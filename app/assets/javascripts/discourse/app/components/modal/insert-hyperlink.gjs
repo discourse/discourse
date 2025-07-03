@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import Form from "discourse/components/form";
 import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
@@ -17,17 +18,23 @@ import { prefixProtocol } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 export default class InsertHyperlink extends Component {
-  @tracked linkText = this.args.model.linkText;
-  @tracked linkUrl = "";
   @tracked selectedRow = -1;
   @tracked searchResults = [];
   @tracked searchLoading = false;
-  _debounced;
-  _activeSearch;
+  #debounced;
+  #activeSearch;
 
   willDestroy() {
     super.willDestroy(...arguments);
-    cancel(this._debounced);
+    cancel(this.#debounced);
+  }
+
+  @cached
+  get data() {
+    return {
+      linkUrl: this.args.model.linkUrl ?? "",
+      linkText: this.args.model.linkText ?? "",
+    };
   }
 
   highlightRow(e, direction) {
@@ -49,38 +56,38 @@ export default class InsertHyperlink extends Component {
 
   selectLink(el) {
     this.searchResults = [];
-    this.linkUrl = el.href;
+
+    this.formApi.setProperties({
+      linkUrl: el.href,
+      linkText: el.dataset.title,
+    });
+
     this.selectedRow = -1;
-
-    if (!this.linkText && el.dataset.title) {
-      this.linkText = el.dataset.title;
-    }
-
     document.querySelector("input.link-text").focus();
   }
 
-  async triggerSearch() {
-    if (this.linkUrl.length < 4 || this.linkUrl.startsWith("http")) {
+  async triggerSearch(linkUrl) {
+    if (!linkUrl || linkUrl.length < 4 || linkUrl.startsWith("http")) {
       this.abortSearch();
       return;
     }
 
     this.searchLoading = true;
-    this._activeSearch = searchForTerm(this.linkUrl, {
+    this.#activeSearch = searchForTerm(linkUrl, {
       typeFilter: "topic",
     });
 
     try {
-      const results = await this._activeSearch;
+      const results = await this.#activeSearch;
       this.searchResults = results?.topics || [];
     } finally {
       this.searchLoading = false;
-      this._activeSearch = null;
+      this.#activeSearch = null;
     }
   }
 
   abortSearch() {
-    this._activeSearch?.abort();
+    this.#activeSearch?.abort();
 
     this.searchResults = [];
     this.searchLoading = false;
@@ -105,6 +112,13 @@ export default class InsertHyperlink extends Component {
           event.preventDefault();
           event.stopPropagation();
         }
+
+        // this would ideally be handled by nesting a submit button within the form tag
+        // but it's tricky with the current modal api
+        if (event.target.tagName === "INPUT") {
+          this.formApi.submit();
+        }
+
         break;
       case "Escape":
         // Esc should cancel dropdown first
@@ -128,8 +142,8 @@ export default class InsertHyperlink extends Component {
   }
 
   @action
-  ok() {
-    const origLink = this.linkUrl;
+  onFormSubmit(data) {
+    const origLink = data.linkUrl;
     const linkUrl = prefixProtocol(origLink);
     const sel = this.args.model.toolbarEvent.selected;
 
@@ -137,7 +151,7 @@ export default class InsertHyperlink extends Component {
       return;
     }
 
-    const linkText = this.linkText || "";
+    const linkText = data.linkText || "";
 
     if (linkText.length) {
       this.args.model.toolbarEvent.addText(`[${linkText}](${linkUrl})`);
@@ -161,14 +175,14 @@ export default class InsertHyperlink extends Component {
   }
 
   @action
-  updateLinkText(event) {
-    this.linkText = event.target.value;
+  registerApi(api) {
+    this.formApi = api;
   }
 
   @action
-  search(event) {
-    this.linkUrl = event.target.value;
-    this._debounced = discourseDebounce(this, this.triggerSearch, 400);
+  search(value) {
+    this.formApi.set("linkUrl", value);
+    this.#debounced = discourseDebounce(this, this.triggerSearch, value, 400);
   }
 
   <template>
@@ -177,64 +191,87 @@ export default class InsertHyperlink extends Component {
       {{on "keydown" this.keyDown}}
       {{on "mousedown" this.mouseDown}}
       @closeModal={{@closeModal}}
-      @title={{i18n "composer.link_dialog_title"}}
+      @title={{i18n
+        (if
+          @model.editing "composer.link_edit_title" "composer.link_dialog_title"
+        )
+      }}
       @bodyClass="insert-link"
       class="insert-hyperlink-modal"
     >
       <:body>
         <div class="inputs">
-          <input
-            {{on "input" this.search}}
-            value={{this.linkUrl}}
-            placeholder={{i18n "composer.link_url_placeholder"}}
-            type="text"
-            autofocus="autofocus"
-            class="link-url"
-          />
+          <Form
+            @data={{this.data}}
+            @onSubmit={{this.onFormSubmit}}
+            @onRegisterApi={{this.registerApi}}
+            as |form|
+          >
+            <form.Field
+              @name="linkUrl"
+              @title={{i18n "composer.link_url_label"}}
+              @format="full"
+              @validation="required"
+              @onSet={{this.search}}
+              as |field|
+            >
+              <field.Input
+                placeholder={{i18n "composer.link_url_placeholder"}}
+                class="link-url"
+                autofocus="autofocus"
+              />
+            </form.Field>
 
-          {{#if this.searchLoading}}
-            {{loadingSpinner}}
-          {{/if}}
+            {{#if this.searchLoading}}
+              {{loadingSpinner}}
+            {{/if}}
 
-          {{#if this.searchResults}}
-            <div class="internal-link-results">
-              {{#each this.searchResults as |result|}}
-                <a
-                  {{on "click" this.linkClick}}
-                  href={{result.url}}
-                  data-title={{result.fancy_title}}
-                  class="search-link"
-                >
-                  <TopicStatus @topic={{result}} @disableActions={{true}} />
-                  {{replaceEmoji result.title}}
-                  <div class="search-category">
-                    {{#if result.category.parentCategory}}
-                      {{categoryLink result.category.parentCategory}}
-                    {{/if}}
-                    {{categoryLink result.category hideParent=true}}
-                    {{discourseTags result}}
-                  </div>
-                </a>
-              {{/each}}
-            </div>
-          {{/if}}
-        </div>
+            {{#if this.searchResults}}
+              <div class="internal-link-results">
+                {{#each this.searchResults as |result|}}
+                  <a
+                    {{on "click" this.linkClick}}
+                    href={{result.url}}
+                    data-title={{result.fancy_title}}
+                    class="search-link"
+                  >
+                    <TopicStatus @topic={{result}} @disableActions={{true}} />
+                    {{replaceEmoji result.title}}
+                    <div class="search-category">
+                      {{#if result.category.parentCategory}}
+                        {{categoryLink result.category.parentCategory}}
+                      {{/if}}
+                      {{categoryLink result.category hideParent=true}}
+                      {{discourseTags result}}
+                    </div>
+                  </a>
+                {{/each}}
+              </div>
+            {{/if}}
 
-        <div class="inputs">
-          <input
-            {{on "input" this.updateLinkText}}
-            value={{this.linkText}}
-            placeholder={{i18n "composer.link_optional_text"}}
-            type="text"
-            class="link-text"
-          />
+            <form.Field
+              @name="linkText"
+              @title={{i18n "composer.link_text_label"}}
+              @format="full"
+              as |field|
+            >
+              <field.Input
+                placeholder={{i18n "composer.link_optional_text"}}
+                class="link-text"
+              />
+            </form.Field>
+          </Form>
         </div>
       </:body>
 
       <:footer>
         <DButton
-          @action={{this.ok}}
-          @label="composer.modal_ok"
+          @action={{this.formApi.submit}}
+          @label={{if
+            @model.editing
+            "composer.link_edit_action"
+            "composer.link_dialog_action"
+          }}
           type="submit"
           class="btn-primary"
         />
@@ -242,7 +279,7 @@ export default class InsertHyperlink extends Component {
         <DButton
           @action={{@closeModal}}
           @label="composer.cancel"
-          class="btn-danger"
+          class="btn-transparent"
         />
       </:footer>
     </DModal>

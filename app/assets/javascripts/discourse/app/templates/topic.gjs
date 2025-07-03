@@ -14,6 +14,7 @@ import DiscourseBanner from "discourse/components/discourse-banner";
 import DiscourseTopic from "discourse/components/discourse-topic";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostStream from "discourse/components/post-stream";
 import PostTextSelection from "discourse/components/post-text-selection";
 import PrivateMessageGlyph from "discourse/components/private-message-glyph";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
@@ -42,7 +43,7 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import stickyAvatars from "discourse/modifiers/sticky-avatars";
+import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
@@ -56,7 +57,6 @@ export default RouteTemplate(
     {{/let}}
 
     <DiscourseTopic
-      {{stickyAvatars}}
       @multiSelect={{@controller.multiSelect}}
       @enteredAt={{@controller.enteredAt}}
       @topic={{@controller.model}}
@@ -117,7 +117,8 @@ export default RouteTemplate(
                       @id="edit-title"
                       @value={{@controller.buffered.title}}
                       @maxlength={{@controller.siteSettings.max_topic_title_length}}
-                      @autofocus="true"
+                      @autofocus={{true}}
+                      {{autoFocus}}
                     />
                   </PluginOutlet>
                 </div>
@@ -222,20 +223,22 @@ export default RouteTemplate(
                   <TopicStatus @topic={{@controller.model}} />
                   <a
                     href={{@controller.model.url}}
-                    {{on "click" @controller.jumpTop}}
+                    {{on
+                      "click"
+                      (if
+                        @controller.model.details.can_edit
+                        @controller.editTopic
+                        @controller.jumpTop
+                      )
+                    }}
                     class="fancy-title"
                   >
                     {{htmlSafe @controller.model.fancyTitle}}
-                  </a>
-                {{/if}}
 
-                {{#if @controller.model.details.can_edit}}
-                  <a
-                    href
-                    {{on "click" @controller.editTopic}}
-                    class="edit-topic"
-                    title={{i18n "edit_topic"}}
-                  >{{icon "pencil"}}</a>
+                    {{#if @controller.model.details.can_edit}}
+                      {{icon "pencil" class="edit-topic"}}
+                    {{/if}}
+                  </a>
                 {{/if}}
 
                 <PluginOutlet
@@ -427,80 +430,152 @@ export default RouteTemplate(
               data-topic-id={{@controller.model.id}}
             >
 
-              <div class="posts-wrapper">
-                <ConditionalLoadingSpinner
-                  @condition={{@controller.model.postStream.loadingAbove}}
-                />
+              {{#if @controller.site.useGlimmerPostStream}}
+                <div class="posts-wrapper">
+                  <span>
+                    <PluginOutlet
+                      @name="topic-above-posts"
+                      @connectorTagName="div"
+                      @outletArgs={{lazyHash model=@controller.model}}
+                    />
+                  </span>
 
-                <span>
-                  <PluginOutlet
-                    @name="topic-above-posts"
-                    @connectorTagName="div"
-                    @outletArgs={{lazyHash model=@controller.model}}
+                  {{#unless @controller.model.postStream.loadingFilter}}
+                    <PostStream
+                      @postStream={{@controller.model.postStream}}
+                      @posts={{@controller.postsToRender}}
+                      @canCreatePost={{@controller.model.details.can_create_post}}
+                      @multiSelect={{@controller.multiSelect}}
+                      @selectedPostsCount={{@controller.selectedPostsCount}}
+                      @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
+                      @selectedQuery={{@controller.selectedQuery}}
+                      @gaps={{@controller.model.postStream.gaps}}
+                      @showReadIndicator={{@controller.model.show_read_indicator}}
+                      @streamFilters={{@controller.model.postStream.streamFilters}}
+                      @lastReadPostNumber={{@controller.userLastReadPostNumber}}
+                      @highestPostNumber={{@controller.highestPostNumber}}
+                      @showFlags={{@controller.showPostFlags}}
+                      @editPost={{@controller.editPost}}
+                      @showHistory={{routeAction "showHistory"}}
+                      @showLogin={{routeAction "showLogin"}}
+                      @showRawEmail={{routeAction "showRawEmail"}}
+                      @deletePost={{@controller.deletePost}}
+                      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
+                      @recoverPost={{@controller.recoverPost}}
+                      @expandHidden={{@controller.expandHidden}}
+                      @toggleBookmark={{@controller.toggleBookmark}}
+                      @togglePostType={{@controller.togglePostType}}
+                      @rebakePost={{@controller.rebakePost}}
+                      @changePostOwner={{@controller.changePostOwner}}
+                      @grantBadge={{@controller.grantBadge}}
+                      @changeNotice={{@controller.changeNotice}}
+                      @lockPost={{@controller.lockPost}}
+                      @unlockPost={{@controller.unlockPost}}
+                      @unhidePost={{@controller.unhidePost}}
+                      @replyToPost={{@controller.replyToPost}}
+                      @toggleWiki={{@controller.toggleWiki}}
+                      @showTopReplies={{@controller.showTopReplies}}
+                      @cancelFilter={{@controller.cancelFilter}}
+                      @removeAllowedUser={{@controller.removeAllowedUser}}
+                      @removeAllowedGroup={{@controller.removeAllowedGroup}}
+                      @topVisibleChanged={{@controller.topVisibleChanged}}
+                      @currentPostChanged={{@controller.currentPostChanged}}
+                      @currentPostScrolled={{@controller.currentPostScrolled}}
+                      @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
+                      @togglePostSelection={{@controller.togglePostSelection}}
+                      @selectReplies={{@controller.selectReplies}}
+                      @selectBelow={{@controller.selectBelow}}
+                      @fillGapBefore={{@controller.fillGapBefore}}
+                      @fillGapAfter={{@controller.fillGapAfter}}
+                      @showInvite={{routeAction "showInvite"}}
+                      @showPagePublish={{routeAction "showPagePublish"}}
+                      @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
+                      @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                      @postSelected={{@controller.postSelected}}
+                      @topicPageQueryParams={{getProperties
+                        @controller
+                        @controller.queryParams
+                      }}
+                      @topic={{@controller.model}}
+                    />
+                  {{/unless}}
+                </div>
+              {{else}}
+                <div class="posts-wrapper">
+                  <ConditionalLoadingSpinner
+                    @condition={{@controller.model.postStream.loadingAbove}}
                   />
-                </span>
 
-                {{#unless @controller.model.postStream.loadingFilter}}
-                  <ScrollingPostStream
-                    @posts={{@controller.postsToRender}}
-                    @canCreatePost={{@controller.model.details.can_create_post}}
-                    @multiSelect={{@controller.multiSelect}}
-                    @selectedPostsCount={{@controller.selectedPostsCount}}
-                    @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
-                    @selectedQuery={{@controller.selectedQuery}}
-                    @gaps={{@controller.model.postStream.gaps}}
-                    @showReadIndicator={{@controller.model.show_read_indicator}}
-                    @streamFilters={{@controller.model.postStream.streamFilters}}
-                    @lastReadPostNumber={{@controller.userLastReadPostNumber}}
-                    @highestPostNumber={{@controller.highestPostNumber}}
-                    @showFlags={{@controller.showPostFlags}}
-                    @editPost={{@controller.editPost}}
-                    @showHistory={{routeAction "showHistory"}}
-                    @showLogin={{routeAction "showLogin"}}
-                    @showRawEmail={{routeAction "showRawEmail"}}
-                    @deletePost={{@controller.deletePost}}
-                    @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
-                    @recoverPost={{@controller.recoverPost}}
-                    @expandHidden={{@controller.expandHidden}}
-                    @toggleBookmark={{@controller.toggleBookmark}}
-                    @togglePostType={{@controller.togglePostType}}
-                    @rebakePost={{@controller.rebakePost}}
-                    @changePostOwner={{@controller.changePostOwner}}
-                    @grantBadge={{@controller.grantBadge}}
-                    @changeNotice={{@controller.changeNotice}}
-                    @lockPost={{@controller.lockPost}}
-                    @unlockPost={{@controller.unlockPost}}
-                    @unhidePost={{@controller.unhidePost}}
-                    @replyToPost={{@controller.replyToPost}}
-                    @toggleWiki={{@controller.toggleWiki}}
-                    @showTopReplies={{@controller.showTopReplies}}
-                    @cancelFilter={{@controller.cancelFilter}}
-                    @removeAllowedUser={{@controller.removeAllowedUser}}
-                    @removeAllowedGroup={{@controller.removeAllowedGroup}}
-                    @topVisibleChanged={{@controller.topVisibleChanged}}
-                    @currentPostChanged={{@controller.currentPostChanged}}
-                    @currentPostScrolled={{@controller.currentPostScrolled}}
-                    @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
-                    @togglePostSelection={{@controller.togglePostSelection}}
-                    @selectReplies={{@controller.selectReplies}}
-                    @selectBelow={{@controller.selectBelow}}
-                    @fillGapBefore={{@controller.fillGapBefore}}
-                    @fillGapAfter={{@controller.fillGapAfter}}
-                    @showInvite={{routeAction "showInvite"}}
-                    @showPagePublish={{routeAction "showPagePublish"}}
-                    @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
-                    @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
-                    @topicPageQueryParams={{getProperties
-                      @controller
-                      @controller.queryParams
-                    }}
+                  <span>
+                    <PluginOutlet
+                      @name="topic-above-posts"
+                      @connectorTagName="div"
+                      @outletArgs={{lazyHash model=@controller.model}}
+                    />
+                  </span>
+
+                  {{#unless @controller.model.postStream.loadingFilter}}
+                    <ScrollingPostStream
+                      @posts={{@controller.postsToRender}}
+                      @canCreatePost={{@controller.model.details.can_create_post}}
+                      @multiSelect={{@controller.multiSelect}}
+                      @selectedPostsCount={{@controller.selectedPostsCount}}
+                      @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
+                      @selectedQuery={{@controller.selectedQuery}}
+                      @gaps={{@controller.model.postStream.gaps}}
+                      @showReadIndicator={{@controller.model.show_read_indicator}}
+                      @streamFilters={{@controller.model.postStream.streamFilters}}
+                      @lastReadPostNumber={{@controller.userLastReadPostNumber}}
+                      @highestPostNumber={{@controller.highestPostNumber}}
+                      @showFlags={{@controller.showPostFlags}}
+                      @editPost={{@controller.editPost}}
+                      @showHistory={{routeAction "showHistory"}}
+                      @showLogin={{routeAction "showLogin"}}
+                      @showRawEmail={{routeAction "showRawEmail"}}
+                      @deletePost={{@controller.deletePost}}
+                      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
+                      @recoverPost={{@controller.recoverPost}}
+                      @expandHidden={{@controller.expandHidden}}
+                      @toggleBookmark={{@controller.toggleBookmark}}
+                      @togglePostType={{@controller.togglePostType}}
+                      @rebakePost={{@controller.rebakePost}}
+                      @changePostOwner={{@controller.changePostOwner}}
+                      @grantBadge={{@controller.grantBadge}}
+                      @changeNotice={{@controller.changeNotice}}
+                      @lockPost={{@controller.lockPost}}
+                      @unlockPost={{@controller.unlockPost}}
+                      @unhidePost={{@controller.unhidePost}}
+                      @replyToPost={{@controller.replyToPost}}
+                      @toggleWiki={{@controller.toggleWiki}}
+                      @showTopReplies={{@controller.showTopReplies}}
+                      @cancelFilter={{@controller.cancelFilter}}
+                      @removeAllowedUser={{@controller.removeAllowedUser}}
+                      @removeAllowedGroup={{@controller.removeAllowedGroup}}
+                      @topVisibleChanged={{@controller.topVisibleChanged}}
+                      @currentPostChanged={{@controller.currentPostChanged}}
+                      @currentPostScrolled={{@controller.currentPostScrolled}}
+                      @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
+                      @togglePostSelection={{@controller.togglePostSelection}}
+                      @selectReplies={{@controller.selectReplies}}
+                      @selectBelow={{@controller.selectBelow}}
+                      @fillGapBefore={{@controller.fillGapBefore}}
+                      @fillGapAfter={{@controller.fillGapAfter}}
+                      @showInvite={{routeAction "showInvite"}}
+                      @showPagePublish={{routeAction "showPagePublish"}}
+                      @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
+                      @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                      @topicPageQueryParams={{getProperties
+                        @controller
+                        @controller.queryParams
+                      }}
+                    />
+                  {{/unless}}
+
+                  <ConditionalLoadingSpinner
+                    @condition={{@controller.model.postStream.loadingBelow}}
                   />
-                {{/unless}}
-
-                <ConditionalLoadingSpinner
-                  @condition={{@controller.model.postStream.loadingBelow}}
-                />
-              </div>
+                </div>
+              {{/if}}
               <div id="topic-bottom"></div>
 
               <ConditionalLoadingSpinner

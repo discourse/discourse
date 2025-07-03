@@ -151,14 +151,14 @@ module ApplicationHelper
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil)
+  def preload_script_url(url, entrypoint: nil, type_module: false)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
     HTML
   end
 
@@ -576,7 +576,10 @@ module ApplicationHelper
 
     return if theme_id.blank?
 
-    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
+    if SiteSetting.use_overhauled_theme_color_palette
+      @scheme_id = ThemeColorScheme.where(theme_id: theme_id).pick(:color_scheme_id)
+    end
+    @scheme_id ||= Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
   def dark_scheme_id

@@ -28,6 +28,7 @@ export default class FKControlCode extends Component {
       @onChange={{this.handleInput}}
       @mode={{@lang}}
       @disabled={{@field.disabled}}
+      @resizable={{true}}
       class="form-kit__control-code"
       style={{this.style}}
       ...attributes

@@ -202,7 +202,10 @@ export default class Flag extends Component {
       opts.message = this.message;
     }
     this.args.model.flagTarget.create(this, opts);
-    this.appEvents.trigger("flag:created");
+    this.appEvents.trigger("flag:created", {
+      message: opts.message,
+      postId: this.args.model.flagModel.id,
+    });
   }
 
   @action

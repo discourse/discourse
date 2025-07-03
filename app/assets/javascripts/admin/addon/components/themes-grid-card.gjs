@@ -83,6 +83,8 @@ export default class ThemeCard extends Component {
       },
       duration: "short",
     });
+
+    window.location.reload();
   }
 
   @action

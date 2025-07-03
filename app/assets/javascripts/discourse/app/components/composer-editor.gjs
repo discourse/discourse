@@ -866,6 +866,8 @@ export default class ComposerEditor extends Component {
     const selected = toolbarEvent.selected;
     toolbarEvent.selectText(selected.start, selected.end - selected.start);
     this.composer.storeToolbarState(toolbarEvent);
+
+    window.getSelection().removeAllRanges();
   }
 
   showPreview() {
@@ -898,15 +900,6 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    toolbar.addButton({
-      id: "quote",
-      group: "fontStyles",
-      icon: "far-comment",
-      sendAction: this.composer.importQuote,
-      title: "composer.quote_post_title",
-      unshift: true,
-    });
-
     if (
       this.composer.allowUpload &&
       this.composer.uploadIcon &&
@@ -924,10 +917,13 @@ export default class ComposerEditor extends Component {
     toolbar.addButton({
       id: "options",
       group: "extras",
-      icon: "gear",
+      icon: "circle-plus",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
-      popupMenu: true,
+      popupMenu: {
+        options: () => this.composer.popupMenuOptions,
+        action: this.composer.onPopupMenuAction,
+      },
     });
   }
 
@@ -960,7 +956,7 @@ export default class ComposerEditor extends Component {
 
   get showTranslationEditor() {
     if (
-      !this.siteSettings.experimental_content_localization ||
+      !this.siteSettings.content_localization_enabled ||
       !this.currentUser.can_localize_content
     ) {
       return false;

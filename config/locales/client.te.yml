@@ -343,6 +343,7 @@ te:
       created: "మీరు ఈ పోస్ట్‌ను బుక్‌మార్క్ చేసారు. %{name}"
       created_generic: "మీరు దీన్ని బుక్‌మార్క్ చేసారు. %{name}"
       create: "బుక్‌మార్క్‌ని సృష్టించండి"
+      clear_reminder: "రిమైండర్‌ను క్లియర్ చేయండి"
       edit: "బుక్‌మార్క్‌ని సవరించండి"
       not_bookmarked: "ఈ పోస్ట్‌ను బుక్‌మార్క్ చేయండి"
       remove_reminder_keep_bookmark: "రిమైండర్‌ని తీసివేసి, బుక్‌మార్క్ ఉంచండి"
@@ -1684,6 +1685,7 @@ te:
           link_copied: "లింక్ కాపీ చేయబడింది!"
           show_advanced: "అధునాతన ఎంపికలను చూపించండి"
           hide_advanced: "అధునాతన ఎంపికలను దాచండి"
+          description: "వివరణ"
           restrict: "పరిమితం చేయండి"
           restrict_email: "ఇమెయిల్కు పరిమితం చేయండి"
           restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
@@ -2249,11 +2251,10 @@ te:
       italic_label: "I"
       italic_title: "వాలు"
       italic_text: "వాలు వచనం"
-      link_title: "హైపర్ లంకె"
+      link_title: "లింక్"
       link_description: "లంకె వివరణ ఇక్కడ రాయండి"
-      link_dialog_title: "హైపర్ లంకె చొప్పించండి"
-      link_optional_text: "ఐచ్చిక శీర్షిక"
-      link_url_placeholder: "URLని అతికించండి లేదా విషయాలను శోధించడానికి టైప్ చేయండి"
+      link_edit_action: "నవీకరించండి"
+      link_optional_text: "వచనం"
       blockquote_title: "బ్లాక్ కోట్"
       blockquote_text: "బ్లాక్ కోట్"
       code_title: "ముందే అలంకరించిన వచనం"
@@ -2320,6 +2321,8 @@ te:
         aria_label: చిత్రం కోసం ప్రత్యామ్నాయ వచనం
       delete_image_button: చిత్రాన్ని తొలగించండి
       toggle_image_grid: ఇమేజ్ గ్రిడ్‌ని టోగుల్ చేయండి
+      link_toolbar:
+        link_copied: "లింక్ కాపీ చేయబడింది!"
     notifications:
       tooltip:
         regular:
@@ -2702,10 +2705,6 @@ te:
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
         hot: "ఏవి అగ్ర విషయాలూ లేవు."
         filter: "విషయాలూ లేవు."
-        educate:
-          new: '<p>మీ కొత్త విషయాలు ఇక్కడ కనిపిస్తాయి. అప్రమేయంగా, విషయాలు కొత్తవిగా పరిగణించబడతాయి మరియు అవి గత 2 రోజులలో సృష్టించబడినట్లయితే <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> సూచికను చూపుతుంది.</p><p>దీన్ని మార్చడానికి మీ <a href="%{userPrefsUrl}">ప్రాధాన్యతలను</a> సందర్శించండి.</p>'
-          unread: "<p>మీ చదవని విషయాలు ఇక్కడ కనిపిస్తాయి.</p><p>అప్రమేయంగా, విషయాలు చదవబడనిదిగా పరిగణించబడతాయి మరియు చదవని గణనలను చూపుతాయి <span class=\"badge unread-posts badge-notification\">1</span> ఒకవేళ మీరు:</p><ul><li>విషయాన్ని సృష్టించినట్లయితే</li><li>విషయానికి ప్రతిస్పందించినట్లైతే</li><li>విషయాన్ని 5 కంటే ఎక్కువ నిముషాలు చదివినట్లయితే</li></ul><p>లేదా ప్రతి విషయం లో \U0001F514 ద్వారా ట్రాక్/ఫాలో చేస్తున్నట్లైతే.</p><p>దీన్ని మార్చడానికి మీ <a href=\"%{userPrefsUrl}\">ప్రాధాన్యతలను</a> సందర్శించండి.</p>"
-          new_new: "<p>మీ కొత్త విషయాలు ఇక్కడ కనిపిస్తాయి మరియు మీరు చదవని విషయాలు కూడా ప్రదర్శించబడతాయి. అప్రమేయంగా, విషయాలు కొత్తవిగా పరిగణించబడతాయి మరియు అవి గత 2 రోజులలో సృష్టించబడినట్లయితే <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> సూచికను చూపుతుంది. మీరు విషయాన్ని సృష్టించినా, విషయానికి ప్రత్యుత్తరమిచ్చినా, విషయాన్ని 5 నిమిషాల కంటే ఎక్కువసేపు చదివినా లేదా విషయాన్ని ట్రాక్ చేసిన, అనుసరించిన (\U0001F514 ద్వారా), చదవని విషయాల గణనలను చూపుతాయి <span class=\"badge unread-posts badge-notification\">1</span>.</p><p>దీన్ని మార్చడానికి మీ <a href=\"%{userPrefsUrl}\">ప్రాధాన్యతలను</a> సందర్శించండి.</p>"
       bottom:
         latest: "ఇంకా కొత్త విషయాలు లేవు."
         posted: "ఇంకా రాసిన విషయాలు లేవు."
@@ -3249,6 +3248,8 @@ te:
           actions: "చర్యలు"
           edit: "సవరించండి"
           delete: "తొలగించండి"
+        post_language_selector:
+          none: "ఏదీ లేదు"
       errors:
         create: "క్షమించండి, మీ పోస్ట్‌ని సృష్టించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
         edit: "క్షమించండి, మీ పోస్ట్‌ని సవరించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
@@ -4998,6 +4999,7 @@ te:
           install: "ఇన్‌స్టాల్ చేయండి"
           themes:
             title: "థీమ్స్"
+            install: "ఇన్‌స్టాల్ చేయండి"
           components:
             title: "భాగాలు"
             install: "ఇన్‌స్టాల్ చేయండి"
@@ -5025,7 +5027,6 @@ te:
           delete: "తొలగించు"
           colors:
             title: "రంగులు"
-          delete_confirm: "ఈ రంగుల పాలెట్‌ను తొలగించాలా?"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"
@@ -5284,6 +5285,10 @@ te:
           remote_theme_edits: "మీరు ఈ థీమ్‌ను సవరించాలనుకుంటే, మీరు తప్పనిసరిగా <a href='%{repoURL}' target='_blank'>దాని రిపోజిటరీలో మార్పును సమర్పించాలి</a>"
           repo_unreachable: "ఈ థీమ్ యొక్క Git రిపోజిటరీని సంప్రదించలేకపోయింది. లోపం సందేశం:"
           imported_from_archive: "ఈ థీమ్ .zip ఫైల్ నుండి దిగుమతి చేయబడింది"
+          settings: "అమరికలు"
+          colors: "రంగులు"
+          discard_colors: "విస్మరించండి"
+          colors_title: "రంగులు"
           scss:
             text: "సీయస్ యస్"
           after_header:
@@ -5325,35 +5330,28 @@ te:
           title: "రంగులు"
           about: "మీ థీమ్‌లు ఉపయోగించే రంగులను సవరించండి. ప్రారంభించడానికి కొత్త రంగుల పాలెట్‌ను సృష్టించండి."
           copy_name_prefix: "దీనికి నకలు"
-          delete_confirm: "ఈ రంగుల పాలెట్‌ను తొలగించాలా?"
           undo: "రద్దు చేయండి"
           undo_title: "చివరిసారి సేవ్ చేయబడినప్పటి నుండి ఈ రంగుకు మీ మార్పులను రద్దు చేయండి."
           revert: "తిద్దు"
           revert_title: "ఈ రంగును డిస్కోర్స్ డిఫాల్ట్ కలర్ పాలెట్‌కి రీసెట్ చేయండి."
           primary:
             name: "ప్రాథమిక"
-            description: "పాఠ్యం, చిహ్నాలు మరియు సరిహద్దులు."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "ద్వితీయ"
-            description: "ప్రధాన వెనుతలం రంగు మరియు కొన్ని మీటల పాఠ్యం రంగు."
           tertiary:
             name: "తృతీయ"
-            description: "లింక్‌లు, కొన్ని బటన్‌లు, నోటిఫికేషన్‌లు మరియు యాస రంగు."
           quaternary:
             name: "చతుర్థీ"
           header_background:
             name: "హెడరు వెనుతలం"
-            description: "సైటు హెడరు వెనుతలం రంగు."
           header_primary:
             name: "హెడరు ప్రాథమిక"
-            description: "సైటు హెడరు పాఠ్యం మరియు చిహ్నాలు"
           highlight:
             name: "హైలైట్"
-            description: "పోస్ట్‌లు మరియు విషయాలు వంటి పేజీలో హైలైట్ చేసిన విషయాల నేపథ్య రంగు."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -5362,19 +5360,14 @@ te:
             name: "highlight-low"
           danger:
             name: "ప్రమాదం"
-            description: "పోస్ట్‌లు మరియు విషయాలను తొలగించడం వంటి చర్యల కోసం రంగును హైలైట్ చేయండి."
           success:
             name: "విజయం"
-            description: "ఒక చర్య విజయవంతమైందని చూపడానికి వాడబడేది"
           love:
             name: "ప్రేమ"
-            description: "ఇష్ఠ బటను రంగు."
           selected:
             name: "ఎంపిక చేయబడినవి"
-            description: "జాబితా-అంశాలు ఎంచుకున్నప్పుడు/సక్రియంగా ఉన్నప్పుడు మూలకాల యొక్క నేపథ్య-రంగు."
           hover:
             name: "హోవర్"
-            description: "లిస్ట్-ఐటెమ్‌లు వాటిపై హోవర్ చేసినప్పుడు లేదా కీబోర్డ్ ఫోకస్‌ని కలిగి ఉన్నప్పుడు వాటి నేపథ్య-రంగు."
           editor:
             light: "లేత"
             dark: "డార్క్"

@@ -147,13 +147,13 @@ RSpec.describe Draft do
     draft = Draft.first
     draft.upload_references << UploadReference.create!(target: draft, upload: Fabricate(:upload))
 
-    expect(UploadReference.count).to eq(1)
+    expect(UploadReference.where(target_type: "Draft").count).to eq(1)
 
     Draft.cleanup!
 
     expect(Draft.count).to eq 0
     expect(user.reload.user_stat.draft_count).to eq(0)
-    expect(UploadReference.count).to eq(0)
+    expect(UploadReference.where(target_type: "Draft").count).to eq(0)
 
     Draft.set(Fabricate(:user), topic_key_1, 0, "draft")
 

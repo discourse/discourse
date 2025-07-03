@@ -25,6 +25,7 @@
 
   .search-header {
     background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
 
     @include search-page-spacing;
   }

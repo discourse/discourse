@@ -196,6 +196,7 @@ fi:
     back_button: "Takaisin"
     welcome_banner:
       header:
+        logged_in_members: "Tervetuloa takaisin, %{preferred_display_name}!"
         anonymous_members: "Tervetuloa sivustolle %{site_name}!"
       search: "Hae"
     themes:
@@ -398,6 +399,7 @@ fi:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       created_generic: "Olet kirjanmerkinnyt tämän. %{name}"
       create: "Luo kirjanmerkki"
+      clear_reminder: "Tyhjennä muistutus"
       edit: "Muokkaa kirjanmerkkiä"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
       remove_reminder_keep_bookmark: "Poista muistutus ja säilytä kirjanmerkki"
@@ -460,9 +462,11 @@ fi:
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi henkilökohtaisen viestin luonnos"
+      edit_topic: "Muokkaa aiheen luonnosta"
       dropdown:
         title: "Avaa tuoreimpien luonnosten valikko"
         untitled: "Nimetön luonnos"
+        view_all: "näytä kaikki luonnokset"
         other_drafts:
           one: "+%{count} muu luonnos"
           other: "+%{count} muuta luonnosta"
@@ -527,6 +531,17 @@ fi:
       date_filter: "Lähetetty välillä"
       in_reply_to: "vastauksena:"
       filtered_flagged_by: "Liputtanut"
+      unknown:
+        title:
+          one: "Sinulla on odottavia tarkistuksia käytöstä poistetusta laajennuksesta:"
+          other: "Sinulla on odottavia tarkistuksia käytöstä poistetuista laajennuksista:"
+        instruction: "Niitä ei voida näyttää oikein, ennen kuin otat käyttöön kyseisen laajennuksen. Ota laajennus käyttöön ja päivitä sivu. Vaihtoehtoisesti voit jättää ne huomiotta. <a href='%{url}' target='_blank'>Lue lisää...</a>"
+        reviewable_unknown_source: "%{reviewableType} (tuntematon lisäosa)"
+        reviewable_known_source: "%{reviewableType} (%{pluginName}-laajennuksesta)"
+        ignore_all: "Ohita kaikki"
+        enable_plugins: "Ota laajennukset käyttöön"
+        delete_confirm: "Oletko varma, että haluat poistaa kaikki arvostelut jotka on luotu käytöstä poistetuilla liitännäisillä?"
+        ignore_success: "Kaikki käytöstä poistettujen laajennusten luomat arvostelut on poistettu."
       explain:
         why: "selitä miksi tämä päätyi jonoon"
         title: "Käsittelypisteytys"
@@ -561,6 +576,7 @@ fi:
         required: "Sinun täytyy osoittaa kohde itsellesi, ennen kuin voit käsitellä sen."
         claimed_by_you: "Osoitit tämän itsellesi ja voit nyt käsitellä sen."
         claimed_by_other: "Tämän voi käsitellä vain <b>%{username}</b>."
+        automatically_claimed_by: "Tätä asiaa tarkastelee parhaillaan <b>%{username}</b>."
       claim:
         title: "osoita ketju itsellesi"
       unclaim:
@@ -597,9 +613,17 @@ fi:
         name: "Nimi"
         fields: "Kentät"
         reject_reason: "Syy"
+        scrubbed_by: "Tietueen puhdisti"
         scrubbed_reason: "Syy"
+        scrubbed_at: "Puhdistettu klo"
+        scrubbed_reject_reason: "Käyttäjän hylkäyksen syy"
         scrub_record:
+          button: Puhdistusrekisteri
+          confirm_title: Poista henkilötiedot
+          confirm_body: "Oletko VARMA, että haluat tyhjentää tämän tarkistusjonon tietueen? Kaikki henkilökohtaiset tiedot (esim. käyttäjätunnus, sähköpostiosoite, IP-osoite) poistetaan pysyvästi tästä tietueesta."
+          reason_title: "Tämän tietueen poistamiselle on oltava syy."
           reason_placeholder: "Syy..."
+          confirm_button: "Vahvista poistaminen"
           cancel_button: "Peruuta"
       user_percentage:
         summary:
@@ -1492,6 +1516,8 @@ fi:
         choose: "Valitse salasana"
         verify_identity: "Vahvista henkilöllisyytesi, jotta voit jatkaa."
         title: "Salasanan palautus"
+        remove: "Poista salasana"
+        remove_detail: "Tilillesi ei enää pääse salasanalla, ellet nollaa sitä."
       second_factor_backup:
         title: "Kaksivaiheisen tunnistuksen varakoodit"
         regenerate: "Tee uusi"
@@ -1879,6 +1905,7 @@ fi:
           edit_link_options: "Muokkaa linkin asetuksia tai lähetä sähköpostitse."
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
+          description: "Kuvaus"
           restrict: "Rajoita:"
           restrict_email: "Rajoita sähköpostiosoitteeseen"
           restrict_domain: "Rajoita verkkotunnukseen"
@@ -1990,6 +2017,7 @@ fi:
         title: "IP-osoite rekisteröityessä"
       avatar:
         title: "Profiilikuva"
+        header_title: "Ilmoitukset ja tili"
         name_and_description: "%{name} - %{description}"
         edit: "Muokkaa profiilikuvaa"
       title:
@@ -2028,6 +2056,7 @@ fi:
     user_tips:
       button: "Selvä!"
       skip: "Ohita vinkit"
+      dont_show_again: "Älä näytä tätä uudelleen"
       first_notification:
         title: "Ensimmäinen ilmoituksesi!"
         content: "Ilmoitusten avulla pysyt ajan tasalla siitä, mitä yhteisössä tapahtuu."
@@ -2069,6 +2098,7 @@ fi:
     multi_select:
       no_results: "Ei tuloksia"
       search: "Hae…"
+      label: "Valitse vaihtoehdot"
     form_kit:
       reset: Palauta
       optional: valinnainen
@@ -2076,6 +2106,8 @@ fi:
       dirty_form: "Et lähettänyt muutoksiasi! Oletko varma, että haluat poistua?"
       errors:
         required: "Pakollinen"
+        date_before_or_equal: "Täytyy olla ennen tai sama kuin %{date}"
+        date_after_or_equal: "Täytyy olla sama kuin  %{date} tai sen jälkeen"
         invalid_url: "Täytyy olla kelvollinen URL"
         not_an_integer: "Täytyy olla kokonaisluku"
         not_accepted: "Täytyy hyväksyä"
@@ -2304,6 +2336,10 @@ fi:
         name: "Google"
         title: "Kirjaudu Googlella"
         sr_title: "Kirjaudu Googlella"
+      twitter:
+        name: "X"
+        title: "Kirjaudu sisään X:llä"
+        sr_title: "Kirjaudu sisään X:llä"
       instagram:
         name: "Instagram"
         title: "Kirjaudu Instagramilla"
@@ -2345,6 +2381,18 @@ fi:
       password_label: "Salasana"
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
+    emoji_set:
+      apple_international: "Apple/International (vanhentunut Twemojissa)"
+      google: "Google (vanhentunut Noto Emojiin)"
+      twitter: "Twitter (vanhentunut Twemojille)"
+      win10: "Win10 (vanhentunut Fluent Emojille)"
+      google_classic: "Google Classic (vanhentunut Noto Emojiin)"
+      facebook_messenger: "Facebook Messenger (vanhentunut standardiin)"
+      openmoji: OpenMoji
+      standard: Vakio
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "Vain alueet"
       categories_with_featured_topics: "Alueet, joissa on esiteltyjä ketjuja"
@@ -2358,6 +2406,10 @@ fi:
       required_at_signup: "Pakollinen"
       optional_at_signup: "Valinnainen"
       hidden_at_signup: "Valinnainen, piilotetaan rekisteröitymisessä"
+    interface_color_selector:
+      disabled: "Älä näytä"
+      sidebar_footer: "Näyttö sivupalkin alatunnisteessa"
+      header: "Näytä ylätunnisteessa"
     shortcut_modifier_key:
       shift: "Vaihto"
       ctrl: "Ctrl"
@@ -2372,6 +2424,8 @@ fi:
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
+    timezone_input:
+      ambiguous_ist: "IST on moniselitteinen, valitse tietty aikavyöhyke (esim. Aasia/Kolkata)."
     select_kit:
       delete_item: "Poista %{name}"
       filter_by: "Suodata: %{name}"
@@ -2449,6 +2503,12 @@ fi:
       esc: "esc"
       esc_label: "kuittaa viesti"
       ok_proceed: "Ok, jatka"
+      translations:
+        title: "Käännetään viestiä"
+        select: "Valitse käännös"
+        save: "Tallenna käännös"
+        original_content: "Alkuperäisen viestin sisältö"
+        placeholder: "Kirjoita viestin käännös tähän..."
       group_mentioned_limit:
         one: "<b>Varoitus!</b> Olet maininnut ryhmän <a href='%{group_link}'>%{group}</a>, mutta ryhmässä on yli %{count} käyttäjä, mikä on ylläpitäjän asettama rajoitus maininnoille. Kukaan ei saa ilmoitusta."
         other: "<b>Varoitus!</b> Olet maininnut ryhmän <a href='%{group_link}'>%{group}</a>, mutta ryhmässä on yli %{count} käyttäjää, mikä on ylläpitäjän asettama rajoitus maininnoille. Kukaan ei saa ilmoitusta."
@@ -2519,6 +2579,8 @@ fi:
       uploading: "Ladataan…"
       show_preview: "näytä esikatselu"
       hide_preview: "piilota esikatselu"
+      switch_to_markdown: "Vaihda tavalliseen Markdown-editoriin (%{keyboardShortcut})"
+      switch_to_rich_text: "Vaihda uuteen rich text editoriin (%{keyboardShortcut})"
       quote_post_title: "Lainaa koko viestiä"
       bold_label: "B"
       bold_title: "Lihavoitu"
@@ -2526,11 +2588,11 @@ fi:
       italic_label: "I"
       italic_title: "Kursiivi"
       italic_text: "kursivoitu teksti"
-      link_title: "Hyperlinkki"
+      link_title: "Linkki"
       link_description: "kirjoita linkin kuvaus tähän"
-      link_dialog_title: "Lisää linkki"
-      link_optional_text: "valinnainen otsikko"
-      link_url_placeholder: "Liitä URL tai hae ketjua kirjoittamalla"
+      link_dialog_action: "Lisää"
+      link_edit_action: "Päivitä"
+      link_optional_text: "Teksti"
       blockquote_title: "Sitaatti"
       blockquote_text: "Sitaatti"
       code_title: "Teksti ilman muotoiluja"
@@ -2600,6 +2662,9 @@ fi:
       image_scale_button: "Muuta kuvan kokoa %{percent} prosenttiin"
       delete_image_button: Poista kuva
       toggle_image_grid: Kuvaruudukko päälle/pois päältä
+      link_toolbar:
+        copy: "Kopioi linkki"
+        link_copied: "Linkki kopioitu!"
     notifications:
       tooltip:
         regular:
@@ -2728,8 +2793,11 @@ fi:
         new_features: "Uusia Discoursen ominaisuuksia on julkaistu!"
         admin_problems: "uusia suosituksia sivustosi hallintapaneelissa"
     upload_selector:
+      change: "Vaihda"
       delete: "Poista"
       uploading: "Ladataan"
+      processing: "Käsitellään lähetystä"
+      select_file: "Napsauta ladataksesi tai vedä ja pudota tiedosto"
       default_image_alt_text: kuva
     search:
       sort_by: "Järjestä"
@@ -2771,9 +2839,13 @@ fi:
       in_messages_tooltip: "vaihda tavallisten ketjujen hakuun"
       in_topics_posts: "kaikissa ketjuissa ja viesteissä"
       enter_hint: "tai paina Enter"
+      mobile_enter_hint: "tai napauta Etsi"
       in_posts_by: "käyttäjän %{username} viesteissä"
       recent: "Viimeisimmät haut"
       clear_recent: "Tyhjennä viimeisimmät haut"
+      experience:
+        search_field: "Hakukenttä sivuston otsikossa"
+        search_icon: "Hakukuvake profiilin avatarin lähellä"
       type:
         default: "Ketjut/viestit"
         users: "Käyttäjiä"
@@ -2856,6 +2928,7 @@ fi:
           aria_label: suodata enimmäiskatselukertojen mukaan
         additional_options:
           label: "Suodata viestien määrän ja ketjun katselukertojen mukaan"
+    hamburger_menu: "Navigointivalikko"
     new_item: "uusi"
     go_back: "palaa takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on yhteenveto käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
@@ -2995,10 +3068,6 @@ fi:
         top: "Suosittuja ketjuja ei ole."
         hot: "Suosittuja ketjuja ei ole."
         filter: "Ketjuja ei ole."
-        educate:
-          new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
-          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge unread-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua yli 5 minuuttia</li></ul><p>tai, jos olet erikseen merkinnyt ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvällä painikkeella.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">asetuksissasi</a>.</p>'
-          new_new: "<p>Uudet ketjusi näkyvät täällä, ja lukemattomat ketjusi näytetään myös. Ketjuja pidetään oletuksena uusina ja ne näyttävät <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-ilmaisimen, jos ne on luotu viimeisten kahden päivän aikana. Lukemattomat ketjut näyttävät lukemattomien määrät <span class=\"badge unread-posts badge-notification\">1</span>, jos sinä loit ketjun, vastasit ketjuun, olet lukenut ketjua yli viiden minuutin ajan tai jos olet nimenomaan asettanut ketjun seuratuksi tai tarkkailluksi \U0001F514-kuvakkeen kautta kussakin ketjussa. </p><p>Voit muuttaa tämän <a href=\"%{userPrefsUrl}\">asetuksissasi</a>.</p>"
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         posted: "Ketjuja, joihin olet kirjoittanut, ei ole enempää."
@@ -3136,6 +3205,9 @@ fi:
           false { tai <a href="{basePath}/latest">katso viimeisimmät ketjut</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} vastaus, siirry ensimmäiseen viestiin"
+        other: "%{count} vastausta, hyppää ensimmäiseen viestiin"
       created_at: "Luotu: %{date}"
       bumped_at: "Viimeisin: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
@@ -3553,6 +3625,9 @@ fi:
       sr_post_like_count_button:
         one: "%{count} käyttäjä tykkäsi tästä viestistä."
         other: "%{count} käyttäjää tykkäsi tästä viestistä."
+      sr_post_read_count_button:
+        one: "%{count} henkilöä luki tämän viestin."
+        other: "%{count} ihmistä on lukenut tämän viestin."
       filtered_replies_hint:
         one: "Näytä tämä viesti ja siihen liittyvä vastaus"
         other: "Näytä tämä viesti ja %{count} siihen liittyvää vastausta"
@@ -3564,9 +3639,20 @@ fi:
       badge_granted_tooltip: "%{username} ansaitsi kunniamerkin %{badge_name} tästä viestistä!"
       localizations:
         table:
+          locale: "Kielikohtainen asetus"
           actions: "Toiminnot"
           edit: "Muokkaa"
           delete: "Poista"
+        add: "Lisää uusi käännös"
+        view:
+          one: "Näytä %{count} käännetty kieli"
+          other: "Näytä %{count} käännetyt kielet"
+        modal:
+          title: "Käännökset viestille"
+          confirm_delete: "Oletko varma, että haluat poistaa käännökset kohteelle '%{languageCode}'?"
+        success: "Käännökset on päivitetty onnistuneesti"
+        post_language_selector:
+          none: "Ei valittu"
       errors:
         create: "Viestin luonti epäonnistui. Yritä uudelleen."
         edit: "Viestin muokkaus epäonnistui. Yritä uudelleen."
@@ -3761,6 +3847,7 @@ fi:
       share:
         title: "Jaa viesti %{post_number}"
         instructions: "Jaa linkki tähän viestiin:"
+      original_language: "Tämä viesti on alun perin kirjoitettu %{language}"
     category:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
@@ -3774,10 +3861,14 @@ fi:
       settings: "Asetukset"
       topic_template: "Malli"
       tags: "Tunnisteet"
+      localizations: "Lokalisoinnit"
       localization:
+        locale: "Kielikohtainen asetus"
         name: "Nimi"
         description: "Kuvaus"
+        add: "Lisää uusi kieliasetus"
         remove: "Poista"
+        hint: "Tällä hetkellä tähän kategoriaan ei ole lokalisointia. Napsauta 'Lisää uusi lokaatio' alla aloittaaksesi lokalisointien lisäämisen."
       tags_allowed_tags: "Rajaa nämä tunnisteet tälle alueelle:"
       tags_allowed_tag_groups: "Rajaa nämä tunnisteryhmät tälle alueelle:"
       tags_placeholder: "(Valinnainen) lista sallituista tunnisteista"
@@ -3800,16 +3891,22 @@ fi:
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
       name: "Alueen nimi"
+      untitled: "Nimetön Kategoria"
       description: "Kuvaus"
       logo: "Alueen logokuva"
       logo_dark: "Tumman tilan alueen logokuva"
+      logo_description: "Suositeltu kuvasuhde on 1:1 ja vähimmäiskoko 200 pikseliä. Jos tämä jätetään tyhjäksi, kuvaa ei näytetä."
       background_image: "Alueen taustakuva"
       background_image_dark: "Kategorioiden tumma taustakuva"
+      style: "Tyylit"
       background_color: "Väri"
+      foreground_color: "Tekstin väri"
       styles:
+        type: "Tyyli"
         icon: "Kuvake"
         emoji: "Emojit"
         options:
+          square: "Neliö"
           icon: "Kuvake"
           emoji: "Emojit"
       color_used: "Väri käytössä"
@@ -3928,6 +4025,7 @@ fi:
       description: "Ilmoita laittomasta sisällöstä ottamalla yhteyttä osoitteeseen <a href='mailto:%{email}?subject=Laitonta sisältöä: %{topic_title}&body=Tämä viesti %{url} sisältää laitonta sisältöä.'>%{email}</a>"
     flagging:
       title: "Kiitos avustasi yhteisön hyväksi!"
+      review_process_description: "Moderaattorit vastaanottavat kaikki liput, ja ne tarkistetaan mahdollisimman pian."
       action: "Liputa viesti"
       take_action: "Ryhdy toimiin…"
       take_action_options:
@@ -4164,6 +4262,7 @@ fi:
         today: "Tänään"
     custom_homepage:
       admin_message: 'Yksi teemoistasi on ottanut käyttöön "custom_homepage"-muuntimen, mutta se ei tuota mitään [custom-homepage]-liittimessä. (Tämä viesti näytetään vain sivuston ylläpitäjille.)'
+    browser_update: 'Valitettavasti <a href="https://discourse.org/about#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -4179,6 +4278,7 @@ fi:
       content_load_error: '<a href="%url%">Sisällön</a> lataaminen ei onnistunut.'
       image_load_error: '<a href="%url%">Kuvan</a> lataaminen ei onnistunut.'
     cannot_render_video: Tätä videota ei voida toistaa, koska selaimesi ei tue tarvittavaa koodekkia.
+    invalid_video_url: Tätä videota ei voi toistaa, koska URL on virheellinen tai ei käytettävissä.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4188,6 +4288,7 @@ fi:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Pikanäppäimet"
       short_title: "Pikavalinnat"
+      search_ctrl_f_tip: "Jos haluat tehdä haun koko foorumilla, paina <kbd>/</kbd>"
       jump_to:
         title: "Siirry"
         home: "%{shortcut} Aloitussivulle"
@@ -4273,6 +4374,8 @@ fi:
       admin:
         title: "Ylläpitäjä"
         search_prev_next: "%{shortcut} Siirry valinnassa ylös ja alas"
+        search_open: "%{shortcut} Avaa admin-käyttöliittymän haku"
+        search_full_page: "%{shortcut} Avaa koko sivun järjestelmänvalvojan haku"
     badges:
       earned_n_times:
         one: "On ansainnut tämän kunniamerkin %{count} kerran"
@@ -4549,7 +4652,7 @@ fi:
           save: "Tallenna"
           delete: "Poista"
           delete_confirm: "Oletko varma, että haluat poistaa tämän osion?"
-          delete_public_confirm: "Tämä osio <strong>näkyy kaikille</strong>, haluatko varmasti poistaa sen?"
+          delete_public_confirm: "Tämä osio näkyy kaikille, haluatko varmasti poistaa sen?"
           update_public_confirm: "Muutokset <strong>näkyvät kaikille</strong> tällä sivustolla. Oletko varma?"
           mark_as_private_confirm: "Tämä osio <strong>näkyy kaikille</strong>. Päivityksen jälkeen se <strong>näkyy vain sinulle</strong>. Oletko varma?"
           reset_confirm: "Haluatko varmasti palauttaa osion oletukset?"
@@ -4665,9 +4768,11 @@ fi:
         forum:
           label: Keskustelualuea
       back_to_forum: "Takaisin foorumille"
+      filter_links: "Suodata linkkejä..."
       clear_filter: "Tyhjennä suodatin"
       no_results:
         title: "Ei tuloksia"
+        description_admin_search: "Emme löytäneet mitään vastaavaa ‘%{filter}”."
       collapse_all_sections: "Pienennä kaikki osiot"
       expand_all_sections: "Laajenna kaikki osiot"
       search: "Hae"
@@ -4675,6 +4780,7 @@ fi:
         interface_color_selector:
           light: "Vaalea"
           dark: "Tumma"
+          auto: "Auto"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
@@ -4776,10 +4882,72 @@ fi:
           paste: "Liitä..."
           save: "Tallenna nimellä..."
     powered_by_discourse: "Voimanlähteenä Discourse"
+    safari_15_warning: "Selaimesi on pian yhteensopimaton tämän yhteisön kanssa. Jos haluat jatkaa osallistumista täällä, päivitä selaimesi tai <a href='%{url}'>lue lisää</a>."
     discovery:
       headings:
+        all:
+          latest: "Kaikki uusimmat aiheet"
+          top: "Kaikki tärkeimmät aiheet"
+          new: "Kaikki uudet aiheet"
+          unread: "Kaikki lukemattomat aiheet"
+          unseen: "Kaikki näkymättömät aiheet"
+          hot: "Kaikki kuumat aiheet"
+          posted: "Kaikki aiheet, joihin olet kirjoittanut"
+          bookmarks: "Kaikki aiheet, jotka olet kirjanmerkannut"
+          default: "Kaikki %{filter} aiheet"
+        category:
+          latest: "Uusimmat aiheet %{category}"
+          top: "Suosituimmat aiheet %{category}"
+          new: "Uudet aiheet %{category}"
+          unread: "Lukemattomat aiheet %{category}"
+          unseen: "Näkemättömät aiheet %{category}"
+          hot: "Kuumat aiheet %{category}"
+          posted: "Aiheet osoitteessa %{category} joihin olet kirjoittanut viestejä"
+          bookmarks: "Aiheet %{category} jonka olet kirjaninut"
+          default: "%{filter} aiheita %{category}-osiossa"
+        single_tag:
+          latest: "Viimeisimmät aiheet tägeillä %{tag}"
+          top: "Suosituimmat aiheet avainsanalla %{tag}"
+          new: "Uudet aiheet avainsanalla %{tag}"
+          unread: "Lukemattomat aiheet avainsanalla %{tag}"
+          unseen: "Näkemättömät aiheet, joihin on merkitty tunniste %{tag}"
+          hot: "Kuumat aiheet avainsanalla %{tag}"
+          posted: "Aiheet, joihin olet kirjoittanut tägillä %{tag}"
+          bookmarks: "Aiheet avainsanalla %{tag}, jotka olet merkinnyt kirjanmerkkeihin"
+          default: "%{filter} aiheet avainsanoilla %{tag}"
         multi_tag:
           default: "Ketjut tunnisteella %{tags}"
+        category_tag:
+          latest: "Viimeisimmät aiheet sivustolla %{category} avainsanoilla %{tag}"
+          top: "Tärkeimmät aiheet sivustolla %{category} avainsanalla %{tag}"
+          new: "Uudet aiheet sivustolla %{category} avainsanalla %{tag}"
+          unread: "Lukemattomat aiheet sivulla %{category} avainsanalla %{tag}"
+          unseen: "Näkemättömät aiheet %{category} -avainsanalla %{tag}"
+          hot: "Kuumat aiheet sivustolla %{category} avainsanalla %{tag}"
+          posted: "Aiheet %{category} -osiossa, joihin olet kirjoittanut tunnisteella %{tag}"
+          bookmarks: "Aiheet sivustolla %{category} avainsanalla %{tag} , jonka olet merkinnyt kirjanmerkkeihin."
+          default: "%{filter} aiheita %{category} tägillä %{tag}"
+        no_tags:
+          all:
+            latest: "Viimeisimmät aiheet ilman avainsanoja"
+            top: "Suosituimmat aiheet ilman avainsanoja"
+            new: "Uudet aiheet ilman avainsanoja"
+            unread: "Lukemattomat aiheet ilman avainsanoja"
+            unseen: "Näkemättömät aiheet ilman avainsanoja"
+            hot: "Kuumat aiheet ilman avainsanoja"
+            posted: "Aiheet, joissa ei ole tunnisteita ja joihin olet julkaissut viestejä"
+            bookmarks: "Aiheet ilman avainsanoja, jotka olet merkinnyt kirjanmerkkeihin"
+            default: "Aiheet ilman avainsanoja"
+          category:
+            latest: "Uusimmat aiheet %{category} ilman avainsanoja"
+            top: "Suosituimmat aiheet %{category} ilman tunnisteita"
+            new: "Uusia aiheita %{category} -ryhmässä ilman avainsanoja"
+            unread: "Lukemattomat aiheet kohteessa %{category} ilman tageja"
+            unseen: "Näkemättömät aiheet kohteessa %{category} ilman tageja"
+            hot: "Kuumat aiheet kohteessa %{category} ilman tageja"
+            posted: "Aiheet kohteessa %{category} ilman tageja ja joihin olet lähettänyt viestejä"
+            bookmarks: "Aiheet %{category} ilman tunnisteita, jotka olet kirjanmerkannut"
+            default: "%{filter} aiheita %{category} ilman tageja"
         categories: "Kaikki alueet"
   admin_js:
     type_to_filter: "Kirjoita suodattaaksesi…"
@@ -4831,32 +4999,106 @@ fi:
         flags:
           title: "Valvonta"
           header_description: "Discoursen liputusjärjestelmä auttaa sinua ja valvojatiimiäsi hallitsemaan sisältöä ja käyttäjien käyttäytymistä sekä pitämään yhteisösi kunnioittavana ja terveenä. Oletusasetukset sopivat useimmille yhteisöille, eikä niitä tarvitse muuttaa. Jos sivustollasi on kuitenkin erityisiä vaatimuksia, voit poistaa tarpeettomat liput käytöstä ja lisätä omia mukautettuja lippuja."
+          keywords: "ilmoita|arvostele|roskapostia|laitonta"
         files:
           title: "Tiedostot"
           header_description: "Asetukset, jotka säätelevät tiedostokoko- ja tyyppirajoituksia, avatarien kokoja ja lähteitä, tiedostojen tallennusta, kuvan laatua ja pakkausta ja muuta"
         legal:
           title: "Oikeudelliset tiedot"
           header_description: "Määritä oikeudelliset asetukset, kuten käyttöehdot, tietosuojakäytäntö, yhteystiedot ja EU-kohtaiset huomioitavat asiat"
+        localization:
+          title: "Lokalisointi"
+          header_description: "Määritä yhteisösi käyttöliittymän kieli ja muut lokalisointivaihtoehdot jäsenillesi"
+          keywords: "maa-asetus|kieli|aikavyöhyke|unicode|ltr"
         login_and_authentication:
           title: "Kirjautuminen ja todennus"
           header_description: "Määritä käyttäjien kirjautumis- ja todennustavat, salatunnukset ja avaimet, OAuth2-palveluntarjoajat ja muuta"
         logo:
+          title: "Logo"
+          header_description: "Määritä koko sivuston logot ja kuvakkeet"
           form:
+            saved: "Logon asetukset tallennetaan."
             logo:
               title: "Ensisijainen logo"
+              description: "Näkyy sivuston ylhäällä navigointi sekä ylhäällä sivuston sähköposti-ilmoituksia."
+              help_text: "Suositeltava koko on 600 x 80 pikseliä."
+            logo_dark:
+              required: "Käytetäänkö tummassa tilassa eri logoa?"
+              title: "Ensisijainen logo tumma"
+              help_text: "Suositeltava koko on 600 x 80 pikseliä."
+            large_icon:
+              title: "Neliökuvake"
+              description: "Logon neliönmuotoinen versio näkyy hallintapaneelin yläosassa ja toimii myös mobiilisovelluksen aloitusnäytön logona."
+              help_text: "Suositeltava koko on 512 x 512 pikseliä."
+            square_icon_dark:
+              required: "Käytetäänkö tummassa tilassa eri neliökuvaketta?"
+              title: "Tumma neliökuvake"
+              help_text: "Suositeltava koko on 512 x 512 pikseliä."
+            favicon:
+              title: "Favicon"
+              description: "Logo näkyy kuvakkeena selaimen välilehdessä ja selaimen suosikeissa/kirjanmerkeissä."
+            logo_small:
+              title: "Pieni logo"
+              description: "Pieni logokuva sivustosi vasemmassa yläkulmassa, näkyvissä vierittäessäsi alaspäin. Jos se jätetään tyhjäksi, näyttöön tulee kotikuvio."
+              help_text: "Suositeltava koko on 120 x 120 pikseliä."
+            logo_small_dark:
+              required: "Käytetäänkö tummassa tilassa eri pientä logoa?"
+              title: "Pieni tumma logo"
+              help_text: "Suositeltava koko on 120 x 120 pikseliä."
             mobile: "Mobiili"
             email: "Sähköpostiosoite"
+            social_media: "Sosiaalinen media"
+            mobile_logo:
+              title: "Mobiili logo"
+              description: "Logo, jota käytetään sivustosi mobiiliversiossa. Jos se jätetään tyhjäksi, käytetään `logo`-asetuksen mukaista kuvaa."
+              help_text: "Käytä leveää suorakaiteen muotoista kuvaa, jonka korkeus on 120 ja kuvasuhde on suurempi kuin 3:1."
+            mobile_logo_dark:
+              required: "Käytätkö toista mobiililogoa tummassa tilassa?"
+              title: "Mobiili logo tumma"
+              help_text: "Käytä laajaa suorakaiteen muotoista kuvaa, jonka korkeus on 120 ja kuvasuhde suurempi kuin 3:1."
+            manifest_icon:
+              title: "Manifestin kuvake"
+              description: "Kuva, jota käytetään logona/splash-kuvana Androidissa. Jos jätetään tyhjäksi, käytetään large_icon."
+              help_text: "Suositeltava koko on 512 x 512 pikseliä."
             manifest_screenshots:
+              title: "Manifest-kuvakaappaukset"
               description: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
+            apple_touch_icon:
+              title: "Apple touch -kuvake"
+              description: "Applen kosketuslaitteissa käytetty kuvake. Jos jätetään tyhjäksi, käytetään large_icon."
+              help_text: "Suositeltu koko on 180 x 180 pikseliä. Läpinäkyvää taustaa ei suositella."
+            digest_logo:
+              title: "Digest-logo"
+              description: "Vaihtoehtoinen logokuva, jota käytetään sivustosi sähköpostiyhteenvedon yläosassa. Jos tämä jätetään tyhjäksi, käytetään `logo`-asetuksesta löytyvää kuvaa."
+              help_text: "Käytä laajaa suorakulmiokuvaa. Älä käytä SVG-kuvaa."
             opengraph_image:
+              title: "OpenGraph kuva"
               description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
+            x_summary_large_image:
+              title: "X yhteenveto suuri kuva"
+              description: "X-kortin 'suuri yhteenvetokuva'. Jos tämä jätetään tyhjäksi, tavalliset kortin metatiedot luodaan OpenGraph_image-kuvan avulla, kunhan se ei ole myös .svg-tiedosto."
+              help_text: "Suositeltu koko on vähintään 280 x 150 pikseliä. Älä käytä SVG-kuvaa."
         fonts:
           title: "Fontit"
+          header_description: "Määritä sivustossasi käytettävät kirjasimet, mukaan lukien perusfontti, otsikkofontti ja oletustekstin koko"
           form:
+            more_fonts: "Lisää kirjasimia"
+            fewer_fonts: "Vähemmän kirjasimia"
+            saved: "Fonttiasetukset on tallennettu."
+            base_font:
+              title: "Perusfontti"
             heading_font:
               title: "Otsikon fontti"
+            default_text_size:
+              title: "Tekstin oletuskoko"
+              description: "Tätä kokoa voi kukin käyttäjä myöhemmin säätää omien mieltymystensä mukaan."
           backfill_modal:
+            title: "Otetaanko käyttöön uudet oletustekstiasetukset?"
+            description:
+              one: "Olet päivittänyt oletustekstin koon. Haluatko soveltaa tätä muutosta %{count} olemassa olevaan käyttäjään?"
+              other: "Olet päivittänyt oletustekstin koon. Haluatko soveltaa tätä muutosta %{count} olemassa oleviin käyttäjiin?"
             modal_yes: "Kyllä"
+            modal_no: "Ei, sovelletaan vain jatkossa"
         navigation:
           title: "Navigointi"
           header_description: "Määritä sivustosi navigointilinkit ja valikon kohteet. Tämä sisältää ensisijaisen navigointivalikon sijainnin ja toiminnan, etusivun yläosassa olevat pikalinkit sekä ylläpitäjän sivupalkin"
@@ -4870,9 +5112,11 @@ fi:
           title: "Rajat"
           header_description: "Määritä, kuinka usein käyttäjät voivat tehdä tiettyjä toimintoja, kuten luoda ketjuja, lähettää viestejä ja lähettää vastauksia"
         search:
+          title: "Hakuasetukset"
           header_description: "Määritä kiinan ja japanin kielten hakuasetukset, mukaan lukien lokikirjaus ja tokenointi"
         search_everything:
           title: "Hae"
+          header_description: "Täältä voit etsiä mitä vain ylläpidon käyttöliittymästä. Voit suodattaa tulokset alla, ja asetuksesi muistetaan. Avataksesi tämän haun missä tahansa hallintaliittymässä paina %{shortcutHTML}."
         security:
           title: "Tietoturva"
           header_description: "Määritä suojausasetukset, mukaan lukien kaksivaiheinen tunnistus, valvojan oikeudet ja sisällön suojauskäytännöt"
@@ -4890,14 +5134,19 @@ fi:
           header_description: "Täällä hallitaan kaikkia ryhmäpohjaisia sovellusten käyttöoikeuksia, joilla hallitaan pääsyä Discoursen eri ominaisuuksiin"
         dashboard:
           title: "Hallintapaneeli"
+          header_description: "Hallintapaneeli tarjoaa tilannekuvan yhteisösi terveydestä, mukaan lukien liikenne, käyttäjien toiminta ja muut keskeiset mittarit"
         users:
           title: "Käyttäjiä"
+          header_description: "Tarkastele ja hallitse käyttäjiä, lähetä kutsuja ja vie käyttäjätietoja"
         groups:
           title: "Ryhmät"
+          header_description: "Luo ja hallitse ryhmiä, aseta ryhmän käyttöoikeuksia ja tarkastele ryhmän toimintaa ja saapuneet-kansioita"
         site_settings:
           title: "Kaikki sivustoasetukset"
+          header_description: "Määritä kaikki Discourse sivuston asetukset muokata sen ulkonäköä, toiminnallisuutta ja käyttökokemusta"
         whats_new:
           title: "Mitä uutta?"
+          header_description: "Pysy ajan tasalla Discoursen uusimmista ominaisuuksista ja parannuksista"
           keywords: "muutokset|ominaisuus|julkaisu"
         backups:
           title: "Varmuuskopiot"
@@ -4905,19 +5154,44 @@ fi:
           sub_pages:
             logs:
               title: "Lokit"
+              header_description: "Tarkastele ja hallinnoi varmuuskopioiden, palautusten ja latausten lokeja"
         reports:
           title: "Raportit"
           header_description: "Raportit ovat tehokas työkalu, joka auttaa sinua ymmärtämään, mitä sivustollasi tapahtuu. Niiden avulla voit tunnistaa trendejä, havaita ongelmia ja tehdä päätöksiä tietojen perusteella."
+          sub_pages:
+            settings:
+              title: "Hallintapaneelin asetukset"
         badges:
           title: "Kunniamerkit"
           header_description: "Kunniamerkit palkitsevat käyttäjiä heidän toiminnastaan, panoksestaan ja saavutuksistaan. Tämä auttaa tunnustamaan, validoimaan ja kannustamaan positiivista käyttäytymistä ja aktiivisuutta yhteisössä"
+        analytics:
+          title: "Analytiikka & SEO"
+          header_description: "Paranna sivuston näkyvyyttä hakukoneiden ja konfiguroida miten voit seurata sivuston kävijöitä"
+          keywords: "haku|google|sivukartta"
+        interface:
+          title: "Käyttöliittymä ja asettelu"
+          header_description: "Muokkaa sivuston yleisen asettelun ja käyttöliittymän tietoja"
+          keywords: "splash"
         content:
+          title: "Sisältö"
+          header_description: "Määritä miten aiheita ja viestejä hallitaan, ja muokkaa sisältöjen luontikokemusta jäsenillesi"
+          keywords: "aiheet|viestit|kategoriat|tunnisteet"
           sub_pages:
+            categories_and_tags:
+              title: "Kategoriat ja tagit"
+            sharing:
+              title: "Jakaminen"
             posts_and_topics:
               title: "Viestit ja ketjut"
+            stats_and_thresholds:
+              title: "Tilastot ja kynnysarvot"
         permalinks:
           title: "Pysyvät linkit"
           header_description: "Aseta uudelleenohjauksia URL-osoitteille, joita sivusto ei tunne"
+        user_defaults:
+          title: "Käyttäjän oletusasetukset"
+          header_description: "Määritä oletusarvot asetuksille, jotka vaikuttavat käyttäjiin, määrittämällä heidän perehdytyskokemuksensa"
+          keywords: "käyttäjät|perehdytys|uudet"
         user_fields:
           title: "Käyttäjäkentät"
           header_description: "Luo mukautettuja käyttäjäkenttiä kerätäksesi lisätietoja yhteisösi jäsenistä. Voit valita, mitä tietoja vaaditaan rekisteröitymisen yhteydessä, mitä profiileissa näytetään ja mitä käyttäjät voivat päivittää."
@@ -4926,6 +5200,7 @@ fi:
           header_description: "Tarkkaillut sanat ovat valvontatyökaluja, jotka voivat suorittaa useita erilaisia toimintoja, kuten estää, sensuroida, linkittää tai liputtaa tiettyjä sanoja sisältäviä viestejä"
         color_palettes:
           title: "Väripaletit"
+          header_description: "Väripaletit määrittelevät ydinvärit, joita käytetään sivuston käyttöliittymässä, kun taas teemat voivat tarjota lisää muotoilua, asetteluja ja komponentteja. Molemmat voivat työskennellä yhdessä luoda sivuston ainutlaatuinen ulkoasu ja tunne, ja molemmat voidaan asettaa saataville käyttäjille valita mieltymys."
         emoji:
           title: "Emojit"
           header_description: "Lisää uusi emoji, joka on kaikkien käytettävissä. Valitse useita tiedostoja luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan."
@@ -4935,29 +5210,55 @@ fi:
         components:
           title: "Komponentit"
           header_description: "Komponentit ovat pienempiä mukautuksia, joita voidaan lisätä teemoihin foorumin ulkoasun tyylin tiettyjen elementtien muuttamiseksi"
+          keywords: "teema|komponentti|laajennus"
+        themes_and_components:
+          title: "Teemat ja komponentit"
+          header_description: "Mukauta Discourse-sivustosi teemoilla ja komponenteilla tarpeidesi mukaan"
+          keywords: "teema | komponentti | laajennus | mukauttaa"
+        site_admin:
+          title: "Sivuston ylläpitäjä"
+          header_description: "Määritä eri asetukset, jotka liittyvät sivuston hallintaan"
+          keywords: "löydä|käynnistä|sovellukset"
         site_texts:
           title: "Sivuston tekstit"
+          header_description: "Mukauta kaikki Discourse-ohjelmassa käytetty teksti vastaamaan yhteisön ääntä ja sävyä."
         email:
+          title: "Sähköpostiasetukset"
+          header_description: "Määritä jäsenillesi lähetettävien sähköpostien asetukset"
+          keywords: "tiivistelmä|peruuta tilaus|sähköposti|smtp|mailgun|sendgrid|esikatselun yhteenveto"
           sub_pages:
+            server_settings:
+              title: "Palvelimen asetukset"
+              header_description: "Määritä asetukset sähköposteille, jotka lähetetään jäsenillesi"
             preview_summary:
               title: "Esikatsele yhteenveto"
               header_description: "Esikatsele ei-aktiivisille käyttäjille lähetettyjen yhteenvetosähköpostien sisältöä"
             advanced_test:
               title: "Edistynyt testi"
+              header_description: "Katso, miten Discourse käsittelee vastaanotettuja sähköposteja"
             templates:
               title: "Mallit"
+              header_description: "Mukauta sähköpostien luomiseen käytettyjä malleja"
         email_logs:
+          title: "Sähköpostilokit"
+          header_description: "Näytä lokit sivustosi lähettämistä sähköposteista"
+          keywords: "lähetetty|ohitettu|palautettu|vastaanotettu|hylätty|sähköpostilokit"
           sub_pages:
             sent:
               title: "Lähetetyt"
+              header_description: "Tarkastele lähetettyjen sähköpostiviestien lokia"
             skipped:
               title: "Ohitettu"
+              header_description: "Näytä loki ohitetuista sähköposteista"
             bounced:
               title: "Toimitus epäonnistui"
+              header_description: "Näytä palautuneiden sähköpostien loki"
             received:
               title: "Vastaanotetut"
+              header_description: "Tarkastele vastaanotettujen sähköpostiviestien lokia"
             rejected:
               title: "Hylätty"
+              header_description: "Tarkastele lokia hylätyistä sähköposteista"
         email_appearance:
           title: "Ulkoasu"
           header_description: "Mukauta mallia, jossa kaikki HTML-sähköpostit hahmonnetaan, ja muotoile käyttämällä CSS:ää"
@@ -4971,25 +5272,46 @@ fi:
               header_description: "Uuden tilin luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä"
             screened_ips:
               title: "Seulottavat IP:t"
+              header_description: "IP-osoitteet, joita tarkkaillaan. Yksittäiset IP-osoitteet voidaan sallia luetteloon."
             screened_urls:
               title: "Seulottavat URL-osoitteet"
               header_description: "Tässä listatut URL-osoitteet ovat olleet roskapostittajiksi tunnistettujen käyttäjien käytössä"
             search_logs:
               title: "Hakulokit"
+              header_description: "Tarkastele suoritettujen hakujen lokia"
         plugins:
           title: "Asennetut lisäosat"
           header_description: "Kaikki asentamasi Discourse-lisäosat tai lisäosat, jotka kuuluvat esiasennettuina Discourse-isännöintiin, näkyvät tässä luettelossa"
         api_keys:
           title: "API-avaimet"
           header_description: "API-avainten avulla voit integroida turvallisesti Discoursen ulkoisiin järjestelmiin ja automatisoida toimintoja. Ylläpitäjät voivat luoda avaimia tietyillä laajuuksilla hallitakseen pääsyä resursseihin ja arkaluontoisiin tietoihin. Laajuudet rajoittavat toimintoja ja näin ollen parantavat turvallisuutta."
+          keywords: "tunnus|laajuus"
         webhooks:
           title: "Webhookit"
+          header_description: "Webhooksin avulla Discourse voi ilmoittaa ulkoisille palveluille, kun sivustossasi tapahtuu tiettyjä tapahtumia. Kun webhook käynnistetään, POST-pyyntö lähetetään annettuihin URL-osoitteisiin."
+          keywords: "tapahtuma|hyötykuorma|url"
         embedding:
           title: "Upottaminen"
           header_description: "Discourse voi upottaa kommentit ketjusta etäsivustolla Javascript APIn avulla, joka luo iframen"
       search:
+        modal_title: "Hae kaikkea admin-osiossa"
         title: "Hae"
+        instructions: "Etsi kaikki adminissa..."
+        full_page_link: "Siirry koko sivun hakuun"
+        no_results: 'Emme löytäneet mitään vastaavaa hakusanalla "%{filter}".'
+        result_count:
+          one: '%{count} tulos haulle "%{filter}"'
+          other: '%{count} tulosta kohteelle "%{filter}"'
         result_types:
+          page:
+            one: "Sivu"
+            other: "Sivut"
+          report:
+            one: "Raportti"
+            other: "Raportit"
+          setting:
+            one: "Asetus"
+            other: "Asetukset"
           theme:
             one: "Värimaailma"
             other: "Teemat"
@@ -5021,6 +5343,7 @@ fi:
           previous_announcements: "Voit nähdä aiemmat ilmoitukset uusista ominaisuuksista <a href='%{url}' target='_blank'>Discourse Metassa</a>"
           learn_more: "Lisätietoja..."
           experimental: "Kokeellinen"
+          only_experiments: "Näytä vain kokeelliset ominaisuudet"
           experiment_enabled: "Olet ottanut kokeellisen ominaisuuden käyttöön."
           experiment_disabled: "Olet poistanut kokeellisen ominaisuuden käytöstä."
           experiment_toggled_too_fast: "Olet ottanut kokeellisen ominaisuuden käyttöön ja poistanut sen käytöstä liian nopeasti. Odota muutama sekunti ennen kuin yrität uudelleen."
@@ -5165,6 +5488,7 @@ fi:
             automatic_membership_user_count:
               one: "%{count} käyttäjällä on jokin uusista sähköpostiverkkotunnuksista, ja hänet lisätään ryhmään."
               other: "%{count} käyttäjällä on jokin uusista sähköpostiverkkotunnuksista, ja heidät lisätään ryhmään."
+            automatic_membership_user_unknown_count: "Käyttäjät, joilla on jokin uusista sähköpostiverkkotunnuksista, lisätään ryhmään."
             automatic_membership_associated_groups: "Käyttäjät, jotka ovat ryhmän jäseniä tässä luetellussa palvelussa, lisätään automaattisesti tähän ryhmään, kun he kirjautuvat sisään palvelulla."
             primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
           alert:
@@ -5251,6 +5575,7 @@ fi:
           description: |
             Kun käytät näkyvyysalueita, voit rajoittaa API-avaimen tiettyyn joukkoon päätepisteitä. Voit myös määritellä mitkä parametrit ovat sallittuja. Erota eri arvot pilkuilla.
           title: Näkyvyysalueet
+          one_or_more: Vähintään yksi soveltamisala on valittava.
           granular: Rakeinen
           read_only: Vain luku
           global: Yleinen
@@ -5502,6 +5827,7 @@ fi:
           emoji: "Emojit"
           navigation: "Navigointi"
           themes_and_components:
+            title: "Teemat ja komponentit"
             keywords: "tiedostopääte"
           site_texts: "Sivuston tekstit"
       email_settings:
@@ -5538,6 +5864,8 @@ fi:
           community_title: "Yhteisön otsikko"
           community_title_help: "Lyhyt kuvaus, joka näkyy selaimen välilehdellä tärkeimmillä sivuilla, kuten alueissa ja ketjuluetteloissa."
           banner_image: "Bannerikuva"
+          banner_image_help: |
+            Suositeltu: 1100x300px. Muotot: JPG, PNG, SVG (max 10MB).
           contact_information: "Yhteystiedot"
           community_owner: "Yhteisön omistaja"
           community_owner_placeholder: "Matti Meikäläinen"
@@ -5572,13 +5900,20 @@ fi:
           city_for_disputes_help: |
             Määritä kaupunki tähän foorumiin liittyvien oikeudellisten riitojen ratkaisemiseksi.
           extra_groups:
+            heading: "Ryhmälistaus"
+            description: "Lisäryhmät, jotka näytetään Tietoja-sivulla."
             groups: "Ryhmät"
+            order: "Lajittelujärjestys"
+            initial_members: "Laajennetut jäsenet"
+            initial_members_description: "Näytettävien ryhmän jäsenten lukumäärä ennen Näytä lisää -painikkeen lisäämistä."
+            show_description: "Sisällytä kuvaus"
           optional: "(valinnainen)"
           update: "Päivitä"
           toasts:
             general_settings_saved: "Yleiset asetukset tallennettiin"
             contact_information_saved: "Yhteystiedot tallennettiin"
             your_organization_saved: "Organisaatiosi tallennettiin"
+            extra_groups_saved: "Ryhmälistaus tallennettu"
           saved: "tallennettu!"
         flags:
           edit_header: "Muokkaa lippua"
@@ -5603,6 +5938,8 @@ fi:
             post: "viestit"
             chat_message: "chat-viestit"
             enabled: "Ota tämä mukautettu lippu käyttöön tallennuksen jälkeen"
+            create_warning: "Kun mukautettua lippua on käytetty, sitä voidaan poistaa käytöstä tai muokata, mutta sitä ei voi poistaa."
+            edit_warning: "Lipun nimen ja kuvauksen muokkaaminen voi aiheuttaa mahdollisia epäjohdonmukaisuuksia. Kun mukautettua lippua on käytetty, sitä voidaan poistaa käytöstä tai muokata, mutta sitä ei voi poistaa."
             edit_flag: "Muokkaa lippua"
             non_editable: "Et voi muokata tätä lippua, koska se on järjestelmälippu tai sitä on jo käytetty käsittelyjärjestelmässä, mutta voit kuitenkin poistaa sen käytöstä."
             delete_flag: "Poista lippu"
@@ -5627,19 +5964,34 @@ fi:
           install: "Asenna"
           themes:
             title: "Teemat"
+            description: "Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille."
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
+            back: "Takaisin teemoihin"
+            install: "Asenna"
           components:
             title: "Komponentit"
+            description: "Mukautukset, jotka muuttavat foorumisuunnittelun pintaelementtejä tai lisäävät käyttöliittymäominaisuuksia"
+            components_intro: "Asenna uusi komponentti aloittaaksesi tai luo oma alusta alkaen näiden resurssien avulla."
+            new_component: "Uusi komponentti"
+            back: "Takaisin komponentteihin"
             install: "Asenna"
             name: "Nimi"
+            used_on: "Käytetään"
             enabled: "Otettu käyttöön?"
             by_author: "Käyttäjältä %{name}"
             learn_more: "Lue lisää"
             edit: "Muokkaa"
             parent_themes_two: "%{name1} ja %{name2}"
+            parent_themes_three: "%{name1}, %{name2} ja %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} ja %{count} lisää"
+              other: "%{name1}, %{name2}, %{name3} ja %{count} lisää"
+            add_to_theme: "Lisää teemaan"
             preview: "Esikatselu"
+            update: "Päivitä uusimpaan"
             check_update: "Tarkista päivitykset"
+            update_available: "Päivitys saatavilla!"
             export: "Vie"
             convert: "Muunna"
             delete: "Poista"
@@ -5647,7 +5999,15 @@ fi:
             filter_by_all: "Kaikki"
             filter_by_used: "Käytetty"
             filter_by_unused: "Käyttämätön"
+            filter_by_updates_available: "Päivityksiä saatavilla"
+            search_components: "Kirjoita komponentin nimi"
+            new_update_for_component: "Uusi päivitys saatavilla %{name}!"
+            component_up_to_date: '"%{name}" on ajan tasalla.'
+            updated_successfully: '"%{name}" on päivitetty onnistuneesti.'
             delete_confirm: 'Haluatko varmasti poistaa lipun "%{name}"?'
+            deleted_successfully: '"%{name}" on poistettu onnistuneesti.'
+            no_components: "Komponentteja ei ole asennettu."
+            no_components_found: "Yksikään komponentti ei vastaa suodattimia."
             badge_unused: "Käyttämätön"
         user_fields:
           field: "Kenttä"
@@ -5664,11 +6024,18 @@ fi:
           duplicate: "Monista"
           delete: "Poista"
           color_options:
+            title: "Värin asetukset"
             toggle: "Käyttäjän valittavissa"
             toggle_description: "Käyttäjät voivat valita väripaletin"
           colors:
             title: "Värit"
-          delete_confirm: "Poistetaanko tämä väripaletti?"
+          save_changes: "Tallenna muutokset"
+          unsaved_changes: "Sinulla on tallentamattomia muutoksia"
+          copy_of: "Kopio %{name}"
+          copy_created: 'Uusi kopio "%{name}" on luotu'
+          illegal_character_in_color: "Väri saa koostua vain heksadesimaalimerkeistä"
+          invalid_color_length: "Värin on oltava muodossa #rrggbb tai #rgb"
+          delete_confirm: "Haluatko varmasti poistaa tämän väripaletin?"
       plugins:
         title: "Lisäosat"
         name: "Nimi"
@@ -5815,6 +6182,7 @@ fi:
           component_name: "Komponentin nimi"
           themes_intro: "Aloita valitsemalla olemassa oleva teema tai asenna uusi"
           themes_intro_new: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
+          components_intro_new: "Asenna uusi komponentti aloittaaksesi tai luo oma alusta alkaen näiden resurssien avulla."
           themes_intro_img_alt: "Uuden teeman paikkamerkki"
           beginners_guide_title: "Aloittelijan opas Discourse-teemojen käyttämiseen"
           developers_guide_title: "Kehittäjän opas Discourse-teemoihin"
@@ -5841,9 +6209,13 @@ fi:
           preview: "Esikatselu"
           default: "Aktiivinen"
           settings_editor: "Asetuseditori"
+          show_advanced: "Näytä edistyneet"
           is_default: "Teema on käytössä oletuksena"
           user_selectable: "Teema on tarjolla käyttäjille"
           user_selectable_badge_label: "Käyttäjän valittavissa"
+          user_selectable_button_label: "Salli käyttäjien valita"
+          user_selectable_unavailable_button_label: "Tee käyttäjille ei-saatavilla"
+          broken_badge_label: "Rikkinäinen teema"
           color_scheme_user_selectable: "Käyttäjät voivat valita väripaletin"
           auto_update: "Päivitä automaattisesti, kun Discourse päivitetään"
           color_scheme: "Väripaletti"
@@ -5861,7 +6233,10 @@ fi:
           convert_theme_alert_generic: "Haluatko varmasti muuntaa tämän teeman komponentiksi?"
           convert_theme_tooltip: "Muunna teema komponentiksi"
           inactive_themes: "Teemat, jotka eivät käytössä:"
+          set_default_theme: "Aseta aktiiviseksi"
+          default_theme: "Aktiivinen teema"
           set_default_success: "Oletusteemaksi asetettiin %{theme}"
+          setting_was_saved: "Teeman asetus tallennettu"
           install_success: "%{theme} asennettiin onnistuneesti!"
           inactive_components: "Käyttämättömät komponentit:"
           selected:
@@ -5873,6 +6248,7 @@ fi:
           disabled_component_tooltip: "Komponentti ei ole käytössä"
           default_theme_tooltip: "Tämä on sivuston oletusteema"
           updates_available_tooltip: "Teemalle on päivityksiä saatavilla"
+          update_available: "Tarvitsee päivitystä"
           and_x_more:
             one: "ja %{count} muuta."
             other: "ja %{count} muuta."
@@ -5893,6 +6269,9 @@ fi:
           unsaved_parent_themes: "Et ole osoittanut komponenttia millekään teemalle. Haluatko siirtyä eteenpäin?"
           discard: "Hylkää"
           stay: "Jää"
+          css_html: "Mukautettu Koodi"
+          edit_css_html: "Muokkaa Koodia"
+          edit_css_html_help: "Et ole vielä muokannut yhtään koodia."
           delete_upload_confirm: "Poistetaanko ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
           component_on_themes: "Sisällytä komponentti näihin teemoihin"
           included_components: "Sisältää komponentit"
@@ -5931,6 +6310,7 @@ fi:
             error: "Teema poistettiin automaattisesti käytöstä, koska se ei ole yhteensopiva tämän Discourse-version kanssa."
             minimum: "Vaatii Discourse-version %{version} tai uudemman."
             maximum: "Vaatii Discourse-version %{version} tai vanhemman."
+          update_to_latest: "Päivitä uusimpaan"
           check_for_updates: "Tarkista päivitykset"
           updating: "Päivitetään…"
           update_success: "Teeman %{theme} päivitys on valmis"
@@ -5950,16 +6330,33 @@ fi:
           remote_theme_edits: "Jos haluat muokata tätä teemaa, sinun on <a href='%{repoURL}' target='_blank'>lähetettävä muutos sen tietovarastoon</a>"
           repo_unreachable: "Teeman Git-tietovarastoon yhdistäminen epäonnistui. Virheviesti:"
           imported_from_archive: "Tämä teema tuotiin .zip-tiedostosta"
+          settings: "Asetukset"
+          colors: "Värit"
+          unsaved_colors:
+            one: "Sinulla on %{count} tallentamaton väri"
+            other: "Sinulla on %{count} tallentamattomia värejä"
+          unsaved_colors_leave_route_confirmation: "Et ole vielä tallentanut väripaletin muutoksia. Oletko varma, että haluat lähteä?"
+          save_colors: "Tallenna värit"
+          discard_colors: "Hylkää"
+          colors_title: "Värit"
           scss:
             text: "CSS"
+            title: "Mukautetut CSS-säännöt, jotka tukevat SCSS-syntaksia"
+          header:
+            text: "Ennen Otsikkoa"
+            title: "Perus-HTML, joka renderöidään Discourse-otsikon yläpuolelle"
           after_header:
             text: "Yläpalkin jälkeen"
+            title: "PerusHTML, joka  renderöidään Discourse-otsikon alle"
           footer:
             text: "Alatunniste"
+            title: "Perus HTML joka renderöidään  sivun alareunaan"
           embedded_scss:
             text: "Upotettu CSS"
+            title: "CSS, joka sisällytetään kun Discourse kommentit on upotettu toiseen sivustoon"
           embedded_header:
             text: "Upotettu yläpalkki"
+            title: "Perus HTML, joka renderöidään  Discourse-kommenttien yläpuolella, kun se upotetaan toiseen sivustoon."
           color_definitions:
             text: "Värimääritykset"
             title: "Syötä mukautetut värimääritykset (vain kokeneille käyttäjille)"
@@ -5972,6 +6369,15 @@ fi:
               %{example}
 
               Etuliitteen lisääminen CSS-kuvauksiin on erittäin suositeltavaa, jotta vältät ristiriidat lisäosien tai ydinsovelluksen kanssa.
+          head_tag:
+            text: "<head>"
+            title: "HTML-koodi, joka lisätään <head>-merkin loppuun, tuki skriptitunnisteille"
+          body_tag:
+            text: "<body>"
+            title: "HTML-koodi, joka lisätään <body>-merkin loppuun, tuki skriptitunnisteille"
+          js:
+            text: "JS"
+            title: "JavaScript-alkukirjain, joka tukee Emberin 'template tag' -syntaksia."
           scss_color_variables_warning: 'Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta. Suosittelemme käyttämään mukautettuja CSS-ominaisuuksia niiden sijasta. Lue lisää aiheesta <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">tästä oppaasta</a>.'
           scss_warning_inline: "Ydinsovelluksen SCSS-värimuuttujien käyttäminen teemoissa on vanhentunutta."
           all_filter: "Kaikki"
@@ -6012,57 +6418,62 @@ fi:
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"
           copy_name_prefix: "Kopio"
-          delete_confirm: "Poistetaanko tämä väripaletti?"
+          delete_confirm: "Haluatko varmasti poistaa tämän väripaletin?"
           undo: "Kumoa"
           undo_title: "Kumoa muutoksesi tähän väriin viimeisimmän tallennuskerran jälkeen."
           revert: "Palauta"
           revert_title: "Nollaa tämä väri vastaamaan Discoursen oletusväripaletin väriä."
           primary:
             name: "ensisijainen"
-            description: "Useimmat tekstit, kuvakkeet ja reunat."
+            description: "Pääteksti ja kuvakkeet"
           primary-medium:
             name: "primary-medium"
+            description: "Poistettu käytöstä tai mykistetty teksti"
           primary-low-mid:
             name: "primary-low-mid"
+            description: "Reunukset ja hienovaraiset korostukset"
           secondary:
             name: "toissijainen"
-            description: "Pääasiallinen taustaväri ja joidenkin painikkeiden tekstin väri."
+            description: "Päätausta ja jokin painikkeen teksti"
           tertiary:
             name: "kolmassijainen"
-            description: "Linkit, jotkin painikkeet, ilmoitukset ja tehosteväri."
+            description: "Korostus väri (linkit, painikkeet, arvot)"
           quaternary:
             name: "neljässijainen"
-            description: "Valinnaiseen käyttöön teemoissa."
+            description: "Valinnainen teeman korostus"
           header_background:
             name: "yläpalkin tausta"
-            description: "Sivuston yläpalkin taustaväri."
+            description: "Otsikon tausta"
           header_primary:
             name: "yläpalkin ensisijainen"
-            description: "Sivuston yläpalkin tekstit ja kuvakkeet."
+            description: "Otsikon teksti ja kuvakkeet"
           highlight:
             name: "korostus"
-            description: "Korostettujen elementtien, kuten viestien ja ketjujen, taustaväri."
+            description: "Korostetut viestit tai aiheet"
           highlight-high:
             name: "highlight-high"
+            description: "Vahva korostus"
           highlight-medium:
             name: "highlight-medium"
+            description: "Keskisuuri korostus"
           highlight-low:
             name: "highlight-low"
+            description: "Hienovarainen kohokohta"
           danger:
             name: "vaara"
-            description: "Korosteväri toiminnoille, kuten viestien ja ketjujen poistaminen."
+            description: "Virheet ja poiston toiminnot"
           success:
             name: "onnistuminen"
-            description: "Käytetään ilmaisemaan, että toiminto onnistui."
+            description: "Onnistuneet toimet"
           love:
             name: "tykkäys"
-            description: "Tykkäyspainikkeen väri."
+            description: "Tykkää painike"
           selected:
             name: "valittu"
-            description: "Elementtien, kuten luettelon kohteiden, taustaväri, kun ne on valittuja tai aktiivisia."
+            description: "Aktiiviset tai valitut kohteet"
           hover:
             name: "osoitus"
-            description: "Elementtien, kuten luettelon kohteiden, taustaväri, kun niitä osoitetaan tai kohdistus on siirretty niihin näppäimistöllä."
+            description: "Paina tai tarkenna tausta"
           editor:
             light: "Vaalea"
             dark: "Tumma"
@@ -6454,6 +6865,7 @@ fi:
           dropdown: "Pudotusvalikko"
           upload: "Lataa tiedosto"
           multiselect: "Monivalinta"
+          tagchooser: "Tagiryhmän valitsin"
         validations_modal:
           button_title: "Validoinnit"
           modal_title: "Validointivaihtoehdot"
@@ -6499,6 +6911,8 @@ fi:
           toggle_form_template: "lomakemalli käytössä"
           select_template: "Valitse lomakemallit"
           select_template_help: "Lisää/muokkaa lomakemalleja"
+        errors:
+          multiple_tags_not_allowed: 'Et voi valita lisää tageja "%{tag_name}". Välttääksesi ongelmat, käytä lomakemallia'
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
@@ -6744,6 +7158,8 @@ fi:
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
         delete_confirm_title: "Oletko varma, että haluat poistaa tämän käyttäjän? Käyttäjä poistetaan pysyvästi!"
         delete_confirm: "On yleensä parempi anonymisoida käyttäjät poistamisen sijaan; näin vältät sisällön poistamisen olemassa olevista keskusteluista."
+        delete_and_block: "Poista käyttäjä ja estä heidän sähköposti- ja IP-osoitteensa"
+        delete_dont_block: "Poista käyttäjä"
         deleting_user: "Poistetaan käyttäjää…"
         deleted: "Käyttäjä poistettiin."
         delete_failed: "Käyttäjän poistanen ei onnistunut. Varmista, että kaikki käyttäjän viestit on poistettu."
@@ -6921,6 +7337,15 @@ fi:
       site_settings:
         title: "Sivustoasetukset"
         description: "Määritä Discourse-sivustosi asetukset muokataksesi sen ulkoasua, toimintoja ja käyttökokemusta."
+        discard:
+          one: "Hylkää muutos"
+          other: "Hylkää muutokset"
+        save:
+          one: "Tallenna muutos"
+          other: "Tallenna kaikki muutokset"
+        dirty_banner:
+          one: "Sinulla on <b>%{count}</b> tallentamaton muutos"
+          other: "Sinulla on <b>%{count}</b> tallentamattomia muutoksia"
         emoji_list:
           invalid_input: "Emoji-luettelossa tulisi olla vain kelvollisia emojien nimiä, esim. hugs"
           add_emoji_button:

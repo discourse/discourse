@@ -891,6 +891,16 @@ class UserNotifications < ActionMailer::Base
       @([#{alnum}_])                   
     /ux
 
-    post.cooked.gsub!(mention_regex) { |match| user.name ? "@#{user.name}" : match }
+    usernames = post.cooked.scan(mention_regex).flatten.compact.uniq
+
+    users = User.where(username: usernames).index_by(&:username)
+
+    post
+      .cooked
+      .gsub(mention_regex) do
+        username = Regexp.last_match[1] || Regexp.last_match[2]
+        user = users[username]
+        user&.name ? "@#{user.name}" : "@#{username}" # fallback to original mention
+      end
   end
 end

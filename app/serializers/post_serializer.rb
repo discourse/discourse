@@ -99,7 +99,8 @@ class PostSerializer < BasicPostSerializer
              :post_localizations_count,
              :locale,
              :is_localized,
-             :language
+             :language,
+             :localization_outdated
 
   def initialize(object, opts)
     super(object, opts)
@@ -671,15 +672,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def raw
-    if ContentLocalization.show_translated_post?(object, scope)
-      object.get_localization(I18n.locale)&.raw || object.raw
-    else
-      object.raw
-    end
+    object.raw
   end
 
   def include_locale?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 
   def is_localized
@@ -687,7 +684,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_is_localized?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 
   def language
@@ -695,7 +692,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_language?
-    SiteSetting.experimental_content_localization && object.locale.present?
+    SiteSetting.content_localization_enabled && object.locale.present?
+  end
+
+  def localization_outdated
+    object.has_localization? && object.get_localization.post_version != object.version
+  end
+
+  def include_localization_outdated?
+    include_is_localized? && is_localized
   end
 
   private

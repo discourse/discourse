@@ -325,7 +325,6 @@ fr:
       s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre « %{setting_name} »."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour « s3_upload_bucket » et « s3_backup_bucket ». Choisissez un autre bucket ou utilisez un chemin d'accès différent pour chaque bucket."
       secure_uploads_requirements: "Les téléversements S3 et les ACL S3 doivent être activés avant d'activer les téléversements sécurisés."
-      s3_use_acls_requirements: "Vous devez activer les ACL S3 lorsque les téléversements sécurisés sont activés."
       share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque les connexions locales sont désactivées."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Vous ne pouvez pas appliquer 2FA si DiscourseConnect est activé."
@@ -611,31 +610,9 @@ fr:
     until_posts:
       one: "%{count} message"
       other: "%{count} messages"
-    avatar: |
-      ### Avez-vous pensé à une photo de profil ?
-
-      Vous avez publié quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous, ce n'est qu'une lettre.
-
-      Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et ajouter une photo qui vous représente ?
-
-      Il est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
-    sequential_replies: |
-      ### Pensez à répondre à plusieurs messages en même temps
-
-      Plutôt que d'écrire plusieurs messages consécutifs dans un même sujet, pensez à écrire une seule réponse contenant des citations ou des mentions faisant référence à des messages précédents.
-
-      Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
-
-      Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
     get_a_room:
       one: Vous avez répondu une fois à @%{reply_username}, saviez-vous que vous pouvez lui envoyer un message privé à la place ?
       other: Vous avez répondu %{count} fois à @%{reply_username}, saviez-vous que vous pouvez lui envoyer des messages privés à la place ?
-    reviving_old_topic: |
-      ### Relancer ce sujet ?
-
-      La dernière réponse à ce sujet remonte à **%{time_ago}**. Votre réponse remettra ce sujet en tête de liste et provoquera l'envoi d'une notification à tous les intervenants qui y ont pris part auparavant.
-
-      Voulez-vous vraiment continuer cette ancienne conversation ?
   activerecord:
     attributes:
       category:
@@ -1692,7 +1669,7 @@ fr:
     x_summary_large_image: "Carte Twitter « Summary Card with Large Image » (sa taille doit être d'au moins 280 en largeur et d'au moins 150 en hauteur et ne peut pas être au format .svg). Si vous laissez ce champ vide, les métadonnées normales de carte sont générées à l'aide d'« opengraph_image » tant que celle-ci n'est pas au format .svg également."
     notification_email: "L'adresse e-mail utilisée pour envoyer les e-mails systèmes essentiels et affichée dans le champ « De ». Le nom de domaine spécifié doit comprendre les informations SPF, DKIM et PTR inversé correctement renseignées pour que l'e-mail arrive à destination."
     email_custom_headers: "Une liste délimitée par des barres verticales d'en-têtes d'e-mail"
-    email_subject: "Format du sujet personnalisable pour les e-mails normaux. Voir <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Format du sujet personnalisable pour les e-mails normaux. Voir <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Donne plus d'informations aux utilisateurs concernant la raison pour laquelle ils ne peuvent pas accéder à ce sujet en particulier. Note : cela est moins sécurisé car les utilisateurs sauront si une URL pointe vers un sujet valide ou non."
     enforce_second_factor: "Demandez aux utilisateurs d'activer l'authentification à deux facteurs avant de pouvoir accéder à l'interface utilisateur de Discourse. Ce paramètre n'affecte pas l'authentification de l'API ou du « fournisseur DiscourseConnect ». Si le paramètre enforce_second_factor_on_external_auth est activé, les utilisateurs ne pourront pas se connecter avec des fournisseurs d'authentification externes après avoir configuré l'authentification à deux facteurs."
     enforce_second_factor_on_external_auth: "Exigez des utilisateurs qu'ils utilisent l'authentification à deux facteurs à chaque connexion. Lorsque cette option est activée, elle empêche les utilisateurs de se connecter à l'aide de méthodes d'authentification externes telles que les connexions via les réseaux sociaux si l'authentification à deux facteurs est activée. En cas de désactivation, les utilisateurs n'auront qu'à confirmer leur authentification à deux facteurs lorsqu'ils se connecteront à l'aide d'un nom d'utilisateur et d'un mot de passe. Consultez également le paramètre « enforce_second_factor »."
@@ -1761,7 +1738,6 @@ fr:
     blocked_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être indexés par Discourse"
     allowed_internal_hosts: "Une liste de domaines internes que Discourse peut indexer en sécurité pour les Onebox et autres"
     allowed_onebox_iframes: "Liste de domaines dans l'attribut « src » des iframes qui sont autorisés dans les prévisualisations Onebox. Le caractère « * » autorise tous les moteurs Onebox par défaut."
-    allowed_iframes: "Une liste de préfixes d'URL iframe src que Discourse peut autoriser en toute sécurité dans les publications"
     allowed_crawler_user_agents: "Les agents utilisateurs des robots d'indexation qui sont autorisés à accéder au site. ATTENTION : CE PARAMÈTRE BLOQUERA TOUS LES ROBOTS D'INDEXATION NON LISTÉS ICI !"
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
     slow_down_crawler_user_agents: 'Agents utilisateurs des robots d''indexation Web dont le débit doit être limité, comme configuré dans le paramètre « slow down crawler rate ». Chaque valeur doit comporter au moins 3 caractères.'
@@ -1885,7 +1861,6 @@ fr:
     s3_endpoint: "La destination peut être modifiée pour envoyer les sauvegardes vers un service compatible avec S3, par exemple DigitalOcean Spaces ou Minio. ATTENTION : laisser vide si vous utilisez AWS S3."
     s3_configure_tombstone_policy: "Activer la suppression automatique des fichiers non utilisés. IMPORTANT : en cas de désactivation, aucun espace disque ne sera récupéré après la suppression des fichiers."
     s3_disable_cleanup: "Empêcher la suppression des anciennes sauvegardes sur S3 lorsqu'il y a plus de sauvegardes que le maximum autorisé."
-    s3_use_acls: "AWS recommande de ne pas utiliser d'ACL sur les compartiments S3 ; si vous suivez ce conseil, décochez cette option. Cela doit être activé si vous utilisez des téléchargements sécurisés."
     enable_direct_s3_uploads: "Permet le téléversement direct en plusieurs parties vers Amazon S3. Consultez https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 pour obtenir plus de détails."
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si cette option est désactivée, seule la base de données sera sauvegardée."
@@ -2219,12 +2194,10 @@ fr:
     max_notifications_per_user: "Volume maximal de notifications par utilisateur. Si ce seuil est dépassé, les notifications les plus anciennes seront supprimées. Applicable chaque semaine. La valeur 0 permet de désactiver cette fonction."
     allowed_user_website_domains: "Le site Web de l'utilisateur sera vérifié par rapport à ces domaines. Liste délimitée par des barres verticales."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrière-plans de profil."
-    sequential_replies_threshold: "Nombre de messages consécutifs qu'un utilisateur peut publier dans un sujet avant d'être averti d'avoir publié trop de réponses consécutives."
     get_a_room_threshold: "Nombre de messages qu'un utilisateur doit envoyer à la même personne dans un même sujet avant de recevoir un avertissement."
     dont_feed_the_trolls_threshold: "Nombre de signalements émis par d'autres utilisateurs avant d'être avertis."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
     dominating_topic_minimum_percent: "Quel pourcentage de messages un utilisateur doit publier dans un sujet avant d'être averti et invité à laisser la communauté répondre."
-    disable_avatar_education_message: "Désactiver le message incitant à changer l'avatar."
     pm_warn_user_last_seen_months_ago: "Lors de la création d'un nouveau message direct, avertissez les utilisateurs lorsque le destinataire cible n'a pas été vu il y a plus de n mois."
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets sans catégorie dans les listes de sujets."
     header_dropdown_category_count: "Nombre de catégories qui peuvent être affichées dans le menu déroulant de l'en-tête."
@@ -2255,7 +2228,6 @@ fr:
     show_time_gap_days: "Si deux messages sont publiés avec ce nombre de jours d'écart, afficher cette durée dans le sujet."
     short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse cette valeur, la barre de progression affichera uniquement le nombre de messages actuel. Si vous modifiez la largeur de la barre de progression, vous devrez peut-être modifier cette valeur."
     default_code_lang: "Coloration syntaxique par défaut du langage de programmation appliquée aux blocs de code markdown (auto, text, ruby, python, etc.). Cette valeur doit également être présente dans le paramètre de site « highlighted languages »."
-    warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse remonte à plusieurs jours, un avertissement sera affiché. Désactivez la fonctionnalité en indiquant 0."
     autohighlight_all_code: "Appliquez la coloration syntaxique aux blocs &lt;code&gt; créés en HTML, même s'ils ne spécifient pas de langue. Pour configurer des blocs de code créés par Markdown, utilisez le paramètre « default code lang »."
     highlighted_languages: "Règles de surlignage de la syntaxe incluses. (Attention : inclure trop de langues peut avoir un impact sur les performances). Consultez <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pour obtenir une démonstration"
     show_copy_button_on_codeblocks: "Afficher un bouton dans les blocs de mise en forme de type « code » permettant de copier le contenu du bloc vers le presse-papier de l'utilisateur."

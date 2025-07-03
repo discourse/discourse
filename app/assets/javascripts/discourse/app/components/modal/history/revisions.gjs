@@ -10,6 +10,7 @@ import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { i18n } from "discourse-i18n";
 
 function tagClasses(tagChanges, state, className) {
   return (tagChanges || []).reduce((classMap, tagChange) => {
@@ -42,12 +43,47 @@ export default class Revisions extends Component {
     return tagClasses(this.get("currentTagChanges"), "inserted", "diff-ins");
   }
 
+  get previousLocale() {
+    return (
+      this.get("model.locale_changes.previous") ||
+      i18n("post.revisions.locale.no_locale_set")
+    );
+  }
+
+  get currentLocale() {
+    return (
+      this.get("model.locale_changes.current") ||
+      i18n("post.revisions.locale.locale_removed")
+    );
+  }
+
   <template>
     <div
       id="revisions"
       data-post-id={{@model.post_id}}
       class={{@hiddenClasses}}
     >
+      {{#if @model.locale_changes}}
+        <div class="row revision__locale">
+          <div class="revision-content">
+            <div class={{if @model.locale_changes.previous "diff-del"}}>
+              {{icon "globe"}}
+              {{this.previousLocale}}
+            </div>
+          </div>
+
+          {{#if (or @mobileView (eq @viewMode "inline"))}}
+            &rarr;&nbsp;
+          {{/if}}
+
+          <div class="revision-content">
+            <div class={{if @model.locale_changes.current "diff-ins"}}>
+              {{icon "globe"}}
+              {{this.currentLocale}}
+            </div>
+          </div>
+        </div>
+      {{/if}}
       {{#if @model.title_changes}}
         <div class="row">
           <h2 class="revision__title">{{htmlSafe @titleDiff}}</h2>

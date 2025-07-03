@@ -156,12 +156,10 @@ registerIconRenderer({
     const id = escape(handleIconId(icon));
     let html = `<svg class='${escape(iconClasses(icon, params))} svg-string'`;
 
-    if (params.label) {
+    if (params["aria-label"]) {
+      html += ` aria-hidden='false' aria-label='${escape(params["aria-label"])}'`;
+    } else {
       html += " aria-hidden='true'";
-    } else if (params["aria-label"]) {
-      html += ` aria-hidden='false' aria-label='${escape(
-        params["aria-label"]
-      )}'`;
     }
     html += ` xmlns="${SVG_NAMESPACE}"><use href="#${id}" /></svg>`;
     if (params.label) {

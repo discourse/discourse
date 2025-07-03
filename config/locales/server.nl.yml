@@ -325,7 +325,6 @@ nl:
       s3_backup_requires_s3_settings: "Je kunt S3 niet als back-uplocatie gebruiken voordat je een '%{setting_name}' hebt opgegeven."
       s3_bucket_reused: "Je kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
       secure_uploads_requirements: "S3-uploads en S3-ACL's moeten zijn ingeschakeld voordat beveiligde uploads worden ingeschakeld."
-      s3_use_acls_requirements: "Je moet S3-ACL's hebben ingeschakeld wanneer beveiligde uploads worden ingeschakeld."
       share_quote_facebook_requirements: "Je moet een Facebook-app-ID instellen om het delen van citaten in te schakelen voor Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Je kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Je kunt 2FA niet afdwingen als DiscourseConnect is ingeschakeld."
@@ -611,31 +610,9 @@ nl:
     until_posts:
       one: "%{count} bericht"
       other: "%{count} berichten"
-    avatar: |
-      ### Wat dacht je van een afbeelding voor je account?
-
-      Je hebt enkele topics en antwoorden geplaatst, maar je profielafbeelding is niet zo uniek als jijzelf, het is maar een letter.
-
-      Heb je overwogen **[je gebruikersprofiel te bezoeken](%{profile_path})** en een afbeelding te uploaden die jou weerspiegelt?
-
-      Het volgen van discussies en vinden van interessante mensen in conversaties is makkelijker wanneer iedereen een unieke profielafbeelding heeft!
-    sequential_replies: |
-      ### Overweeg meerdere berichten tegelijk te beantwoorden
-
-      Overweeg één antwoord dat citaten uit eerdere berichten of @naam-verwijzingen bevat in plaats van verschillende antwoorden achter elkaar te plaatsen in een topic.
-
-      Je kunt je eerdere antwoord bewerken om een citaat toe te voegen door tekst te markeren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
-
-      Het is voor iedereen makkelijker om topics te lezen die minder, maar uitgebreidere antwoorden bevatten dan met veel kleine, individuele antwoorden.
     get_a_room:
       one: Je hebt één keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
       other: Je hebt %{count} keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
-    reviving_old_topic: |
-      ### Dit topic nieuw leven inblazen?
-
-      Het laatste antwoord op dit topic was **%{time_ago}**. Je antwoord zal het topic naar de bovenkant van de bijbehorende lijst verplaatsen en iedereen die eerder bij de conversatie was betrokken op de hoogte brengen.
-
-      Weet je zeker dat je deze oude conversatie wilt voortzetten?
   activerecord:
     attributes:
       category:
@@ -1692,7 +1669,7 @@ nl:
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_custom_headers: "Een lijst gescheiden door pijpsymbolen van aangepaste e-mailheaders"
-    email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     enforce_second_factor: "Verplicht gebruikers om tweeledige verificatie in te schakelen voordat ze toegang krijgen tot de Discourse-interface. Deze instelling heeft geen invloed op verificatie via API of 'DiscourseConnect-provider'. Als enforce_second_factor_on_external_auth is ingeschakeld, kunnen gebruikers zich niet aanmelden met externe verificatieproviders nadat ze tweeledige verificatie hebben ingesteld."
     enforce_second_factor_on_external_auth: "Verplicht gebruikers om altijd tweeledige verificatie te gebruiken. Als dit is ingeschakeld, verhindert dit dat gebruikers zich aanmelden met externe verificatiemethoden zoals sociale aanmelding als ze tweeledige verificatie hebben ingeschakeld. Als dit is uitgeschakeld, hoeven gebruikers hun tweeledige verificatie alleen te bevestigen als ze zich aanmelden met een gebruikersnaam en wachtwoord. Zie ook de instelling 'enforce_second_factor'."
@@ -1761,7 +1738,6 @@ nl:
     blocked_ip_blocks: "Een lijst van private IP-blokken die nooit door Discourse mogen worden verkend"
     allowed_internal_hosts: "Een lijst van interne hosts die Discourse veilig kan verkennen voor oneboxing en andere doeleinden"
     allowed_onebox_iframes: "Een lijst van iframe-src-domeinen die zijn toegestaan via Onebox-insluitingen. `*` staat alle standaard Onebox-engines toe."
-    allowed_iframes: "Een lijst van bron-URL-voorvoegsels voor iframes die Discourse veilig kan toestaan in berichten"
     allowed_crawler_user_agents: "Useragents van webcrawlers die toegang tot de website dienen te hebben. WAARSCHUWING! INSTELLEN HIERVAN BLOKKEERT ALLE CRAWLERS DIE HIER NIET WORDEN VERMELD!"
     blocked_crawler_user_agents: "Uniek hoofdletterongevoelig woord in de useragent-string waarmee webcrawlers worden herkend die geen toegang tot de website mogen hebben. Niet van toepassing als toelatingslijst is opgegeven."
     slow_down_crawler_user_agents: 'Useragents van webcrawlers waarvan de snelheid moet worden beperkt, zoals geconfigureerd in de instelling ''crawlersnelheid vertragen''. Elke waarde moet minimaal 3 tekens lang zijn.'
@@ -1885,7 +1861,6 @@ nl:
     s3_endpoint: "Het eindpunt kan worden gewijzigd voor back-ups van een met S3 compatibele dienst, zoals DigitalOcean Spaces of Minio. WAARSCHUWING: laat dit leeg als je AWS S3 gebruikt."
     s3_configure_tombstone_policy: "Automatisch verwijderingsbeleid voor tombstone-uploads inschakelen. BELANGRIJK: wanneer uitgeschakeld, wordt geen ruimte vrijgemaakt na het verwijderen van uploads."
     s3_disable_cleanup: "Verwijderen van oude back-ups van S3 voorkomen als er meer back-ups zijn dan maximaal toegestaan."
-    s3_use_acls: "AWS raadt aan om geen ACL's te gebruiken op S3-buckets. Als je dit advies opvolgt, schakel deze optie dan uit. Dit moet zijn ingeschakeld als je beveiligde uploads gebruikt."
     enable_direct_s3_uploads: "Maakt directe meerdelige uploads naar Amazon S3 mogelijk, zie https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 voor meer informatie."
     backup_time_of_day: "Tijdstip (UTC) waarop de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads opnemen in geplande back-ups. Wanneer uitgeschakeld, wordt alleen een back-up van de database gemaakt."
@@ -2219,12 +2194,10 @@ nl:
     max_notifications_per_user: "Maximale aantal meldingen per gebruiker. Als dit aantal wordt overschreden, worden oude meldingen verwijderd. Wekelijks afgedwongen. Stel dit in op 0 om uit te schakelen."
     allowed_user_website_domains: "Website van gebruiker wordt op deze domeinen gecontroleerd. Lijst gescheiden door pijpsymbolen."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
-    sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat deze aan te veel opeenvolgende antwoorden wordt herinnerd."
     get_a_room_threshold: "Aantal berichten dat een gebruiker aan dezelfde persoon in hetzelfde topic moet richten voordat deze wordt gewaarschuwd."
     dont_feed_the_trolls_threshold: "Aantal markeringen van andere gebruikers voordat er wordt gewaarschuwd."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobielvriendelijk thema, met de mogelijkheid om naar de volledige website over te schakelen. Schakel dit uit als je een eigen stylesheet wilt gebruiken dat volledig responsief is."
     dominating_topic_minimum_percent: "Het percentage berichten dat een gebruiker in een topic moet maken voordat deze aan het te veel domineren van een topic wordt herinnerd."
-    disable_avatar_education_message: "Educatieve boodschap voor het wijzigen van avatar uitschakelen."
     pm_warn_user_last_seen_months_ago: "Waarschuw gebruikers bij het maken van een nieuw PB wanneer de doelontvanger meer dan n maanden niet is gezien."
     suppress_uncategorized_badge: "De badge voor ongecategoriseerde topics niet in topiclijsten weergeven."
     header_dropdown_category_count: "Het aantal categorieën dat in het header-vervolgkeuzemenu kan worden weergegeven."
@@ -2255,7 +2228,6 @@ nl:
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
     short_progress_text_threshold: "Als het aantal berichten in een topic hoger is dan dit getal, geeft de voortgangsbalk alleen het nummer van het huidige bericht weer. Als je de breedte van de voortgangsbalk wijzigt, moet je deze waarde mogelijk ook te wijzigen."
     default_code_lang: "Standaard syntaxmarkering van programmeertaal toegepast op markdowncodeblokken (automatisch, tekst, Ruby, Python enz.). Deze waarde moet ook aanwezig zijn in de website-instelling 'gemarkeerde talen'."
-    warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
     autohighlight_all_code: "Pas syntaxmarkering toe op in HTML geschreven &lt;code&gt;-blokken, ook als ze geen taal specificeren. Om in markdown geschreven codeblokken te configureren, gebruik je de instelling 'default code lang'."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> voor een demo."
     show_copy_button_on_codeblocks: "Voeg een knop toe aan codeblokken om de inhoud van het blok naar het klembord van de gebruiker te kopiëren."

@@ -244,6 +244,21 @@ jobs:
             exit 1
           fi
 
+      - name: Check SKIP_DB_AND_REDIS bootability
+        if: matrix.build_type == 'backend'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+        run: |
+          if ! (SKIP_DB_AND_REDIS=1 DISCOURSE_DEV_DB="nonexist" bin/rails runner "puts 'booted successfully'"); then
+            echo
+            echo "---------------------------------------------"
+            echo
+            echo "::error::SKIP_DB_AND_REDIS boot failed. Make sure the database is not being accessed during the Rails boot process."
+            echo "To reproduce locally, run \`SKIP_DB_AND_REDIS=1 DISCOURSE_DEV_DB='nonexist' bin/rails runner \"puts 'booted successfully'\"\`."
+            echo
+            exit 1
+          fi
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50

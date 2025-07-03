@@ -21,12 +21,12 @@
 
       .internal-link-results {
         position: absolute;
-        top: 70%;
+        top: 4rem;
         padding: 5px 10px;
         box-shadow: var(--shadow-card);
         z-index: 5;
         background-color: var(--secondary);
-        max-height: 150px;
+        max-height: 10rem;
         width: 90%;
         overflow-y: auto;
 
@@ -382,6 +382,11 @@
   .date-time-configuration {
     display: flex;
 
+    @include viewport.until(sm) {
+      flex-direction: column;
+      gap: 0.5em;
+    }
+
     .fake-input {
       display: none;
     }
@@ -531,6 +536,23 @@
   .control-group.timezones {
     margin-top: 1em;
   }
+
+  @include viewport.until(sm) {
+    .calendar-date-time-input {
+      width: 100%;
+      margin: 0 0 1rem 0;
+    }
+
+    .picker-panel {
+      // mysteriously needed to prevent it from overlapping the timezone-input
+      position: relative;
+      z-index: 0;
+    }
+
+    .pika-single {
+      justify-content: center;
+    }
+  }
 }
 
 .d-modal.grant-badge-modal {
@@ -565,6 +587,22 @@
       input {
         width: auto;
       }
+    }
+  }
+}
+
+@include viewport.until(sm) {
+  .d-modal.change-ownership-modal,
+  .d-modal.grant-badge-modal,
+  .d-modal.bookmark-reminder-modal {
+    .d-modal__container {
+      min-height: calc(var(--composer-vh, 1dvh) * 85);
+    }
+  }
+
+  .d-modal.change-ownership-modal {
+    .d-modal__body {
+      flex: 1;
     }
   }
 }

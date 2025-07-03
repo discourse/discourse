@@ -64,6 +64,9 @@ en_GB:
       change_card_background:
         instructions: "Background images will be centred and have a default width of 590px."
       categories_settings: "Categories"
+      invited:
+        invite:
+          description: "Description"
       summary:
         title: "Summary"
     read_only_mode:
@@ -143,7 +146,6 @@ en_GB:
         color_palettes:
           colors:
             title: "Colours"
-          delete_confirm: "Delete this colour palette?"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"
@@ -155,6 +157,8 @@ en_GB:
           long_title: "Amend colours, CSS and HTML contents of your site"
           color_scheme: "Colour Palette"
           color_scheme_select: "Select colours to be used by theme"
+          colors: "Colours"
+          colors_title: "Colours"
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"
@@ -172,21 +176,8 @@ en_GB:
             title: "Select base colour palette"
           title: "Colours"
           about: "Modify the colours used by your themes. Create a new colour palette to start."
-          delete_confirm: "Delete this colour palette?"
           undo_title: "Undo your changes to this colour since the last time it was saved."
           revert_title: "Reset this colour to Discourse's default colour palette."
-          secondary:
-            description: "The main background colour, and text colour of some buttons."
-          tertiary:
-            description: "Links, some buttons, notifications, and accent colour."
-          header_background:
-            description: "Background colour of the site's header."
-          highlight:
-            description: "The background colour of highlighted elements on the page, such as posts and topics."
-          danger:
-            description: "Highlight colour for actions like deleting posts and topics."
-          love:
-            description: "The like button's colour."
         email_style:
           instructions: "Customise the template in which all html emails are rendered, and style using CSS."
       logs:

@@ -27,13 +27,15 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.qunit.acceptance-function",
   "discourse.qunit.global-exists",
   "discourse.post-stream.trigger-new-post",
-  "discourse.mobile-templates",
-  "discourse.mobile-view",
-  "discourse.mobile-templates",
-  "discourse.component-template-overrides",
   "discourse.plugin-outlet-classic-args-clash",
   "discourse.decorate-plugin-outlet",
+  "component-template-resolving",
+  "discourse.script-tag-hbs",
 ];
+
+const REPLACEMENT_URLS = {
+  "component-template-resolving": "https://meta.discourse.org/t/370019",
+};
 
 if (DEBUG) {
   // used in system specs
@@ -111,6 +113,10 @@ export default class DeprecationWarningHandler extends Service {
   }
 
   notifyAdmin({ id, url }, source) {
+    if (REPLACEMENT_URLS[id]) {
+      url = REPLACEMENT_URLS[id];
+    }
+
     this.#adminWarned = true;
 
     let notice = i18n("critical_deprecation.notice") + " ";

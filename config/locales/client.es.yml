@@ -398,6 +398,7 @@ es:
       created: "Has guardado esta publicación en marcadores. %{name}"
       created_generic: "Has añadido esto a marcadores. %{name}"
       create: "Crear marcador"
+      clear_reminder: "Quitar recordatorio"
       edit: "Editar marcador"
       not_bookmarked: "guarda esta publicación en marcadores"
       remove_reminder_keep_bookmark: "Eliminar recordatorio y mantener marcador"
@@ -1879,6 +1880,7 @@ es:
           edit_link_options: "Edita las opciones del enlace o envíalo por correo electrónico."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
+          description: "Descripción"
           restrict: "Restringir a"
           restrict_email: "Restringir al correo electrónico"
           restrict_domain: "Restringir a un dominio"
@@ -2526,11 +2528,11 @@ es:
       italic_label: "I"
       italic_title: "Cursiva"
       italic_text: "Texto en cursiva"
-      link_title: "Hipervínculo"
+      link_title: "Enlace"
       link_description: "Introduce la descripción del enlace aquí"
-      link_dialog_title: "Insertar hipervínculo"
-      link_optional_text: "título opcional"
-      link_url_placeholder: "Copia una URL o escribe para buscar temas"
+      link_dialog_action: "Insertar"
+      link_edit_action: "Actualizar"
+      link_optional_text: "Texto"
       blockquote_title: "Cita"
       blockquote_text: "Cita"
       code_title: "Texto preformateado"
@@ -2600,6 +2602,9 @@ es:
       image_scale_button: "Escalar imagen a %{percent} %"
       delete_image_button: Eliminar imagen
       toggle_image_grid: Alternar cuadrícula de imágenes
+      link_toolbar:
+        copy: "Copiar enlace"
+        link_copied: "¡Enlace copiado!"
     notifications:
       tooltip:
         regular:
@@ -2995,10 +3000,6 @@ es:
         top: "No hay temas destacados."
         hot: "No hay temas candentes."
         filter: "No hay temas."
-        educate:
-          new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
-          unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 5 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
-          new_new: "<p>Tus temas nuevos aparecerán aquí, y también se mostrarán tus temas no leídos. Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> si se han creado en los últimos 2 días. Los temas no leídos tendrán un marcador <pan class=\"badge unread-posts badge-notification\">1</span> si: has creado el tema, has respondido al tema, has leído el tema durante más de 5 minutos, o si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -3567,6 +3568,8 @@ es:
           actions: "Acciones"
           edit: "Editar"
           delete: "Eliminar"
+        post_language_selector:
+          none: "Ninguno"
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
@@ -4549,7 +4552,7 @@ es:
           save: "Guardar"
           delete: "Eliminar"
           delete_confirm: "¿Seguro que quieres eliminar esta sección?"
-          delete_public_confirm: "Esta sección es <strong>visible para todos</strong>, ¿seguro que quieres eliminarla?"
+          delete_public_confirm: "Esta sección es visible para todos, ¿seguro que quieres eliminarla?"
           update_public_confirm: "Los cambios serán <strong>visibles para todos</strong> en este sitio. ¿Continuar?"
           mark_as_private_confirm: "Esta sección es <strong>visible para todos</strong>. Después de la actualización, será <strong>visible solo para ti</strong>. ¿Continuar?"
           reset_confirm: "¿Seguro que quieres restablecer esta sección a los valores predeterminados?"
@@ -5629,6 +5632,7 @@ es:
             title: "Tema"
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
             new_theme: "Nuevo tema"
+            install: "Instalar"
           components:
             title: "Componentes"
             install: "Instalar"
@@ -5668,7 +5672,6 @@ es:
             toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
           colors:
             title: "Colores"
-          delete_confirm: "¿Eliminar esta paleta de color?"
       plugins:
         title: "Plugins"
         name: "Nombre"
@@ -5950,6 +5953,10 @@ es:
           remote_theme_edits: "Si quieres editar este tema, deberás <a href='%{repoURL}' target='_blank'>proponer un cambio en su repositorio</a>"
           repo_unreachable: "No se ha podido contactar el repositorio Git de este tema. Mensaje de error:"
           imported_from_archive: "Este tema se importó desde un archivo .zip"
+          settings: "Ajustes"
+          colors: "Colores"
+          discard_colors: "Descartar"
+          colors_title: "Colores"
           scss:
             text: "CSS"
           after_header:
@@ -6012,36 +6019,28 @@ es:
           about: "Modifica los colores utilizados en tus temas. Crea una nueva paleta de color para empezar."
           new_name: "Nueva paleta de colores"
           copy_name_prefix: "Copia de"
-          delete_confirm: "¿Eliminar esta paleta de color?"
           undo: "Deshacer"
           undo_title: "Deshacer los cambios realizados a este color desde la última vez que se guardó."
           revert: "Revertir"
           revert_title: "Restablecer este color a la paleta de color por defecto de Discourse."
           primary:
             name: "principal"
-            description: "La mayoría del texto, iconos y bordes."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secundario"
-            description: "El color de fondo principal y el color de texto de algunos botones."
           tertiary:
             name: "terciario"
-            description: "Enlaces, algunos botones, notificaciones y color de énfasis."
           quaternary:
             name: "cuaternario"
-            description: "Para uso opcional en temas."
           header_background:
             name: "fondo del encabezado"
-            description: "Color de fondo del encabezado del sitio."
           header_primary:
             name: "encabezado principal"
-            description: "Texto e iconos en el encabezado del sitio."
           highlight:
             name: "resaltado"
-            description: "El color de fondo de los elementos resaltados en la página, como temas o publicaciones."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6050,19 +6049,14 @@ es:
             name: "highlight-low"
           danger:
             name: "peligro"
-            description: "Color del resaltado para acciones como eliminar temas o publicaciones."
           success:
             name: "éxito"
-            description: "Para indicar que una acción se realizó con éxito."
           love:
             name: "me encanta"
-            description: "El color del botón de me gusta"
           selected:
             name: "seleccionado"
-            description: "El color de fondo de elementos como los elementos de lista cuando están seleccionados/activos."
           hover:
             name: "pasar el ratón por encima"
-            description: "El color de fondo de elementos como los elementos de lista cuando se pasa el ratón sobre ellos o tienen el foco del teclado."
           editor:
             light: "Claro"
             dark: "Oscuro"

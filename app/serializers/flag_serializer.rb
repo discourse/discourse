@@ -42,7 +42,7 @@ class FlagSerializer < ApplicationSerializer
   end
 
   def is_used
-    @options[:used_flag_ids].include?(object.id)
+    @options[:used_flag_ids]&.include?(object.id) || object.used?
   end
 
   def applies_to

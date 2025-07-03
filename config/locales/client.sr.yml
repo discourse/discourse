@@ -1501,6 +1501,7 @@ sr:
           create_link_to_invite: "Napravite link koji se može deliti da biste odmah odobrili pristup ovoj zajednici."
           show_advanced: "Прикажи напредне опције"
           hide_advanced: "Sakrij napredne opcije"
+          description: "Opis"
           cancel: "Odustani"
           create_link: "Napravi link"
           create_link_and_send_email: "Napravi link i pošalji mail"
@@ -1774,11 +1775,7 @@ sr:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "italic tekst"
-      link_title: "Hiperlink"
       link_description: "Unesite opis linka ovde"
-      link_dialog_title: "Ubacite Hiperlink"
-      link_optional_text: "neobavezan naslov"
-      link_url_placeholder: "Zalepite URL ili tip za pretraživanje tema"
       blockquote_title: "izdvojeni citat"
       blockquote_text: "izdvojeni citat"
       code_title: "Pred-formatirani tekst"
@@ -2114,6 +2111,8 @@ sr:
           actions: "Akcije"
           edit: "Izmeni"
           delete: "Obriši"
+        post_language_selector:
+          none: "Ništa"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
@@ -2966,6 +2965,10 @@ sr:
           enable: "Omogući"
           disable: "Onemogući"
           add: "Dodaj"
+          settings: "Podešavanje"
+          colors: "Boje"
+          discard_colors: "Odbaci"
+          colors_title: "Boje"
           scss:
             text: "CSS"
           footer:
@@ -2983,33 +2986,24 @@ sr:
           revert: "Vrati nazad"
           primary:
             name: "primarna"
-            description: "Većina teksta, ikonica i granica."
           secondary:
             name: "sekundarna"
-            description: "Glavna pozadinska boja, i boja teksta na nekim dugmićima."
           tertiary:
             name: "tercijarna"
-            description: "Linkovi, neki dugmići, obaveštenja i boja naglaska."
           quaternary:
             name: "kvartarna"
           header_background:
             name: "Pozadina headera"
-            description: "Pozadinska boja headera stranice."
           header_primary:
             name: "header primarna"
-            description: "Tekst i ikonice u headeru."
           highlight:
             name: "naglasak"
-            description: "Pozadinska boja naglašenih elemenata na stranici, kao što su poruke i teme."
           danger:
             name: "opasnost"
-            description: "Boja naglaska za akcije kao što su brisanje teme ili poruka."
           success:
             name: "uspešno"
-            description: "Koristi se da pokaže da je neka akcija bila uspešna."
           love:
             name: "lajk"
-            description: "Boja dugmeta za lajk"
         email_style:
           css: "CSS"
       email:

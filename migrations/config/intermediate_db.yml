@@ -7,6 +7,37 @@ output:
 
 schema:
   tables:
+    badges:
+      columns:
+        add:
+          - name: "existing_id"
+            datatype: "numeric"
+        exclude:
+          - "grant_count"
+          - "system"
+    categories:
+      columns:
+        add:
+          - name: "about_topic_title"
+            datatype: text
+          - name: "existing_id"
+            datatype: numeric
+        exclude:
+          - "contains_messages"
+          - "latest_post_id"
+          - "latest_topic_id"
+          - "name_lower"
+          - "post_count"
+          - "posts_day"
+          - "posts_month"
+          - "posts_week"
+          - "posts_year"
+          - "topic_count"
+          - "topics_day"
+          - "topics_month"
+          - "topics_week"
+          - "topics_year"
+          - "reviewable_by_group_id"
     user_emails:
       columns:
         include:
@@ -14,14 +45,19 @@ schema:
           - "primary"
           - "user_id"
           - "created_at"
-      primary_key_column_names: [ "email" ]
+      primary_key_column_names: [ "user_id" , "email" ]
     user_options:
       primary_key_column_names: [ "user_id" ]
     users:
       columns:
+        modify:
+          - name: "created_at"
+            nullable: false
         add:
           - name: "original_username"
             datatype: text
+          - name: "avatar_type"
+            datatype: integer
         exclude:
           - "flag_level"
           - "last_emailed_at"
@@ -41,6 +77,8 @@ schema:
         - name: "id"
           datatype: numeric
           rename_to: "original_id"
+        - name: "created_at"
+          nullable: true
         - name_regex: ".*upload.*_id$"
           datatype: text
         - name_regex: ".*_id$"
@@ -63,9 +101,7 @@ schema:
         - "backup_metadata"
         - "badge_groupings"
         - "badge_types"
-        - "badges"
         - "bookmarks"
-        - "categories"
         - "categories_web_hooks"
         - "category_custom_fields"
         - "category_featured_topics"
@@ -178,6 +214,7 @@ schema:
         - "remote_themes"
         - "reviewable_claimed_topics"
         - "reviewable_histories"
+        - "reviewable_notes"
         - "reviewable_scores"
         - "reviewables"
         - "scheduler_stats"

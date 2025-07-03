@@ -8,6 +8,7 @@ module PageObjects
       HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
       MENTION_MENU = ".autocomplete.ac-user"
       RICH_EDITOR = ".d-editor-input.ProseMirror"
+      POST_LANGUAGE_SELECTOR = ".post-language-selector"
 
       def rich_editor
         find(RICH_EDITOR)
@@ -122,6 +123,15 @@ module PageObjects
 
       def category_chooser
         Components::SelectKit.new(".category-chooser")
+      end
+
+      def locale
+        find("#{COMPOSER_ID} #{POST_LANGUAGE_SELECTOR}")
+      end
+
+      def set_locale(locale)
+        Components::DMenu.new(POST_LANGUAGE_SELECTOR).expand
+        find("#{POST_LANGUAGE_SELECTOR} button", text: locale).click
       end
 
       def switch_category(category_name)
@@ -274,11 +284,7 @@ module PageObjects
       end
 
       def select_all
-        execute_script(<<~JS, text)
-          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
-          composer.focus();
-          composer.setSelectionRange(0, composer.value.length);
-        JS
+        find(COMPOSER_INPUT_SELECTOR).send_keys([PLATFORM_KEY_MODIFIER, "a"])
       end
 
       def select_range(start_index, length)

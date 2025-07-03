@@ -325,7 +325,6 @@ es:
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Selecciona otro bucket o usa una ruta diferente para cada bucket."
       secure_uploads_requirements: "Las subidas en S3 y las ACL de S3 deben estar activadas antes de activar las subidas seguras."
-      s3_use_acls_requirements: "Debes tener activadas las ACL de S3 cuando estén activadas las subidas seguras."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "No puedes obligar el uso de 2FA si DiscourseConnect está activado."
@@ -611,31 +610,9 @@ es:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicaciones"
-    avatar: |
-      ### ¿Qué tal si eliges una imagen para tu cuenta?
-
-      Has publicado algunos temas y respuestas, pero tu imagen de perfil no es tan única como lo eres tú, es solo una letra.
-
-      ¿Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
-
-      Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todo el mundo tiene una imagen de perfil única.
-    sequential_replies: |
-      ### Considera la posibilidad de responder a varias publicaciones a la vez
-
-      En vez de publicar varias respuestas seguidas en un tema, considera incluir en una sola respuesta varias citas de las publicaciones previas o @menciones a otras personas.
-
-      Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
-
-      Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
     get_a_room:
       one: Has respondido a @%{reply_username} una vez, ¿sabías que podrías enviarle un mensaje privado en su lugar?
       other: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje rivado directamente?
-    reviving_old_topic: |
-      ### ¿Revivir este tema?
-
-      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema, subiéndolo a la parte superior de la lista y notificando a aquellas personas involucradas en su momento.
-
-      ¿Seguro que quieres continuar esta conversación antigua?
   activerecord:
     attributes:
       category:
@@ -1692,7 +1669,7 @@ es:
     x_summary_large_image: "\"Imagen grande de resumen\" de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg, mientras no sea un .svg"
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
     email_custom_headers: "Lista de correos electrónicos separados por barras"
-    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciona más detalles a los usuarios acerca de por qué no pueden acceder a un tema en particular. Nota: esto es menos seguro dado que los usuarios sabrán si una URL enlaza a un tema válido."
     enforce_second_factor: "Requiere que los usuarios activen la autenticación de dos factores antes de que puedan acceder a la interfaz de usuario de Discourse. Este ajuste no afecta a la autenticación de la API o del «proveedor de DiscourseConnect». Si enforce_second_factor_on_external_auth está activado, los usuarios no podrán iniciar sesión con proveedores de autenticación externos después de configurar la autenticación de dos factores."
     enforce_second_factor_on_external_auth: "Requiere que los usuarios utilicen la autenticación de dos factores en todo momento. Si está activada, impedirá que los usuarios inicien sesión con métodos de autenticación externos, como inicios de sesión sociales, si tienen activada la autenticación de dos factores. Si está desactivada, los usuarios solo tendrán que confirmar su autenticación de doble factor cuando inicien sesión con un nombre de usuario y una contraseña. Consulta también el ajuste «enforece_second_factor»."
@@ -1761,7 +1738,6 @@ es:
     blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_internal_hosts: "Lista de hosts internos sobre los que discourse puede hacer crawl de forma segura para oneboxes y otras finalidades."
     allowed_onebox_iframes: "Una lista de dominios iframe src que se permiten a través de incrustaciones de Onebox. «*» permitirá todos los motores Onebox por defecto."
-    allowed_iframes: "Una lista de prefijos de URL iframe src que Discourse puede permitir con seguridad en las publicaciones"
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
     slow_down_crawler_user_agents: 'Agentes de usuario de rastreadores web a los que se les debe limitar la velocidad según lo configurado en el ajuste «slow down crawler rate». Cada valor debe tener al menos 3 caracteres.'
@@ -1885,7 +1861,6 @@ es:
     s3_endpoint: "El terminal se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Activar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está desactivado, no se reclamará ningún espacio después de eliminar las cargas."
     s3_disable_cleanup: "Evite la eliminación de copias de seguridad antiguas de S3 cuando hay más copias de seguridad que el máximo permitido."
-    s3_use_acls: "AWS recomienda no utilizar ACL en los buckets S3; si sigues este consejo, desmarca esta opción. Debes activarla si utilizas cargas seguras."
     enable_direct_s3_uploads: "Permite la carga directa multiparte a Amazon S3, consulta https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 para más detalles."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en las copias de seguridad programadas. Si esta opción está desactivada, tan solo se ejecutará una copia de seguridad de la base de datos."
@@ -2219,12 +2194,10 @@ es:
     max_notifications_per_user: "Cantidad máxima de notificaciones por usuario. Si se supera este número, las notificaciones antiguas se eliminarán. Aplicado semanalmente. Establece el valor en 0 para desactivar."
     allowed_user_website_domains: "El sitio web del usuario deberá ser uno de estos dominios. Lista delimitada por barras verticales."
     allow_profile_backgrounds: "Permitir a los usuarios subir fondos de perfil."
-    sequential_replies_threshold: "Número de mensajes seguidos que un usuario tiene que publicar antes de que se le recuerde que son demasiadas respuestas consecutivas."
     get_a_room_threshold: "Número de publicaciones que un usuario deber hacer a la misma persona en un mismo tema para recibir una advertencia."
     dont_feed_the_trolls_threshold: "Número de denuncias de otros usuarios antes de ser advertido."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Desactiva esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Porcentaje de publicaciones que un usuario debe hacer en un mismo tema antes de que se le muestre un recordatorio acerca de dominar en demasía un tema."
-    disable_avatar_education_message: "Desactivar mensaje educacional para que los usuarios cambien su foto de perfil."
     pm_warn_user_last_seen_months_ago: "Al crear un nuevo PM, advierte a los usuarios cuando el destinatario no se haya visto hace más de n meses."
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     header_dropdown_category_count: "Cantidad de categorías que se pueden mostrar en el menú desplegable del encabezado."
@@ -2255,7 +2228,6 @@ es:
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
     short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Resaltado de sintaxis del lenguaje de programación por defecto aplicado a los bloques de código markdown (auto, text, ruby, python, etc.). Este valor también debe estar presente en la configuración del sitio «lenguajes resaltados»."
-    warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para desactivar."
     autohighlight_all_code: "Aplicar el resaltado de sintaxis a los bloques de &lt;código&lt; escritos en HTML, aunque no hayan especificado un lenguaje. Para configurar los bloques de código creados con markdown, utiliza la opción «lenguaje de código por defecto»."
     highlighted_languages: "Incluye reglas de resaltado sintáctico. (Advertencia: incluir demasiados idiomas puede afectar al rendimiento) ver: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> para ver una demostración"
     show_copy_button_on_codeblocks: "Añadir un botón para copiar el contenido de los bloques de código al portapapeles."

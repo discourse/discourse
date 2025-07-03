@@ -19,5 +19,5 @@ registerWidgetShim(
 registerWidgetShim(
   "actions-summary",
   "section.post-actions",
-  hbs`<Post::ActionsSummary @post={{@data}} />`
+  hbs`<Post::ActionsSummary @post={{@data.post}} />`
 );

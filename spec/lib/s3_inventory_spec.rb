@@ -7,6 +7,13 @@ RSpec.describe S3Inventory do
 
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
+  let(:system_themes_screenshots) do
+    UploadReference
+      .where(target_type: "ThemeField")
+      .map { |screenshot| screenshot.upload.url }
+      .join("\n")
+  end
+
   before do
     inventory.s3_helper.stub_client_responses!
     inventory.stubs(:cleanup!)
@@ -71,8 +78,10 @@ RSpec.describe S3Inventory do
     it "should display missing uploads correctly" do
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
-      expect(output).to eq("#{@upload_1.url}\n#{@no_etag.url}\n2 of 6 uploads are missing\n")
-      expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
+      expect(output).to eq(
+        "#{system_themes_screenshots}\n#{@upload_1.url}\n#{@no_etag.url}\n6 of 10 uploads are missing\n",
+      )
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(6)
     end
 
     it "should detect when a url match exists with a different etag" do
@@ -85,22 +94,23 @@ RSpec.describe S3Inventory do
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
       expect(output).to eq(<<~TEXT)
+        #{system_themes_screenshots}
         #{upload_with_differing_tag_1.url} has different etag
         #{upload_with_differing_tag_2.url} has different etag
         #{@upload_1.url}
         #{@no_etag.url}
-        4 of 6 uploads are missing
+        8 of 10 uploads are missing
         2 of these are caused by differing etags
         Null the etag column and re-run for automatic backfill
       TEXT
 
-      expect(Discourse.stats.get("missing_s3_uploads")).to eq(4)
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(8)
     end
 
     it "marks missing uploads as not verified and found uploads as verified. uploads not checked will be verified nil" do
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count,
-      ).to eq(13)
+      ).to eq(17)
 
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
@@ -110,7 +120,7 @@ RSpec.describe S3Inventory do
         Upload.where(verification_status: Upload.verification_statuses[:verified]).count,
       ).to eq(4)
 
-      expect(Upload.with_invalid_etag_verification_status.count).to eq(2)
+      expect(Upload.with_invalid_etag_verification_status.count).to eq(6)
 
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count,
@@ -157,7 +167,7 @@ RSpec.describe S3Inventory do
         }.by(-3)
       end
 
-    expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
+    expect(Upload.where.not(etag: nil).by_users.order(:url).pluck(:url, :etag)).to eq(files)
   end
 
   context "when site was restored from a backup" do
@@ -237,7 +247,9 @@ RSpec.describe S3Inventory do
         end
       end
 
-    expect(output).to eq("#{upload.url}\n#{no_etag.url}\n2 of 6 uploads are missing\n")
-    expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
+    expect(output).to eq(
+      "#{system_themes_screenshots}\n#{upload.url}\n#{no_etag.url}\n6 of 10 uploads are missing\n",
+    )
+    expect(Discourse.stats.get("missing_s3_uploads")).to eq(6)
   end
 end

@@ -315,29 +315,6 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇貼文"
-    avatar: |
-      ### 來個大頭貼吧！
-
-      你剛參與了幾個討論話題及回覆，不過你的個人頭像不像你一般獨一無二
-      - 因為只有一個字！
-
-      **[造訪個人檔案](%{profile_path})** 並上傳代表你的頭像吧！
-
-      當每個人都有獨特的頭像時，大家能更容易的關注討論內容，以及找到對話中有趣的使用者！
-    sequential_replies: |
-      ### 請考慮在單一貼文中回覆多則貼文
-
-      與其發好幾篇回應，來回覆各則貼文，不如在同一篇貼文中包含各則貼文的摘錄，並使用 @使用者名稱 來回應。
-
-      你可以編輯你先前的回應訊息，選擇字句後點選 <b>引用</b> 來回應。
-
-      對於大家而言，閱讀包含較多回覆的少量貼文，會比閱讀多篇瑣碎貼文更為輕鬆。
-    reviving_old_topic: |
-      ### 重新開啟這個話題？
-
-      這個話題的最後一個回覆距離今天已有 **%{time_ago}**。你的回覆將讓話題重新出現在列表頂端，並通知原先參與話題討論的人。
-
-      你確定要開啟這個老話題嗎？
   activerecord:
     attributes:
       category:
@@ -1118,7 +1095,7 @@ zh_TW:
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
-    email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
     summary_percent_filter: "當使用者點擊 \"此話題的摘要\"，顯示前面多少 % 的貼文"
@@ -1401,11 +1378,9 @@ zh_TW:
     clean_up_inactive_users_after_days: "刪除尚未認證電子郵件的使用者（沒有發表任何討論主題、信任級別為0）之前的天數。要禁用自動刪除，請設定為0。"
     allowed_user_website_domains: "使用者網站要屬於這些域名中。用 | 分割。"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
-    sequential_replies_threshold: "在被提醒回覆了太多連續的回覆前，使用者在主題中可以連續回覆的貼文的數量。"
     get_a_room_threshold: "在收到警告之前，使用者必須向同一主題中的同一個人發佈的討論話題數。"
     enable_mobile_theme: "為移動設備啟用移動友好的主題，但也能切換回完整站點。如果你想要使用自定義的響應式主題請禁用它。"
     dominating_topic_minimum_percent: "使用者在主題中的貼文占到多少百分比時使得使用者主導話題。"
-    disable_avatar_education_message: "禁用更改頭像操作的教育消息。"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     header_dropdown_category_count: "在下拉式功能表中可以顯示多少類別"
     permalink_normalizations: "在匹配永久連結之前應用如下正則表達式，例如：/(topic.*)\\?.*/\\1 將去掉所有主題路徑的參數字元串。格式為使用正則表達式+使用 \\1 等字元串來訪問捕獲內容"
@@ -1418,7 +1393,6 @@ zh_TW:
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
     short_progress_text_threshold: "在主題中的貼文數超過這個設定後，進度條將只顯示當前的貼文數。如果你更改了進度條的寬度，你需要修改這個值。"
-    warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
     embed_support_markdown: "支持嵌入式討論話題的Markdown格式"
     allowed_embed_selectors: "在 embeds 頁面允許 CSS 元素以逗號分隔清單"
     allowed_href_schemes: "除了 http 和 https 外允許的連結協議。"

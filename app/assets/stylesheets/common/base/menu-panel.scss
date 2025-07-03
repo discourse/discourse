@@ -34,7 +34,14 @@
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
   max-height: calc(100dvh - var(--header-offset) - 1em);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-border-radius);
+
+  .panel-body {
+    // improves usability on high zoom levels
+    max-width: calc(100vw - 2em);
+  }
+
+  @include float-down;
 }
 
 .menu-panel {
@@ -197,6 +204,9 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    // 2em padding very useful for iOS Safari's overlayed bottom nav
+    // padding-bottom: calc(env(safe-area-inset-bottom) + 2em);
   }
 
   .panel-body-bottom {
@@ -250,9 +260,13 @@
 .user-menu.revamped {
   --user-menu-border-width: 1px;
   right: 0;
-  width: 320px;
   padding: 0;
   border-top-right-radius: 0;
+  width: unset;
+
+  @include viewport.until(sm) {
+    width: 320px;
+  }
 
   .panel-body-bottom {
     flex: 0;
@@ -276,6 +290,10 @@
       position: relative;
       border-radius: 0;
       padding: 0.875em 1em 0.875em 0.875em;
+
+      @include viewport.until(sm) {
+        padding: 1.2em 1.4em;
+      }
 
       @media screen and (height <= 400px) {
         // helps with 400% zoom level
@@ -322,6 +340,12 @@
   .panel-body-contents {
     display: flex;
     flex-direction: row-reverse;
+
+    @include viewport.until(sm) {
+      .quick-access-panel li {
+        padding-block: 0.15em;
+      }
+    }
   }
 
   .quick-access-panel {
@@ -409,6 +433,84 @@
 .hamburger-panel {
   .panel-body {
     overflow-y: auto;
+  }
+
+  @include viewport.until(sm) {
+    .sidebar-section-wrapper {
+      margin-bottom: 1.2em;
+    }
+  }
+
+  @include viewport.from(sm) {
+    // sidebar-hamburger hybrid
+    .revamped {
+      --d-sidebar-row-height: 1.875rem;
+      width: 22.5rem;
+
+      .panel-body-content {
+        width: 100%;
+        min-width: 0; // prevent content blowing out width
+      }
+
+      .sidebar-section-wrapper {
+        .sidebar-section-header-button {
+          opacity: 1;
+        }
+
+        .sidebar-section-link.active {
+          font-weight: normal;
+          background: var(--d-hover);
+        }
+
+        .sidebar-section-header-wrapper .select-kit .btn:hover {
+          background: transparent;
+        }
+
+        &.sidebar-section {
+          padding-top: 0.5em;
+
+          .sidebar-section-header-wrapper {
+            margin: 0 0 0.5em;
+            padding-bottom: 0.25em;
+          }
+
+          .sidebar-section-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            li {
+              min-width: 0;
+            }
+          }
+        }
+      }
+
+      .sidebar-section-link-wrapper
+        .sidebar-section-link-hover:hover
+        .sidebar-section-hover-button {
+        background: transparent;
+      }
+
+      .sidebar-footer-wrapper {
+        padding: 0;
+        margin-top: 1em;
+
+        .sidebar-footer-container {
+          padding: 0;
+          border: none;
+          background: var(--secondary);
+
+          &::before {
+            top: -1.5em;
+            background: linear-gradient(
+              to bottom,
+              transparent,
+              rgb(var(--secondary-rgb), 1)
+            );
+          }
+        }
+      }
+    }
   }
 }
 
@@ -681,7 +783,6 @@
     &.pending {
       .icon-avatar__icon-wrapper {
         background: var(--tertiary);
-        font-size: var(--font-down-1);
 
         .d-icon {
           color: var(--secondary);
@@ -701,5 +802,22 @@
   .panel-body-contents {
     max-height: unset;
     min-height: 100%;
+  }
+}
+
+.sidebar-section-header {
+  .sidebar-section-header-global-indicator {
+    .d-icon {
+      color: var(--d-sidebar-header-icon-color);
+    }
+  }
+}
+
+.sidebar-hamburger-dropdown {
+  .discourse-no-touch & {
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:hover,
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:focus-within {
+      background: transparent;
+    }
   }
 }

@@ -19,9 +19,15 @@ export default class PostMenuAddTranslationButton extends Component {
   @tracked showComposer = false;
 
   get originalPostContent() {
+    const originalLocale =
+      this.args.post?.locale || this.siteSettings.default_locale;
+
     return `<div class='d-editor-translation-preview-wrapper'>
          <span class='d-editor-translation-preview-wrapper__header'>
           ${i18n("composer.translations.original_content")}
+            <span class='d-editor-translation-preview-wrapper__original-locale'>
+               ${originalLocale}
+            </span>
          </span>
           ${this.args.post.cooked}
       </div>`;
@@ -30,7 +36,7 @@ export default class PostMenuAddTranslationButton extends Component {
   get showTranslationButton() {
     return (
       this.currentUser &&
-      this.siteSettings.experimental_content_localization &&
+      this.siteSettings.content_localization_enabled &&
       this.currentUser.can_localize_content
     );
   }
@@ -54,7 +60,7 @@ export default class PostMenuAddTranslationButton extends Component {
   async addTranslation() {
     if (
       !this.currentUser ||
-      !this.siteSettings.experimental_content_localization ||
+      !this.siteSettings.content_localization_enabled ||
       !this.currentUser.can_localize_content
     ) {
       return;

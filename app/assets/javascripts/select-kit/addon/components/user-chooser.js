@@ -11,6 +11,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import UserRow from "./user-chooser/user-row";
 
 export const CUSTOM_USER_SEARCH_OPTIONS = [];
 
@@ -33,7 +34,7 @@ export default class UserChooser extends MultiSelectComponent {
   valueProperty = "username";
 
   modifyComponentForRow() {
-    return "user-chooser/user-row";
+    return UserRow;
   }
 
   @computed("value.[]")

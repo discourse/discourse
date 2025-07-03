@@ -25,12 +25,11 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       end
 
       context "when welcome banner is not in the viewport" do
-        before do
-          visit("/")
-          fake_scroll_down_long
-        end
-
         it "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
+          visit("/")
+          expect(welcome_banner).to be_visible
+          fake_scroll_down_long
+          expect(search_page).to have_search_field
           expect(welcome_banner).to be_invisible
           page.send_keys("/")
           expect(search_page).to have_search_menu
@@ -73,12 +72,11 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       end
 
       context "when welcome banner is not in the viewport" do
-        before do
-          visit("/")
-          fake_scroll_down_long
-        end
-
         it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
+          visit("/")
+          expect(welcome_banner).to be_visible
+          fake_scroll_down_long
+          expect(search_page).to have_search_icon
           expect(welcome_banner).to be_invisible
           page.send_keys("/")
           expect(search_page).to have_search_menu

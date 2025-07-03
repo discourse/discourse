@@ -298,6 +298,7 @@ sk:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} nie je platné miestne nastavenie"
       too_long_validation:
         one: "je obmedzený na %{count} znak; zadali ste %{length}."
         few: "je obmedzený na %{count} znakov, zadali ste %{length}."
@@ -329,6 +330,7 @@ sk:
       less_than_or_equal_to: musí byť menej alebo rovné %{count}
       not_a_number: nie je číslo
       not_an_integer: musí byť číslo
+      must_all_be_positive: musia byť všetky kladné
       odd: musí byť nepárne
       record_invalid: ! "Validácia zlyhala s chybami: %{errors}"
       max_emojis: "nemôže mať viac ako %{max_emojis_count} emoji"
@@ -386,7 +388,6 @@ sk:
       s3_backup_requires_s3_settings: "S3 nemôžete použiť ako umiestnenie zálohy, pokiaľ nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemôžete použiť rovnaký bucket pre 's3_upload_bucket' a 's3_backup_bucket'. Vyberte iný bucket alebo použite iné cesty pre každý bucket."
       secure_uploads_requirements: "Pred povolením zabezpečeného odosielania je potrebné povoliť odosielanie na S3 a S3 ACL."
-      s3_use_acls_requirements: "Ak je povolené zabezpečené odosielanie, musíte mať povolené ACL S3."
       share_quote_facebook_requirements: "Ak chcete povoliť zdieľanie citácií pre Facebook, musíte nastaviť id aplikácie Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Ak sú miestne prihlásenia zakázané, nie je možné vynútiť 2FA."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Ak je zapnutá funkcia DiscourseConnect, nie je možné vynútiť 2FA."
@@ -717,34 +718,27 @@ sk:
       few: "%{count} príspevky"
       many: "%{count} príspevkov"
       other: "%{count} príspevkov"
-    avatar: |2
+    "new-topic": |
+      Ďakujeme, že ste prispeli na %{site_name}!
 
-      ### Čo takto nastaviť svoj profilový obrázok?
+      Predtým, ako začnete písať, vyberte kategóriu alebo značku, aby ste túto tému zoskupili so súvisiacimi diskusiami, aby ju ostatní ľahko našli.
 
-      Pridali ste niekoľko tém a odpovedí, ale Váš profilový obrázok nie je taký jedinečný ako Vy - je to len písmeno.
+      Ďalšie tipy a rady týkajúce sa účasti v našej komunite nájdete [pozrite si naše pravidlá komunity](%{base_path}/guidelines).
+    "new-reply": |
+      Ďakujeme, že ste prispeli na %{site_name}!
 
-      Uvažovali ste **[návštíviť svoj používateľský profil](%{profile_path})** a nahrať obrázok, ktorý vás vystihuje?
+      Nezabudnite, že všetci sme skutoční ľudia. Prosím, buďte k svojim kolegom z komunity láskaví.
 
-      Je jednoduchšie sledovať diskusiu a nájsť zaujímavých ľudí v rozhovoroch, keď má každý jedinečný profilový obrázok!
-    sequential_replies: |
-      ### Zvážte odpovedanie na viacero príspevkov naraz**
-
-      Namiesto viacerých odpovedí na tému za sebou, zvážte jednu odpoveď, ktorá obsahuje citácie z predchádzajúcich príspevkov alebo odkazy @name.
-
-      Svoj predchádzajúci príspevok môžete upraviť pridaním citácie zvýraznením textu a výberom tlačidla <b>citovať odpoveď</b>, ktoré sa zobrazí.
-
-      Je jednoduchšie pre všetkých čítať témy, ktoré majú menej, ale podrobnejších odpovedí, než veľa malých, individuálnych odpovedí.
+      Ďalšie tipy a rady týkajúce sa účasti v našej komunite nájdete [pozrite si naše pravidlá komunity](%{base_path}/guidelines).
+    dominating_topic: V tejto téme ste toho napísali veľa! Zvážte, či dáte príležitosť zapojiť sa aj ostatným.
     get_a_room:
       one: Už ste raz odpovedali na @%{reply_username} , vedeli ste, že namiesto toho im môžete poslať osobnú správu?
       few: Odpovedali ste na @%{reply_username} %{count} krát, vedeli ste, že namiesto toho im môžete poslať osobnú správu?
       many: Odpovedali ste na @%{reply_username} %{count} krát, vedeli ste, že namiesto toho im môžete poslať osobnú správu?
       other: Odpovedali ste na @%{reply_username} %{count} krát, vedeli ste, že namiesto toho im môžete poslať osobnú správu?
-    reviving_old_topic: |
-      ### Oživiť túto tému?
-
-      Posledná odpoveď na túto tému bola **%{time_ago}**. Vaša odpoveď posunie tému na začiatok zoznamu a upozorní všetkých, ktorí sa predtým zapojili do tejto konverzácie.
-
-      Ste si istí, že chcete pokračovať v tejto starej konverzácii?
+    dont_feed_the_trolls: Tento príspevok bol označený pre pozornosť moderátora. Odpovedanie na negatívny obsah môže podporiť ďalšie negatívne správanie - ste si istí, že chcete pokračovať?
+    too_many_replies: |
+      Noví používatelia sú dočasne obmedzení na %{newuser_max_replies_per_topic} odpovedí v tej istej téme. Zvážte, prosím, návštevu iných tém, aby ste sa mohli naďalej zoznamovať s komunitou.
   activerecord:
     attributes:
       category:
@@ -1863,7 +1857,7 @@ sk:
     x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
-    email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje používateľom podrobnejšie informácie o tom, prečo nemajú prístup k určitej téme. Poznámka: Je to menej bezpečné, pretože používatelia budú vedieť, či adresa URL odkazuje na platnú tému."
     enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect. Ak je zapnutá možnosť enforce_second_factor_on_external_auth, používatelia sa nebudú môcť prihlásiť pomocou externých poskytovateľov overovania po nastavení dvojfaktorového overovania."
     enforce_second_factor_on_external_auth: "Vyžadujte od používateľov, aby vždy používali dvojfaktorové overovanie. Ak je táto funkcia zapnutá, zabráni používateľom prihlásiť sa pomocou externých metód overovania, ako sú napríklad prihlásenia cez sociálne siete, ak majú povolené dvojfaktorové overovanie. Keď je táto funkcia vypnutá, používatelia budú musieť potvrdiť svoje dvojfaktorové overenie len pri prihlasovaní pomocou používateľského mena a hesla. Pozrite si tiež nastavenie `enforce_second_factor` (vynútiť druhý faktor)."
@@ -1932,7 +1926,7 @@ sk:
     blocked_ip_blocks: "Zoznam súkromných blokov IP, ktoré by Discourse nikdy nemal prehľadávať"
     allowed_internal_hosts: "Zoznam interných hostiteľov, ktoré môže diskurz bezpečne prehľadávať na účely oneboxingu a iné účely"
     allowed_onebox_iframes: "Zoznam domén src iframe, ktoré sú povolené prostredníctvom vložených súborov Onebox. `*` povolí všetky predvolené motory Onebox."
-    allowed_iframes: "Zoznam prefixov URL src iframe, ktoré môže diskurz Discourse bezpečne povoliť v príspevkoch"
+    allowed_iframes: "Zoznam prefixov URL src iframe, ktoré môže diskurz Discourse bezpečne povoliť v príspevkoch. * možno použiť na porovnanie ľubovoľného počtu znakov, ktoré nie sú/."
     allowed_crawler_user_agents: "Používateľskí agenti webových prehľadávačov, ktorí by mali mať povolený prístup na stránku. POZOR! NASTAVENÍM TOHTO ZABLOKUJE VŠETKY PRÁZOVÉ STRÁNKY, KTORÉ TU NEJSÚ UVEDENÉ!"
     blocked_crawler_user_agents: "Jedinečné slovo v reťazci používateľského agenta, ktoré nerozlišuje veľkosť písmen a identifikuje webové prehliadače, ktorým by nemal byť povolený prístup na lokalitu. Neuplatňuje sa, ak je definovaný allowlist."
     slow_down_crawler_user_agents: 'Používateľskí agenti webových prehľadávačov, ktorých rýchlosť by mala byť obmedzená podľa konfigurácie v nastavení "spomaliť rýchlosť prehľadávača". Každá hodnota musí byť dlhá aspoň 3 znaky.'
@@ -2057,7 +2051,7 @@ sk:
     s3_endpoint: "Koncový bod je možné upraviť tak, aby zálohoval do služby kompatibilnej so službou S3, napríklad DigitalOcean Spaces alebo Minio. VAROVANIE: Ak používate AWS S3, nechajte prázdne."
     s3_configure_tombstone_policy: "Povolenie politiky automatického odstraňovania pre nahrávanie náhrobných kameňov. DÔLEŽITÉ: Ak je táto funkcia vypnutá, po vymazaní nahraných súborov nebude obnovené žiadne miesto."
     s3_disable_cleanup: "Zabrániť odstráneniu starých záloh zo služby S3, ak je ich viac, ako je povolené maximum."
-    s3_use_acls: "AWS odporúča nepoužívať ACL na vedrách S3; ak sa riadite touto radou, zrušte začiarknutie tejto možnosti. Táto možnosť musí byť povolená, ak používate zabezpečené nahrávanie."
+    s3_use_acls: "AWS odporúča nepoužívať ACL na vedrách S3; túto možnosť zrušte, len ak máte v úmysle konfigurovať politiky oprávnení na nakonfigurovaných vedrách `s3_upload_bucket` a `s3_backup_bucket`."
     enable_direct_s3_uploads: "Umožňuje priame nahrávanie viacerých častí do Amazon S3, viac informácií nájdete na stránke https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
     backup_with_uploads: "Do pravidelných záloh ulož i nahrané súbory. Pri vypnutej voľbe sa uloží iba záloha databázy."
@@ -2393,12 +2387,10 @@ sk:
     max_notifications_per_user: "Maximálny počet oznámení na používateľa, ak sa tento počet prekročí, staré oznámenia sa vymažú. Vykonáva sa týždenne. Nastavte na 0, ak chcete vypnúť"
     allowed_user_website_domains: "Webová stránka používateľa sa overí na základe týchto domén. Zoznam oddeľovaný potrubím."
     allow_profile_backgrounds: "Povoliť používateľov nahranie pozadia do profilu."
-    sequential_replies_threshold: "Po koľkých po sebe idúcich príspevkov v rade za sebou sa má používateľovi zobraziť varovanie o nadmernom množstve odpovedí?"
     get_a_room_threshold: "Počet príspevkov, ktoré musí používateľ odoslať tej istej osobe v rovnakej téme, kým bude upozornený."
     dont_feed_the_trolls_threshold: "Počet príznakov od iných používateľov pred upozornením."
     enable_mobile_theme: "Mobilné zariadenia používajú tému pre mobilné zariadenia s možnosťou prepnutia na plnú verziu stránok. Vypnite, ak chcete použiť vlastný štýl, ktorý podporuje mobilné zariadenia."
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
-    disable_avatar_education_message: "Vypnúť informatívnu hlášku na zmenu avatara."
     pm_warn_user_last_seen_months_ago: "Pri vytváraní nového PM upozorniť používateľov, keď cieľový príjemca nebol videný pred viac ako n mesiacmi."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
     header_dropdown_category_count: "Koľko kategórií sa môže zobraziť v rozbaľovacom menu v záhlaví."
@@ -2431,7 +2423,6 @@ sk:
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
     short_progress_text_threshold: "Ak počet príspevkov v téme presiahne toto číslo, ukazateľ priebehu zobrazí iba aktuálne číslo príspevku. Túto hodnotu možno budete potrebovať zmeniť, ak zmeníte šírku ukazateľa priebehu."
     default_code_lang: "Predvolené zvýraznenie syntaxe programovacieho jazyka sa používa na bloky označovania kódov (auto, text, ruby, python atď.). Táto hodnota musí byť prítomná aj v nastavení lokality „zvýraznené jazyky“."
-    warn_reviving_old_topic_age: "Zobrazenie varovania, ak niekto začne odpovedať na tému, kde je posledná odpoveď staršia ako uvedený počet dní. Na vypnutie varozania zadajte 0."
     autohighlight_all_code: "Použiť zvýraznenie syntaxe na bloky &lt;code&gt; vytvorené HTML, aj keď nešpecifikovali jazyk. Ak chcete nakonfigurovať bloky kódu vytvoreného markdown, použite nastavenie „predvolený jazyk kódu“."
     highlighted_languages: "Zahrnuté pravidlá zvýrazňovania syntaxe. (Varovanie: zahrnutie príliš veľkého počtu jazykov môže mať vplyv na výkon) pozri: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pre demo"
     show_copy_button_on_codeblocks: "Pridanie tlačidla do kódových blokov na skopírovanie obsahu bloku do schránky používateľa."
@@ -2617,9 +2608,12 @@ sk:
     about_page_extra_groups_order: "Usporiadanie ďalších skupín na stránke o používateľovi."
     adobe_analytics_tags_url: "Adresa URL značiek Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
-    experimental_content_localization: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich jazykových preferencií. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Na tejto funkcii sa intenzívne pracuje."
     rich_editor: "Povoľte bohatý editor, aby všetci používatelia mohli prepínať medzi súčasným režimom Markdown a novým bohatým textovým editorom pre intuitívnejšie a používateľsky prívetivejšie písanie. Bohatý textový editor je v štádiu aktívneho vývoja, takže ešte nie sú podporované všetky funkcie - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>viac informácií nájdete v časti Meta</a>."
-    experimental_content_localization_allowed_groups: 'Skupiny môžu aktualizovať lokalizovaný obsah. Vyžaduje, aby bola povolená "experimentálna lokalizácia obsahu".'
+    viewport_based_mobile_mode: "EXPERIMENTÁLNE: Vypnite režimy pre mobilné zariadenia/plochu založené na používateľskom agentovi a namiesto toho použite šírku zobrazenia."
+    content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
+    content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
+    content_localization_allowed_groups: "Skupiny môžu aktualizovať lokalizovaný obsah. Vyžaduje \"povolená lokalizácia obsahu\"."
+    content_localization_anon_language_switcher: "Povolenie prepínača jazykov, ktorý umožňuje návštevníkom stránky, ktorí nie sú prihlásení, prepínať medzi preloženými verziami diskurzu a obsahom pridaným používateľom. Závisí od zoznamu jazykov definovaných v položke \"lokality podporované lokalizáciou obsahu\"."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
       invalid_email: "Nesprávna emailová adresa."
@@ -2695,6 +2689,7 @@ sk:
       delete_rejected_email_after_days: "Toto nastavenie nemôže byť nižšie ako nastavenie delete_email_logs_after_days alebo vyššie ako %{max}"
       invalid_uncategorized_category_setting: 'Kategóriu „Nekategorizované“ nie je možné vybrať, ak nie je povolené „povoliť témy bez kategórie“.'
       invalid_search_ranking_weights: "Hodnota je neplatná pre nastavenie stránky search_ranking_weights. Príklad: \"{0.1,0.2,0.3,1.0}\". Všimnite si, že maximálna hodnota pre každú váhu je 1,0."
+      content_localization_anon_language_switcher_requirements: "Prepínač jazykov vyžaduje, aby bolo povolené nastavenie stránky `nastaviť lokálnosť zo súboru cookie` a aby v poli `lokalizácia obsahu podporovaná lokálnymi jazykmi` bol aspoň jeden jazyk."
     keywords:
       clean_up_inactive_users_after_days: "deaktivované|neaktívne|neaktivované"
       navigation_menu: "bočný panel|rozbaľovacie okno záhlavia"
@@ -2875,7 +2870,8 @@ sk:
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
     omniauth_error:
-      generic: "Prepáčte, pri pokuse o autorizáciu vášho účtu s %{provider}sa vyskytla chyba. Skúste to znova."
+      generic_without_provider: "Je nám ľúto, ale pri pokuse o autorizáciu vášho účtu pomocou prihlasovacej služby došlo k chybe. Skúste to prosím znova."
+      generic_with_provider: "Prepáčte, pri pokuse o autorizáciu vášho účtu s %{provider}sa vyskytla chyba. Skúste to znova."
       csrf_detected: "Prepáčte, časový limit autorizácie vypršal alebo ste prepli prehliadač. Skúste to znova."
       request_error: "Prepáčte, pri spustení autorizácie sa vyskytla chyba. Skúste to znova."
       invalid_iat: "Prepáčte, ale kvôli rozdielom v čase servera sa nám nepodarilo overiť autorizačný token. Skúste to znova."
@@ -5540,8 +5536,6 @@ sk:
       duplicate_ids: "má duplicitné ID"
       reserved_id: "má vyhradené kľúčové slovo ako id: %{id}"
       unsafe_description: "má nebezpečný popis HTML"
-  content_localization:
-    not_allowed: "Tento obsah nie je povolené lokalizovať."
   activemodel:
     errors:
       <<: *errors

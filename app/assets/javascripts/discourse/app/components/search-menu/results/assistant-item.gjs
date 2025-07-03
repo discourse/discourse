@@ -122,10 +122,14 @@ export default class AssistantItem extends Component {
       return;
     }
 
+    const inPMInboxContext =
+      this.search.searchContext?.type === "private_messages";
     this.args.searchTermChanged(updatedTerm, {
       searchTopics,
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
+      ...(!this.args.searchAllTopics &&
+        inPMInboxContext && { setPMInboxContext: true }),
     });
     this.search.focusSearchInput();
   }
@@ -140,7 +144,7 @@ export default class AssistantItem extends Component {
       data-usage={{@usage}}
     >
       <a class={{concatClass @typeClass "search-link"}} href={{this.href}}>
-        <span aria-label={{i18n "search.title"}}>
+        <span class="search-icon-wrapper" aria-label={{i18n "search.title"}}>
           {{icon (or @icon "magnifying-glass")}}
         </span>
         <span class="search-item-wrapper">

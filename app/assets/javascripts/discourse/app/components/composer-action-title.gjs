@@ -1,8 +1,10 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
+import PostLanguageSelector from "discourse/components/post-language-selector";
 import discourseComputed from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -28,6 +30,9 @@ const TITLES = {
 
 @classNames("composer-action-title")
 export default class ComposerActionTitle extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   @alias("model.replyOptions") options;
   @alias("model.action") action;
 
@@ -62,6 +67,20 @@ export default class ComposerActionTitle extends Component {
         );
       }
     }
+  }
+
+  get showPostLanguageSelector() {
+    const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
+    if (
+      this.currentUser &&
+      this.siteSettings.content_localization_enabled &&
+      this.currentUser.can_localize_content &&
+      allowedActions.includes(this.model.action)
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
@@ -114,5 +133,12 @@ export default class ComposerActionTitle extends Component {
     <span class="action-title" role="heading" aria-level="1">
       {{this.actionTitle}}
     </span>
+
+    {{#if this.showPostLanguageSelector}}
+      <PostLanguageSelector
+        @composerModel={{this.model}}
+        @selectedLanguage={{this.model.locale}}
+      />
+    {{/if}}
   </template>
 }

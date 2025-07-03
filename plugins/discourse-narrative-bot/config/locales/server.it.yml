@@ -385,19 +385,6 @@ it:
 
           Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Lo sapevi che puoi aggiungere un sondaggio in ogni messaggio? Prova ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor per **creare un sondaggio**.
-        not_found: |-
-          Ooops! Non c'è nessun sondaggio nella tua risposta.
-
-          Usa l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Ehi, bel sondaggio! Sono o non sono un buon insegnante?
 
@@ -406,20 +393,6 @@ it:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Qualche volta potresti voler **nascondere dei dettagli** nelle tue risposte:
-
-          - Quando si stanno discutendo punti della trama di un film o di uno show televisivo che potrebbero essere considerati degli spoiler.
-
-          - Quando il tuo messaggio necessita di molti dettagli opzionali che potrebbero intralciare la lettura se letti tutti in una volta.
-
-          [details=Seleziona qui per vedere come funziona!]
-          1. Clicca il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor.
-          2. Seleziona "Nascondi Dettagli".
-          3. Inserisci un riassunto dei dettagli.
-          [/details]
-
-          Riesci ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a ingranaggio nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
           Hai problemi a creare un widget con dei dettagli? Prova a includere quanto segue nella prossima risposta:
 

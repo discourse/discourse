@@ -297,6 +297,7 @@ vi:
       created: "Bạn đã đánh dấu bài đăng này. %{name}"
       created_generic: "Bạn đã đánh dấu trang này. %{name}"
       create: "Tạo dấu trang"
+      clear_reminder: "Xóa lời nhắc"
       edit: "Chỉnh sửa dấu trang"
       not_bookmarked: "đánh dấu bài viết này"
       remove_reminder_keep_bookmark: "Xóa lời nhắc và giữ lại dấu trang"
@@ -1481,6 +1482,7 @@ vi:
           expired_at_time: "Đã hết hạn vào lúc %{time}"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
           hide_advanced: "Ẩn các tùy chọn nâng cao"
+          description: "Mô tả"
           restrict: "Hạn chế đến"
           restrict_email: "Hạn chế đối với email"
           restrict_domain: "Hạn chế đối với miền"
@@ -1941,9 +1943,9 @@ vi:
       italic_text: "văn bản nhấn mạnh"
       link_title: "Liên kết"
       link_description: "Nhập mô tả liên kết ở đây"
-      link_dialog_title: "Chèn liên kết"
-      link_optional_text: "tiêu đề tùy chọn"
-      link_url_placeholder: "Dán URL hoặc nhập vào chủ đề tìm kiếm"
+      link_dialog_action: "Chèn"
+      link_edit_action: "Cập nhật"
+      link_optional_text: "Văn bản"
       blockquote_title: "Blockquote"
       blockquote_text: "Trích dẫn"
       code_title: "Văn bản định dạng trước"
@@ -2326,9 +2328,6 @@ vi:
         bookmarks: "Bạn chưa chủ đề nào được đánh dấu."
         category: "Không có chủ đề nào trong %{category} ."
         top: "Không có chủ đề top."
-        educate:
-          new: '<p>Các chủ đề mới của bạn sẽ xuất hiện ở đây. Theo mặc định, các chủ đề được coi là mới và sẽ hiển thị chỉ báo <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nếu chúng được tạo trong 2 ngày qua.</p><p>Truy cập <a href="%{userPrefsUrl}">tùy chọn</a> của bạn để thay đổi.</p>'
-          unread: "<p>Các chủ đề chưa đọc của bạn xuất hiện ở đây.</p><p>Theo mặc định, các chủ đề được coi là chưa đọc và sẽ hiển thị số lượng chưa đọc <span class=\"badge unread-posts badge-notification\">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 5 phút</li></ul><p>Hoặc nếu bạn đã đặt chủ đề một cách rõ ràng thành Theo dõi hoặc Đã theo dõi qua \U0001F514 trong mỗi chủ đề.</p><p>Truy cập <a href=\"%{userPrefsUrl}\">tùy chọn</a> của bạn để thay đổi điều này.</p>"
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         posted: "Ở đây không có thêm chủ đề nào được đăng."
@@ -2776,6 +2775,8 @@ vi:
           actions: "Hành động"
           edit: "Sửa"
           delete: "Xóa"
+        post_language_selector:
+          none: "Không có gì"
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
@@ -4198,6 +4199,7 @@ vi:
           install: "Cài đặt"
           themes:
             title: "Themes"
+            install: "Cài đặt"
           components:
             title: "Các thành phần"
             install: "Cài đặt"
@@ -4221,7 +4223,6 @@ vi:
           delete: "Xóa"
           colors:
             title: "Màu sắc"
-          delete_confirm: "Xóa bảng màu này?"
       plugins:
         title: "Plugin"
         name: "Tên"
@@ -4449,6 +4450,10 @@ vi:
           remote_theme_edits: "Nếu bạn muốn chỉnh sửa chủ đề này, bạn phải <a href='%{repoURL}' target='_blank'>gửi thay đổi trên kho lưu trữ của nó</a>"
           repo_unreachable: "Không thể liên hệ với kho Git chứa chủ đề này. Thông báo lỗi:"
           imported_from_archive: "Theme này đã được nhập từ tệp .zip"
+          settings: "Cài đặt"
+          colors: "Màu sắc"
+          discard_colors: "Hủy bỏ"
+          colors_title: "Màu sắc"
           scss:
             text: "CSS"
           after_header:
@@ -4489,40 +4494,30 @@ vi:
           title: "Màu sắc"
           about: "Sửa đổi màu sắc mà chủ đề của bạn sử dụng. Tạo một bảng màu mới để bắt đầu."
           copy_name_prefix: "Bản sao của"
-          delete_confirm: "Xóa bảng màu này?"
           undo: "Hoàn tác"
           undo_title: "Hoàn tác thay đổi của bạn vơ"
           revert: "Phục hồi"
           revert_title: "Đặt lại màu này thành bảng màu mặc định của Discourse."
           primary:
             name: "chính"
-            description: "Hầu hết chữ, biểu tượng, và viền."
           secondary:
             name: "cấp hai"
-            description: "Màu nền, và màu chữ của một vài nút."
           tertiary:
             name: "cấp ba"
-            description: "Liên kết, một và nút, thông báo, và màu nhấn."
           quaternary:
             name: "chia bốn"
           header_background:
             name: "nền header"
-            description: "Màu nền header của trang."
           header_primary:
             name: "header chính"
-            description: "Chữ và icon trong header của website."
           highlight:
             name: "highlight"
-            description: "Màu nền của các thành phần được đánh dấu trên trang, như là bài viết và chủ đề."
           danger:
             name: "nguy hiểm"
-            description: "Màu đánh dấu cho thao tác xóa bài viết và chủ đề."
           success:
             name: "thành công"
-            description: "Sử dụng để chỉ một thao tác đã thành công."
           love:
             name: "đáng yêu"
-            description: "Màu của nút like"
           selected:
             name: "đã chọn"
         robots:

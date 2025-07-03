@@ -205,6 +205,8 @@
       border-top: 1px solid var(--primary-low);
       border-left: 1px solid var(--primary-low);
       border-right: 1px solid var(--primary-low);
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
 
       > .d-icon {
         color: var(--primary-medium);

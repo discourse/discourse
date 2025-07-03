@@ -62,65 +62,69 @@ export default class DPageHeader extends Component {
   <template>
     {{#if this.shouldDisplay}}
       <div class="d-page-header">
-        <div class="d-page-header__breadcrumbs">
-          <DBreadcrumbsContainer />
-          {{yield to="breadcrumbs"}}
-        </div>
+        {{#if (has-block "breadcrumbs")}}
+          <div class="d-page-header__breadcrumbs">
+            <DBreadcrumbsContainer />
+            {{yield to="breadcrumbs"}}
+          </div>
+        {{/if}}
 
-        <div class="d-page-header__title-row">
-          {{#if @titleLabel}}
-            <h1 class="d-page-header__title">{{@titleLabel}}</h1>
-          {{/if}}
+        {{#if (or @titleLabel (has-block "actions") @headerActionComponent)}}
+          <div class="d-page-header__title-row">
+            {{#if @titleLabel}}
+              <h1 class="d-page-header__title">{{@titleLabel}}</h1>
+            {{/if}}
 
-          {{#if (or (has-block "actions") @headerActionComponent)}}
-            <div class="d-page-header__actions">
-              {{#if this.site.mobileView}}
-                <DMenu
-                  @identifier="d-page-header-mobile-actions"
-                  @title={{i18n "more_options"}}
-                  @icon="ellipsis-vertical"
-                  class="btn-small"
-                >
-                  <:content>
-                    <DropdownMenu class="d-page-header__mobile-actions">
-                      {{#let
-                        (hash
-                          Primary=DefaultActionListItem
-                          Default=DefaultActionListItem
-                          Danger=DangerActionListItem
-                          Wrapped=WrappedActionListItem
-                        )
-                        as |actions|
-                      }}
-                        {{#if (has-block "actions")}}
-                          {{yield actions to="actions"}}
-                        {{else}}
-                          <@headerActionComponent @actions={{actions}} />
-                        {{/if}}
-                      {{/let}}
-                    </DropdownMenu>
-                  </:content>
-                </DMenu>
-              {{else}}
-                {{#let
-                  (hash
-                    Primary=PrimaryButton
-                    Default=DefaultButton
-                    Danger=DangerButton
-                    Wrapped=WrappedButton
-                  )
-                  as |actions|
-                }}
-                  {{#if (has-block "actions")}}
-                    {{yield actions to="actions"}}
-                  {{else}}
-                    <@headerActionComponent @actions={{actions}} />
-                  {{/if}}
-                {{/let}}
-              {{/if}}
-            </div>
-          {{/if}}
-        </div>
+            {{#if (or (has-block "actions") @headerActionComponent)}}
+              <div class="d-page-header__actions">
+                {{#if this.site.mobileView}}
+                  <DMenu
+                    @identifier="d-page-header-mobile-actions"
+                    @title={{i18n "more_options"}}
+                    @icon="ellipsis-vertical"
+                    class="btn-small"
+                  >
+                    <:content>
+                      <DropdownMenu class="d-page-header__mobile-actions">
+                        {{#let
+                          (hash
+                            Primary=DefaultActionListItem
+                            Default=DefaultActionListItem
+                            Danger=DangerActionListItem
+                            Wrapped=WrappedActionListItem
+                          )
+                          as |actions|
+                        }}
+                          {{#if (has-block "actions")}}
+                            {{yield actions to="actions"}}
+                          {{else}}
+                            <@headerActionComponent @actions={{actions}} />
+                          {{/if}}
+                        {{/let}}
+                      </DropdownMenu>
+                    </:content>
+                  </DMenu>
+                {{else}}
+                  {{#let
+                    (hash
+                      Primary=PrimaryButton
+                      Default=DefaultButton
+                      Danger=DangerButton
+                      Wrapped=WrappedButton
+                    )
+                    as |actions|
+                  }}
+                    {{#if (has-block "actions")}}
+                      {{yield actions to="actions"}}
+                    {{else}}
+                      <@headerActionComponent @actions={{actions}} />
+                    {{/if}}
+                  {{/let}}
+                {{/if}}
+              </div>
+            {{/if}}
+          </div>
+        {{/if}}
 
         {{#if @descriptionLabel}}
           <p class="d-page-header__description">

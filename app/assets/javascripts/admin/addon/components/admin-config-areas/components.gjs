@@ -12,7 +12,9 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import FilterInput from "discourse/components/filter-input";
 import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -161,6 +163,19 @@ export default class AdminConfigAreasComponents extends Component {
     }
   }
 
+  @action
+  deleteComponentById(id) {
+    this.components = this.components.filter((c) => c.id !== id);
+
+    if (
+      this.components.length === 0 &&
+      !this.nameFilter &&
+      !this.statusFilter
+    ) {
+      this.hasComponents = false;
+    }
+  }
+
   <template>
     <DPageSubheader
       @titleLabel={{i18n
@@ -171,11 +186,15 @@ export default class AdminConfigAreasComponents extends Component {
       }}
     >
       <:actions as |actions|>
-        <actions.Primary
-          disabled={{this.loading}}
-          @label="admin.config_areas.themes_and_components.components.install"
-          @action={{this.installModal}}
-        />
+        <PluginOutlet
+          @name="admin-config-area-components-new-button"
+          @outletArgs={{lazyHash actions=actions}}
+        >
+          <actions.Primary
+            @label="admin.config_areas.themes_and_components.components.install"
+            @action={{this.installModal}}
+          />
+        </PluginOutlet>
       </:actions>
     </DPageSubheader>
     <div class="container">
@@ -230,7 +249,10 @@ export default class AdminConfigAreasComponents extends Component {
               </thead>
               <tbody>
                 {{#each this.components as |comp|}}
-                  <ComponentRow @component={{comp}} @refresh={{this.load}} />
+                  <ComponentRow
+                    @component={{comp}}
+                    @deleteComponent={{this.deleteComponentById}}
+                  />
                 {{/each}}
               </tbody>
             </table>
@@ -244,7 +266,11 @@ export default class AdminConfigAreasComponents extends Component {
           {{else}}
             <AdminConfigAreaEmptyList
               @emptyLabel="admin.config_areas.themes_and_components.components.no_components"
-            />
+            >
+              <PluginOutlet
+                @name="admin-config-area-components-empty-list-bottom"
+              />
+            </AdminConfigAreaEmptyList>
           {{/if}}
         {{/if}}
       </ConditionalLoadingSpinner>
@@ -376,8 +402,8 @@ class ComponentRow extends Component {
 
   @action
   delete() {
-    return this.dialog.yesNoConfirm({
-      message: i18n(
+    return this.dialog.deleteConfirm({
+      title: i18n(
         "admin.config_areas.themes_and_components.components.delete_confirm",
         { name: this.args.component.name }
       ),
@@ -395,7 +421,7 @@ class ComponentRow extends Component {
               ),
             },
           });
-          this.args.refresh();
+          this.args.deleteComponent(this.args.component.id);
         } catch (error) {
           this.toasts.error({
             duration: "long",

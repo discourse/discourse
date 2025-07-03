@@ -592,6 +592,22 @@ login:
   enable_signup_cta:
     client: true
     default: true
+  enable_discourse_id:
+    default: false
+    hidden: true
+  discourse_id_client_id:
+    default: ""
+    hidden: true
+  discourse_id_client_secret:
+    default: ""
+    hidden: true
+    secret: true
+  discourse_id_verbose_logging:
+    default: false
+    hidden: true
+  discourse_id_provider_url:
+    default: ""
+    hidden: true
   enable_google_oauth2_logins:
     default: false
   google_oauth2_client_id: ""
@@ -1021,10 +1037,6 @@ groups:
   max_automatic_membership_email_domains:
     default: 50
     hidden: true
-  show_additional_about_groups:
-    client: true
-    default: false
-    hidden: true
 
 posting:
   min_post_length:
@@ -1372,9 +1384,6 @@ posting:
     client: true
     default: "auto"
     area: "posts_and_topics"
-  warn_reviving_old_topic_age:
-    default: 180
-    area: "posts_and_topics"
   autohighlight_all_code:
     client: true
     default: false
@@ -1586,6 +1595,36 @@ posting:
     type: integer
     min: 1
     hidden: true
+
+content_localization:
+  content_localization_enabled:
+    client: true
+    default: false
+    area: "localization"
+  content_localization_allowed_groups:
+    type: group_list
+    list_type: compact
+    allow_any: false
+    client: true
+    default: "1|2" # admin, moderator
+    area: "localization"
+  content_localization_supported_locales:
+    default: ""
+    type: list
+    client: true
+    list_type: named
+    allow_any: false
+    choices: "LocaleSiteSetting.values"
+    area: "localization"
+    validator: "ContentLocalizationLocalesValidator"
+  content_localization_max_locales:
+    default: 10
+    type: integer
+    hidden: true
+  content_localization_anon_language_switcher:
+    default: false
+    client: true
+    validator: "LanguageSwitcherSettingValidator"
 
 email:
   email_time_window_mins:
@@ -2053,6 +2092,24 @@ files:
     default: true
   s3_use_acls:
     default: true
+  s3_enable_access_control_tags:
+    default: false
+    hidden: true
+  s3_access_control_tag_key:
+    default: "discourse:acl"
+    hidden: true
+    min: 1
+    max: 128
+  s3_access_control_tag_public_value:
+    default: "public"
+    hidden: true
+    min: 1
+    max: 256
+  s3_access_control_tag_private_value:
+    default: "private"
+    hidden: true
+    min: 1
+    max: 256
   s3_presigned_get_url_expires_after_seconds:
     default: 300
     hidden: true
@@ -2260,7 +2317,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    area: "group_permissions"
+    area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
@@ -2523,7 +2580,7 @@ security:
     allow_any: false
     choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
-    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com/|https://open.spotify.com/"
+    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/*/embed/preview/|https://www.instagram.com/|https://open.spotify.com/"
     type: list
     list_type: simple
     client: true
@@ -3283,9 +3340,6 @@ uncategorized:
   educate_until_posts:
     default: 2
     area: "users"
-  sequential_replies_threshold:
-    default: 2
-    area: "stats_and_thresholds"
   get_a_room_threshold:
     default: 3
     area: "stats_and_thresholds"
@@ -3295,9 +3349,6 @@ uncategorized:
   dominating_topic_minimum_percent:
     default: 40
     area: "stats_and_thresholds"
-  disable_avatar_education_message:
-    default: false
-    area: "users"
   pm_warn_user_last_seen_months_ago:
     default: 24
     area: "users"
@@ -3564,6 +3615,7 @@ uncategorized:
   enable_welcome_banner:
     client: true
     default: true
+    area: "interface"
 
 user_preferences:
   default_email_digest_frequency:
@@ -3996,26 +4048,15 @@ experimental:
   rich_editor:
     client: true
     default: false
-  experimental_content_localization:
+  reviewable_ui_refresh:
     client: true
-    default: false
-    area: "localization"
-  experimental_content_localization_allowed_groups:
     type: group_list
-    list_type: compact
-    allow_any: false
-    client: true
-    default: "1|2" # admin, moderator
-    area: "localization"
-  experimental_content_localization_supported_locales:
     default: ""
+  experimental_system_themes:
     type: list
-    client: true
-    list_type: named
+    default: "horizon"
+    hidden: true
     allow_any: false
-    choices: "LocaleSiteSetting.values"
-    area: "localization"
-  experimental_anon_language_switcher:
-    default: false
-    client: true
-    validator: "LanguageSwitcherSettingValidator"
+    choices:
+      - "foundation"
+      - "horizon"

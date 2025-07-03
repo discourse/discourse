@@ -727,6 +727,8 @@ export default class TextareaTextManipulation {
       this.replaceText(value, newValue, { skipNewSelection: true });
       this.selectText(this.value.indexOf(newValue), newValue.length);
     }
+
+    return true;
   }
 
   @bind

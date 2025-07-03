@@ -11,6 +11,7 @@ fi:
     models:
       fields:
         required_field: Kenttä "%{name}" on täytettävä kohdassa "%{target}:%{target_name}".
+        invalid_field: Kentän komponenttia `%{component}` ei voi käyttää kohteessa `%{target}:%{target_name}`.
         invalid_metadata: Kentän "%{field}" tiedot ovat virheellisiä, tai komponentti "%{component}" on tuntematon.
     triggerables:
       errors:

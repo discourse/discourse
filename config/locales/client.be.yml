@@ -695,6 +695,7 @@ be:
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
         invite:
+          description: "Апісанне"
           cancel: "адмяніць"
       password:
         title: "Пароль"
@@ -890,11 +891,8 @@ be:
       bold_text: "Моцнае вылучэнне тэксту"
       italic_title: "вылучэнне"
       italic_text: "выдзялення тэксту"
-      link_title: "гіперспасылка"
+      link_title: "Спасылка"
       link_description: "увядзіце апісанне спасылкі"
-      link_dialog_title: "ўставіць гіперспасылку"
-      link_optional_text: "неабавязкова назву"
-      link_url_placeholder: "Устаўце URL адрас альбо тып для пошуку тэмаў"
       blockquote_title: "цытата"
       blockquote_text: "цытата"
       code_title: "Папярэдне фарматаваны тэкст"
@@ -1903,6 +1901,9 @@ be:
           enable: "Уключыць"
           disable: "Адключыць"
           add: "Дадаць"
+          settings: "Налады"
+          colors: "<......"
+          colors_title: "<......"
           all_filter: "Усё"
           active_filter: "актыўныя"
         schema:
@@ -1924,15 +1925,12 @@ be:
             name: "троесны"
           header_background:
             name: "фон загалоўка"
-          header_primary:
-            description: "Тэкст і абразкі ў загалоўку сайта."
           highlight:
             name: "асвятленне"
           success:
             name: "поспех"
           love:
             name: "каханне"
-            description: "Колер кнопкі \"Падабаецца\"."
           editor:
             light: "святло"
             dark: "цёмна"

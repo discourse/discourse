@@ -488,9 +488,11 @@ sk:
       bookmarked_success: "Pridané do záložky!"
       deleted_bookmark_success: "Záložka odstránená!"
       reminder_set_success: "Pripomienka nastavená!"
+      reminder_clear_success: "Pripomienka vymazaná"
       created: "Tento príspevok ste pridali medzi záložky. %{name}"
       created_generic: "Toto ste si priradili do záložiek. %{name}"
       create: "Vytvoriť záložku"
+      clear_reminder: "Vymazať pripomienku"
       edit: "Upraviť záložku"
       not_bookmarked: "Vytvor záložku na tento príspevok"
       remove_reminder_keep_bookmark: "Odstráňte pripomenutie a ponechajte záložku"
@@ -2112,6 +2114,7 @@ sk:
           edit_link_options: "Upravte možnosti prepojenia alebo pošlite e-mailom."
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
+          description: "Popis"
           restrict: "Obmedziť na"
           restrict_email: "Obmedziť na e-mail"
           restrict_domain: "Obmedziť na doménu"
@@ -2590,6 +2593,9 @@ sk:
       to_continue: "Prosím, prihláste sa"
       preferences: "Na zmenu používateľských nastavení musíte byť prihlásený."
       not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Prihláste sa pomocou Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Prihlásenie pomocou služby Google"
@@ -2874,11 +2880,16 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
-      link_title: "Hyperlink"
+      link_title: "Odkaz"
       link_description: "tu zadaj popis odkazu"
-      link_dialog_title: "Vložte hyperlink"
-      link_optional_text: "nepovinný názov"
-      link_url_placeholder: "Vložte adresu URL alebo zadajte vyhľadávané témy"
+      link_dialog_title: "Vložiť odkaz"
+      link_dialog_action: "Vložiť"
+      link_edit_title: "Upraviť odkaz"
+      link_edit_action: "Aktualizovať"
+      link_text_label: "Text odkazu"
+      link_optional_text: "Text"
+      link_url_label: "Odkaz alebo téma"
+      link_url_placeholder: "Vložte odkaz alebo vyhľadajte témy"
       blockquote_title: "Úvodzovky"
       blockquote_text: "Úvodzovky"
       code_title: "Preformátovaný text"
@@ -2948,6 +2959,12 @@ sk:
       image_scale_button: "Zmeniť veľkosť obrázka na %{percent}%"
       delete_image_button: Odstrániť obrázok
       toggle_image_grid: Prepnúť mriežku obrázkov
+      link_toolbar:
+        edit: "Upraviť odkaz"
+        copy: "Kopírovať odkaz"
+        remove: "Odstrániť odkaz"
+        visit: "Otvoriť odkaz na externej karte"
+        link_copied: "Odkaz skopírovaný!"
     notifications:
       tooltip:
         regular:
@@ -3115,6 +3132,7 @@ sk:
       relevance: "Relevancia"
       latest_post: "Najnovší príspevok"
       latest_topic: "Posledná téma"
+      last_read: "Posledné čítanie"
       most_viewed: "Najviac prezerané"
       most_liked: "Najviac sa páčia"
       select_all: "Označ všetky"
@@ -3417,10 +3435,11 @@ sk:
         top: "Nie sú žiadne populárne témy."
         hot: "Neexistujú žiadne horúce témy."
         filter: "Neexistujú žiadne témy."
-        educate:
-          new: '<p>Vaše nové témy sa zobrazia tu. Predvolene sú témy považované za nové a zobrazí sa na nich indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, ak boli vytvorené za posledné 2 dni.</p><p>Navštívte svoje <a href="%{userPrefsUrl}">nastavenia</a>, aby ste to zmenili.</p>'
-          unread: "<p>Vaše neprečítané témy sa zobrazujú tu.</p><p>V predvolenom nastavení sa témy považujú za neprečítané a zobrazí sa počet neprečítaných <span class=\"badge unread-posts badge-notification\">1</span>, ak:</p><ul><li>Vytvorili ste tému</li><li>Odpovedali ste na tému</li><li>Čítali ste tému dlhšie ako 5 minút</li></ul><p>Alebo ak ste tému explicitne nastavili ako Sledovanú alebo Sledovanú prostredníctvom \U0001F514 v každej téme.</p><p>Navštívte svoje <a href=\"%{userPrefsUrl}\">nastavenia</a>, aby ste to zmenili.</p>"
-          new_new: "<p>Zobrazia sa tu vaše nové témy a tiež neprečítané témy. V predvolenom nastavení sa témy považujú za nové a zobrazí sa na nich indikátor <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>, ak boli vytvorené za posledné 2 dni. Neprečítané témy budú zobrazovať počet neprečítaných <span class=\"badge unread-posts badge-notification\">1</span>, ak ste: vytvorili tému, odpovedali na tému, čítali tému dlhšie ako 5 minút alebo ak ste tému explicitne nastavili ako sledovanú alebo sledovanú prostredníctvom \U0001F514 v každej téme.</p><p>Navštívte svoje <a href=\"%{userPrefsUrl}\">nastavenia</a>, aby ste to zmenili.</p>"
+        education:
+          topic_tracking_preferences: "Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href=\"%{basePath}/my/preferences/tracking\">nastaveniach</a>."
+          unread: "Nič nezostalo neprečítané... pôsobivé!"
+          new_new: "Momentálne nič nové...čoskoro sa vráťte!"
+          new: "Momentálne nič nové...čoskoro sa vráťte!"
       bottom:
         latest: "Nie je už viac najnovšich tém."
         posted: "Žiadne ďalšie témy na čítanie."
@@ -3578,6 +3597,7 @@ sk:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Prezrite si všetky kategórie</a> alebo <a href='%{basePath}/latest'>najnovšie témy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Prehliadať všetky kategórie</a>, <a href='%{basePath}/latest'>zobraziť najnovšie témy</a> alebo vidieť hore:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Prehľadávať všetky značky</a> alebo <a href='%{basePath}/latest'>zobraziť najnovšie témy</a>."
+      browse_latest_topics: "Prehľadávanie najnovších tém"
       suggest_create_topic: Ste pripravení <a href>začať novú konverzáciu?</a>
       jump_reply: "Prejsť na pôvodné umiestnenie príspevku"
       jump_reply_aria: "Prejsť na príspevok @%{username}na jeho pôvodnom mieste"
@@ -4059,7 +4079,17 @@ sk:
           edit: "Upraviť"
           delete: "Odstrániť"
         add: "Pridať nový preklad"
+        view:
+          one: "Zobraziť %{count} preloženú lokalitu"
+          few: "Zobraziť %{count} preložené lokality"
+          many: "Zobraziť %{count} preložené lokality"
+          other: "Zobraziť %{count} preložené lokality"
+        modal:
+          title: "Preklady pre príspevok"
+          confirm_delete: "Ste si istí, že chcete odstrániť preklady pre '%{languageCode}'?"
         success: "Preklady boli úspešne aktualizované"
+        post_language_selector:
+          none: "Žiadny"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -4275,6 +4305,7 @@ sk:
         title: "Zdieľať príspevok #%{post_number}"
         instructions: "Zdieľať odkaz na tento príspevok:"
       original_language: "Tento príspevok bol pôvodne napísaný v %{language}"
+      original_language_and_outdated: "Tento príspevok bol pôvodne napísaný v jazyku %{language}. Preklad môže byť zastaraný."
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
@@ -4327,6 +4358,7 @@ sk:
       background_image_dark: "Obrázok na pozadí tmavej kategórie"
       style: "Štýly"
       background_color: "Farba"
+      foreground_color: "Farba textu"
       styles:
         type: "Štýl"
         icon: "Ikona"
@@ -5148,7 +5180,7 @@ sk:
           save: "Uložiť"
           delete: "Odstrániť"
           delete_confirm: "Naozaj chcete odstrániť túto sekciu?"
-          delete_public_confirm: "Táto sekcia je <strong>viditeľná pre všetkých</strong>, naozaj ju chcete odstrániť?"
+          delete_public_confirm: "Táto sekcia je viditeľná pre všetkých, naozaj ju chcete odstrániť?"
           update_public_confirm: "Zmeny budú <strong>viditeľné pre všetkých</strong> na tejto stránke. Si si istý?"
           mark_as_private_confirm: "Táto časť je <strong>viditeľná pre všetkých</strong>. Po aktualizácii bude <strong>viditeľná len pre vás</strong>. Ste si istí?"
           reset_confirm: "Ste si istí, že chcete obnoviť túto sekciu na predvolenú hodnotu?"
@@ -5462,6 +5494,7 @@ sk:
             unseen: "Nevidené témy na stránke %{category} bez značiek"
             hot: "Horúce témy v %{category} bez značiek"
             posted: "Témy v %{category} bez značiek, ktoré ste zverejnili"
+            bookmarks: "Témy na stránke %{category} bez záložiek, ktoré ste si pridali"
             default: "%{filter} tém v %{category} bez značiek"
         categories: "Všetky kategórie"
   admin_js:
@@ -5530,6 +5563,7 @@ sk:
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
         logo:
           title: "Logo"
+          header_description: "Nakonfigurujte logá a ikony používané na celej vašej stránke"
           form:
             saved: "Nastavenia loga sú uložené."
             logo:
@@ -5594,6 +5628,7 @@ sk:
               help_text: "odporúčaná veľkosť je aspoň 280 x 150 pixelov. Nepoužívajte obrázok SVG."
         fonts:
           title: "Fonty"
+          header_description: "Nakonfigurujte písma používané na celej stránke vrátane základného písma, písma nadpisu a predvolenej veľkosti textu"
           form:
             more_fonts: "Viac fontov"
             fewer_fonts: "Menej fontov"
@@ -6512,9 +6547,11 @@ sk:
           install: "Inštalácia"
           themes:
             title: "Témy"
+            description: "Témy pre celú stránku, ktoré menia celkový vzhľad a dojem z vašej stránky pre všetkých používateľov."
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
             new_theme: "Nová téma"
             back: "Späť na témy"
+            install: "Inštalácia"
           components:
             title: "Komponenty"
             description: "Prispôsobenia, ktoré menia povrchové prvky dizajnu vášho fóra alebo pridávajú ďalšie funkcie front-endu"
@@ -6581,8 +6618,10 @@ sk:
           unsaved_changes: "Máte neuložené zmeny"
           copy_of: "Kópia %{name}"
           copy_created: 'Bola vytvorená nová kópia "%{name}"'
-          illegal_character_in_color: "Farby pozostávajú len z hexadecimálnych znakov"
-          delete_confirm: "Odstrániť túto paletu farieb?"
+          illegal_character_in_color: "Farba musí pozostávať len z hexadecimálnych znakov"
+          invalid_color_length: "Farba musí byť vo formáte #rrggbb alebo #rgb"
+          blocked_edit_for_system: "Paletu farieb, ktorá patrí k systémovej téme, nie je možné upravovať."
+          delete_confirm: "Naozaj chcete odstrániť túto farebnú paletu?"
       plugins:
         title: "Pluginy"
         name: "Meno"
@@ -6883,6 +6922,17 @@ sk:
           remote_theme_edits: "Ak chcete upraviť túto tému, musíte <a href='%{repoURL}' target='_blank'>odoslať zmenu v jej úložisku</a>"
           repo_unreachable: "Nepodarilo sa kontaktovať Git repozitár tohto motívu. Chybová správa:"
           imported_from_archive: "Táto téma bola importovaná zo súboru .zip"
+          settings: "Nastavenia"
+          colors: "Farby"
+          unsaved_colors:
+            one: "Máte %{count} neuloženú faribu"
+            few: "Máte %{count} neuložených farieb"
+            many: "Máte %{count} neuložených farieb"
+            other: "Máte %{count} neuložené farby"
+          unsaved_colors_leave_route_confirmation: "Zatiaľ ste neuložili zmeny farebnej palety. Naozaj chcete odísť?"
+          save_colors: "Uložiť farby"
+          discard_colors: "Zahodiť"
+          colors_title: "Farby"
           scss:
             text: "CSS"
             title: "Vlastné pravidlá CSS s podporou syntaxe SCSS"
@@ -6970,57 +7020,62 @@ sk:
           about: "Upravte farby používané v témach. Na začiatok vytvorte novú paletu farieb."
           new_name: "Nová paleta farieb"
           copy_name_prefix: "Kópia"
-          delete_confirm: "Odstrániť túto paletu farieb?"
+          delete_confirm: "Naozaj chcete odstrániť túto farebnú paletu?"
           undo: "Späť"
           undo_title: "Zrušiť zmeny farby a vrátiť sa k predchádzajucej uloženej verzii. "
           revert: "Vrátiť zmeny"
           revert_title: "Obnovenie tejto farby na predvolenú farebnú paletu Discourse."
           primary:
             name: "primárny"
-            description: "Väčšina textov, ikony, a okraje."
+            description: "Hlavný text a ikony"
           primary-medium:
             name: "primárne-stredné"
+            description: "Vypnutý alebo stlmený text"
           primary-low-mid:
             name: "primárne-nízke-stredné"
+            description: "Ohraničenia a jemné akcenty"
           secondary:
             name: "sekundárny"
-            description: "Hlavná farba pozadia a farba textu niektorých ovládacích prvkov."
+            description: "Hlavné pozadie a niektoré texty tlačidiel"
           tertiary:
             name: "terciárny"
-            description: "Odkazy, nejaké tlačidlá, upozornenia a zvýrazňovacie farby."
+            description: "Farba akcentu (odkazy, tlačidlá, odznaky)"
           quaternary:
             name: "štvrťročne"
-            description: "Na voliteľné použitie v témach."
+            description: "Voliteľný prízvuk témy"
           header_background:
             name: "pozadie hlavičky"
-            description: "Farba pozadia hlavičky stránky."
+            description: "Pozadie hlavičky"
           header_primary:
             name: "hlavné záhlavie"
-            description: "Texty a ikony v záhlaví stránky."
+            description: "Text záhlavia a ikony"
           highlight:
             name: "zvýraznenie"
-            description: "Farba pozadia zvýrazneného prvku na stránke, napríklad príspevku alebo témy."
+            description: "Zvýraznené príspevky alebo témy"
           highlight-high:
             name: "zvýraznenie-vysoké"
+            description: "Silné zvýraznenie"
           highlight-medium:
             name: "zvýraznenie-stredné"
+            description: "Stredné zvýraznenie"
           highlight-low:
             name: "zvýraznenie-nízke"
+            description: "Jemné zvýraznenie"
           danger:
             name: "nebezpečenstvo"
-            description: "Zvýrazňovacia farba pre akcie ako napríklad mazanie príspevkov a tém."
+            description: "Chyby a akcie vymazania"
           success:
             name: "úspech"
-            description: "Použitá pre úspešne vykonané akcie."
+            description: "Úspešné akcie"
           love:
             name: "obľúbené"
-            description: "Farba tlačidla \"Páči sa\""
+            description: "Tlačidlo \"Páči sa mi to"
           selected:
             name: "vybraté"
-            description: "Farba pozadia prvkov, ako sú napríklad položky zoznamu, keď sú vybraté/aktívne."
+            description: "Aktívne alebo vybrané položky"
           hover:
             name: "hover"
-            description: "Farba pozadia prvkov, ako sú napríklad položky zoznamu, keď na ne umiestnite kurzor myši alebo je na ne aktívna klávesnica."
+            description: "Pozadie pri prechádzaní alebo zaostrení"
           editor:
             light: "Svetlá"
             dark: "Tmavá"
@@ -7959,6 +8014,7 @@ sk:
           basic: "Základné nastavenia"
           users: "Používatelia"
           posting: "Prispievam"
+          content_localization: "Lokalizácia obsahu"
           email: "Email"
           files: "Súbory"
           trust: "Stupne dôvery"

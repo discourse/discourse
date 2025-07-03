@@ -6,7 +6,6 @@ const extension = {
       attrs: { open: { default: true } },
       content: "summary block+",
       group: "block",
-      draggable: true,
       selectable: true,
       defining: true,
       isolating: true,

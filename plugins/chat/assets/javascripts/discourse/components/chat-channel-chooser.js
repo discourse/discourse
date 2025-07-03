@@ -4,14 +4,16 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import ChatChannelChooserHeader from "./chat-channel-chooser-header";
+import ChatChannelChooserRow from "./chat-channel-chooser-row";
 
 @classNames("chat-channel-chooser")
 @selectKitOptions({
-  headerComponent: "chat-channel-chooser-header",
+  headerComponent: ChatChannelChooserHeader,
 })
 @pluginApiIdentifiers("chat-channel-chooser")
 export default class ChatChannelChooser extends ComboBoxComponent {
   modifyComponentForRow() {
-    return "chat-channel-chooser-row";
+    return ChatChannelChooserRow;
   }
 }

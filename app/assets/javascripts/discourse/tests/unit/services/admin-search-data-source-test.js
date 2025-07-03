@@ -3,8 +3,10 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
+import {
+  logIn,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import {
   PageLinkFormatter,
@@ -70,14 +72,17 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    logIn(getOwner(this));
+    updateCurrentUser({ admin: true });
     this.subject = getOwner(this).lookup("service:admin-search-data-source");
+    this.adminNavManager = getOwner(this).lookup("service:admin-nav-manager");
   });
 
   test("buildMap - is a noop if already cached", async function (assert) {
     await this.subject.buildMap();
-    sinon.stub(ADMIN_NAV_MAP, "forEach");
+    sinon.stub(PreloadStore, "get");
     await this.subject.buildMap();
-    assert.false(ADMIN_NAV_MAP.forEach.called);
+    assert.false(PreloadStore.get.called);
   });
 
   test("buildMap - makes a key/value object of preloaded plugins, excluding disabled and invalid ones", async function (assert) {
@@ -93,10 +98,13 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     );
   });
 
-  test("buildMap - uses ADMIN_NAV_MAP to build up a list of page links including sub-pages", async function (assert) {
+  test("buildMap - uses adminNavManager to build up a list of page links including sub-pages", async function (assert) {
     await this.subject.buildMap();
 
-    assert.true(this.subject.pageDataSourceItems.length > ADMIN_NAV_MAP.length);
+    assert.true(
+      this.subject.pageDataSourceItems.length >
+        this.adminNavManager.filteredNavMap.length
+    );
 
     assert.deepEqual(this.subject.pageDataSourceItems[0], {
       label: "Dashboard",
@@ -114,6 +122,49 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
         (page) => page.url === "/admin/backups/logs"
       ),
       null
+    );
+  });
+
+  test("buildMap - labels are correct for top-level, second-level, and third-level nav", async function (assert) {
+    await this.subject.buildMap();
+
+    const firstPage = this.subject.pageDataSourceItems.find(
+      (page) => page.url === "/admin"
+    );
+
+    assert.notStrictEqual(firstPage, undefined, "top-level page exists");
+    assert.strictEqual(
+      firstPage.label,
+      i18n("admin.dashboard.title"),
+      "top-level label is correct e.g. Dashboard"
+    );
+
+    const secondPage = this.subject.pageDataSourceItems.find(
+      (page) => page.url === "/admin/config/flags"
+    );
+
+    assert.notStrictEqual(secondPage, undefined, "second-level page exists");
+    assert.strictEqual(
+      secondPage.label,
+      i18n("admin.config_sections.community.title") +
+        " > " +
+        i18n("admin.config.flags.title"),
+      "second-level label is correct e.g. Community > Flags"
+    );
+
+    const thirdPage = this.subject.pageDataSourceItems.find(
+      (page) => page.url === "/admin/backups/logs"
+    );
+
+    assert.notStrictEqual(thirdPage, undefined, "third-level page exists");
+    assert.strictEqual(
+      thirdPage.label,
+      i18n("admin.config_sections.advanced.title") +
+        " > " +
+        i18n("admin.config.backups.title") +
+        " > " +
+        i18n("admin.config.backups.sub_pages.logs.title"),
+      "third-level label is correct e.g. Advanced > Backups > Logs"
     );
   });
 
@@ -142,8 +193,8 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       {
         description: "first page",
         icon: "house",
-        keywords: "exact setting",
-        label: "Page about exact setting",
+        keywords: "exact settings",
+        label: "Page about whatever",
         type: "page",
         url: "/admin",
       },
@@ -152,14 +203,14 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       {
         description: "first setting",
         icon: "house",
-        keywords: "exact setting",
+        keywords: "exact settings",
         label: "exact setting",
         type: "setting",
         url: "/admin",
       },
     ];
-    let results = this.subject.search("exact setting");
-    assert.deepEqual(results[0].label, "Page about exact setting");
+    let results = this.subject.search("exact      setting");
+    assert.deepEqual(results[0].label, "Page about whatever");
   });
 });
 
@@ -219,7 +270,7 @@ module(
         this.router,
         navMapSection,
         link,
-        i18n("admin.config.backups.title")
+        i18n(navMapSection.label) + " > " + i18n("admin.config.backups.title")
       );
       assert.deepEqual(
         formatter.format().label,
@@ -228,7 +279,7 @@ module(
           i18n("admin.config.backups.title") +
           " > " +
           i18n(link.label),
-        "link uses the section label, parent label, and link label for sub-pages"
+        "link uses the parent label and link label for sub-pages, since the section label is already included in the parent label"
       );
 
       link = {
@@ -286,9 +337,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().label,
-        i18n("chat.admin.title") +
-          " > " +
-          humanizedSettingName(setting.setting),
+        i18n("chat.admin.title") + " > " + setting.humanized_name,
         "label uses the plugin admin route label and setting name"
       );
     });
@@ -310,9 +359,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().label,
-        i18n("admin.config.about.title") +
-          " > " +
-          humanizedSettingName(setting.setting),
+        i18n("admin.config.about.title") + " > " + setting.humanized_name,
         "label uses the primary area and setting name"
       );
     });
@@ -336,7 +383,7 @@ module(
         formatter.format().label,
         i18n("admin.site_settings.categories.required") +
           " > " +
-          humanizedSettingName(setting.setting),
+          setting.humanized_name,
         "label uses the category and setting name"
       );
     });

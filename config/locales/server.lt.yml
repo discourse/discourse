@@ -357,20 +357,6 @@ lt:
       few: "%{count} pranešimai"
       many: "%{count} pranešimų"
       other: "%{count} pranešimų"
-    avatar: |
-      ### O kaip jūsų paskyros nuotrauka?
-
-      Paskelbėte keletą temų ir atsakymų, tačiau jūsų profilio nuotrauka nėra tokia unikali kaip jūs - tai tik laiškas.
-
-      Ar pagalvojote ** [apsilankyti savo vartotojo profilyje] (%{profile_path}) ** ir įkelti nuotrauką, vaizduojančią jus?
-
-      Lengviau sekti diskusijas ir susirasti įdomių žmonių pokalbiuose, kai kiekvienas turi unikalią profilio nuotrauką!
-    reviving_old_topic: |
-      ### Atgaivinti šią temą?
-
-      Paskutinis atsakymas į šią temą buvo **%{time_ago}**. Jūsų atsakymas temą pakels į jos sąrašo viršų ir praneš visiems anksčiau dalyvavusiems pokalbyje.
-
-      Ar tikrai norite tęsti šį seną pokalbį?
   activerecord:
     attributes:
       category:
@@ -1367,7 +1353,6 @@ lt:
     hide_suspension_reasons: "Nerodyti sustabdymo priežasčių viešai naudotojų profiliuose."
     user_selected_primary_groups: "Leiskite vartotojams nustatyti savo pagrindinę grupę"
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
-    disable_avatar_education_message: "Išjungti švietimo pranešimą keičiant avataras."
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."

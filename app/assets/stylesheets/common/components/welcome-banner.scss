@@ -14,22 +14,21 @@
 }
 
 .welcome-banner {
-  margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    padding: 1.5em 0 3em;
+    padding: var(--space-6) 0 3em;
 
     @include viewport.until(md) {
-      padding: 1em 8px 1.25em;
-      margin-top: 0.5em;
+      padding: var(--space-4) 8px var(--space-5);
+      margin-top: var(--space-2);
     }
 
     @include viewport.until(sm) {
       display: block;
-      padding: 0.5em;
+      padding: var(--space-2);
       margin-top: 0;
     }
 
@@ -67,20 +66,35 @@
       font-size: var(--font-up-6);
       line-height: $line-height-medium;
       font-weight: bold;
-      margin-bottom: 0.5rem;
+      margin-bottom: var(--space-2);
 
       @include viewport.until(md) {
         font-size: var(--font-up-4);
       }
 
       @include viewport.until(sm) {
-        font-size: var(--font-up-2);
+        font-size: var(--font-up-1);
       }
     }
 
     .welcome-banner__title,
     p {
       text-align: center;
+    }
+
+    .welcome-banner__subheader {
+      font-size: var(--font-down-6);
+      font-weight: normal;
+      margin: 0;
+      padding: 0.25rem 0;
+
+      @include viewport.until(md) {
+        font-size: var(--font-down-4);
+      }
+
+      @include viewport.until(sm) {
+        font-size: var(--font-down-1);
+      }
     }
 
     .btn.search-icon {
@@ -111,11 +125,11 @@
       }
 
       + .search-menu-container .search-input {
-        padding-left: 2em;
+        padding-left: var(--space-8);
 
         .rtl & {
           padding-left: unset;
-          padding-right: 2em;
+          padding-right: var(--space-8);
         }
       }
 
@@ -124,7 +138,7 @@
       }
     }
 
-    .results {
+    .search-menu-container .results {
       @include float-down;
       box-sizing: border-box;
       border-radius: var(--d-border-radius);
@@ -133,9 +147,14 @@
       left: 0;
       top: 100%;
       right: 0;
+      padding-top: 0;
 
       @include viewport.until(sm) {
         width: 100%;
+      }
+
+      .search-random-quick-tip {
+        padding-top: var(--space-3);
       }
 
       ul,
@@ -144,7 +163,7 @@
         margin: 0;
       }
 
-      .d-icon-magnifying-glass {
+      .search-icon-wrapper {
         display: none;
       }
     }

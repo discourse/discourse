@@ -75,9 +75,8 @@ acceptance("Discourse Presence Plugin", function (needs) {
       "publishes reply presence when typing"
     );
 
-    const menu = selectKit(".toolbar-popup-menu-options");
-    await menu.expand();
-    await menu.selectRowByName("toggle-whisper");
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='toggle-whisper']");
 
     assert
       .dom(".composer-actions svg.d-icon-far-eye-slash")
@@ -107,13 +106,13 @@ acceptance("Discourse Presence Plugin", function (needs) {
   test("Uses the edit channel for editing", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post[data-post-number='1'] button.show-more-actions");
+    await click(".topic-post[data-post-number='1'] button.edit");
 
     assert
       .dom(".d-editor-input")
       .hasValue(
-        document.querySelector(".topic-post:nth-of-type(1) .cooked > p")
+        document.querySelector(".topic-post[data-post-number='1'] .cooked > p")
           .innerText,
         "composer has contents of post to be edited"
       );

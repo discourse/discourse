@@ -281,7 +281,27 @@ module("Integration | Component | Post", function (hooks) {
 
     await renderComponent(this.post);
 
-    assert.dom(".post-language").exists();
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
+    assert.dom(".post-language").hasText(
+      i18n("post.original_language", {
+        language: "English",
+      })
+    );
+  });
+
+  test("outdated localization", async function (assert) {
+    this.post.is_localized = true;
+    this.post.language = "English";
+    this.post.localization_outdated = true;
+
+    await renderComponent(this.post);
+
+    await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
+    assert.dom(".post-language").hasText(
+      i18n("post.original_language_and_outdated", {
+        language: "English",
+      })
+    );
   });
 
   test("read indicator", async function (assert) {
@@ -668,7 +688,7 @@ module("Integration | Component | Post", function (hooks) {
     this.post.created_at = new Date();
     this.post.notice = {
       type: "returning_user",
-      lastPostedAt: twoDaysAgo,
+      last_posted_at: twoDaysAgo,
     };
 
     await renderComponent(this.post);

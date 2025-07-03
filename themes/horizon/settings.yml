@@ -1,0 +1,11 @@
+enable_welcome_banner:
+  default: true
+  description: "Overrides the core `enable welcome banner` site setting"
+
+search_experience:
+  type: enum
+  default: search_field
+  choices:
+    - search_field
+    - search_icon
+  description: "Overrides the core `search experience` site setting"

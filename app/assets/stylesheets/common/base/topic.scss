@@ -37,7 +37,7 @@
       grid-area: timeline;
       align-self: start;
       position: sticky;
-      top: calc(var(--header-offset, 60px) + 2em);
+      top: calc(var(--header-offset, 60px) + 1.5em);
       margin-left: 1em;
       z-index: z("timeline");
 
@@ -189,6 +189,29 @@
 
     input#edit-title {
       width: 100%;
+    }
+
+    .fancy-title {
+      .d-icon-pencil {
+        font-size: var(--font-down-3);
+      }
+    }
+
+    html.discourse-no-touch & {
+      .fancy-title {
+        .edit-topic {
+          opacity: 0;
+          transition: opacity 0.15s linear;
+          background: none;
+        }
+
+        &:hover,
+        &:focus {
+          .edit-topic {
+            opacity: 1;
+          }
+        }
+      }
     }
 
     @include viewport.until(sm) {

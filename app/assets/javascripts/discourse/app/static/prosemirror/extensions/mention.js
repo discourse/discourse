@@ -1,11 +1,15 @@
 import { mentionRegex } from "pretty-text/mentions";
+import { ajax } from "discourse/lib/ajax";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+
+const VALID_MENTIONS = new Set();
+const INVALID_MENTIONS = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
     mention: {
-      attrs: { name: {} },
+      attrs: { name: {}, valid: { default: true } },
       inline: true,
       group: "inline",
       draggable: true,
@@ -15,14 +19,21 @@ const extension = {
           tag: "a.mention",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
-            return { name: dom.getAttribute("data-name") };
+            return {
+              name: dom.getAttribute("data-name"),
+              valid: dom.getAttribute("data-valid"),
+            };
           },
         },
       ],
       toDOM: (node) => {
         return [
           "a",
-          { class: "mention", "data-name": node.attrs.name },
+          {
+            class: "mention",
+            "data-name": node.attrs.name,
+            "data-valid": node.attrs.valid,
+          },
           `@${node.attrs.name}`,
         ];
       },
@@ -39,6 +50,7 @@ const extension = {
       }
       const mentionStart = start + match[1].length;
       const name = match[2].slice(1);
+
       return state.tr.replaceWith(mentionStart, end, [
         state.schema.nodes.mention.create({ name }),
         state.schema.text(" "),
@@ -74,6 +86,99 @@ const extension = {
       }
     },
   },
+
+  plugins({ pmState: { Plugin, PluginKey } }) {
+    const key = new PluginKey("mention");
+
+    return new Plugin({
+      key,
+      view() {
+        return {
+          update(view) {
+            this.processMentionNodes(view);
+          },
+          processMentionNodes(view) {
+            const mentionNames = [];
+            const mentionNodes = [];
+
+            if (this._processingMentionNodes) {
+              return;
+            }
+
+            this._processingMentionNodes = true;
+
+            view.state.doc.descendants((node, pos) => {
+              if (node.type.name !== "mention" || !node.attrs.valid) {
+                return;
+              }
+
+              const name = node.attrs.name;
+              mentionNames.push(name);
+              mentionNodes.push({ name, node, pos });
+            });
+
+            // process in reverse to avoid issues with position shifts
+            mentionNodes.sort((a, b) => b.pos - a.pos);
+
+            const invalidateMentions = async () => {
+              await fetchMentions(mentionNames);
+
+              for (const mentionNode of mentionNodes) {
+                const { name, node, pos } = mentionNode;
+
+                if (VALID_MENTIONS.has(name)) {
+                  continue;
+                }
+
+                view.dispatch(
+                  view.state.tr.setNodeMarkup(pos, null, {
+                    ...node.attrs,
+                    valid: false,
+                  })
+                );
+              }
+            };
+
+            invalidateMentions().then(() => {
+              this._processingMentionNodes = false;
+            });
+          },
+        };
+      },
+    });
+  },
 };
+
+async function fetchMentions(names) {
+  // only fetch new mentions that are not already validated
+  names = names.uniq().filter((name) => {
+    return !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name);
+  });
+
+  if (!names.length) {
+    return;
+  }
+
+  const response = await ajax("/composer/mentions", {
+    data: { names },
+  });
+
+  const lowerGroupNames = Object.keys(response.groups).map((groupName) =>
+    groupName.toLowerCase()
+  );
+
+  names.forEach((name) => {
+    const lowerName = name.toLowerCase();
+
+    if (
+      response.users.includes(lowerName) ||
+      lowerGroupNames.includes(lowerName)
+    ) {
+      VALID_MENTIONS.add(name);
+    } else {
+      INVALID_MENTIONS.add(name);
+    }
+  });
+}
 
 export default extension;

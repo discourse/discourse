@@ -30,10 +30,12 @@ fi:
     chat_editing_grace_period_max_diff_low_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasot 0 ja 1)."
     chat_editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasosta 2 ylöspäin)."
     chat_preferred_index: "Ensisijainen välilehti ladattaessa /chat."
+    allow_chat_in_anonymous_mode: "Ota tämä asetus käyttöön, jotta sivustoasi selaavat käyttäjät voivat käyttää chattia anonyymisti. Tämä asetus edellyttää, että 'salli anonyymi tila`-asetus on käytössä."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
       chat_upload_not_allowed_secure_uploads: "Chat-lataukset eivät ole sallittuja, kun suojattujen latauksien sivustoasetus on käytössä."
+      allow_chat_in_anonymous_mode_invalid: "Tämä asetus edellyttää, että ensin otetaan käyttöön 'salli nimettömän tilan' asetukset."
   system_messages:
     private_channel_title: "Kanava %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ fi:
     deleted_chat_username: poistettu
     errors:
       users_cant_be_added_to_channel: "Käyttäjiä ei voi lisätä tälle kanavalle."
+      user_cant_be_removed_from_channel: "Käyttäjää ei voi poistaa tältä kanavalta"
       channel_exists_for_category: "Tällä alueella ja nimellä on jo olemassa kanava"
       channel_new_message_disallowed:
         archived: "Kanava on arkistoitu, uusia viestejä ei voi lähettää"
@@ -90,6 +93,7 @@ fi:
       actor_muting_target_user: "Olet vaimentanut käyttäjän %{username}, joten et voi lähettää hänelle viestejä."
       actor_disallowed_dms: "Olet päättänyt estää käyttäjiä lähettämästä sinulle henkilökohtaisia ja yksityisviestejä, joten et voi luoda uusia yksityisviestejä."
       actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle henkilökohtaisia viestejä, joten et voi luoda uusia henkilökohtaisia viestejä hänelle."
+      not_reachable: "Valitettavasti %{username} ei käytä chattia."
       user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
       over_chat_max_direct_message_users_allow_self: "Voit luoda yksityisviestin vain itsellesi."
       over_chat_max_direct_message_users:
@@ -234,6 +238,12 @@ fi:
         private_email:
           one: "[%{site_name}] Uusi viesti"
           other: "[%{site_name}] Uusia viestejä"
+        watched_thread:
+          one: "[%{site_name}] Uusi viesti kanavalta %{channel}"
+          other: "[%{site_name}] Uusia viestejä kanavalta %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muualla"
+          other: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muissa"
         chat_dm_1:
           one: "[%{site_name}] Uusi viesti käyttäjältä %{name}"
           other: "[%{site_name}] Uusia viestejä käyttäjältä %{name}"

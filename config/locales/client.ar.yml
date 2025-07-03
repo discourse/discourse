@@ -578,6 +578,7 @@ ar:
       created: "لقد وضعت إشارة مرجعية على هذا المنشور. %{name}"
       created_generic: "لقد وضعت إشارة مرجعية على هذا. %{name}"
       create: "إنشاء إشارة مرجعية"
+      clear_reminder: "مسح التذكير"
       edit: "تعديل الإشارة المرجعية"
       not_bookmarked: "وضع إشارة مرجعية على هذا المنشور"
       remove_reminder_keep_bookmark: "إزالة التذكير والاحتفاظ بالإشارة المرجعية"
@@ -2273,6 +2274,7 @@ ar:
           edit_link_options: "تعديل خيارات الرابط أو الإرسال عبر البريد الإلكتروني"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
+          description: "الوصف"
           restrict: "التقييد إلى"
           restrict_email: "التقييد إلى البريد الإلكتروني"
           restrict_domain: "التقييد إلى النطاق"
@@ -3060,11 +3062,11 @@ ar:
       italic_label: "I"
       italic_title: "مائل"
       italic_text: "نص مائل"
-      link_title: "رابط تشعُّبي"
+      link_title: "رابط"
       link_description: "أدخِل وصف الرابط هنا"
-      link_dialog_title: "إدراج رابط تشعُّبي"
-      link_optional_text: "عنوان اختياري"
-      link_url_placeholder: "الصق عنوانًا أو اكتب للبحث في الموضوعات"
+      link_dialog_action: "إدراج"
+      link_edit_action: "تحديث"
+      link_optional_text: "النص"
       blockquote_title: "اقتباس فقرة"
       blockquote_text: "اقتباس فقرة"
       code_title: "نص منسَّق سابقًا"
@@ -3134,6 +3136,9 @@ ar:
       image_scale_button: "تغيير حجم الصورة إلى %{percent}%"
       delete_image_button: حذف الصورة
       toggle_image_grid: تشغيل التخطيط الشبكي للصور
+      link_toolbar:
+        copy: "نسخ الرابط"
+        link_copied: "تم نسخ الرابط!"
     notifications:
       tooltip:
         regular:
@@ -3661,10 +3666,6 @@ ar:
         top: "لا توجد موضوعات في الأكثر نشاطًا."
         hot: "لا توجد موضوعات ساخنة."
         filter: "لا توجد موضوعات."
-        educate:
-          new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
-          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍٍ افتراضي وستعرض أعداد الموضوعات غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 5 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
-          new_new: "<p>ستظهر موضوعاتك الجديدة هنا، وسيتم أيضًا عرض موضوعاتك غير المقروءة. تُعتبَر الموضوعات جديدة بشكلٍٍ افتراضي، وستعرض <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> مؤشرًا إذا تم إنشاؤها في آخر يومين. ستعرض الموضوعات غير المقروءة الأعداد غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد: أنشأت الموضوع، أو قرأت الموضوع لأكثر من 5 دقائق، أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>انتقل إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
       bottom:
         latest: "لا يوجد المزيد من الموضوعات الحديثة."
         posted: "لا يوجد المزيد من الموضوعات المنشورة."
@@ -4361,6 +4362,8 @@ ar:
           actions: "الإجراءات"
           edit: "تعديل"
           delete: "حذف"
+        post_language_selector:
+          none: "لا يوجد"
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
@@ -5510,7 +5513,7 @@ ar:
           save: "حفظ"
           delete: "حذف"
           delete_confirm: "هل تريد بالتأكيد حذف هذا القسم؟"
-          delete_public_confirm: "هذا القسم <strong>مرئي للجميع</strong>، هل تريد بالتأكيد حذفه؟"
+          delete_public_confirm: "هذا القسم مرئي للجميع، هل تريد بالتأكيد حذفه؟"
           update_public_confirm: "ستكون التغييرات <strong>مرئية للجميع</strong> على هذا الموقع. هل أنت متأكد؟"
           mark_as_private_confirm: "هذا القسم <strong>مرئي للجميع</strong>. وبعد التحديث، سيكون <strong>مرئيًا لك فقط</strong>. هل أنت متأكد؟"
           reset_confirm: "هل تريد بالتأكيد إعادة تعيين هذا القسم إلى الإعداد الافتراضي؟"
@@ -6692,6 +6695,7 @@ ar:
             title: "الواجهة"
             themes_intro: "قم بتثبيت سمة جديدة للبدء، أو إنشاء سمة خاصة بك من الصفر باستخدام هذه الموارد."
             new_theme: "سمة جديدة"
+            install: "تثبيت"
           components:
             title: "المكوِّنات"
             install: "تثبيت"
@@ -6732,7 +6736,6 @@ ar:
           colors:
             title: "الألوان"
           save_changes: "احفظ التغييرات"
-          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
       plugins:
         title: "الإضافات"
         name: "الاسم"
@@ -7028,6 +7031,10 @@ ar:
           remote_theme_edits: "إذا كنت ترغب في تعديل هذه السمة0، يجب عليك <a href='%{repoURL}' target='_blank'>طلب تغيير في مستودعها</a>"
           repo_unreachable: "تعذَّر الاتصال بمستودع Git لهذه السمة. رسالة الخطأ:"
           imported_from_archive: "تم استيراد هذه السمة من ملف ‎.zip"
+          settings: "الإعدادات"
+          colors: "الألوان"
+          discard_colors: "تجاهل"
+          colors_title: "الألوان"
           scss:
             text: "CSS"
           after_header:
@@ -7106,36 +7113,28 @@ ar:
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"
           copy_name_prefix: "نسخة من"
-          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
           undo: "تراجع"
           undo_title: "يمكنك التراجع عن التغييرات التي أجريتها على هذا اللون منذ آخر مرة تم حفظه."
           revert: "عودة"
           revert_title: "إعادة تعيين هذا اللون إلى لوحة ألوان Discourse الافتراضية"
           primary:
             name: "الأساسي"
-            description: "أغلب النصوص، والأيقونات، والحدود."
           primary-medium:
             name: "أساسي متوسط"
           primary-low-mid:
             name: "أساسي تحت المتوسط"
           secondary:
             name: "الثانوي"
-            description: "لون الخلفية الأساسي، ولون نصوص بعض الأزرار."
           tertiary:
             name: "الثالث"
-            description: "الروابط، وبعض الأزرار، والإشعارات، ولون التمييز."
           quaternary:
             name: "الرابع"
-            description: "للاستخدام الاختياري في السمات."
           header_background:
             name: "خلفية الرأس"
-            description: "لون خلفية رأس الموقع."
           header_primary:
             name: "اللون الأساسي للرأس"
-            description: "النصوص والأيقونات في رأس الموقع."
           highlight:
             name: "التمييز"
-            description: "لون خلفية العناصر المميَّزة في الصفحة، كالمنشورات والموضوعات."
           highlight-high:
             name: "تمييز قوي"
           highlight-medium:
@@ -7144,19 +7143,14 @@ ar:
             name: "تمييز طفيف"
           danger:
             name: "الخطر"
-            description: "لون تمييز الإجراءات مثل حذف المنشورات والموضوعات."
           success:
             name: "تم بنجاح"
-            description: "يتم استخدامه لإظهار نجاح عملية ما."
           love:
             name: "الإعجاب"
-            description: "لون زر تسجيل الإعجاب."
           selected:
             name: "محدَّد"
-            description: "لون الخلفية لعناصر مثل عناصر القائمة عند تحديدها أو عندما تكون نشطة."
           hover:
             name: "التمرير فوق العناصر"
-            description: "لون الخلفية لعناصر مثل عناصر القائمة عند التمرير فوقها أو تحديد التركيز على لوحة المفاتيح لها."
           editor:
             light: "فاتح"
             dark: "داكن"

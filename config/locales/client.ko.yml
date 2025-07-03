@@ -318,6 +318,7 @@ ko:
       created: "이 게시물을 북마크했습니다. %{name}"
       created_generic: "%{name}을 북마크했습니다."
       create: "북마크 만들기"
+      clear_reminder: "미리 알림 지우기"
       edit: "북마크 편집"
       not_bookmarked: "이 게시물 북마크하기"
       remove_reminder_keep_bookmark: "미리 알림 제거 및 북마크 유지"
@@ -1553,6 +1554,7 @@ ko:
           share_link: "공유 링크"
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
+          description: "내용"
           restrict: "다음으로 제한"
           restrict_email: "이메일로 제한"
           restrict_domain: "도메인으로 제한"
@@ -1990,11 +1992,11 @@ ko:
       italic_label: "I"
       italic_title: "기울이기"
       italic_text: "기울이기 적용된 텍스트"
-      link_title: "하이퍼링크"
+      link_title: "링크"
       link_description: "여기에 링크 설명을 입력하세요"
-      link_dialog_title: "하이퍼링크 삽입"
-      link_optional_text: "제목(선택사항)"
-      link_url_placeholder: "주제를 검색하려면 URL을 붙여 넣거나 입력하세요"
+      link_dialog_action: "삽입"
+      link_edit_action: "업데이트"
+      link_optional_text: "텍스트"
       blockquote_title: "블록 따옴표"
       blockquote_text: "블록 따옴표"
       code_title: "미리 서식이 지정된 텍스트"
@@ -2056,6 +2058,8 @@ ko:
       image_alt_text:
         aria_label: 이미지의 대체 텍스트
       delete_image_button: 이미지 삭제
+      link_toolbar:
+        copy: "링크 복사"
     notifications:
       tooltip:
         regular:
@@ -2353,9 +2357,6 @@ ko:
         bookmarks: "아직 북마크된 글이 없습니다."
         category: "%{category} 주제가 없습니다."
         top: "주요 주제가 없습니다."
-        educate:
-          new: '<p>새 주제가 여기에 표시됩니다. 기본적으로 지난 2일 이내에 작성된 주제는 새 주제로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 표시로 확인할 수 있습니다.</p><p>이 기준을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a>에서 변경하세요.</p>'
-          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글수 <span class="badge unread-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>새로운 글 작성</li><li>글에 댓글 작성</li><li>글을 5분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포함됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 주제가 없습니다."
         posted: "더 이상 게시한 주제가 없습니다."
@@ -2799,6 +2800,8 @@ ko:
           actions: "작업"
           edit: "편집"
           delete: "삭제"
+        post_language_selector:
+          none: "없음"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -4190,6 +4193,7 @@ ko:
           install: "설치"
           themes:
             title: "테마"
+            install: "설치"
           components:
             title: "구성 요소"
             install: "설치"
@@ -4212,7 +4216,6 @@ ko:
           delete: "삭제하기"
           colors:
             title: "색상"
-          delete_confirm: "이 색상 표를 삭제 하시겠습니까?"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -4430,6 +4433,10 @@ ko:
           remote_theme_edits: "이 테마를 편집하려면 <a href='%{repoURL}' target='_blank'>저장소에 변경사항을 제출</a>해야 합니다."
           repo_unreachable: "이 테마의 Git 저장소에 접속할 수 없습니다. 오류 메시지:"
           imported_from_archive: "이 테마는 .zip 파일에서 임포트했습니다."
+          settings: "설정"
+          colors: "색상"
+          discard_colors: "포기"
+          colors_title: "색상"
           scss:
             text: "CSS"
           after_header:
@@ -4471,35 +4478,28 @@ ko:
           title: "색상"
           about: "테마에 사용되는 색상을 수정합니다. 시작하려면 새 색상 팔레트를 생성하세요."
           copy_name_prefix: "다음의 사본"
-          delete_confirm: "이 색상 팔레트를 삭제할까요?"
           undo: "실행 취소"
           undo_title: "마지막 저장 이후 색상 변경사항을 실행 취소합니다."
           revert: "되돌리기"
           revert_title: "이 색상을 Discourse의 디폴트 색상 팔레트로 리셋합니다."
           primary:
             name: "1차"
-            description: "대부분의 텍스트, 아이콘 및 테두리"
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "2차"
-            description: "메인 배경 색상, 일부 버튼의 텍스트 색상"
           tertiary:
             name: "3차"
-            description: "링크, 일부 버튼, 알림 및 강조 색상"
           quaternary:
             name: "4차"
           header_background:
             name: "헤더 배경 색상"
-            description: "사이트 헤더의 배경 색상입니다."
           header_primary:
             name: "헤더 기본"
-            description: "사이트 헤더의 텍스트와 아이콘입니다."
           highlight:
             name: "하이라이트"
-            description: "게시물이나 주제와 같은 페이지 내 하이라이트된 요소의 배경 색상입니다."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -4508,13 +4508,10 @@ ko:
             name: "highlight-low"
           danger:
             name: "위험"
-            description: "게시물 및 주제 삭제와 같은 작업의 하이라이트 색상입니다."
           success:
             name: "성공"
-            description: "작업이 성공했음을 나타내는 데 사용됩니다."
           love:
             name: "하트"
-            description: "좋아요 버튼 색입니다."
           selected:
             name: "선택됨"
           editor:

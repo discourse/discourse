@@ -156,6 +156,30 @@ module("Integration | Component | site-setting", function (hooks) {
       .dom("[data-setting='suggested_topics_unread_max_days_old']")
       .hasNoClass("overridden");
   });
+
+  test("Input for secret site setting is hidden by default", async function (assert) {
+    const self = this;
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "test_setting",
+        secret: true,
+        value: "foo",
+      })
+    );
+    await render(
+      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+    );
+    assert.dom(".input-setting-string").hasAttribute("type", "password");
+    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
+    await click(".setting-toggle-secret");
+    assert.dom(".input-setting-string").hasAttribute("type", "text");
+    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye-slash");
+    await click(".setting-toggle-secret");
+    assert.dom(".input-setting-string").hasAttribute("type", "password");
+    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
+  });
 });
 
 module(

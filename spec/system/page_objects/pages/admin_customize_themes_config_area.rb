@@ -11,8 +11,8 @@ module PageObjects
         find(".theme-card.#{theme.name.parameterize}")
       end
 
-      def install_card
-        find(".theme-install-card")
+      def subheader
+        find(".d-page-subheader")
       end
 
       def open_theme_menu(theme)
@@ -30,6 +30,10 @@ module PageObjects
 
       def has_no_badge?(theme, badge)
         find_theme_card(theme).has_no_css?(".theme-card__badge.#{badge}")
+      end
+
+      def has_themes?(names)
+        expect(all(".theme-card__title").map(&:text)).to eq(names)
       end
 
       def toggle_selectable(theme)

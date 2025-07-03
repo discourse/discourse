@@ -352,6 +352,7 @@ ja:
       created: "この投稿をブックマークしました。%{name}"
       created_generic: "これをブックマークしました。%{name}"
       create: "ブックマークを作成"
+      clear_reminder: "リマインダーをクリアする"
       edit: "ブックマークを編集"
       not_bookmarked: "この投稿をブックマークする"
       remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
@@ -1777,6 +1778,7 @@ ja:
           edit_link_options: "リンクオプションを編集するかメールで送信します。"
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
+          description: "説明"
           restrict: "制限する:"
           restrict_email: "メールに制限"
           restrict_domain: "ドメインに制限"
@@ -2387,11 +2389,11 @@ ja:
       italic_label: "I"
       italic_title: "斜体"
       italic_text: "斜体テキスト"
-      link_title: "ハイパーリンク"
+      link_title: "リンク"
       link_description: "リンクの説明をここに入力"
-      link_dialog_title: "ハイパーリンクを挿入"
-      link_optional_text: "オプションのタイトル"
-      link_url_placeholder: "URL を貼り付けるか入力してトピックを検索します"
+      link_dialog_action: "挿入"
+      link_edit_action: "更新"
+      link_optional_text: "テキスト"
       blockquote_title: "ブロック引用"
       blockquote_text: "ブロック引用"
       code_title: "整形済みテキスト"
@@ -2461,6 +2463,9 @@ ja:
       image_scale_button: "画像の表示率を %{percent}% に変更"
       delete_image_button: 画像を削除
       toggle_image_grid: 画像グリッドを切り替える
+      link_toolbar:
+        copy: "リンクをコピー"
+        link_copied: "リンクがコピーされました！"
     notifications:
       tooltip:
         regular:
@@ -2823,10 +2828,6 @@ ja:
         top: "人気のトピックはありません。"
         hot: "ホットなトピックはありません。"
         filter: "トピックはありません。"
-        educate:
-          new: '<p>新しいトピックがここに表示されます。デフォルトでは、2 日以内に作成されたトピックは新しいトピックとみなされ、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> が表示されます。</p><p>この設定はユーザー<a href="%{userPrefsUrl}">設定</a>で変更できます。</p>'
-          unread: "<p>新しいトピックがここに表示されます。</p><p>デフォルトでは次の場合にトピックは未読とされ未読数 <span class=\"badge unread-posts badge-notification\">1</span> が表示されます。</p><ul><li>トピックを作成した場合</li><li>トピックに返信した場合</li><li>トピックを 5 分以上閲覧した場合</li></ul><p>または各トピックの \U0001F514 を通じて明示的にトピックを「追跡」または「ウォッチ中」に設定した場合</p><p>これを変更するには、<a href=\"%{userPrefsUrl}\">設定</a>にアクセスしてください。</p>"
-          new_new: "<p>新しいトピックがここに表示されます。また、未読のトピックも表示されます。デフォルトでは、トピックは新規と見なされ、過去 2 日間に作成されたかどうかを示す <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> インジケーターが表示されます。未読のトピックは、トピックを作成した場合、トピックに返信した場合、5 分以上トピックを閲覧した場合、またはトピックの\U0001F514 からトピックを「追跡」または「ウォッチ中」に設定した場合に未読数 <span class=\"badge unread-posts badge-notification\">1</span> を表示します。</p><p>これを変更するには、<a href=\"%{userPrefsUrl}\">設定</a>にアクセスしてください。</p>"
       bottom:
         latest: "最新のトピックは以上です。"
         posted: "投稿のあるトピックは以上です。"
@@ -3362,6 +3363,8 @@ ja:
           actions: "操作"
           edit: "編集"
           delete: "削除"
+        post_language_selector:
+          none: "なし"
       errors:
         create: "投稿を作成中にエラーが発生しました。もう一度お試しください。"
         edit: "投稿を編集中にエラーが発生しました。もう一度お試しください。"
@@ -4302,7 +4305,7 @@ ja:
           save: "保存"
           delete: "削除"
           delete_confirm: "このセクションを削除してもよろしいですか？"
-          delete_public_confirm: "このセクションは<strong>全員に表示</strong>されます。削除してもよろしいですか？"
+          delete_public_confirm: "このセクションは全員に表示されます。削除してもよろしいですか？"
           update_public_confirm: "変更はこのサイトの<strong>全員に表示</strong>されます。よろしいですか？"
           mark_as_private_confirm: "このセクションは<strong>全員に表示</strong>されます。更新後は<strong>あなたにだけ表示</strong>されます。よろしいですか？"
           reset_confirm: "このセクションをデフォルトにリセットしてもよろしいですか？"
@@ -5354,6 +5357,7 @@ ja:
             title: "テーマ"
             themes_intro: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
             new_theme: "新しいテーマ"
+            install: "インストール"
           components:
             title: "コンポーネント"
             install: "インストール"
@@ -5392,7 +5396,6 @@ ja:
             toggle_description: "ユーザーが色パレットを選択できる"
           colors:
             title: "色"
-          delete_confirm: "この色パレットを削除しますか？"
       plugins:
         title: "プラグイン"
         name: "名前"
@@ -5671,6 +5674,10 @@ ja:
           remote_theme_edits: "このテーマを編集する場合は、<a href='%{repoURL}' target='_blank'>そのリポジトリに変更を送信</a>する必要があります"
           repo_unreachable: "このテーマの Git リポジトリに接続できませんでした。エラーメッセージ:"
           imported_from_archive: "このテーマは .zip ファイルからインポートされました"
+          settings: "設定"
+          colors: "色"
+          discard_colors: "破棄"
+          colors_title: "色"
           scss:
             text: "CSS"
           after_header:
@@ -5729,36 +5736,28 @@ ja:
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
           new_name: "新しい色パレット"
           copy_name_prefix: "コピー元:"
-          delete_confirm: "この色パレットを削除しますか？"
           undo: "元に戻す"
           undo_title: "変更を元に戻して、前回保存された色にします。"
           revert: "戻す"
           revert_title: "この色を Discourse のデフォルトの色パレットにリセットします。"
           primary:
             name: "プライマリー"
-            description: "ほとんどのテキスト、アイコン、ボーダー。"
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "セカンダリー"
-            description: "メインの背景色とボタンのテキスト色。"
           tertiary:
             name: "ターシャリー"
-            description: "リンク、一部のボタン、通知、およびアクセントカラー。"
           quaternary:
             name: "クォータナリー"
-            description: "テーマでオプションとして使用します。"
           header_background:
             name: "ヘッダー背景"
-            description: "サイトのヘッダー背景色。"
           header_primary:
             name: "ヘッダーのプライマリー"
-            description: "サイトのヘッダーのテキストとアイコン。"
           highlight:
             name: "ハイライト"
-            description: "投稿やトピックなど、ページのハイライトされた要素の背景色。"
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -5767,19 +5766,14 @@ ja:
             name: "highlight-low"
           danger:
             name: "危険"
-            description: "投稿やトピックの削除といった操作の強調色。"
           success:
             name: "成功"
-            description: "操作が成功したことを示すために使用します。"
           love:
             name: "ラブ"
-            description: "「いいね！」ボタンの色。"
           selected:
             name: "選択済み"
-            description: "リスト項目などの要素が選択/アクティブの場合の背景色。"
           hover:
             name: "ホバー"
-            description: "リスト項目などの要素がホバーされているかキーボードフォーカスにある場合の背景色。"
           editor:
             light: "ライト"
             dark: "ダーク"

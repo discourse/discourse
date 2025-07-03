@@ -325,7 +325,6 @@ tr_TR:
       s3_backup_requires_s3_settings: "\"%{setting_name}\" değerini sağlamadığınız sürece S3'ü yedekleme konumu olarak kullanamazsınız."
       s3_bucket_reused: "\"s3_upload_bucket\" ve \"s3_backup_bucket\" için aynı kovayı kullanamazsınız. Farklı bir kova seçin veya her kova için farklı bir yol kullanın."
       secure_uploads_requirements: "Güvenli yüklemeler etkinleştirilmeden önce S3 yüklemeleri ve S3 ACL'leri etkinleştirilmelidir."
-      s3_use_acls_requirements: "Güvenli yüklemeler etkinleştirildiğinde S3 ACL'lerin etkin olması gerekir."
       share_quote_facebook_requirements: "Facebook için alıntı paylaşımını etkinleştirmek üzere bir Facebook uygulama kimliği belirlemeniz gerekiyor."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Yerel girişler devre dışı bırakılmışsa 2 adımlı kimlik doğrulamayı zorlayamazsınız."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect etkinleştirilmişse 2 adımlı kimlik doğrulamayı zorlayamazsınız."
@@ -611,24 +610,9 @@ tr_TR:
     until_posts:
       one: "%{count} gönderi"
       other: "%{count} gönderi"
-    avatar: |
-      ### Hesabınız için bir resme ne dersiniz?
-
-      Birkaç konu ve yanıt gönderdiniz, ancak profil resminiz sizin kadar eşsiz değil, sadece bir harf.
-
-      [Kullanıcı profilinizi ziyaret edip](%{profile_path})** sizi yansıtan bir resim yüklemeyi düşündünüz mü?
-
-      Herkesin eşsiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
-    sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi düşünün\n \nBunun yerine lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt vermeyi düşünün.\n\n\nMetni vurgulayıp görünen <b>yanıtı alıntıla</b> düğmesini seçerek alıntı eklemek üzere önceki yanıtınızı düzenleyebilirsiniz.\n\nÇok sayıda küçük ve bireysel yanıt yerine daha az sayıda derinlemesine yanıt içeren konuları okumak herkes için daha kolay olur.\n"
     get_a_room:
       one: '%{reply_username} adlı kullanıcıya kez yanıt verdiniz, bunun yerine ona bir kişisel mesaj gönderebileceğinizi biliyor muydunuz?'
       other: '%{reply_username} adlı kullanıcıya %{count} kez yanıt verdiniz, bunun yerine ona bir kişisel mesaj gönderebileceğinizi biliyor muydunuz?'
-    reviving_old_topic: |
-      ### Bu konu yeniden canlandırılsın mı?
-
-      Bu konuya en son **%{time_ago}** yanıt verildi. Yanıtınız konuyu listenin en üstüne çıkaracak ve daha önce konuşmaya dahil olan herkes bilgilendirilecek.
-
-      Bu eski konuşmaya devam etmek istediğinizden emin misiniz?
   activerecord:
     attributes:
       category:
@@ -1685,7 +1669,7 @@ tr_TR:
     x_summary_large_image: "Twitter kartı \"özet büyük resmi\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
     email_custom_headers: "Özel e-posta başlıklarının boruyla ayrılmış bir listesi"
-    email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
     enforce_second_factor: "Kullanıcıların Discourse kullanıcı arayüzüne erişebilmeleri için iki adımlı kimlik doğrulamayı etkinleştirmelerini zorunlu kılın. Bu ayar API veya \"DiscourseConnect sağlayıcısı\" kimlik doğrulamasını etkilemez. enforce_second_factor_on_external_auth etkinse kullanıcılar iki adımlı kimlik doğrulamayı ayarladıktan sonra harici kimlik doğrulama sağlayıcılarıyla giriş yapamazlar."
     enforce_second_factor_on_external_auth: "Kullanıcıların her zaman iki adımlı kimlik doğrulama kullanmalarını zorunlu kılın. Bu özellik etkinleştirildiğinde, iki adımlı kimlik doğrulama etkinleştirilmişse kullanıcıların sosyal giriş yapma gibi harici kimlik doğrulama yöntemleriyle giriş yapmaları engellenir. Devre dışı bırakıldığında, kullanıcıların yalnızca bir kullanıcı adı ve şifreyle giriş yaparken iki adımlı kimlik doğrulamalarını onaylamaları gerekir. Ayrıca `enforce_second_factor` ayarına da bakın."
@@ -1754,7 +1738,6 @@ tr_TR:
     blocked_ip_blocks: "Discourse tarafından asla taranmaması gereken özel IP bloklarının bir listesi"
     allowed_internal_hosts: "Discourse'un oneboxing ve diğer amaçlar için güvenle tarayabileceği dahili sunucularının bir listesi"
     allowed_onebox_iframes: "Onebox yerleştirmeleri aracılığıyla izin verilen iframe src alan adlarının bir listesi. *` tüm varsayılan Onebox motorlarına izin verir."
-    allowed_iframes: "Discourse'un gönderilerde güvenle izin verebileceği iframe src URL ön eklerinin listesi"
     allowed_crawler_user_agents: "Siteye erişmesine izin verilmesi gereken web veri gezginlerinin kullanıcı aracıları. UYARI! BUNU AYARLAMAK BURADA LİSTELENMEYEN HİÇBİR VERİ GEZGİNİNE İZİN VERMEZ!"
     blocked_crawler_user_agents: "Siteye erişmesine izin verilmemesi gereken web veri gezginlerini tanımlayan kullanıcı aracısı dizesinde büyük/küçük harfe duyarlı olmayan benzersiz kelime. İzin verilenler listesi tanımlanmışsa geçerli değildir."
     slow_down_crawler_user_agents: '"Tarayıcı hızını yavaşlat" ayarında yapılandırıldığı gibi hız sınırlandırılması gereken web veri gezginlerinin kullanıcı aracıları. Her değer en az 3 karakter uzunluğunda olmalıdır.'
@@ -1878,7 +1861,6 @@ tr_TR:
     s3_endpoint: "Uç nokta, DigitalOcean Spaces veya Minio gibi S3 uyumlu bir hizmete yedekleme yapacak şekilde değiştirilebilir. UYARI: AWS S3 kullanıyorsanız boş bırakın."
     s3_configure_tombstone_policy: "Silinmiş öge yüklemeleri için otomatik silme ilkesini etkinleştirin. ÖNEMLİ: Devre dışı bırakılırsa yüklemeler silindikten sonra hiçbir alan geri alınmaz."
     s3_disable_cleanup: "İzin verilen maksimum değerden daha fazla yedekleme olduğunda eski yedeklemelerin S3'ten kaldırılmasını önleyin."
-    s3_use_acls: "AWS, S3 klasörlerinde (bucket) ACL kullanılmamasını önerir; bu tavsiyeye uyacaksanız bu seçeneğin işaretini kaldırın. Güvenli yüklemeler kullanıyorsanız bu etkinleştirilmelidir."
     enable_direct_s3_uploads: "Amazon S3'e doğrudan çok parçalı yüklemelere izin verir, daha fazla bilgi için https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 adresine bakın."
     backup_time_of_day: "Yedeklemenin gerçekleşmesi gereken günün saati UTC."
     backup_with_uploads: "Yüklemeleri zamanlanan yedeklemelere dahil et. Bu devre dışı bırakıldığında yalnızca veritabanı yedeklenir."
@@ -2212,12 +2194,10 @@ tr_TR:
     max_notifications_per_user: "Kullanıcı başına maksimum bildirim miktarı, bu sayı aşılırsa eski bildirimler silinir. Haftalık olarak uygulanır. Devre dışı bırakmak için 0 olarak ayarlayın"
     allowed_user_website_domains: "Kullanıcı web sitesi bu alan adlarına göre doğrulanır. Boruyla ayrılmış liste."
     allow_profile_backgrounds: "Kullanıcıların profil arka planları yüklemesine izin verin."
-    sequential_replies_threshold: "Bir kullanıcının çok fazla ardışık yanıt hakkında hatırlatılmadan önce bir konuda arka arkaya yapması gereken gönderi sayısı."
     get_a_room_threshold: "Bir kullanıcının uyarılmadan önce aynı konuda aynı kişiye yapması gereken gönderi sayısı."
     dont_feed_the_trolls_threshold: "Uyarılmadan önce diğer kullanıcılardan gelen bayrak sayısı."
     enable_mobile_theme: "Mobil cihazlar, sitenin tamamına geçebilme özelliğine sahip mobil uyumlu bir tema kullanır. Tamamen duyarlı özel bir stil sayfası kullanmak istiyorsanız bunu devre dışı bırakın."
     dominating_topic_minimum_percent: "Bir kullanıcının bir konuda aşırı baskınlık kurduğu hatırlatılmadan önce bir konuda yüzde kaç gönderi yapması gerektiği."
-    disable_avatar_education_message: "Avatarı değiştirmek için eğitim mesajını devre dışı bırakın."
     pm_warn_user_last_seen_months_ago: "Yeni bir kişisel mesaj oluştururken, hedef alıcı n aydan daha uzun bir süre önce görülmediğinde kullanıcıları uyarın."
     suppress_uncategorized_badge: "Konu listelerinde kategorize edilmemiş konular için rozet göstermeyin."
     header_dropdown_category_count: "Başlık açılır menüsünde kaç kategori görüntülenebileceği."
@@ -2248,7 +2228,6 @@ tr_TR:
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
     default_code_lang: "Markdown kod bloklarına (otomatik, metin, ruby, python vb.) uygulanan varsayılan programlama dili sözdizimi vurgulaması. Bu değer aynı zamanda \"vurgulanan diller\" site ayarında da bulunmalıdır."
-    warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
     autohighlight_all_code: "Bir dil belirtmemiş olsalar bile, HTML ile yazılmış &lt;code&gt; bloklarına sözdizimi vurgulaması uygulayın. Markdown ile yazılmış kod bloklarını yapılandırmak için 'default code lang' ayarını kullanın."
     highlighted_languages: "Söz dizimi vurgulama kuralları dâhil edildi. (Uyarı: çok fazla dil eklemek, performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"
     show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının panosuna kopyalamak için codeblocks'a bir düğme ekleyin."

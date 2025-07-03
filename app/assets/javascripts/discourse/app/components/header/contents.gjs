@@ -68,6 +68,9 @@ export default class Contents extends Component {
         @outletArgs={{lazyHash
           topicInfo=@topicInfo
           topicInfoVisible=@topicInfoVisible
+          toggleNavigationMenu=@toggleNavigationMenu
+          showSidebar=@showSidebar
+          sidebarIcon=this.sidebarIcon
         }}
         @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument

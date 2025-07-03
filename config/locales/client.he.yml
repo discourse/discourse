@@ -488,9 +488,11 @@ he:
       bookmarked_success: "מסומן!"
       deleted_bookmark_success: "הסימנייה נמחקה!"
       reminder_set_success: "תזכורת הוגדרה!"
+      reminder_clear_success: "התזכורת נמחקה"
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
       create: "יצירת סימנייה"
+      clear_reminder: "פינוי התזכורת"
       edit: "עריכת סימנייה"
       not_bookmarked: "סימון פוסט זה בסימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
@@ -2104,6 +2106,7 @@ he:
           edit_link_options: "עריכת אפשרויות קישור או לשלוח בדוא״ל."
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
+          description: "תיאור"
           restrict: "הגבלה לכדי"
           restrict_email: "הגבלה לדוא״ל"
           restrict_domain: "הגבלה לשם תחום"
@@ -2578,6 +2581,9 @@ he:
       to_continue: "נא להיכנס"
       preferences: "כדי לשנות את העדפות המשתמש ראשית יש להיכנס למערכת."
       not_approved: "החשבון שלך עדיין לא אושר. תישלח אליך הודעה בדוא״ל כשיתאפשר לך להיכנס למערכת."
+      discourse_id:
+        name: "מזהה Discourse"
+        title: "כניסה עם מזהה Discourse"
       google_oauth2:
         name: "Google"
         title: "כניסה עם Google"
@@ -2674,6 +2680,8 @@ he:
         two: "%{count} נושאים בקטגוריה הזו"
         many: "%{count} נושאים בקטגוריה הזו"
         other: "%{count} נושאים בקטגוריה הזו"
+    timezone_input:
+      ambiguous_ist: "IST אינו חד־משמעי, נא לבחור אזור זמן מסוים (למשל: אסיה/קולקטה)"
     select_kit:
       delete_item: "למחוק את %{name}"
       filter_by: "סינון לפי: %{name}"
@@ -2862,9 +2870,14 @@ he:
       italic_text: "טקסט נטוי"
       link_title: "קישור"
       link_description: "הזן תיאור קישור כאן"
-      link_dialog_title: "הזן קישור"
-      link_optional_text: "כותרת כרשות"
-      link_url_placeholder: "יש להדביק כתובת כדי לחפש נושאים"
+      link_dialog_title: "הוספת קישור"
+      link_dialog_action: "כתיבה"
+      link_edit_title: "עריכת קישור"
+      link_edit_action: "עדכון"
+      link_text_label: "טקסט קישור"
+      link_optional_text: "טקסט"
+      link_url_label: "קישור או נושא"
+      link_url_placeholder: "אפשר להדביק קישור או לחפש נושאים"
       blockquote_title: "מקטע ציטוט"
       blockquote_text: "בלוק ציטוט"
       code_title: "טקסט מעוצב"
@@ -2934,6 +2947,12 @@ he:
       image_scale_button: "שינוי קנה המידה של התמונה לכדי %{percent}%"
       delete_image_button: מחיקת תמונה
       toggle_image_grid: החלפת מצב רשת תמונות
+      link_toolbar:
+        edit: "עריכת קישור"
+        copy: "העתקת קישור"
+        remove: "הסרת קישור"
+        visit: "פתיחת קישור בלשונית חיצונית"
+        link_copied: "הקישור הועתק!"
     notifications:
       tooltip:
         regular:
@@ -3101,6 +3120,7 @@ he:
       relevance: "רלוונטיות"
       latest_post: "הפוסטים האחרונים"
       latest_topic: "נושא אחרון"
+      last_read: "קריאה אחרונה"
       most_viewed: "הנצפה ביותר"
       most_liked: "האהובים ביותר"
       select_all: "בחירה בהכול"
@@ -3403,10 +3423,11 @@ he:
         top: "אין נושאים מובילים."
         hot: "אין נושאים חמים."
         filter: "אין נושאים."
-        educate:
-          new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
-          unread: "<p>הנושאים שלא קראת יופיעו כאן.</p><p>כברירת מחדל, נושאים ייחשבו שטרם קראת אותם ויוצג עליהם מונה <span class=\"badge unread-posts badge-notification\">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־5 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך \U0001F514 המופיע בכל נושא.</p><p>ניתן לבקר בעמוד ה<a href=\"%{userPrefsUrl}\">העדפות</a> שלך כדי לשנות זאת.</p>"
-          new_new: "<p>הנושאים החדשים שלך יופיעו כאן לצד הנושאים שטרם קראת. כברירת מחדל, נושאים נחשבים חדשים ויופיע לידם מחוון <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> אם נוצרו ביומיים האחרונים. ליד נושאים שלא נקראו יופיע הסימון <span class=\"badge unread-posts badge-notification\">1</span> אם: יצרת את הנושא, הגבת לנושא, קראת את הנושא במשך למעלה מ־5 דקות או אם ביקשת מפורשות לעקוב או להשגיח אחר הנושא באמצעות \U0001F514 בכל נושא ונושא.</p><p>נא לגשת אל ה<a href=\"%{userPrefsUrl}\">העדפות</a> כדי לשנות זאת.</p>"
+        education:
+          topic_tracking_preferences: "אפשר לצפות ולשנות את הגדרות המעקב אחר הנושא החדש שלך דרך <a href=\"%{basePath}/my/preferences/tracking\">ההעדפות שלך</a>."
+          unread: "לא נשארו פריטים שלא נקראו… מרשים!"
+          new_new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
+          new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."
@@ -3568,6 +3589,7 @@ he:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
+      browse_latest_topics: "עיון בנושאים האחרונים"
       suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
       jump_reply: "קפיצה למיקום המקורי של הפוסט"
       jump_reply_aria: "קפיצה לפוסט של ‎@%{username} במיקומו המקורי"
@@ -4049,7 +4071,17 @@ he:
           edit: "עריכה"
           delete: "מחיקה"
         add: "הוספת תרגום חדש"
+        view:
+          one: "הצגת שפה מתורגמת"
+          two: "הצגת שתי שפות מתורגמות"
+          many: "הצגת %{count} שפות מתורגמות"
+          other: "הצגת %{count} שפות מתורגמות"
+        modal:
+          title: "תרגומים לפוסט"
+          confirm_delete: "למחוק את התרגומים ל־‚%{languageCode}’?"
         success: "התרגומים עודכנו בהצלחה"
+        post_language_selector:
+          none: "ללא"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -4265,6 +4297,7 @@ he:
         title: "שיתוף פוסט מס׳ %{post_number}"
         instructions: "שיתוף קישור לפוסט זה:"
       original_language: "הפוסט הזה נכתב במקור ב%{language}"
+      original_language_and_outdated: "הפוסט הזה נכתב במקור ב%{language}. יכול להיות שהתרגום לא עדכני"
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
@@ -4317,6 +4350,7 @@ he:
       background_image_dark: "תמונת רקע כהה לקטגוריה"
       style: "סגנונות"
       background_color: "צבע"
+      foreground_color: "צבע הטקסט"
       styles:
         type: "סגנון"
         icon: "סמל"
@@ -5132,7 +5166,7 @@ he:
           save: "שמירה"
           delete: "מחיקה"
           delete_confirm: "למחוק את המקטע הזה?"
-          delete_public_confirm: "סעיף זה <strong>גלוי לכולם</strong>, למחוק אותו?"
+          delete_public_confirm: "סעיף זה גלוי לכולם, למחוק אותו?"
           update_public_confirm: "השינויים יהיו <strong>גלויים לכולם</strong> באתר הזה. להמשיך?"
           mark_as_private_confirm: "הסעיף הזה <strong>גלוי לכולם</strong>. לאחר העדכון, הוא יהיה <strong>גלוי רק לך</strong>. להמשיך?"
           reset_confirm: "לאפס את המקטע הזה לברירת המחדל?"
@@ -5439,6 +5473,14 @@ he:
             bookmarks: "נושאים ללא תיוג שהוספת לסימניות"
             default: "נושאים ללא תיוג"
           category:
+            latest: "נושאים עדכניים ב%{category} בלי תגיות"
+            top: "נושאים מובילים ב%{category} בלי תגיות"
+            new: "נושאים חדשים ב%{category} בלי תגיות"
+            unread: "נושאים שלא נקראו ב%{category} בלי תגיות"
+            unseen: "נושאים שלא נצפו ב%{category} בלי תגיות"
+            hot: "נושאים חמים ב%{category} בלי תגיות"
+            posted: "נושאים ב%{category} ללא תיוג שפרסמת בהם"
+            bookmarks: "נושאים ב%{category} ללא תיוג שהוספת לסימניות"
             default: "%{filter} נושאים ב%{category} בלי תגיות"
         categories: "כל הקטגוריות"
   admin_js:
@@ -5507,6 +5549,7 @@ he:
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
         logo:
           title: "לוגו"
+          header_description: "הגדרת הלוגואים והסמלים בהם נעשה שימוש ברחבי האתר שלך"
           form:
             saved: "הגדרות הלוגו נשמרות."
             logo:
@@ -5570,6 +5613,7 @@ he:
               help_text: "הגודל המומלץ הוא ‎280 × 150 פיקסלים לפחות. לא להשתמש בתמונת SVG."
         fonts:
           title: "גופנים"
+          header_description: "הגדרת הגופנים ברחבי האתר שלך, כולל הגופן הבסיסי, גופן הכותרת וגודל הטקסט כברירת מחדל"
           form:
             more_fonts: "גופנים נוספים"
             fewer_fonts: "פחות גופנים"
@@ -5583,6 +5627,11 @@ he:
               description: "את הגודל הזה יוכלו המשתמשים להתאים לעצמם באופן פרטני בהתאם להעדפותיהם."
           backfill_modal:
             title: "להחיל את הגדרות ברירת המחדל החדשות על הטקסט?"
+            description:
+              one: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינוי הזה על משתמש קיים?"
+              two: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על שני משתמשים קיימים?"
+              many: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על %{count} משתמשים קיימים?"
+              other: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על %{count} משתמשים קיימים?"
             modal_yes: "כן"
             modal_no: "לא, להחיל רק מעתה ואילך"
         navigation:
@@ -6481,9 +6530,11 @@ he:
           install: "התקנה"
           themes:
             title: "תמות"
+            description: "ערכות עיצוב של האתר שמשנות את המראה והתחושה הכלליים של האתר שלך לכל המשתמשים."
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
             new_theme: "ערכת עיצוב חדשה"
             back: "חזרה לערכות עיצוב"
+            install: "התקנה"
           components:
             title: "רכיבים"
             description: "התאמות שמשנות רכיבים גלויים של עיצוב הפורום שלך, או מוסיפות תכונות חזית נוספות"
@@ -6550,8 +6601,10 @@ he:
           unsaved_changes: "יש שינויים שלא נשמרו"
           copy_of: "עותק של %{name}"
           copy_created: 'נוצר עותק חדש של „%{name}”'
-          illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
-          delete_confirm: "למחוק לוח צבעים זה?"
+          illegal_character_in_color: "הצבע חייב להיות מורכב מתווים הקסדצימליים בלבד"
+          invalid_color_length: "הצבע צריך להיות בתבנית ‎#rrggbb או ‎#rgb"
+          blocked_edit_for_system: "אי אפשר לערוך ערכות צבעים ששייכות לערכת עיצוב מערכתית."
+          delete_confirm: "למחוק את ערכת הצבעים הזאת?"
       plugins:
         title: "תוספים"
         name: "שם"
@@ -6852,6 +6905,17 @@ he:
           remote_theme_edits: "אם מעניין אותך לערוך את ערכת העיצוב הזאת, עליך <a href='%{repoURL}' target='_blank'>להגיש שינוי במאגר שלה</a>"
           repo_unreachable: "לא ניתן ליצור קשר עם מאגר ה־git של ערכת העיצוב הזו. הודעת השגיאה:"
           imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.zip"
+          settings: "הגדרות"
+          colors: "צבעים"
+          unsaved_colors:
+            one: "יש לך צבע שלא נשמר"
+            two: "יש לך שני צבעים שלא נשמרו"
+            many: "יש לך %{count} צבעים שלא נשמרו"
+            other: "יש לך %{count} צבעים שלא נשמרו"
+          unsaved_colors_leave_route_confirmation: "לא שמרת עדיין את השינויים לערכת הצבעים שלך. לצאת?"
+          save_colors: "שמירת צבעים"
+          discard_colors: "להשליך"
+          colors_title: "צבעים"
           scss:
             text: "CSS"
             title: "כללי CSS מותאמים אישית עם תמיכה בתחביר SCSS"
@@ -6890,6 +6954,7 @@ he:
             title: "HTML להוספה בסוף ה־<body>, עם תמיכה בתגיות script"
           js:
             text: "JS"
+            title: "מאתחל JavaScript עם תמיכה בתחביר ‚template tag’ (תבנית תגית) של Ember"
           scss_color_variables_warning: 'השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט. נא להשתמש במאפייני CSS מותאמים אישית במקום. <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">במדריך הזה</a> יש פרטים נוספים.'
           scss_warning_inline: "השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט."
           all_filter: "הכול"
@@ -6901,6 +6966,30 @@ he:
           back_button: "חזרה אל %{name}"
           fields:
             required: "*נדרש"
+            groups:
+              at_least:
+                one: "צריך לפחות קבוצה אחת"
+                two: "צריך לפחות שתי קבוצות"
+                many: "צריך לפחות %{count} קבוצות"
+                other: "צריך לפחות %{count} קבוצות"
+            categories:
+              at_least:
+                one: "דרושה לפחות קטגוריה אחת"
+                two: "דרושות לפחות שתי קטגוריות"
+                many: "דרושות לפחות %{count} קטגוריות"
+                other: "דרושות לפחות %{count} קטגוריות"
+            tags:
+              at_least:
+                one: "צריך לפחות תגית אחת"
+                two: "צריך לפחות שתי תגיות"
+                many: "צריך לפחות %{count} תגיות"
+                other: "צריך לפחות %{count} תגיות"
+            string:
+              too_short:
+                one: "חייב להיות תו אחד לפחות"
+                two: "חייבים להיות שני תווים לפחות"
+                many: "חייבים להיות %{count} תווים לפחות"
+                other: "חייבים להיות %{count} תווים לפחות"
             number:
               too_small: "חייב להיות גדול או שווה ל־%{count}"
               too_large: "חייב להיות קטן או שווה ל־%{count}"
@@ -6914,57 +7003,62 @@ he:
           about: "שינוי הצבעים המכהנים בערכות העיצוב שלך. עליך ליצור לוח צבעים כדי להתחיל."
           new_name: "לוח צבעים חדש"
           copy_name_prefix: "העתק של"
-          delete_confirm: "למחוק לוח צבעים זה?"
+          delete_confirm: "למחוק את ערכת הצבעים הזאת?"
           undo: "לבטל פעולה"
           undo_title: "ביטול השינויים לצבע זה מאז הפעם שעברה שהוא נשמר."
           revert: "להחזיר"
           revert_title: "לאפס את הצבע הזה ללוח הצבעים כברירת מחדל של Discourse."
           primary:
             name: "ראשי"
-            description: "רוב הטקסט, הייקונים והמסגרות."
+            description: "טקסט ראשי וסמלים"
           primary-medium:
             name: "עיקרי-בינוני"
+            description: "טקסט מושבת או מושתק"
           primary-low-mid:
             name: "עיקרי-נמוך-בינוני"
+            description: "מסגרות גוונים חלופיים עדינים"
           secondary:
             name: "משני"
-            description: "צבע הרקע העיקי, וצבע הטקסט של חלק מהכפתורים."
+            description: "רקע ראשי וטקסט כלשהו על כפתור"
           tertiary:
             name: "שלישוני"
-            description: "קישורים, כפתורים, עדכונים וצבע מבטא."
+            description: "צבע חלופי (קישורים, כפתורים, עיטורים)"
           quaternary:
             name: "רבעוני"
-            description: "לשימוש בערכות עיצוב כרשות"
+            description: "צבע משני לערכת העיצוב כרשות"
           header_background:
             name: "רקע כותרת"
-            description: "צבע הרקע של כותרת האתר."
+            description: "רקע כותרת"
           header_primary:
             name: "כותר עיקרי"
-            description: "טקסט ואייקונים בכותרת האתר."
+            description: "טקסט כותרת וסמלים"
           highlight:
             name: "הדגשה"
-            description: "צבע הרקע של אלמנטים מודגשים בעמוד, כמו פוסטים ונושאים."
+            description: "פוסטים או נושאים מודגשים"
           highlight-high:
             name: "מודגש-גבוה"
+            description: "הדגשה חזקה"
           highlight-medium:
             name: "מודגש-בינוני"
+            description: "הדגשה בינונית"
           highlight-low:
             name: "מודגש-נמוך"
+            description: "הדגשה עדינה"
           danger:
             name: "זהירות"
-            description: "צבע הדגשה של פעולות כמו מחיקת פוסטים ונושאים."
+            description: "שגיאות ופעולות מחיקה"
           success:
             name: "הצלחה"
-            description: "משמש כדי לסמן פעולה מוצלחת."
+            description: "פעולות מוצלחות"
           love:
             name: "חבב"
-            description: "צבע הרקע של הכפתור \"חבב\""
+            description: "כפתור לייק"
           selected:
             name: "נבחרים"
-            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשהם נבחרים/פעילים."
+            description: "פריטים פעילים או נבחרים"
           hover:
             name: "ריחוף"
-            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשעוברים מעליהם עם העכבר או שהמיקוד עובר אליהם מהמקלדת."
+            description: "ריחוף או מיקוד על רקע"
           editor:
             light: "בהיר"
             dark: "כהה"
@@ -7897,6 +7991,7 @@ he:
           basic: "התקנה בסיסית"
           users: "משתמשים"
           posting: "פרסומים"
+          content_localization: "תרגום תוכן"
           email: "דוא״ל"
           files: "קבצים"
           trust: "דרגת אמון"

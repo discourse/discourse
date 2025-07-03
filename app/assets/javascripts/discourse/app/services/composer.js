@@ -367,8 +367,6 @@ export default class ComposerService extends Service {
       return "composer.create_whisper";
     } else if (privateMessage && modelAction === Composer.REPLY) {
       return "composer.create_pm";
-    } else if (modelAction === Composer.ADD_TRANSLATION) {
-      return "composer.translations.save";
     }
 
     return SAVE_LABELS[modelAction];
@@ -414,6 +412,15 @@ export default class ComposerService extends Service {
   popupMenuOptions(composeState) {
     if (composeState === "open" || composeState === "fullscreen") {
       const options = [];
+
+      options.push(
+        this._setupPopupMenuOption({
+          name: "quote",
+          action: this.importQuote,
+          icon: "far-comment",
+          label: "composer.quote_post_title",
+        })
+      );
 
       options.push(
         this._setupPopupMenuOption({
@@ -1192,6 +1199,7 @@ export default class ComposerService extends Service {
 
           return this.destroyDraft().then(() => {
             this.close();
+            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh");
             return result;
           });
@@ -1199,6 +1207,7 @@ export default class ComposerService extends Service {
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("composer:edited-post");
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", {
             id: parseInt(result.responseJson.id, 10),
           });
@@ -1206,11 +1215,14 @@ export default class ComposerService extends Service {
             this.appEvents.trigger("header:update-topic", composer.topic);
           }
         } else {
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh");
         }
 
         if (result.responseJson.action === "create_post") {
-          this.appEvents.trigger("composer:created-post");
+          this.appEvents.trigger("composer:created-post", {
+            postId: result.responseJson.post.id,
+          });
           this.appEvents.trigger(
             "post:highlight",
             result.payload.post_number,
@@ -1272,6 +1284,7 @@ export default class ComposerService extends Service {
       staged = composer.get("stagedPost");
     }
 
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:posted", staged);
 
     this.messageBus.pause();
@@ -1472,6 +1485,8 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
+      locale:
+        this.currentUser.effective_locale || this.siteSettings.default_locale,
     });
   }
 
@@ -1514,6 +1529,7 @@ export default class ComposerService extends Service {
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
       warningsDisabled: opts.warningsDisabled,
+      locale: this._initialLocale(opts),
     });
 
     if (!this.model.targetRecipients) {
@@ -1805,6 +1821,19 @@ export default class ComposerService extends Service {
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
     this.appEvents.trigger("composer-service:last-validated-at-cleared");
+  }
+
+  _initialLocale(opts) {
+    if (opts?.locale) {
+      return opts.locale;
+    }
+
+    // inherit post locale when editing, not when replying
+    if (opts?.post?.locale && opts.action === Composer.EDIT) {
+      return opts.post.locale;
+    }
+
+    return "";
   }
 }
 

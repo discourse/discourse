@@ -398,6 +398,7 @@ nl:
       created: "Je hebt een bladwijzer voor dit bericht gemaakt. %{name}"
       created_generic: "Je hebt een bladwijzer hiervoor gemaakt. %{name}"
       create: "Bladwijzer maken"
+      clear_reminder: "Herinnering verwijderen"
       edit: "Bladwijzer bewerken"
       not_bookmarked: "bladwijzer maken voor dit bericht"
       remove_reminder_keep_bookmark: "Herinnering verwijderen en bladwijzer behouden"
@@ -1879,6 +1880,7 @@ nl:
           edit_link_options: "Bewerk de linkopties of verzend via e-mail."
           show_advanced: "Geavanceerde opties weergeven"
           hide_advanced: "Geavanceerde opties verbergen"
+          description: "Beschrijving"
           restrict: "Beperken tot"
           restrict_email: "Beperken tot e-mail"
           restrict_domain: "Beperken tot domein"
@@ -2526,11 +2528,11 @@ nl:
       italic_label: "I"
       italic_title: "Cursief"
       italic_text: "Cursieve tekst"
-      link_title: "Hyperlink"
+      link_title: "Link"
       link_description: "voer hier een linkbeschrijving in"
-      link_dialog_title: "Hyperlink invoegen"
-      link_optional_text: "optionele titel"
-      link_url_placeholder: "Plak een URL of typ om topics te zoeken"
+      link_dialog_action: "Invoegen"
+      link_edit_action: "Bijwerken"
+      link_optional_text: "Tekst"
       blockquote_title: "Blokcitaat"
       blockquote_text: "Blokcitaat"
       code_title: "Vooraf opgemaakte tekst"
@@ -2600,6 +2602,9 @@ nl:
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen
+      link_toolbar:
+        copy: "Link kopiëren"
+        link_copied: "Link gekopieerd!"
     notifications:
       tooltip:
         regular:
@@ -2995,10 +3000,6 @@ nl:
         top: "Er zijn geen toptopics."
         hot: "Er zijn geen veelgelezen topics."
         filter: "Er zijn geen topics."
-        educate:
-          new: '<p>Hier worden je nieuwe topics weergegeven. Standaard worden topics als nieuw beschouwd en wordt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> weergegeven als ze de afgelopen 2 dagen zijn gemaakt.</p><p>Ga naar je <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
-          unread: "<p>Je ongelezen topics worden hier weergegeven.</p><p>Standaard worden topics als ongelezen beschouwd en wordt het aantal ongelezen berichten aangegeven <span class=\"badge unread-posts badge-notification\">1</span> als je:</p><ul><li>Het topic hebt gemaakt</li><li>Op het topic hebt geantwoord</li><li>Het topic langer dan 5 minuten hebt gelezen</li></ul><p>Of als je het topic expliciet hebt ingesteld op \"Gevolgd\" of \"Geobserveerd\" via de \U0001F514 in elk topic.</p><p>Ga naar je <a href=\"%{userPrefsUrl}\">voorkeuren</a> om dit te wijzigen.</p>"
-          new_new: "<p>Je nieuwe topics worden hier weergegeven, evenals je ongelezen topics. Standaard worden topics beschouwd als nieuw en hebben ze de indicator <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> als ze de afgelopen 2 dagen zijn gemaakt. Ongelezen topics geven het aantal ongelezen berichten weer <span class=\"badge unread-posts badge-notification\">1</span> als je het topic hebt gemaakt, hebt gereageerd op het topic, het topic langer dan 5 minuten hebt gelezen of het topic expliciet hebt gevolgd of bekeken via de \U0001F514 in elk topic.</p><p>Ga naar je <a href=\"%{userPrefsUrl}\">voorkeuren</a> om dit te wijzigen.</p>"
       bottom:
         latest: "Er zijn verder geen nieuwste topics."
         posted: "Er zijn verder geen geplaatste topics."
@@ -3567,6 +3568,8 @@ nl:
           actions: "Acties"
           edit: "Bewerken"
           delete: "Verwijderen"
+        post_language_selector:
+          none: "Geen"
       errors:
         create: "Sorry, er is een fout opgetreden bij het plaatsen van je bericht. Probeer het opnieuw."
         edit: "Sorry, er is een fout opgetreden bij het bewerken van je bericht. Probeer het opnieuw."
@@ -4549,7 +4552,7 @@ nl:
           save: "Opslaan"
           delete: "Verwijderen"
           delete_confirm: "Weet je zeker dat je deze sectie wilt verwijderen?"
-          delete_public_confirm: "Deze sectie is <strong>zichtbaar voor iedereen</strong>, weet je zeker dat je het wilt verwijderen?"
+          delete_public_confirm: "Deze sectie is zichtbaar voor iedereen, weet je zeker dat je het wilt verwijderen?"
           update_public_confirm: "Wijzigingen zijn <strong>zichtbaar voor iedereen</strong> op deze site. Weet je het zeker?"
           mark_as_private_confirm: "Deze sectie is <strong>zichtbaar voor iedereen</strong>. Na de update is de sectie <strong>alleen zichtbaar voor jou</strong>. Weet je het zeker?"
           reset_confirm: "Weet je zeker dat je deze sectie wilt herstellen naar de standaardinstellingen?"
@@ -5628,6 +5631,7 @@ nl:
             title: "Thema's"
             themes_intro: "Installeer een nieuw thema om te beginnen of maak je eigen thema met behulp van deze bronnen."
             new_theme: "Nieuw thema"
+            install: "Installeren"
           components:
             title: "Onderdelen"
             install: "Installeren"
@@ -5667,7 +5671,6 @@ nl:
             toggle_description: "Kleurenpalet kan door gebruikers worden geselecteerd"
           colors:
             title: "Kleuren"
-          delete_confirm: "Dit kleurenpalet verwijderen?"
       plugins:
         title: "Plug-ins"
         name: "Naam"
@@ -5949,6 +5952,10 @@ nl:
           remote_theme_edits: "Als je dit thema wilt bewerken, moet je <a href='%{repoURL}' target='_blank'>een wijziging indienen in de repository</a>"
           repo_unreachable: "Kon geen contact krijgen met de Git-repository van dit thema. Foutbericht:"
           imported_from_archive: "Dit thema is vanuit een .zip-bestand geïmporteerd"
+          settings: "Instellingen"
+          colors: "Kleuren"
+          discard_colors: "Weggooien"
+          colors_title: "Kleuren"
           scss:
             text: "CSS"
           after_header:
@@ -6011,36 +6018,28 @@ nl:
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
           new_name: "Nieuw kleurenpalet"
           copy_name_prefix: "Kopie van"
-          delete_confirm: "Dit kleurenpalet verwijderen?"
           undo: "Ongedaan maken"
           undo_title: "Je wijzigingen aan deze kleur sinds de laatste keer dat deze is opgeslagen ongedaan maken."
           revert: "Herstellen"
           revert_title: "Deze kleur herstellen naar het standaardkleurenpalet van Discourse."
           primary:
             name: "primair"
-            description: "Meeste tekst, pictogrammen en randen."
           primary-medium:
             name: "primair-gemiddeld"
           primary-low-mid:
             name: "primair-laag-mid"
           secondary:
             name: "secundair"
-            description: "De hoofdachtergrondkleur, en tekstkleur van sommige knoppen."
           tertiary:
             name: "tertiair"
-            description: "Links, sommige knoppen, meldingen en accentkleur."
           quaternary:
             name: "quaternair"
-            description: "Voor optioneel gebruik in thema's."
           header_background:
             name: "koptekstachtergrond"
-            description: "Achtergrondkleur van de koptekst van de website."
           header_primary:
             name: "eerste koptekst"
-            description: "Tekst en pictogrammen in de koptekst van de website."
           highlight:
             name: "markeren"
-            description: "De achtergrondkleur van gemarkeerde elementen op de pagina, zoals berichten en topics."
           highlight-high:
             name: "markeren-hoog"
           highlight-medium:
@@ -6049,19 +6048,14 @@ nl:
             name: "markeren-laag"
           danger:
             name: "gevaar"
-            description: "Markeringskleur voor acties zoals het verwijderen van berichten en topics."
           success:
             name: "succes"
-            description: "Gebruikt om aan te geven dat een actie is gelukt."
           love:
             name: "liefde"
-            description: "De kleur van de likeknop."
           selected:
             name: "geselecteerd"
-            description: "De achtergrondkleur van elementen zoals lijstitems wanneer ze geselecteerd/actief zijn."
           hover:
             name: "zweven"
-            description: "De achtergrondkleur van elementen zoals lijstitems als de muisaanwijzer erop wordt geplaatst of als ze de toetsenbordfocus hebben."
           editor:
             light: "Licht"
             dark: "Donker"

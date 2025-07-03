@@ -1,0 +1,117 @@
+@use "lib/viewport";
+
+.welcome-banner {
+  &__wrap {
+    display: grid;
+    grid-template-rows: 0.33fr 0.33fr 0.33fr;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 1em;
+    grid-row-gap: 0.5em;
+    border-bottom: 1px solid var(--primary-300);
+    padding: 1.5em 0 2.5em;
+    margin-bottom: 0;
+
+    @media screen and (width <= 768px) {
+      padding: 1em;
+    }
+
+    @include viewport.until(sm) {
+      display: block;
+      padding: 0.5em;
+      margin-top: 0;
+    }
+
+    .search-menu {
+      grid-column: 2/3;
+      grid-row: 1/-1;
+      width: 100%;
+      align-self: center;
+
+      @media screen and (width <= 1028px) {
+        grid-row: 2/-1;
+        grid-column: 1/-1;
+      }
+
+      @media screen and (width <= 768px) {
+        grid-column: 2/-1;
+        grid-row: 1/-1;
+      }
+
+      @media screen and (width <= 600px) {
+        grid-row: 2/-1;
+        grid-column: 1/-1;
+      }
+
+      @include viewport.until(sm) {
+        display: none;
+      }
+    }
+
+    p:not(.welcome-banner__subheader) {
+      display: none;
+    }
+  }
+
+  .search-menu .search-input,
+  .search-menu-container .search-input {
+    background: var(--d-content-background);
+    border: 1px solid var(--search-color);
+    box-shadow: 0 4px 10px rgb(52, 6, 121, 15%);
+  }
+
+  .search-menu .search-input:focus-within,
+  .search-menu-container .search-input:focus-within {
+    border: 1px solid var(--search-color);
+    outline: 2px solid var(--search-color);
+  }
+
+  .search-menu .d-icon,
+  .search-menu .searching .d-icon,
+  .search-menu .searching .show-advanced-search .d-icon {
+    color: var(--search-color);
+  }
+
+  .panel-body {
+    z-index: z("dropdown");
+  }
+
+  .results {
+    background: var(--d-content-background);
+  }
+
+  &__title {
+    grid-column: 1/2;
+    grid-row: 1/-1;
+    text-align: left;
+    align-self: center;
+    margin: 0;
+    font-weight: 400;
+    color: var(--search-color);
+
+    @media screen and (width <= 1028px) {
+      font-size: var(--font-up-4);
+      grid-column: 1/-1;
+      grid-row: 1;
+      text-align: center;
+      margin-bottom: 0.5em;
+    }
+
+    @media screen and (width <= 768px) {
+      text-align: left;
+      grid-column: 1/2;
+      grid-row: 1/-1;
+      font-size: var(--font-up-3);
+    }
+
+    @media screen and (width <= 600px) {
+      grid-column: 1/-1;
+      grid-row: 1;
+      text-align: center;
+      margin-bottom: 0.5em;
+    }
+
+    @include viewport.until(sm) {
+      font-size: var(--font-up-2);
+    }
+  }
+}

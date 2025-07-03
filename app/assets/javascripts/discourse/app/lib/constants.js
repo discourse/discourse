@@ -24,6 +24,8 @@ export const SIDEBAR_SECTION = {
 
 export const CATEGORY_STYLE_TYPES = { square: 0, icon: 1, emoji: 2 };
 
+export const CATEGORY_TEXT_COLORS = ["FFFFFF", "000000"];
+
 export const AUTO_GROUPS = {
   everyone: {
     id: 0,
@@ -100,3 +102,5 @@ export const ADMIN_SEARCH_RESULT_TYPES = [
 ];
 
 export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];
+
+export const INVITE_DESCRIPTION_MAX_LENGTH = 100;

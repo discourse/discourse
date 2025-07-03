@@ -145,6 +145,11 @@ class TopicsFilter
         Time.zone.parse(
           "#{match_data[:year].to_i}-#{match_data[:month].to_i}-#{match_data[:day].to_i}",
         )
+      elsif value =~ /\A\d+\z/
+        # Handle integer as number of days ago (0 = today at midnight)
+        days = value.to_i
+        return nil if days < 0
+        days.days.ago.beginning_of_day
       end
     when "likes-min", "likes-max", "likes-op-min", "likes-op-max", "posts-min", "posts-max",
          "posters-min", "posters-max", "views-min", "views-max"
@@ -539,6 +544,19 @@ class TopicsFilter
     },
     "views" => {
       column: "topics.views",
+    },
+    "read" => {
+      column: "tu.last_visited_at",
+      scope: -> do
+        if @guardian.user
+          @scope.joins(
+            "JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = #{@guardian.user.id.to_i}",
+          ).where("tu.last_visited_at IS NOT NULL")
+        else
+          # make sure this works for anon
+          @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")
+        end
+      end,
     },
   }
   private_constant :ORDER_BY_MAPPINGS

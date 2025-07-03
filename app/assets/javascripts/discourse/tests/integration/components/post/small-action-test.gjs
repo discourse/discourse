@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import PostSmallAction from "discourse/components/post/small-action";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import I18n from "discourse-i18n";
 
 function renderComponent(post) {
   return render(<template><PostSmallAction @post={{post}} /></template>);
@@ -98,6 +99,36 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
     assert
       .dom(".small-action .d-icon-far-circle-check")
       .exists("the custom icon was rendered");
+  });
+
+  test("api.addGroupPostSmallActionCode", async function (assert) {
+    withPluginApi((api) => {
+      api.addGroupPostSmallActionCode("some_code");
+    });
+
+    this.post.action_code = "some_code";
+    this.post.action_code_who = "somegroup";
+
+    I18n.translations[I18n.locale].js.action_codes = {
+      some_code: "Some %{who} Code Action",
+    };
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".small-action")
+      .hasText(
+        "Some @somegroup Code Action",
+        "the action code text was rendered correctly"
+      );
+
+    assert
+      .dom("a.mention-group")
+      .hasAttribute(
+        "href",
+        "/g/somegroup",
+        "the group mention link has the correct href"
+      );
   });
 
   test("api.addPostSmallActionIcon", async function (assert) {

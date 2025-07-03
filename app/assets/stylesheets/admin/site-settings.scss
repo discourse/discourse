@@ -22,7 +22,7 @@
   }
 }
 
-.admin-site-settings__changes-banner {
+.admin-changes-banner {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
@@ -32,8 +32,9 @@
   padding: var(--space-3);
   background-color: var(--secondary);
   border: 1px solid var(--primary-300);
-  border-radius: var(--border-radius);
+  border-radius: var(--d-border-radius);
   box-shadow: var(--shadow-card);
+  z-index: 1;
 
   @include viewport.until(sm) {
     flex-direction: column;
