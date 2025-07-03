@@ -351,34 +351,4 @@ RSpec.describe CurrentUserSerializer do
       )
     end
   end
-
-  describe "#use_reviewable_ui_refresh" do
-    fab!(:admin)
-    fab!(:user)
-    fab!(:group)
-
-    it "does not include the attribute if the user cannot see the reviewable UI refresh" do
-      serializer = described_class.new(user, scope: Guardian.new(user), root: false)
-
-      expect(serializer.as_json).not_to have_key(:use_reviewable_ui_refresh)
-    end
-
-    it "returns false if the user cannot see the reviewable UI refresh" do
-      SiteSetting.reviewable_ui_refresh = ""
-
-      serializer = described_class.new(admin, scope: Guardian.new(admin), root: false)
-
-      expect(serializer.as_json[:use_reviewable_ui_refresh]).to eq(false)
-    end
-
-    it "returns true if the user can see the reviewable UI refresh" do
-      SiteSetting.reviewable_ui_refresh = group.id
-
-      group.add(admin)
-
-      serializer = described_class.new(admin, scope: Guardian.new(admin), root: false)
-
-      expect(serializer.as_json[:use_reviewable_ui_refresh]).to eq(true)
-    end
-  end
 end
