@@ -120,7 +120,7 @@ body.grid-layout {
 
     @include viewport.from(xl) {
       .discourse-root {
-        grid-template-columns: minmax(0, 1fr) minmax(auto, 57em) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(auto, 68em) minmax(0, 1fr);
       }
 
       #main-outlet {
