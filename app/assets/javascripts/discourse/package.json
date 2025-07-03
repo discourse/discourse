@@ -61,8 +61,8 @@
     "prosemirror-view": "^1.40.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.7",
-    "@babel/standalone": "^7.27.7",
+    "@babel/core": "^7.28.0",
+    "@babel/standalone": "^7.28.0",
     "@colors/colors": "^1.6.0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
