@@ -2,6 +2,7 @@
 
 describe "Post selection | Copy quote", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:composer) { PageObjects::Components::Composer.new }
   let(:cdp) { PageObjects::CDP.new }
 
   fab!(:topic)
@@ -31,6 +32,18 @@ describe "Post selection | Copy quote", type: :system do
 
       select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
       expect(page).not_to have_css(topic_page.copy_quote_button_selector)
+    end
+
+    it "resets the quote state when the toolbar is hidden" do
+      topic_page.visit_topic(topic)
+      select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
+
+      expect(page).to have_css(topic_page.copy_quote_button_selector)
+
+      select_text_range(".topic-map__stat-label", 0, 1) # select non cooked content
+      topic_page.click_reply_button
+
+      expect(composer).to have_value("")
     end
   end
 
