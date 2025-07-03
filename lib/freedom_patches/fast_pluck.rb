@@ -43,7 +43,7 @@ class ActiveRecord::Relation
 
   def pluck(*column_names)
     if loaded? &&
-         (column_names.map(&:to_s) - @klass.attribute_names - @klass.attribute_aliases.keys).empty?
+         (column_names.map(&:to_s) - @model.attribute_names - @model.attribute_aliases.keys).empty?
       return records.pluck(*column_names)
     end
 
