@@ -59,14 +59,14 @@ acceptance("User Activity / Topics - empty state", function (needs) {
   test("When looking at the own activity page", async function (assert) {
     await visit(`/u/${currentUser}/activity/topics`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(i18n("user_activity.no_topics_title"));
   });
 
   test("When looking at another user's activity page", async function (assert) {
     await visit(`/u/${anotherUser}/activity/topics`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(
         i18n("user_activity.no_topics_title_others", { username: anotherUser })
       );

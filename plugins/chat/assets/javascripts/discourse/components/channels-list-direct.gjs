@@ -115,7 +115,7 @@ export default class ChannelsListDirect extends Component {
             @identifier="empty-channels-list"
             @svgContent={{ChatZero}}
             @title={{i18n "chat.no_direct_message_channels"}}
-            @ctaLabel="chat.no_direct_message_channels_cta"
+            @ctaLabel={{i18n "chat.no_direct_message_channels_cta"}}
             @ctaAction={{this.openNewMessageModal}}
           />
         {{/if}}

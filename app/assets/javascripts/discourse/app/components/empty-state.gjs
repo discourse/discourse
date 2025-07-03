@@ -32,7 +32,7 @@ const EmptyState = <template>
             @action={{@ctaAction}}
             @href={{@ctaHref}}
             @route={{@ctaRoute}}
-            @label={{@ctaLabel}}
+            @translatedLabel={{@ctaLabel}}
             @icon={{@ctaIcon}}
             class="btn-primary"
           />

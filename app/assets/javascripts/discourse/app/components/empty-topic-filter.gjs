@@ -25,7 +25,7 @@ export default class EmptyTopicFilter extends Component {
     <EmptyState
       @identifier="empty-topic-filter"
       @title={{this.educationText}}
-      @ctaLabel="topic.browse_latest_topics"
+      @ctaLabel={{i18n "topic.browse_latest_topics"}}
       @ctaRoute="discovery.latest"
       @tipIcon="circle-info"
       @tipText={{htmlSafe
