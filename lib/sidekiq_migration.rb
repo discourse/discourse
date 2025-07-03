@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 # TODO: Remove this after the Discourse 3.5 release
+
+require "sidekiq/api"
+
 class SidekiqMigration
   delegate :old_pool, to: :Sidekiq
 
