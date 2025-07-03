@@ -47,7 +47,7 @@ describe "Creating Invites", type: :system do
 
     create_invite_modal.close
 
-    expect(user_invited_pending_page.invites_list.size).to eq(1)
+    expect(user_invited_pending_page.invites_list.size).to eq(2)
 
     expect(user_invited_pending_page.latest_invite).to be_link_type(
       key: invite_key,
@@ -74,7 +74,7 @@ describe "Creating Invites", type: :system do
       create_invite_modal.save_button.click
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
 
       user_invited_pending_page.latest_invite.edit_button.click
     end
@@ -115,7 +115,7 @@ describe "Creating Invites", type: :system do
 
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
 
       expect(user_invited_pending_page.latest_invite).to have_description("welcome")
       expect(user_invited_pending_page.latest_invite).to be_link_type(
@@ -160,7 +160,7 @@ describe "Creating Invites", type: :system do
 
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
 
       expect(user_invited_pending_page.latest_invite).to be_email_type("someone@discourse.org")
       expect(user_invited_pending_page.latest_invite).to have_group(group)
@@ -188,7 +188,7 @@ describe "Creating Invites", type: :system do
 
       create_invite_modal.close
 
-      expect(user_invited_pending_page.invites_list.size).to eq(1)
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
       expect(user_invited_pending_page.latest_invite).to be_email_type("invitedperson@email.org")
       expect(ActionMailer::Base.deliveries).to eq([])
     end
