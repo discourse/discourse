@@ -4,6 +4,7 @@ describe "Creating Invites", type: :system do
   fab!(:group)
   fab!(:user) { Fabricate(:user, groups: [group]) }
   fab!(:topic) { Fabricate(:post).topic }
+  fab!(:invite) { Fabricate(:invite, invited_by: user, email: "test@example.com") } # avoid empty state
   let(:user_invited_pending_page) { PageObjects::Pages::UserInvitedPending.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:cdp) { PageObjects::CDP.new }
@@ -226,6 +227,26 @@ describe "Creating Invites", type: :system do
 
       expire_date = Time.parse("#{date} #{time}:#{now.strftime("%S")}").utc
       expect(expire_date).to be_within_one_minute_of(now + 1.day)
+    end
+  end
+
+  context "in empty state" do
+    fab!(:user_without_invites) { Fabricate(:user, groups: [group]) }
+    let(:user_invited_pending_page_empty) { PageObjects::Pages::UserInvitedPending.new }
+    let(:create_invite_modal_empty) { PageObjects::Modals::CreateInvite.new }
+
+    before do
+      SiteSetting.invite_allowed_groups = "#{group.id}"
+      sign_in(user_without_invites)
+      user_invited_pending_page_empty.visit(user_without_invites)
+    end
+
+    it "can open the invite modal from the empty state button" do
+      find(".empty-state .btn-primary").click
+      expect(create_invite_modal_empty).to be_visible
+      expect(create_invite_modal_empty.header).to have_text(
+        I18n.t("js.user.invited.invite.new_title"),
+      )
     end
   end
 end
