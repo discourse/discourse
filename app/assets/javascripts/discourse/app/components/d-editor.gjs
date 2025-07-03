@@ -486,6 +486,8 @@ export default class DEditor extends Component {
         ),
       applyList: (head, exampleKey, opts) =>
         this.textManipulation.applyList(selected, head, exampleKey, opts),
+      applyHeading: (level, exampleKey) =>
+        this.textManipulation.applyHeading(selected, level, exampleKey),
       formatCode: () => this.textManipulation.formatCode(),
       addText: (text) => this.textManipulation.addText(selected, text),
       getText: () => this.value,

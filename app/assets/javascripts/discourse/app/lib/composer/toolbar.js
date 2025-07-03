@@ -1,4 +1,5 @@
 // @ts-check
+import { action } from "@ember/object";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -175,6 +176,80 @@ export default class Toolbar extends ToolbarBase {
       active: ({ state }) => state.inItalic,
     });
 
+    const headingLabel = getButtonLabel("composer.heading_label", "H");
+    const headingIcon = headingLabel ? null : "discourse-text";
+    this.addButton({
+      id: "heading",
+      group: "fontStyles",
+      active: ({ state }) => {
+        if (!state || !state.inHeading) {
+          return false;
+        }
+
+        // Only highlight for actual headings, not paragraphs.
+        if (state.inHeading[0] && state.inHeading[1] > 0) {
+          return true;
+        }
+
+        return false;
+      },
+      icon: ({ state }) => {
+        if (!state) {
+          return headingIcon;
+        }
+
+        if (state.inParagraph) {
+          return headingIcon;
+        }
+
+        if (state.inHeading[0]) {
+          if (state.inHeading[1] === 0) {
+            return headingIcon;
+          }
+          return `discourse-h${state.inHeading[1]}`;
+        }
+
+        return headingIcon;
+      },
+      label: headingLabel,
+      // TODO (martin) Figure shortcut out
+      // shortcut: "H",
+      popupMenu: {
+        options: () => {
+          const headingOptions = [];
+          for (let i = 1; i <= 4; i++) {
+            headingOptions.push({
+              name: `heading-${i}`,
+              icon: `discourse-h${i}`,
+              label: "composer.heading_level_n",
+              labelArgs: { levelNumber: i },
+              condition: true,
+              active: ({ state }) => {
+                if (!state) {
+                  return false;
+                }
+
+                if (state.inHeading[0] && state.inHeading[1] === i) {
+                  return true;
+                }
+
+                return false;
+              },
+            });
+          }
+          headingOptions.push({
+            name: "heading-paragraph",
+            icon: "discourse-text",
+            label: "composer.heading_level_paragraph",
+            condition: true,
+            active: ({ state }) => state?.inParagraph,
+          });
+          return headingOptions;
+        },
+        action: this.onHeadingMenuAction.bind(this),
+      },
+    });
+
     if (opts.showLink) {
       this.addButton({
         id: "link",
@@ -252,5 +327,18 @@ export default class Toolbar extends ToolbarBase {
         perform: (e) => e.toggleDirection(),
       });
     }
+  }
+
+  @action
+  onHeadingMenuAction(menuItem) {
+    let level;
+
+    if (menuItem.name === "heading-paragraph") {
+      level = 0;
+    } else {
+      level = parseInt(menuItem.name.split("-")[1], 10);
+    }
+
+    this.context.newToolbarEvent().applyHeading(level, "heading");
   }
 }

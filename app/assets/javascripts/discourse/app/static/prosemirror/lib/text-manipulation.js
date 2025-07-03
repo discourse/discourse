@@ -190,6 +190,13 @@ export default class ProsemirrorTextManipulation {
     command?.(this.view.state, this.view.dispatch);
   }
 
+  applyHeading(_selection, level) {
+    // TODO (martin) Not sure if I will need exampleKey here, 3rd arg
+    const nodeType = this.schema.nodes.heading;
+    const command = setBlockType(nodeType, { level });
+    command?.(this.view.state, this.view.dispatch);
+  }
+
   formatCode() {
     let command;
 
@@ -354,6 +361,11 @@ export default class ProsemirrorTextManipulation {
       inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
       inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
       inBlockquote: inNode(this.view.state, this.schema.nodes.blockquote),
+      inHeading: [
+        inNode(this.view.state, this.schema.nodes.heading),
+        this.view.state.selection.$head.parent?.attrs?.level,
+      ],
+      inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
     });
   }
 }

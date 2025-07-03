@@ -797,6 +797,12 @@ export default class TextareaTextManipulation {
   }
 
   @bind
+  applyHeading() {
+    // applyHeading(sel, level, exampleKey) {
+    // TODO (martin) Fill this in for old non RTE composer
+  }
+
+  @bind
   formatCode() {
     const sel = this.getSelected("", { lineVal: true });
     const selValue = sel.value;
