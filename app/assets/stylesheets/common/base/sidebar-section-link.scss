@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --d-sidebar-section-link-prefix-margin-right: 0.75em;
   --d-sidebar-section-link-prefix-width: 1.35rem;
@@ -169,6 +171,16 @@
     width: var(--d-sidebar-section-link-prefix-width);
     height: var(--d-sidebar-section-link-prefix-width);
     margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+
+    #sidebar-section-content-chat-dms & {
+      @include viewport.from(sm) {
+        --d-sidebar-section-link-prefix-width: 1.75em;
+
+        .prefix-text {
+          font-size: var(--font-0);
+        }
+      }
+    }
 
     .prefix-image {
       border: 1px solid transparent;
