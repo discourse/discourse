@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -7,6 +6,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
+import BaseNodeViewComponent from "../lib/base-node-view-component";
 import ImageAltTextInput from "./image-alt-text-input";
 
 const MIN_SCALE = 50;
@@ -57,19 +57,13 @@ class ImageToolbar extends ToolbarBase {
   }
 }
 
-export default class ImageNodeView extends Component {
+export default class ImageNodeView extends BaseNodeViewComponent {
   @service menu;
 
   @tracked imageToolbar = null;
   @tracked imageState = null;
   @tracked altMenuInstance = null;
-
-  constructor() {
-    super(...arguments);
-
-    // Register this component instance with the nodeView
-    this.args.data?.setComponentInstance?.(this);
-  }
+  @tracked menuInstance = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -114,14 +108,14 @@ export default class ImageNodeView extends Component {
       this.menu.close(this.menuInstance);
     }
 
-    this.menuInstance = await this.menu.show(this.nodeView.dom, {
+    this.menuInstance = await this.menu.show(this.dom, {
       identifier: "composer-image-toolbar",
       component: ToolbarButtons,
       placement: "top-start",
       fallbackPlacements: ["top-start"],
       padding: MARGIN,
       data: this.imageToolbar,
-      portalOutletElement: this.nodeView.dom,
+      portalOutletElement: this.dom,
       closeOnClickOutside: false,
       closeOnEscape: false,
       closeOnScroll: false,
@@ -157,9 +151,11 @@ export default class ImageNodeView extends Component {
 
   @action
   async showAltText() {
-    this.altMenuInstance?.close();
+    if (this.altMenuInstance) {
+      this.menu.close(this.altMenuInstance);
+    }
 
-    const imgElement = this.nodeView.dom.querySelector("img");
+    const imgElement = this.dom.querySelector("img");
 
     this.altMenuInstance = await this.menu.show(imgElement, {
       identifier: "composer-image-alt-text",
@@ -173,7 +169,7 @@ export default class ImageNodeView extends Component {
         onClose: () => this.view.focus(),
         view: this.view,
       },
-      portalOutletElement: this.nodeView.dom,
+      portalOutletElement: this.dom,
       closeOnClickOutside: false,
       closeOnEscape: false,
       closeOnScroll: false,
@@ -247,24 +243,9 @@ export default class ImageNodeView extends Component {
     this.#updateImageState();
   }
 
-  get node() {
-    return this.args.data?.node;
-  }
-
-  get view() {
-    return this.args.data?.view;
-  }
-
-  get getPos() {
-    return this.args.data?.getPos;
-  }
-
-  get nodeView() {
-    return this.args.data?.nodeView;
-  }
-
   get imageAttrs() {
     const node = this.node;
+
     if (!node) {
       return {};
     }
@@ -282,13 +263,13 @@ export default class ImageNodeView extends Component {
   }
 
   selectNode() {
-    this.nodeView.dom.classList.add("ProseMirror-selectednode");
+    this.dom.classList.add("ProseMirror-selectednode");
     this.showToolbar();
     this.showAltText();
   }
 
   deselectNode() {
-    this.nodeView.dom.classList.remove("ProseMirror-selectednode");
+    this.dom.classList.remove("ProseMirror-selectednode");
     this.menuInstance?.close();
     this.altMenuInstance?.close();
   }

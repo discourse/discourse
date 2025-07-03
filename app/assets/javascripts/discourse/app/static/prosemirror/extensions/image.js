@@ -5,7 +5,7 @@ import {
 import { ajax } from "discourse/lib/ajax";
 import { isNumeric } from "discourse/lib/utilities";
 import ImageNodeView from "../components/image-node-view";
-import GlimmerNodeView from "../lib/glimmer-node-view";
+import { createGlimmerNodeView } from "../lib/glimmer-node-view";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
 
@@ -15,8 +15,7 @@ const ALT_TEXT_REGEX =
 /** @type {RichEditorExtension} */
 const extension = {
   nodeViews: {
-    image: ({ getContext }) =>
-      GlimmerNodeView.create(ImageNodeView, "image", getContext),
+    image: createGlimmerNodeView("image", ImageNodeView),
   },
 
   nodeSpec: {
@@ -138,8 +137,30 @@ const extension = {
     },
   },
 
-  plugins({ pmState: { Plugin } }) {
+  plugins({ pmState: { Plugin, NodeSelection, TextSelection } }) {
     const shortUrlResolver = new Plugin({
+      props: {
+        handleTextInput(view, from, to, text) {
+          const { state } = view;
+          const { selection } = state;
+
+          if (selection instanceof NodeSelection && selection.node.isAtom) {
+            const pos = selection.to;
+            const tr = state.tr.setSelection(
+              TextSelection.create(state.doc, pos - 1)
+            );
+            view.dispatch(tr);
+
+            const newTr = view.state.tr.insertText(text);
+            view.dispatch(newTr);
+
+            return true;
+          }
+
+          return false;
+        },
+      },
+
       state: {
         init() {
           return [];

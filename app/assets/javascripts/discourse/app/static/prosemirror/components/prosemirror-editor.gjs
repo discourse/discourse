@@ -113,6 +113,11 @@ export default class ProsemirrorEditor extends Component {
         site: this.site,
         replaceToolbar: this.args.replaceToolbar,
         addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
+        removeGlimmerNodeView: (nodeView) =>
+          this.glimmerNodeViews.splice(
+            this.glimmerNodeViews.indexOf(nodeView),
+            1
+          ),
       }),
     };
   }
@@ -290,8 +295,14 @@ export default class ProsemirrorEditor extends Component {
       {{willDestroy this.teardown}}
     ></div>
     {{#each this.glimmerNodeViews as |nodeView|}}
-      {{#in-element nodeView.element insertBefore=null}}
-        <nodeView.component @data={{nodeView.data}} />
+      {{#in-element nodeView.dom insertBefore=null}}
+        <nodeView.constructor.componentClass
+          @node={{nodeView.node}}
+          @view={{nodeView.view}}
+          @getPos={{nodeView.getPos}}
+          @dom={{nodeView.dom}}
+          @nodeView={{nodeView}}
+        />
       {{/in-element}}
     {{/each}}
   </template>
