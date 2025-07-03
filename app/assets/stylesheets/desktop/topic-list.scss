@@ -86,6 +86,11 @@
     // will be overridden by media width queries on narrow displays to 1 avatar's width
     width: 146px;
 
+    img.avatar {
+      height: var(--d-topic-list-avatar-size);
+      width: var(--d-topic-list-avatar-size);
+    }
+
     > a {
       float: left;
       margin-right: 4px;
