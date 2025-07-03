@@ -21,13 +21,14 @@ end
 # Table name: user_custom_fields
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
 #  name       :string(256)      not null
 #  value      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  user_id    :integer          not null
 #
 # Indexes
 #
+#  idx_user_custom_fields_user_notes_count       (name,user_id) UNIQUE WHERE ((name)::text = 'user_notes_count'::text)
 #  index_user_custom_fields_on_user_id_and_name  (user_id,name)
 #
