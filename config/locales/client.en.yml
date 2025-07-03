@@ -817,7 +817,6 @@ en:
       reject_reason:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
-      flagged_as: "Flagged as"
 
     relative_time_picker:
       minutes:
