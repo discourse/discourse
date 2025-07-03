@@ -347,7 +347,7 @@ export default RouteTemplate(
               @title={{i18n "user.invited.none.title"}}
               @ctaLabel={{i18n "user.invited.none.cta"}}
               @ctaAction={{@controller.createInvite}}
-              @tipIcon="upload"
+              @tipIcon={{if @controller.canBulkInvite "upload"}}
             >
               <:tip>
                 {{#if @controller.canBulkInvite}}
