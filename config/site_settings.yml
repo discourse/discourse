@@ -4048,6 +4048,10 @@ experimental:
   rich_editor:
     client: true
     default: false
+  reviewable_ui_refresh:
+    client: true
+    type: group_list
+    default: ""
   experimental_system_themes:
     type: list
     default: "horizon"
