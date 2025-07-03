@@ -88,13 +88,17 @@
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
   --tag-text-color: var(--primary-medium);
+  background-color: var(--topic-list-item-background-color--visited);
 
   a.title:not(.badge-notification) {
-    color: var(--read-color);
+    color: var(--title-color--read);
+    font-weight: var(--topic-title-font-weight--visited);
   }
 }
 
 .topic-list-item {
+  background-color: var(--topic-list-item-background-color);
+
   .post-excerpt {
     margin-top: var(--space-2);
     margin-bottom: var(--space-2);
@@ -109,16 +113,17 @@
   a.title {
     word-break: break-word;
     color: var(--title-color);
+    font-weight: var(--topic-title-font-weight);
   }
 
   .anon & {
     a.title:visited:not(.badge-notification) {
-      color: var(--read-color);
+      color: var(--title-color--read);
     }
   }
 
   a.title.visited:not(.badge-notification) {
-    color: var(--read-color);
+    color: var(--title-color--read);
   }
 }
 
@@ -299,6 +304,7 @@
 
   .num {
     text-align: center;
+    font-size: var(--d-topic-list-data-font-size);
 
     a {
       color: inherit;
