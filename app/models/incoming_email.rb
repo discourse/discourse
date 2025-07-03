@@ -84,7 +84,7 @@ end
 #  imap_uid_validity :integer
 #  is_auto_generated :boolean          default(FALSE)
 #  is_bounce         :boolean          default(FALSE), not null
-#  raw               :string(1500000)
+#  raw               :text
 #  rejection_message :text
 #  subject           :text
 #  to_addresses      :text

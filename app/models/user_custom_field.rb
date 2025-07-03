@@ -29,6 +29,5 @@ end
 #
 # Indexes
 #
-#  idx_user_custom_fields_user_notes_count       (name,user_id) UNIQUE WHERE ((name)::text = 'user_notes_count'::text)
 #  index_user_custom_fields_on_user_id_and_name  (user_id,name)
 #
