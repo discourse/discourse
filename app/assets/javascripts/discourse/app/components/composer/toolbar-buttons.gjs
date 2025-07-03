@@ -3,8 +3,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu-options";
 import concatClass from "discourse/helpers/concat-class";
-import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 export default class ComposerToolbarButtons extends Component {
   @action
@@ -25,6 +25,12 @@ export default class ComposerToolbarButtons extends Component {
     return this.args.rovingButtonBar || this.args.data.rovingButtonBar;
   }
 
+  @action
+  isButtonActive(button) {
+    const state = this.args.data.context?.textManipulation?.state || {};
+    return button.active?.({ state });
+  }
+
   <template>
     {{#each @data.groups key="group" as |group|}}
       {{#each group.buttons key="id" as |button|}}
@@ -39,7 +45,7 @@ export default class ComposerToolbarButtons extends Component {
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
               @options={{hash icon=button.icon focusAfterOnChange=false}}
-              class={{button.className}}
+              @class={{button.className}}
             />
           {{else}}
             <DButton
@@ -53,7 +59,11 @@ export default class ComposerToolbarButtons extends Component {
               @preventFocus={{button.preventFocus}}
               @onKeyDown={{this.rovingButtonBar}}
               tabindex={{this.tabIndex button}}
-              class={{concatClass "toolbar-link" button.className}}
+              class={{concatClass
+                "toolbar__button"
+                button.className
+                (if (this.isButtonActive button) "--active")
+              }}
               rel={{if button.href "noopener noreferrer"}}
               target={{if button.href "_blank"}}
             />

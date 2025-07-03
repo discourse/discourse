@@ -23,7 +23,7 @@ module Migrations::Importer::Steps
       FROM users u
            JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?
            LEFT JOIN user_emails ue ON u.original_id = ue.user_id
-      ORDER BY ue.ROWID
+      ORDER BY ue.user_id, ue.email
     SQL
 
     private

@@ -6,24 +6,30 @@ import icon from "discourse/helpers/d-icon";
 let globalI = 1;
 
 function stringifyValue(value) {
-  if (value === undefined) {
-    return "undefined";
-  } else if (value === null) {
-    return "null";
-  } else if (["string", "number"].includes(typeof value)) {
-    return JSON.stringify(value);
-  } else if (typeof value === "boolean") {
-    return value.toString();
-  } else if (Array.isArray(value)) {
-    return `Array (${value.length} items)`;
-  } else if (value.toString().startsWith("class ")) {
-    return `class ${value.name} {}`;
-  } else if (value.constructor.name === "function") {
-    return `ƒ ${value.name || "function"}(...)`;
-  } else if (value.id) {
-    return `${value.constructor.name} { id: ${value.id} }`;
-  } else {
-    return `${value.constructor.name} {}`;
+  try {
+    if (value === undefined) {
+      return "undefined";
+    } else if (value === null) {
+      return "null";
+    } else if (["string", "number"].includes(typeof value)) {
+      return JSON.stringify(value);
+    } else if (typeof value === "boolean") {
+      return String(value);
+    } else if (Array.isArray(value)) {
+      return `Array (${value.length} items)`;
+    } else if (String(value).startsWith("class ")) {
+      return `class ${value.name} {}`;
+    } else if (value.constructor?.name === "function") {
+      return `ƒ ${value.name || "function"}(...)`;
+    } else if (value.id) {
+      return `${value.constructor?.name} { id: ${value.id} }`;
+    } else {
+      return `${value.constructor?.name} {}`;
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("Unable to stringify value:", value, e);
+    return "(unable to stringify)";
   }
 }
 

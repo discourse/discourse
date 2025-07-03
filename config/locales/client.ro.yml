@@ -1889,6 +1889,9 @@ ro:
       to_continue: "Te rog să te autentifici."
       preferences: "Trebuie să fii autentificat pentru a schimba preferințele."
       not_approved: "Contul tău încă nu a fost aprobat. Vei primi notificarea prin email când ești gata de logare."
+      discourse_id:
+        name: "ID Discourse"
+        title: "Conectează-te ID-ul Discourse"
       google_oauth2:
         name: "Google"
       twitter:
@@ -2038,14 +2041,16 @@ ro:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "text italic"
-      link_title: "Hyperlink"
+      link_title: "Legătură"
       link_description: "adaugă aici descrierea link-ului"
       link_dialog_title: "Inserează legătură"
       link_dialog_action: "Introdu"
       link_edit_title: "Editează legătură"
       link_edit_action: "Actualizează"
-      link_optional_text: "titlu opțional"
-      link_url_placeholder: "Lipește un URL sau tastează pentru a căuta subiecte"
+      link_text_label: "Text legătură"
+      link_optional_text: "Text"
+      link_url_label: "Legătură sau subiect"
+      link_url_placeholder: "Lipește legătură sau caută subiecte"
       blockquote_title: "Bloc citat"
       blockquote_text: "Bloc citat"
       code_title: "Text preformatat"
@@ -2159,6 +2164,7 @@ ro:
       relevance: "Relevanță"
       latest_post: "Cele mai recente postări"
       latest_topic: "Ultimul subiect"
+      last_read: "Ultima lectură"
       most_viewed: "Cele mai văzute"
       most_liked: "Cele mai apreciate"
       select_all: "Selectează tot"
@@ -2313,9 +2319,11 @@ ro:
         bookmarks: "Nu ai nici un semn de carte încă."
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
-        educate:
-          new: '<p>Subiectele noi vor apărea aici.Implicit, subiectele vor fi considerate noi și vor afișa un indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> dacă au fost create în ultimele 2 zile.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
-          unread: '<p>Subiectele necitite vor apărea aici</p><p>Implicit, subiectele sunt considerate necitite și se va afișa numărul celor necitite <span class="badge unread-posts badge-notification">1</span>dacă ai:</p><ul><li>Creat subiectul</li><li>Răspuns la subiect</li><li>Citit subiectul de mai mult de 5 minute</li></ul><p>Sau dacă ai setat în mod explicit subiectul pe Urmărire sau Urmărire activă prin intermediul contorului de notificare de la sfârșitul fiecărui subiect.</p><p>Mergi la <a href="%{userPrefsUrl}">preferințe</a> pentru a schimba această setare.</p>'
+        education:
+          topic_tracking_preferences: "Poți vizualiza și modifica noile tale setări pentru urmărirea subiectelor în <a href=\"%{basePath}/my/preferences/tracking\">preferințele tale</a>."
+          unread: "Nimic rămas necitit... impresionant!"
+          new_new: "Nimic nou în acest moment... revino în curând!"
+          new: "Nimic nou în acest moment... revino în curând!"
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."
@@ -2406,6 +2414,7 @@ ro:
         one: "%{count} răspuns, sari la prima postare"
         few: "%{count} răspunsuri, sari la prima postare"
         other: "%{count} de răspunsuri, sari la prima postare"
+      browse_latest_topics: "Răsfoiește cele mai recente subiecte"
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
       jump_reply_button: "Sari la articol"
       deleted: "Subiectul a fost șters"
@@ -5103,6 +5112,7 @@ ro:
           basic: "Setări de bază"
           users: "Utilizatori"
           posting: "Postări"
+          content_localization: "Localizare conținut"
           email: "E-mail"
           files: "Fișiere"
           trust: "Niveluri de încredere"

@@ -528,17 +528,19 @@ export default class ReviewableItem extends Component {
         this.dialog.confirm({
           message,
           didConfirm: () => this._performConfirmed(performableAction),
+          didCancel: () => this.#unclaimAutomaticReviewable(),
         });
       }
     } else if (actionModalClass) {
       if (await this.#claimReviewable()) {
-        this.modal.show(actionModalClass, {
+        await this.modal.show(actionModalClass, {
           model: {
             reviewable: this.reviewable,
             performConfirmed: this._performConfirmed,
             action: performableAction,
           },
         });
+        await this.#unclaimAutomaticReviewable();
       }
     } else {
       return this._performConfirmed(performableAction);

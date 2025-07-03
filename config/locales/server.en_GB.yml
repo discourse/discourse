@@ -45,7 +45,7 @@ en_GB:
       labels:
         post: Post
   site_settings:
-    email_subject: "Customisable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Customisable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal colour values to be used for letter avatar background."
     category_colors: "A list of hexadecimal colour values allowed for categories."
     pop3_polling_ssl: "Use SSL when connecting to the POP3 server. (Recommended)"

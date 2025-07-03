@@ -33,7 +33,10 @@ export default class ReviewableClaimedTopic extends Component {
 
     try {
       await claim.save({ topic_id: this.args.topicId });
-      this.args.onClaim(this.currentUser);
+      this.args.onClaim({
+        user: this.currentUser,
+        automatic: false,
+      });
     } catch (e) {
       popupAjaxError(e);
     }

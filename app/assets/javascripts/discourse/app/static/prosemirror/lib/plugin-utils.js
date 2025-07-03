@@ -189,3 +189,37 @@ export function findMarkOfType(marks, type, attrs = {}) {
       Object.keys(attrs).every((key) => item.attrs[key] === attrs[key])
   );
 }
+
+export function hasMark(state, markType, attrs = {}) {
+  const { from, to, empty } = state.selection;
+
+  // For empty selection, check stored marks or marks at position
+  if (empty) {
+    const storedMarks = state.storedMarks || state.selection.$from.marks();
+    return !!findMarkOfType(storedMarks, markType, attrs);
+  }
+
+  // For range selections, check if mark exists in the range
+  return (
+    state.doc.rangeHasMark(from, to, markType) &&
+    (!Object.keys(attrs).length ||
+      state.doc.rangeHasMark(from, to, markType.create(attrs)))
+  );
+}
+
+export function inNode(state, nodeType, attrs = {}) {
+  const { $from } = state.selection;
+
+  for (let d = $from.depth; d >= 0; d--) {
+    const node = $from.node(d);
+    if (node.type === nodeType) {
+      if (!Object.keys(attrs).length) {
+        return true;
+      }
+
+      return Object.keys(attrs).every((key) => node.attrs[key] === attrs[key]);
+    }
+  }
+
+  return false;
+}

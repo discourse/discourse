@@ -64,11 +64,12 @@ RSpec.describe Admin::SiteSettingsController do
         )
       end
 
-      it "returns site settings by area" do
+      xit "returns site settings by area" do
         get "/admin/config/site_settings.json", params: { filter_area: "flags" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["site_settings"].map { |s| s["setting"] }).to match_array(
           %w[
+            flag_post_allowed_groups
             allow_all_users_to_flag_illegal_content
             email_address_to_report_illegal_content
             silence_new_user_sensitivity

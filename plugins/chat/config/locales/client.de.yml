@@ -531,6 +531,7 @@ de:
         select_emoji: "Emoji auswählen"
         system: "System"
         title: "Eingehende Webhooks"
+        header_description: "Eingehende Webhooks können von externen Systemen verwendet werden, um als Bot-Benutzer Nachrichten in einem dafür vorgesehenen Chat-Kanal zu posten"
         url: "URL"
         url_instructions: "Diese URL enthält einen geheimen Wert – bewahre ihn sicher auf."
         username: "Benutzername"

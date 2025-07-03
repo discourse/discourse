@@ -707,36 +707,33 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle whispers when whisperer user", async function (assert) {
-        const menu = selectKit(".toolbar-popup-menu-options");
-
         await visit("/t/this-is-a-test-topic/9");
         await click(".topic-post[data-post-number='1'] button.reply");
 
-        await menu.expand();
-        await menu.selectRowByName("toggle-whisper");
+        await click(".toolbar-menu__options-trigger");
+        await click("[data-name='toggle-whisper']");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .exists("sets the post type to whisper");
 
-        await menu.expand();
-        await menu.selectRowByName("toggle-whisper");
+        await click(".toolbar-menu__options-trigger");
+        await click("[data-name='toggle-whisper']");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .doesNotExist("removes the whisper mode");
 
-        await menu.expand();
-        await menu.selectRowByName("toggle-whisper");
+        await click(".toolbar-menu__options-trigger");
+        await click("[data-name='toggle-whisper']");
 
         await click(".toggle-fullscreen");
 
-        await menu.expand();
+        await click(".toolbar-menu__options-trigger");
 
-        assert.true(
-          menu.rowByName("toggle-whisper").exists(),
-          "whisper toggling is still present when going fullscreen"
-        );
+        assert
+          .dom("[data-name='toggle-whisper']")
+          .exists("whisper toggling is still present when going fullscreen");
       });
 
       test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -803,11 +800,8 @@ import { i18n } from "discourse-i18n";
         await visit("/t/this-is-a-test-topic/9");
         await click(".topic-post[data-post-number='1'] button.reply");
 
-        await selectKit(".toolbar-popup-menu-options").expand();
-
-        await selectKit(".toolbar-popup-menu-options").selectRowByName(
-          "toggle-whisper"
-        );
+        await click(".toolbar-menu__options-trigger");
+        await click("[data-name='toggle-whisper']");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
@@ -823,10 +817,8 @@ import { i18n } from "discourse-i18n";
           .dom(".reply-details .whisper .d-icon-far-eye-slash")
           .doesNotExist("should reset the state of the composer's model");
 
-        await selectKit(".toolbar-popup-menu-options").expand();
-        await selectKit(".toolbar-popup-menu-options").selectRowByName(
-          "toggle-invisible"
-        );
+        await click(".toolbar-menu__options-trigger");
+        await click("[data-name='toggle-invisible']");
 
         assert
           .dom(".reply-details .unlist")
@@ -1505,10 +1497,9 @@ import { i18n } from "discourse-i18n";
           .dom(".d-editor-input")
           .hasValue("hello **the** world", "adds the bold");
 
-        const dropdown = selectKit(".toolbar-popup-menu-options");
-        await dropdown.expand();
+        await click(".toolbar-menu__options-trigger");
 
-        const row = dropdown.rowByName("bold").el();
+        const row = find("[data-name='bold']");
         assert
           .dom(row)
           .hasAttribute(
@@ -1584,6 +1575,62 @@ import { i18n } from "discourse-i18n";
         assert.dom(editor).hasValue(":smile: from keyboard");
       });
 
+      test("buttons with conditions should not trigger shortcut actions when condition is false", async function (assert) {
+        withPluginApi((api) => {
+          api.onToolbarCreate((toolbar) => {
+            toolbar.addButton({
+              id: "smile",
+              group: "extras",
+              icon: "far-face-smile",
+              shortcut: "ALT+S",
+              shortcutAction: (toolbarEvent) => {
+                toolbarEvent.addText(":smile: from keyboard");
+              },
+              condition: () => false,
+            });
+          });
+        });
+
+        await visit("/t/internationalization-localization/280");
+        await click(".post-controls button.reply");
+
+        const editor = find(".d-editor-input");
+        await triggerKeyEvent(".d-editor-input", "keydown", "S", {
+          altKey: true,
+          ...metaModifier,
+        });
+
+        assert.dom(editor).hasValue("");
+      });
+
+      test("buttons with conditions should trigger shortcut actions when condition is true", async function (assert) {
+        withPluginApi((api) => {
+          api.onToolbarCreate((toolbar) => {
+            toolbar.addButton({
+              id: "smile",
+              group: "extras",
+              icon: "far-face-smile",
+              shortcut: "ALT+S",
+              shortcutAction: (toolbarEvent) => {
+                toolbarEvent.addText(":smile: from keyboard");
+              },
+              condition: () => true,
+            });
+          });
+        });
+
+        await visit("/t/internationalization-localization/280");
+        await click(".post-controls button.reply");
+
+        const editor = find(".d-editor-input");
+        await triggerKeyEvent(".d-editor-input", "keydown", "S", {
+          altKey: true,
+          ...metaModifier,
+        });
+
+        assert.dom(editor).hasValue(":smile: from keyboard");
+      });
+
       test("buttons can be added conditionally", async function (assert) {
         withPluginApi("0", (api) => {
           api.addComposerToolbarPopupMenuOption({
@@ -1604,22 +1651,22 @@ import { i18n } from "discourse-i18n";
         assert.dom(".d-editor-input").exists("the composer input is visible");
 
         const expectedName = "[en.some_label]";
-        const dropdown = selectKit(".toolbar-popup-menu-options");
-        await dropdown.expand();
+        await click(".toolbar-menu__options-trigger");
 
-        assert.false(
-          dropdown.rowByName(expectedName).exists(),
-          "custom button is not displayed for reply"
-        );
+        assert
+          .dom(`button[title="${expectedName}"]`)
+          .doesNotExist("custom button is not displayed for reply");
+
+        await click(".toolbar-menu__options-trigger");
 
         await visit("/latest");
         await click("#create-topic");
 
-        await dropdown.expand();
-        assert.true(
-          dropdown.rowByName(expectedName).exists(),
-          "custom button is displayed for new topic"
-        );
+        await click(".toolbar-menu__options-trigger");
+
+        assert
+          .dom(`button[title="${expectedName}"]`)
+          .exists("custom button is displayed for new topic");
       });
     }
   );

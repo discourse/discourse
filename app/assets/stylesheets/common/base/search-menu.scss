@@ -12,16 +12,16 @@
 }
 
 :root {
-  --search-result-element-padding: 0.5em 1rem;
+  --search-result-element-padding: var(--space-2) var(--space-4);
 }
 
 .search-menu.glimmer-search-menu .search-input-wrapper {
   @include viewport.until(sm) {
     position: fixed;
-    left: 1rem;
+    left: var(--space-4);
     right: 0.35rem; // to compensate for cancel button padding
     top: 0;
-    padding-block: 0.5em;
+    padding-block: var(--space-2);
     background-color: var(--secondary);
     z-index: z("base");
   }
@@ -40,7 +40,7 @@
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: 0.75rem 1rem 0;
+        padding: var(--space-3) var(--space-4) 0;
       }
     }
   }
@@ -53,7 +53,7 @@
     background: var(--d-input-bg-color);
     border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
-    padding: 0.25em 0;
+    padding: var(--space-1) 0;
 
     input.search-term__input {
       background: none;
@@ -93,7 +93,7 @@
       }
 
       .search-term__input {
-        padding-left: 1rem;
+        padding-left: var(--space-4);
       }
     }
   }
@@ -115,15 +115,15 @@
     background-color: var(--primary-200);
 
     @include viewport.from(sm) {
-      margin-left: 1rem;
+      margin-left: var(--space-4);
       margin-right: 0;
     }
 
     @include viewport.until(sm) {
       position: fixed;
-      top: calc(var(--header-offset) + 0.75em);
-      left: 1rem;
-      padding: 0.25em 0.5em;
+      top: calc(var(--header-offset) + var(--space-3));
+      left: var(--space-4);
+      padding: var(--space-1) var(--space-2);
     }
 
     &:hover {
@@ -135,16 +135,16 @@
     display: flex;
     flex-direction: column;
     border-radius: var(--d-border-radius);
-    padding-top: 0.75rem;
+    padding-top: var(--space-3);
 
     .heading {
-      padding: 0.5em 0 0 1rem;
+      padding: var(--space-2) 0 0 var(--space-4);
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       .menu-panel & {
-        padding: 0.5em 0.5rem 0 1rem;
+        padding: var(--space-2) var(--space-2) 0 var(--space-4);
       }
 
       .filter {
@@ -173,7 +173,7 @@
       display: flex;
       align-items: center;
       flex-wrap: nowrap;
-      gap: 0.5em;
+      gap: var(--space-2);
     }
 
     // This is purposefully redundant
@@ -185,14 +185,18 @@
     }
 
     @include viewport.until(sm) {
-      padding-block: 0.5em;
+      padding-block: var(--space-2);
     }
 
     .search-item-tag {
-      display: flex;
-      align-items: center;
-      gap: 0.25em;
+      display: inline-flex;
+      align-items: baseline;
+      gap: var(--space-2);
       color: var(--primary-high);
+
+      .d-icon {
+        align-self: center;
+      }
     }
 
     // overrules for legacy css
@@ -214,7 +218,7 @@
       font-size: var(--font-up-1-rem);
       color: var(--tertiary);
       overflow-wrap: anywhere;
-      margin-right: 0.25em;
+      margin-right: var(--space-1);
     }
   }
 
@@ -225,7 +229,7 @@
     .search-link {
       display: flex;
       align-items: center;
-      gap: 0.5em;
+      gap: var(--space-2);
     }
   }
 
@@ -247,7 +251,7 @@
       font-size: var(--font-0);
 
       .badge-category {
-        gap: 0.5em;
+        gap: var(--space-2);
       }
     }
 
@@ -262,7 +266,7 @@
       min-width: 100px;
 
       .search-link {
-        padding-block: 0.5em;
+        padding-block: var(--space-2);
       }
 
       .first-line {
@@ -274,7 +278,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: baseline;
-        gap: 0 0.5em;
+        gap: 0 var(--space-2);
       }
 
       .item {
@@ -293,7 +297,7 @@
 
   .search-result-group .group-result {
     display: flex;
-    gap: 0.5em;
+    gap: var(--space-2);
     align-items: center;
 
     &:not(.--with-flair) {
@@ -382,7 +386,7 @@
   .search-item-user {
     display: flex;
     align-self: center;
-    gap: 0.5em;
+    gap: var(--space-2);
 
     img.avatar {
       width: 20px;
@@ -405,7 +409,7 @@
     min-width: 0;
 
     .keyword {
-      margin-right: 0.25em;
+      margin-right: var(--space-1);
     }
 
     .badge-wrapper {
@@ -416,13 +420,13 @@
 }
 
 .search-random-quick-tip {
-  padding: 0 1rem 0.75rem;
+  padding: 0 var(--space-4) var(--space-3);
   font-size: var(--font-down-2);
   color: var(--primary-medium);
 
   .tip-label {
     background-color: rgb(var(--tertiary-rgb), 0.1);
-    margin-right: 0.25em;
+    margin-right: var(--space-1);
     padding: 2px 4px;
     display: inline-block;
     border: none;
@@ -438,9 +442,9 @@
   align-items: center;
 
   .spinner {
-    width: 0.75rem; // 12px
-    height: 0.75rem; // 12px
-    border-width: 0.125rem; // 2px
+    width: var(--space-3); // 12px
+    height: var(--space-3); // 12px
+    border-width: var(--space-half); // 2px
     margin: 0 $hpad 0 0;
   }
 

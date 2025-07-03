@@ -2280,12 +2280,10 @@ hy:
       italic_label: "I"
       italic_title: "Շեղ"
       italic_text: "շեղ տեքստ"
-      link_title: "Հիպերհղում"
       link_description: "մուտքագրեք հղման նկարագրությունն այստեղ"
       link_dialog_action: "Մուտքագրել"
       link_edit_action: "Թարմացնել"
-      link_optional_text: "ընտրովի վերնագիր"
-      link_url_placeholder: "Տեղադրեք URL կամ տեքստը մուտքագրեք՝ թեմաները որոնելու համար"
+      link_optional_text: "Տեքստ"
       blockquote_title: "Մեջբերել բաժինը"
       blockquote_text: "Մեջբերել բաժինը"
       code_title: "Ձևաչափված տեքստ"
@@ -2588,9 +2586,6 @@ hy:
         category: " %{category}-ում թեմաներ չկան:"
         top: "Թոփ թեմաներ չկան:"
         hot: "Թոփ թեմաներ չկան:"
-        educate:
-          new: '<p>Ձեր նոր թեմաները կհայտնվեն այստեղ: Լռելյայնորեն, թեմաները համարվում են նոր և ցույց կտան <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> ցուցիչը, եթե դրանք ստեղծվել են վերջին 2 օրվա ընթացքում:</p><p>Այցելեք ձեր <a href="%{userPrefsUrl}">Նախապատվությունները</a> այն փոխելու համար:</p>'
-          new_new: "<p>Ձեր նոր թեմաները կհայտնվեն այստեղ, և ձեր չկարդացված թեմաները նույնպես կցուցադրվեն: Լռելյայնորեն, թեմաները համարվում են նոր և ցույց կտան <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> ցուցիչը, եթե դրանք ստեղծվել են վերջին 2 օրվա ընթացքում: Չչկարդացված թեմաները ցույց կտան չկարդացվածների քանակը<span class=\"badge unread-posts badge-notification\">1</span> , եթե դուք ստեղծել եք թեման, պատասխանել եք թեմային, կարդացել եք թեման 5 րոպեից ավելի, կամ եթե \U0001F514-ի միջոցով յուրաքանչյուր թեմայում հստակորեն ընտրել եք Հետևում եմ կամ Դիտում եմ: </p><p>Այցելեք ձեր <a href=\"%{userPrefsUrl}\">նախապատվությունները</a> սա փոխելու համար:</p>"
       bottom:
         latest: "Վերջին թեմաներ այլևս չկան:"
         posted: "Հրապարակված թեմաներ այլևս չկան:"

@@ -3,8 +3,10 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
+import {
+  logIn,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import {
   PageLinkFormatter,
@@ -70,14 +72,17 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    logIn(getOwner(this));
+    updateCurrentUser({ admin: true });
     this.subject = getOwner(this).lookup("service:admin-search-data-source");
+    this.adminNavManager = getOwner(this).lookup("service:admin-nav-manager");
   });
 
   test("buildMap - is a noop if already cached", async function (assert) {
     await this.subject.buildMap();
-    sinon.stub(ADMIN_NAV_MAP, "forEach");
+    sinon.stub(PreloadStore, "get");
     await this.subject.buildMap();
-    assert.false(ADMIN_NAV_MAP.forEach.called);
+    assert.false(PreloadStore.get.called);
   });
 
   test("buildMap - makes a key/value object of preloaded plugins, excluding disabled and invalid ones", async function (assert) {
@@ -93,10 +98,13 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     );
   });
 
-  test("buildMap - uses ADMIN_NAV_MAP to build up a list of page links including sub-pages", async function (assert) {
+  test("buildMap - uses adminNavManager to build up a list of page links including sub-pages", async function (assert) {
     await this.subject.buildMap();
 
-    assert.true(this.subject.pageDataSourceItems.length > ADMIN_NAV_MAP.length);
+    assert.true(
+      this.subject.pageDataSourceItems.length >
+        this.adminNavManager.filteredNavMap.length
+    );
 
     assert.deepEqual(this.subject.pageDataSourceItems[0], {
       label: "Dashboard",
@@ -329,9 +337,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().label,
-        i18n("chat.admin.title") +
-          " > " +
-          humanizedSettingName(setting.setting),
+        i18n("chat.admin.title") + " > " + setting.humanized_name,
         "label uses the plugin admin route label and setting name"
       );
     });
@@ -353,9 +359,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().label,
-        i18n("admin.config.about.title") +
-          " > " +
-          humanizedSettingName(setting.setting),
+        i18n("admin.config.about.title") + " > " + setting.humanized_name,
         "label uses the primary area and setting name"
       );
     });
@@ -379,7 +383,7 @@ module(
         formatter.format().label,
         i18n("admin.site_settings.categories.required") +
           " > " +
-          humanizedSettingName(setting.setting),
+          setting.humanized_name,
         "label uses the category and setting name"
       );
     });

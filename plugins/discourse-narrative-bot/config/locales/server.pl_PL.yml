@@ -403,7 +403,7 @@ pl_PL:
           Zauważ, że gdy odpowiadasz w temacie lub czytasz temat przez dłużej niż kilka minut, poziom powiadomień automatycznie zmienia się na "śledzenie". Możesz zmienić to zachowanie w [ustawieniach użytkownika](%{base_uri}/my/preferences).
       poll:
         instructions: |-
-          Wiesz, że możesz dodać ankietę do każdego posta? Spróbuj użyć <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> zębatki w edytorze, by **utworzyć ankietę**.
+          Czy wiesz, że możesz dodać ankietę do dowolnego posta? Spróbuj użyć ikony <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> w edytorze, aby **zbudować ankietę**.
         not_found: |-
           Ups! Nie było żadnej ankiety w Twojej odpowiedzi.
 
@@ -411,8 +411,8 @@ pl_PL:
 
           ```text
           [poll]
-          * :kot:
-          * :pies:
+          * :cat:
+          * :dog:
           [/poll]
           ```
         reply: |-
@@ -424,19 +424,19 @@ pl_PL:
           [/poll]
       details:
         instructions: |-
-          Czasami możesz chcieć **ukryć szczegóły** w Twoich odpowiedziach:
+          Czasami możesz chcieć **ukryć szczegóły** w swoich odpowiedziach:
 
-          - Kiedy dyskutujesz o wątkach fabuły w filmie lub serialu, które mogą zostać uznane za spoiler.
+          - Kiedy omawiasz punkty fabuły filmu lub serialu telewizyjnego, które mogą być uznane za spoiler.
 
-          - Kiedy Twój wpis zawiera wiele opcjonalnych informacji, które mogą być przytłaczające, gdy ktoś przeczyta je od razu.
+          - Kiedy Twój post wymaga wielu opcjonalnych szczegółów, które mogą być przytłaczające, gdy są czytane na raz.
 
-          [details=Wybierz, by zobaczyć, jak to działa!]
-          1. Naciśnij przycisk <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> koła zębatego w edytorze.
-          2. Wybierz „ukryj szczegóły”.
-          3. Edytuj podsumowanie i dodaj zawartość szczegółów.
+          [details=Wybierz tę opcję, aby zobaczyć, jak to działa!]
+          1. Wybierz ikonę <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> w edytorze.
+          2. Wybierz „Ukryj szczegóły”.
+          3. Edytuj podsumowanie szczegółów i dodaj swoją treść.
           [/details]
 
-          Czy możesz użyć <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> koła zębatego w edytorze, by dodać sekcję detali do swojej kolejnej odpowiedzi?
+          Czy możesz użyć ikony <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> w edytorze, aby dodać sekcję szczegółów do swojej następnej odpowiedzi?
         not_found: |-
           Czy masz problem przy tworzeniu widgetu szczegółów? Spróbuj dołączyć następujący tekst w twojej odpowiedzi.
 

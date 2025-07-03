@@ -385,19 +385,6 @@ nl:
 
           Houd er rekening mee dat wanneer je op een topic reageert of een topic langer dan een paar minuten leest, het automatisch wordt ingesteld op het meldingsniveau 'volgen'. Je kunt dit wijzigen in [je gebruikersvoorkeuren](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Wist je dat je aan elk bericht een poll kunt toevoegen? Probeer het <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tandwiel in de editor te gebruiken om **een poll te maken**.
-        not_found: |-
-          Oeps! Er was geen poll in uw antwoord.
-
-          Gebruik het tandwielpictogram <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> in de editor, of kopieer en plak deze poll in je volgende antwoord:
-
-          ```tekst
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hé, leuke poll! Heb ik het je goed geleerd?
 
@@ -406,20 +393,6 @@ nl:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Soms wil je misschien **details verbergen** in je antwoorden:
-
-          - Wanneer je plotpunten van een film of tv-programma bespreekt, wordt dat als een spoiler beschouwd.
-
-          - Wanneer je bericht veel optionele details nodig heeft die overweldigend kunnen zijn als je ze allemaal tegelijk leest.
-
-          [details=Selecteer dit om te zien hoe het werkt!]
-          1. Selecteer het <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tandwiel in de editor.
-          2. Selecteer "Details verbergen".
-          3. Bewerk het detailoverzicht en voeg je inhoud toe.
-          [/details]
-
-          Kun je het <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tandwiel in de editor gebruiken om een detailsectie toe te voegen aan je volgende antwoord?
         not_found: |-
           Heb je moeite met het maken van een detailwidget? Probeer het volgende in je volgende antwoord op te nemen:
 

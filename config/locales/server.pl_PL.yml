@@ -157,7 +157,7 @@ pl_PL:
         not_valid_boolean_value: "musi być wartością logiczną"
         humanize_not_valid_enum_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być jedną z następujących %{choices}."
         not_valid_enum_value: "musi być jednym z następujących: %{choices}"
-        humanize_not_valid_categories_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być tablicą prawidłowych identyfikatorów kategorii."
+        humanize_not_valid_categories_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłową tablicą nazw tagów."
         not_valid_categories_value: "musi być tablicą prawidłowych identyfikatorów kategorii"
         humanize_categories_value_not_valid_min:
           one: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najmniej %{count} identyfikator kategorii."
@@ -298,6 +298,7 @@ pl_PL:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
+      invalid_locale: "%{invalid_locale} to nieprawidłowe ustawienia regionalne"
       too_long_validation:
         one: "ograniczono do %{count} znaku, podano %{length}."
         few: "ograniczono do %{count} znaków, podano %{length}."
@@ -305,6 +306,7 @@ pl_PL:
         other: "ograniczono do %{count} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
       taken: "jest już w użyciu"
+      reserved: "%{name} nazwa grupy jest zarezerwowana, wybierz inną nazwę"
       accepted: musi zostać zaakceptowane
       blank: nie może być puste
       present: musi być puste
@@ -328,6 +330,7 @@ pl_PL:
       less_than_or_equal_to: musi być mniejszy lub równy %{count}
       not_a_number: nie jest liczbą
       not_an_integer: musi być liczbą całkowitą
+      must_all_be_positive: wszystko musi być pozytywne
       odd: musi być nieparzysty
       record_invalid: ! "Weryfikacja zakończyła się niepowiedzeniem: %{errors}"
       max_emojis: "nie może zawierać więcej niż %{max_emojis_count} emoji"
@@ -715,11 +718,27 @@ pl_PL:
       few: "%{count} wpisy"
       many: "%{count} wpisów"
       other: "%{count} wpisów"
+    "new-topic": |
+      Dziękujemy za wkład w %{site_name}!
+
+      Zanim napiszesz, wybierz kategorię lub tag, aby pogrupować ten temat z powiązanymi dyskusjami, dzięki czemu inni będą mogli go łatwo znaleźć.
+
+      Aby uzyskać więcej wskazówek i porad dotyczących uczestnictwa w naszej społeczności, [sprawdź nasze zasady społeczności](%{base_path}/guidelines).
+    "new-reply": |
+      Dziękujemy za wkład w %{site_name}!
+
+      Pamiętaj, że wszyscy jesteśmy prawdziwymi ludźmi. Bądź miły dla innych członków społeczności.
+
+      Aby uzyskać więcej wskazówek i porad dotyczących uczestnictwa w naszej społeczności, [sprawdź nasze wytyczne społeczności](%{base_path}/guidelines).
+    dominating_topic: Dużo napisałeś w tym temacie! Rozważ danie innym również możliwości wzięcia udziału.
     get_a_room:
       one: Odpowiedziałeś na @%{reply_username} raz. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
       few: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
       many: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
       other: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
+    dont_feed_the_trolls: Ten post został oznaczony do uwagi moderatora. Odpowiadanie na negatywną treść może zachęcać do bardziej negatywnego zachowania - czy na pewno chcesz kontynuować?
+    too_many_replies: |
+      Nowi użytkownicy są tymczasowo ograniczeni do %{newuser_max_replies_per_topic} odpowiedzi w tym samym temacie. Prosimy o odwiedzenie innych tematów, aby nadal poznawać społeczność.
   activerecord:
     attributes:
       category:
@@ -1744,8 +1763,8 @@ pl_PL:
     default_locale: "Domyślny język tej instancji Discourse. Możesz zastąpić tekst kategorii i tematów generowanych przez system na stronie <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Dostosuj / Tekst</a>."
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych ustawieniach"
     set_locale_from_accept_language_header: "Ustaw język interfejsu dla anonimowych użytkowników na podstawie nagłówków języka ich przeglądarki internetowej."
-    set_locale_from_cookie: "Umożliwia ustawienie lokalizacji anonimowego użytkownika poprzez ciasteczko przeglądarki \"locale\"."
-    set_locale_from_param: "Umożliwia ustawienie lokalizacji anonimowego użytkownika poprzez parametr URL 'lang', np. ?lang=es."
+    set_locale_from_cookie: "Umożliwia ustawienie ustawień regionalnych anonimowego użytkownika poprzez ciasteczko przeglądarki \"locale\"."
+    set_locale_from_param: "Umożliwia ustawienie ustawień regionalnych anonimowego użytkownika poprzez parametr URL 'lang', np. ?lang=es."
     support_mixed_text_direction: "Wspieraj mieszane kierunki tekstu od lewej do prawej i od prawej do lewej strony"
     min_post_length: "Minimalna dozwolona długość postu w znakach (z wyłączeniem wiadomości osobistych)"
     min_first_post_length: "Minimalna dozwolona długość pierwszego postu (treści tematu) (z wyłączeniem wiadomości osobistych)"
@@ -1838,7 +1857,7 @@ pl_PL:
     x_summary_large_image: "Karta Twittera 'summary large image' (powinna mieć co najmniej 280 szerokości i co najmniej 150 wysokości, nie może być to .svg). Jeśli pozostanie pusta, zwykłe metadane karty są generowane przy użyciu opengraph_image, o ile nie jest to również .svg"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
-    email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Konfigurowalny format tematów standardowych wiadomości e-mail. Zobacz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
     enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego, zanim będą mogli uzyskać dostęp do interfejsu Discourse. To ustawienie nie ma wpływu na uwierzytelnianie API lub 'dostawcy DiscourseConnect'. Jeśli opcja enforce_second_factor_on_external_auth jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
     enforce_second_factor_on_external_auth: "Wymagaj od użytkowników korzystania z uwierzytelniania dwuskładnikowego przez cały czas. Po włączeniu uniemożliwi to użytkownikom logowanie się za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie społecznościowe, jeśli mają włączone uwierzytelnianie dwuskładnikowe. Po wyłączeniu użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania przy użyciu nazwy użytkownika i hasła. Zobacz także ustawienie `enforce_second_factor`."
@@ -1907,6 +1926,7 @@ pl_PL:
     blocked_ip_blocks: "Lista prywatnych bloków IP, które nigdy nie powinny być indeksowane przez Discourse"
     allowed_internal_hosts: "Lista wewnętrznych hostów, które Discourse mogą bezpiecznie indeksować do oneboxingu i innych celów"
     allowed_onebox_iframes: "Lista domen iframe src, które są dozwolone do osadzania w Onebox. `*` pozwoli na wszystkie domyślne silniki Onebox."
+    allowed_iframes: "Lista prefiksów adresów URL iframe, które Discourse może bezpiecznie dopuszczać w postach. Znak * można użyć w celu dopasowania dowolnej liczby znaków innych niż /."
     allowed_crawler_user_agents: "Agenci użytkowników dla robotów indeksujących, które powinny mieć dostęp do strony. OSTRZEŻENIE! USTAWIENIE TEGO SPOWODUJE BLOKADE ROBOTÓW, KTÓRE NIE SĄ NA LIŚCIE!"
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
     slow_down_crawler_user_agents: 'User-Agent''y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami "spowolnij szybkość indeksowania". Każda wartość musi mieć co najmniej 3 znaki.'
@@ -2031,6 +2051,7 @@ pl_PL:
     s3_endpoint: "Punkt końcowy można zmodyfikować, aby utworzyć kopię zapasową w usłudze zgodnej z S3, takiej jak DigitalOcean Spaces lub Minio. OSTRZEŻENIE: Pozostaw puste, jeśli używasz AWS S3."
     s3_configure_tombstone_policy: "Włącz zasady automatycznego usuwania przy przesyłaniu nagrobków. WAŻNE: Jeśli ta opcja jest wyłączona, nie zostanie odzyskane żadne miejsce po usunięciu przesłanych plików."
     s3_disable_cleanup: "Zapobiegaj usuwaniu starych kopii zapasowych z S3, gdy jest ich więcej niż dozwolone maksimum."
+    s3_use_acls: "AWS zaleca nieużywanie list kontroli dostępu w kontenerach S3; należy odznaczyć tę opcję tylko wtedy, gdy zamierzasz skonfigurować zasady uprawnień w skonfigurowanych kontenerach `s3_upload_bucket` i `s3_backup_bucket`."
     enable_direct_s3_uploads: "Umożliwia bezpośrednie przesyłanie wielu części do Amazon S3, zobacz https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469, aby uzyskać więcej informacji."
     backup_time_of_day: "Godzina (UTC) wykonania kopii zapasowej."
     backup_with_uploads: "Uwzględniaj przesyły w zaplanowanych backupach. Wyłączenie tej opcji spowoduje backup jedynie bazy danych."
@@ -2572,14 +2593,28 @@ pl_PL:
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
     experimental_new_new_view_groups: 'Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i spraw, by łącze "Wszystko" na pasku bocznym prowadziło do niej.'
+    glimmer_post_stream_mode: "Kontroluj, czy nowa implementacja strumienia postów „glimmer” jest używana. „auto” zostanie włączone automatycznie, gdy wszystkie motywy i wtyczki będą gotowe. Ta implementacja jest w trakcie aktywnego rozwoju i nie jest przeznaczona do użytku produkcyjnego. Nie rozwijaj motywów/wtyczek dla niej, dopóki implementacja nie zostanie sfinalizowana i ogłoszona."
+    glimmer_post_stream_mode_auto_groups: "Włącz nową implementację strumienia postów 'glimmer' w trybie 'auto' dla określonych grup użytkowników. Ta implementacja jest w trakcie aktywnego rozwoju i nie jest przeznaczona do użytku produkcyjnego. Nie rozwijaj motywów/wtyczek dla niej, dopóki implementacja nie zostanie sfinalizowana i ogłoszona."
     experimental_form_templates: "Włącz funkcję szablonów formularzy. Zarządzaj szablonami w sekcji <a href='%{base_path}/admin/customize/form-templates'>Dostosuj / Szablony</a>."
+    show_preview_for_form_templates: "Włącz podgląd funkcji szablonów formularzy"
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     experimental_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."
+    about_page_extra_groups: "Grupy, które mają być wyświetlane na stronie „O nas”, poniżej moderatorów."
+    about_page_extra_groups_initial_members: "Liczba członków do rozwinięcia w każdej grupie na stronie „O nas”."
+    about_page_extra_groups_show_description: "Czy uwzględnić opisy grup na stronie „O nas”."
+    about_page_extra_groups_order: "Kolejność dodatkowych grup na stronie „O nas”."
     adobe_analytics_tags_url: "Adres URL znaczników Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
+    rich_editor: "Włącz bogaty edytor, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu sformatowanego, aby uzyskać bardziej intuicyjną i przyjazną użytkownikowi kompozycję. Edytor tekstu sformatowanego jest w trakcie aktywnego rozwoju, więc nie wszystkie funkcje są jeszcze obsługiwane — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>zobacz Meta, aby uzyskać więcej szczegółów</a>."
+    viewport_based_mobile_mode: "EKSPERYMENTALNE: wyłącz tryby mobilne/komputerowe oparte na agencie użytkownika i zamiast tego użyj szerokości obszaru widoku."
+    reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
+    content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
+    content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
+    content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
+    content_localization_anon_language_switcher: "Włącz przełącznik języka, który umożliwia odwiedzającym witrynę, którzy nie są zalogowani, przełączanie się między przetłumaczonymi wersjami Discourse i treściami dodanymi przez użytkowników. Zależy od listy języków zdefiniowanych w 'content locationization supported locales'"
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2605,6 +2640,7 @@ pl_PL:
         many: "Nie może zawierać więcej niż %{count} znaków."
         other: "Nie może zawierać więcej niż %{count} znaków."
       invalid_json: "Nieprawidłowy JSON."
+      invalid_object: "Nieprawidłowy obiekt."
       invalid_reply_by_email_address: "Wartość musi zawierać '%{reply_key}' i musi być inna niż e-mail z powiadomieniem."
       invalid_alternative_reply_by_email_addresses: "Wszystkie wartości muszą zawierać '%{reply_key}' i być inne niż w emailu powiadamiającym."
       invalid_domain_hostname: "Nie może zawierać znaków * lub ?"
@@ -2616,7 +2652,7 @@ pl_PL:
       pop3_polling_authentication_failed: "Błąd autoryzacji POP3. Proszę zweryfikować swoje dane uwierzytelniające POP3."
       reply_by_email_address_is_empty: "Musisz ustawić \"odpowiedz poprzez adres email' przed włączeniem odpowiedzi przez email."
       email_polling_disabled: "Przed włączeniem odpowiedzi przez e-mail należy włączyć sprawdzanie poczty ręcznie lub za pośrednictwem protokołu POP3 albo skonfigurować własne sprawdzanie poczty."
-      user_locale_not_enabled: "Musisz najpierw włączyć ''pozwól na ustawienia lokalne\" przed włączeniem tych ustawień."
+      user_locale_not_enabled: "Musisz najpierw włączyć ''pozwól na ustawienia regionalne\" przed włączeniem tych ustawień."
       at_least_one_group_required: "Dla tego ustawienia musisz określić co najmniej jedną grupę."
       invalid_regex: "Wyrażenie regularne jest niepoprawne lub niedozwolone."
       invalid_regex_with_message: "Wyrażenie regularne '%{regex}' zawiera błąd: %{message}"
@@ -2654,6 +2690,8 @@ pl_PL:
       delete_rejected_email_after_days: "To ustawienie nie może być niższe niż ustawienie delete_email_logs_after_days ani większe niż %{max}"
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
+      content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
+      content_localization_anon_language_switcher_requirements: "Przełącznik języka wymaga, aby ustawienie witryny `ustaw ustawienia regionalne na podstawie pliku cookie` było włączone, a w ustawieniach `obsługiwanych lokalizacji treści` był ustawiony co najmniej jeden język."
     keywords:
       clean_up_inactive_users_after_days: "dezaktywowany|nieaktywny|nieaktywowany"
       navigation_menu: "menu rozwijane paska bocznego|nagłówka"
@@ -2833,6 +2871,12 @@ pl_PL:
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
+    omniauth_error:
+      generic_without_provider: "Przepraszamy, wystąpił błąd podczas próby autoryzacji konta za pomocą usługi logowania. Spróbuj ponownie."
+      generic_with_provider: "Przepraszamy, wystąpił błąd podczas próby autoryzacji Twojego konta za pomocą %{provider}. Spróbuj ponownie."
+      csrf_detected: "Przepraszamy, autoryzacja wygasła lub zmieniłeś przeglądarkę. Spróbuj ponownie."
+      request_error: "Przepraszamy, wystąpił błąd podczas uruchamiania autoryzacji. Spróbuj ponownie."
+      invalid_iat: "Niestety, nie możemy zweryfikować tokenu autoryzacyjnego z powodu różnic zegara serwera. Spróbuj ponownie."
     omniauth_error_unknown: "Coś poszło nie tak podczas przetwarzania logowania, spróbuj ponownie."
     omniauth_confirm_title: "Zaloguj się za pomocą %{provider}"
     omniauth_confirm_button: "Kontynuuj"
@@ -2942,6 +2986,7 @@ pl_PL:
       many: "Użytkownik %{username} ma %{count} posty w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
       other: "Użytkownik %{username} ma %{count} postów w publicznych wątkach lub prywatnych wiadomościach, więc nie można ich usunąć."
     cannot_bulk_delete: "Jeden lub więcej użytkowników nie może zostać usuniętych, ponieważ są administratorami, mają zbyt wiele postów lub mają bardzo stare posty."
+    cannot_remove_all_auth: "Musisz mieć co najmniej jedno powiązane konto, klucz dostępu lub ustawione hasło."
   unsubscribe_mailer:
     title: "Przestań obserwować mailera"
     subject_template: "Potwierdź, że nie chcesz już otrzymywać powiadomień e-mailowych z %{site_title}"
@@ -4297,6 +4342,8 @@ pl_PL:
   offline:
     title: "Nie można załadować aplikacji"
     offline_page_message: "Wygląda na to, że jesteś offline! Sprawdź połączenie sieciowe i spróbuj ponownie."
+  login_required:
+    welcome_message: "# Witamy na %{title}"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -4322,6 +4369,7 @@ pl_PL:
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
       too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
+      larger_than_x_megapixels: "Niestety, obraz o nazwie pliku %{original_filename} jest za duży (maksymalny rozmiar to %{max_image_megapixels} megapikseli). Zmień jego rozmiar i spróbuj ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"
@@ -5255,6 +5303,14 @@ pl_PL:
       restored: Przywrócony
     bulk_user_delete: "usunięte w operacji usuwania zbiorczego"
     cli_bulk_post_delete: "Zbiorczo usunięte z zadania rake"
+    api_post_delete: "Usunięto przez API"
+    reminder_deleted: "Zastąpiono nowym przypomnieniem"
+    user_associated_posts_deleted: "Użytkownik został zniszczony"
+    imap_email_deleted: "Wiadomość e-mail została usunięta z serwera IMAP"
+    imap_email_marked_as_spam: "Wiadomość e-mail została przeniesiona do folderu spam na serwerze IMAP"
+    auto_deleted_hidden_posts: "Automatycznie niszczone ukryte posty"
+    seed_data_topic_updated: "Zaktualizowano temat danych seedów"
+    seed_data_topic_deleted: "Usunięto temat danych seedów"
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
     already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."
@@ -5412,6 +5468,9 @@ pl_PL:
       approve_and_restore:
         title: "Zatwierdź i przywróć post"
         complete: "Post zatwierdzony i przywrócony."
+      approve_and_unhide:
+        title: "Zatwierdź i pokaż post"
+        complete: "Post zatwierdzony i nieukryty"
       delete_user:
         reason: "Skasowano z poziomu kolejki moderacji"
         complete: "Użytkownik usunięty."
@@ -5459,8 +5518,6 @@ pl_PL:
       duplicate_ids: "ma zduplikowane identyfikatory"
       reserved_id: "ma zastrzeżone słowo kluczowe jako id: %{id}"
       unsafe_description: "zawiera niebezpieczny opis HTML"
-  content_localization:
-    not_allowed: "Nie możesz lokalizować tej zawartości."
   activemodel:
     errors:
       <<: *errors

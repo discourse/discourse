@@ -482,7 +482,7 @@ class PluginApi {
    *   initialize() {
    *     withPluginApi("1.33.0", (api) => {
    *       api.addValueTransformerName("my-unique-transformer-name");
-   *     }),
+   *     });
    *   },
    * };
    *
@@ -1288,7 +1288,7 @@ class PluginApi {
    * });
    * ```
    *
-   * This API is deprecated. See renderIntoOutlet instead.
+   * This API is deprecated. See renderInOutlet instead.
    *
    **/
   registerConnectorClass(outletName, connectorName, klass) {

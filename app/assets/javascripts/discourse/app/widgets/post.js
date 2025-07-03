@@ -170,7 +170,7 @@ createWidget("reply-to-tab", {
 
   buildAttributes(attrs) {
     let result = {
-      tabindex: "0",
+      href: "",
     };
 
     if (!attrs.mobileView) {
@@ -201,7 +201,8 @@ createWidget("reply-to-tab", {
     ];
   },
 
-  click() {
+  click(event) {
+    event.preventDefault();
     this.state.loading = true;
     this.sendWidgetAction("toggleReplyAbove").then(
       () => (this.state.loading = false)
@@ -454,8 +455,6 @@ createWidget("post-date", {
 
 // glimmer-post-stream: has glimmer version
 createWidget("post-language", {
-  tagName: "div.post-info.post-language",
-
   html(attrs) {
     return [
       new RenderGlimmer(this, "div", PostMetaDataLanguage, {
@@ -876,13 +875,14 @@ createWidget("post-body", {
   tagName: "div.topic-body.clearfix",
 
   html(attrs, state) {
+    const post = this.findAncestorModel();
     const postContents = this.attach("post-contents", attrs);
     let result = [this.attach("post-meta-data", attrs)];
     result = result.concat(
       applyDecorators(this, "after-meta-data", attrs, state)
     );
     result.push(postContents);
-    result.push(this.attach("actions-summary", attrs));
+    result.push(this.attach("actions-summary", { post }));
     result.push(this.attach("post-links", attrs));
 
     return result;

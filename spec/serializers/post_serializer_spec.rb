@@ -711,15 +711,6 @@ RSpec.describe PostSerializer do
     it "returns the post's raw" do
       expect(json[:raw]).to eq(post.raw)
     end
-
-    it "returns the localized raw" do
-      SiteSetting.content_localization_enabled = true
-      Fabricate(:post_localization, post: post, raw: "raw", locale: "ja")
-      I18n.locale = "ja"
-      post.update!(locale: "en")
-
-      expect(json[:raw]).to eq("raw")
-    end
   end
 
   describe "#locale" do

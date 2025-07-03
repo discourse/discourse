@@ -2284,10 +2284,11 @@ RSpec.describe TopicsController do
             filter_top_level_replies: true,
             print: true,
             preview_theme_id: 9999,
+            include_raw: true,
           }
       expect(response.status).to eq(301)
       expect(response).to redirect_to(
-        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999",
+        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999&include_raw=true",
       )
     end
 
