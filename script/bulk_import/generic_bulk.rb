@@ -255,6 +255,8 @@ class BulkImport::Generic < BulkImport::Base
         show_subcategory_list: row["show_subcategory_list"],
         subcategory_list_style: row["subcategory_list_style"],
         minimum_required_tags: row["minimum_required_tags"],
+        color: row["color"],
+        text_color: row["text_color"],
       }
     end
 

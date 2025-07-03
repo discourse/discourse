@@ -655,6 +655,8 @@ class BulkImport::Base
     show_subcategory_list
     subcategory_list_style
     minimum_required_tags
+    color
+    text_color
   ]
 
   CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
