@@ -1,6 +1,5 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
@@ -9,14 +8,20 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
+import { configNavForPlugin } from "admin/lib/admin-plugin-config-nav";
 
-let additionalAdminSidebarSectionLinks = {};
-
-// For testing.
-export function clearAdditionalAdminSidebarSectionLinks() {
-  additionalAdminSidebarSectionLinks = {};
+function getAdditionalAdminSectionLinks(sectionName) {
+  return applyValueTransformer(
+    "admin-sidebar-section-links",
+    [],
+    { sectionName },
+    { mutable: true }
+  )
+    .map((link) => prepareCustomAdminSidebarSectionLink(sectionName, link))
+    .filter(Boolean);
 }
 
 class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
@@ -186,12 +191,7 @@ function defineAdminSection(
   return AdminNavSection;
 }
 
-// This is used for a plugin API.
-export function addAdminSidebarSectionLink(sectionName, link) {
-  if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
-    additionalAdminSidebarSectionLinks[sectionName] = [];
-  }
-
+function prepareCustomAdminSidebarSectionLink(sectionName, link) {
   // make the name extra-unique
   link.name = `admin_additional_${sectionName}_${link.name}`;
 
@@ -226,7 +226,7 @@ export function addAdminSidebarSectionLink(sectionName, link) {
     return;
   }
 
-  additionalAdminSidebarSectionLinks[sectionName].push(link);
+  return link;
 }
 
 function pluginAdminRouteLinks(router) {
@@ -384,13 +384,12 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       );
     }
 
-    for (const [sectionName, additionalLinks] of Object.entries(
-      additionalAdminSidebarSectionLinks
-    )) {
+    this.adminNavManager.filteredNavMap.forEach((section) => {
+      const additionalLinks = getAdditionalAdminSectionLinks(section.name);
       if (additionalLinks.length) {
-        this.adminNavManager.amendLinksToSection(sectionName, additionalLinks);
+        this.adminNavManager.amendLinksToSection(section.name, additionalLinks);
       }
-    }
+    });
 
     return this.adminNavManager.filteredNavMap.map((section) => {
       section.links.forEach((link) => {

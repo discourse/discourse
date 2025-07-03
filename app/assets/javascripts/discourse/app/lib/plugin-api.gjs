@@ -58,7 +58,6 @@ import {
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
-import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
 import classPrepend, {
@@ -102,7 +101,6 @@ import {
   addSearchResultsCallback,
 } from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
-import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   addSidebarPanel,
@@ -2884,7 +2882,17 @@ class PluginApi {
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
    */
   addAdminSidebarSectionLink(sectionName, link) {
-    addAdminSidebarSectionLink(sectionName, link);
+    this.registerValueTransformer(
+      "admin-sidebar-section-links",
+      ({
+        value: links,
+        context: { sectionName: calculatingForSectionName },
+      }) => {
+        if (sectionName === calculatingForSectionName) {
+          links.push(link);
+        }
+      }
+    );
   }
 
   /**
@@ -3292,7 +3300,12 @@ class PluginApi {
       return;
     }
 
-    registerAdminPluginConfigNav(pluginId, links);
+    this.registerValueTransformer(
+      "admin-plugin-config-navs",
+      ({ value: navs }) => {
+        navs[pluginId] = { links };
+      }
+    );
   }
 
   /**
