@@ -161,6 +161,8 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/lib/plugin-api";
 
+const DEPRECATED_POST_STREAM_CLASSES = ["component:scrolling-post-stream"];
+
 const DEPRECATED_POST_STREAM_WIDGETS = [
   "actions-summary",
   "avatar-flair",
@@ -324,6 +326,8 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
+    this.#deprecateModifyClass(resolverName);
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -3418,6 +3422,15 @@ class PluginApi {
    */
   registerRichEditorExtension(extension) {
     registerRichEditorExtension(extension);
+  }
+
+  #deprecateModifyClass(className) {
+    if (DEPRECATED_POST_STREAM_CLASSES.includes(className)) {
+      deprecated(
+        `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+    }
   }
 
   #deprecatedWidgetOverride(widgetName, override) {
