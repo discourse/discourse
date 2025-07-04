@@ -97,11 +97,11 @@ export default class PostStreamViewportTracker {
   #cloakOffset;
 
   /**
-   * Map of post IDs to their heights when cloaked
+   * Map of post IDs to their styles when cloaked
    * Used to maintain correct scroll position when posts are cloaked
    * @type {Object<number, number>}
    */
-  #cloakedPostsHeight = {};
+  #cloakedPostsStyle = {};
 
   /**
    * IntersectionObserver that tracks which posts should be cloaked/uncloaked
@@ -316,7 +316,7 @@ export default class PostStreamViewportTracker {
         this.#setupEyelineDebugElement(false);
 
         // clear collections
-        this.#cloakedPostsHeight = {};
+        this.#cloakedPostsStyle = {};
         this.#postsOnScreen = {};
         this.#uncloakedPostNumbers.clear();
 
@@ -397,11 +397,24 @@ export default class PostStreamViewportTracker {
       return { active: false };
     }
 
-    const height = this.#cloakedPostsHeight[post.id];
+    const style = this.#cloakedPostsStyle[post.id];
+    if (style && (post.post_number < above || post.post_number > below)) {
+      const { height, margin } = style;
 
-    return height && (post.post_number < above || post.post_number > below)
-      ? { active: true, style: htmlSafe("height: " + height + "px;") }
-      : { active: false };
+      // we're using getBoundingClientRect().height to get the element height before cloaking.
+      // we need to ensure the box-model is border-box to ensure the height is matched with the original
+      // element height
+      return {
+        active: true,
+        style: htmlSafe(
+          `height:${height}px !important;` +
+            `margin:${margin} !important;` +
+            "box-sizing: border-box !important;"
+        ),
+      };
+    }
+
+    return { active: false };
   }
 
   /**
@@ -424,13 +437,19 @@ export default class PostStreamViewportTracker {
     if (isIntersecting) {
       // entering the visibility area
       this.#uncloakedPostNumbers.add(postNumber);
-      delete this.#cloakedPostsHeight[post.id];
+      delete this.#cloakedPostsStyle[post.id];
     } else {
       // entering the cloaking area
       this.#uncloakedPostNumbers.delete(postNumber);
 
       // saves the current post height to prevent jumps while scrolling with existing cloaked posts
-      this.#cloakedPostsHeight[post.id] = target.offsetHeight;
+      // we are using `getBoundingClientRect().height` because the element height is a floating number and
+      // `element.offsetHeight` returns an integer, which causes rounding error issues in the post tracking
+      // `getBoundingClientRect()` also ensures that the padding/border were considered
+      this.#cloakedPostsStyle[post.id] = {
+        height: target.getBoundingClientRect().height,
+        margin: getComputedStyle(target).margin,
+      };
     }
 
     // update the cloaking boundaries
