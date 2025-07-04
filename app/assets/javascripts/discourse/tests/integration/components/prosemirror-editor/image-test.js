@@ -7,36 +7,47 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    const wrap = (img) =>
+      `<p><div class="composer-image-node" contenteditable="false" draggable="true">${img}</div></p>`;
+
     const testCases = {
       image: [
         [
           "![alt text](https://example.com/image.jpg)",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" contenteditable="false" draggable="true"></p>',
+          wrap('<img src="https://example.com/image.jpg" alt="alt text">'),
           "![alt text](https://example.com/image.jpg)",
         ],
         [
           "![alt text](https://example.com/image.jpg 'title')",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" title="title" contenteditable="false" draggable="true"></p>',
+          wrap(
+            '<img src="https://example.com/image.jpg" alt="alt text" title="title">'
+          ),
           '![alt text](https://example.com/image.jpg "title")',
         ],
         [
           '![alt text|100x200](https://example.com/image.jpg "title")',
-          '<p><img src="https://example.com/image.jpg" alt="alt text" title="title" width="100" height="200" contenteditable="false" draggable="true"></p>',
+          wrap(
+            '<img src="https://example.com/image.jpg" alt="alt text" title="title" width="100" height="200">'
+          ),
           '![alt text|100x200](https://example.com/image.jpg "title")',
         ],
         [
           "![alt text|100x200, 50%](https://example.com/image.jpg)",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" width="50" height="100" data-scale="50" contenteditable="false" draggable="true"></p>',
+          wrap(
+            '<img src="https://example.com/image.jpg" alt="alt text" width="100" height="200" data-scale="50" style="width: 50px; height: 100px;">'
+          ),
           "![alt text|100x200, 50%](https://example.com/image.jpg)",
         ],
         [
           "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
-          '<p><img src="https://example.com/image.jpg" alt="alt text" width="50" height="100" data-scale="50" data-thumbnail="true" contenteditable="false" draggable="true"></p>',
+          wrap(
+            '<img src="https://example.com/image.jpg" alt="alt text" width="100" height="200" data-scale="50" data-thumbnail="true" style="width: 50px; height: 100px;">'
+          ),
           "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
         ],
         [
           "![alt text](https://example.com/image(1).jpg)",
-          '<p><img src="https://example.com/image(1).jpg" alt="alt text" contenteditable="false" draggable="true"></p>',
+          wrap('<img src="https://example.com/image(1).jpg" alt="alt text">'),
           "![alt text](https://example.com/image\\(1\\).jpg)",
         ],
         [
@@ -46,7 +57,7 @@ module(
         ],
         [
           "![alt text|audio](upload://hash)",
-          '<p><audio preload="metadata" controls="false" contenteditable="false" draggable="true"><source data-orig-src="upload://hash"></audio></p>',
+          '<p><audio preload="metadata" controls="false" tabindex="-1" contenteditable="false" draggable="true"><source data-orig-src="upload://hash"></audio></p>',
           "![alt text|audio](upload://hash)",
         ],
       ],

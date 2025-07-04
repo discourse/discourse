@@ -66,7 +66,10 @@ export async function setupRichEditor(assert, markdown, multiToggle = false) {
     .replace(
       '<span class="fake-cursor ProseMirror-widget" contenteditable="false"></span>',
       ""
-    );
+    )
+    // or newlines/spaces
+    .replace(/\n/g, "")
+    .replace(/ {2,}/g, "");
 
   return [self, html];
 }

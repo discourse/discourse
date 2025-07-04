@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { NodeSelection } from "prosemirror-state";
+import { eq } from "truth-helpers";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import ImageAltTextInput from "./image-alt-text-input";
@@ -92,8 +93,10 @@ export default class ImageNodeView extends Component {
       scaleDown: this.scaleDown.bind(this),
       scaleUp: this.scaleUp.bind(this),
       removeImage: this.removeImage.bind(this),
-      canScaleDown: () => this.args.node.attrs.scale > MIN_SCALE,
-      canScaleUp: () => this.args.node.attrs.scale < MAX_SCALE,
+      canScaleDown: () =>
+        !this.args.node.attrs.scale || this.args.node.attrs.scale > MIN_SCALE,
+      canScaleUp: () =>
+        this.args.node.attrs.scale && this.args.node.attrs.scale < MAX_SCALE,
       isAltTextMenuOpen: () => this.altMenuInstance?.expanded,
     });
 
@@ -251,15 +254,22 @@ export default class ImageNodeView extends Component {
   }
 
   get imageStyle() {
-    const scale = (this.args.node.attrs.scale || 100) / 100;
-    if (this.args.node.attrs.width && this.args.node.attrs.height) {
-      return htmlSafe(
-        `width: ${this.args.node.attrs.width * scale}px; height: ${
-          this.args.node.attrs.height * scale
-        }px;`
-      );
+    if (
+      !this.args.node.attrs.scale ||
+      this.args.node.attrs.scale === 100 ||
+      !this.args.node.attrs.width ||
+      !this.args.node.attrs.height
+    ) {
+      return null;
     }
-    return null;
+
+    const scale = this.args.node.attrs.scale / 100;
+
+    return htmlSafe(
+      `width: ${this.args.node.attrs.width * scale}px; height: ${
+        this.args.node.attrs.height * scale
+      }px;`
+    );
   }
 
   <template>
@@ -270,8 +280,8 @@ export default class ImageNodeView extends Component {
       width={{@node.attrs.width}}
       height={{@node.attrs.height}}
       data-orig-src={{@node.attrs.originalSrc}}
-      data-thumbnail={{@node.attrs.thumbnail}}
       data-scale={{@node.attrs.scale}}
+      data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
       style={{this.imageStyle}}
       {{didInsert this.setupImage}}
     />

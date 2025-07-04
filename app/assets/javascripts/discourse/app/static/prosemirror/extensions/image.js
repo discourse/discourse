@@ -112,6 +112,7 @@ const extension = {
         const { originalSrc, extras, scale, placeholder, ...attrs } =
           node.attrs;
         attrs["data-orig-src"] = originalSrc;
+
         if (extras === "thumbnail") {
           attrs["data-thumbnail"] = true;
         }

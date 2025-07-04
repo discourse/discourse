@@ -1,9 +1,16 @@
 import { Plugin } from "prosemirror-state";
 
 /*
-  nodeViews: { nodeName: NodeViewClass }
-  nodeViews: { nodeName: (pluginParams) => NodeViewClass }
-  nodeViews: { nodeName: (pluginParams) => (...args) => new NodeViewClass(...args) }
+  There are 3 ways to define a node view:
+
+  Setting a node view class directly (e.g. code-block)
+  `nodeViews: { nodeName: NodeViewClass }`
+
+  Setting a node view class as returned by a function, when plugin params are needed (e.g. footnote)
+  `nodeViews: { nodeName: (pluginParams) => NodeViewClass }`
+
+  Setting a node view instance as returned by a function, when plugin params are needed (e.g. image)
+  `nodeViews: { nodeName: (pluginParams) => (...args) => nodeViewInstance }`
 */
 export function extractNodeViews(extensions, pluginParams) {
   /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */
