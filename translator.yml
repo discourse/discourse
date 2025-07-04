@@ -101,3 +101,10 @@ files:
   - source_path: plugins/automation/config/locales/server.en.yml
     destination_path: plugins/automation/server.yml
     label: automation
+
+  - source_path: themes/foundation/locales/en.yml
+    destination_path: themes/foundation.yml
+    label: theme
+  - source_path: themes/horizon/locales/en.yml
+    destination_path: themes/horizon.yml
+    label: theme
