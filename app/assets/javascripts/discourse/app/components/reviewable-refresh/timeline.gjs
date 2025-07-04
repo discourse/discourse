@@ -209,12 +209,10 @@ export default class ReviewableTimeline extends Component {
 
   <template>
     <div class="reviewable-timeline">
-      {{#if this.currentUser.staff}}
-        <ReviewableNoteForm
-          @reviewable={{@reviewable}}
-          @onNoteCreated={{this.onNoteCreated}}
-        />
-      {{/if}}
+      <ReviewableNoteForm
+        @reviewable={{@reviewable}}
+        @onNoteCreated={{this.onNoteCreated}}
+      />
 
       {{#if this.timelineEvents}}
         <div class="timeline-events">
