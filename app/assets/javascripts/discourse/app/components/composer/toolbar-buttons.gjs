@@ -39,13 +39,17 @@ export default class ComposerToolbarButtons extends Component {
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
+              @context={{@data.context}}
               @content={{(button.popupMenu.options)}}
               @onChange={{button.popupMenu.action}}
               @onOpen={{button.action}}
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
-              @options={{hash icon=button.icon focusAfterOnChange=false}}
-              @class={{button.className}}
+              @icon={{button.icon}}
+              @class={{concatClass
+                button.className
+                (if (this.isButtonActive button) "--active")
+              }}
             />
           {{else}}
             <DButton
