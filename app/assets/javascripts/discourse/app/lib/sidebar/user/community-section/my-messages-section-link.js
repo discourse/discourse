@@ -26,7 +26,7 @@ export default class AdminSectionLink extends BaseSectionLink {
   }
 
   get shouldDisplay() {
-    return !!this.currentUser?.can_send_private_messages;
+    return this.currentUser?.can_send_private_messages;
   }
 
   get currentWhen() {
