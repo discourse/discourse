@@ -94,10 +94,7 @@ export default class DFloatBody extends Component {
           (modifier FloatKitCloseOnEscape @instance.close)
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
-        style={{if
-          this.options.maxWidth
-          (htmlSafe (concat "max-width: " this.options.maxWidth "px"))
-        }}
+        style={{htmlSafe (concat "max-width: " this.options.maxWidth "px")}}
         ...attributes
       >
         <div class={{@innerClass}}>

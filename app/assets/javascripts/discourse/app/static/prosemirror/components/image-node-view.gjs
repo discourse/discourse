@@ -160,7 +160,6 @@ export default class ImageNodeView extends Component {
       closeOnEscape: false,
       closeOnScroll: false,
       trapTab: false,
-      maxWidth: 0,
       offset: ({ rects }) => ({
         mainAxis: -MARGIN - rects.floating.height,
         crossAxis: MARGIN,
