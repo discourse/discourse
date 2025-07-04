@@ -25,8 +25,6 @@
   --nav-horizontal-padding: 0;
   --d-main-content-gap: var(--space-8);
   --main-outlet-padding-top: var(--space-6);
-  --main-outlet-vertical-padding: var(--space-4);
-  --topic-timeline-border-color: var(--tertiary-low-or-tertiary-high);
   --d-topic-list-avatar-size: 24px;
   --d-topic-list-title-font-size: var(--font-up-1);
   --d-topic-list-metadata-top-space: var(--space-1);
@@ -41,6 +39,8 @@
   --topic-title-font-weight--visited: 400;
   --topic-list-item-background-color: var(--secondary);
   --topic-list-item-background-color--visited: var(--secondary);
+  --container-horizontal-padding: 0;
+  --list-container-horizontal-padding: 0;
 }
 
 // Animation Keyframes
@@ -480,6 +480,7 @@ textarea {
 
 .container {
   @extend .clearfix;
+  padding: 0 var(--container-horizontal-padding);
 }
 
 .wrap {
@@ -765,8 +766,6 @@ form {
 
   #main-outlet {
     grid-area: content;
-    padding: var(--main-outlet-padding-top) var(--main-outlet-vertical-padding)
-      0;
   }
 }
 
