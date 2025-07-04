@@ -2,21 +2,11 @@
 
 .fk-d-menu[data-identifier="d-autocomplete"] {
   z-index: z("composer", "dropdown") + 1;
+  --d-border-radius: var(--space-2);
 }
 
 .d-autocomplete-results {
   .autocomplete.ac-user {
-    max-width: 370px;
-    min-width: 300px;
-
-    @include viewport.from(sm) {
-      max-width: 600px;
-    }
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: 8px;
-    box-shadow: var(--shadow-dropdown);
-
     ul {
       list-style: none;
       margin: 0;
