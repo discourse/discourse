@@ -1,0 +1,51 @@
+<table class="popular-post-excerpt with-dir" style="width:100%;background:#fefefe;border-spacing:0;padding:0;vertical-align:top;">
+  <tbody>
+    <tr>
+      <td class="post-excerpt with-dir" style="color:#0a0a0a;font-size:14px;font-weight:normal;padding:16px;width:100%;">
+        <%= email_excerpt(post.cooked, post) %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="popular-post-spacer with-dir" style="border-spacing:0;background-color:#f3f3f3;padding:0;vertical-align:top;width:100%">
+  <tbody>
+    <tr>
+      <td style="border-spacing:0;padding:0;color:#0a0a0a;line-height:1.3;padding:<%= rtl? ? '0 65px 0 0' : '0 0 0 65px' %>;">
+        <div style="width: 0;height: 0;border-top: 30px solid #fefefe;border-right: 30px solid transparent;" dm="triangle"></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="popular-post-meta with-dir" style="background-color:#f3f3f3;padding:0;position:relative;vertical-align:top;width:100%">
+  <tbody>
+    <tr>
+      <td style="padding:0 8px 8px 8px;width:50px;vertical-align:top;">
+        <img src="<%= post.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;height:50px;width:50px;outline:0;" alt="<%= post.user.username -%>">
+      </td>
+      <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;vertical-align:top;">
+        <% if post.user %>
+          <% if SiteSetting.enable_names? && post.user.name && post.user.name.downcase != post.user.username.downcase %>
+            <h6 style="color:inherit;line-height:1.3;margin:0;padding:0;font-weight: normal;font-size:16px;"><%= post.user.name -%></h6>
+          <% end %>
+          <p style="color:inherit;font-size:14px;font-weight:400;line-height:1.3;margin:0 0 8px 0;padding:0;word-wrap:normal;"><%= post.user.username -%></p>
+        <% end %>
+      </td>
+      <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;text-align:<%= rtl? ? 'left' : 'right' %>;">
+        <p style="color:#8f8f8f;line-height:1.3;margin:0 0 10px 0;padding:0;">
+          <a href="<%= post.full_url -%>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none"><%= gsub_emoji_to_unicode(post.topic.title.truncate(100, separator: /\s/)) -%></a>
+        </p>
+        <a href="<%= post.full_url -%>" class="digest-button with-accent-colors" style="width:100%;text-decoration:none;padding:8px 16px;white-space: nowrap;">
+          <%=t 'user_notifications.digest.join_the_discussion' %>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="background-color:#f3f3f3">
+  <table class="spacer with-dir" style="padding:0;vertical-align:top;width:100%;background-color:#f3f3f3">
+    <tbody><tr><td height="40" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:#0a0a0a;font-size:40px;font-weight:400;hyphens:auto;line-height:40px;margin:0;mso-line-height-rule:exactly;padding:0;vertical-align:top;word-wrap:normal">&#xA0;</td></tr></tbody>
+  </table>
+<div>
