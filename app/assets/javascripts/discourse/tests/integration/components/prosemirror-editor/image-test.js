@@ -8,7 +8,7 @@ module(
     setupRenderingTest(hooks);
 
     const wrap = (img) =>
-      `<p><div class="composer-image-node" contenteditable="false" draggable="true">\n${img}\n\n</div></p>`;
+      `<p><div class="composer-image-node" contenteditable="false" draggable="true">        \n    ${img}\n  \n</div></p>`;
 
     const testCases = {
       image: [
