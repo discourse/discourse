@@ -501,7 +501,7 @@ class ProsemirrorPlaceholderHandler {
       if (
         node.type === this.schema.nodes.image &&
         node.attrs.placeholder &&
-        node.attrs?.title === file.id
+        node.attrs.title === file.id
       ) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }

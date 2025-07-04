@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { NodeSelection } from "prosemirror-state";
@@ -197,6 +198,11 @@ export default class ImageNodeView extends Component {
   }
 
   @action
+  setupImage(element) {
+    this.image = element;
+  }
+
+  @action
   scaleDown() {
     const currentScale = this.args.node.attrs.scale || 100;
     const newScale = Math.max(MIN_SCALE, currentScale - SCALE_STEP);
@@ -225,14 +231,15 @@ export default class ImageNodeView extends Component {
   }
 
   selectNode() {
-    this.args.dom.classList.add("ProseMirror-selectednode");
+    this.image.classList.add("ProseMirror-selectednode");
 
     this.showToolbar();
     this.showAltText();
   }
 
   deselectNode() {
-    this.args.dom.classList.remove("ProseMirror-selectednode");
+    this.image.classList.remove("ProseMirror-selectednode");
+
     this.closeMenus();
   }
 
@@ -266,6 +273,7 @@ export default class ImageNodeView extends Component {
       data-thumbnail={{@node.attrs.thumbnail}}
       data-scale={{@node.attrs.scale}}
       style={{this.imageStyle}}
+      {{didInsert this.setupImage}}
     />
   </template>
 }
