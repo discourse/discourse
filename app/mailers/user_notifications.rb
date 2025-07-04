@@ -394,10 +394,6 @@ class UserNotifications < ActionMailer::Base
     opts[:show_category_in_subject] = true
     opts[:show_tags_in_subject] = true
 
-    if !SiteSetting.prioritize_username_in_ux
-      opts[:post].cooked = replace_username_with_name_from_post(opts[:post], user)
-    end
-
     notification_email(user, opts)
   end
 
@@ -565,6 +561,9 @@ class UserNotifications < ActionMailer::Base
       use_topic_title_subject: use_topic_title_subject,
       user: user,
     }
+
+    email_options =
+      DiscoursePluginRegistry.apply_modifier(:user_notification_email_options, email_options)
 
     if group_id = notification_data[:group_id]
       email_options[:group_name] = Group.find_by(id: group_id)&.name
@@ -877,30 +876,5 @@ class UserNotifications < ActionMailer::Base
         .where("created_at > ?", date)
         .count
         .tap { Discourse.redis.setex(key, 1.day, _1) }
-  end
-
-  def replace_username_with_name_from_post(post, user)
-    alnum = '\p{Alphabetic}\p{Mark}\p{Decimal_Number}'
-    mention_regex =
-      /
-      @(
-        [#{alnum}_]                    
-        [#{alnum}._-]{0,58}            
-        [#{alnum}]                     
-      ) |
-      @([#{alnum}_])                   
-    /ux
-
-    usernames = post.cooked.scan(mention_regex).flatten.compact.uniq
-
-    users = User.where(username: usernames).index_by(&:username)
-
-    post
-      .cooked
-      .gsub(mention_regex) do
-        username = Regexp.last_match[1] || Regexp.last_match[2]
-        user = users[username]
-        user&.name ? "@#{user.name}" : "@#{username}" # fallback to original mention
-      end
   end
 end
