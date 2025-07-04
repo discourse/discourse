@@ -74,27 +74,27 @@ end
 # Table name: incoming_emails
 #
 #  id                :integer          not null, primary key
-#  user_id           :integer
-#  topic_id          :integer
-#  post_id           :integer
-#  raw               :text
-#  error             :text
-#  message_id        :text
-#  from_address      :text
-#  to_addresses      :text
 #  cc_addresses      :text
-#  subject           :text
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  rejection_message :text
+#  created_via       :integer          default(0), not null
+#  error             :text
+#  from_address      :text
+#  imap_missing      :boolean          default(FALSE), not null
+#  imap_sync         :boolean
+#  imap_uid          :integer
+#  imap_uid_validity :integer
 #  is_auto_generated :boolean          default(FALSE)
 #  is_bounce         :boolean          default(FALSE), not null
-#  imap_uid_validity :integer
-#  imap_uid          :integer
-#  imap_sync         :boolean
+#  raw               :text
+#  rejection_message :text
+#  subject           :text
+#  to_addresses      :text
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #  imap_group_id     :bigint
-#  imap_missing      :boolean          default(FALSE), not null
-#  created_via       :integer          default(0), not null
+#  message_id        :text
+#  post_id           :integer
+#  topic_id          :integer
+#  user_id           :integer
 #
 # Indexes
 #
