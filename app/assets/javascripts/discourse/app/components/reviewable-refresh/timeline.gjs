@@ -194,7 +194,7 @@ export default class ReviewableTimeline extends Component {
   @action
   async deleteNote(noteId) {
     try {
-      await ajax(`/reviewables/${this.args.reviewable.id}/notes/${noteId}`, {
+      await ajax(`/review/${this.args.reviewable.id}/notes/${noteId}`, {
         type: "DELETE",
       });
 
