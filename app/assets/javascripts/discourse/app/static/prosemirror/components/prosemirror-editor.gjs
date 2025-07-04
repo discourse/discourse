@@ -59,12 +59,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {ProsemirrorEditorArgs} Args
  */
 
-/**
- * @typedef {Object} GlimmerNodeViewDef
- * @property {HTMLElement} element The DOM element where the node view will be rendered
- * @property {any} component The Glimmer component class
- * @property {Record<string, unknown>} data Data to pass to the component
- */
+/** @typedef {import("../lib/glimmer-node-view").default} GlimmerNodeView */
 
 /**
  * @extends {Component<ProsemirrorEditorSignature>}
@@ -81,12 +76,13 @@ export default class ProsemirrorEditor extends Component {
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
-  /** @type {TrackedArray<GlimmerNodeViewDef>} */
+  /** @type {TrackedArray<GlimmerNodeView>} */
   glimmerNodeViews = new TrackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */
   #destructor;
 
+  /** @type {import("discourse/lib/composer/rich-editor-extensions").PluginParams} */
   get pluginParams() {
     return {
       utils: {
@@ -294,14 +290,14 @@ export default class ProsemirrorEditor extends Component {
       {{didUpdate this.updateContext "placeholder" @placeholder}}
       {{willDestroy this.teardown}}
     ></div>
-    {{#each this.glimmerNodeViews as |nodeView|}}
+    {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
       {{#in-element nodeView.dom insertBefore=null}}
-        <nodeView.constructor.componentClass
+        <nodeView.component
           @node={{nodeView.node}}
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
-          @nodeView={{nodeView}}
+          @onSetup={{nodeView.setComponentInstance}}
         />
       {{/in-element}}
     {{/each}}

@@ -294,21 +294,22 @@
   }
 
   &:has(.image-alt-text-input.--expanded) {
-    min-width: 15rem;
+    min-width: calc(max(100% - 1rem, 15rem));
   }
 
   transition: min-width 0.15s ease;
 }
 
 .composer-image-node {
-  display: inline-flex;
-  height: auto;
-  max-width: 100%;
+  display: inline-block;
   white-space: normal;
   position: relative;
-  vertical-align: middle;
-  outline-offset: -1px;
-  padding: 1px;
+  // This makes the editor less pixel perfect with cooked, but it helps with some
+  // hard positions (like between images), and makes the blinking cursor more visible
+  // The vertical offset increases the drop area between image paragraphs
+  margin: -2px 1px;
+  padding: 2px 1px;
+  outline-offset: -2px;
 
   img {
     transition:

@@ -5,32 +5,51 @@ import {
 import { ajax } from "discourse/lib/ajax";
 import { isNumeric } from "discourse/lib/utilities";
 import ImageNodeView from "../components/image-node-view";
-import { createGlimmerNodeView } from "../lib/glimmer-node-view";
+import GlimmerNodeView from "../lib/glimmer-node-view";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
 
 const ALT_TEXT_REGEX =
   /^(.*?)(?:\|(\d{1,4}x\d{1,4}))?(?:,\s*(\d{1,3})%)?(?:\|(.*))?$/;
 
+const createImageNodeView =
+  ({ getContext }) =>
+  (node, view, getPos) => {
+    if (
+      node.attrs.placeholder ||
+      node.attrs.extras === "audio" ||
+      node.attrs.extras === "video"
+    ) {
+      return null;
+    }
+
+    return new GlimmerNodeView({
+      node,
+      view,
+      getPos,
+      getContext,
+      component: ImageNodeView,
+      name: "image",
+    });
+  };
+
 /** @type {RichEditorExtension} */
 const extension = {
-  nodeViews: {
-    image: createGlimmerNodeView("image", ImageNodeView),
-  },
+  nodeViews: { image: createImageNodeView },
 
   nodeSpec: {
     image: {
       inline: true,
       attrs: {
-        src: {},
+        src: { default: "" },
         alt: { default: null },
         title: { default: null },
         width: { default: null },
         height: { default: null },
         originalSrc: { default: null },
         extras: { default: null },
-        "data-scale": { default: null },
-        "data-placeholder": { default: null },
+        scale: { default: null },
+        placeholder: { default: null },
       },
       group: "inline",
       draggable: true,
@@ -38,21 +57,34 @@ const extension = {
         {
           tag: "img[src]",
           getAttrs(dom) {
+            const originalSrc =
+              dom.dataset.origSrc ??
+              (dom.dataset.base62Sha1
+                ? `upload://${dom.dataset.base62Sha1}`
+                : undefined);
+
+            const extras = dom.hasAttribute("data-thumbnail")
+              ? "thumbnail"
+              : undefined;
+
             return {
               src: dom.getAttribute("src"),
               title: dom.getAttribute("title")?.replace(/\n/g, " "),
               alt: dom.getAttribute("alt")?.replace(/\n/g, " "),
               width: dom.getAttribute("width"),
               height: dom.getAttribute("height"),
-              originalSrc:
-                dom.dataset.origSrc ??
-                (dom.dataset.base62Sha1
-                  ? `upload://${dom.dataset.base62Sha1}`
-                  : undefined),
-              extras: dom.hasAttribute("data-thumbnail")
-                ? "thumbnail"
-                : undefined,
-              "data-scale": dom.getAttribute("data-scale"),
+              originalSrc,
+              extras,
+              scale: dom.getAttribute("data-scale"),
+            };
+          },
+        },
+        {
+          tag: "audio source[data-orig-src]",
+          getAttrs(dom) {
+            return {
+              originalSrc: dom.getAttribute("data-orig-src"),
+              extras: "audio",
             };
           },
         },
@@ -61,7 +93,7 @@ const extension = {
         if (node.attrs.extras === "audio") {
           return [
             "audio",
-            { preload: "metadata", controls: false },
+            { preload: "metadata", controls: false, tabindex: -1 },
             ["source", { "data-orig-src": node.attrs.originalSrc }],
           ];
         }
@@ -77,10 +109,19 @@ const extension = {
           ];
         }
 
-        const { originalSrc, extras, ...attrs } = node.attrs;
+        const { originalSrc, extras, scale, placeholder, ...attrs } =
+          node.attrs;
         attrs["data-orig-src"] = originalSrc;
         if (extras === "thumbnail") {
           attrs["data-thumbnail"] = true;
+        }
+
+        if (scale !== null) {
+          attrs["data-scale"] = scale;
+        }
+
+        if (placeholder !== null) {
+          attrs["data-placeholder"] = placeholder;
         }
 
         return ["img", attrs];
@@ -104,7 +145,7 @@ const extension = {
           originalSrc: token.attrGet("data-orig-src"),
           width,
           height,
-          "data-scale":
+          scale:
             percent && isNumeric(percent) ? parseInt(percent, 10) : undefined,
           extras,
         };
@@ -114,14 +155,12 @@ const extension = {
 
   serializeNode: {
     image(state, node) {
-      if (node.attrs["data-placeholder"]) {
+      if (node.attrs.placeholder) {
         return;
       }
 
       const alt = (node.attrs.alt || "").replace(/([\\[\]`])/g, "\\$1");
-      const scale = node.attrs["data-scale"]
-        ? `, ${node.attrs["data-scale"]}%`
-        : "";
+      const scale = node.attrs.scale ? `, ${node.attrs.scale}%` : "";
       const dimensions =
         node.attrs.width && node.attrs.height
           ? `|${node.attrs.width}x${node.attrs.height}${scale}`
@@ -139,28 +178,6 @@ const extension = {
 
   plugins({ pmState: { Plugin, NodeSelection, TextSelection } }) {
     const shortUrlResolver = new Plugin({
-      props: {
-        handleTextInput(view, from, to, text) {
-          const { state } = view;
-          const { selection } = state;
-
-          if (selection instanceof NodeSelection && selection.node.isAtom) {
-            const pos = selection.to;
-            const tr = state.tr.setSelection(
-              TextSelection.create(state.doc, pos - 1)
-            );
-            view.dispatch(tr);
-
-            const newTr = view.state.tr.insertText(text);
-            view.dispatch(newTr);
-
-            return true;
-          }
-
-          return false;
-        },
-      },
-
       state: {
         init() {
           return [];
@@ -218,7 +235,31 @@ const extension = {
       },
     });
 
-    return shortUrlResolver;
+    const avoidTextInputRemoval = new Plugin({
+      props: {
+        handleTextInput(view, from, to, text) {
+          const { state } = view;
+          const { selection } = state;
+
+          if (
+            selection instanceof NodeSelection &&
+            selection.node.type.name === "image"
+          ) {
+            view.dispatch(
+              state.tr
+                .setSelection(TextSelection.create(state.doc, selection.to - 1))
+                .insertText(text)
+            );
+
+            return true;
+          }
+
+          return false;
+        },
+      },
+    });
+
+    return [shortUrlResolver, avoidTextInputRemoval];
   },
 };
 

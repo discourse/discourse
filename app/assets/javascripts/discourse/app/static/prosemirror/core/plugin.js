@@ -9,7 +9,8 @@ export function extractNodeViews(extensions, pluginParams) {
         if (!NodeViewClass.toString().startsWith("class")) {
           NodeViewClass = NodeViewClass(pluginParams);
         }
-        allNodeViews[name] = (...args) => new NodeViewClass(...args);
+
+        allNodeViews[name] = NodeViewClass;
       }
     }
   }
