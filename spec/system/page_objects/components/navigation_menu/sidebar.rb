@@ -73,6 +73,24 @@ module PageObjects
         def click_search_input
           page.find(".sidebar-search__input").click
         end
+
+        def my_messages
+          I18n.t("js.sidebar.sections.community.links.my_messages.content")
+        end
+
+        def has_my_messages_link?
+          page.has_css?(
+            ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']",
+            text: my_messages,
+          )
+        end
+
+        def has_no_my_messages_link?
+          page.has_no_css?(
+            ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']",
+            text: my_messages,
+          )
+        end
       end
     end
   end
