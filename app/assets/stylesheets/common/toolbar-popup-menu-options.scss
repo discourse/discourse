@@ -1,6 +1,7 @@
 @use "lib/viewport";
 
-.toolbar-menu__options-content {
+.toolbar-menu__options-content,
+.toolbar-menu__heading-content {
   @include viewport.from(sm) {
     z-index: z("composer", "content");
   }
@@ -10,4 +11,21 @@
       display: none;
     }
   }
+}
+
+.toolbar-menu__active-icon {
+  .d-icon {
+    padding-right: 1rem;
+  }
+
+  // position: absolute;
+  // right: 0.5em;
+  // top: 50%;
+  // transform: translateY(-50%);
+}
+
+.toolbar-menu__heading-content .dropdown-menu__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

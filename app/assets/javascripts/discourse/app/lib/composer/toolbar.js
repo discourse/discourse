@@ -1,4 +1,5 @@
 // @ts-check
+import { action } from "@ember/object";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -48,12 +49,13 @@ export class ToolbarBase {
    * @param {string=} buttonAttrs.tabindex
    * @param {string=} buttonAttrs.className
    * @param {string=} buttonAttrs.label
+   * @param {string|Function} buttonAttrs.icon
    * @param {string=} buttonAttrs.icon
    * @param {string=} buttonAttrs.href
    * @param {Function=} buttonAttrs.action
    * @param {Function=} buttonAttrs.perform
    * @param {boolean=} buttonAttrs.trimLeading
-   * @param {boolean=} buttonAttrs.popupMenu
+   * @param {Object=} buttonAttrs.popupMenu
    * @param {boolean=} buttonAttrs.preventFocus
    * @param {Function=} buttonAttrs.condition
    * @param {Function=} buttonAttrs.sendAction
@@ -175,6 +177,79 @@ export default class Toolbar extends ToolbarBase {
       active: ({ state }) => state.inItalic,
     });
 
+    const headingLabel = getButtonLabel("composer.heading_label", "H");
+    const unformattedHeadingIcon = headingLabel ? null : "discourse-text";
+    this.addButton({
+      id: "heading",
+      group: "fontStyles",
+      active: ({ state }) => {
+        if (!state || !state.inHeading || !state.selection.allSameType) {
+          return false;
+        }
+
+        if (state.inHeading.inNode) {
+          return true;
+        }
+
+        return false;
+      },
+      icon: ({ state }) => {
+        if (!state || !state.selection.allSameType) {
+          return unformattedHeadingIcon;
+        }
+
+        if (state.inParagraph) {
+          return unformattedHeadingIcon;
+        }
+
+        if (state.inHeading.inNode) {
+          if (state.inHeading.level === 0) {
+            return unformattedHeadingIcon;
+          }
+          return `discourse-h${state.inHeading.level}`;
+        }
+
+        return unformattedHeadingIcon;
+      },
+      label: headingLabel,
+      // TODO (martin) Figure shortcut out
+      // shortcut: "H",
+      popupMenu: {
+        options: () => {
+          const headingOptions = [];
+          for (let i = 1; i <= 4; i++) {
+            headingOptions.push({
+              name: `heading-${i}`,
+              icon: `discourse-h${i}`,
+              label: "composer.heading_level_n",
+              labelArgs: { levelNumber: i },
+              condition: true,
+              active: ({ state }) => {
+                if (!state || !state.selection.allSameType) {
+                  return false;
+                }
+
+                if (state.inHeading.inNode && state.inHeading.level === i) {
+                  return true;
+                }
+
+                return false;
+              },
+            });
+          }
+          headingOptions.push({
+            name: "heading-paragraph",
+            icon: "discourse-text",
+            label: "composer.heading_level_paragraph",
+            condition: true,
+            active: ({ state }) => state?.inParagraph,
+          });
+          return headingOptions;
+        },
+        action: this.onHeadingMenuAction.bind(this),
+      },
+    });
+
     if (opts.showLink) {
       this.addButton({
         id: "link",
@@ -252,5 +327,18 @@ export default class Toolbar extends ToolbarBase {
         perform: (e) => e.toggleDirection(),
       });
     }
+  }
+
+  @action
+  onHeadingMenuAction(menuItem) {
+    let level;
+
+    if (menuItem.name === "heading-paragraph") {
+      level = 0;
+    } else {
+      level = parseInt(menuItem.name.split("-")[1], 10);
+    }
+
+    this.context.newToolbarEvent().applyHeading(level, "heading");
   }
 }

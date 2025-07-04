@@ -32,7 +32,9 @@ export default class ToolbarPopupmenuOptions extends Component {
     if (content.condition) {
       let label;
       if (content.label) {
-        label = i18n(content.label);
+        label = content.labelArgs
+          ? i18n(content.label, content.labelArgs)
+          : i18n(content.label);
         if (content.shortcut) {
           label = htmlSafe(
             `${label} <kbd class="shortcut">${translateModKey(
@@ -49,13 +51,10 @@ export default class ToolbarPopupmenuOptions extends Component {
         )})`;
       }
 
-      return {
-        icon: content.icon,
-        label,
-        title,
-        name: content.name,
-        action: content.action,
-      };
+      return Object.defineProperties(
+        {},
+        Object.getOwnPropertyDescriptors({ ...content, label, title })
+      );
     }
   }
 
@@ -63,11 +62,28 @@ export default class ToolbarPopupmenuOptions extends Component {
     return this.args.content.map(this.#convertMenuOption).filter(Boolean);
   }
 
+  get textManipulationState() {
+    return this.args.context?.textManipulation?.state;
+  }
+
+  @action
+  getActive(option) {
+    return option.active?.({ state: this.textManipulationState });
+  }
+
+  @action
+  getIcon(config) {
+    if (typeof config.icon === "function") {
+      return config.icon?.({ state: this.textManipulationState });
+    }
+
+    return config.icon;
+  }
+
   <template>
     <DMenu
       @identifier={{concat "toolbar-menu__" @class}}
       @groupIdentifier="toolbar-menu"
-      @icon={{@icon}}
       @onRegisterApi={{this.onRegisterApi}}
       @onShow={{@onOpen}}
       @modalForMobile={{true}}
@@ -76,10 +92,10 @@ export default class ToolbarPopupmenuOptions extends Component {
       @offset={{5}}
       @onKeydown={{@onKeydown}}
       tabindex="-1"
-      class={{concatClass @class}}
+      @class={{concatClass "toolbar__button" @class}}
     >
       <:trigger>
-        {{icon @options.icon}}
+        {{icon (this.getIcon this.args)}}
       </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
@@ -88,10 +104,13 @@ export default class ToolbarPopupmenuOptions extends Component {
               <DButton
                 @translatedLabel={{option.label}}
                 @translatedTitle={{option.title}}
-                @icon={{option.icon}}
+                @icon={{this.getIcon option}}
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
               />
+              <span class="toolbar-menu__active-icon">
+                {{if (this.getActive option) (icon "check")}}
+              </span>
             </dropdown.item>
           {{/each}}
         </DropdownMenu>
