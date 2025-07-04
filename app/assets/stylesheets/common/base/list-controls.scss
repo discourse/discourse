@@ -32,9 +32,10 @@
 }
 
 .navigation-container {
-  width: 100%;
+  width: calc(100% - var(--nav-horizontal-padding) * 2);
   display: flex;
   flex-wrap: wrap;
+  padding: 0 var(--nav-horizontal-padding);
 }
 
 .category-breadcrumb {

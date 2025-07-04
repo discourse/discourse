@@ -29,7 +29,7 @@
   margin: 0 0 10px;
 
   .topic-list-data {
-    padding: var(--space-3) var(--space-1);
+    padding: var(--d-topic-list-vertical-padding) var(--space-1);
 
     &:first-of-type {
       padding-inline-start: 0.75rem;
@@ -85,6 +85,11 @@
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
     width: 146px;
+
+    img.avatar {
+      height: var(--d-topic-list-avatar-size);
+      width: var(--d-topic-list-avatar-size);
+    }
 
     > a {
       float: left;
@@ -300,4 +305,5 @@
 
 .container.list-container {
   position: relative;
+  padding: 0 var(--list-container-horizontal-padding);
 }
