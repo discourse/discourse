@@ -42,25 +42,44 @@ export default class EmbeddableHost extends Component {
   }
 
   <template>
-    <tr class="d-admin-row__content">
-      <td class="d-admin-row__detail">
+    <tr class="d-table__row">
+      <td class="d-table__cell --overview">
         {{this.host.host}}
       </td>
-      <td class="d-admin-row__detail">
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">
+          {{i18n "admin.embedding.allowed_paths"}}
+        </div>
         {{this.host.allowed_paths}}
       </td>
-      <td class="d-admin-row__detail">
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">
+          {{i18n "admin.embedding.category"}}
+        </div>
         {{categoryBadge this.category allowUncategorized=true}}
       </td>
-      <td class="d-admin-row__detail">
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">
+          {{i18n "admin.embedding.tags"}}
+        </div>
         {{this.tags}}
       </td>
-      <td class="d-admin-row__detail">
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">
+          {{#if @controller.embedding.embed_by_username}}
+            {{i18n
+              "admin.embedding.post_author_with_default"
+              author=@controller.embedding.embed_by_username
+            }}
+          {{else}}
+            {{i18n "admin.embedding.post_author"}}
+          {{/if}}
+        </div>
         {{this.user}}
       </td>
 
-      <td class="d-admin-row__controls">
-        <div class="d-admin-row__controls-options">
+      <td class="d-table__cell --controls">
+        <div class="d-table__cell-actions">
           <DButton
             class="btn-default btn-small admin-embeddable-host-item__edit"
             @route="adminEmbedding.edit"
