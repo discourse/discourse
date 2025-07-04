@@ -296,7 +296,6 @@
   &:has(.image-alt-text-input.--expanded) {
     min-width: calc(max(100% - 1rem, 15rem));
   }
-
   transition: min-width 0.15s ease;
 }
 
@@ -304,6 +303,7 @@
   display: inline-block;
   white-space: normal;
   position: relative;
+
   // This makes the editor less pixel perfect with cooked, but it helps with some
   // hard positions (like between images), and makes the blinking cursor more visible
   // The vertical offset increases the drop area between image paragraphs
