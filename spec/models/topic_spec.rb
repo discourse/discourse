@@ -3332,6 +3332,17 @@ describe Topic do
     end
   end
 
+  describe "#before_save" do
+    it "replaces empty locales with nil" do
+      topic = Fabricate(:topic, locale: "en")
+
+      topic.locale = ""
+      topic.save!
+
+      expect(topic.reload.locale).to eq(nil)
+    end
+  end
+
   describe "#after_update" do
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:category) { Fabricate(:category_with_definition, read_restricted: true) }

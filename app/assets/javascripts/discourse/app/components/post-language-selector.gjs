@@ -59,7 +59,7 @@ export default class PostLanguageSelector extends Component {
           <dropdown.item>
             <DButton
               @label="post.localizations.post_language_selector.none"
-              @action={{fn this.selectPostLanguage ""}}
+              @action={{fn this.selectPostLanguage null}}
             />
           </dropdown.item>
         </DropdownMenu>
