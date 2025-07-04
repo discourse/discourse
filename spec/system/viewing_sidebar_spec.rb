@@ -168,13 +168,13 @@ describe "Viewing sidebar", type: :system do
     end
 
     describe "My messages sidebar link" do
-      it "should show for signed in user with `can_send_private_messages` permission" do
+      it "should show for user with `can_send_private_messages` permission" do
         sign_in(admin)
         visit("/")
         expect(sidebar).to have_my_messages_link
       end
 
-      it "shouldn't show for signed in user without `can_send_private_messages` permission" do
+      it "shouldn't show for user without `can_send_private_messages` permission" do
         sign_in(user)
         visit("/")
         expect(sidebar).to have_no_my_messages_link
