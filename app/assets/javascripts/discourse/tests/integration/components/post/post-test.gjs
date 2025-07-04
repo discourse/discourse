@@ -99,6 +99,21 @@ module("Integration | Component | Post", function (hooks) {
       .exists("applies the custom classes to the component");
   });
 
+  test("can add classes to the `article` element in the component", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("post-article-class", ({ value }) => {
+        value.push("custom-article-class");
+        return value;
+      });
+    });
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".topic-post > article.custom-article-class")
+      .exists("applies the custom classes `article` element in the component");
+  });
+
   test("links", async function (assert) {
     this.post.link_counts = [
       {
