@@ -55,17 +55,14 @@ export default class ReviewableNoteForm extends Component {
     this.isSubmitting = true;
 
     try {
-      const response = await ajax(
-        `/reviewables/${this.args.reviewable.id}/notes`,
-        {
-          type: "POST",
-          data: {
-            reviewable_note: {
-              content: data.content.trim(),
-            },
+      const response = await ajax(`/review/${this.args.reviewable.id}/notes`, {
+        type: "POST",
+        data: {
+          reviewable_note: {
+            content: data.content.trim(),
           },
-        }
-      );
+        },
+      });
 
       // Clear the submitted content
       await this.formApi.set("content", "");

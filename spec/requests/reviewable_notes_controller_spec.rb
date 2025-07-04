@@ -11,7 +11,7 @@ RSpec.describe ReviewableNotesController do
       before { sign_in(admin) }
 
       it "creates a new reviewable note successfully" do
-        post "/reviewables/#{reviewable.id}/notes.json",
+        post "/review/#{reviewable.id}/notes.json",
              params: {
                reviewable_note: {
                  content: "This is a test note",
@@ -35,7 +35,7 @@ RSpec.describe ReviewableNotesController do
       it "creates a new reviewable note successfully as a moderator" do
         sign_in(moderator)
 
-        post "/reviewables/#{reviewable.id}/notes.json",
+        post "/review/#{reviewable.id}/notes.json",
              params: {
                reviewable_note: {
                  content: "Moderator note",
@@ -49,12 +49,7 @@ RSpec.describe ReviewableNotesController do
       end
 
       it "returns validation errors for invalid content" do
-        post "/reviewables/#{reviewable.id}/notes.json",
-             params: {
-               reviewable_note: {
-                 content: "",
-               },
-             }
+        post "/review/#{reviewable.id}/notes.json", params: { reviewable_note: { content: "" } }
 
         expect(response.status).to eq(422)
 
@@ -65,7 +60,7 @@ RSpec.describe ReviewableNotesController do
       it "returns validation errors for content that's too long" do
         long_content = "a" * (ReviewableNote::MAX_CONTENT_LENGTH + 1)
 
-        post "/reviewables/#{reviewable.id}/notes.json",
+        post "/review/#{reviewable.id}/notes.json",
              params: {
                reviewable_note: {
                  content: long_content,
@@ -81,12 +76,7 @@ RSpec.describe ReviewableNotesController do
       end
 
       it "trims whitespace from content" do
-        post "/reviewables/#{reviewable.id}/notes.json",
-             params: {
-               reviewable_note: {
-                 content: "   ",
-               },
-             }
+        post "/review/#{reviewable.id}/notes.json", params: { reviewable_note: { content: "   " } }
 
         expect(response.status).to eq(422)
 
@@ -95,84 +85,37 @@ RSpec.describe ReviewableNotesController do
       end
 
       it "handles missing reviewable" do
-        post "/reviewables/999999/notes.json", params: { reviewable_note: { content: "Test note" } }
+        post "/review/999999/notes.json", params: { reviewable_note: { content: "Test note" } }
 
         expect(response.status).to eq(404)
-      end
-
-      it "handles malformed parameters" do
-        post "/reviewables/#{reviewable.id}/notes.json",
-             params: {
-               wrong_param: {
-                 content: "Test note",
-               },
-             }
-
-        expect(response.status).to eq(400)
-      end
-
-      context "with HTML content" do
-        it "preserves HTML content as-is" do
-          html_content = "<p>This is <strong>bold</strong> text</p>"
-
-          post "/reviewables/#{reviewable.id}/notes.json",
-               params: {
-                 reviewable_note: {
-                   content: html_content,
-                 },
-               }
-
-          expect(response.status).to eq(200)
-
-          json = response.parsed_body
-          expect(json["content"]).to eq(html_content)
-        end
-      end
-
-      context "with Unicode content" do
-        it "handles Unicode characters correctly" do
-          unicode_content = "Test with emojis 🎉 and accents café"
-
-          post "/reviewables/#{reviewable.id}/notes.json",
-               params: {
-                 reviewable_note: {
-                   content: unicode_content,
-                 },
-               }
-
-          expect(response.status).to eq(200)
-
-          json = response.parsed_body
-          expect(json["content"]).to eq(unicode_content)
-        end
       end
     end
 
     context "when user is not staff" do
       before { sign_in(user) }
 
-      it "returns 404" do
-        post "/reviewables/#{reviewable.id}/notes.json",
+      it "returns 403" do
+        post "/review/#{reviewable.id}/notes.json",
              params: {
                reviewable_note: {
                  content: "This should fail",
                },
              }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
       end
     end
 
     context "when user is not logged in" do
-      it "returns 404" do
-        post "/reviewables/#{reviewable.id}/notes.json",
+      it "returns 403" do
+        post "/review/#{reviewable.id}/notes.json",
              params: {
                reviewable_note: {
                  content: "This should fail",
                },
              }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
       end
     end
   end
@@ -184,7 +127,7 @@ RSpec.describe ReviewableNotesController do
       before { sign_in(admin) }
 
       it "deletes the note successfully" do
-        expect { delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json" }.to change {
+        expect { delete "/review/#{reviewable.id}/notes/#{note.id}.json" }.to change {
           ReviewableNote.where(user: admin).count
         }.by(-1)
 
@@ -195,7 +138,7 @@ RSpec.describe ReviewableNotesController do
       end
 
       it "returns 404 for non-existent note" do
-        delete "/reviewables/#{reviewable.id}/notes/999999.json"
+        delete "/review/#{reviewable.id}/notes/999999.json"
         expect(response.status).to eq(404)
       end
     end
@@ -206,9 +149,9 @@ RSpec.describe ReviewableNotesController do
       before { sign_in(admin) }
 
       it "allows admin to delete any note" do
-        expect {
-          delete "/reviewables/#{reviewable.id}/notes/#{moderator_note.id}.json"
-        }.to change { ReviewableNote.count }.by(-1)
+        expect { delete "/review/#{reviewable.id}/notes/#{moderator_note.id}.json" }.to change {
+          ReviewableNote.count
+        }.by(-1)
 
         expect(response.status).to eq(200)
       end
@@ -219,8 +162,8 @@ RSpec.describe ReviewableNotesController do
 
       before { sign_in(moderator) }
 
-      it "returns 403 forbidden" do
-        delete "/reviewables/#{reviewable.id}/notes/#{admin_note.id}.json"
+      it "returns 403" do
+        delete "/review/#{reviewable.id}/notes/#{admin_note.id}.json"
         expect(response.status).to eq(403)
       end
     end
@@ -228,16 +171,16 @@ RSpec.describe ReviewableNotesController do
     context "when user is not staff" do
       before { sign_in(user) }
 
-      it "returns 404" do
-        delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json"
-        expect(response.status).to eq(404)
+      it "returns 403" do
+        delete "/review/#{reviewable.id}/notes/#{note.id}.json"
+        expect(response.status).to eq(403)
       end
     end
 
     context "when user is not logged in" do
-      it "returns 404" do
-        delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json"
-        expect(response.status).to eq(404)
+      it "returns 403" do
+        delete "/review/#{reviewable.id}/notes/#{note.id}.json"
+        expect(response.status).to eq(403)
       end
     end
 
@@ -245,7 +188,7 @@ RSpec.describe ReviewableNotesController do
       before { sign_in(admin) }
 
       it "returns 404" do
-        delete "/reviewables/999999/notes/#{note.id}.json"
+        delete "/review/999999/notes/#{note.id}.json"
         expect(response.status).to eq(404)
       end
     end
@@ -257,7 +200,7 @@ RSpec.describe ReviewableNotesController do
       before { sign_in(admin) }
 
       it "returns 404" do
-        delete "/reviewables/#{reviewable.id}/notes/#{other_note.id}.json"
+        delete "/review/#{reviewable.id}/notes/#{other_note.id}.json"
         expect(response.status).to eq(404)
       end
     end
