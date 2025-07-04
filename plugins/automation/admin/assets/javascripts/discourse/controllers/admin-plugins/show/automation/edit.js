@@ -4,7 +4,7 @@ import { filterBy, reads } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { extractError } from "discourse/lib/ajax-error";
+import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 
 export default class AutomationEdit extends Controller {
@@ -24,6 +24,21 @@ export default class AutomationEdit extends Controller {
     const date = this.model?.automation?.next_pending_automation_at;
     if (date) {
       return moment(date).format("LLLL");
+    }
+  }
+
+  @action
+  async toggleEnabled() {
+    const automation = this.model.automation;
+    automation.set("enabled", !automation.enabled);
+    this.set("isUpdatingAutomation", true);
+    try {
+      await automation.save({ enabled: automation.enabled });
+    } catch (e) {
+      popupAjaxError(e);
+      automation.set("enabled", !automation.enabled);
+    } finally {
+      this.set("isUpdatingAutomation", false);
     }
   }
 

@@ -135,6 +135,10 @@
 }
 
 .discourse-automation-form {
+  .automation-enabled-card {
+    margin-bottom: 1em;
+  }
+
   .scriptables,
   .triggerables {
     .select-kit-body {
@@ -267,7 +271,11 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      padding: 1em;
+      gap: 1em;
+
+      label {
+        margin: 0;
+      }
 
       .ember-checkbox {
         margin: 0 0 0 1em;
