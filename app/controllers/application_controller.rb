@@ -535,7 +535,10 @@ class ApplicationController < ActionController::Base
       elsif params[:external_id]
         external_id = params[:external_id].chomp(".json")
         if provider_name = params[:external_provider]
-          raise Discourse::InvalidAccess unless guardian.is_admin? # external_id might be something sensitive
+          if SiteSetting.restrict_user_lookup_by_external_id && !guardian.is_admin?
+            raise Discourse::InvalidAccess
+          end
+
           provider = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
           raise Discourse::NotFound if !provider&.is_managed? # Only managed authenticators use UserAssociatedAccount
           UserAssociatedAccount.find_by(
