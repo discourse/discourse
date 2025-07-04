@@ -49,12 +49,13 @@ export class ToolbarBase {
    * @param {string=} buttonAttrs.tabindex
    * @param {string=} buttonAttrs.className
    * @param {string=} buttonAttrs.label
+   * @param {string|Function} buttonAttrs.icon
    * @param {string=} buttonAttrs.icon
    * @param {string=} buttonAttrs.href
    * @param {Function=} buttonAttrs.action
    * @param {Function=} buttonAttrs.perform
    * @param {boolean=} buttonAttrs.trimLeading
-   * @param {boolean=} buttonAttrs.popupMenu
+   * @param {Object=} buttonAttrs.popupMenu
    * @param {boolean=} buttonAttrs.preventFocus
    * @param {Function=} buttonAttrs.condition
    * @param {Function=} buttonAttrs.sendAction
@@ -177,39 +178,38 @@ export default class Toolbar extends ToolbarBase {
     });
 
     const headingLabel = getButtonLabel("composer.heading_label", "H");
-    const headingIcon = headingLabel ? null : "discourse-text";
+    const unformattedHeadingIcon = headingLabel ? null : "discourse-text";
     this.addButton({
       id: "heading",
       group: "fontStyles",
       active: ({ state }) => {
-        if (!state || !state.inHeading) {
+        if (!state || !state.inHeading || !state.selection.allSameType) {
           return false;
         }
 
-        // Only highlight for actual headings, not paragraphs.
-        if (state.inHeading[0] && state.inHeading[1] > 0) {
+        if (state.inHeading.inNode) {
           return true;
         }
 
         return false;
       },
       icon: ({ state }) => {
-        if (!state) {
-          return headingIcon;
+        if (!state || !state.selection.allSameType) {
+          return unformattedHeadingIcon;
         }
 
         if (state.inParagraph) {
-          return headingIcon;
+          return unformattedHeadingIcon;
         }
 
-        if (state.inHeading[0]) {
-          if (state.inHeading[1] === 0) {
-            return headingIcon;
+        if (state.inHeading.inNode) {
+          if (state.inHeading.level === 0) {
+            return unformattedHeadingIcon;
           }
-          return `discourse-h${state.inHeading[1]}`;
+          return `discourse-h${state.inHeading.level}`;
         }
 
-        return headingIcon;
+        return unformattedHeadingIcon;
       },
       label: headingLabel,
       // TODO (martin) Figure shortcut out
@@ -225,11 +225,11 @@ export default class Toolbar extends ToolbarBase {
               labelArgs: { levelNumber: i },
               condition: true,
               active: ({ state }) => {
-                if (!state) {
+                if (!state || !state.selection.allSameType) {
                   return false;
                 }
 
-                if (state.inHeading[0] && state.inHeading[1] === i) {
+                if (state.inHeading.inNode && state.inHeading.level === i) {
                   return true;
                 }
 

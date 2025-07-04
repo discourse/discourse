@@ -223,3 +223,37 @@ export function inNode(state, nodeType, attrs = {}) {
 
   return false;
 }
+
+export function selectionStats(state) {
+  const { from, to } = state.selection;
+  const selectedFragment = state.doc.slice(from, to);
+  const selectedNodeCount = selectedFragment.content.childCount;
+
+  let previousNode = null;
+  let allSameType = true;
+
+  for (let i = 0; i < selectedFragment.content.childCount; i++) {
+    const currentNode = selectedFragment.content.child(i);
+
+    if (previousNode) {
+      if (previousNode.type !== currentNode.type) {
+        allSameType = false;
+      }
+
+      if (
+        previousNode.attrs &&
+        currentNode.attrs &&
+        JSON.stringify(previousNode.attrs) !== JSON.stringify(currentNode.attrs)
+      ) {
+        allSameType = false;
+      }
+    }
+
+    previousNode = currentNode;
+  }
+
+  return {
+    nodeCount: selectedNodeCount,
+    allSameType,
+  };
+}
