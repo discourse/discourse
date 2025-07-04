@@ -146,6 +146,10 @@ module PageObjects
         find(".reviewable-claimed-topic .unclaim").click
       end
 
+      def flag_reason_component
+        PageObjects::Components::Review::FlagReason.new
+      end
+
       private
 
       def reviewable_action_dropdown

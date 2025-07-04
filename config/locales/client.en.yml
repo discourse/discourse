@@ -806,6 +806,61 @@ en:
         reviewable_post:
           title: "Post"
           noun: "post"
+      flagged_as: "Flagged as"
+      assigned_to: "Assigned to"
+      moderator_actions: "Moderator actions"
+      timeline_and_notes: "Timeline & notes"
+      timeline:
+        target_created: "Post created"
+        target_created_by: "Post created by %{username} · %{relativeDate}"
+        flagged: "Flagged"
+        flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
+        claimed: "Claimed"
+        claimed_by: "Claimed by %{username} · %{relativeDate}"
+        reviewed: "Reviewed"
+        reviewed_by: "Reviewed by %{username} · %{relativeDate}"
+        view_conversation: "view PM"
+        note_added: "Moderator note"
+        note_added_by: "Moderator note by %{username} · %{relativeDate}"
+        no_events: "No timeline events to display"
+      notes:
+        add_note_description: "Visible only to moderators. Use this note to add context or decisions about the review."
+        add_note_button: "Add note"
+        placeholder: "Write your note here..."
+        chars_remaining: "%{count} characters remaining"
+        delete_note: "Delete this note"
+        delete: "Delete"
+      new_topic_label: "New topic"
+      queued_user: "Queued user"
+      posted_in: "Posted in"
+      flagged_user: "Flagged user"
+      review_user: "User"
+      need_help: "Need help?"
+      copy_link: "Copy link"
+      view_source: "View source"
+      insights:
+        title: "Insights"
+        flag_volume: "Flag volume"
+        flagged_by_users:
+          one: "Flagged by %{count} unique user"
+          other: "Flagged by %{count} unique users"
+        similar_posts: "Similar past posts"
+        flagged_in_timeframe: "%{count} flagged previously"
+        user_activity: "User activity"
+        activities:
+          new_account: "new account"
+          trust_level: "trust level: %{trustLevelName}"
+          posts:
+            one: "%{count} post"
+            other: "%{count} posts"
+        solution_marked: "Solution marked"
+        topic_has_solution: "This topic has a solution"
+        visibility: "Visibility"
+        topic_unlisted: "This topic is unlisted. Only accessible via direct link — not public."
+      help:
+        moderation_guide: "Discourse moderation guide"
+        flag_priorities: "Managing user reputation and flag priorities"
+        spam_detection: "Spam detection"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -4096,6 +4151,9 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        locale:
+          no_locale_set: "No language set"
+          locale_removed: "Language removed"
         controls:
           first: "First revision"
           previous: "Previous revision"

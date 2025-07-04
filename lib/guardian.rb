@@ -659,6 +659,11 @@ class Guardian
       @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
   end
 
+  def can_see_reviewable_ui_refresh?
+    SiteSetting.reviewable_ui_refresh_map.include?(Group::AUTO_GROUPS[:everyone]) ||
+      @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_map)
+  end
+
   def is_me?(other)
     other && authenticated? && other.is_a?(User) && @user == other
   end

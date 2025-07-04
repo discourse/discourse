@@ -499,6 +499,9 @@ class BulkImport::Base
     id
     name
     full_name
+    public_admission
+    public_exit
+    allow_membership_requests
     title
     bio_raw
     bio_cooked
@@ -509,6 +512,7 @@ class BulkImport::Base
     created_at
     updated_at
   ]
+  GROUP_COLUMNS << :assignable_level if defined?(::DiscourseAssign)
 
   USER_COLUMNS = %i[
     id
@@ -616,7 +620,7 @@ class BulkImport::Base
 
   USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
 
-  GROUP_USER_COLUMNS = %i[group_id user_id created_at updated_at]
+  GROUP_USER_COLUMNS = %i[group_id user_id owner created_at updated_at]
 
   USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at]
 
@@ -646,10 +650,14 @@ class BulkImport::Base
     description
     position
     parent_category_id
-    read_restricted
     uploaded_logo_id
     created_at
     updated_at
+    show_subcategory_list
+    subcategory_list_style
+    minimum_required_tags
+    color
+    text_color
   ]
 
   CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
@@ -659,6 +667,8 @@ class BulkImport::Base
   CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at]
 
   CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at]
+
+  CATEGORY_MODERATION_GROUP_COLUMNS = %i[category_id group_id created_at updated_at]
 
   TOPIC_COLUMNS = %i[
     id
@@ -798,6 +808,14 @@ class BulkImport::Base
     updated_at
     multiple_grant
     query
+    allow_title
+    icon
+    listable
+    target_posts
+    enabled
+    auto_revoke
+    trigger
+    show_posts
   ]
 
   USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
@@ -1042,6 +1060,10 @@ class BulkImport::Base
     create_records(rows, "category_user", CATEGORY_USER_COLUMNS, &block)
   end
 
+  def create_category_moderation_groups(rows, &block)
+    create_records(rows, "category_moderation_group", CATEGORY_MODERATION_GROUP_COLUMNS, &block)
+  end
+
   def create_topics(rows, &block)
     create_records(rows, "topic", TOPIC_COLUMNS, &block)
   end
@@ -1226,6 +1248,10 @@ class BulkImport::Base
 
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
+    # Default assignable_level if not provided by the source data.
+    # The 'assignable_level' attribute itself is only included in the import
+    # if the DiscourseAssign plugin is active (see GROUP_COLUMNS).
+    group[:assignable_level] ||= Group::ALIAS_LEVELS[:nobody]
     group
   end
 
@@ -1370,6 +1396,7 @@ class BulkImport::Base
     notification_level_when_replying: SiteSetting.default_other_notification_level_when_replying,
     like_notification_frequency: SiteSetting.default_other_like_notification_frequency,
     skip_new_user_tips: SiteSetting.default_other_skip_new_user_tips,
+    hide_profile_and_presence: false,
     hide_profile: SiteSetting.default_hide_profile,
     hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
@@ -1377,6 +1404,11 @@ class BulkImport::Base
   }
 
   def process_user_option(user_option)
+    if user_option.key?(:hide_profile_and_presence)
+      hide_profile_and_presence = user_option[:hide_profile_and_presence]
+      user_option[:hide_profile] = user_option[:hide_presence] = hide_profile_and_presence
+    end
+
     USER_OPTION_DEFAULTS.each { |key, value| user_option[key] = value if user_option[key].nil? }
     user_option
   end
@@ -1406,6 +1438,7 @@ class BulkImport::Base
   end
 
   def process_group_user(group_user)
+    group_user[:owner] ||= false
     group_user[:created_at] = NOW
     group_user[:updated_at] = NOW
     group_user
@@ -1441,7 +1474,6 @@ class BulkImport::Base
     category[:slug] ||= Slug.for(name_lower, "") # TODO Ensure that slug doesn't exist yet
     category[:description] = (category[:description] || "").scrub.strip.presence
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
-    category[:read_restricted] = false if category[:read_restricted].nil?
     category[:created_at] ||= NOW
     category[:updated_at] ||= category[:created_at]
 
@@ -1452,6 +1484,7 @@ class BulkImport::Base
       category[:position] = @highest_category_position += 1
     end
 
+    category[:minimum_required_tags] ||= 0
     category
   end
 
@@ -1466,6 +1499,12 @@ class BulkImport::Base
     category_group[:created_at] = NOW
     category_group[:updated_at] = NOW
     category_group
+  end
+
+  def process_category_moderation_group(category_moderation_group)
+    category_moderation_group[:created_at] ||= NOW
+    category_moderation_group[:updated_at] ||= NOW
+    category_moderation_group
   end
 
   def process_category_tag_group(category_tag_group)

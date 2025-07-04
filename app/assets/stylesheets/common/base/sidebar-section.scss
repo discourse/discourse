@@ -2,14 +2,6 @@
   .sidebar-section-header-wrapper {
     display: flex;
 
-    .discourse-no-touch & {
-      &:hover {
-        .d-icon-globe {
-          color: var(--d-sidebar-highlight-color);
-        }
-      }
-    }
-
     &:focus-within {
       background: var(--d-sidebar-highlight-background);
     }

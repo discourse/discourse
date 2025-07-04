@@ -65,6 +65,10 @@ module PageObjects
         find(".post-language-content")
       end
 
+      def open_post_history
+        post.find(".post-info.edits").click
+      end
+
       private
 
       def post_id
