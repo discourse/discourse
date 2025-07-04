@@ -442,7 +442,7 @@ en:
           status:
             label: Status
           enabled:
-            label: Enabled
+            label: "Enable automation"
           disabled:
             label: Disabled
           placeholders:
