@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatar from "discourse/components/user-avatar";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -11,6 +13,7 @@ export default class PostAvatar extends Component {
     return this.args.size || "large";
   }
 
+  @cached
   get user() {
     const username = this.args.post.username;
     const name = this.args.post.name;
@@ -40,8 +43,17 @@ export default class PostAvatar extends Component {
     return !this.args.post.user_id;
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("post-avatar-class", [], {
+      post: this.args.post,
+      user: this.user,
+      userWasDeleted: this.userWasDeleted,
+      size: this.size,
+    });
+  }
+
   <template>
-    <div class="topic-avatar">
+    <div class={{concatClass "topic-avatar" this.additionalClasses}}>
       <PluginOutlet
         @name="post-avatar"
         @outletArgs={{lazyHash
