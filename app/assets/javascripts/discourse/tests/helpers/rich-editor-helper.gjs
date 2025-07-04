@@ -68,7 +68,6 @@ export async function setupRichEditor(assert, markdown, multiToggle = false) {
       ""
     )
     // or newlines/spaces
-    .replace(/\n/g, "")
     .replace(/ {2,}/g, "");
 
   return [self, html];
