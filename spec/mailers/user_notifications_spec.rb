@@ -1307,7 +1307,7 @@ RSpec.describe UserNotifications do
     end
   end
 
-  describe ".notification_email" do
+  describe "#notification_email" do
     let!(:plugin) { Plugin::Instance.new }
     let(:response_by_user) { Fabricate(:user, name: "John Doe") }
     let(:category) { Fabricate(:category, name: "India") }
@@ -1326,24 +1326,9 @@ RSpec.describe UserNotifications do
     end
     let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
     let!(:modify_post) do
-      post.cooked = "modified post"
-      Proc.new do
-        {
-          title: "Super cool topic",
-          post: post,
-          username: "bruce4",
-          from_alias: "John Doe via Discourse",
-          allow_reply_by_email: true,
-          use_site_subject: true,
-          add_re_to_subject: nil,
-          show_category_in_subject: true,
-          show_tags_in_subject: true,
-          show_group_in_subject: nil,
-          notification_type: "mentioned",
-          use_invite_template: nil,
-          use_topic_title_subject: false,
-          user: user,
-        }
+      Proc.new do |email_options|
+        email_options[:post].cooked = "modified post"
+        email_options
       end
     end
 
