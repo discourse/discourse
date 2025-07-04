@@ -445,7 +445,7 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.deepEqual(
         [testObject1.value1, testObject2.value1],
         [0, 0],
-        "catches the exception and and keeps processing the queue when there are others transformers registered"
+        "catches the exception and keeps processing the queue when there are others transformers registered"
       );
     });
 
@@ -1180,7 +1180,7 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.deepEqual(
         [testObject1.value, testObject2.value],
         [0, 0],
-        "catches the exception and and keeps processing the queue when there are others transformers registered"
+        "catches the exception and keeps processing the queue when there are others transformers registered"
       );
     });
 
