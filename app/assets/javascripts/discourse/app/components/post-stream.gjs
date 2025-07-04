@@ -197,6 +197,11 @@ export default class PostStream extends Component {
     // requesting an animation frame to update the cloaking boundaries prevents Chrome from logging
     // [Violation] 'setTimeout' handler took <N>ms when scrolling fast
     requestAnimationFrame(() => {
+      if (this.cloakAbove === above && this.cloakBelow === below) {
+        // prevent Ember from trying to rerender the cloaking logic if the boundaries did not change
+        return;
+      }
+
       this.cloakAbove = above;
       this.cloakBelow = below;
     });

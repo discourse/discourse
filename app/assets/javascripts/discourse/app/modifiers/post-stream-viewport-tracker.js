@@ -40,6 +40,16 @@ const SCROLL_BATCH_INTERVAL_MS = 10;
 // system feeling sluggish.
 const SLACK_FACTOR = 1;
 
+// Number of pixels of intersection required before a post is uncloaked when entering the visibility area.
+// If a post intersects by at least the amount of pixels specified, it will be uncloaked even if the ratio
+// threshold is not met
+const UNCLOAKING_HYSTERESIS_THRESHOLD_PX = 5;
+
+// Percentage of intersection required before a post is uncloaked when entering the visibility area.
+// Post must have at least the specified ratio of its area intersecting to be uncloaked.
+// Works together with pixel threshold - whichever condition is met first will trigger uncloaking
+const UNCLOAKING_HYSTERESIS_RATIO = 0.05;
+
 // Set to true to visualize the eyeline position with a red line
 const DEBUG_EYELINE = false;
 
@@ -97,11 +107,11 @@ export default class PostStreamViewportTracker {
   #cloakOffset;
 
   /**
-   * Map of post IDs to their heights when cloaked
+   * Map of post IDs to their styles when cloaked
    * Used to maintain correct scroll position when posts are cloaked
-   * @type {Object<number, number>}
+   * @type {Object<number, {height: number, margin: string}>}
    */
-  #cloakedPostsHeight = {};
+  #cloakedPostsStyle = {};
 
   /**
    * IntersectionObserver that tracks which posts should be cloaked/uncloaked
@@ -316,7 +326,7 @@ export default class PostStreamViewportTracker {
         this.#setupEyelineDebugElement(false);
 
         // clear collections
-        this.#cloakedPostsHeight = {};
+        this.#cloakedPostsStyle = {};
         this.#postsOnScreen = {};
         this.#uncloakedPostNumbers.clear();
 
@@ -393,15 +403,33 @@ export default class PostStreamViewportTracker {
    */
   @bind
   getCloakingData(post, { above, below }) {
-    if (!cloakingEnabled || !post || cloakingPrevented.posts.has(post.id)) {
+    if (
+      !cloakingEnabled ||
+      !post ||
+      cloakingPrevented.posts.has(post.id) ||
+      this.#postsOnScreen[post.post_number]
+    ) {
       return { active: false };
     }
 
-    const height = this.#cloakedPostsHeight[post.id];
+    const style = this.#cloakedPostsStyle[post.id];
+    if (style && (post.post_number < above || post.post_number > below)) {
+      const { height, margin } = style;
 
-    return height && (post.post_number < above || post.post_number > below)
-      ? { active: true, style: htmlSafe("height: " + height + "px;") }
-      : { active: false };
+      // we're using getBoundingClientRect().height to get the element height before cloaking.
+      // we need to ensure the box-model is border-box to ensure the height is matched with the original
+      // element height
+      return {
+        active: true,
+        style: htmlSafe(
+          `height:${height}px !important;` +
+            `margin:${margin} !important;` +
+            "box-sizing: border-box !important;"
+        ),
+      };
+    }
+
+    return { active: false };
   }
 
   /**
@@ -412,7 +440,8 @@ export default class PostStreamViewportTracker {
    */
   @bind
   trackCloakedPosts(entry) {
-    const { target, isIntersecting } = entry;
+    const { target, isIntersecting, intersectionRect, intersectionRatio } =
+      entry;
     const post = elementsToPost.get(target);
 
     if (!post) {
@@ -422,15 +451,32 @@ export default class PostStreamViewportTracker {
     const postNumber = post.post_number;
 
     if (isIntersecting) {
-      // entering the visibility area
-      this.#uncloakedPostNumbers.add(postNumber);
-      delete this.#cloakedPostsHeight[post.id];
+      // Uncloaks a post if either: 1) it has a significant portion (UNCLOAKING_HYSTERESIS_RATIO)
+      // visible and at least 1px height intersection, or 2) it intersects by at least
+      // UNCLOAKING_HYSTERESIS_THRESHOLD_PX pixels height-wise. This dual-condition hysteresis
+      // prevents rapid cloaking/uncloaking causing layout shifts and flickering when posts are near visibility
+      // thresholds.
+      if (
+        (intersectionRect.height >= 1 &&
+          intersectionRatio >= UNCLOAKING_HYSTERESIS_RATIO) ||
+        intersectionRect.height >= UNCLOAKING_HYSTERESIS_THRESHOLD_PX
+      ) {
+        // entering the visibility area
+        this.#uncloakedPostNumbers.add(postNumber);
+        delete this.#cloakedPostsStyle[post.id];
+      }
     } else {
       // entering the cloaking area
       this.#uncloakedPostNumbers.delete(postNumber);
 
       // saves the current post height to prevent jumps while scrolling with existing cloaked posts
-      this.#cloakedPostsHeight[post.id] = target.offsetHeight;
+      // we are using `getBoundingClientRect().height` because the element height is a floating number and
+      // `element.offsetHeight` returns an integer, which causes rounding error issues in the post tracking
+      // `getBoundingClientRect()` also ensures that the padding/border were considered
+      this.#cloakedPostsStyle[post.id] = {
+        height: target.getBoundingClientRect().height,
+        margin: getComputedStyle(target).margin,
+      };
     }
 
     // update the cloaking boundaries
@@ -642,7 +688,12 @@ export default class PostStreamViewportTracker {
 
     this.#cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
       rootMargin: `${this.#cloakOffset}px 0px`,
-      threshold: [0, 1],
+      // Adding UNCLOAKING_HYSTERESIS_RATIO provides a threshold between completely cloaked (0) and fully visible (1)
+      // states. Without this threshold, the intersection observer would only trigger when the element entered or exited
+      // the cloaking viewport. The values are clamped between 0 and 1.
+      threshold: Array.from(new Set([0, UNCLOAKING_HYSTERESIS_RATIO, 1]))
+        .map((n) => Math.max(0, Math.min(n, 1)))
+        .sort(),
     });
     this.#viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
       rootMargin: `${headerMargin}px 0px 0px 0px`,
