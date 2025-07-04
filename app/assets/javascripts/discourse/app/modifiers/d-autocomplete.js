@@ -7,7 +7,6 @@ import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
-import virtualElementFromCaretCoords from "discourse/lib/virtual-element-from-caret-coords";
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -285,11 +284,11 @@ export default class DAutocompleteModifier extends Modifier {
       // Create virtual element positioned at the caret location
       const virtualElement = this.createVirtualElementAtCaret();
 
-      // Show menu with autocomplete results using d-menu service
-      this.menuInstance = await this.menu.show(virtualElement, {
+      const menuOptions = {
         identifier: "d-autocomplete",
-        groupIdentifier: "d-autocomplete",
         component: DAutocompleteResults,
+        placement: "top-start",
+        fallbackPlacements: ["bottom-start", "top-end", "bottom-end"],
         data: {
           results: this.results,
           selectedIndex: this.selectedIndex,
@@ -299,17 +298,14 @@ export default class DAutocompleteModifier extends Modifier {
             this.componentInstance = componentInstance;
           },
         },
-        padding: { top: 0, left: 0, right: 0, bottom: 0 },
-        inline: true,
-        autoUpdate: true,
-        trapTab: false,
-        closeOnScroll: false,
+        modalForMobile: true,
         onClose: () => {
           this.expanded = false;
           this.options.onClose?.();
         },
-      });
+      };
 
+      this.menuInstance = await this.menu.show(virtualElement, menuOptions);
       this.expanded = true;
 
       // Call onRender callback if provided
@@ -353,7 +349,6 @@ export default class DAutocompleteModifier extends Modifier {
 
     this.selectedIndex = newIndex;
 
-    // Update the component's selectedIndex via action method to trigger reactivity
     if (this.componentInstance && this.componentInstance.updateSelectedIndex) {
       this.componentInstance.updateSelectedIndex(this.selectedIndex);
     }
@@ -499,11 +494,31 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   createVirtualElementAtCaret() {
-    // Get absolute viewport coordinates for the caret
-    const caretCoords = this.getAbsoluteCaretCoords();
+    // Use completeStart position (where @ symbol is) instead of current caret position
+    // This keeps the menu anchored at the start of the autocomplete term
+    const autocompleteStartPosition =
+      this.completeStart !== null
+        ? this.completeStart
+        : this.options.textHandler.getCaretPosition();
 
-    // Create virtual element using the clean library approach
-    // Small upward offset to position menu above the line
-    return virtualElementFromCaretCoords(caretCoords, [9, -250]);
+    const caretCoords = this.options.textHandler.getCaretCoords(
+      autocompleteStartPosition
+    );
+    // TODO: this rect needs to be an input, or a relative reference from textHandler, because not all contexts of this autocomplete will be in the d-editor
+    const rect = document
+      .querySelector(".d-editor-input")
+      .getBoundingClientRect();
+
+    const marginLeft = 9; //offset to place autocomplete in front of the trigger character (e.g. "@")
+    const marginTop = 10;
+
+    return {
+      getBoundingClientRect: () => ({
+        left: rect.left + caretCoords.left + marginLeft,
+        top: rect.top + caretCoords.top + marginTop,
+        width: 1,
+        height: 20,
+      }),
+    };
   }
 }
