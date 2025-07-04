@@ -5,13 +5,14 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
+import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
-import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
+import ChatZero from "./svg/chat-zero";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
@@ -101,11 +102,15 @@ export default class ChannelsListPublic extends Component {
       }}
     >
       {{#if this.chatChannelsManager.publicMessageChannelsEmpty}}
-        <EmptyChannelsList
+        <EmptyState
+          @identifier="empty-channels-list"
+          @svgContent={{ChatZero}}
           @title={{i18n "chat.no_public_channels"}}
-          @ctaTitle={{i18n "chat.no_public_channels_cta"}}
+          @ctaLabel={{if
+            this.chatChannelsManager.displayPublicChannels
+            (i18n "chat.no_public_channels_cta")
+          }}
           @ctaAction={{this.openBrowseChannels}}
-          @showCTA={{this.chatChannelsManager.displayPublicChannels}}
         />
       {{else}}
         {{#each this.channelList as |channel|}}

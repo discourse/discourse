@@ -45,8 +45,8 @@ module(
     test("empty state when there are no notifications", async function (assert) {
       notificationsData.clear();
       await render(<template><NotificationsList /></template>);
-      assert.dom(".empty-state .empty-state-title").exists();
-      assert.dom(".empty-state .empty-state-body").exists();
+      assert.dom(".empty-state .empty-state__title").exists();
+      assert.dom(".empty-state .empty-state__body").exists();
     });
 
     test("doesn't set filter_by_types in the params of the request that fetches the notifications", async function (assert) {

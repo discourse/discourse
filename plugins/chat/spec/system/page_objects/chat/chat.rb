@@ -133,7 +133,7 @@ module PageObjects
       end
 
       def has_no_messages?
-        have_selector(".channel-list-empty-message")
+        have_selector(".empty-state")
       end
 
       def has_direct_message_channels_section?

@@ -49,6 +49,10 @@
   }
 }
 
+.c-list-empty-state {
+  grid-column: 1/-1;
+}
+
 .c-user-threads .empty-state-threads {
   display: flex;
   justify-content: center;
