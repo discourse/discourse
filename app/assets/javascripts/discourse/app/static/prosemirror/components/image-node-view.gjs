@@ -253,16 +253,11 @@ export default class ImageNodeView extends Component {
   }
 
   get imageStyle() {
-    if (
-      !this.args.node.attrs.scale ||
-      this.args.node.attrs.scale === 100 ||
-      !this.args.node.attrs.width ||
-      !this.args.node.attrs.height
-    ) {
+    if (!this.args.node.attrs.width || !this.args.node.attrs.height) {
       return null;
     }
 
-    const scale = this.args.node.attrs.scale / 100;
+    const scale = (this.args.node.attrs.scale || 100) / 100;
 
     return htmlSafe(
       `width: ${this.args.node.attrs.width * scale}px; height: ${

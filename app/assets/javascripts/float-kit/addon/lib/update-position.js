@@ -53,9 +53,7 @@ export async function updatePosition(trigger, content, options) {
     if (options.limitShift) {
       limiter = limitShift(options.limitShift);
     }
-    middleware.push(
-      shift({ padding, limiter, boundary: options.boundary, crossAxis: true })
-    );
+    middleware.push(shift({ padding, limiter, crossAxis: true }));
   }
 
   let arrowElement;

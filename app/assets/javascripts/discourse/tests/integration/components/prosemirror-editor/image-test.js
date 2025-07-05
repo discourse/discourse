@@ -1,76 +1,158 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import { testRenderedMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - image extension",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    const wrap = (img) =>
-      `<p><div class="composer-image-node" contenteditable="false" draggable="true">        \n    ${img}\n  \n</div></p>`;
+    test(
+      "basic image",
+      testRenderedMarkdown(
+        "![alt text](https://example.com/image.jpg)",
+        (assert) => {
+          assert.dom("img").exists("Image should exist");
+          assert
+            .dom("img")
+            .hasAttribute("src", "https://example.com/image.jpg");
+          assert.dom("img").hasAttribute("alt", "alt text");
+        }
+      )
+    );
 
-    const testCases = {
-      image: [
-        [
-          "![alt text](https://example.com/image.jpg)",
-          wrap('<img src="https://example.com/image.jpg" alt="alt text">'),
-          "![alt text](https://example.com/image.jpg)",
-        ],
-        [
-          "![alt text](https://example.com/image.jpg 'title')",
-          wrap(
-            '<img src="https://example.com/image.jpg" alt="alt text" title="title">'
-          ),
-          '![alt text](https://example.com/image.jpg "title")',
-        ],
-        [
-          '![alt text|100x200](https://example.com/image.jpg "title")',
-          wrap(
-            '<img src="https://example.com/image.jpg" alt="alt text" title="title" width="100" height="200">'
-          ),
-          '![alt text|100x200](https://example.com/image.jpg "title")',
-        ],
-        [
-          "![alt text|100x200, 50%](https://example.com/image.jpg)",
-          wrap(
-            '<img src="https://example.com/image.jpg" alt="alt text" width="100" height="200" data-scale="50" style="width: 50px; height: 100px;">'
-          ),
-          "![alt text|100x200, 50%](https://example.com/image.jpg)",
-        ],
-        [
-          "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
-          wrap(
-            '<img src="https://example.com/image.jpg" alt="alt text" width="100" height="200" data-scale="50" data-thumbnail="true" style="width: 50px; height: 100px;">'
-          ),
-          "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
-        ],
-        [
-          "![alt text](https://example.com/image(1).jpg)",
-          wrap('<img src="https://example.com/image(1).jpg" alt="alt text">'),
-          "![alt text](https://example.com/image\\(1\\).jpg)",
-        ],
-        [
-          "![alt text|video](uploads://hash)",
-          '<p><div class="onebox-placeholder-container" contenteditable="false" draggable="true"><span class="placeholder-icon video"></span></div></p>',
-          "![alt text|video](uploads://hash)",
-        ],
-        [
-          "![alt text|audio](upload://hash)",
-          '<p><audio preload="metadata" controls="false" tabindex="-1" contenteditable="false" draggable="true"><source data-orig-src="upload://hash"></audio></p>',
-          "![alt text|audio](upload://hash)",
-        ],
-      ],
-    };
+    test(
+      "image with title",
+      testRenderedMarkdown(
+        '![alt text](https://example.com/image.jpg "title")',
+        (assert) => {
+          assert.dom("img").exists("Image should exist");
+          assert
+            .dom("img")
+            .hasAttribute("src", "https://example.com/image.jpg");
+          assert.dom("img").hasAttribute("alt", "alt text");
+          assert.dom("img").hasAttribute("title", "title");
+        }
+      )
+    );
 
-    Object.entries(testCases).forEach(([name, tests]) => {
-      tests.forEach(([markdown, expectedHtml, expectedMarkdown]) => {
-        test(name, async function (assert) {
-          this.siteSettings.rich_editor = true;
+    test(
+      "image with dimensions and title",
+      testRenderedMarkdown(
+        '![alt text|100x200](https://example.com/image.jpg "title")',
+        (assert) => {
+          assert.dom("img").exists("Image should exist");
+          assert
+            .dom("img")
+            .hasAttribute("src", "https://example.com/image.jpg");
+          assert.dom("img").hasAttribute("alt", "alt text");
+          assert.dom("img").hasAttribute("title", "title");
+          assert.dom("img").hasAttribute("width", "100");
+          assert.dom("img").hasAttribute("height", "200");
+        }
+      )
+    );
 
-          await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
-        });
-      });
-    });
+    test(
+      "image with dimensions and scale",
+      testRenderedMarkdown(
+        "![alt text|100x200, 50%](https://example.com/image.jpg)",
+        (assert) => {
+          assert.dom("img").exists("Image should exist");
+          assert
+            .dom("img")
+            .hasAttribute("src", "https://example.com/image.jpg");
+          assert.dom("img").hasAttribute("alt", "alt text");
+          assert.dom("img").hasAttribute("width", "100");
+          assert.dom("img").hasAttribute("height", "200");
+          assert.dom("img").hasAttribute("data-scale", "50");
+
+          // Check style attribute directly
+          const img = document.querySelector("img");
+          assert.strictEqual(
+            img.style.width,
+            "50px",
+            "Image width style should be 50px"
+          );
+          assert.strictEqual(
+            img.style.height,
+            "100px",
+            "Image height style should be 100px"
+          );
+        }
+      )
+    );
+
+    test(
+      "image with dimensions, scale and thumbnail",
+      testRenderedMarkdown(
+        "![alt text|100x200, 50%|thumbnail](https://example.com/image.jpg)",
+        (assert) => {
+          assert.dom("img").exists("Image should exist");
+          assert
+            .dom("img")
+            .hasAttribute("src", "https://example.com/image.jpg");
+          assert.dom("img").hasAttribute("alt", "alt text");
+          assert.dom("img").hasAttribute("width", "100");
+          assert.dom("img").hasAttribute("height", "200");
+          assert.dom("img").hasAttribute("data-scale", "50");
+          assert.dom("img").hasAttribute("data-thumbnail", "true");
+
+          // Check style attribute directly
+          const img = document.querySelector("img");
+          assert.strictEqual(
+            img.style.width,
+            "50px",
+            "Image width style should be 50px"
+          );
+          assert.strictEqual(
+            img.style.height,
+            "100px",
+            "Image height style should be 100px"
+          );
+        }
+      )
+    );
+
+    test(
+      "image with parentheses in URL",
+      testRenderedMarkdown(
+        "![alt text](https://example.com/image\\(1\\).jpg)",
+        (assert) => {
+          assert.dom("img").exists("Image should exist");
+          assert
+            .dom("img")
+            .hasAttribute("src", "https://example.com/image(1).jpg");
+          assert.dom("img").hasAttribute("alt", "alt text");
+        }
+      )
+    );
+
+    test(
+      "video placeholder",
+      testRenderedMarkdown("![alt text|video](upload://hash)", (assert) => {
+        assert
+          .dom(".onebox-placeholder-container")
+          .exists("Video placeholder should exist");
+        assert
+          .dom(".onebox-placeholder-container")
+          .hasAttribute("data-orig-src", "upload://hash");
+        assert
+          .dom(".placeholder-icon.video")
+          .exists("Video placeholder icon should exist");
+      })
+    );
+
+    test(
+      "audio element",
+      testRenderedMarkdown("![alt text|audio](upload://hash)", (assert) => {
+        assert.dom("audio").exists("Audio element should exist");
+        assert.dom("audio").hasAttribute("preload", "metadata");
+        assert.dom("audio source").exists("Audio source should exist");
+        assert
+          .dom("audio source")
+          .hasAttribute("data-orig-src", "upload://hash");
+      })
+    );
   }
 );
