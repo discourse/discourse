@@ -110,7 +110,11 @@ formatters << { name: "progress", outputs: [] } if formatters.empty?
 formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
-puts "Running turbo_rspec (seed: #{seed}) using files in: #{files}"
+if files.size > 5
+  puts "Running turbo_rspec on #{files.size} files"
+else
+  puts "Running turbo_rspec on: #{files.join(", ")}"
+end
 puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
 
 success =
