@@ -58,7 +58,7 @@ export default class ImageAltTextInput extends Component {
     <div
       class={{concatClass
         "image-alt-text-input"
-        (if this.isExpanded " --expanded")
+        (if this.isExpanded "--expanded")
       }}
     >
       {{#if this.isExpanded}}
