@@ -314,16 +314,14 @@
     transition:
       width 0.2s ease,
       height 0.2s ease;
-  }
 
-  &:not(.ProseMirror-selectednode) {
-    img:hover {
+    &:not(.ProseMirror-selectednode):hover {
       cursor: pointer;
     }
-  }
 
-  &.ProseMirror-selectednode img {
-    user-select: none !important;
+    &.ProseMirror-selectednode {
+      user-select: none;
+    }
   }
 }
 
