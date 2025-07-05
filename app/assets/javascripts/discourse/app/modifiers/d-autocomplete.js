@@ -211,7 +211,7 @@ export default class DAutocompleteModifier extends Modifier {
       const position = await this.guessCompletePosition({ backSpace: true });
       if (position.completeStart !== null) {
         this.completeStart = position.completeStart;
-        await this.performSearch(position.term || "");
+        await this.performAutocomplete();
       }
     }
   }
