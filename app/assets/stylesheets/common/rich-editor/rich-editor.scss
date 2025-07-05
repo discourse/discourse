@@ -53,6 +53,7 @@
     display: inline-block;
     height: auto;
     max-width: 100%;
+    border-radius: var(--d-border-radius);
 
     &[data-placeholder="true"] {
       animation: placeholder 1.5s infinite;
@@ -195,17 +196,21 @@
   }
 }
 
-.fk-d-menu[data-identifier="composer-link-toolbar"] {
-  z-index: z("composer", "dropdown") + 1;
-  animation: fade-in ease 0.25s 1 forwards;
+.fk-d-menu[data-identifier="composer-link-toolbar"],
+.fk-d-menu[data-identifier="composer-image-toolbar"],
+.fk-d-menu[data-identifier="composer-image-alt-text"] {
+  user-select: none;
+  z-index: z("composer", "dropdown");
+  animation: fade-in ease 0.25s 1 forwards !important;
 
   .fk-d-menu__inner-content {
     overflow: visible;
   }
 
-  .btn {
+  .toolbar__button {
     background-color: var(--secondary);
     color: var(--primary-medium);
+    border-radius: var(--d-border-radius);
 
     .d-icon {
       color: var(--primary-medium);
@@ -225,6 +230,10 @@
 
     &:focus-visible {
       @include default-focus;
+    }
+
+    &.--active {
+      background: var(--d-selected);
     }
   }
 
@@ -256,6 +265,110 @@
 
   &:not(:disabled) .d-button-label {
     margin-right: 0.5rem;
+  }
+}
+
+.fk-d-menu[data-identifier="composer-image-alt-text"] {
+  width: calc(100% - 1rem);
+  min-width: calc(max(100% - 1rem, 7.25rem));
+  background-color: rgb(var(--secondary-rgb), 0.65);
+  backdrop-filter: blur(4px);
+  color: var(--primary);
+  isolation: auto;
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-1);
+  box-shadow: var(--shadow-dropdown);
+
+  .fk-d-menu__inner-content {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    min-width: 100%;
+    padding: 0.25rem 0.5rem;
+  }
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px var(--tertiary-high);
+  }
+
+  &:has(.image-alt-text-input.--expanded) {
+    min-width: calc(max(100% - 1rem, 15rem));
+  }
+  transition: min-width 0.15s ease;
+}
+
+.composer-image-node {
+  display: inline-block;
+  white-space: normal;
+  position: relative;
+
+  // This makes the editor less pixel perfect with cooked, but it helps with some
+  // hard positions (like between images), and makes the blinking cursor more visible
+  // The vertical offset increases the drop area between image paragraphs
+  margin: -2px 1px;
+  padding: 2px 1px;
+
+  img {
+    transition:
+      width 0.2s ease,
+      height 0.2s ease;
+
+    &:not(.ProseMirror-selectednode):hover {
+      cursor: pointer;
+    }
+
+    &.ProseMirror-selectednode {
+      user-select: none;
+    }
+  }
+}
+
+.image-alt-text-input {
+  min-width: 100%;
+  display: flex;
+  position: relative;
+  transition: height 0.15s ease;
+  height: 1.5em;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &.--expanded {
+    height: 4.25em;
+  }
+
+  &__field {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0;
+    background: transparent;
+    resize: none;
+    margin: 0;
+    scrollbar-color: rgb(var(--primary-rgb), 0.3) transparent;
+    scrollbar-width: thin;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    line-height: var(--line-height-large);
+
+    &::placeholder {
+      color: var(--primary);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__display {
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
   }
 }
 
@@ -292,7 +405,7 @@
 }
 
 .ProseMirror-selectednode {
-  outline: 2px solid #8cf;
+  outline: 2px solid var(--tertiary-high);
   border-radius: var(--d-border-radius);
 }
 

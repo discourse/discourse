@@ -1,5 +1,5 @@
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { TextSelection } from "prosemirror-state";
+import { NodeSelection, TextSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
@@ -104,6 +104,11 @@ class LinkToolbarPluginView {
    */
   update(view) {
     this.#view = view;
+
+    if (view.state.selection instanceof NodeSelection) {
+      this.#resetToolbar();
+      return;
+    }
 
     const markRange = this.#utils.getMarkRange(
       view.state.selection.$head,
