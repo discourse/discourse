@@ -494,28 +494,13 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   createVirtualElementAtCaret() {
-    // Use completeStart position (where @ symbol is) instead of current caret position
-    // This keeps the menu anchored at the start of the autocomplete term
-    const autocompleteStartPosition =
-      this.completeStart !== null
-        ? this.completeStart
-        : this.options.textHandler.getCaretPosition();
-
-    const caretCoords = this.options.textHandler.getCaretCoords(
-      autocompleteStartPosition
-    );
-    // TODO: this rect needs to be an input, or a relative reference from textHandler, because not all contexts of this autocomplete will be in the d-editor
-    const rect = document
-      .querySelector(".d-editor-input")
-      .getBoundingClientRect();
-
     const marginLeft = 9; //offset to place autocomplete in front of the trigger character (e.g. "@")
     const marginTop = 10;
-
+    const caretCoords = this.getAbsoluteCaretCoords();
     return {
       getBoundingClientRect: () => ({
-        left: rect.left + caretCoords.left + marginLeft,
-        top: rect.top + caretCoords.top + marginTop,
+        left: caretCoords.x + marginLeft,
+        top: caretCoords.y + marginTop,
         width: 1,
         height: 20,
       }),
