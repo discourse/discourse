@@ -74,6 +74,7 @@ export class ToolbarBase {
       Object.defineProperties({}, Object.getOwnPropertyDescriptors(buttonAttrs))
     );
 
+    createdButton.preventFocus ??= true;
     createdButton.tabindex ??= "-1";
     createdButton.className ||= buttonAttrs.id;
     createdButton.condition ||= () => true;
@@ -155,7 +156,6 @@ export default class Toolbar extends ToolbarBase {
       icon: boldIcon,
       label: boldLabel,
       shortcut: "B",
-      preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
       active: ({ state }) => state.inBold,
@@ -169,7 +169,6 @@ export default class Toolbar extends ToolbarBase {
       icon: italicIcon,
       label: italicLabel,
       shortcut: "I",
-      preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("*", "*", "italic_text"),
       active: ({ state }) => state.inItalic,
@@ -181,7 +180,6 @@ export default class Toolbar extends ToolbarBase {
         icon: "link",
         group: "insertions",
         shortcut: "K",
-        preventFocus: true,
         trimLeading: true,
         sendAction: (event) => this.context.send("showLinkModal", event),
         active: ({ state }) => state.inLink,
@@ -193,7 +191,6 @@ export default class Toolbar extends ToolbarBase {
       group: "insertions",
       icon: "quote-right",
       shortcut: "Shift+9",
-      preventFocus: true,
       perform: (e) =>
         e.applyList("> ", "blockquote_text", {
           applyEmptyLines: true,
@@ -208,7 +205,6 @@ export default class Toolbar extends ToolbarBase {
         group: "insertions",
         shortcut: "E",
         icon: "code",
-        preventFocus: true,
         trimLeading: true,
         perform: (e) => e.formatCode(),
         active: ({ state }) => state.inCode || state.inCodeBlock,
@@ -220,7 +216,6 @@ export default class Toolbar extends ToolbarBase {
         icon: "list-ul",
         shortcut: "Shift+8",
         title: "composer.ulist_title",
-        preventFocus: true,
         perform: (e) => e.applyList("* ", "list_item"),
         active: ({ state }) => state.inBulletList,
       });
@@ -231,7 +226,6 @@ export default class Toolbar extends ToolbarBase {
         icon: "list-ol",
         shortcut: "Shift+7",
         title: "composer.olist_title",
-        preventFocus: true,
         perform: (e) =>
           e.applyList(
             (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
@@ -248,7 +242,6 @@ export default class Toolbar extends ToolbarBase {
         icon: "right-left",
         shortcut: "Shift+6",
         title: "composer.toggle_direction",
-        preventFocus: true,
         perform: (e) => e.toggleDirection(),
       });
     }

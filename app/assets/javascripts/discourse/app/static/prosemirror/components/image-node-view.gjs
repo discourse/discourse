@@ -25,7 +25,6 @@ class ImageToolbar extends ToolbarBase {
       icon: "magnifying-glass-minus",
       title: "composer.image_toolbar.zoom_out",
       className: "composer-image-toolbar__zoom-out",
-      preventFocus: true,
       get disabled() {
         return !opts.canScaleDown();
       },
@@ -38,7 +37,6 @@ class ImageToolbar extends ToolbarBase {
       icon: "magnifying-glass-plus",
       title: "composer.image_toolbar.zoom_in",
       className: "composer-image-toolbar__zoom-in",
-      preventFocus: true,
       get disabled() {
         return !opts.canScaleUp();
       },
@@ -51,7 +49,6 @@ class ImageToolbar extends ToolbarBase {
       icon: "trash-can",
       title: "composer.image_toolbar.remove",
       className: "composer-image-toolbar__trash",
-      preventFocus: true,
       action: opts.removeImage,
       tabindex: 0,
     });

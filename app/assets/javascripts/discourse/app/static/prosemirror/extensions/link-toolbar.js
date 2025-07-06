@@ -21,7 +21,6 @@ class LinkToolbar extends ToolbarBase {
       icon: "pen",
       title: "composer.link_toolbar.edit",
       className: "composer-link-toolbar__edit",
-      preventFocus: true,
       action: opts.editLink,
     });
 
@@ -30,7 +29,6 @@ class LinkToolbar extends ToolbarBase {
       icon: "copy",
       title: "composer.link_toolbar.copy",
       className: "composer-link-toolbar__copy",
-      preventFocus: true,
       action: opts.copyLink,
     });
 
@@ -39,7 +37,6 @@ class LinkToolbar extends ToolbarBase {
       icon: "link-slash",
       title: "composer.link_toolbar.remove",
       className: "composer-link-toolbar__unlink",
-      preventFocus: true,
       condition: opts.canUnlink,
       action: opts.unlinkText,
     });
@@ -55,7 +52,6 @@ class LinkToolbar extends ToolbarBase {
       },
       title: "composer.link_toolbar.visit",
       className: "composer-link-toolbar__visit",
-      preventFocus: true,
       condition: () => opts.canVisit() || opts.canUnlink(),
       get href() {
         return opts.canVisit() ? opts.getHref() : null;
