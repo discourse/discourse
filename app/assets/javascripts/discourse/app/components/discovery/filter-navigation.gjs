@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import DButton from "discourse/components/d-button";
+import EditDiscoveryFiltersModal from "discourse/components/modal/edit-discovery-filters";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
@@ -17,6 +18,7 @@ import { resettableTracked } from "discourse/lib/tracked-tools";
 
 export default class DiscoveryFilterNavigation extends Component {
   @service site;
+  @service modal;
 
   @tracked copyIcon = "link";
   @tracked copyClass = "btn-default";
@@ -41,6 +43,17 @@ export default class DiscoveryFilterNavigation extends Component {
     navigator.clipboard.writeText(window.location);
 
     discourseDebounce(this._restoreButton, 3000);
+  }
+
+  @action
+  showEditFiltersModal() {
+    this.modal.show(EditDiscoveryFiltersModal, {
+      model: {
+        queryString: this.newQueryString,
+        updateQueryString: this.updateQueryString,
+        updateTopicsListQueryParams: this.args.updateTopicsListQueryParams,
+      },
+    });
   }
 
   @bind
@@ -82,8 +95,13 @@ export default class DiscoveryFilterNavigation extends Component {
             }}
           />
         </div>
-        {{#if this.newQueryString}}
-          <div class="topic-query-filter__controls">
+        <div class="topic-query-filter__controls">
+          <DButton
+            @icon="pencil"
+            @action={{this.showEditFiltersModal}}
+            title="Edit filters"
+          />
+          {{#if this.newQueryString}}
             <DButton
               @icon="xmark"
               @action={{this.clearInput}}
@@ -98,8 +116,8 @@ export default class DiscoveryFilterNavigation extends Component {
                 class={{this.copyClass}}
               />
             {{/if}}
-          </div>
-        {{/if}}
+          {{/if}}
+        </div>
       </div>
     </section>
   </template>
