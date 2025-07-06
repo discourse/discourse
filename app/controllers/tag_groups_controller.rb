@@ -92,7 +92,10 @@ class TagGroupsController < ApplicationController
 
     matches =
       matches.order("name").limit(
-        fetch_limit_from_params(default: 5, max: SiteSetting.max_tag_search_results),
+        fetch_limit_from_params(
+          default: SiteSetting.max_tag_search_results,
+          max: SiteSetting.max_tag_search_results,
+        ),
       )
 
     render json: {

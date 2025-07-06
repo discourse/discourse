@@ -54,6 +54,17 @@ RSpec.describe TagGroupsController do
                        SiteSetting.max_tag_search_results
     end
 
+    it "doesn't error when the max_tag_search_results setting is lowered from its default" do
+      tag_group = tag_group_with_permission(everyone, readonly)
+
+      SiteSetting.max_tag_search_results = 4
+
+      get "/tag_groups/filter/search.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["results"].size).to eq(1)
+      expect(response.parsed_body["results"].first["name"]).to eq(tag_group.name)
+    end
+
     context "for anons" do
       it "returns the tag group with the associated tag names" do
         tag_group = tag_group_with_permission(everyone, readonly)
