@@ -412,8 +412,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(@babel/core@7.28.0)(@glint/template@1.4.1-unstable.34c4510)
       '@ember/test-waiters':
-        specifier: ^4.1.0
-        version: 4.1.0(@glint/template@1.4.1-unstable.34c4510)
+        specifier: ^4.1.1
+        version: 4.1.1(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/compat':
         specifier: ^3.8.5
         version: 3.8.5(@embroider/core@3.5.5(@glint/template@1.4.1-unstable.34c4510))(@glint/template@1.4.1-unstable.34c4510)
@@ -1830,8 +1830,8 @@ packages:
     resolution: {integrity: sha512-bb9h95ktG2wKY9+ja1sdsFBdOms2lB19VWs8wmNpzgHv1NCetonBoV5jHBV4DHt0uS1tg9z66cZqhUVlYs96KQ==}
     engines: {node: 10.* || 12.* || >= 14.*}
 
-  '@ember/test-waiters@4.1.0':
-    resolution: {integrity: sha512-qRFA0OumYv7/C3hmx4ETC2dlPzyD549D+naPhcrnV2xCnc3AZlKouWyoFnNF+Cje918kRp9aEefVgV3vmGL5Bg==}
+  '@ember/test-waiters@4.1.1':
+    resolution: {integrity: sha512-HbK70JYCDJcGI0CrwcbjeL2QHAn0HLwa3oGep7mr6l/yO95U7JYA8VN+/9VTsWJTmKueLtWayUqEmGS3a3mVOg==}
 
   '@embroider/addon-shim@1.10.0':
     resolution: {integrity: sha512-gcJuHiXgnrzaU8NyU+2bMbtS6PNOr5v5B8OXBqaBvTCsMpXLvKo8OBOQFCoUN0rPX2J6VaFqrbi/371sMvzZug==}
@@ -9803,7 +9803,7 @@ snapshots:
 
   '@ember/test-helpers@5.2.2(@babel/core@7.28.0)(@glint/template@1.4.1-unstable.34c4510)':
     dependencies:
-      '@ember/test-waiters': 4.1.0(@glint/template@1.4.1-unstable.34c4510)
+      '@ember/test-waiters': 4.1.1(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/addon-shim': 1.10.0
       '@embroider/macros': 1.16.12(@glint/template@1.4.1-unstable.34c4510)
       '@simple-dom/interface': 1.4.0
@@ -9823,7 +9823,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@ember/test-waiters@4.1.0(@glint/template@1.4.1-unstable.34c4510)':
+  '@ember/test-waiters@4.1.1(@glint/template@1.4.1-unstable.34c4510)':
     dependencies:
       '@embroider/addon-shim': 1.10.0
       '@embroider/macros': 1.16.12(@glint/template@1.4.1-unstable.34c4510)
@@ -12737,7 +12737,7 @@ snapshots:
 
   ember-async-data@2.0.1(@babel/core@7.28.0)(@glint/template@1.4.1-unstable.34c4510):
     dependencies:
-      '@ember/test-waiters': 4.1.0(@glint/template@1.4.1-unstable.34c4510)
+      '@ember/test-waiters': 4.1.1(@glint/template@1.4.1-unstable.34c4510)
       '@embroider/addon-shim': 1.10.0
       decorator-transforms: 2.3.0(@babel/core@7.28.0)
     transitivePeerDependencies:
