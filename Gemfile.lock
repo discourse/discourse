@@ -598,14 +598,14 @@ GEM
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    sqlite3 (2.7.1-aarch64-linux-gnu)
-    sqlite3 (2.7.1-aarch64-linux-musl)
-    sqlite3 (2.7.1-arm-linux-gnu)
-    sqlite3 (2.7.1-arm-linux-musl)
-    sqlite3 (2.7.1-arm64-darwin)
-    sqlite3 (2.7.1-x86_64-darwin)
-    sqlite3 (2.7.1-x86_64-linux-gnu)
-    sqlite3 (2.7.1-x86_64-linux-musl)
+    sqlite3 (2.7.2-aarch64-linux-gnu)
+    sqlite3 (2.7.2-aarch64-linux-musl)
+    sqlite3 (2.7.2-arm-linux-gnu)
+    sqlite3 (2.7.2-arm-linux-musl)
+    sqlite3 (2.7.2-arm64-darwin)
+    sqlite3 (2.7.2-x86_64-darwin)
+    sqlite3 (2.7.2-x86_64-linux-gnu)
+    sqlite3 (2.7.2-x86_64-linux-musl)
     sshkey (3.0.0)
     stackprof (0.2.27)
     stringio (3.1.7)
@@ -1072,14 +1072,14 @@ CHECKSUMS
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
-  sqlite3 (2.7.1-aarch64-linux-gnu) sha256=9281a5bbecf51e695767c8dbfd340f139a3f248e5828108fc1cbfdf6081b71c4
-  sqlite3 (2.7.1-aarch64-linux-musl) sha256=daeca408854f91bfbdd6b8d33847e039a0346232dae360da5a3ff6a8a9d88d6d
-  sqlite3 (2.7.1-arm-linux-gnu) sha256=3c2ffa960641bd5da4599ef1758d71404888e0a4e8b18c2cf3ad5e8229c088e1
-  sqlite3 (2.7.1-arm-linux-musl) sha256=c3a700629beaa524837c4843011731c7087392b06885ce8ccdad21a9a715d591
-  sqlite3 (2.7.1-arm64-darwin) sha256=c7615705fda493d815213877972096a734772311168bcbc7c6469e2383a3abb8
-  sqlite3 (2.7.1-x86_64-darwin) sha256=740bf99f43bf23c183f9f50116898d941278faa9312a4af85a36454fef6a0ace
-  sqlite3 (2.7.1-x86_64-linux-gnu) sha256=8c742e1c8975dafce1d25b8a4e0321696e36b49c27d19d6eebec261ea77589f1
-  sqlite3 (2.7.1-x86_64-linux-musl) sha256=57c1a87ee2cc3aa0c4ab4bb8811b0b5e955d38f24d8982713dc0cf979b4d64d8
+  sqlite3 (2.7.2-aarch64-linux-gnu) sha256=b1688e8661c65f65bb16a9879c8171c94d22322f4d8e9e452f396a3aa55bbe0a
+  sqlite3 (2.7.2-aarch64-linux-musl) sha256=9086f9370853825c5bbb4d1156c9b1494a7ab5052445469603de5a4f2d127ef1
+  sqlite3 (2.7.2-arm-linux-gnu) sha256=f31d361744775942c4ef7f645457736ad7cdc1c5128a6c19551753e969ccc9be
+  sqlite3 (2.7.2-arm-linux-musl) sha256=0dc0c1b06c0af0e8833508f212297f8665bf37ea624739fdde30d9adba015f20
+  sqlite3 (2.7.2-arm64-darwin) sha256=e09a781a69d793424864cac99daa17a24308fcda1dc459a94ef25ecf31082b60
+  sqlite3 (2.7.2-x86_64-darwin) sha256=92229c8de5a63a3ed909c6390d187439adeeb614700eed30cf19a4f11c3af370
+  sqlite3 (2.7.2-x86_64-linux-gnu) sha256=e15e8b1224e47a8fec2833afcc6c727742eab6a470c929a54551ab03d04dd4a4
+  sqlite3 (2.7.2-x86_64-linux-musl) sha256=1f7e386b82a78c24ef9f875b4891bcee51d1c2cd254f028b3ce3dd429605bc35
   sshkey (3.0.0) sha256=655ba351d6e01a48dfe59d65530af8975c777b8cc57a061770de3228ff2d11cd
   stackprof (0.2.27) sha256=aff6d28656c852e74cf632cc2046f849033dc1dedffe7cb8c030d61b5745e80c
   stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
