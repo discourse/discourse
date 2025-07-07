@@ -1275,7 +1275,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(page).to have_css(".image-alt-text-input__display", text: "image")
 
       find(".image-alt-text-input__display").click
-      find(".image-alt-text-input__field").fill_in with: ""
+      find(".image-alt-text-input__field").fill_in(with: "")
       find(".image-alt-text-input__field").send_keys(:enter)
 
       expect(page).to have_css(
