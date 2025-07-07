@@ -343,7 +343,7 @@ export default class DAutocompleteModifier extends Modifier {
 
     // Calculate new selectedIndex
     const newIndex = Math.max(
-      -1,
+      0,
       Math.min(this.results.length - 1, this.selectedIndex + direction)
     );
 
