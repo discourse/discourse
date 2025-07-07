@@ -116,15 +116,6 @@ export default class DNavigation extends Component {
     }
   }
 
-  @discourseComputed("categoryReadOnlyBanner")
-  createTopicClass(categoryReadOnlyBanner) {
-    let classNames = ["btn-default"];
-    if (categoryReadOnlyBanner) {
-      classNames.push("disabled");
-    }
-    return classNames.join(" ");
-  }
-
   @discourseComputed("category.can_edit")
   showCategoryEdit(canEdit) {
     return canEdit;
@@ -309,7 +300,6 @@ export default class DNavigation extends Component {
         @canCreateTopic={{this.canCreateTopic}}
         @action={{this.clickCreateTopicButton}}
         @label={{this.createTopicLabel}}
-        @btnClass={{this.createTopicClass}}
         @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
         @showDrafts={{if (gt this.draftCount 0) true false}}
       />
