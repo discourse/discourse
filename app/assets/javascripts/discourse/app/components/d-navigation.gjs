@@ -300,7 +300,6 @@ export default class DNavigation extends Component {
         @canCreateTopic={{this.canCreateTopic}}
         @action={{this.clickCreateTopicButton}}
         @label={{this.createTopicLabel}}
-        @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
         @showDrafts={{if (gt this.draftCount 0) true false}}
       />
 
