@@ -776,9 +776,38 @@ export default class TextareaTextManipulation {
         sel.value = i18n(`composer.${exampleKey}`);
       }
 
-      const number = sel.value.startsWith(hval)
-        ? sel.value.slice(hlen)
-        : `${hval}${sel.value}`;
+      // Special handling for markdown headings starting with #,
+      // they are "list-like" in that they have a character at
+      // the start and a level, rather than having a surrounding format.
+      let number;
+      if (head.includes("#")) {
+        const currentHeadingLevel = sel.value.search(/[^#]/);
+
+        // Remove existing heading level if same as the new one,
+        // mirrors list behavior.
+        if (sel.value.startsWith(hval) && currentHeadingLevel + 1 === hlen) {
+          number = sel.value.slice(hlen);
+        } else {
+          // Replace the existing heading level with the new one, or
+          // if there is no heading level, add the new one.
+          if (currentHeadingLevel > 0) {
+            number =
+              hval +
+              sel.value.slice("#".repeat(currentHeadingLevel).length + 1);
+          } else {
+            number = hval + sel.value;
+          }
+        }
+      } else {
+        // Remove existing list item if it's the same as the new
+        // head, e.g. if a line is "* list item", then it converts
+        // it to "list item"
+        if (sel.value.startsWith(hval)) {
+          number = sel.value.slice(hlen);
+        } else {
+          number = `${hval}${sel.value}`;
+        }
+      }
 
       const preNewlines = sel.pre.trim() && "\n\n";
       const postNewlines = sel.post.trim() && "\n\n";
@@ -797,9 +826,22 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  applyHeading() {
-    // applyHeading(sel, level, exampleKey) {
-    // TODO (martin) Fill this in for old non RTE composer
+  applyHeading(sel, level) {
+    if (level > 0) {
+      this.applyList(sel, "#".repeat(level) + " ", "heading_text");
+    } else {
+      // Remove heading when the Paragrah level (0) is selected.
+      const currentHeadingLevel = sel.lineVal.search(/[^#]/);
+      if (currentHeadingLevel >= 0) {
+        // When you apply the list with the same head chars, then they
+        // are removed, so we can use the same function.
+        this.applyList(
+          sel,
+          "#".repeat(currentHeadingLevel) + " ",
+          "heading_text"
+        );
+      }
+    }
   }
 
   @bind

@@ -140,8 +140,10 @@ export default class DEditor extends Component {
   get keymap() {
     const keymap = {};
 
+    // These are defined in lib/composer/toolbar.js via addButton.
+    // It includes shortcuts for top level toolbar buttons, as well
+    // as the toolbar popup menu option shortcuts.
     const shortcuts = this.get("toolbar.shortcuts");
-
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
       keymap[sc] = () => {
@@ -159,6 +161,10 @@ export default class DEditor extends Component {
       };
     });
 
+    // This refers to the "special" composer toolbar popup menu which
+    // is launched from the (+) button in the toolbar. This menu is customizable
+    // via the plugin API, so it differs from regular toolbar button definitions
+    // from toolbar.js
     this.popupMenuOptions?.forEach((popupButton) => {
       if (popupButton.shortcut && popupButton.condition) {
         const shortcut =
@@ -471,7 +477,9 @@ export default class DEditor extends Component {
    * @returns {ToolbarEvent} An object with toolbar event actions
    */
   newToolbarEvent(trimLeading) {
-    const selected = this.textManipulation.getSelected(trimLeading);
+    const selected = this.textManipulation.getSelected(trimLeading, {
+      lineVal: true,
+    });
     return {
       selected,
       selectText: (from, length) =>

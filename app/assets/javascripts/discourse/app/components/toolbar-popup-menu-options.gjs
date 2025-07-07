@@ -44,7 +44,13 @@ export default class ToolbarPopupmenuOptions extends Component {
         }
       }
 
-      let title = content.title ? i18n(content.title) : label;
+      let title = label;
+      if (content.title) {
+        title = content.titleArgs
+          ? i18n(content.title, content.titleArgs)
+          : i18n(content.title);
+      }
+
       if (content.shortcut) {
         title += ` (${translateModKey(
           PLATFORM_KEY_MODIFIER + "+" + content.shortcut

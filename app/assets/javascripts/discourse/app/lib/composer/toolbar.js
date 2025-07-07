@@ -97,6 +97,7 @@ export class ToolbarBase {
       );
     };
 
+    // Main button shortcut bindings and title text.
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
     if (buttonAttrs.shortcut) {
       const shortcutTitle = `${translateModKey(
@@ -108,11 +109,43 @@ export class ToolbarBase {
       } else {
         createdButton.title = `${title} (${shortcutTitle})`;
       }
+
+      // These shortcuts are actually bound in the keymap inside
+      // components/d-editor.gjs
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
     } else {
       createdButton.title = title;
+    }
+
+    // Popup menu option item shortcut bindings and title text.
+    if (buttonAttrs.popupMenu) {
+      buttonAttrs.popupMenu.options().forEach((option) => {
+        if (option.shortcut) {
+          const shortcutTitle = `${translateModKey(
+            PLATFORM_KEY_MODIFIER + "+"
+          )}${translateModKey(option.shortcut)}`;
+
+          if (option.title) {
+            if (option.hideShortcutInTitle) {
+              option.title = i18n(option.title);
+            } else {
+              option.title = `${i18n(option.title)} (${shortcutTitle})`;
+            }
+          }
+
+          if (!option.shortcutAction) {
+            option.action = buttonAttrs.popupMenu.action;
+          }
+
+          // These shortcuts are actually bound in the keymap inside
+          // components/d-editor.gjs
+          this.shortcuts[
+            `${PLATFORM_KEY_MODIFIER}+${option.shortcut}`.toLowerCase()
+          ] = option;
+        }
+      });
     }
 
     if (buttonAttrs.unshift) {
@@ -212,8 +245,6 @@ export default class Toolbar extends ToolbarBase {
         return unformattedHeadingIcon;
       },
       label: headingLabel,
-      // TODO (martin) Figure shortcut out
-      // shortcut: "H",
       popupMenu: {
         options: () => {
           const headingOptions = [];
@@ -222,8 +253,11 @@ export default class Toolbar extends ToolbarBase {
               name: `heading-${i}`,
               icon: `discourse-h${i}`,
               label: "composer.heading_level_n",
+              title: "composer.heading_level_n_title",
               labelArgs: { levelNumber: i },
+              titleArgs: { levelNumber: i },
               condition: true,
+              shortcut: `Shift+${i}`,
               active: ({ state }) => {
                 if (!state || !state.selection.allSameType) {
                   return false;
@@ -241,7 +275,9 @@ export default class Toolbar extends ToolbarBase {
             name: "heading-paragraph",
             icon: "discourse-text",
             label: "composer.heading_level_paragraph",
+            title: "composer.heading_level_paragraph_title",
             condition: true,
+            shortcut: `Shift+0`,
             active: ({ state }) => state?.inParagraph,
           });
           return headingOptions;
