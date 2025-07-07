@@ -906,11 +906,11 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @#{user.username} ")
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
+      expect(rich).to have_css("a.mention", text: user.username)
 
       composer.type_content("and @invalid_user - how are you?")
 
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@invalid_user")
+      expect(rich).to have_no_css("a.mention", text: "@invalid_user")
 
       composer.toggle_rich_editor
 
@@ -924,8 +924,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@unknown")
+      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_no_css("a.mention", text: "@unknown")
     end
 
     it "validates mentions case-insensitively" do
@@ -933,12 +933,12 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @testuser_123 and @TESTUSER_123 ")
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "testuser_123")
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTUSER_123")
+      expect(rich).to have_css("a.mention", text: "testuser_123")
+      expect(rich).to have_css("a.mention", text: "TESTUSER_123")
 
       composer.type_content("and @InvalidUser ")
 
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidUser")
+      expect(rich).to have_no_css("a.mention", text: "@InvalidUser")
     end
 
     it "validates group mentions case-insensitively" do
@@ -946,12 +946,12 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @testgroup_abc and @TESTGROUP_ABC ")
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "testgroup_abc")
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTGROUP_ABC")
+      expect(rich).to have_css("a.mention", text: "testgroup_abc")
+      expect(rich).to have_css("a.mention", text: "TESTGROUP_ABC")
 
       composer.type_content("and @InvalidGroup ")
 
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidGroup")
+      expect(rich).to have_no_css("a.mention", text: "@InvalidGroup")
     end
   end
 
