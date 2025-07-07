@@ -14,7 +14,7 @@ const MIN_SCALE = 50;
 const MAX_SCALE = 100;
 const SCALE_STEP = 25;
 
-const MARGIN = 8;
+const MENU_PADDING = 8;
 
 class ImageToolbar extends ToolbarBase {
   constructor(opts = {}) {
