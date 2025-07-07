@@ -118,4 +118,182 @@ RSpec.describe "tasks/themes" do
       expect(theme.remote_theme.local_version).to eq(original_local_version)
     end
   end
+
+  describe "themes:deduplicate_horizon" do
+    fab!(:user)
+    fab!(:remote_theme) do
+      RemoteTheme.create!(
+        remote_url: "https://github.com/discourse-org/horizon.git",
+        minimum_discourse_version: "2.5.0",
+      )
+    end
+    fab!(:remote_horizon_theme) do
+      Fabricate(
+        :theme,
+        user: user,
+        name: "Remote Horizon",
+        remote_theme: remote_theme,
+        user_selectable: true,
+      )
+    end
+    fab!(:child_component) do
+      Fabricate(:theme, user: user, component: true, name: "Child Component")
+    end
+    fab!(:theme_setting) do
+      ThemeSetting.create!(
+        theme: remote_horizon_theme,
+        data_type: ThemeSetting.types[:bool],
+        name: "enable_welcome_banner",
+        value: "false",
+      )
+    end
+    fab!(:remote_color_scheme) do
+      remote_horizon_theme.color_schemes.create!(
+        name: "Lily Dark",
+        theme_id: remote_horizon_theme.id,
+        user_selectable: false,
+      )
+    end
+    fab!(:remote_color_scheme_2) do
+      remote_horizon_theme.color_schemes.create!(
+        name: "Violet Dark",
+        theme_id: remote_horizon_theme.id,
+        user_selectable: true,
+      )
+    end
+    fab!(:theme_translation_override) do
+      ThemeTranslationOverride.create!(
+        theme: remote_horizon_theme,
+        locale: "en",
+        translation_key: "test.key",
+        value: "Test Value",
+      )
+    end
+
+    let!(:system_horizon_theme) { Theme.horizon_theme }
+    let!(:system_color_scheme) { system_horizon_theme.color_schemes.where(name: "Lily Dark").first }
+    let!(:system_color_scheme_2) do
+      system_horizon_theme.color_schemes.where(name: "Violet Dark").first
+    end
+
+    before do
+      remote_horizon_theme.update!(color_scheme: remote_color_scheme)
+      remote_horizon_theme.add_relative_theme!(:child, child_component)
+      remote_horizon_theme.save!
+      user.user_option.update!(
+        theme_ids: [remote_horizon_theme.id],
+        color_scheme_id: remote_color_scheme.id,
+        dark_scheme_id: remote_color_scheme.id,
+      )
+      SiteSetting.default_theme_id = remote_horizon_theme.id
+    end
+
+    context "when no horizon themes exist" do
+      before do
+        remote_horizon_theme.remote_theme&.destroy!
+        remote_horizon_theme.destroy!
+      end
+
+      it "aborts with no themes message" do
+        output =
+          capture_stderr do
+            expect { invoke_rake_task("themes:deduplicate_horizon") }.to raise_error(SystemExit)
+          end
+        expect(output).to include("🟩 No Horizon themes found")
+      end
+    end
+
+    context "when multiple horizon themes exist" do
+      fab!(:remote_theme_2) do
+        RemoteTheme.create!(
+          remote_url: "https://github.com/discourse/horizon.git",
+          minimum_discourse_version: "2.5.0",
+        )
+      end
+      fab!(:remote_horizon_theme_2) do
+        Fabricate(:theme, user: user, name: "Second Horizon", remote_theme: remote_theme_2)
+      end
+
+      it "aborts with multiple themes message" do
+        output =
+          capture_stderr do
+            expect { invoke_rake_task("themes:deduplicate_horizon") }.to raise_error(SystemExit)
+          end
+        expect(output).to include("⭕ More than one horizon theme installed")
+      end
+    end
+
+    context "when exactly one horizon theme exists" do
+      it "successfully migrates theme data" do
+        expect(system_horizon_theme.user_selectable).to be false
+        expect(SiteSetting.default_theme_id).to eq(remote_horizon_theme.id)
+        expect(system_horizon_theme.child_themes).to eq([])
+        expect(system_horizon_theme.theme_settings.pluck(:name)).to eq([])
+        expect(system_horizon_theme.theme_translation_overrides.pluck(:translation_key)).to eq([])
+        expect(system_horizon_theme.color_scheme.name).to eq("Horizon")
+        expect {
+          capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
+        }.not_to raise_error
+
+        expect { remote_horizon_theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+        system_horizon_theme.reload
+        expect(system_horizon_theme.user_selectable).to be true
+        expect(SiteSetting.default_theme_id).to eq(system_horizon_theme.id)
+        expect(system_horizon_theme.child_themes).to include(child_component)
+        expect(system_horizon_theme.theme_settings.pluck(:name)).to include(theme_setting.name)
+        expect(system_horizon_theme.theme_translation_overrides.pluck(:translation_key)).to include(
+          "test.key",
+        )
+        expect(system_horizon_theme.color_scheme).to eq(system_color_scheme)
+        expect(system_color_scheme.reload.user_selectable).to be true
+        expect(system_color_scheme_2.reload.user_selectable).to be true
+      end
+
+      it "logs that remote theme was deleted" do
+        expect {
+          capture_stderr { capture_stdout { invoke_rake_task("themes:deduplicate_horizon") } }
+        }.to change { UserHistory.count }
+
+        expect(UserHistory.last.action).to eq(UserHistory.actions[:delete_theme])
+        expect(UserHistory.last.subject).to eq("Remote Horizon")
+      end
+
+      it "updates user theme and color scheme" do
+        expect(user.user_option.theme_ids).to eq([remote_horizon_theme.id])
+        expect(user.user_option.color_scheme_id).to eq(remote_color_scheme.id)
+        expect(user.user_option.dark_scheme_id).to eq(remote_color_scheme.id)
+
+        capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
+
+        user.user_option.reload
+        expect(user.user_option.theme_ids).to eq([system_horizon_theme.id])
+        expect(user.user_option.color_scheme_id).to eq(system_color_scheme.id)
+        expect(user.user_option.dark_scheme_id).to eq(system_color_scheme.id)
+      end
+
+      it "does not update user color scheme if custom" do
+        custom_color_scheme = Fabricate(:color_scheme)
+        user.user_option.update!(color_scheme_id: custom_color_scheme.id)
+
+        expect { capture_stdout { invoke_rake_task("themes:deduplicate_horizon") } }.not_to change {
+          user.user_option.color_scheme_id
+        }
+      end
+
+      it "enables system horizon theme if not already enabled" do
+        SiteSetting.experimental_system_themes = "foundation"
+
+        capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
+        expect(SiteSetting.experimental_system_themes_map).to eq(%w[foundation horizon])
+      end
+
+      it "does not modify system themes setting if horizon already enabled" do
+        SiteSetting.experimental_system_themes = "horizon"
+
+        capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
+        expect(SiteSetting.experimental_system_themes_map).to eq(%w[horizon])
+      end
+    end
+  end
 end

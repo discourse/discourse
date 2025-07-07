@@ -2409,4 +2409,15 @@ RSpec.describe Post do
       expect(post.in_user_locale?).to eq(false)
     end
   end
+
+  describe "#before_save" do
+    it "replaces empty locales with nil" do
+      post = Fabricate(:post, locale: "en")
+
+      post.locale = ""
+      post.save!
+
+      expect(post.reload.locale).to eq(nil)
+    end
+  end
 end

@@ -37,6 +37,14 @@ export default class ValidationParser {
     };
   }
 
+  startsWithRule(prefix) {
+    return { prefix };
+  }
+
+  endsWithRule(suffix) {
+    return { suffix };
+  }
+
   betweenRule(args) {
     if (!args) {
       throw new Error("`between` rule expects min/max, eg: between:1,10");

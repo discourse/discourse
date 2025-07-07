@@ -1,33 +1,16 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
-import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
-import FastEdit from "discourse/components/fast-edit";
-import FastEditModal from "discourse/components/modal/fast-edit";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { ajax } from "discourse/lib/ajax";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
-import {
-  clipboardCopy,
-  postUrl,
-  setCaretPosition,
-} from "discourse/lib/utilities";
-import { ADD_TRANSLATION } from "discourse/models/composer";
+import { clipboardCopy, postUrl } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-
-export function fixQuotes(str) {
-  // u+201c, u+201d = “ ”
-  // u+2018, u+2019 = ‘ ’
-  return str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
-}
 
 export default class PostTextSelectionToolbar extends Component {
   @service currentUser;
@@ -38,16 +21,6 @@ export default class PostTextSelectionToolbar extends Component {
   @service appEvents;
   @service toasts;
   @service composer;
-
-  @tracked isFastEditing = false;
-
-  appEventsListeners = modifier(() => {
-    this.appEvents.on("quote-button:edit", this, "toggleFastEdit");
-
-    return () => {
-      this.appEvents.off("quote-button:edit", this, "toggleFastEdit");
-    };
-  });
 
   get topic() {
     return this.args.data.topic;
@@ -103,140 +76,14 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   @action
-  trapEvents(event) {
-    event.stopPropagation();
-  }
-
-  @action
   async copyQuoteToClipboard() {
     const text = await this.args.data.buildQuote();
     clipboardCopy(text);
     this.toasts.success({
-      duration: 3000,
+      duration: "short",
       data: { message: i18n("post.quote_copied_to_clibboard") },
     });
     await this.args.data.hideToolbar();
-  }
-
-  @action
-  async closeFastEdit() {
-    this.isFastEditing = false;
-    await this.args.data.hideToolbar();
-  }
-
-  @action
-  async toggleFastEdit() {
-    const editingLocalizedPost =
-      this.post?.is_localized && this.siteSettings.content_localization_enabled;
-
-    if (editingLocalizedPost) {
-      if (!this.currentUser.can_localize_content) {
-        this._handleFastEdit();
-      }
-
-      return this.dialog.alert({
-        message: i18n("post.localizations.edit_warning.message", {
-          language: this.post.language,
-        }),
-        buttons: [
-          {
-            label: i18n("post.localizations.edit_warning.action_original"),
-            class: "btn-primary",
-            action: () => {}, // TODO: fix not working for some reason, we want it to just open up the editor
-          },
-          {
-            label: i18n("post.localizations.edit_warning.action_translation"),
-            class: "",
-            action: () => this._handleEditTranslation.call(this, this.post),
-          },
-        ],
-      });
-    }
-
-    return this._handleFastEdit();
-  }
-
-  async _handleFastEdit() {
-    if (this.args.data.supportsFastEdit) {
-      if (this.site.desktopView) {
-        this.isFastEditing = !this.isFastEditing;
-      } else {
-        this.modal.show(FastEditModal, {
-          model: {
-            initialValue: this.args.data.quoteState.buffer,
-            post: this.post,
-          },
-        });
-        this.args.data.hideToolbar();
-      }
-    } else {
-      const result = await ajax(`/posts/${this.post.id}`);
-
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-
-      let bestIndex = 0;
-      const rows = result.raw.split("\n");
-
-      // selecting even a part of the text of a list item will include
-      // "* " at the beginning of the buffer, we remove it to be able
-      // to find it in row
-      const buffer = fixQuotes(
-        this.args.data.quoteState.buffer.split("\n")[0].replace(/^\* /, "")
-      );
-
-      rows.some((row, index) => {
-        if (row.length && row.includes(buffer)) {
-          bestIndex = index;
-          return true;
-        }
-      });
-
-      this.args.data.editPost(this.post);
-
-      document
-        .querySelector("#reply-control")
-        ?.addEventListener("transitionend", () => {
-          const textarea = document.querySelector(".d-editor-input");
-          if (!textarea || this.isDestroyed || this.isDestroying) {
-            return;
-          }
-
-          // best index brings us to one row before as slice start from 1
-          // we add 1 to be at the beginning of next line, unless we start from top
-          setCaretPosition(
-            textarea,
-            rows.slice(0, bestIndex).join("\n").length + (bestIndex > 0 ? 1 : 0)
-          );
-
-          // ensures we correctly scroll to caret and reloads composer
-          // if we do another selection/edit
-          textarea.blur();
-          textarea.focus();
-        });
-
-      this.args.data.hideToolbar();
-      return;
-    }
-  }
-
-  async _handleEditTranslation(post) {
-    const { raw } = await ajax(`/posts/${post.id}.json`);
-
-    const composerOpts = {
-      action: ADD_TRANSLATION,
-      draftKey: "translation",
-      warningsDisabled: true,
-      hijackPreview: {
-        component: DEditorOriginalTranslationPreview,
-        model: { postLocale: post.locale, rawPost: raw },
-      },
-      post,
-      selectedTranslationLocale: this.currentUser?.effective_locale,
-    };
-
-    await this.composer.open(composerOpts);
   }
 
   @action
@@ -249,18 +96,7 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    {{! template-lint-disable no-pointer-down-event-binding }}
-    <div
-      {{on "mousedown" this.trapEvents}}
-      {{on "mouseup" this.trapEvents}}
-      class={{concatClass
-        "quote-button"
-        "visible"
-        (if this.isFastEditing "fast-editing")
-      }}
-      {{this.appEventsListeners}}
-    >
+    <div class={{concatClass "quote-button" "visible"}}>
       <div class="buttons">
         <PluginOutlet
           @name="post-text-buttons"
@@ -283,7 +119,10 @@ export default class PostTextSelectionToolbar extends Component {
               @label="post.quote_edit"
               @title="post.quote_edit_shortcut"
               class="btn-flat quote-edit-label"
-              {{on "click" this.toggleFastEdit}}
+              {{on
+                "click"
+                (fn @data.toggleFastEdit this.quoteState @data.supportsFastEdit)
+              }}
             />
           {{/if}}
 
@@ -335,14 +174,6 @@ export default class PostTextSelectionToolbar extends Component {
       </div>
 
       <div class="extra">
-        {{#if this.isFastEditing}}
-          <FastEdit
-            @initialValue={{@data.quoteState.buffer}}
-            @post={{this.post}}
-            @close={{this.closeFastEdit}}
-          />
-        {{/if}}
-
         <PluginOutlet @name="quote-button-after" @connectorTagName="div" />
       </div>
     </div>

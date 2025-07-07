@@ -1,6 +1,7 @@
 // @ts-check
 import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
@@ -9,11 +10,13 @@ import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { i18n } from "discourse-i18n";
+import { hasMark, inNode } from "./plugin-utils";
 
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
  * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
  * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
+ * @typedef {import("discourse/lib/composer/text-manipulation").ToolbarState} ToolbarState
  */
 
 /** @implements {TextManipulation} */
@@ -28,6 +31,8 @@ export default class ProsemirrorTextManipulation {
   placeholder;
   /** @type {AutocompleteHandler} */
   autocompleteHandler;
+  /** @type {ToolbarState} */
+  state = new TrackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
 
@@ -335,6 +340,22 @@ export default class ProsemirrorTextManipulation {
   toggleDirection() {
     this.view.dom.dir = this.view.dom.dir === "rtl" ? "ltr" : "rtl";
   }
+
+  /**
+   * Updates the toolbar state object based on the current editor active states
+   */
+  updateState() {
+    Object.assign(this.state, {
+      inBold: hasMark(this.view.state, this.schema.marks.strong),
+      inItalic: hasMark(this.view.state, this.schema.marks.em),
+      inLink: hasMark(this.view.state, this.schema.marks.link),
+      inCode: hasMark(this.view.state, this.schema.marks.code),
+      inBulletList: inNode(this.view.state, this.schema.nodes.bullet_list),
+      inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
+      inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
+      inBlockquote: inNode(this.view.state, this.schema.nodes.blockquote),
+    });
+  }
 }
 
 /** @implements {AutocompleteHandler} */
@@ -451,7 +472,7 @@ class ProsemirrorPlaceholderHandler {
       alt: i18n("uploading_filename", { filename: file.name }),
       title: file.id,
       width: 120,
-      "data-placeholder": true,
+      placeholder: true,
     });
 
     this.view.dispatch(
@@ -469,10 +490,7 @@ class ProsemirrorPlaceholderHandler {
 
   cancelAll() {
     this.view.state.doc.descendants((node, pos) => {
-      if (
-        node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"]
-      ) {
+      if (node.type === this.schema.nodes.image && node.attrs.placeholder) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
     });
@@ -482,8 +500,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
@@ -496,8 +514,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         nodeToReplace = { node, pos };
         return false;

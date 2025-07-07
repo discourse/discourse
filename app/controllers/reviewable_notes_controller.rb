@@ -2,6 +2,7 @@
 
 class ReviewableNotesController < ApplicationController
   before_action :find_reviewable
+  before_action :ensure_can_see
 
   def create
     note = @reviewable.reviewable_notes.build(note_params)
@@ -17,7 +18,7 @@ class ReviewableNotesController < ApplicationController
   end
 
   def destroy
-    note = @reviewable.reviewable_notes.find(params[:id])
+    note = @reviewable.reviewable_notes.find(params[:note_id])
 
     # Only allow the author or admin to delete notes
     raise Discourse::InvalidAccess unless note.user == current_user || current_user.admin?
@@ -34,5 +35,9 @@ class ReviewableNotesController < ApplicationController
 
   def note_params
     params.require(:reviewable_note).permit(:content)
+  end
+
+  def ensure_can_see
+    Guardian.new(current_user).ensure_can_see_review_queue!
   end
 end

@@ -453,7 +453,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost#{upload.thumbnail(690, 788).url}" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
           expect(cpp).to be_dirty
@@ -687,7 +687,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png" width="230" height="500"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost#{upload.thumbnail(230, 500).url}" width="230" height="500"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
           expect(cpp).to be_dirty
@@ -718,7 +718,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost#{upload.thumbnail(690, 788).url}" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
           expect(cpp).to be_dirty
@@ -729,7 +729,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="><img src=x onerror=alert('haha')>.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">&gt;&lt;img src=x onerror=alert('haha')&gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="><img src=x onerror=alert('haha')>.png"><img src="//test.localhost#{upload.thumbnail(690, 788).url}" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">&gt;&lt;img src=x onerror=alert('haha')&gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
         end
       end
@@ -752,7 +752,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="WAT"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" alt="RED" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="WAT"><img src="//test.localhost#{upload.thumbnail(690, 788).url}" title="WAT" alt="RED" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
           expect(cpp).to be_dirty
@@ -777,7 +777,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="WAT"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="WAT"><img src="//test.localhost#{upload.thumbnail(690, 788).url}" title="WAT" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
           expect(cpp).to be_dirty
@@ -802,7 +802,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="RED"><img src="//test.localhost/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" alt="RED" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">RED</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="RED"><img src="//test.localhost#{upload.thumbnail(690, 788).url}" alt="RED" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">RED</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
 
           expect(cpp).to be_dirty

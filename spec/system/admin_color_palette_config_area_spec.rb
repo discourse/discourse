@@ -7,6 +7,7 @@ describe "Admin Color Palette Config Area Page", type: :system do
   let(:config_area) { PageObjects::Pages::AdminColorPaletteConfigArea.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before { sign_in(admin) }
 
@@ -189,5 +190,23 @@ describe "Admin Color Palette Config Area Page", type: :system do
     href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
 
     expect(page).to have_no_css("link[href=\"#{href}\"]", visible: false)
+  end
+
+  it "can be copied to clipboard" do
+    cdp.allow_clipboard
+
+    config_area.visit(color_scheme.id)
+    config_area.copy_to_clipboard_button.click
+
+    clipboard_content = cdp.read_clipboard
+    clipboard_scheme = JSON.parse(clipboard_content)
+
+    expect(clipboard_scheme["name"]).to eq(color_scheme.name)
+
+    color_scheme.colors.each do |color|
+      expect(color.hex).to eq(clipboard_scheme["light"][color.name])
+      next if color.dark_hex.nil?
+      expect(color.dark_hex).to eq(clipboard_scheme["dark"][color.name])
+    end
   end
 end

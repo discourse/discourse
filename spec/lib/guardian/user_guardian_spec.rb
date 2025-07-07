@@ -156,6 +156,8 @@ RSpec.describe UserGuardian do
     fab!(:tl0_user) { Fabricate(:user, trust_level: 0) }
     fab!(:tl1_user) { Fabricate(:user, trust_level: 1) }
     fab!(:tl2_user) { Fabricate(:user, trust_level: 2) }
+    # Admins can manually upgrade users without them meeting the criteria.
+    fab!(:vip_tl2_user) { Fabricate(:user, trust_level: 2) }
 
     before { tl2_user.user_stat.update!(post_count: 1) }
 
@@ -166,6 +168,13 @@ RSpec.describe UserGuardian do
         it "allows anonymous to see any profile" do
           SiteSetting.hide_new_user_profiles = false
           expect(Guardian.new.can_see_profile?(user)).to eq(true)
+        end
+      end
+
+      context "when hide_new_user_profiles is enabled" do
+        it "allows anonymous to see a no-posts (manually upgraded) TL2 user's profile" do
+          SiteSetting.hide_new_user_profiles = true
+          expect(Guardian.new.can_see_profile?(vip_tl2_user)).to eq(true)
         end
       end
 

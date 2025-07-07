@@ -415,6 +415,15 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "quote",
+          action: this.importQuote,
+          icon: "far-comment",
+          label: "composer.quote_post_title",
+        })
+      );
+
+      options.push(
+        this._setupPopupMenuOption({
           name: "toggle-invisible",
           action: "toggleInvisible",
           icon: "far-eye-slash",
@@ -1211,7 +1220,9 @@ export default class ComposerService extends Service {
         }
 
         if (result.responseJson.action === "create_post") {
-          this.appEvents.trigger("composer:created-post");
+          this.appEvents.trigger("composer:created-post", {
+            postId: result.responseJson.post.id,
+          });
           this.appEvents.trigger(
             "post:highlight",
             result.payload.post_number,

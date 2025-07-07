@@ -317,6 +317,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: var(--space-2);
   align-items: center;
   margin: 0.25rem 0;
 
@@ -335,7 +336,7 @@
   .btn {
     margin: 0;
     background-color: transparent;
-    color: var(--primary-medium);
+    color: var(--primary-high);
     border-radius: var(--d-border-radius);
 
     .d-icon {
@@ -380,6 +381,22 @@
   background-color: var(--primary-low);
   margin: auto 1px;
   height: 1.25rem;
+}
+
+.toolbar__button {
+  .d-editor-button-bar & {
+    @include viewport.from(sm) {
+      padding: 0.3em 0.45em;
+    }
+  }
+
+  &.--active {
+    background: var(--d-selected);
+
+    &.btn:hover .d-icon {
+      color: var(--primary-high);
+    }
+  }
 }
 
 .d-editor #form-template-form {

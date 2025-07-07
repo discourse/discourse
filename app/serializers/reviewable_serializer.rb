@@ -23,7 +23,7 @@ class ReviewableSerializer < ApplicationSerializer
   attribute :status_for_database, key: :status
 
   has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
-  has_one :target_created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
+  has_one :target_created_by, root: "users"
   has_one :topic, serializer: ListableTopicSerializer
   has_many :editable_fields, serializer: ReviewableEditableFieldSerializer, embed: :objects
   has_many :reviewable_scores, serializer: ReviewableScoreSerializer
@@ -140,5 +140,14 @@ class ReviewableSerializer < ApplicationSerializer
 
   def target_created_by_trust_level
     object&.target_created_by&.trust_level
+  end
+
+  def target_created_by
+    user = object.target_created_by
+    return nil unless user
+
+    serializer_class =
+      scope.can_see_reviewable_ui_refresh? ? FlaggedUserSerializer : UserWithCustomFieldsSerializer
+    serializer_class.new(user, scope: scope, root: false)
   end
 end

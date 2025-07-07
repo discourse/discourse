@@ -87,6 +87,7 @@ export default class DDocument extends Component {
       confirmButtonLabel: "refresh",
       didConfirm: () => logout(),
       didCancel: () => logout(),
+      class: "dialog-container__logout-refresh",
     });
   }
 }

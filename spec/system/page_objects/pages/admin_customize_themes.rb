@@ -193,6 +193,18 @@ module PageObjects
         find(".dialog-footer .btn-danger").click
       end
 
+      def included_components_selector
+        PageObjects::Components::SelectKit.new(".included-components-setting .select-kit")
+      end
+
+      def relative_themes_save_button
+        find(".relative-theme-selector .setting-controls__ok")
+      end
+
+      def has_reset_button_for_setting?(css_selector)
+        has_css?("#{css_selector} .setting-controls__undo")
+      end
+
       private
 
       def setting_selector(setting_name, overridden: false)

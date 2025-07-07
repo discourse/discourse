@@ -47,7 +47,7 @@
       }
     }
 
-    p {
+    p:not(.welcome-banner__subheader) {
       display: none;
     }
   }

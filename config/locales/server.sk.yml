@@ -298,6 +298,7 @@ sk:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} nie je platné miestne nastavenie"
       too_long_validation:
         one: "je obmedzený na %{count} znak; zadali ste %{length}."
         few: "je obmedzený na %{count} znakov, zadali ste %{length}."
@@ -329,6 +330,7 @@ sk:
       less_than_or_equal_to: musí byť menej alebo rovné %{count}
       not_a_number: nie je číslo
       not_an_integer: musí byť číslo
+      must_all_be_positive: musia byť všetky kladné
       odd: musí byť nepárne
       record_invalid: ! "Validácia zlyhala s chybami: %{errors}"
       max_emojis: "nemôže mať viac ako %{max_emojis_count} emoji"
@@ -1855,7 +1857,7 @@ sk:
     x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
-    email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje používateľom podrobnejšie informácie o tom, prečo nemajú prístup k určitej téme. Poznámka: Je to menej bezpečné, pretože používatelia budú vedieť, či adresa URL odkazuje na platnú tému."
     enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect. Ak je zapnutá možnosť enforce_second_factor_on_external_auth, používatelia sa nebudú môcť prihlásiť pomocou externých poskytovateľov overovania po nastavení dvojfaktorového overovania."
     enforce_second_factor_on_external_auth: "Vyžadujte od používateľov, aby vždy používali dvojfaktorové overovanie. Ak je táto funkcia zapnutá, zabráni používateľom prihlásiť sa pomocou externých metód overovania, ako sú napríklad prihlásenia cez sociálne siete, ak majú povolené dvojfaktorové overovanie. Keď je táto funkcia vypnutá, používatelia budú musieť potvrdiť svoje dvojfaktorové overenie len pri prihlasovaní pomocou používateľského mena a hesla. Pozrite si tiež nastavenie `enforce_second_factor` (vynútiť druhý faktor)."
@@ -2868,7 +2870,8 @@ sk:
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
     omniauth_error:
-      generic: "Prepáčte, pri pokuse o autorizáciu vášho účtu s %{provider}sa vyskytla chyba. Skúste to znova."
+      generic_without_provider: "Je nám ľúto, ale pri pokuse o autorizáciu vášho účtu pomocou prihlasovacej služby došlo k chybe. Skúste to prosím znova."
+      generic_with_provider: "Prepáčte, pri pokuse o autorizáciu vášho účtu s %{provider}sa vyskytla chyba. Skúste to znova."
       csrf_detected: "Prepáčte, časový limit autorizácie vypršal alebo ste prepli prehliadač. Skúste to znova."
       request_error: "Prepáčte, pri spustení autorizácie sa vyskytla chyba. Skúste to znova."
       invalid_iat: "Prepáčte, ale kvôli rozdielom v čase servera sa nám nepodarilo overiť autorizačný token. Skúste to znova."

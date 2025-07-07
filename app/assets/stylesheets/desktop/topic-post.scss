@@ -18,20 +18,20 @@
   min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
   border-top: 1px solid var(--primary-low);
-  padding: 0.8em 0 0 0;
+  padding: var(--space-3) 0 0 0;
 
   .topic-meta-data {
-    padding: 0 var(--topic-body-width-padding) 0.25em
+    padding: 0 var(--topic-body-width-padding) var(--space-1)
       var(--topic-body-width-padding);
   }
 
   .cooked {
-    padding: 1em var(--topic-body-width-padding) 0.25em
+    padding: var(--space-4) var(--topic-body-width-padding) var(--space-1)
       var(--topic-body-width-padding);
   }
 
   .group-request {
-    padding: 0.5em var(--topic-body-width-padding) 0
+    padding: var(space-2) var(--topic-body-width-padding) 0
       var(--topic-body-width-padding);
   }
 
@@ -110,7 +110,7 @@ nav.post-controls {
     white-space: nowrap;
 
     .topic-post & {
-      margin-right: 0.5em;
+      margin-right: var(--space-2);
     }
 
     .d-icon {
@@ -229,9 +229,9 @@ pre.codeblock-buttons:hover {
           &::before {
             content: "";
             position: absolute;
-            top: -1.5em;
+            top: calc(-1 * var(--space-6));
             width: 1px;
-            height: calc(100% + 1.25em);
+            height: calc(100% + var(--space-5));
             background: var(--primary-300);
             left: 32px;
           }
@@ -239,15 +239,15 @@ pre.codeblock-buttons:hover {
       }
 
       .row {
-        padding-bottom: 0.5em;
+        padding-bottom: var(--space-2);
 
         // Main reply line
         &::before {
           content: "";
           position: absolute;
-          top: -1.5em;
+          top: calc(-1 * var(--space-6));
           width: 1px;
-          height: calc(100% + 1.5em);
+          height: calc(100% + var(--space-6));
           background: var(--primary-300);
           left: 32px;
         }
@@ -260,14 +260,14 @@ pre.codeblock-buttons:hover {
 
         .topic-body {
           border-top: none;
-          padding-bottom: 2.5em;
+          padding-bottom: calc(var(--space-8) + var(--space-2));
 
           .topic-meta-data {
             position: unset;
 
             .post-link-arrow {
               position: absolute;
-              bottom: 0.75em;
+              bottom: var(--space-3);
 
               .archetype-private_message & {
                 bottom: 0;
@@ -290,8 +290,8 @@ pre.codeblock-buttons:hover {
           }
 
           .cooked {
-            margin-top: 0.25em;
-            padding-top: 0.5em;
+            margin-top: var(--space-1);
+            padding-top: var(--space-2);
           }
         }
       }
@@ -307,9 +307,9 @@ pre.codeblock-buttons:hover {
       background: var(--primary-low);
       color: var(--primary-high);
       border: 1px solid var(--primary-300);
-      padding: 6px;
+      padding: var(--space-2);
       left: 32px;
-      bottom: -3em;
+      bottom: calc(-1 * var(--space-12));
       z-index: 1;
 
       .archetype-private_message & {
@@ -334,11 +334,11 @@ pre.codeblock-buttons:hover {
       position: absolute;
       left: 55%;
       transform: translate(-50%, 50%);
-      padding: 0.35em 0.5em;
+      padding: var(--space-1) var(--space-2);
     }
 
     .topic-avatar {
-      padding-left: 1em;
+      padding-left: var(--space-4);
     }
   }
 
@@ -372,9 +372,9 @@ pre.codeblock-buttons:hover {
         &::before {
           content: "";
           position: absolute;
-          top: 1.5em;
+          top: var(--space-6);
           width: 1px;
-          height: calc(100% + 1.5em);
+          height: calc(100% + var(--space-6));
           background: var(--primary-300);
           left: -22px;
         }
@@ -392,7 +392,7 @@ pre.codeblock-buttons:hover {
 
   .d-icon-arrow-up,
   .d-icon-arrow-down {
-    margin-left: 5px;
+    margin-left: var(--space-1);
   }
 
   .reply:first-of-type .row {
@@ -421,11 +421,11 @@ pre.codeblock-buttons:hover {
 
 .post-action {
   .relative-date {
-    margin-left: 5px;
+    margin-left: var(--space-1);
   }
 
   .avatar {
-    margin-right: 2px;
+    margin-right: var(--space-half);
   }
 }
 
@@ -436,7 +436,7 @@ span.post-count {
 }
 
 button.expand-post {
-  margin-top: 10px;
+  margin-top: var(--space-3);
   margin-left: var(--topic-body-width-padding);
 }
 
@@ -523,7 +523,7 @@ video {
 
 .topic-avatar {
   border-top: 1px solid var(--primary-low);
-  padding-top: 15px;
+  padding-top: var(--space-4);
   width: var(--topic-avatar-width);
   float: left;
   z-index: z("base") + 1;
@@ -583,8 +583,8 @@ video {
   position: fixed;
   z-index: z("dropdown") + 1; // 1 higher than .select-posts
   box-shadow: var(--shadow-card);
-  padding: 0.714em;
-  margin-bottom: 5px;
+  padding: var(--space-3);
+  margin-bottom: var(--space-1);
   right: 10px;
 
   @include viewport.from(xl) {
@@ -670,7 +670,7 @@ a.attachment::before {
   text-align: right;
 
   &.--expanded {
-    margin-top: 1.25em;
+    margin-top: var(--space-5);
   }
 }
 
@@ -685,7 +685,7 @@ span.highlighted {
 .topic-post.sticky-avatar {
   > article > .row > .topic-avatar {
     position: sticky;
-    top: calc(var(--header-offset) - 0.25em);
+    top: calc(var(--header-offset) - var(--space-1));
     margin-bottom: 25px;
   }
 }
