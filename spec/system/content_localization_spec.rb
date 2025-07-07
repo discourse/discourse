@@ -34,6 +34,7 @@ describe "Content Localization" do
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
   let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
+  let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
 
   before do
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
@@ -114,7 +115,20 @@ describe "Content Localization" do
       topic_page.visit_topic(topic)
       topic_page.expand_post_actions(post_3)
       topic_page.click_post_action_button(post_3, :edit)
+      expect(edit_localized_post_dialog).to be_open
+      edit_localized_post_dialog.click_yes
       expect(composer).to have_content(post_3.raw)
+    end
+
+    it "allows editing translated content when post is localized" do
+      sign_in(admin)
+
+      topic_page.visit_topic(topic)
+      topic_page.expand_post_actions(post_3)
+      topic_page.click_post_action_button(post_3, :edit)
+      expect(edit_localized_post_dialog).to be_open
+      edit_localized_post_dialog.click_no
+      expect(page).to have_css(".action-title", text: I18n.t("js.composer.translations.title"))
     end
 
     context "for post edit histories" do

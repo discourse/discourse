@@ -898,7 +898,7 @@ export default class TopicController extends Controller {
           },
           {
             label: i18n("post.localizations.edit_warning.action_translation"),
-            class: "",
+            class: "btn-default",
             action: () => this._openComposerForEditTranslation(topic, post),
           },
         ],
