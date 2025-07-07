@@ -1257,7 +1257,7 @@ describe "Composer - ProseMirror editor", type: :system do
       rich.find(".composer-image-node img").click
 
       find(".image-alt-text-input__display").click
-      find(".image-alt-text-input__field").fill_in with: "new alt text"
+      find(".image-alt-text-input__field").fill_in(with: "new alt text")
 
       rich.find("p").click
 
