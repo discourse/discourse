@@ -436,9 +436,9 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("blockquote", text: "This is a blockquote")
     end
 
-    it "supports Ctrl + Shift + 1-6 for headings, 0 for reset" do
+    it "supports Ctrl + Shift + 1-4 for headings, 0 for reset" do
       open_composer_and_toggle_rich_editor
-      (1..6).each do |i|
+      (1..4).each do |i|
         composer.type_content("\nHeading #{i}")
         composer.send_keys([PLATFORM_KEY_MODIFIER, :shift, i.to_s])
 
@@ -650,6 +650,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(page).to have_css(".toolbar__button.bold.--active", count: 0)
       expect(page).to have_css(".toolbar__button.italic.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.heading.--active", count: 0)
       expect(page).to have_css(".toolbar__button.link.--active", count: 0)
       expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
       expect(page).to have_css(".toolbar__button.list.--active", count: 0)
@@ -1138,6 +1139,64 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value(
         "[Updated **bold** and *italic* content](https://updated-example.com)",
       )
+    end
+  end
+
+  describe "heading toolbar" do
+    it "updates toolbar active state and icon based on current heading level" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("## This is a test\n#### And this is another test")
+      expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
+
+      composer.send_keys(:down)
+      expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h4")
+
+      composer.select_all
+      expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-text")
+    end
+
+    it "puts a check next to current heading level in toolbar dropdown, or no check if multiple formats are selected" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("## This is a test\n#### And this is another test")
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-4']")).to have_css(".d-icon-check")
+      heading_menu.collapse
+
+      composer.select_range_rich_editor(0, 0)
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
+      heading_menu.collapse
+
+      composer.select_all
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-4']")).to have_no_css(".d-icon-check")
+    end
+
+    it "can change heading level or reset to paragraph" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("This is a test")
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+
+      expect(rich).to have_css("h2", text: "This is a test")
+
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-3']").click
+      expect(rich).to have_css("h3", text: "This is a test")
+
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-paragraph']").click
+      expect(rich).to have_css("p", text: "This is a test")
     end
   end
 end

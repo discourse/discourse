@@ -191,9 +191,12 @@ export default class ProsemirrorTextManipulation {
   }
 
   applyHeading(_selection, level) {
-    // TODO (martin) Not sure if I will need exampleKey here, 3rd arg
-    const nodeType = this.schema.nodes.heading;
-    const command = setBlockType(nodeType, { level });
+    let command;
+    if (level === 0) {
+      command = setBlockType(this.schema.nodes.paragraph);
+    } else {
+      command = setBlockType(this.schema.nodes.heading, { level });
+    }
     command?.(this.view.state, this.view.dispatch);
   }
 
