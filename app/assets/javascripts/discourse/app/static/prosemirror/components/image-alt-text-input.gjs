@@ -11,8 +11,8 @@ import { i18n } from "discourse-i18n";
 export default class ImageAltTextInput extends Component {
   @tracked isExpanded = false;
 
-  @tracked transientAltText = this.args.data.alt || "";
   @tracked initialAltText = this.args.data.alt || "";
+  @tracked transientAltText = this.initialAltText;
 
   @action
   expandInput() {
