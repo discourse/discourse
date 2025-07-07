@@ -111,12 +111,10 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @translatedLabel={{option.label}}
                 @translatedTitle={{option.title}}
                 @icon={{this.getIcon option}}
+                @suffixIcon={{if (this.getActive option) "check"}}
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
               />
-              <span class="toolbar-menu__active-icon">
-                {{if (this.getActive option) (icon "check")}}
-              </span>
             </dropdown.item>
           {{/each}}
         </DropdownMenu>

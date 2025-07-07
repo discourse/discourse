@@ -215,6 +215,18 @@ export default class DButton extends Component {
         </span>
       {{~/if~}}
 
+      {{#if @suffixIcon}}
+        {{#unless @isLoading}}
+          {{#if @ariaHidden}}
+            <span aria-hidden="true">
+              {{~icon @suffixIcon~}}
+            </span>
+          {{else}}
+            {{~icon @suffixIcon~}}
+          {{/if}}
+        {{/unless}}
+      {{/if}}
+
       {{yield}}
     </this.wrapperElement>
   </template>

@@ -2862,7 +2862,6 @@ en:
       italic_text: "emphasized text"
       heading_label: "H"
       heading_title: "Headings"
-      heading_text: "heading text"
       heading_level_n: "Heading %{levelNumber}"
       heading_level_n_title: "Heading %{levelNumber}"
       heading_level_paragraph: "Paragraph"
