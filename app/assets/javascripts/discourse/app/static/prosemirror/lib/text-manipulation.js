@@ -488,7 +488,7 @@ class ProsemirrorPlaceholderHandler {
       alt: i18n("uploading_filename", { filename: file.name }),
       title: file.id,
       width: 120,
-      "data-placeholder": true,
+      placeholder: true,
     });
 
     this.view.dispatch(
@@ -506,10 +506,7 @@ class ProsemirrorPlaceholderHandler {
 
   cancelAll() {
     this.view.state.doc.descendants((node, pos) => {
-      if (
-        node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"]
-      ) {
+      if (node.type === this.schema.nodes.image && node.attrs.placeholder) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
     });
@@ -519,8 +516,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
@@ -533,8 +530,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         nodeToReplace = { node, pos };
         return false;

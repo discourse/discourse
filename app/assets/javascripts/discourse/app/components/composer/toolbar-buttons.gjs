@@ -15,9 +15,14 @@ export default class ComposerToolbarButtons extends Component {
     const { isFirst = true } = this.args;
     return (
       isFirst &&
-      this.args.data.groups.find((group) => group.buttons?.length > 0)
-        ?.buttons[0]
+      this.args.data.groups
+        .find((group) => group.buttons?.length > 0)
+        ?.buttons.filter(this.isActionable)[0]
     );
+  }
+
+  isActionable(button) {
+    return button.type !== "separator" && !button.disabled;
   }
 
   get rovingButtonBar() {
