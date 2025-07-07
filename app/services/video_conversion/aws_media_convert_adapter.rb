@@ -3,6 +3,8 @@ require "aws-sdk-mediaconvert"
 
 module VideoConversion
   class AwsMediaConvertAdapter < BaseAdapter
+    ADAPTER_NAME = "aws_mediaconvert"
+
     def convert
       return false unless valid_settings?
 

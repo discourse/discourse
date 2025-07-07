@@ -9,6 +9,7 @@ class CreateOptimizedVideos < ActiveRecord::Migration[7.2]
       t.string :url
       t.integer :filesize
       t.string :etag
+      t.string :adapter
 
       t.timestamps
     end

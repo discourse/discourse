@@ -38,6 +38,7 @@ end
 #  url        :string
 #  filesize   :integer
 #  etag       :string
+#  adapter    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
