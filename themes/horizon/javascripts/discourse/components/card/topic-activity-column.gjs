@@ -10,7 +10,6 @@ export default class TopicActivityColumn extends Component {
       return {
         user: undefined,
         username: undefined,
-        activityText: "user_updated",
         class: "--updated",
       };
     }
@@ -19,7 +18,6 @@ export default class TopicActivityColumn extends Component {
       return {
         user: this.args.topic.lastPosterUser,
         username: this.args.topic.last_poster_username,
-        activityText: "user_replied",
         class: "--replied",
       };
     } else if (this.args.topic.posts_count === 1) {

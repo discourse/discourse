@@ -488,6 +488,7 @@ he:
       bookmarked_success: "מסומן!"
       deleted_bookmark_success: "הסימנייה נמחקה!"
       reminder_set_success: "תזכורת הוגדרה!"
+      reminder_clear_success: "התזכורת נמחקה"
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
       create: "יצירת סימנייה"
@@ -2580,6 +2581,9 @@ he:
       to_continue: "נא להיכנס"
       preferences: "כדי לשנות את העדפות המשתמש ראשית יש להיכנס למערכת."
       not_approved: "החשבון שלך עדיין לא אושר. תישלח אליך הודעה בדוא״ל כשיתאפשר לך להיכנס למערכת."
+      discourse_id:
+        name: "מזהה Discourse"
+        title: "כניסה עם מזהה Discourse"
       google_oauth2:
         name: "Google"
         title: "כניסה עם Google"
@@ -2866,10 +2870,14 @@ he:
       italic_text: "טקסט נטוי"
       link_title: "קישור"
       link_description: "הזן תיאור קישור כאן"
+      link_dialog_title: "הוספת קישור"
       link_dialog_action: "כתיבה"
       link_edit_title: "עריכת קישור"
       link_edit_action: "עדכון"
+      link_text_label: "טקסט קישור"
       link_optional_text: "טקסט"
+      link_url_label: "קישור או נושא"
+      link_url_placeholder: "אפשר להדביק קישור או לחפש נושאים"
       blockquote_title: "מקטע ציטוט"
       blockquote_text: "בלוק ציטוט"
       code_title: "טקסט מעוצב"
@@ -3112,6 +3120,7 @@ he:
       relevance: "רלוונטיות"
       latest_post: "הפוסטים האחרונים"
       latest_topic: "נושא אחרון"
+      last_read: "קריאה אחרונה"
       most_viewed: "הנצפה ביותר"
       most_liked: "האהובים ביותר"
       select_all: "בחירה בהכול"
@@ -3414,6 +3423,11 @@ he:
         top: "אין נושאים מובילים."
         hot: "אין נושאים חמים."
         filter: "אין נושאים."
+        education:
+          topic_tracking_preferences: "אפשר לצפות ולשנות את הגדרות המעקב אחר הנושא החדש שלך דרך <a href=\"%{basePath}/my/preferences/tracking\">ההעדפות שלך</a>."
+          unread: "לא נשארו פריטים שלא נקראו… מרשים!"
+          new_new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
+          new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."
@@ -3575,6 +3589,7 @@ he:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
+      browse_latest_topics: "עיון בנושאים האחרונים"
       suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
       jump_reply: "קפיצה למיקום המקורי של הפוסט"
       jump_reply_aria: "קפיצה לפוסט של ‎@%{username} במיקומו המקורי"
@@ -6939,6 +6954,7 @@ he:
             title: "HTML להוספה בסוף ה־<body>, עם תמיכה בתגיות script"
           js:
             text: "JS"
+            title: "מאתחל JavaScript עם תמיכה בתחביר ‚template tag’ (תבנית תגית) של Ember"
           scss_color_variables_warning: 'השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט. נא להשתמש במאפייני CSS מותאמים אישית במקום. <a href="https://meta.discourse.org/t/-/77551#color-variables-2" target="_blank">במדריך הזה</a> יש פרטים נוספים.'
           scss_warning_inline: "השימוש במשתני צבע ליבת SCSS בערכות עיצוב הושמט."
           all_filter: "הכול"
@@ -6950,6 +6966,30 @@ he:
           back_button: "חזרה אל %{name}"
           fields:
             required: "*נדרש"
+            groups:
+              at_least:
+                one: "צריך לפחות קבוצה אחת"
+                two: "צריך לפחות שתי קבוצות"
+                many: "צריך לפחות %{count} קבוצות"
+                other: "צריך לפחות %{count} קבוצות"
+            categories:
+              at_least:
+                one: "דרושה לפחות קטגוריה אחת"
+                two: "דרושות לפחות שתי קטגוריות"
+                many: "דרושות לפחות %{count} קטגוריות"
+                other: "דרושות לפחות %{count} קטגוריות"
+            tags:
+              at_least:
+                one: "צריך לפחות תגית אחת"
+                two: "צריך לפחות שתי תגיות"
+                many: "צריך לפחות %{count} תגיות"
+                other: "צריך לפחות %{count} תגיות"
+            string:
+              too_short:
+                one: "חייב להיות תו אחד לפחות"
+                two: "חייבים להיות שני תווים לפחות"
+                many: "חייבים להיות %{count} תווים לפחות"
+                other: "חייבים להיות %{count} תווים לפחות"
             number:
               too_small: "חייב להיות גדול או שווה ל־%{count}"
               too_large: "חייב להיות קטן או שווה ל־%{count}"
@@ -6985,6 +7025,7 @@ he:
             description: "צבע חלופי (קישורים, כפתורים, עיטורים)"
           quaternary:
             name: "רבעוני"
+            description: "צבע משני לערכת העיצוב כרשות"
           header_background:
             name: "רקע כותרת"
             description: "רקע כותרת"
@@ -7950,6 +7991,7 @@ he:
           basic: "התקנה בסיסית"
           users: "משתמשים"
           posting: "פרסומים"
+          content_localization: "תרגום תוכן"
           email: "דוא״ל"
           files: "קבצים"
           trust: "דרגת אמון"

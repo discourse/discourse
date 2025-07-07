@@ -806,6 +806,61 @@ en:
         reviewable_post:
           title: "Post"
           noun: "post"
+      flagged_as: "Flagged as"
+      assigned_to: "Assigned to"
+      moderator_actions: "Moderator actions"
+      timeline_and_notes: "Timeline & notes"
+      timeline:
+        target_created: "Post created"
+        target_created_by: "Post created by %{username} · %{relativeDate}"
+        flagged: "Flagged"
+        flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
+        claimed: "Claimed"
+        claimed_by: "Claimed by %{username} · %{relativeDate}"
+        reviewed: "Reviewed"
+        reviewed_by: "Reviewed by %{username} · %{relativeDate}"
+        view_conversation: "view PM"
+        note_added: "Moderator note"
+        note_added_by: "Moderator note by %{username} · %{relativeDate}"
+        no_events: "No timeline events to display"
+      notes:
+        add_note_description: "Visible only to moderators. Use this note to add context or decisions about the review."
+        add_note_button: "Add note"
+        placeholder: "Write your note here..."
+        chars_remaining: "%{count} characters remaining"
+        delete_note: "Delete this note"
+        delete: "Delete"
+      new_topic_label: "New topic"
+      queued_user: "Queued user"
+      posted_in: "Posted in"
+      flagged_user: "Flagged user"
+      review_user: "User"
+      need_help: "Need help?"
+      copy_link: "Copy link"
+      view_source: "View source"
+      insights:
+        title: "Insights"
+        flag_volume: "Flag volume"
+        flagged_by_users:
+          one: "Flagged by %{count} unique user"
+          other: "Flagged by %{count} unique users"
+        similar_posts: "Similar past posts"
+        flagged_in_timeframe: "%{count} flagged previously"
+        user_activity: "User activity"
+        activities:
+          new_account: "new account"
+          trust_level: "trust level: %{trustLevelName}"
+          posts:
+            one: "%{count} post"
+            other: "%{count} posts"
+        solution_marked: "Solution marked"
+        topic_has_solution: "This topic has a solution"
+        visibility: "Visibility"
+        topic_unlisted: "This topic is unlisted. Only accessible via direct link — not public."
+      help:
+        moderation_guide: "Discourse moderation guide"
+        flag_priorities: "Managing user reputation and flag priorities"
+        spam_detection: "Spam detection"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -2265,6 +2320,8 @@ en:
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
+        starts_with: "Must start with %{prefix}"
+        ends_with: "Must end with %{suffix}"
         required: "Required"
         date_before_or_equal: "Must be before or equal to %{date}"
         date_after_or_equal: "Must be after or equal to %{date}"
@@ -4089,6 +4146,9 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        locale:
+          no_locale_set: "No language set"
+          locale_removed: "Language removed"
         controls:
           first: "First revision"
           previous: "Previous revision"
@@ -4453,6 +4513,8 @@ en:
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
+      hot:
+        title: "Hot"
       unlisted:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link. %{unlistedReason}"
       personal_message:
@@ -4561,11 +4623,16 @@ en:
           other: "New (%{count})"
         help: "topics created in the last few days"
         all: "All"
+        all_tooltip: "All new topics and topics replied to in the last few days"
         all_with_count: "All (%{count})"
+        new_topics_tooltip: "New topics"
         topics: "Topics"
         topics_with_count: "Topics (%{count})"
+        new_replies_tooltip: "New replies"
         replies: "Replies"
         replies_with_count: "Replies (%{count})"
+      new_new:
+        help: "topics created or replied to in the last few days"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
@@ -5130,6 +5197,9 @@ en:
             invite:
               content: "Invite"
               title: "Invite new members"
+            my_messages:
+              content: "My Messages"
+              title: "My personal messages"
         global_section: "Global section, visible to everyone"
       panels:
         forum:
@@ -6426,6 +6496,9 @@ en:
           save_successful: "User field saved."
         color_palettes:
           palette_name: "Name"
+          copy_to_clipboard: "Copy to Clipboard"
+          copied_to_clipboard: "Copied to Clipboard"
+          copy_to_clipboard_error: "Error copying data to Clipboard"
           duplicate: "Duplicate"
           delete: "Delete"
           color_options:

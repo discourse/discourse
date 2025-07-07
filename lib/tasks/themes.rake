@@ -353,13 +353,6 @@ task "themes:deduplicate_horizon" => :environment do |task, args|
           }
           map
         end
-    if remote_horizon_theme.color_scheme.theme_id == remote_horizon_theme.id
-      system_horizon_theme.update!(
-        color_scheme_id: color_schemes_map[remote_horizon_theme.color_scheme_id][:id],
-      )
-    elsif remote_horizon_theme.color_scheme_id
-      system_horizon_theme.update!(color_scheme_id: remote_horizon_theme.color_scheme_id)
-    end
     system_horizon_theme.color_schemes.find_each do |color_scheme|
       color_scheme.update!(
         user_selectable:
@@ -369,6 +362,14 @@ task "themes:deduplicate_horizon" => :environment do |task, args|
             &.dig(:user_selectable),
       )
     end
+    if remote_horizon_theme.color_scheme.theme_id == remote_horizon_theme.id
+      system_horizon_theme.update!(
+        color_scheme_id: color_schemes_map[remote_horizon_theme.color_scheme_id][:id],
+      )
+    elsif remote_horizon_theme.color_scheme_id
+      system_horizon_theme.update!(color_scheme_id: remote_horizon_theme.color_scheme_id)
+    end
+    system_horizon_theme.color_scheme.update!(user_selectable: true)
     puts "Theme color palette is updated"
     UserOption
       .where(color_scheme_id: color_schemes_map.keys)

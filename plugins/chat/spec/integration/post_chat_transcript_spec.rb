@@ -194,7 +194,7 @@ martin</div>
   end
 
   it "handles nested chat transcripts in posts" do
-    SiteSetting.external_system_avatars_enabled = false
+    SiteSetting.external_system_avatars_url = ""
     freeze_time
 
     channel = Fabricate(:chat_channel)

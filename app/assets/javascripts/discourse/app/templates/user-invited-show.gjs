@@ -4,6 +4,7 @@ import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
 import avatar from "discourse/helpers/avatar";
@@ -15,6 +16,7 @@ import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 
 export default RouteTemplate(
   <template>
@@ -97,25 +99,41 @@ export default RouteTemplate(
         <section>
           {{#if @controller.model.invites}}
             {{#if @controller.inviteRedeemed}}
-              <table class="table user-invite-list">
-                <thead>
-                  <tr>
-                    <th>{{i18n "user.invited.user"}}</th>
-                    <th>{{i18n "user.invited.redeemed_at"}}</th>
+              <table class="d-table user-invite-list">
+                <thead class="d-table__header">
+                  <tr class="d-table__row">
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.user"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.redeemed_at"
+                      }}</th>
                     {{#if @controller.model.can_see_invite_details}}
-                      <th>{{i18n "user.last_seen"}}</th>
-                      <th>{{i18n "user.invited.topics_entered"}}</th>
-                      <th>{{i18n "user.invited.posts_read_count"}}</th>
-                      <th>{{i18n "user.invited.time_read"}}</th>
-                      <th>{{i18n "user.invited.days_visited"}}</th>
-                      <th>{{i18n "user.invited.invited_via"}}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.last_seen"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.topics_entered"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.posts_read_count"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.time_read"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.days_visited"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.invited_via"
+                        }}</th>
                     {{/if}}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="d-table__body">
                   {{#each @controller.model.invites as |invite|}}
-                    <tr>
-                      <td>
+                    <tr class="d-table__row">
+                      <td class="d-table__cell --overview">
                         <LinkTo @route="user" @model={{invite.user}}>{{avatar
                             invite.user
                             imageSize="tiny"
@@ -125,85 +143,142 @@ export default RouteTemplate(
                           @model={{invite.user}}
                         >{{invite.user.username}}</LinkTo>
                       </td>
-                      <td>{{formatDate invite.redeemed_at}}</td>
+                      <td class="d-table__cell --detail">
+                        <div class="d-table__mobile-label">
+                          {{i18n "user.invited.redeemed_at"}}
+                        </div>
+                        {{formatDate invite.redeemed_at}}
+                      </td>
                       {{#if @controller.model.can_see_invite_details}}
-                        <td>{{formatDate invite.user.last_seen_at}}</td>
-                        <td>{{number invite.user.topics_entered}}</td>
-                        <td>{{number invite.user.posts_read_count}}</td>
-                        <td>{{formatDuration invite.user.time_read}}</td>
-                        <td>
-                          <span
-                            title={{i18n "user.invited.days_visited"}}
-                          >{{htmlSafe invite.user.days_visited}}</span>
-                          /
-                          <span
-                            title={{i18n "user.invited.account_age_days"}}
-                          >{{htmlSafe invite.user.days_since_created}}</span>
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n "user.last_seen"}}
+                          </div>
+                          {{formatDate invite.user.last_seen_at}}
                         </td>
-                        <td>{{htmlSafe invite.invite_source}}</td>
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n "user.invited.topics_entered"}}
+                          </div>
+                          {{number invite.user.topics_entered}}
+                        </td>
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n "user.invited.posts_read_count"}}
+                          </div>
+                          {{number invite.user.posts_read_count}}
+                        </td>
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n "user.invited.time_read"}}
+                          </div>
+                          {{formatDuration invite.user.time_read}}
+                        </td>
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n "user.invited.days_visited"}}
+                          </div>
+                          <div>
+                            <span
+                              title={{i18n "user.invited.days_visited"}}
+                            >{{htmlSafe invite.user.days_visited}}</span>
+                            /
+                            <span
+                              title={{i18n "user.invited.account_age_days"}}
+                            >{{htmlSafe invite.user.days_since_created}}</span>
+                          </div>
+                        </td>
+                        <td class="d-table__cell --detail">
+                          <div class="d-table__mobile-label">
+                            {{i18n "user.invited.invited_via"}}
+                          </div>
+                          {{htmlSafe invite.invite_source}}
+                        </td>
                       {{/if}}
                     </tr>
                   {{/each}}
                 </tbody>
               </table>
             {{else}}
-              <table class="table user-invite-list">
-                <thead>
-                  <tr>
-                    <th>{{i18n "user.invited.invited_via"}}</th>
-                    <th>{{i18n "user.invited.sent"}}</th>
-                    <th>{{i18n "user.invited.expires_at"}}</th>
-                    <th></th>
+              <table class="d-table user-invite-list">
+                <thead class="d-table__header">
+                  <tr class="d-table__row">
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.invited_via"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.sent"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.expires_at"
+                      }}</th>
+                    <th class="d-table__header-cell"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="d-table__body">
                   {{#each @controller.model.invites as |invite|}}
-                    <tr>
-                      <td class="invite-type">
-                        <div class="label">{{i18n
-                            "user.invited.invited_via"
-                          }}</div>
-                        {{#if invite.email}}
-                          {{icon "envelope"}}
-                          {{invite.email}}
-                        {{else}}
-                          {{icon "link"}}
-                          {{i18n
-                            "user.invited.invited_via_link"
-                            key=invite.shortKey
-                            count=invite.redemption_count
-                            max=invite.max_redemptions_allowed
-                          }}
-                        {{/if}}
+                    <tr class="d-table__row">
+                      <td class="d-table__cell --overview invite-type">
+                        <div class="invite-shortkey">
+                          {{#if invite.email}}
+                            {{icon "envelope"}}
+                            {{invite.email}}
+                          {{else}}
+                            {{icon "link"}}
+                            {{i18n
+                              "user.invited.invited_via_link"
+                              key=invite.shortKey
+                              count=invite.redemption_count
+                              max=invite.max_redemptions_allowed
+                            }}
+                          {{/if}}
+                        </div>
 
-                        {{#each invite.groups as |g|}}
-                          <p class="invite-extra"><a href="/g/{{g.name}}">{{icon
-                                "users"
-                              }}
-                              {{g.name}}</a></p>
-                        {{/each}}
+                        <div class="invite-details">
+                          {{#if invite.description}}
+                            <div class="invite-description">
+                              {{invite.description}}
+                            </div>
+                          {{/if}}
 
-                        {{#if invite.topic}}
-                          <p class="invite-extra"><a
-                              href={{invite.topic.url}}
-                            >{{icon "file"}} {{invite.topic.title}}</a></p>
-                        {{/if}}
-                        {{#if invite.description}}
-                          <div class="invite-description">
-                            {{invite.description}}
+                          <div class="invite-groups">
+                            {{#each invite.groups as |g|}}
+                              <span class="invite-extra">
+                                <a
+                                  href="/g/{{g.name}}"
+                                  class="invite-extra-item-link"
+                                >{{icon "users"}}
+                                  {{g.name}}
+                                </a>
+                              </span>
+                            {{/each}}
                           </div>
-                        {{/if}}
+
+                          {{#if invite.topic}}
+                            <span class="invite-extra invite-topic">
+                              <a
+                                href={{invite.topic.url}}
+                                class="invite-extra-item-link"
+                              >
+                                {{icon "file-lines"}}
+                                {{invite.topic.title}}
+                              </a>
+                            </span>
+                          {{/if}}
+                        </div>
                       </td>
 
-                      <td class="invite-updated-at">
-                        <div class="label">{{i18n "user.invited.sent"}}</div>
+                      <td class="d-table__cell --detail invite-updated-at">
+                        <div class="d-table__mobile-label">
+                          {{i18n "user.invited.sent"}}
+                        </div>
                         {{formatDate invite.updated_at}}
                       </td>
 
-                      <td class="invite-expires-at">
-                        <div class="label">{{i18n
-                            "user.invited.expires_at"
-                          }}</div>
+                      <td class="d-table__cell --detail invite-expires-at">
+                        <div class="d-table__mobile-label">
+                          {{i18n "user.invited.expires_at"}}
+                        </div>
                         {{#if @controller.inviteExpired}}
                           {{rawDate invite.expires_at}}
                         {{else if invite.expired}}
@@ -214,23 +289,42 @@ export default RouteTemplate(
                       </td>
 
                       {{#if invite.can_delete_invite}}
-                        <td class="invite-actions">
-                          <DButton
-                            @icon="pencil"
-                            @action={{fn @controller.editInvite invite}}
-                            @title="user.invited.edit"
-                            class="btn-default"
-                          />
-                          <DButton
-                            @icon="trash-can"
-                            @action={{fn @controller.destroyInvite invite}}
-                            @title={{if
-                              invite.destroyed
-                              "user.invited.removed"
-                              "user.invited.remove"
-                            }}
-                            class="cancel"
-                          />
+                        <td class="d-table__cell --controls invite-actions">
+                          <div class="d-table__cell-actions">
+                            <DButton
+                              @label="user.invited.edit"
+                              @action={{fn @controller.editInvite invite}}
+                              @title="user.invited.edit"
+                              class="btn-small edit-invite"
+                            />
+                            <DMenu
+                              @identifier="invites-menu"
+                              @title={{i18n "more_options"}}
+                              @icon="ellipsis-vertical"
+                              @onRegisterApi={{@controller.onRegisterApi}}
+                              class="btn-small"
+                            >
+                              <:content>
+                                <DropdownMenu as |dropdown|>
+                                  <dropdown.item>
+                                    <DButton
+                                      @action={{fn
+                                        @controller.destroyInvite
+                                        invite
+                                      }}
+                                      @icon="trash-can"
+                                      class="btn-transparent btn-danger"
+                                      @label={{if
+                                        invite.destroyed
+                                        "user.invited.removed"
+                                        "user.invited.remove"
+                                      }}
+                                    />
+                                  </dropdown.item>
+                                </DropdownMenu>
+                              </:content>
+                            </DMenu>
+                          </div>
                         </td>
                       {{/if}}
                     </tr>

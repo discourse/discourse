@@ -49,6 +49,10 @@ module PageObjects
         page.find(".duplicate-palette")
       end
 
+      def copy_to_clipboard_button
+        page.find(".copy-to-clipboard")
+      end
+
       def has_unsaved_changes_indicator?
         page.has_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
       end

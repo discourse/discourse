@@ -18,6 +18,18 @@ module("Unit | Lib | FormKit | ValidationParser", function (hooks) {
     assert.deepEqual(rules.required, { trim: false });
   });
 
+  test("startsWith", function (assert) {
+    const rules = ValidationParser.parse("startsWith:@");
+
+    assert.deepEqual(rules.startsWith, { prefix: "@" });
+  });
+
+  test("endsWith", function (assert) {
+    const rules = ValidationParser.parse("endsWith:.com");
+
+    assert.deepEqual(rules.endsWith, { suffix: ".com" });
+  });
+
   test("url", function (assert) {
     const rules = ValidationParser.parse("url");
 

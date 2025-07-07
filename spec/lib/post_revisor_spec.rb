@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "post_revisor"
-
-RSpec.describe PostRevisor do
+describe PostRevisor do
   fab!(:topic)
   fab!(:newuser) { Fabricate(:newuser, last_seen_at: Date.today) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
@@ -315,6 +313,26 @@ RSpec.describe PostRevisor do
           end.to change { category.reload.topic_count }.by(1)
         end
       end
+    end
+  end
+
+  describe "editing locale" do
+    it "updates the post's locale" do
+      post = Fabricate(:post)
+
+      PostRevisor.new(post).revise!(post.user, locale: "ja")
+
+      post.reload
+      expect(post.locale).to eq("ja")
+    end
+
+    it "also updates the topic's locale if first post" do
+      post = Fabricate(:post)
+
+      PostRevisor.new(post).revise!(post.user, locale: "ja")
+
+      post.reload
+      expect(post.topic.locale).to eq("ja")
     end
   end
 
