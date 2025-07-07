@@ -2,7 +2,7 @@
 
 describe "DiscourseAutomation | Edit page", type: :system do
   fab!(:admin)
-  fab!(:automation) { Fabricate(:automation, enabled: true) }
+  fab!(:automation)
 
   before do
     SiteSetting.discourse_automation_enabled = true
