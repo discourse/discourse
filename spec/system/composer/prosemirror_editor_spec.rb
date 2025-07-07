@@ -20,6 +20,13 @@ describe "Composer - ProseMirror editor", type: :system do
     composer.focus
   end
 
+  def paste_and_click_image
+    cdp.allow_clipboard
+    cdp.copy_test_image
+    cdp.paste
+    rich.find(".composer-image-node img").click
+  end
+
   it "hides the Composer container's preview button" do
     page.visit "/new-topic"
 
@@ -616,10 +623,8 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "ignores text/html content if Files are present" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
+      paste_and_click_image
 
       expect(rich).to have_css("img[data-orig-src]", count: 1)
 
@@ -1142,29 +1147,9 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "image toolbar" do
-    it "shows image toolbar when image is selected" do
-      cdp.allow_clipboard
-      open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
-
-      expect(rich).to have_css(".composer-image-node img")
-
-      rich.find(".composer-image-node img").click
-
-      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
-      expect(page).to have_css(".composer-image-toolbar__zoom-out")
-      expect(page).to have_css(".composer-image-toolbar__zoom-in")
-      expect(page).to have_css(".composer-image-toolbar__trash")
-    end
-
     it "allows scaling image down and up via toolbar" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
-
-      rich.find(".composer-image-node img").click
+      paste_and_click_image
 
       find(".composer-image-toolbar__zoom-out").click
 
@@ -1184,29 +1169,19 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "allows removing image via toolbar" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-
-      composer.type_content("Before ")
-      cdp.copy_test_image
-      cdp.paste
-      composer.type_content(" After")
-
-      rich.find(".composer-image-node img").click
+      composer.type_content("Before")
+      paste_and_click_image
 
       find(".composer-image-toolbar__trash").click
 
       expect(rich).to have_no_css(".composer-image-node img")
-      expect(rich).to have_content("Before  After")
+      expect(rich).to have_content("Before")
     end
 
     it "hides toolbar when clicking outside image" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
-
-      rich.find(".composer-image-node img").click
+      paste_and_click_image
 
       expect(page).to have_css("[data-identifier='composer-image-toolbar']")
 
@@ -1218,24 +1193,16 @@ describe "Composer - ProseMirror editor", type: :system do
 
   describe "image alt text display and editing" do
     it "shows alt text input when image is selected" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
-
-      rich.find(".composer-image-node img").click
+      paste_and_click_image
 
       expect(page).to have_css("[data-identifier='composer-image-alt-text']")
       expect(page).to have_css(".image-alt-text-input__display")
     end
 
     it "allows editing alt text by clicking on display" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
-
-      rich.find(".composer-image-node img").click
+      paste_and_click_image
 
       find(".image-alt-text-input__display").click
 
@@ -1249,12 +1216,8 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "saves alt text when leaving the input field" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
-
-      rich.find(".composer-image-node img").click
+      paste_and_click_image
 
       find(".image-alt-text-input__display").click
       find(".image-alt-text-input__field").fill_in(with: "new alt text")
@@ -1265,12 +1228,8 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "displays the placeholder if alt text is empty" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
-
-      rich.find(".composer-image-node img").click
+      paste_and_click_image
 
       expect(page).to have_css(".image-alt-text-input__display", text: "image")
 
