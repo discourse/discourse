@@ -3,10 +3,11 @@
 describe "Post selection | Fast edit", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:fast_editor) { PageObjects::Components::FastEditor.new }
-
+  let(:localization_dialog) { PageObjects::Components::Dialog.new }
   fab!(:topic)
 
   fab!(:post) { Fabricate(:post, topic:) }
+  fab!(:post_localizations) { Fabricate(:post_localization, post: post) }
   fab!(:post_2) { Fabricate(:post, topic:, raw: "It ‘twas a great’ “time”!") }
   fab!(:spanish_post) { Fabricate(:post, topic:, raw: "Hola Juan, ¿cómo estás?") }
   fab!(:chinese_post) { Fabricate(:post, topic:, raw: "这是一个测试") }
@@ -117,6 +118,19 @@ describe "Post selection | Fast edit", type: :system do
       expect(page).to have_selector(css(post_with_emoji), text: "Good day !")
       # So we also check the raw content to ensure it's been saved correctly
       expect(post_with_emoji.reload.raw).to eq "Good day :wave:!"
+    end
+  end
+
+  context "when post has localized content" do
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "does not open the fast editor" do
+      topic_page.visit_topic(topic)
+      select_text_range(css(post), 0, 5)
+      expect(topic_page.fast_edit_button).to be_visible
+      topic_page.click_fast_edit_button
+      expect(topic_page.fast_edit_input).not_to be_visible
+      expect(localization_dialog).to be_open
     end
   end
 end
