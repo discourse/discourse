@@ -1595,6 +1595,9 @@ posting:
     type: integer
     min: 1
     hidden: true
+  rich_editor:
+    client: true
+    default: false
 
 content_localization:
   content_localization_enabled:
@@ -4046,9 +4049,6 @@ experimental:
     default: false
     hidden: true
     client: true
-  rich_editor:
-    client: true
-    default: false
   reviewable_ui_refresh:
     client: true
     type: group_list
