@@ -4,8 +4,8 @@ describe "Viewing sidebar", type: :system do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   context "as logged in user", type: :system do
-    fab!(:admin)
-    fab!(:user)
+    fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
 
     before { sign_in(user) }
@@ -175,6 +175,7 @@ describe "Viewing sidebar", type: :system do
       end
 
       it "shouldn't show for user without `can_send_private_messages` permission" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:admins]
         sign_in(user)
         visit("/")
         expect(sidebar).to have_no_my_messages_link
