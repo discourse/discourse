@@ -51,34 +51,48 @@ RSpec.describe VideoConversion::BaseAdapter do
 
     before { allow(OptimizedVideo).to receive(:create_for) }
 
-    it "creates an optimized video record with correct attributes" do
-      adapter.send(:create_optimized_video_record, output_path, new_sha1, filesize, url)
+    context "with adapter that defines ADAPTER_NAME" do
+      let(:test_adapter_class) do
+        Class.new(VideoConversion::BaseAdapter) do
+          ADAPTER_NAME = "test_adapter"
+          def self.name
+            "TestAdapter"
+          end
+        end
+      end
+      let(:adapter) { test_adapter_class.new(upload) }
 
-      expect(OptimizedVideo).to have_received(:create_for).with(
-        upload,
-        "video_converted.mp4",
-        upload.user_id,
-        filesize: filesize,
-        sha1: new_sha1,
-        url: url,
-        extension: "mp4",
-      )
-    end
+      it "creates an optimized video record with correct attributes" do
+        adapter.send(:create_optimized_video_record, output_path, new_sha1, filesize, url)
 
-    it "handles filenames with multiple extensions" do
-      upload.update!(original_filename: "video.original.mp4")
+        expect(OptimizedVideo).to have_received(:create_for).with(
+          upload,
+          "video_converted.mp4",
+          upload.user_id,
+          filesize: filesize,
+          sha1: new_sha1,
+          url: url,
+          extension: "mp4",
+          adapter: "test_adapter",
+        )
+      end
 
-      adapter.send(:create_optimized_video_record, output_path, new_sha1, filesize, url)
+      it "handles filenames with multiple extensions" do
+        upload.update!(original_filename: "video.original.mp4")
 
-      expect(OptimizedVideo).to have_received(:create_for).with(
-        upload,
-        "video.original_converted.mp4",
-        upload.user_id,
-        filesize: filesize,
-        sha1: new_sha1,
-        url: url,
-        extension: "mp4",
-      )
+        adapter.send(:create_optimized_video_record, output_path, new_sha1, filesize, url)
+
+        expect(OptimizedVideo).to have_received(:create_for).with(
+          upload,
+          "video.original_converted.mp4",
+          upload.user_id,
+          filesize: filesize,
+          sha1: new_sha1,
+          url: url,
+          extension: "mp4",
+          adapter: "test_adapter",
+        )
+      end
     end
   end
 end

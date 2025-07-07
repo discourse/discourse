@@ -34,7 +34,17 @@ module VideoConversion
         sha1: new_sha1,
         url: url,
         extension: "mp4",
+        adapter: adapter_name,
       )
+    end
+
+    private
+
+    def adapter_name
+      self.class::ADAPTER_NAME
+    rescue NameError
+      # Fallback for adapters that don't define ADAPTER_NAME
+      self.class.name.demodulize.underscore
     end
   end
 end
