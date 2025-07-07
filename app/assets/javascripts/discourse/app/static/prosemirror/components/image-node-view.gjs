@@ -177,10 +177,6 @@ export default class ImageNodeView extends Component {
   @action
   saveAltText(altText, forceFocus) {
     const pos = this.args.getPos();
-    if (pos === undefined || pos === null) {
-      return;
-    }
-
     const tr = this.args.view.state.tr;
     const newAttrs = {
       ...this.args.node.attrs,
