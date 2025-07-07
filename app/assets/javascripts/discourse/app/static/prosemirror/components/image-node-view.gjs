@@ -102,7 +102,7 @@ export default class ImageNodeView extends Component {
       component: ToolbarButtons,
       placement: "top-start",
       fallbackPlacements: ["top-start"],
-      padding: MARGIN,
+      padding: MENU_PADDING,
       data: this.imageToolbar,
       portalOutletElement: this.args.dom,
       closeOnClickOutside: false,
@@ -111,8 +111,8 @@ export default class ImageNodeView extends Component {
       trapTab: false,
       offset({ rects }) {
         return {
-          mainAxis: -MARGIN - rects.floating.height,
-          crossAxis: MARGIN,
+          mainAxis: -MENU_PADDING - rects.floating.height,
+          crossAxis: MENU_PADDING,
         };
       },
       limitShift: {
@@ -121,8 +121,8 @@ export default class ImageNodeView extends Component {
 
           return {
             crossAxis: Math.min(
-              rects.floating.height + 2 * MARGIN + inputHeight,
-              rects.reference.height - MARGIN
+              rects.floating.height + 2 * MENU_PADDING + inputHeight,
+              rects.reference.height - MENU_PADDING
             ),
           };
         },
@@ -145,7 +145,7 @@ export default class ImageNodeView extends Component {
       component: ImageAltTextInput,
       placement: "bottom-start",
       fallbackPlacements: ["bottom-start"],
-      padding: MARGIN,
+      padding: MENU_PADDING,
       data: {
         alt: this.args.node.attrs.alt,
         onSave: this.saveAltText,
@@ -158,14 +158,14 @@ export default class ImageNodeView extends Component {
       closeOnScroll: false,
       trapTab: false,
       offset: ({ rects }) => ({
-        mainAxis: -MARGIN - rects.floating.height,
-        crossAxis: MARGIN,
+        mainAxis: -MENU_PADDING - rects.floating.height,
+        crossAxis: MENU_PADDING,
       }),
       limitShift: {
         offset: ({ rects }) => {
           const toolbarHeight = this.menuInstance?.content?.offsetHeight || 0;
           return {
-            crossAxis: toolbarHeight + 2 * MARGIN + rects.floating.height,
+            crossAxis: toolbarHeight + 2 * MENU_PADDING + rects.floating.height,
           };
         },
       },
