@@ -128,10 +128,13 @@ export class ToolbarBase {
           )}${translateModKey(option.shortcut)}`;
 
           if (option.title) {
+            const optionTitle = option.titleArgs
+              ? i18n(option.title, option.titleArgs)
+              : i18n(option.title);
             if (option.hideShortcutInTitle) {
-              option.title = i18n(option.title);
+              option.title = optionTitle;
             } else {
-              option.title = `${i18n(option.title)} (${shortcutTitle})`;
+              option.title = `${optionTitle} (${shortcutTitle})`;
             }
           }
 
