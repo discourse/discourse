@@ -445,43 +445,6 @@ Finally, some strings are quite big and there's no need to check that the entire
 
 Our `RateLimiter` system is disabled by default in specs. However if you need to turn it on to test some rate limiting specifically in system specs (though you should use request specs for this), use `RateLimiter.enable`.
 
-### Testing Streaming Interactions (MessageBus Updates)
-
-When testing UI interactions that trigger real-time updates—typically sent via `MessageBus`—you might find that these updates aren’t appearing in your system tests as expected. To ensure that streaming updates work reliably in tests, make sure the following pieces are in place:
-
-1. **Track the `MessageBus.last_id` on the server and pass it to the client.**  
-   This ensures the client receives only messages that occur after the page has loaded.
-
-   On the server side, expose the last ID for the relevant `MessageBus` channel (usually via a serializer):
-
-   ```ruby
-   def foo_channel_last_id
-     MessageBus.last_id("/foo-channel")
-   end
-   ```
-
-   On the client side, use this ID when subscribing to the MessageBus channel:
-
-   ```js
-   this.messageBus.subscribe(
-     this.fooChannel,
-     this.updateResult,
-     this.args.foo_channel_last_id
-   );
-   ```
-
-   > ⚠️ Note: Be mindful that frequent calls to `MessageBus.last_id` can result in increased Redis traffic. If you're calling this in high-volume serializers or endpoints, consider optimizing to reduce the number of Redis hits—for example, by caching or batching where appropriate.
-
-2. **Run jobs immediately in your system specs.**
-
-   This ensures background jobs that publish messages (e.g., via `MessageBus.publish`) are executed synchronously during the test:
-
-   ```ruby
-   before do
-     Jobs.run_immediately!
-   end
-   ```
-
 ## Advanced Chrome Interaction
 
 In certain cases you will need to use some advanced features of Chrome in your system specs. Some examples are interacting with the clipboard (copy and paste) and network manipulation (simulating slow connections). This is achieved using the [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/), and sometimes with native Capybara functionality.
