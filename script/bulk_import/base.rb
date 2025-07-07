@@ -1485,6 +1485,8 @@ class BulkImport::Base
     end
 
     category[:minimum_required_tags] ||= 0
+    category[:color] ||= "0088CC"
+    category[:text_color] ||= "FFFFFF"
     category
   end
 

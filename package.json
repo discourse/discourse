@@ -5,7 +5,7 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.27.1",
+    "@babel/plugin-proposal-decorators": "^7.28.0",
     "@discourse/lint-configs": "^2.22.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "6.7.2",
@@ -24,7 +24,7 @@
     "esbuild": "^0.25.5",
     "eslint": "9.27.0",
     "jsdoc": "^4.0.4",
-    "lefthook": "^1.11.14",
+    "lefthook": "^1.11.16",
     "licensee": "^11.1.1",
     "lint-to-the-future": "^2.6.3",
     "lint-to-the-future-ember-template": "^3.1.0",

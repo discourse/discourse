@@ -44,7 +44,7 @@ RSpec.describe TopicsController do
     fab!(:p2) { Fabricate(:post, topic: p1.topic, user: moderator) }
 
     it "returns the JSON in the format our wordpress plugin needs" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
 
       get "/t/#{p1.topic.id}/wordpress.json", params: { best: 3 }
 

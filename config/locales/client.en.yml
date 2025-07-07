@@ -4628,11 +4628,16 @@ en:
           other: "New (%{count})"
         help: "topics created in the last few days"
         all: "All"
+        all_tooltip: "All new topics and topics replied to in the last few days"
         all_with_count: "All (%{count})"
+        new_topics_tooltip: "New topics"
         topics: "Topics"
         topics_with_count: "Topics (%{count})"
+        new_replies_tooltip: "New replies"
         replies: "Replies"
         replies_with_count: "Replies (%{count})"
+      new_new:
+        help: "topics created or replied to in the last few days"
       posted:
         title: "My Posts"
         help: "topics you have posted in"

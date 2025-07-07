@@ -358,7 +358,7 @@ describe Chat::Message do
     it "supports quote bbcode" do
       topic = Fabricate(:topic, title: "Some quotable topic")
       post = Fabricate(:post, topic: topic)
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
       avatar_src =
         "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "48")}"
 

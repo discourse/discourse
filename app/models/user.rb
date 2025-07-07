@@ -1192,7 +1192,7 @@ class User < ActiveRecord::Base
     normalized_username = normalize_username(username)
 
     # TODO it may be worth caching this in a distributed cache, should be benched
-    if SiteSetting.external_system_avatars_enabled
+    if SiteSetting.external_system_avatars_url.present?
       url = SiteSetting.external_system_avatars_url.dup
       url = +"#{Discourse.base_path}#{url}" unless url =~ %r{\Ahttps?://}
       url.gsub! "{color}", letter_avatar_color(normalized_username)

@@ -6,7 +6,7 @@ class UnicodeUsernameValidator
   end
 
   def valid_value?(value)
-    @valid = SiteSetting.external_system_avatars_enabled || value == "f"
+    @valid = SiteSetting.external_system_avatars_url.present? || value == "f"
   end
 
   def error_message
