@@ -1189,6 +1189,24 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(page).to have_no_css("[data-identifier='composer-image-toolbar']")
     end
+
+    it "sets width and height attributes when scaling external images" do
+      open_composer_and_toggle_rich_editor
+
+      image = Fabricate(:image_upload)
+
+      composer.type_content("![alt text](#{image.url})")
+
+      find(".composer-image-node img").click
+
+      expect(rich).to have_no_css(".composer-image-node img[width]")
+      expect(rich).to have_no_css(".composer-image-node img[height]")
+
+      find(".composer-image-toolbar__zoom-out").click
+
+      expect(rich).to have_css(".composer-image-node img[width]")
+      expect(rich).to have_css(".composer-image-node img[height]")
+    end
   end
 
   describe "image alt text display and editing" do
