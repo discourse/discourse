@@ -96,7 +96,7 @@ class PostRevisor
       end
 
       tc.record_change("category_id", current_category&.id, new_category&.id)
-      tc.check_result(tc.topic.change_category_to_id(new_category_id))
+      tc.check_result(tc.topic.change_category_to_id(new_category_id, silent: @silent))
       create_small_action_for_category_change(
         topic: tc.topic,
         user: tc.user,
@@ -731,7 +731,6 @@ class PostRevisor
 
   def alert_users
     return if @editor.id == Discourse::SYSTEM_USER_ID
-    return if @silent
     Jobs.enqueue(:post_alert, post_id: @post.id)
   end
 

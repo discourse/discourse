@@ -160,6 +160,58 @@ RSpec.describe TopicsBulkAction do
     fab!(:category)
     fab!(:fist_post) { Fabricate(:post, topic: topic) }
 
+    describe "option 'perform action silently'" do
+      fab!(:watcher) { Fabricate(:user) }
+      fab!(:admin)
+
+      before do
+        Jobs.run_immediately!
+        TopicUser.change(
+          watcher,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+      end
+
+      shared_examples "perform action silently" do
+        context "when 'perform action silently' disabled" do
+          it "will send notification to users watching the topic" do
+            expect do
+              TopicsBulkAction.new(
+                admin,
+                [topic.id],
+                type: "change_category",
+                category_id: category.id,
+              ).perform!
+            end.to change { Notification.where(user: watcher).count }
+          end
+        end
+
+        context "when 'perform action silently' enabled" do
+          it "will not send notification to users watching the topic" do
+            expect do
+              TopicsBulkAction.new(
+                admin,
+                [topic.id],
+                type: "change_category",
+                category_id: category.id,
+                silent: true,
+              ).perform!
+            end.to_not change { Notification.where(user: watcher).count }
+          end
+        end
+      end
+
+      context "when 'create_revision_on_bulk_topic_moves' enabled" do
+        SiteSetting.create_revision_on_bulk_topic_moves = true
+        include_examples "perform action silently"
+      end
+      context "when 'create_revision_on_bulk_topic_moves' disabled" do
+        SiteSetting.create_revision_on_bulk_topic_moves = false
+        include_examples "perform action silently"
+      end
+    end
+
     context "when the user can edit the topic" do
       context "with 'create_revision_on_bulk_topic_moves' setting enabled" do
         before { SiteSetting.create_revision_on_bulk_topic_moves = true }

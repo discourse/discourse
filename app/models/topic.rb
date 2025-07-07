@@ -1055,19 +1055,9 @@ class Topic < ActiveRecord::Base
 
         skip_alert = silent || SiteSetting.disable_category_edit_notifications
 
-        puts "\n" * 10
-        puts "skipping alert: #{skip_alert}"
-        puts "silent: #{silent}"
-        puts "\n" * 10
-
         if !skip_alert && (post = self.ordered_posts.first)
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
           DB.after_commit do
-            puts "\n" * 10
-            puts "enqueue notify category change job"
-            puts "post id: #{post.id}"
-            puts "notified_user_ids: #{notified_user_ids}"
-            puts "\n" * 10
             Jobs.enqueue(
               :notify_category_change,
               post_id: post.id,

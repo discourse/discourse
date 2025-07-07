@@ -1909,6 +1909,14 @@ describe Topic do
             expect(topic.category_id).to eq(new_category.id)
           end
 
+          it "should not generate a notification if options: silent is true" do
+            expect do topic.change_category_to_id(new_category.id, silent: true) end.not_to change {
+              Notification.count
+            }
+
+            expect(topic.category_id).to eq(new_category.id)
+          end
+
           it "should generate the modified notification for the topic if already seen" do
             TopicUser.create!(
               topic_id: topic.id,
