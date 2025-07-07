@@ -49,7 +49,7 @@ export default class DiscoveryFilterNavigation extends Component {
   showEditFiltersModal() {
     this.modal.show(EditDiscoveryFiltersModal, {
       model: {
-        queryString: this.newQueryString,
+        filterString: this.newQueryString,
         updateQueryString: this.updateQueryString,
         updateTopicsListQueryParams: this.args.updateTopicsListQueryParams,
       },
