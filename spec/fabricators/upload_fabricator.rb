@@ -12,7 +12,12 @@ Fabricator(:upload) do
 
   url do |attrs|
     sequence(:url) do |n|
-      Discourse.store.get_path_for("original", n + 1, attrs[:sha1], ".#{attrs[:extension]}")
+      Discourse.store.get_path_for(
+        "original",
+        Upload.maximum(:id).to_i + 1,
+        attrs[:sha1],
+        ".#{attrs[:extension]}",
+      )
     end
   end
 
