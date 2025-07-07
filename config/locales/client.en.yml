@@ -4634,7 +4634,7 @@ en:
       new_new:
         help: "topics created or replied to in the last few days"
       posted:
-        title: "My Posts"
+        title: "My posts"
         help: "topics you have posted in"
       bookmarks:
         title: "Bookmarks"
@@ -5181,8 +5181,8 @@ en:
               content: "Users"
               title: "List of all users"
             my_posts:
-              content: "My Posts"
-              content_drafts: "My Drafts"
+              content: "My posts"
+              content_drafts: "My drafts"
               title: "My recent topic activity"
               title_drafts: "My unposted drafts"
               draft_count:
@@ -5198,7 +5198,7 @@ en:
               content: "Invite"
               title: "Invite new members"
             my_messages:
-              content: "My Messages"
+              content: "My messages"
               title: "My personal messages"
         global_section: "Global section, visible to everyone"
       panels:
