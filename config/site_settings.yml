@@ -3647,13 +3647,11 @@ uncategorized:
     default: true
     themeable: true
     area: "interface"
+
   welcome_banner_location:
-    default: "Above topic content"
-    type: enum
     client: true
-    choices:
-      - "Above topic content"
-      - "Below site header"
+    enum: "InterfaceWelcomeBannerLocation"
+    default: "above_topic_content"
     area: "interface"
 
 user_preferences:
