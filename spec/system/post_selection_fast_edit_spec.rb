@@ -3,8 +3,8 @@
 describe "Post selection | Fast edit", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:fast_editor) { PageObjects::Components::FastEditor.new }
+
   fab!(:topic)
-  fab!(:jap_group) { Fabricate(:group).tap { |g| g.add(current_user) } }
 
   fab!(:post) { Fabricate(:post, topic:) }
   fab!(:post_2) { Fabricate(:post, topic:, raw: "It ‘twas a great’ “time”!") }
