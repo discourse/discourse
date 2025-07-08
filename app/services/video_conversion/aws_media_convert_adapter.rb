@@ -58,12 +58,6 @@ module VideoConversion
 
           true # Return true on success
         rescue Aws::MediaConvert::Errors::ServiceError => e
-          Rails.logger.error(
-            "MediaConvert job creation failed for upload #{@upload.id}. " \
-              "Error: #{e.class.name} - #{e.message}" \
-              "#{e.respond_to?(:code) ? " (Code: #{e.code})" : ""}" \
-              "#{e.respond_to?(:context) ? " (Request ID: #{e.context.request_id})" : ""}",
-          )
           Discourse.warn_exception(
             e,
             message: "MediaConvert job creation failed",
@@ -73,9 +67,6 @@ module VideoConversion
           )
           false
         rescue => e
-          Rails.logger.error(
-            "Unexpected error creating MediaConvert job for upload #{@upload.id}: #{e.class.name} - #{e.message}",
-          )
           Discourse.warn_exception(
             e,
             message: "Unexpected error in MediaConvert job creation",
@@ -89,9 +80,6 @@ module VideoConversion
         Rails.logger.error("Invalid parameters for upload #{@upload.id}: #{e.message}")
         false
       rescue => e
-        Rails.logger.error(
-          "Unexpected error in video conversion for upload #{@upload.id}: #{e.class.name} - #{e.message}",
-        )
         Discourse.warn_exception(
           e,
           message: "Unexpected error in video conversion",
@@ -146,9 +134,6 @@ module VideoConversion
           false
         end
       rescue => e
-        Rails.logger.error(
-          "Error processing video completion for upload #{@upload.id}: #{e.message}",
-        )
         Discourse.warn_exception(
           e,
           message: "Error in video processing completion",
