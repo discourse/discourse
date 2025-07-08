@@ -341,23 +341,22 @@ export default class ComposerContainer extends Component {
                   @disableSubmit={{this.composer.disableSubmit}}
                 />
 
-                {{#if this.site.mobileView}}
-                  <DButton
-                    @action={{this.composer.cancel}}
-                    class="cancel btn-transparent"
-                    @icon={{if this.composer.canEdit "xmark" "trash-can"}}
-                    @preventFocus={{true}}
-                    @title="close"
-                  />
-                {{else}}
-                  <DButton
-                    @action={{this.composer.cancel}}
-                    class="cancel btn-transparent"
-                    @preventFocus={{true}}
-                    @title="close"
-                    @label="close"
-                  />
-                {{/if}}
+                <DButton
+                  @action={{this.composer.saveAndClose}}
+                  @icon={{if
+                    this.site.mobileView
+                    (if this.composer.canEdit "xmark" "trash-can")
+                    null
+                  }}
+                  class="cancel btn-transparent"
+                  @preventFocus={{true}}
+                  @title="composer.save_and_close"
+                  @label={{if
+                    this.site.mobileView
+                    null
+                    "composer.save_and_close"
+                  }}
+                />
 
                 {{#if this.site.mobileView}}
 
@@ -465,6 +464,16 @@ export default class ComposerContainer extends Component {
                   </span>
                 </div>
               {{/if}}
+
+              <div class="discard">
+                <DButton
+                  @action={{this.composer.cancel}}
+                  class="discard btn-transparent"
+                  @preventFocus={{true}}
+                  @title="composer.discard"
+                  @label={{"composer.discard"}}
+                />
+              </div>
 
               {{#if (and this.composer.allowPreview this.site.desktopView)}}
                 <DButton

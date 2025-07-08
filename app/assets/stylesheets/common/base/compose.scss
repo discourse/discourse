@@ -558,6 +558,12 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
+  .discard {
+    margin-left: auto;
+    flex: 1;
+    text-align: right;
+  }
+
   #draft-status,
   #file-uploading {
     color: var(--primary-high);

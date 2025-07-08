@@ -666,6 +666,12 @@ export default class ComposerService extends Service {
   }
 
   @action
+  async saveAndClose(event) {
+    event?.preventDefault();
+    await this.saveAndCloseComposer();
+  }
+
+  @action
   async cancel(event) {
     event?.preventDefault();
     await this.cancelComposer();
@@ -1660,6 +1666,43 @@ export default class ComposerService extends Service {
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
+        this.destroyDraft()
+          .then(() => {
+            this.model.clearState();
+            this.close();
+          })
+          .finally(() => {
+            this.appEvents.trigger("composer:cancelled");
+            resolve();
+          });
+      }
+    }).finally(() => {
+      this.skipAutoSave = false;
+    });
+  }
+
+  saveAndCloseComposer() {
+    this.skipAutoSave = true;
+
+    if (this._saveDraftDebounce) {
+      cancel(this._saveDraftDebounce);
+    }
+
+    return new Promise((resolve) => {
+      if (
+        this.get("model.hasMetaData") ||
+        this.get("model.replyDirty") ||
+        this.get("model.titleDirty")
+      ) {
+        // Always save the draft if the user had typed something
+        // or had started setting up a title/tags/category
+        this._saveDraft();
+        this.model.clearState();
+        this.close();
+        this.appEvents.trigger("composer:cancelled");
+        return resolve(true);
+      } else {
+        // If the user didn't type anything, get rid of the draft
         this.destroyDraft()
           .then(() => {
             this.model.clearState();
