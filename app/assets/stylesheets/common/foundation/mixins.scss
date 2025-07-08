@@ -151,8 +151,8 @@ $hpad: 0.65em;
 }
 
 @mixin default-focus() {
-  border-color: var(--tertiary);
-  outline: 2px solid var(--tertiary);
+  border-color: var(--d-input-focused-colo);
+  outline: 2px solid var(--d-input-focused-color);
   outline-offset: -2px;
 }
 
