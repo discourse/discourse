@@ -1301,5 +1301,16 @@ describe "Composer - ProseMirror editor", type: :system do
       heading_menu.option("[data-name='heading-paragraph']").click
       expect(rich).to have_css("p", text: "This is a test")
     end
+
+    it "can insert a heading on an empty line" do
+      open_composer_and_toggle_rich_editor
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+
+      composer.type_content("This is a test")
+      expect(rich).to have_css("h2", text: "This is a test")
+    end
   end
 end

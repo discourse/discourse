@@ -819,7 +819,7 @@ export default class TextareaTextManipulation {
 
       this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
 
-      if (opts.excludeHeadInSelection) {
+      if (opts?.excludeHeadInSelection) {
         this.selectText(
           sel.start + (preNewlines.length - preChars) + hval.length,
           number.length - hval.length
@@ -848,10 +848,7 @@ export default class TextareaTextManipulation {
         this.applyList(
           sel,
           "#".repeat(currentHeadingLevel) + " ",
-          "heading_text",
-          {
-            excludeHeadInSelection: true,
-          }
+          "heading_text"
         );
       }
     }
