@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 describe "Post selection | Fast edit", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
-
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:fast_editor) { PageObjects::Components::FastEditor.new }
-  let(:localization_dialog) { PageObjects::Components::Dialog.new }
   fab!(:topic)
   fab!(:jap_group) { Fabricate(:group).tap { |g| g.add(current_user) } }
 
@@ -21,6 +18,8 @@ describe "Post selection | Fast edit", type: :system do
       raw: "[quote]\n#{post_2.raw}\n[/quote]\n\nBelle journée, n'est-ce pas ?",
     )
   end
+
+  fab!(:current_user) { Fabricate(:admin) }
 
   before { sign_in(current_user) }
 
@@ -118,32 +117,6 @@ describe "Post selection | Fast edit", type: :system do
       expect(page).to have_selector(css(post_with_emoji), text: "Good day !")
       # So we also check the raw content to ensure it's been saved correctly
       expect(post_with_emoji.reload.raw).to eq "Good day :wave:!"
-    end
-  end
-
-  context "when post has localized content" do
-    before do
-      SiteSetting.content_localization_enabled = true
-      SiteSetting.allow_user_locale = true
-      SiteSetting.content_localization_allowed_groups =
-        "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
-      SiteSetting.content_localization_supported_locales = "en|ja"
-      Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
-      Fabricate(:post_localization, post: post, locale: "ja", cooked: "傑作は単なる軍事戦略についてではありません")
-      Fabricate(:post_localization, post: post_2, locale: "ja", cooked: "最大の勝利は戦いを必要としないものです")
-
-      current_user.update!(locale: "ja")
-      sign_in(current_user)
-    end
-
-    it "does not open the fast editor" do
-      topic_page.visit_topic(topic)
-      select_text_range(css(post), 0, 5)
-      expect(topic_page.fast_edit_button).to be_visible
-      pause_test
-      topic_page.click_fast_edit_button
-      expect(topic_page.fast_edit_input).to be_invisible
-      expect(localization_dialog).to be_open
     end
   end
 end

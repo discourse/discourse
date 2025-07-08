@@ -35,6 +35,7 @@ describe "Content Localization" do
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
   let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
   let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
+  let(:fast_editor) { PageObjects::Components::FastEditor.new }
 
   before do
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
@@ -129,6 +130,17 @@ describe "Content Localization" do
       expect(edit_localized_post_dialog).to be_open
       edit_localized_post_dialog.click_no
       expect(page).to have_css(".action-title", text: I18n.t("js.composer.translations.title"))
+    end
+
+    it "does not open the fast editor for localized posts" do
+      sign_in(admin)
+
+      topic_page.visit_topic(topic)
+      select_text_range("#{topic_page.post_by_number_selector(post_3.post_number)} .cooked", 0, 5)
+      expect(topic_page.fast_edit_button).to be_visible
+      topic_page.click_fast_edit_button
+      expect(page).to have_no_css("#fast-edit-input")
+      expect(edit_localized_post_dialog).to be_open
     end
 
     context "for post edit histories" do
