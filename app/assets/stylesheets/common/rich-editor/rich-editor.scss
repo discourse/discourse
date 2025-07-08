@@ -55,6 +55,10 @@
     max-width: 100%;
     border-radius: var(--d-border-radius);
 
+    &.emoji {
+      border-radius: 0;
+    }
+
     &[data-placeholder="true"] {
       animation: placeholder 1.5s infinite;
 
