@@ -471,7 +471,6 @@ export default class AdminBadgesShow extends Component {
         <form.Section @title="Settings">
           <form.Field
             @name="badge_grouping_id"
-            @disabled={{this.readOnly}}
             @validation="required"
             @title={{i18n "admin.badges.badge_grouping"}}
             as |field|
