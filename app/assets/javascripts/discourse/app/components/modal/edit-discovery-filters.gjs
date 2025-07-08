@@ -78,10 +78,12 @@ export default class EditDiscoveryFilters extends Component {
       statusOpen: true,
       statusClosed: false,
       statusBookmarked: false,
+      tagMatchType: "any",
 
       sortOrders: [],
       excludedCategories: [],
       excludedTags: [],
+      excludeTagMatchType: "any",
       statusArchived: false,
       statusListed: false,
       statusUnlisted: false,
@@ -143,11 +145,14 @@ export default class EditDiscoveryFilters extends Component {
           break;
 
         case "tag":
-          const tags = value.split(",");
+          const tags = value.split(/[,+]/);
+          const matchType = value.includes("+") ? "all" : "any";
           if (isExclude) {
             data.excludedTags = tags;
+            data.excludeTagMatchType = matchType;
           } else {
             data.filteredTags = tags;
+            data.tagMatchType = matchType;
           }
           break;
 
@@ -368,10 +373,12 @@ export default class EditDiscoveryFilters extends Component {
       }
 
       if (data.filteredTags?.length > 0) {
-        filterParts.push(`tag:${data.filteredTags.join(",")}`);
+        const delimiter = data.tagMatchType === "all" ? "+" : ",";
+        filterParts.push(`tag:${data.filteredTags.join(delimiter)}`);
       }
       if (data.excludedTags?.length > 0) {
-        filterParts.push(`-tag:${data.excludedTags.join(",")}`);
+        const delimiter = data.excludeTagMatchType === "all" ? "+" : ",";
+        filterParts.push(`-tag:${data.excludedTags.join(delimiter)}`);
       }
 
       const statusValues = [];
@@ -482,15 +489,17 @@ export default class EditDiscoveryFilters extends Component {
                 @title={{I18n.t "topic.filters.include_categories"}}
                 as |field|
               >
-                <CategorySelector
-                  @categories={{field.value}}
-                  @onChange={{fn this.updateCategories form}}
-                  @options={{hash
-                    allowUncategorized=true
-                    clearable=true
-                    maximum=10
-                  }}
-                />
+                <field.Custom>
+                  <CategorySelector
+                    @categories={{field.value}}
+                    @onChange={{fn this.updateCategories form}}
+                    @options={{hash
+                      allowUncategorized=true
+                      clearable=true
+                      maximum=10
+                    }}
+                  />
+                </field.Custom>
               </form.Field>
             </form.Section>
 
@@ -501,13 +510,15 @@ export default class EditDiscoveryFilters extends Component {
                   @title={{I18n.t "topic.filters.include_tags"}}
                   as |field|
                 >
-                  <TagChooser
-                    @tags={{field.value}}
-                    @onChange={{fn this.updateTags form}}
-                    @everyTag={{true}}
-                    @allowCreate={{false}}
-                    @maximum={{10}}
-                  />
+                  <field.Custom>
+                    <TagChooser
+                      @tags={{field.value}}
+                      @onChange={{fn this.updateTags form}}
+                      @everyTag={{true}}
+                      @allowCreate={{false}}
+                      @maximum={{10}}
+                    />
+                  </field.Custom>
                 </form.Field>
               </form.Section>
             {{/if}}
@@ -633,30 +644,34 @@ export default class EditDiscoveryFilters extends Component {
                 @title={{I18n.t "topic.filters.include_categories"}}
                 as |field|
               >
-                <CategorySelector
-                  @categories={{field.value}}
-                  @onChange={{fn this.updateCategories form}}
-                  @options={{hash
-                    allowUncategorized=true
-                    clearable=true
-                    maximum=10
-                  }}
-                />
+                <field.Custom>
+                  <CategorySelector
+                    @categories={{field.value}}
+                    @onChange={{fn this.updateCategories form}}
+                    @options={{hash
+                      allowUncategorized=true
+                      clearable=true
+                      maximum=10
+                    }}
+                  />
+                </field.Custom>
               </form.Field>
               <form.Field
                 @name="excludedCategories"
                 @title={{I18n.t "topic.filters.exclude"}}
                 as |field|
               >
-                <CategorySelector
-                  @categories={{field.value}}
-                  @onChange={{fn this.updateExcludedCategories form}}
-                  @options={{hash
-                    allowUncategorized=true
-                    clearable=true
-                    maximum=10
-                  }}
-                />
+                <field.Custom>
+                  <CategorySelector
+                    @categories={{field.value}}
+                    @onChange={{fn this.updateExcludedCategories form}}
+                    @options={{hash
+                      allowUncategorized=true
+                      clearable=true
+                      maximum=10
+                    }}
+                  />
+                </field.Custom>
               </form.Field>
             </form.Section>
 
@@ -667,12 +682,27 @@ export default class EditDiscoveryFilters extends Component {
                   @title={{I18n.t "topic.filters.include_tags"}}
                   as |field|
                 >
-                  <TagChooser
-                    @tags={{field.value}}
-                    @onChange={{fn this.updateTags form}}
-                    @everyTag={{true}}
-                    @allowCreate={{false}}
-                    @maximum={{10}}
+                  <field.Custom>
+                    <TagChooser
+                      @tags={{field.value}}
+                      @onChange={{fn this.updateTags form}}
+                      @everyTag={{true}}
+                      @allowCreate={{false}}
+                      @maximum={{10}}
+                    />
+                  </field.Custom>
+                </form.Field>
+                <form.Field
+                  @name="tagMatchType"
+                  @title={{I18n.t "topic.filters.tag_match_type"}}
+                >
+                  <form.RadioButton
+                    @value="any"
+                    @label={{I18n.t "topic.filters.match_any_tags"}}
+                  />
+                  <form.RadioButton
+                    @value="all"
+                    @label={{I18n.t "topic.filters.match_all_tags"}}
                   />
                 </form.Field>
                 <form.Field
@@ -680,12 +710,27 @@ export default class EditDiscoveryFilters extends Component {
                   @title={{I18n.t "topic.filters.exclude"}}
                   as |field|
                 >
-                  <TagChooser
-                    @tags={{field.value}}
-                    @onChange={{fn this.updateExcludedTags form}}
-                    @everyTag={{true}}
-                    @allowCreate={{false}}
-                    @maximum={{10}}
+                  <field.Custom>
+                    <TagChooser
+                      @tags={{field.value}}
+                      @onChange={{fn this.updateExcludedTags form}}
+                      @everyTag={{true}}
+                      @allowCreate={{false}}
+                      @maximum={{10}}
+                    />
+                  </field.Custom>
+                </form.Field>
+                <form.Field
+                  @name="excludeTagMatchType"
+                  @title={{I18n.t "topic.filters.exclude_tag_match_type"}}
+                >
+                  <form.RadioButton
+                    @value="any"
+                    @label={{I18n.t "topic.filters.exclude_any_tags"}}
+                  />
+                  <form.RadioButton
+                    @value="all"
+                    @label={{I18n.t "topic.filters.exclude_all_tags"}}
                   />
                 </form.Field>
               </form.Section>
