@@ -182,7 +182,7 @@ const extension = {
     pmState: { NodeSelection },
   }) => {
     return {
-      match: /!\[([^\]]*)\]\(([^)\s]+)\)$/,
+      match: /!\[[^\]]*\]\([^\s]+\)$/,
       handler: (state, match, start, end) => {
         const tr = state.tr;
 
