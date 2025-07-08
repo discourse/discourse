@@ -956,7 +956,7 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "link toolbar" do
-    let(:insert_hyperlink_modal) { PageObjects::Modals::InsertHyperlink.new }
+    let(:upsert_hyperlink_modal) { PageObjects::Modals::UpsertHyperlink.new }
 
     it "shows link toolbar when cursor is on a link" do
       open_composer_and_toggle_rich_editor
@@ -980,19 +980,43 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(insert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to be_open
 
-      expect(insert_hyperlink_modal.link_text_value).to eq("Example")
-      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      insert_hyperlink_modal.fill_in_link_text("Updated Example")
-      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
-      insert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.fill_in_link_text("Updated Example")
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      upsert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-example.com']", text: "Updated Example")
 
       composer.toggle_rich_editor
       expect(composer).to have_value("[Updated Example](https://updated-example.com)")
+    end
+
+    it "escapes URL when editing link via modal" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Example](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
+
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com?query=with space")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css(
+        "a[href='https://updated-example.com?query=with%20space']",
+        text: "Example",
+      )
     end
 
     it "allows copying a link URL via toolbar" do
@@ -1101,14 +1125,14 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(insert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to be_open
 
-      expect(insert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
-      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      insert_hyperlink_modal.fill_in_link_text("Updated :tada: Party")
-      insert_hyperlink_modal.fill_in_link_url("https://updated-party.com")
-      insert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.fill_in_link_text("Updated :tada: Party")
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-party.com")
+      upsert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-party.com']")
       expect(rich).to have_css("a img[title=':tada:'], a img[alt=':tada:']")
@@ -1126,14 +1150,14 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(insert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to be_open
 
-      expect(insert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")
-      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+      expect(upsert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      insert_hyperlink_modal.fill_in_link_text("Updated **bold** and *italic* content")
-      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
-      insert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.fill_in_link_text("Updated **bold** and *italic* content")
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      upsert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-example.com']")
       expect(rich).to have_css("strong a", text: "bold")

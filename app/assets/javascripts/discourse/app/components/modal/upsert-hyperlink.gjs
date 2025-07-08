@@ -17,7 +17,7 @@ import { searchForTerm } from "discourse/lib/search";
 import { prefixProtocol } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
-export default class InsertHyperlink extends Component {
+export default class UpsertHyperlink extends Component {
   @tracked selectedRow = -1;
   @tracked searchResults = [];
   @tracked searchLoading = false;
@@ -144,7 +144,7 @@ export default class InsertHyperlink extends Component {
   @action
   onFormSubmit(data) {
     const origLink = data.linkUrl;
-    const linkUrl = prefixProtocol(origLink);
+    const linkUrl = encodeURI(prefixProtocol(origLink));
     const sel = this.args.model.toolbarEvent.selected;
 
     if (isEmpty(linkUrl)) {
@@ -197,7 +197,7 @@ export default class InsertHyperlink extends Component {
         )
       }}
       @bodyClass="insert-link"
-      class="insert-hyperlink-modal"
+      class="upsert-hyperlink-modal"
     >
       <:body>
         <div class="inputs">
