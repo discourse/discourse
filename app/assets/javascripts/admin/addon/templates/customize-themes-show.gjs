@@ -244,6 +244,12 @@ export default RouteTemplate(
           {{/if}}
         </div>
 
+        {{#if @controller.model.system}}
+          <div class="alert alert-info system-theme-info">
+            {{i18n "admin.customize.theme.built_in_description"}}
+          </div>
+        {{/if}}
+
         {{#if @controller.siteSettings.use_overhauled_theme_color_palette}}
           {{#unless @controller.model.component}}
             <DPageHeader>
