@@ -26,7 +26,7 @@ export default class FKControlTextarea extends Component {
   }
 
   /**
-   * Handles keyboard shortcuts in the textarea
+   * Handles keyboard shortcuts in the textarea.
    *
    * @param {KeyboardEvent} event - Keyboard event
    */
