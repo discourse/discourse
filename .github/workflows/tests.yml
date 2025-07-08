@@ -185,7 +185,7 @@ jobs:
       - name: Create and migrate database
         if: steps.app-cache.outputs.cache-hit != 'true'
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate:reset
@@ -195,7 +195,7 @@ jobs:
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
         env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
