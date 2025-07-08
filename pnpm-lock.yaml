@@ -169,6 +169,9 @@ importers:
       ember-modifier:
         specifier: ^4.2.0
         version: 4.2.2(@babel/core@7.28.0)
+      ember-route-template:
+        specifier: '*'
+        version: 1.0.3
       ember-template-imports:
         specifier: ^4.2.0
         version: 4.3.0
@@ -274,6 +277,9 @@ importers:
       ember-cli-htmlbars:
         specifier: ^6.3.0
         version: 6.3.0
+      ember-modifier:
+        specifier: '*'
+        version: 4.2.2(@babel/core@7.28.0)
       ember-source:
         specifier: '*'
         version: 5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5))
@@ -1047,6 +1053,9 @@ importers:
       ember-decorators:
         specifier: ^6.1.1
         version: 6.1.1
+      ember-modifier:
+        specifier: '*'
+        version: 4.2.2(@babel/core@7.28.0)
       ember-template-imports:
         specifier: ^4.3.0
         version: 4.3.0

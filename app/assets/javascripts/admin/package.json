@@ -25,7 +25,8 @@
     "@ember/render-modifiers": "^2.1.0",
     "@ember-compat/tracked-built-ins": "^0.9.1",
     "ember-modifier": "^4.2.0",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "ember-route-template": "*"
 
   },
   "devDependencies": {

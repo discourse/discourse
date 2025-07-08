@@ -2,6 +2,7 @@ import {
   assets,
   compatPrebuild,
   contentFor,
+  ember,
   hbs,
   optimizeDeps,
   resolver,
@@ -27,6 +28,7 @@ const extensions = [
   ".hbs",
   ".json",
 ];
+
 export default defineConfig(({ mode, command }) => {
   return {
     base: command === "build" ? "" : "/@vite/",
@@ -48,10 +50,9 @@ export default defineConfig(({ mode, command }) => {
     },
     plugins: [
       // Standard Ember stuff
+      ember(),
       hbs(),
-      templateTag(),
       scripts(),
-      resolver(),
       compatPrebuild(),
       assets(),
       contentFor(),

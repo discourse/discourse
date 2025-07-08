@@ -12,7 +12,8 @@
     "ember-template-imports": "^4.3.0",
     "truth-helpers": "workspace:*",
     "@glimmer/component": "*",
-    "ember-source": "*"
+    "ember-source": "*",
+    "ember-modifier": "*"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.32",

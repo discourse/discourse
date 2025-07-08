@@ -22,7 +22,8 @@
     "ember-cli-htmlbars": "^6.3.0",
     "ember-decorators": "^6.1.1",
     "ember-template-imports": "^4.3.0",
-    "truth-helpers": "workspace:*"
+    "truth-helpers": "workspace:*",
+    "ember-modifier": "*"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.2.0",
