@@ -187,7 +187,7 @@ RSpec.describe TopicsBulkAction do
           end
         end
 
-        context "when 'perform action silently' enabled" do
+        context "when 'silent' option is `true`" do
           it "will not send notification to users watching the topic" do
             expect do
               TopicsBulkAction.new(
