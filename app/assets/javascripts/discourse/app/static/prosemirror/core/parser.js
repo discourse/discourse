@@ -19,7 +19,14 @@ export default class Parser {
       : {};
 
     this.postParseTokens = includeDefault
-      ? { softbreak: (state) => state.addNode(state.schema.nodes.hard_break) }
+      ? {
+          softbreak: (state) => {
+            if (state.top().type.name === "paragraph") {
+              state.closeNode();
+              state.openNode(state.schema.nodes.paragraph);
+            }
+          },
+        }
       : {};
 
     for (const [key, value] of Object.entries(

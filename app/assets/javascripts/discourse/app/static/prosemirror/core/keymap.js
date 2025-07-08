@@ -1,9 +1,12 @@
 import {
   chainCommands,
-  exitCode,
+  createParagraphNear,
   joinTextblockBackward,
+  liftEmptyBlock,
+  newlineInCode,
   selectParentNode,
   setBlockType,
+  splitBlock,
 } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 import { undoInputRule } from "prosemirror-inputrules";
@@ -58,16 +61,12 @@ export function buildKeymap(
 
   const schema = params.schema;
 
-  keys["Shift-Enter"] = chainCommands(exitCode, (state, dispatch) => {
-    if (dispatch) {
-      dispatch(
-        state.tr
-          .replaceSelectionWith(schema.nodes.hard_break.create())
-          .scrollIntoView()
-      );
-    }
-    return true;
-  });
+  keys["Shift-Enter"] = chainCommands(
+    newlineInCode,
+    createParagraphNear,
+    liftEmptyBlock,
+    splitBlock
+  );
 
   keys["Mod-Shift-0"] = setBlockType(schema.nodes.paragraph);
   keys["Enter"] = splitListItem(schema.nodes.list_item);
