@@ -47,5 +47,25 @@ module(
 
       assert.dom(".form-kit__control-input").hasAttribute("disabled");
     });
+
+    test("when emptied", async function (assert) {
+      let data = { foo: "xxx" };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @data={{data}} @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Input />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      await formKit().field("foo").fillIn("");
+      await formKit().submit();
+
+      assert.deepEqual(data.foo, null, "it nullifies the value");
+    });
   }
 );
