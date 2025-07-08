@@ -198,6 +198,7 @@ export default class ProsemirrorTextManipulation {
       command = setBlockType(this.schema.nodes.heading, { level });
     }
     command?.(this.view.state, this.view.dispatch);
+    this.focus();
   }
 
   formatCode() {
