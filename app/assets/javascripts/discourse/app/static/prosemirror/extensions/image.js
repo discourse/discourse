@@ -188,7 +188,7 @@ const extension = {
 
         return tr
           .replaceWith(start, end, convertFromMarkdown(match[0]))
-          .setSelection(NodeSelection.create(tr.doc, start + 1))
+          .setSelection(NodeSelection.create(tr.doc, start + 2))
           .scrollIntoView();
       },
     };
