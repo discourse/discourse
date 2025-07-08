@@ -147,7 +147,6 @@ describe "Welcome banner", type: :system do
       it "shows above topic content" do
         SiteSetting.welcome_banner_location = "above_topic_content"
         visit "/"
-        pause_test
         expect(banner).to be_above_topic_content
       end
 
