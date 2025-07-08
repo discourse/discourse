@@ -3743,7 +3743,7 @@ RSpec.describe TopicsController do
 
     describe "when logged in" do
       before { sign_in(user) }
-      let!(:operation) { { type: "change_category", category_id: "1" } }
+      let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
 
       it "requires a list of topic_ids or filter" do
