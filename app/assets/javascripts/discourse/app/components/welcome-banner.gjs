@@ -101,7 +101,6 @@ export default class WelcomeBanner extends Component {
   <template>
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
-
       <div
         class="welcome-banner"
         {{this.checkViewport}}
