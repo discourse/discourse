@@ -15,11 +15,36 @@ class Field {
     return this.element.dataset.controlType;
   }
 
+  /**
+   * For elements that have a single input element, this returns that element.
+   *
+   * @throws {Error} If the control type does not have a single input element.
+   * @returns {HTMLElement} The input element for the control.
+   */
+  get inputElement() {
+    switch (this.controlType) {
+      case "input-text":
+      case "input-number":
+      case "password":
+      case "checkbox":
+        return this.element.querySelector("input");
+      case "code":
+      case "textarea":
+      case "composer":
+        return this.element.querySelector("textarea");
+      case "toggle":
+        return this.element.querySelector("button");
+      case "select":
+        return this.element.querySelector("select");
+      default:
+        throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+  }
+
   value() {
     switch (this.controlType) {
       case "input-text":
-        const input = this.element.querySelector("input");
-        return parseInt(input.value, 10);
+        return parseInt(this.inputElement.value, 10);
     }
   }
 
@@ -33,24 +58,7 @@ class Field {
   }
 
   async fillIn(value) {
-    let element;
-
-    switch (this.controlType) {
-      case "input-text":
-      case "input-number":
-      case "password":
-        element = this.element.querySelector("input");
-        break;
-      case "code":
-      case "textarea":
-      case "composer":
-        element = this.element.querySelector("textarea");
-        break;
-      default:
-        throw new Error(`Unsupported control type: ${this.controlType}`);
-    }
-
-    await fillIn(element, value);
+    await fillIn(this.inputElement, value);
   }
 
   async toggle() {
@@ -61,10 +69,10 @@ class Field {
         );
         break;
       case "checkbox":
-        await click(this.element.querySelector("input"));
+        await click(this.inputElement);
         break;
       case "toggle":
-        await click(this.element.querySelector("button"));
+        await click(this.inputElement);
         break;
       default:
         throw new Error(`Unsupported control type: ${this.controlType}`);
@@ -119,9 +127,8 @@ class Field {
         await picker.selectRowByValue(value);
         break;
       case "select":
-        const select = this.element.querySelector("select");
-        select.value = value;
-        await triggerEvent(select, "input");
+        this.inputElement.value = value;
+        await triggerEvent(this.inputElement, "input");
         break;
       case "menu":
         const trigger = this.element.querySelector(
@@ -145,6 +152,10 @@ class Field {
       default:
         throw new Error("Unsupported field type");
     }
+  }
+
+  async triggerEvent(eventName, options = {}) {
+    await triggerEvent(this.inputElement, eventName, options);
   }
 }
 
