@@ -97,7 +97,7 @@ export default class DiscoveryFilterNavigation extends Component {
         </div>
         <div class="topic-query-filter__controls">
           <DButton
-            @icon="pencil"
+            @icon="sliders"
             @action={{this.showEditFiltersModal}}
             title="Edit filters"
           />
