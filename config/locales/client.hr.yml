@@ -5037,6 +5037,7 @@ hr:
           never: "nikad"
       reports:
         title: "Popis dostupnih izvještaja"
+        meta_doc: "Izvješća su moćan alat koji vam pomaže da shvatite što se događa na vašoj stranici. Mogu vam pomoći u prepoznavanju trendova, uočavanju problema i donošenju odluka na temelju podataka."
         sidebar_title: "Izvještaji"
         sidebar_link:
           all: "Sva izvješća"

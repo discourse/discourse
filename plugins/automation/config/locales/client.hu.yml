@@ -158,7 +158,7 @@ hu:
               description: "Opcionális, korlátozza az aktiválást csak a létrehozott vagy szerkesztett eseményekre"
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
             restricted_tags:
               label: Címkék
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
@@ -226,7 +226,7 @@ hu:
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott PÜ-re vonatkozik
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
         topic_tags_changed:
           trigger_on_modes:
             tags_added_or_removed: Címkék hozzáadva vagy eltávolítva
@@ -248,7 +248,7 @@ hu:
           fields:
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
             restricted_category:
               label: Kategória
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
