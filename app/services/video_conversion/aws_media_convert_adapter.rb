@@ -6,7 +6,7 @@ module VideoConversion
     ADAPTER_NAME = "aws_mediaconvert"
 
     def convert
-      return false unless valid_settings?
+      return false if !valid_settings?
 
       begin
         new_sha1 = SecureRandom.hex(20)
@@ -21,9 +21,9 @@ module VideoConversion
         domain, path = url.split("/", 2)
 
         # Verify the domain contains our bucket
-        unless domain&.include?(SiteSetting.s3_upload_bucket)
+        if !domain&.include?(SiteSetting.s3_upload_bucket)
           raise Discourse::InvalidParameters.new(
-                  "Upload URL domain does not contain expected bucket name: #{SiteSetting.s3_upload_bucket}",
+                  "Upload URL domain for upload ID #{@upload.id} does not contain expected bucket name: #{SiteSetting.s3_upload_bucket}",
                 )
         end
 
@@ -115,7 +115,7 @@ module VideoConversion
       path = "#{output_path}.mp4"
       object = s3_store.object_from_path(path)
 
-      return false unless object&.exists?
+      return false if !object&.exists?
 
       begin
         optimized_video =
@@ -149,43 +149,51 @@ module VideoConversion
     private
 
     def valid_settings?
-      SiteSetting.video_conversion_enabled && SiteSetting.mediaconvert_role_arn.present? &&
-        SiteSetting.mediaconvert_endpoint.present?
+      SiteSetting.video_conversion_enabled && SiteSetting.mediaconvert_role_arn.present?
     end
 
     def mediaconvert_client
-      @mediaconvert_client ||=
-        begin
-          # For some reason the endpoint is not visible in the aws console UI so we need to get it from the API
-          if SiteSetting.mediaconvert_endpoint.blank?
-            client =
-              Aws::MediaConvert::Client.new(
-                region: SiteSetting.s3_region,
-                credentials:
-                  Aws::Credentials.new(
-                    SiteSetting.s3_access_key_id,
-                    SiteSetting.s3_secret_access_key,
-                  ),
-              )
-            resp = client.describe_endpoints
-            SiteSetting.mediaconvert_endpoint = resp.endpoints[0].url
-          end
+      @mediaconvert_client ||= build_client
+    end
 
-          Aws::MediaConvert::Client.new(
-            region: SiteSetting.s3_region,
-            credentials:
-              Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
-            endpoint: SiteSetting.mediaconvert_endpoint,
-          )
-        end
+    def build_client
+      # For some reason the endpoint is not visible in the aws console UI so we need to get it from the API
+      if SiteSetting.mediaconvert_endpoint.blank?
+        client = create_basic_client
+        resp = client.describe_endpoints
+        SiteSetting.mediaconvert_endpoint = resp.endpoints[0].url
+      end
+
+      # Validate that we have an endpoint before proceeding
+      if SiteSetting.mediaconvert_endpoint.blank?
+        error_msg = "MediaConvert endpoint is required but could not be discovered"
+        Discourse.warn_exception(
+          StandardError.new(error_msg),
+          message: error_msg,
+          env: {
+            upload_id: @upload.id,
+          },
+        )
+        raise StandardError, error_msg
+      end
+
+      create_basic_client(endpoint: SiteSetting.mediaconvert_endpoint)
+    end
+
+    def create_basic_client(endpoint: nil)
+      Aws::MediaConvert::Client.new(
+        region: SiteSetting.s3_region,
+        credentials:
+          Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
+        endpoint: endpoint,
+      )
     end
 
     def update_posts_with_optimized_video
-      video_refs = UploadReference.where(upload_id: @upload.id)
-      target_ids = video_refs.pluck(:target_id, :target_type)
+      post_ids = UploadReference.where(upload_id: @upload.id, target_type: "Post").pluck(:target_id)
 
       Post
-        .where(id: target_ids.map(&:first))
+        .where(id: post_ids)
         .find_each do |post|
           Rails.logger.info("Rebaking post #{post.id} to use optimized video")
           post.rebake!
@@ -193,7 +201,11 @@ module VideoConversion
     end
 
     def build_conversion_settings(input_path, output_path)
-      settings = {
+      self.class.build_conversion_settings(input_path, output_path)
+    end
+
+    def self.build_conversion_settings(input_path, output_path)
+      {
         timecode_config: {
           source: "ZEROBASED",
         },
