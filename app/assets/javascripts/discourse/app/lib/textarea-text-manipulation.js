@@ -780,7 +780,7 @@ export default class TextareaTextManipulation {
       // they are "list-like" in that they have a character at
       // the start and a level, rather than having a surrounding format.
       let number;
-      if (head.includes("#")) {
+      if (hval.includes("#")) {
         const currentHeadingLevel = sel.value.search(/[^#]/);
 
         // Remove existing heading level if same as the new one,
@@ -818,17 +818,27 @@ export default class TextareaTextManipulation {
       const postChars = sel.post.length - sel.post.trimStart().length;
 
       this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
-      this.selectText(
-        sel.start + (preNewlines.length - preChars),
-        number.length
-      );
+
+      if (opts.excludeHeadInSelection) {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars) + hval.length,
+          number.length - hval.length
+        );
+      } else {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars),
+          number.length
+        );
+      }
     }
   }
 
   @bind
   applyHeading(sel, level) {
     if (level > 0) {
-      this.applyList(sel, "#".repeat(level) + " ", "heading_text");
+      this.applyList(sel, "#".repeat(level) + " ", "heading_text", {
+        excludeHeadInSelection: true,
+      });
     } else {
       // Remove heading when the Paragrah level (0) is selected.
       const currentHeadingLevel = sel.lineVal.search(/[^#]/);
@@ -838,7 +848,10 @@ export default class TextareaTextManipulation {
         this.applyList(
           sel,
           "#".repeat(currentHeadingLevel) + " ",
-          "heading_text"
+          "heading_text",
+          {
+            excludeHeadInSelection: true,
+          }
         );
       }
     }

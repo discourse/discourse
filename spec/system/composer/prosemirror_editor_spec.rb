@@ -1251,14 +1251,14 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("## This is a test\n#### And this is another test")
       expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
-      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
-
-      composer.send_keys(:down)
-      expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
       expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h4")
 
-      composer.select_all
+      composer.send_keys(:up)
       expect(page).to have_css(".toolbar__button.heading.--active", count: 1)
+      expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-h2")
+
+      composer.select_all
+      expect(page).to have_no_css(".toolbar__button.heading.--active")
       expect(find(".toolbar__button.heading")).to have_css(".d-icon-discourse-text")
     end
 
