@@ -49,11 +49,11 @@ module PageObjects
       end
 
       def above_topic_content?
-        has_css?("#main-outlet > .welcome-banner", visible: :visible)
+        has_css?("#main-outlet > .welcome-banner--above-topic-content", visible: :visible)
       end
 
       def below_site_header?
-        has_css?(".discourse-root > .welcome-banner", visible: :visible)
+        has_css?(".discourse-root > .welcome-banner--below-site-header", visible: :visible)
       end
     end
   end
