@@ -2931,9 +2931,6 @@ developer:
     client: true
     default: 25000
     max: 99000
-  flush_timings_secs:
-    client: true
-    default: 60
   active_user_rate_limit_secs: 60
   verbose_localization:
     default: false
