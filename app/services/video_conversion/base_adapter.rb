@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 module VideoConversion
   class BaseAdapter
+    STATUS_COMPLETE = :complete
+    STATUS_ERROR = :error
+    STATUS_PENDING = :pending
+
     def initialize(upload, options = {})
       @upload = upload
       @options = options
@@ -12,7 +16,7 @@ module VideoConversion
     end
 
     # Checks the status of a conversion job
-    # Returns a symbol: :complete, :error, :pending
+    # Returns a symbol: STATUS_COMPLETE, STATUS_ERROR, or STATUS_PENDING
     def check_status(job_id)
       raise NotImplementedError, "#{self.class} must implement #check_status"
     end
