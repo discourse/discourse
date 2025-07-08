@@ -131,11 +131,33 @@ RSpec.describe SessionController do
   end
 
   describe "#email_login" do
-    let(:email_token) do
-      Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
-    end
+    let(:email_token) { Fabricate(:email_token, user:, scope: EmailToken.scopes[:email_login]) }
 
     before { SiteSetting.enable_local_logins_via_email = true }
+
+    context "when in readonly mode" do
+      before { Discourse.enable_readonly_mode }
+
+      it "allows admins to login" do
+        user.update!(admin: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+
+      it "does not allow moderators to login" do
+        user.update!(moderator: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(503)
+        expect(session[:current_user_id]).to eq(nil)
+      end
+
+      it "does not allow regular users to login" do
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(503)
+        expect(session[:current_user_id]).to eq(nil)
+      end
+    end
 
     context "when in staff writes only mode" do
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
@@ -147,7 +169,14 @@ RSpec.describe SessionController do
         expect(session[:current_user_id]).to eq(user.id)
       end
 
-      it "does not allow other users to login" do
+      it "allows moderators to login" do
+        user.update!(moderator: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+
+      it "does not allow regular users to login" do
         post "/session/email-login/#{email_token.token}.json"
         expect(response.status).to eq(503)
         expect(session[:current_user_id]).to eq(nil)

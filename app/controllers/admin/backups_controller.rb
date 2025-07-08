@@ -8,7 +8,20 @@ class Admin::BackupsController < Admin::AdminController
 
   before_action :ensure_backups_enabled
   skip_before_action :check_xhr, only: %i[index show logs check_backup_chunk upload_backup_chunk]
-  skip_before_action :ensure_backups_enabled, only: %w[show status index email]
+  skip_before_action :ensure_backups_enabled, only: %i[show status index email]
+
+  allow_in_readonly_mode :create,
+                         :cancel,
+                         :email,
+                         :destroy,
+                         :restore,
+                         :rollback,
+                         :readonly,
+                         :upload_backup_chunk,
+                         :create_multipart,
+                         :complete_multipart,
+                         :abort_multipart,
+                         :batch_presign_multipart_parts
 
   def index
     respond_to do |format|
