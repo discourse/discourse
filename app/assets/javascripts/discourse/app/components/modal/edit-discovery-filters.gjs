@@ -11,7 +11,7 @@ import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import I18n, { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
+import CategorySelector from "select-kit/components/category-selector";
 import ComboBox from "select-kit/components/combo-box";
 import TagChooser from "select-kit/components/tag-chooser";
 
@@ -38,7 +38,6 @@ export default class EditDiscoveryFilters extends Component {
   }
 
   parseExistingFilters() {
-    console.log(this.args.model.filterString);
     if (!this.args.model.filterString) {
       return;
     }
@@ -390,8 +389,8 @@ export default class EditDiscoveryFilters extends Component {
           <h3>{{I18n.t "topic.filters.categories"}}</h3>
           <div class="edit-discovery-filters__row">
             <label>{{I18n.t "topic.filters.include"}}</label>
-            <CategoryChooser
-              @value={{this.filteredCategories}}
+            <CategorySelector
+              @categories={{this.filteredCategories}}
               @onChange={{this.updateCategories}}
               @options={{hash
                 allowUncategorized=true
@@ -402,8 +401,8 @@ export default class EditDiscoveryFilters extends Component {
           </div>
           <div class="edit-discovery-filters__row">
             <label>{{I18n.t "topic.filters.exclude"}}</label>
-            <CategoryChooser
-              @value={{this.excludedCategories}}
+            <CategorySelector
+              @categories={{this.excludedCategories}}
               @onChange={{this.updateExcludedCategories}}
               @options={{hash
                 allowUncategorized=true
