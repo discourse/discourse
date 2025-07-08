@@ -20,7 +20,7 @@ class OptimizedVideo < ActiveRecord::Base
       optimized_video
     else
       Rails.logger.error(
-        "Failed to create optimized video: #{optimized_video.errors.full_messages.join(", ")}",
+        "Failed to create optimized video for upload ID #{upload.id}: #{optimized_video.errors.full_messages.join(", ")}",
       )
       nil
     end
