@@ -252,6 +252,7 @@ export default class Toolbar extends ToolbarBase {
 
                 return false;
               },
+              action: this.onHeadingMenuAction.bind(this),
             });
           }
           headingOptions.push({
@@ -262,6 +263,7 @@ export default class Toolbar extends ToolbarBase {
             condition: true,
             shortcut: `Shift+0`,
             active: ({ state }) => state?.inParagraph,
+            action: this.onHeadingMenuAction.bind(this),
           });
           return headingOptions;
         },
