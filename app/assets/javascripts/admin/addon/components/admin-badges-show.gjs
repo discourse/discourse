@@ -9,7 +9,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
 import lazyHash from "discourse/helpers/lazy-hash";
-import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
@@ -481,8 +480,6 @@ export default class AdminBadgesShow extends Component {
               {{#each this.badgeGroupings as |grouping|}}
                 <menu.Item @value={{grouping.id}}>{{grouping.name}}</menu.Item>
               {{/each}}
-              <menu.Divider />
-              <menu.Item @action={{routeAction "editGroupings"}}>Add new group</menu.Item>
             </field.Menu>
           </form.Field>
 
