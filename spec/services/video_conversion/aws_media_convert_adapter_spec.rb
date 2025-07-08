@@ -94,64 +94,12 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       end
 
       it "creates a MediaConvert job and enqueues status check" do
+        input_path = "s3://#{s3_bucket}/uploads/default/original/test.mp4"
+        expected_settings = described_class.build_conversion_settings(input_path, output_path)
+
         expected_job_params = {
           role: SiteSetting.mediaconvert_role_arn,
-          settings: {
-            inputs: [
-              {
-                audio_selectors: {
-                  "Audio Selector 1": {
-                    default_selection: "DEFAULT",
-                  },
-                },
-                file_input: "s3://#{s3_bucket}/uploads/default/original/test.mp4",
-                video_selector: {
-                },
-              },
-            ],
-            output_groups: [
-              {
-                name: "File Group",
-                output_group_settings: {
-                  file_group_settings: {
-                    destination: "s3://#{s3_bucket}/#{output_path}",
-                  },
-                  type: "FILE_GROUP_SETTINGS",
-                },
-                outputs: [
-                  {
-                    audio_descriptions: [
-                      {
-                        codec_settings: {
-                          aac_settings: {
-                            bitrate: 96_000,
-                            coding_mode: "CODING_MODE_2_0",
-                            sample_rate: 48_000,
-                          },
-                          codec: "AAC",
-                        },
-                      },
-                    ],
-                    container_settings: {
-                      container: "MP4",
-                    },
-                    video_description: {
-                      codec_settings: {
-                        codec: "H_264",
-                        h264_settings: {
-                          bitrate: 2_000_000,
-                          rate_control_mode: "CBR",
-                        },
-                      },
-                    },
-                  },
-                ],
-              },
-            ],
-            timecode_config: {
-              source: "ZEROBASED",
-            },
-          },
+          settings: expected_settings,
           status_update_interval: "SECONDS_10",
           user_metadata: {
             "upload_id" => upload.id.to_s,
