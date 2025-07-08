@@ -474,16 +474,4 @@
   textarea {
     resize: vertical;
   }
-
-  &__char-count {
-    position: absolute;
-    right: var(--space-2);
-    font-size: var(--font-down-2);
-    color: var(--primary-medium);
-
-    &.warning {
-      color: var(--danger);
-      font-weight: 500;
-    }
-  }
 }
