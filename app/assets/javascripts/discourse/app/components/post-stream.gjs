@@ -307,8 +307,8 @@ export default class PostStream extends Component {
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}
                 @rebakePost={{fn @rebakePost post}}
                 @recoverPost={{fn @recoverPost post}}
-                @removeAllowedGroup={{fn @removeAllowedGroup post}}
-                @removeAllowedUser={{fn @removeAllowedUser post}}
+                @removeAllowedGroup={{@removeAllowedGroup}}
+                @removeAllowedUser={{@removeAllowedUser}}
                 @replyToPost={{fn @replyToPost post}}
                 @selectBelow={{fn @selectBelow post}}
                 @selectReplies={{fn @selectReplies post}}
