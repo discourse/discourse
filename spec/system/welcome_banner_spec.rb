@@ -142,6 +142,21 @@ describe "Welcome banner", type: :system do
         expect(search_page).to have_no_search_icon
       end
     end
+
+    context "with interface location setting" do
+      it "shows above topic content" do
+        SiteSetting.welcome_banner_location = "above_topic_content"
+        visit "/"
+        pause_test
+        expect(banner).to be_above_topic_content
+      end
+
+      it "shows below site header" do
+        SiteSetting.welcome_banner_location = "below_site_header"
+        visit "/"
+        expect(banner).to be_below_site_header
+      end
+    end
   end
 
   context "when disabled" do

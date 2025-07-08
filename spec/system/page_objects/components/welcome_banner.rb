@@ -47,6 +47,14 @@ module PageObjects
           text: I18n.t("js.welcome_banner.subheader.logged_in_members"),
         )
       end
+
+      def above_topic_content?
+        has_css?("#main-outlet > .welcome-banner", visible: :visible)
+      end
+
+      def below_site_header?
+        has_css?(".discourse-root > .welcome-banner", visible: :visible)
+      end
     end
   end
 end
