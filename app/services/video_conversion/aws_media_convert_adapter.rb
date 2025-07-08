@@ -108,17 +108,17 @@ module VideoConversion
 
       case response.job.status
       when "COMPLETE"
-        :complete
+        STATUS_COMPLETE
       when "ERROR"
         Rails.logger.error("MediaConvert job #{job_id} failed")
-        :error
+        STATUS_ERROR
       when "SUBMITTED", "PROGRESSING"
-        :pending
+        STATUS_PENDING
       else
         Rails.logger.warn(
           "Unexpected MediaConvert job status for job #{job_id}: #{response.job.status}",
         )
-        :error
+        STATUS_ERROR
       end
     end
 
