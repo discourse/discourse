@@ -12,6 +12,8 @@
   --d-input-bg-color--disabled: var(--primary-very-low);
   --d-input-text-color--disabled: var(--primary-medium);
   --d-input-border--disabled: 1px solid var(--primary-low);
+  --d-input-padding-h: 0.65em;
+  --d-input-padding-v: 0.5em;
   --d-nav-color: var(--primary);
   --d-nav-bg-color: transparent;
   --d-nav-color--hover: var(--tertiary);
@@ -29,7 +31,7 @@
   --d-topic-list-avatar-size: 24px;
   --d-topic-list-title-font-size: var(--font-up-1);
   --d-topic-list-metadata-top-space: var(--space-1);
-  --d-topic-list-vertical-padding: var(--space-3);
+  --d-topic-list-data-padding-v: var(--space-3);
   --d-topic-list-data-font-size: var(--font-0);
   --d-tag-horizontal-padding: 0;
   --d-tag-font-size: var(--font-0);
