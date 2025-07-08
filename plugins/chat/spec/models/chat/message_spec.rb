@@ -198,6 +198,34 @@ describe Chat::Message do
   end
 
   describe ".cook" do
+    context "with enable_emoji_shortcuts site setting" do
+      context "when enabled" do
+        before { SiteSetting.enable_emoji_shortcuts = true }
+
+        it "converts emoji shortcuts to emoji" do
+          cooked = described_class.cook <<~MD
+            emoji shortcut :)
+          MD
+
+          expected =
+            "<p>emoji shortcut <img src=\"/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}\" title=\":slight_smile:\" class=\"emoji\" alt=\":slight_smile:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>"
+          expect(cooked).to match(expected)
+        end
+      end
+
+      context "when disabled" do
+        before { SiteSetting.enable_emoji_shortcuts = false }
+
+        it "does not convert emoji shortcuts" do
+          cooked = described_class.cook <<~MD
+            emoji shortcut :)
+          MD
+
+          expect(cooked).to match("<p>emoji shortcut :)</p>")
+        end
+      end
+    end
+
     it "does not support HTML tags" do
       cooked = described_class.cook("<h1>test</h1>")
 
@@ -330,7 +358,7 @@ describe Chat::Message do
     it "supports quote bbcode" do
       topic = Fabricate(:topic, title: "Some quotable topic")
       post = Fabricate(:post, topic: topic)
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
       avatar_src =
         "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "48")}"
 

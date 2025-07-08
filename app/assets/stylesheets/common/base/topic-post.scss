@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 #main-outlet > .regular {
   background: var(--d-content-background);
 }
@@ -633,6 +635,10 @@ aside.quote {
     @include post-aside;
     @include unselectable;
 
+    &[data-can-toggle-quote] {
+      cursor: pointer;
+    }
+
     // blockquote is underneath this and has top margin
     .avatar {
       margin-right: 0.5em;
@@ -679,7 +685,8 @@ aside.quote {
     margin-left: 0.3em;
   }
 
-  .quote-toggle {
+  .quote-toggle,
+  .back {
     padding: 0;
   }
 }
@@ -783,7 +790,7 @@ aside.quote {
   }
 
   .insert-quote + .quote-sharing {
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgb(255, 255, 255, 0.3);
   }
 
   .btn-flat {
@@ -944,6 +951,10 @@ aside.quote {
   flex: 0 0 auto;
   margin-right: 0.5em;
 
+  .btn {
+    padding: revert;
+  }
+
   &.post-date {
     margin-right: 0;
   }
@@ -982,6 +993,7 @@ aside.quote {
       }
 
       .d-icon {
+        margin-right: 0;
         order: 1;
         color: var(--primary-med-or-secondary-med);
       }
@@ -1421,7 +1433,7 @@ span.mention {
   padding: 3em 5em 2em
     calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     padding: 1.5em 1.5em 0.25em;
   }
 
@@ -1460,7 +1472,7 @@ span.mention {
         }
       }
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         &.btn-primary {
           margin-right: 100%;
         }
@@ -1589,7 +1601,7 @@ iframe {
     > .d-icon {
       padding: 0.5em;
       margin: 0.5em;
-      background-color: rgba(var(--always-black-rgb), 0.25);
+      background-color: rgb(var(--always-black-rgb), 0.25);
       color: var(--secondary-or-primary);
       cursor: pointer;
       display: none;
@@ -1680,8 +1692,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   &.--has-overflow,
   &.--editable {
     box-shadow:
-      0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
-      0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
+      0 2px 5px 0 rgb(var(--always-black-rgb), 0.1),
+      0 2px 10px 0 rgb(var(--always-black-rgb), 0.1);
   }
 }
 

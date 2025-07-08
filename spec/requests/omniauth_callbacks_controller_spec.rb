@@ -78,10 +78,64 @@ RSpec.describe Users::OmniauthCallbacksController do
   describe "Google Oauth2" do
     before { SiteSetting.enable_google_oauth2_logins = true }
 
-    it "should display the failure message if needed" do
-      get "/auth/failure"
-      expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("login.omniauth_error.generic"))
+    describe "#failure" do
+      it "defaults to the provider when only one is enabled" do
+        get "/auth/failure"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          I18n.t("login.omniauth_error.generic_with_provider", provider: "Google"),
+        )
+
+        get "/auth/failure", params: { provider: "facebook" }
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          I18n.t("login.omniauth_error.generic_with_provider", provider: "Google"),
+        )
+      end
+
+      it "uses the provider parameter when matching an enabled authenticator" do
+        SiteSetting.enable_facebook_logins = true
+
+        get "/auth/failure", params: { provider: "facebook" }
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          I18n.t("login.omniauth_error.generic_with_provider", provider: "Facebook"),
+        )
+      end
+
+      it "uses the strategy parameter when matching an enabled authenticator" do
+        SiteSetting.enable_facebook_logins = true
+
+        get "/auth/failure", params: { strategy: "facebook" }
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          I18n.t("login.omniauth_error.generic_with_provider", provider: "Facebook"),
+        )
+      end
+
+      it "shows a generic error message when there are more than one enabled providers" do
+        SiteSetting.enable_facebook_logins = true
+
+        get "/auth/failure"
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("login.omniauth_error.generic_without_provider"))
+      end
+
+      Users::OmniauthCallbacksController::ALLOWED_FAILURE_ERRORS.each_key do |error|
+        it "supports specific '#{error}' messages" do
+          get "/auth/failure", params: { message: error }
+          expect(response.status).to eq(200)
+          expect(flash[:error]).to include(I18n.t("login.omniauth_error.#{error}"))
+        end
+      end
+
+      it "falls back to generic error when the specific error doesn't exist" do
+        get "/auth/failure", params: { message: "foo_bar" }
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          I18n.t("login.omniauth_error.generic_with_provider", provider: "Google"),
+        )
+      end
     end
 
     describe "request" do

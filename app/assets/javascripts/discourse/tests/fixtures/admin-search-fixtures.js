@@ -3,6 +3,7 @@ export default {
     settings: [
       {
         setting: "title",
+        humanized_name: "Title",
         description:
           "The name of this site. Visible to all visitors including anonymous users.",
         keywords: [],
@@ -11,6 +12,7 @@ export default {
       },
       {
         setting: "site_description",
+        humanized_name: "Site description",
         description:
           "Describe this site in one sentence. Visible to all visitors including anonymous users.",
         keywords: [],
@@ -47,7 +49,7 @@ export default {
         type: "page_view_anon_browser_reqs",
         title: "Anonymous Browser Pageviews",
         description:
-          "Number of pageviews by anonymous visitors using real browsers.",
+          "Number of pageviews by anonymous visitors using real browsers. Anonym to test word matching.",
         description_link: null,
       },
       {

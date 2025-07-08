@@ -258,11 +258,13 @@ de:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} ist keine gültige Sprachvariante"
       too_long_validation:
         one: "darf höchstens %{count} Zeichen lang sein; du hast %{length} eingegeben."
         other: "darf höchstens %{count} Zeichen lang sein; du hast %{length} eingegeben."
       invalid_boolean: "Ungültiger boolescher Wert."
       taken: "wird bereits verwendet"
+      reserved: "%{name} Gruppenname reserviert ist, wähle einen anderen Namen"
       accepted: muss akzeptiert werden
       blank: darf nicht leer sein
       present: muss leer sein
@@ -286,6 +288,7 @@ de:
       less_than_or_equal_to: muss weniger oder gleich %{count} sein
       not_a_number: ist keine Zahl
       not_an_integer: muss eine Ganzzahl sein
+      must_all_be_positive: müssen alle positiv sein
       odd: muss ungerade sein
       record_invalid: ! "Validierung gescheitert: %{errors}"
       max_emojis: "kann nicht mehr als %{max_emojis_count} Emojis beinhalten"
@@ -331,7 +334,6 @@ de:
       s3_backup_requires_s3_settings: "Du kannst S3 nicht als Backup-Ort verwenden, solange du „%{setting_name}“ nicht festgelegt hast."
       s3_bucket_reused: "Du kannst nicht denselben Bucket für „s3_upload_bucket“ und „s3_backup_bucket“ verwenden. Bitte verwende einen anderen Bucket oder verwende für jeden Bucket einen anderen Pfad."
       secure_uploads_requirements: "S3-Uploads und S3-ACLs müssen aktiviert sein, bevor du sichere Uploads aktivieren kannst."
-      s3_use_acls_requirements: "Du musst S3-ACLs aktiviert haben, wenn sichere Uploads aktiviert sind."
       share_quote_facebook_requirements: "Du musst eine Facebook-App-ID festlegen, um das Teilen von Zitaten für Facebook zu aktivieren."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kannst 2FA nicht erzwingen, wenn lokale Anmeldungen deaktiviert sind."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kannst 2FA nicht erzwingen, wenn DiscourseConnect aktiviert ist."
@@ -623,58 +625,24 @@ de:
       one: "%{count} Beitrag"
       other: "%{count} Beiträge"
     "new-topic": |
-      Willkommen bei %{site_name} &mdash; **danke für das Erstellen eines neuen Themas!**
+      Danke für deinen Beitrag zu %{site_name}!
 
-      - Klingt der Titel interessant, wenn du ihn laut liest? Ist er eine gute Zusammenfassung?
+      Bevor du deinen Beitrag veröffentlichst, wähle bitte eine Kategorie oder ein Schlagwort aus, um dieses Thema mit verwandten Diskussionen zu gruppieren, sodass es für andere leicht zu finden ist.
 
-      - Wer würde sich für dieses Thema interessieren? Warum ist es wichtig? Welche Art von Antworten wünschst du dir?
-
-      - Verwende gebräuchliche Wörter, damit andere das Thema *finden* können. Wähle eine Kategorie (oder ein Schlagwort), um es mit ähnlichen Themen zu gruppieren.
-
-      Mehr Tipps findest du in [unseren Community-Richtlinien](%{base_path}/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
+      Weitere Tipps und Ratschläge für die Teilnahme an unserer Community findest du in unseren [Community-Richtlinien](%{base_path}/guidelines).
     "new-reply": |
-      Willkommen bei %{site_name} &mdash; **danke für deinen Beitrag!**
+      Danke für deinen Beitrag zu %{site_name}!
 
-      - Sei nett zu deinen Community-Mitgliedern.
+      Denk dran, wir sind alle echte Menschen. Bitte sei freundlich zu den anderen Community-Mitgliedern.
 
-      - Verbessert dein Beitrag das Gespräch?
-
-      - Konstruktive Kritik ist erwünscht, aber kritisiere *Ideen*, nicht Menschen.
-
-      Beachte bitte auch [unsere Community-Richtlinien](%{base_path}/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} angezeigt.
-    avatar: |
-      ### Wie wärs mit einem Bild für dein Konto?
-
-      Du hast schon ein paar Themen und Antworten geschrieben, aber dein Profilbild ist noch nicht so einzigartig wie du – es ist nur ein Buchstabe.
-
-      Hast du schon darüber nachgedacht, **[dein Benutzerprofil zu besuchen](%{profile_path})** und ein Bild hochzuladen, das dich repräsentiert?
-
-      Es ist einfacher, Diskussionen zu folgen und in Unterhaltungen interessante Personen zu finden, wenn jeder ein einzigartiges Profilbild hat!
-    sequential_replies: |
-      ### Denke darüber nach, auf mehrere Beiträge gleichzeitig zu antworten
-
-      Statt mehrere aufeinanderfolgende Antworten zu einem Thema zu schreiben, denke bitte darüber nach, eine einzige Antwort zu schreiben, die Zitate mehrerer vorheriger Beiträge oder mehrere Erwähnungen von Benutzernamen mit @ enthält.
-
-      Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
-
-      Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
-    dominating_topic: Du hast in diesem Thema schon eine Menge gepostet! Gib doch auch anderen die Möglichkeit, hier zu antworten und miteinander zu diskutieren.
+      Weitere Tipps und Ratschläge für die Teilnahme an unserer Community findest du in unseren [Community-Richtlinien](%{base_path}/guidelines).
+    dominating_topic: Du hast schon viele Beiträge in diesem Thema veröffentlicht! Gib auch anderen die Möglichkeit, sich zu beteiligen.
     get_a_room:
       one: Du hast @%{reply_username} einmal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
       other: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
-    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation gemeldet. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
+    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation gemeldet. Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten. Möchtest du trotzdem fortfahren?
     too_many_replies: |
-      ### Du hast das Antwort-Limit für dieses Thema erreicht
-
-      Entschuldige, aber neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im selben Thema beschränkt.
-
-      Anstatt eine weitere Antwort hinzuzufügen, denke darüber nach, deine vorherigen Antworten zu bearbeiten oder andere Themen zu besuchen.
-    reviving_old_topic: |
-      ### Thema neu beleben?
-
-      Die letzte Antwort in diesem Thema war **%{time_ago}**. Deine Antwort wird das Thema wieder an den Anfang der Liste schieben und jeden benachrichtigen, der sich zuvor an der Unterhaltung beteiligt hat.
-
-      Bist du dir sicher, dass du diese alte Unterhaltung fortsetzen möchtest?
+      Neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im selben Thema beschränkt. Bitte besuche auch andere Themen, um die Community kennenzulernen.
   activerecord:
     attributes:
       category:
@@ -1716,7 +1684,7 @@ de:
     block_onebox_on_redirect: "Verhindere Oneboxing für URLs, die zu einer weiterführenden Seite führen. Diese Konfiguration verhindert die Erstellung einer visuellen Karte (Onebox) für jede URL, die zu einem anderen Ziel weiterleitet, und stellt sicher, dass direkte, nicht weiterleitende URLs für Oneboxing priorisiert werden."
     allowed_inline_onebox_domains: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
     enable_inline_onebox_on_all_domains: "Ignoriere die Website-Einstellung allowed_inline_onebox_domains und erlaube Inline-Onebox auf allen Domains."
-    onebox_locale: "Das Gebietsschema, das an Onebox-Anbieter gesendet wird. Wenn du nichts angibst, wird die Standard-Sprachumgebung verwendet"
+    onebox_locale: "Die Oberflächensprache, die an Onebox-Anbieter gesendet wird. Wenn du nichts angibst, wird die Standard-Sprachumgebung verwendet"
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
     max_oneboxes_per_post: "Lege die maximale Anzahl von Oneboxes fest, die in einem Beitrag enthalten sein können. Oneboxes bieten eine Vorschau der verlinkten Inhalte im Beitrag."
     facebook_app_access_token: "Ein Token, das aus deiner Facebook-App-ID und deinem Geheimnis generiert wird. Wird verwendet, um Instagram-Oneboxes zu generieren."
@@ -1737,7 +1705,7 @@ de:
     x_summary_large_image: "Twitter-Karte „summary large image“ (sollte mindestens 280 Pixel in der Breite und mindestens 150 Pixel in der Höhe sein, keine .svg-Datei). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt"
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
-    email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
     enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus. Wenn enforce_second_factor_on_external_auth aktiviert ist, können sich Benutzer nicht mit externen Authentifizierungsanbietern anmelden, nachdem sie die Zwei-Faktor-Authentifizierung eingerichtet haben."
     enforce_second_factor_on_external_auth: "Verlangt von den Benutzern, dass sie immer die Zwei-Faktor-Authentifizierung verwenden. Wenn diese Option aktiviert ist, wird verhindert, dass sich Benutzer mit externen Authentifizierungsmethoden wie sozialen Netzwerken anmelden, wenn sie die Zwei-Faktor-Authentifizierung aktiviert haben. Wenn sie deaktiviert ist, müssen die Benutzer die Zwei-Faktor-Authentifizierung nur bestätigen, wenn sie sich mit einem Benutzernamen und einem Passwort anmelden. Siehe auch die Einstellung `enforce_second_factor`."
@@ -1806,7 +1774,7 @@ de:
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
     allowed_internal_hosts: "Eine Liste interner Hosts, die Discourse sicher indizieren kann (für Oneboxing und zu anderen Zwecken)"
     allowed_onebox_iframes: "Eine Liste von „iframe src“-Domains, die in Onebox-Einbettungen erlaubt sind. Mit `*` werden alle Standard-Onebox-Engines zugelassen."
-    allowed_iframes: "Eine Liste von iframe-src-URL-Präfixen, die Discourse problemlos in Beiträgen erlauben kann"
+    allowed_iframes: "Eine Liste von iframe-src-URL-Präfixen, die Discourse problemlos in Beiträgen erlauben kann. * kann verwendet werden, um beliebig vielen Nicht-/ Zeichen zu entsprechen."
     allowed_crawler_user_agents: "Browserkennungen von Webcrawlern, denen der Zugriff auf die Website erlaubt sein soll. WARNUNG! DIESE EINSTELLUNG BLOCKIERT ALLE HIER NICHT GELISTETEN CRAWLER!"
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
     slow_down_crawler_user_agents: 'Browserkennungen von Webcrawlern, die wie in der Einstellung „slow down crawler rate“ konfiguriert, einer Durchsatzratenbegrenzung unterworfen werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein.'
@@ -1931,7 +1899,7 @@ de:
     s3_endpoint: "Der Endpunkt kann so angepasst werden, dass er das Backup an einen S3-kompatiblen Service wie DigitalOcean Spaces oder Minio überträgt. WARNUNG: Bei Verwendung von AWS S3 leer lassen."
     s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Uploads im Papierkorb. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
     s3_disable_cleanup: "Verhindere das Entfernen von alten Backups aus S3, wenn es mehr Backups als das erlaubte Maximum gibt."
-    s3_use_acls: "AWS empfiehlt, keine ACLs auf S3-Buckets zu verwenden; wenn du diesem Rat folgst, deaktiviere diese Option. Diese Option muss aktiviert sein, wenn du sichere Uploads verwendest."
+    s3_use_acls: "AWS empfiehlt, keine ACLs für S3-Buckets zu verwenden. Deaktiviere diese Option nur, wenn du für die konfigurierten `s3_upload_bucket` und `s3_backup_bucket` Berechtigungsrichtlinien konfigurieren möchtest."
     enable_direct_s3_uploads: "Ermöglicht direkte mehrteilige Uploads zu Amazon S3, siehe https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 für weitere Details."
     backup_time_of_day: "Uhrzeit in UTC, zu der Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups einschließen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
@@ -2096,7 +2064,6 @@ de:
     authorized_extensions: "Eine Liste der zulässigen Dateierweiterungen für Uploads"
     authorized_extensions_for_staff: "Eine Liste der Dateierweiterungen, die für Uploads von Team-Mitgliedern zulässig sind (gilt zusätzlich zu der in der Website-Einstellung `authorized_extensions` definierten Liste)."
     theme_authorized_extensions: "Eine Liste der erlaubten Dateierweiterungen für Themen-Uploads"
-    max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird anhand des Titels und Inhalts bestimmt."
     max_image_megapixels: "Maximal zulässige Anzahl von Megapixeln für ein Bild. Bilder mit einer höheren Anzahl von Megapixeln werden abgelehnt."
     title_prettify: "Verhindert gängige Fehler im Titel, z. B. reine Großschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende usw."
     title_remove_extraneous_space: "Entferne führende Leerzeichen vor dem Satzzeichen am Ende."
@@ -2268,12 +2235,10 @@ de:
     max_notifications_per_user: "Maximale Anzahl an Benachrichtigungen pro Benutzer. Wenn diese Zahl überschritten wird, werden alte Benachrichtigungen gelöscht. Wird wöchentlich erzwungen. Zum Deaktivieren auf 0 setzen"
     allowed_user_website_domains: "Benutzer-Websites werden mit diesen Domains abgeglichen. Mehrere Domains können durch senkrechte Striche („|“) getrennt angegeben werden."
     allow_profile_backgrounds: "Benutzern erlauben, Profilhintergründe hochzuladen."
-    sequential_replies_threshold: "Anzahl an aufeinanderfolgenden Beiträgen, die ein Benutzer in einem Thema schreiben kann, bevor er eine entsprechende Benachrichtigung diesbezüglich erhält."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im selben Thema an dieselbe Person schreiben kann, bevor er gewarnt wird."
     dont_feed_the_trolls_threshold: "Anzahl der Meldungen von anderen Benutzern, bevor verwarnt wird."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
-    disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihren Avatar ändern können."
     pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen PN warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für nicht kategorisierte Themen in der Themenliste."
     header_dropdown_category_count: "Wie viele Kategorien im Header-Drop-down-Menü angezeigt werden können."
@@ -2306,7 +2271,6 @@ de:
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
     default_code_lang: "Standardmäßige Syntaxhervorhebung für Programmiersprachen, die auf Markdown-Codeblöcke angewendet wird (auto, text, ruby, python usw.). Dieser Wert muss auch in der Website-Einstellung `highlighted languages` enthalten sein."
-    warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Wende die Syntaxhervorhebung auf HTML-&lt;code&gt;-Blöcke an, auch wenn keine Sprache angegeben ist. Um Markdown-Codeblöcke zu konfigurieren, verwende die Einstellung „default code lang“."
     highlighted_languages: "Enthaltene Regeln zur Syntaxhervorhebung. (Achtung: Zu viele Sprachen können die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> für eine Demo"
     show_copy_button_on_codeblocks: "Eine Schaltfläche zu Codeblöcken hinzufügen, um den Inhalt des Blocks in die Zwischenablage des Benutzers zu kopieren."
@@ -2478,7 +2442,7 @@ de:
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
     glimmer_post_stream_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragsstroms verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
-    glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
+    glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragsstrom-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und veröffentlicht ist."
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
@@ -2486,10 +2450,19 @@ de:
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
+    about_page_extra_groups: "Gruppen, die auf der Seite „Über uns“ unter den Moderatoren angezeigt werden sollen."
+    about_page_extra_groups_initial_members: "Anzahl der Mitglieder, die pro Gruppe auf der „Über uns“-Seite angezeigt werden, bevor eine „Mehr anzeigen“-Schaltfläche erscheint."
+    about_page_extra_groups_show_description: "Ob die Gruppenbeschreibungen auf der Seite „Über uns“ angezeigt werden sollen."
+    about_page_extra_groups_order: "Reihenfolge der zusätzlichen Gruppen auf der Seite „Über uns“."
     adobe_analytics_tags_url: "„Adobe Analytics“-Schlagwort-URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
-    experimental_content_localization: "Zeigt lokalisierte Inhalte basierend auf den Spracheinstellungen der Benutzer an. Diese Inhalte können Kategorien, Schlagwörter, Beiträge und Themen umfassen. Diese Funktion wird derzeit intensiv entwickelt."
     rich_editor: "Aktiviere den Rich-Text-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor für intuitiveres und benutzerfreundlicheres Verfassen wechseln können. Der Rich-Text-Editor befindet sich in der Entwicklung, daher werden noch nicht alle Funktionen unterstützt — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>siehe Meta für weitere Details</a>."
+    viewport_based_mobile_mode: "EXPERIMENTELL: Deaktiviere die User-Agent-basierten Mobil-/Desktop-Modi und verwende stattdessen die Viewport-Breite."
+    reviewable_ui_refresh: "Gruppen, die die experimentelle neue Benutzeroberfläche in der Warteschlange zur Überprüfung nutzen können."
+    content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
+    content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
+    content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
+    content_localization_anon_language_switcher: "Aktiviere den Sprachumschalter, mit dem nicht eingeloggte Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Die verfügbaren Sprachen entsprechen der Liste in ‚content localization supported locales‘."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2511,6 +2484,7 @@ de:
         one: "Darf nicht länger als %{count} Zeichen sein."
         other: "Darf nicht länger als %{count} Zeichen sein."
       invalid_json: "Ungültiges JSON."
+      invalid_object: "Ungültiges Objekt."
       invalid_reply_by_email_address: "Wert muss „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_domain_hostname: "Darf kein * oder ? enthalten."
@@ -2558,6 +2532,8 @@ de:
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
+      content_localization_locale_limit: "Die Anzahl der unterstützten Sprachvarianten darf %{max} nicht überschreiten."
+      content_localization_anon_language_switcher_requirements: "Für den Sprachumschalter muss die Seiteneinstellung `set locale from cookie` aktiviert sein und `content localization supported locales` muss mindestens eine Sprache enthalten."
     keywords:
       clean_up_inactive_users_after_days: "deaktiviert|inaktiv|nicht aktiviert"
       navigation_menu: "Seitenleiste|Kopfzeilen-Drop-down"
@@ -2700,10 +2676,11 @@ de:
     not_available: "Nicht verfügbar. Wie wäre es mit %{suggestion}?"
     something_already_taken: "Etwas ist schiefgelaufen. Vielleicht ist dieser Benutzername oder diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
     omniauth_error:
-      generic: "Entschuldige, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
-      csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Versuche es bitte noch einmal."
-      request_error: "Beim Start der Authentifizierung ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
-      invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server-Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
+      generic_without_provider: "Bei der Autorisierung deines Kontos mit deinem Anmeldedienst ist leider ein Fehler aufgetreten. Bitte versuche es erneut."
+      generic_with_provider: "Bei der Autorisierung deines Kontos mit %{provider} ist leider ein Fehler aufgetreten. Bitte versuche es erneut."
+      csrf_detected: "Die Autorisierung ist leider abgelaufen oder du hast den Browser gewechselt. Bitte versuche es erneut."
+      request_error: "Beim Start der Autorisierung ist leider ein Fehler aufgetreten. Bitte versuche es erneut."
+      invalid_iat: "Das Autorisierungstoken kann wegen unterschiedlicher Server-Uhrzeiten leider nicht geprüft werden. Bitte versuche es erneut."
     omniauth_error_unknown: "Bei der Verarbeitung deiner Anmeldung ist etwas schiefgelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
     omniauth_confirm_button: "Weiter"
@@ -4154,7 +4131,7 @@ de:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
   login_required:
-    welcome_message: "# [Willkommen bei %{title}](#welcome)"
+    welcome_message: "# Willkommen bei %{title}"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
@@ -4180,7 +4157,7 @@ de:
     images:
       too_large: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB). Bitte verkleinere es und versuche es erneut."
       too_large_humanized: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size}). Bitte verkleinere es und versuche es erneut."
-      larger_than_x_megapixels: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
+      larger_than_x_megapixels: "Entschuldige, das Bild mit dem Dateinamen %{original_filename} ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild beschädigt?"
     placeholders:
       too_large: "(Bild größer als %{max_size_kb} KB)"
@@ -5098,6 +5075,14 @@ de:
       restored: Wiederhergestellt
     bulk_user_delete: "bei einem Massenlöschvorgang gelöscht"
     cli_bulk_post_delete: "Massenlöschung aus dem rake Task"
+    api_post_delete: "Per API gelöscht"
+    reminder_deleted: "Ersetzt durch neue Erinnerung"
+    user_associated_posts_deleted: "Benutzer wurde zerstört"
+    imap_email_deleted: "E-Mail wurde auf dem IMAP-Server gelöscht"
+    imap_email_marked_as_spam: "E-Mail wurde auf dem IMAP-Server in den Spam-Ordner verschoben"
+    auto_deleted_hidden_posts: "Versteckte Beiträge automatisch gelöscht"
+    seed_data_topic_updated: "Systemvorlage für Thema aktualisiert"
+    seed_data_topic_deleted: "Systemvorlage für Thema gelöscht"
   reviewables:
     already_handled: "Vielen Dank, aber wir haben diesen Beitrag bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
     already_handled_and_user_not_exist: "Danke, aber jemand hat es bereits überprüft und dieser Benutzer existiert nicht mehr."
@@ -5253,6 +5238,9 @@ de:
       approve_and_restore:
         title: "Beitrag genehmigen und wiederherstellen"
         complete: "Beitrag genehmigt und wiederhergestellt."
+      approve_and_unhide:
+        title: "Beitrag genehmigen und nicht länger verstecken"
+        complete: "Beitrag genehmigt und wieder sichtbar gemacht"
       delete_user:
         reason: "Gelöscht via Warteschlange zur Überprüfung"
         complete: "Benutzer gelöscht."

@@ -131,7 +131,7 @@ export default class BookmarkMenu extends Component {
         // a bookmark, it switches to the other Edit/Delete menu.
         this.quicksaved = true;
         this.toasts.success({
-          duration: 1500,
+          duration: "short",
           views: ["mobile"],
           data: { message: i18n("bookmarks.bookmarked_success") },
         });
@@ -170,11 +170,31 @@ export default class BookmarkMenu extends Component {
       const response = await this.bookmarkManager.delete();
       this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
       this.toasts.success({
-        duration: 1500,
+        duration: "short",
         data: {
           icon: "trash-can",
           message: i18n("bookmarks.deleted_bookmark_success"),
         },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.dMenu.close();
+    }
+  }
+
+  @action
+  async onClearReminder() {
+    try {
+      this.existingBookmark.selectedReminderType = null;
+      this.existingBookmark.selectedDatetime = null;
+      this.existingBookmark.reminderAt = null;
+
+      await this.bookmarkManager.save();
+
+      this.toasts.success({
+        duration: "short",
+        data: { message: i18n("bookmarks.reminder_clear_success") },
       });
     } catch (error) {
       popupAjaxError(error);
@@ -199,7 +219,7 @@ export default class BookmarkMenu extends Component {
       try {
         await this.bookmarkManager.save();
         this.toasts.success({
-          duration: 1500,
+          duration: "short",
           views: ["mobile"],
           data: { message: i18n("bookmarks.reminder_set_success") },
         });
@@ -268,6 +288,23 @@ export default class BookmarkMenu extends Component {
                 class="bookmark-menu__row-btn btn-transparent"
               />
             </dropdown.item>
+
+            {{#if this.existingBookmark.reminderAt}}
+              <dropdown.item
+                class="bookmark-menu__row --clear-reminder"
+                role="button"
+                tabindex="0"
+                data-menu-option-id="clear-reminder"
+              >
+                <DButton
+                  @icon="bell-slash"
+                  @label="bookmarks.clear_reminder"
+                  @action={{this.onClearReminder}}
+                  class="bookmark-menu__row-btn btn-transparent"
+                />
+              </dropdown.item>
+            {{/if}}
+
             <dropdown.item
               class="bookmark-menu__row --remove"
               role="button"

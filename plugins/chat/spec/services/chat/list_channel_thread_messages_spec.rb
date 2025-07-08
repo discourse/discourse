@@ -11,7 +11,6 @@ RSpec.describe Chat::ListChannelThreadMessages do
     it do
       is_expected.to allow_values(Chat::MessagesQuery::MAX_PAGE_SIZE, 1, "1", nil).for(:page_size)
     end
-    it { is_expected.not_to allow_values(Chat::MessagesQuery::MAX_PAGE_SIZE + 1).for(:page_size) }
   end
 
   describe ".call" do
@@ -150,9 +149,10 @@ RSpec.describe Chat::ListChannelThreadMessages do
         end
 
         it "returns messages" do
-          expect(result.can_load_more_past).to eq(false)
-          expect(result.can_load_more_future).to eq(false)
-          expect(result.messages).to contain_exactly(thread.original_message, *messages)
+          expect(result).to have_attributes(
+            metadata: a_hash_including(can_load_more_future: false, can_load_more_past: false),
+            messages: [thread.original_message, *messages],
+          )
         end
       end
 

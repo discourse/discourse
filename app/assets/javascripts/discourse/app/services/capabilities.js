@@ -14,9 +14,9 @@ const breakpointQueries = {
   "2xl": new TrackedMediaQuery("(min-width: 96rem)"),
 };
 
-class Capabilities {
-  touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
+const anyPointerCourseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
 
+class Capabilities {
   isAndroid = ua.includes("Android");
   isWinphone = ua.includes("Windows Phone");
   isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
@@ -65,6 +65,10 @@ class Capabilities {
       return breakpointQueries["2xl"].matches;
     },
   };
+
+  get touch() {
+    return anyPointerCourseQuery.matches;
+  }
 
   get userHasBeenActive() {
     return (

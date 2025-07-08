@@ -93,10 +93,7 @@ export default class ConfirmSession extends Component {
   @action
   async sendPasswordResetEmail() {
     try {
-      const result = await ajax("/session/forgot_password.json", {
-        data: { login: this.currentUser.username },
-        type: "POST",
-      });
+      const result = await this.currentUser.changePassword();
 
       if (result.success) {
         this.errorMessage = null;

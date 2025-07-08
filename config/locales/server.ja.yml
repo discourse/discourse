@@ -298,7 +298,6 @@ ja:
       s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
       secure_uploads_requirements: "安全なアップロードを有効にする前に、S3 アップロードと S3 ACL を有効にする必要があります。"
-      s3_use_acls_requirements: "安全なアップロードを有効にする場合は、S3 ACL が有効になっている必要があります。"
       share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect が有効になっている場合、2FA を適用することはできません。"
@@ -565,58 +564,8 @@ ja:
   education:
     until_posts:
       other: "投稿 %{count} 件"
-    "new-topic": |
-      %{site_name} へようこそ &mdash; **新しい会話を開始していただきありがとうございます！**
-
-      - タイトルを声を出して読み上げたとき、興味深いと感じられますか？要約はわかりやすいですか？
-
-      - どのようなユーザーが興味を持ちますか？なぜ重要ですか？どのような回答を求めていますか？
-
-      - 一般的に使用されている言葉をトピックに含めると、ほかのユーザーが*検索*しやすくなります。トピックを関連トピックとグループ化するには、カテゴリ (またはタグ) を選択してください。
-
-      詳細については、[コミュニティーガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
-    "new-reply": |
-      %{site_name} へようこそ &mdash; **貢献していただきありがとうございます！**
-
-      - 他のコミュニティーメンバーに親切に接してください。
-
-      ‐ あなたの返信によって会話が改善されますか？
-
-      ‐ 建設的な批判は歓迎されますが、ユーザーではなく*アイデア*を批判してください。
-
-      詳細は、[コミュニティーガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
-    avatar: |
-      ### アカウントに写真はいかがですか？
-
-      トピックと返信をいくつか投稿していますが、プロファイル写真が単なる文字になっています。
-
-      **[ユーザープロファイルにアクセス](%{profile_path})**して、あなたを表す写真をアップロードしませんか？
-
-      全員が特有のプロファイル写真を設定していれば、会話のディスカッションをフォローしやすく、面白い人たちを見つけやすくなります！
-    sequential_replies: |
-      ### 複数の投稿にまとめて返信しましょう
-
-      複数の返信をトピックに続けて投稿するのではなく、1 つの返信に前の投稿の引用や @name 参照を含めて投稿することができます。
-
-      前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
-
-      短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
-    dominating_topic: このトピックにたくさん投稿されましたね！ここに返信して互いに話し合うチャンスを他の人にも与えることを検討してください。
     get_a_room:
       other: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
-    dont_feed_the_trolls: この投稿は、モデレーターの注意が必要としてすでに通報されています。返信してもよろしいですか？否定的なコンテンツへの返信は、さらに否定的な行動を助長する傾向があります。
-    too_many_replies: |
-      ### このトピックへの返信数の制限に達しました
-
-      新しいユーザーの同じトピックへの返信は、一時的に %{newuser_max_replies_per_topic} 件に制限されています。
-
-      返信を追加する代わりに、前の返信を編集するかほかのトピックにアクセスしてください。
-    reviving_old_topic: |
-      ### このトピックを復活させませんか？
-
-      このトピックの最後の返信は **%{time_ago}**でした。あなたの返信によってこのトピックをリストのトップにバンプすれば、会話に以前参加していたユーザーに通知されます。
-
-      この古い会話を続けてもよろしいですか？
   activerecord:
     attributes:
       category:
@@ -1643,7 +1592,7 @@ ja:
     x_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
     email_custom_headers: "カスタムメールヘッダーのパイプ区切りのリスト"
-    email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a> をご覧ください"
+    email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a> をご覧ください"
     detailed_404: "特定のトピックにアクセスできない詳細な理由をユーザーに提供します。注意: URL が有効なトピックにリンクしているかどうかがユーザーにわかるため、安全性が低くなります。"
     enforce_second_factor: "ユーザーに Discourse UI にアクセスする前に二要素認証を有効にするように要求します。この設定は API または 'DiscourseConnect プロバイダー' 認証に影響しません。enforce_second_factor_on_external_auth が有効である場合、ユーザーは二要素認証をセットアップした後、外部認証プロバイダーを使用してログインできなくなります。"
     enforce_second_factor_on_external_auth: "ユーザーに常に二要素認証を使用するように要求します。これを有効にすると、二要素認証が有効である場合に、ソーシャルログインなどの外部認証方法でログインできなくなります。無効にすると、ユーザー名とパスワードでログインする際に二要素認証のみを確認する必要があります。`enforce_second_factor` 設定も参照してください。"
@@ -1712,7 +1661,6 @@ ja:
     blocked_ip_blocks: "Discourse によって決してクロールされない非公開 IP ブロックリスト"
     allowed_internal_hosts: "Discourse がワンボックスやその他の目的で安全にクロールできる内部ホストのリスト"
     allowed_onebox_iframes: "ワンボックス埋め込みを介して許可される iframe src ドメインのリスト。`*` はすべてのデフォルトのワンボックスエンジンを許可します。"
-    allowed_iframes: "Discourse が投稿で安全に許可できる iframe src URL プレフィックスのリスト"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
     slow_down_crawler_user_agents: '"slow down crawler rate" 設定の構成のとおりに速度の制限が必要なウェブクローラーのユーザーエージェント。各値の長さは 3 文字以上です。'
@@ -1834,7 +1782,6 @@ ja:
     s3_endpoint: "エンドポイントは DigitalOcean Spaces または Minio などの S3 対応サービスにバックアップするように変更できます。警告: AWS S3 を使用している場合は空のままにしてください。"
     s3_configure_tombstone_policy: "トゥームストーンアップロードの自動削除ポリシーを有効にする。重要: 無効である場合、アップロードが削除された後にスペースを再確保することはありません。"
     s3_disable_cleanup: "最大許容数を超えるバックアップが存在する場合、S3 の古いバックアップの削除を防止する。"
-    s3_use_acls: "AWS は S3 バケットでの ACL の使用を推奨していません。このアドバイスに従っている場合は、このオプションをオフにしてください。安全なアップロードを使用している場合は、これを有効にする必要があります。"
     enable_direct_s3_uploads: "Amazon S3 への直接のマルチ―パートアップロードを許可します。詳細については、https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 をご覧ください。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"
@@ -1999,7 +1946,6 @@ ja:
     authorized_extensions: "アップロードに使用できるファイル拡張子のリスト"
     authorized_extensions_for_staff: "`authorized_extensions` サイト設定で定義されたリストに加えて、スタッフユーザーがアップロードできるファイル拡張子のリスト。"
     theme_authorized_extensions: "テーマのアップロードに使用できるファイル拡張子のリスト"
-    max_similar_results: "新規トピックを作成中に、エディターの上に表示する類似トピックの数。タイトルと本文に基づいて比較されます。"
     max_image_megapixels: "画像に許可されるメガピクセルの最大数。これより大きいメガピクセルの画像は拒否されます。"
     title_prettify: "一般的なタイトルのスペルミスやエラー (すべて大文字、先頭の小文字、複数の！や？の使用、文末の重複するピリオドなど) を防止します。"
     title_remove_extraneous_space: "句読点の前にある先頭の空白を削除する。"
@@ -2169,12 +2115,10 @@ ja:
     max_notifications_per_user: "ユーザー当たりの通知の最大数。この数を超えると、古い通知は削除されます。毎週適用されます。0 に設定すると無効になります"
     allowed_user_website_domains: "ユーザーのウェブサイトはこれらのドメインに対して検証されます。パイプ区切りのリスト。"
     allow_profile_backgrounds: "ユーザーにプロファイル背景のアップロードを許可します。"
-    sequential_replies_threshold: "連続返信が多すぎることを通知されるまでに、ユーザーがトピックで連続して作成できる投稿数。"
     get_a_room_threshold: "警告を受けるまでに、ユーザーが同じトピックの同じ人物に行える投稿数。"
     dont_feed_the_trolls_threshold: "警告を受けるまでの他のユーザーからの通報数。"
     enable_mobile_theme: "モバイルデバイスにモバイル対応のテーマを使用します (デスクトップサイトに切り替え可能)。完全にレスポンシブなカスタムスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザーがトピックを過度に占領していることを通知する、トピック内のユーザーの投稿率。"
-    disable_avatar_education_message: "アバターを変更するためのチュートリアルメッセージを無効にする。"
     pm_warn_user_last_seen_months_ago: "新しい PM を作成するときに、対象の受信者 n か月以上もアクセスしていないことをユーザーに警告します。"
     suppress_uncategorized_badge: "トピックリストに未分類のトピックのバッジを表示しない"
     header_dropdown_category_count: "ヘッダードロップダウンメニューに表示できるカテゴリ数。"
@@ -2205,7 +2149,6 @@ ja:
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
     short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
     default_code_lang: "Markdown コードブロックに適用されるデフォルトのプログラミング言語構文ハイライト (auto、text、ruby、python など)。この値は、`highlighted languages` サイト設定にも含まれている必要があります。"
-    warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "HTMLで作成された &lt;code&gt; ブロックに言語が指定されていない場合でも構文ハイライトを適用します。Markdown で作成されたコードブロックを構成するには、'デフォルトのコード言語' 設定を使用してください。"
     highlighted_languages: "構文ハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> をご覧ください。"
     show_copy_button_on_codeblocks: "コードブロックに、ブロックのコンテンツをユーザーのクリップボードにコピーするボタンを追加します。"
@@ -2374,7 +2317,6 @@ ja:
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
-    glimmer_post_stream_mode_auto_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
@@ -2567,11 +2509,6 @@ ja:
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion}を試しますか？"
     something_already_taken: "エラーが発生しました。ユーザー名またはメールアドレスがすでに登録されている可能性があります。パスワードリセットを行ってください。"
-    omniauth_error:
-      generic: "アカウントを認証中にエラーが発生しました。もう一度お試しください。"
-      csrf_detected: "認証がタイムアウトしたか、ブラウザを切り替えました。もう一度お試しください。"
-      request_error: "認証を開始中にエラーが発生しました。もう一度お試しください。"
-      invalid_iat: "サーバークロックの差により認証トークンを検証できません。もう一度お試しください。"
     omniauth_error_unknown: "ログインを処理中に問題が発生しました。もう一度お試しください。"
     omniauth_confirm_title: "%{provider} を使用してログイン"
     omniauth_confirm_button: "続行"
@@ -3977,8 +3914,6 @@ ja:
   offline:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
-  login_required:
-    welcome_message: "# [%{title}へようこそ](#welcome)"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
@@ -4004,7 +3939,6 @@ ja:
     images:
       too_large: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size_kb} KB です)。サイズを変更してもう一度お試しください。"
       too_large_humanized: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size} です)。サイズを変更してもう一度お試しください。"
-      larger_than_x_megapixels: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_image_megapixels} メガピクセルです)。サイズを変更してもう一度お試しください。"
       size_not_found: "画像のサイズを判定できませんでした。画像が破損している可能性があります。"
     placeholders:
       too_large: "(%{max_size_kb}KB を超える画像)"

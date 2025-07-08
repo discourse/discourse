@@ -399,6 +399,7 @@ fr:
       created: "Vous avez mis un signet à ce message. %{name}"
       created_generic: "Vous avez mis ceci en signet. %{name}"
       create: "Créer un signet"
+      clear_reminder: "Supprimer le rappel"
       edit: "Modifier le signet"
       not_bookmarked: "mettre un signet à ce message"
       remove_reminder_keep_bookmark: "Supprimer le rappel et conserver le signet"
@@ -487,7 +488,7 @@ fr:
       one: "Voir %{count} nouveau sujet"
       other: "Voir %{count} nouveaux sujets"
     preview: "prévisualiser"
-    cancel: "annuler"
+    cancel: "Annuler"
     deleting: "Suppression…"
     save: "Enregistrer les modifications"
     saving: "Enregistrement…"
@@ -1161,7 +1162,6 @@ fr:
       said: "%{username} :"
       profile: "Profil"
       profile_possessive: "Profil de %{username}"
-      account_possessive: "Compte de %{name}"
       mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
       download_archive:
@@ -1882,6 +1882,7 @@ fr:
           edit_link_options: "Modifiez les options du lien ou envoyez-le par e-mail."
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
+          description: "Description"
           restrict: "Restreindre à"
           restrict_email: "Restreindre aux e-mails"
           restrict_domain: "Restreindre au domaine"
@@ -1993,7 +1994,6 @@ fr:
         title: "Adresse IP d'enregistrement"
       avatar:
         title: "Image de profil"
-        header_title: "profil, messages, signets et préférences"
         name_and_description: "%{name} - %{description}"
         edit: "Modifier l'image de profil"
       title:
@@ -2530,11 +2530,11 @@ fr:
       italic_label: "I"
       italic_title: "Italique"
       italic_text: "texte en italique"
-      link_title: "Lien"
+      link_title: "Insérer un lien"
       link_description: "saisir ici la description du lien"
-      link_dialog_title: "Insérer un lien"
-      link_optional_text: "titre (facultatif)"
-      link_url_placeholder: "Collez une adresse URL ou commencez votre saisie pour rechercher un sujet dans le forum"
+      link_dialog_action: "Insérer"
+      link_edit_action: "Mettre à jour"
+      link_optional_text: "Texte"
       blockquote_title: "Citation"
       blockquote_text: "Citation"
       code_title: "Texte préformaté"
@@ -2604,6 +2604,9 @@ fr:
       image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
+      link_toolbar:
+        copy: "Copier le lien"
+        link_copied: "Lien copié !"
     notifications:
       tooltip:
         regular:
@@ -2860,7 +2863,6 @@ fr:
           aria_label: filtrer par nombre de vues maximal
         additional_options:
           label: "Filtrer par nombre de messages et vues par sujet"
-    hamburger_menu: "menu"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -3000,10 +3002,6 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         hot: "Il n'y a aucun sujet populaire."
         filter: "Il n'y a pas de sujets."
-        educate:
-          new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
-          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge unread-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondu</li><li>que vous avez lus plus de 5 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
-          new_new: "<p>Vos nouveaux sujets apparaîtront ici et vos sujets non lus seront également affichés. Par défaut, les sujets sont considérés comme nouveaux et afficheront un indicateur <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> s'ils ont été créés au cours des 2 derniers jours. Les sujets non lus indiqueront le nombre de sujets non lus <span class=\"badge unread-posts badge-notification\">1</span> si vous avez créé le sujet, répondu au sujet, lu le sujet pendant plus de 5 minutes, ou si vous avez explicitement défini le sujet comme suivi ou surveillé via le \U0001F514 dans chaque sujet.</p><p>Accédez à vos <a href=\"%{userPrefsUrl}\">préférences</a> pour modifier cela.</p>"
       bottom:
         latest: "Il n'y a pas d'autres sujets récents à consulter."
         posted: "Il n'y a pas d'autres sujets publiés à consulter."
@@ -3567,6 +3565,13 @@ fr:
       in_reply_to: "Charger le message parent"
       view_all_posts: "Afficher tous les messages"
       badge_granted_tooltip: "%{username} a obtenu le badge « %{badge_name} » pour cette publication !"
+      localizations:
+        table:
+          actions: "Actions"
+          edit: "Modifier"
+          delete: "Supprimer"
+        post_language_selector:
+          none: "Jamais"
       errors:
         create: "Nous sommes désolés, une erreur est survenue lors de la création de votre message. Veuillez réessayer."
         edit: "Nous sommes désolés, une erreur est survenue lors de la modification de votre message. Veuillez réessayer."
@@ -4164,7 +4169,6 @@ fr:
         today: "Aujourd'hui"
     custom_homepage:
       admin_message: 'L''un de vos thèmes a activé le modificateur « custom_homepage », mais il n''affiche rien dans le connecteur [custom-homepage]. (Ce message s''adresse uniquement aux administrateurs du site.)'
-    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -4550,7 +4554,7 @@ fr:
           save: "Enregistrer"
           delete: "Supprimer"
           delete_confirm: "Voulez-vous vraiment supprimer cette section ?"
-          delete_public_confirm: "Cette section est <strong>visible par tout le monde</strong>, voulez-vous vraiment la supprimer ?"
+          delete_public_confirm: "Cette section est visible par tout le monde, voulez-vous vraiment la supprimer ?"
           update_public_confirm: "Les modifications seront visibles par <strong>tous les utilisateurs de</strong> sur ce site. voulez-vous continuer ?"
           mark_as_private_confirm: "Cette section est <strong>visible par tous les utilisateurs</strong>. Après la mise à jour, elle <strong>ne sera visible que par vous</strong>. Voulez-vous continuer ?"
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
@@ -4666,8 +4670,12 @@ fr:
         forum:
           label: Forum
       back_to_forum: "Retour au forum"
+      clear_filter: "Effacer le filtre"
+      no_results:
+        title: "Aucun résultat"
       collapse_all_sections: "Réduire toutes les sections"
       expand_all_sections: "Développer toutes les sections"
+      search: "Recherche"
       footer:
         interface_color_selector:
           light: "Clair"
@@ -4775,14 +4783,9 @@ fr:
     powered_by_discourse: "Alimenté par Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Sujets avec l'étiquette %{tags}"
         categories: "Toutes les catégories"
-        filter_labels:
-          latest: "Récents"
-          top: "Top"
-          new: "Nouveaux"
-          unread: "Non lus"
-          hot: "Populaires"
-          unseen: "Non lus"
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
@@ -4842,24 +4845,23 @@ fr:
         login_and_authentication:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Logo principal"
-              mobile: "Mobile"
-              email: "E-mail"
-              manifest_screenshots:
-                description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
-              opengraph_image:
-                description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
-          fonts:
-            title: "Polices"
-            form:
-              heading_font:
-                title: "Police de titre"
-            backfill_modal:
-              modal_yes: "Oui"
+        logo:
+          form:
+            logo:
+              title: "Logo principal"
+            mobile: "Mobile"
+            email: "E-mail"
+            manifest_screenshots:
+              description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
+            opengraph_image:
+              description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
+        fonts:
+          title: "Polices"
+          form:
+            heading_font:
+              title: "Police de titre"
+          backfill_modal:
+            modal_yes: "Oui"
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -5575,6 +5577,8 @@ fr:
           city_for_disputes_placeholder: "Ville"
           city_for_disputes_help: |
             Précisez la ville où résoudre les litiges juridiques liés à ce forum.
+          extra_groups:
+            groups: "Groupes"
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -5631,6 +5635,7 @@ fr:
             title: "Thèmes"
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
             new_theme: "Nouveau thème"
+            install: "Installer"
           components:
             title: "Composants"
             install: "Installer"
@@ -5663,6 +5668,8 @@ fr:
           save_successful: "Champ utilisateur enregistré."
         color_palettes:
           palette_name: "Nom"
+          duplicate: "Dupliquer"
+          delete: "Supprimer"
           color_options:
             toggle: "Sélectionnable par l'utilisateur"
             toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
@@ -5838,9 +5845,11 @@ fr:
           extra_files_upload: "Exportez le thème pour voir ces fichiers."
           extra_files_remote: "Exportez le thème ou vérifiez le dépôt Git pour voir ces fichiers."
           preview: "Prévisualiser"
+          default: "Actifs"
           settings_editor: "Éditeur de paramètres"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
+          user_selectable_badge_label: "Sélectionnable par l'utilisateur"
           color_scheme_user_selectable: "La palette de couleurs peut être sélectionnée par les utilisateurs"
           auto_update: "Mettre à jour automatiquement lors des mises à jour de Discourse"
           color_scheme: "Palette de couleurs"
@@ -5858,8 +5867,6 @@ fr:
           convert_theme_alert_generic: "Voulez-vous vraiment convertir ce thème en composant ?"
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs :"
-          set_default_theme: "Définir par défaut"
-          default_theme: "Thème par défaut"
           set_default_success: "Thème par défaut défini sur %{theme}"
           install_success: "%{theme} installé avec succès !"
           inactive_components: "Composants non utilisés :"
@@ -5930,7 +5937,6 @@ fr:
             error: "Ce thème a été désactivé automatiquement car il n'est pas compatible avec cette version de Discourse."
             minimum: "Nécessite la version %{version} ou supérieure de Discourse."
             maximum: "Nécessite la version %{version} ou inférieure de Discourse."
-          update_to_latest: "Mettre à jour"
           check_for_updates: "Vérifier les mises à jour"
           updating: "Mise à jour…"
           update_success: "%{theme} Mise à jour terminée"
@@ -5950,6 +5956,10 @@ fr:
           remote_theme_edits: "Pour modifier ce thème, vous devrez <a href='%{repoURL}' target='_blank'>proposer des changements dans son dépôt de développement</a>"
           repo_unreachable: "Le dépôt Git de ce thème est inaccessible. Message d'erreur :"
           imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
+          settings: "Paramètres"
+          colors: "Couleurs"
+          discard_colors: "Abandonner"
+          colors_title: "Couleurs"
           scss:
             text: "CSS"
           after_header:
@@ -5978,30 +5988,30 @@ fr:
           active_filter: "Actif"
           inactive_filter: "Inactif"
           updates_available_filter: "Mises à jour disponibles"
-          schema:
-            title: "Modifier le paramètre %{name}"
-            back_button: "Retour à %{name}"
-            fields:
-              required: "*requis"
-              groups:
-                at_least:
-                  one: "au moins %{count} groupe est requis"
-                  other: "au moins %{count} groupes sont requis"
-              categories:
-                at_least:
-                  one: "au moins %{count} catégorie est requise"
-                  other: "au moins %{count} catégories sont requises"
-              tags:
-                at_least:
-                  one: "au moins %{count} étiquette est requise"
-                  other: "au moins %{count} étiquettes sont requises"
-              string:
-                too_short:
-                  one: "doit contenir au moins %{count} caractère"
-                  other: "doit contenir au moins %{count} caractères"
-              number:
-                too_small: "doit être supérieur ou égal à %{count}"
-                too_large: "doit être inférieur ou égal à %{count}"
+        schema:
+          title: "Modifier le paramètre %{name}"
+          back_button: "Retour à %{name}"
+          fields:
+            required: "*requis"
+            groups:
+              at_least:
+                one: "au moins %{count} groupe est requis"
+                other: "au moins %{count} groupes sont requis"
+            categories:
+              at_least:
+                one: "au moins %{count} catégorie est requise"
+                other: "au moins %{count} catégories sont requises"
+            tags:
+              at_least:
+                one: "au moins %{count} étiquette est requise"
+                other: "au moins %{count} étiquettes sont requises"
+            string:
+              too_short:
+                one: "doit contenir au moins %{count} caractère"
+                other: "doit contenir au moins %{count} caractères"
+            number:
+              too_small: "doit être supérieur ou égal à %{count}"
+              too_large: "doit être inférieur ou égal à %{count}"
         colors:
           select_base:
             title: "Sélectionner la palette de couleurs de base"
@@ -6012,36 +6022,28 @@ fr:
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
-          delete_confirm: "Supprimer cette palette de couleurs ?"
           undo: "Annuler"
           undo_title: "Annuler les modifications que vous avez apportées à cette couleur depuis son dernier enregistrement."
           revert: "Rétablir"
           revert_title: "Rétablir la couleur de la palette par défaut de Discourse."
           primary:
             name: "primaire"
-            description: "La plupart des textes, icônes et bordures."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secondaire"
-            description: "Les couleurs principales du fond et du texte de certains boutons."
           tertiary:
             name: "tertiaire"
-            description: "Liens, boutons, notifications et couleurs d'accentuation."
           quaternary:
             name: "quaternaire"
-            description: "Pour une utilisation facultative dans les thèmes."
           header_background:
             name: "arrière-plan de l'en-tête"
-            description: "Couleur d'arrière-plan de l'en-tête du site."
           header_primary:
             name: "en-tête principal"
-            description: "Textes et icônes dans l'en-tête du site."
           highlight:
             name: "accentuation"
-            description: "La couleur de fond des éléments mis en surbrillance sur la page, comme les messages et sujets."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6050,19 +6052,14 @@ fr:
             name: "highlight-low"
           danger:
             name: "danger"
-            description: "Couleur de mise en valeur pour les actions comme la suppression de messages et de sujets."
           success:
             name: "succès"
-            description: "Utilisée pour indiquer qu'une action a réussi."
           love:
             name: "aimer"
-            description: "La couleur du bouton « J'aime »."
           selected:
             name: "sélectionné"
-            description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont sélectionnés/actifs."
           hover:
             name: "survol"
-            description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont survolés ou lorsque le curseur du clavier est à leur niveau."
           editor:
             light: "Clair"
             dark: "Sombre"

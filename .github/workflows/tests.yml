@@ -19,7 +19,7 @@ on:
       - "migrations/**"
 
 concurrency:
-  group: tests-${{ format('{0}-{1}', github.ref_name, github.job) }}
+  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
 permissions:
@@ -29,9 +29,9 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: ${{ (matrix.build_type == 'system' && matrix.target == 'plugin') && 30 || 20 }}
+    timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
 
     env:
       RAILS_ENV: test
@@ -244,6 +244,21 @@ jobs:
             exit 1
           fi
 
+      - name: Check SKIP_DB_AND_REDIS bootability
+        if: matrix.build_type == 'backend'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+        run: |
+          if ! (SKIP_DB_AND_REDIS=1 DISCOURSE_DEV_DB="nonexist" bin/rails runner "puts 'booted successfully'"); then
+            echo
+            echo "---------------------------------------------"
+            echo
+            echo "::error::SKIP_DB_AND_REDIS boot failed. Make sure the database is not being accessed during the Rails boot process."
+            echo "To reproduce locally, run \`SKIP_DB_AND_REDIS=1 DISCOURSE_DEV_DB='nonexist' bin/rails runner \"puts 'booted successfully'\"\`."
+            echo
+            exit 1
+          fi
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
@@ -274,6 +289,10 @@ jobs:
         if: matrix.build_type == 'system'
         run: script/assemble_ember_build.rb
 
+      - name: Install playwright
+        if: matrix.build_type == 'system'
+        run: pnpm playwright install --with-deps --no-shell chromium
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
@@ -302,8 +321,8 @@ jobs:
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
 
-      - name: Check for failed system test screenshots
-        id: check-failed-system-test-screenshots
+      - name: Check for failed system test artifacts
+        id: check-failed-system-test-artifacts
         if: always() && matrix.build_type == 'system'
         run: |
           if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
@@ -313,12 +332,15 @@ jobs:
           fi
         shell: bash
 
-      - name: Upload failed system test screenshots
+      - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v4
-        if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
+        if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
         with:
-          name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
-          path: tmp/capybara/*.png
+          name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
+          path: |
+            tmp/capybara/*.png
+            tmp/capybara/*.zip
+            tmp/capybara/*.webm
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
@@ -357,8 +379,8 @@ jobs:
       - name: Merge Artifacts
         uses: actions/upload-artifact/merge@v4
         with:
-          name: failed-system-test-screenshots
-          pattern: failed-system-test-screenshots-*
+          name: failed-system-test-artifacts
+          pattern: failed-system-test-artifacts-*
           delete-merged: true
           separate-directories: false
         # Don't fail the job if there aren't any artifacts to merge.

@@ -345,9 +345,9 @@ RSpec.describe Site do
       )
     end
 
-    describe "experimental_content_localization" do
+    describe "content_localization_enabled" do
       it "returns localized category names when enabled" do
-        SiteSetting.experimental_content_localization = true
+        SiteSetting.content_localization_enabled = true
 
         localization = Fabricate(:category_localization)
         category = localization.category
@@ -362,7 +362,7 @@ RSpec.describe Site do
       end
 
       it "returns original names when enabled" do
-        SiteSetting.experimental_content_localization = true
+        SiteSetting.content_localization_enabled = true
 
         category = Fabricate(:category, name: "derp", description: "derp derp")
 
@@ -376,7 +376,6 @@ RSpec.describe Site do
 
   context "when there are anonymous users with different locales" do
     let(:anon_guardian) { Guardian.new }
-    let!(:original_available_locales) { I18n.available_locales }
     let(:original_locale) { I18n.locale }
 
     before do
@@ -387,12 +386,12 @@ RSpec.describe Site do
     end
 
     after do
-      I18n.available_locales = original_available_locales
+      I18n.available_locales = nil
       I18n.locale = original_locale
     end
 
-    context "when experimental_content_localization is disabled" do
-      before { SiteSetting.experimental_content_localization = false }
+    context "when content_localization_enabled is disabled" do
+      before { SiteSetting.content_localization_enabled = false }
 
       it "caches anon site json with a global key (not locale scoped)" do
         expect(Discourse.redis.get("site_json")).to be_nil
@@ -411,8 +410,8 @@ RSpec.describe Site do
       end
     end
 
-    context "when experimental_content_localization is enabled" do
-      before { SiteSetting.experimental_content_localization = true }
+    context "when content_localization_enabled is enabled" do
+      before { SiteSetting.content_localization_enabled = true }
 
       it "caches anon site json separately for each locale" do
         expect(Discourse.redis.get("site_json_en")).to be_nil

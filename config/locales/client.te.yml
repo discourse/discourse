@@ -343,6 +343,7 @@ te:
       created: "మీరు ఈ పోస్ట్‌ను బుక్‌మార్క్ చేసారు. %{name}"
       created_generic: "మీరు దీన్ని బుక్‌మార్క్ చేసారు. %{name}"
       create: "బుక్‌మార్క్‌ని సృష్టించండి"
+      clear_reminder: "రిమైండర్‌ను క్లియర్ చేయండి"
       edit: "బుక్‌మార్క్‌ని సవరించండి"
       not_bookmarked: "ఈ పోస్ట్‌ను బుక్‌మార్క్ చేయండి"
       remove_reminder_keep_bookmark: "రిమైండర్‌ని తీసివేసి, బుక్‌మార్క్ ఉంచండి"
@@ -411,7 +412,7 @@ te:
       one: "%{count} కొత్త విషయం చూడండి"
       other: "%{count} కొత్త విషయాలను చూడండి"
     preview: "ప్రివ్యూ"
-    cancel: "రద్దు చేయండి"
+    cancel: "రద్దుచేయండి"
     deleting: "తొలగించబడుతోంది…"
     save: "మార్పులను సేవ్ చేయండి"
     saving: "సేవ్ చేయబడుతోంది…"
@@ -1059,7 +1060,6 @@ te:
       said: "%{username}:"
       profile: "ప్రొఫైల్"
       profile_possessive: "%{username} యొక్క ప్రొఫైల్"
-      account_possessive: "%{name} యొక్క ఖాతా"
       mute: "నిశ్శబ్దం"
       edit: "ప్రాధాన్యతలను సవరించండి"
       download_archive:
@@ -1685,6 +1685,7 @@ te:
           link_copied: "లింక్ కాపీ చేయబడింది!"
           show_advanced: "అధునాతన ఎంపికలను చూపించండి"
           hide_advanced: "అధునాతన ఎంపికలను దాచండి"
+          description: "వివరణ"
           restrict: "పరిమితం చేయండి"
           restrict_email: "ఇమెయిల్కు పరిమితం చేయండి"
           restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
@@ -1781,7 +1782,6 @@ te:
         title: "రిజిస్ట్రేషన్ ఐపీ చిరునామా"
       avatar:
         title: "ప్రొఫైల్ చిత్రం"
-        header_title: "ప్రొఫైల్, సందేశాలు, బుక్‌మార్క్‌లు మరియు ప్రాధాన్యతలు"
         name_and_description: "%{name} - %{description}"
         edit: "ప్రొఫైల్ చిత్రాన్ని సవరించండి"
       title:
@@ -2251,11 +2251,10 @@ te:
       italic_label: "I"
       italic_title: "వాలు"
       italic_text: "వాలు వచనం"
-      link_title: "హైపర్ లంకె"
+      link_title: "లింక్"
       link_description: "లంకె వివరణ ఇక్కడ రాయండి"
-      link_dialog_title: "హైపర్ లంకె చొప్పించండి"
-      link_optional_text: "ఐచ్చిక శీర్షిక"
-      link_url_placeholder: "URLని అతికించండి లేదా విషయాలను శోధించడానికి టైప్ చేయండి"
+      link_edit_action: "నవీకరించండి"
+      link_optional_text: "వచనం"
       blockquote_title: "బ్లాక్ కోట్"
       blockquote_text: "బ్లాక్ కోట్"
       code_title: "ముందే అలంకరించిన వచనం"
@@ -2322,6 +2321,8 @@ te:
         aria_label: చిత్రం కోసం ప్రత్యామ్నాయ వచనం
       delete_image_button: చిత్రాన్ని తొలగించండి
       toggle_image_grid: ఇమేజ్ గ్రిడ్‌ని టోగుల్ చేయండి
+      link_toolbar:
+        link_copied: "లింక్ కాపీ చేయబడింది!"
     notifications:
       tooltip:
         regular:
@@ -2570,7 +2571,6 @@ te:
           aria_label: గరిష్ట వీక్షణల ద్వారా ఫిల్టర్ చేయండి
         additional_options:
           label: "పోస్ట్ కౌంట్ మరియు విషయం వీక్షణల వారీగా ఫిల్టర్ చేయండి"
-    hamburger_menu: "మెను"
     new_item: "కొత్త"
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
@@ -2705,10 +2705,6 @@ te:
         top: "ఎట్టి అగ్ర విషయాలూ లేవు."
         hot: "ఏవి అగ్ర విషయాలూ లేవు."
         filter: "విషయాలూ లేవు."
-        educate:
-          new: '<p>మీ కొత్త విషయాలు ఇక్కడ కనిపిస్తాయి. అప్రమేయంగా, విషయాలు కొత్తవిగా పరిగణించబడతాయి మరియు అవి గత 2 రోజులలో సృష్టించబడినట్లయితే <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> సూచికను చూపుతుంది.</p><p>దీన్ని మార్చడానికి మీ <a href="%{userPrefsUrl}">ప్రాధాన్యతలను</a> సందర్శించండి.</p>'
-          unread: "<p>మీ చదవని విషయాలు ఇక్కడ కనిపిస్తాయి.</p><p>అప్రమేయంగా, విషయాలు చదవబడనిదిగా పరిగణించబడతాయి మరియు చదవని గణనలను చూపుతాయి <span class=\"badge unread-posts badge-notification\">1</span> ఒకవేళ మీరు:</p><ul><li>విషయాన్ని సృష్టించినట్లయితే</li><li>విషయానికి ప్రతిస్పందించినట్లైతే</li><li>విషయాన్ని 5 కంటే ఎక్కువ నిముషాలు చదివినట్లయితే</li></ul><p>లేదా ప్రతి విషయం లో \U0001F514 ద్వారా ట్రాక్/ఫాలో చేస్తున్నట్లైతే.</p><p>దీన్ని మార్చడానికి మీ <a href=\"%{userPrefsUrl}\">ప్రాధాన్యతలను</a> సందర్శించండి.</p>"
-          new_new: "<p>మీ కొత్త విషయాలు ఇక్కడ కనిపిస్తాయి మరియు మీరు చదవని విషయాలు కూడా ప్రదర్శించబడతాయి. అప్రమేయంగా, విషయాలు కొత్తవిగా పరిగణించబడతాయి మరియు అవి గత 2 రోజులలో సృష్టించబడినట్లయితే <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> సూచికను చూపుతుంది. మీరు విషయాన్ని సృష్టించినా, విషయానికి ప్రత్యుత్తరమిచ్చినా, విషయాన్ని 5 నిమిషాల కంటే ఎక్కువసేపు చదివినా లేదా విషయాన్ని ట్రాక్ చేసిన, అనుసరించిన (\U0001F514 ద్వారా), చదవని విషయాల గణనలను చూపుతాయి <span class=\"badge unread-posts badge-notification\">1</span>.</p><p>దీన్ని మార్చడానికి మీ <a href=\"%{userPrefsUrl}\">ప్రాధాన్యతలను</a> సందర్శించండి.</p>"
       bottom:
         latest: "ఇంకా కొత్త విషయాలు లేవు."
         posted: "ఇంకా రాసిన విషయాలు లేవు."
@@ -3247,6 +3243,13 @@ te:
         other: "మీరు %{count} ప్రత్యుత్తరాలను వీక్షిస్తున్నారు"
       in_reply_to: "పేరెంట్ పోస్ట్‌ని లోడ్ చేయండి"
       view_all_posts: "అన్ని పోస్ట్‌లను వీక్షించండి"
+      localizations:
+        table:
+          actions: "చర్యలు"
+          edit: "సవరించండి"
+          delete: "తొలగించండి"
+        post_language_selector:
+          none: "ఏదీ లేదు"
       errors:
         create: "క్షమించండి, మీ పోస్ట్‌ని సృష్టించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
         edit: "క్షమించండి, మీ పోస్ట్‌ని సవరించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
@@ -3803,7 +3806,6 @@ te:
         this_month: "ఈ నెల"
         this_week: "వారం"
         today: "ఈ రోజు"
-    browser_update: 'దురదృష్టవశాత్తూ, <a href="https://www.discourse.org/faq/#browser">మీ బ్రౌజర్‌కి మద్దతు లేదు</a>. దయచేసి రిచ్ కంటెంట్‌ను వీక్షించడానికి, లాగిన్ చేయడానికి మరియు ప్రత్యుత్తరం ఇవ్వడానికి <a href="https://browsehappy.com">మద్దతు ఉన్న బ్రౌజర్‌కి మారండి</a> .'
     permission_types:
       full: "సృష్టించడం / ప్రత్యుత్తరం ఇవ్వడం / చూడడం"
       create_post: "ప్రత్యుత్తరం ఇవ్వండి / చూడండి"
@@ -4275,6 +4277,10 @@ te:
         forum:
           label: ఫోరం
       back_to_forum: "తిరిగి ఫోరమ్కి"
+      clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
+      no_results:
+        title: "ఫలితాలు లేవు"
+      search: "వెతుకు"
       footer:
         interface_color_selector:
           light: "లేత"
@@ -4382,13 +4388,6 @@ te:
     discovery:
       headings:
         categories: "అన్ని వర్గాలు"
-        filter_labels:
-          latest: "తాజా"
-          top: "అగ్ర"
-          new: "కొత్త "
-          unread: "చదవని"
-          hot: "హాట్"
-          unseen: "చూడనవి"
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
@@ -4434,21 +4433,20 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "ప్రాథమిక లోగో"
-              mobile: "మొబైల్"
-              email: "మెయిల్"
-              manifest_screenshots:
-                description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
-          fonts:
-            form:
-              heading_font:
-                title: "శీర్షిక ఫాంట్"
-            backfill_modal:
-              modal_yes: "అవును"
+        logo:
+          form:
+            logo:
+              title: "ప్రాథమిక లోగో"
+            mobile: "మొబైల్"
+            email: "మెయిల్"
+            manifest_screenshots:
+              description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+        fonts:
+          form:
+            heading_font:
+              title: "శీర్షిక ఫాంట్"
+          backfill_modal:
+            modal_yes: "అవును"
         navigation:
           title: "నావిగేషన్"
         notifications:
@@ -4971,6 +4969,8 @@ te:
           company_name_placeholder: "ఆక్మే సంస్థ"
           governing_law: "పాలక చట్టం"
           city_for_disputes: "వివాదాలకు నగరం"
+          extra_groups:
+            groups: "సమూహాలు"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
           saved: "సేవ్ చేయబడింది!"
@@ -4999,6 +4999,7 @@ te:
           install: "ఇన్‌స్టాల్ చేయండి"
           themes:
             title: "థీమ్స్"
+            install: "ఇన్‌స్టాల్ చేయండి"
           components:
             title: "భాగాలు"
             install: "ఇన్‌స్టాల్ చేయండి"
@@ -5022,6 +5023,8 @@ te:
           delete: "తొలగించు"
         color_palettes:
           palette_name: "పేరు"
+          duplicate: "నకిలీ చేయండి"
+          delete: "తొలగించు"
           colors:
             title: "రంగులు"
       plugins:
@@ -5180,6 +5183,7 @@ te:
           extra_files_upload: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి."
           extra_files_remote: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి లేదా git రిపోజిటరీని తనిఖీ చేయండి."
           preview: "ప్రివ్యూ"
+          default: "క్రియాశీల"
           settings_editor: "అమరికల ఎడిటర్"
           is_default: "థీమ్ డిఫాల్ట్‌గా ప్రారంభించబడింది"
           user_selectable: "థీమ్‌ను సభ్యులు ఎంచుకోవచ్చు"
@@ -5264,8 +5268,6 @@ te:
             error: "ఈ థీమ్ స్వయంచాలకంగా నిలిపివేయబడింది ఎందుకంటే ఇది ఈ డిస్కోర్స్ సంస్కరణకు అనుకూలంగా లేదు."
             minimum: "డిస్కోర్స్ వెర్షన్ %{version} లేదా అంతకంటే ఎక్కువ అవసరం."
             maximum: "డిస్కోర్స్ వెర్షన్ %{version} లేదా దిగువన అవసరం."
-          update_to_latest: "లేటెస్ట్‌కి అప్‌డేట్ చేయండి"
-          check_for_updates: "తాజాకరణలకోసం ప్రయత్నించండి"
           updating: "నవీకరిస్తోంది…"
           up_to_date: "థీమ్ తాజాగా ఉంది, చివరిగా తనిఖీ చేయబడింది:"
           has_overwritten_history: "Git చరిత్ర ఫోర్స్ పుష్ ద్వారా భర్తీ చేయబడినందున ప్రస్తుత థీమ్ వెర్షన్ ఉనికిలో లేదు."
@@ -5283,6 +5285,10 @@ te:
           remote_theme_edits: "మీరు ఈ థీమ్‌ను సవరించాలనుకుంటే, మీరు తప్పనిసరిగా <a href='%{repoURL}' target='_blank'>దాని రిపోజిటరీలో మార్పును సమర్పించాలి</a>"
           repo_unreachable: "ఈ థీమ్ యొక్క Git రిపోజిటరీని సంప్రదించలేకపోయింది. లోపం సందేశం:"
           imported_from_archive: "ఈ థీమ్ .zip ఫైల్ నుండి దిగుమతి చేయబడింది"
+          settings: "అమరికలు"
+          colors: "రంగులు"
+          discard_colors: "విస్మరించండి"
+          colors_title: "రంగులు"
           scss:
             text: "సీయస్ యస్"
           after_header:
@@ -5311,12 +5317,12 @@ te:
           active_filter: "క్రియాశీల"
           inactive_filter: "నిష్క్రియ"
           updates_available_filter: "అప్‌డేట్‌లు అందుబాటులో ఉన్నాయి"
-          schema:
-            back_button: "తిరిగి %{name}కి"
-            fields:
-              number:
-                too_small: "%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి"
-                too_large: "%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి"
+        schema:
+          back_button: "తిరిగి %{name}కి"
+          fields:
+            number:
+              too_small: "%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి"
+              too_large: "%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి"
         colors:
           select_base:
             title: "బేస్ కలర్ పాలెట్ ఎంచుకోండి"
@@ -5324,35 +5330,28 @@ te:
           title: "రంగులు"
           about: "మీ థీమ్‌లు ఉపయోగించే రంగులను సవరించండి. ప్రారంభించడానికి కొత్త రంగుల పాలెట్‌ను సృష్టించండి."
           copy_name_prefix: "దీనికి నకలు"
-          delete_confirm: "ఈ రంగుల పాలెట్‌ను తొలగించాలా?"
           undo: "రద్దు చేయండి"
           undo_title: "చివరిసారి సేవ్ చేయబడినప్పటి నుండి ఈ రంగుకు మీ మార్పులను రద్దు చేయండి."
           revert: "తిద్దు"
           revert_title: "ఈ రంగును డిస్కోర్స్ డిఫాల్ట్ కలర్ పాలెట్‌కి రీసెట్ చేయండి."
           primary:
             name: "ప్రాథమిక"
-            description: "పాఠ్యం, చిహ్నాలు మరియు సరిహద్దులు."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "ద్వితీయ"
-            description: "ప్రధాన వెనుతలం రంగు మరియు కొన్ని మీటల పాఠ్యం రంగు."
           tertiary:
             name: "తృతీయ"
-            description: "లింక్‌లు, కొన్ని బటన్‌లు, నోటిఫికేషన్‌లు మరియు యాస రంగు."
           quaternary:
             name: "చతుర్థీ"
           header_background:
             name: "హెడరు వెనుతలం"
-            description: "సైటు హెడరు వెనుతలం రంగు."
           header_primary:
             name: "హెడరు ప్రాథమిక"
-            description: "సైటు హెడరు పాఠ్యం మరియు చిహ్నాలు"
           highlight:
             name: "హైలైట్"
-            description: "పోస్ట్‌లు మరియు విషయాలు వంటి పేజీలో హైలైట్ చేసిన విషయాల నేపథ్య రంగు."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -5361,19 +5360,14 @@ te:
             name: "highlight-low"
           danger:
             name: "ప్రమాదం"
-            description: "పోస్ట్‌లు మరియు విషయాలను తొలగించడం వంటి చర్యల కోసం రంగును హైలైట్ చేయండి."
           success:
             name: "విజయం"
-            description: "ఒక చర్య విజయవంతమైందని చూపడానికి వాడబడేది"
           love:
             name: "ప్రేమ"
-            description: "ఇష్ఠ బటను రంగు."
           selected:
             name: "ఎంపిక చేయబడినవి"
-            description: "జాబితా-అంశాలు ఎంచుకున్నప్పుడు/సక్రియంగా ఉన్నప్పుడు మూలకాల యొక్క నేపథ్య-రంగు."
           hover:
             name: "హోవర్"
-            description: "లిస్ట్-ఐటెమ్‌లు వాటిపై హోవర్ చేసినప్పుడు లేదా కీబోర్డ్ ఫోకస్‌ని కలిగి ఉన్నప్పుడు వాటి నేపథ్య-రంగు."
           editor:
             light: "లేత"
             dark: "డార్క్"

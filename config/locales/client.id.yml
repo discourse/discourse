@@ -366,7 +366,7 @@ id:
     topic_count_new:
       other: "Lihat %{count} topik baru"
     preview: "pratinjau"
-    cancel: "batal"
+    cancel: "Batal"
     deleting: "Menghapus…"
     save: "Simpan Perubahan"
     saving: "Menyimpan…"
@@ -1367,6 +1367,7 @@ id:
         invite:
           show_advanced: "Tampilkan Opsi Lanjutan"
           hide_advanced: "Sembunyikan Opsi Lanjutan"
+          description: "Deskripsi"
           cancel: "Batal"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
@@ -1650,10 +1651,7 @@ id:
       bold_title: "Strong"
       italic_label: "I"
       italic_title: "Emphasis"
-      link_title: "Hyperlink"
-      link_dialog_title: "Sisipkan Tautan"
-      link_optional_text: "judul opsional"
-      link_url_placeholder: "Tempel URL atau ketik untuk mencari topik"
+      link_dialog_action: "Masukkan"
       blockquote_title: "Blok Kutipan"
       blockquote_text: "Blok Kutipan"
       code_title: "Teks terformat"
@@ -1774,9 +1772,6 @@ id:
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
-        educate:
-          unread: "<p>Topik Anda yang belum dibaca muncul di sini.</p><p>Secara bawaan, topik dianggap belum dibaca dan akan menampilkan jumlah yang belum dibaca <span class=\"badge unread-posts badge-notification\">1</span> jika Anda:</p><ul><li>Membuat topik</li><li>Membalas topik</li><li>Membaca topik lebih dari 5 menit</li></ul><p>Atau jika Anda secara eksplisit atur topik ke Dilacak atau Diikuti melalui \U0001F514 di setiap topik.</p><p>Kunjungi <a href=\"%{userPrefsUrl}\">preferensi </a> Anda untuk mengubahnya.</p>"
-          new_new: "<p>Topik baru Anda akan muncul di sini, dan topik Anda yang belum dibaca juga akan ditampilkan. Secara bawaan, topik dianggap baru dan akan menampilkan indikator <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> jika dibuat dalam 2 hari terakhir. Topik yang belum dibaca akan menampilkan jumlah yang belum dibaca <span class=\"badge unread-posts badge-notification\">1</span> jika Anda: membuat topik, membalas topik, membaca topik selama lebih dari 5 menit, atau jika Anda secara eksplisit menyetel topik ke Dilacak atau Diikuti melalui \U0001F514 di setiap topik.</p><p>Kunjungi <a href=\"%{userPrefsUrl}\">preferensi</a> Anda untuk mengubahnya.</p>"
       bottom:
         new: "Tidak ada topik baru lagi"
     topic_bulk_actions:
@@ -1904,6 +1899,13 @@ id:
       has_replies:
         other: "%{count} Balasan"
       has_replies_count: "%{count}"
+      localizations:
+        table:
+          actions: "Aksi"
+          edit: "Ubah"
+          delete: "Hapus"
+        post_language_selector:
+          none: "Tidak ada"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         backup_too_large: "Maaf, file cadangan terlalu besar."
@@ -2243,6 +2245,7 @@ id:
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"
       expand_all_sections: "Buka semua bagian"
+      search: "Cari"
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"
@@ -2291,11 +2294,6 @@ id:
     discovery:
       headings:
         categories: "Semua kategori"
-        filter_labels:
-          latest: "Terbaru"
-          new: "New"
-          unread: "Belum dibaca"
-          unseen: "Tak terlihat"
   admin_js:
     settings: "Pengaturan"
     admin:
@@ -2312,13 +2310,12 @@ id:
         email:
           title: "Surel"
       config:
-        logo_and_fonts:
-          logo:
-            form:
-              email: "Surel"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ya"
+        logo:
+          form:
+            email: "Surel"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ya"
         navigation:
           title: "Navigasi"
         notifications:
@@ -2469,6 +2466,8 @@ id:
           community_name: "Nama komunitas"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nama"
+          extra_groups:
+            groups: "Grup"
           optional: "(opsional)"
           toasts:
             general_settings_saved: "Pengaturan umum disimpan"
@@ -2509,6 +2508,7 @@ id:
           delete: "Hapus"
         color_palettes:
           palette_name: "Nama"
+          delete: "Hapus"
           colors:
             title: "Warna"
       plugins:
@@ -2560,6 +2560,7 @@ id:
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
+          default: "Aktif"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
@@ -2572,21 +2573,23 @@ id:
           disable: "Nonaktifkan"
           add: "Menambahkan"
           empty: "Tidak ada item"
+          settings: "Pengaturan"
+          colors: "Warna"
+          discard_colors: "Batalkan"
+          colors_title: "Warna"
           all_filter: "Semua"
           active_filter: "Aktif"
-          schema:
-            fields:
-              number:
-                too_small: "harus sama dengan atau lebih besar dari %{count}"
-                too_large: "harus sama dengan atau kurang dari %{count}"
+        schema:
+          fields:
+            number:
+              too_small: "harus sama dengan atau lebih besar dari %{count}"
+              too_large: "harus sama dengan atau kurang dari %{count}"
         colors:
           title: "Warna"
           undo: "Batalkan perintah"
           revert: "Dibalik"
           primary:
             name: "utama"
-          quaternary:
-            description: "Untuk penggunaan opsional dalam tema."
           selected:
             name: "dipilih"
         email_style:

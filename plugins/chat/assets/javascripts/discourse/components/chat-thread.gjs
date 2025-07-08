@@ -545,7 +545,8 @@ export default class ChatThread extends Component {
     <div
       class={{concatClass
         "chat-thread"
-        (if this.messagesLoader.loading "loading")
+        (if this.messagesLoader.loading "--loading")
+        (if this.messagesLoader.fetchedOnce "--loaded")
       }}
       data-id={{@thread.id}}
       {{didInsert this.setup}}

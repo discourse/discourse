@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Discourse 细节"
   js:
     details:
       title: 隐藏详细信息

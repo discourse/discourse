@@ -635,7 +635,7 @@ class Post < ActiveRecord::Base
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
-      if !any_visible_posts_in_topic
+      if is_first_post? || !any_visible_posts_in_topic
         self.topic.update_status(
           "visible",
           false,
@@ -888,6 +888,8 @@ class Post < ActiveRecord::Base
       self.baked_at = Time.zone.now
       self.baked_version = BAKED_VERSION
     end
+
+    self.locale = nil if locale.blank?
   end
 
   def advance_draft_sequence
@@ -1321,6 +1323,18 @@ class Post < ActiveRecord::Base
 
   def mentions
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
+  end
+
+  def has_localization?(locale = I18n.locale)
+    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+  end
+
+  def in_user_locale?
+    locale == I18n.locale.to_s
+  end
+
+  def get_localization(locale = I18n.locale)
+    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
   end
 
   private

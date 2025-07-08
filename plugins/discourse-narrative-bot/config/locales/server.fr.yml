@@ -385,19 +385,6 @@ fr:
 
           Remarquez que quand vous répondez à un sujet ou lisez un sujet pendant plusieurs minutes, le niveau de notification est automatiquement configuré sur « Suivi ». Vous pouvez modifier cela dans [vos préférences utilisateur](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Savez-vous que vous pouvez ajouter un sondage sur n'importe quel message ? Essayez en utilisant la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roue dans l'éditeur pour **créer un sondage**.
-        not_found: |-
-          Oups ! Il n'y a pas de sondage dans votre réponse.
-
-          Utilisez la <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roue dans l'éditeur, ou copiez-collez ce sondage dans votre prochaine réponse :
-
-          « text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          »
         reply: |-
           Hé, bon sondage ! Comment s'est passée votre formation ?
 
@@ -406,20 +393,6 @@ fr:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Parfois, vous souhaiterez **masquer des détails** dans vos réponses :
-
-          - Quand vous discutez d'un film ou d'une série télévisée et que vous risquez de spoiler la communauté.
-
-          - Quand votre message a besoin de nombreux détails optionnels qui peuvent rendre le sujet illisible
-
-          [details=Sélectionnez ceci pour voir comment cela fonctionne !]
-          1. Sélectionnez la roue <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dans l'éditeur.
-          2. Sélectionnez « Masquer le texte ».
-          3. Modifiez le résumé et ajoutez votre contenu.
-          [/details]
-
-          Pouvez-vous utiliser la roue <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dans l'éditeur pour ajouter une section de détails dans votre prochaine réponse ?
         not_found: |-
           Des soucis pour créer le widget de détail ? Essayez d'inclure le texte suivant dans votre prochaine réponse :
 

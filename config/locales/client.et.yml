@@ -333,7 +333,7 @@ et:
       one: "Vaata %{count} uut teemat"
       other: "Vaata %{count} uut teemat"
     preview: "eelvaade"
-    cancel: "tühista"
+    cancel: "Tühista"
     deleting: "Kustutan..."
     save: "Salvesta muudatused"
     saving: "Salvestan..."
@@ -1161,6 +1161,7 @@ et:
         invite_link:
           success: "Kutse link edukalt genereeritud!"
         invite:
+          description: "Kirjeldus"
           cancel: "Tühista"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
@@ -1222,7 +1223,6 @@ et:
         title: "Registreerumise IP-aadress"
       avatar:
         title: "Profiilipilt"
-        header_title: "profiil, sõnumid, järjehoidjad ja eelistused"
       title:
         title: "Pealkiri"
         none: "(pole)"
@@ -1465,10 +1465,8 @@ et:
       italic_label: "I"
       italic_title: "Esiletõstetud"
       italic_text: "esiletõstetud tekst"
-      link_title: "Hüperlink"
       link_description: "sisesta viite kirjeldus siia"
-      link_dialog_title: "Lisa hüperlink"
-      link_optional_text: "valikuline pealkiri"
+      link_optional_text: "Tekst"
       blockquote_title: "Tsitaat"
       blockquote_text: "Tsitaat"
       code_title: "Eelvormindatud tekst"
@@ -2055,6 +2053,13 @@ et:
         other: "Vaatad %{count} vastust postitusele"
       in_reply_to: "Laadi algne postitus"
       view_all_posts: "Vaata kõiki postitusi"
+      localizations:
+        table:
+          actions: "Tegevused"
+          edit: "Muuda"
+          delete: "Kustuta"
+        post_language_selector:
+          none: "Pole"
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
@@ -2671,6 +2676,7 @@ et:
       panels:
         forum:
           label: Foorum
+      search: "Otsi"
       footer:
         interface_color_selector:
           light: "Hele"
@@ -2694,12 +2700,9 @@ et:
         about: "Teave"
     discovery:
       headings:
+        multi_tag:
+          default: "%{tags}-ga sildistatud teemad"
         categories: "Kõik kategooriad"
-        filter_labels:
-          latest: "Värskeimad"
-          top: "Juhtivad"
-          new: "Uus"
-          unread: "Lugemata"
   admin_js:
     settings: "Sätted"
     admin:
@@ -2731,14 +2734,13 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobiil"
-              email: "Meiliaadress"
-          fonts:
-            backfill_modal:
-              modal_yes: "Jah"
+        logo:
+          form:
+            mobile: "Mobiil"
+            email: "Meiliaadress"
+        fonts:
+          backfill_modal:
+            modal_yes: "Jah"
         navigation:
           title: "Navigatsioon"
         notifications:
@@ -3030,6 +3032,8 @@ et:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nimi"
+          extra_groups:
+            groups: "Rühmad"
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
@@ -3072,6 +3076,7 @@ et:
           delete: "Kustuta"
         color_palettes:
           palette_name: "Nimi"
+          delete: "Kustuta"
           colors:
             title: "Värvid"
       plugins:
@@ -3185,6 +3190,7 @@ et:
           desktop: "Töölaud"
           mobile: "Mobiil"
           preview: "Eelvaade"
+          default: "Aktiivne"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
           color_scheme: "Värvipalett"
@@ -3204,6 +3210,9 @@ et:
           disable: "Keela"
           add: "Lisa"
           theme_settings: "Teema seaded"
+          settings: "Seaded"
+          colors: "Värvid"
+          colors_title: "Värvid"
           scss:
             text: "CSS"
           after_header:
@@ -3216,48 +3225,38 @@ et:
           active_filter: "Aktiivne"
           inactive_filter: "Mitteaktiivne"
           updates_available_filter: "Uuendused on saadaval"
-          schema:
-            fields:
-              required: "*nõutud"
-              number:
-                too_small: "peab olema suurem või võrdne kui %{count}"
-                too_large: "peab olema väiksem või võrdne kui %{count}"
+        schema:
+          fields:
+            required: "*nõutud"
+            number:
+              too_small: "peab olema suurem või võrdne kui %{count}"
+              too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
           title: "Värvid"
           copy_name_prefix: "Koopia sellest"
-          delete_confirm: "Kas kustutada see vävripalett?"
           undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
           revert: "Võta tagasi"
           primary:
             name: "primaarne"
-            description: "Enamik tekste, ikoone ja ääri."
           secondary:
             name: "teise astme"
-            description: "Peamine taustavärv ja teksti värv mõnedel nuppudel."
           tertiary:
             name: "kolmanda astme"
-            description: "Viited, mõned nupud, teavitused ja rõhuvärv."
           quaternary:
             name: "neljanda astme"
           header_background:
             name: "päise taust"
-            description: "Saidi päise taustavärv."
           header_primary:
             name: "päise primaarne"
-            description: "Tekst ja ikoonid saidi päises."
           highlight:
             name: "esiletõst"
-            description: "Taustavärv esiletõstetud elementidel lehel, nagu postitused ja teemad."
           danger:
             name: "oht"
-            description: "Esiletõstetud tegevuste värv nagu postituste ja teemade kustutamine."
           success:
             name: "edu"
-            description: "Näitab, et tegevus oli edukas."
           love:
             name: "armastus"
-            description: "Meeldimise nupu värvus."
           selected:
             name: "valitud"
           editor:

@@ -170,6 +170,60 @@ ug:
           unreachable_multiple:
             one: "@%{group} ۋە باشقا %{count} گۇرۇپپا ئاتاشنقا يول قويمايدۇ."
             other: "@%{group} ۋە باشقا %{count} گۇرۇپپا ئاتاشنقا يول قويمايدۇ."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                              other {Mentioning @{group1} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                              other {@{group1} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                            other {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                            other {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                            other {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ<a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                            other {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "بۇ ئۇچۇر %{count} قېتىم ئاتاش ئۇقتۇرۇش چەكلىمىسىدىن ئېشىپ كەتتى."
           other: "بۇ ئۇچۇر %{count} قېتىم ئاتاش ئۇقتۇرۇش چەكلىمىسىدىن ئېشىپ كەتتى."
@@ -477,6 +531,7 @@ ug:
         select_emoji: "چىراي ئىپادە تاللا"
         system: "سىستېما"
         title: "كەلگەن تور ئىلمىكى"
+        header_description: "سىرتقى سىستېما كەلگەن تور ئىلمىكىنى ئىشلىتىپ ئۇچۇرنى ماشىنا ئادەم ئىشلەتكۈچى سۈپىتىدە بەلگىلەنگەن سۆھبەت قانىلىغا يوللاشتا قوللىنىدۇ"
         url: "تور ئادرېسى"
         url_instructions: "بۇ تور ئادرېسىنىڭ مەخپىي قىممىتى بار- ئۇنى بىخەتەر ساقلاڭ."
         username: "ئىشلەتكۈچى ئاتى"
@@ -590,6 +645,7 @@ ug:
         header: "يېڭى ئۇچۇر"
         cancel: "ۋاز كەچ"
       quick_reaction_type:
+        title: "بىر چېكىپ پاراڭلىشىش ئىنكاسى"
         options:
           frequent: "دائىم ئىشلىتىلىدىغان پاراڭلىشىش ئىنكاسى"
           custom: "ئىختىيارى ئىنكاس"

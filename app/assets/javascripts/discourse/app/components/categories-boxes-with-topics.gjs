@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings, tagName } from "@ember-decorators/component";
@@ -9,6 +8,7 @@ import CategoryTitleBefore from "discourse/components/category-title-before";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")
@@ -71,7 +71,7 @@ export default class CategoriesBoxesWithTopics extends Component {
 
           <PluginOutlet
             @name="category-box-below-each-category"
-            @outletArgs={{hash category=c}}
+            @outletArgs={{lazyHash category=c}}
           />
         </div>
       </div>

@@ -12,6 +12,7 @@ import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { i18n } from "discourse-i18n";
 
@@ -36,7 +37,7 @@ export default RouteTemplate(
           <PluginOutlet
             @name="login-before-modal-body"
             @connectorTagName="div"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               flashChanged=this.flashChanged
               flashTypeChanged=this.flashTypeChanged
             }}
@@ -64,7 +65,9 @@ export default RouteTemplate(
               <WelcomeHeader @header={{i18n "login.header_title"}}>
                 <PluginOutlet
                   @name="login-header-bottom"
-                  @outletArgs={{hash createAccount=@controller.createAccount}}
+                  @outletArgs={{lazyHash
+                    createAccount=@controller.createAccount
+                  }}
                 />
               </WelcomeHeader>
               {{#if @controller.showLoginButtons}}
@@ -82,7 +85,7 @@ export default RouteTemplate(
                   <WelcomeHeader @header={{i18n "login.header_title"}}>
                     <PluginOutlet
                       @name="login-header-bottom"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         createAccount=@controller.createAccount
                       }}
                     />
@@ -162,6 +165,7 @@ export default RouteTemplate(
             {{/unless}}
           {{/if}}
         </div>
+        <PluginOutlet @name="below-login-page" />
       </div>
     {{/if}}
   </template>

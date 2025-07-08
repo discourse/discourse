@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .d-modal.insert-hyperlink-modal {
   .insert-link {
     overflow-y: visible;
@@ -19,12 +21,12 @@
 
       .internal-link-results {
         position: absolute;
-        top: 70%;
+        top: 4rem;
         padding: 5px 10px;
         box-shadow: var(--shadow-card);
         z-index: 5;
         background-color: var(--secondary);
-        max-height: 150px;
+        max-height: 10rem;
         width: 90%;
         overflow-y: auto;
 
@@ -301,24 +303,7 @@
   }
 }
 
-.d-modal.chat-modal-new-message {
-  align-items: flex-start;
-
-  .d-modal {
-    &__container {
-      width: var(--modal-max-width);
-      margin-top: 1rem;
-    }
-
-    &__body {
-      padding: 0;
-
-      input {
-        width: auto;
-      }
-    }
-  }
-
+.d-modal.chat-modal-new-message.--quick-palette {
   .chat-message-creator {
     &__add-members-header-container {
       padding-inline: 1rem 0.5rem;
@@ -344,6 +329,7 @@
       &__container {
         width: 100%;
         margin-top: 0;
+        border-radius: 0;
       }
     }
   }
@@ -395,6 +381,11 @@
 
   .date-time-configuration {
     display: flex;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      gap: 0.5em;
+    }
 
     .fake-input {
       display: none;
@@ -545,19 +536,73 @@
   .control-group.timezones {
     margin-top: 1em;
   }
+
+  @include viewport.until(sm) {
+    .calendar-date-time-input {
+      width: 100%;
+      margin: 0 0 1rem 0;
+    }
+
+    .picker-panel {
+      // mysteriously needed to prevent it from overlapping the timezone-input
+      position: relative;
+      z-index: 0;
+    }
+
+    .pika-single {
+      justify-content: center;
+    }
+  }
 }
 
 .d-modal.grant-badge-modal {
   .d-modal {
     &__body {
-      @include breakpoint(medium) {
+      @include viewport.until(lg) {
         overflow: visible;
       }
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         overflow: auto;
         flex-grow: 1;
       }
+    }
+  }
+}
+
+.d-modal.--quick-palette {
+  align-items: flex-start;
+
+  .d-modal {
+    &__container {
+      width: var(--modal-max-width, 100%);
+      margin-top: 1rem;
+      padding-block: 1rem;
+    }
+
+    &__body {
+      padding: 0;
+      gap: 0;
+
+      input {
+        width: auto;
+      }
+    }
+  }
+}
+
+@include viewport.until(sm) {
+  .d-modal.change-ownership-modal,
+  .d-modal.grant-badge-modal,
+  .d-modal.bookmark-reminder-modal {
+    .d-modal__container {
+      min-height: calc(var(--composer-vh, 1dvh) * 85);
+    }
+  }
+
+  .d-modal.change-ownership-modal {
+    .d-modal__body {
+      flex: 1;
     }
   }
 }

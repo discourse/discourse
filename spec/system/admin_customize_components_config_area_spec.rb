@@ -82,17 +82,19 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
     it "can filter components by status" do
       config_area.visit
-
       config_area.status_selector.select("used")
+
       expect(config_area).to have_exact_components(enabled_component.id, remote_component.id)
 
       config_area.status_selector.select("unused")
+
       expect(config_area).to have_exact_components(
         disabled_component.id,
         remote_component_with_update.id,
       )
 
       config_area.status_selector.select("updates_available")
+
       expect(config_area).to have_exact_components(remote_component_with_update.id)
     end
 
@@ -215,7 +217,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       config_area.component(disabled_component.id).more_actions_menu.expand
       config_area.component(disabled_component.id).delete_button.click
 
-      dialog.click_yes
+      dialog.click_danger
 
       expect(toasts).to have_success(
         I18n.t(

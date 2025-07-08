@@ -238,10 +238,12 @@ zh_CN:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
+      invalid_locale: "%{invalid_locale} 不是一个有效的语言环境"
       too_long_validation:
         other: "最多只能有 %{count} 个字符；您输入了 %{length} 个字符。"
       invalid_boolean: "布尔值无效。"
       taken: "已被采用"
+      reserved: "%{name} 组名已保留，请选择其他名称"
       accepted: 必须被接受
       blank: 不能为空
       present: 必须为空
@@ -265,6 +267,7 @@ zh_CN:
       less_than_or_equal_to: 必须小于或等于 %{count}
       not_a_number: 不是数字
       not_an_integer: 必须是整数
+      must_all_be_positive: 必须全部为正数
       odd: 必须是奇数
       record_invalid: ! "验证失败：%{errors}"
       max_emojis: "不能超过 %{max_emojis_count} 个表情符号"
@@ -304,7 +307,6 @@ zh_CN:
       s3_backup_requires_s3_settings: "除非提供 '%{setting_name}'，否则无法将 S3 用作备份位置。"
       s3_bucket_reused: "您无法将同一个存储桶同时用作 's3_upload_bucket' 和 's3_backup_bucket'。请选择一个不同的存储桶或为每个存储桶使用不同的路径。"
       secure_uploads_requirements: "在启用安全上传之前，必须先启用 S3 上传和 S3 ACL。"
-      s3_use_acls_requirements: "启用安全上传时，您必须启用 S3 ACL。"
       share_quote_facebook_requirements: "您必须设置 Facebook 应用 ID 才能为 Facebook 启用引用共享。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录，则无法强制执行双重身份验证。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行双重身份验证。"
@@ -576,57 +578,23 @@ zh_CN:
     until_posts:
       other: "%{count} 个帖子"
     "new-topic": |
-      欢迎加入 %{site_name} &mdash; **感谢您开始新对话**！
+      感谢您对 %{site_name} 做出贡献！
 
-      - 如果您大声朗读出标题，听起来有趣吗？能否很好地概括内容？
+      发帖之前，请选择一个类别或标签，将此主题与相关讨论分组，以便其他人轻松找到它。
 
-      - 谁会对此感兴趣？为什么会感兴趣？您想得到怎样的回应？
-
-      - 在您的话题中包含常用词，以便其他人能够“找到”它。要将您的话题与相关话题并为一组，请选择一个类别（或标签）。
-
-      有关详情，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
+      有关参与我们社区的更多提示和建议，[查看我们的社区准则](%{base_path}/guidelines)。
     "new-reply": |
-      欢迎加入 %{site_name} &mdash; **感谢您的贡献**！
+      感谢您对 %{site_name} 的贡献！
 
-      - 请对其他社区成员保持友善。
+      请记得，我们都是活生生的人。请友善对待您的社区成员。
 
-      - 您的回复是否有益于交流？
-
-      - 欢迎有建设性的批评，但是请对事不对人。
-
-      有关详情，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
-    avatar: |
-      ### 想更改您的头像吗？
-
-      您已经发布了几个话题和回复，但您的个人资料照片并不像您自己一样独一无二，它仅仅是一个字母。
-
-      您想过**[访问您的用户个人资料](%{profile_path})**并上传一张代表您自己的照片吗？
-
-      如果每个人都有自己独特的头像，会让人更加容易参与讨论和发现有趣的人！
-    sequential_replies: |
-      ### 考虑一次回复多个帖子
-
-      与其对某个话题连续回复多次，不如只回复一次，并包括对之前的帖子的引用或者用户名引用。
-
-      您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
-
-      这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
-    dominating_topic: 您在此话题中发布了很多内容！考虑一下让其他人有机会在这里进行回复并互相讨论。
+      如需了解更多参与社区的提示和建议，[请查看我们的社区准则](%{base_path}/guidelines)。
+    dominating_topic: 你在这个主题中发表了很多文章！请考虑让其他人也有机会参与进来。
     get_a_room:
       other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
-    dont_feed_the_trolls: 此帖子已被标记为需要版主关注。确定要回复它吗？对负面内容的回复往往会鼓励更多的负面行为。
+    dont_feed_the_trolls: 该帖子已经被举报过以引起版主注意。回复负面内容会可能会引发更多的负面行为——你确定要继续吗？
     too_many_replies: |
-      ### 您已达到此话题的回复上限
-
-      抱歉，但新用户被暂时限制为只能在同一个话题中回复 %{newuser_max_replies_per_topic} 次。
-
-      与其添加另一个回复，不如考虑编辑您以前的回复，或访问其他话题。
-    reviving_old_topic: |
-      ### 复活此话题？
-
-      此话题的最后回复是 **%{time_ago}**。您的回复将让话题重新出现在列表的顶部并通知所有原先参与过讨论的人。
-
-      确定要继续这个久远的对话吗？
+      新用户在同一主题下回复数量暂时限制为 %{newuser_max_replies_per_topic} 条。请考虑访问其他主题，以继续了解社区。
   activerecord:
     attributes:
       category:
@@ -1661,7 +1629,7 @@ zh_CN:
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
     email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
-    email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "要求用户在访问 Discourse UI 之前启用双重身份验证。此设置不会影响 API 或 'DiscourseConnect provider' 身份验证。如果启用了 enforce_second_factor_on_external_auth 设置，用户在设置双重身份验证后将无法使用外部身份验证提供商登录。"
     enforce_second_factor_on_external_auth: "要求用户始终使用双重身份验证。启用后，如果用户启用了双重身份验证，将无法使用外部身份验证方法（如社交登录）登录。禁用后，用户只需在使用用户名和密码登录时确认双重身份验证。另请参见 `enforce_second_factor` 设置。"
@@ -1730,7 +1698,7 @@ zh_CN:
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
-    allowed_iframes: "Discourse 可以安全地允许在帖子中使用的 iframe src URL 前缀列表"
+    allowed_iframes: "Discourse 允许在帖子中安全使用的 iframe src URL 前缀列表。* 可用于匹配任意数量的非/字符。"
     allowed_crawler_user_agents: "应被允许访问网站的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中不区分大小写的唯一字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
@@ -1855,7 +1823,7 @@ zh_CN:
     s3_endpoint: "可以修改端点以备份到 S3 兼容服务，如 DigitalOcean Spaces 或 Minio。警告：如果使用 AWS S3，请留空。"
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
     s3_disable_cleanup: "当备份的数量超出允许的最大值时，不移除 S3 中的旧备份。"
-    s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；如果您遵循此建议，请取消选中此选项。如果您使用安全上传，则必须启用此选项。"
+    s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；仅当打算在配置的 `s3_upload_bucket`和 `s3_backup_bucket` 上配置权限策略时才取消选中此选项。"
     enable_direct_s3_uploads: "允许直接分段上传到 Amazon S3，如需了解详情，请参阅 https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
@@ -2020,7 +1988,6 @@ zh_CN:
     authorized_extensions: "可以上传的文件扩展名列表"
     authorized_extensions_for_staff: "除了在 `authorized_extensions` 网站设置中定义的列表外，管理人员用户可以上传的文件扩展名列表。"
     theme_authorized_extensions: "上传主题时允许使用的文件扩展名列表"
-    max_similar_results: "撰写新话题时，在编辑器上方显示的类似话题数。比较基于标题和正文。"
     max_image_megapixels: "图片允许的最大百万像素数。具有更高百万像素数的图片将被拒绝。"
     title_prettify: "防止常见的标题拼写错误和错误，包括全部大写、第一个字符小写、多个 ! 和 ?、结尾出现额外的 . 等。"
     title_remove_extraneous_space: "移除末尾标点符号前面的前导空格。"
@@ -2192,12 +2159,10 @@ zh_CN:
     max_notifications_per_user: "每个用户的最大通知数量，如果超过此数值，旧通知将被删除。每周强制执行。设置为 0 将禁用"
     allowed_user_website_domains: "用户网站将针对这些网域进行验证。| 分隔列表。"
     allow_profile_backgrounds: "允许用户上传个人资料背景。"
-    sequential_replies_threshold: "在被提醒太多连续回复之前，用户必须在话题中连续发布的帖子数。"
     get_a_room_threshold: "在被警告之前，用户必须在同一话题中向同一个人发布的帖子数。"
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
     enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整网站。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
-    disable_avatar_education_message: "禁用更改头像的教育消息。"
     pm_warn_user_last_seen_months_ago: "在创建新的私信时，如果目标接收者已经超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
     header_dropdown_category_count: "标题下拉菜单中可以显示的类别数量。"
@@ -2230,7 +2195,6 @@ zh_CN:
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
     default_code_lang: "应用于 Markdown 代码块（auto、text、ruby、python 等）的默认编程语言语法高亮显示。此值还必须存在于 `highlighted languages` 网站设置中。"
-    warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "向使用 HTML 编写的 &lt;code&gt; 块应用语法高亮显示，即使这些代码块未指定语言。要配置使用 Markdown 编写的代码块，请使用 'default code lang' 设置。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含过多语言可能会影响性能）请参阅 <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> 获取演示"
     show_copy_button_on_codeblocks: "向代码块添加一个按钮，以将块内容复制到用户的剪贴板。"
@@ -2402,7 +2366,6 @@ zh_CN:
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
     glimmer_post_stream_mode: "控制是否使用新的 'glimmer' 帖子流实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
-    glimmer_post_stream_mode_auto_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "启用表单模板功能。在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
@@ -2412,8 +2375,13 @@ zh_CN:
     about_page_hidden_groups: "不在 /about 页面显示特定群组的成员。"
     adobe_analytics_tags_url: "Adobe Analytics 标签 URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
-    experimental_content_localization: "根据用户的语言偏好为其显示本地化内容。这些内容可能包括类别、标签、帖子和主题。该功能正在紧张开发中。"
-    experimental_content_localization_allowed_groups: '允许更新本地化内容的组。需要启用"实验性内容本地化"。'
+    rich_editor: "启用富文本编辑器，所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。富文本编辑器目前仍在积极开发中，因此并非所有功能都已支持 — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>请参阅 Meta 了解更多详情</a>。"
+    viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
+    reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
+    content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和主题。支持的语言环境在 'content localization supported locales' 中设置。"
+    content_localization_supported_locales: "用户内容可翻译成的受支持本地语言列表。要求 'content localization enabled'。"
+    content_localization_allowed_groups: "允许群组更新本地化内容。需要 'content localization enabled''。"
+    content_localization_anon_language_switcher: "启用语言切换器，允许未登录的网站访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。取决于 'content localization supported locales' 中定义的语言列表"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2433,6 +2401,7 @@ zh_CN:
       invalid_string_max:
         other: "不得超过 %{count} 个字符。"
       invalid_json: "无效的 JSON。"
+      invalid_object: "无效对象。"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_domain_hostname: "不得包括 * 或 ? 字符。"
@@ -2479,6 +2448,7 @@ zh_CN:
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
+      content_localization_anon_language_switcher_requirements: "语言切换器要求启用 `set locale from cookie` 网站设置，并且 `content localization supported locales` 至少有一种语言。"
     keywords:
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
       navigation_menu: "边栏|标题下拉菜单"
@@ -2602,10 +2572,8 @@ zh_CN:
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了点问题，可能该用户名或电子邮件地址已被注册，试试点击忘记密码链接。"
     omniauth_error:
-      generic: "抱歉，验证您的帐户时出错。请重试。"
-      csrf_detected: "授权超时，或者您已切换浏览器。请重试。"
-      request_error: "启动授权时发生错误。请重试。"
-      invalid_iat: "由于服务器时钟差异，无法验证授权令牌。请重试。"
+      generic_without_provider: "抱歉，尝试使用登录服务授权您的帐户时出现错误。请重试。"
+      generic_with_provider: "抱歉，尝试使用 %{provider} 授权您的帐户时出错。请重试。"
     omniauth_error_unknown: "处理您的登录时出错，请重试。"
     omniauth_confirm_title: "使用 %{provider} 登录"
     omniauth_confirm_button: "继续"
@@ -4043,7 +4011,7 @@ zh_CN:
     title: "无法加载应用"
     offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
   login_required:
-    welcome_message: "# [欢迎来到 %{title}](#welcome)"
+    welcome_message: "# 欢迎来到 %{title}"
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
@@ -4069,7 +4037,7 @@ zh_CN:
     images:
       too_large: "抱歉，您尝试上传的图片过大（大小上限为 %{max_size_kb}KB），请调整大小并重试。"
       too_large_humanized: "抱歉，您尝试上传的图片太大（大小上限为 %{max_size}），请调整大小并重试。"
-      larger_than_x_megapixels: "抱歉，您尝试上传的图片过大（大小上限为 %{max_image_megapixels}00 万像素），请调整大小并重试。"
+      larger_than_x_megapixels: "抱歉，文件名为 %{original_filename} 的图片过大（最大尺寸为 %{max_image_megapixels} 万像素），请调整大小后再试。"
       size_not_found: "抱歉，我们无法确定图片的大小。也许您的图片已被损坏？"
     placeholders:
       too_large: "（图片大小超过 %{max_size_kb}KB）"
@@ -4977,6 +4945,14 @@ zh_CN:
       restored: 已恢复
     bulk_user_delete: "已通过批量删除操作删除"
     cli_bulk_post_delete: "从 rake 任务中批量删除"
+    api_post_delete: "已通过 API 删除"
+    reminder_deleted: "由新的提醒替换"
+    user_associated_posts_deleted: "用户已被删除"
+    imap_email_deleted: "电子邮件已在 IMAP 服务器上删除"
+    imap_email_marked_as_spam: "电子邮件已在 IMAP 服务器上移至垃圾邮件"
+    auto_deleted_hidden_posts: "自动删除隐藏的帖子"
+    seed_data_topic_updated: "种子数据主题已更新"
+    seed_data_topic_deleted: "种子数据主题已删除"
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"

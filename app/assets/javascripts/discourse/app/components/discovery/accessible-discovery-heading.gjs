@@ -16,19 +16,6 @@ export default class AccessibleDiscoveryHeading extends Component {
     return filter;
   }
 
-  get filterLabel() {
-    const key = this.filterKey;
-
-    // fallback to nothing, e.g, "topics in uncategorized"
-    // rather than "[en.discovery.headings.filter_labels.foo] topics in uncategorized"
-    const fallback = "";
-    const label = i18n(`discovery.headings.filter_labels.${key}`);
-
-    return label.includes("discovery.headings.filter_labels.")
-      ? fallback
-      : label;
-  }
-
   get type() {
     const { category, tag, additionalTags } = this.args;
 
@@ -53,39 +40,55 @@ export default class AccessibleDiscoveryHeading extends Component {
 
   get label() {
     const { category, tag, additionalTags, filter } = this.args;
+    const key = this.filterKey;
     const type = this.type;
 
     if (filter === "categories") {
       return i18n("discovery.headings.categories");
     }
 
-    const key = this.filterKey;
-    const isSpecial = ["posted", "bookmarks"].includes(key);
-    const scope = `discovery.headings`;
-
-    if (tag?.id === "none" && !additionalTags?.length) {
-      const noTagsType = category ? "category" : "all";
-
-      const noTagsKey = isSpecial
-        ? `${scope}.no_tags.${noTagsType}.${key}`
-        : `${scope}.no_tags.${noTagsType}_default`;
-
-      return i18n(noTagsKey, {
-        filter: this.filterLabel,
-        category: category?.name,
+    // tag intersections don't have additional filters
+    if (type === "multi_tag") {
+      return i18n("discovery.headings.multi_tag.default", {
+        tags: [tag?.id, ...(additionalTags || [])].filter(Boolean).join(" + "),
       });
     }
 
-    const translationKey = isSpecial
-      ? `${scope}.${type}.${key}`
-      : `${scope}.${type}.default`;
+    if (tag?.id === "none" && !additionalTags?.length) {
+      const noTagsType = category ? "category" : "all";
+      const prefix = `discovery.headings.no_tags.${noTagsType}`;
+      const specificKey = key ? `${prefix}.${key}` : null;
+      const fallbackKey = `${prefix}.default`;
 
-    return i18n(translationKey, {
-      filter: this.filterLabel,
+      const params = {
+        category: category?.name,
+        filter: key,
+      };
+
+      let label = specificKey ? i18n(specificKey, params) : "";
+      if (label === specificKey || label.includes("discovery.headings")) {
+        label = i18n(fallbackKey, params);
+      }
+
+      return label;
+    }
+
+    const base = `discovery.headings.${type}`;
+    const specificKey = key ? `${base}.${key}` : null;
+    const fallbackKey = `${base}.default`;
+
+    const params = {
       category: category?.name,
       tag: tag?.id,
-      tags: [tag?.id, ...(additionalTags || [])].join(" + "),
-    });
+      filter: key,
+    };
+
+    let label = specificKey ? i18n(specificKey, params) : "";
+    if (label === specificKey || label.includes("discovery.headings")) {
+      label = i18n(fallbackKey, params);
+    }
+
+    return label;
   }
 
   <template>

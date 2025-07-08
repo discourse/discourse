@@ -64,34 +64,3 @@ index cd68afe479229ed77b4e4c93759aa90913cdc49c..6e7d71bbeb28f18259fa8afb48ef7827
    registerHandler = function registerHandler(type, callback) {
      let nextHandler = HANDLERS[type] || (() => {});
      HANDLERS[type] = (message, options) => {
-diff --git a/dist/packages/@glimmer/manager/index.js b/dist/packages/@glimmer/manager/index.js
-index ca6ac88fe0fcc7ad335b19fafa039fb6c5ebd14a..462672f9c1cdcca76e9e6713606c1b8d8797eff3 100644
---- a/dist/packages/@glimmer/manager/index.js
-+++ b/dist/packages/@glimmer/manager/index.js
-@@ -546,20 +546,23 @@ function setModifierManager(factory, obj) {
- function setHelperManager(factory, obj) {
-   return setInternalHelperManager(new CustomHelperManager(factory), obj);
- }
-+let TEMPLATE_OVERRIDES = new WeakMap();
- const TEMPLATES = new WeakMap(),
-   getPrototypeOf = Object.getPrototypeOf;
- function setComponentTemplate(factory, obj) {
-   if (isDevelopingApp() && (null === obj || "object" != typeof obj && "function" != typeof obj)) throw new Error(`Cannot call \`setComponentTemplate\` on \`${debugToString$1(obj)}\``);
--  if (isDevelopingApp() && TEMPLATES.has(obj)) throw new Error(`Cannot call \`setComponentTemplate\` multiple times on the same class (\`${debugToString$1(obj)}\`)`);
-+  // if (isDevelopingApp() && TEMPLATES.has(obj)) throw new Error(`Cannot call \`setComponentTemplate\` multiple times on the same class (\`${debugToString$1(obj)}\`)`);
-+  if (TEMPLATES.has(obj)) return TEMPLATE_OVERRIDES.set(obj, factory), obj;
-   return TEMPLATES.set(obj, factory), obj;
- }
- function getComponentTemplate(obj) {
-   let pointer = obj;
-   for (; null !== pointer;) {
--    let template = TEMPLATES.get(pointer);
-+    let template = TEMPLATE_OVERRIDES.get(pointer) ?? TEMPLATES.get(pointer);
-     if (void 0 !== template) return template;
-     pointer = getPrototypeOf(pointer);
-   }
- }
-+function clearTemplateOverrides() { TEMPLATE_OVERRIDES = new WeakMap() };
- 
--export { CustomComponentManager, CustomHelperManager, CustomModifierManager, capabilityFlagsFrom, componentCapabilities, getComponentTemplate, getCustomTagFor, getInternalComponentManager, getInternalHelperManager, getInternalModifierManager, hasCapability, hasDestroyable, hasInternalComponentManager, hasInternalHelperManager, hasInternalModifierManager, hasValue, helperCapabilities, managerHasCapability, modifierCapabilities, setComponentManager, setComponentTemplate, setCustomTagFor, setHelperManager, setInternalComponentManager, setInternalHelperManager, setInternalModifierManager, setModifierManager };
-+export { CustomComponentManager, CustomHelperManager, CustomModifierManager, capabilityFlagsFrom, componentCapabilities, getComponentTemplate, clearTemplateOverrides, getCustomTagFor, getInternalComponentManager, getInternalHelperManager, getInternalModifierManager, hasCapability, hasDestroyable, hasInternalComponentManager, hasInternalHelperManager, hasInternalModifierManager, hasValue, helperCapabilities, managerHasCapability, modifierCapabilities, setComponentManager, setComponentTemplate, setCustomTagFor, setHelperManager, setInternalComponentManager, setInternalHelperManager, setInternalModifierManager, setModifierManager };

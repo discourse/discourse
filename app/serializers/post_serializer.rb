@@ -94,7 +94,13 @@ class PostSerializer < BasicPostSerializer
              :user_suspended,
              :user_status,
              :mentioned_users,
-             :post_url
+             :post_url,
+             :has_post_localizations,
+             :post_localizations_count,
+             :locale,
+             :is_localized,
+             :language,
+             :localization_outdated
 
   def initialize(object, opts)
     super(object, opts)
@@ -647,6 +653,54 @@ class PostSerializer < BasicPostSerializer
 
   def include_mentioned_users?
     SiteSetting.enable_user_status
+  end
+
+  def has_post_localizations
+    object.post_localizations.any?
+  end
+
+  def post_localizations_count
+    object.post_localizations.count
+  end
+
+  def include_has_post_localizations?
+    object&.user&.guardian&.can_localize_content?
+  end
+
+  def include_post_localizations_count?
+    object&.user&.guardian&.can_localize_content?
+  end
+
+  def raw
+    object.raw
+  end
+
+  def include_locale?
+    SiteSetting.content_localization_enabled
+  end
+
+  def is_localized
+    ContentLocalization.show_translated_post?(object, scope) && object.has_localization?
+  end
+
+  def include_is_localized?
+    SiteSetting.content_localization_enabled
+  end
+
+  def language
+    LocaleSiteSetting.get_language_name(object.locale) || locale
+  end
+
+  def include_language?
+    SiteSetting.content_localization_enabled && object.locale.present?
+  end
+
+  def localization_outdated
+    object.has_localization? && object.get_localization.post_version != object.version
+  end
+
+  def include_localization_outdated?
+    include_is_localized? && is_localized
   end
 
   private

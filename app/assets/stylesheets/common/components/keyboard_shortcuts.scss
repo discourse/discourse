@@ -1,8 +1,3 @@
-.topic-list-item td:first-of-type,
-.topic-post {
-  border-left: 1px solid transparent;
-}
-
 .topic-list tr.selected td:first-of-type,
 .topic-list-item.selected td:first-of-type,
 .latest-topic-list-item.selected,
@@ -18,7 +13,8 @@
 .topic-list tr.selected,
 .topic-list-item.selected,
 .featured-topic.selected,
-.topic-post.selected,
+.topic-post,
+.post-stream--cloaked,
 .latest-topic-list-item.selected,
 .search-results .fps-result.selected {
   &:focus-visible {

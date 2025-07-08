@@ -209,11 +209,13 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     const lightChanges = [];
     const darkChanges = [];
 
-    const onLightColorChange = (name, value) => {
-      lightChanges.push([name, value]);
+    const onLightColorChange = (color, value) => {
+      lightChanges.push([color.name, value]);
+      color.hex = value;
     };
-    const onDarkColorChange = (name, value) => {
-      darkChanges.push([name, value]);
+    const onDarkColorChange = (color, value) => {
+      darkChanges.push([color.name, value]);
+      color.dark_hex = value;
     };
 
     await render(
@@ -238,15 +240,15 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       "abcdef",
       "text input value for the primary color updates for `input` events"
     );
-    assert.strictEqual(
-      lightChanges.length,
-      0,
-      "light color change callbacks aren't triggered for `input` events"
+    assert.deepEqual(
+      lightChanges,
+      [["primary", "abcdef"]],
+      "light color change callbacks are triggered for `input` events"
     );
     assert.strictEqual(
       darkChanges.length,
       0,
-      "dark color change callbacks aren't triggered for `input` events"
+      "dark color change callbacks aren't triggered for `input` events when the light color changes"
     );
 
     await this.subject.color("primary").sendColorChangeEvent("#fedcba");
@@ -263,8 +265,11 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     );
     assert.deepEqual(
       lightChanges,
-      [["primary", "fedcba"]],
-      "light color change callbacks are triggered for `change` eventswhen the light color changes"
+      [
+        ["primary", "abcdef"],
+        ["primary", "fedcba"],
+      ],
+      "light color change callbacks are triggered for `change` events when the light color changes"
     );
 
     assert.strictEqual(
@@ -306,12 +311,12 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     assert.strictEqual(
       lightChanges.length,
       0,
-      "light color change callbacks aren't triggered for `input` events"
+      "light color change callbacks aren't triggered for `input` events when the dark color changes"
     );
-    assert.strictEqual(
-      darkChanges.length,
-      0,
-      "dark color change callbacks aren't triggered for `input` events"
+    assert.deepEqual(
+      darkChanges,
+      [["header_background", "776655"]],
+      "dark color change callbacks are triggered for `input` events"
     );
 
     await this.subject
@@ -330,8 +335,11 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     );
     assert.deepEqual(
       darkChanges,
-      [["header_background", "99aaff"]],
-      "dark color change callbacks are triggered for `change` eventswhen the dark color changes"
+      [
+        ["header_background", "776655"],
+        ["header_background", "99aaff"],
+      ],
+      "dark color change callbacks are triggered for `change` events when the dark color changes"
     );
 
     assert.strictEqual(
@@ -401,11 +409,13 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     const lightChanges = [];
     const darkChanges = [];
 
-    const onLightColorChange = (name, value) => {
-      lightChanges.push([name, value]);
+    const onLightColorChange = (color, value) => {
+      lightChanges.push([color.name, value]);
+      color.hex = value;
     };
-    const onDarkColorChange = (name, value) => {
-      darkChanges.push([name, value]);
+    const onDarkColorChange = (color, value) => {
+      darkChanges.push([color.name, value]);
+      color.dark_hex = value;
     };
 
     await render(
@@ -495,6 +505,251 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       this.subject.color("primary").textInput().value,
       "997711",
       "the text input value shows the 6 digits format"
+    );
+  });
+
+  test("validates hex color input", async function (assert) {
+    const colors = [
+      {
+        name: "primary",
+        hex: "aaaaaa",
+        dark_hex: "1e3c8a",
+      },
+    ].map((data) => ColorSchemeColor.create(data));
+
+    const lightChanges = [];
+
+    const onLightColorChange = (color, value) => {
+      lightChanges.push([color.name, value]);
+      color.hex = value;
+    };
+
+    await render(
+      <template>
+        <ColorPaletteEditor
+          @colors={{colors}}
+          @onLightColorChange={{onLightColorChange}}
+        />
+      </template>
+    );
+
+    await this.subject.color("primary").sendTextChangeEvent("333333");
+    assert.strictEqual(
+      this.subject.color("primary").colorInput().value,
+      "#333333",
+      "valid 6-digit hex color is accepted"
+    );
+    assert.deepEqual(
+      lightChanges,
+      [["primary", "333333"]],
+      "light color change callback is called with the expanded value"
+    );
+    lightChanges.length = 0;
+
+    await this.subject.color("primary").sendTextChangeEvent("abc");
+    assert.strictEqual(
+      this.subject.color("primary").colorInput().value,
+      "#aabbcc",
+      "valid 3-digit hex color is accepted and expanded"
+    );
+    assert.deepEqual(
+      lightChanges,
+      [["primary", "aabbcc"]],
+      "light color change callback is called with the expanded value"
+    );
+    lightChanges.length = 0;
+
+    await this.subject.color("primary").sendTextChangeEvent("gggggg");
+    assert.strictEqual(
+      this.subject.color("primary").colorInput().value,
+      "#aabbcc",
+      "invalid hex color is rejected"
+    );
+    assert.strictEqual(
+      lightChanges.length,
+      0,
+      "light color change callback is not called"
+    );
+  });
+
+  test("keypress events handle hex validation", async function (assert) {
+    const colors = [
+      {
+        name: "primary",
+        hex: "aaaaaa",
+        dark_hex: "1e3c8a",
+      },
+    ].map((data) => ColorSchemeColor.create(data));
+
+    await render(
+      <template><ColorPaletteEditor @colors={{colors}} /></template>
+    );
+
+    const textInput = this.subject.color("primary").textInput();
+    const event = new KeyboardEvent("keypress", {
+      key: "g",
+      bubbles: true,
+      cancelable: true,
+    });
+
+    textInput.dispatchEvent(event);
+    assert.true(
+      event.defaultPrevented,
+      "non-hex character keypress is prevented"
+    );
+
+    const validEvent = new KeyboardEvent("keypress", {
+      key: "a",
+      bubbles: true,
+      cancelable: true,
+    });
+    textInput.dispatchEvent(validEvent);
+    assert.false(
+      validEvent.defaultPrevented,
+      "hex character keypress is allowed"
+    );
+  });
+
+  test("Enter key navigates to next color field", async function (assert) {
+    const colors = [
+      {
+        name: "primary",
+        hex: "aaaaaa",
+        dark_hex: "1e3c8a",
+      },
+      {
+        name: "secondary",
+        hex: "bbbbbb",
+        dark_hex: "2d4c9a",
+      },
+      {
+        name: "tertiary",
+        hex: "cccccc",
+        dark_hex: "3e5daa",
+      },
+    ].map((data) => ColorSchemeColor.create(data));
+
+    await render(
+      <template><ColorPaletteEditor @colors={{colors}} /></template>
+    );
+
+    this.subject.color("primary").textInput().focus();
+    assert.strictEqual(
+      document.activeElement,
+      this.subject.color("primary").textInput(),
+      "primary color input is focused"
+    );
+
+    const enterEvent = new KeyboardEvent("keypress", {
+      keyCode: 13,
+      bubbles: true,
+      cancelable: true,
+    });
+    document.activeElement.dispatchEvent(enterEvent);
+
+    assert.strictEqual(
+      document.activeElement,
+      this.subject.color("secondary").textInput(),
+      "secondary color input is focused after Enter key"
+    );
+  });
+
+  test("paste event validates hex color input", async function (assert) {
+    const toastService = this.owner.lookup("service:toasts");
+
+    const colors = [
+      {
+        name: "primary",
+        hex: "aaaaaa",
+        dark_hex: "1e3c8a",
+      },
+    ].map((data) => ColorSchemeColor.create(data));
+
+    await render(
+      <template><ColorPaletteEditor @colors={{colors}} /></template>
+    );
+
+    const textInput = this.subject.color("primary").textInput();
+
+    const validPasteEvent = new ClipboardEvent("paste", {
+      clipboardData: new DataTransfer(),
+      bubbles: true,
+      cancelable: true,
+    });
+    validPasteEvent.clipboardData.setData("text", "123abc");
+    textInput.dispatchEvent(validPasteEvent);
+    assert.false(
+      validPasteEvent.defaultPrevented,
+      "valid hex color paste is not prevented"
+    );
+    assert.strictEqual(
+      toastService.activeToasts.length,
+      0,
+      "no error toast is shown for valid hex color paste"
+    );
+
+    const invalidPasteEvent = new ClipboardEvent("paste", {
+      clipboardData: new DataTransfer(),
+      bubbles: true,
+      cancelable: true,
+    });
+    invalidPasteEvent.clipboardData.setData("text", "xyz123");
+    textInput.dispatchEvent(invalidPasteEvent);
+    assert.true(
+      invalidPasteEvent.defaultPrevented,
+      "invalid hex color paste is prevented"
+    );
+    assert.strictEqual(
+      toastService.activeToasts.length,
+      1,
+      "a toast is shown for invalid hex color paste"
+    );
+    const toast = toastService.activeToasts[0];
+    assert.strictEqual(
+      toast.options.data.theme,
+      "error",
+      "toast is an error type"
+    );
+  });
+
+  test("shows error for invalid color length on Enter", async function (assert) {
+    const toastService = this.owner.lookup("service:toasts");
+
+    const colors = [
+      {
+        name: "primary",
+        hex: "aaaaaa",
+        dark_hex: "1e3c8a",
+      },
+    ].map((data) => ColorSchemeColor.create(data));
+
+    await render(
+      <template><ColorPaletteEditor @colors={{colors}} /></template>
+    );
+
+    const textInput = this.subject.color("primary").textInput();
+    textInput.value = "1234";
+
+    const enterEvent = new KeyboardEvent("keypress", {
+      keyCode: 13,
+      bubbles: true,
+      cancelable: true,
+    });
+    textInput.dispatchEvent(enterEvent);
+    assert.strictEqual(
+      toastService.activeToasts.length,
+      1,
+      "a toast is shown for invalid color length"
+    );
+    const toast = toastService.activeToasts[0];
+    assert.strictEqual(
+      toast.options.data.theme,
+      "error",
+      "toast is an error type"
+    );
+    assert.true(
+      enterEvent.defaultPrevented,
+      "Enter key default action is prevented"
     );
   });
 });

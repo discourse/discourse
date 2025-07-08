@@ -68,7 +68,7 @@ export default class extends Component {
           });
 
           this.toasts.success({
-            duration: 3000,
+            duration: "short",
             data: { message: i18n("admin.user.exports.download.started") },
           });
         } catch (err) {

@@ -179,6 +179,7 @@ export default class Post extends RestModel {
   @trackedPostProperty expandedExcerpt;
   @trackedPostProperty group_moderator;
   @trackedPostProperty hidden;
+  @trackedPostProperty id;
   @trackedPostProperty is_auto_generated;
   @trackedPostProperty last_wiki_edit;
   @trackedPostProperty likeAction;
@@ -191,11 +192,15 @@ export default class Post extends RestModel {
   @trackedPostProperty post_number;
   @trackedPostProperty post_type;
   @trackedPostProperty primary_group_name;
+  @trackedPostProperty quoted;
   @trackedPostProperty read;
   @trackedPostProperty reply_count;
   @trackedPostProperty reply_to_user;
   @trackedPostProperty staff;
+  @trackedPostProperty staged;
   @trackedPostProperty title_is_group;
+  @trackedPostProperty topic;
+  @trackedPostProperty topic_id;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;
   @trackedPostProperty user;
@@ -209,6 +214,8 @@ export default class Post extends RestModel {
   @trackedPostProperty wiki;
   @trackedPostProperty yours;
   @trackedPostProperty user_custom_fields;
+  @trackedPostProperty has_post_localizations;
+  @trackedPostProperty post_localizations;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -601,6 +608,10 @@ export default class Post extends RestModel {
           skip =
             value.username === oldValue.username ||
             get(value, "username") === get(oldValue, "username");
+        } else if (key === "topic" && !value && oldValue) {
+          // if `topic` is already set in the new instance we don't want to overwrite it with null, because the old
+          // instance wasn't fully initialized yet.
+          skip = true;
         }
 
         if (!skip) {
@@ -640,6 +651,7 @@ export default class Post extends RestModel {
       target: "post",
       targetId: this.id,
     });
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   }
 
@@ -756,7 +768,7 @@ export default class Post extends RestModel {
           postId: this.id,
           action: postAction.actionType.name_key,
           canUndo: postAction.can_undo,
-          description: postAction.translatedDescription,
+          description: postAction.actionType.translatedDescription,
         };
       });
   }

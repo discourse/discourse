@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -12,6 +11,7 @@ import FlagActionType from "discourse/components/flag-action-type";
 import FlagSelection from "discourse/components/flag-selection";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
@@ -202,6 +202,10 @@ export default class Flag extends Component {
       opts.message = this.message;
     }
     this.args.model.flagTarget.create(this, opts);
+    this.appEvents.trigger("flag:created", {
+      message: opts.message,
+      postId: this.args.model.flagModel.id,
+    });
   }
 
   @action
@@ -236,7 +240,7 @@ export default class Flag extends Component {
         <PluginOutlet
           @name="after-flag-modal-review-process-description"
           @connectorTagName="div"
-          @outletArgs={{hash post=@model.flagModel}}
+          @outletArgs={{lazyHash post=@model.flagModel}}
         />
         <form>
           <FlagSelection
@@ -259,7 +263,7 @@ export default class Flag extends Component {
         <PluginOutlet
           @name="flag-modal-bottom"
           @connectorTagName="div"
-          @outletArgs={{hash post=@model.flagModel}}
+          @outletArgs={{lazyHash post=@model.flagModel}}
         />
       </:body>
       <:footer>

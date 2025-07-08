@@ -51,7 +51,15 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { disableCloaking } from "discourse/widgets/post-stream";
+import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
+import { disableCloaking as disableWidgetCloaking } from "discourse/widgets/post-stream";
+import deprecated from "discourse/lib/deprecated";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { buildResolver } from "discourse/resolver";
+import { loadSprites } from "../lib/svg-sprite-loader";
+import * as FakerModule from "@faker-js/faker";
+import { setLoadedFaker } from "discourse/lib/load-faker";
 
 let cancelled = false;
 let started = false;
@@ -206,6 +214,7 @@ function writeSummaryLine(message) {
 
 export default function setupTests(config) {
   disableCloaking();
+  disableWidgetCloaking();
 
   setupDeprecationCounter(QUnit);
 

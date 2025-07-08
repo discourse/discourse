@@ -16,6 +16,10 @@ module PageObjects
         filter_dropdown.select_row_by_value(value)
       end
 
+      def find_notification(notification)
+        find(".notification a[href='#{notification.url}']")
+      end
+
       def has_selected_filter_value?(value)
         expect(filter_dropdown).to have_selected_value(value)
       end

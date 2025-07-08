@@ -27,4 +27,5 @@ const Checkbox = <template>
     {{/if}}
   </div>
 </template>;
+
 export default Checkbox;

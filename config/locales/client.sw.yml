@@ -263,7 +263,7 @@ sw:
       one: "Angalia Topiki %{count} Mpya"
       other: "Angalia Topiki %{count} Mpya"
     preview: "kihakiki"
-    cancel: "ghairi"
+    cancel: "Ghairi"
     save: "Hifadhi Mabadiliko"
     saved: "Imehifadhiwa!"
     upload: "Pakia"
@@ -945,6 +945,7 @@ sw:
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
         invite:
+          description: "Elezo"
           cancel: "Ghairi"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
@@ -1007,7 +1008,6 @@ sw:
         title: "Usajili wa Anwani ya Mtandao"
       avatar:
         title: "Picha ya mtumiaji"
-        header_title: "maelezo mafupi, ujumbe, mialamisho na mapendekezo"
       title:
         title: "Kichwa cha Habari"
         none: "(hakuna)"
@@ -1263,10 +1263,9 @@ sw:
       italic_label: "I"
       italic_title: "Mkazo"
       italic_text: "Maneno yaliyo tiliwa mkazo"
-      link_title: "Kiungo-wavuti"
       link_description: "andika maelezo ya kiungo hapa"
-      link_dialog_title: "Ingiza kiungo-wavuti"
-      link_optional_text: "kichwa cha habari kisichokuwa cha muhimu"
+      link_dialog_action: "Weka"
+      link_optional_text: "Neno"
       blockquote_title: "Zuianukulu"
       blockquote_text: "Zuianukulu"
       code_title: "Maneno yaliyowekwa muundo"
@@ -1797,6 +1796,13 @@ sw:
       sr_post_like_count_button:
         one: "Mtu %{count} amevutiwa na hii."
         other: "Watu %{count} wamevutiwa na hii."
+      localizations:
+        table:
+          actions: "Vitendo"
+          edit: "Hariri"
+          delete: "Futa"
+        post_language_selector:
+          none: "Hakuna"
       errors:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."
@@ -2347,6 +2353,7 @@ sw:
               content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
+      search: "Tafuta"
       footer:
         interface_color_selector:
           light: "Hafifu"
@@ -2370,12 +2377,9 @@ sw:
         about: "Kuhusu"
     discovery:
       headings:
+        multi_tag:
+          default: "Mada zenye lebo %{tags}"
         categories: "Kategoria Zote"
-        filter_labels:
-          latest: "Hivi Karibuni"
-          top: "Juu"
-          new: "Mpya"
-          unread: "Haijasomwa"
   admin_js:
     settings: "Mipangilio"
     admin:
@@ -2407,14 +2411,13 @@ sw:
           title: "Mafaili"
         legal:
           title: "Halali"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Kifaa cha kiganjani"
-              email: "Barua pepe"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ndio"
+        logo:
+          form:
+            mobile: "Kifaa cha kiganjani"
+            email: "Barua pepe"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ndio"
         navigation:
           title: "Abiri"
         notifications:
@@ -2677,6 +2680,8 @@ sw:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Jina"
+          extra_groups:
+            groups: "Makundi"
           optional: "(sio muhimu)"
           saved: "imehifadhiwa!"
         flags:
@@ -2716,6 +2721,7 @@ sw:
           delete: "Futa"
         color_palettes:
           palette_name: "Jina"
+          delete: "Futa"
           colors:
             title: "Rangi"
       plugins:
@@ -2828,6 +2834,7 @@ sw:
           desktop: "Eneo kazi la Kompyuta"
           mobile: "Kifaa cha kiganjani"
           preview: "Kihakiki"
+          default: "Mara kwa Mara"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
@@ -2852,12 +2859,13 @@ sw:
           version: "Toleo:"
           enable: "Wezesha"
           disable: "Sitisha"
-          update_to_latest: "Sasisha iwe Toleo Jipya"
-          check_for_updates: "Angalia Masasisho"
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
           theme_settings: "Mipangilio ya Mandhari"
           no_settings: "Mandhari hii haina mipangilio."
+          settings: "Mipangilio"
+          colors: "Rangi"
+          colors_title: "Rangi"
           scss:
             text: "CSS"
           after_header:
@@ -2869,12 +2877,12 @@ sw:
           all_filter: "Vyote"
           active_filter: "Mara kwa Mara"
           inactive_filter: "Isiyo Amilifu"
-          schema:
-            fields:
-              required: "*muhimu na Inahitajika"
-              number:
-                too_small: "izidi au iwe sawa na %{count}"
-                too_large: "lazima iwe chini ya au sawa na %{count}"
+        schema:
+          fields:
+            required: "*muhimu na Inahitajika"
+            number:
+              too_small: "izidi au iwe sawa na %{count}"
+              too_large: "lazima iwe chini ya au sawa na %{count}"
         colors:
           title: "Rangi"
           copy_name_prefix: "Nakala ya"
@@ -2883,32 +2891,24 @@ sw:
           revert: "Rudisha Nyuma"
           primary:
             name: "msingi"
-            description: "Neno, ikoni, na mipaka mingi."
           secondary:
             name: "sekondari"
-            description: "Rangi msingi ya mandharinyuma, na rangi ya maneno ya baadhi ya vitufe. "
           tertiary:
             name: "kila baada ya miezi mitatu"
-            description: "Viungo, baadhi ya vitufe, taarifa, na rangi za lafudhi."
           quaternary:
             name: "kila baada ya miezi minne"
           header_background:
             name: "mandharinyuma ya kichwa"
-            description: "Rangi ya mandharinyuma ya kichwa cha tovuti."
           header_primary:
             name: "kichwa msingi"
-            description: "neno na ikoni ndani ya kichwa cha tovuti."
           highlight:
             name: "angaza"
           danger:
             name: "hatari"
-            description: "angaza rangi kwa vitendo kama kufuta machapisho na mada."
           success:
             name: "mafanikio"
-            description: "inatumika kuonyesha kuwa kitendo kilikuwa na mafanikio"
           love:
             name: "upendo"
-            description: "Rangi ya kitufe cha upendo."
           selected:
             name: "imechaguliwa"
           editor:

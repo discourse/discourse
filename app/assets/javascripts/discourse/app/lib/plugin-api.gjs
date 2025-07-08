@@ -134,6 +134,7 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
+import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -145,6 +146,7 @@ import {
 } from "discourse/widgets/post-small-action";
 import {
   addPostTransformCallback,
+  POST_STREAM_DEPRECATION_OPTIONS,
   preventCloak,
 } from "discourse/widgets/post-stream";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
@@ -192,12 +194,6 @@ const DEPRECATED_POST_STREAM_WIDGETS = [
   "select-post",
   "topic-post-visited-line",
 ];
-
-const POST_STREAM_DEPRECATION_OPTIONS = {
-  since: "v3.5.0.beta1-dev",
-  id: "discourse.post-stream-widget-overrides",
-  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
-};
 
 const blockedModifications = ["component:topic-list"];
 
@@ -486,7 +482,7 @@ class PluginApi {
    *   initialize() {
    *     withPluginApi("1.33.0", (api) => {
    *       api.addValueTransformerName("my-unique-transformer-name");
-   *     }),
+   *     });
    *   },
    * };
    *
@@ -1184,17 +1180,26 @@ class PluginApi {
   }
 
   /**
-   * Prevents an element in the post stream from being cloaked.
-   * This is useful if you are using a plugin such as youtube
-   * and don't want the video removed once it has begun
-   * playing.
+   * Prevents a specific post from being cloaked during scroll.
    *
+   * This is useful, for example, for posts that apply customizations that hold state which
+   * would be lost if the nodes were removed from the DOM, e.g., a playing video.
+   *
+   * Note that the set of prevented posts is reset whenever the topic being displayed changes.
+   *
+   * @param {number} postId - The ID of the post to prevent from cloaking
+   * @param {boolean} prevent - Whether to prevent (true) or allow (false) cloaking
+   *
+   * @example
    * ```javascript
-   * api.preventCloak(1234);
+   * api.preventCloak(1234); // Prevent post 1234 from being cloaked
+   * api.preventCloak(1234, false); // Allow post 1234 to be cloaked again
    * ```
    **/
-  preventCloak(postId) {
-    preventCloak(postId);
+  preventCloak(postId, prevent = true) {
+    // TODO (glimmer-post-stream) remove the call to the widget version of preventCloak below
+    preventCloak(postId); // widgets
+    preventCloaking(postId, prevent); // glimmer-post-stream
   }
 
   /**
@@ -1283,7 +1288,7 @@ class PluginApi {
    * });
    * ```
    *
-   * This API is deprecated. See renderIntoOutlet instead.
+   * This API is deprecated. See renderInOutlet instead.
    *
    **/
   registerConnectorClass(outletName, connectorName, klass) {

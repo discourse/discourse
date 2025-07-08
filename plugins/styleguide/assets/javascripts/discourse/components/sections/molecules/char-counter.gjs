@@ -4,7 +4,7 @@ import CharCounter from "discourse/components/char-counter";
 import withEventValue from "discourse/helpers/with-event-value";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const CharCounter0 = <template>
+const CharCounterMolecule = <template>
   <StyleguideExample @title="<CharCounter>">
     <CharCounter @max="50" @value={{@dummy.charCounterContent}}>
       <textarea
@@ -14,4 +14,5 @@ const CharCounter0 = <template>
     </CharCounter>
   </StyleguideExample>
 </template>;
-export default CharCounter0;
+
+export default CharCounterMolecule;

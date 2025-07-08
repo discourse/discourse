@@ -14,10 +14,6 @@ describe "Wizard", type: :system do
     wizard_page.go_to_next_step
     expect(wizard_page).to be_on_step("privacy")
     wizard_page.go_to_next_step
-    expect(wizard_page).to be_on_step("styling")
-    wizard_page.go_to_next_step
-    expect(wizard_page).to be_on_step("branding")
-    wizard_page.go_to_next_step
     expect(wizard_page).to be_on_step("ready")
     wizard_page.click_jump_in
     expect(page).to have_current_path("/latest")
@@ -40,7 +36,7 @@ describe "Wizard", type: :system do
 
       wizard_page.go_to_next_step
 
-      expect(wizard_page).to be_on_step("styling")
+      expect(wizard_page).to be_on_step("ready")
       expect(SiteSetting.login_required).to eq(true)
       expect(SiteSetting.invite_only).to eq(true)
       expect(SiteSetting.must_approve_users).to eq(true)
@@ -50,75 +46,6 @@ describe "Wizard", type: :system do
       expect(wizard_page.privacy_step).to have_selected_choice("login-required", "private")
       expect(wizard_page.privacy_step).to have_selected_choice("invite-only", "invite_only")
       expect(wizard_page.privacy_step).to have_selected_choice("must-approve-users", "yes")
-    end
-  end
-
-  describe "Wizard Step: Branding" do
-    let(:file_path_1) { file_from_fixtures("logo.png", "images").path }
-    let(:file_path_2) { file_from_fixtures("logo.jpg", "images").path }
-
-    before do
-      SiteSetting.logo = nil
-      SiteSetting.logo_small = nil
-    end
-
-    it "lets user configure logos" do
-      wizard_page.go_to_step("branding")
-      expect(wizard_page).to be_on_step("branding")
-      attach_file(file_path_1) { wizard_page.branding_step.click_upload_button("logo") }
-      expect(wizard_page.branding_step).to have_upload("logo")
-      attach_file(file_path_2) { wizard_page.branding_step.click_upload_button("logo-small") }
-      expect(wizard_page.branding_step).to have_upload("logo-small")
-      wizard_page.go_to_next_step
-      expect(wizard_page).to be_on_step("ready")
-
-      expect(SiteSetting.logo).to eq(Upload.find_by(original_filename: File.basename(file_path_1)))
-      expect(SiteSetting.logo_small).to eq(
-        Upload.find_by(original_filename: File.basename(file_path_2)),
-      )
-    end
-  end
-
-  describe "Wizard Step: Styling" do
-    it "lets user configure styling including font and colors" do
-      wizard_page.go_to_step("styling")
-      expect(wizard_page).to be_on_step("styling")
-
-      wizard_page.styling_step.select_color_palette_option("Dark")
-      wizard_page.styling_step.select_font_option("roboto")
-      wizard_page.styling_step.select_homepage_style_option("hot")
-
-      wizard_page.go_to_next_step
-      expect(wizard_page).to be_on_step("branding")
-
-      expect(Theme.find_default.color_scheme_id).to eq(
-        ColorScheme.find_by(base_scheme_id: "Dark", via_wizard: true).id,
-      )
-      expect(SiteSetting.base_font).to eq("roboto")
-      expect(SiteSetting.heading_font).to eq("roboto")
-      expect(SiteSetting.homepage).to eq("hot")
-
-      wizard_page.go_to_step("styling")
-
-      expect(wizard_page.styling_step).to have_selected_color_palette("Dark")
-      expect(wizard_page.styling_step).to have_selected_font("roboto")
-      expect(wizard_page.styling_step).to have_selected_homepage_style("hot")
-    end
-
-    it "lets user select separate body and heading font if they are already seperate" do
-      SiteSetting.base_font = "poppins"
-      SiteSetting.heading_font = "montserrat"
-      wizard_page.go_to_step("styling")
-      expect(wizard_page).to be_on_step("styling")
-
-      wizard_page.styling_step.select_body_font_option("roboto")
-      wizard_page.styling_step.select_heading_font_option("inter")
-
-      wizard_page.go_to_next_step
-      expect(wizard_page).to be_on_step("branding")
-
-      expect(SiteSetting.base_font).to eq("roboto")
-      expect(SiteSetting.heading_font).to eq("inter")
     end
   end
 

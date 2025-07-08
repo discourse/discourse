@@ -1525,36 +1525,41 @@ RSpec.describe User do
   end
 
   describe "#new_user_posting_on_first_day?" do
-    def test_user?(opts = {})
-      Fabricate.build(
-        :user,
-        { created_at: Time.zone.now }.merge(opts),
-      ).new_user_posting_on_first_day?
+    def create_test_user(opts = {})
+      Fabricate(:user, { created_at: Time.zone.now }.merge(opts))
     end
 
-    it "handles when user has never posted" do
-      expect(test_user?).to eq(true)
-      expect(test_user?(moderator: true)).to eq(false)
-      expect(test_user?(trust_level: TrustLevel[2])).to eq(false)
-      expect(test_user?(created_at: 2.days.ago)).to eq(true)
+    it "is true for a user who has never posted" do
+      expect(create_test_user.new_user_posting_on_first_day?).to eq(true)
+    end
+
+    it "is false if the user is moderator or admin" do
+      expect(create_test_user(moderator: true).new_user_posting_on_first_day?).to eq(false)
+      expect(create_test_user(admin: true).new_user_posting_on_first_day?).to eq(false)
+    end
+
+    it "is false for a user that is TL2 or above" do
+      expect(create_test_user(trust_level: TrustLevel[2]).new_user_posting_on_first_day?).to eq(
+        false,
+      )
+      expect(create_test_user(trust_level: TrustLevel[3]).new_user_posting_on_first_day?).to eq(
+        false,
+      )
+      expect(create_test_user(trust_level: TrustLevel[0]).new_user_posting_on_first_day?).to eq(
+        true,
+      )
     end
 
     it "is true for a user who posted less than 24 hours ago but was created over 1 day ago" do
-      u = Fabricate(:user, created_at: 28.hours.ago)
-      u.user_stat.first_post_created_at = 1.hour.ago
+      u = create_test_user(created_at: 28.hours.ago)
+      u.user_stat.update!(first_post_created_at: 1.hour.ago)
       expect(u.new_user_posting_on_first_day?).to eq(true)
     end
 
     it "is false if first post was more than 24 hours ago" do
-      u = Fabricate(:user, created_at: 28.hours.ago)
-      u.user_stat.first_post_created_at = 25.hours.ago
+      u = create_test_user(created_at: 28.hours.ago)
+      u.user_stat.update!(first_post_created_at: 25.hour.ago)
       expect(u.new_user_posting_on_first_day?).to eq(false)
-    end
-
-    it "considers trust level 0 users as new users unconditionally" do
-      u = Fabricate(:user, created_at: 28.hours.ago, trust_level: TrustLevel[0])
-      u.user_stat.first_post_created_at = 25.hours.ago
-      expect(u.new_user_posting_on_first_day?).to eq(true)
     end
   end
 
@@ -1657,12 +1662,13 @@ RSpec.describe User do
     let(:user) { build(:user, username: "Sam") }
 
     it "returns a 45-pixel-wide avatar" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
       expect(user.small_avatar_url).to eq(
         "//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png",
       )
 
-      SiteSetting.external_system_avatars_enabled = true
+      SiteSetting.external_system_avatars_url =
+        "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
       expect(user.small_avatar_url).to eq(
         "//test.localhost/letter_avatar_proxy/v4/letter/s/5f9b8f/45.png",
       )
@@ -1764,7 +1770,7 @@ RSpec.describe User do
 
   describe "automatic avatar creation" do
     it "sets a system avatar for new users" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
 
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
@@ -2969,7 +2975,10 @@ RSpec.describe User do
 
     describe ".system_avatar_template" do
       context "with external system avatars enabled" do
-        before { SiteSetting.external_system_avatars_enabled = true }
+        before do
+          SiteSetting.external_system_avatars_url =
+            "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
+        end
 
         it "uses the normalized username" do
           expect(User.system_avatar_template("Lo\u0308we")).to match(

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -18,8 +17,6 @@ export default class WelcomeBanner extends Component {
   @service appEvents;
   @service search;
 
-  @tracked inViewport = true;
-
   checkViewport = modifier((element) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -30,13 +27,16 @@ export default class WelcomeBanner extends Component {
 
     observer.observe(element);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      this.search.welcomeBannerSearchInViewport = false;
+    };
   });
 
   handleKeyboardShortcut = modifier(() => {
     const cb = (appEvent) => {
       if (
-        (appEvent.type === "search" || appEvent.type === "page-search") &&
+        appEvent.type === "search" &&
         this.search.welcomeBannerSearchInViewport
       ) {
         this.search.focusSearchInput();
@@ -70,6 +70,12 @@ export default class WelcomeBanner extends Component {
     });
   }
 
+  get subheaderText() {
+    return this.currentUser
+      ? i18n("welcome_banner.subheader.logged_in_members")
+      : i18n("welcome_banner.subheader.anonymous_members");
+  }
+
   get shouldDisplay() {
     const enabled = applyValueTransformer(
       "site-setting-enable-welcome-banner",
@@ -83,11 +89,17 @@ export default class WelcomeBanner extends Component {
     return this.displayForRoute;
   }
 
+  get bodyClasses() {
+    return this.shouldDisplay && this.search.welcomeBannerSearchInViewport
+      ? "welcome-banner--enabled welcome-banner--visible"
+      : this.shouldDisplay
+        ? "welcome-banner--enabled"
+        : "";
+  }
+
   <template>
+    {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
-      {{#if this.search.welcomeBannerSearchInViewport}}
-        {{bodyClass "welcome-banner--visible"}}
-      {{/if}}
 
       <div
         class="welcome-banner"
@@ -98,6 +110,11 @@ export default class WelcomeBanner extends Component {
           <div class="custom-search-banner-wrap welcome-banner__wrap">
             <div class="welcome-banner__title">
               {{htmlSafe this.headerText}}
+              {{#if this.subheaderText}}
+                <p class="welcome-banner__subheader">
+                  {{htmlSafe this.subheaderText}}
+                </p>
+              {{/if}}
             </div>
             <PluginOutlet @name="welcome-banner-below-headline" />
             <div class="search-menu welcome-banner__search-menu">

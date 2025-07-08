@@ -43,7 +43,7 @@ hr:
   views: "pregledi"
   loading: "Učitavanje"
   powered_by_html: 'Pogonjeno <a href="https://www.discourse.org">Discourse</a> platformom, preporučen pregled uz omogućen JavaScript'
-  sign_up: "Učlani se"
+  sign_up: "Registriraj se"
   log_in: "Prijava"
   submit: "Pošalji"
   purge_reason: "Automatski izbrisao kao napušteni, deaktivirani račun."
@@ -416,6 +416,8 @@ hr:
       trust_level_2: "razina_povjerenja_2"
       trust_level_3: "razina_povjerenja_3"
       trust_level_4: "razina_povjerenja_4"
+    default_descriptions:
+      moderators: "Odgovorni za odgovaranje na oznake, moderiranje rasprava i pomoć članovima s njihovim računima"
   education:
     until_posts:
       one: "%{count} objava"
@@ -489,6 +491,7 @@ hr:
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
   category:
     topic_prefix: "O %{category} kategoriji"
+    post_template: "%{replace_paragraph}\n\nKoristite sljedeće odlomke za dulji opis ili za postavljanje smjernica ili pravila kategorije:\n\n- Zašto bi ljudi trebali koristiti ovu kategoriju? Čemu služi?\n\n- Po čemu se točno ovo razlikuje od ostalih kategorija koje već imamo?\n\n- Što bi teme u ovoj kategoriji općenito trebale sadržavati?\n\n- Trebamo li ovu kategoriju? Možemo li se spojiti s drugom kategorijom ili potkategorijom?\n"
     errors:
       not_found: "Kategorija nije pronađena!"
       uncategorized_parent: "Nekategorizirano ne može imati nadkategoriju"
@@ -724,6 +727,8 @@ hr:
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošaljite poruku @%{username}"
+      description: "Želim razgovarati s tom osobom izravno i osobno o njihovoj objavi."
+      short_description: "Želim razgovarati s tom osobom izravno i osobno o njihovoj objavi."
       email_title: 'Vaša objava u "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -1304,7 +1309,6 @@ hr:
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
     dark_mode_none: "ništa"
-    max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
     title_prettify: "Spriječite uobičajene tipfelere i pogreške u naslovu, uključujući velika slova, prvi znak malim slovima, više! i ?, ekstra . na kraju itd."
     title_remove_extraneous_space: "Uklonite početne razmake ispred interpunkcijskih znakova na kraju."

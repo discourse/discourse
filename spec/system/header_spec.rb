@@ -120,16 +120,16 @@ RSpec.describe "Glimmer Header", type: :system do
     find(".header-dropdown-toggle.current-user").click
     expect(header.active_element_id).to eq("user-menu-button-all-notifications")
 
-    find("##{header.active_element_id}").send_keys(:arrow_down)
+    find("##{header.active_element_id}").send_keys(:down)
     expect(header.active_element_id).to eq("user-menu-button-replies")
 
-    4.times { find("##{header.active_element_id}").send_keys(:arrow_down) }
+    4.times { find("##{header.active_element_id}").send_keys(:down) }
     expect(header.active_element_id).to eq("user-menu-button-profile")
 
-    find("##{header.active_element_id}").send_keys(:arrow_down)
+    find("##{header.active_element_id}").send_keys(:down)
     expect(header.active_element_id).to eq("user-menu-button-all-notifications")
 
-    find("##{header.active_element_id}").send_keys(:arrow_up)
+    find("##{header.active_element_id}").send_keys(:up)
     expect(header.active_element_id).to eq("user-menu-button-profile")
   end
 
@@ -227,6 +227,7 @@ RSpec.describe "Glimmer Header", type: :system do
 
     it "displays current user when logged in and login required" do
       SiteSetting.login_required = true
+      SiteSetting.enable_welcome_banner = false
       sign_in(current_user)
 
       visit "/"
@@ -283,15 +284,15 @@ RSpec.describe "Glimmer Header", type: :system do
       sign_in current_user
       visit "/"
 
-      header = find(".d-header")
-      expect(header).not_to have_css(".do-not-disturb-background")
+      expect(page).to have_no_css(".d-header .do-not-disturb-background")
 
       current_user.publish_do_not_disturb(ends_at: 1.hour.from_now)
-      expect(header).to have_css(".d-header .do-not-disturb-background")
+
+      try_until_success { expect(page).to have_css(".d-header .do-not-disturb-background") }
 
       current_user.publish_do_not_disturb(ends_at: 1.second.from_now)
 
-      expect(header).not_to have_css(".d-header .do-not-disturb-background")
+      expect(page).to have_no_css(".d-header .do-not-disturb-background")
     end
   end
 end

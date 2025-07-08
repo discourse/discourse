@@ -168,8 +168,22 @@ zh_CN:
 
           - 我们始终相信[文明社区行为](%{base_uri}/guidelines)。
       onebox:
+        instructions: |-
+          接下来，你能与我分享其中一个链接吗？请回复 **一个单独成行的链接**，它将自动展开并包含一个别致的摘要。
+
+          要复制任何链接，请在移动设备上点击并按住，或在桌面设备上点击右键：
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           酷！这将适用于大多数 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 链接。请记住，它必须**独占一行**，前后都没内容。
+        not_found: |-
+          抱歉，我在您的回复中找不到链接！ :cry:
+
+          您能否尝试在下一次回复中单独一行添加以下链接？
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           这是一张独角兽图片：
@@ -385,11 +399,11 @@ zh_CN:
           请注意，当你回复话题或阅读话题超过几分钟时，它会被自动设置为“跟踪”通知级别。你可以在[你的用户偏好设置](%{base_uri}/my/preferences)中更改此设置。
       poll:
         instructions: |-
-          你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**插入投票**。
+          你知道你可以在任何帖子中添加投票吗？试试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 图标来**创建投票**。
         not_found: |-
-          哎呀！你的回复中还没有任何投票。
+          哎呀！您的回复中没有任何投票。
 
-          使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标，或者在下一个回复中复制粘贴以下投票：
+          使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 图标，或复制并粘贴此投票到您的下一条回复中：
 
           ```text
           [poll]
@@ -406,19 +420,19 @@ zh_CN:
           [/poll]
       details:
         instructions: |-
-          有时你可能想在回复中**隐藏详细信息**：
+          有时您可能希望在回复中**隐藏详细信息**：
 
-          - 当你讨论电影或者电视节目中可能被视为剧透的情节时。
+          - 当您讨论电影或电视节目的情节点时，这些情节会被视为剧透。
 
-          - 当你的帖子中有大量一次性读完可能太困难的可选详细信息时。
+          - 当您的帖子需要大量可选详细信息时，一次性阅读完可能会让人不知所措。
 
-          [details=点这里查看运作方式！]
-          1. 点击编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标。
+          [details=选择此项查看其工作原理！]
+          1. 在编辑器中选择 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 图标。
           2. 选择“隐藏详细信息”。
-          3. 编辑详细信息总结并添加内容。
+          3. 编辑详细信息摘要并添加您的内容。
           [/details]
 
-          你可以使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标在你的下一个回复中添加详细信息部分吗？
+          您可以使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> 图标在下一个回复中添加详细信息部分吗？
         not_found: |-
           创建详细信息微件时碰到麻烦了？试试在你的下一个回复中包含下列文字：
 

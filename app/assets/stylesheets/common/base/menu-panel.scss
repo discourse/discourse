@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
@@ -6,7 +8,7 @@
 
   // ensure there's always space to click outside on tiny devices
   max-width: 90vw;
-  box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 30px -2px rgb(0, 0, 0, 0.5);
   height: 100dvh;
 
   .panel-body {
@@ -18,7 +20,7 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgb(0, 0, 0, 0.3);
   top: 0;
   left: 0;
   display: none;
@@ -32,12 +34,19 @@
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
   max-height: calc(100dvh - var(--header-offset) - 1em);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-border-radius);
+
+  .panel-body {
+    // improves usability on high zoom levels
+    max-width: calc(100vw - 2em);
+  }
+
+  @include float-down;
 }
 
 .menu-panel {
-  border: 1px solid var(--primary-low);
-  box-shadow: var(--shadow-menu-panel);
+  --list-item-padding: 0.5em 1rem;
+  box-shadow: var(--shadow-dropdown);
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
@@ -46,6 +55,7 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  max-height: 100vh;
 
   // remove once glimmer search menu in place
   .widget-link,
@@ -167,7 +177,8 @@
   }
 
   hr {
-    margin: 3px 0;
+    margin: 0;
+    height: auto;
   }
 
   .panel-header {
@@ -193,13 +204,16 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    // 2em padding very useful for iOS Safari's overlayed bottom nav
+    // padding-bottom: calc(env(safe-area-inset-bottom) + 2em);
   }
 
   .panel-body-bottom {
     display: flex;
-    flex: 1 0 0%; // safari height fix
-    margin-top: 0.5em;
+    flex: 1 0 0;
     flex-wrap: wrap;
+    padding: 0.75em 0.75em max(env(safe-area-inset-bottom), 0.75em);
 
     .show-all {
       display: flex;
@@ -230,6 +244,10 @@
     vertical-align: text-bottom;
   }
 
+  .sidebar-filter {
+    width: 100%;
+  }
+
   .sidebar-search {
     width: 100%;
   }
@@ -237,58 +255,18 @@
 
 .search-menu .menu-panel {
   width: 500px;
-
-  @include breakpoint("mobile-extra-large") {
-    &.search-menu-panel {
-      width: 100vw;
-      max-width: 100vw;
-      padding: 0.5rem 0.5rem 0;
-      transform-origin: 66%;
-      transition: height 0.2s ease-in;
-
-      &.empty-panel {
-        height: 4rem;
-      }
-
-      &.slide-in {
-        animation: search-slide-in 0.2s ease-out forwards;
-      }
-
-      &.is-destroying {
-        animation: search-slide-out 0.2s ease-in forwards;
-      }
-
-      @keyframes search-slide-in {
-        from {
-          opacity: 0;
-          transform: scaleX(0);
-        }
-      }
-
-      @keyframes search-slide-out {
-        from {
-          transform: scaleX(1);
-          opacity: 1;
-        }
-
-        to {
-          opacity: 0;
-          transform: scaleX(0);
-        }
-      }
-
-      .btn-cancel-mobile-search {
-        padding: 1rem 0.625rem;
-      }
-    }
-  }
 }
 
 .user-menu.revamped {
+  --user-menu-border-width: 1px;
   right: 0;
-  width: 320px;
   padding: 0;
   border-top-right-radius: 0;
+  width: unset;
+
+  @include viewport.until(sm) {
+    width: 320px;
+  }
 
   .panel-body-bottom {
     flex: 0;
@@ -297,10 +275,10 @@
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
-    border-left: 1px solid var(--primary-low);
-    padding: 0.75em 0 0;
+    padding: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
+    margin-inline: calc(var(--user-menu-border-width) * -1);
   }
 
   .tabs-list {
@@ -311,7 +289,11 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.857em;
+      padding: 0.875em 1em 0.875em 0.875em;
+
+      @include viewport.until(sm) {
+        padding: 1.2em 1.4em;
+      }
 
       @media screen and (height <= 400px) {
         // helps with 400% zoom level
@@ -341,33 +323,41 @@
         background-color: var(--d-selected);
       }
 
-      &:hover {
-        background-color: var(--d-hover);
+      .discourse-no-touch & {
+        &:hover {
+          background-color: var(--d-hover);
+          border-left: var(--user-menu-border-width) solid var(--primary-low);
+          padding-left: calc(0.875em - var(--user-menu-border-width));
+        }
       }
     }
   }
 
   .bottom-tabs {
-    border-top: 1px solid var(--primary-low);
+    border-top: var(--user-menu-border-width) solid var(--primary-low);
   }
 
   .panel-body-contents {
     display: flex;
     flex-direction: row-reverse;
+
+    @include viewport.until(sm) {
+      .quick-access-panel li {
+        padding-block: 0.15em;
+      }
+    }
   }
 
   .quick-access-panel {
     width: 320px;
-    padding: 0.75em;
-    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
     justify-content: space-between;
     box-sizing: border-box;
+    border-right: var(--user-menu-border-width) solid var(--primary-low);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
   #quick-access-profile {
     display: inline;
-    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
 
     ul {
       flex-wrap: nowrap;
@@ -378,14 +368,16 @@
 
     li {
       flex: 1 1 auto;
-      max-height: 3em; // prevent buttons from getting too tall
+      display: flex;
+      flex-direction: column;
+      max-height: 3.25em;
 
       > * {
         // button, a, and everything else
-        height: 100%;
         align-items: center;
         margin: 0;
-        padding: 0 0.5em;
+        padding: var(--list-item-padding);
+        flex: 1 1 auto;
       }
 
       img.emoji {
@@ -432,7 +424,7 @@
     }
 
     hr {
-      border-top: 1px solid var(--primary-low);
+      border-top: var(--user-menu-border-width) solid var(--primary-low);
       width: 100%;
     }
   }
@@ -441,6 +433,84 @@
 .hamburger-panel {
   .panel-body {
     overflow-y: auto;
+  }
+
+  @include viewport.until(sm) {
+    .sidebar-section-wrapper {
+      margin-bottom: 1.2em;
+    }
+  }
+
+  @include viewport.from(sm) {
+    // sidebar-hamburger hybrid
+    .revamped {
+      --d-sidebar-row-height: 1.875rem;
+      width: 22.5rem;
+
+      .panel-body-content {
+        width: 100%;
+        min-width: 0; // prevent content blowing out width
+      }
+
+      .sidebar-section-wrapper {
+        .sidebar-section-header-button {
+          opacity: 1;
+        }
+
+        .sidebar-section-link.active {
+          font-weight: normal;
+          background: var(--d-hover);
+        }
+
+        .sidebar-section-header-wrapper .select-kit .btn:hover {
+          background: transparent;
+        }
+
+        &.sidebar-section {
+          padding-top: 0.5em;
+
+          .sidebar-section-header-wrapper {
+            margin: 0 0 0.5em;
+            padding-bottom: 0.25em;
+          }
+
+          .sidebar-section-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            li {
+              min-width: 0;
+            }
+          }
+        }
+      }
+
+      .sidebar-section-link-wrapper
+        .sidebar-section-link-hover:hover
+        .sidebar-section-hover-button {
+        background: transparent;
+      }
+
+      .sidebar-footer-wrapper {
+        padding: 0;
+        margin-top: 1em;
+
+        .sidebar-footer-container {
+          padding: 0;
+          border: none;
+          background: var(--secondary);
+
+          &::before {
+            top: -1.5em;
+            background: linear-gradient(
+              to bottom,
+              transparent,
+              rgb(var(--secondary-rgb), 1)
+            );
+          }
+        }
+      }
+    }
   }
 }
 
@@ -459,9 +529,6 @@
   flex-direction: column;
   min-height: 0;
   max-height: 100%;
-  border-top: 1px solid var(--primary-low);
-  padding-top: 0.75em;
-  margin-top: -1px;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
@@ -577,15 +644,9 @@
       }
     }
 
-    a,
-    .profile-tab-btn {
+    a {
       display: flex;
-      margin: 0.25em;
-      padding: 0 0.25em;
-    }
-
-    button {
-      padding: 0.25em 0.5em;
+      padding: var(--list-item-padding);
     }
 
     a,
@@ -632,6 +693,7 @@
 
   .spinner-container {
     min-height: 2em;
+    margin: auto;
   }
 
   .spinner {
@@ -667,7 +729,6 @@
     a {
       color: var(--primary);
       align-items: center;
-      padding: 0.15em 0;
 
       .item-label {
         font-weight: bold;
@@ -718,11 +779,14 @@
       }
     }
 
-    &.unread .icon-avatar__icon-wrapper {
-      background: var(--tertiary);
+    &.unread,
+    &.pending {
+      .icon-avatar__icon-wrapper {
+        background: var(--tertiary);
 
-      .d-icon {
-        color: var(--secondary);
+        .d-icon {
+          color: var(--secondary);
+        }
       }
     }
   }
@@ -738,5 +802,22 @@
   .panel-body-contents {
     max-height: unset;
     min-height: 100%;
+  }
+}
+
+.sidebar-section-header {
+  .sidebar-section-header-global-indicator {
+    .d-icon {
+      color: var(--d-sidebar-header-icon-color);
+    }
+  }
+}
+
+.sidebar-hamburger-dropdown {
+  .discourse-no-touch & {
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:hover,
+    .sidebar-section-wrapper .sidebar-section-header-wrapper:focus-within {
+      background: transparent;
+    }
   }
 }

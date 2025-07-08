@@ -246,6 +246,20 @@ RSpec.describe OptimizedImage do
 
         expect(optimized_new.id).not_to eq(old_id)
 
+        old_id = optimized_new.id
+        # it is also able to get an optimized image in a different format
+        optimized_new = OptimizedImage.create_for(upload, 10, 10, format: "gif")
+        expect(optimized_new.id).not_to eq(old_id)
+        expect(optimized_new.extension).to eq(".gif")
+
+        old_id = optimized_new.id
+        # same format, same image
+        optimized_new = OptimizedImage.create_for(upload, 10, 10, format: "gif")
+        expect(optimized_new.id).to eq(old_id)
+
+        path = Shellwords.escape(Discourse.store.path_for(optimized_new))
+        expect(`identify -format %m #{path}`.strip).to eq("GIF")
+
         # cleanup (which transaction rollback may miss)
         optimized_new.destroy
         upload.destroy
@@ -266,6 +280,12 @@ RSpec.describe OptimizedImage do
       expect(File.read(Discourse.store.path_for(resized))).to eq(
         File.read(Discourse.store.path_for(upload)),
       )
+
+      resized = upload.get_optimized_image(50, 50, format: "gif", raise_on_error: true)
+      expect(resized.extension).to eq(".gif")
+      # lets ensure we have a gif with the identify tool
+      path = Shellwords.escape(Discourse.store.path_for(resized))
+      expect(`identify -format %m #{path}`.strip).to eq("GIF")
     end
 
     context "when using an internal store" do

@@ -13,6 +13,9 @@ import SelectKitComponent, {
   selectKitOptions,
 } from "select-kit/components/select-kit";
 import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
+import { isNumeric } from "select-kit/lib/input-utils";
+import MultiSelectFilter from "./multi-select/multi-select-filter";
+import MultiSelectHeader from "./multi-select/multi-select-header";
 
 @classNames("multi-select")
 @selectKitOptions({
@@ -22,8 +25,8 @@ import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
   filterIcon: null,
   closeOnChange: false,
   autoInsertNoneItem: false,
-  headerComponent: "multi-select/multi-select-header",
-  filterComponent: "multi-select/multi-select-filter",
+  headerComponent: MultiSelectHeader,
+  filterComponent: MultiSelectFilter,
   autoFilterable: true,
   caretDownIcon: "caretIcon",
   caretUpIcon: "caretIcon",
@@ -137,7 +140,7 @@ export default class MultiSelect extends SelectKitComponent {
   @computed("value.[]", "content.[]", "selectKit.noneItem")
   get selectedContent() {
     const value = makeArray(this.value).map((v) =>
-      this.selectKit.options.castInteger && this._isNumeric(v) ? Number(v) : v
+      this.selectKit.options.castInteger && isNumeric(v) ? Number(v) : v
     );
 
     if (value.length) {

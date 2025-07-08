@@ -8,6 +8,16 @@ class Auth::Authenticator
     raise NotImplementedError
   end
 
+  # Used in error messages and for display purposes
+  def display_name
+    name
+  end
+
+  # Used in /my/preferences/account to link to the provider's website
+  def provider_url
+    nil
+  end
+
   def enabled?
     raise NotImplementedError
   end

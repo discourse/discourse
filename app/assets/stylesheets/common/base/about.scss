@@ -1,9 +1,41 @@
+@use "lib/viewport";
+
 .about {
   &__main-content {
     display: flex;
     flex-wrap: wrap;
     gap: 2em;
     max-width: 1100px;
+
+    .--custom-group {
+      max-width: unset;
+      margin-top: 3em;
+
+      h3 {
+        a {
+          color: var(--primary);
+
+          &:hover {
+            color: var(--tertiary);
+          }
+        }
+
+        &::first-letter {
+          text-transform: capitalize;
+        }
+      }
+
+      p {
+        margin-top: 0;
+        color: var(--primary-high);
+      }
+
+      &.--has-description {
+        h3 {
+          margin-bottom: 0;
+        }
+      }
+    }
   }
 
   &__header {
@@ -25,7 +57,7 @@
     padding: 1em 1em;
     margin-bottom: 1em;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       flex-direction: column;
     }
 
@@ -37,7 +69,7 @@
   &__stats-item {
     flex: 1 0 fit-content;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       margin-bottom: 1em;
 
       &:last-child {

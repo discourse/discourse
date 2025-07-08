@@ -44,7 +44,7 @@ RSpec.describe TopicsController do
     fab!(:p2) { Fabricate(:post, topic: p1.topic, user: moderator) }
 
     it "returns the JSON in the format our wordpress plugin needs" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
 
       get "/t/#{p1.topic.id}/wordpress.json", params: { best: 3 }
 
@@ -182,7 +182,7 @@ RSpec.describe TopicsController do
 
         describe "when topic has been deleted" do
           it "should still be able to move posts" do
-            PostDestroyer.new(admin, topic.first_post).destroy
+            PostDestroyer.new(admin, topic.first_post, context: "Automated testing").destroy
 
             expect(topic.reload.deleted_at).to_not be_nil
 
@@ -1562,8 +1562,12 @@ RSpec.describe TopicsController do
 
       it "force destroys all deleted small actions in topic too" do
         small_action_post = Fabricate(:small_action, topic: topic)
-        PostDestroyer.new(Discourse.system_user, post).destroy
-        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+        PostDestroyer.new(
+          Discourse.system_user,
+          small_action_post,
+          context: "Automated testing",
+        ).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -1576,8 +1580,12 @@ RSpec.describe TopicsController do
 
       it "creates a log and clean up previously recorded sensitive information" do
         small_action_post = Fabricate(:small_action, topic: topic)
-        PostDestroyer.new(Discourse.system_user, post).destroy
-        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+        PostDestroyer.new(
+          Discourse.system_user,
+          small_action_post,
+          context: "Automated testing",
+        ).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -1595,7 +1603,7 @@ RSpec.describe TopicsController do
 
       it "does not allow to destroy topic if not all posts were force destroyed" do
         _other_post = Fabricate(:post, topic: topic, post_number: 2)
-        PostDestroyer.new(Discourse.system_user, post).destroy
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -1604,7 +1612,11 @@ RSpec.describe TopicsController do
 
       it "does not allow to destroy topic if not all small action posts were deleted" do
         small_action_post = Fabricate(:small_action, topic: topic)
-        PostDestroyer.new(Discourse.system_user, small_action_post).destroy
+        PostDestroyer.new(
+          Discourse.system_user,
+          small_action_post,
+          context: "Automated testing",
+        ).destroy
 
         delete "/t/#{topic.id}.json", params: { force_destroy: true }
 
@@ -2272,10 +2284,11 @@ RSpec.describe TopicsController do
             filter_top_level_replies: true,
             print: true,
             preview_theme_id: 9999,
+            include_raw: true,
           }
       expect(response.status).to eq(301)
       expect(response).to redirect_to(
-        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999",
+        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999&include_raw=true",
       )
     end
 

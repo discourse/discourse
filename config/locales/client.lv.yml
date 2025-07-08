@@ -320,7 +320,7 @@ lv:
       new_topic: "Jaunas tēmas melnraksts"
       new_private_message: "Jauns personīgā ziņojuma melnraksts"
     preview: "priekšskatījums"
-    cancel: "atcelt"
+    cancel: "Atcelt"
     save: "Saglabāt izmaiņas"
     saved: "Saglabāts!"
     upload: "Augšuplādēt"
@@ -1345,6 +1345,7 @@ lv:
           expired_at_time: "Derīguma termiņš beidzas pēc %{time}"
           show_advanced: "Rādīt papildu opcijas"
           hide_advanced: "Slēpt papildu opcijas"
+          description: "Apraksts"
           max_redemptions_allowed: "Maksimāli izmantojams"
           add_to_groups: "Pievienot grupām"
           expires_after: "Derīguma termiņš beidzas"
@@ -1417,7 +1418,6 @@ lv:
         title: "Reģistrēšanās IP adrese"
       avatar:
         title: "Profila attēls"
-        header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
         name_and_description: "%{name} - %{description}"
         edit: "Rediģēt profila attēlu"
       title:
@@ -1699,10 +1699,9 @@ lv:
       italic_label: "I"
       italic_title: "Uzsvars"
       italic_text: "Uzsvērts teksts"
-      link_title: "Saite"
       link_description: "ievadiet saites aprakstu šeit"
-      link_dialog_title: "Ievietojiet saiti"
-      link_optional_text: "neobligāts nosaukums"
+      link_dialog_action: "Ievietot"
+      link_optional_text: "Teksts"
       blockquote_title: "Bloka citāts"
       blockquote_text: "Bloka citāts"
       code_title: "Formatēts teksts"
@@ -2237,6 +2236,13 @@ lv:
         zero: "%{count} cilvēkiem patika šis ieraksts."
         one: "%{count} cilvēkam patika šis ieraksts."
         other: "%{count} cilvēkiem patika šis ieraksts."
+      localizations:
+        table:
+          actions: "Darbības"
+          edit: "Rediģēt"
+          delete: "Dzēst"
+        post_language_selector:
+          none: "Nav"
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -2822,6 +2828,7 @@ lv:
               content: "Pārskats"
             invite:
               content: "Ielūgt"
+      search: "Meklēt"
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -2845,12 +2852,6 @@ lv:
     discovery:
       headings:
         categories: "Visas sadaļas"
-        filter_labels:
-          latest: "Pēdējais"
-          top: "Populārākās"
-          new: "jauns"
-          unread: "Nelasīts"
-          unseen: "Neredzēts"
   admin_js:
     settings: "Iestatījumi"
     admin:
@@ -2880,14 +2881,13 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilais"
-              email: "E-pasts"
-          fonts:
-            backfill_modal:
-              modal_yes: "Jā"
+        logo:
+          form:
+            mobile: "Mobilais"
+            email: "E-pasts"
+        fonts:
+          backfill_modal:
+            modal_yes: "Jā"
         navigation:
           title: "Pārvietošanās"
         notifications:
@@ -3140,6 +3140,8 @@ lv:
       config_areas:
         about:
           company_name: "Vārds"
+          extra_groups:
+            groups: "Grupas"
           optional: "(pēc izvēles)"
           saved: "saglabāts!"
         flags:
@@ -3179,6 +3181,7 @@ lv:
           delete: "Dzēst"
         color_palettes:
           palette_name: "Vārds"
+          delete: "Dzēst"
           colors:
             title: "Krāsas"
       plugins:
@@ -3283,6 +3286,7 @@ lv:
           desktop: "Personālais dators"
           mobile: "Mobilais"
           preview: "Priekšskatījums"
+          default: "Aktīvi"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
@@ -3304,18 +3308,20 @@ lv:
           version: "Versija:"
           enable: "Ieslēgt"
           disable: "Atslēgt"
-          update_to_latest: "Atjaunināt uz pēdējo"
-          check_for_updates: "Pārbaudīt, vai nav atjauninājumi"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
+          settings: "Iestatījumi"
+          colors: "Krāsas"
+          discard_colors: "Izmest"
+          colors_title: "Krāsas"
           scss:
             text: "CSS"
           all_filter: "Viss"
           active_filter: "Aktīvi"
           inactive_filter: "Neaktīvs"
-          schema:
-            fields:
-              required: "*nepieciešams"
+        schema:
+          fields:
+            required: "*nepieciešams"
         colors:
           title: "Krāsas"
           undo: "Atsaukt"
@@ -3324,8 +3330,6 @@ lv:
             name: "primārais"
           success:
             name: "veiksmīgi"
-          love:
-            description: "Atzinības pogas krāsa."
         email_style:
           html: "HTML"
           css: "CSS"

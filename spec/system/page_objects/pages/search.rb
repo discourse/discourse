@@ -4,13 +4,20 @@ module PageObjects
   module Pages
     class Search < PageObjects::Pages::Base
       def type_in_search(input)
-        find("input.full-page-search").send_keys(input)
+        filter = find("input.full-page-search")
+        filter.click
+        filter.send_keys(:end)
+        filter.send_keys(input)
         self
       end
 
       def type_in_search_menu(input)
         find(".search-input--header input").send_keys(input)
         self
+      end
+
+      def sort_order
+        PageObjects::Components::SelectKit.new("#search-sort-by")
       end
 
       def click_search_menu_link
@@ -20,6 +27,10 @@ module PageObjects
       def clear_search_input
         find("input.full-page-search").set("")
         self
+      end
+
+      def search_input
+        find("input.full-page-search")
       end
 
       def has_heading_text?(text)
@@ -34,12 +45,15 @@ module PageObjects
         find(".search-cta").click
       end
 
-      def click_search_icon
-        find(".d-header #search-button").click
+      def expand_dropdown
+        click_search_icon if !has_css?(".search-menu .search-menu-panel", wait: 0)
+        self
       end
 
-      def click_advanced_search_icon
-        find(".show-advanced-search").click
+      def click_search_icon
+        find(".d-header #search-button").click
+        has_css?(is_mobile? ? ".search-container" : ".search-menu-container")
+        self
       end
 
       def click_in_posts_by_user

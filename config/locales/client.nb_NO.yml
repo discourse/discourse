@@ -377,6 +377,7 @@ nb_NO:
       created: "Du har bokmerket dette innlegget. %{name}"
       created_generic: "Du har bokmerket dette. %{name}"
       create: "Opprett bokmerke"
+      clear_reminder: "Fjern påminnelse"
       edit: "Rediger bokmerke"
       not_bookmarked: "bokmerk dette innlegget"
       remove_reminder_keep_bookmark: "Fjern påminnelse og behold bokmerke"
@@ -458,7 +459,7 @@ nb_NO:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
     preview: "forhåndsvisning"
-    cancel: "avbryt"
+    cancel: "Avbryt"
     deleting: "forhåndsvisning"
     save: "Lagre endringer"
     saving: "Lagrer…"
@@ -1115,7 +1116,6 @@ nb_NO:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}s profil"
-      account_possessive: "%{name}s konto"
       mute: "Ignorer"
       edit: "Rediger innstillinger"
       download_archive:
@@ -1807,6 +1807,7 @@ nb_NO:
           link_copied: "Lenk kopiert!"
           show_advanced: "Vis avanserte innstillinger"
           hide_advanced: "Skjul avanserte alternativer"
+          description: "Beskrivelse"
           restrict: "Begrens til"
           restrict_email: "Begrens til e-postadresse"
           restrict_domain: "Begrens til domene"
@@ -1909,7 +1910,6 @@ nb_NO:
         title: "Registreringens IP-adresse."
       avatar:
         title: "Profilbilde"
-        header_title: "Profil, meldinger, bokmerker og innstillinger"
         name_and_description: "%{name} - %{description}"
         edit: "Rediger profilbilde"
       title:
@@ -2435,11 +2435,10 @@ nb_NO:
       italic_label: "K"
       italic_title: "Kursiv"
       italic_text: "kursiv tekst"
-      link_title: "Hyperlenke"
       link_description: "beskriv lenken her"
-      link_dialog_title: "Sett inn hyperlenke"
-      link_optional_text: "valgfri tittel"
-      link_url_placeholder: "Lim inn en URL eller skriv for å søke i emner"
+      link_dialog_action: "Sett inn"
+      link_edit_action: "Oppdater"
+      link_optional_text: "Tekst"
       blockquote_title: "Sitatramme"
       blockquote_text: "Sitatramme"
       code_title: "Kodeutsnitt"
@@ -2509,6 +2508,8 @@ nb_NO:
       image_scale_button: "Skalere bildet til %{percent}%."
       delete_image_button: Slett bilde
       toggle_image_grid: Veksle mellom bilderutenett
+      link_toolbar:
+        link_copied: "Lenk kopiert!"
     notifications:
       tooltip:
         regular:
@@ -2762,7 +2763,6 @@ nb_NO:
           aria_label: filtrer etter maksimal antall visninger
         additional_options:
           label: "Filtrer etter antall innlegg og emnevisninger"
-    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og innstillinger"
@@ -2902,10 +2902,6 @@ nb_NO:
         top: "Det finnes ingen populære emner."
         hot: "Det finnes ingen aktuelle temaer."
         filter: "Det finnes ingen emner."
-        educate:
-          new: '<p>Dine nye emner vil vises her. Som standard betraktes emner som nye, og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator hvis de ble opprettet i de siste 2 dagene.</p><p>Besøk dine <a href="%{userPrefsUrl}">preferanser</a> for å endre dette.</p>'
-          unread: "<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class=\"badge unread-posts badge-notification\">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 5 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via \U0001F514 i hvert emne.</p><p>Gå til<a href=\"%{userPrefsUrl}\">innstillingene</a> dine for å endre dette.</p>"
-          new_new: "<p>Dine nye emner vil vises her, og dine uleste emner også. Som standard anses emner som nye og vil vise en <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-indikator hvis de ble opprettet i løpet av de siste to dagene. Uleste emner vil vise <span class=\"badge unread-posts badge-notification\">1</span> hvis du: opprettet emnet, svarte på emnet, leste emnet i mer enn 5 minutter, eller hvis du uttrykkelig har satt emnet til Sporet eller Overvåket via \U0001F514 i hvert emne.</p><p>Besøk dine <a href=\"%{userPrefsUrl}\">innstillinger</a> for å endre dette.</p>"
       bottom:
         latest: "Det finnes ingen flere siste emner."
         posted: "Det finnes ingen flere emner med innlegg."
@@ -3454,6 +3450,13 @@ nb_NO:
         other: "Viser %{count} svar til"
       in_reply_to: "Last inn overordnet innlegg"
       view_all_posts: "Vis alle innlegg"
+      localizations:
+        table:
+          actions: "Handlinger"
+          edit: "Endre"
+          delete: "Slett"
+        post_language_selector:
+          none: "Ingen"
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
@@ -4339,6 +4342,7 @@ nb_NO:
               content: "Gjennomgang"
             invite:
               content: "Inviter"
+      search: "Søk"
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4367,12 +4371,6 @@ nb_NO:
     discovery:
       headings:
         categories: "Alle kategorier"
-        filter_labels:
-          latest: "Siste"
-          top: "Aktive"
-          new: "Ny"
-          unread: "Uleste"
-          unseen: "Usette"
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
@@ -4414,14 +4412,13 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobil"
-              email: "E-post"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          form:
+            mobile: "Mobil"
+            email: "E-post"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigasjon"
         notifications:
@@ -4764,6 +4761,8 @@ nb_NO:
       config_areas:
         about:
           company_name: "Navn"
+          extra_groups:
+            groups: "Grupper"
           optional: "(valgfritt)"
           update: "Oppdater"
           saved: "lagret!"
@@ -4796,6 +4795,7 @@ nb_NO:
           install: "Installer"
           themes:
             title: "Drakter"
+            install: "Installer"
           components:
             title: "Komponenter"
             install: "Installer"
@@ -4817,6 +4817,7 @@ nb_NO:
           delete: "Slett"
         color_palettes:
           palette_name: "Navn"
+          delete: "Slett"
           colors:
             title: "Farger"
       plugins:
@@ -4950,6 +4951,7 @@ nb_NO:
           extra_files_upload: "Eksporter tema for å vise disse filene."
           extra_files_remote: "Eksporter temaet eller sjekk git-repository for å vise disse filene."
           preview: "Forhåndsvis"
+          default: "Aktiv"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
@@ -5001,8 +5003,6 @@ nb_NO:
           enable: "Aktiver"
           disable: "Deaktiver"
           disabled: "Denne komponenten har blitt deaktivert."
-          update_to_latest: "Oppdater til seneste"
-          check_for_updates: "Se etter oppdateringer"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
           theme_settings: "Draktinnstillinger"
@@ -5010,6 +5010,10 @@ nb_NO:
           commits_behind:
             one: "Drakten er én utgave foreldet!"
             other: "Drakten er %{count} utgaver foreldet!"
+          settings: "Innstillinger"
+          colors: "Farger"
+          discard_colors: "Forkast"
+          colors_title: "Farger"
           scss:
             text: "CSS"
           after_header:
@@ -5021,12 +5025,16 @@ nb_NO:
           all_filter: "Alle"
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
-          schema:
-            fields:
-              required: "*påkrevd"
-              number:
-                too_small: "må være lik eller større enn %{count}"
-                too_large: "må være lik eller mindre enn %{count}"
+        schema:
+          fields:
+            required: "*påkrevd"
+            string:
+              too_short:
+                one: "må være minst %{count} tegn"
+                other: "må være minst %{count} tegn"
+            number:
+              too_small: "må være lik eller større enn %{count}"
+              too_large: "må være lik eller mindre enn %{count}"
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"
@@ -5035,33 +5043,24 @@ nb_NO:
           revert: "Reverser"
           primary:
             name: "primær"
-            description: "Det meste av tekst, ikoner og kanter."
           secondary:
             name: "sekundær"
-            description: "Primær bakgrunnsfarge og tekstfarge på noen knapper"
           tertiary:
             name: "tertiær"
-            description: "Lenker, noen knapper, varsler og effektfarge"
           quaternary:
             name: "kvartær"
           header_background:
             name: "hodebakgrunn"
-            description: "Bakgrunnsfarge i nettstedets hode"
           header_primary:
             name: "primærhode"
-            description: "Tekst og ikoner i nettstedets hode."
           highlight:
             name: "utheving"
-            description: "Bakgrunnsfargen på uthevede elementer på siden, slik som innlegg og emner."
           danger:
             name: "fare"
-            description: "Uthevingsfarge for handlinger som sletting av innlegg og emner."
           success:
             name: "suksess"
-            description: "Brukt til å indikere hvorvidt en handling var vellykket."
           love:
             name: "liker"
-            description: "Fargen til Liker-knappen."
           selected:
             name: "valgt"
           editor:

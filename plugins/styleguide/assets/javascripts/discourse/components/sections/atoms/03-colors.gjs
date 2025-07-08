@@ -53,14 +53,15 @@ const Colors = <template>
 
   <StyleguideExample @title="tertiary-100">
     <section class="color-row">
+      <ColorExample @color="tertiary-25" />
       <ColorExample @color="tertiary-50" />
       <ColorExample @color="tertiary-100" />
       <ColorExample @color="tertiary-200" />
       <ColorExample @color="tertiary-300" />
       <ColorExample @color="tertiary-400" />
-      <ColorExample @color="tertiary-500" />
     </section>
     <section class="color-row">
+      <ColorExample @color="tertiary-500" />
       <ColorExample @color="tertiary-600" />
       <ColorExample @color="tertiary-700" />
       <ColorExample @color="tertiary-800" />
@@ -123,4 +124,5 @@ const Colors = <template>
     </section>
   </StyleguideExample>
 </template>;
+
 export default Colors;

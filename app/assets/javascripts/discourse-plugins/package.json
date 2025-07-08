@@ -5,7 +5,7 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "dependencies": {
-    "@babel/core": "^7.26.10",
+    "@babel/core": "^7.27.7",
     "deprecation-silencer": "workspace:1.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-babel": "^8.2.0",
@@ -14,8 +14,8 @@
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "ember-cli": "~6.3.1",
-    "webpack": "^5.99.7"
+    "ember-cli": "~6.5.0",
+    "webpack": "^5.99.9"
   },
   "engines": {
     "node": ">= 18",

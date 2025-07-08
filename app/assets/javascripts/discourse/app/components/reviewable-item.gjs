@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { concat, fn, hash } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { alias } from "@ember/object/computed";
@@ -24,6 +24,7 @@ import icon from "discourse/helpers/d-icon";
 import dasherizeHelper from "discourse/helpers/dasherize";
 import editableValue from "discourse/helpers/editable-value";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import reviewableStatus from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -527,17 +528,19 @@ export default class ReviewableItem extends Component {
         this.dialog.confirm({
           message,
           didConfirm: () => this._performConfirmed(performableAction),
+          didCancel: () => this.#unclaimAutomaticReviewable(),
         });
       }
     } else if (actionModalClass) {
       if (await this.#claimReviewable()) {
-        this.modal.show(actionModalClass, {
+        await this.modal.show(actionModalClass, {
           model: {
             reviewable: this.reviewable,
             performConfirmed: this._performConfirmed,
             action: performableAction,
           },
         });
+        await this.#unclaimAutomaticReviewable();
       }
     } else {
       return this._performConfirmed(performableAction);
@@ -698,7 +701,7 @@ export default class ReviewableItem extends Component {
         <PluginOutlet
           @name="reviewable-item-actions"
           @connectorTagName="div"
-          @outletArgs={{hash reviewable=this.reviewable}}
+          @outletArgs={{lazyHash reviewable=this.reviewable}}
         />
       </div>
     </div>

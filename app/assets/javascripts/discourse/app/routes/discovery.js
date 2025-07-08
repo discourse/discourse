@@ -12,18 +12,10 @@ export default class DiscoveryRoute extends DiscourseRoute {
   @service router;
   @service session;
   @service site;
-  @service siteSettings;
 
   queryParams = {
     filter: { refreshModel: true },
   };
-
-  redirect() {
-    if (this.siteSettings.login_required && !this.currentUser) {
-      this.router.transitionTo("/login-required?_discourse_homepage_rewrite=1");
-      return;
-    }
-  }
 
   beforeModel(transition) {
     if (transition.to.name === "discovery.index") {

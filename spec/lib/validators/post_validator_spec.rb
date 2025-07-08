@@ -43,6 +43,18 @@ RSpec.describe PostValidator do
 
         expect(post.errors).to be_empty
       end
+
+      it "respects the max body length" do
+        SiteSetting.max_post_length = 5
+        post = Fabricate.build(:post, topic: topic)
+        post.raw = "that's too much mate"
+        validator.post_body_validator(post)
+
+        expect(post.errors.count).to eq(1)
+        expect(post.errors[:raw]).to contain_exactly(
+          I18n.t("errors.messages.too_long_validation", count: 5, length: 20),
+        )
+      end
     end
   end
 

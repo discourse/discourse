@@ -1,14 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
+import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");
@@ -169,6 +172,14 @@ export default class AceEditor extends Component {
     return this.args.mode || "css";
   }
 
+  get cssClasses() {
+    let cssClasses = ["ace"];
+    if (this.args.resizable) {
+      cssClasses.push("ace_editor--resizable");
+    }
+    return cssClasses.join(" ");
+  }
+
   @bind
   editorIdChanged() {
     if (this.autofocus) {
@@ -255,6 +266,11 @@ export default class AceEditor extends Component {
     }
   }
 
+  @bind
+  onResizeDrag(size) {
+    this.editor.container.style.height = `${size}px`;
+  }
+
   <template>
     <div class="ace-wrapper">
       <ConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
@@ -265,10 +281,20 @@ export default class AceEditor extends Component {
           {{didUpdate this.modeChanged @mode}}
           {{didUpdate this.placeholderChanged @placeholder}}
           {{didUpdate this.changeDisabledState @disabled}}
-          class="ace"
+          class={{concatClass this.cssClasses}}
           ...attributes
         >
         </div>
+        {{#if @resizable}}
+          <div
+            class="grippie"
+            {{grippieDragResize
+              ".ace_editor--resizable"
+              "bottom"
+              (hash onThrottledDrag=this.onResizeDrag)
+            }}
+          ></div>
+        {{/if}}
       </ConditionalLoadingSpinner>
     </div>
   </template>

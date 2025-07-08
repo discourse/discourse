@@ -43,7 +43,7 @@
     border-radius: var(--d-border-radius);
     background-color: var(--secondary);
     border: 1px solid var(--primary-low);
-    box-shadow: var(--shadow-menu-panel);
+    box-shadow: var(--shadow-dropdown);
     overscroll-behavior: contain;
     overflow: auto;
   }
@@ -93,7 +93,7 @@
       padding: 0.5em 1rem;
       width: 100%;
       justify-content: flex-start;
-      background: rgba(0, 0, 0, 0);
+      background: rgb(0, 0, 0, 0);
       border-radius: 0;
 
       &.-selected {
@@ -134,5 +134,16 @@
 
   &__divider {
     margin: 0;
+  }
+
+  .shortcut {
+    border: none;
+    color: var(--primary-low-mid);
+    background: transparent;
+    margin-left: 1em;
+    margin-right: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    font-weight: bold;
   }
 }

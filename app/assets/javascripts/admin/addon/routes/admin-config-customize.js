@@ -6,6 +6,6 @@ export default class AdminConfigThemesAndComponentsRoute extends DiscourseRoute 
   @service router;
 
   titleToken() {
-    return i18n("admin.config_areas.themes_and_components.title");
+    return i18n("admin.config.themes_and_components.title");
   }
 }

@@ -31,6 +31,16 @@ module PageObjects
         ".row.setting[data-setting='#{setting_name}']"
       end
 
+      def select_list_values(setting_name, values)
+        setting =
+          PageObjects::Components::SelectKit.new(
+            ".row.setting[data-setting='#{setting_name}'] .list-setting",
+          )
+        setting.expand
+        values.each { |value| setting.select_row_by_value(value) }
+        self
+      end
+
       def has_setting?(setting_name)
         has_css?(".row.setting[data-setting=\"#{setting_name}\"]")
       end
@@ -61,12 +71,14 @@ module PageObjects
       def select_from_emoji_list(setting_name, text = "", save_changes = true)
         setting = find(".admin-detail .row.setting[data-setting='#{setting_name}']")
         setting.find(".setting-value .value-list > .value button").click
-        setting.find(".setting-value .emoji-picker .emoji[title='#{text}']").click
+        find(".emoji-picker .emoji[title='#{text}']").click
         save_setting(setting) if save_changes
       end
 
-      def save_setting(setting_element)
-        setting_element.find(".setting-controls button.ok").click
+      def save_setting(setting)
+        setting = find_setting(setting) if setting.is_a?(String)
+        setting.find(".setting-controls button.ok").click
+        self
       end
 
       def has_overridden_setting?(setting_name, value: nil)
@@ -113,6 +125,11 @@ module PageObjects
 
       def has_greater_than_n_results?(count)
         assert_selector(".admin-detail .row.setting", minimum: count)
+      end
+
+      def error_message(setting_name)
+        setting = find_setting(setting_name)
+        setting.find(".setting-value .validation-error").text
       end
     end
   end

@@ -14,6 +14,7 @@ import SmallUserList, {
 } from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import {
   applyBehaviorTransformer,
@@ -23,6 +24,7 @@ import {
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
+import PostMenuAddTranslationButton from "./menu/buttons/add-translation";
 import PostMenuAdminButton from "./menu/buttons/admin";
 import PostMenuBookmarkButton from "./menu/buttons/bookmark";
 import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
@@ -51,6 +53,7 @@ const buttonKeys = Object.freeze({
   REPLIES: "replies",
   REPLY: "reply",
   SHARE: "share",
+  ADD_TRANSLATION: "addTranslation",
   SHOW_MORE: "showMore",
 });
 
@@ -66,6 +69,7 @@ const coreButtonComponents = new Map([
   [buttonKeys.REPLIES, PostMenuRepliesButton],
   [buttonKeys.REPLY, PostMenuReplyButton],
   [buttonKeys.SHARE, PostMenuShareButton],
+  [buttonKeys.ADD_TRANSLATION, PostMenuAddTranslationButton],
   [buttonKeys.SHOW_MORE, PostMenuShowMoreButton],
 ]);
 
@@ -609,7 +613,7 @@ export default class PostMenu extends Component {
     {{! <section class="post-menu-area clearfix"> }}
     <PluginOutlet
       @name="post-menu"
-      @outletArgs={{hash post=@post state=this.state}}
+      @outletArgs={{lazyHash post=@post state=this.state}}
     >
       <nav
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}

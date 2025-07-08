@@ -105,14 +105,24 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  def failure
-    error_key = params[:message].to_s.gsub(/[^\w-]/, "")
-    error_key = "generic" if error_key.blank?
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].to_h { [_1, _1] }
 
-    flash[:error] = I18n.t(
-      "login.omniauth_error.#{error_key}",
-      default: I18n.t("login.omniauth_error.generic"),
-    ).html_safe
+  def failure
+    error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
+    error = ALLOWED_FAILURE_ERRORS.fetch(error_name, "generic")
+
+    if error == "generic"
+      provider_name = params[:provider].presence || params[:strategy].presence
+      provider = Discourse.enabled_authenticators.find { _1.name == provider_name }&.display_name
+
+      if provider.blank? && Discourse.enabled_authenticators.one?
+        provider = Discourse.enabled_authenticators[0].display_name
+      end
+
+      error = provider.present? ? "generic_with_provider" : "generic_without_provider"
+    end
+
+    flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:).html_safe
 
     render "failure"
   end

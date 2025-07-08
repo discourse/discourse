@@ -1,6 +1,10 @@
 import ThemeSettings from "admin/models/theme-settings";
-
-export default function schemaAndData(version = 1) {
+import SiteSetting from "admin/models/site-setting";
+export const SCHEMA_MODES = {
+  THEME: "theme",
+  SITE_SETTING: "SITE_SETTING",
+};
+export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
   let schema, data;
 
   if (version === 1) {
@@ -19,6 +23,8 @@ export default function schemaAndData(version = 1) {
             properties: {
               name: {
                 type: "string",
+                label: "Level 2 Label",
+                description: "Description for level 2",
               },
               grandchildren: {
                 type: "objects",
@@ -204,6 +210,14 @@ export default function schemaAndData(version = 1) {
     ];
   } else {
     throw new Error("unknown fixture version");
+  }
+
+  if (mode === SCHEMA_MODES.SITE_SETTING) {
+    return SiteSetting.create({
+      schema: schema,
+      value: data,
+      setting: "objects_setting"
+    })
   }
 
   return ThemeSettings.create({

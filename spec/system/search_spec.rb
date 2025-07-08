@@ -19,6 +19,24 @@ describe "Search", type: :system do
 
     after { SearchIndexer.disable }
 
+    it "handles search term cleaning and ordering for aliases" do
+      # we need to be logged in for last read to show up
+      sign_in(post.user)
+      TopicUser.update_last_read(post.user, post.topic.id, 1, 1, 0)
+
+      visit("/search?q=test%20r")
+
+      expect(search_page.search_input.value).to eq("test")
+      # read sort order is set to 5
+      expect(search_page.sort_order.value).to eq("5")
+
+      visit("/search?q=test%20l")
+
+      expect(search_page.search_input.value).to eq("test")
+      # latest sort order is set to 1
+      expect(search_page.sort_order.value).to eq("1")
+    end
+
     it "works and clears search page state", mobile: true do
       visit("/search")
 
@@ -40,9 +58,7 @@ describe "Search", type: :system do
       expect(page).to have_current_path("/")
 
       search_page.click_search_icon
-      search_page.click_advanced_search_icon
 
-      expect(page).to have_css(".search-container")
       expect(search_page).to have_no_search_result
       expect(search_page).to have_heading_text("Search")
     end
@@ -108,7 +124,6 @@ describe "Search", type: :system do
     it "still displays last topic search results after navigating away, then back" do
       visit("/")
       search_page.click_search_icon
-      expect(page).to have_css(".search-menu-container")
       search_page.type_in_search_menu("test")
       search_page.click_search_menu_link
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
@@ -122,7 +137,6 @@ describe "Search", type: :system do
 
       visit("/")
       search_page.click_search_icon
-      expect(page).to have_css(".search-menu-container")
       search_page.type_in_search_menu("test")
       search_page.click_search_menu_link
 

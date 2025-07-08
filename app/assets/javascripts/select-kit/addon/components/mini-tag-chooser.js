@@ -1,11 +1,13 @@
 import { computed } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import {
   attributeBindings,
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
+import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -13,12 +15,14 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
+import SelectKitRow from "./select-kit/select-kit-row";
+import TagRow from "./tag-row";
 
 @attributeBindings("selectKit.options.categoryId:category-id")
 @classNames("mini-tag-chooser")
 @classNameBindings("noTags")
 @selectKitOptions({
+  allowAny: "allowAnyTag",
   fullWidthOnMobile: true,
   filterable: true,
   caretDownIcon: "caretIcon",
@@ -32,9 +36,9 @@ import TagsMixin from "select-kit/mixins/tags";
   useHeaderFilter: false,
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
-export default class MiniTagChooser extends MultiSelectComponent.extend(
-  TagsMixin
-) {
+export default class MiniTagChooser extends MultiSelectComponent {
+  @service tagUtils;
+
   @empty("value") noTags;
   @or("allowCreate", "site.can_create_tag") allowAnyTag;
 
@@ -43,10 +47,10 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return "select-kit/select-kit-row";
+      return SelectKitRow;
     }
 
-    return "tag-row";
+    return TagRow;
   }
 
   modifyNoSelection() {
@@ -81,6 +85,22 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
     return values.map((x) => this.defaultItem(x, x));
   }
 
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
+  }
+
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
+  }
+
   search(filter) {
     const maximum = this.selectKit.options.maximum;
     if (maximum === 0) {
@@ -103,27 +123,32 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
       data.filterForInput = true;
     }
 
-    return this.searchTags("/tags/filter/search", data, this._transformJson);
+    return this.tagUtils.searchTags(
+      "/tags/filter/search",
+      data,
+      this._transformJson
+    );
   }
 
-  _transformJson(context, json) {
-    if (context.isDestroyed || context.isDestroying) {
+  @bind
+  _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
       return [];
     }
 
     let results = json.results;
 
-    context.setProperties({
+    this.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (context.siteSettings.tags_sort_alphabetically) {
+    if (this.siteSettings.tags_sort_alphabetically) {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
     if (json.required_tag_group) {
-      context.set(
+      this.set(
         "selectKit.options.translatedFilterPlaceholder",
         i18n("tagging.choose_for_topic_required_group", {
           count: json.required_tag_group.min_count,
@@ -131,9 +156,9 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
         })
       );
     } else {
-      context.set("selectKit.options.translatedFilterPlaceholder", null);
+      this.set("selectKit.options.translatedFilterPlaceholder", null);
     }
 
-    return results.filter((r) => !makeArray(context.tags).includes(r.id));
+    return results.filter((r) => !makeArray(this.tags).includes(r.id));
   }
 }

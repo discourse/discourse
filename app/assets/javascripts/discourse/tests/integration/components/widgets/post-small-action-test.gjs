@@ -4,6 +4,7 @@ import MountWidget from "discourse/components/mount-widget";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import I18n from "discourse-i18n";
 
 // TODO (glimmer-post-stream) remove this test when removing the widget post stream code
 module(
@@ -112,6 +113,42 @@ module(
       assert
         .dom(".small-action-desc .small-action-recover")
         .exists("adds the recover small action button");
+    });
+
+    test("`addGroupPostSmallActionCode` plugin api", async function (assert) {
+      const self = this;
+
+      withPluginApi("1.6.0", (api) => {
+        api.addGroupPostSmallActionCode("some_code");
+      });
+
+      this.set("args", {
+        id: 123,
+        actionCode: "some_code",
+        actionCodeWho: "somegroup",
+      });
+
+      I18n.translations[I18n.locale].js.action_codes = {
+        some_code: "Some %{who} Code Action",
+      };
+      await render(
+        <template>
+          <MountWidget @widget="post-small-action" @args={{self.args}} />
+        </template>
+      );
+      assert
+        .dom(".small-action")
+        .hasText(
+          "Some @somegroup Code Action",
+          "the action code text was rendered correctly"
+        );
+      assert
+        .dom("a.mention-group")
+        .hasAttribute(
+          "href",
+          "/g/somegroup",
+          "the group mention link has the correct href"
+        );
     });
 
     test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {

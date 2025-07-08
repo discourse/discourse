@@ -80,7 +80,7 @@ export function generatePlaceholderHashtagHTML(type, spanEl, data) {
   link.dataset.type = type;
   link.dataset.id = data.id;
   link.dataset.slug = data.slug;
-  link.dataset.style_type = data.style_type;
+  link.dataset.styleType = data.style_type;
 
   if (data.style_type === "icon") {
     link.dataset.icon = data.icon;
@@ -109,7 +109,7 @@ export function decorateHashtags(element, site) {
         icon: site.hashtag_icons[hashtagType],
         id: hashtagEl.dataset.id,
         slug: hashtagEl.dataset.slug,
-        style_type: hashtagEl.dataset.styleType || "square",
+        style_type: hashtagEl.dataset?.styleType || "square",
       };
 
       if (opts.style_type === "icon") {

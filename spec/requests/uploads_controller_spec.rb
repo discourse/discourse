@@ -921,7 +921,7 @@ RSpec.describe UploadsController do
         expect(result["url"]).not_to include("&x-amz-meta-sha1-checksum=testing")
         expect(result["url"]).not_to include("&x-amz-meta-blah=wontbeincluded")
         expect(result["signed_headers"]).to eq(
-          "x-amz-acl" => "private",
+          "x-amz-acl" => FileStore::S3Store::CANNED_ACL_PRIVATE,
           "x-amz-meta-sha1-checksum" => "testing",
         )
       end

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import PostMetaDataLanguage from "discourse/components/post/meta-data/language";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
@@ -168,7 +169,7 @@ createWidget("reply-to-tab", {
 
   buildAttributes(attrs) {
     let result = {
-      tabindex: "0",
+      href: "",
     };
 
     if (!attrs.mobileView) {
@@ -199,7 +200,8 @@ createWidget("reply-to-tab", {
     ];
   },
 
-  click() {
+  click(event) {
+    event.preventDefault();
     this.state.loading = true;
     this.sendWidgetAction("toggleReplyAbove").then(
       () => (this.state.loading = false)
@@ -373,6 +375,10 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
+    if (attrs.language && attrs.is_localized) {
+      postInfo.push(this.attach("post-language", attrs));
+    }
+
     postInfo.push(this.attach("post-date", attrs));
 
     postInfo.push(
@@ -446,6 +452,18 @@ createWidget("post-date", {
       .show(ShareTopicModal, {
         model: { category: topic.category, topic, post },
       });
+  },
+});
+
+// glimmer-post-stream: has glimmer version
+createWidget("post-language", {
+  html(attrs) {
+    return [
+      new RenderGlimmer(this, "div", PostMetaDataLanguage, {
+        language: attrs.language,
+        localization_outdated: attrs.localization_outdated,
+      }),
+    ];
   },
 });
 
@@ -859,13 +877,14 @@ createWidget("post-body", {
   tagName: "div.topic-body.clearfix",
 
   html(attrs, state) {
+    const post = this.findAncestorModel();
     const postContents = this.attach("post-contents", attrs);
     let result = [this.attach("post-meta-data", attrs)];
     result = result.concat(
       applyDecorators(this, "after-meta-data", attrs, state)
     );
     result.push(postContents);
-    result.push(this.attach("actions-summary", attrs));
+    result.push(this.attach("actions-summary", { post }));
     result.push(this.attach("post-links", attrs));
 
     return result;
@@ -1075,9 +1094,11 @@ export default createWidget("post", {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.height
+    const heightStyle = attrs.height
       ? { style: `min-height: ${attrs.height}px` }
       : undefined;
+
+    return { "data-post-number": attrs.post_number, ...heightStyle };
   },
 
   buildId(attrs) {
@@ -1090,6 +1111,9 @@ export default createWidget("post", {
     }
     const classNames = ["topic-post", "clearfix"];
 
+    if (!attrs.mobileView) {
+      classNames.push("sticky-avatar");
+    }
     if (attrs.id === -1 || attrs.isSaving || attrs.staged) {
       classNames.push("staged");
     }

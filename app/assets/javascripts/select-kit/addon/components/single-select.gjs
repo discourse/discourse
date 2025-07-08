@@ -11,10 +11,12 @@ import SelectKitComponent, {
   selectKitOptions,
 } from "select-kit/components/select-kit";
 import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
+import { isNumeric } from "select-kit/lib/input-utils";
+import SingleSelectHeader from "./select-kit/single-select-header";
 
 @classNames("single-select")
 @selectKitOptions({
-  headerComponent: "select-kit/single-select-header",
+  headerComponent: SingleSelectHeader,
 })
 @pluginApiIdentifiers(["single-select"])
 export default class SingleSelect extends SelectKitComponent {
@@ -26,7 +28,7 @@ export default class SingleSelect extends SelectKitComponent {
       let content;
 
       const value =
-        this.selectKit.options.castInteger && this._isNumeric(this.value)
+        this.selectKit.options.castInteger && isNumeric(this.value)
           ? Number(this.value)
           : this.value;
 

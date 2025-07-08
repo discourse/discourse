@@ -1,47 +1,4 @@
-// Topic list navigation & controls
-.list-controls {
-  background: var(--d-content-background);
-
-  .combo-box .combo-box-header {
-    background: var(--secondary);
-    color: var(--primary);
-    border: 1px solid var(--primary-medium);
-    font-size: var(--font-0);
-    height: 100%;
-
-    &:focus {
-      border-color: var(--tertiary);
-    }
-  }
-
-  .select-kit {
-    .select-kit-collection {
-      max-height: 40vh;
-    }
-  }
-}
-
-.navigation-container {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.category-breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--nav-space) 0;
-
-  > li {
-    // only target the top-level li, not dropdowns
-    display: flex;
-    margin-right: 0.5em;
-    margin-bottom: 0;
-  }
-}
+@use "lib/viewport";
 
 #navigation-bar {
   display: flex;
@@ -62,7 +19,7 @@
     white-space: nowrap;
 
     &:not(:last-child) {
-      margin-right: 0.4em;
+      margin-right: var(--space-2);
     }
   }
 
@@ -70,7 +27,7 @@
     height: 100%;
   }
 
-  @include breakpoint(mobile-large) {
+  @include viewport.until(sm) {
     .edit-category {
       .d-button-label {
         display: none;
@@ -119,7 +76,7 @@
 }
 
 .topic-list.shared-drafts {
-  margin-bottom: 1.5em;
+  margin-bottom: var(--space-6);
 }
 
 #header-list-area {
@@ -143,8 +100,8 @@
 
 .topic-list-item {
   .post-excerpt {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
     font-size: var(--font-down-2);
     word-break: break-word;
   }
@@ -154,7 +111,6 @@
   font-size: var(--font-up-1);
 
   a.title {
-    padding: 15px 0;
     word-break: break-word;
     color: var(--primary);
   }
@@ -185,7 +141,7 @@
 
     .icons {
       font-size: var(--font-down-2);
-      margin-right: 0.75em;
+      margin-right: var(--space-3);
       position: relative;
       top: 0.15em;
     }
@@ -234,13 +190,13 @@
       position: relative; // Chrome needs this, otherwise the line is above the text
       background-color: var(--secondary);
       color: var(--danger-medium);
-      padding: 0 0.55em;
+      padding: 0 var(--space-2);
       font-size: var(--font-down-1);
     }
   }
 
   .topic-list-data {
-    line-height: var(--line-height-large);
+    line-height: var(--line-height-medium);
     text-align: left;
     vertical-align: middle;
   }
@@ -289,7 +245,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5em;
+    margin-top: var(--space-1);
+    gap: 0 var(--space-2);
+    line-height: var(--line-height-large);
 
     a.discourse-tag.box {
       padding-top: 0;
@@ -297,17 +255,16 @@
     }
 
     .discourse-tag.box {
-      margin-right: 0.25em;
+      margin-right: var(--space-1);
     }
 
     .participant-group-wrapper {
       display: flex;
-      margin-left: 0.5em;
       flex-wrap: wrap;
-      gap: 0.5em;
+      gap: var(--space-2);
 
       .participant-group {
-        padding: 0 5px;
+        padding: 0.1em 0.3em;
         border: 1px solid var(--primary-low);
         border-radius: 0.25em;
         min-width: 3em;
@@ -319,6 +276,7 @@
           align-items: center;
           height: 1.25em;
           color: var(--primary-high);
+          font-size: var(--font-down-1);
 
           .mobile-view & {
             height: 1.1em;
@@ -326,6 +284,7 @@
 
           .d-icon {
             margin-right: 5px;
+            font-size: var(--font-down-1);
           }
         }
       }
@@ -335,11 +294,11 @@
   .topic-excerpt {
     display: block;
     font-size: var(--font-down-1);
-    margin-top: 0.33em;
+    margin-top: var(--space-1);
     color: var(--primary-high);
     word-wrap: break-word;
     line-height: var(--line-height-large);
-    padding-right: 20px;
+    padding-right: var(--space-1);
   }
 
   .num {
@@ -353,12 +312,6 @@
       font-weight: 700;
       color: inherit;
       display: inline-block;
-      padding: 15px 5px;
-    }
-  }
-
-  .num.posts {
-    a {
       padding: 15px 5px;
     }
   }
@@ -432,15 +385,15 @@
 
 .top-title-buttons {
   display: flex;
-  margin: 0.5em 0;
+  margin: var(--space-2) 0;
   flex-wrap: wrap;
   font-size: var(--font-down-1);
-  gap: 0.5em;
+  gap: var(--space-2);
 }
 
 div.education {
   color: var(--primary);
-  margin-bottom: 2em;
+  margin-bottom: var(--space-8);
 
   p {
     max-width: 62em;
@@ -451,13 +404,7 @@ div.education {
   }
 }
 
-.list-cell {
-  padding: 12px 5px;
-  color: var(--primary-med-or-secondary-high);
-}
-
 .table-heading {
-  @extend .list-cell;
   border-bottom: 3px solid var(--primary-low);
 }
 
@@ -478,5 +425,5 @@ div.education {
 
 #topic-list-heading {
   line-height: var(--line-height-medium);
-  margin-bottom: 0.5em;
+  margin-bottom: var(--space-2);
 }

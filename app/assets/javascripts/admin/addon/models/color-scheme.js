@@ -11,9 +11,15 @@ import ColorSchemeColor from "admin/models/color-scheme-color";
 class ColorSchemes extends ArrayProxy {}
 
 export default class ColorScheme extends EmberObject {
-  static findAll() {
+  static findAll({ excludeThemeOwned = false } = {}) {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    return ajax("/admin/color_schemes").then((all) => {
+
+    const data = {};
+    if (excludeThemeOwned) {
+      data.exclude_theme_owned = true;
+    }
+
+    return ajax("/admin/color_schemes", { data }).then((all) => {
       all.forEach((colorScheme) => {
         colorSchemes.pushObject(
           ColorScheme.create({
@@ -24,15 +30,7 @@ export default class ColorScheme extends EmberObject {
             theme_name: colorScheme.theme_name,
             base_scheme_id: colorScheme.base_scheme_id,
             user_selectable: colorScheme.user_selectable,
-            colors: colorScheme.colors.map((c) => {
-              return ColorSchemeColor.create({
-                name: c.name,
-                hex: c.hex,
-                dark_hex: c.dark_hex,
-                default_hex: c.default_hex,
-                is_advanced: c.is_advanced,
-              });
-            }),
+            colors: colorScheme.colors,
           })
         );
       });
@@ -50,15 +48,7 @@ export default class ColorScheme extends EmberObject {
       theme_name: json.theme_name,
       base_scheme_id: json.base_scheme_id,
       user_selectable: json.user_selectable,
-      colors: json.colors.map((c) => {
-        return ColorSchemeColor.create({
-          name: c.name,
-          hex: c.hex,
-          dark_hex: c.dark_hex,
-          default_hex: c.default_hex,
-          is_advanced: c.is_advanced,
-        });
-      }),
+      colors: json.colors,
     });
   }
 
@@ -70,6 +60,10 @@ export default class ColorScheme extends EmberObject {
   init() {
     super.init(...arguments);
 
+    const colors = A(this.colors ?? []);
+    this.colors = colors.map((c) => {
+      return ColorSchemeColor.create(c);
+    });
     this.startTrackingChanges();
   }
 
@@ -92,6 +86,25 @@ export default class ColorScheme extends EmberObject {
     });
 
     return [`"${this.name}": {`, buffer.join(",\n"), "}"].join("\n");
+  }
+
+  schemeObject() {
+    const extractColors = (property) =>
+      Object.fromEntries(
+        this.colors.map((color) => [color.name, color[property]])
+      );
+    return {
+      name: this.name,
+      dark: extractColors("dark_hex"),
+      light: extractColors("hex"),
+    };
+  }
+
+  /**
+   * @returns a JSON representation of the color scheme.
+   */
+  dump() {
+    return JSON.stringify(this.schemeObject(), null, 2);
   }
 
   copy() {
@@ -143,7 +156,7 @@ export default class ColorScheme extends EmberObject {
   }
 
   save(opts) {
-    if (this.is_base || this.disableSave) {
+    if (!opts?.forceSave && (this.is_base || this.disableSave)) {
       return;
     }
 
@@ -152,14 +165,17 @@ export default class ColorScheme extends EmberObject {
     const data = {};
     if (!opts || !opts.enabledOnly) {
       data.name = this.name;
-      data.user_selectable = this.user_selectable;
-      data.base_scheme_id = this.base_scheme_id;
-      data.colors = [];
-      this.colors.forEach((c) => {
-        if (!this.id || c.get("changed")) {
-          data.colors.pushObject(c.getProperties("name", "hex", "dark_hex"));
-        }
-      });
+
+      if (!opts?.saveNameOnly) {
+        data.user_selectable = this.user_selectable;
+        data.base_scheme_id = this.base_scheme_id;
+        data.colors = [];
+        this.colors.forEach((c) => {
+          if (!this.id || c.get("changed")) {
+            data.colors.pushObject(c.getProperties("name", "hex", "dark_hex"));
+          }
+        });
+      }
     }
 
     return ajax(`/admin/color_schemes${this.id ? `/${this.id}` : ""}.json`, {
@@ -172,9 +188,11 @@ export default class ColorScheme extends EmberObject {
         this.set("id", result.id);
       }
 
-      if (!opts || !opts.enabledOnly) {
-        this.startTrackingChanges();
-        this.colors.forEach((c) => c.startTrackingChanges());
+      if (!opts?.saveNameOnly) {
+        if (!opts || !opts.enabledOnly) {
+          this.startTrackingChanges();
+          this.colors.forEach((c) => c.startTrackingChanges());
+        }
       }
 
       this.setProperties({ savingStatus: i18n("saved"), saving: false });

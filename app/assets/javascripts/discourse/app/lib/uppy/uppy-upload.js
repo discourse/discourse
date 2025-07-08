@@ -91,6 +91,7 @@ export default class UppyUpload {
   @service siteSettings;
   @service capabilities;
   @service session;
+  @service currentUser;
 
   @tracked uploading = false;
   @tracked processing = false;
@@ -130,7 +131,9 @@ export default class UppyUpload {
       `upload-mixin:${this.config.id}:cancel-upload`,
       this.cancelSingleUpload
     );
-    this.uppyWrapper.uppyInstance?.close();
+    if (this.uppyWrapper.uppyInstance?.close) {
+      this.uppyWrapper.uppyInstance.close();
+    }
   }
 
   @bind

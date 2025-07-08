@@ -19,6 +19,7 @@ RSpec.describe PrettyText do
 
   describe "emails simplified rendering" do
     it "works with default markup" do
+      SiteSetting.discourse_local_dates_email_format = "YYYY-MM-DDTHH:mm:ss[Z] z"
       cooked = PrettyText.cook("[date=2018-05-08]")
       cooked_mail =
         generate_html(
@@ -31,6 +32,7 @@ RSpec.describe PrettyText do
     end
 
     it "works with time" do
+      SiteSetting.discourse_local_dates_email_format = "YYYY-MM-DDTHH:mm:ss[Z] UTC"
       cooked = PrettyText.cook("[date=2018-05-08  time=20:00:00]")
       cooked_mail =
         generate_html(
@@ -44,6 +46,7 @@ RSpec.describe PrettyText do
     end
 
     it "works with multiple timezones" do
+      SiteSetting.discourse_local_dates_email_format = "YYYY-MM-DDTHH:mm:ss[Z] UTC"
       cooked =
         PrettyText.cook(
           '[date=2023-05-08 timezone="Europe/Paris" timezones="America/Los_Angeles|Pacific/Auckland"]',
@@ -60,8 +63,28 @@ RSpec.describe PrettyText do
       expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
     end
 
+    describe "discourse_local_dates_email_timezone" do
+      before do
+        SiteSetting.discourse_local_dates_email_timezone = "Europe/Paris"
+        SiteSetting.discourse_local_dates_email_format = "llll"
+      end
+
+      it "uses the site setting" do
+        cooked = PrettyText.cook("[date=2018-05-08]")
+
+        cooked_mail =
+          generate_html(
+            "Tue, May 8, 2018 2:00 AM",
+            date: "2018-05-08",
+            email_preview: "Tue, May 8, 2018 2:00 AM",
+          )
+
+        expect(PrettyText.format_for_email(cooked)).to match_html(cooked_mail)
+      end
+    end
+
     describe "discourse_local_dates_email_format" do
-      before { SiteSetting.discourse_local_dates_email_format = "DD/MM" }
+      before { SiteSetting.discourse_local_dates_email_format = "DD/MM UTC" }
 
       it "uses the site setting" do
         cooked = PrettyText.cook("[date=2018-05-08]")

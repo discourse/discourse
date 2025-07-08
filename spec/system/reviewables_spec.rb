@@ -91,6 +91,16 @@ describe "Reviewables", type: :system do
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle
     end
+
+    it "should apply correct button classes to actions" do
+      visit("/review")
+
+      expect(page).to have_css(".approve-post.btn-success")
+      expect(page).to have_css(".reject-post .btn-danger")
+
+      expect(page).to have_no_css(".approve-post.btn-default")
+      expect(page).to have_no_css(".reject-post .btn-default")
+    end
   end
 
   describe "when there is a queued post reviewable with a long post" do
@@ -232,6 +242,26 @@ describe "Reviewables", type: :system do
         )
       end
 
+      it "claims the reviewable while revising, and unclaims it when cancelling" do
+        revise_modal = PageObjects::Modals::Base.new
+
+        review_page.visit_reviewable(queued_post_reviewable)
+
+        expect(queued_post_reviewable).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+
+        expect(revise_modal).to be_open
+
+        expect(page).to have_css(".claimed-actions")
+
+        revise_modal.close
+
+        expect(revise_modal).to be_closed
+        expect(page).to have_no_css(".claimed-actions")
+      end
+
       it "allows selecting a custom reason for revise and reject" do
         revise_modal = PageObjects::Modals::Base.new
 
@@ -251,6 +281,24 @@ describe "Reviewables", type: :system do
         revise_modal.click_primary_button
 
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+      end
+
+      context "with reviewable claiming enabled" do
+        before { SiteSetting.reviewable_claiming = "required" }
+
+        it "properly claims and unclaims the reviewable" do
+          review_page.visit_reviewable(queued_post_reviewable)
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+
+          review_page.click_claim_reviewable
+
+          expect(review_page).to have_reviewable_action_dropdown
+
+          review_page.click_unclaim_reviewable
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+        end
       end
     end
   end

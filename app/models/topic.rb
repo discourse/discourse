@@ -415,6 +415,8 @@ class Topic < ActiveRecord::Base
       inherit_auto_close_from_category
       inherit_slow_mode_from_category
     end
+
+    self.locale = nil if locale.blank?
   end
 
   after_save do
@@ -706,9 +708,10 @@ class Topic < ActiveRecord::Base
   end
 
   MAX_SIMILAR_BODY_LENGTH = 200
+  SIMILAR_TOPIC_SEARCH_LIMIT = 10
+  SIMILAR_TOPIC_LIMIT = 3
 
   def self.similar_to(title, raw, user = nil)
-    return [] if SiteSetting.max_similar_results == 0
     return [] if title.blank?
 
     raw = raw.presence || ""
@@ -759,7 +762,7 @@ class Topic < ActiveRecord::Base
         .where("c.topic_id IS NULL")
         .where("topics.category_id NOT IN (#{excluded_category_ids_sql})")
         .order("ts_rank(search_data, #{tsquery}) DESC")
-        .limit(SiteSetting.max_similar_results * 3)
+        .limit(SIMILAR_TOPIC_SEARCH_LIMIT)
 
     candidate_ids = candidates.pluck(:id)
 
@@ -770,7 +773,7 @@ class Topic < ActiveRecord::Base
         .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
         .where("topics.id IN (?)", candidate_ids)
         .order("similarity DESC")
-        .limit(SiteSetting.max_similar_results)
+        .limit(SIMILAR_TOPIC_LIMIT)
 
     if raw.present?
       similars.select(
@@ -1384,10 +1387,15 @@ class Topic < ActiveRecord::Base
     Jobs.cancel_scheduled_job(:remove_banner, topic_id: self.id)
   end
 
-  def banner
+  def banner(guardian = nil)
     post = self.ordered_posts.first
 
-    { html: post.cooked, key: self.id, url: self.url }
+    html = post.cooked
+    if (guardian && ContentLocalization.show_translated_post?(post, guardian))
+      html = post.get_localization&.cooked.presence || html
+    end
+
+    { html:, key: self.id, url: self.url }
   end
 
   cattr_accessor :slug_computed_callbacks
@@ -2124,6 +2132,18 @@ class Topic < ActiveRecord::Base
     fields
   end
 
+  def has_localization?(locale = I18n.locale)
+    topic_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+  end
+
+  def in_user_locale?
+    locale == I18n.locale.to_s
+  end
+
+  def get_localization(locale = I18n.locale)
+    topic_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -2233,6 +2253,7 @@ end
 #  bannered_until            :datetime
 #  external_id               :string
 #  visibility_reason_id      :integer
+#  locale                    :string(20)
 #
 # Indexes
 #

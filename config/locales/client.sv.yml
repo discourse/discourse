@@ -342,6 +342,7 @@ sv:
       created: "Du har bokmärkt detta inlägg. %{name}"
       created_generic: "Du har bokmärkt detta. %{name}"
       create: "Skapa bokmärke"
+      clear_reminder: "Rensa påminnelse"
       edit: "Redigera bokmärke"
       not_bookmarked: "bokmärk detta inlägg"
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
@@ -410,7 +411,7 @@ sv:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
     preview: "förhandsgranska"
-    cancel: "avbryt"
+    cancel: "Avbryt"
     deleting: "Raderar…"
     save: "Spara ändringar"
     saving: "Sparar…"
@@ -1063,7 +1064,6 @@ sv:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}:s profil"
-      account_possessive: "%{name}:s konto"
       mute: "Tysta"
       edit: "Redigera inställningar"
       download_archive:
@@ -1693,6 +1693,7 @@ sv:
           link_copied: "Länken kopierad!"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
+          description: "Beskrivning"
           restrict: "Begränsa till"
           restrict_email: "Begränsa till e-post"
           restrict_domain: "Begränsa till domän"
@@ -1789,7 +1790,6 @@ sv:
         title: "IP-adress vid registrering"
       avatar:
         title: "Profilbild"
-        header_title: "profil, meddelanden, bokmärken och inställningar"
         name_and_description: "%{name} - %{description}"
         edit: "Redigera profilbild"
       title:
@@ -2256,11 +2256,11 @@ sv:
       italic_label: "I"
       italic_title: "Kursiv"
       italic_text: "kursiv text"
-      link_title: "Hyperlänk"
+      link_title: "Länk"
       link_description: "skriv en länkbeskrivning här"
-      link_dialog_title: "Infoga hyperlänk"
-      link_optional_text: "valfri rubrik"
-      link_url_placeholder: "Klistra in en URL eller skriv för att söka ämnen"
+      link_dialog_action: "Ange"
+      link_edit_action: "Uppdatera"
+      link_optional_text: "Text"
       blockquote_title: "Citat"
       blockquote_text: "Citat"
       code_title: "Förformatterad text"
@@ -2327,6 +2327,8 @@ sv:
         aria_label: Alternativ text för bild
       delete_image_button: Radera bild
       toggle_image_grid: Växla bildrutnät
+      link_toolbar:
+        link_copied: "Länken kopierad!"
     notifications:
       tooltip:
         regular:
@@ -2575,7 +2577,6 @@ sv:
           aria_label: filtrera efter största antal visningar
         additional_options:
           label: "Filtrera efter inläggsantal och ämnesvisningar"
-    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
@@ -2708,10 +2709,6 @@ sv:
         top: "Det finns inga toppämnen."
         hot: "Det finns inga heta ämnen."
         filter: "Det finns inga ämnen."
-        educate:
-          new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
-          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 5 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
-          new_new: "<p>Dina nya ämnen kommer att visas här, och dina olästa ämnen kommer också att visas. Som standard betraktas ämnen som nya, med en <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-indikator om de skapades under de senaste 2 dagarna. Olästa ämnen visar oläst-antalet <span class=\"badge unread-posts badge-notification\">1</span> om du: skapade ämnet, svarade på ämnet, läste ämnet i mer än 5 minuter eller om du uttryckligen har ställt in ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -3245,6 +3242,13 @@ sv:
         other: "Visar %{count} svar på"
       in_reply_to: "Ladda överordnat inlägg"
       view_all_posts: "Visa alla inlägg"
+      localizations:
+        table:
+          actions: "Åtgärder"
+          edit: "Redigera"
+          delete: "Ta bort"
+        post_language_selector:
+          none: "Ingen"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -3795,7 +3799,6 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
-    browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -4266,6 +4269,7 @@ sv:
         forum:
           label: Forum
       back_to_forum: "Tillbaka till forumet"
+      search: "Sök"
       footer:
         interface_color_selector:
           light: "Ljust"
@@ -4372,14 +4376,9 @@ sv:
           save: "Spara som..."
     discovery:
       headings:
+        multi_tag:
+          default: "Ämnen taggade med %{tags}"
         categories: "Alla kategorier"
-        filter_labels:
-          latest: "Senaste"
-          top: "Topp"
-          new: "Nya"
-          unread: "Olästa"
-          hot: "Hett"
-          unseen: "Osedda"
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
@@ -4425,22 +4424,21 @@ sv:
           title: "Filer"
         legal:
           title: "Juridik"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Primär logotyp"
-              mobile: "Mobil"
-              email: "E-postadress"
-              manifest_screenshots:
-                description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
-          fonts:
-            title: "Typsnitt"
-            form:
-              heading_font:
-                title: "Typsnitt för rubrik"
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          form:
+            logo:
+              title: "Primär logotyp"
+            mobile: "Mobil"
+            email: "E-postadress"
+            manifest_screenshots:
+              description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+        fonts:
+          title: "Typsnitt"
+          form:
+            heading_font:
+              title: "Typsnitt för rubrik"
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigering"
         notifications:
@@ -4971,6 +4969,8 @@ sv:
           company_name_placeholder: "Acme Organization"
           governing_law: "Gällande lag"
           city_for_disputes: "Domstol vid tvister"
+          extra_groups:
+            groups: "Grupper"
           optional: "(valfri)"
           update: "Uppdatera"
           saved: "sparat!"
@@ -5000,6 +5000,7 @@ sv:
           install: "Installera"
           themes:
             title: "Teman"
+            install: "Installera"
           components:
             title: "Komponenter"
             install: "Installera"
@@ -5023,6 +5024,8 @@ sv:
           delete: "Radera"
         color_palettes:
           palette_name: "Namn"
+          duplicate: "Duplicera"
+          delete: "Radera"
           colors:
             title: "Färger"
       plugins:
@@ -5183,6 +5186,7 @@ sv:
           extra_files_upload: "Exportera temat för att visa dessa filer."
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
+          default: "Aktiv"
           settings_editor: "Inställningar för redigerare"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
@@ -5267,8 +5271,6 @@ sv:
             error: "Det här temat har automatiskt inaktiverats på grund av att det inte är kompatibelt med den här versionen av Discourse."
             minimum: "Kräver Discourse version %{version} eller högre."
             maximum: "Kräver Discourse version %{version} eller lägre."
-          update_to_latest: "Uppdatera till senaste"
-          check_for_updates: "Sök efter uppdateringar"
           updating: "Uppdaterar…"
           up_to_date: "Temat är uppdaterat, senaste kontroll:"
           has_overwritten_history: "Nuvarande temaversion finns inte längre eftersom Git-historiken har skrivits över av en tvingad push."
@@ -5285,6 +5287,10 @@ sv:
           remote_theme_edits: "Om du vill redigera detta tema måste du <a href='%{repoURL}' target='_blank'>skicka in en ändring av dess lagringsplats</a>"
           repo_unreachable: "Kunde inte kontakta Git-lagringsplatsen för detta tema. Felmeddelande:"
           imported_from_archive: "Detta tema importerades från en .zip-fil"
+          settings: "Inställningar"
+          colors: "Färger"
+          discard_colors: "Förkasta"
+          colors_title: "Färger"
           scss:
             text: "CSS"
           after_header:
@@ -5313,12 +5319,12 @@ sv:
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
           updates_available_filter: "Uppdateringar tillgängliga"
-          schema:
-            fields:
-              required: "*krävs"
-              number:
-                too_small: "måste vara större eller lika med %{count}"
-                too_large: "måste vara mindre eller lika med %{count}"
+        schema:
+          fields:
+            required: "*krävs"
+            number:
+              too_small: "måste vara större eller lika med %{count}"
+              too_large: "måste vara mindre eller lika med %{count}"
         colors:
           select_base:
             title: "Välj grundfärgspalett"
@@ -5326,35 +5332,28 @@ sv:
           title: "Färger"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
           copy_name_prefix: "Kopia av"
-          delete_confirm: "Radera den här färgpaletten?"
           undo: "Ångra"
           undo_title: "Återställ ändringarna för den här färgen till den senast sparade versionen."
           revert: "Återställ"
           revert_title: "Återställ den här färgen till Discourse-standardfärgspaletten."
           primary:
             name: "primär"
-            description: "Det mesta av texten, ikoner och ramar."
           primary-medium:
             name: "primär-mellan"
           primary-low-mid:
             name: "primär-låg-mitten"
           secondary:
             name: "sekundär"
-            description: "Den huvudsakliga bakgrundsfärgen, och textfärgen på vissa knappar."
           tertiary:
             name: "tertiär"
-            description: "Länkar, några knappar, aviseringar och accentfärg."
           quaternary:
             name: "kvartär"
           header_background:
             name: "bakgrund för sidhuvud"
-            description: "Bakgrundsfärg för sidans sidhuvud. "
           header_primary:
             name: "sidhuvud primär"
-            description: "Text och ikoner i sidans sidhuvud."
           highlight:
             name: "markera"
-            description: "Bakgrundsfärgen på markerade element på sidan, som inlägg och ämnen."
           highlight-high:
             name: "markerad-hög"
           highlight-medium:
@@ -5363,19 +5362,14 @@ sv:
             name: "markerad-låg"
           danger:
             name: "fara"
-            description: "Markeringsfärg när man tar bort inlägg eller ämnen."
           success:
             name: "lyckades"
-            description: "Används för att indikera att en åtgärd lyckades."
           love:
             name: "älska"
-            description: "Gillaknappens färg."
           selected:
             name: "markerad"
-            description: "Bakgrundsfärgen för element som listobjekt när de är markerade/aktiva."
           hover:
             name: "hovra"
-            description: "Bakgrundsfärgen för element som listobjekt när de hovras eller har tangentbordsfokus."
           editor:
             light: "Ljust"
             dark: "Mörkt"

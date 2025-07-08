@@ -16,11 +16,11 @@
     }
 
     &:hover {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-hover);
     }
 
     &.active {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-selected);
     }
 
     .d-icon {

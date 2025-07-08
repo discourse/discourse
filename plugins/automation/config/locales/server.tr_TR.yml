@@ -11,7 +11,6 @@ tr_TR:
     models:
       fields:
         required_field: '`%{name}` alanı `%{target}:%{target_name}` üzerinde doldurulmalıdır.'
-        invalid_field: Alanın `%{component}` bileşeni `%{target}:%{target_name} üzerinde kullanılamaz.`
         invalid_metadata: '`%{field}` verileri geçersiz veya `%{component}` bileşeni bilinmiyor.'
     triggerables:
       errors:

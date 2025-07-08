@@ -8,6 +8,7 @@ module PageObjects
       HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
       MENTION_MENU = ".autocomplete.ac-user"
       RICH_EDITOR = ".d-editor-input.ProseMirror"
+      POST_LANGUAGE_SELECTOR = ".post-language-selector"
 
       def rich_editor
         find(RICH_EDITOR)
@@ -54,7 +55,7 @@ module PageObjects
       end
 
       def fill_content(content)
-        composer_input.fill_in(with: content)
+        find("#{COMPOSER_ID} .d-editor .d-editor-input").fill_in(with: content)
         self
       end
 
@@ -122,6 +123,15 @@ module PageObjects
 
       def category_chooser
         Components::SelectKit.new(".category-chooser")
+      end
+
+      def locale
+        find("#{COMPOSER_ID} #{POST_LANGUAGE_SELECTOR}")
+      end
+
+      def set_locale(locale)
+        Components::DMenu.new(POST_LANGUAGE_SELECTOR).expand
+        find("#{POST_LANGUAGE_SELECTOR} button", text: locale).click
       end
 
       def switch_category(category_name)
@@ -274,11 +284,7 @@ module PageObjects
       end
 
       def select_all
-        execute_script(<<~JS, text)
-          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
-          composer.focus();
-          composer.setSelectionRange(0, composer.value.length);
-        JS
+        find(COMPOSER_INPUT_SELECTOR).send_keys([PLATFORM_KEY_MODIFIER, "a"])
       end
 
       def select_range(start_index, length)
@@ -313,8 +319,25 @@ module PageObjects
         select_kit.collapse
       end
 
+      def has_rich_editor_active?
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__right-icon.--active")
+      end
+
+      def has_no_rich_editor_active?
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__left-icon.--active")
+      end
+
       def toggle_rich_editor
+        rich = page.find(".composer-toggle-switch")["data-rich-editor"]
+
         editor_toggle_switch.click
+
+        if rich
+          has_no_rich_editor_active?
+        else
+          has_rich_editor_active?
+        end
+
         self
       end
 

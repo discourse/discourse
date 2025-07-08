@@ -232,7 +232,6 @@ sv:
       s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
       secure_uploads_requirements: "S3-uppladdningar och S3 ACL:er måste ha aktiverats innan säkra uppladdningar aktiveras."
-      s3_use_acls_requirements: "Du måste ha S3 ACL:er aktiverade när säkra uppladdningar är aktiverade."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kan inte genomdriva 2FA om DiscourseConnect har aktiverats."
@@ -497,56 +496,6 @@ sv:
     until_posts:
       one: "%{count} inlägg"
       other: "%{count} inlägg"
-    "new-topic": |
-      Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation**
-
-      - Låter rubriken intressant om du läser den högt? Ger det en bra sammanfattning?
-
-      - Vem skulle kunna vara intresserad av detta? Varför är det viktigt? Vad för typ av svar förväntar du dig?
-
-      - Inkludera vanliga förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori (eller tagg).
-
-      För mer information kan du läsa [riktlinjerna](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
-    "new-reply": |
-      Välkommen till %{site_name} &mdash; **tack för att du bidrar!**
-
-      - Var snäll mot andra medlemmar.
-
-      - Bidrar ditt svar till samtalet på något sätt?
-
-      - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
-
-      För mer information kan du läsa [forumets riktlinjer](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
-    avatar: |
-      ### Hur vore det med en bild för ditt konto?
-
-      Du har gjort inlägg i ett par ämnen och svarat, men din profilbild är inte lika unik som dig – den är bara en bokstav.
-
-      Har du övervägt att **[gå till din användarprofil](%{profile_path})** och ladda upp en bild som representerar dig?
-
-      Det är enklare att följa diskussioner och hitta intressanta människor i samtal när alla har en unik profilbild!
-    sequential_replies: |
-      ### Överväg att svara på flera inlägg på en och samma gång
-
-      Istället för flera svar i följd till ett ämne, kan du överväga ett enda svar som innehåller citat från tidigare inlägg eller @namn-referenser.
-
-      Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
-
-      Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
-    dominating_topic: Du har skrivit mycket i det här ämnet! Tänk på att ge andra en möjlighet att svara här och diskutera med andra också.
-    dont_feed_the_trolls: Det här inlägget har redan flaggats för moderatorns uppmärksamhet. Är du säker på att du vill svara på det? Svar på negativt innehåll tenderar att uppmuntra till mer negativt beteende.
-    too_many_replies: |
-      ### Du har nått svarsgränsen för detta ämne
-
-      Tyvärr är nya användare tillfälligt begränsade till %{newuser_max_replies_per_topic} svar i samma ämne.
-
-      Istället för att lägga till ytterligare ett svar, ber vi dig överväga att redigera dina tidigare svar, eller besök andra ämnen.
-    reviving_old_topic: |
-      ### Återuppliva detta ämne?
-
-      Senaste svaret i detta ämne skedde **%{time_ago}**. Ditt svar kommer att lyfta upp ämnet till toppen av listan och avisera alla tidigare involverade i ämnet.
-
-      Är du säker på att du vill fortsätta detta gamla samtal?
   activerecord:
     attributes:
       category:
@@ -1530,7 +1479,7 @@ sv:
     x_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
     email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
-    email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
@@ -1690,7 +1639,6 @@ sv:
     s3_endpoint: "Ändpunkten kan ändras för att säkerhetskopiera till en S3-kompatibel tjänst som DigitalOcean Spaces eller Minio. VARNING: Lämna tomt om du använder AWS S3."
     s3_configure_tombstone_policy: "Aktivera automatisk raderingspolicy för Tombstone uppladdningar. VIKTIGT: Om det är inaktiverat kommer inget utrymme att återtas efter att överföringar har tagits bort."
     s3_disable_cleanup: "Förhindra borttagning av äldre säkerhetskopior från S3 när det finns fler säkerhetskopior än högsta tillåtna."
-    s3_use_acls: "AWS rekommenderar att inte använda ACL:er på S3-behållare. Om du följer detta råd ska det här alternativet avmarkeras. Det måste vara aktiverat om du använder säkra uppladdningar."
     backup_time_of_day: "UTC-tid på dygnet då säkerhetskopieringen sker."
     backup_with_uploads: "Inkludera uppladdning i schemalagda säkerhetskopieringar. Inaktivering av det här kommer endast att säkerhetskopiera databasen."
     backup_gzip_compression_level_for_uploads: "Nivå av Gzip-komprimering som används för att komprimera överföringar."
@@ -1834,7 +1782,6 @@ sv:
     authorized_extensions: "En lista över alla filändelser som är tillåtna för uppladdning"
     authorized_extensions_for_staff: "En lista över alla filändelser som är tillåtna för uppladdning för personalanvändare utöver listan som definieras i webbplatsinställningen `authorized_extensions`."
     theme_authorized_extensions: "En lista över alla filändelser som är tillåtna för temauppladdningar"
-    max_similar_results: "Hur många liknande ämnen som visas ovanför redigeraren vid författandet av ett nytt ämne. Jämförelsen är baserad på ämnesrubrik och innehåll."
     max_image_megapixels: "Maximalt antal megapixlar tillåtet för en bild. Bilder med ett högre värde av megapixlar kommer att avvisas."
     title_prettify: "Förhindra vanliga felskrivningar och misstag, inklusive endast versaler, inledande gemen, flera ! och ?, extra . i slutet osv."
     title_remove_extraneous_space: "Ta bort blanksteg framför slutpunkt."
@@ -1987,12 +1934,10 @@ sv:
     max_notifications_per_user: "Maximalt antal aviseringar per användare. Om detta värde överskrids kommer äldre aviseringar att raderas. Verkställs veckovis. Sätt till 0 för att inaktivera."
     allowed_user_website_domains: "Användarens webbplats kommer att verifieras mot dessa domäner. Avgränsad textfil."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
-    sequential_replies_threshold: "Antal inlägg en användare måste ha skrivit i rad i ett ämne innan användaren blir påmind om för många svar i sekvens."
     get_a_room_threshold: "Antalet inlägg en användare kan göra till samma person inom samma ämne innan det ges en varning."
     dont_feed_the_trolls_threshold: "Antal flaggor från andra användare innan du varnas."
     enable_mobile_theme: "Mobila enheter använder ett mobilvänligt tema, med möjligheten att byta till standardsidan. Inaktivera detta om du vill använda en anpassad stilmall som är helt responsiv."
     dominating_topic_minimum_percent: "Procentandel av antalet inlägg som en användare måste skriva i ett ämne innan de påminns om att de är för dominerande."
-    disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
     pm_warn_user_last_seen_months_ago: "När du skapar ett nytt PM varnas användare om det är mer än n månader sedan målmottagaren sågs till."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     header_dropdown_category_count: "Hur många kategorier kan visas i rubrikens rullgardinsmeny."
@@ -2018,7 +1963,6 @@ sv:
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
     default_code_lang: "Standardprogrammeringsspråkets syntaxmarkering tillämpas på markdown-kodblock (auto, text, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
-    warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tillämpa syntaxmarkering på HTML-författade &lt;code&gt; block, även om de inte angav något språk. För att konfigurera markdown-författade kodblock, använd inställningen 'default code lang'."
     show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."
@@ -2330,11 +2274,6 @@ sv:
     errors: "%{errors}"
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske har användarnamnet eller e-postadressen redan registrerats. Testa Glömt lösenord-länken."
-    omniauth_error:
-      generic: "Tyvärr uppstod det ett fel när ditt konto skulle auktoriseras. Vi ber dig försöka igen."
-      csrf_detected: "Auktoriseringen dröjde för länge, eller så har du bytt webbläsare. Vi ber dig försöka igen."
-      request_error: "Ett fel uppstod vid start av auktorisering. Vi ber dig försöka igen."
-      invalid_iat: "Kunde inte verifiera behörighetsbevis på grund av skillnader mellan klockorna i servrarna. Vi ber dig försöka igen."
     omniauth_error_unknown: "Något gick fel med din inloggning, vi ber dig försöka igen."
     omniauth_confirm_title: "Logga in genom %{provider}"
     omniauth_confirm_button: "Fortsätt"
@@ -3521,8 +3460,6 @@ sv:
   offline:
     title: "Det går inte att ladda appen"
     offline_page_message: "Det ser ut som om du är offline! Kontrollera din nätverksanslutning och försök igen."
-  login_required:
-    welcome_message: "# [Välkommen till %{title}](#välkommen)"
   upload:
     edit_reason: "hämtade lokala kopior av bilder"
     unauthorized: "Tyvärr är filen som du försöker ladda upp inte tillåten (tillåtna filtyper: %{authorized_extensions})."
@@ -3548,7 +3485,6 @@ sv:
     images:
       too_large: "Tyvärr är bilden som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB). Ändra storleken och försök igen."
       too_large_humanized: "Tyvärr är bilden som du försöker ladda upp för stor (maximal storlek är %{max_size}). Ändra storlek på den och försök igen."
-      larger_than_x_megapixels: "Tyvärr är bilden som du försöker ladda upp för stor (maximal dimension är %{max_image_megapixels} megapixlar). Ändra storleken och försök igen."
       size_not_found: "Tyvärr kunde vi inte avgöra bildens storlek. Kanske är din bildfil skadad?"
     placeholders:
       too_large: "(bild större än %{max_size_kb} kB)"

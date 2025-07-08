@@ -162,7 +162,7 @@ sk:
       in_reply_to: "V odpovedi na"
       heading: "Chat"
       join: "Pridať sa"
-      last_visit: "posledná návševa"
+      last_visit: "posledná návšteva"
       mention_warning:
         invitations_sent:
           one: "Pozvánka bola odoslaná"
@@ -585,6 +585,7 @@ sk:
         select_emoji: "Vyberte Emoji"
         system: "systém"
         title: "Prichádzajúce webhooky"
+        header_description: "Prichádzajúce webhooky môžu externé systémy použiť na odosielanie správ do určeného chatovacieho kanála ako používateľ bota."
         url: "URL"
         url_instructions: "Táto adresa URL obsahuje tajnú hodnotu – uschovajte ju."
         username: "Používateľské meno"

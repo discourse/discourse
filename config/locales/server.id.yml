@@ -200,7 +200,6 @@ id:
       s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
       s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
       secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
-      s3_use_acls_requirements: "Anda harus mengaktifkan ACL S3 saat unggahan aman diaktifkan."
       share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Anda tidak dapat menerapkan 2FA jika DiscourseConnect diaktifkan."
@@ -445,30 +444,8 @@ id:
   education:
     until_posts:
       other: "%{count} post"
-    "new-topic": |
-      Selamat datang di %{site_name} &mdash; **terima kasih telah memulai percakapan baru!**
-
-      - Apakah judul terdengar menarik jika Anda membacanya keras-keras? Apakah ini ringkasan yang bagus?
-
-      - Siapa yang akan tertarik dengan ini? Mengapa itu penting? Tanggapan seperti apa yang Anda inginkan?
-
-      - Sertakan kata-kata yang umum digunakan dalam topik Anda sehingga orang lain dapat *menemukan* itu. Untuk mengelompokkan topik Anda dengan topik terkait, pilih kategori (atau tag).
-
-      Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
-    "new-reply": |
-      Selamat datang di %{site_name} &mdash; **terima kasih telah berkontribusi!**
-
-      - Berbaik hatilah kepada sesama anggota komunitas.
-
-      - Apakah balasan Anda meningkatkan percakapan?
-
-      - Kritik konstruktif diperbolehkan, tetapi kritik *ide*, bukan orang.
-
-      Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
-    dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
     get_a_room:
       other: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
-    dont_feed_the_trolls: Posting ini telah ditandai untuk mendapat perhatian moderator. Apakah Anda yakin ingin membalasnya? Balasan ke konten negatif cenderung mendorong lebih banyak perilaku negatif.
   activerecord:
     attributes:
       category:
@@ -1251,7 +1228,6 @@ id:
     include_in_discourse_discover: "Izinkan CDCK, Inc (\"Discourse\") untuk menampilkan komunitas ini di <a href='https://discover.discourse.org' target='_blank'>halaman Discover</a> dan dalam materi pemasaran Discourse. Dengan demikian, Anda akan membagikan data yang diperlukan agar situs Anda dapat disertakan dalam layanan ini. Harap diperhatikan bahwa promosi komunitas merupakan kebijakan Discourse."
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
-    s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
     enable_direct_s3_uploads: "Memungkinkan pengunggahan multipart secara langsung ke Amazon S3, lihat https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 untuk informasi lebih lanjut."
     backup_location: "Lokasi penyimpanan cadangan. PENTING: S3 memerlukan kredensial S3 valid yang dimasukkan dalam pengaturan File. Saat mengubahnya ke S3 dari Lokal, Anda harus menjalankan tugas rake `s3:ensure_cors_rules`."
     s3_use_cdn_url_for_all_uploads: "Gunakan URL CDN untuk semua file yang diunggah ke s3, bukan hanya untuk gambar."
@@ -1399,8 +1375,6 @@ id:
     page_title: "Halaman Tidak Ditemukan"
     see_more: "Selengkapnya"
     search_button: "Cari"
-  login_required:
-    welcome_message: "# [Selamat datang di %{title}](#welcome)"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"

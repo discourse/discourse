@@ -1,8 +1,6 @@
 .composer-toggle-switch {
   --toggle-switch-width: 40px;
   --toggle-switch-height: 24px;
-  height: 100%;
-  grid-column: span 2;
   justify-content: center;
   display: flex;
   align-items: center;
@@ -38,21 +36,20 @@
       display: block;
       position: absolute;
       background-color: var(--tertiary-low);
-      width: calc(var(--toggle-switch-height) - 2px);
-      height: calc(var(--toggle-switch-height) - 4px);
-      top: 2px;
-      transition:
-        left 0.25s,
-        right 0.25s;
+      width: calc(var(--toggle-switch-height) - 0.125rem);
+      height: calc(var(--toggle-switch-height) - 0.25rem);
+      top: 0.125rem;
       border-radius: 0.25em;
-      box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 2px 1px rgb(var(--tertiary-rgb), 0.2);
 
       .--markdown & {
-        left: 2px;
+        transform: translateX(0.125rem);
       }
 
       .--rte & {
-        right: 2px;
+        transform: translateX(
+          calc(var(--toggle-switch-width) - var(--toggle-switch-height))
+        );
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -63,35 +60,37 @@
 
   &__left-icon,
   &__right-icon {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     opacity: 0;
-    transition:
-      opacity 0.25s left 0.25s,
-      right 0.25s;
     height: 100%;
-    width: calc(var(--toggle-switch-height) - 2px);
+    width: calc(var(--toggle-switch-height) - 0.125rem);
+
+    .d-icon {
+      color: var(--primary);
+      vertical-align: text-bottom;
+    }
 
     @media (prefers-reduced-motion: reduce) {
       transition-duration: 0ms;
     }
+  }
+
+  &__left-icon {
+    left: 0.125rem;
 
     .--markdown & {
-      left: 2px;
-    }
-
-    .--rte & {
-      right: 2px;
-    }
-
-    &.--active {
       opacity: 1;
     }
+  }
 
-    .d-icon {
-      font-size: var(--font-down-1);
-      color: var(--primary);
-      vertical-align: text-bottom;
+  &__right-icon {
+    right: 0.125rem;
+
+    .--rte & {
+      opacity: 1;
     }
   }
 }

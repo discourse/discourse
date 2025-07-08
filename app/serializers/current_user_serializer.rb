@@ -76,7 +76,10 @@ class CurrentUserSerializer < BasicUserSerializer
              :login_method,
              :has_unseen_features,
              :can_see_emails,
-             :use_glimmer_post_stream_mode_auto_mode
+             :use_glimmer_post_stream_mode_auto_mode,
+             :can_localize_content?,
+             :effective_locale,
+             :use_reviewable_ui_refresh
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -323,5 +326,29 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_use_glimmer_post_stream_mode_auto_mode?
     scope.user.in_any_groups?(SiteSetting.glimmer_post_stream_mode_auto_groups_map)
+  end
+
+  def can_localize_content?
+    scope.can_localize_content?
+  end
+
+  def include_can_localize_content?
+    SiteSetting.content_localization_enabled
+  end
+
+  def effective_locale
+    scope.user.effective_locale
+  end
+
+  def include_effective_locale?
+    SiteSetting.content_localization_enabled
+  end
+
+  def use_reviewable_ui_refresh
+    scope.can_see_reviewable_ui_refresh?
+  end
+
+  def include_use_reviewable_ui_refresh?
+    scope.can_see_review_queue?
   end
 end

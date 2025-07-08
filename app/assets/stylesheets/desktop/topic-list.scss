@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -27,14 +29,14 @@
   margin: 0 0 10px;
 
   .topic-list-data {
-    padding: 0.8em 0.33em;
+    padding: var(--space-3) var(--space-1);
 
     &:first-of-type {
-      padding-left: 0.67em;
+      padding-inline-start: 0.75rem;
     }
 
     &:last-of-type {
-      padding-right: 0.67em;
+      padding-inline-end: 0.75rem;
     }
 
     th & {
@@ -44,7 +46,7 @@
 
   button.bulk-select {
     padding: 0;
-    margin-right: 0.5em;
+    margin-right: var(--space-2);
     line-height: var(--line-height-large);
   }
 
@@ -54,7 +56,7 @@
 
     label {
       margin: 0;
-      padding: 0.8em 0.67em 1.1em 0.67em;
+      padding: var(--space-3) var(--space-2);
       cursor: pointer;
     }
 
@@ -67,8 +69,8 @@
     background: none;
     border: none;
     line-height: var(--line-height-large);
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
     position: relative;
 
     &.active {
@@ -106,8 +108,8 @@
   }
 
   .posters a:first-child .avatar.latest:not(.single) {
-    box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);
-    border: 1px solid rgba(var(--tertiary-rgb), 0.5);
+    box-shadow: 0 0 3px 1px rgb(var(--tertiary-rgb), 0.35);
+    border: 1px solid rgb(var(--tertiary-rgb), 0.5);
     position: relative;
     left: -2px;
   }
@@ -161,19 +163,10 @@
 }
 
 .topic-list-bottom {
-  margin: 1.25em 0;
+  margin: var(--space-5) 0;
 
   .dismiss-container-bottom {
     float: right;
-  }
-
-  .--no-topics-education + & {
-    margin: 0;
-
-    .footer-message {
-      overflow-wrap: break-word;
-      padding-top: 4em;
-    }
   }
 }
 
@@ -192,7 +185,7 @@
 
 #list-area {
   h2 {
-    margin: 20px 0 10px;
+    margin: var(--space-5) 0 var(--space-3);
   }
 
   .show-more {
@@ -203,8 +196,8 @@
 
     .alert {
       margin: 0;
-      padding: 1.1em 2em 1.1em 0.65em;
-      gap: 0.65em;
+      padding: var(--space-4) var(--space-8) var(--space-4) var(--space-3);
+      gap: var(--space-3);
       align-items: center;
 
       &.loading {
@@ -220,7 +213,7 @@
   margin-left: -5px;
 
   .btn {
-    margin-right: 0.5em;
+    margin-right: var(--space-2);
   }
 }
 
@@ -239,13 +232,14 @@
 
 .category-logo.aspect-image {
   float: left;
-  margin: 0.33em 2em 2em 0;
+  margin: var(--space-1) var(--space-8) var(--space-8) 0;
 }
 
 /* Tablet (portrait) ----------- */
 
 // These styles kick in a little earlier when the sidebar appears
 
+/* stylelint-disable-next-line discourse/no-breakpoint-mixin */
 @include breakpoint(medium, $sidebar: true) {
   .topic-list {
     // suppress views column
@@ -285,11 +279,11 @@
   }
 }
 
-@include breakpoint(medium) {
+@include viewport.until(lg) {
   .nav-pills {
     > li > a {
       font-size: var(--font-0);
-      padding: 0.45em 0.67em;
+      padding: var(--space-2) var(--space-3);
     }
   }
 

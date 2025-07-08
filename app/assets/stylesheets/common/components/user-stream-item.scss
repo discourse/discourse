@@ -140,7 +140,7 @@
 
     &:not(.show-avatars) {
       li.notification {
-        padding: 0.75em 0;
+        padding: var(--space-3);
 
         .d-icon {
           padding-top: 0;

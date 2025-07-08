@@ -24,7 +24,7 @@ RSpec.describe "Chat composer", type: :system do
       channel_page.click_action_button("emoji")
       find("[data-emoji='grimacing']").click(wait: 0.5)
 
-      expect(channel_page.composer.value).to eq(":grimacing:")
+      expect(channel_page.composer).to have_value(":grimacing:")
     end
 
     it "removes denied emojis from insert emoji picker" do
@@ -41,10 +41,10 @@ RSpec.describe "Chat composer", type: :system do
   context "when adding an emoji through the autocomplete" do
     it "adds the emoji to the composer" do
       chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").fill_in(with: ":gri")
+      find(".chat-composer__input").send_keys(":gri")
       find(".emoji-shortname", text: "grimacing").click
 
-      expect(channel_page.composer.value).to eq(":grimacing: ")
+      expect(channel_page.composer).to have_value(":grimacing: ")
     end
 
     it "doesn't suggest denied emojis and aliases" do
@@ -66,7 +66,7 @@ RSpec.describe "Chat composer", type: :system do
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(find(".emoji-picker .filter-input").value).to eq("gri")
+      expect(find(".emoji-picker .filter-input")).to have_value("gri")
     end
 
     xit "filters with the prefilled input" do
@@ -86,7 +86,7 @@ RSpec.describe "Chat composer", type: :system do
       click_link(I18n.t("js.composer.more_emoji"))
       find("[data-emoji='grimacing']").click(wait: 0.5)
 
-      expect(channel_page.composer.value).to eq("hey :grimacing:")
+      expect(channel_page.composer).to have_value("hey :grimacing:")
     end
   end
 
@@ -96,15 +96,15 @@ RSpec.describe "Chat composer", type: :system do
 
       find("body").send_keys("b")
 
-      expect(channel_page.composer.value).to eq("b")
+      expect(channel_page.composer).to have_value("b")
 
       find("body").send_keys("b")
 
-      expect(channel_page.composer.value).to eq("bb")
+      expect(channel_page.composer).to have_value("bb")
 
-      find("body").send_keys(:enter) # special case
+      find("body").send_keys(:enter)
 
-      expect(channel_page.composer.value).to eq("bb")
+      expect(channel_page.messages).to have_message(text: "bb")
     end
 
     context "when user preference is set to send on enter" do
@@ -114,7 +114,8 @@ RSpec.describe "Chat composer", type: :system do
         it "sends the message" do
           chat_page.visit_channel(channel_1)
 
-          channel_page.composer.fill_in(with: "testenter").enter_shortcut
+          channel_page.composer.send_keys("testenter")
+          channel_page.composer.enter_shortcut
 
           expect(channel_page.messages).to have_message(text: "testenter")
         end
@@ -124,9 +125,10 @@ RSpec.describe "Chat composer", type: :system do
         it "adds a linebreak" do
           chat_page.visit_channel(channel_1)
 
-          channel_page.composer.fill_in(with: "testenter").shift_enter_shortcut
+          channel_page.composer.send_keys("testenter")
+          channel_page.composer.shift_enter_shortcut
 
-          expect(channel_page.composer.value).to eq("testenter\n")
+          expect(channel_page.composer).to have_value("testenter\n")
         end
       end
 
@@ -134,7 +136,8 @@ RSpec.describe "Chat composer", type: :system do
         it "sends the message" do
           chat_page.visit_channel(channel_1)
 
-          channel_page.composer.fill_in(with: "testenter").meta_enter_shortcut
+          channel_page.composer.send_keys("testenter")
+          channel_page.composer.meta_enter_shortcut
 
           expect(channel_page.messages).to have_message(text: "testenter")
         end
@@ -148,9 +151,10 @@ RSpec.describe "Chat composer", type: :system do
         it "adds a linebreak" do
           chat_page.visit_channel(channel_1)
 
-          channel_page.composer.fill_in(with: "testenter").enter_shortcut
+          channel_page.composer.send_keys("testenter")
+          channel_page.composer.enter_shortcut
 
-          expect(channel_page.composer.value).to eq("testenter\n")
+          expect(channel_page.composer).to have_value("testenter\n")
         end
       end
 
@@ -158,9 +162,10 @@ RSpec.describe "Chat composer", type: :system do
         it "adds a linebreak" do
           chat_page.visit_channel(channel_1)
 
-          channel_page.composer.fill_in(with: "testenter").shift_enter_shortcut
+          channel_page.composer.send_keys("testenter")
+          channel_page.composer.shift_enter_shortcut
 
-          expect(channel_page.composer.value).to eq("testenter\n")
+          expect(channel_page.composer).to have_value("testenter\n")
         end
       end
 
@@ -168,7 +173,8 @@ RSpec.describe "Chat composer", type: :system do
         it "sends the message" do
           chat_page.visit_channel(channel_1)
 
-          channel_page.composer.fill_in(with: "testenter").meta_enter_shortcut
+          channel_page.composer.send_keys("testenter")
+          channel_page.composer.meta_enter_shortcut
 
           expect(channel_page.messages).to have_message(text: "testenter")
         end
@@ -198,7 +204,7 @@ RSpec.describe "Chat composer", type: :system do
       it "doesnt delete the message" do
         chat_page.visit_channel(channel_1)
         channel_page.composer.edit_last_message_shortcut
-        channel_page.composer.fill_in(with: "")
+        channel_page.composer.send_keys("")
         channel_page.click_send_message
 
         expect(channel_page.messages).to have_message(id: message_1.id)

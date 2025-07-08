@@ -38,9 +38,10 @@ module UserGuardian
   end
 
   def can_edit_name?(user)
-    return false unless SiteSetting.enable_names?
     return false if SiteSetting.auth_overrides_name?
-    return true if is_staff?
+    return true if is_admin?
+    return false unless SiteSetting.enable_names?
+    return true if is_moderator?
     return false if is_anonymous?
     can_edit?(user)
   end
@@ -136,7 +137,8 @@ module UserGuardian
 
     if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
          !SiteSetting.must_approve_users
-      if user.user_stat.blank? || user.user_stat.post_count == 0
+      if (user.user_stat.blank? || user.user_stat.post_count == 0) &&
+           !user.has_trust_level?(TrustLevel[2])
         return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
       end
 
@@ -222,5 +224,13 @@ module UserGuardian
 
   def can_change_tracking_preferences?(user)
     (SiteSetting.allow_changing_staged_user_tracking || !user.staged) && can_edit_user?(user)
+  end
+
+  def can_create_theme?
+    return false if !is_admin?
+    # this modifier is used to further restrict theme creation, it's not
+    # possible to use this modifier to open up theme creation permissions (e.g.
+    # to non-admins)
+    DiscoursePluginRegistry.apply_modifier(:user_guardian_can_create_theme, true, self)
   end
 end

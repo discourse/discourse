@@ -399,6 +399,7 @@ tr_TR:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
       created_generic: "Bunu yer imlerine eklediniz. %{name}"
       create: "Yer imi oluştur"
+      clear_reminder: "Anımsatıcıyı temizle"
       edit: "Yer imini düzenle"
       not_bookmarked: "bu gönderiye yer imi ekle"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
@@ -488,7 +489,7 @@ tr_TR:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
     preview: "ön izleme"
-    cancel: "iptal et"
+    cancel: "İptal et"
     deleting: "Siliniyor…"
     save: "Değişiklikleri Kaydet"
     saving: "Kaydediliyor…"
@@ -1177,7 +1178,6 @@ tr_TR:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} adlı kullanıcının profili"
-      account_possessive: "%{name} adlı kişinin hesabı"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:
@@ -1900,6 +1900,7 @@ tr_TR:
           edit_link_options: "Bağlantı seçeneklerini düzenleyin veya e-posta ile gönderin."
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
+          description: "Açıklama"
           restrict: "Şununla kısıtla"
           restrict_email: "E-posta ile kısıtla"
           restrict_domain: "Alan adıyla kısıtla"
@@ -2011,7 +2012,6 @@ tr_TR:
         title: "Kayıt IP Adresi"
       avatar:
         title: "Profil Resmi"
-        header_title: "profil, mesajlar, yer imleri ve tercihler"
         name_and_description: "%{name} - %{description}"
         edit: "Profil Resmini Düzenle"
       title:
@@ -2574,11 +2574,11 @@ tr_TR:
       italic_label: "I"
       italic_title: "Vurgulama"
       italic_text: "vurgulanan yazı"
-      link_title: "Köprü"
+      link_title: "Bağlantı"
       link_description: "bağlantı açıklamasını buraya girin"
-      link_dialog_title: "Köprü Ekle"
-      link_optional_text: "isteğe bağlı başlık"
-      link_url_placeholder: "Bir URL yapıştırın veya konuları aramak için yazın"
+      link_dialog_action: "Ekle"
+      link_edit_action: "Güncelle"
+      link_optional_text: "Metin"
       blockquote_title: "Blok alıntı"
       blockquote_text: "Blok alıntı"
       code_title: "Önceden biçimlendirilmiş metin"
@@ -2648,6 +2648,9 @@ tr_TR:
       image_scale_button: "Görüntüyü %%{percent} oranına ölçeklendir"
       delete_image_button: Görüntüyü Sil
       toggle_image_grid: Resim ızgarasını aç/kapat
+      link_toolbar:
+        copy: "Bağlantıyı kopyala"
+        link_copied: "Bağlantı kopyalandı!"
     notifications:
       tooltip:
         regular:
@@ -2822,7 +2825,6 @@ tr_TR:
       in_messages_tooltip: "normal konuları aramaya geç"
       in_topics_posts: "tüm konularda ve gönderilerde"
       enter_hint: "veya Enter tuşuna basın"
-      mobile_enter_hint: "veya Arama simgesine dokunun"
       in_posts_by: "@%{username} adlı kullanıcının gönderilerinde"
       recent: "Son Aramalar"
       clear_recent: "Son Aramaları Temizle"
@@ -2910,7 +2912,6 @@ tr_TR:
           aria_label: en fazla görüntülemeye göre filtrele
         additional_options:
           label: "Gönderi sayısına ve konu görüntülemelerine göre filtrele"
-    hamburger_menu: "menü"
     new_item: "yeni"
     go_back: "geri dön"
     not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
@@ -3050,10 +3051,6 @@ tr_TR:
         top: "Popüler konu yok."
         hot: "Popüler bir konu bulunmuyor."
         filter: "Konu yok."
-        educate:
-          new: '<p>Yeni konularınız burada görünür. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi görünür.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihlerinizi</a> ziyaret edin.</p>'
-          unread: "<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve şu durumlarda okunmamış sayısı <span class=\"badge unread-posts badge-notification\">1</span> olarak gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuya yanıt vermişseniz</li><li>Konuyu 5 dakikadan fazla okumuşsanız</li></ul><p>Her bir konuda \U0001F514 aracılığıyla konuyu Takip Edildi veya İzlendi olarak seçmişseniz.</p><p><a href=\"%{userPrefsUrl}\">Tercihler</a> bölümünden bunu değiştirebilirsiniz.</p>"
-          new_new: "<p>Yeni konularınız burada görünecek ve okunmamış konularınız da görüntülenecektir. Varsayılan olarak, konular yeni olarak kabul edilir ve son 2 gün içinde oluşturulmuşlarsa bir <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> göstergesi gösterilir. Okunmamış konular, aşağıdaki durumlarda okunmamış sayıları <span class=\"badge unread-posts badge-notification\">1</span> gösterecektir: Konuyu oluşturduysanız, konuya yanıt verdiyseniz, konuyu 5 dakikadan fazla okuduysanız veya konuyu her konudaki \U0001F514 işareti aracılığıyla açıkça İzlendi veya İzleniyor olarak ayarladıysanız.</p><p>Bunu değiştirmek için <a href=\"%{userPrefsUrl}\">tercihlerinizi</a> ziyaret edin.</p>"
       bottom:
         latest: "Başka en son konu yok."
         posted: "Başka gönderi yapılan konu yok."
@@ -3617,6 +3614,13 @@ tr_TR:
       in_reply_to: "Ana gönderiyi yükle"
       view_all_posts: "Tüm gönderileri görüntüle"
       badge_granted_tooltip: "%{username}, bu gönderi için \"%{badge_name}\" rozetini kazandı!"
+      localizations:
+        table:
+          actions: "Eylemler"
+          edit: "Düzenle"
+          delete: "Sil"
+        post_language_selector:
+          none: "Yok"
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin."
@@ -4214,7 +4218,6 @@ tr_TR:
         today: "Bugün"
     custom_homepage:
       admin_message: 'Temalarınızdan biri "custom_homepage" değiştiricisini etkinleştirdi ancak [custom-homepage] bağlayıcısında hiçbir çıktı vermiyor. (Bu mesaj yalnızca site yöneticilerine gösterilir.)'
-    browser_update: 'Ne yazık ki <a href="https://www.discourse.org/faq/#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
     permission_types:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
@@ -4600,7 +4603,7 @@ tr_TR:
           save: "Kaydet"
           delete: "Sil"
           delete_confirm: "Bu bölümü silmek istediğinizden emin misiniz?"
-          delete_public_confirm: "Bu bölüm <strong>herkes tarafından görülebilir</strong>, silmek istediğinizden emin misiniz?"
+          delete_public_confirm: "Bu bölüm herkes tarafından görülebilir, silmek istediğinizden emin misiniz?"
           update_public_confirm: "Değişiklikler bu sitedeki <strong>herkes tarafından görülebilir</strong>. Emin misiniz?"
           mark_as_private_confirm: "Bu bölüm <strong>herkes tarafından görülebilir</strong>. Güncellemeden sonra <strong>yalnızca size görünür</strong>olacak. Emin misiniz?"
           reset_confirm: "Bu bölümü varsayılana sıfırlamak istediğinizden emin misiniz?"
@@ -4716,8 +4719,12 @@ tr_TR:
         forum:
           label: Forum
       back_to_forum: "Foruma geri dön"
+      clear_filter: "Filtreyi temizle"
+      no_results:
+        title: "Sonuç yok"
       collapse_all_sections: "Tüm bölümleri daralt"
       expand_all_sections: "Tüm bölümleri genişlet"
+      search: "Ara"
       footer:
         interface_color_selector:
           light: "Açık"
@@ -4825,14 +4832,9 @@ tr_TR:
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
     discovery:
       headings:
+        multi_tag:
+          default: "%{tags} etiketli konular"
         categories: "Tüm kategoriler"
-        filter_labels:
-          latest: "En son"
-          top: "En iyi"
-          new: "Yeni"
-          unread: "Okunmamış"
-          hot: "Popüler"
-          unseen: "Görülmemiş"
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
@@ -4892,62 +4894,71 @@ tr_TR:
         login_and_authentication:
           title: "Giriş ve kimlik doğrulama"
           header_description: "Kullanıcıların oturum açma ve kimlik doğrulama yöntemlerini, gizli dizileri ve anahtarları, OAuth2 sağlayıcılarını ve daha fazlasını yapılandırın"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Birincil logo"
-              mobile: "Mobil"
-              email: "E-posta"
-              mobile_logo:
-                description: "Sitenizin mobil versiyonunda kullanılan logo. Boş bırakılırsa, `logo` ayarındaki resim kullanılacaktır."
-                help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
-              mobile_logo_dark:
-                required: "Karanlık mod için farklı bir mobil logo mu kullanacaksınız?"
-                title: "Mobil logo koyu"
-                help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
-              manifest_icon:
-                title: "Manifest simgesi"
-                description: "Android'de logo/açılış resmi olarak kullanılan resim. Boş bırakılırsa, large_icon kullanılacaktır."
-                help_text: "Önerilen boyut 512 x 512 pikseldir."
-              manifest_screenshots:
-                title: "Manifest ekran görüntüleri"
-                description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
-              apple_touch_icon:
-                title: "Apple dokunmatik simgesi"
-                description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa, large_icon kullanılacaktır."
-                help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
-              digest_logo:
-                title: "Digest logosu"
-                description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa, `logo` ayarındaki görüntü kullanılacaktır."
-                help_text: "Geniş bir dikdörtgen görüntü kullanın. SVG görüntüsü kullanmayın."
-              opengraph_image:
-                title: "OpenGraph görüntüsü"
-                description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
-              x_summary_large_image:
-                title: "X özeti büyük resim"
-                description: "X kartı 'özet büyük resim'. Boş bırakılırsa, aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
-                help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG resmi kullanmayın."
-          fonts:
-            title: "Yazı Tipleri"
-            form:
-              more_fonts: "Daha fazla yazı tipi"
-              less_fonts: "Daha az yazı tipi"
-              saved: "Yazı tipi ayarları kaydedildi."
-              base_font:
-                title: "Temel yazı tipi"
-              heading_font:
-                title: "Başlık yazı tipi"
-              default_text_size:
-                title: "Varsayılan metin boyutu"
-                description: "Bu boyut daha sonra her kullanıcı tarafından kendi tercihine göre ayarlanabilir."
-            backfill_modal:
-              title: "Yeni varsayılan metin ayarları uygulansın mı?"
-              description:
-                one: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
-                other: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
-              modal_yes: "Evet"
-              modal_no: "Hayır, sadece ileriye dönük olarak uygula"
+        logo:
+          form:
+            logo:
+              title: "Birincil logo"
+              help_text: "Önerilen boyut 600 x 80 pikseldir."
+            logo_dark:
+              help_text: "Önerilen boyut 600 x 80 pikseldir."
+            large_icon:
+              help_text: "Önerilen boyut 512 x 512 pikseldir."
+            square_icon_dark:
+              help_text: "Önerilen boyut 512 x 512 pikseldir."
+            logo_small:
+              help_text: "Önerilen boyut 120 x 120 pikseldir."
+            logo_small_dark:
+              help_text: "Önerilen boyut 120 x 120 pikseldir."
+            mobile: "Mobil"
+            email: "E-posta"
+            mobile_logo:
+              description: "Sitenizin mobil versiyonunda kullanılan logo. Boş bırakılırsa, `logo` ayarındaki resim kullanılacaktır."
+              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+            mobile_logo_dark:
+              required: "Karanlık mod için farklı bir mobil logo mu kullanacaksınız?"
+              title: "Mobil logo koyu"
+              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+            manifest_icon:
+              title: "Manifest simgesi"
+              description: "Android'de logo/açılış resmi olarak kullanılan resim. Boş bırakılırsa, large_icon kullanılacaktır."
+              help_text: "Önerilen boyut 512 x 512 pikseldir."
+            manifest_screenshots:
+              title: "Manifest ekran görüntüleri"
+              description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
+            apple_touch_icon:
+              title: "Apple dokunmatik simgesi"
+              description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa, large_icon kullanılacaktır."
+              help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
+            digest_logo:
+              title: "Digest logosu"
+              description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa, `logo` ayarındaki görüntü kullanılacaktır."
+              help_text: "Geniş bir dikdörtgen görüntü kullanın. SVG görüntüsü kullanmayın."
+            opengraph_image:
+              title: "OpenGraph görüntüsü"
+              description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
+            x_summary_large_image:
+              title: "X özeti büyük resim"
+              description: "X kartı 'özet büyük resim'. Boş bırakılırsa, aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
+              help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG resmi kullanmayın."
+        fonts:
+          title: "Yazı Tipleri"
+          form:
+            more_fonts: "Daha fazla yazı tipi"
+            saved: "Yazı tipi ayarları kaydedildi."
+            base_font:
+              title: "Temel yazı tipi"
+            heading_font:
+              title: "Başlık yazı tipi"
+            default_text_size:
+              title: "Varsayılan metin boyutu"
+              description: "Bu boyut daha sonra her kullanıcı tarafından kendi tercihine göre ayarlanabilir."
+          backfill_modal:
+            title: "Yeni varsayılan metin ayarları uygulansın mı?"
+            description:
+              one: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
+              other: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
+            modal_yes: "Evet"
+            modal_no: "Hayır, sadece ileriye dönük olarak uygula"
         navigation:
           title: "Gezinme"
           header_description: "Siteniz için gezinme bağlantılarını ve menü ögelerini yapılandırın. Bu, birincil gezinme menüsünün konumunu ve davranışını, ana sayfanın üst kısmındaki hızlı bağlantıları ve yönetici kenar çubuğunu içerir"
@@ -5664,6 +5675,8 @@ tr_TR:
           city_for_disputes_placeholder: "Şehir"
           city_for_disputes_help: |
             Bu forumla ilgili yasal anlaşmazlıkların çözümü için şehri belirtin.
+          extra_groups:
+            groups: "Grup"
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:
@@ -5720,6 +5733,7 @@ tr_TR:
             title: "Temalar"
             themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
             new_theme: "Yeni tema"
+            install: "Yükle"
           components:
             title: "Bileşenler"
             install: "Yükle"
@@ -5752,6 +5766,8 @@ tr_TR:
           save_successful: "Kullanıcı alanı kaydedildi."
         color_palettes:
           palette_name: "Ad"
+          duplicate: "Eş Kopya"
+          delete: "Sil"
           color_options:
             toggle: "Kullanıcı tarafından seçilebilir"
             toggle_description: "Renk paleti, kullanıcılar tarafından seçilebilir"
@@ -5927,9 +5943,11 @@ tr_TR:
           extra_files_upload: "Bu dosyaları görüntülemek için temayı dışa aktarın."
           extra_files_remote: "Bu dosyaları görüntülemek için temayı dışa aktarın veya git deposunu kontrol edin."
           preview: "Ön İzleme"
+          default: "Aktif"
           settings_editor: "Ayar Düzenleyici"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
+          user_selectable_badge_label: "Kullanıcı tarafından seçilebilir"
           color_scheme_user_selectable: "Renk paleti, kullanıcılar tarafından seçilebilir"
           auto_update: "Discourse güncellendiğinde otomatik olarak güncelle"
           color_scheme: "Renk Paleti"
@@ -5947,8 +5965,6 @@ tr_TR:
           convert_theme_alert_generic: "Bu temayı bileşene dönüştürmek istediğinizden emin misiniz?"
           convert_theme_tooltip: "Bu temayı bileşene dönüştür"
           inactive_themes: "Etkin olmayan temalar:"
-          set_default_theme: "Varsayılanı ayarla"
-          default_theme: "Varsayılan tema"
           set_default_success: "Varsayılan tema %{theme} olarak ayarlandı"
           install_success: "%{theme} başarıyla yüklendi!"
           inactive_components: "Kullanılmayan bileşenler:"
@@ -6019,7 +6035,6 @@ tr_TR:
             error: "Bu tema, Discourse'un bu sürümüyle uyumlu olmadığı için otomatik olarak devre dışı bırakıldı."
             minimum: "Dircourse %{version} sürümü veya üstünü gerektirir."
             maximum: "Discourse sürüm %{version} veya altı gerektirir."
-          update_to_latest: "En Sona Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor…"
           update_success: "%{theme} Güncelleme tamamlandı"
@@ -6039,6 +6054,10 @@ tr_TR:
           remote_theme_edits: "Bu temayı düzenlemek istiyorsanız <a href='%{repoURL}' target='_blank'>deposunda bir değişiklik göndermeniz gerekiyor</a>"
           repo_unreachable: "Bu temanın Git deposuyla bağlantı kurulamadı. Hata mesajı:"
           imported_from_archive: "Bu tema bir .zip dosyasından içe aktarıldı"
+          settings: "Ayarlar"
+          colors: "Renkler"
+          discard_colors: "Kapat"
+          colors_title: "Renkler"
           scss:
             text: "CSS"
           after_header:
@@ -6067,30 +6086,30 @@ tr_TR:
           active_filter: "Aktif"
           inactive_filter: "Aktif Değil"
           updates_available_filter: "Güncellemeler Mevcut"
-          schema:
-            title: "%{name} ayarını düzenle"
-            back_button: "%{name} adlı kişiye geri dön"
-            fields:
-              required: "*gerekli"
-              groups:
-                at_least:
-                  one: "en az %{count} grup gerekli"
-                  other: "en az %{count} grup gerekli"
-              categories:
-                at_least:
-                  one: "en az %{count} kategori gerekli"
-                  other: "en az %{count} kategori gerekli"
-              tags:
-                at_least:
-                  one: "en az %{count} etiket gerekli"
-                  other: "en az %{count} etiket gerekli"
-              string:
-                too_short:
-                  one: "en az %{count} karakter olmalı"
-                  other: "en az %{count} karakter olmalı"
-              number:
-                too_small: "%{count} değerine eşit veya bu değerden büyük olmalı"
-                too_large: "%{count} değerine eşit veya bu değerden az olmalı"
+        schema:
+          title: "%{name} ayarını düzenle"
+          back_button: "%{name} adlı kişiye geri dön"
+          fields:
+            required: "*gerekli"
+            groups:
+              at_least:
+                one: "en az %{count} grup gerekli"
+                other: "en az %{count} grup gerekli"
+            categories:
+              at_least:
+                one: "en az %{count} kategori gerekli"
+                other: "en az %{count} kategori gerekli"
+            tags:
+              at_least:
+                one: "en az %{count} etiket gerekli"
+                other: "en az %{count} etiket gerekli"
+            string:
+              too_short:
+                one: "en az %{count} karakter olmalı"
+                other: "en az %{count} karakter olmalı"
+            number:
+              too_small: "%{count} değerine eşit veya bu değerden büyük olmalı"
+              too_large: "%{count} değerine eşit veya bu değerden az olmalı"
         colors:
           select_base:
             title: "Temel renk paletini seçin"
@@ -6101,36 +6120,28 @@ tr_TR:
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
           new_name: "Yeni renk paleti"
           copy_name_prefix: "Şunun kopyası:"
-          delete_confirm: "Bu renk paleti silinsin mi?"
           undo: "Geri Al"
           undo_title: "Bu rengin son kaydedilmesinden bu yana yaptığınız değişiklikleri geri alın."
           revert: "Eski Haline Getir"
           revert_title: "Bu rengi Discourse'un varsayılan renk paletine sıfırlayın."
           primary:
             name: "birincil"
-            description: "Çoğu metin, simge ve kenarlık."
           primary-medium:
             name: "birincil-orta"
           primary-low-mid:
             name: "birincil-düşük-orta"
           secondary:
             name: "ikincil"
-            description: "Ana arka plan rengi ve bazı düğmelerin metin rengi."
           tertiary:
             name: "üçüncül"
-            description: "Bağlantılar, bazı düğmeler, bildirimler ve vurgu rengi."
           quaternary:
             name: "dördüncül"
-            description: "Temalarda isteğe bağlı kullanım için."
           header_background:
             name: "başlık arka planı"
-            description: "Site başlığının arka plan rengi."
           header_primary:
             name: "başlık birincil"
-            description: "Site başlığındaki metin ve simgeler."
           highlight:
             name: "vurgula"
-            description: "Gönderiler ve konular gibi sayfada vurgulanan ögelerin arka plan rengi."
           highlight-high:
             name: "vurgula-yüksek"
           highlight-medium:
@@ -6139,19 +6150,14 @@ tr_TR:
             name: "vurgula-düşük"
           danger:
             name: "tehlike"
-            description: "Gönderileri ve konuları silmek gibi eylemler için rengi vurgulayın."
           success:
             name: "başarılı"
-            description: "Bir eylemin başarılı olduğunu belirtmek için kullanılır."
           love:
             name: "sevgi"
-            description: "Beğen düğmesinin rengi."
           selected:
             name: "seçili"
-            description: "Liste ögeleri gibi ögelerin seçildiklerinde/etkin olduklarında arka plan rengi."
           hover:
             name: "üzerine gelin"
-            description: "Liste ögeleri gibi ögelerin üzerine gelindiğinde veya klavye odağına sahip olduklarında arka plan rengi."
           editor:
             light: "Açık"
             dark: "Koyu"

@@ -8,6 +8,7 @@ describe "Admin | Sidebar Navigation", type: :system do
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
+  let(:filter) { PageObjects::Components::Filter.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -116,7 +117,7 @@ describe "Admin | Sidebar Navigation", type: :system do
   end
 
   it "highlights the 'Themes and components' link when the themes page is visited" do
-    visit("/admin/customize/themes")
+    visit("/admin/config/customize/themes")
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
     )
@@ -158,5 +159,10 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.config.staff_action_logs.title"),
       ],
     )
+
+    filter.filter("watched")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(1)
+    expect(links.map(&:text)).to eq(["Watched words"])
   end
 end

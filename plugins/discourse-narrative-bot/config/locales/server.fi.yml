@@ -169,8 +169,22 @@ fi:
 
           Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
+        instructions: |-
+          Seuraavaksi voitko jakaa yhden näistä linkeistä minun kanssani? Vastaa **linkillä itse rivillä**, ja se laajenee automaattisesti sisältääksesi näppärän yhteenvedon.
+
+          Voit kopioida minkä tahansa linkin napauttamalla ja pitämällä mobiilia pohjassa tai napsauttamalla hiiren oikealla osoitinta:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en. ikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Siistiä! Suurin osa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla _yksin omalla rivillään_; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
+        not_found: |-
+          Anteeksi, en löytänyt linkkiä vastauksestasi! :cry:
+
+          Voitko kokeilla lisätä seuraavan linkin omalle rivilleen seuraavaan vastaukseesi?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Tämä on kuva yksisarvisesta:
@@ -385,19 +399,6 @@ fi:
 
           Huomioi, että kun vastaat ketjuun tai luet sitä kauemmin kuin muutaman minuutin ajan, se saa automaattisesti ilmoitustasokseen 'seurataan'. Tätä voi säätää [käyttäjäasetuksissa](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Tiesitkö, että viesteihin voi lisätä kyselyitä? **Luo kysely** valitsemalla viestieditorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvake.
-        not_found: |-
-          Ups! Vastauksessasi ei ollut kyselyä.
-
-          Käytä editorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvaketta tai kopioi tämä kysely ja liitä se seuraavaan vastaukseesi:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hauska kysely! Miten onnistuin opetuksessa?
 
@@ -406,20 +407,6 @@ fi:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Joskus voit haluta **piilottaa tietoja** vastauksessasi:
-
-          – Kirjoitat elokuvasta tai TV-ohjelmasta jotakin, minkä voi kokea juonipaljastukseksi.
-
-          – Joudut sisällyttämään viestiisi suuria määriä yksityiskohtaista tietoa, joka voisi uuvuttaa lukijaa.
-
-          [details=Napauta niin näet kuinka se toimii!]
-          1. Valitse editorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvake.
-          2. Valitse "Piilota tiedot".
-          3. Muokkaa yhteenvetotekstiä ja lisää sisältö.
-          [/details]
-
-          Piilottaisitko tietoja editorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvakkeen avulla seuraavasta vastauksestasi?
         not_found: |-
           Onko sinulla ongelmia tietotoiminnon kanssa? Kokeilepa laittaa tämä seuraavaan vastaukseesi:
 

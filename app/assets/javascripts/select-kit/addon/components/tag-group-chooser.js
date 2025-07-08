@@ -1,12 +1,14 @@
 import { computed } from "@ember/object";
+import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
+import TagChooserRow from "./tag-chooser-row";
 
 @classNames("tag-group-chooser", "tag-chooser")
 @selectKitOptions({
@@ -16,11 +18,11 @@ import TagsMixin from "select-kit/mixins/tags";
   limit: null,
 })
 @pluginApiIdentifiers("tag-group-chooser")
-export default class TagGroupChooser extends MultiSelectComponent.extend(
-  TagsMixin
-) {
+export default class TagGroupChooser extends MultiSelectComponent {
+  @service tagUtils;
+
   modifyComponentForRow() {
-    return "tag-chooser-row";
+    return TagChooserRow;
   }
 
   @computed("tagGroups.[]")
@@ -35,26 +37,44 @@ export default class TagGroupChooser extends MultiSelectComponent.extend(
       .map((t) => this.defaultItem(t, t));
   }
 
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
+  }
+
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
+  }
+
   search(query) {
     const data = {
       q: query,
       limit: this.siteSettings.max_tag_search_results,
     };
 
-    return this.searchTags(
-      "/tag_groups/filter/search",
-      data,
-      this._transformJson
-    ).then((results) => {
-      if (results && results.length) {
-        return results.filter((r) => {
-          return !makeArray(this.tagGroups).includes(this.getValue(r));
-        });
-      }
-    });
+    return this.tagUtils
+      .searchTags("/tag_groups/filter/search", data, this._transformJson)
+      .then((results) => {
+        if (results && results.length) {
+          return results.filter((r) => {
+            return !makeArray(this.tagGroups).includes(this.getValue(r));
+          });
+        }
+      });
   }
 
-  _transformJson(context, json) {
+  @bind
+  _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
+      return [];
+    }
     return json.results
       .sort((a, b) => a.name > b.name)
       .map((result) => {

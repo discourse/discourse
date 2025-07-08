@@ -291,6 +291,7 @@ ur:
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
       create: "بک مارک بنائیں"
+      clear_reminder: "یاد دہانی مٹائیں"
       edit: "بک مارک میں ترمیم"
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
@@ -1493,6 +1494,7 @@ ur:
           expired_at_time: "%{time}پر ختم ہو گا"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
           hide_advanced: "ایڈوانس آپشنز چھپائیں"
+          description: "تفصیل"
           restrict: "تک محدود"
           restrict_email: "ای میل تک محدود"
           restrict_domain: "ڈومین تک محدود"
@@ -1575,7 +1577,6 @@ ur:
         title: "رجسٹریشن IP ایڈریس"
       avatar:
         title: "پروفائل تصویر"
-        header_title: "پروفائل، پیغامات، بک مارکس اور ترجیحات"
         name_and_description: "%{name} - %{description}"
         edit: "پروفائل تصویر میں ترمیم کریں"
       title:
@@ -1934,11 +1935,11 @@ ur:
       italic_label: "I"
       italic_title: "آئیٹیلک"
       italic_text: "زور دیا گیا ٹَیکسٹ"
-      link_title: "ہائپرلِنک"
+      link_title: "لنک"
       link_description: "یہاں لِنک کی تفصیل درج کریں"
-      link_dialog_title: "ہائپرلِنک ڈالیں"
-      link_optional_text: "اختیاری عنوان"
-      link_url_placeholder: "موضوعات تلاش کرنے کے لئے URL پیسٹ کریں یا ٹائپ کریں"
+      link_dialog_action: "شامل"
+      link_edit_action: "اپ ڈیٹ"
+      link_optional_text: "ٹیکسٹ"
       blockquote_title: "بلاک متن"
       blockquote_text: "بلاک متن"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
@@ -2219,7 +2220,6 @@ ur:
           aria_label: زیادہ سے زیادہ آراء سے فلٹر
         additional_options:
           label: "پوسٹ کی گنتی اور موضوع کے ملاحظات کے لحاظ سے فلٹر"
-    hamburger_menu: "مینیو"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -2288,8 +2288,6 @@ ur:
         bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
         category: "کوئی %{category} کے ٹاپک موجود نہیں ہیں۔"
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
-        educate:
-          new: '<p>آپ کے نئے عنوانات یہاں ظاہر ہوں گے۔ پہلے سے طے شدہ طور پر، عنوانات کو نئے تصور کیا جاتا ہے اور اگر وہ پچھلے 2 دنوں میں بنائے گئے تھے تو وہ <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> دکھائے گا۔</p><p>اسے تبدیل کرنے کے لیے اپنی <a href="%{userPrefsUrl}">ترجیحات</a> دیکھیں۔</p>'
       bottom:
         latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
         posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"
@@ -2748,6 +2746,13 @@ ur:
         other: "%{count} جوابات دیکھیں"
       in_reply_to: "پیرنٹ پوسٹ لوڈ کریں۔"
       view_all_posts: "تمام پوسٹس دیکھیں"
+      localizations:
+        table:
+          actions: "عمل"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
+        post_language_selector:
+          none: "کوئی نہیں"
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         edit: "معذرت، آپ کی پوسٹ ترمیم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
@@ -3620,6 +3625,7 @@ ur:
               content: "جائزہ لیں"
             invite:
               content: "دعوت دیں"
+      search: "تلاش کریں"
       footer:
         interface_color_selector:
           light: "لائٹ"
@@ -3647,13 +3653,9 @@ ur:
         about: "بارے میں"
     discovery:
       headings:
+        multi_tag:
+          default: "ٹاپکس %{tags} کے ساتھ ٹَیگ کردہ"
         categories: "تمام زُمرَہ جات"
-        filter_labels:
-          latest: "تازہ ترین"
-          top: "سب سے اوپر"
-          new: "نئی"
-          unread: "بغیر پڑھے"
-          unseen: "ان دیکھا"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
@@ -3695,16 +3697,15 @@ ur:
           title: "فائلیں"
         legal:
           title: "قانونی"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "موبائل"
-              email: "اِیمیل"
-              manifest_screenshots:
-                description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
-          fonts:
-            backfill_modal:
-              modal_yes: "جی ہاں"
+        logo:
+          form:
+            mobile: "موبائل"
+            email: "اِیمیل"
+            manifest_screenshots:
+              description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
+        fonts:
+          backfill_modal:
+            modal_yes: "جی ہاں"
         navigation:
           title: "نیویگیشن"
         notifications:
@@ -4111,6 +4112,8 @@ ur:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "نام"
+          extra_groups:
+            groups: "گروپس"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
@@ -4139,6 +4142,7 @@ ur:
           install: "انسٹال"
           themes:
             title: "تِھیمز"
+            install: "انسٹال"
           components:
             title: "اجزاء"
             install: "انسٹال"
@@ -4158,6 +4162,8 @@ ur:
           delete: "مٹائیں"
         color_palettes:
           palette_name: "نام"
+          duplicate: "نقل"
+          delete: "مٹائیں"
           colors:
             title: "رنگ"
       plugins:
@@ -4288,6 +4294,7 @@ ur:
           extra_files_upload: "ان فائلوں کو دیکھنے کے لیے تھیم برآمد کریں۔"
           extra_files_remote: "ان فائلوں کو دیکھنے کے لیے تھیم ایکسپورٹ کریں یا گٹ ریپوزٹری کو چیک کریں۔"
           preview: "پیشگی دیکھیں"
+          default: "فعال"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
           auto_update: "ڈسکورس اپ ڈیٹ ہونے پر آٹو اپ ڈیٹ"
@@ -4360,8 +4367,6 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
-          update_to_latest: "تازہ ترین ورژن تک اِپ ڈَیٹ کریں"
-          check_for_updates: "اپ ڈیٹ کے لیے چیک کریں"
           up_to_date: "تِھیم اَپ ڈَیٹ ہے، آخری دفعہ چَیک کیا:"
           has_overwritten_history: "موجودہ تھیم ورژن اب موجود نہیں ہے کیونکہ گٹ ہسٹری کو زبردستی دھکا لگا کر اوور رائٹ کر دیا گیا ہے۔"
           add: "شامل کریں"
@@ -4376,6 +4381,10 @@ ur:
           remote_theme_edits: "اگر آپ اس تھیم میں ترمیم کرنا چاہتے ہیں، تو آپ کو <a href='%{repoURL}' target='_blank'>اس کے ریپوزٹری پرتبدیلی درج کروانا ہوگی</a>"
           repo_unreachable: "اِس تِھیم کی گِٹ رِیپَوزِٹَری سے رابطہ نہیں کیا جا سکا۔ تکنیکی خرابی کا پیغام:"
           imported_from_archive: "یہ تھیم زپ فائل سے درآمد کی گئی تھی۔"
+          settings: "ترتیبات"
+          colors: "رنگ"
+          discard_colors: "منسوخ"
+          colors_title: "رنگ"
           scss:
             text: "CSS"
           after_header:
@@ -4401,12 +4410,12 @@ ur:
           all_filter: "تمام"
           active_filter: "فعال"
           inactive_filter: "غیر فعال"
-          schema:
-            fields:
-              required: "*درکار"
-              number:
-                too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
-                too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
+        schema:
+          fields:
+            required: "*درکار"
+            number:
+              too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
+              too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
@@ -4414,35 +4423,28 @@ ur:
           title: "رنگ"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
           copy_name_prefix: "نقل از"
-          delete_confirm: "اِس رنگ کی تختی کومٹائیں؟"
           undo: "کالعدم کریں"
           undo_title: "اِس رنگ کو آخری دفعہ محفوظ کیے جانے کے وقت سے لے کر اَب تک کی اپنی تمام تبدیلیوں کو کالعدم کریں۔"
           revert: "رِیوَرٹ"
           revert_title: "اِس رنگ کو ڈِسکَورس کی پہلے سے طے شدہ رنگ پیلیٹ کے مطابق رِی سَیٹ کریں۔"
           primary:
             name: "بنیادی"
-            description: "زیادہ تر ٹَیکسٹ، آئیکنز اور بارڈرز"
           primary-medium:
             name: "پرائمری میڈیم"
           primary-low-mid:
             name: "بنیادی-کم-وسط"
           secondary:
             name: "ثانوی"
-            description: "مَین پسِ منظر کا رنگ، اور کچھ بٹنوں کے ٹَیکسٹ کا رنگ۔"
           tertiary:
             name: "ترتییک"
-            description: "لنکس، چند بٹن، اطلاعات، اور اَیکسنٹ رنگ۔"
           quaternary:
             name: "چوتھے درجہ کے"
           header_background:
             name: "ہیڈر کا پسِ منظر"
-            description: "سائٹ کے ہیڈر کے پسِ منظر کا رنگ۔"
           header_primary:
             name: "ہیڈر بنیادی"
-            description: "سائٹ کے ہیڈر میں ٹَیکسٹ اور آئیکنز۔"
           highlight:
             name: "اجاگر کریں"
-            description: "اُجاگر کیے گئے عناصر، جیسے کہ پوسٹس اور ٹاپک، کے پسِ منظر کا رنگ."
           highlight-high:
             name: "ہائی لائٹ-اعلیٰ"
           highlight-medium:
@@ -4451,13 +4453,10 @@ ur:
             name: "ہائی لائٹ-کم"
           danger:
             name: "خطرہ"
-            description: "اِعمال، جیسے کہ پوسٹس اور ٹاپکس کو حذف کرنا، کو نمایاں کرنے کا رنگ۔"
           success:
             name: "کامیابی"
-            description: "ایک کارروائی کے کامیاب ہونے کی نشاندہی کیلئے استعمال کیا جاتا ہے۔"
           love:
             name: "محبت"
-            description: "لائیک بٹن کا رنگ۔"
           selected:
             name: "منتخب کیا ہوا"
           editor:

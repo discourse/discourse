@@ -385,19 +385,6 @@ ja:
 
           トピックに返信する際、またはトピックを数分以上閲覧している場合は、自動的に通知レベルが '追跡' に設定されます。この設定は[ユーザー設定](%{base_uri}/my/preferences)で変更可能です。
       poll:
-        instructions: |-
-          投稿に投票を追加できることを知っていますか？エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車を使って**投票を作成**してみましょう。
-        not_found: |-
-          あれれ？返信に投票がありませんよ。
-
-          エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車アイコンを使うか、この投票をコピーして、次の返信に貼り付けてください。
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           素敵な投票ですね！私の教え方はどうですか？
 
@@ -406,20 +393,6 @@ ja:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          たまに、返信の**詳細を非表示**にしたいことがあるかもしれません。
-
-          - 映画またはテレビ番組のあらすじについて話している場合は、ネタバレと思われる可能性がある場合。
-
-          - まとめて一度に読むと多すぎる可能性のある詳細な情報を投稿に含める必要がある場合。
-
-          [詳細=これを選択してどのように動作するか見てみましょう！]
-          1. エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車を選択します。
-          2. "詳細を非表示" を選択します。
-          3. 詳細の要約を編集して、コンテンツを追加します。
-          [/details]
-
-          エディタの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 歯車を使って、次の返信に詳細セクションを追加してみましょう。
         not_found: |-
           詳細ウィジェットを作成できませんか？次の返信に以下のテキストを含めてみてください。
 

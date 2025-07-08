@@ -13,6 +13,7 @@ import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
@@ -236,7 +237,7 @@ export default class TopicFooterButtons extends Component {
 
       <PluginOutlet
         @name="topic-footer-main-buttons-before-create"
-        @outletArgs={{hash topic=this.topic}}
+        @outletArgs={{lazyHash topic=this.topic}}
         @connectorTagName="span"
       />
 
@@ -252,7 +253,7 @@ export default class TopicFooterButtons extends Component {
 
       <PluginOutlet
         @name="after-topic-footer-main-buttons"
-        @outletArgs={{hash topic=this.topic}}
+        @outletArgs={{lazyHash topic=this.topic}}
         @connectorTagName="span"
       />
     </div>
@@ -285,7 +286,7 @@ export default class TopicFooterButtons extends Component {
 
     <PluginOutlet
       @name="after-topic-footer-buttons"
-      @outletArgs={{hash topic=this.topic}}
+      @outletArgs={{lazyHash topic=this.topic}}
       @connectorTagName="span"
     />
   </template>

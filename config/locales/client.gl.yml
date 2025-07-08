@@ -331,7 +331,7 @@ gl:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
     preview: "visualizar"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     save: "Gardar cambios"
     saved: "Gardado!"
     upload: "Cargar"
@@ -1421,6 +1421,7 @@ gl:
           expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
+          description: "Descrición"
           add_to_groups: "Engadir aos grupos"
           expires_after: "Caduca tras"
           send_invite_email: "Gardar e enviar mensaxe de correo"
@@ -1496,7 +1497,6 @@ gl:
         title: "Rexistro de enderezos IP"
       avatar:
         title: "Imaxe do perfil"
-        header_title: "perfil, mensaxes, marcadores e preferencias"
         name_and_description: "%{name} %{description}"
         edit: "Editar a imaxe do perfil"
       title:
@@ -1831,11 +1831,11 @@ gl:
       italic_label: "C"
       italic_title: "Recalque"
       italic_text: "texto recalcado"
-      link_title: "Hiperligazón"
+      link_title: "Ligazón"
       link_description: "introducir a descrición da ligazón aquí"
-      link_dialog_title: "Inserir hiperligazón"
-      link_optional_text: "título opcional"
-      link_url_placeholder: "Pegue un URL ou escriba para buscar temas"
+      link_dialog_action: "Inserir"
+      link_edit_action: "Actualizar"
+      link_optional_text: "Texto"
       blockquote_title: "Cita"
       blockquote_text: "Citación"
       code_title: "Texto preformatado"
@@ -2135,8 +2135,6 @@ gl:
         bookmarks: "Aínda non marcou este tema."
         category: "Non hai temas en %{category}."
         top: "Non hai temas destacados."
-        educate:
-          new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."
@@ -2576,6 +2574,13 @@ gl:
         other: "Vendo %{count} respostas a"
       in_reply_to: "Cargar a publicación pai"
       view_all_posts: "Ver todas as publicacións"
+      localizations:
+        table:
+          actions: "Accións"
+          edit: "Editar"
+          delete: "Eliminar"
+        post_language_selector:
+          none: "Ningunha"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -3376,6 +3381,7 @@ gl:
               content: "Revisar"
             invite:
               content: "Convidar"
+      search: "Buscar"
       footer:
         interface_color_selector:
           light: "Claro"
@@ -3403,12 +3409,9 @@ gl:
         about: "Verbo de"
     discovery:
       headings:
+        multi_tag:
+          default: "Temas etiquetados %{tags}"
         categories: "Todas as categorías"
-        filter_labels:
-          latest: "Últimos"
-          top: "Destacados"
-          new: "Novo"
-          unread: "Pendentes de lectura"
   admin_js:
     settings: "Configuración"
     admin:
@@ -3449,22 +3452,21 @@ gl:
           title: "Ficheiros"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Móbil"
-              email: "Enderezo de correo"
-              manifest_screenshots:
-                description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
-              opengraph_image:
-                description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
-          fonts:
-            title: "Tipos de letra"
-            form:
-              heading_font:
-                title: "Tipo de letra de título"
-            backfill_modal:
-              modal_yes: "Si"
+        logo:
+          form:
+            mobile: "Móbil"
+            email: "Enderezo de correo"
+            manifest_screenshots:
+              description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
+            opengraph_image:
+              description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+        fonts:
+          title: "Tipos de letra"
+          form:
+            heading_font:
+              title: "Tipo de letra de título"
+          backfill_modal:
+            modal_yes: "Si"
         navigation:
           title: "Navegación"
         notifications:
@@ -3850,6 +3852,8 @@ gl:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          extra_groups:
+            groups: "Grupos"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -3878,6 +3882,7 @@ gl:
           install: "Instalar"
           themes:
             title: "Temas"
+            install: "Instalar"
           components:
             title: "Compoñentes"
             install: "Instalar"
@@ -3897,6 +3902,7 @@ gl:
           delete: "Eliminar"
         color_palettes:
           palette_name: "Nome"
+          delete: "Eliminar"
           colors:
             title: "Cores"
       plugins:
@@ -4029,6 +4035,7 @@ gl:
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
+          default: "Activo"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
@@ -4101,8 +4108,6 @@ gl:
             error: "Este tema foi desactivado automaticamente porque non é compatíbel coa versión actual de Discourse."
             minimum: "Require a versión %{version} de Discourse ou unha superior."
             maximum: "Require a versión %{version} de Discourse ou unha inferior."
-          update_to_latest: "Actualizar o tema"
-          check_for_updates: "Buscar actualizacións"
           up_to_date: "O tema está actualizado, última comprobación:"
           has_overwritten_history: "A versión actual do tema xa non existe porque o historial de Git foi sobrescrito por un push forzado."
           add: "Engadir"
@@ -4117,6 +4122,10 @@ gl:
           remote_theme_edits: "Se quere editar este tema, debe <a href='%{repoURL}' target='_blank'> enviar un cambio a este repositorio</a>"
           repo_unreachable: "Non se puido conectar co repositorio Git deste tema. Mensaxe de erro:"
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
+          settings: "Configuración"
+          colors: "Cores"
+          discard_colors: "Desbotar"
+          colors_title: "Cores"
           scss:
             text: "CSS"
           after_header:
@@ -4142,12 +4151,12 @@ gl:
           all_filter: "Todas"
           active_filter: "Activo"
           inactive_filter: "Inactivo"
-          schema:
-            fields:
-              required: "*obrigatorio"
-              number:
-                too_small: "debe ser igual ou maior que %{count}"
-                too_large: "debe ser igual ou menor que %{count}"
+        schema:
+          fields:
+            required: "*obrigatorio"
+            number:
+              too_small: "debe ser igual ou maior que %{count}"
+              too_large: "debe ser igual ou menor que %{count}"
         colors:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
@@ -4155,35 +4164,28 @@ gl:
           title: "Cores"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
-          delete_confirm: "Eliminar esta paleta de cores?"
           undo: "Desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
           revert: "Reverter"
           revert_title: "Restabelece esta cor na paleta de cores predeterminada de Discourse."
           primary:
             name: "primario"
-            description: "Principalmente texto, iconas e bordos."
           primary-medium:
             name: "primario-medio"
           primary-low-mid:
             name: "primario-baixo-medio"
           secondary:
             name: "secundario"
-            description: "Cor principal do fondo e cor do texto dalgúns botóns."
           tertiary:
             name: "terciario"
-            description: "Ligazóns, algúns botóns, notificacións e cor de realce."
           quaternary:
             name: "cuaternario"
           header_background:
             name: "fondo da cabeceira"
-            description: "Cor do fondo na cabeceira do sitio."
           header_primary:
             name: "cabeceira primaria"
-            description: "Texto e iconas na cabeceira do sitio."
           highlight:
             name: "realce"
-            description: "Cor do fondo dos elementos realzados da páxina, como publicacións e temas."
           highlight-high:
             name: "realzado-alto"
           highlight-medium:
@@ -4192,13 +4194,10 @@ gl:
             name: "realzado-baixo"
           danger:
             name: "perigo"
-            description: "Cor de realce para accións como eliminar publicacións e temas."
           success:
             name: "correcto"
-            description: "Usado para indicar que unha acción se realizou correctamente."
           love:
             name: "amor"
-            description: "Cor do botón gústame."
           selected:
             name: "seleccionado"
           editor:

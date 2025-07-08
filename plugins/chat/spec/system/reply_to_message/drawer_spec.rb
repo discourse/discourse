@@ -33,9 +33,9 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
 
       expect(drawer_page).to have_open_thread
 
-      thread_page.send_message("reply to message")
+      text = thread_page.send_message("reply to message")
 
-      expect(thread_page.messages).to have_message(text: "reply to message")
+      expect(thread_page.messages).to have_message(text:)
 
       drawer_page.back
 

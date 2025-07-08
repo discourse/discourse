@@ -1331,6 +1331,56 @@ RSpec.describe TopicsFilter do
           ).to eq([])
         end
       end
+
+      describe "when query string is `#{filter}-after:1`" do
+        it "should only return topics with #{description} after 1 day ago" do
+          freeze_time do
+            old_topic = Fabricate(:topic, column => 2.days.ago)
+            recent_topic = Fabricate(:topic, column => Time.zone.now)
+
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("#{filter}-after:1")
+                .pluck(:id),
+            ).to contain_exactly(recent_topic.id)
+          end
+        end
+      end
+
+      describe "when query string is `#{filter}-before:1`" do
+        it "should only return topics with #{description} before 1 day ago" do
+          freeze_time do
+            old_topic = Fabricate(:topic, column => 2.days.ago)
+            recent_topic = Fabricate(:topic, column => Time.zone.now)
+
+            results =
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("#{filter}-before:1")
+                .where(id: [old_topic.id, recent_topic.id])
+                .pluck(:id)
+
+            expect(results).to contain_exactly(old_topic.id)
+          end
+        end
+      end
+
+      describe "when query string is `#{filter}-after:0`" do
+        it "should only return topics with #{description} after today" do
+          freeze_time do
+            old_topic = Fabricate(:topic, column => 2.days.ago)
+            recent_topic = Fabricate(:topic, column => Time.zone.now)
+
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("#{filter}-after:0")
+                .pluck(:id),
+            ).to contain_exactly(recent_topic.id)
+          end
+        end
+      end
     end
 
     describe "when filtering by activity of topics" do
@@ -1478,6 +1528,59 @@ RSpec.describe TopicsFilter do
         fab!(:topic) { Fabricate(:topic, title: "This is topic number 2") }
 
         include_examples "ordering topics filters", "title", "topic's title"
+      end
+
+      describe "when ordering by user's last visit to topics" do
+        fab!(:user)
+        fab!(:topic)
+        fab!(:topic2) { Fabricate(:topic) }
+        fab!(:topic3) { Fabricate(:topic) }
+
+        before do
+          freeze_time 3.hours.ago do
+            TopicUser.update_last_read(user, topic3.id, 1, 1, 0)
+          end
+
+          freeze_time 2.hours.ago do
+            TopicUser.update_last_read(user, topic.id, 1, 1, 0)
+          end
+
+          freeze_time 1.hour.ago do
+            TopicUser.update_last_read(user, topic2.id, 1, 1, 0)
+          end
+        end
+
+        describe "when query string is `order:read`" do
+          it "should return topics ordered by last visited date in descending order for logged in users" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new(user))
+                .filter_from_query_string("order:read")
+                .pluck(:id),
+            ).to eq([topic2.id, topic.id, topic3.id])
+          end
+
+          it "should not apply any special ordering for anonymous users" do
+            topics =
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("order:read")
+                .where(id: [topic.id, topic2.id, topic3.id])
+
+            expect(topics.pluck(:id)).to contain_exactly(topic.id, topic2.id, topic3.id)
+          end
+        end
+
+        describe "when query string is `order:read-asc`" do
+          it "should return topics ordered by last visited date in ascending order for logged in users" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new(user))
+                .filter_from_query_string("order:read-asc")
+                .pluck(:id),
+            ).to eq([topic3.id, topic.id, topic2.id])
+          end
+        end
       end
 
       describe "composing multiple order filters" do

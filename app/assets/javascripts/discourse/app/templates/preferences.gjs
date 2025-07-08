@@ -1,10 +1,10 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import DNavigationItem from "discourse/components/d-navigation-item";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -18,7 +18,7 @@ export default RouteTemplate(
           @ariaCurrentContext="subNav"
           class="user-nav__preferences-account"
         >
-          {{icon "user"}}
+          {{icon "circle-user"}}
           <span>{{i18n "user.preferences_nav.account"}}</span>
         </DNavigationItem>
 
@@ -36,7 +36,7 @@ export default RouteTemplate(
           @ariaCurrentContext="subNav"
           class="user-nav__preferences-profile"
         >
-          {{icon "user"}}
+          {{icon "address-card"}}
           <span>{{i18n "user.preferences_nav.profile"}}</span>
         </DNavigationItem>
 
@@ -99,12 +99,12 @@ export default RouteTemplate(
         <PluginOutlet
           @name="user-preferences-nav-under-interface"
           @connectorTagName="div"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
         <PluginOutlet
           @name="user-preferences-nav"
           @connectorTagName="li"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
       </HorizontalOverflowNav>
     </div>
@@ -114,7 +114,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="above-user-preferences"
           @connectorTagName="div"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
       </span>
 

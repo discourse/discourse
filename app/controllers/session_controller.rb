@@ -110,19 +110,22 @@ class SessionController < ApplicationController
       raise Discourse::ReadOnly if @readonly_mode
 
       if ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] != "1"
-        render(content_type: "text/plain", inline: <<~TEXT)
+        return render plain: <<~TEXT, status: 403
           To enable impersonating any user without typing passwords set the following ENV var
 
           export DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE=1
 
           You can do that in your bashrc of bash profile file or the script you use to launch the web server
         TEXT
-
-        return
       end
 
       user = User.find_by_username(params[:session_id])
-      raise "User #{params[:session_id]} not found" if user.blank?
+
+      if user.blank?
+        return render plain: "User #{params[:session_id]} not found", status: 403
+      elsif !user.active?
+        return render plain: "User #{params[:session_id]} is not active", status: 403
+      end
 
       log_on_user(user)
 
@@ -662,30 +665,32 @@ class SessionController < ApplicationController
   def destroy
     redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
 
-    sso = SiteSetting.enable_discourse_connect
-    only_one_authenticator =
-      !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
-    if SiteSetting.login_required && (sso || only_one_authenticator)
-      # In this situation visiting most URLs will start the auth process again
-      # Go to the `/login` page to avoid an immediate redirect
-      redirect_url ||= path("/login")
-    end
+    redirect_url ||=
+      if SiteSetting.login_required
+        uses_sso = SiteSetting.enable_discourse_connect
+        has_one_auth = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.one?
+        path("/login-required") if uses_sso || has_one_auth
+      end
 
     redirect_url ||= path("/")
 
-    event_data = {
+    data = {
       redirect_url: redirect_url,
       user: current_user,
       client_ip: request&.ip,
       user_agent: request&.user_agent,
     }
-    DiscourseEvent.trigger(:before_session_destroy, event_data, **Discourse::Utils::EMPTY_KEYWORDS)
-    redirect_url = event_data[:redirect_url]
+
+    DiscourseEvent.trigger(:before_session_destroy, data)
+
+    # `redirect_url` might have been updated by a `before_session_destroy` listener
+    redirect_url = data[:redirect_url]
 
     reset_session
     log_off_user
+
     if request.xhr?
-      render json: { redirect_url: redirect_url }
+      render json: { redirect_url: }
     else
       redirect_to redirect_url, allow_other_host: true
     end

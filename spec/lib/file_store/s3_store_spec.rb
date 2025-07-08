@@ -28,15 +28,17 @@ RSpec.describe FileStore::S3Store do
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+
         s3_bucket
           .expects(:object)
           .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png}))
           .returns(s3_object)
+
         s3_object
           .expects(:put)
           .with(
             {
-              acl: "public-read",
+              acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
               cache_control: "max-age=31556952, public, immutable",
               content_type: "image/png",
               content_disposition: "inline; filename=\"logo.png\"; filename*=UTF-8''logo.png",
@@ -48,6 +50,7 @@ RSpec.describe FileStore::S3Store do
         expect(store.store_upload(uploaded_file, upload)).to match(
           %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.png},
         )
+
         expect(upload.etag).to eq(etag)
       end
 
@@ -68,6 +71,7 @@ RSpec.describe FileStore::S3Store do
           expect(store.store_upload(uploaded_file, upload)).to match(
             %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/discourse-uploads/original/\d+X.*/#{upload.sha1}\.png},
           )
+
           expect(upload.etag).to eq(etag)
         end
       end
@@ -76,19 +80,22 @@ RSpec.describe FileStore::S3Store do
         it "saves secure attachment using private ACL" do
           SiteSetting.prevent_anons_from_downloading_files = true
           SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
+
           upload =
             Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
+
           s3_bucket
             .expects(:object)
             .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf}))
             .returns(s3_object)
+
           s3_object
             .expects(:put)
             .with(
               {
-                acl: "private",
+                acl: FileStore::S3Store::CANNED_ACL_PRIVATE,
                 cache_control: "max-age=31556952, public, immutable",
                 content_type: "application/pdf",
                 content_disposition: "inline; filename=\"small.pdf\"; filename*=UTF-8''small.pdf",
@@ -106,16 +113,18 @@ RSpec.describe FileStore::S3Store do
           SiteSetting.prevent_anons_from_downloading_files = true
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+
           s3_bucket
             .expects(:object)
             .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png}))
             .returns(s3_object)
             .at_least_once
+
           s3_object
             .expects(:put)
             .with(
               {
-                acl: "public-read",
+                acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
                 cache_control: "max-age=31556952, public, immutable",
                 content_type: "image/png",
                 content_disposition: "inline; filename=\"logo.png\"; filename*=UTF-8''logo.png",
@@ -130,25 +139,58 @@ RSpec.describe FileStore::S3Store do
 
           expect(store.url_for(upload)).to eq(upload.url)
         end
-      end
 
-      describe "when ACLs are disabled" do
-        it "doesn't supply an ACL" do
-          SiteSetting.s3_use_acls = false
+        it "supplies the right tag when `s3_enable_access_control_tags` site setting is enabled" do
+          SiteSetting.s3_enable_access_control_tags = true
           SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
+
           upload =
             Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
+
           s3_bucket
             .expects(:object)
             .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf}))
             .returns(s3_object)
+
           s3_object
             .expects(:put)
             .with(
               {
-                acl: nil,
+                acl: FileStore::S3Store::CANNED_ACL_PRIVATE,
+                tagging: described_class.visibility_tagging_option_value(secure: true),
+                cache_control: "max-age=31556952, public, immutable",
+                content_type: "application/pdf",
+                content_disposition: "inline; filename=\"small.pdf\"; filename*=UTF-8''small.pdf",
+                body: uploaded_file,
+              },
+            )
+            .returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+
+          expect(store.store_upload(uploaded_file, upload)).to match(
+            %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.pdf},
+          )
+        end
+
+        it "doesn't supply an ACL when `s3_use_acls` site setting is disabled" do
+          SiteSetting.s3_use_acls = false
+          SiteSetting.authorized_extensions = "pdf|png|jpg|gif"
+
+          upload =
+            Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true)
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+
+          s3_bucket
+            .expects(:object)
+            .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf}))
+            .returns(s3_object)
+
+          s3_object
+            .expects(:put)
+            .with(
+              {
                 cache_control: "max-age=31556952, public, immutable",
                 content_type: "application/pdf",
                 content_disposition: "inline; filename=\"small.pdf\"; filename*=UTF-8''small.pdf",
@@ -209,7 +251,7 @@ RSpec.describe FileStore::S3Store do
       let(:store) { FileStore::S3Store.new(s3_helper) }
       let(:upload_opts) do
         {
-          acl: "public-read",
+          acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
           cache_control: "max-age=31556952, public, immutable",
           content_type: "image/png",
           apply_metadata_to_destination: true,
@@ -256,7 +298,9 @@ RSpec.describe FileStore::S3Store do
 
   describe "copying files in S3" do
     describe "#copy_file" do
-      it "copies the from in S3 with the right paths" do
+      it "copies the file within S3 with the right paths and request params when `s3_enable_access_control_tags` site setting is enabled and `secure` opts is false" do
+        SiteSetting.s3_enable_access_control_tags = true
+
         upload.update!(
           url:
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png",
@@ -269,7 +313,54 @@ RSpec.describe FileStore::S3Store do
         expect(bucket.find_object(source)).to be_present
         expect(bucket.find_object(destination)).to be_nil
 
-        store.copy_file(upload.url, source, destination)
+        store.copy_file(source:, destination:, secure: false)
+
+        copy_api_request =
+          bucket.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :copy_object
+          end
+
+        expect(copy_api_request[:context].params[:acl]).to eq(
+          FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+        )
+
+        expect(copy_api_request[:context].params[:tagging]).to eq(
+          FileStore::S3Store.visibility_tagging_option_value(secure: false),
+        )
+
+        expect(bucket.find_object(source)).to be_present
+        expect(bucket.find_object(destination)).to be_present
+      end
+
+      it "copies the file within S3 with the right paths and request params when `s3_enable_access_control_tags` site setting is enabled and `secure` opts is true" do
+        SiteSetting.s3_enable_access_control_tags = true
+
+        upload.update!(
+          url:
+            "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png",
+        )
+
+        source = "#{upload_path}/#{Discourse.store.get_path_for_upload(upload)}"
+        destination = source.sub(".png", ".jpg")
+        bucket = prepare_fake_s3(source, upload)
+
+        expect(bucket.find_object(source)).to be_present
+        expect(bucket.find_object(destination)).to be_nil
+
+        store.copy_file(source:, destination:, secure: true)
+
+        copy_api_request =
+          bucket.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :copy_object
+          end
+
+        expect(copy_api_request[:context].params[:acl]).to eq(
+          FileStore::S3Store::CANNED_ACL_PRIVATE,
+        )
+
+        expect(copy_api_request[:context].params[:tagging]).to eq(
+          FileStore::S3Store.visibility_tagging_option_value(secure: true),
+        )
 
         expect(bucket.find_object(source)).to be_present
         expect(bucket.find_object(destination)).to be_present
@@ -468,45 +559,132 @@ RSpec.describe FileStore::S3Store do
   describe "update ACL" do
     before { SiteSetting.authorized_extensions = "pdf|png" }
 
-    describe ".update_upload_ACL" do
+    describe ".update_upload_access_control" do
       let(:upload) { Fabricate(:upload, original_filename: "small.pdf", extension: "pdf") }
 
-      it "sets acl to public by default" do
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        expect_upload_acl_update(upload, "public-read")
+      before { s3_helper.stub_client_responses! }
 
-        expect(store.update_upload_ACL(upload)).to be_truthy
+      it "sets acl to public by default" do
+        expect(store.update_upload_access_control(upload)).to be_truthy
+
+        put_object_acl_request =
+          store.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :put_object_acl
+          end
+
+        expect(put_object_acl_request[:context].params[:acl]).to eq(
+          FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+        )
       end
 
       it "sets acl to private when upload is marked secure" do
         upload.update!(secure: true)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        expect_upload_acl_update(upload, "private")
 
-        expect(store.update_upload_ACL(upload)).to be_truthy
+        expect(store.update_upload_access_control(upload)).to be_truthy
+
+        put_object_acl_request =
+          store.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :put_object_acl
+          end
+
+        expect(put_object_acl_request[:context].params[:acl]).to eq(
+          FileStore::S3Store::CANNED_ACL_PRIVATE,
+        )
+      end
+
+      it "does not set acl when `s3_use_acls` site setting is disabled" do
+        SiteSetting.s3_use_acls = false
+
+        upload.update!(secure: true)
+
+        expect(store.update_upload_access_control(upload)).to be_truthy
+        expect(s3_helper.s3_client.api_requests).to be_empty
+      end
+
+      it "removes acl when `s3_use_acls` site setting is disabled and the `remove_existing_acl` kwarg is true" do
+        SiteSetting.s3_use_acls = false
+
+        upload.update!(secure: true)
+
+        expect(store.update_upload_access_control(upload, remove_existing_acl: true)).to be_truthy
+
+        put_object_acl_request =
+          store.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :put_object_acl
+          end
+
+        expect(put_object_acl_request[:context].params[:acl]).to eq(nil)
+      end
+
+      describe "when `s3_enable_access_control_tags` site setting is enabled" do
+        before { SiteSetting.s3_enable_access_control_tags = true }
+
+        it "set the right tagging option for a public upload" do
+          upload.update!(secure: false)
+
+          store.update_upload_access_control(upload)
+
+          tagging_request =
+            store.s3_helper.s3_client.api_requests.find do |api_request|
+              api_request[:operation_name] == :put_object_tagging
+            end
+
+          expect(tagging_request[:context].params[:tagging][:tag_set]).to eq(
+            [
+              {
+                key: SiteSetting.s3_access_control_tag_key,
+                value: SiteSetting.s3_access_control_tag_public_value,
+              },
+            ],
+          )
+        end
+
+        it "sets the right tagging option for a secure upload" do
+          upload.update!(secure: true)
+
+          store.update_upload_access_control(upload)
+
+          tagging_request =
+            store.s3_helper.s3_client.api_requests.find do |api_request|
+              api_request[:operation_name] == :put_object_tagging
+            end
+
+          expect(tagging_request[:context].params[:tagging][:tag_set]).to eq(
+            [
+              {
+                key: SiteSetting.s3_access_control_tag_key,
+                value: SiteSetting.s3_access_control_tag_private_value,
+              },
+            ],
+          )
+        end
       end
 
       describe "optimized images" do
         it "sets acl to public by default" do
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          expect_upload_acl_update(upload, "public-read")
+          expect_upload_access_control_update(upload, FileStore::S3Store::CANNED_ACL_PUBLIC_READ)
           optimized_image = Fabricate(:optimized_image, upload: upload)
           path = Discourse.store.get_path_for_optimized_image(optimized_image)
 
           stub_optimized_image = stub
           s3_bucket.expects(:object).with(path).returns(stub_optimized_image)
           stub_optimized_image.expects(:acl).returns(stub_optimized_image)
-          stub_optimized_image.expects(:put).with(acl: "public-read").returns(stub_optimized_image)
+          stub_optimized_image
+            .expects(:put)
+            .with(acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ)
+            .returns(stub_optimized_image)
 
-          expect(store.update_upload_ACL(upload)).to be_truthy
+          expect(store.update_upload_access_control(upload)).to be_truthy
         end
       end
 
-      def expect_upload_acl_update(upload, acl)
+      def expect_upload_access_control_update(upload, acl)
         s3_bucket
           .expects(:object)
           .with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf}))
           .returns(s3_object)
+
         s3_object.expects(:acl).returns(s3_object)
         s3_object.expects(:put).with(acl: acl).returns(s3_object)
       end
@@ -577,6 +755,49 @@ RSpec.describe FileStore::S3Store do
       )
       uri = URI.parse(store.signed_url_for_path("uploads/default/blah/def.xyz"))
       expect(uri.path).to eq("/folder_path/uploads/default/blah/def.xyz")
+    end
+  end
+
+  describe "#create_multipart" do
+    before { store.s3_helper.stub_client_responses! }
+
+    it "should create a multipart upload with the ACL parameter set to private canned ACL when `s3_use_acls` site setting is enabled" do
+      store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
+
+      create_multipart_request =
+        store.s3_helper.s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(create_multipart_request[:context].params[:acl]).to eq(
+        FileStore::S3Store::CANNED_ACL_PRIVATE,
+      )
+    end
+
+    it "should create a multipart upload with the ACL parameter set to nil when `s3_use_acls` site setting is disabled" do
+      SiteSetting.s3_use_acls = false
+      store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
+
+      create_multipart_request =
+        store.s3_helper.s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(create_multipart_request[:context].params[:acl]).to eq(nil)
+    end
+
+    it "should create a multipart upload with the tagging parameter set to visibility tags when `s3_enable_access_control_tags` site setting is enabled" do
+      SiteSetting.s3_enable_access_control_tags = true
+      store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
+
+      create_multipart_request =
+        store.s3_helper.s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(create_multipart_request[:context].params[:tagging]).to eq(
+        FileStore::S3Store.visibility_tagging_option_value(secure: true),
+      )
     end
   end
 

@@ -43,8 +43,15 @@ class FormTemplatesController < ApplicationController
       next form_field unless form_field["tag_group"]
 
       tag_group_name = form_field["tag_group"]
-      tags = tag_groups[tag_group_name].tags
+      tags = tag_groups[tag_group_name].tags.reject { |tag| tag.target_tag_id.present? }
       ordered_field = {}
+
+      tags =
+        tags.sort_by do |t|
+          # Transform the name to the displayed value before ordering
+          display = t.description.presence || t.name.tr("-", " ").upcase
+          display
+        end
 
       form_field.each do |key, value|
         ordered_field[key] = value

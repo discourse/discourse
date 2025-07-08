@@ -404,54 +404,6 @@ gl:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicacións"
-    "new-topic": |
-      Dámoslle a benvida a %{site_name} &mdash; , **grazas por comezar unha nova conversa!**
-
-      - Soa ben o seu título, se o le en voz alta? Resume ben o contido?
-
-      - A quen lle interesaría ler isto? Por que é importante? Que tipo de respostas busca?
-
-      - Inclúa palabras de uso frecuente no seu tema para facilitar que poida ser *atopado*. Para agrupalo con outros temas relacionados, seleccione unha categoría (ou etiqueta).
-
-      Para saber máis, [visite as normas da nosa comunidade](%{base_path}/guidelines). Este panel só lle aparecerá na primeira conversa %{education_posts_text}.
-    "new-reply": |
-      Dámoslle a benvida a %{site_name} &mdash; **grazas por contribuír!**
-
-      - Sexa amábel cos outros membros da comunidade.
-
-      - A súa resposta mellora a conversa?
-
-      - A crítica construtiva é benvida pero critique as *ideas*, non as persoas.
-
-      Para saber máis, [consulte as nosas normas da comunidade] (%{base_path}/guidelines). Este panel só lle aparecerá nas súas primeiras conversas %{education_posts_text}.
-    avatar: |
-      ### E se lle engade unha imaxe á súa conta?
-
-      Xa publicou uns cantos temas e respostas, mais a súa imaxe de perfil non é única coma vostede; é simplemente unha letra.
-
-      Pensou en **[visitar o seu perfil de usuario](%{profile_path})** e subir unha imaxe que o represente?
-
-      É máis fácil seguir debates e atopar xente interesante nas conversas cando cadaquén ten unha imaxe de perfil individualizada!
-    sequential_replies: |
-      ### Valore a posibilidade de responder varias publicacións a un tempo
-
-      No canto de publicar varias respostas seguidas nun mesmo tema, pense na opción de dar unha única resposta que inclúa citas de respostas anteriores ou mencións a outros @usuarios.
-
-      Pode editar a súa resposta e engadir unha cita seleccionando o texto e premendo no botón <b>citar resposta</b> que aparece.
-
-      É máis sinxelo para a comunidade ler temas con menos respostas, pero con máis contido, que moitas respostas pequenas e individuais.
-    too_many_replies: |
-      ### Alcanzou o límite de respostas para este tema.
-
-      Sentímolo, mais os novos usuarios teñen temporalmente un límite de %{newuser_max_replies_per_topic} respostas no mesmo tema.
-
-      No canto de engadir unha outra resposta, pense na posibilidade de editar algunhas das anteriores ou visitar outros temas.
-    reviving_old_topic: |
-      ### Quere revivir este tema?
-
-      A última resposta que ten é de hai **%{time_ago}**. A súa resposta fará que se sitúe na parte superior da listaxe e suporá que os usuarios involucrados na conversa reciban unha notificación.
-
-      Confirma que quere continuar con esta antiga conversa?
   activerecord:
     attributes:
       category:
@@ -1319,7 +1271,7 @@ gl:
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
     email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
-    email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
     summary_score_threshold: "A puntuación mínima que se require para que unha publicación sexa incluída en «Resumir este tema»."
@@ -1555,7 +1507,6 @@ gl:
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
     dark_mode_none: "Ningún"
-    max_similar_results: "Número de temas similares que se mostran na parte superior do editor cando se está a redactar un novo tema. A comparación baséase no título e mais no corpo da mensaxe."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
     title_prettify: "Previr erros frecuentes no título, incluídos os títulos escritos con todo en maiúsculas, coa primeira letra en minúscula, con múltiples signos ! ou ?, punto final etc."
     title_remove_extraneous_space: "Retirar os espazos en branco diante da puntuación final."
@@ -1690,11 +1641,9 @@ gl:
     max_notifications_per_user: "Número máximo de notificacións por usuario. Se se supera este número, as notificacións antigas eliminaranse. Aplicación semanal. Estabelecer en 0 para desactivalo"
     allowed_user_website_domains: "O sitio web do usuario verificarase respecto destes dominios. Listaxe separada por barras verticais."
     allow_profile_backgrounds: "Permitir que os usuarios suban fondos de perfil."
-    sequential_replies_threshold: "Número de publicacións seguidas que un usuario ten que facer nun tema antes de que se lle lembre que son demasiadas repostas consecutivas."
     get_a_room_threshold: "Número de publicacións que un usuario debe facerlle á mesma persoa e no mesmo tema antes de recibir unha advertencia."
     enable_mobile_theme: "Os dispositivos móbiles utilizan un tema adaptado para móbiles, coa posibilidade de trocar o sitio completo. Desactíveo se quere utilizar unha folla de estilo personalizada que sexa completamente adaptábel."
     dominating_topic_minimum_percent: "Que porcentaxe de publicacións ten que facer un usuario nun tema antes de recordarlle que está sendo acaparado nese tema."
-    disable_avatar_education_message: "Desactiva a mensaxe educativa para cambiar o avatar."
     suppress_uncategorized_badge: "Non mostrar a insignia para temas sen categoría nas listaxes de temas."
     header_dropdown_category_count: "Número de categorías que se poden amosar no menú despregable da cabeceira."
     permalink_normalizations: "Aplica a seguinte expresión regular antes de que coincidan con ligazóns permanentes, como por exemplo: /(topic.*)\\?.*/\\1 eliminará as cadeas de consulta das rutas temáticas. O formato é regex+string use \\1 etc. para acceder ás capturas"
@@ -1712,7 +1661,6 @@ gl:
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
     short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
-    warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."
@@ -1966,11 +1914,6 @@ gl:
     errors: "%{errors}"
     not_available: "Non dispoñíbel. Tentar %{suggestion}?"
     something_already_taken: "Algo foi mal, quizais o nome de usuario ou o correo electrónico xa están rexistrados. Probe coa ligazón de Esquecín o contrasinal."
-    omniauth_error:
-      generic: "Sentímolo, produciuse un erro ao autorizar a súa conta. Ténteo de novo."
-      csrf_detected: "Esgotouse o tempo de autorización ou cambiou de navegador. Ténteo de novo."
-      request_error: "Produciuse un erro ao comezar coa autorización. Ténteo de novo."
-      invalid_iat: "Non se puido verificar o token de autorización por mor de diferenzas no horario do servidor. Ténteo de novo."
     omniauth_error_unknown: "Produciuse un erro ao procesar o seu rexistro. Ténteo de novo, por favor."
     omniauth_confirm_title: "Iniciar sesión usando %{provider}"
     omniauth_confirm_button: "Continuar"

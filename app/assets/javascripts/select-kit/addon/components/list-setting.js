@@ -8,11 +8,13 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import CreateColorRow from "./create-color-row";
+import SelectedChoice from "./selected-choice";
+import SelectedChoiceColor from "./selected-choice-color";
 
 @classNames("list-setting")
 @selectKitOptions({
   filterable: true,
-  selectedChoiceComponent: "selectedChoiceComponent",
 })
 @pluginApiIdentifiers("list-setting")
 export default class ListSetting extends MultiSelectComponent {
@@ -24,16 +26,16 @@ export default class ListSetting extends MultiSelectComponent {
 
   modifyComponentForRow(collection) {
     if (collection === MAIN_COLLECTION && this.settingName?.includes("color")) {
-      return "create-color-row";
+      return CreateColorRow;
     }
   }
 
   @computed("settingName")
   get selectedChoiceComponent() {
     if (this.settingName?.includes("color")) {
-      return "selected-choice-color";
+      return SelectedChoiceColor;
     } else {
-      return "selected-choice";
+      return SelectedChoice;
     }
   }
 

@@ -5,8 +5,6 @@ import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import I18n, { i18n } from "discourse-i18n";
 import { ADMIN_SEARCH_RESULT_TYPES } from "admin/lib/constants";
 
@@ -14,6 +12,15 @@ const SEPARATOR = ">";
 const MIN_FILTER_LENGTH = 2;
 const MAX_TYPE_RESULT_COUNT_LOW = 15;
 const MAX_TYPE_RESULT_COUNT_HIGH = 50;
+
+const SEARCH_SCORES = {
+  labelStart: 20,
+  labelPartial: 15,
+  exactKeyword: 10,
+  partialKeyword: 7,
+  fallback: 5,
+  pageBonusScore: 20,
+};
 
 function labelOrText(obj, fallback = "") {
   return obj.text || (obj.label ? i18n(obj.label) : fallback);
@@ -63,13 +70,12 @@ export class PageLinkFormatter {
 
     let label;
     if (this.parentLabel) {
-      label = sectionLabel;
-      if (sectionLabel) {
-        label += ` ${SEPARATOR} `;
-      }
-      label += `${this.parentLabel} ${SEPARATOR} ${linkLabel}`;
+      label = `${this.parentLabel} ${SEPARATOR} ${linkLabel}`;
     } else {
-      label = sectionLabel + (sectionLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
+      label = sectionLabel;
+      if (sectionLabel !== linkLabel) {
+        label = label + (sectionLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
+      }
     }
 
     let keywords = this.link.keywords
@@ -121,7 +127,7 @@ export class SettingLinkFormatter {
 
     const keywords = buildKeywords(
       this.setting.setting,
-      humanizedSettingName(this.setting.setting),
+      this.setting.humanized_name,
       this.setting.description,
       this.setting.keywords,
       rootLabel
@@ -159,7 +165,7 @@ export class SettingLinkFormatter {
 
     return [
       rootLabel,
-      `${rootLabel} ${SEPARATOR} ${humanizedSettingName(this.setting.setting)}`,
+      `${rootLabel} ${SEPARATOR} ${this.setting.humanized_name}`,
     ];
   }
 
@@ -202,6 +208,7 @@ export class SettingLinkFormatter {
 export default class AdminSearchDataSource extends Service {
   @service router;
   @service siteSettings;
+  @service adminNavManager;
 
   plugins = {};
   pageDataSourceItems = [];
@@ -215,16 +222,12 @@ export default class AdminSearchDataSource extends Service {
   };
   @tracked _mapCached = false;
 
-  get isLoaded() {
-    return this._mapCached;
-  }
-
   async buildMap() {
-    if (this.isLoaded) {
+    if (this._mapCached) {
       return;
     }
 
-    ADMIN_NAV_MAP.forEach((navMapSection) => {
+    this.adminNavManager.filteredNavMap.forEach((navMapSection) => {
       navMapSection.links.forEach((link) => {
         let parentLabel = this.#addPageLink(navMapSection, link);
 
@@ -250,20 +253,18 @@ export default class AdminSearchDataSource extends Service {
     this.#processSettings(allItems.settings);
     this.#processThemesAndComponents(allItems.themes_and_components);
     this.#processReports(allItems.reports);
-    await Promise.resolve();
-
     this._mapCached = true;
   }
 
-  search(filter, opts = {}) {
+  search(filter) {
     if (filter.length < MIN_FILTER_LENGTH) {
       return [];
     }
 
-    opts.types = opts.types || ADMIN_SEARCH_RESULT_TYPES;
-
-    const filteredResults = [];
-    const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
+    let filteredResults = [];
+    const escapedFilterRegExp = escapeRegExp(
+      filter.toLowerCase().trim().replace(/\s+/g, " ")
+    );
 
     // Pointless to render heaps of settings if the filter is quite low.
     const perTypeLimit =
@@ -271,25 +272,65 @@ export default class AdminSearchDataSource extends Service {
         ? MAX_TYPE_RESULT_COUNT_LOW
         : MAX_TYPE_RESULT_COUNT_HIGH;
 
-    opts.types.forEach((type) => {
-      let typeItemCount = 0;
+    const labelStartRegex = new RegExp(`^${escapedFilterRegExp}`, "i");
+    const labelPartialRegex = new RegExp(`\\b${escapedFilterRegExp}`, "i");
+    const exactKeywordRegexes = escapedFilterRegExp
+      .split(" ")
+      .filter((keyword) => keyword.length > 3)
+      .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
+    const partialKeywordRegexes = escapedFilterRegExp
+      .split(" ")
+      .filter((keyword) => keyword.length > 3)
+      .map((keyword) => new RegExp(`\\b${keyword}`, "i"));
+    const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
+
+    ADMIN_SEARCH_RESULT_TYPES.forEach((type) => {
+      const typeResults = [];
       this[`${type}DataSourceItems`].forEach((dataSourceItem) => {
-        // TODO (martin) There is likely a much better way of doing this matching
-        // that will support fuzzy searches, for now let's go with the most basic thing.
+        dataSourceItem.score = 0;
+
+        if (dataSourceItem.label.match(labelStartRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.labelStart;
+        } else if (dataSourceItem.label.match(labelPartialRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.labelPartial;
+        }
         if (
-          dataSourceItem.keywords.match(escapedFilterRegExp) &&
-          typeItemCount <= perTypeLimit
+          exactKeywordRegexes.length > 0 &&
+          exactKeywordRegexes.every((regex) => {
+            return dataSourceItem.keywords.match(regex);
+          })
         ) {
-          filteredResults.push(dataSourceItem);
-          typeItemCount++;
+          dataSourceItem.score = dataSourceItem.score +=
+            SEARCH_SCORES.exactKeyword;
+        } else if (
+          partialKeywordRegexes.length > 0 &&
+          partialKeywordRegexes.every((regex) => {
+            return dataSourceItem.keywords.match(regex);
+          })
+        ) {
+          dataSourceItem.score = dataSourceItem.score +=
+            SEARCH_SCORES.partialKeyword;
+        }
+        if (filter.length > 3 && dataSourceItem.keywords.match(fallbackRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.fallback;
+        }
+
+        if (dataSourceItem.score > 0) {
+          if (type === "page") {
+            dataSourceItem.score += SEARCH_SCORES.pageBonusScore;
+          }
+
+          typeResults.push(dataSourceItem);
         }
       });
+      filteredResults = filteredResults.concat(
+        typeResults.sort((a, b) => b.score - a.score).slice(0, perTypeLimit)
+      );
     });
-
-    return filteredResults;
+    return filteredResults.sort((a, b) => b.score - a.score);
   }
 
-  #addPageLink(navMapSection, link, parentLabel = "") {
+  #addPageLink(navMapSection, link, parentLabel = null) {
     const formattedPageLink = new PageLinkFormatter(
       this.router,
       navMapSection,
@@ -299,7 +340,7 @@ export default class AdminSearchDataSource extends Service {
 
     // Cache the setting area + category URLs for later use
     // when building the setting list via #processSettings.
-    if (link.settings_area && !this.settingPageMap.areas[this.settings_area]) {
+    if (link.settings_area && !this.settingPageMap.areas[link.settings_area]) {
       this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
         ? `${formattedPageLink.url}/settings`
         : formattedPageLink.url;

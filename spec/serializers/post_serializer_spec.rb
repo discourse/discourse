@@ -703,7 +703,129 @@ RSpec.describe PostSerializer do
     end
   end
 
-  def serialized_post(u)
+  describe "#raw" do
+    fab!(:user)
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "returns the post's raw" do
+      expect(json[:raw]).to eq(post.raw)
+    end
+  end
+
+  describe "#locale" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is included when content_localization_enabled is enabled" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja")
+
+      expect(json[:locale]).to eq("ja")
+    end
+
+    it "is excluded when content_localization_enabled is disabled" do
+      SiteSetting.content_localization_enabled = false
+      post.update!(locale: "ja")
+
+      expect(json[:locale]).to eq(nil)
+    end
+  end
+
+  describe "#is_localized?" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is excluded when content_localization_enabled is disabled" do
+      SiteSetting.content_localization_enabled = false
+
+      expect(json[:is_localized]).to eq(nil)
+    end
+
+    describe "content localization enabled" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "en"
+      end
+
+      it "returns true when the post is localized" do
+        post.update!(locale: "ja")
+        Fabricate(:post_localization, post:, locale: "en")
+
+        expect(json[:is_localized]).to eq(true)
+      end
+
+      it "returns false when the post is same language as user" do
+        post.update!(locale: "ja")
+        I18n.locale = "ja"
+
+        expect(json[:is_localized]).to eq(false)
+      end
+
+      it "returns false when no localization" do
+        post.update!(locale: "ja")
+
+        expect(json[:is_localized]).to eq(false)
+      end
+    end
+  end
+
+  describe "#language" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is excluded when content_localization_enabled is disabled or no locale" do
+      SiteSetting.content_localization_enabled = false
+      post.update!(locale: "ja")
+      expect(serializer.as_json[:language]).to eq(nil)
+
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: nil)
+      expect(serializer.as_json[:language]).to eq(nil)
+    end
+
+    it "shows the language of the post based on locale" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja")
+
+      expect(json[:language]).to eq("日本語")
+    end
+
+    it "defaults to locale if language does not exist" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "aa")
+
+      expect(json[:language]).to eq("aa")
+    end
+  end
+
+  describe "#localization_outdated?" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is excluded when content_localization_enabled is disabled" do
+      SiteSetting.content_localization_enabled = false
+      expect(json[:localization_outdated]).to eq(nil)
+    end
+
+    it "is true when the post is localized and the localization is outdated" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja", version: 3)
+      Fabricate(:post_localization, post:, locale: "en", post_version: 2)
+
+      expect(json[:localization_outdated]).to eq(true)
+    end
+
+    it "is false when the post is localized and the localization is not outdated" do
+      SiteSetting.content_localization_enabled = true
+      post.update!(locale: "ja", version: 10)
+      Fabricate(:post_localization, post:, locale: "en", post_version: 10)
+
+      expect(json[:localization_outdated]).to eq(false)
+    end
+  end
+
+  def serialized_post(u = nil)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true
     s

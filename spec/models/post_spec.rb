@@ -1549,6 +1549,16 @@ RSpec.describe Post do
         post_2.user.user_stat.reload.post_count
       }.from(1).to(0)
     end
+
+    it "changes topic visible status to false if it is the first post" do
+      t = post.topic
+      expect(t.visible).to eq(true)
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      t.reload
+      expect(t.visible).to eq(false)
+    end
   end
 
   describe "#unhide!" do
@@ -1754,10 +1764,10 @@ RSpec.describe Post do
       post.link_post_uploads
 
       post.trash!
-      expect(UploadReference.count).to eq(7)
+      expect(UploadReference.where(target_type: "Post").count).to eq(7)
 
       post.destroy!
-      expect(UploadReference.count).to eq(0)
+      expect(UploadReference.where(target_type: "Post").count).to eq(0)
     end
 
     describe "#link_post_uploads" do
@@ -1933,9 +1943,13 @@ RSpec.describe Post do
           create_post(topic_id: topic.id, post_type: Post.types[:whisper])
         end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).destroy }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+      end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).recover }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").recover
+      end
     end
   end
 
@@ -2354,6 +2368,56 @@ RSpec.describe Post do
       expect(
         Post.public_posts_count_per_day(10.days.ago, 5.days.ago, nil, false, [group.id]),
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
+    end
+  end
+
+  describe "#has_localization?" do
+    it "returns true if the post has localization" do
+      post = Fabricate(:post)
+      Fabricate(:post_localization, post: post, locale: "zh_CN")
+
+      expect(post.has_localization?(:zh_CN)).to eq(true)
+      expect(post.has_localization?(:"zh_CN")).to eq(true)
+      expect(post.has_localization?("zh-CN")).to eq(true)
+
+      expect(post.has_localization?("z")).to eq(false)
+    end
+  end
+
+  describe "#get_localization" do
+    it "returns the localization with the specified locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      zh_localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+      ja_localization = Fabricate(:post_localization, post: post, locale: "ja")
+
+      expect(post.get_localization(:zh_CN)).to eq(zh_localization)
+      expect(post.get_localization("zh-CN")).to eq(zh_localization)
+      expect(post.get_localization("xx")).to eq(nil)
+      expect(post.get_localization).to eq(ja_localization)
+    end
+  end
+
+  describe "#in_user_locale?" do
+    it "returns true if the post has localization in the user's locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post, locale: "ja")
+
+      expect(post.in_user_locale?).to eq(true)
+
+      post.update!(locale: "es")
+      expect(post.in_user_locale?).to eq(false)
+    end
+  end
+
+  describe "#before_save" do
+    it "replaces empty locales with nil" do
+      post = Fabricate(:post, locale: "en")
+
+      post.locale = ""
+      post.save!
+
+      expect(post.reload.locale).to eq(nil)
     end
   end
 end

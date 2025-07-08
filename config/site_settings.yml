@@ -251,7 +251,7 @@ basic:
       - posted
       - bookmarks
       - hot
-    area: "navigation"
+    area: "interface"
   post_menu:
     client: true
     type: list
@@ -269,6 +269,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   post_menu_hidden_items:
     client: true
@@ -285,6 +286,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   share_links:
     client: true
@@ -325,12 +327,12 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
-    area: "navigation"
+    area: "interface"
   mobile_category_page_style:
     client: true
     enum: "MobileCategoryPageStyle"
     default: "categories_with_featured_topics"
-    area: "navigation"
+    area: "interface"
   category_colors:
     client: true
     type: list
@@ -503,6 +505,30 @@ basic:
     default: ""
     type: group_list
     area: "group_permissions"
+  about_page_extra_groups:
+    client: true
+    default: ""
+    type: group_list
+    area: "about"
+  about_page_extra_groups_initial_members:
+    client: true
+    default: 6
+    type: integer
+    area: "about"
+  about_page_extra_groups_order:
+    client: true
+    default: "alphabetically"
+    type: enum
+    choices:
+      - "alphabetically"
+      - "order of creation"
+      - "order of theme setting"
+    area: "about"
+  about_page_extra_groups_show_description:
+    client: true
+    default: false
+    type: bool
+    area: "about"
   adobe_analytics_tags_url:
     default: ""
     regex: "assets.adobedtm.com"
@@ -566,6 +592,22 @@ login:
   enable_signup_cta:
     client: true
     default: true
+  enable_discourse_id:
+    default: false
+    hidden: true
+  discourse_id_client_id:
+    default: ""
+    hidden: true
+  discourse_id_client_secret:
+    default: ""
+    hidden: true
+    secret: true
+  discourse_id_verbose_logging:
+    default: false
+    hidden: true
+  discourse_id_provider_url:
+    default: ""
+    hidden: true
   enable_google_oauth2_logins:
     default: false
   google_oauth2_client_id: ""
@@ -1342,9 +1384,6 @@ posting:
     client: true
     default: "auto"
     area: "posts_and_topics"
-  warn_reviving_old_topic_age:
-    default: 180
-    area: "posts_and_topics"
   autohighlight_all_code:
     client: true
     default: false
@@ -1556,6 +1595,36 @@ posting:
     type: integer
     min: 1
     hidden: true
+
+content_localization:
+  content_localization_enabled:
+    client: true
+    default: false
+    area: "localization"
+  content_localization_allowed_groups:
+    type: group_list
+    list_type: compact
+    allow_any: false
+    client: true
+    default: "1|2" # admin, moderator
+    area: "localization"
+  content_localization_supported_locales:
+    default: ""
+    type: list
+    client: true
+    list_type: named
+    allow_any: false
+    choices: "LocaleSiteSetting.values"
+    area: "localization"
+    validator: "ContentLocalizationLocalesValidator"
+  content_localization_max_locales:
+    default: 10
+    type: integer
+    hidden: true
+  content_localization_anon_language_switcher:
+    default: false
+    client: true
+    validator: "LanguageSwitcherSettingValidator"
 
 email:
   email_time_window_mins:
@@ -1894,12 +1963,12 @@ email:
 files:
   max_image_size_kb:
     client: true
-    default: 4096
+    default: 10240
     max: 102400
     type: file_size_restriction
   max_attachment_size_kb:
     client: true
-    default: 4096
+    default: 10240
     max: 1024000
     type: file_size_restriction
   system_user_max_attachment_size_kb:
@@ -1920,9 +1989,6 @@ files:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
     list_type: file_types
-  theme_download_screenshots:
-    default: false
-    hidden: true
   authorized_extensions:
     client: true
     default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
@@ -2026,6 +2092,24 @@ files:
     default: true
   s3_use_acls:
     default: true
+  s3_enable_access_control_tags:
+    default: false
+    hidden: true
+  s3_access_control_tag_key:
+    default: "discourse:acl"
+    hidden: true
+    min: 1
+    max: 128
+  s3_access_control_tag_public_value:
+    default: "public"
+    hidden: true
+    min: 1
+    max: 256
+  s3_access_control_tag_private_value:
+    default: "private"
+    hidden: true
+    min: 1
+    max: 256
   s3_presigned_get_url_expires_after_seconds:
     default: 300
     hidden: true
@@ -2058,6 +2142,7 @@ files:
   external_system_avatars_enabled:
     default: true
     client: true
+    hidden: true
     validator: "ExternalSystemAvatarsValidator"
   external_system_avatars_url:
     default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
@@ -2151,7 +2236,7 @@ files:
     client: true
     hidden: true
   composer_ios_media_optimisation_image_enabled:
-    default: false
+    default: true
     client: true
     hidden: true
   video_thumbnails_enabled:
@@ -2233,7 +2318,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    area: "group_permissions"
+    area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
@@ -2496,7 +2581,7 @@ security:
     allow_any: false
     choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
-    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com/|https://open.spotify.com/"
+    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/*/embed/preview/|https://www.instagram.com/|https://open.spotify.com/"
     type: list
     list_type: simple
     client: true
@@ -2900,6 +2985,9 @@ developer:
     default: 50
     hidden: true
     client: true
+  viewport_based_mobile_mode:
+    default: false
+    client: true
 
 navigation:
   navigation_menu:
@@ -3150,9 +3238,6 @@ uncategorized:
     validator: "RegexpListValidator"
     area: "permalinks"
 
-  max_similar_results:
-    default: 5
-    area: "posts_and_topics"
   minimum_topics_similar:
     default: 50
     area: "posts_and_topics"
@@ -3256,9 +3341,6 @@ uncategorized:
   educate_until_posts:
     default: 2
     area: "users"
-  sequential_replies_threshold:
-    default: 2
-    area: "stats_and_thresholds"
   get_a_room_threshold:
     default: 3
     area: "stats_and_thresholds"
@@ -3268,9 +3350,6 @@ uncategorized:
   dominating_topic_minimum_percent:
     default: 40
     area: "stats_and_thresholds"
-  disable_avatar_education_message:
-    default: false
-    area: "users"
   pm_warn_user_last_seen_months_ago:
     default: 24
     area: "users"
@@ -3537,6 +3616,7 @@ uncategorized:
   enable_welcome_banner:
     client: true
     default: true
+    area: "interface"
 
 user_preferences:
   default_email_digest_frequency:
@@ -3969,12 +4049,15 @@ experimental:
   rich_editor:
     client: true
     default: false
-  experimental_content_localization:
+  reviewable_ui_refresh:
     client: true
-    default: false
-  experimental_content_localization_allowed_groups:
     type: group_list
-    list_type: compact
+    default: ""
+  experimental_system_themes:
+    type: list
+    default: "horizon"
+    hidden: true
     allow_any: false
-    client: true
-    default: "1|2" # admin, moderator
+    choices:
+      - "foundation"
+      - "horizon"

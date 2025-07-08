@@ -479,7 +479,7 @@ sq:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
     preview: "shiko"
-    cancel: "anulo"
+    cancel: "Anulo"
     deleting: "Po fshihet…"
     save: "Ruaj ndryshimet"
     saving: "Po ruhet..."
@@ -1150,7 +1150,6 @@ sq:
       said: "%{username}:"
       profile: "Profili"
       profile_possessive: "Profili i %{username}"
-      account_possessive: "Llogaria e %{name}"
       mute: "Hesht"
       edit: "Ndryshoni preferencat"
       download_archive:
@@ -1868,6 +1867,7 @@ sq:
           edit_link_options: "Redaktoni opsionet e lidhjes ose dërgoni me email."
           show_advanced: "Shfaqni opsionet e avancuara"
           hide_advanced: "Fshihni opsionet e avancuara"
+          description: "Përshkrimi"
           restrict: "Kufizoni në"
           restrict_email: "Kufizoni në email"
           restrict_domain: "Kufizoni në domein"
@@ -1979,7 +1979,6 @@ sq:
         title: "Adresa IP e regjistrimit"
       avatar:
         title: "Foto e profilit"
-        header_title: "profili, mesazhet, të preferuarat dhe preferencat"
         name_and_description: "%{name} - %{description}"
         edit: "Redaktoni foton e profilit"
       title:
@@ -2519,11 +2518,9 @@ sq:
       italic_label: "I"
       italic_title: "Theksuar"
       italic_text: "tekst i theksuar"
-      link_title: "Lidhje"
       link_description: "shkruaj përshkrimin e lidhjes këtu"
-      link_dialog_title: "Vendosni një lidhje"
-      link_optional_text: "titull fakultativ"
-      link_url_placeholder: "Ngjitni një URL ose shkruani për të kërkuar tema"
+      link_edit_action: "Përditëso"
+      link_optional_text: "Tekst"
       blockquote_title: "Citim"
       blockquote_text: "Citim"
       code_title: "Tekst i paraformatuar"
@@ -2593,6 +2590,9 @@ sq:
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
+      link_toolbar:
+        copy: "Kopjoni lidhjen"
+        link_copied: "Lidhja u kopjua!"
     notifications:
       tooltip:
         regular:
@@ -2849,7 +2849,6 @@ sq:
           aria_label: Filtro sipas shikimeve maksimale
         additional_options:
           label: "Filtro sipas numrit të postimeve dhe shikimeve të temës"
-    hamburger_menu: "menu"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
@@ -2989,10 +2988,6 @@ sq:
         top: "Nuk ka tema popullore."
         hot: "Nuk ka tema të nxehta."
         filter: "Nuk ka tema."
-        educate:
-          new: '<p>Temat tuaja të reja do të shfaqen këtu. Si parazgjedhje, temat konsiderohen të reja dhe do të shfaqin një tregues <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nëse janë krijuar në 2 ditët e fundit.</p><p>Vizitoni preferencat tuaja <a href="%{userPrefsUrl}"></a> për ta ndryshuar këtë.</p>'
-          unread: "<p>Këtu shfaqen temat tuaja të palexuara.</p><p>Si parazgjedhje, temat konsiderohen të palexuara dhe do të tregojnë numrat e palexuara <span class=\"badge unread-posts badge-notification\">1</span> nëse:</p><ul><li>Krijuar temën</li><li>Përgjigje temës</li><li>Lexoni temën për më shumë se 5 minuta</li></ul><p>Ose nëse e keni vendosur në mënyrë eksplicite temën në gjurmuar ose shikuar nëpërmjet \U0001F514 në secilën temë.</p><p>Vizitoni preferencat tuaja <a href=\"%{userPrefsUrl}\"></a> për ta ndryshuar këtë.</p>"
-          new_new: "<p>Temat tuaja të reja do të shfaqen këtu dhe temat tuaja të palexuara gjithashtu do të shfaqen. Si parazgjedhje, temat konsiderohen të reja dhe do të shfaqin një tregues <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> nëse janë krijuar në 2 ditët e fundit. Temat e palexuara do të shfaqin numërimin e palexuar <span class=\"badge unread-posts badge-notification\">1</span> nëse ju: keni krijuar temën, i jeni përgjigjur temës, e lexoni temën për më shumë se 5 minuta ose nëse e keni vendosur në mënyrë eksplicite temën në Gjurmuar ose Shikuar nëpërmjet \U0001F514 në secilën temë.</p><p>Vizitoni preferencat tuaja <a href=\"%{userPrefsUrl}\"></a> për ta ndryshuar këtë.</p>"
       bottom:
         latest: "Nuk ka më tema të reja."
         posted: "Nuk ka më tema të publikuara."
@@ -3423,6 +3418,13 @@ sq:
       sr_post_like_count_button:
         one: "%{count} person pëlqeu këtë postim."
         other: "%{count} vetë pëlqyen këtë postim."
+      localizations:
+        table:
+          actions: "Veprimet"
+          edit: "Redaktoni"
+          delete: "Fshij"
+        post_language_selector:
+          none: "Asnjë"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3959,6 +3961,7 @@ sq:
               title_drafts: "Draftet e mia të papostuara"
             invite:
               content: "Fto"
+      search: "Kërko"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -3979,12 +3982,6 @@ sq:
     discovery:
       headings:
         categories: "Të gjitha kategoritë"
-        filter_labels:
-          latest: "Më të fundit"
-          top: "Popullore"
-          new: "I Ri"
-          unread: "Të palexuara"
-          unseen: "E padukshme"
   admin_js:
     settings: "Rregullimet"
     admin:
@@ -4014,14 +4011,13 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobile"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Po"
+        logo:
+          form:
+            mobile: "Mobile"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Po"
         navigation:
           title: "Shfletimi"
         notifications:
@@ -4240,6 +4236,8 @@ sq:
         about:
           your_organization: "Organizata juaj"
           company_name: "Emri"
+          extra_groups:
+            groups: "Grupet"
           saved: "u ruajt!"
         flags:
           description: "Përshkrimi"
@@ -4279,6 +4277,7 @@ sq:
           delete: "Fshij"
         color_palettes:
           palette_name: "Emri"
+          delete: "Fshij"
           colors:
             title: "Ngjyrat"
       plugins:
@@ -4378,6 +4377,7 @@ sq:
           edit: "Redakto"
           mobile: "Mobile"
           preview: "Parashikimi"
+          default: "Aktiv"
           cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"
@@ -4387,6 +4387,10 @@ sq:
           enable: "Aktivizo"
           disable: "Çaktivizo"
           add: "Shto"
+          settings: "Rregullimet"
+          colors: "Ngjyrat"
+          discard_colors: "Harroni"
+          colors_title: "Ngjyrat"
           scss:
             text: "CSS"
           footer:
@@ -4395,12 +4399,16 @@ sq:
             text: "CSS e ngjitur"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
-          schema:
-            fields:
-              required: "*e nevojshme"
-              number:
-                too_small: "must be greater than or equal to %{count}"
-                too_large: "must be less than or equal to %{count}"
+        schema:
+          fields:
+            required: "*e nevojshme"
+            string:
+              too_short:
+                one: "duhet të jetë të paktën %{count} karakter"
+                other: "must be at least %{count} characters"
+            number:
+              too_small: "must be greater than or equal to %{count}"
+              too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"
@@ -4409,33 +4417,24 @@ sq:
           revert: "Rikthe"
           primary:
             name: "parësor"
-            description: "Shumica e tekstit, ikonave dhe bordurave. "
           secondary:
             name: "dytësor"
-            description: "Ngjyra kryesore e sfondit, dhe teksti i ca butonave. "
           tertiary:
             name: "tretësore"
-            description: "Linket, ca butona, njoftimet dhe ngjyrat për theks."
           quaternary:
             name: "katërsore"
           header_background:
             name: "sfondi i ballinës"
-            description: "Ngjyra në sfond të ballinës."
           header_primary:
             name: "primarja e ballinës"
-            description: "Teksti dhe ikonat në ballinë të faqes. "
           highlight:
             name: "theksi"
-            description: "Sfondi i elementëve të zgjedhur në faqe, si postimet dhe temat."
           danger:
             name: "rrezik"
-            description: "Ngjyra e theksit për veprimet si fshirjen e postimeve apo temave."
           success:
             name: "sukses"
-            description: "Përdoret për të treguar një veprim të kryer me sukses."
           love:
             name: "zemra"
-            description: "Ngjyra e butonit të pëlqimeve."
         email_style:
           html: "HTML"
           css: "CSS"

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 html.composer-open:not(.has-full-page-chat) {
   #main-outlet {
     padding-bottom: var(--composer-height);
@@ -7,6 +9,24 @@ html.composer-open:not(.has-full-page-chat) {
 
 :root {
   --composer-max-width--hide-preview: 740px;
+}
+
+.grippie {
+  cursor: row-resize;
+  padding: 0.25em 0;
+  background: var(--tertiary);
+
+  @media (pointer: coarse) {
+    padding: 0.35em 0;
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    width: 1.5em;
+    margin: auto;
+    border-top: 3px double var(--tertiary-medium);
+  }
 }
 
 #reply-control {
@@ -46,13 +66,13 @@ html.composer-open:not(.has-full-page-chat) {
     flex-direction: column;
     padding: 0.5em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       padding-bottom: max(env(safe-area-inset-bottom), 6px);
       flex-grow: 1;
       min-height: 0;
     }
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       margin: 0 auto;
       height: calc(100% - 11px);
       width: 100%;
@@ -92,26 +112,8 @@ html.composer-open:not(.has-full-page-chat) {
     max-height: calc(100vh - var(--header-offset, 4em));
     padding-bottom: var(--composer-ipad-padding);
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       z-index: z("mobile-composer");
-    }
-
-    .grippie {
-      cursor: row-resize;
-      padding: 0.25em 0;
-      background: var(--tertiary);
-
-      @media (pointer: coarse) {
-        padding: 0.35em 0;
-      }
-
-      &::before {
-        content: "";
-        display: block;
-        width: 1.5em;
-        margin: auto;
-        border-top: 3px double var(--tertiary-medium);
-      }
     }
   }
 
@@ -166,7 +168,7 @@ html.composer-open:not(.has-full-page-chat) {
     align-items: center;
     justify-content: flex-end;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       justify-content: space-between;
     }
 
@@ -181,7 +183,7 @@ html.composer-open:not(.has-full-page-chat) {
         color: var(--primary-medium);
       }
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         max-width: calc(100% - 75px);
       }
     }
@@ -237,7 +239,7 @@ html.composer-open:not(.has-full-page-chat) {
     // Protection for languages with long strings on very small screens. This
     // has no effect on most users but we need it for some cases. If this is
     // not added, "add edit reason" will overlap with the composer controls
-    @include breakpoint(mobile-small) {
+    @include viewport.until(sm) {
       .reply-details {
         flex-wrap: wrap;
       }
@@ -293,11 +295,11 @@ html.composer-open:not(.has-full-page-chat) {
   }
 
   .user-selector {
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       flex-wrap: wrap;
     }
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       margin-bottom: 0.5em;
     }
   }
@@ -317,7 +319,7 @@ html.composer-open:not(.has-full-page-chat) {
       flex: 1 1 100%;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       .mini-tag-chooser,
       .category-chooser {
         z-index: z("base");
@@ -405,7 +407,7 @@ html.composer-open:not(.has-full-page-chat) {
     line-height: var(--line-height-medium);
     margin: 0;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       margin-bottom: 0.15em;
     }
 
@@ -414,7 +416,7 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     .users-input,
     .add-warning {
       width: 100%;
@@ -445,7 +447,7 @@ html.composer-open:not(.has-full-page-chat) {
     margin: 0 0 0.5em 0;
     flex-grow: 1;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       width: 100%;
       max-width: 50%;
     }
@@ -482,7 +484,7 @@ html.composer-open:not(.has-full-page-chat) {
     flex-shrink: 0;
     margin-top: 0.5em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       flex-wrap: wrap;
       gap: 0.25em 0;
 
@@ -513,7 +515,7 @@ html.composer-open:not(.has-full-page-chat) {
     flex: 0 1 auto;
     margin-right: 1em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       margin-right: 0.5em;
       flex: 1 1 auto;
     }
@@ -542,7 +544,7 @@ html.composer-open:not(.has-full-page-chat) {
         background-image: none;
       }
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         .d-icon {
           font-size: var(--font-up-2);
           color: var(--primary-medium);
@@ -561,11 +563,11 @@ html.composer-open:not(.has-full-page-chat) {
     color: var(--primary-high);
     margin-right: 0.5em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       margin-left: 0.5em;
     }
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       text-align: right;
     }
   }
@@ -619,7 +621,7 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  @include breakpoint("mobile-extra-large", min-width) {
+  @include viewport.from(sm) {
     &.private-message {
       .with-tags {
         .title-and-category {
@@ -682,7 +684,7 @@ html.composer-open:not(.has-full-page-chat) {
   box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
-  @include breakpoint("mobile-extra-large", min-width) {
+  @include viewport.from(sm) {
     max-width: 600px;
   }
 
@@ -1016,7 +1018,8 @@ div.ac-wrap {
   //
   // Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
   input:focus,
-  textarea:focus {
+  textarea:focus,
+  [contenteditable="true"]:focus-within {
     animation: blink_input_opacity_to_prevent_scrolling_when_focus 0.01s;
   }
 }
@@ -1024,15 +1027,26 @@ div.ac-wrap {
 .composer-popup {
   box-sizing: border-box;
   position: absolute;
-  width: calc(50% - 16px);
-  top: 19px; // grippie (11px) + .reply-area padding (8px)
-  bottom: 8px;
-  right: 8px;
+  width: calc(60%);
+  max-height: 50%;
+  bottom: 4.2rem;
+  right: 1rem;
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
-  padding: 1.5em;
+  padding: 1.5em 1.5rem 0.75em 1.5rem;
   box-shadow: var(--shadow-dropdown);
-  background: var(--highlight-bg);
+  border-radius: var(--d-border-radius-large);
+  background: var(--secondary);
+
+  .show-preview & {
+    right: 1.5rem;
+    bottom: 4.2rem;
+    width: calc(50% - 2rem);
+  }
+
+  .blurb {
+    display: none;
+  }
 
   > p,
   h3 {
@@ -1072,8 +1086,8 @@ div.ac-wrap {
     flex-direction: row-reverse;
     align-items: center;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 0.5rem;
+    top: 0.5rem;
     color: var(--primary-medium);
     font-size: var(--font-0);
 
@@ -1125,58 +1139,43 @@ div.ac-wrap {
 }
 
 .similar-topics {
-  background-color: var(--tertiary-low);
-
   .similar-topic {
     margin-bottom: 0.5em;
-  }
-
-  a[href] {
-    color: var(--primary);
-  }
-
-  .posts-count {
-    background-color: var(--tertiary);
-  }
-
-  .topic-title {
-    flex: 0 1 auto;
-    margin-right: 0.5em;
   }
 
   span.badge-wrapper {
     margin-left: 0;
   }
 
-  .blurb {
-    color: var(--primary-high);
-  }
-
-  .topic-title,
-  .blurb {
+  .topic-title {
     margin-bottom: 0.5em;
+    flex: 0 1 auto;
+    margin-right: 0.5em;
 
     .d-icon {
       color: var(--primary-high);
     }
-  }
 
-  span.topic {
-    display: flex;
-    flex-direction: column;
-
-    .first-line {
-      flex: 1;
-    }
-
-    .second-line {
+    span.topic {
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0.5em;
+      flex-direction: column;
 
-      .discourse-tags {
-        font-size: var(--font-down-1);
+      .first-line {
+        flex: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.5em;
+
+        .discourse-tags {
+          font-size: var(--font-down-1);
+        }
       }
     }
   }
@@ -1297,7 +1296,7 @@ body:not(.has-sidebar-page) {
       margin-left: 0.67em;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       max-width: unset;
       margin-inline: unset;
     }

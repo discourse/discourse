@@ -348,7 +348,7 @@ ca:
       one: "Vegeu %{count} tema nou"
       other: "Vegeu %{count} temes nous"
     preview: "previsualitza"
-    cancel: "cancel·la"
+    cancel: "Cancel·la"
     save: "Desa els canvis"
     saved: "Desat!"
     upload: "Carrega"
@@ -1291,6 +1291,7 @@ ca:
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         invite:
+          description: "Descripció"
           cancel: "Cancel·la"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
@@ -1354,7 +1355,6 @@ ca:
         title: "Registre d'adreça IP"
       avatar:
         title: "Foto de perfil"
-        header_title: "perfil, missatges, preferits i preferències"
       title:
         title: "Títol"
         none: "(cap)"
@@ -1646,11 +1646,9 @@ ca:
       italic_label: "I"
       italic_title: "Cursiva"
       italic_text: "text en cursiva"
-      link_title: "Enllaç"
       link_description: "introduïu una descripció de l'enllaç"
-      link_dialog_title: "Insereix un enllaç"
-      link_optional_text: "títol opcional"
-      link_url_placeholder: "Enganxeu un URL o escriviu per a cercar temes"
+      link_dialog_action: "Insereix"
+      link_optional_text: "Text"
       blockquote_title: "Bloc de citació"
       blockquote_text: "Bloc de citació"
       code_title: "Text preformatat"
@@ -2280,6 +2278,13 @@ ca:
       sr_post_like_count_button:
         one: "La publicació agrada a %{count} persona."
         other: "La publicació agrada a %{count} persones."
+      localizations:
+        table:
+          actions: "Accions"
+          edit: "Edita"
+          delete: "Suprimeix"
+        post_language_selector:
+          none: "Cap"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -2959,6 +2964,7 @@ ca:
               content: "Revisa"
             invite:
               content: "Convida"
+      search: "Cerca"
       footer:
         interface_color_selector:
           light: "Clar"
@@ -2986,12 +2992,9 @@ ca:
         about: "Quant a"
     discovery:
       headings:
+        multi_tag:
+          default: "Temes etiquetats amb %{tags}"
         categories: "Totes les categories"
-        filter_labels:
-          latest: "Més recents"
-          top: "Principals"
-          new: "Nou"
-          unread: "No llegits"
   admin_js:
     settings: "Configuració"
     admin:
@@ -3032,14 +3035,13 @@ ca:
           title: "Fitxers"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mòbil"
-              email: "Correu electrònic"
-          fonts:
-            backfill_modal:
-              modal_yes: "Sí"
+        logo:
+          form:
+            mobile: "Mòbil"
+            email: "Correu electrònic"
+        fonts:
+          backfill_modal:
+            modal_yes: "Sí"
         navigation:
           title: "Navegació"
         notifications:
@@ -3390,6 +3392,8 @@ ca:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nom"
+          extra_groups:
+            groups: "Grups"
           optional: "(opcional)"
           saved: "desat!"
         flags:
@@ -3417,6 +3421,7 @@ ca:
           install: "Instal·la"
           themes:
             title: "Aparences"
+            install: "Instal·la"
           components:
             title: "Components"
             install: "Instal·la"
@@ -3436,6 +3441,7 @@ ca:
           delete: "Suprimeix"
         color_palettes:
           palette_name: "Nom"
+          delete: "Suprimeix"
           colors:
             title: "Colors"
       plugins:
@@ -3565,6 +3571,7 @@ ca:
           desktop: "Escriptori"
           mobile: "Mòbil"
           preview: "Previsualitza"
+          default: "Actiu"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
@@ -3625,8 +3632,6 @@ ca:
             error: "Aquesta aparença s'ha desactivat automàticament perquè no és compatible amb aquesta versió de Discourse."
             minimum: "Requereix una versió de Discourse %{version} o superior."
             maximum: "Requereix una versió de Discourse %{version} o inferior."
-          update_to_latest: "Actualitza al més recent"
-          check_for_updates: "Comprova si hi ha actualitzacions"
           up_to_date: "L'aparença és actualitzada, última comprovació:"
           add: "Afegeix"
           theme_settings: "Configuració de l'aparença"
@@ -3639,6 +3644,10 @@ ca:
           compare_commits: "(Vegeu els commits nous)"
           repo_unreachable: "No s'ha pogut contactar amb el repositori git d'aquesta aparença. Missatge d'error:"
           imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .zip"
+          settings: "Configuració"
+          colors: "Colors"
+          discard_colors: "Descarta"
+          colors_title: "Colors"
           scss:
             text: "CSS"
           after_header:
@@ -3650,12 +3659,12 @@ ca:
           all_filter: "Tot"
           active_filter: "Actiu"
           inactive_filter: "Inactiu"
-          schema:
-            fields:
-              required: "*necessari"
-              number:
-                too_small: "ha de ser més gran o igual que %{count}"
-                too_large: "ha de ser igual o menor que %{count}"
+        schema:
+          fields:
+            required: "*necessari"
+            number:
+              too_small: "ha de ser més gran o igual que %{count}"
+              too_large: "ha de ser igual o menor que %{count}"
         colors:
           select_base:
             title: "Seleccioneu la paleta de colors base"
@@ -3663,40 +3672,30 @@ ca:
           title: "Colors"
           about: "Modifiqueu els colors utilitzats per les vostres aparences. Creeu una nova paleta de colors per a començar."
           copy_name_prefix: "Còpia de"
-          delete_confirm: "Voleu suprimir aquesta paleta de colors?"
           undo: "Desfés"
           undo_title: "Desfà els canvis a aquest color des de la darrera vegada que va ser desat."
           revert: "Reverteix"
           revert_title: "Restableix aquest color a la paleta de colors predeterminada de Discourse."
           primary:
             name: "primari"
-            description: "La majoria de text, icones i vores."
           secondary:
             name: "secundari"
-            description: "El color de fons principal i el color de text d'alguns botons."
           tertiary:
             name: "terciari"
-            description: "Enllaços, alguns botons, alertes i color de ressaltament."
           quaternary:
             name: "quaternari"
           header_background:
             name: "color de fons de la capçalera"
-            description: "Color de fons de la capçalera del lloc web."
           header_primary:
             name: "capçalera primària"
-            description: "Text i icones en la capçalera del lloc web."
           highlight:
             name: "destaca"
-            description: "El color de fons dels elements destacats en la pàgina, com ara publicacions i temes."
           danger:
             name: "perill"
-            description: "Color destacat per a accions com ara suprimir publicacions i temes."
           success:
             name: "èxit"
-            description: "Emprat per a indicar que una acció ha estat reeixida."
           love:
             name: "amor"
-            description: "El color del botó M'agrada"
           selected:
             name: "seleccionat"
           editor:

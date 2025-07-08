@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { concat, get, hash } from "@ember/helper";
+import { concat, get } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 const suggestionShortcuts = [
@@ -132,7 +133,7 @@ export default class Assistant extends Component {
         <PluginOutlet
           @name="search-menu-results-assistant-tag-intersection-top"
         />
-        {{#each @results as |result index|}}
+        {{#each @results as |result|}}
           <AssistantItem
             @tag={{result.tagName}}
             @additionalTags={{result.additionalTags}}
@@ -144,14 +145,13 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="tag-intersection"
-            data-test-assistant-item="result-category-{{index}}"
           />
         {{/each}}
       {{else if (eq this.suggestionType "categoryOrTag")}}
         <PluginOutlet
           @name="search-menu-results-assistant-category-or-tag-top"
         />
-        {{#each @results as |result index|}}
+        {{#each @results as |result|}}
           {{#if result.model}}
             {{! render category }}
             <AssistantItem
@@ -162,7 +162,6 @@ export default class Assistant extends Component {
               @searchTermChanged={{@searchTermChanged}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="category"
-              data-test-assistant-item="result-model-{{index}}"
             />
           {{else}}
             {{! render tag }}
@@ -174,7 +173,6 @@ export default class Assistant extends Component {
               @searchTermChanged={{@searchTermChanged}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="tag"
-              data-test-assistant-item="result-name-{{index}}"
             />
           {{/if}}
         {{/each}}
@@ -190,7 +188,6 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="user"
-            data-test-assistant-item="result-user-in-topics-posts"
           />
 
           <AssistantItem
@@ -200,10 +197,9 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="user"
-            data-test-assistant-item="result-user-in-this-topic"
           />
         {{else}}
-          {{#each @results as |result index|}}
+          {{#each @results as |result|}}
             <AssistantItem
               @user={{result}}
               @slug={{concat this.prefix "@" result.username}}
@@ -211,16 +207,15 @@ export default class Assistant extends Component {
               @searchTermChanged={{@searchTermChanged}}
               @suggestionKeyword={{@suggestionKeyword}}
               @typeClass="user"
-              data-test-assistant-item="result-user-{{index}}"
             />
           {{/each}}
         {{/if}}
       {{else}}
         <PluginOutlet
           @name="search-menu-results-assistant-shortcut-top"
-          @outletArgs={{hash suggestionShortcuts=this.suggestionShortcuts}}
+          @outletArgs={{lazyHash suggestionShortcuts=this.suggestionShortcuts}}
         />
-        {{#each this.suggestionShortcuts as |item index|}}
+        {{#each this.suggestionShortcuts as |item|}}
           <AssistantItem
             @slug={{concat this.prefix item}}
             @label={{item}}
@@ -228,7 +223,6 @@ export default class Assistant extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{@suggestionKeyword}}
             @typeClass="shortcut"
-            data-test-assistant-item="result-shortcut-{{index}}"
           />
         {{/each}}
       {{/if}}

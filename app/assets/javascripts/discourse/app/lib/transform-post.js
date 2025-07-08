@@ -91,6 +91,10 @@ export function transformBasicPost(post) {
     canPublishPage: false,
     trustLevel: post.trust_level,
     userSuspended: post.user_suspended,
+    locale: post.locale,
+    is_localized: post.is_localized,
+    language: post.language,
+    localization_outdated: post.localization_outdated,
   };
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));

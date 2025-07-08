@@ -76,8 +76,8 @@ export default class AdminCustomizeColorsShowController extends Controller {
 
   @action
   destroy() {
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.customize.colors.delete_confirm"),
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.colors.delete_confirm"),
       didConfirm: () => {
         return this.model.destroy().then(() => {
           this.allColors.removeObject(this.model);

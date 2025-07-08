@@ -18,6 +18,7 @@ class CategoriesController < ApplicationController
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
+
   skip_before_action :check_xhr,
                      only: %i[
                        index
@@ -539,7 +540,7 @@ class CategoriesController < ApplicationController
           conditional_param_keys << { moderating_group_ids: [] }
         end
 
-        if SiteSetting.experimental_content_localization?
+        if SiteSetting.content_localization_enabled?
           conditional_param_keys << {
             category_localizations_attributes: %i[id category_id locale name description _destroy],
           }

@@ -111,7 +111,7 @@ class GroupsController < ApplicationController
 
   def show
     respond_to do |format|
-      group = find_group(:id)
+      group = find_group_for_show
 
       format.html do
         @title = group.full_name.present? ? group.full_name.capitalize : group.name
@@ -190,7 +190,7 @@ class GroupsController < ApplicationController
   end
 
   def posts
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     posts =
@@ -208,7 +208,7 @@ class GroupsController < ApplicationController
   end
 
   def posts_feed
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     @posts =
@@ -224,7 +224,7 @@ class GroupsController < ApplicationController
   def mentions
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
 
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     posts =
@@ -247,7 +247,7 @@ class GroupsController < ApplicationController
   def mentions_feed
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
 
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_see_group_members!(group)
 
     @posts =
@@ -267,7 +267,7 @@ class GroupsController < ApplicationController
   MEMBERS_DEFAULT_PAGE_SIZE = 50
 
   def members
-    group = find_group(:group_id)
+    group = find_group(:name)
 
     guardian.ensure_can_see_group_members!(group)
 
@@ -527,7 +527,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:group_id, ensure_can_see: false)
+    group = find_group(:name, ensure_can_see: false)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -537,7 +537,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:group_id, ensure_can_see: false)
+    group = find_group(:name, ensure_can_see: false)
 
     if group
       render json: { messageable: guardian.can_send_private_message?(group) }
@@ -605,7 +605,7 @@ class GroupsController < ApplicationController
   def request_membership
     params.require(:reason)
 
-    group = find_group(:id)
+    group = find_group(:name)
 
     begin
       GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
@@ -644,7 +644,7 @@ class GroupsController < ApplicationController
   end
 
   def set_notifications
-    group = find_group(:id)
+    group = find_group(:name)
     notification_level = params.require(:notification_level)
 
     user_id = current_user.id
@@ -659,7 +659,7 @@ class GroupsController < ApplicationController
   end
 
   def histories
-    group = find_group(:group_id)
+    group = find_group(:name)
     guardian.ensure_can_edit!(group) unless guardian.can_admin_group?(group)
 
     page_size = 25
@@ -701,7 +701,7 @@ class GroupsController < ApplicationController
   end
 
   def permissions
-    group = find_group(:id)
+    group = find_group(:name)
     category_groups =
       group.category_groups.select do |category_group|
         guardian.can_see_category?(category_group.category)
@@ -725,7 +725,7 @@ class GroupsController < ApplicationController
 
     RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
 
-    settings = params.except(:group_id, :protocol)
+    settings = params.except(:name, :protocol)
     email_host = params[:host]
 
     if !%w[smtp imap].include?(params[:protocol])
@@ -868,9 +868,23 @@ class GroupsController < ApplicationController
     params.require(:group).permit(*attributes)
   end
 
+  def find_group_for_show(ensure_can_see: true)
+    group =
+      if params[:id]
+        Group.find_by(id: params[:id])
+      elsif params[:name]
+        Group.find_by("LOWER(name) = ?", params[:name].downcase)
+      end
+
+    raise Discourse::NotFound if ensure_can_see && !guardian.can_see_group?(group)
+    group
+  end
+
   def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
+
     group = Group.find_by("LOWER(name) = ?", name.downcase)
+
     raise Discourse::NotFound if ensure_can_see && !guardian.can_see_group?(group)
     group
   end

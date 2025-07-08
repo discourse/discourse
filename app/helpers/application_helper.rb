@@ -133,7 +133,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script, typeModule: false)
+  def preload_script(script, type_module: false)
     scripts = []
 
     if chunks = EmberCli.script_chunks[script]
@@ -145,21 +145,20 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script, typeModule:)
+        preload_script_url(path, entrypoint: script, type_module:)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, typeModule: false)
+  def preload_script_url(url, entrypoint: nil, type_module: false)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
-    module_or_defer = typeModule ? 'type="module"' : "defer"
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script #{module_or_defer} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
     HTML
   end
 
@@ -179,8 +178,10 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    list << (mobile_view? ? "mobile-view" : "desktop-view")
-    list << (mobile_device? ? "mobile-device" : "not-mobile-device")
+    unless SiteSetting.viewport_based_mobile_mode
+      list << (mobile_view? ? "mobile-view" : "desktop-view")
+      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
+    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -289,6 +290,9 @@ module ApplicationHelper
     )
   end
 
+  def is_crawler_homepage?
+    request.path == "/" && use_crawler_layout?
+  end
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
@@ -457,6 +461,8 @@ module ApplicationHelper
     if current_user && !crawler_layout?
       params.key?(:print)
     else
+      return false if !current_user && SiteSetting.login_required?
+
       crawler_layout? || !mobile_view? || !modern_mobile_device?
     end
   end
@@ -570,7 +576,10 @@ module ApplicationHelper
 
     return if theme_id.blank?
 
-    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
+    if SiteSetting.use_overhauled_theme_color_palette
+      @scheme_id = ThemeColorScheme.where(theme_id: theme_id).pick(:color_scheme_id)
+    end
+    @scheme_id ||= Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
   def dark_scheme_id
@@ -650,7 +659,13 @@ module ApplicationHelper
         stylesheet_manager
       end
 
-    manager.stylesheet_link_tag(name, "all", self.method(:add_resource_preload_list))
+    name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
+
+    manager.stylesheet_link_tag(
+      name,
+      opts[:media] || "all",
+      self.method(:add_resource_preload_list),
+    )
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -795,7 +810,7 @@ module ApplicationHelper
   end
 
   def preload_modules
-    puts params[:controller]
+    # puts params[:controller]
     ember_route_name =
       if params[:controller] == "list"
         "discovery"

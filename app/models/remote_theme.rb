@@ -82,11 +82,12 @@ class RemoteTheme < ActiveRecord::Base
     )
   end
 
-  # This is only used in the development and test environment and is currently not supported for other environments
-  if Rails.env.test? || Rails.env.development?
-    def self.import_theme_from_directory(directory)
-      update_theme(ThemeStore::DirectoryImporter.new(directory), update_components: "none")
-    end
+  def self.import_theme_from_directory(directory, theme_id: nil)
+    update_theme(
+      ThemeStore::DirectoryImporter.new(directory),
+      update_components: "none",
+      theme_id: theme_id,
+    )
   end
 
   def self.update_theme(
@@ -103,7 +104,13 @@ class RemoteTheme < ActiveRecord::Base
 
     existing = true
     if theme.blank?
-      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], auto_update: false)
+      theme =
+        Theme.new(
+          id: theme_id,
+          user_id: user&.id || -1,
+          name: theme_info["name"],
+          auto_update: false,
+        )
       existing = false
     end
 
@@ -250,7 +257,7 @@ class RemoteTheme < ActiveRecord::Base
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
-        upload = RemoteTheme.create_upload(theme, path, relative_path)
+        upload = RemoteTheme.create_upload(theme: theme, path: path, relative_path: relative_path)
         if !upload.errors.empty?
           raise ImportError,
                 I18n.t(
@@ -269,19 +276,15 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    # TODO (martin): Until we are ready to roll this out more
-    # widely, let's avoid doing this work for most sites.
-    if SiteSetting.theme_download_screenshots
-      begin
-        updated_fields.concat(
-          ThemeScreenshotsHandler.new(theme).parse_screenshots_as_theme_fields!(
-            theme_info["screenshots"],
-            importer,
-          ),
-        )
-      rescue ThemeScreenshotsHandler::ThemeScreenshotError => err
-        raise ImportError, err.message
-      end
+    begin
+      updated_fields.concat(
+        ThemeScreenshotsHandler.new(theme).parse_screenshots_as_theme_fields!(
+          theme_info["screenshots"],
+          importer,
+        ),
+      )
+    rescue ThemeScreenshotsHandler::ThemeScreenshotError => err
+      raise ImportError, err.message
     end
 
     # Update all theme attributes if this is just a placeholder
@@ -474,7 +477,7 @@ class RemoteTheme < ActiveRecord::Base
     remote_url.present?
   end
 
-  def self.create_upload(theme, path, relative_path)
+  def self.create_upload(theme:, path:, relative_path:, skip_validations: false)
     new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
 
     # OptimizedImage has strict file name restrictions, so rename temporarily
@@ -484,6 +487,7 @@ class RemoteTheme < ActiveRecord::Base
       File.open(new_path),
       File.basename(relative_path),
       for_theme: true,
+      skip_validations: skip_validations,
     ).create_for(theme.user_id)
   end
 end

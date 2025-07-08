@@ -19,6 +19,7 @@
   display: flex;
   flex-grow: 1;
   min-height: 0;
+  scrollbar-color: var(--primary-low) transparent;
 }
 
 .d-editor-textarea-column {
@@ -35,7 +36,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-400);
+  border: var(--d-input-border);
   border-radius: var(--d-input-border-radius);
   min-height: 0;
 
@@ -141,7 +142,7 @@
   }
 
   .d-editor-textarea-wrapper {
-    border: 1px solid var(--primary-low);
+    border: var(--d-input-border);
   }
 
   .d-editor-preview-wrapper {
@@ -160,12 +161,6 @@
       padding: 0;
     }
   }
-}
-
-.user-preferences .bio-composer,
-.group-form-bio {
-  padding: 10px;
-  border: 1px solid var(--primary-low);
 }
 
 .d-editor-preview img {
@@ -319,21 +314,19 @@
 
 // d-editor bar button sizing
 .d-editor-button-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-2);
   align-items: center;
-  border-bottom: 1px solid var(--primary-low);
-  width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
+  margin: 0.25rem 0;
 
-  @include breakpoint(tablet) {
-    // occupy available space on narrower screens
-    grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
+  .composer-toggle-switch {
+    padding: 0 0.5rem;
   }
 
-  @include breakpoint(mobile-medium) {
-    font-size: var(--font-down-1);
+  @include viewport.until(sm) {
+    font-size: var(--font-down-1-rem);
   }
 
   .btn:focus-visible {
@@ -343,7 +336,7 @@
   .btn {
     margin: 0;
     background-color: transparent;
-    color: var(--primary-medium);
+    color: var(--primary-high);
     border-radius: var(--d-border-radius);
 
     .d-icon {
@@ -352,7 +345,11 @@
 
     .discourse-no-touch & {
       &:hover {
-        color: var(--primary-low);
+        background-color: var(--primary-low);
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
       }
     }
   }
@@ -360,13 +357,107 @@
   .select-kit-header-wrapper {
     justify-content: center;
   }
+
+  &.--replaced-toolbar {
+    animation: float-left ease 0.2s 1 forwards;
+    flex-wrap: nowrap;
+
+    @keyframes float-left {
+      0% {
+        opacity: 0;
+        transform: translateX(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+.toolbar-separator {
+  width: 1px;
+  background-color: var(--primary-low);
+  margin: auto 1px;
+  height: 1.25rem;
+}
+
+.toolbar__button {
+  .d-editor-button-bar & {
+    @include viewport.from(sm) {
+      padding: 0.3em 0.45em;
+    }
+  }
+
+  &.--active {
+    background: var(--d-selected);
+
+    &.btn:hover .d-icon {
+      color: var(--primary-high);
+    }
+  }
 }
 
 .d-editor #form-template-form {
   overflow: auto;
   background: var(--primary-very-low);
   padding: 1rem;
-  border: 1px solid var(--primary-400);
+  border: var(--d-input-border);
   margin-bottom: 0;
   height: 100%;
+}
+
+#reply-control.composer-action-add_translation {
+  .topic-title-translator {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    input {
+      width: 48.5vw;
+    }
+  }
+
+  .translation-selector-dropdown {
+    margin-bottom: 0.5rem;
+
+    .select-kit-body {
+      max-height: 300px;
+    }
+  }
+
+  .d-editor-preview .d-editor-translation-preview-wrapper {
+    --translation-preview-padding: 1rem;
+    box-sizing: border-box;
+    border: var(--d-input-border);
+    border-radius: var(--d-border-radius);
+    padding: var(--translation-preview-padding);
+    position: relative;
+    height: 100%;
+    padding-top: calc(var(--translation-preview-padding) * 2);
+
+    &__header {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      height: 1.5rem;
+      top: 0;
+      left: 0;
+      background: var(--primary-very-low);
+      padding: 0.45rem var(--translation-preview-padding);
+      border-radius: var(--d-border-radius);
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-high);
+    }
+
+    &__original-locale {
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      font-size: var(--font-down-2);
+      background: var(--tertiary-low);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--d-border-radius);
+    }
+  }
 }

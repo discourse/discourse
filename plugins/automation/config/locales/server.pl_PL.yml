@@ -11,7 +11,7 @@ pl_PL:
     models:
       fields:
         required_field: Pole `%{name}` musi być wypełnione na `%{target}:%{target_name}`.
-        invalid_field: Składnik pola `%{component}` nie może być użyty na `%{target}:%{target_name}.`
+        invalid_field: Składnik pola `%{component}` nie może być użyty na `%{target}:%{target_name}`.
         invalid_metadata: Dane dla `%{field}` są nieprawidłowe lub komponent `%{component}` jest nieznany.
     triggerables:
       errors:

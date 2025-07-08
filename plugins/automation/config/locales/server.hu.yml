@@ -11,7 +11,7 @@ hu:
     models:
       fields:
         required_field: '"%{name}" mezőt a "%{target}:%{target_name}" oldalon kell kitölteni.'
-        invalid_field: '"%{component}" mező összetevője nem használható a "%{target}:%{target_name}" mezőn.'
+        invalid_field: A mező `%{component}` összetevője nem használható `%{target}:%{target_name}` esetén.
         invalid_metadata: '`%{field}` adatai érvénytelenek, vagy a `%{component}` komponens ismeretlen.'
     triggerables:
       errors:
@@ -130,7 +130,7 @@ hu:
         title: Téma lezárása
         description: Lezárja a témát egy opcionális záró üzenettel
       append_last_edited_by:
-        title: Utoljára szerkesztette hozzáadása
+        title: Utolsó szerkesztő hozzáfűzése
         description: Hozzáadja a bejegyzés „utoljára szerkesztette” részleteit a főzött tartalom aljához.
         text: "Utoljára szerkesztette: @%{username} %{date_time}"
       append_last_checked_by:

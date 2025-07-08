@@ -7,7 +7,6 @@ class ThemeMetadata
         discourse-brand-header
         discourse-category-banners
         discourse-clickable-topic
-        discourse-color-scheme-toggle
         discourse-custom-header-links
         Discourse-easy-footer
         discourse-gifs

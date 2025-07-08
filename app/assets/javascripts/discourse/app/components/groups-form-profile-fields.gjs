@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
@@ -9,6 +8,7 @@ import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -169,7 +169,7 @@ export default class GroupsFormProfileFields extends Component {
         <PluginOutlet
           @name="group-edit"
           @connectorTagName="div"
-          @outletArgs={{hash group=this.model}}
+          @outletArgs={{lazyHash group=this.model}}
         />
       </span>
     {{/if}}

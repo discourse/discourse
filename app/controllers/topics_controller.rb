@@ -697,7 +697,7 @@ class TopicsController < ApplicationController
     PostDestroyer.new(
       current_user,
       topic.ordered_posts.with_deleted.first,
-      context: params[:context],
+      context: params[:context].presence || I18n.t("staff_action_logs.api_post_delete"),
       force_destroy: force_destroy,
     ).destroy
 
@@ -1281,7 +1281,7 @@ class TopicsController < ApplicationController
 
     opts =
       params.slice(
-        *%i[page print filter_top_level_replies preview_theme_id].concat(
+        *%i[page print filter_top_level_replies preview_theme_id include_raw].concat(
           additional_allowed_query_parameters,
         ),
       )

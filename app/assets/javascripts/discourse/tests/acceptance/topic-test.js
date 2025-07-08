@@ -87,7 +87,7 @@ import { i18n } from "discourse-i18n";
 
       test("Share Modal", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:first-child button.share");
+        await click(".topic-post[data-post-number='1'] button.share");
 
         assert.dom(".share-topic-modal").exists("shows the share modal");
       });
@@ -95,7 +95,7 @@ import { i18n } from "discourse-i18n";
       test("Copy Link Button", async function (assert) {
         await visit("/t/internationalization-localization/280");
         await click(
-          ".topic-post:first-child button.post-action-menu__copy-link"
+          ".topic-post[data-post-number='1'] button.post-action-menu__copy-link"
         );
 
         assert
@@ -142,8 +142,12 @@ import { i18n } from "discourse-i18n";
 
         assert.dom("a.wiki").doesNotExist("does not show the wiki icon");
 
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(
+          ".topic-post[data-post-number='1'] button.show-post-admin-menu"
+        );
         await click(".btn.wiki");
 
         assert.dom("button.wiki").exists("shows the wiki icon");
@@ -220,8 +224,10 @@ import { i18n } from "discourse-i18n";
       test("Deleting a topic", async function (assert) {
         this.siteSettings.min_topic_views_for_delete_confirm = 10000;
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(".topic-post[data-post-number='1'] button.delete");
         await click(".toggle-admin-menu");
         assert.dom(".topic-admin-recover").exists("shows the recover button");
       });
@@ -229,8 +235,10 @@ import { i18n } from "discourse-i18n";
       test("Deleting a popular topic displays confirmation modal", async function (assert) {
         this.siteSettings.min_topic_views_for_delete_confirm = 10;
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(".topic-post[data-post-number='1'] button.delete");
         assert
           .dom(".delete-topic-confirm-modal")
           .exists("shows the delete confirmation modal");
@@ -239,7 +247,7 @@ import { i18n } from "discourse-i18n";
         assert
           .dom(".delete-topic-confirm-modal")
           .doesNotExist("hides the delete confirmation modal");
-        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(".topic-post[data-post-number='1'] button.delete");
         await click(".delete-topic-confirm-modal .btn-danger");
         await click(".toggle-admin-menu");
         assert.dom(".topic-admin-recover").exists("shows the recover button");
@@ -641,6 +649,166 @@ import { i18n } from "discourse-i18n";
         await click("a.by-post-id");
         assert.true(currentURL().includes("/280"));
       });
+    }
+  );
+
+  acceptance(
+    `Cooked quoted content (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.settings({
+        glimmer_post_stream_mode: postStreamMode,
+      });
+
+      needs.pretender((server, helper) => {
+        server.get("/posts/by_number/280/3", () =>
+          helper.response(
+            200,
+            topicFixtures["/t/280/1.json"].post_stream.posts[2]
+          )
+        );
+        server.get("/posts/by_number/280/5", () =>
+          helper.response(
+            200,
+            topicFixtures["/t/280/1.json"].post_stream.posts[4]
+          )
+        );
+      });
+
+      test("The quoted content is toggled correclty", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "false");
+        assert
+          .dom("#post_5 .quote[data-topic='280'][data-post='3']")
+          .includesText(
+            'So you could replace that lookup table with the "de" one to get German.'
+          )
+          .doesNotIncludeText(
+            "Yep, all strings are going through a lookup table.*"
+          );
+
+        await click(
+          "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+        );
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "true");
+        assert
+          .dom("#post_5 .quote[data-topic='280'][data-post='3']")
+          .includesText(
+            'So you could replace that lookup table with the "de" one to get German.'
+          )
+          .includesText("Yep, all strings are going through a lookup table.*");
+
+        await click(
+          "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+        );
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "false");
+      });
+
+      // TODO (glimmer-post-stream): this test only works with the Glimmer Post Stream.
+      //  When the removing the legacy code we should remove the `if` and run it unconditionally.
+      if (postStreamMode === "enabled") {
+        test("Nesting quoted content works", async function (assert) {
+          await visit("/t/internationalization-localization/280");
+
+          // outer quote
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] > .title .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+
+          assert
+            .dom("#post_7 .quote[data-topic='280'][data-post='5']")
+            .includesText("The problem I see here")
+            .doesNotIncludeText("So you could replace that lookup table");
+
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] > .title .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] > .title .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "true");
+          assert
+            .dom("#post_7 .quote[data-topic='280'][data-post='5']")
+            .includesText("The problem I see here")
+            .includesText("So you could replace that lookup table");
+
+          // nested quote
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+          assert
+            .dom(
+              "#post_7 .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3']"
+            )
+            .includesText(
+              'So you could replace that lookup table with the "de" one to get German.'
+            )
+            .doesNotIncludeText(
+              "Yep, all strings are going through a lookup table.*"
+            );
+
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "true");
+          assert
+            .dom(
+              "#post_7 .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3']"
+            )
+            .includesText(
+              'So you could replace that lookup table with the "de" one to get German.'
+            )
+            .includesText(
+              "Yep, all strings are going through a lookup table.*"
+            );
+
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+
+          // outer quote
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+        });
+      }
     }
   );
 

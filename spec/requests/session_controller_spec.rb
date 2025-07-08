@@ -522,20 +522,44 @@ RSpec.describe SessionController do
   describe "#become" do
     let!(:user) { Fabricate(:user) }
 
-    it "does not work when in production mode" do
-      Rails.env.stubs(:production?).returns(true)
-      get "/session/#{user.username}/become.json"
+    describe "when in production mode" do
+      before { Rails.env.stubs(:production?).returns(true) }
 
-      expect(response.status).to eq(403)
-      expect(response.parsed_body["error_type"]).to eq("invalid_access")
-      expect(session[:current_user_id]).to be_blank
+      it "does not work" do
+        get "/session/#{user.username}/become"
+
+        expect(response.status).to eq(403)
+        expect(session[:current_user_id]).to be_blank
+      end
     end
 
-    it "works in development mode" do
-      Rails.env.stubs(:development?).returns(true)
-      get "/session/#{user.username}/become.json"
-      expect(response).to be_redirect
-      expect(session[:current_user_id]).to eq(user.id)
+    describe "when in development mode" do
+      before { Rails.env.stubs(:development?).returns(true) }
+
+      it "works" do
+        get "/session/#{user.username}/become"
+
+        expect(response).to be_redirect
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+
+      it "raises an error if the user is not found" do
+        get "/session/invalid_user/become"
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include("User invalid_user not found")
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it "raises an error if the user is not active" do
+        user.update!(active: false)
+
+        get "/session/#{user.username}/become"
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include("User #{user.username} is not active")
+        expect(session[:current_user_id]).to be_blank
+      end
     end
   end
 
@@ -2491,7 +2515,7 @@ RSpec.describe SessionController do
       expect(response.parsed_body["redirect_url"]).to eq("/")
     end
 
-    it "redirects to /login when SSO and login_required" do
+    it "redirects to /login-required when SSO and login_required" do
       SiteSetting.discourse_connect_url = "https://example.com/sso"
       SiteSetting.enable_discourse_connect = true
 
@@ -2506,7 +2530,7 @@ RSpec.describe SessionController do
       delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
       expect(response.parsed_body["error"]).not_to be_present
-      expect(response.parsed_body["redirect_url"]).to eq("/login")
+      expect(response.parsed_body["redirect_url"]).to eq("/login-required")
     end
 
     it "allows plugins to manipulate redirect URL" do

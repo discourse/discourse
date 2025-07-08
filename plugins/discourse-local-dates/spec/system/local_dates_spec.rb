@@ -36,7 +36,7 @@ describe "Local dates", type: :system do
       #
       find("span[data-date]:nth-of-type(1)").click
       expect(page.find("[data-content] .current .date-time")).to have_text(
-        "#{formatted_date_for_year(12, 15)}\n2:19 PM",
+        "#{formatted_date_for_year(12, 15)}\n 2:19 PM",
         exact: true,
       )
       page.send_keys(:escape)
@@ -45,14 +45,14 @@ describe "Local dates", type: :system do
       #
       find("span[data-date]:nth-of-type(2)").click
       expect(page.find("[data-content] .current .date-time")).to have_text(
-        "#{formatted_date_for_year(12, 15)}\n1:20 AM",
+        "#{formatted_date_for_year(12, 15)}\n 1:20 AM",
         exact: true,
       )
       page.send_keys(:escape)
 
       find("span[data-date]:nth-of-type(3)").click
       expect(page.find("[data-content] .current .date-time")).to have_text(
-        "#{formatted_date_for_year(12, 15)}\n2:40 AM",
+        "#{formatted_date_for_year(12, 15)}\n 2:40 AM",
         exact: true,
       )
       page.send_keys(:escape)
@@ -61,7 +61,7 @@ describe "Local dates", type: :system do
       #
       find("span[data-date]:nth-of-type(4)").click
       expect(page.find("[data-content] .current .date-time")).to have_text(
-        "#{formatted_date_for_year(12, 15)}\n11:25 AM → 12:26 AM",
+        "#{formatted_date_for_year(12, 15)}\n 11:25 AM → 12:26 AM",
         exact: true,
       )
       page.send_keys(:escape)
@@ -86,7 +86,8 @@ describe "Local dates", type: :system do
     it "allows selecting a date without a time and inserts into the post" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      composer.click_toolbar_button("local-dates")
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
@@ -99,11 +100,12 @@ describe "Local dates", type: :system do
     it "allows selecting a date with a time and inserts into the post" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      composer.click_toolbar_button("local-dates")
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
-      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45am")
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
       insert_datetime_modal.click_primary_button
 
       expect(composer.composer_input.value).to have_content(
@@ -114,16 +116,17 @@ describe "Local dates", type: :system do
     it "allows selecting a start date and time and an end date and time" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      composer.click_toolbar_button("local-dates")
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
-      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45am")
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
       insert_datetime_modal.select_to
 
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(23)
-      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45pm")
+      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45")
 
       insert_datetime_modal.click_primary_button
       expect(composer.composer_input.value).to have_content(
@@ -133,21 +136,24 @@ describe "Local dates", type: :system do
 
     it "allows clearing the end date and time" do
       topic_page.visit_topic_and_open_composer(topic)
+
       expect(topic_page).to have_expanded_composer
-      composer.click_toolbar_button("local-dates")
+
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
+
       expect(insert_datetime_modal).to be_open
 
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
-      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45am")
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
       insert_datetime_modal.select_to
-
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(23)
-      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45pm")
+      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45")
       insert_datetime_modal.delete_to
-
       insert_datetime_modal.click_primary_button
+
       expect(composer.composer_input.value).to have_content(
         "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
       )

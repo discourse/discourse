@@ -17,6 +17,28 @@ describe "Welcome banner", type: :system do
       expect(banner).to have_logged_in_title(current_user.username)
     end
 
+    it "shows subheader when translations are present for logged in and anonymous members" do
+      visit "/"
+      expect(banner).to be_visible
+      expect(banner).to have_no_subheader
+      TranslationOverride.upsert!(
+        "en",
+        "js.welcome_banner.subheader.anonymous_members",
+        "Something about us.",
+      )
+      visit "/"
+      expect(banner).to have_anonymous_subheader
+
+      TranslationOverride.upsert!(
+        "en",
+        "js.welcome_banner.subheader.logged_in_members",
+        "We are so cool!",
+      )
+      sign_in(current_user)
+      visit "/"
+      expect(banner).to have_logged_in_subheader
+    end
+
     it "only displays on top_menu routes" do
       sign_in(current_user)
       SiteSetting.remove_override!(:top_menu)
@@ -37,23 +59,48 @@ describe "Welcome banner", type: :system do
       expect(banner).to be_hidden
     end
 
-    it "hides welcome banner and shows header search on scroll, and vice-versa" do
-      SiteSetting.search_experience = "search_field"
-      Fabricate(:topic)
+    context "when using search_field search_experience" do
+      before { SiteSetting.search_experience = "search_field" }
 
-      sign_in(current_user)
-      visit "/"
-      expect(banner).to be_visible
-      expect(search_page).to have_no_search_field
+      it "hides welcome banner and shows header search on scroll, and vice-versa" do
+        Fabricate(:topic)
 
-      fake_scroll_down_long
+        sign_in(current_user)
+        visit "/"
+        expect(banner).to be_visible
+        expect(search_page).to have_no_search_field
 
-      expect(banner).to be_invisible
-      expect(search_page).to have_search_field
+        fake_scroll_down_long
 
-      page.scroll_to(0, 0)
-      expect(banner).to be_visible
-      expect(search_page).to have_no_search_field
+        expect(banner).to be_invisible
+        expect(search_page).to have_search_field
+
+        page.scroll_to(0, 0)
+        expect(banner).to be_visible
+        expect(search_page).to have_no_search_field
+      end
+    end
+
+    context "when using search_icon search_experience" do
+      before { SiteSetting.search_experience = "search_icon" }
+
+      it "hides welcome banner and shows header search on scroll, and vice-versa" do
+        Fabricate(:topic)
+
+        sign_in(current_user)
+        visit "/"
+        expect(banner).to be_visible
+        expect(search_page).to have_no_search_icon
+
+        fake_scroll_down_long
+
+        expect(banner).to be_invisible
+        expect(search_page).to have_search_icon
+
+        page.scroll_to(0, 0)
+        expect(banner).to be_visible
+        expect(search_page).to have_no_search_icon
+      end
     end
   end
 

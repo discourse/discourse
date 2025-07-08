@@ -1,9 +1,9 @@
-import { hash } from "@ember/helper";
 import { and } from "truth-helpers";
 import DNavigationItem from "discourse/components/d-navigation-item";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 const UserNav = <template>
@@ -73,7 +73,7 @@ const UserNav = <template>
       <PluginOutlet
         @name="user-main-nav"
         @connectorTagName="li"
-        @outletArgs={{hash model=@user}}
+        @outletArgs={{lazyHash model=@user}}
       />
 
       {{#if @user.can_edit}}
@@ -97,4 +97,5 @@ const UserNav = <template>
     </HorizontalOverflowNav>
   </section>
 </template>;
+
 export default UserNav;

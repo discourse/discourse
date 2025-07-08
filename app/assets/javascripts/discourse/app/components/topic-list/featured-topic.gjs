@@ -2,7 +2,7 @@ import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import formatAge from "discourse/helpers/format-age";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const onTimestampClick = function (event) {
@@ -33,7 +33,7 @@ const FeaturedTopic = <template>
       {{on "click" onTimestampClick}}
       href={{@topic.lastPostUrl}}
       class="last-posted-at"
-    >{{formatAge @topic.last_posted_at}}</a>
+    >{{ageWithTooltip @topic.last_posted_at}}</a>
   </div>
 </template>;
 

@@ -40,7 +40,7 @@ class PostRevisor
     end
   end
 
-  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type]
+  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type locale]
 
   attr_reader :category_changed, :post_revision
 
@@ -689,6 +689,7 @@ class PostRevisor
 
     update_topic_excerpt
     update_category_description
+    update_topic_locale
   end
 
   def update_topic_excerpt
@@ -708,6 +709,10 @@ class PostRevisor
     else
       @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
+  end
+
+  def update_topic_locale
+    @topic.update(locale: @fields[:locale]) if @fields.has_key?(:locale)
   end
 
   def advance_draft_sequence

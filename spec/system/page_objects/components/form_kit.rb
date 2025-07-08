@@ -33,7 +33,7 @@ module PageObjects
         case control_type
         when /input-/, "password"
           component.find("input").value
-        when "icon"
+        when "icon", "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
         when "checkbox"
@@ -42,7 +42,7 @@ module PageObjects
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
           PageObjects::Components::DSelect.new(component.find("select")).value
-        when "composer"
+        when "composer", "textarea"
           component.find("textarea").value
         when "image"
           url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
@@ -84,7 +84,15 @@ module PageObjects
       end
 
       def control_type
-        component["data-control-type"]
+        type = component["data-control-type"]
+
+        return type if type != "custom"
+
+        if component.has_css?(".multi-select")
+          "multi-select"
+        else
+          raise "Unknown custom control"
+        end
       end
 
       def toggle
@@ -121,6 +129,12 @@ module PageObjects
           picker.expand
           picker.search(value)
           picker.select_row_by_value(value)
+        when "multi-select"
+          selector = component.find(".form-kit__control-custom > .multi-select")["id"]
+          picker = PageObjects::Components::SelectKit.new("#" + selector)
+          picker.expand
+          picker.search(value)
+          picker.select_row_by_name(value)
         when "select"
           PageObjects::Components::DSelect.new(component.find(".form-kit__control-select")).select(
             value,

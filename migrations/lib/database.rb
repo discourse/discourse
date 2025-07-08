@@ -31,6 +31,19 @@ module Migrations
       nil
     end
 
+    def self.schema_path(type)
+      case type
+      when "intermediate_db"
+        INTERMEDIATE_DB_SCHEMA_PATH
+      when "mappings_db"
+        MAPPINGS_DB_SCHEMA_PATH
+      when "uploads_db"
+        UPLOADS_DB_SCHEMA_PATH
+      else
+        raise "Unknown type: #{type}"
+      end
+    end
+
     def self.format_datetime(value)
       value&.utc&.iso8601
     end

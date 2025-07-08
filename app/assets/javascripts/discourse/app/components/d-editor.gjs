@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -8,11 +7,14 @@ import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
+import curryComponent from "ember-curry-component";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
+import { not } from "truth-helpers";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
+import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
@@ -33,6 +35,7 @@ import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
+import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -41,7 +44,6 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { i18n } from "discourse-i18n";
-import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 let _createCallbacks = [];
 
@@ -68,6 +70,7 @@ export default class DEditor extends Component {
   @tracked editorComponent;
   /** @type {TextManipulation} */
   @tracked textManipulation;
+  @tracked replacedToolbarInstance;
 
   @tracked preview;
 
@@ -88,6 +91,8 @@ export default class DEditor extends Component {
 
     this.register = getRegister(this);
 
+    this.setupToolbar();
+
     if (
       this.siteSettings.rich_editor &&
       this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
@@ -95,6 +100,19 @@ export default class DEditor extends Component {
       this.editorComponent = await loadRichEditor();
     } else {
       this.editorComponent = TextareaEditor;
+    }
+  }
+
+  setupToolbar() {
+    this.toolbar = new Toolbar(
+      this.getProperties("siteSettings", "showLink", "capabilities")
+    );
+    this.toolbar.context = this;
+
+    _createCallbacks.forEach((cb) => cb(this.toolbar));
+
+    if (this.extraButtons) {
+      this.extraButtons(this.toolbar);
     }
   }
 
@@ -131,7 +149,9 @@ export default class DEditor extends Component {
 
         if (customAction) {
           const toolbarEvent = this.newToolbarEvent();
-          customAction(toolbarEvent);
+          if (!button.condition || button.condition(toolbarEvent)) {
+            customAction(toolbarEvent);
+          }
         } else {
           button.action(button);
         }
@@ -139,21 +159,27 @@ export default class DEditor extends Component {
       };
     });
 
-    if (this.popupMenuOptions && this.onPopupMenuAction) {
-      this.popupMenuOptions.forEach((popupButton) => {
-        if (popupButton.shortcut && popupButton.condition) {
-          const shortcut =
-            `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
-          keymap[shortcut] = () => {
-            this.onPopupMenuAction(popupButton, this.newToolbarEvent());
-            return false;
-          };
-        }
-      });
-    }
+    this.popupMenuOptions?.forEach((popupButton) => {
+      if (popupButton.shortcut && popupButton.condition) {
+        const shortcut =
+          `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
+        keymap[shortcut] = () => {
+          this.onPopupMenuAction(
+            {
+              ...popupButton,
+              action: popupButton.shortcutAction ?? popupButton.action,
+            },
+            this.newToolbarEvent()
+          );
+          return false;
+        };
+      }
+    });
 
-    keymap["tab"] = () => this.textManipulation.indentSelection("right");
-    keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    // indentSelection returns true if the selection was indented
+    // itsatrap expects the return value to be false to prevent default
+    keymap["tab"] = () => !this.textManipulation.indentSelection("right");
+    keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
     if (this.siteSettings.rich_editor) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
@@ -166,27 +192,6 @@ export default class DEditor extends Component {
     this._previewMutationObserver?.disconnect();
 
     this._cachedCookFunction = null;
-  }
-
-  @discourseComputed()
-  toolbar() {
-    const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink", "capabilities")
-    );
-    toolbar.context = this;
-
-    _createCallbacks.forEach((cb) => cb(toolbar));
-
-    if (this.extraButtons) {
-      this.extraButtons(toolbar);
-    }
-
-    const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
-    if (firstButton) {
-      firstButton.tabindex = 0;
-    }
-
-    return toolbar;
   }
 
   async cachedCookAsync(text, options) {
@@ -441,41 +446,7 @@ export default class DEditor extends Component {
 
   @action
   rovingButtonBar(event) {
-    let target = event.target;
-    let siblingFinder;
-    if (event.code === "ArrowRight") {
-      siblingFinder = "nextElementSibling";
-    } else if (event.code === "ArrowLeft") {
-      siblingFinder = "previousElementSibling";
-    } else {
-      return true;
-    }
-
-    while (
-      target.parentNode &&
-      !target.parentNode.classList.contains("d-editor-button-bar")
-    ) {
-      target = target.parentNode;
-    }
-
-    let focusable = target[siblingFinder];
-    if (focusable) {
-      while (
-        (focusable.tagName !== "BUTTON" &&
-          !focusable.classList.contains("select-kit")) ||
-        focusable.classList.contains("hidden")
-      ) {
-        focusable = focusable[siblingFinder];
-      }
-
-      if (focusable?.tagName === "DETAILS") {
-        focusable = focusable.querySelector("summary");
-      }
-
-      focusable?.focus();
-    }
-
-    return true;
+    return rovingButtonBar(event, "d-editor-button-bar");
   }
 
   /**
@@ -522,20 +493,6 @@ export default class DEditor extends Component {
       replaceText: (oldVal, newVal, opts) =>
         this.textManipulation.replaceText(oldVal, newVal, opts),
     };
-  }
-
-  @action
-  toolbarButton(button) {
-    if (this.disabled) {
-      return;
-    }
-
-    const toolbarEvent = this.newToolbarEvent(button.trimLeading);
-    if (button.sendAction) {
-      return button.sendAction(toolbarEvent);
-    } else {
-      button.perform(toolbarEvent);
-    }
   }
 
   @action
@@ -617,6 +574,16 @@ export default class DEditor extends Component {
   }
 
   @action
+  replaceToolbar(toolbarInstance) {
+    this.replacedToolbarInstance = toolbarInstance;
+  }
+
+  @action
+  resetToolbar() {
+    this.replacedToolbarInstance = null;
+  }
+
+  @action
   onChange(event) {
     this.set("value", event?.target?.value);
     this.change?.(event);
@@ -652,7 +619,21 @@ export default class DEditor extends Component {
         "indentSelection"
       );
 
+      const replaceToolbar = ({ component, data }) => {
+        this.replacedToolbarComponent = curryComponent(
+          component,
+          { data },
+          getOwner(this)
+        );
+      };
+
+      this.appEvents.on("composer:replace-toolbar", replaceToolbar);
+      this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
+
       return () => {
+        this.appEvents.off("composer:replace-toolbar", replaceToolbar);
+        this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
+
         this.appEvents.off(
           "composer:insert-block",
           textManipulation,
@@ -715,45 +696,41 @@ export default class DEditor extends Component {
             {{if this.disabled 'disabled'}}
             {{if this.isEditorFocused 'in-focus'}}"
         >
-          <div class="d-editor-button-bar" role="toolbar">
-            {{#if this.siteSettings.rich_editor}}
-              <ToggleSwitch
-                @preventFocus={{true}}
-                @disabled={{@disableSubmit}}
-                @state={{this.isRichEditorEnabled}}
-                {{on "click" this.toggleRichEditor}}
-              />
-            {{/if}}
 
-            {{#each this.toolbar.groups as |group|}}
-              {{#each group.buttons as |b|}}
-                {{#if (b.condition this)}}
-                  {{#if b.popupMenu}}
-                    <ToolbarPopupMenuOptions
-                      @content={{this.popupMenuOptions}}
-                      @onChange={{this.onPopupMenuAction}}
-                      @onOpen={{fn b.action b}}
-                      @tabindex={{-1}}
-                      @onKeydown={{this.rovingButtonBar}}
-                      @options={{hash icon=b.icon focusAfterOnChange=false}}
-                      class={{b.className}}
-                    />
-                  {{else}}
-                    <DButton
-                      @action={{fn b.action b}}
-                      @translatedTitle={{b.title}}
-                      @label={{b.label}}
-                      @icon={{b.icon}}
-                      @preventFocus={{b.preventFocus}}
-                      @onKeyDown={{this.rovingButtonBar}}
-                      tabindex={{b.tabindex}}
-                      class={{b.className}}
-                    />
-                  {{/if}}
-                {{/if}}
-              {{/each}}
-            {{/each}}
-          </div>
+          {{#if this.replacedToolbarInstance}}
+            <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
+              <DButton
+                @action={{this.resetToolbar}}
+                @icon="angle-left"
+                @preventFocus={{true}}
+                @onKeyDown={{this.rovingButtonBar}}
+                class="d-editor-button-bar__back"
+              />
+              <ToolbarButtons
+                @data={{this.replacedToolbarInstance}}
+                @rovingButtonBar={{this.rovingButtonBar}}
+                @isFirst={{false}}
+              />
+            </div>
+          {{else}}
+            <div class="d-editor-button-bar" role="toolbar">
+              {{#if this.siteSettings.rich_editor}}
+                <ToggleSwitch
+                  @preventFocus={{true}}
+                  @disabled={{@disableSubmit}}
+                  @state={{this.isRichEditorEnabled}}
+                  {{on "click" this.toggleRichEditor}}
+                  {{on "keydown" this.rovingButtonBar}}
+                />
+              {{/if}}
+
+              <ToolbarButtons
+                @data={{this.toolbar}}
+                @rovingButtonBar={{this.rovingButtonBar}}
+                @isFirst={{not this.siteSettings.rich_editor}}
+              />
+            </div>
+          {{/if}}
 
           <ConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent
@@ -770,6 +747,7 @@ export default class DEditor extends Component {
             @categoryId={{@categoryId}}
             @topicId={{@topicId}}
             @id={{this.textAreaId}}
+            @replaceToolbar={{this.replaceToolbar}}
           />
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet
@@ -780,7 +758,7 @@ export default class DEditor extends Component {
         </div>
       </div>
       <DEditorPreview
-        @preview={{this.preview}}
+        @preview={{if @hijackPreview @hijackPreview this.preview}}
         @forcePreview={{this.forcePreview}}
         @onPreviewUpdated={{this.previewUpdated}}
         @outletArgs={{this.outletArgs}}
