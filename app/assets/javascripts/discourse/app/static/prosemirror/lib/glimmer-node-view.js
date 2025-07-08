@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 
 /**
  * @typedef {Object} GlimmerNodeViewArgs
@@ -43,11 +44,11 @@ export default class GlimmerNodeView {
   }
 
   selectNode() {
-    this.#componentInstance?.selectNode?.();
+    next(() => this.#componentInstance?.selectNode?.());
   }
 
   deselectNode() {
-    this.#componentInstance?.deselectNode?.();
+    next(() => this.#componentInstance?.deselectNode?.());
   }
 
   setSelection() {
