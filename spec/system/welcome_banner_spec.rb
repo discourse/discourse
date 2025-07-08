@@ -5,7 +5,7 @@ describe "Welcome banner", type: :system do
   let(:banner) { PageObjects::Components::WelcomeBanner.new }
   let(:search_page) { PageObjects::Pages::Search.new }
 
-  context "when welcome banner is enabled" do
+  context "when enabled" do
     before { SiteSetting.enable_welcome_banner = true }
 
     it "shows for logged in and anonymous users" do
@@ -104,7 +104,7 @@ describe "Welcome banner", type: :system do
     end
   end
 
-  context "when welcome banner is not enabled" do
+  context "when not enabled" do
     before { SiteSetting.enable_welcome_banner = false }
 
     it "does not show the welcome banner for logged in and anonymous users" do
