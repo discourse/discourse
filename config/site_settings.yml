@@ -2271,9 +2271,13 @@ files:
     hidden: true
   video_conversion_enabled:
     default: false
+    validator: "VideoConversionEnabledValidator"
   video_conversion_service:
+    type: enum
     default: "aws_mediaconvert"
-    hidden: true
+    choices:
+      - "aws_mediaconvert"
+    hidden: false
   mediaconvert_role_arn:
     default: ""
   mediaconvert_endpoint:
