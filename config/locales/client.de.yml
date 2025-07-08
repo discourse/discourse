@@ -738,6 +738,61 @@ de:
         reviewable_post:
           title: "Beitrag"
           noun: "Beitrag"
+      flagged_as: "Gemeldet als"
+      assigned_to: "Zugeordnet zu"
+      moderator_actions: "Moderationsaktionen"
+      timeline_and_notes: "Zeitleiste & Notizen"
+      timeline:
+        target_created: "Beitrag erstellt"
+        target_created_by: "Beitrag erstellt von %{username} - %{relativeDate}"
+        flagged: "Gemeldet"
+        flagged_as_by: "Gemeldet als %{flagReason} von %{username} - %{relativeDate}"
+        claimed: "übernommen"
+        claimed_by: "Übernommen von %{username} - %{relativeDate}"
+        reviewed: "Überprüft"
+        reviewed_by: "Überprüft von %{username} - %{relativeDate}"
+        view_conversation: "PM ansehen"
+        note_added: "Moderationsnotiz"
+        note_added_by: "Moderationsnotiz von %{username} - %{relativeDate}"
+        no_events: "Keine Zeitleistenereignisse zum Anzeigen"
+      notes:
+        add_note_description: "Nur für Moderatoren sichtbar. Verwenden Sie diese Notiz, um Kontext oder Entscheidungen zur Überprüfung hinzuzufügen."
+        add_note_button: "Notiz hinzufügen"
+        placeholder: "Schreib deine Notiz hier..."
+        chars_remaining: "%{count} Zeichen verbleiben"
+        delete_note: "Diese Notiz löschen"
+        delete: "Löschen"
+      new_topic_label: "Neues Thema"
+      queued_user: "Benutzer in der Warteschlange"
+      posted_in: "Veröffentlicht in"
+      flagged_user: "Gemeldeter Benutzer"
+      review_user: "Benutzer"
+      need_help: "Brauchst du Hilfe?"
+      copy_link: "Link kopieren"
+      view_source: "Quelltext ansehen"
+      insights:
+        title: "Einblicke"
+        flag_volume: "Meldeaufkommen"
+        flagged_by_users:
+          one: "Gemeldet von %{count} einzigartigen Benutzer"
+          other: "Gemeldet von %{count} einzigartigen Benutzern"
+        similar_posts: "Ähnliche frühere Beiträge"
+        flagged_in_timeframe: "%{count} zuvor gemeldet"
+        user_activity: "Benutzeraktivität"
+        activities:
+          new_account: "neues Konto"
+          trust_level: "Vertrauensstufe: %{trustLevelName}"
+          posts:
+            one: "%{count} Beitrag"
+            other: "%{count} Beiträge"
+        solution_marked: "Lösung markiert"
+        topic_has_solution: "Dieses Thema hat eine Lösung"
+        visibility: "Sichtbarkeit"
+        topic_unlisted: "Dieses Thema ist nicht gelistet, sondern nur über einen direkten Link zugänglich - nicht öffentlich."
+      help:
+        moderation_guide: "Leitfaden zur Discourse-Moderation"
+        flag_priorities: "Verwalten der Benutzerreputation und Meldungssprioritäten"
+        spam_detection: "Spam-Erkennung"
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
@@ -1177,6 +1232,7 @@ de:
     user_fields:
       none: "(wähle eine Option aus)"
       required: 'Bitte gib einen Wert für „%{name}“ ein'
+      required_select: 'Bitte wähle einen Wert für „%{name}“ aus'
       required_checkbox: 'Das Feld „%{name}“ ist erforderlich'
       same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden"
       optional: (optional)
@@ -2106,6 +2162,8 @@ de:
       errors_summary_title: "Dieses Formular enthält Fehler:"
       dirty_form: "Du hast deine Änderungen nicht gespeichert! Bist du sicher, dass du die Seite verlassen möchtest?"
       errors:
+        starts_with: "Muss mit %{prefix} beginnen"
+        ends_with: "Muss mit %{suffix} enden"
         required: "Erforderlich"
         date_before_or_equal: "Muss %{date} oder früher sein"
         date_after_or_equal: "Muss %{date} oder später sein"
@@ -2668,6 +2726,11 @@ de:
       image_alt_text:
         aria_label: Alternativ-Text für Bild
         title: "Bildbeschreibung hinzufügen"
+      image_toolbar:
+        alt_text: "Bildbeschreibung hinzufügen"
+        zoom_out: "Bildgröße verkleinern"
+        zoom_in: "Bildgröße erhöhen"
+        remove: "Bild entfernen"
       image_scale_button: "Bild auf %{percent} % skalieren"
       delete_image_button: Bild löschen
       toggle_image_grid: Bildraster umschalten
@@ -3082,7 +3145,7 @@ de:
         hot: "Es gibt keine heißen Themen."
         filter: "Es gibt keine Themen."
         education:
-          topic_tracking_preferences: "Du kannst deine Einstellungen für die Verfolgung neuer Themen in <a href=\"%{basePath}/my/preferences/tracking\">deinen Einstellungen</a> einsehen und ändern."
+          topic_tracking_preferences: 'Du kannst deine Einstellungen für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
           unread: "Nichts ungelesen geblieben...beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues... Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues... Schau bald wieder vorbei!"
@@ -3796,6 +3859,9 @@ de:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
           other: "Möchtest du diese %{count} Beiträge wirklich zusammenführen?"
       revisions:
+        locale:
+          no_locale_set: "Keine Sprache eingestellt"
+          locale_removed: "Sprache entfernt"
         controls:
           first: "Erste Überarbeitung"
           previous: "Vorherige Überarbeitung"
@@ -4140,6 +4206,8 @@ de:
       pinned:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
+      hot:
+        title: "Heiß"
       unlisted:
         help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden. %{unlistedReason}"
       personal_message:
@@ -4242,11 +4310,16 @@ de:
           other: "Neu (%{count})"
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
         all: "Alle"
+        all_tooltip: "Alle neuen Themen und Themen, auf die in den letzten Tagen geantwortet wurde"
         all_with_count: "Alle (%{count})"
+        new_topics_tooltip: "Neue Themen"
         topics: "Themen"
         topics_with_count: "Themen (%{count})"
+        new_replies_tooltip: "Neue Antworten"
         replies: "Antworten"
         replies_with_count: "Antworten (%{count})"
+      new_new:
+        help: "Themen, die in den letzten Tagen erstellt oder beantwortet wurden"
       posted:
         title: "Meine Beiträge"
         help: "Themen, zu denen du beigetragen hast"
@@ -4783,6 +4856,9 @@ de:
             invite:
               content: "Einladen"
               title: "Neue Mitglieder einladen"
+            my_messages:
+              content: "Meine Nachrichten"
+              title: "Meine persönlichen Nachrichten"
         global_section: "Globaler Abschnitt, für alle sichtbar"
       panels:
         forum:
@@ -6042,6 +6118,9 @@ de:
           save_successful: "Benutzerfeld gespeichert."
         color_palettes:
           palette_name: "Name"
+          copy_to_clipboard: "In Zwischenablage kopieren"
+          copied_to_clipboard: "Wurde in Zwischenablage kopiert"
+          copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
           duplicate: "Duplizieren"
           delete: "Löschen"
           color_options:
@@ -6351,6 +6430,7 @@ de:
           compare_commits: "(Siehe neue Commits)"
           remote_theme_edits: "Wenn du dieses Theme bearbeiten möchtest, musst du <a href='%{repoURL}' target='_blank'>eine Änderung in seinem Repository einreichen</a>"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
+          built_in_description: "Dieses Theme ist vorinstalliert und kann nicht gelöscht oder angepasst werden"
           imported_from_archive: "Dieses Theme wurde aus einer .zip-Datei importiert"
           settings: "Einstellungen"
           colors: "Farben"

@@ -637,6 +637,15 @@ te:
         reviewable_post:
           title: "పోస్ట్"
           noun: "పోస్ట్"
+      notes:
+        delete: "తొలగించు"
+      review_user: "సభ్యుడు"
+      insights:
+        activities:
+          posts:
+            one: "%{count} పోస్ట్"
+            other: "%{count} పోస్ట్‌లు"
+        visibility: "దృశ్యమానత"
       approval:
         title: "పోస్ట్ కు ఆమోదం అవసరం"
         description: "మేము మీ కొత్త పోస్ట్‌ను స్వీకరించాము కానీ అది కనిపించడానికి ముందు దానిని మోడరేటర్ ఆమోదించాలి. దయచేసి ఓపిక పట్టండి."
@@ -3687,6 +3696,8 @@ te:
       pinned:
         title: "పిన్ చేయబడింది"
         help: "ఈ విషయం మీ కోసం పిన్ చేయబడింది. ఇది దాని వర్గం ఎగువన ప్రదర్శించబడుతుంది"
+      hot:
+        title: "హాట్"
       personal_message:
         title: "ఈ విషయం వ్యక్తిగత సందేశం"
         help: "ఈ విషయం వ్యక్తిగత సందేశం"
@@ -3774,7 +3785,6 @@ te:
         replies: "ప్రత్యుత్తరాలు"
         replies_with_count: "ప్రత్యుత్తరాలు (%{count})"
       posted:
-        title: "నా పోస్ట్‌లు"
         help: "మీరు పోస్ట్ చేసిన విషయాలు"
       bookmarks:
         title: "బుక్‌మార్క్‌లు"
@@ -4257,8 +4267,6 @@ te:
               content: "సభ్యులు"
               title: "సభ్యులందరి జాబితా"
             my_posts:
-              content: "నా పోస్ట్‌లు"
-              content_drafts: "నా చిత్తుప్రతులు"
               title: "నా ఇటీవలి విషయం కార్యాచరణ"
               title_drafts: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
               draft_count:
@@ -5023,6 +5031,9 @@ te:
           delete: "తొలగించు"
         color_palettes:
           palette_name: "పేరు"
+          copy_to_clipboard: "క్లిప్‌బోర్డ్‌కు కాపీ చేయండి"
+          copied_to_clipboard: "క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
+          copy_to_clipboard_error: "క్లిప్‌బోర్డ్‌కి డేటాను కాపీ చేయడంలో లోపం"
           duplicate: "నకిలీ చేయండి"
           delete: "తొలగించు"
           colors:

@@ -637,6 +637,15 @@ sv:
         reviewable_post:
           title: "Inlägg"
           noun: "inlägg"
+      notes:
+        delete: "Radera"
+      review_user: "Användare"
+      insights:
+        activities:
+          posts:
+            one: "%{count} inlägg"
+            other: "%{count} inlägg"
+        visibility: "Synlighet"
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det måste godkännas av en moderator innan det kan visas. Ha tålamod."
@@ -3680,6 +3689,8 @@ sv:
       pinned:
         title: "Fäst"
         help: "Detta ämne är fäst för dig. Det visas i toppen av dess kategori"
+      hot:
+        title: "Hett"
       personal_message:
         title: "Detta ämne är ett personligt meddelande"
         help: "Detta ämne är ett personligt meddelande"
@@ -4250,7 +4261,6 @@ sv:
               title: "Lista över alla användare"
             my_posts:
               content: "Mina inlägg"
-              content_drafts: "Mina utkast"
               title: "Min senaste ämnesaktivitet"
               title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
@@ -5024,6 +5034,9 @@ sv:
           delete: "Radera"
         color_palettes:
           palette_name: "Namn"
+          copy_to_clipboard: "Kopiera till urklipp"
+          copied_to_clipboard: "Kopierad till urklipp"
+          copy_to_clipboard_error: "Fel vid kopiering av data till urklipp"
           duplicate: "Duplicera"
           delete: "Radera"
           colors:

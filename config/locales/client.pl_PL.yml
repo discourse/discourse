@@ -559,8 +559,8 @@ pl_PL:
       new_private_message: "Nowy szkic wiadomości osobistej"
       edit_topic: "Edytuj szkic tematu"
       dropdown:
-        title: "Otwórz menu najnowszych wersji roboczych"
-        untitled: "Wersja robocza bez tytułu"
+        title: "Otwórz menu najnowszych szkiców"
+        untitled: "Szkic bez tytułu"
         view_all: "zobacz wszystkie szkice"
         other_drafts:
           one: "+%{count} inny szkic"
@@ -862,6 +862,65 @@ pl_PL:
         reviewable_post:
           title: "Post"
           noun: "post"
+      flagged_as: "Oflagowany jako"
+      assigned_to: "Przypisany do"
+      moderator_actions: "Działania moderatora"
+      timeline_and_notes: "Oś czasu i uwagi"
+      timeline:
+        target_created: "Post utworzony"
+        target_created_by: "Post utworzony przez %{username} · %{relativeDate}"
+        flagged: "Oflagowany"
+        flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
+        claimed: "Zgłoszony"
+        claimed_by: "Zgłoszony przez %{username} - %{relativeDate}"
+        reviewed: "Przejrzany"
+        reviewed_by: "Przejrzany przez %{username} · %{relativeDate}"
+        view_conversation: "zobacz PW"
+        note_added: "Uwaga moderatora"
+        note_added_by: "Uwaga moderatora %{username} - %{relativeDate}"
+        no_events: "Brak zdarzeń na osi czasu do wyświetlenia"
+      notes:
+        add_note_description: "Widoczne tylko dla moderatorów. Użyj tej uwagi, aby dodać kontekst lub decyzje dotyczące przeglądu."
+        add_note_button: "Dodaj uwagę"
+        placeholder: "Napisz swoją uwagę tutaj..."
+        chars_remaining: "Pozostałe znaki: %{count}"
+        delete_note: "Usuń tę uwagę"
+        delete: "Usuń"
+      new_topic_label: "Nowy temat"
+      queued_user: "Użytkownik w kolejce"
+      posted_in: "Opublikowano w"
+      flagged_user: "Oflagowany użytkownik"
+      review_user: "Użytkownik"
+      need_help: "Potrzebujesz pomocy?"
+      copy_link: "Skopiuj link"
+      view_source: "Wyświetl źródło"
+      insights:
+        title: "Wnioski"
+        flag_volume: "Objętość flagi"
+        flagged_by_users:
+          one: "Oflagowany przez %{count} unikalnego użytkownika"
+          few: "Oflagowany przez %{count} unikalnych użytkowników"
+          many: "Oflagowany przez %{count} unikalnych użytkowników"
+          other: "Oflagowany przez %{count} unikalnych użytkowników"
+        similar_posts: "Podobne poprzednie posty"
+        flagged_in_timeframe: "%{count} oflagowano wcześniej"
+        user_activity: "Aktywność użytkownika"
+        activities:
+          new_account: "nowe konto"
+          trust_level: "poziom zaufania: %{trustLevelName}"
+          posts:
+            one: "%{count} post"
+            few: "%{count} posty"
+            many: "%{count} postów"
+            other: "%{count} wpisów"
+        solution_marked: "Rozwiązanie oznaczone"
+        topic_has_solution: "Ten temat ma rozwiązanie"
+        visibility: "Widoczność"
+        topic_unlisted: "Ten temat jest nieumieszczony na liście. Dostępny tylko za pośrednictwem bezpośredniego łącza — niepubliczny."
+      help:
+        moderation_guide: "Przewodnik moderacji Discourse"
+        flag_priorities: "Zarządzanie reputacją użytkowników i priorytetami flag"
+        spam_detection: "Wykrywanie spamu"
       approval:
         title: "Post wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
@@ -1335,6 +1394,7 @@ pl_PL:
     user_fields:
       none: "(wybierz opcję)"
       required: 'Wprowadź wartość dla "%{name}”'
+      required_select: 'Wybierz wartość dla "%{name}"'
       required_checkbox: 'Pole "%{name}" jest wymagane'
       same_as_password: "Twoje hasło nie powinno się powtarzać w innych polach"
       optional: (opcjonalne)
@@ -1872,7 +1932,7 @@ pl_PL:
         auth_override_instructions: "Adres e-mail można zaktualizować od dostawcy uwierzytelniania."
         no_secondary: "Brak drugorzędnych adresów e-mail"
         instructions: "Nie będzie publicznie widoczny"
-        admin_note: "Uwaga: Użytkownik administratora zmieniający adres e-mail innego użytkownika niebędącego administratorem wskazuje, że użytkownik stracił dostęp do oryginalnego konta e-mail, więc na nowy adres zostanie wysłany e-mail z resetem hasła. Adres e-mail użytkownika nie ulegnie zmianie, dopóki nie zakończy się proces resetowania hasła."
+        admin_note: "Uwaga: użytkownik administratora zmieniający adres e-mail innego użytkownika niebędącego administratorem wskazuje, że użytkownik stracił dostęp do oryginalnego konta e-mail, więc na nowy adres zostanie wysłany e-mail z resetem hasła. Adres e-mail użytkownika nie ulegnie zmianie, dopóki nie zakończy się proces resetowania hasła."
         ok: "Otrzymasz potwierdzenie e-mailem"
         required: "Podaj adres e-mail"
         invalid: "Podaj poprawny adres email"
@@ -2327,6 +2387,8 @@ pl_PL:
       errors_summary_title: "Ten formularz zawiera błędy:"
       dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
       errors:
+        starts_with: "Musi zaczynać się od %{prefix}"
+        ends_with: "Musi kończyć się na %{suffix}"
         required: "Wymagane"
         date_before_or_equal: "Musi być wcześniejsza lub równa %{date}"
         date_after_or_equal: "Musi być późniejsza lub równa %{date}"
@@ -2740,11 +2802,11 @@ pl_PL:
       dark_tone: Ciemny kolor skóry
       default: Spersonalizowane emoji
     shared_drafts:
-      title: "Udostępnione projekty"
+      title: "Udostępnione szkice"
       notice: "Ten temat jest widoczny tylko dla osób, które mogą publikować współdzielone szkice postów."
       destination_category: "Kategoria docelowa"
-      publish: "Opublikuj udostępniony projekt"
-      confirm_publish: "Czy na pewno chcesz opublikować ten projekt?"
+      publish: "Opublikuj udostępniony szkic"
+      confirm_publish: "Czy na pewno chcesz opublikować ten szkic?"
       publishing: "Publikowanie tematu..."
     composer:
       emoji: "Emoji :)"
@@ -2839,8 +2901,8 @@ pl_PL:
       create_topic: "Utwórz temat"
       create_pm: "Wyślij wiadomość"
       create_whisper: "Szept"
-      create_shared_draft: "Utwórz udostępniony projekt"
-      edit_shared_draft: "Edytuj udostępniony projekt"
+      create_shared_draft: "Utwórz udostępniony szkic"
+      edit_shared_draft: "Edytuj udostępniony szkic"
       title: "Lub naciśnij %{modifier}Enter"
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
@@ -2854,7 +2916,7 @@ pl_PL:
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie"
       saved: "Zapisano!"
-      saved_draft: "Publikowanie wersji roboczej w toku. Stuknij, aby wznowić."
+      saved_draft: "Publikowanie szkicu w toku. Stuknij, aby wznowić."
       uploading: "Przesyłanie…"
       show_preview: "pokaż podgląd"
       hide_preview: "ukryj podgląd"
@@ -2891,7 +2953,7 @@ pl_PL:
       help: "Pomoc formatowania Markdown"
       collapse: "zminimalizuj panel kompozytora"
       open: "otwórz panel kompozytora"
-      abandon: "zamknij kompozytora i odrzuć wersję roboczą"
+      abandon: "zamknij kompozytora i odrzuć szkic"
       enter_fullscreen: "wprowadź kompozytora na pełnym ekranie"
       exit_fullscreen: "zamknij kompozytora na pełnym ekranie"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
@@ -2911,7 +2973,7 @@ pl_PL:
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
-        draft: Wersja robocza
+        draft: Szkic
         edit: Edycja
         reply_to_post:
           label: Odpowiedz na post %{postUsername}
@@ -2919,7 +2981,7 @@ pl_PL:
         reply_as_new_topic:
           label: Odpowiedz jako powiązany temat
           desc: Utwórz nowy temat powiązany z tym tematem
-          confirm: Zapisano nową wersję roboczą tematu, która zostanie zastąpiona, jeśli utworzysz połączony temat.
+          confirm: Masz zapisany nowy szkic tematu, który zostanie nadpisany, jeśli utworzysz powiązany temat.
         reply_as_new_group_message:
           label: Odpowiedz jako nowa wiadomość grupowa
           desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
@@ -2933,7 +2995,7 @@ pl_PL:
           label: "Nowy temat"
           desc: Utwórz nowy temat
         shared_draft:
-          label: "Udostępniony projekt"
+          label: "Udostępniony szkic"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
         toggle_topic_bump:
           label: "Przełącz podbicie tematu"
@@ -2943,6 +3005,11 @@ pl_PL:
       image_alt_text:
         aria_label: Tekst alternatywny dla obrazu
         title: "Dodaj opis obrazu"
+      image_toolbar:
+        alt_text: "Dodaj opis obrazu"
+        zoom_out: "Zmniejsz rozmiar obrazu"
+        zoom_in: "Zwiększ rozmiar obrazu"
+        remove: "Usuń obraz"
       image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
@@ -3423,7 +3490,7 @@ pl_PL:
         hot: "Nie ma gorących tematów."
         filter: "Brak tematów."
         education:
-          topic_tracking_preferences: "Możesz przeglądać i zmieniać ustawienia śledzenia nowych tematów w <a href=\"%{basePath}/my/preferences/tracking\">swoich preferencjach</a>."
+          topic_tracking_preferences: 'Możesz przeglądać i zmieniać ustawienia śledzenia nowych tematów w <a href="%{basePath}/my/preferences/tracking">swoich preferencjach</a>.'
           unread: "Nic nie pozostało nieprzeczytane... imponujące!"
           new_new: "Na razie nic nowego. Sprawdź wkrótce!"
           new: "Na razie nic nowego. Sprawdź wkrótce!"
@@ -3785,7 +3852,7 @@ pl_PL:
       flag_topic:
         title: "Zgłoś"
         help: "Oznacz ten temat prywatną flagą lub wyślij osobistą wiadomość na jego temat"
-        success_message: "Ten temat został pomyślnie zgłoszony."
+        success_message: "Ten temat został pomyślnie oflagowany."
       make_public:
         title: "Konwertuj na temat publiczny"
         choose_category: "Wybierz kategorię dla tematu publicznego:"
@@ -4209,9 +4276,9 @@ pl_PL:
             many: "i %{count} innych przeczytało to"
             other: "i %{count} innych przeczytało to"
         by_you:
-          off_topic: "Oznaczono jako nie-na-temat"
+          off_topic: "Oflagowano jako nie-na-temat"
           spam: "Oflagowano jako spam"
-          inappropriate: "Oznaczono jako niewłaściwe"
+          inappropriate: "Oflagowano jako niewłaściwe"
           illegal: "Oflagowano jako nielegalne"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
@@ -4229,6 +4296,9 @@ pl_PL:
           many: "Czy na pewno chcesz połączyć te %{count} postów?"
           other: "Czy na pewno chcesz połączyć te %{count} postów?"
       revisions:
+        locale:
+          no_locale_set: "Nie ustawiono języka"
+          locale_removed: "Język usunięty"
         controls:
           first: "Pierwsza wersja"
           previous: "Poprzednia wersja"
@@ -4583,6 +4653,8 @@ pl_PL:
       pinned:
         title: "Przypięty"
         help: "Temat przypięty dla twojego konta. Będzie wyświetlany na początku swojej kategorii."
+      hot:
+        title: "Gorące"
       unlisted:
         help: "Ten temat nie znajduje się na liście; nie będzie wyświetlany na listach tematów i można uzyskać do niego dostęp tylko za pośrednictwem bezpośredniego linku. %{unlistedReason}"
       personal_message:
@@ -4703,13 +4775,18 @@ pl_PL:
           other: "Nowe (%{count})"
         help: "tematy dodane w ciągu ostatnich kilku dni"
         all: "Wszystkie"
+        all_tooltip: "Wszystkie nowe tematy i te, na które odpowiedziano w ciągu ostatnich kilku dni"
         all_with_count: "Wszystkie (%{count})"
+        new_topics_tooltip: "Nowe tematy"
         topics: "Tematy"
         topics_with_count: "Tematy (%{count})"
+        new_replies_tooltip: "Nowe odpowiedzi"
         replies: "Odpowiedzi"
         replies_with_count: "Odpowiedzi (%{count})"
+      new_new:
+        help: "tematy utworzone lub na które odpowiedziano w ciągu ostatnich kilku dni"
       posted:
-        title: "Wysłane"
+        title: "Moje posty"
         help: "tematy w których pisałeś"
       bookmarks:
         title: "Zakładki"
@@ -5270,10 +5347,10 @@ pl_PL:
               content: "Użytkownicy"
               title: "Lista wszystkich użytkowników"
             my_posts:
-              content: "Wysłane"
+              content: "Moje posty"
               content_drafts: "Moje szkice"
               title: "Moja ostatnia aktywność w temacie"
-              title_drafts: "Moje nieopublikowane wersje robocze"
+              title_drafts: "Moje nieopublikowane szkice"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"
@@ -5290,6 +5367,9 @@ pl_PL:
             invite:
               content: "Zaproś"
               title: "Zaproś nowych członków"
+            my_messages:
+              content: "Moje wiadomości"
+              title: "Moje osobiste wiadomości"
         global_section: "Sekcja globalna, widoczna dla wszystkich"
       panels:
         forum:
@@ -6593,6 +6673,9 @@ pl_PL:
           save_successful: "Pole użytkownika zapisane."
         color_palettes:
           palette_name: "Nazwa"
+          copy_to_clipboard: "Skopiuj do schowka"
+          copied_to_clipboard: "Tekst skopiowany do schowka."
+          copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
           duplicate: "Powiel"
           delete: "Usuń"
           color_options:
@@ -6908,6 +6991,7 @@ pl_PL:
           compare_commits: "(Sprawdź nowe commity)"
           remote_theme_edits: "Jeśli chcesz edytować ten motyw, musisz <a href='%{repoURL}' target='_blank'>przesłać zmianę w jego repozytorium</a>"
           repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
+          built_in_description: "Ten motyw jest wstępnie zainstalowany i nie można go usunąć ani dostosować"
           imported_from_archive: "Motyw został zaimportowany z pliku .zip"
           settings: "Ustawienia"
           colors: "Kolory"
@@ -7828,7 +7912,7 @@ pl_PL:
           requirement_heading: "Wymaganie"
           posts_read_days: "Przeczytane posty: unikalne dni"
           days: "dni"
-          topics_replied_to: "Tematy w odpowiedzi do"
+          topics_replied_to: "Tematy, na które odpowiedziano"
           topics_viewed: "Wyświetlone Tematy"
           topics_viewed_all_time: "Oglądane Tematy (cały czas)"
           posts_read: "Przeczytane Wpisy"

@@ -716,6 +716,16 @@ fr:
         reviewable_post:
           title: "Message"
           noun: "message"
+      notes:
+        delete: "Supprimer"
+      review_user: "Utilisateur"
+      copy_link: "Copier le lien"
+      insights:
+        activities:
+          posts:
+            one: "%{count} message"
+            other: "%{count} messages"
+        visibility: "Visibilité"
       approval:
         title: "Ce message doit être approuvé"
         description: "Votre nouveau message a bien été envoyé, mais il doit être accepté par un modérateur avant d'apparaître publiquement. Merci de votre patience."
@@ -2601,6 +2611,8 @@ fr:
       image_alt_text:
         aria_label: Texte alternatif pour l'image
         title: "Ajouter une description de l'image"
+      image_toolbar:
+        alt_text: "Ajouter une description de l'image"
       image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
@@ -4027,6 +4039,8 @@ fr:
       pinned:
         title: "Épinglé"
         help: "Ce sujet est épinglé pour vous ; il s'affichera en haut de sa catégorie"
+      hot:
+        title: "Populaires"
       unlisted:
         help: "Ce sujet n'apparaît plus dans la liste des sujets et sera seulement accessible via un lien direct. %{unlistedReason}"
       personal_message:
@@ -4135,7 +4149,7 @@ fr:
         replies: "Réponses"
         replies_with_count: "Réponses (%{count})"
       posted:
-        title: "Mes messages"
+        title: "Mes publications"
         help: "sujets auxquels vous avez participé"
       bookmarks:
         title: "Signets"
@@ -4649,8 +4663,7 @@ fr:
               content: "Utilisateurs"
               title: "Liste de tous les utilisateurs"
             my_posts:
-              content: "Mes messages"
-              content_drafts: "Mes brouillons"
+              content: "Mes publications"
               title: "Mon activité récente sur le sujet"
               title_drafts: "Mes brouillons non publiés"
               draft_count:
@@ -5668,6 +5681,9 @@ fr:
           save_successful: "Champ utilisateur enregistré."
         color_palettes:
           palette_name: "Nom"
+          copy_to_clipboard: "Copier dans le presse-papier"
+          copied_to_clipboard: "Copié dans le presse-papier"
+          copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
           duplicate: "Dupliquer"
           delete: "Supprimer"
           color_options:
