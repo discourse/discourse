@@ -258,6 +258,7 @@ hu:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} nem érvényes nyelv"
       too_long_validation:
         one: "%{count} karakterre korlátozva; megadott karakterek száma: %{length}."
         other: "%{count} karakterre korlátozva; megadott karakterek száma: %{length}."
@@ -287,6 +288,7 @@ hu:
       less_than_or_equal_to: kisebb vagy egyenlőnek kell lennie, mint %{count}
       not_a_number: ez nem szám
       not_an_integer: egész számnak kell lennie
+      must_all_be_positive: mindegyiknek pozitívnak kell lennie
       odd: páratlan számnak kell lennie
       record_invalid: ! "Érvényesítés sikertelen: %{errors}"
       max_emojis: "nem lehet több mint %{max_emojis_count} emodzsi"
@@ -1703,7 +1705,7 @@ hu:
     x_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
     notification_email: "A feladó e-mail címe, amelyet az összes lényeges rendszerüzenet küldésekor használ a rendszer. Az itt megadott domainhez helyesen beállított SPF, DKIM és fordított PTR rekordokkal kell rendelkeznie ahhoz, hogy az e-mailek megérkezzenek."
     email_custom_headers: "Függőleges vonallal elválasztott lista az egyéni e-mail fejlécekről"
-    email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Részletesebb tájékoztatást nyújt a felhasználóknak arról, hogy miért nem férhetnek hozzá egy adott témához. Megjegyzés: Ez kevésbé biztonságos, mert a felhasználók tudni fogják, ha egy URL érvényes témára mutat."
     enforce_second_factor: "Megköveteli a felhasználóktól a kétfaktoros hitelesítés engedélyezését, mielőtt hozzáférhetnének a Discourse felhasználói felületéhez. Ez a beállítás nem érinti az API vagy a 'DiscourseConnect szolgáltató' hitelesítést. Ha az enforce_second_factor_on_external_auth be van kapcsolva, a felhasználók nem tudnak bejelentkezni külső hitelesítési szolgáltatókkal, miután beállították a kétfaktoros hitelesítést."
     enforce_second_factor_on_external_auth: "Megköveteli a felhasználóktól a kétfaktoros hitelesítés használatát minden esetben. Ha ez be van kapcsolva, megakadályozza, hogy a felhasználók külső hitelesítési módszerekkel jelentkezzenek be, ha a kétfaktoros hitelesítésük engedélyezve van. Ha ki van kapcsolva, a felhasználóknak csak akkor kell megerősíteniük a kétfaktoros hitelesítésüket, amikor felhasználónévvel és jelszóval jelentkeznek be. Lásd még az enforce_second_factor beállítást."
@@ -1772,6 +1774,7 @@ hu:
     blocked_ip_blocks: "Privát IP-címtartományok listája, amelyeket a Discourse soha nem indexelhet"
     allowed_internal_hosts: "Belső kiszolgálók listája, amelyeket a Discourse biztonságosan indexelhet oneboxing és egyéb célokra"
     allowed_onebox_iframes: "Az iframe src domainek listája, amelyek engedélyezettek a Onebox beágyazásokon keresztül. A * minden alapértelmezett Onebox motort engedélyez."
+    allowed_iframes: "Az iframe src URL előtagok listája, amelyeket a Discourse biztonságosan engedélyez a bejegyzésekben. A * karakter tetszőleges számú, nem-/ karaktert helyettesíthet."
     allowed_crawler_user_agents: "Azon webes keresőrobotok felhasználói ügynökei, amelyek számára engedélyezett a webhely elérése. FIGYELMEZTETÉS! ENNEK BEÁLLÍTÁSA MEGTILTJA AZ ÖSSZES ITT NEM FELSOROLT KERESŐROBOT HOZZÁFÉRÉSÉT!"
     blocked_crawler_user_agents: "A felhasználói ügynök karakterláncban szereplő egyedi, kis- és nagybetűkre nem érzékeny szó, amely azonosítja azokat a webes keresőrobotokat, amelyek számára nem engedélyezett a webhely elérése. Nem alkalmazandó, ha az engedélyezési lista definiálva van."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
@@ -1896,6 +1899,7 @@ hu:
     s3_endpoint: "A végpont módosítható, hogy S3-kompatibilis szolgáltatásba, például DigitalOcean Spaces-be vagy Minio-ba készítsen biztonsági mentést. FIGYELMEZTETÉS: Hagyja üresen, ha AWS S3-at használ."
     s3_configure_tombstone_policy: "Automatikus törlési szabályzat engedélyezése a törölt feltöltésekre. FONTOS: Ha ki van kapcsolva, a feltöltések törlése után nem szabadul fel tárhely."
     s3_disable_cleanup: "Megakadályozza a régi biztonsági mentések eltávolítását az S3-ból, ha több biztonsági mentés van, mint a megengedett maximum."
+    s3_use_acls: "Az AWS azt ajánlja, hogy ne használjon ACL-eket az S3 vödrökön; csak akkor törölje ezt a jelölőnégyzetet, ha a konfigurált `s3_upload_bucket` és `s3_backup_bucket` engedélyezési házirendeket kívánja konfigurálni."
     enable_direct_s3_uploads: "Lehetővé teszi a közvetlen többrészes feltöltéseket az Amazon S3-ba, további részletekért lásd: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469"
     backup_time_of_day: "A nap azon időpontja UTC-ben, amikor a biztonsági mentésnek meg kell történnie."
     backup_with_uploads: "Feltöltések felvétele az ütemezett biztonsági mentésekbe. Ennek kikapcsolásával csak az adatbázisról készül biztonsági mentés."
@@ -2451,6 +2455,10 @@ hu:
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
     rich_editor: "Engedélyezze a szerkesztőt, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új szövegszerkesztő között az intuitívabb és felhasználóbarátabb szerkesztés érdekében. A szövegszerkesztő aktív fejlesztés alatt áll, így még nem minden funkció támogatott - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>további részletekért lásd a Meta oldalon</a>."
     viewport_based_mobile_mode: "KÍSÉRLETI: Tiltsa le a felhasználói ügynök alapú mobil/asztali módokat, és használja helyettük a nézetablak szélességét."
+    content_localization_enabled: "Lokalizált tartalmakat jelenít meg a felhasználók számára a böngésző vagy a felhasználói nyelvi beállítások alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. A támogatott helyi nyelvek a 'tartalom lokalizációja támogatott helyi nyelvek' menüpontban vannak beállítva."
+    content_localization_supported_locales: "A támogatott helyi nyelvek listája, amelyekre a felhasználói tartalom lefordítható. Feltételezi, hogy a 'tartalom lokalizáció engedélyezve'."
+    content_localization_allowed_groups: "Lokalizált tartalom frissítésére jogosult csoportok. Feltételezi a 'tartalom lokalizáció engedélyezve' opciót."
+    content_localization_anon_language_switcher: "Engedélyezze a nyelvváltót, amely lehetővé teszi a nem bejelentkezett látogatók számára, hogy a Discourse lefordított változatai és a felhasználók által készített tartalmak között váltsanak. A 'tartalom lokalizációja támogatott lokalizációk' menüpontban meghatározott nyelvek listájától függ."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."
@@ -2520,6 +2528,8 @@ hu:
       delete_rejected_email_after_days: "Ez a beállítás nem lehet alacsonyabb, mint a delete_email_logs_after_days beállítás, és nem lehet nagyobb, mint %{max}"
       invalid_uncategorized_category_setting: 'A "Nem kategorizált" kategória nem választható ki, ha a "nem kategorizált témák engedélyezése" nincs engedélyezve.'
       invalid_search_ranking_weights: "Az érték érvénytelen a search_ranking_weights webhely beállításánál. Példa: „{0.1,0.2,0.3,1.0}”. Vegye figyelembe, hogy az egyes súlyok maximális értéke 1,0."
+      content_localization_locale_limit: "A támogatott nyelvjárások száma nem haladhatja meg a %{max} értéket."
+      content_localization_anon_language_switcher_requirements: "A nyelvváltóhoz engedélyezni kell a „sütiből beállított területi beállítás” webhelybeállítást, és a „tartalom lokalizációját támogató területi beállítások” beállításnak legalább egy nyelvet kell tartalmaznia."
     keywords:
       clean_up_inactive_users_after_days: "deaktiválva|inaktív|nem aktivált"
       navigation_menu: "oldalsáv|lenyíló fejléc"
@@ -2662,7 +2672,8 @@ hu:
     not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
     omniauth_error:
-      generic: "Sajnáljuk, hiba történt a fiókod %{provider} használatával történő hitelesítése során. Kérjük, próbáld újra."
+      generic_without_provider: "Sajnáljuk, hiba történt a fiókja bejelentkezési szolgáltatással történő hitelesítése során. Kérjük, próbálja újra."
+      generic_with_provider: "Sajnáljuk, hiba történt a fiókod %{provider} használatával történő hitelesítése során. Kérjük, próbáld újra."
       csrf_detected: "Sajnáljuk, az engedélyezés időtúllépést okozott, vagy böngészőt váltott. Kérjük, próbálja újra."
       request_error: "Sajnáljuk, hiba történt az engedélyezés megkezdésekor. Kérjük, próbálja újra."
       invalid_iat: "Sajnáljuk, a szerver órajelének eltérései miatt nem tudjuk ellenőrizni az engedélyezési tokent. Kérjük, próbálja újra."
@@ -4737,7 +4748,7 @@ hu:
       name: Első emodzsi
       description: Egy emodzsit használt egy bejegyzésben
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először adsz hozzá egy Emojit a hozzászólásodhoz :thumbsup:. Az emojik segítségével érzelmeket közvetíthetsz a hozzászólásaidban, a boldogságtól :smiley: a szomorúságon át :anguished: a dühöngésen :angry: és mindenen máson keresztül :sunglasses:. Csak írj be egy :-t (kettőspont), vagy nyomd meg az Emoji eszköztár gombját a szerkesztőben, hogy több száz lehetőség közül választhass :ok_hand:.
+        Ezt a jelvényt akkor kapja, amikor először ad hozzá egy emodzsit a hozzászólásához :thumbsup:. Az emodzsik segítségével érzelmeket közvetíthet a hozzászólásaiban, a boldogságtól :smiley: a szomorúságon :anguished: és a haragon :angry: át bármeddig :sunglasses:. Csak írjon be egy kettőspontot, vagy nyomja meg az Emodzsi eszköztár gombját a szerkesztőben, hogy több száz lehetőség közül választhasson :ok_hand:
     first_mention:
       name: Első megemlítés
       description: Megemlített egy felhasználót egy bejegyzésben

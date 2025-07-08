@@ -7,6 +7,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
+import { modifier } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
@@ -27,7 +28,10 @@ import { isTesting } from "discourse/lib/environment";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyMutableValueTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -50,14 +54,39 @@ export default class Post extends Component {
 
   decoratorState = new TrackedMap();
 
+  addEventListeners = modifier((element, [listeners]) => {
+    for (const { event, callback } of listeners) {
+      element.addEventListener(event, callback);
+    }
+
+    return () => {
+      for (const { event, callback } of listeners) {
+        element.removeEventListener(event, callback);
+      }
+    };
+  });
+
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
       post: this.args.post,
     });
   }
 
+  get additionalArticleClasses() {
+    return applyValueTransformer("post-article-class", [], {
+      post: this.args.post,
+    });
+  }
+
   get canLoadMoreRepliesBelow() {
     return this.repliesBelow.length < this.args.post.reply_count;
+  }
+
+  get customEventListeners() {
+    return applyMutableValueTransformer("post-event-listener", [], {
+      post: this.args.post,
+      decoratorState: this.decoratorState,
+    });
   }
 
   get filteredRepliesShown() {
@@ -396,6 +425,7 @@ export default class Post extends Component {
                   "post--auto-generated is-auto-generated"
                 )
                 (if @post.via_email "post--via-email via-email")
+                this.additionalArticleClasses
               }}
               aria-label={{i18n
                 "share.post"
@@ -405,6 +435,7 @@ export default class Post extends Component {
               data-post-id={{@post.id}}
               data-topic-id={{@post.topicId}}
               data-user-id={{@post.user_id}}
+              {{this.addEventListeners this.customEventListeners}}
             >
               {{#if this.hasRepliesAbove}}
                 <div class="post__row row">
@@ -434,7 +465,11 @@ export default class Post extends Component {
                 </div>
               {{/if}}
               <div class="post__row row">
-                <PostAvatar @post={{@post}} />
+                <PostAvatar
+                  @post={{@post}}
+                  @decoratorState={{this.decoratorState}}
+                  @keyboardSelected={{@keyboardSelected}}
+                />
                 <div class="post__body topic-body clearfix">
                   <PluginOutlet
                     @name="post-metadata"

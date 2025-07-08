@@ -89,6 +89,7 @@ export default class UppyUpload {
   @service siteSettings;
   @service capabilities;
   @service session;
+  @service currentUser;
 
   @tracked uploading = false;
   @tracked processing = false;

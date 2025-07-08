@@ -39,6 +39,11 @@ module PageObjects
         self
       end
 
+      def visit_images(category)
+        page.visit("/c/#{category.slug}/edit/images")
+        self
+      end
+
       def back_to_category
         find(".edit-category-title-bar span", text: "Back to category").click
         self

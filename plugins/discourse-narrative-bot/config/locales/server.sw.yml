@@ -262,18 +262,6 @@ sw:
         not_found: |-
           Inaonekana kuwa bado unaangalia :eyes: mada hii! Kama umeshindwa kuiona, kitufe cha kiwango cha kujulisha kinapatikana chini ya mada.
       poll:
-        instructions: |-
-          Unajua unaweza kuongeza uchaguzi kwenye chapisho lolote? Jaribu kutumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kwenye uhariri ku **tengeneza uchaguzi**
-        not_found: |-
-          Whoops! Hakuna uchaguzi kwenye jibu lako.
-
-          Tumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">kwenye sehemu ya kuhariri, au nakili na kubandika uchaguzi huu kwenye jibu lako lijalo:
-          ```neno
-          [uchaguzi]
-          * :cat:
-          * :dog:
-          [/uchaguzi]
-          ```
         reply: |-
           Habari, uchaguzi mzuri! Nimefanya vipi kwenye kukufundisha?
 
@@ -282,20 +270,6 @@ sw:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Kuna mda ungependa **kuficha taarifa** kwenye majibu yako:
-
-          - Ukiwa unaongelea kuhusu sehemu nzuri za filamu au kipindi cha Runinga ambazo zinaweza kuwaharibia watu na kutowafanya watake kuangalia.
-
-          - Chapisho lako likiwa linahitaji taarifa nyingi kuweza kuelewa.
-
-          [taarifa=Chagua moja kati ya hizi kuona jinsi inavyofanya kazi!]
-          1. Chagua gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kwenye uhariri.
-          2. Chagua "Ficha Taarifa".
-          3. Hariri taarifa za muhtasari na andika machapisho yako.
-          [/taarifa]
-
-          Unaweza kutumia gia <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">kwenye uhariri kuongeza sehemu ya taarifa kwenye jibu lako lijalo?
         not_found: |-
           Umeshindwa kutengeneza widget ya maelezo? Jaribu kuongeza yafuatayo kwenye jibu lako lifuatao:
 

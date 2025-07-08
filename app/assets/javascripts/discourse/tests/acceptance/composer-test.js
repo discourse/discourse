@@ -1491,10 +1491,9 @@ import { i18n } from "discourse-i18n";
           .dom(".d-editor-input")
           .hasValue("hello **the** world", "adds the bold");
 
-        const dropdown = selectKit(".toolbar-popup-menu-options");
-        await dropdown.expand();
+        await click(".toolbar-menu__options-trigger");
 
-        const row = dropdown.rowByName("bold").el();
+        const row = find("[data-name='bold']");
         assert
           .dom(row)
           .hasAttribute(
@@ -1646,22 +1645,22 @@ import { i18n } from "discourse-i18n";
         assert.dom(".d-editor-input").exists("the composer input is visible");
 
         const expectedName = "[en.some_label]";
-        const dropdown = selectKit(".toolbar-popup-menu-options");
-        await dropdown.expand();
+        await click(".toolbar-menu__options-trigger");
 
-        assert.false(
-          dropdown.rowByName(expectedName).exists(),
-          "custom button is not displayed for reply"
-        );
+        assert
+          .dom(`button[title="${expectedName}"]`)
+          .doesNotExist("custom button is not displayed for reply");
+
+        await click(".toolbar-menu__options-trigger");
 
         await visit("/latest");
         await click("#create-topic");
 
-        await dropdown.expand();
-        assert.true(
-          dropdown.rowByName(expectedName).exists(),
-          "custom button is displayed for new topic"
-        );
+        await click(".toolbar-menu__options-trigger");
+
+        assert
+          .dom(`button[title="${expectedName}"]`)
+          .exists("custom button is displayed for new topic");
       });
     }
   );

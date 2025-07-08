@@ -3,8 +3,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu-options";
 import concatClass from "discourse/helpers/concat-class";
-import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 export default class ComposerToolbarButtons extends Component {
   @action
@@ -16,9 +16,14 @@ export default class ComposerToolbarButtons extends Component {
     const { isFirst = true } = this.args;
     return (
       isFirst &&
-      this.args.data.groups.find((group) => group.buttons?.length > 0)
-        ?.buttons[0]
+      this.args.data.groups
+        .find((group) => group.buttons?.length > 0)
+        ?.buttons.filter(this.isActionable)[0]
     );
+  }
+
+  isActionable(button) {
+    return button.type !== "separator" && !button.disabled;
   }
 
   get rovingButtonBar() {
@@ -45,7 +50,7 @@ export default class ComposerToolbarButtons extends Component {
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
               @options={{hash icon=button.icon focusAfterOnChange=false}}
-              class={{button.className}}
+              @class={{button.className}}
             />
           {{else}}
             <DButton

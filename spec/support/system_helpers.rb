@@ -65,7 +65,7 @@ module SystemHelpers
     SiteSetting.has_login_hint = false
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
-    SiteSetting.external_system_avatars_enabled = false
+    SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
     SiteSetting.splash_screen = false
     SiteSetting.allowed_internal_hosts =

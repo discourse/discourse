@@ -8,6 +8,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import "../extensions/register-default";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { baseKeymap } from "prosemirror-commands";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
@@ -58,6 +59,8 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {ProsemirrorEditorArgs} Args
  */
 
+/** @typedef {import("../lib/glimmer-node-view").default} GlimmerNodeView */
+
 /**
  * @extends {Component<ProsemirrorEditorSignature>}
  */
@@ -68,14 +71,18 @@ export default class ProsemirrorEditor extends Component {
   @service capabilities;
   @service modal;
   @service toasts;
+  @service site;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
+  /** @type {TrackedArray<GlimmerNodeView>} */
+  glimmerNodeViews = new TrackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */
   #destructor;
 
+  /** @type {import("discourse/lib/composer/rich-editor-extensions").PluginParams} */
   get pluginParams() {
     return {
       utils: {
@@ -99,7 +106,14 @@ export default class ProsemirrorEditor extends Component {
         capabilities: this.capabilities,
         modal: this.modal,
         toasts: this.toasts,
+        site: this.site,
         replaceToolbar: this.args.replaceToolbar,
+        addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
+        removeGlimmerNodeView: (nodeView) =>
+          this.glimmerNodeViews.splice(
+            this.glimmerNodeViews.indexOf(nodeView),
+            1
+          ),
       }),
     };
   }
@@ -275,7 +289,17 @@ export default class ProsemirrorEditor extends Component {
       {{didUpdate this.convertFromValue @value}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
       {{willDestroy this.teardown}}
-    >
-    </div>
+    ></div>
+    {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
+      {{#in-element nodeView.dom insertBefore=null}}
+        <nodeView.component
+          @node={{nodeView.node}}
+          @view={{nodeView.view}}
+          @getPos={{nodeView.getPos}}
+          @dom={{nodeView.dom}}
+          @onSetup={{nodeView.setComponentInstance}}
+        />
+      {{/in-element}}
+    {{/each}}
   </template>
 }

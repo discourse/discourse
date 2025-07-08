@@ -385,19 +385,6 @@ tr_TR:
 
           Bir konuya yanıt verdiğinizde veya bir konuyu birkaç dakikadan fazla okuduğunuzda, konunun otomatik olarak "izleniyor" bildirim seviyesine ayarlandığını unutmayın. Bunu [kullanıcı tercihlerinizden](%{base_uri}/my/preferences) değiştirebilirsiniz.
       poll:
-        instructions: |-
-          Herhangi bir gönderiye anket ekleyebileceğinizi biliyor muydunuz? **Bir anket oluşturmak** için editördeki <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dişçi çarkı kullanmayı deneyin.
-        not_found: |-
-          Hay aksi! Yanıtınızda herhangi bir anket yoktu.
-
-          Editördeki <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dişli çark simgesini kullanın veya bu anketi kopyalayıp bir sonraki yanıtınıza yapıştırın:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hey, güzel anket! Size öğretme konusunda nasıldım?
 
@@ -406,20 +393,6 @@ tr_TR:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Bazen yanıtlarınızda **detayları gizlemek** isteyebilirsiniz:
-
-          - Bir film veya TV programının spoiler olarak kabul edilebilecek konularını tartışırken.
-
-          - Gönderiniz bir kerede okunduğunda bunaltıcı olabilecek çok sayıda isteğe bağlı ayrıntıya ihtiyaç duyduğunda.
-
-          [ayrıntılar=Nasıl çalıştığını görmek için bunu seçin!]
-          1. Düzenleyicide <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dişli çark simgesini seçin.
-          2. "Ayrıntıları Gizle"yi seçin.
-          3. Ayrıntılar özetini düzenleyin ve içeriğinizi ekleyin.
-          [/details]
-
-          Bir sonraki yanıtınıza ayrıntılar bölümü eklemek için düzenleyicideki <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> dişli çark simgesini kullanabilir misiniz?
         not_found: |-
           Ayrıntılar widget'ı oluşturmakta sorun mu yaşıyorsunuz? Bir sonraki yanıtınıza aşağıdakileri eklemeyi deneyin:
 
