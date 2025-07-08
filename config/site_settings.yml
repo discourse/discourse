@@ -4073,7 +4073,7 @@ experimental:
     default: ""
   experimental_system_themes:
     type: list
-    default: "horizon"
+    default: "horizon|foundation"
     hidden: true
     allow_any: false
     choices:
