@@ -122,27 +122,8 @@ export class ToolbarBase {
 
     // Popup menu option item shortcut bindings and title text.
     if (buttonAttrs.popupMenu) {
-      buttonAttrs.popupMenu.options().forEach((option) => {
+      buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
-          const shortcutTitle = `${translateModKey(
-            PLATFORM_KEY_MODIFIER + "+"
-          )}${translateModKey(option.shortcut)}`;
-
-          if (option.title) {
-            const optionTitle = option.titleArgs
-              ? i18n(option.title, option.titleArgs)
-              : i18n(option.title);
-            if (option.hideShortcutInTitle) {
-              option.title = optionTitle;
-            } else {
-              option.title = `${optionTitle} (${shortcutTitle})`;
-            }
-          }
-
-          if (!option.shortcutAction) {
-            option.action = buttonAttrs.popupMenu.action;
-          }
-
           // These shortcuts are actually bound in the keymap inside
           // components/d-editor.gjs
           this.shortcuts[
