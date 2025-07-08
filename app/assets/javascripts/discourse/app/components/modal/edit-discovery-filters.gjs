@@ -1,13 +1,11 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { array, fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { includes, lt } from "truth-helpers";
+import { lt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import TextField from "discourse/components/text-field";
+import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import I18n, { i18n } from "discourse-i18n";
@@ -18,26 +16,46 @@ import TagChooser from "select-kit/components/tag-chooser";
 export default class EditDiscoveryFilters extends Component {
   @service router;
   @service currentUser;
-
-  @tracked filteredCategories = [];
-  @tracked filteredTags = [];
-  @tracked excludedCategories = [];
-  @tracked excludedTags = [];
-  @tracked sortOrders = [];
-  @tracked statusFilters = [];
-  @tracked activityFilters = {};
-  @tracked createdFilters = {};
-  @tracked postCountFilters = {};
-  @tracked viewCountFilters = {};
-  @tracked likeCountFilters = {};
-  @tracked posterCountFilters = {};
+  @service site;
 
   constructor() {
     super(...arguments);
-    this.parseExistingFilters();
+    this.formData = this.buildFormData();
   }
 
-  parseExistingFilters() {
+  buildFormData() {
+    const data = {
+      sortOrders: [],
+      filteredCategories: [],
+      filteredTags: [],
+      excludedCategories: [],
+      excludedTags: [],
+      statusOpen: false,
+      statusClosed: false,
+      statusArchived: false,
+      statusListed: false,
+      statusUnlisted: false,
+      statusPinned: false,
+      statusBookmarked: false,
+      activityFiltersBefore: null,
+      activityFiltersAfter: null,
+      createdFiltersBefore: null,
+      createdFiltersAfter: null,
+      postCountFiltersMin: null,
+      postCountFiltersMax: null,
+      viewCountFiltersMin: null,
+      viewCountFiltersMax: null,
+      likeCountFiltersMin: null,
+      likeCountFiltersMax: null,
+      posterCountFiltersMin: null,
+      posterCountFiltersMax: null,
+    };
+
+    this.parseExistingFilters(data);
+    return data;
+  }
+
+  parseExistingFilters(data) {
     if (!this.args.model.filterString) {
       return;
     }
@@ -66,23 +84,23 @@ export default class EditDiscoveryFilters extends Component {
             .filter(Boolean);
 
           if (isExclude) {
-            this.excludedCategories = categories;
+            data.excludedCategories = categories;
           } else {
-            this.filteredCategories = categories;
+            data.filteredCategories = categories;
           }
           break;
 
         case "tag":
           const tags = value.split(",");
           if (isExclude) {
-            this.excludedTags = tags;
+            data.excludedTags = tags;
           } else {
-            this.filteredTags = tags;
+            data.filteredTags = tags;
           }
           break;
 
         case "order":
-          this.sortOrders = value.split(",").map((order) => {
+          data.sortOrders = value.split(",").map((order) => {
             const isAscending = order.endsWith("-asc");
             const innerKey = isAscending ? order.replace("-asc", "") : order;
             return { key: innerKey, direction: isAscending ? "asc" : "desc" };
@@ -90,49 +108,56 @@ export default class EditDiscoveryFilters extends Component {
           break;
 
         case "status":
-          this.statusFilters = value.split(",");
+          value.split(",").forEach((statusId) => {
+            const prop = `status${statusId
+              .charAt(0)
+              .toUpperCase()}${statusId.slice(1)}`;
+            if (prop in data) {
+              data[prop] = true;
+            }
+          });
           break;
 
         case "activity-before":
-          this.activityFilters.before = value;
+          data.activityFiltersBefore = value;
           break;
         case "activity-after":
-          this.activityFilters.after = value;
+          data.activityFiltersAfter = value;
           break;
 
         case "created-before":
-          this.createdFilters.before = value;
+          data.createdFiltersBefore = value;
           break;
         case "created-after":
-          this.createdFilters.after = value;
+          data.createdFiltersAfter = value;
           break;
 
         case "posts-min":
-          this.postCountFilters.min = value;
+          data.postCountFiltersMin = value;
           break;
         case "posts-max":
-          this.postCountFilters.max = value;
+          data.postCountFiltersMax = value;
           break;
 
         case "views-min":
-          this.viewCountFilters.min = value;
+          data.viewCountFiltersMin = value;
           break;
         case "views-max":
-          this.viewCountFilters.max = value;
+          data.viewCountFiltersMax = value;
           break;
 
         case "likes-min":
-          this.likeCountFilters.min = value;
+          data.likeCountFiltersMin = value;
           break;
         case "likes-max":
-          this.likeCountFilters.max = value;
+          data.likeCountFiltersMax = value;
           break;
 
         case "posters-min":
-          this.posterCountFilters.min = value;
+          data.posterCountFiltersMin = value;
           break;
         case "posters-max":
-          this.posterCountFilters.max = value;
+          data.posterCountFiltersMax = value;
           break;
       }
     });
@@ -155,163 +180,160 @@ export default class EditDiscoveryFilters extends Component {
 
   get availableStatusFilters() {
     return [
-      { id: "open", name: i18n("topic.filters.status.open") },
-      { id: "closed", name: i18n("topic.filters.status.closed") },
-      { id: "archived", name: i18n("topic.filters.status.archived") },
-      { id: "listed", name: i18n("topic.filters.status.listed") },
-      { id: "unlisted", name: i18n("topic.filters.status.unlisted") },
-      { id: "pinned", name: i18n("topic.filters.status.pinned") },
-      { id: "bookmarked", name: i18n("topic.filters.status.bookmarked") },
+      { id: "statusOpen", name: i18n("topic.filters.status.open") },
+      { id: "statusClosed", name: i18n("topic.filters.status.closed") },
+      { id: "statusArchived", name: i18n("topic.filters.status.archived") },
+      { id: "statusListed", name: i18n("topic.filters.status.listed") },
+      { id: "statusUnlisted", name: i18n("topic.filters.status.unlisted") },
+      { id: "statusPinned", name: i18n("topic.filters.status.pinned") },
+      { id: "statusBookmarked", name: i18n("topic.filters.status.bookmarked") },
+    ];
+  }
+
+  get directionOptions() {
+    return [
+      { id: "desc", name: i18n("topic.filters.sort_descending") },
+      { id: "asc", name: i18n("topic.filters.sort_ascending") },
     ];
   }
 
   @action
-  addSortOrder() {
-    this.sortOrders = [
-      ...this.sortOrders,
-      { key: "activity", direction: "desc" },
-    ];
+  addSortOrder(data, { set }) {
+    const newSortOrder = { key: "activity", direction: "desc" };
+    set("sortOrders", [...data.sortOrders, newSortOrder]);
   }
 
   @action
-  removeSortOrder(index) {
-    this.sortOrders = this.sortOrders.filter((_, i) => i !== index);
+  removeSortOrder(index, data, { set }) {
+    const newOrders = data.sortOrders.filter((_, i) => i !== index);
+    set("sortOrders", newOrders);
   }
 
   @action
-  updateSortOrder(index, field, value) {
-    const updated = [...this.sortOrders];
+  updateSortOrder(index, field, value, data, { set }) {
+    const updated = [...data.sortOrders];
     updated[index] = { ...updated[index], [field]: value };
-    this.sortOrders = updated;
+    set("sortOrders", updated);
   }
 
   @action
-  toggleStatusFilter(status) {
-    if (this.statusFilters.includes(status)) {
-      this.statusFilters = this.statusFilters.filter((s) => s !== status);
-    } else {
-      this.statusFilters = [...this.statusFilters, status];
-    }
+  updateCategories({ set }, categories) {
+    set("filteredCategories", categories);
   }
 
   @action
-  updateCategories(categories) {
-    this.filteredCategories = categories.map((c) => ({
-      id: c.id,
-      slug: c.slug,
-      name: c.name,
-    }));
+  updateExcludedCategories({ set }, categories) {
+    set("excludedCategories", categories);
   }
 
   @action
-  updateExcludedCategories(categories) {
-    this.excludedCategories = categories.map((c) => ({
-      id: c.id,
-      slug: c.slug,
-      name: c.name,
-    }));
+  updateTags(tags, { set }) {
+    set("filteredTags", tags);
   }
 
   @action
-  updateTags(tags) {
-    this.filteredTags = tags;
+  updateExcludedTags(tags, { set }) {
+    set("excludedTags", tags);
   }
 
   @action
-  updateExcludedTags(tags) {
-    this.excludedTags = tags;
-  }
-
-  @action
-  async saveFilters() {
+  async saveFilters(data) {
     try {
       const filterParts = [];
 
-      // Sort orders
-      if (this.sortOrders.length > 0) {
-        const orderValues = this.sortOrders.map((order) =>
+      if (data.sortOrders?.length > 0) {
+        const orderValues = data.sortOrders.map((order) =>
           order.direction === "asc" ? `${order.key}-asc` : order.key
         );
         filterParts.push(`order:${orderValues.join(",")}`);
       }
 
-      // Categories
-      if (this.filteredCategories.length > 0) {
+      if (data.filteredCategories?.length > 0) {
         filterParts.push(
-          `category:${this.filteredCategories.map((c) => c.slug).join(",")}`
+          `category:${data.filteredCategories.map((c) => c.slug).join(",")}`
         );
       }
-      if (this.excludedCategories.length > 0) {
+      if (data.excludedCategories?.length > 0) {
         filterParts.push(
-          `-category:${this.excludedCategories.map((c) => c.slug).join(",")}`
+          `-category:${data.excludedCategories.map((c) => c.slug).join(",")}`
         );
       }
 
-      // Tags
-      if (this.filteredTags.length > 0) {
-        filterParts.push(`tag:${this.filteredTags.join(",")}`);
+      if (data.filteredTags?.length > 0) {
+        filterParts.push(`tag:${data.filteredTags.join(",")}`);
       }
-      if (this.excludedTags.length > 0) {
-        filterParts.push(`-tag:${this.excludedTags.join(",")}`);
-      }
-
-      // Status filters
-      if (this.statusFilters.length > 0) {
-        this.statusFilters.forEach((status) => {
-          filterParts.push(`status:${status}`);
-        });
+      if (data.excludedTags?.length > 0) {
+        filterParts.push(`-tag:${data.excludedTags.join(",")}`);
       }
 
-      // Activity filters
-      if (this.activityFilters.before) {
-        filterParts.push(`activity-before:${this.activityFilters.before}`);
+      const statusValues = [];
+      if (data.statusOpen) {
+        statusValues.push("open");
       }
-      if (this.activityFilters.after) {
-        filterParts.push(`activity-after:${this.activityFilters.after}`);
+      if (data.statusClosed) {
+        statusValues.push("closed");
       }
-
-      // Created filters
-      if (this.createdFilters.before) {
-        filterParts.push(`created-before:${this.createdFilters.before}`);
+      if (data.statusArchived) {
+        statusValues.push("archived");
       }
-      if (this.createdFilters.after) {
-        filterParts.push(`created-after:${this.createdFilters.after}`);
+      if (data.statusListed) {
+        statusValues.push("listed");
       }
-      // Post count filters
-      if (this.postCountFilters.min) {
-        filterParts.push(`posts-min:${this.postCountFilters.min}`);
+      if (data.statusUnlisted) {
+        statusValues.push("unlisted");
       }
-      if (this.postCountFilters.max) {
-        filterParts.push(`posts-max:${this.postCountFilters.max}`);
+      if (data.statusPinned) {
+        statusValues.push("pinned");
       }
-
-      // View count filters
-      if (this.viewCountFilters.min) {
-        filterParts.push(`views-min:${this.viewCountFilters.min}`);
-      }
-      if (this.viewCountFilters.max) {
-        filterParts.push(`views-max:${this.viewCountFilters.max}`);
+      if (data.statusBookmarked) {
+        statusValues.push("bookmarked");
       }
 
-      // Like count filters
-      if (this.likeCountFilters.min) {
-        filterParts.push(`likes-min:${this.likeCountFilters.min}`);
-      }
-      if (this.likeCountFilters.max) {
-        filterParts.push(`likes-max:${this.likeCountFilters.max}`);
+      if (statusValues.length > 0) {
+        filterParts.push(`status:${statusValues.join(",")}`);
       }
 
-      // Poster count filters
-      if (this.posterCountFilters.min) {
-        filterParts.push(`posters-min:${this.posterCountFilters.min}`);
+      if (data.activityFiltersBefore) {
+        filterParts.push(`activity-before:${data.activityFiltersBefore}`);
       }
-      if (this.posterCountFilters.max) {
-        filterParts.push(`posters-max:${this.posterCountFilters.max}`);
+      if (data.activityFiltersAfter) {
+        filterParts.push(`activity-after:${data.activityFiltersAfter}`);
+      }
+      if (data.createdFiltersBefore) {
+        filterParts.push(`created-before:${data.createdFiltersBefore}`);
+      }
+      if (data.createdFiltersAfter) {
+        filterParts.push(`created-after:${data.createdFiltersAfter}`);
+      }
+
+      // Numeric filters
+      if (data.postCountFiltersMin) {
+        filterParts.push(`posts-min:${data.postCountFiltersMin}`);
+      }
+      if (data.postCountFiltersMax) {
+        filterParts.push(`posts-max:${data.postCountFiltersMax}`);
+      }
+      if (data.viewCountFiltersMin) {
+        filterParts.push(`views-min:${data.viewCountFiltersMin}`);
+      }
+      if (data.viewCountFiltersMax) {
+        filterParts.push(`views-max:${data.viewCountFiltersMax}`);
+      }
+      if (data.likeCountFiltersMin) {
+        filterParts.push(`likes-min:${data.likeCountFiltersMin}`);
+      }
+      if (data.likeCountFiltersMax) {
+        filterParts.push(`likes-max:${data.likeCountFiltersMax}`);
+      }
+      if (data.posterCountFiltersMin) {
+        filterParts.push(`posters-min:${data.posterCountFiltersMin}`);
+      }
+      if (data.posterCountFiltersMax) {
+        filterParts.push(`posters-max:${data.posterCountFiltersMax}`);
       }
 
       const filterString = filterParts.join(" ");
 
-      // Navigate to the filtered view
       this.router.transitionTo("discovery.filter", {
         queryParams: { q: filterString },
       });
@@ -329,244 +351,307 @@ export default class EditDiscoveryFilters extends Component {
       class="edit-discovery-filters"
     >
       <:body>
-        {{! Sort Order Section }}
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.sort_by_title"}}</h3>
-          {{#each this.sortOrders as |order index|}}
-            <div class="edit-discovery-filters__sort-order">
-              <ComboBox
-                @value={{order.key}}
-                @content={{this.availableSortOrders}}
-                @onChange={{fn this.updateSortOrder index "key"}}
-                @options={{hash clearable=false}}
-              />
-              <ComboBox
-                @value={{order.direction}}
-                @content={{array
-                  (hash id="desc" name=(I18n.t "topic.filters.sort_descending"))
-                  (hash id="asc" name=(I18n.t "topic.filters.sort_ascending"))
-                }}
-                @onChange={{fn this.updateSortOrder index "direction"}}
-                @options={{hash clearable=false}}
-              />
+        <Form
+          @data={{this.formData}}
+          @onSubmit={{this.saveFilters}}
+          as |form data|
+        >
+
+          {{! Sort Order Section }}
+          <form.Section @title={{I18n.t "topic.filters.sort_by_title"}}>
+            <form.Collection @name="sortOrders" as |collection index|>
+              <form.Row as |row|>
+                <row.Col @size={{4}}>
+                  <collection.Field
+                    @name="key"
+                    @title="Sort Field"
+                    @showTitle={{false}}
+                    as |field|
+                  >
+                    <ComboBox
+                      @value={{field.value}}
+                      @content={{this.availableSortOrders}}
+                      @onChange={{field.set}}
+                      @options={{hash clearable=false}}
+                    />
+                  </collection.Field>
+                </row.Col>
+                <row.Col @size={{4}}>
+                  <collection.Field
+                    @name="direction"
+                    @title="Direction"
+                    @showTitle={{false}}
+                    as |field|
+                  >
+                    <ComboBox
+                      @value={{field.value}}
+                      @content={{this.directionOptions}}
+                      @onChange={{field.set}}
+                      @options={{hash clearable=false}}
+                    />
+                  </collection.Field>
+                </row.Col>
+                <row.Col @size={{4}}>
+                  <DButton
+                    @icon="times"
+                    @action={{fn this.removeSortOrder index data form}}
+                    @title={{I18n.t "topic.filters.remove"}}
+                    class="btn-flat btn-icon"
+                  />
+                </row.Col>
+              </form.Row>
+            </form.Collection>
+
+            {{#if (lt data.sortOrders.length 3)}}
               <DButton
-                @icon="times"
-                @action={{fn this.removeSortOrder index}}
-                @title={{I18n.t "topic.filters.remove"}}
-                class="btn-flat btn-icon"
+                @label="topic.filters.add_sort_order"
+                @icon="plus"
+                @action={{fn this.addSortOrder data form}}
+                class="btn-flat add-sort-order"
               />
-            </div>
-          {{/each}}
-          {{#if (lt this.sortOrders.length 3)}}
-            <DButton
-              @label="topic.filters.add_sort_order"
-              @icon="plus"
-              @action={{this.addSortOrder}}
-              class="btn-flat add-sort-order"
-            />
-          {{/if}}
-        </div>
+            {{/if}}
+          </form.Section>
 
-        {{! Status Filters }}
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.status.title"}}</h3>
-          <div class="edit-discovery-filters__status-filters">
-            {{#each this.availableStatusFilters as |status|}}
-              <label class="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={{includes this.statusFilters status.id}}
-                  {{on "change" (fn this.toggleStatusFilter status.id)}}
+          <form.Section @title={{I18n.t "topic.filters.status.title"}}>
+            <form.CheckboxGroup as |group|>
+              {{#each this.availableStatusFilters as |status|}}
+                <group.Field
+                  @name={{status.id}}
+                  @title={{status.name}}
+                  as |field|
+                >
+                  {{this.debug status.id}}
+                  <field.Checkbox />
+                </group.Field>
+              {{/each}}
+            </form.CheckboxGroup>
+          </form.Section>
+
+          <form.Section @title={{I18n.t "topic.filters.categories"}}>
+            <form.Field
+              @name="filteredCategories"
+              @title={{I18n.t "topic.filters.include"}}
+              as |field|
+            >
+              <CategorySelector
+                @categories={{field.value}}
+                @onChange={{fn this.updateCategories form}}
+                @options={{hash
+                  allowUncategorized=true
+                  clearable=true
+                  maximum=10
+                }}
+              />
+            </form.Field>
+
+            <form.Field
+              @name="excludedCategories"
+              @title={{I18n.t "topic.filters.exclude"}}
+              as |field|
+            >
+              <CategorySelector
+                @categories={{field.value}}
+                @onChange={{fn this.updateExcludedCategories form}}
+                @options={{hash
+                  allowUncategorized=true
+                  clearable=true
+                  maximum=10
+                }}
+              />
+            </form.Field>
+          </form.Section>
+
+          {{! Tag Filters }}
+          {{#if this.site.can_tag_topics}}
+            <form.Section @title={{I18n.t "topic.filters.tags"}}>
+              <form.Field
+                @name="filteredTags"
+                @title={{I18n.t "topic.filters.include"}}
+                as |field|
+              >
+                <TagChooser
+                  @tags={{field.value}}
+                  @onChange={{fn this.updateTags form}}
+                  @everyTag={{true}}
+                  @allowCreate={{false}}
+                  @maximum={{10}}
                 />
-                {{status.name}}
-              </label>
-            {{/each}}
-          </div>
-        </div>
+              </form.Field>
 
-        {{! Category Filters }}
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.categories"}}</h3>
-          <div class="edit-discovery-filters__row">
-            <label>{{I18n.t "topic.filters.include"}}</label>
-            <CategorySelector
-              @categories={{this.filteredCategories}}
-              @onChange={{this.updateCategories}}
-              @options={{hash
-                allowUncategorized=true
-                clearable=true
-                maximum=10
-              }}
-            />
-          </div>
-          <div class="edit-discovery-filters__row">
-            <label>{{I18n.t "topic.filters.exclude"}}</label>
-            <CategorySelector
-              @categories={{this.excludedCategories}}
-              @onChange={{this.updateExcludedCategories}}
-              @options={{hash
-                allowUncategorized=true
-                clearable=true
-                maximum=10
-              }}
-            />
-          </div>
-        </div>
+              <form.Field
+                @name="excludedTags"
+                @title={{I18n.t "topic.filters.exclude"}}
+                as |field|
+              >
+                <TagChooser
+                  @tags={{field.value}}
+                  @onChange={{fn this.updateExcludedTags form}}
+                  @everyTag={{true}}
+                  @allowCreate={{false}}
+                  @maximum={{10}}
+                />
+              </form.Field>
+            </form.Section>
+          {{/if}}
 
-        {{! Tag Filters }}
-        {{#if this.site.can_tag_topics}}
-          <div class="edit-discovery-filters__section">
-            <h3>{{I18n.t "topic.filters.tags"}}</h3>
-            <div class="edit-discovery-filters__row">
-              <label>{{I18n.t "topic.filters.include"}}</label>
-              <TagChooser
-                @tags={{this.filteredTags}}
-                @onChange={{this.updateTags}}
-                @everyTag={{true}}
-                @allowCreate={{false}}
-                @maximum={{10}}
-              />
-            </div>
-            <div class="edit-discovery-filters__row">
-              <label>{{I18n.t "topic.filters.exclude"}}</label>
-              <TagChooser
-                @tags={{this.excludedTags}}
-                @onChange={{this.updateExcludedTags}}
-                @everyTag={{true}}
-                @allowCreate={{false}}
-                @maximum={{10}}
-              />
-            </div>
-          </div>
-        {{/if}}
+          {{! Date Filters }}
+          <form.Section @title={{I18n.t "topic.filters.activity_date"}}>
+            <form.Row as |row|>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="activityFiltersAfter"
+                  @title={{I18n.t "topic.filters.after"}}
+                  as |field|
+                >
+                  <field.Input
+                    @type="date"
+                    placeholder={{I18n.t "topic.filters.date_placeholder"}}
+                  />
+                </form.Field>
+              </row.Col>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="activityFiltersBefore"
+                  @title={{I18n.t "topic.filters.before"}}
+                  as |field|
+                >
+                  <field.Input
+                    @type="date"
+                    placeholder={{I18n.t "topic.filters.date_placeholder"}}
+                  />
+                </form.Field>
+              </row.Col>
+            </form.Row>
+          </form.Section>
 
-        {{! Date Filters }}
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.activity_date"}}</h3>
-          <div class="edit-discovery-filters__date-row">
-            <label>{{I18n.t "topic.filters.after"}}</label>
-            <TextField
-              @value={{this.activityFilters.after}}
-              @placeholder={{I18n.t "topic.filters.date_placeholder"}}
-              @onChange={{fn (mut this.activityFilters.after)}}
-            />
-            <label>{{I18n.t "topic.filters.before"}}</label>
-            <TextField
-              @value={{this.activityFilters.before}}
-              @placeholder={{I18n.t "topic.filters.date_placeholder"}}
-              @onChange={{fn (mut this.activityFilters.before)}}
-            />
-          </div>
-        </div>
+          <form.Section @title={{I18n.t "topic.filters.created_date"}}>
+            <form.Row as |row|>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="createdFiltersAfter"
+                  @title={{I18n.t "topic.filters.after"}}
+                  as |field|
+                >
+                  <field.Input
+                    @type="date"
+                    placeholder={{I18n.t "topic.filters.date_placeholder"}}
+                  />
+                </form.Field>
+              </row.Col>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="createdFiltersBefore"
+                  @title={{I18n.t "topic.filters.before"}}
+                  as |field|
+                >
+                  <field.Input
+                    @type="date"
+                    placeholder={{I18n.t "topic.filters.date_placeholder"}}
+                  />
+                </form.Field>
+              </row.Col>
+            </form.Row>
+          </form.Section>
 
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.created_date"}}</h3>
-          <div class="edit-discovery-filters__date-row">
-            <label>{{I18n.t "topic.filters.after"}}</label>
-            <TextField
-              @value={{this.createdFilters.after}}
-              @placeholder={{I18n.t "topic.filters.date_placeholder"}}
-              @onChange={{fn (mut this.createdFilters.after)}}
-            />
-            <label>{{I18n.t "topic.filters.before"}}</label>
-            <TextField
-              @value={{this.createdFilters.before}}
-              @placeholder={{I18n.t "topic.filters.date_placeholder"}}
-              @onChange={{fn (mut this.createdFilters.before)}}
-            />
-          </div>
-        </div>
+          {{! Numeric Filters }}
+          <form.Section @title={{I18n.t "topic.filters.post_count"}}>
+            <form.Row as |row|>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="postCountFiltersMin"
+                  @title={{I18n.t "topic.filters.minimum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="postCountFiltersMax"
+                  @title={{I18n.t "topic.filters.maximum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+            </form.Row>
+          </form.Section>
 
-        {{! Numeric Filters }}
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.post_count"}}</h3>
-          <div class="edit-discovery-filters__numeric-row">
-            <label>{{I18n.t "topic.filters.minimum"}}</label>
-            <TextField
-              @value={{this.postCountFilters.min}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.postCountFilters.min)}}
-            />
-            <label>{{I18n.t "topic.filters.maximum"}}</label>
-            <TextField
-              @value={{this.postCountFilters.max}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.postCountFilters.max)}}
-            />
-          </div>
-        </div>
+          <form.Section @title={{I18n.t "topic.filters.view_count"}}>
+            <form.Row as |row|>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="viewCountFiltersMin"
+                  @title={{I18n.t "topic.filters.minimum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="viewCountFiltersMax"
+                  @title={{I18n.t "topic.filters.maximum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+            </form.Row>
+          </form.Section>
 
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.view_count"}}</h3>
-          <div class="edit-discovery-filters__numeric-row">
-            <label>{{I18n.t "topic.filters.minimum"}}</label>
-            <TextField
-              @value={{this.viewCountFilters.min}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.viewCountFilters.min)}}
-            />
-            <label>{{I18n.t "topic.filters.maximum"}}</label>
-            <TextField
-              @value={{this.viewCountFilters.max}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.viewCountFilters.max)}}
-            />
-          </div>
-        </div>
+          <form.Section @title={{I18n.t "topic.filters.like_count"}}>
+            <form.Row as |row|>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="likeCountFiltersMin"
+                  @title={{I18n.t "topic.filters.minimum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="likeCountFiltersMax"
+                  @title={{I18n.t "topic.filters.maximum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+            </form.Row>
+          </form.Section>
 
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.like_count"}}</h3>
-          <div class="edit-discovery-filters__numeric-row">
-            <label>{{I18n.t "topic.filters.minimum"}}</label>
-            <TextField
-              @value={{this.likeCountFilters.min}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.likeCountFilters.min)}}
-            />
-            <label>{{I18n.t "topic.filters.maximum"}}</label>
-            <TextField
-              @value={{this.likeCountFilters.max}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.likeCountFilters.max)}}
-            />
-          </div>
-        </div>
+          <form.Section @title={{I18n.t "topic.filters.poster_count"}}>
+            <form.Row as |row|>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="posterCountFiltersMin"
+                  @title={{I18n.t "topic.filters.minimum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="posterCountFiltersMax"
+                  @title={{I18n.t "topic.filters.maximum"}}
+                  as |field|
+                >
+                  <field.Input @type="number" @min="0" />
+                </form.Field>
+              </row.Col>
+            </form.Row>
+          </form.Section>
 
-        <div class="edit-discovery-filters__section">
-          <h3>{{I18n.t "topic.filters.poster_count"}}</h3>
-          <div class="edit-discovery-filters__numeric-row">
-            <label>{{I18n.t "topic.filters.minimum"}}</label>
-            <TextField
-              @value={{this.posterCountFilters.min}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.posterCountFilters.min)}}
-            />
-            <label>{{I18n.t "topic.filters.maximum"}}</label>
-            <TextField
-              @value={{this.posterCountFilters.max}}
-              @type="number"
-              @min="0"
-              @onChange={{fn (mut this.posterCountFilters.max)}}
-            />
-          </div>
-        </div>
+          <form.Actions>
+            <form.Submit @label="topic.filters.apply_filters" />
+            <DButton @action={{@closeModal}} @label="cancel" class="btn-flat" />
+          </form.Actions>
+        </Form>
       </:body>
-
-      <:footer>
-        <DButton
-          @action={{this.saveFilters}}
-          @label="topic.filters.apply_filters"
-          @class="btn-primary"
-        />
-        <DButton @action={{@closeModal}} @label="cancel" @class="btn-flat" />
-      </:footer>
     </DModal>
   </template>
 }
