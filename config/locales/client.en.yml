@@ -2759,7 +2759,6 @@ en:
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
-      toggle_unlisted: "Toggle Unlisted"
       insert_table: "Insert Table"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saved_local_draft_tip: "saved locally"
@@ -2933,6 +2932,9 @@ en:
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
+        toggle_unlisted:
+          label: Toggle unlisted
+          desc: Unlisted topics only accessible to members by direct link
 
       reload: "Reload"
       ignore: "Ignore"
