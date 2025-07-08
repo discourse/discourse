@@ -471,7 +471,7 @@ export default class ComposerContainer extends Component {
                   class="discard btn-transparent"
                   @preventFocus={{true}}
                   @title="composer.discard"
-                  @label={{"composer.discard"}}
+                  @label="composer.discard"
                 />
               </div>
 

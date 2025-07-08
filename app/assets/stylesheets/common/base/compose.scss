@@ -529,7 +529,7 @@ html.composer-open:not(.has-full-page-chat) {
       display: flex;
       margin-left: 1em;
       line-height: normal;
-      color: var(--primary-high);
+      color: var(--accent-color);
       transition: color 250ms;
       padding: 0;
 
@@ -562,6 +562,7 @@ html.composer-open:not(.has-full-page-chat) {
     margin-left: auto;
     flex: 1;
     text-align: right;
+    color: var(--danger);
   }
 
   #draft-status,
