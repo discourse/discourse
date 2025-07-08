@@ -2142,6 +2142,7 @@ files:
     type: list
     list_type: compact
     client: true
+    hidden: true
   external_system_avatars_enabled:
     default: true
     client: true
@@ -2931,16 +2932,22 @@ developer:
     client: true
     default: 25000
     max: 99000
-  active_user_rate_limit_secs: 60
+  active_user_rate_limit_secs:
+    default: 60
+    hidden: true
   verbose_localization:
     default: false
     client: true
+    hidden: true
   top_topics_formula_log_views_multiplier:
     default: 2
+    hidden: true
   top_topics_formula_first_post_likes_multiplier:
     default: 0.5
+    hidden: true
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
+    hidden: true
   rebake_old_posts_count:
     hidden: true
     default: 80
@@ -3100,6 +3107,7 @@ backups:
     default: 1
     min: 1
     max: 9
+    hidden: true
   include_thumbnails_in_backups:
     default: false
   include_s3_uploads_in_backups:
