@@ -113,8 +113,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       puppeteer-core:
-        specifier: ^24.11.2
-        version: 24.11.2
+        specifier: ^24.12.0
+        version: 24.12.0
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -2905,8 +2905,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  agent-base@7.1.3:
-    resolution: {integrity: sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==}
+  agent-base@7.1.4:
+    resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
   aggregate-error@3.1.0:
@@ -3245,8 +3245,8 @@ packages:
   bare-events@2.5.4:
     resolution: {integrity: sha512-+gFfDkR8pj4/TrWCGUGWmJIkBwuxPS5F+a5yWjOHQt2hHvNZd5YLzadjmDUtFmMM4y429bnKLa8bYBMHcYdnQA==}
 
-  bare-fs@4.1.5:
-    resolution: {integrity: sha512-1zccWBMypln0jEE05LzZt+V/8y8AQsQQqxtklqaIyg5nu6OAYFhZxPXinJTSG+kU5qyNmeLgcn9AW7eHiCHVLA==}
+  bare-fs@4.1.6:
+    resolution: {integrity: sha512-25RsLF33BqooOEFNdMcEhMpJy8EoR88zSMrnOQOaM3USnOK2VmaJ1uaQEwPA6AQjrv1lXChScosN6CzbwbO9OQ==}
     engines: {bare: '>=1.16.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -5245,8 +5245,8 @@ packages:
     resolution: {integrity: sha512-w9UMqWwJxHNOvoNzSJ2oPF5wvYcvP7jUvYzhp67yEhTi17ZDBBC1z9pTdGuzjD+EFIqLSYRweZjqfiPzQ06Ebg==}
     engines: {node: '>= 0.4'}
 
-  get-uri@6.0.4:
-    resolution: {integrity: sha512-E1b1lFFLvLgak2whF2xDBcOy6NLVGZBqqjJjsIhvopKfWWEi64pLVTWWehV8KlLerZkfNTA95sTe2OdJKm1OzQ==}
+  get-uri@6.0.5:
+    resolution: {integrity: sha512-b1O07XYq8eRuVzBNgJLstU6FYc1tS6wnMtF1I1D9lE8LxZSOGZ7LhxN54yPP6mGw5f2CkXY2BQUL9Fx41qvcIg==}
     engines: {node: '>= 14'}
 
   get-value@2.0.6:
@@ -7335,8 +7335,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.11.2:
-    resolution: {integrity: sha512-c49WifNb8hix+gQH17TldmD6TC/Md2HBaTJLHexIUq4sZvo2pyHY/Pp25qFQjibksBu/SJRYUY7JsoaepNbiRA==}
+  puppeteer-core@24.12.0:
+    resolution: {integrity: sha512-VrPXPho5Q90Ao86FwJVb+JeAF2Tf41wOTGg8k2SyQJePiJ6hJ5iujYpmP+bmhlb6o+J26bQYRDPOYXP7ALWcxQ==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -8879,8 +8879,8 @@ packages:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
 
-  zod@3.25.67:
-    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+  zod@3.25.75:
+    resolution: {integrity: sha512-OhpzAmVzabPOL6C3A3gpAifqr9MqihV/Msx3gor2b2kviCgcb+HM9SEOpMWwwNp9MRunWnhtAKUoo0AHhjyPPg==}
 
 snapshots:
 
@@ -10600,7 +10600,7 @@ snapshots:
 
   '@npmcli/agent@2.2.2':
     dependencies:
-      agent-base: 7.1.3
+      agent-base: 7.1.4
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.6(supports-color@8.1.1)
       lru-cache: 10.4.3
@@ -11230,7 +11230,7 @@ snapshots:
 
   acorn@8.15.0: {}
 
-  agent-base@7.1.3: {}
+  agent-base@7.1.4: {}
 
   aggregate-error@3.1.0:
     dependencies:
@@ -11594,7 +11594,7 @@ snapshots:
   bare-events@2.5.4:
     optional: true
 
-  bare-fs@4.1.5:
+  bare-fs@4.1.6:
     dependencies:
       bare-events: 2.5.4
       bare-path: 3.0.0
@@ -12263,7 +12263,7 @@ snapshots:
     dependencies:
       devtools-protocol: 0.0.1464554
       mitt: 3.0.1
-      zod: 3.25.67
+      zod: 3.25.75
 
   ci-info@4.2.0: {}
 
@@ -13465,7 +13465,7 @@ snapshots:
       ember-source: 5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.6))
       lodash: 4.17.21
       winston: 3.14.2
-      zod: 3.25.67
+      zod: 3.25.75
     transitivePeerDependencies:
       - supports-color
 
@@ -14525,7 +14525,7 @@ snapshots:
       es-errors: 1.3.0
       get-intrinsic: 1.3.0
 
-  get-uri@6.0.4:
+  get-uri@6.0.5:
     dependencies:
       basic-ftp: 5.0.5
       data-uri-to-buffer: 6.0.2
@@ -14812,7 +14812,7 @@ snapshots:
 
   http-proxy-agent@7.0.2(supports-color@8.1.1):
     dependencies:
-      agent-base: 7.1.3
+      agent-base: 7.1.4
       debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -14827,7 +14827,7 @@ snapshots:
 
   https-proxy-agent@7.0.6(supports-color@8.1.1):
     dependencies:
-      agent-base: 7.1.3
+      agent-base: 7.1.4
       debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -16300,9 +16300,9 @@ snapshots:
   pac-proxy-agent@7.2.0:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
-      agent-base: 7.1.3
+      agent-base: 7.1.4
       debug: 4.4.1(supports-color@8.1.1)
-      get-uri: 6.0.4
+      get-uri: 6.0.5
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.6(supports-color@8.1.1)
       pac-resolver: 7.0.1
@@ -16674,7 +16674,7 @@ snapshots:
 
   proxy-agent@6.5.0:
     dependencies:
-      agent-base: 7.1.3
+      agent-base: 7.1.4
       debug: 4.4.1(supports-color@8.1.1)
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.6(supports-color@8.1.1)
@@ -16702,7 +16702,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.11.2:
+  puppeteer-core@24.12.0:
     dependencies:
       '@puppeteer/browsers': 2.10.5
       chromium-bidi: 5.1.0(devtools-protocol@0.0.1464554)
@@ -17350,7 +17350,7 @@ snapshots:
 
   socks-proxy-agent@8.0.5:
     dependencies:
-      agent-base: 7.1.3
+      agent-base: 7.1.4
       debug: 4.4.1(supports-color@8.1.1)
       socks: 2.8.5
     transitivePeerDependencies:
@@ -17750,7 +17750,7 @@ snapshots:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.1.5
+      bare-fs: 4.1.6
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-buffer
@@ -18595,4 +18595,4 @@ snapshots:
 
   yoctocolors-cjs@2.1.2: {}
 
-  zod@3.25.67: {}
+  zod@3.25.75: {}
