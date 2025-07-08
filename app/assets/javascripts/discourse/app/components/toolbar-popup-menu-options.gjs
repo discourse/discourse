@@ -98,7 +98,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       @offset={{5}}
       @onKeydown={{@onKeydown}}
       tabindex="-1"
-      @class={{concatClass "toolbar__button" @class}}
+      @triggerClass={{concatClass "toolbar__button" @class}}
     >
       <:trigger>
         {{icon (this.getIcon this.args)}}
