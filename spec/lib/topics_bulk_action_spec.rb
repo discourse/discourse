@@ -173,7 +173,7 @@ RSpec.describe TopicsBulkAction do
         )
       end
 
-      shared_examples "perform action silently" do
+      shared_examples "performing with `silent` option provided" do
         context "when 'perform action silently' disabled" do
           it "will send notification to users watching the topic" do
             expect do
