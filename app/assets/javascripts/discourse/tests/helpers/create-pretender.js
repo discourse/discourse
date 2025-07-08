@@ -65,6 +65,7 @@ export function pretenderHelpers() {
 }
 
 export function applyDefaultHandlers(pretender) {
+  console.log("applying default handlers", requirejs.entries);
   // Autoload any `*-pretender` files
   Object.keys(requirejs.entries).forEach((e) => {
     let m = e.match(/^.*helpers\/([a-z-]+)\-pretender$/);

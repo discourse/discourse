@@ -188,8 +188,8 @@ module JsLocaleHelper
 
     remove_message_formats!(translations, locale)
     result = +<<~JS
-      require("discourse/loader-shims");
-      require("discourse-i18n");
+      //require("discourse/loader-shims");
+      //require("discourse-i18n");
     JS
 
     translations.keys.each do |l|
@@ -204,7 +204,7 @@ module JsLocaleHelper
     end
 
     result << <<~JS
-      require("discourse/lib/load-moment");
+      // require("discourse/lib/load-moment");
     JS
     result << moment_locale(locale_str)
     result << moment_locale(locale_str, timezone_names: true)

@@ -69,7 +69,7 @@ def existing_core_build_usable?
   end
 end
 
-build_cmd = %w[pnpm ember build]
+build_cmd = %w[pnpm vite build]
 build_env = { "CI" => "1" }
 
 if Etc.nprocessors > 2

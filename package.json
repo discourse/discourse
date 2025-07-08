@@ -82,6 +82,9 @@
       "ignoreMissing": [
         "webpack"
       ]
+    },
+    "overrides":{
+      "@ember/render-modifiers": "github:jrjohnson/ember-render-modifiers#v2-addon&path:/ember-render-modifiers"
     }
   }
 }

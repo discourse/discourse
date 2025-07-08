@@ -6,6 +6,7 @@ export default class MessageBusService {
   static isServiceFactory = true;
 
   static create() {
-    return MessageBus;
+    // TODO - message-bus-client module not working properly?
+    return window.MessageBus;
   }
 }
