@@ -13,7 +13,6 @@ const extension = {
       attrs: {
         name: {},
         processed: { default: false },
-        valid: { default: true },
       },
       inline: true,
       group: "inline",
@@ -27,7 +26,6 @@ const extension = {
             return {
               name: dom.getAttribute("data-name"),
               processed: dom.getAttribute("data-processed"),
-              valid: dom.getAttribute("data-valid"),
             };
           },
         },
@@ -39,7 +37,6 @@ const extension = {
             class: "hashtag-cooked",
             "data-name": node.attrs.name,
             "data-processed": node.attrs.processed,
-            "data-valid": node.attrs.valid,
           },
           `#${node.attrs.name}`,
         ];
@@ -116,11 +113,7 @@ const extension = {
             const hashtagNodes = [];
 
             view.state.doc.descendants((node, pos) => {
-              if (
-                node.type.name !== "hashtag" ||
-                node.attrs.processed ||
-                !node.attrs.valid
-              ) {
+              if (node.type.name !== "hashtag" || node.attrs.processed) {
                 return;
               }
 
@@ -148,13 +141,23 @@ const extension = {
                   continue;
                 }
 
-                view.dispatch(
-                  view.state.tr.setNodeMarkup(pos, null, {
+                let change;
+                if (validHashtag) {
+                  // mark node as processed so we can skip in future
+                  change = view.state.tr.setNodeMarkup(pos, null, {
                     ...node.attrs,
                     processed: true,
-                    valid: !!validHashtag,
-                  })
-                );
+                  });
+                } else {
+                  // replace invalid hashtags with plain text
+                  change = view.state.tr.replaceWith(
+                    pos,
+                    pos + node.nodeSize,
+                    view.state.schema.text(`#${name}`)
+                  );
+                }
+
+                view.dispatch(change);
 
                 const domNode = view.nodeDOM(pos);
                 if (!validHashtag || !domNode) {

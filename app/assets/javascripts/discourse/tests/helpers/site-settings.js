@@ -11,7 +11,6 @@ const CLIENT_SETTING_TEST_OVERRIDES = {
   enable_github_logins: true,
   authorized_extensions: "jpg|jpeg|png|gif|heic|heif|webp|svg|txt|ico|yml",
   anon_polling_interval: 30000,
-  flush_timings_secs: 5,
 };
 
 import CLIENT_SITE_SETTINGS_WITH_DEFAULTS from "virtual:discourse-test-site-settings";

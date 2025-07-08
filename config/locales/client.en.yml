@@ -2941,6 +2941,12 @@ en:
         aria_label: Alt text for image
         title: "Add image description"
 
+      image_toolbar:
+        alt_text: "Add image description"
+        zoom_out: "Decrease image size"
+        zoom_in: "Increase image size"
+        remove: "Remove image"
+
       image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
       toggle_image_grid: Toggle image grid
@@ -3370,7 +3376,7 @@ en:
         hot: "There are no hot topics."
         filter: "There are no topics."
         education:
-          topic_tracking_preferences: "You can view and change your new topic tracking settings in <a href=\"%{basePath}/my/preferences/tracking\">your preferences</a>."
+          topic_tracking_preferences: 'You can view and change your new topic tracking settings in <a href="%{basePath}/my/preferences/tracking">your preferences</a>.'
           unread: "Nothing left unread...impressive!"
           new_new: "Nothing new at the moment...check back soon!"
           new: "Nothing new at the moment...check back soon!"
@@ -4623,13 +4629,18 @@ en:
           other: "New (%{count})"
         help: "topics created in the last few days"
         all: "All"
+        all_tooltip: "All new topics and topics replied to in the last few days"
         all_with_count: "All (%{count})"
+        new_topics_tooltip: "New topics"
         topics: "Topics"
         topics_with_count: "Topics (%{count})"
+        new_replies_tooltip: "New replies"
         replies: "Replies"
         replies_with_count: "Replies (%{count})"
+      new_new:
+        help: "topics created or replied to in the last few days"
       posted:
-        title: "My Posts"
+        title: "My posts"
         help: "topics you have posted in"
       bookmarks:
         title: "Bookmarks"
@@ -5176,8 +5187,8 @@ en:
               content: "Users"
               title: "List of all users"
             my_posts:
-              content: "My Posts"
-              content_drafts: "My Drafts"
+              content: "My posts"
+              content_drafts: "My drafts"
               title: "My recent topic activity"
               title_drafts: "My unposted drafts"
               draft_count:
@@ -5193,7 +5204,7 @@ en:
               content: "Invite"
               title: "Invite new members"
             my_messages:
-              content: "My Messages"
+              content: "My messages"
               title: "My personal messages"
         global_section: "Global section, visible to everyone"
       panels:
@@ -6809,6 +6820,7 @@ en:
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
+          built_in_description: "This theme is preinstalled and can not be deleted or customized"
           imported_from_archive: "This theme was imported from a .zip file"
           settings: "Settings"
           colors: "Colors"

@@ -14,6 +14,7 @@ import {
 import SectionLink from "discourse/lib/sidebar/section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import InviteSectionLink from "discourse/lib/sidebar/user/community-section/invite-section-link";
+import MyMessagesSectionLink from "discourse/lib/sidebar/user/community-section/my-messages-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
 
@@ -23,6 +24,7 @@ const SPECIAL_LINKS_MAP = {
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
   "/my/activity": MyPostsSectionLink,
+  "/my/messages": MyMessagesSectionLink,
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,

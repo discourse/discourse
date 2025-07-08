@@ -11,7 +11,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.27.7",
+    "@babel/core": "^7.28.0",
     "@ember/string": "^4.0.1",
     "ember-buffered-proxy": "^2.1.1",
     "discourse-i18n": "workspace:*",

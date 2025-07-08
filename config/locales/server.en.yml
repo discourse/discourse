@@ -2208,7 +2208,6 @@ en:
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
     email_posts_context: "How many prior replies to include as context in notification emails."
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
@@ -2729,7 +2728,7 @@ en:
     about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
-    rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition. The rich text editor is under active development, so not all features are supported yet — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>see Meta for more details</a>."
+    rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
 
