@@ -306,6 +306,13 @@ export default class PostTextSelection extends Component {
       supportsFastEdit = false;
     }
 
+    if (
+      this.post?.is_localized &&
+      this.siteSettings.content_localization_enabled
+    ) {
+      supportsFastEdit = false;
+    }
+
     if (supportsFastEdit) {
       const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
       const matches = cooked.innerHTML.match(regexp);

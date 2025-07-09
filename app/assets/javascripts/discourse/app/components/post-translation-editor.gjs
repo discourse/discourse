@@ -14,6 +14,27 @@ export default class PostTranslationEditor extends Component {
   @service composer;
   @service siteSettings;
 
+  constructor() {
+    super(...arguments);
+    this.initializeFromSelectedLocale();
+  }
+
+  async initializeFromSelectedLocale() {
+    if (this.composer.selectedTranslationLocale && !this.composer.model.reply) {
+      const localization = await this.findCurrentLocalization();
+      if (localization) {
+        this.composer.model.set("reply", localization.raw);
+
+        if (localization?.topic_localization) {
+          this.composer.model.set(
+            "title",
+            localization.topic_localization.title
+          );
+        }
+      }
+    }
+  }
+
   async findCurrentLocalization() {
     try {
       const { post_localizations } = await PostLocalization.find(
