@@ -87,7 +87,6 @@
 .topic-list-item.visited .topic-list-data,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
-  --tag-text-color: var(--primary-medium);
   background-color: var(--topic-list-item-background-color--visited);
 
   a.title:not(.badge-notification) {

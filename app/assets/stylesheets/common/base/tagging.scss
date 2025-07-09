@@ -4,10 +4,6 @@
   --tag-text-color: var(--primary-high);
 }
 
-.extra-info-wrapper {
-  --tag-text-color: var(--header_primary-high);
-}
-
 .container.tags-index {
   background: var(--d-content-background);
 }
@@ -73,6 +69,7 @@
   margin: 0;
   color: var(--tag-text-color);
   font-size: var(--d-tag-font-size);
+  font-weight: var(--d-tag-font-weight);
   padding: 0 var(--d-tag-horizontal-padding);
   border-radius: var(--d-tag-border-radius);
   background-color: var(--d-tag-background-color);

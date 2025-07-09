@@ -26,7 +26,18 @@
 
 .topic-list {
   @extend .topic-list-icons;
-  margin: 0 0 10px;
+  margin: var(--d-topic-list-margin-h) var(--d-topic-list-margin-v)
+    var(--d-topic-list-margin-bottom);
+
+  .topic-list-header {
+    font-size: var(--d-topic-list-header-font-size);
+    background-color: var(--d-topic-list-header-background-color);
+  }
+
+  .topic-list-header .topic-list-data {
+    padding: var(--d-topic-list-header-data-padding-h) var(--space-1);
+    color: var(--d-topic-list-header-text-color);
+  }
 
   .topic-list-data {
     padding: var(--d-topic-list-data-padding-v) var(--space-1);

@@ -65,7 +65,7 @@
     }
 
     &__name {
-      color: currentcolor;
+      color: var(--category-badge-title-color);
       text-overflow: ellipsis;
       overflow: hidden;
       min-width: 0;

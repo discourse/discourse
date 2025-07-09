@@ -24,20 +24,38 @@
   --d-nav-underline-height: 0.125em;
   --d-nav-font-size: initial;
   --d-input-focused-color: var(--tertiary);
+  --d-category-border-box-width: 2px;
+  --d-category-box-background-color: none;
+  --d-category-border-accent-width: 6px;
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
   --nav-space: var(--space-3);
   --nav-horizontal-padding: 0;
   --d-main-content-gap: var(--space-8);
   --main-outlet-padding-top: var(--space-6);
+  --table-border-width: 1px;
   --d-topic-list-avatar-size: 24px;
   --d-topic-list-title-font-size: var(--font-up-1);
   --d-topic-list-metadata-top-space: var(--space-1);
   --d-topic-list-data-padding-v: var(--space-3);
+  --d-topic-list-header-data-padding-h: var(--space-3);
   --d-topic-list-data-font-size: var(--font-0);
+  --category-boxes-text-alignment: center;
+  --d-topic-list-header-background-color: initial;
+  --d-topic-list-header-text-color: initial;
+  --d-topic-list-margin-h: 0;
+  --d-topic-list-margin-v: 0;
+  --d-topic-list-margin-bottom: 10px;
   --d-tag-horizontal-padding: 0;
+  --d-tag-font-weight: initial;
   --d-tag-font-size: var(--font-0);
   --d-tag-border-radius: 0;
   --d-tag-background-color: var(--secondary);
+  --category-badge-title-color: currentcolor;
+  --category-boxes-description-text-color: var(--primary-med-or-secondary-high);
+  --d-category-boxes-gap: var(--space-6);
+  --category-boxes-title-font-size: var(--font-up-2);
+  --d-category-boxes-margin-top: var(--space-4);
+  --d-header-padding-v: 0;
   --d-table-border-top-height: 3px;
   --topic-title-font-weight: 400;
   --topic-title-font-weight--visited: 400;
@@ -45,6 +63,7 @@
   --topic-list-item-background-color--visited: var(--secondary);
   --container-horizontal-padding: 0;
   --list-container-horizontal-padding: 0;
+  --d-topic-list-header-font-size: initial;
 }
 
 // Animation Keyframes
