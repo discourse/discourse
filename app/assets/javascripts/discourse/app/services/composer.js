@@ -1485,8 +1485,7 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
-      locale:
-        this.currentUser.effective_locale || this.siteSettings.default_locale,
+      locale: null,
     });
   }
 

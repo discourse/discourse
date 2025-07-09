@@ -55,8 +55,7 @@ export default class PostTranslationsModal extends Component {
 
     this.args.closeModal();
 
-    const originalLocale =
-      this.args.model.post?.locale || this.siteSettings.default_locale;
+    const originalLocale = this.args.model.post?.locale;
 
     const { raw } = await ajax(`/posts/${this.args.model.post.id}.json`);
 

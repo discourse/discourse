@@ -8,7 +8,7 @@ export default class DEditorOriginalTranslationPreview extends Component {
   @service siteSettings;
 
   get originalLocale() {
-    return this.args.model.postLocale || this.siteSettings.default_locale;
+    return this.args.model.postLocale;
   }
 
   <template>
