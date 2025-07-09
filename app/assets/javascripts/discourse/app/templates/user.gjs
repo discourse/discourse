@@ -120,6 +120,19 @@ export default RouteTemplate(
                     </LinkTo>
                   </div>
                 {{/if}}
+                {{#if @controller.model.number_of_silencings}}
+                  <div>
+                    <a href {{on "click" @controller.showSilencings}}>
+                      {{htmlSafe
+                        (i18n
+                          "user.staff_counters.silencings"
+                          className="silencings"
+                          count=@controller.model.number_of_silencings
+                        )
+                      }}
+                    </a>
+                  </div>
+                {{/if}}
                 {{#if @controller.model.number_of_suspensions}}
                   <div>
                     <a href {{on "click" @controller.showSuspensions}}>
@@ -293,6 +306,26 @@ export default RouteTemplate(
                       {{#if @controller.model.suspend_reason}}
                         <b>{{i18n "user.suspended_reason"}}</b>
                         {{@controller.model.suspend_reason}}
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                  {{#if @controller.model.silenced}}
+                    <div class="silenced">
+                      {{icon "microphone-slash"}}
+                      <b>
+                        {{#if @controller.model.silencedForever}}
+                          {{i18n "user.silenced_permanently"}}
+                        {{else}}
+                          {{i18n
+                            "user.silenced_notice"
+                            date=@controller.model.silencedTillDate
+                          }}
+                        {{/if}}
+                      </b>
+                      <br />
+                      {{#if @controller.model.silence_reason}}
+                        <b>{{i18n "user.silenced_reason"}}</b>
+                        {{@controller.model.silence_reason}}
                       {{/if}}
                     </div>
                   {{/if}}

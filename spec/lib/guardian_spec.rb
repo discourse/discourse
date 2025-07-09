@@ -4227,6 +4227,28 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "silencing reasons" do
+    it "will be shown by default" do
+      expect(Guardian.new.can_see_silencing_reason?(user)).to eq(true)
+    end
+
+    context "with hide silencing reason enabled" do
+      before { SiteSetting.hide_silencing_reasons = true }
+
+      it "will not be shown to anonymous users" do
+        expect(Guardian.new.can_see_silencing_reason?(user)).to eq(false)
+      end
+
+      it "users can see their own silencings" do
+        expect(Guardian.new(user).can_see_silencing_reason?(user)).to eq(true)
+      end
+
+      it "staff can see silencings" do
+        expect(Guardian.new(moderator).can_see_silencing_reason?(user)).to eq(true)
+      end
+    end
+  end
+
   describe "#can_remove_allowed_users?" do
     context "with staff users" do
       it "should be true" do

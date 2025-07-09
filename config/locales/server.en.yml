@@ -2428,6 +2428,8 @@ en:
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
+    hide_silencing_reasons: "Don't display silencing reasons publically on user profiles."
+
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."

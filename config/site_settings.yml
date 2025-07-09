@@ -960,6 +960,10 @@ users:
     default: false
     client: true
     area: "users"
+  hide_silencing_reasons:
+    default: false
+    client: true
+    area: "users"
   log_personal_messages_views:
     default: false
     area: "users"

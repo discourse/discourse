@@ -576,12 +576,36 @@ export default class UserCardContents extends CardContentsBase {
                   </div>
                 </div>
               {{else}}
-                {{#if this.user.bio_excerpt}}
-                  <div class="bio">
-                    <HtmlWithLinks>
-                      {{htmlSafe this.user.bio_excerpt}}
-                    </HtmlWithLinks>
+                {{#if this.user.silence_reason}}
+                  <div class="silenced">
+                    <div class="silence-date">
+                      {{icon "microphone-slash"}}
+                      {{#if this.user.silencedForever}}
+                        {{i18n "user.silenced_permanently"}}
+                      {{else}}
+                        {{i18n
+                          "user.silenced_notice"
+                          date=this.user.silencedTillDate
+                        }}
+                      {{/if}}
+                    </div>
+                    <div class="silence-reason">
+                      <span class="silence-reason-title">{{i18n
+                          "user.silenced_reason"
+                        }}</span>
+                      <span
+                        class="silence-reason-description"
+                      >{{this.user.silence_reason}}</span>
+                    </div>
                   </div>
+                {{else}}
+                  {{#if this.user.bio_excerpt}}
+                    <div class="bio">
+                      <HtmlWithLinks>
+                        {{htmlSafe this.user.bio_excerpt}}
+                      </HtmlWithLinks>
+                    </div>
+                  {{/if}}
                 {{/if}}
               {{/if}}
             </div>
