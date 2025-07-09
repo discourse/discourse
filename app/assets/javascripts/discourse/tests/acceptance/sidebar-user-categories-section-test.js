@@ -482,7 +482,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert
       .dom(
-        `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] .sidebar-section-link-prefix .prefix-badge.d-icon-category.restricted`
+        `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] .sidebar-section-link-prefix .prefix-badge[class*="d-icon-category.restricted"]`
       )
       .exists(
         "category3 section link is rendered with lock prefix badge icon as it is read restricted"
