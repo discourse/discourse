@@ -10,7 +10,11 @@ export default class Enum extends Component {
       @onChange={{fn (mut this.value)}}
       @valueProperty={{this.setting.computedValueProperty}}
       @nameProperty={{this.setting.computedNameProperty}}
-      @options={{hash castInteger=true allowAny=this.setting.allowsNone}}
+      @options={{hash
+        castInteger=true
+        allowAny=this.setting.allowsNone
+        none=this.setting.noneItem
+      }}
     />
 
     {{this.preview}}
