@@ -699,6 +699,16 @@ el:
         reviewable_post:
           title: "Ανάρτηση"
           noun: "ανάρτηση"
+      notes:
+        delete: "Σβήσιμο"
+      review_user: "Χρήστης"
+      copy_link: "Αντιγραφή συνδέσμου"
+      insights:
+        activities:
+          posts:
+            one: "%{count} ανάρτηση"
+            other: "%{count} αναρτήσεις"
+        visibility: "Ορατότητα"
       approval:
         title: "Απαιτείται Έγκριση Ανάρτησης"
         description: "Λάβαμε την ανάρτησή σου, αλλά πρέπει πρώτα να εγκριθεί από έναν συντονιστή πριν εμφανιστεί. Παρακαλώ περιμένετε."
@@ -2331,6 +2341,8 @@ el:
       image_alt_text:
         aria_label: Εναλλακτικό κείμενο για την εικόνα
         title: "Προσθήκη περιγραφής εικόνας"
+      image_toolbar:
+        alt_text: "Προσθήκη περιγραφής εικόνας"
       image_scale_button: "Κλιμάκωση εικόνας σε %{percent}%"
       delete_image_button: Διαγραφή Εικόνας
       toggle_image_grid: Εναλλαγή πλέγματος εικόνας
@@ -3582,6 +3594,8 @@ el:
       pinned:
         title: "Καρφιτσωμένο"
         help: "Αυτό το θέμα είναι καρφιτσωμένο για σένα. Θα εμφανίζεται πάντα στην κορυφή της κατηγορίας του"
+      hot:
+        title: "Δημοφιλή"
       personal_message:
         title: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
         help: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
@@ -3659,7 +3673,6 @@ el:
         topics: "Θέματα"
         replies: "Απαντήσεις"
       posted:
-        title: "Οι αναρτήσεις μου"
         help: "θέματα στα οποία έχεις αναρτήσεις"
       bookmarks:
         title: "Σελιδοδείκτες"
@@ -4116,8 +4129,6 @@ el:
               content: "Χρήστες"
               title: "Λίστα όλων των χρηστών"
             my_posts:
-              content: "Οι αναρτήσεις μου"
-              content_drafts: "Τα προσχέδιά μου"
               title: "Η πρόσφατη θεματική μου δραστηριότητα"
               title_drafts: "Τα μη δημοσιευμένα προσχέδια μου"
               draft_count:
@@ -4708,6 +4719,9 @@ el:
           delete: "Σβήσιμο"
         color_palettes:
           palette_name: "Όνομα"
+          copy_to_clipboard: "Αντιγραφή στο Clipboard"
+          copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
+          copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
           duplicate: "Διπλότυπο"
           delete: "Σβήσιμο"
           colors:

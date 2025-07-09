@@ -1669,7 +1669,6 @@ cs:
     tl3_promotion_min_duration: "Minimální počet dní, po které povýšení na úroveň důvěry 3 trvá, než může být uživatel snížen zpět na úroveň důvěry 2."
     delete_all_posts_and_topics_allowed_groups: "Skupiny s povolením mazat příspěvky a témata vytvořená jinými uživateli. Tyto skupiny budou moci také vidět odstraněná témata a příspěvky."
     min_trust_to_create_topic: "Minimální úroveň důvěry potřebná k vytvoření nového tématu."
-    flush_timings_secs: "Jak často odesíláme časová data na server v sekundách."
     dark_mode_none: "Žádná"
     max_image_size_kb: "Maximální velikost nahrávaného obrázku. Toto musí být také nakonfigurováno v nginx (client_max_body_size) nebo apache nebo proxy. Obrázky větší než toto a menší než client_max_body_size budou změněny tak, aby se vešly při nahrávání."
     max_attachment_size_kb: "Maximální velikost nahrávaných souborů příloh. Toto musí být také nakonfigurováno v nginx (client_max_body_size) / apache nebo proxy."
