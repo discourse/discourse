@@ -13,7 +13,7 @@
       <%= preload_script_url ExtraLocalesController.url("main") %>
       <%= preload_script_url ExtraLocalesController.url("mf") %>
       <%= preload_script "admin" %>
-      <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>
+      <%- Discourse.find_plugin_js_assets(include_disabled: true, include_admin_asset: true).each do |file| %>
         <%= preload_script file %>
       <%- end %>
       <%= preload_script "test-site-settings" %>
