@@ -17,8 +17,8 @@ export const TextManipulation = {};
  * @property {boolean} [inCode]
  * @property {boolean} [inCodeBlock]
  * @property {boolean} [inBlockquote]
- * @property {Object}  [inHeading] - Object with `inNode` boolean and a `level` integer
- *  which indicates heading level (1-6)
+ * @property {boolean} [inHeading]
+ * @property {number}  [inHeadingLevel]
  */
 
 /**

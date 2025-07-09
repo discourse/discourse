@@ -199,18 +199,22 @@ export default class Toolbar extends ToolbarBase {
       id: "heading",
       group: "fontStyles",
       active: ({ state }) => {
-        if (!state || !state.inHeading || !state.selection.allSameType) {
+        if (!state || !state.inHeading) {
           return false;
         }
 
-        if (state.inHeading.inNode) {
+        if (state.inHeading) {
+          if (state.inHeadingLevel > 4) {
+            return false;
+          }
+
           return true;
         }
 
         return false;
       },
       icon: ({ state }) => {
-        if (!state || !state.selection.allSameType) {
+        if (!state || !state.inHeading) {
           return unformattedHeadingIcon;
         }
 
@@ -218,11 +222,12 @@ export default class Toolbar extends ToolbarBase {
           return unformattedHeadingIcon;
         }
 
-        if (state.inHeading.inNode) {
-          if (state.inHeading.level === 0) {
+        if (state.inHeading) {
+          if (state.inHeadingLevel > 4) {
             return unformattedHeadingIcon;
           }
-          return `discourse-h${state.inHeading.level}`;
+
+          return `discourse-h${state.inHeadingLevel}`;
         }
 
         return unformattedHeadingIcon;
@@ -231,22 +236,22 @@ export default class Toolbar extends ToolbarBase {
       popupMenu: {
         options: () => {
           const headingOptions = [];
-          for (let i = 1; i <= 4; i++) {
+          for (let headingLevel = 1; headingLevel <= 4; headingLevel++) {
             headingOptions.push({
-              name: `heading-${i}`,
-              icon: `discourse-h${i}`,
+              name: `heading-${headingLevel}`,
+              icon: `discourse-h${headingLevel}`,
               label: "composer.heading_level_n",
               title: "composer.heading_level_n_title",
-              labelArgs: { levelNumber: i },
-              titleArgs: { levelNumber: i },
+              labelArgs: { levelNumber: headingLevel },
+              titleArgs: { levelNumber: headingLevel },
               condition: true,
-              shortcut: `Shift+${i}`,
+              shortcut: `Shift+${headingLevel}`,
               active: ({ state }) => {
-                if (!state || !state.selection.allSameType) {
+                if (!state || !state.inHeading) {
                   return false;
                 }
 
-                if (state.inHeading.inNode && state.inHeading.level === i) {
+                if (state.inHeading && state.inHeadingLevel === headingLevel) {
                   return true;
                 }
 

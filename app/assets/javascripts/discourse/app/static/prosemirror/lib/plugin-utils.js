@@ -190,6 +190,8 @@ export function findMarkOfType(marks, type, attrs = {}) {
   );
 }
 
+// Check if a mark of a specific type is present in the current selection,
+// with optional scoping by specific attributes.
 export function hasMark(state, markType, attrs = {}) {
   const { from, to, empty } = state.selection;
 
@@ -207,11 +209,13 @@ export function hasMark(state, markType, attrs = {}) {
   );
 }
 
+// Check if a node of a specific type is present in the current selection,
+// with optional scoping by specific attributes.
 export function inNode(state, nodeType, attrs = {}) {
-  const { $from } = state.selection;
+  const { from } = state.selection;
 
-  for (let d = $from.depth; d >= 0; d--) {
-    const node = $from.node(d);
+  for (let depth = from.depth; depth >= 0; depth--) {
+    const node = from.node(depth);
     if (node.type === nodeType) {
       if (!Object.keys(attrs).length) {
         return true;
@@ -224,36 +228,58 @@ export function inNode(state, nodeType, attrs = {}) {
   return false;
 }
 
-export function selectionStats(state) {
-  const { from, to } = state.selection;
-  const selectedFragment = state.doc.slice(from, to);
-  const selectedNodeCount = selectedFragment.content.childCount;
+// Check if a node of a specific type is active in the current selection,
+// (with optional scoping by specific attributes), and that no other nodes
+// of any other type are present in the selection.
+export function isNodeActive(state, nodeType, attrs = {}) {
+  const { from, to, empty } = state.selection;
+  const nodeRanges = [];
 
-  let previousNode = null;
-  let allSameType = true;
-
-  for (let i = 0; i < selectedFragment.content.childCount; i++) {
-    const currentNode = selectedFragment.content.child(i);
-
-    if (previousNode) {
-      if (previousNode.type !== currentNode.type) {
-        allSameType = false;
-      }
-
-      if (
-        previousNode.attrs &&
-        currentNode.attrs &&
-        JSON.stringify(previousNode.attrs) !== JSON.stringify(currentNode.attrs)
-      ) {
-        allSameType = false;
-      }
+  // Get all the nodes in the selection range and their positions.
+  state.doc.nodesBetween(from, to, (node, pos) => {
+    if (node.isText) {
+      return;
     }
 
-    previousNode = currentNode;
+    const relativeFrom = Math.max(from, pos);
+    const relativeTo = Math.min(to, pos + node.nodeSize);
+
+    nodeRanges.push({
+      node,
+      from: relativeFrom,
+      to: relativeTo,
+    });
+  });
+
+  const selectionRange = to - from;
+
+  // Find nodes that match the provided type and attributes.
+  const matchedNodeRanges = nodeRanges
+    .filter((nodeRange) => {
+      return nodeType.name === nodeRange.node.type.name;
+    })
+    .filter((nodeRange) => {
+      if (!Object.keys(attrs).length) {
+        return true;
+      } else {
+        return Object.keys(attrs).every(
+          (key) => nodeRange.node.attrs[key] === attrs[key]
+        );
+      }
+    });
+
+  if (empty) {
+    return !!matchedNodeRanges.length;
   }
 
-  return {
-    nodeCount: selectedNodeCount,
-    allSameType,
-  };
+  // Determines if there are other nodes not matching nodeType in the selection
+  // by summing selection ranges to find "gaps" in the selection.
+  const range = matchedNodeRanges.reduce(
+    (sum, nodeRange) => sum + nodeRange.to - nodeRange.from,
+    0
+  );
+
+  // If there are no "gaps" in the selection, it means the nodeType is active
+  // with no other node types selected.
+  return range >= selectionRange;
 }
