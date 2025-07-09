@@ -209,7 +209,10 @@ export default class Composer extends RestModel {
   @tracked post;
   @tracked reply;
   @tracked whisper;
-  @tracked locale = this.post?.locale || this.siteSettings.default_locale;
+  @tracked
+  locale = this.siteSettings.content_localization_enabled
+    ? this.post?.locale || this.siteSettings.default_locale
+    : null;
 
   unlistTopic = false;
   noBump = false;
@@ -1182,7 +1185,9 @@ export default class Composer extends RestModel {
       typingTime: this.typingTime,
       composerTime: this.composerTime,
       metaData: this.metaData,
-      locale: this.locale,
+      locale: this.siteSettings.content_localization_enabled
+        ? this.locale
+        : null,
     });
 
     this.serialize(_create_serializer, createdPost);
