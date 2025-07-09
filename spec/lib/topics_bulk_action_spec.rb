@@ -208,7 +208,7 @@ RSpec.describe TopicsBulkAction do
       end
       context "when 'create_revision_on_bulk_topic_moves' disabled" do
         SiteSetting.create_revision_on_bulk_topic_moves = false
-        include_examples "perform action silently"
+        include_examples "option 'perform action silently'"
       end
     end
 
