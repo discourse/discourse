@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { longDate } from "discourse/lib/formatter";
 import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -170,5 +171,39 @@ acceptance("User Card - Inactive user", function (needs) {
 
     assert.dom(".user-card .name-username-wrapper").hasText("eviltrout");
     assert.dom(".user-card .inactive-user").hasText(i18n("user.inactive_user"));
+  });
+});
+
+acceptance("User Card - Restricted user", function (needs) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  needs.user();
+  needs.pretender((server, helper) => {
+    const cardResponse = cloneJSON(userFixtures["/u/eviltrout/card.json"]);
+    cardResponse.user.silence_reason = "silenced for testing";
+    cardResponse.user.silenced_till = tomorrow.toISOString();
+    cardResponse.user.suspend_reason = "suspended for testing";
+    cardResponse.user.suspended_till = tomorrow.toISOString();
+    server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
+  });
+
+  test("it shows restricted user information", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click('a[data-user-card="eviltrout"]');
+
+    assert
+      .dom(".user-card .card-row .silence-reason")
+      .hasText(i18n("user.silenced_reason") + "silenced for testing");
+    assert
+      .dom(".user-card .card-row .silence-date")
+      .hasText(i18n("user.silenced_notice", { date: longDate(tomorrow) }));
+
+    assert
+      .dom(".user-card .card-row .suspension-reason")
+      .hasText(i18n("user.suspended_reason") + "suspended for testing");
+    assert
+      .dom(".user-card .card-row .suspension-date")
+      .hasText(i18n("user.suspended_notice", { date: longDate(tomorrow) }));
   });
 });
