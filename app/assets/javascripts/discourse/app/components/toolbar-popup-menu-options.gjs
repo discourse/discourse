@@ -38,7 +38,7 @@ export default class ToolbarPopupmenuOptions extends Component {
           : i18n(content.label);
         if (content.shortcut) {
           label = htmlSafe(
-            `<span class="d-button-label__text">${label}</span> <kbd class="d-button-label__shortcut ${
+            `<span class="d-button-label__text">${label}</span> <kbd class="shortcut${
               content.alwaysShowShortcut ? "--always-visible" : ""
             }">${translateModKey(
               PLATFORM_KEY_MODIFIER + "+" + content.shortcut
@@ -127,8 +127,8 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
                 class={{concatClass
-                  "toolbar-popup-menu-options__item"
-                  (if (this.getActive option) "--active-item")
+                  "no-text"
+                  (if (this.getActive option) "--active")
                 }}
               />
             </dropdown.item>
