@@ -94,7 +94,7 @@ export default class UserController extends Controller {
   }
 
   @discourseComputed("model.suspended", "model.silenced", "currentUser.staff")
-  isNotSuspendedOrIsStaff(suspended, silenced, isStaff) {
+  isNotRestrictedOrIsStaff(suspended, silenced, isStaff) {
     return (!suspended && !silenced) || isStaff;
   }
 

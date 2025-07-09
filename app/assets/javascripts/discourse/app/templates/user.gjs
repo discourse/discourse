@@ -329,7 +329,7 @@ export default RouteTemplate(
                       {{/if}}
                     </div>
                   {{/if}}
-                  {{#if @controller.isNotSuspendedOrIsStaff}}
+                  {{#if @controller.isNotRestrictedOrIsStaff}}
                     <HtmlWithLinks>
                       {{htmlSafe @controller.model.bio_cooked}}
                     </HtmlWithLinks>
