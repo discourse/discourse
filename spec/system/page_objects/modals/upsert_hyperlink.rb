@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 module PageObjects
   module Modals
-    class InsertHyperlink < PageObjects::Modals::Base
-      BODY_SELECTOR = ".insert-hyperlink-modal"
-      MODAL_SELECTOR = ".insert-hyperlink-modal"
+    class UpsertHyperlink < PageObjects::Modals::Base
+      BODY_SELECTOR = ".upsert-hyperlink-modal"
+      MODAL_SELECTOR = ".upsert-hyperlink-modal"
       LINK_TEXT_SELECTOR = ".d-modal__body input.link-text"
       LINK_URL_SELECTOR = ".d-modal__body input.link-url"
 

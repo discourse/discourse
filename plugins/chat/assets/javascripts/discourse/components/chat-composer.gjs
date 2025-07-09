@@ -21,7 +21,7 @@ import { Promise } from "rsvp";
 import { not, or } from "truth-helpers";
 import DTextarea from "discourse/components/d-textarea";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
+import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -173,7 +173,7 @@ export default class ChatComposer extends Component {
     this.appEvents.on(
       "chat:open-insert-link-modal",
       this,
-      "openInsertLinkModal"
+      "openUpsertLinkModal"
     );
   }
 
@@ -183,7 +183,7 @@ export default class ChatComposer extends Component {
     this.appEvents.off(
       "chat:open-insert-link-modal",
       this,
-      "openInsertLinkModal"
+      "openUpsertLinkModal"
     );
     this.pane.sending = false;
   }
@@ -408,14 +408,14 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  openInsertLinkModal(event, options = { context: null }) {
+  openUpsertLinkModal(event, options = { context: null }) {
     if (options.context !== this.context) {
       return;
     }
 
     const selected = this.composer.textarea.getSelected("", { lineVal: true });
     const linkText = selected?.value;
-    this.modal.show(InsertHyperlink, {
+    this.modal.show(UpsertHyperlink, {
       model: {
         linkText,
         toolbarEvent: {

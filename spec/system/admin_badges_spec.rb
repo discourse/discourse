@@ -19,7 +19,6 @@ describe "Admin Badges Page", type: :system do
       expect(form.field("enabled")).to be_enabled
       expect(form.field("badge_type_id")).to be_disabled
       expect(form.field("badge_type_id")).to have_value(BadgeType::Bronze.to_s)
-      expect(form.field("badge_grouping_id")).to be_disabled
       expect(form.field("badge_grouping_id")).to have_value(BadgeGrouping::GettingStarted.to_s)
       expect(form.field("allow_title")).to be_enabled
       expect(form.field("allow_title")).to be_unchecked

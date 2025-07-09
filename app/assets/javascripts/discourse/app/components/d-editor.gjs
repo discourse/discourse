@@ -19,7 +19,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
-import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
+import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
 import { SKIP } from "discourse/lib/autocomplete";
@@ -518,7 +518,7 @@ export default class DEditor extends Component {
       linkText = this._lastSel.value;
     }
 
-    this.modal.show(InsertHyperlink, {
+    this.modal.show(UpsertHyperlink, {
       model: {
         linkText,
         toolbarEvent,
