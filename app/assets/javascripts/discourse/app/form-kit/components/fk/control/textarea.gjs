@@ -25,6 +25,26 @@ export default class FKControlTextarea extends Component {
     this.args.field.set(event.target.value);
   }
 
+  /**
+   * Handles keyboard shortcuts in the textarea.
+   *
+   * @param {KeyboardEvent} event - Keyboard event
+   */
+  @action
+  onKeyDown(event) {
+    // Ctrl/Cmd + Enter to submit
+    if (
+      (event.ctrlKey || event.metaKey) &&
+      event.key === "Enter" &&
+      !event.repeat
+    ) {
+      event.preventDefault();
+      event.target.form?.dispatchEvent(
+        new Event("submit", { bubbles: true, cancelable: true })
+      );
+    }
+  }
+
   get style() {
     if (!this.args.height) {
       return;
@@ -42,6 +62,7 @@ export default class FKControlTextarea extends Component {
       ...attributes
       {{this.resizeObserver}}
       {{on "input" this.handleInput}}
+      {{on "keydown" this.onKeyDown}}
     />
   </template>
 }

@@ -543,6 +543,16 @@ bs_BA:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+      notes:
+        delete: "Delete"
+      review_user: "User"
+      insights:
+        activities:
+          posts:
+            one: "%{count} objava"
+            few: "%{count} objave"
+            other: "%{count} objava"
+        visibility: "Vidljivost"
       approval:
         title: "Post treba odobrenje"
         description: "Primili smo Vaš novi post ali on treba biti odobren od strane moderatora prije nego bude javno dostupan. Molimo za strpljenje."
@@ -2772,7 +2782,6 @@ bs_BA:
         topics: "Topics"
         replies: "Odgovori"
       posted:
-        title: "Moje objave"
         help: "teme u kojima imate postove"
       bookmarks:
         title: "Zabilješke"
@@ -3115,8 +3124,6 @@ bs_BA:
               content: "Grupe"
             users:
               content: "Users"
-            my_posts:
-              content: "Moje objave"
             review:
               content: "Pregled"
             invite:
@@ -3595,6 +3602,9 @@ bs_BA:
           delete: "Delete"
         color_palettes:
           palette_name: "Ime"
+          copy_to_clipboard: "Kopirati u clipboard"
+          copied_to_clipboard: "Kopirano u međuspremnik"
+          copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
           delete: "Delete"
           colors:
             title: "Colors"

@@ -533,6 +533,15 @@ ca:
         reviewable_post:
           title: "Publicació"
           noun: "publicació"
+      notes:
+        delete: "Suprimeix"
+      review_user: "Usuari"
+      insights:
+        activities:
+          posts:
+            one: "%{count} publicació"
+            other: "%{count} publicacions"
+        visibility: "Visibilitat"
       approval:
         title: "Cal aprovar la publicació"
         description: "Hem rebut la vostra nova publicació, però cal que sigui aprovada per un moderador abans d'aparèixer publicada. Tingueu una mica de paciència."
@@ -2672,7 +2681,6 @@ ca:
         topics: "Temes"
         replies: "Respostes"
       posted:
-        title: "Les meves publicacions"
         help: "temes en què heu publicat"
       bookmarks:
         title: "Preferits"
@@ -2958,8 +2966,6 @@ ca:
               content: "Grups"
             users:
               content: "Usuaris"
-            my_posts:
-              content: "Les meves publicacions"
             review:
               content: "Revisa"
             invite:
@@ -3441,6 +3447,9 @@ ca:
           delete: "Suprimeix"
         color_palettes:
           palette_name: "Nom"
+          copy_to_clipboard: "Copia al porta-retalls"
+          copied_to_clipboard: "Copiat al porta-retalls."
+          copy_to_clipboard_error: "Error copiant dades al porta-retalls"
           delete: "Suprimeix"
           colors:
             title: "Colors"

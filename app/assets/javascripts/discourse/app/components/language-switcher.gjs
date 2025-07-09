@@ -16,9 +16,9 @@ export default class LanguageSwitcher extends Component {
   async changeLocale(locale) {
     cookie("locale", locale, { path: "/" });
     this.dMenu.close();
-    // we need a hard refresh here for the locale to take effect
-    // window.location.reload();
-    this.router.refresh();
+    // content should switch immediately,
+    // but we need a hard refresh here for controls to switch to the new locale
+    window.location.reload();
   }
 
   @action

@@ -1948,7 +1948,6 @@ fi:
     s3_use_cdn_url_for_all_uploads: "Käytä sisällynjakeluverkon URL-osoitetta kaikille s3:een ladatuille tiedostoille, eikä vain kuvatiedostoille."
     avatar_sizes: "Avatareista automaattisesti luotavat koot."
     external_system_avatars_enabled: "Mahdollistaa ulkoisen palvelun käytön järjestelmän avatarien luomiseen. Kun tämä asetus on käytössä, käyttäjien avatareja ei tuoteta Discoursen järjestelmässä, vaan ne luodaan ja tarjotaan ulkoisen palvelun avulla, jonka määrittää \"external_system_avatars_url\"-asetus."
-    external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
     external_emoji_url: "Emoji-kuvien ulkoisen palvelun URL-osoite. Poista käytöstä jättämällä tyhjäksi."
     use_site_small_logo_as_system_avatar: "Käytä sivuston pientä logoa järjestelmäkäyttäjän avatarin sijasta. Edellyttää, että logo on asetettu."
     restrict_letter_avatar_colors: "Luettelo kuusinumeroisista heksadesimaalisista väriarvoista, joita käytetään kirjainavatareja luotaessa."
@@ -2041,7 +2040,6 @@ fi:
     email_time_window_mins: "Odota (n) minuuttia ennen ilmoitussähköpostien lähettämistä, jotta käyttäjällä on aikaa muokata ja viimeistellä viestinsä."
     personal_email_time_window_seconds: "Odota (n) sekuntia ennen henkilökohtaisten viestien sähköposti-ilmoitusten lähettämistä, jotta käyttäjillä on mahdollisuus muokata ja viimeistellä viestinsä."
     email_posts_context: "Kuinka monta edellistä vastausta liitetään kontekstiksi sähköposti-ilmoituksessa."
-    flush_timings_secs: "Kuinka usein ajoitustiedot päivitetään palvelimelle, sekunneissa."
     title_max_word_length: "Suurin sallittu sanan pituus merkkeinä ketjun otsikossa."
     title_min_entropy: "Ketjun otsikossa vaadittava minimientropia (uniikkeja merkkejä, muilla kuin englannin kielen merkeillä on suurempi painotus)."
     body_min_entropy: "Ketjun leipätekstissä vaadittava minimientropia (uniikkeja merkkejä, muilla kuin englannin kielen merkeillä on suurempi painotus)."
@@ -2451,7 +2449,6 @@ fi:
     about_page_extra_groups_order: "Lisäryhmien järjestys Tietoja-sivulla."
     adobe_analytics_tags_url: "Adobe Analytics -tunnisteiden URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Ryhmät, jotka voivat tarkastella viestin raakaa sähköpostisisältöä, jos se on luotu saapuvasta sähköpostista. Tämä sisältää sähköpostin ylätunnisteet ja muut tekniset tiedot."
-    rich_editor: "Ota käyttöön rikas editori, jotta kaikki käyttäjät voivat vaihtaa nykyisen Markdown-tilan ja uuden rikkaan tekstieditorin välillä intuitiivisempaan ja käyttäjäystävällisempään sävellykseen. Tekstieditori on aktiivisessa kehityksessä, joten kaikkia ominaisuuksia ei tueta vielä — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>katso Meta saadaksesi lisätietoja</a>."
     viewport_based_mobile_mode: "KOKEELLINEN: Poista käyttäjäagenttipohjaiset mobiili-/työpöytätilat käytöstä ja käytä sen sijaan näyttöikkunan leveyttä."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."

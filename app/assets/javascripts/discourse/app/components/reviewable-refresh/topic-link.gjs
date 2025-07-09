@@ -8,20 +8,20 @@ import { i18n } from "discourse-i18n";
 
 <template>
   <div class="post-topic">
-    {{#if this.reviewable.topic}}
+    {{#if @reviewable.topic}}
       <TopicStatus
-        @topic={{this.reviewable.topic}}
+        @topic={{@reviewable.topic}}
         @showPrivateMessageIcon={{true}}
       />
+
       <a
-        href={{this.reviewable.target_url}}
+        href={{@reviewable.target_url}}
         class="title-text"
-      >{{highlightWatchedWords
-          this.reviewable.topic.fancyTitle
-          this.reviewable
-        }}</a>
-      {{categoryBadge this.reviewable.category}}
-      <ReviewableTags @tags={{this.reviewable.topic_tags}} @tagName="" />
+      >{{highlightWatchedWords @reviewable.topic.fancyTitle @reviewable}}</a>
+
+      {{categoryBadge @reviewable.category}}
+
+      <ReviewableTags @tags={{@reviewable.topic_tags}} @tagName="" />
     {{else if (has-block)}}
       {{yield}}
     {{else}}
@@ -29,7 +29,7 @@ import { i18n } from "discourse-i18n";
         {{i18n "review.topics.deleted"}}
         <LinkTo
           @route="topic"
-          @models={{array "-" this.reviewable.removed_topic_id}}
+          @models={{array "-" @reviewable.removed_topic_id}}
         >{{i18n "review.topics.original"}}</LinkTo>
       </span>
     {{/if}}

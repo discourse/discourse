@@ -732,6 +732,16 @@ tr_TR:
         reviewable_post:
           title: "Gönderi"
           noun: "gönderi"
+      notes:
+        delete: "Sil"
+      review_user: "Kullanıcı"
+      copy_link: "Bağlantıyı kopyala"
+      insights:
+        activities:
+          posts:
+            one: "%{count} gönderi"
+            other: "%{count} gönderi"
+        visibility: "Görünürlük"
       approval:
         title: "Gönderi Onay Gerektiriyor"
         description: "Yeni gönderinizi aldık fakat görünmeden önce moderatör tarafından onaylanması gerekiyor. Lütfen sabırlı olun."
@@ -2645,6 +2655,8 @@ tr_TR:
       image_alt_text:
         aria_label: Görüntü için alternatif metin
         title: "Görüntü açıklaması ekle"
+      image_toolbar:
+        alt_text: "Görüntü açıklaması ekle"
       image_scale_button: "Görüntüyü %%{percent} oranına ölçeklendir"
       delete_image_button: Görüntüyü Sil
       toggle_image_grid: Resim ızgarasını aç/kapat
@@ -4076,6 +4088,8 @@ tr_TR:
       pinned:
         title: "Sabitlendi"
         help: "Bu konu sizin için sabitlendi; kategorisinin en üstünde gösterilecek"
+      hot:
+        title: "Popüler"
       unlisted:
         help: "Bu konu listeden kaldırıldı; konu listelerinde gösterilmeyecek ve sadece doğrudan bir bağlantı üzerinden erişilebilir. %{unlistedReason}"
       personal_message:
@@ -4699,7 +4713,6 @@ tr_TR:
               title: "Tüm kullanıcıların listesi"
             my_posts:
               content: "Gönderilerim"
-              content_drafts: "Taslaklarım"
               title: "Son konu etkinliğim"
               title_drafts: "Gönderilmemiş taslaklarım"
               draft_count:
@@ -5766,6 +5779,9 @@ tr_TR:
           save_successful: "Kullanıcı alanı kaydedildi."
         color_palettes:
           palette_name: "Ad"
+          copy_to_clipboard: "Panoya kopyala"
+          copied_to_clipboard: "Panoya Kopyalandı"
+          copy_to_clipboard_error: "Veriler Panoya kopyalanırken hata oluştu"
           duplicate: "Eş Kopya"
           delete: "Sil"
           color_options:

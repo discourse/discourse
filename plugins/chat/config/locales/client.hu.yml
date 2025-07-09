@@ -30,24 +30,24 @@ hu:
               create_message: "Csevegőüzenet létrehozása egy megadott csatornán."
       web_hooks:
         chat_event:
-          group_name: "Chat események"
+          group_name: "Csevegési események"
           chat_message_created: "Üzenet létrejött"
           chat_message_edited: "Üzenet szerkesztve"
           chat_message_trashed: "Üzenet törölve"
           chat_message_restored: "Üzenet visszaállítva"
     about:
-      chat_messages_count: "Chat üzenetek"
-      chat_channels_count: "Chat csatornák"
-      chat_users_count: "Chat felhasználói"
+      chat_messages_count: "Csevegőüzenetek"
+      chat_channels_count: "Csevegőcsatornák"
+      chat_users_count: "Csevegés felhasználói"
       activities:
         chat_messages:
-          one: "%{formatted_number} chat üzenet"
-          other: "%{formatted_number} chat üzenet"
+          one: "%{formatted_number} csevegőüzenet"
+          other: "%{formatted_number} csevegőüzenet"
     chat:
       text_copied: Szöveg vágólapra másolva
-      link_copied: Link vágólapra másolva
+      link_copied: Hivatkozás vágólapra másolva
       back_to_forum: "Fórum"
-      deleted_chat_username: törölt
+      deleted_chat_username: törölve
       dates:
         yesterday: "Tegnap"
       all_loaded: "Összes üzenet megjelenítése"
@@ -68,12 +68,12 @@ hu:
         confirm_move: "Üzenetek áthelyezése"
       delete_messages:
         confirm:
-          one: "Biztos benne hogy elakarja távolítani ezt az üzetnetet?"
-          other: "Biztos benne, hogy el akar távolítani %{count} üzenetet?"
+          one: "Biztos, hogy törli ezt az üzenetet?"
+          other: "Biztos, hogy töröl %{count} üzenetet?"
       channel_settings:
         title: "Csatornabeállítások"
         edit: "Szerkesztés"
-        add: "Új"
+        add: "Hozzáadás"
         close_channel: "Csatorna bezárása"
         open_channel: "Csatorna megnyitása"
         archive_channel: "Csatorna archiválása"
@@ -86,7 +86,7 @@ hu:
         save_label:
           mute_channel: "Csatorna némítási beállítása mentve"
           desktop_notification: "Asztali értesítés beállítása mentve"
-          mobile_notification: "Mobil push értesítés beállítás mentése"
+          mobile_notification: "Mobil leküldéses értesítés beállítása mentve"
       channel_archive:
         title: "Csatorna archiválása"
         instructions: "<p>Egy csatorna archiválása írásvédett módba helyezi azt, és a csatorna összes üzenetét egy új vagy meglévő témába helyezi át. Új üzeneteket nem lehet küldeni, és a meglévő üzeneteket nem lehet szerkeszteni vagy törölni.</p><p>Biztos, hogy archiválja a(z) <strong>%{channelTitle}</strong> csatornát?</p>"
@@ -143,7 +143,7 @@ hu:
           label: "Küldés Enterrel"
           description: "Új sor a Shift+Enter segítségével"
         meta_enter:
-          label: "Küldés: %{meta_key} + Enter"
+          label: "Küldés %{meta_key} + Enterrel"
           description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
@@ -160,30 +160,30 @@ hu:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
         invite: "Meghívás a csatornára"
-        channel_wide_mentions_disallowed: "A @here és @all említések le vannak tiltva ezen a csatornán."
+        channel_wide_mentions_disallowed: "A @here és @all megemlítések le vannak tiltva ezen a csatornán."
         groups:
           header:
             some: "Egyes felhasználók nem kapnak értesítést"
             all: "Senki nem kap értesítést"
-          unreachable_1: "@%{group} nem engedélyezi a megemlítéseket."
-          unreachable_2: "@%{group1} és @%{group2} nem engedélyezi az megemlítést."
+          unreachable_1: "A(z) @%{group} nem engedélyezi a megemlítéseket."
+          unreachable_2: "A(z) @%{group1} és a(z) @%{group2} nem engedélyezi az megemlítéseket."
           unreachable_multiple:
-            one: "@%{group} és még %{count} csoport nem engedélyezi a megemlítést."
-            other: "@%{group} és még %{count} csoport nem engedélyezi a megemlítést."
-          too_many_members_MF: "{ groupCount, plural,  \n     =1 {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                  other {Az @{group1} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                  other {Az @{group1} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n     =2 {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} és @{group2} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                other {Az @{group1} és @{group2} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} és @{group2} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                other {Az @{group1} és @{group2} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n  other {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Ezen {groupCount} csoport megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                other {Ezen {groupCount} csoport megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Ezen {groupCount} csoport megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                other {Ezen {groupCount} csoport megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n}\n"
+            one: "A(z) @%{group} és még %{count} csoport nem engedélyezi a megemlítést."
+            other: "A(z) @%{group} és még %{count} csoport nem engedélyezi a megemlítést."
+          too_many_members_MF: "{ groupCount, plural,\n     =1 { \n          { isAdmin, select, \n            true { \n              { notificationLimit, plural, \n                  one {A(z) @{group1} megemlítése meghaladja az <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési korlátot</a>, ami # felhasználót érint.} \n                  other {A(z) @{group1} megemlítése meghaladja az <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési korlátot</a>, ami # felhasználót érint.} \n              } \n            } \n            false { \n              { notificationLimit, plural, \n                  one {A(z) @{group1} megemlítése meghaladja az értesítési korlátot, ami # felhasználót érint.} \n                  other {A(z) @{group1} megemlítése meghaladja az értesítési korlátot, ami # felhasználót érint.} \n              }\n            }\n            other {}\n          } \n        } \n     =2 { \n          { isAdmin, select, \n            true { \n              { notificationLimit, plural, \n                  one {A(z) @{group1} és a(z) @{group2} megemlítése meghaladja az <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési korlátot</a>, ami # felhasználót érint.} \n                other {A(z) @{group1} és a(z) @{group2} megemlítése meghaladja az <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési korlátot</a>, ami # felhasználót érint.} \n              } \n            } \n            false { \n              { notificationLimit, plural, \n                  one {A(z) @{group1} és a(z) @{group2} megemlítése meghaladja az értesítési korlátot, ami # felhasználót érint.} \n                other {A(z) @{group1} és a(z) @{group2} megemlítése meghaladja az értesítési korlátot, ami # felhasználót érint.} \n              } \n            } \n            other {}\n          }\n        }\n  other {\n          { isAdmin, select,\n            true {\n              { notificationLimit, plural, \n                  one {Ezen {groupCount} csoport megemlítése meghaladja az <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési korlátot</a>, ami # felhasználót érint.} \n                other {Ezen {groupCount} csoport megemlítése meghaladja az <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési korlátot</a>, ami # felhasználót érint.} \n              } \n            } \n            false {\n              { notificationLimit, plural, \n                  one {Ezen {groupCount} csoport megemlítése meghaladja az értesítési korlátot, ami # felhasználót érint.} \n                other {Ezen {groupCount} csoport megemlítése meghaladja az értesítési korlátot, ami # felhasználót érint.} \n              }\n            }\n            other {}\n          }\n        }\n}\n"
         too_many_mentions:
-          one: "Ez az üzenet túllépi a %{count} megemlítési korlátot."
-          other: "Ez az üzenet túllépi a %{count} megemlítési korlátot."
+          one: "Ez az üzenet túllépi a(z) %{count} megemlítéses korlátot"
+          other: "Ez az üzenet túllépi a(z) %{count} megemlítéses korlátot"
         too_many_mentions_admin:
-          one: 'Ez az üzenet túllépi a %{count} megemlítési <a href="%{siteSettingUrl}" target="_blank">korlátot</a>.'
-          other: 'Ez az üzenet túllépi a %{count} megemlítési <a href="%{siteSettingUrl}" target="_blank">korlátot</a>.'
+          one: 'Ez az üzenet túllépi a(z) %{count} <a href="%{siteSettingUrl}" target="_blank">megemlítéses korlátot</a>.'
+          other: 'Ez az üzenet túllépi a(z) %{count} <a href="%{siteSettingUrl}" target="_blank">megemlítéses korlátot</a>.'
       aria_roles:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
-      no_direct_message_channels: "Még nem csatlakoztál közvetlen üzenetekhez!"
-      no_direct_message_channels_cta: "Beszélgetés kezdeményezése"
-      no_public_channels: "Még nem csatlakoztál egyetlen csatornához sem!"
+      no_direct_message_channels: "Még nem csatlakozott közvetlen üzenetekhez!"
+      no_direct_message_channels_cta: "Beszélgetés kezdése"
+      no_public_channels: "Még nem csatlakozott egyetlen csatornához sem!"
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
@@ -216,7 +216,7 @@ hu:
       copy_link: "Hivatkozás másolása"
       copy_text: "Szöveg másolása"
       rebake_message: "HTML újjáépítése"
-      message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
+      message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakteresek lehetnek."
       retry_staged_message:
         title: "Hálózati hiba"
         action: "Újraküldi?"
@@ -230,8 +230,8 @@ hu:
       return_to_channel: "Vissza a csatornához"
       return_to_threads_list: "Vissza a témák listájához"
       unread_threads_count:
-        one: "Van %{count} olvasatlan besszélgetése"
-        other: "Van %{count} olvasatlan besszélgetése"
+        one: "%{count} olvasatlan beszélgetése van"
+        other: "%{count} olvasatlan beszélgetése van"
       scroll_to_bottom: "Görgetés lefelé"
       scroll_to_new_messages: "Új üzenetek megtekintése"
       sound:
@@ -243,31 +243,31 @@ hu:
       title: "csevegés"
       title_capitalized: "Csevegés"
       upload: "Fájl csatolása"
-      upload_to_channel: "Feltöltés %{title} címre"
+      upload_to_channel: "Feltöltés ide: %{title}"
       upload_to_thread: "Feltöltés a témába"
       uploaded_files:
         one: "%{count} fájl"
         other: "%{count} fájl"
-      you_flagged: "Ön jelentette ezt az üzenetet"
+      you_flagged: "Megjelölte ezt az üzenetet"
       exit: "vissza"
       channel_status:
         read_only_header: "A csatorna írásvédett"
-        read_only: "Csak olvasható"
+        read_only: "Írásvédett"
         archived_header: "A csatorna archiválva van"
         archived: "Archivált"
-        archive_failed: "A csatorna archiválása nem sikerült. %{completed}/%{total} üzenetek archiválva. <a target=\"_blank\" href=\"%{topic_url}\">A</a> céltéma létrejött. Nyomja meg az Újra gombot az archiválás befejezéséhez."
-        archive_failed_no_topic: "A csatorna archiválása nem sikerült. %{completed}/%{total} üzenetek archiválva. A céltéma nem jött létre. Nyomja meg az Újra gombot az archiválás befejezéséhez."
-        archive_completed: "Lásd <a target=\"_blank\" href=\"%{topic_url}\">az archív témát</a>"
+        archive_failed: "A csatorna archiválása nem sikerült. %{completed}/%{total} üzenet archiválva lett. <a target=\"_blank\" href=\"%{topic_url}\">A céltéma</a> létrejött. Nyomja meg az Újra gombot az archiválás befejezéséhez."
+        archive_failed_no_topic: "A csatorna archiválása nem sikerült. %{completed}/%{total} üzenet archiválva lett, a céltéma nem jött létre. Nyomja meg az Újra gombot az archiválás befejezéséhez."
+        archive_completed: "Az <a target=\"_blank\" href=\"%{topic_url}\">archív téma</a> megtekintése"
         closed_header: "A csatorna zárolva van"
-        closed: "Zárt"
+        closed: "Lezárt"
         open_header: "A csatorna nyitva van"
-        open: "Megnyitás"
+        open: "Nyitott"
       browse:
         back: "Vissza"
         title: Csatornák
         filter_all: Összes
         filter_open: Megnyitás
-        filter_closed: Zárt
+        filter_closed: Lezárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint
       chat_message_separator:
@@ -372,7 +372,7 @@ hu:
         create: "Csatorna létrehozása"
         description: "Leírás (nem kötelező)"
         name: "Csatorna neve"
-        slug: "Csatorna azonosító (opcionális)"
+        slug: "Csatornaazonosító (nem kötelező)"
         title: "Új csatorna"
         type: "Típus"
         types:
@@ -394,7 +394,7 @@ hu:
           other: "<span>%{commaSeparatedUsernames} és további %{count} a következővel reagált </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Eszköztár be/ki"
-        italic_text: "dőlt szöveg"
+        italic_text: "kiemelt szöveg"
         bold_text: "félkövér szöveg"
         code_text: "kódszöveg"
         send: "Küldés"
@@ -407,7 +407,7 @@ hu:
         mention: "Csak megemlítésnél"
         always: "Összes tevékenységnél"
       settings:
-        channel_wide_mentions_label: "Engedélyezve az @all és @here említések"
+        channel_wide_mentions_label: "Az @all és @here megemlítések engedélyezése"
         channel_wide_mentions_description: "Engedélyezi a felhasználóknak, hogy értesítsék a #%{channel} összes tagját az @all-al, vagy csak azokat, akik az adott pillanatban aktívak @here"
         channel_threading_label: "Témázás"
         channel_threading_description: "Ha engedélyezve van a témázás, a csevegőüzenetekre adott válaszok egy külön beszélgetést hoznak létre, amely a fő csatorna mellett létezik."
@@ -415,12 +415,12 @@ hu:
         auto_join_users_info: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Add hozzá őket ehhez a csatornához, ha hozzáférnek a %{category} kategóriához."
         auto_join_users_info_no_category: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Adja hozzá őket ehhez a csatornához, ha hozzáfér a kiválasztott kategóriához."
         auto_join_users_warning: "Minden olyan felhasználó, aki nem tagja ennek a csatornának, de hozzáféréssel rendelkezik a %{category} kategóriához, csatlakozni fog. Biztos benne?"
-        notification_level: "Push értesítések küldése"
+        notification_level: "Leküldéses értesítések küldése"
         follow: "Belépés"
         followed: "Csatlakozott"
         mute: "Csatorna némítása"
-        threading_enabled: "Engedélyezed"
-        threading_disabled: "Kikapcsolt"
+        threading_enabled: "Bekapcsolva"
+        threading_disabled: "Kikapcsolva"
         muted_on: "Be"
         muted_off: "Ki"
         notifications: "Értesítések"
@@ -658,7 +658,7 @@ hu:
           composer_code: "%{shortcut} Kód (csak a szerkesztőben)"
           drawer_open: "%{shortcut} Csevegési fiók megnyitása"
           drawer_close: "%{shortcut} Csevegési fiók bezárása"
-          mark_all_channels_read: "%{shortcut} Minden csatorna olvasottként való megjelölése"
+          mark_all_channels_read: "%{shortcut} Összes csatorna megjelölése olvasottként"
     topic_statuses:
       chat:
         help: "A csevegés engedélyezett ebben a témában"

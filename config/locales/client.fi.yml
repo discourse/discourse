@@ -737,6 +737,16 @@ fi:
         reviewable_post:
           title: "Viesti"
           noun: "viesti"
+      notes:
+        delete: "Poista"
+      review_user: "Käyttäjä"
+      copy_link: "Kopioi linkki"
+      insights:
+        activities:
+          posts:
+            one: "ensimmäisen %{count} viestin"
+            other: "ensimmäisen %{count} viestin"
+        visibility: "Näkyvyys"
       approval:
         title: "Viesti odottaa hyväksyntää"
         description: "Viestisi saapui perille, mutta valvojan on vielä hyväksyttävä se, jotta se näkyy sivustolla. Ole kärsivällinen."
@@ -2659,6 +2669,8 @@ fi:
       image_alt_text:
         aria_label: Kuvan vaihtoehtoinen teksti
         title: "Lisää kuvalle kuvaus"
+      image_toolbar:
+        alt_text: "Lisää kuvalle kuvaus"
       image_scale_button: "Muuta kuvan kokoa %{percent} prosenttiin"
       delete_image_button: Poista kuva
       toggle_image_grid: Kuvaruudukko päälle/pois päältä
@@ -4120,6 +4132,8 @@ fi:
       pinned:
         title: "Kiinnitetty"
         help: "Tämä ketju on kiinnitetty sinulle; se näytetään alueensa yläosassa"
+      hot:
+        title: "Liekeissä"
       unlisted:
         help: "Tämä ketju on piilotettu; sitä ei näytetä ketjuluetteloissa, ja siihen pääsee vain suoran linkin kautta. %{unlistedReason}"
       personal_message:
@@ -4748,7 +4762,6 @@ fi:
               title: "Luettelo kaikista käyttäjistä"
             my_posts:
               content: "Viestini"
-              content_drafts: "Omat luonnokset"
               title: "Viimeaikainen ketjutoimintani"
               title_drafts: "Julkaisemattomat luonnokseni"
               draft_count:
@@ -6021,6 +6034,9 @@ fi:
           save_successful: "Käyttäjäkenttä tallennettu."
         color_palettes:
           palette_name: "Nimi"
+          copy_to_clipboard: "Kopioi leikepöydälle"
+          copied_to_clipboard: "Kopioitiin leikepöydälle"
+          copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
           duplicate: "Monista"
           delete: "Poista"
           color_options:

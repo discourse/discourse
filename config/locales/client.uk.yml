@@ -866,6 +866,65 @@ uk:
         reviewable_post:
           title: "Допис"
           noun: "допис"
+      flagged_as: "Позначено як"
+      assigned_to: "Призначено для"
+      moderator_actions: "Дії модератора"
+      timeline_and_notes: "Хронологія та нотатки"
+      timeline:
+        target_created: "Пост створено"
+        target_created_by: "Створено %{username} · %{relativeDate}"
+        flagged: "Позначено"
+        flagged_as_by: "Позначено як %{flagReason} від %{username} · %{relativeDate}"
+        claimed: "Заявлено претензію"
+        claimed_by: "Подано претензію %{username} · %{relativeDate}"
+        reviewed: "Розглянуто"
+        reviewed_by: "Переглянуто %{username} · %{relativeDate}"
+        view_conversation: "перегляд ПП"
+        note_added: "Нотатка модератора"
+        note_added_by: "Примітка модератора %{username} · %{relativeDate}"
+        no_events: "Немає подій на шкалі часу для відображення"
+      notes:
+        add_note_description: "Видно тільки модераторам. Використовуйте цю примітку, щоб додати контекст або рішення щодо розгляду."
+        add_note_button: "Додати примітку"
+        placeholder: "Напишіть свою нотатку тут..."
+        chars_remaining: "Залишилося %{count} символів"
+        delete_note: "Видалити цю примітку"
+        delete: "Видалити"
+      new_topic_label: "Нова тема"
+      queued_user: "Користувач у черзі"
+      posted_in: "Опубліковано в"
+      flagged_user: "Позначений користувач"
+      review_user: "Користувач"
+      need_help: "Потрібна допомога?"
+      copy_link: "Скопіювати посилання"
+      view_source: "Переглянути вихідний код"
+      insights:
+        title: "Статистика"
+        flag_volume: "Гучність прапора"
+        flagged_by_users:
+          one: "Позначено %{count} унікальним користувачем"
+          few: "Позначено %{count} унікальними користувачами"
+          many: "Позначено %{count} унікальними користувачами"
+          other: "Позначено %{count} унікальними користувачами"
+        similar_posts: "Схожі попередні публікації"
+        flagged_in_timeframe: "%{count} позначено раніше"
+        user_activity: "Активність користувача"
+        activities:
+          new_account: "новий обліковий запис"
+          trust_level: "рівень довіри: %{trustLevelName}"
+          posts:
+            one: "%{count} допис"
+            few: "%{count} дописи"
+            many: "%{count} дописів"
+            other: "%{count} дописів"
+        solution_marked: "Рішення позначено"
+        topic_has_solution: "Ця тема має рішення"
+        visibility: "Видимість"
+        topic_unlisted: "Ця тема не входить до списку. Доступна лише за прямим посиланням — не публічна."
+      help:
+        moderation_guide: "Посібник з модерації дискурсу"
+        flag_priorities: "Керування репутацією користувачів та пріоритетами скарг"
+        spam_detection: "Виявлення спаму"
       approval:
         title: "Допис потребує схвалення"
         description: "Ми отримали ваш новий допис, але він потребує схвалення модератором, перш ніж зʼявитися. Будь ласка, будьте терплячі."
@@ -1339,6 +1398,7 @@ uk:
     user_fields:
       none: "(вибрати опцію)"
       required: 'Будь ласка, введіть значення для "%{name}"'
+      required_select: 'Будь ласка, виберіть значення для "%{name}"'
       required_checkbox: 'Поле "%{name}" є обов’язковим'
       same_as_password: "Ваш пароль не повинен повторюватися в інших полях"
       optional: (опціонально)
@@ -2332,6 +2392,8 @@ uk:
       errors_summary_title: "Ця форма містить помилки:"
       dirty_form: "Ви не надсилали свої зміни! Ви впевнені, що хочете піти?"
       errors:
+        starts_with: "Повинно починатися з %{prefix}"
+        ends_with: "Має закінчуватися на %{suffix}"
         required: "Обов'язкові"
         date_before_or_equal: "Повинно бути раніше або дорівнювати %{date}"
         date_after_or_equal: "Має бути після або дорівнювати %{date}"
@@ -2948,6 +3010,11 @@ uk:
       image_alt_text:
         aria_label: Альтернативний текст для зображення
         title: "Додати опис зображення"
+      image_toolbar:
+        alt_text: "Додати опис зображення"
+        zoom_out: "Зменшити розмір зображення"
+        zoom_in: "Збільшити розмір зображення"
+        remove: "Видалити зображення"
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення
       toggle_image_grid: Перемкнути сітку зображень
@@ -3124,6 +3191,7 @@ uk:
       relevance: "За змістом"
       latest_post: "Останній допис"
       latest_topic: "Остання тема"
+      last_read: "Останні прочитані"
       most_viewed: "Найбільш переглянуті"
       most_liked: "Найбільше подобається"
       select_all: "Обрати все"
@@ -3427,7 +3495,7 @@ uk:
         hot: "Нема гарячих тем."
         filter: "Немає тем."
         education:
-          topic_tracking_preferences: "Ви можете переглянути та змінити налаштування відстеження нових тем у <a href=\"%{basePath}/my/preferences/tracking\">своїх</a> налаштуваннях."
+          topic_tracking_preferences: 'Ви можете переглянути та змінити налаштування відстеження нових тем у <a href="%{basePath}/my/preferences/tracking">своїх</a> налаштуваннях.'
           unread: "Не залишилося нічого непрочитаного... вражаюче!"
           new_new: "Наразі нічого нового... слідкуйте за новинами!"
           new: "Наразі нічого нового... слідкуйте за новинами!"
@@ -4233,6 +4301,9 @@ uk:
           many: "Ви впевнені, що хочете об’єднати ці %{count} дописів?"
           other: "Ви впевнені, що хочете об’єднати ці %{count} дописів?"
       revisions:
+        locale:
+          no_locale_set: "Мова не встановлена"
+          locale_removed: "Мову вилучено"
         controls:
           first: "Перша версія"
           previous: "Попередня версія"
@@ -4587,6 +4658,8 @@ uk:
       pinned:
         title: "Закріплені"
         help: "Ця тема для вас закріплена; вона буде показана вгорі свого розділу"
+      hot:
+        title: "Гаряче"
       unlisted:
         help: "Ця тема не перебуває у списку; вона не відображатиметься у списках тем, і доступ до неї можна отримати лише за прямим посиланням. %{unlistedReason}"
       personal_message:
@@ -4709,11 +4782,16 @@ uk:
           other: "Нові (%{count})"
         help: "теми, створені за останні кілька днів"
         all: "Все"
+        all_tooltip: "Усі нові теми та теми, на які відповіли за останні кілька днів"
         all_with_count: "Всі (%{count})"
+        new_topics_tooltip: "Нові теми"
         topics: "Теми"
         topics_with_count: "Теми (%{count})"
+        new_replies_tooltip: "Нові відповіді"
         replies: "Відповіді"
         replies_with_count: "Відповіді (%{count})"
+      new_new:
+        help: "теми, створені або на які відповіли за останні кілька днів"
       posted:
         title: "Мої дописи"
         help: "теми, в які ви дописували"
@@ -5296,6 +5374,9 @@ uk:
             invite:
               content: "Запрошення"
               title: "Запросити нових учасників"
+            my_messages:
+              content: "Мої повідомлення"
+              title: "Мої особисті повідомлення"
         global_section: "Глобальний розділ, видимий для всіх"
       panels:
         forum:
@@ -6599,6 +6680,9 @@ uk:
           save_successful: "Поле користувача збережено."
         color_palettes:
           palette_name: "Імʼя"
+          copy_to_clipboard: "Скопіювати в буфер"
+          copied_to_clipboard: "Скопійовано у буфер обміну"
+          copy_to_clipboard_error: "Помилка під час копіювання даних у буфер обміну"
           duplicate: "Дублювати"
           delete: "Видалити"
           color_options:
@@ -6914,6 +6998,7 @@ uk:
           compare_commits: "(Дивіться нові комміти)"
           remote_theme_edits: "Якщо ви хочете відредагувати цю тему, ви повинні <a href='%{repoURL}' target='_blank'>надіслати зміни до її сховища</a>"
           repo_unreachable: "Не вдалося зв’язатися з Git-репозиторієм цієї теми. Повідомлення про помилку:"
+          built_in_description: "Ця тема попередньо встановлена і не може бути видалена або змінена"
           imported_from_archive: "Ця тема була імпортована з .zip файлу"
           settings: "Налаштування"
           colors: "Кольори"

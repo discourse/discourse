@@ -51,7 +51,18 @@ RSpec.describe TagGroupsController do
     describe "when limit params is invalid" do
       include_examples "invalid limit params",
                        "/tag_groups/filter/search.json",
-                       SiteSetting.max_tag_search_results
+                       described_class::MAX_TAG_GROUPS_SEARCH_RESULTS
+    end
+
+    it "doesn't error when the max_tag_search_results setting is lowered from its default" do
+      tag_group = tag_group_with_permission(everyone, readonly)
+
+      SiteSetting.max_tag_search_results = 4
+
+      get "/tag_groups/filter/search.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["results"].size).to eq(1)
+      expect(response.parsed_body["results"].first["name"]).to eq(tag_group.name)
     end
 
     context "for anons" do

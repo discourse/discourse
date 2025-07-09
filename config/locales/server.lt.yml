@@ -1283,7 +1283,6 @@ lt:
     purge_deleted_uploads_grace_period_days: "Atidėjimo laikotarpis (dienomis), kol ištrintas įkėlimas ištrinamas."
     s3_access_key_id: "„Amazon S3“ prieigos rakto ID, kuris bus naudojamas vaizdams, priedams ir atsarginėms kopijoms įkelti."
     avatar_sizes: "Automatiškai sugeneruotų avatarų dydžių sąrašas."
-    external_system_avatars_url: "Išorinės sistemos avatarų paslaugos URL. Leidžiami pakeitimai yra {username} {first_letter} {color} {size}"
     external_emoji_url: "Jaustukų vaizdų išorinės paslaugos URL. Palikite tuščią, kad išjungtumėte."
     use_site_small_logo_as_system_avatar: "Naudokite mažą svetainės logotipą, o ne sistemos vartotojo avatarą. Reikalingas logotipas."
     enable_listing_suspended_users_on_search: "Įgalinkite nuolatinius vartotojus rasti sustabdytus vartotoj"

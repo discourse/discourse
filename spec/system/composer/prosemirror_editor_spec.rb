@@ -20,6 +20,13 @@ describe "Composer - ProseMirror editor", type: :system do
     composer.focus
   end
 
+  def paste_and_click_image
+    cdp.allow_clipboard
+    cdp.copy_test_image
+    cdp.paste
+    rich.find(".composer-image-node img").click
+  end
+
   it "hides the Composer container's preview button" do
     page.visit "/new-topic"
 
@@ -602,7 +609,7 @@ describe "Composer - ProseMirror editor", type: :system do
         lines">
       HTML
 
-      img = rich.find("img:nth-of-type(1)")
+      img = rich.find(".composer-image-node img")
 
       expect(img["src"]).to eq("https://example.com/image.png")
       expect(img["alt"]).to eq("alt with new lines")
@@ -616,10 +623,8 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "ignores text/html content if Files are present" do
-      cdp.allow_clipboard
       open_composer_and_toggle_rich_editor
-      cdp.copy_test_image
-      cdp.paste
+      paste_and_click_image
 
       expect(rich).to have_css("img[data-orig-src]", count: 1)
 
@@ -901,11 +906,11 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @#{user.username} ")
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
+      expect(rich).to have_css("a.mention", text: user.username)
 
       composer.type_content("and @invalid_user - how are you?")
 
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@invalid_user")
+      expect(rich).to have_no_css("a.mention", text: "@invalid_user")
 
       composer.toggle_rich_editor
 
@@ -919,8 +924,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@unknown")
+      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_no_css("a.mention", text: "@unknown")
     end
 
     it "validates mentions case-insensitively" do
@@ -928,12 +933,12 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @testuser_123 and @TESTUSER_123 ")
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "testuser_123")
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTUSER_123")
+      expect(rich).to have_css("a.mention", text: "testuser_123")
+      expect(rich).to have_css("a.mention", text: "TESTUSER_123")
 
       composer.type_content("and @InvalidUser ")
 
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidUser")
+      expect(rich).to have_no_css("a.mention", text: "@InvalidUser")
     end
 
     it "validates group mentions case-insensitively" do
@@ -941,17 +946,17 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @testgroup_abc and @TESTGROUP_ABC ")
 
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "testgroup_abc")
-      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTGROUP_ABC")
+      expect(rich).to have_css("a.mention", text: "testgroup_abc")
+      expect(rich).to have_css("a.mention", text: "TESTGROUP_ABC")
 
       composer.type_content("and @InvalidGroup ")
 
-      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidGroup")
+      expect(rich).to have_no_css("a.mention", text: "@InvalidGroup")
     end
   end
 
   describe "link toolbar" do
-    let(:insert_hyperlink_modal) { PageObjects::Modals::InsertHyperlink.new }
+    let(:upsert_hyperlink_modal) { PageObjects::Modals::UpsertHyperlink.new }
 
     it "shows link toolbar when cursor is on a link" do
       open_composer_and_toggle_rich_editor
@@ -975,19 +980,43 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(insert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to be_open
 
-      expect(insert_hyperlink_modal.link_text_value).to eq("Example")
-      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      insert_hyperlink_modal.fill_in_link_text("Updated Example")
-      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
-      insert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.fill_in_link_text("Updated Example")
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      upsert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-example.com']", text: "Updated Example")
 
       composer.toggle_rich_editor
       expect(composer).to have_value("[Updated Example](https://updated-example.com)")
+    end
+
+    it "escapes URL when editing link via modal" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Example](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
+
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com?query=with space")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css(
+        "a[href='https://updated-example.com?query=with%20space']",
+        text: "Example",
+      )
     end
 
     it "allows copying a link URL via toolbar" do
@@ -1096,14 +1125,14 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(insert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to be_open
 
-      expect(insert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
-      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      insert_hyperlink_modal.fill_in_link_text("Updated :tada: Party")
-      insert_hyperlink_modal.fill_in_link_url("https://updated-party.com")
-      insert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.fill_in_link_text("Updated :tada: Party")
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-party.com")
+      upsert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-party.com']")
       expect(rich).to have_css("a img[title=':tada:'], a img[alt=':tada:']")
@@ -1121,14 +1150,14 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(insert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to be_open
 
-      expect(insert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")
-      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+      expect(upsert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      insert_hyperlink_modal.fill_in_link_text("Updated **bold** and *italic* content")
-      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
-      insert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.fill_in_link_text("Updated **bold** and *italic* content")
+      upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      upsert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-example.com']")
       expect(rich).to have_css("strong a", text: "bold")
@@ -1137,6 +1166,122 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.toggle_rich_editor
       expect(composer).to have_value(
         "[Updated **bold** and *italic* content](https://updated-example.com)",
+      )
+    end
+  end
+
+  describe "image toolbar" do
+    it "allows scaling image down and up via toolbar" do
+      open_composer_and_toggle_rich_editor
+      paste_and_click_image
+
+      find(".composer-image-toolbar__zoom-out").click
+
+      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("75")
+
+      find(".composer-image-toolbar__zoom-out").click
+
+      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("50")
+
+      find(".composer-image-toolbar__zoom-in").click
+
+      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("75")
+
+      find(".composer-image-toolbar__zoom-in").click
+
+      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("100")
+    end
+
+    it "allows removing image via toolbar" do
+      open_composer_and_toggle_rich_editor
+      composer.type_content("Before")
+      paste_and_click_image
+
+      find(".composer-image-toolbar__trash").click
+
+      expect(rich).to have_no_css(".composer-image-node img")
+      expect(rich).to have_content("Before")
+    end
+
+    it "hides toolbar when clicking outside image" do
+      open_composer_and_toggle_rich_editor
+      paste_and_click_image
+
+      expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+
+      rich.find("p").click
+
+      expect(page).to have_no_css("[data-identifier='composer-image-toolbar']")
+    end
+
+    it "sets width and height attributes when scaling external images" do
+      open_composer_and_toggle_rich_editor
+
+      image = Fabricate(:image_upload)
+
+      composer.type_content("![alt text](#{image.url})")
+
+      find(".composer-image-node img").click
+
+      expect(rich).to have_no_css(".composer-image-node img[width]")
+      expect(rich).to have_no_css(".composer-image-node img[height]")
+
+      find(".composer-image-toolbar__zoom-out").click
+
+      expect(rich).to have_css(".composer-image-node img[width]")
+      expect(rich).to have_css(".composer-image-node img[height]")
+    end
+  end
+
+  describe "image alt text display and editing" do
+    it "shows alt text input when image is selected" do
+      open_composer_and_toggle_rich_editor
+      paste_and_click_image
+
+      expect(page).to have_css("[data-identifier='composer-image-alt-text']")
+      expect(page).to have_css(".image-alt-text-input__display")
+    end
+
+    it "allows editing alt text by clicking on display" do
+      open_composer_and_toggle_rich_editor
+      paste_and_click_image
+
+      find(".image-alt-text-input__display").click
+
+      expect(page).to have_css(".image-alt-text-input.--expanded")
+      expect(page).to have_css(".image-alt-text-input__field")
+
+      find(".image-alt-text-input__field").fill_in(with: "updated alt text")
+      find(".image-alt-text-input__field").send_keys(:enter)
+
+      expect(rich.find(".composer-image-node img")["alt"]).to eq("updated alt text")
+    end
+
+    it "saves alt text when leaving the input field" do
+      open_composer_and_toggle_rich_editor
+      paste_and_click_image
+
+      find(".image-alt-text-input__display").click
+      find(".image-alt-text-input__field").fill_in(with: "new alt text")
+
+      rich.find("p").click
+
+      expect(rich.find(".composer-image-node img")["alt"]).to eq("new alt text")
+    end
+
+    it "displays the placeholder if alt text is empty" do
+      open_composer_and_toggle_rich_editor
+      paste_and_click_image
+
+      expect(page).to have_css(".image-alt-text-input__display", text: "image")
+
+      find(".image-alt-text-input__display").click
+      find(".image-alt-text-input__field").fill_in(with: "")
+      find(".image-alt-text-input__field").send_keys(:enter)
+
+      expect(page).to have_css(
+        ".image-alt-text-input__display",
+        text: I18n.t("js.composer.image_alt_text.title"),
       )
     end
   end

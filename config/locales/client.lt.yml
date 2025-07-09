@@ -806,6 +806,18 @@ lt:
         reviewable_post:
           title: "Įrašai"
           noun: "įrašai"
+      notes:
+        delete: "Pašalinti"
+      review_user: "Narys"
+      copy_link: "Nukopijuoti nuorodą"
+      insights:
+        activities:
+          posts:
+            one: "%{count} pranešimas"
+            few: "%{count} pranešimai"
+            many: "%{count} pranešimų"
+            other: "%{count} pranešimų"
+        visibility: "Matomumas"
       approval:
         title: "Įrašui reikalingas patvirtinimas"
         description: "Mes gavome tavo naują įrašą, tačiau jis turi būti patvirtintas moderatoriaus. Ačiū už kantrybę!"
@@ -3678,7 +3690,6 @@ lt:
         topics: "Temos"
         replies: "Atsakymai"
       posted:
-        title: "Mano Įrašai"
         help: "temos, kuriose yra tavo įrašas"
       bookmarks:
         title: "Žymės"
@@ -4053,8 +4064,6 @@ lt:
               content: "Grupės"
             users:
               content: "Vartotojai"
-            my_posts:
-              content: "Mano Įrašai"
             review:
               content: "Peržiūra"
             invite:
@@ -4565,6 +4574,9 @@ lt:
           delete: "Pašalinti"
         color_palettes:
           palette_name: "Vardas"
+          copy_to_clipboard: "Nukopijuoti į iškarpinę"
+          copied_to_clipboard: "Nukopijuota į iškirptę"
+          copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
           delete: "Pašalinti"
           colors:
             title: "Spalvos"
