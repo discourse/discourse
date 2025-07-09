@@ -46,12 +46,14 @@ export default class ToolbarPopupmenuOptions extends Component {
           );
         }
 
-        label = htmlSafe(
-          label +
-            iconHTML("check", {
-              class: "d-button-label__active-icon",
-            })
-        );
+        if (content.showActiveIcon) {
+          label = htmlSafe(
+            label +
+              iconHTML("check", {
+                class: "d-button-label__active-icon",
+              })
+          );
+        }
       }
 
       let title = label;

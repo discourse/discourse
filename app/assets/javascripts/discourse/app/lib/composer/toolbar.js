@@ -248,6 +248,7 @@ export default class Toolbar extends ToolbarBase {
               }),
               condition: true,
               shortcut: `Shift+${headingLevel}`,
+              showActiveIcon: true,
               active: ({ state }) => {
                 if (!state || !state.inHeading) {
                   return false;
@@ -269,6 +270,7 @@ export default class Toolbar extends ToolbarBase {
             title: "composer.heading_level_paragraph_title",
             condition: true,
             shortcut: `Shift+0`,
+            showActiveIcon: true,
             active: ({ state }) => state?.inParagraph,
             action: this.onHeadingMenuAction.bind(this),
           });

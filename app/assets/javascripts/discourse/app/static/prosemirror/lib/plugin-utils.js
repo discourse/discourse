@@ -212,10 +212,10 @@ export function hasMark(state, markType, attrs = {}) {
 // Check if a node of a specific type is present in the current selection,
 // with optional scoping by specific attributes.
 export function inNode(state, nodeType, attrs = {}) {
-  const { from } = state.selection;
+  const { $from } = state.selection;
 
-  for (let depth = from.depth; depth >= 0; depth--) {
-    const node = from.node(depth);
+  for (let depth = $from.depth; depth >= 0; depth--) {
+    const node = $from.node(depth);
     if (node.type === nodeType) {
       if (!Object.keys(attrs).length) {
         return true;
