@@ -344,10 +344,12 @@
 
     .discourse-no-touch & {
       &:hover {
-        background-color: var(--primary-low);
+        background-color: var(--d-hover);
 
         .d-icon {
-          color: var(--primary-medium);
+          color: var(
+            --primary-high
+          ); // to remove when btn hover variable is scoped better
         }
       }
     }
