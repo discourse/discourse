@@ -31,20 +31,22 @@ export default RouteTemplate(
 
       <div class="permalink-results">
         {{#if @controller.model.length}}
-          <table class="d-admin-table permalinks">
-            <thead>
-              <th>{{i18n "admin.permalink.url"}}</th>
-              <th>{{i18n "admin.permalink.destination"}}</th>
+          <table class="d-table permalinks">
+            <thead class="d-table__header">
+              <tr class="d-table__row">
+                <th class="d-table__header-cell">{{i18n "admin.permalink.url"}}</th>
+                <th class="d-table__header-cell">{{i18n "admin.permalink.destination"}}</th>
+              </tr>
             </thead>
-            <tbody>
+            <tbody class="d-table__body">
               {{#each @controller.model as |pl|}}
                 <tr
                   class={{concatClass
-                    "admin-permalink-item d-admin-row__content"
+                    "d-table__row admin-permalink-item"
                     pl.key
                   }}
                 >
-                  <td class="d-admin-row__overview">
+                  <td class="d-table__cell --overview">
                     <FlatButton
                       @title="admin.permalink.copy_to_clipboard"
                       @icon="far-clipboard"
@@ -56,7 +58,7 @@ export default RouteTemplate(
                       title={{pl.url}}
                     >{{pl.url}}</span>
                   </td>
-                  <td class="d-admin-row__detail destination">
+                  <td class="d-table__cell --detail destination">
                     {{#if pl.topic_id}}
                       <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
                     {{/if}}
@@ -80,8 +82,8 @@ export default RouteTemplate(
                       <a href={{pl.user_url}}>{{pl.username}}</a>
                     {{/if}}
                   </td>
-                  <td class="d-admin-row__controls">
-                    <div class="d-admin-row__controls-options">
+                  <td class="d-table__cell --controls">
+                    <div class="d-table__cell-actions">
                       <DButton
                         class="btn-default btn-small admin-permalink-item__edit"
                         @route="adminPermalinks.edit"

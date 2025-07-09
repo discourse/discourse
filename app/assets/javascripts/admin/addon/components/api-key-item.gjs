@@ -65,11 +65,17 @@ export default class ApiKeyItem extends Component {
   <template>
     <tr class="d-table__row">
       <td class="d-table__cell --overview key">
-        {{this.apiKey.truncatedKey}}
-        {{#if this.apiKey.revoked_at}}
-          <span class="d-table__badge">{{i18n
-              "admin.api.revoked"
-            }}</span>{{/if}}
+        <div class="d-table__value-wrapper">
+          {{this.apiKey.truncatedKey}}
+          {{#if this.apiKey.revoked_at}}
+            <div class="status-label --inactive">
+              <div class="status-label-indicator"></div>
+              <div class="status-label-text">
+                {{i18n "admin.api.revoked" }}
+                </div>
+            </div>
+          {{/if}}
+        </div>
       </td>
       <td class="d-table__cell --detail key-description">
         <div class="d-table__mobile-label">{{i18n
@@ -91,7 +97,7 @@ export default class ApiKeyItem extends Component {
         <div class="d-table__mobile-label">{{i18n
           "admin.api.created"
         }}</div>
-        <div class="d-table__mobile-value-wrapper">
+        <div class="d-table__value-wrapper">
           <LinkTo @route="adminUser" @model={{this.apiKey.createdBy}}>
             {{avatar this.apiKey.createdBy imageSize="small"}}
           </LinkTo>
@@ -100,7 +106,7 @@ export default class ApiKeyItem extends Component {
       </td>
       <td class="d-table__cell --detail key-scope">
         <div class="d-table__mobile-label">{{i18n "admin.api.scope"}}</div>
-        <div class="d-table__mobile-value-wrapper">
+        <div class="d-table__value-wrapper">
           {{icon this.scopeIcon}}
           {{this.scopeName}}
         </div>

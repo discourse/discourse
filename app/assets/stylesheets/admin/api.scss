@@ -1,26 +1,24 @@
 @use "lib/viewport";
 
-// Styles for admin/api
-.d-admin-table.web-hooks {
-  .d-admin-row__overview.payload-url {
-    word-wrap: break-word;
-    max-width: 20vw;
+// For /admin/api/webhooks
+.d-table.admin-web_hooks__items {
+  .d-table__cell {
+    &.key-url {
+      word-break: break-all;
+      white-space: normal;
+    }
 
-    @include viewport.until(lg) {
-      max-width: 70vw;
+    &.key-description {
+      white-space: pre-wrap;
+      word-break: break-word;
     }
   }
+}
 
-  .d-admin-row__detail.description {
-    @include viewport.until(lg) {
-      display: block;
-    }
-
-    .d-admin-row__mobile-label {
-      @include viewport.until(lg) {
-        display: block;
-      }
-    }
+// For /admin/api/keys
+.d-table.admin-api_keys__items {
+  .d-table__cell.key {
+    display: flex;
   }
 }
 

@@ -7,12 +7,14 @@ const ApiKeysList = <template>
     {{#if @apiKeys}}
       <table class="d-table admin-api_keys__items">
         <thead class="d-table__header">
-          <th class="d-table__header-cell">{{i18n "admin.api.key"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.api.description"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.api.user"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.api.created"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.api.scope"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.api.last_used"}}</th>
+          <tr class="d-table__row">
+            <th class="d-table__header-cell">{{i18n "admin.api.key"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.description"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.user"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.created"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.scope"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.last_used"}}</th>
+          </tr>
         </thead>
         <tbody class="d-table__body">
           {{#each @apiKeys as |apiKey|}}

@@ -75,12 +75,14 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   <template>
     <div class="container admin-user_fields">
       {{#if this.fields}}
-        <table class="d-admin-table admin-flags__items">
-          <thead>
-            <th>{{i18n "admin.config_areas.user_fields.field"}}</th>
-            <th>{{i18n "admin.config_areas.user_fields.type"}}</th>
+        <table class="d-table user-fields">
+          <thead class="d-table__header">
+            <tr class="d-table__row">
+              <th class="d-table__header-cell">{{i18n "admin.config_areas.user_fields.field"}}</th>
+              <th class="d-table__header-cell">{{i18n "admin.config_areas.user_fields.type"}}</th>
+            </tr>
           </thead>
-          <tbody>
+          <tbody class="d-table__body">
             {{#each this.sortedFields as |field|}}
               <AdminUserFieldItem
                 @userField={{field}}
