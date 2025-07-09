@@ -453,3 +453,4 @@ en:
             label: Last run
           last_updated_by:
             label: Updated by
+          enable_toggle_disabled: "You can enable this automation once all required fields are complete."

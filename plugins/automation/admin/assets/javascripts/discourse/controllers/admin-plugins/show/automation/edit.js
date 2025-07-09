@@ -27,16 +27,21 @@ export default class AutomationEdit extends Controller {
     }
   }
 
+  get disableEnabledToggle() {
+    return !(this.automation.canBeEnabled || this.automation.enabled);
+  }
+
   @action
   async toggleEnabled() {
     const automation = this.model.automation;
-    automation.set("enabled", !automation.enabled);
+    // automation.set("enabled", !automation.enabled);
+    automation.enabled = !automation.enabled;
     this.set("isUpdatingAutomation", true);
     try {
       await automation.save({ enabled: automation.enabled });
     } catch (e) {
       popupAjaxError(e);
-      automation.set("enabled", !automation.enabled);
+      automation.enabled = !automation.enabled;
     } finally {
       this.set("isUpdatingAutomation", false);
     }

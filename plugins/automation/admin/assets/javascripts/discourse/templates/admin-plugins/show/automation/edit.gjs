@@ -10,6 +10,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ComboBox from "select-kit/components/combo-box";
+import DTooltip from "float-kit/components/d-tooltip";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import FormError from "discourse/plugins/automation/admin/components/form-error";
 
@@ -32,10 +33,28 @@ export default RouteTemplate(
                   "discourse_automation.models.automation.enabled.label"
                 }}</label>
 
-              <DToggleSwitch
-                @state={{@controller.model.automation.enabled}}
-                {{on "click" @controller.toggleEnabled}}
-              />
+              <span class="enabled-toggle-with-tooltip">
+                {{#if @controller.disableEnabledToggle}}
+                  <DTooltip @identifier="automation-enabled-toggle">
+                    <:trigger>
+                      <DToggleSwitch
+                        disabled={{true}}
+                        @state={{@controller.model.automation.enabled}}
+                      />
+                    </:trigger>
+                    <:content>
+                      {{i18n
+                        "discourse_automation.models.automation.enable_toggle_disabled"
+                      }}
+                    </:content>
+                  </DTooltip>
+                {{else}}
+                  <DToggleSwitch
+                    @state={{@controller.model.automation.enabled}}
+                    {{on "click" @controller.toggleEnabled}}
+                  />
+                {{/if}}
+              </span>
             </div>
           </:content>
         </AdminConfigAreaCard>
