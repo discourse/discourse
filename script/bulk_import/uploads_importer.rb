@@ -25,6 +25,11 @@ module BulkImport
   UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
 
   class UploadsImporter
+    class DownloadFailedError < StandardError
+    end
+    class UploadSizeExceededError < DownloadFailedError
+    end
+
     TRANSACTION_SIZE = 1000
     QUEUE_SIZE = 1000
 
@@ -127,17 +132,18 @@ module BulkImport
           current_count = 0
 
           while !(params = status_queue.pop).nil?
-            begin
-              if params.delete(:skipped) == true
-                skipped_count += 1
-              elsif (error_message = params.delete(:error)) || params[:upload].nil?
-                error_count += 1
-                puts "", "Failed to create upload: #{params[:id]} (#{error_message})", ""
-              end
+            case params.delete(:status)
+            when :error
+              error_count += 1
+              puts "", "Failed to create upload: #{params[:id]} (#{params[:skip_details]})", ""
+            when :skipped
+              skipped_count += 1
+            end
 
+            begin
               insert(<<~SQL, params)
-                INSERT INTO uploads (id, upload, markdown, skip_reason)
-                VALUES (:id, :upload, :markdown, :skip_reason)
+                INSERT INTO uploads (id, upload, markdown, skip_reason, skip_details)
+                VALUES (:id, :upload, :markdown, :skip_reason, :skip_details)
               SQL
             rescue StandardError => e
               puts "", "Failed to insert upload: #{params[:id]} (#{e.message}))", ""
@@ -193,10 +199,11 @@ module BulkImport
 
                 if !file_exists
                   status_queue << {
+                    status: :skipped,
                     id: row["id"],
                     upload: nil,
-                    skipped: true,
-                    skip_reason: "file not found",
+                    skip_reason: "file_not_found",
+                    skip_details: nil,
                   }
                   next
                 end
@@ -240,21 +247,24 @@ module BulkImport
 
                 if upload_okay
                   status_queue << {
+                    status: :ok,
                     id: row["id"],
                     upload: upload.attributes.to_json,
                     markdown:
                       UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
                     skip_reason: nil,
+                    skip_details: nil,
                   }
                   break
                 elsif retry_count >= 3
                   error_message ||= upload&.errors&.full_messages&.join(", ") || "unknown error"
                   status_queue << {
+                    status: :error,
                     id: row["id"],
                     upload: nil,
                     markdown: nil,
-                    error: "too many retries: #{error_message}",
-                    skip_reason: "too many retries",
+                    skip_reason: "too_many_retries",
+                    skip_details: "Too many retries: #{error_message}",
                   }
                   break
                 end
@@ -264,11 +274,12 @@ module BulkImport
               end
             rescue StandardError => e
               status_queue << {
+                status: :error,
                 id: row["id"],
                 upload: nil,
                 markdown: nil,
-                error: e.message,
-                skip_reason: "error",
+                skip_reason: e.is_a?(DownloadFailedError) ? "download_error" : "error",
+                skip_details: e.message,
               }
             ensure
               data_file&.close!
@@ -286,42 +297,47 @@ module BulkImport
 
     def download_file(url:, id:, retry_count: 0)
       path = download_cache_path(id)
-      original_filename = nil
 
       if File.exist?(path) && (original_filename = get_original_filename(id))
         return path, original_filename
       end
 
-      fd = FinalDestination.new(url)
       file = nil
+      original_filename = nil
 
-      fd.get do |response, chunk, uri|
-        if file.nil?
-          check_response!(response, uri)
-          original_filename = extract_filename_from_response(response, uri)
-          file = File.open(path, "wb")
+      begin
+        fd = FinalDestination.new(url)
+
+        fd.get do |response, chunk, uri|
+          if file.nil?
+            check_response!(response, uri)
+            original_filename = extract_filename_from_response(response, uri)
+            file = File.open(path, "wb")
+          end
+
+          file.write(chunk)
+
+          if (file_size = file.size) > MAX_FILE_SIZE
+            File.unlink(path)
+
+            raise UploadSizeExceededError,
+                  "Upload size #{file.size} bytes exceeds the limit of #{MAX_FILE_SIZE} bytes"
+          end
         end
 
-        file.write(chunk)
+        return unless file
 
-        if file.size > MAX_FILE_SIZE
-          file.close
-          file.unlink
-          file = nil
-          throw :done
-        end
-      end
-
-      if file
-        file.close
         insert(
           "INSERT INTO downloads (id, original_filename) VALUES (?, ?)",
           [id, original_filename],
         )
-        return path, original_filename
-      end
 
-      nil
+        [path, original_filename]
+      rescue StandardError => e
+        raise DownloadFailedError, "Failed to download upload from #{url}: #{e.message}"
+      ensure
+        file&.close
+      end
     end
 
     def download_cache_path(id)
@@ -335,10 +351,8 @@ module BulkImport
 
     def check_response!(response, uri)
       if uri.blank?
-        code = response.code.to_i
-
-        if code >= 400
-          raise "#{code} Error"
+        if response.code.to_i >= 400
+          response.value
         else
           throw :done
         end
@@ -688,7 +702,8 @@ module BulkImport
           id TEXT PRIMARY KEY NOT NULL,
           upload JSON_TEXT,
           markdown TEXT,
-          skip_reason TEXT
+          skip_reason TEXT,
+          skip_details TEXT
         )
       SQL
 
