@@ -94,7 +94,7 @@ class TagGroupsController < ApplicationController
       matches.order("name").limit(
         fetch_limit_from_params(
           default: SiteSetting.max_tag_search_results,
-          max: SiteSetting.max_tag_search_results,
+          max: 1000, # matches the max limit for max_tag_search_results setting
         ),
       )
 

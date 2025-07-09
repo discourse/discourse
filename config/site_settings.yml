@@ -3892,6 +3892,7 @@ tags:
     client: true
     default: 5
     min: 1
+    max: 1000
     area: "categories_and_tags"
   max_tags_in_filter_list:
     client: true
