@@ -82,7 +82,7 @@ export default class BulkSelectTopicsDropdown extends Component {
       },
       {
         id: "close-topics",
-        icon: "lock",
+        icon: "topic.closed",
         name: i18n("topic_bulk_actions.close_topics.name"),
       },
       {
