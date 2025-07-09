@@ -415,6 +415,8 @@ class Topic < ActiveRecord::Base
       inherit_auto_close_from_category
       inherit_slow_mode_from_category
     end
+
+    self.locale = nil if locale.blank?
   end
 
   after_save do

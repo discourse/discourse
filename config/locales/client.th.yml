@@ -437,6 +437,13 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+      notes:
+        delete: "ลบ"
+      review_user: "ผู้ใช้"
+      insights:
+        activities:
+          posts:
+            other: "%{count} โพส"
       approval:
         title: "โพสต์นี้ต้องได้รับการอนุมัติ"
         description: "เราได้รับโพสต์ใหม่ของคุณแล้ว แต่ต้องได้รับการอนุมัติจากผู้ดูแลก่อนถึงจะปรากฏขึ้น กรุณารอสักครู่"
@@ -2250,7 +2257,6 @@ th:
         topics: "หัวข้อ"
         replies: "ตอบ"
       posted:
-        title: "โพสต์ของฉัน"
         help: "กระทู้ที่คุณได้โพสต์"
       bookmarks:
         title: "บุ๊กมาร์ก"
@@ -2508,7 +2514,6 @@ th:
             users:
               content: "ผู้ใช้"
             my_posts:
-              content: "โพสต์ของฉัน"
               draft_count:
                 other: "%{count}แบบร่าง"
             review:

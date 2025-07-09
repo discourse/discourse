@@ -604,6 +604,17 @@ sl:
         reviewable_post:
           title: "Prispevek"
           noun: "prispevek"
+      notes:
+        delete: "Izbriši"
+      review_user: "Uporabnik"
+      insights:
+        activities:
+          posts:
+            one: "%{count} prispevek"
+            two: "%{count} prispevka"
+            few: "%{count} prispevki"
+            other: "%{count} prispevkov"
+        visibility: "Vidljivost"
       approval:
         title: "Prispevek za odobritev."
         description: "Prejeli smo vaš nov prispevek, vendar potrebuje odobritev s strani moderatorja preden bo objavljen. Prosimo za potrpežljivost."
@@ -4115,6 +4126,9 @@ sl:
           delete: "Izbriši"
         color_palettes:
           palette_name: "Ime"
+          copy_to_clipboard: "Kopiraj v odložišče"
+          copied_to_clipboard: "Kopirano v odložišče"
+          copy_to_clipboard_error: "Prišlo je do napake pri kopiranju v odložišče"
           delete: "Izbriši"
           colors:
             title: "Barve"

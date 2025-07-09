@@ -6,6 +6,7 @@ import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ColorPaletteEditor, {
@@ -123,6 +124,30 @@ export default class AdminConfigAreasColorPalette extends Component {
   @action
   onEditorTabSwitch(newMode) {
     this.editorMode = newMode;
+  }
+
+  @action
+  async copyToClipboard() {
+    try {
+      await clipboardCopy(this.args.colorPalette.dump());
+      this.toasts.success({
+        data: {
+          message: i18n(
+            "admin.config_areas.color_palettes.copied_to_clipboard"
+          ),
+        },
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      this.toasts.error({
+        data: {
+          message: i18n(
+            "admin.config_areas.color_palettes.copy_to_clipboard_error"
+          ),
+        },
+      });
+    }
   }
 
   @action
@@ -320,6 +345,11 @@ export default class AdminConfigAreasColorPalette extends Component {
                   {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
                 </span>
               {{/if}}
+              <DButton
+                class="copy-to-clipboard"
+                @label="admin.config_areas.color_palettes.copy_to_clipboard"
+                @action={{this.copyToClipboard}}
+              />
               <form.Submit
                 @isLoading={{this.saving}}
                 @label="admin.config_areas.color_palettes.save_changes"

@@ -494,6 +494,15 @@ lv:
         reviewable_post:
           title: "Ieraksts"
           noun: "ieraksts"
+      notes:
+        delete: "Dzēst"
+      review_user: "Lietotājs"
+      insights:
+        activities:
+          posts:
+            zero: "%{count} raksti"
+            one: "%{count} raksts"
+            other: "%{count} raksti"
       approval:
         title: "Ieraksts gaida apstiprinājumu"
         description: "Mēs saņēmām jūsu ierakstu, taču vispirms to jāapstiprina moderatoram. Lūdzu, esiet pacietīgi."
@@ -2575,7 +2584,6 @@ lv:
         topics: "Tēmas"
         replies: "Atbildes"
       posted:
-        title: "Mani ieraksti"
         help: "tēmas, kurās esat rakstījis"
       bookmarks:
         title: "Grāmatzīmes"
@@ -2822,8 +2830,6 @@ lv:
               content: "Grupas"
             users:
               content: "Lietotāji"
-            my_posts:
-              content: "Mani ieraksti"
             review:
               content: "Pārskats"
             invite:
@@ -3181,6 +3187,9 @@ lv:
           delete: "Dzēst"
         color_palettes:
           palette_name: "Vārds"
+          copy_to_clipboard: "Kopēt uz starpliktuvi (clipboard)"
+          copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
+          copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
           delete: "Dzēst"
           colors:
             title: "Krāsas"

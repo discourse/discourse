@@ -1,0 +1,9 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  theme_metadata:
+    description: "Ein einfaches, schönes Theme, das die Out-of-the-Box-Erfahrung für Discourse-Seiten verbessert."

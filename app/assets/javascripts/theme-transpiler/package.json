@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.27.2",
-    "@babel/standalone": "^7.27.7",
+    "@babel/standalone": "^7.28.0",
     "@csstools/postcss-light-dark-function": "^2.0.9",
     "@rollup/browser": "^4.40.2",
     "@rollup/plugin-babel": "^6.0.4",
@@ -21,7 +21,7 @@
     "autoprefixer": "^10.4.21",
     "babel-plugin-ember-template-compilation": "^2.4.1",
     "content-tag": "^4.0.0",
-    "core-js": "^3.43.0",
+    "core-js": "^3.44.0",
     "decorator-transforms": "^2.3.0",
     "discourse": "workspace:0.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",

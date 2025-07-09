@@ -3,7 +3,8 @@
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
   --d-sidebar-row-horizontal-padding: 1rem;
-  --d-sidebar-vertical-gap: 0.125rem;
+  --d-sidebar-vertical-gap: var(--space-half);
+  --sidebar-section-wrapper-padding: 1.5rem 1rem 1rem;
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
@@ -101,7 +102,7 @@
     flex-direction: column;
     box-sizing: border-box;
     flex: 1;
-    padding: 1.5rem 1rem 1rem;
+    padding: var(--sidebar-section-wrapper-padding);
     overflow-x: hidden;
     overflow-y: auto;
 

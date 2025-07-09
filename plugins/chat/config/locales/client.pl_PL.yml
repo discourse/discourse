@@ -289,7 +289,7 @@ pl_PL:
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"
-      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie wersji roboczej może nie działać"
+      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie szkiców może nie działać"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
       restore: "Przywróć usuniętą wiadomość"
@@ -569,6 +569,7 @@ pl_PL:
         select_emoji: "Wybierz emoji"
         system: "system"
         title: "Przychodzące webhooki"
+        header_description: "Przychodzące webhooki mogą być używane przez systemy zewnętrzne do publikowania wiadomości na wyznaczonym kanale czatu jako użytkownik bota"
         url: "URL"
         url_instructions: "Ten adres URL zawiera tajną wartość — zachowaj go w bezpiecznym miejscu."
         username: "Nazwa użytkownika"

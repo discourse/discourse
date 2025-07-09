@@ -137,7 +137,8 @@ module UserGuardian
 
     if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
          !SiteSetting.must_approve_users
-      if user.user_stat.blank? || user.user_stat.post_count == 0
+      if (user.user_stat.blank? || user.user_stat.post_count == 0) &&
+           !user.has_trust_level?(TrustLevel[2])
         return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
       end
 

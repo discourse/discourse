@@ -298,6 +298,7 @@ he:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} זאת לא שפה תקפה"
       too_long_validation:
         one: "מוגבל לאורך של תו: הקלדת %{length}."
         two: "מוגבל לאורך של שני תווים: הקלדת %{length}."
@@ -329,6 +330,7 @@ he:
       less_than_or_equal_to: חייב להיות קטן או שווה ל־%{count}
       not_a_number: אינו מספר
       not_an_integer: חייב להיות מספר שלם
+      must_all_be_positive: הכול חייב להיות חיובי
       odd: חייב להיות אי־זוגי
       record_invalid: ! "בדיקה נכשלה: %{errors}"
       max_emojis: "לא יכולים להיות יותר מ־%{max_emojis_count} תווי אמוג׳י."
@@ -1849,7 +1851,7 @@ he:
     x_summary_large_image: "‚תמונת סיכום גדולה’ של כרטיס טוויטר (אמורה להיות ברוחב של 280 לפחות ובגובה של 150 לפחות, לא יכולה להיות ‎.svg). אם נשאר ריק, ייווצרו נתוני על של כרטיס רגיל בעזרת ה־opengraph_image (תמונת opengraph) כל עוד זאת גם לא ‎.svg"
     notification_email: "כתובת הדוא״ל מאת: לטובת שליחת כל הודעות המערכת החיוניות. כדי שהודעות הדוא״ל יגיעו, לשם התחום המצויין כאן חייבת להיות הגדרה נכונה של SPF,‏ DKIM ורשומות reverse PTR."
     email_custom_headers: "רשימה מופרדת בקווים אנכיים (הסימון |) של כותרות דוא״ל מותאמות אישית"
-    email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "תבנית נושא בהתאמה אישית להודעות דוא״ל תקניות. יש לעיין ב־<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "מספק פרטים נוספים למשתמשים בנוגע לסיבה שבגינה אין להם גישה לנושא מסוים. לתשומת לבך: מדובר בתצורה לא מאובטחת כיוון שמשתמשים ידעו אם כתובת מקשרת לנושא תקף."
     enforce_second_factor: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי לפני שיוכלו לגשת לממשק המשתמש של Discourse. ההגדרה הזאת לא משפיעה על ה־API או על אימות ‚DiscourseConnect provider’. אם ההגדרה enforce_second_factor_on_external_auth (אכיפת אימות דו־שלבי על אימות חיצוני) פעילה, משתמשים לא יוכלו להיכנס דרך ספקי אימות חיצוניים לאחר הגדרת אימות דו־שלבי."
     enforce_second_factor_on_external_auth: "לדרוש מהמשתמשים להפעיל אימות דו־שלבי באופן גורף. כשהאפשרות הזאת פעילה היא תמנע ממשתמשים להיכנס עם שיטות אימות חיצוניות כגון רשתות חברתיות אם מופעל אימות דו־שלבי מהצד שלהן. כשהאפשרות מושבתת משתמשים יצטרכו לאמת את האימות הדו־שלבי שלהם רק בעת כניסה עם שם משתמש וסיסמה. כדאי לקרוא על ההגדרה ‚enforce_second_factor’ (אכיפת אימות דו־שלבי)."
@@ -1918,6 +1920,7 @@ he:
     blocked_ip_blocks: "רשימת מקטעי כתובות IP פרטיות ש־Discourse לא אמור לסרוק"
     allowed_internal_hosts: "רשימת מארחים פנימיים ש־Discourse יכול לסרוק לטובת תיבת תחימה ומטרות אחרות."
     allowed_onebox_iframes: "רשימה של שמות תחום ל־src של iframe שמותר להשתמש בהטמעות לתיבות תחימה. `*` יאפשר את כל מנועי תיבות התחימה כבררת מחדל."
+    allowed_iframes: "רשימה של כתובות ל־src של iframe ש־Discourse יכולה להרשאות בבטחה בפוסטים. אפשר להשתמש ב־* כדי לתפוס מספר כלשהו של אותיות או תווים כלשהם."
     allowed_crawler_user_agents: "סוכני משתמשים של סורקי רשת שמורשים לגשת לאתר. אזהרה! שינוי הגדרה זו תחסום את כל הסורקים שאינם מופיעים כאן!"
     blocked_crawler_user_agents: "מילה ייחודית שאינה תלוית רישיות במחרוזת סוכן המשתמש (user agent) שמגדירה לאילו סורקי רשת אין הרשאת גישה לאתר. לא חל במקרה שהגדרת רשימת היתר."
     slow_down_crawler_user_agents: 'סוכני משתמשים של סורקי רשת שכמות הגישה שלהם תוגבל בהתאם להגדרה „האטת קצב סורקי רשת”. כל ערך חייב להיות באורך של 3 תווים לפחות.'
@@ -2042,6 +2045,7 @@ he:
     s3_endpoint: "ניתן לערוך את נקודת הגישה לגיבוי כדי שתפנה לשירות תואם S3 כגון DigitalOcean Spaces או Minio. אזהרה: יש להשאיר ריק בעת שימוש ב־S3 מבית AWS."
     s3_configure_tombstone_policy: "הפעלת מדיניות מחיקה אוטומטית להעלאות מצבה. חשוב: אם אפשרות זו מושבתת, לא יפונה מקום לאחר מחיקת העלאות."
     s3_disable_cleanup: "למנוע הסרה של גיבויים ישנים מ־S3 כשיש יותר גיבויים מהמותר."
+    s3_use_acls: "AWS ממליצה לא להשתמש ב־ACLs (רשימות בקרת גישה) על דליים (Buckets) של S3, יש לבטל את הסימון באפשרות זו רק אם יש כוונה להגדיר מדיניות הרשאות על `s3_upload_bucket` (דלי העלאה ל־S3) ו־`s3_backup_bucket` (דלי S3 לגיבוי) שהוגדרו."
     enable_direct_s3_uploads: "מאפשר העלאות ישירות רבות חלקים ל־S3 מבית Amazon, לפרטים: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
@@ -2094,7 +2098,7 @@ he:
     s3_use_cdn_url_for_all_uploads: "להשתמש בכתובת CDN לכל הקבצים שהועלו ל־S3 במקום רק לתמונות."
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "מאפשר שימוש בשירות חיצוני ליצירת אווטרים של מערכת. כאשר הגדרה זו מופעלת, אווטרים של משתמשים, במקום להיות מופקים בתוך מערכת השיח, נוצרים ומסופקים על ידי שירות חיצוני המוגדר על ידי ההגדרה `external_system_avatars_url`."
-    external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
+    external_system_avatars_url: "הכתובת לשירות התמונות הייצוגיות החלופי. ההחלפות המותרות הן {username} {first_letter} {color} {size}. יש להשאיר ריק כדי להשבית."
     external_emoji_url: "כתובת שירות תמונות האמוג׳י החיצוני. ריק משבית את ההגדרה."
     use_site_small_logo_as_system_avatar: "להשתמש בלוגו הקטן של האתר במקום התמונה הייצוגית של המשתמש מהמערכת. דורש שהלוגו יהיה קיים."
     restrict_letter_avatar_colors: "רשימה של ערכי צבעים בייצוג של 6 תווים הקסדצימליים לשימוש כרקע לאות מייצגת."
@@ -2187,7 +2191,6 @@ he:
     email_time_window_mins: "להמתין (n) דקות בטרם כל שליחת התראה בדוא״ל, כדי לאפשר למשתמשים הזדמנות לערוך ולוודא באופן סופי את הפוסטים שלהם."
     personal_email_time_window_seconds: "להמתין (n) שניות בטרם שליחת הודעות בדוא״ל עם התראות על הודעות אישיות, כדי לתת למשתמשים הזדמנות לסיים את עריכת ההודעות שלהם."
     email_posts_context: "כמה תגובות קודמות יש לכלול כהקשר בהתראות בדוא״ל."
-    flush_timings_secs: "באיזו תדירות אנחנו מזרימים מידע לשרת, בשניות."
     title_max_word_length: "האורך המקסימלי המותר למילה בכותרת נושא, בתווים. "
     title_min_entropy: "האנטרופיה (תווים ייחודים שאינם בשפת הכתיבה) המינימלית הנדרשת בכותרת נושא."
     body_min_entropy: "האנטרופיה (תוים ייחודיים, תווים שאינם באנגלית נחשבים יותר) המינימלית הנדרשת בגוף הפוסט."
@@ -2584,6 +2587,7 @@ he:
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     experimental_new_new_view_groups: 'לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
     glimmer_post_stream_mode: "בקרה האם להשתמש במימוש תזרים הפוסט החדש ‚glimmer’. הערך ‚auto’ יפעיל אותו אוטומטית לאחר שכל ערכות העיצוב והתוספים שלך מוענים. המימוש הזה נמצא בפיתוח כרגע, ולא מיועד לשימוש יומיומי. לא לפתח על גביו ערכות עיצוב/תוספים עד שהמימוש יושלם ויוכרז רשמית."
+    glimmer_post_stream_mode_auto_groups: "הפעלת מימוש תזרים הפוסט החדש ‚glimmer’ במצב ‚auto’ לקבוצת המשתמשים שצוינה. המימוש הזה בפיתוח כרגע ואינו מיועד לשימוש יומיומי. לא לפתח ערכות עיצוב/תוספים על גביו עד שהמימוש יושלם ויוכרז רשמית."
     experimental_form_templates: "יש להפעיל את יכולת תבניות הטפסים. אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     show_preview_for_form_templates: "הפעלת התצוגה המקדימה של יכולת תבניות הטפסים"
     lazy_load_categories_groups: "לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
@@ -2597,8 +2601,11 @@ he:
     about_page_extra_groups_order: "סידור הקבוצות הנוספות בעמוד על אודות."
     adobe_analytics_tags_url: "כתובת תגיות Adobe Analytics‏ (`https://assets.adobedtm.com/...‎`)"
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
-    rich_editor: "הפעלת עורך הטקסט העשיר כדי שכל המשתמשים יוכלו לעבור בין מצב Markdown הנוכחי לעורך הטקסט העשיר החדש לקבלת חיבור מותאם וידידותי יותר למשתמש. עורך הטקסט העשיר נמצא בתהליכי פיתוח, כך שלא כל היכולות נתמכות עדיין - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>עוד פרטים במטא</a>."
     viewport_based_mobile_mode: "ניסיוני: להשבית מצבים מבוססים סוכן לקוח (User-Agent) נייד/מחשב ולהשתמש ברוחב האשנב (viewport) במקום."
+    reviewable_ui_refresh: "קבוצות שיכולות להשתמש בממשק המשתמש הניסיוני החדש בתור הסקירה."
+    content_localization_enabled: "הצגת תוכן מתורגם/מקומי למשתמשים לפי הדפדפן או העדפות שפת המשתמש. תוכן שכזה יכול לכלול קטגוריות, תגיות, פוסטים ונושאים. השפות הנתמכות מוגדרות תחת ‚content localization supported locales’ (שפות נתמכות לתרגום תוכן)."
+    content_localization_supported_locales: "רשימת שפות שאפשר לתרגם אליהן את תוכן המשתמשים. דורש את הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
+    content_localization_allowed_groups: "קבוצות שמורשות לעדכן תוכן שתורגם לשפה המקומית. נדרשת הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2674,6 +2681,8 @@ he:
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
       invalid_uncategorized_category_setting: 'אי אפשר לבחור בקטגוריה „ללא קטגוריה” אם ‚הרשאת נושאים ללא קטגוריה’ אסורה.'
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
+      content_localization_locale_limit: "מספר השפות הנתמכות לא יכול לחרוג מעבר ל־%{max}."
+      content_localization_anon_language_switcher_requirements: "בורר השפות דורש שהגדרת האתר `set locale from cookie` (הגדרת שפה מעוגייה) תהיה פעילה ושתחת `content localization supported locales` (שפות שנתמכות לתרגום תוכן) תופיע לפחות שפה אחת."
     keywords:
       clean_up_inactive_users_after_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
       navigation_menu: "סרגל צד|כותרת נפתחת|כותרת מתרחבת"
@@ -2854,7 +2863,8 @@ he:
     not_available: "לא זמין. נסו %{suggestion}?"
     something_already_taken: "משהו השתבש, אולי שם המשתמש או כתובת הדואר האלקטרוני כבר בשימוש. נסו את קישור שכחתי סיסמה."
     omniauth_error:
-      generic: "אירעה שגיאה בעת ניסיון לאשר את חשבונך דרך %{provider}, עמך הסליחה. נא לנסות שוב."
+      generic_without_provider: "אירעה שגיאה בעת ניסיון לאשר את חשבונך דרך שירות הכניסה שלך, עמך הסליחה. נא לנסות שוב."
+      generic_with_provider: "אירעה שגיאה בעת ניסיון לאשר את חשבונך דרך %{provider}, עמך הסליחה. נא לנסות שוב."
       csrf_detected: "זמן ההמתנה לאישור הסתיים או שהחלפת דפדפנים, עמך הסליחה. נא לנסות שוב."
       request_error: "אירעה שגיאה בהתחלת האימות, עמך הסליחה. נא לנסות שוב."
       invalid_iat: "לא הצלחנו לוודא את אסימון האימות עקב הפרשים בין השעה המקומית לשעה בשרת, עמך הסליחה. נא לנסות שוב."

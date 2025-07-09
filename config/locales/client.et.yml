@@ -455,6 +455,15 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+      notes:
+        delete: "Kustuta"
+      review_user: "Kasutaja"
+      insights:
+        activities:
+          posts:
+            one: "%{count} postitus"
+            other: "%{count} postitust"
+        visibility: "Nähtavus"
       approval:
         title: "Postitus vajab kinnitust"
         description: "Oleme sinu uue postituse kätte saanud, kuid see vajab enne ilmumist moderaatori kinnitust. Palume veidi kannatust. "
@@ -2420,7 +2429,6 @@ et:
         topics: "Teemasid"
         replies: "Vastused"
       posted:
-        title: "Minu"
         help: "minu postitustega teemad"
       bookmarks:
         title: "Järjehoidjad"
@@ -2667,8 +2675,6 @@ et:
               content: "Rühmad"
             users:
               content: "Kasutajad"
-            my_posts:
-              content: "Minu"
             review:
               content: "Vaata üle"
             invite:
@@ -3076,6 +3082,9 @@ et:
           delete: "Kustuta"
         color_palettes:
           palette_name: "Nimi"
+          copy_to_clipboard: "Kopeeri lõikelauale"
+          copied_to_clipboard: "Kopeeritud lõikelauale"
+          copy_to_clipboard_error: "Tõrge kopeerimisel"
           delete: "Kustuta"
           colors:
             title: "Värvid"

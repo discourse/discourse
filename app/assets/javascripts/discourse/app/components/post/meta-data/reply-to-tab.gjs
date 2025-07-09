@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
@@ -19,8 +20,15 @@ export default class PostMetaDataReplyToTab extends Component {
 
   @service site;
 
+  @action
+  handleClick(event) {
+    event.preventDefault();
+    this.args.toggleReplyAbove();
+  }
+
   <template>
     <a
+      href
       class="reply-to-tab"
       disabled={{@repliesAbove.isPending}}
       role={{if this.site.desktopView "button"}}
@@ -29,9 +37,8 @@ export default class PostMetaDataReplyToTab extends Component {
         (concat "embedded-posts__top--" @post.post_number)
       }}
       aria-expanded={{if this.site.desktopView @hasRepliesAbove}}
-      tabindex="0"
       title="post.in_reply_to"
-      {{on "click" @toggleReplyAbove}}
+      {{on "click" this.handleClick}}
     >
       {{#if @repliesAbove.isPending}}
         <div class="spinner small"></div>

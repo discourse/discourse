@@ -430,6 +430,11 @@
       color: var(--primary-high);
     }
 
+    .emoji {
+      width: 1em;
+      height: 1em;
+    }
+
     // default category position hidden
     .badge-category__wrapper {
       display: none;

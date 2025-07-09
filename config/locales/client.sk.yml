@@ -866,6 +866,65 @@ sk:
         reviewable_post:
           title: "Príspevok"
           noun: "príspevok"
+      flagged_as: "Označené ako"
+      assigned_to: "Priradené k"
+      moderator_actions: "Akcie moderátora"
+      timeline_and_notes: "Časová os a poznámky"
+      timeline:
+        target_created: "Príspevok vytvorený"
+        target_created_by: "Príspevok vytvoril/a %{username} · %{relativeDate}"
+        flagged: "Označené"
+        flagged_as_by: "Označené ako %{flagReason} od %{username} - %{relativeDate}"
+        claimed: "Nárokované"
+        claimed_by: "Nárokované používateľom %{username} · %{relativeDate}"
+        reviewed: "Preskúmal"
+        reviewed_by: "Preskúmal %{username} - %{relativeDate}"
+        view_conversation: "zobrazenie PM"
+        note_added: "Poznámka moderátora"
+        note_added_by: "Moderátorská poznámka od %{username} - %{relativeDate}"
+        no_events: "Žiadne udalosti na časovej osi na zobrazenie"
+      notes:
+        add_note_description: "Viditeľné len pre moderátorov. Túto poznámku použite na doplnenie kontextu alebo rozhodnutia o recenzii."
+        add_note_button: "Pridať poznámku"
+        placeholder: "Tu napíšte svoju poznámku..."
+        chars_remaining: "%{count} zostávajúce znaky"
+        delete_note: "Odstrániť túto poznámku"
+        delete: "Odstrániť"
+      new_topic_label: "Nová téma"
+      queued_user: "Používateľ v rade"
+      posted_in: "Uverejnené v"
+      flagged_user: "Označený používateľ"
+      review_user: "Používateľ"
+      need_help: "Potrebujete pomoc?"
+      copy_link: "Kopírovať odkaz"
+      view_source: "Zobraziť zdroj"
+      insights:
+        title: "Prehľady"
+        flag_volume: "Objem vlajky"
+        flagged_by_users:
+          one: "Nahlásené %{count} unikátnym používateľom"
+          few: "Nahlásené %{count} unikátnymi používateľmi"
+          many: "Nahlásené %{count} unikátnymi používateľmi"
+          other: "Nahlásené %{count} unikátnymi používateľmi"
+        similar_posts: "Podobné predchádzajúce príspevky"
+        flagged_in_timeframe: "%{count} označené už skôr"
+        user_activity: "Aktivita používateľa"
+        activities:
+          new_account: "nový účet"
+          trust_level: "úroveň dôvery: %{trustLevelName}"
+          posts:
+            one: "%{count} príspevok"
+            few: "%{count} príspevkov"
+            many: "%{count} príspevkov"
+            other: "%{count} príspevky"
+        solution_marked: "Riešenie označené"
+        topic_has_solution: "Táto téma má riešenie"
+        visibility: "Viditeľnosť"
+        topic_unlisted: "Táto téma nie je uvedená v zozname. Prístupná len cez priame prepojenie - nie je verejná."
+      help:
+        moderation_guide: "Sprievodca moderovaním Discourse"
+        flag_priorities: "Správa reputácie používateľa a priorít označovania"
+        spam_detection: "Detekcia spamu"
       approval:
         title: "Príspevok vyžaduje schválenie"
         description: "Váš príspevok sme obdžali, ale skôr než bude zverejnený musí byť schválený moderátorom. Prosíme o trpezlivosť."
@@ -1339,6 +1398,7 @@ sk:
     user_fields:
       none: "(vyberte možnosť)"
       required: 'Zadajte hodnotu pre „%{name}“'
+      required_select: 'Vyberte hodnotu pre „%{name}“'
       required_checkbox: 'Pole "%{name}" je povinné'
       same_as_password: "Vaše heslo by sa nemalo opakovať v iných poliach"
       optional: (nepovinné)
@@ -2334,6 +2394,8 @@ sk:
       errors_summary_title: "Tento formulár obsahuje chyby:"
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
       errors:
+        starts_with: "Musí začínať s %{prefix}"
+        ends_with: "Musí končiť na %{suffix}"
         required: "Povinné"
         date_before_or_equal: "Musí byť pred alebo rovná %{date}"
         date_after_or_equal: "Musí byť po alebo rovná %{date}"
@@ -2956,6 +3018,11 @@ sk:
       image_alt_text:
         aria_label: Alternatívny text pre obrázok
         title: "Pridať popis obrázka"
+      image_toolbar:
+        alt_text: "Pridať popis obrázka"
+        zoom_out: "Zmenšiť veľkosť obrázka"
+        zoom_in: "Zväčšiť veľkosť obrázka"
+        remove: "Odstrániť obrázok"
       image_scale_button: "Zmeniť veľkosť obrázka na %{percent}%"
       delete_image_button: Odstrániť obrázok
       toggle_image_grid: Prepnúť mriežku obrázkov
@@ -3132,6 +3199,7 @@ sk:
       relevance: "Relevancia"
       latest_post: "Najnovší príspevok"
       latest_topic: "Posledná téma"
+      last_read: "Posledné čítanie"
       most_viewed: "Najviac prezerané"
       most_liked: "Najviac sa páčia"
       select_all: "Označ všetky"
@@ -3435,7 +3503,7 @@ sk:
         hot: "Neexistujú žiadne horúce témy."
         filter: "Neexistujú žiadne témy."
         education:
-          topic_tracking_preferences: "Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href=\"%{basePath}/my/preferences/tracking\">nastaveniach</a>."
+          topic_tracking_preferences: 'Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href="%{basePath}/my/preferences/tracking">nastaveniach</a>.'
           unread: "Nič nezostalo neprečítané... pôsobivé!"
           new_new: "Momentálne nič nové...čoskoro sa vráťte!"
           new: "Momentálne nič nové...čoskoro sa vráťte!"
@@ -4233,6 +4301,9 @@ sk:
           many: "Ste si istý, že chcete zlúčiť týchto %{count} príspevkov?"
           other: "Ste si istý, že chcete zlúčiť tieto %{count} príspevky"
       revisions:
+        locale:
+          no_locale_set: "Nie je nastavený žiadny jazyk"
+          locale_removed: "Jazyk odstránený"
         controls:
           first: "Prvá revízia"
           previous: "Predchádzajúca revízia"
@@ -4593,6 +4664,8 @@ sk:
       pinned:
         title: "Pripnutý"
         help: "Túto tému ste pripli. Bude zobrazená na vrchole svojej kategórie"
+      hot:
+        title: "Horúce"
       unlisted:
         help: "Téma je nezverejnená; nebude zobrazená v zoznamoch tém a môže byť prístupná iba cez priamy odkaz. %{unlistedReason}"
       personal_message:
@@ -4715,11 +4788,16 @@ sk:
           other: "Nových (%{count})"
         help: "témy vytvorené za posledných pár dní"
         all: "Všetky"
+        all_tooltip: "Všetky nové témy a témy, na ktoré bolo odpovedané v posledných dňoch"
         all_with_count: "Všetky (%{count})"
+        new_topics_tooltip: "Nové témy"
         topics: "Témy"
         topics_with_count: "Témy (%{count})"
+        new_replies_tooltip: "Nové odpovede"
         replies: "Odpovede"
         replies_with_count: "Odpovede (%{count})"
+      new_new:
+        help: "témy vytvorené alebo zodpovedané za posledných niekoľko dní"
       posted:
         title: "Moje príspevky"
         help: "témy s vašimi príspevkami"
@@ -5302,6 +5380,9 @@ sk:
             invite:
               content: "Pozvi"
               title: "Pozvanie nových členov"
+            my_messages:
+              content: "Moje správy"
+              title: "Moje osobné správy"
         global_section: "Globálna sekcia, viditeľná pre všetkých"
       panels:
         forum:
@@ -6605,6 +6686,9 @@ sk:
           save_successful: "Používateľské pole uložené."
         color_palettes:
           palette_name: "Meno"
+          copy_to_clipboard: "Skopírovať do schránky"
+          copied_to_clipboard: "Skopírované do schránky"
+          copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
           duplicate: "Duplikát"
           delete: "Odstrániť"
           color_options:
@@ -6920,6 +7004,7 @@ sk:
           compare_commits: "(Pozri nové revízie)"
           remote_theme_edits: "Ak chcete upraviť túto tému, musíte <a href='%{repoURL}' target='_blank'>odoslať zmenu v jej úložisku</a>"
           repo_unreachable: "Nepodarilo sa kontaktovať Git repozitár tohto motívu. Chybová správa:"
+          built_in_description: "Táto téma je predinštalovaná a nie je možné ju odstrániť ani prispôsobiť"
           imported_from_archive: "Táto téma bola importovaná zo súboru .zip"
           settings: "Nastavenia"
           colors: "Farby"

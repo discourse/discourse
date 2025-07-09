@@ -218,6 +218,7 @@ export default class NavItem extends EmberObject {
   }
 
   @service topicTrackingState;
+  @service currentUser;
 
   @tracked name;
   @reads("name") filterType;
@@ -231,7 +232,13 @@ export default class NavItem extends EmberObject {
       return this._title;
     }
 
-    return i18n("filters." + this.name.replace("/", ".") + ".help", {});
+    let nameKey = this.name.replace("/", ".");
+
+    if (nameKey === "new" && this.currentUser?.new_new_view_enabled) {
+      nameKey = "new_new";
+    }
+
+    return i18n("filters." + nameKey + ".help", {});
   }
 
   set title(value) {

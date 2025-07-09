@@ -63,6 +63,13 @@
     p:last-of-type {
       margin-bottom: 0;
     }
+
+    .lazy-video-container {
+      height: 150px;
+      max-width: calc(150px / 9 * 16);
+      margin: 1em 0 0.5em 0;
+      padding: 0;
+    }
   }
 
   .topic-body .cooked & {

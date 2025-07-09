@@ -72,6 +72,34 @@ describe "Admin Customize Themes", type: :system do
     expect(page).not_to have_css(".delete")
   end
 
+  it "hides unecessary sections and buttons for system themes" do
+    theme.theme_fields.create!(
+      name: "js",
+      target_id: Theme.targets[:extra_js],
+      value: "console.log('second test')",
+    )
+    yaml = <<~YAML
+      enable_welcome_banner:
+        default: true
+        description: "Overrides the core `enable welcome banner` site setting"
+    YAML
+    theme.set_field(target: :settings, name: "yaml", value: yaml)
+    theme.save!
+
+    visit("/admin/customize/themes/#{theme.id}")
+    expect(page).to have_css(".created-by")
+    expect(page).to have_css(".export")
+    expect(page).to have_css(".extra-files")
+    expect(page).to have_css(".theme-settings")
+
+    theme.stubs(:system?).returns(true)
+    visit("/admin/customize/themes/#{theme.id}")
+    expect(page).not_to have_css(".created-by")
+    expect(page).not_to have_css(".export")
+    expect(page).not_to have_css(".extra-files")
+    expect(page).not_to have_css(".theme-settings")
+  end
+
   describe "when editing theme translations" do
     it "should allow admin to edit and save the theme translations" do
       theme.set_field(

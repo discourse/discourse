@@ -31,7 +31,9 @@ describe "Content Localization" do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:post_1_obj) { PageObjects::Components::Post.new(1) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
+  let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
 
   before do
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
@@ -113,6 +115,33 @@ describe "Content Localization" do
       topic_page.expand_post_actions(post_3)
       topic_page.click_post_action_button(post_3, :edit)
       expect(composer).to have_content(post_3.raw)
+    end
+
+    context "for post edit histories" do
+      before do
+        SiteSetting.editing_grace_period = 0
+        PostRevisor.new(post_1).revise!(Discourse.system_user, { raw: post_1.raw, locale: "" })
+        PostRevisor.new(post_1).revise!(Discourse.system_user, { raw: post_1.raw, locale: "ja" })
+      end
+
+      it "shows the language of the post in history modal" do
+        sign_in(admin)
+
+        visit("/")
+        topic_list.visit_topic_with_title(topic.title)
+
+        post_1_obj.open_post_history
+        expect(post_history_modal.current_locale).to have_content("日本語")
+        expect(post_history_modal.previous_locale).to have_content(
+          I18n.t("js.post.revisions.locale.no_locale_set"),
+        )
+
+        post_history_modal.click_previous_revision
+        expect(post_history_modal.current_locale).to have_content(
+          I18n.t("js.post.revisions.locale.locale_removed"),
+        )
+        expect(post_history_modal.previous_locale).to have_content("English (US)")
+      end
     end
   end
 
