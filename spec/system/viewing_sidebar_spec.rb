@@ -167,7 +167,7 @@ describe "Viewing sidebar", type: :system do
       end
     end
 
-    describe "My messages sidebar link" do
+    describe "when My messages sidebar link" do
       it "should show for user with `can_send_private_messages` permission" do
         sign_in(admin)
         visit("/")
@@ -194,6 +194,29 @@ describe "Viewing sidebar", type: :system do
           sign_in(admin)
           visit("/")
           expect(sidebar).to have_my_messages_link("Overrided")
+        end
+      end
+
+      describe "has unread messages" do
+        context "with navigation menu preference" do
+          fab!(:topic) { Fabricate(:topic, user: user) }
+
+          it "should show new messages indicator" do
+            visit("/")
+            expect(sidebar).to have_my_messages_link_with_unread_icon(1)
+          end
+
+          it "should show a count of the new items" do
+            admin.user_option.update!(sidebar_show_count_of_new_items: true)
+            visit("/")
+            expect(sidebar).to have_my_messages_link_with_unread_count(1)
+          end
+
+          it "should not show the unread count when there are no unread messages" do
+            message.update(unread: false)
+            visit("/")
+            expect(sidebar).to have_my_messages_link_without_unread_icon
+          end
         end
       end
     end
