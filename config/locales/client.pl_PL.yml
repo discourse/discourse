@@ -551,12 +551,12 @@ pl_PL:
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
       abandon:
-        confirm: "Masz już wersję roboczą w toku. Co chcesz z nią zrobić?"
+        confirm: "Masz już szkic w toku. Co chcesz z nim zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
       dropdown:
-        title: "Otwórz menu najnowszych wersji roboczych"
-        untitled: "Wersja robocza bez tytułu"
+        title: "Otwórz menu najnowszych szkiców"
+        untitled: "Szkic bez tytułu"
         view_all: "pokaż wszystkie"
         other_drafts:
           one: "+%{count} inny szkic"
@@ -1841,7 +1841,7 @@ pl_PL:
         auth_override_instructions: "Adres e-mail można zaktualizować od dostawcy uwierzytelniania."
         no_secondary: "Brak drugorzędnych adresów e-mail"
         instructions: "Nie będzie publicznie widoczny"
-        admin_note: "Uwaga: Użytkownik administratora zmieniający adres e-mail innego użytkownika niebędącego administratorem wskazuje, że użytkownik stracił dostęp do oryginalnego konta e-mail, więc na nowy adres zostanie wysłany e-mail z resetem hasła. Adres e-mail użytkownika nie ulegnie zmianie, dopóki nie zakończy się proces resetowania hasła."
+        admin_note: "Uwaga: użytkownik administratora zmieniający adres e-mail innego użytkownika niebędącego administratorem wskazuje, że użytkownik stracił dostęp do oryginalnego konta e-mail, więc na nowy adres zostanie wysłany e-mail z resetem hasła. Adres e-mail użytkownika nie ulegnie zmianie, dopóki nie zakończy się proces resetowania hasła."
         ok: "Otrzymasz potwierdzenie e-mailem"
         required: "Podaj adres e-mail"
         invalid: "Podaj poprawny adres email"
@@ -2687,11 +2687,11 @@ pl_PL:
       dark_tone: Ciemny kolor skóry
       default: Spersonalizowane emoji
     shared_drafts:
-      title: "Udostępnione projekty"
+      title: "Udostępnione szkice"
       notice: "Ten temat jest widoczny tylko dla osób, które mogą publikować współdzielone szkice postów."
       destination_category: "Kategoria docelowa"
-      publish: "Opublikuj udostępniony projekt"
-      confirm_publish: "Czy na pewno chcesz opublikować ten projekt?"
+      publish: "Opublikuj udostępniony szkic"
+      confirm_publish: "Czy na pewno chcesz opublikować ten szkic?"
       publishing: "Publikowanie tematu..."
     composer:
       emoji: "Emoji :)"
@@ -2780,8 +2780,8 @@ pl_PL:
       create_topic: "Utwórz temat"
       create_pm: "Wyślij wiadomość"
       create_whisper: "Szept"
-      create_shared_draft: "Utwórz udostępniony projekt"
-      edit_shared_draft: "Edytuj udostępniony projekt"
+      create_shared_draft: "Utwórz udostępniony szkic"
+      edit_shared_draft: "Edytuj udostępniony szkic"
       title: "Lub naciśnij %{modifier}Enter"
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
@@ -2795,7 +2795,7 @@ pl_PL:
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie"
       saved: "Zapisano!"
-      saved_draft: "Publikowanie wersji roboczej w toku. Stuknij, aby wznowić."
+      saved_draft: "Publikowanie szkicu w toku. Stuknij, aby wznowić."
       uploading: "Przesyłanie…"
       show_preview: "pokaż podgląd"
       hide_preview: "ukryj podgląd"
@@ -2825,7 +2825,7 @@ pl_PL:
       help: "Pomoc formatowania Markdown"
       collapse: "zminimalizuj panel kompozytora"
       open: "otwórz panel kompozytora"
-      abandon: "zamknij kompozytora i odrzuć wersję roboczą"
+      abandon: "zamknij kompozytora i odrzuć szkic"
       enter_fullscreen: "wprowadź kompozytora na pełnym ekranie"
       exit_fullscreen: "zamknij kompozytora na pełnym ekranie"
       exit_fullscreen_prompt: "Naciśnij <kbd>ESC</kbd>, aby wyjść z pełnego ekranu"
@@ -2845,7 +2845,7 @@ pl_PL:
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
-        draft: Wersja robocza
+        draft: Szkic
         edit: Edycja
         reply_to_post:
           label: Odpowiedz na post %{postUsername}
@@ -2853,7 +2853,7 @@ pl_PL:
         reply_as_new_topic:
           label: Odpowiedz jako powiązany temat
           desc: Utwórz nowy temat powiązany z tym tematem
-          confirm: Zapisano nową wersję roboczą tematu, która zostanie zastąpiona, jeśli utworzysz połączony temat.
+          confirm: Masz zapisany nowy szkic tematu, który zostanie nadpisany, jeśli utworzysz powiązany temat.
         reply_as_new_group_message:
           label: Odpowiedz jako nowa wiadomość grupowa
           desc: Utwórz nową wiadomość zaczynając od tych samych odbiorców
@@ -2867,7 +2867,7 @@ pl_PL:
           label: "Nowy temat"
           desc: Utwórz nowy temat
         shared_draft:
-          label: "Udostępniony projekt"
+          label: "Udostępniony szkic"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
         toggle_topic_bump:
           label: "Przełącz podbicie tematu"
@@ -3701,7 +3701,7 @@ pl_PL:
       flag_topic:
         title: "Zgłoś"
         help: "Oznacz ten temat prywatną flagą lub wyślij osobistą wiadomość na jego temat"
-        success_message: "Ten temat został pomyślnie zgłoszony."
+        success_message: "Ten temat został pomyślnie oflagowany."
       make_public:
         title: "Konwertuj na temat publiczny"
         choose_category: "Wybierz kategorię dla tematu publicznego:"
@@ -4109,9 +4109,9 @@ pl_PL:
           sr_post_likers_list_description: "użytkownicy, którzy polubili ten post"
           sr_post_readers_list_description: "użytkownicy, którzy przeczytali ten post"
         by_you:
-          off_topic: "Oznaczono jako nie-na-temat"
+          off_topic: "Oflagowano jako nie-na-temat"
           spam: "Oflagowano jako spam"
-          inappropriate: "Oznaczono jako niewłaściwe"
+          inappropriate: "Oflagowano jako niewłaściwe"
           illegal: "Oflagowano jako nielegalne"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
@@ -5146,7 +5146,7 @@ pl_PL:
               content: "Wysłane"
               content_drafts: "Moje szkice"
               title: "Moja ostatnia aktywność w temacie"
-              title_drafts: "Moje nieopublikowane wersje robocze"
+              title_drafts: "Moje nieopublikowane szkice"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"
@@ -7256,7 +7256,7 @@ pl_PL:
           requirement_heading: "Wymaganie"
           posts_read_days: "Przeczytane posty: unikalne dni"
           days: "dni"
-          topics_replied_to: "Tematy w odpowiedzi do"
+          topics_replied_to: "Tematy, na które odpowiedziano"
           topics_viewed: "Wyświetlone Tematy"
           topics_viewed_all_time: "Oglądane Tematy (cały czas)"
           posts_read: "Przeczytane Wpisy"
