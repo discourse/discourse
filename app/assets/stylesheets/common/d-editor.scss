@@ -396,6 +396,10 @@
       color: var(--primary-high);
     }
   }
+
+  &.-expanded {
+    background: var(--d-hover);
+  }
 }
 
 .d-editor #form-template-form {
