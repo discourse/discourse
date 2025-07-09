@@ -1330,6 +1330,10 @@ class UsersController < ApplicationController
 
     type = params[:type]
 
+    if type == "gravatar" && !SiteSetting.gravatar_enabled?
+      return render json: failed_json, status: 422
+    end
+
     invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != "system"
     return render json: failed_json, status: 422 if invalid_type
 

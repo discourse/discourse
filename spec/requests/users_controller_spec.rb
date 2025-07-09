@@ -3635,6 +3635,17 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
       end
 
+      it "raises an error when trying to pick Gravatar when gravatars are not enabled" do
+        SiteSetting.gravatar_enabled = false
+        put "/u/#{user1.username}/preferences/avatar/pick.json",
+            params: {
+              upload_id: upload.id,
+              type: "gravatar",
+            }
+
+        expect(response.status).to eq(422)
+      end
+
       it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is disabled" do
         SiteSetting.uploaded_avatars_allowed_groups = ""
         put "/u/#{user1.username}/preferences/avatar/pick.json",

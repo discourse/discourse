@@ -11,6 +11,7 @@ describe "User preferences | Account", type: :system do
     it "saves custom picture and system assigned pictures" do
       user_account_preferences_page.open_avatar_selector_modal(user)
       expect(avatar_selector_modal).to be_open
+      expect(avatar_selector_modal).to have_avatar_options("system", "gravatar", "upload")
 
       avatar_selector_modal.select_avatar_upload_option
       file_path = File.absolute_path(file_from_fixtures("logo.jpg"))
@@ -32,6 +33,14 @@ describe "User preferences | Account", type: :system do
       user_account_preferences_page.open_avatar_selector_modal(user)
       expect(avatar_selector_modal).to be_open
       expect(avatar_selector_modal).to have_no_avatar_upload_button
+    end
+
+    it "does not show Gravatar option when gravatars are not enabled" do
+      SiteSetting.gravatar_enabled = false
+
+      user_account_preferences_page.open_avatar_selector_modal(user)
+      expect(avatar_selector_modal).to be_open
+      expect(avatar_selector_modal).to have_avatar_options("system", "upload")
     end
   end
 
