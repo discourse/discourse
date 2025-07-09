@@ -475,3 +475,26 @@
     resize: vertical;
   }
 }
+
+.reviewable-topic-link {
+  display: flex;
+  flex-direction: column;
+
+  &__title-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-2);
+
+    &-tags {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
