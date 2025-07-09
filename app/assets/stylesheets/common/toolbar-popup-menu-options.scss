@@ -6,6 +6,12 @@
     z-index: z("composer", "content");
   }
 
+  .dropdown-menu {
+    .btn {
+      gap: var(--space-2);
+    }
+  }
+
   .shortcut {
     @include viewport.until(sm) {
       display: none;
@@ -16,8 +22,6 @@
 .toolbar-menu__heading-content {
   .dropdown-menu {
     .btn {
-      gap: var(--space-2);
-
       &.--active {
         .d-button-label__active-icon {
           visibility: visible;
