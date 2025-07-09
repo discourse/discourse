@@ -51,7 +51,7 @@ RSpec.describe TagGroupsController do
     describe "when limit params is invalid" do
       include_examples "invalid limit params",
                        "/tag_groups/filter/search.json",
-                       SiteSetting.max_tag_search_results
+                       described_class::MAX_TAG_GROUPS_SEARCH_RESULTS
     end
 
     it "doesn't error when the max_tag_search_results setting is lowered from its default" do

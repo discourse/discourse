@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TagGroupsController < ApplicationController
+  MAX_TAG_GROUPS_SEARCH_RESULTS = 1000 # matches the max limit for max_tag_search_results setting
+
   requires_login except: [:search]
   before_action :ensure_staff, except: [:search]
 
@@ -94,7 +96,7 @@ class TagGroupsController < ApplicationController
       matches.order("name").limit(
         fetch_limit_from_params(
           default: SiteSetting.max_tag_search_results,
-          max: 1000, # matches the max limit for max_tag_search_results setting
+          max: MAX_TAG_GROUPS_SEARCH_RESULTS,
         ),
       )
 
