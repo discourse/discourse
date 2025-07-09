@@ -199,18 +199,22 @@ export default class Toolbar extends ToolbarBase {
       id: "heading",
       group: "fontStyles",
       active: ({ state }) => {
-        if (!state || !state.inHeading || !state.selection.allSameType) {
+        if (!state || !state.inHeading) {
           return false;
         }
 
-        if (state.inHeading.inNode) {
+        if (state.inHeading) {
+          if (state.inHeadingLevel > 4) {
+            return false;
+          }
+
           return true;
         }
 
         return false;
       },
       icon: ({ state }) => {
-        if (!state || !state.selection.allSameType) {
+        if (!state || !state.inHeading) {
           return unformattedHeadingIcon;
         }
 
@@ -218,11 +222,12 @@ export default class Toolbar extends ToolbarBase {
           return unformattedHeadingIcon;
         }
 
-        if (state.inHeading.inNode) {
-          if (state.inHeading.level === 0) {
+        if (state.inHeading) {
+          if (state.inHeadingLevel > 4) {
             return unformattedHeadingIcon;
           }
-          return `discourse-h${state.inHeading.level}`;
+
+          return `discourse-h${state.inHeadingLevel}`;
         }
 
         return unformattedHeadingIcon;
@@ -231,22 +236,25 @@ export default class Toolbar extends ToolbarBase {
       popupMenu: {
         options: () => {
           const headingOptions = [];
-          for (let i = 1; i <= 4; i++) {
+          for (let headingLevel = 1; headingLevel <= 4; headingLevel++) {
             headingOptions.push({
-              name: `heading-${i}`,
-              icon: `discourse-h${i}`,
-              label: "composer.heading_level_n",
-              title: "composer.heading_level_n_title",
-              labelArgs: { levelNumber: i },
-              titleArgs: { levelNumber: i },
+              name: `heading-${headingLevel}`,
+              icon: `discourse-h${headingLevel}`,
+              translatedLabel: i18n("composer.heading_level_n", {
+                levelNumber: headingLevel,
+              }),
+              translatedTitle: i18n("composer.heading_level_n_title", {
+                levelNumber: headingLevel,
+              }),
               condition: true,
-              shortcut: `Shift+${i}`,
+              shortcut: `Shift+${headingLevel}`,
+              showActiveIcon: true,
               active: ({ state }) => {
-                if (!state || !state.selection.allSameType) {
+                if (!state || !state.inHeading) {
                   return false;
                 }
 
-                if (state.inHeading.inNode && state.inHeading.level === i) {
+                if (state.inHeading && state.inHeadingLevel === headingLevel) {
                   return true;
                 }
 
@@ -262,6 +270,7 @@ export default class Toolbar extends ToolbarBase {
             title: "composer.heading_level_paragraph_title",
             condition: true,
             shortcut: `Shift+0`,
+            showActiveIcon: true,
             active: ({ state }) => state?.inParagraph,
             action: this.onHeadingMenuAction.bind(this),
           });

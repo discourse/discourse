@@ -707,33 +707,24 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle whispers when whisperer user", async function (assert) {
+        const menu = selectKit(".composer-actions");
+
         await visit("/t/this-is-a-test-topic/9");
         await click(".topic-post[data-post-number='1'] button.reply");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
+        await menu.expand();
+        await menu.selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .exists("sets the post type to whisper");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
+        await menu.expand();
+        await menu.selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .doesNotExist("removes the whisper mode");
-
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
-
-        await click(".toggle-fullscreen");
-
-        await click(".toolbar-menu__options-trigger");
-
-        assert
-          .dom("[data-name='toggle-whisper']")
-          .exists("whisper toggling is still present when going fullscreen");
       });
 
       test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -800,8 +791,9 @@ import { i18n } from "discourse-i18n";
         await visit("/t/this-is-a-test-topic/9");
         await click(".topic-post[data-post-number='1'] button.reply");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
+        await selectKit(".composer-actions").expand();
+
+        await selectKit(".composer-actions").selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
@@ -817,8 +809,10 @@ import { i18n } from "discourse-i18n";
           .dom(".reply-details .whisper .d-icon-far-eye-slash")
           .doesNotExist("should reset the state of the composer's model");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-invisible']");
+        await selectKit(".composer-actions").expand();
+        await selectKit(".composer-actions").selectRowByValue(
+          "toggle_unlisted"
+        );
 
         assert
           .dom(".reply-details .unlist")

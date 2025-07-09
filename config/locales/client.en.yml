@@ -2759,7 +2759,6 @@ en:
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
-      toggle_unlisted: "Toggle Unlisted"
       insert_table: "Insert Table"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saved_local_draft_tip: "saved locally"
@@ -2940,6 +2939,9 @@ en:
         toggle_topic_bump:
           label: "Toggle topic bump"
           desc: "Reply without changing latest reply date"
+        toggle_unlisted:
+          label: Toggle unlisted
+          desc: Unlisted topics only accessible to members by direct link
 
       reload: "Reload"
       ignore: "Ignore"
@@ -6827,6 +6829,7 @@ en:
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
+          built_in_description: "This theme is preinstalled and can not be deleted or customized"
           imported_from_archive: "This theme was imported from a .zip file"
           settings: "Settings"
           colors: "Colors"

@@ -171,6 +171,7 @@ function initializeDiscourseLocalDates(api) {
         model: { insertDate: (markup) => event.addText(markup) },
       }),
     shortcut: "Shift+.",
+    alwaysShowShortcut: true,
     shortcutAction: (event) => {
       const timezone = api.getCurrentUser().user_option.timezone;
       const time = moment().format("HH:mm:ss");

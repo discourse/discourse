@@ -151,6 +151,7 @@ export default class ComposerContainer extends Component {
                   <ComposerActionTitle
                     @model={{this.composer.model}}
                     @canWhisper={{this.composer.canWhisper}}
+                    @canUnlistTopic={{this.composer.canUnlistTopic}}
                   />
 
                   <PluginOutlet

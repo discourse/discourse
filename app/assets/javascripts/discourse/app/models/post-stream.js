@@ -11,6 +11,7 @@ import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { deepMerge } from "discourse/lib/object";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
@@ -18,6 +19,7 @@ import { loadTopicView } from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
+
 export function setLastEditNotificationClick(
   topicId,
   postNumber,
@@ -1253,22 +1255,31 @@ export default class PostStream extends RestModel {
   // Handles an error loading a topic based on a HTTP status code. Updates
   // the text to the correct values.
   errorLoading(error) {
-    const topic = this.topic;
-    this.set("loadingFilter", false);
-    topic.set("errorLoading", true);
+    applyBehaviorTransformer(
+      "post-stream-error-loading",
+      () => {
+        const topic = this.topic;
+        this.set("loadingFilter", false);
+        topic.set("errorLoading", true);
 
-    if (!error.jqXHR) {
-      throw error;
-    }
+        if (!error.jqXHR) {
+          throw error;
+        }
 
-    const json = error.jqXHR.responseJSON;
-    if (json && json.extras && json.extras.html) {
-      topic.set("errorTitle", json.extras.title);
-      topic.set("errorHtml", json.extras.html);
-    } else {
-      topic.set("errorMessage", i18n("topic.server_error.description"));
-      topic.set("noRetry", error.jqXHR.status === 403);
-    }
+        const json = error.jqXHR.responseJSON;
+        if (json && json.extras && json.extras.html) {
+          topic.set("errorTitle", json.extras.title);
+          topic.set("errorHtml", json.extras.html);
+        } else {
+          topic.set("errorMessage", i18n("topic.server_error.description"));
+          topic.set("noRetry", error.jqXHR.status === 403);
+        }
+      },
+      {
+        topic: this.topic,
+        error,
+      }
+    );
   }
 
   _initUserModels(post) {
