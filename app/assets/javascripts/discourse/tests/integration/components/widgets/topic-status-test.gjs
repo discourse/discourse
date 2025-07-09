@@ -18,7 +18,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       <template><MountWidget @widget="topic-status" @args={{args}} /></template>
     );
 
-    assert.dom(".topic-status [class*='.d-icon-topic.closed']").exists();
+    assert.dom(".topic-status [class*='d-icon-topic.closed']").exists();
   });
 
   test("toggling pin status", async function (assert) {

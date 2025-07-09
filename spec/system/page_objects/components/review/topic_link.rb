@@ -7,7 +7,7 @@ module PageObjects
         WRAPPER_CSS = ".post-topic"
 
         def has_closed_topic_status?
-          within(WRAPPER_CSS) { has_css?(".topic-status [class*='.d-icon-topic.closed']") }
+          within(WRAPPER_CSS) { has_css?(".topic-status [class*='d-icon-topic.closed']") }
         end
 
         def has_topic_link?(topic_title:, post_url:)
