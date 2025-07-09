@@ -240,10 +240,12 @@ export default class Toolbar extends ToolbarBase {
             headingOptions.push({
               name: `heading-${headingLevel}`,
               icon: `discourse-h${headingLevel}`,
-              label: "composer.heading_level_n",
-              title: "composer.heading_level_n_title",
-              labelArgs: { levelNumber: headingLevel },
-              titleArgs: { levelNumber: headingLevel },
+              translatedLabel: i18n("composer.heading_level_n", {
+                levelNumber: headingLevel,
+              }),
+              translatedTitle: i18n("composer.heading_level_n_title", {
+                levelNumber: headingLevel,
+              }),
               condition: true,
               shortcut: `Shift+${headingLevel}`,
               active: ({ state }) => {

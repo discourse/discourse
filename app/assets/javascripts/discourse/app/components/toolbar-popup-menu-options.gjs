@@ -31,9 +31,9 @@ export default class ToolbarPopupmenuOptions extends Component {
   #convertMenuOption(content) {
     if (content.condition) {
       let label;
-      if (content.label) {
-        label = content.labelArgs
-          ? i18n(content.label, content.labelArgs)
+      if (content.label || content.translatedLabel) {
+        label = content.translatedLabel
+          ? content.translatedLabel
           : i18n(content.label);
         if (content.shortcut) {
           label = htmlSafe(
@@ -45,9 +45,9 @@ export default class ToolbarPopupmenuOptions extends Component {
       }
 
       let title = label;
-      if (content.title) {
-        title = content.titleArgs
-          ? i18n(content.title, content.titleArgs)
+      if (content.title || content.translatedTitle) {
+        title = content.translatedTitle
+          ? content.translatedTitle
           : i18n(content.title);
       }
 
