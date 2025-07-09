@@ -34,8 +34,12 @@ export default RouteTemplate(
           <table class="d-table permalinks">
             <thead class="d-table__header">
               <tr class="d-table__row">
-                <th class="d-table__header-cell">{{i18n "admin.permalink.url"}}</th>
-                <th class="d-table__header-cell">{{i18n "admin.permalink.destination"}}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "admin.permalink.url"
+                  }}</th>
+                <th class="d-table__header-cell">{{i18n
+                    "admin.permalink.destination"
+                  }}</th>
               </tr>
             </thead>
             <tbody class="d-table__body">

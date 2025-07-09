@@ -63,8 +63,12 @@ export default class AdminConfigAreasFlags extends Component {
     <div class="container admin-flags">
       <table class="d-table admin-flags__items">
         <thead class="d-table__header">
-          <th class="d-table__header-cell">{{i18n "admin.config_areas.flags.description"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.config_areas.flags.enabled"}}</th>
+          <th class="d-table__header-cell">{{i18n
+              "admin.config_areas.flags.description"
+            }}</th>
+          <th class="d-table__header-cell">{{i18n
+              "admin.config_areas.flags.enabled"
+            }}</th>
         </thead>
         <tbody class="d-table__body">
           {{#each this.flags as |flag|}}

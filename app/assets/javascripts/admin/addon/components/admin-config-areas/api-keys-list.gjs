@@ -9,11 +9,14 @@ const ApiKeysList = <template>
         <thead class="d-table__header">
           <tr class="d-table__row">
             <th class="d-table__header-cell">{{i18n "admin.api.key"}}</th>
-            <th class="d-table__header-cell">{{i18n "admin.api.description"}}</th>
+            <th class="d-table__header-cell">{{i18n
+                "admin.api.description"
+              }}</th>
             <th class="d-table__header-cell">{{i18n "admin.api.user"}}</th>
             <th class="d-table__header-cell">{{i18n "admin.api.created"}}</th>
             <th class="d-table__header-cell">{{i18n "admin.api.scope"}}</th>
             <th class="d-table__header-cell">{{i18n "admin.api.last_used"}}</th>
+            <th class="d-table__header-cell"></th>
           </tr>
         </thead>
         <tbody class="d-table__body">

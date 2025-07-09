@@ -41,7 +41,9 @@ export default class AdminConfigAreasEmojisList extends Component {
             <th class="d-table__header-cell">{{i18n "admin.emoji.image"}}</th>
             <th class="d-table__header-cell">{{i18n "admin.emoji.name"}}</th>
             <th class="d-table__header-cell">{{i18n "admin.emoji.group"}}</th>
-            <th class="d-table__header-cell" colspan="3">{{i18n "admin.emoji.created_by"}}</th>
+            <th class="d-table__header-cell" colspan="3">{{i18n
+                "admin.emoji.created_by"
+              }}</th>
           </tr>
         </thead>
         {{#if this.sortedEmojis}}

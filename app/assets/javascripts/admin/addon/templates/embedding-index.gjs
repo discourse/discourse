@@ -28,8 +28,12 @@ export default RouteTemplate(
       <table class="d-table">
         <thead class="d-table__header">
           <th class="d-table__header-cell">{{i18n "admin.embedding.host"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.embedding.allowed_paths"}}</th>
-          <th class="d-table__header-cell">{{i18n "admin.embedding.category"}}</th>
+          <th class="d-table__header-cell">{{i18n
+              "admin.embedding.allowed_paths"
+            }}</th>
+          <th class="d-table__header-cell">{{i18n
+              "admin.embedding.category"
+            }}</th>
           <th class="d-table__header-cell">{{i18n "admin.embedding.tags"}}</th>
           {{#if @controller.embedding.embed_by_username}}
             <th class="d-table__header-cell">{{i18n
@@ -37,7 +41,9 @@ export default RouteTemplate(
                 author=@controller.embedding.embed_by_username
               }}</th>
           {{else}}
-            <th class="d-table__header-cell">{{i18n "admin.embedding.post_author"}}</th>
+            <th class="d-table__header-cell">{{i18n
+                "admin.embedding.post_author"
+              }}</th>
           {{/if}}
         </thead>
         <tbody class="d-table__body">

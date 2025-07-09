@@ -71,8 +71,8 @@ export default class ApiKeyItem extends Component {
             <div class="status-label --inactive">
               <div class="status-label-indicator"></div>
               <div class="status-label-text">
-                {{i18n "admin.api.revoked" }}
-                </div>
+                {{i18n "admin.api.revoked"}}
+              </div>
             </div>
           {{/if}}
         </div>
@@ -94,9 +94,7 @@ export default class ApiKeyItem extends Component {
         {{/if}}
       </td>
       <td class="d-table__cell --detail key-created">
-        <div class="d-table__mobile-label">{{i18n
-          "admin.api.created"
-        }}</div>
+        <div class="d-table__mobile-label">{{i18n "admin.api.created"}}</div>
         <div class="d-table__value-wrapper">
           <LinkTo @route="adminUser" @model={{this.apiKey.createdBy}}>
             {{avatar this.apiKey.createdBy imageSize="small"}}
@@ -112,9 +110,7 @@ export default class ApiKeyItem extends Component {
         </div>
       </td>
       <td class="d-table__cell --detail key-last-used">
-        <div class="d-table__mobile-label">{{i18n
-            "admin.api.last_used"
-          }}</div>
+        <div class="d-table__mobile-label">{{i18n "admin.api.last_used"}}</div>
         {{#if this.apiKey.last_used_at}}
           {{formatDate this.apiKey.last_used_at}}
         {{else}}

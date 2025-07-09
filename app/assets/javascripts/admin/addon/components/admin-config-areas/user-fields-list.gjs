@@ -78,8 +78,12 @@ export default class AdminConfigAreasUserFieldsList extends Component {
         <table class="d-table user-fields">
           <thead class="d-table__header">
             <tr class="d-table__row">
-              <th class="d-table__header-cell">{{i18n "admin.config_areas.user_fields.field"}}</th>
-              <th class="d-table__header-cell">{{i18n "admin.config_areas.user_fields.type"}}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "admin.config_areas.user_fields.field"
+                }}</th>
+              <th class="d-table__header-cell">{{i18n
+                  "admin.config_areas.user_fields.type"
+                }}</th>
             </tr>
           </thead>
           <tbody class="d-table__body">

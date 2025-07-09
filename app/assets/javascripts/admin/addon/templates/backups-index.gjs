@@ -49,7 +49,9 @@ export default RouteTemplate(
     <table class="d-table admin-backups-list">
       <thead class="d-table__header">
         <tr class="d-table__row">
-          <th class="d-table__header-cell">{{i18n "admin.backups.columns.filename"}}</th>
+          <th class="d-table__header-cell">{{i18n
+              "admin.backups.columns.filename"
+            }}</th>
           <th class="backup-size">{{i18n "admin.backups.columns.size"}}</th>
           <th class="d-table__header-cell"></th>
         </tr>
