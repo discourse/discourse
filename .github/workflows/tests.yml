@@ -173,6 +173,7 @@ jobs:
             ${{ hashFiles('config/environments/test.rb') }}-
             ${{ env.USES_PARALLEL_DATABASES }}-
             ${{ env.PARALLEL_TEST_PROCESSORS }}-
+            ${{ matrix.target }}-
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
