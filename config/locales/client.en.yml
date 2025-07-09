@@ -4019,7 +4019,7 @@ en:
         post_language_selector:
           none: "None"
         edit_warning:
-          message: "This is a translated post. Do you want to edit the original post in %{language} or edit this specific translation?"
+          message: "This is a translated post.<br><br> Do you want to edit the original post in %{language} or edit this specific translation?"
           action_original: "Edit original post"
           action_translation: "Edit this translation"
 
