@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "Discourse Reaktioner"
+  js:
+    discourse_reactions:
+      reactions_title: "Reaktioner"
+      state_panel:
+        more_users: "och %{count} till..."
+      reaction:
+        forbidden: "Den reaktionen skapades för långt tillbaka i tiden. Den kan inte längre ändras eller tas bort."
+      picker:
+        react_with: "Reagera på det här inlägget med: %{reaction}"
+        cant_remove_reaction: "Du kan inte längre ta bort din reaktion"
+        remove_reaction: "Ta bort denna %{reaction}-reaktion"
+      main_reaction:
+        add: "Gilla detta inlägg"
+        remove: "Ta bort denna gillning"
+        cant_remove: "Du kan inte längre ta bort ditt gillande"
+    notifications:
+      reaction_2_users: "%{username}, %{username2}"
+      reaction_multiple_users:
+        one: "%{username} och %{count} andra"
+        other: "%{username} och %{count} andra"
+      titles:
+        reaction: "ny reaktion"

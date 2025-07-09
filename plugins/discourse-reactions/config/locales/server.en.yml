@@ -1,0 +1,23 @@
+en:
+  site_settings:
+    discourse_reactions_like_icon: "Defines the icon used for the main reaction button. This should be a <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> icon name, not an emoji name."
+    discourse_reactions_reaction_for_like: "Defines the reaction associated to the Like action. Historical Like records will not be changed if this setting changes, it is <strong>strongly recommended</strong> that this setting is never changed."
+    discourse_reactions_enabled: "Enable the discourse-reactions plugin."
+    discourse_reactions_enabled_reactions: "Defines a list of enabled reactions, any emoji is allowed here."
+    discourse_reactions_desaturated_reaction_panel: "Reduces visual noise of reactions by displaying them desaturated until hover."
+    discourse_reactions_excluded_from_like: "Reactions that do not count as a Like. Any reactions that are not on this list will count as a Like for badges, reporting, and other purposes."
+    discourse_reactions_like_sync_enabled: "If this is enabled, historical reactions will have their matching Like records created, except those reactions defined in `discourse_reactions_excluded_from_like`. This sync will happen on a regular basis in the background, and also when you change `discourse_reactions_excluded_from_like`."
+    errors:
+      invalid_excluded_emoji: "You cannot exclude emojis that are not in 'discourse reactions enabled reactions' and you cannot exclude the emoji used for 'discourse reactions reaction for like'."
+  badges:
+    first_reaction:
+      name: First Reaction
+      description: Reacted to the post
+      long_description: |
+        This badge is granted the first time you react to a post. Reacting to the posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share your reaction!
+  reports:
+    reactions:
+      title: "Reactions"
+      description: "List most recent reactions."
+      labels:
+        day: "Day"
