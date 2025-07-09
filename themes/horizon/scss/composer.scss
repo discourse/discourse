@@ -13,6 +13,10 @@
   }
 }
 
+#reply-control {
+  background-color: var(--background-color);
+}
+
 #reply-control.hide-preview:not(.draft) {
   @include viewport.from(sm) {
     background: var(--d-content-background);
@@ -117,5 +121,141 @@
 
   .topic-title-translator input {
     width: 47.25vw;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.6;
+  }
+}
+
+@include viewport.until(sm) {
+  .composer-open {
+    body::after {
+      height: 100vh;
+      content: "";
+      top: 0;
+      bottom: 0;
+      position: fixed;
+      width: 100vw;
+      left: 0;
+      right: 0;
+      background: black;
+      z-index: calc(z("mobile-composer") - 1);
+      user-select: none;
+      animation: fade 0.3s forwards;
+
+      @media (prefers-reduced-motion) {
+        animation-duration: 0s;
+      }
+    }
+  }
+
+  .toggle-toolbar {
+    display: none;
+  }
+
+  #reply-control {
+    background: var(--secondary);
+
+    &.open {
+      top: 0;
+      transform: none;
+      height: 100dvh;
+      max-height: unset;
+    }
+
+    .title-input {
+      order: 1;
+    }
+
+    #reply-title {
+      border: 0;
+      padding: var(--space-3) 0;
+      border-radius: 0;
+      background: var(--secondary);
+      font-size: var(--font-up-1);
+      margin: 0;
+
+      &:focus {
+        outline: 0;
+      }
+    }
+
+    .reply-area {
+      padding-inline: var(--space-4);
+    }
+
+    .d-editor {
+      &-textarea-wrapper {
+        border: 0;
+
+        &.in-focus {
+          outline: 0;
+        }
+      }
+
+      &-input {
+        padding-inline: 0;
+      }
+
+      p[data-placeholder] {
+        margin: 0;
+      }
+
+      &-button-bar {
+        width: 100%;
+        justify-content: space-around;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+        position: absolute;
+        bottom: 0;
+        border: 1px solid var(--primary-low);
+        border-radius: var(--d-border-radius);
+        background: var(--secondary-very-high);
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        margin-block: var(--space-3);
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
+        .btn {
+          font-size: var(--font-up-1);
+          color: var(--primary-high);
+
+          &:not(a) {
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+
+    .composer-toggle-switch__slider {
+      background: var(--secondary);
+    }
+
+    .submit-panel {
+      .cancel {
+        position: absolute;
+        top: 0.5rem;
+        right: 3rem;
+
+        .d-icon {
+          font-size: var(--font-0);
+          padding: 0.4em 0.467em;
+        }
+      }
+
+      .mobile-preview {
+        display: none;
+      }
+    }
   }
 }
