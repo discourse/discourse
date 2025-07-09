@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-loose-assertions */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
