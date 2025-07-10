@@ -2122,6 +2122,7 @@ en:
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
 
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
+    video_conversion_service: "The video conversion service to use for processing uploaded videos."
     mediaconvert_role_arn: "AWS IAM role ARN for MediaConvert service. Required when using AWS MediaConvert for video conversion."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
