@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    openid_connect_enabled: OpenID Connect 認証を有効にする。ユーザーインターフェースのテキストは<a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>こちら</a>でカスタマイズしてください
+    openid_connect_discovery_document: "OpenID Connect 検出ドキュメント URL。通常、'https://your.domain/.well-known/openid-configuration' にあります"
+    openid_connect_client_id: "OpenID Connect クライアント ID"
+    openid_connect_client_secret: "OpenID Connect クライアントシークレット"
+    openid_connect_authorize_scope: "承認エンドポイントに送信されるスコープ。これには 'openid' が含まれる必要があります。"
+    openid_connect_rp_initiated_logout: "ログアウト後、ユーザーを end_session_endpoint にリダイレクトする。ID プロバイダーにサポートされており、検出ドキュメントに含まれている必要があります。"
+    openid_connect_rp_initiated_logout_redirect: "（オプション）ログアウトエンドポイントに渡される post_logout_redirect_uri。指定されている場合、ID プロバイダーに登録されている必要があります。"
+    openid_connect_token_scope: "トークンエンドポイントをリクエストする際に送信されるスコープ。公式の仕様では、これは必要ありません。"
+    openid_connect_error_redirects: "error_reason コールバックに最初のパラメーターが含まれる場合、ユーザーは 2 番目のパラメーターにある URL にリダイレクトされる"
+    openid_connect_allow_association_change: "ユーザーが OpenID Connect プロバイダーから Discourse アカウントを切断して再接続することを許可する"
+    openid_connect_verbose_logging: "詳細な openid-connect 認証情報を `/logs` に記録する。通常使用の場合は、これを無効にしてください。"
+    openid_connect_authorize_parameters: "/auth/oidc から IDP の承認エンドポイントへのリダイレクトに含まれる URL パラメーター"
+    openid_connect_overrides_email: "ログインごとに、ユーザーのメールアドレスを openid-connect 値でオーバーライドする。`auth_overrides_email` と同じように機能しますが、OpenID Connect ログインに固有です。"
+    openid_connect_claims: "スコープに基づいてデータを戻さないプロバイダーで使用するための要求を明示的に定義する。（JSON）"
+    openid_connect_match_by_email: "メールアドレスを使用して、OpenID Connect 認証を既存の Discourse ユーザーアカウントと照合する。"
+    openid_connect_use_pkce: "OpenID Connect 認証の Proof Key for Code Exchange（PKCE）を有効にする。"
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: ID プロバイダーから構成を取得できません。もう一度お試しください。
