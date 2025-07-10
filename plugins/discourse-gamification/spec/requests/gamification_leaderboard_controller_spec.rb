@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe DiscourseGamification::GamificationLeaderboardController do
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:current_user) { Fabricate(:user, group_ids: [group.id]) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:staged_user) { Fabricate(:user, staged: true) }
