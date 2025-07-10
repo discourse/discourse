@@ -1555,8 +1555,8 @@ en:
           one: '<span class="%{className}">%{count}</span> deleted post'
           other: '<span class="%{className}">%{count}</span> deleted posts'
         silencings:
-          one: '<span class="%{className}">%{count}</span> silencing'
-          other: '<span class="%{className}">%{count}</span> silencings'
+          one: '<span class="%{className}">%{count}</span> silenced'
+          other: '<span class="%{className}">%{count}</span> silenced'
         suspensions:
           one: '<span class="%{className}">%{count}</span> suspension'
           other: '<span class="%{className}">%{count}</span> suspensions'
