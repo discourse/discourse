@@ -122,3 +122,10 @@ files:
   - source_path: plugins/discourse-apple-auth/config/locales/server.en.yml
     destination_path: plugins/apple-auth/server.yml
     label: apple-auth
+
+  - source_path: plugins/discourse-microsoft-auth/config/locales/client.en.yml
+    destination_path: plugins/microsoft-auth/client.yml
+    label: microsoft-auth
+  - source_path: plugins/discourse-microsoft-auth/config/locales/server.en.yml
+    destination_path: plugins/microsoft-auth/server.yml
+    label: microsoft-auth

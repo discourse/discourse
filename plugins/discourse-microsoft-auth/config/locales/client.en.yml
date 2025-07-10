@@ -1,0 +1,6 @@
+en:
+  js:
+    login:
+      microsoft_office365:
+        name: "Microsoft"
+        title: "Login with Microsoft"
