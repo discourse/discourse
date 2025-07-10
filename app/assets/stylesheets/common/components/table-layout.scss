@@ -173,6 +173,15 @@
   }
 }
 
+.d-table__mobile-label {
+  display: none;
+
+  @include viewport.until(md) {
+    display: inline-flex;
+    color: var(--primary-high);
+  }
+}
+
 .d-table__cell.--controls {
   text-align: right;
   width: auto;
@@ -186,7 +195,7 @@
   }
 }
 
-// Wrapper keeps button and dropdown aligned
+// Wraps and aligns button group like main action + icon only button
 .d-table__cell-actions {
   display: flex;
   flex-direction: row;
@@ -198,15 +207,7 @@
   }
 }
 
-.d-table__mobile-label {
-  display: none;
-
-  @include viewport.until(md) {
-    display: inline-flex;
-    color: var(--primary-high);
-  }
-}
-
+// Wraps and aligns cell content like icons and text
 .d-table__value-wrapper {
   display: flex;
   align-items: center;
