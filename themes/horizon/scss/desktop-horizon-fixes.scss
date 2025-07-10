@@ -28,6 +28,13 @@
 }
 
 .topic-list-header {
+  display: none;
+
+  .bulk-select-enabled & {
+    display: block;
+    height: 0;
+  }
+
   tr {
     border: none;
   }
@@ -50,6 +57,7 @@
   // bulk select
   .bulk-select-topics {
     position: absolute;
+    top: 0;
     right: 0;
     background: var(--secondary);
     border-radius: 0 0 0 var(--d-border-radius);
