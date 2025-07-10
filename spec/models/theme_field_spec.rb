@@ -59,22 +59,22 @@ RSpec.describe ThemeField do
     expect(theme_field.error).to eq(nil)
   end
 
-  it "only extracts inline javascript to an external file" do
+  it "only extracts special script tags to an external file" do
     html = <<~HTML
       <script type="text/discourse-plugin" version="0.8">
-        var a = "inline discourse plugin";
+        console.log("inline discourse plugin");
       </script>
       <script type="text/template" data-template="custom-template">
         <div>custom script type</div>
       </script>
       <script>
-        var b = "inline raw script";
+        console.log("inline raw script");
       </script>
       <script type="texT/jAvasCripT">
-        var c = "text/javascript";
+        console.log("text/javascript");
       </script>
       <script type="application/javascript">
-        var d = "application/javascript";
+        console.log("application/javascript");
       </script>
       <script src="/external-script.js"></script>
     HTML
@@ -82,33 +82,32 @@ RSpec.describe ThemeField do
     theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<link rel=\"modulepreload\" href=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"-1\">",
     )
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
-    expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
-    expect(theme_field.javascript_cache.content).to include('b = "inline raw script"')
-    expect(theme_field.javascript_cache.content).to include('c = "text/javascript"')
-    expect(theme_field.javascript_cache.content).to include('d = "application/javascript"')
+    expect(theme_field.javascript_cache.content).to include('"inline discourse plugin"')
+    expect(theme_field.value_baked).to include('"inline raw script"')
+    expect(theme_field.value_baked).to include('"text/javascript"')
+    expect(theme_field.value_baked).to include('"application/javascript"')
   end
 
-  it "adds newlines between the extracted javascripts" do
+  it "preserves simple script tags" do
     html = <<~HTML
       <script>var a = 10</script>
       <script>var b = 10</script>
     HTML
 
-    extracted = <<~JS
-      var a = 10
-      var b = 10
-    JS
-
     theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
-    expect(theme_field.javascript_cache.content).to include(extracted)
+    expect(theme_field.javascript_cache).to eq(nil)
+    expect(theme_field.value_baked).to eq <<~HTML
+      <script nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">var a = 10</script>
+      <script nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">var b = 10</script>
+    HTML
   end
 
-  it "correctly extracts and generates errors for transpiled js" do
+  it "correctly logs errors for transpiled js" do
     html = <<HTML
 <script type="text/discourse-plugin" version="0.8">
    badJavaScript(;
@@ -117,15 +116,13 @@ HTML
 
     field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     field.ensure_baked!
-    expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include(
-      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<link rel=\"modulepreload\" href=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\">",
     )
     expect(field.javascript_cache.content).to include("[THEME -1 'Foundation'] Compile error")
 
     field.update!(value: "")
     field.ensure_baked!
-    expect(field.error).to eq(nil)
   end
 
   it "allows us to use theme settings in handlebars templates" do
@@ -146,13 +143,13 @@ HTML
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<link rel=\"modulepreload\" href=\"#{javascript_cache.url}\" data-theme-id=\"-1\">",
     )
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
     expect(javascript_cache.content).to include("test text \\\" 123!")
     expect(javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme_field.theme_id}/discourse/templates/my-template\"",
+      'themeCompatModules["discourse/templates/my-template"]',
     )
   end
 
@@ -670,7 +667,7 @@ HTML
       it "injects into JS" do
         html = <<~HTML
           <script type="text/discourse-plugin" version="0.8">
-            var a = "inline discourse plugin";
+            console.log("inline discourse plugin", themePrefix("foo"));
           </script>
         HTML
 

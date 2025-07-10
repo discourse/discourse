@@ -547,6 +547,7 @@ class Theme < ActiveRecord::Base
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
           <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" />
+          <!-- TODO - multiple importmaps are not supported in all browsers. Combine into one -->
           <script type="importmap" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
             {
               "imports": {

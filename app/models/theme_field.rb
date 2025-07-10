@@ -119,13 +119,115 @@ class ThemeField < ActiveRecord::Base
 
   def process_html(html)
     errors = []
-    javascript_cache || build_javascript_cache
 
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
 
-    # todo: restore script tag support
+    js_tree = {}
+    js_errors = []
+    deprecated_template_names = []
 
-    [html, errors&.join("\n")]
+    doc = Nokogiri::HTML5.fragment(html)
+
+    doc
+      .css('script[type="text/x-handlebars"]')
+      .each do |node|
+        name = node["name"] || node["data-template-name"] || "broken"
+        is_raw = name =~ /\.(raw|hbr)\z/
+        hbs_template = node.inner_html
+
+        if is_raw
+          js_errors.push(
+            "[THEME #{theme.id}] [discourse/templates/#{name}] Raw templates are no longer supported",
+          )
+        else
+          js_tree["discourse/templates/#{name.delete_prefix("/")}.hbs"] = hbs_template
+          deprecated_template_names << name
+        end
+
+        node.remove
+      end
+
+    if deprecated_template_names.present? || js_errors.present?
+      js = <<~JS
+        import deprecated from "discourse/lib/deprecated";
+
+        export default {
+          initialize(){
+            const names = #{deprecated_template_names.to_json};
+            names.forEach((name) => {
+              deprecated(
+                `[${name}] adding templates to a theme using <script type='text/x-handlebars'> is deprecated. Move to dedicated .hbs or .gjs files.`,
+                {
+                  id: "discourse.script-tag-hbs",
+                  url: "https://meta.discourse.org/t/366482",
+                }
+              )
+            });
+            const errors = #{js_errors.to_json};
+            errors.forEach((error) => console.error(error));
+          }
+        }
+      JS
+      js_tree["discourse/initializers/script-tag-hbs-deprecations.js"] = js
+    end
+
+    doc
+      .css('script[type="text/discourse-plugin"]')
+      .each_with_index do |node, index|
+        version = node["version"]
+        next if version.blank?
+
+        initializer_name =
+          "theme-field" + "-#{self.id}" + "-#{Theme.targets[self.target_id]}" +
+            "-#{ThemeField.types[self.type_id]}" + "-script-#{index + 1}"
+
+        js = <<~JS
+          import { withPluginApi } from "discourse/lib/plugin-api";
+          import deprecated from "discourse/lib/deprecated";
+
+          export default {
+            name: #{initializer_name.inspect},
+            after: "inject-objects",
+
+            initialize() {
+              deprecated(
+                "Adding JS code using <script type='text/discourse-plugin'> is deprecated. Move this code to a dedicated JavaScript file.",
+                {
+                  id: "discourse.script-tag-discourse-plugin",
+                  url: "https://meta.discourse.org/t/366482",
+                }
+              )
+              withPluginApi(#{version.inspect}, (api) => {
+                #{node.inner_html}
+              });
+            }
+          };
+        JS
+
+        js_tree["discourse/initializers/#{initializer_name}.js"] = js
+        node.remove
+      end
+
+    doc.css("script").each_with_index { |node, index| node["nonce"] = CSP_NONCE_PLACEHOLDER }
+
+    if js_tree.present?
+      js_compiler =
+        ThemeJavascriptCompiler.new(theme_id, self.theme.name, theme.build_settings_hash)
+      js_compiler.append_tree(js_tree)
+
+      javascript_cache || build_javascript_cache
+      javascript_cache.content = js_compiler.content
+      javascript_cache.source_map = js_compiler.source_map
+      javascript_cache.save!
+
+      doc.add_child(<<~HTML.html_safe)
+        <link rel="modulepreload" href="#{javascript_cache.url}" data-theme-id="#{theme_id}">
+      HTML
+    else
+      javascript_cache&.mark_for_destruction
+    end
+
+    [doc.to_s, errors&.join("\n")]
   end
 
   def validate_svg_sprite_xml
