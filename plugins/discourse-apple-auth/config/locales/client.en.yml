@@ -1,0 +1,8 @@
+en:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Sign in with Apple"
+        sr_title: "Sign in with Apple"
+        message: "Authenticating with Apple"

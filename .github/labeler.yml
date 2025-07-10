@@ -30,6 +30,10 @@ discourse-reactions:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-reactions/**/*
 
+discourse-apple-auth:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-apple-auth/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

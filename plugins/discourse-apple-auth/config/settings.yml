@@ -1,0 +1,8 @@
+plugins:
+  sign_in_with_apple_enabled: false
+  apple_client_id: ''
+  apple_team_id: ''
+  apple_key_id: ''
+  apple_pem:
+    default: ''
+    textarea: true

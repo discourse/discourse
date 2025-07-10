@@ -50,6 +50,7 @@
 !/plugins/checklist
 !/plugins/footnote
 !/plugins/discourse-reactions
+!/plugins/discourse-apple-auth
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
