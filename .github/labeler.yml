@@ -2,16 +2,56 @@ chat:
   - changed-files:
       - any-glob-to-any-file: plugins/chat/**/*
 
+checklist:
+  - changed-files:
+      - any-glob-to-any-file: plugins/checklist/**/*
+
+discourse-details:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-details/**/*
+
+discourse-lazy-videos:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-lazy-videos/**/*
+
+discourse-local-dates:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-local-dates/**/*
+
+discourse-narrative-bot:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-narrative-bot/**/*
+
+discourse-presence:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-presence/**/*
+
+footnote:
+  - changed-files:
+      - any-glob-to-any-file: plugins/footnote/**/*
+
+poll:
+  - changed-files:
+      - any-glob-to-any-file: plugins/poll/**/*
+
+spoiler-alert:
+  - changed-files:
+      - any-glob-to-any-file: plugins/spoiler-alert/**/*
+
+styleguide:
+  - changed-files:
+      - any-glob-to-any-file: plugins/styleguide/**/*
+
 migrations-tooling:
   - changed-files:
       - any-glob-to-any-file:
-        - migrations/**/*
-        - script/bulk_import/**/*
-        - script/import_scripts/**/*
+          - migrations/**/*
+          - script/bulk_import/**/*
+          - script/import_scripts/**/*
 
 i18n:
   - changed-files:
       - any-glob-to-any-file:
-        - config/locales/*en.yml
-        - plugins/**/config/locales/*en.yml
-        - "**/*i18n*"
+          - config/locales/*en.yml
+          - plugins/**/config/locales/*en.yml
+          - "**/*i18n*"
