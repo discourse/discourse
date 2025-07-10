@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "Discourse Reaktioner"
+  js:
+    discourse_reactions:
+      reactions_title: "Reaktioner"
+      state_panel:
+        more_users: "og %{count} mere..."
+      reaction:
+        forbidden: "Den reaktion blev givet for længe siden. Den kan ikke længere ændres eller fjernes."
+      picker:
+        react_with: "Reager på dette indlæg med: %{reaction}"
+        cant_remove_reaction: "Du kan ikke længere fjerne din reaktion"
+        remove_reaction: "Fjern denne %{reaction} reaktion"
+      main_reaction:
+        add: "Du 'synes godt om' dette indlæg"
+        remove: "Fjern dette 'Synes godt om'"
+        cant_remove: "Du kan ikke længere fjerne dit 'Synes godt om'"
+        unauthenticated: "Tilmeld dig eller log ind for at 'synes godt om' dette indlæg"
+    notifications:
+      reaction_2_users: "%{username}, %{username2}"
+      titles:
+        reaction: "ny reaktion"
