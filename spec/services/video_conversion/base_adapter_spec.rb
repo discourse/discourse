@@ -52,9 +52,11 @@ RSpec.describe VideoConversion::BaseAdapter do
     before { allow(OptimizedVideo).to receive(:create_for) }
 
     context "with adapter that defines ADAPTER_NAME" do
+      let(:adapter_name) { "test_adapter_#{SecureRandom.hex(4)}" }
       let(:test_adapter_class) do
+        adapter_name_const = adapter_name
         Class.new(VideoConversion::BaseAdapter) do
-          ADAPTER_NAME = "test_adapter"
+          const_set(:ADAPTER_NAME, adapter_name_const)
           def self.name
             "TestAdapter"
           end
@@ -73,7 +75,7 @@ RSpec.describe VideoConversion::BaseAdapter do
           sha1: new_sha1,
           url: url,
           extension: "mp4",
-          adapter: "test_adapter",
+          adapter: adapter_name,
         )
       end
 
@@ -90,7 +92,7 @@ RSpec.describe VideoConversion::BaseAdapter do
           sha1: new_sha1,
           url: url,
           extension: "mp4",
-          adapter: "test_adapter",
+          adapter: adapter_name,
         )
       end
     end
