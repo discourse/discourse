@@ -13,7 +13,7 @@ export default class CategoriesBoxesTopic extends Component {
       return "thumbtack";
     }
     if (closed || archived) {
-      return "lock";
+      return "category.restricted";
     }
     return "far-file-lines";
   }

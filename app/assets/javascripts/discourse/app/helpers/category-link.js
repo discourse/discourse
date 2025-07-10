@@ -200,7 +200,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (restricted) {
-    html += iconHTML("lock");
+    html += iconHTML("category.restricted");
   }
   _extraIconRenderers.forEach((renderer) => {
     const iconName = renderer(category);
