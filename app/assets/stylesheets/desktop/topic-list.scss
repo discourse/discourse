@@ -35,19 +35,21 @@
   }
 
   .topic-list-header .topic-list-data {
-    padding: var(--d-topic-list-header-data-padding-h) var(--space-1);
+    padding: var(--d-topic-list-header-data-padding-h)
+      var(--d-topic-list-header-data-padding-v);
     color: var(--d-topic-list-header-text-color);
   }
 
   .topic-list-data {
-    padding: var(--d-topic-list-data-padding-v) var(--space-1);
+    padding: var(--d-topic-list-data-padding-h)
+      var(--d-topic-list-data-padding-v);
 
     &:first-of-type {
-      padding-inline-start: 0.75rem;
+      padding-inline-start: var(--d-topic-list-data-padding-inline-start);
     }
 
     &:last-of-type {
-      padding-inline-end: 0.75rem;
+      padding-inline-end: (--d-topic-list-data-padding-inline-end);
     }
 
     th & {
@@ -131,15 +133,15 @@
   }
 
   .likes {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .views {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .posts {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .post-actions {
