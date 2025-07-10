@@ -115,3 +115,10 @@ files:
   - source_path: plugins/discourse-reactions/config/locales/server.en.yml
     destination_path: plugins/discourse-reactions/server.yml
     label: discourse-reactions
+
+  - source_path: plugins/discourse-apple-auth/config/locales/client.en.yml
+    destination_path: plugins/apple-auth/client.yml
+    label: apple-auth
+  - source_path: plugins/discourse-apple-auth/config/locales/server.en.yml
+    destination_path: plugins/apple-auth/server.yml
+    label: apple-auth
