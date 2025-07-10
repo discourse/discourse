@@ -52,6 +52,7 @@
 !/plugins/discourse-reactions
 !/plugins/discourse-apple-auth
 !/plugins/discourse-login-with-amazon
+!/plugins/discourse-lti
 !/plugins/discourse-microsoft-auth
 /plugins/*/auto_generated
 
