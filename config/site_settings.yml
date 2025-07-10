@@ -2277,7 +2277,6 @@ files:
     default: "aws_mediaconvert"
     choices:
       - "aws_mediaconvert"
-    hidden: false
   mediaconvert_role_arn:
     default: ""
   mediaconvert_endpoint:
