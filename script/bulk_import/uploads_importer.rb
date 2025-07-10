@@ -54,8 +54,10 @@ module BulkImport
         puts "Uploading uploads..."
         upload_files
 
-        puts "", "Creating optimized images..."
-        create_optimized_images if @settings[:create_optimized_images]
+        if @settings[:create_optimized_images]
+          puts "", "Creating optimized images..."
+          create_optimized_images
+        end
       end
       puts ""
     ensure
@@ -591,6 +593,11 @@ module BulkImport
 
             loop do
               upload = Upload.find_by(sha1: row["upload_sha1"])
+              unless upload
+                puts "", "Could not find upload with sha1: #{row["upload_sha1"]}", ""
+                status_queue << { id: row["upload_id"], status: :error }
+                break
+              end
 
               optimized_images =
                 begin
@@ -605,7 +612,7 @@ module BulkImport
                   end
                 rescue StandardError => e
                   puts e.message
-                  puts e.stacktrace
+                  puts e.backtrace.join("\n")
                   nil
                 end
 

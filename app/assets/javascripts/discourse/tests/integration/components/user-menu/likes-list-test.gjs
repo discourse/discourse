@@ -18,13 +18,13 @@ module(
       await render(<template><LikesNotificationsList /></template>);
 
       assert
-        .dom(".empty-state-title")
+        .dom(".empty-state__title")
         .hasText(
           i18n("user.no_likes_title"),
           "empty state title for the likes tab is shown"
         );
       assert
-        .dom(".empty-state-body a")
+        .dom(".empty-state__body a")
         .hasAttribute(
           "href",
           "/my/preferences/notifications",

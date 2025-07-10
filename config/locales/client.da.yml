@@ -681,6 +681,16 @@ da:
         reviewable_post:
           title: "Indlæg"
           noun: "indlæg"
+      notes:
+        delete: "Slet"
+      review_user: "Bruger"
+      copy_link: "Kopiér link"
+      insights:
+        activities:
+          posts:
+            one: "%{count} indlæg"
+            other: "%{count} indlæg"
+        visibility: "Synlighed"
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
@@ -2284,6 +2294,8 @@ da:
       image_alt_text:
         aria_label: Alternativ tekst til billede
         title: "Tilføj billedbeskrivelse"
+      image_toolbar:
+        alt_text: "Tilføj billedbeskrivelse"
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
       link_toolbar:
@@ -3568,7 +3580,6 @@ da:
         replies: "Svar"
         replies_with_count: "Svar (%{count})"
       posted:
-        title: "Mine indlæg"
         help: "emner du har skrevet indlæg i"
       bookmarks:
         title: "Bogmærker"
@@ -4003,8 +4014,6 @@ da:
               content: "Brugere"
               title: "Liste over alle brugere"
             my_posts:
-              content: "Mine indlæg"
-              content_drafts: "Mine Kladder"
               title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
@@ -4745,6 +4754,9 @@ da:
           delete: "Slet"
         color_palettes:
           palette_name: "Navn"
+          copy_to_clipboard: "Kopiér til udklipsholder"
+          copied_to_clipboard: "Kopieret til udklipsholder"
+          copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
           duplicate: "Dupliker"
           delete: "Slet"
           color_options:

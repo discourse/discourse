@@ -671,6 +671,15 @@ nb_NO:
         reviewable_post:
           title: "Innlegg"
           noun: "innlegg"
+      notes:
+        delete: "Slett"
+      review_user: "Bruker"
+      insights:
+        activities:
+          posts:
+            one: "%{count} innlegg"
+            other: "%{count} innlegg"
+        visibility: "Synlighet"
       approval:
         title: "Innlegg trenger godkjenning"
         description: "Vi har mottatt ditt nye innlegg men det krever godkjenning av en moderator før det vises. Ha tålmod."
@@ -2505,6 +2514,8 @@ nb_NO:
       image_alt_text:
         aria_label: Alt-tekst for bilde
         title: "Legg til bildebeskrivelse"
+      image_toolbar:
+        alt_text: "Legg til bildebeskrivelse"
       image_scale_button: "Skalere bildet til %{percent}%."
       delete_image_button: Slett bilde
       toggle_image_grid: Veksle mellom bilderutenett
@@ -3974,7 +3985,6 @@ nb_NO:
         topics: "Emner"
         replies: "Svar"
       posted:
-        title: "Mine innlegg"
         help: "emner du har bidratt med innlegg i"
       bookmarks:
         title: "Bokmerker"
@@ -4336,8 +4346,6 @@ nb_NO:
               content: "Grupper"
             users:
               content: "Brukere"
-            my_posts:
-              content: "Mine innlegg"
             review:
               content: "Gjennomgang"
             invite:
@@ -4817,6 +4825,9 @@ nb_NO:
           delete: "Slett"
         color_palettes:
           palette_name: "Navn"
+          copy_to_clipboard: "Kopier til utklippstavle"
+          copied_to_clipboard: "Kopiert til utklippstavle"
+          copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"
           delete: "Slett"
           colors:
             title: "Farger"

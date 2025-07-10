@@ -551,6 +551,14 @@ vi:
         reviewable_post:
           title: "Bài viết"
           noun: "bài đăng"
+      notes:
+        delete: "Xóa"
+      review_user: "Người dùng"
+      insights:
+        activities:
+          posts:
+            other: "%{count} bài đăng"
+        visibility: "Khả năng hiển thị"
       approval:
         title: "Bài viết cần phê duyệt"
         description: "Chúng tôi đã nhận được bài viết mới của bạn, nhưng nó cần phải được phê duyệt bởi admin trước khi được hiện. Xin hãy kiên nhẫn."
@@ -4219,6 +4227,9 @@ vi:
           delete: "Xóa"
         color_palettes:
           palette_name: "Tên"
+          copy_to_clipboard: "Sao chép vào clipboard"
+          copied_to_clipboard: "Sao chép vào Clipboard"
+          copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
           duplicate: "Nhân bản"
           delete: "Xóa"
           colors:

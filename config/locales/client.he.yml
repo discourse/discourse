@@ -861,6 +861,63 @@ he:
         reviewable_post:
           title: "פוסט"
           noun: "פוסט"
+      flagged_as: "מסומן בתור"
+      assigned_to: "הוקצה לטובת"
+      moderator_actions: "פעולות פיקוח"
+      timeline_and_notes: "ציר זמן והערות"
+      timeline:
+        target_created: "פוסט נוצר"
+        target_created_by: "הפוסט נוצר על ידי %{username} · %{relativeDate}"
+        flagged: "מסומן"
+        flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
+        reviewed: "נבדק"
+        reviewed_by: "נבדק על ידי %{username} · %{relativeDate}"
+        view_conversation: "הצגת הודעה פרטית"
+        note_added: "הערת פיקוח"
+        note_added_by: "הערת פיקוח מאת %{username} · %{relativeDate}"
+        no_events: "אין אירועי ציר זמן להצגה"
+      notes:
+        add_note_description: "גלוי רק למפקחים. אפשר להשתמש בהערה הזאת כדי להוסיף הקשר או החלטות בנוסע לסקירה."
+        add_note_button: "הוספת הערה"
+        placeholder: "כאן ניתן לכתוב את ההערה שלך…"
+        chars_remaining: "נותרו %{count} תווים"
+        delete_note: "מחיקת ההערה הזאת"
+        delete: "מחיקה"
+      new_topic_label: "נושא חדש"
+      queued_user: "משתמש בתור"
+      posted_in: "פורסם ב־"
+      flagged_user: "משתמש מסומן"
+      review_user: "משתמש"
+      need_help: "אפשר להציע עזרה?"
+      copy_link: "העתקת קישור"
+      view_source: "הצגת המקור"
+      insights:
+        title: "תובנות"
+        flag_volume: "נפח סימון"
+        flagged_by_users:
+          one: "סומן על ידי משתמש/ת ייחודי/ת"
+          two: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
+          many: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
+          other: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
+        similar_posts: "פוסטים דומים מהעבר"
+        flagged_in_timeframe: "%{count} סומנו בעבר"
+        user_activity: "פעילות המשתמש"
+        activities:
+          new_account: "חשבון חדש"
+          trust_level: "רמת אמון: %{trustLevelName}"
+          posts:
+            one: "פוסט"
+            two: "שני פוסטים"
+            many: "%{count} פוסטים"
+            other: "%{count} פוסטים"
+        solution_marked: "סומן פתרון"
+        topic_has_solution: "לנושא הזה יש פתרון"
+        visibility: "חשיפה"
+        topic_unlisted: "הנושא הזה אינו מופיע ברשימות. הוא זמין רק דרך קישור ישיר ולא באופן ציבורי."
+      help:
+        moderation_guide: "מדריך פיקוח של Discourse"
+        flag_priorities: "ניהול מוניטין של משתמש ועדיפויות סימון"
+        spam_detection: "זיהוי זבל"
       approval:
         title: "הפוסט זקוק לאישור"
         description: "הפוסט התקבל אך הוא נתון לאישור מפקח בטרם הצגתו. נא להתאזר בסבלנות."
@@ -1334,6 +1391,7 @@ he:
     user_fields:
       none: "(יש לבחור אפשרות)"
       required: 'נא למלא ערך עבור „%{name}”'
+      required_select: 'נא לבחור ערך עבור „%{name}”'
       required_checkbox: 'השדה „%{name}” הוא חובה'
       same_as_password: "אין לחזור על הסיסמה שלך בשדות אחרים"
       optional: (רשות)
@@ -2328,6 +2386,8 @@ he:
       errors_summary_title: "הטופס הזה מכיל שגיאות:"
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
       errors:
+        starts_with: "חייב להיפתח בקידומת %{prefix}"
+        ends_with: "חייב להסתיים בסיומת %{suffix}"
         required: "נדרש"
         date_before_or_equal: "חייב להיות לפני או שווה ל־%{date}"
         date_after_or_equal: "חייב להיות אחרי או שווה ל־%{date}"
@@ -2944,6 +3004,8 @@ he:
       image_alt_text:
         aria_label: כיתוב חלופי לתמונה
         title: "הוספת תיאור תמונה"
+      image_toolbar:
+        alt_text: "הוספת תיאור תמונה"
       image_scale_button: "שינוי קנה המידה של התמונה לכדי %{percent}%"
       delete_image_button: מחיקת תמונה
       toggle_image_grid: החלפת מצב רשת תמונות
@@ -3424,7 +3486,7 @@ he:
         hot: "אין נושאים חמים."
         filter: "אין נושאים."
         education:
-          topic_tracking_preferences: "אפשר לצפות ולשנות את הגדרות המעקב אחר הנושא החדש שלך דרך <a href=\"%{basePath}/my/preferences/tracking\">ההעדפות שלך</a>."
+          topic_tracking_preferences: 'אפשר לצפות ולשנות את הגדרות המעקב אחר הנושא החדש שלך דרך <a href="%{basePath}/my/preferences/tracking">ההעדפות שלך</a>.'
           unread: "לא נשארו פריטים שלא נקראו… מרשים!"
           new_new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
           new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
@@ -4226,6 +4288,9 @@ he:
           many: "למזג את %{count} הפוסטים האלו?"
           other: "למזג את %{count} הפוסטים האלו?"
       revisions:
+        locale:
+          no_locale_set: "לא הוגדרה שפה"
+          locale_removed: "השפה הוסרה"
         controls:
           first: "מהדורה ראשונה"
           previous: "מהדורה קודמת"
@@ -4580,6 +4645,8 @@ he:
       pinned:
         title: "נעוץ"
         help: "נושא זה ננעץ עבורך, הוא יופיע בראש הקטגוריה"
+      hot:
+        title: "חמים"
       unlisted:
         help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק דרך קישור ישיר. %{unlistedReason}"
       personal_message:
@@ -4702,11 +4769,16 @@ he:
           other: "חדשים (%{count})"
         help: "נושאים שנוצרו בימים האחרונים"
         all: "הכול"
+        all_tooltip: "כל הנושאים החדשים והנושאים שנענו בימים האחרונים"
         all_with_count: "הכול (%{count})"
+        new_topics_tooltip: "נושאים חדשים"
         topics: "נושאים"
         topics_with_count: "נושאים (%{count})"
+        new_replies_tooltip: "תגובות חדשות"
         replies: "תשובות"
         replies_with_count: "תשובות (%{count})"
+      new_new:
+        help: "נושאים שנוצרו או נענו בימים האחרונים"
       posted:
         title: "הפוסטים שלי"
         help: "נושאים בהם פרסמת"
@@ -5289,6 +5361,9 @@ he:
             invite:
               content: "להזמין"
               title: "הזמנת חברים חדשים"
+            my_messages:
+              content: "ההודעות שלי"
+              title: "ההודעות הפרטיות שלי"
         global_section: "סעיף כללי, גלוי לכולם"
       panels:
         forum:
@@ -6589,6 +6664,9 @@ he:
           save_successful: "שדה משתמש נשמר."
         color_palettes:
           palette_name: "שם"
+          copy_to_clipboard: "העתקה ללוח הגזירים"
+          copied_to_clipboard: "הועתק ללוח הגזירים"
+          copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח הגזירים"
           duplicate: "שכפול"
           delete: "מחיקה"
           color_options:

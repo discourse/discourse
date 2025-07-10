@@ -3,6 +3,19 @@
 .toolbar-menu__options-content {
   @include viewport.from(sm) {
     z-index: z("composer", "content");
+
+    // making sure it's only limited in height on floating menu, not mobile menu
+    &.fk-d-menu {
+      max-height: 30vh;
+    }
+  }
+
+  .discourse-touch & {
+    z-index: calc(z("mobile-composer") + 1);
+  }
+
+  .fullscreen-composer & {
+    z-index: z("header") + 1;
   }
 
   .shortcut {

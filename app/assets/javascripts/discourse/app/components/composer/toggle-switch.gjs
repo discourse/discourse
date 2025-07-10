@@ -15,7 +15,7 @@ export default class ComposerToggleSwitch extends Component {
   }
 
   get label() {
-    const keyboardShortcut = `${translateModKey("ctrl")}+M`;
+    const keyboardShortcut = `${translateModKey("ctrl")}M`;
     if (this.args.state) {
       return i18n("composer.switch_to_markdown", { keyboardShortcut });
     } else {

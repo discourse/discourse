@@ -277,6 +277,16 @@ be:
         reviewable_post:
           title: "Паведамленне"
           noun: "пост"
+      notes:
+        delete: "выдаляць"
+      review_user: "карыстальнік"
+      insights:
+        activities:
+          posts:
+            one: "%{count} запіс"
+            few: "%{count}запісаў"
+            many: "%{count}запісаў"
+            other: "%{count}запісаў"
       approval:
         title: "Паведамленне мае патрэбу ў падцверджанні"
         ok: "Добра"
@@ -1318,7 +1328,6 @@ be:
         topics: "тэмы"
         replies: "Адказы"
       posted:
-        title: "мае паведамленні"
         help: "тэмы, у якія Вы дапісвалі"
       bookmarks:
         title: "закладкі"
@@ -1492,9 +1501,6 @@ be:
               content: "Групы"
             users:
               content: "карыстальнікаў"
-            my_posts:
-              content: "мае паведамленні"
-              content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
       search: "Пошук"
