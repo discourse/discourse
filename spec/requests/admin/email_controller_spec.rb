@@ -67,7 +67,7 @@ RSpec.describe Admin::EmailController do
       end
 
       context "with SiteSetting.disable_emails" do
-        fab!(:eviltrout) { Fabricate(:evil_trout) }
+        fab!(:eviltrout, :evil_trout)
         fab!(:admin)
 
         it 'bypasses disable when setting is "yes"' do

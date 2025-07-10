@@ -782,7 +782,7 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       context "when updating a translation override for a system badge" do
-        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        fab!(:user_with_badge_title, :active_user)
         let(:badge) { Badge.find(Badge::Regular) }
 
         before do

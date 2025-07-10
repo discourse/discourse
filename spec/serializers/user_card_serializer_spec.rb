@@ -129,7 +129,7 @@ RSpec.describe UserCardSerializer do
 
   describe "#featured_topic" do
     fab!(:user)
-    fab!(:featured_topic) { Fabricate(:topic) }
+    fab!(:featured_topic, :topic)
 
     before { user.user_profile.update(featured_topic_id: featured_topic.id) }
 

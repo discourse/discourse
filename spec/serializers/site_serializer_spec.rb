@@ -281,8 +281,8 @@ RSpec.describe SiteSerializer do
     end
 
     describe "when tagging is enabled" do
-      fab!(:tag2) { Fabricate(:tag) }
-      fab!(:tag3) { Fabricate(:tag) }
+      fab!(:tag2, :tag)
+      fab!(:tag3, :tag)
 
       before { SiteSetting.tagging_enabled = true }
 
@@ -375,8 +375,8 @@ RSpec.describe SiteSerializer do
 
   describe "#whispers_allowed_groups_names" do
     fab!(:admin)
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
+    fab!(:not_allowed_user, :user)
     fab!(:group1) { Fabricate(:group, name: "whisperers1", users: [allowed_user]) }
     fab!(:group2) { Fabricate(:group, name: "whisperers2", users: [allowed_user]) }
 

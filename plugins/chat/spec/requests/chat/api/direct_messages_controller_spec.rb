@@ -2,9 +2,9 @@
 
 RSpec.describe Chat::Api::DirectMessagesController do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
+  fab!(:user3, :user)
 
   before do
     SiteSetting.chat_enabled = true

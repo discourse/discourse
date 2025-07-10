@@ -1415,7 +1415,7 @@ RSpec.describe Post do
   describe "#set_owner" do
     fab!(:post)
     fab!(:admin)
-    fab!(:new_user) { Fabricate(:user) }
+    fab!(:new_user, :user)
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1647,8 +1647,8 @@ RSpec.describe Post do
 
   describe "video_thumbnails" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
-    fab!(:image_upload) { Fabricate(:upload) }
-    fab!(:image_upload_2) { Fabricate(:upload) }
+    fab!(:image_upload, :upload)
+    fab!(:image_upload_2, :upload)
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
 
@@ -1720,10 +1720,10 @@ RSpec.describe Post do
   describe "uploads" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:video_upload_2) { Fabricate(:upload, extension: "mp4") }
-    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:image_upload, :upload)
     fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
     fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
-    fab!(:attachment_upload_2) { Fabricate(:upload) }
+    fab!(:attachment_upload_2, :upload)
     fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
@@ -2170,8 +2170,8 @@ RSpec.describe Post do
   end
 
   describe "#publish_changes_to_client!" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user3, :user)
     fab!(:topic) { Fabricate(:private_message_topic, user: user1) }
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:group_user) { Fabricate(:group_user, user: user3) }

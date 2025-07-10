@@ -356,7 +356,7 @@ describe "PostCreatedEdited" do
     end
 
     context "when tags is restricted" do
-      fab!(:tag_1) { Fabricate(:tag) }
+      fab!(:tag_1, :tag)
 
       before do
         automation.upsert_field!(
@@ -391,10 +391,10 @@ describe "PostCreatedEdited" do
     context "when using restricted_categories with deeply nested categories" do
       before_all { SiteSetting.max_category_nesting = 3 }
 
-      fab!(:top_category) { Fabricate(:category) }
+      fab!(:top_category, :category)
       fab!(:mid_category) { Fabricate(:category, parent_category_id: top_category.id) }
       fab!(:bottom_category) { Fabricate(:category, parent_category_id: mid_category.id) }
-      fab!(:another_category) { Fabricate(:category) }
+      fab!(:another_category, :category)
 
       before do
         automation.upsert_field!(
@@ -599,7 +599,7 @@ describe "PostCreatedEdited" do
   end
 
   context "when excluded groups are defined" do
-    fab!(:excluded_group) { Fabricate(:group) }
+    fab!(:excluded_group, :group)
 
     before do
       automation.upsert_field!(

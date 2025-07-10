@@ -4,9 +4,9 @@ RSpec.describe "Navigation", type: :system do
   fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
-  fab!(:user) { Fabricate(:admin) }
+  fab!(:user, :admin)
   fab!(:category_channel)
-  fab!(:category_channel_2) { Fabricate(:category_channel) }
+  fab!(:category_channel_2, :category_channel)
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 

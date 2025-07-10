@@ -2,7 +2,7 @@
 
 describe "Viewing user private messages", type: :system do
   fab!(:user) { Fabricate(:user, username: "mIxed_caSE_usERNAME") }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user2, :user)
 
   let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
 

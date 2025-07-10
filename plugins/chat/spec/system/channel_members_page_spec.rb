@@ -3,8 +3,8 @@
 RSpec.describe "Channel - Info - Members page", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
 
   before do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
@@ -161,7 +161,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
   end
 
   describe "removing members" do
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
 
     before { channel_1.add(Fabricate(:user)) }
 

@@ -4,7 +4,7 @@ RSpec.describe ReviewableQueuedPostSerializer do
   fab!(:admin)
 
   describe "new topic" do
-    fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic) }
+    fab!(:reviewable, :reviewable_queued_post_topic)
 
     it "allows us to edit category / title" do
       json =
@@ -43,7 +43,7 @@ RSpec.describe ReviewableQueuedPostSerializer do
   end
 
   describe "reply to an existing topic" do
-    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:reviewable, :reviewable_queued_post)
 
     it "includes correct user fields" do
       json =

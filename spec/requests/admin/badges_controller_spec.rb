@@ -350,7 +350,7 @@ RSpec.describe Admin::BadgesController do
       end
 
       context "when there is a user with a title granted using the badge" do
-        fab!(:user_with_badge_title) { Fabricate(:active_user) }
+        fab!(:user_with_badge_title, :active_user)
         fab!(:badge) { Fabricate(:badge, name: "Oathbreaker", allow_title: true) }
 
         before do

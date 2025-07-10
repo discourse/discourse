@@ -13,7 +13,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
     )
   end
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   let(:guardian) { current_user.guardian }
 
   let(:channel_ids) { [] }
@@ -29,8 +29,8 @@ RSpec.describe Chat::TrackingStateReportQuery do
   end
 
   context "when channel_ids provided" do
-    fab!(:channel_1) { Fabricate(:category_channel) }
-    fab!(:channel_2) { Fabricate(:category_channel) }
+    fab!(:channel_1, :category_channel)
+    fab!(:channel_2, :category_channel)
     let(:channel_ids) { [channel_1.id, channel_2.id] }
 
     before do

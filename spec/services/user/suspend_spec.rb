@@ -23,7 +23,7 @@ RSpec.describe User::Suspend do
 
     fab!(:admin)
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     let(:params) { { user_id:, reason:, suspend_until:, other_user_ids:, message: } }
     let(:dependencies) { { guardian: } }

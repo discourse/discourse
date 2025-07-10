@@ -3,7 +3,7 @@
 describe "Post menu", type: :system do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:topic, reload: true)
+  fab!(:other_topic, :topic)
   fab!(:post, reload: true) { Fabricate(:post, topic: topic, reads: 5, like_count: 6) }
   fab!(:post2, reload: true) { Fabricate(:post, user: user, topic: topic, like_count: 0) }
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelThreadsCurrentUserTitlePromptSeenController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:category_channel, threading_enabled: true) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
   fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1, original_message: message_1) }

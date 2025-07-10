@@ -777,7 +777,7 @@ RSpec.describe TopicsFilter do
         )
       end
 
-      fab!(:topic_without_tag) { Fabricate(:topic) }
+      fab!(:topic_without_tag, :topic)
       fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
       fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
       fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
@@ -983,7 +983,7 @@ RSpec.describe TopicsFilter do
       fab!(:tag2) { Fabricate(:tag, name: "tag2") }
       fab!(:tag3) { Fabricate(:tag, name: "tag3") }
 
-      fab!(:topic_without_tag) { Fabricate(:topic) }
+      fab!(:topic_without_tag, :topic)
       fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
       fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
       fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
@@ -1533,8 +1533,8 @@ RSpec.describe TopicsFilter do
       describe "when ordering by user's last visit to topics" do
         fab!(:user)
         fab!(:topic)
-        fab!(:topic2) { Fabricate(:topic) }
-        fab!(:topic3) { Fabricate(:topic) }
+        fab!(:topic2, :topic)
+        fab!(:topic3, :topic)
 
         before do
           freeze_time 3.hours.ago do

@@ -2,24 +2,24 @@
 
 RSpec.describe Guardian do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:another_user) { Fabricate(:user) }
-  fab!(:member) { Fabricate(:user) }
-  fab!(:owner) { Fabricate(:user) }
+  fab!(:another_user, :user)
+  fab!(:member, :user)
+  fab!(:owner, :user)
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:admin)
-  fab!(:anonymous_user) { Fabricate(:anonymous) }
+  fab!(:anonymous_user, :anonymous)
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
   fab!(:group)
-  fab!(:another_group) { Fabricate(:group) }
+  fab!(:another_group, :group)
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
-  fab!(:plain_category) { Fabricate(:category) }
+  fab!(:plain_category, :category)
 
   fab!(:trust_level_0)
   fab!(:trust_level_1)
   fab!(:trust_level_2)
   fab!(:trust_level_3)
   fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
-  fab!(:another_admin) { Fabricate(:admin) }
+  fab!(:another_admin, :admin)
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
 
   fab!(:topic) { Fabricate(:topic, user: user) }
@@ -566,7 +566,7 @@ RSpec.describe Guardian do
 
   describe "can_reply_as_new_topic" do
     fab!(:topic)
-    fab!(:private_message) { Fabricate(:private_message_topic) }
+    fab!(:private_message, :private_message_topic)
 
     it "returns false for a non logged in user" do
       expect(Guardian.new(nil).can_reply_as_new_topic?(topic)).to be_falsey
@@ -1122,7 +1122,7 @@ RSpec.describe Guardian do
 
     describe "a Post" do
       fab!(:post)
-      fab!(:another_admin) { Fabricate(:admin) }
+      fab!(:another_admin, :admin)
 
       it "correctly handles post visibility" do
         topic = post.topic
@@ -1808,7 +1808,7 @@ RSpec.describe Guardian do
       end
 
       context "when category group moderation is enabled" do
-        fab!(:cat_mod_user) { Fabricate(:user) }
+        fab!(:cat_mod_user, :user)
 
         before do
           SiteSetting.enable_category_group_moderation = true
@@ -2004,7 +2004,7 @@ RSpec.describe Guardian do
       end
 
       context "with private message" do
-        fab!(:private_message) { Fabricate(:private_message_topic) }
+        fab!(:private_message, :private_message_topic)
 
         it "returns false at trust level 3" do
           expect(Guardian.new(trust_level_3).can_edit?(private_message)).to eq(false)
@@ -2314,7 +2314,7 @@ RSpec.describe Guardian do
     end
 
     context "with a private message topic" do
-      fab!(:pm) { Fabricate(:private_message_topic) }
+      fab!(:pm, :private_message_topic)
 
       it "returns false when not logged in" do
         expect(Guardian.new.can_move_posts?(pm)).to be_falsey

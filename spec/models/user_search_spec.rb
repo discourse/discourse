@@ -38,7 +38,7 @@ RSpec.describe UserSearch do
 
   context "with a secure category" do
     fab!(:user)
-    fab!(:searching_user) { Fabricate(:user) }
+    fab!(:searching_user, :user)
     fab!(:group)
     fab!(:category) { Fabricate(:category, read_restricted: true, user: user) }
 

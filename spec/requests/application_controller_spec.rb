@@ -606,7 +606,7 @@ RSpec.describe ApplicationController do
 
     describe "when `cross_origin_opener_unsafe_none_groups` site setting has been set" do
       fab!(:group)
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before do
         SiteSetting.cross_origin_opener_policy_header = "same-origin"
@@ -1537,7 +1537,7 @@ RSpec.describe ApplicationController do
     end
 
     context "when user is admin" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       before { sign_in(user) }
 

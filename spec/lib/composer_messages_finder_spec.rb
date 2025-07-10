@@ -37,7 +37,7 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     context "with private message" do
-      fab!(:topic) { Fabricate(:private_message_topic) }
+      fab!(:topic, :private_message_topic)
 
       context "when starting a new private message" do
         let(:finder) do
@@ -190,9 +190,9 @@ RSpec.describe ComposerMessagesFinder do
 
   describe "#dont_feed_the_trolls" do
     fab!(:user)
-    fab!(:author) { Fabricate(:user) }
-    fab!(:other_user) { Fabricate(:user) }
-    fab!(:third_user) { Fabricate(:user) }
+    fab!(:author, :user)
+    fab!(:other_user, :user)
+    fab!(:third_user, :user)
     fab!(:topic) { Fabricate(:topic, user: author) }
     fab!(:original_post) { Fabricate(:post, topic: topic, user: author) }
     fab!(:unflagged_post) { Fabricate(:post, topic: topic, user: author) }
@@ -284,8 +284,8 @@ RSpec.describe ComposerMessagesFinder do
 
   describe ".check_get_a_room" do
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
-    fab!(:third_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
+    fab!(:third_user, :user)
     fab!(:topic) { Fabricate(:topic, user: other_user) }
     fab!(:op) { Fabricate(:post, topic_id: topic.id, user: other_user) }
 

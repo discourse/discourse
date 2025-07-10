@@ -4,16 +4,16 @@ RSpec.describe UserMerger do
   fab!(:target_user) { Fabricate(:user, username: "galahad", email: "galahad@knights.com") }
   fab!(:source_user) { Fabricate(:user, username: "lancelot", email: "lancelot@knights.com") }
 
-  fab!(:poll_regular) { Fabricate(:poll) }
+  fab!(:poll_regular, :poll)
   fab!(:poll_regular_option1) { Fabricate(:poll_option, poll: poll_regular, html: "Option 1") }
   fab!(:poll_regular_option2) { Fabricate(:poll_option, poll: poll_regular, html: "Option 2") }
 
-  fab!(:poll_multiple) { Fabricate(:poll) }
+  fab!(:poll_multiple, :poll)
   fab!(:poll_multiple_optionA) { Fabricate(:poll_option, poll: poll_multiple, html: "Option A") }
   fab!(:poll_multiple_optionB) { Fabricate(:poll_option, poll: poll_multiple, html: "Option B") }
   fab!(:poll_multiple_optionC) { Fabricate(:poll_option, poll: poll_multiple, html: "Option C") }
 
-  fab!(:poll_ranked_choice) { Fabricate(:poll) }
+  fab!(:poll_ranked_choice, :poll)
   fab!(:poll_ranked_choice_optionA) do
     Fabricate(:poll_option, poll: poll_ranked_choice, html: "Option A")
   end

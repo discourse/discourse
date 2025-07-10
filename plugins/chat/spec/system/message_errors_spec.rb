@@ -7,7 +7,7 @@ RSpec.describe "Message errors", type: :system do
     let(:max_length) { SiteSetting.chat_maximum_message_length }
     let(:message) { "atoolongmessage" + "a" * max_length }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
 
     before do

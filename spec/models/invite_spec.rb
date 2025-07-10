@@ -349,8 +349,8 @@ RSpec.describe Invite do
     end
 
     context "when inviting to a topic" do
-      fab!(:topic) { Fabricate(:private_message_topic) }
-      fab!(:another_topic) { Fabricate(:private_message_topic) }
+      fab!(:topic, :private_message_topic)
+      fab!(:another_topic, :private_message_topic)
 
       before { invite.topic_invites.create!(topic: topic) }
 
@@ -398,13 +398,13 @@ RSpec.describe Invite do
   end
 
   describe "scopes" do
-    fab!(:inviter) { Fabricate(:user) }
+    fab!(:inviter, :user)
 
     fab!(:pending_invite) { Fabricate(:invite, invited_by: inviter, email: "pending@example.com") }
     fab!(:pending_link_invite) do
       Fabricate(:invite, invited_by: inviter, email: nil, max_redemptions_allowed: 5)
     end
-    fab!(:pending_invite_from_another_user) { Fabricate(:invite) }
+    fab!(:pending_invite_from_another_user, :invite)
 
     fab!(:expired_invite) do
       Fabricate(:invite, invited_by: inviter, email: "expired@example.com", expires_at: 1.day.ago)
