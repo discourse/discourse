@@ -77,7 +77,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   end
 
   describe "#convert" do
-    let(:output_path) { "optimized/videos/#{new_sha1}" }
+    let(:output_path) { "original/1X/#{new_sha1}" }
     let(:job_id) { "job-123" }
 
     before { allow(Jobs).to receive(:enqueue_in) }
@@ -138,9 +138,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
         adapter.convert
 
-        expect(Rails.logger).to have_received(:error).with(
-          "MediaConvert job creation failed for upload #{upload.id}. Error: Aws::MediaConvert::Errors::ServiceError - Test error (Code: InvalidParameter) (Request ID: test-request-id)",
-        )
         expect(Discourse).to have_received(:warn_exception).with(
           error,
           message: "MediaConvert job creation failed",
@@ -157,9 +154,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
         adapter.convert
 
-        expect(Rails.logger).to have_received(:error).with(
-          "Unexpected error creating MediaConvert job for upload #{upload.id}: StandardError - Unexpected error",
-        )
         expect(Discourse).to have_received(:warn_exception).with(
           error,
           message: "Unexpected error in MediaConvert job creation",
@@ -185,7 +179,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       it "returns false and logs error" do
         adapter.convert
         expect(Rails.logger).to have_received(:error).with(
-          "Invalid parameters for upload #{upload.id}: Upload URL domain does not contain expected bucket name: #{s3_bucket}",
+          "Invalid parameters for upload #{upload.id}: Upload URL domain for upload ID #{upload.id} does not contain expected bucket name: #{s3_bucket}",
         )
         expect(adapter.convert).to be false
       end
@@ -264,7 +258,13 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
         upload,
         "video_converted.mp4",
         upload.user_id,
-        { extension: "mp4", filesize: 1024, sha1: new_sha1, url: expected_url },
+        {
+          extension: "mp4",
+          filesize: 1024,
+          sha1: new_sha1,
+          url: expected_url,
+          adapter: "aws_mediaconvert",
+        },
       )
       expect(post).to have_received(:rebake!)
       expect(Rails.logger).to have_received(:info).with(/Rebaking post #{post.id}/)
@@ -294,16 +294,24 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     end
 
     context "when an error occurs" do
+      let(:error) { StandardError.new("Test error") }
+
       before do
         allow(s3_object).to receive(:exists?).and_return(true)
         allow(s3_object).to receive(:size).and_return(1024)
-        allow(OptimizedVideo).to receive(:create_for).and_raise(StandardError.new("Test error"))
+        allow(OptimizedVideo).to receive(:create_for).and_raise(error)
       end
 
       it "returns false and logs error" do
         adapter.handle_completion(job_id, output_path, new_sha1)
-        expect(Rails.logger).to have_received(:error).with(/Error processing video completion/)
-        expect(Discourse).to have_received(:warn_exception)
+        expect(Discourse).to have_received(:warn_exception).with(
+          error,
+          message: "Error in video processing completion",
+          env: {
+            upload_id: upload.id,
+            job_id: job_id,
+          },
+        )
         expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be false
       end
     end
