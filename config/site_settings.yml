@@ -571,7 +571,7 @@ basic:
     area: "interface"
   use_modern_autocomplete:
     client: true
-    hidden: true
+    hidden: false
     default: true
     area: "interface"
 
