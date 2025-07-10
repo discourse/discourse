@@ -465,12 +465,7 @@ class RemoteTheme < ActiveRecord::Base
     existing_theme_site_settings =
       theme.theme_site_settings.where(name: theme_site_settings.keys).to_a
     theme_site_settings.each do |setting, value|
-      if !SiteSetting.themeable[setting.to_sym]
-        Rails.logger.warn(
-          "Attempted to set non-themeable site setting '#{setting}' for theme ID #{theme.id}, it should be removed from the theme's about.json file.",
-        )
-        next
-      end
+      next if !SiteSetting.themeable[setting.to_sym]
 
       # If there is an existing theme site setting,
       # and the value is not the same as the value from about.json,

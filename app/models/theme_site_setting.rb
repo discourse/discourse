@@ -43,7 +43,7 @@ class ThemeSiteSetting < ActiveRecord::Base
       ActiveRecord::Base.connection.table_exists?(self.table_name)
   end
 
-  # Genetates a map of theme IDs to their site setting values. When
+  # Generates a map of theme IDs to their site setting values. When
   # there is no theme site setting for a given theme, the default
   # site setting value is used.
   #
