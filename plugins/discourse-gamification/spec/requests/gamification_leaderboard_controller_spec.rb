@@ -3,11 +3,20 @@
 require "rails_helper"
 
 RSpec.describe DiscourseGamification::GamificationLeaderboardController do
-  let(:group) { Fabricate(:group) }
-  let(:current_user) { Fabricate(:user, group_ids: [group.id]) }
-  let(:user_2) { Fabricate(:user) }
-  let(:staged_user) { Fabricate(:user, staged: true) }
-  let(:anon_user) { Fabricate(:user, email: "john@anonymized.invalid") }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:current_user) { Fabricate(:user, group_ids: [group.id]) }
+  fab!(:user_2) { Fabricate(:user) }
+  fab!(:staged_user) { Fabricate(:user, staged: true) }
+  fab!(:anon_user) { Fabricate(:user, email: "john@anonymized.invalid") }
+  fab!(:currently_suspended_user) do
+    Fabricate(:user, suspended_at: Time.now, suspended_till: 5.days.from_now)
+  end
+  fab!(:previously_suspended_user) do
+    Fabricate(:user, suspended_at: Time.now, suspended_till: 5.days.from_now)
+  end
+
+  fab!(:user_3) { Fabricate(:user) }
+
   let!(:create_score) { UserVisit.create(user_id: current_user.id, visited_at: 2.days.ago) }
   let!(:create_score_for_user2) { UserVisit.create(user_id: user_2.id, visited_at: 2.days.ago) }
   let!(:create_score_for_staged_user) do
@@ -16,11 +25,18 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
   let!(:create_score_for_anon_user) do
     UserVisit.create(user_id: anon_user.id, visited_at: 2.days.ago)
   end
+  let!(:create_score_for_currently_suspended_user) do
+    UserVisit.create(user_id: currently_suspended_user.id, visited_at: 2.days.ago)
+  end
+  let!(:create_score_for_previously_suspended_user) do
+    UserVisit.create(user_id: previously_suspended_user.id, visited_at: 2.days.ago)
+  end
+  let!(:create_score_for_user_3) { UserVisit.create(user_id: user_3.id, visited_at: 2.days.ago) }
   let!(:create_topic) { Fabricate(:topic, user: current_user) }
-  let!(:leaderboard) do
+  fab!(:leaderboard) do
     Fabricate(:gamification_leaderboard, name: "test", created_by_id: current_user.id)
   end
-  let!(:leaderboard_2) do
+  fab!(:leaderboard_2) do
     Fabricate(
       :gamification_leaderboard,
       name: "test_2",
@@ -29,7 +45,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
       to_date: 1.day.ago,
     )
   end
-  let!(:leaderboard_with_group) do
+  fab!(:leaderboard_with_group) do
     Fabricate(
       :gamification_leaderboard,
       name: "test_3",
@@ -39,7 +55,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
     )
   end
 
-  let!(:leaderboard_with_default_period_set_to_daily) do
+  fab!(:leaderboard_with_default_period_set_to_daily) do
     Fabricate(
       :gamification_leaderboard,
       name: "test_4",
@@ -115,17 +131,29 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
       expect(data["users"].map { |u| u["id"] }).to eq([current_user.id])
     end
 
-    it "excludes staged and anon users" do
+    it "excludes staged, anon users, currently suspended and deleted users" do
+      user_3.destroy
       # prove score for staged/anon user exists
       expect(DiscourseGamification::GamificationScore.all.map(&:user_id)).to include(
         staged_user.id,
         anon_user.id,
       )
+
+      expect(DiscourseGamification::GamificationScore.all.map(&:user_id)).to_not include(
+        currently_suspended_user.id,
+        user_3.id,
+      )
+
       DiscourseGamification::LeaderboardCachedView.new(leaderboard).create
 
       get "/leaderboard/#{leaderboard.id}.json"
       data = response.parsed_body
-      expect(data["users"].map { |u| u["id"] }).to_not include(staged_user.id, anon_user.id)
+      expect(data["users"].map { |u| u["id"] }).to_not include(
+        staged_user.id,
+        anon_user.id,
+        currently_suspended_user.id,
+        user_3.id,
+      )
     end
 
     it "does not error if visible_to_groups_ids or included_groups_ids are empty" do
