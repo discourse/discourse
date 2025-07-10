@@ -258,8 +258,10 @@ export default class EditCategoryGeneral extends Component {
 
       {{#if this.showDescription}}
         <@form.Section @title={{i18n "category.description"}}>
+          <span class="readonly-field">{{this.categoryDescription}}</span>
+
           {{#if @category.topic_url}}
-            <@form.Container @subtitle={{this.categoryDescription}}>
+            <@form.Container>
               <@form.Button
                 @action={{this.showCategoryTopic}}
                 @icon="pencil"
