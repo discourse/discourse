@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 .fk-d-menu[data-identifier="d-autocomplete"] {
-  z-index: z("composer", "dropdown") + 1;
+  z-index: z("modal", "dialog") + 1;
   --d-border-radius: var(--space-2);
 }
 
