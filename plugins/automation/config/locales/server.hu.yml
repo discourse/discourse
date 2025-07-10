@@ -147,8 +147,8 @@ hu:
         title: "Alapértelmezett csoportkategória értesítés"
         description: "Állítsa be egy kategória alapértelmezett értesítési szintjét egy csoport tagjai számára"
       send_chat_message:
-        title: "Chat üzenet küldése"
-        description: "Egyéni chat üzenet küldése egy csatornának"
+        title: "Csevegőüzenet küldése"
+        description: "Egyéni csevegőüzenet küldése egy csatornának"
       random_assign:
         title: "Véletlenszerű hozzárendelés"
         description: "Véletlenszerűen rendeljen témákat egy csoporthoz"
