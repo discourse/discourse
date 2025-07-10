@@ -1472,6 +1472,11 @@ import { i18n } from "discourse-i18n";
         glimmer_post_stream_mode: postStreamMode,
         allow_uncategorized_topics: true,
       });
+      needs.pretender((server, helper) => {
+        server.get("/drafts/topic_280.json", function () {
+          return helper.response(200, { draft: null });
+        });
+      });
 
       test("buttons can support a shortcut", async function (assert) {
         withPluginApi("0", (api) => {
