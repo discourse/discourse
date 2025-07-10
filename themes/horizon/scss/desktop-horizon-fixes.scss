@@ -3,6 +3,8 @@
   .topic-list-header {
     position: relative;
     top: 0;
+    height: 0;
+    display: block;
   }
 
   .topic-author-avatar-data {
@@ -28,6 +30,8 @@
 }
 
 .topic-list-header {
+  display: none;
+
   tr {
     border: none;
   }
@@ -50,6 +54,7 @@
   // bulk select
   .bulk-select-topics {
     position: absolute;
+    top: 0;
     right: 0;
     background: var(--secondary);
     border-radius: 0 0 0 var(--d-border-radius);
