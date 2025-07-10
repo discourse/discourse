@@ -178,7 +178,7 @@ export default class DAutocompleteModifier extends Modifier {
 
   async performAutocomplete() {
     const caretPosition = this.getCaretPosition();
-    const value = this.targetElement.value;
+    const value = this.getValue();
     const key = value[caretPosition - 1];
 
     // Check if we should trigger autocomplete
@@ -228,7 +228,7 @@ export default class DAutocompleteModifier extends Modifier {
     // Close if only whitespace or invalid context
     if (
       (term.length !== 0 && term.trim().length === 0) ||
-      this.targetElement.value[this.getCaretPosition()]?.trim()
+      this.getValue()[this.getCaretPosition()]?.trim()
     ) {
       await this.closeAutocomplete();
       return;
@@ -392,7 +392,7 @@ export default class DAutocompleteModifier extends Modifier {
       );
     } else {
       // Simple text replacement (default behavior)
-      const value = this.targetElement.value;
+      const value = this.getValue();
       const preserveKey = this.options.preserveKey ?? true;
       const replacement = (preserveKey ? this.options.key || "" : "") + term;
 
@@ -412,12 +412,12 @@ export default class DAutocompleteModifier extends Modifier {
     }
 
     // Call afterComplete callback
-    this.options.afterComplete?.(this.targetElement.value, event);
+    this.options.afterComplete?.(this.getValue(), event);
   }
 
   async guessCompletePosition(opts = {}) {
     let caretPos = this.getCaretPosition();
-    const value = this.targetElement.value;
+    const value = this.getValue();
 
     if (opts.backSpace) {
       caretPos -= 1;
@@ -453,12 +453,12 @@ export default class DAutocompleteModifier extends Modifier {
     return { completeStart: start, term };
   }
 
+  getValue() {
+    return this.options.textHandler.getValue();
+  }
+
   getCaretPosition() {
-    // Use textHandler if available for consistency
-    if (this.options.textHandler) {
-      return this.options.textHandler.getCaretPosition();
-    }
-    return this.targetElement.selectionStart || 0;
+    return this.options.textHandler.getCaretPosition();
   }
 
   getAbsoluteCaretCoords() {
