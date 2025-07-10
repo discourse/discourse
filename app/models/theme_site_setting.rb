@@ -11,7 +11,8 @@ class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
 
   # Gets a list of themes that have theme site setting records
-  # and the associated values for those settings.
+  # and the associated values for those settings, where the
+  # value is different from the default site setting value.
   #
   # @return [Array<Hash>] an array of hashes where each hash contains:
   #   - :theme_id [Integer] the ID of the theme
@@ -31,8 +32,17 @@ class ThemeSiteSetting < ActiveRecord::Base
 
     DB
       .query(sql, setting_names: SiteSetting.themeable_site_settings)
+      .each { |row| row.setting_name = row.setting_name.to_sym }
+      .select do |row|
+        # Do not consider this as an "overridden" setting if the value
+        # is the same as the default site setting value.
+        row.value !=
+          SiteSetting
+            .type_supervisor
+            .to_db_value(row.setting_name, SiteSetting.defaults[row.setting_name])
+            .first
+      end
       .each do |row|
-        row.setting_name = row.setting_name.to_sym
         row.value =
           SiteSetting.type_supervisor.to_rb_value(row.setting_name, row.value, row.data_type)
       end

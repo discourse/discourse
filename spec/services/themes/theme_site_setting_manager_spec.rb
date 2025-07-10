@@ -154,9 +154,9 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
       it { is_expected.to run_successfully }
 
-      it "removes the theme site setting" do
-        expect { result }.to change { ThemeSiteSetting.count }.by(-1)
-        expect(ThemeSiteSetting.exists?(id: theme_site_setting.id)).to be_falsey
+      it "updates the theme site setting to the site setting default value" do
+        result
+        expect(theme_site_setting.reload.value).to eq("t")
       end
 
       it "logs the removal in staff action log" do
@@ -204,9 +204,9 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
       it { is_expected.to run_successfully }
 
-      it "removes the theme site setting when value matches default" do
-        expect { result }.to change { ThemeSiteSetting.count }.by(-1)
-        expect(ThemeSiteSetting.exists?(id: theme_site_setting.id)).to be_falsey
+      it "updates theme site setting when value matches default" do
+        result
+        expect(theme_site_setting.reload.value).to eq("t")
       end
     end
   end

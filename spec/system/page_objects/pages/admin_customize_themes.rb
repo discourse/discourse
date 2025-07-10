@@ -114,6 +114,10 @@ module PageObjects
         has_css?(theme_site_setting_selector(setting_name, overridden: true))
       end
 
+      def has_no_overridden_theme_site_setting?(setting_name)
+        has_no_css?(theme_site_setting_selector(setting_name, overridden: true))
+      end
+
       def toggle_theme_site_setting(setting_name)
         find(theme_site_setting_selector(setting_name)).find(
           ".setting-value input[type='checkbox']",

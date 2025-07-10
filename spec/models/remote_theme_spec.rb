@@ -533,7 +533,6 @@ RSpec.describe RemoteTheme do
 
         theme = nil
 
-        Rails.logger.expects(:warn).with(includes("non-themeable site setting"))
         theme = RemoteTheme.import_theme(initial_repo_url)
 
         expect(theme.theme_site_settings.count).to eq(0)
@@ -571,7 +570,7 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.first.value).to eq("search_icon")
       end
 
-      it "deletes the theme site setting if it's the same value as the site setting default value" do
+      it "updates the theme site setting if it's the same value as the site setting default value" do
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -599,7 +598,7 @@ RSpec.describe RemoteTheme do
         theme.remote_theme.update_from_remote
         theme.reload
 
-        expect(theme.theme_site_settings.count).to eq(0)
+        expect(theme.theme_site_settings.first.value).to eq("search_icon")
       end
     end
   end

@@ -7,7 +7,7 @@ RSpec.describe ThemeSiteSettingResolver do
 
   describe "#resolved_theme_site_settings" do
     let(:themeable_setting) { :enable_welcome_banner }
-    let(:default_value) { SiteSetting.defaults[themeable_setting].to_s }
+    let(:default_value) { SiteSetting.defaults[themeable_setting] }
 
     it "returns themeable settings" do
       result = resolver.resolved_theme_site_settings

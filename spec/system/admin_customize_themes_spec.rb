@@ -358,6 +358,18 @@ describe "Admin Customize Themes", type: :system do
       ).to be_falsey
     end
 
+    it "does not show the overridden indicator if the theme site setting value in the DB is the same as the default" do
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme: theme,
+        name: "enable_welcome_banner",
+        value: true,
+      )
+      theme_page.visit(theme.id)
+      expect(theme_page).to have_theme_site_setting("enable_welcome_banner")
+      expect(theme_page).to have_no_overridden_theme_site_setting("enable_welcome_banner")
+    end
+
     it "alters the UI via MessageBus when a theme site setting changes" do
       SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
       banner = PageObjects::Components::WelcomeBanner.new

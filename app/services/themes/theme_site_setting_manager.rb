@@ -88,33 +88,44 @@ class Themes::ThemeSiteSettingManager
 
     if existing_theme_site_setting
       context[:previous_value] = existing_theme_site_setting.setting_rb_value
+      setting_record = existing_theme_site_setting
 
-      # Since the site setting itself doesn't matter, if we are
-      # setting this back to the same value as the default setting
-      # value then it makes sense to get rid of the theme site setting
-      # override.
+      # If the setting is nil or matches the site setting default,
+      # then we just update the existing theme site setting to reflect
+      # this, as insurance against further changes to the site setting
+      # default value.
       if params.value.nil? || setting_ruby_value == SiteSetting.defaults[params.name]
-        context[:new_value] = SiteSetting.defaults[params.name]
-        existing_theme_site_setting.destroy!
+        new_db_value, _ =
+          SiteSetting.type_supervisor.to_db_value(params.name, SiteSetting.defaults[params.name])
+        new_ruby_value = SiteSetting.defaults[params.name]
       else
-        context[:new_value] = setting_ruby_value
-        existing_theme_site_setting.update!(value: setting_db_value)
-        setting_record = existing_theme_site_setting
+        new_db_value = setting_db_value
+        new_ruby_value = setting_ruby_value
       end
+
+      existing_theme_site_setting.update!(value: new_db_value)
+      context[:new_value] = new_ruby_value
     else
-      # Don't need to create a record if the value is nil or matches the
-      # site setting default
-      if !params.value.nil? && setting_ruby_value != SiteSetting.defaults[params.name]
-        setting_record =
-          theme.theme_site_settings.create!(
-            name: params.name,
-            value: setting_db_value,
-            data_type: setting_data_type,
-          )
-        context[:new_value] = setting_ruby_value
+      # If the setting is nil or matches the site setting default,
+      # then we make a record using the site setting default as
+      # insurance against further changes to the default value for
+      # the site setting.
+      if params.value.nil? || setting_ruby_value == SiteSetting.defaults[params.name]
+        new_db_value, _ =
+          SiteSetting.type_supervisor.to_db_value(params.name, SiteSetting.defaults[params.name])
+        new_ruby_value = SiteSetting.defaults[params.name]
       else
-        context[:new_value] = SiteSetting.defaults[params.name]
+        new_db_value = setting_db_value
+        new_ruby_value = setting_ruby_value
       end
+
+      setting_record =
+        theme.theme_site_settings.create!(
+          name: params.name,
+          value: new_db_value,
+          data_type: setting_data_type,
+        )
+      context[:new_value] = new_ruby_value
     end
 
     context[:theme_site_setting] = setting_record

@@ -179,7 +179,7 @@ module SiteSettingExtension
   def setting_metadata_hash(setting)
     setting_hash = {
       setting:,
-      default: SiteSetting.defaults[setting].to_s,
+      default: SiteSetting.defaults[setting],
       description: SiteSetting.description(setting),
       humanized_name: SiteSetting.humanized_name(setting),
     }.merge(type_supervisor.type_hash(setting))
