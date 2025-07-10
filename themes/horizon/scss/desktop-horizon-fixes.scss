@@ -3,6 +3,8 @@
   .topic-list-header {
     position: relative;
     top: 0;
+    height: 0;
+    display: block;
   }
 
   .topic-author-avatar-data {
@@ -29,11 +31,6 @@
 
 .topic-list-header {
   display: none;
-
-  .bulk-select-enabled & {
-    display: block;
-    height: 0;
-  }
 
   tr {
     border: none;
