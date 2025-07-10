@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  login:
+    authenticator_error_fetch_user_details: "לא ניתן לקבל את פרטי המשתמש שלך. יש לך חשבון פעיל?"
+  site_settings:
+    oauth2_enabled: "מופעל OAuth2 בהתאמה אישית"
+    oauth2_client_id: "מזהה לקוח ל־OAuth2 בהתאמה אישית"
+    oauth2_client_secret: "סוד לקוח ל־OAuth2 בהתאמה אישית"
+    oauth2_authorize_url: "כתובת אימות ל־OAuth2"
+    oauth2_authorize_signup_url: '(רשות) כתובת חלופית להרשאה בה ייעשה שימוש עם לחיצה על הכפתור „הרשמה”'
+    oauth2_token_url: "כתובת אסימון ל־OAuth2"
+    oauth2_token_url_method: "שיטה שמשמשת לקבלת כתובת האסימון"
+    oauth2_callback_user_id_path: "נתיב בתגובת האסימון למזהה המשתמש, למשל: params.info.uuid"
+    oauth2_callback_user_info_paths: "נתיבים בתגובת האסימון למאפיינים אחרים של משתמשים. המאפיינים הנתמכים הם name,‏ username,‏ email,‏ email_verified ו־avatar (שם, שם משתמש, כתובת דוא״ל, האם הדוא״ל מאומת ותמונה ייצוגית בהתאמה). התצורה היא מאפיין:נתיב, למשל: name:params.info.name"
+    oauth2_fetch_user_details: "אחזור JSON משתמש עבור OAuth2"
+    oauth2_user_json_url: "כתובת לקבל ה־JSON של המשתמש לטובת OAuth2 (נא לשים לב שהחלפת את הביטוי ‎:id במזהה שהוחזרת על ידי קריאת ה־OAuth ואת ‎:token באסימון המשתמש)"
+    oauth2_user_json_url_method: "שיטה שמשמשת לקבלת כתובת ה־JSON של המשתמש"
+    oauth2_json_user_id_path: "נתיב מזהה המשתמש ב־JSON של ה־OAuth2 של המשתמש. למשל: user.username"
+    oauth2_json_username_path: "נתיב שם המשתמש ב־JSON של ה־OAuth2 של המשתמש. למשל: user.username"
+    oauth2_json_name_path: "נתיב ב־JSON משתמש OAuth2 לשם המלא של המשתמש. למשל: user.name.full"
+    oauth2_json_email_path: "נתיב ב־JSON משתמש OAuth2 לכתובת הדוא״ל של המשתמש. למשל: user.email"
+    oauth2_json_email_verified_path: "נתיב למצב אימות כתובת הדוא״ל של המשתמש ב־JSON של ה־OAuth2 של המשתמש. למשל: user.email.verified.‏ oauth2_email_verified חייב להיות מושבת כדי שההגדרה הזו תהיה בתוקף"
+    oauth2_json_avatar_path: "נתיב כתובת התמונה הייצוגית של המשתמש ב־JSON של ה־OAuth2 של המשתמש. למשל: user.avatar_url"
+    oauth2_email_verified: "נא לבדוק אם אתר זה עם OAuth2 אימת את הדוא״ל"
+    oauth2_overrides_email: "לעקוף את הדוא״ל של Discourse בדוא״ל חיצוני בכל כניסה למערכת. עובד כמו ההגדרה `auth_overrides_email` (אימות עוקף דוא״ל), אך הוא משמש נקודתית לכניסה עם OAuth2."
+    oauth2_send_auth_header: "שליחת פרטי גישה של לקוח בכותרת אימות (Authorization) של HTTP"
+    oauth2_send_auth_body: "שליחת פרטי גישה של לקוח בגוף הבקשה"
+    oauth2_debug_auth: "לכלול פירוט עשיר לטובת ניפוי שגיאות ביומנים שלך"
+    oauth2_authorize_options: "בעת בקשת אימות האפשרויות האלו"
+    oauth2_scope: "בעת בקשת אימות תחום זה"
+    oauth2_button_title: "הטקסט לכפתור ה־OAuth2"
+    oauth2_allow_association_change: לאפשר למשתמשים לנתק ולחבר מחדש את חשבונות ה־Discourse שלהם מספק ה־OAuth2
+    oauth2_disable_csrf: "השבתת בדיקת CSRF"
+    errors:
+      oauth2_fetch_user_details: "oauth2_callback_user_id_path חייב להיות נוכח לטובת נטרול של oauth2_fetch_user_details"
