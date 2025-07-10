@@ -50,6 +50,10 @@ discourse-oauth2-basic:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-oauth2-basic/**/*
 
+discourse-openid-connect:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-openid-connect/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

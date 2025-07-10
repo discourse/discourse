@@ -55,6 +55,7 @@
 !/plugins/discourse-lti
 !/plugins/discourse-microsoft-auth
 !/plugins/discourse-oauth2-basic
+!/plugins/discourse-openid-connect
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
