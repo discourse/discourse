@@ -203,34 +203,22 @@ export default class Toolbar extends ToolbarBase {
           return false;
         }
 
-        if (state.inHeading) {
-          if (state.inHeadingLevel > 4) {
-            return false;
-          }
-
-          return true;
+        if (state.inHeadingLevel > 4) {
+          return false;
         }
 
-        return false;
+        return true;
       },
       icon: ({ state }) => {
         if (!state || !state.inHeading) {
           return unformattedHeadingIcon;
         }
 
-        if (state.inParagraph) {
+        if (state.inHeadingLevel > 4) {
           return unformattedHeadingIcon;
         }
 
-        if (state.inHeading) {
-          if (state.inHeadingLevel > 4) {
-            return unformattedHeadingIcon;
-          }
-
-          return `discourse-h${state.inHeadingLevel}`;
-        }
-
-        return unformattedHeadingIcon;
+        return `discourse-h${state.inHeadingLevel}`;
       },
       label: headingLabel,
       popupMenu: {
@@ -254,7 +242,7 @@ export default class Toolbar extends ToolbarBase {
                   return false;
                 }
 
-                if (state.inHeading && state.inHeadingLevel === headingLevel) {
+                if (state.inHeadingLevel === headingLevel) {
                   return true;
                 }
 
