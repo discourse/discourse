@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    enable_login_with_amazon: "Включите аутентификацию входа через Amazon, требуется «Вход с ID клиента Amazon» и «Вход с ключом клиента Amazon»."
+    login_with_amazon_client_id: "Вход с ID клиента Amazon"
+    login_with_amazon_client_secret: "Вход с ключом клиента Amazon"
+    login_with_amazon_scope: "Вход с помощью Amazon OAuth2 (через пробел)"
+    login_with_amazon_overrides_email: "Переопределяет адрес электронной почты в аккаунте пользователя Discourse."
+    errors:
+      login_with_amazon_client_id_is_blank: "Вы должны установить «Вход с ID клиента amazon» перед включением этой настройки."
+      login_with_amazon_client_secret_is_blank: "Вы должны установить «Вход с ключом клиента amazon» перед включением этой настройки."

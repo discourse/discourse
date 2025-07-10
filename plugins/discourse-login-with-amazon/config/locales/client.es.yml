@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Iniciar sesión con Amazon"
+        message: "Autenticando con inicio de sesión con Amazon (asegúrate de que no haya bloqueadores de ventanas emergentes activados)"

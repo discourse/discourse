@@ -34,6 +34,10 @@ discourse-apple-auth:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-apple-auth/**/*
 
+discourse-login-with-amazon:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-login-with-amazon/**/*
+
 discourse-microsoft-auth:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-microsoft-auth/**/*
