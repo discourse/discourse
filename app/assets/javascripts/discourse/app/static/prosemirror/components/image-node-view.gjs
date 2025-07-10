@@ -287,7 +287,7 @@ export default class ImageNodeView extends Component {
 
     const scale = (this.args.node.attrs.scale || 100) / 100;
 
-    return htmlSafe(`width: ${width * scale}px; height: ${height * scale}px;`);
+    return htmlSafe(`width: ${width * scale}px;`);
   }
 
   @action
