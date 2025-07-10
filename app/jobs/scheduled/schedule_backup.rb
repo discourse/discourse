@@ -7,7 +7,8 @@ module Jobs
 
     def execute(args)
       delete_prior_to_n_days
-      return unless SiteSetting.enable_backups? && SiteSetting.automatic_backups_enabled?
+      return if !SiteSetting.enable_backups?
+      return if SiteSetting.backup_frequency.blank?
 
       store = BackupRestore::BackupStore.create
       if latest_backup = store.latest_file

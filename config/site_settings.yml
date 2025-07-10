@@ -3089,8 +3089,6 @@ backups:
   remove_older_backups:
     client: true
     default: ""
-  automatic_backups_enabled:
-    default: true
   backup_frequency:
     min: 1
     max: 30

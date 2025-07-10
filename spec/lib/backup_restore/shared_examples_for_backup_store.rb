@@ -170,7 +170,7 @@ RSpec.shared_examples "backup store" do
         expect(store.files).to eq([backup1])
       end
 
-      it "runs if SiteSetting.automatic_backups_enabled? is true" do
+      it "runs if SiteSetting.backup_frequency is configured" do
         base_backup_s3_url = "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com"
         stub_request(:get, "#{base_backup_s3_url}/?list-type=2&prefix=default/").to_return(
           status: 200,
@@ -180,7 +180,7 @@ RSpec.shared_examples "backup store" do
         )
         stub_request(:head, "#{base_backup_s3_url}/").to_return(status: 200, body: "", headers: {})
 
-        SiteSetting.automatic_backups_enabled = true
+        SiteSetting.backup_frequency = 1
         scheduleBackup = Jobs::ScheduleBackup.new
         scheduleBackup.expects(:delete_prior_to_n_days)
         scheduleBackup.perform
