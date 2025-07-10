@@ -992,17 +992,25 @@ users:
     default: 10000
     hidden: true
     area: "notifications"
+  gravatar_enabled:
+    type: "bool"
+    default: true
+    client: true
+    area: "users"
   gravatar_name:
     default: Gravatar
     client: true
+    hidden: true
     area: "users"
   gravatar_base_url:
     default: www.gravatar.com
     client: true
+    hidden: true
     area: "users"
   gravatar_login_url:
     default: /emails
     client: true
+    hidden: true
     area: "users"
   max_bookmarks_per_user:
     default: 2000
