@@ -10,8 +10,10 @@
     }
   }
 
-  .discourse-touch & {
-    z-index: calc(z("mobile-composer") + 1);
+  &.fk-d-menu {
+    @include viewport.until(sm) {
+      z-index: calc(z("mobile-composer") + 1);
+    }
   }
 
   .fullscreen-composer & {
