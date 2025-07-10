@@ -212,6 +212,9 @@ RSpec.describe FileStore::S3Store do
         end
 
         before do
+          # Set up required MediaConvert settings
+          SiteSetting.video_conversion_service = "aws_mediaconvert"
+          SiteSetting.mediaconvert_role_arn = "arn:aws:iam::123456789012:role/MediaConvertRole"
           SiteSetting.video_conversion_enabled = true
           # Default stub that returns false for any argument
           allow(FileHelper).to receive(:is_supported_video?).and_return(false)
