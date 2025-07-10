@@ -25,9 +25,7 @@ class VideoConversionEnabledValidator
     if SiteSetting.video_conversion_service == "aws_mediaconvert"
       if SiteSetting.mediaconvert_role_arn.blank?
         I18n.t("site_settings.errors.mediaconvert_role_arn_required")
-      end
-
-      if s3_credentials_missing?
+      elsif s3_credentials_missing?
         I18n.t("site_settings.errors.s3_credentials_required_for_video_conversion")
       end
     end
