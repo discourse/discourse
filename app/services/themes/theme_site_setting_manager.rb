@@ -15,15 +15,12 @@ class Themes::ThemeSiteSettingManager
   params do
     attribute :theme_id, :integer
     attribute :name
-    attribute :value, :string
+    attribute :value
 
     validates :theme_id, presence: true
     validates :name, presence: true
 
-    after_validation do
-      self.name = self.name.to_sym if self.name.present?
-      self.value = self.value || nil
-    end
+    after_validation { self.name = self.name.to_sym if self.name.present? }
   end
 
   policy :current_user_is_admin

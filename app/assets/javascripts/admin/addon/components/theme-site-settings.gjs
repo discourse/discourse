@@ -34,7 +34,6 @@ export default class ThemeSiteSettings extends Component {
     });
   }
 
-  @action
   isLastThemeSettingOverride(overrides, theme) {
     return theme === overrides.themes.at(-1);
   }
@@ -56,17 +55,6 @@ export default class ThemeSiteSettings extends Component {
     this.themesWithSiteSettingOverrides =
       response.themes_with_site_setting_overrides;
     return this.themesWithSiteSettingOverrides;
-  }
-
-  @action
-  joinedThemesOverriding(themesOverriding) {
-    return themesOverriding
-      .map((theme) => {
-        return `<a href="${basePath()}/admin/customize/themes/${
-          theme.theme_id
-        }" class="theme-link">${theme.theme_name}</a>`;
-      })
-      .join(", ");
   }
 
   <template>
