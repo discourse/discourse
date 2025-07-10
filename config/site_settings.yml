@@ -1603,6 +1603,9 @@ posting:
     type: integer
     min: 1
     hidden: true
+  rich_editor:
+    client: true
+    default: false
 
 content_localization:
   content_localization_enabled:
@@ -1624,6 +1627,11 @@ content_localization:
     allow_any: false
     choices: "LocaleSiteSetting.values"
     area: "localization"
+    validator: "ContentLocalizationLocalesValidator"
+  content_localization_max_locales:
+    default: 10
+    type: integer
+    hidden: true
   content_localization_anon_language_switcher:
     default: false
     client: true
@@ -2142,9 +2150,11 @@ files:
     type: list
     list_type: compact
     client: true
+    hidden: true
   external_system_avatars_enabled:
     default: true
     client: true
+    hidden: true
     validator: "ExternalSystemAvatarsValidator"
   external_system_avatars_url:
     default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
@@ -2320,7 +2330,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    area: "group_permissions"
+    area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
@@ -2930,19 +2940,22 @@ developer:
     client: true
     default: 25000
     max: 99000
-  flush_timings_secs:
-    client: true
+  active_user_rate_limit_secs:
     default: 60
-  active_user_rate_limit_secs: 60
+    hidden: true
   verbose_localization:
     default: false
     client: true
+    hidden: true
   top_topics_formula_log_views_multiplier:
     default: 2
+    hidden: true
   top_topics_formula_first_post_likes_multiplier:
     default: 0.5
+    hidden: true
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
+    hidden: true
   rebake_old_posts_count:
     hidden: true
     default: 80
@@ -3102,6 +3115,7 @@ backups:
     default: 1
     min: 1
     max: 9
+    hidden: true
   include_thumbnails_in_backups:
     default: false
   include_s3_uploads_in_backups:
@@ -3896,6 +3910,7 @@ tags:
     client: true
     default: 5
     min: 1
+    max: 1000
     area: "categories_and_tags"
   max_tags_in_filter_list:
     client: true
@@ -4050,12 +4065,13 @@ experimental:
     default: false
     hidden: true
     client: true
-  rich_editor:
+  reviewable_ui_refresh:
     client: true
-    default: false
+    type: group_list
+    default: ""
   experimental_system_themes:
     type: list
-    default: ""
+    default: "horizon"
     hidden: true
     allow_any: false
     choices:

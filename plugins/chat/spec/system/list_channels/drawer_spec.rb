@@ -90,7 +90,7 @@ RSpec.describe "List channels | Drawer", type: :system do
   context "when no category channels" do
     it "shows the empty channel list" do
       drawer_page.visit_index
-      expect(drawer_page).to have_selector(".channel-list-empty-message")
+      expect(drawer_page).to have_selector(".empty-state")
     end
   end
 
@@ -231,7 +231,7 @@ RSpec.describe "List channels | Drawer", type: :system do
       drawer_page.visit_index
       drawer_page.click_direct_messages
 
-      expect(drawer_page).to have_selector(".channel-list-empty-message")
+      expect(drawer_page).to have_selector(".empty-state")
     end
   end
 end

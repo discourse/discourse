@@ -714,6 +714,16 @@ nl:
         reviewable_post:
           title: "Bericht"
           noun: "bericht"
+      notes:
+        delete: "Verwijderen"
+      review_user: "Gebruiker"
+      copy_link: "Link kopiëren"
+      insights:
+        activities:
+          posts:
+            one: "%{count} bericht"
+            other: "%{count} berichten"
+        visibility: "Zichtbaarheid"
       approval:
         title: "Bericht vereist goedkeuring"
         description: "We hebben je nieuwe bericht ontvangen, maar dit moet eerst door een moderator worden goedgekeurd voordat het zichtbaar wordt. Heb geduld."
@@ -2599,6 +2609,8 @@ nl:
       image_alt_text:
         aria_label: Alternatieve tekst voor afbeelding
         title: "Beschrijving van afbeelding toevoegen"
+      image_toolbar:
+        alt_text: "Beschrijving van afbeelding toevoegen"
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen
@@ -4025,6 +4037,8 @@ nl:
       pinned:
         title: "Vastgemaakt"
         help: "Dit topic is voor je vastgemaakt; het wordt weergegeven bovenaan de categorie"
+      hot:
+        title: "Veelgelezen"
       unlisted:
         help: "Dit topic is niet zichtbaar; het wordt niet weergegeven in topiclijsten en is alleen toegankelijk via een rechtstreekse link. %{unlistedReason}"
       personal_message:
@@ -4648,7 +4662,6 @@ nl:
               title: "Lijst van alle gebruikers"
             my_posts:
               content: "Mijn berichten"
-              content_drafts: "Mijn concepten"
               title: "Mijn recente topicactiviteit"
               title_drafts: "Mijn ongeplaatste concepten"
               draft_count:
@@ -5664,6 +5677,9 @@ nl:
           save_successful: "Gebruikersveld opgeslagen."
         color_palettes:
           palette_name: "Naam"
+          copy_to_clipboard: "Kopiëren naar klembord"
+          copied_to_clipboard: "Gekopieerd naar klembord"
+          copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
           duplicate: "Dupliceren"
           delete: "Verwijderen"
           color_options:

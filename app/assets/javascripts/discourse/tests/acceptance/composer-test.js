@@ -707,36 +707,24 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle whispers when whisperer user", async function (assert) {
-        const menu = selectKit(".toolbar-popup-menu-options");
+        const menu = selectKit(".composer-actions");
 
         await visit("/t/this-is-a-test-topic/9");
         await click(".topic-post[data-post-number='1'] button.reply");
 
         await menu.expand();
-        await menu.selectRowByName("toggle-whisper");
+        await menu.selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .exists("sets the post type to whisper");
 
         await menu.expand();
-        await menu.selectRowByName("toggle-whisper");
+        await menu.selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .doesNotExist("removes the whisper mode");
-
-        await menu.expand();
-        await menu.selectRowByName("toggle-whisper");
-
-        await click(".toggle-fullscreen");
-
-        await menu.expand();
-
-        assert.true(
-          menu.rowByName("toggle-whisper").exists(),
-          "whisper toggling is still present when going fullscreen"
-        );
       });
 
       test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -803,11 +791,9 @@ import { i18n } from "discourse-i18n";
         await visit("/t/this-is-a-test-topic/9");
         await click(".topic-post[data-post-number='1'] button.reply");
 
-        await selectKit(".toolbar-popup-menu-options").expand();
+        await selectKit(".composer-actions").expand();
 
-        await selectKit(".toolbar-popup-menu-options").selectRowByName(
-          "toggle-whisper"
-        );
+        await selectKit(".composer-actions").selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
@@ -823,9 +809,9 @@ import { i18n } from "discourse-i18n";
           .dom(".reply-details .whisper .d-icon-far-eye-slash")
           .doesNotExist("should reset the state of the composer's model");
 
-        await selectKit(".toolbar-popup-menu-options").expand();
-        await selectKit(".toolbar-popup-menu-options").selectRowByName(
-          "toggle-invisible"
+        await selectKit(".composer-actions").expand();
+        await selectKit(".composer-actions").selectRowByValue(
+          "toggle_unlisted"
         );
 
         assert
@@ -1505,10 +1491,9 @@ import { i18n } from "discourse-i18n";
           .dom(".d-editor-input")
           .hasValue("hello **the** world", "adds the bold");
 
-        const dropdown = selectKit(".toolbar-popup-menu-options");
-        await dropdown.expand();
+        await click(".toolbar-menu__options-trigger");
 
-        const row = dropdown.rowByName("bold").el();
+        const row = find("[data-name='bold']");
         assert
           .dom(row)
           .hasAttribute(
@@ -1660,22 +1645,22 @@ import { i18n } from "discourse-i18n";
         assert.dom(".d-editor-input").exists("the composer input is visible");
 
         const expectedName = "[en.some_label]";
-        const dropdown = selectKit(".toolbar-popup-menu-options");
-        await dropdown.expand();
+        await click(".toolbar-menu__options-trigger");
 
-        assert.false(
-          dropdown.rowByName(expectedName).exists(),
-          "custom button is not displayed for reply"
-        );
+        assert
+          .dom(`button[title="${expectedName}"]`)
+          .doesNotExist("custom button is not displayed for reply");
+
+        await click(".toolbar-menu__options-trigger");
 
         await visit("/latest");
         await click("#create-topic");
 
-        await dropdown.expand();
-        assert.true(
-          dropdown.rowByName(expectedName).exists(),
-          "custom button is displayed for new topic"
-        );
+        await click(".toolbar-menu__options-trigger");
+
+        assert
+          .dom(`button[title="${expectedName}"]`)
+          .exists("custom button is displayed for new topic");
       });
     }
   );

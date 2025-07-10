@@ -665,6 +665,15 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+      notes:
+        delete: "刪除"
+      review_user: "使用者"
+      copy_link: "複製連結"
+      insights:
+        activities:
+          posts:
+            other: "%{count} 篇貼文"
+        visibility: "能見度"
       approval:
         title: "貼文需等待審核"
         description: "我們已收到您的貼文，但需要先經過版主審核後才會顯示出來。敬請稍後。"
@@ -2472,6 +2481,8 @@ zh_TW:
       image_alt_text:
         aria_label: 圖像的替代文字
         title: "新增圖片描述"
+      image_toolbar:
+        alt_text: "新增圖片描述"
       image_scale_button: "將影像縮放至 %{percent}%"
       delete_image_button: 刪除圖片
       toggle_image_grid: 切換影像網格
@@ -3831,6 +3842,8 @@ zh_TW:
       pinned:
         title: "已釘選"
         help: "此話題已置頂，將顯示在它所屬分類話題列表的最上方"
+      hot:
+        title: "熱門"
       unlisted:
         help: "此話題已被取消公開；它不會顯示在話題列表中，只能通過直接連結訪問。%{unlistedReason}"
       personal_message:
@@ -5484,6 +5497,9 @@ zh_TW:
           save_successful: "儲存使用者欄位。"
         color_palettes:
           palette_name: "名字"
+          copy_to_clipboard: "複製至剪貼簿"
+          copied_to_clipboard: "已複製至剪貼簿"
+          copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
           duplicate: "複製"
           delete: "刪除"
           color_options:

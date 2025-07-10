@@ -651,6 +651,15 @@ ja:
         reviewable_post:
           title: "投稿"
           noun: "投稿"
+      notes:
+        delete: "削除"
+      review_user: "ユーザー"
+      copy_link: "リンクをコピー"
+      insights:
+        activities:
+          posts:
+            other: "投稿 %{count} 件"
+        visibility: "表示状態"
       approval:
         title: "承認待ちの投稿"
         description: "あなたの新しい投稿を受領しましたが、表示するにはモデレーターの承認が必要です。しばらくお待ちください。"
@@ -2460,6 +2469,8 @@ ja:
       image_alt_text:
         aria_label: 画像の代替テキスト
         title: "画像の説明の追加"
+      image_toolbar:
+        alt_text: "画像の説明の追加"
       image_scale_button: "画像の表示率を %{percent}% に変更"
       delete_image_button: 画像を削除
       toggle_image_grid: 画像グリッドを切り替える
@@ -3805,6 +3816,8 @@ ja:
       pinned:
         title: "固定"
         help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
+      hot:
+        title: "ホット"
       unlisted:
         help: "このトピックは未掲載です。トピックリストには表示されません。直リンクでのみアクセス可能です。%{unlistedReason}"
       personal_message:
@@ -4397,7 +4410,6 @@ ja:
               title: "すべてのユーザーのリスト"
             my_posts:
               content: "自分の投稿"
-              content_drafts: "下書き"
               title: "最近のトピックアクティビティ"
               title_drafts: "未投稿の下書き"
               draft_count:
@@ -5389,6 +5401,9 @@ ja:
           save_successful: "ユーザーフィールドは保存されました。"
         color_palettes:
           palette_name: "名前"
+          copy_to_clipboard: "クリップボードにコピー"
+          copied_to_clipboard: "クリップボードにコピーしました"
+          copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
           duplicate: "複製"
           delete: "削除"
           color_options:

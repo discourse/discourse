@@ -802,6 +802,63 @@ hr:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+      flagged_as: "Označeno kao"
+      assigned_to: "Dodijeljeno"
+      moderator_actions: "Radnje moderatora"
+      timeline_and_notes: "Vremenska linija i bilješke"
+      timeline:
+        target_created: "Objava je kreirana"
+        target_created_by: "Objavu kreirao/la %{username} · %{relativeDate}"
+        flagged: "Označeno"
+        flagged_as_by: " %{username} označio/la kao %{flagReason} · %{relativeDate}"
+        claimed: "Preuzeto"
+        claimed_by: "Preuzeo/la %{username} · %{relativeDate}"
+        reviewed: "Recenzirano"
+        reviewed_by: "Recenzirao/la %{username} · %{relativeDate}"
+        view_conversation: "pogledaj privatnu poruku"
+        note_added: "Napomena moderatora"
+        note_added_by: "Napomena moderatora od %{username} · %{relativeDate}"
+        no_events: "Nema događaja na vremenskoj liniji za prikaz"
+      notes:
+        add_note_description: "Vidljivo samo moderatorima. Pomoću ove bilješke dodajte kontekst ili odluke o recenziji."
+        add_note_button: "Dodaj bilješku"
+        placeholder: "Ovdje napišite svoju bilješku..."
+        chars_remaining: "Preostalo je %{count} znakova"
+        delete_note: "Izbrišite ovu bilješku"
+        delete: "Pobriši"
+      new_topic_label: "Nova tema"
+      queued_user: "Korisnik u redu čekanja"
+      posted_in: "Objavljeno u"
+      flagged_user: "Označeni korisnik"
+      review_user: "Korisnik"
+      need_help: "Trebate pomoć?"
+      copy_link: "Kopirajte poveznicu"
+      view_source: "Pogledajte izvor"
+      insights:
+        title: "Uvidi"
+        flag_volume: "Količina oznaka"
+        flagged_by_users:
+          one: "Označio %{count} jedinstveni korisnik"
+          few: "Označila %{count} jedinstvena korisnika"
+          other: "Označilo %{count} jedinstvenih korisnika"
+        similar_posts: "Slične prošle objave"
+        flagged_in_timeframe: "Prethodno označeno: %{count} "
+        user_activity: "Aktivnost korisnika"
+        activities:
+          new_account: "novi račun"
+          trust_level: "razina povjerenja: %{trustLevelName}"
+          posts:
+            one: "%{count} objava"
+            few: "%{count} objava"
+            other: "%{count} objava"
+        solution_marked: "Rješenje označeno"
+        topic_has_solution: "Ova tema ima rješenje"
+        visibility: "Vidljivost"
+        topic_unlisted: "Ova tema nije na popisu. Dostupna je samo putem izravne poveznice — nije javna."
+      help:
+        moderation_guide: "Discourse vodič za moderiranje"
+        flag_priorities: "Upravljanje reputacijom korisnika i prioritetima označavanja"
+        spam_detection: "Otkrivanje neželjene pošte"
       approval:
         title: "natpis čeka potvrdu"
         description: "Zaprimili smo vašu objavu, ali potrebno je odobrenje moderatora prije nego se pojavi. Molim vas budite strpljivi."
@@ -1257,6 +1314,7 @@ hr:
     user_fields:
       none: "(odaberi opciju)"
       required: 'Unesi vrijednost za "%{name}"'
+      required_select: 'Molimo odaberite vrijednost za "%{name}"'
       required_checkbox: 'Polje "%{name}" je neophodno'
       same_as_password: "Vaša lozinka ne smije se ponavljati u drugim poljima"
       optional: (opcionalno)
@@ -2217,6 +2275,8 @@ hr:
       errors_summary_title: "Ovaj obrazac sadrži pogreške:"
       dirty_form: "Niste poslali promjene! Jeste li sigurni da želite otići?"
       errors:
+        starts_with: "Mora početi sa %{prefix}"
+        ends_with: "Mora završiti sa %{suffix}"
         required: "Potrebno"
         date_before_or_equal: "Mora biti prije ili jednako %{date}"
         date_after_or_equal: "Mora biti nakon ili jednako %{date}"
@@ -2806,6 +2866,8 @@ hr:
       image_alt_text:
         aria_label: Zamjenski tekst za sliku
         title: "Dodaj opis slike"
+      image_toolbar:
+        alt_text: "Dodaj opis slike"
       image_scale_button: "Skaliraj sliku na %{percent}%"
       delete_image_button: Izbriši sliku
       toggle_image_grid: Uključi/isključi rešetku slike
@@ -2968,6 +3030,7 @@ hr:
       relevance: "Relevantnost"
       latest_post: "Posljednje objave"
       latest_topic: "Najnovija tema"
+      last_read: "Zadnje pročitano"
       most_viewed: "Nagledanije"
       most_liked: "Najviše se sviđa"
       select_all: "Odaberi sve"
@@ -3249,10 +3312,10 @@ hr:
         bookmarks: "Još nemate zabiljženih tema."
         category: "Nema tema u %{category}."
         top: "Nema glavnih tema."
-        hot: "Nema popularnih tema."
+        hot: "Nema vrućih tema."
         filter: "Nema tema."
         education:
-          topic_tracking_preferences: "Nove postavke praćenja tema možete pregledati i promijeniti u <a href=\"%{basePath}/my/preferences/tracking\">svojim postavkama</a>."
+          topic_tracking_preferences: 'Nove postavke praćenja tema možete pregledati i promijeniti u <a href="%{basePath}/my/preferences/tracking">svojim postavkama</a>.'
           unread: "Ništa nije ostalo nepročitano...impresivno!"
           new_new: "Trenutno ništa nova... provjerite uskoro!"
           new: "Trenutno ništa nova... provjerite uskoro!"
@@ -3266,7 +3329,7 @@ hr:
         category: "Nema više tema u kategoriji %{category}."
         tag: "Nema više tema s oznakom %{tag}."
         top: "Nema više glavnih tema."
-        hot: "Nema više popularnih tema."
+        hot: "Nema više vrućih tema."
         bookmarks: "U oznakama nema više spremljenih tema."
         filter: "Nema više tema."
     topic_bulk_actions:
@@ -4361,6 +4424,8 @@ hr:
       pinned:
         title: "Zakvačeno"
         help: "Ova vam je tema zakvačena, prikazivati će se na vrhu svoje kategorije."
+      hot:
+        title: "Vruće"
       unlisted:
         help: "Ova tema nije navedena; neće se prikazivati u popisima tema i može joj se pristupiti samo putem izravne poveznice. %{unlistedReason}"
       personal_message:
@@ -4479,7 +4544,6 @@ hr:
         replies: "Odgovori"
         replies_with_count: "Odgovori (%{count})"
       posted:
-        title: "Moje objave"
         help: "teme u kojima si objavljivao"
       bookmarks:
         title: "Zabilješke"
@@ -4574,12 +4638,14 @@ hr:
         filter_sidebar: "%{shortcut} Bočna traka filtera"
         help: "%{shortcut} Otvori pomoć tipkovnice"
         toggle_bulk_select: "%{shortcut} Uključi/isključi skupni odabir"
+        dismiss: "%{shortcut} Odbacite odabrane teme"
         x: "%{shortcut} Uključi/isključi odabir (u načinu skupnog odabira)"
         log_out: "%{shortcut} Odjava"
       composing:
         title: "Sastavljanje"
         return: "%{shortcut} Povratak skladatelju"
         fullscreen: "%{shortcut} Kompozitor preko cijelog zaslona"
+        insert_current_time: "%{shortcut} Umetnite trenutno vrijeme"
       bookmarks:
         title: "Označavanje"
         enter: "%{shortcut} Spremi i zatvori"
@@ -4613,7 +4679,9 @@ hr:
         mark_tracking: "%{shortcut} Prati temu"
         mark_watching: "%{shortcut} Promatraj temu"
         print: "%{shortcut} Ispis teme"
+        defer: "%{shortcut} Označite temu kao nepročitanu"
         topic_admin_actions: "%{shortcut} Otvorite administratorske akcije teme"
+        archive_private_message: "%{shortcut} Uključite/isključite arhiviranje osobne poruke"
       search_menu:
         title: "Izbornik za pretraživanje"
         prev_next: "%{shortcut} Premještanje odabira gore i dolje"
@@ -4622,12 +4690,18 @@ hr:
       admin:
         title: "Administrator"
         search_prev_next: "%{shortcut} Premještanje odabira gore i dolje"
+        search_open: "%{shortcut} Otvorite pretragu administratorskog sučelja"
+        search_full_page: "%{shortcut} Otvorite administratorsku pretragu na cijeloj stranici"
     badges:
       earned_n_times:
         one: "Dobio ovu značku %{count} put"
         few: "Dobio ovu značku %{count} puta"
         other: "Dobio ovu značku %{count} puta"
       granted_on: "Odobreno %{date}"
+      others_count:
+        one: "Dodijeljeno drugima %{count} put"
+        few: "Dodijeljeno drugima %{count} puta"
+        other: "Dodijeljeno drugima %{count} puta"
       title: Značke
       allow_title: "Ovu značku možete upotrijebiti kao naslov"
       multiple_grant: "To možete zaraditi više puta"
@@ -4639,6 +4713,10 @@ hr:
         one: "+ još %{count}"
         few: "+%{count} više"
         other: "+%{count} više"
+      awarded:
+        one: "%{number} dodijeljeno"
+        few: "%{number} dodijeljeno"
+        other: "%{number} dodijeljeno"
       select_badge_for_title: Odaberi značku koju češ koristit kao titulu
       none: "(ništa)"
       successfully_granted: "Uspješno dodijeljeno %{badge} korisniku %{username}"
@@ -4676,6 +4754,14 @@ hr:
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
+      choose_for_topic_required:
+        one: "odaberite najmanje %{count} oznaku"
+        few: "odaberite najmanje %{count} oznake"
+        other: "odaberite najmanje %{count} oznaka"
+      choose_for_topic_required_group:
+        one: "odaberite %{count} oznaku iz '%{name}"
+        few: "odaberite %{count} oznake iz '%{name}"
+        other: "odaberite %{count} oznaka iz '%{name}"
       info: "Info"
       default_info: "Ova oznaka nije ograničena ni na jednu kategoriju i nema sinonime."
       staff_info: "Da biste dodali ograničenja, stavite ovu oznaku u grupu oznaka <a href=%{basePath}/tag_groups></a>."
@@ -4712,6 +4798,7 @@ hr:
         few: "Njegovi %{count} sinonima također će biti izbrisani."
         other: "Njegovi %{count} sinonimi također će biti izbrisani."
       edit_tag: "Uredite naziv i opis oznake"
+      description: "Opis (najviše1000 znakova)"
       sort_by: "Sortiraj po:"
       sort_by_count: "količina"
       sort_by_name: "ime"
@@ -4775,8 +4862,13 @@ hr:
         everyone_can_use: "Oznake mogu koristiti svi"
         usable_only_by_groups: "Oznake su vidljive svima, ali samo ih sljedeće grupe mogu koristiti"
         visible_only_to_groups: "Oznake su vidljive samo sljedećim grupama"
+        cannot_save:
+          empty_name: "Nije moguće spremiti grupu oznaka. Provjerite je li naziv grupe oznaka prazan."
+          no_tags: "Nije moguće spremiti grupu oznaka. Provjerite je li odabrana barem jedna oznaka."
+          no_groups: "Nije moguće spremiti grupu oznaka. Provjerite je li barem jedna grupa odabrana za dopuštenje."
         tags_placeholder: "Pretražite ili izradite oznake"
         parent_tag_placeholder: "Neobvezno"
+        select_groups_placeholder: "Odaberite grupe"
         disabled: "Označavanje je onemogućeno. "
       topics:
         none:
@@ -4806,6 +4898,7 @@ hr:
     theme_preview_notice: "Trenutno pregledavate temu, zatvorite ovu karticu ili prozor preglednika da biste se vratili na uobičajenu konfiguraciju web stranice."
     image_removed: "(slika uklonjena)"
     pause_notifications:
+      title: "Pauzirajte obavijesti za"
       label: "Pauziraj obavijesti"
       options:
         half_hour: "30 minuta"
@@ -4841,10 +4934,13 @@ hr:
       no_read_topics_body: "Kada počnete čitati rasprave, ovdje ćete vidjeti popis. Da biste počeli čitati, potražite teme koje vas zanimaju u <a href='%{topUrl}'>Top</a> ili <a href='%{categoriesUrl}'>kategorije</a> ili pretražite po ključnoj riječi %{searchIcon}"
     no_group_messages_title: "Nisu pronađene grupne poruke"
     topic_entrance:
+      sr_jump_top_button: "Idite na prvu objavu - %{date}"
+      sr_jump_bottom_button: "Idite na zadnju objavu - %{date}"
       jump_top_button_title: "Skoči na prvi post"
       jump_bottom_button_title: "Skoči na zadnji post"
     fullscreen_table:
       expand_btn: "Proširite tablicu"
+      view_table: "Pogledajte tablicu"
     second_factor_auth:
       redirect_after_success: "Provjera autentičnosti drugog faktora je uspješna. Preusmjeravanje na prethodnu stranicu…"
     sidebar:
@@ -4868,23 +4964,70 @@ hr:
         filter_placeholder: "Filtrirajte kategorije"
         no_categories: "Nema kategorija koje odgovaraju danom pojmu."
         show_more: "Prikaži više"
+      tags_form_modal:
+        title: "Uredite navigaciju oznaka"
+        filter_placeholder: "Filtrirajte oznake"
+        no_tags: "Nema oznaka koje odgovaraju zadanom pojmu."
+        subtitle:
+          text: "i automatski ćemo prikazati najčešće oznake ove stranice"
       edit_navigation_modal_form:
         deselect_button_text: "Odznači sve"
         reset_to_defaults: "Vrati na zadane postavke"
         filter_dropdown:
           all: "Sve"
+          selected: "Odabrano"
+          unselected: "Neodabrano"
       sections:
         custom:
+          add: "Dodajte prilagođeni odjeljak"
+          edit: "Uredite prilagođeni odjeljak"
           save: "Spremi"
           delete: "Pobriši"
+          delete_confirm: "Jeste li sigurni da želite izbrisati ovaj odjeljak?"
+          delete_public_confirm: "Ovaj je odjeljak vidljiv svima, jeste li sigurni da ga želite izbrisati?"
+          update_public_confirm: "Promjene će biti <strong>vidljive svima</strong> na ovoj stranici. Jeste li sigurni?"
+          mark_as_private_confirm: "Ovaj odjeljak je <strong>vidljiv svima</strong>. Nakon ažuriranja bit će <strong>vidljiv samo vama</strong>. Jeste li sigurni?"
+          reset_confirm: "Jeste li sigurni da želite vratiti ovaj odjeljak na zadane postavke?"
+          public: "Vidljivo svima"
+          always_public: "Sadržaj u ovom odjeljku je uvijek javan"
+          more_menu: "Više izbornika"
           links:
+            add: "Dodajte još jednu poveznicu"
+            delete: "Izbrišite poveznicu"
             reset: "Vrati na zadano"
             icon:
               label: "Ikona"
+              validation:
+                blank: "Ikona ne može biti prazna"
+                maximum:
+                  one: "Ikona mora biti kraća od %{count} znaka"
+                  few: "Ikona mora biti kraća od %{count} znaka"
+                  other: "Ikona mora biti kraća od %{count} znakova"
             name:
               label: "Naziv"
+              validation:
+                blank: "Ime ne može biti prazno"
+                maximum:
+                  one: "Ime mora biti kraće od %{count} znaka"
+                  few: "Ime mora biti kraće od %{count} znaka"
+                  other: "Ime mora biti kraće od %{count} znakova"
             value:
               label: "Veza"
+              validation:
+                blank: "Poveznica ne može biti prazna"
+                maximum:
+                  one: "Poveznica mora biti kraća od %{count} znaka"
+                  few: "Poveznica mora biti kraća od %{count} znaka"
+                  other: "Poveznica mora biti kraća od %{count} znakova"
+                invalid: "Format nije važeći"
+          title:
+            label: "Naslov odjeljka"
+            validation:
+              blank: "Naslov ne može biti prazan"
+              maximum:
+                one: "Naslov mora biti kraći od %{count} znaka"
+                few: "Naslov mora biti kraći od %{count} znaka"
+                other: "Naslov mora biti kraći od %{count} znakova"
         about:
           header_link_text: "O nama"
         messages:
@@ -4912,6 +5055,7 @@ hr:
           configure_defaults: "Konfigurirajte zadane postavke"
         community:
           edit_section:
+            sidebar: "Prilagodite ovaj odjeljak"
             header_dropdown: "Prilagodba"
           links:
             about:
@@ -4939,7 +5083,6 @@ hr:
               content: "Korisnici"
               title: "Popis svih korisnika"
             my_posts:
-              content: "Moje objave"
               title: "Moja nedavna aktivnost vezana uz temu"
               title_drafts: "Moje neobjavljene skice"
               draft_count:
@@ -4955,12 +5098,34 @@ hr:
                 other: "%{count} na čekanju"
             invite:
               content: "Pozovite"
+              title: "Pozovite nove članove"
+            my_messages:
+              title: "Moje osobne poruke"
+        global_section: "Globalni odjeljak, vidljiv svima"
+      panels:
+        forum:
+          label: Forum
+      back_to_forum: "Povratak na forum"
+      filter_links: "Filtriraj poveznice..."
+      no_results:
+        description_admin_search: "Nismo mogli pronaći ništa što odgovara '%{filter}'."
+      collapse_all_sections: "Sažmite sve odjeljke"
+      expand_all_sections: "Proširite sve odjeljke"
       search: "Pretraživanje"
+      footer:
+        interface_color_selector:
+          light: "Svijetlo"
+          dark: "Tamno"
+          auto: "Auto"
     welcome_topic_banner:
       title: "Kreirajte svoju temu dobrodošlice"
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."
       button_title: "Započnite s uređivanjem"
     until: "Do:"
+    char_counter:
+      exceeded: "Prekoračen je  najveći dopušteni broj znakova."
+    form_template_chooser:
+      select_template: "Odaberite predloške obrazaca"
     form_templates:
       upload_field:
         upload: "Učitaj"
@@ -4981,6 +5146,14 @@ hr:
           tel: "Unesite valjani telefonski broj."
           text: "Unesite tekstualnu vrijednost."
           url: "Unesite valjanu URL adresu."
+        too_short:
+          one: "Unos mora imati %{count} znak ili više."
+          few: "Unos mora imati %{count} znaka ili više."
+          other: "Unos mora imati %{count} znakova ili više."
+        too_long:
+          one: "Unos mora biti kraći od %{count} znaka."
+          few: "Unos mora biti kraći od %{count} znaka."
+          other: "Unos mora biti kraći od %{count} znakova."
         range_overflow:
           one: "Unos mora biti manji od %{count}."
           few: "Unos mora biti manji od %{count}."
@@ -4992,19 +5165,129 @@ hr:
         pattern_mismatch: "Molimo uskladite s traženim formatom."
         bad_input: "Unesite valjani unos."
     table_builder:
+      title: "Alat za izradu tablica"
       modal:
+        title: "Alat za izradu tablica"
+        create: "Izradite tablicu"
         help:
+          title: "Korištenje alata za uređivanje proračunskih tablica"
           enter_key: "Unesi"
+          tab_key: "Kartica"
+          new_row: "na kraju retka za umetanje novog retka."
+          new_col: "na kraju stupca za umetanje novog stupca."
+          options: "Desnom tipkom miša kliknite ćelije za pristup dodatnim opcijama u padajućem izborniku."
+        confirm_close: "Jeste li sigurni da želite zatvoriti alat za izradu tablica? Sve nespremljene promjene bit će izgubljene."
       edit:
+        btn_edit: "Uredite tablicu"
         modal:
+          title: "Uredite tablicu"
           cancel: "otkaži"
           create: "Spremi"
           reason: "zašto izmjenjujete?"
+          trigger_reason: "Dodajte razlog za uređivanje"
+        default_edit_reason: "Ažuriranje tablice pomoću alata za uređivanje tablica"
+      default_header:
+        col_1: "Stupac 1"
+        col_2: "Stupac 2"
+        col_3: "Stupac 3"
+        col_4: "Stupac 4"
       spreadsheet:
+        no_records_found: "Nisu pronađeni zapisi"
         show: "Pokaži"
+        entries: "unosi"
         about: "O nama"
+        prompts:
+          delete_selected_rows: "Jeste li sigurni da želite izbrisati odabrane retke?"
+          delete_selected_cols: "Jeste li sigurni da želite izbrisati odabrane stupce?"
+          will_destroy_merged_cells: "Ova će radnja uništiti sve postojeće spojene ćelije. Jeste li sigurni?"
+          will_clear_search_results: "Ova će radnja uništiti sve postojeće spojene ćelije. Jeste li sigurni?"
+          conflicts_with_merged_cells: "Postoji sukob s drugom spojenom ćelijom"
+        invalid_merge_props: "Nevažeća spojena svojstva"
+        cells_already_merged: "Ćelija je već spojena"
+        no_cells_selected: "Nema odabranih ćelija"
+        context_menu:
+          row:
+            before: "Umetnite novi redak prije"
+            after: "Umetnite novi redak nakon"
+            delete: "Izbrišite odabrane retke"
+          col:
+            before: "Umetnite novi stupac prije"
+            after: "Umetnite novi stupac nakon"
+            delete: "Brisanje odabranih stupaca"
+            rename: "Preimenujte ovaj stupac"
+          order:
+            ascending: "Redoslijed uzlazno"
+            descending: "Redoslijed silazno"
+          copy: "Kopirati..."
+          paste: "Zalijepiti..."
+          save: "Spremiti kao..."
+    powered_by_discourse: "Pokreće Discourse"
+    safari_15_warning: "Vaš preglednik uskoro neće biti kompatibilan s ovom zajednicom. Kako biste ovdje nastavili sudjelovati, nadogradite preglednik ili <a href='%{url}'>saznajte više</a>."
     discovery:
       headings:
+        all:
+          latest: "Sve najnovije teme"
+          top: "Sve najpopularnije teme"
+          new: "Sve nove teme"
+          unread: "Sve nepročitane teme"
+          unseen: "Sve neviđene teme"
+          hot: "Sve vruće teme"
+          posted: "Sve teme u kojima ste objavljivali"
+          bookmarks: "Sve teme koje ste označili"
+          default: "Sve %{filter} teme"
+        category:
+          latest: "Najnovije teme u %{category}"
+          top: "Najpopularnije teme u %{category}"
+          new: "Nove teme u %{category}"
+          unread: "Nepročitane teme u %{category}"
+          unseen: "Neviđene teme u %{category}"
+          hot: "Vruće teme u %{category}"
+          posted: "Teme u %{category} u kojima ste objavili"
+          bookmarks: "Teme u %{category} koje ste označili"
+          default: "%{filter} teme u %{category}"
+        single_tag:
+          latest: "Najnovije teme označene s %{tag}"
+          top: "Najpopularnije teme označene s %{tag}"
+          new: "Nove teme označene s %{tag}"
+          unread: "Nepročitane teme označene s %{tag}"
+          unseen: "Neviđene teme označene s %{tag}"
+          hot: "Vruće teme označene s %{tag}"
+          posted: "Teme označene s %{tag} u kojima ste objavili"
+          bookmarks: "Teme označene s %{tag} koje ste označili"
+          default: "%{filter} teme označene s %{tag}"
+        multi_tag:
+          default: "Teme označene s %{tags}"
+        category_tag:
+          latest: "Najnovije teme u %{category} označene s %{tag}"
+          top: "Najpopularnije teme u %{category} označene s %{tag}"
+          new: "Nove teme u %{category} označene s %{tag}"
+          unread: "Nepročitane teme u %{category} označene s %{tag}"
+          unseen: "Neviđene teme u %{category} označene s %{tag}"
+          hot: "Vruće teme u %{category} označene s %{tag}"
+          posted: "Teme u %{category} označene s %{tag} u kojima ste objavili"
+          bookmarks: "Teme u %{category} označene s %{tag} koje ste označili"
+          default: "%{filter} teme u %{category} označene s %{tag}"
+        no_tags:
+          all:
+            latest: "Najnovije teme bez oznaka"
+            top: "Najpopularnije teme bez oznaka"
+            new: "Nove teme bez oznaka"
+            unread: "Nepročitane teme bez oznaka"
+            unseen: "Neviđene teme bez oznaka"
+            hot: "Vruće teme bez oznaka"
+            posted: "Teme bez oznaka u kojima ste objavili"
+            bookmarks: "Teme bez oznaka koje ste označili"
+            default: "Teme bez oznaka"
+          category:
+            latest: "Najnovije teme u %{category} bez oznaka"
+            top: "Najpopularnije teme u %{category} bez oznaka"
+            new: "Nove teme u %{category} bez oznaka"
+            unread: "Nepročitane teme u %{category} bez oznaka"
+            unseen: "Neviđene teme u %{category} bez oznaka"
+            hot: "Vruće teme u %{category} bez oznaka"
+            posted: "Teme u %{category} bez oznaka u kojima ste objavili"
+            bookmarks: "Teme u %{category} bez oznaka koje ste označili"
+            default: "%{filter} teme u %{category} bez oznaka"
         categories: "Sve kategorije"
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
@@ -5020,6 +5303,7 @@ hr:
           never: "nikad"
       reports:
         title: "Popis dostupnih izvještaja"
+        meta_doc: "Izvješća su moćan alat koji vam pomaže da shvatite što se događa na vašoj stranici. Mogu vam pomoći u prepoznavanju trendova, uočavanju problema i donošenju odluka na temelju podataka."
         sidebar_title: "Izvještaji"
       config_sections:
         account:
@@ -5546,6 +5830,9 @@ hr:
           delete: "Pobriši"
         color_palettes:
           palette_name: "Ime"
+          copy_to_clipboard: "Kopirati u međuspremnik"
+          copied_to_clipboard: "Kopirano u međuspremnik"
+          copy_to_clipboard_error: "Greška pri kopiranju podataka u međuspremnik"
           duplicate: "Dupliciraj"
           delete: "Pobriši"
           colors:

@@ -4,6 +4,10 @@
 
 // Base
 // --------------------------------------------------
+:root {
+  --category-badge-size: 0.75em;
+  --category-badge-border-radius: 0;
+}
 
 %badge {
   display: inline-block;
@@ -35,8 +39,9 @@
       content: "";
       background: var(--category-badge-color);
       flex: 0 0 auto;
-      width: 0.625rem; // fixed dimensions (10px square)
-      height: 0.625rem;
+      width: var(--category-badge-size);
+      height: var(--category-badge-size);
+      border-radius: var(--category-badge-border-radius);
     }
 
     &.--style-emoji,
@@ -60,7 +65,7 @@
     }
 
     &__name {
-      color: currentcolor;
+      color: var(--category-badge-title-color);
       text-overflow: ellipsis;
       overflow: hidden;
       min-width: 0;

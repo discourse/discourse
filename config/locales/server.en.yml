@@ -1810,7 +1810,7 @@ en:
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
-    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up two-factor authentication."
     enforce_second_factor_on_external_auth: "Require users to use two-factor authentication at all times. When enabled this will prevent users logging in with external authentication methods like social logins if they have two-factor authentication enabled. When disabled users will only need to confirm their two-factor authentication when logging in with a username and password. Also see the `enforce_second_factor` setting."
@@ -2097,7 +2097,7 @@ en:
     avatar_sizes: "List of automatically generated avatar sizes."
 
     external_system_avatars_enabled: "Enables the use of an external service for generating system avatars. When this setting is enabled, user avatars, instead of being produced within the Discourse system, are generated and provided by an external service defined by the `external_system_avatars_url` setting."
-    external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
+    external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}. Leave blank to disable."
     external_emoji_url: "URL of the external service for emoji images. Leave blank to disable."
     use_site_small_logo_as_system_avatar: "Use the site's small logo instead of the system user's avatar. Requires the logo to be present."
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
@@ -2209,7 +2209,6 @@ en:
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
     email_posts_context: "How many prior replies to include as context in notification emails."
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
@@ -2730,8 +2729,9 @@ en:
     about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
-    rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition. The rich text editor is under active development, so not all features are supported yet — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>see Meta for more details</a>."
+    rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
+    reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
 
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
@@ -2807,6 +2807,7 @@ en:
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
+      content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
       content_localization_anon_language_switcher_requirements: "The language switcher requires the `set locale from cookie` site setting to be enabled, and the `content localization supported locales` to have at least one language."
 
     keywords:

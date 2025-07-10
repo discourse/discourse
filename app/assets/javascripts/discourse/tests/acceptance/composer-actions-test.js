@@ -211,8 +211,12 @@ acceptance("Composer Actions", function (needs) {
     assert.dom(".d-editor-input").includesValue(quote);
     assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
-    assert.strictEqual(composerActions.rowByIndex(2).value(), "shared_draft");
-    assert.strictEqual(composerActions.rows().length, 3);
+    assert.strictEqual(
+      composerActions.rowByIndex(2).value(),
+      "toggle_unlisted"
+    );
+    assert.strictEqual(composerActions.rowByIndex(3).value(), "shared_draft");
+    assert.strictEqual(composerActions.rows().length, 4);
   });
 
   test("interactions - private message", async function (assert) {

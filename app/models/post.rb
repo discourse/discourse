@@ -888,6 +888,8 @@ class Post < ActiveRecord::Base
       self.baked_at = Time.zone.now
       self.baked_version = BAKED_VERSION
     end
+
+    self.locale = nil if locale.blank?
   end
 
   def advance_draft_sequence

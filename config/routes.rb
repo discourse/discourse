@@ -523,19 +523,21 @@ Discourse::Application.routes.draw do
         :constraints => {
           reviewable_id: /\d+/,
         }
+    post "review/:reviewable_id/notes" => "reviewable_notes#create",
+         :constraints => {
+           reviewable_id: /\d+/,
+         }
     delete "review/:reviewable_id" => "reviewables#destroy",
            :constraints => {
              reviewable_id: /\d+/,
            }
+    delete "review/:reviewable_id/notes/:note_id" => "reviewable_notes#destroy",
+           :constraints => {
+             reviewable_id: /\d+/,
+             note_id: /\d+/,
+           }
 
     resources :reviewable_claimed_topics, only: %i[create destroy]
-
-    resources :reviewables, only: [] do
-      resources :reviewable_notes,
-                only: %i[create destroy],
-                path: "notes",
-                constraints: StaffConstraint.new
-    end
 
     get "session/sso" => "session#sso"
     get "session/sso_login" => "session#sso_login"

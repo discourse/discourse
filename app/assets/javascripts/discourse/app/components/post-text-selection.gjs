@@ -201,6 +201,7 @@ export default class PostTextSelection extends Component {
 
   @bind
   async hideToolbar() {
+    this.args.quoteState.clear();
     await this.menuInstance?.close();
     await this.menuInstance?.destroy();
   }
@@ -241,7 +242,19 @@ export default class PostTextSelection extends Component {
       return;
     }
 
-    return getElement(range.commonAncestorContainer)?.closest?.(".cooked");
+    const cooked = getElement(range.commonAncestorContainer)?.closest?.(
+      ".cooked"
+    );
+
+    if (!cooked) {
+      return;
+    }
+
+    if (cooked.closest(".small-action")) {
+      return;
+    }
+
+    return cooked;
   }
 
   get post() {
@@ -290,6 +303,13 @@ export default class PostTextSelection extends Component {
     const start = getElement(selection.getRangeAt(0).startContainer);
 
     if (!start || start.closest(CSS_TO_DISABLE_FAST_EDIT)) {
+      supportsFastEdit = false;
+    }
+
+    if (
+      this.post?.is_localized &&
+      this.siteSettings.content_localization_enabled
+    ) {
       supportsFastEdit = false;
     }
 

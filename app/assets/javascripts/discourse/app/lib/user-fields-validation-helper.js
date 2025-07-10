@@ -43,7 +43,9 @@ class TrackedUserField {
       const reasonKey =
         this.field.field_type === "confirm"
           ? "user_fields.required_checkbox"
-          : "user_fields.required";
+          : this.field.field_type === "text"
+            ? "user_fields.required"
+            : "user_fields.required_select";
       validation = failedResult({
         reason: i18n(reasonKey, {
           name: this.field.name,

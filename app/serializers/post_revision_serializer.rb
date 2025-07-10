@@ -42,6 +42,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
   add_compared_field :wiki
   add_compared_field :post_type
+  add_compared_field :locale
 
   def previous_hidden
     previous["hidden"]
@@ -192,6 +193,13 @@ class PostRevisionSerializer < ApplicationSerializer
     previous["category_id"] != current["category_id"]
   end
 
+  def locale_changes
+    prev = LocaleSiteSetting.get_language_name(previous["locale"])
+    cur = LocaleSiteSetting.get_language_name(current["locale"])
+
+    { previous: prev, current: cur }
+  end
+
   protected
 
   def post
@@ -220,6 +228,7 @@ class PostRevisionSerializer < ApplicationSerializer
       "wiki" => [post.wiki],
       "post_type" => [post.post_type],
       "user_id" => [post.user_id],
+      "locale" => [post.locale],
     }
 
     # Retrieve any `tracked_topic_fields`

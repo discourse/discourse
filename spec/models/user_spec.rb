@@ -1662,12 +1662,13 @@ RSpec.describe User do
     let(:user) { build(:user, username: "Sam") }
 
     it "returns a 45-pixel-wide avatar" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
       expect(user.small_avatar_url).to eq(
         "//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png",
       )
 
-      SiteSetting.external_system_avatars_enabled = true
+      SiteSetting.external_system_avatars_url =
+        "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
       expect(user.small_avatar_url).to eq(
         "//test.localhost/letter_avatar_proxy/v4/letter/s/5f9b8f/45.png",
       )
@@ -1769,7 +1770,7 @@ RSpec.describe User do
 
   describe "automatic avatar creation" do
     it "sets a system avatar for new users" do
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
 
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
@@ -2974,7 +2975,10 @@ RSpec.describe User do
 
     describe ".system_avatar_template" do
       context "with external system avatars enabled" do
-        before { SiteSetting.external_system_avatars_enabled = true }
+        before do
+          SiteSetting.external_system_avatars_url =
+            "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
+        end
 
         it "uses the normalized username" do
           expect(User.system_avatar_template("Lo\u0308we")).to match(

@@ -519,6 +519,15 @@ gl:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+      notes:
+        delete: "Eliminar"
+      review_user: "Usuario"
+      insights:
+        activities:
+          posts:
+            one: "%{count} publicación"
+            other: "%{count} publicacións"
+        visibility: "Visibilidade"
       approval:
         title: "A publicación necesita aprobación"
         description: "Recibimos a súa nova publicación pero cómpre que sexa aprobada por un moderador antes de aparecer. Teña paciencia."
@@ -3030,7 +3039,6 @@ gl:
         topics: "Temas"
         replies: "Réplicas"
       posted:
-        title: "As miñas publicacións"
         help: "temas nos que publicou"
       bookmarks:
         title: "Marcadores"
@@ -3375,8 +3383,6 @@ gl:
               content: "Grupos"
             users:
               content: "Usuarios"
-            my_posts:
-              content: "As miñas publicacións"
             review:
               content: "Revisar"
             invite:
@@ -3902,6 +3908,9 @@ gl:
           delete: "Eliminar"
         color_palettes:
           palette_name: "Nome"
+          copy_to_clipboard: "Copiar ao portapapeis"
+          copied_to_clipboard: "Copiado ao portapapeis"
+          copy_to_clipboard_error: "Produciuse un erro ao copiar os datos ao portapapeis"
           delete: "Eliminar"
           colors:
             title: "Cores"

@@ -92,5 +92,29 @@ module(
       assert.form().field("content").hasValue("final value");
       assert.dom(".form-kit__control-textarea").hasValue("final value");
     });
+
+    test("Ctrl/Cmd + Enter submits the form", async function (assert) {
+      let data = { foo: null };
+      const mutateData = (x) => (data = x);
+
+      await render(
+        <template>
+          <Form @onSubmit={{mutateData}} as |form|>
+            <form.Field @name="foo" @title="Foo" as |field|>
+              <field.Textarea />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      await formKit().field("foo").fillIn("bar");
+      await formKit().field("foo").triggerEvent("keydown", {
+        key: "Enter",
+        ctrlKey: true,
+      });
+      await settled();
+
+      assert.deepEqual(data, { foo: "bar" });
+    });
   }
 );

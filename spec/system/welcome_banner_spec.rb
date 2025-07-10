@@ -19,6 +19,28 @@ describe "Welcome banner", type: :system do
       expect(banner).to have_logged_in_title(current_user.username)
     end
 
+    it "shows subheader when translations are present for logged in and anonymous members" do
+      visit "/"
+      expect(banner).to be_visible
+      expect(banner).to have_no_subheader
+      TranslationOverride.upsert!(
+        "en",
+        "js.welcome_banner.subheader.anonymous_members",
+        "Something about us.",
+      )
+      visit "/"
+      expect(banner).to have_anonymous_subheader
+
+      TranslationOverride.upsert!(
+        "en",
+        "js.welcome_banner.subheader.logged_in_members",
+        "We are so cool!",
+      )
+      sign_in(current_user)
+      visit "/"
+      expect(banner).to have_logged_in_subheader
+    end
+
     it "only displays on top_menu routes" do
       sign_in(current_user)
       SiteSetting.remove_override!(:top_menu)

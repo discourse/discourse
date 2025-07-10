@@ -179,32 +179,10 @@ describe "Post translations", type: :system do
       end
     end
 
-    context "when the user's default locale is different from the site default" do
-      before do
-        SiteSetting.allow_user_locale = true
-        admin.update!(locale: "fr")
-      end
-
-      it "should show the user's locale as the default in the post language switcher" do
-        visit("/latest")
-        page.find("#create-topic").click
-        expect(
-          page.has_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label", text: "FR"),
-        ).to be true
-      end
-    end
-
-    context "when the user's default locale is different from the site default but not an available language" do
-      before do
-        SiteSetting.allow_user_locale = true
-        admin.update!(locale: "de")
-      end
-
-      it "should make the selected language blank" do
-        visit("/latest")
-        page.find("#create-topic").click
-        expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
-      end
+    it "should not have a locale set by default" do
+      visit("/latest")
+      page.find("#create-topic").click
+      expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
     end
   end
 end

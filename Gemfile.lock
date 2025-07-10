@@ -151,9 +151,9 @@ GEM
     exifr (1.4.1)
     extralite-bundle (2.12)
     fabrication (3.0.0)
-    faker (3.5.1)
+    faker (3.5.2)
       i18n (>= 1.8.11, < 2)
-    faraday (2.13.1)
+    faraday (2.13.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -221,7 +221,7 @@ GEM
     iso8601 (0.13.0)
     jmespath (1.6.2)
     json (2.12.2)
-    json-schema (5.1.1)
+    json-schema (5.2.1)
       addressable (~> 2.8)
       bigdecimal (~> 3.1)
     json_schemer (2.4.0)
@@ -236,6 +236,7 @@ GEM
     libv8-node (24.1.0.0)
     libv8-node (24.1.0.0-aarch64-linux)
     libv8-node (24.1.0.0-arm64-darwin)
+    libv8-node (24.1.0.0-x86_64-darwin)
     libv8-node (24.1.0.0-x86_64-linux)
     libv8-node (24.1.0.0-x86_64-linux-musl)
     lint_roller (1.1.0)
@@ -272,7 +273,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0624)
+    mime-types-data (3.2025.0708)
     mini_mime (1.1.5)
     mini_racer (0.19.0)
       libv8-node (~> 24.1.0.0)
@@ -447,7 +448,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.9.0)
-    rdoc (6.14.1)
+    rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
     redcarpet (3.6.1)
@@ -507,7 +508,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.77.0)
+    rubocop (1.78.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -597,14 +598,14 @@ GEM
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    sqlite3 (2.7.0-aarch64-linux-gnu)
-    sqlite3 (2.7.0-aarch64-linux-musl)
-    sqlite3 (2.7.0-arm-linux-gnu)
-    sqlite3 (2.7.0-arm-linux-musl)
-    sqlite3 (2.7.0-arm64-darwin)
-    sqlite3 (2.7.0-x86_64-darwin)
-    sqlite3 (2.7.0-x86_64-linux-gnu)
-    sqlite3 (2.7.0-x86_64-linux-musl)
+    sqlite3 (2.7.2-aarch64-linux-gnu)
+    sqlite3 (2.7.2-aarch64-linux-musl)
+    sqlite3 (2.7.2-arm-linux-gnu)
+    sqlite3 (2.7.2-arm-linux-musl)
+    sqlite3 (2.7.2-arm64-darwin)
+    sqlite3 (2.7.2-x86_64-darwin)
+    sqlite3 (2.7.2-x86_64-linux-gnu)
+    sqlite3 (2.7.2-x86_64-linux-musl)
     sshkey (3.0.0)
     stackprof (0.2.27)
     stringio (3.1.7)
@@ -867,8 +868,8 @@ CHECKSUMS
   exifr (1.4.1) sha256=768374cc6b6ff3743acba57c1c35229bdd8c6b9fbc1285952047fc1215c4b894
   extralite-bundle (2.12) sha256=9c9912b7ab592e7064089ee608cf86ab9edd81d20065acb87d1f4fed06052987
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
-  faker (3.5.1) sha256=1ad1fbea279d882f486059c23fe3ddb816ccd1d7052c05a45014b4450d859bfc
-  faraday (2.13.1) sha256=cc531eb5467e7d74d4517630fa96f1a7003647cbf20a9a3e067d098941217b75
+  faker (3.5.2) sha256=f9a80291b2e3f259801d1dd552f0732fe04dce5d1f74e798365bc0413789c473
+  faraday (2.13.2) sha256=5c19762e3bbe78e61d8007c5119f2968373c5296d6c6d6aa05b6f9cec34f2a1a
   faraday-net_http (3.4.1) sha256=095757fae7872b94eac839c08a1a4b8d84fd91d6886cfbe75caa2143de64ab3b
   faraday-retry (2.3.2) sha256=2402d2029032ebd238a2046221e67f6ef0da78c5a8ce8cd4f8b9c62e4d6451d1
   fast_blank (1.0.1) sha256=269fc30414fed4e6403bc4a49081e1ea539f8b9226e59276ed1efaefabaa17ea
@@ -906,7 +907,7 @@ CHECKSUMS
   iso8601 (0.13.0) sha256=298c2b15b7be5fa95a1372813d36a2257656cd8e906dfbc1f5cb409851425aa2
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   json (2.12.2) sha256=ba94a48ad265605c8fa9a50a5892f3ba6a02661aa010f638211f3cb36f44abf4
-  json-schema (5.1.1) sha256=b3829ad9bcdfc5010d8a160c4c2bebb8fed8d05d22de65648f6ba646b071f9bf
+  json-schema (5.2.1) sha256=1ef39286c4771e7a71661d955fec9b66d1d1708547a0071c130af7c0a9264898
   json_schemer (2.4.0) sha256=56cb6117bb5748d925b33ad3f415b513d41d25d0bbf57fe63c0a78ff05597c24
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   kgio (2.11.4) sha256=bda7a2146115998a5b07154e708e0ac02c38dcee7e793c33e2e14f600fdfffc6
@@ -914,6 +915,7 @@ CHECKSUMS
   libv8-node (24.1.0.0) sha256=2f0e9ac629c4c5753eaf7001952bb6dce4eb596f3dc0df3049ee7d9cfb9471cd
   libv8-node (24.1.0.0-aarch64-linux) sha256=fe7787bdb082d1101f65d8f42572ec6c634776a334d82b9fedded152e1d4f358
   libv8-node (24.1.0.0-arm64-darwin) sha256=f34bdd85787a32a16db137ffbe83feb1cd09f4d69ff3c43cd2f0a675656ee16b
+  libv8-node (24.1.0.0-x86_64-darwin) sha256=243cfae376d7d54b02fb9e8cfd2a2a08e791d066fb78252925a825f05805083b
   libv8-node (24.1.0.0-x86_64-linux) sha256=0857486e64f7bd4133d4aa607c42d0abade1ab53dffcbfd30f12e0b7dba8f157
   libv8-node (24.1.0.0-x86_64-linux-musl) sha256=080a243ac014054780cc0d0be2c18b93642a139d09622c0cfd1ebc8614d24437
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
@@ -934,7 +936,7 @@ CHECKSUMS
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
-  mime-types-data (3.2025.0624) sha256=32034cfa6fb6efa02930ffde4f89f2818f1d2a36ead2cd2be97ce0ff3e0f5e96
+  mime-types-data (3.2025.0708) sha256=9089b436d382d8d2a4c9277d2aa9109ecf25ff4d056dc97e224009f042edb9db
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_racer (0.19.0) sha256=9152694738db8b145ced843126e2a391f908732c069cb97bbc909c2bac16bbc1
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
@@ -1013,7 +1015,7 @@ CHECKSUMS
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rbtrace (0.5.2) sha256=a2d7d222ab81363aaa0e91337ddbf70df834885d401a80ea0339d86c71f31895
   rchardet (1.9.0) sha256=26889486cdd83b378652baf7603f71d93e431bb11bc237b4cd8c65151af4a590
-  rdoc (6.14.1) sha256=905efa796cd296ef252af4fb31fe41c073dee894de6aad715821f335c632516b
+  rdoc (6.14.2) sha256=9fdd44df130f856ae70cc9a264dfd659b9b40de369b16581f4ab746e42439226
   redcarpet (3.6.1) sha256=d444910e6aa55480c6bcdc0cdb057626e8a32c054c29e793fa642ba2f155f445
   redis (5.4.0) sha256=798900d869418a9fc3977f916578375b45c38247a556b61d58cba6bb02f7d06b
   redis-client (0.25.0) sha256=927dfd07a37346fd9111d80cac3199d2a02b4c084c79260acf7a5057bd742910
@@ -1039,7 +1041,7 @@ CHECKSUMS
   rss (0.3.1) sha256=b46234c04551b925180f8bedfc6f6045bf2d9998417feda72f300e7980226737
   rswag-specs (2.16.0) sha256=8ba26085c408b0bd2ed21dc8015c80f417c7d34c63720ab7133c2549b5bd2a91
   rtlcss (0.2.1) sha256=213d5a00bf61267f93a7a516d699d77e1cc5f396743abb33c01e3f3243a7bf60
-  rubocop (1.77.0) sha256=1f360b4575ef7a124be27b0dfffa227a2b2d9420d22d4fd8bf179d702bcc88c0
+  rubocop (1.78.0) sha256=8b74a6f912eb4fd3e6878851f7f7f45dcad8c7185c34250d4f952b0ee80d6bc0
   rubocop-ast (1.45.1) sha256=94042e49adc17f187ba037b33f941ba7398fede77cdf4bffafba95190a473a3e
   rubocop-capybara (2.22.1) sha256=ced88caef23efea53f46e098ff352f8fc1068c649606ca75cb74650970f51c0c
   rubocop-discourse (3.12.1) sha256=ebf7e2224f053047372071419052828c3e3a01bccb14ea1f282ac143547df9bc
@@ -1070,14 +1072,14 @@ CHECKSUMS
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
   snaky_hash (2.0.3) sha256=25a3d299566e8153fb02fa23fd9a9358845950f7a523ddbbe1fa1e0d79a6d456
-  sqlite3 (2.7.0-aarch64-linux-gnu) sha256=8e4ca6fee1e635092fc56c951274b732e5d3186526b3db43286ed3cacf9d2c70
-  sqlite3 (2.7.0-aarch64-linux-musl) sha256=ffa253517b62bc241b91016402e5b44087390bf7e89ba4820eb7f3c28cf76ce6
-  sqlite3 (2.7.0-arm-linux-gnu) sha256=720abe303b75c55f98ce5d0e9ab32cb45570d3ec99490953fa807c45d0fd3f6c
-  sqlite3 (2.7.0-arm-linux-musl) sha256=c2b437c54df1debf41e523b02df4f0324e2891f34e12deb4d97db168d6c717ed
-  sqlite3 (2.7.0-arm64-darwin) sha256=b79d76bd496688f45bd43069f3475285f3303d00a2a9c61cd4fc915350aa20ac
-  sqlite3 (2.7.0-x86_64-darwin) sha256=5a625bb886d2b594b9c90f11852128777b8949aa8a78c3da95a7e122e206a056
-  sqlite3 (2.7.0-x86_64-linux-gnu) sha256=6d7a41bbfc2319bc7e43e944a97a8b15de91c71098bc1d8f4c91c8b719b1c940
-  sqlite3 (2.7.0-x86_64-linux-musl) sha256=b6ff52adad59521918854adf5784dc57bc8853fdcd904b66fd53af7b683b4042
+  sqlite3 (2.7.2-aarch64-linux-gnu) sha256=b1688e8661c65f65bb16a9879c8171c94d22322f4d8e9e452f396a3aa55bbe0a
+  sqlite3 (2.7.2-aarch64-linux-musl) sha256=9086f9370853825c5bbb4d1156c9b1494a7ab5052445469603de5a4f2d127ef1
+  sqlite3 (2.7.2-arm-linux-gnu) sha256=f31d361744775942c4ef7f645457736ad7cdc1c5128a6c19551753e969ccc9be
+  sqlite3 (2.7.2-arm-linux-musl) sha256=0dc0c1b06c0af0e8833508f212297f8665bf37ea624739fdde30d9adba015f20
+  sqlite3 (2.7.2-arm64-darwin) sha256=e09a781a69d793424864cac99daa17a24308fcda1dc459a94ef25ecf31082b60
+  sqlite3 (2.7.2-x86_64-darwin) sha256=92229c8de5a63a3ed909c6390d187439adeeb614700eed30cf19a4f11c3af370
+  sqlite3 (2.7.2-x86_64-linux-gnu) sha256=e15e8b1224e47a8fec2833afcc6c727742eab6a470c929a54551ab03d04dd4a4
+  sqlite3 (2.7.2-x86_64-linux-musl) sha256=1f7e386b82a78c24ef9f875b4891bcee51d1c2cd254f028b3ce3dd429605bc35
   sshkey (3.0.0) sha256=655ba351d6e01a48dfe59d65530af8975c777b8cc57a061770de3228ff2d11cd
   stackprof (0.2.27) sha256=aff6d28656c852e74cf632cc2046f849033dc1dedffe7cb8c030d61b5745e80c
   stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa

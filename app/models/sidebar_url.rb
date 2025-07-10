@@ -14,9 +14,15 @@ class SidebarUrl < ActiveRecord::Base
       segment: SidebarUrl.segments["primary"],
     },
     {
-      name: "My Posts",
+      name: "My posts",
       path: "/my/activity",
       icon: "user",
+      segment: SidebarUrl.segments["primary"],
+    },
+    {
+      name: "My messages",
+      path: "/my/messages",
+      icon: "inbox",
       segment: SidebarUrl.segments["primary"],
     },
     { name: "Review", path: "/review", icon: "flag", segment: SidebarUrl.segments["primary"] },

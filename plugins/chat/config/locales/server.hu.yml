@@ -14,7 +14,7 @@ hu:
     chat_dm_retention_days: "A személyes csevegési csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_auto_silence_duration: "A felhasználók ennyi percig lesznek némítva, ha túllépik a csevegőüzenet létrehozási korlátját. Állítsa „0”-ra, hogy letiltsa az automatikus némítást."
     chat_allowed_messages_for_trust_level_0: "A 0-s megbízhatósági szinttel rendelkező felhasználók legfeljebb ennyi üzenetet küldhetnek 30 másodpercen belül. A korlátozás letiltásához állítsa „0”-ra."
-    chat_allowed_messages_for_other_trust_levels: "Az 1–4-es megbízhatósági szinttel rendelkező felhasználók legfeljebb ennyi üzenetet küldhetnek 30 másodpercen belül. A korlátozás letiltásához állítsa „0”-ra."
+    chat_allowed_messages_for_other_trust_levels: "Az 1-4-es bizalmi szinttel rendelkező felhasználók legfeljebb ennyi üzenetet küldhetnek 30 másodpercen belül. A korlátozás letiltásához állítsa „0”-ra."
     chat_silence_user_sensitivity: "Annak a valószínűsége, hogy a csevegésben megjelölt felhasználó automatikusan némítva lesz."
     chat_auto_silence_from_flags_duration: "Azon percek száma, ameddig a felhasználók el lesznek némítva, ha a megjelölt csevegési üzenetek miatt automatikusan némítva lesznek."
     chat_duplicate_message_sensitivity: "Annak a valószínűsége, hogy az azonos feladó által küldött ismételt üzenet rövid időn belül blokkolásra kerül. Tizedes szám 0 és 1.0 között, ahol az 1.0 a legmagasabb érték (az üzeneteket gyakrabban blokkolja rövidebb idő alatt). Az ismételt üzenetek engedélyezéséhez állítsa „0”-ra az értéket."
@@ -127,8 +127,8 @@ hu:
           title: "Üzenet törlése"
           description: "Üzenet törlése, hogy a felhasználók ne láthassák."
         delete_and_agree:
-          title: "Megjelölés és Üzenet törlése figyelmen kívül hagyása"
-          description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból, és törli az üzenetet."
+          title: "Megjelölés figyelmen kívül hagyása, és az üzenet törlése"
+          description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és az üzenet törlésével."
         disagree_and_restore:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
@@ -136,7 +136,7 @@ hu:
           title: "Elutasítás"
         ignore:
           title: "Ne csináljon semmit"
-          description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból anélkül, hogy bármit is tenne."
+          description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
       direct_messages:
         transcript_title: "A korábbi üzenetek átirata a(z) %{channel_name} csatornában"
         transcript_body: "A pontosabb kontextus érdekében hozzáadtuk a beszélgetés korábbi üzeneteinek átiratát (legfeljebb tíz):\n\n%{transcript}"
@@ -189,7 +189,7 @@ hu:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"
       inline_to_channel: "Csevegés #%{chat_channel}"
       inline_to_topic_channel: "Csevegés a %{topic_title} témához"
-      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread: "%{thread_title} – #%{chat_channel}"
       inline_to_thread_no_title: "Téma: #%{chat_channel}"
       thread_title_connector: "ebben:"
       x_members:

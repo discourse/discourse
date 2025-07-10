@@ -4,8 +4,10 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import PostTranslationsModal from "discourse/components/modal/post-translations";
+import { ajax } from "discourse/lib/ajax";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
@@ -17,21 +19,6 @@ export default class PostMenuAddTranslationButton extends Component {
   @service siteSettings;
 
   @tracked showComposer = false;
-
-  get originalPostContent() {
-    const originalLocale =
-      this.args.post?.locale || this.siteSettings.default_locale;
-
-    return `<div class='d-editor-translation-preview-wrapper'>
-         <span class='d-editor-translation-preview-wrapper__header'>
-          ${i18n("composer.translations.original_content")}
-            <span class='d-editor-translation-preview-wrapper__original-locale'>
-               ${originalLocale}
-            </span>
-         </span>
-          ${this.args.post.cooked}
-      </div>`;
-  }
 
   get showTranslationButton() {
     return (
@@ -66,11 +53,19 @@ export default class PostMenuAddTranslationButton extends Component {
       return;
     }
 
+    const { raw } = await ajax(`/posts/${this.args.post.id}.json`);
+
     await this.composer.open({
       action: Composer.ADD_TRANSLATION,
       draftKey: "translation",
       warningsDisabled: true,
-      hijackPreview: this.originalPostContent,
+      hijackPreview: {
+        component: DEditorOriginalTranslationPreview,
+        model: {
+          postLocale: this.args.post.locale,
+          rawPost: raw,
+        },
+      },
       post: this.args.post,
     });
   }

@@ -134,7 +134,7 @@ export default class PostCookedHtml extends Component {
 
   @bind
   decorateAfterAdopt(element, helper) {
-    if (this.isStreamElement) {
+    if (!this.isStreamElement) {
       return;
     }
 

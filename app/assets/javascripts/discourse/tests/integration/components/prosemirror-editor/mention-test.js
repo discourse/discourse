@@ -26,32 +26,32 @@ module(
     const testCases = {
       mention: [
         "@eviltrout",
-        '<p><a class="mention" data-name="eviltrout" data-valid="true" contenteditable="false" draggable="true">@eviltrout</a></p>',
+        '<p><a class="mention" data-name="eviltrout" contenteditable="false" draggable="true">@eviltrout</a></p>',
         "@eviltrout",
       ],
       "text with mention": [
         "Hello @eviltrout",
-        '<p>Hello <a class="mention" data-name="eviltrout" data-valid="true" contenteditable="false" draggable="true">@eviltrout</a></p>',
+        '<p>Hello <a class="mention" data-name="eviltrout" contenteditable="false" draggable="true">@eviltrout</a></p>',
         "Hello @eviltrout",
       ],
       "mention after heading": [
         "## Hello\n\n@eviltrout",
-        '<h2>Hello</h2><p><a class="mention" data-name="eviltrout" data-valid="true" contenteditable="false" draggable="true">@eviltrout</a></p>',
+        '<h2>Hello</h2><p><a class="mention" data-name="eviltrout" contenteditable="false" draggable="true">@eviltrout</a></p>',
         "## Hello\n\n@eviltrout",
       ],
       "group mention": [
         "Maybe @support can help",
-        '<p>Maybe <a class="mention" data-name="support" data-valid="true" contenteditable="false" draggable="true">@support</a> can help</p>',
+        '<p>Maybe <a class="mention" data-name="support" contenteditable="false" draggable="true">@support</a> can help</p>',
         "Maybe @support can help",
       ],
       "group and user mention": [
         "Hey @john, I think @support can help here",
-        '<p>Hey <a class="mention" data-name="john" data-valid="true" contenteditable="false" draggable="true">@john</a>, I think <a class="mention" data-name="support" data-valid="true" contenteditable="false" draggable="true">@support</a> can help here</p>',
+        '<p>Hey <a class="mention" data-name="john" contenteditable="false" draggable="true">@john</a>, I think <a class="mention" data-name="support" contenteditable="false" draggable="true">@support</a> can help here</p>',
         "Hey @john, I think @support can help here",
       ],
       "invalid mention": [
         "Hello @invalid, how are you?",
-        '<p>Hello <a class="mention" data-name="invalid" data-valid="false" contenteditable="false" draggable="true">@invalid</a>, how are you?</p>',
+        "<p>Hello @invalid, how are you?</p>",
         "Hello @invalid, how are you?",
       ],
     };

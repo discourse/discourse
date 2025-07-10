@@ -366,19 +366,6 @@ sv:
 
           Notera att när du besvarar ett ämne, eller läser ett ämne i mer än ett par minuter, ställs aviseringsnivån automatiskt in till 'följer'. Du kan ändra detta i [dina användarinställningar](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Visste du att du kan lägga till omröstningar till valfritt inlägg? Testa att använda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulet i redigeraren för att **skapa en omröstning**.
-        not_found: |-
-          Hoppsan! Det fanns ingen omröstning i ditt svar.
-
-          Använd <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulsikonen i redigeraren, eller kopiera och klistra in denna omröstning i ditt nästa svar:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Bra, fin omröstning! Hur lyckades jag med att lära dig detta?
 
@@ -387,20 +374,6 @@ sv:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Ibland vill du **gömma detaljer** i dina svar:
-
-          - När din diskussion exempelvis innehåller avslöjande detaljer för en bok eller film som anses vara en spoiler.
-
-          - När ditt inlägg innehåller en stor mängd information som kan upplevas som överväldigande om det ska läsas på en gång.
-
-          [details=Välj detta för att se hur det fungerar!]
-          1. Välj <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulet i redigeraren.
-          2. Välj "Göm detaljer"
-          3. Editera detaljsammanfattningen och lägg till ditt innehåll.
-          [/details]
-
-          Kan du använda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> kugghjulet i redigeraren för att lägga till en sektion med detaljer i ditt nästa svar?
         not_found: |-
           Har du problem med att skapa en widget för detaljer? Försök med att inkludera följande i ditt nästa svar:
 

@@ -8,10 +8,12 @@
   --d-max-width: 1110px;
   --d-input-bg-color: var(--secondary);
   --d-input-text-color: var(--primary);
-  --d-input-border: 1px solid var(--primary-400);
+  --d-input-border: 1px solid var(--input-border-color);
   --d-input-bg-color--disabled: var(--primary-very-low);
   --d-input-text-color--disabled: var(--primary-medium);
   --d-input-border--disabled: 1px solid var(--primary-low);
+  --d-input-padding-h: 0.65em;
+  --d-input-padding-v: 0.5em;
   --d-nav-color: var(--primary);
   --d-nav-bg-color: transparent;
   --d-nav-color--hover: var(--tertiary);
@@ -20,8 +22,49 @@
   --d-nav-bg-color--active: transparent;
   --d-nav-border-color--active: var(--d-nav-color--active);
   --d-nav-underline-height: 0.125em;
+  --d-nav-font-size: initial;
+  --d-input-focused-color: var(--tertiary);
+  --d-category-border-box-width: 2px;
+  --d-category-box-background-color: none;
+  --d-category-border-accent-width: 6px;
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
-  --nav-space: 0.75em;
+  --nav-space: var(--space-3);
+  --nav-horizontal-padding: 0;
+  --d-main-content-gap: var(--space-8);
+  --main-outlet-padding-top: var(--space-6);
+  --main-outlet-padding-v: 0;
+  --main-outlet-padding-bottom: 0;
+  --table-border-width: 1px;
+  --d-topic-list-avatar-size: 24px;
+  --d-topic-list-title-font-size: var(--font-up-1);
+  --d-topic-list-metadata-top-space: var(--space-1);
+  --d-topic-list-data-padding-v: var(--space-3);
+  --d-topic-list-header-data-padding-h: var(--space-3);
+  --d-topic-list-data-font-size: var(--font-0);
+  --category-boxes-text-alignment: center;
+  --d-topic-list-header-background-color: initial;
+  --d-topic-list-header-text-color: initial;
+  --d-topic-list-margin-h: 0;
+  --d-topic-list-margin-v: 0;
+  --d-topic-list-margin-bottom: 10px;
+  --d-tag-horizontal-padding: 0;
+  --d-tag-font-weight: initial;
+  --d-tag-font-size: var(--font-0);
+  --d-tag-border-radius: 0;
+  --d-tag-background-color: var(--secondary);
+  --category-badge-title-color: currentcolor;
+  --category-boxes-description-text-color: var(--primary-med-or-secondary-high);
+  --d-category-boxes-gap: var(--space-6);
+  --category-boxes-title-font-size: var(--font-up-2);
+  --d-category-boxes-margin-top: var(--space-4);
+  --d-header-padding-v: 0;
+  --d-table-border-top-height: 3px;
+  --topic-title-font-weight: 400;
+  --topic-title-font-weight--visited: 400;
+  --topic-list-item-background-color: var(--secondary);
+  --topic-list-item-background-color--visited: var(--secondary);
+  --list-container-horizontal-padding: 0;
+  --d-topic-list-header-font-size: initial;
 }
 
 // Animation Keyframes
@@ -150,7 +193,7 @@ h6 {
 }
 
 a.cancel {
-  margin-left: 1.25em;
+  margin-left: var(--space-5);
   line-height: normal;
   color: var(--primary-high);
   transition: var(--d-button-transition);
@@ -203,7 +246,7 @@ label {
   a {
     // flex removes whitespace characters between text nodes and elements
     // so we need to add it back
-    margin: 0 0.25em;
+    margin: 0 var(--space-1);
   }
 }
 
@@ -360,7 +403,7 @@ table {
     font-weight: normal;
     color: var(--primary-medium);
     text-align: left;
-    padding: 0.5em;
+    padding: var(--space-2);
   }
 }
 
@@ -427,12 +470,13 @@ textarea {
   }
 
   .d-icon {
-    margin-left: 0.25em;
+    margin-left: var(--space-1);
   }
 
   button {
     background: none;
     border: none;
+    padding: 0;
   }
 }
 
@@ -686,17 +730,17 @@ form {
   }
 
   .control-group {
-    margin-bottom: 1.25em;
+    margin-bottom: var(--space-5);
   }
 
   .radio-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
+    gap: var(--space-2);
   }
 
   .controls:not(.controls-dropdown) + .controls {
-    margin-top: 0.5em;
+    margin-top: var(--space-2);
   }
 }
 
@@ -749,12 +793,12 @@ form {
 }
 
 #main-outlet {
-  padding-top: 1.5em;
+  padding: var(--main-outlet-padding-top) var(--main-outlet-padding-v)
+    var(--main-outlet-padding-bottom);
 
   .mobile-view & {
-    padding-top: 1.25em;
+    padding-top: var(--space-5); // notch avoidance
 
-    // notch avoidance
     @media only screen and (orientation: landscape) {
       padding-right: env(safe-area-inset-right);
       padding-left: env(safe-area-inset-left);
@@ -829,7 +873,7 @@ form {
     "instructions controls";
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 0 0.5em;
+  gap: 0 var(--space-2);
 
   .control-label {
     grid-area: title;
@@ -844,7 +888,7 @@ form {
   }
 
   .controls {
-    margin-top: 0.5em;
+    margin-top: var(--space-2);
     grid-area: controls;
   }
 
@@ -858,7 +902,7 @@ form {
 
   .row {
     border-bottom: 1px solid var(--primary-low);
-    padding: 0.25em 0;
+    padding: var(--space-1) 0;
     display: grid;
     grid-template-areas:
       "email dropdown"
@@ -918,7 +962,7 @@ form {
 
     .d-icon {
       height: 0.74em;
-      width: 0.75em;
+      width: 0.74em;
     }
   }
 
@@ -952,13 +996,13 @@ form {
     flex-direction: column;
 
     .grouped-control-label {
-      padding: 0.25em 0;
+      padding: var(--space-1) 0;
     }
 
     .grouped-control-field {
       flex: 1 0 auto;
       display: flex;
-      padding-bottom: 0.25em;
+      padding-bottom: var(--space-1);
 
       label {
         margin: 0;
@@ -969,10 +1013,10 @@ form {
 
 a#user-nav-skip-link,
 a#skip-link {
-  padding: 0.25em 0.5em;
+  padding: var(--space-1) var(--space-2);
   position: fixed;
   top: -50px;
-  left: 1em;
+  left: var(--space-4);
   color: var(--secondary);
   background: var(--tertiary);
   transition: top 0.3s ease-out;
@@ -997,11 +1041,11 @@ body.has-sidebar-page {
 
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
-    gap: 0 2em;
+    gap: 0 var(--d-main-content-gap);
     padding-left: 0;
 
     @include viewport.until(lg) {
-      gap: 0 1em;
+      --d-main-content-gap: var(--space-4);
     }
   }
 }
@@ -1052,7 +1096,7 @@ body.has-sidebar-page {
     color: var(--primary);
 
     .d-icon {
-      margin-right: 0.25em;
+      margin-right: var(--space-1);
       color: var(--primary-medium);
     }
   }

@@ -375,6 +375,23 @@ shared_examples "signup scenarios" do
       end
     end
   end
+
+  describe "user custom fields" do
+    it "shows tips if required but not selected" do
+      user_field_text = Fabricate(:user_field)
+      user_field_dropdown = Fabricate(:user_field_dropdown)
+
+      signup_form.open
+      find(".signup-page-cta__signup").click
+
+      expect(signup_form).to have_content(
+        I18n.t("js.user_fields.required", name: user_field_text.name),
+      )
+      expect(signup_form).to have_content(
+        I18n.t("js.user_fields.required_select", name: user_field_dropdown.name),
+      )
+    end
+  end
 end
 
 describe "Signup", type: :system do

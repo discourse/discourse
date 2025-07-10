@@ -15,8 +15,8 @@ describe "Details button", type: :system do
     it "uses the text selection for content" do
       visit("/new-topic")
       composer.fill_content("test :+1:").toggle_rich_editor.select_all
-      find(".toolbar-popup-menu-options").click
-      find(".select-kit-row[data-name='Hide Details']").click
+      find(".toolbar-menu__options-trigger").click
+      find("button[title='Hide Details']").click
       rich.click(x: 22, y: 30) # hack for pseudo element
 
       expect(rich).to have_css(

@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
+import { and, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -75,8 +76,10 @@ export default RouteTemplate(
             </span>
           {{/if}}
         </div>
-      {{else}}
-        <span class="heading">{{i18n "admin.customize.theme.creator"}}</span>
+      {{else if (not @controller.model.system)}}
+        <span class="heading created-by">{{i18n
+            "admin.customize.theme.creator"
+          }}</span>
         <span>
           <UserLink @user={{@controller.model.user}}>
             {{formatUsername @controller.model.user.username}}
@@ -180,11 +183,19 @@ export default RouteTemplate(
         class="form-horizontal theme settings control-unit relative-theme-selector included-components-setting"
       >
         <div class="row setting">
-          <ThemeSettingRelativesSelector
-            @setting={{@controller.relativesSelectorSettingsForTheme}}
-            @model={{@controller.model}}
-            class="theme-setting"
-          />
+          <PluginOutlet
+            @name="admin-customize-theme-included-components-setting"
+            @outletArgs={{lazyHash
+              setting=@controller.relativesSelectorSettingsForTheme
+              model=@controller.model
+            }}
+          >
+            <ThemeSettingRelativesSelector
+              @setting={{@controller.relativesSelectorSettingsForTheme}}
+              @model={{@controller.model}}
+              class="theme-setting"
+            />
+          </PluginOutlet>
         </div>
       </section>
     {{/if}}
@@ -256,8 +267,8 @@ export default RouteTemplate(
       </div>
     {{/unless}}
 
-    {{#if @controller.extraFiles.length}}
-      <div class="control-unit">
+    {{#if (and @controller.extraFiles.length (not @controller.model.system))}}
+      <div class="control-unit extra-files">
         <div class="mini-title">{{i18n
             "admin.customize.theme.extra_files"
           }}</div>
@@ -302,7 +313,7 @@ export default RouteTemplate(
     {{/if}}
 
     {{#if @controller.hasSettings}}
-      <div class="control-unit">
+      <div class="control-unit theme-settings">
         <div class="mini-title">{{i18n
             "admin.customize.theme.theme_settings"
           }}</div>
@@ -367,12 +378,14 @@ export default RouteTemplate(
         target="_blank"
         class="btn btn-default"
       >{{icon "desktop"}}{{i18n "admin.customize.theme.preview"}}</a>
-      <a
-        class="btn btn-default export"
-        rel="noopener noreferrer"
-        target="_blank"
-        href={{@controller.downloadUrl}}
-      >{{icon "download"}} {{i18n "admin.export_json.button_text"}}</a>
+      {{#unless @controller.model.system}}
+        <a
+          class="btn btn-default export"
+          rel="noopener noreferrer"
+          target="_blank"
+          href={{@controller.downloadUrl}}
+        >{{icon "download"}} {{i18n "admin.export_json.button_text"}}</a>
+      {{/unless}}
 
       {{#if @controller.showConvert}}
         <DButton
@@ -401,7 +414,7 @@ export default RouteTemplate(
           />
         {{/if}}
       {{/if}}
-      {{#if @controller.hasSettings}}
+      {{#if (and @controller.hasSettings (not @controller.model.system))}}
         <DButton
           @action={{@controller.showThemeSettingsEditor}}
           @label="admin.customize.theme.settings_editor"

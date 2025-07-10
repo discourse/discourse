@@ -285,6 +285,7 @@ export default class TopicMapSummary extends Component {
           @placement="right"
           @groupIdentifier="topic-map"
           @inline={{true}}
+          @autofocus={{true}}
         >
           <:trigger>
             {{number @topic.like_count noTitle="true"}}
@@ -339,6 +340,7 @@ export default class TopicMapSummary extends Component {
           @groupIdentifier="topic-map"
           @placement="right"
           @inline={{true}}
+          @autofocus={{true}}
         >
           <:trigger>
             {{number this.linksCount maxDisplay=LINKS_THRESHOLD noTitle="true"}}
@@ -386,6 +388,7 @@ export default class TopicMapSummary extends Component {
           @modalForMobile={{true}}
           @groupIdentifier="topic-map"
           @inline={{true}}
+          @autofocus={{true}}
         >
           <:trigger>
             {{number @topic.participant_count noTitle="true"}}

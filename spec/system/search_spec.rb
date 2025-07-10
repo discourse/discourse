@@ -19,6 +19,24 @@ describe "Search", type: :system do
 
     after { SearchIndexer.disable }
 
+    it "handles search term cleaning and ordering for aliases" do
+      # we need to be logged in for last read to show up
+      sign_in(post.user)
+      TopicUser.update_last_read(post.user, post.topic.id, 1, 1, 0)
+
+      visit("/search?q=test%20r")
+
+      expect(search_page.search_input.value).to eq("test")
+      # read sort order is set to 5
+      expect(search_page.sort_order.value).to eq("5")
+
+      visit("/search?q=test%20l")
+
+      expect(search_page.search_input.value).to eq("test")
+      # latest sort order is set to 1
+      expect(search_page.sort_order.value).to eq("1")
+    end
+
     it "works and clears search page state", mobile: true do
       visit("/search")
 
