@@ -14,6 +14,7 @@ class OptimizedVideo < ActiveRecord::Base
         extension: options[:extension] || File.extname(filename),
         url: options[:url],
         filesize: options[:filesize],
+        adapter: options[:adapter],
       )
 
     if optimized_video.save
