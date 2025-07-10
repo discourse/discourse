@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    discourse_reactions_like_icon: "Определяет значок, используемый для основной кнопки реакции. Это должно быть название значка <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>, а не название эмодзи."
+    discourse_reactions_reaction_for_like: "Определяет реакцию, связанную с действием «Нравится». Исторические записи о лайках не будут изменены, если этот параметр изменится, поэтому <strong>настоятельно рекомендуется</strong> никогда его не менять."
+    discourse_reactions_enabled: "Включить плагин 'discourse-reactions'."
+    discourse_reactions_enabled_reactions: "Определение списка доступных реакций. Разрешены любые эмодзи."
+    discourse_reactions_desaturated_reaction_panel: "Уменьшение визуального шума. Значки реакций отображаются обесцвеченными до наведения на них курсора."
+    discourse_reactions_excluded_from_like: "Реакции, которые не засчитываются как лайк. Любые реакции, которых нет в этом списке, будут засчитываться как лайки для наград, отчетов и других целей."
+    discourse_reactions_like_sync_enabled: "Если эта опция включена, для исторических реакций будут созданы соответствующие записи «Нравится», за исключением тех реакций, которые определены в `discourse_reactions_excluded_from_like`. Эта синхронизация будет происходить регулярно в фоновом режиме, а также при изменении `discourse_reactions_excluded_from_like`."
+    errors:
+      invalid_excluded_emoji: "Нельзя исключить эмодзи, которые не входят в `discourse_reactions_enabled_reactions`, и нельзя исключить эмодзи из `discourse_reactions_reaction_for_like`."
+  badges:
+    first_reaction:
+      name: Первая реакция
+      description: Пользователь первый раз отреагировал на сообщение
+      long_description: |
+        Эта награда выдается, когда вы первый раз отреагировали на сообщение. Подобные действия - это отличный способ сообщить участникам сообщества, что они опубликовали статью, не оставившую вас равнодушным. Не стесняйтесь делиться эмоциями!
+  reports:
+    reactions:
+      title: "Реакции"
+      description: "Перечень самых последних реакций."
+      labels:
+        day: "День"

@@ -26,6 +26,10 @@ discourse-presence:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-presence/**/*
 
+discourse-reactions:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-reactions/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

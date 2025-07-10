@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    discourse_reactions:
+      state_panel:
+        more_users: "và %{count} nữa..."
+      main_reaction:
+        add: "Thích bài viết này"
+    notifications:
+      reaction_2_users: "%{username}, %{username2}"
+      reaction_multiple_users:
+        other: "%{username} và %{count} khác"
+      titles:
+        reaction: "phản ứng mới"
