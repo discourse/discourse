@@ -130,6 +130,13 @@ files:
     destination_path: plugins/login-with-amazon/server.yml
     label: login-with-amazon
 
+  - source_path: plugins/discourse-lti/config/locales/client.en.yml
+    destination_path: plugins/lti/client.yml
+    label: lti
+  - source_path: plugins/discourse-lti/config/locales/server.en.yml
+    destination_path: plugins/lti/server.yml
+    label: lti
+
   - source_path: plugins/discourse-microsoft-auth/config/locales/client.en.yml
     destination_path: plugins/microsoft-auth/client.yml
     label: microsoft-auth

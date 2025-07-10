@@ -38,6 +38,10 @@ discourse-login-with-amazon:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-login-with-amazon/**/*
 
+discourse-lti:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-lti/**/*
+
 discourse-microsoft-auth:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-microsoft-auth/**/*
