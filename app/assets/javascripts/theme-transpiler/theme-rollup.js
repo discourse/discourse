@@ -49,6 +49,8 @@ globalThis.fetch = function (url) {
 let lastRollupResult;
 let lastRollupError;
 globalThis.rollup = function (modules, opts) {
+  const themeBase = `theme-${opts.themeId}/`;
+
   const resultPromise = rollup({
     input: "virtual:main",
     logLevel: "info",
@@ -60,30 +62,20 @@ globalThis.rollup = function (modules, opts) {
       {
         name: "discourse-extensionsearch",
         async resolveId(source, context) {
-          // console.log(`Running extensionsearch ${source}`);
-
           if (source.match(/\.(js|gjs|hbs)$/)) {
             return null;
           }
 
           for (const ext of ["", ".js", ".gjs", ".hbs"]) {
-            // console.log(ext);
             let resolved;
             try {
-              resolved = await this.resolve(
-                `${source}${ext}`,
-                context /*, {
-                skipSelf: true,
-              }*/
-              );
+              resolved = await this.resolve(`${source}${ext}`, context);
             } catch (error) {
               if (!error.message.includes("Cannot access the file system")) {
                 throw error;
               }
-              // console.log("caught");
             }
-            // console.log(`finished resolve, ${source}${ext}, `);
-            // console.log(JSON.stringify(resolved));
+
             if (resolved) {
               return resolved;
             }
@@ -96,11 +88,8 @@ globalThis.rollup = function (modules, opts) {
         name: "discourse-loader",
         resolveId(source, context) {
           if (rollupVirtualImports[source]) {
-            return source;
+            return `${themeBase}${source}`;
           }
-
-          // console.log(source);
-          // console.log(Object.keys(modules));
 
           if (source.startsWith(".")) {
             if (!context) {
@@ -111,24 +100,25 @@ globalThis.rollup = function (modules, opts) {
             source = join(dirname(context), source);
           }
 
-          if (modules.hasOwnProperty(source)) {
-            return source;
+          if (source.startsWith(themeBase)) {
+            const fromBase = source.slice(themeBase.length);
+            if (modules.hasOwnProperty(fromBase)) {
+              return source;
+            }
           }
-
-          // for (const ext of ["", ".js", ".gjs", ".hbs"]) {
-          //   const candidate = source + ext;
-          //   if (modules.hasOwnProperty(candidate)) {
-          //     return candidate;
-          //   }
-          // }
-          // return false;
         },
         load(id) {
-          if (rollupVirtualImports[id]) {
-            return rollupVirtualImports[id](modules, opts);
+          if (!id.startsWith(themeBase)) {
+            return;
           }
-          if (modules.hasOwnProperty(id)) {
-            return modules[id];
+
+          const fromBase = id.slice(themeBase.length);
+
+          if (rollupVirtualImports[fromBase]) {
+            return rollupVirtualImports[fromBase](modules, opts);
+          }
+          if (modules.hasOwnProperty(fromBase)) {
+            return modules[fromBase];
           }
         },
       },
@@ -136,9 +126,15 @@ globalThis.rollup = function (modules, opts) {
       {
         name: "discourse-colocation",
         async resolveId(source, context) {
+          if (source.startsWith(".")) {
+            source = join(dirname(context), source);
+          }
+
           if (
-            source.startsWith("discourse/components/") ||
-            source.startsWith("admin/components/")
+            !(
+              source.startsWith(`${themeBase}discourse/components/`) ||
+              source.startsWith(`${themeBase}admin/components/`)
+            )
           ) {
             return;
           }
@@ -187,11 +183,10 @@ globalThis.rollup = function (modules, opts) {
         },
 
         transform: {
-          // order: "pre",
           async handler(input, id) {
             if (
-              !id.startsWith("discourse/components/") &&
-              !id.startsWith("admin/components/")
+              !id.startsWith(`${themeBase}discourse/components/`) &&
+              !id.startsWith(`${themeBase}admin/components/`)
             ) {
               return;
             }
@@ -209,9 +204,7 @@ globalThis.rollup = function (modules, opts) {
               if (hbs) {
                 const s = new MagicString(input);
                 s.prepend(
-                  `import template from '${hbs.id}';
-const __COLOCATED_TEMPLATE__ = template;
-`
+                  `import template from '${hbs.id}';\nconst __COLOCATED_TEMPLATE__ = template;\n`
                 );
 
                 return {
@@ -320,8 +313,6 @@ const __COLOCATED_TEMPLATE__ = template;
       return bundle.generate({
         format: "es",
         sourcemap: "hidden",
-        sourcemapPathTransform: (relativeSourcePath) =>
-          `theme-${opts.themeId}/${relativeSourcePath}`,
       });
     })
     .then(({ output }) => {

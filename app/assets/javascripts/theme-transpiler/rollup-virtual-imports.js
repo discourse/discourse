@@ -10,8 +10,6 @@ export default {
 
     let i = 1;
     for (const moduleFilename of Object.keys(tree)) {
-      let moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
-
       if (
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
@@ -20,24 +18,30 @@ export default {
         continue;
       }
 
+      const filenameWithoutExtension = moduleFilename.replace(
+        /\.[^\.]+(\.es6)?$/,
+        ""
+      );
+
+      let compatModuleName = filenameWithoutExtension;
+
       if (moduleFilename.match(/(^|\/)connectors\//)) {
         const isTemplate = moduleFilename.endsWith(".hbs");
-        const isInTemplatesDirectory = moduleName.match(/(^|\/)templates\//);
+        const isInTemplatesDirectory =
+          moduleFilename.match(/(^|\/)templates\//);
 
         if (isTemplate && !isInTemplatesDirectory) {
-          moduleName = moduleName.replace(
+          compatModuleName = compatModuleName.replace(
             /(^|\/)connectors\//,
             "$1templates/connectors/"
           );
         } else if (!isTemplate && isInTemplatesDirectory) {
-          moduleName = moduleName.replace(/^templates\//, "");
+          compatModuleName = compatModuleName.replace(/^templates\//, "");
         }
-        output += `import * as Mod${i} from "${moduleFilename}";\n`;
-        output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
-      } else {
-        output += `import * as Mod${i} from "${moduleFilename}";\n`;
-        output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
       }
+
+      output += `import * as Mod${i} from "./${filenameWithoutExtension}";\n`;
+      output += `themeCompatModules["${compatModuleName}"] = Mod${i};\n`;
 
       i += 1;
     }

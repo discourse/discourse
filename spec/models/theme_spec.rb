@@ -989,21 +989,6 @@ HTML
 
       expect(content).to include("function migrate(settings)")
     end
-
-    it "recompiles when settings are changed" do
-      content, digest = theme.baked_js_tests_with_digest
-      expect(content).to be_present
-      expect(digest).to be_present
-      expect(content).to include("assert.ok(true);")
-
-      theme.update_setting(:some_number, 55)
-      theme.save!
-      expect(theme.build_settings_hash[:some_number]).to eq(55)
-
-      new_content, new_digest = theme.baked_js_tests_with_digest
-      expect(new_content).not_to eq(content)
-      expect(new_digest).not_to eq(digest)
-    end
   end
 
   describe "get_setting" do

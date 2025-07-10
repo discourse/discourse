@@ -9,10 +9,14 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree({ "connectors/blah-2.hbs" => "{{var}}" })
       compiler.append_tree({ "javascripts/connectors/blah-3.hbs" => "{{var}}" })
 
-      expect(compiler.content.to_s).to include("themeCompatModules[\"/connectors/blah-1\"]")
-      expect(compiler.content.to_s).to include("themeCompatModules[\"connectors/blah-2\"]")
       expect(compiler.content.to_s).to include(
-        "themeCompatModules[\"javascripts/connectors/blah-3\"]",
+        "themeCompatModules[\"/templates/connectors/blah-1\"]",
+      )
+      expect(compiler.content.to_s).to include(
+        "themeCompatModules[\"templates/connectors/blah-2\"]",
+      )
+      expect(compiler.content.to_s).to include(
+        "themeCompatModules[\"javascripts/templates/connectors/blah-3\"]",
       )
     end
   end
@@ -215,7 +219,7 @@ RSpec.describe ThemeJavascriptCompiler do
       )
       expect(compiler.content).to include("ember-this-fallback")
       expect(compiler.content).to include(
-        "The `value` property path was used in the `discourse/components/my-component.hbs` template without using `this`. This fallback behavior has been deprecated, all properties must be looked up on `this` when used in the template: {{this.value}}",
+        "The `value` property path was used in the `theme-1/discourse/components/my-component.hbs` template without using `this`. This fallback behavior has been deprecated, all properties must be looked up on `this` when used in the template: {{this.value}}",
       )
     end
   end
