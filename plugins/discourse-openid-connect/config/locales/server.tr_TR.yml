@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    openid_connect_enabled: OpenID Connect kimlik doğrulamasını etkinleştirin. Kullanıcı arayüzü metnini <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>buradan</a> özelleştirin
+    openid_connect_discovery_document: "OpenID Connect keşif belgesi URL'si. Normalde \"https://your.domain/.well-known/openid-configuration\" adresinde bulunur"
+    openid_connect_client_id: "OpenID Connect istemci kimliği"
+    openid_connect_client_secret: "OpenID Connect istemci sırrı"
+    openid_connect_authorize_scope: "Yetkilendirme uç noktasına gönderilen kapsamlar. Bu, \"openid\" içermelidir."
+    openid_connect_rp_initiated_logout: "Çıkış yaptıktan sonra kullanıcıyı end_session_endpoint'e yönlendirin. Kimlik sağlayıcınız tarafından desteklenmeli ve keşif belgesine dahil edilmelidir."
+    openid_connect_rp_initiated_logout_redirect: "(isteğe bağlı) Çıkış yap uç noktasına iletilecek olan post_logout_redirect_uri. Sağlanmışsa kimlik sağlayıcı ile kayıtlı olmalıdır."
+    openid_connect_token_scope: "Belirteç uç noktası talep edilirken gönderilen kapsamlar. Resmi spesifikasyon bunu gerektirmez."
+    openid_connect_error_redirects: "Geri arama error_reason ilk parametreyi içeriyorsa kullanıcı ikinci parametredeki URL'ye yönlendirilir"
+    openid_connect_allow_association_change: "Kullanıcıların Discourse hesaplarının bağlantısını OpenID Connect sağlayıcısından kesmelerine ve yeniden bağlamalarına izin verin"
+    openid_connect_verbose_logging: "Ayrıntılı openid-connect kimlik doğrulama bilgilerini \"/logs\" dosyasına kaydedin. Normal kullanım sırasında bunu devre dışı bırakın."
+    openid_connect_authorize_parameters: "auth/oidc'den IDP'nin yetkilendirme uç noktasına yönlendirmeye dahil edilecek URL parametreleri"
+    openid_connect_overrides_email: "Her oturum açma işleminde, openid-connect değerini kullanarak kullanıcının e-postasını geçersiz kılın. \"auth_overrides_email\" ayarıyla aynı şekilde çalışır, ancak OpenID Connect girişlerine özeldir."
+    openid_connect_claims: "Kapsamlara dayalı olarak verileri geri iletmeyen sağlayıcılarla kullanım için talepleri açıkça tanımlayın. (JSON)"
+    openid_connect_match_by_email: "OpenID Connect kimlik doğrulamalarını mevcut Discourse kullanıcı hesaplarıyla eşleştirmek için e-posta adresini kullanın."
+    openid_connect_use_pkce: "OpenID Connect kimlik doğrulaması için Kod Değişimi Kanıt Anahtarını (PKCE) etkinleştirin."
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: Kimlik sağlayıcıdan yapılandırma alınamıyor. Lütfen tekrar deneyin.

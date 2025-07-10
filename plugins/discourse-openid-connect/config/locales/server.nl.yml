@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    openid_connect_enabled: Schakel OpenID Connect-verificatie in. Pas de gebruikersinterfacetekst <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>hier</a> aan
+    openid_connect_discovery_document: "URL van OpenID Connect-detectiedocument. Normaal gesproken te vinden op 'https://jouw.domein/.well-known/openid-configuration'"
+    openid_connect_client_id: "OpenID Connect-client-ID"
+    openid_connect_client_secret: "OpenID Connect-clientgeheim"
+    openid_connect_authorize_scope: "De bereiken die naar het autorisatie-eindpunt zijn gestuurd. Dit moet 'openid' bevatten."
+    openid_connect_rp_initiated_logout: "Leid de gebruiker om naar end_session_endpoint na afmelden. Moet worden ondersteund door je identiteitsprovider en worden opgenomen in het ontdekkingsdocument."
+    openid_connect_rp_initiated_logout_redirect: "(optioneel) De post_logout_redirect_uri die wordt doorgegeven aan het afmeldingseindpunt. Indien opgegeven, moet deze worden geregistreerd bij de identiteitsprovider."
+    openid_connect_token_scope: "De bereiken die worden gestuurd bij verzoeken aan het tokeneindpunt. De officiële specificatie vereist dit niet."
+    openid_connect_error_redirects: "Als de callback error_reason de eerste parameter bevat, wordt de gebruiker naar de URL in de tweede parameter geleid"
+    openid_connect_allow_association_change: "Gebruikers toestaan hun Discourse-accounts te ontkoppelen en opnieuw te verbinden met de OpenID Connect-provider"
+    openid_connect_verbose_logging: "Gedetailleerde OpenID Connect-verificatiegegevens loggen in `/logs`. Houd dit uitgeschakeld tijdens normaal gebruik."
+    openid_connect_authorize_parameters: "URL-parameters die worden opgenomen in de omleiding van /auth/oidc naar het autorisatie-eindpunt van de IDP"
+    openid_connect_overrides_email: "Overschrijf bij elke aanmelding het e-mailadres van de gebruiker met de waarde van OpenID Connect. Werkt hetzelfde als de instelling 'auth_overrides_email', maar is specifiek voor OpenID Connect-aanmeldingen."
+    openid_connect_claims: "Definieer expliciet de claims voor gebruik met providers die geen gegevens retourneren op basis van bereiken. (JSON)"
+    openid_connect_match_by_email: "E-mailadres gebruiken om OpenID Connect-verificaties te matchen met bestaande Discourse-gebruikersaccounts."
+    openid_connect_use_pkce: "Schakel Proof Key for Code Exchange (PKCE) in voor OpenID Connect-verificatie."
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: Kan configuratie niet ophalen van identiteitsprovider. Probeer het opnieuw.

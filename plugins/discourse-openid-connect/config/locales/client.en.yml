@@ -1,0 +1,12 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_openid_connect: "Discourse OpenID Connect"
+  js:
+    login:
+      oidc:
+        name: "OpenID Connect"
+        title: "with OpenID Connect"
+        message: "Authenticating with OpenID Connect"

@@ -150,3 +150,10 @@ files:
   - source_path: plugins/discourse-oauth2-basic/config/locales/server.en.yml
     destination_path: plugins/oauth2-basic/server.yml
     label: oauth2-basic
+
+  - source_path: plugins/discourse-openid-connect/config/locales/client.en.yml
+    destination_path: plugins/openid-connect/client.yml
+    label: openid-connect
+  - source_path: plugins/discourse-openid-connect/config/locales/server.en.yml
+    destination_path: plugins/openid-connect/server.yml
+    label: openid-connect
