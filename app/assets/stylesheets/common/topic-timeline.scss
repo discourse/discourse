@@ -238,7 +238,7 @@
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
-      border-left: 1px solid var(--tertiary-low-or-tertiary-high);
+      border-left: 1px solid var(--topic-timeline-border-color);
       position: relative;
       transform: translateZ(0);
     }
@@ -265,7 +265,7 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: var(--tertiary-low-or-tertiary-high);
+      background-color: var(--topic-timeline-border-color);
       height: 100%;
       float: left;
       z-index: z("base") + 1;

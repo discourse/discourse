@@ -143,7 +143,7 @@ RSpec.describe Middleware::RequestTracker do
       # /srv/status is never a tracked view because content-type is text/plain
       data =
         Middleware::RequestTracker.get_data(
-          env("HTTP_USER_AGENT" => "kube-probe/1.18", "REQUEST_URI" => "/srv/status?shutdown_ok=1"),
+          env("HTTP_USER_AGENT" => "kube-probe/1.18", "REQUEST_URI" => "/srv/status"),
           ["200", { "Content-Type" => "text/plain" }],
           0.1,
         )

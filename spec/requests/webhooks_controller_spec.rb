@@ -79,6 +79,31 @@ RSpec.describe WebhooksController do
       expect(email_log.bounce_error_code).to eq("5.1.1")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
+
+    context "when readonly mode is enabled" do
+      before { Discourse.enable_readonly_mode }
+
+      it "returns 503" do
+        user = Fabricate(:user, email:)
+        email_log = Fabricate(:email_log, user:, message_id:, to_address: email)
+
+        post "/webhooks/mailgun.json",
+             params: {
+               "token" => token,
+               "timestamp" => timestamp,
+               "event" => "dropped",
+               "recipient" => email,
+               "Message-Id" => "<#{message_id}>",
+               "signature" => signature,
+               "error" =>
+                 "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
+               "code" => "5.1.1",
+             }
+
+        expect(response.status).to eq(503)
+        expect(email_log.reload.bounced).to eq(false)
+      end
+    end
   end
 
   describe "#sendgrid" do

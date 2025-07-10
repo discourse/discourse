@@ -12,7 +12,8 @@ class SessionController < ApplicationController
 
   skip_before_action :check_xhr, only: %i[second_factor_auth_show]
 
-  allow_in_staff_writes_only_mode :create, :email_login, :forgot_password
+  allow_in_readonly_mode :email_login
+  allow_in_staff_writes_only_mode :create, :forgot_password
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
@@ -107,7 +108,6 @@ class SessionController < ApplicationController
 
     def become
       raise Discourse::InvalidAccess if Rails.env.production?
-      raise Discourse::ReadOnly if @readonly_mode
 
       if ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] != "1"
         return render plain: <<~TEXT, status: 403
@@ -166,7 +166,7 @@ class SessionController < ApplicationController
 
   def sso_login
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect
-    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
+    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode
 
     params.require(:sso)
     params.require(:sig)
@@ -207,7 +207,7 @@ class SessionController < ApplicationController
       invite = validate_invitiation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
-        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
+        raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
         if user.suspended?
           render_sso_error(text: failed_to_login(user)[:error], status: 403)
@@ -332,7 +332,7 @@ class SessionController < ApplicationController
 
     user = User.find_by_username_or_email(normalized_login_param)
 
-    raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
     rate_limit_second_factor!(user)
 
@@ -446,11 +446,9 @@ class SessionController < ApplicationController
 
   def email_login
     token = params[:token]
-    matched_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])
-    user = matched_token&.user
+    user = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
-
     rate_limit_second_factor!(user)
 
     if user.present? && !authenticate_second_factor(user).ok
@@ -458,12 +456,17 @@ class SessionController < ApplicationController
     end
 
     if user = EmailToken.confirm(token, scope: EmailToken.scopes[:email_login])
+      if @staff_writes_only_mode
+        raise Discourse::ReadOnly unless user.staff?
+      elsif @readonly_mode
+        raise Discourse::ReadOnly unless user.admin?
+      end
+
       if login_not_approved_for?(user)
         return render json: login_not_approved
       elsif payload = login_error_check(user)
         return render json: payload
       else
-        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
         user.update_timezone_if_missing(params[:timezone])
         log_on_user(user)
         return render json: success_json
@@ -636,7 +639,7 @@ class SessionController < ApplicationController
       end
 
     if user
-      raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
+      raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
       enqueue_password_reset_for_user(user)
     else
       RateLimiter.new(

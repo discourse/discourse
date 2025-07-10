@@ -24,6 +24,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    padding: 0 var(--d-header-padding-v);
 
     .contents {
       display: flex;
@@ -351,7 +352,7 @@
   }
 
   .topic-link {
-    color: var(--header_primary);
+    color: var(--title-color--header);
     display: block;
 
     @include ellipsis;
