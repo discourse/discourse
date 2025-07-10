@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  login:
+    authenticator_error_fetch_user_details: "Kon je gebruikersgegevens niet ophalen. Heb je een actief account?"
+  site_settings:
+    oauth2_enabled: "Aangepaste OAuth2 is ingeschakeld"
+    oauth2_client_id: "Client-ID voor aangepaste OAuth2"
+    oauth2_client_secret: "Clientgeheim voor aangepaste OAuth2"
+    oauth2_authorize_url: "Autorisatie-URL voor OAuth2"
+    oauth2_authorize_signup_url: '(optioneel) Alternatieve autorisatie-URL die wordt gebruikt wanneer de knop "Registreren" wordt gebruikt'
+    oauth2_token_url: "Token-URL voor OAuth2"
+    oauth2_token_url_method: "Gebruikte methode voor ophalen van de token-URL"
+    oauth2_callback_user_id_path: "Pad in het tokenantwoord naar de gebruikers-ID, bijvoorbeeld params.info.uuid"
+    oauth2_callback_user_info_paths: "Paden in het tokenantwoord voor andere gebruikerseigenschappen. Ondersteunde eigenschappen zijn name, username, email, email_verified en avatar. De notatie is property:path, bijvoorbeeld name:params.info.name"
+    oauth2_fetch_user_details: "Gebruikers-JSON voor OAuth2 ophalen"
+    oauth2_user_json_url: "URL voor het ophalen van de gebruikers-JSON voor OAuth2 (we vervangen :id vervangen door de geretourneerde ID van de OAuth-aanroep en :token door de token-ID)"
+    oauth2_user_json_url_method: "Gebruikte methode voor ophalen van de gebruikers-JSON"
+    oauth2_json_user_id_path: "Pad in de OAuth2-gebruikers-JSON naar de gebruikers-ID, bijvoorbeeld user.id"
+    oauth2_json_username_path: "Pad in de OAuth2-gebruikers-JSON naar de gebruikersnaam, bijvoorbeeld user.username"
+    oauth2_json_name_path: "Pad in de OAuth2-gebruikers-JSON naar de volledige naam van de gebruiker, bijvoorbeeld user.name.full"
+    oauth2_json_email_path: "Pad in de OAuth2-gebruikers-JSON naar het e-mailadres van de gebruiker, bijvoorbeeld user.email"
+    oauth2_json_email_verified_path: "Pad in de OAuth2-gebruikers-JSON naar de e-mailverificatiestatus van de gebruiker, bijvoorbeeld user.email.verified. Deze instelling heeft alleen effect als oauth2_email_verified is uitgeschakeld"
+    oauth2_json_avatar_path: "Pad in de Oauth2-gebruikers-JSON naar de avatar van de gebruiker, bijvoorbeeld user.avatar_url"
+    oauth2_email_verified: "Controleer dit als de OAuth2-site het e-mailadres heeft geverifieerd"
+    oauth2_overrides_email: "Overschrijf het Discourse-e-mailadres met het externe e-mailadres bij elke aanmelding. Werkt hetzelfde als de instelling `auth_overrides_email`, maar is specifiek voor OAuth2-aanmeldingen."
+    oauth2_send_auth_header: "Clientaanmeldgegevens sturen in een HTTP-autorisatieheader"
+    oauth2_send_auth_body: "Clientaanmeldgegevens sturen in verzoektekst"
+    oauth2_debug_auth: "Uitgebreide debuggegevens opnemen in je logs"
+    oauth2_authorize_options: "Deze opties verzoeken bij autoriseren"
+    oauth2_scope: "Dit bereik verzoeken bij autoriseren"
+    oauth2_button_title: "De tekst voor de OAuth2-knop"
+    oauth2_allow_association_change: Gebruikers toestaan hun Discourse-account te ontkoppelen van de OAuth2-provider en opnieuw te koppelen
+    oauth2_disable_csrf: "CSRF-controle uitschakelen"
+    errors:
+      oauth2_fetch_user_details: "oauth2_callback_user_id_path moet aanwezig zijn om oauth2_fetch_user_details uit te schakelen"

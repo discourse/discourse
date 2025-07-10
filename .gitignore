@@ -54,6 +54,7 @@
 !/plugins/discourse-login-with-amazon
 !/plugins/discourse-lti
 !/plugins/discourse-microsoft-auth
+!/plugins/discourse-oauth2-basic
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

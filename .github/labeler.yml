@@ -46,6 +46,10 @@ discourse-microsoft-auth:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-microsoft-auth/**/*
 
+discourse-oauth2-basic:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-oauth2-basic/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
