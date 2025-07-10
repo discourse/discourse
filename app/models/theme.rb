@@ -1049,16 +1049,10 @@ class Theme < ActiveRecord::Base
         theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
       )
 
-    compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash, minify: false)
+    compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
     compiler.append_tree(load_all_extra_js)
     compiler.append_tree(migrations_tree, include_variables: false)
     compiler.append_tree(tests_tree)
-
-    # compiler.append_raw_script "test_setup.js", <<~JS
-    #   (function() {
-    #     require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
-    #   })();
-    # JS
 
     content = compiler.content
 
