@@ -34,6 +34,10 @@ discourse-apple-auth:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-apple-auth/**/*
 
+discourse-microsoft-auth:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-microsoft-auth/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

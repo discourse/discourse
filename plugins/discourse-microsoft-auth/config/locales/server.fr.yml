@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    microsoft_auth_enabled: "Permettre aux utilisateurs de s'authentifier via Microsoft ?"
+    microsoft_auth_client_id: 'App ID/ID de client Microsoft (il ne s''agit PAS de l''ID secret). Pour le configurer, visitez <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
+    microsoft_auth_client_secret: "Mot de passe secret Microsoft (utilisez la valeur, PAS l'ID secret)"
+    microsoft_auth_email_verified: "Traitez tous les e-mails Microsoft comme vérifiés par défaut. AVERTISSEMENT : activez cette option uniquement si vous êtes sûr(e) que tous vos utilisateurs ont vérifié leurs adresses e-mail."

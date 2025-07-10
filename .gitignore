@@ -51,6 +51,7 @@
 !/plugins/footnote
 !/plugins/discourse-reactions
 !/plugins/discourse-apple-auth
+!/plugins/discourse-microsoft-auth
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
