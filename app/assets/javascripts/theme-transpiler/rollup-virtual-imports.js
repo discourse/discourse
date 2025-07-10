@@ -1,5 +1,5 @@
 export default {
-  "virtual:main": (tree) => {
+  "virtual:main": (tree, { themeId }) => {
     let output = `
       import "virtual:init-settings";
     `;
@@ -8,13 +8,23 @@ export default {
 
     let i = 1;
     for (const moduleFilename of Object.keys(tree)) {
+      let moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
+
+      if (
+        !(
+          moduleFilename.endsWith(".js") ||
+          moduleFilename.endsWith(".js.es6") ||
+          moduleFilename.endsWith(".hbs")
+        )
+      ) {
+        // Unsupported file type. Log a warning and skip
+        output += `console.warn("[THEME ${themeId}] Unsupported file type: ${moduleFilename}");\n`;
+        continue;
+      }
+
       if (moduleFilename.match(/(^|\/)connectors\//)) {
-        let moduleName = moduleFilename.replace(/\.es6?$/, "");
-
-        const isTemplate = moduleName.endsWith(".hbs");
+        const isTemplate = moduleFilename.endsWith(".hbs");
         const isInTemplatesDirectory = moduleName.match(/(^|\/)templates\//);
-
-        moduleName = moduleName.replace(/\.[^\.]+$/, "");
 
         if (isTemplate && !isInTemplatesDirectory) {
           moduleName = moduleName.replace(
@@ -27,8 +37,7 @@ export default {
         output += `import * as Mod${i} from "${moduleFilename}";\n`;
         output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
       } else {
-        const moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
-        output += `import * as Mod${i} from "${moduleName}";\n`;
+        output += `import * as Mod${i} from "${moduleFilename}";\n`;
         output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
       }
 

@@ -272,7 +272,7 @@ const __COLOCATED_TEMPLATE__ = template;
                 import { hbs } from 'ember-cli-htmlbars';
                 export default hbs(${JSON.stringify(input)}, { moduleName: ${JSON.stringify(id)} });
               `,
-                map: { mappings: "" },
+                map: null,
               };
             }
           },

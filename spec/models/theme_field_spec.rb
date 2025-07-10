@@ -255,40 +255,35 @@ HTML
 
     # All together
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
+      'themeCompatModules["discourse/templates/discovery"]',
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
+      'themeCompatModules["discourse/controllers/discovery"]',
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery-2\"",
+      'themeCompatModules["discourse/controllers/discovery-2"]',
     )
-    expect(theme.javascript_cache.content).to include("const settings =")
+    expect(theme.javascript_cache.content).to include("registerSettings(")
     expect(theme.javascript_cache.content).to include(
-      "[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'blah' (discourse/controllers/discovery.blah)",
+      "[THEME #{theme.id}] Unsupported file type: discourse/controllers/discovery.blah",
     )
     expect(theme.javascript_cache.content).to include(
-      "[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'hbr' (discourse/templates/other_discovery.hbr)",
+      "[THEME #{theme.id}] Unsupported file type: discourse/templates/other_discovery.hbr",
     )
 
-    # Check sourcemap
-    expect(theme.javascript_cache.source_map).to eq(nil)
-    ThemeJavascriptCompiler.enable_terser!
-    js_field.update(compiler_version: "0")
-    theme.save!
-
+    puts theme.javascript_cache.content
     expect(theme.javascript_cache.source_map).not_to eq(nil)
     map = JSON.parse(theme.javascript_cache.source_map)
 
     expect(map["sources"]).to contain_exactly(
-      "discourse/controllers/discovery-2.js",
-      "discourse/controllers/discovery.blah",
-      "discourse/controllers/discovery.js",
-      "discourse/templates/discovery.js",
-      "discourse/templates/other_discovery.hbr",
+      "theme-#{theme.id}/discourse/controllers/discovery-2.js",
+      "theme-#{theme.id}/discourse/controllers/discovery.js",
+      "theme-#{theme.id}/discourse/templates/discovery.hbs",
+      "theme-#{theme.id}/virtual:main",
+      "theme-#{theme.id}/virtual:theme",
+      "theme-#{theme.id}/virtual:init-settings",
     )
-    expect(map["sourceRoot"]).to eq("theme-#{theme.id}/")
-    expect(map["sourcesContent"].length).to eq(5)
+    expect(map["sourcesContent"].length).to eq(6)
   end
 
   def create_upload_theme_field!(name)

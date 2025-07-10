@@ -15,19 +15,23 @@ export default function (babel) {
           return;
         }
 
-        const properties = path.node.specifiers.map((specifier) => {
-          if (specifier.type === "ImportDefaultSpecifier") {
-            return t.objectProperty(
-              t.identifier("default"),
-              t.identifier(specifier.local.name)
-            );
-          } else {
-            return t.objectProperty(
-              t.identifier(specifier.imported.name),
-              t.identifier(specifier.local.name)
-            );
-          }
-        });
+        const properties = path.node.specifiers
+          .map((specifier) => {
+            if (specifier.type === "ImportDefaultSpecifier") {
+              return t.objectProperty(
+                t.identifier("default"),
+                t.identifier(specifier.local.name)
+              );
+            } else if (specifier.type === "ImportNamespaceSpecifier") {
+              // TODO
+            } else {
+              return t.objectProperty(
+                t.identifier(specifier.imported.name),
+                t.identifier(specifier.local.name)
+              );
+            }
+          })
+          .filter(Boolean);
 
         const replacement = t.variableDeclaration("const", [
           t.variableDeclarator(
