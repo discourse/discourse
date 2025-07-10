@@ -1,3 +1,5 @@
+const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
+
 export default {
   "virtual:main": (tree, { themeId }) => {
     let output = `
@@ -11,11 +13,7 @@ export default {
       let moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
 
       if (
-        !(
-          moduleFilename.endsWith(".js") ||
-          moduleFilename.endsWith(".js.es6") ||
-          moduleFilename.endsWith(".hbs")
-        )
+        !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
         // Unsupported file type. Log a warning and skip
         output += `console.warn("[THEME ${themeId}] Unsupported file type: ${moduleFilename}");\n`;

@@ -268,7 +268,6 @@ HTML
       "[THEME #{theme.id}] Unsupported file type: discourse/templates/other_discovery.hbr",
     )
 
-    puts theme.javascript_cache.content
     expect(theme.javascript_cache.source_map).not_to eq(nil)
     map = JSON.parse(theme.javascript_cache.source_map)
 
