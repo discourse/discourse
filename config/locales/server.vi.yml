@@ -2066,7 +2066,6 @@ vi:
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
     badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
-    success: "Gửi mail lỗi"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
   performance_report:

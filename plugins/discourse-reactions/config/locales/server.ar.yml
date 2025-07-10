@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 ar:
-  site_settings:
-    discourse_reactions_like_icon: "يحدِّد الأيقونة المُستخدَمة لزر التفاعل الرئيسي. ينبغي أن يكون هذا اسم أيقونة من <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>، وليس اسم رمز تعبيري."
-    discourse_reactions_reaction_for_like: "يحدِّد التفاعل المرتبط بالإجراء \"أعجبني\". لن يتم تغيير سجلات الإعجاب التاريخية إذا تغيَّر هذا الإعداد، فمن <strong>الموصى به بشدة</strong> عدم تغيير هذا الإعداد أبدًا."
-    discourse_reactions_enabled: "يفعِّل المكوِّن الإضافي discourse-reactions"
-    discourse_reactions_enabled_reactions: "يحدد قائمة بالتفاعلات المفعَّلة، ويُسمَح بأي رمز تعبيري هنا."
-    discourse_reactions_desaturated_reaction_panel: "يقلل التشويش البصري للتفاعلات عن طريق عرضها بألوان غير مشبَّعة حتى التمرير فوقها."
-    discourse_reactions_excluded_from_like: "التفاعلات التي لا تُحتسَب كتسجيل إعجاب. سيتم احتساب أي تفاعلات غير موجودة في هذه القائمة كتسجيل إعجاب للشارات والبلاغات وأغراضٍ أخرى."
-    discourse_reactions_like_sync_enabled: "إذا تم تفعيل هذا الإعداد، فسيتم إنشاء سجلات الإعجاب المطابقة للتفاعلات التاريخية، باستثناء تلك التفاعلات المحدَّدة في `discourse_reactions_excluded_from_like`. ستحدث هذه المزامنة بشكلٍ منتظم في الخلفية، وأيضًا عند تغيير `discourse_reactions_excluded_from_like`."
-    errors:
-      invalid_excluded_emoji: "لا يمكنك استبعاد الرموز التعبيرية التي ليست ضمن 'discourse reactions enabled reactions' ولا يمكنك استبعاد الرموز التعبيرية المستخدمة في 'discourse reactions reaction for like'."
-  badges:
-    first_reaction:
-      name: أول تفاعل
-      description: تفاعل مع المنشور
-      long_description: |
-        يتم منح هذه الشارة في المرة الأولى التي تتفاعل فيها مع منشور. يُعد التفاعل مع المنشورات طريقة رائعة لإخبار زملائك في المجتمع بأن ما نشروه كان مثيرًا للاهتمام أو مفيدًا أو رائعًا أو مرحًا. شارك تفاعلك!
   reports:
     reactions:
-      title: "التفاعلات"
-      description: "يعرض قائمة بأحدث التفاعلات."
       labels:
         day: "اليوم"

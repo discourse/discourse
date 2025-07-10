@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 zh_CN:
-  site_settings:
-    discourse_reactions_like_icon: "定义用于主回应按钮的图标。这应该是一个 <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> 图标名称，而不是表情符号名称。"
-    discourse_reactions_reaction_for_like: "定义与“赞”操作相关的回应。如果此设置发生变化，历史“赞”记录将不会更改，<strong>强烈建议</strong>永远不要更改此设置。"
-    discourse_reactions_enabled: "启用 discourse-reactions 插件。"
-    discourse_reactions_enabled_reactions: "定义启用的回应列表，此处允许使用任何表情符号。"
-    discourse_reactions_desaturated_reaction_panel: "通过在悬停前显示不饱和的回应，减少回应的视觉噪音。"
-    discourse_reactions_excluded_from_like: "不计为“赞”的回应。任何不在此列表中的回应都将计为“赞”，用于徽章、报告和其他目的。"
-    discourse_reactions_like_sync_enabled: "如果启用此功能，历史回应将创建其匹配的“赞”记录，`discourse_reactions_excluded_from_like` 中定义的回应除外。此同步将在后台定期发生，当您更改 `discourse_reactions_excluded_from_like` 时也会进行同步。"
-    errors:
-      invalid_excluded_emoji: "您不能排除不在 'discourse reactions enabled reactions' 中的表情符号，也不能排除用于 'discourse reactions reaction for like' 的表情符号。"
-  badges:
-    first_reaction:
-      name: 首次回应
-      description: 回应了帖子
-      long_description: |
-        您第一次回应帖子时会被授予此徽章。回应帖子是让您的社区成员知道他们发布的内容有趣、有用、酷或好玩的绝佳方式。分享您的回应！
   reports:
     reactions:
-      title: "回应"
-      description: "列出最近的回应。"
       labels:
         day: "天"

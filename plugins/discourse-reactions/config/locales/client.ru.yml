@@ -5,33 +5,13 @@
 # https://translate.discourse.org/
 
 ru:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_reactions: "Реакции"
   js:
     discourse_reactions:
-      reactions_title: "Реакции"
       state_panel:
-        more_users: "и еще %{count}..."
-      reaction:
-        forbidden: "Эту реакцию нельзя изменить или удалить - она была создана очень давно."
-      picker:
-        react_with: "Отреагировать на это сообщение: %{reaction}"
-        cant_remove_reaction: "Вы больше не можете удалить свою реакцию"
-        remove_reaction: "Удалить реакцию %{reaction}"
+        more_users: "и ещё %{count}..."
       main_reaction:
-        add: "Выразить своё отношение к этому сообщению"
-        remove: "Удалить эту эмоцию"
-        cant_remove: "Вы больше не можете удалить поставленный лайк"
-        unauthenticated: "Чтобы поставить лайк этой публикации, зарегистрируйтесь или войдите"
+        add: "Поставить лайк сообщению"
     notifications:
-      reaction_1_user_multiple_posts:
-        one: "отреагировал(-а) на %{count} вашу публикацию"
-        few: "отреагировал(-а) на %{count} ваши публикации"
-        many: "отреагировал(-а) на %{count} ваших публикаций"
-        other: "отреагировал(-а) на ваши публикации (%{count})"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} и ещё %{count}"

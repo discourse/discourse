@@ -4721,10 +4721,6 @@ zh_CN:
         连续 365 天访问论坛会被授予此徽章。哇哦，一整年！
     badge_title_metadata: "%{site_title}上的%{display_name}徽章"
   admin_login:
-    success: "电子邮件已发送"
-    errors:
-      unknown_email_address: "未知的电子邮件地址。"
-      invalid_token: "无效令牌。"
     email_input: "管理员电子邮件"
     submit_button: "发送电子邮件"
     safe_mode: "安全模式：登录时禁用所有主题/插件"

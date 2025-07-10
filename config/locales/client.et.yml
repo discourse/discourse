@@ -1151,7 +1151,8 @@ et:
         remove: "Eemalda"
         reinvited: "Kutse uuesti saadetud"
         user: "Kutsutud kasutaja"
-        none: "Pole ühtegi kutset, mida näidata."
+        none:
+          title: "Pole ühtegi kutset, mida näidata."
         truncated:
           one: "Näitan esimest kutset."
           other: "Näitan esimest %{count} kutset."
@@ -1439,7 +1440,6 @@ et:
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
       toggle_whisper: "Lülita sosistamine ümber"
-      toggle_unlisted: "Lülita eemaldamine ümber"
       insert_table: "Sisesta tabel"
       posting_not_on_topic: "Millisesse teemasse soovid vastata?"
       saved_local_draft_tip: "salvestatud lokaalselt"

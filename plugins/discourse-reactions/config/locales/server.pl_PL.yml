@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  site_settings:
-    discourse_reactions_like_icon: "Określa ikonę używaną dla głównego przycisku reakcji. Powinna to być nazwa ikony <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>, a nie nazwa emoji."
-    discourse_reactions_reaction_for_like: "Określa reakcję związaną z akcją \"lubię to\". Historyczne rekordy \"lubię to\" nie zostaną zmienione, jeśli to ustawienie ulegnie zmianie, dlatego <strong>zdecydowanie</strong> zaleca się, aby nigdy nie zmieniać tego ustawienia."
-    discourse_reactions_enabled: "Włącz wtyczkę discourse-reactions."
-    discourse_reactions_enabled_reactions: "Definiuje listę włączonych reakcji, wszystkie emoji są tutaj dozwolone."
-    discourse_reactions_desaturated_reaction_panel: "Redukuje wizualny szum reakcji poprzez wyświetlanie ich w postaci nienasyconej aż do momentu najechania na nie."
-    discourse_reactions_excluded_from_like: "Reakcje, które nie liczą się jako \"lubię to\". Wszelkie reakcje, które nie znajdują się na tej liście, będą liczone jako polubienia do odznak, raportów i innych celów."
-    discourse_reactions_like_sync_enabled: "Jeśli ta opcja jest włączona, dla historycznych reakcji zostaną utworzone odpowiadające im rekordy polubień, z wyjątkiem tych reakcji, które są zdefiniowane w `discourse_reactions_excluded_from_like`. Synchronizacja będzie odbywać się regularnie w tle, a także w momencie zmiany ustawienia `discourse_reactions_excluded_from_like`."
-    errors:
-      invalid_excluded_emoji: "Nie możesz wykluczyć emotikonów, które nie znajdują się w ustawieniu 'discourse reactions enabled reactions', ani emotikony używanej w ustawieniu 'discourse reactions reaction for like'."
-  badges:
-    first_reaction:
-      name: Pierwsza reakcja
-      description: Reakcja na post
-      long_description: |
-        Ta odznaka jest przyznawana po raz pierwszy przy reagowaniu na wpis. Reagowanie na posty to świetny sposób na to, by członkowie społeczności wiedzieli, że to, co opublikowali, było interesujące, przydatne, fajne lub zabawne. Podziel się swoją reakcją!
   reports:
     reactions:
-      title: "Reakcje"
-      description: "Lista najnowszych reakcji."
       labels:
         day: "Dzień"

@@ -1653,7 +1653,8 @@ da:
         reinvited: "Invitation gensendt"
         removed: "Fjernet"
         user: "Inviteret bruger"
-        none: "Ingen invitationer at vise."
+        none:
+          title: "Ingen invitationer at vise."
         truncated:
           one: "Viser den første invitation."
           other: "Viser de første %{count} invitationer."
@@ -2163,7 +2164,6 @@ da:
       unlist: "Ikke listede"
       add_warning: "Dette er en officiel advarsel."
       toggle_whisper: "Slå hvisken til/fra"
-      toggle_unlisted: "Slå listning til/fra"
       insert_table: "Indsæt tabel"
       posting_not_on_topic: "Hvilket emne vil du svare på?"
       saved_local_draft_tip: "gemt lokalt"

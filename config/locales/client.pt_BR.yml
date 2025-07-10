@@ -1851,7 +1851,8 @@ pt_BR:
         removed: "Removido(a)"
         search: "digite para pesquisar convites…"
         user: "Usuário(a) convidado(a)"
-        none: "Não há convites para exibir."
+        none:
+          title: "Não há convites para exibir."
         truncated:
           one: "Exibindo o primeiro convite."
           other: "Exibindo os primeiros %{count} convites."
@@ -2472,7 +2473,6 @@ pt_BR:
       unlist: "não listado"
       add_warning: "Esta é uma advertência oficial."
       toggle_whisper: "Alternar sussuro"
-      toggle_unlisted: "Alternar não listado"
       insert_table: "Inserir tabela"
       posting_not_on_topic: "Qual tópico você gostaria de responder?"
       saved_local_draft_tip: "salvo em modo local"

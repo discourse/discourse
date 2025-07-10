@@ -2502,10 +2502,6 @@ lt:
         Šis ženklelis suteikiamas už apsilankymą 365 dienas iš eilės. Oho, visus metus!
     badge_title_metadata: "%{display_name} ženklelis puslapyje %{site_title}"
   admin_login:
-    success: "El. paštas išsiųstas"
-    errors:
-      unknown_email_address: "Nežinomas e-pašto adresas"
-      invalid_token: "Netinkamas prieigos raktas."
     email_input: "Administratoriaus el. paštas"
     submit_button: "Siųsti e-paštą"
   performance_report:

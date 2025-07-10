@@ -1359,7 +1359,8 @@ id:
         remove: "Hapus"
         reinvited: "Undangan sudah dikirim ulang"
         user: "Pengguna yang telah diundang"
-        none: "Tidak ada undangan"
+        none:
+          title: "Tidak ada undangan"
         pending: "Undangan yang tertunda"
         topics_entered: "Topik Dilihat"
         posts_read_count: "Tulisan dilihat"

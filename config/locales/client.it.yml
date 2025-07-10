@@ -1839,7 +1839,8 @@ it:
         removed: "Rimosso"
         search: "Digita per cercare inviti…"
         user: "Utente Invitato"
-        none: "Nessun invito da visualizzare."
+        none:
+          title: "Nessun invito da visualizzare."
         truncated:
           one: "Visualizzazione del primo invito."
           other: "Visualizzazione dei primi %{count} inviti."
@@ -2451,7 +2452,6 @@ it:
       unlist: "invisibile"
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
-      toggle_unlisted: "Rendi Invisibile"
       insert_table: "Inserisci tabella"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saved_local_draft_tip: "salvato in locale"

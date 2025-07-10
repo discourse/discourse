@@ -15,8 +15,8 @@ uk:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} і ще %{count}"
-        few: "%{username} і ще %{count}"
-        many: "%{username} і ще %{count}"
-        other: "%{username} і ще %{count}"
+        few: "%{username} та %{count} інших"
+        many: "%{username} та %{count} інших"
+        other: "%{username} та %{count} інших"
       titles:
         reaction: "нова реакція"

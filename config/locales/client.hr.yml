@@ -292,7 +292,7 @@ hr:
       one: "poveznica"
       few: "poveznica"
       other: "poveznice"
-    faq: "ČPP"
+    faq: "FAQ"
     guidelines: "Vodić za uporabu"
     privacy_policy: "Izjava o privatnosti"
     privacy: "Privatnost"
@@ -2012,7 +2012,8 @@ hr:
         removed: "Uklonjeno"
         search: "upišite za pretraživanje pozivnica…"
         user: "Pozvani Korisnici"
-        none: "Nema poziva za prikaz."
+        none:
+          title: "Nema poziva za prikaz."
         truncated:
           one: "Prikazuje se prva pozivnica."
           few: "Prikazuje se prvih %{count} pozivnica."
@@ -2686,7 +2687,6 @@ hr:
       unlist: "nenavedeno"
       add_warning: "Ovo je službeno upozorenje."
       toggle_whisper: "Uključi šapat"
-      toggle_unlisted: "Uključi / isključi Nenavedeno"
       insert_table: "Umetni tablicu"
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "spašeno lokalno"
@@ -3316,9 +3316,6 @@ hr:
         filter: "Nema tema."
         education:
           topic_tracking_preferences: 'Nove postavke praćenja tema možete pregledati i promijeniti u <a href="%{basePath}/my/preferences/tracking">svojim postavkama</a>.'
-          unread: "Ništa nije ostalo nepročitano...impresivno!"
-          new_new: "Trenutno ništa nova... provjerite uskoro!"
-          new: "Trenutno ništa nova... provjerite uskoro!"
       bottom:
         latest: "Nema više najnovijih tema."
         posted: "Nema više objavljenih članaka."
@@ -5071,7 +5068,7 @@ hr:
               content: "Tema"
               title: "Sve teme"
             faq:
-              content: "ČPP"
+              content: "FAQ"
               title: "Smjernice za korištenje ove stranice"
             guidelines:
               content: "Vodić za uporabu"
@@ -5305,6 +5302,7 @@ hr:
         title: "Popis dostupnih izvještaja"
         meta_doc: "Izvješća su moćan alat koji vam pomaže da shvatite što se događa na vašoj stranici. Mogu vam pomoći u prepoznavanju trendova, uočavanju problema i donošenju odluka na temelju podataka."
         sidebar_title: "Izvještaji"
+        back: "Povratak na sva izvješća"
       config_sections:
         account:
           title: "Račun"

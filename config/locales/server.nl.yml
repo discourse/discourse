@@ -4748,10 +4748,6 @@ nl:
         Deze badge wordt toegekend voor het bezoeken op 365 opeenvolgende dagen. Wauw, een heel jaar!
     badge_title_metadata: "%{display_name}-badge op %{site_title}"
   admin_login:
-    success: "E-mail verzonden"
-    errors:
-      unknown_email_address: "Onbekend e-mailadres."
-      invalid_token: "Ongeldig token."
     email_input: "E-mailadres van beheerder"
     submit_button: "E-mail versturen"
     safe_mode: "Veilige modus: schakel alle thema's/plug-ins uit bij het aanmelden"

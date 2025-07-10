@@ -1841,7 +1841,8 @@ fr:
         removed: "Supprimé"
         search: "commencez votre saisie pour rechercher vos invitations…"
         user: "Utilisateur(rice) invité(e)"
-        none: "Aucune invitation à afficher."
+        none:
+          title: "Aucune invitation à afficher."
         truncated:
           one: "Afficher la première invitation."
           other: "Afficher les %{count} premières invitations."
@@ -2453,7 +2454,6 @@ fr:
       unlist: "invisible"
       add_warning: "Ceci est un avertissement officiel."
       toggle_whisper: "Activer/désactiver le murmure"
-      toggle_unlisted: "Activer/désactiver la visibilité"
       insert_table: "Insérer un tableau"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saved_local_draft_tip: "enregistré sur votre appareil"

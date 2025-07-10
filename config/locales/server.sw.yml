@@ -1928,9 +1928,6 @@ sw:
       name: Mshiriki
     badge_title_metadata: "beji %{display_name} kwenye %{site_title} "
   admin_login:
-    success: "Barua Pepe Imetumwa"
-    errors:
-      unknown_email_address: "Barua pepe isiyojulikana."
     email_input: "Barua Pepe ya Kiongozi"
     submit_button: "Tuma Barua Pepe"
   performance_report:

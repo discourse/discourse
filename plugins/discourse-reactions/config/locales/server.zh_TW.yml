@@ -5,19 +5,7 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  site_settings:
-    discourse_reactions_enabled: "啟用discourse-reactions插件"
-    discourse_reactions_enabled_reactions: "定義一組啟用反應的清單，並允許可用的表情符號於本清單中。"
-    discourse_reactions_desaturated_reaction_panel: "通過將反應顯示為去飽和度，直到懸停，以減少反應的視覺噪聲。"
-  badges:
-    first_reaction:
-      name: 頭一個反應
-      description: 對貼文的反應
-      long_description: |
-        這個徽章是在您第一次對一個貼文做出反應時授予的。對貼文作出反應是一個很好的方式以讓您的社群成員知道他們發布的貼文是有趣、有用、酷或是好玩的。分享您的反應吧！
   reports:
     reactions:
-      title: "反應"
-      description: "列出最近的反應。"
       labels:
         day: "天"

@@ -1825,7 +1825,8 @@ sq:
         removed: "U hoq"
         search: "shtypni për të kërkuar ftesat…"
         user: "Anëtari i ftuar"
-        none: "Asnjë ftesë për të shfaqur."
+        none:
+          title: "Asnjë ftesë për të shfaqur."
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen %{count} ftesat e para."
@@ -2440,7 +2441,6 @@ sq:
       unlist: "çlistuar"
       add_warning: "Ky është një paralajmërim zyrtar."
       toggle_whisper: "Pëshpëritje?"
-      toggle_unlisted: "Toggle Unlisted"
       insert_table: "Futni tabelën"
       posting_not_on_topic: "Cilës temë doni t'i përgjigjeni?"
       saved_local_draft_tip: "ruajtur lokalisht"

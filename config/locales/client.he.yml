@@ -2107,7 +2107,8 @@ he:
         removed: "הוסרה"
         search: "יש להקליד כדי לחפש בהזמנות…"
         user: "משתמשים שהוזמנו"
-        none: "אין הזמנות להצגה"
+        none:
+          title: "אין הזמנות להצגה"
         truncated:
           one: "מראה את ההזמנה הראשונה."
           two: "מראה את %{count} ההזמנות הראשונות."
@@ -2815,7 +2816,6 @@ he:
       unlist: "לא-רשום"
       add_warning: "זוהי אזהרה רשמית."
       toggle_whisper: "הפעלת לחישה"
-      toggle_unlisted: "סימון/אי-סימון כלא-ברשימות"
       insert_table: "הוספת טבלה"
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saved_local_draft_tip: "נשמר מקומית"
@@ -3487,9 +3487,6 @@ he:
         filter: "אין נושאים."
         education:
           topic_tracking_preferences: 'אפשר לצפות ולשנות את הגדרות המעקב אחר הנושא החדש שלך דרך <a href="%{basePath}/my/preferences/tracking">ההעדפות שלך</a>.'
-          unread: "לא נשארו פריטים שלא נקראו… מרשים!"
-          new_new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
-          new: "אין חדש כרגע… נא לבדוק שוב בקרוב!"
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."

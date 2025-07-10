@@ -1839,7 +1839,8 @@ es:
         removed: "Eliminado"
         search: "escribe para buscar invitaciones…"
         user: "Usuario invitado"
-        none: "Sin invitaciones para mostrar."
+        none:
+          title: "Sin invitaciones para mostrar."
         truncated:
           one: "Mostrando la primera invitación."
           other: "Mostrando las primeras %{count} invitaciones."
@@ -2451,7 +2452,6 @@ es:
       unlist: "oculto"
       add_warning: "Esta es una advertencia oficial."
       toggle_whisper: "Activar/desactivar susurro"
-      toggle_unlisted: "Visible/Invisible"
       insert_table: "Insertar tabla"
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saved_local_draft_tip: "guardado localmente"

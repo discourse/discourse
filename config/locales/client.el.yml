@@ -27,6 +27,7 @@ el:
         millions: "%{number}εκατ."
     dates:
       time: "HH:mm"
+      time_short: "ω:λλ"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
@@ -1658,7 +1659,8 @@ el:
         removed: "Αφαιρέθηκε"
         search: "πληκτρολογήστε για αναζήτηση προσκλήσεων…"
         user: "Προσκεκλημένος Χρήστης"
-        none: "Δεν υπάρχουν προσκλήσεις για προβολή."
+        none:
+          title: "Δεν υπάρχουν προσκλήσεις για προβολή."
         truncated:
           one: "Δείχνοντας την πρώτη πρόσκληση."
           other: "Προβάλονται οι πρώτες %{count} προσκλήσεις."
@@ -2206,7 +2208,6 @@ el:
       unlist: "κρυμμένο"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
       toggle_whisper: "Εναλλαγή Ψιθύρων"
-      toggle_unlisted: "Εναλλαγή Κρυφών"
       insert_table: "Εισαγωγή Πίνακα"
       posting_not_on_topic: "Σε ποιο θέμα θέλετε να απαντήσετε;"
       saved_local_draft_tip: "αποθηκεύτηκε τοπικά"

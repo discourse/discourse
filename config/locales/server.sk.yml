@@ -5071,10 +5071,6 @@ sk:
         Tento odznak sa udeľuje za návštevu 365 po sebe nasledujúcich dní. Páni, celý rok!
     badge_title_metadata: "%{display_name} odznak na stránke %{site_title}"
   admin_login:
-    success: "Email odoslaný"
-    errors:
-      unknown_email_address: "Neznáma e-mailová adresa."
-      invalid_token: "Neplatný token."
     email_input: "Email administrátora"
     submit_button: "Poslať email"
     safe_mode: "Bezpečný režim: pri prihlásení zakážte všetky témy/pluginy"

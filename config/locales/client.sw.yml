@@ -935,7 +935,8 @@ sw:
         remove: "Ondoa"
         reinvited: "Mualiko umetumwa tena"
         user: "Mtumiaji Aliyekaribishwa"
-        none: "Hakuna mialiko ya kuonyeshwa."
+        none:
+          title: "Hakuna mialiko ya kuonyeshwa."
         truncated:
           one: "Onyesha mwaliko wa kwanza."
           other: "Onyesha mialiko ya kwanza %{count}."
@@ -1240,7 +1241,6 @@ sw:
       unlist: "ondoa kwenye orodha"
       add_warning: "Hii ni onyo rasmi."
       toggle_whisper: "Badilisha Nong'ono"
-      toggle_unlisted: "Badilisha Ondoa kwenye Orodha"
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       drafts_offline: "Miswadajaribio Nje ya Mtandao"

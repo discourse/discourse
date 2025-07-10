@@ -2752,7 +2752,6 @@ fa_IR:
       name: هواخواه
     badge_title_metadata: "نشان %{display_name} در %{site_title}"
   admin_login:
-    success: "ایمیل ارسال شد"
     email_input: "ایمیل مدیر ارشد"
     submit_button: "ارسال ایمیل"
     safe_mode: "حالت ایمن: هنگام ورود به سیستم، تمام پوسته‌ها/افزونه‌ها را غیرفعال شود"

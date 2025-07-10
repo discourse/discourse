@@ -1893,10 +1893,6 @@ sl:
         Ta značka vam je podeljena za obiskovanje 365 zaporednih dni. Neverjetno, celo leto!
     badge_title_metadata: "%{display_name} značka na %{site_title}"
   admin_login:
-    success: "E-sporočilo poslano"
-    errors:
-      unknown_email_address: "Neznan e-naslov."
-      invalid_token: "Napačen žeton."
     email_input: "Administratorjev e-naslov"
     submit_button: "Pošlji e-sporočilo"
   tags:

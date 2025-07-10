@@ -2453,10 +2453,6 @@ te:
         వరుసగా 365 రోజులు సందర్శించినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. వావ్, మొత్తం సంవత్సరం!
     badge_title_metadata: "%{site_title} లో %{display_name} బ్యాడ్జ్"
   admin_login:
-    success: "ఇమెయిల్ పంపబడింది"
-    errors:
-      unknown_email_address: "తెలియని ఇమెయిల్ చిరునామా."
-      invalid_token: "చెల్లని టోకేను."
     email_input: "అడ్మిన్ ఇమెయిల్"
     submit_button: "ఈ మెయిల్ పంపించండి"
   tags:

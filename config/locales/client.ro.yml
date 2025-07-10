@@ -1623,7 +1623,8 @@ ro:
         remove: "Eliminați"
         reinvited: "Invitaţia a fost retrimisă"
         user: "Utilizator invitat"
-        none: "Nu există invitații."
+        none:
+          title: "Nu există invitații."
         truncated:
           one: "Se afișează prima invitație."
           few: "Se afișează primele %{count} invitații."
@@ -2038,7 +2039,6 @@ ro:
       unlist: "nelistat"
       add_warning: "Aceasta este o avertizare oficială."
       toggle_whisper: "Comută modul discret"
-      toggle_unlisted: "Comută modul nelistat"
       insert_table: "Inserează tabel"
       posting_not_on_topic: "În care subiect vrei să răspunzi?"
       saved_local_draft_tip: "salvat local"
@@ -2140,6 +2140,9 @@ ro:
           label: "Discuție nouă"
         toggle_topic_bump:
           label: "Comută bump pentru subiect"
+        toggle_unlisted:
+          label: Comută la nelistate
+          desc: Subiecte nelistate, accesibile membrilor doar prin legătură directă
       reload: "Reîncarcă"
       ignore: "Ignoră"
       image_alt_text:
@@ -2383,9 +2386,6 @@ ro:
         top: "Nu exită niciun subiect de top."
         education:
           topic_tracking_preferences: 'Poți vizualiza și modifica noile tale setări pentru urmărirea subiectelor în <a href="%{basePath}/my/preferences/tracking">preferințele tale</a>.'
-          unread: "Nimic rămas necitit... impresionant!"
-          new_new: "Nimic nou în acest moment... revino în curând!"
-          new: "Nimic nou în acest moment... revino în curând!"
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."

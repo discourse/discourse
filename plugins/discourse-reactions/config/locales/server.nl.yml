@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 nl:
-  site_settings:
-    discourse_reactions_like_icon: "Definieert het pictogram dat voor de hoofdreactieknop wordt gebruikt. Dit moet een <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>-pictogramnaam zijn, geen emojinaam."
-    discourse_reactions_reaction_for_like: "Definieert de reactie die is gekoppeld aan de Like-actie. Historische gegevens worden niet gewijzigd als deze instelling wordt gewijzigd. Het wordt <strong>sterk aanbevolen</strong> deze instelling nooit te wijzigen."
-    discourse_reactions_enabled: "Schakel de Discourse-reactiesplug-in in."
-    discourse_reactions_enabled_reactions: "Definieert een lijst van ingeschakelde reacties, elke emoji is hier toegestaan."
-    discourse_reactions_desaturated_reaction_panel: "Vermindert visuele ruis van reacties door ze onverzadigd weer te geven totdat er met de muis overheen wordt gegaan."
-    discourse_reactions_excluded_from_like: "Reacties die niet tellen als een Like. Alle reacties die niet op deze lijst staan, tellen als een Like voor badges, rapportage en andere doeleinden."
-    discourse_reactions_like_sync_enabled: "Als dit is ingeschakeld, worden bij historische reacties de overeenkomende Like-gegevens gecreëerd, behalve reacties die zijn gedefinieerd in 'discourse_reactions_excluded_from_like'. Deze synchronisatie zal regelmatig op de achtergrond plaatsvinden, ook wanneer je 'discourse_reactions_excluded_from_like' wijzigt."
-    errors:
-      invalid_excluded_emoji: "Je kunt geen emoji's uitsluiten die niet voorkomen in 'discoursereacties ingeschakelde reacties' en je kunt de emoji's die worden gebruikt voor 'discoursereacties reactie voor like' niet uitsluiten."
-  badges:
-    first_reaction:
-      name: Eerste reactie
-      description: Gereageerd op het bericht
-      long_description: |
-        Deze badge wordt toegekend als je voor het eerst reageert op een bericht. Reageren op berichten is een geweldige manier om andere communityleden te laten weten dat wat ze hebben geplaatst interessant, nuttig, cool of leuk was. Deel je reactie!
   reports:
     reactions:
-      title: "Reacties"
-      description: "Lijst van meest recente reacties."
       labels:
-        day: "Day"
+        day: "Dag"

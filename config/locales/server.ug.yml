@@ -4629,10 +4629,6 @@ ug:
         بۇ تارتۇق ئۇدا 365 كۈن زىيارەت قىلغانلارغا بېرىلىدۇ. ۋاھ، پۈتكۈل بىر يىل!
     badge_title_metadata: "%{site_title} دىكى %{display_name} تارتۇق"
   admin_login:
-    success: "ئېلخەت يوللاندى"
-    errors:
-      unknown_email_address: "نامەلۇم ئېلخەت ئادرېسى."
-      invalid_token: "ئىناۋەتسىز پەرمان تاختىسى."
     email_input: "باشقۇرغۇچى ئېلخىتى"
     submit_button: "ئېلخەت يوللا"
     safe_mode: "بىخەتەر ھالەت: تىزىمغا كىرگەندە بارلىق ئۆرنەك/ قىستۇرما چەكلىنىدۇ"

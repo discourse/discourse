@@ -2219,7 +2219,8 @@ ar:
         removed: "تمت إزالتها"
         search: "اكتب للبحث في الدعوات…"
         user: "المستخدم المدعو"
-        none: "لا توجد دعوات لعرضها."
+        none:
+          title: "لا توجد دعوات لعرضها."
         truncated:
           zero: "يتم عرض أول %{count} دعوة."
           one: "يتم عرض أول دعوة (%{count})."
@@ -2945,7 +2946,6 @@ ar:
       unlist: "تم إلغاء إدراجه"
       add_warning: "هذا تحذير رسمي."
       toggle_whisper: "تفعيل الهمس"
-      toggle_unlisted: "تفعيل إلغاء الإدراج"
       insert_table: "إدراج جدول"
       posting_not_on_topic: "أي موضوع تريد الرد عليه؟"
       saved_local_draft_tip: "تم الحفظ محليًا"

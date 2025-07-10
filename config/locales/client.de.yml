@@ -1911,7 +1911,12 @@ de:
         removed: "Entfernt"
         search: "zum Suchen nach Einladungen hier etwas eingeben …"
         user: "Eingeladener Benutzer"
-        none: "Keine Einladungen anzuzeigen."
+        none:
+          title: "Keine Einladungen anzuzeigen."
+          cta: "Einladungslink erstellen"
+          tip:
+            prefix: "Du kannst auch Masseneinladungen verschicken, indem du"
+            action: "eine CSV-Datei hochlädst"
         truncated:
           one: "Zeige die erste Einladung."
           other: "Zeige die ersten %{count} Einladungen."
@@ -2555,7 +2560,6 @@ de:
       unlist: "unsichtbar"
       add_warning: "Dies ist eine offizielle Warnung."
       toggle_whisper: "Flüstermodus umschalten"
-      toggle_unlisted: "Sichtbarkeit umschalten"
       insert_table: "Tabelle einfügen"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saved_local_draft_tip: "lokal gespeichert"
@@ -2721,6 +2725,9 @@ de:
         toggle_topic_bump:
           label: "„Nach oben verschieben“ für Thema umschalten"
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
+        toggle_unlisted:
+          label: Sichtbarkeit umschalten
+          desc: Nicht aufgelistete Themen, die nur für Mitglieder über einen direkten Link zugänglich sind
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -3146,7 +3153,7 @@ de:
         filter: "Es gibt keine Themen."
         education:
           topic_tracking_preferences: 'Du kannst deine Einstellungen für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
-          unread: "Nichts ungelesen geblieben...beeindruckend!"
+          unread: "Nichts ungelesen geblieben... beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues... Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues... Schau bald wieder vorbei!"
       bottom:
@@ -3735,6 +3742,10 @@ de:
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
           none: "Keiner"
+        edit_warning:
+          message: "Dies ist ein übersetzter Beitrag.<br><br> Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
+          action_original: "Originalbeitrag bearbeiten"
+          action_translation: "Diese Übersetzung bearbeiten"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."

@@ -3402,10 +3402,6 @@ gl:
         Esta insignia concédese por nos visitar durante 365 días consecutivos. Un ano enteiriño!
     badge_title_metadata: "%{display_name} insignia en %{site_title}"
   admin_login:
-    success: "Correo electrónico enviado"
-    errors:
-      unknown_email_address: "Enderezo de correo electrónico descoñecido."
-      invalid_token: "Token non válido."
     email_input: "Correo electrónico do administrador"
     submit_button: "Enviar correo electrónico"
   performance_report:

@@ -5,42 +5,20 @@
 # https://translate.discourse.org/
 
 ar:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_reactions: "تفاعلات Discourse"
   js:
     discourse_reactions:
-      reactions_title: "التفاعلات"
       state_panel:
         more_users: "و%{count} أخرى..."
-      reaction:
-        forbidden: "تم إنشاء هذا التفاعل منذ فترة طويلة جدًا، ولم يعُد من الممكن تعديله أو حذفه."
-      picker:
-        react_with: "تفاعل مع هذا المنشور باستخدام: %{reaction}"
-        cant_remove_reaction: "لم يعد بإمكانك إزالة تفاعلك"
-        remove_reaction: "إزالة هذا التفاعل %{reaction}"
       main_reaction:
         add: "تسجيل الإعجاب بهذا المنشور"
-        remove: "إزالة هذا الإعجاب"
-        cant_remove: "لم يعد بإمكانك إزالة إعجابك"
-        unauthenticated: "يُرجى الاشتراك أو تسجيل الدخول لتسجيل الإعجاب بهذا المنشور"
     notifications:
-      reaction_1_user_multiple_posts:
-        zero: "تفاعل على %{count} من منشوراتك"
-        one: "تفاعل على منشور (%{count}) من منشوراتك"
-        two: "تفاعل على منشورين (%{count}) من منشوراتك"
-        few: "تفاعل على %{count} منشورات من منشوراتك"
-        many: "تفاعل على %{count} منشورًا من منشوراتك"
-        other: "تفاعل على %{count} منشور من منشوراتك"
-      reaction_2_users: "%{username}، و%{username2}"
+      reaction_2_users: "%{username}، %{username2}"
       reaction_multiple_users:
-        zero: "%{username} و%{count} آخر"
+        zero: "%{username} و%{count} مستخدم آخر"
         one: "%{username} وواحد (%{count}) آخر"
-        two: "%{username} واثنان (%{count}) آخران"
-        few: "%{username} و%{count} آخرين"
-        many: "%{username} و%{count} آخر"
-        other: "%{username} و%{count} آخر"
+        two: "%{username} ومستخدمان (%{count}) آخران"
+        few: "%{username} و%{count} مستخدمين آخرين"
+        many: "%{username} و%{count} مستخدمًا آخر"
+        other: "%{username} و%{count} مستخدم آخر"
       titles:
         reaction: "تفاعل جديد"

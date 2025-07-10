@@ -1009,7 +1009,6 @@ et:
     first_reply_by_email:
       name: Esimene vastamine meiliga
   admin_login:
-    success: "Kiri saadetud"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
   tags:

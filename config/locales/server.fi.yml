@@ -4730,10 +4730,6 @@ fi:
         Tämä kunniamerkki myönnetään, kun vierailet 365 peräkkäisenä päivänä. Vau, kokonainen vuosi!
     badge_title_metadata: "Kunniamerkki %{display_name} sivustolla %{site_title}"
   admin_login:
-    success: "Sähköposti lähetetty"
-    errors:
-      unknown_email_address: "Tuntematon sähköpostiosoite."
-      invalid_token: "Tunniste ei kelpaa."
     email_input: "Ylläpitäjän sähköpostiosoite"
     submit_button: "Lähetä sähköposti"
     safe_mode: "Vikasietotila: poista kaikki teemat ja lisäosat käytöstä kirjautuessasi sisään"

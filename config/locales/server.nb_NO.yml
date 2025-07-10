@@ -1271,7 +1271,6 @@ nb_NO:
       name: Gir tilbake
     badge_title_metadata: "%{display_name} merke på %{site_title}"
   admin_login:
-    success: "E-post sendt"
     submit_button: "Send e-post"
   tags:
     title: "Stikkord"

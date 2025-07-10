@@ -4067,10 +4067,6 @@ sv:
         Det här märket beviljas för besök 365 dagar i rad. Wow, ett helt år!
     badge_title_metadata: "%{display_name} utmärkelse på %{site_title}"
   admin_login:
-    success: "E-post skickad"
-    errors:
-      unknown_email_address: "Okänd e-postadress."
-      invalid_token: "Ogiltigt bevis.."
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
     safe_mode: "Säkert läge: inaktivera alla teman/tillägg när du loggar in"

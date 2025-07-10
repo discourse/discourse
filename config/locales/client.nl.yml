@@ -1839,7 +1839,8 @@ nl:
         removed: "Verwijderd"
         search: "typ om uitnodigingen te zoeken…"
         user: "Uitgenodigde gebruiker"
-        none: "Geen uitnodigingen om weer te geven."
+        none:
+          title: "Geen uitnodigingen om weer te geven."
         truncated:
           one: "De eerste uitnodiging wordt weergegeven."
           other: "De eerste %{count} uitnodigingen worden weergegeven."
@@ -2451,7 +2452,6 @@ nl:
       unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluisteren in-/uitschakelen"
-      toggle_unlisted: "Onzichtbaar in-/uitschakelen"
       insert_table: "Tabel invoegen"
       posting_not_on_topic: "Op welk topic wil je antwoorden?"
       saved_local_draft_tip: "lokaal opgeslagen"

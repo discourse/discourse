@@ -206,7 +206,7 @@ pl_PL:
           personal_messages: Wiadomości osobiste
           public_topics: Tematy publiczne (wyklucz wszystkie bezpieczne kategorie)
           with_images: Obrazy
-          with_links: Odnośniki
+          with_links: Linki
           with_code: Kod
           with_uploads: Pliki
         user_updated:

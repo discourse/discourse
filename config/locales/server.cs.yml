@@ -3709,10 +3709,6 @@ cs:
         Tento odznak se uděluje za návštěvu po 365 po sobě jdoucích dnů. Páni, celý rok!
     badge_title_metadata: "%{display_name} odznak na %{site_title}"
   admin_login:
-    success: "E-mail odeslán"
-    errors:
-      unknown_email_address: "Neznámá e-mailová adresa."
-      invalid_token: "Neplatný token."
     email_input: "E-mail správce"
     submit_button: "Odeslat e-mail"
     safe_mode: "Nouzový režim: při přihlášení zakázat všechny motivy/pluginy"

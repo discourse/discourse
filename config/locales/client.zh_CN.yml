@@ -1807,7 +1807,8 @@ zh_CN:
         removed: "已移除"
         search: "输入以搜索邀请…"
         user: "邀请用户"
-        none: "没有要显示的邀请。"
+        none:
+          title: "没有要显示的邀请。"
         truncated:
           other: "正在显示前 %{count} 个邀请。"
         redeemed: "已确认的邀请"
@@ -2406,7 +2407,6 @@ zh_CN:
       unlist: "取消公开"
       add_warning: "这是一个官方警告。"
       toggle_whisper: "切换密语"
-      toggle_unlisted: "切换取消公开"
       insert_table: "插入表"
       posting_not_on_topic: "您想回复哪个话题？"
       saved_local_draft_tip: "已保存到本地"
@@ -2952,9 +2952,6 @@ zh_CN:
         filter: "没有话题。"
         education:
           topic_tracking_preferences: '您可以在 <a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的主题跟踪设置。'
-          unread: "没有什么未读的...令人印象深刻！"
-          new_new: "目前没什么新东西... 稍后再回来看看！"
-          new: "目前没什么新东西... 稍后再回来看看！"
       bottom:
         latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"

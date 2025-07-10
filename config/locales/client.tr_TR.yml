@@ -1859,7 +1859,8 @@ tr_TR:
         removed: "Kaldırıldı"
         search: "davetlerde aramak için yazın…"
         user: "Davet Edilen Kullanıcı"
-        none: "Görüntülenecek davet yok."
+        none:
+          title: "Görüntülenecek davet yok."
         truncated:
           one: "İlk davet gösteriliyor."
           other: "İlk %{count} davet gösteriliyor."
@@ -2495,7 +2496,6 @@ tr_TR:
       unlist: "listelenmedi"
       add_warning: "Bu resmi bir uyarıdır."
       toggle_whisper: "Fısıltıyı Aç/Kapat"
-      toggle_unlisted: "Liste Dışı Aç/Kapat"
       insert_table: "Tablo ekle"
       posting_not_on_topic: "Hangi konuya yanıt vermek istiyorsunuz?"
       saved_local_draft_tip: "yerel olarak kaydedildi"

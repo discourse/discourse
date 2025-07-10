@@ -4755,10 +4755,6 @@ pt_BR:
         Este emblema é concedido por ter acessado 365 dias consecutivos. Uau, um ano inteiro!
     badge_title_metadata: "%{display_name} emblema em %{site_title}"
   admin_login:
-    success: "E-mail enviado"
-    errors:
-      unknown_email_address: "endereço de e-mail desconhecido."
-      invalid_token: "token inválido."
     email_input: "E-mail do(a) administrador(a)"
     submit_button: "Enviar e-mail"
     safe_mode: "Modo de segurança: desativa todos os temas/plugins ao fazer login"

@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 ro:
-  site_settings:
-    discourse_reactions_like_icon: "Definește iconul folosit pentru butonul principal de reacție. Acesta ar trebui să fie un nume de icon <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> , nu un nume de emoji."
-    discourse_reactions_reaction_for_like: "Definește reacția asociată acțiunii de apreciere. Înregistrările istorice de apreciere nu vor fi modificate dacă se schimbă această setare; <strong>se recomandă cu tărie</strong> ca această setare să nu fie niciodată modificată."
-    discourse_reactions_enabled: "Activează modulul discourse-reactions."
-    discourse_reactions_enabled_reactions: "Definește o listă de reacții activate, orice emoticon este permis aici."
-    discourse_reactions_desaturated_reaction_panel: "Reduce zgomotul vizual al reacțiilor afișându-le nesaturate până la trecerea cu mausul peste."
-    discourse_reactions_excluded_from_like: "Reacții care nu se iau în considerare ca o apreciere. Toate reacțiile care nu se regăsesc pe această listă se vor contoriza ca o apreciere pentru insigne, raportare și alte scopuri."
-    discourse_reactions_like_sync_enabled: "Dacă această opțiune este activată, reacțiile istorice vor avea înregistrările lor de aprecieri create, cu excepția acelor reacții definite în `discourse_reactions_excluded_from_like`. Această sincronizare va avea loc în mod regulat în fundal și, de asemenea, atunci când modifici `discourse_reactions_excluded_from_like`."
-    errors:
-      invalid_excluded_emoji: "Nu poți exclude emoticon-urile care nu se regăsesc în „reacțiile activate din discourse reactions” și nu poți exclude emoticon-urile utilizate pentru „reacția de apreciere din discourse reactions”."
-  badges:
-    first_reaction:
-      name: Prima reacție
-      description: A reacționat la articol
-      long_description: |
-        Această insignă este acordată prima dată când reacționezi la un articol. Reacționarea la articole este o modalitate excelentă de a-i face pe colegii tăi să știe că ceea ce au publicat a fost interesant, util, cool sau distractiv. Împărtășește-ți reacția!
   reports:
     reactions:
-      title: "Reacții"
-      description: "Enumeră cele mai recente reacții."
       labels:
         day: "Zi"

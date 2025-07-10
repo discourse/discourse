@@ -4708,10 +4708,6 @@ tr_TR:
         Bu rozet, 365 gün üst üste ziyaret ettiğinizde verilir. Vay canına, koca bir yıl!
     badge_title_metadata: "%{site_title}'da %{display_name} rozeti"
   admin_login:
-    success: "E-posta Gönderildi"
-    errors:
-      unknown_email_address: "Bilinmeyen e-posta adresi."
-      invalid_token: "Geçersiz token."
     email_input: "Yönetici e-postası"
     submit_button: "E-posta Gönder"
     safe_mode: "Güvenli Mod: Giriş yaparken tüm temaları/eklentileri devre dışı bırakın"

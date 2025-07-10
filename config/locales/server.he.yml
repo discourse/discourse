@@ -5026,10 +5026,6 @@ he:
         עיטור זה מוענק על ביקור יומיומי במשך 365 ימים. ואו, שנה שלמה!
     badge_title_metadata: "עיטור ב-%{site_title} של %{display_name}"
   admin_login:
-    success: "הודעת דוא״ל נשלחה"
-    errors:
-      unknown_email_address: "כתובת הדוא״ל שגויה."
-      invalid_token: "אסימון שגוי."
     email_input: "דוא״ל של המנהל"
     submit_button: "שליחת דוא״ל"
     safe_mode: "מצב בטוח: השבתת כל ערכות העיצוב/תוספים בעת כניסה"

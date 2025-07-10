@@ -4783,10 +4783,6 @@ hu:
         Ezt a jelvényt azok kapják, akik 365 egymást követő napon látogatják meg a fórumunkat. Wow, egy egész év!
     badge_title_metadata: "%{display_name} jelvény itt: %{site_title}"
   admin_login:
-    success: "E-mail elküldve"
-    errors:
-      unknown_email_address: "Ismeretlen e-mail cím."
-      invalid_token: "Érvénytelen token."
     email_input: "Adminisztrátori e-mail"
     submit_button: "E-mail küldése"
     safe_mode: "Biztonságos mód: minden téma/plugin letiltása bejelentkezéskor"

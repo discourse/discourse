@@ -2323,7 +2323,6 @@ el:
       name: Λάτρης
     badge_title_metadata: "%{display_name} παράσημο στην %{site_title}"
   admin_login:
-    success: "Το Email Στάλθηκε"
     email_input: "Email Διαχειριστή"
     submit_button: "Αποστολή Email"
   performance_report:

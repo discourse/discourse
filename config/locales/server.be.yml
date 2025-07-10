@@ -2237,10 +2237,6 @@ be:
         Гэты значок прадастаўляецца для наведвання 365 дзён запар. Нічога сабе, цэлы год!
     badge_title_metadata: "% {Display_name} значок на% {SITE_TITLE}"
   admin_login:
-    success: "ліст адпраўлены"
-    errors:
-      unknown_email_address: "Невядомы адрас электроннай пошты."
-      invalid_token: "Недапушчальны маркер."
     email_input: "адміністратар Email"
     submit_button: "Адправіць на e-mail"
   performance_report:

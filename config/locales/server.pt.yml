@@ -2009,7 +2009,6 @@ pt:
         Este distintivo é concedido pela primeira vez que responde a uma publicação por email :e-mail:.
     badge_title_metadata: "Emblema %{display_name} em %{site_title}"
   admin_login:
-    success: "Email Enviado"
     email_input: "Email Administração"
     submit_button: "Enviar Email"
   performance_report:

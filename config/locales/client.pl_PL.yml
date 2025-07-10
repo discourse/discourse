@@ -235,7 +235,7 @@ pl_PL:
         disabled: "Odpięcie %{when}"
       visible:
         enabled: "Wylistowanie %{when}"
-        disabled: "Odlistowanie %{when}"
+        disabled: "Zastrzeżony %{when}"
       banner:
         enabled: "Ustawił ten baner %{when}. Będzie widoczny na górze każdej strony, póki nie zostanie ukryty przez użytkownika."
         disabled: "Usunięto ten baner %{when}. Nie będzie już pojawiać się u góry każdej strony."
@@ -315,7 +315,7 @@ pl_PL:
     admin_title: "Administracja"
     show_more: "pokaż więcej"
     show_help: "opcje"
-    links: "Odnośniki"
+    links: "Linki"
     links_lowercase:
       one: "link"
       few: "linki"
@@ -916,7 +916,7 @@ pl_PL:
         solution_marked: "Rozwiązanie oznaczone"
         topic_has_solution: "Ten temat ma rozwiązanie"
         visibility: "Widoczność"
-        topic_unlisted: "Ten temat jest nieumieszczony na liście. Dostępny tylko za pośrednictwem bezpośredniego łącza — niepubliczny."
+        topic_unlisted: "Ten temat jest zastrzeżony. Dostępny tylko za pośrednictwem bezpośredniego linku — niepubliczny."
       help:
         moderation_guide: "Przewodnik moderacji Discourse"
         flag_priorities: "Zarządzanie reputacją użytkowników i priorytetami flag"
@@ -1312,7 +1312,7 @@ pl_PL:
       "13": "Skrzynka odbiorcza"
       "14": "Oczekujące"
       "15": "Szkice"
-      "17": "Odnośniki"
+      "17": "Linki"
     categories:
       categories_label: "kategorie"
       subcategories_label: "podkategorie"
@@ -1509,7 +1509,7 @@ pl_PL:
         W tym panelu zostaniesz powiadomiony o aktywności bezpośrednio związanej z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> lub zacytuje Cię i odpowie na obserwowane przez Ciebie tematy. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie jesteś zalogowany przez jakiś czas. <br><br> Poszukaj %{icon} aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz otrzymywać powiadomienia. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
       no_other_notifications_title: "Nie masz jeszcze żadnych innych powiadomień"
       no_other_notifications_body: >
-        W tym panelu będziesz otrzymywać powiadomienia o innych rodzajach aktywności, które mogą być dla Ciebie istotne - na przykład gdy ktoś zamieści link do jednego z Twoich postów lub go edytuje.
+        W tym panelu będziesz powiadamiany o innych rodzajach aktywności, które mogą Cię zainteresować — na przykład, gdy ktoś udostępni link do Twojego wpisu lub go edytuje.
       no_notifications_page_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_page_body: >
         Zostaniesz powiadomiony o działaniach bezpośrednio związanych z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> Ciebie lub cytuje Ciebie, i odpowiada na tematy, które oglądasz. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie zalogujesz się przez jakiś czas. <br><br> Poszukaj %{icon} , aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz być powiadamiany. Aby dowiedzieć się więcej, zobacz swoje <a href='%{preferencesUrl}'>preferencje powiadomień</a>.
@@ -1532,7 +1532,7 @@ pl_PL:
       dark_mode_enable: "Włącz automatyczną paletę kolorów trybu ciemnego"
       text_size_default_on_all_devices: "Ustaw ten domyślny rozmiar tekstu na wszystkich urządzeniach"
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
-      external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
+      external_links_in_new_tab: "Otwórz wszystkie linki zewnętrzne w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_smart_lists: "Włącz inteligentne listy podczas pisania w kompozytorze"
       enable_defer: "Włącz opcję oznaczania tematów jako nieprzeczytanych"
@@ -2110,7 +2110,12 @@ pl_PL:
         removed: "Usunięto"
         search: "wpisz, aby wyszukać zaproszenia…"
         user: "Zaproszony(-a) użytkownik(-czka)"
-        none: "Brak zaproszeń do wyświetlenia."
+        none:
+          title: "Brak zaproszeń do wyświetlenia."
+          cta: "Utwórz link z zaproszeniem"
+          tip:
+            prefix: "Możesz również wysyłać zaproszenia zbiorcze poprzez"
+            action: "przesłanie pliku CSV"
         truncated:
           one: "Wyświetlanie pierwszego zaproszenia."
           few: "Wyświetlanie %{count} pierwszych zaproszeń."
@@ -2132,7 +2137,7 @@ pl_PL:
         days_visited: "Dni odwiedzin"
         account_age_days: "Wiek konta w dniach"
         create: "Zaproś"
-        generate_link: "Stwórz odnośnik z zaproszeniem"
+        generate_link: "Utwórz link z zaproszeniem"
         link_generated: "Oto Twój link z zaproszeniem!"
         valid_for: "Link do zaproszenia jest ważny tylko dla tego adresu: %{email}"
         single_user: "Zaproś przez e-mail"
@@ -2813,10 +2818,9 @@ pl_PL:
       more_emoji: "więcej…"
       options: "Opcje"
       whisper: "szept"
-      unlist: "nie widoczny"
+      unlist: "zastrzeżony"
       add_warning: "To jest oficjalne ostrzeżenie."
       toggle_whisper: "Przełącz szept"
-      toggle_unlisted: "Przycisk ukrywania"
       insert_table: "Wstaw tabelę"
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saved_local_draft_tip: "zapisano lokalnie"
@@ -2929,8 +2933,8 @@ pl_PL:
       italic_label: "I"
       italic_title: "Wyróżnienie"
       italic_text: "wyróżniony tekst"
-      link_title: "Odnośnik"
-      link_description: "wprowadź tutaj opis odnośnika"
+      link_title: "Link"
+      link_description: "wpisz tutaj opis linku"
       link_dialog_title: "Wstaw link"
       link_dialog_action: "Wstaw"
       link_edit_title: "Edytuj link"
@@ -3000,6 +3004,9 @@ pl_PL:
         toggle_topic_bump:
           label: "Przełącz podbicie tematu"
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
+        toggle_unlisted:
+          label: Przełącz zastrzeżone
+          desc: ! "Tematy \tzastrzeżone są dostępne tylko dla członków za pośrednictwem bezpośredniego łącza"
       reload: "Przeładuj"
       ignore: "Ignoruj"
       image_alt_text:
@@ -3391,7 +3398,7 @@ pl_PL:
         confirm: "Potwierdź"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
-        unlist_topics: "Ukryj tematy"
+        unlist_topics: "Zastrzeż tematy"
         relist_topics: "Odśwież listę tematów"
         reset_bump_dates: "Zresetuj daty ważności"
         defer: "Oznacz jako nieprzeczytane"
@@ -3491,7 +3498,7 @@ pl_PL:
         filter: "Brak tematów."
         education:
           topic_tracking_preferences: 'Możesz przeglądać i zmieniać ustawienia śledzenia nowych tematów w <a href="%{basePath}/my/preferences/tracking">swoich preferencjach</a>.'
-          unread: "Nic nie pozostało nieprzeczytane... imponujące!"
+          unread: "Nic nie zostało do przeczytania. Imponujące!"
           new_new: "Na razie nic nowego. Sprawdź wkrótce!"
           new: "Na razie nic nowego. Sprawdź wkrótce!"
       bottom:
@@ -3521,7 +3528,7 @@ pl_PL:
       move_messages_to_inbox:
         name: "Przenieś do skrzynki odbiorczej"
       unlist_topics:
-        name: "Usuń z listy"
+        name: "Zastrzeż"
       relist_topics:
         name: "Dodaj do listy"
       remove_tags:
@@ -3819,7 +3826,7 @@ pl_PL:
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
         archive: "Archiwizuj temat"
-        invisible: "Ukryj temat"
+        invisible: "Zastrzeż temat"
         visible: "Pokaż temat"
         reset_read: "Zresetuj przeczytane dane"
         make_public: "Upublicznij temat…"
@@ -4152,6 +4159,10 @@ pl_PL:
         success: "Tłumaczenia zostały pomyślnie zaktualizowane"
         post_language_selector:
           none: "Brak"
+        edit_warning:
+          message: "To jest przetłumaczony post.<br><br> Chcesz edytować oryginalny post w języku %{language} czy edytować to konkretne tłumaczenie?"
+          action_original: "Edytuj oryginalny post"
+          action_translation: "Edytuj to tłumaczenie"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -4656,15 +4667,15 @@ pl_PL:
       hot:
         title: "Gorące"
       unlisted:
-        help: "Ten temat nie znajduje się na liście; nie będzie wyświetlany na listach tematów i można uzyskać do niego dostęp tylko za pośrednictwem bezpośredniego linku. %{unlistedReason}"
+        help: "Ten temat jest zastrzeżony; nie będzie wyświetlany na listach tematów i można uzyskać do niego dostęp tylko za pośrednictwem bezpośredniego łącza. %{unlistedReason}"
       personal_message:
         title: "Ten temat jest wiadomością prywatną"
         help: "Ten temat jest wiadomością prywatną"
       visibility_reasons:
-        op_flag_threshold_reached: "Ten temat został automatycznie usunięty z listy, ponieważ osiągnięto próg zgłoszeń"
+        op_flag_threshold_reached: "Ten temat został automatycznie zastrzeżony, ponieważ osiągnięto próg zgłoszeń"
         op_unhidden: "Temat ten został ponownie poruszony przez autora"
         embedded_topic: "Ten temat został ponownie umieszczony na liście, ponieważ jest to temat osadzony"
-        manually_unlisted: "Ten temat został ręcznie usunięty z listy przez administratora lub moderatora"
+        manually_unlisted: "Ten temat został ręcznie zastrzeżony przez administratora lub moderatora"
         manually_relisted: "Ten temat został ponownie umieszczony na liście przez administratora lub moderatora"
         bulk_action: "Widoczność tego tematu została zmieniona z powodu akcji zbiorczej wykonanej przez użytkownika"
     posts: "Wpisy"
@@ -5274,7 +5285,7 @@ pl_PL:
                   many: "Nazwa musi być krótsza niż %{count} znaków"
                   other: "Nazwa musi być krótsza niż %{count} znaków"
             value:
-              label: "Odnośnik"
+              label: "Link"
               validation:
                 blank: "Link nie może być pusty"
                 maximum:
@@ -7467,7 +7478,7 @@ pl_PL:
           replace: "Zamień"
           tag: "Tag"
           silence: "Wycisz"
-          link: "Odnośnik"
+          link: "Link"
         action_descriptions:
           block: "Komunikat o błędzie zostanie wyświetlony podczas próby utworzenia posta zawierającego te słowa."
           censor: "Zezwalaj na posty zawierające te słowa, ale zastąp je znakami ukrywającymi ocenzurowane słowa."
@@ -7484,7 +7495,7 @@ pl_PL:
           replace_label: "Zastąpienie"
           replace_placeholder: "przykład"
           tag_label: "Tag"
-          link_label: "Odnośnik"
+          link_label: "Link"
           link_placeholder: "https://example.com"
           add: "Dodaj"
           success: "Sukces"
@@ -8291,7 +8302,7 @@ pl_PL:
         embed_post_limit: "Maksymalna ilość osadzanych wpisów "
         embed_title_scrubber: "Wyrażenie regularne używane do czyszczenia tytułu postów"
         embed_truncate: "Skracaj treść osadzanych wpisów"
-        embed_unlisted: "Zaimportowane tematy będą niepubliczne do czasu uzyskania odpowiedzi."
+        embed_unlisted: "Zaimportowane tematy będą zastrzeżone do czasu uzyskania odpowiedzi."
         allowed_embed_selectors: "Selektor CSS dla elementów, które są dozwolone w osadzaniu"
         blocked_embed_selectors: "Selektor CSS dla elementów, które są usuwane z osadzonych"
         allowed_embed_classnames: "Dozwolone nazwy klas CSS"

@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 de:
-  site_settings:
-    discourse_reactions_like_icon: "Definiert das Symbol, das für die Hauptreaktionsschaltfläche verwendet wird. Dies sollte ein <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>-Symbolname sein, kein Emoji-Name."
-    discourse_reactions_reaction_for_like: "Legt die Reaktion fest, die mit der „Gefällt mir“-Aktion verbunden ist. Historische „Gefällt mir“-Datensätze werden nicht geändert, wenn diese Einstellung geändert wird. Es wird <strong>dringend empfohlen</strong>, diese Einstellung nie zu ändern."
-    discourse_reactions_enabled: "Aktiviere das discourse-reactions-Plug-in"
-    discourse_reactions_enabled_reactions: "Definiert eine Liste von aktivierten Reaktionen. Jedes Emoji ist hier erlaubt."
-    discourse_reactions_desaturated_reaction_panel: "Stellt Reaktionen weniger ablenkend in Graustufen dar, bis sie im Fokus des Zeigers stehen."
-    discourse_reactions_excluded_from_like: "Reaktionen, die nicht als „Gefällt mir“ gelten. Alle Reaktionen, die nicht auf dieser Liste stehen, werden in Bezug auf Abzeichen, Berichte und andere Zwecke als „Gefällt mir“ gewertet."
-    discourse_reactions_like_sync_enabled: "Wenn diese Option aktiviert ist, werden für vorherige Reaktionen die entsprechenden „Gefällt mir“-Einträge erstellt, außer für die Reaktionen, die in `discourse_reactions_excluded_from_like` definiert sind. Dieser Abgleich findet regelmäßig im Hintergrund statt und auch, wenn du `discourse_reactions_excluded_from_like` änderst."
-    errors:
-      invalid_excluded_emoji: "Du kannst keine Emojis ausschließen, die nicht in „discourse reactions enabled reactions“ enthalten sind, und du kannst das Emoji nicht ausschließen, das für „discourse reactions reaction for like“ verwendet wird."
-  badges:
-    first_reaction:
-      name: Erste Reaktion
-      description: Auf Beitrag reagiert
-      long_description: |
-        Das Abzeichen wird verliehen, wenn du das erste Mal auf einen Beitrag reagierst. Das Reagieren auf Beiträge ist eine tolle Art, um Mitglieder wissen zu lassen, dass ihr Beitrag interessant, nützlich, cool oder witzig war. Teile deine Reaktion!
   reports:
     reactions:
-      title: "Reaktionen"
-      description: "Die neusten Reaktionen anzeigen"
       labels:
         day: "Tag"

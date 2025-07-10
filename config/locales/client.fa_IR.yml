@@ -1847,7 +1847,8 @@ fa_IR:
         removed: "پاک شد"
         search: "دعوت‌ها را برای جستجو تایپ کنید…"
         user: "کاربر دعوت شده"
-        none: "هیچ دعوتنامه ای برای نمایش نیست"
+        none:
+          title: "هیچ دعوتنامه ای برای نمایش نیست"
         truncated:
           one: "نمایش %{count} دعوت اول."
           other: "نمایش %{count} دعوت اول."
@@ -2471,7 +2472,6 @@ fa_IR:
       unlist: "از فهرست پاک شده"
       add_warning: "این یک هشدار رسمی است."
       toggle_whisper: "تغییر وضعیت زمزمه"
-      toggle_unlisted: "تغییر وضعیت از لیست خارج شده"
       insert_table: "درج جدول"
       posting_not_on_topic: "به کدام موضوع می‌خواهید پاسخ دهید؟"
       saved_local_draft_tip: "به صورت محلی ذخیره شد"

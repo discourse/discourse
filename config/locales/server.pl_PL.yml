@@ -770,7 +770,7 @@ pl_PL:
               too_large_group: "Grupa: %{group_name}, ma zbyt wielu użytkowników, aby otrzymać wiadomość. Limit wynosi %{limit}."
               unable_to_update: "Wystąpił błąd przy aktualizacji tego tematu."
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
-              unable_to_unlist: "Przepraszamy, nie możesz utworzyć niepublicznego tematu."
+              unable_to_unlist: "Przepraszamy, nie możesz utworzyć zastrzeżonego tematu."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
         user:
@@ -2429,8 +2429,8 @@ pl_PL:
     embed_topics_list: "Włącz osadzanie list tematów w formacie HTML. To ustawienie umożliwia osadzanie list tematów z Twojego forum na innych stronach internetowych w sposób kompatybilny i łatwy w użyciu."
     embed_set_canonical_url: "Ustaw kanoniczny adres URL dla osadzonych tematów w adresie osadzonej zawartości."
     embed_truncate: "Skróć treść postów osadzonych ze źródeł zewnętrznych. To ustawienie gwarantuje, że po osadzeniu w Twojej witrynie wpisu z zewnętrznego adresu URL będzie wyświetlana tylko początkowa część treści. Jeśli wolisz wyświetlać pełną treść postów zewnętrznych, możesz wyłączyć to ustawienie."
-    embed_unlisted: "Osadzone tematy nie będą wyświetlane, dopóki użytkownik nie odpowie."
-    import_embed_unlisted: "Zaimportowane osadzone tematy nie będą wyświetlane, dopóki użytkownik nie odpowie (nawet jeśli ustawienie `embed unlisted` jest odznaczone)."
+    embed_unlisted: "Osadzone tematy będą zastrzeżone, dopóki użytkownik nie odpowie."
+    import_embed_unlisted: "Zaimportowane osadzone tematy będą zastrzeżone, dopóki użytkownik nie odpowie (nawet jeśli ustawienie `embed unlisted` jest odznaczone)."
     embed_support_markdown: "Obsługa formatowania Markdown dla osadzonych postów."
     allowed_embed_selectors: "Rozdzielana przecinkami lista elementów CSS, które są dozwolone w osadzaniu."
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
@@ -2574,6 +2574,7 @@ pl_PL:
     dashboard_hidden_reports: "Zezwalaj na ukrycie określonych raportów z panelu administracyjnego."
     dashboard_visible_tabs: "Wybierz, które karty panelu administracyjnego są widoczne."
     dashboard_general_tab_activity_metrics: "Wybierz raporty, które mają być wyświetlane jako metryki aktywności na karcie ogólne."
+    gravatar_enabled: "Użyj usługi <a href='https://gravatar.com/'>Gravatar</a> dla awatarów użytkowników. Uniemożliwi to użytkownikom przełączanie się na usługę Gravatar dla swoich awatarów, ale nie wpłynie to na użytkowników, którzy już z niej korzystają."
     gravatar_name: "Podaj nazwę dostawcy usługi Gravatar. Ta nazwa jest zwykle używana do identyfikacji źródła dostarczającego awatary Gravatar do witryny."
     gravatar_base_url: "Podaj adres URL umożliwiający dostęp do API serwisu Gravatar. To ustawienie jest niezbędne do konwersji adresów e-mail na adresy URL Gravatar, gdzie przechowywane są obrazy awatarów."
     gravatar_login_url: "Odnoszący się do `gravatar_base_url` adres URL, który umożliwia użytkownikowi zalogowanie się do usługi Gravatar."
@@ -4837,7 +4838,7 @@ pl_PL:
       name: Weteran
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a> możliwość globalnej edycji, przypinania, zamykania, archiwizacji, dzielenia i scalania tematów oraz więcej polubień
       long_description: |
-        Ta odznaka jest przyznawana za zdobycie 4. poziomu zaufania. Jesteś wybranym przez zespół administracyjny weteranem i stawiasz dobry przykład reszcie społeczności poprzez swoje akcje i wypowiedzi. Możesz edytować wszystkie wpisy i dokonywać akcji typowych dla moderatorów: przypinania, zamykania, usuwanie z list, archiwizowania, dzielenia i scalania tematów.
+        Ta odznaka jest przyznawana za zdobycie 4. poziomu zaufania. Jesteś wybranym przez zespół administracyjny weteranem i stawiasz dobry przykład reszcie społeczności poprzez swoje akcje i wypowiedzi. Możesz edytować wszystkie wpisy i dokonywać akcji typowych dla moderatorów: przypinania, zamykania, zastrzeżenia, archiwizowania, dzielenia i scalania tematów.
     welcome:
       name: Powitanie
       description: Otrzymano polubienie
@@ -5051,10 +5052,7 @@ pl_PL:
         Ta odznaka jest przyznawana za odwiedzanie forum przez 365 kolejnych dni. Wow, to cały rok!
     badge_title_metadata: "%{display_name} odznaka na %{site_title}"
   admin_login:
-    success: "Email wysłany"
-    errors:
-      unknown_email_address: "Nieznany adres e-mail."
-      invalid_token: "Nieprawidłowy token."
+    acknowledgement: "Jeśli istnieje konto administratora z adresem e-mail %{email}, otrzymasz wiadomość e-mail z linkiem do zalogowania się."
     email_input: "Email administratora. "
     submit_button: "Wyślij Email"
     safe_mode: "Tryb awaryjny: wyłącz wszystkie motywy/wtyczki podczas logowania"

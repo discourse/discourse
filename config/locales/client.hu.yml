@@ -1862,7 +1862,8 @@ hu:
         removed: "Eltávolítva"
         search: "gépeljen a meghívók kereséséhez…"
         user: "Meghívott felhasználó"
-        none: "Nincs megjeleníthető meghívó."
+        none:
+          title: "Nincs megjeleníthető meghívó."
         truncated:
           one: "Az első meghívó megjelenítése."
           other: "Az első %{count} meghívó megjelenítése."
@@ -2504,7 +2505,6 @@ hu:
       unlist: "nem listázott"
       add_warning: "Ez egy hivatalos figyelmeztetés."
       toggle_whisper: "Suttogás be/ki"
-      toggle_unlisted: "Nem listázott állapot be/ki"
       insert_table: "Tábla beszúrása"
       posting_not_on_topic: "Melyik témára szeretne válaszolni?"
       saved_local_draft_tip: "helyben mentett"
@@ -3091,9 +3091,6 @@ hu:
         filter: "Nincsenek témák."
         education:
           topic_tracking_preferences: 'Az új témakövetési beállításokat a <a href="%{basePath}/my/preferences/tracking">beállítások</a> között tekintheti meg és módosíthatja.'
-          unread: "Nem maradt olvasatlan tartalom...lenyűgöző!"
-          new_new: "Jelenleg semmi újdonság... nézz vissza később!"
-          new: "Jelenleg semmi újdonság... nézz vissza később!"
       bottom:
         latest: "Nincs több friss téma."
         posted: "Nincs több közzétett téma."

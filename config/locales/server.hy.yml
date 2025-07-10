@@ -2727,10 +2727,6 @@ hy:
         Այս կրծքանշանը շնորհվում է 365 հաջորդական օր այցելության համար: Վաու, մի ամբողջ տարի !
     badge_title_metadata: "%{display_name} կրծքանշան %{site_title} -ում"
   admin_login:
-    success: "Էլ. նամակն Ուղարկված է"
-    errors:
-      unknown_email_address: "Անհայտ էլ. հասցե:"
-      invalid_token: "Անվավեր տոկեն:"
     email_input: "Ադմինի Էլ. հասցե"
     submit_button: "Ուղարկել Էլ. նամակ"
   performance_report:

@@ -1323,7 +1323,8 @@ bs_BA:
         remove: "Ukloni"
         reinvited: "Pozivnica ponovo poslata"
         user: "Pozvan korisnik"
-        none: "Nema pozivnica za prikazati"
+        none:
+          title: "Nema pozivnica za prikazati"
         truncated:
           one: "Prikaz prve pozivnice."
           few: "Prikaz prvih %{count} pozivnica."
@@ -1677,7 +1678,6 @@ bs_BA:
       unlist: "nelistan"
       add_warning: "Ovo je zvanično upozorenje."
       toggle_whisper: " Prekidač za Šapat"
-      toggle_unlisted: "Prekidač za Listan"
       posting_not_on_topic: "Na koju temu želite da odgovorite?"
       saved_local_draft_tip: "sačuvano lokalno"
       drafts_offline: "skicirano lokalno"

@@ -1524,7 +1524,8 @@ sl:
         reinvited: "Povabilo ponovno poslano"
         search: "pričnite tipkati za iskanje vabil..."
         user: "Povabljen uporabnik"
-        none: "Ni povabil za prikaz."
+        none:
+          title: "Ni povabil za prikaz."
         truncated:
           one: "Prikazano prvo povabilo."
           two: "Prikazana prva %{count} povabila."
@@ -1980,7 +1981,6 @@ sl:
       unlist: "izločeno"
       add_warning: "To je uradno opozorilo."
       toggle_whisper: "Preklopi šepet"
-      toggle_unlisted: "Preklopi izločeno"
       posting_not_on_topic: "Na katero temo bi radi odgovorili?"
       saved_local_draft_tip: "shranjeno lokalno"
       drafts_offline: "osnutki brez povezave"

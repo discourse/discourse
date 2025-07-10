@@ -2117,7 +2117,8 @@ sk:
         removed: "Odstránené"
         search: "začni písať pre hľadanie pozvánok"
         user: "Pozvaný používateľ"
-        none: "Nemáte žiadne pozvánky na zobrazenie."
+        none:
+          title: "Nemáte žiadne pozvánky na zobrazenie."
         truncated:
           one: "Zobrazuje sa prvá pozvánka."
           few: "Zobrazujú sa prvé %{count} pozvánky."
@@ -2829,7 +2830,6 @@ sk:
       unlist: "nezaradený"
       add_warning: "Toto je oficiálne varovanie."
       toggle_whisper: "Prepnúť šepot"
-      toggle_unlisted: "Prepnúť Nezaradené"
       insert_table: "Vložiť tabuľku"
       posting_not_on_topic: "Na akú tému chcete odpovedať?"
       saved_local_draft_tip: "uložené lokálne"
@@ -3504,9 +3504,6 @@ sk:
         filter: "Neexistujú žiadne témy."
         education:
           topic_tracking_preferences: 'Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href="%{basePath}/my/preferences/tracking">nastaveniach</a>.'
-          unread: "Nič nezostalo neprečítané... pôsobivé!"
-          new_new: "Momentálne nič nové...čoskoro sa vráťte!"
-          new: "Momentálne nič nové...čoskoro sa vráťte!"
       bottom:
         latest: "Nie je už viac najnovšich tém."
         posted: "Žiadne ďalšie témy na čítanie."

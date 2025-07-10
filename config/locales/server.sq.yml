@@ -1375,7 +1375,6 @@ sq:
       long_description: |
         Kjo stemë jepet herën e parë kur i përgjigjeni një postimi nëpërmjet email-it :e-mail:
   admin_login:
-    success: "Emaili u dërgua"
     email_input: "Admin Email"
     submit_button: "Dërgo Email"
   performance_report:

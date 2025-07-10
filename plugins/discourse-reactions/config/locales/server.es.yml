@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 es:
-  site_settings:
-    discourse_reactions_like_icon: "Define el icono utilizado para el botón principal de reacción. Debe ser un nombre de icono <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>, no un nombre de emoji."
-    discourse_reactions_reaction_for_like: "Define la reacción asociada a la acción Me gusta. Los registros históricos de Me gusta no se modificarán si cambia este ajuste, por lo que se <strong>recomienda encarecidamente</strong> que este ajuste no se modifique nunca."
-    discourse_reactions_enabled: "Activar el plugin discourse-reactions."
-    discourse_reactions_enabled_reactions: "Define una lista de reacciones activadas. Se permite cualquier emoji."
-    discourse_reactions_desaturated_reaction_panel: "Reduce el ruido visual de las reacciones mostrándolas con menos color hasta que se pasa el ratón por encima."
-    discourse_reactions_excluded_from_like: "Reacciones que no cuentan como un Me gusta. Cualquier reacción que no esté en esta lista contará como un Me gusta para insignias, informes y otros fines."
-    discourse_reactions_like_sync_enabled: "Si está activada, se crearán los registros de Me gusta correspondientes a las reacciones históricas, excepto para las reacciones definidas en «discourse_reactions_excluded_from_like». Esta sincronización se realizará regularmente en segundo plano, y también cuando cambies «discourse_reactions_excluded_from_like»."
-    errors:
-      invalid_excluded_emoji: "No puedes excluir los emojis que no estén en «reacciones de Discourse que posibilitan reacciones» ni tampoco puedes excluir los emojis utilizados para «reacciones de Discourse para Me gusta»."
-  badges:
-    first_reaction:
-      name: Primera reacción
-      description: Reaccionó a una publicación
-      long_description: |
-        Esta medalla se concede la primera vez que reaccionas a una publicación. Las reacciones son una buena manera de hacer saber a las demás personas de la comunidad que lo que publicaron era interesante, útil, divertido o guay. ¡Comparte tus reacciones!
   reports:
     reactions:
-      title: "Reacciones"
-      description: "Listar las reacciones más recientes."
       labels:
         day: "Día"

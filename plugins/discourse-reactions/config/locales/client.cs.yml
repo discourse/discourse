@@ -5,38 +5,18 @@
 # https://translate.discourse.org/
 
 cs:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_reactions: "Discourse Reakce"
   js:
     discourse_reactions:
-      reactions_title: "Reakce"
       state_panel:
-        more_users: "a %{count} další(ch)..."
-      reaction:
-        forbidden: "Tato reakce byla vytvořena již před příliš dlouhou dobou, nelze ji dále měnit ani odstraňovat."
-      picker:
-        react_with: "Reagovat na tento příspěvek pomocí: %{reaction}"
-        cant_remove_reaction: "Svou reakci již nemůžete odstranit"
-        remove_reaction: "Odstranit tuto reakci %{reaction}"
+        more_users: "%{count} navíc..."
       main_reaction:
         add: "Tento příspěvek se mi líbí"
-        remove: "Odeberte toto Líbí se"
-        cant_remove: "Své Líbí se již nelze odebrat"
-        unauthenticated: "Chcete-li dát Líbí se na tento příspěvek, zaregistrujte se nebo se přihlaste"
     notifications:
-      reaction_1_user_multiple_posts:
-        one: "reagoval na váš příspěvek"
-        few: "reagoval na %{count} vaše příspěvky"
-        many: "reagoval na %{count} vašich příspěvků"
-        other: "reagoval na %{count} vašich příspěvků"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} a %{count} další"
         few: "%{username} a %{count} další"
-        many: "%{username} a %{count} dalších"
+        many: "%{username} a %{count} další"
         other: "%{username} a %{count} dalších"
       titles:
         reaction: "nová reakce"

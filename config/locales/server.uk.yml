@@ -5013,10 +5013,6 @@ uk:
         Ця нагорода надається за відвідування 365 днів поспіль. Ого, цілий рік!
     badge_title_metadata: "%{display_name} нагорода на %{site_title}"
   admin_login:
-    success: "Лист надіслано"
-    errors:
-      unknown_email_address: "Невідома електронна адреса."
-      invalid_token: "Неприпустимий token."
     email_input: "Електронна пошта Адміністратора"
     submit_button: "Надіслати ел. листа"
     safe_mode: "Безпечний режим: вимкнути усі теми/втулки під час входу"

@@ -1573,10 +1573,6 @@ bg:
     devotee:
       name: Отдаден
   admin_login:
-    success: "Изпратен имейл"
-    errors:
-      unknown_email_address: "Неизвестен имейл адрес"
-      invalid_token: "Невалиден жетон"
     email_input: "Админ имейл"
     submit_button: "Изпрати имейл"
   performance_report:

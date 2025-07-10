@@ -5,38 +5,18 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_reactions: "Reakcje Discourse"
   js:
     discourse_reactions:
-      reactions_title: "Reakcje"
       state_panel:
         more_users: "i %{count} więcej..."
-      reaction:
-        forbidden: "Ta reakcja powstała zbyt dawno temu. Nie można go już modyfikować ani usuwać."
-      picker:
-        react_with: "Zareaguj na ten post z: %{reaction}"
-        cant_remove_reaction: "Nie możesz już usunąć swojej reakcji"
-        remove_reaction: "Usuń reakcję %{reaction}"
       main_reaction:
-        add: "Polub ten post"
-        remove: "Usuń to polubienie"
-        cant_remove: "Nie możesz już usunąć polubienia"
-        unauthenticated: "Zarejestruj się lub zaloguj, aby polubić ten post"
+        add: "Polub ten wpis"
     notifications:
-      reaction_1_user_multiple_posts:
-        one: "zareagował na %{count} Twój post"
-        few: "zareagował na %{count} Twoje posty"
-        many: "zareagował na %{count} Twoich postów"
-        other: "zareagował na %{count} Twoich postów"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} i %{count} inny"
         few: "%{username} i %{count} inni"
-        many: "%{username} i %{count} innych"
-        other: "%{username} i %{count} innych"
+        many: "%{username} i %{count} inni"
+        other: "%{username} i %{count} inni"
       titles:
         reaction: "nowa reakcja"

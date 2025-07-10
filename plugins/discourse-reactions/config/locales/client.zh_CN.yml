@@ -5,30 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_reactions: "Discourse Reactions"
   js:
     discourse_reactions:
-      reactions_title: "回应"
-      state_panel:
-        more_users: "还有 %{count} 个…"
-      reaction:
-        forbidden: "该回应是很久以前创建的。它不能再被修改或移除。"
-      picker:
-        react_with: "使用以下方式回应此帖子：%{reaction}"
-        cant_remove_reaction: "您无法再移除您自己的回应了"
-        remove_reaction: "删除此 %{reaction} 回应"
       main_reaction:
         add: "点赞此帖子"
-        remove: "移除此赞"
-        cant_remove: "您无法再移除您自己的赞了"
-        unauthenticated: "请注册或登录以点赞此帖子"
     notifications:
-      reaction_1_user_multiple_posts:
-        other: "回应了您的 %{count} 个帖子"
       reaction_2_users: "%{username}、%{username2}"
       reaction_multiple_users:
         other: "%{username} 和其他 %{count} 人"

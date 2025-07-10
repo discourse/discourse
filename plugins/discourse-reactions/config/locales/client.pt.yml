@@ -5,22 +5,10 @@
 # https://translate.discourse.org/
 
 pt:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          discourse_reactions: "Reações Discourse"
   js:
     discourse_reactions:
-      reactions_title: "Reações"
-      state_panel:
-        more_users: "e mais %{count}..."
-      picker:
-        react_with: "Reagir a esta publicação com: %{reaction}"
-        remove_reaction: "Remover esta %{reaction} reação"
       main_reaction:
-        add: "Gostar desta publicação"
-        remove: "Remover este gosto"
+        add: "Gostar desta mensagem"
     notifications:
       reaction_2_users: "%{username}, %{username2}"
       titles:

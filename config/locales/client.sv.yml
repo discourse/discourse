@@ -1667,7 +1667,8 @@ sv:
         removed: "Borttagen"
         search: "skriv för att söka i inbjudningar…"
         user: "Inbjuden användare"
-        none: "Inga inbjudningar att visa."
+        none:
+          title: "Inga inbjudningar att visa."
         truncated:
           one: "Visar den första inbjudningen."
           other: "Visar de första %{count} inbjudningarna."
@@ -2182,7 +2183,6 @@ sv:
       unlist: "avlistad"
       add_warning: "Det här är en officiell varning."
       toggle_whisper: "Växla viskning"
-      toggle_unlisted: "Växla olistad"
       insert_table: "Infoga tabell"
       posting_not_on_topic: "Vilket ämne vill du svara på?"
       saved_local_draft_tip: "sparat lokalt"

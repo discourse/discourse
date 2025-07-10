@@ -2087,7 +2087,6 @@ ro:
     devotee:
       description: Ai vizitat 365 zile consecutive
   admin_login:
-    success: "Emailul a fost trimis"
     email_input: "Email Admin"
     submit_button: "Trimite email"
   performance_report:

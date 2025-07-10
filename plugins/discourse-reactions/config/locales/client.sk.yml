@@ -15,8 +15,8 @@ sk:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} a %{count} ďalší"
-        few: "%{username} a %{count} ďalších"
-        many: "%{username} a %{count} ďalších"
-        other: "%{username} a %{count} ďalších"
+        few: "%{username} a %{count} iných"
+        many: "%{username} a %{count} iné"
+        other: "%{username} a %{count} iné"
       titles:
         reaction: "nová reakcia"

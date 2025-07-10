@@ -5,25 +5,7 @@
 # https://translate.discourse.org/
 
 cs:
-  site_settings:
-    discourse_reactions_like_icon: "Definuje ikonu použitou pro hlavní reakční tlačítko. Mělo by se jednat o název ikony <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>, nikoli o název emoji."
-    discourse_reactions_reaction_for_like: "Definuje reakci přidruženou k akci Líbí se. Pokud změníte toto nastavení, nebude to mít vliv na historické záznamy a <strong>důrazně doporučujeme</strong> toto nastavení nikdy neměnit."
-    discourse_reactions_enabled: "Povolit plugin Discourse-Reakce."
-    discourse_reactions_enabled_reactions: "Určuje seznam povolených reakcí, všechny emoji jsou zde povoleny."
-    discourse_reactions_desaturated_reaction_panel: "Snižuje vizuální šum reakcí tím, že je zobrazí až po najetí myší."
-    discourse_reactions_excluded_from_like: "Reakce, které se nepočítají jako \"Líbí se\". Reakce, které nejsou na tomto seznamu, se budou počítat jako \"Líbí se\" pro účely odznaků, reporting a další účely."
-    discourse_reactions_like_sync_enabled: "Pokud je toto povoleno, budou mít historické reakce vytvořeny odpovídající záznamy Líbí se, kromě reakcí definovaných v `discourse_reactions_excluded_from_like`. Tato synchronizace bude probíhat pravidelně na pozadí a také když změníte `discourse_reactions_excluded_from_like`."
-    errors:
-      invalid_excluded_emoji: "Nemůžete vyloučit emotikony, které nejsou v 'discourse reactions enabled reactions' a nemůžete vyloučit emotikony používané pro 'discourse reactions reaction for like'."
-  badges:
-    first_reaction:
-      name: První reakce
-      description: Reagoval/a na příspěvek
-      long_description: |
-        Tento odznak je udělen při první reakci na příspěvek. Reakce na příspěvky je skvělý způsob, jak dát svým kolegům vědět, že to, co zveřejnili, bylo zajímavé, užitečné, skvělé nebo zábavné. Podělte se o svou reakci!
   reports:
     reactions:
-      title: "Reakce"
-      description: "Seznam nejnovějších reakcí."
       labels:
         day: "Den"
