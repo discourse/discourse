@@ -145,7 +145,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    rescue_with_handler(Discourse::ReadOnly.new) || raise
+    rescue_with_handler(Discourse::ReadOnly) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
@@ -580,9 +580,7 @@ class ApplicationController < ActionController::Base
 
   def rate_limit_second_factor!(user)
     return if params[:second_factor_token].blank?
-
     RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
-
     RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
   end
 

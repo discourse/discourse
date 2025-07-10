@@ -5307,10 +5307,7 @@ en:
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
-    success: "Email Sent"
-    errors:
-      unknown_email_address: "Unknown email address."
-      invalid_token: "Invalid token."
+    acknowledgement: "If an admin account with the email address %{email} exists, you will receive an email with a link to log in."
     email_input: "Admin Email"
     submit_button: "Send Email"
     safe_mode: "Safe Mode: disable all themes/plugins when logging in"

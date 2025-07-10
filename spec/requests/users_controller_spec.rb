@@ -208,7 +208,7 @@ RSpec.describe UsersController do
     end
   end
 
-  describe "#remove password" do
+  describe "#remove_password" do
     it "responds forbidden when not logged in" do
       put "/u/#{user.username}/remove-password.json"
       expect(response.status).to eq(403)
@@ -750,7 +750,7 @@ RSpec.describe UsersController do
   end
 
   describe "#admin_login" do
-    it "enqueues mail with admin email and sso enabled" do
+    it "enqueues mail with admin email" do
       put "/u/admin-login", params: { email: admin.email }
       expect(response.status).to eq(200)
       expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
@@ -767,15 +767,26 @@ RSpec.describe UsersController do
     end
 
     context "when email is incorrect" do
-      it "should return the right response" do
-        put "/u/admin-login", params: { email: "random" }
+      it "doesn't enqueue the mail and returns the same message" do
+        expect { put "/u/admin-login", params: { email: "random" } }.to_not change {
+          Jobs::CriticalUserEmail.jobs.size
+        }
 
         expect(response.status).to eq(200)
+        expect(response.body).to match(I18n.t("admin_login.acknowledgement", email: "random"))
+      end
+    end
 
-        response_body = response.body
+    context "when readonly mode is enabled" do
+      before { Discourse.enable_readonly_mode }
 
-        expect(response_body).to match(I18n.t("admin_login.errors.unknown_email_address"))
-        expect(response_body).to_not match(I18n.t("login.second_factor_description"))
+      it "enqueues mail with admin email" do
+        expect { put "/u/admin-login", params: { email: admin.email } }.to change {
+          Jobs::CriticalUserEmail.jobs.size
+        }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(response.body).to match(I18n.t("admin_login.acknowledgement", email: admin.email))
       end
     end
   end
@@ -4725,8 +4736,7 @@ RSpec.describe UsersController do
         RateLimiter.enable
         freeze_time
 
-        user = post_user
-        token = user.email_tokens.first
+        post_user
 
         6.times do |n|
           put "/u/update-activation-email.json",
@@ -4826,8 +4836,7 @@ RSpec.describe UsersController do
         RateLimiter.enable
         freeze_time
 
-        user = inactive_user
-        token = user.email_tokens.first
+        inactive_user
 
         6.times do |n|
           put "/u/update-activation-email.json",
@@ -5777,6 +5786,40 @@ RSpec.describe UsersController do
       )
     end
 
+    describe "when staff writes only mode is enabled" do
+      before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
+
+      it "enqueues the right email for moderator" do
+        user1.update!(moderator: true)
+
+        expect { post "/u/email-login.json", params: { login: user1.email } }.to change {
+          Jobs::CriticalUserEmail.jobs.count
+        }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_found"]).to eq(true)
+      end
+
+      it "enqueues the right email for admin" do
+        user1.update!(admin: true)
+
+        expect { post "/u/email-login.json", params: { login: user1.email } }.to change {
+          Jobs::CriticalUserEmail.jobs.count
+        }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_found"]).to eq(true)
+      end
+
+      it "does not enqueue the email for a regular user" do
+        expect { post "/u/email-login.json", params: { login: user1.email } }.not_to change {
+          Jobs::CriticalUserEmail.jobs.count
+        }
+
+        expect(response.status).to eq(503)
+      end
+    end
+
     describe "when enable_local_logins_via_email is disabled" do
       before { SiteSetting.enable_local_logins_via_email = false }
 
@@ -6430,7 +6473,6 @@ RSpec.describe UsersController do
       it "renames the key" do
         sign_in(user1)
         put "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
-        response_parsed = response.parsed_body
 
         expect(response.status).to eq(200)
         expect(passkey.reload.name).to eq("new name")
