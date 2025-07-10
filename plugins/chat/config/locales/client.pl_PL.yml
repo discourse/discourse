@@ -289,7 +289,7 @@ pl_PL:
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"
-      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie wersji roboczej może nie działać"
+      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie szkiców może nie działać"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
       restore: "Przywróć usuniętą wiadomość"

@@ -554,7 +554,7 @@ hu:
       cannot_set_past_reminder: "Nem állíthat be könyvjelző-emlékeztetőt a múltban."
       cannot_set_reminder_in_distant_future: "Nem állíthat be könyvjelző-emlékeztetőt 10 évnél tovább a jövőben."
       time_must_be_provided: "Minden emlékeztetőhöz időt kell rendelni"
-      for_topic_must_use_first_post: "Csak az első bejegyzést használhatja a téma könyvjelzőjének megjelölésére."
+      for_topic_must_use_first_post: "Csak az első bejegyzést használhatja a téma könyvjelzőzésére."
       bookmarkable_id_type_required: "A könyvjelzővel ellátandó rekord neve és típusa szükséges."
       invalid_bookmarkable: "A(z) %{type} nem könyvjelzőzhető."
     reminders:
@@ -609,7 +609,7 @@ hu:
       everyone: "Automatikus csoport, beleértve az összes tagot"
       staff: "Automatikus csoport, beleértve az adminokat és moderátorokat"
       admins: "Felelős az oldal konfigurálásért és karbantartásáért, hozzáfér minden taghoz és tevékenységi adathoz."
-      moderators: "Felelős a megjelölések megválaszolásáért, a beszélgetések moderálásáért és a tagoknak a fiókjaikkal kapacsolatos segítségnyújtásért."
+      moderators: "A megjelölések megválaszolásáért, a beszélgetések moderálásáért és a tagok fiókjaival kapcsolatos segítségnyújtásért felelős."
       trust_level_0: "Korlátozott képességekkel rendelkező új tagok, akik tanulják a közösségi normákat és funkciókat."
       trust_level_1: "A nagyobb bizalommal rendelkező tagok, akik kezdeti elkötelezettséget mutattak olvasásukkal most több funkcióhoz férhetnek hozzá. E csoport minden tagja egyben a bizalmi_szint_0 csoport tagja is."
       trust_level_2: "Aktív tagok, akik folyamatos hozzájárulásaik révén teljes állampolgári jogokat szereztek. Ennek a csoportnak minden tagja a bizalmi_szint_1 és a bizalmi_szint_0 csoportok tagja is."
@@ -809,8 +809,8 @@ hu:
     uncategorized_description: "Témák, amelyeknek nincs szükségük kategóriára, vagy nem férnek bele semmilyen más létező kategóriába."
   trust_levels:
     admin: "Adminisztrátor"
-    staff: "Személyzet"
-    change_failed_explanation: "Megpróbáltad lefokozni %{user_name} bizalmi szintjét '%{new_trust_level}' értékre. A bizalmi szintjük azonban már '%{current_trust_level}'. A %{user_name} bizalmi szintje '%{current_trust_level}' marad – ha először a felhasználói zár bizalmi szintjét kívánja visszaminősíteni"
+    staff: "Stáb"
+    change_failed_explanation: "Megpróbálta %{user_name} bizalmi szintjét „%{new_trust_level}” szintre lefokozni. A bizalmi szintje azonban már „%{current_trust_level}”. %{user_name} bizalmi szintje „%{current_trust_level}” marad – ha le akarja fokozni, először zárolja a felhasználó bizalmi szintjét."
   post:
     image_placeholder:
       broken: "Ez a kép hibás"
@@ -841,7 +841,7 @@ hu:
       create_like: "Hűha! Nagyon sok szeretetet osztottál meg! Elérted a maximális lájkszámot 24 órán belül, de ahogy egyre magasabb bizalmi szintre teszel szert, naponta több lájkot oszthatsz ki. A hozzászólásokat %{time_left} múlva újra lájkolhatod."
       create_bookmark: "Elérte a napi könyvjelzők maximális számát. További könyvjelzőket hozhat létre %{time_left} múlva."
       edit_post: "Elérte a napi szerkesztések maximális számát. További szerkesztéseket küldhet be %{time_left} múlva."
-      live_post_counts: "Túl gyorsan kéred az élő bejegyzések számlálását. Kérjük, várjon %{time_left}, mielőtt újra próbálkozna."
+      live_post_counts: "Túl gyorsan kéri le az élő bejegyzések számát. Várjon %{time_left}, mielőtt újra próbálkozna."
       unsubscribe_via_email: "Elérte az e-mailben történő leiratkozások legnagyobb számát. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
       topic_invitations_per_day: "Elérte a témameghívások maximális számát. További meghívókat %{time_left} múlva küldhet."
     hours:
@@ -1162,7 +1162,7 @@ hu:
   flags:
     errors:
       already_handled: "A megjelölést már kezelték"
-      wrong_move: "A megjelölés nem mozgatható"
+      wrong_move: "A megjelölés nem helyezhető át"
       system: "A renszermegjelölő nem frissíthető vagy törölhető."
       used: "A megjelölés nem frissíthető vagy törölhető, mert már használták."
       unique_name: "A megjelölés nevének egyedinek kell lennie"
@@ -1187,7 +1187,7 @@ hu:
         user: Felhasználó
         agreed_flags: Elfogadott megjelölések
         disagreed_flags: Elutasított megjelölések
-        ignored_flags: Ignorált megjelölések
+        ignored_flags: Figyelmen kívül hagyott megjelölések
         score: Pontszám
       description: "A felhasználók listája a stábtagok válaszainak aránya szerint rendezve (elutasított, vagy elfogadott)."
     moderators_activity:
@@ -1214,7 +1214,7 @@ hu:
         poster: Bejegyző
         flagger: Megjelölő
         time_to_resolution: Határidő a megoldásig
-      description: "Megjelölések státuszának listája, beleértve azok típusát, a bejegyzőt, a megjelölést beküldő személyt és a határidőt"
+      description: "Megjelölések állapotának listája, beleértve azok típusát, a bejegyzés létrehozóját, a megjelölést beküldőjét és a határidőt."
     visits:
       title: "Felhasználói látogatások"
       xaxis: "Nap"
@@ -1378,12 +1378,12 @@ hu:
       title: "Moderátorok értesítése"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
-      description: "Azon alkalmak száma, amikor a moderátorok személyes üzeneteket kaptak tmegjelölések részleteivel."
+      description: "A moderátorok hányszor kaptak személyes üzeneteket a megjelölések részleteivel."
     notify_user_private_messages:
       title: "Felhasználó értesítése"
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
-      description: "A felhasználóknak a megjelölés párbeszédpanel használatával küldött személyes üzenetek száma."
+      description: "A felhasználók hányszor küldtek személyes üzenetet a megjelölés párbeszédpanel használatával."
     top_referrers:
       title: "Legnépszerűbb hivatkozók"
       xaxis: "Felhasználó"
@@ -1952,7 +1952,6 @@ hu:
     s3_use_cdn_url_for_all_uploads: "Használja a CDN URL-t az s3-ba feltöltött összes fájlhoz, ne csak a képekhez."
     avatar_sizes: "Az automatikusan generált avatarméretek listája."
     external_system_avatars_enabled: "Engedélyezi egy külső szolgáltatás használatát a rendszer-avatárok generálásához. Ha ez a beállítás engedélyezett, a felhasználói avatárokat nem a Discourse rendszer állítja elő, hanem egy külső szolgáltatás generálja és biztosítja, amelyet az `external_system_avatars_url` beállítás határoz meg."
-    external_system_avatars_url: "A külső rendszer-avatár szolgáltatás URL-je. Engedélyezett helyettesítések: {username} {first_letter} {color} {size}"
     external_emoji_url: "A hangulatjel képek külső szolgáltatásának URL-je. A letiltáshoz hagyja üresen."
     use_site_small_logo_as_system_avatar: "Használja a webhely kis logóját a rendszerfelhasználó avatara helyett. A logó jelenléte szükséges."
     restrict_letter_avatar_colors: "A betű-avatárok hátteréhez használandó 6 jegyű hexadecimális színértékek listája."
@@ -2004,7 +2003,7 @@ hu:
     edit_all_post_groups: "A csoport felhasználói szerkeszthetik más felhasználók bejegyzéseit"
     min_trust_to_create_topic: "Az új téma létrehozásához szükséges minimális bizalmi szint."
     create_topic_allowed_groups: "Csoportok, amelyek új témákat hozhatnak létre. Az adminisztrátorok és moderátorok mindig létrehozhatnak témákat."
-    allow_flagging_staff: "Ha engedélyezve van, a felhasználók megjelölhetik a stabtagok bejegyzéseit."
+    allow_flagging_staff: "Ha engedélyezve van, a felhasználók megjelölhetik a stábtagok bejegyzéseit."
     min_trust_to_edit_wiki_post: "A wikinek jelölt hozzászólás szerkesztéséhez szükséges minimális bizalmi szint."
     edit_wiki_post_allowed_groups: "Csoportok, amelyek szerkeszthetik a wikiként megjelölt bejegyzéseket. Az adminisztrátorok és moderátorok mindig szerkeszthetik a wikiként megjelölt bejegyzéseket."
     min_trust_to_edit_post: "A hozzászólások szerkesztéséhez szükséges minimális bizalmi szint."
@@ -2045,7 +2044,6 @@ hu:
     email_time_window_mins: "Várjon (n) percet bármilyen értesítő e-mail küldése előtt, hogy a felhasználóknak lehetőségük legyen szerkeszteni és véglegesíteni bejegyzéseiket."
     personal_email_time_window_seconds: "Várjon (n) másodpercet, mielőtt bármilyen személyes üzenetről értesítő e-mailt küldene, hogy a felhasználóknak lehetőségük legyen szerkeszteni és véglegesíteni az üzeneteiket."
     email_posts_context: "Hány korábbi válasz szerepeljen kontextusként az értesítési e-mailekben."
-    flush_timings_secs: "Milyen gyakran küldjük az időzítési adatokat a szervernek, másodpercben."
     title_max_word_length: "A téma címében megengedett szavak maximális hossza karakterekben."
     title_min_entropy: "A téma címéhez szükséges minimális entrópia (egyedi karakterek, nem angol karakterek többet számítanak)."
     body_min_entropy: "A bejegyzés tartalmához szükséges minimális entrópia (egyedi karakterek, nem angol karakterek többet számítanak)."
@@ -2095,9 +2093,9 @@ hu:
     min_ban_entries_for_roll_up: "A Felgöngyölítés gombra kattintáskor új alhálózati tiltás bejegyzést hoz létre, ha legalább (N) bejegyzés van."
     max_age_unmatched_emails: "A nem egyező szűrt e-mail bejegyzések törlése (N) nap után."
     max_age_unmatched_ips: "A nem egyező szűrt IP bejegyzések törlése (N) nap után."
-    num_flaggers_to_close_topic: "Egyedi megjelölések minimális száma, amely szükséges egy téma automatikus szüneteltetéséhez beavatkozás céljából"
+    num_flaggers_to_close_topic: "A téma beavatkozás céljából történő automatikus szüneteltetéséhez szükséges egyedi megjelölők minimális száma"
     num_hours_to_close_topic: "Egy téma szüneteltetésének óraszáma beavatkozás céljából."
-    auto_respond_to_flag_actions: "Engedélyezze az automatikus választ a megjelölés elvetésekor."
+    auto_respond_to_flag_actions: "Automatikus válasz bekapcsolása a megjelölés elvetéséhez."
     min_first_post_typing_time: "Minimális idő ezredmásodpercben, amennyit egy felhasználónak gépelnie kell az első bejegyzése során. Ha nem éri el a küszöbértéket, a bejegyzés automatikusan a jóváhagyásra váró sorba kerül. Állítsa 0-ra a kikapcsoláshoz (nem ajánlott)"
     fast_typing_threshold: "Minimális idő ezredmásodpercben, amennyit a felhasználónak írással kell töltenie az első bejegyzéshez. Ha nem éri el a küszöböt, a bejegyzés automatikusan bekerül az ellenőrzési sorba. Az alacsony érték 1 másodperc, a normál 3 másodperc, a legmagasabb pedig 5 másodperc."
     auto_silence_fast_typers_on_first_post: "Automatikusan elnémítja azokat a felhasználókat, akik nem érik el a \"gyors gépelési küszöböt\"."
@@ -2108,7 +2106,7 @@ hu:
     reviewable_default_visibility: "Ne jelenítsen meg áttekintendő elemeket, hacsak nem felelnek meg ennek a prioritásnak"
     reviewable_low_priority_threshold: "A prioritásszűrő elrejti azokat az áttekintendő elemeket, amelyek nem felelnek meg ennek a pontszámnak, kivéve, ha a „(bármely)” szűrőt használja."
     high_trust_flaggers_auto_hide_posts: "Az új felhasználói bejegyzések automatikusan el vannak rejtve, miután egy 3-as bizalmi szint feletti felhasználó spamként jelölte meg őket"
-    allow_all_users_to_flag_illegal_content: "A névtelen felhasználók látni fogják azokat az információkat, amelyeket e-mailben kell küldeniük a rendszergazdáknak, hogy jelentsék az illegális tartalmat. Ez a beállítás elsőbbséget élvez az „engedélyezett csoportok megjelölésével” szemben."
+    allow_all_users_to_flag_illegal_content: "A névtelen felhasználók látni fogják az illegális tartalom adminisztrátorok felé való jelzéséhez szükséges információkat. Ez a beállítás elsőbbséget élvez az „bejegyzéseket megjelölhető csoportokkal” szemben."
     email_address_to_report_illegal_content: "Ha üresen hagyja, az alapértelmezett webhelyadminisztrátori e-mail-cím kerül felhasználásra."
     cooldown_hours_until_reflag: "Mennyi időt kell várniuk a felhasználóknak, amíg újra megjelölhetnek egy bejegyzést."
     slow_mode_prevents_editing: "A „Lassú mód” megakadályozza a szerkesztést az editing_grace_period után?"
@@ -2169,7 +2167,7 @@ hu:
     email_in_min_trust: "A minimális bizalmi szint, amivel a felhasználónak rendelkeznie kell, hogy új témákat tegyen közzé e-mailben."
     email_in_allowed_groups: "Csoportok, amelyek új témákat tehetnek közzé e-mailben. Az adminisztrátorok és a moderátorok bármikor közzétehetnek új témákat e-mailben."
     email_in_authserv_id: "A bejövő e-mailek hitelesítését végző szolgáltatás azonosítója. Ennek beállításaira vonatkozó utasításokat <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> oldalon találja."
-    email_in_spam_header: "Kiválasztja azt a speciális e-mail fejlécet, amelyet a spam azonosítására használunk. Ez az opció lehet X-Spam-Flag, X-Spam-Status vagy X-SES-Spam-Verdict, és az e-mail spam-ként kerül megjelölésre a fejléc értéke alapján. Például, ha a kiválasztott beállítás X-Spam-Flag, akkor egy olyan e-mail, amelynek ez a fejlécértéke IGEN-re van állítva, spam-ként lesz osztályozva."
+    email_in_spam_header: "Kiválasztja a levélszemét azonosítására használt e-mail-fejlécet. Ez a lehetőség az X-Spam-Flag, az X-Spam-Status vagy az X-SES-Spam-Verdict lehet, és a fejléc értéke alapján lesz az e-mail levélszemétnek jelölve. Például, ha a kiválasztott beállítás az X-Spam-Flag, akkor egy YES fejlécértékű üzenet levélszemétként lesz osztályozva."
     enable_imap: "Az IMAP engedélyezése a csoportos üzenetek szinkronizálásához."
     enable_imap_write: "Kétirányú IMAP szinkronizálás engedélyezése. Ha le van tiltva, az IMAP-fiókokon minden írási művelet le van tiltva."
     enable_imap_idle: "Használja az IMAP IDLE mechanizmust az új e-mailek megvárásához."
@@ -2364,7 +2362,7 @@ hu:
     enable_offline_indicator: "Üzenet megjelenítése a felhasználóknak, ha azt észleli, hogy nincs hálózati kapcsolatuk"
     default_sidebar_link_to_filtered_list: "Alapértelmezés szerint a navigációs menü hivatkozásai a szűrt listára hivatkozzanak."
     default_sidebar_show_count_of_new_items: "A navigációs menü hivatkozásai alapértelmezés szerint az új elemek számát mutatják jelvények helyett."
-    default_sidebar_switch_panel_position: "A gomb pozíciója az oldalsávon a csevegésre váltáshoz"
+    default_sidebar_switch_panel_position: "Csevegésre váltás gombjának pozíciója az oldalsávon"
     retain_web_hook_events_period_days: "Hány napig őrizze meg a webhook esemény rekordokat."
     retain_web_hook_events_aggregate_days: "A webhook esemény összesített rekordok megőrzésének napjainak száma."
     retry_web_hook_events: "Automatikusan újrapróbálja a sikertelen webhook eseményeket 4 alkalommal. Az újrapróbálások közötti időközök 1, 5, 25 és 125 perc."
@@ -2453,7 +2451,6 @@ hu:
     about_page_extra_groups_order: "Az extra csoportok sorrendje a névjegy oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
-    rich_editor: "Engedélyezze a szerkesztőt, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új szövegszerkesztő között az intuitívabb és felhasználóbarátabb szerkesztés érdekében. A szövegszerkesztő aktív fejlesztés alatt áll, így még nem minden funkció támogatott - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>további részletekért lásd a Meta oldalon</a>."
     viewport_based_mobile_mode: "KÍSÉRLETI: Tiltsa le a felhasználói ügynök alapú mobil/asztali módokat, és használja helyettük a nézetablak szélességét."
     content_localization_enabled: "Lokalizált tartalmakat jelenít meg a felhasználók számára a böngésző vagy a felhasználói nyelvi beállítások alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. A támogatott helyi nyelvek a 'tartalom lokalizációja támogatott helyi nyelvek' menüpontban vannak beállítva."
     content_localization_supported_locales: "A támogatott helyi nyelvek listája, amelyekre a felhasználói tartalom lefordítható. Feltételezi, hogy a 'tartalom lokalizáció engedélyezve'."
@@ -3440,7 +3437,7 @@ hu:
 
         További útmutatásért olvasd el a [fórumunk szabályzatát](%{base_url}/guidelines)!
     too_many_spam_flags:
-      title: "Túl sok spam megjelölés"
+      title: "Túl sok megjelölés kéretlen tartalomként"
       subject_template: "Új fiók felfüggesztve"
       text_body_template: |
         Szia!
@@ -3451,7 +3448,7 @@ hu:
 
         További útmutatásért, kérünk, olvasd el a [közösségi irányelveket](%{base_url}/ irányelvek)!
     too_many_tl3_flags:
-      title: "Túl sok TL3 megjelölés"
+      title: "Túl sok BSZ3 szintű megjelölés"
       subject_template: "Új fiók felfüggesztve"
       text_body_template: |
         Szia!
@@ -4450,7 +4447,7 @@ hu:
   privacy_topic:
     title: "Adatvédelmi szabályzat"
     body: |
-      ## [Fórum Adminisztrátor, kérjük, alább találja az adatvédelmi szabályzat kezdő sablonját, amelyet az Ön oldalához kell igazítania.]
+      ## [Fórumadminisztrátor, alább találja az adatvédelmi szabályzat kiinduló sablonját, amelyet az Ön oldalához kell igazítania.]
 
       <a name="collect"></a>
 
@@ -4458,9 +4455,9 @@ hu:
 
       Információkat gyűjtünk Öntől, amikor regisztrál az oldalunkon, és adatokat gyűjtünk, amikor részt vesz a fórumon az itt megosztott tartalmak olvasásával, írásával és értékelésével.
 
-      Az oldalunkon történő regisztrációkor megkérhetjük, hogy adja meg nevét és e-mail címét. Azonban látogathatja az oldalunkat regisztráció nélkül is. Az Ön e-mail címét egy egyedi linket tartalmazó e-maillel ellenőrizzük. Ha ezt a linket meglátogatják, tudjuk, hogy Ön ellenőrzi az e-mail címet.
+      Az oldalunkon történő regisztrációkor megkérhetjük, hogy adja meg nevét és e-mail-címét. Azonban látogathatja az oldalunkat regisztráció nélkül is. Az Ön e-mail-címét egy egyedi hivatkozást tartalmazó e-maillel ellenőrizzük. Ha felkeresik ezt a hivatkozást, akkor tudjuk, hogy Ön rendelkezik az e-mail-címmel.
 
-      Regisztrált felhasználóként és bejegyzés közzétételekor rögzítjük azt az IP-címet, ahonnan a bejegyzés származik. Emellett megőrizhetjük a szervernaplókat, amelyek tartalmazzák a szerverünkhöz intézett minden kérés IP-címét.
+      Regisztrációkor és bejegyzés közzétételekor rögzítjük azt az IP-címet, ahonnan érkezett. Emellett megőrizhetjük a kiszolgálónaplókat, amelyek tartalmazzák a kiszolgálónkhoz küldött minden kérés IP-címét.
 
       <a name="use"></a>
 
@@ -4474,7 +4471,7 @@ hu:
 
       * Az ügyfélszolgálat javításához — az Ön információi segítenek nekünk, hogy hatékonyabban válaszoljunk az ügyfélszolgálati kérésekre és támogatási igényekre.
 
-      * Időszakos e-mailek küldéséhez — Az Ön által megadott e-mail címet használhatjuk arra, hogy információkat, értesítéseket küldjünk Önnek a témák változásairól vagy az Ön felhasználónevével kapcsolatban, válaszoljunk a kérdéseire és/vagy egyéb kérésekre vagy kérdésekre.
+      * Időszakos e-mailek küldéséhez — Az Ön által megadott e-mail-címet használhatjuk arra, hogy információkat, értesítéseket küldjünk Önnek a témák változásairól vagy az Ön felhasználónevével kapcsolatban, válaszoljunk a kérdéseire és kéréseire.
 
       <a name="protect"></a>
 
@@ -4488,7 +4485,7 @@ hu:
 
       Jóhiszeműen törekszünk arra, hogy:
 
-      A szerverünkhöz intézett összes kérés IP-címét tartalmazó szervernaplókat legfeljebb [NAPOK SZÁMA] napig őrizzük meg.
+      A kiszolgálónkhoz intézett összes kérés IP-címét tartalmazó kiszolgálónaplókat legfeljebb [NAPOK SZÁMA] napig őrizzük meg.
 
       <a name="cookies"></a>
 
@@ -4496,31 +4493,31 @@ hu:
 
       Igen. A sütik kis fájlok, amelyeket egy webhely vagy annak szolgáltatója az Ön számítógépének merevlemezére továbbít a webböngészőjén keresztül (ha Ön ezt engedélyezi). Ezek a sütik lehetővé teszik, hogy a webhely felismerje az Ön böngészőjét, és ha van regisztrált fiókja, összekapcsolja azt a regisztrált fiókjával.
 
-      Sütiket használunk, hogy megértsük és elmenthessük az Ön preferenciáit a jövőbeli látogatásokhoz, és összesített adatokat gyűjtsünk a webhelyforgalomról és a webhely interakciójáról, hogy a jövőben jobb webhelyes élményeket és eszközöket kínálhassunk. Szerződhetünk harmadik fél szolgáltatókkal, hogy segítsenek nekünk jobban megérteni webhelyünk látogatóit. Ezek a szolgáltatók nem használhatják fel a nevünkben gyűjtött információkat, kivéve ha segítenek nekünk üzleti tevékenységünk folytatásában és fejlesztésében.
+      Sütiket használunk, hogy megértsük és elmenthessük az Ön preferenciáit a jövőbeli látogatásokhoz, és összesített adatokat gyűjtsünk a webhelyforgalomról és a webhely interakciójáról, hogy a jövőben jobb webhelyes élményeket és eszközöket kínálhassunk. Szerződhetünk külső szolgáltatókkal, hogy segítsenek nekünk jobban megérteni webhelyünk látogatóit. Ezek a szolgáltatók nem használhatják fel a nevünkben gyűjtött információkat, kivéve, ha az üzleti tevékenységünk folytatásában és fejlesztésében segítenek nekünk.
 
       <a name="disclose"></a>
 
       ## [Közlünk-e bármilyen információt külső felekkel?](#disclose)
 
-      Nem adjuk el, nem kereskedünk vagy egyéb módon nem továbbítjuk külső feleknek az Ön személyazonosításra alkalmas adatait. Ez nem vonatkozik azokra a megbízható harmadik felekre, akik segítenek nekünk webhelyünk üzemeltetésében, üzleti tevékenységünk folytatásában vagy az Ön kiszolgálásában, feltéve, hogy ezek a felek beleegyeznek abba, hogy ezeket az információkat bizalmasan kezelik. Akkor is kiadhatjuk az Ön adatait, ha úgy véljük, hogy a közzététel megfelelő a törvény betartásához, webhelyünk szabályzatainak érvényesítéséhez vagy saját vagy mások jogainak, tulajdonának vagy biztonságának védelméhez. Azonban a nem személyazonosításra alkalmas látogatói információkat átadhatjuk más feleknek marketing, reklám vagy egyéb célokra.
+      Nem adjuk el, nem kereskedünk vagy egyéb módon nem továbbítjuk külső feleknek az Ön személyazonosításra alkalmas adatait. Ez nem vonatkozik azokra a megbízható harmadik felekre, akik segítenek nekünk webhelyünk üzemeltetésében, üzleti tevékenységünk folytatásában vagy az Ön kiszolgálásában, feltéve, hogy ezek a felek beleegyeznek abba, hogy ezeket az információkat bizalmasan kezelik. Akkor is kiadhatjuk az Ön adatait, ha úgy véljük, hogy a közzététel megfelelő a törvény betartásához, webhelyünk szabályzatainak érvényesítéséhez vagy saját vagy mások jogainak, tulajdonának vagy biztonságának védelméhez. Azonban a nem személyazonosításra alkalmas látogatói információkat átadhatjuk más feleknek marketing-, reklám- vagy egyéb célokra.
 
       <a name="third-party"></a>
 
-      ## [Harmadik fél linkjei](#third-party)
+      ## [Harmadik felek hivatkozásai](#third-party)
 
-      Alkalmanként, saját belátásunk szerint, harmadik fél termékeit vagy szolgáltatásait is szerepeltethetjük vagy kínálhatjuk webhelyünkön. Ezeknek a harmadik fél webhelyeknek külön és független adatvédelmi szabályzatuk van. Ezért nem vállalunk felelősséget vagy kötelezettséget ezen linkelt webhelyek tartalmáért és tevékenységeiért. Mindazonáltal törekszünk webhelyünk integritásának védelmére, és szívesen fogadunk minden visszajelzést ezekről a webhelyekről.
+      Alkalmanként, saját belátásunk szerint, harmadik fél termékeit vagy szolgáltatásait is szerepeltethetjük vagy kínálhatjuk webhelyünkön. Ezeknek a külső webhelyeknek külön és független adatvédelmi szabályzatuk van. Ezért nem vállalunk felelősséget vagy kötelezettséget ezen hivatkozott webhelyek tartalmáért és tevékenységeiért. Mindazonáltal törekszünk webhelyünk integritásának védelmére, és szívesen fogadunk minden visszajelzést ezekről a webhelyekről.
 
       <a name="coppa"></a>
 
       ## [Gyermekek Online Adatvédelmi Törvényének (COPPA) való megfelelés](#coppa)
 
-      Webhelyünk, termékeink és szolgáltatásaink mind 13 éves vagy annál idősebb embereknek szólnak. Ha ez a szerver az Egyesült Államokban van, és Ön 13 évnél fiatalabb, a COPPA ([Gyermekek Online Adatvédelmi Törvénye](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) követelményei szerint ne használja ezt a webhelyet.
+      Webhelyünk, termékeink és szolgáltatásaink mind 13 éves vagy annál idősebb embereknek szólnak. Ha ez a kiszolgáló az Egyesült Államokban van, és Ön 13 évnél fiatalabb, a COPPA ([Gyermekek Online Adatvédelmi Törvénye](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) követelményei szerint ne használja ezt a webhelyet.
 
       <a name="online"></a>
 
       ## [Csak online adatvédelmi szabályzat](#online)
 
-      Ez az online adatvédelmi szabályzat csak a webhelyünkön keresztül gyűjtött információkra vonatkozik, és nem az offline módon gyűjtött információkra.
+      Ez az online adatvédelmi szabályzat csak a webhelyünkön keresztül gyűjtött információkra vonatkozik, az offline módon gyűjtött információkra nem.
 
       <a name="consent"></a>
 
@@ -4558,7 +4555,7 @@ hu:
       name: Alapvető
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tapasztalt felhasználó</a>, ismer minden alapvető közösségi funkciót
       long_description: |
-        Ezt a jelvényt akkor kapja meg, amikor eléri az 1. bizalmi szintet. Köszönjük, hogy kitartott és elolvasott néhány témát, hogy megtudja, miről szól a közösségünk. Több felhasználói funkció életbe lépett: megkapta az összes alapvető közösségi képességet, például a személyes üzenetküldést, a megjelölést, a wiki szerkesztését, valamint több kép és link közzétételének lehetőségét.
+        Ezt a jelvényt akkor kapja meg, amikor eléri az 1. bizalmi szintet. Köszönjük, hogy kitartott és elolvasott néhány témát, hogy megtudja, miről szól a közösségünk. Több felhasználói funkció életbe lépett: megkapta az összes alapvető közösségi képességet, például a személyes üzenetküldést, a megjelölést, a wiki szerkesztését, valamint több kép és hivatkozás közzétételének lehetőségét.
     member:
       name: Tag
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Engedélyezett</a> meghívók, csoportos üzenetküldés, több kedvelés
@@ -4640,7 +4637,7 @@ hu:
       long_description: |
         Ezt a jelvényt akkor kapja meg, amikor először kedvel egy bejegyzést a :heart: gombbal. A bejegyzések kedvelése nagyszerű módja annak, hogy a közösség tagjai tudják, hogy amit közzé tettek, érdekesek, hasznosak, jók vagy szórakoztatók voltak az Ön számára. Oszza meg a szeretetet!
     first_flag:
-      name: Első Megjelölés
+      name: Első megjelölés
       description: Megjelölt egy bejegyzést
       long_description: |
         Ezt a jelvényt akkor kapja meg, amikor először jelöl meg egy bejegyzést. A megjelöléssel segíthet, hogy mindenki számára kellemes hely maradjon a fórum. Ha bármi olyan bejegyzést észlel, amely valamilyen okból moderátori figyelmet igényel, ne habozzon megjelölni. Ha problémát lát, :flag_black: jelölje meg!
@@ -4953,7 +4950,7 @@ hu:
             placeholder: "San Francisco, Kalifornia"
           site_contact:
             label: "Automatikus üzenetek"
-            description: "Minden automatikus Discourse személyes üzenet ettől a felhasználótól kerül elküldésre, például a megjelölés figyelmeztetések és a biztonsági mentés befejezéséről szóló értesítések."
+            description: "Minden automatikus Discourse személyes üzenet ettől a felhasználótól kerül elküldésre, például a megjelölési figyelmeztetések és a biztonsági mentés befejezéséről szóló értesítések."
           contact_email:
             label: "Kapcsolattartó"
             placeholder: "example@user.com"
@@ -5097,19 +5094,19 @@ hu:
       agree_and_edit:
         title: "Elfogadás és bejegyzés szerkesztése"
         description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
-        complete: "A megjelölést tudomásul vette, most már szerkesztheti a bejegyzést."
+        complete: "Megjelölés tudomásul véve, most már szerkesztheti a bejegyzést."
       delete_single:
         title: "Törlés"
         complete: "Bejegyzés törölve."
       delete:
         title: "Törlés..."
       delete_and_ignore:
-        title: "Megjelölés figyelmen kívül hagyása és bejegyzés törlése"
-        description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból, és törölje a bejegyzést; ha az első hozzászólás, akkor töröld a témát is. "
+        title: "Megjelölés figyelmen kívül hagyása, és a bejegyzés törlése"
+        description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és a bejegyzés törlésével; ha ez az első hozzászólás, akkor a témát is törli. "
         complete: "Bejegyzés törölve."
       delete_and_ignore_replies:
-        title: "Megjelölés figyelmen kívül hagyása, bejegyzés és válaszok törlése"
-        description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból, törölje a bejegyzést és az összes válaszát; ha az első hozzászólás, akkor töröld a témát is"
+        title: "Megjelölés figyelmen kívül hagyása, a bejegyzés és a válaszok törlése"
+        description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, a bejegyzés és az összes válasz törlésével; ha ez az első hozzászólás, akkor a témát is törli"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       delete_and_agree:

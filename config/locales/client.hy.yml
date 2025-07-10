@@ -702,6 +702,16 @@ hy:
         reviewable_post:
           title: "Գրառում"
           noun: "գրառում"
+      notes:
+        delete: "Ջնջել"
+      review_user: "Օգտատեր"
+      copy_link: "Պատճենել հղումը"
+      insights:
+        activities:
+          posts:
+            one: "%{count} գրառում"
+            other: "%{count} գրառում"
+        visibility: "Տեսանելիություն"
       approval:
         title: "Գրառումը Հաստատման Կարիք Ունի"
         description: "Մենք ստացել ենք Ձեր նոր գրառումը, սակայն այն պետք է հաստատվի մոդերատորի կողմից մինչև ցուցադրվելը: Խնդրում ենք սպասել:"
@@ -3350,6 +3360,8 @@ hy:
       pinned:
         title: "Ամրակցված"
         help: "Այս թեման ամրակցված է Ձեզ համար; այն կցուցադրվի իր կատեգորիայի վերևում"
+      hot:
+        title: "Թոփ"
       unlisted:
         help: "Թեման թաքցվել է՝ այն չի ցուցադրվի թեմաների ցուցակներում։ Այն կարելի է տեսնել միայն ուղղակի հղումով։ %{unlistedReason}"
       personal_message:
@@ -3433,7 +3445,6 @@ hy:
         topics: "Թեմաներ"
         replies: "Պատասխաններ"
       posted:
-        title: "Իմ Գրառումները"
         help: "թեմաները, որտեղ Դուք գրառում եք կատարել"
       bookmarks:
         title: "Էջանշաններ"
@@ -3786,8 +3797,6 @@ hy:
               content: "Խմբեր"
             users:
               content: "Օգտատերեր"
-            my_posts:
-              content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
             invite:
@@ -4287,6 +4296,9 @@ hy:
           delete: "Ջնջել"
         color_palettes:
           palette_name: "Անուն"
+          copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
+          copied_to_clipboard: "Կրկնօրինակված է Փոխանակման Հարթակում"
+          copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"
           delete: "Ջնջել"
           colors:
             title: "Գույներ"

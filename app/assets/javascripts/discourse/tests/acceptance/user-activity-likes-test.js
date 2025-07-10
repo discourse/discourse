@@ -19,14 +19,14 @@ acceptance("User Activity / Likes - empty state", function (needs) {
   test("When looking at own likes page", async function (assert) {
     await visit(`/u/${currentUser}/activity/likes-given`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(i18n("user_activity.no_likes_title"));
   });
 
   test("When looking at another user's likes page", async function (assert) {
     await visit(`/u/${anotherUser}/activity/likes-given`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(
         i18n("user_activity.no_likes_title_others", { username: anotherUser })
       );

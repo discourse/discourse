@@ -779,6 +779,15 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+      notes:
+        delete: "Obriši"
+      review_user: "Korisnik"
+      insights:
+        activities:
+          posts:
+            one: "%{count} poruka"
+            few: "%{count} poruka"
+            other: "%{count} poruka"
       approval:
         title: "Potrebno odobrenje"
         description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
@@ -2373,7 +2382,6 @@ sr:
         topics: "Teme"
         replies: "Odgovori"
       posted:
-        title: "Moje poruke"
         help: "teme u kojima si pisao poruke"
       bookmarks:
         title: "Markiraj"
@@ -2590,8 +2598,6 @@ sr:
               content: "Grupe"
             users:
               content: "Korisnici"
-            my_posts:
-              content: "Moje poruke"
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"

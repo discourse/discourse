@@ -704,6 +704,15 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+      notes:
+        delete: "Fshij"
+      review_user: "User"
+      copy_link: "Kopjoni lidhjen"
+      insights:
+        activities:
+          posts:
+            one: "%{count} postim"
+            other: "%{count} postime"
       approval:
         title: "Postimi ka nevojë për aprovim"
         description: "Postimi juaj u morr, por duhet të aprovohet nga një moderator para se të shfaqet në faqe. Kini pak durim. "
@@ -2587,6 +2596,8 @@ sq:
       image_alt_text:
         aria_label: Teksti alternativ për imazhin
         title: "Shtoni përshkrimin e imazhit"
+      image_toolbar:
+        alt_text: "Shtoni përshkrimin e imazhit"
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
@@ -3717,7 +3728,6 @@ sq:
         topics: "Topics"
         replies: "Përgjigjet"
       posted:
-        title: "Postimet e mia"
         help: "temat ku keni dërguar pêrgjigje"
       bookmarks:
         title: "Të preferuarat"
@@ -3955,8 +3965,6 @@ sq:
             users:
               content: "Users"
             my_posts:
-              content: "Postimet e mia"
-              content_drafts: "Draftet e mia"
               title: "Aktiviteti im i fundit për temën"
               title_drafts: "Draftet e mia të papostuara"
             invite:
@@ -4277,6 +4285,9 @@ sq:
           delete: "Fshij"
         color_palettes:
           palette_name: "Emri"
+          copy_to_clipboard: "Kopjoni në Clipboard"
+          copied_to_clipboard: "Kopjuar në Clipboard"
+          copy_to_clipboard_error: "Gabim gjatë kopjimit të të dhënave në Clipboard"
           delete: "Fshij"
           colors:
             title: "Ngjyrat"

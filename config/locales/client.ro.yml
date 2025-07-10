@@ -715,6 +715,60 @@ ro:
         reviewable_post:
           title: "Articol"
           noun: "postare"
+      flagged_as: "Semnalat ca"
+      assigned_to: "Atribuit la"
+      moderator_actions: "Acțiuni moderator"
+      timeline_and_notes: "Cronologie și note"
+      timeline:
+        target_created: "A fost creată postarea"
+        target_created_by: "Postare creată de %{username} · %{relativeDate}"
+        flagged: "Semnalat"
+        flagged_as_by: "Semnalat ca %{flagReason} de %{username} · %{relativeDate}"
+        claimed: "Revendicat"
+        claimed_by: "Revendicat de %{username} · %{relativeDate}"
+        reviewed: "Revizuit"
+        reviewed_by: "Revizuit de %{username} · %{relativeDate}"
+        view_conversation: "vezi MP"
+        note_added: "Notă moderator"
+        note_added_by: "Notă moderator de la %{username} · %{relativeDate}"
+        no_events: "Nu există evenimente cronologice de afișat"
+      notes:
+        add_note_description: "Vizibil doar pentru moderatori. Folosește această notă pentru a adăuga context sau decizii cu privire la revizuire."
+        add_note_button: "Adaugă notă"
+        placeholder: "Scrie-ți nota aici..."
+        chars_remaining: "%{count} caractere rămase"
+        delete_note: "Șterge această notă"
+        delete: "Șterge"
+      new_topic_label: "Subiect nou"
+      queued_user: "Utilizator în coadă"
+      posted_in: "Postat în"
+      flagged_user: "Utilizator semnalat"
+      review_user: "Utilizator"
+      need_help: "Ai nevoie de ajutor?"
+      copy_link: "Copiază legătură"
+      view_source: "Vezi sursă"
+      insights:
+        flagged_by_users:
+          one: "Semnalat de un utilizator unic"
+          few: "Semnalat de %{count} utilizatori unici"
+          other: "Semnalat de %{count} de utilizatori unici"
+        similar_posts: "Postări anterioare similare"
+        user_activity: "Activitate utilizator"
+        activities:
+          new_account: "cont nou"
+          trust_level: "nivel de încredere: %{trustLevelName}"
+          posts:
+            one: "o postare"
+            few: "%{count} postări"
+            other: "%{count} de postări"
+        solution_marked: "Soluție marcată"
+        topic_has_solution: "Acest subiect are o soluție"
+        visibility: "Vizibilitate"
+        topic_unlisted: "Acest subiect este nelistat. Accesibil doar prin legătură directă — nu este public."
+      help:
+        moderation_guide: "Ghid de moderare Discourse"
+        flag_priorities: "Gestionarea reputației utilizatorului și a priorităților de semnalare"
+        spam_detection: "Detectare spam"
       approval:
         title: "Articolul are nevoie de aprobare"
         description: "Am primit articolul tău nou, dar trebuie să fie aprobat de un moderator înainte că el să apară pe site. Te rugăm să ai răbdare."
@@ -1115,6 +1169,7 @@ ro:
     user_fields:
       none: "(alege o opțiune)"
       required: 'Te rog introdu o valoare pentru "%{name}"'
+      required_select: 'Te rog să selectezi o valoare pentru „%{name}”'
       required_checkbox: 'Câmpul „%{name}” este obligatoriu'
       same_as_password: "Parola ta nu trebuie repetată în alte câmpuri"
       optional: (opțional)
@@ -1760,6 +1815,8 @@ ro:
       reset: Resetare
       optional: opțional
       errors:
+        starts_with: "Trebuie să înceapă cu %{prefix}"
+        ends_with: "Trebuie să se termine cu %{suffix}"
         required: "Necesare"
         date_before_or_equal: "Trebuie să fie înainte sau egală cu %{date}"
         date_after_or_equal: "Trebuie să fie după sau egală cu %{date}"
@@ -2087,6 +2144,11 @@ ro:
       ignore: "Ignoră"
       image_alt_text:
         title: "Adaugă descriere imagine"
+      image_toolbar:
+        alt_text: "Adaugă descriere imagine"
+        zoom_out: "Micșorează dimensiunea imaginii"
+        zoom_in: "Mărește dimensiunea imaginii"
+        remove: "Înlătură imagine"
       image_scale_button: "Scalează imaginea la %{percent}%"
       link_toolbar:
         edit: "Editează legătură"
@@ -2320,7 +2382,7 @@ ro:
         category: "Nu există niciun subiect din categoria %{category}."
         top: "Nu exită niciun subiect de top."
         education:
-          topic_tracking_preferences: "Poți vizualiza și modifica noile tale setări pentru urmărirea subiectelor în <a href=\"%{basePath}/my/preferences/tracking\">preferințele tale</a>."
+          topic_tracking_preferences: 'Poți vizualiza și modifica noile tale setări pentru urmărirea subiectelor în <a href="%{basePath}/my/preferences/tracking">preferințele tale</a>.'
           unread: "Nimic rămas necitit... impresionant!"
           new_new: "Nimic nou în acest moment... revino în curând!"
           new: "Nimic nou în acest moment... revino în curând!"
@@ -2828,6 +2890,9 @@ ro:
           few: "Ești sigur că vrei să ștergi acele %{count} postări?"
           other: "Ești sigur că vrei să ștergi acele %{count} postări?"
       revisions:
+        locale:
+          no_locale_set: "Nicio limbă setată"
+          locale_removed: "Limbă înlăturată"
         controls:
           first: "Prima revizie"
           previous: "Revizie precedentă"
@@ -3085,6 +3150,8 @@ ro:
       pinned:
         title: "Fixat"
         help: "Acest subiect este fixat. Va fi afișat la începutul categoriei din care face parte."
+      hot:
+        title: "Cald"
     posts: "Postări"
     pending_posts:
       label: "În așteptare"
@@ -3478,7 +3545,7 @@ ro:
             users:
               content: "Utilizatori"
             my_posts:
-              content: "Articolele mele"
+              content: "Postările mele"
               content_drafts: "Ciornele mele"
               title: "Activitatea mea recentă legată de subiect"
               title_drafts: "Ciornele mele nepublicate"
@@ -3492,6 +3559,9 @@ ro:
             invite:
               content: "Invită"
               title: "Invită membri noi"
+            my_messages:
+              content: "Mesajele mele"
+              title: "Mesajele mele personale"
       panels:
         forum:
           label: Forum
@@ -4284,6 +4354,9 @@ ro:
           save_successful: "Câmp utilizator salvat."
         color_palettes:
           palette_name: "Nume"
+          copy_to_clipboard: "Copiază în clipbord"
+          copied_to_clipboard: "Copiat în clipbord"
+          copy_to_clipboard_error: "Eroare la copierea datelor în clipbord"
           duplicate: "Fă duplicat"
           delete: "Șterge"
           color_options:
@@ -4456,6 +4529,7 @@ ro:
           up_to_date: "Tema este actuală, ultima verificare:"
           add: "Adaugă"
           edit_objects_theme_setting: "Editor de setări ale obiectelor"
+          built_in_description: "Această temă este preinstalată și nu poate fi ștearsă sau personalizată"
           settings: "Setări"
           colors: "Culori"
           save_colors: "Salvează culori"

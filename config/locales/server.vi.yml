@@ -1173,7 +1173,6 @@ vi:
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
     personal_email_time_window_seconds: "Chờ (n) giây trước khi gửi bất kỳ email thông báo tin nhắn cá nhân nào để người dùng có cơ hội chỉnh sửa và hoàn thiện tin nhắn của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
-    flush_timings_secs: "Tần suất tuôn dữ liệu thời gian tới server, theo giây."
     title_max_word_length: "Chiều dài tối đa chữ cho phép, tính theo ký tự, trong một tiêu đề chủ đề."
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."

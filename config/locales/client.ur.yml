@@ -545,6 +545,15 @@ ur:
         reviewable_post:
           title: "پوسٹ"
           noun: "پوسٹ"
+      notes:
+        delete: "مٹائیں"
+      review_user: "صارف"
+      insights:
+        activities:
+          posts:
+            one: "%{count} پوسٹ"
+            other: "%{count} پوسٹس"
+        visibility: "نموداری"
       approval:
         title: "پوسٹ کو منظوری کی ضرورت ہے"
         description: "ہمیں آپ کی نئی پوسٹ موصول ہو چکی ہے لیکن یہ ظاہر ہونے سے پہلے ایک منتظم سے منظور ہونا ضروری ہے۔ براہ مہربانی صبر کریں۔"
@@ -3223,7 +3232,6 @@ ur:
         topics: "ٹاپک"
         replies: "جوابات"
       posted:
-        title: "میری پوسٹ"
         help: "ٹاپک جن میں آپ نے پوسٹ کیا ہے"
       bookmarks:
         title: "بُکمارکس"
@@ -3619,8 +3627,6 @@ ur:
               content: "گروپس"
             users:
               content: "صارفین"
-            my_posts:
-              content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
             invite:
@@ -4162,6 +4168,9 @@ ur:
           delete: "مٹائیں"
         color_palettes:
           palette_name: "نام"
+          copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
+          copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
+          copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
           duplicate: "نقل"
           delete: "مٹائیں"
           colors:

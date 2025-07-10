@@ -674,6 +674,57 @@ zh_CN:
         reviewable_post:
           title: "帖子"
           noun: "帖子"
+      flagged_as: "举报者"
+      assigned_to: "分配给"
+      moderator_actions: "版主活动"
+      timeline_and_notes: "时间线和注释"
+      timeline:
+        target_created: "帖子已创建"
+        target_created_by: "帖子由 %{username} · %{relativeDate} 创建"
+        flagged: "已举报"
+        flagged_as_by: "被 %{username} · %{relativeDate} 举报 %{flagReason}"
+        claimed: "已认领"
+        claimed_by: "由 %{username} · %{relativeDate} 认领"
+        reviewed: "已审核"
+        reviewed_by: "由 %{username} · %{relativeDate} 审核"
+        view_conversation: "查看私信"
+        note_added: "版主注释"
+        note_added_by: "%{username} · %{relativeDate} 的版主注释"
+        no_events: "没有可显示的时间线事件"
+      notes:
+        add_note_description: "仅版主可见。使用此注释来添加有关此审核的背景信息或决定。"
+        add_note_button: "添加注释"
+        placeholder: "在这里写下你的注释..."
+        chars_remaining: "剩余 %{count} 个字符"
+        delete_note: "删除此注释"
+        delete: "删除"
+      new_topic_label: "新话题"
+      queued_user: "已加入队列的用户"
+      posted_in: "发帖于"
+      review_user: "用户"
+      need_help: "需要帮助？"
+      copy_link: "复制链接"
+      view_source: "查看来源"
+      insights:
+        title: "洞察"
+        flagged_by_users:
+          other: "由 %{count} 位独立用户举报"
+        similar_posts: "过去的相似帖子"
+        flagged_in_timeframe: "之前被举报 %{count} 次"
+        user_activity: "用户活动"
+        activities:
+          new_account: "新帐户"
+          trust_level: "信任级别：%{trustLevelName}"
+          posts:
+            other: "%{count} 个帖子"
+        solution_marked: "被标记为解决方案"
+        topic_has_solution: "此话题有解决方案"
+        visibility: "公开范围"
+        topic_unlisted: "此话题未公开。仅可通过直接链接访问，不公开。"
+      help:
+        moderation_guide: "Discourse 审核指南"
+        flag_priorities: "管理用户声誉和举报优先级"
+        spam_detection: "垃圾信息检测"
       approval:
         title: "帖子需要审批"
         description: "我们已收到您的帖子，不过需要由版主批准才能显示。请耐心等待。"
@@ -1096,6 +1147,7 @@ zh_CN:
     user_fields:
       none: "（选择一个选项）"
       required: '请为“%{name}”输入一个值。'
+      required_select: '请为 "%{name}" 选择一个值'
       required_checkbox: '字段“%{name}”为必选项'
       same_as_password: "您的密码不应重复出现在其他字段中"
       optional: '（可选）'
@@ -1993,6 +2045,8 @@ zh_CN:
       errors_summary_title: "此表单包含错误："
       dirty_form: "您没有提交更改！确定要离开吗？"
       errors:
+        starts_with: "必须以 %{prefix} 开头"
+        ends_with: "必须以 %{suffix} 结尾"
         required: "必选"
         date_before_or_equal: "必须早于或等于 %{date}"
         date_after_or_equal: "必须晚于或等于 %{date}"
@@ -2514,6 +2568,8 @@ zh_CN:
       image_alt_text:
         aria_label: 图片的替换文字
         title: "添加图片描述"
+      image_toolbar:
+        alt_text: "添加图片描述"
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片
       toggle_image_grid: 切换图片网格
@@ -2648,6 +2704,7 @@ zh_CN:
       relevance: "相关性"
       latest_post: "最新帖子"
       latest_topic: "最新话题"
+      last_read: "最近阅读"
       most_viewed: "浏览最多"
       most_liked: "赞最多"
       select_all: "全选"
@@ -2894,7 +2951,7 @@ zh_CN:
         hot: "没有热门话题。"
         filter: "没有话题。"
         education:
-          topic_tracking_preferences: "您可以在 <a href=\"%{basePath}/my/preferences/tracking\">您的偏好设置</a>中查看和更改新的主题跟踪设置。"
+          topic_tracking_preferences: '您可以在 <a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的主题跟踪设置。'
           unread: "没有什么未读的...令人印象深刻！"
           new_new: "目前没什么新东西... 稍后再回来看看！"
           new: "目前没什么新东西... 稍后再回来看看！"
@@ -3562,6 +3619,9 @@ zh_CN:
         confirm:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
+        locale:
+          no_locale_set: "未设置语言"
+          locale_removed: "语言已移除"
         controls:
           first: "第一个修订"
           previous: "上一个修订"
@@ -3901,6 +3961,8 @@ zh_CN:
       pinned:
         title: "已置顶"
         help: "此话题已对您置顶；它将显示在所属类别的顶部"
+      hot:
+        title: "热门"
       unlisted:
         help: "此话题已被取消公开；它不会显示在话题列表中，只能通过直接链接访问。%{unlistedReason}"
       personal_message:
@@ -3993,11 +4055,16 @@ zh_CN:
           other: "新 (%{count})"
         help: "最近几天创建的话题"
         all: "所有"
+        all_tooltip: "所有新主题和过去几天回复的主题"
         all_with_count: "所有 (%{count})"
+        new_topics_tooltip: "新话题"
         topics: "话题"
         topics_with_count: "话题 (%{count})"
+        new_replies_tooltip: "新回复"
         replies: "回复"
         replies_with_count: "回复 (%{count})"
+      new_new:
+        help: "最近几天创建或回复的主题"
       posted:
         title: "我的帖子"
         help: "您发过帖子的话题"
@@ -4511,6 +4578,9 @@ zh_CN:
             invite:
               content: "邀请"
               title: "邀请新成员"
+            my_messages:
+              content: "我的消息"
+              title: "我的个人信息"
         global_section: "全局版块，对所有人可见"
       panels:
         forum:
@@ -4644,6 +4714,7 @@ zh_CN:
           new: "%{category}中的新话题"
           unread: "%{category}中的未读话题"
           unseen: "%{category}中的未见话题"
+          hot: "%{category}中的热门话题"
           posted: "%{category} 中您发布过帖子的话题"
           bookmarks: "%{category} 中您已添加书签的话题"
           default: "%{category}中的%{filter}话题"
@@ -4661,6 +4732,7 @@ zh_CN:
         no_tags:
           all:
             latest: "最新的无标签话题"
+            top: "热门的无标签话题"
             new: "新的无标签话题"
             unread: "未读的无标签话题"
             unseen: "未见的无标签话题"
@@ -5731,6 +5803,9 @@ zh_CN:
           save_successful: "用户字段已保存。"
         color_palettes:
           palette_name: "名称"
+          copy_to_clipboard: "复制到剪贴板"
+          copied_to_clipboard: "已复制到剪贴板"
+          copy_to_clipboard_error: "复制到剪贴板时出错"
           duplicate: "复制"
           delete: "删除"
           color_options:
@@ -6136,6 +6211,7 @@ zh_CN:
             name: "主要-低-中"
           secondary:
             name: "次要"
+            description: "主要背景和按钮文本"
           tertiary:
             name: "第三"
             description: "强调色（链接、按钮、徽章）"

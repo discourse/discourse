@@ -767,12 +767,19 @@ export default class DEditor extends Component {
           />
         </div>
       </div>
-      <DEditorPreview
-        @preview={{if @hijackPreview @hijackPreview this.preview}}
-        @forcePreview={{this.forcePreview}}
-        @onPreviewUpdated={{this.previewUpdated}}
-        @outletArgs={{this.outletArgs}}
-      />
+
+      {{#if @hijackPreview}}
+        <div class="d-editor-preview-wrapper">
+          <@hijackPreview.component @model={{@hijackPreview.model}} />
+        </div>
+      {{else}}
+        <DEditorPreview
+          @preview={{this.preview}}
+          @forcePreview={{this.forcePreview}}
+          @onPreviewUpdated={{this.previewUpdated}}
+          @outletArgs={{this.outletArgs}}
+        />
+      {{/if}}
     </div>
   </template>
 }

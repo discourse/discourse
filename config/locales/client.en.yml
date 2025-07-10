@@ -2043,7 +2043,13 @@ en:
         removed: "Removed"
         search: "type to search invites…"
         user: "Invited User"
-        none: "No invites to display."
+        none:
+          title: "No invites to display."
+          cta: "Create invite link"
+          tip:
+            prefix: "You can also send bulk invites by"
+            action: "uploading a CSV file"
+            suffix: ""
         truncated:
           one: "Showing the first invite."
           other: "Showing the first %{count} invites."
@@ -3386,9 +3392,9 @@ en:
         filter: "There are no topics."
         education:
           topic_tracking_preferences: 'You can view and change your new topic tracking settings in <a href="%{basePath}/my/preferences/tracking">your preferences</a>.'
-          unread: "Nothing left unread...impressive!"
-          new_new: "Nothing new at the moment...check back soon!"
-          new: "Nothing new at the moment...check back soon!"
+          unread: "Nothing left unread... impressive!"
+          new_new: "Nothing new at the moment... check back soon!"
+          new: "Nothing new at the moment... check back soon!"
 
       bottom:
         latest: "There are no more latest topics."
@@ -4027,6 +4033,10 @@ en:
         success: "Translations have been updated successfully"
         post_language_selector:
           none: "None"
+        edit_warning:
+          message: "This is a translated post.<br><br> Do you want to edit the original post in %{language} or edit this specific translation?"
+          action_original: "Edit original post"
+          action_translation: "Edit this translation"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."

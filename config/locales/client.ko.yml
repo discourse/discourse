@@ -580,6 +580,15 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+      notes:
+        delete: "삭제하기"
+      review_user: "사용자"
+      copy_link: "링크 복사"
+      insights:
+        activities:
+          posts:
+            other: "글 %{count}개"
+        visibility: "시계"
       approval:
         title: "승인이 필요한 게시물"
         description: "새 게시물이 있습니다. 그러나 이 게시물이 보여지려면 운영자의 승인이 필요합니다. 잠시 기다려 주세요."
@@ -3644,8 +3653,7 @@ ko:
             users:
               content: "사용자들"
             my_posts:
-              content: "내 게시물"
-              content_drafts: "내 초안"
+              content: "내 글"
               title: "최근 주제 활동"
               title_drafts: "게시하지 않은 초안"
               draft_count:
@@ -4213,6 +4221,9 @@ ko:
           delete: "삭제하기"
         color_palettes:
           palette_name: "그룹명"
+          copy_to_clipboard: "클립 보드에 복사"
+          copied_to_clipboard: "클립보드로 복사됨"
+          copy_to_clipboard_error: "데이터를 클립보드로 복사하는 중 오류 발생"
           delete: "삭제하기"
           colors:
             title: "색상"

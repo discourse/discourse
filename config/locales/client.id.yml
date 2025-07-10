@@ -582,6 +582,13 @@ id:
         reviewable_post:
           title: "Postingan"
           noun: "postingan"
+      notes:
+        delete: "Hapus"
+      review_user: "Pengguna"
+      insights:
+        activities:
+          posts:
+            other: "%{count} post"
       approval:
         title: "Pesan Membutuhkan Persetujuan"
         description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
@@ -2508,6 +2515,8 @@ id:
           delete: "Hapus"
         color_palettes:
           palette_name: "Nama"
+          copy_to_clipboard: "Menyalin ke Clipboard"
+          copy_to_clipboard_error: "Terjadi kesalahan saat menyalin data ke Clipboard"
           delete: "Hapus"
           colors:
             title: "Warna"
