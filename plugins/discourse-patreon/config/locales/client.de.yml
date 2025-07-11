@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse – Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Mit Patreon anmelden
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filter'
+      group: 'Gruppe'
+      rewards: 'Belohnungen'
+      filter: 'Filter'
+      help_text: 'Du kannst eine Discourse-Gruppe mit einer oder mehreren Patreon-Belohnungsstufen synchronisieren.'
+      last_synced: 'Zuletzt synchronisiert'
+      edit: 'Bearbeiten'
+      delete: 'Löschen'
+      save: 'Speichern'
+      update_data: 'Patreon-Daten aktualisieren und Gruppen synchronisieren'
+      refresh_page: 'Neue Daten wurden über die Patreon-API heruntergeladen. Bitte lade die Seite neu.'
+      select_group: 'Gruppe auswählen'
+      field:
+        id: "ID"
+        email: "E-Mail"
+        amount_cents: "Betrag (in Cent)"
+        rewards: "Belohnungen"
+        declined_since: "Spende abgelehnt seit"
+        more_details:
+          label: "Zahlungen und weitere Details"
+          help_text:
+            email_available: "Gehe nach unten rechts auf der Seite, um den Verlauf der Patreon-Spenden zu sehen."
+            email_not_available: "Wähle das Patreon-Mitglied aus und gehe auf der Seite nach unten rechts, um den Verlauf der Patreon-Spenden zu sehen."
+      donation_prompt:
+        body: |
+          <h1>Hallo, Leser!</h1>
+
+          <p>Gefällt dir unsere Website? Möchtest du einen Beitrag zu einem guten Zweck leisten?</p>
+
+          <p>
+            Wenn du unsere Website hilfreich findest und dir die Community gefällt, die wir geschaffen haben, würden wir uns freuen, wenn du für unsere Website spendest.
+            Spenden sorgen dafür, dass unsere Dienste reibungslos funktionieren und dass unsere Community auch in den nächsten Jahren weiterbestehen kann.
+            Jeder Euro zählt und wird sinnvoll eingesetzt.
+          </p>
+
+          <p>Dankeschön für deine Unterstützung!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Patron werden</a>
+          </p>

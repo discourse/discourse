@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    patreon:
+      header:
+        rules: 'Filtre'
+      group: 'Skupina'
+      rewards: 'Odmeny'
+      filter: 'Filter'
+      edit: 'Upraviť'
+      delete: 'Odstrániť'
+      save: 'Uložiť'
+      field:
+        id: "Id"
+        email: "Email"
+        rewards: "Odmena"

@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Kirjaudu Patreonilla
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Suodattimet'
+      group: 'Ryhmä'
+      rewards: 'Palkinnot'
+      filter: 'Suodatin'
+      help_text: 'Voit synkronoida Discourse-ryhmän yhteen tai useampaan Patreon-palkintotasoon.'
+      last_synced: 'Viimeksi synkronisoitu'
+      edit: 'Muokkaa'
+      delete: 'Poista'
+      save: 'Tallenna'
+      update_data: 'Päivitä Patreonin tiedot ja synkronoi ryhmät'
+      refresh_page: 'Uusia tietoja on ladattu Patreonin APIsta. Päivitä sivu.'
+      select_group: 'Valitse ryhmä'
+      field:
+        id: "Tunnus"
+        email: "Sähköposti"
+        amount_cents: "Määrä (senteissä)"
+        rewards: "Palkinnot"
+        declined_since: "Lahjoituslupaus peruttu alkaen"
+        more_details:
+          label: "Maksut ja muita tietoja"
+          help_text:
+            email_available: "Selaa oikeaan alareunaan nähdäksesi tämän Patreonin lahjoituslupaushistoria."
+            email_not_available: "Valitse Patreon-jäsen ja selaa oikeaan alakulmaan nähdäksesi lahjoituslupaushistorian."
+      donation_prompt:
+        body: |
+          <h1>Hei lukija!</h1>
+
+          <p>Pidätkö verkkosivustostamme? Haluaisitko osallistua hyvään tarkoitukseen?</p>
+
+          <p>
+            Jos verkkosivustomme on mielestäsi hyödyllinen ja pidät luomastamme yhteisöstä, olisimme iloisia, jos antaisit lahjoituksen verkkosivustollemme.
+            Lahjoitukset pitävät palvelumme käynnissä ja varmistavat, että yhteisömme jatkaa toimintaansa tulevina vuosina.
+            Jokainen dollari on tärkeä ja laitetaan hyvään käyttöön.
+          </p>
+
+          <p>Kiitos tuestasi!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Ryhdy tukijaksi</a>
+          </p>

@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  js:
+    login:
+      patreon:
+        name: Patreón
+    patreon:
+      title: 'Patreón'
+      header:
+        rules: 'Filtros'
+      group: 'Grupo'
+      rewards: 'Recompensas'
+      filter: 'Filtro'
+      help_text: 'Pode sincronizar un grupo de Discourse cun ou máis niveis de recompensa de Patreon.'
+      last_synced: 'Última sincronización'
+      edit: 'Editar'
+      delete: 'Eliminar'
+      save: 'Gardar'
+      update_data: 'Actualizar os datos de Patreon e sincronizar os grupos'
+      refresh_page: 'Descargáronse novos datos da API de Patreon. Actualice a páxina.'
+      select_group: 'Seleccione un grupo'
+      field:
+        id: "Id"
+        email: "Correo electrónico"
+        amount_cents: "Cantidade (en céntimos)"
+        rewards: "Recompensas"
+        declined_since: "Compromiso rexeitado dende"
+        more_details:
+          label: "Pagamentos e máis detalles"
+          help_text:
+            email_available: "Acceda á parte inferior dereita da páxina para ver o historial de compromisos deste Patreon."
+            email_not_available: "Seleccione o membro de Patreon e acceda co botón da parte inferior dereita da páxina para ver o historial de promesas."
+      donation_prompt:
+        body: |
+          <h1>Ola lector!</h1>
+
+          <p>Gústalle o noso sitio? Gustaríalle contribuír a unha boa causa?</p>
+
+          <p>
+            Se atopa de utilidade o sitio e lle resulta atractiva a comunidade que fomos creando, estariamos encantados se doase ao noso sitio.
+            As doazóns manteñen o noso servizo funcionando normalmente e asegura que a nosa comunidade estará operativa nos vindeiros anos.
+            Cada moeda conta e faremos bo uso delas.
+          </p>
+
+          <p>Grazas polo seu apoio!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Fágase Patron</a>
+          </p>

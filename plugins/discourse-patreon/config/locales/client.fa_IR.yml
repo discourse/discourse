@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    login:
+      patreon:
+        name: پاترئون
+    patreon:
+      title: 'پاترون'
+      header:
+        rules: 'فیلترها'
+      group: 'گروه'
+      rewards: 'پاداش'
+      filter: 'فیلتر'
+      edit: 'ویرایش'
+      delete: 'حذف'
+      save: 'ذخیره'
+      select_group: 'یک گروه را انتخاب کنید'
+      field:
+        id: "شناسه"
+        email: "ایمیل"
+        amount_cents: "مقدار (به سنت)"
+        rewards: "پاداش"
+        more_details:
+          label: "پرداخت‌ها و جزئیات بیشتر"

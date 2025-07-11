@@ -58,6 +58,10 @@ discourse-zendesk-plugin:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-zendesk-plugin/**/*
 
+discourse-patreon:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-patreon/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
