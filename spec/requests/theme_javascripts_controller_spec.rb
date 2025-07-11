@@ -173,10 +173,10 @@ RSpec.describe ThemeJavascriptsController do
         registerSettings(#{component.id}, {
           "num_setting": 5,
           "theme_uploads": {
-            "vendorlib": "/uploads/default/test_0/original/1X/b10e05af44c2fb49675ae94347e2abf494bae48f.js"
+            "vendorlib": "/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js"
           },
           "theme_uploads_local": {
-            "vendorlib": "/theme-javascripts/329c6b57d2bbe618b7393e087d0d5a269d532122.js?__ws=test.localhost"
+            "vendorlib": "/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost"
           }
         });
       JS
