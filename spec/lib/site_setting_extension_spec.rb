@@ -926,7 +926,7 @@ RSpec.describe SiteSettingExtension do
   describe ".setup_methods" do
     describe "for uploads site settings" do
       fab!(:upload)
-      fab!(:upload2) { Fabricate(:upload) }
+      fab!(:upload2, :upload)
 
       it "should return the upload record" do
         settings.setting(:some_upload, upload.id.to_s, type: :upload)

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe MovedPost do
-  fab!(:new_topic) { Fabricate(:topic) }
+  fab!(:new_topic, :topic)
   fab!(:new_post) { Fabricate(:post, topic: new_topic) }
 
-  fab!(:old_topic) { Fabricate(:topic) }
+  fab!(:old_topic, :topic)
   fab!(:old_post) { Fabricate(:post, topic: old_topic) }
 
   fab!(:moved_post) do

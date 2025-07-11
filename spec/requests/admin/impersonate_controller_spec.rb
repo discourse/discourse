@@ -4,7 +4,7 @@ RSpec.describe Admin::ImpersonateController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:another_admin) { Fabricate(:admin) }
+  fab!(:another_admin, :admin)
 
   describe "#index" do
     context "when logged in as an admin" do

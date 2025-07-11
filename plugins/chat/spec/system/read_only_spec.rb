@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Read only", type: :system do
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:channel_1, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
@@ -9,7 +9,7 @@ RSpec.describe "Read only", type: :system do
   before { chat_system_bootstrap }
 
   context "when regular user" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     before do
       channel_1.add(current_user)
@@ -37,7 +37,7 @@ RSpec.describe "Read only", type: :system do
   end
 
   context "when admin" do
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
 
     before do
       channel_1.add(current_user)

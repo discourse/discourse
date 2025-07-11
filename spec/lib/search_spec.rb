@@ -101,7 +101,7 @@ RSpec.describe Search do
     before { SiteSetting.tagging_enabled = true }
 
     context "with staff tags" do
-      fab!(:hidden_tag) { Fabricate(:tag) }
+      fab!(:hidden_tag, :tag)
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
@@ -208,7 +208,7 @@ RSpec.describe Search do
 
   describe "users" do
     fab!(:user) { Fabricate(:user, username: "DonaldDuck") }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     before do
       SearchIndexer.enable
@@ -1960,8 +1960,8 @@ RSpec.describe Search do
     context "when searching for posts made by users of a group" do
       fab!(:topic) { Fabricate(:topic, created_at: 3.months.ago) }
       fab!(:user)
-      fab!(:user_2) { Fabricate(:user) }
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_2, :user)
+      fab!(:user_3, :user)
       fab!(:group) { Fabricate(:group, name: "Like_a_Boss").tap { |g| g.add(user) } }
       fab!(:group_2) { Fabricate(:group).tap { |g| g.add(user_2) } }
       let!(:post) { Fabricate(:post, raw: "hi this is a test 123 123", topic: topic, user: user) }
@@ -3081,10 +3081,10 @@ RSpec.describe Search do
   end
 
   describe "whisper search" do
-    fab!(:topic2) { Fabricate(:topic) }
+    fab!(:topic2, :topic)
     fab!(:user)
-    fab!(:whisperer) { Fabricate(:user) }
-    fab!(:whisperers_group) { Fabricate(:group) }
+    fab!(:whisperer, :user)
+    fab!(:whisperers_group, :group)
     fab!(:regular_post) do
       Fabricate(:post, topic: topic, raw: "this is a regular post with whisper content")
     end

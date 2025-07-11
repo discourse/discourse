@@ -4,7 +4,7 @@ require "topic_publisher"
 
 RSpec.describe TopicPublisher do
   describe "shared drafts" do
-    fab!(:shared_drafts_category) { Fabricate(:category) }
+    fab!(:shared_drafts_category, :category)
     fab!(:category)
 
     before { SiteSetting.shared_drafts_category = shared_drafts_category.id }

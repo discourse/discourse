@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelThreadMessagesController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:thread) do
     Fabricate(:chat_thread, channel: Fabricate(:chat_channel, threading_enabled: true))
   end

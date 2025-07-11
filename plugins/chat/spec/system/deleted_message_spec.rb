@@ -5,8 +5,8 @@ RSpec.describe "Deleted message", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  fab!(:current_user) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :admin)
+  fab!(:channel_1, :category_channel)
 
   before do
     chat_system_bootstrap
@@ -44,7 +44,7 @@ RSpec.describe "Deleted message", type: :system do
     end
 
     context "when the current user is not admin" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it "does not error when coming back to the channel from another channel" do
         message = Fabricate(:chat_message, chat_channel: channel_1)
@@ -110,7 +110,7 @@ RSpec.describe "Deleted message", type: :system do
     let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
     let(:open_thread) { PageObjects::Pages::ChatThread.new }
 
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }

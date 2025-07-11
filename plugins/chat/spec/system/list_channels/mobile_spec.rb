@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "List channels | mobile", type: :system, mobile: true do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
@@ -13,7 +13,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
 
   context "when channels present" do
     context "when category channels" do
-      fab!(:category_channel_1) { Fabricate(:category_channel) }
+      fab!(:category_channel_1, :category_channel)
 
       it "doesn’t show the last message" do
         message =
@@ -122,7 +122,7 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
 
     context "when direct message channels" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-      fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
+      fab!(:inaccessible_dm_channel_1, :direct_message_channel)
 
       it "show the last message" do
         message =

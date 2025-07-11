@@ -15,8 +15,8 @@ RSpec.describe Themes::BulkDestroy do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:theme_1) { Fabricate(:theme) }
-    fab!(:theme_2) { Fabricate(:theme) }
+    fab!(:theme_1, :theme)
+    fab!(:theme_2, :theme)
     fab!(:admin)
 
     let(:params) { { theme_ids: [theme_1.id, theme_2.id] } }

@@ -182,8 +182,8 @@ end
 
 if ENV["PREFABRICATION"] == "0"
   module Prefabrication
-    def fab!(name, **opts, &blk)
-      blk ||= proc { Fabricate(name) }
+    def fab!(name, fabricator_name = nil, **opts, &blk)
+      blk ||= proc { Fabricate(fabricator_name || name) }
       let!(name, &blk)
     end
   end
@@ -199,8 +199,8 @@ else
   end
 
   module Prefabrication
-    def fab!(name, **opts, &blk)
-      blk ||= proc { Fabricate(name) }
+    def fab!(name, fabricator_name = nil, **opts, &blk)
+      blk ||= proc { Fabricate(fabricator_name || name) }
       let_it_be(name, refind: true, **opts, &blk)
     end
   end

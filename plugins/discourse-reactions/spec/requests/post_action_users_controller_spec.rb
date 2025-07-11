@@ -4,9 +4,9 @@ RSpec.describe PostActionUsersController do
   before { SiteSetting.discourse_reactions_enabled = true }
 
   describe "post_action_users_list modifier for PostActionUsersController" do
-    fab!(:current_user) { Fabricate(:user) }
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:current_user, :user)
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
     fab!(:post)
 
     before do

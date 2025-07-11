@@ -384,7 +384,7 @@ RSpec.describe PostSerializer do
     fab!(:user)
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
-    fab!(:anonymous_user) { Fabricate(:anonymous) }
+    fab!(:anonymous_user, :anonymous)
 
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new(anonymous_user), root: false) }
     let(:post_action) do
@@ -510,7 +510,7 @@ RSpec.describe PostSerializer do
 
   describe "#badges_granted" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     fab!(:post) { Fabricate(:post, user: user) }
     fab!(:post2) { Fabricate(:post, user: user) }
 

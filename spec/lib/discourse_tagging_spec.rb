@@ -26,7 +26,7 @@ RSpec.describe DiscourseTagging do
   describe "visible_tags" do
     fab!(:tag4) { Fabricate(:tag, name: "fun4") }
 
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     let(:guardian2) { Guardian.new(user2) }
 
     fab!(:group) { Fabricate(:group, name: "my-group") }
@@ -482,7 +482,7 @@ RSpec.describe DiscourseTagging do
       end
 
       context "with tags visible only to staff" do
-        fab!(:hidden_tag) { Fabricate(:tag) }
+        fab!(:hidden_tag, :tag)
         let!(:staff_tag_group) do
           Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
         end
@@ -499,7 +499,7 @@ RSpec.describe DiscourseTagging do
       end
 
       context "with tags visible only to non-admin group" do
-        fab!(:hidden_tag) { Fabricate(:tag) }
+        fab!(:hidden_tag, :tag)
         fab!(:group) { Fabricate(:group, name: "my-group") }
         let!(:user_tag_group) do
           Fabricate(:tag_group, permissions: { "my-group" => 1 }, tag_names: [hidden_tag.name])
@@ -893,7 +893,7 @@ RSpec.describe DiscourseTagging do
   end
 
   describe "filter_visible" do
-    fab!(:hidden_tag) { Fabricate(:tag) }
+    fab!(:hidden_tag, :tag)
     let!(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
@@ -1103,7 +1103,7 @@ RSpec.describe DiscourseTagging do
     end
 
     context "with hidden tags" do
-      fab!(:hidden_tag) { Fabricate(:tag) }
+      fab!(:hidden_tag, :tag)
       let!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
@@ -1538,9 +1538,9 @@ RSpec.describe DiscourseTagging do
   end
 
   describe "Tag in multiple tag groups" do
-    fab!(:parent) { Fabricate(:tag) }
-    fab!(:child) { Fabricate(:tag) }
-    fab!(:no_show_tag) { Fabricate(:tag) }
+    fab!(:parent, :tag)
+    fab!(:child, :tag)
+    fab!(:no_show_tag, :tag)
 
     fab!(:no_show_tag_group) do
       Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [no_show_tag.name])
@@ -1586,8 +1586,8 @@ RSpec.describe DiscourseTagging do
   describe "staff_tag_names" do
     fab!(:tag)
 
-    fab!(:staff_tag) { Fabricate(:tag) }
-    fab!(:other_staff_tag) { Fabricate(:tag) }
+    fab!(:staff_tag, :tag)
+    fab!(:other_staff_tag, :tag)
 
     let!(:staff_tag_group) do
       Fabricate(

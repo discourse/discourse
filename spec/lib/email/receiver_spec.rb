@@ -417,12 +417,12 @@ RSpec.describe Email::Receiver do
       expect { process(:gmail_html_reply) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq <<~MD.strip
         This is a **GMAIL** reply ;)
-        
+
         <details class='elided'>
         <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
-        
+
         This is the *elided* part!
-        
+
         </details>
       MD
     end
@@ -2040,7 +2040,7 @@ RSpec.describe Email::Receiver do
   end
 
   describe "mailman mirror" do
-    fab!(:category) { Fabricate(:mailinglist_mirror_category) }
+    fab!(:category, :mailinglist_mirror_category)
 
     it "uses 'from' email address" do
       expect { process(:mailman_1) }.to change { Topic.count }
@@ -2072,7 +2072,7 @@ RSpec.describe Email::Receiver do
   end
 
   describe "mailing list mirror" do
-    fab!(:category) { Fabricate(:mailinglist_mirror_category) }
+    fab!(:category, :mailinglist_mirror_category)
 
     before { SiteSetting.block_auto_generated_emails = true }
 

@@ -932,7 +932,7 @@ RSpec.describe ListController do
 
   describe "topics_by" do
     fab!(:topic2) { Fabricate(:topic, user: user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     before do
       user.user_stat.update!(post_count: 1)
@@ -1058,7 +1058,7 @@ RSpec.describe ListController do
   end
 
   describe "#private_messages_unread" do
-    fab!(:pm_user) { Fabricate(:user) }
+    fab!(:pm_user, :user)
 
     fab!(:pm) do
       Fabricate(:private_message_topic).tap do |t|
@@ -1090,10 +1090,10 @@ RSpec.describe ListController do
   end
 
   describe "#private_messages_warnings" do
-    fab!(:target_user) { Fabricate(:user) }
+    fab!(:target_user, :user)
     fab!(:admin)
-    fab!(:moderator1) { Fabricate(:moderator) }
-    fab!(:moderator2) { Fabricate(:moderator) }
+    fab!(:moderator1, :moderator)
+    fab!(:moderator2, :moderator)
 
     let(:create_args) do
       {
@@ -1299,8 +1299,8 @@ RSpec.describe ListController do
   end
 
   describe "shared drafts" do
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
 
     fab!(:topic1) { Fabricate(:topic, category: category1) }
     fab!(:topic2) { Fabricate(:topic, category: category2) }

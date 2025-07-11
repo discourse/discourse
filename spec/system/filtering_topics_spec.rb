@@ -109,7 +109,7 @@ describe "Filtering topics", type: :system do
   end
 
   describe "bulk topic selection" do
-    fab!(:user) { Fabricate(:moderator) }
+    fab!(:user, :moderator)
 
     it "shows the buttons and checkboxes" do
       topics = Fabricate.times(2, :topic)

@@ -79,7 +79,7 @@ RSpec.describe About do
       Fabricate(:group, users: [private_cat_moderator, common_moderator, common_moderator_2])
     end
 
-    fab!(:public_cat) { Fabricate(:category) }
+    fab!(:public_cat, :category)
     fab!(:public_category_moderation_group) do
       Fabricate(:category_moderation_group, category: public_cat, group: public_group)
     end
@@ -131,14 +131,14 @@ RSpec.describe About do
   end
 
   describe "#moderators" do
-    fab!(:mod_1) { Fabricate(:moderator) }
-    fab!(:mod_2) { Fabricate(:moderator) }
-    fab!(:mod_3) { Fabricate(:moderator) }
+    fab!(:mod_1, :moderator)
+    fab!(:mod_2, :moderator)
+    fab!(:mod_3, :moderator)
 
     context "with the about_page_hidden_groups setting" do
       fab!(:group_1) { Fabricate(:group, users: [mod_1, mod_3]) }
       fab!(:group_2) { Fabricate(:group, users: [mod_3]) }
-      fab!(:group_3) { Fabricate(:group) }
+      fab!(:group_3, :group)
 
       before { SiteSetting.about_page_hidden_groups = [group_1.id, group_2.id].join("|") }
 

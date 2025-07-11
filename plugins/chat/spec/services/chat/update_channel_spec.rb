@@ -3,8 +3,8 @@
 RSpec.describe Chat::UpdateChannel do
   subject(:result) { described_class.call(params:, **dependencies) }
 
-  fab!(:channel) { Fabricate(:chat_channel) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:channel, :chat_channel)
+  fab!(:current_user, :admin)
   fab!(:upload)
 
   let(:guardian) { Guardian.new(current_user) }
@@ -22,7 +22,7 @@ RSpec.describe Chat::UpdateChannel do
   let(:dependencies) { { guardian: } }
 
   context "when the user cannot edit the channel" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     it { is_expected.to fail_a_policy(:check_channel_permission) }
   end

@@ -95,8 +95,8 @@ RSpec.describe Auth::ManagedAuthenticator do
     end
 
     describe "connecting to another user account" do
-      fab!(:user1) { Fabricate(:user) }
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user1, :user)
+      fab!(:user2, :user)
       before do
         UserAssociatedAccount.create!(user: user1, provider_name: "myauth", provider_uid: "1234")
       end

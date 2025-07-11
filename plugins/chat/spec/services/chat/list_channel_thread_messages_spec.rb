@@ -135,7 +135,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
         end
 
         context "when user is admin" do
-          fab!(:user) { Fabricate(:admin) }
+          fab!(:user, :admin)
 
           it { is_expected.to run_successfully }
         end

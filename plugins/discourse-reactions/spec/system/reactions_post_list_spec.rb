@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "Reactions | Post reaction user list", type: :system, js: true do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:user_3) { Fabricate(:user) }
+  fab!(:current_user, :user)
+  fab!(:user_2, :user)
+  fab!(:user_3, :user)
   fab!(:post) { Fabricate(:post, user: current_user) }
 
   let(:reactions_list) do

@@ -162,8 +162,8 @@ RSpec.describe TagGroupsController do
   describe "#create" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before { sign_in(admin) }
 
@@ -192,8 +192,8 @@ RSpec.describe TagGroupsController do
   describe "#delete" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
 
     before { sign_in(admin) }
@@ -219,9 +219,9 @@ RSpec.describe TagGroupsController do
   describe "#update" do
     fab!(:admin)
 
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
 
     before { sign_in(admin) }

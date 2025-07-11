@@ -13,7 +13,7 @@ RSpec.describe(Flags::UpdateFlag) do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
     fab!(:flag)
 
     let(:params) do
@@ -59,7 +59,7 @@ RSpec.describe(Flags::UpdateFlag) do
     end
 
     context "when user is not allowed to perform the action" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:invalid_access) }
     end

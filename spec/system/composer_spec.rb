@@ -18,8 +18,8 @@ describe "Composer", type: :system do
   end
 
   context "in a topic, the autocomplete prioritizes" do
-    fab!(:topic_user) { Fabricate(:user) }
-    fab!(:second_reply_user) { Fabricate(:user) }
+    fab!(:topic_user, :user)
+    fab!(:second_reply_user, :user)
 
     fab!(:topic) { Fabricate(:topic, user: topic_user) }
     fab!(:op) { Fabricate(:post, topic: topic, user: topic_user) }

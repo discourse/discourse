@@ -235,7 +235,7 @@ RSpec.describe Hijack do
   end
 
   context "when there is a current user" do
-    fab!(:test_current_user) { Fabricate(:user) }
+    fab!(:test_current_user, :user)
 
     it "captures the current user" do
       test_user_id = nil

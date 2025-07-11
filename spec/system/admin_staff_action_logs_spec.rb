@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin staff action logs", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:history_1) do
     Fabricate(
       :site_setting_change_history,
@@ -10,7 +10,7 @@ describe "Admin staff action logs", type: :system do
       new_value: "all",
     )
   end
-  fab!(:history_2) { Fabricate(:topic_closed_change_history) }
+  fab!(:history_2, :topic_closed_change_history)
   fab!(:history_3) do
     Fabricate(
       :user_history,
