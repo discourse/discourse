@@ -1,0 +1,205 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Integracions de xat"
+  js:
+    chat_integration:
+      menu_title: "Integracions de xat"
+      settings: "Configuració"
+      no_providers: "Heu d'habilitar alguns proveïdors en la configuració del connector"
+      channels_with_errors: "Alguns canals d'aquest proveïdor van fallar l'última vegada que es van enviar missatges. Feu clic en la icona o icones d'error per a obtenir més informació."
+      channel_exception: "Es va produir un error desconegut la darrera vegada que es va enviar un missatge a aquest canal."
+      group_mention_template: "Mencions de: @ %{name}"
+      group_message_template: "Missatges a: @ %{name}"
+      choose_group: "(trieu un grup)"
+      all_categories: "(totes les categories)"
+      all_tags: "(totes les etiquetes)"
+      create_rule: "Crea una regla"
+      create_channel: "Crea un canal"
+      delete_channel: "Suprimeix"
+      test_channel: "Test"
+      edit_channel: "Edita"
+      channel_delete_confirm: "Esteu segur que voleu suprimir aquest canal? Se suprimiran totes les regles associades."
+      test_modal:
+        title: "Envia un missatge de prova"
+        topic: "Tema"
+        send: "Envia un missatge de prova"
+        close: "Tanca"
+        error: "S'ha produït un error desconegut en enviar el missatge. Consulteu els registres del lloc web per a obtenir més informació."
+        success: "Missatge enviat correctament"
+      type:
+        normal: Normal
+        group_message: Missatge de grup
+        group_mention: Menció de grup
+      filter:
+        mute: 'Silenci'
+        follow: 'Sols la primera publicació'
+        watch: 'Totes les publicacions i respostes'
+      rule_table:
+        filter: "Filtre"
+        category: "Categoria"
+        tags: "Etiquetes"
+        edit_rule: "Edita"
+        delete_rule: "Suprimeix"
+      edit_channel_modal:
+        title: "Edita el canal"
+        save: "Desa el canal"
+        cancel: "Cancel·la"
+        provider: "Proveïdor"
+        channel_validation:
+          ok: "Vàlid"
+          fail: "Format no vàlid"
+      edit_rule_modal:
+        title: Edita la regla
+        save: Desa la regla
+        cancel: Cancel·la
+        provider: Proveïdor
+        type: Tipus
+        channel: Canal
+        filter: Filtre
+        category: Categoria
+        group: Grup
+        tags: Etiquetes
+        instructions:
+          type: "Canvieu el tipus per a activar notificacions de missatges de grup o de mencions"
+          filter: "Nivell de notificació. El silenciament sobreescriu altres regles"
+          category: "Aquesta regla només s'aplicarà als temes de la categoria especificada"
+          group: "Aquesta regla s'aplicarà a les publicacions que facin referència a aquest grup"
+          tags: "Si s'especifica, aquesta regla sols s'aplicarà als temes que tinguin almenys una d'aquestes etiquetes."
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Canal
+              help: "per exemple #canal, @nomdusuari."
+          errors:
+            action_prohibited: "El bot no té permís per a publicar en aquest canal"
+            channel_not_found: "El canal especificat no existeix en Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom per a descriure el canal. No es fa servir per a la connexió amb Telegram."
+            chat_id:
+              title: ID de xat
+              help: Un número que us ha donat el bot o un identificador de canal de difusió en la forma @nomdelcanal
+          errors:
+            channel_not_found: "El canal especificat no existeix en Telegram"
+            forbidden: "El bot no té permís per a publicar en aquest canal"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom per a descriure el canal. No s'utilitza per a la connexió amb Discord."
+            webhook_url:
+              title: URL del webhook
+              help: L'URL del webhook creat en la configuració del servidor Discord
+        guilded:
+          param:
+            name:
+              title: "Nom"
+            webhook_url:
+              title: URL del webhook
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Canal
+              help: "per exemple #canal, @nomdusuari."
+          errors:
+            channel_not_found: "El canal especificat no existeix en Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom per a descriure el canal. No s'utilitza per a la connexió amb Matrix."
+            room_id:
+              title: "ID de la sala"
+              help: "'Identificador privat' de la sala. Hauria de ser similar a !abcdefg:matrix.org"
+          errors:
+            unknown_token: "El testimoni d'accés no és vàlid"
+            unknown_room: "L'ID de la sala no és vàlid"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Stream"
+              help: "El nom de l'stream de Zulip al qual s'ha d'enviar el missatge, p. ex. \"general\"."
+            subject:
+              title: "Assumpte"
+              help: "L'assumpte que s'ha de posar a aquests missatges enviats pel bot."
+          errors:
+            does_not_exist: "Aquest stream no existeix en Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Canal
+              help: "per exemple #canal, @nomdusuari."
+          errors:
+            invalid_channel: "Aquest canal no existeix en Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Nom"
+              help: "El nom de la sala Gitter, p. ex. gitterHQ/services."
+            webhook_url:
+              title: "URL del webhook"
+              help: "L'URL proporcionat quan creeu una nova integració en la sala Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Testimoni de flux"
+              help: "El testimoni de flux proporcionat després de crear una font per a un flux al qual voleu enviar missatges."
+        teams:
+          param:
+            name:
+              title: "Nom"
+            webhook_url:
+              title: "URL del webhook"
+        powerautomate:
+          param:
+            name:
+              title: "Nom"
+            webhook_url:
+              title: "URL del webhook"
+        webex:
+          param:
+            name:
+              title: "Nom"
+            webhook_url:
+              title: "URL del webhook"
+        google:
+          param:
+            name:
+              title: "Nom"
+            webhook_url:
+              title: "URL del webhook"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Missatge
+            url:
+              label: URL
+            channel:
+              label: Canal
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: Proveïdor

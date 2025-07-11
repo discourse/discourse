@@ -192,3 +192,10 @@ files:
   - source_path: plugins/discourse-math/config/locales/server.en.yml
     destination_path: plugins/math/server.yml
     label: math
+
+  - source_path: plugins/discourse-chat-integration/config/locales/client.en.yml
+    destination_path: plugins/chat-integration/client.yml
+    label: chat-integration
+  - source_path: plugins/discourse-chat-integration/config/locales/server.en.yml
+    destination_path: plugins/chat-integration/server.yml
+    label: chat-integration

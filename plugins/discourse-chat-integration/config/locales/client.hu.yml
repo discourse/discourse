@@ -1,0 +1,155 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    chat_integration:
+      settings: "Beállítások"
+      choose_group: "(válassz egy csoportot)"
+      all_categories: "(összes kategória)"
+      all_tags: "(összes címke)"
+      delete_channel: "Töröl"
+      test_channel: "Teszt"
+      edit_channel: "Szerkeszt"
+      test_modal:
+        title: "Tesztüzenet küldése"
+        topic: "Téma"
+        send: "Szöveges üzenet küldése"
+        close: "Bezár"
+        success: "Üzenet sikeresen elküldve"
+      type:
+        normal: Normális
+        group_message: Csoportos üzenet
+        group_mention: Csoportos megemlítés
+      filter:
+        mute: 'Lenémít'
+      rule_table:
+        filter: "Szűr"
+        category: "Kategória"
+        tags: "Címkék"
+        edit_rule: "Szerkeszt"
+        delete_rule: "Töröl"
+      edit_channel_modal:
+        cancel: "Visszavon"
+        provider: "Szolgáltató"
+        channel_validation:
+          ok: "Érvényes"
+          fail: "Érvénytelen formátum"
+      edit_rule_modal:
+        title: Szabály Szerkesztése
+        save: Szabály Mentése
+        cancel: Visszavon
+        provider: Szolgáltató
+        type: Típus
+        channel: Csatorna
+        filter: Szűr
+        category: Kategória
+        group: Csoport
+        tags: Címkék
+      provider:
+        slack:
+          param:
+            identifier:
+              title: Csatorna
+              help: "pl. #csatorna, @felhasználónév"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Név"
+            chat_id:
+              title: Chat ID
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Név"
+            webhook_url:
+              title: Webhook URL
+        guilded:
+          param:
+            name:
+              title: "Név"
+            webhook_url:
+              title: Webhook URL
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Csatorna
+              help: "pl. #csatorna, @felhasználónév"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Név"
+            room_id:
+              title: "Szoba ID"
+          errors:
+            unknown_room: "Szoba ID érvénytelen"
+        zulip:
+          title: "Zulip"
+          param:
+            subject:
+              title: "Tárgy"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Csatorna
+              help: "pl. #csatorna, @felhasználónév"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Név"
+            webhook_url:
+              title: "Webhook URL"
+        flowdock:
+          title: "Flowdock"
+        teams:
+          param:
+            name:
+              title: "Név"
+            webhook_url:
+              title: "Webhook URL"
+              help: "Az új bejövő webhook létrehozásakor megadott URL"
+        powerautomate:
+          param:
+            name:
+              title: "Név"
+            webhook_url:
+              title: "Webhook URL"
+              help: "Az új bejövő webhook létrehozásakor megadott URL"
+        webex:
+          param:
+            name:
+              title: "Név"
+            webhook_url:
+              title: "Webhook URL"
+              help: "Az új bejövő webhook létrehozásakor megadott URL"
+        google:
+          param:
+            name:
+              title: "Név"
+            webhook_url:
+              title: "Webhook URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Üzenet
+            url:
+              label: URL
+            channel:
+              label: Csatorna
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: Csatorna neve
+            provider:
+              label: Szolgáltató

@@ -1,0 +1,336 @@
+en:
+  site_settings:
+    chat_integration_enabled: 'Enable the discourse-chat-integration plugin'
+    chat_integration_discourse_username: 'Username of user to act as when fetching content.'
+    chat_integration_delay_seconds: 'Number of seconds to wait after post creation before sending chat notitifications'
+
+    #######################################
+    ########## SLACK SETTINGS #############
+    #######################################
+    chat_integration_slack_username: "Bot's username to post to slack with"
+    chat_integration_slack_enabled: 'Enable the slack chat-integration provider'
+    chat_integration_slack_access_token: 'OAuth Access Token for authenticating with Slack'
+    chat_integration_slack_incoming_webhook_token: 'The verification token used to authenticate incoming requests'
+    chat_integration_slack_excerpt_length: 'Slack post excerpt length'
+    chat_integration_slack_icon_url: 'Icon to post to slack with (defaults to forum logo)'
+    chat_integration_slack_outbound_webhook_url: "For using Slack's 'Incoming Webhook' system instead of of the OAuth API. Not recommended."
+    chat_integration_slack_transcript_quote: Wrap slack transcript in [quote] tags?
+
+    errors:
+      chat_integration_slack_api_configs_are_empty: "You must enter either an outbound webhook URL, or an access token"
+
+    #######################################
+    ######### TELEGRAM SETTINGS ###########
+    #######################################
+    chat_integration_telegram_enabled: "Enable the Telegram chat-integration provider"
+    chat_integration_telegram_access_token: "Your bot's access token from the Telegram botfather"
+    chat_integration_telegram_excerpt_length: "Telegram post excerpt length"
+    chat_integration_telegram_enable_slash_commands: "Allow telegram subscriptions to be managed using 'slash commands'"
+
+    #######################################
+    ########## DISCORD SETTINGS ###########
+    #######################################
+    chat_integration_discord_enabled: "Enable the Discord chat-integration provider"
+    chat_integration_discord_message_content: "The message to include above the summary when sending a notification to Discord"
+    chat_integration_discord_excerpt_length: "Discord post excerpt length"
+
+    #######################################
+    ########## GUILDED SETTINGS ###########
+    #######################################
+    chat_integration_guilded_enabled: "Enable the Guilded chat-integration provider"
+    chat_integration_guilded_excerpt_length: "Guilded post excerpt length"
+
+    #######################################
+    ######## MATTERMOST SETTINGS ##########
+    #######################################
+    chat_integration_mattermost_enabled: "Enable the Mattermost chat-integration provider"
+    chat_integration_mattermost_webhook_url: 'URL for the Mattermost webhook'
+    chat_integration_mattermost_incoming_webhook_token: 'The verification token used to authenticate incoming requests'
+    chat_integration_mattermost_icon_url: "Icon for posts to Mattermost (defaults to forum logo)"
+    chat_integration_mattermost_excerpt_length: "Mattermost post excerpt length"
+
+    #######################################
+    ############ MATRIX SETTINGS ##########
+    #######################################
+    chat_integration_matrix_enabled: "Enable the Matrix chat integration provider"
+    chat_integration_matrix_homeserver: "Homeserver to connect to. Make sure to include the protocol"
+    chat_integration_matrix_access_token: "Access token for the bot's Matrix account"
+    chat_integration_matrix_excerpt_length: "Matrix post excerpt length"
+    chat_integration_matrix_use_notice: "Use notice instead of plain message"
+
+    #######################################
+    ########### ZULIP SETTINGS ############
+    #######################################
+    chat_integration_zulip_enabled: "Enable the Zulip chat integration provider"
+    chat_integration_zulip_server: "The base URL for your Zulip server. Make sure to include http(s)://"
+    chat_integration_zulip_bot_email_address: "The email address associated with your Zulip bot"
+    chat_integration_zulip_bot_api_key: "The API key for your Zulip bot"
+    chat_integration_zulip_excerpt_length: "Zulip post excerpt length"
+
+    #######################################
+    ###### ROCKET CHAT SETTINGS ###########
+    #######################################
+    chat_integration_rocketchat_enabled: "Enable the Rocket Chat chat integration provider"
+    chat_integration_rocketchat_webhook_url: "The URL for the Rocket Chat integration webhook"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat post excerpt length"
+
+    #######################################
+    ############ GITTER SETTINGS ##########
+    #######################################
+    chat_integration_gitter_enabled: "Enable the Gitter chat integration provider"
+
+    #######################################
+    ########## FLOWDOCK SETTINGS ##########
+    #######################################
+    chat_integration_flowdock_enabled: "Enable the Flowdock chat integration provider"
+    chat_integration_flowdock_excerpt_length: "Flowdock post excerpt length"
+
+    #######################################
+    ########## GROUPME SETTINGS ##########
+    #######################################
+    chat_integration_groupme_enabled: "Enable the Groupme chat integration provider"
+    chat_integration_groupme_excerpt_length: "Groupme post excerpt length"
+    chat_integration_groupme_bot_ids: "*required* Bot IDs, seperated by ',' if there are multiple"
+    chat_integration_groupme_instance_names: " *required* Name of the GroupMe chat, seperated by ',' if there are multiple (same order as Bot IDs)"
+
+    ###########################################
+    ######## MICROSOFT TEAMS SETTINGS #########
+    ###########################################
+    chat_integration_teams_enabled: "Enable the Microsoft Teams chat integration provider"
+    chat_integration_teams_excerpt_length: "Microsoft Team post excerpt length"
+
+    ####################################################
+    ######## MICROSOFT POWER AUTOMATE SETTINGS #########
+    ####################################################
+    chat_integration_powerautomate_enabled: "Enable the Microsoft Power Automate integration provider"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate post excerpt length"
+
+    ###########################################
+    ######## WEBEX TEAMS SETTINGS #########
+    ###########################################
+    chat_integration_webex_enabled: "Enable the Webex Teams chat integration provider"
+    chat_integration_webex_excerpt_length: "Webex Team post excerpt length"
+
+    ###########################################
+    ######## GOOGLE SETTINGS #########
+    ###########################################
+    chat_integration_google_enabled: "Enable the 'Google Chat' chat integration provider"
+    chat_integration_google_excerpt_length: "Google Chat post excerpt length"
+
+  dashboard:
+    problem:
+      channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/chat-integration'>the chat integration section</a> to find out more."
+
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Send Slack message
+      send_chat_integration_message:
+        title: Send Chat-Integration message
+  chat_integration:
+
+    all_categories: "(all categories)"
+    deleted_category: "(deleted category)"
+    deleted_group: "(deleted group)"
+
+    group_mention_template: "mentions of: @%{name}"
+    group_message_template: "messages to: @%{name}"
+
+
+    topic_tag_changed:
+      added_and_removed: "Added %{added} and removed %{removed}"
+      added: "Added %{added}"
+      removed: "Removed %{removed}"
+
+    provider:
+
+      #######################################
+      ########## SLACK STRINGS ##############
+      #######################################
+      slack:
+        status:
+          header: |
+            *Rules for this channel*
+            (if multiple rules match a post, the topmost rule is executed)
+          no_rules: "There are no rules set up for this channel. Run `/discourse help` for instructions."
+          rule_string: "*%{index})* *%{filter}* posts in *%{category}*"
+          rule_string_tags_suffix: " with tags: *%{tags}*"
+        parse_error: "Sorry, I didn't understand that. Run `/discourse help` for instructions."
+        create:
+          created: "Rule created successfully"
+          updated: "Rule updated successfully"
+          error: "Sorry, an error occured while creating that rule."
+        delete:
+          success: "Rule deleted successfully"
+          error: "Sorry, an error occured while deleting that rule. Run `/discourse status` for a list of rules."
+        not_found:
+          tag: "The *%{name}* tag cannot be found."
+          category: "The *%{name}* category cannot be found. Available categories: *%{list}*"
+        help: |
+          *New rule:* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          (you must specify a rule type and at least one category or tag)
+          - *thread* – notify this channel for new topics, thread replies if possible
+          - *watch* – notify this channel for new topics and new replies
+          - *follow* – notify this channel for new topics
+          - *mute* – block notifications to this channel
+
+          *Remove rule:* `/discourse remove [rule number]`
+          (`[rule number]` can be found by running `/discourse status`)
+
+          *List rules:* `/discourse status`
+
+          *[Experimental] Post transcript:* `/discourse post [n]`
+          Create a draft topic on discourse containing the last `n` posts in this channel
+
+          *Help:* `/discourse help`
+        transcript:
+          modal_title: "Create Transcript"
+          modal_description: "All messages in the thread will be assembled into a single forum post. You will be given the opportunity to edit the transcript before posting."
+          transcript_ready: "Transcript ready"
+          continue_on_discourse: "Continue on Forum"
+          error: "Something went wrong when building the transcript, sorry!"
+          post_to_discourse: "Click here to draft a post on Discourse with a transcript"
+          api_required: "Sorry, this integration isn't setup to support posting transcripts."
+          view_on_slack: "View in %{name} on Slack"
+          first_message_pretext: "starting %{n} messages ago:"
+          last_message_pretext: "and ending %{n} messages ago:"
+          posted_in: "posted in %{name}"
+          change_first_message: "Change first message..."
+          change_last_message: "Change last message..."
+          loading: "Loading the transcript..."
+          error_users: "Error: unable to fetch users from Slack"
+          error_history: "Error: unable to fetch channel history from Slack"
+          error_ts: "Error: unable to fetch requested message from Slack"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Added %{added} and removed %{removed}"
+            added: "Added %{added}"
+            removed: "Removed %{removed}"
+
+      #######################################
+      ########## TELEGRAM STRINGS ###########
+      #######################################
+      telegram:
+        unknown_chat: "This chat isn't setup on %{site_title}. Ask an administrator to add a channel with 'Chat ID' %{chat_id}."
+        known_chat: "This chat is setup on %{site_title}. Configure it in the admin panel. (Chat ID: %{chat_id})"
+        message: |-
+                <b>%{user}</b> posted in <a href="%{post_url}">%{title}</a>
+
+                <pre>%{post_excerpt}</pre>
+
+        status:
+            header: |
+              <b>Rules for this channel</b>
+              (if multiple rules match a post, the topmost rule is executed)
+            no_rules: "There are no rules set up for this channel. Run <code>/help</code> for instructions."
+            rule_string: "<b>%{index})</b> <b>%{filter}</b> posts in <b>%{category}</b>"
+            rule_string_tags_suffix: " with tags: <b>%{tags}</b>"
+        parse_error: "Sorry, I didn't understand that. Run <code>/help</code> for instructions."
+        create:
+          created: "Rule created successfully"
+          updated: "Rule updated successfully"
+          error: "Sorry, an error occured while creating that rule."
+        delete:
+          success: "Rule deleted successfully"
+          error: "Sorry, an error occured while deleting that rule. Run <code>/status</code> for a list of rules."
+        not_found:
+          tag: "The <b>%{name}</b> tag cannot be found."
+          category: "The <b>%{name}</b> category cannot be found. Available categories: <b>%{list}</b>"
+        help: |
+          <b>New rule:</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          (you must specify a rule type and at least one category or tag)
+          - <b>watch</b> – notify this channel for new topics and new replies
+          - <b>follow</b> – notify this channel for new topics
+          - <b>mute</b> – block notifications to this channel
+
+          <b>Remove rule:</b> <code>/remove [rule number]</code>
+          (<code>[rule number]</code> can be found by running <code>/status</code>)
+
+          <b>List rules:</b> <code>/status</code>
+
+          <b>Help:</b> <code>/help</code>
+
+      #######################################
+      ########### HIPCHAT STRINGS ###########
+      #######################################
+      hipchat:
+        message: <b>%{user}</b> posted in <a href="%{post_url}">%{title}</a>
+
+      #######################################
+      ######## MATTERMOST STRINGS ###########
+      #######################################
+      mattermost:
+        status:
+          header: |
+            *Rules for this channel*
+            (if multiple rules match a post, the topmost rule is executed)
+          no_rules: "There are no rules set up for this channel. Run `/discourse help` for instructions."
+          rule_string: "*%{index})* *%{filter}* posts in *%{category}*"
+          rule_string_tags_suffix: " with tags: *%{tags}*"
+        parse_error: "Sorry, I didn't understand that. Run `/discourse help` for instructions."
+        create:
+          created: "Rule created successfully"
+          updated: "Rule updated successfully"
+          error: "Sorry, an error occured while creating that rule."
+        delete:
+          success: "Rule deleted successfully"
+          error: "Sorry, an error occured while deleting that rule. Run `/discourse status` for a list of rules."
+        not_found:
+          tag: "The *%{name}* tag cannot be found."
+          category: "The *%{name}* category cannot be found. Available categories: *%{list}*"
+        help: |
+          *New rule:* `/discourse [watch|follow|mute] [category] [tag:name]`
+          (you must specify a rule type and at least one category or tag)
+          - *watch* – notify this channel for new topics and new replies
+          - *follow* – notify this channel for new topics
+          - *mute* – block notifications to this channel
+
+          *Remove rule:* `/discourse remove [rule number]`
+          (`[rule number]` can be found by running `/discourse status`)
+
+          *List rules:* `/discourse status`
+
+          *Help:* `/discourse help`
+
+      #######################################
+      ############ MATRIX STRINGS ###########
+      #######################################
+      matrix:
+        text_message: "%{user} posted in %{title} - %{post_url}"
+        formatted_message: |
+                    <b>%{user}</b> posted in <b><a href='%{post_url}'>%{title}</a></b>
+                    <blockquote>
+                    %{excerpt}
+                    </blockquote>
+
+      #######################################
+      ############# ZULIP STRINGS ###########
+      #######################################
+      zulip:
+        message: |
+                    **%{user}** posted in **[%{title}](%{post_url})**
+                    ~~~quote
+                    %{excerpt}
+                    ~~~
+
+      #######################################
+      ########### FLOWDOCK STRINGS ##########
+      #######################################
+      flowdock:
+        message_title: "posted"
+
+      #######################################
+      ############ GOOGLE STRINGS ###########
+      #######################################
+      google:
+        new_post: "New post on %{site_title}"
+        new_topic: "New topic on %{site_title}"
+        author: "by @%{username}"
+        link: "View on %{site_title}"
+
+      #######################################
+      ########## GROUPME STRINGS ###########
+      #######################################
+      groupme:
+        errors:
+          instance_names_issue: "instance names incorrectly formatted or not provided"

@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  chat_integration:
+    all_categories: "(όλες οι κατηγορίες)"
+    topic_tag_changed:
+      added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
+      added: "Προστέθηκε %{added}"
+      removed: "Αφαιρέθηκε %{removed}"
+    provider:
+      slack:
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
+            added: "Προστέθηκε %{added}"
+            removed: "Αφαιρέθηκε %{removed}"
+      flowdock:
+        message_title: "αναρτήθηκε"

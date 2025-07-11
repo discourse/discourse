@@ -1,0 +1,171 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  site_settings:
+    chat_integration_enabled: 'Միացրեք discourse-զրույցի-ինտեգրումների մատակարարը'
+    chat_integration_discourse_username: 'Օգտատիրոջ օգտանուն, որով նա հանդես կգա բովանդակության բեռնման ժամանակ'
+    chat_integration_delay_seconds: 'Վայրկյանների քանակը, որ անհրաժեշտ է սպասել գրառման ստեղծումից հետո՝ մինչև զրույցի ծանուցումներ ուղարկելը'
+    chat_integration_slack_enabled: 'Միացրեք slack-զրույցի-ինտեգրումների մատակարարը'
+    chat_integration_slack_access_token: 'OAuth Թույլտվության Տոկեն Slack -ի հետ նույնականացման համար'
+    chat_integration_slack_incoming_webhook_token: 'Մուտքային հարցումների նույնականացման համար օգտագործվող հաստատման տոկենը'
+    chat_integration_slack_excerpt_length: 'Slack գրառման հատվածի երկարություն'
+    chat_integration_slack_icon_url: 'slack-ում գրառում կատարելու պատկերակ (լռելյայն նույնն է, ինչ ֆորումի լոգոն)'
+    chat_integration_slack_outbound_webhook_url: "Slack -ի 'Մուտքային Webhook' համակարգ OAuth API օգտագործելու փոխարեն: Խորհուրդ չի տրվում:"
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Դուք պետք է մուտքագրեք կա՛մ դուրս եկող webhook -ի URL, կամ հասանելիության տոկեն:"
+    chat_integration_telegram_enabled: "Միացրեք Telegram զրույցի-ինտեգրումների մատակարարը"
+    chat_integration_telegram_access_token: "Ձեր բոտի հասանելիության տոկենը Telegram հայր-բոտից"
+    chat_integration_telegram_excerpt_length: "Telegram գրառման հատվածի երկարություն"
+    chat_integration_telegram_enable_slash_commands: "Թույլատրել telegram-ի բաժանորդագրություններին կառավարվել 'slash commands' -ի միջոցով:"
+    chat_integration_discord_enabled: "Միացրեք Discord զրույցի-ինտեգրումների մատակարարը"
+    chat_integration_discord_message_content: "Հաղորդագրություն, որը պետք է ներառվի ամփոփման մեջ Discord -ին ծանուցում ուղարկելիս "
+    chat_integration_discord_excerpt_length: "Discord գրառման հատվածի երկարություն"
+    chat_integration_mattermost_enabled: "Միացրեք Mattermost զրույցի-ինտեգրումների մատակարարը"
+    chat_integration_mattermost_webhook_url: 'URL Mattermost webhook -ի համար'
+    chat_integration_mattermost_incoming_webhook_token: 'Մուտքային հարցումների նույնականացման համար օգտագործվող վավերացման տոկեն'
+    chat_integration_mattermost_icon_url: "Mattermost-ում գրառում կատարելու պատկերակ (լռելյայն նույնն է, ինչ ֆորումի լոգոն)"
+    chat_integration_mattermost_excerpt_length: "Mattermost գրառման հատվածի երկարություն"
+    chat_integration_matrix_enabled: "Միացրեք Matrix զրույցի-ինտեգրումների մատակարարը"
+    chat_integration_matrix_homeserver: "Հոմսերվեր, որի հետ պետք է կապվել: Համոզվեք, որ ներառել եք պրոտոկոլը:"
+    chat_integration_matrix_access_token: "Բոտի Matrix հաշվին հասանելիության տոկեն"
+    chat_integration_matrix_excerpt_length: "Matrix գրառման հատվածի երկարություն"
+    chat_integration_matrix_use_notice: "Հասարակ հաղորդագրության փոխարեն պգտագործեք նշում"
+    chat_integration_zulip_enabled: "Միացրեք Zulip զրույցի-ինտեգրումների մատակարարը"
+    chat_integration_zulip_server: "Ձեր Zulip սերվերի համար հիմնական URL -ը: Համոզվեք, որ ներառել եք http(s)://"
+    chat_integration_zulip_bot_email_address: "Ձեր Zulip բոտի հետ կապակցված էլ. հասցե"
+    chat_integration_zulip_bot_api_key: "Ձեր Zulip բոտի API key-ը"
+    chat_integration_zulip_excerpt_length: "Zulip գրառման հատվածի երկարություն"
+    chat_integration_rocketchat_enabled: "Միացրեք Rocket Chat զրույցի ինտեգրումների մատակարարը"
+    chat_integration_rocketchat_webhook_url: "Rocket Chat ինտեգրման webhook -ի URL -ը"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat գրառման հատվածի երկարություն"
+    chat_integration_gitter_enabled: "Միացրեք Gitter զրույցի-ինտեգրումների մատակարարը"
+    chat_integration_flowdock_enabled: "Միացրեք Flowdock զրույցի-ինտեգրումների մատակարարը"
+    chat_integration_flowdock_excerpt_length: "Flowdock գրառման հատվածի երկարություն"
+  chat_integration:
+    all_categories: "(Բոլոր կատեգորիաները)"
+    deleted_category: "(ջնջված կատեգորիա)"
+    deleted_group: "(ջնջված խումբ)"
+    group_mention_template: "նշումներ՝ @%{name}"
+    group_message_template: "հաղորդագրություն դեպի՝ @%{name}"
+    provider:
+      slack:
+        status:
+          header: |
+            *Կանոններ այս ալիքի համար*
+            (եթե գրառմանը համընկնում են բազմակի կանոններ, դուրս է բերվում ամենավերին կանոնը)
+          no_rules: "Այս ալիքի համար սահմանված կանոններ չկան: Գործարկեք `/discourse help` հրահանգների համար: "
+          rule_string: "*%{index})* *%{filter}* գրառում *%{category}* -ում"
+          rule_string_tags_suffix: "հետևյալ թեգերով՝ *%{tags}*"
+        parse_error: "Ներողություն, ես չհասկացա դա: Գործարկեք `/discourse help` հրահանգների համար:"
+        create:
+          created: "Կանոնը հաջողությամբ ստեղված է"
+          updated: "Կանոնը հաջողությամբ թարմացված է"
+          error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
+        delete:
+          success: "Կանոնը հաջողությամբ ջնջվել է"
+          error: "Ներողություն, այդ կանոնը ջնջելիս տեղի է ունեցել սխալ: Գործարկեք `/discourse status` կանոնների ցանկի համար:"
+        not_found:
+          tag: " *%{name}* թեգը չի գտնվել:"
+          category: "*%{name}* կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ *%{list}*"
+        transcript:
+          error: "Ինչ-որ սխալ է տեղի ունեցել կրկնօրինակը ստեղծելիս, ներողություն!"
+          post_to_discourse: "Սեղմեք այստեղ՝ Discourse -ում կրնկօրինակի հետ միասին գրառում սևագրելու համար"
+          api_required: "Ներողություն, այս ինտեգրումը նախատեսված չէ գրառումների կրնկօրինակների ապահովման համար:"
+          view_on_slack: "Դիտել %{name} -ում Slack -ում"
+          first_message_pretext: "սկսված %{n} հաղորդագրություն առաջ՝"
+          last_message_pretext: "և %{n} հաղորդագրություն առաջ վերջացող՝"
+          posted_in: "հրապարակված է %{name}-ում"
+          change_first_message: "Փոփոխել առաջին հաղորդագրությունը"
+          change_last_message: "Փոփոխել վերջին հաղորդագրությունը..."
+          loading: "Կրնկօրինակի բեռնում..."
+      telegram:
+        unknown_chat: "Այս զրույցը տեղակայված չէ %{site_title}-ում: Խնդրեք ադմինիստրատորին ավելացնել ալիք %{chat_id}'Զրույցի ID' -ով:"
+        known_chat: "Այս զրույցը տեղակայված է %{site_title} -ում: Կարգավորեք այն ադմինի կառավարման հարթակում (Զրույցի ID՝ %{chat_id})"
+        message: |-
+          <b>%{user}</b>-ը գրառում է կատարել <a href="%{post_url}">%{title}</a> -ում
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Կանոններ այս ալիքի համար</b>
+            (եթե գրառմանը համընկնում են բազմակի կանոններ, դուրս է բերվում ամենավերին կանոնը)
+          no_rules: "Այս ալիքի համար տեղադրված կանոններ չկան: Գործարկեք <code>/help</code> հրահանգների համար:"
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> գրառում <b>%{category}</b> -ում"
+          rule_string_tags_suffix: "հետևյալ թեգերով՝ <b>%{tags}</b>"
+        parse_error: "Ներողություն, Ես չհասկացա դա: Գործարկեք <code>/help</code> հրահանգների համար:"
+        create:
+          created: "Կանոնը հաջողությամբ ստեղծված է"
+          updated: "Կանոնը հաջողությամբ թարմացված է"
+          error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
+        delete:
+          success: "Կանոնը հաջողությամբ ջնջվել է"
+          error: "Ներողություն, այդ կանոնը ջնջելիս տեղի է ունեցել սխալ: Գործարկեք <code>/status</code> կանոնների ցանկի համար:"
+        not_found:
+          tag: "<b>%{name}</b> թեգը չի գտնվել:"
+          category: "<b>%{name}</b> կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ <b>%{list}</b>"
+        help: |
+          <b>Նոր կանոն՝</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          (Դուք պետք է սահմանեք կանոնի տիպ և առնվազն մեկ կատեգորիա կամ թեգ)
+          - <b>դիտել</b> – ծանուցել այս ալիքին նոր թեմաների և պատասխանների մասին
+          - <b>հետևել</b> – ծանուցել այս ալիքին նոր թեմաների մասին
+          - <b>խլացնել</b> – արգելափակել ծանուցումները այս ալիքին
+
+          <b>Հեռացնել կանոնը՝</b> <code>/remove [rule number]</code>
+          (<code>[rule number]</code> can be found by running <code>/status</code>)
+
+          <b>Ցուցակավորել կանոնները՝</b> <code>/status</code>
+
+          <b>Օգնություն՝</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> -ը գրառում է կատարել <a href="%{post_url}">%{title}</a> -ում
+      mattermost:
+        status:
+          header: |
+            *Կանոններ այս ալիքի համարl*
+            (եթե գրառմանը համընկնում են բազմակի կանոններ, դուրս է բերվում ամենավերին կանոնը)
+          no_rules: "Այս ալիքի համար սահմանված կանոններ չկան: Գործարկեք `/discourse help` հրահանգների համար: "
+          rule_string: "*%{index})* *%{filter}* գրառումները *%{category}* -ում"
+          rule_string_tags_suffix: "հետևյալ թեգերով՝ *%{tags}*"
+        parse_error: "Ներողություն, ես չհասկացա դա: Գործարկեք `/discourse help` հրահանգների համար:"
+        create:
+          created: "Կանոնը հաջողությամբ ստեղծվել է"
+          updated: "Կանոնը հաջողությամբ թարմացված է"
+          error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
+        delete:
+          success: "Կանոնը հաջողությամբ ջնջվել է"
+          error: "Ներողություն, այդ կանոնը ջնջելիս տեղի է ունեցել սխալ: Գործարկեք `/discourse status` կանոնների ցանկի համար:"
+        not_found:
+          tag: " *%{name}* թեգը չի գտնվել"
+          category: " *%{name}* կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ *%{list}*"
+        help: |
+          *Նոր կանոն՝* `/discourse [watch|follow|mute] [category] [tag:name]`
+          (Դուք պետք է սահմանեք կանոնի տիպ և առնվազն մեկ կատեգորիա կամ թեգ )
+          - *դիտել* – ծանուցել այս ալիքին նոր թեմաների և պատասխանների մասին
+          - *հետևել* – ծանուցել այս ալիքին նոր թեմաների մասին
+          - *խլացնել* – արգելափակել ծանուցումները այս ալիքին
+
+          *Հեռացնել կանոնը՝* `/discourse remove [rule number]`
+          (`[rule number]` can be found by running `/discourse status`)
+
+          *Ցուցակավորել կանոնները՝* `/discourse status`
+
+          *Օգնություն՝* `/discourse help`
+      matrix:
+        text_message: "%{user} -ը գրառում է կատարել %{title} -ում - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> -ը գրառում է կատարել՝ <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** -ը գրառում է կատարել **[%{title} -ում](%{post_url})**
+          ~~~մեջբերում
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "հրապարակված"

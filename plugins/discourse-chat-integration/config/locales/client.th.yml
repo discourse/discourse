@@ -1,0 +1,82 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    chat_integration:
+      settings: "การตั้งค่า"
+      all_categories: "(หมวดหมู่ทั้งหมด)"
+      delete_channel: "ลบ"
+      edit_channel: "แก้ไข"
+      test_modal:
+        topic: "หัวข้อ"
+        close: "ปิด"
+      type:
+        normal: ปกติ
+      filter:
+        mute: 'ปิด'
+      rule_table:
+        category: "หมวดหมู่"
+        tags: "ป้าย"
+        edit_rule: "แก้ไข"
+        delete_rule: "ลบ"
+      edit_channel_modal:
+        cancel: "ยกเลิก"
+      edit_rule_modal:
+        cancel: ยกเลิก
+        type: ชนิด
+        category: หมวดหมู่
+        group: กลุ่ม
+        tags: ป้าย
+      provider:
+        telegram:
+          param:
+            name:
+              title: "ชื่อ"
+        discord:
+          param:
+            name:
+              title: "ชื่อ"
+        guilded:
+          param:
+            name:
+              title: "ชื่อ"
+        matrix:
+          param:
+            name:
+              title: "ชื่อ"
+        zulip:
+          param:
+            subject:
+              title: "หัวข้อ"
+        gitter:
+          param:
+            name:
+              title: "ชื่อ"
+        teams:
+          param:
+            name:
+              title: "ชื่อ"
+        powerautomate:
+          param:
+            name:
+              title: "ชื่อ"
+        webex:
+          param:
+            name:
+              title: "ชื่อ"
+        google:
+          param:
+            name:
+              title: "ชื่อ"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: ข้อความ
+            url:
+              label: URL

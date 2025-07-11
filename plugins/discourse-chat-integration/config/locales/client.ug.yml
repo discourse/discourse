@@ -1,0 +1,106 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    chat_integration:
+      settings: "تەڭشەكلەر"
+      all_categories: "(ھەممە سەھىپە)"
+      all_tags: "(ھەممە بەلگە)"
+      delete_channel: "ئۆچۈر"
+      test_channel: "سىنا"
+      edit_channel: "تەھرىر"
+      test_modal:
+        topic: "تېما"
+        close: "تاقا"
+      type:
+        normal: ئادەتتىكى
+      filter:
+        mute: 'ئۈنسىز'
+        follow: 'تۇنجى يازمىغىلا'
+      rule_table:
+        filter: "سۈزگۈچ"
+        category: "سەھىپە"
+        tags: "بەلگە"
+        edit_rule: "تەھرىر"
+        delete_rule: "ئۆچۈر"
+      edit_channel_modal:
+        cancel: "ۋاز كەچ"
+      edit_rule_modal:
+        cancel: ۋاز كەچ
+        type: تىپى
+        filter: سۈزگۈچ
+        category: سەھىپە
+        group: گۇرۇپپا
+        tags: بەلگە
+      provider:
+        telegram:
+          param:
+            name:
+              title: "ئىسمى"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "ئىسمى"
+            webhook_url:
+              title: تور ئىلمىكى تور ئادرېسى
+        guilded:
+          param:
+            name:
+              title: "ئىسمى"
+            webhook_url:
+              title: تور ئىلمىكى تور ئادرېسى
+        matrix:
+          param:
+            name:
+              title: "ئىسمى"
+        zulip:
+          param:
+            subject:
+              title: "ماۋزۇ"
+        gitter:
+          param:
+            name:
+              title: "ئىسمى"
+            webhook_url:
+              title: "تور ئىلمىكى تور ئادرېسى"
+        teams:
+          param:
+            name:
+              title: "ئىسمى"
+            webhook_url:
+              title: "تور ئىلمىكى تور ئادرېسى"
+        powerautomate:
+          param:
+            name:
+              title: "ئىسمى"
+            webhook_url:
+              title: "تور ئىلمىكى تور ئادرېسى"
+        webex:
+          param:
+            name:
+              title: "ئىسمى"
+            webhook_url:
+              title: "تور ئىلمىكى تور ئادرېسى"
+        google:
+          param:
+            name:
+              title: "ئىسمى"
+            webhook_url:
+              title: "تور ئىلمىكى تور ئادرېسى"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: ئۇچۇر
+            url:
+              label: تور ئادرېسى
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: قانال ئىسمى
