@@ -57,6 +57,7 @@
 !/plugins/discourse-oauth2-basic
 !/plugins/discourse-openid-connect
 !/plugins/discourse-zendesk-plugin
+!/plugins/discourse-patreon
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

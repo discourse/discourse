@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: 使用 Patreon 登录
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: '筛选器'
+      group: '群组'
+      rewards: '奖励'
+      filter: '筛选器'
+      help_text: '您可以将 Discourse 群组与一个或多个 Patreon 奖励等级同步。'
+      last_synced: '最后同步'
+      edit: '编辑'
+      delete: '删除'
+      save: '保存'
+      update_data: '更新 Patreon 数据并同步群组'
+      refresh_page: '新数据已从 Patreon API 下载。请刷新页面。'
+      select_group: '选择一个群组'
+      field:
+        id: "ID"
+        email: "电子邮件"
+        amount_cents: "金额（以美分为单位）"
+        rewards: "奖励"
+        declined_since: "承诺拒绝自"
+        more_details:
+          label: "付款和更多详细信息"
+          help_text:
+            email_available: "在页面右下角查看 Patreon 的承诺历史。"
+            email_not_available: "选择 Patreon 成员并在页面右下角查看承诺历史。"
+      donation_prompt:
+        body: |
+          <h1>读者您好！</h1>
+
+          <p>您喜欢我们的网站吗？您是否愿意为公益事业做出贡献？</p>
+
+          <p>
+            如果您认为我们的网站有所帮助并且喜欢我们创建的社区，我们将十分感激您能捐助我们的网站。
+            捐助可以帮助我们的服务保持稳定运行，并确保我们的社区在未来几年内仍可正常运营。
+            每一元的捐助都十分重要并会被妥当利用。
+          </p>
+
+          <p>感谢您的支持！<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">成为赞助人</a>
+          </p>
