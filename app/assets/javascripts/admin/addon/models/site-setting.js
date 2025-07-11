@@ -79,6 +79,7 @@ export default class SiteSetting extends EmberObject {
   @alias("settingObjectHelper.validValues") validValues;
   @alias("settingObjectHelper.allowsNone") allowsNone;
   @alias("settingObjectHelper.anyValue") anyValue;
+  @alias("settingObjectHelper.noneItem") noneItem;
 
   constructor() {
     super(...arguments);

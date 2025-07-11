@@ -48,16 +48,27 @@ export default class SettingObjectHelper {
   }
 
   @dependentKeyCompat
+  get noneItem() {
+    const originalValidValues = this.settingObj.get("valid_values");
+    return (
+      Array.isArray(originalValidValues) &&
+      originalValidValues.find((item) => item.value === "")
+    );
+  }
+
+  @dependentKeyCompat
   get validValues() {
     const originalValidValues = this.settingObj.get("valid_values");
     const values = [];
     const translateNames = this.settingObj.translate_names;
 
     (originalValidValues || []).forEach((v) => {
-      if (v.name && v.name.length > 0 && translateNames) {
-        values.addObject({ name: i18n(v.name), value: v.value });
-      } else {
-        values.addObject(v);
+      if (v.value !== "") {
+        if (v.name && v.name.length > 0 && translateNames) {
+          values.addObject({ name: i18n(v.name), value: v.value });
+        } else {
+          values.addObject(v);
+        }
       }
     });
     return values;
