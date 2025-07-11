@@ -184,6 +184,8 @@ jobs:
 
       - name: Create and migrate database
         if: steps.app-cache.outputs.cache-hit != 'true'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
