@@ -32,7 +32,7 @@
 }
 
 .navigation-container {
-  width: calc(100% - var(--nav-horizontal-padding) * 2);
+  width: 100%;
   font-size: var(--d-nav-font-size);
   display: flex;
   flex-wrap: wrap;
