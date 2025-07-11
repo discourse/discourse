@@ -238,6 +238,26 @@ RSpec.describe DiscourseJsProcessor do
       expect(result["code"]).to include("() => dt7948.n")
     end
 
+    it "supports object literal decorators without errors" do
+      script = <<~JS.chomp
+        export default {
+          @decorated foo: "bar",
+
+          @decorated
+          myMethod() {
+            console.log("hello world");
+          }
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          {},
+        )
+      expect(result["code"]).to include("dt7948")
+    end
+
     it "can use themePrefix in a template" do
       script = <<~JS.chomp
         themePrefix();
@@ -315,7 +335,6 @@ RSpec.describe DiscourseJsProcessor do
     expect(result["code"]).to include(
       "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
-    puts result["code"]
   end
 
   it "handles relative imports from one module to another" do

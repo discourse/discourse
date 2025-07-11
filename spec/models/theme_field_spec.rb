@@ -771,7 +771,7 @@ HTML
     after { upload_file.unlink }
 
     skip "correctly handles local JS asset caching" do
-      # todo
+      # todo - make this a system spec
       upload =
         UploadCreator.new(upload_file, "test.js", for_theme: true).create_for(
           Discourse::SYSTEM_USER_ID,
