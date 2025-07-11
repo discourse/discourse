@@ -38,6 +38,12 @@ schema:
           - "topics_week"
           - "topics_year"
           - "reviewable_by_group_id"
+    category_custom_fields:
+      primary_key_column_names: [ "category_id", "name" ]
+      columns:
+        exclude:
+          - "created_at"
+          - "id"
     user_emails:
       columns:
         include:
@@ -103,7 +109,6 @@ schema:
         - "badge_types"
         - "bookmarks"
         - "categories_web_hooks"
-        - "category_custom_fields"
         - "category_featured_topics"
         - "category_form_templates"
         - "category_groups"
