@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    discourse_graphviz_enabled: "Graphviz-Plug-in aktivieren"
+    graphviz_default_svg: "Standardmäßig wird SVG-Rendering anstelle von Bild-Rendering verwendet. Kann pro Diagramm mit dem Element `svg=true|false` angepasst werden."

@@ -171,3 +171,10 @@ files:
   - source_path: plugins/discourse-patreon/config/locales/server.en.yml
     destination_path: plugins/patreon/server.yml
     label: patreon
+
+  - source_path: plugins/discourse-graphviz/config/locales/client.en.yml
+    destination_path: plugins/graphviz/client.yml
+    label: graphviz
+  - source_path: plugins/discourse-graphviz/config/locales/server.en.yml
+    destination_path: plugins/graphviz/server.yml
+    label: graphviz

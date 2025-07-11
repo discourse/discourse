@@ -62,6 +62,10 @@ discourse-patreon:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-patreon/**/*
 
+discourse-graphviz:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-graphviz/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
