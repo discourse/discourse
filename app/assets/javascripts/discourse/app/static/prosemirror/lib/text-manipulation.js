@@ -9,6 +9,7 @@ import { liftListItem, sinkListItem } from "prosemirror-schema-list";
 import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
@@ -35,13 +36,24 @@ export default class ProsemirrorTextManipulation {
   state = new TrackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
+  shouldUseModernAutocomplete = false;
 
-  constructor(owner, { schema, view, convertFromMarkdown, convertToMarkdown }) {
+  constructor(
+    owner,
+    {
+      schema,
+      view,
+      convertFromMarkdown,
+      convertToMarkdown,
+      shouldUseModernAutocomplete,
+    }
+  ) {
     setOwner(this, owner);
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.shouldUseModernAutocomplete = shouldUseModernAutocomplete;
 
     this.placeholder = new ProsemirrorPlaceholderHandler({
       schema,
@@ -81,13 +93,43 @@ export default class ProsemirrorTextManipulation {
     next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
   }
 
+  // TODO: DRY - extract this later
+  _setupModernAutocomplete(options) {
+    // Import the modifier dynamically to avoid circular dependencies
+    import("discourse/modifiers/d-autocomplete")
+      .then((module) => {
+        const DAutocompleteModifier = module.default;
+
+        // Create and apply the modifier
+        const modifier = new DAutocompleteModifier(
+          getOwnerWithFallback(this),
+          []
+        );
+
+        // Adapt options for the modifier
+        const modifierOptions = {
+          ...options,
+          // Use the textarea's autocomplete handler for text manipulation
+          textHandler: this.autocompleteHandler,
+        };
+
+        // Apply the modifier to the textarea
+        modifier.modify(this.view.dom, [modifierOptions]);
+      })
+      .catch(() => {});
+  }
+
   autocomplete(options) {
-    // @ts-ignore
-    $(this.view.dom).autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
-    );
+    if (this.shouldUseModernAutocomplete) {
+      this._setupModernAutocomplete(options);
+    } else {
+      // @ts-ignore
+      $(this.view.dom).autocomplete(
+        options instanceof Object
+          ? { textHandler: this.autocompleteHandler, ...options }
+          : options
+      );
+    }
   }
 
   applySurroundSelection(head, tail, exampleKey) {
@@ -506,6 +548,7 @@ class ProsemirrorPlaceholderHandler {
   }
 
   progress() {}
+
   progressComplete() {}
 
   cancelAll() {

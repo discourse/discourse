@@ -65,6 +65,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @extends {Component<ProsemirrorEditorSignature>}
  */
 export default class ProsemirrorEditor extends Component {
+  @service siteSettings;
   @service session;
   @service dialog;
   @service menu;
@@ -224,6 +225,7 @@ export default class ProsemirrorEditor extends Component {
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
       convertToMarkdown: this.convertToMarkdown,
+      shouldUseModernAutocomplete: this.siteSettings.use_modern_autocomplete,
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);

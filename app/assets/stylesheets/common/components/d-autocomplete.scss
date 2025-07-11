@@ -1,0 +1,52 @@
+@use "lib/viewport";
+
+.fk-d-menu[data-identifier="d-autocomplete"] {
+  z-index: z("modal", "dialog") + 1;
+  --d-border-radius: var(--space-2);
+}
+
+.d-autocomplete-results {
+  .autocomplete.ac-user {
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        margin: 0;
+        padding: 0;
+
+        a {
+          display: block;
+          padding: 8px 12px;
+          color: var(--primary);
+          text-decoration: none;
+          border-bottom: 1px solid var(--primary-low);
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover,
+          &.selected {
+            background-color: var(--tertiary-low);
+          }
+
+          .avatar {
+            margin-right: 8px;
+            vertical-align: middle;
+          }
+
+          .username {
+            font-weight: bold;
+          }
+
+          .name {
+            color: var(--primary-medium);
+            margin-left: 8px;
+          }
+        }
+      }
+    }
+  }
+}

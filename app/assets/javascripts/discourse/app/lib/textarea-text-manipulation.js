@@ -7,6 +7,7 @@ import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
@@ -79,6 +80,7 @@ export default class TextareaTextManipulation {
     this.$textarea = $(textarea);
 
     this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
+    this._modernAutocompleteModifier = null;
 
     generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
@@ -899,13 +901,56 @@ export default class TextareaTextManipulation {
     }
   }
 
+  cleanup() {
+    // Clean up modern autocomplete modifier if it exists
+    if (this._modernAutocompleteModifier) {
+      this._modernAutocompleteModifier.willDestroy();
+      this._modernAutocompleteModifier = null;
+    }
+  }
+
   autocomplete(options) {
-    // @ts-ignore
-    this.$textarea.autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
-    );
+    if (this.siteSettings.use_modern_autocomplete) {
+      // Use modern d-autocomplete modifier
+      this._setupModernAutocomplete(options);
+    } else {
+      // @ts-ignore
+      this.$textarea.autocomplete(
+        options instanceof Object
+          ? { textHandler: this.autocompleteHandler, ...options }
+          : options
+      );
+    }
+  }
+
+  _setupModernAutocomplete(options) {
+    // Import the modifier dynamically to avoid circular dependencies
+    import("discourse/modifiers/d-autocomplete")
+      .then((module) => {
+        const DAutocompleteModifier = module.default;
+
+        // Create and apply the modifier
+        const modifier = new DAutocompleteModifier(
+          getOwnerWithFallback(this),
+          []
+        );
+
+        // Adapt options for the modifier
+        const modifierOptions = {
+          ...options,
+          // Use the textarea's autocomplete handler for text manipulation
+          textHandler: this.autocompleteHandler,
+        };
+
+        // Apply the modifier to the textarea
+        modifier.modify(this.textarea, [modifierOptions]);
+
+        // Store reference for cleanup
+        this._modernAutocompleteModifier = modifier;
+      })
+      .catch(() => {
+        // Failed to set up modern autocomplete
+      });
   }
 }
 
