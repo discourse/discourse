@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def delete_emoji(name)
-        find(".d-admin-row__content", text: name).find(delete_button_selector).click
+        find(".d-table__row", text: name).find(delete_button_selector).click
       end
 
       private
@@ -27,7 +27,7 @@ module PageObjects
       end
 
       def delete_button_selector
-        ".d-admin-row__controls-delete"
+        ".d-table__cell-action-delete"
       end
     end
   end

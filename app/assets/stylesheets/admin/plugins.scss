@@ -8,7 +8,7 @@
     }
   }
 
-  .d-admin-table.admin-plugins-list {
+  .d-table.admin-plugins-list {
     .admin-plugins-list__version {
       width: 14%;
 
@@ -18,7 +18,7 @@
       }
     }
 
-    .d-admin-row__controls {
+    .d-table__cell.--controls {
       width: 10%;
 
       @include viewport.until(md) {

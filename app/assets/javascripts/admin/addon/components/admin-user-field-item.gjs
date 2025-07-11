@@ -66,21 +66,21 @@ export default class AdminUserFieldItem extends Component {
   }
 
   <template>
-    <tr class="d-admin-row__content admin-user_field-item">
-      <td class="d-admin-row__overview">
+    <tr class="d-table__row admin-user_field-item">
+      <td class="d-table__cell --overview">
         <div
-          class="d-admin-row__overview-name admin-user_field-item__name"
+          class="d-table__overview-name admin-user_field-item__name"
         >{{@userField.name}}</div>
-        <div class="d-admin-row__overview-about">{{htmlSafe
+        <div class="d-table__overview-about">{{htmlSafe
             @userField.description
           }}</div>
-        <div class="d-admin-row__overview-flags">{{this.flags}}</div>
+        <div class="d-table__overview-flags">{{this.flags}}</div>
       </td>
-      <td class="d-admin-row__detail">
+      <td class="d-table__cell --detail">
         {{@userField.fieldTypeName}}
       </td>
-      <td class="d-admin-row__controls">
-        <div class="d-admin-row__controls-options">
+      <td class="d-table__cell --controls">
+        <div class="d-table__cell-actions">
           <DButton
             class="btn-default btn-small admin-user_field-item__edit"
             @action={{this.edit}}
