@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  chat_integration:
+    all_categories: "(kõik kategooriad)"
+    deleted_category: "(kustutatud kategooria)"
+    deleted_group: "(kustutatud grupp)"
+    provider:
+      slack:
+        delete:
+          success: "Reegel on kustutatud"
+        transcript:
+          loading: "Käsikirja laadimine..."
+      telegram:
+        delete:
+          success: "Reegel on kustutatud"
+      mattermost:
+        delete:
+          success: "Reegel on kustutatud"
+      flowdock:
+        message_title: "postitatud"

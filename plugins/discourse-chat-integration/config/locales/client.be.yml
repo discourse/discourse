@@ -1,0 +1,82 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    chat_integration:
+      settings: "Налады"
+      all_categories: "(Усе катэгорыі)"
+      delete_channel: "Выдаліць"
+      edit_channel: "Рэдагаваць"
+      test_modal:
+        topic: "Тэма"
+        close: "зачыніць"
+      filter:
+        mute: 'Заглушыць'
+      rule_table:
+        filter: "Filter"
+        category: "Катэгорыя"
+        tags: "Цэтлікі"
+        edit_rule: "Рэдагаваць"
+        delete_rule: "Выдаліць"
+      edit_channel_modal:
+        cancel: "Адмяніць"
+      edit_rule_modal:
+        cancel: Адмяніць
+        type: тып
+        filter: Filter
+        category: Катэгорыя
+        group: Група
+        tags: Цэтлікі
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Назва"
+        discord:
+          param:
+            name:
+              title: "Назва"
+        guilded:
+          param:
+            name:
+              title: "Назва"
+        matrix:
+          param:
+            name:
+              title: "Назва"
+        zulip:
+          param:
+            subject:
+              title: "тэма"
+        gitter:
+          param:
+            name:
+              title: "Назва"
+        teams:
+          param:
+            name:
+              title: "Назва"
+        powerautomate:
+          param:
+            name:
+              title: "Назва"
+        webex:
+          param:
+            name:
+              title: "Назва"
+        google:
+          param:
+            name:
+              title: "Назва"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Паказаць выдаленыя паведамленні...
+            url:
+              label: URL спасылка

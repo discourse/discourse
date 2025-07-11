@@ -74,6 +74,10 @@ discourse-math:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-math/**/*
 
+discourse-chat-integration:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-chat-integration/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

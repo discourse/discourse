@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Integrações de bate-papo"
+  js:
+    chat_integration:
+      menu_title: "Integrações de bate-papo"
+      settings: "Configurações"
+      no_providers: "Você precisa habilitar alguns provedores nas configurações do plugin"
+      channels_with_errors: "Alguns canais deste provedor falharam na última vez em que as mensagens foram enviadas. Clique no(s) ícone(s) de erro para saber mais."
+      channel_exception: "Um erro desconhecido ocorreu na última vez que uma mensagem foi enviada para este canal."
+      group_mention_template: "Menções de: @%{name}"
+      group_message_template: "Mensagens para: @%{name}"
+      choose_group: "(escolha um grupo)"
+      all_categories: "(todas as categorias)"
+      all_tags: "(todas as etiquetas)"
+      create_rule: "Criar Regra"
+      create_channel: "Criar Canal"
+      delete_channel: "Excluir"
+      test_channel: "Testar"
+      edit_channel: "Editar"
+      channel_delete_confirm: "Você tem certeza de que deseja excluir este canal? Todas as regras associadas serão excluídas."
+      test_modal:
+        title: "Enviar uma mensagem de teste"
+        topic: "Tópico"
+        send: "Enviar Mensagem de Teste"
+        close: "Fechar"
+        error: "Um erro desconhecido ocorreu durante o envio da mensagem. Verifique os logs do site para mais informações."
+        success: "Mensagem enviada com sucesso"
+      type:
+        normal: Normal
+        group_message: Mensagem de Grupo
+        group_mention: Menção de Grupo
+      filter:
+        mute: 'Silenciar'
+        follow: 'Somente a primeira postagem'
+        watch: 'Todas as postagens e respostas'
+        thread: 'Todas as postagens encadeadas'
+      rule_table:
+        filter: "Filtro"
+        category: "Categoria"
+        tags: "Etiquetas"
+        edit_rule: "Editar"
+        delete_rule: "Excluir"
+      edit_channel_modal:
+        title: "Editar Canal"
+        save: "Salvar Canal"
+        cancel: "Cancelar"
+        provider: "Provedor"
+        channel_validation:
+          ok: "Válido"
+          fail: "Formato inválido"
+      edit_rule_modal:
+        title: Editar Regra
+        save: Salvar Regra
+        cancel: Cancelar
+        provider: Provedor
+        type: Tipo
+        channel: Canal
+        filter: Filtro
+        category: Categoria
+        group: Grupo
+        tags: Etiquetas
+        instructions:
+          type: "Alterar o tipo para acionar notificações para mensagens de grupo ou menções"
+          filter: "Nível de notificação. Silenciar sobrescreve outras regras correspondentes"
+          category: "Esta regra será aplicada apenas a tópicos na categoria especificada"
+          group: "Esta regra será aplicada a postagens que referenciem este grupo"
+          tags: "Se especificado, esta regra será aplicada apenas a tópicos que possuem pelo menos uma destas etiquetas"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Canal
+              help: "ex.: #canal, @username."
+          errors:
+            action_prohibited: "Este robô não tem permissão para postar naquele canal"
+            channel_not_found: "O canal especificado não existe no Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome para descrever o canal. Não é usado para a conexão ao Telegram."
+            chat_id:
+              title: ID do Bate-Papo
+              help: Um número dado a você pelo robô, ou um identificador do canal de transmissão no formato @nome_do_canal
+          errors:
+            channel_not_found: "O canal especificado não existe no Telegram"
+            forbidden: "O robô não tem permissão para postar neste canal"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome para descrever o canal. Não é usado para a conexão ao Discord."
+            webhook_url:
+              title: URL do Webhook
+              help: A URL do webhook criada nas configurações do seu servidor Discord
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome para descrever o canal. Não é usado para a conexão ao Guilded"
+            webhook_url:
+              title: URL do Webhook
+              help: A URL do webhook criada nas configurações do seu servidor Guilded
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Canal
+              help: "ex.: #canal, @username."
+          errors:
+            channel_not_found: "O canal especificado não existe no Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome para descrever o canal. Não é usado para a conexão com o Matrix."
+            room_id:
+              title: "ID da Sala"
+              help: "O \"identificador privado\" para a sala. Precisa ser algo como !abcdefg:matrix.org"
+          errors:
+            unknown_token: "O token de acesso é inválido"
+            unknown_room: "O ID da sala é inválido"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Transmissão"
+              help: "O nome da transmissão do Zulip para a qual a mensagem deve ser enviada. ex.: \"geral'"
+            subject:
+              title: "Assunto"
+              help: "O assunto com que estas mensagens enviadas pelo robô devem ser dadas"
+          errors:
+            does_not_exist: "Esta transmissão não existe no Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Canal
+              help: "ex.: #canal, @username."
+          errors:
+            invalid_channel: "Este canal não existe no Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Nome"
+              help: "O nome de uma sala Gitter, ex.: gitterHQ/services."
+            webhook_url:
+              title: "URL do Webhook"
+              help: "A URL fornecida quando você cria uma nova integração em uma sala Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Token de Fluxo"
+              help: "O token de fluxo fornecido depois de criar uma fonte para um fluxo no qual você deseja enviar mensagens."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Nome da instância GroupMe"
+              help: "o nome da instância GroupMe como listado nas configurações do site. Use \"todas\" para enviar a todas as instâncias"
+          errors:
+            not_found: "O caminho para qual você tentou publicar sua mensagem não foi encontrado. Verifique o ID de Robô nas Configurações do Site."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome de canal do Teams, por exemplo: discourse"
+            webhook_url:
+              title: "Webhook URL"
+              help: "A URL fornecida ao criar um novo webhook de entrada"
+          errors:
+            invalid_channel: "Este canal não existe no Microsoft Teams"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome para o canal (exibido apenas na interface de administração do Discourse)"
+            webhook_url:
+              title: "URL do webhook"
+              help: "A URL fornecida ao criar um novo webhook de entrada"
+          errors:
+            invalid_webhook: "A URL desse webhook não é válida."
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome de espaço do Webex, exemplo: discourse"
+            webhook_url:
+              title: "URL do Webhook"
+              help: "A URL fornecida ao criar um novo webhook de entrada"
+          errors:
+            invalid_channel: "Este canal não existe no Webex"
+        google:
+          title: "Bate-papo do Google"
+          param:
+            name:
+              title: "Nome"
+              help: "Um nome para o canal (exibido apenas na interface de administração do Discourse)"
+            webhook_url:
+              title: "URL do Webhook"
+              help: "A URL fornecida quando você cria um novo webhook de entrada"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Enviar uma mensagem do Slack
+          fields:
+            message:
+              label: Mensagem
+              description: >-
+                Use ${TOPIC} para o nome do tópico, ${URL} para a URL utilizada, ${REMOVED_TAGS} para etiquetas removidas, ${ADDED_TAGS} para etiquetas adicionadas, ${ADDED_AND_REMOVED} para texto padrão. Disponível apenas se o gatilho estiver definido como etiquetas de tópico alteradas.
+            url:
+              label: URL
+            channel:
+              label: Canal
+        send_chat_integration_message:
+          title: Enviar mensagem de integração com chat
+          fields:
+            channel_name:
+              label: Nome do canal
+              description: "O nome do canal está nas configurações de integração do chat"
+            provider:
+              label: Provedor
