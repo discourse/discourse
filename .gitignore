@@ -66,6 +66,7 @@
 !/plugins/discourse-math
 !/plugins/discourse-chat-integration
 !/plugins/discourse-github
+!/plugins/discourse-templates
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
