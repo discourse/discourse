@@ -443,17 +443,16 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("blockquote", text: "This is a blockquote")
     end
 
-    # TODO (martin) Bring this back once we decide what to do for cross-platform shortcuts
-    xit "supports Ctrl + Shift + 1-4 for headings, 0 for reset" do
+    it "supports Ctrl + Shift + 1-4 for headings, 0 for reset" do
       open_composer_and_toggle_rich_editor
       (1..4).each do |i|
         composer.type_content("\nHeading #{i}")
-        composer.send_keys([PLATFORM_KEY_MODIFIER, :shift, i.to_s])
+        composer.send_keys([PLATFORM_KEY_MODIFIER, :alt, i.to_s])
 
         expect(rich).to have_css("h#{i}", text: "Heading #{i}")
       end
 
-      composer.send_keys([PLATFORM_KEY_MODIFIER, :shift, "0"])
+      composer.send_keys([PLATFORM_KEY_MODIFIER, :alt, "0"])
       expect(rich).not_to have_css("h4")
     end
 

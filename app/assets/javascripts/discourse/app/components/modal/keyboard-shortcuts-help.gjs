@@ -222,6 +222,58 @@ export default class KeyboardShortcutsHelp extends Component {
             keys1: [META, SHIFT, "."],
             keysDelimiter: PLUS,
           }),
+          bold: buildShortcut("composing.bold", {
+            keys1: [META, "b"],
+            keysDelimiter: PLUS,
+          }),
+          italic: buildShortcut("composing.italic", {
+            keys1: [META, "i"],
+            keysDelimiter: PLUS,
+          }),
+          link: buildShortcut("composing.link", {
+            keys1: [META, "k"],
+            keysDelimiter: PLUS,
+          }),
+          preformatted: buildShortcut("composing.preformatted", {
+            keys1: [META, "e"],
+            keysDelimiter: PLUS,
+          }),
+          paragraph: buildShortcut("composing.paragraph", {
+            keys1: [META, ALT, "0"],
+            keysDelimiter: PLUS,
+          }),
+          heading1: buildShortcut("composing.heading_1", {
+            keys1: [META, ALT, "1"],
+            keysDelimiter: PLUS,
+          }),
+          heading2: buildShortcut("composing.heading_2", {
+            keys1: [META, ALT, "2"],
+            keysDelimiter: PLUS,
+          }),
+          heading3: buildShortcut("composing.heading_3", {
+            keys1: [META, ALT, "3"],
+            keysDelimiter: PLUS,
+          }),
+          heading4: buildShortcut("composing.heading_4", {
+            keys1: [META, ALT, "4"],
+            keysDelimiter: PLUS,
+          }),
+          toggleDirection: buildShortcut("composing.toggle_direction", {
+            keys1: [META, SHIFT, "6"],
+            keysDelimiter: PLUS,
+          }),
+          orderedList: buildShortcut("composing.ordered_list", {
+            keys1: [META, SHIFT, "7"],
+            keysDelimiter: PLUS,
+          }),
+          unorderedList: buildShortcut("composing.unordered_list", {
+            keys1: [META, SHIFT, "8"],
+            keysDelimiter: PLUS,
+          }),
+          blockquote: buildShortcut("composing.blockquote", {
+            keys1: [META, SHIFT, "9"],
+            keysDelimiter: PLUS,
+          }),
         },
       },
       bookmarks: {

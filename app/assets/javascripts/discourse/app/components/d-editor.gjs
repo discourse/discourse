@@ -143,6 +143,10 @@ export default class DEditor extends Component {
     // These are defined in lib/composer/toolbar.js via addButton.
     // It includes shortcuts for top level toolbar buttons, as well
     // as the toolbar popup menu option shortcuts.
+
+    // TODO (martin) Might be nice to automatically add these shortcuts
+    // to keyboard-shortcuts-help.gjs at some point (the modal launched with
+    // ?)
     const shortcuts = this.get("toolbar.shortcuts");
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
