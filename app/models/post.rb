@@ -1162,6 +1162,7 @@ class Post < ActiveRecord::Base
         "track/@src",
         "video/@poster",
         "div/@data-video-src",
+        "div/@data-original-video-src",
       )
 
     links =
