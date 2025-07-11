@@ -1,0 +1,205 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Զրույցի ինտեգրումներ"
+  js:
+    chat_integration:
+      menu_title: "Զրույցի ինտեգրումներ"
+      settings: "Կարգավորումներ"
+      no_providers: "Դուք պետք է միացնեք որոշ մատակարարների պլագինի կարգավորումներում"
+      channels_with_errors: "Այս մատակարարի որոշ ալիքներ ձախողվել են վերջին անգամ հաղորդագրությունները ուղարկելիս: Սեղմեք սխալի պատկերակ(ներ)ին՝ ավելին իմանալու համար:"
+      channel_exception: "Վերջին անգամ այս ալիքին հաղորդագրություն ուղարկելիս տեղի է ունեցել անհայտ սխալ:"
+      group_mention_template: "Նշումներ՝ @%{name}"
+      group_message_template: "Հաղորդագրություն դեպի՝ @%{name}"
+      choose_group: "(ընտրեք խումբ)"
+      all_categories: "(բոլոր կատեգորիաները)"
+      all_tags: "(բոլոր թեգերը)"
+      create_rule: "Ստեղծել Կանոն"
+      create_channel: "Ստեղծել Ալիք"
+      delete_channel: "Ջնջել"
+      test_channel: "Փորձարկել"
+      edit_channel: "Խմբագրել"
+      channel_delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս ալիքը: Բոլոր կապակցված կանոնները կջնջվեն:"
+      test_modal:
+        title: "Ուղարկել փորձնական հաղորդագրություն"
+        topic: "Թեմա"
+        send: "Ուղարկել Փորձնական Հաղորդագրություն"
+        close: "Փակել"
+        error: "Հաղորդագրությունն ուղարկելիս տեղի է ունեցել անհայտ սխալ: Ստուգեք կայքի գրառումները՝ հավելյալ տեղեկատվություն ստանալու համար:"
+        success: "Հաղորդագրությունը հաջողությամբ ուղարկված է"
+      type:
+        normal: Նորմալ
+        group_message: Խմբային Հաղորդագրություն
+        group_mention: Խմբային նշում
+      filter:
+        mute: 'Խլացնել'
+        follow: 'Միայն առաջին գրառումը'
+        watch: 'Բոլոր գրառումները և պատասխանները'
+      rule_table:
+        filter: "Ֆիլտր"
+        category: "Կատեգորիա"
+        tags: "Թեգեր"
+        edit_rule: "Խմբագրել"
+        delete_rule: "Ջնջել"
+      edit_channel_modal:
+        title: "Խմբագրել Ալիքը"
+        save: "Պահպանել Ալիքը"
+        cancel: "Չեղարկել"
+        provider: "Մատակարար"
+        channel_validation:
+          ok: "Վավեր"
+          fail: "Անվավեր ֆորմատ"
+      edit_rule_modal:
+        title: Խմբագրել Կանոնը
+        save: Պահպանել Կանոնը
+        cancel: Չեղարկել
+        provider: Մատակարար
+        type: Տիպ
+        channel: Ալիք
+        filter: Ֆիլտրել
+        category: Կատեգորիա
+        group: Խումբ
+        tags: Թեգեր
+        instructions:
+          type: "Փոփոխել տիպը՝ ծանուցումներ գործարկելու խմբային հաղորդագրությունների կամ նշումների համար"
+          filter: "Ծանուցումների մակարդակ: Խլացումը վերասահմանում է այլ համընկնող կանոնները"
+          category: "ԱՅս կանոնը կկիրառվի միայն տվյալ կատեգորիայի թեմաների նկատմամբ"
+          group: "Այս կանոնը կկիրառվի այս խմբին վերաբերող գրառումներին"
+          tags: "Եթե սահմանված է, այս կանոնը կկիրառվի միայն այն թեմաների նկատմամբ, որոնք ունեն հետևյալ թեգերից առնվազն մեկը"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Ալիք
+              help: "օրինակ՝ #ալիք, @օգտանուն:"
+          errors:
+            action_prohibited: "Բոտ այդ ալիքում գրառում կատարելու թույլտվություն չունի"
+            channel_not_found: "Տվյալ ալիքը գոյություն չունի slack-wum"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Անուն"
+              help: "Անուն ալիքը նկարագրելու համար: Այն չի օգտագործվում Telegram-ին միանալու համար:"
+            chat_id:
+              title: Զրույցի ID
+              help: Բոտի կամ հեռարձակման ալիքի նույնականացնողի կողմից Ձեզ տրվող համար հետևյալ ձևով՝ @channelname
+          errors:
+            channel_not_found: "Տվյալ ալիքը գոյություն չունի Telegram-ում"
+            forbidden: "Բոտը չունի այս ալիքում գրառում կատարելու թույլտվույթուն:"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Անուն"
+              help: "Անուն ալիքը նկարագրելու համար: Այն չի օգտագործվում Discord-ին միանալու համար: "
+            webhook_url:
+              title: Webhook -ի URL
+              help: Ձեր Discord սերվերի կարգավորումներում ստեղծված webhook -ի URL -ը
+        guilded:
+          param:
+            name:
+              title: "Անուն"
+            webhook_url:
+              title: Webhook -ի URL
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Ալիք
+              help: "օրինակ՝ #ալիք, @օգտանուն:"
+          errors:
+            channel_not_found: "Տվյալ ալիքը գոյություն չունի Mattermost-ում"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Անուն"
+              help: "Անուն ալիքը նկարագրելու համար: Այն չի օգտագործվում Matrix-ին միանալու համար: "
+            room_id:
+              title: "Սենյակի ID"
+              help: "'Մասնավոր նույնականացնող' սենյակի համար: Այն պետք է ունենա մոտավորապես հետևյալ տեսքը՝ !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Հասանելիության տոկենը անվավեր է"
+            unknown_room: "Սենյակի ID -ն անվավեր է"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Հոսք"
+              help: "Zulip հոսքի անունը, որին պետք է ուղարկվի հաղորդագրությունը, օրինակ՝ 'general'"
+            subject:
+              title: "Թեմա"
+              help: "Այն թեման, որը պետք է տրվի բոտի կողմից ուղարկված հաղորդագրություններին"
+          errors:
+            does_not_exist: "Այդ հոսքը գոյություն չունի Zulip -ում"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Ալիք
+              help: "օրինակ՝ #ալիք, @օգտանուն:"
+          errors:
+            invalid_channel: "Այդ ալիքը գոյություն չունի Rocket Chat-ում"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Անուն"
+              help: "Gitter -ի սենյակի անուն, օրինակ՝ gitterHQ/services."
+            webhook_url:
+              title: "Webhook -ի URL"
+              help: "URL -ը, որը տրվում է Gitter սենյակում նոր ինտեգրում ստեղծելիս:"
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Հոսքի Տոկեն"
+              help: "Հոսքի տոկեն, որը տրամադրվում է հոսքի համար սկզբնաղյուր ստեղծելուց հետո, որի մեջ Դուք ցանկանում եք ուղարկել հաղորդագրություններ:"
+        teams:
+          param:
+            name:
+              title: "Անուն"
+            webhook_url:
+              title: "Webhook -ի URL"
+        powerautomate:
+          param:
+            name:
+              title: "Անուն"
+            webhook_url:
+              title: "Webhook -ի URL"
+        webex:
+          param:
+            name:
+              title: "Անուն"
+            webhook_url:
+              title: "Webhook -ի URL"
+        google:
+          param:
+            name:
+              title: "Անուն"
+            webhook_url:
+              title: "Webhook -ի URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Ուղարկել
+            url:
+              label: URL
+            channel:
+              label: Ալիք
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: Մատակարար

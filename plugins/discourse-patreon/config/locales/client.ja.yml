@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Patreon でログイン
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'フィルター'
+      group: 'グループ'
+      rewards: '報酬'
+      filter: 'フィルター'
+      help_text: 'Discourse グループを 1 つ以上の Patreon 報酬ランクと同期できます。'
+      last_synced: '最終同期'
+      edit: '編集'
+      delete: '削除'
+      save: '保存'
+      update_data: 'Patreon データを更新してグループを同期'
+      refresh_page: 'Patreon API から新しいデータがダウンロードされました。ページを更新してください。'
+      select_group: 'グループを選択'
+      field:
+        id: "ID"
+        email: "メールアドレス"
+        amount_cents: "金額（セント単位）"
+        rewards: "報酬"
+        declined_since: "誓約拒否"
+        more_details:
+          label: "支払いとその他の詳細"
+          help_text:
+            email_available: "ページの右下に移動し、この Patreon の誓約履歴を確認してください。"
+            email_not_available: "Patreon メンバーを選択し、ページの右下に移動して、誓約履歴を確認してください。"
+      donation_prompt:
+        body: |
+          <h1>皆さん、こんにちは！</h1>
+
+          <p>私たちのウェブサイトを気に入っていただけていますでしょうか？慈善活動に貢献したいと思いませんか？</p>
+
+          <p>
+            私たちのウェブサイトがあなたの役に立っており、コミュニティーをお楽しみいただいているのであれば、このウェブサイトに寄付していただければ幸いです。
+            今後数年に渡って、私たちのサービスとコミュニティーの運営を円滑に維持していくには、皆さんからの寄付が必要です。
+            皆さんからの 1 円 1 円を大切に利用させていただきます。
+          </p>
+
+          <p>皆さんのご支援をお待ちしております！<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">パトロンになる</a>
+          </p>

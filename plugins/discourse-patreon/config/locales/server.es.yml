@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    patreon_enabled: 'Habilitar el complemento discourse-patreon'
+    patreon_login_enabled: 'Habilitar el inicio de sesión a través de Patreon'
+    patreon_client_id: 'ID de cliente de Patreon generada'
+    patreon_client_secret: 'Secreto de cliente de Patreon generado'
+    patreon_webhook_secret: 'Secreto de webhook de Patreon generado'
+    patreon_creator_discourse_username: "Nombre de usuario de la cuenta de Discourse que se usa para iniciar sesión mediante la cuenta de creador de Patreon usando el «inicio de sesión a través de Patreon»"
+    patreon_creator_access_token: "Token de acceso de creador de Patreon generado"
+    patreon_creator_refresh_token: "Token de actualización de creador de Patreon generado"
+    patreon_declined_pledges_grace_period_days: "Período de gracia (en días) antes de que una promesa se rechace por completo."
+    max_patreon_api_reqs_per_hr: "Número máximo de solicitudes del API de Patreon por hora"
+    max_patreon_api_reqs_per_day: "Número máximo de solicitudes del API de Patreon por día"
+    patreon_verbose_log: 'habilitar el registro detallado de la carga útil de Patreon'
+    patreon_donation_prompt_enabled: "¿Activar el aviso de donación?"
+    patreon_donation_prompt_show_after_topics: "Mostrar aviso de donación después de n temas"
+    patreon_donation_prompt_campaign_url: "URL de la campaña de donación"
+    errors:
+      patreon_creator_username_not_set: "Tienes que establecer la configuración del Nombre de usuario de Discourse para Patreon Creator antes de activar el inicio de sesión de Patreon."
+  dashboard:
+    problem:
+      access_token_invalid: "Los valores de los tokens de acceso y actualización de Patreon Creator son incorrectos. Debes copiar y pegar los nuevos tokens del <a href='https://www.patreon.com/platform/documentation/clients'>sitio web de Patreon</a> a los <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>ajustes del sitio</a>."
+  patreon:
+    error:
+      invalid_response: "Respuesta no válida de la API de Patreon"

@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Se connecter avec Amazon"
+        message: "Authentification avec la connexion à Amazon (assurez-vous qu'aucun bloqueur de fenêtres contextuelles n'est activé)"

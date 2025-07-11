@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    cakeday_enabled: "Näytä vuosipäiväemoji[t] nimen vieressä Discourseen liittymisen vuosipäivänä."
+    cakeday_emoji: "Emojit, jotka näytetään käyttäjän nimen vieressä päivänä, jolloin he liittyivät Discourseen. Useampia emojeita voi määrittää näin: smile|cake|smile"
+    cakeday_birthday_enabled: "Näytä syntymäpäiväemoji[t] nimen vieressä syntymäpäivänä."
+    cakeday_birthday_emoji: "Emojit, jotka näytetään käyttäjän nimen vieressä heidän syntymäpäivänään. Useampia emojeita voi määrittää näin: smile|cake|smile"

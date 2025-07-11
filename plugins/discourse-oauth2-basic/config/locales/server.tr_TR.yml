@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  login:
+    authenticator_error_fetch_user_details: "Kullanıcı ayrıntılarınız görüntülenemedi. Aktif bir hesabınız var mı?"
+  site_settings:
+    oauth2_enabled: "Özel OAuth2 etkin"
+    oauth2_client_id: "Özel OAuth2 için müşteri kimliği"
+    oauth2_client_secret: "Özel OAuth2 için İstemci Sırrı"
+    oauth2_authorize_url: "OAuth2 için yetkilendirme URL'si"
+    oauth2_authorize_signup_url: '(isteğe bağlı) "Kaydol" düğmesi kullanıldığında kullanılan alternatif yetkilendirme URL''si'
+    oauth2_token_url: "OAuth2 için Token URL'si"
+    oauth2_token_url_method: "Token URL'sini getirmek için kullanılan yöntem"
+    oauth2_callback_user_id_path: "Token yanıtında kullanıcı kimliğine giden yol. ör.: params.info.uuid"
+    oauth2_callback_user_info_paths: "Token yanıtındaki diğer kullanıcı özelliklerine giden yollar. Desteklenen özellikler name, username, email, email_verified ve avatar'dır. Biçim özellik:yol şeklindedir, ör.: name:params.info.name"
+    oauth2_fetch_user_details: "OAuth2 için kullanıcı JSON'unu getir"
+    oauth2_user_json_url: "OAuth2 için kullanıcı JSON'unu alma URL'si (:id'yi OAuth çağrısı tarafından döndürülen id ile ve :token'ı token id ile değiştirdiğimize dikkat edin)"
+    oauth2_user_json_url_method: "Kullanıcı JSON URL'sini getirmek için kullanılan yöntem"
+    oauth2_json_user_id_path: "OAuth2 Kullanıcı JSON'unda kullanıcı kimliğine giden yol. ör.: user.id"
+    oauth2_json_username_path: "OAuth2 Kullanıcı JSON'unda kullanıcı adına giden yol. ör.: user.username"
+    oauth2_json_name_path: "OAuth2 Kullanıcı JSON'unda kullanıcının tam adına giden yol. ör.: user.name.full"
+    oauth2_json_email_path: "OAuth2 Kullanıcı JSON'unda kullanıcının e-postasına giden yol. ör.: user.email"
+    oauth2_json_email_verified_path: "OAuth2 Kullanıcı JSON'unda kullanıcının e-posta doğrulama durumuna giden yol. ör.: user.email.verified. oauth2_email_verified, bu ayarın herhangi bir etkiye sahip olması için devre dışı bırakılmalıdır"
+    oauth2_json_avatar_path: "Oauth2 Kullanıcı JSON'unda kullanıcının avatarına giden yol. ör.: user.avatar_url"
+    oauth2_email_verified: "OAuth2 sitesi e-postayı doğruladıysa bunu kontrol edin"
+    oauth2_overrides_email: "Her oturum açma işleminde Discourse e-postasını uzak e-posta ile geçersiz kılın. \"auth_overrides_email\" ayarı ile aynı şekilde çalışır, ancak OAuth2 girişlerine özeldir."
+    oauth2_send_auth_header: "İstemci kimlik bilgilerini HTTP Yetkilendirme üstbilgisinde gönderin"
+    oauth2_send_auth_body: "İstemci kimlik bilgilerini talep gövdesinde gönderin"
+    oauth2_debug_auth: "Günlüklerinize zengin hata ayıklama bilgileri ekleyin"
+    oauth2_authorize_options: "Yetkilendirirken bu seçenekleri isteyin"
+    oauth2_scope: "Yetkilendirirken bu kapsamı isteyin"
+    oauth2_button_title: "OAuth2 düğmesinin metni"
+    oauth2_allow_association_change: Kullanıcıların Discourse hesaplarının bağlantısını OAuth2 sağlayıcısından kesmelerine ve yeniden bağlamalarına izin verin
+    oauth2_disable_csrf: "CSRF kontrolünü devre dışı bırakın"
+    errors:
+      oauth2_fetch_user_details: "oauth2_fetch_user_details'ı devre dışı bırakmak için oauth2_callback_user_id_path mevcut olmalıdır"

@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  site_settings:
+    patreon_enabled: 'Habilita el connector Discourse-Patreon'
+    patreon_login_enabled: 'Habilita la connexió social de Patreon'
+    patreon_client_id: 'ID generat de client Patreon '
+    patreon_client_secret: 'Secret de client generat de Patreon'
+    patreon_webhook_secret: 'Secret generat de Patreon Webhook'
+    patreon_creator_discourse_username: "Nom d'usuari del compte de Discourse que s'utilitza per a iniciar sessió mitjançant el compte de creador de Patreon fent servir 'Patreon Social Login'."
+    patreon_creator_access_token: "Testimoni d'accés generat de creador de Patreon"
+    patreon_creator_refresh_token: "Testimoni de refresc generat de creador de Patreon"
+    patreon_declined_pledges_grace_period_days: "Període de gràcia (en dies) abans que es denegui completament el compromís."
+    max_patreon_api_reqs_per_hr: "Nombre màxim de sol·licituds API de Patreon per hora"
+    max_patreon_api_reqs_per_day: "Nombre màxim de sol·licituds API de Patreon per dia"
+    patreon_verbose_log: 'habilita el registre detallat de la càrrega útil del Patreon'
+    patreon_donation_prompt_enabled: "Voleu activar la sol·licitud de donació?"
+    patreon_donation_prompt_show_after_topics: "Mostra el missatge de donació després de n temes"
+  patreon:
+    error:
+      invalid_response: "Resposta no vàlida de l'API de Patreon"

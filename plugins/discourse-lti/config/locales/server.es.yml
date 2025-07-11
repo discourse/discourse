@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    lti_enabled: Habilitar la autenticación LTI 1.3
+    lti_authorization_endpoint: El terminal de autorización de la plataforma LTI
+    lti_client_ids: Los ID de cliente para esta herramienta
+    lti_platform_issuer_id: El ID del emisor de la plataforma LTI. Normalmente es una URL, que incluye https://
+    lti_platform_public_key: La clave pública de la plataforma LTI
+    lti_email_verified: Actívala si se han verificado las direcciones de correo electrónico de la Plataforma.

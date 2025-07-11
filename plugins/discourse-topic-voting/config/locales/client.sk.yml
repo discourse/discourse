@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    category:
+      sort_options:
+        votes: "Hlasy"
+    topic_voting:
+      vote_title: "Hlas"
+      vote_title_plural: "Hlasy"
+      voted_title: "Odhlasované"
+      voting_closed_title: "Hlasovanie ukončené"
+      voting_limit: "Limit"
+      anonymous_button:
+        one: "Hlas"
+        few: "Hlasy"
+        many: "Hlasy"
+        other: "Hlasy"
+      remove_vote: "Odstrániť hlas"
+    filters:
+      votes:
+        title: "Hlasy"

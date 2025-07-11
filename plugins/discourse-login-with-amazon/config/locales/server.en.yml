@@ -1,0 +1,11 @@
+en:
+  site_settings:
+    enable_login_with_amazon: "Enable Login with Amazon authentication, requires `login with amazon client id` and `login with amazon client secret`."
+    login_with_amazon_client_id: "Login with Amazon client ID"
+    login_with_amazon_client_secret: "Login with Amazon client secret"
+    login_with_amazon_scope: "Login with Amazon OAuth2 scopes (space separated)"
+    login_with_amazon_overrides_email: "Overrides the email address on the Discourse user account."
+
+    errors:
+      login_with_amazon_client_id_is_blank: "You must set 'login with amazon client id' before enabling this setting."
+      login_with_amazon_client_secret_is_blank: "You must set 'login with amazon client secret' before enabling this setting."

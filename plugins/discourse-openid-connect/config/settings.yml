@@ -1,0 +1,39 @@
+discourse_openid_connect:
+  openid_connect_enabled:
+    default: false
+  openid_connect_discovery_document:
+    default: ""
+  openid_connect_client_id:
+    default: ""
+  openid_connect_client_secret:
+    default: ""
+    secret: true
+  openid_connect_rp_initiated_logout:
+    default: false
+  openid_connect_rp_initiated_logout_redirect:
+    default: ""
+  openid_connect_allow_association_change:
+    default: false
+  openid_connect_overrides_email:
+    default: false
+  openid_connect_authorize_scope:
+    default: "openid"
+  openid_connect_verbose_logging:
+    default: false
+  openid_connect_token_scope:
+    default: ""
+  openid_connect_error_redirects:
+    default: ""
+    type: list
+    list_type: secret
+  openid_connect_authorize_parameters:
+    default: ""
+    type: list
+    list_type: compact
+  openid_connect_claims:
+    default: ""
+    textarea: true
+  openid_connect_match_by_email:
+    default: true
+  openid_connect_use_pkce:
+    default: false

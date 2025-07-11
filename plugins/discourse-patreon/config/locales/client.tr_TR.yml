@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Patreon ile giriş yapın
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtreler'
+      group: 'Grup'
+      rewards: 'Ödüller'
+      filter: 'Filtre'
+      help_text: 'Bir Discourse grubunu bir veya daha fazla Patreon ödül kademesiyle senkronize edebilirsiniz.'
+      last_synced: 'Son senkronize'
+      edit: 'Düzenle'
+      delete: 'Sil'
+      save: 'Kaydet'
+      update_data: 'Patreon Verilerini Güncelle ve Grupları Senkronize Et'
+      refresh_page: 'Patreon API''den yeni veriler indirildi. Lütfen sayfayı yenileyin.'
+      select_group: 'Grup seçin'
+      field:
+        id: "Kimlik"
+        email: "E-posta"
+        amount_cents: "Miktar (sent cinsinden)"
+        rewards: "Ödüller"
+        declined_since: "O Zamandan Bu Yana Bağış Azaldı"
+        more_details:
+          label: "Ödemeler ve Daha Fazla Ayrıntı"
+          help_text:
+            email_available: "Bu Patreon'un bağış geçmişini görmek için sayfanın sağ alt kısmına ulaşın."
+            email_not_available: "Bağış geçmişini görmek için Patreon üyesini seçin ve sayfanın sağ alt kısmına ulaşın."
+      donation_prompt:
+        body: |
+          <h1>Merhaba okuyucu!</h1>
+
+          <p>Web sitemizi beğendiniz mi? İyi bir amaca katkıda bulunmak ister misiniz?</p>
+
+          <p>
+            Web sitemizi yararlı buluyor ve oluşturduğumuz topluluktan hoşlanıyorsanız web sitemize bağışta bulunursanız çok seviniriz.
+            Bağışlar, hizmetlerimizin sorunsuz bir şekilde devam etmesini ve topluluğumuzun yıllarca faaliyette kalmasını sağlar.
+            Her miktar önemli ve iyi bir şekilde kullanılacak.
+          </p>
+
+          <p>Desteğiniz için teşekkür ederiz!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Hami Olun</a>
+          </p>

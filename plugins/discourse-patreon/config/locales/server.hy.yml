@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  site_settings:
+    patreon_enabled: 'Միացնել discourse-patreon պլագինը'
+    patreon_login_enabled: 'Միացնել Patreon Սոցիալակա կայքով Մուտքը'
+    patreon_client_id: 'Գեներացված Patreon Հաճախորդի ID'
+    patreon_client_secret: 'Գեներացված Patreon Հաճախորդի Գաղտնիք'
+    patreon_webhook_secret: 'Գեներացված Patreon Webhook Գաղտնիք'
+    patreon_creator_discourse_username: "Discourse հաշվի օգտանուն, որը օգտագործվում է Patreon ստեղծողի հաշվի միջոցով մուտք գործելու ժամանակ՝ օգտագործելով 'Patreon Սոցիալական կայքով Մուտքը'"
+    patreon_creator_access_token: "Գեներացված Patreon Ստեղծողի հասանելիության տոկեն"
+    patreon_creator_refresh_token: "Գեներացված Patreon Creator's Refesh TokenՍտեղծողի Թարմացման Տոկեն"
+    patreon_declined_pledges_grace_period_days: "Արտոնյալ ժամկետը (օրերով) , որից հետո երաշխիքը ամբողջությամբ մերժվում է:"
+    max_patreon_api_reqs_per_hr: "Patreon API հարցումների առավելագույն քանակը մեկ ժամում"
+    max_patreon_api_reqs_per_day: "Patreon API հարցումների առավելագույն քանակը մեկ օրում"
+    patreon_verbose_log: 'միացնել patreon տվյալների ուղարկման բառային մուտքագրումը'
+  patreon:
+    error:
+      invalid_response: "Անվավեր արձագանք Patreon API -ից"

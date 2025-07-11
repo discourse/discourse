@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Patreon для Discourse"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Войти через Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Фильтры'
+      group: 'Группа'
+      rewards: 'Награда'
+      filter: 'Фильтр'
+      help_text: 'Вы можете синхронизировать группу Discourse с одним или несколькими уровнями вознаграждений Patreon.'
+      last_synced: 'Последняя синхронизация'
+      edit: 'Изменить'
+      delete: 'Удалить'
+      save: 'Сохранить'
+      update_data: 'Обновить данные на Patreon и синхронизировать группы'
+      refresh_page: 'Новые данные были загружены из Patreon API. Пожалуйста, обновите страницу.'
+      select_group: 'Выберите группу'
+      field:
+        id: "Id"
+        email: "Email"
+        amount_cents: "Сумма (в центах)"
+        rewards: "Награда"
+        declined_since: "Подписка отклонена с"
+        more_details:
+          label: "Платежи и более подробная информация"
+          help_text:
+            email_available: "Дойдите до правого нижнего края страницы Patreon, чтобы увидеть историю подписок."
+            email_not_available: "Выберите участника Patreon и дойдите до правого нижнего края страницы, чтобы увидеть историю подписок."
+      donation_prompt:
+        body: |
+          <h1> Привет, читатель! </h1>
+
+          <p> Вам нравится наш сайт? Хотели бы вы внести свой вклад в благое дело? </p>
+
+          <p>
+          Если наш веб-сайт окажется полезным, и вам понравится созданное нами сообщество, мы будем рады, если вы сделаете пожертвование.
+          Пожертвования обеспечивают бесперебойную работу наших служб и гарантируют, что наше сообщество будет функционировать в течение многих лет.
+          Каждый доллар имеет значение и будет полезен.
+          </p>
+
+          <p> Спасибо за Вашу поддержку! <p>
+
+          <p>
+          <a class="btn btn-large btn-danger" href="%{campaignUrl}">Стать покровителем</a>
+          </p>

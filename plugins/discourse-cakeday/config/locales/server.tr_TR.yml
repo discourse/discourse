@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    cakeday_enabled: "Discourse'a katıldıkları tarihte kullanıcının adının yanında pasta günü emoji'si göster."
+    cakeday_emoji: "Discourse'a katıldıkları tarihte kullanıcının adının yanında gösterilecek emoji'ler. Birden fazla emoji şu şekilde belirtilebilir: gülümseme|pasta|gülümseme"
+    cakeday_birthday_enabled: "Doğum gününde kullanıcının adının yanında doğum günü emoji'lerini göster."
+    cakeday_birthday_emoji: "Doğum gününde kullanıcının adının yanında gösterilecek emoji'ler. Birden fazla emoji şu şekilde belirtilebilir: gülümseme|pasta|gülümseme"

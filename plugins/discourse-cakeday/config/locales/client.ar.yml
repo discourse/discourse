@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    user:
+      date_of_birth:
+        user_title: "اليوم هو عيد ميلادك!"
+        title: "اليوم هو عيد ميلادي!"
+        label: "تاريخ الميلاد"
+      anniversary:
+        user_title: "اليوم هو الذكرى السنوية لليوم الذي انضممت فيه إلى مجتمعنا!"
+        title: "اليوم هو الذكرى السنوية لانضمامي إلى هذا المجتمع!"
+    cakeday:
+      title: الكعكة
+      today: "اليوم"
+      tomorrow: "غدًا"
+      upcoming: "قادمة"
+      all: "الكل"
+    birthdays:
+      title: "أعياد الميلاد"
+      month:
+        title: "أعياد الميلاد في شهر"
+        empty: "لا يوجد مستخدمون يحتفلون بأعياد ميلادهم هذا الشهر."
+      upcoming:
+        title: "أعياد الميلاد في الفترة من %{start_date} إلى %{end_date}"
+        empty: "لا يوجد مستخدمون يحتفلون بأعياد ميلادهم في السبعة أيام القادمة."
+      today:
+        title: "أعياد الميلاد في %{date}"
+        empty: "لا يوجد مستخدمون يحتفلون بأعياد ميلادهم اليوم."
+      tomorrow:
+        empty: "لا يوجد مستخدمون يحتفلون بأعياد ميلادهم غدًا."
+    anniversaries:
+      title: "احتفالات الذكرى السنوية"
+      month:
+        title: "احتفالات الذكرى السنوية في شهر"
+        empty: "لا يوجد مستخدمون يحتفلون بالذكرى السنوية هذا الشهر."
+      upcoming:
+        title: "احتفالات الذكرى السنوية في الفترة من %{start_date} إلى %{end_date}"
+        empty: "لا يوجد مستخدمون يحتفلون بالذكرى السنوية في السبعة أيام القادمة."
+      today:
+        title: "احتفالات الذكرى السنوية في %{date}"
+        empty: "لا يوجد مستخدمون يحتفلون بالذكرى السنوية اليوم."
+      tomorrow:
+        empty: "لا يوجد مستخدمون يحتفلون بالذكرى السنوية غدًا."

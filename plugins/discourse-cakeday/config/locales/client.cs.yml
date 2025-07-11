@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Dnes máte narozeniny!"
+        title: "Dnes jsou moje narozeniny!"
+        label: "Datum narození"
+      anniversary:
+        user_title: "Dnes je výročí dne, kdy jste se připojili k naší komunitě!"
+        title: "Dnes je výročí dne, kdy jsem se připojil/a k této komunitě!"
+    cakeday:
+      title: Cakeday
+      today: "Dnes"
+      tomorrow: "Zítra"
+      upcoming: "Nadcházející"
+      all: "Vše"
+    birthdays:
+      title: "Narozeniny"
+      month:
+        title: "Narozeniny v měsíci "
+        empty: "Tento měsíc neslaví narozeniny žádní uživatelé."
+      upcoming:
+        title: "Narozeniny %{start_date} - %{end_date}"
+        empty: "V příštích 7 dnech neslaví narozeniny žádní uživatelé."
+      today:
+        title: "Narozeniny %{date}"
+        empty: "Dnes neslaví narozeniny žádní uživatelé."
+      tomorrow:
+        empty: "Zítra neslaví narozeniny žádní uživatelé."
+    anniversaries:
+      title: "Výročí"
+      month:
+        title: "Výročí v měsíci "
+        empty: "Tento měsíc neslaví svá výročí žádní uživatelé."
+      upcoming:
+        title: "Výročí pro %{start_date} - %{end_date}"
+        empty: "V příštích 7 dnech neslaví svá výročí žádní uživatelé."
+      today:
+        title: "Výročí pro %{date}"
+        empty: "Dnes neslaví výročí žádní uživatelé."
+      tomorrow:
+        empty: "Zítra neslaví výročí žádní uživatelé."

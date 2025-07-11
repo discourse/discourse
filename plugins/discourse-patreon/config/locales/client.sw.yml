@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Inachujwa'
+      group: 'Kikundi'
+      rewards: 'Tuzo'
+      filter: 'Ichujwe'
+      last_synced: 'Mara ya mwisho Ulandanishi umefanyika'
+      edit: 'Hariri'
+      delete: 'Futa'
+      save: 'Hifadhi'
+      field:
+        id: "Utambulisho"
+        email: "Barua Pepe"
+        amount_cents: "Kiasi (kwenye senti)"
+        rewards: "Tuzo"
+        declined_since: "Ombi Limekataliwa Tangia"

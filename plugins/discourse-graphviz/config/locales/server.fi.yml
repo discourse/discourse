@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    discourse_graphviz_enabled: "Ota Graphviz-lisäosa käyttöön"
+    graphviz_default_svg: "Käytä oletuksena SVG-hahmontamista kuvahahmontamisen sijaan, voidaan mukauttaa kaaviokohtaisesti \"svg=true|false\"-elementillä."

@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    openid_connect_enabled: تفعيل مصادقة OpenID Connect. يمكنك تخصيص نص واجهة المستخدم <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>هنا</a>
+    openid_connect_discovery_document: "عنوان URL لمستند استكشاف OpenID Connect. موجود عادةً على \"https://your.domain/.well-known/openid-configuration\""
+    openid_connect_client_id: "معرِّف العميل لـ OpenID Connect"
+    openid_connect_client_secret: "سر عميل OpenID Connect"
+    openid_connect_authorize_scope: "النطاقات المرسلة إلى نقطة نهاية المصادقة. يجب أن يتضمَّن ذلك 'openid'."
+    openid_connect_rp_initiated_logout: "إعادة توجيه المستخدام إلى end_session_endpoint بعد تسجيل الخروج. يجب دعم هذا الإعداد من قِبل موفِّر الهوية وتضمينه في مستند الاستكشاف."
+    openid_connect_rp_initiated_logout_redirect: "(اختياري) post_logout_redirect_uri الذي سيتم تمريره إلى نقطة نهاية تسجيل الخروج. في حال إدخاله، فإنه يجب تسجيله باستخدام موفِّر الهوية."
+    openid_connect_token_scope: "النطاقات المرسلة عند طلب نقطة نهاية الرمز المميَّز. لا تتطلب المواصفات الرسمية ذلك."
+    openid_connect_error_redirects: "إذا كان رد الاتصال error_reason يحتوي على المعلمة الأولى، فستتم إعادة توجيه المستخدم إلى عنوان URL في المعلمة الثانية"
+    openid_connect_allow_association_change: "السماح للمستخدمين بإلغاء ربط حسابات Discourse وإعادة ربطها من مقدِّم خدمة OpenID Connect"
+    openid_connect_verbose_logging: "تسجيل معلومات مصادقة openid-connect المفصَّلة في `/logs`. اترك هذا الإعداد متوقفًا خلال الاستخدام العادي."
+    openid_connect_authorize_parameters: "معلمات عنوان URL التي تضمينها في إعادة التوجيه من /auth/oidc إلى نقطة نهاية مصادقة IDP"
+    openid_connect_overrides_email: "تجاوز عنوان البريد الإلكتروني للمستخدم باستخدام قيمة openid-connect في كل عملية تسجيل دخول. يعمل هذا الإعداد بنفس طريقة عمل `auth_overrides_email`، لكنه خاص بعمليات تسجيل الدخول باستخدام OpenID Connect."
+    openid_connect_claims: "تحديد المطالبات بشكلٍ صريح، والتي سيتم استخدامها مع مقدِّمي الخدمة الذي لا يعيدون تمرير البيانات حسب النطاقات (JSON)"
+    openid_connect_match_by_email: "استخدم عنوان البريد الإلكتروني لمطابقة مصادقات OpenID Connect مع حسابات مستخدمي Discourse الموجودة."
+    openid_connect_use_pkce: "تفعيل Proof Key for Code Exchange (PKCE) لمصادقة OpenID Connect."
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: يتعذَّر جلب التهيئة من موفِّر الهوية. يُرجى إعادة المحاولة.

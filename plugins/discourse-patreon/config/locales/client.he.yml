@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: כניסה עם פטראון
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'מסננים'
+      group: 'קבוצה'
+      rewards: 'פרסים'
+      filter: 'מסנן'
+      help_text: 'ניתן לסנכרן קבוצת Discourse עם שכבה אחת או יותר של פרסים מ־Patreon.'
+      last_synced: 'נסכרון אחרון'
+      edit: 'עריכה'
+      delete: 'מחיקה'
+      save: 'שמירה'
+      update_data: 'עדכון הנתונים של Patreon וסנכרון הקבוצות'
+      refresh_page: 'התקבלו נתונים חדשים מה־API של Patreon. נא לרענן את העמוד.'
+      select_group: 'בחירת קבוצה'
+      field:
+        id: "מזהה"
+        email: "דוא״ל"
+        amount_cents: "כמות (בסנטים)"
+        rewards: "פרסים"
+        declined_since: "ההבטחה נדחתה מאז"
+        more_details:
+          label: "תשלומים ופרטים נוספים"
+          help_text:
+            email_available: "ניתן להגיע לפינה הימנית התחתונה של העמוד כדי לצפות בהיסטוריית ההבטחות של ה־Patreon הזה."
+            email_not_available: "נא לבחור בחבר ב־Patreon ולהגיע לפינה הימנית התחתונה של העמוד כדי לצפות בהיסטוריית ההבטחות."
+      donation_prompt:
+        body: |
+          <h1>שלום לקוראינו!</h1>
+
+          <p>איך האתר שלנו? מעניין אותך לתרום למטרה טובה?</p>
+
+          <p>
+          אם לדעתך האתר שלנו מועיל והקהילה שבנינו נאה בעיניך, נשמח לבקש ממך לתרום לאתר שלנו.
+          התרומות דואגות לכך שהשירותים ימשיכו לפעול בצורה איכותית ויעילה ומבטיחה את פעילות הקהילה שלנו גם לשנים הבאות.
+          כל דולר נחשב והוא ישמש למטרה טובה.
+          </p>
+
+          <p>תודה על תמיכתך!<p>
+
+          <p>
+          <a class="btn btn-large btn-danger" href="%{campaignUrl}">הפיכה ל־Patreon</a>
+          </p>

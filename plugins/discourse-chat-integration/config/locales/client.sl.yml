@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    chat_integration:
+      settings: "Nastavitve"
+      choose_group: "(izberite skupino)"
+      all_categories: "(vse kategorije)"
+      all_tags: "(vse oznake)"
+      delete_channel: "Izbriši"
+      edit_channel: "Uredi"
+      test_modal:
+        topic: "Tema"
+        close: "Zapri"
+      type:
+        normal: Običajno
+      filter:
+        mute: 'Utišano'
+      rule_table:
+        filter: "Filter"
+        category: "Kategorija"
+        tags: "Oznake"
+        edit_rule: "Uredi"
+        delete_rule: "Izbriši"
+      edit_channel_modal:
+        cancel: "Prekliči"
+      edit_rule_modal:
+        cancel: Prekliči
+        type: Tip
+        filter: Filter
+        category: Kategorija
+        group: Skupina
+        tags: Oznake
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Polno ime"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Polno ime"
+        guilded:
+          param:
+            name:
+              title: "Ime"
+        matrix:
+          param:
+            name:
+              title: "Polno ime"
+        zulip:
+          param:
+            subject:
+              title: "Naslov"
+        gitter:
+          param:
+            name:
+              title: "Polno ime"
+        teams:
+          param:
+            name:
+              title: "Ime"
+        powerautomate:
+          param:
+            name:
+              title: "Ime"
+        webex:
+          param:
+            name:
+              title: "Ime"
+        google:
+          param:
+            name:
+              title: "Ime"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Opozorilo
+            url:
+              label: URL

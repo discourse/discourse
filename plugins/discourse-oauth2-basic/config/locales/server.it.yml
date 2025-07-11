@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  login:
+    authenticator_error_fetch_user_details: "Impossibile recuperare i tuoi dettagli utente. Hai un account attivo?"
+  site_settings:
+    oauth2_enabled: "OAuth2 personalizzato abilitato"
+    oauth2_client_id: "ID client per OAuth2 personalizzato"
+    oauth2_client_secret: "Segreto client per OAuth2 personalizzato"
+    oauth2_authorize_url: "URL di autorizzazione per OAuth2"
+    oauth2_authorize_signup_url: '(facoltativo) URL di autorizzazione alternativo utilizzato quando si usa il pulsante "Registrati"'
+    oauth2_token_url: "URL del token per OAuth2"
+    oauth2_token_url_method: "Metodo utilizzato per recuperare l'URL del token"
+    oauth2_callback_user_id_path: "Percorso nella risposta del token all'id utente. es: params.info.uuid"
+    oauth2_callback_user_info_paths: "Percorsi nella risposta del token alle altre proprietà utente. Le proprietà supportate sono name, username, email, email_verified e avatar. Il formato è property:path, es: name:params.info.name"
+    oauth2_fetch_user_details: "Recupera il JSON dell'utente per OAuth2"
+    oauth2_user_json_url: "URL per recuperare il JOSN dell'utente per OAuth2 (nota: sostituiamo :id con l'id restituito dalla chiamata OAuth e :token con l'id token)"
+    oauth2_user_json_url_method: "Metodo utilizzato per recuperare l'URL JSON dell'utente"
+    oauth2_json_user_id_path: "Percorso nel JSON dell'utente OAuth2 per l'id utente. es.: user.id"
+    oauth2_json_username_path: "Percorso nel JSON dell'utente OAuth2 per il nome utente. es.: user.username"
+    oauth2_json_name_path: "Percorso nel JSON dell'utente OAuth2 per il nome completo. es.: user.name.full"
+    oauth2_json_email_path: "Percorso nel JSON dell'utente OAuth2 per l'email dell'utente. es.: user.email"
+    oauth2_json_email_verified_path: "Percorso nel JSON dell'utente OAuth2 per lo stato di verifica dell'email utente. Es.: user.email.verified. oauth2_email_verified deve essere disabilitato affinché questa impostazione abbia effetto."
+    oauth2_json_avatar_path: "Percorso nel JSON dell'utente OAuth2 per l'avatar dell'utente. es.: user.avatar_url"
+    oauth2_email_verified: "Abilita questa impostazione se il sito OAuth2 ha verificato \nl'email"
+    oauth2_overrides_email: "Sostituisci l'e-mail di Discourse con l'e-mail remota a ogni accesso. Funziona come l'impostazione `auth_overrides_email`, ma è specifica per gli accessi OAuth2."
+    oauth2_send_auth_header: "Invia le credenziali del client in un'intestazione di autorizzazione HTTP"
+    oauth2_send_auth_body: "Invia le credenziali del client nel corpo della richiesta"
+    oauth2_debug_auth: "Includi informazioni di debugging complete nei tuoi log"
+    oauth2_authorize_options: "In fase di autorizzazione, richiedi queste opzioni"
+    oauth2_scope: "In fase di autorizzazione, richiedi questo ambito"
+    oauth2_button_title: "Il testo per il pulsante OAuth2"
+    oauth2_allow_association_change: Consenti agli utenti di disconnettere e riconnettere i loro account Discourse dal fornitore OAuth2
+    oauth2_disable_csrf: "Disabilita il controllo CSRF"
+    errors:
+      oauth2_fetch_user_details: "oauth2_callback_user_id_path deve essere presente per disabilitare oauth2_fetch_user_details"

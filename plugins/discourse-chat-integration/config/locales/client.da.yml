@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Chat Integrationer"
+  js:
+    chat_integration:
+      menu_title: "Chat Integrationer"
+      settings: "Indstillinger"
+      no_providers: "Du skal aktivere nogle udbydere i udvidelses-indstillingerne"
+      channels_with_errors: "Nogle kanaler for denne udbyder gav fejl sidste gang beskeder blev sendt. Klik på fejlikonet/fejlikonerne for at få mere at vide."
+      channel_exception: "Der opstod en ukendt fejl, da en meddelelse sidst blev sendt til denne kanal."
+      group_message_template: "Meddelelser til: @%{name}"
+      choose_group: "(vælg en gruppe)"
+      all_categories: "(alle kategorier)"
+      all_tags: "(alle mærker)"
+      create_rule: "Opret Regel"
+      create_channel: "Opret Kanal"
+      delete_channel: "Slet"
+      test_channel: "Test"
+      edit_channel: "Rediger"
+      channel_delete_confirm: "Er du sikker på, at du vil slette denne kanal? Alle tilknyttede regler vil blive slettet."
+      test_modal:
+        title: "Send en testmeddelelse"
+        topic: "Emne"
+        send: "Send Testmeddelelse"
+        close: "Luk"
+      type:
+        normal: Normal
+      filter:
+        mute: 'Mute'
+      rule_table:
+        filter: "Filter"
+        category: "Kategori"
+        tags: "Tags"
+        edit_rule: "Rediger"
+        delete_rule: "Slet"
+      edit_channel_modal:
+        cancel: "Afbryd"
+      edit_rule_modal:
+        cancel: Afbryd
+        type: Type
+        filter: Filter
+        category: Kategori
+        group: Gruppe
+        tags: Tags
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Navn"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Navn"
+        guilded:
+          param:
+            name:
+              title: "Navn"
+        matrix:
+          param:
+            name:
+              title: "Navn"
+        zulip:
+          param:
+            subject:
+              title: "Subjekt"
+        gitter:
+          param:
+            name:
+              title: "Navn"
+        teams:
+          param:
+            name:
+              title: "Navn"
+        powerautomate:
+          param:
+            name:
+              title: "Navn"
+        webex:
+          param:
+            name:
+              title: "Navn"
+        google:
+          param:
+            name:
+              title: "Navn"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Meddelelse
+            url:
+              label: URL

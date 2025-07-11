@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    cakeday_enabled: "Visa tårtdagsemoji/-emojier bredvid användarens namn på det datum då de anslöt sig till Discourse."
+    cakeday_emoji: "Emojin/emojierna som kommer att visas bredvid användarens namn på det datum då de anslöt sig till Discourse. Flera emojier kan anges genom: smile|cake|smile"
+    cakeday_birthday_enabled: "Visa födelsedagsemoji/-emojier bredvid användarens namn på deras födelsedag."
+    cakeday_birthday_emoji: "Emojin/emojierna som kommer att visas bredvid användarens namn på födelsedagen. Flera emojier kan anges genom: smile|cake|smile"

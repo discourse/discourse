@@ -1,0 +1,191 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "채팅 통합"
+  js:
+    chat_integration:
+      menu_title: "채팅 통합"
+      settings: "설정"
+      no_providers: "플러그인 설정에서 일부 제공자를 활성화해야합니다"
+      channels_with_errors: "이 제공자의 일부 채널은 마지막으로 메시지를 송신 할 때 실패했습니다. 자세한 내용을 보려면 오류 아이콘을 클릭하십시오."
+      channel_exception: "메시지가이 채널로 마지막으로 전송 될 때 알 수없는 오류가 발생했습니다."
+      group_mention_template: "언급 : @ %{name}"
+      group_message_template: "메시지 : @ %{name}"
+      choose_group: "(그룹을 선택하십시오)"
+      all_categories: "(전체 카테고리)"
+      all_tags: "(모든 태그)"
+      create_rule: "규칙 만들기"
+      create_channel: "채널 만들기"
+      delete_channel: "삭제"
+      test_channel: "테스트"
+      edit_channel: "수정"
+      channel_delete_confirm: "이 채널을 삭제 하시겠습니까? 관련된 모든 규칙이 삭제됩니다."
+      test_modal:
+        title: "테스트 메시지 보내기"
+        topic: "토픽"
+        send: "테스트 메시지 보내기"
+        close: "닫기"
+        error: "메시지를 보내는 동안 알 수없는 오류가 발생했습니다. 자세한 내용은 사이트 로그를 확인하십시오."
+        success: "메세지가 성공적으로 전송되었습니다"
+      type:
+        normal: '알림 : 일반'
+        group_message: 그룹 메시지
+        group_mention: 그룹 언급
+      filter:
+        mute: '알림 끄기'
+        follow: '첫 번째 게시물 만'
+        watch: '모든 게시물과 답글'
+      rule_table:
+        filter: "필터"
+        category: "카테고리"
+        tags: "태그"
+        edit_rule: "수정"
+        delete_rule: "삭제"
+      edit_channel_modal:
+        title: "채널 수정"
+        save: "채널 저장"
+        cancel: "취소"
+        provider: "공급자"
+        channel_validation:
+          ok: "유효한"
+          fail: "잘못된 형식"
+      edit_rule_modal:
+        title: 규칙 수정
+        save: 규칙 저장
+        cancel: 취소
+        provider: 공급자
+        type: 형식
+        channel: 채널
+        filter: 필터
+        category: 카테고리
+        group: 그룹
+        tags: 태그
+        instructions:
+          type: "그룹 메시지 또는 멘션에 대한 알림을 트리거하도록 유형 변경"
+          filter: "알림 수준. 음소거는 다른 일치 규칙보다 우선합니다."
+          category: "이 규칙은 지정된 카테고리의 주제에만 적용됩니다."
+          group: "이 규칙은이 그룹을 참조하는 게시물에 적용됩니다."
+          tags: "지정된 경우이 규칙은 이러한 태그 중 하나 이상을 가진 주제에만 적용됩니다."
+      provider:
+        slack:
+          title: "느슨하게"
+          param:
+            identifier:
+              title: 채널
+              help: "예 : #channel, @username"
+          errors:
+            action_prohibited: "봇은 해당 채널에 게시 할 권한이 없습니다"
+            channel_not_found: "지정된 채널이 여유 시간에 존재하지 않습니다"
+        telegram:
+          title: "텔레그램"
+          param:
+            name:
+              title: "이름"
+              help: "채널을 설명하는 이름입니다. Telegram에 연결하는 데 사용되지 않습니다."
+            chat_id:
+              title: 채팅 ID
+              help: 봇이 제공 한 번호 또는 @channelname 형식의 브로드 캐스트 채널 식별자
+          errors:
+            channel_not_found: "지정된 채널이 텔레 그램에 없습니다"
+            forbidden: "봇은이 채널에 게시 할 권한이 없습니다"
+        discord:
+          title: "불일치"
+          param:
+            name:
+              title: "이름"
+              help: "채널을 설명하는 이름입니다. Discord 연결에는 사용되지 않습니다."
+            webhook_url:
+              title: 웹 후크 URL
+              help: Discord 서버 설정에서 생성 된 웹 후크 URL
+        guilded:
+          param:
+            name:
+              title: "그룹명"
+            webhook_url:
+              title: 웹 후크 URL
+        mattermost:
+          title: "가장 중요한"
+          param:
+            identifier:
+              title: 채널
+              help: "예 : #channel, @username"
+          errors:
+            channel_not_found: "지정된 채널이 Mattermost에 존재하지 않습니다"
+        matrix:
+          title: "매트릭스"
+          param:
+            name:
+              title: "이름"
+              help: "채널을 설명하는 이름입니다. Matrix에 연결하는 데 사용되지 않습니다."
+            room_id:
+              title: "방 ID"
+              help: "회의실의 &#39;개인 식별자&#39;입니다. ! abcdefg : matrix.org와 같은 형식이어야합니다."
+          errors:
+            unknown_token: "액세스 토큰이 유효하지 않습니다"
+            unknown_room: "방 ID가 잘못되었습니다"
+        zulip:
+          title: "줄립"
+          param:
+            stream:
+              title: "흐름"
+            subject:
+              title: "제목"
+        rocketchat:
+          param:
+            identifier:
+              title: 채널
+              help: "예 : #channel, @username"
+        gitter:
+          param:
+            name:
+              title: "이름"
+            webhook_url:
+              title: "웹 후크 URL"
+        teams:
+          param:
+            name:
+              title: "그룹명"
+            webhook_url:
+              title: "웹 후크 URL"
+        powerautomate:
+          param:
+            name:
+              title: "그룹명"
+            webhook_url:
+              title: "웹 후크 URL"
+        webex:
+          param:
+            name:
+              title: "그룹명"
+            webhook_url:
+              title: "웹 후크 URL"
+        google:
+          param:
+            name:
+              title: "그룹명"
+            webhook_url:
+              title: "웹 후크 URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: 메시지 보내기
+            url:
+              label: URL
+            channel:
+              label: 채널
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: 채널명
+            provider:
+              label: 공급자

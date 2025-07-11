@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Ma van a születésnapod!"
+        title: "Ma van a születésnapom!"
+        label: "Születési dátum"
+      anniversary:
+        user_title: "Ma van az évfordulója, hogy csatlakoztál a közösségünkhöz!"
+        title: "Ma van az évfordulója, hogy csatlakoztam ehhez a közösséghez!"
+    cakeday:
+      title: Tortanap
+      today: "Ma"
+      tomorrow: "Holnap"
+      upcoming: "Közelgő"
+      all: "Mind"
+    birthdays:
+      title: "Születésnapok"
+      month:
+        title: "Születésnapok ebben a hónapban"
+        empty: "Nincs olyan felhasználó, aki ebben a hónapban ünnepli a születésnapját."
+      upcoming:
+        title: "Születésnapok %{start_date} - %{end_date}"
+        empty: "Nincs olyan felhasználó, aki a következő 7 napban ünnepli a születésnapját."
+      today:
+        title: "Születésnapok %{date}"
+        empty: "Nincs olyan felhasználó, aki ma ünnepli a születésnapját."
+      tomorrow:
+        empty: "Nincs olyan felhasználó, aki holnap ünnepli a születésnapját."
+    anniversaries:
+      title: "Évfordulók"
+      month:
+        title: "Évfordulók ebben a hónapban"
+        empty: "Nincs olyan felhasználó, aki ebben a hónapban ünnepli az évfordulóját."
+      upcoming:
+        title: "Évfordulók %{start_date} - %{end_date}"
+        empty: "Nincs olyan felhasználó, aki a következő 7 napban ünnepli az évfordulóját."
+      today:
+        title: "Évfordulók %{date}"
+        empty: "Nincs olyan felhasználó, aki ma ünnepli az évfordulóját."
+      tomorrow:
+        empty: "Nincs olyan felhasználó, aki holnap ünnepli az évfordulóját."

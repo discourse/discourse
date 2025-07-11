@@ -1,0 +1,13 @@
+plugins:
+  cakeday_enabled:
+    default: true
+    client: true
+  cakeday_emoji:
+    default: 'cake'
+    client: true
+  cakeday_birthday_enabled:
+    default: true
+    client: true
+  cakeday_birthday_emoji:
+    default: 'birthday'
+    client: true

@@ -1,0 +1,92 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Pokalbių integracijos"
+  js:
+    chat_integration:
+      menu_title: "Pokalbių integracijos"
+      settings: "Nustatymai"
+      all_categories: "(Visos kategorijos)"
+      delete_channel: "Pašalinti"
+      test_channel: "Bandymas"
+      edit_channel: "Redaguoti"
+      test_modal:
+        topic: "Tema"
+        close: "Uždaryti"
+      type:
+        normal: Įprastas
+      filter:
+        mute: 'Nutildyti'
+      rule_table:
+        filter: "Filtruoti"
+        category: "Kategorija"
+        tags: "Žymos"
+        edit_rule: "Redaguoti"
+        delete_rule: "Pašalinti"
+      edit_channel_modal:
+        cancel: "Atšaukti"
+      edit_rule_modal:
+        cancel: Atšaukti
+        type: Tipas
+        filter: Filtruoti
+        category: Kategorija
+        group: Grupė
+        tags: Žymos
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Vardas"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Vardas"
+        guilded:
+          param:
+            name:
+              title: "Vardas"
+        matrix:
+          param:
+            name:
+              title: "Vardas"
+        zulip:
+          param:
+            subject:
+              title: "Tema"
+        gitter:
+          param:
+            name:
+              title: "Vardas"
+        teams:
+          param:
+            name:
+              title: "Vardas"
+        powerautomate:
+          param:
+            name:
+              title: "Vardas"
+        webex:
+          param:
+            name:
+              title: "Vardas"
+        google:
+          param:
+            name:
+              title: "Vardas"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Žinutės
+            url:
+              label: Nuoroda

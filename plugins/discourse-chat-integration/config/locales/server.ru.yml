@@ -1,0 +1,232 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    chat_integration_enabled: 'Включить плагин discourse-chat-integration'
+    chat_integration_discourse_username: 'Имя пользователя, используемое при загрузке контента.'
+    chat_integration_delay_seconds: 'Количество секунд ожидания после создания записи перед отправкой уведомлений в чат'
+    chat_integration_slack_username: "Имя бота для отправки сообщения в Slack"
+    chat_integration_slack_enabled: 'Включить провайдера для чат-интеграции со Slack'
+    chat_integration_slack_access_token: 'OAuth-токен доступа для аутентификации в Slack'
+    chat_integration_slack_incoming_webhook_token: 'Токен подтверждения, используемый для аутентификации входящих запросов'
+    chat_integration_slack_excerpt_length: 'Размер сообщения в Slack'
+    chat_integration_slack_icon_url: 'URL логотипа для отображения в Slack (по умолчанию используется логотип форума)'
+    chat_integration_slack_outbound_webhook_url: "URL для использования входящих вебхуков в Slack вместо API OAuth. Использовать не рекомендуется."
+    chat_integration_slack_transcript_quote: Помещать slack-содержимое в теги [quote]?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Вы должны ввести либо исходящий URL-адрес вебхука, либо токен доступа"
+    chat_integration_telegram_enabled: "Включить чат-интеграцию с Telegram"
+    chat_integration_telegram_access_token: "Токен доступа вашего бота от Telegram"
+    chat_integration_telegram_excerpt_length: "Размер сообщения в Telegram"
+    chat_integration_telegram_enable_slash_commands: "Разрешить управление подписками Telegram с помощью 'slash commands'"
+    chat_integration_discord_enabled: "Включить провайдера для чат-интеграции c Discord"
+    chat_integration_discord_message_content: "Сообщение, размещаемое над сводкой при отправке уведомления в Discord"
+    chat_integration_discord_excerpt_length: "Размер сообщения в Discord"
+    chat_integration_guilded_enabled: "Включить провайдера для чат-интеграции с Guilded"
+    chat_integration_guilded_excerpt_length: "Размер сообщения в Guilded"
+    chat_integration_mattermost_enabled: "Включить провайдера для чат-интеграции c Mattermost"
+    chat_integration_mattermost_webhook_url: 'URL для вебхука в Mattermost'
+    chat_integration_mattermost_incoming_webhook_token: 'Токен подтверждения, используемый для аутентификации входящих запросов'
+    chat_integration_mattermost_icon_url: "URL логотипа для отображения в Mattermost (по умолчанию используется логотип форума)"
+    chat_integration_mattermost_excerpt_length: "Размер сообщения в Mattermost"
+    chat_integration_matrix_enabled: "Включить провайдера для чат-интеграции с Matrix"
+    chat_integration_matrix_homeserver: "Настройка homeserver для подключения. Не забудьте указать протокол"
+    chat_integration_matrix_access_token: "Токен доступа для бота Matrix"
+    chat_integration_matrix_excerpt_length: "Размер сообщения в Matrix"
+    chat_integration_matrix_use_notice: "Используйте уведомление вместо простого сообщения"
+    chat_integration_zulip_enabled: "Включить провайдера для чат-интеграции с Zulip"
+    chat_integration_zulip_server: "Базовый URL для вашего сервера Zulip. Обязательно укажите префикс http(s)://"
+    chat_integration_zulip_bot_email_address: "Адрес электронной почты, связанный с вашим ботом Zulip"
+    chat_integration_zulip_bot_api_key: "Ключ API для бота Zulip"
+    chat_integration_zulip_excerpt_length: "Размер сообщения в Zulip"
+    chat_integration_rocketchat_enabled: "Включить провайдера для чат-интеграции с Rocket Chat"
+    chat_integration_rocketchat_webhook_url: "URL для вебхука интеграции с Rocket Chat"
+    chat_integration_rocketchat_excerpt_length: "Размер сообщения в Rocket Chat"
+    chat_integration_gitter_enabled: "Включить провайдера для чат-интеграции с Gitter"
+    chat_integration_flowdock_enabled: "Включить провайдера для чат-интеграции с Flowdock"
+    chat_integration_flowdock_excerpt_length: "Размер сообщения в Flowdock"
+    chat_integration_groupme_enabled: "Включить провайдера для чат-интеграции с Groupme"
+    chat_integration_groupme_excerpt_length: "Размер сообщения в Groupme"
+    chat_integration_groupme_bot_ids: "*требуются* идентификаторы ботов, разделенные запятыми, при наличии нескольких ботов"
+    chat_integration_groupme_instance_names: " *требуются* имена GroupMe, разделенные запятыми, при наличии нескольких элементов (в том же порядке, что и идентификаторы ботов)"
+    chat_integration_teams_enabled: "Включить интеграцию с Microsoft Teams"
+    chat_integration_teams_excerpt_length: "Размер сообщения в Microsoft Team"
+    chat_integration_powerautomate_enabled: "Включить интеграцию с Microsoft Power Automate"
+    chat_integration_powerautomate_excerpt_length: "Размер публикации в Microsoft Power Automate"
+    chat_integration_webex_enabled: "Включить службу интеграции с чатом Webex Teams"
+    chat_integration_webex_excerpt_length: "Размер сообщения в Webex Teams"
+    chat_integration_google_enabled: "Включить провайдера для чат-интеграции c Google Chat"
+    chat_integration_google_excerpt_length: "Размер сообщения в Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "В некоторых каналах интеграции чата есть ошибки. Подробнее — в <a href='%{base_path}/admin/plugins/chat-integration'>разделе интеграции чата</a>."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Отправить Slack-сообщение
+      send_chat_integration_message:
+        title: Отправка сообщения с помощью плагина Chat-Integration
+  chat_integration:
+    all_categories: "(все категории)"
+    deleted_category: "(удаленный раздел)"
+    deleted_group: "(удаленная группа)"
+    group_mention_template: "Упоминания о: @ %{name}"
+    group_message_template: "сообщения для: @%{name}"
+    topic_tag_changed:
+      added_and_removed: "Добавлено — %{added}, удалено — %{removed}"
+      added: "Добавлено: %{added}"
+      removed: "Удалено: %{removed}"
+    provider:
+      slack:
+        status:
+          header: |
+            Этот чат настроен на %{site_title}. Настройте его в панели администратора. (Идентификатор чата: %{chat_id})
+          no_rules: "Для этого канала нет правил. Запустите `/discourse help` для получения инструкций."
+          rule_string: "*%{index})* *%{filter}* сообщений в разделе *%{category}*"
+          rule_string_tags_suffix: " с тегами: *%{tags}*"
+        parse_error: "Непонятно. Для получения инструкций запустите `/discourse help`."
+        create:
+          created: "Правило успешно создано"
+          updated: "Правило успешно обновлено"
+          error: "Извините, при создании этого правила произошла ошибка."
+        delete:
+          success: "Правило успешно удалено"
+          error: "При удалении этого правила произошла ошибка. Запустите `/discourse status` для получения списка правил."
+        not_found:
+          tag: "Тег *%{name}* не найден."
+          category: "Раздел *%{name}* не найден. Доступные разделы: *%{list}*"
+        help: |
+          *Новое правило:* `/discourse [thread|watch|follow|mute] [категория] [tag:название]`
+          (необходимо указать тип правила и хотя бы одну категорию или тег)
+          - *thread* — уведомлять канал о новых темах, ответы по возможности в цепочках.
+          - *watch* — уведомлять этот канал о новых темах и новых ответах.
+          - *follow* — уведомлять этот канал о новых темах.
+          - *mute* — не уведомлять этот канал.
+
+          *Удаление правила:* `/discourse remove [номер правила]`
+          (`[номер правила]` можно найти, запустив `/discourse status`)
+
+          *Вывести правила:* `/discourse status`
+
+          *[Экспериментальная функция] Содержимое записи:* `/discourse post [n]`
+          Создать черновик темы на Discourse с последними `n` сообщениями в этом канале.
+
+          *Справка:* `/discourse help`
+        transcript:
+          modal_title: "Создать стенограмму"
+          modal_description: "Все сообщения в ветке обсуждения будут собраны в единое сообщение на форуме. Вам будет предоставлена возможность отредактировать стенограмму перед публикацией."
+          transcript_ready: "Стенограмма готова"
+          continue_on_discourse: "Продолжить на форуме"
+          error: "Что-то пошло не так при создании стенограммы, извините!"
+          post_to_discourse: "Нажмите здесь, чтобы создать черновик записи на Discourse с содержимым"
+          api_required: "Эта интеграция не настроена для поддержки публикации содержимого."
+          view_on_slack: "Посмотреть в %{name} на Slack"
+          first_message_pretext: "начало, сообщений назад — %{n}:"
+          last_message_pretext: "и конец, сообщений назад — %{n}:"
+          posted_in: "размещено в %{name}"
+          change_first_message: "Изменить первое сообщение..."
+          change_last_message: "Изменить последнее сообщение..."
+          loading: "Загрузка стенограммы..."
+          error_users: "Ошибка: не удается получить пользователей из Slack"
+          error_history: "Ошибка: не удается получить историю канала из Slack"
+          error_ts: "Ошибка: не удается получить запрошенное сообщение из Slack"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Добавлено — %{added}, удалено — %{removed}"
+            added: "Добавлено: %{added}"
+            removed: "Удалено: %{removed}"
+      telegram:
+        unknown_chat: "Этот чат не настроен на %{site_title}. Попросите администратора добавить канал с идентификатором чата %{chat_id}."
+        known_chat: "Этот чат настроен на %{site_title}. Настройте его в панели администратора. (Идентификатор чата: %{chat_id})"
+        message: |-
+          <b>%{user}</b> размещено в <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Правила для этого канала</b>
+            (если сообщение соответствует нескольким правилам, то выполняется самое верхнее правило)
+          no_rules: "Для этого канала нет правил. Запустите <code>/help</code> для получения инструкций."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> сообщений в разделе <b>%{category}</b>"
+          rule_string_tags_suffix: " с тегами: <b>%{tags}</b>"
+        parse_error: "Непонятно. Для получения инструкций запустите <code>/help</code>."
+        create:
+          created: "Правило успешно создано"
+          updated: "Правило успешно обновлено"
+          error: "Извините, произошла ошибка при создании этого правила."
+        delete:
+          success: "Правило успешно удалено"
+          error: "При удалении этого правила произошла ошибка. Запустить <code>/status</code> для получения списка правил."
+        not_found:
+          tag: "Тег <b>%{name}</b> не найден."
+          category: "Раздел <b>%{name}</b> не найден. Доступные разделы: <b>%{list}</b>"
+        help: |
+          <b>Новое правило:</b> <code>/[watch|follow|mute] [категория] [tag:название]</code>
+          (необходимо указать тип правила и хотя бы одну категорию или тег)
+          - <b>watch</b> — уведомлять этот канал о новых темах и новых ответах.
+          - <b>follow</b> — уведомлять этот канал о новых темах.
+          - <b>mute</b> — не уведомлять этот канал.
+
+          <b>Удаление правила:</b> <code>/remove [номер правила]</code>
+          (<code>[номер правила]</code> можно найти, запустив <code>/status</code>)
+
+          <b>Вывести правила:</b> <code>/status</code>
+
+          <b>Справка:</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> разместил(а) запись в <a href="%{post_url}">%{title}</a>
+      mattermost:
+        status:
+          header: |
+            *Правила для этого канала*
+            (если сообщение соответствует нескольким правилам, то выполняется самое верхнее правило)
+          no_rules: "Для этого канала нет правил. Запустите `/discourse help` для получения инструкций."
+          rule_string: "*%{index})* *%{filter} *сообщений в разделе *%{category}*"
+          rule_string_tags_suffix: " с тегами: *%{tags}*"
+        parse_error: "Извини, я этого не понял. Запустите `/discourse help` для получения инструкций."
+        create:
+          created: "Правило успешно создано"
+          updated: "Правило успешно обновлено"
+          error: "Извините, произошла ошибка при создании этого правила."
+        delete:
+          success: "Правило успешно удалено"
+          error: "При удалении этого правила произошла ошибка. Запустите `/discourse status` для получения списка правил."
+        not_found:
+          tag: "Тег *%{name}* не найден."
+          category: "Категория * %{name} * не найдена. Доступные категории: * %{list} *"
+        help: |
+          *Новое правило:* `/discourse [watch|follow|mute] [категория] [tag:название]`
+          (необходимо указать тип правила и хотя бы одну категорию или тег)
+          - *watch* — уведомлять этот канал о новых темах и новых ответах.
+          - *follow* — уведомлять этот канал о новых темах.
+          - *mute* — не уведомлять этот канал.
+
+          *Удаление правила:* `/discourse remove [номер правила]`
+          (`[номер правила]` можно найти, запустив `/discourse status`)
+
+          *Вывести правила:* `/discourse status`
+
+          *Справка:* `/discourse help`
+      matrix:
+        text_message: "%{user} размещено в %{title} - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> разместил(а) запись <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: "**%{user}** опубликовано в **[%{title}] (%{post_url})**\n~~~ цитата \n%{excerpt}\n~~~\n"
+      flowdock:
+        message_title: "отправлено"
+      google:
+        new_post: "Новое сообщение на %{site_title}"
+        new_topic: "Новая тема на %{site_title}"
+        author: "от @%{username}"
+        link: "Посмотреть на %{site_title}"
+      groupme:
+        errors:
+          instance_names_issue: "Имена экземпляров неправильно отформатированы или не указаны"

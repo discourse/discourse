@@ -1,0 +1,172 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  site_settings:
+    chat_integration_enabled: 'ڈسکورس-چَیٹ-اِنٹیگرَیشَن پلگ اِن کو فعال کریں'
+    chat_integration_discourse_username: 'صارف کا صارف نام جس کی بنیاد پر مواد لایا جائے۔'
+    chat_integration_delay_seconds: 'پوسٹ کی تخلیق کے بعد چَیٹ اطلاعات بھیجنے سے پہلے کتنے سیکنڈ کا انتظار کیا جائے'
+    chat_integration_slack_username: "سلَیک پر پوسٹ کرنے کیلئے بَوٹ کا صارف نام"
+    chat_integration_slack_enabled: 'سلَّیک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں'
+    chat_integration_slack_access_token: 'سلَّیک کے ساتھ توثیق کیلئے OAuth ایکسَیس ٹوکن'
+    chat_integration_slack_incoming_webhook_token: 'آنے والی درخواستوں کی توثیق کرنے کیلئے استعمال ہونے والا توثیقی ٹوکن'
+    chat_integration_slack_excerpt_length: 'سلَّیک پوسٹ کے اقتباس کا سائز'
+    chat_integration_slack_icon_url: 'جس آئکن کے ساتھ سلَّیک پر پوسٹ کیا جائے (ڈِیفالٹ فورم لوگو ہے)'
+    chat_integration_slack_outbound_webhook_url: "OAuth API کے بجائے سلَّیک کے 'اِنکَمینگ وَیب ھُوک' کے سِسٹَم کا استعمال کرنے کیلئے۔ ناپسندیدہ۔"
+    errors:
+      chat_integration_slack_api_configs_are_empty: "آپ کا ایک آؤٹ باؤنڈ وَیب ھُوک URL، یا ایک ایکسَیس ٹوکن درج کرنا ضروری ہے"
+    chat_integration_telegram_enabled: "ٹَیلیگرام کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_telegram_access_token: "ٹَیلیگرام بَوٹفادر کی طرف سے آپ کے بَوٹ کا ایکسَیس ٹوکن"
+    chat_integration_telegram_excerpt_length: "ٹَیلیگرام پوسٹ کے اقتباس کا سائز"
+    chat_integration_telegram_enable_slash_commands: "ٹَیلیگرام کی سَبسکرِپشنز کو 'سلَیش کمانڈز' کا استعمال کرتے ہوئے مَینَیج کرنے کی اجازت دیں"
+    chat_integration_discord_enabled: "ڈِسکَورڈ کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_discord_message_content: "ڈِسکَورڈ پر اِطلاع بھیجنے پر، خلاصہ کے اوپر شامل کیے جانے والا پیغام"
+    chat_integration_discord_excerpt_length: "ڈِسکَورڈ پوسٹ کے اقتباس کا سائز"
+    chat_integration_mattermost_enabled: "مَیٹرمَوسٹ کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_mattermost_webhook_url: 'مَیٹرمَوسٹ وَیب ھُوک کیلئے URL'
+    chat_integration_mattermost_incoming_webhook_token: 'آنے والی درخواستوں کی توثیق کرنے کیلئے استعمال ہونے والا توثیقی ٹوکن'
+    chat_integration_mattermost_icon_url: "مَیٹرمَوسٹ پر پوسٹس کیلئے آئکن (ڈِیفالٹ فورَم لوگو ہے)"
+    chat_integration_mattermost_excerpt_length: "مَیٹرمَوسٹ پوسٹ کے اقتباس کا سائز"
+    chat_integration_matrix_enabled: "مَیٹرِکس کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_matrix_homeserver: "ہوم سرور جس کے ساتھ کَنیکٹ کرنا ہے۔ پروٹوکول شامل کرنا یقینی بنائیں"
+    chat_integration_matrix_access_token: "بَوٹ کے مَیٹرِکس اکاؤنٹ کیلئے ایکسَیس ٹوکن"
+    chat_integration_matrix_excerpt_length: "مَیٹرِکس پوسٹ کے اقتباس کا سائز"
+    chat_integration_matrix_use_notice: "سادہ پیغام کے بجائے نوٹس کا استعمال کریں"
+    chat_integration_zulip_enabled: "زُولِپ کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_zulip_server: "آپ کے زُولِپ سرور کا بَیس URL۔ http(s):// شامل کرنا یقینی بنائیں"
+    chat_integration_zulip_bot_email_address: "آپ کے زُولِپ بَوٹ کے ساتھ منسلک ای میل ایڈریس"
+    chat_integration_zulip_bot_api_key: "آپ کے زُولِپ بَوٹ کیلئے API کِی"
+    chat_integration_zulip_excerpt_length: "زُولِپ پوسٹ کے اقتباس کا سائز"
+    chat_integration_rocketchat_enabled: "راکٹ چَیٹ کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_rocketchat_webhook_url: "راکٹ چَیٹ اِنٹیگرَیشَن وَیب ھُوک کیلئے URL"
+    chat_integration_rocketchat_excerpt_length: "راکٹ چَیٹ پوسٹ کے اقتباس کا سائز"
+    chat_integration_gitter_enabled: "گِیٹر کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_flowdock_enabled: "فلَوڈَوک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
+    chat_integration_flowdock_excerpt_length: "فلَوڈَوک پوسٹ کے اقتباس کا سائز"
+  chat_integration:
+    all_categories: "(تمام زُمرَہ جات)"
+    deleted_category: "(حذف کردہ زُمرہ)"
+    deleted_group: "(حذف کردہ گروپ)"
+    group_mention_template: "ذکر: @%{name} کے"
+    group_message_template: "پیغامات: @%{name} کیلئے"
+    provider:
+      slack:
+        status:
+          header: |
+            *اِس چینل کیلئے اصول*
+            (اگر ایک سے زیادہ اصول ایک پوسٹ سے مماثلت رکھیں گے، تو سب سے اوپر والا اصول فعال ہو گا)
+          no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
+          rule_string: "*%{index})* *%{filter}* پوسٹس *%{category}* میں"
+          rule_string_tags_suffix: "ٹیگز کے ساتھ: *%{tags}*"
+        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
+        create:
+          created: "اصول کامیای سے بنا لیا گیا"
+          updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
+          error: "معذرت، اصول بناتے ہوے ایک خرابی کا سامنا کرنا پڑا۔"
+        delete:
+          success: "اصول کامیای سے حذف کر لیا گیا"
+          error: "معذرت، اصول حذف کرتے ہوے ایک خرابی کا سامنا کرنا پڑا۔ اصولوں کی فہرست کیلئے `discourse status/` رَن کریں۔"
+        not_found:
+          tag: "ٹیگ *%{name}* تلاش نہیں کیا جا سکا۔"
+          category: "زُمرہ *%{name}* تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: *%{list}*"
+        transcript:
+          error: "ٹرانسکرِپٹ بناتے وقت کچھ غلط ہو گیا، معذرت!"
+          post_to_discourse: "ٹرانسکرِپٹ کے ساتھ ڈِسکورس پر ایک پوسٹ ڈرافٹ کرنے کیلئے یہاں کلک کریں"
+          api_required: "معذرت، یہ اِنٹیگرَیشَن ٹرانسکرِپٹس شائع کرنے کیلئے سیٹ اَپ نہیں ہے۔"
+          view_on_slack: "%{name}میں سلَّیک پر دیکھیں "
+          first_message_pretext: "شروع %{n} پیغامات قبل:"
+          last_message_pretext: "اور ختم %{n} پیغامات قبل:"
+          posted_in: "%{name}میں پوسٹ کیا گیا "
+          change_first_message: "پہلا پیغام تبدیل کریں..."
+          change_last_message: "آخری پیغام تبدیل کریں..."
+          loading: "ٹرانسکرِپٹ لوڈ ہو رہی ہے..."
+      telegram:
+        unknown_chat: "یہ چیٹ %{site_title} پر سَیٹ اَپ نہیں ہے۔ 'چیٹ ID' %{chat_id} والا چَینل شامل کرنے کیلئے ایک ایڈمِنِسٹریٹر کو کہیے۔"
+        known_chat: "یہ چیٹ %{site_title} پر سَیٹ اَپ ہے۔ اِسے اَیڈمِن پَینل میں ترتیب دیں۔ (چیٹ ID:%{chat_id})"
+        message: |-
+          <b>%{user}</b>نے <a href="%{post_url}">%{title}</a> میں پوسٹ کیا
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>اِس چَینل کے اصول</b>
+            (اگر ایک سے زیادہ اصول ایک پوسٹ سے مماثلت رکھیں گے، تو سب سے اوپر والا اصول فعال ہو گا)
+          no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے <code>help/</code> رَن کریں۔"
+          rule_string: "<b>%{index})</b> <b>%{filter}</b>پوسٹس <b>%{category}</b> میں "
+          rule_string_tags_suffix: "ٹیگز کے ساتھ: <b>%{tags}</b>"
+        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے <code>help/</code> رَن کریں۔"
+        create:
+          created: "اصول کامیای سے بنا لیا گیا"
+          updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
+          error: "معذرت، اصول بناتے ہوے ایک خرابی کا سامنا کرنا پڑا۔"
+        delete:
+          success: "اصول کامیای سے حذف کر لیا گیا"
+          error: "معذرت، اصول حذف کرتے ہوے ایک خرابی کا سامنا کرنا پڑا۔ اصولوں کی فہرست کیلئے <code>status/</code> رَن کریں۔"
+        not_found:
+          tag: "ٹیگ <b>%{name}</b> تلاش نہیں کیا جا سکا۔"
+          category: "زُمرہ <b>%{name}</b> تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: <b>%{list}</b>"
+        help: |
+          <b>نیا اصول:</b> <code>/discourse [watch|follow|mute] [category] [tag:name]</code>
+          (آپ کا اصول کی قسم اور کم از کم ایک زُمرہ یا ٹَیگ کی وضاحت کرنا ضروری ہے)
+          - <b>watch</b> – اِس چینل کو نئے ٹاپک اور نئے جوابات پر مطلع کریں
+          - <b>follow</b> – نئے ٹاپکس پر اِس چینل کو مطلع کریں
+          - <b>mute</b> – اِس چینل پر اطلاعات بلاک کریں
+
+          <b>اصول ہٹائیں:</b> <code>[اصول نمبر] remove/</code>
+          (<code>[اصول نمبر]</code> <code>status/</code> رَن کر کہ پتہ چلایا جا سکتا ہے)
+
+          <b>اصولوں کی فہرست:</b> <code>status/</code>
+
+          <b>مدد:</b> <code>help/</code>
+      hipchat:
+        message: <b>%{user}</b> نے <a href="%{post_url}">%{title}</a> میں پوسٹ کیا۔
+      mattermost:
+        status:
+          header: |
+            *اِس چینل کیلئے اصول*
+            (اگر ایک سے زیادہ اصول ایک پوسٹ سے مماثلت رکھیں گے، تو سب سے اوپر والا اصول فعال ہو گا)
+          no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
+          rule_string: "*%{index})* *%{filter}* پوسٹس *%{category}* میں"
+          rule_string_tags_suffix: "ٹیگز کے ساتھ: *%{tags}*"
+        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
+        create:
+          created: "اصول کامیای سے بنا لیا گیا"
+          updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
+          error: "معذرت، اصول بناتے ہوے ایک خرابی کا سامنا کرنا پڑا۔"
+        delete:
+          success: "اصول کامیای سے حذف کر لیا گیا"
+          error: "معذرت، اصول حذف کرتے ہوے ایک خرابی کا سامنا کرنا پڑا۔ اصولوں کی فہرست کیلئے `discourse status/` رَن کریں۔"
+        not_found:
+          tag: "ٹیگ *%{name}* تلاش نہیں کیا جا سکا۔"
+          category: "زُمرہ *%{name}* تلاش نہیں کیا جا سکا۔ دستیاب زُمرہ جات: *%{list}*"
+        help: |
+          *نیا اصول:* `/discourse [watch|follow|mute] [category] [tag:name]`
+          (آپ کا اصول کی قسم اور کم از کم ایک زُمرہ یا ٹَیگ کی وضاحت کرنا ضروری ہے)
+          - *watch* – اِس چینل کو نئے ٹاپک اور نئے جوابات پر مطلع کریں
+          - *follow* – نئے ٹاپکس پر اِس چینل کو مطلع کریں
+          - *mute* – اِس چینل پر اطلاعات بلاک کریں
+
+          *اصول ہٹائیں:* `discourse status/`
+          (`[اصول نمبر]` `discourse status/` رَن کر کہ پتہ چلایا جا سکتا ہے)
+
+          *اصولوں کی فہرست:* `discourse status/`
+
+          *مدد:* `discourse help/`
+      matrix:
+        text_message: "%{user} نے %{title} میں پوسٹ کیا - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b>نے <b> <a href='%{post_url}'>%{title}</a></b>میں پوسٹ کیا
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** نے **[%{title}](%{post_url})** میں پوسٹ کیا
+          ~~~اقتباس
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "پوسٹ کیا"

@@ -1,0 +1,206 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Інтеграція чату"
+  js:
+    chat_integration:
+      menu_title: "Інтеграція чату"
+      settings: "Налаштування"
+      no_providers: "Потрібно включити деяких постачальників у налаштуваннях плагіна"
+      channels_with_errors: "Деякі канали цього провайдера не вдавалися, коли останній раз надсилалися повідомлення. Клацніть піктограму помилок, щоб дізнатися більше."
+      channel_exception: "Невідома помилка сталася під час останнього надсилання повідомлення на цей канал."
+      group_message_template: "Повідомлення до: @ %{name}"
+      choose_group: "(виберіть групу)"
+      all_categories: "(усі категорії)"
+      all_tags: "(усі теги)"
+      create_rule: "Створити правило"
+      create_channel: "Створити канал"
+      delete_channel: "Видалити"
+      test_channel: "Тест"
+      edit_channel: "Редагувати"
+      channel_delete_confirm: "Справді видалити цей канал? Усі пов’язані правила будуть видалені."
+      test_modal:
+        title: "Надіслати тестове повідомлення"
+        topic: "Тема"
+        send: "Надіслати тестове повідомлення"
+        close: "Закрити"
+        error: "Під час надсилання повідомлення сталася невідома помилка. Перегляньте журнали сайту для отримання додаткової інформації."
+        success: "Повідомлення успішно надіслано"
+      type:
+        normal: Нормальний
+        group_message: Групове повідомлення
+        group_mention: Згадування групи
+      filter:
+        mute: 'Приглушено'
+        follow: 'Лише перший пост'
+        watch: 'Усі повідомлення та відповіді'
+      rule_table:
+        filter: "Фільтр"
+        category: "Категорія"
+        tags: "Теги"
+        edit_rule: "Редагувати"
+        delete_rule: "Видалити"
+      edit_channel_modal:
+        title: "Редагувати канал"
+        save: "Зберегти канал"
+        cancel: "Скасувати"
+        provider: "Постачальник"
+        channel_validation:
+          ok: "Дійсний"
+          fail: "Недійсний формат"
+      edit_rule_modal:
+        title: Редагувати правило
+        save: Збережіть правило
+        cancel: Скасувати
+        provider: Постачальник
+        type: Тип
+        channel: Канал
+        filter: Фільтр
+        category: Категорія
+        group: Група
+        tags: Теги
+        instructions:
+          type: "Змініть тип для запуску сповіщень для групових повідомлень чи згадок"
+          filter: "Рівень сповіщення. Приглушення замінює інші правила"
+          category: "Це правило стосується лише тем у зазначеній категорії"
+          group: "Це правило застосовується до публікацій, на які посилається ця група"
+          tags: "Якщо зазначено, це правило застосовуватиметься лише до тем, які мають принаймні один із цих тегів"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Канал
+              help: "наприклад #channel, @username."
+          errors:
+            action_prohibited: "Бот не має дозволу на публікацію в цьому каналі"
+            channel_not_found: "Зазначений канал не існує у slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Ім'я"
+              help: "Назва для опису каналу. Він не використовується для з’єднання з Telegram."
+            chat_id:
+              title: Chat ID
+              help: Номер, який вам надає бот, або ідентифікатор трансляційного каналу у формі @channelname
+          errors:
+            channel_not_found: "Зазначений канал не існує в Telegram"
+            forbidden: "Бот не має дозволу публікувати в цей канал"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Ім'я"
+              help: "Назва для опису каналу. Він не використовується для з’єднання з Discord."
+            webhook_url:
+              title: Webhook URL
+              help: URL-адреса webhook, створена у налаштуваннях вашого сервера Discord
+        guilded:
+          param:
+            name:
+              title: "Імʼя"
+            webhook_url:
+              title: Webhook URL
+        mattermost:
+          title: "Найважливіше"
+          param:
+            identifier:
+              title: Канал
+              help: "наприклад #channel, @username."
+          errors:
+            channel_not_found: "Зазначений канал не існує в Найважливіших"
+        matrix:
+          title: "Матриця"
+          param:
+            name:
+              title: "Ім'я"
+              help: "Назва для опису каналу. Він не використовується для з’єднання з Matrix."
+            room_id:
+              title: "Room ID"
+              help: "'private identifier' для кімнати. Це має виглядати приблизно так !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Маркер доступу недійсний"
+            unknown_room: "Room ID недійсний"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Потік"
+              help: "Ім’я потоку Zulip, на яке слід надіслати повідомлення. Наприклад,  'general'"
+            subject:
+              title: "Тема"
+              help: "Тема повідомлення, що надсилаються ботом"
+          errors:
+            does_not_exist: "Цей потік не існує на Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Канал
+              help: "наприклад #channel, @username."
+          errors:
+            invalid_channel: "Цей канал не існує в Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Ім'я"
+              help: "Назва кімнати Gitter, наприклад gitterHQ/services."
+            webhook_url:
+              title: "Webhook URL"
+              help: "URL-адреса, яка створюється під час створення нової інтеграції з Gitter кімнатою."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Flow Token"
+              help: "Token потоку надається після створення джерела для потоку, в який потрібно відправляти повідомлення."
+        teams:
+          param:
+            name:
+              title: "Імʼя"
+            webhook_url:
+              title: "Webhook URL"
+        powerautomate:
+          param:
+            name:
+              title: "Імʼя"
+            webhook_url:
+              title: "URL-адреса веб-хука"
+        webex:
+          param:
+            name:
+              title: "Імʼя"
+            webhook_url:
+              title: "Webhook URL"
+        google:
+          param:
+            name:
+              title: "Імʼя"
+            webhook_url:
+              title: "Webhook URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Повідомлення
+            url:
+              label: Посилання
+            channel:
+              label: Канал
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: Назва каналу
+            provider:
+              label: Постачальник

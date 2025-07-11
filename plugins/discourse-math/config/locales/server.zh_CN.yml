@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    discourse_math_enabled: "启用 Discourse Math 插件（将对 $ 和 $$ 进行特殊处理）"
+    discourse_math_provider: "默认数学呈现提供程序"
+    discourse_math_zoom_on_hover: "鼠标悬停放大 200%（仅 MathJax）"
+    discourse_math_enable_accessibility: "启用无障碍功能（仅 MathJax）"
+    discourse_math_enable_asciimath: "启用 asciimath（将对由 % 分隔的输入进行特殊处理）（仅 MathJax）"

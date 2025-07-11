@@ -50,6 +50,24 @@
 !/plugins/checklist
 !/plugins/footnote
 !/plugins/discourse-reactions
+!/plugins/discourse-apple-auth
+!/plugins/discourse-login-with-amazon
+!/plugins/discourse-lti
+!/plugins/discourse-microsoft-auth
+!/plugins/discourse-oauth2-basic
+!/plugins/discourse-openid-connect
+!/plugins/discourse-zendesk-plugin
+!/plugins/discourse-patreon
+!/plugins/discourse-adplugin
+!/plugins/discourse-affiliate
+!/plugins/discourse-graphviz
+!/plugins/discourse-rss-polling
+!/plugins/discourse-cakeday
+!/plugins/discourse-math
+!/plugins/discourse-chat-integration
+!/plugins/discourse-github
+!/plugins/discourse-templates
+!/plugins/discourse-topic-voting
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

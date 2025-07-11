@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    patreon_enabled: 'discourse-patreon プラグインを有効にする'
+    patreon_login_enabled: 'Patreon ソーシャルログインを有効にする'
+    patreon_client_id: '生成された Patreon クライアント ID'
+    patreon_client_secret: '生成された Patreon クライアントシークレット'
+    patreon_webhook_secret: '生成された Patreon Webhook シークレット'
+    patreon_creator_discourse_username: "「Patreon ソーシャルログイン」でPatreon クリエーターアカウントを通じてログインするために使用する Discourse アカウントのユーザー名"
+    patreon_creator_access_token: "生成された Patreon クリエーターのアクセストークン"
+    patreon_creator_refresh_token: "生成された Patreon クリエーターのリフレッシュトークン"
+    patreon_declined_pledges_grace_period_days: "誓約が完全に拒否されるまでの猶予期間（日数）。"
+    max_patreon_api_reqs_per_hr: "1 時間当たりの Patreon API の最大リクエスト数"
+    max_patreon_api_reqs_per_day: "1 日当たりの Patreon API リクエストの最大数"
+    patreon_verbose_log: 'Patreon ペイロードの詳細なロギングを有効にする'
+    patreon_donation_prompt_enabled: "寄付プロンプトを有効にしますか？"
+    patreon_donation_prompt_show_after_topics: "トピック n 件ごとに寄付プロンプトを表示する"
+    patreon_donation_prompt_campaign_url: "寄付プロンプトのキャンペーン URL"
+    errors:
+      patreon_creator_username_not_set: "Patreon ログインを有効にする前に、Patreon クリエーターの Discourse ユーザー名設定を設定する必要があります。"
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon Creator のアクセストークンとリフレッシュトークンの値が間違っています。<a href='https://www.patreon.com/platform/documentation/clients'>Patreon ウェブサイト</a>から新しいトークンをコピーして<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>サイト設定</a>に貼り付ける必要があります。"
+  patreon:
+    error:
+      invalid_response: "Patreon API からの無効な応答"

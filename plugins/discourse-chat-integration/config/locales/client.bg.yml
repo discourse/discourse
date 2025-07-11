@@ -1,0 +1,85 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  js:
+    chat_integration:
+      settings: "Настройки"
+      all_categories: "(всички категории)"
+      delete_channel: "Изтрий"
+      edit_channel: "Редактирай"
+      test_modal:
+        topic: "Тема"
+        close: "Затвори"
+      type:
+        normal: Нормален
+      filter:
+        mute: 'Заглушаване'
+      rule_table:
+        filter: "Филтер"
+        category: "Категория"
+        tags: "Етикети"
+        edit_rule: "Редактирай"
+        delete_rule: "Изтрий"
+      edit_channel_modal:
+        cancel: "Отмени"
+      edit_rule_modal:
+        cancel: Отмени
+        type: Тип
+        filter: Филтер
+        category: Категория
+        group: Група
+        tags: Етикети
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Име"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Име"
+        guilded:
+          param:
+            name:
+              title: "Име"
+        matrix:
+          param:
+            name:
+              title: "Име"
+        zulip:
+          param:
+            subject:
+              title: "Тема"
+        gitter:
+          param:
+            name:
+              title: "Име"
+        teams:
+          param:
+            name:
+              title: "Име"
+        powerautomate:
+          param:
+            name:
+              title: "Име"
+        webex:
+          param:
+            name:
+              title: "Име"
+        google:
+          param:
+            name:
+              title: "Име"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Съобщение
+            url:
+              label: URL

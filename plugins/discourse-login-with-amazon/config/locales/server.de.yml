@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    enable_login_with_amazon: "Authentifizierung über „Anmelden mit Amazon“ aktivieren, erfordert `login with amazon client id` und `login with amazon client secret`."
+    login_with_amazon_client_id: "Client-ID für „Anmelden mit Amazon“"
+    login_with_amazon_client_secret: "Client-Geheimnis für „Anmelden mit Amazon“"
+    login_with_amazon_scope: "OAuth2-Bereiche für „Anmelden mit Amazon“ (durch Leerzeichen getrennt)"
+    login_with_amazon_overrides_email: "Überschreibt die E-Mail-Adresse im Discourse-Benutzerkonto."
+    errors:
+      login_with_amazon_client_id_is_blank: "Bevor du diese Einstellung aktivierst, musst du „login with amazon client id“ festlegen."
+      login_with_amazon_client_secret_is_blank: "Bevor du diese Einstellung aktivierst, musst du „login with amazon client secret“ festlegen."

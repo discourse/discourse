@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  site_settings:
+    cakeday_enabled: "Pokaži praznični emoji ob imenu uporabnice/ka na dan, ko so se pridružili Discoursu."
+    cakeday_emoji: "Emoji(ji), ki bo(do) prikazan(i) poleg uporabnikovega imena na dan, ko se je pridružil Discoursu. Več emojijev lahko določite z: smile|cake|smile"
+    cakeday_birthday_enabled: "Pokaži praznični emoji ob imenu uporabnice/ka na njihov rojstni dan."
+    cakeday_birthday_emoji: "Emoji(ji), ki bo(do) prikazan(i) poleg uporabnikovega imena na njihov rojstni dan. Več emojijev lahko določite z: smile|cake|smile"

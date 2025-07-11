@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    patreon_enabled: 'Aktivera discourse-patreon-tillägget'
+    patreon_login_enabled: 'Aktivera Patreon Social Login'
+    patreon_client_id: 'Genererade Patreon-klient-ID'
+    patreon_client_secret: 'Genererade Patreon-klienthemlighet'
+    patreon_webhook_secret: 'Genererade Patreon Webhook-hemlighet'
+    patreon_creator_discourse_username: "Användarnamn på det Discourse-konto som används för att logga in via Patreon-skaparkonto med 'Patreon Social Login'"
+    patreon_creator_access_token: "Genererade Patreon Creator-åtkomstbevis"
+    patreon_creator_refresh_token: "Genererade Patreon Creator-uppdateringsbevis"
+    patreon_declined_pledges_grace_period_days: "Nådefrist (i dagar) innan en donation nekas helt."
+    max_patreon_api_reqs_per_hr: "Maximalt antal Patreon API-förfrågningar per timme"
+    max_patreon_api_reqs_per_day: "Maximalt antal Patreon API-förfrågningar per dag"
+    patreon_verbose_log: 'aktivera utförlig loggning av Patreon-nyttolast'
+    patreon_donation_prompt_enabled: "Aktivera donationsuppmaning?"
+    patreon_donation_prompt_show_after_topics: "Visa donationsuppmaning efter n ämnen"
+    patreon_donation_prompt_campaign_url: "Donationsuppmaningskampanj-URL"
+    errors:
+      patreon_creator_username_not_set: "Du måste ange inställningen för Patreon-skaparens Discourse-användarnamn innan du aktiverar Patreon-inloggning."
+  patreon:
+    error:
+      invalid_response: "Ogiltigt svar från Patreon-API"
