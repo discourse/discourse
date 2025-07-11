@@ -221,6 +221,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         break;
       case "update-category":
         this.showBulkTopicActionsModal(actionId, "change_category", {
+          allowSilent: true,
           description: i18n(`topic_bulk_actions.update_category.description`),
         });
         break;

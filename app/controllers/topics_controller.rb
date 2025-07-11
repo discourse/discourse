@@ -1048,11 +1048,16 @@ class TopicsController < ApplicationController
           :category_id,
           :notification_level_id,
           :message,
+          :silent,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tags: [],
         )
         .to_h
         .symbolize_keys
+
+    if operation.has_key? :silent
+      operation[:silent] = ActiveModel::Type::Boolean.new.cast(operation[:silent])
+    end
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
 
