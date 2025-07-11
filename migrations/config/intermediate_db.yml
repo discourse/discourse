@@ -38,6 +38,11 @@ schema:
           - "topics_week"
           - "topics_year"
           - "reviewable_by_group_id"
+    category_users:
+      primary_key_column_names: [ "category_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
     user_emails:
       columns:
         include:
@@ -115,7 +120,6 @@ schema:
         - "category_tag_groups"
         - "category_tag_stats"
         - "category_tags"
-        - "category_users"
         - "chat_channel_archives"
         - "chat_channel_custom_fields"
         - "chat_channels"
