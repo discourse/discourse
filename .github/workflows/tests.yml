@@ -172,6 +172,7 @@ jobs:
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ hashFiles('config/environments/test.rb') }}-
+            ${{ env.LOAD_PLUGINS }}-
             ${{ env.USES_PARALLEL_DATABASES }}-
             ${{ env.PARALLEL_TEST_PROCESSORS }}-
 
