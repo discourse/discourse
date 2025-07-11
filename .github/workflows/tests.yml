@@ -173,6 +173,7 @@ jobs:
             ${{ hashFiles('config/environments/test.rb') }}-
             ${{ env.USES_PARALLEL_DATABASES }}-
             ${{ env.PARALLEL_TEST_PROCESSORS }}-
+            ${{ matrix.target }}-
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -184,14 +185,18 @@ jobs:
 
       - name: Create and migrate database
         if: steps.app-cache.outputs.cache-hit != 'true'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
-          script/silence_successful_output bin/rake db:migrate
+          script/silence_successful_output bin/rake db:migrate:reset
 
       - name: Create and migrate parallel databases
         if: >-
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -217,7 +222,7 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: |
           bin/rake annotate:ensure_all_indexes
-          bin/annotate --models --model-dir app/models
+          bin/annotaterb models --model-dir app/models
 
           if [ ! -z "$(git status --porcelain app/models/)" ]; then
             echo "Core annotations are not up to date. To resolve, run:"
