@@ -199,7 +199,7 @@ RSpec.describe DiscourseJsProcessor do
           export default class MyClass {
             @someDecorator
             myMethod() {
-              console.log('hello world');
+              console.log("hello world");
             }
             <template>
               <div>template content</div>
@@ -235,7 +235,7 @@ RSpec.describe DiscourseJsProcessor do
           { "discourse/initializers/foo.js" => script },
           {},
         )
-      expect(result["code"]).to include("(()=>dt7948.n")
+      expect(result["code"]).to include("() => dt7948.n")
     end
 
     it "can use themePrefix in a template" do

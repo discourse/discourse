@@ -116,7 +116,7 @@ class ThemeSettingsMigrationsRunner
       raise_error(
         "themes.import_error.migrations.syntax_error",
         name: migration.original_name,
-        error: error.message + "\n" + error.backtrace.join("\n"),
+        error: error.message,
       )
     rescue MiniRacer::V8OutOfMemoryError
       raise_error(
