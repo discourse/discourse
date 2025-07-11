@@ -3,6 +3,7 @@
 .fk-d-menu[data-identifier="d-autocomplete"] {
   z-index: z("modal", "dialog") + 1;
   --d-border-radius: var(--space-2);
+  animation: fade-in ease 0.25s 1 forwards !important;
 }
 
 .d-autocomplete-results {
