@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Fjern semikoloner fra forespørgslen."
+        dirty: "Du skal gemme forespørgslen, før du kører den."
+    explorer:
+      or: "eller"
+      admins_only: "Data explorer er kun tilgængelige for administratorer."
+      allow_groups: "Tillad grupper at få adgang til denne forespørgsel"
+      title: "Data Udforsker"
+      create: "Opret Ny"
+      create_placeholder: "Navn på forespørgsel..."
+      description_placeholder: "Indtast en beskrivelse her"
+      import:
+        label: "Importer"
+        modal: "Importer en forespørgsel"
+      help:
+        label: "Hjælp"
+        modal_title: "Hjælp til Data Udforsker"
+      schema:
+        title: "Database Skema"
+        filter: "Søg..."
+      types:
+        bool:
+          yes: "Ja"
+          no: "Nej"
+          null_: "Null"
+      export: "Eksporter"
+      save: "Gem ændringer"
+      saverun: "Gem ændringer og kør"
+      run: "Kør"
+      undo: "Kassér Ændringer"
+      edit: "Rediger"
+      delete: "Slet"
+      recover: "Fortryd sletning af forespørgsel"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Tabel"
+      show_graph: "Graf"
+      query_name: "Forespørgsel"
+      query_groups: "grupper"
+      query_description: "Beskrivelse"
+      query_user: "Oprettet af"
+      reset_params: "Nulstil"
+      search_placeholder: "Søg..."
+    group:
+      reports: "Rapporter"

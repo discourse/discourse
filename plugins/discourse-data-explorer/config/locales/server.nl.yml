@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    data_explorer_enabled: "Gegevensverkenner op /admin/plugins/explorer inschakelen"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Plan een PB met de resultaten van Gegevensverkenner
+        description: Laat geplande rapporten naar je berichten sturen
+        no_csv_allowed: "Als het veld 'attach_csv' wordt gebruikt, moet 'csv' worden toegevoegd aan de lijst van toegestane extensies in de site-instellingen."
+      recurring_data_explorer_result_topic:
+        title: Plaats een bericht in een topic met Gegevensverkenner-resultaten
+        description: Ontvang geplande rapporten over een specifiek topic
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Gepland rapport voor %{query_name}"
+      upload_appendix: "Bijlage: [%{filename}|bijlage](%{short_url})"

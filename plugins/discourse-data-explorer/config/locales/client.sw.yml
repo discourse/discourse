@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Ondoa alama ya mkato kwenye swali."
+        dirty: "Lazima uhifadhi taarifa kabla ya kutekeleza."
+    explorer:
+      or: "au"
+      admins_only: "Uwezo wa kupitia taarifa zote unapatikana kwa viongozi tu."
+      title: "Utafiti wa Taarifa"
+      create: "Tengeneza Mpya"
+      create_placeholder: "Jina la ulizo..."
+      description_placeholder: "Andika maelezo hapa"
+      import:
+        label: "Imeingizwa kutoka sehemu nyingine"
+        modal: "Ingiza Ulizo"
+      help:
+        label: "Msaada"
+      schema:
+        title: "Mpango wa kuhifadhidata"
+        filter: "Tafuta..."
+        sensitive: "Taarifa zilizomo ndani ya safuwima zinaweza kuwa za kibinafsi au zinazozingatiwa. Tafadhali kuwa makini na mwangalifu unapotumia hizi taarifa. "
+      types:
+        bool:
+          yes: "Ndio"
+          no: "Hapana"
+          null_: "Hamna Kitu"
+      export: "Hamisha"
+      save: "Hifadhi Mabadiliko"
+      undo: "Kataa Mabadiliko"
+      edit: "Hariri"
+      delete: "Futa"
+      recover: "Rejesha Suala"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Mabaliko uliyofanya kwenye ulizo hayajahifadhiwa, hifadhi kabla ya kwenda kwingine."
+      query_name: "Swali"
+      query_groups: "Makundi"
+      query_description: "Maelezo"
+      query_user: "Imetengenezwa na"
+      explain_label: "pamoja na mpango wa swala?"
+      save_params: "Seti Chaguo-misingi"
+      reset_params: "Weka/Anzisha Upya"
+      search_placeholder: "Tafuta"
