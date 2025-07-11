@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Accedi con Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtri'
+      group: 'Gruppo'
+      rewards: 'Ricompense'
+      filter: 'Filtro'
+      help_text: 'Puoi sincronizzare un gruppo Discourse con uno o più livelli di ricompense di Patreon.'
+      last_synced: 'Ultima Sincronizzazione'
+      edit: 'Modifica'
+      delete: 'Cancella'
+      save: 'Salva'
+      update_data: 'Aggiorna Dati Patreon & Sincronizza Gruppi'
+      refresh_page: 'Nuovi dati sono stati scaricati dall''API Patreon. Si prega di aggiornare la pagina.'
+      select_group: 'Seleziona un gruppo'
+      field:
+        id: "Id"
+        email: "Email"
+        amount_cents: "Importo (in centesimi)"
+        rewards: "Ricompense"
+        declined_since: "Promessa di donazione rifiutata dal"
+        more_details:
+          label: "Pagamenti e altri dettagli"
+          help_text:
+            email_available: "Raggiungi la parte in basso a destra della pagina per vedere la cronologia delle donazioni di Patreon."
+            email_not_available: "Seleziona il membro Patreon e raggiungi la parte in basso a destra della pagina per vedere la cronologia delle donazioni."
+      donation_prompt:
+        body: |
+          <h1>Caro lettore, benvenuto!</h1>
+
+          <p>Ti piace il nostro sito web? Vuoi contribuire a una buona causa?</p>
+
+          <p>
+            Se trovi utile il nostro sito web e ti piace la community che abbiamo creato, ti saremmo molto grati se tu volessi fare una donazione al nostro sito web.
+            Le donazioni garantiscono il buon funzionamento dei nostri servizi e assicurano l'operatività della nostra community negli anni a venire.
+            Anche la più piccola somma è importante e sarà messa a frutto.
+          </p>
+
+          <p>Grazie per il tuo sostegno!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Diventa un nostro sostenitore</a>
+          </p>

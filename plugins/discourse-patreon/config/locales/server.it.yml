@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    patreon_enabled: 'Abilita il plugin discourse-patreon'
+    patreon_login_enabled: 'Abilita l''accesso social di Patreon'
+    patreon_client_id: 'ID client di Patreon generato'
+    patreon_client_secret: 'Segreto client di Patreon generato'
+    patreon_webhook_secret: 'Segreto webhook di Patreon generato'
+    patreon_creator_discourse_username: "Nome utente dell'account Discourse che viene utilizzato per accedere tramite l'account di Patreon creator utilizzando l'\"Accesso Social di Patreon\""
+    patreon_creator_access_token: "Token di accesso a Patreon Creator generato"
+    patreon_creator_refresh_token: "Token di aggiornamento per Patreon Creator generato"
+    patreon_declined_pledges_grace_period_days: "Il periodo di tolleranza (in giorni) prima che una promessa di donazione sia completamente rifiutata."
+    max_patreon_api_reqs_per_hr: "Numero massimo di richieste API Patreon all'ora"
+    max_patreon_api_reqs_per_day: "Numero massimo di richieste API Patreon al giorno"
+    patreon_verbose_log: 'abilita la diagnostica dettagliata del payload di patreon'
+    patreon_donation_prompt_enabled: "Abilitare la richiesta di donazione?"
+    patreon_donation_prompt_show_after_topics: "Mostra la richiesta di donazione dopo n argomenti"
+    patreon_donation_prompt_campaign_url: "URL della campagna per la richiesta di donazioni"
+    errors:
+      patreon_creator_username_not_set: "Devi impostare il nome utente di Patreon Creator Discourse prima di abilitare l'accesso a Patreon."
+  dashboard:
+    problem:
+      access_token_invalid: "I valori dei token di accesso e aggiornamento di Patreon Creator sono errati. Devi copiare e incollare i nuovi token dal <a href='https://www.patreon.com/platform/documentation/clients'>sito web Patreon</a> alle <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>impostazioni del sito</a>."
+  patreon:
+    error:
+      invalid_response: "Risposta non valida dall'API Patreon"

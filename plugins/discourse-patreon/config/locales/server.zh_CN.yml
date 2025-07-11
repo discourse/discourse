@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    patreon_enabled: '启用 discourse-patreon 插件'
+    patreon_login_enabled: '启用 Patreon 社交登录'
+    patreon_client_id: '生成的 Patreon 客户端 ID'
+    patreon_client_secret: '生成的 Patreon 客户端密钥'
+    patreon_webhook_secret: '生成的 Patreon 网络钩子密钥'
+    patreon_creator_discourse_username: "Discourse 帐户的用户名，用于使用“Patreon 社交登录”通过 Patreon 创作者帐户登录"
+    patreon_creator_access_token: "生成的 Patreon 创作者的访问令牌"
+    patreon_creator_refresh_token: "生成的 Patreon 创作者的刷新令牌"
+    patreon_declined_pledges_grace_period_days: "承诺被完全拒绝之前的宽限期（以天为单位）。"
+    max_patreon_api_reqs_per_hr: "每小时最大 Patreon API 请求数量"
+    max_patreon_api_reqs_per_day: "每天最大 Patreon API 请求数量"
+    patreon_verbose_log: '启用 Patreon 有效负载的详细日志记录'
+    patreon_donation_prompt_enabled: "启用捐助提示？"
+    patreon_donation_prompt_show_after_topics: "在 n 个话题后显示捐助提示"
+    patreon_donation_prompt_campaign_url: "捐助提示活动 URL"
+    errors:
+      patreon_creator_username_not_set: "在启用 Patreon 登录之前，您需要设置 Patreon 创作者 Discourse 用户名设置。"
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon 创作者的访问和刷新令牌值不正确。您必须将新的令牌从 <a href='https://www.patreon.com/platform/documentation/clients'>Patreon 网站</a>复制粘贴到<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>网站设置</a>。"
+  patreon:
+    error:
+      invalid_response: "Patreon API 的响应无效"
