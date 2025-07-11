@@ -157,6 +157,8 @@ GEM
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
     faraday-net_http (3.4.1)
       net-http (>= 0.5.0)
     faraday-retry (2.3.2)
@@ -213,6 +215,7 @@ GEM
       progress (~> 3.0, >= 3.0.1)
     image_size (3.4.0)
     in_threads (1.6.0)
+    inflection (1.0.0)
     io-console (0.8.0)
     irb (1.15.2)
       pp (>= 0.6.0)
@@ -290,6 +293,7 @@ GEM
     multi_json (1.16.0)
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
+    multipart-post (2.2.3)
     mustache (1.1.1)
     net-http (0.6.0)
       uri
@@ -643,6 +647,13 @@ GEM
     yaml-lint (0.1.2)
     yard (0.9.37)
     zeitwerk (2.7.3)
+    zendesk_api (1.38.0.rc1)
+      faraday (> 2.0.0)
+      faraday-multipart
+      hashie (>= 3.5.2, < 6.0.0)
+      inflection
+      mini_mime
+      multipart-post (~> 2.0)
 
 PLATFORMS
   aarch64-linux
@@ -700,6 +711,7 @@ DEPENDENCIES
   fabrication
   faker
   faraday
+  faraday-multipart (= 1.0.4)
   faraday-retry
   fast_blank
   fastimage
@@ -707,6 +719,7 @@ DEPENDENCIES
   htmlentities
   http_accept_language
   image_optim
+  inflection (= 1.0.0)
   iso8601
   json
   json_schemer
@@ -730,6 +743,7 @@ DEPENDENCIES
   minio_runner
   mocha
   multi_json
+  multipart-post (= 2.2.3)
   mustache
   net-http
   net-imap
@@ -801,6 +815,7 @@ DEPENDENCIES
   yaml-lint
   yard
   zeitwerk
+  zendesk_api (= 1.38.0.rc1)
 
 CHECKSUMS
   actionmailer (7.2.2.1) sha256=b02ae523c32c8ad762d4db941e76f3c108c106030132247ee7a7b8c86bc7b21f
@@ -870,6 +885,7 @@ CHECKSUMS
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
   faker (3.5.2) sha256=f9a80291b2e3f259801d1dd552f0732fe04dce5d1f74e798365bc0413789c473
   faraday (2.13.2) sha256=5c19762e3bbe78e61d8007c5119f2968373c5296d6c6d6aa05b6f9cec34f2a1a
+  faraday-multipart (1.0.4) sha256=9012021ab57790f7d712f590b48d5f948b19b43cfa11ca83e6459f06090b0725
   faraday-net_http (3.4.1) sha256=095757fae7872b94eac839c08a1a4b8d84fd91d6886cfbe75caa2143de64ab3b
   faraday-retry (2.3.2) sha256=2402d2029032ebd238a2046221e67f6ef0da78c5a8ce8cd4f8b9c62e4d6451d1
   fast_blank (1.0.1) sha256=269fc30414fed4e6403bc4a49081e1ea539f8b9226e59276ed1efaefabaa17ea
@@ -902,6 +918,7 @@ CHECKSUMS
   image_optim (0.31.4) sha256=5bffd0891268e8d189d46ee4b8599918581bba1032d244e6ace4779a434776c0
   image_size (3.4.0) sha256=c6a580513fe74947e25e5d3f0aea1e33add6c20f7d0007efa65504317b7f029a
   in_threads (1.6.0) sha256=91a7e6138d279dc632f59b8a9a409e47148948e297c0f69c92f9a2479a182149
+  inflection (1.0.0) sha256=ceba9b26fc28b9af82e33e822d28f78a4312af75687efec81d5ef1062498d355
   io-console (0.8.0) sha256=cd6a9facbc69871d69b2cb8b926fc6ea7ef06f06e505e81a64f14a470fddefa2
   irb (1.15.2) sha256=222f32952e278da34b58ffe45e8634bf4afc2dc7aa9da23fed67e581aa50fdba
   iso8601 (0.13.0) sha256=298c2b15b7be5fa95a1372813d36a2257656cd8e906dfbc1f5cb409851425aa2
@@ -948,6 +965,7 @@ CHECKSUMS
   msgpack (1.8.0) sha256=e64ce0212000d016809f5048b48eb3a65ffb169db22238fb4b72472fecb2d732
   multi_json (1.16.0) sha256=111f3120b69989829e7819321e3f626b943c04017cedf912b8fc7125fefa7636
   multi_xml (0.7.2) sha256=307a96dc48613badb7b2fc174fd4e62d7c7b619bc36ea33bfd0c49f64f5787ce
+  multipart-post (2.2.3) sha256=462979de2971b8df33c2ee797fd497731617241f9dcd93960cc3caccb2dd13d8
   mustache (1.1.1) sha256=90891fdd50b53919ca334c8c1031eada1215e78d226d5795e523d6123a2717d0
   net-http (0.6.0) sha256=9621b20c137898af9d890556848c93603716cab516dc2c89b01a38b894e259fb
   net-imap (0.5.9) sha256=d95905321e1bd9f294ffc7ff8697be218eee1ec96c8504c0960964d0a0be33fc
@@ -1105,6 +1123,7 @@ CHECKSUMS
   yaml-lint (0.1.2) sha256=e3960b171766ae187338a169815e99fe10fcb0d9c22b1c539e8d57e114324c8a
   yard (0.9.37) sha256=a6e910399e78e613f80ba9add9ba7c394b1a935f083cccbef82903a3d2a26992
   zeitwerk (2.7.3) sha256=b2e86b4a9b57d26ba68a15230dcc7fe6f040f06831ce64417b0621ad96ba3e85
+  zendesk_api (1.38.0.rc1) sha256=9ebe2575d223ed1c0651b2d10df6c010141cda49d524c38532b472f7e8bb3f7a
 
 RUBY VERSION
    ruby 3.3.1p55

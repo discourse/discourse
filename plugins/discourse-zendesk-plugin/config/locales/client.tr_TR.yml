@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
+  js:
+    topic:
+      create_zendesk_issue: "Zendesk Bileti Oluştur"
+      view_zendesk_issue: "Zendesk'te görüntüle"
+    zendesk:
+      credentials_not_setup: Zendesk giriş bilgilerinizi ayarlamadınız.
+      url_not_set: Zendesk URL'niz şu anda ayarlı değil.
+      general_error: Bir şeyler ters gitti.
+  site_settings:
+    zendesk_url: Zendesk URL'niz. ör. https://YOUR_SUBDOMAIN.zendesk.com/api/v2
+    zendesk_enabled: Zendesk eklentisini etkinleştirin
+    zendesk_autogenerate_all_categories: Tüm kategoriler için otomatik olarak bilet oluştur. Etkinleştirilirse `zendesk_autogenerate_categories` yok sayılır.
+    zendesk_autogenerate_categories: Otomatik olarak Zendesk biletleri oluşturacak kategorilerin listesi.
+    zendesk_jobs_api_token: Zendesk kimlik doğrulaması için API token'ı
+    zendesk_jobs_email: Zendesk kimlik doğrulaması için kullanılacak e-posta
+    zendesk_job_push_all_posts: Bir konudaki tüm gönderiler Zendesk yorumları olarak itilsin mi? Devre dışı bırakılırsa yalnızca ilk gönderi Zendesk'e gönderilir.
+    zendesk_job_push_only_author_posts: Yalnızca asıl konu yazarının gönderilerini zendesk'e itin. Yalnızca "zendesk_job_push_all_posts" etkinleştirilmişse geçerlidir
+    sync_comments_from_zendesk: Zendesk'ten Discourse'a otomatik yorum gönderin. Yalnızca `zendesk_autogenerate_categories` içindeki konular için geçerlidir.
+    zendesk_incoming_webhook_token: Zendesk giden web kancasından gelen yükte gönderilen token. Yalnızca "sync_comments_from_zendesk" etkinleştirilmişse gereklidir.
+    zendesk_tags: Her bir bilete eklenecek etiketlerin listesi
