@@ -1,0 +1,13 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fa:
+  site_settings:
+    cakeday_enabled: "در روزی که کاربر به فروم پیوسته اسمایلی کیک تولد را کنار نام کاربری او نمایش بده."
+    cakeday_emoji: "اسمایلی که در کنار نام کاربری نمایش داده شود. چندین اسمایلی را میتوان به صورت زیر مشخص کرد: smile|cake|smile"
+    cakeday_birthday_enabled: "اسمایلی روز تولد را در روز تولد کاربر کنار نام کاربری او نمایش بده."
+    cakeday_birthday_emoji: "اسمایلی که در کنار نام کاربری نمایش داده شود. چندین اسمایلی را میتوان به صورت زیر مشخص کرد: smile|cake|smile"

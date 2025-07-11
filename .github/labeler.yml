@@ -78,6 +78,10 @@ discourse-rss-polling:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-rss-polling/**/*
 
+discourse-cakeday:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-cakeday/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

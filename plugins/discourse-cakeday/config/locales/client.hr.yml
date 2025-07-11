@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Danas vam je rođendan!"
+        title: "Danas mi je rođendan!"
+        label: "Datum rođenja"
+      anniversary:
+        user_title: "Danas je godišnjica vašeg učlanjenja na forum!"
+        title: "Danas je godišnjica mog učlanjenja na forum!"
+    cakeday:
+      title: Godišnjica učlanjenja
+      today: "Danas"
+      tomorrow: "Sutra"
+      upcoming: "Nadolazeći"
+      all: "Sve"
+    birthdays:
+      title: "Rođendani"
+      month:
+        title: "Rođendani u mjesecu"
+        empty: "Nema korisnika koji imaju rođendane ovaj mjesec."
+      upcoming:
+        title: "Rođendani od %{start_date} do %{end_date}"
+        empty: "Nema korisnika kojima je rođendan u sljedećih sedam dana."
+      today:
+        title: "Rođendani za %{date}"
+        empty: "Nema korisnika kojima je danas rođendan."
+      tomorrow:
+        empty: "Nema korisnika kojima je rođendan sutra."
+    anniversaries:
+      title: "Godišnjice"
+      month:
+        title: "Godišnjice u mjesecu"
+        empty: "Nema korisnika kojima je godišnjica ovaj mjesec."
+      upcoming:
+        title: "Godišnjice za %{start_date} - %{end_date}"
+        empty: "Nema korisnika kojima je godišnjica u sljedećih sedam dana."
+      today:
+        title: "Godišnjice za %{date}"
+        empty: "Nema korisnika koji danas slave godišnjice."
+      tomorrow:
+        empty: "Nema korisnika koji sutra slave godišnjicu."

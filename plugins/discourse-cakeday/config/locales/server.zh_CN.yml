@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    cakeday_enabled: "在用户加入 Discourse 的日期于用户名旁显示纪念日表情符号。"
+    cakeday_emoji: "将在用户加入 Discourse 的日期于用户名称旁显示的表情符号。可以通过 smile|cake|smile 指定多个表情符号"
+    cakeday_birthday_enabled: "在用户生日当天于用户名称旁显示生日表情符号。"
+    cakeday_birthday_emoji: "将在用户生日于用户名称旁显示的表情符号。可以通过 smile|cake|smile 指定多个表情符号"

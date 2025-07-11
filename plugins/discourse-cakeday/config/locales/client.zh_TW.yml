@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    user:
+      date_of_birth:
+        user_title: "今天是您的生日！"
+        title: "今天是我的生日！"
+        label: "生日"
+      anniversary:
+        user_title: "今天是您加入社群的週年紀念日！"
+        title: "今天是我加入社群的週年紀念日！"
+    cakeday:
+      title: Cakeday
+      today: "今天"
+      tomorrow: "明天"
+      upcoming: "即將到來"
+      all: "全部"
+    birthdays:
+      title: "生日"
+      month:
+        title: "生日在"
+        empty: "沒有使用者在這個月慶祝他們的生日。"
+      upcoming:
+        title: "生日是 %{start_date} - %{end_date}"
+        empty: "沒有使用者在未來 7 天慶祝他們的生日。"
+      today:
+        title: "生日是 %{date}"
+        empty: "沒有使用者在今天慶祝他們的生日。"
+      tomorrow:
+        empty: "沒有使用者在明天慶祝他們的生日。"
+    anniversaries:
+      title: "週年紀念日"
+      month:
+        title: "週年紀念日是"
+        empty: "沒有使用者在這個月慶祝他們的週年紀念日。"
+      upcoming:
+        title: "週年紀念日是 %{start_date} - %{end_date}"
+        empty: "沒有使用者在未來 7 天慶祝他們的週年紀念日。"
+      today:
+        title: "週年紀念日是 %{date}"
+        empty: "沒有使用者在今天慶祝他們的週年紀念日。"
+      tomorrow:
+        empty: "沒有使用者在明天慶祝他們的週年紀念日。"

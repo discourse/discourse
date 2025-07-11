@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Avui és el vostre natalici!"
+        title: "Avui és el meu natalici!"
+        label: "Data de naixement"
+      anniversary:
+        user_title: "Avui és l'aniversari del dia en què us vau sumar a la comunitat!"
+        title: "Avui és l'aniversari del dia en què em vaig sumar a aquesta comunitat!"
+    cakeday:
+      title: Dia de pastís
+      today: "Avui"
+      tomorrow: "Demà"
+      upcoming: "Vinent"
+      all: "Tots"
+    birthdays:
+      title: "Natalicis"
+      month:
+        title: "Natalicis en el mes de"
+        empty: "No hi ha usuaris que celebrin el natalici aquest mes."
+      upcoming:
+        title: "Natalicis en %{start_date} - %{end_date}"
+        empty: "No hi ha usuaris que celebri el natalici en els 7 dies vinents."
+      today:
+        title: "Natalicis en %{date}"
+        empty: "No hi ha usuaris que celebrin el natalici avui."
+      tomorrow:
+        empty: "No hi ha usuaris que celebrin el natalici demà."
+    anniversaries:
+      title: "Aniversaris"
+      month:
+        title: "Aniversaris del mes de"
+        empty: "No hi ha usuaris que celebrin un aniversari aquest mes."
+      upcoming:
+        title: "Aniversaris en %{start_date} - %{end_date}"
+        empty: "No hi ha usuaris que celebrin un aniversari en els 7 dies vinents."
+      today:
+        title: "Aniversaris en %{date}"
+        empty: "No hi ha usuaris que celebrin un aniversari avui."
+      tomorrow:
+        empty: "No hi ha usuaris que celebrin un aniversari demà."

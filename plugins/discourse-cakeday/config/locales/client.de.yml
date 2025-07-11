@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Heute ist dein Geburtstag!"
+        title: "Heute ist mein Geburtstag!"
+        label: "Geburtstag"
+      anniversary:
+        user_title: "Heute ist der Jahrestag deiner Registrierung!"
+        title: "Heute ist der Jahrestag meiner Registrierung!"
+    cakeday:
+      title: Jahrestag
+      today: "Heute"
+      tomorrow: "Morgen"
+      upcoming: "Demnächst"
+      all: "Alle"
+    birthdays:
+      title: "Geburtstage"
+      month:
+        title: "Geburtstage im Monat"
+        empty: "Kein Benutzer feiert diesen Monat seinen Geburtstag."
+      upcoming:
+        title: "Bevorstehende Geburtstage %{start_date}–%{end_date}"
+        empty: "Kein Benutzer feiert in den nächsten 7 Tagen seinen Geburtstag."
+      today:
+        title: "Geburtstage %{date}"
+        empty: "Kein Benutzer feiert heute seinen Geburtstag."
+      tomorrow:
+        empty: "Kein Benutzer feiert morgen seinen Geburtstag."
+    anniversaries:
+      title: "Jahrestage"
+      month:
+        title: "Jahrestage des Monats"
+        empty: "Kein Benutzer feiert in diesem Monat seinen Jahrestag."
+      upcoming:
+        title: "Bevorstehende Jahrestage %{start_date}–%{end_date}"
+        empty: "Kein Benutzer feiert in den nächsten 7 Tagen seinen Jahrestag."
+      today:
+        title: "Jahrestage %{date}"
+        empty: "Kein Benutzer feiert heute seinen Jahrestag."
+      tomorrow:
+        empty: "Kein Benutzer feiert morgen seinen Jahrestag."

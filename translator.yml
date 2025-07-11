@@ -199,3 +199,10 @@ files:
   - source_path: plugins/discourse-rss-polling/config/locales/server.en.yml
     destination_path: plugins/rss-polling/server.yml
     label: rss-polling
+
+  - source_path: plugins/discourse-cakeday/config/locales/client.en.yml
+    destination_path: plugins/cakeday/client.yml
+    label: cakeday
+  - source_path: plugins/discourse-cakeday/config/locales/server.en.yml
+    destination_path: plugins/cakeday/server.yml
+    label: cakeday

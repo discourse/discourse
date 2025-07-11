@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    user:
+      date_of_birth:
+        user_title: "今日はあなたの誕生日です！"
+        title: "今日は私の誕生日です！"
+        label: "生年月日"
+      anniversary:
+        user_title: "今日は、あなたが私たちのコミュニティーに参加した日の記念日です！"
+        title: "今日は、私がこのコミュニティーに参加した日の記念日です！"
+    cakeday:
+      title: ケーキデイ
+      today: "今日"
+      tomorrow: "明日"
+      upcoming: "今後"
+      all: "すべて"
+    birthdays:
+      title: "誕生日"
+      month:
+        title: "月の誕生日"
+        empty: "今月が誕生日のユーザーはいません。"
+      upcoming:
+        title: "%{start_date}～%{end_date} の誕生日"
+        empty: "今後 7 日間が誕生日のユーザーはいません。"
+      today:
+        title: "%{date} の誕生日"
+        empty: "今日が誕生日のユーザーはいません。"
+      tomorrow:
+        empty: "明日が誕生日のユーザーはいません。"
+    anniversaries:
+      title: "記念日"
+      month:
+        title: "月の記念日"
+        empty: "今月記念日のあるユーザーはいません。"
+      upcoming:
+        title: "%{start_date}～%{end_date} の記念日"
+        empty: "今後 7 日間に記念日のあるユーザーはいません。"
+      today:
+        title: "%{date} の記念日"
+        empty: "今日が記念日のユーザーはいません。"
+      tomorrow:
+        empty: "明日が記念日のユーザーはいません。"

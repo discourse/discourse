@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    cakeday_enabled: "사용자가 담론에 참여한 날짜에 사용자 이름 옆에 케이크 데이 이모지를 표시합니다."
+    cakeday_emoji: "사용자가 Discourse에 가입 한 날짜에 사용자 이름 옆에 표시되는 그림 이모티콘. 여러 이모티콘을 지정할 수 있습니다 : smile | cake | smile"
+    cakeday_birthday_enabled: "생일에 사용자 이름 옆에 생일 그림 이모티콘을 표시합니다."
+    cakeday_birthday_emoji: "생일에 사용자 이름 옆에 표시되는 그림 이모티콘. 여러 이모티콘을 지정할 수 있습니다 : smile | cake | smile"

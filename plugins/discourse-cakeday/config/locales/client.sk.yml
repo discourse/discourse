@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Dnes máte narodeniny!"
+        title: "Dnes mám narodeniny!"
+        label: "Dátum narodenia"
+    cakeday:
+      today: "Dnes"
+      tomorrow: "Zajtra"
+      all: "Všetky"
+    birthdays:
+      title: "Narodeniny"

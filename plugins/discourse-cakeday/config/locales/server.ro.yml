@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    cakeday_enabled: "Arată emoji(uri) cakeday lângă numele utilizatorului la data în care s-a înscris în comunitate."
+    cakeday_emoji: "Emoji[s] care se vor afișa lângă numele utilizatorului la data la care s-a alăturat comunității. Mai multe emojiuri pot fi specificate prin: smile|cake| smile"
+    cakeday_birthday_enabled: "Afișează emoji(uri) pentru ziua de naștere alături de numele utilizatorului în ziua acestuia."
+    cakeday_birthday_emoji: "Emoji-uri, care vor fi afișate lângă numele utilizatorului în ziua lui de naștere. Se pot specifica mai multe emoji-uri folosind: smile|cake|smile"

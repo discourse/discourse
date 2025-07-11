@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    cakeday_enabled: "Показывать cakeday-эмодзи напротив имени пользователя в годовщину регистрации на форуме."
+    cakeday_emoji: "Показывать эти эмодзи напротив имени пользователя в годовщину регистрации на форуме. Можно указать несколько эмодзи сразу, например: smile|cake|smile"
+    cakeday_birthday_enabled: "Показывать поздравительные эмодзи напротив имени пользователя в его день рождения."
+    cakeday_birthday_emoji: "Показывать эти эмодзи напротив имени пользователя в его день рождения. Можно указать несколько эмодзи сразу, например: smile|cake|smile"

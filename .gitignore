@@ -62,6 +62,7 @@
 !/plugins/discourse-affiliate
 !/plugins/discourse-graphviz
 !/plugins/discourse-rss-polling
+!/plugins/discourse-cakeday
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

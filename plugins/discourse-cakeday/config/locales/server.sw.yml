@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  site_settings:
+    cakeday_enabled: "Onyesha alama y[z]a keki pembeni ya jina la mtumiaji siku aliyojiunga Discourse."
+    cakeday_emoji: "Ishara za vitendo [z]itaonyeshwa pembeni ya jina la mtumiaji siku aliyojiunga Discourse. Ishara nyingi zinaweza kuchaguliwa na: smile|cake|smile"
+    cakeday_birthday_enabled: "Onyesha ishara ya siku y[z]a kuzaliwa pembeni ya jina la mtumiaji siku zao za kuzaliwa."
+    cakeday_birthday_emoji: "Ishara za vitendo [z]itaonyeshwa pembeni ya jina la mtumiaji siku aliyojiunga Discourse. Ishara nyingi zinaweza kuchaguliwa na: smile|cake|smile"
