@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    enable_discourse_github_plugin: "Włącz wtyczkę discourse-github"
+    github_linkback_enabled: "Połącz problemy z GitHub z dyskusjami na forum"
+    github_linkback_projects: "Lista projektów do odsyłania"
+    github_linkback_access_token: 'Ważny token dostępu dla użytkownika, który opublikuje link zwrotny oraz do liczenia commitów/wkładów w celu przyznania odznak. Zerknij <a href="https://meta.discourse.org/t/99895">tutaj</a>, aby uzyskać instrukcje, jak zdobyć token.'
+    github_badges_enabled: "Włącz odznaki GitHub"

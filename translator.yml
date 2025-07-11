@@ -220,3 +220,10 @@ files:
   - source_path: plugins/discourse-chat-integration/config/locales/server.en.yml
     destination_path: plugins/chat-integration/server.yml
     label: chat-integration
+
+  - source_path: plugins/discourse-github/config/locales/client.en.yml
+    destination_path: plugins/github/client.yml
+    label: github
+  - source_path: plugins/discourse-github/config/locales/server.en.yml
+    destination_path: plugins/github/server.yml
+    label: github

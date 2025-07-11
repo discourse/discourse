@@ -90,6 +90,10 @@ discourse-chat-integration:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-chat-integration/**/*
 
+discourse-github:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-github/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
