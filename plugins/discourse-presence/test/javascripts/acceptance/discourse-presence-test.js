@@ -11,6 +11,11 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Discourse Presence Plugin", function (needs) {
   needs.user({ whisperer: true });
+  needs.pretender((server, helper) => {
+    server.get("/drafts/topic_280.json", function () {
+      return helper.response(200, { draft: null });
+    });
+  });
 
   test("Doesn't break topic creation", async function (assert) {
     await visit("/");

@@ -15,6 +15,9 @@ acceptance("Emoji", function (needs) {
     server.get("/emojis/search-aliases.json", () => {
       return helper.response([]);
     });
+    server.get("/drafts/topic_280.json", function () {
+      return helper.response(200, { draft: null });
+    });
   });
 
   test("emoji is cooked properly", async function (assert) {
