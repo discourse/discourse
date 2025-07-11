@@ -65,12 +65,12 @@ module Chat
       ::Chat::Channel.includes(:chatable).find_by(id: params.channel_id)
     end
 
-    def fetch_membership(channel:, guardian:)
-      channel.membership_for(guardian.user)
-    end
-
     def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
+    end
+
+    def fetch_membership(channel:, guardian:)
+      channel.membership_for(guardian.user)
     end
 
     def fetch_target_message_id(params:, membership:)
