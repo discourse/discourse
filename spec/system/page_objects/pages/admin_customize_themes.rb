@@ -99,6 +99,39 @@ module PageObjects
         has_css?("#{setting_selector(setting_name)} .desc", exact_text: description)
       end
 
+      def has_theme_site_setting?(setting_name)
+        find(theme_site_setting_selector(setting_name)).has_css?(
+          ".setting-label",
+          text: SiteSetting.humanized_name(setting_name),
+        )
+        find(theme_site_setting_selector(setting_name)).has_css?(
+          ".setting-value",
+          text: SiteSetting.description(setting_name),
+        )
+      end
+
+      def has_overridden_theme_site_setting?(setting_name)
+        has_css?(theme_site_setting_selector(setting_name, overridden: true))
+      end
+
+      def has_no_overridden_theme_site_setting?(setting_name)
+        has_no_css?(theme_site_setting_selector(setting_name, overridden: true))
+      end
+
+      def toggle_theme_site_setting(setting_name)
+        find(theme_site_setting_selector(setting_name)).find(
+          ".setting-value input[type='checkbox']",
+        ).click
+        find(theme_site_setting_selector(setting_name)).find(".setting-controls .ok").click
+      end
+
+      def reset_overridden_theme_site_setting(setting_name)
+        find(theme_site_setting_selector(setting_name, overridden: true)).find(
+          ".setting-controls__undo",
+        ).click
+        find(theme_site_setting_selector(setting_name)).find(".setting-controls .ok").click
+      end
+
       def has_no_themes_list?
         has_no_css?(".themes-list-header")
       end
@@ -209,6 +242,10 @@ module PageObjects
 
       def setting_selector(setting_name, overridden: false)
         "section.theme.settings .setting#{overridden ? ".overridden" : ""}[data-setting=\"#{setting_name}\"]"
+      end
+
+      def theme_site_setting_selector(setting_name, overridden: false)
+        "section.theme.theme-site-settings .setting#{overridden ? ".overridden" : ""}.theme-site-setting[data-setting=\"#{setting_name}\"]"
       end
     end
   end

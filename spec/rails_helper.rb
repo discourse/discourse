@@ -142,6 +142,8 @@ module TestSetup
     WordWatcher.disable_cache
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+    ThemeSiteSetting.delete_all
+    Theme.expire_site_setting_cache!
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
