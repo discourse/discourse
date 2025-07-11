@@ -30,37 +30,37 @@ export default RouteTemplate(
       @onToggleMenu={{@controller.toggleMenu}}
     />
 
-    <div class="admin-nav admin-site-settings-category-nav pull-left">
-      <ul class="nav nav-stacked">
-        {{#each @controller.visibleSiteSettings as |category|}}
-          <li
-            class={{concatClass
-              "admin-site-settings-category-nav__item"
-              category.nameKey
-            }}
-          >
-            <LinkTo
-              @route="adminSiteSettingsCategory"
-              @model={{category.nameKey}}
-              class={{category.nameKey}}
-              title={{category.name}}
+    <div class="admin-nav__wrapper">
+      <div class="admin-nav admin-site-settings-category-nav">
+        <ul class="nav nav-stacked">
+          {{#each @controller.visibleSiteSettings as |category|}}
+            <li
+              class={{concatClass
+                "admin-site-settings-category-nav__item"
+                category.nameKey
+              }}
             >
-              {{category.name}}
-              {{#if @controller.filtersApplied}}
-                <span class="count">({{category.count}})</span>
-              {{/if}}
-            </LinkTo>
-          </li>
-        {{/each}}
-      </ul>
+              <LinkTo
+                @route="adminSiteSettingsCategory"
+                @model={{category.nameKey}}
+                class={{category.nameKey}}
+                title={{category.name}}
+              >
+                {{category.name}}
+                {{#if @controller.filtersApplied}}
+                  <span class="count">({{category.count}})</span>
+                {{/if}}
+              </LinkTo>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+
+      <div class="admin-detail mobile-closed">
+        {{outlet}}
+      </div>
+
     </div>
-
-    <div class="admin-detail pull-left mobile-closed">
-      {{outlet}}
-    </div>
-
-    <div class="clearfix"></div>
-
     <AdminSiteSettingsChangesBanner />
   </template>
 );
