@@ -15,6 +15,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 export default class DAutocompleteResults extends Component {
   @tracked selectedIndex = this.args.data.selectedIndex || 0;
   wrapperElement;
+  isInitialRender = true;
 
   constructor(owner, args) {
     super(owner, args);
@@ -27,6 +28,7 @@ export default class DAutocompleteResults extends Component {
   @action
   updateSelectedIndex(newIndex) {
     this.selectedIndex = newIndex;
+    this.isInitialRender = false; // Mark that this is navigation, not initial render
     // Apply DOM manipulation like original autocomplete
     this.markSelected();
   }
@@ -44,11 +46,13 @@ export default class DAutocompleteResults extends Component {
         const selectedLink = links[this.selectedIndex];
         selectedLink.classList.add("selected");
 
-        // Simple scrollIntoView to handle menu scrolling
-        selectedLink.scrollIntoView({
-          block: "nearest",
-          behavior: "smooth",
-        });
+        // Only scroll during navigation, not initial render
+        if (!this.isInitialRender) {
+          selectedLink.scrollIntoView({
+            block: "nearest",
+            behavior: "smooth",
+          });
+        }
       }
     }
   }
