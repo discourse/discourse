@@ -1,0 +1,55 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Remova os pontos e vírgulas da consulta."
+        dirty: "Deve guardar a consulta antes de executar."
+    explorer:
+      or: "ou"
+      admins_only: "O explorador de dados está disponível apenas para os administradores."
+      title: "Explorador de Dados"
+      create: "Criar Nova"
+      create_placeholder: "Nome da consulta..."
+      import:
+        label: "Importar"
+        modal: "Importar Uma Consulta"
+      help:
+        label: "Ajuda"
+      schema:
+        title: "Esquema da Base de Dados"
+        filter: "Pesquisar..."
+        sensitive: "O conteúdo desta coluna pode conter informação particularmente sensível ou privada. Por favor, tenha cuidado ao utilizar os conteúdos desta coluna."
+      types:
+        bool:
+          yes: "Sim"
+          no: "Não"
+      export: "Exportar"
+      save: "Guardar alterações"
+      saverun: "Guardar Alterações e Executar"
+      run: "Executar"
+      undo: "Ignorar Alterações"
+      edit: "Editar"
+      delete: "Eliminar"
+      recover: "Recuperar Consulta"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Uma consulta tem alterações não guardadas que serão perdidas se navegar para outro lado."
+      run_time: "Consulta concluída em %{value} ms."
+      result_count:
+        one: "%{count} resultado."
+        other: "%{count} resultados."
+      query_groups: "Grupos"
+      query_description: "Descrição"
+      column: "Coluna %{number}"
+      explain_label: "Incluir plano de consulta?"
+      save_params: "Definir Predefinições"
+      reset_params: "Repor"
+      search_placeholder: "Pesquisar..."
+    group:
+      reports: "Relatórios"

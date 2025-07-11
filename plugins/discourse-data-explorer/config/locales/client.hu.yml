@@ -1,0 +1,73 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Pontosvesszők eltávolítása a lekérdezésből."
+        dirty: "Futtatás előtt el kell mentenie a lekérdezést."
+    explorer:
+      or: "vagy"
+      admins_only: "Az adatfelfedező csak az adminok számára érhető el."
+      allow_groups: "Engedélyezés csoportok számára, hogy hozzáférjenek ehhez a lekérdezéshez"
+      title: "Adatfelfedező"
+      create: "Új létrehozása"
+      create_placeholder: "Lekérdezés neve…"
+      description_placeholder: "Adjon meg egy leírást"
+      import:
+        label: "Importálás"
+        modal: "Lekérdezés importálása"
+        unparseable_json: "Nem értelmezhető JSON-fájl."
+        wrong_json: "Hibás JSON-fájl. A JSON-fájlnak kellene tartalmaznia egy „query” objektumot, amelynek legalább egy „sql” tulajdonsággal kell rendelkeznie."
+      help:
+        label: "Súgó"
+        modal_title: "Adatfelfedező súgó"
+        auto_resolution: "<h2>Automatikus entitásfeloldás</h2> <p>Ha egy lekérdezés egy entitásazonosítót ad vissza, akkor az Adatfelfedező automatikusan lecserélheti az entitás nevére és más hasznos információkra a találatokban. Az automatikus feloldás ezeknél érhető el: <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> és <i><b>badge_id</b></i>. Próbálja ki ezen lekérdezés futtatásával:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Egyéni paraméterek létrehozása</h2> <p>Hogy egyéni paramétereket hozzon létre a lekérdezéseihez, tegye ezt a lekérdezés fölé, és kövesse a formátumot:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Megjegyzés: a [params] sor kötelező, az azt megelőző két kötőjellel együtt, és deklarálnia kell minden egyes egyéni paramétert.</i></p>"
+        default_values: "<h3>Alapértelmezett értékek</h3> <p>Deklarálhatja a paramétereket alapértelmezett értékkel vagy azok nélkül. Az alapértelmezett értékek meg fognak jelenni a szövegmezőben, a lekérdezésszerkesztő alatt, amellyel a céljainak megfelelően szerkesztheti azokat. Az alapértelmezett érték nélküli paraméterek is szövegmezőt fognak kapni, de üresek lesznek, és pirossal lesznek kiemelve..</p> <pre><code>-- [params]\n-- text :username = saját_felhasználónév\n-- int :age</code></pre>"
+        data_types: "<h3>Adattípusok</h3> <p>Itt szerepel néhány gyakori használható adattípus:</p> <ul> <li><b>integer</b> - előjeles négybájtos egész</li> <li><b>text</b> - változó hosszúságú karakterlánc</li> <li><b>boolean</b> – igaz/hamis</li> <li><b>date</b> - naptári dátum (év, hó, nap)</li> </ul> <p>További információkért az adattípusokról, keresse fel <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>ezt a weboldalt</a>.</p>"
+      schema:
+        title: "Adatbázis-séma"
+        filter: "Keresés…"
+        sensitive: "Az oszlop tartalma különösen érzékeny vagy privát információkat tartalmazhat. Legyen óvatos az oszlop tartalmának használatakor."
+      types:
+        bool:
+          yes: "Igen"
+          no: "Nem"
+          null_: "Null"
+      export: "Exportálás"
+      save: "Módosítások mentése"
+      saverun: "Módosítások mentése és futtatása"
+      run: "Futtatás"
+      undo: "Módosítások elvetése"
+      edit: "Szerkesztés"
+      delete: "Törlés"
+      recover: "Lekérdezés törlésének visszavonása"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Tábla"
+      show_graph: "Grafikon"
+      others_dirty: "A lekérdezés nem mentett módosításokat tartalmaz, amelyek elvesznek, ha elnavigál."
+      run_time: "A lekérdezés %{value} ms alatt fejeződött be."
+      result_count:
+        one: "%{count} találat."
+        other: "%{count} találat."
+      query_name: "Lekérdezés"
+      query_groups: "Csoportok"
+      link: "Hivatkozás ehhez:"
+      report_name: "Jelentés"
+      query_description: "Leírás"
+      query_time: "Utolsó futás"
+      query_user: "Létrehozta:"
+      column: "%{number}. oszlop"
+      explain_label: "Beleveszi a lekérdezési tervet?"
+      save_params: "Alapértékek beállítása"
+      reset_params: "Alaphelyzet"
+      search_placeholder: "Keresés…"
+      no_search_results: "Sajnos nem találtunk a szövegének megfelelő találatot."
+    group:
+      reports: "Jelentések"

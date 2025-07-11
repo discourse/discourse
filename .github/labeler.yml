@@ -78,6 +78,10 @@ discourse-chat-integration:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-chat-integration/**/*
 
+discourse-data-explorer:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-data-explorer/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

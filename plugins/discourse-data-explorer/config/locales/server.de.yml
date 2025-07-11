@@ -1,0 +1,45 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    data_explorer_enabled: "Aktiviere den Daten-Explorer unter /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Plane eine PN mit den Ergebnissen des Daten-Explorers
+        description: Geplante Berichte an deine Nachrichten schicken
+        no_csv_allowed: "Wenn das Feld `attach_csv` verwendet wird, muss `csv` zur Liste der autorisierten Erweiterungen in den Website-Einstellungen hinzugefügt werden."
+      recurring_data_explorer_result_topic:
+        title: Einen Beitrag in einem Thema mit Daten-Explorer-Ergebnissen planen
+        description: Geplante Berichte zu einem bestimmten Thema veröffentlichen
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Geplanter Bericht für %{query_name}"
+        body: |
+          Hallo %{recipient_name}, dein Daten Explorer Bericht ist fertig.
+
+          Anfragename:
+          %{query_name}
+
+          Hier sind die Ergebnisse:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Daten-Explorer anzeigen</a>
+
+          Bericht erstellt um %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Geplanter Bericht für %{query_name}
+
+          Hier sind die Ergebnisse:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Abfrage im Data Explorer anzeigen</a>
+
+          Bericht erstellt um %{created_at} (%{timezone})
+      upload_appendix: "Anhang: [%{filename}|attachment](%{short_url})"

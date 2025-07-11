@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"
+        dirty: "چلانے سے پہلے آپ کا کمانڈ کو محفوظ کرنا لازمی ہے۔"
+    explorer:
+      or: "یا"
+      admins_only: "ڈیٹا ایکسپلورر صرف ایڈمنوں کو دستیاب ہے۔"
+      title: "ڈیٹا ایکسپلورر"
+      create: "نیا بنائیں"
+      create_placeholder: "ڈیٹا کمانڈ کا نام..."
+      description_placeholder: "یہاں تفصیل درج کریں"
+      import:
+        label: "درآمد"
+        modal: "ڈیٹا کمانڈ درآمد کریں"
+      help:
+        label: "مدد"
+      schema:
+        title: "ڈیٹا بیس سکیمہ"
+        filter: "تلاش کریں..."
+        sensitive: "اس کالم کے مواد میں خاص طور پر حساس یا نِجی معلومات موجود ہوسکتی ہے۔ براہ مہربانی، اِس کالم کے مواد کا استعمال کرتے وقت احتیاط کریں۔"
+      types:
+        bool:
+          yes: "ہاں "
+          no: "نہیں "
+          null_: "خالی"
+      export: "برآمد"
+      save: "تبدیلیاں محفوظ کریں"
+      saverun: "تبدیلیاں محفوظ کریں اور چلائیں"
+      run: "چلائیں"
+      undo: "تبدیلیاں منسوخ کریں"
+      edit: "ترمیم کریں"
+      delete: "حذف کریں"
+      recover: "ڈیٹا کمانڈ کا حذف کرنا منسوخ کریں"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "ایک ڈیٹا کمانڈ کی غیرمحفوظ کردہ تبدیلیاں موجود ہیں جو آپ کے یہاں سے جانے کے بعد کھو جائیں گی۔"
+      result_count:
+        one: "%{count} نتیجہ۔"
+        other: "%{count} نتائج۔"
+      query_name: "ڈیٹا کمانڈ"
+      query_groups: "گروپس"
+      report_name: "رپورٹ"
+      query_description: "تفصیل"
+      query_time: "چلا آخری دفعہ"
+      query_user: "نے بنایا"
+      explain_label: "ڈیٹا کمانڈ پلَین شامل کریں؟"
+      save_params: "ڈیفالٹس سَیٹ کریں"
+      reset_params: "رِی سَیٹ"
+      search_placeholder: "تلاش کریں..."
+      no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہ مل سکے۔"
+    group:
+      reports: "رپورٹیں"
