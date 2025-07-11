@@ -15,12 +15,14 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return i18n("sidebar.sections.community.links.my_messages.content");
+    return i18n("sidebar.sections.community.links.my_messages.title");
   }
 
   get text() {
     return i18n(
-      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
+      `sidebar.sections.community.links.${this.overridenName
+        .toLowerCase()
+        .replace(" ", "_")}.content`,
       { defaultValue: this.overridenName }
     );
   }

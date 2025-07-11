@@ -3,7 +3,7 @@
 describe "Viewing sidebar", type: :system do
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  context "as logged in user", type: :system do
+  context "as logged in user" do
     fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
@@ -36,7 +36,7 @@ describe "Viewing sidebar", type: :system do
       end
     end
 
-    describe "Community sidebar section", type: :system do
+    describe "Community sidebar section" do
       fab!(:user) { Fabricate(:user, locale: "pl_PL") }
       fab!(:translation_override) do
         TranslationOverride.create!(
@@ -180,6 +180,22 @@ describe "Viewing sidebar", type: :system do
         visit("/")
         expect(sidebar).to have_no_my_messages_link
       end
+
+      context "with translation override" do
+        fab!(:translation_override) do
+          TranslationOverride.create!(
+            locale: "en",
+            translation_key: "js.sidebar.sections.community.links.my_messages.content",
+            value: "Overrided",
+          )
+        end
+
+        it "is translated" do
+          sign_in(admin)
+          visit("/")
+          expect(sidebar).to have_my_messages_link("Overrided")
+        end
+      end
     end
 
     it "shouldn't display the panel header for the main sidebar" do
@@ -189,7 +205,7 @@ describe "Viewing sidebar", type: :system do
     end
   end
 
-  context "as anonymous user", type: :system do
+  context "as anonymous user" do
     describe "My messages sidebar link" do
       it "shouldn't show for anonymous user" do
         visit("/")
