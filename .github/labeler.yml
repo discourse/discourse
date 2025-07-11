@@ -82,6 +82,10 @@ discourse-cakeday:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-cakeday/**/*
 
+discourse-math:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-math/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
