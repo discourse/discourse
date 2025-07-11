@@ -54,6 +54,10 @@ discourse-openid-connect:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-openid-connect/**/*
 
+discourse-zendesk-plugin:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-zendesk-plugin/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

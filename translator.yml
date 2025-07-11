@@ -157,3 +157,10 @@ files:
   - source_path: plugins/discourse-openid-connect/config/locales/server.en.yml
     destination_path: plugins/openid-connect/server.yml
     label: openid-connect
+
+  - source_path: plugins/discourse-zendesk-plugin/config/locales/client.en.yml
+    destination_path: plugins/zendesk-plugin/client.yml
+    label: zendesk-plugin
+  - source_path: plugins/discourse-zendesk-plugin/config/locales/server.en.yml
+    destination_path: plugins/zendesk-plugin/server.yml
+    label: zendesk-plugin

@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
+  js:
+    topic:
+      create_zendesk_issue: "Créer un ticket Zendesk"
+      view_zendesk_issue: "Afficher sur Zendesk"
+    zendesk:
+      credentials_not_setup: Vous n'avez pas configuré vos informations d'identification Zendesk.
+      url_not_set: Votre adresse URL Zendesk n'est pas définie actuellement.
+      general_error: Une erreur est survenue.
+  site_settings:
+    zendesk_url: Votre adresse URL Zendesk. P. ex., https://YOUR_SUBDOMAIN.zendesk.com/api/v2
+    zendesk_enabled: Activer l'extension Zendesk
+    zendesk_autogenerate_all_categories: Créez automatiquement des tickets pour toutes les catégories. Si cette option est activée, « zendesk_autogenerate_categories » est ignoré.
+    zendesk_autogenerate_categories: Liste des catégories qui créeront automatiquement des tickets Zendesk.
+    zendesk_jobs_api_token: Jeton API pour l'authentification Zendesk
+    zendesk_jobs_email: E-mail à utiliser pour l'authentification Zendesk
+    zendesk_job_push_all_posts: Transférer tous les messages d'un sujet en tant que commentaires Zendesk ? Si ce paramètre est désactivé, seul le premier message sera envoyé à Zendesk.
+    zendesk_job_push_only_author_posts: Envoyer uniquement les messages de l'auteur du sujet d'origine à zendesk. S'applique uniquement si « zendesk_job_push_all_posts » est activé
+    sync_comments_from_zendesk: Publier automatiquement les commentaires de Zendesk sur Discourse. Ne s'applique que pour les sujets présents dans « zendesk_autogenerate_categories ».
+    zendesk_incoming_webhook_token: Jeton envoyé dans les données depuis le webhook sortant de Zendesk. Obligatoire uniquement si « sync_comments_from_zendesk » est activé.
+    zendesk_tags: Liste des étiquettes à ajouter à chaque ticket

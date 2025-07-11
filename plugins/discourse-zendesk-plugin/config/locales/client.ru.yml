@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Zendesk для Discourse"
+  js:
+    topic:
+      create_zendesk_issue: "Создать тикет в Zendesk"
+      view_zendesk_issue: "Посмотреть на Zendesk"
+    zendesk:
+      credentials_not_setup: Вы не настроили учётные данные Zendesk.
+      url_not_set: URL-адрес Zendesk не установлен.
+      general_error: Ошибка.
+  site_settings:
+    zendesk_url: URL-адрес Zendesk. Например, https://ВАШ_ПОДДОМЕН.zendesk.com/api/v2
+    zendesk_enabled: Включить плагин Zendesk
+    zendesk_autogenerate_all_categories: Автоматическое создание тикетов для всех категорий. Если включено, `zendesk_autogenerate_categories` игнорируется.
+    zendesk_autogenerate_categories: Список категорий, в которых будут автоматически создаваться тикеты Zendesk.
+    zendesk_jobs_api_token: Токен API для аутентификации Zendesk
+    zendesk_jobs_email: Электронная почта для аутентификации Zendesk
+    zendesk_job_push_all_posts: Отправлять все записи в теме как комментарии Zendesk? Если отключено, в Zendesk будет отправлена только первая запись.
+    zendesk_job_push_only_author_posts: Отправлять в Zendesk только записи исходного автора темы. Применяется, только если включен параметр `zendesk_job_push_all_posts`.
+    sync_comments_from_zendesk: Автопубликация комментариев из Zendesk в Discourse. Относится только к темам в `zendesk_autogenerate_categories`.
+    zendesk_incoming_webhook_token: Токен, отправляемый в сопровождение из исходящего вебхука Zendesk. Требуется, только если включен параметр `sync_comments_from_zendesk`.
+    zendesk_tags: Список тегов, которые нужно добавить к каждому тикету
