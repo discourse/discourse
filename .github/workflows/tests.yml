@@ -216,18 +216,24 @@ jobs:
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       - name: Check Annotations
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins' || matrix.target == 'chat')
         run: |
           bin/rake annotate:ensure_all_indexes
-          bin/annotate --models --model-dir app/models
 
-          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+          if [ "${{ matrix.target }}" = "core" ]; then
+            bin/annotate --models --model-dir app/models
+          else
+            directories=$(find plugins/**/app/models -type d -depth 0 | tr '\n' ',')
+            bin/annotate --models --model-dir "$directories"
+          fi
+
+          if [ ! -z "$(git status --porcelain app/models/ plugins/**/app/models/)" ]; then
             echo "Core annotations are not up to date. To resolve, run:"
             echo "  bin/rake annotate:clean"
             echo
             echo "Or manually apply the diff printed below:"
             echo "---------------------------------------------"
-            git -c color.ui=always diff app/models/
+            git -c color.ui=always diff app/models/ plugins/**/app/models/
             exit 1
           fi
 
