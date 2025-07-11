@@ -8,7 +8,8 @@ import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin"
 import { precompile } from "ember-source/dist/ember-template-compiler";
 import EmberThisFallback from "ember-this-fallback";
 import MagicString from "magic-string";
-import { dirname, join } from "path";
+import { memfs } from "memfs";
+import { basename, dirname, join } from "path";
 // import { minify as terserMinify } from "terser";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
@@ -51,9 +52,12 @@ let lastRollupError;
 globalThis.rollup = function (modules, opts) {
   const themeBase = `theme-${opts.themeId}/`;
 
+  const { vol } = memfs(modules, themeBase);
+
   const resultPromise = rollup({
     input: "virtual:main",
     logLevel: "info",
+    fs: vol.promises,
     onLog(level, message) {
       // eslint-disable-next-line no-console
       console.log(level, message);
@@ -62,49 +66,27 @@ globalThis.rollup = function (modules, opts) {
       {
         name: "discourse-extensionsearch",
         async resolveId(source, context) {
-          if (source.match(/\.(js|gjs|hbs)$/)) {
+          if (source.match(/\.\w+$/)) {
+            // Already has an extension
             return null;
           }
 
           for (const ext of ["", ".js", ".gjs", ".hbs"]) {
-            let resolved;
-            try {
-              resolved = await this.resolve(`${source}${ext}`, context);
-            } catch (error) {
-              if (!error.message.includes("Cannot access the file system")) {
-                throw error;
-              }
-            }
+            const resolved = await this.resolve(`${source}${ext}`, context);
 
             if (resolved) {
               return resolved;
             }
           }
 
-          return false;
+          return null;
         },
       },
       {
-        name: "discourse-loader",
-        resolveId(source, context) {
+        name: "discourse-virtual-loader",
+        resolveId(source) {
           if (rollupVirtualImports[source]) {
             return `${themeBase}${source}`;
-          }
-
-          if (source.startsWith(".")) {
-            if (!context) {
-              throw new Error(
-                `Unable to resolve relative import '${source}' without a context`
-              );
-            }
-            source = join(dirname(context), source);
-          }
-
-          if (source.startsWith(themeBase)) {
-            const fromBase = source.slice(themeBase.length);
-            if (modules.hasOwnProperty(fromBase)) {
-              return source;
-            }
           }
         },
         load(id) {
@@ -117,12 +99,16 @@ globalThis.rollup = function (modules, opts) {
           if (rollupVirtualImports[fromBase]) {
             return rollupVirtualImports[fromBase](modules, opts);
           }
-          if (modules.hasOwnProperty(fromBase)) {
-            return modules[fromBase];
+        },
+      },
+      {
+        name: "discourse-external-loader",
+        async resolveId(source) {
+          if (!source.startsWith(".")) {
+            return { id: source, external: true };
           }
         },
       },
-
       {
         name: "discourse-colocation",
         async resolveId(source, context) {
@@ -140,23 +126,11 @@ globalThis.rollup = function (modules, opts) {
           }
 
           if (source.endsWith(".js")) {
-            let hbs;
-            try {
-              hbs = await this.resolve(source.replace(/.js$/, ".hbs"), context);
-            } catch (error) {
-              if (!error.message.includes("Cannot access the file system")) {
-                throw error;
-              }
-            }
-
-            let js;
-            try {
-              js = await this.resolve(source, context);
-            } catch (error) {
-              if (!error.message.includes("Cannot access the file system")) {
-                throw error;
-              }
-            }
+            const hbs = await this.resolve(
+              `./${basename(source).replace(/.js$/, ".hbs")}`,
+              source
+            );
+            const js = await this.resolve(source, context);
 
             if (!js && hbs) {
               return {
@@ -192,14 +166,10 @@ globalThis.rollup = function (modules, opts) {
             }
 
             if (id.endsWith(".js")) {
-              let hbs;
-              try {
-                hbs = await this.resolve(id.replace(/.js$/, ".hbs"), id);
-              } catch (error) {
-                if (!error.message.includes("Cannot access the file system")) {
-                  throw error;
-                }
-              }
+              const hbs = await this.resolve(
+                `./${basename(id).replace(/.js$/, ".hbs")}`,
+                id
+              );
 
               if (hbs) {
                 const s = new MagicString(input);

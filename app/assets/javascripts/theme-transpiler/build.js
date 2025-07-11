@@ -54,6 +54,8 @@ esbuild
       "source-map-js": "source-map-js",
       assert: "./noop",
       fs: "./noop",
+      stream: "readable-stream",
+      "abort-controller": "abort-controller/dist/abort-controller",
     },
     banner: {
       js: `var process = { "env": { "EMBER_ENV": "production" }, "cwd": () => "/" };`,
