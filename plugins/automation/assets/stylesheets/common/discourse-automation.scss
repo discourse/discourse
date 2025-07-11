@@ -288,6 +288,21 @@
     }
   }
 
+  .d-editor .d-editor-container {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+
+    .d-editor-textarea-wrapper {
+      box-sizing: border-box;
+      min-width: 300px;
+
+      .d-editor-input {
+        min-height: 200px;
+      }
+    }
+  }
+
   .field-wrapper {
     display: flex;
     flex-direction: column;
@@ -342,22 +357,6 @@
           margin: 0;
         }
       }
-
-      .d-editor,
-      .d-editor-container {
-        display: flex;
-        flex: 1;
-        justify-content: space-between;
-
-        .d-editor-input {
-          min-height: 200px;
-        }
-      }
-    }
-
-    .d-editor-textarea-wrapper {
-      box-sizing: border-box;
-      min-width: 300px;
     }
 
     .pm-field:not(:last-child) {
@@ -371,7 +370,6 @@
     .pm-textarea {
       width: 100%;
       box-sizing: border-box;
-      height: 200px;
     }
 
     .no-pm {
