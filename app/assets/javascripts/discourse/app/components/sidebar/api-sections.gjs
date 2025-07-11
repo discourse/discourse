@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { getCustomSectionMoreLinks } from "discourse/lib/sidebar/custom-section-more-links";
 import ApiSection from "./api-section";
 import PanelHeader from "./panel-header";
 
@@ -63,6 +64,31 @@ function prepareSidebarSectionClass(Section, routerService) {
 
       this.filterable = filterable;
       this.sidebarState = sidebarState;
+
+      // Add more links from plugin API registrations
+      this._setupMoreLinks();
+    }
+
+    _setupMoreLinks() {
+      const moreLinksClasses = getCustomSectionMoreLinks(this.name);
+      if (moreLinksClasses.length > 0) {
+        this._apiMoreLinks = moreLinksClasses.map((LinkClass) => {
+          const linkInstance = new LinkClass();
+          // Set owner so the link has access to services
+          const owner = getOwner(this);
+          if (owner) {
+            setOwner(linkInstance, owner);
+          }
+          return linkInstance;
+        });
+      }
+    }
+
+    get moreLinks() {
+      // Combine section-defined more links with API-registered more links
+      const sectionMoreLinks = super.moreLinks || [];
+      const apiMoreLinks = this._apiMoreLinks || [];
+      return [...sectionMoreLinks, ...apiMoreLinks];
     }
 
     @cached
