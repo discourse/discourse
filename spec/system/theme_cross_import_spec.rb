@@ -57,6 +57,6 @@ describe "Cross theme imports", type: :system do
 
   it "works" do
     visit "/"
-    pause_test
+    # TODO
   end
 end
