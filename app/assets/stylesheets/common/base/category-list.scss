@@ -150,7 +150,7 @@
     }
 
     .category-box-inner {
-      padding: 1em;
+      padding: var(--space-4);
 
       .category-logo {
         float: none;
@@ -161,12 +161,12 @@
 
   &.no-logos {
     .category-box .category-box-inner > a {
-      padding: 3em 1em;
+      padding: var(--space-12) var(--space-4);
     }
   }
 
   .description {
-    margin-bottom: 1em;
+    margin-bottom: var(--space-4);
     text-align: var(--category-boxes-text-alignment);
     font-size: var(--font-0);
     color: var(--category-boxes-description-text-color);
@@ -347,7 +347,7 @@
 .categories-list .category {
   h3,
   h4 {
-    margin-bottom: 0;
+    margin-bottom: var(--d-categories-list-title-margin-bottom);
   }
 
   .category-description {
