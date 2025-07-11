@@ -178,3 +178,10 @@ files:
   - source_path: plugins/discourse-graphviz/config/locales/server.en.yml
     destination_path: plugins/graphviz/server.yml
     label: graphviz
+
+  - source_path: plugins/discourse-rss-polling/config/locales/client.en.yml
+    destination_path: plugins/rss-polling/client.yml
+    label: rss-polling
+  - source_path: plugins/discourse-rss-polling/config/locales/server.en.yml
+    destination_path: plugins/rss-polling/server.yml
+    label: rss-polling

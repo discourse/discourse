@@ -66,6 +66,10 @@ discourse-graphviz:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-graphviz/**/*
 
+discourse-rss-polling:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-rss-polling/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

@@ -59,6 +59,7 @@
 !/plugins/discourse-zendesk-plugin
 !/plugins/discourse-patreon
 !/plugins/discourse-graphviz
+!/plugins/discourse-rss-polling
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
