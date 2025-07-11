@@ -41,7 +41,14 @@ export default class DAutocompleteResults extends Component {
 
       // Add 'selected' class to current selection
       if (this.selectedIndex >= 0 && links[this.selectedIndex]) {
-        links[this.selectedIndex].classList.add("selected");
+        const selectedLink = links[this.selectedIndex];
+        selectedLink.classList.add("selected");
+
+        // Simple scrollIntoView to handle menu scrolling
+        selectedLink.scrollIntoView({
+          block: "nearest",
+          behavior: "smooth",
+        });
       }
     }
   }
