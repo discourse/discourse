@@ -502,7 +502,7 @@ export default class DAutocompleteModifier extends Modifier {
         left: caretCoords.x + marginLeft,
         top: caretCoords.y + marginTop,
         width: 1,
-        height: 20,
+        height: 10,
       }),
     };
   }
