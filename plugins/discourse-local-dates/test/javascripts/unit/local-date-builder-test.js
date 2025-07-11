@@ -93,7 +93,7 @@ module("Unit | Library | local-date-builder", function () {
         date: "2022-10-07",
         timezone: SINGAPORE,
         localTimezone: SINGAPORE,
-        sameLocalDayAsFrom: true,
+        sameLocalDay: true,
       },
       { formatted: "12:22 PM (Singapore)" },
       "it displays the time only as the date is the same local day as 'from'"
