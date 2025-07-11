@@ -1,0 +1,79 @@
+.math-container {
+  &.block-math,
+  &.ascii-math {
+    display: block;
+
+    // we use tag selectors because MathJax does not provide helpfull classes
+    // and the possible combinations a bit absurd. The styles are scoped by the
+    // parent selector. So they don't affect any other elements.
+    > {
+      div,
+      span {
+        // Mathjax ships with !important inline;
+        display: block !important;
+        max-width: 100%;
+        margin-bottom: 1em;
+
+        // Inner containers for all renderers
+        // mathjax generic
+        [id*="-Frame"],
+        > nobr,
+        > span,
+        // special handeling for SVG
+        &.MathJax_SVG,
+        // special handeling for katex
+        .katex-html {
+          display: block;
+          overflow-x: auto;
+          max-width: 100%;
+          padding: 0.25em 0.5em;
+          box-sizing: border-box;
+        }
+      }
+    }
+
+    // On mobile we add a slight fade on either side to indicate that the user can
+    // scroll. However, this should not be added to the composer since mathjax does
+    // not render in the mobile composer
+    .cooked & {
+      .mobile-view & {
+        position: relative;
+
+        &::before {
+          content: "";
+          position: absolute;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 1em;
+          height: 100%;
+          background: linear-gradient(
+            to right,
+            rgb(var(--secondary-rgb), 1) 0%,
+            rgb(var(--secondary-rgb), 0) 100%
+          );
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          z-index: 1;
+          right: 0;
+          top: 0;
+          width: 1em;
+          height: 100%;
+          background: linear-gradient(
+            to right,
+            rgb(var(--secondary-rgb), 0) 0%,
+            rgb(var(--secondary-rgb), 1) 100%
+          );
+        }
+
+        .MJXp-mtable,
+        .MJXp-mstyle {
+          padding: 0 0.75em;
+        }
+      }
+    }
+  }
+}

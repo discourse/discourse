@@ -70,6 +70,10 @@ discourse-rss-polling:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-rss-polling/**/*
 
+discourse-math:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-math/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
