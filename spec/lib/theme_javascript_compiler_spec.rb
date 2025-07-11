@@ -5,12 +5,12 @@ RSpec.describe ThemeJavascriptCompiler do
 
   describe "#append_ember_template" do
     it "maintains module names so that discourse-boot.js can correct them" do
-      compiler.append_tree({ "/connectors/blah-1.hbs" => "{{var}}" })
+      compiler.append_tree({ "connectors/blah-1.hbs" => "{{var}}" })
       compiler.append_tree({ "connectors/blah-2.hbs" => "{{var}}" })
       compiler.append_tree({ "javascripts/connectors/blah-3.hbs" => "{{var}}" })
 
       expect(compiler.content.to_s).to include(
-        "themeCompatModules[\"/templates/connectors/blah-1\"]",
+        "themeCompatModules[\"templates/connectors/blah-1\"]",
       )
       expect(compiler.content.to_s).to include(
         "themeCompatModules[\"templates/connectors/blah-2\"]",

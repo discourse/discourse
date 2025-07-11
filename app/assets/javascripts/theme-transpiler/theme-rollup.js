@@ -112,14 +112,15 @@ globalThis.rollup = function (modules, opts) {
       {
         name: "discourse-colocation",
         async resolveId(source, context) {
+          let resolvedSource = source;
           if (source.startsWith(".")) {
-            source = join(dirname(context), source);
+            resolvedSource = join(dirname(context), source);
           }
 
           if (
             !(
-              source.startsWith(`${themeBase}discourse/components/`) ||
-              source.startsWith(`${themeBase}admin/components/`)
+              resolvedSource.startsWith(`${themeBase}discourse/components/`) ||
+              resolvedSource.startsWith(`${themeBase}admin/components/`)
             )
           ) {
             return;
@@ -128,13 +129,13 @@ globalThis.rollup = function (modules, opts) {
           if (source.endsWith(".js")) {
             const hbs = await this.resolve(
               `./${basename(source).replace(/.js$/, ".hbs")}`,
-              source
+              resolvedSource
             );
             const js = await this.resolve(source, context);
 
             if (!js && hbs) {
               return {
-                id: source,
+                id: resolvedSource,
                 meta: {
                   "rollup-hbs-plugin": {
                     type: "template-only-component-js",
@@ -166,15 +167,13 @@ globalThis.rollup = function (modules, opts) {
             }
 
             if (id.endsWith(".js")) {
-              const hbs = await this.resolve(
-                `./${basename(id).replace(/.js$/, ".hbs")}`,
-                id
-              );
+              const relativeHbs = `./${basename(id).replace(/.js$/, ".hbs")}`;
+              const hbs = await this.resolve(relativeHbs, id);
 
               if (hbs) {
                 const s = new MagicString(input);
                 s.prepend(
-                  `import template from '${hbs.id}';\nconst __COLOCATED_TEMPLATE__ = template;\n`
+                  `import template from '${relativeHbs}';\nconst __COLOCATED_TEMPLATE__ = template;\n`
                 );
 
                 return {
