@@ -38,6 +38,7 @@ export default class DAutocompleteModifier extends Modifier {
   debouncedSearch = null;
   targetElement = null;
   menuInstance = null;
+  virtualElement = null;
 
   // Constants
   ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
@@ -120,8 +121,14 @@ export default class DAutocompleteModifier extends Modifier {
     event.stopPropagation();
   };
 
-  handleGlobalClick = async () => {
+  handleGlobalClick = async (event) => {
     if (this.expanded) {
+      // Don't close if clicking on the grippie (composer drag handle)
+      if (event.target.closest(".grippie")) {
+        return;
+      }
+
+      // Close on any other outside click
       await this.closeAutocomplete();
     }
   };
@@ -204,6 +211,9 @@ export default class DAutocompleteModifier extends Modifier {
         await this.closeAutocomplete();
       }
     }
+
+    // Update menu position after autocomplete processing
+    this.updateMenuPosition();
   }
 
   async handleBackspace() {
@@ -282,7 +292,15 @@ export default class DAutocompleteModifier extends Modifier {
 
     try {
       // Create virtual element positioned at the caret location
-      const virtualElement = this.createVirtualElementAtCaret();
+      this.virtualElement = this.createVirtualElementAtCaret();
+
+      // Find the appropriate container for portal and boundary
+      // Try to find d-editor container, composer container, or fall back to body for textarea compatibility
+      const container =
+        this.targetElement.closest(".d-editor-container") ||
+        this.targetElement.closest(".composer-fields") ||
+        this.targetElement.closest(".ember-view") ||
+        document.body;
 
       const menuOptions = {
         identifier: "d-autocomplete",
@@ -298,6 +316,8 @@ export default class DAutocompleteModifier extends Modifier {
             this.componentInstance = componentInstance;
           },
         },
+        closeOnClickOutside: false,
+        closeOnEscape: true,
         modalForMobile: true,
         onClose: () => {
           this.expanded = false;
@@ -305,11 +325,23 @@ export default class DAutocompleteModifier extends Modifier {
         },
       };
 
-      this.menuInstance = await this.menu.show(virtualElement, menuOptions);
+      // Only add portal configuration if we found a proper container (not document.body)
+      if (container !== document.body) {
+        menuOptions.portalOutletElement = container;
+        menuOptions.boundary = container;
+      }
+
+      this.menuInstance = await this.menu.show(
+        this.virtualElement,
+        menuOptions
+      );
       this.expanded = true;
 
       // Call onRender callback if provided
       this.options.onRender?.(this.results);
+
+      // Set up position updates for this menu instance
+      this.updateMenuPosition();
     } catch {
       // Error rendering autocomplete
     }
@@ -327,6 +359,7 @@ export default class DAutocompleteModifier extends Modifier {
     this.selectedIndex = -1;
     this.previousTerm = null;
     this.menuInstance = null;
+    this.virtualElement = null; // Clean up virtual element reference
     this.componentInstance = null; // Clean up component reference
 
     cancel(this.debouncedSearch);
@@ -493,17 +526,42 @@ export default class DAutocompleteModifier extends Modifier {
     };
   }
 
+  updateMenuPosition() {
+    // Update position if menu is expanded and we have instances
+    if (this.expanded && this.menuInstance && this.virtualElement) {
+      // Force the menu system to recalculate position by reassigning the trigger
+      // This is similar to how the link toolbar works
+      import("@ember/runloop").then(({ next }) => {
+        next(() => {
+          if (this.menuInstance?.instance) {
+            // Update the trigger element which forces position recalculation
+            this.menuInstance.instance.trigger = this.virtualElement;
+
+            // Try to call updatePosition if available on the float instance
+            if (this.menuInstance.instance.updatePosition) {
+              this.menuInstance.instance.updatePosition();
+            }
+          }
+        });
+      });
+    }
+  }
+
   createVirtualElementAtCaret() {
     const marginLeft = 9; //offset to place autocomplete in front of the trigger character (e.g. "@")
     const marginTop = 10;
-    const caretCoords = this.getAbsoluteCaretCoords();
+
+    // Create virtual element with dynamic getBoundingClientRect
     return {
-      getBoundingClientRect: () => ({
-        left: caretCoords.x + marginLeft,
-        top: caretCoords.y + marginTop,
-        width: 1,
-        height: 20,
-      }),
+      getBoundingClientRect: () => {
+        const caretCoords = this.getAbsoluteCaretCoords();
+        return {
+          left: caretCoords.x + marginLeft,
+          top: caretCoords.y + marginTop,
+          width: 1,
+          height: 20,
+        };
+      },
     };
   }
 }
