@@ -269,7 +269,7 @@ export default class PostCooked {
       const icon = iconHTML("arrow-up");
       navLink = `<a href='${this._urlForPostNumber(
         postNumber
-      )}' title='${quoteTitle}' class='btn-flat back'>${icon}</a>`;
+      )}' title='${quoteTitle}' aria-label='${quoteTitle}' class='btn-flat back'>${icon}</a>`;
     }
 
     // Only add the expand/contract control if it's not a full post
@@ -277,12 +277,13 @@ export default class PostCooked {
     let expandContract = "";
 
     if (!aside.dataset.full) {
-      const icon = iconHTML(desc, { title: "post.expand_collapse" });
+      const icon = iconHTML(desc);
       const quoteId = aside.querySelector("blockquote")?.id;
 
       if (quoteId) {
         const isExpanded = aside.dataset.expanded === "true";
-        expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" class="quote-toggle btn-flat">${icon}</button>`;
+        const toggleLabel = isExpanded ? i18n("post.collapse") : i18n("expand");
+        expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" aria-label="${toggleLabel}" title="${toggleLabel}" class="quote-toggle btn-flat">${icon}</button>`;
 
         if (titleElement) {
           titleElement.style.cursor = "pointer";
