@@ -31,43 +31,8 @@ export default class ToolbarPopupmenuOptions extends Component {
 
   #convertMenuOption(content) {
     if (content.condition) {
-      let label;
-      if (content.label || content.translatedLabel) {
-        label = content.translatedLabel
-          ? content.translatedLabel
-          : i18n(content.label);
-        if (content.shortcut) {
-          label = htmlSafe(
-            `<span class="d-button-label__text">${label}</span> <kbd class="shortcut ${
-              content.alwaysShowShortcut ? "--always-visible" : ""
-            }">${translateModKey(
-              PLATFORM_KEY_MODIFIER + "+" + content.shortcut
-            )}</kbd>`
-          );
-        }
-
-        if (content.showActiveIcon) {
-          label = htmlSafe(
-            label +
-              iconHTML("check", {
-                class: "d-button-label__active-icon",
-              })
-          );
-        }
-      }
-
-      let title = label;
-      if (content.title || content.translatedTitle) {
-        title = content.translatedTitle
-          ? content.translatedTitle
-          : i18n(content.title);
-      }
-
-      if (content.shortcut) {
-        title += ` (${translateModKey(
-          PLATFORM_KEY_MODIFIER + "+" + content.shortcut
-        )})`;
-      }
+      const label = this.#calculateLabel(content);
+      const title = this.#calculateTitle(content);
 
       return Object.defineProperties(
         {},
@@ -76,8 +41,69 @@ export default class ToolbarPopupmenuOptions extends Component {
     }
   }
 
+  #calculateTitle(content) {
+    if (content.label && !content.title && !content.translatedTitle) {
+      return this.#calculateLabel(content, { textOnly: true });
+    }
+
+    if (!content.translatedTitle && !content.title) {
+      return;
+    }
+
+    const title = content.translatedTitle
+      ? content.translatedTitle
+      : i18n(content.title);
+
+    if (content.shortcut) {
+      return `${title} (${translateModKey(
+        PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+      )})`;
+    }
+
+    return title;
+  }
+
+  #calculateLabel(content, opts = {}) {
+    if (!content.label && !content.translatedLabel) {
+      return;
+    }
+
+    const label = content.translatedLabel
+      ? content.translatedLabel
+      : i18n(content.label);
+
+    if (opts.textOnly) {
+      if (content.shortcut) {
+        return `${label} (${translateModKey(
+          PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+        )})`;
+      }
+
+      return label;
+    }
+
+    let htmlLabel = `<span class="d-button-label__text">${label}</span>`;
+    if (content.shortcut) {
+      htmlLabel += ` <kbd class="shortcut ${
+        content.alwaysShowShortcut ? "--always-visible" : ""
+      }">${translateModKey(
+        PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+      )}</kbd>`;
+    }
+
+    if (content.showActiveIcon) {
+      htmlLabel += iconHTML("check", {
+        class: "d-button-label__active-icon",
+      });
+    }
+
+    return htmlSafe(htmlLabel);
+  }
+
   get convertedContent() {
-    return this.args.content.map(this.#convertMenuOption).filter(Boolean);
+    return this.args.content
+      .map(this.#convertMenuOption.bind(this))
+      .filter(Boolean);
   }
 
   get textManipulationState() {
