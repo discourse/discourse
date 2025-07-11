@@ -5,9 +5,9 @@ RSpec.describe UserSearch do
   before { SearchIndexer.enable } # Enable for each test
 
   fab!(:topic)
-  fab!(:topic2) { Fabricate :topic }
-  fab!(:topic3) { Fabricate :topic }
-  fab!(:topic4) { Fabricate :topic }
+  fab!(:topic2, :topic)
+  fab!(:topic3, :topic)
+  fab!(:topic4, :topic)
   fab!(:mr_b) do
     Fabricate :user, username: "mrb", name: "Michael Madsen", last_seen_at: 10.days.ago
   end
