@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "チャットの統合"
+  js:
+    chat_integration:
+      menu_title: "チャットの統合"
+      settings: "設定"
+      no_providers: "プラグイン設定でいくつかのプロバイダーを有効にする必要があります"
+      channels_with_errors: "このプロバイダーの一部のチャンネルは、最後にメッセージが送信されたときに失敗しました。詳細については、エラーアイコンをクリックしてください。"
+      channel_exception: "メッセージがこのチャンネルに最後に送信されたときに、不明なエラーが発生しました。"
+      group_mention_template: "メンション: @%{name}"
+      group_message_template: "メッセージの宛先: @%{name}"
+      choose_group: "（グループを選択）"
+      all_categories: "(すべてのカテゴリ)"
+      all_tags: "（すべてのタグ）"
+      create_rule: "ルールを作成"
+      create_channel: "チャンネルを作成"
+      delete_channel: "削除"
+      test_channel: "テスト"
+      edit_channel: "編集"
+      channel_delete_confirm: "このチャンネルを削除してもよろしいですか？関連するすべてのルールが削除されます。"
+      test_modal:
+        title: "テストメッセージの送信"
+        topic: "トピック"
+        send: "テストメッセージを送信"
+        close: "閉じる"
+        error: "メッセージの送信中に不明なエラーが発生しました。詳細については、サイトログをご覧ください。"
+        success: "メッセージは正常に送信されました"
+      type:
+        normal: 標準
+        group_message: グループメッセージ
+        group_mention: グループメンション
+      filter:
+        mute: 'ミュート'
+        follow: '最初の投稿のみ'
+        watch: 'すべての投稿と返信'
+        thread: '返信スレッドのあるすべての投稿'
+      rule_table:
+        filter: "フィルター"
+        category: "カテゴリ"
+        tags: "タグ"
+        edit_rule: "編集"
+        delete_rule: "削除"
+      edit_channel_modal:
+        title: "チャンネルを編集"
+        save: "チャンネルを保存"
+        cancel: "キャンセル"
+        provider: "プロバイダー"
+        channel_validation:
+          ok: "有効"
+          fail: "無効な形式"
+      edit_rule_modal:
+        title: ルールを編集
+        save: ルールを保存
+        cancel: キャンセル
+        provider: プロバイダー
+        type: タイプ
+        channel: チャンネル
+        filter: フィルター
+        category: カテゴリ
+        group: グループ
+        tags: タグ
+        instructions:
+          type: "グループメッセージまたはメンションの通知をトリガーするタイプを変更します"
+          filter: "通知レベル。ミュートは他の一致するルールをオーバーライドします"
+          category: "個のルールは指定されたカテゴリのトピックにのみ適用されます"
+          group: "このルールはこのグループを参照する投稿に適用されます"
+          tags: "指定された場合、このルールは少なくとも以下のいずれかのタグを持つトピックにのみ適用されます"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: チャンネル
+              help: "例: #channel、@username。"
+          errors:
+            action_prohibited: "ボットには、そのチャンネルに投稿する権限がありません"
+            channel_not_found: "指定されたチャンネルは Slack に存在しません"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "名前"
+              help: "チャンネルを説明する名前。Telegram への接続には使用されません。"
+            chat_id:
+              title: チャット ID
+              help: ボットから提供された番号、または @channelname の形式のブロードキャストチャンネル識別子
+          errors:
+            channel_not_found: "指定されたチャンネルは Telegram に存在しません"
+            forbidden: "ボットには、このチャンネルに投稿する権限がありません"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "名前"
+              help: "チャンネルを説明する名前。Discord への接続には使用されません。"
+            webhook_url:
+              title: Webhook の URL
+              help: Discord サーバー設定で作成された Webhook URL
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "名前"
+              help: "チャンネルを説明する名前。Guilded への接続には使用されません。"
+            webhook_url:
+              title: Webhook の URL
+              help: Guilded サーバー設定で作成された Webhook URL
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: チャンネル
+              help: "例: #channel、@username。"
+          errors:
+            channel_not_found: "指定されたチャンネルは Mattermost に存在しません"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "名前"
+              help: "チャンネルを説明する名前。Matrix への接続には使用されません。"
+            room_id:
+              title: "ルーム ID"
+              help: "ルームの「プライベート識別子」。!abcdefg:matrix.org のような形式です"
+          errors:
+            unknown_token: "アクセストークンが無効です"
+            unknown_room: "ルーム ID が無効です"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "ストリーム"
+              help: "メッセージの送信先となる Zulip ストリームの名前。例: 「general」"
+            subject:
+              title: "件名"
+              help: "ボットが送信するこれらのメッセージに指定する件名"
+          errors:
+            does_not_exist: "そのストリームは Zulip に存在しません"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: チャンネル
+              help: "例: #channel、@username。"
+          errors:
+            invalid_channel: "そのチャンネルは Rocket Chat に存在しません"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "名前"
+              help: "Gitter ルームの名前。例: gitterHQ/services。"
+            webhook_url:
+              title: "Webhook の URL"
+              help: "Gitter ルームで新しい統合を作成するときに提供される URL。"
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Flow トークン"
+              help: "メッセージの送信先となる Flow のソースを作成した後に提供される Flow トークン。"
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "GroupMe インスタンス名"
+              help: "サイト設定にリストされている GroupMe インスタンスの名前。すべてのインスタンスに送信するには「all」を使用します"
+          errors:
+            not_found: "メッセージの投稿先のパスが見つかりません。サイト設定でボット ID を確認してください。"
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "名前"
+              help: "Teams チャンネル名。例: discourse"
+            webhook_url:
+              title: "Webhook の URL"
+              help: "新しい着信 Webhook を作成するときに提供される URL"
+          errors:
+            invalid_channel: "そのチャンネルは Microsoft Teams に存在しません"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "名前"
+              help: "チャンネルの名前（Discourse 管理者インターフェースにのみ表示）"
+            webhook_url:
+              title: "Webhook URL"
+              help: "新しい着信 Webhook を作成するときに提供される URL"
+          errors:
+            invalid_webhook: "その webhook URL は有効ではありません。"
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "名前"
+              help: "Webex スペース名。例: discourse"
+            webhook_url:
+              title: "Webhook の URL"
+              help: "新しい着信 Webhook を作成するときに提供される URL"
+          errors:
+            invalid_channel: "そのチャンネルは Webex に存在しません"
+        google:
+          title: "Google チャット"
+          param:
+            name:
+              title: "名前"
+              help: "チャンネルの名前（Discourse 管理者インターフェースにのみ表示）"
+            webhook_url:
+              title: "Webhook の URL"
+              help: "新しい Webhook を作成するときに提供される URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Slack メッセージを送信する
+          fields:
+            message:
+              label: メッセージ
+              description: >-
+                トピック名に ${TOPIC}、使用されている URL に ${URL}、削除されたタグに ${REMOVED_TAGS}、追加されたタグに ${ADDED_TAGS}、デフォルトのテキストに ${ADDED_AND_REMOVED} を使用します。トリガーが「トピックタグの変更」に設定されている場合にのみ使用できます。
+            url:
+              label: URL
+            channel:
+              label: チャンネル
+        send_chat_integration_message:
+          title: チャット統合メッセージの送信
+          fields:
+            channel_name:
+              label: チャンネル名
+              description: "チャンネル名はチャット統合の設定で確認できます"
+            provider:
+              label: プロバイダー

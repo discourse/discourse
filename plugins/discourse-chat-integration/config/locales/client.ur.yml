@@ -1,0 +1,205 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "چَیٹ اِنٹیگرَیشَن"
+  js:
+    chat_integration:
+      menu_title: "چَیٹ اِنٹیگرَیشَن"
+      settings: "سیٹِنگ"
+      no_providers: "آپ کو پلَگ اِن کی سیٹِنگ میں کچھ پرووَائیڈرز کو فعال کرنے کی ضرورت ہے"
+      channels_with_errors: "پچھلی دفعہ پیغامات بھیجنے پر اِس پرووَائیڈر کے کچھ چینلز ناکام ہوگئے تھے۔ مزید جاننے کیلئے خرابی کے آئکن پر کلک کریں۔"
+      channel_exception: "آخری دفعہ اِس چینل کو پیغام بھیجنے پر ایک نامعلوم خرابی کا سامنا کرنا پڑا۔"
+      group_mention_template: "ذکر: @%{name} کے"
+      group_message_template: "پیغامات: @%{name} کیلئے"
+      choose_group: "(ایک گروپ منتخب کریں)"
+      all_categories: "(تمام زُمرَہ جات)"
+      all_tags: "(تمام ٹَیگز)"
+      create_rule: "اصول بنائیں"
+      create_channel: "چینل بنائیں"
+      delete_channel: "حذف کریں"
+      test_channel: "ٹیسٹ"
+      edit_channel: "ترمیم کریں"
+      channel_delete_confirm: "کیا آپ واقعی یہ چینل حذف کرنا چاہتے ہیں؟ تمام منسلک اصول حذف ہو جائیں گے۔"
+      test_modal:
+        title: "ایک ٹیسٹ پیغام بھیجیں"
+        topic: "ٹاپک"
+        send: "ٹیسٹ پیغام بھیجیں"
+        close: "بند کریں"
+        error: "پیغام بھیجنے پر ایک نامعلوم خرابی کا سامنا کرنا پڑا۔ مزید جاننے کیلئے سائٹ لاگز چیک کریں۔"
+        success: "پیغام کامیابی سے بھیجا گیا"
+      type:
+        normal: عمومی
+        group_message: گروپ پیغام
+        group_mention: گروپ ذکر
+      filter:
+        mute: 'خاموش کریں'
+        follow: 'صرف پہلی پوسٹ'
+        watch: 'تمام پوسٹس اور جوابات'
+      rule_table:
+        filter: "فِلٹر"
+        category: "زُمرَہ"
+        tags: "ٹیگز"
+        edit_rule: "ترمیم کریں"
+        delete_rule: "حذف کریں"
+      edit_channel_modal:
+        title: "چینل ترمیم کریں"
+        save: "چَینل محفوظ کریں"
+        cancel: "منسوخ"
+        provider: "پرووَائیڈر"
+        channel_validation:
+          ok: "درست"
+          fail: "غلط فارمَیٹ"
+      edit_rule_modal:
+        title: اصول ترمیم کریں
+        save: اصول محفوظ کریں
+        cancel: منسوخ
+        provider: پرووَائیڈر
+        type: قِسم
+        channel: چَینل
+        filter: فِلٹر
+        category: زُمرَہ
+        group: گروپ
+        tags: ٹیگز
+        instructions:
+          type: "گروپ پیغامات یا ذکر کے بارے میں اطلاعات کو متحرک کرنے والی قِسم کو تبدیل کریں"
+          filter: "اطلاعات کا لیول۔ خاموشی دوسرے مماثل اصولوں کو منسوخ کردیتی ہے"
+          category: "یہ اصول صرف مخصوص زُمرہ کے ٹاپکس پر لاگو ہو گا"
+          group: "یہ اصول اِس گروپ کا حوالہ دینے والی پوسٹس پر لاگو ہو گا"
+          tags: "اگر متعین ہو، تو یہ اصول صرف ایسے ٹاپکس پر لاگو ہو گا جن پر اِن ٹیگز میں سے کم از کم ایک موجود ہو"
+      provider:
+        slack:
+          title: "سلَّیک"
+          param:
+            identifier:
+              title: چَینل
+              help: "ثال کے طور پر #چینل، @صارف نام۔"
+          errors:
+            action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
+            channel_not_found: "یہ مخصوص چینل سلَّیک پر موجود نہیں ہے"
+        telegram:
+          title: "ٹَیلیگرام"
+          param:
+            name:
+              title: "نام"
+              help: "چَینل کی وضاحت کرنے کیلئے نام۔ یہ ٹَیلیگرام کے ساتھ کنکشن کیلئے استعمال نہیں کیا جاتا ہے۔"
+            chat_id:
+              title: چَیٹ ID
+              help: بَوٹ کی طرف سے آپ کو دیا گیا نمبر، یا @channelname کی فارم میں ایک براڈکاسٹ چینل آئیڈَینٹِیفائر
+          errors:
+            channel_not_found: "یہ مخصوص چینل ٹَیلیگرام پر موجود نہیں ہے"
+            forbidden: "بَوٹ کو اِس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
+        discord:
+          title: "ڈِسکَورڈ"
+          param:
+            name:
+              title: "نام"
+              help: "چَینل کی وضاحت کرنے کیلئے نام۔ یہ ڈِسکَورڈ کے ساتھ کنکشن کیلئے استعمال نہیں کیا جاتا ہے۔"
+            webhook_url:
+              title: وَیب ھُوک URL
+              help: آپ کے ڈِسکَورڈ سروَر کی سیٹِنگ میں بنایا گیا وَیب ھُوک URL
+        guilded:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: وَیب ھُوک URL
+        mattermost:
+          title: "مَیٹرمَوسٹ"
+          param:
+            identifier:
+              title: چَینل
+              help: "ثال کے طور پر #چینل، @صارف نام۔"
+          errors:
+            channel_not_found: "یہ مخصوص چینل مَیٹرمَوسٹ پر موجود نہیں ہے"
+        matrix:
+          title: "مَیٹرِکس"
+          param:
+            name:
+              title: "نام"
+              help: "چَینل کی وضاحت کرنے کیلئے نام۔ یہ مَیٹرِکس کے ساتھ کنکشن کیلئے استعمال نہیں کیا جاتا ہے۔"
+            room_id:
+              title: "رُوم ID"
+              help: "رُوم کا 'پرائیوَِیٹ آئیڈَینٹِیفائر'۔ یہ کچھ abcdefg:matrix.org! کی طرح نظر آنا چاہئے"
+          errors:
+            unknown_token: "ایکسَیس ٹوکن غلط ہے"
+            unknown_room: "رُوم ID غلط ہے"
+        zulip:
+          title: "زُولِپ"
+          param:
+            stream:
+              title: "سٹریم"
+              help: "زُولِپ سٹریم کا نام جس پر پیغام بھیجا جانا چاہئے۔ مثال کے طور پر 'general'"
+            subject:
+              title: "موضوع"
+              help: "بذریعہ بَوٹ بھیجے گئے اِن پیغامات کا موضوع دیا جانا چاہئیے"
+          errors:
+            does_not_exist: "وہ سٹریم زُولِپ پر موجود نہیں ہے"
+        rocketchat:
+          title: "راکٹ.چَیٹ"
+          param:
+            identifier:
+              title: چَینل
+              help: "مثال کے طور پر #چینل، @صارف نام۔"
+          errors:
+            invalid_channel: "وہ چینل راکٹ چَیٹ پر موجود نہیں ہے"
+        gitter:
+          title: "گِیٹر"
+          param:
+            name:
+              title: "نام"
+              help: "ایک گِیٹر روم کا نام مثال کے طور پر gitterHQ/services۔"
+            webhook_url:
+              title: "وَیب ھُوک URL"
+              help: "فراہم کیے جانے والا URL، جب آپ گِیٹر روم میں ایک نئی اِنٹیگرَیشَن بناتے ہیں۔"
+        flowdock:
+          title: "فلَوڈَوک"
+          param:
+            flow_token:
+              title: "فلَو ٹوکن"
+              help: "ایک فلَو کا سَورس بنانے کے بعد فراہم ہونے والا فلَو ٹوکن جس میں آپ پیغامات بھیجنا چاہتے ہیں"
+        teams:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "وَیب ھُوک URL"
+        powerautomate:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "وَیب ھُوک URL"
+        webex:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "وَیب ھُوک URL"
+        google:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "وَیب ھُوک URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: پیغام
+            url:
+              label: URL
+            channel:
+              label: چَینل
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: پرووَائیڈر

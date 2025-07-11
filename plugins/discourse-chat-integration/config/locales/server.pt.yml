@@ -1,0 +1,113 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  site_settings:
+    chat_integration_enabled: 'Ativar o ''''plug-in'''' de integração de conversação discourse'
+    chat_integration_slack_enabled: 'Ativar provedor de integração de conversação slack'
+    chat_integration_slack_access_token: 'O «Código de Acesso» de OAuth para a autenticação com Slack'
+    chat_integration_slack_incoming_webhook_token: 'O código de verificação utilizado para autenticar pedidos a receber'
+    chat_integration_slack_excerpt_length: 'Comprimento do excerto da mensagem de Slack'
+    chat_integration_telegram_enabled: "Ativar provedor de integração de conversação Telegram"
+    chat_integration_telegram_excerpt_length: "Comprimento do excerto da mensagem de Telegram"
+    chat_integration_discord_enabled: "Ativar provedor de integração de conversação Discord"
+    chat_integration_discord_excerpt_length: "Comprimento do excerto da mensagem de Discord"
+    chat_integration_mattermost_enabled: "Ativar provedor de integração de conversação Mattermost"
+    chat_integration_mattermost_webhook_url: 'URL para o ''''webhook'''' de Mattermost'
+    chat_integration_mattermost_incoming_webhook_token: 'O código de verificação utilizado para autenticar pedidos a receber'
+    chat_integration_mattermost_icon_url: "Ícone para as mensagens de Mattermost (predefine para logótipo do fórum)"
+    chat_integration_matrix_enabled: "Ativar provedor de integração de conversação Matrix"
+    chat_integration_zulip_enabled: "Ativar provedor de integração de conversação Zulip"
+    chat_integration_zulip_bot_email_address: "O endereço de ''e-mail'' associado com o seu robô Zulip"
+    chat_integration_zulip_bot_api_key: "A chave da API para o seu robô Zulip"
+    chat_integration_zulip_excerpt_length: "Comprimento do excerto da mensagem de Zulip"
+    chat_integration_rocketchat_excerpt_length: "Comprimento do excerto da mensagem de Rocket Chat"
+    chat_integration_gitter_enabled: "Ativar provedor de integração de conversação Gitter"
+    chat_integration_flowdock_enabled: "Ativar provedor de integração de conversação Flowdock"
+    chat_integration_flowdock_excerpt_length: "Comprimento do excerto da mensagem de Flowdock"
+  chat_integration:
+    all_categories: "(todas as categorias)"
+    deleted_category: "(categoria eliminada)"
+    deleted_group: "(grupo eliminado)"
+    group_mention_template: "menções de: @%{name}"
+    group_message_template: "mensagens para: @%{name}"
+    provider:
+      slack:
+        status:
+          no_rules: "Não existem regras configuradas para este canal. Execute <code>/discourse help</code> para instruções."
+          rule_string: "*%{index})* *%{filter}* publica na *%{category}*"
+          rule_string_tags_suffix: " com etiquetas: *%{tags}*"
+        parse_error: "Desculpe, eu não compreendi isso. Execute '/discourse help' para instruções."
+        create:
+          created: "Regra criada com sucesso"
+          updated: "Regra atualizada com sucesso"
+          error: "Desculpe, ocorreu um erro enquanto criava a regra."
+        delete:
+          success: "Regra eliminada com sucesso"
+          error: "Desculpe, ocorreu um erro enquanto eliminava a regra. Execute `/discourse status` para uma lista de regras."
+        not_found:
+          tag: "Não é possível encontrar a etiqueta \"%{name}\"."
+          category: "Não foi possível encontrar a categoria *%{name}*. Categorias disponíveis: *%{list}*"
+        transcript:
+          view_on_slack: "Ver em %{name} no Slack"
+          posted_in: "publicou em %{name}"
+          change_first_message: "Alterar a primeira mensagem..."
+          change_last_message: "Alterar a última mensagem..."
+          loading: "A carregar a transcrição..."
+      telegram:
+        message: |-
+          <b>%{user}</b> publicou no <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Regras para este canall
+            (Se múltiplas regras corresponderem a uma mensagem, a regra superior será executada)
+          no_rules: "Não existem regras configuradas para este canal. Execute <code>/help</code> para instruções."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> publica na <b>%{category}</b>"
+          rule_string_tags_suffix: " com etiquetas: <b>%{tags}</b>"
+        parse_error: "Desculpe, eu não compreendi isso. Execute <code>/help</code> para instruções."
+        create:
+          created: "Regra criada com sucesso"
+          updated: "Regra atualizada com sucesso"
+          error: "Desculpe, ocorreu um erro enquanto criava a regra."
+        delete:
+          success: "Regra eliminada com sucesso"
+        not_found:
+          tag: "Não é possível encontrar a etiqueta <b>%{name}</b>."
+      hipchat:
+        message: <b>%{user}</b> publicou em <a href="%{post_url}">%{title}</a>
+      mattermost:
+        status:
+          no_rules: "Não existem regras configuradas para este canal. Execute <code>/discourse help</code> para instruções."
+          rule_string: "*%{index})* *%{filter}* publica na *%{category}*"
+          rule_string_tags_suffix: " com etiquetas: *%{tags}*"
+        parse_error: "Desculpe, eu não compreendi isso. Execute '/discourse help' para instruções."
+        create:
+          created: "Regra criada com sucesso"
+          updated: "Regra atualizada com sucesso"
+          error: "Desculpe, ocorreu um erro enquanto criava a regra."
+        delete:
+          success: "Regra eliminada com sucesso"
+          error: "Desculpe, ocorreu um erro enquanto eliminava a regra. Execute `/discourse status` para uma lista de regras."
+        not_found:
+          tag: "Não é possível encontrar a etiqueta \"%{name}\"."
+          category: "Não foi possível encontrar a categoria *%{name}*. Categorias disponíveis: *%{list}*"
+      matrix:
+        text_message: "%{user} publicou em %{title} - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> publicou no <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** publicou em **[%{title}](%{post_url})**
+          ~~~citação
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "publicou"

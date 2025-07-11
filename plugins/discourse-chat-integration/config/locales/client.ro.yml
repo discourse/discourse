@@ -1,0 +1,135 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Integrări pentru Chat"
+  js:
+    chat_integration:
+      menu_title: "Integrări pentru Chat"
+      settings: "Setări"
+      no_providers: "Trebuie să activezi niște furnizori în setările pluginului"
+      channels_with_errors: "Unele canale pentru acest furnizor au eșuat când au fost trimise mesaje ultima dată. Apăsați pictograma(ele) de eroare pentru a afla mai mult."
+      choose_group: "(selectează un grup)"
+      all_categories: "(toate categoriile)"
+      all_tags: "(toate etichetele)"
+      create_rule: "Creează regulă"
+      create_channel: "Creează canal"
+      delete_channel: "Șterge"
+      test_channel: "Test"
+      edit_channel: "Editează"
+      channel_delete_confirm: "Ești sigur că vrei să ștergi acest canal? Toate regulile asociate vor fi șterse."
+      test_modal:
+        title: "Trimiteți un mesaj de test"
+        topic: "Subiect"
+        send: "Trimiteți un mesaj de test"
+        close: "Închide"
+        error: "O eroare necunoscută a apărut atunci când mesajul era în curs de trimitere. Verifică jurnalele site-ului pentru mai multe informații."
+        success: "Mesajul a fost trimis cu succes"
+      type:
+        normal: Normal
+        group_message: Mesaj de grup
+        group_mention: Mențiune de grup
+      filter:
+        mute: 'Silențios'
+        follow: 'Doar prima postare'
+        watch: 'Toate postările și răspunsurile'
+      rule_table:
+        filter: "Filtrează"
+        category: "Categorie"
+        tags: "Etichete"
+        edit_rule: "Editează"
+        delete_rule: "Șterge"
+      edit_channel_modal:
+        title: "Editează canal"
+        save: "Salvează canal"
+        cancel: "Anulează"
+        provider: "Furnizor"
+        channel_validation:
+          ok: "Corect"
+          fail: "Format incorect"
+      edit_rule_modal:
+        title: Editează regulă
+        save: Salvează regulă
+        cancel: Anulează
+        provider: Furnizor
+        type: Tip
+        channel: Canal
+        filter: Filtru
+        category: Categorie
+        group: Grup
+        tags: Etichete
+      provider:
+        slack:
+          param:
+            identifier:
+              title: Canal
+        telegram:
+          param:
+            name:
+              title: "Nume"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nume"
+        guilded:
+          param:
+            name:
+              title: "Nume"
+        mattermost:
+          param:
+            identifier:
+              title: Canal
+        matrix:
+          param:
+            name:
+              title: "Nume"
+        zulip:
+          param:
+            subject:
+              title: "Subiect"
+        rocketchat:
+          param:
+            identifier:
+              title: Canal
+        gitter:
+          param:
+            name:
+              title: "Nume"
+        teams:
+          param:
+            name:
+              title: "Nume"
+        powerautomate:
+          param:
+            name:
+              title: "Nume"
+        webex:
+          param:
+            name:
+              title: "Nume"
+        google:
+          param:
+            name:
+              title: "Nume"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Mesaj
+            url:
+              label: URL
+            channel:
+              label: Canal
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: Furnizor

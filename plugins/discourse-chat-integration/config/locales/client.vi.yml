@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
+  js:
+    chat_integration:
+      menu_title: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
+      settings: "Xác lập"
+      no_providers: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
+      channels_with_errors: "Một vài channels từ dịch vụ chat này đã thất bại trong lần gửi tin nhắn cuối cùng. Nhấn chuột vào biểu tượng lỗi để xem thêm."
+      choose_group: "(chọn một nhóm)"
+      all_categories: "(tất cả danh mục)"
+      all_tags: "(tất cả từ khoá)"
+      delete_channel: "Xóa"
+      edit_channel: "Sửa"
+      test_modal:
+        title: "Gửi một tin nhắn kiểm tra dịch vụ"
+        topic: "Chủ đề"
+        send: "Gửi tin nhắn kiểm tra"
+        close: "Đóng lại"
+      type:
+        normal: Bình thường
+      filter:
+        mute: 'Im lặng'
+        follow: 'Chỉ chủ đề đầu tiên'
+        watch: 'Tất cả bài viết và trả lời'
+      rule_table:
+        filter: "Lọc"
+        category: "Danh mục"
+        tags: "Thẻ"
+        edit_rule: "Sửa"
+        delete_rule: "Xóa"
+      edit_channel_modal:
+        cancel: "Hủy"
+        channel_validation:
+          ok: "Hợp lệ"
+          fail: "Định dạng không hợp lệ"
+      edit_rule_modal:
+        title: Sửa quy tắc
+        save: Lưu quy tắc
+        cancel: Hủy
+        type: Loại
+        filter: Lọc
+        category: Danh mục
+        group: Nhóm
+        tags: Thẻ
+      provider:
+        slack:
+          param:
+            identifier:
+              help: "Ví dụ #channel, @username"
+        telegram:
+          param:
+            name:
+              title: "Tên"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Tên"
+        guilded:
+          param:
+            name:
+              title: "Tên"
+        mattermost:
+          param:
+            identifier:
+              help: "Ví dụ #channel, @username"
+        matrix:
+          param:
+            name:
+              title: "Tên"
+        zulip:
+          param:
+            subject:
+              title: "Tiêu đề"
+        rocketchat:
+          param:
+            identifier:
+              help: "Ví dụ #channel, @username"
+        gitter:
+          param:
+            name:
+              title: "Tên"
+        teams:
+          param:
+            name:
+              title: "Tên"
+        powerautomate:
+          param:
+            name:
+              title: "Tên"
+        webex:
+          param:
+            name:
+              title: "Tên"
+        google:
+          param:
+            name:
+              title: "Tên"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Tin nhắn
+            url:
+              label: URL

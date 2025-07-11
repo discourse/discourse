@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  chat_integration:
+    all_categories: "(всички категории)"
+    topic_tag_changed:
+      added_and_removed: "Добавен е %{added} и е премахнат %{removed}"
+      added: "Добавен %{added}"
+      removed: "Премахнат %{removed}"
+    provider:
+      slack:
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Добавен е %{added} и е премахнат %{removed}"
+            added: "Добавен %{added}"
+            removed: "Премахнат %{removed}"
+      flowdock:
+        message_title: "публикувано"

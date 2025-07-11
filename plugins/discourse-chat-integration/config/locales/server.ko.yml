@@ -1,0 +1,124 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    chat_integration_enabled: '담론 채팅 통합 플러그인 사용'
+    chat_integration_discourse_username: '컨텐츠를 가져올 때 작동 할 사용자의 사용자 이름입니다.'
+    chat_integration_delay_seconds: '채팅 알림을 보내기 전에 포스트 작성 후 대기하는 시간 (초)'
+    chat_integration_slack_username: "느슨하게 게시 할 봇의 사용자 이름"
+    chat_integration_slack_enabled: '슬랙 채팅 통합 제공자 사용'
+    chat_integration_slack_access_token: '슬랙으로 인증하기위한 OAuth 액세스 토큰'
+    chat_integration_slack_incoming_webhook_token: '들어오는 요청을 인증하는 데 사용되는 확인 토큰'
+    chat_integration_slack_excerpt_length: '느슨한 게시물 발췌 길이'
+    chat_integration_slack_icon_url: '느슨하게 게시 할 아이콘 (기본값은 포럼 로고)'
+    chat_integration_slack_outbound_webhook_url: "OAuth API 대신 Slack의 &#39;Incoming Webhook&#39;시스템을 사용합니다. 권장하지 않습니다."
+    errors:
+      chat_integration_slack_api_configs_are_empty: "발신 웹 후크 URL 또는 액세스 토큰을 입력해야합니다"
+    chat_integration_telegram_enabled: "텔레 그램 채팅 통합 제공자 사용"
+    chat_integration_telegram_access_token: "Telegram botfather의 봇 액세스 토큰"
+    chat_integration_telegram_excerpt_length: "전보 게시물 발췌 길이"
+    chat_integration_telegram_enable_slash_commands: "&#39;슬래시 명령&#39;을 사용하여 전보 구독을 관리 할 수 있습니다."
+    chat_integration_discord_enabled: "Discord 채팅 통합 공급자를 사용하도록 설정"
+    chat_integration_discord_message_content: "Discord에 알림을 보낼 때 요약 위에 포함 할 메시지"
+    chat_integration_discord_excerpt_length: "불일치 포스트 발췌 길이"
+    chat_integration_mattermost_enabled: "Mattermost 채팅 통합 제공자 사용"
+    chat_integration_mattermost_webhook_url: 'Mattermost 웹 후크의 URL'
+    chat_integration_mattermost_incoming_webhook_token: '들어오는 요청을 인증하는 데 사용되는 확인 토큰'
+    chat_integration_mattermost_icon_url: "Mattermost에 대한 게시물 아이콘 (기본값은 포럼 로고)"
+    chat_integration_mattermost_excerpt_length: "가장 중요한 포스트 발췌 길이"
+    chat_integration_matrix_enabled: "매트릭스 채팅 통합 제공자 사용"
+    chat_integration_matrix_homeserver: "연결할 홈 서버. 프로토콜을 포함해야합니다"
+    chat_integration_matrix_access_token: "봇의 매트릭스 계정에 대한 액세스 토큰"
+    chat_integration_matrix_excerpt_length: "매트릭스 포스트 발췌 길이"
+    chat_integration_matrix_use_notice: "일반 메시지 대신 알림 사용"
+    chat_integration_zulip_enabled: "Zulip 채팅 통합 제공자 사용"
+    chat_integration_zulip_server: "Zulip 서버의 기본 URL입니다. http (s) : //를 포함해야합니다."
+    chat_integration_zulip_bot_email_address: "Zulip 봇과 관련된 이메일 주소"
+    chat_integration_zulip_bot_api_key: "Zulip 봇의 API 키"
+    chat_integration_zulip_excerpt_length: "Zulip 포스트 발췌 길이"
+    chat_integration_rocketchat_enabled: "로켓 채팅 채팅 통합 공급자 사용"
+    chat_integration_rocketchat_webhook_url: "로켓 채팅 통합 웹 후크의 URL"
+    chat_integration_rocketchat_excerpt_length: "로켓 채팅 게시물 발췌 길이"
+    chat_integration_gitter_enabled: "Gitter chat 통합 제공자 사용"
+    chat_integration_flowdock_enabled: "Flowdock 채팅 통합 공급자 사용"
+    chat_integration_flowdock_excerpt_length: "Flowdock 포스트 발췌 길이"
+  chat_integration:
+    all_categories: "(전체 카테고리)"
+    deleted_category: "(삭제 된 카테고리)"
+    deleted_group: "(삭제 된 그룹)"
+    group_mention_template: "언급 : @ %{name}"
+    group_message_template: "메시지 : @ %{name}"
+    provider:
+      slack:
+        status:
+          no_rules: "이 채널에 설정된 규칙이 없습니다. 지침을 보려면`/ discourse help`를 실행하십시오."
+          rule_string: "* %{index}) * * %{filter} * * %{category}의 게시물 *"
+          rule_string_tags_suffix: "태그 포함 : * %{tags} *"
+        parse_error: "죄송합니다. 이해가되지 않았습니다. 지침을 보려면`/ discourse help`를 실행하십시오."
+        create:
+          created: "규칙이 성공적으로 생성되었습니다"
+          updated: "규칙이 성공적으로 업데이트되었습니다"
+          error: "해당 규칙을 만드는 중 오류가 발생했습니다."
+        delete:
+          success: "규칙이 성공적으로 삭제되었습니다"
+          error: "해당 규칙을 삭제하는 중에 오류가 발생했습니다. 규칙 목록을 보려면`/ discourse status`를 실행하십시오."
+        not_found:
+          tag: "* %{name} * 태그를 찾을 수 없습니다."
+          category: "* %{name} * 카테고리를 찾을 수 없습니다. 사용 가능한 카테고리 : * %{list} *"
+        transcript:
+          error: "대화 내용을 작성할 때 문제가 발생했습니다. 죄송합니다."
+          post_to_discourse: "대화 내용으로 담론에 대한 게시물을 작성하려면 여기를 클릭하십시오."
+          api_required: "죄송합니다.이 통합은 대화 내용 게시를 지원하도록 설정되지 않았습니다."
+          view_on_slack: "View in %{name} 슬랙"
+          first_message_pretext: "%{n} 메시지 시작하기 :"
+          last_message_pretext: "및 종료 %{n} 메시지 :"
+          posted_in: "%{name}에 게시"
+          change_first_message: "첫 번째 메시지 변경 ..."
+          change_last_message: "마지막 메시지 변경 ..."
+          loading: "성적표로드 중 ..."
+      telegram:
+        unknown_chat: "이 채팅은 %{site_title}에 설정되어 있지 않습니다. 관리자에게 &#39;채팅 ID&#39;%{chat_id}의 채널을 추가하도록 요청하십시오."
+        known_chat: "이 채팅은 %{site_title}에 설정되어 있습니다. 관리자 패널에서 구성하십시오. (채팅 ID : %{chat_id})"
+        message: |-
+          <b>%{title}에</b> 게시 된 <a href="%{post_url}">%{user}</a> <pre> %{post_excerpt} </pre>
+        status:
+          no_rules: "이 채널에 설정된 규칙이 없습니다. 지침을 보려면 <code>/help</code> 를 실행하십시오."
+          rule_string: "<b>%{index})</b> <b>%{filter}의</b> 게시물 <b>%{category}</b>"
+          rule_string_tags_suffix: "태그와 함께 : <b>%{tags}</b>"
+        parse_error: "죄송합니다. 이해가되지 않았습니다. 지침을 보려면 <code>/help</code> 를 실행하십시오."
+        create:
+          created: "규칙이 성공적으로 생성되었습니다"
+          updated: "규칙이 성공적으로 업데이트되었습니다"
+          error: "해당 규칙을 만드는 중 오류가 발생했습니다."
+        delete:
+          success: "규칙이 성공적으로 삭제되었습니다"
+          error: "해당 규칙을 삭제하는 중에 오류가 발생했습니다. 규칙 목록을 보려면 <code>/status</code> 를 실행하십시오."
+        not_found:
+          tag: "<b>%{name}</b> 태그를 찾을 수 없습니다."
+          category: "<b>%{name}</b> 카테고리를 찾을 수 없습니다. 사용 가능한 카테고리 : <b>%{list}</b>"
+      hipchat:
+        message: <b>%{title}에</b> 게시 된 <a href="%{post_url}">%{user}</a>
+      mattermost:
+        status:
+          no_rules: "이 채널에 설정된 규칙이 없습니다. 지침을 보려면`/ discourse help`를 실행하십시오."
+          rule_string: "* %{index}) * * %{filter} * * %{category}의 게시물 *"
+          rule_string_tags_suffix: "태그 포함 : * %{tags} *"
+        parse_error: "죄송합니다. 이해가되지 않았습니다. 지침을 보려면`/ discourse help`를 실행하십시오."
+        create:
+          created: "규칙이 성공적으로 생성되었습니다"
+          updated: "규칙이 성공적으로 업데이트되었습니다"
+          error: "해당 규칙을 만드는 중 오류가 발생했습니다."
+        delete:
+          success: "규칙이 성공적으로 삭제되었습니다"
+          error: "해당 규칙을 삭제하는 중에 오류가 발생했습니다. 규칙 목록을 보려면`/ discourse status`를 실행하십시오."
+        not_found:
+          tag: "* %{name} * 태그를 찾을 수 없습니다."
+          category: "* %{name} * 카테고리를 찾을 수 없습니다. 사용 가능한 카테고리 : * %{list} *"
+      matrix:
+        text_message: "%{title}-%{post_url}에 게시 된 %{user}"
+      flowdock:
+        message_title: "게시"
