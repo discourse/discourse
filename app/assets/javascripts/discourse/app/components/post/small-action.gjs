@@ -17,10 +17,10 @@ export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
 export const customGroupActionCodes = [];
 
 export const ICONS = {
-  "closed.enabled": "lock",
-  "closed.disabled": "unlock-keyhole",
-  "autoclosed.enabled": "lock",
-  "autoclosed.disabled": "unlock-keyhole",
+  "closed.enabled": "topic.closed",
+  "closed.disabled": "topic.opened",
+  "autoclosed.enabled": "topic.closed",
+  "autoclosed.disabled": "topic.opened",
   "archived.enabled": "folder",
   "archived.disabled": "folder-open",
   "pinned.enabled": "thumbtack",

@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    discourse_reactions_like_icon: "Définit l'icône utilisée pour le bouton de réaction principal. Il doit s'agir d'un nom d'icône <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> et non d'un nom d'émoji."
+    discourse_reactions_reaction_for_like: "Définit la réaction associée à l'action J'aime. Les enregistrements historiques ne seront pas modifiés si ce paramètre change, il est <strong>fortement recommandé</strong> de ne jamais modifier ce paramètre."
+    discourse_reactions_enabled: "Activer l'extension discourse-reactions."
+    discourse_reactions_enabled_reactions: "Définit une liste de réactions activées, n'importe quel émoji est autorisé ici."
+    discourse_reactions_desaturated_reaction_panel: "Réduit le bruit visuel des réactions en les affichant désaturées lorsqu'elles ne sont pas survolées."
+    discourse_reactions_excluded_from_like: "Les réactions qui ne sont pas considérées comme des « J'aime ». Toute réaction ne figurant pas sur cette liste sera considérée comme un J'aime pour les badges, les rapports et à d'autres fins."
+    discourse_reactions_like_sync_enabled: "Si cette option est activée, les enregistrements J'aime correspondants seront créés pour les réactions historiques, à l'exception des réactions définies dans discourse_reactions_excluded_from_like. Cette synchronisation se produira régulièrement en arrière-plan, ainsi que lorsque vous modifierez « discourse_reactions_excluded_from_like »."
+    errors:
+      invalid_excluded_emoji: "Vous ne pouvez pas exclure les émojis qui ne figurent pas dans les « réactions discourse, réactions activées » et vous ne pouvez pas exclure les émojis utilisés pour « réactions discourse, réaction J'aime »."
+  badges:
+    first_reaction:
+      name: Première réaction
+      description: A réagi au message
+      long_description: |
+        Ce badge est accordé la première fois que vous réagissez à un message. Les réactions sont un excellent moyen de faire savoir aux autres membres de la communauté que leurs messages sont intéressants, utiles, cools ou amusants. Partagez vos réactions !
+  reports:
+    reactions:
+      title: "Réactions"
+      description: "Répertorie les réactions les plus récentes."
+      labels:
+        day: "Jour"

@@ -49,6 +49,7 @@
 !/plugins/spoiler-alert
 !/plugins/checklist
 !/plugins/footnote
+!/plugins/discourse-reactions
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
