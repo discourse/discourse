@@ -14,10 +14,10 @@ import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import onebox from "./onebox";
 import orderedList from "./ordered-list";
+import paragraph from "./paragraph";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
-import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
 
@@ -43,7 +43,7 @@ const defaultExtensions = [
   underline,
   htmlInline,
   htmlBlock,
-  trailingParagraph,
+  paragraph,
   typographerReplacements,
   table,
   markdownPaste,
