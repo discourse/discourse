@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    discourse_graphviz_enabled: "Graphviz eklentisini etkinleştirin"
+    graphviz_default_svg: "Görüntü oluşturma yerine SVG oluşturmayı varsayılan yapın, \"svg=true|false\" ögesi ile grafik başına özelleştirilebilir."
