@@ -7,7 +7,12 @@ class Auth::DiscourseIdAuthenticator < Auth::ManagedAuthenticator
     option :client_options, auth_scheme: :basic_auth
 
     def authorize_params
-      super.tap { _1[:intent] = "signup" if request.params["signup"] == "true" }
+      super.tap do |params|
+        if request.params["signup"] == "true"
+          params[:intent] = "signup"
+          params[:email] = request.params["email"] if request.params["email"].present?
+        end
+      end
     end
 
     def callback_url

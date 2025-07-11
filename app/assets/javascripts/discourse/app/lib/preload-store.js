@@ -40,6 +40,10 @@ export default {
     return Promise.resolve(null);
   },
 
+  has(key) {
+    return this.data.has(key);
+  },
+
   get(key) {
     return this.data.get(key);
   },
