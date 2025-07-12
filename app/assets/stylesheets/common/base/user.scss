@@ -212,6 +212,10 @@
         color: var(--danger);
       }
 
+      .silenced {
+        color: var(--danger);
+      }
+
       .primary {
         width: 100%;
         position: relative;
@@ -335,6 +339,10 @@
   }
 
   .deleted-posts {
+    background-color: var(--danger-medium);
+  }
+
+  .silencings {
     background-color: var(--danger-medium);
   }
 

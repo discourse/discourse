@@ -2126,6 +2126,15 @@ RSpec.describe User do
         expect(user.number_of_flagged_posts).to eq(0)
       end
     end
+
+    describe "#number_of_silencings" do
+      it "counts the number of silencings" do
+        3.times do
+          Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
+        end
+        expect(user.number_of_silencings).to eq(3)
+      end
+    end
   end
 
   describe "new_user?" do

@@ -225,6 +225,15 @@
       }
     }
 
+    .silenced {
+      color: var(--danger);
+
+      .silence-reason-title,
+      .silence-date {
+        font-weight: bold;
+      }
+    }
+
     .profile-hidden,
     .inactive-user {
       font-size: var(--font-up-1);

@@ -432,6 +432,11 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   @discourseComputed("silenced_till")
+  silenced(silencedTill) {
+    return silencedTill && moment(silencedTill).isAfter();
+  }
+
+  @discourseComputed("silenced_till")
   silencedForever(silencedTill) {
     return isForever(silencedTill);
   }

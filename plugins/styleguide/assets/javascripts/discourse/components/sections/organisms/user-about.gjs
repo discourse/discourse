@@ -289,6 +289,11 @@ const UserAbout = <template>
             </a>
           </div>
           <div>
+            <span class="silencings">
+              {{@dummy.user.num_of_silencings}}
+            </span>&nbsp;{{i18n "user.staff_counters.silencings"}}
+          </div>
+          <div>
             <span class="suspensions">
               {{@dummy.user.number_of_suspensions}}
             </span>&nbsp;{{i18n "user.staff_counters.suspensions"}}
