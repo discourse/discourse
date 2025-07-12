@@ -221,19 +221,20 @@ jobs:
           bin/rake annotate:ensure_all_indexes
 
           if [ "${{ matrix.target }}" = "core" ]; then
-            bin/annotate --models --model-dir app/models
+            directories='app/models'
           else
             directories=$(find plugins/**/app/models -type d -depth 0 | tr '\n' ',')
-            bin/annotate --models --model-dir "$directories"
           fi
 
-          if [ ! -z "$(git status --porcelain app/models/ plugins/**/app/models/)" ]; then
+          bin/annotate --models --model-dir $directories
+
+          if [ ! -z "$(git status --porcelain $directories)" ]; then
             echo "Core annotations are not up to date. To resolve, run:"
             echo "  bin/rake annotate:clean"
             echo
             echo "Or manually apply the diff printed below:"
             echo "---------------------------------------------"
-            git -c color.ui=always diff app/models/ plugins/**/app/models/
+            git -c color.ui=always diff $directories
             exit 1
           fi
 
