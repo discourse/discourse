@@ -220,6 +220,7 @@ jobs:
         run: |
           bin/rake annotate:ensure_all_indexes
 
+          directories=''
           if [ "${{ matrix.target }}" = "core" ]; then
             directories='app/models'
           else
