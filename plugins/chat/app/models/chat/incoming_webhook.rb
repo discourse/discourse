@@ -31,7 +31,7 @@ end
 #  id              :bigint           not null, primary key
 #  name            :string           not null
 #  key             :string           not null
-#  chat_channel_id :integer          not null
+#  chat_channel_id :bigint           not null
 #  username        :string
 #  description     :string
 #  emoji           :string

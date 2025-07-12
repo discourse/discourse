@@ -17,8 +17,8 @@ end
 # Table name: chat_webhook_events
 #
 #  id                       :bigint           not null, primary key
-#  chat_message_id          :integer          not null
-#  incoming_chat_webhook_id :integer          not null
+#  chat_message_id          :bigint           not null
+#  incoming_chat_webhook_id :bigint           not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #

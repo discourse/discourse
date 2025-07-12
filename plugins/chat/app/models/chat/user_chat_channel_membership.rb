@@ -26,13 +26,13 @@ end
 #
 #  id                                  :bigint           not null, primary key
 #  user_id                             :integer          not null
-#  chat_channel_id                     :integer          not null
-#  last_read_message_id                :integer
+#  chat_channel_id                     :bigint           not null
+#  last_read_message_id                :bigint
 #  following                           :boolean          default(FALSE), not null
 #  muted                               :boolean          default(FALSE), not null
 #  created_at                          :datetime         not null
 #  updated_at                          :datetime         not null
-#  last_unread_mention_when_emailed_id :integer
+#  last_unread_mention_when_emailed_id :bigint
 #  join_mode                           :integer          default("manual"), not null
 #  last_viewed_at                      :datetime         not null
 #  notification_level                  :integer          default("mention"), not null
