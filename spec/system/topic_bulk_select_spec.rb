@@ -71,9 +71,9 @@ describe "Topic bulk select", type: :system do
   end
 
   context "when appending tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
 
     before { SiteSetting.tagging_enabled = true }
 

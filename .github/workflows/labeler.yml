@@ -6,6 +6,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  issues: write # Needed for labeler to add labels to PRs: https://github.com/orgs/community/discussions/156181
 
 jobs:
   triage:

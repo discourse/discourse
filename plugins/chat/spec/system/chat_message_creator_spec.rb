@@ -3,7 +3,7 @@
 RSpec.describe "Flag message", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]

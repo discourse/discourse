@@ -193,6 +193,7 @@ export default class DateInput extends Component {
       @value={{readonly this.value}}
       id={{this.inputId}}
       {{on "input" this.onChangeDate}}
+      ...attributes
     />
 
     {{#unless this.useGlobalPickerContainer}}

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Reviewables", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :admin)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   before do

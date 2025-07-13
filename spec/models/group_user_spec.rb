@@ -44,11 +44,11 @@ RSpec.describe GroupUser do
   describe "default category notifications" do
     fab!(:group)
     fab!(:user)
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
-    fab!(:category3) { Fabricate(:category) }
-    fab!(:category4) { Fabricate(:category) }
-    fab!(:category5) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
+    fab!(:category3, :category)
+    fab!(:category4, :category)
+    fab!(:category5, :category)
 
     def levels
       CategoryUser.notification_levels
@@ -137,11 +137,11 @@ RSpec.describe GroupUser do
   describe "default tag notifications" do
     fab!(:group)
     fab!(:user)
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
-    fab!(:tag4) { Fabricate(:tag) }
-    fab!(:tag5) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
+    fab!(:tag4, :tag)
+    fab!(:tag5, :tag)
     fab!(:synonym1) { Fabricate(:tag, target_tag: tag1) }
 
     def levels
@@ -203,9 +203,9 @@ RSpec.describe GroupUser do
 
   describe "#ensure_consistency!" do
     fab!(:group)
-    fab!(:group_2) { Fabricate(:group) }
+    fab!(:group_2, :group)
 
-    fab!(:pm_post) { Fabricate(:private_message_post) }
+    fab!(:pm_post, :private_message_post)
 
     fab!(:pm_topic) { pm_post.topic.tap { |t| t.allowed_groups << group } }
 

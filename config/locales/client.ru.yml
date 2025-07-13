@@ -840,6 +840,18 @@ ru:
         reviewable_post:
           title: "Сообщение"
           noun: "публикация"
+      notes:
+        delete: "Удалить"
+      review_user: "Пользователь"
+      copy_link: "Копировать ссылку"
+      insights:
+        activities:
+          posts:
+            one: "%{count} сообщение"
+            few: "%{count} сообщения"
+            many: "%{count} сообщений"
+            other: "%{count} сообщений"
+        visibility: "Видимость"
       approval:
         title: "Сообщения, требующие одобрения"
         description: "Сообщение получено, но оно требует проверки и утверждения модератором перед публикацией. Будьте терпеливы."
@@ -2877,6 +2889,8 @@ ru:
       image_alt_text:
         aria_label: Альтернативный текст для изображения
         title: "Добавить описание изображения"
+      image_toolbar:
+        alt_text: "Добавить описание изображения"
       image_scale_button: "Масштабировать изображение до %{percent}%"
       delete_image_button: Удалить изображение
       toggle_image_grid: Сетка изображений
@@ -4465,6 +4479,8 @@ ru:
       pinned:
         title: "Закреплена"
         help: "Эта тема для вас закреплена; она будет показана в верхней части свой категории"
+      hot:
+        title: "Горячие"
       unlisted:
         help: "Тема скрыта — она не будет отображаться в списках тем. Доступ к ней возможен только по прямой ссылке. %{unlistedReason}"
       personal_message:
@@ -4593,7 +4609,7 @@ ru:
         replies: "Ответы"
         replies_with_count: "Ответы (%{count})"
       posted:
-        title: "Мои сообщения"
+        title: "Мои записи"
         help: "темы, в которых вы принимали участие"
       bookmarks:
         title: "Закладки"
@@ -5149,8 +5165,7 @@ ru:
               content: "Пользователи"
               title: "Список пользователей"
             my_posts:
-              content: "Мои сообщения"
-              content_drafts: "Мои черновики"
+              content: "Мои записи"
               title: "Мои недавняя активность в темах"
               title_drafts: "Мои неопубликованные черновики"
               draft_count:
@@ -6202,6 +6217,9 @@ ru:
           save_successful: "Пользовательское поле сохранено."
         color_palettes:
           palette_name: "Название"
+          copy_to_clipboard: "Скопировать в буфер"
+          copied_to_clipboard: "Скопировано в буфер"
+          copy_to_clipboard_error: "Ошибка при копировании данных в буфер обмена"
           duplicate: "Дублировать"
           delete: "Удалить"
           color_options:

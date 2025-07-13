@@ -35,6 +35,9 @@ Discourse/Plugins/NoMonkeyPatching:
 Lint/Debugger:
   Exclude:
     - script/**/*
+  DebuggerMethods:
+    SystemHelpers:
+      - pause_test
 
 RSpec/InstanceVariable:
   Enabled: true

@@ -10,8 +10,8 @@ describe Chat::ChannelUnreadsQuery do
     ).map(&:to_h)
   end
 
-  fab!(:channel_1) { Fabricate(:category_channel) }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:channel_1, :category_channel)
+  fab!(:current_user, :user)
   let(:include_missing_memberships) { false }
   let(:include_read) { true }
   let(:channel_ids) { [channel_1.id] }
@@ -86,7 +86,7 @@ describe Chat::ChannelUnreadsQuery do
     end
 
     context "for multiple channels" do
-      fab!(:channel_2) { Fabricate(:category_channel) }
+      fab!(:channel_2, :category_channel)
       let(:channel_ids) { [channel_1.id, channel_2.id] }
 
       before do
@@ -243,7 +243,7 @@ describe Chat::ChannelUnreadsQuery do
     end
 
     context "for multiple channels" do
-      fab!(:channel_2) { Fabricate(:category_channel) }
+      fab!(:channel_2, :category_channel)
       let(:channel_ids) { [channel_1.id, channel_2.id] }
 
       it "returns accurate counts" do
@@ -312,7 +312,7 @@ describe Chat::ChannelUnreadsQuery do
     end
 
     context "for multiple channels" do
-      fab!(:channel_2) { Fabricate(:category_channel) }
+      fab!(:channel_2, :category_channel)
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_2, user: current_user) }
       fab!(:thread_2) { Fabricate(:chat_thread, channel: channel_2, original_message: message_2) }
       let(:channel_ids) { [channel_1.id, channel_2.id] }

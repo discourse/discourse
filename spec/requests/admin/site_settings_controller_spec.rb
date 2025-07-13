@@ -53,7 +53,7 @@ RSpec.describe Admin::SiteSettingsController do
   end
 
   describe "#user_count" do
-    fab!(:staged_user) { Fabricate(:staged) }
+    fab!(:staged_user, :staged)
     let(:tracking) { NotificationLevels.all[:tracking] }
 
     context "when logged in as an admin" do
@@ -441,9 +441,9 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       context "with default categories" do
-        fab!(:user1) { Fabricate(:user) }
-        fab!(:user2) { Fabricate(:user) }
-        fab!(:staged_user) { Fabricate(:staged) }
+        fab!(:user1, :user)
+        fab!(:user2, :user)
+        fab!(:staged_user, :staged)
         let(:watching) { NotificationLevels.all[:watching] }
         let(:tracking) { NotificationLevels.all[:tracking] }
 
@@ -555,9 +555,9 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       context "with default tags" do
-        fab!(:user1) { Fabricate(:user) }
-        fab!(:user2) { Fabricate(:user) }
-        fab!(:staged_user) { Fabricate(:staged) }
+        fab!(:user1, :user)
+        fab!(:user2, :user)
+        fab!(:staged_user, :staged)
         let(:watching) { NotificationLevels.all[:watching] }
         let(:tracking) { NotificationLevels.all[:tracking] }
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin User Page", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   let(:admin_user_page) { PageObjects::Pages::AdminUser.new }
   let(:suspend_user_modal) { PageObjects::Modals::PenalizeUser.new("suspend") }

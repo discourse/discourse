@@ -18,9 +18,9 @@ module(
 
     test("empty state when there are no notifications", async function (assert) {
       await render(<template><RepliesNotificationsList /></template>);
-      assert.dom(".empty-state .empty-state-body").exists();
+      assert.dom(".empty-state .empty-state__body").exists();
       assert
-        .dom(".empty-state .empty-state-title")
+        .dom(".empty-state .empty-state__title")
         .hasText(i18n("user.no_notifications_title"));
     });
   }

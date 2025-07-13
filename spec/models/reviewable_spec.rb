@@ -750,7 +750,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "#actions_for" do
-    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:reviewable, :reviewable_queued_post)
     fab!(:user)
 
     it "gets the bundles and actions for a reviewable" do

@@ -1274,7 +1274,6 @@ hr:
     s3_region: "Naziv regije Amazon S3 koji će se koristiti za učitavanje slika i sigurnosnih kopija."
     s3_cdn_url: "CDN URL koji se koristi za sva s3 sredstva (na primjer: https://cdn.somewhere.com). UPOZORENJE: nakon promjene ove postavke morate ponovno ispeći sve stare objave."
     avatar_sizes: "Popis automatski generiranih veličina avatara."
-    external_system_avatars_url: "URL usluge avatara vanjskog sustava. Dopuštene zamjene su {username} {first_letter} {color} {size}"
     external_emoji_url: "URL vanjske usluge za emoji slike. Ostavite prazno za onemogućavanje."
     use_site_small_logo_as_system_avatar: "Koristite mali logo stranice umjesto avatara korisnika sustava. Zahtijeva da logo bude prisutan."
     restrict_letter_avatar_colors: "Popis 6-znamenkastih heksadecimalnih vrijednosti boja koje će se koristiti za pozadinu avatara slova."

@@ -1,0 +1,508 @@
+html.discourse-reactions-no-select {
+  -webkit-touch-callout: none; /* Disables long-touch menu */
+
+  @include user-select(none); /* Disable text selection */
+}
+
+.discourse-reactions-list {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .reactions {
+    display: flex;
+    align-items: center;
+
+    .discourse-reactions-list-emoji {
+      border-radius: 100px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:nth-of-type(1n + 4) {
+        display: none;
+      }
+
+      .emoji {
+        width: 1.1em;
+        height: 1.1em;
+
+        &.desaturated {
+          filter: grayscale(100%);
+
+          &:hover {
+            filter: grayscale(0%);
+          }
+        }
+      }
+
+      .discourse-no-touch & {
+        &:hover {
+          .user-list {
+            visibility: visible;
+            opacity: 0.9;
+
+            .spinner {
+              animation-play-state: running;
+            }
+          }
+        }
+      }
+    }
+
+    .user-list {
+      position: absolute;
+      visibility: hidden;
+      z-index: z("usercard") - 2;
+      transition: opacity 0.33s;
+      opacity: 0;
+      padding: 0.5em 0;
+      min-width: 120px;
+      min-height: 80px;
+
+      .spinner {
+        animation-play-state: paused;
+      }
+
+      .container {
+        margin-top: 0.5em;
+        font-size: $font-down-2;
+        background-color: var(--primary);
+        color: var(--secondary-very-high);
+        border-radius: 3px;
+        padding: 1em;
+        display: flex;
+        flex-direction: column;
+
+        .heading {
+          font-weight: 700;
+          font-size: $font-up-1;
+          padding-bottom: 0.5em;
+          text-align: left;
+        }
+
+        .username {
+          @include ellipsis;
+        }
+
+        .username,
+        .other-users {
+          white-space: nowrap;
+          text-align: left;
+        }
+
+        .other-users {
+          padding-top: 0.25em;
+          color: var(--secondary-high);
+        }
+      }
+    }
+  }
+
+  .users {
+    font-size: $font-down-1;
+    color: var(--primary-medium);
+    margin-left: 0.5em;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.discourse-reactions-picker {
+  z-index: z("usercard") - 2;
+  position: absolute;
+  visibility: hidden;
+  padding: 15px 0;
+
+  &.is-expanded {
+    visibility: visible;
+  }
+
+  .discourse-reactions-picker-container {
+    margin: 0.25em;
+    box-shadow: var(--shadow-card);
+    background-color: var(--secondary);
+    z-index: 1;
+    border-radius: 8px;
+    display: grid;
+    grid-gap: 0.25em;
+
+    @for $i from 1 through 8 {
+      &.col-#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+      }
+    }
+  }
+
+  .pickable-reaction {
+    // TODO fix this in core
+    padding: 0.25em !important;
+    margin: 0.25em !important;
+    border: 1px solid transparent !important;
+    cursor: not-allowed;
+    border-radius: 8px;
+
+    .emoji {
+      pointer-events: none;
+      height: 1.2em;
+      width: 1.2em;
+    }
+
+    &:not(.can-undo) {
+      background: var(--primary-very-low);
+    }
+
+    &.can-undo {
+      cursor: pointer;
+
+      .discourse-no-touch & {
+        &:hover {
+          background: none !important;
+          border-color: transparent !important;
+          transform: scale(1.5);
+        }
+      }
+    }
+
+    &.is-used {
+      border-color: var(--tertiary-low) !important;
+    }
+  }
+}
+
+.discourse-reactions-counter .discourse-reactions-state-panel {
+  cursor: default;
+  z-index: z("usercard") - 2;
+  position: absolute;
+  visibility: hidden;
+  padding: 15px 0;
+
+  &.is-expanded {
+    min-width: 80px;
+    visibility: visible;
+  }
+
+  .discourse-reactions-state-panel-reaction .count {
+    padding-right: 0.25em;
+  }
+
+  @for $i from 1 through 5 {
+    &.max-length-#{$i} {
+      .discourse-reactions-state-panel-reaction .count {
+        width: #{$i * 10}px;
+      }
+    }
+  }
+
+  .container {
+    box-shadow: var(--shadow-card);
+    background-color: var(--secondary);
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    padding: 0.25em;
+    border-radius: 8px;
+  }
+
+  .counters {
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+.discourse-reactions-state-panel-reaction {
+  border-bottom: 1px solid var(--primary-low);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    border: none;
+    padding-bottom: 0;
+  }
+
+  .list {
+    display: grid;
+    grid-column-gap: 0.25em;
+    grid-row-gap: 0.25em;
+    padding-top: 0.25em;
+    grid-template-rows: 22.5px;
+  }
+
+  @for $i from 1 through 9 {
+    .list-columns-#{$i} {
+      grid-template-columns: repeat($i, 22.5px);
+    }
+  }
+
+  .users {
+    display: flex;
+    flex-direction: column;
+
+    .trigger-user-card {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .avatar {
+        // constrain to container
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .more {
+    color: var(--primary-medium);
+    font-size: $font-down-1;
+    padding-top: 0.5em;
+    text-align: left;
+  }
+
+  .reaction-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.25em;
+    margin-left: 0 !important; // core rule has too much specificity
+
+    .count {
+      font-size: $font-down-1;
+      color: var(--primary-medium);
+      text-align: left;
+
+      @include ellipsis;
+    }
+
+    .emoji-wrapper {
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .show-users {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+    border-color: transparent !important;
+    color: var(--primary-medium) !important;
+
+    .d-icon {
+      color: var(--primary-medium) !important;
+      margin: 0;
+      pointer-events: none;
+    }
+  }
+
+  .count {
+    color: var(--primary);
+    font-size: $font-up-1;
+    margin-left: 0.5em;
+  }
+}
+
+.discourse-reactions-actions {
+  display: inline-flex;
+  justify-content: flex-end;
+  height: 100%;
+
+  .spinner-container {
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-left: 0 !important; // core rule has too much specificity
+  }
+
+  &:not(.custom-reaction-used) {
+    .discourse-reactions-counter {
+      line-height: 1;
+
+      + .discourse-reactions-reaction-button {
+        button {
+          padding-left: 0.45em;
+        }
+      }
+    }
+
+    .reactions-counter {
+      padding: 8px 0 8px 10px;
+    }
+  }
+
+  &.can-toggle-reaction {
+    .discourse-reactions-reaction-button .reaction-button,
+    .discourse-reactions-reaction-button {
+      cursor: pointer;
+    }
+  }
+
+  &:not(.can-toggle-reaction) {
+    .discourse-reactions-reaction-button .reaction-button,
+    .discourse-reactions-reaction-button {
+      cursor: not-allowed;
+    }
+  }
+
+  &.has-reacted {
+    .discourse-no-touch & {
+      .discourse-reactions-double-button:hover {
+        background: var(--primary-low);
+      }
+    }
+
+    &.has-used-main-reaction {
+      .discourse-reactions-reaction-button .reaction-button .d-icon {
+        color: var(--love);
+      }
+    }
+
+    &.can-toggle-reaction {
+      .discourse-no-touch & {
+        .discourse-reactions-reaction-button:hover .reaction-button {
+          .d-icon {
+            color: var(--primary-low-mid);
+          }
+          background: var(--primary-low);
+        }
+      }
+
+      .discourse-reactions-reaction-button {
+        cursor: pointer;
+      }
+    }
+
+    &:not(.can-toggle-reaction) {
+      .discourse-no-touch & {
+        .discourse-reactions-reaction-button:hover .reaction-button {
+          background: var(--primary-low);
+        }
+      }
+    }
+  }
+
+  &:not(.has-reacted) {
+    &.my-post {
+      .discourse-no-touch & {
+        .discourse-reactions-double-button:hover {
+          .d-icon {
+            color: var(--primary-low-mid);
+          }
+          background: var(--primary-low);
+        }
+      }
+    }
+
+    &:not(.my-post) {
+      .discourse-no-touch & {
+        .discourse-reactions-double-button:hover,
+        .discourse-reactions-reaction-button:hover .reaction-button {
+          background: var(--love-low);
+
+          .d-icon {
+            color: var(--love);
+          }
+        }
+      }
+    }
+  }
+}
+
+.discourse-reactions-double-button {
+  display: inline-flex;
+  border-radius: var(--d-post-control-border-radius);
+
+  @include user-select(none);
+}
+
+.discourse-reactions-reaction-button {
+  position: relative;
+  display: flex;
+  touch-action: pan-y;
+
+  .btn-toggle-reaction-like {
+    outline: none;
+    pointer-events: none;
+    background: none;
+  }
+
+  .btn-toggle-reaction-emoji {
+    outline: none;
+    pointer-events: none;
+    background: none;
+    width: 1em;
+    height: 1em;
+  }
+}
+
+.discourse-reactions-counter {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+
+  .reactions-counter {
+    font-size: $font-up-1;
+    color: var(--primary-low-mid);
+    display: flex;
+    pointer-events: none;
+    margin-left: 0.5em;
+  }
+
+  &.only-like {
+    .reactions-counter {
+      margin: 0;
+    }
+  }
+}
+
+nav.post-controls .actions {
+  display: inline-flex;
+}
+
+nav.post-controls .actions button {
+  display: inline-flex;
+  align-items: center;
+}
+
+.discourse-reactions-my-reaction {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+
+  .reaction-emoji {
+    margin-right: 5px;
+    height: 15px;
+  }
+}
+
+nav.post-controls .actions .reaction-button:focus {
+  background: var(--primary-low);
+  color: var(--primary);
+}
+
+nav.post-controls .actions .reaction-button {
+  margin: 0;
+}

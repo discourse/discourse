@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Uploading files in the composer to S3", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:other_user) { Fabricate(:user, username: "otherguy") }
 
   let(:modal) { PageObjects::Modals::Base.new }

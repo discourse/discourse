@@ -120,7 +120,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user is staff" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
         it "dismisses posts" do
@@ -452,8 +452,8 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
@@ -519,9 +519,9 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "append tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
@@ -590,8 +590,8 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "remove_tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true

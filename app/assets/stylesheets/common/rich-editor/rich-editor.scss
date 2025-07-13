@@ -49,27 +49,20 @@
     font-size: var(--font-up-1-rem);
   }
 
-  img {
-    display: inline-block;
-    height: auto;
-    max-width: 100%;
-    border-radius: var(--d-border-radius);
+  img[data-placeholder="true"] {
+    animation: placeholder 1.5s infinite;
 
-    &[data-placeholder="true"] {
-      animation: placeholder 1.5s infinite;
+    @keyframes placeholder {
+      0% {
+        opacity: 0.6;
+      }
 
-      @keyframes placeholder {
-        0% {
-          opacity: 0.6;
-        }
+      50% {
+        opacity: 0.4;
+      }
 
-        50% {
-          opacity: 0.4;
-        }
-
-        100% {
-          opacity: 0.6;
-        }
+      100% {
+        opacity: 0.6;
       }
     }
   }
@@ -311,6 +304,10 @@
   padding: 2px 1px;
 
   img {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    border-radius: var(--d-border-radius);
     transition:
       width 0.2s ease,
       height 0.2s ease;

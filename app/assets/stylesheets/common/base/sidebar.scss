@@ -17,7 +17,9 @@
   --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
   --d-sidebar-header-color: var(--primary-medium);
   --d-sidebar-header-icon-color: var(--primary-medium);
-  --d-sidebar-border-color: var(--primary-low);
+  --d-sidebar-header-font-weight: bold;
+  --d-sidebar-section-border-color: var(--content-border-color);
+  --d-sidebar-border-color: var(--content-border-color);
   --d-sidebar-link-color: var(--primary-high);
   --d-sidebar-link-icon-color: var(--primary-500);
   --d-sidebar-link-badge-color: var(--primary-700); // example: new count
@@ -86,7 +88,7 @@
     box-sizing: border-box;
     width: 100%;
     padding: 0;
-    border-right: 1px solid var(--primary-low);
+    border-right: 1px solid var(--d-sidebar-border-color);
     overflow-x: hidden;
 
     // allows sidebar to scroll to the bottom when the composer is open

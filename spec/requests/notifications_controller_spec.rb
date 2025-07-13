@@ -32,7 +32,7 @@ RSpec.describe NotificationsController do
   context "when logged in" do
     context "as normal user" do
       fab!(:user) { sign_in(Fabricate(:user)) }
-      fab!(:acting_user) { Fabricate(:user) }
+      fab!(:acting_user, :user)
       fab!(:notification) do
         Fabricate(:notification, user: user, data: { username: acting_user.username }.to_json)
       end
@@ -186,7 +186,7 @@ RSpec.describe NotificationsController do
             )
           end
 
-          fab!(:pending_reviewable) { Fabricate(:reviewable) }
+          fab!(:pending_reviewable, :reviewable)
 
           before { SiteSetting.navigation_menu = "sidebar" }
 

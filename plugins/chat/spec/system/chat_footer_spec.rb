@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
   let(:chat_page) { PageObjects::Pages::Chat.new }

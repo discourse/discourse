@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "Reacciones de Discourse"
+  js:
+    discourse_reactions:
+      reactions_title: "Reacciones"
+      state_panel:
+        more_users: "y %{count} más..."
+      reaction:
+        forbidden: "Esa reacción se creó hace demasiado tiempo. Ya no se puede modificar ni eliminar."
+      picker:
+        react_with: "Reacciona a esta publicación con: %{reaction}"
+        cant_remove_reaction: "Ya no puedes eliminar tu reacción"
+        remove_reaction: "Eliminar la reacción %{reaction}"
+      main_reaction:
+        add: "Me gusta esta publicación"
+        remove: "Deshacer me gusta"
+        cant_remove: "Ya no puedes eliminar tu me gusta"
+        unauthenticated: "Regístrate o inicia sesión para darle me gusta a esta publicación"
+    notifications:
+      reaction_1_user_multiple_posts:
+        one: "reaccionó a %{count} de tu publicación"
+        other: "reaccionó a %{count} de tus publicaciones"
+      reaction_2_users: "%{username}, %{username2}"
+      reaction_multiple_users:
+        one: "%{username} y %{count} más"
+        other: "%{username} y otros %{count}"
+      titles:
+        reaction: "nueva reacción"

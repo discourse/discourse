@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "תחושות ב־Discourse"
+  js:
+    discourse_reactions:
+      reactions_title: "תחושות"
+      state_panel:
+        more_users: "ו־%{count} נוספות..."
+      reaction:
+        forbidden: "תחושה זו נוצרה לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותה."
+      picker:
+        react_with: "להוסיף תחושה לפוסט הזה: %{reaction}"
+        cant_remove_reaction: "כבר אין לך אפשרות להסיר את התחושה שלך"
+        remove_reaction: "להסיר את התחושה %{reaction}"
+      main_reaction:
+        add: "לסמן את הפוסט בלייק"
+        remove: "הסרת הלייק הזה"
+        cant_remove: "כבר אין לך אפשרות להסיר את הלייק שלך"
+        unauthenticated: "נא להירשם או להיכנס כדי לסמן את הפוסט הזה בלייק"
+    notifications:
+      reaction_1_user_multiple_posts:
+        one: "תגובה כלשהי לפוסט שלך"
+        two: "תגובה כלשהי ל־%{count} מהפוסטים שלך"
+        many: "תגובה כלשהי ל־%{count} מהפוסטים שלך"
+        other: "תגובה כלשהי ל־%{count} מהפוסטים שלך"
+      reaction_2_users: "%{username}, %{username2}"
+      reaction_multiple_users:
+        one: "%{username} ועוד %{count}"
+        two: "%{username} ועוד %{count}"
+        many: "%{username} ועוד %{count}"
+        other: "%{username} ועוד %{count}"
+      titles:
+        reaction: "תחושה חדשה"

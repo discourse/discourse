@@ -714,6 +714,16 @@ es:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+      notes:
+        delete: "Eliminar"
+      review_user: "Usuario"
+      copy_link: "Copiar enlace"
+      insights:
+        activities:
+          posts:
+            one: "%{count} publicación"
+            other: "%{count} publicaciones"
+        visibility: "Visibilidad"
       approval:
         title: "La publicación requiere aprobación"
         description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor, ten paciencia."
@@ -2599,6 +2609,8 @@ es:
       image_alt_text:
         aria_label: Texto alternativo para imagen
         title: "Añadir descripción de la imagen"
+      image_toolbar:
+        alt_text: "Añadir descripción de la imagen"
       image_scale_button: "Escalar imagen a %{percent} %"
       delete_image_button: Eliminar imagen
       toggle_image_grid: Alternar cuadrícula de imágenes
@@ -4025,6 +4037,8 @@ es:
       pinned:
         title: "Anclado"
         help: "Este tema se ha anclado para ti; se mostrará en la parte superior de su categoría"
+      hot:
+        title: "Caliente"
       unlisted:
         help: "Este tema no está incluido en la lista; no se mostrará en las listas de temas y solo se podrá acceder a él mediante un enlace directo. %{unlistedReason}"
       personal_message:
@@ -4648,7 +4662,6 @@ es:
               title: "Lista de todos los usuarios"
             my_posts:
               content: "Mis publicaciones"
-              content_drafts: "Mis borradores"
               title: "Mi actividad de tema reciente"
               title_drafts: "Mis borradores no publicados"
               draft_count:
@@ -5665,6 +5678,9 @@ es:
           save_successful: "Campo de usuario guardado."
         color_palettes:
           palette_name: "Nombre"
+          copy_to_clipboard: "Copiar al portapapeles"
+          copied_to_clipboard: "Copiado al portapapeles"
+          copy_to_clipboard_error: "Error al copiar datos al portapapeles"
           duplicate: "Duplicar"
           delete: "Eliminar"
           color_options:

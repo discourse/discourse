@@ -5,6 +5,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
   "post-menu-toggle-like-action",
+  "post-stream-error-loading",
   "topic-list-item-click",
 ]);
 
@@ -42,7 +43,11 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "navigation-bar-dropdown-mode",
   "parent-category-row-class",
   "parent-category-row-class-mobile",
+  "post-article-class",
+  "post-avatar-class",
+  "post-avatar-template",
   "post-class",
+  "post-event-listener",
   "post-flag-available-flags",
   "post-flag-title",
   "post-menu-buttons",

@@ -14,7 +14,7 @@ RSpec.shared_examples "channel access example" do |verb, endpoint, params|
   end
 
   context "with anonymous user" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
+    fab!(:chat_channel, :category_channel)
 
     it "returns a 403" do
       public_send(verb, "/chat/api/channels/#{chat_channel.id}#{endpoint}", params: params)

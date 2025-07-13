@@ -604,6 +604,15 @@ bg:
         reviewable_post:
           title: "Публикация"
           noun: "публикация"
+      notes:
+        delete: "Изтрий"
+      review_user: "Потребител"
+      insights:
+        activities:
+          posts:
+            one: "%{count} публикация"
+            other: "%{count} публикации"
+        visibility: "Видимост"
       approval:
         title: "Публикацията изисква одобрение"
         description: "Ние получихме вашата публикация, но тя трябва да бъде одобрена от модератора преди да бъде показана. Моля, проявете търпение."
@@ -3155,7 +3164,6 @@ bg:
         topics: "Теми"
         replies: "Отговори"
       posted:
-        title: "Моите публикации"
         help: "теми в които сте публикували"
       bookmarks:
         title: "Отметки"
@@ -3409,8 +3417,6 @@ bg:
               content: "Групи"
             users:
               content: "Потребители"
-            my_posts:
-              content: "Моите публикации"
             review:
               content: "Преглед"
             invite:
@@ -3730,6 +3736,9 @@ bg:
           delete: "Изтрий"
         color_palettes:
           palette_name: "Име"
+          copy_to_clipboard: "Копиране в клипборда"
+          copied_to_clipboard: "Копирано в клипборда"
+          copy_to_clipboard_error: "Грешка при копирането на данни в клипборда"
           delete: "Изтрий"
           colors:
             title: "Цветове"

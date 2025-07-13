@@ -9,9 +9,9 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:chatters) { Fabricate(:group) }
+    fab!(:chatters, :group)
     fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
     let(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
     end

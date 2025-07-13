@@ -6,10 +6,10 @@ describe "Automatic user removal from channels" do
 
   fab!(:user_1_guardian) { Guardian.new(user_1) }
 
-  fab!(:secret_group) { Fabricate(:group) }
+  fab!(:secret_group, :group)
   fab!(:private_category) { Fabricate(:private_category, group: secret_group) }
 
-  fab!(:public_channel) { Fabricate(:chat_channel) }
+  fab!(:public_channel, :chat_channel)
   fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
 
@@ -71,7 +71,7 @@ describe "Automatic user removal from channels" do
     end
 
     context "for staff users" do
-      fab!(:staff_user) { Fabricate(:admin) }
+      fab!(:staff_user, :admin)
 
       it "does not remove them from chat channels" do
         public_channel.add(staff_user)
@@ -125,7 +125,7 @@ describe "Automatic user removal from channels" do
       end
 
       context "for staff users" do
-        fab!(:staff_user) { Fabricate(:admin) }
+        fab!(:staff_user, :admin)
 
         it "does not remove them from public channels" do
           public_channel.add(staff_user)
@@ -145,7 +145,7 @@ describe "Automatic user removal from channels" do
 
     context "when a user is removed from a private category group" do
       context "when the user is in another group that can interact with the channel" do
-        fab!(:stealth_group) { Fabricate(:group) }
+        fab!(:stealth_group, :group)
 
         before do
           CategoryGroup.create!(
@@ -197,7 +197,7 @@ describe "Automatic user removal from channels" do
       end
 
       context "for staff users" do
-        fab!(:staff_user) { Fabricate(:admin) }
+        fab!(:staff_user, :admin)
 
         it "does not remove them from the channel" do
           secret_group.add(staff_user)
@@ -227,7 +227,7 @@ describe "Automatic user removal from channels" do
       end
 
       context "for staff users" do
-        fab!(:staff_user) { Fabricate(:admin) }
+        fab!(:staff_user, :admin)
 
         it "does not remove them from the channel" do
           secret_group.add(staff_user)

@@ -48,7 +48,7 @@ RSpec.describe EmailController do
     end
 
     describe "unsubscribe using rfc 8058" do
-      fab!(:topic_post) { Fabricate(:post) }
+      fab!(:topic_post, :post)
       before { ActionController::Base.allow_forgery_protection = true }
       after { ActionController::Base.allow_forgery_protection = false }
 
@@ -137,7 +137,7 @@ RSpec.describe EmailController do
     end
 
     describe "unsubscribe from a topic" do
-      fab!(:a_post) { Fabricate(:post) }
+      fab!(:a_post, :post)
       let(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::TOPIC_TYPE, post: a_post) }
 
       it "can unwatch topic" do
@@ -221,7 +221,7 @@ RSpec.describe EmailController do
     end
 
     describe "when topic is private" do
-      fab!(:private_topic) { Fabricate(:private_message_topic) }
+      fab!(:private_topic, :private_message_topic)
 
       it "should return the right response" do
         key = SecureRandom.hex

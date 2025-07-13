@@ -87,7 +87,7 @@ pl_PL:
         few: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
         many: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
         other: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
-      draft_too_long: "Wersja robocza jest za długa."
+      draft_too_long: "Szkic jest zbyt długi."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       message_move_invalid_channel: "Kanał źródłowy i docelowy muszą być kanałami publicznymi."
       message_move_no_messages_found: "Nie znaleziono wiadomości z podanymi identyfikatorami wiadomości."

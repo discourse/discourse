@@ -42,7 +42,7 @@ module PageObjects
 
       def click_save
         form.submit
-        expect(page).to have_css(".d-admin-table")
+        expect(page).to have_css(".d-table")
       end
 
       def form

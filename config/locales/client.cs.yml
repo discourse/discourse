@@ -866,6 +866,18 @@ cs:
         reviewable_post:
           title: "Příspěvek"
           noun: "příspěvek"
+      notes:
+        delete: "Smazat"
+      review_user: "Uživatel"
+      copy_link: "Kopírovat odkaz"
+      insights:
+        activities:
+          posts:
+            one: "%{count} příspěvek"
+            few: "%{count} příspěvky"
+            many: "%{count} příspěvků"
+            other: "%{count} příspěvků"
+        visibility: "Viditelnost"
       approval:
         title: "Příspěvek potřebuje schválení"
         description: "Obdrželi jsme váš příspěvek, ale musí být před zveřejněním schválen moderátorem. Buďte trpěliví."
@@ -2947,6 +2959,8 @@ cs:
       image_alt_text:
         aria_label: Alternativní text pro obrázek
         title: "Přidat popis obrázku"
+      image_toolbar:
+        alt_text: "Přidat popis obrázku"
       image_scale_button: "Změnit velikost obrázku na %{percent}%"
       delete_image_button: Odstranit obrázek
       toggle_image_grid: Přepnout mřížku obrázku
@@ -4590,6 +4604,8 @@ cs:
       pinned:
         title: "Připnuto"
         help: "Pro vás je toto téma připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"
+      hot:
+        title: "Žhavé"
       unlisted:
         help: "Toto téma je skryto; nebude zobrazeno v seznamech témat a je přístupné pouze prostřednictvím přímého odkazu. %{unlistedReason}"
       personal_message:
@@ -4718,7 +4734,6 @@ cs:
         replies: "Odpovědi"
         replies_with_count: "Odpovědi (%{count})"
       posted:
-        title: "Mé příspěvky"
         help: "témata, do kterých jste přispěli"
       bookmarks:
         title: "Záložky"
@@ -5279,8 +5294,6 @@ cs:
               content: "Uživatelé"
               title: "Seznam všech uživatelů"
             my_posts:
-              content: "Mé příspěvky"
-              content_drafts: "Moje koncepty"
               title: "Moje nedávná aktivita k tématům"
               title_drafts: "Moje nezveřejněné koncepty"
               draft_count:
@@ -6602,6 +6615,9 @@ cs:
           save_successful: "Uživatelské pole uloženo."
         color_palettes:
           palette_name: "Jméno"
+          copy_to_clipboard: "Kopírovat do schránky"
+          copied_to_clipboard: "Zkopírováno do schránky"
+          copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
           duplicate: "Duplikovat"
           delete: "Smazat"
           color_options:

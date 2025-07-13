@@ -728,6 +728,16 @@ pt:
         reviewable_post:
           title: "Mensagem"
           noun: "publicação"
+      notes:
+        delete: "Eliminar"
+      review_user: "Utilizador"
+      copy_link: "Copiar link"
+      insights:
+        activities:
+          posts:
+            one: "%{count} mensagem"
+            other: "%{count} mensagens"
+        visibility: "Visibilidade"
       approval:
         title: "A Publicação Necessita de Aprovação"
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
@@ -3742,7 +3752,6 @@ pt:
         topics: "Tópicos"
         replies: "Respostas"
       posted:
-        title: "As Minhas publicações"
         help: "tópicos em que publicou"
       bookmarks:
         title: "Marcadores"
@@ -4089,8 +4098,6 @@ pt:
               content: "Grupos"
             users:
               content: "Utilizadores"
-            my_posts:
-              content: "As Minhas publicações"
             review:
               content: "Revisão"
             invite:
@@ -4594,6 +4601,9 @@ pt:
           delete: "Eliminar"
         color_palettes:
           palette_name: "Nome"
+          copy_to_clipboard: "Copiar para a Área de Transferência"
+          copied_to_clipboard: "Copiado para a Área de Transferência"
+          copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
           delete: "Eliminar"
           colors:
             title: "Cores"

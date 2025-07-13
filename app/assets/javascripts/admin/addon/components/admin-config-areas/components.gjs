@@ -234,20 +234,22 @@ export default class AdminConfigAreasComponents extends Component {
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.components.length}}
           <LoadMore @action={{this.loadMore}}>
-            <table class="d-admin-table component-list">
-              <thead>
-                <th>{{i18n
-                    "admin.config_areas.themes_and_components.components.name"
-                  }}</th>
-                <th>{{i18n
-                    "admin.config_areas.themes_and_components.components.used_on"
-                  }}</th>
-                <th>{{i18n
-                    "admin.config_areas.themes_and_components.components.enabled"
-                  }}</th>
-                <th></th>
+            <table class="d-table component-list">
+              <thead class="d-table__header">
+                <tr class="d-table__row">
+                  <th class="d-table__header-cell">{{i18n
+                      "admin.config_areas.themes_and_components.components.name"
+                    }}</th>
+                  <th class="d-table__header-cell">{{i18n
+                      "admin.config_areas.themes_and_components.components.used_on"
+                    }}</th>
+                  <th class="d-table__header-cell">{{i18n
+                      "admin.config_areas.themes_and_components.components.enabled"
+                    }}</th>
+                  <th class="d-table__header-cell"></th>
+                </tr>
               </thead>
-              <tbody>
+              <tbody class="d-table__body">
                 {{#each this.components as |comp|}}
                   <ComponentRow
                     @component={{comp}}
@@ -456,16 +458,16 @@ class ComponentRow extends Component {
   <template>
     <tr
       data-component-id={{@component.id}}
-      class="d-admin-row__content admin-config-components__component-row
+      class="d-table__row admin-config-components__component-row
         {{if this.hasUpdates 'has-update'}}"
     >
-      <td class="d-admin-row__overview">
-        <div class="d-admin-row__overview-name">
+      <td class="d-table__cell --overview">
+        <div class="d-table__overview-name">
           {{@component.name}}
         </div>
         {{#if @component.remote_theme.authors}}
           <div
-            class="d-admin-row__overview-author admin-config-components__author-name"
+            class="d-table__overview-author admin-config-components__author-name"
           >{{i18n
               "admin.config_areas.themes_and_components.components.by_author"
               (hash name=@component.remote_theme.authors)
@@ -473,7 +475,7 @@ class ComponentRow extends Component {
         {{/if}}
         {{#if this.description}}
           <div
-            class="d-admin-row__overview-about admin-config-components__description"
+            class="d-table__overview-about admin-config-components__description"
           >
             {{this.description}}
             {{#if @component.remote_theme.about_url}}
@@ -487,7 +489,7 @@ class ComponentRow extends Component {
         {{/if}}
         {{#if this.hasUpdates}}
           <div
-            class="d-admin-row__overview-about admin-config-components__update-available"
+            class="d-table__overview-about admin-config-components__update-available"
           >
             {{i18n
               "admin.config_areas.themes_and_components.components.update_available"
@@ -495,8 +497,8 @@ class ComponentRow extends Component {
           </div>
         {{/if}}
       </td>
-      <td class="d-admin-row__detail admin-config-components__parent-themes">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail admin-config-components__parent-themes">
+        <div class="d-table__mobile-label">
           {{i18n "admin.config_areas.themes_and_components.components.used_on"}}
         </div>
         <div class="admin-config-components__parent-themes-list">
@@ -514,8 +516,8 @@ class ComponentRow extends Component {
           {{/if}}
         </div>
       </td>
-      <td class="d-admin-row__detail">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail">
+        <div class="d-table__mobile-label">
           {{i18n "admin.config_areas.themes_and_components.components.enabled"}}
         </div>
         <DToggleSwitch
@@ -525,8 +527,8 @@ class ComponentRow extends Component {
           {{on "click" this.toggleEnabled}}
         />
       </td>
-      <td class="d-admin-row__controls">
-        <div class="d-admin-row__controls-options">
+      <td class="d-table__cell --controls">
+        <div class="d-table__cell-actions">
           <DButton
             class="admin-config-components__edit"
             @label="admin.config_areas.themes_and_components.components.edit"

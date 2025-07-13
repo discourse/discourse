@@ -8,7 +8,7 @@ RSpec.describe HashtagAutocompleteService do
   fab!(:tag1) do
     Fabricate(:tag, name: "great-books", staff_topic_count: 22, public_topic_count: 22)
   end
-  fab!(:topic1) { Fabricate(:topic) }
+  fab!(:topic1, :topic)
 
   let(:guardian) { Guardian.new(user) }
 

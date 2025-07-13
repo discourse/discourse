@@ -422,16 +422,6 @@ export default class ComposerService extends Service {
         })
       );
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-invisible",
-          action: "toggleInvisible",
-          icon: "far-eye-slash",
-          label: "composer.toggle_unlisted",
-          condition: "canUnlistTopic",
-        })
-      );
-
       if (this.capabilities.touch) {
         options.push(
           this._setupPopupMenuOption({
@@ -460,16 +450,6 @@ export default class ComposerService extends Service {
           })
         );
       }
-
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-whisper",
-          action: "toggleWhisper",
-          icon: "far-eye-slash",
-          label: "composer.toggle_whisper",
-          condition: "showWhisperToggle",
-        })
-      );
 
       options.push(
         this._setupPopupMenuOption({
@@ -840,11 +820,6 @@ export default class ComposerService extends Service {
         tableTokens: null,
       },
     });
-  }
-
-  @action
-  toggleInvisible() {
-    this.toggleProperty("model.unlistTopic");
   }
 
   @action
@@ -1368,7 +1343,7 @@ export default class ComposerService extends Service {
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
-   @param {String} [opts.hijackPreview] Option to hijack the preview with custom content
+   @param {String} [opts.hijackPreview] Option to hijack the preview with a custom component, you must pass { component: CustomPreviewComponent, model: { ... } }
    @param {String} [opts.selectedTranslationLocale] The locale to use for the translation
    **/
   async open(opts = {}) {
@@ -1491,8 +1466,7 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
-      locale:
-        this.currentUser.effective_locale || this.siteSettings.default_locale,
+      locale: null,
     });
   }
 

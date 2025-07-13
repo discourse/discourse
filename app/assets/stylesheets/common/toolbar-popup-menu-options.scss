@@ -1,13 +1,125 @@
 @use "lib/viewport";
 
-.toolbar-menu__options-content {
+.toolbar-menu__options-content,
+.toolbar-menu__heading-content {
   @include viewport.from(sm) {
     z-index: z("composer", "content");
+
+    // making sure it's only limited in height on floating menu, not mobile menu
+    &.fk-d-menu {
+      max-height: 30vh;
+    }
+  }
+
+  &.fk-d-menu {
+    @include viewport.until(sm) {
+      z-index: calc(z("mobile-composer") + 1);
+    }
+  }
+
+  .fullscreen-composer & {
+    z-index: z("header") + 1;
+  }
+
+  .dropdown-menu {
+    .btn {
+      gap: var(--space-2);
+    }
   }
 
   .shortcut {
     @include viewport.until(sm) {
       display: none;
+    }
+  }
+}
+
+.toolbar-menu__heading-content {
+  .dropdown-menu {
+    .btn {
+      &.--active {
+        .d-button-label__active-icon {
+          visibility: visible;
+          margin-left: auto;
+        }
+      }
+
+      &:hover,
+      &:focus,
+      &:focus-visible {
+        .shortcut {
+          display: block;
+        }
+
+        .d-button-label__active-icon {
+          visibility: hidden;
+        }
+      }
+    }
+
+    .d-button-label {
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+
+      &__active-icon {
+        visibility: hidden;
+      }
+
+      &__text {
+        padding-right: var(--space-8); // extra spacing for the shortcut
+      }
+
+      .shortcut {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        display: none;
+        margin: 0;
+        font-size: var(--font-down-1-rem);
+      }
+    }
+
+    .btn[data-name="heading-1"] {
+      .d-button-label__text,
+      .d-icon[class*="d-icon-discourse"] {
+        font-size: var(--font-up-2-rem);
+        font-weight: bold;
+      }
+    }
+
+    .btn[data-name="heading-2"] {
+      .d-button-label__text,
+      .d-icon {
+        font-size: var(--font-up-1-rem);
+        font-weight: bold;
+      }
+    }
+
+    .btn[data-name="heading-3"] {
+      .d-button-label__text,
+      .d-icon {
+        font-size: var(--font-0);
+        font-weight: bold;
+      }
+    }
+
+    .btn[data-name="heading-4"] {
+      .d-button-label__text,
+      .d-icon {
+        font-weight: bold;
+        font-size: var(--font-down-1-rem);
+      }
+    }
+
+    .btn[data-name="heading-paragraph"] {
+      .d-button-label__text,
+      .d-icon {
+        font-size: var(--font-down-1-rem);
+      }
     }
   }
 }

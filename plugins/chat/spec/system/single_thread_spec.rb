@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Single thread in side panel", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -16,7 +16,7 @@ describe "Single thread in side panel", type: :system do
   end
 
   context "when threading is disabled for the channel" do
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
 
     before { channel.update!(threading_enabled: false) }
 
@@ -30,7 +30,7 @@ describe "Single thread in side panel", type: :system do
   end
 
   context "when threading is enabled for the channel" do
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2, :user)
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { chat_thread_chain_bootstrap(channel: channel, users: [current_user, user_2]) }
 

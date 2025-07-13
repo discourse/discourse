@@ -42,7 +42,7 @@ RSpec.describe FlagSerializer do
   end
 
   describe "#is_used" do
-    fab!(:unused_flag) { Fabricate(:flag) }
+    fab!(:unused_flag, :flag)
 
     fab!(:used_flag) do
       flag = Fabricate(:flag)

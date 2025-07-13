@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe PostGuardian do
-  fab!(:groupless_user) { Fabricate(:user) }
+  fab!(:groupless_user, :user)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:anon) { Fabricate(:anonymous) }
+  fab!(:anon, :anonymous)
   fab!(:admin)
   fab!(:moderator)
   fab!(:group)

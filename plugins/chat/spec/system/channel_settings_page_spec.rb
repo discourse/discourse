@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Channel - Info - Settings page", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -47,7 +47,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
   end
 
   context "as not allowed to see the channel" do
-    fab!(:channel_1) { Fabricate(:private_category_channel) }
+    fab!(:channel_1, :private_category_channel)
 
     it "redirects to browse page" do
       chat_page.visit_channel_settings(channel_1)
@@ -186,7 +186,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
   end
 
   context "as staff" do
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
 
     before { channel_1.add(current_user) }
 

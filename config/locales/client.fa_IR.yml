@@ -722,6 +722,16 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+      notes:
+        delete: "حذف"
+      review_user: "کاربر"
+      copy_link: "رونوشت پیوند"
+      insights:
+        activities:
+          posts:
+            one: "%{count} فرسته"
+            other: "%{count} نوشته"
+        visibility: "قابل مشاهده"
       approval:
         title: "نوشته نیاز به تایید دارد"
         description: "ما نوشته شما را دریافت کرده ایم ولی قبل از نمایش نیاز به تایید آن توسط یکی از ناظران است. لطفا صبر داشته باشید."
@@ -2617,6 +2627,8 @@ fa_IR:
       image_alt_text:
         aria_label: متن Alt برای عکس
         title: "توضیحات تصویر را اضافه کنید"
+      image_toolbar:
+        alt_text: "توضیحات تصویر را اضافه کنید"
       image_scale_button: "تغییر مقیاس تصویر به %{percent}%"
       delete_image_button: حذف تصویر
       toggle_image_grid: تغییر وضعیت شبکه تصویر
@@ -4055,6 +4067,8 @@ fa_IR:
       pinned:
         title: "سنجاق شده"
         help: "این موضوع برای شما سنجاق شده است، و در بالای دسته‌بندی نمایش داده خواهد شد."
+      hot:
+        title: "داغ"
       unlisted:
         help: "این موضوع از فهرست خارج شد و در فهرست موضوعات نمایش داده نخواهد شد؛ و فقط از طریق لینک مستقیم در دسترس خواهد بود. %{unlistedReason}"
       personal_message:
@@ -4678,7 +4692,6 @@ fa_IR:
               title: "فهرست همه‌ی کاربران"
             my_posts:
               content: "نوشته‌های من"
-              content_drafts: "پیش‌نویس‌های من"
               title: "فعالیت اخیر موضوع‌های من"
               title_drafts: "پیش‌نویس‌های ارسال‌نشده‌ی من"
               draft_count:
@@ -5687,6 +5700,9 @@ fa_IR:
           save_successful: "فیلد کاربر ذخیره شد."
         color_palettes:
           palette_name: "نام"
+          copy_to_clipboard: "کپی در clipboard"
+          copied_to_clipboard: "کپی شد"
+          copy_to_clipboard_error: "خطا در کپی اطلاعات"
           duplicate: "تکراری"
           delete: "حذف"
           color_options:

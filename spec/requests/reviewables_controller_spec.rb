@@ -76,7 +76,7 @@ RSpec.describe ReviewablesController do
       end
 
       context "with trashed topics and posts" do
-        fab!(:post1) { Fabricate(:post) }
+        fab!(:post1, :post)
         fab!(:reviewable) do
           Fabricate(
             :reviewable,
@@ -90,7 +90,7 @@ RSpec.describe ReviewablesController do
         fab!(:moderator)
         let(:topic) { post1.topic }
 
-        fab!(:category_mod) { Fabricate(:user) }
+        fab!(:category_mod, :user)
         fab!(:group)
         fab!(:group_user) { GroupUser.create!(group_id: group.id, user_id: category_mod.id) }
         fab!(:mod_group) do
@@ -657,7 +657,7 @@ RSpec.describe ReviewablesController do
       end
 
       context "with claims" do
-        fab!(:qp) { Fabricate(:reviewable_queued_post) }
+        fab!(:qp, :reviewable_queued_post)
 
         it "fails when reviewables must be claimed" do
           SiteSetting.reviewable_claiming = "required"
@@ -745,9 +745,9 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#topics" do
-      fab!(:post0) { Fabricate(:post) }
+      fab!(:post0, :post)
       fab!(:post1) { Fabricate(:post, topic: post0.topic) }
-      fab!(:post2) { Fabricate(:post) }
+      fab!(:post2, :post)
       fab!(:user0) { Fabricate(:user, refresh_auto_groups: true) }
       fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
 
@@ -846,8 +846,8 @@ RSpec.describe ReviewablesController do
 
     describe "#update" do
       fab!(:reviewable)
-      fab!(:reviewable_post) { Fabricate(:reviewable_queued_post) }
-      fab!(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
+      fab!(:reviewable_post, :reviewable_queued_post)
+      fab!(:reviewable_topic, :reviewable_queued_post_topic)
       fab!(:moderator)
       fab!(:reviewable_approved_post) do
         Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])

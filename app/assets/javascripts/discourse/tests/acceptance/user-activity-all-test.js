@@ -19,14 +19,14 @@ acceptance("User Activity / All - empty state", function (needs) {
   test("When looking at own activity page", async function (assert) {
     await visit(`/u/${currentUser}/activity`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(i18n("user_activity.no_activity_title"));
   });
 
   test("When looking at another user's activity page", async function (assert) {
     await visit(`/u/${anotherUser}/activity`);
     assert
-      .dom("div.empty-state span.empty-state-title")
+      .dom("div.empty-state .empty-state__title")
       .hasText(i18n("user_activity.no_activity_title")); // the same title as when looking at own page
   });
 });

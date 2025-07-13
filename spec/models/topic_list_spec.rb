@@ -69,7 +69,7 @@ RSpec.describe TopicList do
     describe "when there are tags restricted to a category" do
       fab!(:category)
       fab!(:topic) { Fabricate(:topic, category: category) }
-      fab!(:other_topic) { Fabricate(:topic) } # uncategorized
+      fab!(:other_topic, :topic) # uncategorized
       fab!(:tag) { Fabricate(:tag, topics: [topic], categories: [category], name: "category-tag") }
       fab!(:other_tag) { Fabricate(:tag, topics: [topic], name: "use-anywhere") }
       let(:topic_list) do

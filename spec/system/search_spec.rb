@@ -213,7 +213,7 @@ describe "Search", type: :system do
 
   describe "bulk actions" do
     fab!(:admin)
-    fab!(:tag1) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
 
     before do
       SearchIndexer.enable

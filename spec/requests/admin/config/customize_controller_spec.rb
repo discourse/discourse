@@ -55,8 +55,8 @@ RSpec.describe Admin::Config::CustomizeController do
   end
 
   describe "#components" do
-    fab!(:parent_theme_1) { Fabricate(:theme) }
-    fab!(:parent_theme_2) { Fabricate(:theme) }
+    fab!(:parent_theme_1, :theme)
+    fab!(:parent_theme_2, :theme)
 
     fab!(:used_component) do
       Fabricate(
