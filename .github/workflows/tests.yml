@@ -224,7 +224,7 @@ jobs:
           if [ "${{ matrix.target }}" = "core" ]; then
             directories="app/models"
           else
-            directories="$(find plugins/**/app/models -type d -depth 0)"
+            directories="$(find plugins -type d -path 'plugins/*/app/models' -maxdepth 3)"
           fi
 
           bin/annotate --models --model-dir $(echo "${directories}" | tr '\n' ',')
