@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import DButton from "discourse/components/d-button";
+import FilterTips from "discourse/components/discovery/filter-tips";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
@@ -72,6 +73,10 @@ export default class DiscoveryFilterNavigation extends Component {
             @type="text"
             id="queryStringInput"
             autocomplete="off"
+          />
+          <FilterTips
+            @queryString={{this.newQueryString}}
+            @onSelectTip={{this.updateQueryString}}
           />
           {{! EXPERIMENTAL OUTLET - don't use because it will be removed soon  }}
           <PluginOutlet
