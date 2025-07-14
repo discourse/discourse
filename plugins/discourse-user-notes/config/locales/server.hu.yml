@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  site_settings:
+    user_notes_enabled: "Megjegyzések hozzáadása a felhasználókhoz engedélyezése a személyzeti felhasználóknak"
+  user_notes:
+    official_warning: "Hivatalos figyelmeztetést kaptál a következő felhasználótól @%{username} -- %{warning_link}"
+    user_suspended: "@%{username} felfüggesztette ezt a fiókot a következő ideig, %{suspended_till}. Ok: %{reason}"
+    user_silenced: "@%{username} elnémította ezt a fiókot a következő ideig, %{silenced_till}. Ok: %{reason}"
+  reports:
+    user_notes:
+      labels:
+        user: Felhasználó
+        note: Megjegyzés
+        moderator: Moderátor

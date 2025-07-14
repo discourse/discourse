@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  site_settings:
+    user_notes_enabled: "Επιτρέψτε στους επόπτες να προθέτουν σημειώσεις στους χρήστες"
+    user_notes_moderators_delete: "Να επιτρέπεται στους επόπτες να διαγράφουν σημειώσεις χρήστη"
+  user_notes:
+    official_warning: "Έλαβες μια επίσημη προειδοποίηση από το @%{username} - %{warning_link}"
+    user_suspended: "Ο χρήστης @%{username} ανέστειλε αυτόν τον λογαριασμό έως τις %{suspended_till}. Λόγος: %{reason}"
+    user_silenced: "Ο χρήστης @%{username} ανέστειλε αυτόν τον λογαριασμό έως τις %{silenced_till}. Λόγος: %{reason}"
+  reports:
+    user_notes:
+      title: "Σημειώσεις χρήστη"
+      description: "Λίστα των πρόσφατων σημειώσεων για χρήστες."
+      labels:
+        user: Χρήστης
+        note: Σημείωση
+        moderator: Συντονιστής

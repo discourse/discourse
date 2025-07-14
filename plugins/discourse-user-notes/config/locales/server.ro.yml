@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    user_notes_enabled: "Permite personalului să atașeze note utilizatorilor"
+    user_notes_moderators_delete: "Permite moderatorilor să șteargă notele despre utilizatori"
+  user_notes:
+    official_warning: "A primit un avertisment oficial de la %{username} -- %{warning_link}"
+    user_suspended: "%{username} a suspendat acest cont până pe %{suspended_till}. Motiv: %{reason}"
+    user_silenced: "%{username} a suspendat acest cont până pe %{silenced_till}. Motiv: %{reason}"
+  reports:
+    user_notes:
+      title: "Note despre utilizator"
+      description: "Listează cele mai recente note despre utilizatori."
+      labels:
+        user: Utilizator
+        note: Notă
+        moderator: Moderator

@@ -213,3 +213,10 @@ files:
   - source_path: plugins/discourse-post-voting/config/locales/server.en.yml
     destination_path: plugins/post-voting/server.yml
     label: post-voting
+
+  - source_path: plugins/discourse-user-notes/config/locales/client.en.yml
+    destination_path: plugins/user-notes/client.yml
+    label: user-notes
+  - source_path: plugins/discourse-user-notes/config/locales/server.en.yml
+    destination_path: plugins/user-notes/server.yml
+    label: user-notes

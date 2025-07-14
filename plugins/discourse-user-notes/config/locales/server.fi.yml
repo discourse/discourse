@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    user_notes_enabled: "Salli henkilökunnan lisätä huomioita käyttäjiin"
+    user_notes_moderators_delete: "Salli valvojien poistaa käyttäjähuomioita"
+  user_notes:
+    official_warning: "%{username} antoi virallisen varoituksen – %{warning_link}"
+    user_suspended: "@%{username} hyllytti tämän käyttäjän %{suspended_till} asti. Syy: %{reason}"
+    user_silenced: "@%{username} hiljensi tämän tilin %{silenced_till} asti. Syy: %{reason}"
+  reports:
+    user_notes:
+      title: "Käyttäjähuomiot"
+      description: "Listaa viimeisimmät käyttäjähuomiot."
+      labels:
+        user: Käyttäjä
+        note: Huomio
+        moderator: Valvoja
