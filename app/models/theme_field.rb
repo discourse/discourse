@@ -229,11 +229,18 @@ class ThemeField < ActiveRecord::Base
       .css("script")
       .each_with_index do |node, index|
         if inline_javascript?(node)
-          js_compiler.append_raw_script(
-            "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
-            node.inner_html,
-          )
-          node.remove
+          unique_name = "theme-field-#{self.id}-inline-#{index + 1}"
+
+          node.inner_html = +"// Inline script from theme #{theme_id}\n#{node.inner_html}"
+          node["type"] = "text/discourse-deferred-inline-js"
+          node["data-script-name"] = unique_name
+
+          node.add_next_sibling(<<~HTML)
+            <script type="module" nonce="#{CSP_NONCE_PLACEHOLDER}">
+              const node = document.querySelector("script[data-script-name='#{unique_name}']");
+              node.removeAttribute("type"); node.replaceWith(node);
+            </script>
+          HTML
         else
           node["nonce"] = CSP_NONCE_PLACEHOLDER
         end

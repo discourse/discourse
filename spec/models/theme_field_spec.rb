@@ -59,7 +59,7 @@ RSpec.describe ThemeField do
     expect(theme_field.error).to eq(nil)
   end
 
-  it "only extracts inline javascript to an external file" do
+  it "handles script tags correctly" do
     html = <<~HTML
       <script type="text/discourse-plugin" version="0.8">
         var a = "inline discourse plugin";
@@ -86,26 +86,12 @@ RSpec.describe ThemeField do
     )
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
+    expect(theme_field.value_baked).to include("inline raw script")
+    expect(theme_field.value_baked).to include("text/javascript")
+    expect(theme_field.value_baked).to include("application/javascript")
+    expect(theme_field.value_baked).to include('type="text/discourse-deferred-inline-js"')
+    expect(theme_field.value_baked).to include('type="module"')
     expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
-    expect(theme_field.javascript_cache.content).to include('b = "inline raw script"')
-    expect(theme_field.javascript_cache.content).to include('c = "text/javascript"')
-    expect(theme_field.javascript_cache.content).to include('d = "application/javascript"')
-  end
-
-  it "adds newlines between the extracted javascripts" do
-    html = <<~HTML
-      <script>var a = 10</script>
-      <script>var b = 10</script>
-    HTML
-
-    extracted = <<~JS
-      var a = 10
-      var b = 10
-    JS
-
-    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
-    theme_field.ensure_baked!
-    expect(theme_field.javascript_cache.content).to include(extracted)
   end
 
   it "correctly extracts and generates errors for transpiled js" do
@@ -797,7 +783,7 @@ HTML
         theme.set_field(
           target: :common,
           name: "head_tag",
-          value: "<script>let c = 'd';</script>",
+          value: "<script type='text/discourse-plugin' version='0.1'>let c = 'd';</script>",
           type: :html,
         )
 

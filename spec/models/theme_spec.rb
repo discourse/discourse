@@ -840,12 +840,12 @@ HTML
 
     it "recompiles when the hostname changes" do
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
-      theme_field =
-        theme.set_field(
-          target: :common,
-          name: :after_header,
-          value: '<script>console.log("hello world");</script>',
-        )
+      theme.set_field(
+        target: :common,
+        name: :after_header,
+        value:
+          '<script type="text/discourse-plugin" version="0.1">console.log("hello world");</script>',
+      )
       theme.save!
 
       expect(Theme.lookup_field(theme.id, :common, :after_header)).to include(
