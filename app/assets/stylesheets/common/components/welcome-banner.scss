@@ -164,23 +164,15 @@
 }
 
 .welcome-banner__title,
-.welcome-banner__wrap p {
+.welcome-banner__subheader {
   text-align: center;
 }
 
 .welcome-banner__subheader {
-  font-size: var(--font-down-6);
+  font-size: var(--font-up-1-rem);
   font-weight: normal;
   margin: 0;
   padding: 0.25rem 0;
-
-  @include viewport.until(md) {
-    font-size: var(--font-down-4);
-  }
-
-  @include viewport.until(sm) {
-    font-size: var(--font-down-1);
-  }
 }
 
 // hide search icon from default search menu

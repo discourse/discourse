@@ -10,12 +10,18 @@
     }
   }
 
+  &__inner-wrapper {
+    container-type: inline-size;
+  }
+
   &__wrap {
-    display: grid;
-    grid-template-rows: 0.33fr 0.33fr 0.33fr;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 1em;
-    grid-row-gap: 0.5em;
+    display: flex;
+    gap: var(--space-8);
+
+    // grid-template-rows: 0.33fr 0.33fr 0.33fr;
+    // grid-template-columns: 1fr 1fr;
+    // grid-column-gap: 1em;
+    // grid-row-gap: 0.5em;
     border-bottom: 1px solid var(--primary-300);
     margin-block: 0;
     padding: var(--space-4);
@@ -33,8 +39,6 @@
     .--below-site-header & {
       border-bottom: 0;
 
-      // margin-left: max(var(--d-sidebar-width), 1rem);
-
       @include viewport.from(xl) {
         margin-left: max(var(--d-sidebar-width), var(--space-4));
       }
@@ -44,13 +48,24 @@
       padding-bottom: var(
         --space-8
       ); // visual balancing for top-padding from horizon content area
+
+      @container (width <= 800px) {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
     }
 
     .search-menu {
-      grid-column: 2/3;
-      grid-row: 1/-1;
+      // grid-column: 2/3;
+      // grid-row: 1/-1;
       width: 100%;
       align-self: center;
+
+      .--above-topic-content & {
+        @container (width >= 800px) {
+          width: 50cqw;
+        }
+      }
 
       // @media screen and (width <= 1028px) {
       //   grid-row: 2/-1;
@@ -58,8 +73,8 @@
       // }
 
       @include viewport.until(md) {
-        grid-row: 2/-1;
-        grid-column: 1/-1;
+        // grid-row: 2/-1;
+        // grid-column: 1/-1;
       }
 
       // @media screen and (width <= 600px) {
@@ -101,29 +116,52 @@
   }
 
   &__title {
-    grid-column: 1/2;
-    grid-row: 1/-1;
+    // grid-column: 1/2;
+    // grid-row: 1/-1;
     text-align: left;
     align-self: center;
     margin: 0;
     color: var(--search-color);
 
+    .--above-topic-content & {
+      @container (width >= 800px) {
+        width: calc(45cqw - var(--space-8));
+      }
+
+      @container (width <= 800px) {
+        white-space: nowrap;
+        text-align: center;
+      }
+    }
+
     @include viewport.from(md) {
-      text-align: center;
-      white-space: nowrap;
       font-size: clamp(var(--font-up-4), 4vw, var(--font-up-6));
+
+      .--below-site-header & {
+        text-align: center;
+      }
     }
 
     @include viewport.until(md) {
-      text-align: center;
-      grid-column: 1/-1;
-      grid-row: 1;
+      // grid-column: 1/-1;
+      // grid-row: 1;
       font-size: var(--font-up-4);
       margin-bottom: 0.5em;
     }
 
     @include viewport.until(sm) {
       font-size: var(--font-up-2);
+    }
+  }
+
+  &__subheader {
+    white-space: wrap;
+    text-align: left;
+
+    .--above-topic-content & {
+      @container (width <= 800px) {
+        text-align: center;
+      }
     }
   }
 }
