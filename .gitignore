@@ -65,6 +65,7 @@
 !/plugins/discourse-data-explorer
 !/plugins/discourse-post-voting
 !/plugins/discourse-user-notes
+!/plugins/discourse-assign
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

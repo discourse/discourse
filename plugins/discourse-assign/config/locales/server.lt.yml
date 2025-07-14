@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  site_settings:
+    assign_enabled: "Įgalinti priskirtą įskiepį"
+  discourse_assign:
+    reminders_frequency:
+      never: "niekada"
+      daily: "kas dieną"
+      weekly: "kas savaitę"
+      monthly: "kas mėnesį"
+      quarterly: "kas ketvirtį"

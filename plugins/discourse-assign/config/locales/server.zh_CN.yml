@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    assign_enabled: "启用指定插件"
+    assigns_public: "允许公众查看话题指定"
+    assigns_user_url_path: "指定给用户的话题的路径（使用 :{username} 替换用户名）"
+    assigns_by_staff_mention: "如果一个管理人员指定给另一个管理人员，话题将被自动指定。"
+    unassign_creates_tracking_post: "如果您取消指定话题，将创建一个密语或操作来跟踪更改"
+    assign_self_regex: "需要为自指定传递的正则表达式。例如，“我的名单”"
+    assign_other_regex: "通过提及将话题指定给其他人需要传递的正则表达式。例如，“您的名单”"
+    unassign_on_group_archive: "当消息被群组归档时，取消指定消息（如果移回收件箱则重新指定）"
+    unassign_on_close: "当话题被关闭时取消指定话题"
+    reassign_on_open: "当话题被打开后，重新指定给之前指定的用户/群组"
+    invite_on_assign: "将个人消息指定给用户或群组时，如果他们还不是参与者，请邀请他们加入 PM。"
+    assign_mailer: "何时发送任务指定的通知电子邮件"
+    remind_assigns: "提醒用户存在待处理的指定。"
+    remind_assigns_frequency: "就已指定的话题提醒用户的频率。"
+    pending_assign_reminder_threshold: "触发提醒通知的待处理指定数量。"
+    max_assigned_topics: "可以指定给用户的最大话题数。"
+    assign_allowed_on_groups: "这些群组中的用户可以指定话题，也可以向他们指定话题。"
+    enable_assign_status: "向每个指定添加可自定义的状态字段。"
+    assign_statuses: "每个指定可用的状态列表。第一个状态是应用于每个新指定的默认状态。"
+    errors:
+      assign_statuses:
+        too_few: "必须至少有两种不同的状态。"
+        duplicate: "存在重复的状态值。"
+        removed_in_use: "如果存在使用此状态的现有指定，则无法从列表中移除该状态。"
+  discourse_assign:
+    assigned_to: "指定给 @%{username} 的话题"
+    unassigned: "话题已被取消指定"
+    already_claimed: "该话题已被认领。"
+    already_assigned: "主题已被指定给 @%{username}"
+    too_many_assigns: "@%{username} 已达到指定话题的最大数量 (%{max})。"
+    too_many_assigns_for_topic: "已达到每个话题 %{limit} 个任务指定的限制。"
+    forbidden_assign_to: "无法指定 @%{username}，因为他们不属于指定的允许群组。"
+    forbidden_assignee_not_pm_participant: "无法指定 @%{username}，因为他们无权访问此私信。您可以通过邀请 @%{username} 加入此私信来授予其权限。"
+    forbidden_assignee_cant_see_topic: "无法指定 @%{username}，因为他们无权访问此话题。"
+    group_already_assigned: "话题已被指定给 @%{group}"
+    forbidden_group_assign_to: "无法指定 @%{group}，因为他们不属于指定的允许群组。"
+    forbidden_group_assignee_not_pm_participant: "无法指定 @%{group}，因为并非所有成员都有权访问此私信。"
+    forbidden_group_assignee_cant_see_topic: "无法指定 @%{group}，因为并非所有成员都有权访问此话题。"
+    flag_assigned: "抱歉，该举报的话题已被指定给其他用户"
+    flag_unclaimed: "在对举报采取行动之前，您必须先认领该话题。"
+    topic_assigned_excerpt: "向您指定了话题 '%{title}'"
+    topic_group_assigned_excerpt: "将话题“%{title}”指定给 @%{group}"
+    reminders_frequency:
+      never: "永不"
+      daily: "每天"
+      weekly: "每周"
+      monthly: "每月"
+      quarterly: "每季度"
+  assign_mailer:
+    title: "指定邮件程序"
+    subject_template: "[%{email_prefix}] %{assignee_name} 将您指定至 '%{topic_title}'！"
+    text_body_template: |
+      嘿，%{assignee_name} 将您**指定**至讨论
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      如果您感兴趣，点击下方的链接：
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "您有 %{pending_assignments} 个待处理任务指定"
+    body: |
+      您目前有 [%{pending_assignments} 个待处理的任务指定](%{assignments_link})。
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      如果您有多个指定的话题，将%{frequency}发送此提醒。
+    newest: |
+      ### 最新
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### 最旧
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: 随机指定
+        no_one: "尝试随机指定 `@%{group}` 的成员，但没有人可用。"
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} 已为您指定"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "所选状态无效（它未包含在 assigned_status 站点设置中）。"

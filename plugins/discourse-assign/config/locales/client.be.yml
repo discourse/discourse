@@ -1,0 +1,35 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    discourse_assign:
+      assigned: "прызначаны"
+      group_everyone: "усе"
+      reassign:
+        title: "рэдагаваць"
+      assign_modal:
+        status_label: Статус
+      assign_mailer:
+        never: "ніколі"
+        always: "заўсёды"
+      reminders_frequency:
+        never: "ніколі"
+        daily: "штодня"
+        weekly: "штотыдзень"
+        monthly: "штомесяц"
+        quarterly: "штоквартальна"
+    user:
+      messages:
+        assigned: "прызначаны"
+      assignment_description:
+        topic: "%{topic_title}"
+    notifications:
+      titles:
+        assigned: "прызначаны"
+    edit_assignments_modal:
+      topic: "тэма"
+      post: "пост"

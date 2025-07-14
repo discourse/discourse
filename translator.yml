@@ -220,3 +220,10 @@ files:
   - source_path: plugins/discourse-user-notes/config/locales/server.en.yml
     destination_path: plugins/user-notes/server.yml
     label: user-notes
+
+  - source_path: plugins/discourse-assign/config/locales/client.en.yml
+    destination_path: plugins/assign/client.yml
+    label: assign
+  - source_path: plugins/discourse-assign/config/locales/server.en.yml
+    destination_path: plugins/assign/server.yml
+    label: assign

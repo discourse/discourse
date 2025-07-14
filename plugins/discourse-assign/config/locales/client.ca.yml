@@ -1,0 +1,77 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    filters:
+      unassigned:
+        title: "No assignat"
+        help: "Temes que no estan assignats"
+    action_codes:
+      assigned: "Assignat %{who} %{when}"
+      assigned_group: "Assignat %{who} %{when}"
+      unassigned: "Desassignat %{who} %{when}"
+      unassigned_group: "Desassignat %{who} %{when}"
+    discourse_assign:
+      cant_act: "No podeu actuar sobre banderes assignades a altres usuaris."
+      cant_act_unclaimed: "Cal reclamar el tema abans d'actuar sobre les banderes"
+      assigned: "Assignat"
+      group_everyone: "Tothom"
+      assigned_to: "Assignat a"
+      assigned_to_w_ellipsis: "Assignat a..."
+      unassign:
+        title: "Desassigna"
+        title_w_ellipsis: "Desassigna..."
+        help: "Desassigna %{username} del tema"
+      assign:
+        title: "Assigna"
+        help: "Assigna el tema a l'usuari"
+      reassign:
+        title: "Edita"
+      topic_level_menu:
+        unassign_with_ellipsis: "Desassigna..."
+      assign_modal:
+        title: "Assigna el tema"
+        assign: "Assigna"
+        optional_label: "(opcional)"
+        status_label: Estat
+      claim:
+        title: "reclama"
+        help: "Assigneu-vos el tema"
+      assign_mailer:
+        never: "Mai"
+        always: "Sempre"
+      reminders_frequency:
+        description: "Freqüència per a rebre recordatoris de temes assignats"
+        never: "Mai"
+        daily: "Diàriament"
+        weekly: "Setmanalment"
+        monthly: "Mensualment"
+        quarterly: "Trimestralment"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Assigna"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "No facis res"
+      messages:
+        assigned_title: "Assignats (%{count})"
+        assigned: "Assignats"
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Assignat a"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Assignat"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Publicació"

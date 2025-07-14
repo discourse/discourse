@@ -1,0 +1,98 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    assign_enabled: "Włącz wtyczkę przypisywania"
+    assigns_public: "Zezwól wszystkim na widzenie, komu przydzielono dany temat"
+    assigns_user_url_path: "Ścieżka do tematów przypisanych użytkownikom (użyj {username} zamiast nazwy użytkownika)"
+    assigns_by_staff_mention: "Jeśli członek zespołu wzmiankuje innego członka zespołu, temat jest automatycznie przypisywany"
+    unassign_creates_tracking_post: "Jeśli cofniesz przypisanie tematu, szept lub mała akcja zostanie utworzona, by śledzić zmianę"
+    assign_self_regex: "Regex, który musi przejść, by możliwe było przypisanie tematu samemu sobie. Przykład: ’moja lista’"
+    assign_other_regex: "Regex, który musi przejść, by możliwe było przypisanie tematów innym użytkownikom dzięki wzmiankom. Przykład: ’twoja lista’"
+    unassign_on_group_archive: "Kiedy wpis jest archiwizowany przez grupę, cofnij przypisanie wiadomości (po ponowieniu przypisania jest ona przenoszona z powrotem do skrzynki odbiorczej)"
+    unassign_on_close: "Kiedy temat zostaje zamknięty, cofnij jego przypisanie"
+    reassign_on_open: "Kiedy temat jest otwierany, przydziel ponownie poprzednio przypisanych użytkowników/grupy"
+    invite_on_assign: "Gdy osobista wiadomość jest przypisana do użytkownika lub grupy, zaproś ich na PW, jeśli nie są jeszcze uczestnikami."
+    assign_mailer: "Kiedy wysyłać powiadomienia e-mail dotyczące przypisań"
+    remind_assigns: "Przypominaj użytkownikom o oczekujących przypisaniach."
+    remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
+    max_assigned_topics: "Maksymalna liczba tematów, które można przypisać użytkownikowi."
+    assign_allowed_on_groups: "Użytkownicy w tych grupach mają prawo do przypisywania tematów i mogą być przypisani do tematów."
+    enable_assign_status: "Dodaj konfigurowalne pole stanu do każdego przypisania."
+    errors:
+      assign_statuses:
+        duplicate: "Istnieją zduplikowane wartości statusu."
+  discourse_assign:
+    assigned_to: "Temat przypisany do @%{username}"
+    unassigned: "Cofnięto przypisanie tematu"
+    already_claimed: "Ten temat został już przejęty."
+    already_assigned: "Temat jest już przypisany do @%{username}"
+    too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
+    too_many_assigns_for_topic: "Osiągnięto limit %{limit} przypisań na temat."
+    forbidden_assign_to: "Nie można przypisać @%{username}, ponieważ nie należy do przypisanych dozwolonych grup."
+    forbidden_assignee_not_pm_participant: "@%{username} nie może być przypisany, ponieważ nie ma dostępu do tej prywatnej wiadomości. Możesz przyznać dostęp @%{username}, zapraszając go do tej prywatnej wiadomości."
+    forbidden_assignee_cant_see_topic: "Nie można przypisać @%{username}, ponieważ nie ma dostępu do tego tematu."
+    group_already_assigned: "Temat jest już przypisany do @%{group}"
+    forbidden_group_assign_to: "Nie można przypisać @%{group}, ponieważ nie należy do przypisanych dozwolonych grup."
+    forbidden_group_assignee_not_pm_participant: "Nie można przypisać @%{group}, ponieważ nie wszyscy członkowie mają dostęp do tej prywatnej wiadomości."
+    forbidden_group_assignee_cant_see_topic: "Nie można przypisać @%{group}, ponieważ nie wszyscy członkowie mają dostęp do tego tematu."
+    flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
+    flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
+    topic_assigned_excerpt: "przypisano ci temat '%{title}'"
+    topic_group_assigned_excerpt: "przypisano temat '%{title}' do @%{group}"
+    reminders_frequency:
+      never: "nigdy"
+      daily: "dziennie"
+      weekly: "co tydzień"
+      monthly: "miesięcznie"
+      quarterly: "kwartalnie"
+  assign_mailer:
+    title: "Przypisz mailera"
+    subject_template: "[%{email_prefix}] %{assignee_name} przypisał cię do '%{topic_title}'!"
+    text_body_template: |
+      Hej, %{assignee_name} **przypisał** cię do dyskusji
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Jeśli jesteś zainteresowany, kliknij poniższy link:
+
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Masz %{pending_assignments} oczekujących przypisań"
+    body: |
+      Masz [%{pending_assignments} oczekujących przypisań](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      To przypomnienie będzie wysyłane %{frequency} jeśli masz więcej niż jeden przypisany temat.
+    newest: |
+      ### Najnowsze
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Najstarszy
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Przypisanie losowe
+        no_one: "Próbowano losowo przypisać członka `@%{group}`, ale nikt nie był dostępny."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} przypisał Ciebie"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Wybrany status jest nieprawidłowy (nie jest zawarty w ustawieniu witryny assigned_status)."
