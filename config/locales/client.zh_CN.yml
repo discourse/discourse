@@ -4764,13 +4764,13 @@ zh_CN:
       reports:
         title: "可用报告列表"
         meta_doc: "报告是帮助您了解网站上所发生事情的有力工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
-        sidebar_title: "举报"
+        sidebar_title: "报告"
         back: "返回到所有报告"
       config_sections:
         account:
           title: "帐户"
         reports:
-          title: "举报"
+          title: "报告"
         community:
           title: "社区"
         appearance:
@@ -5104,7 +5104,7 @@ zh_CN:
           page:
             other: "页面"
           report:
-            other: "举报"
+            other: "报告"
           setting:
             other: "设置"
           theme:
