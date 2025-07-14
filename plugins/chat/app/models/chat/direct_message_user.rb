@@ -16,7 +16,7 @@ end
 # Table name: direct_message_users
 #
 #  id                        :bigint           not null, primary key
-#  direct_message_channel_id :integer          not null
+#  direct_message_channel_id :bigint           not null
 #  user_id                   :integer          not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
