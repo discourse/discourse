@@ -6,11 +6,6 @@ const DEPRECATION_WORKFLOW = [
     handler: "silence",
     matchId: "discourse.decorate-widget.hamburger-widget-links",
   },
-  // TODO (glimmer-post-stream): remove the silence once upgrade notes are ready and we start rolling out the new version
-  {
-    handler: "silence",
-    matchId: "discourse.post-stream-widget-overrides",
-  },
 ];
 
 export default DEPRECATION_WORKFLOW;
