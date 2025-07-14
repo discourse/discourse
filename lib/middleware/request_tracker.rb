@@ -301,6 +301,7 @@ class Middleware::RequestTracker
     if data
       if result && (headers = result[1])
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
+        headers["X-Discourse-BrowserPageView"] = "1" if data[:explicit_track_view]
       end
 
       if @@detailed_request_loggers

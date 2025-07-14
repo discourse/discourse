@@ -109,6 +109,23 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(2)
     end
 
+    it "adds the appropriate response header based on explicit tracking (AJAX requests, BPVs)" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, headers, response = middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1"))
+      expect(headers["X-Discourse-TrackView"]).to eq("1")
+      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+    end
+
+    it "adds the appropriate response header based on implicit tracking (HTML requests)" do
+      middleware =
+        Middleware::RequestTracker.new(
+          lambda { |env| [200, { "Content-Type" => "text/html" }, ["OK"]] },
+        )
+      status, headers, response = middleware.call(env)
+      expect(headers["X-Discourse-TrackView"]).to eq("1")
+      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
+    end
+
     it "can log requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
@@ -519,7 +536,7 @@ RSpec.describe Middleware::RequestTracker do
 
     after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-    let :middleware do
+    let(:middleware) do
       app = lambda { |env| [200, {}, ["OK"]] }
 
       Middleware::RequestTracker.new(app)
