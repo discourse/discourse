@@ -150,16 +150,10 @@ export default class LoginPageController extends Controller {
 
         if (authResult && !authResult.error) {
           const destinationUrl = cookie("destination_url");
-          const ssoDestinationUrl = cookie("sso_destination_url");
 
-          if (ssoDestinationUrl) {
-            removeCookie("sso_destination_url");
-            window.location.assign(ssoDestinationUrl);
-          } else if (destinationUrl) {
+          if (destinationUrl) {
             removeCookie("destination_url");
-            window.location.assign(destinationUrl);
-          } else if (this.referrerTopicUrl) {
-            window.location.assign(this.referrerTopicUrl);
+            window.location = destinationUrl;
           } else {
             window.location.reload();
           }
@@ -322,23 +316,14 @@ export default class LoginPageController extends Controller {
           hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
         };
 
-        const destinationUrl = cookie("destination_url");
-        const ssoDestinationUrl = cookie("sso_destination_url");
-
         applyHiddenFormInputValue(this.loginName, "username");
         applyHiddenFormInputValue(this.loginPassword, "password");
 
-        if (ssoDestinationUrl) {
-          removeCookie("sso_destination_url");
-          window.location.assign(ssoDestinationUrl);
-          return;
-        } else if (destinationUrl) {
-          // redirect client to the original URL
-          removeCookie("destination_url");
+        const destinationUrl = cookie("destination_url");
 
+        if (destinationUrl) {
+          removeCookie("destination_url");
           applyHiddenFormInputValue(destinationUrl, "redirect");
-        } else if (this.referrerTopicUrl) {
-          applyHiddenFormInputValue(this.referrerTopicUrl, "redirect");
         } else {
           applyHiddenFormInputValue(window.location.href, "redirect");
         }
@@ -349,7 +334,7 @@ export default class LoginPageController extends Controller {
             navigator.userAgent.match(/Safari/g)
           ) {
             // In case of Safari on iOS do not submit hidden login form
-            window.location.href = hiddenLoginForm.querySelector(
+            window.location = hiddenLoginForm.querySelector(
               "input[name=redirect]"
             ).value;
           } else {
