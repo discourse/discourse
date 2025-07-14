@@ -46,31 +46,35 @@ export default RouteTemplate(
       </div>
     {{/if}}
 
-    <table class="d-admin-table admin-backups-list">
-      <thead>
-        <th>{{i18n "admin.backups.columns.filename"}}</th>
-        <th class="backup-size">{{i18n "admin.backups.columns.size"}}</th>
-        <th></th>
+    <table class="d-table admin-backups-list">
+      <thead class="d-table__header">
+        <tr class="d-table__row">
+          <th class="d-table__header-cell">{{i18n
+              "admin.backups.columns.filename"
+            }}</th>
+          <th class="backup-size">{{i18n "admin.backups.columns.size"}}</th>
+          <th class="d-table__header-cell"></th>
+        </tr>
       </thead>
-      <tbody>
+      <tbody class="d-table__body">
         {{#each @controller.model as |backup|}}
           <tr
-            class="d-admin-row__content backup-item-row"
+            class="d-table__row backup-item-row"
             data-backup-filename={{backup.filename}}
           >
-            <td class="d-admin-row__overview">
+            <td class="d-table__cell --overview">
               <div class="backup-filename">
                 {{backup.filename}}
               </div>
             </td>
-            <td class="d-admin-row__detail backup-size">
-              <div class="d-admin-row__mobile-label">
+            <td class="d-table__cell --detail backup-size">
+              <div class="d-table__mobile-label">
                 {{i18n "admin.backups.columns.size"}}
               </div>
               {{humanSize backup.size}}
             </td>
-            <td class="d-admin-row__controls backup-controls">
-              <div class="d-admin-row__controls-options">
+            <td class="d-table__cell --controls backup-controls">
+              <div class="d-table__cell-actions">
                 <DButton
                   @action={{fn @controller.download backup}}
                   @title="admin.backups.operations.download.title"

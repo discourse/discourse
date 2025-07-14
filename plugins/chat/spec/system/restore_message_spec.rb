@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "Restore message", type: :system do
-  fab!(:admin_user) { Fabricate(:admin) }
-  fab!(:regular_user) { Fabricate(:user) }
-  fab!(:another_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:admin_user, :admin)
+  fab!(:regular_user, :user)
+  fab!(:another_user, :user)
+  fab!(:channel_1, :category_channel)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }

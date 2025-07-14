@@ -5,7 +5,7 @@ require "rotp"
 
 RSpec.describe Admin::UsersController do
   fab!(:admin)
-  fab!(:another_admin) { Fabricate(:admin) }
+  fab!(:another_admin, :admin)
   fab!(:moderator)
   fab!(:user)
   fab!(:coding_horror)
@@ -295,8 +295,8 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#suspend" do
-    fab!(:created_post) { Fabricate(:post) }
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:created_post, :post)
+    fab!(:other_user, :user)
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now, reason: "because of this post", post_id: created_post.id }
     end
@@ -652,7 +652,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#revoke_admin" do
-    fab!(:another_admin) { Fabricate(:admin) }
+    fab!(:another_admin, :admin)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1116,7 +1116,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#revoke_moderation" do
-    fab!(:another_moderator) { Fabricate(:moderator) }
+    fab!(:another_moderator, :moderator)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1606,7 +1606,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#activate" do
-    fab!(:reg_user) { Fabricate(:inactive_user) }
+    fab!(:reg_user, :inactive_user)
 
     shared_examples "user activation possible" do
       it "returns success" do
@@ -1659,7 +1659,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#deactivate" do
-    fab!(:reg_user) { Fabricate(:active_user) }
+    fab!(:reg_user, :active_user)
 
     shared_examples "user deactivation possible" do
       it "returns success" do
@@ -1699,7 +1699,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#log_out" do
-    fab!(:reg_user) { Fabricate(:user) }
+    fab!(:reg_user, :user)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1740,8 +1740,8 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#silence" do
-    fab!(:reg_user) { Fabricate(:user) }
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:reg_user, :user)
+    fab!(:other_user, :user)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -2511,7 +2511,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#merge" do
-    fab!(:target_user) { Fabricate(:user) }
+    fab!(:target_user, :user)
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
 

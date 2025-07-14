@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Drawer - index", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 

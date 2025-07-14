@@ -62,11 +62,11 @@ export default class AdminPluginsListItem extends Component {
     <tr
       data-plugin-name={{@plugin.name}}
       class={{concat
-        "d-admin-row__content admin-plugins-list__row"
+        "d-table__row admin-plugins-list__row"
         (if this.isAdminSearchFiltered "-admin-search-filtered")
       }}
     >
-      <td class="d-admin-row__overview admin-plugins-list__name-details">
+      <td class="d-table__cell --overview admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
           <div class="d-admin-row__overview-name admin-plugins-list__name">
             {{@plugin.nameTitleized}}
@@ -103,8 +103,8 @@ export default class AdminPluginsListItem extends Component {
           {{/if}}
         </div>
       </td>
-      <td class="d-admin-row__detail admin-plugins-list__version">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail admin-plugins-list__version">
+        <div class="d-table__mobile-label">
           {{i18n "admin.plugins.version"}}
         </div>
         <div class="plugin-version">
@@ -117,8 +117,8 @@ export default class AdminPluginsListItem extends Component {
           </PluginOutlet>
         </div>
       </td>
-      <td class="d-admin-row__detail admin-plugins-list__enabled">
-        <div class="d-admin-row__mobile-label">
+      <td class="d-table__cell --detail admin-plugins-list__enabled">
+        <div class="d-table__mobile-label">
           {{i18n "admin.plugins.enabled"}}
         </div>
         <PluginOutlet
@@ -135,7 +135,7 @@ export default class AdminPluginsListItem extends Component {
           {{/if}}
         </PluginOutlet>
       </td>
-      <td class="d-admin-row__controls admin-plugins-list__settings">
+      <td class="d-table__cell --controls admin-plugins-list__settings">
         <PluginOutlet
           @name="admin-plugin-list-item-settings"
           @outletArgs={{lazyHash plugin=@plugin}}

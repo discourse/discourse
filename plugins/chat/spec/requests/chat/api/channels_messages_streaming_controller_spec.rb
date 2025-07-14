@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsMessagesStreamingController do
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:channel_1, :chat_channel)
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.chat_enabled = true
@@ -63,7 +63,7 @@ RSpec.describe Chat::Api::ChannelsMessagesStreamingController do
     end
 
     context "when the user can stop" do
-      fab!(:current_user) { Fabricate(:admin) }
+      fab!(:current_user, :admin)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
 
       before { channel_1.add(current_user) }

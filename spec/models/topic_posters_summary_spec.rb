@@ -24,7 +24,7 @@ RSpec.describe TopicPostersSummary do
     end
 
     context "when the last poster is also the topic creator" do
-      fab!(:featured_user1) { Fabricate(:user) }
+      fab!(:featured_user1, :user)
 
       let!(:topic) do
         Fabricate(
@@ -44,10 +44,10 @@ RSpec.describe TopicPostersSummary do
 
     context "when the topic has many posters" do
       let!(:last_poster) { Fabricate(:user) }
-      fab!(:featured_user1) { Fabricate(:user) }
-      fab!(:featured_user2) { Fabricate(:user) }
-      fab!(:featured_user3) { Fabricate(:user) }
-      fab!(:featured_user4) { Fabricate(:user) }
+      fab!(:featured_user1, :user)
+      fab!(:featured_user2, :user)
+      fab!(:featured_user3, :user)
+      fab!(:featured_user4, :user)
 
       let!(:topic) do
         Fabricate(

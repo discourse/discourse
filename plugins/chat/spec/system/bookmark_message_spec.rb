@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Bookmark message", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -9,7 +9,7 @@ RSpec.describe "Bookmark message", type: :system do
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
+  fab!(:category_channel_1, :category_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
   before do
@@ -51,7 +51,7 @@ RSpec.describe "Bookmark message", type: :system do
     end
 
     context "in drawer mode" do
-      fab!(:category_channel_2) { Fabricate(:category_channel) }
+      fab!(:category_channel_2, :category_channel)
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: category_channel_2) }
 
       fab!(:bookmark_1) { Bookmark.create!(bookmarkable: message_1, user: current_user) }

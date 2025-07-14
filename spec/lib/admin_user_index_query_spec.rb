@@ -154,7 +154,7 @@ RSpec.describe AdminUserIndexQuery do
 
   describe "with a silenced user" do
     fab!(:user) { Fabricate(:user, silenced_till: 1.year.from_now) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     it "finds the silenced user" do
       query = ::AdminUserIndexQuery.new(query: "silenced")

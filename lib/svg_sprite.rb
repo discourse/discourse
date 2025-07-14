@@ -97,6 +97,11 @@ module SvgSprite
         discourse-threads
         discourse-add-translation
         download
+        discourse-h1
+        discourse-h2
+        discourse-h3
+        discourse-h4
+        discourse-h5
         earth-americas
         ellipsis
         ellipsis-vertical

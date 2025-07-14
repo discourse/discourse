@@ -3,7 +3,7 @@
 RSpec.describe TagsController do
   fab!(:user)
   fab!(:admin)
-  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:regular_user, :trust_level_4)
   fab!(:moderator)
   fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
@@ -406,7 +406,7 @@ RSpec.describe TagsController do
 
   describe "#show" do
     fab!(:tag) { Fabricate(:tag, name: "test") }
-    fab!(:topic_without_tags) { Fabricate(:topic) }
+    fab!(:topic_without_tags, :topic)
     fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
     it "should return the right response" do
@@ -777,8 +777,8 @@ RSpec.describe TagsController do
 
   describe "#show_latest" do
     fab!(:tag)
-    fab!(:other_tag) { Fabricate(:tag) }
-    fab!(:third_tag) { Fabricate(:tag) }
+    fab!(:other_tag, :tag)
+    fab!(:third_tag, :tag)
 
     fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
     fab!(:multi_tag_topic) { Fabricate(:topic, tags: [tag, other_tag]) }

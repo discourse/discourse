@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Archive channel", type: :system do
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:channel_1, :chat_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
@@ -14,7 +14,7 @@ RSpec.describe "Archive channel", type: :system do
 
   context "when archiving is disabled" do
     context "when admin user" do
-      fab!(:current_user) { Fabricate(:admin) }
+      fab!(:current_user, :admin)
 
       before { sign_in(current_user) }
 
@@ -30,7 +30,7 @@ RSpec.describe "Archive channel", type: :system do
     before { SiteSetting.chat_allow_archiving_channels = true }
 
     context "when regular user" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before { sign_in(current_user) }
 
@@ -42,7 +42,7 @@ RSpec.describe "Archive channel", type: :system do
     end
 
     context "when admin user" do
-      fab!(:current_user) { Fabricate(:admin) }
+      fab!(:current_user, :admin)
 
       before { sign_in(current_user) }
 

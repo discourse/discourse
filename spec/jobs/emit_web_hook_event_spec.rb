@@ -5,8 +5,8 @@ require "excon"
 RSpec.describe Jobs::EmitWebHookEvent do
   subject(:job) { described_class.new }
 
-  fab!(:post_hook) { Fabricate(:web_hook) }
-  fab!(:inactive_hook) { Fabricate(:inactive_web_hook) }
+  fab!(:post_hook, :web_hook)
+  fab!(:inactive_hook, :inactive_web_hook)
   fab!(:post)
   fab!(:user)
 

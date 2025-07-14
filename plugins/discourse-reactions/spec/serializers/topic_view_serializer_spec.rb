@@ -8,8 +8,8 @@ describe TopicViewSerializer do
   before { SiteSetting.discourse_reactions_enabled = true }
 
   context "with reactions and shadow like" do
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
     fab!(:post_1) { Fabricate(:post, user: user_1) }
     fab!(:post_2) { Fabricate(:post, user: user_1, topic: post_1.topic) }
     fab!(:otter) { Fabricate(:reaction, post: post_1, reaction_value: "otter") }
@@ -87,7 +87,7 @@ describe TopicViewSerializer do
   end
 
   describe "only shadow like" do
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_1, :user)
     fab!(:post_1) { Fabricate(:post, user: user_1) }
     fab!(:like_1) do
       Fabricate(

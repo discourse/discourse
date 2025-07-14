@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat channel", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, use_service: true, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -171,7 +171,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when a message contains mentions" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     fab!(:message) do
       Fabricate(
         :chat_message,
@@ -240,7 +240,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when reply is right under" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     before do
       Fabricate(:chat_message, in_reply_to: message_1, user: other_user, chat_channel: channel_1)
@@ -255,7 +255,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when reply is not directly connected" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     before do
       Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
@@ -271,7 +271,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when replying to message that has HTML tags" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     fab!(:message_2) do
       Fabricate(
         :chat_message,

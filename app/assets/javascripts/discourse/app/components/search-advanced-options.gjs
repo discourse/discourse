@@ -955,14 +955,12 @@ export default class SearchAdvancedOptions extends Component {
               @content={{this.postTimeOptions}}
               @value={{this.searchedTerms.time.when}}
               @onChange={{this.onChangeWhenTime}}
-              @options={{hash
-                headerAriaLabel=(i18n "search.advanced.post.time.aria_label")
-              }}
             />
             <DateInput
               @date={{this.searchedTerms.time.days}}
               @onChange={{this.onChangeWhenDate}}
               @inputId="search-post-date"
+              aria-label={{i18n "search.advanced.post.time.aria_label"}}
             />
           </div>
         </div>

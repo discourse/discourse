@@ -5,10 +5,10 @@ RSpec.describe TrustLevel3Requirements do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:moderator)
-  fab!(:topic1) { Fabricate(:topic) }
-  fab!(:topic2) { Fabricate(:topic) }
-  fab!(:topic3) { Fabricate(:topic) }
-  fab!(:topic4) { Fabricate(:topic) }
+  fab!(:topic1, :topic)
+  fab!(:topic2, :topic)
+  fab!(:topic3, :topic)
+  fab!(:topic4, :topic)
 
   before { described_class.clear_cache }
 

@@ -7,9 +7,9 @@ RSpec.describe "Separate sidebar mode", type: :system do
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
   let(:header_component) { PageObjects::Components::Chat::Header.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
 
   before do
     SiteSetting.navigation_menu = "sidebar"

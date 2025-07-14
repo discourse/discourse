@@ -9,10 +9,10 @@ describe TopicsController do
   fab!(:open_mouth_reaction) { Fabricate(:reaction, post: post, reaction_value: "open_mouth") }
   fab!(:hugs_reaction) { Fabricate(:reaction, post: post, reaction_value: "hugs") }
 
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:user_3) { Fabricate(:user) }
-  fab!(:user_4) { Fabricate(:user) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:user_3, :user)
+  fab!(:user_4, :user)
 
   before do
     SiteSetting.discourse_reactions_enabled = true

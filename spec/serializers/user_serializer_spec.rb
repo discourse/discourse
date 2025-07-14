@@ -70,7 +70,7 @@ RSpec.describe UserSerializer do
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
     fab!(:upload)
-    fab!(:upload2) { Fabricate(:upload) }
+    fab!(:upload2, :upload)
 
     context "when the scope user is admin" do
       let(:scope) { Guardian.new(admin_user) }
@@ -309,7 +309,7 @@ RSpec.describe UserSerializer do
     end
 
     describe "ignored and muted" do
-      fab!(:viewing_user) { Fabricate(:user) }
+      fab!(:viewing_user, :user)
       let(:scope) { Guardian.new(viewing_user) }
 
       it "returns false values for muted and ignored" do

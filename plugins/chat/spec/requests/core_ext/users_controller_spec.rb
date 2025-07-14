@@ -24,7 +24,7 @@ describe UsersController do
   end
 
   describe "#user_menu_bookmarks" do
-    fab!(:chatters) { Fabricate(:group) }
+    fab!(:chatters, :group)
     let(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
     let(:bookmark_message) { Fabricate(:chat_message) }
     let(:bookmark_user) { current_user }
@@ -56,7 +56,7 @@ describe UsersController do
 
   describe "#show_card" do
     fab!(:user)
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user, :user)
 
     before do
       SiteSetting.chat_enabled = true

@@ -802,10 +802,10 @@ describe Chat::Message do
 
   describe "#upsert_mentions" do
     context "with direct mentions" do
-      fab!(:user1) { Fabricate(:user) }
-      fab!(:user2) { Fabricate(:user) }
-      fab!(:user3) { Fabricate(:user) }
-      fab!(:user4) { Fabricate(:user) }
+      fab!(:user1, :user)
+      fab!(:user2, :user)
+      fab!(:user3, :user)
+      fab!(:user4, :user)
       fab!(:message) do
         Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
       end

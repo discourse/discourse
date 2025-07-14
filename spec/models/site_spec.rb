@@ -285,7 +285,7 @@ RSpec.describe Site do
 
   describe ".all_categories_cache" do
     fab!(:category)
-    fab!(:category2) { Fabricate(:category) }
+    fab!(:category2, :category)
 
     it "returns cached categories" do
       categories_data = Site.all_categories_cache

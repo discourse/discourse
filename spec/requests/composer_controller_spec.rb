@@ -2,7 +2,7 @@
 
 RSpec.describe ComposerController do
   describe "#mentions" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:user)
 
     fab!(:group) do
@@ -116,7 +116,7 @@ RSpec.describe ComposerController do
     end
 
     context "with a private message" do
-      fab!(:allowed_user) { Fabricate(:user) }
+      fab!(:allowed_user, :user)
       fab!(:topic) { Fabricate(:private_message_topic, user: allowed_user) }
 
       it "does not work if topic is not visible" do
@@ -212,7 +212,7 @@ RSpec.describe ComposerController do
     end
 
     context "with a new private message" do
-      fab!(:allowed_user) { Fabricate(:user) }
+      fab!(:allowed_user, :user)
 
       it "finds mentions" do
         get "/composer/mentions.json",

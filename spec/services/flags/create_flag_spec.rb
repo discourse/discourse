@@ -12,7 +12,7 @@ RSpec.describe(Flags::CreateFlag) do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
 
     let(:params) do
       { name:, description:, applies_to:, require_message:, enabled:, auto_action_type: }
@@ -26,7 +26,7 @@ RSpec.describe(Flags::CreateFlag) do
     let(:auto_action_type) { true }
 
     context "when user is not allowed to perform the action" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:invalid_access) }
     end

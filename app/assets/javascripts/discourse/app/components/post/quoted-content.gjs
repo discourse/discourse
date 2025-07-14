@@ -214,7 +214,8 @@ export default class PostQuotedContent extends Component {
               @action={{this.toggleExpanded}}
               @ariaControls={{@id}}
               @ariaExpanded={{this.expanded}}
-              @title="post.expand_collapse"
+              @ariaLabel={{if this.expanded "post.collapse" "expand"}}
+              @title={{if this.expanded "post.collapse" "expand"}}
             >
               {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                   extra whitespace that will interfere with the text captured when quoting a quoted content }}
@@ -226,6 +227,7 @@ export default class PostQuotedContent extends Component {
               class="btn-flat back"
               @href={{this.quotedPostUrl}}
               @title="post.follow_quote"
+              @ariaLabel="post.follow_quote"
             >
               {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                   extra whitespace that will interfere with the text captured when quoting a quoted content }}

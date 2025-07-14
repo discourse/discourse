@@ -30,9 +30,9 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#top_category_ids" do
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
-    fab!(:category3) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
+    fab!(:category3, :category)
 
     it "should include empty top_category_ids array" do
       payload = serializer.as_json
@@ -332,7 +332,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#featured_topic" do
-    fab!(:featured_topic) { Fabricate(:topic) }
+    fab!(:featured_topic, :topic)
 
     before { user.user_profile.update!(featured_topic_id: featured_topic.id) }
 

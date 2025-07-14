@@ -130,7 +130,7 @@ RSpec.describe DiscourseUpdates do
 
   describe "new features" do
     fab!(:admin)
-    fab!(:admin2) { Fabricate(:admin) }
+    fab!(:admin2, :admin)
     let!(:last_item_date) { 5.minutes.ago }
     let!(:sample_features) do
       [

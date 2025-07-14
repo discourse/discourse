@@ -11,7 +11,7 @@ describe "PMCreated" do
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggers::PM_CREATED) }
 
   context "when creating a PM to a user" do
-    fab!(:target_user) { Fabricate(:user) }
+    fab!(:target_user, :user)
     let(:basic_topic_params) do
       {
         title: "hello world topic",
@@ -38,7 +38,7 @@ describe "PMCreated" do
     end
 
     context "when user is not targeted" do
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user2, :user)
 
       it "doesn't fire the trigger" do
         list =

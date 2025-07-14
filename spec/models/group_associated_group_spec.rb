@@ -3,9 +3,9 @@
 RSpec.describe GroupAssociatedGroup do
   fab!(:user)
   fab!(:group)
-  fab!(:group2) { Fabricate(:group) }
+  fab!(:group2, :group)
   fab!(:associated_group)
-  fab!(:associated_group2) { Fabricate(:associated_group) }
+  fab!(:associated_group2, :associated_group)
   fab!(:uag) do
     UserAssociatedGroup.create(user_id: user.id, associated_group_id: associated_group.id)
   end

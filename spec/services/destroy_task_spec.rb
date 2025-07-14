@@ -2,10 +2,10 @@
 
 RSpec.describe DestroyTask do
   describe "destroy topics" do
-    fab!(:c) { Fabricate(:category_with_definition) }
+    fab!(:c, :category_with_definition)
     fab!(:t) { Fabricate(:topic, category: c) }
     let!(:p) { Fabricate(:post, topic: t) }
-    fab!(:c2) { Fabricate(:category_with_definition) }
+    fab!(:c2, :category_with_definition)
     fab!(:t2) { Fabricate(:topic, category: c2) }
     let!(:p2) { Fabricate(:post, topic: t2) }
     fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }
@@ -40,10 +40,10 @@ RSpec.describe DestroyTask do
   end
 
   describe "destroy categories" do
-    fab!(:c) { Fabricate(:category_with_definition) }
+    fab!(:c, :category_with_definition)
     fab!(:t) { Fabricate(:topic, category: c) }
     let!(:p) { Fabricate(:post, topic: t) }
-    fab!(:c2) { Fabricate(:category_with_definition) }
+    fab!(:c2, :category_with_definition)
     fab!(:t2) { Fabricate(:topic, category: c) }
     let!(:p2) { Fabricate(:post, topic: t2) }
     fab!(:sc) { Fabricate(:category_with_definition, parent_category: c2) }

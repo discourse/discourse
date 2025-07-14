@@ -5,16 +5,21 @@ import ApiKeyItem from "admin/components/api-key-item";
 const ApiKeysList = <template>
   <div class="container admin-api_keys">
     {{#if @apiKeys}}
-      <table class="d-admin-table admin-api_keys__items">
-        <thead>
-          <th>{{i18n "admin.api.key"}}</th>
-          <th>{{i18n "admin.api.description"}}</th>
-          <th>{{i18n "admin.api.user"}}</th>
-          <th>{{i18n "admin.api.created"}}</th>
-          <th>{{i18n "admin.api.scope"}}</th>
-          <th>{{i18n "admin.api.last_used"}}</th>
+      <table class="d-table admin-api_keys__items">
+        <thead class="d-table__header">
+          <tr class="d-table__row">
+            <th class="d-table__header-cell">{{i18n "admin.api.key"}}</th>
+            <th class="d-table__header-cell">{{i18n
+                "admin.api.description"
+              }}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.user"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.created"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.scope"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.api.last_used"}}</th>
+            <th class="d-table__header-cell"></th>
+          </tr>
         </thead>
-        <tbody>
+        <tbody class="d-table__body">
           {{#each @apiKeys as |apiKey|}}
             <ApiKeyItem @apiKey={{apiKey}} />
           {{/each}}

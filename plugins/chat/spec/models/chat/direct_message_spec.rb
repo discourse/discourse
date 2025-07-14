@@ -3,10 +3,10 @@
 describe Chat::DirectMessage do
   fab!(:user1) { Fabricate(:user, username: "chatdmfellow1") }
   fab!(:user2) { Fabricate(:user, username: "chatdmuser") }
-  fab!(:chat_channel) { Fabricate(:direct_message_channel) }
+  fab!(:chat_channel, :direct_message_channel)
 
   it_behaves_like "a chatable model" do
-    fab!(:chatable) { Fabricate(:direct_message) }
+    fab!(:chatable, :direct_message)
     let(:channel_class) { Chat::DirectMessageChannel }
   end
 

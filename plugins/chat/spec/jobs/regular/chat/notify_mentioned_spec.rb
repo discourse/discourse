@@ -5,7 +5,7 @@ describe Jobs::Chat::NotifyMentioned do
 
   fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:public_channel) { Fabricate(:category_channel) }
+  fab!(:public_channel, :category_channel)
 
   before do
     user_1.reload
