@@ -64,7 +64,7 @@ body:not(.has-full-page-chat, .wizard) {
 
   #main-outlet-wrapper {
     @include viewport.until(lg) {
-      --main-grid-gap: 0;
+      --main-grid-gap: 0em;
     }
 
     @media screen and (width >= 768px) {
