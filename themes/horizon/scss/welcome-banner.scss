@@ -1,6 +1,15 @@
 @use "lib/viewport";
 
 .welcome-banner {
+  &.--below-site-header {
+    background-color: var(--background-color);
+    border-radius: 0;
+
+    @include viewport.from(md) {
+      margin-bottom: var(--space-4);
+    }
+  }
+
   &__wrap {
     display: grid;
     grid-template-rows: 0.33fr 0.33fr 0.33fr;
@@ -8,11 +17,11 @@
     grid-column-gap: 1em;
     grid-row-gap: 0.5em;
     border-bottom: 1px solid var(--primary-300);
-    padding: 1.5em 0 2.5em;
-    margin-bottom: 0;
+    margin-block: 0;
+    padding: var(--space-4);
 
-    @media screen and (width <= 768px) {
-      padding: 1em;
+    @include viewport.until(lg) {
+      padding-block: var(--space-8);
     }
 
     @include viewport.until(sm) {
@@ -21,30 +30,42 @@
       margin-top: 0;
     }
 
+    .--below-site-header & {
+      border-bottom: 0;
+
+      // margin-left: max(var(--d-sidebar-width), 1rem);
+
+      @include viewport.from(xl) {
+        margin-left: max(var(--d-sidebar-width), var(--space-4));
+      }
+    }
+
+    .--above-topic-content & {
+      padding-bottom: var(
+        --space-8
+      ); // visual balancing for top-padding from horizon content area
+    }
+
     .search-menu {
       grid-column: 2/3;
       grid-row: 1/-1;
       width: 100%;
       align-self: center;
 
-      @media screen and (width <= 1028px) {
+      // @media screen and (width <= 1028px) {
+      //   grid-row: 2/-1;
+      //   grid-column: 1/-1;
+      // }
+
+      @include viewport.until(md) {
         grid-row: 2/-1;
         grid-column: 1/-1;
       }
 
-      @media screen and (width <= 768px) {
-        grid-column: 2/-1;
-        grid-row: 1/-1;
-      }
-
-      @media screen and (width <= 600px) {
-        grid-row: 2/-1;
-        grid-column: 1/-1;
-      }
-
-      @include viewport.until(sm) {
-        display: none;
-      }
+      // @media screen and (width <= 600px) {
+      //   grid-row: 2/-1;
+      //   grid-column: 1/-1;
+      // }
     }
 
     p:not(.welcome-banner__subheader) {
@@ -85,28 +106,19 @@
     text-align: left;
     align-self: center;
     margin: 0;
-    font-weight: 400;
     color: var(--search-color);
 
-    @media screen and (width <= 1028px) {
+    @include viewport.from(md) {
+      text-align: center;
+      white-space: nowrap;
+      font-size: clamp(var(--font-up-4), 4vw, var(--font-up-6));
+    }
+
+    @include viewport.until(md) {
+      text-align: center;
+      grid-column: 1/-1;
+      grid-row: 1;
       font-size: var(--font-up-4);
-      grid-column: 1/-1;
-      grid-row: 1;
-      text-align: center;
-      margin-bottom: 0.5em;
-    }
-
-    @media screen and (width <= 768px) {
-      text-align: left;
-      grid-column: 1/2;
-      grid-row: 1/-1;
-      font-size: var(--font-up-3);
-    }
-
-    @media screen and (width <= 600px) {
-      grid-column: 1/-1;
-      grid-row: 1;
-      text-align: center;
       margin-bottom: 0.5em;
     }
 
