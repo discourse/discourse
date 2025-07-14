@@ -9,7 +9,7 @@ RSpec.describe Chat::TrashMessage do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:message) { Fabricate(:chat_message, user: current_user) }
 
     let(:guardian) { Guardian.new(current_user) }

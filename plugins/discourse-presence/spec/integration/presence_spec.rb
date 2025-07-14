@@ -3,7 +3,7 @@
 RSpec.describe "discourse-presence" do
   describe "PresenceChannel configuration" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     fab!(:admin)
 
     fab!(:group) do

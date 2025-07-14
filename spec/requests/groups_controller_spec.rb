@@ -2,8 +2,8 @@
 
 RSpec.describe GroupsController do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:other_user, :user)
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin)
@@ -1647,7 +1647,7 @@ RSpec.describe GroupsController do
       end
 
       context "when is able to add several members to a group" do
-        fab!(:user1) { Fabricate(:user) }
+        fab!(:user1, :user)
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }
 
         it "adds by username" do
@@ -2177,7 +2177,7 @@ RSpec.describe GroupsController do
 
       describe "#remove_members" do
         context "when is able to remove several members from a group" do
-          fab!(:user1) { Fabricate(:user) }
+          fab!(:user1, :user)
           fab!(:user2) { Fabricate(:user, username: "UsEr2") }
           let(:group1) { Fabricate(:group, users: [user1, user2]) }
 
@@ -2498,7 +2498,7 @@ RSpec.describe GroupsController do
   end
 
   describe "#request_membership" do
-    fab!(:new_user) { Fabricate(:user) }
+    fab!(:new_user, :user)
 
     it "requires the user to log in" do
       post "/groups/#{group.name}/request_membership.json"

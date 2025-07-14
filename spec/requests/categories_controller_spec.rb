@@ -650,9 +650,9 @@ RSpec.describe CategoriesController do
   end
 
   describe "#update" do
-    fab!(:mod_group_1) { Fabricate(:group) }
-    fab!(:mod_group_2) { Fabricate(:group) }
-    fab!(:mod_group_3) { Fabricate(:group) }
+    fab!(:mod_group_1, :group)
+    fab!(:mod_group_2, :group)
+    fab!(:mod_group_3, :group)
 
     before { Jobs.run_immediately! }
 

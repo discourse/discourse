@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Shortcuts | full page", type: :system do
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:channel_1, :chat_channel)
+  fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }
 

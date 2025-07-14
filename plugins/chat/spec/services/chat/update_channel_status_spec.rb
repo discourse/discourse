@@ -11,8 +11,8 @@ RSpec.describe(Chat::UpdateChannelStatus) do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:channel) { Fabricate(:chat_channel) }
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:channel, :chat_channel)
+    fab!(:current_user, :admin)
 
     let(:params) { { channel_id:, status: } }
     let(:dependencies) { { guardian: } }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Reactions | Activity", type: :system, js: true do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.discourse_reactions_enabled = true
@@ -10,7 +10,7 @@ describe "Reactions | Activity", type: :system, js: true do
   end
 
   context "when current user reacts to a post" do
-    fab!(:post_1) { Fabricate(:post) }
+    fab!(:post_1, :post)
     before do
       DiscourseReactions::ReactionManager.new(
         reaction_value: "clap",

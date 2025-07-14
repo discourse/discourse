@@ -6,7 +6,7 @@ describe "Discord OAuth2" do
   let(:client_secret) { "adddcccdddd99922" }
   let(:temp_code) { "discord_temp_code_544254" }
 
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user1, :user)
 
   def setup_discord_email_stub(email, verified:)
     stub_request(:get, "https://discord.com/api/users/@me").with(

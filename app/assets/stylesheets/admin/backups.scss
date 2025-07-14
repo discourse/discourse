@@ -6,13 +6,14 @@
     margin-top: 1em;
   }
 
-  .d-admin-table {
-    .backup-size {
-      text-align: right;
+  .d-table {
+    .d-table__cell.--overview {
+      max-width: 65%;
+      text-wrap: balance;
     }
 
-    .backup-filename {
-      text-wrap: balance;
+    .backup-size {
+      text-align: right;
     }
   }
 }

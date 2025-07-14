@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe "Quoting chat message transcripts", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:admin)
-  fab!(:chat_channel_1) { Fabricate(:chat_channel) }
+  fab!(:chat_channel_1, :chat_channel)
 
   let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -41,7 +41,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     before { cdp.allow_clipboard }
 
     context "when quoting a single message into a topic" do
-      fab!(:post_1) { Fabricate(:post) }
+      fab!(:post_1, :post)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
       it "quotes the message" do
@@ -62,7 +62,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     end
 
     context "when quoting multiple messages into a topic" do
-      fab!(:post_1) { Fabricate(:post) }
+      fab!(:post_1, :post)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
@@ -83,7 +83,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     end
 
     context "when quoting a message containing a onebox" do
-      fab!(:post_1) { Fabricate(:post) }
+      fab!(:post_1, :post)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
       before do

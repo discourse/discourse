@@ -49,7 +49,7 @@ describe "SendPms" do
 
   context "when run from user_added_to_group trigger" do
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
-    fab!(:tracked_group_1) { Fabricate(:group) }
+    fab!(:tracked_group_1, :group)
 
     before do
       automation.update!(trigger: "user_added_to_group")
@@ -76,8 +76,8 @@ describe "SendPms" do
     end
 
     context "when sent from regular user" do
-      fab!(:user_2) { Fabricate(:user) }
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_2, :user)
+      fab!(:user_3, :user)
       let(:raw) { "This is a general message sent" }
 
       before do
@@ -109,7 +109,7 @@ describe "SendPms" do
   end
 
   context "when delayed" do
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_1, :user)
 
     before { automation.update!(trigger: DiscourseAutomation::Triggers::RECURRING) }
 

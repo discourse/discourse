@@ -8,13 +8,13 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
     let(:dependencies) { { guardian: } }
     let(:guardian) { Guardian.new(current_user) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
-    fab!(:channel_1) { Fabricate(:chat_channel) }
-    fab!(:channel_2) { Fabricate(:chat_channel) }
-    fab!(:channel_3) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
+    fab!(:channel_2, :chat_channel)
+    fab!(:channel_3, :chat_channel)
 
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }

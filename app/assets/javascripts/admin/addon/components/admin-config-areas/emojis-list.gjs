@@ -35,20 +35,22 @@ export default class AdminConfigAreasEmojisList extends Component {
     </div>
 
     {{#if this.emojis}}
-      <table id="custom_emoji" class="d-admin-table">
-        <thead>
-          <tr>
-            <th>{{i18n "admin.emoji.image"}}</th>
-            <th>{{i18n "admin.emoji.name"}}</th>
-            <th>{{i18n "admin.emoji.group"}}</th>
-            <th colspan="3">{{i18n "admin.emoji.created_by"}}</th>
+      <table id="custom_emoji" class="d-table">
+        <thead class="d-table__header">
+          <tr class="d-table__row">
+            <th class="d-table__header-cell">{{i18n "admin.emoji.image"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.emoji.name"}}</th>
+            <th class="d-table__header-cell">{{i18n "admin.emoji.group"}}</th>
+            <th class="d-table__header-cell" colspan="3">{{i18n
+                "admin.emoji.created_by"
+              }}</th>
           </tr>
         </thead>
         {{#if this.sortedEmojis}}
-          <tbody>
+          <tbody class="d-table__body">
             {{#each this.sortedEmojis as |emoji|}}
-              <tr class="d-admin-row__content">
-                <td class="d-admin-row__overview">
+              <tr class="d-table__row">
+                <td class="d-table__cell --overview">
                   <img
                     class="emoji emoji-custom"
                     src={{emoji.url}}
@@ -56,29 +58,29 @@ export default class AdminConfigAreasEmojisList extends Component {
                     alt={{i18n "admin.emoji.alt"}}
                   />
                 </td>
-                <td class="d-admin-row__detail">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">
                     {{i18n "admin.emoji.name"}}
                   </div>
                   :{{emoji.name}}:
                 </td>
-                <td class="d-admin-row__detail">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">
                     {{i18n "admin.emoji.group"}}
                   </div>
                   {{emoji.group}}
                 </td>
-                <td class="d-admin-row__detail">
-                  <div class="d-admin-row__mobile-label">
+                <td class="d-table__cell --detail">
+                  <div class="d-table__mobile-label">
                     {{i18n "admin.emoji.created_by"}}
                   </div>
                   {{emoji.created_by}}
                 </td>
-                <td class="d-admin-row__controls action">
+                <td class="d-table__cell --controls action">
                   <DButton
                     @action={{fn this.adminEmojis.destroyEmoji emoji}}
                     @label="admin.emoji.delete"
-                    class="btn-default btn-small d-admin-row__controls-delete"
+                    class="btn-default btn-small d-table__cell-action-delete"
                   />
                 </td>
               </tr>

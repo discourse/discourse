@@ -134,12 +134,20 @@ export default class ComposerEditor extends Component {
     let placeholder = "composer.reply_placeholder_choose_category";
 
     if (!requiredCategoryMissing) {
-      const key = authorizesOneOrMoreImageExtensions(
+      const allowImages = authorizesOneOrMoreImageExtensions(
         this.currentUser.staff,
         this.siteSettings
-      )
-        ? "reply_placeholder"
-        : "reply_placeholder_no_images";
+      );
+
+      let key;
+      if (this.siteSettings.rich_editor) {
+        key = allowImages
+          ? "reply_placeholder_rte"
+          : "reply_placeholder_rte_no_images";
+      } else {
+        key = allowImages ? "reply_placeholder" : "reply_placeholder_no_images";
+      }
+
       placeholder = `composer.${key}`;
     }
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Flagging post", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:first_post) { Fabricate(:post, topic: topic) }

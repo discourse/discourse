@@ -4,7 +4,7 @@ describe Chat::ChannelArchiveService do
   class FakeArchiveError < StandardError
   end
 
-  fab!(:channel) { Fabricate(:category_channel) }
+  fab!(:channel, :category_channel)
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:category)
 

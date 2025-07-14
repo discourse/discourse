@@ -528,8 +528,8 @@ describe "Composer Form Templates", type: :system do
   context "when using tagchooser" do
     fab!(:tag1) { Fabricate(:tag, description: "Tag 1 custom Translation") }
     fab!(:tag2) { Fabricate(:tag, description: "Tag 2 custom Translation") }
-    fab!(:tag3) { Fabricate(:tag) }
-    fab!(:tag4) { Fabricate(:tag) }
+    fab!(:tag3, :tag)
+    fab!(:tag4, :tag)
 
     fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag1, tag3]) }
     fab!(:tag_group2) { Fabricate(:tag_group, name: "tag_group2", tags: [tag2, tag4]) }

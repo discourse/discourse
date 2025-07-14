@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::ThreadParticipantQuery do
-  fab!(:thread_1) { Fabricate(:chat_thread) }
-  fab!(:thread_2) { Fabricate(:chat_thread) }
-  fab!(:thread_3) { Fabricate(:chat_thread) }
+  fab!(:thread_1, :chat_thread)
+  fab!(:thread_2, :chat_thread)
+  fab!(:thread_3, :chat_thread)
 
   context "when users have messaged in the thread" do
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
-    fab!(:user_3) { Fabricate(:user) }
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
+    fab!(:user_3, :user)
 
     before do
       Fabricate(:chat_message, thread: thread_1, user: user_1)

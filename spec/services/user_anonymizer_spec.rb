@@ -27,7 +27,7 @@ RSpec.describe UserAnonymizer do
 
     let(:original_email) { "edward@example.net" }
     let(:user) { Fabricate(:user, username: "edward", email: original_email) }
-    fab!(:another_user) { Fabricate(:evil_trout) }
+    fab!(:another_user, :evil_trout)
 
     it "changes username" do
       make_anonymous

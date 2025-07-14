@@ -1,5 +1,4 @@
 import { array, concat, fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
@@ -120,9 +119,28 @@ export default RouteTemplate(
                     </LinkTo>
                   </div>
                 {{/if}}
+                {{#if @controller.model.number_of_silencings}}
+                  <div>
+                    <LinkTo
+                      @route="adminLogs.staffActionLogs"
+                      @query={{@controller.silencingsRouteQuery}}
+                    >
+                      {{htmlSafe
+                        (i18n
+                          "user.staff_counters.silencings"
+                          className="silencings"
+                          count=@controller.model.number_of_silencings
+                        )
+                      }}
+                    </LinkTo>
+                  </div>
+                {{/if}}
                 {{#if @controller.model.number_of_suspensions}}
                   <div>
-                    <a href {{on "click" @controller.showSuspensions}}>
+                    <LinkTo
+                      @route="adminLogs.staffActionLogs"
+                      @query={{@controller.suspensionsRouteQuery}}
+                    >
                       {{htmlSafe
                         (i18n
                           "user.staff_counters.suspensions"
@@ -130,7 +148,7 @@ export default RouteTemplate(
                           count=@controller.model.number_of_suspensions
                         )
                       }}
-                    </a>
+                    </LinkTo>
                   </div>
                 {{/if}}
                 {{#if @controller.model.warnings_received_count}}
@@ -278,25 +296,51 @@ export default RouteTemplate(
                 <div class="bio">
                   {{#if @controller.model.suspended}}
                     <div class="suspended">
-                      {{icon "ban"}}
-                      <b>
-                        {{#if @controller.model.suspendedForever}}
-                          {{i18n "user.suspended_permanently"}}
-                        {{else}}
-                          {{i18n
-                            "user.suspended_notice"
-                            date=@controller.model.suspendedTillDate
-                          }}
-                        {{/if}}
-                      </b>
-                      <br />
+                      <div class="suspension-date">
+                        {{icon "ban"}}
+                        <b>
+                          {{#if @controller.model.suspendedForever}}
+                            {{i18n "user.suspended_permanently"}}
+                          {{else}}
+                            {{i18n
+                              "user.suspended_notice"
+                              date=@controller.model.suspendedTillDate
+                            }}
+                          {{/if}}
+                        </b>
+                      </div>
                       {{#if @controller.model.suspend_reason}}
-                        <b>{{i18n "user.suspended_reason"}}</b>
-                        {{@controller.model.suspend_reason}}
+                        <div class="suspension-reason">
+                          <b>{{i18n "user.suspended_reason"}}</b>
+                          {{@controller.model.suspend_reason}}
+                        </div>
                       {{/if}}
                     </div>
                   {{/if}}
-                  {{#if @controller.isNotSuspendedOrIsStaff}}
+                  {{#if @controller.model.silenced}}
+                    <div class="silenced">
+                      <div class="silence-date">
+                        {{icon "microphone-slash"}}
+                        <b>
+                          {{#if @controller.model.silencedForever}}
+                            {{i18n "user.silenced_permanently"}}
+                          {{else}}
+                            {{i18n
+                              "user.silenced_notice"
+                              date=@controller.model.silencedTillDate
+                            }}
+                          {{/if}}
+                        </b>
+                      </div>
+                      {{#if @controller.model.silence_reason}}
+                        <div class="silence-reason">
+                          <b>{{i18n "user.silenced_reason"}}</b>
+                          {{@controller.model.silence_reason}}
+                        </div>
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                  {{#if @controller.isNotRestrictedOrIsStaff}}
                     <HtmlWithLinks>
                       {{htmlSafe @controller.model.bio_cooked}}
                     </HtmlWithLinks>

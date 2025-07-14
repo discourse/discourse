@@ -3,7 +3,7 @@
 RSpec.describe "Glimmer Header", type: :system do
   let(:header) { PageObjects::Pages::Header.new }
   let(:search) { PageObjects::Pages::Search.new }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:topic)
 
   it "renders basics" do
@@ -206,7 +206,7 @@ RSpec.describe "Glimmer Header", type: :system do
   end
 
   context "when resetting password" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     it "does not show search, login, or signup buttons" do
       email_token =
@@ -223,7 +223,7 @@ RSpec.describe "Glimmer Header", type: :system do
   end
 
   context "when logged in and login required" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     it "displays current user when logged in and login required" do
       SiteSetting.login_required = true

@@ -69,12 +69,7 @@ export function buildKeymap(
     return true;
   });
 
-  keys["Mod-Shift-0"] = setBlockType(schema.nodes.paragraph);
   keys["Enter"] = splitListItem(schema.nodes.list_item);
-
-  for (let level = 1; level <= 6; level++) {
-    keys["Mod-Shift-" + level] = setBlockType(schema.nodes.heading, { level });
-  }
 
   keys["Mod-Shift-_"] = (state, dispatch) => {
     dispatch?.(

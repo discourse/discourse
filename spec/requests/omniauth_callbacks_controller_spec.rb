@@ -1018,7 +1018,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context "when attempting reconnect" do
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user2, :user)
       let(:user1_provider_id) { "12345" }
       let(:user2_provider_id) { "123456" }
 

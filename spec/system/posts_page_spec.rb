@@ -2,8 +2,8 @@
 
 describe "Posts page", type: :system do
   fab!(:post)
-  fab!(:post_2) { Fabricate(:post) }
-  fab!(:post_3) { Fabricate(:post) }
+  fab!(:post_2, :post)
+  fab!(:post_3, :post)
   fab!(:user)
   let(:posts_page) { PageObjects::Pages::Posts.new }
 

@@ -152,7 +152,7 @@ export default class TopicAdminMenu extends Component {
                     "topic.actions.close"
                   }}
                   @action={{fn this.onButtonAction "toggleClosed"}}
-                  @icon={{if @topic.closed "unlock" "lock"}}
+                  @icon={{if @topic.closed "topic.opened" "topic.closed"}}
                 />
               </dropdown.item>
             {{/if}}

@@ -301,7 +301,7 @@ RSpec.describe PostDestroyer do
         end
 
         context "when recovered by user with access to moderate topic category" do
-          fab!(:review_user) { Fabricate(:user) }
+          fab!(:review_user, :user)
 
           before do
             SiteSetting.enable_category_group_moderation = true
@@ -548,7 +548,7 @@ RSpec.describe PostDestroyer do
     end
 
     context "when deleted by user with access to moderate topic category" do
-      fab!(:review_user) { Fabricate(:user) }
+      fab!(:review_user, :user)
 
       before do
         SiteSetting.enable_category_group_moderation = true
@@ -625,7 +625,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "private message" do
-    fab!(:author) { Fabricate(:user) }
+    fab!(:author, :user)
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) }
     fab!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
     fab!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2) }
@@ -1003,7 +1003,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "topic links" do
-    fab!(:first_post) { Fabricate(:post) }
+    fab!(:first_post, :post)
     let!(:topic) { first_post.topic }
     let!(:second_post) { Fabricate(:post_with_external_links, topic: topic) }
 
@@ -1023,7 +1023,7 @@ RSpec.describe PostDestroyer do
   describe "internal links" do
     fab!(:topic)
     let!(:second_post) { Fabricate(:post, topic: topic) }
-    fab!(:other_topic) { Fabricate(:topic) }
+    fab!(:other_topic, :topic)
     let!(:other_post) { Fabricate(:post, topic: other_topic) }
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:base_url) { URI.parse(Discourse.base_url) }

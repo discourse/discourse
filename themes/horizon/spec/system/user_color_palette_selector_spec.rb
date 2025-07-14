@@ -9,7 +9,7 @@ describe "Horizon theme | User color palette selector", type: :system do
     horizon_theme.color_schemes.update_all(user_selectable: true)
     horizon_theme
   end
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:palette_selector) { PageObjects::Components::UserColorPaletteSelector.new }
   let(:interface_color_mode) { PageObjects::Components::InterfaceColorMode.new }

@@ -5,10 +5,10 @@ require_relative "../fabricators/reaction_fabricator.rb"
 require_relative "../fabricators/reaction_user_fabricator.rb"
 
 describe PostSerializer do
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:user_3) { Fabricate(:user) }
-  fab!(:user_4) { Fabricate(:user) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:user_3, :user)
+  fab!(:user_4, :user)
   fab!(:post_1) { Fabricate(:post, user: user_1) }
   let(:reaction_otter) { Fabricate(:reaction, reaction_value: "otter", post: post_1) }
   let(:reaction_plus_1) { Fabricate(:reaction, reaction_value: "+1", post: post_1) }
@@ -104,7 +104,7 @@ describe PostSerializer do
       Fabricate(:reaction, reaction_value: custom_emoji.name, post: post_1)
     end
 
-    fab!(:user_5) { Fabricate(:user) }
+    fab!(:user_5, :user)
 
     fab!(:custom_reaction_user) do
       Fabricate(:reaction_user, reaction: custom_emoji_reaction, user: user_5, post: post_1)

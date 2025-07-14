@@ -3,9 +3,9 @@
 require "rails_helper"
 
 describe Report do
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:post_1) { Fabricate(:post) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:post_1, :post)
   fab!(:post_2) { Fabricate(:post, user: user_1) }
 
   before do

@@ -10,10 +10,10 @@ describe DiscourseReactions::ReactionNotification do
     PostActionNotifier.enable
   end
 
-  fab!(:post_1) { Fabricate(:post) }
+  fab!(:post_1, :post)
   fab!(:thumbsup) { Fabricate(:reaction, post: post_1, reaction_value: "thumbsup") }
   fab!(:user_1) { Fabricate(:user, name: "Bruce Wayne Jr.") }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_2, :user)
   fab!(:user_3) { Fabricate(:user, name: "Bruce Wayne Sr.") }
   fab!(:reaction_user1) { Fabricate(:reaction_user, reaction: thumbsup, user: user_1) }
   fab!(:like_reaction) { Fabricate(:reaction, post: post_1, reaction_value: "heart") }

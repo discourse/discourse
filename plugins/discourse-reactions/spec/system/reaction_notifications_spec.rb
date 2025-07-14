@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Reactions | Notifications", type: :system, js: true do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:acting_user_1) { Fabricate(:user, name: "Bruce Wayne I") }
   fab!(:acting_user_2) { Fabricate(:user, name: "Bruce Wayne II") }
 

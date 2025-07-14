@@ -8,8 +8,8 @@ RSpec.describe UsersController do
     Fabricate(:user, username: "someusername", refresh_auto_groups: true, created_at: 6.minutes.ago)
   end
   fab!(:another_user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:invitee) { Fabricate(:user) }
-  fab!(:inviter) { Fabricate(:user) }
+  fab!(:invitee, :user)
+  fab!(:inviter, :user)
 
   fab!(:admin)
   fab!(:moderator)
@@ -1670,7 +1670,7 @@ RSpec.describe UsersController do
 
     context "with custom fields" do
       fab!(:user_field)
-      fab!(:another_field) { Fabricate(:user_field) }
+      fab!(:another_field, :user_field)
       fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without a value for the fields" do
@@ -2209,7 +2209,7 @@ RSpec.describe UsersController do
 
       context "when it's someone else's username" do
         fab!(:user) { Fabricate(:user, username: "hansolo") }
-        fab!(:someone_else) { Fabricate(:user) }
+        fab!(:someone_else, :user)
         before do
           sign_in(someone_else)
 
@@ -3828,8 +3828,8 @@ RSpec.describe UsersController do
     context "while logged in" do
       before { sign_in(user1) }
 
-      fab!(:avatar1) { Fabricate(:upload) }
-      fab!(:avatar2) { Fabricate(:upload) }
+      fab!(:avatar1, :upload)
+      fab!(:avatar2, :upload)
       let(:url) { "https://www.discourse.org" }
 
       it "raises an error when url is blank" do
@@ -5176,7 +5176,7 @@ RSpec.describe UsersController do
 
   describe "#cards" do
     fab!(:user) { Discourse.system_user }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     before { user2.user_stat.update!(post_count: 1) }
 
@@ -5659,7 +5659,7 @@ RSpec.describe UsersController do
       end
 
       describe "when searching by group name" do
-        fab!(:exclusive_group) { Fabricate(:group) }
+        fab!(:exclusive_group, :group)
 
         it "return results if the user is a group member" do
           exclusive_group.add(user)
@@ -6978,7 +6978,7 @@ RSpec.describe UsersController do
       end
 
       context "with a valid passkey" do
-        fab!(:user2) { Fabricate(:user) }
+        fab!(:user2, :user)
         let!(:passkey) do
           Fabricate(
             :user_security_key,
@@ -7070,9 +7070,9 @@ RSpec.describe UsersController do
 
   describe "#feature_topic" do
     fab!(:topic)
-    fab!(:other_topic) { Fabricate(:topic) }
+    fab!(:other_topic, :topic)
     fab!(:private_message) { Fabricate(:private_message_topic, user: another_user) }
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     describe "site setting enabled" do
       before { SiteSetting.allow_featured_topic_on_user_profiles = true }
@@ -7877,6 +7877,68 @@ RSpec.describe UsersController do
         read_notifications = response.parsed_body["read_notifications"]
         expect(topics.size).to eq(0)
         expect(read_notifications.size).to eq(0)
+      end
+    end
+  end
+
+  describe "#staff_info" do
+    context "when logged out" do
+      it "responds with 403" do
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
+        Fabricate(:user_history, action: UserHistory.actions[:suspend_user], target_user: user)
+        Fabricate(:reviewable_flagged_post, target_created_by: user)
+      end
+
+      it "responds with 403 for normal users" do
+        sign_in(user)
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "responds with 200 for moderators" do
+        sign_in(moderator)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "responds with 200 for admins" do
+        sign_in(admin)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "delegates work to `User`" do
+        user_instance = mock
+        UsersController.any_instance.stubs(:fetch_user_from_params).returns(user_instance)
+
+        result = {}
+
+        %i[
+          number_of_deleted_posts
+          number_of_flagged_posts
+          number_of_flags_given
+          number_of_silencings
+          number_of_suspensions
+          warnings_received_count
+          number_of_rejected_posts
+        ].each do |info|
+          user_instance.expects(info).returns(user.public_send(info))
+          result[info.to_s] = user.public_send(info)
+        end
+
+        sign_in(admin)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.parsed_body).to eq(result)
       end
     end
   end

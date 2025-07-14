@@ -3,12 +3,12 @@
 require "rails_helper"
 
 describe DiscourseReactions::CustomReactionsController do
-  fab!(:post_1) { Fabricate(:post) }
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:user_3) { Fabricate(:user) }
-  fab!(:user_4) { Fabricate(:user) }
-  fab!(:user_5) { Fabricate(:user) }
+  fab!(:post_1, :post)
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:user_3, :user)
+  fab!(:user_4, :user)
+  fab!(:user_5, :user)
   fab!(:admin)
   fab!(:post_2) { Fabricate(:post, user: user_1) }
   fab!(:private_topic) { Fabricate(:private_message_topic, user: user_2, recipient: admin) }
@@ -166,7 +166,7 @@ describe DiscourseReactions::CustomReactionsController do
   describe "#reactions_given" do
     fab!(:private_topic) { Fabricate(:private_message_topic, user: user_2) }
     fab!(:private_post) { Fabricate(:post, topic: private_topic) }
-    fab!(:secure_group) { Fabricate(:group) }
+    fab!(:secure_group, :group)
     fab!(:secure_category) { Fabricate(:private_category, group: secure_group) }
     fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
     fab!(:secure_post) { Fabricate(:post, topic: secure_topic) }
@@ -257,8 +257,8 @@ describe DiscourseReactions::CustomReactionsController do
     end
 
     describe "a post with one of your reactions has been deleted" do
-      fab!(:deleted_post) { Fabricate(:post) }
-      fab!(:kept_post) { Fabricate(:post) }
+      fab!(:deleted_post, :post)
+      fab!(:kept_post, :post)
       fab!(:user)
       fab!(:reaction_on_deleted_post) do
         Fabricate(:reaction, post: deleted_post, reaction_value: "laughing")

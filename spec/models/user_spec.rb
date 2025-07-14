@@ -63,7 +63,7 @@ RSpec.describe User do
       end
 
       fab!(:tag)
-      fab!(:hidden_tag) { Fabricate(:tag) }
+      fab!(:hidden_tag, :tag)
       fab!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
       end
@@ -490,7 +490,7 @@ RSpec.describe User do
   end
 
   describe "enqueue_staff_welcome_message" do
-    fab!(:first_admin) { Fabricate(:admin) }
+    fab!(:first_admin, :admin)
     fab!(:user)
 
     it "enqueues message for admin" do
@@ -577,7 +577,7 @@ RSpec.describe User do
   end
 
   describe "delete posts in batches" do
-    fab!(:post1) { Fabricate(:post) }
+    fab!(:post1, :post)
     fab!(:user) { post1.user }
     fab!(:post2) { Fabricate(:post, topic: post1.topic, user: user) }
     fab!(:post3) { Fabricate(:post, user: user) }
@@ -794,7 +794,7 @@ RSpec.describe User do
 
   describe "email_hash" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     it "should have a sane email hash" do
       expect(user.email_hash).to match(/^[0-9a-f]{32}$/)
@@ -1829,7 +1829,7 @@ RSpec.describe User do
 
   describe "#purge_unactivated" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-    fab!(:admin) { Fabricate(:user) }
+    fab!(:admin, :user)
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -2126,6 +2126,15 @@ RSpec.describe User do
         expect(user.number_of_flagged_posts).to eq(0)
       end
     end
+
+    describe "#number_of_silencings" do
+      it "counts the number of silencings" do
+        3.times do
+          Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
+        end
+        expect(user.number_of_silencings).to eq(3)
+      end
+    end
   end
 
   describe "new_user?" do
@@ -2150,11 +2159,11 @@ RSpec.describe User do
   end
 
   context "when user preferences are overridden" do
-    fab!(:category0) { Fabricate(:category) }
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
-    fab!(:category3) { Fabricate(:category) }
-    fab!(:category4) { Fabricate(:category) }
+    fab!(:category0, :category)
+    fab!(:category1, :category)
+    fab!(:category2, :category)
+    fab!(:category3, :category)
+    fab!(:category4, :category)
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
@@ -2251,7 +2260,7 @@ RSpec.describe User do
 
   describe "#read_first_notification?" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
-    fab!(:notification) { Fabricate(:private_message_notification) }
+    fab!(:notification, :private_message_notification)
 
     describe "when first notification has not been seen" do
       it "should return the right value" do
@@ -3063,7 +3072,7 @@ RSpec.describe User do
   describe "Granting admin or moderator status" do
     context "when granting admin status" do
       context "when there is a reviewable" do
-        fab!(:user) { Fabricate(:reviewable_user) }
+        fab!(:user, :reviewable_user)
 
         context "when the user isn’t approved yet" do
           it "approves the associated reviewable" do
@@ -3102,7 +3111,7 @@ RSpec.describe User do
 
   describe "#recent_time_read" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     before_all do
       UserVisit.create(
