@@ -42,128 +42,174 @@ export default RouteTemplate(
               flashTypeChanged=this.flashTypeChanged
             }}
           />
-
-          {{#if @controller.hasNoLoginOptions}}
-            <div class={{if @controller.site.desktopView "login-left-side"}}>
-              <div class="login-welcome-header no-login-methods-configured">
-                <h1 class="login-title">{{i18n
-                    "login.no_login_methods.title"
-                  }}</h1>
-                <img />
-                <p class="login-subheader">
-                  {{htmlSafe
-                    (i18n
-                      "login.no_login_methods.description"
-                      (hash adminLoginPath=@controller.adminLoginPath)
-                    )
-                  }}
-                </p>
-              </div>
-            </div>
-          {{else}}
-            {{#if @controller.site.mobileView}}
-              <WelcomeHeader @header={{i18n "login.header_title"}}>
-                <PluginOutlet
-                  @name="login-header-bottom"
-                  @outletArgs={{lazyHash
-                    createAccount=@controller.createAccount
-                  }}
-                />
-              </WelcomeHeader>
-              {{#if @controller.showLoginButtons}}
-                <LoginButtons
-                  @externalLogin={{@controller.externalLoginAction}}
-                  @passkeyLogin={{@controller.passkeyLogin}}
-                  @context="login"
-                />
-              {{/if}}
-            {{/if}}
-
-            {{#if @controller.canLoginLocal}}
-              <div class={{if @controller.site.desktopView "login-left-side"}}>
-                {{#if @controller.site.desktopView}}
-                  <WelcomeHeader @header={{i18n "login.header_title"}}>
-                    <PluginOutlet
-                      @name="login-header-bottom"
-                      @outletArgs={{lazyHash
-                        createAccount=@controller.createAccount
-                      }}
-                    />
-                  </WelcomeHeader>
-                {{/if}}
-                <LocalLoginForm
-                  @loginName={{@controller.loginName}}
-                  @loginNameChanged={{@controller.loginNameChanged}}
-                  @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
-                  @canUsePasskeys={{@controller.canUsePasskeys}}
-                  @passkeyLogin={{@controller.passkeyLogin}}
-                  @loginPassword={{@controller.loginPassword}}
-                  @secondFactorMethod={{@controller.secondFactorMethod}}
-                  @secondFactorToken={{@controller.secondFactorToken}}
-                  @backupEnabled={{@controller.backupEnabled}}
-                  @totpEnabled={{@controller.totpEnabled}}
-                  @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
-                  @securityKeyChallenge={{@controller.securityKeyChallenge}}
-                  @showSecurityKey={{@controller.showSecurityKey}}
-                  @otherMethodAllowed={{@controller.otherMethodAllowed}}
-                  @showSecondFactor={{@controller.showSecondFactor}}
-                  @handleForgotPassword={{@controller.handleForgotPassword}}
-                  @login={{@controller.triggerLogin}}
-                  @flashChanged={{@controller.flashChanged}}
-                  @flashTypeChanged={{@controller.flashTypeChanged}}
-                  @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
-                />
-                {{#if @controller.site.desktopView}}
-                  <LoginPageCta
-                    @canLoginLocal={{@controller.canLoginLocal}}
-                    @showSecurityKey={{@controller.showSecurityKey}}
-                    @login={{@controller.triggerLogin}}
-                    @loginButtonLabel={{@controller.loginButtonLabel}}
-                    @loginDisabled={{@controller.loginDisabled}}
-                    @showSignupLink={{@controller.showSignupLink}}
-                    @createAccount={{@controller.createAccount}}
-                    @loggingIn={{@controller.loggingIn}}
-                    @showSecondFactor={{@controller.showSecondFactor}}
-                  />
-                {{/if}}
-              </div>
-            {{/if}}
-
-            {{#if
-              (and @controller.showLoginButtons @controller.site.desktopView)
+          <PluginOutlet
+            @name="login-wrapper"
+            @outletArgs={{lazyHash
+              createAccount=@controller.createAccount
+              loginName=@controller.loginName
+              loginNameChanged=@controller.loginNameChanged
+              canLoginLocalWithEmail=@controller.canLoginLocalWithEmail
+              canUsePasskeys=@controller.canUsePasskeys
+              passkeyLogin=@controller.passkeyLogin
+              loginPassword=@controller.loginPassword
+              showLoginButtons=@controller.showLoginButtons
+              secondFactorMethod=@controller.secondFactorMethod
+              secondFactorToken=@controller.secondFactorToken
+              backupEnabled=@controller.backupEnabled
+              totpEnabled=@controller.totpEnabled
+              securityKeyAllowedCredentialIds=@controller.securityKeyAllowedCredentialIds
+              securityKeyChallenge=@controller.securityKeyChallenge
+              showSecurityKey=@controller.showSecurityKey
+              otherMethodAllowed=@controller.otherMethodAllowed
+              showSecondFactor=@controller.showSecondFactor
+              handleForgotPassword=@controller.handleForgotPassword
+              login=@controller.triggerLogin
+              flashChanged=@controller.flashChanged
+              flashTypeChanged=@controller.flashTypeChanged
+              securityKeyCredentialChanged=@controller.securityKeyCredentialChanged
+              adminLoginPath=@controller.adminLoginPath
+              desktopView=@controller.site.desktopView
+              mobileView=@controller.site.mobileView
+              externalLoginAction=@controller.externalLoginAction
+              canLoginLocal=@controller.canLoginLocal
+              loginButtonLabel=@controller.loginButtonLabel
+              loginDisabled=@controller.loginDisabled
+              showSignupLink=@controller.showSignupLink
+              loggingIn=@controller.loggingIn
+              hasAtLeastOneLoginButton=@controller.hasAtLeastOneLoginButton
+              hasNoLoginOptions=@controller.hasNoLoginOptions
             }}
-              {{#unless @controller.canLoginLocal}}
-                <div class="login-left-side">
-                  <WelcomeHeader @header={{i18n "login.header_title"}} />
+          >
+            {{#if @controller.hasNoLoginOptions}}
+              <div class={{if @controller.site.desktopView "login-left-side"}}>
+                <div class="login-welcome-header no-login-methods-configured">
+                  <h1 class="login-title">{{i18n
+                      "login.no_login_methods.title"
+                    }}</h1>
+                  <img />
+                  <p class="login-subheader">
+                    {{htmlSafe
+                      (i18n
+                        "login.no_login_methods.description"
+                        (hash adminLoginPath=@controller.adminLoginPath)
+                      )
+                    }}
+                  </p>
                 </div>
-              {{/unless}}
-              {{#if @controller.hasAtLeastOneLoginButton}}
-                <div class="login-right-side">
+              </div>
+            {{else}}
+
+              {{#if @controller.site.mobileView}}
+                <WelcomeHeader @header={{i18n "login.header_title"}}>
+                  <PluginOutlet
+                    @name="login-header-bottom"
+                    @outletArgs={{lazyHash
+                      createAccount=@controller.createAccount
+                    }}
+                  />
+                </WelcomeHeader>
+                {{#if @controller.showLoginButtons}}
+
                   <LoginButtons
                     @externalLogin={{@controller.externalLoginAction}}
                     @passkeyLogin={{@controller.passkeyLogin}}
                     @context="login"
                   />
+
+                {{/if}}
+              {{/if}}
+
+              {{#if @controller.canLoginLocal}}
+                <div
+                  class={{if @controller.site.desktopView "login-left-side"}}
+                >
+                  {{#if @controller.site.desktopView}}
+                    <WelcomeHeader @header={{i18n "login.header_title"}}>
+                      <PluginOutlet
+                        @name="login-header-bottom"
+                        @outletArgs={{lazyHash
+                          createAccount=@controller.createAccount
+                        }}
+                      />
+                    </WelcomeHeader>
+                  {{/if}}
+                  <LocalLoginForm
+                    @loginName={{@controller.loginName}}
+                    @loginNameChanged={{@controller.loginNameChanged}}
+                    @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
+                    @canUsePasskeys={{@controller.canUsePasskeys}}
+                    @passkeyLogin={{@controller.passkeyLogin}}
+                    @loginPassword={{@controller.loginPassword}}
+                    @secondFactorMethod={{@controller.secondFactorMethod}}
+                    @secondFactorToken={{@controller.secondFactorToken}}
+                    @backupEnabled={{@controller.backupEnabled}}
+                    @totpEnabled={{@controller.totpEnabled}}
+                    @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
+                    @securityKeyChallenge={{@controller.securityKeyChallenge}}
+                    @showSecurityKey={{@controller.showSecurityKey}}
+                    @otherMethodAllowed={{@controller.otherMethodAllowed}}
+                    @showSecondFactor={{@controller.showSecondFactor}}
+                    @handleForgotPassword={{@controller.handleForgotPassword}}
+                    @login={{@controller.triggerLogin}}
+                    @flashChanged={{@controller.flashChanged}}
+                    @flashTypeChanged={{@controller.flashTypeChanged}}
+                    @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
+                  />
+                  {{#if @controller.site.desktopView}}
+                    <LoginPageCta
+                      @canLoginLocal={{@controller.canLoginLocal}}
+                      @showSecurityKey={{@controller.showSecurityKey}}
+                      @login={{@controller.triggerLogin}}
+                      @loginButtonLabel={{@controller.loginButtonLabel}}
+                      @loginDisabled={{@controller.loginDisabled}}
+                      @showSignupLink={{@controller.showSignupLink}}
+                      @createAccount={{@controller.createAccount}}
+                      @loggingIn={{@controller.loggingIn}}
+                      @showSecondFactor={{@controller.showSecondFactor}}
+                    />
+                  {{/if}}
                 </div>
               {{/if}}
-            {{/if}}
-          {{/if}}
 
-          {{#if @controller.site.mobileView}}
-            {{#unless @controller.hasNoLoginOptions}}
-              <LoginPageCta
-                @canLoginLocal={{@controller.canLoginLocal}}
-                @showSecurityKey={{@controller.showSecurityKey}}
-                @login={{@controller.triggerLogin}}
-                @loginButtonLabel={{@controller.loginButtonLabel}}
-                @loginDisabled={{@controller.loginDisabled}}
-                @showSignupLink={{@controller.showSignupLink}}
-                @createAccount={{@controller.createAccount}}
-                @loggingIn={{@controller.loggingIn}}
-                @showSecondFactor={{@controller.showSecondFactor}}
-              />
-            {{/unless}}
-          {{/if}}
+              {{#if
+                (and @controller.showLoginButtons @controller.site.desktopView)
+              }}
+
+                {{#unless @controller.canLoginLocal}}
+                  <div class="login-left-side">
+                    <WelcomeHeader @header={{i18n "login.header_title"}} />
+                  </div>
+                {{/unless}}
+                {{#if @controller.hasAtLeastOneLoginButton}}
+                  <div class="login-right-side">
+                    <LoginButtons
+                      @externalLogin={{@controller.externalLoginAction}}
+                      @passkeyLogin={{@controller.passkeyLogin}}
+                      @context="login"
+                    />
+                  </div>
+                {{/if}}
+
+              {{/if}}
+            {{/if}}
+
+            {{#if @controller.site.mobileView}}
+              {{#unless @controller.hasNoLoginOptions}}
+                <LoginPageCta
+                  @canLoginLocal={{@controller.canLoginLocal}}
+                  @showSecurityKey={{@controller.showSecurityKey}}
+                  @login={{@controller.triggerLogin}}
+                  @loginButtonLabel={{@controller.loginButtonLabel}}
+                  @loginDisabled={{@controller.loginDisabled}}
+                  @showSignupLink={{@controller.showSignupLink}}
+                  @createAccount={{@controller.createAccount}}
+                  @loggingIn={{@controller.loggingIn}}
+                  @showSecondFactor={{@controller.showSecondFactor}}
+                />
+              {{/unless}}
+            {{/if}}
+
+          </PluginOutlet>
         </div>
         <PluginOutlet @name="below-login-page" />
       </div>
