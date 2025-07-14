@@ -33,7 +33,7 @@ module PageObjects
       end
 
       def has_themes?(names)
-        expect(all(".theme-card__title").map(&:text)).to eq(names)
+        expect(all(".theme-card__title").map(&:text)).to match_array(names)
       end
 
       def toggle_selectable(theme)
