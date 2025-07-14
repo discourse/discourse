@@ -49,7 +49,7 @@
     }
 
     &:last-of-type {
-      padding-inline-end: (--d-topic-list-data-padding-inline-end);
+      padding-inline-end: var(--d-topic-list-data-padding-inline-end);
     }
 
     th & {
