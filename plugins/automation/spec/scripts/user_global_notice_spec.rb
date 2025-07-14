@@ -18,6 +18,7 @@ describe "UserGlobalNotice" do
       automation_1.upsert_field!("stalled_after", "choices", { value: "PT1H" }, target: "trigger")
       automation_1.upsert_field!("notice", "message", { value: "foo bar" }, target: "script")
       automation_1.upsert_field!("level", "choices", { value: "error" }, target: "script")
+      automation_1.update!(enabled: true)
     end
 
     describe "script" do
@@ -71,6 +72,7 @@ describe "UserGlobalNotice" do
         target: "script",
       )
       automation_1.upsert_field!("level", "choices", { value: "success" }, target: "script")
+      automation_1.update!(enabled: true)
     end
 
     it "creates a notice for the solution author" do
@@ -105,6 +107,8 @@ describe "UserGlobalNotice" do
 
     before do
       [automation_1, automation_2].each do |automation|
+        automation.upsert_field!("notice", "message", { value: "foo bar" }, target: "script")
+        automation.update!(enabled: true)
         automation.trigger!(
           "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
           "topic" => topic_1,
