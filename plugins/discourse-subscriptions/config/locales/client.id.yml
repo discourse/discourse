@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    discourse_subscriptions:
+      optional: Opsional
+      user:
+        payments:
+          created_at: Dibuat
+        plans:
+          product: Nama
+        subscriptions:
+          status: Status
+          created_at: Dibuat
+          cancel: batal
+      billing:
+        email: Email
+      admin:
+        dashboard:
+          table:
+            head:
+              user: Pengguna
+        products:
+          product:
+            description: Deskripsi
+            active: Aktif
+            created_at: Dibuat
+        plans:
+          plan:
+            active: Aktif
+            created_at: Dibuat
+        coupons:
+          active: Aktif?
+          actions: Aksi
+        subscriptions:
+          subscription:
+            user: Pengguna
+            status: Status
+            created_at: Dibuat

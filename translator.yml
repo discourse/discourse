@@ -227,3 +227,10 @@ files:
   - source_path: plugins/discourse-assign/config/locales/server.en.yml
     destination_path: plugins/assign/server.yml
     label: assign
+
+  - source_path: plugins/discourse-subscriptions/config/locales/client.en.yml
+    destination_path: plugins/subscriptions/client.yml
+    label: subscriptions
+  - source_path: plugins/discourse-subscriptions/config/locales/server.en.yml
+    destination_path: plugins/subscriptions/server.yml
+    label: subscriptions

@@ -94,6 +94,10 @@ discourse-assign:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-assign/**/*
 
+discourse-subscriptions:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-subscriptions/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
