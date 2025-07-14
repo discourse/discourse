@@ -14,10 +14,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
   let(:install_modal) { PageObjects::Modals::InstallTheme.new }
   let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
 
-  before do
-    SiteSetting.experimental_system_themes = "foundation|horizon"
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   it "has an install button in the subheader" do
     config_area.visit
@@ -77,19 +74,5 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     expect(page).to have_content(
       I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
     )
-  end
-
-  it "allows controlling visibility of system themes with experimental_system_themes setting" do
-    SiteSetting.experimental_system_themes = ""
-    config_area.visit
-    expect(config_area).to have_themes(["First theme", "Second theme"])
-
-    SiteSetting.experimental_system_themes = "foundation"
-    config_area.visit
-    expect(config_area).to have_themes(["Foundation", "First theme", "Second theme"])
-
-    SiteSetting.experimental_system_themes = "foundation|horizon"
-    config_area.visit
-    expect(config_area).to have_themes(["Foundation", "Horizon", "First theme", "Second theme"])
   end
 end
