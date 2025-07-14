@@ -2,7 +2,7 @@
 
 describe Chat::ChatablesSerializer do
   context "with status" do
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_1, :user)
 
     before do
       SiteSetting.enable_user_status = true

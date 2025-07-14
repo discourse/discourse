@@ -19,12 +19,12 @@ RSpec.describe Chat::AutoJoinChannels do
       let(:trust_level) { 1 } # SiteSetting.chat_allowed_groups defaults to admins, moderators, and TL1 users
       let(:last_seen_at) { 5.minutes.ago } # Users must have been seen "recently" to be auto-joined to a channel
 
-      fab!(:public_category) { Fabricate(:category) }
+      fab!(:public_category, :category)
       fab!(:private_category) { Fabricate(:category, read_restricted: true) }
 
-      fab!(:private_group_readonly) { Fabricate(:group) }
-      fab!(:private_group_create_post) { Fabricate(:group) }
-      fab!(:private_group_full) { Fabricate(:group) }
+      fab!(:private_group_readonly, :group)
+      fab!(:private_group_create_post, :group)
+      fab!(:private_group_full, :group)
 
       fab!(:private_category_group_readonly) do
         Fabricate(

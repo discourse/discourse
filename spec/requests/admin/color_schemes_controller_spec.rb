@@ -172,7 +172,7 @@ RSpec.describe Admin::ColorSchemesController do
   end
 
   describe "#update" do
-    fab!(:existing) { Fabricate(:color_scheme) }
+    fab!(:existing, :color_scheme)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -235,7 +235,7 @@ RSpec.describe Admin::ColorSchemesController do
   end
 
   describe "#destroy" do
-    fab!(:existing) { Fabricate(:color_scheme) }
+    fab!(:existing, :color_scheme)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }

@@ -3,9 +3,9 @@
 describe "Thread tracking state | drawer", type: :system do
   include ActiveSupport::Testing::TimeHelpers
 
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
   fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -90,7 +90,7 @@ describe "Thread tracking state | drawer", type: :system do
     end
 
     describe "channel index unread indicators" do
-      fab!(:other_channel) { Fabricate(:chat_channel) }
+      fab!(:other_channel, :chat_channel)
 
       before { other_channel.add(current_user) }
 

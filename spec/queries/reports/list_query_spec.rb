@@ -4,7 +4,7 @@ RSpec.describe Reports::ListQuery do
   describe ".call" do
     subject(:result) { described_class.call }
 
-    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:current_user, :admin)
 
     let(:result_page_view_report_types) do
       result.filter { |r| r[:type].starts_with?("page_view") }.map { |r| r[:type] }

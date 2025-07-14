@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Search | Shortcuts for variations of search input", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:welcome_banner) { PageObjects::Components::WelcomeBanner.new }
   let(:search_page) { PageObjects::Pages::Search.new }

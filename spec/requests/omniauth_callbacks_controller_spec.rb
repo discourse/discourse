@@ -224,34 +224,50 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context "when in readonly mode" do
-      it "should return a 503" do
-        Discourse.enable_readonly_mode
+      before { Discourse.enable_readonly_mode }
 
+      it "returns a 503 (GET)" do
         get "/auth/google_oauth2/callback"
-        expect(response.code).to eq("503")
+        expect(response.status).to eq(503)
+      end
+
+      it "returns a 503 (POST)" do
+        post "/auth/google_oauth2/callback"
+        expect(response.status).to eq(503)
       end
     end
 
     context "when in staff writes only mode" do
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
-      it "returns a 503 for non-staff" do
+      it "returns a 503 for non-staff (GET)" do
         mock_auth(user.email, user.username, user.name)
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(503)
-        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-
-        expect(logged_on_user).to eq(nil)
+        expect(Discourse.current_user_provider.new(request.env).current_user).to eq(nil)
       end
 
-      it "completes for staff" do
+      it "returns a 503 for non-staff (POST)" do
+        mock_auth(user.email, user.username, user.name)
+        post "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(503)
+        expect(Discourse.current_user_provider.new(request.env).current_user).to eq(nil)
+      end
+
+      it "completes for admins (GET)" do
         user.update!(admin: true)
         mock_auth(user.email, user.username, user.name)
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(302)
-        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(Discourse.current_user_provider.new(request.env).current_user).to eq(user)
+      end
 
-        expect(logged_on_user).not_to eq(nil)
+      it "completes for moderators (POST)" do
+        user.update!(moderator: true)
+        mock_auth(user.email, user.username, user.name)
+        post "/auth/google_oauth2/callback.json"
+        expect(response.status).to eq(302)
+        expect(Discourse.current_user_provider.new(request.env).current_user).to eq(user)
       end
     end
 
@@ -635,7 +651,6 @@ RSpec.describe Users::OmniauthCallbacksController do
           provider_uid: "123545",
         )
 
-        old_email = user.email
         user.update!(email: "email@example.com")
 
         get "/auth/google_oauth2/callback.json"
@@ -911,8 +926,6 @@ RSpec.describe Users::OmniauthCallbacksController do
           SiteSetting.google_oauth2_hd_groups = true
 
           stub_request(:post, "https://oauth2.googleapis.com/token").to_return do |request|
-            jwt = Rack::Utils.parse_query(request.body)["assertion"]
-            decoded_token = JWT.decode(jwt, private_key.public_key, true, { algorithm: "RS256" })
             {
               status: 200,
               body: { "access_token" => token, "type" => "bearer" }.to_json,
@@ -1005,7 +1018,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context "when attempting reconnect" do
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user2, :user)
       let(:user1_provider_id) { "12345" }
       let(:user2_provider_id) { "123456" }
 

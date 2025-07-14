@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat composer", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }

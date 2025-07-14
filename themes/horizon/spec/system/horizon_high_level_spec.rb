@@ -11,7 +11,7 @@ describe "Horizon theme | High level", type: :system do
       .update_all(user_selectable: true)
     horizon_theme
   end
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:tag_1) { Fabricate(:tag, name: "wow-cool") }
   fab!(:tag_2) { Fabricate(:tag, name: "another-tag") }
   fab!(:category)

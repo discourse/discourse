@@ -737,7 +737,7 @@ RSpec.describe UserNotifications do
 
       context "when several users are mentioned in the same email" do
         fab!(:user1) { Fabricate(:user, name: "Cool User1 Name") }
-        fab!(:user2) { Fabricate(:user) }
+        fab!(:user2, :user)
         fab!(:user3) { Fabricate(:user, name: "Cool User2 Name") }
 
         let(:response) do

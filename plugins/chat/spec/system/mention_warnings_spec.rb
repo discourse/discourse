@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe "Mentions warnings", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -35,7 +35,7 @@ RSpec.describe "Mentions warnings", type: :system do
         fab!(:publicly_mentionable_group) do
           Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
         end
-        fab!(:user_2) { Fabricate(:user) }
+        fab!(:user_2, :user)
 
         context "when the group has too many members" do
           before do

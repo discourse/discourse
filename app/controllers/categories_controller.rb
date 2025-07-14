@@ -29,6 +29,9 @@ class CategoriesController < ApplicationController
                      ]
   skip_before_action :verify_authenticity_token, only: %i[search]
 
+  # The front-end is POSTing data to this endpoint, but we're not modifying anything
+  allow_in_readonly_mode :search
+
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
   MAX_CATEGORIES_LIMIT = 25

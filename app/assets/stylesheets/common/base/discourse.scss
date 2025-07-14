@@ -51,14 +51,15 @@
   --d-tag-font-weight: initial;
   --d-tag-font-size: var(--font-0);
   --d-tag-border-radius: 0;
-  --d-tag-background-color: var(--secondary);
+  --d-tag-background-color: transparent;
   --category-badge-title-color: currentcolor;
   --category-boxes-description-text-color: var(--primary-med-or-secondary-high);
   --d-category-boxes-gap: var(--space-6);
   --category-boxes-title-font-size: var(--font-up-2);
   --d-category-boxes-margin-top: var(--space-4);
-  --d-header-padding-v: 0;
+  --d-header-padding-v: 0.67em;
   --d-table-border-top-height: 3px;
+  --d-wrap-padding-h: 0.67em;
   --topic-title-font-weight: 400;
   --topic-title-font-weight--visited: 400;
   --topic-list-item-background-color: var(--secondary);
@@ -507,7 +508,6 @@ textarea {
 }
 
 .wrap {
-  --d-wrap-padding-h: 0.67em;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;

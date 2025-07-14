@@ -1426,9 +1426,13 @@ end
 #  idx_posts_deleted_posts                                (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
 #  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                                   (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
+#  index_posts_on_deleted_by_id                           (deleted_by_id) WHERE (deleted_by_id IS NOT NULL)
 #  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
+#  index_posts_on_last_editor_id                          (last_editor_id) WHERE (last_editor_id IS NOT NULL)
+#  index_posts_on_locked_by_id                            (locked_by_id) WHERE (locked_by_id IS NOT NULL)
+#  index_posts_on_reply_to_user_id                        (reply_to_user_id) WHERE (reply_to_user_id IS NOT NULL)
 #  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE

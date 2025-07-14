@@ -2,7 +2,7 @@
 
 describe "chat transcripts in rich editor", type: :system do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:channel) { Fabricate(:chat_channel) }
+  fab!(:channel, :chat_channel)
   fab!(:message_1) do
     Fabricate(:chat_message, user: current_user, chat_channel: channel, created_at: 2.days.ago)
   end

@@ -584,7 +584,7 @@ third line`
   });
 
   testCase(
-    `bullet button with no selection`,
+    "unordered list button with no selection",
     async function (assert, textarea) {
       const example = i18n("composer.list_item");
 
@@ -598,23 +598,26 @@ third line`
     }
   );
 
-  testCase(`bullet button with a selection`, async function (assert, textarea) {
-    textarea.selectionStart = 6;
-    textarea.selectionEnd = 11;
+  testCase(
+    "unordered list button with a selection",
+    async function (assert, textarea) {
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 11;
 
-    await click(`button.bullet`);
-    assert.strictEqual(this.value, `hello\n\n* world\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 14);
+      await click(`button.bullet`);
+      assert.strictEqual(this.value, `hello\n\n* world\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 14);
 
-    await click(`button.bullet`);
-    assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 12);
-  });
+      await click(`button.bullet`);
+      assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 12);
+    }
+  );
 
   testCase(
-    `bullet button with a multiple line selection`,
+    "unordered list button with a multiple line selection",
     async function (assert, textarea) {
       this.set("value", "* Hello\n\nWorld\n\nEvil");
 
@@ -633,54 +636,63 @@ third line`
     }
   );
 
-  testCase(`list button with no selection`, async function (assert, textarea) {
-    const example = i18n("composer.list_item");
+  testCase(
+    "ordered list button with no selection",
+    async function (assert, textarea) {
+      const example = i18n("composer.list_item");
 
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello world.\n\n1. ${example}`);
-    assert.strictEqual(textarea.selectionStart, 14);
-    assert.strictEqual(textarea.selectionEnd, 17 + example.length);
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello world.\n\n1. ${example}`);
+      assert.strictEqual(textarea.selectionStart, 14);
+      assert.strictEqual(textarea.selectionEnd, 17 + example.length);
 
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello world.\n\n${example}`);
-    assert.strictEqual(textarea.selectionStart, 14);
-    assert.strictEqual(textarea.selectionEnd, 14 + example.length);
-  });
-
-  testCase(`list button with a selection`, async function (assert, textarea) {
-    textarea.selectionStart = 6;
-    textarea.selectionEnd = 11;
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello\n\n1. world\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 15);
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
-    assert.strictEqual(textarea.selectionStart, 7);
-    assert.strictEqual(textarea.selectionEnd, 12);
-  });
-
-  testCase(`list button with line sequence`, async function (assert, textarea) {
-    this.set("value", "Hello\n\nWorld\n\nEvil");
-
-    textarea.selectionStart = 0;
-    textarea.selectionEnd = 18;
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, "1. Hello\n\n2. World\n\n3. Evil");
-    assert.strictEqual(textarea.selectionStart, 0);
-    assert.strictEqual(textarea.selectionEnd, 27);
-
-    await click(`button.list`);
-    assert.strictEqual(this.value, "Hello\n\nWorld\n\nEvil");
-    assert.strictEqual(textarea.selectionStart, 0);
-    assert.strictEqual(textarea.selectionEnd, 18);
-  });
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello world.\n\n${example}`);
+      assert.strictEqual(textarea.selectionStart, 14);
+      assert.strictEqual(textarea.selectionEnd, 14 + example.length);
+    }
+  );
 
   testCase(
-    "list button does not reset undo history",
+    "ordered list button with a selection",
+    async function (assert, textarea) {
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 11;
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello\n\n1. world\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 15);
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
+      assert.strictEqual(textarea.selectionStart, 7);
+      assert.strictEqual(textarea.selectionEnd, 12);
+    }
+  );
+
+  testCase(
+    "ordered list button with line sequence",
+    async function (assert, textarea) {
+      this.set("value", "Hello\n\nWorld\n\nEvil");
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 18;
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, "1. Hello\n\n2. World\n\n3. Evil");
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 27);
+
+      await click(`button.list`);
+      assert.strictEqual(this.value, "Hello\n\nWorld\n\nEvil");
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 18);
+    }
+  );
+
+  testCase(
+    "ordered list button does not reset undo history",
     async function (assert, textarea) {
       this.set("value", "existing");
       textarea.selectionStart = 0;
@@ -692,6 +704,86 @@ third line`
       document.execCommand("undo");
 
       assert.strictEqual(this.value, "existing");
+    }
+  );
+
+  testCase(
+    "heading button with no selection",
+    async function (assert, textarea) {
+      this.set("value", "");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 0;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-2"]');
+
+      assert.strictEqual(
+        this.value,
+        "## Heading",
+        "it adds a placeholder and selects it"
+      );
+      assert.strictEqual(textarea.selectionStart, 3);
+      assert.strictEqual(textarea.selectionEnd, 10);
+    }
+  );
+
+  testCase(
+    "heading button with a selection",
+    async function (assert, textarea) {
+      this.set("value", "Hello world");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 11;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-2"]');
+
+      assert.strictEqual(
+        this.value,
+        "## Hello world",
+        "it applies heading 2 and selects the text"
+      );
+      assert.strictEqual(textarea.selectionStart, 3);
+      assert.strictEqual(textarea.selectionEnd, 14);
+    }
+  );
+
+  testCase(
+    "heading button with a selection and existing heading",
+    async function (assert, textarea) {
+      this.set("value", "## Hello world");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 14;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-4"]');
+
+      assert.strictEqual(
+        this.value,
+        "#### Hello world",
+        "it applies heading 4 and selects the text"
+      );
+      assert.strictEqual(textarea.selectionStart, 5);
+      assert.strictEqual(textarea.selectionEnd, 16);
+    }
+  );
+
+  testCase(
+    "heading button with a selection and existing heading converting to paragraph",
+    async function (assert, textarea) {
+      this.set("value", "## Hello world");
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 14;
+
+      await click("button.heading");
+      await click('.btn[data-name="heading-paragraph"]');
+
+      assert.strictEqual(
+        this.value,
+        "Hello world",
+        "it applies paragraph and selects the text"
+      );
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 11);
     }
   );
 

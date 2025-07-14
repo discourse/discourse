@@ -3,7 +3,7 @@
 RSpec.describe TopicConverter do
   describe "convert_to_public_topic" do
     fab!(:admin)
-    fab!(:author) { Fabricate(:user) }
+    fab!(:author, :user)
     fab!(:category) { Fabricate(:category, topic_count: 1) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) } # creates a topic without a first post
     let(:first_post) do
@@ -132,7 +132,7 @@ RSpec.describe TopicConverter do
 
   describe "convert_to_private_message" do
     fab!(:admin)
-    fab!(:author) { Fabricate(:user) }
+    fab!(:author, :user)
     fab!(:category)
     fab!(:topic) { Fabricate(:topic, user: author, category_id: category.id) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }

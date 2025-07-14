@@ -23,7 +23,7 @@ RSpec.describe User::Silence do
 
     fab!(:admin)
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     let(:params) { { user_id:, reason:, silenced_till:, other_user_ids:, message: } }
     let(:dependencies) { { guardian: } }

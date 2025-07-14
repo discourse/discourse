@@ -109,14 +109,15 @@ class ApplicationLayoutPreloader
   end
 
   def preload_anonymous_data
+    check_readonly_mode if @readonly_mode.nil?
     @preloaded["site"] = Site.json_for(@guardian)
     @preloaded["siteSettings"] = SiteSetting.client_settings_json
     @preloaded["themeSiteSettingOverrides"] = SiteSetting.theme_site_settings_json(@theme_id)
     @preloaded["customHTML"] = custom_html_json
     @preloaded["banner"] = banner_json
     @preloaded["customEmoji"] = custom_emoji
-    @preloaded["isReadOnly"] = get_or_check_readonly_mode.to_json
-    @preloaded["isStaffWritesOnly"] = get_or_check_staff_writes_only_mode.to_json
+    @preloaded["isReadOnly"] = @readonly_mode.to_json
+    @preloaded["isStaffWritesOnly"] = @staff_writes_only_mode.to_json
     @preloaded["activatedThemes"] = activated_themes_json
   end
 

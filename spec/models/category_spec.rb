@@ -88,7 +88,7 @@ RSpec.describe Category do
 
   describe "#category_moderation_groups" do
     fab!(:group)
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:category_moderation_group) { Fabricate(:category_moderation_group, category:, group:) }
@@ -114,7 +114,7 @@ RSpec.describe Category do
 
     fab!(:admin)
 
-    fab!(:default_category) { Fabricate(:category_with_definition) }
+    fab!(:default_category, :category_with_definition)
 
     fab!(:full_category) do
       c = Fabricate(:category_with_definition)
@@ -208,8 +208,8 @@ RSpec.describe Category do
   end
 
   describe "security" do
-    fab!(:category) { Fabricate(:category_with_definition) }
-    fab!(:category_2) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
+    fab!(:category_2, :category_with_definition)
     fab!(:user)
     fab!(:group)
 
@@ -876,7 +876,7 @@ RSpec.describe Category do
   end
 
   describe "require topic/post approval" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     it "delegates methods to category settings" do
       expect(category).to delegate_method(:require_reply_approval).to(:category_setting)
@@ -1014,7 +1014,7 @@ RSpec.describe Category do
   describe "validate permissions compatibility" do
     fab!(:admin)
     fab!(:group)
-    fab!(:group2) { Fabricate(:group) }
+    fab!(:group2, :group)
     fab!(:parent_category) { Fabricate(:category_with_definition, name: "parent") }
     fab!(:subcategory) do
       Fabricate(:category_with_definition, name: "child1", parent_category_id: parent_category.id)
@@ -1399,7 +1399,7 @@ RSpec.describe Category do
   describe "allowed_tags=" do
     let(:category) { Fabricate(:category) }
     fab!(:tag)
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag2, :tag)
 
     before { SiteSetting.tagging_enabled = true }
 

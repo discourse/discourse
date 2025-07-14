@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe "Shortcuts | drawer", type: :system do
-  fab!(:user_1) { Fabricate(:admin) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:channel_2) { Fabricate(:chat_channel) }
+  fab!(:user_1, :admin)
+  fab!(:channel_1, :chat_channel)
+  fab!(:channel_2, :chat_channel)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }

@@ -3,7 +3,7 @@
 RSpec.describe "React to message", type: :system do
   fab!(:current_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
   fab!(:other_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
+  fab!(:category_channel_1, :category_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
   let(:chat) { PageObjects::Pages::Chat.new }

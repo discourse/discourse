@@ -9,7 +9,7 @@ RSpec.describe Chat::CreateMessageInteraction do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:message) do
       Fabricate(
         :chat_message,
@@ -61,7 +61,7 @@ RSpec.describe Chat::CreateMessageInteraction do
     end
 
     context "when user doesn't have access to the channel" do
-      fab!(:channel) { Fabricate(:private_category_channel) }
+      fab!(:channel, :private_category_channel)
 
       before { message.update!(chat_channel: channel) }
 

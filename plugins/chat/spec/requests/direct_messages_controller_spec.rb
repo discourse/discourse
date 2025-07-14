@@ -2,9 +2,9 @@
 
 RSpec.describe Chat::DirectMessagesController do
   fab!(:user)
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
+  fab!(:user3, :user)
 
   before do
     SiteSetting.chat_enabled = true
@@ -52,7 +52,7 @@ RSpec.describe Chat::DirectMessagesController do
       end
 
       context "with more than two users" do
-        fab!(:user3) { Fabricate(:user) }
+        fab!(:user3, :user)
         before { channel.chatable.direct_message_users.create!(user_id: user3.id) }
 
         it "returns the channel" do

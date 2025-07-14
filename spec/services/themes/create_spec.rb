@@ -147,7 +147,7 @@ RSpec.describe Themes::Create do
         end
 
         context "when there is an existing default theme" do
-          fab!(:existing_default) { Fabricate(:theme) }
+          fab!(:existing_default, :theme)
 
           before { existing_default.set_default! }
 

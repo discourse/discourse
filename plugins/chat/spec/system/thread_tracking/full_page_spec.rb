@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "Thread tracking state | full page", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
   fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -102,7 +102,7 @@ describe "Thread tracking state | full page", type: :system do
     end
 
     describe "sidebar unread indicators" do
-      fab!(:other_channel) { Fabricate(:chat_channel) }
+      fab!(:other_channel, :chat_channel)
 
       before do
         other_channel.add(current_user)

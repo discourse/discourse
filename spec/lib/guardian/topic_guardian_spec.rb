@@ -3,8 +3,8 @@
 RSpec.describe TopicGuardian do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
-  fab!(:tl3_user) { Fabricate(:trust_level_3) }
-  fab!(:tl4_user) { Fabricate(:trust_level_4) }
+  fab!(:tl3_user, :trust_level_3)
+  fab!(:tl4_user, :trust_level_4)
   fab!(:moderator)
   fab!(:category)
   fab!(:group)

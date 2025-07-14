@@ -135,8 +135,17 @@ RSpec.describe Admin::EmailLogsController do
 
   describe "#skipped" do
     # fab!(:user)
-    fab!(:log1) { Fabricate(:skipped_email_log, user: user, created_at: 20.minutes.ago) }
-    fab!(:log2) { Fabricate(:skipped_email_log, created_at: 10.minutes.ago) }
+    fab!(:log1) do
+      Fabricate(
+        :skipped_email_log,
+        to_address: "test@example.com",
+        user: user,
+        created_at: 20.minutes.ago,
+      )
+    end
+    fab!(:log2) do
+      Fabricate(:skipped_email_log, to_address: "different@example.com", created_at: 10.minutes.ago)
+    end
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -158,6 +167,17 @@ RSpec.describe Admin::EmailLogsController do
 
           expect(response.status).to eq(200)
 
+          logs = response.parsed_body
+
+          expect(logs.count).to eq(1)
+          expect(logs.first["id"]).to eq(log1.id)
+        end
+      end
+
+      context "when filtered by address" do
+        it "should return the right response" do
+          get "/admin/email-logs/skipped.json", params: { address: "test@example" }
+          expect(response.status).to eq(200)
           logs = response.parsed_body
 
           expect(logs.count).to eq(1)
