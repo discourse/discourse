@@ -82,6 +82,10 @@ discourse-data-explorer:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-data-explorer/**/*
 
+discourse-post-voting:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-post-voting/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

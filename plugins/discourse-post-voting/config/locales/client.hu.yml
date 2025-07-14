@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span>%{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Nem lehet rövidebb, mint %{count} karakter"
+              other: "Nem lehet rövidebb, mint %{count} karakter"
+          edit: "szerkesztés"
+          cancel: "mégse"
+          user:
+            deleted: "(felhasználó törölve)"
+          reviewables:
+            actions:
+              agree_and_suspend:
+                title: "Felhasználó felfüggesztése"
+                description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
+              agree_and_silence:
+                title: "Felhasználó némítása"
+                description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
+              disagree:
+                title: "Elutasítás"
+      topic:
+        sort_by: "Rendezés"
+        activity: "Tevékenység"

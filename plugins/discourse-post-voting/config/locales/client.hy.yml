@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Մուտքագրեք առնվազն %{count} սիմվոլ"
+              other: "Մուտքագրեք առնվազն %{count} սիմվոլ"
+          edit: "խմբագրել"
+          cancel: "չեղարկել"
+          user:
+            deleted: "(օգտատերը ջնջված է)"
+          reviewables:
+            actions:
+              agree_and_suspend:
+                title: "Սառեցնել Օգտատիրոջը"
+                description: "Ընդունել դրոշակավորումը և սառեցնել օգտատիրոջը:"
+              agree_and_silence:
+                title: "Լռեցնել Օգտատիրոջը"
+                description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
+              disagree:
+                title: "Չընդունել"
+      topic:
+        sort_by: "Դասավորել ըստ"
+        activity: "Ակտիվության"

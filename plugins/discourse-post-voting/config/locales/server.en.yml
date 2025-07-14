@@ -1,0 +1,104 @@
+en:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Post voting is not enabled."
+        replying_to_post_not_permited: "You are not allowed to create a post in reply to another post."
+        voting_not_permitted: "You are not allowed to vote on this post."
+        comment_cannot_be_downvoted: "You can only upvote comments."
+        self_voting_not_permitted: "You are not allowed to vote on your own post or comment."
+        vote_archived_topic: "You cannot vote on archived topics."
+        vote_closed_topic: "You cannot vote on closed topics."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Post voting is not enabled."
+        subtype_not_allowed: "The Post Voting subtype can only be used with regular topics."
+        cannot_change_to_post_voting_subtype: "Changing a topic's subtype to Post Voting is not permitted."
+      answer_count:
+        one: "%{count} Answer"
+        other: "%{count} Answers"
+
+  site_settings:
+    qa_tags: "Tags to enable post voting on topic"
+    post_voting_enabled: "Enable Post Voting Plugin"
+    post_voting_enable_likes_on_answers: "Enable like button on replies on Post Voting topics"
+    post_voting_undo_vote_action_window: "Number of minutes users are allowed to undo votes in Post Voting topics (enter 0 for no limit)"
+    post_voting_comment_limit_per_post: "Number of comments allowed on each post"
+    min_trust_to_flag_posts_voting_comments: "Minimum trust level to flag a post voting comment"
+    flag_posts_voting_comments_allowed_groups: "Groups allowed to flag a post voting comment"
+
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+
+
+  post_action_types:
+    vote:
+      title: "Vote"
+      description: "Vote for this post"
+      short_description: "Vote for this post"
+      long_form: "voted for this post"
+
+  vote:
+    error:
+      user_has_not_voted: "User has not voted."
+      user_over_limit: "You cannot exceed the number of votes for your trust level."
+      already_voted: "You can only vote once per question."
+      undo_vote_action_window:
+        one: "You cannot undo vote %{count} minute after voting."
+        other: "You cannot undo vote %{count} minutes after voting."
+      one_vote_per_post: "You can only vote once for each post."
+      one_vote_per_comment: "You can only vote once for each comment."
+
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "Commenting on a post that is not in a Post Voting topic is not permitted."
+        not_permitted: "Commenting on associated post is not permitted."
+        limit_exceeded: "Limit of %{limit} comments per post has been reached."
+        perform: "Post Voting Comment flagged with score high enough to silence user."
+        auto_silence_from_flags: "Automatically silenced due to flagging."
+      reviewables:
+        comment_already_handled: "Thanks, but we've already reviewed this comment and determined it does not need to be flagged again."
+        actions:
+          agree:
+          agree_and_keep_comment:
+            title: "Keep comment"
+            description: "Agree with flag and keep the comment unchanged."
+          agree_and_keep_deleted:
+            title: "Keep comment Deleted"
+            description: "Agree with flag and leave the comment deleted."
+          agree_and_suspend:
+            title: "Suspend User"
+            description: "Agree with flag and suspend the user."
+          agree_and_silence:
+            title: "Silence User"
+            description: "Agree with flag and silence the user."
+          agree_and_restore:
+            title: "Restore comment"
+            description: "Restore the comment so that users can see it."
+          agree_and_delete:
+            title: "Delete comment"
+            description: "Delete the comment so that users cannot see it."
+          delete_and_agree:
+            title: "Ignore Flag and Delete comment"
+            description: "Ignore the flag by removing it from the queue and delete the comment."
+          disagree_and_restore:
+            title: "Disagree and Restore comment"
+            description: "Restore the comment so that all users can see it."
+          disagree:
+            title: "Disagree"
+          ignore:
+            title: "Do Nothing"
+            description: "Ignore the flag by removing it from the queue without taking any action."
+        transcript:
+          view: "View previous comments transcript"
+      reviewable_score_types:
+        needs_review:
+          title: "Needs Review"
+        notify_user:
+          comment_pm_title: "Your post voting comment"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "A post voting comment requires staff attention"
+          comment_pm_body: "%{link}\n\n%{comment}"

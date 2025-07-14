@@ -1,0 +1,107 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Голосование по сообщениям не включено."
+        replying_to_post_not_permited: "Вы не можете создать сообщение в ответ на другое сообщение."
+        voting_not_permitted: "Вы не можете голосовать за это сообщение."
+        comment_cannot_be_downvoted: "Вы можете голосовать только за комментарии."
+        self_voting_not_permitted: "Вы не можете голосовать за собственное сообщение или комментарий."
+        vote_archived_topic: "Нельзя голосовать по архивным темам."
+        vote_closed_topic: "Нельзя голосовать по закрытым темам."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Голосование по сообщениям не включено."
+        subtype_not_allowed: "Подтип «Голосование по сообщениям» можно использовать только с обычными темами."
+        cannot_change_to_post_voting_subtype: "Переключение на формат «Голосование по сообщениям» не допускается."
+      answer_count:
+        one: "%{count} ответ"
+        few: "%{count} ответа"
+        many: "%{count} ответов"
+        other: "%{count} ответа"
+  site_settings:
+    qa_tags: "Теги для переключения темы в формат «Голосование по сообщениям»"
+    post_voting_enabled: "Включить плагин «Голосование по публикациям»"
+    post_voting_enable_likes_on_answers: "Включить лайки в ответах тем формата «Голосование по публикациям»"
+    post_voting_undo_vote_action_window: "Количество минут, в течение которых пользователям разрешено отменять голоса в темах формата «Голосование по публикациям» (0 — не ограничивать время)"
+    post_voting_comment_limit_per_post: "Максимальное количество комментариев к каждой публикации"
+    min_trust_to_flag_posts_voting_comments: "Минимальный уровень доверия для жалобы на комментарий в режиме «Голосование по публикациям»"
+    flag_posts_voting_comments_allowed_groups: "Группам разрешено жаловаться на комментарии в режиме «Голосование по публикациям»"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "Голосовать"
+      description: "Проголосовать за эту запись"
+      short_description: "Проголосовать за эту запись"
+      long_form: "проголосовал(а) за эту запись"
+  vote:
+    error:
+      user_has_not_voted: "Пользователь не проголосовал."
+      user_over_limit: "Нельзя превышать количество голосов, установленное для вашего уровня доверия."
+      already_voted: "Проголосовать можно только один раз за вопрос."
+      undo_vote_action_window:
+        one: "Вы не можете отменить голос по истечении %{count} минуты после голосования."
+        few: "Вы не можете отменить голос по истечении %{count} минут после голосования."
+        many: "Вы не можете отменить голос по истечении %{count} минут после голосования."
+        other: "Вы не можете отменить голос по истечении %{count} минуты после голосования."
+      one_vote_per_post: "Проголосовать можно только один раз на каждую запись."
+      one_vote_per_comment: "Проголосовать можно только один раз на каждый комментарий."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "Комментирование сообщения, не относящегося к теме в формате «Голосование по сообщениям», не допускается."
+        not_permitted: "Комментирование связанного сообщения не допускается."
+        limit_exceeded: "Достигнут лимит комментариев на одно сообщение: %{limit}."
+        perform: "На комментарий к публикации с голосованием поступило достаточно много жалоб, чтобы заморозить пользователя."
+        auto_silence_from_flags: "Автоматическая заморозка из-за жалобы."
+      reviewables:
+        comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."
+        actions:
+          agree_and_keep_comment:
+            title: "Сохранить комментарий"
+            description: "Согласиться с жалобой, но оставить комментарий без изменений."
+          agree_and_keep_deleted:
+            title: "Оставить комментарий удаленным"
+            description: "Согласиться с жалобой и оставить комментарий удаленным."
+          agree_and_suspend:
+            title: "Блокировка пользователя"
+            description: "Согласиться с жалобой и заблокировать пользователя."
+          agree_and_silence:
+            title: "Заморозка пользователя"
+            description: "Согласиться с жалобой и заморозить пользователя."
+          agree_and_restore:
+            title: "Восстановить комментарий"
+            description: "Восстановить комментарий, чтобы пользователи могли его видеть."
+          agree_and_delete:
+            title: "Удалить комментарий"
+            description: "Удалить комментарий, чтобы пользователи не могли его видеть."
+          delete_and_agree:
+            title: "Игнорировать жалобу и удалить комментарий"
+            description: "Проигнорировать жалобу, удалив ее из очереди, и удалить комментарий."
+          disagree_and_restore:
+            title: "Отклонить жалобу и восстановить комментарий"
+            description: "Восстановить комментарий, чтобы все пользователи могли его видеть."
+          disagree:
+            title: "Отклонить"
+          ignore:
+            title: "Ничего не делать"
+            description: "Проигнорировать жалобу, удалив ее из очереди, не предпринимая никаких действий."
+        transcript:
+          view: "Просмотр содержимого предыдущих комментариев"
+      reviewable_score_types:
+        needs_review:
+          title: "Требуется проверка"
+        notify_user:
+          comment_pm_title: "Ваш комментарий к публикации с голосованием"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "Комментарий к публикации с голосованием требует внимания персонала"
+          comment_pm_body: "%{link}\n\n%{comment}"

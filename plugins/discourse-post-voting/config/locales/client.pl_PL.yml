@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  post_voting:
+    reviewables:
+      comment_already_handled: "Dziękujemy, ale sprawdziliśmy już ten komentarz i stwierdziliśmy, że nie ma potrzeby jego ponownego oznaczania."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "nowy komentarz"
+    composer:
+      composer_actions:
+        remove_as_post_voting:
+          desc: "Temat zostanie utworzony w zwykłym formacie"
+    vote:
+      already_voted: "Na jedno pytanie można oddać tylko jeden głos."
+      user_over_limit: "Nie możesz przekroczyć liczby głosów odpowiadającej Twojemu poziomowi zaufania."
+      one_vote_per_post: "Na każdy post można oddać tylko jeden głos."
+    last_answer_lowercase: ostatnia odpowiedź
+    answer_lowercase:
+      one: odpowiedź
+      few: odpowiedzi
+      many: odpowiedzi
+      other: odpowiedzi
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Wprowadź co najmniej %{count} znak"
+              few: "Wprowadź co najmniej %{count} znaki"
+              many: "Wprowadź co najmniej %{count} znaków"
+              other: "Wprowadź co najmniej %{count} znaki"
+            length_ok:
+              one: "Pozostał %{count} znak..."
+              few: "Pozostały %{count} znaki..."
+              many: "Pozostało %{count} znaków..."
+              other: "Pozostało %{count} znaków..."
+            too_long:
+              one: "Komentarz nie może być dłuższy niż %{count} znak"
+              few: "Komentarz nie może być dłuższy niż %{count} znaki"
+              many: "Komentarz nie może być dłuższy niż %{count} znaków"
+              other: "Komentarz nie może być dłuższy niż %{count} znaków"
+          submit: "Dodaj komentarz"
+          edit: "edytuj"
+          cancel: "anuluj"
+          add: "Dodaj komentarz"
+          show:
+            one: Pokaż jeszcze %{count} komentarz
+            few: Pokaż jeszcze %{count} komentarze
+            many: Pokaż jeszcze %{count} komentarzy
+            other: Pokaż %{count} więcej komentarzy
+          delete:
+            confirm: "Czy na pewno chcesz usunąć ten komentarz?"
+          user:
+            deleted: "(użytkownik usunięty)"
+          reviewables:
+            comment_already_handled: "Dziękujemy, ale sprawdziliśmy już ten komentarz i stwierdziliśmy, że nie ma potrzeby jego ponownego oznaczania."
+            actions:
+              agree:
+                title: "Zgadzam się..."
+              agree_and_keep_comment:
+                title: "Zachowaj komentarz"
+                description: "Zgadzam się z flagą i pozostawię komentarz bez zmian."
+              agree_and_keep_deleted:
+                title: "Zachowaj komentarz usunięty"
+                description: "Zgadzam się z flagą i pozostawię komentarz usunięty."
+              agree_and_suspend:
+                title: "Zawieś użytkownika"
+                description: "Zgódź się z flagą i zawieś konto użytkownika."
+              agree_and_silence:
+                title: "Wycisz użytkownika"
+                description: "Zgódź się z flagą i wycisz użytkownika."
+              agree_and_restore:
+                title: "Przywróć komentarz"
+                description: "Przywróć komentarz, aby użytkownicy mogli go zobaczyć."
+              agree_and_delete:
+                title: "Usuń komentarz"
+                description: "Usuń komentarz, aby użytkownicy nie mogli go zobaczyć."
+              disagree_and_restore:
+                description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
+              disagree:
+                title: "Wycofaj"
+              ignore:
+                title: "Nic nie rób"
+                description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+      topic:
+        sort_by: "Sortuj po"
+        votes: "Głosy"
+        activity: "Aktywność"
+        answer_count:
+          one: "%{count} odpowiedź"
+          few: "%{count} odpowiedzi"
+          many: "%{count} odpowiedzi"
+          other: "%{count} odpowiedzi"
+    review:
+      transcript:
+        view: "Zobacz transkrypcję poprzednich wiadomości"

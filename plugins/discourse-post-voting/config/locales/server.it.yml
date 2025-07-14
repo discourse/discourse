@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "La votazione dei messaggi non è abilitata."
+        replying_to_post_not_permited: "Non sei autorizzato a creare un messaggio in risposta a un altro messaggio."
+        voting_not_permitted: "Non sei autorizzato a votare su questo messaggio."
+        comment_cannot_be_downvoted: "Puoi solo votare a favore dei commenti."
+        self_voting_not_permitted: "Non sei autorizzato a votare il tuo stesso messaggio o commento."
+        vote_archived_topic: "Non puoi votare su argomenti archiviati."
+        vote_closed_topic: "Non puoi votare su argomenti chiusi."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "La votazione dei messaggi non è abilitata."
+        subtype_not_allowed: "Il sottotipo Votazione dei messaggi può essere utilizzato solo con argomenti normali."
+        cannot_change_to_post_voting_subtype: "Non è consentito modificare il sottotipo di un argomento con votazione dei messaggi."
+      answer_count:
+        one: "%{count} risposta"
+        other: "%{count} risposte"
+  site_settings:
+    qa_tags: "Etichette per abilitare la votazione dei messaggi sull'argomento"
+    post_voting_enabled: "Abilita il plugin per la votazione dei messaggi"
+    post_voting_enable_likes_on_answers: "Abilita il pulsante Mi piace nelle risposte agli argomenti con votazione dei messaggi"
+    post_voting_undo_vote_action_window: "Numero di minuti consentiti agli utenti per annullare i voti negli argomenti con votazione dei messaggi (inserisci 0 per non definire alcun limite)"
+    post_voting_comment_limit_per_post: "Numero di commenti consentiti su ogni messaggio"
+    min_trust_to_flag_posts_voting_comments: "Livello di attendibilità minimo per contrassegnare un commento di votazione dei messaggi"
+    flag_posts_voting_comments_allowed_groups: "Gruppi autorizzati a contrassegnare un commento di votazione dei messaggi"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "Vota"
+      description: "Vota per questo messaggio"
+      short_description: "Vota per questo messaggio"
+      long_form: "ha votato per questo messaggio"
+  vote:
+    error:
+      user_has_not_voted: "L'utente non ha votato."
+      user_over_limit: "Non puoi superare il numero di voti per il tuo livello di attendibilità."
+      already_voted: "Puoi votare una sola volta per domanda."
+      undo_vote_action_window:
+        one: "Non puoi annullare il voto %{count} minuto dopo la votazione."
+        other: "Non puoi annullare la votazione %{count} minuti dopo la votazione."
+      one_vote_per_post: "Puoi votare una sola volta per messaggio."
+      one_vote_per_comment: "Puoi votare una sola volta per ogni commento."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "Non è consentito commentare un messaggio che non è in un argomento con votazione dei messaggi."
+        not_permitted: "Non è consentito commentare messaggi associati."
+        limit_exceeded: "È stato raggiunto il limite di %{limit} commenti per messaggio."
+        perform: "Commento di votazione di messaggio contrassegnato con un punteggio sufficientemente alto per silenziare l'utente."
+        auto_silence_from_flags: "Silenziato automaticamente a causa della segnalazione."
+      reviewables:
+        comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
+        actions:
+          agree_and_keep_comment:
+            title: "Mantieni il commento"
+            description: "Accetta la segnalazione e mantieni invariato il commento."
+          agree_and_keep_deleted:
+            title: "Mantieni il commento cancellato"
+            description: "Accetta segnalazione e conferma eliminazione del commento."
+          agree_and_suspend:
+            title: "Sospendi utente"
+            description: "Accetta segnalazione e sospendi l'utente."
+          agree_and_silence:
+            title: "Silenzia utente"
+            description: "Accetta segnalazione e silenzia l'utente."
+          agree_and_restore:
+            title: "Ripristina il commento"
+            description: "Ripristina il commento in modo che gli utenti possano vederlo."
+          agree_and_delete:
+            title: "Elimina il commento"
+            description: "Elimina il commento in modo che gli utenti non possano vederlo."
+          delete_and_agree:
+            title: "Ignora segnalazione ed elimina commento"
+            description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il commento."
+          disagree_and_restore:
+            title: "Esprimi disaccordo e ripristina il commento"
+            description: "Ripristina il commento in modo che tutti gli utenti possano vederlo."
+          disagree:
+            title: "Rifiuta"
+          ignore:
+            title: "Non fare nulla"
+            description: "Ignora la segnalazione rimuovendola dalla coda senza intraprendere alcuna azione."
+        transcript:
+          view: "Visualizza la trascrizione dei commenti precedenti"
+      reviewable_score_types:
+        needs_review:
+          title: "Necessita di revisione"
+        notify_user:
+          comment_pm_title: "Il tuo commento sulla votazione del messaggio"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "Un commento di votazione dei messaggi richiede l'attenzione dello staff"
+          comment_pm_body: "%{link}\n\n%{comment}"

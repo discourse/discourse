@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  post_action_types:
+    vote:
+      title: "بېلەت تاشلاش"
+  post_voting:
+    comment:
+      reviewables:
+        actions:
+          agree_and_suspend:
+            title: "توختىتىلغان ئىشلەتكۈچى"
+            description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى توختىتىدۇ."
+          agree_and_silence:
+            title: "ئىشلەتكۈچىنى ئۈنسىزلە"
+            description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى ئۈنسىزلەيدۇ."
+          disagree:
+            title: "قوشۇلما"
+          ignore:
+            title: "ھېچ ئىش قىلما"
+            description: "پاش قىلىشنى ئۆچرەتتىن چىقىرىۋېتىپ پەرۋا قىلماي، ھېچقانداق مەشغۇلات قىلمايدۇ."
+      reviewable_score_types:
+        needs_review:
+          title: "تەستىقلاش كېرەك"
+        notify_user:
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_body: "%{link}\n\n%{comment}"

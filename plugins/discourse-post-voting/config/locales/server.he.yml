@@ -1,0 +1,107 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "מצב שו\"ת אינו מופעל."
+        replying_to_post_not_permited: "אסור לך ליצור פוסט בתגובה לפוסט אחר."
+        voting_not_permitted: "אסור לך להצביע לפוסט זה."
+        comment_cannot_be_downvoted: "אפשר להצביע לתגובות בלבד."
+        self_voting_not_permitted: "אסור לך להצביע על פוסט או תגובה שלך."
+        vote_archived_topic: "אי אפשר להצביע לנושאים בארכיון."
+        vote_closed_topic: "אי אפשר להצביע לנושאים סגורים."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "מצב שו\"ת אינו מופעל."
+        subtype_not_allowed: "ניתן ליצור נושאים בתבנית שו\"ת רק על גבי נושאים רגילים."
+        cannot_change_to_post_voting_subtype: "לא ניתן להחליף נושאים בתבנית שו\"ת."
+      answer_count:
+        one: "תשובה %{count}"
+        two: "%{count} תשובות"
+        many: "%{count} תשובות"
+        other: "%{count} תשובות"
+  site_settings:
+    qa_tags: "תגיות להפעלת שו\"ת על נושא"
+    post_voting_enabled: "הפעלת תוסף הצבעה על פוסטים"
+    post_voting_enable_likes_on_answers: "הפעלת כפתור לייק על נושאים של הצבעה על פוסטים"
+    post_voting_undo_vote_action_window: "מספר הדקות שמשתמשים רשאים לבטל הצבעות בנושאי הצבעות על פוסטים (0 להסרת ההגבלה)"
+    post_voting_comment_limit_per_post: "מספר התגובות המותר על כל פוסט"
+    min_trust_to_flag_posts_voting_comments: "דרגת האמון המזערית לסימון הערת הצבעה על פוסט"
+    flag_posts_voting_comments_allowed_groups: "קבוצות שמורשות לסמן הערת הצבעה לפוסט"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments (דרגת אמון מזערית לסימון הערות הצבעה על פוסטים)"
+  post_action_types:
+    vote:
+      title: "הצבעה"
+      description: "הצבעה לפוסט"
+      short_description: "הצבעה עבור פוסט"
+      long_form: "הצבעת עבור הפוסט"
+  vote:
+    error:
+      user_has_not_voted: "משתמש לא הצביע."
+      user_over_limit: "אסור לחרוג מכמות ההצבעות לדרגת האמון שלך."
+      already_voted: "אפשר להצביע רק פעם אחת לכל שאלה."
+      undo_vote_action_window:
+        one: "אי אפשר לבטל הצבעה דקה %{count} לאחר ההצבעה."
+        two: "אי אפשר לבטל הצבעה %{count} דקות לאחר ההצבעה."
+        many: "אי אפשר לבטל הצבעה %{count} דקות לאחר ההצבעה."
+        other: "אי אפשר לבטל הצבעה %{count} דקות לאחר ההצבעה."
+      one_vote_per_post: "אפשר להצביע רק פעם אחת לכל פוסט."
+      one_vote_per_comment: "אפשר להצביע רק פעם אחת לכל תגובה."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "לא ניתן להגיב על פוסט שאינו בתבנית שו\"ת."
+        not_permitted: "הוספת תגובה על פוסט משויך אסורה."
+        limit_exceeded: "הגעת למגבלה של %{limit} תגובות לפוסט."
+        perform: "הערת הצבעת פוסט סומנה עם ניקוד גבוה מספיק כדי להשתיק את המשתמש."
+        auto_silence_from_flags: "הושתק אוטומטית עקב סימון."
+      reviewables:
+        comment_already_handled: "תודה לך, כבר בדקנו את התגובה הזאת והחלטנו שאין צורך לסמן אותה בדגל פעם נוספת."
+        actions:
+          agree_and_keep_comment:
+            title: "להשאיר את התגובה"
+            description: "הבעת הסכמה עם הדגל והשארת התגובה ללא שינוי."
+          agree_and_keep_deleted:
+            title: "להשאיר את התגובה מחוקה"
+            description: "הבעת הסכמה עם הדגל והשארת התגובה מחוקה."
+          agree_and_suspend:
+            title: "השעיית משתמש"
+            description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
+          agree_and_silence:
+            title: "השתקת משתמש"
+            description: "הבעת הסכמה עם הדגל והשתקת המשתמש."
+          agree_and_restore:
+            title: "שחזור תגובה"
+            description: "לשחזר את התגובה כדי שמשתמשים יוכלו לראות אותה."
+          agree_and_delete:
+            title: "מחיקת תגובה"
+            description: "למחוק את התגובה כדי שמשתמשים לא יוכלו לראות אותה."
+          delete_and_agree:
+            title: "התעלמות מהדגל ומחיקת התגובה"
+            description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת התגובה."
+          disagree_and_restore:
+            title: "לסרב ולשחזר תגובה"
+            description: "לשחזר את התגובה כדי שכל המשתמשים יוכלו לראות אותה."
+          disagree:
+            title: "אי קבלה"
+          ignore:
+            title: "לא לעשות דבר"
+            description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
+        transcript:
+          view: "הצגת תמליל התגובות הקודמות"
+      reviewable_score_types:
+        needs_review:
+          title: "דורש סקירה"
+        notify_user:
+          comment_pm_title: "הערת הצבעה שלך על פוסט"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "הערת הצבעה על פוסטים דורשת את תשומת לב הסגל"
+          comment_pm_body: "%{link}\n\n%{comment}"
