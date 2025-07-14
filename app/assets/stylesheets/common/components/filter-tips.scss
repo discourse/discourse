@@ -1,0 +1,62 @@
+.filter-tips {
+  position: relative;
+
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    box-shadow: var(--shadow-dropdown);
+    z-index: 1000;
+    margin-top: 0.25em;
+    max-height: 300px;
+    overflow-y: auto;
+
+    .filter-tip {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5em 1em;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: var(--font-down-1);
+      color: var(--primary);
+      transition: background-color 0.15s;
+
+      &:hover,
+      &.selected {
+        background-color: var(--tertiary-low);
+      }
+
+      &.selected {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+
+      &:first-child {
+        border-top-left-radius: var(--d-border-radius);
+        border-top-right-radius: var(--d-border-radius);
+      }
+
+      &:last-child {
+        border-bottom-left-radius: var(--d-border-radius);
+        border-bottom-right-radius: var(--d-border-radius);
+      }
+
+      .filter-name {
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .filter-placeholder {
+        color: var(--primary-medium);
+        font-style: italic;
+        margin-left: 0.25em;
+      }
+    }
+  }
+}
