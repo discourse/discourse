@@ -1,39 +1,5 @@
-<a href="https://www.discourse.org/">
-  <img src="images/discourse-readme-logo.png" width="300px">
-</a>
-
-The online home for your community. 
-
-![readme](https://github.com/user-attachments/assets/db764ef2-5cc2-4873-b11d-4a2052e1993d)
-
-
-> You can self-host Discourse on your own infrastructure. But if you'd rather skip the setup, maintenance, and server management, we offer official Discourse hosting.
->
-> 👉 Learn more about [Discourse hosting](https://discourse.org/pricing)
-
-Discourse is a 100% open-source community platform for those who want complete control over how and where their site is run.
-
-Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. 
-
-**With Discourse, you can:**
-
-* 💬 **Create discussion topics** to foster meaningful conversations.
-
-* ⚡️ **Connect in real-time** with built-in chat.
-  
-* 🎨 **Customize your experience** with an ever-growing selection of official and community themes.
-
-* 🤖 **Enhance your community** with plugins, from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to advanced tools like SQL analysis with the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
-
-To learn more, visit [discourse.org](https://www.discourse.org/) and join our support community at [meta.discourse.org](https://meta.discourse.org/).
-
-
-Here are just a few of the incredible communities using Discourse: 
-
-![discourse-communities](https://github.com/user-attachments/assets/a79b5d56-7748-4f6d-8a2d-daa950366fcc)
-
-👉 [Discover more communities using Discourse](https://discover.discourse.org/)
-
+A platform for doctors and HCPs to discuss various topics not found on the Medisetter app. Allow anonymous discussions.
+[Forum for HCPs](https://forum.medisetter.com/)
 
 ## Development
 
