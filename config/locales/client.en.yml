@@ -1479,6 +1479,9 @@ en:
       suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
+      silenced_notice: "This user is silenced until %{date}."
+      silenced_permanently: "This user is silenced."
+      silenced_reason: "Reason: "
       github_profile: "GitHub"
       email_activity_summary: "Activity Summary"
       mailing_list_mode:
@@ -1551,6 +1554,9 @@ en:
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> deleted post'
           other: '<span class="%{className}">%{count}</span> deleted posts'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> silenced'
+          other: '<span class="%{className}">%{count}</span> silenced'
         suspensions:
           one: '<span class="%{className}">%{count}</span> suspension'
           other: '<span class="%{className}">%{count}</span> suspensions'
