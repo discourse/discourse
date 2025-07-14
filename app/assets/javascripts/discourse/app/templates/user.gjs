@@ -1,5 +1,4 @@
 import { array, concat, fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
@@ -122,7 +121,10 @@ export default RouteTemplate(
                 {{/if}}
                 {{#if @controller.model.number_of_silencings}}
                   <div>
-                    <a href {{on "click" @controller.showSilencings}}>
+                    <LinkTo
+                      @route="adminLogs.staffActionLogs"
+                      @query={{@controller.silencingsRouteQuery}}
+                    >
                       {{htmlSafe
                         (i18n
                           "user.staff_counters.silencings"
@@ -130,12 +132,15 @@ export default RouteTemplate(
                           count=@controller.model.number_of_silencings
                         )
                       }}
-                    </a>
+                    </LinkTo>
                   </div>
                 {{/if}}
                 {{#if @controller.model.number_of_suspensions}}
                   <div>
-                    <a href {{on "click" @controller.showSuspensions}}>
+                    <LinkTo
+                      @route="adminLogs.staffActionLogs"
+                      @query={{@controller.suspensionsRouteQuery}}
+                    >
                       {{htmlSafe
                         (i18n
                           "user.staff_counters.suspensions"
@@ -143,7 +148,7 @@ export default RouteTemplate(
                           count=@controller.model.number_of_suspensions
                         )
                       }}
-                    </a>
+                    </LinkTo>
                   </div>
                 {{/if}}
                 {{#if @controller.model.warnings_received_count}}

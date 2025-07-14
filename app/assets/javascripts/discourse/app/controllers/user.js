@@ -212,22 +212,22 @@ export default class UserController extends Controller {
     return this.site.desktopView;
   }
 
-  @action
-  showSilencings(event) {
-    event?.preventDefault();
-    this.adminTools.showActionLogs(this, {
-      target_user: this.get("model.username"),
-      action_name: "silence_user",
-    });
+  get silencingsRouteQuery() {
+    return {
+      filters: {
+        target_user: this.get("model.username"),
+        action_name: "silence_user",
+      },
+    };
   }
 
-  @action
-  showSuspensions(event) {
-    event?.preventDefault();
-    this.adminTools.showActionLogs(this, {
-      target_user: this.get("model.username"),
-      action_name: "suspend_user",
-    });
+  get suspensionsRouteQuery() {
+    return {
+      filters: {
+        target_user: this.get("model.username"),
+        action_name: "suspend_user",
+      },
+    };
   }
 
   @action
