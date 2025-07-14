@@ -287,3 +287,6 @@ gem "inflection", "1.0.0", require: false
 gem "multipart-post", "2.2.3", require: false
 gem "faraday-multipart", "1.0.4", require: false
 gem "zendesk_api", "1.38.0.rc1", require: false
+
+# for discourse-subscriptions
+gem "stripe", "11.1.0", require: false

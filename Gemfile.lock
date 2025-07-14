@@ -613,6 +613,7 @@ GEM
     sshkey (3.0.0)
     stackprof (0.2.27)
     stringio (3.1.7)
+    stripe (11.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     test-prof (1.4.4)
@@ -803,6 +804,7 @@ DEPENDENCIES
   sqlite3
   sshkey
   stackprof
+  stripe (= 11.1.0)
   syntax_tree
   test-prof
   thor
@@ -1101,6 +1103,7 @@ CHECKSUMS
   sshkey (3.0.0) sha256=655ba351d6e01a48dfe59d65530af8975c777b8cc57a061770de3228ff2d11cd
   stackprof (0.2.27) sha256=aff6d28656c852e74cf632cc2046f849033dc1dedffe7cb8c030d61b5745e80c
   stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
+  stripe (11.1.0) sha256=a76e82cc7e4d2433803ca5fbe9453d019df376236f0b9fbcb7f36e6dd327f98d
   syntax_tree (6.2.0) sha256=a50a01c246601af3c258edbb6b12e44373d17966ab3bebd1f7224b3b994a343d
   test-prof (1.4.4) sha256=1a59513ed9d33a1f5ca17c0b89da4e70f60a91c83ec62e9a873dbb99141353ef
   thor (1.3.2) sha256=eef0293b9e24158ccad7ab383ae83534b7ad4ed99c09f96f1a6b036550abbeda
