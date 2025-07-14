@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  site_settings:
+    assign_enabled: "اسائین پلگ اِن فعال کریں"
+    assigns_public: "عام عوام کو ٹاپک اسائنمنٹس کو دیکھنے کی اجازت دیں"
+    assigns_user_url_path: "صارفین کو اسائین کردہ ٹاپک کا یوآرایل (صارف نام کے متبادل {صارف نام} اِستعمال کریں)"
+    assigns_by_staff_mention: "اگر ایک اسٹاف ممبر کسی دوسرے اسٹاف ممبر کا ذکر کرے، تو ٹاپک خود بخود اسائین کر دیا جاتا ہے"
+    unassign_creates_tracking_post: "اگر آپ کسی ٹاپک کو غیر اسائین کردہ بناتے ہیں تو تبدیلی کو ٹریک کرنے کے لیے ایک وِھسپر یا چھوٹی کارروائی بنائی جائے گی"
+    assign_self_regex: "رَیج اَیکس جو خود اسائین کے لیے پاس ہونا لاذمی ہے۔ مثال 'میری فہرست'"
+    assign_other_regex: "رَیج اَیکس جو دوسروں کو، ذکر کے ذریعے، ٹاپک اسائین کرنے کیلیے پاس ہونا لاذمی ہے۔ مثال 'میری فہرست'۔"
+    unassign_on_group_archive: "جب کسی گروپ کی طرف سے ایک پیغام آرکائو کیا حائے تو اسے غیر اسائین کر دیا جائے (اگر اِنباکس میں واپس منتقل ہو تو دوبارہ اسائین کیا جائے)"
+    unassign_on_close: "جب ٹاپک بند کیا جائے تواسے غیراسائین کر دیں"
+    assign_mailer: "تفویض کے لئے اطلاعات ای میل کب بھیجیں"
+    remind_assigns: "زیر التواء اسائین کردہ کے بارے میں صارفین کو یاد دہانی کرائیں۔"
+    remind_assigns_frequency: "اسائین کردہ ٹاپکس کے بارے میں صارفین کو یاد دہانی کرانے کی فریکوئینسی۔"
+    max_assigned_topics: "ٹاپکس کی زیادہ سے زیادہ تعداد جو ایک صارف کو اسائین کیے جاسکتے ہیں۔"
+    assign_allowed_on_groups: "ان گروپوں میں صارفین کو عنوانات تفویض کرنے کی اجازت ہے اور انہیں عنوانات تفویض کیے جاسکتے ہیں۔"
+  discourse_assign:
+    assigned_to: "ٹاپک @%{username} کو اسائین کر دیا گیا"
+    unassigned: "ٹاپک اسائین شدہ نہیں تھا"
+    already_claimed: "وہ ٹاپک پہلے سے ہی کََلیم کر لیا گیا ہے۔"
+    already_assigned: "ٹاپک پہلے سے ہی @%{username} کو اسائین کیا ہوا ہے"
+    too_many_assigns: "@%{username} پہلے سے ہی اسائین کردہ ٹاپکس کی زیادہ سے زیادہ حد تک پہنچ چکا ہے (%{max})۔"
+    forbidden_assign_to: "@%{username} کو تفویض نہیں کیا جاسکتا ہے کیونکہ وہ تفویض کردہ گروپوں سے تعلق نہیں رکھتے ہیں۔"
+    forbidden_assignee_cant_see_topic: "@%{username} کو تفویض نہیں کیا جاسکتا کیونکہ ان کے پاس اس موضوع تک رسائی نہیں ہے۔"
+    group_already_assigned: "ٹاپک پہلے سے ہی @%{group} کو اسائین کیا ہوا ہے"
+    forbidden_group_assign_to: "@%{group} کو تفویض نہیں کیا جاسکتا ہے کیونکہ وہ تفویض کردہ گروپوں سے تعلق نہیں رکھتے ہیں۔"
+    flag_assigned: "معذرت، اُس فلَیگ کا ٹاپک ایک دوسرے صارف کو آسائین ہواوا ہے"
+    flag_unclaimed: "فلَیگ پر عمل کرنے سے پہلے آپ کا یہ ٹاپک کلَیم کرنا ضروری ہے"
+    topic_assigned_excerpt: "نے ٹاپک '%{title}' اسائین کیا"
+    reminders_frequency:
+      never: "کبھی نہیں "
+      daily: "روزانہ "
+      weekly: "ہفتہ وار"
+      monthly: "ماہانہ"
+      quarterly: "سہ ماہی"
+  assign_mailer:
+    title: "مَیلر اسائین کریں"
+    subject_template: "[%{email_prefix}] %{assignee_name} نے آپ کو '%{topic_title}' اسائین کیا! "
+    text_body_template: |
+      ارے، %{assignee_name} نے آپ کو ایک بحث **اسائین** کی ہے
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      اگر آپ دلچسپی رکھتے ہیں تو، نیچے دیئے گئے لنک پر کلک کریں:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "آپ کے پاس %{pending_assignments} زیر التواء اسائنمنٹس ہیں"
+    body: |
+      آپ کے پاس فی الحال [%{pending_assignments} زیر التواء اسائنمنٹس](%{assignments_link}) ہیں۔
+
+      %{newest_assignments}
+      %{oldest_assignments}
+      اگر آپ کے پاس ایک سے زائد اسائین کردہ ٹاپک موجود ہوں گے تو یہ یاد دہانی %{frequency} بھیجی جائے گی۔
+    newest: |
+      ### تازہ ترین
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### قدیم ترین
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

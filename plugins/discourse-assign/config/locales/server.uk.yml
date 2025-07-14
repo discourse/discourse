@@ -1,0 +1,67 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    assign_enabled: "Увімкніть плагін призначення"
+    assigns_public: "Дозвольте широкій громадськості переглянути призначення в темах"
+    assigns_user_url_path: "Шлях до призначених користувачам тем (використовуйте: {ім’я користувача} для заміни імені користувача)"
+    assigns_by_staff_mention: "Якщо співробітник згадує іншого співробітника, тема автоматично призначається"
+    unassign_creates_tracking_post: "Якщо ви не скасуєте тему, для відстеження змін буде створено шепіт або невелику дію"
+    assign_self_regex: "Regex, який потрібно пройти для самостійного призначення. Приклад 'my list'"
+    assign_other_regex: "Regex, який потрібно пройти для присвоєння тем іншим шляхом згадування. Приклад 'your list'."
+    unassign_on_group_archive: "Коли повідомлення заархівоване групою, скасуйте повідомлення (перепризначте, якщо перенести назад у папку 'Вхідні')"
+    unassign_on_close: "Коли тема закрита, скасуйте тему"
+    assign_mailer: "Коли надсилати повідомлення електронної пошти про виконання завдань"
+    remind_assigns: "Нагадуйте користувачам про очікувані призначення."
+    remind_assigns_frequency: "Частота нагадування користувачам про призначені теми."
+    max_assigned_topics: "Максимальна кількість тем, які можна призначити користувачеві."
+  discourse_assign:
+    assigned_to: "Тема призначена для @ %{username}"
+    unassigned: "Тема не була призначена"
+    already_claimed: "Цю тему вже заявлено."
+    already_assigned: "Тема вже призначена для @ %{username}"
+    too_many_assigns: "@ %{username} вже досяг максимальної кількості призначених тем (%{max})."
+    group_already_assigned: "Тема вже призначена для @ %{group}"
+    flag_assigned: "На жаль, тема з цим прапором призначена іншому користувачеві"
+    flag_unclaimed: "Ви повинні претендувати на цю тему, перш ніж діяти за прапором"
+    topic_assigned_excerpt: "призначив вам тему '%{title}'"
+    reminders_frequency:
+      never: "ніколи"
+      daily: "щодня"
+      weekly: "щотижня"
+      monthly: "щомісяця"
+      quarterly: "щоквартально"
+  assign_mailer:
+    title: "Assign Mailer"
+    subject_template: "[%{email_prefix}] %{assignee_name} призначив вас за '%{topic_title}'!"
+    text_body_template: |
+      Вітаю, %{assignee_name} **призначив** вас до обговорення
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Якщо ви зацікавлені, натисніть посилання нижче:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Вас очікує завдання %{pending_assignments}"
+    body: |
+      На даний момент у вас є [%{pending_assignments} очікувані завдання](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Це нагадування буде надіслано%{frequency} якщо у вас більше однієї призначеної теми.
+    newest: |
+      ### Найновіше
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Найстаріше
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

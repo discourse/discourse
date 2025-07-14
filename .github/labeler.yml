@@ -90,6 +90,10 @@ discourse-user-notes:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-user-notes/**/*
 
+discourse-assign:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-assign/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
