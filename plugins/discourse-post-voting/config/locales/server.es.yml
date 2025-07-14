@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Votar publicación no está habilitada."
+        replying_to_post_not_permited: "No puedes crear una publicación en respuesta a otra publicación."
+        voting_not_permitted: "No tienes permitido votar en esta publicación."
+        comment_cannot_be_downvoted: "Solo puedes votar comentarios."
+        self_voting_not_permitted: "No puedes votar en tu propia publicación o comentario."
+        vote_archived_topic: "No puedes votar en temas archivados."
+        vote_closed_topic: "No puedes votar en temas cerrados."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Votar publicación no está habilitada."
+        subtype_not_allowed: "El subtipo Votar publicación solo se puede usar con temas normales."
+        cannot_change_to_post_voting_subtype: "No se permite cambiar el subtipo de un tema a Votar publicación."
+      answer_count:
+        one: "%{count} respuesta"
+        other: "%{count} respuestas"
+  site_settings:
+    qa_tags: "Etiquetas para habilitar Votar publicación sobre un tema"
+    post_voting_enabled: "Habilitar el plugin Votar publicación"
+    post_voting_enable_likes_on_answers: "Habilitar el botón «Me gusta» en las respuestas a los temas Votar publicación"
+    post_voting_undo_vote_action_window: "Número de minutos en los cuales los usuarios tienen permitido deshacer sus votos en temas Votar publicación (introducir 0 para no poner límite)"
+    post_voting_comment_limit_per_post: "Número de comentarios permitidos en cada publicación"
+    min_trust_to_flag_posts_voting_comments: "Nivel de confianza mínimo para denunciar un comentario de votación de publicación"
+    flag_posts_voting_comments_allowed_groups: "Grupos autorizados a denunciar un comentario de votación de publicación"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "Votar"
+      description: "Vota por esta publicación"
+      short_description: "Vota por esta publicación"
+      long_form: "ha votado esta publicación"
+  vote:
+    error:
+      user_has_not_voted: "El usuario no ha votado."
+      user_over_limit: "No puedes superar el número de votos para tu nivel de confianza."
+      already_voted: "Solo puedes votar una vez por pregunta."
+      undo_vote_action_window:
+        one: "No puedes deshacer el voto %{count} minuto después de votar."
+        other: "No puedes deshacer el voto %{count} minutos después de votar."
+      one_vote_per_post: "Solo puedes votar una vez por cada publicación."
+      one_vote_per_comment: "Solo puedes votar una vez por cada comentario."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "No está permitido comentar una publicación que no esté en un tema Votar publicación."
+        not_permitted: "No se permite comentar los mensajes asociados."
+        limit_exceeded: "Se ha alcanzado el límite de %{limit} comentarios por publicación."
+        perform: "Comentario de votación de publicación denunciado con una puntuación lo suficientemente alta como para silenciar al usuario."
+        auto_silence_from_flags: "Silenciado automáticamente debido a denuncias."
+      reviewables:
+        comment_already_handled: "Gracias, pero ya hemos revisado este comentario y hemos determinado que no es necesario denunciarlo de nuevo."
+        actions:
+          agree_and_keep_comment:
+            title: "Mantener comentario"
+            description: "Estar de acuerdo con la denuncia y mantener el comentario intacto."
+          agree_and_keep_deleted:
+            title: "Mantener el comentario eliminado"
+            description: "Aceptar la denuncia y dejar el comentario eliminado."
+          agree_and_suspend:
+            title: "Suspender al usuario"
+            description: "Aceptar la denuncia y suspender al usuario."
+          agree_and_silence:
+            title: "Silenciar al usuario"
+            description: "Aceptar la denuncia y silenciar al usuario."
+          agree_and_restore:
+            title: "Restaurar comentario"
+            description: "Restaura el comentario para que los usuarios puedan verlo."
+          agree_and_delete:
+            title: "Eliminar comentario"
+            description: "Elimina el comentario para que los usuarios no puedan verlo."
+          delete_and_agree:
+            title: "Ignorar denuncia y eliminar comentario"
+            description: "Ignorar la denuncia eliminándola de la cola y eliminar el comentario."
+          disagree_and_restore:
+            title: "Discrepar y restaurar comentario"
+            description: "Restaura el comentario para que todos los usuarios puedan verlo."
+          disagree:
+            title: "No estoy de acuerdo"
+          ignore:
+            title: "No hacer nada"
+            description: "Ignora la denuncia eliminándola de la cola sin realizar ninguna acción."
+        transcript:
+          view: "Ver la transcripción de los comentarios anteriores"
+      reviewable_score_types:
+        needs_review:
+          title: "Necesita revisión"
+        notify_user:
+          comment_pm_title: "Tu comentario de votación de publicación"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "Un comentario de votación de publicación requiere atención del personal"
+          comment_pm_body: "%{link}\n\n%{comment}"

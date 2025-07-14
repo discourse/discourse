@@ -1,0 +1,74 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Głosowanie na post nie jest włączone."
+        replying_to_post_not_permited: "Nie możesz utworzyć postu w odpowiedzi na inny post."
+        voting_not_permitted: "Nie możesz głosować na ten post."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Głosowanie na post nie jest włączone."
+      answer_count:
+        one: "%{count} odpowiedź"
+        few: "%{count} odpowiedzi"
+        many: "%{count} odpowiedzi"
+        other: "%{count} odpowiedzi"
+  site_settings:
+    qa_tags: "Tagi umożliwiające głosowanie na posty w temacie"
+    post_voting_comment_limit_per_post: "Liczba komentarzy dozwolonych pod każdym postem"
+  post_action_types:
+    vote:
+      title: "Głosuj"
+      description: "Zagłosuj na ten post"
+      short_description: "Zagłosuj na ten post"
+  vote:
+    error:
+      user_has_not_voted: "Użytkownik nie oddał głosu."
+      user_over_limit: "Nie możesz przekroczyć liczby głosów odpowiadającej Twojemu poziomowi zaufania."
+      already_voted: "Na jedno pytanie można oddać tylko jeden głos."
+      one_vote_per_post: "Na każdy post można oddać tylko jeden głos."
+      one_vote_per_comment: "Na każdy komentarz można oddać tylko jeden głos."
+  post_voting:
+    comment:
+      reviewables:
+        comment_already_handled: "Dziękujemy, ale sprawdziliśmy już ten komentarz i stwierdziliśmy, że nie ma potrzeby jego ponownego oznaczania."
+        actions:
+          agree_and_keep_comment:
+            title: "Zachowaj komentarz"
+            description: "Zgadzam się z flagą i pozostawię komentarz bez zmian."
+          agree_and_keep_deleted:
+            title: "Zachowaj komentarz usunięty"
+            description: "Zgadzam się z flagą i pozostawię komentarz usunięty."
+          agree_and_suspend:
+            title: "Zawieś użytkownika"
+            description: "Zgódź się z flagą i zawieś konto użytkownika."
+          agree_and_silence:
+            title: "Wycisz użytkownika"
+            description: "Zgódź się z flagą i wycisz użytkownika."
+          agree_and_restore:
+            title: "Przywróć komentarz"
+            description: "Przywróć komentarz, aby użytkownicy mogli go zobaczyć."
+          agree_and_delete:
+            title: "Usuń komentarz"
+            description: "Usuń komentarz, aby użytkownicy nie mogli go zobaczyć."
+          disagree_and_restore:
+            description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
+          disagree:
+            title: "Wycofaj"
+          ignore:
+            title: "Nic nie rób"
+            description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+      reviewable_score_types:
+        needs_review:
+          title: "Wymaga sprawdzenia"
+        notify_user:
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_body: "%{link}\n\n%{comment}"

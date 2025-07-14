@@ -206,3 +206,10 @@ files:
   - source_path: plugins/discourse-data-explorer/config/locales/server.en.yml
     destination_path: plugins/data-explorer/server.yml
     label: data-explorer
+
+  - source_path: plugins/discourse-post-voting/config/locales/client.en.yml
+    destination_path: plugins/post-voting/client.yml
+    label: post-voting
+  - source_path: plugins/discourse-post-voting/config/locales/server.en.yml
+    destination_path: plugins/post-voting/server.yml
+    label: post-voting

@@ -1,0 +1,33 @@
+.post-voting-topic,
+.post-voting-topic-sort-by-activity {
+  .post-voting-answers-header {
+    width: unset;
+    padding: 0;
+    padding-bottom: 1em;
+    border-top: none;
+    border-bottom: 1px solid var(--primary-low);
+    margin-bottom: 1em;
+  }
+
+  .topic-avatar {
+    position: relative;
+  }
+
+  // TODO: avoid using magic values here
+  // and in .post-voting-post below
+  .topic-body .cooked {
+    margin-left: 55px;
+    min-height: 55px;
+  }
+}
+
+.post-voting-post {
+  position: absolute;
+  left: 0;
+  top: 45px;
+  width: 45px;
+
+  .post-voting-post-list {
+    left: -5px;
+  }
+}
