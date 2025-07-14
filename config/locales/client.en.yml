@@ -6843,7 +6843,7 @@ en:
           theme_site_settings: "Settings the theme can override"
           edit_objects_theme_setting: "Objects setting editor"
           overriden_settings_explanation: "Changes from the default are marked with a dot and highlight. Click Reset to reset to the default."
-          overriden_site_settings_explanation: "Site settings the theme can customize. Click Reset to restore the theme’s default. If none is set, the site setting default is used."
+          overriden_site_settings_explanation: "Site settings the theme can customize. Click Reset to restore the theme’s default. If none is set, the site setting default is used. You can see all site settings being overridden by themes at <a href='%{themeSiteSettingsConfigUrl}'>the theme site settings config page</a>."
           no_settings: "This theme has no settings."
           theme_translations: "Theme translations"
           empty: "No items"
