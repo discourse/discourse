@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-theme_exists = Theme.exists?
-
-SystemThemesManager.sync!
-
 # we can not guess what to do if customization already started, so skip it
-if !theme_exists
+if !Theme.exists?
   STDERR.puts "> Seeding theme and color schemes"
 
   color_schemes = [
@@ -28,7 +24,9 @@ if !theme_exists
       )
   end
 
-  Theme.foundation_theme.set_default!
+  name = I18n.t("color_schemes.default_theme_name")
+  default_theme = Theme.create!(name: name, user_id: Discourse::SYSTEM_USER_ID)
+  default_theme.set_default!
 
   if SiteSetting.default_dark_mode_color_scheme_id ==
        SiteSetting.defaults[:default_dark_mode_color_scheme_id]
@@ -37,3 +35,5 @@ if !theme_exists
     SiteSetting.default_dark_mode_color_scheme_id = dark_scheme_id if dark_scheme_id.present?
   end
 end
+
+SystemThemesManager.sync!

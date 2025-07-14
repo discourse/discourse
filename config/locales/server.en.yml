@@ -4677,6 +4677,7 @@ en:
     solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
+    default_theme_name: "Default"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"

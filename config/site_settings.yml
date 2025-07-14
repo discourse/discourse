@@ -4071,3 +4071,11 @@ experimental:
     client: true
     type: group_list
     default: ""
+  experimental_system_themes:
+    type: list
+    default: "horizon"
+    hidden: true
+    allow_any: false
+    choices:
+      - "foundation"
+      - "horizon"

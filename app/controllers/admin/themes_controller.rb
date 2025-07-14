@@ -170,13 +170,14 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.strict_loading.include_relations.order(:name)
+    @themes = Theme.with_experimental_system_themes.strict_loading.include_relations.order(:name)
 
     @color_schemes =
       ColorScheme
         .strict_loading
         .all
         .without_theme_owned_palettes
+        .with_experimental_system_theme_palettes
         .includes(:theme, color_scheme_colors: :color_scheme)
         .to_a
 
