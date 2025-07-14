@@ -32,8 +32,8 @@
   --nav-horizontal-padding: 0em;
   --d-main-content-gap: var(--space-8);
   --main-outlet-padding-top: var(--space-6);
-  --main-outlet-padding-v: 0;
-  --main-outlet-padding-bottom: 0;
+  --main-outlet-padding-v: 0em;
+  --main-outlet-padding-bottom: 0em;
   --table-border-width: 1px;
   --d-topic-list-avatar-size: 24px;
   --d-topic-list-title-font-size: var(--font-up-1);
@@ -49,20 +49,20 @@
   --category-boxes-text-alignment: center;
   --d-topic-list-header-background-color: initial;
   --d-topic-list-header-text-color: initial;
-  --d-topic-list-margin-h: 0;
-  --d-topic-list-margin-v: 0;
+  --d-topic-list-margin-h: 0em;
+  --d-topic-list-margin-v: 0em;
   --d-topic-list-margin-bottom: 10px;
-  --d-tag-horizontal-padding: 0;
+  --d-tag-horizontal-padding: 0em;
   --d-tag-font-weight: initial;
   --d-tag-font-size: var(--font-0);
-  --d-tag-border-radius: 0;
+  --d-tag-border-radius: 0px;
   --d-tag-background-color: transparent;
   --category-badge-title-color: currentcolor;
   --category-boxes-description-text-color: var(--primary-med-or-secondary-high);
   --d-category-boxes-gap: var(--space-6);
   --category-boxes-title-font-size: var(--font-up-2);
   --d-category-boxes-margin-top: var(--space-4);
-  --d-categories-list-title-margin-bottom: 0;
+  --d-categories-list-title-margin-bottom: 0em;
   --d-header-padding-v: 0.67em;
   --d-table-border-top-height: 3px;
   --d-wrap-padding-h: 0.67em;
@@ -70,7 +70,7 @@
   --topic-title-font-weight--visited: 400;
   --topic-list-item-background-color: var(--secondary);
   --topic-list-item-background-color--visited: var(--secondary);
-  --list-container-horizontal-padding: 0;
+  --list-container-horizontal-padding: 0em;
   --d-topic-list-header-font-size: initial;
 }
 
