@@ -52,6 +52,34 @@
     "form_template_ids": {
       "type": "array",
       "items": {}
+    },
+    "category_localizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The unique identifier for an existing localization. Must be included otherwise the record will be deleted."
+          },
+          "locale": {
+            "type": "string",
+            "description": "The locale for the localization, e.g., 'en', 'zh_CN'. Locale should be in the list of SiteSetting.content_localization_supported_locales."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the category in the specified locale."
+          },
+          "description": {
+            "type": "string",
+            "description": "The description excerpt of the category in the specified locale."
+          }
+        },
+        "required": [
+          "locale",
+          "name"
+        ]
+      }
     }
   },
   "required": [

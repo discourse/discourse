@@ -9,7 +9,7 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   class CategoryLocalizationSerializer < ApplicationSerializer
-    attributes :id, :category_id, :locale, :name, :description
+    attributes :id, :locale, :name, :description
   end
 
   attributes :read_restricted,
