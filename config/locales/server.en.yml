@@ -2839,6 +2839,9 @@ en:
 
   filter:
     description:
+      status: "Filter topics by their status"
+      in: "Filter topics by in personal lists"
+      order: "Sort topics by a specific field"
       category: "Show topics in a specific category"
       category_any: "Show topics in any of the specified categories (comma-separated)"
       exclude_category: "Exclude topics from a specific category"
