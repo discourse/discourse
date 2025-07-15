@@ -196,7 +196,10 @@ export default class PostSmallAction extends Component {
           {{#unless this.CustomComponent}}
             {{#if @post.cooked}}
               <div class="small-action-custom-message">
-                <PostCookedHtml @post={{@post}} />
+                <PostCookedHtml
+                  @post={{@post}}
+                  @streamElement={{@streamElement}}
+                />
               </div>
             {{/if}}
           {{/unless}}

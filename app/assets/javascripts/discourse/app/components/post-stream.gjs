@@ -324,6 +324,7 @@ export default class PostStream extends Component {
                 @showPagePublish={{fn @showPagePublish post}}
                 @showRawEmail={{fn @showRawEmail post}}
                 @showReadIndicator={{@showReadIndicator}}
+                @streamElement={{true}}
                 @togglePostSelection={{fn @togglePostSelection post}}
                 @togglePostType={{fn @togglePostType post}}
                 @toggleReplyAbove={{fn @toggleReplyAbove post}}

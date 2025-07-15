@@ -40,7 +40,7 @@ export default class PostCookedHtml extends Component {
   }
 
   get isStreamElement() {
-    return this.args.streamElement ?? true;
+    return this.args.streamElement ?? false;
   }
 
   @bind
@@ -69,7 +69,7 @@ export default class PostCookedHtml extends Component {
               ...extraArguments,
               post: nestedPost,
               decoratorState,
-              streamElement: false,
+              streamElement: this.isStreamElement,
               highlightTerm: this.highlightTerm,
               extraDecorators: [
                 ...this.extraDecorators,
@@ -104,6 +104,7 @@ export default class PostCookedHtml extends Component {
             post: this.args.post,
             renderGlimmer: helper.renderGlimmer,
             renderNestedPostCookedHtml,
+            streamElement: this.isStreamElement,
           });
 
           if (typeof decorationCleanup === "function") {
