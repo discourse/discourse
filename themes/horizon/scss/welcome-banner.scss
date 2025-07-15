@@ -5,7 +5,7 @@
     background-color: var(--background-color);
     border-radius: 0;
 
-    @include viewport.from(md) {
+    @include viewport.until(lg) {
       margin-bottom: var(--space-4);
     }
   }
@@ -16,18 +16,19 @@
 
   &__wrap {
     display: flex;
+    align-items: center;
     gap: var(--space-8);
-
-    // grid-template-rows: 0.33fr 0.33fr 0.33fr;
-    // grid-template-columns: 1fr 1fr;
-    // grid-column-gap: 1em;
-    // grid-row-gap: 0.5em;
     border-bottom: 1px solid var(--primary-300);
     margin-block: 0;
-    padding: var(--space-4);
+    padding-block: var(--space-4) var(--space-8);
 
-    @include viewport.until(lg) {
-      padding-block: var(--space-8);
+    @include viewport.from(xl) {
+      justify-content: center;
+    }
+
+    @include viewport.until(md) {
+      flex-direction: column;
+      gap: var(--space-4);
     }
 
     @include viewport.until(sm) {
@@ -38,6 +39,7 @@
 
     .--below-site-header & {
       border-bottom: 0;
+      padding: var(--space-8) var(--space-4);
 
       @include viewport.from(xl) {
         margin-left: max(var(--d-sidebar-width), var(--space-4));
@@ -45,10 +47,6 @@
     }
 
     .--above-topic-content & {
-      padding-bottom: var(
-        --space-8
-      ); // visual balancing for top-padding from horizon content area
-
       @container (width <= 800px) {
         flex-direction: column;
         gap: var(--space-4);
@@ -56,8 +54,6 @@
     }
 
     .search-menu {
-      // grid-column: 2/3;
-      // grid-row: 1/-1;
       width: 100%;
       align-self: center;
 
@@ -67,20 +63,9 @@
         }
       }
 
-      // @media screen and (width <= 1028px) {
-      //   grid-row: 2/-1;
-      //   grid-column: 1/-1;
-      // }
-
-      @include viewport.until(md) {
-        // grid-row: 2/-1;
-        // grid-column: 1/-1;
+      @include viewport.from(xl) {
+        margin-inline: unset;
       }
-
-      // @media screen and (width <= 600px) {
-      //   grid-row: 2/-1;
-      //   grid-column: 1/-1;
-      // }
     }
 
     p:not(.welcome-banner__subheader) {
@@ -116,10 +101,7 @@
   }
 
   &__title {
-    // grid-column: 1/2;
-    // grid-row: 1/-1;
     text-align: left;
-    align-self: center;
     margin: 0;
     color: var(--search-color);
 
@@ -134,19 +116,16 @@
       }
     }
 
+    @include viewport.from(xl) {
+      margin-inline: unset;
+    }
+
     @include viewport.from(md) {
       font-size: clamp(var(--font-up-4), 4vw, var(--font-up-6));
-
-      .--below-site-header & {
-        text-align: center;
-      }
     }
 
     @include viewport.until(md) {
-      // grid-column: 1/-1;
-      // grid-row: 1;
       font-size: var(--font-up-4);
-      margin-bottom: 0.5em;
     }
 
     @include viewport.until(sm) {
@@ -156,12 +135,5 @@
 
   &__subheader {
     white-space: wrap;
-    text-align: left;
-
-    .--above-topic-content & {
-      @container (width <= 800px) {
-        text-align: center;
-      }
-    }
   }
 }
