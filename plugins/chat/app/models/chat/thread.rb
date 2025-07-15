@@ -149,15 +149,16 @@ end
 # Table name: chat_threads
 #
 #  id                       :bigint           not null, primary key
-#  channel_id               :integer          not null
-#  original_message_id      :integer          not null
-#  original_message_user_id :integer          not null
+#  channel_id               :bigint           not null
+#  original_message_id      :bigint           not null
+#  original_message_user_id :bigint           not null
 #  status                   :integer          default("open"), not null
 #  title                    :string
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  replies_count            :integer          default(0), not null
 #  last_message_id          :bigint
+#  force                    :boolean          default(FALSE), not null
 #
 # Indexes
 #

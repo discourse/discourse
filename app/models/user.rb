@@ -1632,6 +1632,10 @@ class User < ActiveRecord::Base
       .count
   end
 
+  def number_of_silencings
+    UserHistory.for(self, :silence_user).count
+  end
+
   def number_of_suspensions
     UserHistory.for(self, :suspend_user).count
   end

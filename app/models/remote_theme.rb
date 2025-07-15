@@ -386,7 +386,7 @@ class RemoteTheme < ActiveRecord::Base
         raise ActiveRecord::Rollback if !theme.save
       end
 
-      upsert_theme_site_settings(theme, theme_info["theme_site_settings"])
+      create_theme_site_settings(theme, theme_info["theme_site_settings"])
 
       theme.migrate_settings(start_transaction: false) if run_migrations
     end
@@ -459,7 +459,7 @@ class RemoteTheme < ActiveRecord::Base
     theme.color_scheme = ordered_schemes.first if theme.new_record?
   end
 
-  def upsert_theme_site_settings(theme, theme_site_settings)
+  def create_theme_site_settings(theme, theme_site_settings)
     theme_site_settings ||= {}
 
     existing_theme_site_settings =
@@ -467,23 +467,16 @@ class RemoteTheme < ActiveRecord::Base
     theme_site_settings.each do |setting, value|
       next if !SiteSetting.themeable[setting.to_sym]
 
-      # If there is an existing theme site setting,
-      # and the value is not the same as the value from about.json,
-      # and the value is not the same as the site setting default value,
-      # then leave it alone, we don't want to mess with site owner's changes.
+      # If there is an existing theme site setting, then don't touch it,
+      # we don't want to mess with site owner's changes.
       existing_theme_site_setting =
         existing_theme_site_settings.find do |theme_site_setting|
           theme_site_setting.name == setting
         end
-      if existing_theme_site_setting.present?
-        if existing_theme_site_setting.value != value &&
-             existing_theme_site_setting.value != SiteSetting.defaults[setting]
-          next
-        end
-      end
+      next if existing_theme_site_setting.present?
 
-      # The manager handles creating the theme site setting if it does not exist,
-      # and deleting it if the value is nil or the same as the default site setting value.
+      # The manager handles creating the theme site setting record
+      # if it does not exist.
       Themes::ThemeSiteSettingManager.call(
         params: {
           theme_id: theme.id,
@@ -493,9 +486,6 @@ class RemoteTheme < ActiveRecord::Base
         guardian: Discourse.system_user.guardian,
       ) { |result| }
     end
-
-    # Remove any site settings that are no longer in the about.json
-    theme.theme_site_settings.where.not(name: theme_site_settings.keys).destroy_all
   end
 
   def github_diff_link

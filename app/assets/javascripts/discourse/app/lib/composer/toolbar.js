@@ -234,6 +234,7 @@ export default class Toolbar extends ToolbarBase {
               translatedTitle: i18n("composer.heading_level_n_title", {
                 levelNumber: headingLevel,
               }),
+              shortcut: "Alt+" + headingLevel,
               condition: true,
               showActiveIcon: true,
               active: ({ state }) => {
@@ -257,6 +258,7 @@ export default class Toolbar extends ToolbarBase {
             title: "composer.heading_level_paragraph_title",
             condition: true,
             showActiveIcon: true,
+            shortcut: "Alt+0",
             active: ({ state }) => state?.inParagraph,
             action: this.onHeadingMenuAction.bind(this),
           });

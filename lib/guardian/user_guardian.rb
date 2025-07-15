@@ -115,6 +115,11 @@ module UserGuardian
     user == @user || is_staff?
   end
 
+  def can_see_silencing_reason?(user)
+    return true unless SiteSetting.hide_silencing_reasons?
+    user == @user || is_staff?
+  end
+
   def can_disable_second_factor?(user)
     user && can_administer_user?(user)
   end

@@ -7881,6 +7881,68 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#staff_info" do
+    context "when logged out" do
+      it "responds with 403" do
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user)
+        Fabricate(:user_history, action: UserHistory.actions[:suspend_user], target_user: user)
+        Fabricate(:reviewable_flagged_post, target_created_by: user)
+      end
+
+      it "responds with 403 for normal users" do
+        sign_in(user)
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "responds with 200 for moderators" do
+        sign_in(moderator)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "responds with 200 for admins" do
+        sign_in(admin)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.status).to eq(200)
+      end
+
+      it "delegates work to `User`" do
+        user_instance = mock
+        UsersController.any_instance.stubs(:fetch_user_from_params).returns(user_instance)
+
+        result = {}
+
+        %i[
+          number_of_deleted_posts
+          number_of_flagged_posts
+          number_of_flags_given
+          number_of_silencings
+          number_of_suspensions
+          warnings_received_count
+          number_of_rejected_posts
+        ].each do |info|
+          user_instance.expects(info).returns(user.public_send(info))
+          result[info.to_s] = user.public_send(info)
+        end
+
+        sign_in(admin)
+
+        get "/u/#{user.username}/staff-info.json"
+        expect(response.parsed_body).to eq(result)
+      end
+    end
+  end
+
   def create_second_factor_security_key
     sign_in(user1)
     stub_secure_session_confirmed

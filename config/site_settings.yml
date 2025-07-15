@@ -968,6 +968,10 @@ users:
     default: false
     client: true
     area: "users"
+  hide_silencing_reasons:
+    default: false
+    client: true
+    area: "users"
   log_personal_messages_views:
     default: false
     area: "users"
@@ -4077,11 +4081,3 @@ experimental:
     client: true
     type: group_list
     default: ""
-  experimental_system_themes:
-    type: list
-    default: "horizon"
-    hidden: true
-    allow_any: false
-    choices:
-      - "foundation"
-      - "horizon"

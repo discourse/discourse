@@ -469,7 +469,7 @@ RSpec.describe RemoteTheme do
     end
 
     describe "theme site settings" do
-      it "upserts theme site settings defined in about.json" do
+      it "creates theme site settings defined in about.json" do
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -486,7 +486,7 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.first.data_type).to eq(SiteSetting.types[:bool])
       end
 
-      it "removes theme site settings that are no longer in about.json" do
+      it "does not remove theme site settings that are no longer in about.json" do
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -516,9 +516,11 @@ RSpec.describe RemoteTheme do
         theme.remote_theme.update_from_remote
         theme.reload
 
-        expect(theme.theme_site_settings.count).to eq(1)
+        expect(theme.theme_site_settings.count).to eq(2)
         expect(theme.theme_site_settings.first.name).to eq("enable_welcome_banner")
         expect(theme.theme_site_settings.first.value).to eq("f")
+        expect(theme.theme_site_settings.second.name).to eq("search_experience")
+        expect(theme.theme_site_settings.second.value).to eq("search_field")
       end
 
       it "ignores non-themeable site settings" do
@@ -570,7 +572,7 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.first.value).to eq("search_icon")
       end
 
-      it "updates the theme site setting if it's the same value as the site setting default value" do
+      it "does not update the existing theme site setting" do
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -584,8 +586,6 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.first.name).to eq("search_experience")
         expect(theme.theme_site_settings.first.value).to eq("search_field")
 
-        theme.theme_site_settings.first.update!(value: "search_icon")
-
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -598,7 +598,7 @@ RSpec.describe RemoteTheme do
         theme.remote_theme.update_from_remote
         theme.reload
 
-        expect(theme.theme_site_settings.first.value).to eq("search_icon")
+        expect(theme.theme_site_settings.first.value).to eq("search_field")
       end
     end
   end

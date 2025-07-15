@@ -30,7 +30,7 @@ class Themes::ThemeSiteSettingManager
 
   transaction do
     step :convert_new_value_to_site_setting_values
-    step :save_update_or_destroy
+    step :upsert
     step :log_change
   end
 
@@ -74,7 +74,7 @@ class Themes::ThemeSiteSettingManager
     context[:setting_ruby_value] = setting_ruby_value
   end
 
-  def save_update_or_destroy(
+  def upsert(
     params:,
     existing_theme_site_setting:,
     theme:,
