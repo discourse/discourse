@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  reports:
+    currently_away:
+      title: المستخدمون الغائبون حاليًا
+      labels:
+        username: اسم المستخدم
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: بدأ الحدث
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "منطقة العطلة التي أرسلتها غير موجودة."
+    discourse_calendar_enable_holiday_failed: "تعذَّر تفعيل هذه العطلة، إنها مفعَّلة حاليًا أو لم يتم إيقافها."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "الحدث - نجحت الدعوة الجماعية"
+      subject_template: "تمت معالجة الدعوة الجماعية للمستخدمين بنجاح"
+      text_body_template: "تمت معالجة ملف الدعوة الجماعية الخاص بك، وتم إنشاء %{processed} من المدعوين."
+    discourse_post_event_bulk_invite_failed:
+      title: "الحدث - فشلت الدعوة الجماعية"
+      subject_template: "تمت معالجة الدعوة الجماعية للمستخدمين مع وجود أخطاء"
+      text_body_template: |
+        تمت معالجة ملف الدعوة الجماعية الخاص بك، وتم إنشاء %{processed} من المدعوين مع وجود %{failed} من الأخطاء.
+
+        إليك السجل:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "الحد الأقصى للصفوف النصية لكل حدث في التقويم."
+    map_events_to_color: "تعيين لون لكل وسم أو فئة."
+    map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
+    calendar_enabled: "قم بتفعيل المكوِّن الإضافي لتقويم Discourse. سيضيف ذلك دعمًا لعلامة [calendar][/calendar] في أول منشور في الموضوع."
+    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى تفعيل `calendar enabled`."
+    displayed_invitees_limit: "يحد من أعداد المدعوين المعروضة في حدث."
+    display_post_event_date_on_topic_title: "يعرض تاريخ الحدث بعد عنوان الموضوع."
+    use_local_event_date: "استخدام التاريخ المحلي بعد عنوان الموضوع بدلًا من الوقت النسبي."
+    discourse_post_event_allowed_on_groups: "المجموعات المسموح لها بإنشاء الأحداث."
+    discourse_post_event_allowed_custom_fields: "يتيح السماح لكل حدث بتحديد قيمة الحقول المخصَّصة."
+    discourse_post_event_edit_notifications_time_extension: "يمد (بالدقائق) الفترة بعد نهاية حدث عندما يستمر المدعوون ذوي الحالة `going` في تلقي الإشعارات عند التعديل في المنشور الأصلي."
+    holiday_calendar_topic_id: "معرِّف الموضوع لتقويم العطلات/الغياب لفريق العمل"
+    holiday_status_emoji: يحدِّد الرمز التعبيري المستخدم في حالة العطلة.
+    delete_expired_event_posts_after: "سيتم حذف المنشورات ذات الأحداث المنتهية تلقائيًا بعد (n) من الساعات. اضبط القيمة على 1- لإيقاف الحذف."
+    all_day_event_start_time: "ستبدأ الأحداث التي ليس بها وقت محدَّد للبدء في هذا الوقت. التنسيق هو HH:mm. للساعة 6 صباحًا، أدخل 06:00."
+    all_day_event_end_time: "ستنتهي الأحداث التي ليس بها وقت محدَّد للانتهاء في هذا الوقت. التنسيق هو HH:mm. للساعة 6 مساءً، أدخل 18:00."
+    all_day_event_time_error: "الوقت غير صالح. يجب كتابة الوقت بالتنسيق HH:mm (مثال: 08:00)."
+    calendar_categories: "عرض تقويم في أعلى الفئة. الإعدادات الإلزامية هي categoryId وpostId. مثال: categoryId=6;postId=453\n الإعدادات الصالحة الأخرى: tzPicker وweekends وdefaultView."
+    calendar_categories_outlet: "يسمح بتغيير المنفذ المفترض أن يعرض تقويم الفئة."
+    working_days: "تحديد أيام العمل. يمكنك عرض مدى توافر مجموعة باستخدام علامة `timezones` في منشور: مثال: `[timezones group=admins][timezones]`"
+    working_day_start_hour: "وقت البدء لساعات يوم العمل"
+    working_day_end_hour: "وقت الانتهاء لساعات يوم العمل"
+    close_to_working_day_hours_extension: "تحديد وقت التمديد في ساعات يوم العمل لتمييز المناطق الزمنية"
+    events_calendar_categories: "عرض تقويم الأحداث في أعلى الفئة."
+    sort_categories_by_event_start_date_enabled: "تفعيل ترتيب موضوعات الفئات حسب تاريخ بدء الحدث."
+    disable_resorting_on_categories_enabled: "السماح للفئات بإيقاف قدرة المستخدمين على الترتيب حسب فئة الحدث."
+    calendar_automatic_holidays_enabled: "يحدِّد حالة العطلة تلقائيًا حسب المنطقة الجغرافية للمستخدمين (ملاحظة: يمكنك إيقاف عطلات تلقائية محدَّدة في إعدادات المكوِّن الإضافي)"
+    event_participation_buttons: "قائمة أزرار المشاركة في الأحداث التي يمكن للمستخدمين استخدامها."
+    sidebar_show_upcoming_events: "عرض رابط الأحداث القادمة في الشريط الجانبي ضمن \"المزيد\"."
+    include_expired_events_on_calendar: "تضمين الأحداث الماضية/منتهية الصلاحية في طرق عرض تقويم الفئة والأحداث القادمة."
+  discourse_calendar:
+    invite_user_notification: "دعاك %{username} إلى: %{description}"
+    calendar_must_be_in_first_post: "لا يمكن استخدام علامة التقويم إلا في المنشور الأول في الموضوع."
+    more_than_one_calendar: "لا يمكن أن يكون لديك أكثر من تقويم واحد في المنشور."
+    more_than_two_dates: "لا يمكن أن يحتوي منشور ضمن موضوع في التقويم على أكثر من تاريخين."
+    event_expired: "انتهى الحدث"
+    holiday_status:
+      description: "في عطلة"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} على وشك البدء."
+      after_event_reminder: "انتهى %{title}."
+      ongoing_event_reminder: "%{title} جارٍ."
+    errors:
+      bulk_invite:
+        max_invitees: "تم إنشاء أول %{max_invittes} من المدعوين. جرِّب تقسيم الملف إلى أجزاء أصغر."
+        error: "حدث خطأ في تحميل هذا الملف. يُرجى إعادة المحاولة لاحقًا."
+      models:
+        event:
+          only_one_event: "لا يمكن أن يتضمَّن المنشور أكثر من حدثٍ واحد."
+          must_be_in_first_post: "لا يمكن إلا للمنشور الأول في موضوع أن يتضمَّن حدثًا."
+          raw_invitees_length: "يقتصر الحدث على %{count} من المستخدمين/المجموعات."
+          raw_invitees:
+            only_group: "لا يقبل الحدث إلا أسماء المجموعات."
+          ends_at_before_starts_at: "لا يمكن أن ينتهي الحدث قبل أن يبدأ."
+          start_must_be_present_and_a_valid_date: "يتطلَّب الحدث تاريخ بدء صالحًا."
+          end_must_be_a_valid_date: "يجب أن يكون تاريخ الانتهاء تاريخًا صالحًا."
+          invalid_recurrence: "يجب أن يكون التكرار واحدًا مما يلي: every_month أو every_week أو every_two_weeks أو every_four_week أو every_day، أو every_weekday."
+          invalid_timezone: "لم يتم التعرُّف على المنطقة الزمنية."
+          acting_user_not_allowed_to_create_event: "غير مسموح للمستخدم الحالي بإنشاء أحداث."
+          acting_user_not_allowed_to_act_on_this_event: "غير مسموح للمستخدم الحالي باتخاذ إجراء بشأن هذا الحدث."
+          invalid_allowed_groups: "المجموعات المسموح بها غير صالحة."
+          acting_user_not_allowed_to_invite_these_groups: "غير مسموح للمستخدم الحالي بدعوة تلك المجموعات."
+          custom_field_is_invalid: "غير مسموح بالحقل المخصَّص `%{field}`."
+          name:
+            length: "يجب أن يتراوح طول اسم الحدث بين %{minimum} و%{maximum} من الأحرف."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "تذكير بالحدث"

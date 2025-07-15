@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    discourse_assign:
+      group_everyone: "Të gjithë"
+      reassign:
+        title: "Redakto"
+      assign_mailer:
+        never: "Asnjëherë"
+        always: "Gjithmonë"
+      reminders_frequency:
+        never: "Asnjëherë"
+        daily: "Ditore"
+        weekly: "Javore"
+        monthly: "Mujore"
+        quarterly: "Tremujorsh"
+    user:
+      assignment_description:
+        topic: "%{topic_title}"
+    edit_assignments_modal:
+      topic: "Topic"
+      post: "Postim"

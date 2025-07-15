@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    assign_enabled: "할당 플러그인 사용"
+    assigns_public: "일반 대중이 주제 할당을 볼 수 있도록 허용"
+    assigns_user_url_path: "사용자에게 할당 된 주제의 경로 (사용자 이름을 대체하기 위해 {username} 사용)"
+    assigns_by_staff_mention: "직원이 다른 직원을 언급하면 주제가 자동으로 할당됩니다."
+    unassign_creates_tracking_post: "주제를 할당 해제하면 변경 사항을 추적하기 위해 속삭임 또는 작은 동작이 생성됩니다."
+    assign_self_regex: "자체 할당을 위해 통과해야하는 정규식. &#39;내 목록&#39;예"
+    assign_other_regex: "언급을 통해 다른 사람에게 주제를 할당하기 위해 전달해야하는 정규식. 예를 들어 &#39;내 목록&#39;입니다."
+    unassign_on_group_archive: "메시지가 그룹에 의해 보관 된 경우 메시지를 할당 해제합니다 (받은 편지함으로 다시 이동하면 재 할당)"
+    unassign_on_close: "주제를 닫을 때 주제를 할당 해제"
+    assign_mailer: "과제를 위해 알림 이메일을 보내는시기"
+    remind_assigns: "보류중인 할당에 대해 사용자에게 알립니다."
+    remind_assigns_frequency: "할당 된 주제에 대해 사용자에게 알리는 빈도입니다."
+    max_assigned_topics: "사용자에게 할당 할 수있는 최대 주제 수입니다."
+  discourse_assign:
+    assigned_to: "@ %{username}에 할당 된 주제"
+    unassigned: "주제가 할당되지 않았습니다"
+    already_claimed: "그 주제는 이미 주장되었습니다."
+    already_assigned: "주제가 이미 @ %{username}에 할당되었습니다."
+    too_many_assigns: "@ %{username}이 (가) 이미 지정된 최대 주제 수 (%{max})에 도달했습니다."
+    group_already_assigned: "주제가 이미 @ %{group}에 할당되었습니다."
+    flag_assigned: "해당 플래그의 주제가 다른 사용자에게 할당되었습니다."
+    flag_unclaimed: "깃발에 행동하기 전에 그 주제를 주장해야합니다"
+    topic_assigned_excerpt: "&#39;%{title}&#39;주제를 지정했습니다"
+    reminders_frequency:
+      never: "하지않음"
+      daily: "매일"
+      weekly: "매주"
+      monthly: "월간 간행물"
+      quarterly: "계간지"
+  assign_mailer:
+    title: "메일러 할당"
+    subject_template: "[%{email_prefix}] %{assignee_name}가 &#39;%{topic_title}&#39;에 당신을 할당했습니다!"
+  pending_assigns_reminder:
+    title: "보류중인 할당이 %{pending_assignments}입니다."

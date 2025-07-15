@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    gamification:
+      you: "మీరు"
+      leaderboard:
+        link_to_settings: "అమరికలు"
+        refresh: "తాజాపరుచు"
+        name: "పేరు"
+        period:
+          all_time: "ఆల్ టైమ్"
+          yearly: "వార్షిక"
+          quarterly: "త్రైమాసిక"
+          monthly: "నెలవారీ"
+          weekly: "వారానికోసారి"
+          daily: "రోజువారీ"
+      create: "సృష్టించండి"
+      cancel: "రద్దుచేయి"
+      close: "మూసివేయి"
+      delete: "తొలగించు"
+      edit: "సవరణ"
+      back: "వెనుకకు"
+      save: "భద్రపరుచు"
+      apply: "ఆపాదించు"
+      update_range:
+        all_time: "ఆల్ టైమ్"
+      custom_range_from: "నుండి"
+      admin:
+        name: "పేరు"

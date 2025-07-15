@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    data_explorer_enabled: "/admin/plugins/explorer のデータエクスプローラーを許可する"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: データエクスプローラーの結果で PM をスケジュールする
+        description: 定期レポートをメッセージで送信します
+        no_csv_allowed: "`attach_csv` フィールドを使用する場合は、`csv` がサイト設定の承認済み拡張機能のリストに追加されている必要があります。"
+      recurring_data_explorer_result_topic:
+        title: データエクスプローラーの結果を使用してトピックへの投稿をスケジュールする
+        description: 定期レポートを特定のトピックに投稿します
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "%{query_name} の定期レポート"
+      upload_appendix: "付録: [%{filename}|添付ファイル](%{short_url})"

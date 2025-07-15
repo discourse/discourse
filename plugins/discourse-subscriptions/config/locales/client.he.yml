@@ -1,0 +1,484 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse מינויים"
+  site_settings:
+    discourse_subscriptions_enabled: הפעלת תוסף המינויים של Discourse.
+    discourse_subscriptions_extra_nav_subscribe: להציג את כפתור הרישום בניווט הראשי
+    discourse_subscriptions_pricing_table_id: נא להוסיף את מזהה טבלת התמחיר (pricing-table-id) מקוד הטמעת טבלת התמחור לכאן.
+    discourse_subscriptions_pricing_table_enabled: כפתור הרישום יציג את טבלת התמחור להמטעה ויעשה שימוש ב־Stripe Checkout.
+    discourse_subscriptions_public_key: מפתח מופץ של Stripe
+    discourse_subscriptions_secret_key: מפתח סודי של Stripe
+    discourse_subscriptions_webhook_secret: סוד התלייה של Stripe
+    discourse_subscriptions_currency: קוד מטבע כבררת מחדל. ניתן לדרוס את זה בעת יצירת תכנית מינוי.
+    discourse_subscriptions_campaign_enabled: מאפשר כרזת מסע פרסום לקידום תמיכה כלכלית בקהילה הזאת.
+    discourse_subscriptions_campaign_goal: היעד המספרי של מסע פרסום התמיכה שלך (מנויים או סכום שגויס).
+    discourse_subscriptions_campaign_type: בוחר את סוג מסע הפרסום להרצה (מנויים או סכום חודשי שגויס).
+    discourse_subscriptions_campaign_banner_location: בוחר את מיקום כרזת מסע הפרסום (למעלה או בסרגל הצד).
+    discourse_subscriptions_campaign_banner_shadow_color: בוחר את צבע הצללת כרזת מסע הפרסום.
+    discourse_subscriptions_campaign_banner_bg_image: ניתן להעלות תמונה משלך כרקע לכרזת מסע הפרסום.
+    discourse_subscriptions_campaign_show_contributors: מציג תמונות ייצוגיות של הרכישות האחרונות של מוצרים שדורשים מינוי.
+    discourse_subscriptions_campaign_product: מזהה המוצר ב־Stripe לשליחה לתומכים כשהם לוחצים על הכפתור במסע הפרסום. אם ההגדרה הזאת ריקה, התומכים יופנו לעמוד המוצרים הראשי.
+    discourse_subscriptions_enable_automatic_tax: מאפשר חישוב מס אוטומטי שיחשב את כל שיעורי המס בכל החשבוניות שמופקות על ידי המינוי.
+    discourse_subscriptions_enable_verbose_logging: הפעלת תיאור מפורט יותר כדי לסייע בניפוי שגיאות. נא לא להשאיר פעיל לצמיתות בסביבה מבצעית.
+    errors:
+      discourse_patrons_amount_must_be_currency: "סכומי המטבעות אמורים להיות מטבעות בלי סימן דולר (למשל: 1.50)"
+  js:
+    filters:
+      subscribe:
+        help: ניתן לתמוך באתר הזה בהרשמה אל
+    discourse_subscriptions:
+      title: מינויי Discourse
+      admin_navigation: מינויים
+      optional: רשות
+      navigation:
+        billing: חיוב
+        payments: תשלומים
+        subscriptions: מינויים
+        subscribe: הרשמה
+        user_activity:
+          payments: תשלומים
+      campaign:
+        title: לתמוך בנו
+        body: אנו זקוקים לעזרה שלך כדי שהקהילה הזאת תמשיך להתקיים!
+        success_title: הצלחה!
+        success_body: אנו מודים ךף על עזרתך להמשך ביסוס הקהילה הזאת!
+        subscribers: מנויים
+        goal_comparison: "<strong>%{current}</strong> מתוך <strong>%{goal}</strong>"
+        raised: גויסו
+        button: תמיכה
+        recent_contributors: תורמים אחרונים
+        goal: הגענו ליעד
+        one_click_campaign: ליצור מסע פרסום תמיכה אוטומטית
+        refresh_campaign: לרענן את נתוני מסע הפרסום
+        refresh_page: נתוני מסע הפרסום מסתנכרנים כעת מול Stripe מאחורי הקלעים. יש לרענן את העמוד בעוד מספר רגעים כדי לטעון את הנתונים העדכניים.
+        supporter: תומך
+        supporters: תומכים
+        confirm_creation_title: ליצור אוטומטית מסע פרסום עבור הקהילה שלך?
+        confirm_creation: |-
+          <p>בחירה להמשיך תיצור:</p>
+
+          <ul>
+          <li>קבוצה לתגמול לתומכים שלך עם כותרת מותאמת אישית ותוספת חביבה לתמונה הייצוגית</li>
+          <li>מוצר Stripe עם מחירים שהוגדרו מראש (חודשית ושנתית) אותו המשתמשים שלך יכולים לרכוש כדי לתמוך באתר שלך.</li>
+          </ul>
+
+          <p>שנמשיך?</p>
+        created: מסע הפרסום שלך בלחיצה בודדת נוצר ומוכן לצאת לדרך! מתבצעת הפניה להגדרות מסע הפרסום.
+      one_time_payment: תשלום חד־פעמי
+      plans:
+        purchase: רכישת מינוי
+        select: בחירת תכנית מינוי
+        interval:
+          adverb:
+            day: יומי
+            week: שבועי
+            month: חודשי
+            year: שנתי
+        payment_button: הרשמה
+        success: תודה לך! המינוי של נוצר.
+        incomplete: התשלום הושלם. המינוי שלך יתעדכן עם סיום תהליך התשלום.
+        validate:
+          payment_options:
+            required: נא לבחור תכנית מינוי.
+      user:
+        payments:
+          id: מזהה תשלום
+          amount: סכום
+          created_at: נוצר
+        payments_help: אין תשלומים
+        plans:
+          rate: תעריף
+          product: שם
+        subscriptions_help: אין לך מינויים פעילים.
+        subscriptions:
+          id: מזהה מינוי
+          status: מצב
+          discounted: בהנחה
+          renews: חידושים
+          update_card:
+            heading: "עדכון כרטיס למינוי: %{sub_id}"
+            single: "עדכון"
+          created_at: נוצר
+          cancel: ביטול
+          cancelled: בוטל
+          operations:
+            destroy:
+              confirm: לבטל את המינוי הזה?
+      subscribe:
+        title: הרשמה
+        view_past: הצגת רכישות עבר
+        no_products: אין מוצרים זמינים.
+        unauthenticated: עליך להיכנס או ליצור חשבון כדי להירשם.
+        invalid_coupon: קוד הקופון שהזנת שגוי. נא לנסות שוב.
+        invalid_cardholder_name: שם בעל הכרטיס נדרש.
+        invalid_cardholder_country: ארץ נדרשת.
+        invalid_cardholder_state: מדינה נדרשת.
+        invalid_cardholder_province: מחוז נדרש.
+        transaction_error: אירעה שגיאה בעיבוד התשלום. נא לנסות שוב.
+        card:
+          title: תשלום
+        customer:
+          title: פרטי הלקו
+        promo_code: קופון
+        buttons:
+          subscribe: הרשמה
+        purchased: נרכשה
+        go_to_billing: מעבר לחיוב
+        already_purchased: תודה רבה לך על רכישת המוצר הזה בעבר!
+        cardholder_name: שם בעל הכרטיס
+        cardholder_address:
+          line1: כתובת
+          city: עיר
+          state: מדינה
+          province: מחוז
+          country: ארץ
+          postal_code: מיקוד
+        countries:
+          AF: "אפגניסטן"
+          AX: "איי אולנד"
+          AL: "אלבניה"
+          DZ: "אלג׳יריה"
+          AS: "סמואה האמריקנית"
+          AD: "אנדורה"
+          AO: "אנגולה"
+          AI: "אנגווילה"
+          AQ: "אנטארקטיקה"
+          AG: "אנטיגואה וברבודה"
+          AR: "ארגנטינה"
+          AM: "ארמניה"
+          AW: "ארובה"
+          AU: "אוסטרליה"
+          AT: "אוסטריה"
+          AZ: "אזרבייג׳ן"
+          BS: "איי בהאמה"
+          BH: "בחריין"
+          BD: "בנגלדש"
+          BB: "ברבדוס"
+          BY: "בלארוס"
+          BE: "בלגיה"
+          BZ: "בליז"
+          BJ: "בנין"
+          BM: "ברמודה"
+          BT: "בהוטן"
+          BO: "בוליביה, המדינה הרב־לאומית של"
+          BQ: "הולנד הקריבית"
+          BA: "בוסניה והרצגובינה"
+          BW: "בוטסואנה"
+          BV: "האי בובה"
+          BR: "ברזיל"
+          IO: "הטריטוריה הבריטית באוקיינוס ההודי"
+          BN: "ברוניי משכן השלום"
+          BG: "בולגריה"
+          BF: "בורקינה פאסו"
+          BI: "בורונדי"
+          KH: "קמבודיה"
+          CM: "קמרון"
+          CA: "קנדה"
+          CV: "כף ורדה"
+          KY: "איי קיימן"
+          CF: "הרפובליקה המרכז אפריקאית"
+          TD: "צ׳אד"
+          CL: "צ׳ילה"
+          CN: "סין"
+          CX: "אי חג המולד"
+          CC: "איי קוקוס (קילינג)"
+          CO: "קולומביה"
+          KM: "קומורו"
+          CG: "קונגו"
+          CD: "קונגו, הרפובליקה הדמוקרטית של"
+          CK: "איי קוק"
+          CR: "קוסטה ריקה"
+          CI: "חוף השנהב"
+          HR: "קרואטיה"
+          CU: "קובה"
+          CW: "קוראסאו"
+          CY: "קפריסין"
+          CZ: "הרפובליקה הצ׳כית"
+          DK: "דנמרק"
+          DJ: "ג׳יבוטי"
+          DM: "דומיניקה"
+          DO: "הרפובליקה הדומיניקנית"
+          EC: "אקוודור"
+          EG: "מצרים"
+          SV: "אל סלבדור"
+          GQ: "גינאה המשוונית"
+          ER: "אריתריאה"
+          EE: "אסטוניה"
+          ET: "אתיופיה"
+          FK: "איי פוקלנד (מאלווינאס)"
+          FO: "איי פארו"
+          FJ: "פיג׳י"
+          FI: "פינלנד"
+          FR: "צרפת"
+          GF: "גיאנה הצרפתית"
+          PF: "פולינזיה הצרפתית"
+          TF: "הארצות הדרומיות והאנטארקטיות של צרפת"
+          GA: "גבון"
+          GM: "גמביה"
+          GE: "גאורגיה"
+          DE: "גרמניה"
+          GH: "גאנה"
+          GI: "גיברלטר"
+          GR: "יוון"
+          GL: "גרינלנד"
+          GD: "גרנדה"
+          GP: "גוואדלופ"
+          GU: "גואם"
+          GT: "גואטמלה"
+          GG: "גרנזי"
+          GN: "גינאה"
+          GW: "גינאה ביסאו"
+          GY: "גיאנה"
+          HT: "האיטי"
+          HM: "האי הרד ואיי מקדונלד"
+          VA: "הכס הקדוש (מדינת הוותיקן)"
+          HN: "הונדורס"
+          HK: "הונג קונג"
+          HU: "הונגריה"
+          IS: "איסלנד"
+          IN: "הודו"
+          ID: "אינדונזיה"
+          IR: "איראן, הרפובליקה האסלאמית של"
+          IQ: "עיראק"
+          IE: "אירלנד"
+          IM: "האי מאן"
+          IL: "ישראל"
+          IT: "איטליה"
+          JM: "ג׳מייקה"
+          JP: "יפן"
+          JE: "ג׳רזי"
+          JO: "ירדן"
+          KZ: "קזחסטן"
+          KE: "קניה"
+          KI: "קיריבטי"
+          KP: "קוריאה, הרפובליקה הדמוקרטית העממית של"
+          KR: "קוריאה, הרפובליקה של"
+          KW: "כוויית"
+          KG: "קירגיזסטן"
+          LA: "לאוס, הרפובליקה הדמוקרטית העממית של"
+          LV: "לטביה"
+          LB: "לבנון"
+          LS: "לסוטו"
+          LR: "ליבריה"
+          LY: "לוב"
+          LI: "ליכטנשטיין"
+          LT: "ליטא"
+          LU: "לוקסמבורג"
+          MO: "מקאו"
+          MK: "מקדוניה, הרפובליקה היוגוסלבית לשעבר של"
+          MG: "מדגסקר"
+          MW: "מלאווי"
+          MY: "מלזיה"
+          MV: "האיים המלדיביים"
+          ML: "מאלי"
+          MT: "מלטה"
+          MH: "איי מרשל"
+          MQ: "מרטיניק"
+          MR: "מאוריטניה"
+          MU: "מאוריציוס"
+          YT: "מיוט"
+          MX: "מקסיקו"
+          FM: "מיקרונזיה, המדינות הפדרטיביות של"
+          MD: "מולדובה, הרפובליקה של"
+          MC: "מונקו"
+          MN: "מונגוליה"
+          ME: "מונטנגרו"
+          MS: "Montserrat"
+          MA: "מרוקו"
+          MZ: "מוזמביק"
+          MM: "מיאנמר"
+          NA: "נמיביה"
+          NR: "נאורו"
+          NP: "נפאל"
+          NL: "הולנד"
+          NC: "קלדוניה החדשה"
+          NZ: "ניו זילנד"
+          NI: "ניקרגואה"
+          NE: "ניז׳ר"
+          NG: "ניגריה"
+          NU: "ניואה"
+          NF: "האי נורפוק"
+          MP: "איי מריאנה הצפוניים"
+          "NO": "נורווגיה"
+          OM: "עומאן"
+          PK: "פקיסטן"
+          PW: "פלאו"
+          PS: "הרשות הפלסטינית"
+          PA: "פנמה"
+          PG: "פפואה גינאה החדשה"
+          PY: "פרגוואי"
+          PE: "פרו"
+          PH: "הפיליפינים"
+          PN: "פיטקרן"
+          PL: "פולין"
+          PT: "פורטוגל"
+          PR: "פוארטו ריקו"
+          QA: "קטאר"
+          RE: "ראוניון"
+          RO: "רומניה"
+          RU: "רוסיה, פדרציית"
+          RW: "רואנדה"
+          BL: "סן ברתלמי"
+          SH: "סנט הלנה, אסנשן וטריסטן דה קונה"
+          KN: "סנט קיטס ונוויס"
+          LC: "סנט לוסיה"
+          MF: "סן מרטן (החלק הצרפתי)"
+          PM: "סן־פייר ומיקלון"
+          VC: "סנט וינסנט והגרנדינים"
+          WS: "סמואה"
+          SM: "סן מרינו"
+          ST: "סאו טומה ופרינסיפה"
+          SA: "ערב הסעודית"
+          SN: "סנגל"
+          RS: "סרביה"
+          SC: "סיישל"
+          SL: "סיירה לאון"
+          SG: "סינגפור"
+          SX: "סן מרטן (החלק ההולנדי)"
+          SK: "סלובקיה"
+          SI: "סלובניה"
+          SB: "איי שלמה"
+          SO: "סומליה"
+          ZA: "דרום אפריקה"
+          GS: "איי ג׳ורג׳יה הדרומית ואיי סנדוויץ׳ הדרומיים"
+          SS: "דרום סודאן"
+          ES: "ספרד"
+          LK: "סרי לנקה"
+          SD: "סודאן"
+          SR: "סורינאם"
+          SJ: "סבאלברד ויאן מאיין"
+          SZ: "סווזילנד"
+          SE: "שוודיה"
+          CH: "שווייץ"
+          SY: "הרפובליקה הערבית הסורית"
+          TW: "טאייוואן, מחוז של סין"
+          TJ: "טג׳יקיסטן"
+          TZ: "טנזניה, הרפובליקה המאוחדת של"
+          TH: "תאילנד"
+          TL: "מזרח טימור"
+          TG: "טוגו"
+          TK: "טוקלאו"
+          TO: "טונגה"
+          TT: "טרינידד וטובגו"
+          TN: "תוניסיה"
+          TR: "טורקיה"
+          TM: "טורקמניסטן"
+          TC: "איי טרקס וקייקוס"
+          TV: "טובאלו"
+          UG: "אוגנדה"
+          UA: "אוקראינה"
+          AE: "איחוד האמירויות הערביות"
+          GB: "הממלכה המאוחדת"
+          US: "ארצות הברית"
+          UM: "האיים המרוחקים הקטנים של ארצות הברית"
+          UY: "אורוגוואי"
+          UZ: "אוזבקיסטן"
+          VU: "ונואטו"
+          VE: "ונצואלה, הרפובליקה הבוליברית של"
+          VN: "וייטנאם"
+          VG: "איי הבתולה הבריטיים"
+          VI: "איי הבתולה, ארצות הברית"
+          WF: "ואליס ופוטונה"
+          EH: "סהרה המערבית"
+          YE: "תימן"
+          ZM: "זמביה"
+          ZW: "זימבבואה"
+      billing:
+        name: שם מלא
+        email: כתובת דוא״ל
+        phone: מספר טלפון
+      confirmation:
+        amount: סכום
+        last4: מספר כרטיס
+      buttons:
+        make_payment: ביצוע תשלום
+        confirm_payment: אישור תשלום
+        success: חזרה
+      admin:
+        unconfigured: 'Stripe לא מוגדר נכון. נא לעיין ב־Discourse Meta למידע נוסף.'
+        on_meta: מינויי Discourse ב־Meta
+        dashboard:
+          title: לוח בקרה
+          table:
+            head:
+              user: משתמש
+              payment_intent: מזהה תשלום
+              receipt_email: דוא״ל הנמען
+              amount: סכום
+        products:
+          title: מוצרים
+          operations:
+            create: יצירת מוצר חדש
+            update: עדכון מוצר
+            new: מוצר חדש
+            destroy:
+              confirm: להשמיד את המוצר הזה?
+          product:
+            product_id: מזהה מוצר
+            name: שם מוצר
+            statement_descriptor: תיאור עסקה
+            statement_descriptor_help: מידע נוסף על המוצר שיופיע בשורה בתדפיס בכרטיס האשראי של הלקוח שלך.
+            plan_help: יצירת תכנית תשלום לרישום לקוחות למוצר הזה.
+            description: תיאור
+            description_help: מתאר את מוצר המינוי שלך.
+            repurchaseable: ניתן לרכישה חוזרת?
+            repurchase_help: לאפשר לרכוש מוצר ותכניות נלוות מספר פעמים
+            active: פעיל
+            active_help: יש לכבות את זה עד שהמוצר שלך מוכן לקבל לקוחות.
+            created_at: נוצר
+            updated_at: עודכן
+          product_help: לפני שללקוחות יתאפשר להירשם לאתר שלך, עליך ליצור לפחות מוצר אחד ותוכנית שיוך.
+        plans:
+          title: תכניות תמחור
+          operations:
+            add: הוספת תכנית חדשה
+            create: יצירת תכנית
+            update: עדכון תכנית
+            create_help: לאחר יצירת תכנית תמחור, ניתן לעדכן אך ורק את הכינוי, תקופת הניסוי וקבוצת המשתמשים שלה.
+            new: תכנית חדשה
+            destroy:
+              confirm: להשמיד את התכנית הזאת?
+          plan:
+            nickname: כינוי התכנית
+            nickname_help: לא יופיע בפני הלקוחות אך יסייע לך למצוא את התכנית הזאת בהמשך
+            plan_id: מזהה תכנית
+            product: מוצר
+            interval: הפרשי חיוב
+            amount: סכום
+            trial: ימי תקופת ניסיון
+            trial_help: מינויים לתכנית זו יתחילו אוטומטית עם תקופת ניסיון באורך זה
+            group: קבוצת משתמשים
+            group_help: זו קבוצת המשתמשים ב־Discourse אליה יתווסף הלקוח בעת יצירת המינוי.
+            active: פעיל
+            created_at: נוצר
+            recurring: תכנית מתחדשת?
+        coupons:
+          title: שוברים
+          code: קוד שובר
+          discount: הנחה
+          times_redeemed: מספר הסליקות
+          active: פעיל?
+          actions: פעולות
+          create: יצירת שובר
+          promo_code: קוד שובר (בלתי תלוי רישיות)
+        subscriptions:
+          title: מינויים
+          subscription:
+            user: משתמש
+            subscription_id: מזהה מינוי
+            customer: לקו
+            product: מוצר
+            plan: תכנית
+            status: מצב
+            created_at: נוצר
+        ask_refund: לזכות את התשלום האחרון ששולם על ידי הלקוח?
+        canceled: "המינוי מבוטל."

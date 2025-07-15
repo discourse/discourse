@@ -1,0 +1,191 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse 割り当て"
+  js:
+    filters:
+      unassigned:
+        title: "未割り当て"
+        help: "未割り当てのトピック"
+    action_codes:
+      assigned: "%{who} を割り当てました: %{when}"
+      assigned_group: "%{who} を割り当てました: %{when}"
+      assigned_to_post: "%{who} を<a href='%{path}'>投稿</a>に割り当てました: %{when}"
+      assigned_group_to_post: "%{who} を<a href='%{path}'>投稿</a>に割り当てました: %{when}"
+      unassigned: "%{who} の割り当てを解除しました: %{when}"
+      unassigned_group: "%{who} の割り当てを解除しました: %{when}"
+      unassigned_from_post: "%{who} を<a href='%{path}'>投稿</a>の割り当てから解除しました: %{when}"
+      unassigned_group_from_post: "%{who} を<a href='%{path}'>投稿</a>の割り当てから解除しました: %{when}"
+      reassigned: "%{who} を再割り当てしました: %{when}"
+      reassigned_group: "%{who} を再割り当てしました: %{when}"
+      details_change: "が %{who} の割り当て情報を変更しました: %{when}"
+      note_change: "が %{who} の割り当てメモを変更しました: %{when}"
+      status_change: "が %{who} の割り当てステータスを変更しました: %{when}"
+    discourse_assign:
+      add_unassigned_filter: "カテゴリに「未割り当て」フィルターを追加"
+      cant_act: "他のユーザーに割り当てられた通報に対応することはできません"
+      cant_act_unclaimed: "通報に対応する前に、このトピックを引き受ける必要があります。"
+      topic_search_placeholder: "タイトルまたは投稿のコンテンツでトピックを検索"
+      sidebar_name_filter_placeholder: "名前/ユーザー名"
+      assigned: "割り当て済み"
+      group_everyone: "全員"
+      assigned_to: "割り当て先"
+      assigned_topic_to: "トピックを <a href='%{path}'>%{username}</a> に割り当てました"
+      assign_post_to: "#%{post_number} を %{username} に割り当てました"
+      assign_post_to_multiple: "#%{post_number} を %{username}"
+      assigned_to_w_ellipsis: "割り当て先..."
+      unassign:
+        title: "割り当て解除"
+        title_w_ellipsis: "割り当て解除..."
+        help: "トピックから %{username} の割り当てを解除する"
+      assign:
+        title: "割り当て"
+        help: "トピックをユーザーに割り当てる"
+      assign_post:
+        title: "投稿を割り当てる"
+      unassign_post:
+        title: "投稿の割り当てを解除する"
+        help: "投稿から %{username} の割り当てを解除する"
+      reassign:
+        title: "編集"
+        title_w_ellipsis: "割り当てを編集..."
+        to_self: "自分に再割り当てする"
+        to_self_help: "トピックを自分に再割り当てする"
+        help: "割り当て情報を編集します"
+      reassign_modal:
+        title: "トピックを再割り当てする"
+      topic_level_menu:
+        edit_assignments: "割り当てを編集..."
+        reassign_topic_to_me: "トピックを自分に割り当て直す"
+        unassign_with_ellipsis: "割り当て解除..."
+        unassign_from_post: "#%{post_number} から @%{assignee} の割り当てを解除"
+        unassign_from_post_help: "投稿 #%{post_number} から @%{assignee} の割り当てを解除"
+        unassign_from_topic: "トピックから @%{username} の割り当てを解除"
+      assign_modal:
+        title: "トピックを割り当てる"
+        reassign_title: "トピックを再割り当てする"
+        assign: "割り当てる"
+        assignee_label: 割り当てられた担当者
+        assignment_label: 割り当て
+        choose_assignee: 割り当てるユーザーを選択します。
+        edit_assignments_title: "割り当ての編集"
+        note_label: メモ
+        optional_label: "(オプション)"
+        status_label: ステータス
+        suggestions: 提案
+      assign_post_modal:
+        title: "投稿を割り当てる"
+      claim:
+        title: "引き受ける"
+        help: "トピックを自分に割り当てる"
+      assign_mailer:
+        never: "通知しない"
+        different_users: "割り当てユーザーと割り当てられたユーザーが異なるユーザーである場合のみ"
+        always: "常に"
+      reminders_frequency:
+        description: "割り当てられたトピックのリマインダーを受け取る頻度"
+        never: "通知しない"
+        daily: "毎日"
+        weekly: "毎週"
+        monthly: "毎月"
+        quarterly: "3 か月ごと"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "割り当てる"
+              assignable_levels:
+                title: "このグループを割り当てられるユーザー"
+    user:
+      notification_level_when_assigned:
+        label: "割り当てられたとき"
+        watch_topic: "トピックをウォッチ"
+        track_topic: "トピックを追跡"
+        do_nothing: "何もしない"
+      messages:
+        assigned_title: "割り当て済み（%{count}）"
+        assigned: "割り当てました"
+      no_assignments_title: "まだ割り当てはありません"
+      no_assignments_body: >
+        割り当てられたトピックとメッセージがここに一覧表示されます。また、割り当てのリマインダーが定期的に通知されます。この通知頻度は<a href='%{preferencesUrl}'>ユーザー設定</a>で変更できます。 <br><br>トピックまたはメッセージを自分または別のユーザーに割り当てるには、下にある %{icon} 割り当てボタンを探してください。
+      dismiss_assigned_tooltip: "すべての未読の割り当てを既読にします"
+      assigned_to_group:
+        post: "%{group_name} に割り当てられた投稿"
+        topic: "%{group_name} に割り当てられたトピック"
+      assigned_to_you:
+        post: "あなたに割り当てられた投稿"
+        topic: "あなたに割り当てらたトピック"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "割り当てイベント"
+          assigned: "ユーザーがトピックを割り当てたとき"
+          unassigned: "ユーザーがトピックの割り当てを解除したとき"
+    search:
+      advanced:
+        in:
+          assigned: "割り当て済みである"
+          unassigned: "未割り当てである"
+        assigned:
+          label: "割り当て先"
+    topics:
+      bulk:
+        unassign: "トピックを割り当て解除"
+        assign: "トピックを割り当てる"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: 投稿テンプレート
+              description: 入力すると、このテンプレートを使った投稿が作成され、トピックではなく、その投稿にユーザーが割り当てられます。
+            assignees_group:
+              label: 割り当て先グループ
+            minimum_time_between_assignments:
+              label: 割り当て間の最低時間
+            min_recently_assigned_days:
+              label: 最近の割り当ての最小日数
+              description: デフォルトは 14 日です。
+            skip_new_users_for_days:
+              label: 新しいユーザーを数日間スキップ
+              description: デフォルトは 0 日です（ユーザーがサインアップした直後に割り当てられます）。
+            max_recently_assigned_days:
+              label: 最近の割り当ての最大日数
+              description: まず、過去 `n` 日に割り当てられたユーザーを除外します。ほかにユーザーがいない場合、`min_recently_assigned_days` にフォールバックします。デフォルトは 180 日です。
+            assigned_topic:
+              label: 割り当てられたトピック ID
+            in_working_hours:
+              label: 勤務時間内のユーザー
+    notification_reason:
+      user: "このトピックはあなたに割り当てられたため、新しい返信の件数が表示されます。"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} があなたを割り当てました"
+      titles:
+        assigned: "割り当て完了"
+      dismiss_confirmation:
+        body:
+          assigns:
+            other: "本当によろしいですか？未読の割り当て通知が %{count} 件あります。"
+    user_menu:
+      view_all_assigned: "すべての割り当て済みを表示"
+      tabs:
+        assign_list: "割り当てリスト"
+        assign_list_with_unread:
+          other: "割り当てリスト - %{count} 件の未読の割り当て"
+    edit_assignments_modal:
+      title: "割り当ての編集"
+      topic: "トピック"
+      post: "投稿"

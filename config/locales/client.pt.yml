@@ -1335,6 +1335,8 @@ pt:
       suspended_notice: "Este utilizador está suspenso até %{date}."
       suspended_permanently: "Este utilizador está suspenso"
       suspended_reason: "Motivo: "
+      silenced_permanently: "Este utilizador está silenciado."
+      silenced_reason: "Motivo:"
       github_profile: "GitHub"
       email_activity_summary: "Sumário de actividade"
       mailing_list_mode:
@@ -1857,7 +1859,8 @@ pt:
         removed: "Removido"
         search: "digite para pesquisar convites…"
         user: "Utilizador Convidado"
-        none: "Sem convites para exibir."
+        none:
+          title: "Sem convites para exibir."
         truncated:
           one: "A exibir o primeiro convite."
           other: "A exibir os primeiros %{count} convites."
@@ -2461,7 +2464,6 @@ pt:
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
       toggle_whisper: "Alternar Sussuro"
-      toggle_unlisted: "Alternar Não Listado"
       insert_table: "Inserir tabela"
       posting_not_on_topic: "A que tópico quer responder?"
       saved_local_draft_tip: "guardado localmente"

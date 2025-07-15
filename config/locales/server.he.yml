@@ -2568,6 +2568,7 @@ he:
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
     dashboard_general_tab_activity_metrics: "נא לבחור דיווחים שיופיעו בתור מדדי פעילות בלשונית הכללית."
+    gravatar_enabled: "אפשר להשתמש בשירות <a href='https://gravatar.com/'>Gravatar</a> לתמונות ייצוגיות של משתמשים. ההגדרה הזאת תמנע ממשתמשים לעבור ל־Gravatar עבור התמונות ייצוגיות שלהם, אך לא תשפיע על משתמשים שכבר עשו זאת."
     gravatar_name: "נא לציין את שם ספק שירות Gravatar. השם הזה בדרך כלל ישמש לזיהוי ספק מקור תמונות ה־Gravatar הייצוגיות באתר."
     gravatar_base_url: "נא לציין את כתובת הגישה ל־API של ספק Gravatar. ההגדרה הזאת הכרחית להמרת כתובות דוא״ל לכתובות Gravatar בה מאוחסנות התמונות הייצוגיות."
     gravatar_login_url: "כתובת ביחס אל `gravatar_base_url` (כתובת הבסיס של Gravatar) שמספקת למשתמש גישה לשירות Gravatar."
@@ -2601,6 +2602,7 @@ he:
     about_page_extra_groups_order: "סידור הקבוצות הנוספות בעמוד על אודות."
     adobe_analytics_tags_url: "כתובת תגיות Adobe Analytics‏ (`https://assets.adobedtm.com/...‎`)"
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
+    rich_editor: "הפעלת עורך הטקסט העשיר כדי שכל המשתמשים יוכלו לעבור בין מצב ה־Markdown הנוכחי ועורך הטקסט העשיר החדש לכתיבת הודעות מותאמת וידידותית יותר."
     viewport_based_mobile_mode: "ניסיוני: להשבית מצבים מבוססים סוכן לקוח (User-Agent) נייד/מחשב ולהשתמש ברוחב האשנב (viewport) במקום."
     reviewable_ui_refresh: "קבוצות שיכולות להשתמש בממשק המשתמש הניסיוני החדש בתור הסקירה."
     content_localization_enabled: "הצגת תוכן מתורגם/מקומי למשתמשים לפי הדפדפן או העדפות שפת המשתמש. תוכן שכזה יכול לכלול קטגוריות, תגיות, פוסטים ונושאים. השפות הנתמכות מוגדרות תחת ‚content localization supported locales’ (שפות נתמכות לתרגום תוכן)."
@@ -4407,7 +4409,6 @@ he:
     solarized_dark_theme_name: "חשיפה כהה לשמש"
     wcag_dark: "נגיש כהה"
     wcag_dark_theme_name: "נגיש כהה"
-    default_theme_name: "ברירת מחדל"
     light_theme_name: "בהיר"
     dark_theme_name: "כהה"
     neutral_theme_name: "נייטרלי"
@@ -5026,10 +5027,6 @@ he:
         עיטור זה מוענק על ביקור יומיומי במשך 365 ימים. ואו, שנה שלמה!
     badge_title_metadata: "עיטור ב-%{site_title} של %{display_name}"
   admin_login:
-    success: "הודעת דוא״ל נשלחה"
-    errors:
-      unknown_email_address: "כתובת הדוא״ל שגויה."
-      invalid_token: "אסימון שגוי."
     email_input: "דוא״ל של המנהל"
     submit_button: "שליחת דוא״ל"
     safe_mode: "מצב בטוח: השבתת כל ערכות העיצוב/תוספים בעת כניסה"

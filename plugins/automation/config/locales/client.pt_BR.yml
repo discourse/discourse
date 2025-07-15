@@ -420,6 +420,7 @@ pt_BR:
           name:
             label: Gatilho
         automation:
+          runs_this_month: "%{count} este mês"
           name:
             label: Nome
           trigger:

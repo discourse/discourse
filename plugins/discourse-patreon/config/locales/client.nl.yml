@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Inloggen met Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filters'
+      group: 'Groep'
+      rewards: 'Beloningen'
+      filter: 'Filter'
+      help_text: 'Je kunt een Discourse-groep met een of meer Patreon-beloningsniveaus synchroniseren.'
+      last_synced: 'Laatst gesynchroniseerd'
+      edit: 'Bewerken'
+      delete: 'Verwijderen'
+      save: 'Opslaan'
+      update_data: 'Patreon-gegevens bijwerken en groepen synchroniseren'
+      refresh_page: 'Er zijn nieuwe gegevens gedownload via de Patreon-API. Vernieuw de pagina.'
+      select_group: 'Selecteer een groep'
+      field:
+        id: "ID"
+        email: "E-mailadres"
+        amount_cents: "Bedrag (in centen)"
+        rewards: "Beloningen"
+        declined_since: "Donatie geweigerd sinds"
+        more_details:
+          label: "Betalingen en meer details"
+          help_text:
+            email_available: "Bekijk de pagina rechtsonder om de donatiegeschiedenis van deze Patreon te zien."
+            email_not_available: "Selecteer het Patreon-lid en bekijk de pagina rechtsonder om de donatiegeschiedenis te zien."
+      donation_prompt:
+        body: |
+          <h1>Hallo lezer!</h1>
+
+          <p>Bevalt onze website? Wil je bijdragen aan een goed doel?</p>
+
+          <p>
+          Als je onze website nuttig vindt en geniet van de community die we hebben gecreëerd, zouden we het fijn vinden als je doneert aan onze website.
+          Donaties zorgen ervoor dat onze services soepel blijven werken en dat onze community nog jarenlang operationeel blijft.
+          Elke cent telt en wordt goed gebruikt.
+          </p>
+
+          <p>Bedankt voor je steun!<p>
+
+          <p>
+          <a class="btn btn-large btn-danger" href="%{campaignUrl}">Patron worden</a>
+          </p>

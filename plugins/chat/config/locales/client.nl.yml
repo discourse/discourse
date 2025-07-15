@@ -234,9 +234,7 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
-      no_direct_message_channels: "Je neemt nog niet deel aan directe berichten!"
       no_direct_message_channels_cta: "Gesprek starten"
-      no_public_channels: "Je neemt nog niet deel aan kanalen!"
       no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       only_chat_push_notifications:

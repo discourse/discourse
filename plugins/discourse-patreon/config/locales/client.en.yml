@@ -1,0 +1,54 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Log in with Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filters'
+      group: 'Group'
+      rewards: 'Rewards'
+      filter: 'Filter'
+      help_text: 'You can sync a Discourse group with one or more Patreon reward tiers.'
+      last_synced: 'Last Synced'
+      edit: 'Edit'
+      delete: 'Delete'
+      save: 'Save'
+      update_data: 'Update Patreon Data & Sync Groups'
+      refresh_page: 'New data has been downloaded from Patreon API. Please refresh the page.'
+      select_group: 'Select a group'
+      field:
+        id: "Id"
+        email: "Email"
+        amount_cents: "Amount (in cents)"
+        rewards: "Rewards"
+        declined_since: "Pledge Declined Since"
+        more_details:
+          label: "Payments & More Details"
+          help_text:
+            email_available: "Reach bottom right of the page to see this Patreon's pledge history."
+            email_not_available: "Select the Patreon member and reach bottom right of the page to see the pledge history."
+      donation_prompt:
+        body: |
+          <h1>Hello reader!</h1>
+
+          <p>Do you like our website? Would you like to contribute to a good cause?</p>
+
+          <p>
+            If find our website helpful and enjoy the community we've created, we would love if you donated to our website.
+            Donations keep our services running smoothly and ensures that our community will be operational for years to come.
+            Every dollar counts and will be put to good use.
+          </p>
+
+          <p>Thank you for your support!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Become a Patron</a>
+          </p>

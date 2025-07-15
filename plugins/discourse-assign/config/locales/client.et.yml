@@ -1,0 +1,61 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    discourse_assign:
+      assigned: "Määratud"
+      group_everyone: "Kõik"
+      assigned_to: "Määratud kasutajale"
+      assigned_to_w_ellipsis: "Määratud kasutajale..."
+      unassign:
+        title: "Eemalda määramine"
+        title_w_ellipsis: "Eemalda määramine..."
+      assign:
+        title: "Määra"
+      reassign:
+        title: "Muuda"
+      topic_level_menu:
+        unassign_with_ellipsis: "Eemalda määramine..."
+      assign_modal:
+        title: "Määra teema"
+        assign: "Määra"
+        optional_label: "(valikuline)"
+        status_label: Staatus
+      claim:
+        help: "Määra teema endale"
+      assign_mailer:
+        never: "Mitte kunagi"
+        always: "Alati"
+      reminders_frequency:
+        never: "Mitte kunagi"
+        daily: "Igapäevaselt"
+        weekly: "Iganädalaselt"
+        monthly: "Igakuiselt"
+        quarterly: "Kvartaalselt"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Määra"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Ära tee midagi"
+      messages:
+        assigned: "Määratud"
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Määratud kasutajale"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Määratud"
+    edit_assignments_modal:
+      topic: "Teema"
+      post: "Postitus"

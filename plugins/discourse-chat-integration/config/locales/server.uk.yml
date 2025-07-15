@@ -1,0 +1,63 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    chat_integration_enabled: 'Увімкнути плагін інтеграції дискурс-чату'
+    chat_integration_telegram_excerpt_length: "Довжина витягу телеграмового повідомлення"
+  chat_integration:
+    all_categories: "(усі категорії)"
+    deleted_category: "(видалена категорія)"
+    deleted_group: "(видалена група)"
+    group_message_template: "повідомлення до: @ %{name}"
+    topic_tag_changed:
+      added_and_removed: "Додано %{added} і видалено %{removed}"
+      added: "Додано %{added}"
+      removed: "Видалено %{removed}"
+    provider:
+      slack:
+        status:
+          no_rules: "Для цього каналу немає правил. Запустіть `/discourse help` для отримання інструкцій."
+          rule_string_tags_suffix: "з тегами: * %{tags} *"
+        create:
+          created: "Правило створено успішно"
+          updated: "Правило успішно оновлено"
+          error: "На жаль, під час створення цього правила сталася помилка."
+        delete:
+          success: "Правило успішно видалено"
+          error: "На жаль, під час видалення цього правила сталася помилка. Запустіть `/discourse status` для списку правил."
+        transcript:
+          change_first_message: "Змінити перше повідомлення ..."
+          change_last_message: "Змінити останнє повідомлення ..."
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Додано %{added} і видалено %{removed}"
+            added: "Додано %{added}"
+            removed: "Видалено %{removed}"
+      telegram:
+        status:
+          no_rules: "Для цього каналу немає правил. Запустіть <code>/help</code> для нструкцій."
+          rule_string_tags_suffix: "з тегами: <b>%{tags}</b>"
+        parse_error: "Вибачте, я цього не зрозумів. Запустіть <code>/help</code> для інструкцій."
+        create:
+          created: "Правило створено успішно"
+          updated: "Правило успішно оновлено"
+          error: "На жаль, під час створення цього правила сталася помилка."
+        delete:
+          success: "Правило успішно видалено"
+      mattermost:
+        status:
+          no_rules: "Для цього каналу немає правил. Запустіть `/discourse help` для отримання інструкцій."
+          rule_string_tags_suffix: "з тегами: * %{tags} *"
+        create:
+          created: "Правило створено успішно"
+          updated: "Правило успішно оновлено"
+          error: "На жаль, під час створення цього правила сталася помилка."
+        delete:
+          success: "Правило успішно видалено"
+          error: "На жаль, під час видалення цього правила сталася помилка. Запустіть `/discourse status` для списку правил."
+      flowdock:
+        message_title: "опубліковано"

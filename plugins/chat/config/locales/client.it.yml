@@ -234,9 +234,7 @@ it:
         header: "Intestazione della chat"
         composer: "Compositore di chat"
         channels_list: "Elenco dei canali di chat"
-      no_direct_message_channels: "Non hai ancora aderito a nessun messaggio diretto!"
       no_direct_message_channels_cta: "Iniziare una conversazione"
-      no_public_channels: "Non hai ancora aderito a nessun canale!"
       no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
       only_chat_push_notifications:

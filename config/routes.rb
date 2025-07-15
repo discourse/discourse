@@ -409,6 +409,7 @@ Discourse::Application.routes.draw do
         resources :site_settings, only: %i[index]
         get "analytics-and-seo" => "site_settings#index"
         get "content" => "site_settings#index"
+        get "content/settings" => "site_settings#index"
         get "content/sharing" => "site_settings#index"
         get "content/posts-and-topics" => "site_settings#index"
         get "content/stats-and-thresholds" => "site_settings#index"

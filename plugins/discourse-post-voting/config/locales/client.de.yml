@@ -1,0 +1,124 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Beitragsabstimmung
+  post_voting:
+    reviewables:
+      comment_already_handled: "Danke, aber wir haben diesen Kommentar bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
+  js:
+    discourse_post_voting:
+      title: "Beitragsabstimmung"
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "neuer Kommentar"
+      popup:
+        question_answer_user_commented: '%{username} hat kommentiert in „%{topic}“ – %{site_title}'
+    category:
+      post_voting_settings_heading: Beitragsabstimmung
+      create_as_post_voting_default: Neue Themen werden in dieser Kategorie standardmäßig als Beitragsabstimmungsthemen eingestellt.
+      only_post_voting_in_this_category: Neue Themen können in dieser Kategorie nur Themen zur Beitragsabstimmung sein.
+    composer:
+      create_post_voting:
+        label: "Beitragsabstimmungsthema erstellen"
+      composer_actions:
+        create_as_post_voting:
+          label: "Beitragsabstimmung umschalten"
+          desc: "Thema wird mit Beiträgen erstellt, bei denen abgestimmt werden kann"
+        remove_as_post_voting:
+          label: "Beitragsabstimmung entfernen"
+          desc: "Thema wird im regulären Format erstellt"
+    vote:
+      already_voted: "Du kannst nur einmal pro Frage abstimmen."
+      user_over_limit: "Du kannst nicht öfter abstimmen, als es deine Vertrauensstufe erlaubt."
+      one_vote_per_post: "Du kannst nur einmal für jeden Beitrag abstimmen."
+    last_answer_lowercase: letzte Antwort
+    answer_lowercase:
+      one: Antwort
+      other: Antworten
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Gib mindestens %{count} Zeichen ein"
+              other: "Gib mindestens %{count} Zeichen ein"
+            length_ok:
+              one: "%{count} Zeichen verbleibend …"
+              other: "%{count} Zeichen verbleibend …"
+            too_long:
+              one: "Kommentar darf nicht länger als %{count} Zeichen sein"
+              other: "Kommentar darf nicht länger als %{count} Zeichen sein"
+          submit: "Kommentar hinzufügen"
+          edit: "bearbeiten"
+          cancel: "abbrechen"
+          add: "Kommentar hinzufügen"
+          show:
+            one: '%{count} weiteren Kommentar anzeigen'
+            other: '%{count} weitere Kommentare anzeigen'
+          delete:
+            confirm: "Möchtest du wirklich diesen Kommentar löschen?"
+          user:
+            deleted: "(Benutzer gelöscht)"
+          reviewables:
+            comment_already_handled: "Danke, aber wir haben diesen Kommentar bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
+            actions:
+              agree:
+                title: "Zustimmen …"
+              agree_and_keep_comment:
+                title: "Kommentar behalten"
+                description: "Meldung zustimmen und den Kommentar unbearbeitet lassen."
+              agree_and_keep_deleted:
+                title: "Kommentar gelöscht lassen"
+                description: "Meldung zustimmen und den Kommentar gelöscht lassen."
+              agree_and_suspend:
+                title: "Benutzer sperren"
+                description: "Meldung zustimmen und den Benutzer sperren."
+              agree_and_silence:
+                title: "Benutzer stummschalten"
+                description: "Meldung zustimmen und den Benutzer stummschalten."
+              agree_and_restore:
+                title: "Kommentar wiederherstellen"
+                description: "Kommentar wiederherstellen, damit Benutzer ihn sehen können."
+              agree_and_delete:
+                title: "Kommentar löschen"
+                description: "Kommentar löschen, damit Benutzer ihn nicht sehen können."
+              delete_and_agree:
+                title: "Meldung ignorieren und Kommentar löschen"
+                description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Kommentar löschst."
+              disagree_and_restore:
+                title: "Ablehnen und Kommentar wiederherstellen"
+                description: "Kommentar wiederherstellen, damit alle Benutzer ihn sehen können."
+              disagree:
+                title: "Ablehnen"
+              ignore:
+                title: "Nichts tun"
+                description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
+            transcript:
+              view: "Transkript früherer Kommentare anzeigen"
+      topic:
+        answer:
+          label: "Antwort"
+          help: "mit dem Verfassen einer Antwort beginnen"
+        sort_by: "Sortieren nach"
+        votes: "Stimmen"
+        activity: "Aktivität"
+        answer_count:
+          one: "%{count} Antwort"
+          other: "%{count} Antworten"
+        voters_count_diff:
+          one: "und %{count} weiterer Benutzer ..."
+          other: "und %{count} weitere Benutzer …"
+    review:
+      transcript:
+        view: "Transkript früherer Nachrichten anzeigen"
+      types:
+        reviewable_post_voting_comment:
+          title: "Beitragsabstimmungskommentar gemeldet"

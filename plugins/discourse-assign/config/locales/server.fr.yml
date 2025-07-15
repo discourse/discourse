@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    assign_enabled: "Activer l'extension d'attribution"
+    assigns_public: "Autoriser le grand public à voir les attributions des sujets"
+    assigns_user_url_path: "Chemin vers les sujets attribués aux utilisateurs (utilisez {username} pour remplacer le nom d'utilisateur)"
+    assigns_by_staff_mention: "Si un membre du personnel mentionne un autre membre du personnel, le sujet est automatiquement attribué"
+    unassign_creates_tracking_post: "Si vous annulez l'attribution d'un sujet, un murmure ou une petite action sera créée pour suivre le changement"
+    assign_self_regex: "Expression régulière qui doit être validée pour permettre l'attribution d'un sujet à soi-même. Par exemple : « ma liste »"
+    assign_other_regex: "Expression régulière qui doit être validée pour permettre l'attribution d'un sujet à d'autres utilisateurs via une mention. Par exemple : « votre liste »"
+    unassign_on_group_archive: "Quand un message est archivé par un groupe, annuler l'attribution du message (réattribué s'il est à nouveau déplacé dans la boîte de réception)"
+    unassign_on_close: "Quand un sujet est fermé, annuler l'attribution du sujet"
+    reassign_on_open: "Lorsqu'un sujet est ouvert, réattribuer les utilisateurs/groupes précédemment attribués"
+    invite_on_assign: "Lorsqu'un message personnel est attribué à un utilisateur ou à un groupe, invitez-le dans le MD s'il n'est pas déjà participant."
+    assign_mailer: "Quand envoyer un e-mail de notification pour les attributions"
+    remind_assigns: "Rappelle aux utilisateurs les attributions en attente."
+    remind_assigns_frequency: "Fréquence à laquelle rappeler les attributions aux utilisateurs."
+    pending_assign_reminder_threshold: "Nombre d'attributions en attente qui déclenchent une notification de rappel."
+    max_assigned_topics: "Nombre maximal de sujets qui peuvent être attribués à un utilisateur."
+    assign_allowed_on_groups: "Les utilisateurs de ces groupes sont autorisés à attribuer des sujets et peuvent se voir attribuer des sujets."
+    enable_assign_status: "Ajouter un champ de statut personnalisable à chaque attribution."
+    assign_statuses: "Liste des statuts disponibles pour chaque attribution. Le premier statut est le statut par défaut appliqué à chaque nouvelle attribution."
+    errors:
+      assign_statuses:
+        too_few: "Il doit y avoir au moins deux statuts différents disponibles."
+        duplicate: "Il existe des valeurs de statut dupliquées."
+        removed_in_use: "Impossible de supprimer un statut de la liste si des attributions existantes utilisent ce statut."
+  discourse_assign:
+    assigned_to: "Sujet attribué à @%{username}"
+    unassigned: "L'attribution du sujet a été annulée"
+    already_claimed: "Le sujet a déjà été réservé."
+    already_assigned: "Le sujet est déjà attribué à @%{username}"
+    too_many_assigns: "@%{username} a atteint le nombre maximal de sujets attribués (%{max})."
+    too_many_assigns_for_topic: "La limite de %{limit} attributions par sujet a été atteinte."
+    forbidden_assign_to: "@%{username} ne peut pas recevoir d'attribution, car il ou elle n'appartient pas aux groupes autorisés attribués."
+    forbidden_assignee_not_pm_participant: "@%{username} ne peut pas recevoir d'attribution, car il ou elle n'a pas accès à ce MD. Vous pouvez accorder l'accès à %{username} en l'invitant dans ce MD."
+    forbidden_assignee_cant_see_topic: "@%{username} ne peut pas recevoir d'attribution, car il ou elle n'a pas accès à ce sujet."
+    group_already_assigned: "Le sujet est déjà attribué à @%{group}"
+    forbidden_group_assign_to: "@%{group} ne peut pas recevoir d'attribution, car ce groupe n'appartient pas aux groupes autorisés attribués."
+    forbidden_group_assignee_not_pm_participant: "@%{group} ne peut pas recevoir d'attribution, car tous les membres n'ont pas accès à ce MD."
+    forbidden_group_assignee_cant_see_topic: "@%{group} ne peut pas recevoir d'attribution, car tous les membres n'ont pas accès à ce sujet."
+    flag_assigned: "Nous sommes désolés, le sujet de ce signalement est attribué à un autre utilisateur."
+    flag_unclaimed: "Vous devez réserver ce sujet avant d'agir sur le signalement"
+    topic_assigned_excerpt: "vous a attribué le sujet « %{title} »"
+    topic_group_assigned_excerpt: "a attribué le sujet « %{title} » à @%{group}"
+    reminders_frequency:
+      never: "jamais"
+      daily: "chaque jour"
+      weekly: "chaque semaine"
+      monthly: "chaque mois"
+      quarterly: "chaque trimestre"
+  assign_mailer:
+    title: "Attribuer un expéditeur"
+    subject_template: "[%{email_prefix}] %{assignee_name} vous a attribué le sujet « %{topic_title} » !"
+    text_body_template: |
+      Hey, %{assignee_name} vous a **attribué** une discussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Si vous êtes intéressé(e), cliquez sur le lien suivant :
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Vous avez %{pending_assignments} attribution(s) en attente"
+    body: |
+      Vous avez actuellement [%{pending_assignments} attribution(s) en attente](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Ce rappel vous sera envoyé %{frequency} si vous avez plus d'un sujet attribué.
+    newest: |
+      ### Plus récente(s)
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Plus ancienne(s)
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Attribution aléatoire
+        no_one: "A tenté d'attribuer aléatoirement un membre du groupe @%{group}, mais personne n'était disponible."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} vous a attribué"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Le statut sélectionné n'est pas valide (il n'est pas inclus dans le paramètre du site assigned_status)."

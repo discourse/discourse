@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    patreon_enabled: 'Ota discourse-patreon-lisäosa käyttöön'
+    patreon_login_enabled: 'Ota käyttöön yhteisökirjautuminen Patreonilla'
+    patreon_client_id: 'Luotu Patreonin asiakastunnus (client ID)'
+    patreon_client_secret: 'Luotu Patreonin asiakkaan salatunnus (client secret)'
+    patreon_webhook_secret: 'Luotu Patreonin webhook-salausavain (webhook secret)'
+    patreon_creator_discourse_username: "Sen Discourse-tilin käyttäjätunnus, jota käytetään kirjauduttaessa Patreon-tuottajatilin (engl. creator account) kautta Patreonin yhteisökirjautumisen kautta"
+    patreon_creator_access_token: "Luotu Patreonin tuottajan tunnistusväline (creator's access token)"
+    patreon_creator_refresh_token: "Luotu Patreonin tuottajan päivitysväline (creator's refresh token)"
+    patreon_declined_pledges_grace_period_days: "Varoaika (päivinä), kunnes lahjoituslupaus hylätään lopullisesti."
+    max_patreon_api_reqs_per_hr: "Patreon API-pyyntöjen enimmäismäärä per tunti"
+    max_patreon_api_reqs_per_day: "Patreon API-pyyntöjen päivittäinen enimmäismäärä"
+    patreon_verbose_log: 'salli patreon-tietosisällön monikirjaus'
+    patreon_donation_prompt_enabled: "Otetaanko lahjoituskehotus käyttöön?"
+    patreon_donation_prompt_show_after_topics: "Näytä lahjoituskehotus n ketjun jälkeen"
+    patreon_donation_prompt_campaign_url: "Lahjoituskehotuskampanjan URL"
+    errors:
+      patreon_creator_username_not_set: "Sinun täytyy määrittää Patreon Creator Discourse -käyttäjätunnusasetus ennen kuin otat Patreon-kirjautumisen käyttöön."
+  dashboard:
+    problem:
+      access_token_invalid: "Patreonin tuottajan tunnistus- ja päivitysvälineiden arvot ovat virheellisiä. Sinun täytyy kopioida ja liittää uudet välineet <a href='https://www.patreon.com/platform/documentation/clients'>Patreonin verkkosivustolta</a> <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>sivuston asetuksiin</a>."
+  patreon:
+    error:
+      invalid_response: "Virheellinen vastaus Patreonin APIsta"

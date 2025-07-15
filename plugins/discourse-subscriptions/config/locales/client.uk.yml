@@ -1,0 +1,59 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    discourse_subscriptions:
+      optional: Опціонально
+      campaign:
+        success_title: Успіх!
+      plans:
+        interval:
+          adverb:
+            day: За день
+            week: Щотижня
+            month: Щомісяця
+            year: Щорічно
+      user:
+        payments:
+          created_at: Створено
+        plans:
+          product: Назва
+        subscriptions:
+          status: Статус
+          update_card:
+            single: "Оновити"
+          created_at: Створено
+          cancel: скасувати
+      subscribe:
+        countries:
+          MS: "Montserrat"
+      billing:
+        email: Електронна пошта
+      admin:
+        dashboard:
+          title: Майстерня
+          table:
+            head:
+              user: Користувач
+        products:
+          product:
+            description: Опис
+            active: Активний
+            created_at: Створено
+            updated_at: Оновлено
+        plans:
+          plan:
+            active: Активний
+            created_at: Створено
+        coupons:
+          active: Активний?
+          actions: Дії
+        subscriptions:
+          subscription:
+            user: Користувач
+            status: Статус
+            created_at: Створено

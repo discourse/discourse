@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Supprimez les points-virgules de la requête."
+        dirty: "Vous devez enregistrer la requête avant de l'exécuter."
+    explorer:
+      or: "ou"
+      admins_only: "L'explorateur de données n'est disponible que pour les administrateurs."
+      allow_groups: "Autoriser les groupes à accéder à cette requête"
+      title: "Explorateur de données"
+      create: "Nouvelle requête"
+      create_placeholder: "Nom de la requête…"
+      description_placeholder: "Saisissez une description ici"
+      import:
+        label: "Importer"
+        modal: "Importer une requête"
+        unparseable_json: "Fichier JSON non analysable."
+        wrong_json: "Fichier JSON incorrect. Un fichier JSON doit contenir un objet « query », qui doit au moins avoir une propriété « sql »."
+      help:
+        label: "Aide"
+        modal_title: "Aide de l'explorateur de données"
+        auto_resolution: "<h2>Résolution d'entité automatique</h2> <p>Lorsque votre requête renvoie un identifiant d'entité, l'explorateur de données peut le remplacer automatiquement par le nom de l'entité et d'autres informations utiles dans les résultats de la requête. La résolution automatique est disponible pour <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> et <i><b>badge_id</b></i>. Pour essayer cette fonction, exécutez cette requête :</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Création de paramètres personnalisés</h2> <p>Pour créer des paramètres personnalisés pour vos requêtes, placez ceci en haut de votre requête et respectez le format :</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Remarque : la première ligne avec [params] est requise, ainsi que les deux tirets qui la précèdent et chaque paramètre personnalisé que vous souhaitez déclarer.</i></p>"
+        default_values: "<h3>Valeurs par défaut</h3> <p>Vous pouvez déclarer des paramètres avec ou sans valeurs par défaut. Les valeurs par défaut s'afficheront dans un champ de texte sous l'éditeur de requête, que vous pourrez modifier selon vos besoins. Les paramètres déclarés sans valeurs par défaut généreront toujours un champ de texte, mais seront vides et surlignés en rouge.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Types de données</h3> <p>Voici les types de données courants que vous pouvez utiliser :</p> <ul> <li><b>integer</b> - entier signé à quatre octets</li> <li><b>text</b> - chaîne de caractères de longueur variable</li> <li><b>boolean</b> - vrai/faux</li> <li><b>date</b> - date calendaire (année, mois, jour)</li> </ul> <p>Pour plus d'informations concernant les types de données, visitez <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>ce site Web</a>.</p>"
+      schema:
+        title: "Schéma de la base de données"
+        filter: "Recherche…"
+        sensitive: "Le contenu de cette colonne peut contenir des informations particulièrement sensibles ou privées. Veuillez faire preuve de prudence lorsque vous utilisez ce contenu."
+      types:
+        bool:
+          yes: "Oui"
+          no: "Non"
+          null_: "Nul"
+      export: "Exporter"
+      view_json: "Afficher JSON"
+      save: "Enregistrer les modifications"
+      saverun: "Enregistrer les modifications et exécuter"
+      run: "Exécuter"
+      undo: "Annuler les modifications"
+      edit: "Modifier"
+      delete: "Supprimer"
+      recover: "Annuler la suppression de la requête"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Tableau"
+      show_graph: "Graphique"
+      others_dirty: "Une requête comporte des modifications non enregistrées qui seront perdues si vous quittez la page"
+      run_time: "Requête exécutée en %{value} millisecondes."
+      result_count:
+        one: "%{count} résultat."
+        other: "%{count} résultats."
+      max_result_count:
+        one: "Affichage du premier (%{count}) résultat."
+        other: "Affichage des %{count} premiers résultats."
+      query_name: "Requête"
+      query_groups: "Groupes"
+      link: "Lien pour"
+      report_name: "Rapport"
+      query_description: "Description"
+      query_time: "Dernière exécution"
+      query_user: "Créée par"
+      column: "Colonne %{number}"
+      explain_label: "Inclure le plan d'exécution ?"
+      save_params: "Définir les valeurs par défaut"
+      reset_params: "Réinitialiser"
+      search_placeholder: "Recherche…"
+      no_search_results: "Désolé, nous n'avons trouvé aucun résultat correspondant à votre texte."
+      form:
+        errors:
+          invalid: "Invalide"
+          no_such_category: "Aucune catégorie de ce type"
+          no_such_group: "Aucun groupe de ce type"
+          invalid_date: "%{date} est une date invalide"
+          invalid_time: "%{time} est une heure invalide"
+    group:
+      reports: "Rapports"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé API à un ensemble de requêtes en spécifiant des ID de requêtes."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Envoyer à l'utilisateur, au groupe ou à l'adresse e-mail
+            query_id:
+              label: Requête de l'explorateur de données
+            query_params:
+              label: Paramètres de requête de l'explorateur de données
+            skip_empty:
+              label: Ignorer l'envoi d'un MP s'il n'y a aucun résultat
+            attach_csv:
+              label: Joindre le fichier CSV au MD
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: Le sujet dans lequel les résultats de la requête doivent être affichés
+            query_id:
+              label: Requête de l'explorateur de données
+            query_params:
+              label: Paramètres de requête de l'explorateur de données
+            skip_empty:
+              label: Ignorer la publication s'il n'y a aucun résultat
+            attach_csv:
+              label: Joindre le fichier CSV à la publication

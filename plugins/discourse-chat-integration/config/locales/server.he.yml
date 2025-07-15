@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    chat_integration_enabled: 'הפעלת התוסף discourse-chat-integration (שילוב צ׳אט ב־Discourse)'
+    chat_integration_discourse_username: 'שם המשתמש להתחקות אליו בעת קבלת תוכן.'
+    chat_integration_delay_seconds: 'מספר השניות להמתין לאחר יצירת פוסט בטרם שליחת התראות לצ׳אט'
+    chat_integration_slack_username: "שם המשתמש של הבוט לפרסום דרך slack"
+    chat_integration_slack_enabled: 'הפעלת ספק שילוב הצ׳אט עם Slack'
+    chat_integration_slack_access_token: 'אסימון גישה OAuth לאימות מול Slack'
+    chat_integration_slack_incoming_webhook_token: 'אסימון הווידוא שמשמש לאמת בקשות נכנסות'
+    chat_integration_slack_excerpt_length: 'אורך מהפוסט שמופיע בתקציר ב־Slack'
+    chat_integration_slack_icon_url: 'סמל לצד ההודעות שנשלחות ל־Slack (בררת המחדל היא לוגו הפורום)'
+    chat_integration_slack_outbound_webhook_url: "לטובת שימוש במערכת ‚ההתליות הנכנסות’ במקום ב־API של OAuth. לא מומלץ."
+    chat_integration_slack_transcript_quote: לעטוף את התמלול מ־Slack בתגיות [quote]?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "עליך לציין כתובת התלייה יוצאת או אסימון גישה"
+    chat_integration_telegram_enabled: "הפעלת ספק שילוב הצ׳אט עם טלגרם"
+    chat_integration_telegram_access_token: "אסימון הגישה לבוט שלך מה־botfather של טלגרם"
+    chat_integration_telegram_excerpt_length: "אורך מהפוסט שמופיע בתקציר בטלגרם"
+    chat_integration_telegram_enable_slash_commands: "לאפשר ניהול מינויים בטלגרם דרך ‚פקודות לוכסן’"
+    chat_integration_discord_enabled: "הפעלת ספק שילוב הצ׳אט עם Discord"
+    chat_integration_discord_message_content: "ההודעה שיש לכלול מעל לסיכום בעת שליחת התראות ל־Discord"
+    chat_integration_discord_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Discord"
+    chat_integration_guilded_enabled: "הפעלת ספק שילוב הצ׳אט עם Guilded"
+    chat_integration_guilded_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Guilded"
+    chat_integration_mattermost_enabled: "הפעלת ספק שילוב הצ׳אט עם Mattermost"
+    chat_integration_mattermost_webhook_url: 'כתובת התלייה של Mattermost'
+    chat_integration_mattermost_incoming_webhook_token: 'אסימון הווידוא שמשמש לאמת בקשות נכנסות'
+    chat_integration_mattermost_icon_url: "סמל לפרסומים אל Mattermost (בררת המחדל היא לוגו הפורום)"
+    chat_integration_mattermost_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Mattermost"
+    chat_integration_matrix_enabled: "הפעלת ספק שילוב הצ׳אט עם Matrix"
+    chat_integration_matrix_homeserver: "שרת בית לחיבור. נא לוודא שכללת את הפרוטוקול."
+    chat_integration_matrix_access_token: "אסימון גישה לחשבון ה־Matrix של הבוט"
+    chat_integration_matrix_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Matrix"
+    chat_integration_matrix_use_notice: "להשתמש בהתראה במקום בהודעה פשוטה"
+    chat_integration_zulip_enabled: "הפעלת ספק שילוב הצ׳אט עם Zulip"
+    chat_integration_zulip_server: "כתובת הבסיס לשרת ה־Zulip. נא לוודא שכללת גם את ה־‎http(s)://‎"
+    chat_integration_zulip_bot_email_address: "כתובת הדוא״ל שמשויכת לבוט שלך ב־Zulip"
+    chat_integration_zulip_bot_api_key: "מפתח ה־API לבוט ה־Zulip שלך"
+    chat_integration_zulip_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Zulip"
+    chat_integration_rocketchat_enabled: "הפעלת ספק שילוב הצ׳אט עם Rocket Chat"
+    chat_integration_rocketchat_webhook_url: "כתובת התליית השילוב עם Rocket Chat"
+    chat_integration_rocketchat_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Rocket Chat"
+    chat_integration_gitter_enabled: "הפעלת ספק שילוב הצ׳אט עם Gitter"
+    chat_integration_flowdock_enabled: "הפעלת ספק שילוב הצ׳אט עם Flowdock"
+    chat_integration_flowdock_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Flowdock"
+    chat_integration_groupme_enabled: "הפעלת ספק שילוב הצ׳אט עם Groupme"
+    chat_integration_groupme_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Groupme"
+    chat_integration_groupme_bot_ids: "*נדרש* מזהי הבוטים, מופרדים ב־, אם יש כמה כאלה"
+    chat_integration_groupme_instance_names: "*נדרש* שמות הצ׳אטים ב־GroupMe, מופרדים ב־, אם יש כמה כאלה (באותו הסדר כמו מזהי הבוטים)"
+    chat_integration_teams_enabled: "הפעלת ספק שילוב הצ׳אט עם Microsoft Teams"
+    chat_integration_teams_excerpt_length: "אורך מהפוסט שמופיע בתקציר Microsoft Teams"
+    chat_integration_powerautomate_enabled: "הפעלת ספק השילוב עם Microsoft Power Automate"
+    chat_integration_powerautomate_excerpt_length: "אורך מהפוסט שמופיע בתקציר Microsoft Power Automate"
+    chat_integration_webex_enabled: "הפעלת ספק שילוב הצ׳אט עם Webex Teams"
+    chat_integration_webex_excerpt_length: "אורך מהפוסט שמופיע בתקציר Webex Teams"
+    chat_integration_google_enabled: "הפעלת ספק שילוב הצ׳אט עם ‚Google Chat’"
+    chat_integration_google_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "בחלק מערוצי שילובי הצ׳אט יש שגיאות. נא לבקר ב<a href='%{base_path}/admin/plugins/chat-integration'>אגף שילובי הצ׳אט</a> כדי להבין יותר."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: שליחת הודעה ב־Slack
+      send_chat_integration_message:
+        title: שליחת הודעת שילוב צ׳אט
+  chat_integration:
+    all_categories: "(כל הקטגוריות)"
+    deleted_category: "(קטגוריה שנמחקה)"
+    deleted_group: "(קבוצה שנמחקה)"
+    group_mention_template: "אזכורים של: ‎‎@%{name}‎"
+    group_message_template: "הודעות אל: ‎‎@%{name}‎"
+    topic_tag_changed:
+      added_and_removed: "נוספו %{added} והוסרו %{removed}"
+      added: "נוספו %{added}"
+      removed: "הוסרו %{removed}"
+    provider:
+      slack:
+        status:
+          header: |
+            *כללים לערוץ זה*
+            (אם מספר כללים תואמים לפוסט, יופעל הכלל העליון מביניהם)
+          no_rules: "לא מוגדרים כללים לערוץ זה. יש להריץ את הפקודה `‎/discourse help` להנחיות."
+          rule_string: "*%{index})* *%{filter}* פוסטים תחת *%{category}*"
+          rule_string_tags_suffix: " עם תגיות: *%{tags}*"
+        parse_error: "לא הצלחתי להבין את זה, סליחה. יש להריץ את הפקודה `‎/discourse help` לקבלת הנחיות."
+        create:
+          created: "כלל נוצר בהצלחה"
+          updated: "כלל עודכן בהצלחה"
+          error: "אירעה שגיאה בעת יצירת כלל זה, עמך הסליחה."
+        delete:
+          success: "כלל נמחק בהצלחה"
+          error: "אירעה שגיאה בעת מחיקת הכלל הזה, עמך הסליחה. נא להריץ את הפקודה `‎/discourse status` לרשימת הכללים."
+        not_found:
+          tag: "לא ניתן למצוא את התגית *%{name}*."
+          category: "לא ניתן למצוא את הקטגוריה *%{name}*. קטגוריות זמינות: *%{list}*"
+        help: |
+          *כלל חדש:* ‪`‎/discourse [thread|watch|follow|mute] [קטגוריה] [tag:שם]`
+          (עליך לציין סוג כלל ולפחות קטגוריה או תגית אחת)
+          - *thread* – להודיע לערוץ הזה אם יש נושאים חדשים, תגובות לשרשור אם ניתן
+          - *watch* – להודיע לערוץ הזה אם יש נושאים חדשים או תגובות חדשות
+          - *follow* – להודיע לערוץ הזה אם יש נושאים חדשים
+          - *mute* – חסימת התראות לערוץ זה
+
+          *הסרת כלל:* ‪`/discourse remove [מספר כלל]`
+          (`[מספר כלל]` ניתן למצוא בעזרת `‎/discourse status`)
+
+          *הצגת כללים:* `‎/discourse status`
+
+          *[ניסיוני] פרסומים אחרונים:* `‎/discourse post [n]`
+          יצירת נושא טיוטה ב־Discourse שמציג את `n` הפוסטים האחרונים בערוץ זה
+
+          *עזרה:* `‎/discourse help`
+        transcript:
+          modal_title: "יצירת תמליל"
+          modal_description: "כל ההודעות בשרשור יורכבו לפוסט יחיד בפורום. תינתן לך האפשרות לערוך את התמליל לפני הפרסום."
+          transcript_ready: "התמליל מוכן"
+          continue_on_discourse: "להמשיך בפורום"
+          error: "משהו השתבש במהלך בניית מהלך השיחה, עמך הסליחה!"
+          post_to_discourse: "יש ללחוץ כאן כדי ליצור פוסט טיוטה ב־Discourse עם תמלול"
+          api_required: "שילוב זה אינו מוגדר לתמוך בפרסום תמלולים, עמך הסליחה."
+          view_on_slack: "הצגה בתוך %{name} ב־Slack"
+          first_message_pretext: "התחיל לפני %{n} הודעות:"
+          last_message_pretext: "והסתיים לפני %{n} הודעות:"
+          posted_in: "פורסם תחת %{name}"
+          change_first_message: "עריכת ההודעה הראשונה…"
+          change_last_message: "עריכת ההודעה האחרונה…"
+          loading: "מהלך השיחה נטען…"
+          error_users: "שגיאה: לא ניתן למשוך את המשתמשים מ־Slack"
+          error_history: "שגיאה: לא ניתן למשוך את היסטוריית הערוץ מ־Slack"
+          error_ts: "שגיאה: לא ניתן למשוך את ההודעה המבוקשת מ־Slack"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "נוספו %{added} והוסרו %{removed}"
+            added: "נוספו %{added}"
+            removed: "הוסרו %{removed}"
+      telegram:
+        unknown_chat: "צ׳אט זה אינו מוגדר באתר %{site_title}. נא לבקש מההנהלה להוסיף ערוץ עם ‚מזהה צ׳אט’ כזה %{chat_id}."
+        known_chat: "צ׳אט זה מוגדר באתר %{site_title}. יש להגדיר אותו דרך לוח ההנהלה. (מזהה צ׳אט: %{chat_id})"
+        message: |-
+          <a href="%{post_url}">%{title}</a> פורסם על ידי <b>%{user}</b>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>כללים לערוץ זה</b>
+            (אם מספר כללים תואמים לפוסט, יופעל הכלל העליון מביניהם)
+          no_rules: "לא מוגדרים כללים לערוץ זה. יש להריץ את הפקודה <code>‎/help</code> להנחיות."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> פוסטים תחת<b>%{category}</b>"
+          rule_string_tags_suffix: " עם התגיות: <b>%{tags}</b>"
+        parse_error: "לא הבנתי במה מדובר, עמך הסליחה. יש להריץ את הפקודה <code>‎/help</code> לקבלת הנחיות."
+        create:
+          created: "כלל נוצר בהצלחה"
+          updated: "כלל עודכן בהצלחה"
+          error: "אירעה שגיאה בעת יצירת כלל זה, עמך הסליחה."
+        delete:
+          success: "כלל נמחק בהצלחה"
+          error: "אירעה שגיאה בעת מחיקת הכלל, עמך הסליחה. יש להריץ את הפקודה <code>‎/status</code> לקבלת רשימת הכללים."
+        not_found:
+          tag: "לא ניתן למצוא את התגית <b>%{name}</b>."
+          category: "לא ניתן למצוא את הקטגוריה <b>%{name}</b>. הקטגוריות הזמינות: <b>%{list}</b>"
+        help: |
+          <b>כלל חדש:</b> <code>‪/[watch|follow|mute] [קטגוריה] [tag:שם]</code>
+          (עליך לציין סוג כלל ולפחות קטגוריה או תגית אחת)
+          - <b>watch</b> – להודיע לערוץ הזה אם יש נושאים חדשים או תגובות חדשות
+          - <b>follow</b> – להודיע לערוץ הזה אם יש נושאים חדשים
+          - <b>mute</b> – חסימת התראות לערוץ זה
+
+          <b>הסרת כלל:</b> <code>‪/remove [מספר כלל]</code>
+          (<code>[מספר כלל]</code> ניתן למצוא בעזרת <code>‎/status</code>)
+
+          <b>הצגת כללים:</b> <code>‎/status</code>
+
+          <b>עזרה:</b> <code>‎/help</code>
+      hipchat:
+        message: <a href="%{post_url}">%{title}</a> פורסם על ידי <b>%{user}</b>
+      mattermost:
+        status:
+          header: |
+            *כללים לערוץ זה*
+            (אם מספר כללים תואמים לפוסט, יופעל הכלל העליון מביניהם)
+          no_rules: "לא מוגדרים כללים לערוץ זה. יש להריץ את הפקודה `‎/discourse help` להנחיות."
+          rule_string: "*%{index})* *%{filter}* פוסטים תחת *%{category}*"
+          rule_string_tags_suffix: " עם התגיות: *%{tags}*"
+        parse_error: "לא הצלחתי להבין את זה, סליחה. יש להריץ את הפקודה `‎/discourse help` לקבלת הנחיות."
+        create:
+          created: "כלל נוצר בהצלחה"
+          updated: "כלל עודכן בהצלחה"
+          error: "אירעה שגיאה בעת יצירת כלל זה, עמך הסליחה."
+        delete:
+          success: "כלל נמחק בהצלחה"
+          error: "אירעה שגיאה בעת מחיקת הכלל הזה, עמך הסליחה. נא להריץ את הפקודה `‎/discourse status` לרשימת הכללים."
+        not_found:
+          tag: "לא ניתן למצוא את התגית *%{name}*."
+          category: "לא ניתן למצוא את הקטגוריה *%{name}*. קטגוריות זמינות: *%{list}*"
+        help: |
+          *כלל חדש:* ‪`‎/discourse [watch|follow|mute] [קטגוריה] [tag:שם]`
+          (עליך לציין סוג כלל ולפחות קטגוריה או תגית אחת)
+          - *watch* – להודיע לערוץ הזה אם יש נושאים חדשים או תגובות חדשות
+          - *follow* – להודיע לערוץ הזה אם יש נושאים חדשים
+          - *mute* – חסימת התראות לערוץ זה
+
+          *הסרת כלל:* ‪`/discourse remove [מספר כלל]`
+          (`[מספר כלל]` ניתן למצוא בעזרת `‎/discourse status`)
+
+          *הצגת כללים:* `‎/discourse status`
+
+          *עזרה:* `‎/discourse help`
+      matrix:
+        text_message: "פרסום חדש תחת %{title} על ידי %{user} - %{post_url}"
+        formatted_message: |
+          פרסום חדש תחת <b><a href='%{post_url}'>%{title}</a></b> על ידי <b>%{user}</b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          פרסום חדש תחת **[%{title}](%{post_url})** על ידי **%{user}**
+          ~~~quote
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "פורסם"
+      google:
+        new_post: "פוסט חדש באתר %{site_title}"
+        new_topic: "נושא חדש באתר %{site_title}"
+        author: "מאת ‎@%{username}"
+        link: "לצפייה באתר %{site_title}"
+      groupme:
+        errors:
+          instance_names_issue: "שם העותק אינו בתצורה הנכונה או שלא סופק"

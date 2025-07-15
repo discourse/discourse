@@ -1,0 +1,80 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  reports:
+    currently_away:
+      title: Użytkownicy aktualnie nieobecni
+      labels:
+        username: Nazwa konta
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Wydarzenie rozpoczęte
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Podany przez Ciebie region świąt nie istnieje."
+    discourse_calendar_enable_holiday_failed: "Nie można włączyć tego święta, jest ono już włączone lub nie jest wyłączone."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Zdarzenie — zaproszenie zbiorcze powiodło się"
+      subject_template: "Zaproszenie zbiorcze zostało pomyślnie przetworzone"
+      text_body_template: "Twój plik z zaproszeniami zbiorczymi został przetworzony, utworzono %{processed} zaproszeń."
+    discourse_post_event_bulk_invite_failed:
+      title: "Zdarzenie — zaproszenie zbiorcze nie powiodło się"
+      subject_template: "Zaproszenie zbiorcze zostało przetworzone z błędami"
+  site_settings:
+    events_max_rows: "Maksymalna liczba wierszy tekstu na wydarzenie w kalendarzu."
+    map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
+    displayed_invitees_limit: "Ogranicza liczbę zaproszeń wyświetlanych w wydarzeniu."
+    display_post_event_date_on_topic_title: "Wyświetla datę wydarzenia po tytule tematu."
+    use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."
+    discourse_post_event_allowed_on_groups: "Grupy, które mogą tworzyć wydarzenia."
+    discourse_post_event_edit_notifications_time_extension: "Wydłuża (w minutach) okres po zakończeniu wydarzenia, w którym osoby zaproszone są nadal powiadamiane o edycji w oryginalnym poście."
+    holiday_calendar_topic_id: "Identyfikator tematu kalendarza świąt/nieobecności personelu."
+    holiday_status_emoji: Określa emoji używane dla statusu świąt.
+    working_days: "Ustaw dni robocze. Możesz wyświetlić dostępność grupy za pomocą tagu `timezones` w poście, np.: `[timezones group=admins][timezones]`"
+    events_calendar_categories: "Wyświetl kalendarz wydarzeń na górze kategorii."
+    sort_categories_by_event_start_date_enabled: "Włącz sortowanie tematów kategorii według daty rozpoczęcia wydarzenia."
+    calendar_automatic_holidays_enabled: "Automatycznie ustawiaj status świąt na podstawie regionu użytkownika (uwaga: możesz wyłączyć określone automatyczne święta w ustawieniach wtyczki)"
+    sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
+    include_expired_events_on_calendar: "Uwzględnij minione/wygasłe wydarzenia w widokach kalendarza kategorii i nadchodzących wydarzeń."
+  discourse_calendar:
+    invite_user_notification: "%{username} zaprosił Cię do: %{description}"
+    calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
+    more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."
+    more_than_two_dates: "Post w temacie kalendarza nie może zawierać więcej niż dwóch dat."
+    event_expired: "Wydarzenie wygasło"
+    holiday_status:
+      description: "Na świętach"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} wkrótce się rozpocznie."
+      after_event_reminder: "%{title} dobiegło końca."
+      ongoing_event_reminder: "%{title} trwa."
+    errors:
+      bulk_invite:
+        error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
+      models:
+        event:
+          only_one_event: "Post może mieć tylko jedno wydarzenie."
+          must_be_in_first_post: "Wydarzenie może znajdować się tylko w pierwszym poście tematu."
+          raw_invitees_length: "Wydarzenie jest ograniczone do %{count} użytkowników/grup."
+          raw_invitees:
+            only_group: "Wydarzenie akceptuje tylko nazwy grup."
+          ends_at_before_starts_at: "Wydarzenie nie może zakończyć się zanim się zacznie."
+          start_must_be_present_and_a_valid_date: "Wydarzenie wymaga prawidłowej daty rozpoczęcia."
+          end_must_be_a_valid_date: "Data zakończenia musi być prawidłową datą."
+          invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Strefa czasowa nie została rozpoznana."
+          acting_user_not_allowed_to_create_event: "Bieżący użytkownik nie ma uprawnień do tworzenia wydarzeń."
+          acting_user_not_allowed_to_act_on_this_event: "Obecny użytkownik nie może działać w związku z tym wydarzeniem."
+          invalid_allowed_groups: "Nieprawidłowe dozwolone grupy."
+          acting_user_not_allowed_to_invite_these_groups: "Bieżący użytkownik nie może zapraszać tych grup."
+          custom_field_is_invalid: "Pole niestandardowe `%{field}` jest niedozwolone."
+          name:
+            length: "Długość nazwy wydarzenia musi zawierać się w przedziale od %{minimum} do %{maximum} znaków."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Przypomnienie o wydarzeniu"

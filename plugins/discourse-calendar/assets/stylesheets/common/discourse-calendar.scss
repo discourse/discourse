@@ -1,0 +1,433 @@
+.discourse-calendar-wrap {
+  margin: 0.5em 0;
+  border: 5px solid var(--primary-low);
+}
+
+.category-calendar .calendar {
+  overflow-y: scroll;
+}
+
+.before-topic-list-body-outlet.category-calendar {
+  display: table-caption;
+}
+
+.calendar.fc {
+  height: 645px; // Must be fixed to prevent height change on load
+  border: 0;
+
+  &.fc-unthemed {
+    tbody,
+    thead,
+    tr {
+      border: none;
+
+      td.fc-widget-content,
+      td.fc-widget-header {
+        border-left: 0;
+
+        &:last-child {
+          border-right: 0;
+        }
+      }
+    }
+    overflow: hidden;
+
+    .fc-scroller {
+      height: 560px !important;
+      padding-bottom: 5px;
+    }
+
+    .fc-basic-view .fc-day-top .fc-day-number {
+      float: left;
+    }
+
+    .fc-bg td.fc-today {
+      background-color: var(--highlight-medium);
+      border-style: solid;
+    }
+
+    .fc-month-view .fc-widget-content,
+    .fc-basicWeek-view .fc-widget-content,
+    .fc-head-container {
+      padding: 0;
+    }
+
+    .fc-bg tbody {
+      border-width: 0;
+    }
+
+    .fc-header-toolbar {
+      padding: 0.5em 0.5em 0 0.5em;
+    }
+
+    .fc-title {
+      @include ellipsis;
+      display: block;
+    }
+
+    .fc-event-container {
+      padding: 3px;
+    }
+
+    .fc-widget-header span {
+      padding: 3px 3px 3px 0.5em;
+    }
+
+    .fc-center {
+      display: none;
+    }
+
+    .fc-button {
+      border-radius: 0;
+      box-shadow: none;
+      background: var(--primary-low);
+      text-transform: capitalize;
+      color: var(--primary);
+      text-shadow: none;
+      border: none;
+      padding: 6px 12px;
+
+      &:hover {
+        background: var(--primary-medium);
+        color: var(--secondary);
+      }
+
+      &.fc-state-active {
+        background: var(--tertiary);
+        color: var(--secondary);
+      }
+    }
+
+    .fc-button-group {
+      // margin-right: 0;
+      .fc-button {
+        margin: 0;
+      }
+    }
+
+    .fc-divider,
+    .fc-list-empty,
+    .fc-list-heading td,
+    .fc-popover .fc-header {
+      background: var(--primary-low);
+    }
+
+    .fc-content,
+    .fc-divider,
+    .fc-list-heading td,
+    .fc-list-view,
+    .fc-popover,
+    .fc-row,
+    tbody,
+    td,
+    th,
+    thead {
+      border-color: var(--primary-low);
+    }
+  }
+
+  .fc-event,
+  .fc-event-dot {
+    background-color: var(--tertiary);
+    border: 1px solid transparent;
+
+    .fc-time {
+      display: none;
+    }
+
+    &.grouped-event {
+      background-color: var(--primary-low);
+      border: 1px solid var(--primary-low-mid);
+      color: var(--primary);
+
+      .emoji {
+        margin-right: 0.25em;
+      }
+    }
+  }
+
+  .fc-left {
+    .fc-button-group:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .fc-list-item-add-to-calendar {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+  }
+}
+
+a.holiday {
+  cursor: default;
+}
+
+.combo-box.user-timezone {
+  min-width: 15em;
+}
+
+.discourse-calendar-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0.5em;
+  border-bottom: 1px solid var(--primary-low);
+  background: var(--primary-very-low);
+  min-height: 60px;
+
+  .discourse-calendar-timezone-picker {
+    font-size: 16px;
+    margin-bottom: 0;
+    max-width: 50vw;
+  }
+
+  h2.discourse-calendar-title {
+    margin: 0 !important;
+  }
+
+  .title {
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+}
+
+.group-timezones {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+
+  &[data-size="auto"],
+  &.auto {
+    height: auto;
+  }
+
+  &[data-size="small"],
+  &.small {
+    height: 175px;
+  }
+
+  &[data-size="medium"],
+  &.medium {
+    height: 300px;
+  }
+
+  &[data-size="large"],
+  &.large {
+    height: 600px;
+  }
+}
+
+.group-timezones-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5em;
+  box-sizing: border-box;
+
+  .title {
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+}
+
+.group-timezones-time-traveler {
+  display: flex;
+  align-items: center;
+
+  .time {
+    font-weight: 700;
+    margin-right: 0.5em;
+    min-width: 45px;
+  }
+}
+
+.mobile-view .group-timezones-time-traveler,
+.mobile-view .group-timezones-filter {
+  display: none;
+}
+
+.discourse-group-timezones-slider-wrapper {
+  // we need the wrapper because Firefox doesn't allow pseudo selectors on inputs
+  position: relative;
+  margin: 0.25em 0;
+  margin-right: 0.5em;
+
+  &::before {
+    display: block;
+    content: "";
+    position: absolute;
+    margin-top: -1px;
+    background: var(--tertiary);
+    height: 2px;
+    top: 50%;
+    width: 100%;
+  }
+}
+
+.group-timezones-slider {
+  position: relative;
+  z-index: 1; // need a positive z-index to appear above the ::before
+  display: flex;
+  width: 120px;
+  padding: 0.25em;
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  outline: none;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+.group-timezones-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-rows: auto;
+  grid-gap: 0.25em;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  .group-timezones-header {
+    .title {
+      font-weight: 700;
+    }
+  }
+
+  .group-timezone,
+  .group-timezone-new-day {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 0.25em;
+  }
+
+  .group-timezone-new-day {
+    align-items: center;
+    justify-content: space-between;
+    color: inherit;
+    font-size: var(--font-down-1);
+
+    .before {
+      margin-right: auto;
+      text-transform: capitalize;
+    }
+
+    .after {
+      margin-left: auto;
+      text-transform: capitalize;
+    }
+  }
+
+  .group-timezone {
+    color: var(--primary);
+    background-color: var(--calendar-normal);
+    transition: opacity 0.4s;
+    opacity: 0.5;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.close-to-working-hours {
+      background-color: var(--calendar-close-to-working-hours);
+      opacity: 0.7;
+    }
+
+    &.in-working-hours {
+      background-color: var(--calendar-in-working-hours);
+      opacity: 1;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .time {
+        font-weight: 700;
+      }
+
+      .offset {
+        font-size: var(--font-down-2);
+        margin-left: 0.5em;
+      }
+    }
+
+    .group-timezones-members {
+      padding: 0;
+      margin: 0.1em 0;
+
+      .group-timezones-member {
+        margin: 0.1em;
+        list-style: none;
+        display: inline-block;
+
+        &.on-holiday {
+          opacity: 0.7;
+          position: relative;
+        }
+
+        &.on-holiday::after {
+          content: "📅";
+          position: absolute;
+          bottom: -0.15em;
+          left: 1em;
+          font-size: var(--font-down-2);
+        }
+      }
+    }
+  }
+}
+
+.group-timezones-reset {
+  display: flex;
+  margin-left: 0.5em;
+}
+
+.group-timezones-filter[type="text"] {
+  margin: 0;
+  width: 120px;
+}
+
+.emoji.on-holiday {
+  width: 15px;
+  height: 15px;
+}
+
+#event-popover {
+  background-color: var(--tertiary-very-low);
+  z-index: z("modal", "tooltip");
+  box-shadow: var(--shadow-dropdown);
+  border-radius: 4px;
+  padding: 0.5em;
+  max-width: min(75vw, 400px);
+
+  [data-popper-arrow],
+  [data-popper-arrow]::before {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: inherit;
+    top: -2px;
+  }
+
+  [data-popper-arrow] {
+    visibility: hidden;
+  }
+
+  [data-popper-arrow]::before {
+    visibility: visible;
+    content: "";
+    transform: rotate(45deg);
+  }
+}

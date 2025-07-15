@@ -2820,7 +2820,6 @@ da:
     wcag_theme_name: "WCAG lys"
     wcag_dark: "WCAG Mørk"
     wcag_dark_theme_name: "WCAG Mørk"
-    default_theme_name: "Standard"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
     neutral_theme_name: "Neutral"
@@ -3085,10 +3084,6 @@ da:
         Dette emblem tildeles for at besøge webstedet 365 på hinanden følgende dage. Wauw, det er mere end et helt år!
     badge_title_metadata: "%{display_name} emblem på %{site_title}"
   admin_login:
-    success: "E-mail Sendt"
-    errors:
-      unknown_email_address: "Ukendt e-mail-adresse."
-      invalid_token: "Ugyldigt token."
     email_input: "Admin E-Mail"
     submit_button: "Send E-Mail"
   performance_report:

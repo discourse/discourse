@@ -1,0 +1,86 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    chat_integration:
+      settings: "Nastavení"
+      all_categories: "(všechny kategorie)"
+      all_tags: "(všechny štítky)"
+      delete_channel: "Smazat"
+      edit_channel: "Upravit"
+      test_modal:
+        topic: "Témata"
+        close: "Zavřít"
+      type:
+        normal: Normální
+      filter:
+        mute: 'Ignorovat'
+      rule_table:
+        filter: "Filtr"
+        category: "Kategorie"
+        tags: "Tagy"
+        edit_rule: "Upravit"
+        delete_rule: "Smazat"
+      edit_channel_modal:
+        cancel: "Zrušit"
+      edit_rule_modal:
+        cancel: Zrušit
+        type: Typ
+        filter: Filtr
+        category: Kategorie
+        group: Skupina
+        tags: Tagy
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Jméno"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Název"
+        guilded:
+          param:
+            name:
+              title: "Jméno"
+        matrix:
+          param:
+            name:
+              title: "Jméno"
+        zulip:
+          param:
+            subject:
+              title: "Předmět"
+        gitter:
+          param:
+            name:
+              title: "Jméno"
+        teams:
+          param:
+            name:
+              title: "Jméno"
+        powerautomate:
+          param:
+            name:
+              title: "Jméno"
+        webex:
+          param:
+            name:
+              title: "Jméno"
+        google:
+          param:
+            name:
+              title: "Jméno"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Odeslat
+            url:
+              label: URL

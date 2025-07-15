@@ -1901,7 +1901,6 @@ ro:
     wcag_theme_name: "WCAG deschis"
     wcag_dark: "WCAG Închis"
     wcag_dark_theme_name: "WCAG Închis"
-    default_theme_name: "Implicit"
   edit_this_page: "Editează această pagină"
   csv_export:
     boolean_yes: "Da"
@@ -2087,7 +2086,6 @@ ro:
     devotee:
       description: Ai vizitat 365 zile consecutive
   admin_login:
-    success: "Emailul a fost trimis"
     email_input: "Email Admin"
     submit_button: "Trimite email"
   performance_report:

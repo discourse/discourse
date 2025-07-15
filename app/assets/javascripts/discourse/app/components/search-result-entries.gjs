@@ -13,6 +13,7 @@ export default class SearchResultEntries extends Component {
           @selected={{this.selected}}
           @highlightQuery={{this.highlightQuery}}
           @searchLogId={{this.searchLogId}}
+          @isPMOnly={{this.isPMOnly}}
         />
       {{/each}}
     </div>

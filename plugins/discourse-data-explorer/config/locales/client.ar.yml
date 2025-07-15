@@ -1,0 +1,124 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "أزِل الفواصل المنقوطة من الاستعلام."
+        dirty: "يجب عليك حفظ الاستعلام قبل التشغيل."
+    explorer:
+      or: "أو"
+      admins_only: "مستكشف البيانات متاح للمسؤولين فقط."
+      allow_groups: "السماح للمجموعات بالوصول إلى هذا الاستعلام"
+      title: "مستكشف البيانات"
+      create: "إنشاء جديد"
+      create_placeholder: "اسم الاستعلام..."
+      description_placeholder: "أدخِل وصفًا هنا"
+      import:
+        label: "استيراد"
+        modal: "استيراد استعلام"
+        unparseable_json: "ملف JSON غير قابل للتحليل"
+        wrong_json: "ملف JSON خاطئ. يجب أن يحتوي ملف JSON على كائن \"استعلام\"، والذي يجب أن يحتوي على الأقل على خاصية \"sql\"."
+      help:
+        label: "المساعدة"
+        modal_title: "مساعدة مستكشف البيانات"
+        auto_resolution: "<h2>ربط السجلات التلقائي</h2> <p>عندما يؤدي الاستعلام إلى إرجاع مُعرِّف الكيان، فقد يستبدله مستكشف البيانات تلقائيًا باسم الكيان والمعلومات المفيدة الأخرى في نتائج الاستعلام. يتوفَّر الربط التلقائي لـ <i><b>user_id</b></i> و<i><b>group_id</b></i> و<i><b>topic_id</b></i> و<i><b>category_id</b></i> و<i><b>badge_id</b></i>. لتجربة ذلك، شغِّل هذا الاستعلام:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>إنشاء معلمات مخصَّصة</h2> <p>لإنشاء معلمات مخصَّصة لاستعلاماتك، ضع هذا في الجزء العلوي من استعلامك واتبع التنسيق:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>ملاحظة: السطر الأول الذي يحتوي على [params] مطلوب، بالإضافة إلى شرطتين قبله وكل معلمة مخصَّصة تريد الإعلان عنها.</i></p>"
+        default_values: "<h3>القيم الافتراضية</h3> <p>يمكنك إعلان المعلمات بقيم افتراضية أو من دونها. ستظهر القيم الافتراضية في حقلٍ نصي أسفل محرِّر الاستعلام، والذي يمكنك تعديله حسب احتياجاتك. ستظل المعلمات المعلنة دون قيم افتراضية تنشئ حقلًا نصيًا، لكنها ستكون فارغة ومظللة باللون الأحمر.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>أنواع البيانات</h3> <p>فيما يلي أنواع البيانات الشائعة التي يمكنك استخدامها:</p> <ul> <li><b>عدد صحيح</b> - عدد صحيح رباعي البايت مع مراعاة إشارته</li> <li><b>نص</b> - سلسلة أحرف متغيرة الطول</li> <li><b>قيمة منطقية</b> - صواب/خطأ</li> <li><b>تاريخ</b> - تاريخ تقويمي (سنة، شهر، يوم)</li> </ul> <p>لمزيد من المعلومات بشأن أنواع البيانات، انتقل إلى <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>هذا الموقع</a>.</p>"
+      schema:
+        title: "مخطط قاعدة البيانات"
+        filter: "بحث..."
+        sensitive: "قد تتضمَّن محتويات هذا العمود معلومات حساسة أو سرية بشكلٍ خاص. يُرجى توخي الحذر عند استخدام محتويات هذا العمود."
+      types:
+        bool:
+          yes: "نعم"
+          no: "لا"
+          null_: "فارغ"
+      export: "تصدير"
+      view_json: "عرض JSON"
+      save: "حفظ التغييرات"
+      saverun: "حفظ التغييرات والتشغيل"
+      run: "تشغيل"
+      undo: "تجاهل التغييرات"
+      edit: "تعديل"
+      delete: "حذف"
+      recover: "إلغاء حذف الاستعلام"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "جدول"
+      show_graph: "رسم بياني"
+      others_dirty: "يحتوي الاستعلام على تغييرات غير محفوظة سيتم فقدها إذا انتقلت بعيدًا."
+      run_time: "اكتمل الاستعلام في %{value} مللي ثانية."
+      result_count:
+        zero: "%{count} نتيجة."
+        one: "نتيجة واحدة (%{count})."
+        two: "نتيجتان (%{count})"
+        few: "%{count} نتائج."
+        many: "%{count} نتيجةً."
+        other: "%{count} نتيجة."
+      max_result_count:
+        zero: "جارٍ عرض أبرز %{count} نتيجة."
+        one: "جارٍ عرض أبرز نتيجة (%{count})."
+        two: "جارٍ عرض أبرز نتيجتين (%{count})."
+        few: "جارٍ عرض أبرز %{count} نتائج."
+        many: "جارٍ عرض أبرز %{count} نتيجةً."
+        other: "جارٍ عرض أبرز %{count} نتيجة."
+      query_name: "استعلام"
+      query_groups: "المجموعات"
+      link: "رابط لـ"
+      report_name: "تقرير"
+      query_description: "الوصف"
+      query_time: "آخر تشغيل"
+      query_user: "تم الإنشاء من قِبل"
+      column: "العمود %{number}"
+      explain_label: "هل تريد تضمين خطة الاستعلام؟"
+      save_params: "الضبط على الإعدادات الافتراضية"
+      reset_params: "إعادة التعيين"
+      search_placeholder: "بحث..."
+      no_search_results: "عذرًا، لم نتمكن من العثور على أي نتائج مطابقة لنصك."
+      form:
+        errors:
+          invalid: "غير صالح"
+          no_such_category: "لا توجد فئة بهذا الاسم"
+          no_such_group: "لا توجد مجموعة بهذا الاسم"
+          invalid_date: "%{date} هو تاريخ غير صالح"
+          invalid_time: "%{time} هو وقت غير صالح"
+    group:
+      reports: "التقارير"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "تشغيل استعلامات مستكشف البيانات. يمكنك تقييد مفتاح واجهة برمجة التطبيقات (API) إلى مجموعة من الاستعلامات عن طريق تحديد معرِّفات الاستعلامات."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: الإرسال إلى مستخدم أو مجموعة أو بريد إلكتروني
+            query_id:
+              label: استعلام مستكشف البيانات
+            query_params:
+              label: معلمات استعلام مستكشف البيانات
+            skip_empty:
+              label: تخطي إرسال رسالة شخصية إذا لم تكن هناك نتائج
+            attach_csv:
+              label: إرفاق ملف CSV بالرسالة الشخصية
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: الموضوع الذي سيتم نشر نتائج الاستعلام فيه
+            query_id:
+              label: استعلام مستكشف البيانات
+            query_params:
+              label: معلمات استعلام مستكشف البيانات
+            skip_empty:
+              label: تخطي النشر إذا لم تكن هناك نتائج
+            attach_csv:
+              label: إرفاق ملف CSV بالمنشور

@@ -881,7 +881,6 @@ et:
     dark: "Tume"
     neutral: "Neutraalne"
     summer: "Suvi"
-    default_theme_name: "Vaikimisi"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
@@ -1009,7 +1008,6 @@ et:
     first_reply_by_email:
       name: Esimene vastamine meiliga
   admin_login:
-    success: "Kiri saadetud"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
   tags:

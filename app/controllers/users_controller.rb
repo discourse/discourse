@@ -484,7 +484,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ %r{\A[a-z_\-/]+\z}
+    raise Discourse::NotFound if params[:path] !~ %r{\A[a-zA-Z_\-/]+\z}
 
     if current_user.blank?
       cookies[:destination_url] = path("/my/#{params[:path]}")
@@ -1523,6 +1523,7 @@ class UsersController < ApplicationController
       number_of_deleted_posts
       number_of_flagged_posts
       number_of_flags_given
+      number_of_silencings
       number_of_suspensions
       warnings_received_count
       number_of_rejected_posts

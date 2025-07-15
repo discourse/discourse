@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Patreon de Discourse"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Iniciar sesión con Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtros'
+      group: 'Grupo'
+      rewards: 'Recompensas'
+      filter: 'Filtro'
+      help_text: 'Puedes sincronizar un grupo de Discourse con uno o varios niveles de recompensa Patreon.'
+      last_synced: 'Última sincronización'
+      edit: 'Editar'
+      delete: 'Eliminar'
+      save: 'Guardar'
+      update_data: 'Actualizar datos de Patreon y sincronizar grupos'
+      refresh_page: 'Se han descargado nuevos datos desde la API de Patreon. Actualiza la página.'
+      select_group: 'Selecciona un grupo'
+      field:
+        id: "ID"
+        email: "Correo electrónico"
+        amount_cents: "Cantidad (en céntimos)"
+        rewards: "Recompensas"
+        declined_since: "Promesa rechazada desde"
+        more_details:
+          label: "Pagos y más detalles"
+          help_text:
+            email_available: "Ve a la parte inferior derecha de la página para ver el historial de promesas de Patreon."
+            email_not_available: "Selecciona el miembro de Patreon y ve a la parte inferior derecha de la página para ver el historial de promesas."
+      donation_prompt:
+        body: |
+          <h1>¡Hola lector!</h1>
+
+          <p>¿Te gusta nuestro sitio web? ¿Quieres contribuir a una buena causa?</p>
+
+          <p>
+            Si nuestro sitio web te resulta útil y disfrutas de la comunidad que hemos creado, nos encantaría que hicieras una donación a nuestro sitio web.
+            Las donaciones mantienen nuestros servicios en funcionamiento y garantizan que nuestra comunidad esté operativa durante años.
+            Cada dólar cuenta y se le dará un buen uso.
+          </p>
+
+          <p>¡Gracias por tu apoyo!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Hazte mecenas</a>
+          </p>

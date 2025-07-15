@@ -4,10 +4,7 @@ class Admin::ColorSchemesController < Admin::AdminController
   before_action :fetch_color_scheme, only: %i[update destroy]
 
   def index
-    schemes =
-      ColorScheme.without_theme_owned_palettes.with_experimental_system_theme_palettes.order(
-        "color_schemes.id ASC",
-      )
+    schemes = ColorScheme.without_theme_owned_palettes.order("color_schemes.id ASC")
 
     schemes = schemes.where(theme_id: nil) if params[:exclude_theme_owned]
 

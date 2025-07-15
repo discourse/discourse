@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    chat_integration_enabled: 'Discourse-chatintegratieplug-in inschakelen'
+    chat_integration_discourse_username: 'Gebruikersnaam om te gebruiken bij het ophalen van inhoud.'
+    chat_integration_delay_seconds: 'Aantal seconden dat moet worden gewacht na het maken van een bericht voordat chatmeldingen worden gestuurd'
+    chat_integration_slack_username: "De gebruikersnaam van de bot om mee te Slacken"
+    chat_integration_slack_enabled: 'Slack-chatintegratieprovider inschakelen'
+    chat_integration_slack_access_token: 'OAuth-toegangstoken voor Slack-verificatie'
+    chat_integration_slack_incoming_webhook_token: 'Het verificatietoken dat wordt gebruikt om binnenkomende verzoeken te verifiëren'
+    chat_integration_slack_excerpt_length: 'Lengte uittreksel Slack-bericht'
+    chat_integration_slack_icon_url: 'Pictogram voor berichten op Slack (standaard ingesteld op forumlogo)'
+    chat_integration_slack_outbound_webhook_url: "Voor gebruik van het 'Incoming Webhook'-systeem van Slack in plaats van de OAuth-API. Wordt niet aangeraden."
+    chat_integration_slack_transcript_quote: Slack-transcript tussen [quote]-tags plaatsen?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Je moet een uitgaande webhook-URL invoeren of een toegangstoken"
+    chat_integration_telegram_enabled: "Telegram-chatintegratieprovider inschakelen"
+    chat_integration_telegram_access_token: "Het toegangstoken van je bot van de Telegram-botfather"
+    chat_integration_telegram_excerpt_length: "Lengte uittreksel Telegram-bericht"
+    chat_integration_telegram_enable_slash_commands: "Toestaan dat Telegram-abonnementen worden beheerd met behulp van 'slash-opdrachten'"
+    chat_integration_discord_enabled: "Discord-chatintegratieprovider inschakelen"
+    chat_integration_discord_message_content: "Het bericht dat boven de samenvatting moet worden opgenomen bij het sturen van een melding naar Discord"
+    chat_integration_discord_excerpt_length: "Lengte uittreksel Discord-bericht"
+    chat_integration_guilded_enabled: "Guilded-chatintegratieprovider inschakelen"
+    chat_integration_guilded_excerpt_length: "Lengte uittreksel Guilded-bericht"
+    chat_integration_mattermost_enabled: "Mattermost-chatintegratieprovider inschakelen"
+    chat_integration_mattermost_webhook_url: 'URL voor de Mattermost-webhook'
+    chat_integration_mattermost_incoming_webhook_token: 'Het verificatietoken dat wordt gebruikt om binnenkomende verzoeken te verifiëren'
+    chat_integration_mattermost_icon_url: "Pictogram voor berichten op Mattermost (standaard ingesteld op forumlogo)"
+    chat_integration_mattermost_excerpt_length: "Lengte uittreksel Mattermost-bericht"
+    chat_integration_matrix_enabled: "Matrix-chatintegratieprovider inschakelen"
+    chat_integration_matrix_homeserver: "Homeserver om verbinding mee te maken. Zorg dat je het protocol vermeldt"
+    chat_integration_matrix_access_token: "Toegangstoken voor het Matrix-account van de bot"
+    chat_integration_matrix_excerpt_length: "Lengte uittreksel Matrix-bericht"
+    chat_integration_matrix_use_notice: "Melding gebruiken in plaats van gewoon bericht"
+    chat_integration_zulip_enabled: "Zulip-chatintegratieprovider inschakelen"
+    chat_integration_zulip_server: "De basis-URL voor je Zulip-server. Zorg dat je http(s):// vermeldt"
+    chat_integration_zulip_bot_email_address: "Het e-mailadres dat is gekoppeld aan je Zulip-bot"
+    chat_integration_zulip_bot_api_key: "De API-sleutel voor je Zulip-bot"
+    chat_integration_zulip_excerpt_length: "Lengte uittreksel Zulip-bericht"
+    chat_integration_rocketchat_enabled: "Rocket Chat-chatintegratieprovider inschakelen"
+    chat_integration_rocketchat_webhook_url: "De URL voor de Rocket Chat-integratiewebhook"
+    chat_integration_rocketchat_excerpt_length: "Lengte uittreksel Rocket Chat-bericht"
+    chat_integration_gitter_enabled: "Gitter-chatintegratieprovider inschakelen"
+    chat_integration_flowdock_enabled: "Flowdock-chatintegratieprovider inschakelen"
+    chat_integration_flowdock_excerpt_length: "Lengte uittreksel Flowdock-bericht"
+    chat_integration_groupme_enabled: "Groupme-chatintegratieprovider inschakelen"
+    chat_integration_groupme_excerpt_length: "Lengte uittreksel Groupme-bericht"
+    chat_integration_groupme_bot_ids: "*vereist* Bot-ID's, gescheiden door ',' als er meerdere zijn"
+    chat_integration_groupme_instance_names: " *vereist* Naam van de GroupMe-chat, gescheiden door ',' als er meerdere zijn (zelfde volgorde als bot-ID's)"
+    chat_integration_teams_enabled: "Microsoft Teams-chatintegratieprovider inschakelen"
+    chat_integration_teams_excerpt_length: "Lengte uittreksel Microsoft Teams-bericht"
+    chat_integration_powerautomate_enabled: "Microsoft Power Automate-integratieprovider inschakelen"
+    chat_integration_powerautomate_excerpt_length: "Lengte uittreksel Microsoft Power Automate-bericht"
+    chat_integration_webex_enabled: "Webex-chatintegratieprovider inschakelen"
+    chat_integration_webex_excerpt_length: "Lengte uittreksel Webex-bericht"
+    chat_integration_google_enabled: "Google Chat-chatintegratieprovider inschakelen"
+    chat_integration_google_excerpt_length: "Lengte uittreksel Google Chat-bericht"
+  dashboard:
+    problem:
+      channel_errors: "Sommige chatintegratiekanalen hebben fouten. Ga naar <a href='%{base_path}/admin/plugins/chat-integration'>de sectie chatintegratie</a> voor meer informatie."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Slack-bericht sturen
+      send_chat_integration_message:
+        title: Chatintegratiebericht verzenden
+  chat_integration:
+    all_categories: "(alle categorieën)"
+    deleted_category: "(verwijderde categorie)"
+    deleted_group: "(verwijderde groep)"
+    group_mention_template: "vermeldingen van: @%{name}"
+    group_message_template: "berichten naar: @%{name}"
+    topic_tag_changed:
+      added_and_removed: "%{added} toegevoegd en %{removed} verwijderd"
+      added: "%{added} toegevoegd"
+      removed: "%{removed} verwijderd"
+    provider:
+      slack:
+        status:
+          header: |
+            *Regels voor dit kanaal*
+            (als meerdere regels overeenkomen met een bericht, wordt de bovenste regel uitgevoerd)
+          no_rules: "Er zijn geen regels ingesteld voor dit kanaal. Voer '/discourse help' uit voor instructies."
+          rule_string: "*%{index})* *%{filter}* berichten in *%{category}*"
+          rule_string_tags_suffix: " met tags: *%{tags}*"
+        parse_error: "Sorry, dat heb ik niet begrepen. Voer '/discourse help' uit voor instructies."
+        create:
+          created: "Regel gemaakt"
+          updated: "Regel bijgewerkt"
+          error: "Sorry, er is een fout opgetreden bij het maken van die regel."
+        delete:
+          success: "Regel verwijderd"
+          error: "Sorry, er is een fout opgetreden bij het verwijderen van die regel. Voer '/discourse status' uit voor een lijst van regels."
+        not_found:
+          tag: "De tag *%{name}* kon niet worden gevonden."
+          category: "De categorie *%{name}* kon niet worden gevonden. Beschikbare categorieën: *%{list}*"
+        help: |
+          *Nieuwe regel:* '/discourse [thread|watch|follow|mute] [category] [tag:naam]'
+          (je moet een regeltype opgeven en minimaal één categorie of tag)
+          - *thread* – informeer dit kanaal over nieuwe topics, plaats antwoorden in een draad indien mogelijk
+          - *watch* – informeer dit kanaal over nieuwe topics en nieuwe antwoorden
+          - *follow* – informeer dit kanaal over nieuwe topics
+          - *mute* – blokkeer meldingen geadresseerd aan dit kanaal
+
+          *Regel verwijderen: * '/discourse remove [regelnummer]'
+          ('[regelnummer]' kan worden gevonden door '/discourse status' uit te voeren)
+
+          *Lijst van regels:* '/discourse status'
+
+          *[Experimenteel] Berichttranscript:* '/discourse post [n]'
+          Maak een concepttopic op Discourse met de laatste 'n' berichten in dit kanaal
+
+          *Help:* '/discourse help'
+        transcript:
+          modal_title: "Transcript maken"
+          modal_description: "Alle berichten in de draad worden samengevoegd tot één forumbericht. Je hebt de mogelijkheid om het transcript te bewerken voordat je het plaatst."
+          transcript_ready: "Transcript gereed"
+          continue_on_discourse: "Doorgaan op forum"
+          error: "Er is iets misgegaan bij het maken van het transcript, sorry!"
+          post_to_discourse: "Klik hier om een bericht op Discourse op te stellen met een transcript"
+          api_required: "Sorry, deze integratie is niet ingesteld om het plaatsen van transcripten te ondersteunen."
+          view_on_slack: "Bekijken in %{name} op Slack"
+          first_message_pretext: "vanaf %{n} berichten geleden:"
+          last_message_pretext: "en tot %{n} berichten geleden:"
+          posted_in: "geplaatst in %{name}"
+          change_first_message: "Eerste bericht wijzigen..."
+          change_last_message: "Laatste bericht wijzigen..."
+          loading: "Transcript laden..."
+          error_users: "Fout: kan gebruikers niet ophalen van Slack"
+          error_history: "Fout: kan kanaalgeschiedenis niet ophalen van Slack"
+          error_ts: "Fout: kan verzochte bericht niet ophalen van Slack"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "%{added} toegevoegd en %{removed} verwijderd"
+            added: "%{added} toegevoegd"
+            removed: "%{removed} verwijderd"
+      telegram:
+        unknown_chat: "Deze chat is niet ingesteld op %{site_title}. Vraag een beheerder om een kanaal toe te voegen met chat-ID %{chat_id}."
+        known_chat: "Deze chat is ingesteld op %{site_title}. Configureer hem in het beheerscherm. (Chat-ID: %{chat_id})"
+        message: |-
+          <b>%{user}</b> heeft een bericht geplaatst in <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Regels voor dit kanaal</b>
+            (als meerdere regels overeenkomen met een bericht, wordt de bovenste regel uitgevoerd)
+          no_rules: "Er zijn geen regels ingesteld voor dit kanaal. Voer <code>/help</code> uit voor instructies."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> berichten in <b>%{category}</b>"
+          rule_string_tags_suffix: " met tags: <b>%{tags}</b>"
+        parse_error: "Sorry, dat heb ik niet begrepen. Voer <code>/help</code> uit voor instructies."
+        create:
+          created: "Regel gemaakt"
+          updated: "Regel bijgewerkt"
+          error: "Sorry, er is een fout opgetreden bij het maken van die regel."
+        delete:
+          success: "Regel verwijderd"
+          error: "Sorry, er is een fout opgetreden bij het verwijderen van die regel. Voer <code>/status</code> uit voor een lijst van regels."
+        not_found:
+          tag: "De tag <b>%{name}</b> kon niet worden gevonden."
+          category: "De categorie <b>%{name}</b> kon niet worden gevonden. Beschikbare categorieën: <b>%{list}</b>"
+        help: |
+          <b>Nieuwe regel:</b> <code>/[watch|follow|mute] [category] [tag:naam]</code>
+          (je moet een regeltype opgeven en minimaal één categorie of tag)
+          - <b>watch</b> – informeer dit kanaal over nieuwe topics en nieuwe antwoorden
+          - <b>follow</b> – informeer dit kanaal over nieuwe topics
+          - <b>mute</b> – blokkeer meldingen geadresseerd aan dit kanaal
+
+          <b>Regel verwijderen:</b> <code>/remove [regelnummer]</code>
+          (<code>[regelnummer]</code> kan worden gevonden door <code>/status</code> uit te voeren)
+
+          <b>Lijst van regels:</b> <code>/status</code>
+
+          <b>Help:</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> heeft een bericht geplaatst in <a href="%{post_url}">%{title}</a>
+      mattermost:
+        status:
+          header: |
+            *Regels voor dit kanaal*
+            (als meerdere regels overeenkomen met een bericht, wordt de bovenste regel uitgevoerd)
+          no_rules: "Er zijn geen regels ingesteld voor dit kanaal. Voer '/discourse help' uit voor instructies."
+          rule_string: "*%{index})* *%{filter}* berichten in *%{category}*"
+          rule_string_tags_suffix: " met tags: *%{tags}*"
+        parse_error: "Sorry, dat heb ik niet begrepen. Voer '/discourse help' uit voor instructies."
+        create:
+          created: "Regel gemaakt"
+          updated: "Regel bijgewerkt"
+          error: "Sorry, er is een fout opgetreden bij het maken van die regel."
+        delete:
+          success: "Regel verwijderd"
+          error: "Sorry, er is een fout opgetreden bij het verwijderen van die regel. Voer '/discourse status' uit voor een lijst van regels."
+        not_found:
+          tag: "De tag *%{name}* kon niet worden gevonden."
+          category: "De categorie *%{name}* kon niet worden gevonden. Beschikbare categorieën: *%{list}*"
+        help: |
+          *Nieuwe regel:* '/discourse [watch|follow|mute] [category] [tag:naam]'
+          (je moet een regeltype opgeven en minimaal één categorie of tag)
+          - *watch* – informeer dit kanaal over nieuwe topics en nieuwe antwoorden
+          - *follow* – informeer dit kanaal over nieuwe topics
+          - *mute* – blokkeer meldingen geadresseerd aan dit kanaal
+
+          *Regel verwijderen: * '/discourse remove [regelnummer]'
+          ('[regelnummer]' kan worden gevonden door '/discourse status' uit te voeren)
+
+          *Lijst van regels:* '/discourse status'
+
+          *Help:* '/discourse help'
+      matrix:
+        text_message: "%{user} heeft een bericht geplaatst in %{title} - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> heeft een bericht geplaatst in <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** heeft een bericht geplaatst in **[%{title}](%{post_url})**
+          ~~~quote
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "geplaatst"
+      google:
+        new_post: "Nieuw bericht op %{site_title}"
+        new_topic: "Nieuw topic op %{site_title}"
+        author: "van @%{username}"
+        link: "Weergeven op %{site_title}"
+      groupme:
+        errors:
+          instance_names_issue: "instantienamen onjuist geschreven of niet opgegeven"

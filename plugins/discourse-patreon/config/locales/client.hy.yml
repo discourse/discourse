@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Ֆիլտրներ'
+      group: 'Խմբավորել'
+      rewards: 'Պարգևատրումներ'
+      filter: 'Ֆիլտրել'
+      help_text: 'Դուք կարող եք համաժամանակեցնել Discourse խումբ մեկ կամ ավելի Patreon պարգևատրման աստիճանների հետ:'
+      last_synced: 'Վերջին անգամ Համաժամանակեցվել է'
+      edit: 'Խմբագրել'
+      delete: 'Ջնջել'
+      save: 'Պահպանել'
+      update_data: 'Թարմացնել Patreon -ի Տվյալները և Համաժամանակեցնել Խմբերը'
+      refresh_page: 'Patreon API -ից ներբեռնվել են նոր տվյալներ: Խնդրում ենք թարմացնել էջը:'
+      field:
+        id: "Id"
+        email: "Էլ. հասցե"
+        amount_cents: "Քանակ (ցենտով)"
+        rewards: "Պարգևատրումներ"
+        declined_since: "Երաշխիքի Մերժման Պատճառ՝"
+        more_details:
+          label: "Վճարումներ և Մանրամասն Տեղեկություններ"
+          help_text:
+            email_available: "Իջեք դեպի էջի ներքևի աջ կողմ՝ այս Patreon-ի երաշխիքի պատմությունը դիտելու համար"
+            email_not_available: "Ընտրել Patreon անդամի և իջնել դեպի էջի ներքևի աջ կողմ՝ երաշխիքի պատմությունը դիտելու համար:"

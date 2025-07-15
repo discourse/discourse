@@ -1,0 +1,513 @@
+# Great Britain/United Kingdom holiday definitions for the Ruby Holiday gem.
+#
+# Including England, Wales, Scotland, N. Ireland, the Isle of Man, Guernsey
+# and Jersey.
+#
+# Updated: 2019-02-10
+# Sources:
+# - http://en.wikipedia.org/wiki/List_of_holidays_by_country#United_Kingdom_and_Crown_dependencies
+#
+# Notes:
+# - Jersey, Guernsey and the Isle of Man are encode with both their ISO 3166-1 and ISO 3-3166-2 codes.
+# - England and Wales together should be encoded as [gb_eng, gb_wls, gb_eaw...]
+# - For :gb_sct, St. Andrew's Day is 'informal' 2006 and earlier but a bank holiday from 2007 on.
+---
+months:
+  0:
+  - name: Good Friday
+    regions: [gb]
+    function: easter(year)
+    function_modifier: -2
+  - name: Easter Sunday
+    regions: [gb]
+    function: easter(year)
+  - name: Easter Monday
+    regions: [gb_eng, gb_wls, gb_eaw, gb_nir, je, gb_jsy, gg, gb_gsy]
+    function: easter(year)
+    function_modifier: 1
+  1:
+  - name: New Year's Day
+    regions: [gb]
+    mday: 1
+    observed: to_monday_if_weekend(date)
+  - name: 2nd January
+    regions: [gb_sct]
+    mday: 2
+    observed: to_weekday_if_boxing_weekend(date)
+  3:
+  - name: St. Piran's Day
+    regions: [gb_con]
+    mday: 5
+  - name: St. Patrick's Day
+    regions: [gb_nir]
+    mday: 17
+    observed: to_monday_if_weekend(date)
+  5:
+  - name: May Day
+    regions: [gb]
+    week: 1
+    wday: 1
+    year_ranges:
+      until: 2019
+  - name: May Day
+    regions: [gb]
+    mday: 8
+    year_ranges:
+      limited: [2020]
+  - name: May Day
+    regions: [gb]
+    week: 1
+    wday: 1
+    year_ranges:
+      from: 2021
+  - name: Liberation Day
+    regions: [je, gb_jsy, gg, gb_gsy]
+    mday: 9
+  - name: Bank Holiday
+    regions: [gb]
+    week: -1
+    wday: 1
+    year_ranges:
+      until: 2021
+  - name: Bank Holiday
+    regions: [gb]
+    week: -1
+    wday: 1
+    year_ranges:
+      from: 2023
+  6:
+  - name: Bank Holiday
+    regions: [gb]
+    mday: 2
+    year_ranges:
+      limited: [2022]
+  - name: Platinum Jubilee
+    regions: [gb]
+    mday: 3
+    year_ranges:
+      limited: [2022]
+  7:
+  - name: Tynwald Day
+    regions: [im, gb_iom]
+    mday: 5
+  - name: Battle of the Boyne
+    regions: [gb_nir]
+    mday: 12
+    observed: to_monday_if_weekend(date)
+  8:
+  - name: Bank Holiday
+    regions: [gb_sct]
+    week: 1
+    wday: 1
+  - name: Bank Holiday
+    regions: [gb_eng, gb_wls, gb_eaw, gb_nir, je, gb_jsy, gg, gb_gsy]
+    week: -1
+    wday: 1
+  9:
+  - name: State Funeral of Queen Elizabeth II
+    regions: [gb]
+    mday: 19
+    year_ranges:
+      limited: [2022]
+  11:
+  - name: Guy Fawkes Day
+    regions: [gb]
+    mday: 5
+    type: informal
+  - name: St. Andrew's Day
+    regions: [gb_sct]
+    mday: 30
+    type: informal
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      until: 2006
+  - name: St. Andrew's Day
+    regions: [gb_sct]
+    mday: 30
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 2007
+  12:
+  - name: Christmas Day
+    regions: [gb]
+    mday: 25
+    observed: to_monday_if_weekend(date)
+  - name: Boxing Day
+    regions: [gb]
+    mday: 26
+    observed: to_weekday_if_boxing_weekend(date)
+
+tests:
+  - given:
+      date: '2008-03-21'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Good Friday"
+  - given:
+      date: '2008-03-23'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Easter Sunday"
+  - given:
+      date: '2008-05-05'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "May Day"
+  - given:
+      date: '2008-05-26'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2008-11-05'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Guy Fawkes Day"
+  - given:
+      date: '2008-12-25'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2008-12-26'
+      regions: ["gb"]
+      options: ["informal"]
+    expect:
+      name: "Boxing Day"
+  - given:
+      date: '2008-03-17'
+      regions: ["gb_nir"]
+      options: ["informal"]
+    expect:
+      name: "St. Patrick's Day"
+  - given:
+      date: '2018-03-17'
+      regions: ["gb_nir"]
+      options: ["informal"]
+    expect:
+      name: "St. Patrick's Day"
+  - given:
+      date: '2018-03-19'
+      regions: ["gb_nir"]
+      options: ["observed", "informal"]
+    expect:
+      name: "St. Patrick's Day"
+  - given:
+      date: '2019-03-17'
+      regions: ["gb_nir"]
+      options: ["informal"]
+    expect:
+      name: "St. Patrick's Day"
+  - given:
+      date: '2019-03-18'
+      regions: ["gb_nir"]
+      options: ["observed", "informal"]
+    expect:
+      name: "St. Patrick's Day"
+  - given:
+      date: '2020-07-12'
+      regions: ["gb_nir"]
+    expect:
+      name: "Battle of the Boyne"
+  - given:
+      date: '2020-07-12'
+      regions: ["gb_nir"]
+      options: ["observed"]
+    expect:
+      holiday: false
+  - given:
+      date: '2020-07-13'
+      regions: ["gb_nir"]
+      options: ["observed"]
+    expect:
+      name: "Battle of the Boyne"
+  - given:
+      date: '2008-07-12'
+      regions: ["gb_nir"]
+    expect:
+      name: "Battle of the Boyne"
+  - given:
+      date: '2008-07-14'
+      regions: ["gb_nir"]
+      options: ["observed"]
+    expect:
+      name: "Battle of the Boyne"
+  - given:
+      date: '2021-07-12'
+      regions: ["gb_nir"]
+    expect:
+      name: "Battle of the Boyne"
+  - given:
+      date: '2021-07-12'
+      regions: ["gb_nir"]
+      options: ["observed"]
+    expect:
+      name: "Battle of the Boyne"
+  - given:
+      date: '2021-07-13'
+      regions: ["gb_nir"]
+      options: ["observed"]
+    expect:
+      holiday: false
+  - given:
+      date: '2006-11-30'
+      regions: ["gb_sct"]
+      options: ["informal"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2006-11-30'
+      regions: ["gb_sct"]
+      options: ["informal", "observed"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2002-12-02'
+      regions: ["gb_sct"]
+      options: ["informal", "observed"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2004-11-30'
+      regions: ["gb_sct"]
+    expect:
+      holiday: false
+  - given:
+      date: '2005-11-30'
+      regions: ["gb_sct"]
+    expect:
+      holiday: false
+  - given:
+      date: '2006-11-30'
+      regions: ["gb_sct"]
+    expect:
+      holiday: false
+  - given:
+      date: '2007-11-30'
+      regions: ["gb_sct"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2007-11-30'
+      regions: ["gb_sct"]
+      options: ["informal"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2007-11-30'
+      regions: ["gb_sct"]
+      options: ["informal", "observed"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2016-11-30'
+      regions: ["gb_sct"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2019-11-30'
+      regions: ["gb_sct"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2019-11-30'
+      regions: ["gb_sct"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2019-12-2'
+      regions: ["gb_sct"]
+      options: ["observed"]
+    expect:
+      name: "St. Andrew's Day"
+  - given:
+      date: '2008-12-25'
+      regions: ["gb_"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2009-12-25'
+      regions: ["gb_"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2010-12-27'
+      regions: ["gb_"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2008-12-26'
+      regions: ["gb_"]
+      options: ["observed"]
+    expect:
+      name: "Boxing Day"
+  - given:
+      date: '2009-12-28'
+      regions: ["gb_"]
+      options: ["observed"]
+    expect:
+      name: "Boxing Day"
+  - given:
+      date: '2010-12-28'
+      regions: ["gb_"]
+      options: ["observed"]
+    expect:
+      name: "Boxing Day"
+  - given:
+      date: '2011-12-27'
+      regions: ["gb_"]
+      options: ["observed"]
+    expect:
+      name: "Boxing Day"
+  - given:
+      date: '2010-01-01'
+      regions: ["gb"]
+      options: ["observed"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2011-01-03'
+      regions: ["gb"]
+      options: ["observed"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2012-01-02'
+      regions: ["gb"]
+      options: ["observed"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2010-01-04'
+      regions: ["gb_sct"]
+      options: ["observed"]
+    expect:
+      name: "2nd January"
+  - given:
+      date: '2011-01-04'
+      regions: ["gb_sct"]
+      options: ["observed"]
+    expect:
+      name: "2nd January"
+  - given:
+      date: '2012-01-03'
+      regions: ["gb_sct"]
+      options: ["observed"]
+    expect:
+      name: "2nd January"
+  - given:
+      date: '2013-01-02'
+      regions: ["gb_sct"]
+      options: ["observed"]
+    expect:
+      name: "2nd January"
+  - given:
+      date: '2014-01-02'
+      regions: ["gb_sct"]
+      options: ["observed"]
+    expect:
+      name: "2nd January"
+  - given:
+      date: '2008-03-24'
+      regions: ["gb_wls"]
+    expect:
+      name: "Easter Monday"
+  - given:
+      date: '2008-08-25'
+      regions: ["gb_wls"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2008-03-24'
+      regions: ["gb_eng"]
+    expect:
+      name: "Easter Monday"
+  - given:
+      date: '2008-08-25'
+      regions: ["gb_eng"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2008-03-24'
+      regions: ["gb_nir"]
+    expect:
+      name: "Easter Monday"
+  - given:
+      date: '2008-08-25'
+      regions: ["gb_nir"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2008-03-24'
+      regions: ["gb_eaw"]
+    expect:
+      name: "Easter Monday"
+  - given:
+      date: '2008-08-25'
+      regions: ["gb_eaw"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2008-03-24'
+      regions: ["gb_"]
+    expect:
+      name: "Easter Monday"
+  - given:
+      date: '2008-08-25'
+      regions: ["gb_"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2018-05-09'
+      regions: ["je"]
+    expect:
+      name: "Liberation Day"
+  - given:
+      date: '2018-04-02'
+      regions: ["je"]
+    expect:
+      name: "Easter Monday"
+  - given:
+      date: '2018-08-27'
+      regions: ["je"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2022-06-02'
+      regions: ["gb"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2022-05-30'
+      regions: ["gb"]
+    expect:
+      holiday: false
+  - given:
+      date: '2022-06-03'
+      regions: ["gb"]
+    expect:
+      name: "Platinum Jubilee"
+  - given:
+      date: '2023-05-29'
+      regions: ["gb"]
+    expect:
+      name: "Bank Holiday"
+  - given:
+      date: '2022-09-19'
+      regions: ["gb"]
+    expect:
+      name: "State Funeral of Queen Elizabeth II"
+  - given:
+      date: '2023-09-19'
+      regions: ["gb"]
+    expect:
+      holiday: false

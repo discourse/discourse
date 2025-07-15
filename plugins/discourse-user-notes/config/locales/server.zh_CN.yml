@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    user_notes_enabled: "允许管理人员将备注附加到用户"
+    user_notes_moderators_delete: "允许版主删除用户备注"
+  user_notes:
+    official_warning: "收到来自 @%{username} 的正式警告 – %{warning_link}"
+    user_suspended: "@%{username} 将此帐户暂停至 %{suspended_till}。原因：%{reason}"
+    user_silenced: "@%{username} 将此帐户禁言至 %{silenced_till}。原因：%{reason}"
+  reports:
+    user_notes:
+      title: "用户备注"
+      description: "列出最近的用户备注。"
+      labels:
+        user: 用户
+        note: 备注
+        moderator: 版主

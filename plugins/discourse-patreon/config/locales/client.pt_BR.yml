@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Patreon no Discourse"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Entrar com o Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtros'
+      group: 'Grupo'
+      rewards: 'Recompensas'
+      filter: 'Filtro'
+      help_text: 'Você pode sincronizar um grupo do Discourse com um ou mais níveis de recompensa do Patreon.'
+      last_synced: 'Último Sincronizado'
+      edit: 'Editar'
+      delete: 'Excluir'
+      save: 'Salvar'
+      update_data: 'Atualizar dados do Patreon e sincronizar grupos'
+      refresh_page: 'Novos dados foram baixados da API do Patreon. Atualize a página.'
+      select_group: 'Selecione um grupo'
+      field:
+        id: "Id"
+        email: "E-mail"
+        amount_cents: "Valor (em centavos)"
+        rewards: "Recompensas"
+        declined_since: "Compromisso Recusado Desde"
+        more_details:
+          label: "Pagamentos e mais detalhes"
+          help_text:
+            email_available: "Vá para o canto inferior direito da página para ver este histórico de compromissos do Patreon."
+            email_not_available: "Selecione o membro Patreon e vá para o canto inferior direito da página para ver o histórico de compromissos."
+      donation_prompt:
+        body: |
+          <h1>Olá, leitor!</h1>
+
+          <p>Você gosta do nosso site? Gostaria de contribuir para uma boa causa?</p>
+
+          <p>
+            Se achar nosso site útil e gosta da comunidade que criamos, nós adoraríamos que fizesse uma doação para nosso site.
+            Doações mantêm nossos serviços funcionando sem problemas e garantem que nossa comunidade estará operacional por muitos anos.
+            Cada dólar conta e será bem utilizado.
+          </p>
+
+          <p>Obrigado pelo seu apoio!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Torne-se um(a) Patrono(a)</a>
+          </p>

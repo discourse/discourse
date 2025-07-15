@@ -78,10 +78,10 @@ module PageObjects
           I18n.t("js.sidebar.sections.community.links.my_messages.content")
         end
 
-        def has_my_messages_link?
+        def has_my_messages_link?(text = my_messages)
           page.has_css?(
             ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']",
-            text: my_messages,
+            text:,
           )
         end
 

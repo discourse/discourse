@@ -1,0 +1,35 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    discourse_assign:
+      group_everyone: "Toată lumea"
+      reassign:
+        title: "Modifică"
+      assign_modal:
+        note_label: Notă
+        optional_label: "(opțional)"
+        status_label: Status
+      assign_mailer:
+        never: "Niciodată"
+        always: "Întotdeauna"
+      reminders_frequency:
+        never: "Niciodată"
+        daily: "Zilnic"
+        weekly: "Săptămânal"
+        monthly: "Lunar"
+        quarterly: "Trimestrial"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Nu face nimic"
+      assignment_description:
+        topic: "%{topic_title}"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+    edit_assignments_modal:
+      topic: "Discuție"
+      post: "Articol"

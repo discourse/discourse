@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    lti_enabled: LTI 1.3 認証を有効にする
+    lti_authorization_endpoint: LTI プラットフォームの承認エンドポイント
+    lti_client_ids: このツールのクライアント ID
+    lti_platform_issuer_id: LTI プラットフォームの発行者 ID。通常、https:// を含む URL
+    lti_platform_public_key: LTI プラットフォームの公開鍵
+    lti_email_verified: プラットフォームのメールアドレスが確認されている場合に有効にします。

@@ -234,7 +234,7 @@ HTML
       f =
         ThemeField.create!(
           target_id: Theme.targets[:mobile],
-          theme_id: 1,
+          theme_id: -1,
           name: "after_header",
           value: html,
         )

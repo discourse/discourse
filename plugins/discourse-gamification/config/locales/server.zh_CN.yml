@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    discourse_gamification_enabled: "启用 Discourse 游戏化插件"
+    like_received_score_value: "当用户收到点赞时所获得的点数"
+    like_given_score_value: "用户每给出一个点赞时所获得的点数"
+    solution_score_value: "当用户的帖子被标记为解决方案时获得的点数"
+    user_invited_score_value: "当用户发出的邀请被兑换时所获得的点数"
+    time_read_score_value: "每花一小时时间阅读所获得的点数"
+    post_read_score_value: "用户每阅读 100 个帖子所获得的点数"
+    topic_created_score_value: "当用户创建话题时所获得的点数"
+    post_created_score_value: "当用户创建帖子时所获得的点数"
+    flag_created_score_value: "当用户举报帖子并且该举报被管理人员接受时所获得的点数"
+    day_visited_score_value: "用户每天访问站点所获得的点数"
+    scorable_categories: "操作将生成点数的类别列表。留空以在所有类别上启用点数。"
+    reaction_received_score_value: "当用户收到回应时所获得的点数"
+    reaction_given_score_value: "用户每给出一个回应时所获得的点数"
+    chat_reaction_received_score_value: "当用户收到聊天消息的回应时所获得的点数"
+    chat_reaction_given_score_value: "用户每给出一个聊天消息的回应时所获得的点数"
+    chat_message_created_score_value: "用户在聊天中发送的每条消息所获得的点数"
+    score_ranking_strategy: "排行榜位置排名策略"
+  score: "点数"
+  default_leaderboard_name: "全局排行榜"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "您已达到重新计算分数的最大次数。请等待 %{time_left}后再试。"
+  errors:
+    leaderboard_positions_not_ready: "我们正在生成您的排行榜。请几分钟后再试。"

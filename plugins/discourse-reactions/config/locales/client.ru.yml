@@ -14,7 +14,7 @@ ru:
     discourse_reactions:
       reactions_title: "Реакции"
       state_panel:
-        more_users: "и еще %{count}..."
+        more_users: "и ещё %{count}..."
       reaction:
         forbidden: "Эту реакцию нельзя изменить или удалить - она была создана очень давно."
       picker:
@@ -22,7 +22,7 @@ ru:
         cant_remove_reaction: "Вы больше не можете удалить свою реакцию"
         remove_reaction: "Удалить реакцию %{reaction}"
       main_reaction:
-        add: "Выразить своё отношение к этому сообщению"
+        add: "Поставить лайк сообщению"
         remove: "Удалить эту эмоцию"
         cant_remove: "Вы больше не можете удалить поставленный лайк"
         unauthenticated: "Чтобы поставить лайк этой публикации, зарегистрируйтесь или войдите"

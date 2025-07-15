@@ -1,0 +1,95 @@
+en:
+  site_settings:
+    assign_enabled: "Enable the assign plugin"
+    assigns_public: "Allow general public to see topic assignments"
+    assigns_user_url_path: "Path to users assigned topics (use: {username} to substitute username)"
+    assigns_by_staff_mention: "If a staff member mentions another staff member, topic is automatically assigned"
+    unassign_creates_tracking_post: "If you unassign a topic a whisper or small action will be created to track change"
+    assign_self_regex: "Regex that needs to pass for self assign. Example 'my list'"
+    assign_other_regex: "Regex that needs to pass for assigning topics to others via mention. Example 'your list'."
+    unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
+    unassign_on_close: "When a topic is closed unassign topic"
+    reassign_on_open: "When a topic is opened reassign previously assigned users/groups"
+    invite_on_assign: "When a personal message is assigned to a user or group, invite them to the PM if they are not already a participant."
+    assign_mailer: "When to send notification email for assignments"
+    remind_assigns: "Remind users about pending assigns."
+    remind_assigns_frequency: "Frequency for reminding users about assigned topics."
+    pending_assign_reminder_threshold: "Number of pending assignments that triggers a reminder notification."
+    max_assigned_topics: "Maximum number of topics that can be assigned to a user."
+    assign_allowed_on_groups: "Users in these groups are allowed to assign topics and can be assigned topics."
+    enable_assign_status: "Add a customizable status field to every assignment."
+    assign_statuses: "List of statuses available to each assignment. The first status is the default status applied to every new assignment."
+    errors:
+      assign_statuses:
+        too_few: "There must be at least two different statuses available."
+        duplicate: "There are duplicate status values."
+        removed_in_use: "Can't remove a status from the list if there are existing assignments using this status."
+  discourse_assign:
+    assigned_to: "Topic assigned to @%{username}"
+    unassigned: "Topic was unassigned"
+    already_claimed: "That topic has already been claimed."
+    already_assigned: "Topic is already assigned to @%{username}"
+    too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
+    too_many_assigns_for_topic: "Limit of %{limit} assignments per topic has been reached."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
+    forbidden_assignee_not_pm_participant: "@%{username} can't be assigned because they don't have access to this PM. You can grant @%{username} access by inviting them to this PM."
+    forbidden_assignee_cant_see_topic: "@%{username} can't be assigned because they don't have access to this topic."
+    group_already_assigned: "Topic is already assigned to @%{group}"
+    forbidden_group_assign_to: "@%{group} can't be assigned since they don't belong to assigned allowed groups."
+    forbidden_group_assignee_not_pm_participant: "@%{group} can't be assigned because not all members have access to this PM."
+    forbidden_group_assignee_cant_see_topic: "@%{group} can't be assigned because not all members have access to this topic."
+    flag_assigned: "Sorry, that flag's topic is assigned to another user"
+    flag_unclaimed: "You must claim that topic before acting on the flag"
+    topic_assigned_excerpt: "assigned you the topic '%{title}'"
+    topic_group_assigned_excerpt: "assigned the topic '%{title}' to @%{group}"
+    reminders_frequency:
+      never: "never"
+      daily: "daily"
+      weekly: "weekly"
+      monthly: "monthly"
+      quarterly: "quarterly"
+  assign_mailer:
+    title: "Assign Mailer"
+    subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
+    text_body_template: |
+      Hey, %{assignee_name} **assigned** you to a discussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      If you're interested, click the link below:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "You have %{pending_assignments} pending assignments"
+    body: |
+      You currently have [%{pending_assignments} pending assignments](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      This reminder will be sent %{frequency} if you have more than one assigned topic.
+    newest: |
+      ### Newest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Oldest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Random assign
+        no_one: "Attempted randomly assign a member of `@%{group}`, but no one was available."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} assigned you"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Selected status is invalid (it is not included in the assigned_status site setting)."

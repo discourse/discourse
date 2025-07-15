@@ -1,19 +1,12 @@
 @use "lib/viewport";
 
-.toolbar-menu__options-content,
-.toolbar-menu__heading-content {
-  @include viewport.from(sm) {
-    z-index: z("composer", "content");
+.fk-d-menu[class*="toolbar-menu"] {
+  z-index: z("composer", "dropdown");
 
+  @include viewport.from(sm) {
     // making sure it's only limited in height on floating menu, not mobile menu
     &.fk-d-menu {
       max-height: 30vh;
-    }
-  }
-
-  &.fk-d-menu {
-    @include viewport.until(sm) {
-      z-index: calc(z("mobile-composer") + 1);
     }
   }
 

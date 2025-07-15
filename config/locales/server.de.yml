@@ -2224,6 +2224,7 @@ de:
     delete_associated_accounts_on_password_reset: "Entferne verknüpfte Konten, wenn der Benutzer sein Passwort ändert."
     allow_featured_topic_on_user_profiles: "Erlaube Benutzern, ihrer Benutzerkarte und ihrem Profil einen Link zu einem Thema hinzuzufügen."
     show_inactive_accounts: "Erlaube angemeldeten Benutzern, die Profile inaktiver Benutzer anzuschauen."
+    hide_silencing_reasons: "Zeige Gründe für Stummschaltung nicht öffentlich auf Benutzerprofilen an."
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
     log_personal_messages_views: "Protokolliere Aufrufe persönlicher Nachrichten durch Administratoren für andere Benutzer/Gruppen."
     ignored_users_count_message_threshold: "Benachrichtige die Moderatoren, wenn ein bestimmter Benutzer von so vielen anderen Benutzern ignoriert wird."
@@ -2422,6 +2423,7 @@ de:
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
     dashboard_general_tab_activity_metrics: "Wähle Berichte aus, die als Aktivitätsmetrik in der Registerkarte „Allgemein“ angezeigt werden."
+    gravatar_enabled: "Verwende den <a href='https://gravatar.com/'>Gravatar-Dienst</a> für Benutzeravatare. Wenn diese Option deaktiviert ist, können Benutzer ihre Avatare nicht mehr auf Gravatar umstellen. Benutzer, die den Dienst bereits nutzen, sind davon nicht betroffen."
     gravatar_name: "Gib den Namen des Gravatar-Dienstanbieters an. Dieser Name wird normalerweise verwendet, um die Quelle zu identifizieren, die Gravatar-Avatare für die Website bereitstellt."
     gravatar_base_url: "Gib die URL für den Zugriff auf die API des Gravatar-Anbieters an. Diese Einstellung ist wichtig für die Umwandlung von E-Mail-Adressen in Gravatar-URLs, für die Avatar-Bilder hinterlegt werden."
     gravatar_login_url: "URL relativ zu `gravatar_base_url`, die dem Benutzer die Anmeldung beim Gravatar-Dienst ermöglicht."
@@ -4213,7 +4215,6 @@ de:
     solarized_dark_theme_name: "Solarized (dunkel)"
     wcag_dark: "WCAG (dunkel)"
     wcag_dark_theme_name: "WCAG (dunkel)"
-    default_theme_name: "Standard"
     light_theme_name: "Hell"
     dark_theme_name: "Dunkel"
     neutral_theme_name: "Neutral"
@@ -4839,10 +4840,7 @@ de:
         Dieses Abzeichen wird verliehen für Besuche an 365 aufeinanderfolgenden Tagen. Wow, ein ganzes Jahr!
     badge_title_metadata: "„%{display_name}“-Abzeichen auf %{site_title}"
   admin_login:
-    success: "E-Mail gesendet"
-    errors:
-      unknown_email_address: "Unbekannte E-Mail-Adresse."
-      invalid_token: "Ungültiges Token."
+    acknowledgement: "Wenn ein Admin-Konto mit der E-Mail-Adresse %{email} existiert, erhältst du eine E-Mail mit einem Link zum Einloggen."
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
     safe_mode: "Abgesicherter Modus: Alle Themes/Plug-ins beim Anmelden deaktivieren"

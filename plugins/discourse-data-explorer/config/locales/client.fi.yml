@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Poista puolipisteet kyselystä."
+        dirty: "Kysely täytyy tallentaa ennen suorittamista."
+    explorer:
+      or: "tai"
+      admins_only: "Dataselain on vain ylläpitäjille."
+      allow_groups: "Salli ryhmien käyttää tätä kyselyä"
+      title: "Dataselain"
+      create: "Luo uusi"
+      create_placeholder: "Kyselyn nimi..."
+      description_placeholder: "Kirjoita kuvaus tähän"
+      import:
+        label: "Tuo"
+        modal: "Tuo kysely"
+        unparseable_json: "JSON-tiedosto ei ole jäsennettävissä."
+        wrong_json: "Väärä JSON-tiedosto. JSON-tiedoston tulisi sisältää query-objekti, jolla tulisi olla ainakin sql-ominaisuus."
+      help:
+        label: "Apua"
+        modal_title: "Dataselaimen ohje"
+        auto_resolution: "<h2>Automaattinen yksikön selvitys</h2> <p>Kun kyselysi palauttaa yksikön, Dataselain voi korvata sen automaattisesti yksikön nimellä ja muilla hyödyllisillä tiedoilla kyselyn tuloksissa. Automaattinen selvitys on käytettävissä <i><b>user_id</b></i>-, <i><b>group_id</b></i>-, <i><b>topic_id</b></i>-, <i><b>category_id</b></i>- ja <i><b>badge_id</b></i>-tietueissa. Voit kokeilla tätä suorittamalla tämän kyselyn:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Mukautettujen parametrien luominen</h2> <p>Voit luoda mukautettuja parametreja kyselyillesi lisäämällä tämän kyselysi yläosaan ja käyttämällä muotoa:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Huomautus: ensimmäinen rivi, jossa on [params], on pakollinen yhdessä sitä edeltävien väliviivojen kanssa, sekä jokainen mukautettu parametri, jonka haluat esitellä.</i></p>"
+        default_values: "<h3>Oletusarvot</h3> <p>Voit esitellä parametreja oletusarvoilla tai ilman. Oletusarvot näkyvät tekstikentässä kyselyeditorin alla, ja voit muokata niitä tarpeidesi mukaan. Ilman oletusarvoja esitellyt parametrit luovat tekstikentän, mutta ne ovat tyhjiä ja korostettu punaisena.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Datatyyppejä</h3> <p>Nämä ovat yleisiä datatyyppejä, joita voit käyttää:</p> <ul> <li><b>kokonaisluku</b> – etumerkillinen nelitavuinen kokonaisluku</li> <li><b>teksti</b> – vaihtelevanpituinen merkkijono</li> <li><b>totuusarvo</b> – tosi/epätosi</li> <li><b>päivämäärä</b> – kalenteripäivä (vuosi, kuukausi, päivä)</li> </ul> <p>Lisätietoja datatyypeistä saat <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>tältä verkkosivustolta</a>.</p>"
+      schema:
+        title: "Tietokannan rakenne"
+        filter: "Hae..."
+        sensitive: "Tämän sarakkeen sisältö voi sisältää erityisen arkaluontoista tai yksityistä tietoa. Noudata erityistä harkintaa käyttäessäsi sarakkeen sisältämää tietoa."
+      types:
+        bool:
+          yes: "Kyllä"
+          no: "Ei"
+          null_: "Tyhjä"
+      export: "Vie"
+      view_json: "Näytä JSON"
+      save: "Tallenna muutokset"
+      saverun: "Tallenna muutokset ja suorita"
+      run: "Suorita"
+      undo: "Kumoa muutokset"
+      edit: "Muokkaa"
+      delete: "Poista"
+      recover: "Palauta poistettu kysely"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Taulukko"
+      show_graph: "Kaavio"
+      others_dirty: "Kyselyyn tehdyt tallentamattomat muutokset menetetään, jos navigoit pois."
+      run_time: "Kysely suoritettu %{value} millisekunnissa."
+      result_count:
+        one: "%{count} tulos."
+        other: "%{count} tulosta."
+      max_result_count:
+        one: "Näytetään osuvin %{count} tulos."
+        other: "Näytetään osuvimmat %{count} tulosta."
+      query_name: "Kysely"
+      query_groups: "Ryhmät"
+      link: "Linkki:"
+      report_name: "Raportti"
+      query_description: "Kuvaus"
+      query_time: "Viimeksi suoritettu"
+      query_user: "Luonut"
+      column: "Sarake %{number}"
+      explain_label: "Sisällytä kyselysuunnitelma?"
+      save_params: "Aseta oletusarvot"
+      reset_params: "Nollaa"
+      search_placeholder: "Hae..."
+      no_search_results: "Pahoittelut, emme löytäneet tekstiäsi vastaavia tuloksia."
+      form:
+        errors:
+          invalid: "Virheellinen"
+          no_such_category: "Tällaista luokkaa ei ole"
+          no_such_group: "Tällaista ryhmää ei ole"
+          invalid_date: "%{date} on virheellinen päivämäärä"
+          invalid_time: "%{time} on virheellinen aika"
+    group:
+      reports: "Raportit"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Suorita Dataselaimen kyselyitä. Rajoita API-avain tiettyihin kyselyihin määrittämällä kyselyiden tunnuksia."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Lähetä käyttäjälle, ryhmälle tai sähköpostiosoitteeseen
+            query_id:
+              label: Dataselaimen kysely
+            query_params:
+              label: Dataselaimen kyselyparametrit
+            skip_empty:
+              label: Ohita yksityisviestin lähettäminen, jos tuloksia ei ole
+            attach_csv:
+              label: Liitä CSV-tiedosto yksityisviestiin
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: Ketju, johon kyselyn tulokset lähetetään
+            query_id:
+              label: Dataselaimen kysely
+            query_params:
+              label: Dataselaimen kyselyparametrit
+            skip_empty:
+              label: Ohita viestin lähettäminen, jos tuloksia ei ole
+            attach_csv:
+              label: Liitä CSV-tiedosto viestiin

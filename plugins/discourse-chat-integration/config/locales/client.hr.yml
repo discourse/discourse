@@ -1,0 +1,164 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Chat integracije"
+  js:
+    chat_integration:
+      menu_title: "Chat integracije"
+      settings: "Postavke"
+      no_providers: "Morate omogućiti neke davatelje usluga u postavkama dodatka"
+      channels_with_errors: "Neki kanali za tog davatelja usluga nisu uspjeli zadnji put kada su poruke poslane. Kliknite ikon(u) pogreške da biste saznali više."
+      channel_exception: "Došlo je do nepoznate pogreške kada je poruka zadnji put poslana na ovaj kanal."
+      group_mention_template: "Spominjanje: @%{name}"
+      group_message_template: "Poruke na: @%{name}"
+      choose_group: "(odaberite grupu)"
+      all_categories: "(sve kategorije)"
+      all_tags: "(sve oznake)"
+      create_rule: "Stvori pravilo"
+      create_channel: "Stvori kanal"
+      delete_channel: "Pobriši"
+      test_channel: "Test"
+      edit_channel: "Izmijeni"
+      channel_delete_confirm: "Jeste li sigurni da želite izbrisati ovaj kanal? Sva pridružena pravila bit će izbrisana."
+      test_modal:
+        title: "Pošaljite probnu poruku"
+        topic: "Teme"
+        send: "Pošalji testnu poruku"
+        close: "Zatvori"
+        error: "Došlo je do nepoznate pogreške prilikom slanja poruke. Više podataka potražite u zapisnicima web mjesta."
+        success: "Poruka je uspješno poslana"
+      type:
+        normal: Normalno
+        group_message: Grupna poruka
+        group_mention: Spomena grupe
+      filter:
+        mute: 'Utišaj'
+        follow: 'Samo prvi post'
+        watch: 'Svi postovi i odgovori'
+        thread: 'Svi postovi s navojnim odgovorima'
+      rule_table:
+        filter: "Filter"
+        category: "Kategorija"
+        tags: "Oznake"
+        edit_rule: "Izmijeni"
+        delete_rule: "Pobriši"
+      edit_channel_modal:
+        title: "Uredi kanal"
+        save: "Spremi kanal"
+        cancel: "Odustani"
+        provider: "Pružatelj usluga"
+        channel_validation:
+          ok: "Vrijedi"
+          fail: "Neispravan format"
+      edit_rule_modal:
+        title: Uredi pravilo
+        save: Spremi pravilo
+        cancel: Odustani
+        provider: Pružatelj usluga
+        type: Tip
+        channel: Kanal
+        filter: Filter
+        category: Kategorija
+        group: Grupa
+        tags: Oznake
+        instructions:
+          type: "Promijenite vrstu da biste pokrenuli obavijesti za grupne poruke ili spominjanja"
+          filter: "Razina obavijesti. Isključivanje zvuka nadjačava druga pravila podudaranja"
+          category: "Ovo pravilo će se primjenjivati samo na teme u navedenoj kategoriji"
+          group: "Ovo pravilo će se primjenjivati na postove koji se odnose na ovu grupu"
+          tags: "Ako je navedeno, ovo pravilo će se primjenjivati samo na teme koje imaju barem jednu od tih oznaka"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Kanal
+              help: "npr. #channel, @username."
+          errors:
+            action_prohibited: "Bot nema dozvolu za objavljivanje na tom kanalu"
+            channel_not_found: "Navedeni kanal ne postoji na slacku"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Ime"
+              help: "Naziv za opis kanala. Ne koristi se za vezu s Telegramom."
+            chat_id:
+              title: ID chata
+              help: Broj koji vam je dodijelio bot ili identifikator kanala emitiranog kanala u obliku @channelname
+          errors:
+            channel_not_found: "Navedeni kanal ne postoji na Telegramu"
+            forbidden: "Bot nema dozvolu za objavljivanje na ovom kanalu"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Ime"
+        guilded:
+          param:
+            name:
+              title: "Ime"
+        mattermost:
+          param:
+            identifier:
+              title: Kanal
+              help: "npr. #channel, @username."
+        matrix:
+          param:
+            name:
+              title: "Ime"
+        zulip:
+          param:
+            subject:
+              title: "predmet"
+        rocketchat:
+          param:
+            identifier:
+              title: Kanal
+              help: "npr. #channel, @username."
+        gitter:
+          param:
+            name:
+              title: "Ime"
+        teams:
+          param:
+            name:
+              title: "Ime"
+        powerautomate:
+          param:
+            name:
+              title: "Ime"
+        webex:
+          param:
+            name:
+              title: "Ime"
+        google:
+          param:
+            name:
+              title: "Ime"
+            webhook_url:
+              help: "URL koji ste dobili prilikom izrade novog webhooka"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Poruka
+            url:
+              label: URL
+            channel:
+              label: Kanal
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: Naziv kanala
+            provider:
+              label: Pružatelj usluga

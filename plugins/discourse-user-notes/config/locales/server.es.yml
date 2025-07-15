@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    user_notes_enabled: "Permitir a los usuarios del personal adjuntar notas a los usuarios"
+    user_notes_moderators_delete: "Permitir a los moderadores eliminar notas de usuario"
+  user_notes:
+    official_warning: "Recibió una advertencia oficial de @%{username} -- %{warning_link}"
+    user_suspended: "@%{username} suspendió esta cuenta hasta el %{suspended_till}. Razón: %{reason}"
+    user_silenced: "@%{username} silenció esta cuenta hasta el %{silenced_till}. Razón: %{reason}"
+  reports:
+    user_notes:
+      title: "Notas de usuario"
+      description: "Listar las notas de usuario más recientes."
+      labels:
+        user: Usuario
+        note: Nota
+        moderator: Moderador

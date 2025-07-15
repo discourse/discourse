@@ -1479,6 +1479,9 @@ en:
       suspended_notice: "This user is suspended until %{date}."
       suspended_permanently: "This user is suspended."
       suspended_reason: "Reason: "
+      silenced_notice: "This user is silenced until %{date}."
+      silenced_permanently: "This user is silenced."
+      silenced_reason: "Reason: "
       github_profile: "GitHub"
       email_activity_summary: "Activity Summary"
       mailing_list_mode:
@@ -1551,6 +1554,9 @@ en:
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> deleted post'
           other: '<span class="%{className}">%{count}</span> deleted posts'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> silenced'
+          other: '<span class="%{className}">%{count}</span> silenced'
         suspensions:
           one: '<span class="%{className}">%{count}</span> suspension'
           other: '<span class="%{className}">%{count}</span> suspensions'
@@ -2847,6 +2853,8 @@ en:
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
+      reply_placeholder_rte: "Type here. Use the toolbar or Markdown for formatting. Drag or paste images."
+      reply_placeholder_rte_no_images: "Type here. Use the toolbar or Markdown for formatting."
       reply_placeholder_choose_category: "Select a category before typing here."
       view_new_post: "View your new post."
       saving: "Saving"
@@ -4768,6 +4776,19 @@ en:
         return: "%{shortcut} Return to composer"
         fullscreen: "%{shortcut} Fullscreen composer"
         insert_current_time: "%{shortcut} Insert current time"
+        bold: "%{shortcut} Bold"
+        italic: "%{shortcut} Italic"
+        link: "%{shortcut} Insert link"
+        preformatted: "%{shortcut} Preformatted text"
+        paragraph: "%{shortcut} Paragraph"
+        heading_1: "%{shortcut} Heading 1"
+        heading_2: "%{shortcut} Heading 2"
+        heading_3: "%{shortcut} Heading 3"
+        heading_4: "%{shortcut} Heading 4"
+        toggle_direction: "%{shortcut} Toggle text direction"
+        ordered_list: "%{shortcut} Ordered list"
+        unordered_list: "%{shortcut} Unordered list"
+        blockquote: "%{shortcut} Blockquote"
       bookmarks:
         title: "Bookmarking"
         enter: "%{shortcut} Save and close"
@@ -7607,7 +7628,7 @@ en:
         activity: Activity
         like_count: Likes Given / Received
         last_100_days: "in the last 100 days"
-        private_topics_count: Private Topics
+        private_topics_count: Personal Messages
         posts_read_count: Posts Read
         post_count: Posts Created
         second_factor_enabled: Two-Factor Authentication Enabled

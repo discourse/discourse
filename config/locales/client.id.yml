@@ -1077,6 +1077,8 @@ id:
       suspended_notice: "Pengguna ini ditangguhkan sampai %{date}"
       suspended_permanently: "Pengguna ini dicekal"
       suspended_reason: "Alasan:"
+      silenced_permanently: "Pengguna ini dibungkam."
+      silenced_reason: "Alasan:"
       github_profile: "GitHub"
       email_activity_summary: "Jumlah aktifitas"
       mailing_list_mode:
@@ -1359,7 +1361,8 @@ id:
         remove: "Hapus"
         reinvited: "Undangan sudah dikirim ulang"
         user: "Pengguna yang telah diundang"
-        none: "Tidak ada undangan"
+        none:
+          title: "Tidak ada undangan"
         pending: "Undangan yang tertunda"
         topics_entered: "Topik Dilihat"
         posts_read_count: "Tulisan dilihat"

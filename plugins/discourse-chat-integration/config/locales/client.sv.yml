@@ -1,0 +1,232 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Chattintegreringar"
+  js:
+    chat_integration:
+      menu_title: "Chattintegreringar"
+      settings: "Inställningar"
+      no_providers: "Du måste aktivera vissa leverantörer i tilläggsinställningarna"
+      channels_with_errors: "Vissa kanaler för denna leverantör misslyckades förra gången meddelanden skickades. Klicka på felikonen/-erna för att få veta mer."
+      channel_exception: "Det uppstod ett okänt fel när ett meddelande senast skickades till den här kanalen."
+      group_mention_template: "Omnämnanden av: @%{name}"
+      group_message_template: "Meddelanden till: @%{name}"
+      choose_group: "(välj en grupp)"
+      all_categories: "(alla kategorier)"
+      all_tags: "(alla taggar)"
+      create_rule: "Skapa regel"
+      create_channel: "Skapa kanal"
+      delete_channel: "Radera"
+      test_channel: "Testa"
+      edit_channel: "Redigera"
+      channel_delete_confirm: "Är du säker på att du vill radera den här kanalen? Alla tillhörande regler kommer att raderas."
+      test_modal:
+        title: "Skicka ett testmeddelande"
+        topic: "Ämne"
+        send: "Skicka testmeddelande"
+        close: "Stäng"
+        error: "Ett okänt fel uppstod när meddelandet skickades. Kontrollera webbplatsloggarna för mer information."
+        success: "Meddelandet har skickats"
+      type:
+        normal: Normal
+        group_message: Gruppmeddelande
+        group_mention: Gruppomnämnande
+      filter:
+        mute: 'Tysta'
+        follow: 'Endast första inlägget'
+        watch: 'Alla inlägg och svar'
+        thread: 'Alla inlägg med trådade svar'
+      rule_table:
+        filter: "Filter"
+        category: "Kategori"
+        tags: "Taggar"
+        edit_rule: "Redigera"
+        delete_rule: "Radera"
+      edit_channel_modal:
+        title: "Redigera kanal"
+        save: "Spara kanal"
+        cancel: "Avbryt"
+        provider: "Leverantör"
+        channel_validation:
+          ok: "Giltig"
+          fail: "Ogiltigt format"
+      edit_rule_modal:
+        title: Redigera regel
+        save: Spara regel
+        cancel: Avbryt
+        provider: Leverantör
+        type: Typ
+        channel: Kanal
+        filter: Filter
+        category: Kategori
+        group: Grupp
+        tags: Taggar
+        instructions:
+          type: "Ändra typen för att utlösa aviseringar för gruppmeddelanden eller omnämnanden"
+          filter: "Aviseringsnivå. Tysta åsidosätter andra matchningsregler"
+          category: "Denna regel gäller endast för ämnen i den angivna kategorin"
+          group: "Denna regel gäller för inlägg som hänvisar till denna grupp"
+          tags: "Om den anges gäller denna regel endast för ämnen som har minst en av dessa taggar"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Kanal
+              help: "t.ex. #kanal, @användarnamn."
+          errors:
+            action_prohibited: "Hjälpredan har inte behörighet att publicera inlägg i den kanalen"
+            channel_not_found: "Den angivna kanalen finns inte på Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Namn"
+              help: "Ett namn som beskriver kanalen. Det används inte för anslutningen till Telegram."
+            chat_id:
+              title: Chatt-ID
+              help: Ett nummer som du har fått av hjälpredan eller en kanalidentifierare i formen @kanalnamn
+          errors:
+            channel_not_found: "Den angivna kanalen finns inte på Telegram"
+            forbidden: "Hjälpredan har inte behörighet att publicera inlägg till den här kanalen"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Namn"
+              help: "Ett namn för att beskriva kanalen. Det används inte för anslutningen till Discord."
+            webhook_url:
+              title: Webhook-URL
+              help: Webhook-URL som skapats i dina Discord-serverinställningar
+        guilded:
+          param:
+            name:
+              title: "Namn"
+            webhook_url:
+              title: Webhook-URL
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Kanal
+              help: "t.ex. #kanal, @användarnamn."
+          errors:
+            channel_not_found: "Den angivna kanalen finns inte på Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Namn"
+              help: "Ett namn som beskriver kanalen. Det används inte för anslutningen till Matrix."
+            room_id:
+              title: "Rums-ID"
+              help: "Den 'privata identifieraren' för rummet. Den borde vara något i stil med !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Åtkomstbevis är ogiltigt"
+            unknown_room: "Rums-ID är ogiltigt"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Ström"
+              help: "Namnet på Zulip-strömmen som meddelandet ska skickas till. t.ex. 'general'"
+            subject:
+              title: "Ämne"
+              help: "Ämnet som dessa meddelanden, som skickas av hjälpredan, bör ges"
+          errors:
+            does_not_exist: "Den strömmen finns inte på Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Kanal
+              help: "t.ex. #kanal, @användarnamn."
+          errors:
+            invalid_channel: "Den kanalen finns inte på Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Namn"
+              help: "Ett Gitter-rums namn, t.ex. gitterHQ/services."
+            webhook_url:
+              title: "Webhook-URL"
+              help: "URL-adressen som tillhandahålls när du skapar en ny integrering i ett Gitter-rum."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Flödesbevis"
+              help: "Flödesbeviset som tillhandahålls efter att du har skapat en källa för ett flöde till vilket du vill skicka meddelanden."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "GroupMe-instansnamn"
+              help: "namn på Groupme-instans som visas i listan i webbplatsinställningar. använd 'all' för att skicka till alla instanser"
+          errors:
+            not_found: "Adressen du försökte skicka ditt meddelande till hittades inte. Kontrollera Bot-ID i webbplatsinställningar."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "Namn"
+              help: "Ett kanalnamn för Teams, t.ex. Discourse"
+            webhook_url:
+              title: "Webhook-URL"
+              help: "URL som tillhandahålls när du skapar en ny inkommande webhook"
+          errors:
+            invalid_channel: "Den kanalen finns inte hos Microsoft Teams"
+        powerautomate:
+          param:
+            name:
+              title: "Namn"
+              help: "Ett namn på kanalen (visas endast i Discourse-administratörspanelen)"
+            webhook_url:
+              title: "Webhook-URL"
+              help: "URL som tillhandahålls när du skapar en ny inkommande webhook"
+        webex:
+          title: "Webex-team"
+          param:
+            name:
+              title: "Namn"
+              help: "Ett utrymmesnamn för Webex, t.ex. Discourse"
+            webhook_url:
+              title: "Webhook-URL"
+              help: "URL som tillhandahålls när du skapar en ny inkommande webhook"
+          errors:
+            invalid_channel: "Den kanalen finns inte på Webex"
+        google:
+          title: "Google Chatt"
+          param:
+            name:
+              title: "Namn"
+              help: "Ett namn på kanalen (visas endast i Discourse-administratörspanelen)"
+            webhook_url:
+              title: "Webhook-URL"
+              help: "URL som tillhandahålls när du skapar en ny inkommande webhook"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Skicka Slack-meddelande
+          fields:
+            message:
+              label: Meddelande
+            url:
+              label: URL
+            channel:
+              label: Kanal
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: Kanalnamn
+            provider:
+              label: Leverantör

@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    discourse_subscriptions:
+      optional: ఐచ్ఛికం
+      plans:
+        interval:
+          adverb:
+            day: రోజువారీ
+            week: వారానికోసారి
+            month: నెలవారీ
+            year: వార్షిక
+      user:
+        payments:
+          created_at: సృష్టించిన
+        plans:
+          product: పేరు
+        subscriptions:
+          status: స్థితి
+          update_card:
+            single: "నవీకరించండి"
+          created_at: సృష్టించిన
+          cancel: రద్దు
+      billing:
+        email: ఈమెయిల్
+      admin:
+        dashboard:
+          title: రంగస్థలం
+          table:
+            head:
+              user: సభ్యుడు
+        products:
+          product:
+            description: వివరణ
+            active: క్రియాశీల
+            created_at: సృష్టించిన
+            updated_at: నవీకరించబడింది
+        plans:
+          plan:
+            active: క్రియాశీల
+            created_at: సృష్టించిన
+        coupons:
+          active: క్రియాశీల?
+          actions: చర్యలు
+        subscriptions:
+          subscription:
+            user: సభ్యుడు
+            status: స్థితి
+            created_at: సృష్టించిన

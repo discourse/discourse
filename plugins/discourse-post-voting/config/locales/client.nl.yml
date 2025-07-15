@@ -1,0 +1,119 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Stemmen op berichten
+  post_voting:
+    reviewables:
+      comment_already_handled: "Bedankt, maar we hebben deze reactie al beoordeeld en vastgesteld dat deze niet opnieuw hoeft te worden gemarkeerd."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "nieuwe reactie"
+      popup:
+        question_answer_user_commented: '%{username} heeft gereageerd in ''%{topic}'' - %{site_title}'
+    category:
+      post_voting_settings_heading: Stemmen op berichten
+      create_as_post_voting_default: Nieuwe topics in deze categorie zijn standaard ingesteld op Stemmen op berichten.
+      only_post_voting_in_this_category: Nieuwe topics in deze categorie kunnen alleen Stemmen op berichten zijn.
+    composer:
+      create_post_voting:
+        label: "Topic met stemmen op berichten maken"
+      composer_actions:
+        create_as_post_voting:
+          label: "Stemmen op berichten schakelen"
+          desc: "Topic wordt gemaakt met berichten waarop kan worden gestemd"
+        remove_as_post_voting:
+          label: "Stemmen op berichten verwijderen"
+          desc: "Topic wordt gemaakt in de normale vorm"
+    vote:
+      already_voted: "Je kunt maar één keer stemmen per vraag."
+      user_over_limit: "Je mag het aantal stemmen voor je vertrouwensniveau niet overschrijden."
+      one_vote_per_post: "Je kunt maar één keer stemmen per bericht."
+    last_answer_lowercase: laatste antwoord
+    answer_lowercase:
+      one: antwoord
+      other: antwoorden
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Voer minimaal %{count} teken in"
+              other: "Voer minimaal %{count} tekens in"
+            length_ok:
+              one: "%{count} teken resterend..."
+              other: "%{count} tekens resterend..."
+            too_long:
+              one: "Reactie mag niet langer zijn dan %{count} teken"
+              other: "Reactie mag niet langer zijn dan %{count} tekens"
+          submit: "Voeg een reactie toe"
+          edit: "bewerken"
+          cancel: "annuleren"
+          add: "Voeg een reactie toe"
+          show:
+            one: Nog %{count} reactie weergeven
+            other: Nog %{count} reacties weergeven
+          delete:
+            confirm: "Weet je zeker dat je deze reactie wilt verwijderen?"
+          user:
+            deleted: "(gebruiker verwijderd)"
+          reviewables:
+            comment_already_handled: "Bedankt, maar we hebben deze reactie al beoordeeld en vastgesteld dat deze niet opnieuw hoeft te worden gemarkeerd."
+            actions:
+              agree:
+                title: "Akkoord..."
+              agree_and_keep_comment:
+                title: "Reactie behouden"
+                description: "Ga akkoord met de markering en laat de reactie ongewijzigd."
+              agree_and_keep_deleted:
+                title: "Reactie verwijderd houden"
+                description: "Ga akkoord met de markering en laat de reactie verwijderd."
+              agree_and_suspend:
+                title: "Gebruiker schorsen"
+                description: "Akkoord met markering en de gebruiker schorsen."
+              agree_and_silence:
+                title: "Gebruiker dempen"
+                description: "Akkoord met markering en de gebruiker dempen."
+              agree_and_restore:
+                title: "Reactie herstellen"
+                description: "Herstel de reactie zodat gebruikers deze kunnen zien."
+              agree_and_delete:
+                title: "Reactie verwijderen"
+                description: "Verwijder de reactie zodat gebruikers deze niet kunnen zien."
+              delete_and_agree:
+                title: "Markering negeren en reactie verwijderen"
+                description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder de reactie."
+              disagree_and_restore:
+                title: "Niet akkoord en reactie herstellen"
+                description: "Herstel de reactie zodat alle gebruikers deze kunnen zien."
+              disagree:
+                title: "Niet akkoord"
+              ignore:
+                title: "Niets doen"
+                description: "Negeer de markering door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen."
+            transcript:
+              view: "Transcript van eerdere reacties weergeven"
+      topic:
+        answer:
+          label: "Antwoorden"
+          help: "begin met het opstellen van een antwoord"
+        sort_by: "Sorteren op"
+        votes: "Stemmen"
+        activity: "Activiteit"
+        answer_count:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
+    review:
+      transcript:
+        view: "Transcript van eerdere berichten weergeven"
+      types:
+        reviewable_post_voting_comment:
+          title: "Gemarkeerde Stemmen op berichten-reactie"

@@ -1,0 +1,129 @@
+discourse_calendar:
+  calendar_enabled:
+    default: false
+    client: true
+  holiday_calendar_topic_id:
+    default: ""
+    client: true
+  holiday_status_emoji:
+    client: true
+    default: "date"
+  delete_expired_event_posts_after:
+    min: -1
+    default: -1
+  all_day_event_start_time:
+    default: ""
+    client: true
+    validator: "CalendarSettingsValidator"
+  all_day_event_end_time:
+    default: ""
+    client: true
+    validator: "CalendarSettingsValidator"
+  calendar_categories:
+    type: list
+    list_type: simple
+    client: true
+    default: ""
+  calendar_categories_outlet:
+    client: true
+    default: "discovery-list-container-top"
+    type: enum
+    choices:
+      - none
+      - discovery-list-container-top
+      - before-topic-list-body
+  working_days:
+    type: list
+    list_type: simple
+    default: Monday|Tuesday|Wednesday|Thursday|Friday
+    client: true
+  working_day_start_hour:
+    default: 8
+    client: true
+  working_day_end_hour:
+    default: 17
+    client: true
+  close_to_working_day_hours_extension:
+    default: 2
+    client: true
+  calendar_automatic_holidays_enabled: true
+  enable_timezone_offset_for_calendar_events:
+    default: false
+    client: true
+    hidden: true
+  split_grouped_events_by_timezone_threshold:
+    default: 0
+    client: true
+    hidden: true
+  default_timezone_offset_user_option:
+    default: false
+    client: true
+    hidden: true
+  event_participation_buttons:
+    default: "going|interested|not going"
+    client: true
+    type: list
+    list_type: simple
+    allow_any: false
+    choices:
+      - going
+      - interested
+      - not going
+  discourse_post_event_enabled:
+    default: false
+    client: true
+  discourse_post_event_allowed_on_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  displayed_invitees_limit:
+    default: 10
+    client: false
+    max: 25
+  display_post_event_date_on_topic_title:
+    default: true
+    client: true
+  use_local_event_date:
+    default: false
+    client: true
+  discourse_post_event_max_bulk_invitees:
+    default: 500
+    hidden: true
+  discourse_post_event_edit_notifications_time_extension:
+    default: 0
+    min: 0
+  discourse_post_event_allowed_custom_fields:
+    type: list
+    list_type: simple
+    client: true
+    default: ""
+  events_calendar_categories:
+    type: category_list
+    client: true
+    default: ""
+  sort_categories_by_event_start_date_enabled:
+    default: false
+    client: true
+  disable_resorting_on_categories_enabled:
+    default: false
+    client: true
+  sidebar_show_upcoming_events:
+    default: true
+    client: true
+  events_max_rows:
+    default: 2
+    client: true
+  map_events_to_color:
+    client: true
+    default: "[]"
+    json_schema: DiscourseCalendar::SiteSettings::MapEventTagColorsJsonSchema
+  map_events_title:
+    client: true
+    default: ""
+    json_schema: DiscourseCalendar::SiteSettings::MapEventsTitleJsonSchema
+  include_expired_events_on_calendar:
+    default: false
+    client: true
