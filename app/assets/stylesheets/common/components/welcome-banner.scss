@@ -36,14 +36,11 @@
       margin-top: 0;
     }
 
-    > div {
-      margin-inline: auto;
-      max-width: 600px;
-    }
-
     .search-menu {
       display: flex;
       position: relative;
+      margin-inline: auto;
+      max-width: 600px;
 
       .search-menu-container {
         width: 100%;
@@ -153,6 +150,9 @@
   line-height: $line-height-medium;
   font-weight: bold;
   margin-bottom: var(--space-2);
+  margin-inline: auto;
+  max-width: 600px;
+  text-align: center;
 
   @include viewport.until(md) {
     font-size: var(--font-up-4);
@@ -161,11 +161,6 @@
   @include viewport.until(sm) {
     font-size: var(--font-up-1);
   }
-}
-
-.welcome-banner__title,
-.welcome-banner__subheader {
-  text-align: center;
 }
 
 .welcome-banner__subheader {
