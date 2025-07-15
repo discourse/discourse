@@ -287,6 +287,12 @@ export default class FullPageSearchController extends Controller {
     );
   }
 
+  @discourseComputed("q")
+  isPMOnly(q) {
+    // Check if search is filtered to private messages only
+    return q && /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(q);
+  }
+
   @discourseComputed("resultCount", "noSortQ")
   resultCountLabel(count, term) {
     const plus = count % 50 === 0 ? "+" : "";
