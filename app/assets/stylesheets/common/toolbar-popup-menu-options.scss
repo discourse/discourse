@@ -11,8 +11,9 @@
     }
   }
 
-  &.fk-d-menu {
-    @include viewport.until(sm) {
+  &.fk-d-menu,
+  .mobile-device & {
+    @include viewport.until(md) {
       z-index: calc(z("mobile-composer") + 1);
     }
   }
