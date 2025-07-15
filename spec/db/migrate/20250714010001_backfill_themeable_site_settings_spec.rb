@@ -24,8 +24,8 @@ RSpec.describe BackfillThemeableSiteSettings do
 
     BackfillThemeableSiteSettings.new.up
 
-    # This count includes the system themes and the default theme, but not the component theme.
-    expect(ThemeSiteSetting.where(name: "enable_welcome_banner").count).to eq(5)
+    # This count includes the system themes theme, but not the component.
+    expect(ThemeSiteSetting.where(name: "enable_welcome_banner").count).to eq(4)
 
     # Don't insert any record if the site setting was never changed from the default.
     expect(ThemeSiteSetting.where(name: "search_experience").count).to eq(0)
