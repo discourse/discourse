@@ -10,6 +10,16 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 
+const SEARCHABLE_FILTERS = {
+  tag: "tag",
+  "-tag": "tag",
+  category: "category",
+  "-category": "category",
+  "=category": "category",
+  "-=category": "category",
+  "created-by": "user",
+};
+
 export default class FilterTips extends Component {
   @service currentUser;
   @service site;
@@ -46,10 +56,7 @@ export default class FilterTips extends Component {
   }
 
   get currentItems() {
-    let results = this.isSearchingValues
-      ? this.searchResults
-      : this.filteredTips;
-    return results;
+    return this.isSearchingValues ? this.searchResults : this.filteredTips;
   }
 
   get filteredTips() {
@@ -67,6 +74,20 @@ export default class FilterTips extends Component {
         .slice(0, 10);
     }
 
+    // Check if we're in the middle of typing a filter value
+    const colonIndex = lastWord.indexOf(":");
+    if (colonIndex > 0) {
+      const filterName = lastWord.substring(0, colonIndex);
+
+      // If it's not a special searchable filter, still show autocomplete
+      if (!SEARCHABLE_FILTERS[filterName]) {
+        return this.args.tips
+          .filter((tip) => tip.name.toLowerCase().startsWith(lastWord))
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .slice(0, 10);
+      }
+    }
+
     return this.args.tips
       .filter((tip) => {
         const filterName = tip.name.split(":")[0];
@@ -74,6 +95,10 @@ export default class FilterTips extends Component {
       })
       .sort((a, b) => a.name.localeCompare(b.name))
       .slice(0, 10);
+  }
+
+  getSearchableFilter(filterName) {
+    return SEARCHABLE_FILTERS[filterName] || null;
   }
 
   @action
@@ -92,14 +117,8 @@ export default class FilterTips extends Component {
   }
 
   async _performValueSearch(filterName, valueText) {
-    let searchType;
-    if (filterName === "tag" || filterName === "-tag") {
-      searchType = "tag";
-    } else if (filterName === "category" || filterName === "-category") {
-      searchType = "category";
-    } else if (filterName === "created-by") {
-      searchType = "user";
-    } else {
+    const searchType = this.getSearchableFilter(filterName);
+    if (!searchType) {
       return;
     }
 
@@ -171,12 +190,7 @@ export default class FilterTips extends Component {
       const filterName = lastWord.substring(0, colonIndex);
       const valueText = lastWord.substring(colonIndex + 1);
 
-      // Check if this is a searchable filter
-      if (
-        ["tag", "-tag", "category", "-category", "created-by"].includes(
-          filterName
-        )
-      ) {
+      if (this.getSearchableFilter(filterName)) {
         this.isSearchingValues = true;
         this.activeFilter = filterName;
         this.performValueSearch(filterName, valueText);
@@ -269,7 +283,9 @@ export default class FilterTips extends Component {
     const words = this.currentInputValue.split(/\s+/);
     const filterName = tip.name;
     words[words.length - 1] = filterName;
-    if (filterName[-1] !== ":") {
+
+    // Only add space if the filter doesn't end with ":"
+    if (!filterName.endsWith(":")) {
       words[words.length - 1] += " ";
     }
     const updatedValue = words.join(" ");
@@ -277,15 +293,17 @@ export default class FilterTips extends Component {
     this.args.onSelectTip(updatedValue);
     this.selectedIndex = -1;
 
-    if (
-      ["tag", "-tag", "category", "-category", "created-by"].includes(
-        filterName
-      )
-    ) {
+    // Check if this filter is searchable
+    const baseFilterName = filterName.endsWith(":")
+      ? filterName.slice(0, -1)
+      : filterName;
+
+    if (this.getSearchableFilter(baseFilterName)) {
       this.isSearchingValues = true;
-      this.activeFilter = filterName;
-      this.performValueSearch(filterName, "");
+      this.activeFilter = baseFilterName;
+      this.performValueSearch(baseFilterName, "");
     }
+
     if (this.inputElement) {
       this.inputElement.focus();
       this.inputElement.setSelectionRange(
