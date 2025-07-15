@@ -269,9 +269,9 @@ export function buildResolver(baseName) {
       }
     }
 
-    resolveController(parsedName) {
-      console.trace("lookup", parsedName);
-    }
+    // resolveController(parsedName) {
+    // console.trace("lookup", parsedName);
+    // }
 
     resolveTemplate(parsedName) {
       return (
