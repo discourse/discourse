@@ -216,7 +216,7 @@ GEM
     image_size (3.4.0)
     in_threads (1.6.0)
     inflection (1.0.0)
-    io-console (0.8.0)
+    io-console (0.8.1)
     irb (1.15.2)
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
@@ -921,7 +921,7 @@ CHECKSUMS
   image_size (3.4.0) sha256=c6a580513fe74947e25e5d3f0aea1e33add6c20f7d0007efa65504317b7f029a
   in_threads (1.6.0) sha256=91a7e6138d279dc632f59b8a9a409e47148948e297c0f69c92f9a2479a182149
   inflection (1.0.0) sha256=ceba9b26fc28b9af82e33e822d28f78a4312af75687efec81d5ef1062498d355
-  io-console (0.8.0) sha256=cd6a9facbc69871d69b2cb8b926fc6ea7ef06f06e505e81a64f14a470fddefa2
+  io-console (0.8.1) sha256=1e15440a6b2f67b6ea496df7c474ed62c860ad11237f29b3bd187f054b925fcb
   irb (1.15.2) sha256=222f32952e278da34b58ffe45e8634bf4afc2dc7aa9da23fed67e581aa50fdba
   iso8601 (0.13.0) sha256=298c2b15b7be5fa95a1372813d36a2257656cd8e906dfbc1f5cb409851425aa2
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
