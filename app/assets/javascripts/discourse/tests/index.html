@@ -17,10 +17,8 @@
 
     {{content-for "head"}} {{content-for "test-head"}}
 
-    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
-    <link rel="stylesheet" href="{{rootURL}}assets/discourse.css">
-    <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
-    <link rel="stylesheet" href="{{rootURL}}bootstrap/core-css-for-tests.css" data-embroider-ignore />
+    <link rel="stylesheet" href="/@embroider/virtual/vendor.css" />
+    <link rel="stylesheet" href="/@embroider/virtual/test-support.css" />
 
     {{content-for "head-footer"}} {{content-for "test-head-footer"}}
 
@@ -45,35 +43,64 @@
 
     {{content-for "body"}} {{content-for "test-body"}}
 
-    <script src="/testem.js" integrity="" data-embroider-ignore></script>
+    <!-- <script src="/testem.js" integrity="" data-embroider-ignore></script> -->
 
-    <script src="{{rootURL}}assets/vendor.js"></script>
+    <script type="module" src="/@embroider/virtual/vendor.js"></script>
 
-    <script src="{{rootURL}}assets/test-support.js"></script>
+    <script type="module" src="/@embroider/virtual/test-support.js"></script>
 
-    <script src="{{rootURL}}assets/discourse.js"></script>
+    <script type="module">
+      import { setEnvironment } from "discourse-common/config/environment";
+      setEnvironment("testing");
+    </script>
 
     <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/main.js" data-embroider-ignore></script>
     <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/mf.js" data-embroider-ignore></script>
     <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/admin.js" data-embroider-ignore></script>
     <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/wizard.js" data-embroider-ignore></script>
     <script src="{{rootURL}}assets/test-site-settings.js" data-embroider-ignore></script>
-    <script src="{{rootURL}}assets/admin.js" data-embroider-ignore></script>
+    
+    <script type="module" src="/discourse.js"></script>
+    <script type="module" src="/admin.js"></script>
 
-    <template id="dynamic-test-js">
+    <!-- <script src="{{rootURL}}assets/test-i18n.js" data-embroider-ignore></script> -->
+    <!-- <script src="{{rootURL}}assets/test-site-settings.js" data-embroider-ignore></script> -->
+    <!-- <script type="module" src="/discourse.js" data-embroider-ignore></script> -->
+
+    <script type="module">
+      import "../../../stylesheets/qunit.scss";
+
+      import "./test-boot-ember-cli";
+
+      (function () {
+        if (window.unsupportedBrowser) {
+          throw "Unsupported browser detected";
+        }
+
+        let element = document.querySelector(
+          `meta[name="discourse/config/environment"]`
+        );
+        const config = JSON.parse(
+          decodeURIComponent(element.getAttribute("content"))
+        );
+        const event = new CustomEvent("discourse-init", { detail: config });
+        document.dispatchEvent(event);
+      })();
+    </script>
+
+    <!-- <template id="dynamic-test-js">
       {{content-for "test-plugin-css"}}
       {{content-for "test-plugin-js"}}
       {{content-for "test-plugin-tests-js"}}
-      <script defer src="{{rootURL}}assets/scripts/discourse-test-listen-boot.js" data-embroider-ignore></script>
-      <script defer src="{{rootURL}}assets/scripts/discourse-boot.js" data-embroider-ignore></script>
+      
       {{content-for "body-footer"}} {{content-for "test-body-footer"}}
-    </template>
+    </template> -->
 
-    <discourse-dynamic-test-js>
-    </discourse-dynamic-test-js>
+    <!-- <discourse-dynamic-test-js>
+    </discourse-dynamic-test-js> -->
 
     <!-- This script takes the <template>, filters plugin assets as required, then appends to discourse-dynamic-test-js -->
-    <script src="{{rootURL}}assets/scripts/discourse-test-load-dynamic-js.js" data-embroider-ignore></script>
+    <!-- <script src="{{rootURL}}assets/scripts/discourse-test-load-dynamic-js.js" data-embroider-ignore></script> -->
 
     <link rel="stylesheet" href="{{rootURL}}stylesheets/qunit-custom.css" data-embroider-ignore />
   </body>

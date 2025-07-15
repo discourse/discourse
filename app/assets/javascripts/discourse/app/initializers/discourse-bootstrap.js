@@ -30,26 +30,6 @@ export default {
       setupData = setupDataElement.dataset;
     }
 
-    let preloaded;
-    const preloadedDataElement = document.getElementById("data-preloaded");
-    if (preloadedDataElement) {
-      preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
-    }
-
-    const keys = Object.keys(preloaded);
-    if (keys.length === 0) {
-      throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
-    }
-
-    keys.forEach(function (key) {
-      PreloadStore.store(key, JSON.parse(preloaded[key]));
-
-      if (setupData.debugPreloadedAppData === "true") {
-        // eslint-disable-next-line no-console
-        console.log(key, PreloadStore.get(key));
-      }
-    });
-
     setupURL(setupData.cdn, setupData.baseUrl, setupData.baseUri);
     setEnvironment(setupData.environment);
     I18n.defaultLocale = setupData.defaultLocale;

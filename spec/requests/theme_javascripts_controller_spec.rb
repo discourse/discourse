@@ -142,9 +142,11 @@ RSpec.describe ThemeJavascriptsController do
       _, digest = component.baked_js_tests_with_digest
 
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
-      expect(response.body).to include(
-        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{component.id}, {\"num_setting\":5}, { force: true });",
-      )
+      expect(response.body).to include <<~JS
+        registerSettings(#{component.id}, {
+          "num_setting": 5
+        });
+      JS
       expect(response.body).to include("assert.ok(true);")
     end
 
@@ -167,12 +169,17 @@ RSpec.describe ThemeJavascriptsController do
         component.theme_fields.find_by(upload_id: js_upload.id).javascript_cache.digest
 
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
-      expect(response.body).to include(
-        "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
-          "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
-          "\"/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
-          "\"/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost\"}}, { force: true });",
-      )
+      expect(response.body).to include <<~JS
+        registerSettings(#{component.id}, {
+          "num_setting": 5,
+          "theme_uploads": {
+            "vendorlib": "/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js"
+          },
+          "theme_uploads_local": {
+            "vendorlib": "/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost"
+          }
+        });
+      JS
       expect(response.body).to include("assert.ok(true);")
     ensure
       js_file&.close

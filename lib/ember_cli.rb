@@ -15,23 +15,55 @@ class EmberCli < ActiveSupport::CurrentAttributes
   def self.script_chunks
     return cache[:script_chunks] if cache[:script_chunks]
 
-    chunk_infos = JSON.parse(File.read("#{dist_dir}/assets.json"))
+    entrypoints = {}
 
-    chunk_infos.transform_keys! { |key| key.delete_prefix("assets/").delete_suffix(".js") }
+    vite_manifest = JSON.parse(File.read("#{dist_dir}/.vite/manifest.json"))
 
-    chunk_infos.transform_values! do |value|
-      value["assets"].map { |chunk| chunk.delete_prefix("assets/").delete_suffix(".js") }
+    vite_manifest.each do |key, value|
+      next unless value["isEntry"]
+      entrypoints[key.delete_suffix(".js")] = [
+        value["file"].delete_prefix("assets/").delete_suffix(".js"),
+      ]
     end
+    p entrypoints
 
-    # Special case - vendor.js is fingerprinted by Embroider in production, but not run through Webpack
-    if !assets.include?("vendor.js") &&
-         fingerprinted = assets.find { |a| a.match?(/^vendor\..*\.js$/) }
-      chunk_infos["vendor"] = [fingerprinted.delete_suffix(".js")]
-    end
-
-    cache[:script_chunks] = chunk_infos
+    cache[:script_chunks] = entrypoints
   rescue Errno::ENOENT
     {}
+  end
+
+  def self.route_bundles
+    vite_manifest = JSON.parse(File.read("#{dist_dir}/.vite/manifest.json"))
+
+    route_bundles = {}
+
+    vite_manifest.each do |key, value|
+      next unless route = key[/\Aembroider_virtual:.*:route=(.*)\z/, 1]
+      route_bundles[route] = deep_preloads_for(key)
+    end
+
+    route_bundles
+  rescue Errno::ENOENT
+    {}
+  end
+
+  def self.deep_preloads_for(asset)
+    vite_manifest = JSON.parse(File.read("#{dist_dir}/.vite/manifest.json"))
+
+    preloads = []
+    seen = Set.new
+    seen.add(asset)
+
+    asset = vite_manifest[asset]
+    preloads.push asset["file"].delete_prefix("assets/").delete_suffix(".js")
+
+    asset["imports"]&.each do |import|
+      next if seen.include?(import)
+      seen.add(import)
+      preloads.push(*deep_preloads_for(import))
+    end
+
+    preloads
   end
 
   def self.is_ember_cli_asset?(name)

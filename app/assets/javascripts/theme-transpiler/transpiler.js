@@ -1,7 +1,6 @@
-// This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
-
 import "./shims";
 import "./postcss";
+import "./theme-rollup";
 import { transform as babelTransform } from "@babel/standalone";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";

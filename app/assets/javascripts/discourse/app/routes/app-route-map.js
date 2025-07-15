@@ -16,8 +16,8 @@ export default function () {
     "topic",
     { path: "/t/:slug/:id", resetNamespace: true },
     function () {
-      this.route("fromParams", { path: "/" });
-      this.route("fromParamsNear", { path: "/:nearPost" });
+      this.route("from-params", { path: "/" });
+      this.route("from-params-near", { path: "/:nearPost" });
     }
   );
 

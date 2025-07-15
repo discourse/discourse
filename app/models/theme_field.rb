@@ -119,11 +119,11 @@ class ThemeField < ActiveRecord::Base
 
   def process_html(html)
     errors = []
-    javascript_cache || build_javascript_cache
 
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
 
-    js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
+    js_tree = {}
+    js_errors = []
     deprecated_template_names = []
 
     doc = Nokogiri::HTML5.fragment(html)
@@ -135,28 +135,19 @@ class ThemeField < ActiveRecord::Base
         is_raw = name =~ /\.(raw|hbr)\z/
         hbs_template = node.inner_html
 
-        begin
-          if is_raw
-            js_compiler.append_js_error(
-              "discourse/templates/#{name}",
-              "Raw templates are no longer supported",
-            )
-          else
-            js_compiler.append_ember_template(
-              "discourse/templates/#{name.delete_prefix("/")}",
-              hbs_template,
-            )
-            deprecated_template_names << name
-          end
-        rescue ThemeJavascriptCompiler::CompileError => ex
-          js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
-          errors << ex.message
+        if is_raw
+          js_errors.push(
+            "[THEME #{theme.id}] [discourse/templates/#{name}] Raw templates are no longer supported",
+          )
+        else
+          js_tree["discourse/templates/#{name.delete_prefix("/")}.hbs"] = hbs_template
+          deprecated_template_names << name
         end
 
         node.remove
       end
 
-    if deprecated_template_names.present?
+    if deprecated_template_names.present? || js_errors.present?
       js = <<~JS
         import deprecated from "discourse/lib/deprecated";
 
@@ -172,10 +163,12 @@ class ThemeField < ActiveRecord::Base
                 }
               )
             });
+            const errors = #{js_errors.to_json};
+            errors.forEach((error) => console.error(error));
           }
         }
       JS
-      js_compiler.append_module(js, "discourse/initializers/script-tag-hbs-deprecations", "js")
+      js_tree["discourse/initializers/script-tag-hbs-deprecations.js"] = js
     end
 
     doc
@@ -187,8 +180,8 @@ class ThemeField < ActiveRecord::Base
         initializer_name =
           "theme-field" + "-#{self.id}" + "-#{Theme.targets[self.target_id]}" +
             "-#{ThemeField.types[self.type_id]}" + "-script-#{index + 1}"
-        begin
-          js = <<~JS
+
+        js = <<~JS
           import { withPluginApi } from "discourse/lib/plugin-api";
           import deprecated from "discourse/lib/deprecated";
 
@@ -211,45 +204,29 @@ class ThemeField < ActiveRecord::Base
           };
         JS
 
-          js_compiler.append_module(
-            js,
-            "discourse/initializers/#{initializer_name}",
-            "js",
-            include_variables: true,
-          )
-        rescue ThemeJavascriptCompiler::CompileError => ex
-          js_compiler.append_js_error("discourse/initializers/#{initializer_name}", ex.message)
-          errors << ex.message
-        end
-
+        js_tree["discourse/initializers/#{initializer_name}.js"] = js
         node.remove
       end
 
-    doc
-      .css("script")
-      .each_with_index do |node, index|
-        if inline_javascript?(node)
-          js_compiler.append_raw_script(
-            "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
-            node.inner_html,
-          )
-          node.remove
-        else
-          node["nonce"] = CSP_NONCE_PLACEHOLDER
-        end
-      end
+    doc.css("script").each_with_index { |node, index| node["nonce"] = CSP_NONCE_PLACEHOLDER }
 
-    settings_hash = theme.build_settings_hash
-    if js_compiler.has_content? && settings_hash.present?
-      js_compiler.prepend_settings(settings_hash)
+    if js_tree.present?
+      js_compiler =
+        ThemeJavascriptCompiler.new(theme_id, self.theme.name, theme.build_settings_hash)
+      js_compiler.append_tree(js_tree)
+
+      javascript_cache || build_javascript_cache
+      javascript_cache.content = js_compiler.content
+      javascript_cache.source_map = js_compiler.source_map
+      javascript_cache.save!
+
+      doc.add_child(<<~HTML.html_safe)
+        <link rel="modulepreload" href="#{javascript_cache.url}" data-theme-id="#{theme_id}">
+      HTML
+    else
+      javascript_cache&.mark_for_destruction
     end
-    javascript_cache.content = js_compiler.content
-    javascript_cache.source_map = js_compiler.source_map
-    javascript_cache.save!
 
-    doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
-      <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
-    HTML
     [doc.to_s, errors&.join("\n")]
   end
 
