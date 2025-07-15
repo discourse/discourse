@@ -6946,7 +6946,12 @@ en:
             title: "Select base color palette"
             description: "Base palette:"
           title: "Colors"
-          edit: "Edit color palettes"
+          edit: "Edit"
+          set_default: "Set as active on default theme"
+          from_theme: "From theme: %{name}"
+          active_badge:
+            text: "Active"
+            title: "Active color palette"
           long_title: "Color palettes"
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"

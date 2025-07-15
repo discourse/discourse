@@ -1,22 +1,15 @@
-import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
+import DPageSubheader from "discourse/components/d-page-subheader";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
+import ColorSchemeListItem from "admin/components/color-scheme-list-item";
 
 export default RouteTemplate(
   <template>
-    <DPageHeader
-      @titleLabel={{i18n "admin.config.color_palettes.title"}}
-      @descriptionLabel={{i18n
-        "admin.config.color_palettes.header_description"
-      }}
-      @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
-      @hideTabs={{true}}
-    >
+    <DPageHeader @hideTabs={{true}}>
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
@@ -26,36 +19,50 @@ export default RouteTemplate(
       </:breadcrumbs>
     </DPageHeader>
 
-    <div class="content-list color-schemes">
-      <ul>
-        {{#each @controller.model as |scheme|}}
-          {{#unless scheme.is_base}}
-            <li>
-              <LinkTo
-                @route="adminCustomize.colors.show"
-                @model={{scheme}}
-                @replace={{true}}
-              >
-                {{icon "paintbrush"}}
-                {{scheme.description}}
-              </LinkTo>
-            </li>
-          {{/unless}}
-        {{/each}}
-      </ul>
+    <DPageSubheader
+      @titleLabel={{i18n "admin.config.color_palettes.title"}}
+      @descriptionLabel={{i18n
+        "admin.config.color_palettes.header_description"
+      }}
+      @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
+    >
+      <:actions as |actions|>
+        <PluginOutlet
+          @name="admin-customize-colors-new-button"
+          @outletArgs={{lazyHash actions=actions controller=@controller}}
+        >
+          <actions.Primary
+            @label="admin.customize.new"
+            @action={{@controller.newColorScheme}}
+            @icon="plus"
+          />
+        </PluginOutlet>
+      </:actions>
+    </DPageSubheader>
 
-      <PluginOutlet @name="admin-customize-colors-new-button">
-        <DButton
-          @action={{@controller.newColorScheme}}
-          @icon="plus"
-          @label="admin.customize.new"
-          class="btn-default"
-        />
-      </PluginOutlet>
-    </div>
+    <ul class="color-palette__list">
+      {{! Show the built-in "Default" color scheme first }}
+      <ColorSchemeListItem
+        @scheme={{null}}
+        @defaultTheme={{@controller.defaultTheme}}
+        @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
+        @toggleUserSelectable={{@controller.toggleUserSelectable}}
+        @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+        @deleteColorScheme={{@controller.deleteColorScheme}}
+      />
 
-    {{outlet}}
-
-    <div class="clearfix"></div>
+      {{#each @controller.model as |scheme|}}
+        {{#unless scheme.is_base}}
+          <ColorSchemeListItem
+            @scheme={{scheme}}
+            @defaultTheme={{@controller.defaultTheme}}
+            @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
+            @toggleUserSelectable={{@controller.toggleUserSelectable}}
+            @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+            @deleteColorScheme={{@controller.deleteColorScheme}}
+          />
+        {{/unless}}
+      {{/each}}
+    </ul>
   </template>
 );

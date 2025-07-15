@@ -2,7 +2,9 @@ import { Input } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
+import DPageHeader from "discourse/components/d-page-header";
 import TextField from "discourse/components/text-field";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
@@ -11,6 +13,20 @@ import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
 
 export default RouteTemplate(
   <template>
+    <DPageHeader @hideTabs={{true}}>
+      <:breadcrumbs>
+        <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+        <DBreadcrumbsItem
+          @path="/admin/customize/colors"
+          @label={{i18n "admin.config.color_palettes.title"}}
+        />
+        <DBreadcrumbsItem
+          @path="/admin/customize/colors/{{@controller.model.id}}"
+          @label={{@controller.model.name}}
+        />
+      </:breadcrumbs>
+    </DPageHeader>
+
     <div class="color-scheme show-current-style">
       <div class="admin-container">
         <h1>{{#if

@@ -1,0 +1,57 @@
+.color-palette {
+  &.admin-config-area-card {
+    padding: 0;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1em;
+    align-items: stretch;
+    width: 100%;
+    list-style-type: none;
+    margin: 0;
+  }
+
+  &__container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    flex: 1 1 auto;
+    padding: var(--space-4) var(--space-4) 0;
+
+    h3 {
+      margin-bottom: var(--space-1);
+    }
+
+    .color-palette__theme-link {
+      min-height: 2rem;
+      font-size: var(--font-down-1);
+
+      a {
+        color: var(--primary-medium);
+      }
+
+      .d-icon {
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+
+  &__controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 var(--space-4) var(--space-4) var(--space-4);
+  }
+
+  &__badges {
+    min-height: 2rem;
+  }
+}

@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,6 +9,14 @@ import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-sele
 export default class AdminCustomizeColorsController extends Controller {
   @service router;
   @service modal;
+  @service store;
+  @service dialog;
+
+  @tracked defaultTheme = null;
+
+  isDefaultThemeColorScheme = (scheme) => {
+    return this.defaultTheme?.color_scheme_id === scheme.id;
+  };
 
   @discourseComputed("model.@each.id")
   baseColorScheme() {
@@ -39,7 +48,7 @@ export default class AdminCustomizeColorsController extends Controller {
     newColorScheme.save().then(() => {
       this.model.pushObject(newColorScheme);
       newColorScheme.set("savingStatus", null);
-      this.router.replaceWith("adminCustomize.colors.show", newColorScheme);
+      this.router.replaceWith("adminCustomize.colors-show", newColorScheme);
     });
   }
 
@@ -49,6 +58,43 @@ export default class AdminCustomizeColorsController extends Controller {
       model: {
         baseColorSchemes: this.baseColorSchemes,
         newColorSchemeWithBase: this.newColorSchemeWithBase,
+      },
+    });
+  }
+
+  @action
+  toggleUserSelectable(scheme) {
+    scheme.set("user_selectable", !scheme.get("user_selectable"));
+    scheme.updateUserSelectable(scheme.get("user_selectable"));
+  }
+
+  @action
+  setAsDefaultThemePalette(scheme) {
+    this.store.findAll("theme").then((themes) => {
+      const defaultTheme = themes.findBy("default", true);
+      if (defaultTheme) {
+        // null is the pre-seeded scheme
+        const schemeId = scheme ? scheme.get("id") : null;
+        defaultTheme.set("color_scheme_id", schemeId);
+
+        this.set("defaultTheme", defaultTheme);
+
+        defaultTheme.saveChanges("color_scheme_id").then(() => {
+          // refresh to show changes
+          window.location.reload();
+        });
+      }
+    });
+  }
+
+  @action
+  deleteColorScheme(scheme) {
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.colors.delete_confirm"),
+      didConfirm: () => {
+        return scheme.destroy().then(() => {
+          this.model.removeObject(scheme);
+        });
       },
     });
   }
