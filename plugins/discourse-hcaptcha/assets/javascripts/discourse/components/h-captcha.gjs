@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 const HCAPTCHA_SCRIPT_URL = "https://hcaptcha.com/1/api.js?render=explicit";
 
 export default class HCaptcha extends Component {
-  @service hCaptchaService;
+  @service captchaService;
 
   @tracked widgetId;
   @tracked invalid = true;
@@ -47,6 +47,7 @@ export default class HCaptcha extends Component {
 
   async loadHCaptchaScript(siteKey) {
     await loadScript(HCAPTCHA_SCRIPT_URL);
+
     this.hCaptcha = window.hcaptcha;
     this.renderHCaptcha(siteKey);
   }
@@ -62,15 +63,15 @@ export default class HCaptcha extends Component {
     this.widgetId = this.hCaptcha.render("h-captcha-field", {
       sitekey: siteKey,
       callback: (response) => {
-        this.hCaptchaService.token = response;
-        this.hCaptchaService.invalid = !response;
+        this.captchaService.token = response;
+        this.captchaService.invalid = !response;
       },
       "expired-callback": () => {
-        this.hCaptchaService.invalid = true;
+        this.captchaService.invalid = true;
       },
     });
 
-    this.hCaptchaService.registerWidget(this.hCaptcha, this.widgetId);
+    this.captchaService.registerWidget(this.hCaptcha, this.widgetId);
   }
 
   <template>
@@ -82,8 +83,8 @@ export default class HCaptcha extends Component {
       </div>
     {{/if}}
 
-    {{#if this.hCaptchaService.submitFailed}}
-      <InputTip @validation={{this.hCaptchaService.inputValidation}} />
+    {{#if this.captchaService.submitFailed}}
+      <InputTip @validation={{this.captchaService.inputValidation}} />
     {{/if}}
   </template>
 }

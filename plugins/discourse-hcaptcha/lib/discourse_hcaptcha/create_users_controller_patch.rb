@@ -2,56 +2,37 @@
 
 module DiscourseHcaptcha
   module CreateUsersControllerPatch
-    H_CAPTCHA_VERIFICATION_URL = "https://hcaptcha.com/siteverify".freeze
-
     extend ActiveSupport::Concern
-    included { before_action :check_h_captcha, only: [:create] }
+    included { before_action :check_captcha, only: [:create] }
 
-    def check_h_captcha
-      return unless SiteSetting.discourse_hcaptcha_enabled
+    def check_captcha
+      return unless SiteSetting.discourse_captcha_enabled
 
-      h_captcha_token = fetch_h_captcha_token
-      raise Discourse::InvalidAccess.new if h_captcha_token.blank?
+      captcha_provider = captcha_provider_selector
 
-      response = send_h_captcha_verification(h_captcha_token)
+      captcha_token = captcha_provider.fetch_captcha_token(cookies)
+      raise Discourse::InvalidAccess.new if captcha_token.blank?
 
-      validate_h_captcha_response(response)
+      response = captcha_provider.send_captcha_verification(captcha_token)
+
+      validate_captcha_response(response)
     rescue => e
-      Rails.logger.warn("Error parsing hCaptcha response: #{e}")
-      fail_with("h_captcha_verification_failed")
+      Rails.logger.warn("Error parsing Captcha response: #{e}")
+      fail_with("captcha_verification_failed")
     end
 
     private
 
-    def send_h_captcha_verification(h_captcha_token)
-      uri = URI.parse(H_CAPTCHA_VERIFICATION_URL)
-
-      http = FinalDestination::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-
-      request = FinalDestination::HTTP::Post.new(uri.request_uri)
-      request.set_form_data(
-        { "secret" => SiteSetting.hcaptcha_secret_key, "response" => h_captcha_token },
-      )
-
-      http.request(request)
-    end
-
-    def fetch_h_captcha_token
-      temp_id = cookies.encrypted[:h_captcha_temp_id]
-      h_captcha_token = Discourse.redis.get("hCaptchaToken_#{temp_id}")
-
-      if temp_id.present?
-        Discourse.redis.del("hCaptchaToken_#{temp_id}")
-        cookies.delete(:h_captcha_temp_id)
+    def captcha_provider_selector
+      if SiteSetting.discourse_hcaptcha_enabled
+        ::DiscourseHcaptcha::HcaptchaProvider.new
+      elsif SiteSetting.discourse_recaptcha_enabled
+        ::DiscourseHcaptcha::RecaptchaProvider.new
       end
-
-      h_captcha_token
     end
 
-    def validate_h_captcha_response(response)
+    def validate_captcha_response(response)
       raise Discourse::InvalidAccess.new if response.code.to_i >= 500
-
       response_json = JSON.parse(response.body)
       if response_json["success"].nil? || response_json["success"] == false
         raise Discourse::InvalidAccess.new

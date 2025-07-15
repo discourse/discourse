@@ -5,10 +5,17 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PLUGIN_ID = "discourse-hCaptcha";
 
+function captchaSelector(siteSettings) {
+  if (siteSettings.discourse_hcaptcha_enabled) {
+    return "hcaptcha";
+  } else if (siteSettings.discourse_recaptcha_enabled) {
+    return "recaptcha";
+  }
+}
+
 function initializeHCaptcha(api, container) {
   const siteSettings = container.lookup("service:site-settings");
-
-  if (!siteSettings.discourse_hcaptcha_enabled) {
+  if (!siteSettings.discourse_captcha_enabled) {
     return;
   }
 
@@ -16,21 +23,23 @@ function initializeHCaptcha(api, container) {
     pluginId: PLUGIN_ID,
 
     createAccount() {
-      const hCaptchaService = getOwnerWithFallback(this).lookup(
-        "service:h-captcha-service"
+      const captchaService = getOwnerWithFallback(this).lookup(
+        "service:captcha-service"
       );
-      hCaptchaService.submitted = true;
+      captchaService.submitted = true;
 
-      if (hCaptchaService.invalid) {
+      if (captchaService.invalid) {
         return Promise.reject();
       }
 
       const data = {
-        token: hCaptchaService.token,
+        token: captchaService.token,
       };
 
+      const captcha_route = captchaSelector(siteSettings);
+
       const originalAccountCreation = this._super;
-      return ajax("/hcaptcha/create.json", {
+      return ajax(`/captcha/${captcha_route}/create.json`, {
         data,
         type: "POST",
       })
@@ -38,11 +47,11 @@ function initializeHCaptcha(api, container) {
           return originalAccountCreation(...arguments);
         })
         .catch(() => {
-          hCaptchaService.failed = true;
+          captchaService.failed = true;
           return Promise.reject();
         })
         .finally(() => {
-          hCaptchaService.reset();
+          captchaService.reset();
         });
     },
   });
