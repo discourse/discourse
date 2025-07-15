@@ -3,143 +3,31 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { debounce } from "@ember/runloop";
+import { cancel, debounce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { and, eq, or } from "truth-helpers";
+import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
-import { i18n } from "discourse-i18n";
 
 export default class FilterTips extends Component {
   @service currentUser;
   @service site;
 
   @tracked showTips = false;
-  @tracked selectedIndex = -1;
   @tracked currentInputValue = "";
   @tracked isSearchingValues = false;
   @tracked searchResults = [];
   @tracked activeFilter = null;
-
-  allFilterTips = [
-    {
-      filter: "category",
-      placeholder: "category/ies to include",
-      description: i18n("filters.tips.category"),
-      hasValues: true,
-      searchType: "category",
-    },
-    {
-      filter: "-category",
-      placeholder: "category/ies to exclude",
-      description: i18n("filters.tips.exclude_category"),
-      hasValues: true,
-      searchType: "category",
-    },
-    {
-      filter: "tag",
-      placeholder: "tag/s to include",
-      description: i18n("filters.tips.tag"),
-      hasValues: true,
-      searchType: "tag",
-    },
-    {
-      filter: "-tag",
-      placeholder: "tag/s to exclude",
-      description: i18n("filters.tips.exclude_tag"),
-      hasValues: true,
-      searchType: "tag",
-    },
-    {
-      filter: "status",
-      placeholder: "status value",
-      description: i18n("filters.tips.status"),
-      values: ["open", "closed", "archived", "listed", "unlisted", "public"],
-      hasValues: true,
-    },
-    {
-      filter: "in",
-      placeholder: "location",
-      description: i18n("filters.tips.in"),
-      values: [
-        "bookmarked",
-        "posted",
-        "watching",
-        "tracking",
-        "muted",
-        "pinned",
-      ],
-      hasValues: true,
-    },
-    {
-      filter: "created-after",
-      placeholder: "days ago or YYYY-MM-DD",
-      description: i18n("filters.tips.created_after"),
-    },
-    {
-      filter: "created-before",
-      placeholder: "days ago or YYYY-MM-DD",
-      description: i18n("filters.tips.created_before"),
-    },
-    {
-      filter: "activity-after",
-      placeholder: "days ago or YYYY-MM-DD",
-      description: i18n("filters.tips.activity_after"),
-    },
-    {
-      filter: "activity-before",
-      placeholder: "days ago or YYYY-MM-DD",
-      description: i18n("filters.tips.activity_before"),
-    },
-    {
-      filter: "likes-min",
-      placeholder: "minimum likes",
-      description: i18n("filters.tips.likes_min"),
-    },
-    {
-      filter: "likes-max",
-      placeholder: "maximum likes",
-      description: i18n("filters.tips.likes_max"),
-    },
-    {
-      filter: "posts-min",
-      placeholder: "minimum posts",
-      description: i18n("filters.tips.posts_min"),
-    },
-    {
-      filter: "posts-max",
-      placeholder: "maximum posts",
-      description: i18n("filters.tips.posts_max"),
-    },
-    {
-      filter: "posters-min",
-      placeholder: "minimum posters",
-      description: i18n("filters.tips.posters_min"),
-    },
-    {
-      filter: "views-min",
-      placeholder: "minimum views",
-      description: i18n("filters.tips.views_min"),
-    },
-    {
-      filter: "created-by",
-      placeholder: "@username",
-      description: i18n("filters.tips.created_by"),
-      hasValues: true,
-      searchType: "user",
-    },
-    {
-      filter: "order",
-      placeholder: "sort order",
-      description: i18n("filters.tips.order"),
-      values: ["activity", "created", "likes", "views", "latest-post", "title"],
-      hasValues: true,
-    },
-  ];
+  searchTimer = null;
+  @tracked _selectedIndex = -1;
 
   willDestroy() {
     super.willDestroy(...arguments);
+    if (this.searchTimer) {
+      cancel(this.searchTimer);
+      this.searchTimer = null;
+    }
     if (this.inputElement) {
       this.inputElement.removeEventListener("focus", this.handleInputFocus);
       this.inputElement.removeEventListener("blur", this.handleInputBlur);
@@ -148,69 +36,81 @@ export default class FilterTips extends Component {
     }
   }
 
+  get selectedIndex() {
+    return this._selectedIndex;
+  }
+
+  set selectedIndex(value) {
+    this._selectedIndex = value;
+    this.args.blockEnterSubmit(value !== -1);
+  }
+
   get currentItems() {
-    if (this.isSearchingValues) {
-      return this.searchResults;
-    }
-    return this.filteredTips;
+    let results = this.isSearchingValues
+      ? this.searchResults
+      : this.filteredTips;
+    return results;
   }
 
   get filteredTips() {
-    if (!this.currentInputValue) {
-      return this.allFilterTips.slice(0, 8);
+    if (!this.args.tips) {
+      return [];
     }
 
     const words = this.currentInputValue.split(/\s+/);
     const lastWord = words[words.length - 1].toLowerCase();
 
-    // Check if we're in value entry mode
-    const colonIndex = lastWord.indexOf(":");
-    if (colonIndex !== -1) {
-      const filterName = lastWord.substring(0, colonIndex);
-      const valueText = lastWord.substring(colonIndex + 1);
-      const filter = this.allFilterTips.find(
-        (tip) => tip.filter === filterName
-      );
-
-      if (filter) {
-        this.activeFilter = filter;
-        this.isSearchingValues = true;
-
-        if (filter.searchType) {
-          this.performValueSearch(filter.searchType, valueText);
-          return [];
-        } else if (filter.values) {
-          const filtered = filter.values
-            .filter((v) => v.toLowerCase().includes(valueText.toLowerCase()))
-            .map((v) => ({ value: v, label: v }));
-          this.searchResults = filtered;
-          return [];
-        }
-      }
+    if (!this.currentInputValue) {
+      return this.args.tips
+        .filter((tip) => tip.priority)
+        .sort((a, b) => (b.priority || 0) - (a.priority || 0))
+        .slice(0, 10);
     }
 
-    // Regular filter search
-    this.isSearchingValues = false;
-    this.activeFilter = null;
-    return this.allFilterTips
-      .filter((tip) => tip.filter.toLowerCase().startsWith(lastWord))
-      .slice(0, 8);
+    return this.args.tips
+      .filter((tip) => {
+        const filterName = tip.name.split(":")[0];
+        return filterName.toLowerCase().startsWith(lastWord);
+      })
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .slice(0, 10);
   }
 
   @action
-  performValueSearch(searchType, query) {
-    debounce(this, this._performValueSearch, searchType, query, 300);
+  performValueSearch(filterName, valueText) {
+    if (this.searchTimer) {
+      cancel(this.searchTimer);
+    }
+
+    this.searchTimer = debounce(
+      this,
+      this._performValueSearch,
+      filterName,
+      valueText,
+      300
+    );
   }
 
-  async _performValueSearch(searchType, query) {
+  async _performValueSearch(filterName, valueText) {
+    let searchType;
+    if (filterName === "tag" || filterName === "-tag") {
+      searchType = "tag";
+    } else if (filterName === "category" || filterName === "-category") {
+      searchType = "category";
+    } else if (filterName === "created-by") {
+      searchType = "user";
+    } else {
+      return;
+    }
+
     if (searchType === "tag") {
       try {
-        const response = await ajax("/tags/filter/search", {
-          data: { q: query || "", limit: 20 },
+        const response = await ajax("/tags/filter/search.json", {
+          data: { q: valueText || "", limit: 5 },
         });
         this.searchResults = response.results.map((tag) => ({
-          value: tag.name,
-          label: `${tag.name} (${tag.count})`,
+          value: `${filterName}:${tag.name}`,
+          label: `${filterName}:${tag.name} (${tag.count})`,
         }));
       } catch {
         this.searchResults = [];
@@ -221,23 +121,23 @@ export default class FilterTips extends Component {
         .filter((c) => {
           const name = c.name.toLowerCase();
           const slug = c.slug.toLowerCase();
-          const search = (query || "").toLowerCase();
+          const search = (valueText || "").toLowerCase();
           return name.includes(search) || slug.includes(search);
         })
-        .slice(0, 20)
+        .slice(0, 10)
         .map((c) => ({
-          value: c.slug,
-          label: c.name,
+          value: `${filterName}:${c.slug}`,
+          label: `${filterName}:${c.name}`,
         }));
       this.searchResults = filtered;
     } else if (searchType === "user") {
       try {
         const response = await ajax("/u/search/users", {
-          data: { term: query || "", limit: 20 },
+          data: { term: valueText || "", limit: 10 },
         });
         this.searchResults = response.users.map((user) => ({
-          value: `@${user.username}`,
-          label: `@${user.username}`,
+          value: `${filterName}:@${user.username}`,
+          label: `${filterName}:@${user.username}`,
         }));
       } catch {
         this.searchResults = [];
@@ -260,8 +160,34 @@ export default class FilterTips extends Component {
   @action
   handleInput(event) {
     this.currentInputValue = event.target.value;
-    // Reset selection when input changes
     this.selectedIndex = -1;
+
+    // Check if we're entering a value for a searchable filter
+    const words = this.currentInputValue.split(/\s+/);
+    const lastWord = words[words.length - 1];
+    const colonIndex = lastWord.indexOf(":");
+
+    if (colonIndex > 0) {
+      const filterName = lastWord.substring(0, colonIndex);
+      const valueText = lastWord.substring(colonIndex + 1);
+
+      // Check if this is a searchable filter
+      if (
+        ["tag", "-tag", "category", "-category", "created-by"].includes(
+          filterName
+        )
+      ) {
+        this.isSearchingValues = true;
+        this.activeFilter = filterName;
+        this.performValueSearch(filterName, valueText);
+      } else {
+        this.isSearchingValues = false;
+        this.activeFilter = null;
+      }
+    } else {
+      this.isSearchingValues = false;
+      this.activeFilter = null;
+    }
   }
 
   @action
@@ -273,13 +199,11 @@ export default class FilterTips extends Component {
 
   @action
   handleInputBlur() {
-    setTimeout(() => {
-      if (!this.element?.contains(document.activeElement)) {
-        this.showTips = false;
-        this.isSearchingValues = false;
-        this.activeFilter = null;
-      }
-    }, 200);
+    if (!this.element?.contains(document.activeElement)) {
+      this.showTips = false;
+      this.isSearchingValues = false;
+      this.activeFilter = null;
+    }
   }
 
   @action
@@ -311,7 +235,6 @@ export default class FilterTips extends Component {
       case "Tab":
         event.preventDefault();
         event.stopPropagation();
-        // If nothing selected, use first item if available
         const indexToUse = this.selectedIndex === -1 ? 0 : this.selectedIndex;
         if (indexToUse < this.currentItems.length) {
           if (this.isSearchingValues) {
@@ -322,7 +245,6 @@ export default class FilterTips extends Component {
         }
         break;
       case "Enter":
-        // Only handle if something is selected
         if (this.selectedIndex >= 0) {
           event.preventDefault();
           event.stopPropagation();
@@ -337,6 +259,7 @@ export default class FilterTips extends Component {
       case "Escape":
         this.showTips = false;
         this.isSearchingValues = false;
+        this.activeFilter = null;
         break;
     }
   }
@@ -344,20 +267,25 @@ export default class FilterTips extends Component {
   @action
   selectTip(tip) {
     const words = this.currentInputValue.split(/\s+/);
-    words[words.length - 1] = tip.filter + ":";
+    const filterName = tip.name;
+    words[words.length - 1] = filterName;
+    if (filterName[-1] !== ":") {
+      words[words.length - 1] += " ";
+    }
     const updatedValue = words.join(" ");
 
     this.args.onSelectTip(updatedValue);
     this.selectedIndex = -1;
-    this.isSearchingValues = true;
-    this.activeFilter = tip;
 
-    if (tip.searchType) {
-      this.performValueSearch(tip.searchType, "");
-    } else if (tip.values) {
-      this.searchResults = tip.values.map((v) => ({ value: v, label: v }));
+    if (
+      ["tag", "-tag", "category", "-category", "created-by"].includes(
+        filterName
+      )
+    ) {
+      this.isSearchingValues = true;
+      this.activeFilter = filterName;
+      this.performValueSearch(filterName, "");
     }
-
     if (this.inputElement) {
       this.inputElement.focus();
       this.inputElement.setSelectionRange(
@@ -370,17 +298,13 @@ export default class FilterTips extends Component {
   @action
   selectValue(item) {
     const words = this.currentInputValue.split(/\s+/);
-    const lastWord = words[words.length - 1];
-    const colonIndex = lastWord.indexOf(":");
-    const filterName = lastWord.substring(0, colonIndex);
-
-    words[words.length - 1] = `${filterName}:${item.value}`;
+    words[words.length - 1] = item.value;
     const updatedValue = words.join(" ") + " ";
 
     this.args.onSelectTip(updatedValue);
-    this.showTips = false;
     this.isSearchingValues = false;
     this.activeFilter = null;
+    this.selectedIndex = -1;
 
     if (this.inputElement) {
       this.inputElement.focus();
@@ -393,11 +317,7 @@ export default class FilterTips extends Component {
 
   <template>
     <div class="filter-tips" {{didInsert this.setupEventListeners}}>
-      {{#if
-        (and
-          this.showTips (or this.filteredTips.length this.searchResults.length)
-        )
-      }}
+      {{#if (and this.showTips this.currentItems.length)}}
         <div class="filter-tips__dropdown">
           {{#if this.isSearchingValues}}
             {{#each this.searchResults as |item index|}}
@@ -408,7 +328,7 @@ export default class FilterTips extends Component {
                 }}
                 @action={{fn this.selectValue item}}
               >
-                {{item.label}}
+                <span class="filter-value">{{item.label}}</span>
               </DButton>
             {{/each}}
           {{else}}
@@ -420,8 +340,10 @@ export default class FilterTips extends Component {
                 }}
                 @action={{fn this.selectTip tip}}
               >
-                <span class="filter-name">{{tip.filter}}:</span>
-                <span class="filter-placeholder">{{tip.placeholder}}</span>
+                <span class="filter-name">{{tip.name}}</span>
+                {{#if tip.description}}
+                  <span class="filter-description">— {{tip.description}}</span>
+                {{/if}}
               </DButton>
             {{/each}}
           {{/if}}

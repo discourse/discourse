@@ -1443,6 +1443,15 @@ RSpec.describe ListController do
       end
     end
 
+    it "should include filter_option_info in the response" do
+      get "/filter.json"
+      parsed = response.parsed_body
+      expect(response.status).to eq(200)
+      expect(parsed["topic_list"]["filter_option_info"].length).to eq(
+        TopicsFilter.option_info.length,
+      )
+    end
+
     it "should filter with tag_group option" do
       topic_with_tag = Fabricate(:topic, tags: [tag])
       topic2_with_tag = Fabricate(:topic, tags: [tag])

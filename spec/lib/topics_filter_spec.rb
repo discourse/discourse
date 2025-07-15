@@ -5,6 +5,18 @@ RSpec.describe TopicsFilter do
   fab!(:admin)
   fab!(:group)
 
+  describe "#option_info" do
+    it "should return a correct hash with name and description keys for all" do
+      # also ensures no missing translations
+      options = TopicsFilter.option_info
+      expect(options).to be_an(Array)
+      expect(options).to all(be_a(Hash))
+      expect(options).to all(include(:name, :description))
+      # 10 is arbitray, but better than just checking for 1
+      expect(options.length).to be > 10
+    end
+  end
+
   describe "#filter_from_query_string" do
     describe "when filtering with multiple filters" do
       fab!(:tag) { Fabricate(:tag, name: "tag1") }

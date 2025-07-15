@@ -55,9 +55,14 @@ export default class DiscoveryFilterNavigation extends Component {
 
   @action
   handleKeydown(event) {
-    if (event.key === "Enter" && !event.defaultPrevented) {
+    if (event.key === "Enter" && this._allowEnterSubmit) {
       this.args.updateTopicsListQueryParams(this.newQueryString);
     }
+  }
+
+  @action
+  blockEnterSubmit(value) {
+    this._allowEnterSubmit = !value;
   }
 
   <template>
@@ -100,6 +105,8 @@ export default class DiscoveryFilterNavigation extends Component {
           <FilterTips
             @queryString={{this.newQueryString}}
             @onSelectTip={{this.updateQueryString}}
+            @tips={{@tips}}
+            @blockEnterSubmit={{this.blockEnterSubmit}}
           />
         </div>
       </div>
