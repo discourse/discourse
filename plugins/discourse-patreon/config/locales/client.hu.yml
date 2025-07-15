@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Szűrők'
+      group: 'Csoport'
+      rewards: 'Jutalmak'
+      filter: 'Szűr'
+      last_synced: 'Utoljára szinkronizálva'
+      edit: 'Szerkeszt'
+      delete: 'Töröl'
+      save: 'Mentés'
+      field:
+        id: "Id"
+        email: "Email"
+        rewards: "Jutalmak"

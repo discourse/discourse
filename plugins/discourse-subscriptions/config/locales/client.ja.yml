@@ -1,0 +1,484 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse サブスクリプション"
+  site_settings:
+    discourse_subscriptions_enabled: Discourse サブスクリプションプラグインを有効にします。
+    discourse_subscriptions_extra_nav_subscribe: プライマリーナビゲーションに購読ボタンを表示する
+    discourse_subscriptions_pricing_table_id: 価格表の埋め込みコードの pricing-table-id をここに追加します。
+    discourse_subscriptions_pricing_table_enabled: 購読ボタンを使うと、埋め込み価格表が表示され、Stripe による決済が使用されます。
+    discourse_subscriptions_public_key: Stripe の公開可能キー
+    discourse_subscriptions_secret_key: Stripe のシークレットキー
+    discourse_subscriptions_webhook_secret: Stripe の Webhook シークレット
+    discourse_subscriptions_currency: デフォルトの通貨コード。これは、サブスクリプションプランを作成する際にオーバーライドできます。
+    discourse_subscriptions_campaign_enabled: このコミュニティーの財政的支援を促進するキャンペーンバナーを有効にします。
+    discourse_subscriptions_campaign_goal: 支援キャンペーンの数値目標（購読者数または集金額）。
+    discourse_subscriptions_campaign_type: 実施するキャンペーンのタイプを選択します（購読者数または月間集金額）。
+    discourse_subscriptions_campaign_banner_location: キャンペーンバナーの場所を選択します（トップまたはサイドバー）。
+    discourse_subscriptions_campaign_banner_shadow_color: キャンペーンバナーのドロップシャドウの色を選択します。
+    discourse_subscriptions_campaign_banner_bg_image: キャンペーンバナーの背景として使用するカスタム画像をアップロードします。
+    discourse_subscriptions_campaign_show_contributors: 直近のサブスクリプション商品のアバターを表示します。
+    discourse_subscriptions_campaign_product: サポーターがキャンペーンのボタンをクリックしたときにサポーターを送信するための Stripe 商品 ID。この設定が空白である場合、サポーターはメインの商品ページにリダイレクトされます。
+    discourse_subscriptions_enable_automatic_tax: サブスクリプションによって生成されるすべての請求書の税率を自動的に計算する自動税計算を有効にします。
+    discourse_subscriptions_enable_verbose_logging: デバッグを支援するために、より詳細なログを有効にします。本番環境では永久的に有効にしないでください。
+    errors:
+      discourse_patrons_amount_must_be_currency: "通貨の金額は、ドル記号なしの通貨である必要があります（例: 1.50）"
+  js:
+    filters:
+      subscribe:
+        help: 購読してこのサイトを支援する
+    discourse_subscriptions:
+      title: Discourse サブスクリプション
+      admin_navigation: サブスクリプション
+      optional: オプション
+      navigation:
+        billing: 請求
+        payments: 支払い
+        subscriptions: サブスクリプション
+        subscribe: 購読
+        user_activity:
+          payments: 支払い
+      campaign:
+        title: ご支援ください
+        body: このコミュニティーを運営し続けるには、あなたの支援が必要です！
+        success_title: 成功！
+        success_body: このコミュニティーの運営をご支援いただきありがとうございます！
+        subscribers: 購読者数
+        goal_comparison: "<strong>%{current}</strong> / <strong>%{goal}</strong>"
+        raised: 集金額
+        button: 支援する
+        recent_contributors: 最近の貢献者
+        goal: 目標を達成しました
+        one_click_campaign: 支援キャンペーンを自動作成
+        refresh_campaign: キャンペーンデータを更新
+        refresh_page: キャンペーンデータはバックグラウンドで Stripe から同期しています。しばらくしてからページを更新し、最新の情報を読み込んでください。
+        supporter: サポーター
+        supporters: サポーター
+        confirm_creation_title: コミュニティーのキャンペーンを自動的に作成しますか？
+        confirm_creation: |-
+          <p>続行すると、以下が作成されます。</p>
+
+          <ul>
+          <li>カスタムタイトルとアバターフレアを報酬として与えるサポーターグループ</li>
+          <li>あなたのサイトを支援するためにユーザーが購入する既定の価格（月間および年間）の Stripe 商品</li>
+          </ul>
+
+          <p>続行しますか？</p>
+        created: ワンクリックキャンペーンが作成され、実施準備が整いました！キャンペーン設定にリダイレクトします。
+      one_time_payment: 一回払い
+      plans:
+        purchase: サブスクリプションを購入する
+        select: サブスクリプションプランを選択する
+        interval:
+          adverb:
+            day: 毎日
+            week: 毎週
+            month: 毎月
+            year: 毎年
+        payment_button: 購読
+        success: ありがとうございました！サブスクリプションが作成されました。
+        incomplete: お支払いは未完了です。あなたのサブスクリプションはお支払いが完了してから更新されます。
+        validate:
+          payment_options:
+            required: サブスクリプションプランを選択してください。
+      user:
+        payments:
+          id: 支払い ID
+          amount: 金額
+          created_at: 作成
+        payments_help: 支払いはありません
+        plans:
+          rate: 料金
+          product: 名前
+        subscriptions_help: アクティブなサブスクリプションはありません。
+        subscriptions:
+          id: サブスクリプション ID
+          status: ステータス
+          discounted: 割引適用
+          renews: 更新
+          update_card:
+            heading: "サブスクリプション用カードの更新: %{sub_id}"
+            single: "更新"
+          created_at: 作成
+          cancel: キャンセル
+          cancelled: キャンセル済み
+          operations:
+            destroy:
+              confirm: このサブスクリプションをキャンセルしてもよろしいですか？
+      subscribe:
+        title: 購読
+        view_past: 過去の購入を表示
+        no_products: 現在、利用可能な商品はありません。
+        unauthenticated: 購読するにはログインするか、アカウントを作成してください。
+        invalid_coupon: 無効なクーポンコードを入力しました。もう一度お試しください。
+        invalid_cardholder_name: カード名義人名は必須です。
+        invalid_cardholder_country: 国は必須です。
+        invalid_cardholder_state: 都道府県は必須です。
+        invalid_cardholder_province: 都道府県は必須です。
+        transaction_error: 支払いの処理中にエラーが発生しました。もう一度お試しください。
+        card:
+          title: 支払い
+        customer:
+          title: お客様情報
+        promo_code: クーポン
+        buttons:
+          subscribe: 購読
+        purchased: 購入済み
+        go_to_billing: 請求に移動
+        already_purchased: この商品をご購入いただきありがとうございました！
+        cardholder_name: カード名義人名
+        cardholder_address:
+          line1: 町名・番地
+          city: 市区郡
+          state: 都道府県
+          province: 都道府県
+          country: 国
+          postal_code: 郵便番号
+        countries:
+          AF: "アフガニスタン"
+          AX: "オーランド諸島"
+          AL: "アルバニア"
+          DZ: "アルジェリア"
+          AS: "アメリカ領サモア"
+          AD: "アンドラ"
+          AO: "アンゴラ"
+          AI: "アンギラ"
+          AQ: "南極大陸"
+          AG: "アンティグア・バーブーダ"
+          AR: "アルゼンチン"
+          AM: "アルメニア"
+          AW: "アルバ"
+          AU: "オーストラリア"
+          AT: "オーストリア"
+          AZ: "アゼルバイジャン"
+          BS: "バハマ"
+          BH: "バーレーン"
+          BD: "バングラデシュ"
+          BB: "バルバドス"
+          BY: "ベラルーシ"
+          BE: "ベルギー"
+          BZ: "ベリーズ"
+          BJ: "ベナン"
+          BM: "バミューダ"
+          BT: "ブータン"
+          BO: "ボリビア多民族国"
+          BQ: "ボネール島、シント・ユースタティウス島、サバ島"
+          BA: "ボスニア・ヘルツェゴヴィナ"
+          BW: "ボツワナ"
+          BV: "ブーべ島"
+          BR: "ブラジル"
+          IO: "イギリス領インド洋地域"
+          BN: "ブルネイ・ダルサラーム"
+          BG: "ブルガリア"
+          BF: "ブルキナファソ"
+          BI: "ブルンジ"
+          KH: "カンボジア"
+          CM: "カメルーン"
+          CA: "カナダ"
+          CV: "カーボベルデ"
+          KY: "ケイマン諸島"
+          CF: "中央アフリカ共和国"
+          TD: "チャド"
+          CL: "チリ"
+          CN: "中国"
+          CX: "クリスマス島"
+          CC: "ココス (キーリング) 諸島"
+          CO: "コロンビア"
+          KM: "コモロ"
+          CG: "コンゴ"
+          CD: "コンゴ民主共和国"
+          CK: "クック諸島"
+          CR: "コスタリカ"
+          CI: "コートジボワール"
+          HR: "クロアチア"
+          CU: "キューバ"
+          CW: "キュラソー"
+          CY: "キプロス"
+          CZ: "チェコ共和国"
+          DK: "デンマーク"
+          DJ: "ジブチ"
+          DM: "ドミニカ"
+          DO: "ドミニカ共和国"
+          EC: "エクアドル"
+          EG: "エジプト"
+          SV: "エルサルバドル"
+          GQ: "赤道ギニア"
+          ER: "エリトリア"
+          EE: "エストニア"
+          ET: "エチオピア"
+          FK: "フォークランド諸島 (マルビナス)"
+          FO: "フェロー諸島"
+          FJ: "フィジー"
+          FI: "フィンランド"
+          FR: "フランス"
+          GF: "フランス領ギアナ"
+          PF: "フランス領ポリネシア"
+          TF: "フランス領南方領土"
+          GA: "ガボン"
+          GM: "ガンビア"
+          GE: "ジョージア"
+          DE: "ドイツ"
+          GH: "ガーナ"
+          GI: "ジブラルタル"
+          GR: "ギリシャ"
+          GL: "グリーンランド"
+          GD: "グレナダ"
+          GP: "グアドループ"
+          GU: "グアム"
+          GT: "グアテマラ"
+          GG: "ガーンジー島"
+          GN: "ギニア"
+          GW: "ギニアビサウ"
+          GY: "ガイアナ"
+          HT: "ハイチ"
+          HM: "ハード島およびマクドナルド島"
+          VA: "ローマ法王庁 (バチカン市国)"
+          HN: "ホンジュラス"
+          HK: "香港"
+          HU: "ハンガリー"
+          IS: "アイスランド"
+          IN: "インド"
+          ID: "インドネシア"
+          IR: "イラン、イスラム共和国"
+          IQ: "イラク"
+          IE: "アイルランド"
+          IM: "マン島"
+          IL: "イスラエル"
+          IT: "イタリア"
+          JM: "ジャマイカ"
+          JP: "日本"
+          JE: "ジャージー"
+          JO: "ヨルダン"
+          KZ: "カザフスタン"
+          KE: "ケニア"
+          KI: "キリバチ"
+          KP: "北朝鮮、民主人民共和国"
+          KR: "韓国、大韓民国"
+          KW: "クウェート"
+          KG: "キルギス"
+          LA: "ラオス人民民主共和国"
+          LV: "ラトビア"
+          LB: "レバノン"
+          LS: "レソト"
+          LR: "リベリア"
+          LY: "リビア"
+          LI: "リヒテンシュタイン"
+          LT: "リトアニア"
+          LU: "ルクセンブルク"
+          MO: "マカオ"
+          MK: "マケドニア、旧ユーゴスラビア共和国"
+          MG: "マダガスカル"
+          MW: "マラウイ"
+          MY: "マレーシア"
+          MV: "モルディブ"
+          ML: "マリ"
+          MT: "マルタ"
+          MH: "マーシャル諸島"
+          MQ: "マルティニーク"
+          MR: "モーリタニア"
+          MU: "モーリシャス"
+          YT: "マヨット"
+          MX: "メキシコ"
+          FM: "ミクロネシア連邦"
+          MD: "モルドバ共和国"
+          MC: "モナコ"
+          MN: "モンゴル"
+          ME: "モンテネグロ"
+          MS: "モントセラト"
+          MA: "モロッコ"
+          MZ: "モザンビーク"
+          MM: "ミャンマー"
+          NA: "ナミビア"
+          NR: "ナウル"
+          NP: "ネパール"
+          NL: "オランダ"
+          NC: "ニューカレドニア"
+          NZ: "ニュージーランド"
+          NI: "ニカラグア"
+          NE: "ニジェール"
+          NG: "ナイジェリア"
+          NU: "ニウエ"
+          NF: "ノーフォーク島"
+          MP: "北マリアナ諸島"
+          "NO": "ノルウェー"
+          OM: "オマーン"
+          PK: "パキスタン"
+          PW: "パラオ"
+          PS: "パレスチナ領土、占領下"
+          PA: "パナマ"
+          PG: "パプアニューギニア"
+          PY: "パラグアイ"
+          PE: "ペルー"
+          PH: "フィリピン"
+          PN: "ピトケアン"
+          PL: "ポーランド"
+          PT: "ポルトガル"
+          PR: "プエルトリコ"
+          QA: "カタール"
+          RE: "レユニオン島"
+          RO: "ルーマニア"
+          RU: "ロシア連邦"
+          RW: "ルワンダ"
+          BL: "サン・バルテルミー島"
+          SH: "セントヘレナ・アセンションおよびトリスタンダクーニャ"
+          KN: "セントクリストファー ネイビス"
+          LC: "セントルシア"
+          MF: "サン・マルタン (フランス領)"
+          PM: "サンピエール島およびミクロン島"
+          VC: "セントビンセントおよびグレナディーン諸島"
+          WS: "サモア"
+          SM: "サンマリノ"
+          ST: "サントメ・プリンシペ"
+          SA: "サウジアラビア"
+          SN: "セネガル"
+          RS: "セルビア"
+          SC: "セーシェル"
+          SL: "シエラレオネ"
+          SG: "シンガポール"
+          SX: "シント・マールテン (オランダ領)"
+          SK: "スロバキア"
+          SI: "スロベニア"
+          SB: "ソロモン諸島"
+          SO: "ソマリア"
+          ZA: "南アフリカ"
+          GS: "サウスジョージア島およびサウスサンドイッチ諸島"
+          SS: "南スーダン"
+          ES: "スペイン"
+          LK: "スリランカ"
+          SD: "スーダン"
+          SR: "スリナム"
+          SJ: "スバールバル諸島およびヤンマイエン島"
+          SZ: "スワジランド"
+          SE: "スウェーデン"
+          CH: "スイス"
+          SY: "シリア・アラブ共和国"
+          TW: "台湾、中国省"
+          TJ: "タジキスタン"
+          TZ: "タンザニア連合共和国"
+          TH: "タイ"
+          TL: "東ティモール"
+          TG: "トーゴ"
+          TK: "トケラウ"
+          TO: "トンガ"
+          TT: "トリニダード・トバゴ"
+          TN: "チュニジア"
+          TR: "トルコ"
+          TM: "トルクメニスタン"
+          TC: "タークス・カイコス諸島"
+          TV: "ツバル"
+          UG: "ウガンダ"
+          UA: "ウクライナ"
+          AE: "アラブ首長国連邦"
+          GB: "イギリス"
+          US: "アメリカ合衆国"
+          UM: "米国領有小離島"
+          UY: "ウルグアイ"
+          UZ: "ウズベキスタン"
+          VU: "バヌアツ"
+          VE: "ベネズエラ、ボリバル共和国"
+          VN: "ベトナム"
+          VG: "イギリス領バージン諸島"
+          VI: "アメリカ領バージン諸島"
+          WF: "ウォリス・フツナ"
+          EH: "西サハラ"
+          YE: "イエメン"
+          ZM: "ザンビア"
+          ZW: "ジンバブエ"
+      billing:
+        name: 氏名
+        email: Eメール
+        phone: 電話番号
+      confirmation:
+        amount: 金額
+        last4: カード番号
+      buttons:
+        make_payment: 支払う
+        confirm_payment: 支払いを確認
+        success: 戻る
+      admin:
+        unconfigured: 'Stripe が正しく構成されていません。詳細は、Discourse メタをご覧ください。'
+        on_meta: メタの Discourse サブスクリプション
+        dashboard:
+          title: ダッシュボード
+          table:
+            head:
+              user: ユーザー
+              payment_intent: 支払い ID
+              receipt_email: 領収書メール
+              amount: 金額
+        products:
+          title: 商品
+          operations:
+            create: 商品の新規作成
+            update: 商品を更新
+            new: 新しい商品
+            destroy:
+              confirm: この商品を破棄してもよろしいですか？
+          product:
+            product_id: 商品 ID
+            name: 商品名
+            statement_descriptor: 明細書の記述
+            statement_descriptor_help: お客様のクレジットカード明細書に表示される商品に関する追加情報。
+            plan_help: お客様がこの商品に購読するための料金プランを作成します。
+            description: 説明
+            description_help: これは、サブスクリプション商品の説明です。
+            repurchaseable: 再購入可能？
+            repurchase_help: 商品と関連するプランを複数回購入できるようにします
+            active: アクティブ
+            active_help: 商品を消費者に提供する準備が整うまで、これをオフにします。
+            created_at: 作成
+            updated_at: 更新
+          product_help: お客様がサイトを購読するまでに、少なくとも 1 つの商品と関連するプランを作成する必要があります。
+        plans:
+          title: 料金プラン
+          operations:
+            add: 新しいプランを追加
+            create: プランを作成
+            update: プランを更新
+            create_help: 料金プランが作成されると、ニックネーム、試用期間、およびユーザーグループのみを更新できます。
+            new: 新しいプラン
+            destroy:
+              confirm: このプランを破棄してもよろしいですか？
+          plan:
+            nickname: プランのニックネーム
+            nickname_help: これはお客様には表示されませんが、後でこのプランを見つけるのに役立ちます
+            plan_id: プラン ID
+            product: 商品
+            interval: 請求頻度
+            amount: 金額
+            trial: 試用期間の日数
+            trial_help: このプランのサブスクリプションは、この期間の無料の試用期間で自動的に開始されます。
+            group: ユーザーグループ
+            group_help: これは、サブスクリプションが作成されたときにお客様が追加される Discourse ユーザーグループです。
+            active: アクティブ
+            created_at: 作成
+            recurring: 定期プラン？
+        coupons:
+          title: クーポン
+          code: プロモコ―ド
+          discount: 割引
+          times_redeemed: 引き換え回数
+          active: アクティブ？
+          actions: アクション
+          create: クーポンを作成
+          promo_code: プロモコ―ド（大文字と小文字を区別しない）
+        subscriptions:
+          title: サブスクリプション
+          subscription:
+            user: ユーザー
+            subscription_id: サブスクリプション ID
+            customer: お客様
+            product: 商品
+            plan: プラン
+            status: ステータス
+            created_at: 作成
+        ask_refund: お客様が最後に行った支払いを返金しますか？
+        canceled: "サブスクリプションはキャンセルされました。"

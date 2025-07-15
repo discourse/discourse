@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    explorer:
+      or: "alebo"
+      admins_only: "Prieskumník údajov je dostupný iba administrátorom."
+      title: "Prieskumník údajov"
+      create: "Vztvoriť novú"
+      import:
+        label: "Import"
+      help:
+        label: "Pomoc"
+      schema:
+        filter: "Hľadať"
+      types:
+        bool:
+          yes: "Áno"
+          no: "Nie"
+      export: "Exportovať"
+      save: "Uložiť zmeny"
+      edit: "Upraviť"
+      delete: "Zmazať"
+      download_json: "JSON"
+      download_csv: "CSV"
+      result_count:
+        one: "%{count} výsledok."
+        few: "%{count} výsledkov."
+        many: "%{count} výsledky."
+        other: "%{count} výsledky."
+      query_groups: "Skupiny"
+      query_description: "Popis"
+      query_user: "Vytvoril"
+      save_params: "Predvolené"
+      reset_params: "Resetovať"
+      search_placeholder: "Hľadať"
+    group:
+      reports: "Hlásenia"

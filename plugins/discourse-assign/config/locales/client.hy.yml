@@ -1,0 +1,71 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    action_codes:
+      assigned: "Վերագրված է %{who}-ին %{when}"
+      assigned_group: "Վերագրված է %{who}-ին %{when}"
+      unassigned: "Ետկանչված է %{who} -ից%{when}"
+      unassigned_group: "Ետկանչված է %{who} -ից%{when}"
+    discourse_assign:
+      cant_act: "Դուք չեք կարող գործողություն կատարել դրոշակների հետ, որոնք վերագրված են այլ օգտատերերի"
+      cant_act_unclaimed: "Դուք պետք է պահանջեք այս թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
+      assigned: "Վերագրված"
+      group_everyone: "Բոլորը"
+      assigned_to: "Վերագրված է"
+      assigned_to_w_ellipsis: "Վերագրված է..."
+      unassign:
+        title: "Ետ կանչել վերագրումը"
+        title_w_ellipsis: "Ետ կանչել վերագրումը..."
+      assign:
+        title: "Վերագրել"
+        help: "Վերագրել Թեման Օգտատիրոջը"
+      reassign:
+        title: "Խմբագրել"
+      topic_level_menu:
+        unassign_with_ellipsis: "Ետ կանչել վերագրումը..."
+      assign_modal:
+        title: "Վերագրել Թեման"
+        assign: "Վերագրել"
+        optional_label: "(ընտրովի)"
+        status_label: Ստատուս
+      claim:
+        title: "պահանջ"
+        help: "Վերագրել թեման ինքներդ Ձեզ"
+      assign_mailer:
+        never: "Երբեք"
+        always: "Միշտ"
+      reminders_frequency:
+        never: "Երբեք"
+        daily: "Օրվա Ընթացքում"
+        weekly: "Շաբաթվա Ընթացքում"
+        monthly: "Ամսվա Ընթացքում"
+        quarterly: "Եռամսյակի Ընթացքում"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Վերագրել"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Ոչինչ չանել"
+      messages:
+        assigned_title: "Վերագրված (%{count})"
+        assigned: "Վերագրված"
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Վերագրված է"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Վերագրված"
+    edit_assignments_modal:
+      topic: "Թեմա"
+      post: "Գրառում"

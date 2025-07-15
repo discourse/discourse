@@ -1,0 +1,193 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse – Zuordnen"
+  js:
+    filters:
+      unassigned:
+        title: "Zuordnung aufgehoben"
+        help: "Nicht zugeordnete Themen"
+    action_codes:
+      assigned: "%{who} zugeordnet %{when}"
+      assigned_group: "%{who} zugeordnet %{when}"
+      assigned_to_post: "%{who} zu <a href='%{path}'>Beitrag</a> zugeordnet %{when}"
+      assigned_group_to_post: "%{who} zu <a href='%{path}'>Beitrag</a> zugeordnet %{when}"
+      unassigned: "Zuordnung von %{who} aufgehoben %{when}"
+      unassigned_group: "Zuordnung von %{who} aufgehoben %{when}"
+      unassigned_from_post: "Zuordnung von %{who} zu <a href='%{path}'>Beitrag</a> aufgehoben %{when}"
+      unassigned_group_from_post: "Zuordnung von %{who} zu <a href='%{path}'>Beitrag</a> aufgehoben %{when}"
+      reassigned: "%{who} %{when} erneut zugeordnet"
+      reassigned_group: "%{who} %{when} erneut zugeordnet"
+      details_change: "Zuordnungsdetails geändert für %{who} %{when}"
+      note_change: "Zuordnungsnotiz geändert für %{who} %{when}"
+      status_change: "Zuordnungsstatus geändert für %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Filter „Nicht zugeordnet“ zur Kategorie hinzufügen"
+      cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugeordnet wurden."
+      cant_act_unclaimed: "Du musst das Thema übernehmen, bevor du Meldungen behandeln kannst."
+      topic_search_placeholder: "Themen nach Titel oder Beitragsinhalt suchen"
+      sidebar_name_filter_placeholder: "Name/Benutzername"
+      assigned: "Zugeordnet"
+      group_everyone: "Jeder"
+      assigned_to: "Zugeordnet zu"
+      assigned_topic_to: "Thema zugeordnet zu <a href='%{path}'>%{username}</a>"
+      assign_post_to: "#%{post_number} %{username} zugeordnet"
+      assign_post_to_multiple: "#%{post_number} zu %{username}"
+      assigned_to_w_ellipsis: "Zugeordnet zu …"
+      unassign:
+        title: "Zuordnung aufheben"
+        title_w_ellipsis: "Zuordnung aufheben …"
+        help: "Zuordnung von %{username} zu Thema aufheben"
+      assign:
+        title: "Zuordnen"
+        help: "Thema einem Benutzer zuordnen"
+      assign_post:
+        title: "Beitrag zuordnen"
+      unassign_post:
+        title: "Zuordnung zu Beitrag aufheben"
+        help: "Zuordnung von %{username} zu Beitrag aufheben"
+      reassign:
+        title: "Bearbeiten"
+        title_w_ellipsis: "Zuordnung bearbeiten …"
+        to_self: "Mir neu zuordnen"
+        to_self_help: "Thema mir neu zuordnen"
+        help: "Zuordnungsdetails bearbeiten"
+      reassign_modal:
+        title: "Thema neu zuordnen"
+      topic_level_menu:
+        edit_assignments: "Zuordnungen bearbeiten …"
+        reassign_topic_to_me: "Thema mir neu zuordnen"
+        unassign_with_ellipsis: "Zuordnung aufheben …"
+        unassign_from_post: "Zuordnung von @%{assignee} zu #%{post_number} aufheben"
+        unassign_from_post_help: "Zuordnung von @%{assignee} zu Beitrag #%{post_number} aufheben"
+        unassign_from_topic: "Zuordnung von @%{username} zu Thema aufheben"
+      assign_modal:
+        title: "Thema zuordnen"
+        reassign_title: "Thema neu zuordnen"
+        assign: "Zuordnen"
+        assignee_label: Zugeordnete Person
+        assignment_label: Zuordnung
+        choose_assignee: Wähle einen Benutzer aus, den du zuordnen möchtest.
+        edit_assignments_title: "Zuordnungen bearbeiten"
+        note_label: Notiz
+        optional_label: "(optional)"
+        status_label: Status
+        suggestions: Vorschläge
+      assign_post_modal:
+        title: "Beitrag zuordnen"
+      claim:
+        title: "übernehmen"
+        help: "Thema mir selbst zuordnen"
+      assign_mailer:
+        never: "Nie"
+        different_users: "Nur wenn die zuordnende Person und die zugeordnete Person unterschiedliche Benutzer sind"
+        always: "Immer"
+      reminders_frequency:
+        description: "Intervall für das Erhalten von Erinnerungen an zugeordnete Themen"
+        never: "Nie"
+        daily: "Täglich"
+        weekly: "Wöchentlich"
+        monthly: "Monatlich"
+        quarterly: "Vierteljährlich"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Zuordnen"
+              assignable_levels:
+                title: "Wer kann für diese Gruppe Zuordnungen vornehmen"
+    user:
+      notification_level_when_assigned:
+        label: "Bei Zuordnung"
+        watch_topic: "Thema beobachten"
+        track_topic: "Thema verfolgen"
+        do_nothing: "Nichts tun"
+      messages:
+        assigned_title: "Zugeordnet (%{count})"
+        assigned: "Zugeordnet"
+      no_assignments_title: "Du hast noch keine Zuordnungen"
+      no_assignments_body: >
+        Deine zugeordneten Themen und Nachrichten werden hier aufgelistet. Außerdem erhältst du regelmäßig eine Erinnerungsbenachrichtigung betreffend deine Zuordnungen, die du in deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> anpassen kannst. <br><br> Um dir selbst oder einer anderen Person ein Thema oder eine Nachricht zuzuordnen, verwende die Zuordnungsschaltfläche %{icon} unten.
+      dismiss_assigned_tooltip: "Alle ungelesenen Zuordnungsbenachrichtigungen als gelesen markieren"
+      assigned_to_group:
+        post: "Beitrag zugeordnet zu %{group_name}"
+        topic: "Thema zugeordnet zu %{group_name}"
+      assigned_to_you:
+        post: "Beitrag wurde dir zugeordnet"
+        topic: "Thema wurde dir zugeordnet"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Ereignisse zuordnen"
+          assigned: "Wenn ein Benutzer ein Thema zuordnet"
+          unassigned: "Wenn ein Benutzer die Zuordnung eines Themas aufhebt"
+    search:
+      advanced:
+        in:
+          assigned: "sind zugeordnet"
+          unassigned: "sind nicht zugeordnet"
+        assigned:
+          label: "Zugeordnet zu"
+    topics:
+      bulk:
+        unassign: "Zuordnung von Themen aufheben"
+        assign: "Themen zuordnen"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Beitragsvorlage
+              description: Wenn ausgefüllt, wird ein Beitrag mit dieser Vorlage erstellt und ein Benutzer anstelle des Themas zugeordnet.
+            assignees_group:
+              label: Gruppe der zugeordneten Personen
+            minimum_time_between_assignments:
+              label: Mindestanzahl der Stunden zwischen Zuordnungen
+            min_recently_assigned_days:
+              label: 'Kürzlich zugeordnet: Mindestanzahl der Tage'
+              description: Standardmäßig 14 Tage.
+            skip_new_users_for_days:
+              label: Neue Benutzer überspringen für Anzahl von Tagen
+              description: Standardmäßig 0 Tage (Benutzer können sofort nach der Registrierung zugeordnet werden).
+            max_recently_assigned_days:
+              label: 'Kürzlich zugeordnet: Maximalanzahl der Tage'
+              description: Erster Versuch, Benutzer auszuschließen, die in den letzten `n` Tagen zugeordnet wurden. Wenn kein Benutzer übrig ist, wird auf `min_recently_assigned_days` zurückgegriffen. Standardmäßig 180 Tage.
+            assigned_topic:
+              label: Zugeordnete Themen-ID
+            in_working_hours:
+              label: Benutzer in Arbeitszeit
+    notification_reason:
+      user: "Du siehst die Anzahl der neuen Antworten, weil dir dieses Thema zugeordnet wurde."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} hat dich zugeordnet"
+      titles:
+        assigned: "Zugeordnet"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Bist du sicher? Du hast %{count} ungelesene Zuordnungsbenachrichtigung."
+            other: "Bist du sicher? Du hast %{count} ungelesene Zuordnungsbenachrichtigungen."
+    user_menu:
+      view_all_assigned: "alle zugeordneten anzeigen"
+      tabs:
+        assign_list: "Zuordnungsliste"
+        assign_list_with_unread:
+          one: "Zuordnungsliste – %{count} ungelesene Zuordnung"
+          other: "Zuordnungsliste – %{count} ungelesene Zuordnungen"
+    edit_assignments_modal:
+      title: "Zuordnungen bearbeiten"
+      topic: "Thema"
+      post: "Beitrag"

@@ -1,0 +1,119 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Vote d'un message
+  post_voting:
+    reviewables:
+      comment_already_handled: "Merci, mais nous avons déjà examiné ce commentaire et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "nouveau commentaire"
+      popup:
+        question_answer_user_commented: '%{username} a commenté dans « %{topic} » - %{site_title}'
+    category:
+      post_voting_settings_heading: Vote d'un message
+      create_as_post_voting_default: Les nouveaux sujets sont par défaut les sujets de vote de message dans cette catégorie.
+      only_post_voting_in_this_category: Les nouveaux sujets ne peuvent être que des sujets postérieurs au vote dans cette catégorie.
+    composer:
+      create_post_voting:
+        label: "Créer un sujet de vote de message"
+      composer_actions:
+        create_as_post_voting:
+          label: "Activer/désactiver le vote de message"
+          desc: "Le sujet sera créé avec des messages pouvant faire l'objet d'un vote"
+        remove_as_post_voting:
+          label: "Supprimer le vote de message"
+          desc: "Le sujet sera créé dans le format normal"
+    vote:
+      already_voted: "Vous ne pouvez voter qu'une seule fois par question."
+      user_over_limit: "Vous ne pouvez pas dépasser le nombre de votes correspondant à votre niveau de confiance."
+      one_vote_per_post: "Vous ne pouvez voter qu'une seule fois pour chaque message."
+    last_answer_lowercase: dernière réponse
+    answer_lowercase:
+      one: réponse
+      other: réponses
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Saisissez au moins %{count} caractère"
+              other: "Saisissez au moins %{count} caractères"
+            length_ok:
+              one: "Il reste %{count} caractère…"
+              other: "Il reste %{count} caractères…"
+            too_long:
+              one: "Le commentaire ne peut pas comporter plus de %{count} caractère"
+              other: "Le commentaire ne peut pas comporter plus de %{count} caractères"
+          submit: "Ajouter un commentaire"
+          edit: "modifier"
+          cancel: "annuler"
+          add: "Ajouter un commentaire"
+          show:
+            one: Afficher %{count} commentaire supplémentaire
+            other: Afficher %{count} commentaires supplémentaires
+          delete:
+            confirm: "Voulez-vous vraiment supprimer ce commentaire ?"
+          user:
+            deleted: "(utilisateur supprimé)"
+          reviewables:
+            comment_already_handled: "Merci, mais nous avons déjà examiné ce commentaire et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
+            actions:
+              agree:
+                title: "D'accord…"
+              agree_and_keep_comment:
+                title: "Conserver le commentaire"
+                description: "Accepter le signalement et conserver le commentaire tel quel."
+              agree_and_keep_deleted:
+                title: "Garder le commentaire supprimé"
+                description: "Accepter le signalement et laisser le commentaire supprimé."
+              agree_and_suspend:
+                title: "Suspendre l'utilisateur"
+                description: "Accepter le signalement et suspendre l'utilisateur."
+              agree_and_silence:
+                title: "Désactiver l'utilisateur"
+                description: "Accepter le signalement et désactiver l'utilisateur."
+              agree_and_restore:
+                title: "Restaurer le commentaire"
+                description: "Restaurer le commentaire pour que les utilisateurs puissent le voir."
+              agree_and_delete:
+                title: "Supprimer le commentaire"
+                description: "Supprimer le commentaire pour que les utilisateurs ne puissent pas le voir."
+              delete_and_agree:
+                title: "Ignorer le signalement et supprimer le commentaire"
+                description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le commentaire."
+              disagree_and_restore:
+                title: "Rejeter le signalement et rétablir le commentaire"
+                description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
+              disagree:
+                title: "Refuser"
+              ignore:
+                title: "Ne rien faire"
+                description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
+            transcript:
+              view: "Afficher la transcription des commentaires précédents"
+      topic:
+        answer:
+          label: "Réponse"
+          help: "commencez à rédiger une réponse"
+        sort_by: "Trier par"
+        votes: "Votes"
+        activity: "Activité"
+        answer_count:
+          one: "%{count} réponse"
+          other: "%{count} réponses"
+    review:
+      transcript:
+        view: "Afficher la transcription des messages précédents"
+      types:
+        reviewable_post_voting_comment:
+          title: "Commentaire sur le vote de publication signalé"

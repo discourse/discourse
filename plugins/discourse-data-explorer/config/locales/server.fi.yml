@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    data_explorer_enabled: "Ota käyttöön Dataselain, ilmestyy polkuun /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Ajoita yksityisviesti Dataselaimen tuloksilla
+        description: Vastaanota ajoitettuja raportteja viesteihisi
+        no_csv_allowed: "Kun käytät attach_csv-kenttää, \"csv\" täytyy lisätä sallittujen päätteiden luetteloon sivustoasetuksissa."
+      recurring_data_explorer_result_topic:
+        title: Ajoita viesti ketjussa Dataselaimen tuloksilla
+        description: Vastaanota ajoitettuja raportteja tiettyyn ketjuun
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Kyselyn %{query_name} ajoitettu raportti"
+      upload_appendix: "Liite: [%{filename}|attachment](%{short_url})"

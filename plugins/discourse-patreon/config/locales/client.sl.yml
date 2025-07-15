@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtri'
+      group: 'Skupina'
+      rewards: 'Nagrade'
+      filter: 'Filter'
+      help_text: 'Discourse skupino lahko sinhronizirate z eno ali več nagradnimi stopnjami v Patreonu.'
+      last_synced: 'Nazadnje sinhronizirano'
+      edit: 'Uredi'
+      delete: 'Izbriši'
+      save: 'Shrani'
+      update_data: 'Posodobi Patreon podatke & sinhroniziraj skupine'
+      field:
+        id: "Id"
+        email: "Email"
+        amount_cents: "Vrednost (v centih)"
+        rewards: "Nagrade"
+        more_details:
+          label: "Plačila & več podatkov"

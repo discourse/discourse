@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Rimuovi i punti e virgola dalla query."
+        dirty: "È necessario salvare la query prima di eseguirla."
+    explorer:
+      or: "oppure"
+      admins_only: "Data explorer è disponibile solo per gli amministratori."
+      allow_groups: "Consenti ai gruppi di accedere a questa query"
+      title: "Data Explorer"
+      create: "Crea Nuovo"
+      create_placeholder: "Nome query..."
+      description_placeholder: "Inserisci una descrizione qui"
+      import:
+        label: "Importa"
+        modal: "Importa una query"
+        unparseable_json: "File JSON non analizzabile."
+        wrong_json: "File JSON errato. Un file JSON dovrebbe contenere un oggetto \"query\" contenente almeno una proprietà \"sql\"."
+      help:
+        label: "Guida"
+        modal_title: "Guida di Data Explorer"
+        auto_resolution: "<h2>Risoluzione automatica dell'entità</h2> <p>Quando la query restituisce l'ID di un'entità, Data Explorer può sostituirla automaticamente con il nome dell'entità e altre informazioni utili nei risultati delle query. La risoluzione automatica è disponibile per i dati <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> e <i><b>badge_id</b></i>. Fai una prova, eseguendo questa query:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Creazione di parametri personalizzati</h2> <p>Per creare parametri personalizzati per le query, inserisci questo codice nella parte superiore della query e segui il formato:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Nota: la prima riga con [params] è obbligatoria, come i due trattini che precedono e tutti i parametri personalizzati che intendi dichiarare.</i></p>"
+        default_values: "<h3>Valori predefiniti</h3> <p>È possibile dichiarare parametri con o senza valori predefiniti. I valori predefiniti verranno visualizzati in un campo di testo sotto l'editor di query, che può essere modificato in base alle esigenze. I parametri dichiarati senza valori predefiniti genereranno comunque un campo di testo, ma saranno vuoti ed evidenziati in rosso.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Tipi di dati</h3> <p>Di seguito sono riportati i tipi di dati comuni che puoi utilizzare:</p> <ul> <li><b>integer</b> - intero a quattro byte con segno</li> <li><b>text</b> - stringa di caratteri di lunghezza variabile</li> <li><b>boolean</b> – valore vero/falso</li> <li><b>data</b> - data di calendario (anno, mese, giorno)</li> </ul> <p>Per ulteriori informazioni sui tipi di dati, visita <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>questo sito web</a>.</p>"
+      schema:
+        title: "Schema del Database "
+        filter: "Ricerca..."
+        sensitive: "Questa colonna potrebbe contenere dati sensibili o informazioni private. Occorre prestare particolare attenzione nell'uso dei contenuti di questa colonna."
+      types:
+        bool:
+          yes: "Sì"
+          no: "No"
+          null_: "Null"
+      export: "Esporta"
+      view_json: "Visualizza JSON"
+      save: "Salva Modifiche"
+      saverun: "Salva modifiche ed esegui"
+      run: "Esegui"
+      undo: "Annulla Modifiche"
+      edit: "Modifica"
+      delete: "Elimina"
+      recover: "Ripristina Query"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Tabella"
+      show_graph: "Grafico"
+      others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
+      run_time: "Query completata in %{value} ms."
+      result_count:
+        one: "%{count} risultato."
+        other: "%{count} risultati."
+      max_result_count:
+        one: "Visualizzazione del primo (%{count}) risultato"
+        other: "Visualizzazione dei primi %{count} risultati."
+      query_name: "Query"
+      query_groups: "Gruppi"
+      link: "Collegamento per"
+      report_name: "Rapporto"
+      query_description: "Descrizione"
+      query_time: "Ultima esecuzione"
+      query_user: "Creato da"
+      column: "Colonna %{number}"
+      explain_label: "Includere il piano query?"
+      save_params: "Imposta Predefiniti"
+      reset_params: "Reimposta"
+      search_placeholder: "Ricerca..."
+      no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."
+      form:
+        errors:
+          invalid: "Non valido"
+          no_such_category: "Categoria inesistente"
+          no_such_group: "Gruppo inesistente"
+          invalid_date: "%{date} è una data non valida"
+          invalid_time: "%{time} è un orario non valido"
+    group:
+      reports: "Rapporti"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Esegui le query di Data Explorer. Limita la chiave API a un insieme di query specificando i loro ID."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Invia a utente, gruppo o e-mail
+            query_id:
+              label: Query di Data Explorer
+            query_params:
+              label: Parametri della query di Data Explorer
+            skip_empty:
+              label: Salta l'invio di MP se non ci sono risultati
+            attach_csv:
+              label: Allega il file CSV al MP
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: L'argomento in cui pubblicare i risultati della query
+            query_id:
+              label: Query di Data Explorer
+            query_params:
+              label: Parametri della query di Data Explorer
+            skip_empty:
+              label: Salta la pubblicazione se non ci sono risultati
+            attach_csv:
+              label: Allega il file CSV all'argomento

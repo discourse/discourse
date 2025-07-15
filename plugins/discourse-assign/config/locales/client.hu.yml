@@ -1,0 +1,123 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    filters:
+      unassigned:
+        title: "Nem kiosztott"
+        help: "Témák, amelyek nincsenek kiosztva"
+    action_codes:
+      assigned: "Kiosztva %{who} részére, %{when}"
+      assigned_group: "Kiosztva %{who} részére, %{when}"
+      assigned_to_post: "<a href='%{path}'>Bejegyzés</a> kiosztva %{who} részére, %{when}"
+      assigned_group_to_post: "<a href='%{path}'>Bejegyzés</a> kiosztva %{who} részére, %{when}"
+      unassigned: "%{who} Elvéve, %{when}"
+      unassigned_group: "%{who} Elvéve, %{when}"
+      unassigned_from_post: "%{who} Elvéve a <a href='%{path}'>bejegyzéstől</a>, %{when}"
+      unassigned_group_from_post: "%{who} Elvéve a <a href='%{path}'>bejegyzéstől</a>, %{when}"
+      reassigned: "Átadva %{who} részére, %{when}"
+      reassigned_group: "Átadva %{who} részére, %{when}"
+    discourse_assign:
+      add_unassigned_filter: "A „nem kiosztott” szűrő hozzáadása a kategóriához"
+      cant_act: "Nem kezelheti a más felhasználóhoz hozzárendelt jelzőket"
+      cant_act_unclaimed: "Le kell foglalnia a témát, mielőtt a jelzőket kezelhetné."
+      topic_search_placeholder: "Témák keresése cím vagy bejegyzéstartalom alapján"
+      sidebar_name_filter_placeholder: "Név/felhasználónév"
+      assigned: "Kiosztott"
+      group_everyone: "Mindenki"
+      assigned_to: "Kiosztva:"
+      assigned_to_w_ellipsis: "Kiosztva…"
+      unassign:
+        title: "Elvétel"
+        title_w_ellipsis: "Elvétel…"
+        help: "%{username} elvétele a témától"
+      assign:
+        title: "Kiosztás"
+        help: "Téma kiosztása a felhasználónak"
+      assign_post:
+        title: "Bejegyzés kiosztása"
+      unassign_post:
+        title: "Elvétel a bejegyzéstől"
+        help: "%{username} elvétele a bejegyzéstől"
+      reassign:
+        title: "Szerkesztés"
+        to_self: "Átvétel"
+        to_self_help: "Téma átvétele"
+      reassign_modal:
+        title: "Téma átadása"
+      topic_level_menu:
+        unassign_with_ellipsis: "Elvétel…"
+      assign_modal:
+        title: "Téma kiosztása"
+        reassign_title: "Téma átadása"
+        assign: "Kiosztás"
+        note_label: Megjegyzés
+        optional_label: "(nem kötelező)"
+        status_label: Állapot
+      assign_post_modal:
+        title: "Bejegyzés kiosztása"
+      claim:
+        title: "lefoglalás"
+        help: "Téma kiosztása saját magának"
+      assign_mailer:
+        never: "Soha"
+        different_users: "Csak akkor, ha a kiosztó, és aki kapja, különböző felhasználók"
+        always: "Mindig"
+      reminders_frequency:
+        description: "Kiosztott témákra vonatkozó emlékeztetők fogadási gyakorisága"
+        never: "Soha"
+        daily: "Naponta"
+        weekly: "Hetente"
+        monthly: "Havonta"
+        quarterly: "Negyedévente"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Kiosztás"
+              assignable_levels:
+                title: "Ki oszthat ki ennek a csoportnak"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Ne csinálj semmit"
+      messages:
+        assigned_title: "Kiosztott (%{count})"
+        assigned: "Kiosztva"
+      no_assignments_title: "Még nincsenek kiosztott feladatai"
+      no_assignments_body: >
+        A kiosztott témák és üzenetek itt jelennek meg. Rendszeresen kap egy emlékeztető értesítést is a kiosztott feladatokról, amelyeket a <a href='%{preferencesUrl}'>felhasználói beállításokban</a> módosíthat. <br><br>Téma vagy üzenet saját magának vagy valaki másnak történő kiosztásához keresse a lenti %{icon} kiosztás gombot.
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Kiosztva:"
+    topics:
+      bulk:
+        unassign: "Témák elvétele"
+        assign: "Témák kiosztása"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Megbízottak csoportja
+            minimum_time_between_assignments:
+              label: Feladatkiosztások közti órák legkisebb száma
+            min_recently_assigned_days:
+              description: Alapértelmezés szerint 14 nap.
+            in_working_hours:
+              label: Felhasználók munkaidőben
+    notification_reason:
+      user: "Látni fogja az új válaszok számát, mert ezt a témát Önnek osztották ki."
+    notifications:
+      assigned: "<span>%{username}</span>%{description}"
+      titles:
+        assigned: "Kiosztott"
+    edit_assignments_modal:
+      topic: "Téma"
+      post: "Bejegyzés"

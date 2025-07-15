@@ -1,0 +1,150 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    filters:
+      unassigned:
+        title: "Otilldelat"
+        help: "Ämnen som inte är tilldelade"
+    action_codes:
+      assigned: "Tilldelat %{who} %{when}"
+      assigned_group: "Tilldelat %{who} %{when}"
+      assigned_to_post: "Tilldelat %{who} för <a href='%{path}'>inlägg</a> %{when}"
+      assigned_group_to_post: "Tilldelat %{who} för <a href='%{path}'>inlägg</a> %{when}"
+      unassigned: "Otilldelat %{who} %{when}"
+      unassigned_group: "Otilldelat %{who} %{when}"
+      unassigned_from_post: "Otilldelat %{who} från <a href='%{path}'>inlägg</a> %{when}"
+      unassigned_group_from_post: "Otilldelat %{who} från <a href='%{path}'>inlägg</a> %{when}"
+      reassigned: "Omtilldelad %{who} %{when}"
+      reassigned_group: "Omtilldelad %{who} %{when}"
+      details_change: "Ändrade tilldelningsdetaljer för %{who} %{when}"
+      note_change: "Ändrade tilldelningsanteckning för %{who} %{when}"
+      status_change: "Ändrad tilldelningsstatus för %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Lägg till 'otilldelat' som en filterkategori"
+      cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
+      cant_act_unclaimed: "Du måste ta kontroll över detta ämne innan du kan agera på flaggor."
+      topic_search_placeholder: "Sök ämnen efter titel eller inläggsinnehåll"
+      sidebar_name_filter_placeholder: "Namn/användarnamn"
+      assigned: "Tilldelat"
+      group_everyone: "Alla"
+      assigned_to: "Tilldelat till"
+      assigned_to_w_ellipsis: "Tilldelad till..."
+      unassign:
+        title: "Otilldela"
+        title_w_ellipsis: "Ta bort tilldelning..."
+        help: "Otilldela %{username} för ämne"
+      assign:
+        title: "Tilldela"
+        help: "Tilldela ämne till användare"
+      assign_post:
+        title: "Tilldela inlägg"
+      unassign_post:
+        title: "Ta bort tilldelning från inlägg"
+        help: "Ta bort tilldelning %{username} från inlägg"
+      reassign:
+        title: "Redigera"
+        title_w_ellipsis: "Redigera uppgift..."
+        to_self: "Omtilldela till mig"
+        to_self_help: "Omtilldela ämne till mig"
+        help: "Redigera tilldelningsdetaljer"
+      reassign_modal:
+        title: "Tilldela om ämne"
+      topic_level_menu:
+        unassign_with_ellipsis: "Ta bort tilldelning..."
+      assign_modal:
+        title: "Tilldela ämne"
+        reassign_title: "Tilldela om ämne"
+        assign: "Tilldela"
+        note_label: Anteckning
+        optional_label: "(valfri)"
+        status_label: Status
+      assign_post_modal:
+        title: "Tilldela inlägg"
+      claim:
+        title: "begär"
+        help: "Tilldela ämne till dig själv"
+      assign_mailer:
+        never: "Aldrig"
+        different_users: "Enbart om tilldelare och tilldelad är olika användare"
+        always: "Alltid"
+      reminders_frequency:
+        description: "Frekvens för att erhålla ämnespåminnelser"
+        never: "Aldrig"
+        daily: "Dagligen"
+        weekly: "Veckovis"
+        monthly: "Månadsvis"
+        quarterly: "Kvartalsvis"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Tilldela"
+              assignable_levels:
+                title: "Vem som kan tilldela denna grupp"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Gör ingenting"
+      messages:
+        assigned_title: "Tilldelade (%{count})"
+        assigned: "Tilldelad"
+      no_assignments_title: "Du har inga tilldelningar än"
+      no_assignments_body: >
+        Dina tilldelade ämnen och meddelanden visas här i en lista. Du kommer också att få en periodisk påminnelse om dina tilldelningar, som du kan justera i dina <a href='%{preferencesUrl}'>användarinställningar</a>. <br><br> Om du vill tilldela ett ämne eller ett meddelande till dig själv eller till någon annan letar du efter tilldelningsknappen %{icon} längst ned.
+      dismiss_assigned_tooltip: "Markera alla olästa tilldelningsmeddelanden som lästa"
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        in:
+          assigned: "är tilldelade"
+          unassigned: "är otilldelade"
+        assigned:
+          label: "Tilldelad till"
+    topics:
+      bulk:
+        unassign: "Otilldela ämnen"
+        assign: "Tilldela ämnen"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Inläggsmall
+              description: Om den fylls i skapas ett inlägg med den här mallen och en användare tilldelas inlägget istället för ämnet.
+            assignees_group:
+              label: Tilldelade-grupp
+            minimum_time_between_assignments:
+              label: Minsta antal timmar mellan tilldelningar
+            min_recently_assigned_days:
+              label: Lägsta antal dagar som nyligen tilldelat
+              description: Standardvärdet är 14 dagar.
+            max_recently_assigned_days:
+              label: Högsta antal dagar som nyligen tilldelat
+              description: Första försöket att hoppa över användare som tilldelats under de senaste `n` dagarna. Om ingen användare finns kvar återgår det till 'min_recently_assigned_days'. Standardvärden är 180 dagar.
+            assigned_topic:
+              label: Tilldelat ämnes-ID
+            in_working_hours:
+              label: Användare under arbetstid
+    notification_reason:
+      user: "Du kommer att se en räknare för nya svar eftersom detta ämne tilldelades dig."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} tilldelade dig"
+      titles:
+        assigned: "Tilldelad"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Är du säker? Du har %{count} olästa tilldelningsmeddelande."
+            other: "Är du säker? Du har %{count} olästa tilldelningsmeddelande."
+    user_menu:
+      view_all_assigned: "visa alla tilldelade"
+    edit_assignments_modal:
+      topic: "Ämne"
+      post: "Inlägg"

@@ -1,0 +1,933 @@
+# United States holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2024-02-05.
+#
+# Changed: 2024-02-05
+# - Remove Lee-Jackson Day
+# 
+# Changed: 2017-06-15 to 2017-06-20
+# - Add missing holiday information for a whole bunch of US states
+# - Correct some existing holiday information
+# - Add custom functions for Georgia’s State Holiday, Lee-Jackson Day and Election Day
+# - Add custom functions for Rosh Hashanah and Yom Kippur with pre-defined dates from 2014 to 2020
+# - Add missing tests and correct existing tests
+# - Add helpful comments
+# - Add a lot of used sources
+#
+# Common Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_of_the_United_States
+# - https://www.timeanddate.com/holidays/us/
+# - https://publicholidays.us
+# - https://en.wikipedia.org/wiki/List_of_U.S._state_abbreviations
+# Sources about special state holidays:
+# - https://en.wikipedia.org/wiki/Black_Friday_(shopping)#United_States
+# - http://www.officeholidays.com/countries/usa/black_friday.php
+# - https://publicholidays.us/christmas/
+# - https://publicholidays.us/kansas/
+# - https://publicholidays.us/Wisconsin/
+# - https://publicholidays.us/Arkansas/
+# - https://publicholidays.us/Georgia/
+# - https://publicholidays.us/Maryland/
+# - https://publicholidays.us/Nevada/
+# - https://publicholidays.us/Ohio/
+# - http://www.sos.ms.gov/education-publications/pages/state-holidays.aspx
+# - http://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&Search_String=&URL=0100-0199/0110/Sections/0110.117.html
+# - http://www.statutes.legis.state.tx.us/Docs/GV/htm/GV.662.htm
+# - https://en.wikipedia.org/wiki/Lincoln%27s_Birthday
+# - https://en.wikipedia.org/wiki/Washington%27s_Birthday
+# - https://en.wikipedia.org/wiki/Shrove_Tuesday
+# - https://en.wikipedia.org/wiki/Town_meeting#Vermont
+# - https://en.wikipedia.org/wiki/Seward%27s_Day
+# - https://en.wikipedia.org/wiki/Emancipation_Day
+# - https://en.wikipedia.org/wiki/Patriots%27_Day
+# - https://georgia.gov/popular-topic/observing-state-holidays
+# - https://en.wikipedia.org/wiki/Confederate_Memorial_Day
+# - http://www.admin.sc.gov/humanresources/employee-information/benefits-and-leave/holiday-leave
+# - http://louisiana.gov/Government/For_State_Employees/
+# - http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&Search_String=&URL=0600-0699/0683/Sections/0683.01.html
+# - http://dhrd.hawaii.gov/state-observed-holidays/
+# - https://www.timeanddate.com/holidays/us/kamehameha-day
+# - http://www.mass.gov/anf/employment-equal-access-disability/hr-policies/legal-holiday-calendar.html
+# - http://www.edd.ca.gov/payroll_taxes/Legal_Holidays.htm
+# - https://en.wikipedia.org/wiki/Emancipation_Day#United_States
+# - http://www.visuperiorcourt.org/about/holidays.aspx
+# - http://www.personnel.wv.gov/employees/benefits/Pages/Holidays.aspx
+# - https://www.timeanddate.com/holidays/us/pioneer-day
+# - http://sos.ri.gov/divisions/Civics-And-Education/ri-state-holidays
+# - http://humanresources.vermont.gov/benefits-wellness/holiday-schedule
+# - http://doa.alaska.gov/dop/fileadmin/socc/pdf/bkgrnd_socc10.pdf
+# - https://en.wikipedia.org/wiki/Election_Day_(United_States)
+# - https://www.timeanddate.com/holidays/us/yom-kippur
+# - https://www.timeanddate.com/holidays/us/rosh-hashana
+# - http://www.when-is.com/rosh-hashanah-2014.asp
+# - https://de.wikipedia.org/wiki/Jom_Kippur#Jom_Kippur-Termine
+# - https://de.wikipedia.org/wiki/Rosch_ha-Schana#Zeitpunkt_und_Einbettung_in_den_j.C3.BCdischen_Kalender
+# - https://als.wikipedia.org/wiki/Rosch_ha-Schana
+# - http://www.kleiner-kalender.de/event/rosch-ha-schana/0651c.html
+# - http://www.kaldix.com/united-states/calendar/virginia/holidays/independence-day/year-2017/
+# - https://publicholidays.us/independence-day/
+
+---
+
+months:
+  0:
+  - name: Shrove Tuesday
+    regions: [us_fl]
+    function: easter(year)
+    function_modifier: -47
+  - name: Mardi Gras Day
+    regions: [us_la]
+    function: easter(year)
+    function_modifier: -47
+  - name: Lundi Gras # most businesses closed in southern louisiana
+    regions: [us_la]
+    function: easter(year)
+    function_modifier: -48
+  - name: Good Friday # informal in general
+    regions: [us]
+    function: easter(year)
+    function_modifier: -2
+    type: informal
+  - name: Good Friday # public holiday in the following states
+    regions: [us_ct, us_de, us_gu, us_hi, us_in, us_ky, us_la, us_nj, us_nc, us_nd, us_pr, us_tn]
+    function: easter(year)
+    function_modifier: -2
+  - name: Easter Sunday
+    regions: [us]
+    function: easter(year)
+    type: informal
+  1:
+  - name: New Year's Day
+    regions: [us]
+    mday: 1
+    observed: to_weekday_if_weekend(date)
+  - name: Martin Luther King's and Robert E. Lee's Birthdays # renamed Martin Luther King, Jr. Day
+    regions: [us_ms]
+    week: 3
+    wday: 1
+  - name: Idaho Human Rights Day # renamed Martin Luther King, Jr. Day
+    regions: [us_id]
+    week: 3
+    wday: 1
+  - name: Civil Rights Day # renamed Martin Luther King, Jr. Day
+    regions: [us_ar]
+    week: 3
+    wday: 1
+  - name: Martin Luther King, Jr. Day # Third Monday in January
+    regions: [us]
+    week: 3
+    wday: 1
+  - name: Inauguration Day
+    function: us_inauguration_day(year)
+    regions: [us_tx, us_dc, us_la, us_md, us_va]
+  - name: Confederate Heroes Day # fixed
+    regions: [us_tx]
+    mday: 19
+  2:
+  - name: Presidents' Day # Note: Several states are using another name for this holiday, there are 12 notations for it
+    week: 3
+    regions: [us]
+    wday: 1
+  3:
+  - name: Town Meeting Day # First Tuesday in March
+    regions: [us_vt]
+    week: 1
+    wday: 2
+  - name: Texas Independence Day # fixed
+    regions: [us_tx]
+    mday: 2
+  - name: Prince Jonah Kuhio Kalanianaole Day
+    regions: [us_hi]
+    observed: to_weekday_if_weekend(date)
+    mday: 26
+  - name: Seward's Day # Last Monday in March
+    regions: [us_ak]
+    week: -1
+    wday: 1
+  - name: César Chávez Day # fixed
+    regions: [us_ca]
+    mday: 31
+  4:
+  - name: Emancipation Day
+    regions: [us_dc]
+    observed: to_weekday_if_weekend(date)
+    mday: 16
+  - name: Patriots' Day # Third Monday in April
+    regions: [us_me, us_ma]
+    week: 3
+    wday: 1
+  - name: San Jacinto Day # fixed
+    regions: [us_tx]
+    mday: 21
+  - name: Confederate Memorial Day # Last Monday in April
+    regions: [us_al, us_ms]
+    week: -1
+    wday: 1
+  - name: Confederate Memorial Day
+    regions: [us_fl]
+    mday: 26
+    observed: to_monday_if_sunday(date)
+  - name: State Holiday # April 20 or April 26
+    regions: [us_ga]
+    function: georgia_state_holiday(year, month)
+  - name: Arbor Day # fixed
+    regions: [us_ne]
+    mday: 28
+  5:
+  - name: Truman Day # fixed
+    regions: [us_mo]
+    mday: 8
+  - name: Confederate Memorial Day # fixed
+    regions: [us_sc]
+    mday: 10
+  - name: Memorial Day # Note: full name in Mississippi is National Memorial Day/Jefferson Davis' Birthday
+    regions: [us]
+    week: -1
+    wday: 1
+  6:
+  - name: Jefferson Davis' Birthday # First Monday in June
+    regions: [us_al]
+    week: 1
+    wday: 1
+  - name: Birthday of Jefferson Davis # fixed
+    regions: [us_fl]
+    mday: 3
+  - name: King Kamehameha I Day
+    regions: [us_hi]
+    observed: to_weekday_if_weekend(date)
+    mday: 11
+  - name: Emancipation Day in Texas # fixed
+    regions: [us_tx]
+    mday: 19
+  - name: Juneteenth # fixed
+    regions: [us]
+    mday: 19
+    observed: to_weekday_if_weekend(date)
+  - name: West Virginia Day
+    regions: [us_wv]
+    mday: 20
+    observed: to_weekday_if_weekend(date)
+  7:
+  - name: Emancipation Day # fixed
+    regions: [us_vi]
+    mday: 3
+  - name: Independence Day # fixed
+    regions: [us]
+    mday: 4
+    function: to_weekday_if_weekend(date)
+  - name: Pioneer Day # fixed
+    regions: [us_ut]
+    mday: 24
+  8:
+  - name: Victory Day # Second Monday in August
+    regions: [us_ri]
+    week: 2
+    wday: 1
+  - name: Bennington Battle Day
+    regions: [us_vt]
+    mday: 16
+    observed: to_weekday_if_weekend(date)
+  - name: Statehood Day # Third Friday in August
+    regions: [us_hi]
+    week: 3
+    wday: 5
+  - name: Lyndon Baines Johnson Day # fixed
+    regions: [us_tx]
+    mday: 27
+  9:
+  - name: Labor Day
+    week: 1
+    regions: [us]
+    wday: 1
+  - name: Rosh Hashanah
+    regions: [us_tx]
+    function: rosh_hashanah(year)
+  - name: Yom Kippur
+    regions: [us_tx]
+    function: yom_kippur(year)
+  10:
+  - name: Indigenous Peoples Day
+    regions: [us, us_az, us_co, us_oh, us_or, us_sd, us_wy] # NOTE: Consolidating the extra sub-regions removes them from the generated REGIONS list.
+    week: 2
+    wday: 1
+  - name: Alaska Day # fixed
+    regions: [us_ak]
+    mday: 18
+  - name: Nevada Day # Last Friday in October
+    regions: [us_nv]
+    week: -1
+    wday: 5
+  11:
+  - name: Election Day
+    regions: [us_de, us_hi, us_in, us_mt, us_nj, us_ny, us_pa, us_ri]
+    function: election_day(year)
+  - name: Veterans Day
+    regions: [us]
+    mday: 11
+    observed: to_weekday_if_weekend(date)
+  - name: Thanksgiving
+    regions: [us]
+    week: 4
+    wday: 4
+  - name: Family Day
+    function: day_after_thanksgiving(year)
+    regions: [us_nv]
+  - name: State Holiday
+    function: day_after_thanksgiving(year)
+    regions: [us_ga]
+  - name: Presidents' Day
+    function: day_after_thanksgiving(year)
+    regions: [us_nm]
+  - name: Lincoln's Birthday
+    function: day_after_thanksgiving(year)
+    regions: [us_in]
+  - name: American Indian Heritage Day
+    function: day_after_thanksgiving(year)
+    regions: [us_md]
+  - name: Day after Thanksgiving (Black Friday)
+    function: day_after_thanksgiving(year)
+    regions: [us_ca, us_de, us_fl, us_ia, us_il, us_ks, us_ky, us_me, us_mi, us_mn, us_ms, us_ne, us_nh, us_nc, us_pa, us_sc, us_ok, us_tn, us_tx, us_va, us_wa, us_wv]
+  12:
+  - name: Christmas Eve
+    regions: [us_ar, us_mi, us_nc, us_sc, us_tx, us_wi]
+    mday: 24
+  - name: Christmas Eve (Holiday) # Note: Always if Christmas Eve don't match
+    regions: [us_mi, us_sc, us_va]
+    mday: 24
+    function: christmas_eve_holiday(date)
+  - name: Christmas Day
+    regions: [us]
+    mday: 25
+    observed: to_weekday_if_weekend(date)
+  - name: Day after Christmas
+    regions: [us_ar, us_nc, us_ok, us_sc, us_tn, us_tx]
+    mday: 26
+  - name: New Year's Eve
+    regions: [us_mi, us_wi]
+    mday: 31
+
+methods:
+  christmas_eve_holiday:
+    arguments: date
+    ruby: |
+      beginning_of_month = Date.civil(date.year, date.month, 1)
+      (date.saturday? || date.sunday?) ? date.downto(beginning_of_month).find {|d| d if d.wday == 5} : date
+  rosh_hashanah:
+    arguments: year
+    ruby: |
+      rosh_hashanah_dates = {
+          '2014' => Date.civil(2014, 9, 25),
+          '2015' => Date.civil(2015, 9, 14),
+          '2016' => Date.civil(2016, 10, 3),
+          '2017' => Date.civil(2017, 9, 21),
+          '2018' => Date.civil(2018, 9, 10),
+          '2019' => Date.civil(2019, 9, 30),
+          '2020' => Date.civil(2020, 9, 19)
+      }
+      rosh_hashanah_dates[year.to_s]
+  yom_kippur:
+    arguments: year
+    ruby: |
+      yom_kippur_dates = {
+          '2014' => Date.civil(2014, 10, 4),
+          '2015' => Date.civil(2015, 9, 23),
+          '2016' => Date.civil(2016, 10, 12),
+          '2017' => Date.civil(2017, 9, 30),
+          '2018' => Date.civil(2018, 9, 19),
+          '2019' => Date.civil(2019, 10, 9),
+          '2020' => Date.civil(2020, 9, 28)
+      }
+      yom_kippur_dates[year.to_s]
+  georgia_state_holiday:
+    # Monday before that holiday
+    arguments: year, month
+    ruby: |
+      beginning_of_month = Date.civil(year, month, 1)
+      state_holiday = Date.civil(year, month, 26)
+      state_holiday.downto(beginning_of_month).find {|date| date if date.wday == 1 }
+  election_day:
+    # Tuesday after the first Monday of November
+    arguments: year
+    ruby: |
+       Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 11, 1, 1) + 1
+  us_inauguration_day:
+    # January 20, every fourth year, following Presidential election
+    arguments: year
+    ruby: |
+      year % 4 == 1 ? 20 : nil
+  day_after_thanksgiving:
+    arguments: year
+    ruby: |
+      Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 11, 4, 4) + 1
+
+tests:
+  - given:
+      date: ['2017-2-28', '2018-2-13', '2019-3-5']
+      regions: ["us_fl"]
+    expect:
+      name: 'Shrove Tuesday'
+  - given:
+      date: ['2017-2-28', '2018-2-13', '2019-3-5']
+      regions: ["us_la"]
+    expect:
+      name: 'Mardi Gras Day'
+  - given:
+      date: ['2017-2-28', '2018-2-13', '2019-3-5']
+      regions: ["us"]
+    expect:
+      holiday: false
+
+  - given:
+      date: ['2017-4-14', '2018-3-30', '2019-4-19']
+      regions: ["us_ct","us_de","us_gu","us_hi","us_in","us_ky","us_la","us_nj","us_nc","us_nd","us_pr","us_tn"]
+    expect:
+      name: 'Good Friday'
+  - given:
+      date: ['2017-4-14', '2018-3-30', '2019-4-19']
+      regions: ["us"]
+      options: ["informal"]
+    expect:
+      name: 'Good Friday'
+  - given:
+      date: ['2017-2-28', '2018-2-13', '2019-3-5']
+      regions: ["us"]
+    expect:
+      holiday: false
+
+  - given:
+      date: ['2017-4-16', '2018-4-1', '2019-4-21']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-4-16', '2018-4-1', '2019-4-21']
+      regions: ["us"]
+      options: ["informal"]
+    expect:
+      name: "Easter Sunday"
+
+  - given:
+      date: '2017-1-1'
+      regions: ["us"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2017-1-2'
+      regions: ["us"]
+      options: ["observed"]
+    expect:
+      name: "New Year's Day"
+
+  - given:
+      date: ['2017-1-16', '2018-1-15', '2019-1-21']
+      regions: ["us"]
+    expect:
+      name: "Martin Luther King, Jr. Day"
+
+  - given:
+      date: ['2016-1-18', '2017-1-16', '2018-1-15']
+      regions: ["us"]
+    expect:
+      name: "Martin Luther King, Jr. Day"
+  - given:
+      date: ['2016-1-18', '2017-1-16', '2018-1-15']
+      regions: ["us_ms"]
+    expect:
+      name: "Martin Luther King's and Robert E. Lee's Birthdays"
+  - given:
+      date: ['2016-1-18', '2017-1-16', '2018-1-15']
+      regions: ["us_id"]
+    expect:
+      name: "Idaho Human Rights Day"
+  - given:
+      date: ['2016-1-18', '2017-1-16', '2018-1-15']
+      regions: ["us_ar"]
+    expect:
+      name: "Civil Rights Day"
+
+  - given:
+      date: ['2017-1-20', '2021-1-20']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-1-20', '2021-1-20']
+      regions: ["us_tx", "us_dc", "us_la", "us_md", "us_va"]
+    expect:
+      name: "Inauguration Day"
+
+  - given:
+      date: ['2017-1-13', '2018-1-12', '2019-1-18']
+      regions: ["us"]
+    expect:
+      holiday: false
+
+  - given:
+      date: ['2017-1-19']
+      regions: ["us_tx"]
+    expect:
+      name: "Confederate Heroes Day"
+
+  - given:
+      date: ['2008-2-18', '2017-2-20', '2018-2-19']
+      regions: ["us"]
+    expect:
+      name:  "Presidents' Day"
+
+  - given:
+      date: ['2017-3-6', '2018-3-5', '2019-3-4']
+      regions: ["us"]
+    expect:
+      holiday: false
+
+  - given:
+      date: ['2017-3-7', '2018-3-6', '2019-3-5']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-3-7', '2018-3-6', '2019-3-5']
+      regions: ["us_vt"]
+    expect:
+      name: "Town Meeting Day"
+
+  - given:
+      date: ['2017-3-2']
+      regions: ["us_tx"]
+    expect:
+      name: "Texas Independence Day"
+
+  - given:
+      date: ['2017-3-27', '2018-3-26', '2022-3-25']
+      regions: ["us"]
+      options: ["observed"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-3-27', '2018-3-26', '2022-3-25']
+      regions: ["us_hi"]
+      options: ["observed"]
+    expect:
+      name: "Prince Jonah Kuhio Kalanianaole Day"
+  - given:
+      date: ['2017-3-26']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-3-26']
+      regions: ["us_hi"]
+    expect:
+      name: "Prince Jonah Kuhio Kalanianaole Day"
+
+  - given:
+      date: ['2017-3-27', '2018-3-26', '2019-3-25']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-3-27', '2018-3-26', '2019-3-25']
+      regions: ["us_ak"]
+    expect:
+      name: "Seward's Day"
+
+  - given:
+      date: ['2017-3-31']
+      regions: ["us_ca"]
+    expect:
+      name: "César Chávez Day"
+
+  - given:
+      date: ['2023-4-17', '2022-4-15', '2028-4-17']
+      regions: ["us_dc", "us_ca"]
+      options: ["observed"]
+    expect:
+      name: "Emancipation Day"
+  - given:
+      date: ['2017-4-16']
+      regions: ["us_dc"]
+    expect:
+      name: "Emancipation Day"
+
+  - given:
+      date: ['2017-4-17', '2018-4-16', '2019-4-15']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-4-17', '2018-4-16', '2019-4-15']
+      regions: ["us_me", "us_ma"]
+    expect:
+      name: "Patriots' Day"
+
+  - given:
+      date: ['2017-4-21']
+      regions: ["us_tx"]
+    expect:
+      name: "San Jacinto Day"
+
+  - given:
+      date: ['2017-4-24', '2018-4-30', '2019-4-29']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-4-24', '2018-4-30', '2019-4-29']
+      regions: ["us_al", "us_ms"]
+    expect:
+      name: "Confederate Memorial Day"
+
+  - given:
+      date: ['2015-4-27', '2020-4-27', '2026-4-27']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2015-4-27', '2020-4-27', '2026-4-27']
+      regions: ["us_fl"]
+      options: ["observed"]
+    expect:
+      name: "Confederate Memorial Day"
+
+  - given:
+      date: ['2017-4-26']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-4-26']
+      regions: ["us_fl"]
+    expect:
+      name: "Confederate Memorial Day"
+
+  - given:
+      date: ['2015-4-20', '2021-4-26']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2015-4-20', '2021-4-26']
+      regions: ["us_ga"]
+    expect:
+      name: "State Holiday"
+
+  - given:
+      date: ['2017-4-28']
+      regions: ["us_ne"]
+    expect:
+      name: "Arbor Day"
+  - given:
+      date: ['2017-5-8']
+      regions: ["us_mo"]
+    expect:
+      name: "Truman Day"
+  - given:
+      date: ['2017-5-10']
+      regions: ["us_sc"]
+    expect:
+      name: "Confederate Memorial Day"
+  - given:
+      date: ['2017-5-29', '2018-5-28', '2019-5-27']
+      regions: ["us"]
+    expect:
+      name: "Memorial Day"
+
+  - given:
+      date: ['2017-6-5', '2018-6-4', '2019-6-3']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-6-5', '2018-6-4', '2019-6-3']
+      regions: ["us_al"]
+    expect:
+      name: "Jefferson Davis' Birthday"
+  - given:
+      date: ['2017-6-3']
+      regions: ["us_fl"]
+    expect:
+      name: "Birthday of Jefferson Davis"
+
+  - given:
+      date: ['2017-6-12', '2018-6-11', '2022-6-10']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-6-12', '2018-6-11', '2022-6-10']
+      regions: ["us_hi"]
+      options: ["observed"]
+    expect:
+      name: "King Kamehameha I Day"
+
+  - given:
+      date: ['2017-6-11']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-6-11']
+      regions: ["us_hi"]
+    expect:
+      name: "King Kamehameha I Day"
+  - given:
+      date: ['2017-6-19']
+      regions: ["us_tx"]
+    expect:
+      name: "Emancipation Day in Texas"
+
+  - given:
+      date: ['2017-6-20', '2020-6-19', '2021-6-21']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-6-20', '2020-6-19', '2021-6-21']
+      regions: ["us_wv"]
+      options: ["observed"]
+    expect:
+      name: "West Virginia Day"
+  - given:
+      date: ['2017-6-20']
+      regions: ["us_wv"]
+    expect:
+      name: "West Virginia Day"
+
+  - given:
+      date: ['2017-7-3']
+      regions: ["us_vi"]
+    expect:
+      name: "Emancipation Day"
+
+  - given:
+      date: ['2020-7-4', '2021-7-4', '2026-7-4']
+      regions: ["us", "us_va"]
+    expect:
+      name: "Independence Day"
+
+  - given:
+      date: ['2020-7-3', '2021-7-5', '2026-7-3']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2020-7-3', '2021-7-5', '2026-7-3']
+      regions: ["us_va"]
+    expect:
+      name: "Independence Day (Holiday)"
+  - given:
+      date: ['2020-7-24']
+      regions: ["us_ut"]
+    expect:
+      name: "Pioneer Day"
+
+  - given:
+      date: ['2017-8-14', '2020-8-10', '2021-8-9']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-8-14', '2020-8-10', '2021-8-9']
+      regions: ["us_ri"]
+    expect:
+      name: "Victory Day"
+
+  - given:
+      date: ['2017-8-16', '2020-8-17', '2025-8-15']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-8-16', '2020-8-17', '2025-8-15']
+      regions: ["us_vt"]
+      options: ["observed"]
+    expect:
+      name: "Bennington Battle Day"
+  - given:
+      date: ['2017-8-16']
+      regions: ["us_vt"]
+    expect:
+      name: "Bennington Battle Day"
+
+  - given:
+      date: ['2017-8-18', '2020-8-21', '2025-8-15']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-8-18', '2020-8-21', '2025-8-15']
+      regions: ["us_hi"]
+    expect:
+      name: "Statehood Day"
+  - given:
+      date: ['2017-8-27']
+      regions: ["us_tx"]
+    expect:
+      name: "Lyndon Baines Johnson Day"
+  - given:
+      date: ['2017-9-4', '2018-9-3', '2019-9-2']
+      regions: ["us"]
+    expect:
+      name: "Labor Day"
+
+  - given:
+      date: ['2017-9-21', '2018-9-10', '2019-9-30']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-9-21', '2018-9-10', '2019-9-30']
+      regions: ["us_tx"]
+    expect:
+      name: "Rosh Hashanah"
+
+  - given:
+      date: ['2017-9-30', '2018-9-19', '2019-10-9']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-9-30', '2018-9-19', '2019-10-9']
+      regions: ["us_tx"]
+    expect:
+      name: "Yom Kippur"
+
+  - given:
+      date: ['2017-10-9', '2018-10-8', '2019-10-14']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-10-9', '2018-10-8', '2019-10-14']
+      regions: ["us_al", "us_az", "us_co", "us_ct", "us_dc", "us_ga", "us_id", "us_il", "us_in", "us_ma", "us_md", "us_me", "us_mo", "us_mt", "us_ne", "us_nj", "us_nm", "us_ny", "us_oh", "us_pa", "us_ri", "us_ut", "us_va", "us_wv"]
+    expect:
+      name: "Columbus Day"
+  - given:
+      date: ['2017-10-9', '2018-10-8', '2019-10-14']
+      regions: ["us_ak", "us_ar", "us_ca", "us_de", "us_fl", "us_hi", "us_mi", "us_mn", "us_nd", "us_nv", "us_or", "us_sd", "us_tx", "us_vt", "us_wa", "us_wi", "us_wy"]
+      options: ["informal"]
+    expect:
+      name: "Columbus Day"
+  - given:
+      date: ['2017-10-9', '2018-10-8', '2019-10-14']
+      regions: ["us_ak", "us_ar", "us_ca", "us_de", "us_fl", "us_hi", "us_mi", "us_mn", "us_nd", "us_nv", "us_or", "us_sd", "us_tx", "us_vt", "us_wa", "us_wi", "us_wy"]
+    expect:
+      holiday: false
+
+  - given:
+      date: ['2017-10-18']
+      regions: ["us_ak"]
+    expect:
+      name: "Alaska Day"
+
+  - given:
+      date: ['2017-10-27', '2018-10-26', '2019-10-25']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-10-27', '2018-10-26', '2019-10-25']
+      regions: ["us_nv"]
+    expect:
+      name: "Nevada Day"
+
+  - given:
+      date: ['2017-11-7', '2018-11-6', '2021-11-2']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-11-7', '2018-11-6', '2021-11-2']
+      regions: ["us_de", "us_hi", "us_in", "us_mt", "us_nj", "us_ny", "us_pa", "us_ri"]
+    expect:
+      name: "Election Day"
+  - given:
+      date: ['2017-11-10', '2018-11-12', '2019-11-11']
+      regions: ["us"]
+      options: ["observed"]
+    expect:
+      name: "Veterans Day"
+  - given:
+      date: ['2017-11-11']
+      regions: ["us"]
+    expect:
+      name: "Veterans Day"
+  - given:
+      date: ['2017-11-23', '2018-11-22', '2019-11-28']
+      regions: ["us"]
+    expect:
+      name: "Thanksgiving"
+
+  - given:
+      date: ['2017-11-24', '2018-11-23', '2019-11-29']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2017-11-24', '2018-11-23', '2019-11-29']
+      regions: ["us_nv"]
+    expect:
+      name: "Family Day"
+  - given:
+      date: ['2017-11-24', '2018-11-23', '2019-11-29']
+      regions: ["us_ga"]
+    expect:
+      name: "State Holiday"
+  - given:
+      date: ['2017-11-24', '2018-11-23', '2019-11-29']
+      regions: ["us_nm"]
+    expect:
+      name: "Presidents' Day"
+  - given:
+      date: ['2017-11-24', '2018-11-23', '2019-11-29']
+      regions: ["us_in"]
+    expect:
+      name: "Lincoln's Birthday"
+  - given:
+      date: ['2017-11-24', '2018-11-23', '2019-11-29']
+      regions: ["us_md"]
+    expect:
+      name: "American Indian Heritage Day"
+  - given:
+      date: ['2017-11-24', '2018-11-23', '2019-11-29']
+      regions: ["us_ca", "us_de", "us_fl", "us_ia", "us_il", "us_ks", "us_ky", "us_me", "us_mi", "us_mn", "us_ms", "us_ne", "us_nh", "us_nc", "us_pa", "us_sc", "us_ok", "us_tn", "us_tx", "us_va", "us_wa", "us_wv"]
+    expect:
+      name: "Day after Thanksgiving (Black Friday)"
+
+  - given:
+      date: ['2022-12-23', '2023-12-22', '2028-12-22']
+      regions: ["us_mi", "us_sc", "us_va"]
+    expect:
+      name: "Christmas Eve (Holiday)"
+  - given:
+      date: ['2017-12-24']
+      regions: ["us_ar", "us_mi", "us_nc", "us_va", "us_sc", "us_tx", "us_wi"]
+    expect:
+      name: "Christmas Eve"
+
+  - given:
+      date: ['2021-12-27', '2022-12-26', '2027-12-27']
+      regions: ["us"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2021-12-24', '2022-12-26', '2027-12-24']
+      regions: ["us"]
+      options: ["observed"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: ['2017-12-25']
+      regions: ["us"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: ['2017-12-26']
+      regions: ["us_ar", "us_nc", "us_ok", "us_sc", "us_tn", "us_tx"]
+    expect:
+      name: "Day after Christmas"
+  - given:
+      date: ['2017-12-31']
+      regions: ["us_mi", "us_wi"]
+    expect:
+      name: "New Year's Eve"

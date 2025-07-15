@@ -1,0 +1,95 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    assign_enabled: "Включить возможность назначать ответственного за тему"
+    assigns_public: "Разрешить обычным пользователям видеть на кого назначена тема"
+    assigns_user_url_path: "Путь к назначенным темам (используйте {username} для подстановки имени)"
+    assigns_by_staff_mention: "Когда кто-то из персонала упоминает другого сотрудника в теме, то тема закрепляется за тем сотрудником"
+    unassign_creates_tracking_post: "При снятии ответственного с темы создается скрытое сообщение, чтобы можно было отследить изменения в теме"
+    assign_self_regex: "Шаблон, по которому тема будет автоматически закрепляться за текущим пользователем. Например, 'мой список'"
+    assign_other_regex: "Шаблон, по которому назначение будет происходить автоматически на пользователя при его упоминании. Например, 'твой список'"
+    unassign_on_group_archive: "Отменить назначение сообщения, когда сообщение архивируется группой (переназначить, если оно возвращено обратно из архива)"
+    unassign_on_close: "Снимать ответственного с темы при её закрытии"
+    reassign_on_open: "При открытии темы переназначать ранее назначенных пользователей (группы)"
+    invite_on_assign: "Если личное сообщение назначено пользователю или группе, пригласить их, если они еще не являются участниками."
+    assign_mailer: "Когда отправлять уведомления по электронной почте для назначений"
+    remind_assigns: "Напоминать пользователям об ожидающих назначениях."
+    remind_assigns_frequency: "Частота напоминания пользователям о назначенных темах."
+    pending_assign_reminder_threshold: "Количество запланированных назначений для срабатывания напоминания."
+    max_assigned_topics: "Максимальное количество тем, которые могут быть назначены пользователю."
+    assign_allowed_on_groups: "Пользователи в указанных группах могут назначать ответственного в тему и быть назначенными."
+    enable_assign_status: "Добавить настраиваемое поле статуса к каждому назначению."
+    assign_statuses: "Список статусов, доступных для каждого назначения. Первый статус — это статус по умолчанию, применяемый к каждому новому назначению."
+    errors:
+      assign_statuses:
+        too_few: "Должно быть доступно как минимум два разных статуса."
+        duplicate: "Имеются повторяющиеся значения статуса."
+        removed_in_use: "Невозможно удалить статус из списка, если есть назначения, использующие этот статус."
+  discourse_assign:
+    assigned_to: "Тема назначена пользователю @%{username}"
+    unassigned: "Ответственный снят"
+    already_claimed: "Эта тема уже зарезервирована."
+    already_assigned: "Эта тема уже назначена пользователю @%{username}"
+    too_many_assigns: "Пользователю @%{username} уже назначено максимально возможное количество тем (%{max})."
+    too_many_assigns_for_topic: "Достигнут лимит в %{limit} назначений на одну тему."
+    forbidden_assign_to: "Пользователя @%{username} нельзя назначить, поскольку он не состоит в группах, которым разрешено назначать темы."
+    forbidden_assignee_not_pm_participant: "@%{username} не могут быть назначены, поскольку они не имеют доступа к этому личному сообщению. Вы можете предоставить доступ @%{username}, пригласив их к обсуждению в этом личном сообщении."
+    forbidden_assignee_cant_see_topic: "@%{username} не могут быть назначены, поскольку у них нет доступа к этой теме."
+    group_already_assigned: "Эта тема уже назначена группе @%{group}"
+    forbidden_group_assign_to: "Группы @%{group} не могут быть назначены, поскольку они не принадлежат к группам, которым разрешено назначение."
+    forbidden_group_assignee_not_pm_participant: "Группа @%{group} не может быть назначена, поскольку не все её участники имеют доступ к этому личному сообщению."
+    forbidden_group_assignee_cant_see_topic: "Группа @%{group} не может быть назначена, поскольку не все её участники имеют доступ к этой теме."
+    flag_assigned: "Извините, эта тема с жалобой назначена другому пользователю"
+    flag_unclaimed: "Вы должны зарезервировать эту тему прежде чем рассматривать жалобу."
+    topic_assigned_excerpt: "назначил вам тему '%{title}'"
+    topic_group_assigned_excerpt: "назначил(а) тему «%{title}» группе «@%{group}»"
+    reminders_frequency:
+      never: "никогда"
+      daily: "ежедневно"
+      weekly: "еженедельно"
+      monthly: "ежемесячно"
+      quarterly: "ежеквартально"
+  assign_mailer:
+    title: "Уведомление о назначении"
+    subject_template: "[%{email_prefix}] %{assignee_name} назначил(а) Вас ответственным в теме '%{topic_title}'!"
+    text_body_template: |
+      Привет, %{assignee_name} **назначил(а)** Вас ответственным в теме
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Подробности по ссылке ниже:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "У вас есть отложенные назначения: %{pending_assignments}"
+    body: "В настоящее время у вас есть [%{pending_assignments} отложенных назначений] (%{assignments_link}).\n\n%{newest_assignments}\n%{oldest_assignments} \n\nЭто напоминание будет отправляться %{frequency}, если у вас более одной назначенной темы.\n"
+    newest: |
+      ### Самые новые
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Самые старые
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Случайное назначение
+        no_one: "Нет доступных пользователей при попытке назначить случайного пользователя из группы `@%{group}`."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} назначил(а) вас"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Выбранный статус недействителен (он отсутствует в списке статусов)."

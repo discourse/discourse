@@ -18,8 +18,6 @@ describe "discourse login client auth" do
           username: OmniauthHelpers::USERNAME,
         ),
     )
-
-    Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:github]
   end
 
   after { reset_omniauth_config(:discourse_id) }

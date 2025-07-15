@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    assign_enabled: "Ota osoituslisäosa käyttöön"
+    assigns_public: "Salli tavallisen kansan nähdä ketjujen osoitukset"
+    assigns_user_url_path: "Polku, joka näyttää kaikki käyttäjälle osoitetut (käytä: {username} käyttäjänimen paikalla)"
+    assigns_by_staff_mention: "Jos henkilökunnan jäsen mainitsee toisen henkilökunnan jäsenen, ketju osoitetaan automaattisesti"
+    unassign_creates_tracking_post: "Jos perut ketjun osoituksen, kuiskaus tai pieni merkintä luodaan pitämään kirjaa muutoksesta"
+    assign_self_regex: "Säännöllinen lauseke, jolla osoitetaan itselle. Esimerkiksi 'minun listalle'"
+    assign_other_regex: "Säännöllinen lauseke, jolla osoitetaan toiselle maininnan avulla. Esimerkiksi 'sinun listalle'."
+    unassign_on_group_archive: "Kun ryhmä arkistoi yksityiskeskustelun, peru viestin osoitus (osoitetaan uudelleen, jos siirretään takaisin saapuneisiin)"
+    unassign_on_close: "Peru ketjun osoitus, kun ketju suljetaan"
+    reassign_on_open: "Kun ketju avataan, osoita aikaisemmin osoitetut käyttäjät/ryhmät uudelleen"
+    invite_on_assign: "Kun henkilökohtainen viesti osoitetaan käyttäjälle tai ryhmälle, kutsu hänet yksityisviestiin, jos hän ei vielä ole osallistuja."
+    assign_mailer: "Milloin lähetetään ilmoituksia osoituksista"
+    remind_assigns: "Muistuta käyttäjiä odottavista osoituksista."
+    remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus."
+    pending_assign_reminder_threshold: "Odottavien osoitusten määrä, joka laukaisee muistutusilmoituksen."
+    max_assigned_topics: "Käyttäjälle osoitettavien ketjujen enimmäismäärä."
+    assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaa aiheita, ja heille voidaan osoittaa aiheita."
+    enable_assign_status: "Lisää mukautettava tilakenttä jokaiseen osoitukseen."
+    assign_statuses: "Luettelo kullekin osoitukselle käytettävissä olevista tiloista. Ensimmäinen tila on oletustila, jota käytetään jokaiselle uudelle osoitukselle."
+    errors:
+      assign_statuses:
+        too_few: "Käytettävissä täytyy olla vähintään kaksi eri tilaa."
+        duplicate: "Jotkin tilojen arvot ovat päällekkäisiä."
+        removed_in_use: "Tilaa ei voi poistaa luettelosta, jos jokin osoitus käyttää tätä tilaa."
+  discourse_assign:
+    assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
+    unassigned: "Ketjun osoitus peruttiin"
+    already_claimed: "Ketju on jo omittu."
+    already_assigned: "Ketju on jo osoitettu käyttäjälle %{username}"
+    too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen enimmäismäärän (%{max})."
+    too_many_assigns_for_topic: "%{limit} osoituksen ketjukohtainen raja on saavutettu."
+    forbidden_assign_to: "Käyttäjää @%{username} ei voi osoittaa, koska hän ei kuulu sallittuihin osoitusryhmiin."
+    forbidden_assignee_not_pm_participant: "Käyttäjää @%{username} ei voi osoittaa, koska hänellä ei ole tämän yksityisviestin käyttöoikeutta. Voit antaa käyttäjälle @%{username} käyttöoikeuden kutsumalla hänet tähän yksityisviestiin."
+    forbidden_assignee_cant_see_topic: "Käyttäjää @%{username} ei voi osoittaa, koska hänellä ei ole tämän ketjun käyttöoikeutta."
+    group_already_assigned: "Ketju on jo osoitettu ryhmälle %{group}"
+    forbidden_group_assign_to: "Ryhmää @%{group} ei voi osoittaa, koska se ei kuulu sallittuihin osoitusryhmiin."
+    forbidden_group_assignee_not_pm_participant: "Ryhmää @%{group} ei voi osoittaa, koska kaikilla jäsenillä ei ole tämän yksityisviestin käyttöoikeutta."
+    forbidden_group_assignee_cant_see_topic: "Ryhmää @%{group} ei voi osoittaa, koska kaikilla jäsenillä ei ole tämän ketjun käyttöoikeutta."
+    flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle käyttäjälle"
+    flag_unclaimed: "Ketju täytyy omia ennen lipun käsittelyä"
+    topic_assigned_excerpt: "osoitti sinulle ketjun \"%{title}\""
+    topic_group_assigned_excerpt: "osoitti ketjun %{title} ryhmälle @%{group}"
+    reminders_frequency:
+      never: "ei koskaan"
+      daily: "päivittäin"
+      weekly: "viikottain"
+      monthly: "kuukausittain"
+      quarterly: "vuosineljännettäin"
+  assign_mailer:
+    title: "Osoitus"
+    subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun \"%{topic_title}\"!"
+    text_body_template: |
+      Hei, %{assignee_name} **osoitti** sinulle keskustelun
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Jos olet kiinnostunut, klikkaa linkkiä alla:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Sinulla on %{pending_assignments} odottavaa tehtävää"
+    body: |
+      Sinulla on [%{pending_assignments} odottavaa tehtävää] (%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Tämä muistutus lähetetään%{frequency}, jos sinulla on useampi kuin yksi osoitettu ketju.
+    newest: |
+      ### Uusin
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Vanhin
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Satunnainen osoitus
+        no_one: "Ryhmän @%{group} jäsentä yritettiin osoittaa satunnaisesti, mutta kukaan ei ollut saatavilla."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} osoitti sinut"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Valittu tila on virheellinen (se ei sisälly assigned_status-sivustoasetukseen)."

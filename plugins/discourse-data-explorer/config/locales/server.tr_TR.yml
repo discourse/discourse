@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    data_explorer_enabled: "Veri gezginini şuradan etkinleştirin: /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Veri Gezgini sonuçlarıyla kişisel mesaj planlayın
+        description: Mesajlarınıza gönderilen planlanmış raporları alın
+        no_csv_allowed: "`attach_csv` alanını kullanırken site ayarlarında izin verilen uzantılar listesine `csv` eklenmelidir."
+      recurring_data_explorer_result_topic:
+        title: Veri Gezgini sonuçlarını içeren bir konuda gönderi planlayın
+        description: Belirli bir konuya gönderilen planlanmış raporları alın
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "%{query_name} için planlanmış rapor"
+      upload_appendix: "Ek: [%{filename}|ek](%{short_url})"

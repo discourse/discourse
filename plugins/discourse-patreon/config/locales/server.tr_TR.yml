@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    patreon_enabled: 'Discourse-patreon eklentisini etkinleştir'
+    patreon_login_enabled: 'Patreon Sosyal Girişini Etkinleştir'
+    patreon_client_id: 'Oluşturulan Patreon İstemci Kimliği'
+    patreon_client_secret: 'Oluşturulan Patreon İstemcisi Gizliliği'
+    patreon_webhook_secret: 'Oluşturulan Patreon Web Kancası Sırrı'
+    patreon_creator_discourse_username: "\"Patreon Sosyal Girişi\" kullanılarak Patreon oluşturucu hesabı üzerinden giriş yapmak için kullanılan Discourse hesabının kullanıcı adı"
+    patreon_creator_access_token: "Oluşturulan Patreon Oluşturucusunun Erişim Token'ı"
+    patreon_creator_refresh_token: "Oluşturulan Patreon Oluşturucusunun Refesh Token'ı"
+    patreon_declined_pledges_grace_period_days: "Bir bağış tamamen reddedilmeden önceki bekleme süresi (gün cinsinden)."
+    max_patreon_api_reqs_per_hr: "Saat başına maksimum Patreon API isteği sayısı"
+    max_patreon_api_reqs_per_day: "Günlük maksimum Patreon API isteği sayısı"
+    patreon_verbose_log: 'patreon yükünün ayrıntılı günlük kaydını etkinleştirin'
+    patreon_donation_prompt_enabled: "Bağış istemi etkinleştirilsin mi?"
+    patreon_donation_prompt_show_after_topics: "N konudan sonra bağış istemini göster"
+    patreon_donation_prompt_campaign_url: "Bağış istemi kampanyasının URL'si"
+    errors:
+      patreon_creator_username_not_set: "Patreon Girişini etkinleştirmeden önce Patreon Üreticisi Discourse Kullanıcı Adı ayarını yapmanız gerekir."
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon Creator'ın erişim ve yenileme token değerleri yanlış. Yeni token'ları <a href='https://www.patreon.com/platform/documentation/clients'>Patreon web sitesinden</a> kopyalayıp <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>site ayarlarına</a> yapıştırmalısınız."
+  patreon:
+    error:
+      invalid_response: "Patreon API'den geçersiz yanıt"

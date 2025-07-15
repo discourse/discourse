@@ -1,0 +1,120 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Удалите точку с запятой из запроса."
+        dirty: "Вы должны сохранить запрос перед его выполнением."
+    explorer:
+      or: "или"
+      admins_only: "Исследование данных доступно только для администраторов."
+      allow_groups: "Разрешить группам доступ к этому запросу"
+      title: "Проводник данных"
+      create: "Создать"
+      create_placeholder: "Имя запроса..."
+      description_placeholder: "Введите описание"
+      import:
+        label: "Импорт"
+        modal: "Импорт запроса"
+        unparseable_json: "Невозможно распарсить JSON-файл."
+        wrong_json: "Неверный формат JSON-файла. Файл должен содержать объект 'запрос', у которого как минимум должно быть свойство 'sql'."
+      help:
+        label: "Справка"
+        modal_title: "Проводник данных. Справка."
+        auto_resolution: "<h2>Автоматическое разрешение</h2> <p>Когда запрос возвращает идентификатор объекта, проводник данных может автоматически заменить его именем объекта и другой полезной информацией в результатах запроса. Автоматическое разрешение доступно для <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> и <i><b>badge_id</b></i>. Для пробы запустите этот запрос:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Создание настраиваемых параметров</h2> <p>Чтобы создать настраиваемые параметры для запроса, поместите эти данные в верхней части запроса, придерживаясь следующего формата:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Примечание: первая строка с [params] обязательна, с двумя дефисами перед ней и всеми настраиваемыми параметрами, которые вы хотите объявить.</i></p>"
+        default_values: "<h3>Значения по умолчанию</h3> <p>Вы можете объявлять параметры со значениями по умолчанию или без таковых. Значения по умолчанию будут отображаться в текстовом поле под редактором запросов, эти значения вы можете менять по своему усмотрению. Параметры, объявленные без значений по умолчанию, по-прежнему будут создавать текстовое поле, но такие поля будут пустыми и будут выделены красным цветом.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Типы данных</h3> <p>Основные типы данных, которые можно использовать:</p> <ul> <li><b>целое число</b> — знаковое четырехбайтовое целое число,</li> <li><b>текст</b> — строка символов переменной длины,</li> <li><b>логическое значение</b> — истина, ложь,</li> <li><b>дата</b> — календарная дата (год, месяц, день).</li> </ul> <p>Подробнее о типах данных смотрите на <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>этом веб-сайте</a>.</p>"
+      schema:
+        title: "Схема базы данных"
+        filter: "Поиск..."
+        sensitive: "Эта колонка может содержать конфиденциальную информацию. Будьте осторожны при использовании её содержимого."
+      types:
+        bool:
+          yes: "Да"
+          no: "Нет"
+          null_: "Null"
+      export: "Экспорт"
+      view_json: "Просмотреть JSON"
+      save: "Сохранить изменения"
+      saverun: "Сохранить изменения и выполнить запрос"
+      run: "Выполнить запрос"
+      undo: "Отменить изменения"
+      edit: "Редактировать"
+      delete: "Удалить"
+      recover: "Восстановить запрос"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Таблица"
+      show_graph: "График"
+      others_dirty: "Запрос имеет несохранённые изменения, которые будут потеряны, если вы уйдёте со страницы."
+      run_time: "Запрос завершен за %{value} мс."
+      result_count:
+        one: "%{count} результат."
+        few: "%{count} результата."
+        many: "%{count} результатов."
+        other: "%{count} результатов."
+      max_result_count:
+        one: "Показан %{count} лучший результат."
+        few: "Показаны %{count} лучших результата."
+        many: "Показаны %{count} лучших результатов."
+        other: "Показаны %{count} лучшего результата."
+      query_name: "Запрос"
+      query_groups: "Группы"
+      link: "Ссылка для"
+      report_name: "Отчёт"
+      query_description: "Описание"
+      query_time: "Время выполнения последнего запроса"
+      query_user: "Создано"
+      column: "Колонка %{number}"
+      explain_label: "Отобразить план запроса"
+      save_params: "Установка значений по умолчанию"
+      reset_params: "Сброс"
+      search_placeholder: "Поиск..."
+      no_search_results: "К сожалению, мы не смогли найти результаты, соответствующие вашему запросу."
+      form:
+        errors:
+          invalid: "Недопустимое значение"
+          no_such_category: "Нет такой категории"
+          no_such_group: "Нет такой группы"
+          invalid_date: "%{date} — недопустимая дата"
+          invalid_time: "%{time} — недопустимое время"
+    group:
+      reports: "Отчёты"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Выполнение запросов проводника данных. Ограничьте ключ API набором запросов, указав идентификаторы запросов."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Отправить пользователю, в группу или на адрес электронной почты
+            query_id:
+              label: Запрос проводника данных
+            query_params:
+              label: Параметры запроса проводника данных
+            skip_empty:
+              label: Пропустить отправку личного сообщения, если нет результатов
+            attach_csv:
+              label: Прикрепить CSV-файл к личному сообщению
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: Тема для публикации результатов запроса
+            query_id:
+              label: Запрос проводника данных
+            query_params:
+              label: Параметры запроса для проводника данных
+            skip_empty:
+              label: Пропустить публикацию, если нет результатов
+            attach_csv:
+              label: Прикрепить CSV-файл к публикации

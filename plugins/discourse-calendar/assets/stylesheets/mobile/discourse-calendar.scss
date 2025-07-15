@@ -1,0 +1,46 @@
+.discourse-calendar-wrap {
+  border: 0;
+
+  .discourse-calendar-header {
+    padding: 0;
+    background: none;
+
+    h2.discourse-calendar-title {
+      font-size: var(--font-0);
+      flex-wrap: nowrap;
+      max-width: 75%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .discourse-calendar-timezone-picker {
+      max-width: 40vw;
+    }
+  }
+
+  .fc-view-container {
+    .fc-day-header.fc-widget-header {
+      text-align: center;
+      padding: 0.25em;
+
+      span {
+        font-size: var(--font-down-1);
+        text-align: center;
+        padding: 0;
+      }
+    }
+  }
+
+  .calendar {
+    padding: 0;
+
+    .fc-list-item-add-to-calendar {
+      display: block;
+    }
+
+    &.fc-unthemed .fc-header-toolbar {
+      padding: 0.5em 0;
+    }
+  }
+}

@@ -1,0 +1,73 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID teme
+    discourse_calendar:
+      disable_holiday: "Onemogući"
+      enable_holiday: "Omogući"
+      date: "Datum"
+      region:
+        none: "Ništa"
+      toolbar_button:
+        today: "Today"
+        month: "Mjesec"
+        week: "Sedmica"
+        day: "Day"
+    group_timezones:
+      search: "Pretraga..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      bulk_invite: "Skupna pozivnica"
+      bulk_invite_modal:
+        title: "Skupna pozivnica"
+        success: "Fajl je uspješno učitan, dobit će te ukratko obavijest o progresu."
+        error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
+      upcoming_events:
+        status: "Status"
+      models:
+        event:
+          closed: "Zatvoreno"
+          status:
+            public:
+              title: "Javno"
+            private:
+              title: "Privatno"
+      builder_modal:
+        custom_fields:
+          placeholder: "Opciono"
+        create: "napravi"
+        update: "Save"
+        timezone:
+          label: Vremenska zona
+        reminders:
+          units:
+            days: "days"
+          periods:
+            before: "prije"
+            after: "poslije"
+        recurrence:
+          label: "Vraćanje"
+          none: "Bez ponavljanja"
+          every_day: "Svaki dan"
+        url:
+          label: "URL"
+          placeholder: "Opciono"
+        location:
+          label: "Lokacija"
+        description:
+          label: "Opis"
+        status:
+          label: "Status"
+      invite_user_or_group:
+        invite: "Pošalji"

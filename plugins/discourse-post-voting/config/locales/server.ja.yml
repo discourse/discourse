@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "投稿の投票は有効になっていません。"
+        replying_to_post_not_permited: "別の投稿への返信として投稿を作成することはできません。"
+        voting_not_permitted: "この投稿には投票できません。"
+        comment_cannot_be_downvoted: "コメントにのみ賛成できます。"
+        self_voting_not_permitted: "自分の投稿またはコメントに投票できません。"
+        vote_archived_topic: "アーカイブされたトピックに投票できません。"
+        vote_closed_topic: "クローズされたトピックに投票できません。"
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "投稿の投票は有効になっていません。"
+        subtype_not_allowed: "投稿の投票のサブタイプは、通常のトピックのみで使用できます。"
+        cannot_change_to_post_voting_subtype: "トピックのサブタイプを投稿の投票に変更することはできません。"
+      answer_count:
+        other: "回答 %{count} 件"
+  site_settings:
+    qa_tags: "トピックへの投稿の投票を有効にするタグ"
+    post_voting_enabled: "投稿の投票プラグインを有効化"
+    post_voting_enable_likes_on_answers: "投稿の投票トピックでの返信に「いいね！」ボタンを有効にする"
+    post_voting_undo_vote_action_window: "投稿の投票トピックでユーザーが投票を取り消すことのできる分数 (無制限の場合は 0 を入力します)"
+    post_voting_comment_limit_per_post: "各投稿に許可されるコメント数"
+    min_trust_to_flag_posts_voting_comments: "投稿の投票コメントを通報できる最低信頼レベル"
+    flag_posts_voting_comments_allowed_groups: "投稿の投票コメントを通報できるグループ"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "投票"
+      description: "この投稿に投票します"
+      short_description: "この投稿に投票します"
+      long_form: "がこの投稿に投票しました"
+  vote:
+    error:
+      user_has_not_voted: "ユーザーはまだ投票していません"
+      user_over_limit: "信頼レベルの投票数を超えることはできません。"
+      already_voted: "質問ごとに 1 回だけ投票できます。"
+      undo_vote_action_window:
+        other: "投票後 %{count} 分間は投票を取り消すことができません。"
+      one_vote_per_post: "投稿ごとに 1 回だけ投票できます。"
+      one_vote_per_comment: "コメントごとに 1 回だけ投票できます。"
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "投稿の投票トピックに含まれない投稿へのコメントはできません。"
+        not_permitted: "関連する投稿にコメントすることはできません。"
+        limit_exceeded: "投稿あたり %{limit} 件のコメント数制限に達しました。"
+        perform: "ユーザーを投稿禁止にするのに十分なスコアで通報された投稿の投票コメント。"
+        auto_silence_from_flags: "通報により自動的に投稿禁止にされました。"
+      reviewables:
+        comment_already_handled: "ありがとうございます。ただ、このコメントはすでにレビュー済みで、通報の必要がないと判断されています。"
+        actions:
+          agree_and_keep_comment:
+            title: "コメントを保持"
+            description: "通報に同意し、コメントを変更しないままにします。"
+          agree_and_keep_deleted:
+            title: "コメントを削除されたままにする"
+            description: "通報に同意し、コメントを削除したままにします。"
+          agree_and_suspend:
+            title: "ユーザーを凍結"
+            description: "通報に同意し、ユーザーを凍結します。"
+          agree_and_silence:
+            title: "ユーザーを投稿禁止"
+            description: "通報に同意し、ユーザーを投稿禁止にします。"
+          agree_and_restore:
+            title: "コメントを復元"
+            description: "ユーザーが閲覧できるようにコメントを復元します。"
+          agree_and_delete:
+            title: "コメントを削除"
+            description: "ユーザーが閲覧できないようにコメントを削除します。"
+          delete_and_agree:
+            title: "通報を無視してコメントを削除"
+            description: "キューから削除して通報を無視し、そのコメントを削除します。"
+          disagree_and_restore:
+            title: "却下してコメントを復元"
+            description: "すべてのユーザーが閲覧できるようにコメントを復元します。"
+          disagree:
+            title: "却下"
+          ignore:
+            title: "何もしない"
+            description: "何もアクションを起こさずに、キューから削除して通報を無視します。"
+        transcript:
+          view: "前のコメントのトランスクリプトを表示"
+      reviewable_score_types:
+        needs_review:
+          title: "要レビュー"
+        notify_user:
+          comment_pm_title: "あなたの投票の投稿コメント"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "投稿の投票コメントにはスタッフの注意が必要です"
+          comment_pm_body: "%{link}\n\n%{comment}"

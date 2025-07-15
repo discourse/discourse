@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  reports:
+    currently_away:
+      title: Пользователи отсутствуют
+      labels:
+        username: Имя пользователя
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Мероприятие началось
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Указанный вами регион праздничного календаря не существует."
+    discourse_calendar_enable_holiday_failed: "Этот праздник нельзя включить: он уже включён или не был отключен."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Событие - Массовое приглашение успешно выполнено"
+      subject_template: "Массовое приглашение успешно обработано"
+      text_body_template: "Ваш файл для массового приглашения пользователей был успешно обработан, отправлено приглашений: %{processed}."
+    discourse_post_event_bulk_invite_failed:
+      title: "Событие - Не удалось выполнить массовое приглашение"
+      subject_template: "Массовое приглашение обработано с ошибками"
+      text_body_template: |
+        Ваш файл массового приглашения был обработан, %{processed} приглашенных. Ошибок: %{failed}.
+
+        Журнал приглашений:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "Максимальное количество текстовых строк на мероприятие в календаре."
+    map_events_to_color: "Назначать цвет каждому тегу или категории."
+    map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
+    calendar_enabled: "Включить плагин discourse-calendar. Это добавит поддержку тега [calendar][/calendar] в первой публикации темы."
+    discourse_post_event_enabled: "Включает функции мероприятий. Примечание: также необходимо, чтобы был включен параметр `calendar enabled`."
+    displayed_invitees_limit: "Ограничивать количество приглашений, отображаемых в мероприятии ."
+    display_post_event_date_on_topic_title: "Отображать дату мероприятия после названия темы."
+    use_local_event_date: "Использовать локальную дату после заголовка темы вместо прошедшего времени."
+    discourse_post_event_allowed_on_groups: "Группы, которым разрешено создавать мероприятия."
+    discourse_post_event_allowed_custom_fields: "Позволять каждому мероприятию устанавливать значение настраиваемых полей."
+    discourse_post_event_edit_notifications_time_extension: "Продлить на указанное здесь количество минут период после окончания мероприятия, когда приглашённые всё ещё получают уведомление об изменении исходной записи."
+    holiday_calendar_topic_id: "Идентификатор темы календаря праздников и отсутствия сотрудников."
+    holiday_status_emoji: Эмодзи для статуса «праздники».
+    delete_expired_event_posts_after: "Сообщения с истекшими мероприятиями будут автоматически удалены после указанного здесь количества часов (n). Установите значение -1 для отключения удаления."
+    all_day_event_start_time: "Мероприятия, для которых не указано время начала, начнутся в указанное здесь время. Формат времени — ЧЧ:мм. Например, для 6:00 утра введите 06:00"
+    all_day_event_end_time: "Мероприятия, для которых не указано время окончания, завершатся в указанное здесь время. Формат времени — ЧЧ:мм. Например, для 6:00 вечера введите 18:00"
+    all_day_event_time_error: "Неверное время. Формат должен быть ЧЧ: мм (например, 08:00)."
+    calendar_categories: "Отображать календарь в верхней части раздела. Обязательные настройки - categoryId и postId. например: categoryId = 6; postId = 453\n Другие допустимые настройки: часовые пояса, выходные дни и формат отображения."
+    calendar_categories_outlet: "Позволяет указать, где отображать календарь категории."
+    working_days: "Установка рабочих дней. Вы можете отобразить доступность группы с помощью тега `timezones`, пометив им сообщение, например:` [timezones group = admins][timezones]`"
+    working_day_start_hour: "Время начала рабочего дня."
+    working_day_end_hour: "Время окончания рабочего дня."
+    close_to_working_day_hours_extension: "Продлевать время рабочего дня с учётом часовых поясов."
+    events_calendar_categories: "Отображать календарь мероприятий в верхней части категории."
+    sort_categories_by_event_start_date_enabled: "Включить сортировку тем категории по дате начала мероприятия."
+    disable_resorting_on_categories_enabled: "Разрешить категориям скрывать возможность сортировать мероприятия по категориям."
+    calendar_automatic_holidays_enabled: "Автоматически задавать статус «праздники» по региону пользователя (отключить конкретные автоматически устанавливаемые праздники можно в настройках плагина)"
+    event_participation_buttons: "Список кнопок участия в мероприятиях, которые могут использовать пользователи."
+    sidebar_show_upcoming_events: "Показывать ссылку на предстоящие мероприятия на боковой панели в разделе «Еще»."
+    include_expired_events_on_calendar: "Включать прошедшие/истекшие мероприятия в представлениях «Календарь категорий» и «Предстоящие мероприятия»."
+  discourse_calendar:
+    invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
+    calendar_must_be_in_first_post: "Тег календаря может быть использован только в первой публикации темы."
+    more_than_one_calendar: "В записи не может быть более одного календаря."
+    more_than_two_dates: "Запись в теме календаря не может содержать более двух дат."
+    event_expired: "Срок проведения мероприятия истек"
+    holiday_status:
+      description: "Выходные"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "Мероприятие «%{title}» вот-вот начнется."
+      after_event_reminder: "Мероприятие «%{title}» закончилось."
+      ongoing_event_reminder: "Мероприятие «%{title}» продолжается."
+    errors:
+      bulk_invite:
+        max_invitees: "Были созданы первые приглашения (%{max_invittes}). Попробуйте разделить файл на более мелкие части."
+        error: "Произошла ошибка при загрузке файла. Повторите попытку позже."
+      models:
+        event:
+          only_one_event: "В публикации может быть только одно мероприятие."
+          must_be_in_first_post: "Мероприятие может быть только в первой публикации темы."
+          raw_invitees_length: "Мероприятие ограничено по числу пользователей/групп (%{count})."
+          raw_invitees:
+            only_group: "Мероприятие принимает только имена групп."
+          ends_at_before_starts_at: "Мероприятие не может закончиться до того, как начнется."
+          start_must_be_present_and_a_valid_date: "В мероприятии должна быть установлена правильная дата начала."
+          end_must_be_a_valid_date: "Дата окончания должна быть правильной."
+          invalid_recurrence: "Повторение должно быть одним из следующих значений: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Часовой пояс не распознан."
+          acting_user_not_allowed_to_create_event: "Текущему пользователю не разрешено создавать мероприятия."
+          acting_user_not_allowed_to_act_on_this_event: "Текущий пользователь не имеет права работать с этим мероприятием."
+          invalid_allowed_groups: "Недействительные разрешённые группы."
+          acting_user_not_allowed_to_invite_these_groups: "Текущему пользователю не разрешено приглашать эти группы."
+          custom_field_is_invalid: "Настраиваемое поле `%{field}` не допускается."
+          name:
+            length: "Название мероприятия должно содержать столько символов: от %{minimum} до %{maximum}."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Напоминание о мероприятии"

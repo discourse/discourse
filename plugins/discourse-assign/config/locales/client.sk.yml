@@ -1,0 +1,69 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    action_codes:
+      assigned: "Priradené %{who}%{when}"
+      assigned_group: "Priradené %{who}%{when}"
+      unassigned: "Nepriradené %{who}%{when}"
+      unassigned_group: "Nepriradené %{who}%{when}"
+    discourse_assign:
+      assigned: "Priradené"
+      group_everyone: "Každý"
+      assigned_to: "Priradené komu"
+      assigned_to_w_ellipsis: "Priradené komu..."
+      unassign:
+        title: "Nepriradené"
+        title_w_ellipsis: "Nepriradené..."
+      assign:
+        title: "Priradiť"
+        help: "Priradiť tému používateľovi"
+      reassign:
+        title: "Upraviť"
+      topic_level_menu:
+        unassign_with_ellipsis: "Nepriradené..."
+      assign_modal:
+        title: "Priradiť tému"
+        assign: "Priraď"
+        note_label: Poznámka
+        optional_label: "(nepovinné)"
+        status_label: Stav
+      claim:
+        title: "prevziať"
+        help: "Priradiť tému sebe"
+      assign_mailer:
+        never: "Nikdy"
+        always: "Vždy"
+      reminders_frequency:
+        never: "Nikdy"
+        daily: "Denne"
+        weekly: "Týždenne"
+        monthly: "Mesačne"
+        quarterly: "Štvrťročne"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Priradiť"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Nerobiť nič"
+      messages:
+        assigned: "Priradené"
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Priradené komu"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Priradené"
+    edit_assignments_modal:
+      topic: "Témy"
+      post: "Príspevok"

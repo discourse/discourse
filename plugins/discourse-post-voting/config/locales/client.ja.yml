@@ -1,0 +1,113 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: 投稿の投票
+  post_voting:
+    reviewables:
+      comment_already_handled: "ありがとうございます。ただ、このコメントはすでにレビュー済みで、通報の必要がないと判断されています。"
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "新しいコメント"
+      popup:
+        question_answer_user_commented: '%{username} が「%{topic}」にコメントしました - %{site_title}'
+    category:
+      post_voting_settings_heading: 投稿の投票
+      create_as_post_voting_default: このカテゴリの新しいトピックは、デフォルトで投稿の投票トピックになります。
+      only_post_voting_in_this_category: このカテゴリの新しいトピックは、投稿の投票トピックにしかできません。
+    composer:
+      create_post_voting:
+        label: "投稿の投票トピックを作成する"
+      composer_actions:
+        create_as_post_voting:
+          label: "投稿の投票を切り替える"
+          desc: "トピックは投票可能な投稿で作成されます"
+        remove_as_post_voting:
+          label: "投稿の投票を削除"
+          desc: "トピックは通常の形式で作成されます"
+    vote:
+      already_voted: "質問ごとに 1 回だけ投票できます。"
+      user_over_limit: "信頼レベルの投票数を超えることはできません。"
+      one_vote_per_post: "投稿ごとに 1 回だけ投票できます。"
+    last_answer_lowercase: 最後の回答
+    answer_lowercase:
+      other: 回答
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              other: "%{count} 文字以上を入力してください"
+            length_ok:
+              other: "残り %{count} 文字..."
+            too_long:
+              other: "コメントは %{count} 文字以下にしてください"
+          submit: "コメントを追加する"
+          edit: "編集"
+          cancel: "キャンセル"
+          add: "コメントを追加する"
+          show:
+            other: さらに %{count} 件のコメントを表示
+          delete:
+            confirm: "このコメントを削除してもよろしいですか？"
+          user:
+            deleted: "(削除されたユーザー)"
+          reviewables:
+            comment_already_handled: "ありがとうございます。ただ、このコメントはすでにレビュー済みで、通報の必要がないと判断されています。"
+            actions:
+              agree:
+                title: "同意…"
+              agree_and_keep_comment:
+                title: "コメントを保持"
+                description: "通報に同意し、コメントを変更しないままにします。"
+              agree_and_keep_deleted:
+                title: "コメントを削除されたままにする"
+                description: "通報に同意し、コメントを削除したままにします。"
+              agree_and_suspend:
+                title: "ユーザーを凍結"
+                description: "通報に同意し、ユーザーを凍結します。"
+              agree_and_silence:
+                title: "ユーザーを投稿禁止"
+                description: "通報に同意し、ユーザーを投稿禁止にします。"
+              agree_and_restore:
+                title: "コメントを復元"
+                description: "ユーザーが閲覧できるようにコメントを復元します。"
+              agree_and_delete:
+                title: "コメントを削除"
+                description: "ユーザーが閲覧できないようにコメントを削除します。"
+              delete_and_agree:
+                title: "通報を無視してコメントを削除"
+                description: "キューから削除して通報を無視し、そのコメントを削除します。"
+              disagree_and_restore:
+                title: "却下してコメントを復元"
+                description: "すべてのユーザーが閲覧できるようにコメントを復元します。"
+              disagree:
+                title: "却下"
+              ignore:
+                title: "何もしない"
+                description: "何もアクションを起こさずに、キューから削除して通報を無視します。"
+            transcript:
+              view: "前のコメントのトランスクリプトを表示"
+      topic:
+        answer:
+          label: "回答"
+          help: "回答を書き始めます"
+        sort_by: "並べ替え"
+        votes: "投票"
+        activity: "アクティビティ"
+        answer_count:
+          other: "回答 %{count} 件"
+    review:
+      transcript:
+        view: "前のメッセージのトランスクリプトを表示"
+      types:
+        reviewable_post_voting_comment:
+          title: "通報された投稿の投票コメント"

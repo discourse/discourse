@@ -1,0 +1,59 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    discourse_subscriptions:
+      optional: Προαιρετικό
+      campaign:
+        success_title: Επιτυχία!
+      plans:
+        interval:
+          adverb:
+            day: Ημερήσιες
+            week: Εβδομαδιαία
+            month: Μηνιαία
+            year: Ετήσια
+      user:
+        payments:
+          created_at: Δημιουργήθηκε
+        plans:
+          product: Όνομα
+        subscriptions:
+          status: Κατάσταση
+          update_card:
+            single: "Ενημέρωση"
+          created_at: Δημιουργήθηκε
+          cancel: ακύρωση
+      subscribe:
+        countries:
+          MS: "Montserrat"
+      billing:
+        email: Διεύθυνση Email
+      admin:
+        dashboard:
+          title: Πίνακας ελέγχου
+          table:
+            head:
+              user: Χρήστης
+        products:
+          product:
+            description: Περιγραφή
+            active: Ενεργοί
+            created_at: Δημιουργήθηκε
+            updated_at: Ενημερώθηκε
+        plans:
+          plan:
+            active: Ενεργοί
+            created_at: Δημιουργήθηκε
+        coupons:
+          active: Ενεργοί?
+          actions: Ενέργειες
+        subscriptions:
+          subscription:
+            user: Χρήστης
+            status: Κατάσταση
+            created_at: Δημιουργήθηκε

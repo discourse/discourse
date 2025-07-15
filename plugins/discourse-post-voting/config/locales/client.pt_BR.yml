@@ -1,0 +1,119 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Votação em publicação
+  post_voting:
+    reviewables:
+      comment_already_handled: "Agradecemos, mas já analisamos este comentário e determinamos que não precisa ser sinalizado novamente."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "novo comentário"
+      popup:
+        question_answer_user_commented: '%{username} comentou em "%{topic}" - %{site_title}'
+    category:
+      post_voting_settings_heading: Votação de publicação
+      create_as_post_voting_default: Novos tópicos padrão para tópicos de "Votação de publicação" nesta categoria.
+      only_post_voting_in_this_category: Novos tópicos podem ser apenas tópicos de "votação em postagem" nesta categoria
+    composer:
+      create_post_voting:
+        label: "Criar tópico de votação de publicação"
+      composer_actions:
+        create_as_post_voting:
+          label: "Alterar votação de publicação"
+          desc: "O tópico será criado com publicações para votar"
+        remove_as_post_voting:
+          label: "Remover votação de publicação"
+          desc: "O tópico será criado no formato regular"
+    vote:
+      already_voted: "Você só pode votar uma vez por pergunta."
+      user_over_limit: "Você não pode exceder o número de votos para seu nível de confiança."
+      one_vote_per_post: "Você só pode votar uma vez em cada postagem."
+    last_answer_lowercase: última resposta
+    answer_lowercase:
+      one: resposta
+      other: respostas
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Insira pelo menos %{count} caractere"
+              other: "Insira pelo menos %{count} caracteres"
+            length_ok:
+              one: "%{count} caractere restante..."
+              other: "%{count} caracteres restantes..."
+            too_long:
+              one: "O comentário não pode ter mais do que %{count} caractere"
+              other: "O comentário não pode ter mais do que %{count} caracteres"
+          submit: "Adicione um comentário"
+          edit: "editar"
+          cancel: "cancelar"
+          add: "Adicione um comentário"
+          show:
+            one: Mostrar mais %{count} comentário
+            other: Mostrar mais %{count} comentários
+          delete:
+            confirm: "Tem certeza de que deseja excluir este comentário?"
+          user:
+            deleted: "(usuário(a) excluído(a))"
+          reviewables:
+            comment_already_handled: "Agradecemos, mas já analisamos este comentário e determinamos que não precisa ser sinalizado novamente."
+            actions:
+              agree:
+                title: "Concordo..."
+              agree_and_keep_comment:
+                title: "Manter comentário"
+                description: "Concorde com o sinalizador e mantenha o comentário inalterado."
+              agree_and_keep_deleted:
+                title: "Manter comentário excluído"
+                description: "Concorde com o sinalizador e mantenha o comentário excluído."
+              agree_and_suspend:
+                title: "Suspender usuário(s)"
+                description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
+              agree_and_silence:
+                title: "Silenciar usuário(a)"
+                description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
+              agree_and_restore:
+                title: "Restaurar comentário"
+                description: "Restaure o comentário para que os(as) usuários(as) possam ver."
+              agree_and_delete:
+                title: "Excluir comentário"
+                description: "Exclua o comentário para que os(as) usuários(as) não possam ver."
+              delete_and_agree:
+                title: "Ignorar sinalizador e excluir comentário"
+                description: "Ignore o sinalizador ao removê-lo da fila e exclua o comentário."
+              disagree_and_restore:
+                title: "Discordar e restaurar comentário"
+                description: "Restaure o comentário para que todos(as) usuários(as) possam ver."
+              disagree:
+                title: "Discordar"
+              ignore:
+                title: "Não fazer nada"
+                description: "Ignore o sinalizador ao removê-lo da fila sem realizar nenhuma ação."
+            transcript:
+              view: "Ver transcrição de comentários anteriores"
+      topic:
+        answer:
+          label: "Resposta"
+          help: "começar a escrever uma resposta"
+        sort_by: "Ordenar por"
+        votes: "Votos"
+        activity: "Atividade"
+        answer_count:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+    review:
+      transcript:
+        view: "Ver transcrição de mensagens anteriores"
+      types:
+        reviewable_post_voting_comment:
+          title: "Comentário de votação em postagem sinalizado"

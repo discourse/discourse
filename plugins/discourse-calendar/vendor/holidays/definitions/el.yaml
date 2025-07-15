@@ -1,0 +1,158 @@
+# Greek holiday definitions for the Ruby Holiday gem.
+#
+# Created: 2011-05-11.
+# Sources:
+    # http://www.assa.org.au/edm.html
+    # http://fotios.org/node/1104
+    # http://www.faqs.org/faqs/calendars/faq/
+    # http://5dspace-time.org/Calendar/Algorithm.html - for offsets
+    # http://el.wikipedia.org/wiki/Επίσημες_αργίες_στην_Ελλάδα - for holidays
+    # http://www.eortologio.gr/arthra/pasxa.php - for holidays
+---
+months:
+  0:
+  - name: Μεγάλη Παρασκευή
+    regions: [el]
+    function: orthodox_easter(year)
+    function_modifier: -2
+  - name: Μεγάλο Σάββατο
+    regions: [el]
+    function: orthodox_easter(year)
+    function_modifier: -1
+  - name: Κυριακή του Πάσχα
+    regions: [el]
+    function: orthodox_easter(year)
+  - name: Δευτέρα του Πάσχα
+    regions: [el]
+    function: orthodox_easter(year)
+    function_modifier: 1
+  - name: Καθαρά Δευτέρα
+    regions: [el]
+    function: orthodox_easter(year)
+    function_modifier: -48
+  - name: Αγίου Πνεύματος
+    regions: [el]
+    function: orthodox_easter(year)
+    function_modifier: 50
+  1:
+  - name: Πρωτοχρονιά
+    regions: [el]
+    mday: 1
+  - name: Θεοφάνεια
+    regions: [el]
+    mday: 6
+  3:
+  - name: Επέτειος της Επανάστασης του 1821
+    regions: [el]
+    mday: 25
+  5:
+  - name: Πρωτομαγιά
+    regions: [el]
+    mday: 1
+  8:
+  - name: Κοίμηση της Θεοτόκου
+    regions: [el]
+    mday: 15
+  10:
+  - name: Επέτειος του Όχι
+    regions: [el]
+    mday: 28
+  12:
+  - name: Χριστούγεννα
+    regions: [el]
+    mday: 25
+  - name: Δεύτερη ημέρα των Χριστουγέννων
+    regions: [el]
+    mday: 26
+
+tests:
+  - given:
+      date: '2011-01-01'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Πρωτοχρονιά"
+  - given:
+      date: '2011-01-06'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Θεοφάνεια"
+  - given:
+      date: '2011-04-22'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Μεγάλη Παρασκευή"
+  - given:
+      date: '1970-04-25'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Μεγάλο Σάββατο"
+  - given:
+      date: '1985-04-14'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Κυριακή του Πάσχα"
+  - given:
+      date: '2011-04-24'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Κυριακή του Πάσχα"
+  - given:
+      date: '2027-05-02'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Κυριακή του Πάσχα"
+  - given:
+      date: '2046-04-30'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Δευτέρα του Πάσχα"
+  - given:
+      date: '2011-05-01'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Πρωτομαγιά"
+  - given:
+      date: '2011-06-13'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Αγίου Πνεύματος"
+  - given:
+      date: '2012-06-04'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Αγίου Πνεύματος"
+  - given:
+      date: '2011-03-07'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Καθαρά Δευτέρα"
+  - given:
+      date: '2012-02-27'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Καθαρά Δευτέρα"
+  - given:
+      date: '2011-12-25'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Χριστούγεννα"
+  - given:
+      date: '2011-12-26'
+      regions: ["el"]
+      options: ["informal"]
+    expect:
+      name: "Δεύτερη ημέρα των Χριστουγέννων"

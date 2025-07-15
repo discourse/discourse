@@ -81,6 +81,66 @@ describe Auth::DiscourseIdAuthenticator do
     it "defines callback_url" do
       expect(strategy.callback_url).to eq("http://test.localhost/auth/discourse_id/callback")
     end
+
+    describe "#authorize_params" do
+      let(:env) { Rack::MockRequest.env_for("http://example.com/auth/discourse_id", params:) }
+      let(:request) { Rack::Request.new(env) }
+      let(:strategy) do
+        strategy = Auth::DiscourseIdAuthenticator::DiscourseIdStrategy.new({})
+        allow(strategy).to receive(:request).and_return(request)
+        strategy
+      end
+
+      before do
+        allow_any_instance_of(OmniAuth::Strategies::OAuth2).to receive(
+          :authorize_params,
+        ).and_return({})
+      end
+
+      context "when just email parameter is present" do
+        let(:params) { { "email" => "test@example.com" } }
+
+        it "does not include email in authorize params" do
+          expect(strategy.authorize_params[:email]).to be_nil
+        end
+      end
+
+      context "when signup parameter is true" do
+        let(:params) { { "signup" => "true" } }
+
+        it "includes signup intent in authorize params" do
+          expect(strategy.authorize_params[:intent]).to eq("signup")
+        end
+      end
+
+      context "when signup parameter is false" do
+        let(:params) { { "signup" => "false" } }
+
+        it "does not include signup intent in authorize params" do
+          expect(strategy.authorize_params[:intent]).to be_nil
+        end
+      end
+
+      context "when signup is false and email is present" do
+        let(:params) { { "email" => "test@example.com", "signup" => "false" } }
+
+        it "does not include anything in authorize params" do
+          params = strategy.authorize_params
+          expect(params[:email]).to be_nil
+          expect(params[:intent]).to be_nil
+        end
+      end
+
+      context "when signup is true and email is present" do
+        let(:params) { { "email" => "test@example.com", "signup" => "true" } }
+
+        it "includes both email and intent in authorize params" do
+          params = strategy.authorize_params
+          expect(params[:email]).to eq("test@example.com")
+          expect(params[:intent]).to eq("signup")
+        end
+      end
+    end
   end
 
   let(:hash) do

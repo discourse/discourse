@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    discourse_assign:
+      assigned: "تەقسىملەنگەن"
+      group_everyone: "ھەممەيلەن"
+      reassign:
+        title: "تەھرىر"
+      assign_modal:
+        note_label: ئەسكەرتىش
+        optional_label: "(تاللاشچان)"
+        status_label: ھالەت
+      assign_mailer:
+        never: "ھەرگىز"
+        always: "ھەمىشە"
+      reminders_frequency:
+        never: "ھەرگىز"
+        daily: "كۈندىلىك"
+        weekly: "ھەپتىلىك"
+        monthly: "ئايلىق"
+        quarterly: "پەسىللىك"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "ھېچ ئىش قىلما"
+      messages:
+        assigned: "تەقسىملەنگەن"
+      assignment_description:
+        topic: "%{topic_title}"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "تەقسىملەنگەن"
+    edit_assignments_modal:
+      topic: "تېما"
+      post: "يازما"

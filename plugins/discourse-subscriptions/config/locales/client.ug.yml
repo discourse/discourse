@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    discourse_subscriptions:
+      optional: تاللاشچان
+      campaign:
+        success_title: مۇۋەپپەقىيەتلىك!
+      plans:
+        interval:
+          adverb:
+            day: كۈندىلىك
+            week: ھەپتىلىك
+            month: ئايلىق
+            year: يىللىق
+      user:
+        payments:
+          created_at: قۇرغان ۋاقتى
+        plans:
+          product: ئىسمى
+        subscriptions:
+          status: ھالەت
+          update_card:
+            single: "يېڭىلا"
+          created_at: قۇرغان ۋاقتى
+          cancel: ۋاز كەچ
+      billing:
+        email: ئېلخەت
+      admin:
+        dashboard:
+          title: باشقۇرۇش تاختا
+          table:
+            head:
+              user: ئىشلەتكۈچى
+        products:
+          product:
+            description: چۈشەندۈرۈش
+            active: ئاكتىپ
+            created_at: قۇرغان ۋاقتى
+            updated_at: يېڭىلاندى
+        plans:
+          plan:
+            active: ئاكتىپ
+            created_at: قۇرغان ۋاقتى
+        coupons:
+          active: ئاكتىپ?
+          actions: مەشغۇلات
+        subscriptions:
+          subscription:
+            user: ئىشلەتكۈچى
+            status: ھالەت
+            created_at: قۇرغان ۋاقتى

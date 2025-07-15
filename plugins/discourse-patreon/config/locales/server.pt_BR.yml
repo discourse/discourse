@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    patreon_enabled: 'Ativar o plugin discourse-patreon'
+    patreon_login_enabled: 'Ativar Login Social do Patreon'
+    patreon_client_id: 'ID do cliente Patreon gerado'
+    patreon_client_secret: 'Segredo do cliente Patreon gerado'
+    patreon_webhook_secret: 'Segredo do Webhook do Patreon gerado'
+    patreon_creator_discourse_username: "Nome do(a) usuário(a) da conta do Discourse que é usado para entrar pela conta do(a) criador(a) do Patreon com o \"Login Social do Patreon\""
+    patreon_creator_access_token: "Token de acesso do criador do Patreon gerado"
+    patreon_creator_refresh_token: "Token de atualização do(a) criador(a) do Patreon gerado"
+    patreon_declined_pledges_grace_period_days: "Período de carência (em dias) antes que um compromisso seja recusado completamente."
+    max_patreon_api_reqs_per_hr: "Número máximo de solicitações da API do Patreon por hora"
+    max_patreon_api_reqs_per_day: "Número máximo de solicitações da API do Patreon por dia"
+    patreon_verbose_log: 'ativar registro prolixo do conteúdo do Patreon'
+    patreon_donation_prompt_enabled: "Ativar solicitação de doação?"
+    patreon_donation_prompt_show_after_topics: "Mostrar solicitação de doação após n tópicos"
+    patreon_donation_prompt_campaign_url: "URL da campanha de solicitação de doação"
+    errors:
+      patreon_creator_username_not_set: "Você precisa definir a configuração do nome do(a) usuário(a) do Discourse do(a) criador(a) do Patreon antes de ativar o login do Patreon."
+  dashboard:
+    problem:
+      access_token_invalid: "Os valores dos tokens de atualização e acesso do Patreon Creator estão incorretos. É preciso copiar e colar os novos tokens de <a href='https://www.patreon.com/platform/documentation/clients'>Patreon website</a> para as <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>configurações do site</a>."
+  patreon:
+    error:
+      invalid_response: "Resposta inválida da API do Patreon"

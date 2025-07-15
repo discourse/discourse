@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    explorer:
+      or: "ose"
+      import:
+        label: "Importo"
+      types:
+        bool:
+          yes: "Po"
+          no: "Jo"
+      export: "Eksporto"
+      save: "Ruaj ndryshimet"
+      edit: "Redakto"
+      delete: "Fshij"
+      query_groups: "Grupet"
+      query_description: "Përshkrimi"
+      reset_params: "Rivendos"

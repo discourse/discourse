@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    openid_connect_enabled: Activer l'authentification OpenID Connect. Personnaliser le texte de l'interface utilisateur <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>ici</a>
+    openid_connect_discovery_document: "URL du document de découverte OpenID Connect. Normalement situé à l'adresse https://your.domain/.well-known/openid-configuration"
+    openid_connect_client_id: "ID de client OpenID Connect"
+    openid_connect_client_secret: "Secret du client OpenID Connect"
+    openid_connect_authorize_scope: "Les autorisations envoyées au point de terminaison d'autorisation. Cela doit inclure « openid »."
+    openid_connect_rp_initiated_logout: "Rediriger l'utilisateur vers end_session_endpoint après la déconnexion. Doit être supporté par votre fournisseur d'identité et inclus dans le document de découverte."
+    openid_connect_rp_initiated_logout_redirect: "(facultatif) Le post_logout_redirect_uri qui sera transmis au point de terminaison de déconnexion. S'il est fourni, il doit être enregistré auprès du fournisseur d'identité."
+    openid_connect_token_scope: "Les autorisations envoyées lors de la demande du point de terminaison du jeton. Les spécifications officielles ne l'exigent pas."
+    openid_connect_error_redirects: "Si le rappel error_reason contient le premier paramètre, l'utilisateur sera redirigé vers l'adresse URL reprise dans le deuxième paramètre"
+    openid_connect_allow_association_change: "Autoriser les utilisateurs à déconnecter et à reconnecter leurs comptes Discourse du fournisseur OpenID Connect"
+    openid_connect_verbose_logging: "Consigne les informations d'authentification détaillées d'openid-connect dans « /logs ». Maintenez cette option désactivée pendant l'utilisation normale."
+    openid_connect_authorize_parameters: "Paramètres de l'adresse URL qui seront inclus dans la redirection de /auth/oidc vers le point de terminaison d'autorisation de l'IDP"
+    openid_connect_overrides_email: "À chaque connexion, remplacer l'adresse e-mail de l'utilisateur à l'aide de la valeur openid-connect. Fonctionne de la même manière que le paramètre « auth_overrides_email », mais est spécifique aux connexions OpenID Connect."
+    openid_connect_claims: "Définir explicitement les revendications à utiliser avec les fournisseurs qui ne retransmettent pas les données en fonction des autorisations. (JSON)"
+    openid_connect_match_by_email: "Utilisez l'adresse e-mail pour associer les authentifications OpenID Connect aux comptes utilisateur Discourse existants."
+    openid_connect_use_pkce: "Activez la clé de preuve pour l'échange de codes (PKCE) pour l'authentification OpenID Connect."
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: Impossible de récupérer la configuration du fournisseur d'identité. Veuillez réessayer.

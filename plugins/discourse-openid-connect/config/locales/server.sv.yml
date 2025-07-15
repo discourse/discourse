@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    openid_connect_enabled: Aktivera OpenID Connect-autentisering. Anpassa användargränssnittets text <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>här</a>
+    openid_connect_discovery_document: "Webbadress för OpenID Connect-identifieringsdokument. Finns normalt på 'https://your.domain/.well-known/openid-configuration'"
+    openid_connect_client_id: "OpenID Connect-klient-ID"
+    openid_connect_client_secret: "OpenID Connect-klienthemlighet"
+    openid_connect_authorize_scope: "Omfången som skickas till auktoriseringsslutpunkten. Detta måste innehålla 'openid'."
+    openid_connect_rp_initiated_logout: "Omdirigera användaren till end_session_endpoint efter utloggning. Måste stödjas av din identitetsleverantör och ingå i identifieringsdokumentet."
+    openid_connect_rp_initiated_logout_redirect: "(valfritt) Post_logout_redirect_uri som kommer att skickas till utloggningsslutpunkten. Om den tillhandahålls måste den registreras hos identitetsleverantören."
+    openid_connect_token_scope: "De omfång som skickas när du begär tokenslutpunkten. Den officiella specifikationen kräver inte detta."
+    openid_connect_error_redirects: "Om callback error_reason innehåller den första parametern kommer användaren att omdirigeras till URL:en i den andra parametern"
+    openid_connect_allow_association_change: "Tillåt att användare kopplar från och återansluter sina Discourse-konton hos OpenID Connect-leverantören"
+    openid_connect_verbose_logging: "Logga detaljerad openid-connect-autentiseringsinformation i `/logs`. Låt detta förbli inaktiverat under normal användning."
+    openid_connect_authorize_parameters: "URL-parametrar som kommer att omfattas i omdirigeringen från /auth/oidc till IDP:ns auktoriseringsslutpunkt"
+    openid_connect_overrides_email: "Vid varje inloggning, åsidosätt användarens e-postadress med hjälp av värdet för openid-connect. Fungerar precis som inställningen 'auth_overrides_email', men är specifik för OpenID Connect-inloggningar."
+    openid_connect_claims: "Definiera uttryckligen kraven för användning av leverantörer som inte skickar tillbaka data baserat på omfång. (JSON)"
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: Det gick inte att hämta konfigurationen från identitetsleverantören. Försök igen.

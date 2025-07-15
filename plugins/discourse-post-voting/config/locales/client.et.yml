@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Sisesta vähemalt %{count} sümbol"
+              other: "Sisesta vähemalt %{count} sümbolit"
+          edit: "muuda"
+          cancel: "tühista"
+          user:
+            deleted: "(kasutaja kustutatud)"
+          reviewables:
+            actions:
+              agree_and_suspend:
+                title: "Peata kasutaja"
+              agree_and_silence:
+                title: "Vaigista kasutaja"
+              disagree:
+                title: "Ei nõustu"
+      topic:
+        sort_by: "Järjesta"
+        activity: "Aktiivsus"

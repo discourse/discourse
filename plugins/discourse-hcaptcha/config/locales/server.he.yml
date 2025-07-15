@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "אירעה תקלה עם הגדרות `site_key` או `secret_key` של ה־hCaptcha שלך"
+  admin:
+    site_settings:
+      categories:
+        discourse_hcaptcha: "תוסף hCaptcha"
+  site_settings:
+    discourse_hcaptcha_enabled: "הפעלת התוסף hCaptcha (מבחן טיורינג). דורש חשבון ב־<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>."
+    hcaptcha_site_key: "מפתח אתר hCaptcha מחשבון ה־<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> שלך"
+    hcaptcha_secret_key: "מפתח סודי hCaptcha מחשבון ה־<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> שלך"
+  h_captcha_verification_failed: "אימות hCaptcha נכשל"

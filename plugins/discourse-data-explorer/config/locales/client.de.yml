@@ -1,0 +1,118 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Entferne die Semikolons aus der Anfrage."
+        dirty: "Du musst die Anfrage vor der Ausführung speichern."
+    explorer:
+      or: "oder"
+      admins_only: "Der Daten-Explorer ist nur für Administratoren verfügbar."
+      allow_groups: "Gruppen erlauben, auf diese Anfrage zuzugreifen"
+      title: "Daten-Explorer"
+      create: "Neu erstellen"
+      create_placeholder: "Name der Anfrage …"
+      description_placeholder: "Hier bitte eine Beschreibung eingeben"
+      import:
+        label: "Importieren"
+        modal: "Anfrage importieren"
+        unparseable_json: "JSON-Datei kann nicht verarbeitet werden."
+        wrong_json: "Falsche JSON-Datei. Eine JSON-Datei sollte ein „query“-Objekt enthalten, das zumindest eine „sql“-Eigenschaft haben sollte."
+      help:
+        label: "Hilfe"
+        modal_title: "Daten-Explorer-Hilfe"
+        auto_resolution: "<h2>Automatische Auflösung von Entitäten</h2> <p>Wenn deine Anfrage eine Entitäts-ID zurückgibt, kann der Daten-Explorer diese automatisch durch den Entitätsnamen und andere nützliche Informationen in den Anfrageergebnissen ersetzen. Die automatische Auflösung ist verfügbar für <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> und <i><b>badge_id</b></i>. Um dies auszuprobieren, führe diese Anfrage aus:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Benutzerdefinierte Parameter erstellen</h2> <p>Um benutzerdefinierte Parameter für deine Anfragen zu erstellen, füge Folgendes am Anfang deiner Anfrage ein und befolge das Format:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Hinweis: Die erste Zeile mit [params] ist erforderlich, zusammen mit zwei Bindestrichen davor und jedem benutzerdefinierten Parameter, den du deklarieren möchtest.</i></p>"
+        default_values: "<h3>Standardwerte</h3> <p>Du kannst Parameter mit oder ohne Standardwerte deklarieren. Die Standardwerte werden in einem Textfeld unter dem Anfrage-Editor angezeigt, das du beliebig bearbeiten kannst. Bei Parametern, die ohne Standardwerte angegeben werden, erscheint zwar immer noch ein Textfeld, aber es ist leer und rot markiert.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Datentypen</h3> <p>Hier sind gängige Datentypen, die du verwenden kannst:</p> <ul> <li><b>Ganzzahl</b> - vorzeichenbehaftete Vier-Byte-Ganzzahl</li> <li><b>Text</b> - Zeichenkette mit variabler Länge</li> <li><b>Boolean</b> – wahr/falsch</li> <li><b>Datum</b> - Kalenderdatum (Jahr, Monat, Tag)</li> </ul> <p>Weitere Informationen über Datentypen findest du auf <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>dieser Website</a>.</p>"
+      schema:
+        title: "Datenbank-Schema"
+        filter: "Suchen …"
+        sensitive: "Die Inhalte dieser Spalte enthalten möglicherweise besonders sensible oder persönliche Informationen. Bitte gehe behutsam mit den Inhalten dieser Spalte um."
+      types:
+        bool:
+          yes: "Ja"
+          no: "Nein"
+          null_: "Null"
+      export: "Exportieren"
+      view_json: "JSON anzeigen"
+      save: "Änderungen speichern"
+      saverun: "Änderungen speichern und ausführen"
+      run: "Ausführen"
+      undo: "Änderungen verwerfen"
+      edit: "Bearbeiten"
+      delete: "Löschen"
+      recover: "Anfrage wiederherstellen"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Tabelle"
+      show_graph: "Diagramm"
+      others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
+      run_time: "Anfrage in %{value} ms abgeschlossen."
+      result_count:
+        one: "%{count} Ergebnis."
+        other: "%{count} Ergebnisse."
+      max_result_count:
+        one: "Zeige das Top-%{count} Ergebnis."
+        other: "Zeige die Top-%{count} Ergebnisse."
+      query_name: "Anfrage"
+      query_groups: "Gruppen"
+      link: "Link für"
+      report_name: "Bericht"
+      query_description: "Beschreibung"
+      query_time: "Letzter Lauf"
+      query_user: "Erstellt von"
+      column: "Spalte %{number}"
+      explain_label: "Anfrageplan einbeziehen?"
+      save_params: "Standards festlegen"
+      reset_params: "Zurücksetzen"
+      search_placeholder: "Suchen …"
+      no_search_results: "Leider konnten wir keine Ergebnisse finden, die deinem Text entsprechen."
+      form:
+        errors:
+          invalid: "Ungültig"
+          no_such_category: "Keine solche Kategorie"
+          no_such_group: "Keine solche Gruppe"
+          invalid_date: "%{date} ist ein ungültiges Datum"
+          invalid_time: "%{time} ist eine ungültige Zeit"
+    group:
+      reports: "Berichte"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: An Benutzer, Gruppe oder E-Mail senden
+            query_id:
+              label: Daten-Explorer-Anfrage
+            query_params:
+              label: Daten-Explorer-Anfrageparameter
+            skip_empty:
+              label: Überspringe das Senden einer PN, wenn es keine Ergebnisse gibt
+            attach_csv:
+              label: Hänge die CSV-Datei an die PN an
+            users_from_group:
+              label: Senden jedem Gruppenmitglied eine individuelle PN
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: Das Thema, in dem die Anfrageergebnisse veröffentlicht werden
+            query_id:
+              label: Daten-Explorer-Anfrage
+            query_params:
+              label: Daten-Explorer-Anfrageparameter
+            skip_empty:
+              label: Überspringe die Veröffentlichung, wenn keine Ergebnisse vorliegen
+            attach_csv:
+              label: Hänge die CSV-Datei an den Beitrag an

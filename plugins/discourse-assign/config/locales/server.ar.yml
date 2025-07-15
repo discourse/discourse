@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    assign_enabled: "تفعيل المكوِّن الإضافي للتعيين"
+    assigns_public: "السماح للعامة برؤية تعيينات الموضوعات"
+    assigns_user_url_path: "مسار الموضوعات المعيَّنة إلى المستخدمين (استخدم: {username} لاستبدال اسم المستخدم)"
+    assigns_by_staff_mention: "تعيين الموضوع تلقائيًا إذا أشار أحد أعضاء طاقم العمل إلى عضو آخر في طاقم العمل"
+    unassign_creates_tracking_post: "إنشاء همسة أو إجراء صغير لتتبُّع التغيير إذا ألغيت تعيين موضوع"
+    assign_self_regex: "العبارة النمطية التي يجب تمريرها للتعيين الذاتي. مثال: 'قائمتي'"
+    assign_other_regex: "العبارة النمطية التي يجب تمريرها لتعيين الموضوعات إلى الآخرين من خلال الإشارة. مثال: \"قائمتك\""
+    unassign_on_group_archive: "إلغاء تعيين الرسالة (وإعادة تعيينها إذا عادت إلى صندوق الوارد) عند أرشفة إحدى المجموعات للرسالة"
+    unassign_on_close: "إلغاء تعيين الموضوع عند إغلاقه"
+    reassign_on_open: "إعادة تعيين المستخدمين/المجموعات المعيَّنة مسبقًا عند فتح الموضوع"
+    invite_on_assign: "دعوة المستخدم أو المجموعة إلى الرسالة الشخصية عند تعيينها إليهما، إذا لم يكونا مشاركين فيها بالفعل."
+    assign_mailer: "متى يتم إرسال إشعار بالمهام المعيَّنة عبر البريد الإلكتروني"
+    remind_assigns: "تذكير المستخدمين بالمهام المعيَّنة قيد الانتظار"
+    remind_assigns_frequency: "معدل تكرار تذكير المستخدمين بالموضوعات المعيَّنة"
+    pending_assign_reminder_threshold: "عدد المهام المعيَّنة المعلَّقة التي تؤدي إلى ظهور إشعار تذكير."
+    max_assigned_topics: "أقصى عدد من الموضوعات التي يمكن تعيينها إلى مستخدم"
+    assign_allowed_on_groups: "المجموعات المسموح للمستخدمين فيها بتعيين الموضوعات ويمكن تعيين الموضوعات إليها"
+    enable_assign_status: "أضِف حقل حالة قابل للتخصيص لكل تعيين."
+    assign_statuses: "قائمة الحالات المتاحة لكل تعيين. الحالة الأولى هي الحالة الافتراضية المطبَّقة على كل تعيين جديد."
+    errors:
+      assign_statuses:
+        too_few: "يجب أن تتوفَّر حالتان مختلفتان على الأقل."
+        duplicate: "هناك قيم حالة مكرَّرة."
+        removed_in_use: "لا يمكن إزالة حالة من القائمة إذا كانت هناك تعيينات حالية تستخدم هذه الحالة."
+  discourse_assign:
+    assigned_to: "تم تعيين الموضوع إلى @%{username}"
+    unassigned: "تم إلغاء تعيين الموضوع"
+    already_claimed: "تمت المطالبة بملكية هذا الموضوع بالفعل."
+    already_assigned: "الموضوع معيَّن بالفعل إلى @%{username}"
+    too_many_assigns: "لقد بلغ @%{username} أقصى عدد من الموضوعات المعيَّنة (%{max})."
+    too_many_assigns_for_topic: "تم بلوغ الحد الأقصى لعدد المهام المعيَّنة في الموضوع والبالغ %{limit}."
+    forbidden_assign_to: "لا يمكن تعيين @%{username} لأنه لا ينتمي إلى المجموعات المسموح بها المعيَّنة."
+    forbidden_assignee_not_pm_participant: "لا يمكن تعيين @%{username} لأنه لا يملك إذن الوصول إلى هذه الرسالة الخاصة. يمكنك منح @%{username} إذن الوصول من خلال دعوته إلى هذه الرسالة الخاصة."
+    forbidden_assignee_cant_see_topic: "لا يمكن تعيين @%{username} لأنه لا يملك إذن الوصول إلى هذا الموضوع."
+    group_already_assigned: "الموضوع معيَّن بالفعل إلى @%{group}"
+    forbidden_group_assign_to: "لا يمكن تعيين @%{group} لأنه لا ينتمي إلى المجموعات المسموح بها المعيَّنة."
+    forbidden_group_assignee_not_pm_participant: "لا يمكن تعيين @%{group} لأن بعض أعضائها لا يملكون إذن الوصول إلى هذه الرسالة الخاصة."
+    forbidden_group_assignee_cant_see_topic: "لا يمكن تعيين @%{group} لأن بعض أعضائها لا يملكون إذن الوصول إلى هذا الموضوع."
+    flag_assigned: "عذرًا، موضوع هذا البلاغ معيَّن إلى مستخدم آخر"
+    flag_unclaimed: "يجب عليك المطالبة بملكية هذا الموضوع قبل اتخاذ إجراء بشأن البلاغ"
+    topic_assigned_excerpt: "عيَّن الموضوع \"%{title}\" إليك"
+    topic_group_assigned_excerpt: "تم تعيين الموضوع '%{title}' إلى المجموعة @%{group}"
+    reminders_frequency:
+      never: "أبدًا"
+      daily: "يوميًا"
+      weekly: "أسبوعيًا"
+      monthly: "شهريًا"
+      quarterly: "ربع سنوي"
+  assign_mailer:
+    title: "تعيين مرسل البريد"
+    subject_template: "عيَّن [%{email_prefix}] %{assignee_name} الموضوع \"%{topic_title}\" إليك!"
+    text_body_template: |
+      مرحبًا، **عيَّن** %{assignee_name} مناقشةً إليك
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      إذا كنت مهتمًا، فانقر على الرابط أدناه:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "لديك %{pending_assignments} من المهام المعيَّنة قيد الانتظار"
+    body: |
+      لديك حاليًا [%{pending_assignments} من المهام المعيَّنة قيد الانتظار](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      سيتم إرسال هذا التذكير %{frequency} إذا كان لديك أكثر من موضوع واحد معيَّن.
+    newest: |
+      ### الأحدث
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### الأقدم
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: تعيين عشوائي
+        no_one: "تمت محاولة تعيين عضو من المجموعة @%{group} عشوائيًا، ولكن لم يكن هناك أي عضو متاح."
+  discourse_push_notifications:
+    popup:
+      assigned: "عيَّنك @%{username}"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "الحالة المحدَّدة غير صالحة (لم يتم تضمينها في إعداد الموقع assigned_status)."

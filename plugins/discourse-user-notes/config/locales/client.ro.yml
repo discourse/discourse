@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    user_notes:
+      title: "Note despre utilizator"
+      attach: "Adaugă notă despre utilizator"
+      remove: "Eliminați nota despre utilizator"
+      show: "Note utilizator (%{count})"
+      delete_confirm: "Ești sigur că vrei să ştergi acea notă de utilizator?"
+      show_post: "Arată postarea"

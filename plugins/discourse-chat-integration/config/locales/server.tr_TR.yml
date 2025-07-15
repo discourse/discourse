@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    chat_integration_enabled: 'discourse-chat-integration eklentisini etkinleştirin'
+    chat_integration_discourse_username: 'İçerik getirilirken işlem yapılacak kullanıcının kullanıcı adı.'
+    chat_integration_delay_seconds: 'Sohbet bildirimleri göndermeden önce gönderi oluşturulduktan sonra beklenecek saniye sayısı'
+    chat_integration_slack_username: "Slack'te gönderi yapacak botun kullanıcı adı"
+    chat_integration_slack_enabled: 'Slack sohbet entegrasyon sağlayıcısını etkinleştirin'
+    chat_integration_slack_access_token: 'Slack ile kimlik doğrulama için OAuth Erişim Token''ı'
+    chat_integration_slack_incoming_webhook_token: 'Gelen isteklerin kimliğini doğrulamak için kullanılan doğrulama belirteci'
+    chat_integration_slack_excerpt_length: 'Slack gönderi alıntı uzunluğu'
+    chat_integration_slack_icon_url: 'Slack''e gönderi yapmak için simge (varsayılan olarak forum logosu)'
+    chat_integration_slack_outbound_webhook_url: "OAuth API yerine Slack'in \"Gelen Web Kancası\" sistemini kullanmak için. Tavsiye edilmez."
+    chat_integration_slack_transcript_quote: Gevşek transkript [quote] etikete kaydırılsın mı?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Giden bir web kancası URL'si veya bir erişim token'ı girmelisiniz"
+    chat_integration_telegram_enabled: "Telegram sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_telegram_access_token: "Botunuzun Telegram botfather'dan aldığı erişim token'ı"
+    chat_integration_telegram_excerpt_length: "Telegram gönderisi alıntı uzunluğu"
+    chat_integration_telegram_enable_slash_commands: "Telegram aboneliklerinin \"eğik çizgi komutları\" kullanılarak yönetilmesine izin verin"
+    chat_integration_discord_enabled: "Discord sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_discord_message_content: "Discord'a bir bildirim gönderirken özetin üzerine eklenecek mesaj"
+    chat_integration_discord_excerpt_length: "Discord gönderisi alıntı uzunluğu"
+    chat_integration_guilded_enabled: "Guilded sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_guilded_excerpt_length: "Guilded gönderisi alıntı uzunluğu"
+    chat_integration_mattermost_enabled: "Mattermost sohbet entegrasyonu sağlayıcısını etkinleştirin"
+    chat_integration_mattermost_webhook_url: 'Mattermost web kancası için URL'
+    chat_integration_mattermost_incoming_webhook_token: 'Gelen isteklerin kimliğini doğrulamak için kullanılan doğrulama token''ı'
+    chat_integration_mattermost_icon_url: "Mattermost'a gönderiler için simge (varsayılan olarak forum logosu)"
+    chat_integration_mattermost_excerpt_length: "Mattermost gönderisi alıntı uzunluğu"
+    chat_integration_matrix_enabled: "Matrix sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_matrix_homeserver: "Bağlanılacak ana sunucu. Protokolü eklediğinizden emin olun"
+    chat_integration_matrix_access_token: "Botun Matrix hesabı için erişim token'ı"
+    chat_integration_matrix_excerpt_length: "Matrix gönderisi alıntı uzunluğu"
+    chat_integration_matrix_use_notice: "Düz mesaj yerine bildirim kullanın"
+    chat_integration_zulip_enabled: "Zulip sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_zulip_server: "Zulip sunucunuz için temel URL. http(s):// eklediğinizden emin olun"
+    chat_integration_zulip_bot_email_address: "Zulip botunuzla ilişkili e-posta adresi"
+    chat_integration_zulip_bot_api_key: "Zulip botunuz için API anahtarı"
+    chat_integration_zulip_excerpt_length: "Zulip gönderisi alıntı uzunluğu"
+    chat_integration_rocketchat_enabled: "Rocket Chat sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_rocketchat_webhook_url: "Rocket Chat entegrasyonu web kancası için URL"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat gönderisi alıntı uzunluğu"
+    chat_integration_gitter_enabled: "Gitter sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_flowdock_enabled: "Flowdock sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_flowdock_excerpt_length: "Flowdock gönderisi alıntı uzunluğu"
+    chat_integration_groupme_enabled: "Groupme sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_groupme_excerpt_length: "Groupme gönderisi alıntı uzunluğu"
+    chat_integration_groupme_bot_ids: "*gerekli* Birden fazla Bot varsa \",\" ile ayrılmış Bot kimlikleri"
+    chat_integration_groupme_instance_names: " *gerekli* GroupMe sohbetinin adı, birden fazla varsa \",\" ile ayrılır (Bot Kimlikleri ile aynı sırada)"
+    chat_integration_teams_enabled: "Microsoft Teams sohbet tümleştirme sağlayıcısını etkinleştirin"
+    chat_integration_teams_excerpt_length: "Microsoft Team gönderisi alıntı uzunluğu"
+    chat_integration_powerautomate_enabled: "Microsoft Power Automate entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate gönderi alıntısı uzunluğu"
+    chat_integration_webex_enabled: "Webex Teams sohbet tümleştirme sağlayıcısını etkinleştirin"
+    chat_integration_webex_excerpt_length: "Webex Team gönderisi alıntı uzunluğu"
+    chat_integration_google_enabled: "\"Google Chat\" sohbet entegrasyon sağlayıcısını etkinleştirin"
+    chat_integration_google_excerpt_length: "Google Chat gönderisi alıntı uzunluğu"
+  dashboard:
+    problem:
+      channel_errors: "Bazı sohbet entegrasyon kanallarında hatalar var. Daha fazla bilgi edinmek için <a href='%{base_path}/admin/plugins/chat-integration'>sohbet entegrasyonu bölümünü</a> ziyaret edin."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Slack mesajı gönder
+      send_chat_integration_message:
+        title: Chat-Integration mesajı gönderin
+  chat_integration:
+    all_categories: "(tüm kategoriler)"
+    deleted_category: "(silinmiş kategori)"
+    deleted_group: "(silinmiş grup)"
+    group_mention_template: "şu kullanıcıdan bahsedildi: @%{name}"
+    group_message_template: "şu kullanıcıya mesaj gönderildi: @%{name}"
+    topic_tag_changed:
+      added_and_removed: "%{added} eklendi ve %{removed} kaldırıldı"
+      added: "%{added} eklendi"
+      removed: "%{removed} kaldırıldı"
+    provider:
+      slack:
+        status:
+          header: |
+            *Bu kanal için kurallar*
+            (birden fazla kural bir gönderiyle eşleşirse en üstteki kural uygulanır)
+          no_rules: "Bu kanal için belirlenmiş herhangi bir kural yok. Talimatlar için \"/discourse help\" komutunu çalıştırın."
+          rule_string: "*%{index})* *%{filter}*%{category}* içindeki gönderiler"
+          rule_string_tags_suffix: " şu etiketlerle: *%{tags}*"
+        parse_error: "Üzgünüm, bunu anlayamadım. Talimatlar için \"/discourse help\" komutunu çalıştırın."
+        create:
+          created: "Kural başarıyla oluşturuldu"
+          updated: "Kural başarıyla güncellendi"
+          error: "Üzgünüz, bu kural oluşturulurken bir hata oluştu."
+        delete:
+          success: "Kural başarıyla silindi"
+          error: "Üzgünüz, bu kuralı silerken bir hata oluştu. Kuralların bir listesi için \"/discourse status\" komutunu çalıştırın."
+        not_found:
+          tag: "*%{name}* etiketi bulunamadı."
+          category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"
+        help: |
+          *Yeni kural:* "/discourse [thread|watch|follow|mute] [category] [tag:name]"
+          (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
+          - *thread* - yeni konular için bu kanalı bilgilendirin, mümkünse konu yanıtlarıyla
+          - *watch* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
+          - *follow* - yeni konular için bu kanalı bilgilendirin
+          - *mute* - bu kanala bildirimleri engelleyin
+
+          *Remove rule:* "/discourse remove [rule number]"
+          ("[kural sayısı]", "/discourse status" çalıştırılarak bulunabilir)
+
+          *List rules:* "/discourse status"
+
+          *[Experimental] Post transcript:* "/discourse post [n]"
+          Discourse'ta bu kanalda son "n" gönderiyi içeren bir taslak konu oluşturun
+
+          *Help:* "/discourse help"
+        transcript:
+          modal_title: "Transkript Oluştur"
+          modal_description: "Başlıktaki tüm mesajlar tek bir forum gönderisinde toplanır. Göndermeden önce transkripti düzenleme fırsatı verilir."
+          transcript_ready: "Transkript hazır"
+          continue_on_discourse: "Forumda devam et"
+          error: "Transkript oluşturulurken bir şeyler ters gitti, üzgünüm!"
+          post_to_discourse: "Konuşma metni ile forum hakkında bir gönderi hazırlamak için buraya tıklayın"
+          api_required: "Maalesef bu entegrasyon, konuşma metni yayınlarını destekleyecek şekilde ayarlanmamış."
+          view_on_slack: "Slack'te %{name} içinde görüntüle"
+          first_message_pretext: "%{n} mesaj öncesinden başlıyor:"
+          last_message_pretext: "ve %{n} mesaj önce bitiyor:"
+          posted_in: "%{name} içindeki gönderi"
+          change_first_message: "İlk mesajı değiştir..."
+          change_last_message: "Son mesajı değiştir..."
+          loading: "Transkript yükleniyor..."
+          error_users: "Hata: Slack'ten kullanıcı alınamıyor"
+          error_history: "Hata: Slack'ten kanal geçmişi alınamıyor"
+          error_ts: "Hata: Slack'ten talep edilen mesaj alınamıyor"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "%{added} eklendi ve %{removed} kaldırıldı"
+            added: "%{added} eklendi"
+            removed: "%{removed} kaldırıldı"
+      telegram:
+        unknown_chat: "Bu sohbet %{site_title} adresinde ayarlanmamış. Bir yöneticiden \"Sohbet Kimliği\" %{chat_id} ile bir kanal eklemesini isteyin."
+        known_chat: "Bu sohbet %{site_title} adresinde kurulmuş. Yönetici panelinde yapılandırın. (Sohbet Kimliği: %{chat_id})"
+        message: |-
+          <b>%{user}</b> <a href="%{post_url}">%{title}</a> adresinde gönderi yaptı
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Bu kanal için kurallar</b>
+            (birden fazla kural bir gönderiyle eşleşirse en üstteki kural uygulanır)
+          no_rules: "Bu kanal için belirlenmiş bir kural yok. Talimatlar için <code>/help</code> kodunu çalıştırın."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> <b>%{category}</b> kategorisindeki gönderiler"
+          rule_string_tags_suffix: " şu etiketlerle: <b>%{tags}</b>"
+        parse_error: "Üzgünüm, bunu anlayamadım. Talimatlar için <code>/help</code> komutunu çalıştırın."
+        create:
+          created: "Kural başarıyla oluşturuldu"
+          updated: "Kural başarıyla güncellendi"
+          error: "Üzgünüz, bu kural oluşturulurken bir hata oluştu."
+        delete:
+          success: "Kural başarıyla silindi"
+          error: "Maalesef, bu kural silinirken bir hata oluştu. Kurallar listesi için <code>/status</code> komutunu çalıştırın."
+        not_found:
+          tag: "<b>%{name}</b> etiketi bulunamadı."
+          category: "<b>%{name}</b> kategorisi bulunamadı. Mevcut kategoriler: <b>%{list}</b>"
+        help: |
+          <b>Yeni kural:</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
+          - <b>watch</b> - yeni konular ve yeni yanıtlar için bu kanalı bilgilendir
+          - <b>follow</b> - yeni konular için bu kanalı bilgilendir
+          - <b>mute</b> - bu kanala bildirimleri engelle
+
+          <b>Kural kaldırma:</b> <code>/remove [kural numarası]</code>
+          (<code>[kural numarası]</code> <code>/status</code>çalıştırılarak bulunabilir)
+
+          <b>Kuralları listele:</b> <code>/status</code>
+
+          <b>Yardım:</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> <a href="%{post_url}">%{title}</a> adresinde gönderi yaptı
+      mattermost:
+        status:
+          header: |
+            *Bu kanal için kurallar*
+            (birden fazla kural bir gönderiyle eşleşirse en üstteki kural uygulanır)
+          no_rules: "Bu kanal için belirlenmiş herhangi bir kural yok. Talimatlar için \"/discourse help\" komutunu çalıştırın."
+          rule_string: "*%{index}) * * %{filter} * * %{category} içindeki gönderiler*"
+          rule_string_tags_suffix: " şu etiketlerle: *%{tags}*"
+        parse_error: "Üzgünüm, bunu anlayamadım. Talimatlar için \"/discourse help\" komutunu çalıştırın."
+        create:
+          created: "Kural başarıyla oluşturuldu"
+          updated: "Kural başarıyla güncellendi"
+          error: "Üzgünüz, bu kural oluşturulurken bir hata oluştu."
+        delete:
+          success: "Kural başarıyla silindi"
+          error: "Üzgünüz, bu kuralı silerken bir hata oluştu. Kuralların bir listesi için \"/discourse status\" komutunu çalıştırın."
+        not_found:
+          tag: "*%{name}* etiketi bulunamadı."
+          category: "*%{name}* kategorisi bulunamadı. Mevcut kategoriler: *%{list}*"
+        help: |
+          *Yeni kural:* "/discourse [watch|follow|mute] [category] [tag:name]"
+          (bir kural türü ve en az bir kategori veya etiket belirtmelisiniz)
+          - *izle* - yeni konular ve yeni yanıtlar için bu kanalı bilgilendirin
+          - *takip et* - yeni konular için bu kanalı bilgilendirin
+          - *sessize al* - bu kanala gelen bildirimleri engelleyin
+
+          *Kuralı kaldırın:* "/discourse remove [rule number]"
+          ("[rule number]", "/discourse status" çalıştırılarak bulunabilir)
+
+          *Kuralları listele:* "/discourse status"
+
+          *Yardım:* "/discourse help"
+      matrix:
+        text_message: "%{user} %{title} - %{post_url} adresinde gönderi yaptı"
+        formatted_message: |
+          <b>%{user}</b> <b><a href='%{post_url}'>%{title}</a></b> adresinde gönderi yaptı
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** **[%{title}](%{post_url})** adresinde gönderi yaptı
+          ~~~quote
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "gönderildi"
+      google:
+        new_post: "%{site_title} üzerinde yeni gönderi"
+        new_topic: "%{site_title} üzerinde yeni konu"
+        author: "@%{username} tarafından"
+        link: "%{site_title} üzerinde görüntüle"
+      groupme:
+        errors:
+          instance_names_issue: "örnek adları yanlış biçimlendirilmiş veya sağlanmamış"

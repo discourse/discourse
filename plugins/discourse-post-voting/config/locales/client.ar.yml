@@ -1,0 +1,143 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: التصويت على المنشورات
+  post_voting:
+    reviewables:
+      comment_already_handled: "شكرًا، لكننا راجعنا هذا التعليق بالفعل وقررنا أنه لا يلزم الإبلاغ عنه مرة أخرى."
+  js:
+    notifications:
+      question_answer_user_commented: "‏<span>⁨%{username}⁩</span> ‏%{description}"
+      titles:
+        question_answer_user_commented: "تعليق جديد"
+      popup:
+        question_answer_user_commented: 'علَّق %{username} في "%{topic}" - ‏%{site_title}'
+    category:
+      post_voting_settings_heading: التصويت على المنشورات
+      create_as_post_voting_default: يتم تعيين الموضوعات الجديدة افتراضيًا إلى موضوعات "التصويت على المنشورات" في هذه الفئة.
+      only_post_voting_in_this_category: لا يمكن أن تكون الموضوعات الجديدة إلا موضوعات "تصويت على المنشورات" في هذه الفئة.
+    composer:
+      create_post_voting:
+        label: "إنشاء موضوع للتصويت على المنشورات"
+      composer_actions:
+        create_as_post_voting:
+          label: "تبديل التصويت على المنشورات"
+          desc: "سيتم إنشاء الموضوع مع منشورات قابلة للتصويت"
+        remove_as_post_voting:
+          label: "إزالة التصويت على المنشورات"
+          desc: "سيتم إنشاء الموضوع بتنسيق عادي"
+    vote:
+      already_voted: "يمكنك التصويت مرة واحدة فقط لكل سؤال."
+      user_over_limit: "لا يمكنك تجاوز عدد الأصوات لمستوى ثقتك."
+      one_vote_per_post: "يمكنك التصويت مرة واحدة فقط لكل منشور."
+    last_answer_lowercase: الإجابة الأخيرة
+    answer_lowercase:
+      zero: إجابة
+      one: إجابة واحدة
+      two: إجابتان
+      few: إجابات
+      many: إجابة
+      other: إجابة
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              zero: "أدخل %{count} حرفًا على الأقل"
+              one: "أدخل حرفًا واحدًا (%{count}) على الأقل"
+              two: "أدخل حرفين (%{count}) على الأقل"
+              few: "أدخل %{count} أحرف على الأقل"
+              many: "أدخل %{count} حرفًا على الأقل"
+              other: "أدخل %{count} حرفًا على الأقل"
+            length_ok:
+              zero: "تبقَّى %{count} حرفًا..."
+              one: "تبقَّى حرف واحد (%{count})..."
+              two: "تبقَّى حرفان (%{count})..."
+              few: "تبقَّى %{count} أحرف..."
+              many: "تبقَّى %{count} حرفًا..."
+              other: "تبقَّى %{count} حرفًا..."
+            too_long:
+              zero: "لا يمكن أن يتجاوز طول التعليق %{count} حرفًا"
+              one: "لا يمكن أن يتجاوز طول التعليق حرفًا واحدًا (%{count})"
+              two: "لا يمكن أن يتجاوز طول التعليق حرفين (%{count})"
+              few: "لا يمكن أن يتجاوز طول التعليق %{count} أحرف"
+              many: "لا يمكن أن يتجاوز طول التعليق %{count} حرفًا"
+              other: "لا يمكن أن يتجاوز طول التعليق %{count} حرفًا"
+          submit: "إضافة تعليق"
+          edit: "تعديل"
+          cancel: "إلغاء"
+          add: "إضافة تعليق"
+          show:
+            zero: عرض %{count} تعليقًا إضافيًا
+            one: عرض تعليق واحد (%{count}) إضافي
+            two: عرض تعليقين (%{count}) إضافيين
+            few: عرض %{count} تعليقات إضافية
+            many: عرض %{count} تعليقًا إضافيًا
+            other: عرض %{count} تعليقًا إضافيًا
+          delete:
+            confirm: "هل تريد بالتأكيد حذف هذا التعليق؟"
+          user:
+            deleted: "(تم حذف المستخدم)"
+          reviewables:
+            comment_already_handled: "شكرًا، لكننا راجعنا هذا التعليق بالفعل وقررنا أنه لا يلزم الإبلاغ عنه مرة أخرى."
+            actions:
+              agree:
+                title: "الموافقة..."
+              agree_and_keep_comment:
+                title: "إبقاء التعليق"
+                description: "الموافقة على البلاغ والاحتفاظ بالتعليق دون تغيير."
+              agree_and_keep_deleted:
+                title: "إبقاء التعليق محذوفًا"
+                description: "الموافقة على البلاغ وترك التعليق محذوفًا."
+              agree_and_suspend:
+                title: "تعليق المستخدم"
+                description: "الموافقة على البلاغ وتعليق المستخدم"
+              agree_and_silence:
+                title: "كتم المستخدم"
+                description: "الموافقة على البلاغ وكتم المستخدم"
+              agree_and_restore:
+                title: "استعادة التعليق"
+                description: "استعادة التعليق حتى يتمكن المستخدمون من رؤيته."
+              agree_and_delete:
+                title: "حذف التعليق"
+                description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
+              delete_and_agree:
+                title: "تجاهل البلاغ وحذف التعليق"
+                description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
+              disagree_and_restore:
+                title: "عدم الموافقة واستعادة التعليق"
+                description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
+              disagree:
+                title: "عدم الموافقة"
+              ignore:
+                title: "عدم اتخاذ أي إجراء"
+                description: "تجاهل البلاغ بإزالته من قائمة الانتظار دون اتخاذ أي إجراء."
+            transcript:
+              view: "عرض نص التعليقات السابقة"
+      topic:
+        answer:
+          label: "إجابة"
+          help: "البدء في تأليف إجابة"
+        sort_by: "الترتيب حسب"
+        votes: "الأصوات"
+        activity: "النشاط"
+        answer_count:
+          zero: "%{count} إجابات"
+          one: "إجابة واحدة (%{count})"
+          two: "إجابتان (%{count})"
+          few: "%{count} إجابات"
+          many: "%{count} إجابات"
+          other: "%{count} إجابات"
+    review:
+      transcript:
+        view: "عرض نص الرسائل السابقة"
+      types:
+        reviewable_post_voting_comment:
+          title: "تم الإبلاغ عن تعليق للتصويت على منشور"

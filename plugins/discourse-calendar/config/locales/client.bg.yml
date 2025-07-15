@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: Тема ID
+    discourse_calendar:
+      disable_holiday: "Деактивиране"
+      enable_holiday: "Позволи"
+      date: "Дата"
+      region:
+        none: "Без"
+      toolbar_button:
+        today: "Днес"
+        month: "Месец"
+        week: "Седмица"
+        day: "Ден"
+    group_timezones:
+      search: "Търсене ... "
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      bulk_invite: "Групова покана"
+      bulk_invite_modal:
+        title: "Групова покана"
+        success: "Файлът е качен успешно. Ще бъдете информирани чрез съобщение, когато процесът завърши."
+        error: "За съжаление файлът трябва да е във формат CSV."
+      upcoming_events:
+        status: "Статус"
+      models:
+        event:
+          expired: "Изтекъл срок"
+          closed: "Затворена"
+          status:
+            public:
+              title: "Публични"
+            private:
+              title: "Затворени"
+      builder_modal:
+        custom_fields:
+          placeholder: "По избор"
+        create: "Създай"
+        update: "Запази "
+        timezone:
+          label: Часова зона
+        reminders:
+          units:
+            minutes: "минути"
+            hours: "часа"
+            days: "дни "
+          periods:
+            before: "преди"
+            after: "след"
+        url:
+          label: "URL"
+          placeholder: "По избор"
+        location:
+          label: "Локация"
+        description:
+          label: "Описание"
+        status:
+          label: "Статус"

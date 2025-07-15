@@ -1,0 +1,122 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "הסרת הנקודה פסיק מהשאילתה."
+        dirty: "עליך לשמור את השאילתה בטרם ההרצה."
+    explorer:
+      or: "או"
+      admins_only: "דפדפן הנתונים זמין למנהלים בלבד."
+      allow_groups: "לאפשר לקבוצות לגשת לשאילתה הזאת"
+      title: "דפדפן נתונים"
+      create: "יצירת חדשה"
+      create_placeholder: "שם השאילתה…"
+      description_placeholder: "יש להקליד תיאור כאן"
+      import:
+        label: "ייבוא"
+        modal: "ייבוא שאילתה"
+        unparseable_json: "קובץ JSON שאינו ניתן לפענוח."
+        wrong_json: "קובץ JSON שגוי. קובץ JSON צריך להכיל רכיב ‚query’, שצריך לכלול לפחות מאפיין ‚sql’."
+      help:
+        label: "עזרה"
+        modal_title: "עזרה עם דפדפן הנתונים"
+        auto_resolution: "<h2>אבחנת יישות אוטומטית</h2> <p>כאשר השאילתה שלך מחזירה מזהה יישות, סייר הנתונים עשוי להחליף אותו בשם היישות ובפרטים מועילים נוספים אוטומטית בתוצאות השאילתה. אבחנה אוטומטית זמינה עבור <i><b>user_id</b></i>,‏ <i><b>group_id</b></i>,‏ <i><b>topic_id</b></i>,‏ <i><b>category_id</b></i> ו־<i><b>badge_id</b></i>. כדי לנסות זאת יש להריץ את השאילתה הבאה:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>יצירת משתנים מותאמים אישית</h2> <p>כדי ליצור משתנים מותאמים אישית לשאילתות שלך, יש להציב זאת בראש השאילתה ולהיצמד לתבנית:</p> ‎<pre><code>‎-- [params]\n‎-- int :num = 1\n\nSELECT :num</code></pre> <p><i>לתשומך לבך: השורה הראשונה עם [params] נחוצה, בצירוף שני מינוסים לפניה וכל משתנה מותאם אישית שעליו ברצונך להכריז.</i></p>"
+        default_values: "<h3>ערכי בררת מחדל</h3> <p>ניתן להכריז על משתנים עם או בלי ערכי בררת מחדל. ערכי בררת מחדל יופיעו בשדה טקסט מעל לעורך השאילתות אותם ניתן לערוך בהתאם לצורך. משתנים שמוכרזים ללא ערכי בררת מחדל עדיין ייצרו שדה טקסט אך הם יהיו ריקים ויודגשו באדום.</p> <pre><code>‎-- [params]\n‎-- text :username = my_username\n‎-- int :age</code></pre>"
+        data_types: "<h3>סוגי נתונים</h3> <p>להלן סוגי הנתונים הנפוצים בהם ניתן להשתמש:</p> <ul> <li><b>integer</b> - מספר שלם וחיובי בגודל ארבעה בתים</li> <li><b>text</b> - מחרוזת תווים באורך משתנה</li> <li><b>boolean</b> – אמת/שקר</li> <li><b>date</b> - תאריך בלוח השנה (שנה, חודש, יום)</li> </ul> <p>למידע נוסף על סוגי נתונים ניתן לבקר <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>באתר הזה</a>.</p>"
+      schema:
+        title: "סכמת מסד הנתונים"
+        filter: "חיפוש…"
+        sensitive: "תכני העמודה הזו עשויים להכיל מידע רגיש או פרטי. נא לנקוט במשנה זהירות בעת השימוש בעמודה זו."
+      types:
+        bool:
+          yes: "כן"
+          no: "לא"
+          null_: "ריק"
+      export: "ייצוא"
+      view_json: "הצגת JSON"
+      save: "שמירת שינויים"
+      saverun: "שמירת השינויים והרצה"
+      run: "הרצה"
+      undo: "התעלמות מהשינויים"
+      edit: "עריכה"
+      delete: "מחיקה"
+      recover: "ביטול מחיקת השאילתה"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "טבלה"
+      show_graph: "תרשים"
+      others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד עקב ניווט למקום אחר."
+      run_time: "השאילתה הושלמה תוך %{value} מילישניות."
+      result_count:
+        one: "תוצאה אחת."
+        two: "2 תוצאות."
+        many: "%{count} תוצאות."
+        other: "%{count} תוצאות."
+      max_result_count:
+        one: "התוצאה המובילה מופיעה (%{count})."
+        two: "%{count} התוצאות המובילות מופיעות."
+        many: "%{count} התוצאות המובילות מופיעות."
+        other: "%{count} התוצאות המובילות מופיעות."
+      query_name: "שאילתה"
+      query_groups: "קבוצות"
+      link: "קישור אל"
+      report_name: "דוח"
+      query_description: "תיאור"
+      query_time: "הרצה אחרונה"
+      query_user: "נוצר על ידי"
+      column: "עמודה %{number}"
+      explain_label: "לכלול תכנית שאילתה?"
+      save_params: "הגדרת בררות מחדל"
+      reset_params: "איפוס"
+      search_placeholder: "חיפוש…"
+      no_search_results: "לא הצלחנו למצוא תוצאות שעונות לטקסט שלך, עמך הסליחה."
+      form:
+        errors:
+          invalid: "שגוי"
+          no_such_category: "אין קטגוריה כזו"
+          no_such_group: "אין קבוצה כזו"
+          invalid_date: "%{date} הוא תאריך שגוי"
+          invalid_time: "%{time} היא שעה שגויה"
+    group:
+      reports: "דוחות"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "הרצת שאילתות של סייר נתונים. ניתן להגביל את מפתח ה־API לסדרה של שאילתות על ידי ציון מזהה שאילתה."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: שליחה למשתמש, לקבוצה או לדוא״ל
+            query_id:
+              label: שאילתת דפדפן נתונים
+            query_params:
+              label: משתני שאילתת דפדפן נתונים
+            skip_empty:
+              label: דילוג על שליחת הודעה פרטית אם אין תוצאות
+            attach_csv:
+              label: צירוף קובץ ה־CSV להודעה הפרטית
+            users_from_group:
+              label: שליחת הודעה פרטית לכל חבר בקבוצה
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: הנושא לפרסום תוצאות השאילתה אליו
+            query_id:
+              label: שאילתת דפדפן נתונים
+            query_params:
+              label: משתני שאילתת דפדפן נתונים
+            skip_empty:
+              label: דילוג על פרסום אם אין תוצאות
+            attach_csv:
+              label: צירוף קובץ ה־CSV לפוסט

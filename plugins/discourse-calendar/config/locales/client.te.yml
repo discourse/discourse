@@ -1,0 +1,73 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: విషయపు ఐడీ
+    discourse_calendar:
+      disable_holiday: "అచేతనం"
+      enable_holiday: "చేతనం"
+      date: "తేదీ"
+      region:
+        none: "ఏదీ లేదు"
+      toolbar_button:
+        today: "ఈరోజు"
+        month: "ఈ నెల"
+        week: "వారం"
+        day: "రోజు"
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "అన్నీ చూపండి"
+      add_to_calendar: "క్యాలెండర్‌కు జోడించండి"
+      created_by: "సృష్టికర్త"
+      bulk_invite: "చాలా మొత్తం ఆహ్వానాలు"
+      bulk_invite_modal:
+        confirm: "నిర్ధారించండి"
+        title: "చాలా మొత్తం ఆహ్వానాలు"
+        error: "క్షమించండి, ఫైల్ CSV ఆకృతిలో ఉండాలి."
+      upcoming_events:
+        status: "స్థితి"
+      models:
+        event:
+          expired: "గడువు ముగిసింది"
+          closed: "మూసివేయబడినవి"
+          status:
+            public:
+              title: "బహిరంగం"
+            private:
+              title: "అంతరంగికం"
+      builder_modal:
+        custom_fields:
+          placeholder: "ఐచ్ఛికం"
+        create: "సృష్టించండి"
+        update: "భద్రపరుచు"
+        timezone:
+          label: సమయమండలం
+        reminders:
+          units:
+            minutes: "నిమిషాలు"
+            hours: "గంటలు"
+            days: "రోజులు"
+          periods:
+            before: "ముందు"
+            after: "తర్వాత"
+        url:
+          label: "యూఆర్ యల్"
+          placeholder: "ఐచ్ఛికం"
+        location:
+          label: "ప్రాంతం"
+        description:
+          label: "వివరణ"
+        status:
+          label: "స్థితి"
+      invite_user_or_group:
+        invite: "పంపండి"
