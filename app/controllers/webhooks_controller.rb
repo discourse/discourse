@@ -1,9 +1,16 @@
 # frozen_string_literal: true
 
-require "openssl"
-
 class WebhooksController < ActionController::Base
+  include ReadOnlyMixin
+
   skip_before_action :verify_authenticity_token
+
+  before_action :check_readonly_mode
+  before_action :block_if_readonly_mode
+
+  rescue_from Discourse::ReadOnly do
+    head :service_unavailable
+  end
 
   def mailgun
     return signature_failure if SiteSetting.mailgun_api_key.blank?
@@ -279,7 +286,7 @@ class WebhooksController < ActionController::Base
 
     begin
       public_key = OpenSSL::PKey::EC.new(Base64.decode64(SiteSetting.sendgrid_verification_key))
-    rescue StandardError => err
+    rescue StandardError
       Rails.logger.error("Invalid Sendgrid verification key")
       return false
     end

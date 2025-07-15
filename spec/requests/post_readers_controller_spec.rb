@@ -3,7 +3,7 @@
 RSpec.describe PostReadersController do
   describe "#index" do
     fab!(:admin)
-    fab!(:reader) { Fabricate(:user) }
+    fab!(:reader, :user)
 
     before { sign_in(admin) }
 

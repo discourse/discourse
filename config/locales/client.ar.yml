@@ -964,6 +964,12 @@ ar:
         reviewable_post:
           title: "المنشور"
           noun: "منشور"
+      notes:
+        delete: "حذف"
+      review_user: "المستخدم"
+      copy_link: "نسخ الرابط"
+      insights:
+        visibility: "الرؤية"
       approval:
         title: "المنشور بحاجة للموافقة"
         description: "لقد استلمنا منشورك الجديد، لكنه بحاجة إلى موافقة أحد المشرفين عليه قبل ظهوره. يُرجى الانتظار."
@@ -3133,6 +3139,8 @@ ar:
       image_alt_text:
         aria_label: النص البديل للصورة
         title: "إضافة وصف الصورة"
+      image_toolbar:
+        alt_text: "إضافة وصف الصورة"
       image_scale_button: "تغيير حجم الصورة إلى %{percent}%"
       delete_image_button: حذف الصورة
       toggle_image_grid: تشغيل التخطيط الشبكي للصور
@@ -4879,6 +4887,8 @@ ar:
       pinned:
         title: "مثبَّت"
         help: "هذا الموضوع مثبَّت لك وسيتم عرضه في أعلى فئته"
+      hot:
+        title: "ساخن"
       unlisted:
         help: "هذا الموضوع غير مدرج؛ لن يتم عرضه في قوائم الموضوعات، ويمكن الوصول إليه فقط عبر رابط مباشر. %{unlistedReason}"
       personal_message:
@@ -5625,7 +5635,6 @@ ar:
               title: "قائمة بكل المستخدمين"
             my_posts:
               content: "منشوراتي"
-              content_drafts: "مسوداتي"
               title: "نشاطي الأخير في الموضوع"
               title_drafts: "مسوداتي غير المنشورة"
               draft_count:
@@ -6728,6 +6737,9 @@ ar:
           save_successful: "تم حفظ حقل المستخدم."
         color_palettes:
           palette_name: "الاسم"
+          copy_to_clipboard: "نسخ الى الحافظة"
+          copied_to_clipboard: "تم النسخ إلى الحافظة"
+          copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"
           duplicate: "تكرار"
           delete: "حذف"
           color_options:

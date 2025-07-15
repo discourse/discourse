@@ -11,7 +11,7 @@ RSpec.describe SecondFactorManager do
       credential_id: valid_security_key_data[:credential_id],
     )
   end
-  fab!(:another_user) { Fabricate(:user) }
+  fab!(:another_user, :user)
 
   fab!(:user_second_factor_backup)
   let(:user_backup) { user_second_factor_backup.user }

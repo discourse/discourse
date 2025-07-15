@@ -3,19 +3,19 @@
 
 RSpec.describe TopicsController do
   fab!(:topic)
-  fab!(:dest_topic) { Fabricate(:topic) }
+  fab!(:dest_topic, :topic)
   fab!(:invisible_topic) { Fabricate(:topic, visible: false) }
 
-  fab!(:pm) { Fabricate(:private_message_topic) }
+  fab!(:pm, :private_message_topic)
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post_author1) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:post_author2) { Fabricate(:user) }
-  fab!(:post_author3) { Fabricate(:user) }
-  fab!(:post_author4) { Fabricate(:user) }
-  fab!(:post_author5) { Fabricate(:user) }
-  fab!(:post_author6) { Fabricate(:user) }
+  fab!(:post_author2, :user)
+  fab!(:post_author3, :user)
+  fab!(:post_author4, :user)
+  fab!(:post_author5, :user)
+  fab!(:post_author6, :user)
   fab!(:moderator)
   fab!(:admin)
   fab!(:trust_level_0)
@@ -23,8 +23,8 @@ RSpec.describe TopicsController do
   fab!(:trust_level_4)
 
   fab!(:category)
-  fab!(:tracked_category) { Fabricate(:category) }
-  fab!(:shared_drafts_category) { Fabricate(:category) }
+  fab!(:tracked_category, :category)
+  fab!(:shared_drafts_category, :category)
   fab!(:staff_category) do
     Fabricate(:category).tap do |staff_category|
       staff_category.set_permissions(staff: :full)
@@ -944,7 +944,7 @@ RSpec.describe TopicsController do
     end
 
     describe "changing ownership" do
-      fab!(:user_a) { Fabricate(:user) }
+      fab!(:user_a, :user)
       fab!(:p1) { Fabricate(:post, user: post_author1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: post_author2, topic: topic) }
 
@@ -1706,8 +1706,8 @@ RSpec.describe TopicsController do
       end
 
       context "with permission" do
-        fab!(:post_hook) { Fabricate(:post_web_hook) }
-        fab!(:topic_hook) { Fabricate(:topic_web_hook) }
+        fab!(:post_hook, :post_web_hook)
+        fab!(:topic_hook, :topic_web_hook)
 
         it "succeeds" do
           put "/t/#{topic.slug}/#{topic.id}.json"
@@ -1888,8 +1888,8 @@ RSpec.describe TopicsController do
         end
 
         context "when using SiteSetting.disable_tags_edit_notifications" do
-          fab!(:t1) { Fabricate(:tag) }
-          fab!(:t2) { Fabricate(:tag) }
+          fab!(:t1, :tag)
+          fab!(:t2, :tag)
           let(:tags) { [t1, t2] }
 
           it "doesn't bump the topic if the setting is enabled" do
@@ -2047,12 +2047,12 @@ RSpec.describe TopicsController do
         end
 
         context "when updating to a category with restricted tags" do
-          fab!(:restricted_category) { Fabricate(:category) }
-          fab!(:tag1) { Fabricate(:tag) }
-          fab!(:tag2) { Fabricate(:tag) }
-          fab!(:tag3) { Fabricate(:tag) }
+          fab!(:restricted_category, :category)
+          fab!(:tag1, :tag)
+          fab!(:tag2, :tag)
+          fab!(:tag3, :tag)
           fab!(:tag_group_1) { Fabricate(:tag_group, tag_names: [tag1.name]) }
-          fab!(:tag_group_2) { Fabricate(:tag_group) }
+          fab!(:tag_group_2, :tag_group)
 
           before_all do
             SiteSetting.tagging_enabled = true
@@ -2599,8 +2599,8 @@ RSpec.describe TopicsController do
     end
 
     context "with permission errors" do
-      fab!(:allowed_user) { Fabricate(:user) }
-      fab!(:allowed_group) { Fabricate(:group) }
+      fab!(:allowed_user, :user)
+      fab!(:allowed_group, :group)
       fab!(:accessible_group) { Fabricate(:group, public_admission: true) }
       fab!(:secure_category) do
         c = Fabricate(:category)
@@ -2616,7 +2616,7 @@ RSpec.describe TopicsController do
           c.save!
         end
       end
-      fab!(:normal_topic) { Fabricate(:topic) }
+      fab!(:normal_topic, :topic)
       fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
       fab!(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
 
@@ -3743,7 +3743,7 @@ RSpec.describe TopicsController do
 
     describe "when logged in" do
       before { sign_in(user) }
-      let!(:operation) { { type: "change_category", category_id: "1" } }
+      let!(:operation) { { type: "change_category", category_id: "1", silent: true } }
       let!(:topic_ids) { [1, 2, 3] }
 
       it "requires a list of topic_ids or filter" do
@@ -4375,7 +4375,7 @@ RSpec.describe TopicsController do
       end
 
       context "with tag" do
-        fab!(:tag_topic) { Fabricate(:topic) }
+        fab!(:tag_topic, :topic)
         fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
 
         it "dismisses topics for tag" do
@@ -4388,7 +4388,7 @@ RSpec.describe TopicsController do
           fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
           fab!(:topic_with_restricted_tag) { Fabricate(:topic, tags: [restricted_tag]) }
           fab!(:group)
-          fab!(:topic_without_tag) { Fabricate(:topic) }
+          fab!(:topic_without_tag, :topic)
           fab!(:tag_group) do
             Fabricate(
               :tag_group,
@@ -4434,7 +4434,7 @@ RSpec.describe TopicsController do
       end
 
       context "with tag and category" do
-        fab!(:tag_topic) { Fabricate(:topic) }
+        fab!(:tag_topic, :topic)
         fab!(:topic_tag) { Fabricate(:topic_tag, topic: tag_topic, tag: tag) }
         fab!(:tag_and_category_topic) { Fabricate(:topic, category: category) }
         fab!(:topic_tag2) { Fabricate(:topic_tag, topic: tag_and_category_topic, tag: tag) }
@@ -4452,8 +4452,8 @@ RSpec.describe TopicsController do
       end
 
       context "with specific topics" do
-        fab!(:topic2) { Fabricate(:topic) }
-        fab!(:topic3) { Fabricate(:topic) }
+        fab!(:topic2, :topic)
+        fab!(:topic3, :topic)
 
         it "updates the `new_since` date" do
           TopicTrackingState
@@ -4527,7 +4527,7 @@ RSpec.describe TopicsController do
 
     describe "new and unread" do
       fab!(:group)
-      fab!(:new_topic) { Fabricate(:topic) }
+      fab!(:new_topic, :topic)
       fab!(:unread_topic) { Fabricate(:topic, highest_post_number: 3) }
       fab!(:topic_user) do
         Fabricate(
@@ -4652,7 +4652,7 @@ RSpec.describe TopicsController do
 
       context "when tag" do
         fab!(:tag)
-        fab!(:new_topic_2) { Fabricate(:topic) }
+        fab!(:new_topic_2, :topic)
         fab!(:unread_topic_2) { Fabricate(:topic, highest_post_number: 3) }
         fab!(:topic_user) do
           Fabricate(
@@ -5421,7 +5421,7 @@ RSpec.describe TopicsController do
     before { SiteSetting.shared_drafts_category = shared_drafts_category.id }
 
     describe "#update_shared_draft" do
-      fab!(:other_cat) { Fabricate(:category) }
+      fab!(:other_cat, :category)
       fab!(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
 
       context "when anonymous" do

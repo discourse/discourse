@@ -498,7 +498,7 @@ RSpec.describe SearchController do
     end
 
     context "with lazy loaded categories" do
-      fab!(:parent_category) { Fabricate(:category) }
+      fab!(:parent_category, :category)
       fab!(:category) { Fabricate(:category, parent_category: parent_category) }
       fab!(:other_category) { Fabricate(:category, parent_category: parent_category) }
 

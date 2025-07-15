@@ -5,7 +5,9 @@ import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import EmptyState from "discourse/components/empty-state";
 import LoadMore from "discourse/components/load-more";
+import SvgEnvelopeZero from "discourse/components/svg/envelope-zero";
 import TextField from "discourse/components/text-field";
 import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
@@ -42,21 +44,23 @@ export default RouteTemplate(
             </div>
           {{/if}}
           <section class="user-invite-buttons">
-            <DButton
-              @icon="plus"
-              @action={{@controller.createInvite}}
-              @label="user.invited.create"
-              class="btn-default invite-button"
-            />
-            {{#if @controller.canBulkInvite}}
-              {{#if @controller.siteSettings.allow_bulk_invite}}
-                {{#if @controller.site.desktopView}}
-                  <DButton
-                    @icon="upload"
-                    @action={{@controller.createInviteCsv}}
-                    @label="user.invited.bulk_invite.text"
-                    class="btn-default"
-                  />
+            {{#if @controller.model.invites}}
+              <DButton
+                @icon="plus"
+                @action={{@controller.createInvite}}
+                @label="user.invited.create"
+                class="btn-default invite-button"
+              />
+              {{#if @controller.canBulkInvite}}
+                {{#if @controller.siteSettings.allow_bulk_invite}}
+                  {{#if @controller.site.desktopView}}
+                    <DButton
+                      @icon="upload"
+                      @action={{@controller.createInviteCsv}}
+                      @label="user.invited.bulk_invite.text"
+                      class="btn-default"
+                    />
+                  {{/if}}
                 {{/if}}
               {{/if}}
             {{/if}}
@@ -337,13 +341,26 @@ export default RouteTemplate(
               @condition={{@controller.invitesLoading}}
             />
           {{else}}
-            <div class="user-invite-none">
-              {{#if @controller.canBulkInvite}}
-                {{htmlSafe (i18n "user.invited.bulk_invite.none")}}
-              {{else}}
-                {{i18n "user.invited.none"}}
-              {{/if}}
-            </div>
+            <EmptyState
+              @identifier="empty-channels-list"
+              @svgContent={{SvgEnvelopeZero}}
+              @title={{i18n "user.invited.none.title"}}
+              @ctaLabel={{i18n "user.invited.none.cta"}}
+              @ctaAction={{@controller.createInvite}}
+              @tipIcon={{if @controller.canBulkInvite "upload"}}
+            >
+              <:tip>
+                {{#if @controller.canBulkInvite}}
+                  {{i18n "user.invited.none.tip.prefix"}}
+                  <DButton
+                    @action={{@controller.createInviteCsv}}
+                    @label="user.invited.none.tip.action"
+                    class="btn-link"
+                  />
+                  {{i18n "user.invited.none.tip.suffix"}}
+                {{/if}}
+              </:tip>
+            </EmptyState>
           {{/if}}
         </section>
       </LoadMore>

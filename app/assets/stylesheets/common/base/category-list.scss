@@ -61,8 +61,8 @@
 .category-boxes,
 .category-boxes-with-topics {
   display: grid;
-  gap: 1.5em;
-  margin-top: 1em;
+  gap: var(--d-category-boxes-gap);
+  margin-top: var(--d-category-boxes-margin-top);
   margin-bottom: 1em;
   width: 100%;
 
@@ -73,7 +73,9 @@
     align-content: flex-start;
     box-sizing: border-box;
     border-width: 0;
-    border-left-width: 6px;
+    border-radius: var(--d-border-radius);
+    background-color: var(--d-category-box-background-color);
+    border-left-width: var(--d-category-border-accent-width);
     border-style: solid;
     border-color: var(--category-badge-color, var(--primary-low));
 
@@ -121,7 +123,7 @@
     padding: 1em;
     display: flex;
     flex-direction: column;
-    border-width: 2px;
+    border-width: var(--d-category-border-box-width);
     border-left-width: 0;
     border-style: solid;
     border-color: var(--primary-low);
@@ -148,7 +150,7 @@
     }
 
     .category-box-inner {
-      padding: 1em;
+      padding: var(--space-4);
 
       .category-logo {
         float: none;
@@ -159,15 +161,15 @@
 
   &.no-logos {
     .category-box .category-box-inner > a {
-      padding: 3em 1em;
+      padding: var(--space-12) var(--space-4);
     }
   }
 
   .description {
-    margin-bottom: 1em;
-    text-align: center;
+    margin-bottom: var(--space-4);
+    text-align: var(--category-boxes-text-alignment);
     font-size: var(--font-0);
-    color: var(--primary-med-or-secondary-high);
+    color: var(--category-boxes-description-text-color);
     position: relative;
 
     @include line-clamp(4);
@@ -186,11 +188,9 @@
   }
 
   h3 {
-    font-size: var(--font-up-2);
-    margin-bottom: 0.5em;
-    margin-top: 0.25em;
+    font-size: var(--category-boxes-title-font-size);
     line-height: var(--line-height-medium);
-    text-align: center;
+    text-align: var(--category-boxes-text-alignment);
     color: var(--primary);
     overflow: hidden;
   }
@@ -347,7 +347,7 @@
 .categories-list .category {
   h3,
   h4 {
-    margin-bottom: 0;
+    margin-bottom: var(--d-categories-list-title-margin-bottom);
   }
 
   .category-description {

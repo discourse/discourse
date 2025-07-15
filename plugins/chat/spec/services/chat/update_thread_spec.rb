@@ -9,11 +9,11 @@ RSpec.describe Chat::UpdateThread do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:private_channel) { Fabricate(:private_category_channel, group: Fabricate(:group)) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message_user: current_user) }
-    fab!(:other_thread) { Fabricate(:chat_thread) }
+    fab!(:other_thread, :chat_thread)
 
     let(:guardian) { Guardian.new(current_user) }
     let(:title) { "some new title :D" }

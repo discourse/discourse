@@ -87,18 +87,17 @@
 .topic-list-item.visited .topic-list-data,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
-  --tag-text-color: var(--primary-medium);
+  background-color: var(--topic-list-item-background-color--visited);
 
   a.title:not(.badge-notification) {
-    color: var(--primary-medium);
-  }
-
-  .badge-category {
-    color: var(--primary-medium);
+    color: var(--title-color--read);
+    font-weight: var(--topic-title-font-weight--visited);
   }
 }
 
 .topic-list-item {
+  background-color: var(--topic-list-item-background-color);
+
   .post-excerpt {
     margin-top: var(--space-2);
     margin-bottom: var(--space-2);
@@ -108,21 +107,22 @@
 }
 
 .topic-list-main-link {
-  font-size: var(--font-up-1);
+  font-size: var(--d-topic-list-title-font-size);
 
   a.title {
     word-break: break-word;
-    color: var(--primary);
+    color: var(--title-color);
+    font-weight: var(--topic-title-font-weight);
   }
 
   .anon & {
     a.title:visited:not(.badge-notification) {
-      color: var(--primary-medium);
+      color: var(--title-color--read);
     }
   }
 
   a.title.visited:not(.badge-notification) {
-    color: var(--primary-medium);
+    color: var(--title-color--read);
   }
 }
 
@@ -206,7 +206,7 @@
   }
 
   td {
-    color: var(--primary-medium);
+    color: var(--metadata-color);
     font-size: var(--font-0);
   }
 
@@ -245,7 +245,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-top: var(--space-1);
+    margin-top: var(--d-topic-list-metadata-top-space);
     gap: 0 var(--space-2);
     line-height: var(--line-height-large);
 
@@ -295,7 +295,7 @@
     display: block;
     font-size: var(--font-down-1);
     margin-top: var(--space-1);
-    color: var(--primary-high);
+    color: var(--excerpt-color);
     word-wrap: break-word;
     line-height: var(--line-height-large);
     padding-right: var(--space-1);
@@ -303,6 +303,7 @@
 
   .num {
     text-align: center;
+    font-size: var(--d-topic-list-data-font-size);
 
     a {
       color: inherit;

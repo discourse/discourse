@@ -75,12 +75,9 @@ acceptance("Discourse Presence Plugin", function (needs) {
       "publishes reply presence when typing"
     );
 
-    await click(".toolbar-menu__options-trigger");
-    await click("[data-name='toggle-whisper']");
-
-    assert
-      .dom(".composer-actions svg.d-icon-far-eye-slash")
-      .exists("sets the post type to whisper");
+    const menu = selectKit(".composer-actions");
+    await menu.expand();
+    await menu.selectRowByValue("toggle_whisper");
 
     assert.deepEqual(
       presentUserIds("/discourse-presence/reply/280"),

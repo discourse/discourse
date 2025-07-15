@@ -726,6 +726,16 @@ pt_BR:
         reviewable_post:
           title: "Postagem"
           noun: "postagem"
+      notes:
+        delete: "Excluir"
+      review_user: "Usuário(a)"
+      copy_link: "Copiar link"
+      insights:
+        activities:
+          posts:
+            one: "%{count} postagem"
+            other: "%{count} postagens"
+        visibility: "Visibilidade"
       approval:
         title: "A postagem precisa de aprovação"
         description: "Nós recebemos sua nova postagem, mas é necessário ter aprovação da moderação antes de ser exibida. Pedimos paciência."
@@ -2620,6 +2630,8 @@ pt_BR:
       image_alt_text:
         aria_label: Texto alternativo para imagem
         title: "Adicionar descrição da imagem"
+      image_toolbar:
+        alt_text: "Adicionar descrição da imagem"
       image_scale_button: "Dimensionar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar para grade de imagem
@@ -4053,6 +4065,8 @@ pt_BR:
       pinned:
         title: "Fixado"
         help: "Este tópico está fixado para você. Será exibido no topo de sua categoria"
+      hot:
+        title: "Em alta"
       unlisted:
         help: "Este tópico não está listado. Não será exibido nas listas de tópicos e só poderá ser acessado por meio de um link direto. %{unlistedReason}"
       personal_message:
@@ -4678,7 +4692,6 @@ pt_BR:
               title: "Lista de todos(as) os(as) usuários(as)"
             my_posts:
               content: "Minhas postagens"
-              content_drafts: "Meus Rascunhos"
               title: "Minha atividade de tópico recente"
               title_drafts: "Meus rascunhos não publicados"
               draft_count:
@@ -5774,6 +5787,9 @@ pt_BR:
           save_successful: "Campo de usuário(a) salvo."
         color_palettes:
           palette_name: "Nome"
+          copy_to_clipboard: "Copiar para área de transferência"
+          copied_to_clipboard: "Copiou para área de transferência"
+          copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
           duplicate: "Duplicado"
           delete: "Excluir"
           color_options:

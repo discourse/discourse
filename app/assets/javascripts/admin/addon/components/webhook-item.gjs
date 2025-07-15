@@ -32,8 +32,8 @@ export default class WebhookItem extends Component {
   }
 
   <template>
-    <tr class="d-admin-row__content">
-      <td class="d-admin-row__overview key">
+    <tr class="d-table__row">
+      <td class="d-table__cell --overview key">
         <LinkTo @route="adminWebHooks.show" @model={{this.webhook}}>
           <WebhookStatus
             @deliveryStatuses={{this.deliveryStatuses}}
@@ -41,16 +41,16 @@ export default class WebhookItem extends Component {
           />
         </LinkTo>
       </td>
-      <td class="d-admin-row__detail">
+      <td class="d-table__cell --detail key-url">
         <LinkTo @route="adminWebHooks.edit" @model={{this.webhook}}>
           {{this.webhook.payload_url}}
         </LinkTo>
       </td>
-      <td class="d-admin-row__detail">
+      <td class="d-table__cell --detail key-description">
         {{this.webhook.description}}
       </td>
-      <td class="d-admin-row__controls key-controls">
-        <div class="d-admin-row__controls-options">
+      <td class="d-table__cell --controls key-controls">
+        <div class="d-table__cell-actions">
           <DButton
             @action={{this.edit}}
             @label="admin.web_hooks.edit"

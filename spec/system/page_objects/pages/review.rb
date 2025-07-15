@@ -150,6 +150,10 @@ module PageObjects
         PageObjects::Components::Review::FlagReason.new
       end
 
+      def topic_link_component
+        PageObjects::Components::Review::TopicLink.new
+      end
+
       private
 
       def reviewable_action_dropdown

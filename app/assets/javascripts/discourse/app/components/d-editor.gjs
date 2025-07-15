@@ -140,8 +140,14 @@ export default class DEditor extends Component {
   get keymap() {
     const keymap = {};
 
-    const shortcuts = this.get("toolbar.shortcuts");
+    // These are defined in lib/composer/toolbar.js via addButton.
+    // It includes shortcuts for top level toolbar buttons, as well
+    // as the toolbar popup menu option shortcuts.
 
+    // TODO (martin) Might be nice to automatically add these shortcuts
+    // to keyboard-shortcuts-help.gjs at some point (the modal launched with
+    // ?)
+    const shortcuts = this.get("toolbar.shortcuts");
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
       keymap[sc] = () => {
@@ -159,6 +165,10 @@ export default class DEditor extends Component {
       };
     });
 
+    // This refers to the "special" composer toolbar popup menu which
+    // is launched from the (+) button in the toolbar. This menu is customizable
+    // via the plugin API, so it differs from regular toolbar button definitions
+    // from toolbar.js
     this.popupMenuOptions?.forEach((popupButton) => {
       if (popupButton.shortcut && popupButton.condition) {
         const shortcut =
@@ -471,7 +481,9 @@ export default class DEditor extends Component {
    * @returns {ToolbarEvent} An object with toolbar event actions
    */
   newToolbarEvent(trimLeading) {
-    const selected = this.textManipulation.getSelected(trimLeading);
+    const selected = this.textManipulation.getSelected(trimLeading, {
+      lineVal: true,
+    });
     return {
       selected,
       selectText: (from, length) =>
@@ -486,6 +498,8 @@ export default class DEditor extends Component {
         ),
       applyList: (head, exampleKey, opts) =>
         this.textManipulation.applyList(selected, head, exampleKey, opts),
+      applyHeading: (level, exampleKey) =>
+        this.textManipulation.applyHeading(selected, level, exampleKey),
       formatCode: () => this.textManipulation.formatCode(),
       addText: (text) => this.textManipulation.addText(selected, text),
       getText: () => this.value,
@@ -757,12 +771,19 @@ export default class DEditor extends Component {
           />
         </div>
       </div>
-      <DEditorPreview
-        @preview={{if @hijackPreview @hijackPreview this.preview}}
-        @forcePreview={{this.forcePreview}}
-        @onPreviewUpdated={{this.previewUpdated}}
-        @outletArgs={{this.outletArgs}}
-      />
+
+      {{#if @hijackPreview}}
+        <div class="d-editor-preview-wrapper">
+          <@hijackPreview.component @model={{@hijackPreview.model}} />
+        </div>
+      {{else}}
+        <DEditorPreview
+          @preview={{this.preview}}
+          @forcePreview={{this.forcePreview}}
+          @onPreviewUpdated={{this.previewUpdated}}
+          @outletArgs={{this.outletArgs}}
+        />
+      {{/if}}
     </div>
   </template>
 }

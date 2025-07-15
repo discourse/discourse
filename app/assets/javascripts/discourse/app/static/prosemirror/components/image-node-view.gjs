@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
@@ -57,10 +58,12 @@ class ImageToolbar extends ToolbarBase {
 
 export default class ImageNodeView extends Component {
   @service menu;
+  @service siteSettings;
 
   @tracked imageToolbar;
   @tracked menuInstance;
   @tracked altMenuInstance;
+  @tracked imageLoaded = false;
 
   constructor() {
     super(...arguments);
@@ -215,14 +218,18 @@ export default class ImageNodeView extends Component {
   scaleImage(scale) {
     const pos = this.args.getPos();
     const tr = this.args.view.state.tr;
-    this.args.view.dispatch(
-      tr
-        .setNodeMarkup(pos, null, {
-          ...this.args.node.attrs,
-          scale,
-        })
-        .setSelection(NodeSelection.create(tr.doc, pos))
-    );
+
+    if (!this.args.node.attrs.width || !this.args.node.attrs.height) {
+      const dimensions = this.maxDimensions;
+      if (dimensions) {
+        tr.setNodeAttribute(pos, "width", dimensions.width);
+        tr.setNodeAttribute(pos, "height", dimensions.height);
+      }
+    }
+
+    tr.setNodeAttribute(pos, "scale", scale);
+    tr.setSelection(NodeSelection.create(tr.doc, pos));
+    this.args.view.dispatch(tr);
   }
 
   selectNode() {
@@ -245,18 +252,38 @@ export default class ImageNodeView extends Component {
     this.altMenuInstance = null;
   }
 
+  get maxDimensions() {
+    if (!this.imageLoaded) {
+      return null;
+    }
+
+    const widthRatio =
+      this.siteSettings.max_image_width / this.image.naturalWidth;
+    const heightRatio =
+      this.siteSettings.max_image_height / this.image.naturalHeight;
+
+    const ratio = Math.min(widthRatio, heightRatio);
+
+    return {
+      width: Math.floor(this.image.naturalWidth * ratio),
+      height: Math.floor(this.image.naturalHeight * ratio),
+    };
+  }
+
   get imageStyle() {
-    if (!this.args.node.attrs.width || !this.args.node.attrs.height) {
+    const width = this.args.node.attrs.width ?? this.maxDimensions?.width;
+    if (!width) {
       return null;
     }
 
     const scale = (this.args.node.attrs.scale || 100) / 100;
 
-    return htmlSafe(
-      `width: ${this.args.node.attrs.width * scale}px; height: ${
-        this.args.node.attrs.height * scale
-      }px;`
-    );
+    return htmlSafe(`width: ${width * scale}px`);
+  }
+
+  @action
+  updateImageLoaded() {
+    this.imageLoaded = true;
   }
 
   <template>
@@ -271,6 +298,7 @@ export default class ImageNodeView extends Component {
       data-thumbnail={{if (eq @node.attrs.extras "thumbnail") "true"}}
       style={{this.imageStyle}}
       {{didInsert this.setupImage}}
+      {{on "load" this.updateImageLoaded}}
     />
   </template>
 }

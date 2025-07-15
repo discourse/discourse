@@ -1036,8 +1036,8 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "#dark_scheme_id" do
-    fab!(:dark_scheme) { Fabricate(:color_scheme) }
-    fab!(:light_scheme) { Fabricate(:color_scheme) }
+    fab!(:dark_scheme, :color_scheme)
+    fab!(:light_scheme, :color_scheme)
 
     before do
       helper.request.cookies["color_scheme_id"] = light_scheme.id

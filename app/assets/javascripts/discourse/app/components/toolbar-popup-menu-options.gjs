@@ -6,6 +6,7 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { iconHTML } from "discourse/lib/icon-library";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -30,44 +31,103 @@ export default class ToolbarPopupmenuOptions extends Component {
 
   #convertMenuOption(content) {
     if (content.condition) {
-      let label;
-      if (content.label) {
-        label = i18n(content.label);
-        if (content.shortcut) {
-          label = htmlSafe(
-            `${label} <kbd class="shortcut">${translateModKey(
-              PLATFORM_KEY_MODIFIER + "+" + content.shortcut
-            )}</kbd>`
-          );
-        }
-      }
+      const label = this.#calculateLabel(content);
+      const title = this.#calculateTitle(content);
 
-      let title = content.title ? i18n(content.title) : label;
+      return Object.defineProperties(
+        {},
+        Object.getOwnPropertyDescriptors({ ...content, label, title })
+      );
+    }
+  }
+
+  #calculateTitle(content) {
+    if (content.label && !content.title && !content.translatedTitle) {
+      return this.#calculateLabel(content, { textOnly: true });
+    }
+
+    if (!content.translatedTitle && !content.title) {
+      return;
+    }
+
+    const title = content.translatedTitle
+      ? content.translatedTitle
+      : i18n(content.title);
+
+    if (content.shortcut) {
+      return `${title} (${translateModKey(
+        PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+      )})`;
+    }
+
+    return title;
+  }
+
+  #calculateLabel(content, opts = {}) {
+    if (!content.label && !content.translatedLabel) {
+      return;
+    }
+
+    const label = content.translatedLabel
+      ? content.translatedLabel
+      : i18n(content.label);
+
+    if (opts.textOnly) {
       if (content.shortcut) {
-        title += ` (${translateModKey(
+        return `${label} (${translateModKey(
           PLATFORM_KEY_MODIFIER + "+" + content.shortcut
         )})`;
       }
 
-      return {
-        icon: content.icon,
-        label,
-        title,
-        name: content.name,
-        action: content.action,
-      };
+      return label;
     }
+
+    let htmlLabel = `<span class="d-button-label__text">${label}</span>`;
+    if (content.shortcut) {
+      htmlLabel += ` <kbd class="shortcut ${
+        content.alwaysShowShortcut ? "--always-visible" : ""
+      }">${translateModKey(
+        PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+      )}</kbd>`;
+    }
+
+    if (content.showActiveIcon) {
+      htmlLabel += iconHTML("check", {
+        class: "d-button-label__active-icon",
+      });
+    }
+
+    return htmlSafe(htmlLabel);
   }
 
   get convertedContent() {
-    return this.args.content.map(this.#convertMenuOption).filter(Boolean);
+    return this.args.content
+      .map(this.#convertMenuOption.bind(this))
+      .filter(Boolean);
+  }
+
+  get textManipulationState() {
+    return this.args.context?.textManipulation?.state;
+  }
+
+  @action
+  getActive(option) {
+    return option.active?.({ state: this.textManipulationState });
+  }
+
+  @action
+  getIcon(config) {
+    if (typeof config.icon === "function") {
+      return config.icon?.({ state: this.textManipulationState });
+    }
+
+    return config.icon;
   }
 
   <template>
     <DMenu
       @identifier={{concat "toolbar-menu__" @class}}
       @groupIdentifier="toolbar-menu"
-      @icon={{@icon}}
       @onRegisterApi={{this.onRegisterApi}}
       @onShow={{@onOpen}}
       @modalForMobile={{true}}
@@ -76,10 +136,11 @@ export default class ToolbarPopupmenuOptions extends Component {
       @offset={{5}}
       @onKeydown={{@onKeydown}}
       tabindex="-1"
-      class={{concatClass @class}}
+      @triggerClass={{concatClass "toolbar__button" @class}}
+      @class="toolbar-popup-menu-options"
     >
       <:trigger>
-        {{icon @options.icon}}
+        {{icon (this.getIcon this.args)}}
       </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
@@ -88,9 +149,13 @@ export default class ToolbarPopupmenuOptions extends Component {
               <DButton
                 @translatedLabel={{option.label}}
                 @translatedTitle={{option.title}}
-                @icon={{option.icon}}
+                @icon={{this.getIcon option}}
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
+                class={{concatClass
+                  "no-text"
+                  (if (this.getActive option) "--active")
+                }}
               />
             </dropdown.item>
           {{/each}}

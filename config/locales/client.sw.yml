@@ -346,6 +346,15 @@ sw:
         reviewable_post:
           title: "Ujumbe"
           noun: "ujumbe"
+      notes:
+        delete: "Futa"
+      review_user: "Mtumiaji"
+      insights:
+        activities:
+          posts:
+            one: "%{count} chapisho"
+            other: "%{count} machapisho"
+        visibility: "Uonekanaji"
       approval:
         title: "Chapisho Linahitaji Kibali"
         description: "Tumepokea chapisho lako jipya, lakini linahitaji kupata kibali kutoka kwa kiongozi kabla ya kuonyeshwa. Tafadhali kuwa na subira."
@@ -2109,7 +2118,6 @@ sw:
         topics: "Mada"
         replies: "Majibu"
       posted:
-        title: "Machapisho Yangu"
         help: "mada zenye machapisho yako"
       bookmarks:
         title: "Mialamisho"
@@ -2349,8 +2357,6 @@ sw:
               content: "Vikundi"
             users:
               content: "Watumiaji"
-            my_posts:
-              content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
       search: "Tafuta"
@@ -2721,6 +2727,9 @@ sw:
           delete: "Futa"
         color_palettes:
           palette_name: "Jina"
+          copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
+          copied_to_clipboard: "Umenakili kwenye Ubao Nakili"
+          copy_to_clipboard_error: "Hitilafu imetokea wakati wa kunakili taarifa kwenye ubao nakili."
           delete: "Futa"
           colors:
             title: "Rangi"

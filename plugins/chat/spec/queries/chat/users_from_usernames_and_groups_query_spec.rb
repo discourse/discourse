@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe Chat::UsersFromUsernamesAndGroupsQuery do
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
-  fab!(:user4) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
+  fab!(:user3, :user)
+  fab!(:user4, :user)
   fab!(:group1) { Fabricate(:public_group, users: [user1, user2]) }
   fab!(:group2) { Fabricate(:public_group, users: [user3]) }
 

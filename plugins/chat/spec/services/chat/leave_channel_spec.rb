@@ -8,8 +8,8 @@ RSpec.describe Chat::LeaveChannel do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:channel_1) { Fabricate(:chat_channel) }
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:channel_1, :chat_channel)
+    fab!(:current_user, :user)
 
     let(:guardian) { Guardian.new(current_user) }
     let(:channel_id) { channel_1.id }

@@ -2428,6 +2428,8 @@ en:
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
+    hide_silencing_reasons: "Don't display silencing reasons publically on user profiles."
+
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
@@ -2691,6 +2693,7 @@ en:
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
 
+    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. This will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
     gravatar_base_url: "Specify the URL for accessing the Gravatar provider's API. This setting is critical for converting email addresses into Gravatar URLs where avatar images are stored."
     gravatar_login_url: "URL relative to `gravatar_base_url`, which provides the user with the login to the Gravatar service."
@@ -4674,7 +4677,6 @@ en:
     solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
-    default_theme_name: "Default"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"
@@ -5307,10 +5309,7 @@ en:
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
-    success: "Email Sent"
-    errors:
-      unknown_email_address: "Unknown email address."
-      invalid_token: "Invalid token."
+    acknowledgement: "If an admin account with the email address %{email} exists, you will receive an email with a link to log in."
     email_input: "Admin Email"
     submit_button: "Send Email"
     safe_mode: "Safe Mode: disable all themes/plugins when logging in"

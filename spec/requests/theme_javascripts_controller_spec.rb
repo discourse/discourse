@@ -64,19 +64,16 @@ RSpec.describe ThemeJavascriptsController do
     end
 
     it "adds sourceMappingUrl if there is a source map" do
-      digest = SecureRandom.hex(20)
-      javascript_cache.update(digest: digest)
-      get "/theme-javascripts/#{digest}.js"
+      get "/theme-javascripts/#{javascript_cache.digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to eq('console.log("hello");')
 
-      digest = SecureRandom.hex(20)
-      javascript_cache.update(digest: digest, source_map: "{fakeSourceMap: true}")
-      get "/theme-javascripts/#{digest}.js"
+      javascript_cache.update(source_map: "{fakeSourceMap: true}")
+      get "/theme-javascripts/#{javascript_cache.digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to eq <<~JS
         console.log("hello");
-        //# sourceMappingURL=#{digest}.map?__ws=test.localhost
+        //# sourceMappingURL=#{javascript_cache.digest}.map?__ws=test.localhost
       JS
     end
 
@@ -105,14 +102,13 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/#{javascript_cache.digest}.map"
       expect(response.status).to eq(404)
 
-      digest = SecureRandom.hex(20)
-      javascript_cache.update(digest: digest, source_map: "{fakeSourceMap: true}")
-      get "/theme-javascripts/#{digest}.map"
+      javascript_cache.update(source_map: "{fakeSourceMap: true}")
+      get "/theme-javascripts/#{javascript_cache.digest}.map"
       expect(response.status).to eq(200)
       expect(response.body).to eq("{fakeSourceMap: true}")
 
       javascript_cache.destroy
-      get "/theme-javascripts/#{digest}.map"
+      get "/theme-javascripts/#{javascript_cache.digest}.map"
       expect(response.status).to eq(404)
     end
   end

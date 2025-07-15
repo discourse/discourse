@@ -109,6 +109,30 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(2)
     end
 
+    it "adds the appropriate response header based on explicit tracking (AJAX requests, BPVs)" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, headers, response = middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1"))
+      expect(headers["X-Discourse-TrackView"]).to eq("1")
+      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+    end
+
+    it "adds the appropriate response header based on implicit tracking (HTML requests)" do
+      middleware =
+        Middleware::RequestTracker.new(
+          lambda { |env| [200, { "Content-Type" => "text/html" }, ["OK"]] },
+        )
+      status, headers, response = middleware.call(env)
+      expect(headers["X-Discourse-TrackView"]).to eq("1")
+      expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
+    end
+
+    it "adds the appropriate response header based on deferred tracking (MiniProfiler piggyback, BPVs)" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, headers, response = middleware.call(env("HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"))
+      expect(headers["X-Discourse-TrackView"]).to eq(nil)
+      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+    end
+
     it "can log requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
@@ -143,7 +167,7 @@ RSpec.describe Middleware::RequestTracker do
       # /srv/status is never a tracked view because content-type is text/plain
       data =
         Middleware::RequestTracker.get_data(
-          env("HTTP_USER_AGENT" => "kube-probe/1.18", "REQUEST_URI" => "/srv/status?shutdown_ok=1"),
+          env("HTTP_USER_AGENT" => "kube-probe/1.18", "REQUEST_URI" => "/srv/status"),
           ["200", { "Content-Type" => "text/plain" }],
           0.1,
         )
@@ -173,7 +197,7 @@ RSpec.describe Middleware::RequestTracker do
         )
       Middleware::RequestTracker.log_request(data)
 
-      expect(data[:deferred_track]).to eq(true)
+      expect(data[:deferred_track_view]).to eq(true)
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
@@ -519,7 +543,7 @@ RSpec.describe Middleware::RequestTracker do
 
     after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
-    let :middleware do
+    let(:middleware) do
       app = lambda { |env| [200, {}, ["OK"]] }
 
       Middleware::RequestTracker.new(app)

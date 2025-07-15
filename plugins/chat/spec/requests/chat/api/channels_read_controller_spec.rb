@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsReadController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.chat_enabled = true
@@ -12,7 +12,7 @@ RSpec.describe Chat::Api::ChannelsReadController do
   describe "#read" do
     describe "marking a single message read" do
       fab!(:chat_channel)
-      fab!(:other_user) { Fabricate(:user) }
+      fab!(:other_user, :user)
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
 
@@ -95,11 +95,11 @@ RSpec.describe Chat::Api::ChannelsReadController do
     end
 
     describe "marking all messages read" do
-      fab!(:chat_channel_1) { Fabricate(:chat_channel) }
-      fab!(:chat_channel_2) { Fabricate(:chat_channel) }
-      fab!(:chat_channel_3) { Fabricate(:chat_channel) }
+      fab!(:chat_channel_1, :chat_channel)
+      fab!(:chat_channel_2, :chat_channel)
+      fab!(:chat_channel_3, :chat_channel)
 
-      fab!(:other_user) { Fabricate(:user) }
+      fab!(:other_user, :user)
 
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1, user: other_user) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1, user: other_user) }

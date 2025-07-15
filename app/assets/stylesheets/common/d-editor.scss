@@ -318,7 +318,6 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: var(--space-2);
-  align-items: center;
   margin: 0.25rem 0;
 
   .composer-toggle-switch {
@@ -345,10 +344,12 @@
 
     .discourse-no-touch & {
       &:hover {
-        background-color: var(--primary-low);
+        background-color: var(--d-hover);
 
         .d-icon {
-          color: var(--primary-medium);
+          color: var(
+            --primary-high
+          ); // to remove when btn hover variable is scoped better
         }
       }
     }
@@ -397,6 +398,10 @@
       color: var(--primary-high);
     }
   }
+
+  &.-expanded {
+    background: var(--d-hover);
+  }
 }
 
 .d-editor #form-template-form {
@@ -427,7 +432,7 @@
     }
   }
 
-  .d-editor-preview .d-editor-translation-preview-wrapper {
+  .d-editor-translation-preview-wrapper {
     --translation-preview-padding: 1rem;
     box-sizing: border-box;
     border: var(--d-input-border);

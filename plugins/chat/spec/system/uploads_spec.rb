@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Uploading files in chat messages", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -214,7 +214,7 @@ describe "Uploading files in chat messages", type: :system do
   end
 
   context "when uploads are not allowed" do
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2, :user)
     fab!(:direct_message_channel_1) do
       Fabricate(:direct_message_channel, users: [current_user, user_2])
     end

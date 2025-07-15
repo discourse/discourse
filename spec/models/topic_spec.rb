@@ -5,7 +5,7 @@ describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:whisperers_group) { Fabricate(:group) }
+  fab!(:whisperers_group, :group)
   fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
   fab!(:moderator)
   fab!(:coding_horror)
@@ -386,8 +386,8 @@ describe Topic do
   end
 
   describe "topic title uniqueness" do
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
 
     fab!(:topic) { Fabricate(:topic, category: category1) }
     let(:new_topic) { Fabricate.build(:topic, title: topic.title, category: category1) }
@@ -611,7 +611,7 @@ describe Topic do
   end
 
   describe "category validation" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     context "when allow_uncategorized_topics is false" do
       before { SiteSetting.allow_uncategorized_topics = false }
@@ -646,7 +646,7 @@ describe Topic do
   end
 
   describe ".similar_to" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     it "returns an empty array with nil params" do
       expect(Topic.similar_to(nil, nil)).to eq([])
@@ -1087,7 +1087,7 @@ describe Topic do
 
           fab!(:topic) { Fabricate(:topic, category: category) }
           fab!(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
-          fab!(:invitee) { Fabricate(:user) }
+          fab!(:invitee, :user)
 
           describe "as a group owner" do
             it "should be able to invite a user" do
@@ -1750,7 +1750,7 @@ describe Topic do
   end
 
   describe "with category" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     it "should not increase the topic_count with no category" do
       expect {
@@ -1909,6 +1909,14 @@ describe Topic do
             expect(topic.category_id).to eq(new_category.id)
           end
 
+          it "should not generate a notification if options: silent is true" do
+            expect do topic.change_category_to_id(new_category.id, silent: true) end.not_to change {
+              Notification.count
+            }
+
+            expect(topic.category_id).to eq(new_category.id)
+          end
+
           it "should generate the modified notification for the topic if already seen" do
             TopicUser.create!(
               topic_id: topic.id,
@@ -2001,7 +2009,7 @@ describe Topic do
         describe "when the topic title is not valid" do
           fab!(:topic_title) { topic.title }
           fab!(:topic_slug) { topic.slug }
-          fab!(:topic_2) { Fabricate(:topic) }
+          fab!(:topic_2, :topic)
 
           it "does not save title or slug when title repeats letters" do
             topic.title = "a" * 50
@@ -2539,10 +2547,10 @@ describe Topic do
 
   describe "all_allowed_users" do
     fab!(:topic) { Fabricate(:topic, allowed_groups: [group]) }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:allowed_group_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
+    fab!(:allowed_group_user, :user)
     fab!(:moderator) { Fabricate(:user, moderator: true) }
-    fab!(:rando) { Fabricate(:user) }
+    fab!(:rando, :user)
 
     before do
       topic.allowed_users << allowed_user
@@ -2640,7 +2648,7 @@ describe Topic do
     fab!(:topic)
 
     context "with category's topic count" do
-      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:category, :category_with_definition)
 
       it "subtracts 1 if topic is being deleted" do
         topic = Fabricate(:topic, category: category)
@@ -2690,7 +2698,7 @@ describe Topic do
     fab!(:topic)
 
     context "with category's topic count" do
-      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:category, :category_with_definition)
 
       it "adds 1 if topic is deleted" do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
@@ -3143,7 +3151,7 @@ describe Topic do
   end
 
   describe "#pm_with_non_human_user?" do
-    fab!(:robot) { Fabricate(:bot) }
+    fab!(:robot, :bot)
 
     fab!(:topic) do
       topic =
@@ -3539,8 +3547,8 @@ describe Topic do
   end
 
   describe "#publish_stats_to_clients!" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
     fab!(:topic) { Fabricate(:topic, user: user1) }
     fab!(:post1) { Fabricate(:post, topic: topic, user: user1) }
     fab!(:post2) { Fabricate(:post, topic: topic, user: user2) }

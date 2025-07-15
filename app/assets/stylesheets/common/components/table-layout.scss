@@ -5,12 +5,80 @@
 
   @include viewport.until(md) {
     border-collapse: collapse;
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-12);
   }
 
   th,
   td {
     padding: var(--space-2);
+  }
+
+  // Badges/statuses
+  // Default
+  .status-label {
+    --d-border-radius: var(--space-4);
+    --status-icon-diameter: 8px;
+    display: flex;
+    flex-wrap: nowrap;
+    width: fit-content;
+    background-color: var(--primary-low);
+    padding: var(--space-half) var(--space-2);
+    border-radius: var(--d-border-radius);
+
+    .status-label-indicator {
+      display: inline-block;
+      width: var(--status-icon-diameter);
+      height: var(--status-icon-diameter);
+      border-radius: 50%;
+      background-color: var(--primary-high);
+      flex-shrink: 0;
+      margin-right: var(--space-1);
+      margin-top: 0.35rem;
+    }
+
+    .status-label-text {
+      color: var(--primary-high);
+      font-size: var(--font-down-1);
+    }
+  }
+
+  // Success badge
+  .status-label.--success {
+    background-color: var(--success-low);
+
+    .status-label-indicator {
+      background-color: var(--success);
+    }
+
+    .status-label-text {
+      color: var(--success-hover);
+    }
+  }
+
+  // Critical badge
+  .status-label.--critical {
+    background-color: var(--danger-low);
+
+    .status-label-indicator {
+      background-color: var(--danger);
+    }
+
+    .status-label-text {
+      color: var(--danger-hover);
+    }
+  }
+
+  // Inactive badge
+  .status-label.--inactive {
+    background-color: var(--primary-low);
+
+    .status-label-indicator {
+      background-color: var(--primary-high);
+    }
+
+    .status-label-text {
+      color: var(--primary-high);
+    }
   }
 }
 
@@ -35,6 +103,11 @@
     margin-bottom: var(--space-3);
     border: 1px solid var(--primary-low);
   }
+
+  &.has-update {
+    background-color: var(--tertiary-very-low);
+    border-left: solid 3px var(--tertiary);
+  }
 }
 
 .d-table__cell {
@@ -57,12 +130,55 @@
     width: auto;
     border-top: 0;
   }
+
+  .d-table__overview-name {
+    font-weight: 700;
+    max-width: 80%;
+    margin-bottom: var(--space-1);
+  }
+
+  .d-table__overview-author {
+    font-size: var(--font-down-1);
+    margin-bottom: var(--space-1);
+  }
+
+  .d-table__overview-about {
+    padding-right: var(--space-4);
+
+    @include viewport.until(md) {
+      padding-top: var(--space-1);
+    }
+
+    .d-icon {
+      font-size: var(--font-down-3);
+      margin-bottom: 0.1em;
+    }
+  }
+
+  .d-table__overview-flags {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    text-transform: lowercase;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
 }
 
 .d-table__cell.--detail {
   @include viewport.until(md) {
     display: flex;
     justify-content: space-between;
+  }
+}
+
+.d-table__mobile-label {
+  display: none;
+
+  @include viewport.until(md) {
+    display: inline-flex;
+    color: var(--primary-high);
   }
 }
 
@@ -79,7 +195,7 @@
   }
 }
 
-// Wrapper keeps button and dropdown aligned
+// Wraps and aligns button group like main action + icon only button
 .d-table__cell-actions {
   display: flex;
   flex-direction: row;
@@ -91,11 +207,9 @@
   }
 }
 
-.d-table__mobile-label {
-  display: none;
-
-  @include viewport.until(md) {
-    display: inline-flex;
-    color: var(--primary-high);
-  }
+// Wraps and aligns cell content like icons and text
+.d-table__value-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }

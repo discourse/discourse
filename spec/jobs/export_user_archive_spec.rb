@@ -4,7 +4,7 @@ require "csv"
 
 RSpec.describe Jobs::ExportUserArchive do
   fab!(:user) { Fabricate(:user, username: "john_doe", refresh_auto_groups: true) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user2, :user)
   let(:extra) { {} }
   let(:job) do
     j = Jobs::ExportUserArchive.new

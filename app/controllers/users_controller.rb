@@ -107,7 +107,8 @@ class UsersController < ApplicationController
 
   before_action :add_noindex_header, only: %i[show my_redirect]
 
-  allow_in_staff_writes_only_mode :admin_login, :email_login, :password_reset_update
+  allow_in_readonly_mode :admin_login
+  allow_in_staff_writes_only_mode :email_login, :password_reset_update
 
   MAX_RECENT_SEARCHES = 5
 
@@ -483,7 +484,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ %r{\A[a-z_\-/]+\z}
+    raise Discourse::NotFound if params[:path] !~ %r{\A[a-zA-Z_\-/]+\z}
 
     if current_user.blank?
       cookies[:destination_url] = path("/my/#{params[:path]}")
@@ -862,7 +863,6 @@ class UsersController < ApplicationController
     RateLimiter.new(nil, "remove-password-hr-#{user.username}", 6, 1.hour).performed!
 
     raise Discourse::NotFound if !user || !user.user_password
-    raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
     raise Discourse::InvalidAccess if !session_is_trusted?
 
     user.remove_password
@@ -872,16 +872,15 @@ class UsersController < ApplicationController
 
   def password_reset_update
     expires_now
-    token = params[:token]
-    password_reset_find_user(token, committing_change: true)
 
+    token = params[:token]
+
+    password_reset_find_user(token, committing_change: true)
     rate_limit_second_factor!(@user)
 
-    # no point doing anything else if we can't even find
-    # a user from the token
-    if @user
-      raise Discourse::ReadOnly if staff_writes_only_mode? && !@user.staff?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !@user&.staff?
 
+    if @user
       if !secure_session["second-factor-#{token}"]
         second_factor_authentication_result =
           @user.authenticate_second_factor(params, secure_session)
@@ -1008,21 +1007,17 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "admin-login-hr-#{request.remote_ip}", 6, 1.hour).performed!
       RateLimiter.new(nil, "admin-login-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-      if user = User.with_email(params[:email]).admins.human_users.first
+      if user = User.real.admins.with_email(params[:email]).first
         email_token =
-          user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        token_string = email_token.token
-        token_string += "?safe_mode=no_plugins,no_themes" if params["use_safe_mode"]
-        Jobs.enqueue(
-          :critical_user_email,
-          type: "admin_login",
-          user_id: user.id,
-          email_token: token_string,
-        )
-        @message = I18n.t("admin_login.success")
-      else
-        @message = I18n.t("admin_login.errors.unknown_email_address")
+          user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login]).token
+        email_token += "?safe_mode=no_plugins,no_themes" if params["use_safe_mode"]
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token:)
       end
+
+      # NOTE: we don't check for `readonly` mode here because it might leak information about whether
+      # an email address is a registered admin account.
+
+      @message = I18n.t("admin_login.acknowledgement", email: params[:email])
     end
 
     render layout: "no_ember"
@@ -1040,12 +1035,14 @@ class UsersController < ApplicationController
 
     RateLimiter.new(nil, "email-login-hour-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "email-login-min-#{request.remote_ip}", 3, 1.minute).performed!
-    user = User.human_users.find_by_username_or_email(params[:login])
+    user = User.real.find_by_username_or_email(params[:login])
     user_presence = user.present? && !user.staged
 
     if user
       RateLimiter.new(nil, "email-login-hour-#{user.id}", 6, 1.hour).performed!
       RateLimiter.new(nil, "email-login-min-#{user.id}", 3, 1.minute).performed!
+
+      raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
       if user_presence
         DiscourseEvent.trigger(:before_email_login, user)
@@ -1330,6 +1327,10 @@ class UsersController < ApplicationController
 
     type = params[:type]
 
+    if type == "gravatar" && !SiteSetting.gravatar_enabled?
+      return render json: failed_json, status: 422
+    end
+
     invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != "system"
     return render json: failed_json, status: 422 if invalid_type
 
@@ -1522,6 +1523,7 @@ class UsersController < ApplicationController
       number_of_deleted_posts
       number_of_flagged_posts
       number_of_flags_given
+      number_of_silencings
       number_of_suspensions
       warnings_received_count
       number_of_rejected_posts

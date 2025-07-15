@@ -154,18 +154,22 @@ table {
 }
 
 tbody {
-  border-top: 3px solid var(--primary-low);
+  border-top: var(--d-table-border-top-height) solid var(--table-border-color);
 }
 
 .topic-list-item,
-tr {
-  border-bottom: 1px solid var(--primary-low);
+tbody tr {
+  border-bottom: var(--table-border-width) solid var(--table-border-color);
 
   @media (prefers-reduced-motion: no-preference) {
     &.highlighted {
       animation: background-fade-highlight 2.5s ease-out;
     }
   }
+}
+
+.topic-list-header tr {
+  border-bottom: var(--table-border-width) solid var(--table-border-color);
 }
 
 // https://en.wikipedia.org/wiki/Ruby_character

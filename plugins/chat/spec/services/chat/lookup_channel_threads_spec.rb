@@ -82,7 +82,7 @@ end
 RSpec.describe ::Chat::LookupChannelThreads do
   subject(:result) { described_class.call(params:, **dependencies) }
 
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
 
   let(:guardian) { Guardian.new(current_user) }

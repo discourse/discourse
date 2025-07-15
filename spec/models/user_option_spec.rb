@@ -92,8 +92,8 @@ RSpec.describe UserOption do
   end
 
   describe "#mailing_list_mode" do
-    fab!(:forum_user) { Fabricate(:user) }
-    fab!(:mailing_list_user) { Fabricate(:user) }
+    fab!(:forum_user, :user)
+    fab!(:mailing_list_user, :user)
 
     before do
       forum_user.user_option.update(mailing_list_mode: false)

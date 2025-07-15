@@ -40,7 +40,7 @@
     "ember-source": "~5.12.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.99.9",
+    "webpack": "^5.100.1",
     "@floating-ui/dom": "^1.6.12",
     "@ember-compat/tracked-built-ins": "^0.9.1"
   },

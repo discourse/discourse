@@ -108,3 +108,10 @@ files:
   - source_path: themes/horizon/locales/en.yml
     destination_path: themes/horizon.yml
     label: theme
+
+  - source_path: plugins/discourse-reactions/config/locales/client.en.yml
+    destination_path: plugins/discourse-reactions/client.yml
+    label: discourse-reactions
+  - source_path: plugins/discourse-reactions/config/locales/server.en.yml
+    destination_path: plugins/discourse-reactions/server.yml
+    label: discourse-reactions

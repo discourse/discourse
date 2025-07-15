@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Chat::Api::CurrentUserChannelsController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     SiteSetting.chat_enabled = true
@@ -30,7 +30,7 @@ describe Chat::Api::CurrentUserChannelsController do
     end
 
     context "as allowed user" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before { sign_in(current_user) }
 

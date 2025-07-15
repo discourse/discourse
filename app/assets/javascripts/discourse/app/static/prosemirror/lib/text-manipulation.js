@@ -10,7 +10,7 @@ import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { i18n } from "discourse-i18n";
-import { hasMark, inNode } from "./plugin-utils";
+import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
@@ -190,6 +190,17 @@ export default class ProsemirrorTextManipulation {
     command?.(this.view.state, this.view.dispatch);
   }
 
+  applyHeading(_selection, level) {
+    let command;
+    if (level === 0) {
+      command = setBlockType(this.schema.nodes.paragraph);
+    } else {
+      command = setBlockType(this.schema.nodes.heading, { level });
+    }
+    command?.(this.view.state, this.view.dispatch);
+    this.focus();
+  }
+
   formatCode() {
     let command;
 
@@ -345,6 +356,12 @@ export default class ProsemirrorTextManipulation {
    * Updates the toolbar state object based on the current editor active states
    */
   updateState() {
+    const activeHeadingLevel = [1, 2, 3, 4, 5, 6].find((headingLevel) =>
+      isNodeActive(this.view.state, this.schema.nodes.heading, {
+        level: headingLevel,
+      })
+    );
+
     Object.assign(this.state, {
       inBold: hasMark(this.view.state, this.schema.marks.strong),
       inItalic: hasMark(this.view.state, this.schema.marks.em),
@@ -354,6 +371,9 @@ export default class ProsemirrorTextManipulation {
       inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
       inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
       inBlockquote: inNode(this.view.state, this.schema.nodes.blockquote),
+      inHeading: !!activeHeadingLevel,
+      inHeadingLevel: activeHeadingLevel,
+      inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
     });
   }
 }

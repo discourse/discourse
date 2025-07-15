@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Search", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   let(:search_modal) { PageObjects::Modals::AdminSearch.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
@@ -77,5 +77,16 @@ describe "Admin Search", type: :system do
 
     send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "/"])
     expect(search_modal).to be_open
+  end
+
+  it "works with sections which have a redirect instead of explicit /settings route" do
+    visit "/admin"
+
+    sidebar.click_search_input
+
+    search_modal.search("tags tag style")
+    search_modal.find_result("setting", 0).click
+
+    expect(page).to have_current_path("/admin/config/content?filter=tag_style")
   end
 end

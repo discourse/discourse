@@ -802,6 +802,63 @@ hr:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+      flagged_as: "Označeno kao"
+      assigned_to: "Dodijeljeno"
+      moderator_actions: "Radnje moderatora"
+      timeline_and_notes: "Vremenska linija i bilješke"
+      timeline:
+        target_created: "Objava je kreirana"
+        target_created_by: "Objavu kreirao/la %{username} · %{relativeDate}"
+        flagged: "Označeno"
+        flagged_as_by: " %{username} označio/la kao %{flagReason} · %{relativeDate}"
+        claimed: "Preuzeto"
+        claimed_by: "Preuzeo/la %{username} · %{relativeDate}"
+        reviewed: "Recenzirano"
+        reviewed_by: "Recenzirao/la %{username} · %{relativeDate}"
+        view_conversation: "pogledaj privatnu poruku"
+        note_added: "Napomena moderatora"
+        note_added_by: "Napomena moderatora od %{username} · %{relativeDate}"
+        no_events: "Nema događaja na vremenskoj liniji za prikaz"
+      notes:
+        add_note_description: "Vidljivo samo moderatorima. Pomoću ove bilješke dodajte kontekst ili odluke o recenziji."
+        add_note_button: "Dodaj bilješku"
+        placeholder: "Ovdje napišite svoju bilješku..."
+        chars_remaining: "Preostalo je %{count} znakova"
+        delete_note: "Izbrišite ovu bilješku"
+        delete: "Pobriši"
+      new_topic_label: "Nova tema"
+      queued_user: "Korisnik u redu čekanja"
+      posted_in: "Objavljeno u"
+      flagged_user: "Označeni korisnik"
+      review_user: "Korisnik"
+      need_help: "Trebate pomoć?"
+      copy_link: "Kopirajte poveznicu"
+      view_source: "Pogledajte izvor"
+      insights:
+        title: "Uvidi"
+        flag_volume: "Količina oznaka"
+        flagged_by_users:
+          one: "Označio %{count} jedinstveni korisnik"
+          few: "Označila %{count} jedinstvena korisnika"
+          other: "Označilo %{count} jedinstvenih korisnika"
+        similar_posts: "Slične prošle objave"
+        flagged_in_timeframe: "Prethodno označeno: %{count} "
+        user_activity: "Aktivnost korisnika"
+        activities:
+          new_account: "novi račun"
+          trust_level: "razina povjerenja: %{trustLevelName}"
+          posts:
+            one: "%{count} objava"
+            few: "%{count} objava"
+            other: "%{count} objava"
+        solution_marked: "Rješenje označeno"
+        topic_has_solution: "Ova tema ima rješenje"
+        visibility: "Vidljivost"
+        topic_unlisted: "Ova tema nije na popisu. Dostupna je samo putem izravne poveznice — nije javna."
+      help:
+        moderation_guide: "Discourse vodič za moderiranje"
+        flag_priorities: "Upravljanje reputacijom korisnika i prioritetima označavanja"
+        spam_detection: "Otkrivanje neželjene pošte"
       approval:
         title: "natpis čeka potvrdu"
         description: "Zaprimili smo vašu objavu, ali potrebno je odobrenje moderatora prije nego se pojavi. Molim vas budite strpljivi."
@@ -1257,6 +1314,7 @@ hr:
     user_fields:
       none: "(odaberi opciju)"
       required: 'Unesi vrijednost za "%{name}"'
+      required_select: 'Molimo odaberite vrijednost za "%{name}"'
       required_checkbox: 'Polje "%{name}" je neophodno'
       same_as_password: "Vaša lozinka ne smije se ponavljati u drugim poljima"
       optional: (opcionalno)
@@ -2217,6 +2275,8 @@ hr:
       errors_summary_title: "Ovaj obrazac sadrži pogreške:"
       dirty_form: "Niste poslali promjene! Jeste li sigurni da želite otići?"
       errors:
+        starts_with: "Mora početi sa %{prefix}"
+        ends_with: "Mora završiti sa %{suffix}"
         required: "Potrebno"
         date_before_or_equal: "Mora biti prije ili jednako %{date}"
         date_after_or_equal: "Mora biti nakon ili jednako %{date}"
@@ -2806,6 +2866,8 @@ hr:
       image_alt_text:
         aria_label: Zamjenski tekst za sliku
         title: "Dodaj opis slike"
+      image_toolbar:
+        alt_text: "Dodaj opis slike"
       image_scale_button: "Skaliraj sliku na %{percent}%"
       delete_image_button: Izbriši sliku
       toggle_image_grid: Uključi/isključi rešetku slike
@@ -2968,6 +3030,7 @@ hr:
       relevance: "Relevantnost"
       latest_post: "Posljednje objave"
       latest_topic: "Najnovija tema"
+      last_read: "Zadnje pročitano"
       most_viewed: "Nagledanije"
       most_liked: "Najviše se sviđa"
       select_all: "Odaberi sve"
@@ -3252,7 +3315,7 @@ hr:
         hot: "Nema vrućih tema."
         filter: "Nema tema."
         education:
-          topic_tracking_preferences: "Nove postavke praćenja tema možete pregledati i promijeniti u <a href=\"%{basePath}/my/preferences/tracking\">svojim postavkama</a>."
+          topic_tracking_preferences: 'Nove postavke praćenja tema možete pregledati i promijeniti u <a href="%{basePath}/my/preferences/tracking">svojim postavkama</a>.'
           unread: "Ništa nije ostalo nepročitano...impresivno!"
           new_new: "Trenutno ništa nova... provjerite uskoro!"
           new: "Trenutno ništa nova... provjerite uskoro!"
@@ -4361,6 +4424,8 @@ hr:
       pinned:
         title: "Zakvačeno"
         help: "Ova vam je tema zakvačena, prikazivati će se na vrhu svoje kategorije."
+      hot:
+        title: "Vruće"
       unlisted:
         help: "Ova tema nije navedena; neće se prikazivati u popisima tema i može joj se pristupiti samo putem izravne poveznice. %{unlistedReason}"
       personal_message:
@@ -4479,7 +4544,6 @@ hr:
         replies: "Odgovori"
         replies_with_count: "Odgovori (%{count})"
       posted:
-        title: "Moje objave"
         help: "teme u kojima si objavljivao"
       bookmarks:
         title: "Zabilješke"
@@ -5019,7 +5083,6 @@ hr:
               content: "Korisnici"
               title: "Popis svih korisnika"
             my_posts:
-              content: "Moje objave"
               title: "Moja nedavna aktivnost vezana uz temu"
               title_drafts: "Moje neobjavljene skice"
               draft_count:
@@ -5036,6 +5099,8 @@ hr:
             invite:
               content: "Pozovite"
               title: "Pozovite nove članove"
+            my_messages:
+              title: "Moje osobne poruke"
         global_section: "Globalni odjeljak, vidljiv svima"
       panels:
         forum:
@@ -5217,6 +5282,12 @@ hr:
             latest: "Najnovije teme u %{category} bez oznaka"
             top: "Najpopularnije teme u %{category} bez oznaka"
             new: "Nove teme u %{category} bez oznaka"
+            unread: "Nepročitane teme u %{category} bez oznaka"
+            unseen: "Neviđene teme u %{category} bez oznaka"
+            hot: "Vruće teme u %{category} bez oznaka"
+            posted: "Teme u %{category} bez oznaka u kojima ste objavili"
+            bookmarks: "Teme u %{category} bez oznaka koje ste označili"
+            default: "%{filter} teme u %{category} bez oznaka"
         categories: "Sve kategorije"
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
@@ -5232,6 +5303,7 @@ hr:
           never: "nikad"
       reports:
         title: "Popis dostupnih izvještaja"
+        meta_doc: "Izvješća su moćan alat koji vam pomaže da shvatite što se događa na vašoj stranici. Mogu vam pomoći u prepoznavanju trendova, uočavanju problema i donošenju odluka na temelju podataka."
         sidebar_title: "Izvještaji"
       config_sections:
         account:
@@ -5758,6 +5830,9 @@ hr:
           delete: "Pobriši"
         color_palettes:
           palette_name: "Ime"
+          copy_to_clipboard: "Kopirati u međuspremnik"
+          copied_to_clipboard: "Kopirano u međuspremnik"
+          copy_to_clipboard_error: "Greška pri kopiranju podataka u međuspremnik"
           duplicate: "Dupliciraj"
           delete: "Pobriši"
           colors:

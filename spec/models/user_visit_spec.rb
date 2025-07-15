@@ -2,7 +2,7 @@
 
 RSpec.describe UserVisit do
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   it "can ensure consistency" do
     user.update_visit_record!(2.weeks.ago.to_date)

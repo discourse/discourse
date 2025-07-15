@@ -3,8 +3,8 @@
 describe Chat::ThreadOriginalMessageSerializer do
   subject(:serializer) { described_class.new(message_1, scope: guardian, root: nil) }
 
-  fab!(:message_1) { Fabricate(:chat_message) }
-  fab!(:guardian_user) { Fabricate(:user) }
+  fab!(:message_1, :chat_message)
+  fab!(:guardian_user, :user)
 
   let(:guardian) { Guardian.new(guardian_user) }
 

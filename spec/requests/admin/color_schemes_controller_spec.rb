@@ -32,20 +32,6 @@ RSpec.describe Admin::ColorSchemesController do
         expect(scheme_colors[0]["hex"]).to eq(base_scheme_colors[0].hex)
       end
 
-      it "filters colors belonging to experimental system themes" do
-        SiteSetting.experimental_system_themes = ""
-        get "/admin/color_schemes.json"
-        expect(response.status).to eq(200)
-        scheme_names = response.parsed_body.map { |scheme| scheme["name"] }
-        expect(scheme_names).not_to include("Horizon")
-
-        SiteSetting.experimental_system_themes = "horizon"
-        get "/admin/color_schemes.json"
-        expect(response.status).to eq(200)
-        scheme_names = response.parsed_body.map { |scheme| scheme["name"] }
-        expect(scheme_names).to include("Horizon")
-      end
-
       it "serializes default colors even when not present in database" do
         scheme = ColorScheme.create_from_base({ name: "my color scheme" })
         scheme.colors.find_by(name: "primary").destroy!
@@ -172,7 +158,7 @@ RSpec.describe Admin::ColorSchemesController do
   end
 
   describe "#update" do
-    fab!(:existing) { Fabricate(:color_scheme) }
+    fab!(:existing, :color_scheme)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -235,7 +221,7 @@ RSpec.describe Admin::ColorSchemesController do
   end
 
   describe "#destroy" do
-    fab!(:existing) { Fabricate(:color_scheme) }
+    fab!(:existing, :color_scheme)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }

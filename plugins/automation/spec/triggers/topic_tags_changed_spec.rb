@@ -3,9 +3,9 @@
 describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
   before { SiteSetting.discourse_automation_enabled = true }
 
-  fab!(:cool_tag) { Fabricate(:tag) }
-  fab!(:bad_tag) { Fabricate(:tag) }
-  fab!(:another_tag) { Fabricate(:tag) }
+  fab!(:cool_tag, :tag)
+  fab!(:bad_tag, :tag)
+  fab!(:another_tag, :tag)
 
   fab!(:category)
 
@@ -83,8 +83,8 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
   end
 
   context "when watching a few cool tags" do
-    fab!(:cool_tag_2) { Fabricate(:tag) }
-    fab!(:cool_tag_3) { Fabricate(:tag) }
+    fab!(:cool_tag_2, :tag)
+    fab!(:cool_tag_3, :tag)
 
     before do
       automation.upsert_field!(
@@ -189,8 +189,8 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
   end
 
   context "when watching a few categories" do
-    fab!(:category_2) { Fabricate(:category) }
-    fab!(:category_3) { Fabricate(:category) }
+    fab!(:category_2, :category)
+    fab!(:category_3, :category)
 
     before do
       automation.upsert_field!(

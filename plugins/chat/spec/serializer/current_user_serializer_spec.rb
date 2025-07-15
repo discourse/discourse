@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CurrentUserSerializer do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:serializer) do
     described_class.new(current_user, scope: Guardian.new(current_user), root: false)

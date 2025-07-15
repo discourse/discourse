@@ -536,7 +536,7 @@ ug:
         title:
           one: "چەكلىگەن قىستۇرمىنىڭ كېچىكتۈرۈلگەن تەكشۈرۈشچان ئىنكاسى بار:"
           other: "چەكلىگەن قىستۇرمىنىڭ كېچىكتۈرۈلگەن تەكشۈرۈشچان ئىنكاسى بار:"
-        instruction: "سىز مۇناسىپ قىستۇرمىنى قوزغاتمىغۇچە ئۇلار نورمال كۆرۈنمەيدۇ. قىستۇرمىنى قوزغىتىپ بەتنى يېڭىلاڭ. ياكى، ئۇلارغا پەرۋا قىلمىسىڭىزمۇ بولىدۇ. <a href='%{url}' target='_blank'>تېخىمۇ كۆپ بىلدۈرگۈ…</a>"
+        instruction: "سىز مۇناسىپ قىستۇرمىنى قوزغاتمىغۇچە ئۇلار نورمال كۆرۈنمەيدۇ. قىستۇرمىنى قوزغىتىپ بەتنى يېڭىلاڭ. ياكى، ئۇلارغا پەرۋا قىلمىسىڭىزمۇ بولىدۇ. <a href='%{url}' target='_blank'>مول بىلىم…</a>"
         reviewable_unknown_source: "%{reviewableType} (يوچۇن قىستۇرما)"
         reviewable_known_source: "%{reviewableType} («%{pluginName}» قىستۇرمىدىن)"
         ignore_all: "ھەممىگە پەرۋا قىلما"
@@ -738,6 +738,61 @@ ug:
         reviewable_post:
           title: "يازما"
           noun: "يازما"
+      flagged_as: "پاش قىلىنغان"
+      assigned_to: "تەقسىم قىلىندى"
+      moderator_actions: "رىياسەتچى مەشغۇلاتى"
+      timeline_and_notes: "ۋاقىت سىزىقى ۋە ئىزاھات"
+      timeline:
+        target_created: "يازما قۇرۇلدى"
+        target_created_by: "يازما قۇرغۇچى %{username} · %{relativeDate}"
+        flagged: "پاش قىلىندى"
+        flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
+        claimed: "تەلەپ قىلىندى"
+        claimed_by: "%{username} · %{relativeDate} تەلەپ قىلدى"
+        reviewed: "تەكشۈردى"
+        reviewed_by: "%{username} · %{relativeDate} تەكشۈردى"
+        view_conversation: "شەخسىي ئۇچۇرنى كۆرسىتىدۇ"
+        note_added: "رىياسەتچى ئىزاھاتى"
+        note_added_by: "%{username} · %{relativeDate} رىياسەتچى ئىزاھاتى"
+        no_events: "كۆرسىتىدىغان ۋاقىت سىزىقى پائالىيىتى يوق"
+      notes:
+        add_note_description: "رىياسەتچىگىلا كۆرۈنىدى. بۇ ئىزاھات ئارقىلىق تەكشۈرۈپ تەستىقلاشقا مۇناسىۋەتلىك مەزمۇن ياكى قارار قوشۇلىدۇ."
+        add_note_button: "ئىزاھات قوش"
+        placeholder: "بۇ جايغا ئىزاھاتىڭىزنى يېزىڭ…"
+        chars_remaining: "%{count} ھەرپ قالدى"
+        delete_note: "بۇ ئىزاھاتنى ئۆچۈر"
+        delete: "ئۆچۈر"
+      new_topic_label: "يېڭى تېما"
+      queued_user: "ئۆچرەتتىكى ئىشلەتكۈچى"
+      posted_in: "يوللانغان ۋاقتى"
+      flagged_user: "باش قىلىنغان ئىشلەتكۈچى"
+      review_user: "ئىشلەتكۈچى"
+      need_help: "ياردەم كېرەكمۇ؟"
+      copy_link: "ئۇلانما كۆچۈر"
+      view_source: "مەنبەنى كۆرسەت"
+      insights:
+        title: "چۈشەنچە"
+        flag_volume: "پاش قىلىش مىقدارى"
+        flagged_by_users:
+          one: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
+          other: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
+        similar_posts: "ئوخشاشراق ئىلگىرىكى يازما"
+        flagged_in_timeframe: "ئىلگىرى %{count} قېتىم پاش قىلىنغان"
+        user_activity: "ئىشلەتكۈچى پائالىيىتى"
+        activities:
+          new_account: "يېڭى ھېسابات"
+          trust_level: "ئىشەنچ دەرىجىسى: %{trustLevelName}"
+          posts:
+            one: "%{count} يازما"
+            other: "%{count} يازما"
+        solution_marked: "ھەل قىلىش چارىسى دەپ بەلگە سېلىندى"
+        topic_has_solution: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"
+        visibility: "كۆرۈنۈشچانلىقى"
+        topic_unlisted: "بۇ تېما تىزىمدىن قالدۇرۇلدى. پەقەت بىۋاسىتە ئۇلانما ئارقىلىق زىيارەت قىلغىلى بولىدۇ - ئاشكارا ئەمەس."
+      help:
+        moderation_guide: "Discourse رىياسەتچىلىك يېتەكچىسى"
+        flag_priorities: "ئىشلەتكۈچىنىڭ ئىناۋىتى ۋە پاش قىلىش ئالدىنلىقىنى باشقۇرىدۇ"
+        spam_detection: "ئەخلەت ئۇچۇر بايقاش"
       approval:
         title: "يازما تەستىقلاشقا موھتاج"
         description: "يېڭى يازمىڭىزنى تاپشۇرۇۋالدۇق ئەمما ئۇ كۆرۈنۈشتىن ئىلگىرى رىياسەتچى تەستىقلىشى كېرەك. سەۋر قىلىڭ."
@@ -1177,6 +1232,7 @@ ug:
     user_fields:
       none: "(تاللانما تاللىنىدۇ)"
       required: '«%{name}» نىڭ قىممىتىنى كىرگۈزۈڭ'
+      required_select: '«%{name}» نىڭ قىممىتىنى تاللاڭ'
       required_checkbox: 'بۆلەك «%{name}» زۆرۈر'
       same_as_password: "سىز كىرگۈزگەن ئىم باشقا بۆلەكتە تەكرارلانماسلىقى كېرەك"
       optional: (تاللاشچان)
@@ -2106,6 +2162,8 @@ ug:
       errors_summary_title: "بۇ جەدۋەلدە خاتالىق بار:"
       dirty_form: "ئۆزگەرتىشلىرىڭىزنى تاپشۇرمىدىڭىز! راستتىنلا ئايرىلامسىز؟"
       errors:
+        starts_with: "چوقۇم %{prefix} بىلەن باشلىنىدۇ"
+        ends_with: "چوقۇم %{suffix} بىلەن ئاخىرلىشىدۇ"
         required: "زۆرۈر"
         date_before_or_equal: "چوقۇم %{date} دىن ئىلگىرى ياكى تەڭ بولۇشى كېرەك"
         date_after_or_equal: "چوقۇم %{date} دىن كېيىن ياكى تەڭ بولۇشى كېرەك"
@@ -2165,8 +2223,8 @@ ug:
             one {# خاتالىق/مىنۇت}
           other {# خاتالىق/مىنۇت}
         } چېكىدىن ئېشىپ كەتتى.
-    learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ…"
-    learn_more_with_link: "<a href='%{url}' target='_blank'>تەپسىلاتى…</a>"
+    learn_more: "مول بىلىم…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>مول بىلىم…</a>"
     mute: ئۈنسىز
     unmute: ئۈنلۈك
     last_post: يوللانغان ۋاقىت
@@ -2674,6 +2732,11 @@ ug:
       image_alt_text:
         aria_label: سۈرەتنىڭ ئالماشتۇرىدىغان خېتى
         title: "سۈرەت چۈشەندۈرۈشى قوش"
+      image_toolbar:
+        alt_text: "سۈرەت چۈشەندۈرۈشى قوش"
+        zoom_out: "سۈرەت چوڭلۇقىنى كىچىكلىتىدۇ"
+        zoom_in: "سۈرەت چوڭلۇقىنى چوڭايتىدۇ"
+        remove: "سۈرەتنى چىقىرىۋېتىدۇ"
       image_scale_button: "سۈرەتنى %%{percent} كە تەڭشە"
       delete_image_button: سۈرەت ئۆچۈر
       toggle_image_grid: سۈرەت سېتكىسىنى ئالماشتۇر
@@ -3088,7 +3151,7 @@ ug:
         hot: "قىزىق تېما يوق."
         filter: "تېما يوق."
         education:
-          topic_tracking_preferences: "يېڭى تېما ئىزلاش تەڭىكىڭىزنى <a href=\"%{basePath}/my/preferences/tracking\">مايىللىقىڭىز</a> دا كۆرسىتىپ ۋە ئۆزگەرتەلەيسىز."
+          topic_tracking_preferences: 'يېڭى تېما ئىزلاش تەڭىكىڭىزنى <a href="%{basePath}/my/preferences/tracking">مايىللىقىڭىز</a> دا كۆرسىتىپ ۋە ئۆزگەرتەلەيسىز.'
           unread: "ئوقۇلمىغان ھېچ نەرسە قالمىدى… تەسىرلىك!"
           new_new: "ھازىرچە ھېچقانداق يېڭىلىق يوق… تېزلا تەكشۈرىدۇ!"
           new: "ھازىرچە ھېچقانداق يېڭىلىق يوق… تېزلا تەكشۈرىدۇ!"
@@ -3802,6 +3865,9 @@ ug:
           one: "يازمىنى راستتىنلا بىرلەشتۈرەمسىز؟"
           other: "%{count} يازمىنى راستتىنلا بىرلەشتۈرەمسىز؟"
       revisions:
+        locale:
+          no_locale_set: "تىل تەڭشىكى يوق"
+          locale_removed: "تىل چىقىرىۋېتىلدى"
         controls:
           first: "بىرىنچى تۈزىتىش"
           previous: "ئالدىنقى تۈزىتىش"
@@ -4152,6 +4218,8 @@ ug:
       pinned:
         title: "چوققىلاندى"
         help: "بۇ تېما سىزگە چوققىلاندى، ئۇ ئۆزىنىڭ سەھىپىسىنىڭ چوققىسىدا كۆرۈنىدۇ"
+      hot:
+        title: "قىزىق"
       unlisted:
         help: "بۇ تېما تىزىمدىن قالدۇرۇلدى؛ ئۇ تېما تىزىمىدا كۆرۈنمەيدۇ، پەقەت بىۋاسىتە ئۇلانمىسى ئارقىلىق زىيارەت قىلغىلى بولىدۇ. %{unlistedReason}"
       personal_message:
@@ -4254,11 +4322,16 @@ ug:
           other: "يېڭى (%{count})"
         help: "ئۆتكەن بىر قانچە كۈندە قۇرۇلغان يازما"
         all: "ھەممىسى"
+        all_tooltip: "بارلىق يېڭى تېما ۋە يېقىنقى بىر قانچە كۈندىكى جاۋاب يېزىلغان تېمىلار"
         all_with_count: "ھەممىسى (%{count})"
+        new_topics_tooltip: "يېڭى تېما"
         topics: "تېما"
         topics_with_count: "تېما (%{count})"
+        new_replies_tooltip: "يېڭى جاۋاب"
         replies: "جاۋاب"
         replies_with_count: "جاۋاب (%{count})"
+      new_new:
+        help: "يېقىنقى بىر قانچە كۈندە قۇرۇلغان ياكى جاۋاب يېزىلغان تېمىلار"
       posted:
         title: "يازمىلىرىم"
         help: "سىز يازما يوللاپ باققان تېما"
@@ -4795,6 +4868,9 @@ ug:
             invite:
               content: "تەكلىپ"
               title: "يېڭى ئەزا تەكلىپ قىلىش"
+            my_messages:
+              content: "ئۇچۇرلىرىم"
+              title: "شەخسىي ئۇچۇرلىرىم"
         global_section: "ئومۇمىيەت بۆلىكى، ھەممەيلەنگە كۆرۈنىدۇ"
       panels:
         forum:
@@ -4914,7 +4990,7 @@ ug:
           paste: "چاپلا…"
           save: "باشقا ئاتتا ساقلا…"
     powered_by_discourse: "Discourse دا ياسالغان"
-    safari_15_warning: "توركۆرگۈڭىز بۇ جامائەت بىلەن تېزلا ماسلاشماسلىقى مۇمكىن. بۇ جامائەتكە قاتنىشىش ئۈچۈن، توركۆرگۈڭىزنى يۈكسەلتىڭ ياكى <a href='%{url}'>تېخىمۇ كۆپ بىلدۈرگۈ</a>."
+    safari_15_warning: "توركۆرگۈڭىز بۇ جامائەت بىلەن تېزلا ماسلاشماسلىقى مۇمكىن. بۇ جامائەتكە قاتنىشىش ئۈچۈن، توركۆرگۈڭىزنى يۈكسەلتىڭ ياكى <a href='%{url}'>مول بىلىم</a>."
     discovery:
       headings:
         all:
@@ -5371,9 +5447,9 @@ ug:
         dismiss_notice: "پەرۋا قىلما"
         new_features:
           title: "يېڭىلىق?"
-          subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «تېخىمۇ كۆپ بىلدۈرگۈ» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
+          subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «مول بىلىم» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
           previous_announcements: "سىز <a href='%{url}' target='_blank'>Discourse Meta</a> دىن ئىلگىرىكى يېڭى ئىقتىدار ئۇقتۇرۇشىنى كۆرەلەيسىز"
-          learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ…"
+          learn_more: "مول بىلىم…"
           experimental: "تەجرىبە"
           only_experiments: "پەقەت تەجرىبە ئىقتىدارلىرىنىلا كۆرسىتىدۇ"
           experiment_enabled: "تەجرىبە ئىقتىدارىنى قوزغاتتىڭىز."
@@ -6013,7 +6089,7 @@ ug:
             used_on: "ئىشلىتىلگەن"
             enabled: "قوزغىتىلدى؟"
             by_author: "يازغۇچى %{name}"
-            learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
+            learn_more: "مول بىلىم"
             edit: "تەھرىر"
             parent_themes_two: "%{name1} ۋە %{name2}"
             parent_themes_three: "%{name1}, %{name2} ۋە %{name3}"
@@ -6054,6 +6130,9 @@ ug:
           save_successful: "ئىشلەتكۈچى بۆلىكى ساقلاندى."
         color_palettes:
           palette_name: "ئىسمى"
+          copy_to_clipboard: "چاپلاش تاختىسىغا كۆچۈر"
+          copied_to_clipboard: "چاپلاش تاختىسىغا كۆچۈرۈلدى"
+          copy_to_clipboard_error: "سانلىق مەلۇماتنى چاپلاش تاختىسىغا كۆچۈرۈۋاتقاندا خاتالىق كۆرۈلدى"
           duplicate: "كۆپەيت"
           delete: "ئۆچۈر"
           color_options:
@@ -6085,7 +6164,7 @@ ug:
         broken_route: "«%{name}» دەك ئۇلانمىنى سەپلىيەلمەيدۇ. ئېلان چەكلىگۈچنى چەكلەپ ئاندىن بەتنى قايتا يۈكلەشنى سىنايدۇ."
         author: "يازغۇچى %{author}"
         experimental_badge: "تەجرىبە"
-        learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ"
+        learn_more: "مول بىلىم"
       navigation_menu:
         sidebar: "يانبالداق"
         header_dropdown: "ماۋزۇ تارتما تىزىملىك"
@@ -6363,6 +6442,7 @@ ug:
           compare_commits: "(يېڭى تاپشۇرۇشنى كۆرسەت)"
           remote_theme_edits: "ئەگەر بۇ ئۆرنەكنى تەھرىرلىمەكچى بولسىڭىز، <a href='%{repoURL}' target='_blank'>خەزىنەگە ئۆزگىرىش يوللاش</a> زۆرۈر."
           repo_unreachable: "بۇ ئۆرنەكنىڭ Git خەزىنە ئامبىرى بىلەن ئالاقىلىشالمىدى. خاتالىق ئۇچۇرى:"
+          built_in_description: "بۇ ئۆرنەك ئالدىن ئورنىتىلغان بولۇپ، ئۆچۈرگىلى ياكى خاسلاشتۇرغىلى بولمايدۇ."
           imported_from_archive: "بۇ ئۆرنەك .zip ھۆججەتتىن ئەكىرىلگەن"
           settings: "تەڭشەك"
           colors: "رەڭ"

@@ -26,17 +26,30 @@
 
 .topic-list {
   @extend .topic-list-icons;
-  margin: 0 0 10px;
+  margin: var(--d-topic-list-margin-h) var(--d-topic-list-margin-v)
+    var(--d-topic-list-margin-bottom);
+
+  .topic-list-header {
+    font-size: var(--d-topic-list-header-font-size);
+    background-color: var(--d-topic-list-header-background-color);
+  }
+
+  .topic-list-header .topic-list-data {
+    padding: var(--d-topic-list-header-data-padding-h)
+      var(--d-topic-list-header-data-padding-v);
+    color: var(--d-topic-list-header-text-color);
+  }
 
   .topic-list-data {
-    padding: var(--space-3) var(--space-1);
+    padding: var(--d-topic-list-data-padding-h)
+      var(--d-topic-list-data-padding-v);
 
     &:first-of-type {
-      padding-inline-start: 0.75rem;
+      padding-inline-start: var(--d-topic-list-data-padding-inline-start);
     }
 
     &:last-of-type {
-      padding-inline-end: 0.75rem;
+      padding-inline-end: var(--d-topic-list-data-padding-inline-end);
     }
 
     th & {
@@ -86,6 +99,11 @@
     // will be overridden by media width queries on narrow displays to 1 avatar's width
     width: 146px;
 
+    img.avatar {
+      height: var(--d-topic-list-avatar-size);
+      width: var(--d-topic-list-avatar-size);
+    }
+
     > a {
       float: left;
       margin-right: 4px;
@@ -115,15 +133,15 @@
   }
 
   .likes {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .views {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .posts {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .post-actions {
@@ -300,4 +318,5 @@
 
 .container.list-container {
   position: relative;
+  padding: 0 var(--list-container-horizontal-padding);
 }

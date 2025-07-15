@@ -714,6 +714,16 @@ it:
         reviewable_post:
           title: "Messaggio"
           noun: "messaggio"
+      notes:
+        delete: "Elimina"
+      review_user: "Utente"
+      copy_link: "Copia link"
+      insights:
+        activities:
+          posts:
+            one: "%{count} messaggio"
+            other: "%{count} messaggi"
+        visibility: "Visibilità"
       approval:
         title: "Messaggio Da Approvare"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia deve essere approvato da un moderatore. Attendi."
@@ -2599,6 +2609,8 @@ it:
       image_alt_text:
         aria_label: Testo alternativo per l'immagine
         title: "Aggiungi descrizione immagine"
+      image_toolbar:
+        alt_text: "Aggiungi descrizione immagine"
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine
@@ -4025,6 +4037,8 @@ it:
       pinned:
         title: "Appuntato"
         help: "Questo argomento è appuntato per te; verrà mostrato in cima alla sua categoria"
+      hot:
+        title: "Novità"
       unlisted:
         help: "Questo argomento è invisibile: non verrà mostrato negli elenchi argomenti ed è possibile accedervi solo tramite collegamento diretto. %{unlistedReason}"
       personal_message:
@@ -4133,7 +4147,7 @@ it:
         replies: "Risposte"
         replies_with_count: "Risposte (%{count})"
       posted:
-        title: "I miei Messaggi"
+        title: "I miei messaggi"
         help: "argomenti in cui hai scritto"
       bookmarks:
         title: "Segnalibri"
@@ -4647,8 +4661,7 @@ it:
               content: "Utenti"
               title: "Elenco di tutti gli utenti"
             my_posts:
-              content: "I miei Messaggi"
-              content_drafts: "Le mie bozze"
+              content: "I miei messaggi"
               title: "La mia recente attività sull'argomento"
               title_drafts: "Le mie bozze non pubblicate"
               draft_count:
@@ -5668,6 +5681,9 @@ it:
           save_successful: "Campo utente salvato."
         color_palettes:
           palette_name: "Nome"
+          copy_to_clipboard: "Copia negli Appunti"
+          copied_to_clipboard: "Copiato negli Appunti"
+          copy_to_clipboard_error: "Errore durante la copia negli appunti"
           duplicate: "Duplica"
           delete: "Elimina"
           color_options:

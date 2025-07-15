@@ -33,7 +33,7 @@ RSpec.describe "Dismissing New", type: :system do
     end
 
     context "when dismissing new on a category's topic list" do
-      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:category, :category_with_definition)
       fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
       fab!(:category_topic) { Fabricate(:topic, category: category, user: user) }
       fab!(:category_post1) { create_post(user: user, topic: category_topic) }

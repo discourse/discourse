@@ -44,6 +44,10 @@ module PageObjects
         self
       end
 
+      def heading_menu
+        PageObjects::Components::DMenu.new(find(".d-editor-button-bar button.heading"))
+      end
+
       def focus
         find(COMPOSER_INPUT_SELECTOR).click
         self
@@ -293,6 +297,11 @@ module PageObjects
           composer.focus();
           composer.setSelectionRange(#{start_index}, #{length});
         JS
+      end
+
+      def select_range_rich_editor(start_index, length)
+        focus
+        select_text_range(RICH_EDITOR, start_index, length)
       end
 
       def submit

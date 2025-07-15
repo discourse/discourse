@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Header Search - Responsive Behavior", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   let(:search_page) { PageObjects::Pages::Search.new }
 
   before { SiteSetting.search_experience = "search_field" }

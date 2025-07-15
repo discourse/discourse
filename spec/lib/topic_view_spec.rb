@@ -962,8 +962,8 @@ RSpec.describe TopicView do
   end
 
   describe "#image_url" do
-    fab!(:op_upload) { Fabricate(:image_upload) }
-    fab!(:post3_upload) { Fabricate(:image_upload) }
+    fab!(:op_upload, :image_upload)
+    fab!(:post3_upload, :image_upload)
 
     fab!(:post1) { Fabricate(:post, topic: topic) }
     fab!(:post2) { Fabricate(:post, topic: topic) }

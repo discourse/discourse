@@ -8,7 +8,7 @@ describe Jobs::DiscourseAutomation::StalledTopicTracker do
   end
 
   describe "find stalled topics" do
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_1, :user)
     fab!(:topic_1) { Fabricate(:topic, user: user_1, created_at: 1.month.ago) }
 
     before do

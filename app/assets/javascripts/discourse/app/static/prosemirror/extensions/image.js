@@ -177,6 +177,23 @@ const extension = {
     },
   },
 
+  inputRules: ({
+    utils: { convertFromMarkdown },
+    pmState: { NodeSelection },
+  }) => {
+    return {
+      match: /!\[[^\]]*\]\([^\s]+\)$/,
+      handler: (state, match, start, end) => {
+        const tr = state.tr;
+
+        return tr
+          .replaceWith(start, end, convertFromMarkdown(match[0]))
+          .setSelection(NodeSelection.create(tr.doc, start + 2))
+          .scrollIntoView();
+      },
+    };
+  },
+
   plugins({ pmState: { Plugin, NodeSelection, TextSelection } }) {
     const shortUrlResolver = new Plugin({
       state: {
