@@ -1021,7 +1021,7 @@ class Topic < ActiveRecord::Base
 
   cattr_accessor :update_featured_topics
 
-  def changed_to_category(new_category)
+  def changed_to_category(new_category, silent: nil)
     return true if new_category.blank? || Category.exists?(topic_id: id)
 
     if new_category.id == SiteSetting.uncategorized_category_id &&
@@ -1053,7 +1053,9 @@ class Topic < ActiveRecord::Base
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        if !SiteSetting.disable_category_edit_notifications && (post = self.ordered_posts.first)
+        skip_alert = silent || SiteSetting.disable_category_edit_notifications
+
+        if !skip_alert && (post = self.ordered_posts.first)
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
           DB.after_commit do
             Jobs.enqueue(
@@ -1130,7 +1132,7 @@ class Topic < ActiveRecord::Base
     new_post
   end
 
-  def change_category_to_id(category_id)
+  def change_category_to_id(category_id, silent: nil)
     return false if private_message?
 
     new_category_id = category_id.to_i
@@ -1144,7 +1146,7 @@ class Topic < ActiveRecord::Base
 
     reviewables.update_all(category_id: new_category_id)
 
-    changed_to_category(cat)
+    changed_to_category(cat, silent: silent)
   end
 
   def remove_allowed_group(removed_by, name)
