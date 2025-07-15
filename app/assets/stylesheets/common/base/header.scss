@@ -181,7 +181,7 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
-      background-color: var(--primary-low);
+      background-color: var(--d-hover);
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
@@ -193,7 +193,7 @@
 
     &:active {
       color: var(--primary);
-      background-color: var(--primary-low);
+      background-color: var(--d-hover);
     }
   }
 
