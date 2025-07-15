@@ -74,11 +74,12 @@ function registerTopicFooterButtons(api) {
       const modal = getOwner(this).lookup("service:modal");
 
       if (this.topic.isAssigned()) {
-        this.set("topic.assigned_to_user", null);
-        this.set("topic.assigned_to_group", null);
+        this.topic.assigned_to_user = null;
+        this.topic.assigned_to_group = null;
 
         await taskActions.unassign(this.topic.id, "Topic");
 
+        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
         this.appEvents.trigger("post-stream:refresh", {
           id: this.topic.postStream.firstPostId,
         });
@@ -88,6 +89,7 @@ function registerTopicFooterButtons(api) {
             topic: this.topic,
           },
           onSuccess: () =>
+            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh", {
               id: this.topic.postStream.firstPostId,
             }),
@@ -172,9 +174,10 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      this.set("topic.assigned_to_user", null);
-      this.set("topic.assigned_to_group", null);
+      this.topic.assigned_to_user = null;
+      this.topic.assigned_to_group = null;
       taskActions.unassign(this.topic.id).then(() => {
+        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
         this.appEvents.trigger("post-stream:refresh", {
           id: this.topic.postStream.firstPostId,
         });
@@ -220,11 +223,12 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      this.set("topic.assigned_to_user", null);
-      this.set("topic.assigned_to_group", null);
+      this.topic.assigned_to_user = null;
+      this.topic.assigned_to_group = null;
 
       await taskActions.reassignUserToTopic(this.currentUser, this.topic);
 
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh", {
         id: this.topic.postStream.firstPostId,
       });
@@ -274,6 +278,7 @@ function registerTopicFooterButtons(api) {
         targetType: "Topic",
         isAssigned: this.topic.isAssigned(),
         onSuccess: () =>
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", {
             id: this.topic.postStream.firstPostId,
           }),
@@ -499,42 +504,49 @@ function initialize(api) {
               }
               const target = post || topic;
 
-              target.set("assignment_note", data.assignment_note);
-              target.set("assignment_status", data.assignment_status);
+              target.assignment_note = data.assignment_note;
+              target.assignment_status = data.assignment_status;
               if (data.assigned_type === "User") {
-                target.set(
-                  "assigned_to_user_id",
-                  data.type === "assigned" ? data.assigned_to.id : null
-                );
-                target.set("assigned_to_user", data.assigned_to);
+                target.assigned_to_user_id =
+                  data.type === "assigned" ? data.assigned_to.id : null;
+                target.assigned_to_user = data.assigned_to;
               }
               if (data.assigned_type === "Group") {
-                target.set(
-                  "assigned_to_group_id",
-                  data.type === "assigned" ? data.assigned_to.id : null
-                );
-                target.set("assigned_to_group", data.assigned_to);
+                target.assigned_to_group_id =
+                  data.type === "assigned" ? data.assigned_to.id : null;
+                target.assigned_to_group = data.assigned_to;
               }
 
               if (data.post_id) {
-                if (data.type === "unassigned") {
-                  delete topic.indirectly_assigned_to[data.post_number];
+                if (data.type === "assigned") {
+                  topic.indirectly_assigned_to[data.post_id].assigned_to =
+                    data.assigned_to;
+                } else if (data.type === "unassigned") {
+                  delete topic.indirectly_assigned_to[data.post_id];
                 }
 
+                // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
                 this.appEvents.trigger("post-stream:refresh", {
                   id: topic.postStream.posts[0].id,
                 });
+                // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
                 this.appEvents.trigger("post-stream:refresh", {
                   id: data.post_id,
                 });
               }
               if (topic.closed) {
+                // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
                 this.appEvents.trigger("post-stream:refresh", {
                   id: topic.postStream.posts[0].id,
                 });
               }
             }
+            // force the components tracking `topic.indirectly_assigned_to` to update
+            // eslint-disable-next-line no-self-assign
+            topic.indirectly_assigned_to = topic.indirectly_assigned_to;
+
             this.appEvents.trigger("header:update-topic", topic);
+            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh", {
               id: topic.postStream.posts[0].id,
             });
@@ -578,7 +590,14 @@ function initialize(api) {
 }
 
 function customizePost(api, siteSettings) {
-  api.addTrackedPostProperties("assigned_to_user", "assigned_to_group");
+  api.addTrackedPostProperties(
+    "assigned_to_group",
+    "assigned_to_group_id",
+    "assigned_to_user",
+    "assigned_to_user_id",
+    "assignment_note",
+    "assignment_status"
+  );
 
   api.modifyClass(
     "model:post",
