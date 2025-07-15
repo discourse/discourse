@@ -2,7 +2,7 @@
 
 .topic-map.--op {
   // topic map under OP
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   border-bottom: none;
   padding-left: calc(
     var(--topic-body-width-padding) + var(--topic-avatar-width)
@@ -35,7 +35,7 @@ body:not(.archetype-private_message) {
   --chart-line-color: var(--tertiary);
   --chart-point-color: var(--tertiary-medium);
   --chart-prediction-color: var(--primary-low-mid);
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   box-sizing: border-box;
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
