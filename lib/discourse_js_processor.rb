@@ -109,7 +109,14 @@ class DiscourseJsProcessor
       @skip_module = skip_module
     end
 
-    def perform(source, root_path = nil, logical_path = nil, theme_id: nil, extension: nil)
+    def perform(
+      source,
+      root_path = nil,
+      logical_path = nil,
+      theme_id: nil,
+      extension: nil,
+      generate_map: false
+    )
       self.class.v8_call(
         "transpile",
         source,
@@ -119,6 +126,7 @@ class DiscourseJsProcessor
           filename: logical_path || "unknown",
           extension: extension,
           themeId: theme_id,
+          generateMap: generate_map,
         },
       )
     end
