@@ -2108,6 +2108,8 @@ class UsersController < ApplicationController
 
   def respond_to_suspicious_request
     if suspicious?(params)
+      Rails.logger.warn("$$$$$$$$$$ in respond_to_suspicious_request, params is set to #{params}")
+      Rails.logger.warn(params)
       render json: {
                success: true,
                active: false,
@@ -2117,12 +2119,19 @@ class UsersController < ApplicationController
   end
 
   def suspicious?(params)
+    Rails.logger.warn(
+      "$$$$$$$$$$ in suspicious? #{params} | #{current_user} | #{is_api?} | #{current_user&.admin?}",
+    )
     return false if current_user && is_api? && current_user.admin?
     honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
   end
 
   def honeypot_or_challenge_fails?(params)
+    Rails.logger.warn("$$$$$$$$$$ in honeypot_or_challenge_fails? #{params} | #{is_api?}")
     return false if is_api?
+    Rails.logger.warn(
+      "$$$$$$$$$$ in honeypot_or_challenge_fails?2 #{honeypot_value} | #{challenge_value&.try(:reverse)}",
+    )
     params[:password_confirmation] != honeypot_value ||
       params[:challenge] != challenge_value.try(:reverse)
   end
