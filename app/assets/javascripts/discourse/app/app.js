@@ -64,12 +64,6 @@ if (PreloadStore.get("currentUser")?.staff) {
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
-window.moduleBroker = {
-  lookup: function (moduleName) {
-    return require(moduleName);
-  },
-};
-
 for (const link of document.querySelectorAll("link[rel=modulepreload]")) {
   const themeId = link.dataset.themeId;
   const compatModules = (await import(/* @vite-ignore */ link.href)).default;
