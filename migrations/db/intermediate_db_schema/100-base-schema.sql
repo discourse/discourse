@@ -76,6 +76,15 @@ CREATE TABLE categories
     user_id                                   NUMERIC  NOT NULL
 );
 
+CREATE TABLE category_users
+(
+    category_id        NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
+    last_seen_at       DATETIME,
+    notification_level INTEGER  NOT NULL,
+    PRIMARY KEY (category_id, user_id)
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
