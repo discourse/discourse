@@ -315,7 +315,11 @@ class TopicQuery
 
     results = apply_ordering(results) if results.order_values.empty?
 
-    create_list(:filter, {}, results)
+    create_list(
+      :filter,
+      { include_filter_option_info: @options[:include_filter_option_info].to_s != "false" },
+      results,
+    )
   end
 
   def list_read
@@ -561,6 +565,10 @@ class TopicQuery
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
     list.per_page = options[:per_page]&.to_i || per_page_setting
+
+    if filter == :filter && options[:include_filter_option_info]
+      list.filter_option_info = TopicsFilter.option_info
+    end
     list
   end
 

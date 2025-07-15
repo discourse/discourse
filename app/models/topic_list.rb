@@ -45,6 +45,7 @@ class TopicList
     :shared_drafts,
     :category,
     :publish_read_state,
+    :filter_option_info,
   )
 
   def initialize(filter, current_user, topics, opts = nil)
