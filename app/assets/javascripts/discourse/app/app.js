@@ -1,6 +1,6 @@
 performance.mark("discourse-init");
-const event = new CustomEvent("discourse-init");
-document.dispatchEvent(event);
+const initEvent = new CustomEvent("discourse-init");
+document.dispatchEvent(initEvent);
 
 import "./setup-deprecation-workflow";
 import "decorator-transforms/globals";
@@ -57,7 +57,6 @@ function populatePreloadStore() {
 populatePreloadStore();
 
 let adminCompatModules = {};
-debugger;
 if (PreloadStore.get("currentUser")?.staff) {
   adminCompatModules = (await import("admin/compat-modules")).default;
 }
