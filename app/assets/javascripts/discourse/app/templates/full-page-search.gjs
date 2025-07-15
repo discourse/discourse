@@ -226,6 +226,7 @@ export default RouteTemplate(
                   @selected={{@controller.bulkSelectHelper.selected}}
                   @highlightQuery={{@controller.highlightQuery}}
                   @searchLogId={{@controller.model.grouped_search_result.search_log_id}}
+                  @isPMOnly={{@controller.isPMOnly}}
                 />
 
                 <ConditionalLoadingSpinner @condition={{@controller.loading}}>

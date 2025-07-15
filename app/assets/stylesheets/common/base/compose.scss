@@ -1199,6 +1199,10 @@ div.ac-wrap {
         height: calc(var(--composer-vh, 1vh) * 100) !important;
       }
 
+      .grippie {
+        display: none;
+      }
+
       .d-editor-preview-wrapper {
         margin-top: 1%;
       }
@@ -1221,10 +1225,6 @@ div.ac-wrap {
       #file-uploading {
         margin-left: 0;
         text-align: initial;
-      }
-
-      .composer-popup {
-        top: 30px;
       }
 
       &::before {

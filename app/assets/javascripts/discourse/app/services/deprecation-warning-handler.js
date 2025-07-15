@@ -31,6 +31,7 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.decorate-plugin-outlet",
   "component-template-resolving",
   "discourse.script-tag-hbs",
+  "discourse.script-tag-discourse-plugin",
 ];
 
 const REPLACEMENT_URLS = {
