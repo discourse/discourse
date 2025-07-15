@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    discourse_hCaptcha:
+      missing_token: "Veuillez compléter le défi hCaptcha."
+      placeholder: espace réservé
+      contact_system_administrator: "Une erreur s'est produite avec hCaptcha. Si ce problème persiste, veuillez contacter un administrateur système"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_hcaptcha: "Discours hCaptcha"

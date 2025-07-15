@@ -234,3 +234,10 @@ files:
   - source_path: plugins/discourse-subscriptions/config/locales/server.en.yml
     destination_path: plugins/subscriptions/server.yml
     label: subscriptions
+
+  - source_path: plugins/discourse-hcaptcha/config/locales/client.en.yml
+    destination_path: plugins/hcaptcha/client.yml
+    label: hcaptcha
+  - source_path: plugins/discourse-hcaptcha/config/locales/server.en.yml
+    destination_path: plugins/hcaptcha/server.yml
+    label: hcaptcha

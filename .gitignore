@@ -67,6 +67,7 @@
 !/plugins/discourse-user-notes
 !/plugins/discourse-assign
 !/plugins/discourse-subscriptions
+!/plugins/discourse-hcaptcha
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

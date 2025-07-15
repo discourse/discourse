@@ -98,6 +98,10 @@ discourse-subscriptions:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-subscriptions/**/*
 
+discourse-hcaptcha:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-hcaptcha/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
