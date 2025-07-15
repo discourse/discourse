@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { array, fn } from "@ember/helper";
+import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import { not } from "truth-helpers";
@@ -47,6 +48,17 @@ export default class ColorSchemeListItem extends Component {
       );
     }
     return htmlSafe(getColorSchemeStyles(this.args.scheme));
+  }
+
+  @action
+  setDefault() {
+    this.args.toggleUserSelectable(this.args.scheme);
+    this.dMenu.close();
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
   }
 
   <template>
@@ -110,13 +122,14 @@ export default class ColorSchemeListItem extends Component {
               @modalForMobile={{true}}
               @icon="ellipsis"
               @triggers={{array "click"}}
+              @onRegisterApi={{this.onRegisterApi}}
             >
               <:content>
                 <DropdownMenu as |dropdown|>
                   {{#unless this.isBuiltInDefault}}
                     <dropdown.item>
                       <DButton
-                        @action={{fn @toggleUserSelectable @scheme}}
+                        @action={{this.setDefault}}
                         @icon={{if
                           @scheme.user_selectable
                           "user-xmark"
