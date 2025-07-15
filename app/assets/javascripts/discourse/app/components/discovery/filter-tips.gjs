@@ -60,7 +60,7 @@ export default class FilterTips extends Component {
     const words = this.currentInputValue.split(/\s+/);
     const lastWord = words[words.length - 1].toLowerCase();
 
-    if (!this.currentInputValue) {
+    if (!this.currentInputValue || lastWord === "") {
       return this.args.tips
         .filter((tip) => tip.priority)
         .sort((a, b) => (b.priority || 0) - (a.priority || 0))
