@@ -126,6 +126,13 @@ RSpec.describe Middleware::RequestTracker do
       expect(headers["X-Discourse-BrowserPageView"]).to eq(nil)
     end
 
+    it "adds the appropriate response header based on deferred tracking (MiniProfiler piggyback, BPVs)" do
+      middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
+      status, headers, response = middleware.call(env("HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"))
+      expect(headers["X-Discourse-TrackView"]).to eq(nil)
+      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+    end
+
     it "can log requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
@@ -190,7 +197,7 @@ RSpec.describe Middleware::RequestTracker do
         )
       Middleware::RequestTracker.log_request(data)
 
-      expect(data[:deferred_track]).to eq(true)
+      expect(data[:deferred_track_view]).to eq(true)
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
