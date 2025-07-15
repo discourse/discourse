@@ -55,6 +55,10 @@
         flex-direction: column;
         gap: var(--space-4);
       }
+
+      @include viewport.until(lg) {
+        padding-inline: var(--space-4);
+      }
     }
 
     .search-menu {
@@ -111,7 +115,7 @@
 
     .--above-topic-content & {
       @container (width >= 800px) {
-        width: calc(45cqw - var(--space-8));
+        flex-grow: 1;
       }
 
       @container (width <= 800px) {
