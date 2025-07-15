@@ -39,7 +39,7 @@ function updateScriptReferences({
         discourse: "/@vite/discourse.js",
         vendor: "/@vite/vendor.js",
         "start-discourse": "/@vite/start-discourse.js",
-        admin: "/@vite/admin.js",
+        // admin: "/@vite/admin.js",
       };
 
       if (!entrypoints[entrypointName]) {
