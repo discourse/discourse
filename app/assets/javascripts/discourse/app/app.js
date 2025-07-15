@@ -61,12 +61,22 @@ if (PreloadStore.get("currentUser")?.staff) {
   adminCompatModules = (await import("admin/compat-modules")).default;
 }
 
-window.moduleBroker = {
-  lookup: (moduleName) => window.require(moduleName),
-};
-
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
+
+window.moduleBroker = {
+  lookup: function (moduleName) {
+    return require(moduleName);
+  },
+};
+
+for (const link of document.querySelectorAll("link[rel=modulepreload]")) {
+  const themeId = link.dataset.themeId;
+  const compatModules = (await import(link.href)).default;
+  for (const [key, mod] of Object.entries(compatModules)) {
+    define(`discourse/theme-${themeId}/${key}`, () => mod);
+  }
+}
 
 class Discourse extends Application {
   modulePrefix = "discourse";

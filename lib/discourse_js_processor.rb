@@ -2,6 +2,8 @@
 require "execjs"
 require "mini_racer"
 
+# MiniRacer::Platform.set_flags!(:trace_wasm_memory)
+
 class DiscourseJsProcessor
   class TranspileError < StandardError
   end
@@ -28,12 +30,15 @@ class DiscourseJsProcessor
 
     def self.build_theme_transpiler
       FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
-      Discourse::Utils.execute_command(
-        "pnpm",
-        "-C=app/assets/javascripts/theme-transpiler",
-        "node",
-        "build.js",
-      )
+      result =
+        Discourse::Utils.execute_command(
+          "pnpm",
+          "-C=app/assets/javascripts/theme-transpiler",
+          "node",
+          "build.js",
+        )
+      # File.write("app/assets/javascripts/theme-transpiler/theme-transpiler.js", result)
+      result
     end
 
     def self.build_production_theme_transpiler
@@ -46,8 +51,8 @@ class DiscourseJsProcessor
       ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
 
       # General shims
-      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
-      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
+      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(puts(err)) })
+      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(puts(err)) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       source =
@@ -56,6 +61,8 @@ class DiscourseJsProcessor
         else
           @processor_mutex.synchronize { build_theme_transpiler }
         end
+
+      # source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
 
       ctx.eval(source, filename: "theme-transpiler.js")
 
@@ -146,6 +153,10 @@ class DiscourseJsProcessor
 
     def terser(tree, opts)
       self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    end
+
+    def rollup(tree, opts)
+      self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
     end
 
     def post_css(css:, map:, source_map_file:)

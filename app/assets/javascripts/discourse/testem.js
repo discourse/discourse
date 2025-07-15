@@ -132,7 +132,7 @@ class Reporter extends TapReporter {
 }
 
 module.exports = {
-  test_page: "tests/index.html?hidepassed",
+  test_page: "tests/index.html?hidepassed&disable_local_debug",
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,

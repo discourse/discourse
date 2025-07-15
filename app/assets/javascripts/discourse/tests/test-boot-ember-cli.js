@@ -13,7 +13,16 @@ loadCompatModules(
   "discourse/tests/"
 );
 
-document.addEventListener("discourse-init", () => {
+document.addEventListener("discourse-init", async () => {
+  for (const link of document.querySelectorAll("link[rel=modulepreload]")) {
+    const themeId = link.dataset.themeId;
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/theme-${themeId}/${key}`, () => mod);
+    }
+  }
+
   if (!window.EmberENV.TESTS_FILE_LOADED) {
     throw new Error(
       'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
@@ -29,9 +38,13 @@ document.addEventListener("discourse-init", () => {
 
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target") || "core";
-  const testingTheme = !!document.querySelector("script[data-theme-id]");
+  const testingTheme = !!document.querySelector(
+    "link[rel=modulepreload][data-theme-id]"
+  );
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
-  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
+  const hasThemeJs = !!document.querySelector(
+    "link[rel=modulepreload][data-theme-id]"
+  );
 
   document.body.insertAdjacentHTML(
     "afterbegin",

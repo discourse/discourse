@@ -1184,7 +1184,7 @@ RSpec.describe Admin::ThemesController do
         theme.set_field(
           target: :common,
           name: :header,
-          value: '<script>console.log("test")</script>',
+          value: '<script type="text/discourse-plugin" version="0.1">console.log("test")</script>',
         )
         theme.save!
 
