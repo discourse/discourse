@@ -106,6 +106,10 @@ discourse-gamification:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-gamification/**/*
 
+discourse-calendar:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-calendar/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

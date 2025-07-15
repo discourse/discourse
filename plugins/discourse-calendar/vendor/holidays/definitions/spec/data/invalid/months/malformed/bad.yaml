@@ -1,0 +1,15 @@
+---
+months:
+  1:
+  - name: Test Holiday
+    regions: [test]
+    mday: 1
+
+methods:
+  test:
+    arguments: year
+    source: |
+      true
+
+tests: |
+  test

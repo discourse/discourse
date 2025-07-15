@@ -1,0 +1,131 @@
+# Maltese holiday definitions for the Ruby Holiday gem.  In English.
+#
+# Updated: 2017-06-08
+# Sources:
+# - https://en.wikipedia.org/wiki/Public_holidays_in_Malta
+---
+months:
+  0:
+  - name: Good Friday # Il-Ġimgħa l-Kbira
+    regions: [mt_en]
+    function: easter(year)
+    function_modifier: -2
+  1:
+  - name: New Year's Day # L-Ewwel tas-Sena
+    regions: [mt_en]
+    mday: 1
+  2:
+  - name: Feast of Saint Paul's Shipwreck in Malta # Nawfraġju ta' San Pawl
+    regions: [mt_en]
+    mday: 10
+  3:
+  - name: Feast of Saint Joseph # San Ġużepp
+    regions: [mt_en]
+    mday: 19
+  - name: Freedom Day # Jum il-Ħelsien
+    regions: [mt_en]
+    mday: 31
+  5:
+  - name: Worker's Day # Jum il-Ħaddiem
+    regions: [mt_en]
+    mday: 1
+  6:
+  - name: Sette Giugno
+    regions: [mt_en]
+    mday: 7
+  - name: Feast of Saint Peter & Saint Paul # L-Imnarja
+    regions: [mt_en]
+    mday: 29
+  8:
+  - name: Feast of the Assumption of Our Lady # Santa Marija
+    regions: [mt_en]
+    mday: 15
+  9:
+  - name: Victory Day # Jum il-Vitorja
+    regions: [mt_en]
+    mday: 8
+  - name: Independence Day # Jum l-Indipendenza
+    regions: [mt_en]
+    mday: 21
+  12:
+  - name: Feast of the Immaculate Conception # Il-Kunċizzjoni
+    regions: [mt_en]
+    mday: 8
+  - name: Republic Day # Jum ir-Repubblika
+    regions: [mt_en]
+    mday: 13
+  - name: Christmas Day # Il-Milied
+    regions: [mt_en]
+    mday: 25
+
+tests:
+  - given:
+      date: '2017-1-1'
+      regions: ["mt_en"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2017-2-10'
+      regions: ["mt_en"]
+    expect:
+      name: "Feast of Saint Paul's Shipwreck in Malta"
+  - given:
+      date: '2017-3-19'
+      regions: ["mt_en"]
+    expect:
+      name: "Feast of Saint Joseph"
+  - given:
+      date: '2017-3-31'
+      regions: ["mt_en"]
+    expect:
+      name: "Freedom Day"
+  - given:
+      date: '2017-5-1'
+      regions: ["mt_en"]
+    expect:
+      name: "Worker's Day"
+  - given:
+      date: '2017-6-7'
+      regions: ["mt_en"]
+    expect:
+      name: "Sette Giugno"
+  - given:
+      date: '2017-6-29'
+      regions: ["mt_en"]
+    expect:
+      name: "Feast of Saint Peter & Saint Paul"
+  - given:
+      date: '2017-8-15'
+      regions: ["mt_en"]
+    expect:
+      name: "Feast of the Assumption of Our Lady"
+  - given:
+      date: '2017-9-8'
+      regions: ["mt_en"]
+    expect:
+      name: "Victory Day"
+  - given:
+      date: '2017-9-21'
+      regions: ["mt_en"]
+    expect:
+      name: "Independence Day"
+  - given:
+      date: '2017-12-8'
+      regions: ["mt_en"]
+    expect:
+      name: "Feast of the Immaculate Conception"
+  - given:
+      date: '2017-12-13'
+      regions: ["mt_en"]
+    expect:
+      name: "Republic Day"
+  - given:
+      date: '2017-12-25'
+      regions: ["mt_en"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: ['2017-4-14', '2018-3-30', '2019-4-19']
+      regions: ["mt_en"]
+    expect:
+      name: "Good Friday"

@@ -1,0 +1,137 @@
+# Czech holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2016-04-20.
+# Sources:
+# - http://cs.wikipedia.org/wiki/%C4%8Cesk%C3%BD_st%C3%A1tn%C3%AD_sv%C3%A1tek
+# - http://www.mpsv.cz/cs/74
+---
+months:
+  0:
+  - name: Velký pátek
+    regions: [cz]
+    function: easter(year)
+    function_modifier: -2
+  - name: Velikonoční pondělí
+    regions: [cz]
+    function: easter(year)
+    function_modifier: 1
+  1:
+  - name: Den obnovy samostatného českého státu
+    regions: [cz]
+    mday: 1
+  5:
+  - name: Svátek práce
+    regions: [cz]
+    mday: 1
+  - name: Den vítězství
+    regions: [cz]
+    mday: 8
+  7:
+  - name: Den slovanských věrozvěstů Cyrila a Metoděje
+    regions: [cz]
+    mday: 5
+  - name: Den upálení mistra Jana Husa
+    regions: [cz]
+    mday: 6
+  9:
+  - name: Den české státnosti
+    regions: [cz]
+    mday: 28
+  10:
+  - name: Den vzniku samostatného československého státu
+    regions: [cz]
+    mday: 28
+  11:
+  - name: Den boje za svobodu a demokracii
+    regions: [cz]
+    mday: 17
+  12:
+  - name: Štědrý den
+    regions: [cz]
+    mday: 24
+  - name: 1. svátek vánoční
+    regions: [cz]
+    mday: 25
+  - name: 2. svátek vánoční
+    regions: [cz]
+    mday: 26
+
+tests:
+  - given:
+      date: '2010-01-01'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Den obnovy samostatného českého státu"
+  - given:
+      date: '2016-03-25'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Velký pátek"
+  - given:
+      date: '2010-04-05'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Velikonoční pondělí"
+  - given:
+      date: '2010-05-01'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Svátek práce"
+  - given:
+      date: '2010-05-08'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Den vítězství"
+  - given:
+      date: '2010-07-05'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Den slovanských věrozvěstů Cyrila a Metoděje"
+  - given:
+      date: '2010-07-06'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Den upálení mistra Jana Husa"
+  - given:
+      date: '2010-09-28'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Den české státnosti"
+  - given:
+      date: '2010-10-28'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Den vzniku samostatného československého státu"
+  - given:
+      date: '2010-11-17'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Den boje za svobodu a demokracii"
+  - given:
+      date: '2010-12-24'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "Štědrý den"
+  - given:
+      date: '2010-12-25'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "1. svátek vánoční"
+  - given:
+      date: '2010-12-26'
+      regions: ["cz"]
+      options: ["informal"]
+    expect:
+      name: "2. svátek vánoční"

@@ -1,0 +1,100 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID discuție
+    discourse_calendar:
+      disable_holiday: "Dezactivează"
+      enable_holiday: "Activează"
+      date: "Dată"
+      add_to_calendar: "Adaugă în Google Calendar"
+      region:
+        none: "Nimeni"
+      toolbar_button:
+        today: "Astăzi"
+        month: "Lună"
+        week: "Săptămână"
+        day: "Zi"
+    group_timezones:
+      search: "Caută..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      invite: "Notifică un utilizator"
+      add_to_calendar: "Adaugă în calendar"
+      send_pm_to_creator: "Trimite PM către %{username}"
+      export_event: "Exportă evenimentul"
+      created_by: "Creat de"
+      bulk_invite: "Invitație în masă"
+      bulk_invite_modal:
+        title: "Invitație în masă"
+        success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
+        error: "Scuze, fișierul trebuie să fie în format CSV."
+        confirmation_message: "Ești pe cale să anunți pe toată lumea din fișierul încărcat."
+      upcoming_events:
+        title: "Evenimente viitoare"
+        creator: "Creator"
+        status: "Stare"
+        starts_at: "Începe la"
+      upcoming_events_list:
+        title: "Evenimente viitoare"
+        empty: "Fără evenimente viitoare"
+        all_day: "Toată ziua"
+        error: "Eroare la preluarea evenimentelor"
+        try_again: "Încearcă din nou"
+        view_all: "Vezi tot"
+      models:
+        invitee:
+          status:
+            unknown: "Nu sunt interesat"
+            going: "Vin"
+            not_going: "Nu Vin"
+            interested: "Interesat"
+        event:
+          expired: "Expirate"
+          closed: "Închis"
+          status:
+            public:
+              title: "Public"
+            private:
+              title: "Privat"
+      builder_modal:
+        custom_fields:
+          placeholder: "Opțional"
+        create: "Creează"
+        update: "Salvare"
+        timezone:
+          label: Fus orar
+        reminders:
+          units:
+            minutes: "minute"
+            hours: "ore"
+            days: "zile"
+          periods:
+            before: "înainte"
+            after: "după"
+        recurrence:
+          label: "Recurență"
+          none: "Nicio recurență"
+          every_day: "În fiecare zi"
+        url:
+          label: "URL"
+          placeholder: "Opțional"
+        location:
+          label: "Locație"
+        description:
+          label: "Descriere"
+        status:
+          label: "Status"
+      invite_user_or_group:
+        title: "Notifică utilizatorul (utilizatorii) sau grupul (grupurile)"
+        invite: "Trimite"

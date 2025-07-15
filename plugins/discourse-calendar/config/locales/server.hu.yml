@@ -1,0 +1,65 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  reports:
+    currently_away:
+      title: Jelenleg távol lévő felhasználók
+      labels:
+        username: Felhasználónév
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Az esemény elkezdődött
+  system_messages:
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Esemény – A csoportos meghívás sikeres"
+      subject_template: "A csoportos meghívás feldolgozása sikeres"
+      text_body_template: "A csoportos meghívás feldolgozása sikeres, %{processed} meghívott létrehozva."
+    discourse_post_event_bulk_invite_failed:
+      title: "Esemény – A csoportos meghívás sikertelen"
+      subject_template: "Hiba a csoportos meghívás feldolgozása során"
+      text_body_template: |
+        A csoportos meghívási fájl feldolgozása megtörtént, %{processed} meghívott jött létre %{failed} hibával.
+
+        Ez a napló:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    working_day_start_hour: "A munkanapok kezdési időpontja."
+    working_day_end_hour: "A munkanapok befejezési időpontja."
+  discourse_calendar:
+    invite_user_notification: "%{username} meghívta erre: %{description}"
+    calendar_must_be_in_first_post: "A naptár címke csak a téma első bejegyzésében használható."
+    more_than_one_calendar: "Egy bejegyzésben nem lehet több naptár."
+    more_than_two_dates: "Egy naptár téma bejegyzése nem tartalmazhat kettőnél több dátumot."
+    event_expired: "Az esemény lejárt"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "A(z) %{title} mindjárt kezdődik."
+      after_event_reminder: "A(z) %{title} véget ért."
+      ongoing_event_reminder: "A(z) %{title} folyamatban van."
+    errors:
+      bulk_invite:
+        max_invitees: "Az első %{max_invittes} meghívott lett létrehozva. Próbálja meg a fájlt kisebb részekre osztani."
+        error: "Hiba történt a fájl feltöltésekor. Kérlek, próbáld újra később."
+      models:
+        event:
+          only_one_event: "Egy bejegyzésnek csak egy eseménye lehet."
+          must_be_in_first_post: "Esemény csak a téma első bejegyzésében lehet."
+          raw_invitees_length: "Egy esemény %{count} felhasználóra/csoportra korlátozódik."
+          raw_invitees:
+            only_group: "Egy esemény csak csoportneveket fogad el."
+          ends_at_before_starts_at: "Egy esemény nem érhet véget, mielőtt elkezdődne."
+          start_must_be_present_and_a_valid_date: "Az eseményhez érvényes kezdési dátum szükséges."
+          end_must_be_a_valid_date: "A befejezés dátumának érvényes dátumnak kell lennie."
+          acting_user_not_allowed_to_create_event: "A jelenlegi felhasználó nem hozhat létre eseményeket."
+          acting_user_not_allowed_to_act_on_this_event: "A jelenlegi felhasználó nem tehet semmit ennél az eseménynél."
+          custom_field_is_invalid: "A(z) „%{field}” egyéni mező nem engedélyezett."
+          name:
+            length: "Az eseménynév hosszának %{minimum} és %{maximum} karakter között kell lennie."

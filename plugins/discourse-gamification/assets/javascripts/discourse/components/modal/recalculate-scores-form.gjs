@@ -155,6 +155,7 @@ export default class RecalculateScoresForm extends Component {
                 @valueProperty="value"
                 @content={{this.updateRange}}
                 @value={{this.updateRangeValue}}
+                {{! template-lint-disable no-action }}
                 @onChange={{action (mut this.updateRangeValue)}}
               />
 
@@ -165,6 +166,7 @@ export default class RecalculateScoresForm extends Component {
                     @id="custom-from-date"
                     @placeholder="yyyy-mm-dd"
                     @value={{this.recalculateFromDate}}
+                    {{! template-lint-disable no-action }}
                     @onSelect={{action (mut this.recalculateFromDate)}}
                     class="date-input"
                   />

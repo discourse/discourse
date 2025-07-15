@@ -1,0 +1,100 @@
+en:
+  reports:
+    currently_away:
+      title: Users currently away
+      labels:
+        username: Username
+
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Event started
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "The holiday region you provided does not exist."
+    discourse_calendar_enable_holiday_failed: "This holiday could not be enabled, it's already enabled or it's not disabled."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Event - Bulk Invite Succeeded"
+      subject_template: "Bulk invite processed successfully"
+      text_body_template: "Your bulk invite file was processed, %{processed} invitee(s) created."
+    discourse_post_event_bulk_invite_failed:
+      title: "Event - Bulk Invite Failed"
+      subject_template: "Bulk invite processed with errors"
+      text_body_template: |
+        Your bulk invite file was processed, %{processed} invitee(s) created with %{failed} error(s).
+
+        Here's the log:
+
+        ```text
+        %{logs}
+        ```
+
+  site_settings:
+    events_max_rows: "Maximum text rows per event in the Calendar."
+    map_events_to_color: "Assign a color to each tag or category."
+    map_events_title: "Overwrites 'Events' in the 'Upcoming Events' sidebar title per category."
+    calendar_enabled: "Enable the discourse-calendar plugin. This will add support for a [calendar][/calendar] tag in the first post of a topic."
+    discourse_post_event_enabled: "Enables the Event features. Note: also needs `calendar enabled` to be enabled."
+    displayed_invitees_limit: "Limits the numbers of invitees displayed on an event."
+    display_post_event_date_on_topic_title: "Displays the date of the event after the topic title."
+    use_local_event_date: "Use local date after topic title instead of relative time."
+    discourse_post_event_allowed_on_groups: "Groups that are allowed to create events."
+    discourse_post_event_allowed_custom_fields: "Allows to let each event to set the value of custom fields."
+    discourse_post_event_edit_notifications_time_extension: "Extends (in minutes) the period after the end of an event when `going` invitees are still being notified from edit in the original post."
+    holiday_calendar_topic_id: "Topic ID of staffs holiday / absence calendar."
+    holiday_status_emoji: Defines the emoji used for the holiday status.
+    delete_expired_event_posts_after: "Posts with expired events will be automatically deleted after (n) hours. Set to -1 to disable deletion."
+    all_day_event_start_time: "Events that do not have a start time specified will start at this time. Format is HH:mm. For 6:00 am, enter 06:00"
+    all_day_event_end_time: "Events that do not have a end time specified will end at this time. Format is HH:mm. For 6:00 pm, enter 18:00"
+    all_day_event_time_error: "Invalid time. Format needs to be HH:mm (ex: 08:00)."
+    calendar_categories: "Display a calendar at the top of a category. Mandatory settings are categoryId and postId. eg: categoryId=6;postId=453\n Other valid settings: tzPicker, weekends and defaultView."
+    calendar_categories_outlet: "Allows to change which outlet should show the category calendar."
+    working_days: "Set working days. You can display the availability of a group using the `timezones` tag in a post, eg: `[timezones group=admins][timezones]`"
+    working_day_start_hour: "Start time of the working day hours."
+    working_day_end_hour: "End time of the working day hours."
+    close_to_working_day_hours_extension: "Set extension time in working day hours to highlight the timezones."
+    events_calendar_categories: "Display an events calendar at the top of a category."
+    sort_categories_by_event_start_date_enabled: "Enable the sorting of category topics by event start date."
+    disable_resorting_on_categories_enabled: "Allow categories to disable the ability for users to sort on the event category."
+    calendar_automatic_holidays_enabled: "Automatically set holiday status based on a users region (note: you can disable specific automatic holidays in plugin settings)"
+    event_participation_buttons: "List of event participation buttons users can use."
+    sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
+    include_expired_events_on_calendar: "Include past/expired events on Category Calendar and Upcoming Events views."
+  discourse_calendar:
+    invite_user_notification: "%{username} invited you to: %{description}"
+    calendar_must_be_in_first_post: "Calendar tag can only be used in first post of a topic."
+    more_than_one_calendar: "You can’t have more than one calendar in a post."
+    more_than_two_dates: "A post of a calendar topic can’t contain more than two dates."
+    event_expired: "Event expired"
+    holiday_status:
+      description: "On holiday"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} is about to start."
+      after_event_reminder: "%{title} has ended."
+      ongoing_event_reminder: "%{title} is ongoing."
+    errors:
+      bulk_invite:
+        max_invitees: "First %{max_invittes} invitees have been created. Try splitting the file in smaller parts."
+        error: "There was an error uploading that file. Please try again later."
+      models:
+        event:
+          only_one_event: "A post can only have one event."
+          must_be_in_first_post: "An event can only be in the first post of a topic."
+          raw_invitees_length: "An event is limited to %{count} users/groups."
+          raw_invitees:
+            only_group: "An event accepts only group names."
+          ends_at_before_starts_at: "An event can't end before it starts."
+          start_must_be_present_and_a_valid_date: "An event requires a valid start date."
+          end_must_be_a_valid_date: "End date must be a valid date."
+          invalid_recurrence: "Recurrence must be one of: every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Timezone not recognized."
+          acting_user_not_allowed_to_create_event: "Current user is not allowed to create events."
+          acting_user_not_allowed_to_act_on_this_event: "Current user is not allowed to act on this event."
+          invalid_allowed_groups: "Invalid allowed groups."
+          acting_user_not_allowed_to_invite_these_groups: "Current user is not allowed to invite these groups."
+          custom_field_is_invalid: "The custom field `%{field}` is not allowed."
+          name:
+            length: "Event name length must be between %{minimum} and %{maximum} characters."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Event Reminder"

@@ -1,0 +1,80 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID Chủ đề
+    discourse_calendar:
+      disable_holiday: "Tắt"
+      enable_holiday: "Bật"
+      date: "ày"
+      region:
+        none: "Không có gì"
+      toolbar_button:
+        today: "Hôm nay"
+        month: "Tháng"
+        week: "Tuần"
+        day: "Ngày"
+    group_timezones:
+      search: "Tìm kiến..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "Hiển thị tất cả"
+      add_to_calendar: "Thêm vào lịch"
+      created_by: "Tạo bởi"
+      bulk_invite: "Mời hàng loạt"
+      bulk_invite_modal:
+        confirm: "xác nhận"
+        title: "Mời hàng loạt"
+        success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
+        error: "Xin lỗi, file phải ở định dạng CSV."
+      upcoming_events:
+        status: "Trạng thái"
+      models:
+        event:
+          expired: "Hết hạn"
+          closed: "Đã "
+          status:
+            public:
+              title: "Công khai"
+            private:
+              title: "Riêng tư"
+      builder_modal:
+        custom_fields:
+          placeholder: "Tùy chọn"
+        create: "Tạo"
+        update: "Lưu lại"
+        timezone:
+          label: Múi giờ
+        reminders:
+          units:
+            minutes: "phút"
+            hours: "tiếng"
+            days: "ngày"
+          periods:
+            before: "trước"
+            after: "sau"
+        recurrence:
+          label: "Tái diễn"
+          none: "Không tái diễn"
+          every_day: "Mỗi ngày"
+        url:
+          label: "URL"
+          placeholder: "Tùy chọn"
+        location:
+          label: "Vị trí"
+        description:
+          label: "Mô tả"
+        status:
+          label: "Trạng thái"
+      invite_user_or_group:
+        invite: "Gửi"

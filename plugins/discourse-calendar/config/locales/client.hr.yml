@@ -1,0 +1,80 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID teme
+    discourse_calendar:
+      disable_holiday: "Onemogući"
+      enable_holiday: "Omogućiti"
+      date: "Datum"
+      region:
+        none: "Ništa"
+      toolbar_button:
+        today: "Danas"
+        month: "Mjesec"
+        week: "Tjedan"
+        day: "Dan"
+    group_timezones:
+      search: "Pretraži..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "Prikaži sve"
+      add_to_calendar: "Dodaj u kalendar"
+      created_by: "Napravio"
+      bulk_invite: "Skupna pozivnica"
+      bulk_invite_modal:
+        confirm: "potvrdi"
+        title: "Skupna pozivnica"
+        success: "Datoteka je uspješno učitana, biti ćete obaviješteni porukom kada je proces završen."
+        error: "Nažalost, datoteka bi trebala biti u CSV formatu."
+      upcoming_events:
+        status: "Statust"
+      models:
+        event:
+          expired: "Isteklo"
+          closed: "Zatvoreno"
+          status:
+            public:
+              title: "Javnost"
+            private:
+              title: "Privatno"
+      builder_modal:
+        custom_fields:
+          placeholder: "Neobvezno"
+        create: "Kreiraj"
+        update: "Spremi"
+        timezone:
+          label: Vremenska zona
+        reminders:
+          units:
+            minutes: "minute"
+            hours: "sata"
+            days: "dana"
+          periods:
+            before: "prije"
+            after: "poslije"
+        recurrence:
+          label: "Ponavljanje"
+          none: "Nema ponavljanja"
+          every_day: "Svaki dan"
+        url:
+          label: "URL"
+          placeholder: "Neobvezno"
+        location:
+          label: "Lokacija"
+        description:
+          label: "Opis"
+        status:
+          label: "Statust"
+      invite_user_or_group:
+        invite: "Pošalji"

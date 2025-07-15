@@ -248,3 +248,10 @@ files:
   - source_path: plugins/discourse-gamification/config/locales/server.en.yml
     destination_path: plugins/gamification/server.yml
     label: gamification
+
+  - source_path: plugins/discourse-calendar/config/locales/client.en.yml
+    destination_path: plugins/calendar/client.yml
+    label: calendar
+  - source_path: plugins/discourse-calendar/config/locales/server.en.yml
+    destination_path: plugins/calendar/server.yml
+    label: calendar
