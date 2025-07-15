@@ -467,8 +467,6 @@ lv:
     search_button: "Meklēt"
   upload:
     unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
-  color_schemes:
-    default_theme_name: "Noklusējums"
   csv_export:
     boolean_yes: "Jā"
     boolean_no: "Nē"

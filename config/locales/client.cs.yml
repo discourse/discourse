@@ -866,17 +866,58 @@ cs:
         reviewable_post:
           title: "Příspěvek"
           noun: "příspěvek"
+      flagged_as: "Nahlášeno jako"
+      assigned_to: "Přiřazeno"
+      moderator_actions: "Akce moderátora"
+      timeline_and_notes: "Časová osa a poznámky"
+      timeline:
+        target_created: "Příspěvek vytvořen"
+        target_created_by: "Příspěvek vytvořil/a %{username} - %{relativeDate}"
+        flagged: "Nahlášeno"
+        flagged_as_by: "Nahlášeno jako %{flagReason} uživatelem %{username} · %{relativeDate}"
+        claimed: "Nárokováno"
+        claimed_by: "Nárokováno uživatelem %{username} · %{relativeDate}"
+        reviewed: "Zkontrolováno"
+        reviewed_by: "Zkontroloval/a %{username} - %{relativeDate}"
+        view_conversation: "zobrazit SZ"
+        note_added: "Poznámka moderátora"
+        note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
+        no_events: "Na časové ose nejsou k zobrazení žádné události"
       notes:
+        add_note_description: "Viditelné pouze pro moderátory. Tuto poznámku použijte k přidání kontextu nebo rozhodnutí o kontrole."
+        add_note_button: "Přidat poznámku"
+        placeholder: "Napište sem svoji poznámku..."
+        chars_remaining: "Zbývá %{count} znaků"
+        delete_note: "Smazat tuto poznámku"
         delete: "Smazat"
+      new_topic_label: "Nové téma"
+      queued_user: "Uživatel ve frontě"
+      posted_in: "Zveřejněno v"
+      flagged_user: "Nahlášený uživatel"
       review_user: "Uživatel"
+      need_help: "Potřebujete pomoc?"
       copy_link: "Kopírovat odkaz"
+      view_source: "Zobrazit zdroj"
       insights:
+        flag_volume: "Objem nahlášení"
+        flagged_by_users:
+          one: "Nahlášeno %{count} unikátním uživatelem"
+          few: "Nahlášeno %{count} unikátními uživateli"
+          many: "Nahlášeno %{count} unikátními uživateli"
+          other: "Nahlášeno %{count} unikátními uživateli"
+        similar_posts: "Podobné minulé příspěvky"
+        flagged_in_timeframe: "%{count} předchozích nahlášení"
+        user_activity: "Aktivita uživatelů"
         activities:
+          new_account: "nový účet"
+          trust_level: "úroveň důvěry: %{trustLevelName}"
           posts:
             one: "%{count} příspěvek"
             few: "%{count} příspěvky"
             many: "%{count} příspěvků"
             other: "%{count} příspěvků"
+        solution_marked: "Řešení označeno"
+        topic_has_solution: "Toto téma má řešení"
         visibility: "Viditelnost"
       approval:
         title: "Příspěvek potřebuje schválení"
@@ -1509,6 +1550,7 @@ cs:
       suspended_notice: "Uživatel je pozastaven do %{date}."
       suspended_permanently: "Tento uživatel je pozastaven."
       suspended_reason: "Důvod: "
+      silenced_reason: "Důvod: "
       github_profile: "GitHub"
       email_activity_summary: "Souhrn aktivit"
       mailing_list_mode:
@@ -2063,7 +2105,8 @@ cs:
         removed: "Odstraněno"
         search: "pište pro hledání v pozvánkách..."
         user: "Pozvaný uživatel"
-        none: "Nejsou žádné pozvánky k zobrazení."
+        none:
+          title: "Nejsou žádné pozvánky k zobrazení."
         truncated:
           one: "Zobrazena první pozvánka."
           few: "Zobrazeny první %{count} pozvánky."
@@ -2774,7 +2817,6 @@ cs:
       unlist: "skryto"
       add_warning: "Toto je oficiální varování."
       toggle_whisper: "Přepnout šeptání"
-      toggle_unlisted: "Přepnout skrytí"
       insert_table: "Vložit tabulku"
       posting_not_on_topic: "Na jaké téma chcete odpovědět?"
       saved_local_draft_tip: "uloženo lokálně"
@@ -4734,6 +4776,7 @@ cs:
         replies: "Odpovědi"
         replies_with_count: "Odpovědi (%{count})"
       posted:
+        title: "Mé příspěvky"
         help: "témata, do kterých jste přispěli"
       bookmarks:
         title: "Záložky"
@@ -5294,6 +5337,8 @@ cs:
               content: "Uživatelé"
               title: "Seznam všech uživatelů"
             my_posts:
+              content: "Mé příspěvky"
+              content_drafts: "Mé koncepty"
               title: "Moje nedávná aktivita k tématům"
               title_drafts: "Moje nezveřejněné koncepty"
               draft_count:
@@ -5312,6 +5357,9 @@ cs:
             invite:
               content: "Pozvat"
               title: "Pozvat nové členy"
+            my_messages:
+              content: "Mé zprávy"
+              title: "Mé soukromé zprávy"
         global_section: "Globální sekce viditelná pro všechny"
       panels:
         forum:
@@ -6933,6 +6981,7 @@ cs:
           compare_commits: "(viz nové commity)"
           remote_theme_edits: "Pokud chcete tento motiv upravit, musíte <a href='%{repoURL}' target='_blank'>odeslat změnu do jeho repozitáře</a>"
           repo_unreachable: "Nelze kontaktovat Git repozitář tohoto motivu. Chybová zpráva:"
+          built_in_description: "Tento motiv je předinstalován a nemůže být smazán nebo přizpůsoben"
           imported_from_archive: "Tento motiv byl importován ze souboru .zip"
           settings: "Nastavení"
           colors: "Barvy"
@@ -8030,6 +8079,7 @@ cs:
           basic: "Základní nastavení"
           users: "Uživatelé"
           posting: "Přispívání"
+          content_localization: "Lokalizace obsahu"
           email: "Emaily"
           files: "Soubory"
           trust: "Úrovně důvěry"

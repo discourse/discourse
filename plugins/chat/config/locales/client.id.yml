@@ -78,9 +78,7 @@ id:
           unreachable_1: "@%{group} tidak mengizinkan penyebutan."
           unreachable_multiple:
             other: "@%{group} dan %{count} grup lainnya tidak mengizinkan penyebutan."
-      no_direct_message_channels: "Anda belum bergabung dengan pesan langsung apa pun!"
       no_direct_message_channels_cta: "Memulai percakapan"
-      no_public_channels: "Anda belum bergabung dengan kanal mana pun!"
       no_public_channels_cta: "Jelajahi kanal"
       placeholder_silenced: "Anda tidak dapat mengirim pesan saat ini."
       reply: "Balas"

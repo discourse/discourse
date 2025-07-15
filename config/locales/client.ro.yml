@@ -1288,6 +1288,8 @@ ro:
       suspended_notice: "Acest utilizator este suspendat până la %{date}."
       suspended_permanently: "Acest utilizator este suspendat."
       suspended_reason: "Motiv: "
+      silenced_permanently: "Acest utilizator este silențios."
+      silenced_reason: "Motivul edit[rii: "
       github_profile: "GitHub"
       email_activity_summary: "Sumar activitate"
       mailing_list_mode:
@@ -1623,7 +1625,8 @@ ro:
         remove: "Eliminați"
         reinvited: "Invitaţia a fost retrimisă"
         user: "Utilizator invitat"
-        none: "Nu există invitații."
+        none:
+          title: "Nu există invitații."
         truncated:
           one: "Se afișează prima invitație."
           few: "Se afișează primele %{count} invitații."
@@ -2038,7 +2041,6 @@ ro:
       unlist: "nelistat"
       add_warning: "Aceasta este o avertizare oficială."
       toggle_whisper: "Comută modul discret"
-      toggle_unlisted: "Comută modul nelistat"
       insert_table: "Inserează tabel"
       posting_not_on_topic: "În care subiect vrei să răspunzi?"
       saved_local_draft_tip: "salvat local"
@@ -2098,6 +2100,12 @@ ro:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "text italic"
+      heading_label: "T"
+      heading_title: "Titluri"
+      heading_level_n: "Titlu %{levelNumber}"
+      heading_level_n_title: "Titlu %{levelNumber}"
+      heading_level_paragraph: "Paragraf"
+      heading_level_paragraph_title: "Paragraf"
       link_title: "Legătură"
       link_description: "adaugă aici descrierea link-ului"
       link_dialog_title: "Inserează legătură"
@@ -2110,6 +2118,7 @@ ro:
       link_url_placeholder: "Lipește legătură sau caută subiecte"
       blockquote_title: "Bloc citat"
       blockquote_text: "Bloc citat"
+      heading_text: "Titluri"
       code_title: "Text preformatat"
       code_text: "indentează textul preformatat cu 4 spații"
       paste_code_text: "tastează sau lipește cod aici"
@@ -2140,6 +2149,9 @@ ro:
           label: "Discuție nouă"
         toggle_topic_bump:
           label: "Comută bump pentru subiect"
+        toggle_unlisted:
+          label: Comută la nelistate
+          desc: Subiecte nelistate, accesibile membrilor doar prin legătură directă
       reload: "Reîncarcă"
       ignore: "Ignoră"
       image_alt_text:
@@ -2383,9 +2395,6 @@ ro:
         top: "Nu exită niciun subiect de top."
         education:
           topic_tracking_preferences: 'Poți vizualiza și modifica noile tale setări pentru urmărirea subiectelor în <a href="%{basePath}/my/preferences/tracking">preferințele tale</a>.'
-          unread: "Nimic rămas necitit... impresionant!"
-          new_new: "Nimic nou în acest moment... revino în curând!"
-          new: "Nimic nou în acest moment... revino în curând!"
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."

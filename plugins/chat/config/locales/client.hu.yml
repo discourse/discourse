@@ -109,16 +109,16 @@ hu:
         create: "Új csatorna"
       close: "Lezárás"
       remove: "Eltávolítás"
-      collapse: "Csevegőfiók összecsukása"
-      expand: "Chat fiók bővítése"
-      confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
+      collapse: "Csevegési fiók összecsukása"
+      expand: "Csevegési fiók kibontása"
+      confirm_flag: "Biztos, hogy megjelöli %{username} üzenetét?"
       deleted:
         one: "Üzenetet törölve. [megtekintés]"
         other: "%{count} üzenet törölve. [összes megtekintése]"
       hidden: "Egy üzenet el lett rejtve. [megtekintés]"
       delete: "Törlés"
       edited: "szerkesztve"
-      muted: "némított"
+      muted: "némítva"
       joined: "csatlakozott"
       empty_state:
         direct_message_cta: "Személyes csevegés indítása"
@@ -128,7 +128,7 @@ hu:
       email_frequency:
         description: "Csak akkor küldünk e-mailt, ha az elmúlt 15 percben nem láttuk."
         never: "Soha"
-        title: "E-mail értesítések"
+        title: "E-mail-értesítések"
         when_away: "Csak ha távol van"
       header_indicator_preference:
         title: "Aktivitásjelző megjelenítése a fejlécben"
@@ -141,16 +141,16 @@ hu:
       send_shortcut:
         enter:
           label: "Küldés Enterrel"
-          description: "Új sor a Shift+Enter segítségével"
+          description: "Új sor Shift + Enterrel"
         meta_enter:
           label: "Küldés %{meta_key} + Enterrel"
           description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
-      flag: "Jelölés"
+      flag: "Megjelölés"
       emoji: "Emodzsi beszúrása"
-      flagged: "Ezt az üzenetet felülvizsgálatra jelentették"
-      invalid_access: "Nincs hozzáférése ennek a csevegőcsatornának a megtekintéséhez"
-      invitation_notification: "<span>%{username}</span> <span>meghvta Önt, hogy csatlakozzon egy csevegőcsatornához</span>"
+      flagged: "Ezt az üzenetet felülvizsgálatra jelölték meg"
+      invalid_access: "Nincs hozzáférése, hogy megtekintse ezt a csevegőcsatornát"
+      invitation_notification: "<span>%{username}</span> <span>meghívta, hogy csatlakozzon egy csevegőcsatornához</span>"
       in_reply_to: "Válaszul erre:"
       heading: "Csevegés"
       join: "Belépés"
@@ -181,9 +181,7 @@ hu:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
-      no_direct_message_channels: "Még nem csatlakozott közvetlen üzenetekhez!"
       no_direct_message_channels_cta: "Beszélgetés kezdése"
-      no_public_channels: "Még nem csatlakozott egyetlen csatornához sem!"
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
@@ -200,9 +198,9 @@ hu:
       close_full_page: "Teljes képernyős csevegés bezárása"
       open_message: "Üzenet megnyitása a csevegésben"
       placeholder_self: "Jegyezzen le valamit"
-      placeholder_channel: "Csevegés %{channelName}"
+      placeholder_channel: "Csevegés itt: %{channelName}"
       placeholder_thread: "Csevegés a témában"
-      placeholder_users: "Csevegés: %{commaSeparatedNames}"
+      placeholder_users: "Csevegés velük: %{commaSeparatedNames}"
       placeholder_group: "Csevegés a csoportban"
       placeholder_new_message_disallowed:
         archived: "A csatorna archiválva van, jelenleg nem küldhet új üzenetet."
@@ -292,16 +290,16 @@ hu:
         remove_member: "Eltávolítás"
       new_message_modal:
         title: Üzenet küldése
-        add_user_long: <kbd>shift + kattintás</kbd> vagy <kbd>shift + enter </kbd><span>@%{username} hozzáadása</span>
+        add_user_long: <kbd>shift + kattintás</kbd> vagy <kbd>shift + enter</kbd><span>@%{username} hozzáadása</span>
         add_user_short: <span>Felhasználó hozzáadása</span>
         open_channel: <span>Csatorna megnyitása</span>
         default_search_placeholder: "#a-csatorna, @valaki vagy bármi"
         default_channel_search_placeholder: "#a-csatorna"
         default_user_search_placeholder: "@valaki"
-        user_search_placeholder: "...további tagok hozzáadása"
+        user_search_placeholder: "…további tagok hozzáadása"
         disabled_user: "letiltotta a csevegést"
         no_items: "Nincsenek elemek"
-        create_group_placeholder: "Csoportos csevegés neve (opcionális)"
+        create_group_placeholder: "Csoportos csevegés neve (nem kötelező)"
         participants_counter: "%{selection_count}/%{max} résztvevő"
         new_group_chat: "Új csoportos csevegés"
         filter: "Szűrő"
@@ -313,7 +311,7 @@ hu:
         input_placeholder: Név hozzáadása
         slug_description: Az URL-ben a csatornanév helyett egy csatorna azonosító szerepel
         name: Csatorna neve
-        slug: Csatorna azonosító (opcionális)
+        slug: Csatornaazonosító (nem kötelező)
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása
@@ -324,7 +322,7 @@ hu:
         prefix: "Címzett:"
         no_results: Nincs találat
         selected_user_title: "%{username} kijelölésének megszüntetése"
-        group_name: "Csoportos csevegés neve (opcionális)"
+        group_name: "Csoportos csevegés neve (nem kötelező)"
         members_counter:
           one: "%{count}/%{max} tag"
           other: "%{count}/%{max} tag"
@@ -340,23 +338,23 @@ hu:
         auto_join_users:
           public_category_warning: "A(z) %{category} egy nyilvános kategória. Automatikusan hozzáadja az összes nemrég aktív felhasználót ehhez a csatornához?"
           warning_1_group:
-            one: "%{count} felhasználó automatikus hozzáadása a %{group} csoportból?"
-            other: "%{count} felhasználó automatikus hozzáadása a %{group} csoportból?"
+            one: "Automatikusan hozzáad %{count} felhasználót a(z) %{group} csoportból?"
+            other: "Automatikusan hozzáad %{count} felhasználót a(z) %{group} csoportból?"
           warning_2_groups:
-            one: "%{count} felhasználó automatikus hozzáadása a %{group1} és a %{group2} csoportból?"
-            other: "%{count} felhasználó automatikus hozzáadása a %{group1} és a %{group2} csoportból?"
+            one: "Automatikusan hozzáad %{count} felhasználót a(z) %{group1} és a(z) %{group2} csoportból?"
+            other: "Automatikusan hozzáad %{count} felhasználót a(z) %{group1} és a(z) %{group2} csoportból?"
           warning_multiple_groups_MF: |
             { groupCount, plural,
                 one {
                       { userCount, plural,
-                          one {Automatikusan hozzáad {userCount} felhasználót a {groupName} és {groupCount} másik csoporthoz?}
-                        other {Automatikusan hozzáad {userCount} felhasználót a {groupName} és {groupCount} másik csoporthoz?}
+                          one {Automatikusan hozzáad {userCount} felhasználót a(z) {groupName} és {groupCount} másik csoporthoz?}
+                        other {Automatikusan hozzáad {userCount} felhasználót a(z) {groupName} és {groupCount} másik csoporthoz?}
                       }
                     }
               other {
                       { userCount, plural,
-                          one {{userCount} felhasználó automatikus hozzáadása {groupName} és {groupCount} másik csoporthoz?}
-                        other {{userCount} felhasználó automatikus hozzáadása {groupName} és {groupCount} másik csoporthoz?}
+                          one {Automatikusan hozzáad {userCount} felhasználót a(z) {groupName} és {groupCount} másik csoporthoz?}
+                        other {Automatikusan hozzáad {userCount} felhasználót a(z) {groupName} és {groupCount} másik csoporthoz?}
                       }
                     }
             }
@@ -432,26 +430,26 @@ hu:
         settings_title: "Beállítások"
         info_title: "Csatornainformációk"
         category_label: "Kategória"
-        history_label: "Idővonal"
+        history_label: "Előzmények"
         members_label: "Tagok"
       admin:
         title: "Csevegés"
         export_messages:
-          title: "Chat üzenetek exportálása"
-          description: "Minden csatorna minden üzenetét exportálja."
+          title: "Csevegőüzenetek exportálása"
+          description: "Ez exportálja az összes csatorna összes üzenetét."
           create_export: "Export létrehozása"
           confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
-          export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-et, ha elkészült."
+          export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-t, ha elkészült."
       my_threads:
         title: Témáim
         aria_label: "Váltás a témáim listára"
       direct_messages:
-        title: "PÜ"
+        title: "PÜ-k"
         aria_label: "Váltás privát üzenetekre"
         new: "Személyes csevegés létrehozása"
         create: "Ugrás"
-        leave: "E személyes csevegés elhagyása"
-        close: "Zárja be ezt a személyes csevegést"
+        leave: "Személyes csevegés elhagyása"
+        close: "Személyes csevegés bezárása"
         cannot_create: "Sajnos nem tud közvetlen üzeneteket küldeni."
       channel_list:
         title: "Csatornák"
@@ -478,15 +476,15 @@ hu:
         select_emoji: "Válasszon emodzsit"
         system: "rendszer"
         title: "Bejövő webhookok"
-        url: "URL"
-        url_instructions: "Ez az URL egy titkos értéket tartalmaz - tartsa biztonságban."
+        url: "Webcím"
+        url_instructions: "Ez a webcím egy titkos értéket tartalmaz – tartsa biztonságban."
         username: "Felhasználónév"
         username_instructions: "A csatornán közzétevő bot felhasználóneve. Ha üresen marad, akkor alapértelmezés szerint „rendszer”."
         instructions: "A bejövő webhookokat külső rendszerek használhatják arra, hogy üzeneteket küldjenek el egy kijelölt csevegőcsatornára bot-felhasználóként a <code>/hooks/:key</code> végponton keresztül. A hasznos adat egyetlen <code>szöveges</code> paraméterből áll, amely 2000 karakterre korlátozódik.<br><br>Támogatjuk a korlátozott Slack formátumú <code>szöveg</code> paramétereit is, a hivatkozások és említések kinyerése a <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api formátuma alapján. slack.com/reference/surfaces/formatting</a>, de ehhez a <code>/hooks/:key/slack</code> végpontot kell használni."
         saved: "Webhook módosítások mentése"
         created: "Webhook létrehozva"
       selection:
-        cancel: "Visszavon"
+        cancel: "Mégse"
         quote_selection: "Idézet a témában"
         copy: "Másolás"
         delete: "Törlés (%{selectionCount}/%{totalCount})"
@@ -518,20 +516,20 @@ hu:
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
         indefinitely_short: "határozatlan ideig"
-        indefinitely_long: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket korlátlan ideig megőrizzék."
+        indefinitely_long: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket határozatlan ideig megőrizzék."
         short:
           one: "%{count} nap"
           other: "%{count} nap"
         long:
-          one: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket a %{count} napig megőrizzék."
-          other: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket a %{count} napig megőrizzék."
+          one: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket %{count} napig megőrizzék."
+          other: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket %{count} napig megőrizzék."
       flags:
         off_topic: "Ez az üzenet nem tartozik a csatorna címében meghatározott jelenlegi vitához, és valószínűleg máshová kellene áthelyezni."
-        inappropriate: "Ez az üzenet olyan elemeket tartalmaz, amelyet egy értelmes ember sértőnek, gorombának vagy <a href=\"%{basePath}/guidelines\">a közösségi irányelvek</a> megsértésének tartana."
-        illegal: "Ez a bejegyzés a személyzet figyelmét igényli, mert úgy vélem, hogy illegális tartalmat tartalmaz."
-        spam: "Ez az üzenet reklám, vagy vandalizmus. Nem hasznos vagy releváns az aktuális csatorna szempontjából."
+        inappropriate: "Ez az üzenet olyan elemeket tartalmaz, amelyet egy értelmes ember sértőnek, gorombának vagy <a href=\"%{basePath}/guidelines\">a közösségi irányelveket</a> megszegőnek tartana."
+        illegal: "Ez a bejegyzés a stáb figyelmét igényli, mert úgy vélem, hogy illegális tartalmat tartalmaz."
+        spam: "Ez az üzenet reklám vagy vandalizmus. Nem hasznos vagy releváns az aktuális csatorna szempontjából."
         notify_user: "Szeretnék közvetlenül és személyesen beszélni ezzel a személlyel az üzenetéről."
-        notify_moderators: "Ez az üzenet a személyzet figyelmét igényli a fentiekben fel nem sorolt egyéb okból."
+        notify_moderators: "Ez az üzenet a stáb figyelmét igényli a fentiekben fel nem sorolt egyéb okból."
       flagging:
         action: "Üzenet megjelölése"
       emoji_picker:
@@ -562,7 +560,7 @@ hu:
         notifications:
           regular:
             title: "Normális"
-            description: "Kapjon értesítést, ha valaki megemlíti Önt ebben a témában."
+            description: "Értesítést kap, ha valaki megemlíti Önt ebben a témában."
           tracking:
             title: "Követés"
             description: "Értesítést kap, ha valaki megemlíti Önt ebben a témában, és láthatja az új válaszok számát a téma listájában."
@@ -589,11 +587,11 @@ hu:
         none: "Nem vesz részt semmilyen témában ebben a csatornában."
       draft_channel_screen:
         header: "Új üzenet"
-        cancel: "Visszavon"
+        cancel: "Mégse"
       quick_reaction_type:
         title: "Csevegési reakciók egy kattintással"
         options:
-          frequent: "Leggyakrabban használt chatreakciók"
+          frequent: "Leggyakrabban használt csevegési reakciók"
           custom: "Egyéni reakciók"
     notifications:
       chat_invitation: "meghívta Önt, hogy csatlakozzon egy csevegőcsatornához"
@@ -614,11 +612,11 @@ hu:
           other_plain: "megemlítette %{identifier} felhasználót egy személyes csevegésben"
           other_html: "<span>%{username}</span> <span>megemlítette %{identifier} felhasználót egy személyes csevegésben</span>"
         chat_message: "Új csevegőüzenet"
-        chat_quoted: "%{username} idézte a csevegési üzenetet"
+        chat_quoted: "%{username} idézte a csevegőüzenetét"
       titles:
-        chat_mention: "A chatben megemlítve"
-        chat_invitation: "Meghívás a chat-csatornára"
-        chat_quoted: "Idézett csevegőüzenet"
+        chat_mention: "Csevegésben megemlítve"
+        chat_invitation: "Meghívás a csevegőcsatornára"
+        chat_quoted: "Csevegőüzenet idézve"
         chat_watched_thread: "Látott csevegés"
     action_codes:
       chat:
@@ -644,7 +642,7 @@ hu:
           title: "Megjelölt csevegőüzenet"
         reviewable_chat_message:
           title: "Megjelölt csevegőüzenet"
-          noun: "csevegés üzenet"
+          noun: "csevegőüzenet"
     keyboard_shortcuts_help:
       chat:
         title: "Csevegés"
@@ -665,18 +663,18 @@ hu:
     user:
       allow_private_messages: "Engedélyezze más felhasználóknak, hogy személyes és közvetlen üzeneteket küldjenek nekem"
       muted_users_instructions: "Távolítsa el az összes értesítést, személyes üzenetet és közvetlen csevegőüzenetet ezektől a felhasználóktól."
-      allowed_pm_users_instructions: "Csak személyes üzeneteket vagy közvetlen chat-üzeneteket engedélyezzen ezektől a felhasználóktól."
-      allow_private_messages_from_specific_users: "Csak bizonyos felhasználóknak engedélyezze, hogy személyes vagy közvetlen üzeneteket küldjenek nekem."
-      ignored_users_instructions: "Törölje az összes bejegyzést, üzenetet, értesítést, személyes üzenetet és közvetlen csevegőüzenetet ezektől a felhasználóktól."
+      allowed_pm_users_instructions: "Csak a személyes üzenetek vagy a privát csevegőüzenetek engedélyezése ezektől a felhasználóktól."
+      allow_private_messages_from_specific_users: "A személyes üzenetek vagy a privát üzenetek engedélyezése csak a megadott felhasználók számára"
+      ignored_users_instructions: "Az összes bejegyzés, üzenet, értesítés, személyes üzenet és privát csevegőüzenetet eltüntetése ezektől a felhasználóktól."
     user_menu:
-      no_chat_notifications_title: "Még nincsenek csevegés értesítései"
+      no_chat_notifications_title: "Még nincsenek csevegési értesítései"
       no_chat_notifications_body: >
         Ezen a panelon kap értesítést, ha valaki közvetlen üzenetet küld Önnek, vagy <b>@megemlítik</b> egy csevegésben. Értesítést küldünk az email címére is, ha egy ideje már nem volt bejelentkezve. <br><br> Kattintson a csevegőcsatorna tetején található címre, amennyiben szeretné beállítani, hogy milyen érdesítést szeretne kapni az adott csatornán. További információkért tekintse meg a <a href='%{preferencesUrl}'>Értesítési beállításokat</a>.
       tabs:
-        chat_notifications: "Csevegés értesítések"
+        chat_notifications: "Csevegési értesítések"
         chat_notifications_with_unread:
-          one: "Csevegési értesítések - %{count} olvasatlan"
-          other: "Csevegési értesítések - %{count} olvasatlan"
+          one: "Csevegési értesítések – %{count} olvasatlan"
+          other: "Csevegési értesítések – %{count} olvasatlan"
     styleguide:
       sections:
         chat:

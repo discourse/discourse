@@ -1306,6 +1306,8 @@ zh_CN:
       suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
+      silenced_permanently: "此用户已被禁言."
+      silenced_reason: "原因："
       github_profile: "GitHub"
       email_activity_summary: "活动总结"
       mailing_list_mode:
@@ -1807,7 +1809,8 @@ zh_CN:
         removed: "已移除"
         search: "输入以搜索邀请…"
         user: "邀请用户"
-        none: "没有要显示的邀请。"
+        none:
+          title: "没有要显示的邀请。"
         truncated:
           other: "正在显示前 %{count} 个邀请。"
         redeemed: "已确认的邀请"
@@ -2406,7 +2409,6 @@ zh_CN:
       unlist: "取消公开"
       add_warning: "这是一个官方警告。"
       toggle_whisper: "切换密语"
-      toggle_unlisted: "切换取消公开"
       insert_table: "插入表"
       posting_not_on_topic: "您想回复哪个话题？"
       saved_local_draft_tip: "已保存到本地"
@@ -2475,6 +2477,8 @@ zh_CN:
       remove_featured_link: "从话题中移除链接。"
       reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
       reply_placeholder_no_images: "在此处输入。使用 Markdown、BBCode 或 HTML 排版。"
+      reply_placeholder_rte: "在此处输入。使用工具栏或 Markdown 进行格式化。拖放或粘贴图片。"
+      reply_placeholder_rte_no_images: "在此处输入。使用工具栏或 Markdown 进行格式化。"
       reply_placeholder_choose_category: "先选择一个类别，然后在此处输入。"
       view_new_post: "查看您的新帖子。"
       saving: "正在保存"
@@ -2492,6 +2496,12 @@ zh_CN:
       italic_label: "I"
       italic_title: "强调"
       italic_text: "强调文本"
+      heading_label: "H"
+      heading_title: "标题"
+      heading_level_n: "标题 %{levelNumber}"
+      heading_level_n_title: "标题 %{levelNumber}"
+      heading_level_paragraph: "段落"
+      heading_level_paragraph_title: "段落"
       link_title: "链接"
       link_description: "在此处输入链接描述"
       link_dialog_title: "插入链接"
@@ -2504,6 +2514,7 @@ zh_CN:
       link_url_placeholder: "粘贴链接或搜索话题"
       blockquote_title: "块引用"
       blockquote_text: "块引用"
+      heading_text: "标题"
       code_title: "预先格式化的文本"
       code_text: "将预先格式化的文本缩进 4 个空格"
       paste_code_text: "在此处键入或粘贴代码"
@@ -2952,9 +2963,6 @@ zh_CN:
         filter: "没有话题。"
         education:
           topic_tracking_preferences: '您可以在 <a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的主题跟踪设置。'
-          unread: "没有什么未读的...令人印象深刻！"
-          new_new: "目前没什么新东西... 稍后再回来看看！"
-          new: "目前没什么新东西... 稍后再回来看看！"
       bottom:
         latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"

@@ -4518,7 +4518,6 @@ ar:
     solarized_dark_theme_name: "داكن شمسي"
     wcag_dark: "WCAG داكن"
     wcag_dark_theme_name: "WCAG داكن"
-    default_theme_name: "افتراضي"
     light_theme_name: "فاتح"
     dark_theme_name: "داكن"
     neutral_theme_name: "محايد"
@@ -5147,10 +5146,6 @@ ar:
         يتم منح هذه الشارة عند الزيارة 365 يومًا متتاليًا. هذا أكثر من عام كامل!
     badge_title_metadata: "الشارة %{display_name} على %{site_title}"
   admin_login:
-    success: "تم إرسال الرسالة الإلكترونية"
-    errors:
-      unknown_email_address: "عنوان البريد الإلكتروني غير معروف."
-      invalid_token: "الرمز غير صالح."
     email_input: "البريد الإلكتروني للمسؤول"
     submit_button: "إرسال رسالة إلكترونية"
     safe_mode: "الوضع الآمن: إيقاف كل السمات المكوِّنات الإضافية عند تسجيل الدخول"
