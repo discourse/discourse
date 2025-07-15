@@ -16,7 +16,7 @@ describe "Admin Reports", type: :system do
   context "when use_legacy_pageviews is false" do
     before { SiteSetting.use_legacy_pageviews = false }
 
-    it "redirects from site_traffic to consolidated_page_views" do
+    it "won't redirects from site_traffic to consolidated_page_views" do
       visit "/admin/reports/site_traffic"
       expect(page).to have_current_path("/admin/reports/site_traffic")
     end
