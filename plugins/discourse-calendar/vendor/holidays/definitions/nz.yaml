@@ -1,0 +1,324 @@
+# New Zealand holiday definitions for the Ruby Holiday gem.
+# Updated: 2022-07-01.
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_New_Zealand
+# - Matariki - https://www.mbie.govt.nz/assets/matariki-dates-2022-to-2052-matariki-advisory-group.pdf
+---
+months:
+  0:
+  - name: Good Friday
+    regions: [nz]
+    function: easter(year)
+    function_modifier: -2
+  - name: Easter Monday
+    regions: [nz]
+    function: easter(year)
+    function_modifier: 1
+  - name: Matariki
+    regions: [nz]
+    function: matariki(year)
+  1:
+  - name: New Year's Day
+    regions: [nz]
+    mday: 1
+    observed: to_monday_if_weekend(date)
+  - name: Day after New Year's Day
+    regions: [nz]
+    mday: 2
+    observed: to_weekday_if_boxing_weekend(date)
+  - name: Southland Anniversary Day
+    regions: [nz_sl]
+    mday: 17
+  - name: Wellington Anniversary Day
+    regions: [nz_we]
+    mday: 22
+    observed: closest_monday(date)
+  - name: Auckland Anniversary Day
+    regions: [nz_ak]
+    mday: 29
+    observed: closest_monday(date)
+  - name: Northland Anniversary Day
+    regions: [nz_nl]
+    mday: 29
+    observed: closest_monday(date)
+  2:
+  - name: Nelson Anniversary Day
+    regions: [nz_ne]
+    mday: 1
+    observed: closest_monday(date)
+  - name: Waitangi Day
+    regions: [nz]
+    mday: 6
+    observed: to_monday_if_weekend(date)
+  3:
+  - name: Otago Anniversary Day
+    regions: [nz_ot]
+    mday: 23
+    observed: closest_monday(date)
+  - name: Taranaki Anniversary Day
+    regions: [nz_ta]
+    week: 2
+    wday: 1
+    observed: closest_monday(date)
+  4:
+  - name: ANZAC Day
+    regions: [nz]
+    mday: 25
+    observed: to_monday_if_weekend(date)
+  6:
+  - name: Queen's Birthday
+    regions: [nz]
+    week: 1
+    wday: 1
+  9:
+  - name: Dominion Day
+    regions: [nz_sc]
+    week: 4
+    wday: 1
+  10:
+  - name: Hawke's bay Anniversary Day
+    regions: [nz_hb]
+    week: 1
+    wday: 1
+    observed: previous_friday(date)
+  - name: Labour Day
+    regions: [nz]
+    week: 4
+    wday: 1
+  - name: Marlborough Anniversary Day
+    regions: [nz_mb]
+    week: 4
+    wday: 1
+    observed: next_week(date)
+  11:
+  - name: Canterbury Anniversary Day
+    regions: [nz_ca]
+    week: 2
+    wday: 5
+  - name: Chatham Island Anniversary Day
+    regions: [nz_ch]
+    mday: 30
+    observed: closest_monday(date)
+  12:
+  - name: Westland Anniversary Day
+    regions: [nz_wl]
+    mday: 1
+    observed: closest_monday(date)
+  - name: Christmas Day
+    regions: [nz]
+    mday: 25
+    observed: to_monday_if_weekend(date)
+  - name: Boxing Day
+    regions: [nz]
+    mday: 26
+    observed: to_weekday_if_boxing_weekend(date)
+
+tests:
+  - given:
+      date: '2007-01-01'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "New Year's Day"
+  - given:
+      date: '2007-01-02'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "Day after New Year's Day"
+  - given:
+      date: '2007-02-06'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "Waitangi Day"
+  - given:
+      date: '2007-04-06'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "Good Friday"
+  - given:
+      date: '2007-04-09'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "Easter Monday"
+  - given:
+      date: '2007-04-25'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "ANZAC Day"
+  - given:
+      date: '2007-12-25'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "Christmas Day"
+  - given:
+      date: '2007-12-26'
+      regions: ["nz"]
+      options: ["informal"]
+    expect:
+      name: "Boxing Day"
+  - given:
+      date: '2015-04-25'
+      regions: ["nz"]
+    expect:
+      name: "ANZAC Day"
+  - given:
+      date: '2015-04-27'
+      regions: ["nz"]
+      options: ["observed"]
+    expect:
+      name: "ANZAC Day"
+  - given:
+      date: '2016-04-25'
+      regions: ["nz"]
+    expect:
+      name: "ANZAC Day"
+  - given:
+      date: '2016-04-25'
+      regions: ["nz"]
+      options: ["observed"]
+    expect:
+      name: "ANZAC Day"
+  - given:
+      date: '2015-02-06'
+      regions: ["nz"]
+    expect:
+      name: "Waitangi Day"
+  - given:
+      date: '2015-02-06'
+      regions: ["nz"]
+      options: ["observed"]
+    expect:
+      name: "Waitangi Day"
+  - given:
+      date: '2016-02-06'
+      regions: ["nz"]
+    expect:
+      name: "Waitangi Day"
+  - given:
+      date: '2016-02-08'
+      regions: ["nz"]
+      options: ["observed"]
+    expect:
+      name: "Waitangi Day"
+  - given:
+      date: '2016-02-01'
+      regions: ["nz_ne"]
+      options: ["observed"]
+    expect:
+      name: "Nelson Anniversary Day"
+  - given:
+      date: '2017-01-30'
+      regions: ["nz_ne"]
+      options: ["observed"]
+    expect:
+      name: "Nelson Anniversary Day"
+  - given:
+      date: '2018-01-29'
+      regions: ["nz_ne"]
+      options: ["observed"]
+    expect:
+      name: "Nelson Anniversary Day"
+  - given:
+      date: '2019-02-04'
+      regions: ["nz_ne"]
+      options: ["observed"]
+    expect:
+      name: "Nelson Anniversary Day"
+  - given:
+      date: '2016-03-14'
+      regions: ["nz_ta"]
+      options: ["observed"]
+    expect:
+      name: "Taranaki Anniversary Day"
+  - given:
+      date: '2017-03-13'
+      regions: ["nz_ta"]
+      options: ["observed"]
+    expect:
+      name: "Taranaki Anniversary Day"
+  - given:
+      date: '2018-03-12'
+      regions: ["nz_ta"]
+      options: ["observed"]
+    expect:
+      name: "Taranaki Anniversary Day"
+  - given:
+      date: '2019-03-11'
+      regions: ["nz_ta"]
+      options: ["observed"]
+    expect:
+      name: "Taranaki Anniversary Day"
+  - given:
+      date: "2022-06-24"
+      regions: ["nz"]
+    expect:
+      name: "Matariki"
+  - given:
+      date: "2052-06-21"
+      regions: ["nz"]
+    expect:
+      name: "Matariki"
+
+methods:
+  closest_monday:
+    arguments: date
+    ruby: |
+      if [1, 2, 3, 4].include?(date.wday)
+        date -= (date.wday - 1)
+      elsif 0 == date.wday
+        date += 1
+      else
+        date += 8 - date.wday
+      end
+      date
+  previous_friday:
+    arguments: date
+    ruby: |
+      date - 3
+  next_week:
+    arguments: date
+    ruby: |
+      date + 7
+  matariki:
+    arguments: year
+    ruby: |
+      @matariki_dates ||= {
+        2022 => Date.civil(2022, 6, 24),
+        2023 => Date.civil(2023, 7, 14),
+        2024 => Date.civil(2024, 6, 28),
+        2025 => Date.civil(2025, 6, 20),
+        2026 => Date.civil(2026, 7, 10),
+        2027 => Date.civil(2027, 6, 25),
+        2028 => Date.civil(2028, 7, 14),
+        2029 => Date.civil(2029, 7,  6),
+        2030 => Date.civil(2030, 6, 21),
+        2031 => Date.civil(2031, 7, 11),
+        2032 => Date.civil(2032, 7,  2),
+        2033 => Date.civil(2033, 6, 24),
+        2034 => Date.civil(2034, 7,  7),
+        2035 => Date.civil(2035, 6, 29),
+        2036 => Date.civil(2036, 7, 18),
+        2037 => Date.civil(2037, 7, 10),
+        2038 => Date.civil(2038, 6, 25),
+        2039 => Date.civil(2039, 7, 15),
+        2040 => Date.civil(2040, 7,  6),
+        2041 => Date.civil(2041, 7, 19),
+        2042 => Date.civil(2042, 7, 11),
+        2043 => Date.civil(2043, 7,  3),
+        2044 => Date.civil(2044, 6, 24),
+        2045 => Date.civil(2045, 7,  7),
+        2046 => Date.civil(2046, 6, 29),
+        2047 => Date.civil(2047, 7, 19),
+        2048 => Date.civil(2048, 7,  3),
+        2049 => Date.civil(2049, 6, 25),
+        2050 => Date.civil(2050, 7, 15),
+        2051 => Date.civil(2051, 6, 30),
+        2052 => Date.civil(2052, 6, 21),
+      }
+      @matariki_dates[year]

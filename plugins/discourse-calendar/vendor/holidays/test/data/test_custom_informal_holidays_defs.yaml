@@ -1,0 +1,11 @@
+---
+months:
+  1:
+  - name: informal day with type as string
+    regions: [custom_informal]
+    mday: 1
+    type: informal
+  - name: informal day with type as symbol
+    regions: [custom_informal]
+    mday: 5
+    type: :informal

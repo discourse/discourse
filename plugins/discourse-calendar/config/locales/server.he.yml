@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  reports:
+    currently_away:
+      title: משתמשים שאינם נמצאים כרגע
+      labels:
+        username: שם משתמש
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: האירוע התחיל
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "אזור החג שסיפקת לא קיים."
+    discourse_calendar_enable_holiday_failed: "לא ניתן היה לאפשר את החג הזה, הוא כבר מאופשר או שהוא לא מושבת."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "אירוע - הזמנה קבוצתית הצליחה"
+      subject_template: "ההזמנה המרוכזת עובדה בהצלחה"
+      text_body_template: "קובץ ההזמנה המרוכזת שלך עובד, נוצרו %{processed} מוזמנים."
+    discourse_post_event_bulk_invite_failed:
+      title: "אירוע - הזמנה מרוכזת נכשלה"
+      subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
+      text_body_template: |
+        קובץ ההזמנה המרוכזת שלך עבר עיבוד, %{processed} המוזמנים נוצרו על אף %{failed} השגיאות שארעו:
+
+        הנה התיעוד:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "כמות שורות טקסט מרבית לאירוע בלוח השנה."
+    map_events_to_color: "הקצאת צבע לכל תגית או קטגוריה."
+    map_events_title: "דריסת ‚אירועים’ בכותרת סרגל הצד ה‚אירועים הקרובים’ לפי קטגוריה."
+    calendar_enabled: "נא להפעיל את התוסף discourse-calendar. כך תתווסף תמיכה בתגית ‎[calendar][/calendar] בפוסט ראשון בנושא."
+    discourse_post_event_enabled: "הפעלת יכולות האירועים. לתשומת ליבך: דורש גם את הפעלת `לוח שנה פעיל`."
+    displayed_invitees_limit: "מגביל את מספר המוזמנים שמוצגים לאירוע."
+    display_post_event_date_on_topic_title: "מציג את תאריך האירוע אחרי כותרת הנושא."
+    use_local_event_date: "להשתמש בתאריך המקומי אחרי כותרת הנושא במקום בזמן יחסי."
+    discourse_post_event_allowed_on_groups: "קבוצות שמורשות ליצור אירועים."
+    discourse_post_event_allowed_custom_fields: "מאפשר לכל אירוע להגדיר את ערכי השדות המותאמים אישית לעצמו."
+    discourse_post_event_edit_notifications_time_extension: "מאריך (בדקות) את הזמן שלאחר סוף אירוע כאשר מוזמנים ש‚הולכים’ עדיין מקבלים התראות על עריכה בפרסום המקורי"
+    holiday_calendar_topic_id: "מזהה נושא של לוח שנה עם חגי / היעדרות הסגל."
+    holiday_status_emoji: מגדיר את האמוג׳י המשמש לסימון חופשה.
+    delete_expired_event_posts_after: "פוסטים עם אירועים שתוקפם פג יימחקו אוטומטית לאחר (n) שעות. יש להגדיר ל־‎-1 כדי להשבית מחיקה."
+    all_day_event_start_time: "אירועים שלא צוינה להם שעת התחלה יתחילו בשעה הזאת. התבנית היא HH:mm. ל־6:00 בבוקר יש להקליד 06:00"
+    all_day_event_end_time: "אירועים שלא צוינה להם שעת סיום יסתיימו בשעה הזאת. התבנית היא HH:mm. ל־6:00 בערב יש להקליד 18:00"
+    all_day_event_time_error: "שעה שגויה. התבנית צריכה להיות HH:mm (למשל: 08:00)."
+    calendar_categories: "הצג לוח שנה בראש קטגוריה. הגדרות חובה הן categoryId ו־postId. למשל: categoryId=6;postId=453\n הגדרות תקפות נוספות: tzPicker,‏ weekends ו־defaultView."
+    calendar_categories_outlet: "מאפשר לך לשנות איזה מתאם תצוגה יציג את לוח השנה של הקטגוריה."
+    working_days: "הגדרת ימי עבודה. ניתן להציג את זמינות הקבוצה באמצעות תגית `timezones` (אזורי זמן) בפוסט, למשל: `‎[timezones group=admins][timezones]‎`"
+    working_day_start_hour: "שעת תחילת יום העבודה."
+    working_day_end_hour: "שעת סיום יום העבודה."
+    close_to_working_day_hours_extension: "הגדרת זמן הארכה בשעות כדי להדגיש את אזורי הזמן."
+    events_calendar_categories: "הצגת לוח אירועים בראש קטגוריה."
+    sort_categories_by_event_start_date_enabled: "לאפשר מיון של נושאי קטגוריות לפי תאריך תחילת האירוע."
+    disable_resorting_on_categories_enabled: "לאפשר לקטגוריות להשבית את היכולת של משתמשים למיין לפי קטגוריית האירוע."
+    calendar_automatic_holidays_enabled: "להגדיר מצב חופשה לפי האזור של המשתמש (לתשומת לבך: ניתן להשבית חגים אוטומטיים מסוימים בהגדרות התוסף)"
+    event_participation_buttons: "רשימת כפתורי השתתפות באירועים לשימוש המשתמשים."
+    sidebar_show_upcoming_events: "הצגת קישור לאירועים קרובים בסרגל הצד תחת ‚עוד’."
+    include_expired_events_on_calendar: "לכלול אירועי קודמים/שפג תוקפם בתצוגות לוח השנה של הקטגוריה ובאירועים קרבים."
+  discourse_calendar:
+    invite_user_notification: "קיבלת הזמנה מאת %{username} אל: %{description}"
+    calendar_must_be_in_first_post: "ניתן להשתמש בתגית יומן רק בפוסט הראשון של נושא."
+    more_than_one_calendar: "לא יכול להיות יותר מלוח שנה אחד בפוסט."
+    more_than_two_dates: "פוסט של נושא יומן לא יכול להכיל יותר משני תאריכים."
+    event_expired: "תוקף האירוע פג"
+    holiday_status:
+      description: "בחג"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} עומד להתחיל."
+      after_event_reminder: "%{title} הסתיים."
+      ongoing_event_reminder: "%{title} מתרחש כרגע."
+    errors:
+      bulk_invite:
+        max_invitees: "%{max_invittes} המוזמנים הראשונים נוצרו. עדיף לנסות לפצל את הקובץ לחלקים קטנים יותר."
+        error: "אירעה שגיאה בשליחת הקובץ. נא לנסות שוב מאוחר יותר."
+      models:
+        event:
+          only_one_event: "לפוסט יכול להיות רק אירוע אחד."
+          must_be_in_first_post: "אירוע יכול להיות רק בפוסט הראשון של נושא."
+          raw_invitees_length: "אירוע מוגבל ל־%{count} משתמשים/קבוצות."
+          raw_invitees:
+            only_group: "אירוע מקבל רק שמות קבוצות."
+          ends_at_before_starts_at: "אירוע לא יכול להסתיים לפני שהתחיל."
+          start_must_be_present_and_a_valid_date: "לאירוע נחוץ תאריך התחלה תקף."
+          end_must_be_a_valid_date: "תאריך הסיום חייב להיות תאריך תקף."
+          invalid_recurrence: "חזרה חייבת להיות אחת מבין: every_month,‏ every_week,‏ every_two_weeks,‏ every_four_weeks,‏ every_day,‏ every_weekday."
+          invalid_timezone: "אזור הזמן לא מזוהה."
+          acting_user_not_allowed_to_create_event: "למשתמש הנוכחי אסור ליצור אירועים."
+          acting_user_not_allowed_to_act_on_this_event: "אסור למשתמש הנוכחי לפעול כנגד האירוע הזה."
+          invalid_allowed_groups: "קבוצות מותרות שגויות."
+          acting_user_not_allowed_to_invite_these_groups: "למשתמש הנוכחי אסור להזמין את הקבוצות האלו."
+          custom_field_is_invalid: "השדה המותאם אישית `%{field}` אסור לשימוש."
+          name:
+            length: "אורך שם האירוע חייב להיות בין %{minimum} ל־%{maximum} תווים."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "תזכורת לאירוע"

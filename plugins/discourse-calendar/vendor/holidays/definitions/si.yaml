@@ -1,0 +1,159 @@
+# Slovenia holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2014-04-09.
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_Slovenia
+
+months:
+  0:
+  - name: velikonočna nedelja
+    regions: [si]
+    function: easter(year)
+  - name: velikonočni ponedeljek
+    regions: [si]
+    function: easter(year)
+    function_modifier: 1
+  - name: binkošti
+    regions: [si]
+    function: easter(year)
+    function_modifier: 49
+  1:
+  - name: novo leto
+    regions: [si]
+    mday: 1
+  2:
+  - name: Prešernov dan, slovenski kulturni praznik
+    regions: [si]
+    mday: 8
+  4:
+  - name: dan upora proti okupatorju
+    regions: [si]
+    mday: 27
+  5:
+  - name: praznik dela
+    regions: [si]
+    mday: 1
+  - name: praznik dela
+    regions: [si]
+    mday: 2
+  6:
+  - name: dan državnosti
+    regions: [si]
+    mday: 25
+  8:
+  - name: Marijino vnebovzetje
+    regions: [si]
+    mday: 15
+  10:
+  - name: dan reformacije
+    regions: [si]
+    mday: 31
+  11:
+  - name: dan spomina na mrtve
+    regions: [si]
+    mday: 1
+  12:
+  - name: božič
+    regions: [si]
+    mday: 25
+  - name: dan samostojnosti in enotnosti
+    regions: [si]
+    mday: 26
+
+tests:
+  - given:
+      date: '2015-04-05'
+      regions: ["si"]
+    expect:
+      name: "velikonočna nedelja"
+  - given:
+      date: '2016-03-27'
+      regions: ["si"]
+    expect:
+      name: "velikonočna nedelja"
+  - given:
+      date: '2015-04-06'
+      regions: ["si"]
+    expect:
+      name: "velikonočni ponedeljek"
+  - given:
+      date: '2016-03-28'
+      regions: ["si"]
+    expect:
+      name: "velikonočni ponedeljek"
+  - given:
+      date: '2015-05-24'
+      regions: ["si"]
+    expect:
+      name: "binkošti"
+  - given:
+      date: '2016-05-15'
+      regions: ["si"]
+    expect:
+      name: "binkošti"
+  - given:
+      date: ["2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01", "2018-01-01", "2019-01-01", "2020-01-01"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "novo leto"
+  - given:
+      date: ["2014-02-08", "2015-02-08", "2016-02-08", "2017-02-08", "2018-02-08", "2019-02-08", "2020-02-08"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "Prešernov dan, slovenski kulturni praznik"
+  - given:
+      date: ["2014-04-27", "2015-04-27", "2016-04-27", "2017-04-27", "2018-04-27", "2019-04-27", "2020-04-27"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "dan upora proti okupatorju"
+  - given:
+      date: ["2014-05-01", "2015-05-01", "2016-05-01", "2017-05-01", "2018-05-01", "2019-05-01", "2020-05-01"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "praznik dela"
+  - given:
+      date: ["2014-05-02", "2015-05-02", "2016-05-02", "2017-05-02", "2018-05-02", "2019-05-02", "2020-05-02"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "praznik dela"
+  - given:
+      date: ["2014-06-25", "2015-06-25", "2016-06-25", "2017-06-25", "2018-06-25", "2019-06-25", "2020-06-25"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "dan državnosti"
+  - given:
+      date: ["2014-08-15", "2015-08-15", "2016-08-15", "2017-08-15", "2018-08-15", "2019-08-15", "2020-08-15"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "Marijino vnebovzetje"
+  - given:
+      date: ["2014-10-31", "2015-10-31", "2016-10-31", "2017-10-31", "2018-10-31", "2019-10-31", "2020-10-31"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "dan reformacije"
+  - given:
+      date: ["2014-11-01", "2015-11-01", "2016-11-01", "2017-11-01", "2018-11-01", "2019-11-01", "2020-11-01"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "dan spomina na mrtve"
+  - given:
+      date: ["2014-12-25", "2015-12-25", "2016-12-25", "2017-12-25", "2018-12-25", "2019-12-25", "2020-12-25"]
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "božič"
+  - given:
+      date: '2008-12-26'
+      regions: ["si"]
+      options: ["informal"]
+    expect:
+      name: "dan samostojnosti in enotnosti"

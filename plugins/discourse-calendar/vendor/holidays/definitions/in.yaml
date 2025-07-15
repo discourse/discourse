@@ -1,0 +1,146 @@
+# India holiday definitions
+
+---
+months:
+  1:
+  - name: New Year's Day
+    regions: [in]
+    mday: 1
+  - name: Makar Sankranti
+    regions: [in_mh, in_gj, in_ka]
+    mday: 14
+    year_ranges:
+      limited: [2025]
+  - name: Republic Day
+    regions: [in]
+    mday: 26
+    observed: to_weekday_if_weekend(date)
+  2:
+  - name: Chhatrapati Shivaji Maharaj Jayanti
+    regions: [in_mh]
+    mday: 19
+    year_ranges:
+      limited: [2025]
+  - name: Mahashivratri
+    regions: [in_mh, in_gj]
+    mday: 26
+    year_ranges:
+      limited: [2025]
+  3:
+  - name: Holi
+    regions: [in_mh, in_gj, in_ka]
+    mday: 14
+    year_ranges:
+      limited: [2025]
+  - name: Eid al-Fitr
+    regions: [in_mh, in_gj, in_ka, in_tn]
+    mday: 31
+    year_ranges:
+      limited: [2025]
+  4:
+  - name: Mahavir Jayanti
+    regions: [in_mh, in_gj]
+    mday: 10
+    year_ranges:
+      limited: [2025]
+  - name: Ambedkar Jayanti
+    regions: [in_mh, in_gj]
+    mday: 14
+  - name: Tamil New Year's Day
+    regions: [in_tn]
+    mday: 14
+  - name: Good Friday
+    regions: [in_mh, in_tn, in_gj]
+    mday: 18
+    year_ranges:
+      limited: [2025]
+  5:
+  - name: Maharashtra Day
+    regions: [in_mh]
+    mday: 1
+  - name: Gujarat Day
+    regions: [in_gj]
+    mday: 1
+  - name: Labour's Day
+    regions: [in_tn, in_ka]
+    mday: 1
+  - name: Buddha Purnima
+    regions: [in_mh, in_gj]
+    mday: 12
+    year_ranges:
+      limited: [2025]
+  6:
+  - name: Eid al-Adha
+    regions: [in_tn, in_gj, in_mh]
+    mday: 7
+    year_ranges:
+      limited: [2025]
+  7:
+  - name: Muharram
+    regions: [in_gj, in_tn, in_mh]
+    mday: 6
+    year_ranges:
+      limited: [2025]
+  8:
+  - name: Raksha Bandhan
+    regions: [in_mh, in_gj]
+    mday: 9
+    year_ranges:
+      limited: [2025]
+  - name: Independence Day
+    regions: [in]
+    mday: 15
+    observed: to_weekday_if_weekend(date)
+  - name: Ganesh Chaturthi
+    regions: [in_mh, in_gj]
+    mday: 27
+    year_ranges:
+      limited: [2025]
+  9:
+  - name: Milad-un-Nabi
+    regions: [in_mh, in_tn, in_gj]
+    mday: 16
+    year_ranges:
+      limited: [2025]
+  - name: Navratri Sthapana
+    regions: [in_mh, in_gj]
+    mday: 22
+    year_ranges:
+      limited: [2025]
+  10:
+  - name: Gandhi Jayanti
+    regions: [in]
+    mday: 2
+    observed: to_weekday_if_weekend(date)
+  - name: Dussehra
+    regions: [in_mh, in_tn, in_gj]
+    mday: 2
+    year_ranges:
+      limited: [2025]
+  - name: Diwali
+    regions: [in]
+    mday: 21
+    year_ranges:
+      limited: [2025]
+  - name: Govardhan Puja
+    regions: [in_mh, in_gj]
+    mday: 22
+    year_ranges:
+      limited: [2025]
+  - name: Sardar Vallabhbhai Patel Jayanti
+    regions: [in_gj]
+    mday: 31
+  11:
+  - name: Kannada Rajyothsava
+    regions: [in_ka]
+    mday: 1
+  - name: Guru Nanak Jayanti
+    regions: [in_mh, in_gj]
+    mday: 5
+    year_ranges:
+      limited: [2025]
+  12:
+  - name: Christmas Day
+    regions: [in]
+    mday: 25
+    observed: to_weekday_if_weekend(date)

@@ -1,0 +1,133 @@
+#upcoming-events-calendar,
+#category-events-calendar {
+  &.fc-unthemed {
+    tbody,
+    thead,
+    tr {
+      border: none;
+    }
+
+    .fc-basic-view .fc-day-top .fc-day-number {
+      float: left;
+    }
+
+    .fc-bg td.fc-today {
+      background-color: var(--highlight-medium);
+      border-style: solid;
+    }
+
+    .fc-month-view .fc-widget-content,
+    .fc-basicWeek-view .fc-widget-content,
+    .fc-head-container {
+      padding: 0;
+    }
+
+    .fc-bg tbody {
+      border-width: 0;
+    }
+
+    .fc-header-toolbar {
+      margin: 1em 0 0.5em 0;
+    }
+
+    .fc-title {
+      @include ellipsis;
+      display: block;
+    }
+
+    .fc-widget-header span {
+      padding: 3px 3px 3px 0.5em;
+    }
+
+    .fc-center {
+      display: none;
+    }
+
+    .fc-button {
+      border-radius: 0;
+      box-shadow: none;
+      background: var(--primary-low);
+      text-transform: capitalize;
+      color: var(--primary);
+      text-shadow: none;
+      border: none;
+      padding: 6px 12px;
+
+      &:hover {
+        background: var(--primary-medium);
+        color: var(--secondary);
+      }
+
+      &.fc-state-active {
+        background: var(--tertiary);
+        color: var(--secondary);
+      }
+      margin: 0.3em 0 0.3em 0.5em;
+    }
+
+    .fc-button-group {
+      margin: 0.3em 0 0.3em 0.5em;
+
+      // margin-right: 0;
+      .fc-button {
+        margin: 0;
+      }
+    }
+
+    .fc-divider,
+    .fc-list-empty,
+    .fc-list-heading td,
+    .fc-popover .fc-header {
+      background: var(--primary-low);
+    }
+
+    .fc-content,
+    .fc-divider,
+    .fc-list-heading td,
+    .fc-list-view,
+    .fc-popover,
+    .fc-row,
+    tbody,
+    td,
+    th,
+    thead {
+      border-color: var(--primary-low);
+    }
+  }
+
+  .fc-event,
+  .fc-event-dot {
+    color: var(--secondary);
+    background-color: var(--tertiary);
+    border: 1px solid transparent;
+
+    .fc-time {
+      display: none;
+    }
+
+    &.grouped-event {
+      background: var(--secondary);
+      border: 1px solid var(--primary-low-mid);
+      color: var(--primary);
+
+      .emoji {
+        margin-right: 0.25em;
+      }
+    }
+  }
+
+  .fc-past-event {
+    opacity: 0.3;
+  }
+
+  .fc-left {
+    .fc-button-group:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .fc-list-item-add-to-calendar {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+  }
+}

@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: หมายเลขกระทู้
+    discourse_calendar:
+      disable_holiday: "ปิดใช้งาน"
+      enable_holiday: "เปิดใช้งาน"
+      date: "วันที่"
+      region:
+        none: "ไม่มี"
+      toolbar_button:
+        today: "วันนี้"
+        month: "เดือน"
+        week: "สัปดาห์"
+    group_timezones:
+      search: "ค้นหา..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username}%{description}"
+      created_by: "สร้างโดย"
+      bulk_invite_modal:
+        success: "ไฟล์ถูกอัปโหลดเรียบร้อยแล้ว คุณจะได้รับการแจ้งเตือนทางข้อความเมื่อขั้นตอนเสร็จสิ้น"
+      upcoming_events:
+        status: "สถานะ"
+      models:
+        event:
+          closed: "ปิด"
+          status:
+            public:
+              title: "สาธารณะ"
+            private:
+              title: "ส่วนตัว"
+      builder_modal:
+        custom_fields:
+          placeholder: "ทางเลือก"
+        create: "สร้าง"
+        update: "บันทึก"
+        timezone:
+          label: เขตเวลา
+        reminders:
+          units:
+            days: "วัน"
+          periods:
+            before: "ก่อน"
+            after: "หลังจาก"
+        recurrence:
+          label: "มีการเกิดขึ้นซ้ำ"
+          none: "ไม่มีการเกิดขึ้นซ้ำ"
+          every_day: "ทุกวัน"
+        url:
+          label: "URL"
+          placeholder: "ทางเลือก"
+        location:
+          label: "ที่อยู่"
+        description:
+          label: "รายละเอียด"
+        status:
+          label: "สถานะ"
+      invite_user_or_group:
+        invite: "ส่ง"
