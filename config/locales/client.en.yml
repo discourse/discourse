@@ -7628,7 +7628,7 @@ en:
         activity: Activity
         like_count: Likes Given / Received
         last_100_days: "in the last 100 days"
-        private_topics_count: Private Topics
+        private_topics_count: Personal Messages
         posts_read_count: Posts Read
         post_count: Posts Created
         second_factor_enabled: Two-Factor Authentication Enabled
