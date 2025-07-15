@@ -39,10 +39,14 @@
 
     .--below-site-header & {
       border-bottom: 0;
-      padding: var(--space-8) var(--space-4);
+      padding: var(--space-4) var(--space-4) var(--space-8);
 
       @include viewport.from(xl) {
         margin-left: max(var(--d-sidebar-width), var(--space-4));
+      }
+
+      @include viewport.until(lg) {
+        padding: var(--space-8) var(--space-4) var(--space-8);
       }
     }
 
