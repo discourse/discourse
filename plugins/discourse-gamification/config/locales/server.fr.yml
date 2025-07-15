@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    discourse_gamification_enabled: "Activer l'extension Discourse Gamification"
+    like_received_score_value: "La valeur de l'acclamation accordée lorsqu'un utilisateur reçoit une mention J'aime"
+    like_given_score_value: "La valeur de l'acclamation accordée pour chaque mention « J'aime » donnée par un utilisateur"
+    solution_score_value: "La valeur de l'acclamation accordée lorsque le message d'un utilisateur est marqué comme une solution"
+    user_invited_score_value: "La valeur de l'acclamation accordée lorsqu'un utilisateur a reçu une invitation"
+    time_read_score_value: "La valeur de l'acclamation accordée pour chaque heure passée à lire"
+    post_read_score_value: "La valeur de l'acclamation accordée pour chaque lot de cent messages lus par un utilisateur"
+    topic_created_score_value: "La valeur de l'acclamation accordée lorsqu'un utilisateur crée un sujet"
+    post_created_score_value: "La valeur de l'acclamation accordée lorsqu'un utilisateur crée un message"
+    flag_created_score_value: "La valeur de l'acclamation accordée lorsqu'un utilisateur signale un message et que ce signalement est accepté par un responsable"
+    day_visited_score_value: "La valeur de l'acclamation accordée pour chaque jour où un utilisateur visite le site"
+    scorable_categories: "Liste des catégories où les actions susciteront des acclamations. Laissez ce champ vide pour activer les acclamations dans toutes les catégories"
+    reaction_received_score_value: "La valeur de l'acclamation accordée lorsqu'un utilisateur reçoit une réaction"
+    reaction_given_score_value: "La valeur de l'acclamation accordée pour chaque réaction donnée par un utilisateur"
+    chat_reaction_received_score_value: "La valeur de l'acclamation accordée lorsqu'un utilisateur reçoit une réaction à un message de discussion"
+    chat_reaction_given_score_value: "La valeur de l'acclamation accordée pour chaque réaction donnée par un utilisateur à un message de discussion"
+    chat_message_created_score_value: "La valeur de l'acclamation accordée pour chaque message qu'un utilisateur envoie dans une discussion"
+    score_ranking_strategy: "Stratégie de classement de la position au tableau d'affichage"
+  score: "Acclamations"
+  default_leaderboard_name: "Classement mondial"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "Vous avez atteint le nombre maximal de recalculs de scores. Veuillez patienter %{time_left} avant de réessayer."
+  errors:
+    leaderboard_positions_not_ready: "Nous générons votre classement. Réessayez dans quelques minutes."

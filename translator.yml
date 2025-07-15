@@ -241,3 +241,10 @@ files:
   - source_path: plugins/discourse-hcaptcha/config/locales/server.en.yml
     destination_path: plugins/hcaptcha/server.yml
     label: hcaptcha
+
+  - source_path: plugins/discourse-gamification/config/locales/client.en.yml
+    destination_path: plugins/gamification/client.yml
+    label: gamification
+  - source_path: plugins/discourse-gamification/config/locales/server.en.yml
+    destination_path: plugins/gamification/server.yml
+    label: gamification

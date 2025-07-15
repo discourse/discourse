@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    discourse_gamification_enabled: "Discourse-Gamifizierung-Plug-in aktivieren"
+    like_received_score_value: "Der Wert des Beifalls, der vergeben wird, wenn ein Benutzer ein „Gefällt mir“ erhält"
+    like_given_score_value: "Der Wert des Beifalls, der für jedes „Gefällt mir“ vergeben wird, das ein Benutzer gibt"
+    solution_score_value: "Der Wert des Beifalls, der vergeben wird, wenn der Beitrag eines Benutzers als Lösung markiert wird"
+    user_invited_score_value: "Der Wert des Beifalls, der vergeben wird, wenn ein Benutzer eine eingelöste Einladung hat"
+    time_read_score_value: "Der Wert des Beifalls, der für jede Stunde Lesezeit vergeben wird"
+    post_read_score_value: "Der Wert des Beifalls, der für jeweils hundert Beiträge vergeben wird, die ein Benutzer liest"
+    topic_created_score_value: "Der Wert des Beifalls, der vergeben wird, wenn ein Benutzer ein Thema erstellt"
+    post_created_score_value: "Der Wert des Beifalls, der vergeben wird, wenn ein Benutzer einen Beitrag erstellt"
+    flag_created_score_value: "Der Wert des Beifalls, der vergeben wird, wenn ein Benutzer einen Beitrag meldet und diese Meldung von einem Team-Benutzer akzeptiert wird"
+    day_visited_score_value: "Der Wert des Beifalls, der für jeden Tag vergeben wird, an dem ein Benutzer die Website besucht"
+    scorable_categories: "Liste der Kategorien, in denen Aktionen Beifall erzeugen. Leer lassen, um Beifall für alle Kategorien zu aktivieren"
+    reaction_received_score_value: "Der Wert des Beifalls, der vergeben wird, wenn ein Benutzer eine Reaktion erhält"
+    reaction_given_score_value: "Der Wert des Beifalls, der für jede Reaktion vergeben wird, die ein Benutzer gibt"
+    chat_reaction_received_score_value: "Der Wert des Beifalls, der vergeben wird, wenn ein Benutzer eine Reaktion auf eine Chat-Nachricht erhält"
+    chat_reaction_given_score_value: "Der Wert des Beifalls, der für jede Reaktion vergeben wird, die ein Benutzer für eine Chat-Nachricht gibt"
+    chat_message_created_score_value: "Der Wert des Beifalls, der für jede Nachricht vergeben wird, die ein Benutzer in einem Chat sendet"
+    score_ranking_strategy: "Strategie für die Ranglistenposition"
+  score: "Beifall"
+  default_leaderboard_name: "Globale Rangliste"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "Du hast die maximale Anzahl an Score-Neuberechnungen erreicht. Bitte warte %{time_left}, bevor du es wieder versuchst."
+  errors:
+    leaderboard_positions_not_ready: "Wir generieren gerade deine Rangliste. Versuche es in ein paar Minuten noch einmal."
