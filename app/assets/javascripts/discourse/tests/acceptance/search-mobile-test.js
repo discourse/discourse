@@ -24,7 +24,7 @@ acceptance("Search - Mobile", function (needs) {
       .dom(".advanced-filters[open]")
       .exists("it should expand advanced search filters");
 
-    await fillIn(".search-query", "discourse");
+    await fillIn(".search-query", "consectetur");
     await click(".search-cta");
 
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
@@ -38,7 +38,7 @@ acceptance("Search - Mobile", function (needs) {
     assert
       .dom("input.full-page-search")
       .hasValue(
-        "discourse",
+        "consectetur",
         "does not reset input when hitting search icon again"
       );
   });
