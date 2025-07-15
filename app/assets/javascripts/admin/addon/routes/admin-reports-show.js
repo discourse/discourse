@@ -56,6 +56,20 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     return super.serializeQueryParam(value, urlKey, defaultValueType);
   }
 
+  redirect(params) {
+    if (
+      params.type === "site_traffic" &&
+      this.siteSettings.use_legacy_pageviews
+    ) {
+      this.router.transitionTo("adminReports.show", "consolidated_page_views", {
+        queryParams: {
+          ...params,
+          type: "consolidated_page_views",
+        },
+      });
+    }
+  }
+
   @action
   onParamsChange(params) {
     const queryParams = {
