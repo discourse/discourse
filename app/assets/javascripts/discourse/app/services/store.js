@@ -365,7 +365,9 @@ export default class StoreService extends Service {
           );
 
           obj[this.pluralize(subType)] = hydrated || [];
-          delete obj[k];
+          if (hydrated.some(Boolean)) {
+            delete obj[k];
+          }
         } else {
           const hydrated = this._lookupSubType(subType, type, obj[k], root);
           if (hydrated) {
