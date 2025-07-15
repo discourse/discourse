@@ -1,0 +1,85 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Плагин Discourse «Геймификация»"
+  js:
+    gamification_score: "Репутация"
+    gamification:
+      score: "Репутация"
+      you: "Вы"
+      leaderboard:
+        title: "Таблица лидеров"
+        info: "Как это работает?"
+        link_to_settings: "Настройки"
+        refresh: "Обновить"
+        modal:
+          title: "Как устроена таблица лидеров?"
+          text: "Баллы начисляются за участие в сообществе, например за посещение, за выраженные симпатии, за публикацию сообщений. Баллы обновляются каждые несколько минут. Чем более вы активны на форуме, помогая другим участникам сообщества, тем больше баллов вам будет начислено!"
+        name: "Имя"
+        name_placeholder: "Название…"
+        new: "Новая таблица лидеров"
+        create_success: "Таблица лидеров создана"
+        delete_success: "Таблица лидеров удалена."
+        save_success: "Таблица лидеров сохранена."
+        cta: "Создать первую таблицу лидеров"
+        none: "Таблицы лидеров ещё не созданы."
+        confirm_destroy: "Вы действительно хотите удалить эту таблицу лидеров?"
+        date:
+          range: "Диапазон дат (с/по)"
+          from: "С даты"
+          to: "По дату"
+          helper: "Если даты не указаны, в таблице лидеров будут отображаться баллы без каких-либо ограничений по времени."
+        visible_to_groups: "Видна группам"
+        visible_to_groups_help: "Только пользователи из этих групп смогут просматривать таблицу лидеров. Оставьте поле пустым, чтобы разрешить доступ всем участникам."
+        included_groups: "Включённые группы"
+        included_groups_help: "Только пользователи из этих групп будут включены в таблицу лидеров. Оставьте поле пустым, чтобы отображать в таблице всех участников."
+        excluded_groups: "Исключённые группы"
+        excluded_groups_help: "Пользователи из этих групп не будут включены в таблицу лидеров. Оставьте поле пустым, чтобы отображать в таблице всех участников."
+        default_period: "Период по умолчанию"
+        default_period_help: "Установите период времени по умолчанию для отображения таблицы лидеров."
+        period_filter_disabled: "Отключить фильтр по периоду времени"
+        period:
+          all_time: "За всё время"
+          yearly: "За год"
+          quarterly: "За квартал"
+          monthly: "За месяц"
+          weekly: "За неделю"
+          daily: "За день"
+        rank: "Рейтинг"
+      create: "Создать"
+      cancel: "Отмена"
+      close: "Закрыть"
+      delete: "Удалить"
+      edit: "Редактировать"
+      back: "Назад"
+      save: "Сохранить"
+      apply: "Применить"
+      recalculate: "Пересчитать баллы"
+      recalculating: "Пересчет баллов..."
+      completed: "Готово! Баллы пересчитаны."
+      update_scores_help: "Обновить все баллы для всех таблиц лидеров:"
+      update_range:
+        last_10_days: "За последние 10 дней"
+        last_30_days: "За последние 30 дней"
+        last_90_days: "За последние 90 дней"
+        last_year: "За последний год"
+        all_time: "За всё время"
+        custom_date_range: "Настраиваемый диапазон"
+      custom_range_from: "От"
+      daily_update_scores_availability:
+        one: "Остался %{count} ежедневный пересчет"
+        few: "Осталось %{count} ежедневных пересчета"
+        many: "Осталось %{count} ежедневных пересчетов"
+        other: "Осталось %{count} ежедневного пересчета"
+      admin:
+        title: "Геймификация"
+        name: "Название"
+        period: "Период"

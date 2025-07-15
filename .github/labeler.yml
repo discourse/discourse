@@ -102,6 +102,10 @@ discourse-hcaptcha:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-hcaptcha/**/*
 
+discourse-gamification:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-gamification/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

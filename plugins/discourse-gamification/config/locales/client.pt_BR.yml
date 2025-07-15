@@ -1,0 +1,83 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse Gamification"
+  js:
+    gamification_score: "Saudações"
+    gamification:
+      score: "Saudações"
+      you: "Você"
+      leaderboard:
+        title: "Tabelas de classificação"
+        info: "Como isso funciona?"
+        link_to_settings: "Definições"
+        refresh: "Atualizar"
+        modal:
+          title: "Como funciona a tabela de classificação?"
+          text: "Os pontos são concedidos por se envolver com a comunidade, como visitar, curtir e postar. Sua pontuação é atualizada dentro de poucos minutos. Então, seja útil, ativo(a) e solidário(a), e suba na hierarquia!"
+        name: "Nome"
+        name_placeholder: "Nome..."
+        new: "Nova tabela de classificação"
+        create_success: "Tabela de classificação criada"
+        delete_success: "Tabela de classificação excluída"
+        save_success: "Tabela de classificação salva"
+        cta: "Faça sua primeira tabela de classificação"
+        none: "Nenhuma tabela de classificação foi criada ainda."
+        confirm_destroy: "Tem certeza de que deseja excluir essa tabela de classificação?"
+        date:
+          range: "Intervalo de datas De / Até"
+          from: "Data de início"
+          to: "Data final"
+          helper: "Se as datas forem deixadas em branco, a tabela de classificação mostrará as pontuações obtidas sem restrições de tempo."
+        visible_to_groups: "Visível para grupos"
+        visible_to_groups_help: "Apenas os usuários desses grupos poderão visualizar a tabela de classificação. Deixe vazio para permitir que todos visualizem."
+        included_groups: "Grupos incluídos"
+        included_groups_help: "Apenas os usuários desses grupos serão incluídos na tabela de classificação. Deixe vazio para listar todos."
+        excluded_groups: "Grupos excluídos"
+        excluded_groups_help: "Impeça que os usuários desses grupos sejam incluídos na tabela de classificação. Deixe em branco para listar todos."
+        default_period: "Período padrão"
+        default_period_help: "Defina o período de tempo padrão a ser exibido para este placar."
+        period_filter_disabled: "Desativar filtro de período"
+        period:
+          all_time: "Desde o início"
+          yearly: "Todo ano"
+          quarterly: "Todo semestre"
+          monthly: "Todo mês"
+          weekly: "A cada semana"
+          daily: "A cada dia"
+        rank: "Classificação"
+      create: "Criar"
+      cancel: "Cancelar"
+      close: "Fechar"
+      delete: "Excluir"
+      edit: "Editar"
+      back: "Voltar"
+      save: "Salvar"
+      apply: "Aplicar"
+      recalculate: "Recalcular pontuação"
+      recalculating: "Recalculando pontuação..."
+      completed: "Pronto! A pontuação foi recalculada com êxito."
+      update_scores_help: "Atualizar a pontuação de todos os placares"
+      update_range:
+        last_10_days: "Últimos 10 dias"
+        last_30_days: "Últimos 30 dias"
+        last_90_days: "Últimos 90 dias"
+        last_year: "Ano passado"
+        all_time: "Desde o início"
+        custom_date_range: "Intervalo personalizado"
+      custom_range_from: "De"
+      daily_update_scores_availability:
+        one: "%{count} recálculo diário restante"
+        other: "%{count} recálculo(s) diário(s) restante(s)"
+      admin:
+        title: "Gamificação"
+        name: "Nome"
+        period: "Período"

@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    discourse_gamification_enabled: "הפעלת תוסף המשחוק של Discourse"
+    like_received_score_value: "ערך התשועה שמוענק כשמשתמש מקבל לייק"
+    like_given_score_value: "ערך התשועה שמוענק עבור כל לייק שמשתמש נותן"
+    solution_score_value: "ערך התשועה שמוענק כאשר פוסט של משתמש מסומן כפתרון"
+    user_invited_score_value: "ערך התשועה שמוענק כאשר משתמש מקבל הזמנה שסולקה"
+    time_read_score_value: "ערך התשועה שמוענק עבור כל שעת קריאה"
+    post_read_score_value: "ערך התשועה שמוענק עבור כל מאה פוסטים שמשתמש קורא"
+    topic_created_score_value: "ערך התשועה שמוענק כאשר משתמש יוצר נושא"
+    post_created_score_value: "ערך התשועה שמוענק כאשר משתמש יוצר פוסט"
+    flag_created_score_value: "ערך התשועה שמוענק כאשר משתמש מסמן פוסט בדגל והדגל מתקבל על ידי משתמש צוות"
+    day_visited_score_value: "ערך התשועה שמוענק עבור כל יום בו משתמש מבקר באתר"
+    scorable_categories: "רשימת הקטגוריות בהן פעולות מייצרות תשועות. יש להשאיר ריק כדי להפעיל תשועות בכל הקטגוריות"
+    reaction_received_score_value: "ערך התשועה שמוענק כשמשתמש מקבל רגש"
+    reaction_given_score_value: "ערך התשועה שמוענק עבור כל רגש שמשתמש נותן"
+    chat_reaction_received_score_value: "ערך התשועה שמוענק כשמשתמש מקבל תגובה להודעה בצ׳אט"
+    chat_reaction_given_score_value: "ערך התשועה שמוענק עבור כל רגש שמשתמש הוסיף להודעת צ׳אט"
+    chat_message_created_score_value: "ערך התשועה שמוענק עבור כל הודעה שמשתמש שולח בצ׳אט"
+    score_ranking_strategy: "אסטרטגיית דירוג מיקום בלוח התוצאות"
+  score: "תשועות"
+  default_leaderboard_name: "לוח תוצאות עולמי"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "הגעת למספר החישובים מחדש לניקוד המרבי. נא להמתין %{time_left} בטרם ביצוע ניסיון חוזר."
+  errors:
+    leaderboard_positions_not_ready: "אנו מייצרים את לוח התוצאות שלך. נא לנסות שוב בעוד כמה דקות."

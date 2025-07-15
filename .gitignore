@@ -68,6 +68,7 @@
 !/plugins/discourse-assign
 !/plugins/discourse-subscriptions
 !/plugins/discourse-hcaptcha
+!/plugins/discourse-gamification
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    discourse_gamification_enabled: "Abilita il plugin di Discourse Gamification"
+    like_received_score_value: "Il valore dei complimenti assegnati quando un utente riceve un Mi piace"
+    like_given_score_value: "Il valore dei complimenti assegnati per ogni Mi piace messo da un utente"
+    solution_score_value: "Il valore dei complimenti assegnati quando il messaggio di un utente è contrassegnato come soluzione"
+    user_invited_score_value: "Il valore dei complimenti assegnati quando un utente ha un invito riscattato"
+    time_read_score_value: "Il valore dei complimenti assegnati per ogni ora trascorsa leggendo"
+    post_read_score_value: "Il valore dei complimenti assegnati per ogni cento messaggi letti da un utente"
+    topic_created_score_value: "Il valore dei complimenti assegnati quando un utente crea un argomento"
+    post_created_score_value: "Il valore dei complimenti assegnati quando un utente crea un messaggio"
+    flag_created_score_value: "Il valore dei complimenti assegnati quando un utente segnala un messaggio e la segnalazione è accettata da un utente dello staff"
+    day_visited_score_value: "Il valore dei complimenti assegnati per ogni giorno in cui un utente visita il sito"
+    scorable_categories: "Elenco di categorie in cui le azioni genereranno complimenti. Lascia vuota l'opzione per abilitare i complimenti in tutte le categorie"
+    reaction_received_score_value: "Il valore dei complimenti assegnati quando un utente riceve una reazione"
+    reaction_given_score_value: "Il valore dei complimenti assegnati per ogni reazione messa da un utente"
+    chat_reaction_received_score_value: "Il valore dei complimenti assegnati quando un utente riceve una reazione a un messaggio di chat"
+    chat_reaction_given_score_value: "Il valore dei complimenti assegnati per ogni reazione messa da un utente a un messaggio di chat"
+    chat_message_created_score_value: "Il valore dei complimenti assegnati per ogni messaggio che un utente invia in chat"
+    score_ranking_strategy: "Strategia di posizionamento in classifica"
+  score: "Complimenti"
+  default_leaderboard_name: "Classifica globale"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "Hai raggiunto il numero massimo di ricalcoli di punteggio. Attendi %{time_left} prima di riprovare."
+  errors:
+    leaderboard_positions_not_ready: "Stiamo generando la tua classifica. Riprova tra qualche minuto."

@@ -1,0 +1,27 @@
+en:
+  site_settings:
+    discourse_gamification_enabled: "Enable the Discourse Gamification Plugin"
+    like_received_score_value: "The value of the cheer awarded when a user receives a like"
+    like_given_score_value: "The value of the cheer awarded for every like a user gives"
+    solution_score_value: "The value of the cheer awarded when a user's post is marked as a solution"
+    user_invited_score_value: "The value of the cheer awarded when a user has an invite redeemed"
+    time_read_score_value: "The value of the cheer awarded for every hour of time spent reading"
+    post_read_score_value: "The value of the cheer awarded for every one hundred posts a user reads"
+    topic_created_score_value: "The value of the cheer awarded when a user creates a topic"
+    post_created_score_value: "The value of the cheer awarded when a user creates a post"
+    flag_created_score_value: "The value of the cheer awarded when a user flags a post and that flag is accepted by a staff user"
+    day_visited_score_value: "The value of the cheer awarded for every day a user visits the site"
+    scorable_categories: "List of categories where actions will generate cheers. Leave empty to enable cheers on all categories"
+    reaction_received_score_value: "The value of the cheer awarded when a user receives a reaction"
+    reaction_given_score_value: "The value of the cheer awarded for every reaction a user gives"
+    chat_reaction_received_score_value: "The value of the cheer awarded when a user receives a reaction to a chat message"
+    chat_reaction_given_score_value: "The value of the cheer awarded for every reaction a user gives to a chat message"
+    chat_message_created_score_value: "The value of the cheer awarded for every message a user sends in a chat"
+    score_ranking_strategy: "Leaderboard position ranking strategy"
+  score: "Cheers"
+  default_leaderboard_name: "Global Leaderboard"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "You’ve reached the maximum number of recalculating scores. Please wait %{time_left} before trying again."
+  errors:
+    leaderboard_positions_not_ready: "We are generating your leaderboard. Try again in a few minutes."
