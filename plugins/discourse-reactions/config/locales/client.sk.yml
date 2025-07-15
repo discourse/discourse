@@ -5,18 +5,38 @@
 # https://translate.discourse.org/
 
 sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "Discourse reakcie"
   js:
     discourse_reactions:
+      reactions_title: "Reakcie"
       state_panel:
         more_users: "a %{count} ďalšie..."
+      reaction:
+        forbidden: "Táto reakcia vznikla príliš dávno. Už sa nedá upraviť ani odstrániť."
+      picker:
+        react_with: "Reagujte na tento príspevok pomocou: %{reaction}"
+        cant_remove_reaction: "Už nemôžete odstrániť svoju reakciu"
+        remove_reaction: "Odstráňte túto reakciu %{reaction}"
       main_reaction:
         add: "Páči sa mi tento príspevok"
+        remove: "Odstrániť toto páči sa mi to"
+        cant_remove: "Už nemôžete odstrániť svoj like"
+        unauthenticated: "Pre označenie „Páči sa mi to“ sa prosím zaregistrujte alebo prihláste."
     notifications:
+      reaction_1_user_multiple_posts:
+        one: "reagoval na %{count} váš príspevok"
+        few: "reagovali na %{count} vašich príspevkov"
+        many: "reagovali na %{count} vašich príspevkov"
+        other: "reagovali na %{count} vaše príspevky"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} a %{count} ďalší"
-        few: "%{username} a %{count} ďalších"
-        many: "%{username} a %{count} ďalších"
-        other: "%{username} a %{count} ďalších"
+        few: "%{username} a %{count} iných"
+        many: "%{username} a %{count} iné"
+        other: "%{username} a %{count} iné"
       titles:
         reaction: "nová reakcia"

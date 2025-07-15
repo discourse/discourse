@@ -798,6 +798,7 @@ th:
       suspended_notice: "ผู้ใช้นี้ถูกระงับจนถึง %{date}"
       suspended_permanently: "ผู้ใช้นี้ถูกระงับชั่วคราว"
       suspended_reason: "เหตุผล:"
+      silenced_reason: "เหตุผล:"
       github_profile: "กิตฮับ"
       email_activity_summary: "สรุปกิจกรรม"
       mailing_list_mode:
@@ -1062,7 +1063,8 @@ th:
         remove: "ลบ"
         reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
         user: "เชิญชวนผู้ใช้แล้ว"
-        none: "ไม่มีคำเชิญที่จะแสดง"
+        none:
+          title: "ไม่มีคำเชิญที่จะแสดง"
         truncated:
           other: "กำลังแสดงคำเชิญ %{count} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"

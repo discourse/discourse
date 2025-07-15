@@ -1082,6 +1082,8 @@ ur:
       suspended_notice: "یہ صارف %{date} تک معطل ہے۔"
       suspended_permanently: "یہ صارف معطل ہے۔"
       suspended_reason: "وجہ: "
+      silenced_permanently: "یہ صارف خاموش کیا ہوا ہے."
+      silenced_reason: "وجہ: "
       github_profile: "گِٹ ہَب"
       email_activity_summary: "سرگرمی کا خلاصہ"
       mailing_list_mode:
@@ -1469,7 +1471,8 @@ ur:
         reinvited: "دعوت دوبارہ بھیج دی گئی"
         removed: "ہٹا دیا"
         user: "مدعو کیا گیا صارف"
-        none: "ظاہر کرنے کے لئے کوئی دعوتیں نہیں ہیں۔"
+        none:
+          title: "ظاہر کرنے کے لئے کوئی دعوتیں نہیں ہیں۔"
         truncated:
           one: "پہلی دعوت دکھائی جا رہی ہیں۔"
           other: "پہلی %{count} دعوتیں دکھائی جا رہی ہیں۔"
@@ -1878,7 +1881,6 @@ ur:
       unlist: "غیر مندرج"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
       toggle_whisper: "سرگوشی ٹَوگل کریں"
-      toggle_unlisted: "غیر مندرج ٹَوگل کریں"
       posting_not_on_topic: "کون سے ٹاپک کا آپ جواب دینا چاہتے ہیں؟"
       saved_local_draft_tip: "مقامی طور پر محفوظ کر لیا گیا"
       drafts_offline: "ڈرافٹس آف لائن"

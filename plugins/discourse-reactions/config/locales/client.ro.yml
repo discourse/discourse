@@ -22,7 +22,7 @@ ro:
         cant_remove_reaction: "Nu-ți mai poți elimina reacția."
         remove_reaction: "Elimină această reacție %{reaction}"
       main_reaction:
-        add: "Apreciază acest articol"
+        add: "Apreciază această postare"
         remove: "Elimină această apreciere"
         cant_remove: "Nu-ți mai poți elimina aprecierea"
         unauthenticated: "Te rugăm să te înregistrezi sau să te conectezi pentru a aprecia acest articol."

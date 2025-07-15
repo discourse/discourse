@@ -234,9 +234,7 @@ tr_TR:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
         channels_list: "Sohbet kanalları listesi"
-      no_direct_message_channels: "Henüz herhangi bir doğrudan mesaja katılmadınız!"
       no_direct_message_channels_cta: "Konuşma başlat"
-      no_public_channels: "Henüz hiçbir kanala katılmadınız!"
       no_public_channels_cta: "Kanallara göz at"
       kicked_from_channel: "Artık bu kanala erişemezsiniz."
       only_chat_push_notifications:

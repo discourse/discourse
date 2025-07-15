@@ -4120,7 +4120,6 @@ es:
     solarized_dark_theme_name: "Solarizado oscuro"
     wcag_dark: "WCAG Oscuro"
     wcag_dark_theme_name: "WCAG Oscuro"
-    default_theme_name: "Por defecto"
     light_theme_name: "Claro"
     dark_theme_name: "Oscuro"
     neutral_theme_name: "Neutro"
@@ -4745,10 +4744,6 @@ es:
         Esta medalla se concede por visitarnos durante 365 días consecutivos. ¡Guau, un año entero!
     badge_title_metadata: "%{display_name} medalla en %{site_title}"
   admin_login:
-    success: "Correo electrónico enviado"
-    errors:
-      unknown_email_address: "Dirección de correo electrónico desconocida."
-      invalid_token: "Token no válido."
     email_input: "Correo electrónico de administrador"
     submit_button: "Enviar correo electrónico"
     safe_mode: "Modo seguro: desactivar todos los temas y plugins al iniciar sesión"

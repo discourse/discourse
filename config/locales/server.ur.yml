@@ -2896,7 +2896,6 @@ ur:
     latte: "لا ٹَیے"
     summer: "موسمِ گرما"
     dark_rose: "گہرا گلابی"
-    default_theme_name: "ڈِیفالٹ"
     light_theme_name: "لائٹ"
     dark_theme_name: "ڈارک"
     neutral_theme_name: "نیوٹرل"
@@ -3151,10 +3150,6 @@ ur:
         یہ بَیج مسلسل 365 دنوں تک وِزِٹ کرنے پر عطا کیا جاتا ہے۔ واہ، ایک پورا سال!
     badge_title_metadata: "%{site_title}پر %{display_name} بَیج"
   admin_login:
-    success: "ای میل بھیج دی گئ"
-    errors:
-      unknown_email_address: "نامعلوم ای میل ایڈریس۔"
-      invalid_token: "غلط ٹوکن۔"
     email_input: "ایڈمن اِی میل"
     submit_button: "اِیمیل بھیجیں"
   performance_report:

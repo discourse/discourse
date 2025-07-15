@@ -1125,6 +1125,8 @@ ko:
       suspended_notice: "이 사용자는 %{date}까지 정지되었습니다."
       suspended_permanently: "이 사용자는 정지되었습니다."
       suspended_reason: "이유: "
+      silenced_permanently: "이 회원은 차단되었습니다."
+      silenced_reason: "이유: "
       github_profile: "GitHub"
       email_activity_summary: "활동 요약"
       mailing_list_mode:
@@ -1528,7 +1530,8 @@ ko:
         reinvited: "초대 재전송됨"
         removed: "제거됨"
         user: "초대된 사용자"
-        none: "표시할 초대가 없습니다."
+        none:
+          title: "표시 할 초대가 없습니다."
         truncated:
           other: "첫 %{count}개의 초대를 표시합니다."
         redeemed: "사용된 초대"
@@ -1946,7 +1949,6 @@ ko:
       unlist: "목록에서 제외됨"
       add_warning: "공식 경고입니다."
       toggle_whisper: "귓속말 토글"
-      toggle_unlisted: "목록에서 제외 토글"
       posting_not_on_topic: "어떤 주제에 댓글을 달까요?"
       saved_local_draft_tip: "로컬에 저장됨"
       drafts_offline: "오프라인 초안"

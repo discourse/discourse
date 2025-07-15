@@ -20,9 +20,11 @@ zh_TW:
         cant_remove_reaction: "您無法再移除您的反應"
         remove_reaction: "刪除此 %{reaction} 反應"
       main_reaction:
-        add: "喜歡這篇文章"
+        add: "給此貼文按讚"
         remove: "刪除這個喜歡"
     notifications:
       reaction_2_users: "%{username}、%{username2}"
+      reaction_multiple_users:
+        other: "%{username} 和其他 %{count} 人"
       titles:
-        reaction: "新的反應"
+        reaction: "新反應"

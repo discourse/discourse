@@ -1288,6 +1288,8 @@ hy:
       suspended_notice: "Այս օգտատերը սառեցված է մինչև %{date}:"
       suspended_permanently: "Այս օգտատերը սառեցված է"
       suspended_reason: "Պատճառը՝ "
+      silenced_permanently: "Այս օգտատերը լռեցված է."
+      silenced_reason: "Պատճառը՝ "
       github_profile: "GitHub"
       email_activity_summary: "Ակտիվության Ամփոփում"
       mailing_list_mode:
@@ -1786,7 +1788,8 @@ hy:
         removed: "Հեռացվել է"
         search: "փնտրել հրավերներ"
         user: "Հրավիրված Օգտատեր"
-        none: "Հրավերներ չկան:"
+        none:
+          title: "Հրավերներ չկան:"
         truncated:
           one: "Առաջին հրավերի ցուցադրում"
           other: "Ցույց են տրված առաջին %{count} հրավերները:"
@@ -2233,7 +2236,6 @@ hy:
       unlist: "չցուցակագրված"
       add_warning: "Սա պաշտոնական զգուշացում է:"
       toggle_whisper: "Փոխանջատել Շշնջումը"
-      toggle_unlisted: "Փոխանջատել Չցուցակագրվածները"
       posting_not_on_topic: "Ո՞ր թեմային եք Դուք ցանկանում պատասխանել:"
       saved_local_draft_tip: "պահված է տեղում"
       drafts_offline: "Օֆլայն սևագրեր"

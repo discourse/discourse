@@ -5,18 +5,38 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_reactions: "Реакції Discourse"
   js:
     discourse_reactions:
+      reactions_title: "Реакції"
       state_panel:
         more_users: "і більше %{count}..."
+      reaction:
+        forbidden: "Ця реакція виникла надто давно. Її вже не можна змінити або усунути."
+      picker:
+        react_with: "Відреагувати на цей пост: %{reaction}"
+        cant_remove_reaction: "Ви більше не можете видалити вашу реакцію"
+        remove_reaction: "Видалити цю реакцію %{reaction}"
       main_reaction:
         add: "Мені подобається цей допис"
+        remove: "Видалити цей лайк"
+        cant_remove: "Ви більше не можете видалити свій лайк"
+        unauthenticated: "Будь ласка, зареєструйтесь або увійдіть, щоб поставити лайк цій публікації"
     notifications:
+      reaction_1_user_multiple_posts:
+        one: "відреагував(-ла) на %{count} ваш допис"
+        few: "відреагував(-ла) на %{count} ваші дописи"
+        many: "відреагував(-ла) на %{count} ваших дописів"
+        other: "відреагував(-ла) на %{count} ваших дописів"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} і ще %{count}"
-        few: "%{username} і ще %{count}"
-        many: "%{username} і ще %{count}"
-        other: "%{username} і ще %{count}"
+        few: "%{username} та %{count} інших"
+        many: "%{username} та %{count} інших"
+        other: "%{username} та %{count} інших"
       titles:
         reaction: "нова реакція"

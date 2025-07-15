@@ -22,7 +22,7 @@ pt_BR:
         cant_remove_reaction: "Você não pode mais remover sua reação"
         remove_reaction: "Remova esta %{reaction} reação"
       main_reaction:
-        add: "Curta esta postagem"
+        add: "Curtir esta postagem"
         remove: "Remova essa curtida"
         cant_remove: "Você não pode mais remover sua curtida"
         unauthenticated: "Cadastre-se ou faça login para curtir esta postagem"
@@ -32,7 +32,7 @@ pt_BR:
         other: "reagiu a %{count} das suas postagens"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
-        one: "%{username} e %{count} outro"
-        other: "%{username} e %{count} outros(as)"
+        one: "%{username} e mais %{count}"
+        other: "%{username} e mais %{count}"
       titles:
         reaction: "nova reação"
