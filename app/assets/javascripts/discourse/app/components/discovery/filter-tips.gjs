@@ -16,7 +16,7 @@ export default class FilterTips extends Component {
   @service site;
 
   @tracked showTips = false;
-  @tracked selectedIndex = 0;
+  @tracked selectedIndex = -1;
   @tracked currentInputValue = "";
   @tracked isSearchingValues = false;
   @tracked searchResults = [];
@@ -260,16 +260,15 @@ export default class FilterTips extends Component {
   @action
   handleInput(event) {
     this.currentInputValue = event.target.value;
-    if (this.currentItems.length > 0) {
-      this.selectedIndex = 0;
-    }
+    // Reset selection when input changes
+    this.selectedIndex = -1;
   }
 
   @action
   handleInputFocus(event) {
     this.currentInputValue = event.target.value;
     this.showTips = true;
-    this.selectedIndex = 0;
+    this.selectedIndex = -1;
   }
 
   @action
@@ -292,22 +291,47 @@ export default class FilterTips extends Component {
     switch (event.key) {
       case "ArrowDown":
         event.preventDefault();
-        this.selectedIndex =
-          (this.selectedIndex + 1) % this.currentItems.length;
+        if (this.selectedIndex === -1) {
+          this.selectedIndex = 0;
+        } else {
+          this.selectedIndex =
+            (this.selectedIndex + 1) % this.currentItems.length;
+        }
         break;
       case "ArrowUp":
         event.preventDefault();
-        this.selectedIndex =
-          (this.selectedIndex - 1 + this.currentItems.length) %
-          this.currentItems.length;
+        if (this.selectedIndex === -1) {
+          this.selectedIndex = this.currentItems.length - 1;
+        } else {
+          this.selectedIndex =
+            (this.selectedIndex - 1 + this.currentItems.length) %
+            this.currentItems.length;
+        }
         break;
       case "Tab":
-      case "Enter":
         event.preventDefault();
-        if (this.isSearchingValues) {
-          this.selectValue(this.currentItems[this.selectedIndex]);
-        } else {
-          this.selectTip(this.currentItems[this.selectedIndex]);
+        event.stopPropagation();
+        // If nothing selected, use first item if available
+        const indexToUse = this.selectedIndex === -1 ? 0 : this.selectedIndex;
+        if (indexToUse < this.currentItems.length) {
+          if (this.isSearchingValues) {
+            this.selectValue(this.currentItems[indexToUse]);
+          } else {
+            this.selectTip(this.currentItems[indexToUse]);
+          }
+        }
+        break;
+      case "Enter":
+        // Only handle if something is selected
+        if (this.selectedIndex >= 0) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          if (this.isSearchingValues) {
+            this.selectValue(this.currentItems[this.selectedIndex]);
+          } else {
+            this.selectTip(this.currentItems[this.selectedIndex]);
+          }
         }
         break;
       case "Escape":
@@ -324,7 +348,7 @@ export default class FilterTips extends Component {
     const updatedValue = words.join(" ");
 
     this.args.onSelectTip(updatedValue);
-    this.selectedIndex = 0;
+    this.selectedIndex = -1;
     this.isSearchingValues = true;
     this.activeFilter = tip;
 

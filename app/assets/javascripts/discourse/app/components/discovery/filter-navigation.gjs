@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
@@ -53,6 +53,13 @@ export default class DiscoveryFilterNavigation extends Component {
     this.copyClass = "btn-default";
   }
 
+  @action
+  handleKeydown(event) {
+    if (event.key === "Enter" && !event.defaultPrevented) {
+      this.args.updateTopicsListQueryParams(this.newQueryString);
+    }
+  }
+
   <template>
     {{bodyClass "navigation-filter"}}
 
@@ -69,15 +76,19 @@ export default class DiscoveryFilterNavigation extends Component {
           <Input
             class="topic-query-filter__filter-term"
             @value={{this.newQueryString}}
-            @enter={{fn @updateTopicsListQueryParams this.newQueryString}}
+            {{on "keydown" this.handleKeydown}}
             @type="text"
             id="queryStringInput"
             autocomplete="off"
           />
-          <FilterTips
-            @queryString={{this.newQueryString}}
-            @onSelectTip={{this.updateQueryString}}
-          />
+          {{#if this.newQueryString}}
+            <DButton
+              @icon="xmark"
+              @action={{this.clearInput}}
+              @disabled={{unless this.newQueryString "true"}}
+              class="topic-query-filter__clear-btn btn-flat"
+            />
+          {{/if}}
           {{! EXPERIMENTAL OUTLET - don't use because it will be removed soon  }}
           <PluginOutlet
             @name="below-filter-input"
@@ -86,25 +97,11 @@ export default class DiscoveryFilterNavigation extends Component {
               newQueryString=this.newQueryString
             }}
           />
+          <FilterTips
+            @queryString={{this.newQueryString}}
+            @onSelectTip={{this.updateQueryString}}
+          />
         </div>
-        {{#if this.newQueryString}}
-          <div class="topic-query-filter__controls">
-            <DButton
-              @icon="xmark"
-              @action={{this.clearInput}}
-              @disabled={{unless this.newQueryString "true"}}
-            />
-
-            {{#if this.discoveryFilter.q}}
-              <DButton
-                @icon={{this.copyIcon}}
-                @action={{this.copyQueryString}}
-                @disabled={{unless this.newQueryString "true"}}
-                class={{this.copyClass}}
-              />
-            {{/if}}
-          </div>
-        {{/if}}
       </div>
     </section>
   </template>
