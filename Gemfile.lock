@@ -143,7 +143,7 @@ GEM
     drb (2.2.3)
     dry-initializer (3.2.0)
     email_reply_trimmer (0.2.0)
-    erb (5.0.1)
+    erb (5.0.2)
     erubi (1.13.1)
     excon (1.2.5)
       logger
@@ -216,7 +216,7 @@ GEM
     image_size (3.4.0)
     in_threads (1.6.0)
     inflection (1.0.0)
-    io-console (0.8.0)
+    io-console (0.8.1)
     irb (1.15.2)
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
@@ -383,11 +383,10 @@ GEM
     prettyprint (0.2.0)
     prism (1.4.0)
     progress (3.6.0)
-    propshaft (1.1.0)
+    propshaft (1.2.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
       rack
-      railties (>= 7.0.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -878,7 +877,7 @@ CHECKSUMS
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
   email_reply_trimmer (0.2.0) sha256=05843fa5ee1a2037235f1f3c876e922f613e2b4406fea5bb14212d1708d6c525
-  erb (5.0.1) sha256=760439803b36cc93eca8a266aab614614e588024a89bc30a62e78d98ff452c23
+  erb (5.0.2) sha256=d30f258143d4300fb4ecf430042ac12970c9bb4b33c974a545b8f58c1ec26c0f
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
   execjs (2.10.0) sha256=6bcb8be8f0052ff9d370b65d1c080f2406656e150452a0abdb185a133048450d
@@ -921,7 +920,7 @@ CHECKSUMS
   image_size (3.4.0) sha256=c6a580513fe74947e25e5d3f0aea1e33add6c20f7d0007efa65504317b7f029a
   in_threads (1.6.0) sha256=91a7e6138d279dc632f59b8a9a409e47148948e297c0f69c92f9a2479a182149
   inflection (1.0.0) sha256=ceba9b26fc28b9af82e33e822d28f78a4312af75687efec81d5ef1062498d355
-  io-console (0.8.0) sha256=cd6a9facbc69871d69b2cb8b926fc6ea7ef06f06e505e81a64f14a470fddefa2
+  io-console (0.8.1) sha256=1e15440a6b2f67b6ea496df7c474ed62c860ad11237f29b3bd187f054b925fcb
   irb (1.15.2) sha256=222f32952e278da34b58ffe45e8634bf4afc2dc7aa9da23fed67e581aa50fdba
   iso8601 (0.13.0) sha256=298c2b15b7be5fa95a1372813d36a2257656cd8e906dfbc1f5cb409851425aa2
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
@@ -1008,7 +1007,7 @@ CHECKSUMS
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.4.0) sha256=dc0e3e00e93160213dc2a65519d9002a4a1e7b962db57d444cf1a71565bb703e
   progress (3.6.0) sha256=360ed306dfa43d6174e847d563c70736dca249e2333cfec4b0387306c86cd573
-  propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
+  propshaft (1.2.0) sha256=b66038c76a52232e8f836a7eca36c5f82ca8b8e641ef391c31c88fa34db5a6e4
   pry (0.15.2) sha256=12d54b8640d3fa29c9211dd4ffb08f3fd8bf7a4fd9b5a73ce5b59c8709385b6b
   pry-byebug (3.11.0) sha256=0b0abb7d309bc7f00044d512a3c8567274f7012b944b38becc8440439a1cea72
   pry-rails (0.3.11) sha256=a69e28e24a34d75d1f60bcf241192a54253f8f7ef8a62cba1e75750a9653593d
