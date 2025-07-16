@@ -571,7 +571,6 @@ basic:
     area: "interface"
   floatkit_autocomplete_composer:
     client: true
-    hidden: false
     default: false
     area: "interface"
 
