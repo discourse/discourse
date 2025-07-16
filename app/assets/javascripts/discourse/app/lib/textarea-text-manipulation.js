@@ -910,8 +910,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    if (this.siteSettings.use_modern_autocomplete) {
-      // Use modern d-autocomplete modifier
+    if (this.siteSettings.floatkit_autocomplete_composer) {
       this._setupModernAutocomplete(options);
     } else {
       // @ts-ignore
