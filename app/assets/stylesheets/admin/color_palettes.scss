@@ -20,6 +20,15 @@
     flex: 1 1 auto;
   }
 
+  &__preview {
+    background: var(--secondary--preview);
+    border-bottom: 1px solid var(--primary-low--preview, #e9e9e9);
+
+    svg {
+      padding: var(--space-4);
+    }
+  }
+
   &__details {
     display: flex;
     flex-direction: column;
@@ -53,5 +62,45 @@
 
   &__badges {
     min-height: 2rem;
+  }
+
+  .fk-d-tooltip__trigger {
+    background: transparent;
+
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+
+  &__filters {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+
+    .filter-input-container {
+      flex: 4 1 auto;
+    }
+
+    .d-select {
+      flex: 1 1 auto;
+      width: auto;
+    }
+  }
+
+  &__no-results {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    padding: var(--space-6);
+    gap: var(--space-2);
+
+    h3 {
+      font-weight: normal;
+    }
+
+    .btn {
+      align-self: center;
+    }
   }
 }

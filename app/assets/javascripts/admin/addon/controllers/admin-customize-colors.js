@@ -13,6 +13,8 @@ export default class AdminCustomizeColorsController extends Controller {
   @service dialog;
 
   @tracked defaultTheme = null;
+  @tracked filterValue = "";
+  @tracked typeFilter = "all";
 
   isDefaultThemeColorScheme = (scheme) => {
     return this.defaultTheme?.color_scheme_id === scheme.id;
@@ -35,6 +37,76 @@ export default class AdminCustomizeColorsController extends Controller {
       baseColorsHash.set(color.get("name"), color);
     });
     return baseColorsHash;
+  }
+
+  @discourseComputed("model.@each.id", "filterValue", "typeFilter")
+  filteredColorSchemes() {
+    let schemes = this.model.filter((scheme) => !scheme.is_base);
+
+    if (this.typeFilter !== "all") {
+      if (this.typeFilter === "user_selectable") {
+        schemes = schemes.filter((scheme) => scheme.user_selectable);
+      } else if (this.typeFilter === "from_theme") {
+        schemes = schemes.filter((scheme) => scheme.theme_id);
+      }
+    }
+
+    // Filter by search term
+    if (this.filterValue) {
+      const term = this.filterValue.toLowerCase();
+      schemes = schemes.filter((scheme) => {
+        const nameMatches = scheme.name?.toLowerCase().includes(term);
+        const descriptionMatches = scheme.description
+          ?.toLowerCase()
+          .includes(term);
+        const themeMatches = scheme.theme_name?.toLowerCase().includes(term);
+        return nameMatches || descriptionMatches || themeMatches;
+      });
+    }
+
+    return schemes;
+  }
+
+  @discourseComputed("filteredColorSchemes")
+  showFilters() {
+    return this.model.filter((scheme) => !scheme.is_base).length > 8;
+  }
+
+  @discourseComputed("filterValue", "typeFilter")
+  showBuiltInDefault() {
+    if (this.typeFilter === "from_theme") {
+      return false;
+    }
+
+    if (this.typeFilter === "user_selectable") {
+      return false;
+    }
+
+    // check if it matches "Light (default)"
+    if (this.filterValue) {
+      const term = this.filterValue.toLowerCase();
+      const lightDefault = "light (default)";
+      return lightDefault.includes(term);
+    }
+
+    return true;
+  }
+
+  get typeFilterOptions() {
+    return [
+      {
+        value: "all",
+        label: i18n("admin.customize.colors.filters.all"),
+      },
+      {
+        value: "user_selectable",
+        label: i18n("admin.customize.colors.filters.user_selectable"),
+      },
+      {
+        value: "from_theme",
+        label: i18n("admin.customize.colors.filters.from_theme"),
+      },
+    ];
   }
 
   @action
@@ -97,5 +169,22 @@ export default class AdminCustomizeColorsController extends Controller {
         });
       },
     });
+  }
+
+  @action
+  onFilterChange(event) {
+    this.filterValue = event.target?.value || "";
+  }
+
+  @action
+  onTypeFilterChange(value) {
+    this.typeFilter = value;
+  }
+
+  @action
+  resetFilters() {
+    this.filterValue = "";
+    this.typeFilter = "all";
+    document.querySelector(".admin-filter__input")?.focus();
   }
 }

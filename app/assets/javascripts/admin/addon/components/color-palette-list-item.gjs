@@ -2,16 +2,22 @@ import Component from "@glimmer/component";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import SvgSingleColorPalettePlaceholder from "admin/components/svg/single-color-palette-placeholder";
 import { getColorSchemeStyles } from "admin/lib/color-transformations";
+import DButtonTooltip from "float-kit/components/d-button-tooltip";
 import DMenu from "float-kit/components/d-menu";
+import DTooltip from "float-kit/components/d-tooltip";
 
-export default class ColorSchemeListItem extends Component {
+export default class ColorPaletteListItem extends Component {
+  @service toasts;
+
   get isBuiltInDefault() {
     return this.args.scheme === null;
   }
@@ -47,7 +53,28 @@ export default class ColorSchemeListItem extends Component {
         "--primary-low--preview: #e9e9e9; --tertiary-low--preview: #d1f0ff;"
       );
     }
-    return htmlSafe(getColorSchemeStyles(this.args.scheme));
+
+    // generate primary-low and tertiary-low
+    const existingStyles = getColorSchemeStyles(this.args.scheme);
+
+    // create variables from scheme.colors
+    const colorVariables =
+      this.args.scheme?.colors
+        ?.map((color) => {
+          let hex = color.hex || color.default_hex;
+
+          if (hex && !hex.startsWith("#")) {
+            hex = `#${hex}`;
+          }
+          return `--${color.name}--preview: ${hex}`;
+        })
+        .join("; ") || "";
+
+    const allStyles = colorVariables
+      ? `${existingStyles} ${colorVariables};`
+      : existingStyles;
+
+    return htmlSafe(allStyles);
   }
 
   @action
@@ -61,9 +88,25 @@ export default class ColorSchemeListItem extends Component {
     this.dMenu = api;
   }
 
+  @action
+  setAsDefaultWithToast(scheme) {
+    this.toasts.success({
+      duration: "short",
+      data: {
+        message: i18n("admin.customize.colors.saved_refreshing"),
+      },
+    });
+    this.args.setAsDefaultThemePalette(scheme);
+  }
+
   <template>
+    {{log @scheme}}
     <li style={{this.styles}} class="admin-config-area-card color-palette">
       <div class="color-palette__container">
+        <div class="color-palette__preview">
+          <SvgSingleColorPalettePlaceholder />
+        </div>
+
         <div class="color-palette__details">
           {{#if this.isBuiltInDefault}}
             <h3>
@@ -78,7 +121,7 @@ export default class ColorSchemeListItem extends Component {
                   @route="adminCustomizeThemes.show"
                   @models={{array "themes" @scheme.theme_id}}
                 >
-                  {{icon "paintbrush"}}
+                  {{icon "link"}}
                   {{@scheme.theme_name}}
                 </LinkTo>
               {{/if}}
@@ -108,13 +151,25 @@ export default class ColorSchemeListItem extends Component {
         </div>
 
         <div class="color-palette__controls">
-          <DButton
-            @route="adminCustomize.colors-show"
-            @routeModels={{array @scheme.id}}
-            @label="admin.customize.colors.edit"
-            class="btn-secondary"
-            disabled={{not this.canEdit}}
-          />
+          <DButtonTooltip>
+            <:button>
+              <DButton
+                @route="adminCustomize.colors-show"
+                @routeModels={{array @scheme.id}}
+                @label="admin.customize.colors.edit"
+                class="btn-secondary"
+                @disabled={{not this.canEdit}}
+              />
+            </:button>
+            <:tooltip>
+              {{#unless this.canEdit}}
+                <DTooltip
+                  @icon="circle-info"
+                  @content={{i18n "admin.customize.colors.system_palette"}}
+                />
+              {{/unless}}
+            </:tooltip>
+          </DButtonTooltip>
 
           {{#if this.showSetAsDefault}}
             <DMenu
@@ -148,7 +203,7 @@ export default class ColorSchemeListItem extends Component {
                   <dropdown.item>
                     <DButton
                       @action={{fn
-                        @setAsDefaultThemePalette
+                        this.setAsDefaultWithToast
                         (if this.isBuiltInDefault null @scheme)
                       }}
                       @icon="star"
