@@ -569,7 +569,7 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
-  use_modern_autocomplete:
+  floatkit_autocomplete_composer:
     client: true
     hidden: false
     default: true
