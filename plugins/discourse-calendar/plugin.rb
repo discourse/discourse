@@ -238,10 +238,11 @@ after_initialize do
         SiteSetting.display_post_event_date_on_topic_title &&
         object.topic.custom_fields.keys.include?(DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT)
     end,
-  ) { object.topic.custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT] }
+  ) { object.topic.event_starts_at }
 
   add_to_class(:topic, :event_starts_at) do
-    @event_starts_at ||= custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT]
+    @event_starts_at ||=
+      Time.zone.parse(custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT].to_s)
   end
 
   add_to_serializer(
@@ -263,10 +264,11 @@ after_initialize do
         SiteSetting.display_post_event_date_on_topic_title &&
         object.topic.custom_fields.keys.include?(DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT)
     end,
-  ) { object.topic.custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT] }
+  ) { object.topic.event_ends_at }
 
   add_to_class(:topic, :event_ends_at) do
-    @event_ends_at ||= custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT]
+    @event_ends_at ||=
+      Time.zone.parse(custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT].to_s)
   end
 
   add_to_serializer(
