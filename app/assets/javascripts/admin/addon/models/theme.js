@@ -9,6 +9,7 @@ import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 import ColorScheme from "admin/models/color-scheme";
 import ThemeSettings from "admin/models/theme-settings";
+import ThemeSiteSettings from "admin/models/theme-site-settings";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5, 6];
@@ -24,6 +25,12 @@ class Theme extends RestModel {
     if (json.settings) {
       json.settings = json.settings.map((setting) =>
         ThemeSettings.create(setting)
+      );
+    }
+
+    if (json.themeable_site_settings) {
+      json.themeable_site_settings = json.themeable_site_settings.map(
+        (setting) => ThemeSiteSettings.create(setting)
       );
     }
 

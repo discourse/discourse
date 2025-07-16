@@ -2,7 +2,7 @@
 
 describe "Admin Customize Themes", type: :system do
   fab!(:color_scheme)
-  fab!(:theme) { Fabricate(:theme, name: "Cool theme 1") }
+  fab!(:theme) { Fabricate(:theme, name: "Cool theme 1", user_selectable: true) }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
@@ -321,6 +321,71 @@ describe "Admin Customize Themes", type: :system do
 
       dialog.click_yes
       expect(page).to have_current_path("/")
+    end
+  end
+
+  describe "editing theme site settings" do
+    it "shows all themeable site settings and allows editing values" do
+      theme_page.visit(theme.id)
+      SiteSetting.themeable_site_settings.each do |setting_name|
+        expect(theme_page).to have_theme_site_setting(setting_name)
+      end
+      theme_page.toggle_theme_site_setting("enable_welcome_banner")
+      expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
+      expect(page).to have_content(
+        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+      )
+      expect(
+        ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
+      ).to be_truthy
+    end
+
+    it "allows resetting themeable site setting values back to site setting default" do
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme: theme,
+        name: "enable_welcome_banner",
+        value: false,
+      )
+      theme_page.visit(theme.id)
+      expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
+      theme_page.reset_overridden_theme_site_setting("enable_welcome_banner")
+      expect(page).to have_content(
+        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+      )
+      expect(
+        ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
+      ).to be_falsey
+    end
+
+    it "does not show the overridden indicator if the theme site setting value in the DB is the same as the default" do
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme: theme,
+        name: "enable_welcome_banner",
+        value: true,
+      )
+      theme_page.visit(theme.id)
+      expect(theme_page).to have_theme_site_setting("enable_welcome_banner")
+      expect(theme_page).to have_no_overridden_theme_site_setting("enable_welcome_banner")
+    end
+
+    it "alters the UI via MessageBus when a theme site setting changes" do
+      SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
+      banner = PageObjects::Components::WelcomeBanner.new
+      other_user = Fabricate(:user)
+      other_user.user_option.update!(theme_ids: [theme.id])
+      sign_in(other_user)
+      visit("/")
+      expect(banner).to be_visible
+
+      using_session(:admin) do
+        sign_in(admin)
+        theme_page.visit(theme.id)
+        theme_page.toggle_theme_site_setting("enable_welcome_banner")
+      end
+
+      expect(banner).to be_hidden
     end
   end
 end

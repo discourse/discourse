@@ -1,18 +1,26 @@
 # Available options:
 #
-# default            - The default value of the setting. For upload site settings, use the id of the upload seeded in db/fixtures/010_uploads.rb.
-# client             - Set to true if the javascript should have access to this setting's value.
-# refresh            - Set to true if clients should refresh when the setting is changed.
-# min                - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max                - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex              - A regex that the value must match.
-# validator          - The name of the class that will be use to validate the value of the setting.
-# allow_any          - For choice settings allow items not specified in the choice list (default true)
-# secret             - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
-# enum               - The setting has a fixed set of allowed values, and only one can be chosen.
-#                      Set to the class name that defines the set.
-# locale_default     - A hash which overrides according to `SiteSetting.default_locale`.
-#                      The key should be as the same as possible value of default_locale.
+# default               - The default value of the setting. For upload site settings, use the id of the upload seeded
+#                         in db/fixtures/010_uploads.rb.
+# client                - Set to true if the javascript should have access to this setting's value.
+# refresh               - Set to true if clients should refresh when the setting is changed.
+# min                   - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max                   - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex                 - A regex that the value must match.
+# validator             - The name of the class that will be use to validate the value of the setting.
+# allow_any             - For choice settings allow items not specified in the choice list (default true)
+# secret                - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
+# enum                  - The setting has a fixed set of allowed values, and only one can be chosen.
+#                         Set to the class name that defines the set.
+# locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
+#                         The key should be as the same as possible value of default_locale.
+# mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
+#                         in the UI.
+# requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
+#                         Only valid value here is "simple" which will display a confirmation dialog when the setting
+#                         is changed.
+# themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
+#                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
 #
 #
 # type: email                 - Must be a valid email address.
@@ -3218,6 +3226,7 @@ search:
     client: true
     type: enum
     enum: "SearchExperienceSiteSetting"
+    themeable: true
 
 uncategorized:
   version_checks:
@@ -3636,6 +3645,7 @@ uncategorized:
   enable_welcome_banner:
     client: true
     default: true
+    themeable: true
     area: "interface"
 
 user_preferences:

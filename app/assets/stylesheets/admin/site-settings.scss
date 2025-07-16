@@ -53,3 +53,30 @@
     font-weight: 700;
   }
 }
+
+.admin-theme-site-settings-row {
+  &__setting {
+    .setting-label {
+      margin: 0;
+    }
+
+    .setting-description {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+    }
+  }
+
+  @include viewport.from(sm) {
+    &__setting {
+      width: 40%;
+    }
+
+    &__default {
+      width: 10%;
+    }
+
+    &__overridden {
+      width: 50%;
+    }
+  }
+}

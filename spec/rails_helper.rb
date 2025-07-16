@@ -319,6 +319,9 @@ RSpec.configure do |config|
     Discourse.current_user_provider = TestCurrentUserProvider
     Discourse::Application.load_tasks
 
+    ThemeField.delete_all
+    ThemeSiteSetting.delete_all
+    Theme.expire_site_setting_cache!
     SiteSetting.refresh!
 
     # Rebase defaults
