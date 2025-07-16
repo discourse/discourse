@@ -261,4 +261,129 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       expect(generated_css).not_to include(".hashtag-color--category--#{private_category.id}")
     end
   end
+
+  context "with floatkit autocomplete enabled" do
+    before { SiteSetting.floatkit_autocomplete_composer = true }
+
+    it "searches for categories and tags with # and prioritises categories in the results" do
+      visit_topic_and_initiate_autocomplete
+      hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
+      expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
+        ["Cool Category", "cooltag (x325)"],
+      )
+    end
+
+    it "begins showing results as soon as # is pressed based on categories and tags topic_count" do
+      visit_topic_and_initiate_autocomplete(initiation_text: "#", expected_count: 5)
+      hashtag_results = page.all(".hashtag-autocomplete__link")
+      expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
+        [
+          "Cool Category",
+          "Other Category",
+          uncategorized_category.name,
+          "cooltag (x325)",
+          "othertag (x66)",
+        ],
+      )
+    end
+
+    it "cooks the selected hashtag clientside in the composer preview with the correct url and icon" do
+      visit_topic_and_initiate_autocomplete
+      hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
+      hashtag_results[0].click
+      expect(page).to have_css(".hashtag-cooked")
+      cooked_hashtag = page.find(".hashtag-cooked")
+
+      expect(cooked_hashtag["outerHTML"]).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: category.url,
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag(
+          "span",
+          with: {
+            class: "hashtag-category-square hashtag-color--category-#{category.id}",
+          },
+        )
+      end
+
+      visit_topic_and_initiate_autocomplete
+      hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
+      hashtag_results[1].click
+      expect(page).to have_css(".hashtag-cooked")
+      cooked_hashtag = page.find(".hashtag-cooked")
+      expect(cooked_hashtag["outerHTML"]).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: tag.url,
+          "data-type": "tag",
+          "data-slug": tag.name,
+          "data-id": tag.id,
+        },
+      ) do
+        with_tag(
+          "svg",
+          with: {
+            class: "fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string",
+          },
+        ) { with_tag("use", with: { href: "#tag" }) }
+      end
+    end
+
+    it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
+      topic_page.visit_topic_and_open_composer(topic)
+
+      expect(topic_page).to have_expanded_composer
+
+      topic_page.send_reply("this is a #cool-cat category and a #cooltag tag")
+
+      expect(topic_page).to have_post_number(2)
+
+      cooked_hashtags = page.all(".hashtag-cooked", count: 2)
+
+      expect(cooked_hashtags[0]["outerHTML"]).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: category.url,
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+          "aria-label": category.name,
+        },
+      ) do
+        with_tag(
+          "span",
+          with: {
+            class: "hashtag-category-square hashtag-color--category-#{category.id}",
+          },
+        )
+      end
+
+      expect(cooked_hashtags[1]["outerHTML"]).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: tag.url,
+          "data-type": "tag",
+          "data-slug": tag.name,
+          "data-id": tag.id,
+          "aria-label": tag.name,
+        },
+      ) do
+        with_tag(
+          "svg",
+          with: {
+            class: "fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string",
+          },
+        ) { with_tag("use", with: { href: "#tag" }) }
+      end
+    end
+  end
 end
