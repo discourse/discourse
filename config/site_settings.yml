@@ -4061,7 +4061,7 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: auto
+    default: disabled
   enable_rich_text_paste:
     client: true
     default: true
