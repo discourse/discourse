@@ -7,7 +7,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class WelcomeBanner extends Component {
