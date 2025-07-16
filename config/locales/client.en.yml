@@ -240,11 +240,11 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
 
     critical_deprecation:
-      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identified plugin: '%{name}'"
+      notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>learn more</em></a>)"
+      theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Plugin '%{name}'"
+      unknown_source: "One of your themes or plugins"
 
     s3:
       regions:
