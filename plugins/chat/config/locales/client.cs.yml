@@ -250,9 +250,7 @@ cs:
         header: "Záhlaví chatu"
         composer: "Editor chatu"
         channels_list: "Seznam kanálů chatu"
-      no_direct_message_channels: "Zatím jste se nepřipojili k žádným přímým zprávám!"
       no_direct_message_channels_cta: "Zahajte konverzaci"
-      no_public_channels: "Zatím jste se nepřipojili k žádnému kanálu!"
       no_public_channels_cta: "Procházet kanály"
       kicked_from_channel: "K tomuto kanálu již nemáte přístup."
       only_chat_push_notifications:

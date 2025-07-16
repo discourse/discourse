@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { Assignment } from "./assignment";
 
 export function extendTopicModel(api) {
@@ -5,6 +6,14 @@ export function extendTopicModel(api) {
     "model:topic",
     (Superclass) =>
       class extends Superclass {
+        @tracked assigned_to_group;
+        @tracked assigned_to_group_id;
+        @tracked assigned_to_user;
+        @tracked assigned_to_user_id;
+        @tracked assignment_note;
+        @tracked assignment_status;
+        @tracked indirectly_assigned_to;
+
         assignees() {
           const result = [];
 

@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DecoratedHtml from "discourse/components/decorated-html";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
@@ -30,7 +30,6 @@ export default class PostCookedHtml extends Component {
   @service appEvents;
   @service currentUser;
 
-  @tracked highlighted = false;
   #pendingDecoratorCleanup = [];
   #decoratorState = this.args.decoratorState || new TrackedMap();
 
@@ -40,11 +39,11 @@ export default class PostCookedHtml extends Component {
   }
 
   get isStreamElement() {
-    return this.args.streamElement ?? true;
+    return this.args.streamElement ?? false;
   }
 
   @bind
-  decorateBeforeAdopt(element, helper) {
+  decorateBeforeAdopt(element, helper, args) {
     this.#cleanupDecorations();
 
     [...POST_COOKED_DECORATORS, ...this.extraDecorators].forEach(
@@ -69,8 +68,8 @@ export default class PostCookedHtml extends Component {
               ...extraArguments,
               post: nestedPost,
               decoratorState,
-              streamElement: false,
-              highlightTerm: this.highlightTerm,
+              streamElement: this.isStreamElement,
+              highlightTerm: args.highlightTerm,
               extraDecorators: [
                 ...this.extraDecorators,
                 ...makeArray(extraDecorators),
@@ -87,9 +86,9 @@ export default class PostCookedHtml extends Component {
             data: {
               post: this.args.post,
               cooked: this.cooked,
-              highlightTerm: this.highlightTerm,
-              isIgnored: this.isIgnored,
-              ignoredUsers: this.ignoredUsers,
+              highlightTerm: args.highlightTerm,
+              isIgnored: args.isIgnored,
+              ignoredUsers: args.ignoredUsers,
             },
             decoratorState,
             cooked: this.cooked,
@@ -97,13 +96,14 @@ export default class PostCookedHtml extends Component {
             currentUser: this.currentUser,
             extraDecorators: this.extraDecorators,
             helper,
-            highlightTerm: this.highlightTerm,
-            ignoredUsers: this.ignoredUsers,
-            isIgnored: this.isIgnored,
+            highlightTerm: args.highlightTerm,
+            ignoredUsers: args.ignoredUsers,
+            isIgnored: args.isIgnored,
             owner,
             post: this.args.post,
             renderGlimmer: helper.renderGlimmer,
             renderNestedPostCookedHtml,
+            streamElement: this.isStreamElement,
           });
 
           if (typeof decorationCleanup === "function") {
@@ -186,6 +186,11 @@ export default class PostCookedHtml extends Component {
       @className="cooked"
       @decorate={{this.decorateBeforeAdopt}}
       @decorateAfterAdopt={{this.decorateAfterAdopt}}
+      @decorateArgs={{lazyHash
+        highlightTerm=this.highlightTerm
+        isIgnored=this.isIgnored
+        ignoredUsers=this.ignoredUsers
+      }}
       @html={{htmlSafe this.cooked}}
       @model={{@post}}
     />

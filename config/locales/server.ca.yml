@@ -2459,7 +2459,6 @@ ca:
     latte: "Latte"
     summer: "Estiu"
     dark_rose: "Rosa fosc"
-    default_theme_name: "Per defecte"
     light_theme_name: "Clar"
     dark_theme_name: "Fosc"
     neutral_theme_name: "Neutre"
@@ -2719,10 +2718,6 @@ ca:
         Aquesta insígnia es concedeix per visitar 365 dies consecutius. Caram, un any sencer!
     badge_title_metadata: "%{display_name} insígnia en %{site_title}"
   admin_login:
-    success: "Correu enviat"
-    errors:
-      unknown_email_address: "Adreça de correu electrònic desconeguda."
-      invalid_token: "Testimoni no vàlid."
     email_input: "Correu d'administrador"
     submit_button: "Envia un correu"
   performance_report:

@@ -1344,6 +1344,8 @@ fi:
       suspended_notice: "Tämä käyttäjätili on estetty %{date} asti."
       suspended_permanently: "Käyttäjä on hyllytetty."
       suspended_reason: "Syy: "
+      silenced_permanently: "Käyttäjä on hiljennetty."
+      silenced_reason: "Syy: "
       github_profile: "GitHub"
       email_activity_summary: "Yhteenveto tapahtumista"
       mailing_list_mode:
@@ -1864,7 +1866,8 @@ fi:
         removed: "Poistettu"
         search: "kirjoita hakeaksesi kutsuja…"
         user: "Kutsuttu käyttäjä"
-        none: "Ei näytettäviä kutsuja."
+        none:
+          title: "Ei näytettäviä kutsuja."
         truncated:
           one: "Näytetään ensimmäinen kutsu."
           other: "Näytetään ensimmäiset %{count} kutsua."
@@ -2503,7 +2506,6 @@ fi:
       unlist: "listaamaton"
       add_warning: "Tämä on virallinen varoitus."
       toggle_whisper: "Kuiskaus päälle/pois"
-      toggle_unlisted: "Listaus päälle/pois"
       insert_table: "Lisää taulukko"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saved_local_draft_tip: "tallennettu paikallisesti"

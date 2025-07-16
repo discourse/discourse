@@ -240,11 +240,11 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
 
     critical_deprecation:
-      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identified plugin: '%{name}'"
+      notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>learn more</em></a>)"
+      theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Plugin '%{name}'"
+      unknown_source: "One of your themes or plugins"
 
     s3:
       regions:
@@ -5510,6 +5510,9 @@ en:
         legal:
           title: "Legal"
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
+        theme_site_settings:
+          title: "Theme site settings"
+          header_description: "Shows all theme site settings and the themes that are currently overriding them"
         localization:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
@@ -5799,6 +5802,15 @@ en:
         embedding:
           title: "Embedding"
           header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
+
+      theme_site_settings:
+        setting: "Setting"
+        overridden_by: "Overridden by"
+        default_value: "Default"
+        overridden_value: "Overridden value: %{value}"
+        select_setting: "Select a site setting to see current theme values"
+        add: "Go to theme site settings"
+        help: "The theme you are currently using is <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Go to the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>theme config page</a> to alter theme site settings, or click on a linked theme in the table below to edit its settings."
 
       search:
         modal_title: "Search everything in admin"
@@ -6485,7 +6497,7 @@ en:
           install: "Install"
           themes:
             title: "Themes"
-            description: "Site-wide themes that change the overall look and feel of your site for all users."
+            description: "Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href=\"%{themeSiteSettingsUrl}\">View theme site settings</a>"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -6848,11 +6860,13 @@ en:
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
-          theme_settings: "Theme Settings"
-          edit_objects_theme_setting: "Objects Setting Editor"
-          overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
+          theme_settings: "Custom theme settings"
+          theme_site_settings: "Settings the theme can override"
+          edit_objects_theme_setting: "Objects setting editor"
+          overriden_settings_explanation: "Changes from the default are marked with a dot and highlight. Click Reset to reset to the default."
+          overriden_site_settings_explanation: "Site settings the theme can customize. Click Reset to restore the theme’s default. If none is set, the site setting default is used. You can see all site settings being overridden by themes at <a href='%{themeSiteSettingsConfigUrl}'>the theme site settings config page</a>."
           no_settings: "This theme has no settings."
-          theme_translations: "Theme Translations"
+          theme_translations: "Theme translations"
           empty: "No items"
           commits_behind:
             one: "Theme is %{count} commit behind!"
@@ -6916,6 +6930,8 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
+          theme_setting_saved: "Theme setting saved!"
+          theme_site_setting_saved: "Theme site setting saved!"
 
         schema:
           title: "Edit %{name} setting"
@@ -7265,6 +7281,7 @@ en:
             tag_group_destroy: "delete tag group"
             tag_group_change: "change tag group"
             delete_associated_accounts: "delete associated accounts"
+            change_theme_site_setting: "change theme site setting"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

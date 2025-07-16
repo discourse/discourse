@@ -234,9 +234,7 @@ pt_BR:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
         channels_list: "Lista de canais de chat"
-      no_direct_message_channels: "Você ainda não entrou em nenhum canal de mensagem direta!"
       no_direct_message_channels_cta: "Iniciar uma conversa"
-      no_public_channels: "Você ainda não entrou em nenhum canal!"
       no_public_channels_cta: "Explorar canais"
       kicked_from_channel: "Você não pode mais acessar este canal."
       only_chat_push_notifications:

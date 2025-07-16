@@ -9,10 +9,14 @@ describe "Search | Shortcuts for variations of search input", type: :system do
   before { sign_in(current_user) }
 
   context "when search_experience is search_field" do
-    before { SiteSetting.search_experience = "search_field" }
+    before do
+      Fabricate(:theme_site_setting_with_service, name: "search_experience", value: "search_field")
+    end
 
     context "when enable_welcome_banner is true" do
-      before { SiteSetting.enable_welcome_banner = true }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
+      end
 
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         visit("/")
@@ -41,7 +45,9 @@ describe "Search | Shortcuts for variations of search input", type: :system do
     end
 
     context "when enable_welcome_banner is false" do
-      before { SiteSetting.enable_welcome_banner = false }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
+      end
 
       it "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
         visit("/")
@@ -56,10 +62,14 @@ describe "Search | Shortcuts for variations of search input", type: :system do
   end
 
   context "when search_experience is search_icon" do
-    before { SiteSetting.search_experience = "search_icon" }
+    before do
+      Fabricate(:theme_site_setting_with_service, name: "search_experience", value: "search_icon")
+    end
 
     context "when enable_welcome_banner is true" do
-      before { SiteSetting.enable_welcome_banner = true }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
+      end
 
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         visit("/")
@@ -88,7 +98,9 @@ describe "Search | Shortcuts for variations of search input", type: :system do
     end
 
     context "when enable_welcome_banner is false" do
-      before { SiteSetting.enable_welcome_banner = false }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
+      end
 
       it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
         visit("/")

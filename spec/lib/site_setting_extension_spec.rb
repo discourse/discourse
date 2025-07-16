@@ -921,6 +921,12 @@ RSpec.describe SiteSettingExtension do
 
       expect(client_settings["with_html"]).to eq("<script></script>rest")
     end
+
+    it "does not include themeable site settings" do
+      SiteSetting.refresh!
+      expect(SiteSetting.client_settings_json_uncached).not_to include("enable_welcome_banner")
+      expect(SiteSetting.client_settings_json_uncached).not_to include("search_experience")
+    end
   end
 
   describe ".setup_methods" do
@@ -981,6 +987,74 @@ RSpec.describe SiteSettingExtension do
           :requires_confirmation
         ],
       ).to eq(nil)
+    end
+  end
+
+  describe "themeable settings" do
+    fab!(:theme_1) { Fabricate(:theme) }
+    fab!(:theme_2) { Fabricate(:theme) }
+    fab!(:tss_1) do
+      Fabricate(
+        :theme_site_setting_with_service,
+        name: "enable_welcome_banner",
+        value: false,
+        theme: theme_1,
+      )
+    end
+    fab!(:tss_2) do
+      Fabricate(
+        :theme_site_setting_with_service,
+        name: "search_experience",
+        value: "search_field",
+        theme: theme_2,
+      )
+    end
+
+    it "has the site setting default values when there are no theme site settings for the theme" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:search_experience]).to eq("search_icon")
+      expect(SiteSetting.theme_site_settings[theme_2.id][:enable_welcome_banner]).to eq(true)
+    end
+
+    it "returns true for settings that are themeable" do
+      expect(SiteSetting.themeable[:enable_welcome_banner]).to eq(true)
+    end
+
+    it "returns false for settings that are not themeable" do
+      expect(SiteSetting.themeable[:title]).to eq(false)
+    end
+
+    it "caches the theme site setting values on a per theme basis" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:enable_welcome_banner]).to eq(false)
+      expect(SiteSetting.theme_site_settings[theme_2.id][:search_experience]).to eq("search_field")
+    end
+
+    it "overrides the site setting value with the theme site setting" do
+      SiteSetting.create!(
+        name: "enable_welcome_banner",
+        data_type: SiteSettings::TypeSupervisor.types[:bool],
+        value: "t",
+      )
+      SiteSetting.create!(
+        name: "search_experience",
+        data_type: SiteSettings::TypeSupervisor.types[:enum],
+        value: SiteSetting.type_supervisor.to_db_value(:search_experience, "search_icon"),
+      )
+      SiteSetting.refresh!
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_2.id)).to eq(true)
+      expect(SiteSetting.search_experience(theme_id: theme_1.id)).to eq("search_icon")
+      expect(SiteSetting.search_experience(theme_id: theme_2.id)).to eq("search_field")
+    end
+
+    describe ".theme_site_settings_json_uncached" do
+      it "returns the correct JSON" do
+        SiteSetting.refresh!
+        expect(SiteSetting.theme_site_settings_json_uncached(theme_1.id)).to eq(
+          %Q|{"enable_welcome_banner":false,"search_experience":"search_icon"}|,
+        )
+      end
     end
   end
 

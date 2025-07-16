@@ -1272,6 +1272,8 @@ nb_NO:
       suspended_notice: "Denne brukeren er utestengt til %{date}."
       suspended_permanently: "Denne brukeren er utestengt."
       suspended_reason: "Begrunnelse: "
+      silenced_permanently: "Denne brukeren er dempet."
+      silenced_reason: "Begrunnelse:"
       github_profile: "GitHub"
       email_activity_summary: "Oppsummering av aktivitet"
       mailing_list_mode:
@@ -1781,7 +1783,8 @@ nb_NO:
         reinvited: "Invitasjon sendt igjen"
         removed: "Fjernet"
         user: "Invitert bruker"
-        none: "Ingen invitasjoner å vise."
+        none:
+          title: "Ingen invitasjoner å vise."
         truncated:
           one: "Viser den første invitasjonen."
           other: "Viser de %{count} første invitisajonene."
@@ -2357,7 +2360,6 @@ nb_NO:
       unlist: "skjult"
       add_warning: "Dette er en offisiell advarsel."
       toggle_whisper: "Slå på/av hvisking"
-      toggle_unlisted: "Skjul eller gjør synlig"
       insert_table: "Sett inn tabell"
       posting_not_on_topic: "Hvilket emne ønsker du å svare på?"
       saved_local_draft_tip: "lagret lokalt"

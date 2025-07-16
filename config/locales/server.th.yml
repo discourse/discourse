@@ -462,8 +462,6 @@ th:
     see_more: "อื่น"
     search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
-  color_schemes:
-    default_theme_name: "ค่าเริ่มต้น"
   csv_export:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"

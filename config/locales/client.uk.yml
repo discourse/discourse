@@ -1557,6 +1557,9 @@ uk:
       suspended_notice: "Цей обліковий запис призупинено до %{date}."
       suspended_permanently: "Цей обліковий запис призупинено."
       suspended_reason: "Причина: "
+      silenced_notice: "Цьому користувачеві буде закрито доступ до %{date}."
+      silenced_permanently: "Цей користувач заблокований."
+      silenced_reason: "Причина: "
       github_profile: "GitHub"
       email_activity_summary: "Підсумок активності"
       mailing_list_mode:
@@ -1633,6 +1636,11 @@ uk:
           few: '<span class="%{className}">%{count}</span> видалені дописи'
           many: '<span class="%{className}">%{count}</span> видалених дописів'
           other: '<span class="%{className}">%{count}</span> видалені дописи'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> заблоковано'
+          few: '<span class="%{className}">%{count}</span> заблоковано'
+          many: '<span class="%{className}">%{count}</span> заблоковано'
+          other: '<span class="%{className}">%{count}</span> заблоковано'
         suspensions:
           one: '<span class="%{className}">%{count}</span> призупинено'
           few: '<span class="%{className}">%{count}</span> призупинено'
@@ -2115,7 +2123,12 @@ uk:
         removed: "Вилучені"
         search: "шукати запрошення…"
         user: "Запрошений користувач"
-        none: "Немає запрошень для показу."
+        none:
+          title: "Немає запрошень для показу."
+          cta: "Створити посилання для запрошення"
+          tip:
+            prefix: "Ви також можете надсилати масові запрошення"
+            action: "завантаження файлу CSV"
         truncated:
           one: "перше запрошення"
           few: "Перші %{count} запрошення"
@@ -2821,7 +2834,6 @@ uk:
       unlist: "приховане зі стрічок"
       add_warning: "Це офіційне попередження."
       toggle_whisper: "Шепіт"
-      toggle_unlisted: "Сховати зі списків тем"
       insert_table: "Вставити таблицю"
       posting_not_on_topic: "На яку тему ви хочете відповісти?"
       saved_local_draft_tip: "збережено локально"
@@ -2917,6 +2929,8 @@ uk:
       remove_featured_link: "Видалити посилання з теми."
       reply_placeholder: "Пишіть тут. Для форматування використовуйте Markdown, BBCode або HTML. Перетягніть або вставте зображення."
       reply_placeholder_no_images: "Пишіть тут. Використовуйте Markdown, BBCode або HTML для форматування."
+      reply_placeholder_rte: "Введіть тут. Використовуйте панель інструментів або Markdown для форматування. Перетягніть або вставте зображення."
+      reply_placeholder_rte_no_images: "Введіть тут. Використовуйте панель інструментів або Markdown для форматування."
       reply_placeholder_choose_category: "Виберіть розділ, перш ніж тут писати."
       view_new_post: "Перегляньте свій новий допис."
       saving: "Збереження"
@@ -2934,6 +2948,12 @@ uk:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "виділення тексту курсивом"
+      heading_label: "Н"
+      heading_title: "Заголовки"
+      heading_level_n: "Заголовок %{levelNumber}"
+      heading_level_n_title: "Заголовок %{levelNumber}"
+      heading_level_paragraph: "Абзац"
+      heading_level_paragraph_title: "Абзац"
       link_title: "Посилання"
       link_description: "введіть опис посилання"
       link_dialog_title: "Вставити посилання"
@@ -2946,6 +2966,7 @@ uk:
       link_url_placeholder: "Вставити посилання або шукати теми"
       blockquote_title: "Цитата"
       blockquote_text: "Цитата"
+      heading_text: "Заголовок"
       code_title: "Попередньо форматований текст"
       code_text: "відступ попередньо відформатованого тексту на 4 інтервали"
       paste_code_text: "Надрукуйте або вставте сюди код"
@@ -3005,6 +3026,9 @@ uk:
         toggle_topic_bump:
           label: "Не піднімати тему"
           desc: "Відповісти без зміни дати останньої відповіді"
+        toggle_unlisted:
+          label: Перемикання між приватністю
+          desc: Непублічні теми доступні лише учасникам за прямим посиланням
       reload: "Перезавантажити"
       ignore: "Ігнорувати"
       image_alt_text:
@@ -3497,8 +3521,8 @@ uk:
         education:
           topic_tracking_preferences: 'Ви можете переглянути та змінити налаштування відстеження нових тем у <a href="%{basePath}/my/preferences/tracking">своїх</a> налаштуваннях.'
           unread: "Не залишилося нічого непрочитаного... вражаюче!"
-          new_new: "Наразі нічого нового... слідкуйте за новинами!"
-          new: "Наразі нічого нового... слідкуйте за новинами!"
+          new_new: "Наразі нічого нового... заходьте пізніше!"
+          new: "Наразі нічого нового... заходьте пізніше!"
       bottom:
         latest: "Більше немає останніх тем."
         posted: "Створених тем більше немає."
@@ -4157,6 +4181,10 @@ uk:
         success: "Переклади були успішно оновлені"
         post_language_selector:
           none: "Немає"
+        edit_warning:
+          message: "Це перекладена публікація.<br><br> Ви хочете відредагувати оригінальний допис на %{language} або відредагувати цей конкретний переклад?"
+          action_original: "Редагувати оригінальний допис"
+          action_translation: "Редагувати цей переклад"
       errors:
         create: "Вибачте, під час створення допису сталася помилка. Будь ласка, спробуйте ще раз."
         edit: "Вибачте, під час редагування вашого допису сталася помилка. Будь ласка, спробуйте ще раз."
@@ -4897,6 +4925,19 @@ uk:
         return: "%{shortcut} Повернутися в редактор"
         fullscreen: "%{shortcut} Повноекранний редактор"
         insert_current_time: "%{shortcut} Вставити поточний час"
+        bold: "%{shortcut} Жирний"
+        italic: "%{shortcut} Курсив"
+        link: "%{shortcut} Вставити посилання"
+        preformatted: "%{shortcut} Попередньо відформатований текст"
+        paragraph: "%{shortcut} Абзац"
+        heading_1: "%{shortcut} Заголовок 1"
+        heading_2: "%{shortcut} Заголовок 2"
+        heading_3: "%{shortcut} Заголовок 3"
+        heading_4: "%{shortcut} Заголовок 4"
+        toggle_direction: "%{shortcut} Змінити напрямок тексту"
+        ordered_list: "%{shortcut} Упорядкований список"
+        unordered_list: "%{shortcut} Невпорядкований список"
+        blockquote: "%{shortcut} Цитата"
       bookmarks:
         title: "Закладка"
         enter: "%{shortcut} Зберегти і закрити"

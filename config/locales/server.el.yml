@@ -2127,7 +2127,6 @@ el:
     base_theme_name: "Βάση"
     light: "Ανοιχτό"
     dark: "Σκούρο"
-    default_theme_name: "Προεπιλογή"
     light_theme_name: "Ανοιχτό"
     dark_theme_name: "Σκούρο"
   edit_this_page: "Επεξεργασία αυτής της σελίδας"
@@ -2323,7 +2322,6 @@ el:
       name: Λάτρης
     badge_title_metadata: "%{display_name} παράσημο στην %{site_title}"
   admin_login:
-    success: "Το Email Στάλθηκε"
     email_input: "Email Διαχειριστή"
     submit_button: "Αποστολή Email"
   performance_report:

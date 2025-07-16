@@ -1254,6 +1254,8 @@ zh_TW:
       suspended_notice: "該使用者已被停權至 %{date}。"
       suspended_permanently: "該使用者已被停權。"
       suspended_reason: "原因: "
+      silenced_permanently: "該使用者已被禁言."
+      silenced_reason: "原因: "
       github_profile: "GitHub"
       email_activity_summary: "活動摘要"
       mailing_list_mode:
@@ -1753,7 +1755,8 @@ zh_TW:
         removed: "已移除"
         search: "輸入以搜索邀請…"
         user: "受邀請的使用者"
-        none: "沒有可顯示的邀請"
+        none:
+          title: "沒有可顯示的邀請"
         truncated:
           other: "只顯示前 %{count} 個邀請。"
         redeemed: "已接受的邀請"
@@ -2332,7 +2335,6 @@ zh_TW:
       unlist: "不公開"
       add_warning: "這是正式警告。"
       toggle_whisper: "切換密談"
-      toggle_unlisted: "切換 不公開"
       insert_table: "插入表格"
       posting_not_on_topic: "你想要回覆哪個話題?"
       saved_local_draft_tip: "本地儲存完畢"

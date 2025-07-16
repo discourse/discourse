@@ -1240,6 +1240,8 @@ ja:
       suspended_notice: "このユーザーは %{date} まで凍結されています。"
       suspended_permanently: "このユーザーは凍結されています。"
       suspended_reason: "理由: "
+      silenced_permanently: "このユーザーは投稿を禁止されています."
+      silenced_reason: "理由: "
       github_profile: "GitHub"
       email_activity_summary: "アクティビティの概要"
       mailing_list_mode:
@@ -1739,7 +1741,8 @@ ja:
         removed: "削除"
         search: "招待履歴を検索…"
         user: "招待したユーザー"
-        none: "表示する招待はありません。"
+        none:
+          title: "表示する招待はありません。"
         truncated:
           other: "最初の %{count} 件の招待を表示しています。"
         redeemed: "承諾済みの招待"
@@ -2320,7 +2323,6 @@ ja:
       unlist: "非表示"
       add_warning: "これは運営スタッフからの警告です。"
       toggle_whisper: "ささやきを切り替える"
-      toggle_unlisted: "非表示を切り替える"
       insert_table: "テーブルを挿入"
       posting_not_on_topic: "どのトピックに返信しますか？"
       saved_local_draft_tip: "ローカルに保存しました"

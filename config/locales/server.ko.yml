@@ -3234,7 +3234,6 @@ ko:
     wcag_theme_name: "WCAG 라이트"
     wcag_dark: "WCAG 다크"
     wcag_dark_theme_name: "WCAG 다크"
-    default_theme_name: "기본"
     light_theme_name: "라이트"
     dark_theme_name: "다크"
     neutral_theme_name: "중립국"
@@ -3519,10 +3518,6 @@ ko:
         이 배지는 365일 연속 방문시 부여됩니다. 와, 일년 내내!
     badge_title_metadata: "%{site_title}의 %{display_name} 배지"
   admin_login:
-    success: "이메일 전송됨"
-    errors:
-      unknown_email_address: "알 수 없는 이메일 주소입니다."
-      invalid_token: "토큰이 유효하지 않습니다."
     email_input: "관리자 이메일"
     submit_button: "이메일 전송"
   performance_report:

@@ -2503,7 +2503,6 @@ zh_TW:
     latte: "棕色"
     summer: "夏季"
     dark_rose: "暗紅"
-    default_theme_name: "預設"
     light_theme_name: "輕亮"
     dark_theme_name: "黑暗"
     neutral_theme_name: "中性"
@@ -2758,10 +2757,6 @@ zh_TW:
         連續 365 天訪問論壇會被授予該勳章。天啊，整整一年了！
     badge_title_metadata: "%{display_name}徽章在%{site_title}"
   admin_login:
-    success: "已發送郵件"
-    errors:
-      unknown_email_address: "未知的郵件地址"
-      invalid_token: "token 無效"
     email_input: "管理者郵件"
     submit_button: "送出電子郵件"
   performance_report:

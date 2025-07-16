@@ -12,4 +12,11 @@ RSpec.describe SystemThemesManager do
     expect(Theme.horizon_theme.color_schemes.where(user_selectable: true).count).to eq(2)
     expect(Theme.horizon_theme.color_schemes.where(user_selectable: false).count).to eq(10)
   end
+
+  it "renables themes" do
+    SystemThemesManager.sync!
+    Theme.horizon_theme.update_column(:enabled, false)
+    SystemThemesManager.sync!
+    expect(Theme.horizon_theme.reload.enabled).to be true
+  end
 end

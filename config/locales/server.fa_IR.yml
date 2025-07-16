@@ -2568,7 +2568,6 @@ fa_IR:
     solarized_light_theme_name: "خورشیدی روشن"
     solarized_dark: "خورشیدی تیره"
     solarized_dark_theme_name: "خورشیدی تیره"
-    default_theme_name: "پیش‌فرض"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
   edit_this_page: "ویرایش این صفحه"
@@ -2752,7 +2751,6 @@ fa_IR:
       name: هواخواه
     badge_title_metadata: "نشان %{display_name} در %{site_title}"
   admin_login:
-    success: "ایمیل ارسال شد"
     email_input: "ایمیل مدیر ارشد"
     submit_button: "ارسال ایمیل"
     safe_mode: "حالت ایمن: هنگام ورود به سیستم، تمام پوسته‌ها/افزونه‌ها را غیرفعال شود"

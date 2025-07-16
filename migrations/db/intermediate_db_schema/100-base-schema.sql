@@ -138,6 +138,7 @@ CREATE TABLE user_options
     mailing_list_mode                    BOOLEAN,
     mailing_list_mode_frequency          INTEGER,
     new_topic_duration_minutes           INTEGER,
+    notification_level_when_assigned     INTEGER,
     notification_level_when_replying     INTEGER,
     oldest_search_log_date               DATETIME,
     only_chat_push_notifications         BOOLEAN,

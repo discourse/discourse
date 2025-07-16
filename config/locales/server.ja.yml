@@ -3993,7 +3993,6 @@ ja:
     solarized_dark_theme_name: "Solarized ダーク"
     wcag_dark: "WCAG ダーク"
     wcag_dark_theme_name: "WCAG ダーク"
-    default_theme_name: "デフォルト"
     light_theme_name: "ライト"
     dark_theme_name: "ダーク"
     neutral_theme_name: "ニュートラル"
@@ -4617,10 +4616,6 @@ ja:
         このバッジは、365 日間連続でアクセスしたときに付与されます。なんと、丸 1 年間です！
     badge_title_metadata: "%{site_title} の %{display_name} バッジ"
   admin_login:
-    success: "メールを送信しました"
-    errors:
-      unknown_email_address: "不明なメールアドレスです。"
-      invalid_token: "無効なトークンです。"
     email_input: "管理者メール"
     submit_button: "メールを送信"
     safe_mode: "セーフモード: ログイン時にすべてのテーマ/プラグインを無効にする"

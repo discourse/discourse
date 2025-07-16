@@ -1557,6 +1557,9 @@ sk:
       suspended_notice: "Tento používateľ je suspendovaný do %{date}"
       suspended_permanently: "Tento používateľ je suspendovaný"
       suspended_reason: "Dôvod:"
+      silenced_notice: "Tento používateľ je umlčaný do %{date}."
+      silenced_permanently: "Tento používateľ je umlčaný."
+      silenced_reason: "Dôvod:"
       github_profile: "GitHub"
       email_activity_summary: "Zhrnutie aktivít"
       mailing_list_mode:
@@ -1635,6 +1638,11 @@ sk:
           few: '<span class="%{className}">%{count}</span> odstránených príspevkov'
           many: '<span class="%{className}">%{count}</span> odstránených príspevkov'
           other: '<span class="%{className}">%{count}</span> odstránené príspevky'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> umlčané'
+          few: '<span class="%{className}">%{count}</span> umlčané'
+          many: '<span class="%{className}">%{count}</span> umlčané'
+          other: '<span class="%{className}">%{count}</span> umlčané'
         suspensions:
           one: '<span class="%{className}">%{count}</span> pozastavení'
           few: '<span class="%{className}">%{count}</span> pozastavení'
@@ -2117,7 +2125,12 @@ sk:
         removed: "Odstránené"
         search: "začni písať pre hľadanie pozvánok"
         user: "Pozvaný používateľ"
-        none: "Nemáte žiadne pozvánky na zobrazenie."
+        none:
+          title: "Nemáte žiadne pozvánky na zobrazenie."
+          cta: "Vytvoriť pozývací odkaz"
+          tip:
+            prefix: "Pozvánky môžete posielať aj hromadne prostredníctvom"
+            action: "nahrávanie súboru CSV"
         truncated:
           one: "Zobrazuje sa prvá pozvánka."
           few: "Zobrazujú sa prvé %{count} pozvánky."
@@ -2829,7 +2842,6 @@ sk:
       unlist: "nezaradený"
       add_warning: "Toto je oficiálne varovanie."
       toggle_whisper: "Prepnúť šepot"
-      toggle_unlisted: "Prepnúť Nezaradené"
       insert_table: "Vložiť tabuľku"
       posting_not_on_topic: "Na akú tému chcete odpovedať?"
       saved_local_draft_tip: "uložené lokálne"
@@ -2925,6 +2937,8 @@ sk:
       remove_featured_link: "Odstrániť odkaz z témy."
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
       reply_placeholder_no_images: "Píšte sem. Na formátovanie použite Markdown, BBCode alebo HTML."
+      reply_placeholder_rte: "Sem píšte. Na formátovanie použite panel s nástrojmi alebo Markdown. Presuňte alebo vložte obrázky."
+      reply_placeholder_rte_no_images: "Sem píšte. Na formátovanie použite panel s nástrojmi alebo Markdown."
       reply_placeholder_choose_category: "Pred zadaním tu vyberte kategóriu."
       view_new_post: "Zobraziť nový príspevok."
       saving: "Ukladanie"
@@ -2942,6 +2956,12 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
+      heading_label: "H"
+      heading_title: "Nadpisy"
+      heading_level_n: "Nadpis %{levelNumber}"
+      heading_level_n_title: "Nadpis %{levelNumber}"
+      heading_level_paragraph: "Odsek"
+      heading_level_paragraph_title: "Odsek"
       link_title: "Odkaz"
       link_description: "tu zadaj popis odkazu"
       link_dialog_title: "Vložiť odkaz"
@@ -2954,6 +2974,7 @@ sk:
       link_url_placeholder: "Vložte odkaz alebo vyhľadajte témy"
       blockquote_title: "Úvodzovky"
       blockquote_text: "Úvodzovky"
+      heading_text: "Nadpis"
       code_title: "Preformátovaný text"
       code_text: "Odsaďte preformátovaný text 4 medzerami"
       paste_code_text: "sem zadajte alebo vložte kód"
@@ -3013,6 +3034,9 @@ sk:
         toggle_topic_bump:
           label: "Prepnúť tému bump"
           desc: "Odpoveď bez zmeny dátumu poslednej odpovede"
+        toggle_unlisted:
+          label: Prepínanie nezaradených
+          desc: Nezaradené témy prístupné len členom prostredníctvom priameho prepojenia
       reload: "Znovu načítať"
       ignore: "Ignorovať"
       image_alt_text:
@@ -3505,8 +3529,8 @@ sk:
         education:
           topic_tracking_preferences: 'Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href="%{basePath}/my/preferences/tracking">nastaveniach</a>.'
           unread: "Nič nezostalo neprečítané... pôsobivé!"
-          new_new: "Momentálne nič nové...čoskoro sa vráťte!"
-          new: "Momentálne nič nové...čoskoro sa vráťte!"
+          new_new: "Momentálne nič nové... čoskoro sa vráťte!"
+          new: "Momentálne nič nové... skúste to znova neskôr!"
       bottom:
         latest: "Nie je už viac najnovšich tém."
         posted: "Žiadne ďalšie témy na čítanie."
@@ -4157,6 +4181,10 @@ sk:
         success: "Preklady boli úspešne aktualizované"
         post_language_selector:
           none: "Žiadny"
+        edit_warning:
+          message: "Toto je preložený príspevok.<br><br> Chcete upraviť pôvodný príspevok na stránke %{language} alebo upraviť tento konkrétny preklad?"
+          action_original: "Upraviť pôvodný príspevok"
+          action_translation: "Upraviť tento preklad"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -4903,6 +4931,19 @@ sk:
         return: "%{shortcut} Návrat k editora správ"
         fullscreen: "%{shortcut} Režim celoobrazovkového editora"
         insert_current_time: "%{shortcut} Vložiť aktuálny čas"
+        bold: "%{shortcut} Tučné písmo"
+        italic: "%{shortcut} Kurzíva"
+        link: "%{shortcut} Vložiť odkaz"
+        preformatted: "%{shortcut} Predformátovaný text"
+        paragraph: "%{shortcut} Odsek"
+        heading_1: "%{shortcut} Nadpis 1"
+        heading_2: "%{shortcut} Nadpis 2"
+        heading_3: "%{shortcut} Nadpis 3"
+        heading_4: "%{shortcut} Nadpis 4"
+        toggle_direction: "%{shortcut} Prepnúť smer textu"
+        ordered_list: "%{shortcut} Zoradený zoznam"
+        unordered_list: "%{shortcut} Neusporiadaný zoznam"
+        blockquote: "%{shortcut} Bloková citácia"
       bookmarks:
         title: "Záložky"
         enter: "%{shortcut} Uložiť a zatvoriť"

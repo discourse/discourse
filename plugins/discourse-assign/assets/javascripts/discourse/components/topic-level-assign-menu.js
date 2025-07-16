@@ -28,18 +28,20 @@ export default {
 
     switch (id) {
       case "unassign": {
-        this.set("topic.assigned_to_user", null);
-        this.set("topic.assigned_to_group", null);
+        this.topic.assigned_to_user = null;
+        this.topic.assigned_to_group = null;
 
         await taskActions.unassign(this.topic.id);
+        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
         this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         break;
       }
       case "reassign-self": {
-        this.set("topic.assigned_to_user", null);
-        this.set("topic.assigned_to_group", null);
+        this.topic.assigned_to_user = null;
+        this.topic.assigned_to_group = null;
 
         await taskActions.reassignUserToTopic(this.currentUser, this.topic);
+        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
         this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         break;
       }
@@ -49,6 +51,7 @@ export default {
             topic: this.topic,
           },
           onSuccess: () =>
+            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh", { id: firstPostId }),
         });
         break;
@@ -57,7 +60,13 @@ export default {
         if (id.startsWith("unassign-from-post-")) {
           const postId = extractPostId(id);
           await taskActions.unassign(postId, "Post");
+
           delete this.topic.indirectly_assigned_to[postId];
+
+          // force the components tracking `topic.indirectly_assigned_to` to update
+          // eslint-disable-next-line no-self-assign
+          this.topic.indirectly_assigned_to = this.topic.indirectly_assigned_to;
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         }
       }

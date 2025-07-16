@@ -990,6 +990,8 @@ lv:
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_permanently: "Šī lietotāja darbība ir apturēta."
       suspended_reason: "Iemesls:"
+      silenced_permanently: "Šis lietotājs ir izslēgts."
+      silenced_reason: "Iemesls:"
       github_profile: "GitHub"
       email_activity_summary: "Aktivitātes atskaite"
       mailing_list_mode:
@@ -1329,7 +1331,8 @@ lv:
         reinvited: "Ielūgums atkārtots"
         removed: "Noņemts"
         user: "Ielūgtie lietotāji"
-        none: "Nav uzaicinājumu ko parādīt."
+        none:
+          title: "Nav uzaicinājumu ko parādīt."
         truncated:
           zero: "Nav ielūgumu."
           one: "Pirmais ielūgums."
@@ -1681,7 +1684,6 @@ lv:
       unlist: "paslēpts"
       add_warning: "Šis ir oficiāls brīdinājums."
       toggle_whisper: "Čukstēšana"
-      toggle_unlisted: "Paslēpšana no tēmu saraksta"
       posting_not_on_topic: "Kurā tēmā vēlaties komentēt?"
       saved_local_draft_tip: "saglabāts lokāli"
       drafts_offline: "lokāls melnraksts"

@@ -956,6 +956,8 @@ ca:
       suspended_notice: "Aquest usuari és suspès fins a %{date}."
       suspended_permanently: "Aquest usuari és suspès."
       suspended_reason: "Motiu:"
+      silenced_permanently: "Aquest usuari és silenciat."
+      silenced_reason: "Motiu:"
       github_profile: "GitHub"
       email_activity_summary: "Resum d'activitat"
       mailing_list_mode:
@@ -1279,7 +1281,8 @@ ca:
         remove: "Elimina"
         reinvited: "Invitació reenviada"
         user: "Usuari convidat"
-        none: "Cap invitació per a mostrar."
+        none:
+          title: "Cap invitació per a mostrar."
         truncated:
           one: "Mostrant la primera invitació."
           other: "Mostrant les primeres %{count} invitacions."
@@ -1615,7 +1618,6 @@ ca:
       unlist: "invisible"
       add_warning: "Aquest és un avís oficial."
       toggle_whisper: "Commuta el xiuxiueig"
-      toggle_unlisted: "Commuta invisible"
       posting_not_on_topic: "A quin tema voleu respondre?"
       saved_local_draft_tip: "desat localment"
       drafts_offline: "esborranys fora de línia"

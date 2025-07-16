@@ -12,40 +12,46 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Discourse Assign | Assign mobile", function (needs) {
-  needs.user();
-  needs.mobileView();
-  needs.settings({ assign_enabled: true });
-
-  needs.pretender((server, helper) => {
-    server.get("/assign/suggestions", () => {
-      return helper.response({
-        success: true,
-        assign_allowed_groups: false,
-        assign_allowed_for_groups: [],
-        suggestions: [
-          {
-            id: 19,
-            username: "eviltrout",
-            name: "Robin Ward",
-            avatar_template:
-              "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
-          },
-        ],
-      });
-    });
-  });
-
-  test("Footer dropdown contains button", async function (assert) {
-    updateCurrentUser({ can_assign: true });
-    await visit("/t/internationalization-localization/280");
-    await click(".topic-footer-mobile-dropdown-trigger");
-    await click(".assign");
-    assert.dom(".assign.d-modal").exists("assign modal opens");
-  });
-});
-
 ["enabled", "disabled"].forEach((postStreamMode) => {
+  acceptance(
+    `Discourse Assign | Assign mobile (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.user();
+      needs.mobileView();
+      needs.settings({
+        assign_enabled: true,
+        glimmer_post_stream_mode: postStreamMode,
+      });
+
+      needs.pretender((server, helper) => {
+        server.get("/assign/suggestions", () => {
+          return helper.response({
+            success: true,
+            assign_allowed_groups: false,
+            assign_allowed_for_groups: [],
+            suggestions: [
+              {
+                id: 19,
+                username: "eviltrout",
+                name: "Robin Ward",
+                avatar_template:
+                  "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
+              },
+            ],
+          });
+        });
+      });
+
+      test("Footer dropdown contains button", async function (assert) {
+        updateCurrentUser({ can_assign: true });
+        await visit("/t/internationalization-localization/280");
+        await click(".topic-footer-mobile-dropdown-trigger");
+        await click(".assign");
+        assert.dom(".assign.d-modal").exists("assign modal opens");
+      });
+    }
+  );
+
   acceptance(
     `Discourse Assign | Assign desktop (glimmer_post_stream_mode = ${postStreamMode})`,
     function (needs) {

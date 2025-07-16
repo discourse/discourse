@@ -1019,6 +1019,8 @@ gl:
       suspended_notice: "Este usuario está suspendido ata o %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Razón: "
+      silenced_permanently: "Este usuario está silenciado."
+      silenced_reason: "Motivo: "
       github_profile: "Github"
       email_activity_summary: "Resumo da actividade"
       mailing_list_mode:
@@ -1397,7 +1399,8 @@ gl:
         reinvited: "Convite reenviado"
         removed: "Retirado"
         user: "Usuario convidado"
-        none: "Non hai convites que amosar."
+        none:
+          title: "Non hai convites que amosar."
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros %{count} convites."
@@ -1785,7 +1788,6 @@ gl:
       unlist: "fóra da lista"
       add_warning: "Este é un aviso oficial."
       toggle_whisper: "Trocar rumor"
-      toggle_unlisted: "Trocar fóra da lista"
       posting_not_on_topic: "A que tema quere responder?"
       saved_local_draft_tip: "gardado localmente"
       drafts_offline: "borradores sen conexión"

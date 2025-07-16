@@ -1391,6 +1391,8 @@ ug:
       suspended_notice: "بۇ ئىشلەتكۈچى %{date} غىچە ۋاقىتلىق چەكلەنگەن."
       suspended_permanently: "بۇ ئىشلەتكۈچى ۋاقىتلىق چەكلەنگەن."
       suspended_reason: "سەۋەبى: "
+      silenced_permanently: "بۇ ئىشلەتكۈچىنىڭ ئۈنى ئۆچۈرۈلگەن."
+      silenced_reason: "سەۋەبى: "
       github_profile: "GitHub"
       email_activity_summary: "پائالىيەت خۇلاسىسى"
       mailing_list_mode:
@@ -1911,7 +1913,12 @@ ug:
         removed: "چىقىرىۋېتىلدى"
         search: "كىرگۈزۈلسە تەكلىپنى ئىزدەيدۇ…"
         user: "تەكلىپ قىلىنغان ئىشلەتكۈچى"
-        none: "كۆرسىتىدىغان تەكلىپ يوق"
+        none:
+          title: "كۆرسىتىدىغان تەكلىپ يوق"
+          cta: "تەكلىپ ئۇلانمىسى قۇر"
+          tip:
+            prefix: "سىز يەنە توپ تەكلىپ يوللىيالايسىز"
+            action: "CSV ھۆججىتىنى يۈكلەۋاتىدۇ"
         truncated:
           one: "تۇنجى تەكلىپنى كۆرسىتىدۇ."
           other: "تۇنجى %{count} تەكلىپنى كۆرسىتىدۇ."
@@ -2561,7 +2568,6 @@ ug:
       unlist: "تىزىلمىدى"
       add_warning: "بۇ رەسمىي ئاگاھلاندۇرۇش."
       toggle_whisper: "پىچىر ئالماشتۇر"
-      toggle_unlisted: "تىزىلمىغاننى ئالماشتۇر"
       insert_table: "جەدۋەل قىستۇر"
       posting_not_on_topic: "سىز قايسى تېمىغا جاۋاب بەرمەكچى؟"
       saved_local_draft_tip: "يەرلىككە ساقلاندى"
@@ -2656,6 +2662,11 @@ ug:
       italic_label: "I"
       italic_title: "يانتۇ"
       italic_text: "يانتۇ تېكىست"
+      heading_title: "ماۋزۇ"
+      heading_level_n: "ماۋزۇ %{levelNumber}"
+      heading_level_n_title: "ماۋزۇ %{levelNumber}"
+      heading_level_paragraph: "ئابزاس"
+      heading_level_paragraph_title: "ئابزاس"
       link_title: "ئۇلانما"
       link_description: "بۇ جايغا ئۇلانما چۈشەندۈرۈشى كىرگۈزۈلىدۇ"
       link_dialog_title: "ئۇلانما قىستۇر"
@@ -2668,6 +2679,7 @@ ug:
       link_url_placeholder: "ئۇلانما چاپلا ياكى تېما ئىزدە"
       blockquote_title: "بۆلەك نەقىل"
       blockquote_text: "بۆلەك نەقىل"
+      heading_text: "ماۋزۇ"
       code_title: "پىچىملىق تېكىست"
       code_text: "پىچىملىق تېكىستنى 4 بوشلۇق ئىچىگە سۈرىدۇ"
       paste_code_text: "بۇ جايغا كود كىرگۈزۈلىدۇ ياكى چاپلىنىدۇ"
@@ -2727,6 +2739,9 @@ ug:
         toggle_topic_bump:
           label: "تېما چوققىلاشنى ئالماشتۇرىدۇ"
           desc: "ئاخىرقى جاۋاب ۋاقتىنى ئۆزگەرتمەي جاۋاب قايتۇرىدۇ"
+        toggle_unlisted:
+          label: تىزىلمىغاننى ئالماشتۇر
+          desc: تىزىلمىغان تېمىنى پەقەت ئەزالار بىۋاستە ئۇلانما ئارقىلىق زىيارەت قىلالايدۇ
       reload: "قايتا يۈكلە"
       ignore: "پەرۋا قىلما"
       image_alt_text:
@@ -3741,6 +3756,10 @@ ug:
         success: "تەرجىمە مۇۋەپپەقىيەتلىك يېڭىلاندى"
         post_language_selector:
           none: "يوق"
+        edit_warning:
+          message: "بۇ تەرجىمە قىلىنغان يازما. <br><br>سىز %{language} دىكى ئەسلى يازمىنى تەھرىرلەمسىز ياكى بۇ تەرجىمىنى تەھرىرلەمسىز؟"
+          action_original: "ئەسلى يازمىنى تەھرىرلە"
+          action_translation: "بۇ تەرجىمىنى تەھرىرلە"
       errors:
         create: "كەچۈرۈڭ، يازمىڭىزنى قۇرۇۋاتقاندا خاتالىق كۆرۈلگەن. قايتا سىناڭ."
         edit: "كەچۈرۈڭ، يازمىڭىزنى تەھرىرلەۋاتقاندا خاتالىق كۆرۈلگەن. قايتا سىناڭ."

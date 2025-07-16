@@ -2186,7 +2186,6 @@ te:
     solarized_dark_theme_name: "సోలారైజ్డ్ డార్క్"
     wcag_dark: "WCAG డార్క్"
     wcag_dark_theme_name: "WCAG డార్క్"
-    default_theme_name: "అప్రమేయ"
     light_theme_name: "లేత"
     dark_theme_name: "డార్క్"
     neutral_theme_name: "తటస్థ"
@@ -2453,10 +2452,6 @@ te:
         వరుసగా 365 రోజులు సందర్శించినందుకు ఈ బ్యాడ్జ్ మంజూరు చేయబడింది. వావ్, మొత్తం సంవత్సరం!
     badge_title_metadata: "%{site_title} లో %{display_name} బ్యాడ్జ్"
   admin_login:
-    success: "ఇమెయిల్ పంపబడింది"
-    errors:
-      unknown_email_address: "తెలియని ఇమెయిల్ చిరునామా."
-      invalid_token: "చెల్లని టోకేను."
     email_input: "అడ్మిన్ ఇమెయిల్"
     submit_button: "ఈ మెయిల్ పంపించండి"
   tags:
