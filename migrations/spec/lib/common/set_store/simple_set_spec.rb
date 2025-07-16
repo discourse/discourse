@@ -44,6 +44,13 @@ describe Migrations::SetStore::SimpleSet do
       expect(set.include?(3)).to be true
     end
 
+    it "adds multiple nested values at once" do
+      set.bulk_add([[1], [2], [3]])
+      expect(set.include?(1)).to be true
+      expect(set.include?(2)).to be true
+      expect(set.include?(3)).to be true
+    end
+
     it "returns nil" do
       expect(set.bulk_add([1, 2, 3])).to be_nil
     end

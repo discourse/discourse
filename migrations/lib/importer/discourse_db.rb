@@ -2,6 +2,8 @@
 
 module Migrations::Importer
   class DiscourseDB
+    QueryResult = Data.define(:rows, :column_count)
+
     COPY_BATCH_SIZE = 1_000
     SKIP_ROW_MARKER = :"$skip"
 
@@ -93,15 +95,31 @@ module Migrations::Importer
     end
 
     def query_array(sql, *params)
+      query_result_set(sql, *params).rows
+    end
+
+    def query_result_set(sql, *params)
       @connection.send_query_params(sql, params)
       @connection.set_single_row_mode
 
-      Enumerator.new do |y|
-        while (result = @connection.get_result)
-          result.stream_each_row { |row| y.yield(row) }
-          result.clear
+      first_result = @connection.get_result
+
+      return QueryResult.new(rows: Enumerator.new {}, column_count: 0) unless first_result
+
+      column_count = first_result.nfields
+
+      enum =
+        Enumerator.new do |y|
+          first_result.stream_each_row { |row| y.yield(row) }
+          first_result.clear
+
+          while (result = @connection.get_result)
+            result.stream_each_row { |row| y.yield(row) }
+            result.clear
+          end
         end
-      end
+
+      QueryResult.new(rows: enum, column_count:)
     end
 
     def close

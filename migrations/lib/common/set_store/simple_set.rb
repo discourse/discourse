@@ -22,7 +22,8 @@ module Migrations::SetStore
     end
 
     def bulk_add(records)
-      @store.merge(records)
+      values = records.lazy.map { |value| value.is_a?(Array) ? value[0] : value }
+      @store.merge(values)
       nil
     end
   end
