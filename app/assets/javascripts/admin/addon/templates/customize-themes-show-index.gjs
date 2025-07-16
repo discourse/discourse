@@ -1,6 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
-import { and, not } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -199,34 +199,32 @@ export default RouteTemplate(
       </section>
     {{/if}}
 
-    {{#unless @controller.model.system}}
-      {{#unless @controller.model.remote_theme.is_git}}
-        <div class="control-unit">
-          <div class="mini-title">{{i18n
-              "admin.customize.theme.css_html"
+    {{#unless
+      (or @controller.model.system @controller.model.remote_theme.is_git)
+    }}
+      <div class="control-unit">
+        <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
+        {{#if @controller.model.hasEditedFields}}
+          <div class="description">{{i18n
+              "admin.customize.theme.custom_sections"
             }}</div>
-          {{#if @controller.model.hasEditedFields}}
-            <div class="description">{{i18n
-                "admin.customize.theme.custom_sections"
-              }}</div>
-            <ul>
-              {{#each @controller.editedFieldsFormatted as |field|}}
-                <li>{{field}}</li>
-              {{/each}}
-            </ul>
-          {{else}}
-            <div class="description">
-              {{i18n "admin.customize.theme.edit_css_html_help"}}
-            </div>
-          {{/if}}
+          <ul>
+            {{#each @controller.editedFieldsFormatted as |field|}}
+              <li>{{field}}</li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="description">
+            {{i18n "admin.customize.theme.edit_css_html_help"}}
+          </div>
+        {{/if}}
 
-          <DButton
-            @action={{@controller.editTheme}}
-            @label="admin.customize.theme.edit_css_html"
-            class="btn-default edit edit-code"
-          />
-        </div>
-      {{/unless}}
+        <DButton
+          @action={{@controller.editTheme}}
+          @label="admin.customize.theme.edit_css_html"
+          class="btn-default edit edit-code"
+        />
+      </div>
 
       <div class="control-unit">
         <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
