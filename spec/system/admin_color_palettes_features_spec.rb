@@ -86,11 +86,10 @@ describe "Admin Color Palettes Features", type: :system do
     it "can set palette as default and shows toast" do
       visit("/admin/customize/colors")
 
-      within("[data-palette-id='#{regular_palette.id}']") do
-        find(".btn-flat").click
-        expect(page).to have_css(".dropdown-menu")
-        click_button(I18n.t("admin_js.admin.customize.colors.set_default"))
-      end
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default"))
 
       expect(toasts).to have_success(I18n.t("admin_js.admin.customize.colors.saved_refreshing"))
     end
@@ -98,11 +97,10 @@ describe "Admin Color Palettes Features", type: :system do
     it "can toggle user selectable status" do
       visit("/admin/customize/colors")
 
-      within("[data-palette-id='#{regular_palette.id}']") do
-        find(".btn-flat").click
-        expect(page).to have_css(".dropdown-menu")
-        click_button(I18n.t("admin_js.admin.customize.theme.user_selectable_button_label"))
-      end
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+      click_button(I18n.t("admin_js.admin.customize.theme.user_selectable_button_label"))
 
       expect(regular_palette.reload.user_selectable).to be true
     end
