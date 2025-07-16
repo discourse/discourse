@@ -738,11 +738,11 @@ module SiteSettingExtension
   def setup_shadowed_methods(name, value)
     clean_name = name.to_s.sub("?", "").to_sym
 
-    define_singleton_method clean_name do
+    define_singleton_method clean_name do |scoped_to = nil|
       value
     end
 
-    define_singleton_method "#{clean_name}?" do
+    define_singleton_method "#{clean_name}?" do |scoped_to = nil|
       value
     end
 
