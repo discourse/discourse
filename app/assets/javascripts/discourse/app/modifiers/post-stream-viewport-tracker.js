@@ -649,7 +649,7 @@ export default class PostStreamViewportTracker {
       : Math.max(
           this.#headerOffset,
           this.#wrapperElement.getBoundingClientRect().top
-        );
+        ) + 1;
   }
 
   /**
