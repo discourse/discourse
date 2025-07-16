@@ -1,0 +1,279 @@
+<DModal
+  @title={{i18n
+    (concat
+      "discourse_post_event.builder_modal."
+      (if @model.event.id "update_event_title" "create_event_title")
+    )
+  }}
+  class="post-event-builder-modal"
+  @closeModal={{@closeModal}}
+  @flash={{this.flash}}
+>
+  <:body>
+    <ConditionalLoadingSection @isLoading={{this.isSaving}}>
+      <form>
+        <PluginOutlet
+          @name="post-event-builder-form"
+          @outletArgs={{hash event=@model.event}}
+          @connectorTagName="div"
+        >
+          <DateTimeInputRange
+            @from={{this.startsAt}}
+            @to={{this.endsAt}}
+            @timezone={{@model.event.timezone}}
+            @onChange={{this.onChangeDates}}
+          />
+
+          <EventField
+            class="name"
+            @label="discourse_post_event.builder_modal.name.label"
+          >
+            <Input
+              @value={{@model.event.name}}
+              placeholder={{i18n
+                "discourse_post_event.builder_modal.name.placeholder"
+              }}
+            />
+          </EventField>
+
+          <EventField
+            class="url"
+            @label="discourse_post_event.builder_modal.url.label"
+          >
+            <Input
+              @value={{@model.event.url}}
+              placeholder={{i18n
+                "discourse_post_event.builder_modal.url.placeholder"
+              }}
+            />
+          </EventField>
+
+          <EventField
+            class="timezone"
+            @label="discourse_post_event.builder_modal.timezone.label"
+          >
+            <TimezoneInput
+              @value={{@model.event.timezone}}
+              @onChange={{this.setNewTimezone}}
+              class="input-xxlarge"
+              @none="discourse_post_event.builder_modal.timezone.remove_timezone"
+            />
+          </EventField>
+
+          <EventField @label="discourse_post_event.builder_modal.status.label">
+            <label class="radio-label">
+              <RadioButton
+                @name="status"
+                @value="public"
+                @selection={{@model.event.status}}
+                @onChange={{this.onChangeStatus}}
+              />
+              <span class="message">
+                <span class="title">
+                  {{i18n
+                    "discourse_post_event.models.event.status.public.title"
+                  }}
+                </span>
+                <span class="description">
+                  {{i18n
+                    "discourse_post_event.models.event.status.public.description"
+                  }}
+                </span>
+              </span>
+            </label>
+            <label class="radio-label">
+              <RadioButton
+                @name="status"
+                @value="private"
+                @selection={{@model.event.status}}
+                @onChange={{this.onChangeStatus}}
+              />
+              <span class="message">
+                <span class="title">
+                  {{i18n
+                    "discourse_post_event.models.event.status.private.title"
+                  }}
+                </span>
+                <span class="description">
+                  {{i18n
+                    "discourse_post_event.models.event.status.private.description"
+                  }}
+                </span>
+              </span>
+            </label>
+            <label class="radio-label">
+              <RadioButton
+                @name="status"
+                @value="standalone"
+                @selection={{@model.event.status}}
+                @onChange={{this.onChangeStatus}}
+              />
+              <span class="message">
+                <span class="title">
+                  {{i18n
+                    "discourse_post_event.models.event.status.standalone.title"
+                  }}
+                </span>
+                <span class="description">
+                  {{i18n
+                    "discourse_post_event.models.event.status.standalone.description"
+                  }}
+                </span>
+              </span>
+            </label>
+          </EventField>
+
+          <EventField
+            @enabled={{eq @model.event.status "private"}}
+            @label="discourse_post_event.builder_modal.invitees.label"
+          >
+            <GroupSelector
+              @fullWidthWrap={{true}}
+              @groupFinder={{this.groupFinder}}
+              @groupNames={{@model.event.rawInvitees}}
+              @onChangeCallback={{this.setRawInvitees}}
+              @placeholderKey="topic.invite_private.group_name"
+            />
+          </EventField>
+
+          <EventField
+            class="reminders"
+            @label="discourse_post_event.builder_modal.reminders.label"
+          >
+            <div class="reminders-list">
+              {{#each @model.event.reminders as |reminder|}}
+                <div class="reminder-item">
+                  <ComboBox
+                    class="reminder-type"
+                    @value={{reminder.type}}
+                    @nameProperty="name"
+                    @valueProperty="value"
+                    @content={{this.reminderTypes}}
+                  />
+
+                  <Input
+                    class="reminder-value"
+                    min={{0}}
+                    @value={{reminder.value}}
+                    placeholder={{i18n
+                      "discourse_post_event.builder_modal.name.placeholder"
+                    }}
+                  />
+
+                  <ComboBox
+                    class="reminder-unit"
+                    @value={{reminder.unit}}
+                    @nameProperty="name"
+                    @valueProperty="value"
+                    @content={{this.reminderUnits}}
+                  />
+
+                  <ComboBox
+                    class="reminder-period"
+                    @value={{reminder.period}}
+                    @nameProperty="name"
+                    @valueProperty="value"
+                    @content={{this.reminderPeriods}}
+                  />
+
+                  <DButton
+                    class="remove-reminder"
+                    @icon="xmark"
+                    @action={{fn @model.event.removeReminder reminder}}
+                  />
+
+                </div>
+              {{/each}}
+            </div>
+
+            <DButton
+              class="add-reminder"
+              @disabled={{this.addReminderDisabled}}
+              @icon="plus"
+              @label="discourse_post_event.builder_modal.add_reminder"
+              @action={{@model.event.addReminder}}
+            />
+          </EventField>
+
+          <EventField
+            class="recurrence"
+            @label="discourse_post_event.builder_modal.recurrence.label"
+          >
+            <ComboBox
+              class="available-recurrences"
+              @value={{@model.event.recurrence}}
+              @content={{this.availableRecurrences}}
+              @options={{hash
+                none="discourse_post_event.builder_modal.recurrence.none"
+              }}
+            />
+          </EventField>
+
+          <EventField
+            class="minimal-event"
+            @label="discourse_post_event.builder_modal.minimal.label"
+          >
+            <label class="checkbox-label">
+              <Input @type="checkbox" @checked={{@model.event.minimal}} />
+              <span class="message">
+                {{i18n
+                  "discourse_post_event.builder_modal.minimal.checkbox_label"
+                }}
+              </span>
+            </label>
+          </EventField>
+
+          {{#if this.allowedCustomFields.length}}
+            <EventField
+              @label="discourse_post_event.builder_modal.custom_fields.label"
+            >
+              <p class="event-field-description">
+                {{i18n
+                  "discourse_post_event.builder_modal.custom_fields.description"
+                }}
+              </p>
+              {{#each this.allowedCustomFields as |allowedCustomField|}}
+                <span class="label custom-field-label">
+                  {{allowedCustomField}}
+                </span>
+                <Input
+                  class="custom-field-input"
+                  @value={{readonly
+                    (get @model.event.customFields allowedCustomField)
+                  }}
+                  placeholder={{i18n
+                    "discourse_post_event.builder_modal.custom_fields.placeholder"
+                  }}
+                  {{on "input" (fn this.setCustomField allowedCustomField)}}
+                />
+              {{/each}}
+            </EventField>
+          {{/if}}
+        </PluginOutlet>
+      </form>
+    </ConditionalLoadingSection>
+  </:body>
+  <:footer>
+    {{#if @model.event.id}}
+      <DButton
+        class="btn-primary"
+        @label="discourse_post_event.builder_modal.update"
+        @icon="calendar-day"
+        @action={{this.updateEvent}}
+      />
+
+      <DButton
+        @icon="trash-can"
+        class="btn-danger"
+        @action={{this.destroyPostEvent}}
+      />
+    {{else}}
+      <DButton
+        class="btn-primary"
+        @label="discourse_post_event.builder_modal.create"
+        @icon="calendar-day"
+        @action={{this.createEvent}}
+      />
+    {{/if}}
+  </:footer>
+</DModal>

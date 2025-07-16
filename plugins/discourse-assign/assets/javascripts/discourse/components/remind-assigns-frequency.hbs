@@ -1,0 +1,14 @@
+{{#if this.siteSettings.assign_enabled}}
+  <div class="controls controls-dropdown">
+    <label>{{i18n "discourse_assign.reminders_frequency.description"}}</label>
+    <ComboBox
+      @id="remind-assigns-frequency"
+      @valueProperty="value"
+      @content={{this.availableFrequencies}}
+      @value={{this.selectedFrequency}}
+      @onChange={{action
+        (mut this.user.custom_fields.remind_assigns_frequency)
+      }}
+    />
+  </div>
+{{/if}}

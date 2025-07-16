@@ -1,0 +1,29 @@
+<DModal
+  @title={{i18n "discourse_post_event.invite_user_or_group.title"}}
+  @closeModal={{@closeModal}}
+  @flash={{this.flash}}
+>
+  <:body>
+    <form>
+      <EventField>
+        <EmailGroupUserChooser
+          @value={{this.invitedNames}}
+          @options={{hash
+            fullWidthWrap=true
+            includeMessageableGroups=true
+            filterPlaceholder="composer.users_placeholder"
+            excludeCurrentUser=true
+          }}
+        />
+      </EventField>
+    </form>
+  </:body>
+  <:footer>
+    <DButton
+      @type="button"
+      class="btn-primary"
+      @label="discourse_post_event.invite_user_or_group.invite"
+      @action={{this.invite}}
+    />
+  </:footer>
+</DModal>

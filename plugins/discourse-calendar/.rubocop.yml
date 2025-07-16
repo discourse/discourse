@@ -1,0 +1,6 @@
+inherit_gem:
+  rubocop-discourse: stree-compat.yml
+AllCops:
+  Exclude:
+    - vendor/**/*
+    - gems/**/*

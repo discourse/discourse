@@ -1,0 +1,23 @@
+<DModal class="assign" @title={{this.title}} @closeModal={{@closeModal}}>
+  <:body>
+    <AssignUserForm
+      @model={{this.model}}
+      @onSubmit={{this.onSubmit}}
+      @formApi={{this.formApi}}
+    />
+  </:body>
+
+  <:footer>
+    <DButton
+      class="btn-primary"
+      @action={{this.formApi.submit}}
+      @label={{if
+        this.model.reassign
+        "discourse_assign.reassign.title"
+        "discourse_assign.assign_modal.assign"
+      }}
+    />
+
+    <DModalCancel @close={{@closeModal}} />
+  </:footer>
+</DModal>

@@ -1,0 +1,14 @@
+<h3>{{i18n "discourse_assign.assign.title"}}</h3>
+
+<section class="field">
+  <div class="enable-accepted-answer">
+    <label class="checkbox-label">
+      <Input
+        @type="checkbox"
+        @checked={{readonly this.outletArgs.category.enable_unassigned_filter}}
+        {{on "change" this.onChangeSetting}}
+      />
+      {{i18n "discourse_assign.add_unassigned_filter"}}
+    </label>
+  </div>
+</section>

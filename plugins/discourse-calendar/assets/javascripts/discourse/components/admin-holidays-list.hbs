@@ -1,0 +1,18 @@
+<table class="holidays-list">
+  <thead>
+    <tr>
+      <td>{{i18n "discourse_calendar.date"}}</td>
+      <td colspan="2">{{i18n "discourse_calendar.holiday"}}</td>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each @holidays as |holiday|}}
+      <AdminHolidaysListItem
+        @holiday={{holiday}}
+        @isHolidayDisabled={{holiday.disabled}}
+        @region_code={{@region_code}}
+      />
+    {{/each}}
+  </tbody>
+</table>

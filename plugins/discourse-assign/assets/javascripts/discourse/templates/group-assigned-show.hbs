@@ -1,0 +1,41 @@
+<div class="topic-search-div">
+  <div class="inline-form full-width">
+    <Input
+      {{on "input" (action "onChangeFilter" value="target.value")}}
+      @value={{readonly this.search}}
+      @type="search"
+      placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
+      autocomplete="off"
+      class="no-blur"
+    />
+  </div>
+</div>
+
+<LoadMore
+  @selector=".paginated-topics-list .topic-list tr"
+  @action={{action "loadMore"}}
+  class="paginated-topics-list"
+>
+  <BasicTopicList
+    @topicList={{this.model}}
+    @hideCategory={{this.hideCategory}}
+    @showPosters={{this.showPosters}}
+    @bulkSelectEnabled={{this.bulkSelectEnabled}}
+    @canBulkSelect={{this.canBulkSelect}}
+    @selected={{this.selected}}
+    @hasIncoming={{this.hasIncoming}}
+    @incomingCount={{this.incomingCount}}
+    @showInserted={{action "showInserted"}}
+    @tagsForUser={{this.tagsForUser}}
+    @changeSort={{action "changeSort"}}
+    @toggleBulkSelect={{action "toggleBulkSelect"}}
+    @bulkSelectAction={{action "refresh"}}
+    @bulkSelectHelper={{this.bulkSelectHelper}}
+    @unassign={{action "unassign"}}
+    @reassign={{action "reassign"}}
+    @onScroll={{this.saveScrollPosition}}
+    @scrollOnLoad={{true}}
+  />
+
+  <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
+</LoadMore>

@@ -1,0 +1,61 @@
+<section class="user-secondary-navigation group-assignments">
+  {{body-class "group-assign"}}
+  <MobileNav
+    @desktopClass="action-list activity-list nav-stacked"
+    class="activity-nav"
+  >
+    {{#if this.isDesktop}}
+      <div class="search-div">
+        <Input
+          {{on "input" (action this.onChangeFilterName value="target.value")}}
+          @type="text"
+          @value={{readonly this.filterName}}
+          placeholder={{i18n
+            "discourse_assign.sidebar_name_filter_placeholder"
+          }}
+          class="search"
+        />
+      </div>
+    {{/if}}
+
+    <LoadMore @selector=".activity-nav li" @action={{action "loadMore"}}>
+      <GroupAssignedFilter
+        @showAvatar={{false}}
+        @filter="everyone"
+        @routeType={{this.route_type}}
+        @assignmentCount={{this.group.assignment_count}}
+        @search={{this.search}}
+        @ascending={{this.ascending}}
+        @order={{this.order}}
+      />
+
+      <GroupAssignedFilter
+        @showAvatar={{false}}
+        @groupName={{this.group.name}}
+        @filter={{this.group.name}}
+        @routeType={{this.route_type}}
+        @assignmentCount={{this.group.group_assignment_count}}
+        @search={{this.search}}
+        @ascending={{this.ascending}}
+        @order={{this.order}}
+      />
+
+      {{#each this.members as |member|}}
+        <GroupAssignedFilter
+          @showAvatar={{true}}
+          @filter={{member}}
+          @routeType={{this.route_type}}
+          @search={{this.search}}
+          @ascending={{this.ascending}}
+          @order={{this.order}}
+        />
+      {{/each}}
+
+      <ConditionalLoadingSpinner @condition={{this.loading}} />
+    </LoadMore>
+  </MobileNav>
+</section>
+
+<section class="user-content">
+  {{outlet}}
+</section>

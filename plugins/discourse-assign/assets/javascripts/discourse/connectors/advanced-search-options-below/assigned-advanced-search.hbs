@@ -1,0 +1,18 @@
+<div class="control-group">
+  <label class="control-label" for="search-assigned-to">
+    {{i18n "search.advanced.assigned.label"}}
+  </label>
+
+  <div class="controls">
+    <EmailGroupUserChooser
+      @value={{this.outletArgs.searchedTerms.assigned}}
+      @onChange={{this.onChangeAssigned}}
+      @options={{hash
+        maximum=1
+        excludeCurrentUser=false
+        includeGroups=true
+        customSearchOptions=(hash assignableGroups=true)
+      }}
+    />
+  </div>
+</div>

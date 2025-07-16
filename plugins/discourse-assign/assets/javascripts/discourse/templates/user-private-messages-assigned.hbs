@@ -1,0 +1,10 @@
+<UserNav::MessagesSecondaryNav>
+  <li class="messages-assigned-latest">
+    <LinkTo @route="userPrivateMessages.assigned.index">
+      {{d-icon "envelope"}}
+      <span>{{i18n "categories.latest"}}</span>
+    </LinkTo>
+  </li>
+</UserNav::MessagesSecondaryNav>
+
+{{outlet}}

@@ -1,0 +1,6 @@
+# Only add no-op commits to this file
+# To prevent these commits to show in git blame
+# git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# DEV: Apply syntax_tree formatting 
+8d1261a2a610f151364a3af594a4614aa29a458a

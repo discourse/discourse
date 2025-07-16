@@ -1,0 +1,98 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "discourse_post_event.bulk_invite_modal.title"}}
+  class="post-event-bulk-invite"
+  @flash={{this.flash}}
+>
+  <:body>
+    <div class="bulk-invites">
+      <p class="bulk-event-help">
+        {{i18n
+          (concat
+            "discourse_post_event.bulk_invite_modal.description_"
+            @model.event.status
+          )
+        }}
+      </p>
+      <h3>{{i18n "discourse_post_event.bulk_invite_modal.inline_title"}}</h3>
+
+      <div class="bulk-invite-rows">
+        {{#each this.bulkInvites as |bulkInvite|}}
+          <div class="bulk-invite-row">
+            {{#if @model.event.isPrivate}}
+              <GroupSelector
+                class="bulk-invite-identifier"
+                @single={{true}}
+                @groupFinder={{this.groupFinder}}
+                @groupNames={{bulkInvite.identifier}}
+                @placeholderKey="discourse_post_event.bulk_invite_modal.group_selector_placeholder"
+                @onChangeCallback={{fn
+                  this.updateBulkGroupInviteIdentifier
+                  bulkInvite
+                }}
+              />
+            {{/if}}
+            {{#if @model.event.isPublic}}
+              <EmailGroupUserChooser
+                class="bulk-invite-identifier"
+                @value={{bulkInvite.identifier}}
+                @onChange={{fn this.updateInviteIdentifier bulkInvite}}
+                @options={{hash
+                  maximum=1
+                  filterPlaceholder="discourse_post_event.bulk_invite_modal.user_selector_placeholder"
+                }}
+              />
+            {{/if}}
+
+            <ComboBox
+              class="bulk-invite-attendance"
+              @value={{bulkInvite.attendance}}
+              @content={{this.bulkInviteStatuses}}
+              @nameProperty="name"
+              @valueProperty="name"
+              @onChange={{fn (mut bulkInvite.attendance)}}
+            />
+
+            <DButton
+              @icon="trash-can"
+              @action={{fn this.removeBulkInvite bulkInvite}}
+              class="remove-bulk-invite"
+            />
+          </div>
+        {{/each}}
+      </div>
+
+      <div class="bulk-invite-actions">
+        <DButton
+          class="send-bulk-invites btn-primary"
+          @label="discourse_post_event.bulk_invite_modal.send_bulk_invites"
+          @action={{this.sendBulkInvites}}
+          @disabled={{this.bulkInviteDisabled}}
+        />
+        <DButton
+          class="add-bulk-invite"
+          @icon="plus"
+          @action={{this.addBulkInvite}}
+        />
+      </div>
+    </div>
+
+    <div class="csv-bulk-invites">
+      <h3>{{i18n "discourse_post_event.bulk_invite_modal.csv_title"}}</h3>
+
+      <div class="bulk-invite-actions">
+        <BulkInviteSampleCsvFile />
+
+        <CsvUploader
+          @uploadUrl={{concat
+            "/discourse-post-event/events/"
+            @model.event.id
+            "/csv-bulk-invite"
+          }}
+          @i18nPrefix="discourse_post_event.bulk_invite_modal"
+          @uploadDone={{this.uploadDone}}
+        />
+      </div>
+    </div>
+  </:body>
+</DModal>

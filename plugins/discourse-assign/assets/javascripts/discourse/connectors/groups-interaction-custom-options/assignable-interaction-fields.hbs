@@ -1,0 +1,20 @@
+<div class="control-group">
+  <label class="control-label">
+    {{i18n "discourse_assign.admin.groups.manage.interaction.assign"}}
+  </label>
+
+  <label for="visibility">
+    {{i18n
+      "discourse_assign.admin.groups.manage.interaction.assignable_levels.title"
+    }}
+  </label>
+
+  <ComboBox
+    @name="alias"
+    @valueProperty="value"
+    @value={{this.assignableLevel}}
+    @content={{this.assignableLevelOptions}}
+    @onChange={{this.onChangeAssignableLevel}}
+    class="groups-form-assignable-level"
+  />
+</div>

@@ -1,0 +1,28 @@
+<div class="invitees-type-filter">
+  <DButton
+    @label="discourse_post_event.models.invitee.status.going"
+    class={{concat-class
+      "btn toggle-going"
+      (if (eq @viewType "going") "btn-danger" "btn-default")
+    }}
+    @action={{fn @toggle "going"}}
+  />
+
+  <DButton
+    @label="discourse_post_event.models.invitee.status.interested"
+    class={{concat-class
+      "btn toggle-interested"
+      (if (eq @viewType "interested") "btn-danger" "btn-default")
+    }}
+    @action={{fn @toggle "interested"}}
+  />
+
+  <DButton
+    @label="discourse_post_event.models.invitee.status.not_going"
+    class={{concat-class
+      "btn toggle-not-going"
+      (if (eq @viewType "not_going") "btn-danger" "btn-default")
+    }}
+    @action={{fn @toggle "not_going"}}
+  />
+</div>

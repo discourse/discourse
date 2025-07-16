@@ -1,0 +1,23 @@
+<h3>
+  {{i18n "discourse_calendar.holidays.header_title"}}
+</h3>
+
+<RegionInput
+  @value={{this.selectedRegion}}
+  @onChange={{action "getHolidays"}}
+/>
+
+<p class="desc">
+  {{i18n "discourse_calendar.holidays.pick_region_description"}}
+  <br /><br />
+  {{i18n "discourse_calendar.holidays.disabled_holidays_description"}}
+</p>
+
+<ConditionalLoadingSpinner @condition={{this.loading}} />
+
+{{#if this.model.holidays}}
+  <AdminHolidaysList
+    @holidays={{this.model.holidays}}
+    @region_code={{this.selectedRegion}}
+  />
+{{/if}}
