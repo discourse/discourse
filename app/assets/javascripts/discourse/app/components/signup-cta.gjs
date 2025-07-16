@@ -1,7 +1,6 @@
 import Component from "@ember/component";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { on as onEvent } from "@ember-decorators/object";
+import { on } from "@ember-decorators/object";
 import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
@@ -9,15 +8,6 @@ import discourseLater from "discourse/lib/later";
 import { i18n } from "discourse-i18n";
 
 export default class SignupCta extends Component {
-  action = "showCreateAccount";
-
-  @action
-  neverShow(event) {
-    event?.preventDefault();
-    this.keyValueStore.setItem("anon-cta-never", "t");
-    this.session.set("showSignupCta", false);
-  }
-
   @action
   hideForSession() {
     this.session.set("hideSignupCta", true);
@@ -25,7 +15,13 @@ export default class SignupCta extends Component {
     discourseLater(() => this.session.set("showSignupCta", false), 20 * 1000);
   }
 
-  @onEvent("willDestroyElement")
+  @action
+  hideForever() {
+    this.session.set("showSignupCta", false);
+    this.keyValueStore.setItem("anon-cta-never", "t");
+  }
+
+  @on("willDestroyElement")
   _turnOffIfHidden() {
     if (this.session.get("hideSignupCta")) {
       this.session.set("showSignupCta", false);
@@ -35,9 +31,7 @@ export default class SignupCta extends Component {
   <template>
     <div class="signup-cta alert alert-info">
       {{#if this.session.hideSignupCta}}
-        <h3>
-          {{i18n "signup_cta.hidden_for_session"}}
-        </h3>
+        <h3>{{i18n "signup_cta.hidden_for_session"}}</h3>
       {{else}}
         <h3>{{replaceEmoji (i18n "signup_cta.intro")}}</h3>
         <p>{{replaceEmoji (i18n "signup_cta.value_prop")}}</p>
@@ -54,9 +48,11 @@ export default class SignupCta extends Component {
             @label="signup_cta.hide_session"
             class="no-icon"
           />
-          <a href {{on "click" this.neverShow}}>{{i18n
-              "signup_cta.hide_forever"
-            }}</a>
+          <DButton
+            @action={{this.hideForever}}
+            @label="signup_cta.hide_forever"
+            class="no-icon btn-flat"
+          />
         </div>
       {{/if}}
     </div>
