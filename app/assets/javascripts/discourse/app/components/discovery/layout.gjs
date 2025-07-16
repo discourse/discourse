@@ -4,13 +4,14 @@ import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import CategoryList from "discourse/models/category-list";
 
 export default class Layout extends Component {
   get listClass() {
-    if ("filterType" in this.args.model) {
-      return "--topic-list";
-    } else if (this.args.model.categories) {
+    if (this.args.model instanceof CategoryList) {
       return "--category-list";
+    } else {
+      return "--topic-list";
     }
   }
 
