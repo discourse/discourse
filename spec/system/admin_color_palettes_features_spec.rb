@@ -102,7 +102,9 @@ describe "Admin Color Palettes Features", type: :system do
       expect(page).to have_css(".dropdown-menu")
       click_button(I18n.t("admin_js.admin.customize.theme.user_selectable_button_label"))
 
-      expect(regular_palette.reload.user_selectable).to be true
+      within("[data-palette-id='#{regular_palette.id}']") do
+        expect(page).to have_css(".theme-card__badge.--selectable")
+      end
     end
   end
 
