@@ -100,8 +100,11 @@ export default class ColorPaletteListItem extends Component {
   }
 
   <template>
-    {{log @scheme}}
-    <li style={{this.styles}} class="admin-config-area-card color-palette">
+    <li
+      style={{this.styles}}
+      class="admin-config-area-card color-palette"
+      data-palette-id={{@scheme.id}}
+    >
       <div class="color-palette__container">
         <div class="color-palette__preview">
           <SvgSingleColorPalettePlaceholder />
