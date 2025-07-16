@@ -120,36 +120,34 @@ export default class DeprecationWarningHandler extends Service {
 
     this.#adminWarned = true;
 
-    let notice = i18n("critical_deprecation.notice") + " ";
-
-    if (url) {
-      notice += i18n("critical_deprecation.linked_id", {
-        id: escapeExpression(id),
-        url: escapeExpression(url),
+    let sourceString;
+    if (source?.type === "theme") {
+      sourceString = i18n("critical_deprecation.theme_source", {
+        name: escapeExpression(source.name),
+        path: source.path,
+      });
+    } else if (source?.type === "plugin") {
+      sourceString = i18n("critical_deprecation.plugin_source", {
+        name: escapeExpression(source.name),
       });
     } else {
-      notice += i18n("critical_deprecation.id", {
-        id: escapeExpression(id),
+      sourceString = i18n("critical_deprecation.unknown_source");
+    }
+
+    let notice =
+      i18n("critical_deprecation.notice", {
+        source: sourceString,
+        id,
+      }) + " ";
+
+    if (url) {
+      notice += i18n("critical_deprecation.learn_more_link", {
+        url,
       });
     }
 
     if (this.siteSettings.warn_critical_js_deprecations_message) {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;
-    }
-
-    if (source?.type === "theme") {
-      notice +=
-        " " +
-        i18n("critical_deprecation.theme_source", {
-          name: escapeExpression(source.name),
-          path: source.path,
-        });
-    } else if (source?.type === "plugin") {
-      notice +=
-        " " +
-        i18n("critical_deprecation.plugin_source", {
-          name: escapeExpression(source.name),
-        });
     }
 
     addGlobalNotice(notice, "critical-deprecation", {
