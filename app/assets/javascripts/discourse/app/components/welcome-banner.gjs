@@ -8,7 +8,7 @@ import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class WelcomeBanner extends Component {
   @service router;
@@ -71,9 +71,10 @@ export default class WelcomeBanner extends Component {
   }
 
   get subheaderText() {
-    return this.currentUser
-      ? i18n("welcome_banner.subheader.logged_in_members")
-      : i18n("welcome_banner.subheader.anonymous_members");
+    const memberKey = this.currentUser
+      ? "logged_in_members"
+      : "anonymous_members";
+    return I18n.lookup(`welcome_banner.subheader.${memberKey}`);
   }
 
   get shouldDisplay() {
