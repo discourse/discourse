@@ -3,6 +3,7 @@ import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
 
 /**
@@ -310,8 +311,8 @@ export default class PostStreamViewportTracker {
       trackedArgs && Object.values(trackedArgs);
 
       schedule("afterRender", () => {
-        // forces updates performed when the scroll is triggered
-        this.#scrollTriggered();
+        // forces updates performed when the scroll is triggered to be performed after the initial rendering
+        this.#scrollTriggered(true);
       });
 
       // cleanup
@@ -556,6 +557,64 @@ export default class PostStreamViewportTracker {
   }
 
   /**
+   * Gets the testing wrapper element for test environment
+   * @private
+   * @returns {HTMLElement} The ember-testing container element
+   */
+  get #testWrapperElement() {
+    return document.getElementById("ember-testing");
+  }
+
+  /**
+   * Gets the total document height, accounting for test environment
+   * @private
+   * @returns {number} The total scrollable height of the document
+   */
+  get #documentHeight() {
+    return isTesting()
+      ? this.#testWrapperElement.scrollHeight
+      : Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        );
+  }
+
+  /**
+   * Gets the viewport height, accounting for test environment
+   * @private
+   * @returns {number} The height of the viewport
+   */
+  get #viewportHeight() {
+    return isTesting()
+      ? this.#testWrapperElement.offsetHeight
+      : window.innerHeight;
+  }
+
+  /**
+   * Gets the current scroll position, accounting for test environment
+   * @private
+   * @returns {number} The current vertical scroll position
+   */
+  get #scrollPosition() {
+    return isTesting() ? this.#testWrapperElement.scrollTop : window.scrollY;
+  }
+
+  /**
+   * Gets the top boundary position for post visibility calculations
+   * In production, accounts for header offset if the wrapper element top is less than header offset
+   * @private
+   * @returns {number} The top boundary position in viewport coordinates
+   */
+  get #topBoundary() {
+    return isTesting()
+      ? this.#wrapperElement.getBoundingClientRect().top
+      : Math.max(
+          this.#headerOffset,
+          this.#wrapperElement.getBoundingClientRect().top
+        );
+  }
+
+  /**
    * Calculates the position of the "eyeline" - the horizontal line in the viewport
    * that determines which post is considered the current post
    *
@@ -567,18 +626,12 @@ export default class PostStreamViewportTracker {
    */
   #calculateEyelineViewportOffset() {
     // Get viewport and scroll data
-    const viewportHeight = window.innerHeight;
-    const scrollPosition = window.scrollY;
-    const documentHeight = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight
-    );
+    const viewportHeight = this.#viewportHeight;
+    const scrollPosition = this.#scrollPosition;
+    const documentHeight = this.#documentHeight;
 
     // Calculate boundaries
-    const topBoundary = Math.max(
-      this.#headerOffset,
-      this.#wrapperElement.getBoundingClientRect().top
-    );
+    const topBoundary = this.#topBoundary;
     const bottomBoundary =
       this.#bottomBoundaryElement?.getBoundingClientRect()?.top ??
       viewportHeight;
@@ -635,7 +688,18 @@ export default class PostStreamViewportTracker {
    */
   #findPostMatchingEyeline(eyeLineOffset) {
     let target, percentScrolled;
-    for (const { element } of Object.values(this.#postsOnScreen)) {
+
+    // Get target elements from posts currently visible on screen
+    let targetElements = Object.values(this.#postsOnScreen).map(
+      (post) => post.element
+    );
+
+    // If no posts are visible on screen, fall back to all observed post elements
+    if (!targetElements.length) {
+      targetElements = this.#observedPostElements;
+    }
+
+    for (const element of targetElements) {
       const { top, bottom } = element.getBoundingClientRect();
 
       if (eyeLineOffset >= top && eyeLineOffset <= bottom) {
@@ -758,22 +822,33 @@ export default class PostStreamViewportTracker {
   }
 
   /**
-   * Handles scroll events by calculating the new eyeline position
-   * and finding the post that matches that position
-   * Also updates the debug element if enabled
+   * Handles scroll events by calculating the new eyeline position and finding the post that matches that position.
+   * The eyeline position determines which post is considered current based on the scroll position.
+   *
+   * When called, this method:
+   * 1. Calculates the current eyeline position in the viewport
+   * 2. Updates post tracking to find the current visible post at that position
+   * 3. Updates the debug visual element if DEBUG_EYELINE is enabled
+   *
+   * @private
+   * @param {boolean} [immediate=false] - If true, processes the eyeline updates synchronously instead of debounced
    */
-  #scrollTriggered() {
+  #scrollTriggered(immediate = false) {
     const eyelineOffset = this.#calculateEyelineViewportOffset();
 
-    this.#scheduledTimers.set(
-      this.#findPostMatchingEyeline,
-      discourseDebounce(
-        this,
+    if (immediate) {
+      this.#findPostMatchingEyeline(eyelineOffset);
+    } else {
+      this.#scheduledTimers.set(
         this.#findPostMatchingEyeline,
-        eyelineOffset,
-        SCROLL_BATCH_INTERVAL_MS
-      )
-    );
+        discourseDebounce(
+          this,
+          this.#findPostMatchingEyeline,
+          eyelineOffset,
+          SCROLL_BATCH_INTERVAL_MS
+        )
+      );
+    }
 
     if (DEBUG_EYELINE) {
       this.#updateEyelineDebugElementPosition(eyelineOffset);
@@ -807,7 +882,7 @@ export default class PostStreamViewportTracker {
    * @returns {boolean} Whether the offset was changed
    */
   #updateCloakOffset() {
-    const newOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
+    const newOffset = Math.ceil(this.#viewportHeight * SLACK_FACTOR);
 
     if (newOffset === this.#cloakOffset) {
       return false;
