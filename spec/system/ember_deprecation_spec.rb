@@ -43,9 +43,7 @@ describe "JS Deprecation Handling", type: :system do
     JS
 
     message = find("#global-notice-critical-deprecation")
-    expect(message).to have_text(
-      "One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes",
-    )
+    expect(message).to have_text("One of your themes or plugins contains code which needs updating")
     expect(message).to have_text(SiteSetting.warn_critical_js_deprecations_message)
   end
 
