@@ -892,6 +892,7 @@ div.ac-wrap {
   // the interactive-widget=resizes-content in the viewport meta tag
   // for maximum browser compatibility (including Firefox on Android)
   // see https://developer.chrome.com/blog/viewport-resize-behavior for context
+  .discourse-touch,
   .mobile-device {
     #reply-control {
       // this might be overkill
