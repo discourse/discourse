@@ -1445,7 +1445,9 @@ en:
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color palette on all my devices"
-      color_scheme: "Color Palette"
+      color_scheme: "Colors"
+      color_scheme_palette: "Palette"
+      color_scheme_mode: "Mode"
       color_schemes:
         default_description: "Theme default"
         disable_dark_scheme: "Same as regular"

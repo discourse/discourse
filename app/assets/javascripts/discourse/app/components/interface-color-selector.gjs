@@ -23,18 +23,21 @@ export default class InterfaceColorSelector extends Component {
   @action
   switchToLight(dMenu) {
     this.interfaceColor.forceLightMode();
+    this.args.onChange?.("light");
     dMenu.close();
   }
 
   @action
   switchToDark(dMenu) {
     this.interfaceColor.forceDarkMode();
+    this.args.onChange?.("dark");
     dMenu.close();
   }
 
   @action
   switchToAuto(dMenu) {
     this.interfaceColor.removeColorModeOverride();
+    this.args.onChange?.("auto");
     dMenu.close();
   }
 
