@@ -140,6 +140,10 @@ RSpec.describe Email::Processor do
   end
 
   describe "from reply to email address" do
+    SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+    SiteSetting.manual_polling_enabled = true
+    SiteSetting.reply_by_email_enabled = true
+
     let(:mail) do
       "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?"
     end
