@@ -1617,7 +1617,7 @@ posting:
     hidden: true
   rich_editor:
     client: true
-    default: false
+    default: true
 
 content_localization:
   content_localization_enabled:
