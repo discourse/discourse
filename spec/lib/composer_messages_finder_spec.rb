@@ -18,7 +18,7 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_education_message" do
-    let(:user) { Fabricate.build(:user) }
+    fab!(:user)
 
     context "when creating topic" do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
