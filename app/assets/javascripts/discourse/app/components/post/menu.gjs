@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
@@ -448,17 +449,27 @@ export default class PostMenu extends Component {
     );
   }
 
+  @cached
+  get checkLikedPost() {
+    if (this.currentUser && this.keyValueStore) {
+      const likedPostId = this.keyValueStore.getInt("likedPostId");
+      if (likedPostId && likedPostId === this.args.post.id) {
+        this.keyValueStore.remove("likedPostId");
+        next(() => this.toggleLike());
+      }
+    }
+  }
+
   @action
   async toggleLike() {
     await applyBehaviorTransformer(
       "post-menu-toggle-like-action",
       async () => {
         if (!this.currentUser) {
-          this.keyValueStore &&
-            this.keyValueStore.set({
-              key: "likedPostId",
-              value: this.args.post.id,
-            });
+          this.keyValueStore?.set({
+            key: "likedPostId",
+            value: this.args.post.id,
+          });
 
           this.args.showLogin();
           return;
@@ -609,6 +620,7 @@ export default class PostMenu extends Component {
   }
 
   <template>
+    {{this.checkLikedPost}}
     {{! The section tag can't be include while we're still using the widget shim }}
     {{! <section class="post-menu-area clearfix"> }}
     <PluginOutlet
