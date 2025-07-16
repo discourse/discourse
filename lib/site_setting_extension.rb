@@ -200,41 +200,50 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    MultiJson.dump(
-      Hash[
-        *@client_settings
-          .flat_map do |name|
-            # Themeable site settings require a theme ID, which we do not always
-            # have when loading client site settings. They are excluded here,
-            # to get them use theme_site_settings_json(:theme_id)
-            next if themeable[name]
+    uncached_json =
+      @client_settings.filter_map do |name|
+        # Themeable site settings require a theme ID, which we do not always
+        # have when loading client site settings. They are excluded here,
+        # to get them use theme_site_settings_json(:theme_id)
+        next if themeable[name]
 
-            value =
-              if deprecated_settings.include?(name.to_s)
-                public_send(name, warn: false)
-              else
-                public_send(name)
-              end
-
-            type = type_supervisor.get_type(name)
-            if type == :upload
-              value = value.to_s
-            elsif type == :uploaded_image_list
-              value = value.map(&:to_s).join("|")
-            end
-
-            [name, value]
+        value =
+          if deprecated_settings.include?(name.to_s)
+            public_send(name, warn: false)
+          else
+            public_send(name)
           end
-          .compact
-      ],
-    )
-  rescue => e
-    Rails.logger.error("Error while generating client_settings_json_uncached: #{e.message}")
+
+        type = type_supervisor.get_type(name)
+        if type == :upload
+          value = value.to_s
+        elsif type == :uploaded_image_list
+          value = value.map(&:to_s).join("|")
+        end
+
+        [name, value]
+      end
+    MultiJson.dump(Hash[uncached_json])
+  rescue => err
+    # If something goes wrong here we really need to be aware of it in tests.
+    raise err if Rails.env.test?
+
+    Rails.logger.error("Error while generating client_settings_json_uncached: #{err.message}")
     nil
   end
 
   def theme_site_settings_json_uncached(theme_id)
-    MultiJson.dump(theme_site_settings[theme_id])
+    begin
+      MultiJson.dump(theme_site_settings[theme_id])
+    rescue => err
+      # If something goes wrong here we really need to be aware of it in tests.
+      raise err if Rails.env.test?
+
+      Rails.logger.error(
+        "Error while generating theme_site_settings_json_uncached for theme ID #{theme_id}: #{err.message}",
+      )
+      nil
+    end
   end
 
   # Retrieve all settings
