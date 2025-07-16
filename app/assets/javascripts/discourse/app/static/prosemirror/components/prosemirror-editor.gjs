@@ -90,7 +90,7 @@ export default class ProsemirrorEditor extends Component {
       utils: {
         ...utils,
         convertFromMarkdown: this.convertFromMarkdown,
-        convertToMarkdown: this.convertToMarkdown
+        convertToMarkdown: this.convertToMarkdown,
       },
       schema: this.schema,
       pmState: ProsemirrorState,
@@ -116,8 +116,8 @@ export default class ProsemirrorEditor extends Component {
           this.glimmerNodeViews.splice(
             this.glimmerNodeViews.indexOf(nodeView),
             1
-          )
-      })
+          ),
+      }),
     };
   }
 
@@ -146,7 +146,7 @@ export default class ProsemirrorEditor extends Component {
   @action
   handleAsyncPlugin(plugin) {
     const state = this.view.state.reconfigure({
-      plugins: [...this.view.state.plugins, plugin]
+      plugins: [...this.view.state.plugins, plugin],
     });
 
     this.view.updateState(state);
@@ -170,7 +170,7 @@ export default class ProsemirrorEditor extends Component {
       dropCursor({ color: "var(--primary)" }),
       gapCursor(),
       history(),
-      ...extractPlugins(this.extensions, params, this.handleAsyncPlugin)
+      ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
     ];
 
     this.parser = new Parser(
@@ -211,7 +211,7 @@ export default class ProsemirrorEditor extends Component {
         blur: () => {
           next(() => this.args.focusOut?.());
           return false;
-        }
+        },
       },
       handleKeyDown: (view, event) => {
         // suppress if Enter/Tab and the autocomplete is open
@@ -219,7 +219,7 @@ export default class ProsemirrorEditor extends Component {
           AUTOCOMPLETE_KEY_DOWN_SUPPRESS.includes(event.key) &&
           !!document.querySelector(".autocomplete")
         );
-      }
+      },
     });
 
     this.textManipulation = new TextManipulation(getOwner(this), {
@@ -227,7 +227,8 @@ export default class ProsemirrorEditor extends Component {
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
       convertToMarkdown: this.convertToMarkdown,
-      shouldUseModernAutocomplete: this.siteSettings.floatkit_autocomplete_composer
+      shouldUseModernAutocomplete:
+        this.siteSettings.floatkit_autocomplete_composer,
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);

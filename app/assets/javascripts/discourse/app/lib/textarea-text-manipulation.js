@@ -929,10 +929,10 @@ export default class TextareaTextManipulation {
         const DAutocompleteModifier = module.default;
 
         // Create and apply the modifier
-        const modifier = new DAutocompleteModifier(
-          getOwnerWithFallback(this),
-          []
-        );
+        const modifier = new DAutocompleteModifier(getOwnerWithFallback(this), {
+          named: {},
+          positional: [],
+        });
 
         // Adapt options for the modifier
         const modifierOptions = {
