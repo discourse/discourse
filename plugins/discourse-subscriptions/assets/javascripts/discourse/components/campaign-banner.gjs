@@ -77,7 +77,12 @@ export default class CampaignBanner extends Component {
       }
     }
 
-    if (this.currentUser && this.showContributors) {
+    if (
+      this.currentUser &&
+      this.showContributors &&
+      this.siteSettings.discourse_subscriptions_enabled &&
+      this.siteSettings.discourse_subscriptions_campaign_enabled
+    ) {
       return ajax("/s/contributors", { method: "get" }).then((result) => {
         this.setProperties({
           contributors: result,
