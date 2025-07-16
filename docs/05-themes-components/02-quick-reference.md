@@ -16,6 +16,7 @@ As themes grow more powerful, there's more to remember about how they work. We h
 [:notebook_with_decorative_cover: Theme Directory](/c/theme)
 [:jigsaw: Component Directory](/c/theme-component)
 [:wrench: Theme Modifiers](https://meta.discourse.org/t/theme-modifiers-a-brief-introduction/150605)
+[:wrench: Themeable site settings](PLACEHOLDER_THEMEABLE)
 
 ### File/Folder Structure <small>[read more](https://meta.discourse.org/t/structure-of-themes-and-theme-components/60848)</small>
 
@@ -115,6 +116,30 @@ html {
   font-size: #{$global-font-size}px;
   background: $site-background;
 }
+```
+
+### Themeable site settings <small>[read more](PLACEHOLDER_THEMEABLE)</small>
+
+`about.json`:
+
+```json
+"theme_site_settings": {
+  "enable_welcome_banner": false
+}
+```
+
+Access from JavaScript:
+
+```js
+@service siteSettings;
+
+this.siteSettings.enable_welcome_banner;
+```
+
+Access from gjs templates:
+
+```gjs
+<template>{{this.siteSettings.enable_welcome_banner}}</template>
 ```
 
 ### Translations <small>[read more](https://meta.discourse.org/t/adding-localizable-strings-to-themes-and-theme-components/109867)</small>

@@ -6,6 +6,8 @@ id: theme-settings
 
 Discourse has the ability for themes to have "settings" that can be added by theme developers to allow site owners to customize themes through UI without having to change any line of code and worry about losing their changes with future updates for the theme.
 
+Themes can also alter certain themeable site settings, for more information on that, see the [Themeable site settings](PLACEHOLDER_THEMEABLE) topic.
+
 ## :heavy_plus_sign: Adding settings to your theme
 
 Adding settings to your theme is a bit different from adding CSS and JS code, that is there is no way to do it via the UI.
