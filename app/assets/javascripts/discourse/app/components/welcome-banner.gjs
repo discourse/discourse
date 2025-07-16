@@ -77,16 +77,7 @@ export default class WelcomeBanner extends Component {
   }
 
   get shouldDisplay() {
-    const enabled = applyValueTransformer(
-      "site-setting-enable-welcome-banner",
-      this.siteSettings.enable_welcome_banner
-    );
-
-    if (!enabled) {
-      return false;
-    }
-
-    return this.displayForRoute;
+    return this.siteSettings.enable_welcome_banner && this.displayForRoute;
   }
 
   get bodyClasses() {
