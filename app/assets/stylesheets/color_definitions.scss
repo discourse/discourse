@@ -125,6 +125,8 @@
   --gold: #{$gold};
   --silver: #{$silver};
   --bronze: #{$bronze};
+  --link-color: var(--tertiary);
+  --mention-background-color: var(--primary-low);
   --title-color--read: var(--primary-medium);
   --content-border-color: var(--primary-low);
   --input-border-color: var(--primary-400);
