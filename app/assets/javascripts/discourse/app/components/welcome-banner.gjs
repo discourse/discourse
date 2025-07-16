@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -100,13 +101,7 @@ export default class WelcomeBanner extends Component {
   }
 
   get locationClass() {
-    const location = this.siteSettings.welcome_banner_location;
-    if (location === "above_topic_content") {
-      return "welcome-banner--above-topic-content";
-    } else if (location === "below_site_header") {
-      return "welcome-banner--below-site-header";
-    }
-    return "";
+    return `--${dasherize(this.siteSettings.welcome_banner_location)}`;
   }
 
   <template>
