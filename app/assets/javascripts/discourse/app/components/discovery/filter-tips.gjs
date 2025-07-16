@@ -167,7 +167,7 @@ export default class FilterTips extends Component {
   @action
   setupEventListeners(element) {
     this.element = element;
-    this.inputElement = document.querySelector("#queryStringInput");
+    this.inputElement = this.args.inputElement;
     if (this.inputElement) {
       this.inputElement.addEventListener("focus", this.handleInputFocus);
       this.inputElement.addEventListener("blur", this.handleInputBlur);
@@ -278,6 +278,11 @@ export default class FilterTips extends Component {
     }
   }
 
+  updateValue(value) {
+    this.currentInputValue = value;
+    this.args.onSelectTip(value);
+  }
+
   @action
   selectTip(tip) {
     const words = this.currentInputValue.split(/\s+/);
@@ -290,7 +295,7 @@ export default class FilterTips extends Component {
     }
     const updatedValue = words.join(" ");
 
-    this.args.onSelectTip(updatedValue);
+    this.updateValue(updatedValue);
     this.selectedIndex = -1;
 
     // Check if this filter is searchable
@@ -319,10 +324,11 @@ export default class FilterTips extends Component {
     words[words.length - 1] = item.value;
     const updatedValue = words.join(" ") + " ";
 
-    this.args.onSelectTip(updatedValue);
+    this.updateValue(updatedValue);
     this.isSearchingValues = false;
     this.activeFilter = null;
     this.selectedIndex = -1;
+    this.searchResults = [];
 
     if (this.inputElement) {
       this.inputElement.focus();
