@@ -921,6 +921,12 @@ RSpec.describe SiteSettingExtension do
 
       expect(client_settings["with_html"]).to eq("<script></script>rest")
     end
+
+    it "does not include themeable site settings" do
+      SiteSetting.refresh!
+      expect(SiteSetting.client_settings_json_uncached).not_to include("enable_welcome_banner")
+      expect(SiteSetting.client_settings_json_uncached).not_to include("search_experience")
+    end
   end
 
   describe ".setup_methods" do
@@ -1040,6 +1046,15 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.enable_welcome_banner(theme_id: theme_2.id)).to eq(true)
       expect(SiteSetting.search_experience(theme_id: theme_1.id)).to eq("search_icon")
       expect(SiteSetting.search_experience(theme_id: theme_2.id)).to eq("search_field")
+    end
+
+    describe ".theme_site_settings_json_uncached" do
+      it "returns the correct JSON" do
+        SiteSetting.refresh!
+        expect(SiteSetting.theme_site_settings_json_uncached(theme_1.id)).to eq(
+          %Q|{"enable_welcome_banner":false,"search_experience":"search_icon"}|,
+        )
+      end
     end
   end
 
