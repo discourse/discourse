@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserAvatar from "discourse/components/user-avatar";
@@ -53,6 +54,8 @@ export function resetGroupPostSmallActionCodes() {
 }
 
 export default class PostSmallAction extends Component {
+  decoratorState = new TrackedMap();
+
   @cached
   get CustomComponent() {
     return applyValueTransformer("post-small-action-custom-component", null, {
@@ -198,6 +201,8 @@ export default class PostSmallAction extends Component {
               <div class="small-action-custom-message">
                 <PostCookedHtml
                   @post={{@post}}
+                  @decoratorState={{this.decoratorState}}
+                  @highlightTerm={{@highlightTerm}}
                   @streamElement={{@streamElement}}
                 />
               </div>
