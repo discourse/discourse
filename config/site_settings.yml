@@ -3772,6 +3772,10 @@ user_preferences:
     client: true
     area: "user_defaults"
 
+  default_categories_update_batch:
+    type: integer
+    default: 50000
+    client: false
   default_categories_watching:
     type: category_list
     default: ""

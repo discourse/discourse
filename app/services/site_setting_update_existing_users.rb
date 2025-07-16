@@ -18,16 +18,18 @@ class SiteSettingUpdateExistingUsers
 
       UserOption.human_users.where(user_option => previous_value).update_all(attrs)
     elsif id.start_with?("default_categories_")
+      batch_size = SiteSetting.default_categories_update_batch
       previous_category_ids = previous_value.split("|")
       new_category_ids = new_value.split("|")
 
       notification_level = self.category_notification_level(id)
 
       categories_to_unwatch = previous_category_ids - new_category_ids
-      CategoryUser.where(
-        category_id: categories_to_unwatch,
-        notification_level: notification_level,
-      ).delete_all
+
+      CategoryUser
+        .where(category_id: categories_to_unwatch, notification_level: notification_level)
+        .in_batches(of: batch_size) { |batch| batch.delete_all }
+
       TopicUser
         .joins(:topic)
         .where(
@@ -37,17 +39,19 @@ class SiteSettingUpdateExistingUsers
             category_id: categories_to_unwatch,
           },
         )
-        .update_all(notification_level: TopicUser.notification_levels[:regular])
+        .select("topic_users.id")
+        .in_batches(of: batch_size) do |batch|
+          batch.update_all(notification_level: TopicUser.notification_levels[:regular])
+        end
 
       (new_category_ids - previous_category_ids).each do |category_id|
         skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
-
         User
           .real
           .where(staged: false)
           .where.not(id: skip_user_ids)
           .select(:id)
-          .find_in_batches do |users|
+          .find_in_batches(batch_size: batch_size) do |users|
             category_users = []
             users.each do |user|
               category_users << {
@@ -60,16 +64,16 @@ class SiteSettingUpdateExistingUsers
           end
       end
     elsif id.start_with?("default_tags_")
+      batch_size = SiteSetting.default_tags_update_batch
       previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
       new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
       now = Time.zone.now
 
       notification_level = self.tag_notification_level(id)
 
-      TagUser.where(
-        tag_id: (previous_tag_ids - new_tag_ids),
-        notification_level: notification_level,
-      ).delete_all
+      TagUser
+        .where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level)
+        .in_batches(of: batch_size) { |batch| batch.delete_all }
 
       (new_tag_ids - previous_tag_ids).each do |tag_id|
         skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
@@ -79,7 +83,7 @@ class SiteSettingUpdateExistingUsers
           .where(staged: false)
           .where.not(id: skip_user_ids)
           .select(:id)
-          .find_in_batches do |users|
+          .find_in_batches(batch_size: batch_size) do |users|
             tag_users = []
             users.each do |user|
               tag_users << {
