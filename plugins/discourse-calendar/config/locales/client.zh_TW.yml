@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: 話題 ID
+    discourse_calendar:
+      disable_holiday: "禁用"
+      enable_holiday: "啟用"
+      date: "日期"
+      region:
+        none: "無"
+      toolbar_button:
+        today: "今天"
+        month: "月"
+        week: "週"
+        day: "天"
+    group_timezones:
+      search: "搜尋..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "顯示全部"
+      bulk_invite_modal:
+        success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
+        error: "上傳的檔案必須是 csv 格式。"
+      upcoming_events:
+        status: "狀態"
+      models:
+        event:
+          expired: "已過期"
+          closed: "不公開"
+          status:
+            public:
+              title: "公開"
+            private:
+              title: "私密"
+      builder_modal:
+        custom_fields:
+          placeholder: "選擇性"
+        create: "創建"
+        update: "保存"
+        timezone:
+          label: 時區
+        reminders:
+          units:
+            minutes: "分鐘"
+            hours: "小時"
+            days: "天"
+          periods:
+            before: "之前"
+            after: "之後"
+        recurrence:
+          label: "週期"
+          none: "單一"
+          every_day: "每天"
+        url:
+          label: "網址"
+          placeholder: "選擇性"
+        location:
+          label: "位置"
+        description:
+          label: "簡述"
+        status:
+          label: "狀態"
+      invite_user_or_group:
+        invite: "發送"

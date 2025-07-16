@@ -5,7 +5,16 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    discourse_reactions_enabled: "discourse-reactions قىستۇرمىسىنى قوزغىتىدۇ."
+    discourse_reactions_enabled_reactions: "قوزغىتىلغان ئىنكاس تىزىمىنى بەلگىلەيدۇ، بۇ جايدا خالىغان چىراي ئىپادىگە يول قويۇلىدۇ."
+  badges:
+    first_reaction:
+      name: تۇنجى ئىنكاس
+      description: يازمىغا ئىنكاس قايتۇردى
   reports:
     reactions:
+      title: "ئىنكاس"
+      description: "ئەڭ يېقىنقى ئىنكاسنى تىزىدۇ."
       labels:
         day: "كۈن"

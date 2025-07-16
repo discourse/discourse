@@ -1321,6 +1321,8 @@ it:
       suspended_notice: "Questo utente è sospeso fino al %{date}."
       suspended_permanently: "Questo utente è sospeso."
       suspended_reason: "Motivo: "
+      silenced_permanently: "Questo utente è silenziato."
+      silenced_reason: "Motivo:"
       github_profile: "GitHub"
       email_activity_summary: "Riepilogo Attività"
       mailing_list_mode:
@@ -1839,7 +1841,8 @@ it:
         removed: "Rimosso"
         search: "Digita per cercare inviti…"
         user: "Utente Invitato"
-        none: "Nessun invito da visualizzare."
+        none:
+          title: "Nessun invito da visualizzare."
         truncated:
           one: "Visualizzazione del primo invito."
           other: "Visualizzazione dei primi %{count} inviti."
@@ -2451,7 +2454,6 @@ it:
       unlist: "invisibile"
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
-      toggle_unlisted: "Rendi Invisibile"
       insert_table: "Inserisci tabella"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saved_local_draft_tip: "salvato in locale"

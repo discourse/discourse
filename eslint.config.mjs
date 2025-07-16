@@ -15,6 +15,7 @@ export default [
       "lib/javascripts/messageformat.js",
       "lib/javascripts/messageformat-lookup.js",
       "plugins/**/lib/javascripts/locale",
+      "plugins/discourse-math/public",
       "public/",
       "vendor/",
       "app/assets/javascripts/discourse/tests/fixtures",

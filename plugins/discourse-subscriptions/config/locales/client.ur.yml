@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    discourse_subscriptions:
+      optional: اختیاری
+      campaign:
+        success_title: کامیابی!
+      plans:
+        interval:
+          adverb:
+            day: روزانہ
+            week: ہفتہ وار
+            month: ماہانہ
+            year: سالانہ
+      user:
+        payments:
+          created_at: بنایا گیا
+        plans:
+          product: نام
+        subscriptions:
+          status: سٹیٹس
+          update_card:
+            single: "اپ ڈیٹ"
+          created_at: بنایا گیا
+          cancel: منسوخ
+      billing:
+        email: اِی میل
+      admin:
+        dashboard:
+          title: ڈَیش بورڈ
+          table:
+            head:
+              user: صارف
+        products:
+          product:
+            description: تفصیل
+            active: فعال
+            created_at: بنایا گیا
+            updated_at: اپ ڈیٹ
+        plans:
+          plan:
+            active: فعال
+            created_at: بنایا گیا
+        coupons:
+          active: فعال?
+          actions: عمل
+        subscriptions:
+          subscription:
+            user: صارف
+            status: سٹیٹس
+            created_at: بنایا گیا

@@ -3265,8 +3265,6 @@ cs:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
-  color_schemes:
-    default_theme_name: "Výchozí"
   edit_this_page: "Upravit tuto stránku"
   csv_export:
     boolean_yes: "Ano"
@@ -3709,10 +3707,6 @@ cs:
         Tento odznak se uděluje za návštěvu po 365 po sobě jdoucích dnů. Páni, celý rok!
     badge_title_metadata: "%{display_name} odznak na %{site_title}"
   admin_login:
-    success: "E-mail odeslán"
-    errors:
-      unknown_email_address: "Neznámá e-mailová adresa."
-      invalid_token: "Neplatný token."
     email_input: "E-mail správce"
     submit_button: "Odeslat e-mail"
     safe_mode: "Nouzový režim: při přihlášení zakázat všechny motivy/pluginy"

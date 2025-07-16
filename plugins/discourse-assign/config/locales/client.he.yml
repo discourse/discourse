@@ -1,0 +1,194 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse הקצאות"
+  js:
+    filters:
+      unassigned:
+        title: "לא מוקצה"
+        help: "נושאים שאינם מוקצים"
+    action_codes:
+      assigned: "מוקצה לטובת %{who} %{when}"
+      assigned_group: "מוקצה לטובת %{who} %{when}"
+      assigned_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}'>פוסט</a> ב־%{when}"
+      assigned_group_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}'>פוסט</a> ב־%{when}"
+      unassigned: "הוסרה ההקצאה של %{who} %{when}"
+      unassigned_group: "הוסרה ההקצאה של %{who} %{when}"
+      unassigned_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}'>פוסט</a> ב־%{when}"
+      unassigned_group_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}'>פוסט</a> ב־%{when}"
+      reassigned: "הוקצה מחדש לטובת %{who} %{when}"
+      reassigned_group: "הוקצה מחדש לטובת %{who} %{when}"
+      details_change: "הוחלפו פרטי ההקצאה עבור %{who} %{when}"
+      note_change: "הערת ההקצאה של %{who} נערכה ב־%{when}"
+      status_change: "הוחלף מצב ההקצאה עבור %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "הוספת מסנן ‚ללא הקצאה’ לקטגוריה"
+      cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
+      cant_act_unclaimed: "עליך לדרוש את הנושא הזה לפני נקיטת פעולות על דגלים."
+      topic_search_placeholder: "חפש נושאים לפי כותרת או תוכן הפוסט"
+      sidebar_name_filter_placeholder: "שם/שם משתמש"
+      assigned: "מוקצה"
+      group_everyone: "כולם"
+      assigned_to: "מוקצה לטובת"
+      assigned_topic_to: "נושא הוקצה לטובת <a href='%{path}'>%{username}</a>"
+      assign_post_to: "מס׳ %{post_number} הוקצה לטובת %{username}"
+      assign_post_to_multiple: "מס׳ %{post_number} אל %{username}"
+      assigned_to_w_ellipsis: "מוקצה לטובת..."
+      unassign:
+        title: "ביטול הקצאה"
+        title_w_ellipsis: "ביטול הקצאה..."
+        help: "לבטל את הקצאת %{username} מהנושא"
+      assign:
+        title: "הקצאה"
+        help: "הקצאת משתמש לנושא"
+      assign_post:
+        title: "הקצאת פוסט"
+      unassign_post:
+        title: "ביטול הקצאת פוסט"
+        help: "לבטל את הקצאת %{username} מהפוסט"
+      reassign:
+        title: "עריכה"
+        title_w_ellipsis: "עריכת הקצאה…"
+        to_self: "הקצאה מחדש אלי"
+        to_self_help: "הקצאת נושא אלי מחדש"
+        help: "עריכת פרטי משימה"
+      reassign_modal:
+        title: "הקצאת נושא מחדש"
+      topic_level_menu:
+        edit_assignments: "עריכת הקצאות…"
+        reassign_topic_to_me: "הקצאת הנושא אליי מחדש"
+        unassign_with_ellipsis: "ביטול הקצאה..."
+        unassign_from_post: "ביטול הקצאת ‎@%{assignee} ממס׳ %{post_number}"
+        unassign_from_post_help: "ביטול הקצאת ‎@%{assignee} מפוסט מס׳ %{post_number}"
+        unassign_from_topic: "ביטול הקצאת ‎@%{username} מנושא"
+      assign_modal:
+        title: "הקצאת נושא"
+        reassign_title: "הקצאת נושא מחדש"
+        assign: "הקצאה"
+        assignee_label: ממונה
+        assignment_label: הקצאה
+        choose_assignee: נא לבחור משתמש להקצאה.
+        edit_assignments_title: "עריכת הקצאות"
+        note_label: הערה
+        optional_label: "(רשות)"
+        status_label: מצב
+        suggestions: הצעות
+      assign_post_modal:
+        title: "הקצאת פוסט"
+      claim:
+        title: "דרישה"
+        help: "הקצאת נושא לעצמך"
+      assign_mailer:
+        never: "אף פעם"
+        different_users: "רק אם הצד המקצה או הצד שהוקצה אליו הם משתמשים שונים"
+        always: "תמיד"
+      reminders_frequency:
+        description: "תדירות קבלת תזכורות לנושאים מוקצים"
+        never: "אף פעם"
+        daily: "יומי"
+        weekly: "שבועי"
+        monthly: "חודשי"
+        quarterly: "רבעוני"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "הקצאה"
+              assignable_levels:
+                title: "מי יכול להקצות את הקבוצה הזאת"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "לא לעשות דבר"
+      messages:
+        assigned_title: "מוקצים (%{count})"
+        assigned: "מוקצה"
+      no_assignments_title: "אין לך מטלות עדיין"
+      no_assignments_body: >
+        הנושאים שמוקצים אליך יופיעו כאן. תישלחנה אליך הודעות תזכורת מדי פעם בפעם כדי להזכיר לך את המטלות שלך, ניתן להגדיר אותן <a href='%{preferencesUrl}'>בהעדפות המשתמש</a> שלך. <br><br> כדי להקצות נושא או הודעה לעצמך או למישהו אחר יש לחפש את הכפתור %{icon} הקצאה למטה.
+      dismiss_assigned_tooltip: "סימון כל התראות ההקצאה שלא נקראו כהתראות שנקראו"
+      assigned_to_group:
+        post: "הפוסט הוקצה לטובת %{group_name}"
+        topic: "הנושא הוקצה לטובת %{group_name}"
+      assigned_to_you:
+        post: "הפוסט הוקצה לך"
+        topic: "הנושא הוקצה לך"
+      assignment_description:
+        post: "%{topic_title} (מס׳ %{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "הקצאת אירועים"
+          assigned: "בעת הקצאת נושא על ידי משתמש"
+          unassigned: "בעת ביטול הקצאת נושא על ידי משתמש"
+    search:
+      advanced:
+        in:
+          assigned: "מוקצים"
+          unassigned: "אינם מוקצים"
+        assigned:
+          label: "מוקצה לטובת"
+    topics:
+      bulk:
+        unassign: "ביטול הקצאת נושאים"
+        assign: "הקצאת נושאים"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: תבנית פוסט
+              description: אם ימולא, יווצר פוסט עם התבנית הזאת ויוקצה אליו משתמש במקום הנושא.
+            assignees_group:
+              label: קבוצת מוקצים
+            minimum_time_between_assignments:
+              label: כמות מזערית של שעות בין הקצאות
+            min_recently_assigned_days:
+              label: כמות מזערית של ימים שהוקצו לאחרונה
+              description: ברירת המחדל היא 14 ימים.
+            skip_new_users_for_days:
+              label: דילוג על משתמשים חדשים למשך ימים
+              description: ברירת המחדל היא 0 ימים (אפשר להקצות משתמשים מיידית לאחר ההרשמה).
+            max_recently_assigned_days:
+              label: כמות מרבית של ימים שהוקצו לאחרונה
+              description: הניסיון הראשון להחריג משתמש שהוקצו ב־`n` הימים האחרונים. אם לא עזבו משתמשים, תתבצע נסיגה אל `min_recently_assigned_days`. ברירת המחדל היא 180 ימים.
+            assigned_topic:
+              label: מזהה נושא מוקצה
+            in_working_hours:
+              label: משתמשים בשעות עבודה
+    notification_reason:
+      user: "תופיע ספירה של תגובות חדשות כיוון שהנושא הזה הוקצה אליך."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "הוקצה אליך על ידי %{username}"
+      titles:
+        assigned: "מוקצה"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "בוודאות? יש לך התראת הקצאה %{count}."
+            two: "בוודאות? יש לך %{count} התראות הקצאה."
+            many: "בוודאות? יש לך %{count} התראות הקצאה."
+            other: "בוודאות? יש לך %{count} התראות הקצאה."
+    user_menu:
+      view_all_assigned: "הצגת כל ההקצאות"
+      tabs:
+        assign_list: "הצגת הקצאות"
+        assign_list_with_unread:
+          one: "רשימת הקצאות - הקצאה %{count} שלא נקראה"
+          two: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
+          many: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
+          other: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
+    edit_assignments_modal:
+      title: "עריכת הקצאות"
+      topic: "נושא"
+      post: "פוסט"

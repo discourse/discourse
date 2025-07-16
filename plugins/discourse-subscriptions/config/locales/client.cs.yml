@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    discourse_subscriptions:
+      optional: Volitelné
+      campaign:
+        success_title: Úspěch!
+      plans:
+        interval:
+          adverb:
+            day: Denně
+            week: Týdně
+            month: Měsíčně
+            year: Ročně
+      user:
+        payments:
+          created_at: Vytvořený
+        plans:
+          product: Jméno
+        subscriptions:
+          status: Stav
+          update_card:
+            single: "Aktualizovat"
+          created_at: Vytvořený
+          cancel: zrušit
+      billing:
+        email: Email
+      admin:
+        dashboard:
+          title: Rozcestník
+          table:
+            head:
+              user: Uživatel
+        products:
+          product:
+            description: Popis
+            active: Aktivní
+            created_at: Vytvořený
+            updated_at: Aktualizováno
+        plans:
+          plan:
+            active: Aktivní
+            created_at: Vytvořený
+        coupons:
+          active: Aktivní?
+          actions: Akce
+        subscriptions:
+          subscription:
+            user: Uživatel
+            status: Stav
+            created_at: Vytvořený

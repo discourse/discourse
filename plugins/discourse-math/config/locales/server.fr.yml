@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    discourse_math_enabled: "Activer l'extension Discourse Math (cette opération ajoutera un traitement spécifique des blocs $ et $$)"
+    discourse_math_provider: "Fournisseur de rendu mathématique par défaut"
+    discourse_math_zoom_on_hover: "Zoom à 200 % au passage de la souris (MathJax uniquement)"
+    discourse_math_enable_accessibility: "Activer les fonctions d'accessibilité (MathJax uniquement)"
+    discourse_math_enable_asciimath: "Activer asciimath (cette opération ajoutera un traitement spécifique à l'entrée délimitée %) (MathJax uniquement)"

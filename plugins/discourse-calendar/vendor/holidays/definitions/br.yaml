@@ -1,0 +1,174 @@
+# Brazilian holiday definitions for the Ruby Holiday gem.
+# Provided by Rogério Carrasqueira
+#
+# Updated: 2008-11-28.
+# Sources:
+# - http://pt.wikipedia.org/wiki/Feriados_no_Brasil
+
+---
+months:
+  0:
+  - name: Segunda-Feira de Carnaval
+    regions: [br]
+    function: easter(year)
+    function_modifier: -48
+  - name: Terça-Feira de Carnaval # same as Shrove Tuesday
+    regions: [br]
+    function: easter(year)
+    function_modifier: -47
+  - name: Sexta-feira Santa
+    regions: [br]
+    function: easter(year)
+    function_modifier: -2
+  - name: Páscoa
+    regions: [br]
+    function: easter(year)
+  - name: Corpus Christi
+    regions: [br]
+    function: easter(year)
+    function_modifier: 60
+  1:
+  - name: Dia da Confraternização Universal
+    regions: [br]
+    mday: 1
+  - name: Aniversário da cidade de São Paulo
+    regions: [br_spcapital]
+    mday: 25
+  4:
+  - name: Dia de Tiradentes
+    regions: [br]
+    mday: 21
+  5:
+  - name: Dia do Trabalho
+    regions: [br]
+    mday: 1
+  7:
+  - name: Revolução Constitucionalista
+    regions: [br_sp, br_spcapital]
+    mday: 9
+  9:
+  - name: Proclamação da Independência
+    regions: [br]
+    mday: 7
+  10:
+  - name: Dia de Nossa Senhora Aparecida
+    regions: [br]
+    mday: 12
+  11:
+  - name: Dia de Finados
+    regions: [br]
+    mday: 2
+  - name: Proclamação da República
+    regions: [br]
+    mday: 15
+  - name: Dia da Consciência Negra
+    regions: [br_spcapital]
+    mday: 20
+  12:
+  - name: Natal
+    regions: [br]
+    mday: 25
+
+tests:
+  - given:
+      date: '2008-01-01'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Dia da Confraternização Universal"
+  - given:
+      date: '2005-02-08'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Terça-Feira de Carnaval"
+  - given:
+      date: '2006-02-28'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Terça-Feira de Carnaval"
+  - given:
+      date: '2007-02-20'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Terça-Feira de Carnaval"
+  - given:
+      date: '2008-02-05'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Terça-Feira de Carnaval"
+  - given:
+      date: '2008-03-21'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Sexta-feira Santa"
+  - given:
+      date: '2008-03-23'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Páscoa"
+  - given:
+      date: '2008-04-21'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Dia de Tiradentes"
+  - given:
+      date: '2008-05-01'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Dia do Trabalho"
+  - given:
+      date: '2005-05-26'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Corpus Christi"
+  - given:
+      date: '2007-06-07'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Corpus Christi"
+  - given:
+      date: '2008-05-22'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Corpus Christi"
+  - given:
+      date: '2008-09-07'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Proclamação da Independência"
+  - given:
+      date: '2008-10-12'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Dia de Nossa Senhora Aparecida"
+  - given:
+      date: '2008-11-02'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Dia de Finados"
+  - given:
+      date: '2008-11-15'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Proclamação da República"
+  - given:
+      date: '2008-12-25'
+      regions: ["br"]
+      options: ["informal"]
+    expect:
+      name: "Natal"

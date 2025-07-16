@@ -1,0 +1,7 @@
+en:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Login with Amazon"
+        message: "Authenticating with Login with Amazon (make sure pop up blockers are not enabled)"

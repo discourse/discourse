@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    patreon_enabled: 'Включить плагин discourse-patreon'
+    patreon_login_enabled: 'Включить Patreon Social Login'
+    patreon_client_id: 'Сгенерированный Patreon Client ID'
+    patreon_client_secret: 'Сгенерированный Patreon Client Secret'
+    patreon_webhook_secret: 'Сгенерированный Patreon Webhook Secret'
+    patreon_creator_discourse_username: "Имя пользователя Discourse, которое используется для входа через учётную запись Patreon с помощью 'Patreon Social Login'"
+    patreon_creator_access_token: "Сгенерированный access-токен от Patreon"
+    patreon_creator_refresh_token: "Сгенерированный refesh-токен от Patreon"
+    patreon_declined_pledges_grace_period_days: "Период ожидания (в днях) до полного отказа от подписки."
+    max_patreon_api_reqs_per_hr: "Максимальное количество запросов Patreon API в час"
+    max_patreon_api_reqs_per_day: "Максимальное количество запросов Patreon API в день"
+    patreon_verbose_log: 'Добавлять в журнал подробную информацию при работе с Patreon'
+    patreon_donation_prompt_enabled: "Включить запрос на пожертвование?"
+    patreon_donation_prompt_show_after_topics: "Показывать приглашение к пожертвованию после указанного здесь количества тем"
+    patreon_donation_prompt_campaign_url: "URL рекламной кампании для пожертвований"
+    errors:
+      patreon_creator_username_not_set: "Перед включением входа через Patreon необходимо установить настройку имени пользователя в Patreon Creator Discourse."
+  dashboard:
+    problem:
+      access_token_invalid: "Значения токенов доступа и обновления Patreon Creator неверны. Вам нужно скопировать и вставить новые токены с <a href='https://www.patreon.com/platform/documentation/clients'>сайта Patreon</a> в <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>, настройки сайта</a>."
+  patreon:
+    error:
+      invalid_response: "Неверный ответ от Patreon API"

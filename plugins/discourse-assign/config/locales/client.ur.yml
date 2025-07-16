@@ -1,0 +1,122 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    filters:
+      unassigned:
+        title: "غیر اسائین کریں"
+        help: "عنوانات جو تفویض نہیں کیے گئے ہیں"
+    action_codes:
+      assigned: "تفویض کردہ %{who} %{when}"
+      assigned_group: "تفویض کردہ %{who} %{when}"
+      assigned_to_post: "تفویض کردہ %{who} سے <a href='%{path}'>پوسٹ</a> %{when}"
+      assigned_group_to_post: "تفویض کردہ %{who} سے <a href='%{path}'>پوسٹ</a> %{when}"
+      unassigned: "غیر تفویض کردہ %{who} %{when}"
+      unassigned_group: "غیر تفویض کردہ %{who} %{when}"
+      unassigned_from_post: "<a href='%{path}'>پوسٹ</a> %{when}سے %{who} کو غیر تفویض کیا گیا۔"
+      unassigned_group_from_post: "<a href='%{path}'>پوسٹ</a> %{when}سے %{who} کو غیر تفویض کیا گیا۔"
+      reassigned: "%{who} %{when}دوبارہ تفویض کیا گیا۔"
+      reassigned_group: "%{who} %{when}دوبارہ تفویض کیا گیا۔"
+    discourse_assign:
+      add_unassigned_filter: "زمرے میں 'غیر تفویض' فلٹر شامل کریں"
+      cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
+      cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
+      topic_search_placeholder: "عنوان یا پوسٹ مواد کے ذریعہ موضوعات تلاش کریں"
+      sidebar_name_filter_placeholder: "نام/صارف نام"
+      assigned: "اسائین کردہ"
+      group_everyone: "ہر کوئی"
+      assigned_to: "جس کو اسائین کیا گیا"
+      assigned_to_w_ellipsis: "کو تفویض..."
+      unassign:
+        title: "غیر اسائین کریں"
+        title_w_ellipsis: "غیر تفویض کریں..."
+        help: "موضوع سے %{username} کو غیر متعین کریں"
+      assign:
+        title: "اسائین کریں"
+        help: "صارف کو ٹاپک اسائین کریں"
+      assign_post:
+        title: "پوسٹ تفویض کریں"
+      unassign_post:
+        title: "پوسٹ سے غیر تفویض"
+        help: "پوسٹ سے %{username} غیر تفویض کریں"
+      reassign:
+        title: "ترمیم کریں"
+        to_self: "مجھے دوبارہ تفویض کریں"
+        to_self_help: "مجھے موضوع دوبارہ تفویض کریں"
+      reassign_modal:
+        title: "موضوع دوبارہ تفویض کریں"
+      topic_level_menu:
+        unassign_with_ellipsis: "غیر تفویض کریں..."
+      assign_modal:
+        title: "ٹاپک اسائین کریں"
+        reassign_title: "موضوع دوبارہ تفویض کریں"
+        assign: "اسائین کریں"
+        optional_label: "(اختیاری)"
+        status_label: سٹیٹس
+      assign_post_modal:
+        title: "پوسٹ تفویض کریں"
+      claim:
+        title: "کلیم کریں"
+        help: "اپنے آپ کو ٹاپک اسائین کریں"
+      assign_mailer:
+        never: "کبھی نہیں "
+        different_users: "صرف اس صورت میں جب تفویض کرنے والے اور تفویض کرنے والے مختلف صارفین ہیں"
+        always: "ہمیشہ"
+      reminders_frequency:
+        description: "اسائین کردہ ٹاپکس کے بارے میں یاد دہانیاں وصول کرنے کی فریکوئینسی"
+        never: "کبھی نہیں "
+        daily: "روزانہ "
+        weekly: "ہفتہ وار"
+        monthly: "ماہانہ"
+        quarterly: "سہ ماہی"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "تفویض"
+              assignable_levels:
+                title: "کون اس گروپ کو تفویض کر سکتا ہے"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "کچھ نہ کریں"
+      messages:
+        assigned_title: "اسائین کردہ (%{count})"
+        assigned: "اسائین کردہ"
+      no_assignments_title: "آپ کے پاس ابھی تک کوئی اسائنمنٹ نہیں ہے"
+      no_assignments_body: >
+        آپ کے تفویض کردہ عنوانات اور پیغامات یہاں درج ہوں گے۔ آپ کو اپنے اسائنمنٹس کی وقفے وقفہ سے یاد دہانی کا نوٹیفکیشن بھی ملے گا ، جسے آپ اپنی <a href='%{preferencesUrl}'>صارف ترجیحات</a>میں ایڈجسٹ کرسکتے ہیں۔ <br><br> اپنے آپ کو یا کسی اور کو موضوع یا پیغام تفویض کرنے کے لئے ، %{icon} تفویض والے بٹن کو تلاش کریں۔
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        in:
+          assigned: "تفویض کیے گئے"
+          unassigned: "غیرتفویض شدہ ہیں"
+        assigned:
+          label: "کو تفویض"
+    topics:
+      bulk:
+        unassign: "موضوعات کو غیر تفویض کریں"
+        assign: "موضوعات تفویض کریں"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: پوسٹ کا سانچہ
+              description: اگر پُر ہو جائے تو اس سانچے کے ساتھ ایک پوسٹ بنائی جائے گی اور موضوع کی بجائے اس کے لیے ایک صارف تفویض کیا جائے گا۔
+            assignees_group:
+              label: تفویض کا روں کاگروپ
+            minimum_time_between_assignments:
+              label: اسائنمنٹس کے درمیان کم از کم گھنٹے
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "تفویض کردہ"
+    edit_assignments_modal:
+      topic: "ٹاپک"
+      post: "پوسٹ"

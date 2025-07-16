@@ -1,0 +1,121 @@
+#admin-plugin-chat {
+  table {
+    margin-top: 0;
+
+    td:last-child {
+      white-space: nowrap;
+    }
+
+    td:not(:last-child) {
+      width: 30%;
+    }
+  }
+
+  div.table-footer {
+    margin-top: 10px;
+  }
+
+  div.error {
+    font-size: 1.1em;
+    font-weight: bold;
+    max-width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: var(--danger-low);
+    padding: 15px;
+  }
+
+  div.channel-details {
+    margin-top: 20px;
+    border: 1px solid var(--primary-low);
+
+    div.channel-header {
+      background: var(--primary-low);
+      padding: 10px;
+      overflow: auto;
+
+      .channel-title {
+        font-size: 1.3em;
+
+        .field-name {
+          font-weight: bold;
+        }
+      }
+    }
+
+    div.channel-footer {
+      overflow: auto;
+    }
+  }
+
+  .chat-integration-settings-button {
+    margin-right: 10px;
+  }
+}
+
+.admin-controls-chat-providers {
+  margin-right: auto;
+}
+
+#chat-integration-edit-channel-modal,
+#chat_integration_test_modal,
+#chat-integration-edit-rule_modal {
+  table {
+    width: 100%;
+
+    tbody {
+      border-top: none;
+    }
+
+    tr {
+      border: none;
+    }
+
+    tr.input td {
+      padding-top: 10px;
+
+      &.label {
+        width: 100px;
+
+        label {
+          margin-bottom: 0;
+          font-weight: bold;
+        }
+      }
+    }
+
+    tr.chat-instructions label {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      margin-top: 0.5rem;
+    }
+  }
+
+  #channel-field {
+    width: 200px;
+    margin-bottom: 0;
+    box-shadow: none;
+  }
+
+  .tag-chooser {
+    ul.select2-choices {
+      border: none;
+      background: none;
+    }
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  .field-name {
+    font-weight: bold;
+  }
+}
+
+#chat_integration_error_modal {
+  pre {
+    max-width: 500px;
+    max-height: 800px;
+    overflow: scroll;
+    background: var(--primary-low);
+  }
+}

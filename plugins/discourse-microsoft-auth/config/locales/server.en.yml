@@ -1,0 +1,7 @@
+en:
+  site_settings:
+    microsoft_auth_enabled: "Allow users to authenticate using Microsoft?"
+    microsoft_auth_client_id: 'Microsoft App ID/Client ID (NOT the Secret ID) - to setup visit <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
+    microsoft_auth_client_secret: "Microsoft Secret Password (use the Value, NOT the Secret ID)"
+    microsoft_auth_email_verified: "Treat all Microsoft emails as verified by default. WARNING: Only enable this if you are sure that all your users have verified emails."
+    microsoft_auth_tenant_id: 'Microsoft Tenant ID (common is standard, is a MUST for all cases except Single Tenant) - to find the ID visit <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

@@ -1,0 +1,61 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "쿼리에서 세미콜론을 제거하십시오."
+        dirty: "실행하기 전에 쿼리를 저장해야합니다."
+    explorer:
+      or: "또는"
+      admins_only: "데이터 탐색기는 관리자 만 사용할 수 있습니다."
+      allow_groups: "그룹이이 쿼리에 액세스하도록 허용"
+      title: "데이터 탐색기"
+      create: "새로 만들기"
+      create_placeholder: "검색어 이름 ..."
+      description_placeholder: "여기에 설명을 입력하세요"
+      import:
+        label: "가져오기"
+        modal: "검색어 가져 오기"
+      help:
+        label: "도움말"
+      schema:
+        title: "데이터베이스 스키마"
+        filter: "검색..."
+        sensitive: "이 열의 내용에는 특히 민감한 정보 또는 개인 정보가 포함될 수 있습니다. 이 열의 내용을 사용할 때는주의하십시오."
+      types:
+        bool:
+          yes: "네"
+          no: "아니오"
+          null_: "없는"
+      export: "내보내기"
+      save: "변경사항 저장"
+      saverun: "변경 사항 저장 및 실행"
+      run: "운영"
+      undo: "변경 사항을 취소"
+      edit: "수정"
+      delete: "삭제"
+      recover: "삭제 취소 쿼리"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "검색어에 저장하지 않은 변경 사항이있어 이동하면 사라집니다."
+      result_count:
+        other: "%{count}개의 결과."
+      query_name: "쿼리"
+      query_groups: "그룹"
+      link: "링크"
+      report_name: "보고서"
+      query_description: "설명"
+      query_time: "마지막 실행"
+      query_user: "작성자"
+      explain_label: "쿼리 계획을 포함 하시겠습니까?"
+      save_params: "기본값 설정"
+      reset_params: "리셋"
+      search_placeholder: "검색..."
+      no_search_results: "죄송합니다. 귀하의 텍스트와 일치하는 결과를 찾을 수 없습니다."
+    group:
+      reports: "보고서"

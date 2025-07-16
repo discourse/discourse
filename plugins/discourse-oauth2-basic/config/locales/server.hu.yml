@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  login:
+    authenticator_error_fetch_user_details: "Nem sikerült lekérni a felhasználói adatokat. Van aktív fiókja?"
+  site_settings:
+    oauth2_enabled: "Az egyéni OAuth2 engedélyezett"
+    oauth2_client_id: "Kliensazonosító az egyéni OAuth2-höz"
+    oauth2_client_secret: "Kliens titka az egyéni OAuth2-höz"
+    oauth2_authorize_url: "Az OAuth2 engedélyezési URL-je"
+    oauth2_authorize_signup_url: '(nem kötelező) A „Regisztráció” gomb használatakor használt alternatív engedélyezési URL'
+    oauth2_token_url: "Az OAuth2 token URL-je"
+    oauth2_token_url_method: "A Token URL lekéréséhez használt módszer"
+    oauth2_callback_user_id_path: "Útvonal a token válaszában a felhasználói azonosítóhoz. Például params.info.uuid"
+    oauth2_callback_user_info_paths: "Útvonalak a token válaszában más felhasználói tulajdonságokhoz. A támogatott tulajdonságok: name, username, email, email_verified és avatar. A formátuma tulajdonság:útvonal, például: name:params.info.name"
+    oauth2_fetch_user_details: "Felhasználói JSON lekérése az OAuth2-höz"

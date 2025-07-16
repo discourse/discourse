@@ -1385,8 +1385,6 @@ id:
     sender_topic_deleted: "topik telah dihapus"
     group_smtp_post_deleted: "postingan telah dihapus"
     group_smtp_topic_deleted: "topik telah dihapus"
-  color_schemes:
-    default_theme_name: "Asal"
   csv_export:
     boolean_yes: "Ya"
     boolean_no: "Tidak"

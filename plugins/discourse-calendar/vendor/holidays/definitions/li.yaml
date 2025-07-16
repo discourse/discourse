@@ -1,0 +1,154 @@
+# Liechtenstein holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2011-10-17.
+# Sources:
+#  http://www.tourismus.li/de/navpage-RegionLI-InformationLI-44728.html
+---
+months:
+  0:
+  - name: Fasnachtsdienstag
+    regions: [li]
+    function: easter(year)
+    function_modifier: -47
+  - name: Karfreitag
+    regions: [li]
+    function: easter(year)
+    function_modifier: -2
+  - name: Ostern
+    regions: [li]
+    function: easter(year)
+    type: informal
+  - name: Ostermontag
+    regions: [li]
+    function: easter(year)
+    function_modifier: 1
+  - name: Auffahrt
+    regions: [li]
+    function: easter(year)
+    function_modifier: 39
+  - name: Pfingstmontag
+    regions: [li]
+    function: easter(year)
+    function_modifier: 50
+  - name: Fronleichnam
+    regions: [li]
+    function: easter(year)
+    function_modifier: 60
+  1:
+  - name: Neujahrstag
+    regions: [li]
+    mday: 1
+  - name: Heilige Drei Könige
+    regions: [li, li]
+    mday: 6
+  2:
+  - name: Maria Lichtmess
+    regions: [li]
+    mday: 2
+  3:
+  - name: St. Josef
+    regions: [li]
+    mday: 19
+  5:
+  - name: Tag der Arbeit
+    regions: [li]
+    mday: 1
+  8:
+  - name: Staatsfeiertag
+    regions: [li]
+    mday: 15
+  9:
+  - name: Maria Geburt
+    regions: [li]
+    mday: 8
+  11:
+  - name: Allerheiligen
+    regions: [li]
+    mday: 1
+  12:
+  - name: Maria Empfängnis
+    regions: [li]
+    mday: 8
+  - name: Heilig Abend
+    regions: [li]
+    mday: 24
+  - name: Weihnachten
+    regions: [li]
+    mday: 25
+  - name: Stefanstag
+    regions: [li]
+    mday: 26
+  - name: Silvester
+    regions: [li]
+    mday: 31
+
+tests:
+  - given:
+      date: '2009-01-01'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Neujahrstag"
+  - given:
+      date: '2011-03-08'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Fasnachtsdienstag"
+  - given:
+      date: '2009-04-10'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Karfreitag"
+  - given:
+      date: '2009-04-12'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Ostern"
+  - given:
+      date: '2009-04-13'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Ostermontag"
+  - given:
+      date: '2009-05-21'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Auffahrt"
+  - given:
+      date: '2009-06-01'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Pfingstmontag"
+  - given:
+      date: '2009-12-25'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Weihnachten"
+  - given:
+      date: '2009-12-26'
+      regions: ["li"]
+      options: ["informal"]
+    expect:
+      name: "Stefanstag"
+  - given:
+      date: '2009-06-11'
+      regions: ["li"]
+    expect:
+      name: "Fronleichnam"
+  - given:
+      date: '2009-08-15'
+      regions: ["li"]
+    expect:
+      name: "Staatsfeiertag"
+  - given:
+      date: '2009-11-01'
+      regions: ["li"]
+    expect:
+      name: "Allerheiligen"

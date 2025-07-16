@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    gamification:
+      you: "Du"
+      leaderboard:
+        link_to_settings: "Instillinger"
+        refresh: "Last inn siden på nytt"
+        name: "Navn"
+        period:
+          all_time: "Totalt"
+          yearly: "Årlig"
+          quarterly: "Kvartalsvis"
+          monthly: "Månedlig"
+          weekly: "Ukentlig"
+          daily: "Daglig"
+      create: "Opprett"
+      cancel: "Avbryt"
+      close: "Lukk"
+      delete: "Slett"
+      edit: "Endre"
+      back: "Forrige"
+      save: "Lagre"
+      apply: "Bruk"
+      update_range:
+        last_10_days: "Siste 10 dager"
+        last_30_days: "Siste 30 dager"
+        last_90_days: "Siste 90 dager"
+        all_time: "Totalt"
+      custom_range_from: "Fra"
+      admin:
+        name: "Navn"

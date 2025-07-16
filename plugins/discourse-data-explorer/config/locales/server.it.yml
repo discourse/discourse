@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    data_explorer_enabled: "Abilitare il plugin Data Explorer su /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Pianifica un MP con i risultati di Data Explorer
+        description: Ricevi report pianificati inviati ai tuoi messaggi
+        no_csv_allowed: "Quando si utilizza il campo `attach_csv`, `csv` deve essere aggiunto all'elenco delle estensioni autorizzate nelle impostazioni del sito."
+      recurring_data_explorer_result_topic:
+        title: Pianifica un messaggio a un argomento con i risultati di Data Explorer
+        description: Ricevi report programmati pubblicati su un argomento specifico
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Report programmato per %{query_name}"
+      upload_appendix: "Appendice: [%{filename}|allegato](%{short_url})"

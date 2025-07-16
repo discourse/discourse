@@ -1,0 +1,127 @@
+# Serbian holiday definitions for the Ruby Holiday gem. In Cyrillic.
+#
+# Updated: 2017-06-09
+# Sources:
+# - https://en.wikipedia.org/wiki/Public_holidays_in_Serbia
+# - https://de.wikipedia.org/wiki/Feiertage_in_Serbien
+# - https://www.timeanddate.com/holidays/serbia/
+# - https://www.wko.at/service/aussenwirtschaft/Serbien:-Feiertage-2016.html
+# - http://www.lexilogos.com/keyboard/serbian_conversion.htm
+---
+months:
+  0:
+  - name: Велики петак # Good Friday
+    regions: [rs_cyrl]
+    function: orthodox_easter(year)
+    function_modifier: -2
+  - name: Велика Субота # Holy Saturday
+    regions: [rs_cyrl]
+    function: orthodox_easter(year)
+    function_modifier: -1
+  - name: Васкрс # Easter Sunday
+    regions: [rs_cyrl]
+    function: orthodox_easter(year)
+  - name: Васкрсни понедељак # Easter Monday
+    regions: [rs_cyrl]
+    function: orthodox_easter(year)
+    function_modifier: 1
+  1:
+  - name: Нова Година # New Year's Day
+    regions: [rs_cyrl]
+    mday: 1
+  - name: Нова Година # Day after New Year's Day
+    regions: [rs_cyrl]
+    mday: 2
+  - name: Божић # Christmas Day
+    regions: [rs_cyrl]
+    mday: 7
+  - name: Свети Сава (Савиндан) # Saint Sava Day
+    regions: [rs_cyrl]
+    mday: 27
+  2:
+  - name: Дан државности Србије # Statehood Day
+    regions: [rs_cyrl]
+    mday: 15
+  - name: Дан државности Србије # Day after Statehood Day
+    regions: [rs_cyrl]
+    mday: 16
+  5:
+  - name: Празник рада # Worker's Day
+    regions: [rs_cyrl]
+    mday: 1
+  - name: Празник рада # Day after Worker's Day
+    regions: [rs_cyrl]
+    mday: 2
+  - name: Дан победе над фашизмом # Victory Day
+    regions: [rs_cyrl]
+    mday: 9
+  6:
+  - name: Видовдан # Saint Vitus Day
+    regions: [rs_cyrl]
+    mday: 28
+  11:
+  - name: Дан примирја # Armistice Day
+    regions: [rs_cyrl]
+    mday: 11
+
+tests:
+  - given:
+      date: ['2017-1-1', '2017-1-2']
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Нова Година"
+  - given:
+      date: '2017-1-7'
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Божић"
+  - given:
+      date: '2017-1-27'
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Свети Сава (Савиндан)"
+  - given:
+      date: ['2017-2-15', '2017-2-16']
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Дан државности Србије"
+  - given:
+      date: ['2017-5-1', '2017-5-2']
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Празник рада"
+  - given:
+      date: '2017-5-9'
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Дан победе над фашизмом"
+  - given:
+      date: '2017-6-28'
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Видовдан"
+  - given:
+      date: '2017-11-11'
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Дан примирја"
+  - given:
+      date: ['2017-4-14', '2018-4-6', '2019-4-26']
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Велики петак"
+  - given:
+      date: ['2017-4-15', '2018-4-7', '2019-4-27']
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Велика Субота"
+  - given:
+      date: ['2017-4-16', '2018-4-8', '2019-4-28']
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Васкрс"
+  - given:
+      date: ['2017-4-17', '2018-4-9', '2019-4-29']
+      regions: ["rs_cyrl"]
+    expect:
+      name: "Васкрсни понедељак"

@@ -1,0 +1,205 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "اشتراک دیسکورس"
+  site_settings:
+    discourse_subscriptions_enabled: فعال کردن افزونه اشتراک دیسکورس
+    discourse_subscriptions_extra_nav_subscribe: دکمه اشتراک در منو اصلی نشان داده شود
+  js:
+    filters:
+      subscribe:
+        help: با خرید اشتراک از این سایت پشتیبانی کنید
+    discourse_subscriptions:
+      title: اشتراک دیسکورس
+      admin_navigation: اشتراک‌ها
+      optional: اختیاری
+      navigation:
+        billing: صورت‌حساب
+        payments: پرداخت‌ها
+        subscriptions: اشتراک‌ها
+        subscribe: اشتراک
+        user_activity:
+          payments: پرداخت‌ها
+      campaign:
+        title: از ما حمایت کنید
+        success_title: موفقیت!
+        goal_comparison: "<strong>%{current}</strong> از <strong>%{goal}</strong>"
+        confirm_creation_title: آیا می‌خواهید به طور خودکار یک کمپین برای انجمن خود ایجاد کنید؟
+      plans:
+        interval:
+          adverb:
+            day: روزانه
+            week: هفتگی
+            month: ماهانه
+            year: سالیانه
+        payment_button: اشتراک
+      user:
+        payments:
+          id: شناسه پرداخت‌
+          created_at: ساخته شده
+        payments_help: هنوز هیچ پرداختی وجود ندارد
+        plans:
+          rate: نرخ
+          product: نام
+        subscriptions:
+          status: وضعیت
+          discounted: با تخفیف
+          update_card:
+            heading: "به‌روزرسانی کارت برای اشتراک: %{sub_id}"
+            single: "به‌روزرسانی"
+          created_at: ساخته شده
+          cancel: لغو
+      subscribe:
+        title: اشتراک
+        invalid_cardholder_name: نام دارنده کارت الزامی است.
+        invalid_cardholder_country: کشور الزامی است.
+        invalid_cardholder_state: ایالت الزامی است.
+        invalid_cardholder_province: استان الزامی است.
+        card:
+          title: پرداخت‌
+        promo_code: تخفیف
+        buttons:
+          subscribe: اشتراک
+        cardholder_name: نام دارنده کارت
+        cardholder_address:
+          line1: آدرس خیابان
+          city: شهر
+          state: ایالت
+          province: استان
+          country: کشور
+          postal_code: کد پستی
+        countries:
+          AF: "افغانستان"
+          AX: "جزایر الند"
+          AL: "آلبانی"
+          DZ: "الجزایر"
+          AS: "ساموآی آمریکا"
+          AD: "آندورا"
+          AO: "آنگولا"
+          AI: "آنگویلا"
+          AQ: "جنوبگان"
+          AG: "آنتیگوآ و باربودا"
+          AR: "آرژانتین"
+          AM: "ارمنستان"
+          AW: "آروبا"
+          AU: "استرالیا"
+          AT: "اتریش"
+          AZ: "آذربایجان"
+          BS: "باهاما"
+          BH: "بحرین"
+          BD: "بنگلادش"
+          BB: "باربادوس"
+          BY: "بلاروس"
+          BE: "بلژیک"
+          BZ: "بلیز"
+          BJ: "بنین"
+          BM: "برمودا"
+          BT: "بوتان"
+          BO: "بولیوی، دولت چند ملیتی"
+          BQ: "جزایر کارائیب هلند"
+          BA: "بوسنی و هرزگوین"
+          BW: "بوتسوانا"
+          BV: "جزیره بووه"
+          BR: "برزیل"
+          IO: "قلمرو بریتانیا در اقیانوس هند"
+          BN: "برونئی دارالسلام"
+          BG: "بلغارستان"
+          BF: "بورکینافاسو"
+          BI: "بوروندی"
+          KH: "کامبوج"
+          CM: "کامرون"
+          CA: "کانادا"
+          CV: "کیپ ورد"
+          KY: "جزایر کیمن"
+          CF: "جمهوری آفریقای مرکزی"
+          TD: "چاد"
+          CL: "شیلی"
+          CN: "چین"
+          CX: "جزیره کریسمس"
+          CC: "جزایر کوکوس"
+          CO: "کلمبیا"
+          KM: "کومور"
+          CG: "کنگو"
+          CD: "کنگو، جمهوری دموکراتیک"
+          CK: "جزایر کوک"
+          CR: "کاستاریکا"
+          CI: "ساحل عاج"
+          HR: "کرواسی"
+          CU: "کوبا"
+          CW: "کوراسائو"
+          CY: "قبرس"
+          CZ: "جمهوری چک"
+          DK: "دانمارک"
+          DJ: "جیبوتی"
+          DM: "دومینیکا"
+          DO: "جمهوری دومینیکن"
+          EC: "اکوادور"
+          EG: "مصر"
+          SV: "السالوادور"
+          GQ: "گینه استوایی"
+          ER: "اریتره"
+          IR: "ایران"
+          IQ: "عراق"
+          IE: "ایرلند"
+          IT: "ایتالیا"
+          JP: "ژاپن"
+          KW: "کویت"
+      billing:
+        name: نام کامل
+        email: ایمیل
+        phone: شماره تلفن
+      confirmation:
+        last4: شماره کارت
+      buttons:
+        confirm_payment: تایید پرداخت‌
+      admin:
+        dashboard:
+          title: پیشخوان
+          table:
+            head:
+              user: کاربر
+              payment_intent: شناسه پرداخت‌
+        products:
+          title: محصولات
+          operations:
+            create: ایجاد محصول جدید
+            update: به‌روزرسانی محصول
+            new: محصول جدید
+            destroy:
+              confirm: آیا مطمئن هستید که می‌خواهید این محصول را پاک کنید؟
+          product:
+            product_id: شناسه محصول
+            name: نام محصول
+            description: توضیح
+            active: فعال
+            created_at: ساخته شده
+            updated_at: به روز شده
+        plans:
+          plan:
+            product: محصول
+            active: فعال
+            created_at: ساخته شده
+        coupons:
+          title: تخفیف‌ها
+          code: کد تبلیغاتی
+          discount: با تخفیف
+          active: فعال؟
+          actions: عملیات
+          create: ایجاد تخفیف
+          promo_code: کد تبلیغاتی (حساس به حروف کوچک و بزرگ)
+        subscriptions:
+          title: اشتراک‌ها
+          subscription:
+            user: کاربر
+            customer: مشتری
+            product: محصول
+            status: وضعیت
+            created_at: ساخته شده

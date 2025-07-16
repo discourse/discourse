@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  reports:
+    currently_away:
+      title: Utilisateurs actuellement absents
+      labels:
+        username: Nom d'utilisateur
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: L'événement a commencé
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "La région de vacances que vous avez indiquée n'existe pas."
+    discourse_calendar_enable_holiday_failed: "Ce jour férié n'a pas pu être activé, il est déjà activé ou il n'est pas désactivé."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Événement - Invitation groupée réussie"
+      subject_template: "Envoi des invitations groupées réussi"
+      text_body_template: "Votre envoi d'invitations groupées a été effectué. %{processed} invitation(s) envoyée(s)."
+    discourse_post_event_bulk_invite_failed:
+      title: "Événement - Échec de l'invitation groupée"
+      subject_template: "Invitation groupée exécutée avec des erreurs"
+      text_body_template: |
+        Votre envoi d'invitations groupées a été effectué. %{processed} invitation(s) ont été envoyée(s) avec %{failed} erreur(s).
+
+        Voici le détail :
+
+        ```texte
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "Nombre maximal de lignes de texte par événement dans le calendrier."
+    map_events_to_color: "Assigner une couleur à chaque étiquette ou catégorie."
+    map_events_title: "Remplace « Événements » dans le titre de la barre latérale « Événements à venir » par catégorie."
+    calendar_enabled: "Activer l'extension discourse-calendar. Ceci ajoutera la prise en charge de l'étiquette [calendar][/calendar] dans le premier message d'un sujet."
+    discourse_post_event_enabled: "Active les fonctionnalités d'événement. Remarque : il faut également que « calendrier activé » soit activé."
+    displayed_invitees_limit: "Limite le nombre d'invités affichés sur un événement."
+    display_post_event_date_on_topic_title: "Affiche la date de l'événement après le titre du sujet."
+    use_local_event_date: "Utiliser la date locale après le titre du sujet au lieu de l'heure relative."
+    discourse_post_event_allowed_on_groups: "Groupes autorisés à créer des événements."
+    discourse_post_event_allowed_custom_fields: "Permet à chaque événement de définir la valeur des champs personnalisés."
+    discourse_post_event_edit_notifications_time_extension: "Prolonge (en minutes) la période suivant la fin d'un événement pendant laquelle les invités « participants » sont toujours notifiés de la modification du message original."
+    holiday_calendar_topic_id: "ID du sujet du calendrier des vacances/absences du personnel."
+    holiday_status_emoji: Définit l’émoji utilisé pour le statut de vacances.
+    delete_expired_event_posts_after: "Les messages comprenant des événements expirés seront automatiquement supprimés après (n) heures. Fixez cette valeur sur -1 pour désactiver la suppression."
+    all_day_event_start_time: "Les événements qui n'ont pas d'heure de début spécifiée commenceront à cette heure. Le format est HH:mm. Pour indiquer 6:00 heures, saisissez 06:00"
+    all_day_event_end_time: "Les événements qui n'ont pas d'heure de fin spécifiée se termineront à cette heure. Le format est HH:mm. Pour indiquer 18:00 heures, saisissez 18:00"
+    all_day_event_time_error: "Heure invalide. Le format doit être HH:mm (p. ex. : 08:00)."
+    calendar_categories: "Affiche un calendrier en haut d'une catégorie. Les paramètres obligatoires sont categoryId et postId. P. ex. : categoryId=6;postId=453\n Autres paramètres valides : tzPicker, weekends et defaultView."
+    calendar_categories_outlet: "Permet de changer quelle sortie doit afficher le calendrier de la catégorie."
+    working_days: "Définissez les jours ouvrés. Vous pouvez afficher la disponibilité d'un groupe en utilisant l'étiquette « timezones » dans un message. P. ex. : « [timezones group=admins][timezones] »"
+    working_day_start_hour: "Heure de début des heures de travail."
+    working_day_end_hour: "Heure de fin des heures de travail."
+    close_to_working_day_hours_extension: "Définir le temps d'extension dans les heures de travail pour mettre en évidence les fuseaux horaires."
+    events_calendar_categories: "Afficher un calendrier des événements en haut d'une catégorie."
+    sort_categories_by_event_start_date_enabled: "Activer le tri des rubriques de la catégorie par date de début de l'événement."
+    disable_resorting_on_categories_enabled: "Autoriser les catégories pour désactiver la possibilité pour les utilisateurs de trier la catégorie d'événement."
+    calendar_automatic_holidays_enabled: "Définir automatiquement le statut des vacances en fonction de la région de l'utilisateur (note : il est possible de désactiver des vacances automatiques spécifiques dans les paramètres de l'extension)"
+    event_participation_buttons: "Liste des boutons de participation aux événements que les utilisateurs peuvent utiliser."
+    sidebar_show_upcoming_events: "Afficher le lien des événements à venir dans la barre latérale sous « Plus »."
+    include_expired_events_on_calendar: "Inclure les événements passés ou expirés dans le calendrier des catégories et les vues des événements à venir."
+  discourse_calendar:
+    invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
+    calendar_must_be_in_first_post: "L'étiquette du calendrier ne peut être utilisée que dans le premier message d'un sujet."
+    more_than_one_calendar: "Vous ne pouvez pas avoir plus d'un calendrier dans un message."
+    more_than_two_dates: "Un message d'un sujet du calendrier ne peut pas contenir plus de deux dates."
+    event_expired: "Événement expiré"
+    holiday_status:
+      description: "En vacances"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "L'événement %{title} est sur le point de commencer."
+      after_event_reminder: "L'événement %{title} est terminé."
+      ongoing_event_reminder: "L'événement %{title} est en cours."
+    errors:
+      bulk_invite:
+        max_invitees: "Les %{max_invittes} premières invitations ont été créées. Essayez de diviser le fichier en plus petites parties."
+        error: "Une erreur s'est produite lors du téléversement du fichier. Veuillez réessayer plus tard."
+      models:
+        event:
+          only_one_event: "Un message ne peut contenir qu'un seul événement."
+          must_be_in_first_post: "Un événement ne peut figurer que dans le premier message d'un sujet."
+          raw_invitees_length: "Un événement est limité à %{count} utilisateurs/groupes."
+          raw_invitees:
+            only_group: "Un événement ne peut accepter que les noms de groupes."
+          ends_at_before_starts_at: "Un événement ne peut pas se terminer avant d'avoir commencé."
+          start_must_be_present_and_a_valid_date: "Un événement nécessite une date de début valide."
+          end_must_be_a_valid_date: "La date de fin doit être une date valide."
+          invalid_recurrence: "La récurrence doit être l'une des suivantes : every_month, every_week, every_two_weeks, every_four_weeks, every_day, every_weekday."
+          invalid_timezone: "Fuseau horaire non reconnu."
+          acting_user_not_allowed_to_create_event: "L'utilisateur actuel n'est pas autorisé à créer des événements."
+          acting_user_not_allowed_to_act_on_this_event: "L'utilisateur actuel n'est pas autorisé à agir sur cet événement."
+          invalid_allowed_groups: "Groupes autorisés non valides."
+          acting_user_not_allowed_to_invite_these_groups: "L'utilisateur actuel n'est pas autorisé à inviter ces groupes."
+          custom_field_is_invalid: "Le champ personnalisé « %{field} » n'est pas autorisé."
+          name:
+            length: "Le nom de l'événement doit contenir entre %{minimum} et %{maximum} caractères."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Rappel d'événement"

@@ -1,0 +1,100 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  site_settings:
+    assign_enabled: "Ativar o plug-in de atribuição"
+    assigns_public: "Permitir que o público geral veja atribuições de tópico"
+    assigns_user_url_path: "Caminho para os tópicos atribuídos dos(as) usuários(as) (usar: {username} para substuir o nome do(a) usuário(a))"
+    assigns_by_staff_mention: "Se um membro da equipe mencionar o tópico de outro membro da equipe, o tópico será atribuído automaticamente"
+    unassign_creates_tracking_post: "Se você cancelar a atribuição de um tópico, um sussurro ou pequena ação será criada para acompanhar a alteração"
+    assign_self_regex: "Regex que é preciso passar para autoatribuição. Por exemplo: \"minha lista\""
+    assign_other_regex: "Regex que é preciso passar para atribuir tópicos aos(às) outros(as) através de menção. Por exemplo: \"sua lista\"."
+    unassign_on_group_archive: "Quando uma mensagem for arquivada por grupo, cancelar atribuição da mensagem (reatribuir se for movida de volta para a caixa de entrada)"
+    unassign_on_close: "Quando um tópico for fechado, cancelar atribuição do tópico"
+    reassign_on_open: "Quando um tópico for aberto, reatribuir grupos/usuários(as) atribuídos(as) anteriormente"
+    invite_on_assign: "Quando uma mensagem pessoal for atribuída a um(a) usuário(a) ou gurpo, convidar para MP caos ainda não seja um(a) participante."
+    assign_mailer: "Quadno enviar e-mail de notificação para atribuições"
+    remind_assigns: "Lembrar usuários(as) sobre atribuições pendentes."
+    remind_assigns_frequency: "Frequência para lembrar usuários(as) sobre tópicos atribuídos."
+    max_assigned_topics: "Quantidade máxima de tópicos que podem ser atribuídos a um(a) usuário(a)."
+    assign_allowed_on_groups: "Usuários(as) nestes grupos têm permissão para atribuir tópicos e podem receber atribuições de tópicos."
+    enable_assign_status: "Adicionar um campo de status personalizável para cada atribuição."
+    assign_statuses: "Lista de status disponíveis para cada atribuição. O primeiro status é o status aplicado a toda atribuição nova."
+    errors:
+      assign_statuses:
+        too_few: "Deve haver pelo menos dois status diferentes disponíveis."
+        duplicate: "Há valores de status repetidos."
+        removed_in_use: "Não é possível remover um status da lista se houver atribuições existentes usando este status."
+  discourse_assign:
+    assigned_to: "Tópico atribuído a @%{username}"
+    unassigned: "A atribuição do tópico foi cancelada"
+    already_claimed: "Este tópico já foi solicitado."
+    already_assigned: "O tópico já foi atribuído a @%{username}"
+    too_many_assigns: "@%{username} já atingiu o máximo de tópicos atribuídos (%{max})."
+    too_many_assigns_for_topic: "O limite de %{limit} atribuições por tópico foi atingido"
+    forbidden_assign_to: "Não é possível atribuir @%{username}, pois não pertence aos grupos permitidos atribuídos."
+    forbidden_assignee_not_pm_participant: "Não é possível atribiur @%{username}, pois não tem acesso a esta MP. Você pode atribuir acesso a @%{username} convidando para esta MP."
+    forbidden_assignee_cant_see_topic: "Não é possível atribuir @%{username}, pois não tem acesso a este tópico."
+    group_already_assigned: "O tópico já foi atribuído a @%{group}"
+    forbidden_group_assign_to: "Não é possível atribuir @%{group}, pois não pertence aos grupos permitidos atribuídos."
+    forbidden_group_assignee_not_pm_participant: "Não é possível atribuir @%{group}, pois nem todos os membros têm acesso a esta MP."
+    forbidden_group_assignee_cant_see_topic: "Não é possível atribuir @%{group}, pois nem todos os membros têm acesso a este tópico."
+    flag_assigned: "Desculpe, o tópico dessa sinalização já foi atribuído a outro(a) usuário(a)"
+    flag_unclaimed: "Você deve solicitar esse tópico antes de agir no sinalizador"
+    topic_assigned_excerpt: "tópico \"%{title}\" atribuído a você"
+    topic_group_assigned_excerpt: "tópico \"%{title}\" atribuído a @%{group}"
+    reminders_frequency:
+      never: "nunca"
+      daily: "diariamente"
+      weekly: "semanalmente"
+      monthly: "mensal"
+      quarterly: "trimestral"
+  assign_mailer:
+    title: "Atribuir mensageiro(a)"
+    subject_template: "[%{email_prefix}] Você foi atribuído(a) por %{assignee_name} a \"%{topic_title}\"!"
+    text_body_template: |
+      Olá, você foi **atribuído(a)** por %{assignee_name} a uma discussão
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Se tiver interesse, clique no link abaixo:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Você tem %{pending_assignments} atribuições pendentes"
+    body: |
+      Atualmente você tem [%{pending_assignments} atribuições pendentes](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Este lembrete será enviado %{frequency} se você tiver mais de um tópico atribuído.
+    newest: |
+      ### Mais recentes
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Mais antigos
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Atribuição aleatória
+        no_one: "Tentativa de atribuir aleatoriamente um mebro de \"@%{group}\", mas ninguém estava disponível."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} atribuiu você"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "O status selecionado é inválido (não está incuso as configurações do site assigned_status)."

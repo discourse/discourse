@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "تكاملات الدردشة"
+  js:
+    chat_integration:
+      menu_title: "تكاملات الدرشة"
+      settings: "الإعدادات"
+      no_providers: "عليك تفعيل بعض مقدِّمي الخدمة في إعدادات المكوِّن الإضافي"
+      channels_with_errors: "فشلت بعض قنوات مقدِّم الخدمة هذا مؤخرًا في آخر مرة تم فيها إرسال الرسائل. انقر على أيقونة/أيقونات الأخطاء لمعرفة المزيد."
+      channel_exception: "حدث خطأ غير معروف في آخر مرة تم فيها إرسال رسالة إلى هذه القناة."
+      group_mention_template: "الإشارات إلى: @%{name}"
+      group_message_template: "الرسائل إلى: @%{name}"
+      choose_group: "(اختر مجموعة)"
+      all_categories: "(جميع الفئات)"
+      all_tags: "(جميع الوسوم)"
+      create_rule: "إنشاء قاعدة"
+      create_channel: "إنشاء قناة"
+      delete_channel: "حذف"
+      test_channel: "اختبار"
+      edit_channel: "تعديل"
+      channel_delete_confirm: "هل تريد بالتأكيد حذف هذه القناة؟ سيتم حذف جميع القواعد المرتبطة."
+      test_modal:
+        title: "إرسال رسالة اختبار"
+        topic: "الموضوع"
+        send: "إرسال رسالة اختبار"
+        close: "إغلاق"
+        error: "حدث خطأ غير معروف في أثناء إرسال الرسالة. تحقَّق من سجلات الموقع لمزيدٍ من المعلومات."
+        success: "تم إرسال الرسالة بنجاح"
+      type:
+        normal: عادي
+        group_message: رسالة مجموعة
+        group_mention: إشارة مجموعة
+      filter:
+        mute: 'صامت'
+        follow: 'أول منشور فقط'
+        watch: 'كل المنشورات والردود'
+        thread: 'كل المنشورات ذات الردود المسلسلة'
+      rule_table:
+        filter: "تصفية"
+        category: "الفئة"
+        tags: "الوسوم"
+        edit_rule: "تعديل"
+        delete_rule: "حذف"
+      edit_channel_modal:
+        title: "تعديل القناة"
+        save: "حفظ القناة"
+        cancel: "إلغاء"
+        provider: "مقدِّم الخدمة"
+        channel_validation:
+          ok: "صالح"
+          fail: "تنسيق غير صالح"
+      edit_rule_modal:
+        title: تعديل القاعدة
+        save: حفظ القاعدة
+        cancel: إلغاء
+        provider: مقدِّم الخدمة
+        type: النوع
+        channel: القناة
+        filter: تصفية
+        category: الفئة
+        group: المجموعة
+        tags: الوسوم
+        instructions:
+          type: "غيِّر النوع لتشغيل الإشعارات لرسائل أو إشارات المجموعة"
+          filter: "مستوى الإشعارات. يتجاوز الكتم قواعد المطابقة الأخرى"
+          category: "ستنطبق هذه القاعدة على الموضوعات في الفئة المحدَّدة فقط"
+          group: "ستنطبق هذه القاعدة على المنشورات التي تشير إلى هذه المجموعة"
+          tags: "إذا تم تحديد هذه القاعدة، فستنطبق فقط على الموضوعات التي تحمل واحدًا من هذه الوسوم على الأقل"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: القناة
+              help: "على سبيل المثال، #channel، @username."
+          errors:
+            action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
+            channel_not_found: "القناة المحدَّدة غير موجودة على Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Telegram."
+            chat_id:
+              title: مُعرِّف الدردشة
+              help: رقم يمنحك إياه برنامج الروبوت، أو مُعرِّف قناة البث بالتنسق @channelname
+          errors:
+            channel_not_found: "القناة المحدَّدة غير موجودة على Telegram"
+            forbidden: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Discord."
+            webhook_url:
+              title: عنوان URL لخطاف الويب
+              help: عنوان URL لخطاف الويب، والذي تم إنشاؤه في إعدادات خادم Discord
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Guilded"
+            webhook_url:
+              title: عنوان URL لخطاف الويب
+              help: عنوان URL لخطاف الويب، والذي تم إنشاؤه في إعدادات خادم Guilded
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: القناة
+              help: "على سبيل المثال، #channel، @username."
+          errors:
+            channel_not_found: "القناة المحدَّدة غير موجودة على Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Matrix."
+            room_id:
+              title: "مُعرِّف الغرفة"
+              help: "\"المُعرِّف الخاص\" للغرفة. يجب أن يبدو مثل !abcdefg:matrix.org"
+          errors:
+            unknown_token: "رمز الوصول غير صالح"
+            unknown_room: "مُعرِّف الغرفة غير صالح"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Stream"
+              help: "اسم قسم Zulip الذي يجب إرسال الرسالة إليه. مثلًا، \"عام\""
+            subject:
+              title: "الموضوع"
+              help: "العنوان الذي يجب إعطاؤه إلى هذه الرسائل التي أرسلها برنامج الروبوت"
+          errors:
+            does_not_exist: "هذا القسم غير موجود على Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: القناة
+              help: "على سبيل المثال، #channel، @username."
+          errors:
+            invalid_channel: "هذه القناة غير موجودة على Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم غرفة Gitter؛ على سبيل المثال، gitterHQ/services."
+            webhook_url:
+              title: "عنوان URL لخطاف الويب"
+              help: "عنوان URL الذي يتم إدخاله عند إنشاء تكامل جديد في غرفة Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "رمز القسم"
+              help: "رمز القسم الذي تم إدخاله بعد إنشاء مصدر لقسم تريد إرسال الرسائل فيه."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "اسم مثيل GroupMe"
+              help: "اسم مثيل Groupme كما هو مدرج في إعدادات الموقع. استخدم \"الكل\" للإرسال إلى جميع المثيلات"
+          errors:
+            not_found: "لم يتم العثور على المسار الذي حاولت نشر رسالتك فيه. تحقَّق من مُعرِّف برنامج الروبوت في إعدادات الموقع."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم قناة Teams، مثل \"مناقشة\""
+            webhook_url:
+              title: "عنوان URL لخطاف الويب"
+              help: "عنوان URL الذي يتم إدخاله عند إنشاء خطاف ويب وارد جديد"
+          errors:
+            invalid_channel: "هذه القناة غير موجودة على Microsoft Teams"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم للقناة (يظهر فقط في واجهة مسؤول Discourse)"
+            webhook_url:
+              title: "عنوان URL لخطاف الويب"
+              help: "عنوان URL الذي يتم إدخاله عند إنشاء خطاف ويب وارد جديد"
+          errors:
+            invalid_webhook: "عنوان URL لخطاف الويب هذا غير صالح."
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم مساحة Webex، مثل \"مناقشة\""
+            webhook_url:
+              title: "عنوان URL لخطاف الويب"
+              help: "عنوان URL الذي يتم إدخاله عند إنشاء خطاف ويب وارد جديد"
+          errors:
+            invalid_channel: "هذه القناة غير موجودة على Webex"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "الاسم"
+              help: "اسم للقناة (يظهر فقط في واجهة مسؤول Discourse)"
+            webhook_url:
+              title: "عنوان URL لخطاف الويب"
+              help: "عنوان URL الذي يتم إدخاله عند إنشاء خطاف ويب جديد"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: إرسال رسالة Slack
+          fields:
+            message:
+              label: رسالة
+              description: >-
+                استخدم ${TOPIC} لاسم الموضوع، و${URL} لعنوان URL المستخدم، و${REMOVED_TAGS} للوسوم المحذوفة، و${ADDED_TAGS} للوسوم المُضافة، و${ADDED_AND_REMOVED} للنص الافتراضي. متاح فقط إذا تم تعيين المشغِّل على وسوم الموضوع التي تم تغييرها.
+            url:
+              label: عنوان URL
+            channel:
+              label: القناة
+        send_chat_integration_message:
+          title: إرسال رسالة Chat-Integration
+          fields:
+            channel_name:
+              label: اسم القناة
+              description: "يمكنك العثور على اسم القناة في إعدادات تكامل الدردشة"
+            provider:
+              label: مقدِّم الخدمة

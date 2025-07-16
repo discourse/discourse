@@ -14,7 +14,7 @@ de:
     discourse_reactions:
       reactions_title: "Reaktionen"
       state_panel:
-        more_users: "und %{count} weitere …"
+        more_users: "und %{count} mehr..."
       reaction:
         forbidden: "Diese Reaktion wurde vor zu langer Zeit erstellt. Sie kann nicht mehr bearbeitet oder gelöscht werden."
       picker:
@@ -22,7 +22,7 @@ de:
         cant_remove_reaction: "Du kannst deine Reaktion nicht mehr entfernen"
         remove_reaction: "Entferne diese %{reaction} Reaktion"
       main_reaction:
-        add: "Diesem Beitrag ein „Gefällt mir“ geben"
+        add: "Dieser Beitrag gefällt mir"
         remove: "Entferne dieses „Gefällt mir“"
         cant_remove: "Du kannst dein „Gefällt mir“ nicht mehr entfernen"
         unauthenticated: "Bitte registriere dich oder melde dich an, um diesem Beitrag ein „Gefällt mir“ zu geben"

@@ -181,9 +181,7 @@ fi:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"
         channels_list: "Chat-kanavien luettelo"
-      no_direct_message_channels: "Et ole vielä liittynyt yksityisviesteihin!"
       no_direct_message_channels_cta: "Aloita keskustelu"
-      no_public_channels: "Et ole vielä liittynyt kanaville!"
       no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       only_chat_push_notifications:

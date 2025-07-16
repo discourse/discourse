@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    assign_enabled: "Habilitar el complemento de asignación"
+    assigns_public: "Permitir que el público en general vea las asignaciones de temas"
+    assigns_user_url_path: "Ruta a los temas asignados a los usuarios (usa: {username} para sustituir el nombre de usuario)"
+    assigns_by_staff_mention: "Si un miembro del staff menciona a otro miembro del staff, el tema se asigna automáticamente"
+    unassign_creates_tracking_post: "Si anulas la asignación de un tema, se creará un susurro o una pequeña acción para hacer seguimiento del cambio."
+    assign_self_regex: "Expresión regular que necesita pasar para asignar a sí mismo. Ejemplo «mi lista»"
+    assign_other_regex: "Expresión regular que necesita pasar para asignar temas a otros a través de una mención. Ejemplo «tu lista»."
+    unassign_on_group_archive: "Cuando un mensaje es archivado por un grupo, anula la asignación del mensaje (reasigna si se mueve nuevamente a la bandeja de entrada)"
+    unassign_on_close: "Cuando se cierra un tema, anular la asignación del tema"
+    reassign_on_open: "Cuando se abre un tema se reasignan los usuarios/grupos previamente asignados"
+    invite_on_assign: "Cuando se asigna un mensaje personal a un usuario o grupo, invítale al MP si aún no es participante."
+    assign_mailer: "Cuándo enviar notificaciones por correo electrónico de asignaciones."
+    remind_assigns: "Recordar a los usuarios sobre asignaciones pendientes."
+    remind_assigns_frequency: "Frecuencia para recordar a los usuarios sobre los temas asignados."
+    pending_assign_reminder_threshold: "Número de asignaciones pendientes que activa una notificación de recordatorio."
+    max_assigned_topics: "Número máximo de temas que se pueden asignar a un usuario."
+    assign_allowed_on_groups: "Los usuarios de estos grupos pueden asignar temas y se les pueden asignar temas."
+    enable_assign_status: "Añade un campo de estado personalizable a cada asignación."
+    assign_statuses: "Lista de estados disponibles para cada asignación. El primer estado es el que se aplica por defecto a cada nueva asignación."
+    errors:
+      assign_statuses:
+        too_few: "Debe haber al menos dos estados diferentes disponibles."
+        duplicate: "Hay valores de estado duplicados."
+        removed_in_use: "No se puede eliminar un estado de la lista si hay asignaciones existentes que usan este estado."
+  discourse_assign:
+    assigned_to: "Tema asignado a @%{username}"
+    unassigned: "Se anuló la asignación del tema"
+    already_claimed: "Ese tema ya ha sido reclamado."
+    already_assigned: "El tema ya está asignado a @%{username}"
+    too_many_assigns: "@%{username} ya ha alcanzado el número máximo de temas asignados (%{max})."
+    too_many_assigns_for_topic: "Se ha alcanzado el límite de %{limit} asignaciones por tema."
+    forbidden_assign_to: "No se puede asignar a @%{username} porque no pertenecen a los grupos permitidos para asignaciones."
+    forbidden_assignee_not_pm_participant: "@%{username} no puede ser asignado porque no tiene acceso a este MP. Puedes concederle acceso a @%{username} invitándole a este MP."
+    forbidden_assignee_cant_see_topic: "@%{username} no puede ser asignado porque no tiene acceso a este tema."
+    group_already_assigned: "El tema ya está asignado a @%{group}"
+    forbidden_group_assign_to: "No se puede asignar a @%{group} porque no pertenecen a los grupos permitidos para asignaciones."
+    forbidden_group_assignee_not_pm_participant: "No se puede asignar @%{group} porque no todos los miembros tienen acceso a este PM."
+    forbidden_group_assignee_cant_see_topic: "No se puede asignar @%{group} porque no todos los miembros tienen acceso a este tema."
+    flag_assigned: "Lo sentimos, el tema de esa denuncia está asignado a otro usuario."
+    flag_unclaimed: "Debes reclamar este tema antes de actuar sobre la denuncia"
+    topic_assigned_excerpt: "te asignó el tema «%{title}»"
+    topic_group_assigned_excerpt: "asignó el tema '%{title}' a @%{group}"
+    reminders_frequency:
+      never: "nunca"
+      daily: "diariamente"
+      weekly: "semanalmente"
+      monthly: "mensualmente"
+      quarterly: "trimestralmente"
+  assign_mailer:
+    title: "Asignar correo"
+    subject_template: "¡[%{email_prefix}] %{assignee_name} te ha asignado a «%{topic_title}»!"
+    text_body_template: |
+      Hola, %{assignee_name}, **te ha asignado** a una discusión
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Si estás interesado, haz clic en el siguiente enlace:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Tienes %{pending_assignments} asignaciones pendientes"
+    body: |
+      Actualmente tienes [%{pending_assignments} asignaciones pendientes](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Este recordatorio se enviará %{frequency} si tienes más de un tema asignado.
+    newest: |
+      ### Lo más nuevo
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Lo más antiguo
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Asignación aleatoria
+        no_one: "Se intentó asignar aleatoriamente un miembro de «@%{group}», pero no había nadie disponible."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} te asignó"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "El estado seleccionado no es válido (no está incluido en la configuración del sitio assigned_status)."

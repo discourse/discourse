@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "שילובי צ׳אט"
+  js:
+    chat_integration:
+      menu_title: "שילובי צ׳אט"
+      settings: "הגדרות"
+      no_providers: "עליך לאפשר מספר ספקים בהגדרות התוסף"
+      channels_with_errors: "בפעם האחרונה שנשלחו מסרים כמה ערוצים נכשלו עבור הספר הזה. לחץ על סמליל(י) השגיאה כדי לקבל עוד מידע"
+      channel_exception: "אירעה שגיאה בלתי מזוהה בפעם האחרונה שנשלחה הודעה בערוץ זה."
+      group_mention_template: "אזכורים של: ‎@%{name}‎"
+      group_message_template: "הודעות אל: ‎@%{name}‎"
+      choose_group: "(נא לבחור קבוצה)"
+      all_categories: "(כל הקטגוריות)"
+      all_tags: "(כל התגיות)"
+      create_rule: "יצירת כלל"
+      create_channel: "יצירת ערוץ"
+      delete_channel: "הסרה"
+      test_channel: "נסיון"
+      edit_channel: "עריכה"
+      channel_delete_confirm: "למחוק את הערוץ הזה? כל הכללים המקושרים אליו ימחקו."
+      test_modal:
+        title: "שליחת הודעת ניסיון"
+        topic: "נושא"
+        send: "שליחת הודעת ניסיון"
+        close: "סגירה"
+        error: "שגיאה לא מזוהה התרחשה בעת שליחת ההודעה. יש לבדוק את הלוגים של האתר עבור מידע נוסף."
+        success: "ההודעה נשלחה בהצלחה"
+      type:
+        normal: רגיל
+        group_message: הודעה קבוצתית
+        group_mention: איזכור קבוצה
+      filter:
+        mute: 'השתק'
+        follow: 'הודעה ראשונה בלבד'
+        watch: 'כל הפוסטים והתגובות'
+        thread: 'כל הפוסטים עם תגובות בשרשרת'
+      rule_table:
+        filter: "סינון"
+        category: "קטגוריה"
+        tags: "תגיות"
+        edit_rule: "עריכה"
+        delete_rule: "הסרה"
+      edit_channel_modal:
+        title: "עריכת ערוץ"
+        save: "שמירת ערוץ"
+        cancel: "ביטול"
+        provider: "ספק"
+        channel_validation:
+          ok: "מאומת"
+          fail: "פורמט לא חוקי"
+      edit_rule_modal:
+        title: שינוי כלל
+        save: שמירת כלל
+        cancel: ביטול
+        provider: ספק
+        type: סוג
+        channel: ערוץ
+        filter: סינון
+        category: קטגוריה
+        group: קבוצה
+        tags: תגיות
+        instructions:
+          type: "יש לשנות את הסוג כדי להפעיל התראות עבור הודעות קבוצתיות או איזכורים"
+          filter: "רמת התראה. השתקה דורסת כללים תואמים נוספים"
+          category: "כלל זה יחול על נושאים בקטגוריה המצוינת"
+          group: "כלל זה חל על פוסטים שמפנים לקבוצה זו"
+          tags: "אם צוין, כלל זה יחול רק כל נושאים שיש להם לפחות אחת מהתגיות האלה."
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: ערוץ
+              help: "למשל #ערוץ, @שם_משתמש."
+          errors:
+            action_prohibited: "לבוט אין הרשה לפרסם לערוץ הזה"
+            channel_not_found: "הערוץ שצוין לא קיים ב־Slack"
+        telegram:
+          title: "טלגרם"
+          param:
+            name:
+              title: "שם"
+              help: "שם לתיאור הערוץ. לא בשימוש בחיבור לטלגרם."
+            chat_id:
+              title: מזהה שיחה
+              help: מספר שהעניק לך הבוט או מזהה פרסום ערוצים בתצורה @שם_ערוץ
+          errors:
+            channel_not_found: "הערוץ שצוין לא קיים בטלגרם"
+            forbidden: "לבוט אין הרשאה לפרסם לערוץ הזה"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "שם"
+              help: "שם לתיאור הערוץ. הוא לא משמש לחיבור אל Discord."
+            webhook_url:
+              title: כתובת התלייה
+              help: כתובת ההתלייה נוצרה בהגדרות שרת ה־Discord שלך
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "שם"
+              help: "שם לתיאור הערוץ. לא משמש לחיבור אל Guilded"
+            webhook_url:
+              title: כתובת התלייה
+              help: כתובת ההתלייה נוצרה בהגדרות שרת ה־Guilded שלך
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: ערוץ
+              help: "למשל #ערוץ, @שם_משתמש."
+          errors:
+            channel_not_found: "הערוץ שצוין לא קיים ב־Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "שם"
+              help: "שם לתיאור הערוץ. הוא לא משמש לחיבור אל Matrix."
+            room_id:
+              title: "מזהה חדר"
+              help: "ה‚מזהה הפרטי’ של החדר. הוא אמור להיראות בערך ככה: ‎!abcdefg:matrix.org"
+          errors:
+            unknown_token: "אסימון הגישה שגוי"
+            unknown_room: "מזהה החדר שגוי"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "תזרים"
+              help: "שם תזרים ה־Zulip שאליו אמורה להישלח ההודעה, למשל: ‚general’"
+            subject:
+              title: "נושא"
+              help: "הנושא שיינתן להודעות אלו שנשלחות על ידי הבוט"
+          errors:
+            does_not_exist: "תזרים זה לא קיים ב־Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: ערוץ
+              help: "למשל #ערוץ, @שם_משתמש."
+          errors:
+            invalid_channel: "ערוץ זה לא קיים ב־‏Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "שם"
+              help: "שם חדר ב־Gitter למשל gitterHQ/services."
+            webhook_url:
+              title: "כתובת התלייה"
+              help: "הכתובת שסופקה בעת יצירת שילוב בחדר Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "אסימון Flow"
+              help: "אסימון ה־flow לאחר יצירת המשאב ל־flow אליו ברצונך לשלוח הודעות."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "שם עותק ה־GroupMe"
+              help: "שם עותק ה־Groupme כפי שמופיע בהגדרות האתר. יש להשתמש ב־‚all’ (הכול) כדי לשלוח לכל העותקים"
+          errors:
+            not_found: "הנתיב אליו ניסית לפרסם את ההודעה שלך לא נמצא. נא לבדוק את מזהה הבוט בהגדרות האתר."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "שם"
+              help: "שם ערוץ ב־Teams, למשל: discourse"
+            webhook_url:
+              title: "כתובת התלייה"
+              help: "הכתובת שתסופק ביצירת התליית רשת נכנסת חדשה"
+          errors:
+            invalid_channel: "ערוץ זה לא קיים ב־Microsoft Teams"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "שם"
+              help: "שם לערוץ (מופיע רק במנשק הניהול של Discourse)"
+            webhook_url:
+              title: "כתובת התלייה"
+              help: "הכתובת שתסופק ביצירת התליית רשת נכנסת חדשה"
+          errors:
+            invalid_webhook: "כתובת ההתלייה שגויה."
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "שם"
+              help: "שם מתחם ב־WebEx, למשל: discourse"
+            webhook_url:
+              title: "כתובת התלייה"
+              help: "הכתובת שתסופק ביצירת התליית רשת נכנסת חדשה"
+          errors:
+            invalid_channel: "ערוץ זה לא קיים ב־WebEx"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "שם"
+              help: "שם לערוץ (מופיע רק במנשק הניהול של Discourse)"
+            webhook_url:
+              title: "כתובת התלייה"
+              help: "הכתובת שתסופק ביצירת התליית רשת חדשה"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: שליחת הודעה ב־Slack
+          fields:
+            message:
+              label: הודעה
+              description: >-
+                להשתמש בביטוי ${TOPIC} לשם הנושא, ${URL} לכתובות לשימוש, ${REMOVED_TAGS} לתגיות שהוסרו, ${ADDED_TAGS} לתגיות שנוספו, ${ADDED_AND_REMOVED} לטקסט ברירת המחדל. זמין רק אם ההזנקה מוגדרת לשינוי תגיות נושא.
+            url:
+              label: כתובת
+            channel:
+              label: ערוץ
+        send_chat_integration_message:
+          title: שליחת הודעת שילוב צ׳אט
+          fields:
+            channel_name:
+              label: שם הערוץ
+              description: "אפשר למצוא את שם הערוץ בהגדרות שילוב הצ׳אט"
+            provider:
+              label: ספק

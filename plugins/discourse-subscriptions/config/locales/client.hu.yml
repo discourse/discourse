@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    discourse_subscriptions:
+      optional: Opcionális
+      campaign:
+        success_title: Siker!
+      plans:
+        interval:
+          adverb:
+            day: Napi
+            week: Heti
+            month: Havi
+            year: Éves
+      user:
+        payments:
+          created_at: Létrehozott
+        plans:
+          product: Név
+        subscriptions:
+          status: Állapot
+          update_card:
+            single: "Frissítés"
+          created_at: Létrehozott
+          cancel: mégse
+      billing:
+        email: E-mail
+      admin:
+        dashboard:
+          title: Vezérlőpult
+          table:
+            head:
+              user: Felhasználó
+        products:
+          product:
+            description: Leírás
+            active: Aktív
+            created_at: Létrehozott
+            updated_at: Frissítve
+        plans:
+          plan:
+            active: Aktív
+            created_at: Létrehozott
+        coupons:
+          active: Aktív?
+          actions: Műveletek
+        subscriptions:
+          subscription:
+            user: Felhasználó
+            status: Állapot
+            created_at: Létrehozott

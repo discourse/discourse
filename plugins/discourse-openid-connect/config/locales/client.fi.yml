@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_openid_connect: "Discourse OpenID Connect"
+  js:
+    login:
+      oidc:
+        name: "OpenID Connect"
+        title: "OpenID Connectilla"
+        message: "Todennus OpenID Connectilla"

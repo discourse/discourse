@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  reports:
+    currently_away:
+      labels:
+        username: نام‌کاربری
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: رویداد شروع شد
+  site_settings:
+    events_calendar_categories: "نمایش رویدادهای تقویم در بالای دسته‌بندی"
+    sidebar_show_upcoming_events: "پیوند رویدادهای آینده را در نوار کناری زیر «بیشتر» نمایش دهید."
+  discourse_calendar:
+    invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
+    holiday_status:
+      description: "در تعطیلات"
+  discourse_post_event:
+    errors:
+      bulk_invite:
+        error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
+      models:
+        event:
+          invalid_timezone: "منطقه‌زمانی شناسایی نشد."
+          invalid_allowed_groups: "گروه‌های مجاز نامعتبر."
+          acting_user_not_allowed_to_invite_these_groups: "کاربر فعلی اجازه دعوت از این گروه‌ها را ندارد."

@@ -1321,6 +1321,8 @@ nl:
       suspended_notice: "Deze gebruiker is geschorst tot %{date}."
       suspended_permanently: "Deze gebruiker is geschorst."
       suspended_reason: "Reden: "
+      silenced_permanently: "Deze gebruiker is gedempt."
+      silenced_reason: "Reden: "
       github_profile: "GitHub"
       email_activity_summary: "Activiteitsamenvatting"
       mailing_list_mode:
@@ -1839,7 +1841,8 @@ nl:
         removed: "Verwijderd"
         search: "typ om uitnodigingen te zoeken…"
         user: "Uitgenodigde gebruiker"
-        none: "Geen uitnodigingen om weer te geven."
+        none:
+          title: "Geen uitnodigingen om weer te geven."
         truncated:
           one: "De eerste uitnodiging wordt weergegeven."
           other: "De eerste %{count} uitnodigingen worden weergegeven."
@@ -2451,7 +2454,6 @@ nl:
       unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluisteren in-/uitschakelen"
-      toggle_unlisted: "Onzichtbaar in-/uitschakelen"
       insert_table: "Tabel invoegen"
       posting_not_on_topic: "Op welk topic wil je antwoorden?"
       saved_local_draft_tip: "lokaal opgeslagen"

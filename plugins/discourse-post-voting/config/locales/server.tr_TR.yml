@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Gönderi oylama etkin değil."
+        replying_to_post_not_permited: "Başka bir gönderiye yanıt olarak gönderi oluşturmanıza izin verilmiyor."
+        voting_not_permitted: "Bu gönderiye oy vermenize izin verilmiyor."
+        comment_cannot_be_downvoted: "Sadece yorumlara olumlu oy verebilirsiniz."
+        self_voting_not_permitted: "Kendi gönderinize veya yorumunuza oy vermenize izin verilmiyor."
+        vote_archived_topic: "Arşivlenmiş konulara oy veremezsiniz."
+        vote_closed_topic: "Kapatılan konulara oy veremezsiniz."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Gönderi oylama etkin değil."
+        subtype_not_allowed: "Gönderi Oylama alt türü yalnızca normal konularda kullanılabilir."
+        cannot_change_to_post_voting_subtype: "Bir konunun alt türünün Gönderi Oylama olarak değiştirilmesine izin verilmez."
+      answer_count:
+        one: "%{count} Yanıt"
+        other: "%{count} Yanıt"
+  site_settings:
+    qa_tags: "Konuyla ilgili gönderi oylamasını etkinleştirmek için etiketler"
+    post_voting_enabled: "Gönderi Oylaması Eklentisini etkinleştir"
+    post_voting_enable_likes_on_answers: "Gönderi Oylaması konularındaki yanıtlarda beğen düğmesini etkinleştir"
+    post_voting_undo_vote_action_window: "Kullanıcıların Gönderi Oylama konularındaki oyları geri almalarına izin verilen dakika sayısı (limit olmaması için 0 girin)"
+    post_voting_comment_limit_per_post: "Her gönderide izin verilen yorum sayısı"
+    min_trust_to_flag_posts_voting_comments: "Bir gönderi oylama yorumuna bayrak eklemek için minimum güven seviyesi"
+    flag_posts_voting_comments_allowed_groups: "Bir oylama yorumuna bayrak eklemesine izin verilen gruplar"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "Oy verin"
+      description: "Bu gönderiye oy verin"
+      short_description: "Bu gönderiye oy verin"
+      long_form: "bu gönderiye oy verdi"
+  vote:
+    error:
+      user_has_not_voted: "Kullanıcı oy vermedi."
+      user_over_limit: "Güven seviyenize uygun oy sayısını aşamazsınız."
+      already_voted: "Her soru için yalnızca bir kez oy kullanabilirsiniz."
+      undo_vote_action_window:
+        one: "Oy kullandıktan %{count} dakika sonra oylamayı geri alamazsınız."
+        other: "Oy kullandıktan %{count} dakika sonra oylamayı geri alamazsınız."
+      one_vote_per_post: "Her gönderi için yalnızca bir kez oy kullanabilirsiniz."
+      one_vote_per_comment: "Her yorum için yalnızca bir kez oy kullanabilirsiniz."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "Gönderi Oylama konusunda olmayan bir gönderiye yorum yapılmasına izin verilmez."
+        not_permitted: "İlişkili gönderiye yorum yapılmasına izin verilmez."
+        limit_exceeded: "Gönderi başına %{limit} yorum limitine ulaşıldı."
+        perform: "Kullanıcıyı susturmaya yetecek kadar yüksek puanla bayrak eklenen Gönderi Oylama Yorumu."
+        auto_silence_from_flags: "Bayrak eklenmesi nedeniyle otomatik olarak susturuldu."
+      reviewables:
+        comment_already_handled: "Teşekkürler, ancak bu yorumu daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
+        actions:
+          agree_and_keep_comment:
+            title: "Yorumu sakla"
+            description: "Bayrağı kabul edin ve yorumu değiştirmeyin."
+          agree_and_keep_deleted:
+            title: "Yorumu Silinmiş hâlde tut"
+            description: "Bayrağı kabul edin ve yorumu silinmiş olarak bırakın."
+          agree_and_suspend:
+            title: "Kullanıcıyı Askıya Al"
+            description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
+          agree_and_silence:
+            title: "Kullanıcıyı Sustur"
+            description: "Bayrağı kabul edin ve kullanıcıyı susturun."
+          agree_and_restore:
+            title: "Yorumu geri yükle"
+            description: "Kullanıcıların görebilmesi için yorumu geri yükleyin."
+          agree_and_delete:
+            title: "Yorumu sil"
+            description: "Kullanıcıların görememesi için yorumu silin."
+          delete_and_agree:
+            title: "Bayrağı yok say ve yorumu Sil"
+            description: "Kuyruktan kaldırarak bayrağı yok sayın ve yorumu silin."
+          disagree_and_restore:
+            title: "Katılma ve yorumu Geri Yükle"
+            description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
+          disagree:
+            title: "Katılma"
+          ignore:
+            title: "Hiçbir şey yapma"
+            description: "Herhangi bir işlem yapmadan bayrağı kuyruktan kaldırarak yok say."
+        transcript:
+          view: "Önceki yorumların dökümünü görüntüle"
+      reviewable_score_types:
+        needs_review:
+          title: "İnceleme Gerekiyor"
+        notify_user:
+          comment_pm_title: "Gönderi oylama yorumunuz"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "Bir gönderi oylama yorumu, personelin dikkatini gerektiriyor"
+          comment_pm_body: "%{link}\n\n%{comment}"

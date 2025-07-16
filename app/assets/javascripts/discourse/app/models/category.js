@@ -783,25 +783,11 @@ export default class Category extends RestModel {
         emoji: this.emoji,
         icon: this.icon,
         ...(this.siteSettings.content_localization_enabled && {
-          category_localizations_attributes: this._buildUpdatedLocalizations(),
+          category_localizations: this.localizations,
         }),
       }),
       type: id ? "PUT" : "POST",
     });
-  }
-
-  _buildUpdatedLocalizations() {
-    const localizationsToDestroy = this.category_localizations
-      .filter(
-        (original) =>
-          !this.localizations.some((newLoc) => newLoc.id === original.id)
-      )
-      .map((loc) => ({
-        id: loc.id,
-        _destroy: true,
-      }));
-
-    return [...this.localizations, ...localizationsToDestroy];
   }
 
   _permissionsForUpdate() {

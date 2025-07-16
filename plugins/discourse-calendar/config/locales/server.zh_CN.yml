@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  reports:
+    currently_away:
+      title: 用户目前离开
+      labels:
+        username: 用户名
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: 活动已开始
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "您提供的假期区域不存在。"
+    discourse_calendar_enable_holiday_failed: "无法启用此假期，它已被启用或未被禁用。"
+    discourse_post_event_bulk_invite_succeeded:
+      title: "活动 - 批量邀请成功"
+      subject_template: "批量邀请处理成功"
+      text_body_template: "您的批量邀请文件已被处理，创建了 %{processed} 位受邀者。"
+    discourse_post_event_bulk_invite_failed:
+      title: "活动 - 批量邀请失败"
+      subject_template: "批量邀请已被处理，但存在错误"
+      text_body_template: |
+        您的批量邀请文件已被处理，创建了 %{processed} 位受邀者，存在 %{failed} 个错误。
+
+        以下为日志：
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "日历中每个活动的最大文本行数。"
+    map_events_to_color: "为每个标签或类别分配颜色。"
+    map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
+    calendar_enabled: "启用 discourse-calendar 插件。这将在话题的第一个帖子中添加对 [calendar][/calendar] 标签的支持。"
+    discourse_post_event_enabled: "启用活动功能。注意：还需要启用 `calendar enabled`。"
+    displayed_invitees_limit: "限制活动中显示的受邀者数量。"
+    display_post_event_date_on_topic_title: "在话题标题之后显示活动日期。"
+    use_local_event_date: "在话题标题后使用本地日期而不是相对时间。"
+    discourse_post_event_allowed_on_groups: "允许创建活动的群组。"
+    discourse_post_event_allowed_custom_fields: "允许让每个活动设置自定义字段的值。"
+    discourse_post_event_edit_notifications_time_extension: "活动结束后延长一段时间（以分钟为单位），让“参加”的受邀者仍可以收到原始帖子的编辑通知。"
+    holiday_calendar_topic_id: "管理人员假期/缺勤日历的话题 ID。"
+    holiday_status_emoji: 给节日状态设置表情图片。
+    delete_expired_event_posts_after: "包含过期活动的帖子将在 (n) 小时后自动删除。设置为 -1 将禁用删除。"
+    all_day_event_start_time: "未指定开始时间的活动将在此时间开始。格式为 HH:mm。如为上午 6:00，输入 06:00"
+    all_day_event_end_time: "未指定结束时间的活动将在此时间结束。格式为 HH:mm。如为下午 6:00，输入 18:00"
+    all_day_event_time_error: "时间无效。格式必须为 HH:mm（例如：08:00）。"
+    calendar_categories: "在类别顶部显示日历。强制设置为 categoryId 和 postId。例如：categoryId=6;postId=453\n 其他有效设置：tzPicker、weekends 和 defaultView。"
+    calendar_categories_outlet: "允许更改应显示类别日历的位置。"
+    working_days: "设置工作日。您可以在帖子中使用 `timezones` 标签显示群组可用性，例如：`[timezones group=admins][timezones]`"
+    working_day_start_hour: "工作日的开始时间。"
+    working_day_end_hour: "工作日的结束时间。"
+    close_to_working_day_hours_extension: "以工作日小时为单位设置延长时间，突出显示时区。"
+    events_calendar_categories: "在类别顶部显示活动日历。"
+    sort_categories_by_event_start_date_enabled: "启用按活动开始日期对类别话题进行排序。"
+    disable_resorting_on_categories_enabled: "允许类别禁用用户对活动类别进行排序的功能。"
+    calendar_automatic_holidays_enabled: "根据用户所在区域自动设置假期状态（注意：您可以在插件设置中禁用特定的自动假期）"
+    event_participation_buttons: "用户可以使用的活动参与按钮列表。"
+    sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
+    include_expired_events_on_calendar: "在“类别日历”和“近期活动”视图中包括过去/过期的活动。"
+  discourse_calendar:
+    invite_user_notification: "%{username} 邀请您加入：%{description}"
+    calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"
+    more_than_one_calendar: "一个帖子中不能有多个日历。"
+    more_than_two_dates: "日历话题的帖子不能包含两个以上的日期。"
+    event_expired: "活动已过期"
+    holiday_status:
+      description: "休假"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} 即将开始。"
+      after_event_reminder: "%{title} 已结束。"
+      ongoing_event_reminder: "%{title} 正在进行。"
+    errors:
+      bulk_invite:
+        max_invitees: "前 %{max_invittes} 位受邀者已创建。尝试将文件拆分成更小的部分。"
+        error: "上传文件时出错。请稍后再试。"
+      models:
+        event:
+          only_one_event: "一个帖子只能有一个活动。"
+          must_be_in_first_post: "活动只能出现在话题的第一个帖子中。"
+          raw_invitees_length: "活动仅限于 %{count} 个用户/群组。"
+          raw_invitees:
+            only_group: "活动只接受群组名称。"
+          ends_at_before_starts_at: "活动的结束日期不能早于开始日期。"
+          start_must_be_present_and_a_valid_date: "活动需要有效的开始日期。"
+          end_must_be_a_valid_date: "结束日期必须是有效日期。"
+          invalid_recurrence: "重复必须是以下值之一：every_month、every_week、every_two_weeks、every_four_weeks、every_day、every_weekday。"
+          invalid_timezone: "无法识别时区。"
+          acting_user_not_allowed_to_create_event: "当前用户不能创建活动。"
+          acting_user_not_allowed_to_act_on_this_event: "当前用户不能在此活动上执行操作。"
+          invalid_allowed_groups: "允许的群组无效。"
+          acting_user_not_allowed_to_invite_these_groups: "当前用户不能邀请这些群组。"
+          custom_field_is_invalid: "不允许自定义字段 `%{field}`。"
+          name:
+            length: "活动名称长度必须介于 %{minimum} 和 %{maximum} 个字符之间。"
+  discourse_push_notifications:
+    popup:
+      event_reminder: "活动提醒"

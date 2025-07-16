@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filter'
+      group: 'Grupp'
+      rewards: 'Belöningar'
+      filter: 'Filter'
+      help_text: 'Du kan synkronisera en Discourse-grupp med en eller flera Patreon-belöningsnivåer.'
+      last_synced: 'Senast synkroniserad'
+      edit: 'Redigera'
+      delete: 'Radera'
+      save: 'Spara'
+      update_data: 'Uppdatera Patreon-data och synkronisera grupper'
+      refresh_page: 'Ny data har laddats ner från Patreon-API:n. Uppdatera sidan.'
+      select_group: 'Välj en grupp'
+      field:
+        id: "ID"
+        email: "E-post"
+        amount_cents: "Belopp (i cent)"
+        rewards: "Belöningar"
+        declined_since: "Donation nekad sedan"
+        more_details:
+          label: "Betalningar och mer detaljer"
+          help_text:
+            email_available: "Längst ner till höger på sidan ser du den här Patreonens donationshistorik."
+            email_not_available: "Välj Patreon-medlemmen och gå längst ner till höger på sidan för att se donationshistoriken."
+      donation_prompt:
+        body: |
+          <h1>Hej på dig som läser detta!</h1>
+
+          <p>Gillar du vår webbplats? Vill du bidra till ett gott ändamål?</p>
+
+          <p>
+            Om du tycker att vår webbplats är till nytta, och använder dig av det forum som vi har skapat, skulle vi bli glada om du donerade till webbplatsen.
+            Donationer är det som ser till att våra tjänster fungerar smidigt och säkerställer att vårt forum fungerar under många år framöver.
+            Varje krona räknas och kommer till god användning.
+          </p>
+
+          <p>Tack för ditt stöd!<p>
+
+          <p>
+          <a class="btn btn-large btn-danger" href="%{campaignUrl}">Bli Patreon</a>
+          </p>

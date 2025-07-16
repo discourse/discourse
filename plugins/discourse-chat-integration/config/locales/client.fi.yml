@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Chat-integraatiot"
+  js:
+    chat_integration:
+      menu_title: "Chat-integraatiot"
+      settings: "Asetukset"
+      no_providers: "Sinun täytyy sallia jotkin palveluntarjoajat lisäosien asetuksissa"
+      channels_with_errors: "Jotkin tämän palveluntuottajan kanavista pettivät viimeksi, kun viestejä lähetettiin. Klikkaa vikaikonia/ikoneita saadaksesi lisää tietoa."
+      channel_exception: "Tuntematon virhe tapahtui viimeksi, kun viesti lähetettiin tälle kanavalle. "
+      group_mention_template: "Maininnat: @%{name}"
+      group_message_template: "Viestejä käyttäjälle: @%{name}"
+      choose_group: "(valitse ryhmä) "
+      all_categories: "(kaikki alueet)"
+      all_tags: "(kaikki tunnisteet) "
+      create_rule: "Luo sääntö"
+      create_channel: "Luo kanava"
+      delete_channel: "Poista"
+      test_channel: "Testi"
+      edit_channel: "Muokkaa"
+      channel_delete_confirm: "Oletko varma, että haluat poistaa tämän kanavan? Kaikki kanavaan liittyvät säännöt poistetaan. "
+      test_modal:
+        title: "Lähetä testiviesti"
+        topic: "Ketju"
+        send: "Lähetä testiviesti"
+        close: "Sulje"
+        error: "Tuntematon virhe tapahtui viestiä lähetettäessä. Tarkasta sivuston loki saadaksesi lisätietoa."
+        success: "Viesti lähetetty onnistuneesti"
+      type:
+        normal: Normaali
+        group_message: Ryhmäviesti
+        group_mention: Ryhmämaininta
+      filter:
+        mute: 'Vaimenna'
+        follow: 'Vain ensimmäinen viesti'
+        watch: 'Kaikki viestit ja vastaukset'
+        thread: 'Kaikki viestit, joissa on ketjutettuja vastauksia'
+      rule_table:
+        filter: "Suodatin"
+        category: "Alue"
+        tags: "Tunnisteet"
+        edit_rule: "Muokkaa"
+        delete_rule: "Poista"
+      edit_channel_modal:
+        title: "Muokkaa kanavaa"
+        save: "Tallenna kanava"
+        cancel: "Peru"
+        provider: "Palveluntarjoaja"
+        channel_validation:
+          ok: "Voimassa"
+          fail: "Formaatti ei kelpaa"
+      edit_rule_modal:
+        title: Muokkaa sääntöä
+        save: Tallenna sääntö
+        cancel: Peru
+        provider: Palveluntarjoaja
+        type: Tyyppi
+        channel: Kanava
+        filter: Suodatin
+        category: Alue
+        group: Ryhmä
+        tags: Tunnisteet
+        instructions:
+          type: "Muuta tyyppiä laukaistaksesi ilmoituksia ryhmäviesteistä tai maininnoista"
+          filter: "Muistutusten taso. Vaimennus syrjäyttää muut vastaavat asetukset"
+          category: "Tämä sääntö koskee vain ketjuja määritellyllä alueella"
+          group: "Tämä sääntö koskee tähän ryhmään viittaavia viestejä"
+          tags: "Jos määritelty, tämä sääntö koskee vain ketjuja, joissa on vähintään yksi näistä tunnisteista"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Kanava
+              help: "esim. #kanava, @käyttäjänimi."
+          errors:
+            action_prohibited: "Botilla ei ole oikeuksia lähettää viestejä tälle kanavalle"
+            channel_not_found: "Kyseistä kanavaa ei ole olemassa Slackissa"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Nimi"
+              help: "Kanavaa kuvaava nimi. Sitä ei käytetä Telegramiin yhdistämiseen."
+            chat_id:
+              title: Keskustelutunnus
+              help: Botin antama numero tai julkisen kanavan tunnus muodossa @kanavannimi
+          errors:
+            channel_not_found: "Kyseistä kanavaa ei ole olemassa Telegramissa"
+            forbidden: "Botilla ei ole oikeuksia lähettää viestejä tälle kanavalle"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nimi"
+              help: "Kanavaa kuvaava nimi. Sitä ei käytetä Discordiin yhdistämiseen."
+            webhook_url:
+              title: Webhookin URL
+              help: Webhookin URL, joka on luotu Discordin palvelinasetuksissa
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "Nimi"
+              help: "Kanavaa kuvaava nimi. Sitä ei käytetä Guildediin yhdistämiseen"
+            webhook_url:
+              title: Webhookin URL
+              help: Webhookin URL, joka on luotu Guildedin palvelinasetuksissa
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Kanava
+              help: "esim. #kanava, @käyttäjänimi."
+          errors:
+            channel_not_found: "Kyseistä kanavaa ei ole olemassa Mattermostissa"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Nimi"
+              help: "Kanavaa kuvaava nimi. Sitä ei käytetä Matrixiin yhdistämiseen."
+            room_id:
+              title: "Huoneen tunnus"
+              help: "Huoneen \"yksityinen tunniste\". Sen pitäisi näyttää tältä: !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Käyttöoikeustunnus on virheellinen"
+            unknown_room: "Huoneen tunnus ei kelpaa"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Virta"
+              help: "Sen Zulip-virran nimi, johon viesti tuisi lähettää, esim. \"yleinen\""
+            subject:
+              title: "Otsikko"
+              help: "Aihe, joka tulisi antaa näille botin lähettämille viesteille"
+          errors:
+            does_not_exist: "Tätä virtaa ei ole olemassa Zulipissa"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Kanava
+              help: "esim. #kanava, @käyttäjänimi"
+          errors:
+            invalid_channel: "Tätä kanavaa ei ole olemassa Rocket Chatissa"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Nimi"
+              help: "Gitter-huoneen nimi, esim. gitterHQ/services."
+            webhook_url:
+              title: "Webhookin URL"
+              help: "URL-osoite, joka annetaan, kun luot uuden integraation Gitter-huoneessa."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Kulun tunnus"
+              help: "Kulun tunnus, joka annetaan sen jälkeen, kun olet luonut lähteen kululle, johon haluat lähettää viestejä."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "GroupMe-esiintymän nimi"
+              help: "Groupme-esiintymän nimi, joka on ilmoitettu sivuston asetuksissa. Lähetä kaikkiin esiintymiin käyttämällä \"kaikki\"-valintaa."
+          errors:
+            not_found: "Polkua, johon yritit lähettää viestisi, ei löytynyt. Tarkista botin tunnus sivuston asetuksista."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "Nimi"
+              help: "Teams-kanavan nimi, esim. discourse"
+            webhook_url:
+              title: "Webhookin URL"
+              help: "URL-osoite, joka annetaan, kun luot uuden saapuvan webhookin"
+          errors:
+            invalid_channel: "Tätä kanavaa ei ole olemassa Microsoft Teamsissa"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "Nimi"
+              help: "Kanavan nimi (näkyy vain Discoursen ylläpitäjän käyttöliittymässä)"
+            webhook_url:
+              title: "Webhookin URL-osoite"
+              help: "URL-osoite, joka annetaan, kun luot uuden saapuvan webhookin"
+          errors:
+            invalid_webhook: "Tämä webhookin URL ei ole kelvollinen."
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "Nimi"
+              help: "Webex-tilan nimi, esim. discourse"
+            webhook_url:
+              title: "Webhookin URL"
+              help: "URL-osoite, joka annetaan, kun luot uuden saapuvan webhookin"
+          errors:
+            invalid_channel: "Tätä kanavaa ei ole olemassa Webexissä"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "Nimi"
+              help: "Kanavan nimi (näkyy vain Discoursen ylläpitäjän käyttöliittymässä)"
+            webhook_url:
+              title: "Webhookin URL"
+              help: "URL-osoite, joka annetaan, kun luot uuden webhookin"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Lähetä Slack-viesti
+          fields:
+            message:
+              label: Viesti
+              description: >-
+                Käytä ${TOPIC} ketjun nimelle, ${URL} käytetylle URL-osoitteelle, ${REMOVED_TAGS} poistetuille tunnisteille, ${ADDED_TAGS} lisätyille tunnisteille, ${ADDED_AND_REMOVED} oletustekstille. Käytettävissä vain, jos triggeriksi on asetettu ketjun tunnisteiden muutos.
+            url:
+              label: URL
+            channel:
+              label: Kanava
+        send_chat_integration_message:
+          title: Lähetä chat-integraatioviesti
+          fields:
+            channel_name:
+              label: Kanavan nimi
+              description: "Löydät kanavan nimen chat-integraation asetuksista"
+            provider:
+              label: Palveluntarjoaja

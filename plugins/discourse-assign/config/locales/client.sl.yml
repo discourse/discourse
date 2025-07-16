@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    discourse_assign:
+      group_everyone: "Vsi"
+      reassign:
+        title: "Uredi"
+      assign_modal:
+        optional_label: "(neobvezno)"
+        status_label: Stanje
+      assign_mailer:
+        never: "Nikoli"
+        always: "Vedno"
+      reminders_frequency:
+        never: "Nikoli"
+        daily: "Dnevno"
+        weekly: "Tedensko"
+        monthly: "Mesečno"
+        quarterly: "V četrtletju"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Ne naredi nič"
+      assignment_description:
+        topic: "%{topic_title}"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Prispevek"

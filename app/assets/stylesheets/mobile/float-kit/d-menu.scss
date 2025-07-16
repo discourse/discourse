@@ -1,4 +1,6 @@
 .fk-d-menu-modal {
+  z-index: z("modal", "dropdown");
+
   &__grip {
     position: absolute;
     top: 2.5px;

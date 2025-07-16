@@ -4179,7 +4179,6 @@ ug:
     solarized_dark_theme_name: "قۇياش نۇرى قاراڭغۇ"
     wcag_dark: "WCAG قاراڭغۇ"
     wcag_dark_theme_name: "WCAG قاراڭغۇ"
-    default_theme_name: "كۆڭۈلدىكى"
     light_theme_name: "يورۇق"
     dark_theme_name: "قاراڭغۇ"
     neutral_theme_name: "بىتەرەپ"
@@ -4629,10 +4628,6 @@ ug:
         بۇ تارتۇق ئۇدا 365 كۈن زىيارەت قىلغانلارغا بېرىلىدۇ. ۋاھ، پۈتكۈل بىر يىل!
     badge_title_metadata: "%{site_title} دىكى %{display_name} تارتۇق"
   admin_login:
-    success: "ئېلخەت يوللاندى"
-    errors:
-      unknown_email_address: "نامەلۇم ئېلخەت ئادرېسى."
-      invalid_token: "ئىناۋەتسىز پەرمان تاختىسى."
     email_input: "باشقۇرغۇچى ئېلخىتى"
     submit_button: "ئېلخەت يوللا"
     safe_mode: "بىخەتەر ھالەت: تىزىمغا كىرگەندە بارلىق ئۆرنەك/ قىستۇرما چەكلىنىدۇ"

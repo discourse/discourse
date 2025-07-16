@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    user_notes:
+      title: "Käyttäjähuomiot"
+      attach: "Lisää käyttäjähuomio"
+      remove: "Poista käyttäjähuomio"
+      show: "Käyttäjähuomiot (%{count})"
+      delete_confirm: "Oletko varma, että haluat poistaa kyseisen käyttäjähuomion?"
+      show_post: "Näytä viesti"

@@ -1,0 +1,104 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  reports:
+    currently_away:
+      title: Şu anda uzaktaki kullanıcılar
+      labels:
+        username: Kullanıcı Adı
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Etkinlik başladı
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Belirttiğiniz tatil bölgesi mevcut değil."
+    discourse_calendar_enable_holiday_failed: "Bu tatil etkinleştirilemedi, zaten etkinleştirilmiş veya devre dışı bırakılmamış."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Etkinlik - Toplu Davet Başarılı Oldu"
+      subject_template: "Toplu davet başarıyla işlendi"
+      text_body_template: "Toplu davet dosyanız işlendi, %{processed} davetli oluşturuldu."
+    discourse_post_event_bulk_invite_failed:
+      title: "Etkinlik - Toplu Davet Başarısız Oldu"
+      subject_template: "Toplu davet, hatalarla işlendi"
+      text_body_template: |
+        Toplu davet dosyanız işlendi, %{failed} hatayla %{processed} davetli oluşturuldu.
+
+        Günlük:
+
+        ```text
+        %{logs}
+        ```
+  site_settings:
+    events_max_rows: "Takvimdeki etkinlik başına maksimum metin satırı."
+    map_events_to_color: "Her etikete veya kategoriye bir renk atayın."
+    map_events_title: "Her kategori için \"Yaklaşan Etkinlikler\" kenar çubuğu başlığındaki \"Etkinlikler\"in üzerine yazar."
+    calendar_enabled: "discourse-calendar eklentisini etkinleştirin. Bu, bir konunun ilk gönderisine [calendar][/calendar] etiketi için destek ekleyecektir."
+    discourse_post_event_enabled: "Etkinlik özelliklerini etkinleştirir. Not: `takvim etkin` özelliğinin de etkinleştirilmesi gerekir."
+    displayed_invitees_limit: "Bir etkinlikte gösterilen davetlilerin sayısını sınırlar."
+    display_post_event_date_on_topic_title: "Konu başlığından sonra olayın tarihini gösterir."
+    use_local_event_date: "Konu başlığından sonra göreli zaman yerine yerel tarih kullanın."
+    discourse_post_event_allowed_on_groups: "Etkinlik oluşturmasına izin verilen gruplar."
+    discourse_post_event_allowed_custom_fields: "Her olayın özel alanların değerini ayarlamasına izin verir."
+    discourse_post_event_edit_notifications_time_extension: "Bir etkinliğin bitiminden sonraki süreyi (dakika olarak) uzatır, \"gidiyor\" davetliler orijinal gönderideki düzenlemeden yine de haberdar edilir."
+    holiday_calendar_topic_id: "Personelin tatil / izin takviminin konu kimliği."
+    holiday_status_emoji: Tatil durumu için kullanılan emoji'yi tanımlar.
+    delete_expired_event_posts_after: "Süresi dolmuş etkinlikleri olan gönderiler (n) saat sonra otomatik olarak silinecektir. Silmeyi devre dışı bırakmak için -1'e ayarlayın."
+    all_day_event_start_time: "Başlangıç zamanı belirtilmeyen etkinlikler bu saatte başlayacaktır. Biçim SS:dd'dir. Sabah 6 için 06.00 yazın"
+    all_day_event_end_time: "Bitiş saati belirtilmeyen etkinlikler bu saatte sona erecektir. Biçim SS:dd'dir. Öğleden sonra 6 için 18.00 girin"
+    all_day_event_time_error: "Geçersiz saat. Biçim SS:dd (ör: 08.00) olmalıdır."
+    calendar_categories: "Bir kategorinin en üstünde bir takvim görüntüleyin. Zorunlu ayarlar, CategoryId ve postId'dir. ör.: CategoryId=6;postId=453\n Diğer geçerli ayarlar: tzPicker, hafta sonları ve defaultView."
+    calendar_categories_outlet: "Kategori takvimini hangi çıkışın göstereceğini değiştirmeye izin verir."
+    working_days: "Çalışma günlerini ayarlayın. Bir gönderide \"saat dilimleri\" etiketini kullanarak bir grubun uygunluğunu görüntüleyebilirsiniz, ör.: \"[timezones group=admins][timezones]\""
+    working_day_start_hour: "Çalışma günü saatlerinin başlama saati."
+    working_day_end_hour: "Çalışma günü saatlerinin bitiş saati."
+    close_to_working_day_hours_extension: "Saat dilimlerini vurgulamak için çalışma günü saatlerinde uzatma süresini ayarlayın."
+    events_calendar_categories: "Bir kategorinin en üstünde bir etkinlik takvimi görüntüleyin."
+    sort_categories_by_event_start_date_enabled: "Kategori konularının etkinlik başlangıç tarihine göre sıralanmasını etkinleştirin."
+    disable_resorting_on_categories_enabled: "Kategorilerin, kullanıcıların etkinlik kategorisine göre sıralama yapma özelliğini devre dışı bırakmasına izin verin."
+    calendar_automatic_holidays_enabled: "Kullanıcı bölgesine göre tatil durumunu otomatik olarak ayarla (not: belirli otomatik tatilleri eklenti ayarlarından devre dışı bırakabilirsiniz)"
+    event_participation_buttons: "Kullanıcıların kullanabileceği etkinlik katılım düğmelerinin listesi."
+    sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
+    include_expired_events_on_calendar: "Kategori Takvimi ve Yaklaşan Etkinlikler görünümlerine geçmiş/süresi dolmuş etkinlikleri ekleyin."
+  discourse_calendar:
+    invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
+    calendar_must_be_in_first_post: "Takvim etiketi, bir konunun yalnızca ilk gönderisinde kullanılabilir."
+    more_than_one_calendar: "Bir gönderide birden fazla takviminiz olamaz."
+    more_than_two_dates: "Bir takvim konusunun gönderisi ikiden fazla tarih içeremez."
+    event_expired: "Etkinliğin süresi doldu"
+    holiday_status:
+      description: "Tatilde"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} başlamak üzere."
+      after_event_reminder: "%{title} sona erdi."
+      ongoing_event_reminder: "%{title} devam ediyor."
+    errors:
+      bulk_invite:
+        max_invitees: "İlk %{max_invittes} davetli oluşturuldu. Dosyayı daha küçük parçalara bölmeyi deneyin."
+        error: "Bu dosya yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyiniz."
+      models:
+        event:
+          only_one_event: "Bir gönderide yalnızca bir etkinlik olabilir."
+          must_be_in_first_post: "Bir etkinlik yalnızca bir konunun ilk gönderisinde olabilir."
+          raw_invitees_length: "Bir etkinlik %{count} kullanıcı/grupla sınırlıdır."
+          raw_invitees:
+            only_group: "Bir etkinlik yalnızca grup adlarını kabul eder."
+          ends_at_before_starts_at: "Bir etkinlik başlamadan bitemez."
+          start_must_be_present_and_a_valid_date: "Bir etkinlik için geçerli bir başlangıç tarihi gerekir."
+          end_must_be_a_valid_date: "Bitiş tarihi geçerli bir tarih olmalıdır."
+          invalid_recurrence: "Yineleme şunlardan biri olmalıdır: her_ay, her_hafta, her_iki_hafta, her_dört_hafta, her_gün, her_hafta içi."
+          invalid_timezone: "Saat dilimi tanınmadı."
+          acting_user_not_allowed_to_create_event: "Mevcut kullanıcının etkinlik oluşturmasına izin verilmiyor."
+          acting_user_not_allowed_to_act_on_this_event: "Mevcut kullanıcının bu etkinlik üzerinde işlem yapmasına izin verilmiyor."
+          invalid_allowed_groups: "Geçersiz izin verilen gruplar."
+          acting_user_not_allowed_to_invite_these_groups: "Mevcut kullanıcının bu grupları davet etmesine izin verilmiyor."
+          custom_field_is_invalid: "\"%{field}\" özel alanına izin verilmiyor."
+          name:
+            length: "Etkinlik adı uzunluğu %{minimum} ila %{maximum} karakter olmalıdır."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Etkinlik Anımsatıcısı"
