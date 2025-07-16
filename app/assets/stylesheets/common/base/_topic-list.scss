@@ -129,7 +129,7 @@
 .sticky-header .topic-list-header {
   position: sticky;
   top: var(--header-offset, 60px);
-  background: var(--secondary);
+  background: var(--d-topic-list-header-background-color);
   z-index: 2;
 }
 
