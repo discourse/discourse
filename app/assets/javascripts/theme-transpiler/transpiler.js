@@ -54,7 +54,8 @@ function buildTemplateCompilerBabelPlugins({ extension, themeId }) {
 }
 
 globalThis.transpile = function (source, options = {}) {
-  const { moduleId, filename, extension, skipModule, themeId } = options;
+  const { moduleId, filename, extension, skipModule, themeId, generateMap } =
+    options;
 
   if (extension === "gjs") {
     const preprocessor = new Preprocessor();
@@ -69,7 +70,7 @@ globalThis.transpile = function (source, options = {}) {
   plugins.push([DecoratorTransforms, { runEarly: true }]);
 
   try {
-    return babelTransform(source, {
+    const result = babelTransform(source, {
       moduleId,
       filename,
       ast: false,
@@ -85,7 +86,16 @@ globalThis.transpile = function (source, options = {}) {
           },
         ],
       ],
-    }).code;
+      sourceMaps: generateMap,
+    });
+    if (generateMap) {
+      return {
+        code: result.code,
+        map: JSON.stringify(result.map),
+      };
+    } else {
+      return result.code;
+    }
   } catch (error) {
     // Workaround for https://github.com/rubyjs/mini_racer/issues/262
     error.message = JSON.stringify(error.message);

@@ -8,7 +8,12 @@ class ThemeField < ActiveRecord::Base
   CSP_NONCE_PLACEHOLDER = "__CSP__NONCE__PLACEHOLDER__f72bff1b1768168a34ee092ce759f192__"
 
   belongs_to :upload
-  has_one :javascript_cache, dependent: :destroy
+  has_one :javascript_cache, -> { where(name: nil) }, dependent: :destroy, autosave: true
+  has_many :raw_javascript_caches,
+           -> { where.not(name: nil) },
+           class_name: "JavascriptCache",
+           dependent: :destroy,
+           autosave: true
   has_one :upload_reference, as: :target, dependent: :destroy
   has_one :theme_settings_migration
 
@@ -119,8 +124,6 @@ class ThemeField < ActiveRecord::Base
 
   def process_html(html)
     errors = []
-    javascript_cache || build_javascript_cache
-
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
 
     js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
@@ -225,31 +228,52 @@ class ThemeField < ActiveRecord::Base
         node.remove
       end
 
+    unused_raw_caches = Set.new raw_javascript_caches.to_a
+
     doc
       .css("script")
+      .select { |node| inline_javascript?(node) }
       .each_with_index do |node, index|
-        if inline_javascript?(node)
-          js_compiler.append_raw_script(
-            "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
+        unique_name =
+          "theme-#{theme_id}-inline-#{Theme.targets[self.target_id]}-#{name}#{"-#{index + 1}" if index > 0}"
+
+        cache =
+          raw_javascript_caches.find { |c| c.name == unique_name } ||
+            raw_javascript_caches.build(name: unique_name)
+        transpiled =
+          DiscourseJsProcessor::Transpiler.new(skip_module: true).perform(
             node.inner_html,
+            nil,
+            "theme-#{theme_id}/#{unique_name}.js",
+            generate_map: true,
           )
-          node.remove
-        else
-          node["nonce"] = CSP_NONCE_PLACEHOLDER
-        end
+        cache.content = transpiled["code"]
+        cache.source_map = transpiled["map"]
+        cache.save!
+        unused_raw_caches.delete(cache)
+
+        node.replace "<script defer src='#{cache.url}' data-theme-id='#{theme_id}'></script>"
       end
 
-    settings_hash = theme.build_settings_hash
-    if js_compiler.has_content? && settings_hash.present?
-      js_compiler.prepend_settings(settings_hash)
-    end
-    javascript_cache.content = js_compiler.content
-    javascript_cache.source_map = js_compiler.source_map
-    javascript_cache.save!
+    doc.css("script").each { |node| node["nonce"] = CSP_NONCE_PLACEHOLDER }
 
-    doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
-      <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
-    HTML
+    unused_raw_caches.each(&:destroy!)
+
+    if js_compiler.has_content?
+      javascript_cache || build_javascript_cache
+      settings_hash = theme.build_settings_hash
+      js_compiler.prepend_settings(settings_hash) if settings_hash.present?
+      javascript_cache.content = js_compiler.content
+      javascript_cache.source_map = js_compiler.source_map
+      javascript_cache.save!
+
+      doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
+        <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
+      HTML
+    else
+      javascript_cache&.destroy!
+    end
+
     [doc.to_s, errors&.join("\n")]
   end
 
