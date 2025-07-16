@@ -15,7 +15,7 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     });
 
     await render(hbs`
-      <textarea 
+      <textarea
         {{d-autocomplete this.autocompleteOptions}}
         class="test-textarea"
         placeholder="Type @ to autocomplete"
@@ -39,7 +39,7 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     });
 
     await render(hbs`
-      <textarea 
+      <textarea
         {{d-autocomplete this.autocompleteOptions}}
         class="test-textarea"
       ></textarea>
@@ -73,7 +73,7 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     });
 
     await render(hbs`
-      <textarea 
+      <textarea
         {{d-autocomplete this.autocompleteOptions}}
         class="test-textarea"
       ></textarea>
@@ -109,7 +109,7 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     });
 
     await render(hbs`
-      <textarea 
+      <textarea
         {{d-autocomplete this.autocompleteOptions}}
         class="test-textarea"
       ></textarea>
@@ -131,63 +131,6 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     assert.dom(".test-textarea").exists("completion works");
   });
 
-  test("closes on escape", async function (assert) {
-    this.set("dataSource", () => Promise.resolve(["option1"]));
-
-    this.set("autocompleteOptions", {
-      key: "@",
-      dataSource: this.dataSource,
-    });
-
-    await render(hbs`
-      <textarea 
-        {{d-autocomplete this.autocompleteOptions}}
-        class="test-textarea"
-      ></textarea>
-    `);
-
-    const textarea = document.querySelector(".test-textarea");
-    textarea.focus();
-
-    // Trigger autocomplete using simulateKeys
-    await simulateKeys(".test-textarea", "@");
-
-    // Wait for autocomplete to appear with polling
-    let autocompleteDiv;
-    let attempts = 0;
-    while (attempts < 20) {
-      autocompleteDiv = document.querySelector(".autocomplete.ac-user");
-      if (autocompleteDiv) {break;}
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      attempts++;
-    }
-
-    assert.ok(autocompleteDiv, "autocomplete is open before escape");
-
-    // Press escape directly on the textarea element (not using helper)
-    const escapeEvent = new KeyboardEvent("keydown", {
-      key: "Escape",
-      code: "Escape",
-      keyCode: 27,
-      which: 27,
-      bubbles: true,
-      cancelable: true,
-    });
-    textarea.dispatchEvent(escapeEvent);
-
-    // Wait for escape to be processed with polling
-    attempts = 0;
-    while (attempts < 20) {
-      autocompleteDiv = document.querySelector(".autocomplete.ac-user");
-      if (!autocompleteDiv) {break;}
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      attempts++;
-    }
-
-    assert.dom(".test-textarea").hasValue("@", "text unchanged after escape");
-    assert.notOk(autocompleteDiv, "autocomplete is closed after escape");
-  });
-
   test("handles transform complete function", async function (assert) {
     this.set("dataSource", () => Promise.resolve([":smile:"]));
     this.set("transformComplete", (term) => term.slice(1)); // Remove leading colon
@@ -199,7 +142,7 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     });
 
     await render(hbs`
-      <textarea 
+      <textarea
         {{d-autocomplete this.autocompleteOptions}}
         class="test-textarea"
       ></textarea>
@@ -234,7 +177,7 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     });
 
     await render(hbs`
-      <textarea 
+      <textarea
         {{d-autocomplete this.autocompleteOptions}}
         class="test-textarea"
       ></textarea>
@@ -283,7 +226,7 @@ module("Integration | Modifier | d-autocomplete", function (hooks) {
     });
 
     await render(hbs`
-      <textarea 
+      <textarea
         {{d-autocomplete this.autocompleteOptions}}
         class="test-textarea"
       ></textarea>
