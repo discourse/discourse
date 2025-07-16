@@ -26,12 +26,12 @@ RSpec.describe ComposerMessagesFinder do
       before { SiteSetting.educate_until_posts = 10 }
 
       it "returns a message for a user who has not posted any topics" do
-        user.expects(:created_topic_count).returns(9)
+        user.expects(:post_count).returns(9)
         expect(finder.check_education_message).to be_present
       end
 
       it "returns no message when the user has posted enough topics" do
-        user.expects(:created_topic_count).returns(10)
+        user.expects(:post_count).returns(10)
         expect(finder.check_education_message).to be_blank
       end
     end
