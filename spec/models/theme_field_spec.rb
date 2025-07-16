@@ -59,7 +59,7 @@ RSpec.describe ThemeField do
     expect(theme_field.error).to eq(nil)
   end
 
-  it "only extracts inline javascript to an external file" do
+  it "extracts inline javascript to an external file" do
     html = <<~HTML
       <script type="text/discourse-plugin" version="0.8">
         var a = "inline discourse plugin";
@@ -81,31 +81,22 @@ RSpec.describe ThemeField do
 
     theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
-    expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+
+    baked_doc = Nokogiri::HTML5.fragment(theme_field.value_baked)
+
+    extracted_scripts = baked_doc.css("script[src^='/theme-javascripts/']")
+    expect(extracted_scripts.length).to eq(4)
+
+    expect(theme_field.javascript_cache.content).to include("inline discourse plugin")
+
+    raw_js_cache_contents = theme_field.raw_javascript_caches.map(&:content)
+    expect(raw_js_cache_contents).to contain_exactly(
+      'var b = "inline raw script";',
+      'var c = "text/javascript";',
+      'var d = "application/javascript";',
     )
-    expect(theme_field.value_baked).to include("external-script.js")
-    expect(theme_field.value_baked).to include('<script type="text/template"')
-    expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
-    expect(theme_field.javascript_cache.content).to include('b = "inline raw script"')
-    expect(theme_field.javascript_cache.content).to include('c = "text/javascript"')
-    expect(theme_field.javascript_cache.content).to include('d = "application/javascript"')
-  end
 
-  it "adds newlines between the extracted javascripts" do
-    html = <<~HTML
-      <script>var a = 10</script>
-      <script>var b = 10</script>
-    HTML
-
-    extracted = <<~JS
-      var a = 10
-      var b = 10
-    JS
-
-    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
-    theme_field.ensure_baked!
-    expect(theme_field.javascript_cache.content).to include(extracted)
+    expect(baked_doc.css("script[type='text/template']").length).to eq(1)
   end
 
   it "correctly extracts and generates errors for transpiled js" do
@@ -797,7 +788,7 @@ HTML
         theme.set_field(
           target: :common,
           name: "head_tag",
-          value: "<script>let c = 'd';</script>",
+          value: "<script type='text/discourse-plugin' version='0.1'>let c = 'd';</script>",
           type: :html,
         )
 

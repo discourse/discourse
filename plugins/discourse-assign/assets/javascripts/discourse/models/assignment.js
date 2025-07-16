@@ -31,12 +31,12 @@ export class Assignment extends EmberObject {
   // to-do rename to groupName, some components use both this model
   // and models from server, that's why we have to call it "group_name" now
   @tracked group_name;
-  @tracked username;
+  @tracked isEdited = false;
   @tracked name;
-  @tracked status;
   @tracked note;
+  @tracked status;
+  @tracked username;
   targetId;
   targetType;
   postNumber;
-  isEdited = false;
 }

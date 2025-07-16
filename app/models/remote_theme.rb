@@ -386,6 +386,8 @@ class RemoteTheme < ActiveRecord::Base
         raise ActiveRecord::Rollback if !theme.save
       end
 
+      create_theme_site_settings(theme, theme_info["theme_site_settings"])
+
       theme.migrate_settings(start_transaction: false) if run_migrations
     end
 
@@ -455,6 +457,35 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     theme.color_scheme = ordered_schemes.first if theme.new_record?
+  end
+
+  def create_theme_site_settings(theme, theme_site_settings)
+    theme_site_settings ||= {}
+
+    existing_theme_site_settings =
+      theme.theme_site_settings.where(name: theme_site_settings.keys).to_a
+    theme_site_settings.each do |setting, value|
+      next if !SiteSetting.themeable[setting.to_sym]
+
+      # If there is an existing theme site setting, then don't touch it,
+      # we don't want to mess with site owner's changes.
+      existing_theme_site_setting =
+        existing_theme_site_settings.find do |theme_site_setting|
+          theme_site_setting.name == setting
+        end
+      next if existing_theme_site_setting.present?
+
+      # The manager handles creating the theme site setting record
+      # if it does not exist.
+      Themes::ThemeSiteSettingManager.call(
+        params: {
+          theme_id: theme.id,
+          name: setting,
+          value: value,
+        },
+        guardian: Discourse.system_user.guardian,
+      ) { |result| }
+    end
   end
 
   def github_diff_link
