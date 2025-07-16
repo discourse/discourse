@@ -39,8 +39,8 @@ describe "Admin Color Palettes Features", type: :system do
     it "can filter by type" do
       visit("/admin/customize/colors")
 
-      find(".d-select").click
-      find("option[value='user_selectable']").click
+      select_kit = PageObjects::Components::DSelect.new(".d-select")
+      select_kit.select("user_selectable")
 
       expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
       expect(page).to have_no_css("[data-palette-id='#{regular_palette.id}']")
@@ -53,7 +53,10 @@ describe "Admin Color Palettes Features", type: :system do
       find(".admin-filter__input").fill_in(with: "bananas")
 
       expect(page).to have_css(".color-palette__no-results")
-      expect(page).to have_css("button", text: I18n.t("admin.customize.colors.filters.reset"))
+      expect(page).to have_css(
+        "button",
+        text: I18n.t("admin_js.admin.customize.colors.filters.reset"),
+      )
     end
   end
 
@@ -85,10 +88,10 @@ describe "Admin Color Palettes Features", type: :system do
 
       within("[data-palette-id='#{regular_palette.id}']") do
         find(".btn-flat").click
-        click_button(I18n.t("admin.customize.colors.set_default"))
+        click_button(I18n.t("admin_js.admin.customize.colors.set_default"))
       end
 
-      expect(toasts).to have_success(I18n.t("admin.customize.colors.saved_refreshing"))
+      expect(toasts).to have_success(I18n.t("admin_js.admin.customize.colors.saved_refreshing"))
     end
 
     it "can toggle user selectable status" do
@@ -96,7 +99,7 @@ describe "Admin Color Palettes Features", type: :system do
 
       within("[data-palette-id='#{regular_palette.id}']") do
         find(".btn-flat").click
-        click_button(I18n.t("admin.customize.theme.user_selectable_button_label"))
+        click_button(I18n.t("admin_js.admin.customize.theme.user_selectable_button_label"))
       end
 
       expect(regular_palette.reload.user_selectable).to be true
