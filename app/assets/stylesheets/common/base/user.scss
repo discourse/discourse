@@ -751,7 +751,7 @@
     }
   }
 
-  .light-color-scheme {
+  .color-palette {
     margin-right: 1em;
   }
 
@@ -773,15 +773,15 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    .light-color-scheme {
-      @include inactiveMode;
-    }
+    // .color-palette {
+    //   @include inactiveMode;
+    // }
   }
 
   @media (prefers-color-scheme: light) {
-    .dark-color-scheme {
-      @include inactiveMode;
-    }
+    // .dark-color-scheme {
+    //   @include inactiveMode;
+    // }
   }
 
   .undo-preview {

@@ -6,7 +6,6 @@ import { reload } from "discourse/helpers/page-reloader";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   listColorSchemes,
-  loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
@@ -40,24 +39,10 @@ export default class InterfaceController extends Controller {
   @controller("preferences") preferencesController;
 
   currentThemeId = currentThemeId();
-  previewingColorScheme = false;
-  selectedDarkColorSchemeId = null;
-  makeColorSchemeDefault = true;
 
-  @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
   subpageTitle = i18n("user.preferences_nav.interface");
 
   @reads("userSelectableColorSchemes.length") showColorSchemeSelector;
-
-  @not("currentSchemeCanBeSelected") showColorSchemeNoneItem;
-
-  selectedColorSchemeNoneLabel = i18n("user.color_schemes.default_description");
-
-  init() {
-    super.init(...arguments);
-    this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
-    this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
-  }
 
   @discourseComputed("makeThemeDefault")
   saveAttrNames(makeThemeDefault) {
@@ -156,24 +141,6 @@ export default class InterfaceController extends Controller {
     return listColorSchemes(this.site);
   }
 
-  @discourseComputed(
-    "userSelectableThemes",
-    "userSelectableColorSchemes",
-    "themeId"
-  )
-  currentSchemeCanBeSelected(userThemes, userColorSchemes, themeId) {
-    if (!userThemes || !themeId) {
-      return false;
-    }
-
-    const theme = userThemes.findBy("id", themeId);
-    if (!theme) {
-      return false;
-    }
-
-    return userColorSchemes.findBy("id", theme.color_scheme_id);
-  }
-
   @discourseComputed("model.user_option.theme_ids", "themeId")
   showThemeSetDefault(userOptionThemes, selectedTheme) {
     return !userOptionThemes || userOptionThemes[0] !== selectedTheme;
@@ -230,10 +197,10 @@ export default class InterfaceController extends Controller {
     return result;
   }
 
-  @discourseComputed
-  showDarkModeToggle() {
-    return this.defaultDarkSchemeId > 0 && !this.showDarkColorSchemeSelector;
-  }
+  // @discourseComputed
+  // showDarkModeToggle() {
+  //   return this.defaultDarkSchemeId > 0 && !this.showDarkColorSchemeSelector;
+  // }
 
   @discourseComputed
   userSelectableDarkColorSchemes() {
@@ -242,36 +209,14 @@ export default class InterfaceController extends Controller {
     });
   }
 
-  @discourseComputed("userSelectableDarkColorSchemes")
-  showDarkColorSchemeSelector(darkSchemes) {
-    // when a default dark scheme is set
-    // dropdown has two items (disable / use site default)
-    // but we show a checkbox in that case
-    const minToShow = this.defaultDarkSchemeId > 0 ? 2 : 1;
-    return darkSchemes && darkSchemes.length > minToShow;
-  }
-
-  getSelectedColorSchemeId() {
-    if (!this.session.userColorSchemeId) {
-      return;
-    }
-
-    const theme = this.userSelectableThemes?.findBy("id", this.themeId);
-
-    // we don't want to display the numeric ID of a scheme
-    // when it is set by the theme but not marked as user selectable
-    if (
-      theme?.color_scheme_id === this.session.userColorSchemeId &&
-      !this.userSelectableColorSchemes.findBy(
-        "id",
-        this.session.userColorSchemeId
-      )
-    ) {
-      return;
-    } else {
-      return this.session.userColorSchemeId;
-    }
-  }
+  // @discourseComputed("userSelectableDarkColorSchemes")
+  // showDarkColorSchemeSelector(darkSchemes) {
+  //   // when a default dark scheme is set
+  //   // dropdown has two items (disable / use site default)
+  //   // but we show a checkbox in that case
+  //   const minToShow = this.defaultDarkSchemeId > 0 ? 2 : 1;
+  //   return darkSchemes && darkSchemes.length > minToShow;
+  // }
 
   @action
   save() {
@@ -374,70 +319,6 @@ export default class InterfaceController extends Controller {
     // Force refresh when leaving this screen
     this.session.requiresRefresh = true;
     this.set("textSize", newSize);
-  }
-
-  @action
-  loadColorScheme(colorSchemeId) {
-    this.setProperties({
-      selectedColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.canPreviewColorScheme,
-    });
-
-    if (!this.canPreviewColorScheme) {
-      return;
-    }
-
-    if (colorSchemeId < 0) {
-      const defaultTheme = this.userSelectableThemes.findBy("id", this.themeId);
-
-      if (defaultTheme && defaultTheme.color_scheme_id) {
-        colorSchemeId = defaultTheme.color_scheme_id;
-      }
-    }
-    loadColorSchemeStylesheet(colorSchemeId, this.themeId);
-    if (this.selectedDarkColorSchemeId === -1) {
-      // set this same scheme for dark mode preview when dark scheme is disabled
-      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-    }
-  }
-
-  @action
-  loadDarkColorScheme(colorSchemeId) {
-    this.setProperties({
-      selectedDarkColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.canPreviewColorScheme,
-    });
-
-    if (!this.canPreviewColorScheme) {
-      return;
-    }
-
-    if (colorSchemeId === -1) {
-      // load preview of regular scheme when dark scheme is disabled
-      loadColorSchemeStylesheet(this.selectedColorSchemeId, this.themeId, true);
-      this.session.set("darkModeAvailable", false);
-    } else {
-      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-      this.session.set("darkModeAvailable", true);
-    }
-  }
-
-  @action
-  undoColorSchemePreview() {
-    this.setProperties({
-      selectedColorSchemeId: this.session.userColorSchemeId,
-      selectedDarkColorSchemeId: this.session.userDarkSchemeId,
-      previewingColorScheme: false,
-    });
-    const darkStylesheet = document.querySelector("link#cs-preview-dark"),
-      lightStylesheet = document.querySelector("link#cs-preview-light");
-    if (darkStylesheet) {
-      darkStylesheet.remove();
-    }
-
-    if (lightStylesheet) {
-      lightStylesheet.remove();
-    }
   }
 
   @action

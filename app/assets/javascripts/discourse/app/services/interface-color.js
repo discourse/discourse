@@ -83,6 +83,7 @@ export default class InterfaceColor extends Service {
     if (flipStylesheets) {
       const lightStylesheet = this.#lightColorsStylesheet();
       const darkStylesheet = this.#darkColorsStylesheet();
+      debugger;
       if (lightStylesheet && darkStylesheet) {
         lightStylesheet.media = "none";
         darkStylesheet.media = "all";
@@ -102,6 +103,7 @@ export default class InterfaceColor extends Service {
     }
 
     const darkStylesheet = this.#darkColorsStylesheet();
+    debugger;
     if (darkStylesheet) {
       darkStylesheet.media = "(prefers-color-scheme: dark)";
       this.appEvents.trigger("interface-color:changed", DARK);
