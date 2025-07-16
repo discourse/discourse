@@ -113,8 +113,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       puppeteer-core:
-        specifier: ^24.13.0
-        version: 24.13.0
+        specifier: ^24.14.0
+        version: 24.14.0
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -2492,8 +2492,8 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@puppeteer/browsers@2.10.5':
-    resolution: {integrity: sha512-eifa0o+i8dERnngJwKrfp3dEq7ia5XFyoqB17S4gK8GhsQE4/P8nxOfQSE0zQHxzzLo/cmF+7+ywEQ7wK7Fb+w==}
+  '@puppeteer/browsers@2.10.6':
+    resolution: {integrity: sha512-pHUn6ZRt39bP3698HFQlu2ZHCkS/lPcpv7fVQcGBSzNNygw171UXAKrCUhy+TEMw4lEttOKDgNpb04hwUAJeiQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -3612,8 +3612,8 @@ packages:
     resolution: {integrity: sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==}
     engines: {node: '>=6.0'}
 
-  chromium-bidi@7.1.0:
-    resolution: {integrity: sha512-UVYuuZfwi7AIiV+OWIRePZD6kX1bSNxoWjEsYG+Xkb97hzQIt9qnV662I5A6BAcdKO4bcZQVrkK/VhNHzFjNDg==}
+  chromium-bidi@7.1.1:
+    resolution: {integrity: sha512-L2BKQ0rSLADgbPMIdDh3wnYHs3EiUiMay2Sq0CTolheaADmWIf6Pe+T9LJRcnh5rcMz0U7MVk0cQVvKsGRMa1g==}
     peerDependencies:
       devtools-protocol: '*'
 
@@ -7341,8 +7341,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.13.0:
-    resolution: {integrity: sha512-2Mr1zFCMfAJpKN5mRGqDAmwVEtS6qsalLnUZJn1uJxMdbZLMiqNuMf12gDmZGizg0CjvcfXxoaJhEZB8W0DXlw==}
+  puppeteer-core@24.14.0:
+    resolution: {integrity: sha512-NO9XpCl+i8oB0zJp81iPhzMo2QK8/JTj4ramSvTpGCo9CPCNo4AZ8qVOGpSgXzlcOfOT3VHOkzTfPo08GOE5jA==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -10750,7 +10750,7 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@puppeteer/browsers@2.10.5':
+  '@puppeteer/browsers@2.10.6':
     dependencies:
       debug: 4.4.1(supports-color@8.1.1)
       extract-zip: 2.0.1
@@ -12269,7 +12269,7 @@ snapshots:
 
   chrome-trace-event@1.0.4: {}
 
-  chromium-bidi@7.1.0(devtools-protocol@0.0.1464554):
+  chromium-bidi@7.1.1(devtools-protocol@0.0.1464554):
     dependencies:
       devtools-protocol: 0.0.1464554
       mitt: 3.0.1
@@ -16712,10 +16712,10 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.13.0:
+  puppeteer-core@24.14.0:
     dependencies:
-      '@puppeteer/browsers': 2.10.5
-      chromium-bidi: 7.1.0(devtools-protocol@0.0.1464554)
+      '@puppeteer/browsers': 2.10.6
+      chromium-bidi: 7.1.1(devtools-protocol@0.0.1464554)
       debug: 4.4.1(supports-color@8.1.1)
       devtools-protocol: 0.0.1464554
       typed-query-selector: 2.12.0
