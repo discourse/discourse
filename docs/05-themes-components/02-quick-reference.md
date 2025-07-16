@@ -16,7 +16,7 @@ As themes grow more powerful, there's more to remember about how they work. We h
 [:notebook_with_decorative_cover: Theme Directory](/c/theme)
 [:jigsaw: Component Directory](/c/theme-component)
 [:wrench: Theme Modifiers](https://meta.discourse.org/t/theme-modifiers-a-brief-introduction/150605)
-[:wrench: Themeable site settings](PLACEHOLDER_THEMEABLE)
+[:wrench: Themeable site settings](https://meta.discourse.org/t/-/374376)
 
 ### File/Folder Structure <small>[read more](https://meta.discourse.org/t/structure-of-themes-and-theme-components/60848)</small>
 
@@ -118,7 +118,7 @@ html {
 }
 ```
 
-### Themeable site settings <small>[read more](PLACEHOLDER_THEMEABLE)</small>
+### Themeable site settings <small>[read more](https://meta.discourse.org/t/-/374376)</small>
 
 `about.json`:
 
