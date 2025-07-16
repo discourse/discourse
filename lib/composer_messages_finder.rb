@@ -27,8 +27,9 @@ class ComposerMessagesFinder
     return if @topic&.private_message?
 
     education_key = creating_topic? ? "education.new-topic" : "education.new-reply"
+    count = @user.topic_count + @user.post_count
 
-    if @user.post_count < SiteSetting.educate_until_posts
+    if count < SiteSetting.educate_until_posts
       return(
         {
           id: "education",
