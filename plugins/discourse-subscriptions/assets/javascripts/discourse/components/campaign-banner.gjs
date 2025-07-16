@@ -147,6 +147,9 @@ export default class CampaignBanner extends Component {
     "visible"
   )
   shouldShow(currentRoute, currentUser, enabled, visible) {
+    if (!currentRoute) {
+      return false;
+    }
     // do not show on admin or subscriptions pages
     const showOnRoute =
       currentRoute !== "discovery.s" &&
