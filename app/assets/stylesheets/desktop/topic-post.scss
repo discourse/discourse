@@ -17,7 +17,7 @@
   float: left;
   min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--primary-low);
   padding: var(--space-3) 0 0 0;
 
   .topic-meta-data {
@@ -522,7 +522,7 @@ video {
 }
 
 .topic-avatar {
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--primary-low);
   padding-top: var(--space-4);
   width: var(--topic-avatar-width);
   float: left;
