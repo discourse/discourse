@@ -201,8 +201,9 @@ export default class PostSmallAction extends Component {
               <div class="small-action-custom-message">
                 <PostCookedHtml
                   @post={{@post}}
-                  @highlightTerm={{@highlightTerm}}
                   @decoratorState={{this.decoratorState}}
+                  @highlightTerm={{@highlightTerm}}
+                  @streamElement={{@streamElement}}
                 />
               </div>
             {{/if}}

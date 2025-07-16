@@ -4,8 +4,15 @@ import PostQuotedContent from "discourse/components/post/quoted-content";
 
 export default function quoteControls(element, context) {
   // Extract required properties from context
-  const { post, highlightTerm, ignoredUsers, decoratorState, owner, helper } =
-    context;
+  const {
+    decoratorState,
+    helper,
+    highlightTerm,
+    ignoredUsers,
+    owner,
+    post,
+    streamElement,
+  } = context;
 
   // Find all quote blocks in the element
   const quotes = element.querySelectorAll("aside.quote");
@@ -60,6 +67,7 @@ export default function quoteControls(element, context) {
       quotedPostNotFound: aside.classList.contains("quote-post-not-found"),
       quotedPostNumber,
       quotedTopicId,
+      streamElement,
       title,
       username,
       wrapperElement: aside,

@@ -48,6 +48,10 @@ export default class TaskActions extends Service {
   async unassignPost(post) {
     await this.unassign(post.id, "Post");
     delete post.topic.indirectly_assigned_to[post.id];
+
+    // force the components tracking `topic.indirectly_assigned_to` to update
+    // eslint-disable-next-line no-self-assign
+    post.topic.indirectly_assigned_to = post.topic.indirectly_assigned_to;
   }
 
   showAssignModal(
@@ -85,11 +89,11 @@ export default class TaskActions extends Service {
 
   async assign(model) {
     if (isEmpty(model.username)) {
-      model.target.set("assigned_to_user", null);
+      model.target.assigned_to_user = null;
     }
 
     if (isEmpty(model.group_name)) {
-      model.target.set("assigned_to_group", null);
+      model.target.assigned_to_group = null;
     }
 
     let path = "/assign/assign";

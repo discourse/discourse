@@ -467,6 +467,140 @@ RSpec.describe RemoteTheme do
         expect(screenshot_2.upload.original_filename).to eq("dark.jpeg")
       end
     end
+
+    describe "theme site settings" do
+      it "creates theme site settings defined in about.json" do
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "enable_welcome_banner" => false })
+              .to_json,
+        )
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+        expect(theme.theme_site_settings.count).to eq(1)
+        expect(theme.theme_site_settings.first.name).to eq("enable_welcome_banner")
+        expect(theme.theme_site_settings.first.value).to eq("f")
+        expect(theme.theme_site_settings.first.data_type).to eq(SiteSetting.types[:bool])
+      end
+
+      it "does not remove theme site settings that are no longer in about.json" do
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge(
+                "theme_site_settings" => {
+                  "enable_welcome_banner" => false,
+                  "search_experience" => "search_field",
+                },
+              )
+              .to_json,
+        )
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+        expect(theme.theme_site_settings.count).to eq(2)
+
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "enable_welcome_banner" => false })
+              .to_json,
+        )
+
+        theme.remote_theme.update_from_remote
+        theme.reload
+
+        expect(theme.theme_site_settings.count).to eq(2)
+        expect(theme.theme_site_settings.first.name).to eq("enable_welcome_banner")
+        expect(theme.theme_site_settings.first.value).to eq("f")
+        expect(theme.theme_site_settings.second.name).to eq("search_experience")
+        expect(theme.theme_site_settings.second.value).to eq("search_field")
+      end
+
+      it "ignores non-themeable site settings" do
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "min_admin_password_length" => 20 })
+              .to_json,
+        )
+
+        theme = nil
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+
+        expect(theme.theme_site_settings.count).to eq(0)
+      end
+
+      # TODO (martin) Hard to test this without a better example...we don't have any
+      # theme site settings that are an enum with > 2 values.
+      xit "does not override user modified theme site settings" do
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "search_experience" => "search_field" })
+              .to_json,
+        )
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+        expect(theme.theme_site_settings.first.value).to eq("search_field")
+
+        theme.theme_site_settings.first.update!(value: "search_icon")
+
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "search_experience" => "search_field" })
+              .to_json,
+        )
+
+        theme.remote_theme.update_from_remote
+        theme.reload
+
+        expect(theme.theme_site_settings.first.value).to eq("search_icon")
+      end
+
+      it "does not update the existing theme site setting" do
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "search_experience" => "search_field" })
+              .to_json,
+        )
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+        expect(theme.theme_site_settings.first.name).to eq("search_experience")
+        expect(theme.theme_site_settings.first.value).to eq("search_field")
+
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "search_experience" => "search_icon" })
+              .to_json,
+        )
+
+        theme.remote_theme.update_from_remote
+        theme.reload
+
+        expect(theme.theme_site_settings.first.value).to eq("search_field")
+      end
+    end
   end
 
   let(:github_repo) do

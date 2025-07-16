@@ -254,7 +254,7 @@ export default class PostQuotedContent extends Component {
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
-                    @streamElement={{false}}
+                    @streamElement={{@streamElement}}
                   />
                 </div>
               </:content>

@@ -1504,6 +1504,7 @@ RSpec.describe ApplicationController do
             "isStaffWritesOnly",
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "themeSiteSettingOverrides",
           ],
         )
       end
@@ -1529,6 +1530,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
+            "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
           ],
@@ -1556,6 +1558,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
+            "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
