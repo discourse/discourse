@@ -50,6 +50,7 @@ module Migrations::Database::IntermediateDB
         mailing_list_mode,
         mailing_list_mode_frequency,
         new_topic_duration_minutes,
+        notification_level_when_assigned,
         notification_level_when_replying,
         oldest_search_log_date,
         only_chat_push_notifications,
@@ -69,7 +70,7 @@ module Migrations::Database::IntermediateDB
       )
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
 
@@ -116,6 +117,7 @@ module Migrations::Database::IntermediateDB
       mailing_list_mode: nil,
       mailing_list_mode_frequency: nil,
       new_topic_duration_minutes: nil,
+      notification_level_when_assigned: nil,
       notification_level_when_replying: nil,
       oldest_search_log_date: nil,
       only_chat_push_notifications: nil,
@@ -177,6 +179,7 @@ module Migrations::Database::IntermediateDB
         ::Migrations::Database.format_boolean(mailing_list_mode),
         mailing_list_mode_frequency,
         new_topic_duration_minutes,
+        notification_level_when_assigned,
         notification_level_when_replying,
         ::Migrations::Database.format_datetime(oldest_search_log_date),
         ::Migrations::Database.format_boolean(only_chat_push_notifications),
