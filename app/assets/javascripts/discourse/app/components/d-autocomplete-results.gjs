@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { htmlSafe } from "@ember/template";
 
 /**
  * Component for rendering autocomplete results in a d-menu
@@ -87,12 +88,14 @@ export default class DAutocompleteResults extends Component {
     if (!this.args.data.template) {
       return "";
     }
-    return this.args.data.template({ options: this.args.data.results });
+    return htmlSafe(
+      this.args.data.template({ options: this.args.data.results })
+    );
   }
 
   <template>
     <div {{didInsert this.setup}}>
-      {{{this.templateHTML}}}
+      {{this.templateHTML}}
     </div>
   </template>
 }
