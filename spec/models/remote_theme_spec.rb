@@ -206,7 +206,7 @@ RSpec.describe RemoteTheme do
       expect(theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
       expect(theme.theme_modifier_set.custom_homepage).to eq(true)
 
-      expect(theme.theme_fields.length).to eq(14)
+      expect(theme.theme_fields.length).to eq(15)
 
       mapped = Hash[*theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -227,7 +227,7 @@ RSpec.describe RemoteTheme do
         "export default function migrate(settings) {\n  return settings;\n}\n",
       )
 
-      expect(mapped.length).to eq(14)
+      expect(mapped.length).to eq(15)
 
       expect(theme.settings.length).to eq(2)
       expect(theme.settings[:boolean_setting].value).to eq(true)
@@ -381,7 +381,7 @@ RSpec.describe RemoteTheme do
           RemoteTheme::ImportError,
           I18n.t(
             "themes.import_error.asset_too_big",
-            filename: "common/color_definitions.scss",
+            filename: "about.json",
             limit: ActiveSupport::NumberHelper.number_to_human_size(1),
           ),
         )
@@ -759,7 +759,7 @@ RSpec.describe RemoteTheme do
       theme = RemoteTheme.import_theme_from_directory(theme_dir)
 
       expect(theme.name).to eq("Header Icons")
-      expect(theme.theme_fields.count).to eq(6)
+      expect(theme.theme_fields.count).to eq(7)
     end
   end
 end
