@@ -38,6 +38,7 @@
     box-sizing: border-box;
     width: 100%;
     padding-inline: 1rem;
+    padding-bottom: var(--composer-height);
   }
 
   &__inner-container {
@@ -125,8 +126,4 @@
   .cancel-message-action {
     margin-left: auto;
   }
-}
-
-.composer-open .chat-composer__outer-container {
-  padding-bottom: var(--composer-height);
 }
