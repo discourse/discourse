@@ -10,12 +10,12 @@
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
     box-shadow: var(--shadow-dropdown);
-    z-index: 1000;
+    z-index: z("dropdown") + 1;
     margin-top: 0.25em;
     max-height: 300px;
     overflow-y: auto;
 
-    .filter-tip {
+    .filter-tip__button {
       display: block;
       width: 100%;
       text-align: left;
@@ -47,15 +47,13 @@
         border-bottom-right-radius: var(--d-border-radius);
       }
 
-      .filter-name {
+      .filter-tip__name {
         font-weight: 600;
         color: var(--primary);
       }
 
-      .filter-placeholder {
-        color: var(--primary-medium);
-        font-style: italic;
-        margin-left: 0.25em;
+      .filter-tip__description {
+        color: var(--primary-high);
       }
     }
   }

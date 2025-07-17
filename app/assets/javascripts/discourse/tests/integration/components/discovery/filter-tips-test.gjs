@@ -15,14 +15,13 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
 
   hooks.beforeEach(function () {
     this.tips = [
-      { name: "category:", description: "Filter category", priority: 1 },
       {
-        name: "category:%",
+        name: "category:",
         description: "Filter category",
-        placeholder: "category",
+        priority: 1,
+        type: "category",
       },
-      { name: "tag:", description: "Filter tag", priority: 1 },
-      { name: "tag:%", description: "Filter tag", placeholder: "tag" },
+      { name: "tag:", description: "Filter tag", priority: 1, type: "tag" },
       { name: "status:", description: "Filter status", priority: 1 },
       { name: "status:open", description: "Open topics" },
     ];
@@ -57,18 +56,26 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     );
 
     await triggerEvent("#q", "focus");
-    assert.dom(".filter-tip").exists({ count: 3 }, "shows tips on focus");
-    assert.dom(".filter-tip.selected").doesNotExist("no selection yet");
+    assert
+      .dom(".filter-tip__button")
+      .exists({ count: 3 }, "shows tips on focus");
+    assert.dom(".filter-tip__button.selected").doesNotExist("no selection yet");
     assert.dom("#q").hasValue("");
 
     await triggerKeyEvent("#q", "keydown", "ArrowDown");
-    assert.dom(".filter-tip.selected .filter-name").hasText("category:");
+    assert
+      .dom(".filter-tip__button.selected .filter-tip__name")
+      .hasText("category:");
 
     await triggerKeyEvent("#q", "keydown", "ArrowDown");
-    assert.dom(".filter-tip.selected .filter-name").hasText("tag:");
+    assert
+      .dom(".filter-tip__button.selected .filter-tip__name")
+      .hasText("tag:");
 
     await triggerKeyEvent("#q", "keydown", "ArrowUp");
-    assert.dom(".filter-tip.selected .filter-name").hasText("category:");
+    assert
+      .dom(".filter-tip__button.selected .filter-tip__name")
+      .hasText("category:");
   });
 
   test("selecting a tip with tab", async function (assert) {
@@ -91,16 +98,19 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     await triggerKeyEvent("#q", "keydown", "Tab");
 
     assert.strictEqual(this.query, "category:", "tab adds filter");
-    assert
-      .dom(".filter-tip")
-      .exists({ count: 1 }, "tips for category shows up");
     assert.dom("#q").hasValue("category:");
+
+    assert
+      .dom(".filter-tip__button")
+      .exists({ count: 1 }, "tips for category shows up");
 
     await triggerEvent("#q", "focus");
     await triggerKeyEvent("#q", "keydown", "Tab");
 
-    assert.dom(".filter-tip").exists({ count: 3 }, "tips show again");
-    assert.dom(".filter-tip.selected").doesNotExist("selection cleared");
+    assert.dom(".filter-tip__button").exists({ count: 3 }, "tips show again");
+    assert
+      .dom(".filter-tip__button.selected")
+      .doesNotExist("selection cleared");
     assert.dom("#q").hasValue("category:support ", "category slug added");
   });
 
@@ -122,11 +132,14 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     await triggerEvent("#q", "focus");
     await fillIn("#q", "tag:e");
 
-    assert.dom(".filter-value").exists("shows tag results");
-    assert.dom(".filter-value").hasText("tag:ember (1)");
+    assert.dom(".filter-tip__button").exists("shows tag results");
+    assert.dom(".filter-tip__name").hasText("tag:ember");
+    assert.dom(".filter-tip__description").hasText("— 1");
 
     await triggerKeyEvent("#q", "keydown", "ArrowDown");
-    assert.dom(".filter-tip.selected .filter-value").hasText("tag:ember (1)");
+    assert
+      .dom(".filter-tip__button.selected .filter-tip__name")
+      .hasText("tag:ember");
 
     await triggerKeyEvent("#q", "keydown", "Enter");
     assert.strictEqual(this.query, "tag:ember ", "enter selects result");
@@ -148,16 +161,16 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     );
 
     await triggerEvent("#q", "focus");
-    assert.dom(".filter-tip").exists("tips visible");
+    assert.dom(".filter-tip__button").exists("tips visible");
     await triggerKeyEvent("#q", "keydown", "Escape");
-    assert.dom(".filter-tip").doesNotExist("tips hidden on escape");
+    assert.dom(".filter-tip__button").doesNotExist("tips hidden on escape");
 
     await fillIn("#q", "status");
     await triggerEvent("#q", "input");
     await triggerKeyEvent("#q", "keydown", "Escape");
     assert.strictEqual(this.query, "", "query not changed");
     assert.dom("#q").hasValue("status", "input unchanged");
-    assert.dom(".filter-tip").doesNotExist("tips remain hidden");
+    assert.dom(".filter-tip__button").doesNotExist("tips remain hidden");
   });
 
   test("blockEnterSubmit is called correctly", async function (assert) {
