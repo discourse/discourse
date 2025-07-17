@@ -1188,18 +1188,18 @@ RSpec.describe Admin::ThemesController do
         )
         theme.save!
 
-        javascript_caches =
+        javascript_cache =
           theme
             .theme_fields
             .find_by(target_id: Theme.targets[:common], name: :header)
-            .raw_javascript_caches
-        expect(javascript_caches.length).to eq(1)
+            .javascript_cache
+        expect(javascript_cache).to_not eq(nil)
 
         delete "/admin/themes/#{theme.id}.json"
 
         expect(response.status).to eq(204)
         expect { theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect { javascript_caches[0].reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { javascript_cache.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
