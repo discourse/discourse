@@ -5,6 +5,12 @@ import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
 
+function unicodeEnabled({ getContext }) {
+  return !!getContext().siteSettings.unicode_usernames;
+}
+
+const regExp = mentionRegex(unicodeEnabled);
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -37,10 +43,8 @@ const extension = {
       },
     },
   },
-
   inputRules: {
-    // TODO(renato): pass unicodeUsernames?
-    match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
+    match: new RegExp(`(^|\\W)(${regExp.source}) $`, `${regExp.flags}`),
     handler: (state, match, start, end) => {
       const { $from } = state.selection;
       if ($from.nodeBefore?.type === state.schema.nodes.mention) {

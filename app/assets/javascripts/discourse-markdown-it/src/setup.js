@@ -156,6 +156,7 @@ class Setup {
       markdownTypographerQuotationMarks:
         siteSettings.markdown_typographer_quotation_marks,
       markdownLinkifyTlds: siteSettings.markdown_linkify_tlds,
+      unicodeUsernames: siteSettings.unicode_usernames,
     };
 
     this.#context.options = options.discourse = discourse;
