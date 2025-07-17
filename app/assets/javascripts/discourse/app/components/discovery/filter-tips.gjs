@@ -83,7 +83,7 @@ export default class FilterTips extends Component {
 
       // If the tip has a type and we have value text, do placeholder search
       if (tip?.type && valueText !== undefined) {
-        this.handlePlaceholderSearch(filterName, valueText, tip.type, prefix);
+        this.handlePlaceholderSearch(filterName, valueText, tip, prefix);
         return this.searchResults.length > 0 ? this.searchResults : [];
       }
     }
@@ -151,10 +151,8 @@ export default class FilterTips extends Component {
   }
 
   @action
-  handlePlaceholderSearch(filterName, valueText, type, prefix = "") {
-    if (!this.activeFilter || this.activeFilter !== filterName) {
-      this.activeFilter = filterName;
-    }
+  handlePlaceholderSearch(filterName, valueText, tip, prefix = "") {
+    this.activeFilter = filterName;
 
     if (this.searchTimer) {
       cancel(this.searchTimer);
@@ -165,25 +163,42 @@ export default class FilterTips extends Component {
       this._performPlaceholderSearch,
       filterName,
       valueText,
-      type,
+      tip,
       prefix,
       300
     );
   }
 
-  async _performPlaceholderSearch(filterName, valueText, type, prefix) {
+  async _performPlaceholderSearch(filterName, valueText, tip, prefix) {
+    const type = tip.type;
+    let lastTerm = valueText;
+    let results = [];
+
+    let prevTerms = "";
+    let splitTerms;
+
+    if (tip.delimiters) {
+      const delimiters = tip.delimiters.map((s) => s.name);
+      splitTerms = lastTerm.split(new RegExp(`[${delimiters.join("")}]`));
+      lastTerm = splitTerms[splitTerms.length - 1];
+      prevTerms = valueText.slice(0, -lastTerm.length);
+    }
+
+    lastTerm = (lastTerm || "").toLowerCase().trim();
+
     if (type === "tag") {
       try {
         const response = await ajax("/tags/filter/search.json", {
-          data: { q: valueText || "", limit: 5 },
+          data: { q: lastTerm || "", limit: 5 },
         });
-        this.searchResults = response.results.map((tag) => ({
-          name: `${prefix}${filterName}:${tag.name}`,
+        results = response.results.map((tag) => ({
+          name: `${prefix}${filterName}:${prevTerms}${tag.name}`,
           description: `${tag.count}`,
           isPlaceholderCompletion: true,
+          term: tag.name,
         }));
       } catch {
-        this.searchResults = [];
+        results = [];
       }
     } else if (type === "category") {
       const categories = this.site.categories || [];
@@ -191,32 +206,58 @@ export default class FilterTips extends Component {
         .filter((c) => {
           const name = c.name.toLowerCase();
           const slug = c.slug.toLowerCase();
-          const search = (valueText || "").toLowerCase();
-          return name.includes(search) || slug.includes(search);
+          return name.includes(lastTerm) || slug.includes(lastTerm);
         })
         .slice(0, 10)
         .map((c) => ({
-          name: `${prefix}${filterName}:${c.slug}`,
+          name: `${prefix}${filterName}:${prevTerms}${c.slug}`,
           description: `${c.name}`,
           isPlaceholderCompletion: true,
+          term: c.slug,
         }));
-      this.searchResults = filtered;
+      results = filtered;
     } else if (type === "username") {
       try {
         const response = await ajax("/u/search/users", {
-          data: { term: valueText || "", limit: 10 },
+          data: { term: lastTerm || "", limit: 10 },
         });
-        this.searchResults = response.users.map((user) => ({
+        results = response.users.map((user) => ({
           name: `${prefix}${filterName}:${user.username}`,
+          term: user.username,
           isPlaceholderCompletion: true,
         }));
       } catch {
-        this.searchResults = [];
+        results = [];
       }
     } else if (type === "tag_group") {
       // Handle tag group search if needed
-      this.searchResults = [];
+      results = [];
     }
+
+    // special handling for exact matches
+    if (tip.delimiters) {
+      let lastMatches = false;
+
+      results = results.filter((r) => {
+        lastMatches ||= lastTerm === r.term;
+        if (splitTerms.includes(r.term)) {
+          return false;
+        }
+        return true;
+      });
+
+      if (lastMatches) {
+        tip.delimiters.forEach((delimiter) => {
+          results.push({
+            name: `${prefix}${filterName}:${prevTerms}${lastTerm}${delimiter.name}`,
+            description: delimiter.description,
+            isPlaceholderCompletion: true,
+          });
+        });
+      }
+    }
+
+    this.searchResults = results;
   }
 
   @action
@@ -263,7 +304,7 @@ export default class FilterTips extends Component {
 
       if (tip?.type) {
         this.activeFilter = filterName;
-        this.handlePlaceholderSearch(filterName, valueText, tip.type, prefix);
+        this.handlePlaceholderSearch(filterName, valueText, tip, prefix);
       } else {
         this.activeFilter = null;
         this.searchResults = [];
@@ -355,11 +396,11 @@ export default class FilterTips extends Component {
     if (item.isPlaceholderCompletion) {
       // Replace the current word with the completed value
       words[words.length - 1] = item.name;
-      const updatedValue = words.join(" ") + " ";
+      const updatedValue = words.join(" ");
 
       this.updateValue(updatedValue);
-      this.activeFilter = null;
       this.searchResults = [];
+      this.updateResults();
     } else {
       // Handle regular tip selection
       const lastWord = words[words.length - 1];
@@ -385,7 +426,7 @@ export default class FilterTips extends Component {
 
       if (item.type) {
         this.activeFilter = baseFilterName;
-        this.handlePlaceholderSearch(baseFilterName, "", item.type, prefix);
+        this.handlePlaceholderSearch(baseFilterName, "", item, prefix);
       }
     }
 
