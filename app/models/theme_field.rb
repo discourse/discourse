@@ -241,12 +241,18 @@ class ThemeField < ActiveRecord::Base
           raw_javascript_caches.find { |c| c.name == unique_name } ||
             raw_javascript_caches.build(name: unique_name)
         transpiled =
-          DiscourseJsProcessor::Transpiler.new(skip_module: true).perform(
-            node.inner_html,
-            nil,
-            "theme-#{theme_id}/#{unique_name}.js",
-            generate_map: true,
-          )
+          begin
+            DiscourseJsProcessor::Transpiler.new(skip_module: true).perform(
+              node.inner_html,
+              nil,
+              "theme-#{theme_id}/#{unique_name}.js",
+              generate_map: true,
+            )
+          rescue DiscourseJsProcessor::TranspileError => e
+            message = "[THEME #{theme_id} '#{theme.name}'] Compile error: #{e.message}"
+            errors << message
+            { "code" => "console.error(#{message.to_json});\n", "map" => nil }
+          end
         cache.content = transpiled["code"]
         cache.source_map = transpiled["map"]
         cache.save!
