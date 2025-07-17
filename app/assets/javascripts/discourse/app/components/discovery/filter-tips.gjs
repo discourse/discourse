@@ -500,7 +500,7 @@ export default class FilterTips extends Component {
         <div class="filter-tips__dropdown">
           {{#each this.currentItems as |item index|}}
             <DButton
-              @class={{concatClass
+              class={{concatClass
                 "filter-tip__button"
                 (if (eq index this.selectedIndex) "selected")
               }}
