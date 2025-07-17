@@ -103,7 +103,7 @@ export default class MountWidget extends Component {
   }
 
   get isDeactivated() {
-    return this.siteSettings.deactivate_widgets_rendering === "yes";
+    return this.siteSettings.deactivate_widgets_rendering;
   }
 
   didInsertElement() {

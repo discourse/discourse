@@ -139,7 +139,7 @@ export function createWidgetFrom(base, name, opts) {
 export function createWidget(name, opts) {
   if (
     getOwnerWithFallback(this)?.lookup(`service:site-settings`)
-      ?.deactivate_widgets_rendering === "yes"
+      ?.deactivate_widgets_rendering
   ) {
     warnWidgetsDeprecation(
       `Widgets are deactivated and won't be rendered. Your site may not working properly. Affected widget: ${name}.`,

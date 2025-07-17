@@ -4071,11 +4071,7 @@ experimental:
     default: "auto"
   deactivate_widgets_rendering:
     client: true
-    type: enum
-    choices:
-      - no
-      - yes
-    default: "no"
+    default: false
   enable_rich_text_paste:
     client: true
     default: true

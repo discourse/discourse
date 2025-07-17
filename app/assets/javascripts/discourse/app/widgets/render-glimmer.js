@@ -219,7 +219,7 @@ RenderGlimmer.prototype.type = "Widget";
 export function registerWidgetShim(name, tagName, template) {
   if (
     getOwnerWithFallback(this)?.lookup(`service:site-settings`)
-      ?.deactivate_widgets_rendering === "yes"
+      ?.deactivate_widgets_rendering
   ) {
     warnWidgetsDeprecation(
       `Widgets are deactivated and won't be rendered. Your site may not working properly. Affected widget: ${name}.`,
