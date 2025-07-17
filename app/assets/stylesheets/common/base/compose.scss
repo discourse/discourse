@@ -1122,6 +1122,10 @@ div.ac-wrap {
   &:nth-of-type(2) {
     width: calc(50% - 65px);
   }
+
+  .discourse-tags {
+    font-size: var(--font-down-1);
+  }
 }
 
 .custom-body {
