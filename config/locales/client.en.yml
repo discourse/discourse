@@ -5375,6 +5375,12 @@ en:
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 
+    filter:
+      description:
+        yesterday: "Yesterday"
+        last_week: "Last week"
+        last_month: "Last month"
+        last_year: "Last year"
     discovery:
       headings:
         all:

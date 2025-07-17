@@ -165,13 +165,26 @@ class TopicsFilter
         type: "tag_group",
         prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag_group") }],
       },
-      { name: "activity-before:", description: I18n.t("filter.description.activity_before") },
-      { name: "activity-after:", description: I18n.t("filter.description.activity_after") },
-      { name: "created-before:", description: I18n.t("filter.description.created_before") },
+      {
+        name: "activity-before:",
+        description: I18n.t("filter.description.activity_before"),
+        type: "date",
+      },
+      {
+        name: "activity-after:",
+        description: I18n.t("filter.description.activity_after"),
+        type: "date",
+      },
+      {
+        name: "created-before:",
+        description: I18n.t("filter.description.created_before"),
+        type: "date",
+      },
       {
         name: "created-after:",
         description: I18n.t("filter.description.created_after"),
         priority: 1,
+        type: "date",
       },
       {
         name: "created-by:",
@@ -179,8 +192,16 @@ class TopicsFilter
         type: "username",
         delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
-      { name: "latest-post-before:", description: I18n.t("filter.description.latest_post_before") },
-      { name: "latest-post-after:", description: I18n.t("filter.description.latest_post_after") },
+      {
+        name: "latest-post-before:",
+        description: I18n.t("filter.description.latest_post_before"),
+        type: "date",
+      },
+      {
+        name: "latest-post-after:",
+        description: I18n.t("filter.description.latest_post_after"),
+        type: "date",
+      },
       { name: "likes-min:", description: I18n.t("filter.description.likes_min") },
       { name: "likes-max:", description: I18n.t("filter.description.likes_max") },
       { name: "likes-op-min:", description: I18n.t("filter.description.likes_op_min") },

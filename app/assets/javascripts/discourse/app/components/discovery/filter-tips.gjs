@@ -9,6 +9,7 @@ import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
+import { i18n } from "discourse-i18n";
 
 const MAX_RESULTS = 20;
 
@@ -181,7 +182,11 @@ export default class FilterTips extends Component {
       const delimiters = tip.delimiters.map((s) => s.name);
       splitTerms = lastTerm.split(new RegExp(`[${delimiters.join("")}]`));
       lastTerm = splitTerms[splitTerms.length - 1];
-      prevTerms = valueText.slice(0, -lastTerm.length);
+      if (lastTerm === "") {
+        prevTerms = valueText;
+      } else {
+        prevTerms = valueText.slice(0, -lastTerm.length);
+      }
     }
 
     lastTerm = (lastTerm || "").toLowerCase().trim();
@@ -218,11 +223,21 @@ export default class FilterTips extends Component {
       results = filtered;
     } else if (type === "username") {
       try {
-        const response = await ajax("/u/search/users", {
-          data: { term: lastTerm || "", limit: 10 },
+        const data = {
+          limit: 10,
+        };
+
+        if ((lastTerm || "").length > 0) {
+          data.term = lastTerm;
+        } else {
+          data.last_seen_users = true;
+        }
+        const response = await ajax("/u/search/users.json", {
+          data,
         });
         results = response.users.map((user) => ({
-          name: `${prefix}${filterName}:${user.username}`,
+          name: `${prefix}${filterName}:${prevTerms}${user.username}`,
+          description: user.name || "",
           term: user.username,
           isPlaceholderCompletion: true,
         }));
@@ -232,6 +247,13 @@ export default class FilterTips extends Component {
     } else if (type === "tag_group") {
       // Handle tag group search if needed
       results = [];
+    } else if (type === "date") {
+      results = this.getDateSuggestions(
+        prefix,
+        filterName,
+        prevTerms,
+        lastTerm
+      );
     }
 
     // special handling for exact matches
@@ -258,6 +280,31 @@ export default class FilterTips extends Component {
     }
 
     this.searchResults = results;
+  }
+
+  getDateSuggestions(prefix, filterName, prevTerms, lastTerm) {
+    const dateOptions = [
+      { value: "1", key: "yesterday" },
+      { value: "7", key: "last_week" },
+      { value: "30", key: "last_month" },
+      { value: "365", key: "last_year" },
+    ];
+
+    return dateOptions
+      .filter((option) => {
+        const description = i18n(`filter.description.days.${option.key}`);
+        return (
+          !lastTerm ||
+          option.value.includes(lastTerm) ||
+          description.toLowerCase().includes(lastTerm.toLowerCase())
+        );
+      })
+      .map((option) => ({
+        name: `${prefix}${filterName}:${prevTerms}${option.value}`,
+        description: i18n(`filter.description.${option.key}`),
+        isPlaceholderCompletion: true,
+        term: option.value,
+      }));
   }
 
   @action
