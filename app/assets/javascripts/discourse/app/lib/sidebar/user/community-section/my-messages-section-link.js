@@ -1,7 +1,10 @@
+import { service } from "@ember/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { i18n } from "discourse-i18n";
 
 export default class MyMessagesSectionLink extends BaseSectionLink {
+  @service pmTopicTrackingState;
+
   get name() {
     return "my-messages";
   }
@@ -27,6 +30,39 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
     );
   }
 
+  get totalCount() {
+    const newUserMsgs = this._lookupCount({ type: "new", inboxFilter: "user" });
+    const unreadUserMsgs = this._lookupCount({
+      type: "unread",
+      inboxFilter: "user",
+    });
+    const groupMsgsCount = this.currentUser.groupsWithMessages?.reduce(
+      (count, { name }) => {
+        const newGroupMsgs = this._lookupCount("new", {
+          inboxFilter: "group",
+          groupName: name,
+        });
+        const unreadGroupMsgs = this._lookupCount("unread", {
+          inboxFilter: "group",
+          groupName: name,
+        });
+
+        return count + newGroupMsgs + unreadGroupMsgs;
+      },
+      0
+    );
+
+    return newUserMsgs + unreadUserMsgs + groupMsgsCount;
+  }
+
+  _lookupCount({ type, inboxFilter, groupName }) {
+    const opts = { inboxFilter };
+    return this.pmTopicTrackingState.lookupCount(
+      type,
+      groupName ? { ...opts, groupName } : opts
+    );
+  }
+
   get showCount() {
     return !this.currentUser?.sidebarShowCountOfNewItems;
   }
@@ -37,7 +73,7 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
     }
 
     if (this.currentUser.new_new_view_enabled) {
-      return "0";
+      return this.totalCount;
     } else {
       return i18n("sidebar.sections.community.links.my_messages.content");
     }
