@@ -1326,7 +1326,7 @@ class Post < ActiveRecord::Base
   end
 
   def has_localization?(locale = I18n.locale)
-    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+    get_localization(locale).present?
   end
 
   def in_user_locale?
@@ -1334,7 +1334,8 @@ class Post < ActiveRecord::Base
   end
 
   def get_localization(locale = I18n.locale)
-    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+    locale_string = locale.to_s.sub("-", "_")
+    post_localizations.find { |tl| tl.locale == locale_string }
   end
 
   private
