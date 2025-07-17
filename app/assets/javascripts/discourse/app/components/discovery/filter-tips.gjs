@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { cancel, debounce } from "@ember/runloop";
+import { cancel, debounce, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -19,8 +19,10 @@ export default class FilterTips extends Component {
   @tracked showTips = false;
   @tracked currentInputValue = "";
   @tracked searchResults = [];
-  @tracked activeFilter = null;
+
+  activeFilter = null;
   searchTimer = null;
+
   @tracked _selectedIndex = -1;
 
   willDestroy() {
@@ -281,10 +283,15 @@ export default class FilterTips extends Component {
 
   @action
   handleInputBlur() {
-    if (!this.element?.contains(document.activeElement)) {
-      this.showTips = false;
-      this.activeFilter = null;
-      this.searchResults = [];
+    // delay this cause we need to handle click events on tips
+    later(() => {
+      this.hideTipsIfNeeded();
+    }, 200);
+  }
+
+  hideTipsIfNeeded() {
+    if (document.activeElement !== this.inputElement && this.showTips) {
+      this.hideTips();
     }
   }
 
@@ -331,12 +338,14 @@ export default class FilterTips extends Component {
         }
         break;
       case "Escape":
-        this.showTips = false;
-        this.activeFilter = null;
-        this.searchResults = [];
-        this.args.blockEnterSubmit(false);
+        this.hideTips();
         break;
     }
+  }
+
+  hideTips() {
+    this.showTips = false;
+    this.args.blockEnterSubmit(false);
   }
 
   @action
@@ -404,14 +413,15 @@ export default class FilterTips extends Component {
           {{#each this.currentItems as |item index|}}
             <DButton
               @class={{concatClass
-                "filter-tip"
+                "filter-tip__button"
                 (if (eq index this.selectedIndex) "selected")
               }}
               @action={{fn this.selectItem item}}
             >
-              <span class="filter-name">{{item.name}}</span>
+              <span class="filter-tip__name">{{item.name}}</span>
               {{#if item.description}}
-                <span class="filter-description">— {{item.description}}</span>
+                <span class="filter-tip__description">—
+                  {{item.description}}</span>
               {{/if}}
             </DButton>
           {{/each}}
