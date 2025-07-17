@@ -45,6 +45,13 @@ class QunitController < ApplicationController
       return
     end
 
+    about_json =
+      JSON.parse(theme.theme_fields.find_by(target_id: Theme.targets[:about])&.value || "{}")
+    @required_plugins =
+      about_json
+        .dig("tests", "requiredPlugins")
+        &.map { |p| p.split("/").last.delete_suffix(".git") } || []
+
     request.env[:resolved_theme_id] = theme.id
     request.env[:skip_theme_ids_transformation] = true
   end

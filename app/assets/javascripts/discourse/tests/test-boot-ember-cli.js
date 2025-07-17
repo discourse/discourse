@@ -60,7 +60,7 @@ document.addEventListener("discourse-init", () => {
     }
 
     const isPlugin = name.match(/\/plugins\//);
-    const isTheme = name.match(/\/theme-\d+\//);
+    const isTheme = name.match(/\/theme--?\d+\//);
     const isCore = !isPlugin && !isTheme;
     const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
 
