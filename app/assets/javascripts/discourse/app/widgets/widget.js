@@ -3,6 +3,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { camelize } from "@ember/string";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import deprecated, { isDeprecationSilenced } from "discourse/lib/deprecated";
 import { isProduction } from "discourse/lib/environment";
 import { deepMerge } from "discourse/lib/object";
 import { consolePrefix } from "discourse/lib/source-identifier";
@@ -29,6 +30,27 @@ import {
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
 import { i18n } from "discourse-i18n";
+
+export const WIDGET_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta8-dev",
+  id: "discourse.widgets-end-of-life",
+  url: "", // TODO (widgets-end-of-life): Add URL to meta topic
+};
+
+export const POST_STREAM_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta1-dev",
+  id: "discourse.post-stream-widget-overrides",
+  url: "https://meta.discourse.org/t/372063/1",
+};
+
+export function warnWidgetsDeprecation(message) {
+  if (
+    consolePrefix() &&
+    !isDeprecationSilenced(POST_STREAM_DEPRECATION_OPTIONS.id)
+  ) {
+    deprecated(message, WIDGET_DEPRECATION_OPTIONS);
+  }
+}
 
 const _registry = {};
 
@@ -114,6 +136,10 @@ export function createWidgetFrom(base, name, opts) {
 }
 
 export function createWidget(name, opts) {
+  warnWidgetsDeprecation(
+    `Using \`api.createWidget\` is deprecated and will soon stop working. Use Glimmer components instead. Affected widget: ${name}.`
+  );
+
   return createWidgetFrom(Widget, name, opts);
 }
 

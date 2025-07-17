@@ -11,19 +11,16 @@ import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { createWidget } from "discourse/widgets/widget";
+import {
+  createWidget,
+  POST_STREAM_DEPRECATION_OPTIONS,
+} from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
-
-export const POST_STREAM_DEPRECATION_OPTIONS = {
-  since: "v3.5.0.beta1-dev",
-  id: "discourse.post-stream-widget-overrides",
-  url: "https://meta.discourse.org/t/372063/1",
-};
 
 export let havePostStreamWidgetExtensions = null;
 
 registerDeprecationHandler((_, opts) => {
-  if (opts?.id === "discourse.post-stream-widget-overrides") {
+  if (opts?.id === POST_STREAM_DEPRECATION_OPTIONS.id) {
     if (!havePostStreamWidgetExtensions) {
       havePostStreamWidgetExtensions = new Set();
     }

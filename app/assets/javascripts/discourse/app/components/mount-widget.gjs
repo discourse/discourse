@@ -6,7 +6,11 @@ import { diff, patch } from "virtual-dom";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { getRegister } from "discourse/lib/get-owner";
 import { WidgetClickHook } from "discourse/widgets/hooks";
-import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
+import {
+  queryRegistry,
+  traverseCustomWidgets,
+  warnWidgetsDeprecation,
+} from "discourse/widgets/widget";
 
 let _cleanCallbacks = {};
 
@@ -46,6 +50,10 @@ export default class MountWidget extends Component {
   init() {
     super.init(...arguments);
     const name = this.widget;
+
+    warnWidgetsDeprecation(
+      `The \`MountWidget\` component is deprecated and will soon stop working. Use Glimmer components instead. Affected widget: ${name}.`
+    );
 
     if (name === "post-cooked") {
       throw [
