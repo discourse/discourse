@@ -50,9 +50,12 @@ describe "Welcome banner", type: :system do
 
     context "with empty subheader translations (default)" do
       context "with `non-en` default locale and `en` interface locale" do
-        before { SiteSetting.default_locale = "uk" }
+        before do
+          SiteSetting.default_locale = "uk"
+          SiteSetting.allow_user_locale = true
+        end
 
-        xit "hides subheader if active locale key is missing and fallback `en` translation is an empty string" do
+        it "hides subheader if active locale key is missing and fallback `en` translation is an empty string" do
           TranslationOverride.upsert!(
             "uk",
             "js.welcome_banner.subheader.logged_in_members",
