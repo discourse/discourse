@@ -16,7 +16,7 @@ RSpec.describe "Styleguide assets" do
   context "when visiting styleguide" do
     it "loads styleguide assets" do
       get "/styleguide"
-      expect(response.body).to include("styleguide")
+      expect(response.body).to include("styleguide.js")
     end
   end
 end
