@@ -276,7 +276,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0708)
+    mime-types-data (3.2025.0715)
     mini_mime (1.1.5)
     mini_racer (0.19.0)
       libv8-node (~> 24.1.0.0)
@@ -374,7 +374,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
-    playwright-ruby-client (1.52.0)
+    playwright-ruby-client (1.53.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
     pp (0.6.2)
@@ -955,7 +955,7 @@ CHECKSUMS
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
-  mime-types-data (3.2025.0708) sha256=9089b436d382d8d2a4c9277d2aa9109ecf25ff4d056dc97e224009f042edb9db
+  mime-types-data (3.2025.0715) sha256=865f9759d5db11f983086a70379f8282e2e64fba7b82058b928c63a7ab79871d
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_racer (0.19.0) sha256=9152694738db8b145ced843126e2a391f908732c069cb97bbc909c2bac16bbc1
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
@@ -1002,7 +1002,7 @@ CHECKSUMS
   parallel_tests (5.3.0) sha256=af1af58044dd69987c5af199fcace01166a6238a11f36ce88ec173d1505a04ef
   parser (3.3.8.0) sha256=2476364142b307fa5a1b1ece44f260728be23858a9c71078e956131a75453c45
   pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
-  playwright-ruby-client (1.52.0) sha256=4a413f4176fcd794251909780d6b50a9b2791e59160cdc893dac1409459e9c84
+  playwright-ruby-client (1.53.0) sha256=640691a49e7a60b1388b7b8695e7d8c62dd1a5d9583907c3168b9656cfab4094
   pp (0.6.2) sha256=947ec3120c6f92195f8ee8aa25a7b2c5297bb106d83b41baa02983686577b6ff
   prettier_print (1.2.1) sha256=a72838b5f23facff21f90a5423cdcdda19e4271092b41f4ea7f50b83929e6ff9
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
