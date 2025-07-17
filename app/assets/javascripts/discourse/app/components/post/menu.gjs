@@ -466,7 +466,7 @@ export default class PostMenu extends Component {
       "post-menu-toggle-like-action",
       async () => {
         if (!this.currentUser) {
-          this.keyValueStore?.set({
+          this.keyValueStore.set({
             key: "likedPostId",
             value: this.args.post.id,
           });
