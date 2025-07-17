@@ -451,7 +451,7 @@ export default class PostMenu extends Component {
 
   @cached
   get checkLikedPost() {
-    if (this.currentUser && this.keyValueStore) {
+    if (this.currentUser) {
       const likedPostId = this.keyValueStore.getInt("likedPostId");
       if (likedPostId && likedPostId === this.args.post.id) {
         this.keyValueStore.remove("likedPostId");
