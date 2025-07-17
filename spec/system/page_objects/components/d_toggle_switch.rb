@@ -27,6 +27,15 @@ module PageObjects
           visible: :all,
         )
       end
+
+      def disabled?
+        label_component.has_css?(".d-toggle-switch__checkbox[disabled]", visible: :all)
+      end
+
+      def enabled?
+        label_component.has_no_css?(".d-toggle-switch__checkbox[disabled]", visible: :all) &&
+          label_component.has_css?(".d-toggle-switch__checkbox", visible: :all)
+      end
     end
   end
 end

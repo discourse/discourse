@@ -137,6 +137,31 @@ module DiscourseAutomation
       fields.map { |f| f[:component] }.uniq
     end
 
+    def missing_required_fields
+      if automation.blank?
+        raise RuntimeError.new("`missing_required_fields` cannot be called without `@automation`")
+      end
+
+      required = Set.new
+
+      fields.each do |field|
+        next if !field[:required]
+        required << field[:name].to_s
+      end
+
+      return [] if required.empty?
+
+      automation
+        .fields
+        .where(target: "script", name: required)
+        .pluck(:name, :metadata)
+        .each do |name, metadata|
+          required.delete(name) if metadata.present? && metadata["value"].present?
+        end
+
+      required.to_a
+    end
+
     def utils
       Utils
     end
