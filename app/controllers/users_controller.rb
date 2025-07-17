@@ -604,6 +604,7 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
+    Rails.logger.warn("!~! check_username 1, secure_session_id? #{session["secure_session_id"]}")
     if !params[:username].present?
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
@@ -617,10 +618,12 @@ class UsersController < ApplicationController
 
     checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
+    Rails.logger.warn("!~! check_username 2, secure_session_id? #{session["secure_session_id"]}")
     render json: checker.check_username(username, email)
   end
 
   def check_email
+    Rails.logger.warn("!~! check_email 1, secure_session_id? #{session["secure_session_id"]}")
     begin
       RateLimiter.new(nil, "check-email-#{request.remote_ip}", 10, 1.minute).performed!
     rescue RateLimiter::LimitExceeded
@@ -651,6 +654,7 @@ class UsersController < ApplicationController
       return render json: failed_json.merge(errors: [error])
     end
 
+    Rails.logger.warn("!~! check_email 2, secure_session_id? #{session["secure_session_id"]}")
     render json: success_json
   end
 
@@ -2107,9 +2111,10 @@ class UsersController < ApplicationController
   end
 
   def respond_to_suspicious_request
+    Rails.logger.warn("!~! in respond_to_suspicious_request, params: #{params}")
+    Rails.logger.warn(params)
     if suspicious?(params)
-      Rails.logger.warn("$$$$$$$$$$ in respond_to_suspicious_request, params is set to #{params}")
-      Rails.logger.warn(params)
+      Rails.logger.warn("Yup... suspicious!")
       render json: {
                success: true,
                active: false,
@@ -2120,18 +2125,19 @@ class UsersController < ApplicationController
 
   def suspicious?(params)
     Rails.logger.warn(
-      "$$$$$$$$$$ in suspicious? #{params} | #{current_user} | #{is_api?} | #{current_user&.admin?}",
+      "!~! in suspicious? #{params} | #{current_user} | #{is_api?} | #{current_user&.admin?}",
     )
     return false if current_user && is_api? && current_user.admin?
     honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
   end
 
   def honeypot_or_challenge_fails?(params)
-    Rails.logger.warn("$$$$$$$$$$ in honeypot_or_challenge_fails? #{params} | #{is_api?}")
-    return false if is_api?
+    Rails.logger.warn("!~! in honeypot_or_challenge_fails? #{params} | #{is_api?}")
     Rails.logger.warn(
-      "$$$$$$$$$$ in honeypot_or_challenge_fails?2 #{honeypot_value} | #{challenge_value&.try(:reverse)}",
+      "!~! in honeypot_or_challenge_fails, secure_session_id? #{session["secure_session_id"]}",
     )
+
+    return false if is_api?
     params[:password_confirmation] != honeypot_value ||
       params[:challenge] != challenge_value.try(:reverse)
   end
