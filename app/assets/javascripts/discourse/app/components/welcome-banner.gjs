@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import I18n, { i18n } from "discourse-i18n";
@@ -98,12 +100,15 @@ export default class WelcomeBanner extends Component {
         : "";
   }
 
+  get locationClass() {
+    return `--${dasherize(this.siteSettings.welcome_banner_location)}`;
+  }
+
   <template>
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
-
       <div
-        class="welcome-banner"
+        class={{concatClass "welcome-banner" this.locationClass}}
         {{this.checkViewport}}
         {{this.handleKeyboardShortcut}}
       >

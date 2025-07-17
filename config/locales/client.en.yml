@@ -2678,6 +2678,9 @@ en:
       disabled: "Do not display"
       sidebar_footer: "Display in sidebar footer"
       header: "Display in header"
+    welcome_banner_location:
+      above_topic_content: "Above topic content"
+      below_site_header: "Below site header"
 
     shortcut_modifier_key:
       shift: "Shift"

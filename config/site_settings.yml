@@ -3648,6 +3648,12 @@ uncategorized:
     themeable: true
     area: "interface"
 
+  welcome_banner_location:
+    client: true
+    enum: "WelcomeBannerLocation"
+    default: "above_topic_content"
+    area: "interface"
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
