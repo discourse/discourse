@@ -20,7 +20,6 @@ export default class FilterTips extends Component {
   @tracked currentInputValue = "";
   @tracked searchResults = [];
   @tracked activeFilter = null;
-  @tracked activeSeparator = null;
   searchTimer = null;
   @tracked _selectedIndex = -1;
 
@@ -95,44 +94,53 @@ export default class FilterTips extends Component {
         .slice(0, MAX_RESULTS);
     }
 
-    // Filter tips based on the last word
-    return this.args.tips
-      .filter((tip) => {
-        // Remove prefix from tip name for comparison
-        const tipName = tip.name.replace(/^[-=]/, "");
-        const searchTerm = lastWord.replace(/^[-=]/, "");
+    const tips = [];
 
-        // Skip exact matches with colon
-        if (searchTerm.endsWith(":") && tipName === searchTerm) {
-          return false;
+    this.args.tips.forEach((tip) => {
+      if (tips.length >= MAX_RESULTS) {
+        return;
+      }
+      const tipName = tip.name.replace(/^[-=]/, "");
+      const searchTerm = lastWord.replace(/^[-=]/, "");
+
+      // Skip exact matches with colon
+      if (searchTerm.endsWith(":") && tipName === searchTerm) {
+        return;
+      }
+
+      if (tipName.indexOf(searchTerm) > -1) {
+        tips.push(tip);
+      } else if (tip.alias && tip.alias.indexOf(searchTerm) > -1) {
+        tips.push({
+          ...tip,
+          name: tip.alias,
+        });
+      }
+    });
+
+    return tips.sort((a, b) => {
+      const aName = a.name.replace(/^[-=]/, "");
+      const bName = b.name.replace(/^[-=]/, "");
+      const searchTerm = lastWord.replace(/^[-=]/, "");
+
+      const aStartsWith = aName.startsWith(searchTerm);
+      const bStartsWith = bName.startsWith(searchTerm);
+
+      if (aStartsWith && !bStartsWith) {
+        return -1;
+      }
+      if (!aStartsWith && bStartsWith) {
+        return 1;
+      }
+
+      if (aStartsWith && bStartsWith) {
+        if (aName.length !== bName.length) {
+          return aName.length - bName.length;
         }
+      }
 
-        return tipName.indexOf(searchTerm) > -1;
-      })
-      .sort((a, b) => {
-        const aName = a.name.replace(/^[-=]/, "");
-        const bName = b.name.replace(/^[-=]/, "");
-        const searchTerm = lastWord.replace(/^[-=]/, "");
-
-        const aStartsWith = aName.startsWith(searchTerm);
-        const bStartsWith = bName.startsWith(searchTerm);
-
-        if (aStartsWith && !bStartsWith) {
-          return -1;
-        }
-        if (!aStartsWith && bStartsWith) {
-          return 1;
-        }
-
-        if (aStartsWith && bStartsWith) {
-          if (aName.length !== bName.length) {
-            return aName.length - bName.length;
-          }
-        }
-
-        return aName.localeCompare(bName);
-      })
-      .slice(0, MAX_RESULTS);
+      return aName.localeCompare(bName);
+    });
   }
 
   extractPrefix(word) {
@@ -165,11 +173,11 @@ export default class FilterTips extends Component {
     if (type === "tag") {
       try {
         const response = await ajax("/tags/filter/search.json", {
-          data: { q: valueText || "", limit: 10 },
+          data: { q: valueText || "", limit: 5 },
         });
         this.searchResults = response.results.map((tag) => ({
-          value: `${prefix}${filterName}:${tag.name}`,
-          label: `${prefix}${filterName}:${tag.name} (${tag.count})`,
+          name: `${prefix}${filterName}:${tag.name}`,
+          description: `${tag.count}`,
           isPlaceholderCompletion: true,
         }));
       } catch {
@@ -186,8 +194,8 @@ export default class FilterTips extends Component {
         })
         .slice(0, 10)
         .map((c) => ({
-          value: `${prefix}${filterName}:${c.slug}`,
-          label: `${prefix}${filterName}:${c.name}`,
+          name: `${prefix}${filterName}:${c.slug}`,
+          description: `${c.name}`,
           isPlaceholderCompletion: true,
         }));
       this.searchResults = filtered;
@@ -197,8 +205,7 @@ export default class FilterTips extends Component {
           data: { term: valueText || "", limit: 10 },
         });
         this.searchResults = response.users.map((user) => ({
-          value: `${prefix}${filterName}:${user.username}`,
-          label: `${prefix}${filterName}:@${user.username}`,
+          name: `${prefix}${filterName}:${user.username}`,
           isPlaceholderCompletion: true,
         }));
       } catch {
@@ -338,7 +345,7 @@ export default class FilterTips extends Component {
 
     if (item.isPlaceholderCompletion) {
       // Replace the current word with the completed value
-      words[words.length - 1] = item.value;
+      words[words.length - 1] = item.name;
       const updatedValue = words.join(" ") + " ";
 
       this.updateValue(updatedValue);
@@ -390,13 +397,6 @@ export default class FilterTips extends Component {
     this.args.onSelectTip(value);
   }
 
-  formatTipDisplay(tip) {
-    if (tip.prefixes && tip.prefixes.length > 0) {
-      return tip.name;
-    }
-    return tip.name;
-  }
-
   <template>
     <div class="filter-tips" {{didInsert this.setupEventListeners}}>
       {{#if (and this.showTips this.currentItems.length)}}
@@ -409,13 +409,9 @@ export default class FilterTips extends Component {
               }}
               @action={{fn this.selectItem item}}
             >
-              {{#if item.isPlaceholderCompletion}}
-                <span class="filter-value">{{item.label}}</span>
-              {{else}}
-                <span class="filter-name">{{this.formatTipDisplay item}}</span>
-                {{#if item.description}}
-                  <span class="filter-description">— {{item.description}}</span>
-                {{/if}}
+              <span class="filter-name">{{item.name}}</span>
+              {{#if item.description}}
+                <span class="filter-description">— {{item.description}}</span>
               {{/if}}
             </DButton>
           {{/each}}
