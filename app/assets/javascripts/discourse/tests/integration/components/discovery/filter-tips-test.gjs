@@ -33,7 +33,10 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     this.blockEnter = () => {};
     this.capture = (el) => (this.inputElement = el);
 
-    this.site.categories = [{ id: 1, name: "Support", slug: "support" }];
+    this.site.categories = [
+      { id: 1, name: "Bug", slug: "bugs" },
+      { id: 2, name: "Feature", slug: "feature" },
+    ];
     pretender.get("/tags/filter/search.json", () =>
       response({ results: [{ name: "ember", count: 1 }] })
     );
@@ -102,16 +105,19 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
 
     assert
       .dom(".filter-tip__button")
-      .exists({ count: 1 }, "tips for category shows up");
+      .exists({ count: 2 }, "tips for category shows up");
 
     await triggerEvent("#q", "focus");
     await triggerKeyEvent("#q", "keydown", "Tab");
 
-    assert.dom(".filter-tip__button").exists({ count: 3 }, "tips show again");
+    assert.dom("#q").hasValue("category:bugs", "category slug added");
+
+    assert
+      .dom(".filter-tip__button")
+      .exists({ count: 1 }, "tips show again for category that remains");
     assert
       .dom(".filter-tip__button.selected")
       .doesNotExist("selection cleared");
-    assert.dom("#q").hasValue("category:support ", "category slug added");
   });
 
   test("searching tag values", async function (assert) {

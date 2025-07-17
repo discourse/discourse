@@ -137,7 +137,7 @@ class TopicsFilter
         description: I18n.t("filter.description.category"),
         priority: 1,
         type: "category",
-        seperators: [{ name: ",", description: I18n.t("filter.description.category_any") }],
+        delimiters: [{ name: ",", description: I18n.t("filter.description.category_any") }],
         prefixes: [
           { name: "-", description: I18n.t("filter.description.exclude_category") },
           { name: "=", description: I18n.t("filter.description.category_without_subcategories") },
@@ -153,7 +153,7 @@ class TopicsFilter
         alias: "tags:",
         priority: 1,
         type: "tag",
-        seperators: [
+        delimiters: [
           { name: ",", description: I18n.t("filter.description.tags_any") },
           { name: "+", description: I18n.t("filter.description.tags_all") },
         ],
@@ -177,7 +177,7 @@ class TopicsFilter
         name: "created-by:",
         description: I18n.t("filter.description.created_by"),
         type: "username",
-        seperators: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
+        delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
       { name: "latest-post-before:", description: I18n.t("filter.description.latest_post_before") },
       { name: "latest-post-after:", description: I18n.t("filter.description.latest_post_after") },
