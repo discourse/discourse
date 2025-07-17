@@ -122,6 +122,16 @@ CREATE TABLE "groups"
     visibility_level                   INTEGER
 );
 
+CREATE TABLE group_users
+(
+    group_id           NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
+    created_at         DATETIME,
+    notification_level INTEGER,
+    owner              BOOLEAN,
+    PRIMARY KEY (group_id, user_id)
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
