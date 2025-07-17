@@ -15,6 +15,20 @@ RSpec.describe TopicsFilter do
       # 10 is arbitray, but better than just checking for 1
       expect(options.length).to be > 10
     end
+
+    it "should include nothing about tags when disabled" do
+      SiteSetting.tagging_enabled = false
+      options = TopicsFilter.option_info
+
+      tag_options = options.find { |o| o[:name].include? "tag" }
+      expect(tag_options).to be_nil
+
+      SiteSetting.tagging_enabled = true
+      options = TopicsFilter.option_info
+
+      tag_options = options.find { |o| o[:name].include? "tag" }
+      expect(tag_options).not_to be_nil
+    end
   end
 
   describe "#filter_from_query_string" do
