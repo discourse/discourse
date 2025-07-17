@@ -5214,6 +5214,9 @@ en:
             badges:
               content: "Badges"
               title: "All the badges available to earn"
+            filter:
+              content: "Filter"
+              title: "Filter topics by category, tag, or other criteria"
             topics:
               content: "Topics"
               title: "All topics"
