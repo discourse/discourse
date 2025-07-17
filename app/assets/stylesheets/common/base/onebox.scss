@@ -2,14 +2,14 @@
 
 :root {
   --onebox-shadow-color: var(--primary-100);
-  --onbox-border-color: var(--primary-300);
+  --onebox-border-color: var(--primary-300);
 }
 
 @mixin onebox-shadow($thickness) {
   border: 0;
   margin-inline: $thickness;
   box-shadow:
-    0 0 0 1px var(--onbox-border-color),
+    0 0 0 1px var(--onebox-border-color),
     0 0 0 $thickness var(--onebox-shadow-color);
 
   // Makes the outer drop shadow radius equal to --d-border-radius
