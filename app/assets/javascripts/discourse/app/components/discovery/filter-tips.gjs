@@ -20,6 +20,7 @@ export default class FilterTips extends Component {
   @tracked currentInputValue = "";
   @tracked searchResults = [];
   @tracked activeFilter = null;
+  @tracked activeSeparator = null;
   searchTimer = null;
   @tracked _selectedIndex = -1;
 
@@ -58,27 +59,35 @@ export default class FilterTips extends Component {
     const words = this.currentInputValue.split(/\s+/);
     const lastWord = words[words.length - 1].toLowerCase();
 
+    // If we have search results from placeholder search, show those
     if (this.activeFilter && this.searchResults.length > 0) {
       return this.searchResults;
     }
 
+    // Check if we're in the middle of a filter with a value
     const colonIndex = lastWord.indexOf(":");
-    const endsWithColon = lastWord.endsWith(":");
     if (colonIndex > 0) {
-      const filterName = lastWord.substring(0, colonIndex);
-      const valueText = lastWord.substring(colonIndex + 1);
+      const prefix = this.extractPrefix(lastWord);
+      const filterName = lastWord.substring(
+        prefix.length,
+        colonIndex + prefix.length
+      );
+      const valueText = lastWord.substring(colonIndex + prefix.length + 1);
 
+      // Find matching tip
       const tip = this.args.tips.find((t) => {
-        const tipFilterName = t.name.split(":")[0];
+        const tipFilterName = t.name.replace(/^[-=]/, "").split(":")[0];
         return tipFilterName === filterName;
       });
 
-      if (tip?.placeholder && valueText !== undefined) {
-        this.handlePlaceholderSearch(filterName, valueText, tip.placeholder);
+      // If the tip has a type and we have value text, do placeholder search
+      if (tip?.type && valueText !== undefined) {
+        this.handlePlaceholderSearch(filterName, valueText, tip.type, prefix);
         return this.searchResults.length > 0 ? this.searchResults : [];
       }
     }
 
+    // Default filtering logic
     if (!this.currentInputValue || lastWord === "") {
       return this.args.tips
         .filter((tip) => tip.priority)
@@ -86,29 +95,53 @@ export default class FilterTips extends Component {
         .slice(0, MAX_RESULTS);
     }
 
+    // Filter tips based on the last word
     return this.args.tips
       .filter((tip) => {
-        if (endsWithColon && tip.name === lastWord) {
+        // Remove prefix from tip name for comparison
+        const tipName = tip.name.replace(/^[-=]/, "");
+        const searchTerm = lastWord.replace(/^[-=]/, "");
+
+        // Skip exact matches with colon
+        if (searchTerm.endsWith(":") && tipName === searchTerm) {
           return false;
         }
-        return tip.name.indexOf(lastWord) > -1;
+
+        return tipName.indexOf(searchTerm) > -1;
       })
       .sort((a, b) => {
-        const aStartsWith = a.name.startsWith(lastWord);
-        const bStartsWith = b.name.startsWith(lastWord);
+        const aName = a.name.replace(/^[-=]/, "");
+        const bName = b.name.replace(/^[-=]/, "");
+        const searchTerm = lastWord.replace(/^[-=]/, "");
+
+        const aStartsWith = aName.startsWith(searchTerm);
+        const bStartsWith = bName.startsWith(searchTerm);
+
         if (aStartsWith && !bStartsWith) {
           return -1;
         }
         if (!aStartsWith && bStartsWith) {
           return 1;
         }
-        return a.name.localeCompare(b.name);
+
+        if (aStartsWith && bStartsWith) {
+          if (aName.length !== bName.length) {
+            return aName.length - bName.length;
+          }
+        }
+
+        return aName.localeCompare(bName);
       })
       .slice(0, MAX_RESULTS);
   }
 
+  extractPrefix(word) {
+    const match = word.match(/^(-=|=-|-|=)/);
+    return match ? match[0] : "";
+  }
+
   @action
-  handlePlaceholderSearch(filterName, valueText, placeholder) {
+  handlePlaceholderSearch(filterName, valueText, type, prefix = "") {
     if (!this.activeFilter || this.activeFilter !== filterName) {
       this.activeFilter = filterName;
     }
@@ -122,26 +155,27 @@ export default class FilterTips extends Component {
       this._performPlaceholderSearch,
       filterName,
       valueText,
-      placeholder,
+      type,
+      prefix,
       300
     );
   }
 
-  async _performPlaceholderSearch(filterName, valueText, placeholder) {
-    if (placeholder === "tag") {
+  async _performPlaceholderSearch(filterName, valueText, type, prefix) {
+    if (type === "tag") {
       try {
         const response = await ajax("/tags/filter/search.json", {
-          data: { q: valueText || "", limit: 5 },
+          data: { q: valueText || "", limit: 10 },
         });
         this.searchResults = response.results.map((tag) => ({
-          value: `${filterName}:${tag.name}`,
-          label: `${filterName}:${tag.name} (${tag.count})`,
+          value: `${prefix}${filterName}:${tag.name}`,
+          label: `${prefix}${filterName}:${tag.name} (${tag.count})`,
           isPlaceholderCompletion: true,
         }));
       } catch {
         this.searchResults = [];
       }
-    } else if (placeholder === "category") {
+    } else if (type === "category") {
       const categories = this.site.categories || [];
       const filtered = categories
         .filter((c) => {
@@ -152,24 +186,27 @@ export default class FilterTips extends Component {
         })
         .slice(0, 10)
         .map((c) => ({
-          value: `${filterName}:${c.slug}`,
-          label: `${filterName}:${c.name}`,
+          value: `${prefix}${filterName}:${c.slug}`,
+          label: `${prefix}${filterName}:${c.name}`,
           isPlaceholderCompletion: true,
         }));
       this.searchResults = filtered;
-    } else if (placeholder === "username") {
+    } else if (type === "username") {
       try {
         const response = await ajax("/u/search/users", {
           data: { term: valueText || "", limit: 10 },
         });
         this.searchResults = response.users.map((user) => ({
-          value: `${filterName}:@${user.username}`,
-          label: `${filterName}:@${user.username}`,
+          value: `${prefix}${filterName}:${user.username}`,
+          label: `${prefix}${filterName}:@${user.username}`,
           isPlaceholderCompletion: true,
         }));
       } catch {
         this.searchResults = [];
       }
+    } else if (type === "tag_group") {
+      // Handle tag group search if needed
+      this.searchResults = [];
     }
   }
 
@@ -203,18 +240,21 @@ export default class FilterTips extends Component {
     const colonIndex = lastWord.indexOf(":");
 
     if (colonIndex > 0) {
-      const filterName = lastWord.substring(0, colonIndex);
-      const valueText = lastWord.substring(colonIndex + 1);
+      const prefix = this.extractPrefix(lastWord);
+      const filterName = lastWord.substring(
+        prefix.length,
+        colonIndex + prefix.length
+      );
+      const valueText = lastWord.substring(colonIndex + prefix.length + 1);
 
       const tip = this.args.tips.find((t) => {
-        // TODO: also add handing for , and + which are a bit special
-        const tipFilterName = t.name.split(":")[0];
-        return tipFilterName === filterName && t.placeholder;
+        const tipFilterName = t.name.replace(/^[-=]/, "").split(":")[0];
+        return tipFilterName === filterName && t.type;
       });
 
-      if (tip?.placeholder) {
+      if (tip?.type) {
         this.activeFilter = filterName;
-        this.handlePlaceholderSearch(filterName, valueText, tip.placeholder);
+        this.handlePlaceholderSearch(filterName, valueText, tip.type, prefix);
       } else {
         this.activeFilter = null;
         this.searchResults = [];
@@ -297,6 +337,7 @@ export default class FilterTips extends Component {
     const words = this.currentInputValue.split(/\s+/);
 
     if (item.isPlaceholderCompletion) {
+      // Replace the current word with the completed value
       words[words.length - 1] = item.value;
       const updatedValue = words.join(" ") + " ";
 
@@ -304,28 +345,31 @@ export default class FilterTips extends Component {
       this.activeFilter = null;
       this.searchResults = [];
     } else {
-      const filterName = item.name;
+      // Handle regular tip selection
+      const lastWord = words[words.length - 1];
+      const prefix = this.extractPrefix(lastWord);
+
+      // Check if this tip supports prefixes
+      const supportsPrefix = item.prefixes && item.prefixes.length > 0;
+      const filterName =
+        supportsPrefix && prefix ? `${prefix}${item.name}` : item.name;
+
       words[words.length - 1] = filterName;
 
-      if (!filterName.endsWith(":")) {
+      // If the filter ends with colon or has separators, don't add space
+      if (!filterName.endsWith(":") && !item.separators?.length) {
         words[words.length - 1] += " ";
       }
-      const updatedValue = words.join(" ");
 
+      const updatedValue = words.join(" ");
       this.updateValue(updatedValue);
 
-      const baseFilterName = filterName.endsWith(":")
-        ? filterName.slice(0, -1)
-        : filterName;
+      // Check if we should show placeholder search
+      const baseFilterName = item.name.replace(/^[-=]/, "").split(":")[0];
 
-      const tip = this.args.tips.find((t) => {
-        const tipFilterName = t.name.split(":")[0];
-        return tipFilterName === baseFilterName;
-      });
-
-      if (tip?.placeholder) {
+      if (item.type) {
         this.activeFilter = baseFilterName;
-        this.handlePlaceholderSearch(baseFilterName, "", tip.placeholder);
+        this.handlePlaceholderSearch(baseFilterName, "", item.type, prefix);
       }
     }
 
@@ -346,6 +390,13 @@ export default class FilterTips extends Component {
     this.args.onSelectTip(value);
   }
 
+  formatTipDisplay(tip) {
+    if (tip.prefixes && tip.prefixes.length > 0) {
+      return tip.name;
+    }
+    return tip.name;
+  }
+
   <template>
     <div class="filter-tips" {{didInsert this.setupEventListeners}}>
       {{#if (and this.showTips this.currentItems.length)}}
@@ -361,7 +412,7 @@ export default class FilterTips extends Component {
               {{#if item.isPlaceholderCompletion}}
                 <span class="filter-value">{{item.label}}</span>
               {{else}}
-                <span class="filter-name">{{item.name}}</span>
+                <span class="filter-name">{{this.formatTipDisplay item}}</span>
                 {{#if item.description}}
                   <span class="filter-description">— {{item.description}}</span>
                 {{/if}}
