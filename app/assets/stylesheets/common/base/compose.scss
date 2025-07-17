@@ -719,12 +719,6 @@ html.composer-open:not(.has-full-page-chat) {
 
         &.selected {
           background-color: var(--d-selected);
-
-          .username,
-          .name,
-          .emoji-shortname {
-            font-weight: bold;
-          }
         }
 
         .avatar {
