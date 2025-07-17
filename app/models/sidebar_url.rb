@@ -53,6 +53,7 @@ class SidebarUrl < ActiveRecord::Base
       icon: "certificate",
       segment: SidebarUrl.segments["secondary"],
     },
+    { name: "Filter", path: "/filter", icon: "filter", segment: SidebarUrl.segments["secondary"] },
   ]
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
