@@ -16,7 +16,13 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
   hooks.beforeEach(function () {
     this.tips = [
       { name: "category:", description: "Filter category", priority: 1 },
+      {
+        name: "category:%",
+        description: "Filter category",
+        placeholder: "category",
+      },
       { name: "tag:", description: "Filter tag", priority: 1 },
+      { name: "tag:%", description: "Filter tag", placeholder: "tag" },
       { name: "status:", description: "Filter status", priority: 1 },
       { name: "status:open", description: "Open topics" },
     ];
@@ -152,5 +158,78 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     assert.strictEqual(this.query, "", "query not changed");
     assert.dom("#q").hasValue("status", "input unchanged");
     assert.dom(".filter-tip").doesNotExist("tips remain hidden");
+  });
+
+  test("blockEnterSubmit is called correctly", async function (assert) {
+    let blockEnterCalled = false;
+    let blockEnterValue = null;
+
+    this.blockEnter = (shouldBlock) => {
+      blockEnterCalled = true;
+      blockEnterValue = shouldBlock;
+    };
+
+    let self = this;
+
+    await render(
+      <template>
+        <input id="q" {{didInsert self.capture}} />
+        <FilterTips
+          @tips={{self.tips}}
+          @queryString={{self.query}}
+          @onSelectTip={{self.update}}
+          @blockEnterSubmit={{self.blockEnter}}
+          @inputElement={{self.inputElement}}
+        />
+      </template>
+    );
+
+    // Initially, no selection, so blockEnter should be called with false
+    await triggerEvent("#q", "focus");
+    assert.true(blockEnterCalled, "blockEnter was called");
+    assert.false(
+      blockEnterValue,
+      "blockEnter called with false when no selection"
+    );
+
+    // Reset tracking
+    blockEnterCalled = false;
+    blockEnterValue = null;
+
+    // Arrow down to select first item
+    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    assert.true(blockEnterCalled, "blockEnter called when selection changes");
+    assert.true(
+      blockEnterValue,
+      "blockEnter called with true when item selected"
+    );
+
+    // Reset and arrow up to wrap to last item
+    blockEnterCalled = false;
+    await triggerKeyEvent("#q", "keydown", "ArrowUp");
+    await triggerKeyEvent("#q", "keydown", "ArrowUp");
+    assert.true(blockEnterCalled, "blockEnter called on arrow navigation");
+    assert.true(blockEnterValue, "blockEnter still true with selection");
+
+    // Select an item with Tab
+    await triggerKeyEvent("#q", "keydown", "Tab");
+    assert.true(blockEnterCalled, "blockEnter called after selection");
+    assert.false(
+      blockEnterValue,
+      "blockEnter called with false after selecting"
+    );
+
+    // Type to trigger search for tag values
+    await fillIn("#q", "tag:e");
+    assert.true(blockEnterCalled, "blockEnter called when typing");
+    assert.false(blockEnterValue, "blockEnter false when typing");
+
+    // Select a search result
+    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    assert.true(blockEnterValue, "blockEnter true when search result selected");
+
+    // Escape to clear
+    await triggerKeyEvent("#q", "keydown", "Escape");
+    assert.false(blockEnterValue, "blockEnter false after escape");
   });
 });
