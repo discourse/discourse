@@ -6592,6 +6592,7 @@ en:
         author: "By %{author}"
         experimental_badge: "experimental"
         learn_more: "Learn more"
+        preinstalled: "Preinstalled"
 
       navigation_menu:
         sidebar: "Sidebar"

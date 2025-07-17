@@ -7,7 +7,6 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-narrative-bot
 
 enabled_site_setting :discourse_narrative_bot_enabled
-hide_plugin
 
 require_relative "lib/discourse_narrative_bot/welcome_post_type_site_setting"
 register_asset "stylesheets/discourse-narrative-bot.scss"
