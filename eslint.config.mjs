@@ -25,4 +25,13 @@ export default [
       "tmp/",
     ],
   },
+  {
+    files: ["themes/**/*.{js,gjs}"],
+    languageOptions: {
+      globals: {
+        settings: "readonly",
+        themePrefix: "readonly",
+      },
+    },
+  },
 ];
