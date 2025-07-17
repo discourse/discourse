@@ -130,7 +130,7 @@ class TopicsFilter
   end
 
   def self.option_info
-    [
+    results = [
       {
         name: "category:",
         alias: "categories:",
@@ -146,24 +146,6 @@ class TopicsFilter
             description: I18n.t("filter.description.exclude_category_without_subcategories"),
           },
         ],
-      },
-      {
-        name: "tag:",
-        description: I18n.t("filter.description.tag"),
-        alias: "tags:",
-        priority: 1,
-        type: "tag",
-        delimiters: [
-          { name: ",", description: I18n.t("filter.description.tags_any") },
-          { name: "+", description: I18n.t("filter.description.tags_all") },
-        ],
-        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag") }],
-      },
-      {
-        name: "tag_group:",
-        description: I18n.t("filter.description.tag_group"),
-        type: "tag_group",
-        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag_group") }],
       },
       {
         name: "activity-before:",
@@ -256,6 +238,33 @@ class TopicsFilter
       { name: "order:read", description: I18n.t("filter.description.order_read") },
       { name: "order:read-asc", description: I18n.t("filter.description.order_read_asc") },
     ]
+
+    if SiteSetting.tagging_enabled?
+      results.push(
+        {
+          name: "tag:",
+          description: I18n.t("filter.description.tag"),
+          alias: "tags:",
+          priority: 1,
+          type: "tag",
+          delimiters: [
+            { name: ",", description: I18n.t("filter.description.tags_any") },
+            { name: "+", description: I18n.t("filter.description.tags_all") },
+          ],
+          prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag") }],
+        },
+      )
+      results.push(
+        {
+          name: "tag_group:",
+          description: I18n.t("filter.description.tag_group"),
+          type: "tag_group",
+          prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag_group") }],
+        },
+      )
+    end
+
+    results
   end
 
   private
