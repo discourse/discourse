@@ -9,14 +9,17 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
+import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
 import { splitString } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import SettingValidationMessage from "admin/components/setting-validation-message";
 import Description from "admin/components/site-settings/description";
+import JobStatus from "admin/components/site-settings/job-status";
 import SiteSetting from "admin/models/site-setting";
 
 const CUSTOM_TYPES = [
@@ -51,13 +54,30 @@ export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
   @service siteSettingChangeTracker;
+  @service messageBus;
 
   @tracked isSecret = null;
+  @tracked status = null;
   updateExistingUsers = null;
 
   constructor() {
     super(...arguments);
     this.isSecret = this.setting?.secret;
+    if (this.setting.setting.includes("default_categories")) {
+      this.messageBus.subscribe(`${this.setting.setting}`, this.onMessage);
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this.setting.setting.includes("default_categories")) {
+      this.messageBus.subscribe(`${this.setting.setting}`, this.onMessage);
+    }
+  }
+
+  @bind
+  async onMessage(membership) {
+    this.status = membership.status;
   }
 
   @action
@@ -227,6 +247,14 @@ export default class SiteSettingComponent extends Component {
     return this.setting.staffLogFilter;
   }
 
+  get canUpdate() {
+    if (!this.status || this.status === "completed") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @action
   async update() {
     if (this.setting.requiresConfirmation) {
@@ -367,6 +395,7 @@ export default class SiteSettingComponent extends Component {
           />
 
           <Description @description={{this.setting.description}} />
+          <JobStatus @status={{this.status}} />
         {{else}}
           <this.resolvedComponent
             {{on "keydown" this._handleKeydown}}
@@ -383,11 +412,12 @@ export default class SiteSettingComponent extends Component {
           />
           {{#if this.displayDescription}}
             <Description @description={{this.setting.description}} />
+            <JobStatus @status={{this.status}} />
           {{/if}}
         {{/if}}
       </div>
 
-      {{#if this.dirty}}
+      {{#if (and this.dirty this.canUpdate)}}
         <div class="setting-controls">
           <DButton
             @action={{this.update}}
@@ -404,7 +434,7 @@ export default class SiteSettingComponent extends Component {
             class="cancel setting-controls__cancel"
           />
         </div>
-      {{else if this.overridden}}
+      {{else if (and this.overridden this.canUpdate)}}
         {{#if this.setting.secret}}
           <DButton
             @action={{this.toggleSecret}}
