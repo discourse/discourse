@@ -4069,6 +4069,13 @@ experimental:
       - auto
       - enabled
     default: "auto"
+  deactivate_widgets_rendering:
+    client: true
+    type: enum
+    choices:
+      - no
+      - yes
+    default: "yes"
   enable_rich_text_paste:
     client: true
     default: true

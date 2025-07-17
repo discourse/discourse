@@ -5,6 +5,7 @@ import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import deprecated, { isDeprecationSilenced } from "discourse/lib/deprecated";
 import { isProduction } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { deepMerge } from "discourse/lib/object";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -43,9 +44,9 @@ export const POST_STREAM_DEPRECATION_OPTIONS = {
   url: "https://meta.discourse.org/t/372063/1",
 };
 
-export function warnWidgetsDeprecation(message) {
+export function warnWidgetsDeprecation(message, ignoreCore = false) {
   if (
-    consolePrefix() &&
+    (ignoreCore || consolePrefix()) &&
     !isDeprecationSilenced(POST_STREAM_DEPRECATION_OPTIONS.id)
   ) {
     deprecated(message, WIDGET_DEPRECATION_OPTIONS);
@@ -136,9 +137,20 @@ export function createWidgetFrom(base, name, opts) {
 }
 
 export function createWidget(name, opts) {
-  warnWidgetsDeprecation(
-    `Using \`api.createWidget\` is deprecated and will soon stop working. Use Glimmer components instead. Affected widget: ${name}.`
-  );
+  if (
+    getOwnerWithFallback(this)?.lookup(`service:site-settings`)
+      ?.deactivate_widgets_rendering === "yes"
+  ) {
+    warnWidgetsDeprecation(
+      `Widgets are deactivated and won't be rendered. Your site may not working properly. Affected widget: ${name}.`,
+      false
+    );
+    return;
+  } else {
+    warnWidgetsDeprecation(
+      `Using \`api.createWidget\` is deprecated and will soon stop working. Use Glimmer components instead. Affected widget: ${name}.`
+    );
+  }
 
   return createWidgetFrom(Widget, name, opts);
 }
