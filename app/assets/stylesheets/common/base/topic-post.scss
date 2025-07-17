@@ -1153,7 +1153,7 @@ blockquote > *:last-child {
 
   .topic-avatar,
   .small-action-desc {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .topic-avatar {
@@ -1485,7 +1485,7 @@ span.mention {
   box-sizing: border-box;
   align-items: center;
   background-color: var(--tertiary-low);
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
   max-width: calc(

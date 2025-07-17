@@ -17,7 +17,7 @@
     grid-row-end: 2;
 
     .horizontal-overflow-nav {
-      border-block: 1px solid var(--primary-low);
+      border-block: 1px solid var(--content-border-color);
     }
 
     .group-dropdown {
@@ -36,7 +36,7 @@
     grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     font-size: var(--font-down-1);
   }
 
@@ -120,7 +120,7 @@
   .user-notifications-filter {
     display: block;
     width: 100%;
-    border-bottom: 0.5px solid var(--primary-low);
+    border-bottom: 0.5px solid var(--content-border-color);
   }
 }
 
@@ -146,7 +146,7 @@
     .secondary {
       display: inline-block;
       width: 100%;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
 
       .btn {
         padding: 4px 12px;
@@ -198,7 +198,7 @@
 
     .details {
       background: rgb(var(--secondary-rgb), 0.8);
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
       .groups {
         display: inline;
@@ -836,12 +836,12 @@
   .pref-passkeys,
   .pref-auth-tokens {
     .row {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
       padding: 0.5em 0;
       margin: 0.5em 0;
 
       &:last-child {
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
       }
     }
   }
@@ -895,7 +895,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     margin: 0.25em 0;
     padding: 0.25em 0;
     align-items: center;
@@ -928,7 +928,7 @@
 
   .wrapper {
     display: flex;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     width: 100%;
   }
 
