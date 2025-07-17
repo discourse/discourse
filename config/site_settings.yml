@@ -1618,6 +1618,7 @@ posting:
   rich_editor:
     client: true
     default: false
+    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:
