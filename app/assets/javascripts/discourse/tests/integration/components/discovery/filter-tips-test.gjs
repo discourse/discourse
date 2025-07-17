@@ -148,7 +148,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       .hasText("tag:ember");
 
     await triggerKeyEvent("#q", "keydown", "Enter");
-    assert.strictEqual(this.query, "tag:ember ", "enter selects result");
+    assert.strictEqual(this.query, "tag:ember", "enter selects result");
   });
 
   test("escape hides suggestions", async function (assert) {
