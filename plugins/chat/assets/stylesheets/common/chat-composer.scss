@@ -126,3 +126,7 @@
     margin-left: auto;
   }
 }
+
+.composer-open .chat-composer__outer-container {
+  padding-bottom: var(--composer-height);
+}
