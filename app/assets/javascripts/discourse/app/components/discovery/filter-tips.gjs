@@ -23,6 +23,7 @@ export default class FilterTips extends Component {
 
   activeFilter = null;
   searchTimer = null;
+  handleBlurTimer = null;
 
   @tracked _selectedIndex = -1;
 
@@ -31,6 +32,11 @@ export default class FilterTips extends Component {
     if (this.searchTimer) {
       cancel(this.searchTimer);
       this.searchTimer = null;
+    }
+
+    if (this.handleBlurTimer) {
+      cancel(this.handleBlurTimer);
+      this.handleBlurTimer = null;
     }
     if (this.inputElement) {
       this.inputElement.removeEventListener("focus", this.handleInputFocus);
@@ -371,13 +377,17 @@ export default class FilterTips extends Component {
 
   @action
   handleInputBlur() {
+    if (this.handleBlurTimer) {
+      cancel(this.handleBlurTimer);
+    }
     // delay this cause we need to handle click events on tips
-    later(() => {
+    this.handleBlurTimer = later(() => {
       this.hideTipsIfNeeded();
     }, 200);
   }
 
   hideTipsIfNeeded() {
+    this.handleBlurTimer = null;
     if (document.activeElement !== this.inputElement && this.showTips) {
       this.hideTips();
     }
