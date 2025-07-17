@@ -119,6 +119,29 @@ HTML
     expect(field.error).to eq(nil)
   end
 
+  it "correctly extracts and generates errors for raw transpiled js" do
+    html = <<~HTML
+      <script>
+        badJavaScript(;
+      </script>
+    HTML
+
+    field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
+    field.ensure_baked!
+
+    expect(field.error).not_to eq(nil)
+    expect(field.value_baked).to include(
+      "<script defer=\"\" src=\"#{field.raw_javascript_caches[0].url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+    )
+    expect(field.raw_javascript_caches[0].content).to include(
+      "[THEME -1 'Foundation'] Compile error",
+    )
+
+    field.update!(value: "")
+    field.ensure_baked!
+    expect(field.error).to eq(nil)
+  end
+
   it "allows us to use theme settings in handlebars templates" do
     html = <<HTML
 <script type='text/x-handlebars' data-template-name='my-template'>
