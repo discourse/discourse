@@ -83,7 +83,6 @@ export default class ComposerContainer extends Component {
   }
 
   <template>
-    {{log this.composer}}
     <ComposerBody
       @composer={{this.composer.model}}
       @showPreview={{this.composer.isPreviewVisible}}
