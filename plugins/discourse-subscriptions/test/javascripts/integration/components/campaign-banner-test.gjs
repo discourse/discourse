@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import sinon from "sinon";
 import CampaignBanner from "discourse/plugins/discourse-subscriptions/discourse/components/campaign-banner";
 
 module("Subscriptions | campaign-banner", function (hooks) {
@@ -17,9 +17,14 @@ module("Subscriptions | campaign-banner", function (hooks) {
     });
 
     // Set site settings
-    this.owner.lookup("service:site-settings").discourse_subscriptions_enabled = false;
-    this.owner.lookup("service:site-settings").discourse_subscriptions_campaign_enabled = true;
-    this.owner.lookup("service:site-settings").discourse_subscriptions_campaign_show_contributors = true;
+    this.owner.lookup("service:site-settings").discourse_subscriptions_enabled =
+      false;
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_campaign_enabled = true;
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_campaign_show_contributors = true;
 
     // Mock current user
     this.owner.lookup("service:current-user").setProperties({
@@ -33,7 +38,9 @@ module("Subscriptions | campaign-banner", function (hooks) {
     });
 
     // Mock router with a valid route using sinon stub
-    sinon.stub(this.owner.lookup("service:router"), "currentRouteName").value("discovery.latest");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentRouteName")
+      .value("discovery.latest");
 
     await render(<template><CampaignBanner /></template>);
 
@@ -56,17 +63,34 @@ module("Subscriptions | campaign-banner", function (hooks) {
     pretender.get("/s/contributors", (request) => {
       requestCount++;
       ajaxUrl = request.url;
-      return [200, { "Content-Type": "application/json" }, JSON.stringify(mockContributors)];
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify(mockContributors),
+      ];
     });
 
     // Set site settings - all enabled
-    this.owner.lookup("service:site-settings").discourse_subscriptions_enabled = true;
-    this.owner.lookup("service:site-settings").discourse_subscriptions_campaign_enabled = true;
-    this.owner.lookup("service:site-settings").discourse_subscriptions_campaign_show_contributors = true;
-    this.owner.lookup("service:site-settings").discourse_subscriptions_campaign_goal = 100;
-    this.owner.lookup("service:site-settings").discourse_subscriptions_campaign_amount_raised = 50;
-    this.owner.lookup("service:site-settings").discourse_subscriptions_campaign_type = "Amount";
-    this.owner.lookup("service:site-settings").discourse_subscriptions_currency = "USD";
+    this.owner.lookup("service:site-settings").discourse_subscriptions_enabled =
+      true;
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_campaign_enabled = true;
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_campaign_show_contributors = true;
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_campaign_goal = 100;
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_campaign_amount_raised = 50;
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_campaign_type = "Amount";
+    this.owner.lookup(
+      "service:site-settings"
+    ).discourse_subscriptions_currency = "USD";
 
     // Mock current user
     this.owner.lookup("service:current-user").setProperties({
@@ -80,14 +104,20 @@ module("Subscriptions | campaign-banner", function (hooks) {
     });
 
     // Mock router with a valid route using sinon stub
-    sinon.stub(this.owner.lookup("service:router"), "currentRouteName").value("discovery.latest");
+    sinon
+      .stub(this.owner.lookup("service:router"), "currentRouteName")
+      .value("discovery.latest");
 
     await render(<template><CampaignBanner /></template>);
 
     // Verify the banner is rendered
     assert.dom(".campaign-banner").exists("Campaign banner is rendered");
-    assert.dom(".campaign-banner-info-header").exists("Campaign banner header is rendered");
-    assert.dom(".campaign-banner-progress").exists("Campaign banner progress is rendered");
+    assert
+      .dom(".campaign-banner-info-header")
+      .exists("Campaign banner header is rendered");
+    assert
+      .dom(".campaign-banner-progress")
+      .exists("Campaign banner progress is rendered");
 
     // Verify AJAX request was made
     assert.strictEqual(
@@ -102,9 +132,11 @@ module("Subscriptions | campaign-banner", function (hooks) {
     );
 
     // Wait for the AJAX request to complete and verify contributors are shown
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // The contributors should be rendered in the template
-    assert.dom(".campaign-banner-progress-users").exists("Contributors section is rendered");
+    assert
+      .dom(".campaign-banner-progress-users")
+      .exists("Contributors section is rendered");
   });
 });
