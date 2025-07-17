@@ -70,7 +70,9 @@
   --topic-title-font-weight--visited: 400;
   --topic-list-item-background-color: var(--secondary);
   --topic-list-item-background-color--visited: var(--secondary);
-  --list-container-horizontal-padding: 0em;
+  --list-container-padding-x: 0em;
+  --list-container-categories-padding-x: var(--list-container-padding-v);
+  --list-container-topiclist-padding-x: var(--list-container-padding-v);
   --d-topic-list-header-font-size: initial;
 }
 
