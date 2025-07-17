@@ -186,6 +186,13 @@ fetch(`${target}/about.json`).catch(() => {
   );
 });
 
+const pluginTestPages = process.env.PLUGIN_TARGETS;
+if (pluginTestPages) {
+  module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
+    return `tests/index.html?hidepassed&target=${plugin}`;
+  });
+}
+
 const themeTestPages = process.env.THEME_TEST_PAGES;
 
 if (themeTestPages) {

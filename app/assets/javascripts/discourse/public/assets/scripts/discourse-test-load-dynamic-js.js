@@ -15,7 +15,7 @@ if (target === "all" || target === "plugins") {
   loadPlugins.add(target);
   dynamicJsTemplate.content
     .querySelector(`script[data-discourse-plugin="${target}"]`)
-    .dataset.discourseTestRequiredPlugins?.split(",")
+    ?.dataset.discourseTestRequiredPlugins?.split(",")
     .forEach((plugin) => {
       loadPlugins.add(plugin);
     });

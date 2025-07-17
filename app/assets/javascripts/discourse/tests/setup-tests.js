@@ -155,6 +155,8 @@ function setupToolbar() {
     select.value ||= "core";
     select.querySelector("option:not([value])").remove();
     select.querySelector("option[value=-----]").disabled = true;
+    select.querySelector("option[value=plugins]").innerText =
+      "all plugins (not recommended)";
     select.querySelector("option[value=all]").innerText =
       "all (not recommended)";
   });

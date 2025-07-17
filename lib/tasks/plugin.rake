@@ -232,16 +232,15 @@ task "plugin:qunit", :plugin do |t, args|
 
   cmd = "LOAD_PLUGINS=1 "
 
-  target =
-    if args[:plugin] == "*"
-      puts "Running qunit tests for all plugins"
-      "plugins"
-    else
-      puts "Running qunit tests for #{args[:plugin]}"
-      args[:plugin]
-    end
+  if args[:plugin] == "*"
+    plugin_names = Dir.glob("plugins/*/test/**/*-test.js").map { |file| file.split("/")[1] }.uniq
+    puts "Running qunit tests for all plugins: #{plugin_names.join(", ")}"
+    cmd += "PLUGIN_TARGETS='#{plugin_names.join(",")}' "
+  else
+    puts "Running qunit tests for #{args[:plugin]}"
+    cmd += "TARGET='#{args[:plugin]}' "
+  end
 
-  cmd += "TARGET='#{target}' "
   cmd += "#{rake} qunit:test"
 
   system cmd
