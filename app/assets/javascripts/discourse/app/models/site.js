@@ -128,7 +128,9 @@ export default class Site extends RestModel {
     let enabled;
 
     /* eslint-disable no-console */
-    let settingValue = this.siteSettings.glimmer_post_stream_mode;
+    let settingValue = this.siteSettings.deactivate_widgets_rendering
+      ? "enabled" // if widgets rendering is deactivated, we always use the glimmer post stream
+      : this.siteSettings.glimmer_post_stream_mode;
     if (
       settingValue === "disabled" &&
       this.currentUser?.use_glimmer_post_stream_mode_auto_mode
