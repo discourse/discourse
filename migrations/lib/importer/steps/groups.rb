@@ -4,9 +4,15 @@ module Migrations::Importer::Steps
   class Groups < ::Migrations::Importer::CopyStep
     DEFAULT_VISIBILITY_LEVEL = Group.visibility_levels[:public]
     DEFAULT_ALIAS_LEVEL = Group::ALIAS_LEVELS[:nobody]
+    DEFAULT_NOTIFICATION_LEVEL = GroupUser.notification_levels[:watching]
     VISIBILITY_LEVELS = Group.visibility_levels.values.to_set.freeze
     ALIAS_LEVELS = Group::ALIAS_LEVELS.values.to_set.freeze
     TRUST_LEVELS = TrustLevel.levels.values.to_set.freeze
+    NOTIFICATION_LEVELS = GroupUser.notification_levels.values.to_set.freeze
+    DOMAIN_PROTOCOL_REGEX = %r{\Ahttps?://}.freeze
+    DOMAIN_PATH_REGEX = %r{/.*\z}.freeze
+    MAX_FULL_NAME_LENGTH = 100
+    MAX_MEMBER_REQUEST_TEMPLATE_LENGTH = 5_000
 
     depends_on :uploads
     store_mapped_ids true
@@ -67,15 +73,15 @@ module Migrations::Importer::Steps
       super
 
       @unique_name_finder = ::Migrations::Importer::UniqueNameFinder.new(shared_data)
+      @max_domains = SiteSetting.max_automatic_membership_email_domains
     end
 
     private
 
     def transform_row(row)
       # TODO(selase):
-      #   1. Validate automatic_membership_email_domains
-      #   2. Cook bio_raw
-      #   3. Adopt importer framework warning implementation once available
+      #   1. Cook bio_raw
+      #   2. Adopt importer framework warning implementation once available
       if (existing_id = row[:existing_id])
         row[:id] = resolve_existing_id(existing_id)
 
@@ -83,9 +89,18 @@ module Migrations::Importer::Steps
       end
 
       row[:name] = @unique_name_finder.find_available_group_name(row[:name])
-      row[:title] = row[:title].scrub.strip.presence if row[:title].present?
-      row[:bio_raw] = row[:bio_raw].scrub.strip.presence if row[:bio_raw].present?
+      row[:full_name] = sanitize_string(row[:full_name], MAX_FULL_NAME_LENGTH)
+      row[:title] = sanitize_string(row[:title])
+      row[:bio_raw] = sanitize_string(row[:bio_raw])
+      row[:membership_request_template] = sanitize_string(
+        row[:membership_request_template],
+        MAX_MEMBER_REQUEST_TEMPLATE_LENGTH,
+      )
 
+      # TODO(selase):
+      #   We need to ensure this isn't set to true for groups that are imported without an owner.
+      #   Maybe we can do this as part of some other step after group users or potentially just
+      #   join on group_users table here to determine if the group has an owner
       row[:allow_membership_requests] ||= false
       row[:allow_unknown_sender_topic_replies] ||= false
       row[:primary_group] ||= false
@@ -93,6 +108,11 @@ module Migrations::Importer::Steps
       row[:public_exit] ||= false
       row[:publish_read_state] ||= false
 
+      row[:default_notification_level] = ensure_valid_value(
+        value: row[:default_notification_level],
+        allowed_set: NOTIFICATION_LEVELS,
+        default_value: DEFAULT_NOTIFICATION_LEVEL,
+      )
       row[:visibility_level] = ensure_valid_value(
         value: row[:visibility_level],
         allowed_set: VISIBILITY_LEVELS,
@@ -122,6 +142,38 @@ module Migrations::Importer::Steps
         ) { |value, _default_value| puts "    #{row[:name]}: Invalid grant_trust_level '#{value}'" }
       end
 
+      if row[:automatic_membership_email_domains].present?
+        valid_domains = []
+
+        row[:automatic_membership_email_domains]
+          .split("|")
+          .each do |domain|
+            domain.sub!(DOMAIN_PROTOCOL_REGEX, "")
+            domain.sub!(DOMAIN_PATH_REGEX, "")
+
+            unless domain =~ Group::VALID_DOMAIN_REGEX
+              puts "    #{row[:name]}: Invalid automatic_membership_email_domain '#{domain}'"
+              next
+            end
+
+            if domain.length > Group::MAX_EMAIL_DOMAIN_LENGTH
+              puts "    #{row[:name]}: Invalid automatic_membership_email_domain. Domain '#{domain}' is too long " \
+                     "(Max: #{Group::MAX_EMAIL_DOMAIN_LENGTH})."
+              next
+            end
+
+            valid_domains << domain
+          end
+
+        if valid_domains.size > @max_domains
+          puts "    #{row[:name]}: Invalid automatic_membership_email_domain. Too many domains (Max: #{@max_domains})."
+
+          valid_domains = valid_domains.take(@max_domains)
+        end
+
+        row[:automatic_membership_email_domains] = valid_domains.join("|")
+      end
+
       row[:flair_upload_id] = row[:discourse_flair_upload_id]
 
       super
@@ -134,6 +186,17 @@ module Migrations::Importer::Steps
       else
         @ids_by_name[existing_id]
       end
+    end
+
+    def sanitize_string(value, max_length = nil)
+      return value if value.nil? || value.empty?
+
+      value = value.dup
+      value[max_length..-1] = "" if max_length && value.length > max_length
+      value.scrub!
+      value.strip!
+
+      value.empty? ? nil : value
     end
   end
 end
