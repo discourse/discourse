@@ -1,12 +1,29 @@
 const dynamicJsTemplate = document.querySelector("#dynamic-test-js");
 
 const params = new URLSearchParams(document.location.search);
-const target = params.get("target");
-const skipPlugins = !target || target === "core";
+const target = params.get("target") || "core";
 
+const loadPlugins = new Set();
+
+if (target === "all" || target === "plugins") {
+  // Load all plugins
+  dynamicJsTemplate.content
+    .querySelectorAll("script[data-discourse-plugin]")
+    .forEach((el) => loadPlugins.add(el.dataset.discoursePlugin));
+} else if (target !== "core") {
+  // Load a specific plugin
+  loadPlugins.add(target);
+  dynamicJsTemplate.content
+    .querySelector(`script[data-discourse-plugin="${target}"]`)
+    .dataset.discourseTestRequiredPlugins?.split(",")
+    .forEach((plugin) => {
+      loadPlugins.add(plugin);
+    });
+}
 (async function setup() {
   for (const element of dynamicJsTemplate.content.childNodes) {
-    if (skipPlugins && element.dataset?.discoursePlugin) {
+    const pluginName = element.dataset?.discoursePlugin;
+    if (pluginName && !loadPlugins.has(pluginName)) {
       continue;
     }
 
