@@ -29,13 +29,15 @@ export default class DAutocompleteResults extends Component {
   @action
   updateSelectedIndex(newIndex) {
     this.selectedIndex = newIndex;
-    this.isInitialRender = false; // Mark that this is navigation, not initial render
-    // Apply DOM manipulation like original autocomplete
+    this.isInitialRender = false;
     this.markSelected();
   }
 
   markSelected() {
-    // Find all links in the autocomplete menu and update selection like original
+    // This is a more imperative approach that's meant to be compatible with the pre-existing autocomplete templates,
+    // we should refactor in future to use component templates that are more declarative in setting the `selected` class.
+
+    // Find all links in the autocomplete menu and update selection
     if (this.wrapperElement) {
       const links = this.wrapperElement.querySelectorAll("li a");
 
