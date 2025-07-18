@@ -9,4 +9,4 @@ en:
     admin:
       site_settings:
         categories:
-          discourse_captcha: "Discourse hCaptcha"
+          discourse_hcaptcha: "Discourse hCaptcha"
