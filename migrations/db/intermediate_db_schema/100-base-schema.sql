@@ -85,6 +85,35 @@ CREATE TABLE category_users
     PRIMARY KEY (category_id, user_id)
 );
 
+CREATE TABLE "groups"
+(
+    original_id                        NUMERIC  NOT NULL PRIMARY KEY,
+    allow_membership_requests          BOOLEAN,
+    allow_unknown_sender_topic_replies BOOLEAN,
+    automatic_membership_email_domains TEXT,
+    bio_raw                            TEXT,
+    created_at                         DATETIME,
+    default_notification_level         INTEGER,
+    existing_id                        NUMERIC,
+    flair_bg_color                     TEXT,
+    flair_color                        TEXT,
+    flair_icon                         TEXT,
+    flair_upload_id                    TEXT,
+    full_name                          TEXT,
+    grant_trust_level                  INTEGER,
+    members_visibility_level           INTEGER,
+    membership_request_template        TEXT,
+    mentionable_level                  INTEGER,
+    messageable_level                  INTEGER,
+    name                               TEXT     NOT NULL,
+    primary_group                      BOOLEAN,
+    public_admission                   BOOLEAN,
+    public_exit                        BOOLEAN,
+    publish_read_state                 BOOLEAN,
+    title                              TEXT,
+    visibility_level                   INTEGER
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
