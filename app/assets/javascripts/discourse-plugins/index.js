@@ -274,13 +274,11 @@ module.exports = {
       directoryName,
       hasJs,
       hasAdminJs,
-      testRequiredPlugins,
     } of pluginInfos) {
       if (hasJs) {
         scripts.push({
           src: `plugins/${directoryName}.js`,
           name: pluginName,
-          testRequiredPlugins,
         });
       }
 
@@ -288,7 +286,6 @@ module.exports = {
         scripts.push({
           src: `plugins/${directoryName}_extras.js`,
           name: pluginName,
-          testRequiredPlugins,
         });
       }
 
@@ -296,7 +293,6 @@ module.exports = {
         scripts.push({
           src: `plugins/${directoryName}_admin.js`,
           name: pluginName,
-          testRequiredPlugins,
         });
       }
     }
