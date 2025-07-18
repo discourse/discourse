@@ -7,9 +7,9 @@ import ReCaptcha from "../../components/re-captcha";
 @tagName("")
 @classNames(
   "create-account-after-user-fields-outlet",
-  "hcaptcha-fields-connector"
+  "captcha-fields-connector"
 )
-export default class HcaptchaFieldsConnector extends Component {
+export default class captchaFieldsConnector extends Component {
   @service siteSettings;
 
   <template>

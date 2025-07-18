@@ -5,7 +5,7 @@ class ProblemCheck::HcaptchaConfiguration < ProblemCheck
 
   def call
     if SiteSetting.discourse_captcha_enabled && SiteSetting.discourse_hcaptcha_enabled &&
-         !hcaptcha_credentias_present?
+         !hcaptcha_credentials_present?
       return problem
     end
 
@@ -14,7 +14,7 @@ class ProblemCheck::HcaptchaConfiguration < ProblemCheck
 
   private
 
-  def hcaptcha_credentias_present?
+  def hcaptcha_credentials_present?
     SiteSetting.hcaptcha_site_key.present? && SiteSetting.hcaptcha_secret_key.present?
   end
 end
