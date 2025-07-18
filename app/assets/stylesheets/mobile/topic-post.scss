@@ -408,8 +408,8 @@ span.highlighted {
 
 .read-state {
   // contained within the padding to prevent vertical overflow
-  max-width: var(--d-wrap-padding-h);
-  right: calc(var(--d-wrap-padding-h) * -1);
+  max-width: var(--d-wrap-padding-x);
+  right: calc(var(--d-wrap-padding-x) * -1);
   font-size: 6px; // static size to avoid overflow issues
 
   svg {
