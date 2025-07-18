@@ -9,7 +9,7 @@ module Jobs
         new_value = value.nil? ? "" : value
         previous_value = args[:previous_value]
 
-        batch_size = SiteSetting.default_categories_update_batch
+        batch_size = 50_000
         previous_category_ids = previous_value.split("|")
         new_category_ids = new_value.split("|")
         offset = offset.to_i
