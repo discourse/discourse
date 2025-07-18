@@ -3,27 +3,31 @@ const dynamicJsTemplate = document.querySelector("#dynamic-test-js");
 const params = new URLSearchParams(document.location.search);
 const target = params.get("target") || "core";
 
-const loadPlugins = new Set();
+// Same list maintained in qunit_controller.rb
+const alwaysRequiredPlugins = ["discourse-local-dates"];
 
-if (target === "all" || target === "plugins") {
-  // Load all plugins
-  dynamicJsTemplate.content
-    .querySelectorAll("script[data-discourse-plugin]")
-    .forEach((el) => loadPlugins.add(el.dataset.discoursePlugin));
-} else if (target !== "core") {
-  // Load a specific plugin
-  loadPlugins.add(target);
-  dynamicJsTemplate.content
-    .querySelector(`script[data-discourse-plugin="${target}"]`)
-    ?.dataset.discourseTestRequiredPlugins?.split(",")
-    .forEach((plugin) => {
-      loadPlugins.add(plugin);
-    });
-}
+const requiredPluginInfo = JSON.parse(
+  dynamicJsTemplate.content.querySelector("#discourse-required-plugin-info")
+    .innerHTML
+);
+
 (async function setup() {
   for (const element of dynamicJsTemplate.content.childNodes) {
     const pluginName = element.dataset?.discoursePlugin;
-    if (pluginName && pluginName !== "_all" && !loadPlugins.has(pluginName)) {
+
+    if (pluginName && target === "core") {
+      continue;
+    }
+
+    const shouldLoad =
+      !pluginName ||
+      ["all", "plugins"].includes(target) ||
+      pluginName === "_all" ||
+      target === pluginName ||
+      alwaysRequiredPlugins.includes(pluginName) ||
+      requiredPluginInfo[target]?.includes(pluginName);
+
+    if (!shouldLoad) {
       continue;
     }
 

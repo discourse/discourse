@@ -2,8 +2,7 @@
   "tests": {
     "requiredPlugins": [
       "discourse-lazy-videos",
-      "spoiler-alert",
-      "discourse-local-dates"
+      "spoiler-alert"
     ]
   }
 }

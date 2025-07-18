@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class QunitController < ApplicationController
+  # Same list maintained in discourse-test-load-dynamic-js.js
+  ALWAYS_LOADED_PLUGINS = %w[discourse-local-dates]
+
   skip_before_action *%i[
                        check_xhr
                        preload_json

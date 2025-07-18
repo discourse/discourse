@@ -301,12 +301,21 @@ module.exports = {
       }
     }
 
-    return scripts
+    const scriptTags = scripts
       .map(
-        ({ src, name, testRequiredPlugins }) =>
-          `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}" data-discourse-test-required-plugins="${testRequiredPlugins.join(",")}"></script>`
+        ({ src, name }) =>
+          `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
       )
       .join("\n");
+
+    const requiredPluginInfos = {};
+    for (const { pluginName, testRequiredPlugins } of pluginInfos) {
+      requiredPluginInfos[pluginName] = testRequiredPlugins;
+    }
+
+    const requiredPluginInfoTag = `<script type="application/json" id="discourse-required-plugin-info">${JSON.stringify(requiredPluginInfos)}</script>`;
+
+    return `${scriptTags}\n${requiredPluginInfoTag}`;
   },
 
   pluginTestScriptTags(config) {
