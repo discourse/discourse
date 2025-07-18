@@ -8,7 +8,7 @@ const alwaysRequiredPlugins = ["discourse-local-dates"];
 
 const requiredPluginInfo = JSON.parse(
   dynamicJsTemplate.content.querySelector("#discourse-required-plugin-info")
-    .innerHTML
+    ?.innerHTML || "{}"
 );
 
 (async function setup() {
