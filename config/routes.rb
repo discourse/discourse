@@ -497,7 +497,7 @@ Discourse::Application.routes.draw do
           format: :js,
         }
 
-    resources :session, id: RouteFormat.username, only: %i[create destroy become] do
+    resources :session, id: RouteFormat.username, only: %i[create destroy] do
       get "become" if !Rails.env.production?
 
       collection { post "forgot_password" }

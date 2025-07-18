@@ -21,11 +21,11 @@ end
 # Table name: user_custom_fields
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
 #  name       :string(256)      not null
 #  value      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  user_id    :integer          not null
 #
 # Indexes
 #
