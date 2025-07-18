@@ -216,7 +216,7 @@ RSpec.describe Oneboxer do
       end
     end
 
-    it "does not leak private category information" do
+    it "does not show private subcategory information" do
       parent_category = Fabricate(:category)
       private_subcategory =
         Fabricate(
