@@ -43,6 +43,10 @@ schema:
       columns:
         exclude:
           - "id"
+    muted_users:
+      columns:
+        exclude:
+          - "id"
     user_emails:
       columns:
         include:
@@ -204,7 +208,6 @@ schema:
         - "linked_topics"
         - "message_bus"
         - "moved_posts"
-        - "muted_users"
         - "notifications"
         - "oauth2_user_infos"
         - "onceoff_logs"
