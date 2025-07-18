@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 RSpec.describe Admin::SiteSettingsController do
   fab!(:admin)
   fab!(:moderator)
@@ -457,19 +456,24 @@ RSpec.describe Admin::SiteSettingsController do
             notification_level: tracking,
             user: user2,
           )
+
+          Jobs.run_immediately!
         end
 
         it "should update existing users user preference" do
-          put "/admin/site_settings/default_categories_watching.json",
-              params: {
-                default_categories_watching: category_ids.last(2).join("|"),
-                update_existing_user: true,
-              }
-
+          perform_enqueued_jobs do
+            put "/admin/site_settings/default_categories_watching.json",
+                params: {
+                  default_categories_watching: category_ids.last(2).join("|"),
+                  update_existing_user: true,
+                }
+          end
           expect(response.status).to eq(200)
+
           expect(
             CategoryUser.where(category_id: category_ids.first, notification_level: watching).count,
           ).to eq(0)
+
           expect(
             CategoryUser.where(category_id: category_ids.last, notification_level: watching).count,
           ).to eq(User.real.where(staged: false).count - 1)

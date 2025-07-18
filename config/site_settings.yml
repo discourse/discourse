@@ -3775,7 +3775,6 @@ user_preferences:
   default_categories_update_batch:
     type: integer
     default: 50000
-    client: false
   default_categories_watching:
     type: category_list
     default: ""
@@ -3801,6 +3800,9 @@ user_preferences:
     client: true
     area: "user_defaults"
 
+  default_tags_update_batch:
+    type: integer
+    default: 50000
   default_tags_watching:
     type: tag_list
     default: ""

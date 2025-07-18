@@ -4,7 +4,6 @@ module Jobs
   class SiteSettingUpdateDefaultCategories < ::Jobs::Base
     def execute(args)
       DistributedMutex.synchronize("process_site_setting_#{args[:id]}", validity: 10.minutes) do
-        puts "process_site_setting_#{args[:id]}"
         id = args[:id]
         value = args[:value]
         new_value = value.nil? ? "" : value
