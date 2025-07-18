@@ -136,7 +136,7 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
-  parallel: -1,
+  parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
   browser_start_timeout: 120,
   browser_args: {
     Chromium: [
