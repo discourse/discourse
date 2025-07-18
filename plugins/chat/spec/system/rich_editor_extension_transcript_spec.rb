@@ -14,14 +14,12 @@ describe "chat transcripts in rich editor", type: :system do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.rich_editor = true
     sign_in(current_user)
   end
 
   it "works for single messages" do
     page.visit "/new-topic"
     expect(composer).to be_opened
-    composer.toggle_rich_editor
     composer.focus
 
     markdown =
@@ -47,7 +45,6 @@ describe "chat transcripts in rich editor", type: :system do
   it "works for multiple messages" do
     page.visit "/new-topic"
     expect(composer).to be_opened
-    composer.toggle_rich_editor
     composer.focus
 
     markdown =

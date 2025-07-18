@@ -1,21 +1,14 @@
 # frozen_string_literal: true
 
 describe "Composer - ProseMirror editor", type: :system do
-  fab!(:user) do
-    user = Fabricate(:user, refresh_auto_groups: true)
-    user.user_option.update!(composition_mode: UserOption.composition_mode_types[:modern])
-    user
-  end
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:tag)
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
 
-  before do
-    SiteSetting.rich_editor = true
-    sign_in(user)
-  end
+  before { sign_in(user) }
 
   def open_composer
     page.visit "/new-topic"

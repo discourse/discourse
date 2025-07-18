@@ -13,6 +13,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
+    SiteSetting.rich_editor = false
     chat_system_bootstrap(admin, [chat_channel_1])
     chat_channel_1.add(current_user)
     sign_in(current_user)
