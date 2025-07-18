@@ -8,7 +8,7 @@ export default class SubCategoryItem extends CategoryListItem {
   <template>
     <PluginOutlet
       @name="sub-category-item"
-      @outletArgs={{hash subCategoryItem=this}}>
+      @outletArgs={{lazyHash category=this.category isMuted=this.isMuted hideUnread=this.hideUnread unreadTopicsCount=this.unreadTopicsCount newTopicsCount=this.newTopicsCount}}>
       {{#unless this.isMuted}}
         {{#if this.site.mobileView}}
           {{categoryLink this.category}}
