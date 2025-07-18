@@ -79,7 +79,7 @@ acceptance("Dashboard", function (needs) {
       )
       .exists({ count: 1 });
 
-    await fillIn(".dashboard .admin-reports-header__filter", "flags");
+    await fillIn(".dashboard .admin-filter-controls__input", "flags");
 
     assert
       .dom(
@@ -96,7 +96,7 @@ acceptance("Dashboard", function (needs) {
       )
       .exists({ count: 1 }, "navigating back and forth resets filter");
 
-    await fillIn(".dashboard .admin-reports-header__filter", "activities");
+    await fillIn(".dashboard .admin-filter-controls__input", "activities");
 
     assert
       .dom(
