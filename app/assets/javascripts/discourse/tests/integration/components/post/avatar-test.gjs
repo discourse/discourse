@@ -57,8 +57,8 @@ module("Integration | Component | Post | PostAvatar", function (hooks) {
 
     assert
       .dom("img.avatar")
-      .hasAttribute("height", "100", "it change the height of the avatar")
-      .hasAttribute("width", "100", "it change the width of the avatar");
+      .hasAttribute("height", "100", "changes the height of the avatar")
+      .hasAttribute("width", "100", "changes the width of the avatar");
   });
 
   test("can change the template of the avatar", async function (assert) {
@@ -72,6 +72,6 @@ module("Integration | Component | Post | PostAvatar", function (hooks) {
 
     assert
       .dom("img.avatar")
-      .hasAttribute("src", /.gif$/, "it change the avatar url");
+      .hasAttribute("src", /.gif$/, "changes the avatar url");
   });
 });
