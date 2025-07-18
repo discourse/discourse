@@ -710,41 +710,45 @@ export default class DEditor extends Component {
             {{if this.disabled 'disabled'}}
             {{if this.isEditorFocused 'in-focus'}}"
         >
-
-          {{#if this.replacedToolbarInstance}}
-            <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
-              <DButton
-                @action={{this.resetToolbar}}
-                @icon="angle-left"
-                @preventFocus={{true}}
-                @onKeyDown={{this.rovingButtonBar}}
-                class="d-editor-button-bar__back"
-              />
-              <ToolbarButtons
-                @data={{this.replacedToolbarInstance}}
-                @rovingButtonBar={{this.rovingButtonBar}}
-                @isFirst={{false}}
-              />
-            </div>
-          {{else}}
-            <div class="d-editor-button-bar" role="toolbar">
-              {{#if this.siteSettings.rich_editor}}
-                <ToggleSwitch
+          <div class="d-editor-button-bar__wrapper">
+            {{#if this.replacedToolbarInstance}}
+              <div
+                class="d-editor-button-bar --replaced-toolbar"
+                role="toolbar"
+              >
+                <DButton
+                  @action={{this.resetToolbar}}
+                  @icon="angle-left"
                   @preventFocus={{true}}
-                  @disabled={{@disableSubmit}}
-                  @state={{this.isRichEditorEnabled}}
-                  {{on "click" this.toggleRichEditor}}
-                  {{on "keydown" this.rovingButtonBar}}
+                  @onKeyDown={{this.rovingButtonBar}}
+                  class="d-editor-button-bar__back"
                 />
-              {{/if}}
+                <ToolbarButtons
+                  @data={{this.replacedToolbarInstance}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
+                  @isFirst={{false}}
+                />
+              </div>
+            {{else}}
+              <div class="d-editor-button-bar" role="toolbar">
+                {{#if this.siteSettings.rich_editor}}
+                  <ToggleSwitch
+                    @preventFocus={{true}}
+                    @disabled={{@disableSubmit}}
+                    @state={{this.isRichEditorEnabled}}
+                    {{on "click" this.toggleRichEditor}}
+                    {{on "keydown" this.rovingButtonBar}}
+                  />
+                {{/if}}
 
-              <ToolbarButtons
-                @data={{this.toolbar}}
-                @rovingButtonBar={{this.rovingButtonBar}}
-                @isFirst={{not this.siteSettings.rich_editor}}
-              />
-            </div>
-          {{/if}}
+                <ToolbarButtons
+                  @data={{this.toolbar}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
+                  @isFirst={{not this.siteSettings.rich_editor}}
+                />
+              </div>
+            {{/if}}
+          </div>
 
           <ConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent
