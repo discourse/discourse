@@ -570,6 +570,7 @@ RSpec.describe Admin::SiteSettingsController do
         before do
           SiteSetting.default_tags_watching = tags.first(2).pluck(:name).join("|")
           TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
+          Jobs.run_immediately!
         end
 
         it "should update existing users user preference" do

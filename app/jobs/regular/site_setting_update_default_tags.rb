@@ -15,7 +15,7 @@ module Jobs
         new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
         now = Time.zone.now
 
-        notification_level = SiteSettingUpdateExistingUsers.category_notification_level(id)
+        notification_level = SiteSettingUpdateExistingUsers.tag_notification_level(id)
 
         TagUser
           .where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level)
