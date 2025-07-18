@@ -6,9 +6,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 function renderComponent(post) {
-  return render(
-    <template><PostAvatar @post={{post}} @size="small" /></template>
-  );
+  return render(<template><PostAvatar @post={{post}} /></template>);
 }
 
 module("Integration | Component | Post | PostAvatar", function (hooks) {
@@ -76,7 +74,7 @@ module("Integration | Component | Post | PostAvatar", function (hooks) {
       .dom("img.avatar")
       .hasAttribute(
         "src",
-        "/letter_avatar_proxy/v4/letter/e/eviltrout/48.gif",
+        "/letter_avatar_proxy/v4/letter/e/eviltrout/96.gif",
         "it change the avatar url"
       );
   });
