@@ -228,22 +228,22 @@ export default RouteTemplate(
         />
       </div>
 
-    {{#if this.model.include_ip}}
-      <div class="display-row last-ip">
-        <div class="field">{{i18n "user.ip_address.title"}}</div>
-        <div class="value">{{@controller.model.ip_address}}</div>
-        <div class="controls">
-          {{#if @controller.currentUser.staff}}
-            {{#if @controller.model.ip_address}}
-              <IpLookup
-                @ip={{@controller.model.ip_address}}
-                @userId={{@controller.model.id}}
-              />
+      {{#if this.model.include_ip}}
+        <div class="display-row last-ip">
+          <div class="field">{{i18n "user.ip_address.title"}}</div>
+          <div class="value">{{@controller.model.ip_address}}</div>
+          <div class="controls">
+            {{#if @controller.currentUser.staff}}
+              {{#if @controller.model.ip_address}}
+                <IpLookup
+                  @ip={{@controller.model.ip_address}}
+                  @userId={{@controller.model.id}}
+                />
+              {{/if}}
             {{/if}}
           </div>
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
 
       {{#if @controller.model.include_ip}}
         <div class="display-row registration-ip">
@@ -261,7 +261,6 @@ export default RouteTemplate(
           </div>
         </div>
       </div>
-
 
       {{#if @controller.showBadges}}
         <div class="display-row">
