@@ -23,7 +23,7 @@ if (target === "all" || target === "plugins") {
 (async function setup() {
   for (const element of dynamicJsTemplate.content.childNodes) {
     const pluginName = element.dataset?.discoursePlugin;
-    if (pluginName && !loadPlugins.has(pluginName)) {
+    if (pluginName && pluginName !== "_all" && !loadPlugins.has(pluginName)) {
       continue;
     }
 
