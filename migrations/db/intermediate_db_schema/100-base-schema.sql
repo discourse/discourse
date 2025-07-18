@@ -76,6 +76,14 @@ CREATE TABLE categories
     user_id                                   NUMERIC  NOT NULL
 );
 
+CREATE TABLE category_custom_fields
+(
+    category_id NUMERIC NOT NULL,
+    name        TEXT    NOT NULL,
+    value       TEXT,
+    PRIMARY KEY (category_id, name)
+);
+
 CREATE TABLE category_users
 (
     category_id        NUMERIC  NOT NULL,

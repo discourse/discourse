@@ -42,6 +42,12 @@ schema:
       primary_key_column_names: [ "category_id", "user_id" ]
       columns:
         exclude:
+           - "id"
+    category_custom_fields:
+      primary_key_column_names: [ "category_id", "name" ]
+      columns:
+        exclude:
+          - "created_at"
           - "id"
     user_emails:
       columns:
@@ -110,7 +116,6 @@ schema:
         - "bookmarks"
         - "calendar_events"
         - "categories_web_hooks"
-        - "category_custom_fields"
         - "category_featured_topics"
         - "category_form_templates"
         - "category_groups"
