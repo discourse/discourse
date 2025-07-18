@@ -600,6 +600,28 @@ RSpec.describe RemoteTheme do
 
         expect(theme.theme_site_settings.first.value).to eq("search_field")
       end
+
+      it "makes sure to refresh the site setting theme site setting cache so we have full data there for each theme" do
+        add_to_git_repo(
+          initial_repo,
+          "about.json" =>
+            JSON
+              .parse(about_json)
+              .merge("theme_site_settings" => { "enable_welcome_banner" => false })
+              .to_json,
+        )
+        theme = RemoteTheme.import_theme(initial_repo_url)
+
+        expect(SiteSetting.theme_site_settings[theme.id][:enable_welcome_banner]).to eq(false)
+        expect(SiteSetting.theme_site_settings[theme.id][:search_experience]).to eq("search_icon")
+      end
+
+      it "makes sure to set the theme site setting cache with defaults correctly when the theme has no theme_site_settings overrides defined" do
+        theme = RemoteTheme.import_theme(initial_repo_url)
+
+        expect(SiteSetting.theme_site_settings[theme.id][:enable_welcome_banner]).to eq(true)
+        expect(SiteSetting.theme_site_settings[theme.id][:search_experience]).to eq("search_icon")
+      end
     end
   end
 
