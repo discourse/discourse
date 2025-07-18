@@ -17,9 +17,18 @@ import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ColorPaletteListItem extends Component {
   @service toasts;
+  @service i18n;
 
   get isBuiltInDefault() {
-    return this.args.scheme === null;
+    return this.args.scheme?.is_builtin_default || false;
+  }
+
+  get setAsDefaultLabel() {
+    const themeName = this.args.defaultTheme?.name || "Default";
+
+    return i18n("admin.customize.colors.set_default", {
+      theme: themeName,
+    });
   }
 
   get canEdit() {
@@ -111,25 +120,18 @@ export default class ColorPaletteListItem extends Component {
         </div>
 
         <div class="color-palette__details">
-          {{#if this.isBuiltInDefault}}
-            <h3>
-              {{i18n "admin.customize.theme.default_light_scheme"}}
-            </h3>
-            <div class="color-palette__theme-link"></div>
-          {{else}}
-            <h3>{{@scheme.description}}</h3>
-            <div class="color-palette__theme-link">
-              {{#if @scheme.theme_id}}
-                <LinkTo
-                  @route="adminCustomizeThemes.show"
-                  @models={{array "themes" @scheme.theme_id}}
-                >
-                  {{icon "link"}}
-                  {{@scheme.theme_name}}
-                </LinkTo>
-              {{/if}}
-            </div>
-          {{/if}}
+          <h3>{{@scheme.description}}</h3>
+          <div class="color-palette__theme-link">
+            {{#if @scheme.theme_id}}
+              <LinkTo
+                @route="adminCustomizeThemes.show"
+                @models={{array "themes" @scheme.theme_id}}
+              >
+                {{icon "link"}}
+                {{@scheme.theme_name}}
+              </LinkTo>
+            {{/if}}
+          </div>
 
           <div class="color-palette__badges">
             {{#if @scheme.user_selectable}}
@@ -210,7 +212,7 @@ export default class ColorPaletteListItem extends Component {
                         (if this.isBuiltInDefault null @scheme)
                       }}
                       @icon="star"
-                      @label="admin.customize.colors.set_default"
+                      @translatedLabel={{this.setAsDefaultLabel}}
                       class="btn-transparent"
                       disabled={{this.isActive}}
                     />

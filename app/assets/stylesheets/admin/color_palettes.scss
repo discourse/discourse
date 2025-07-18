@@ -22,7 +22,7 @@
   }
 
   &__preview {
-    background: var(--secondary--preview);
+    background: var(--secondary--preview, #fff);
     border-bottom: 1px solid var(--primary-low--preview, #e9e9e9);
 
     svg {

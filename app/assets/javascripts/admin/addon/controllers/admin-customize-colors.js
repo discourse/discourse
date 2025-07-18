@@ -1,8 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 
@@ -20,28 +19,24 @@ export default class AdminCustomizeColorsController extends Controller {
     return this.defaultTheme?.color_scheme_id === scheme.id;
   };
 
-  @discourseComputed("model.@each.id")
-  baseColorScheme() {
-    return this.model.findBy("is_base", true);
+  get allBaseColorSchemes() {
+    return this.model?.filterBy("is_base", true) || [];
   }
 
-  @discourseComputed("model.@each.id")
-  baseColorSchemes() {
-    return this.model.filterBy("is_base", true);
-  }
-
-  @discourseComputed("baseColorScheme")
-  baseColors(baseColorScheme) {
-    const baseColorsHash = EmberObject.create({});
-    baseColorScheme.get("colors").forEach((color) => {
-      baseColorsHash.set(color.get("name"), color);
-    });
-    return baseColorsHash;
-  }
-
-  @discourseComputed("model.@each.id", "filterValue", "typeFilter")
-  filteredColorSchemes() {
+  get filteredColorSchemes() {
     let schemes = this.model.filter((scheme) => !scheme.is_base);
+    // built-in "Light (default)"
+    const builtInDefault = {
+      id: null,
+      is_base: null,
+      theme_id: null,
+      theme_name: null,
+      name: "Light (default)",
+      user_selectable: false,
+      description: i18n("admin.customize.theme.default_light_scheme"),
+      is_builtin_default: true,
+    };
+    schemes.unshift(builtInDefault);
 
     if (this.typeFilter !== "all") {
       if (this.typeFilter === "user_selectable") {
@@ -51,45 +46,47 @@ export default class AdminCustomizeColorsController extends Controller {
       }
     }
 
-    // Filter by search term
     if (this.filterValue) {
       const term = this.filterValue.toLowerCase();
       schemes = schemes.filter((scheme) => {
+        if (scheme.is_builtin_default) {
+          return "default light".includes(term);
+        }
+
         const nameMatches = scheme.name?.toLowerCase().includes(term);
-        const descriptionMatches = scheme.description
-          ?.toLowerCase()
-          .includes(term);
         const themeMatches = scheme.theme_name?.toLowerCase().includes(term);
-        return nameMatches || descriptionMatches || themeMatches;
+        return nameMatches || themeMatches;
       });
     }
+
+    // active first, then user selectable, then alpha
+    schemes.sort((a, b) => {
+      const defaultId = this.defaultTheme?.color_scheme_id;
+
+      const isDefaultA = a.is_builtin_default
+        ? defaultId === null
+        : a.id === defaultId;
+
+      const isDefaultB = b.is_builtin_default
+        ? defaultId === null
+        : b.id === defaultId;
+
+      if (isDefaultA !== isDefaultB) {
+        return isDefaultA ? -1 : 1;
+      }
+
+      if (a.user_selectable !== b.user_selectable) {
+        return a.user_selectable ? -1 : 1;
+      }
+
+      return (a.name || "").localeCompare(b.name || "");
+    });
 
     return schemes;
   }
 
-  @discourseComputed("filteredColorSchemes")
-  showFilters() {
+  get showFilters() {
     return this.model.filter((scheme) => !scheme.is_base).length > 8;
-  }
-
-  @discourseComputed("filterValue", "typeFilter")
-  showBuiltInDefault() {
-    if (this.typeFilter === "from_theme") {
-      return false;
-    }
-
-    if (this.typeFilter === "user_selectable") {
-      return false;
-    }
-
-    // check if it matches "Light (default)"
-    if (this.filterValue) {
-      const term = this.filterValue.toLowerCase();
-      const lightDefault = "light (default)";
-      return lightDefault.includes(term);
-    }
-
-    return true;
   }
 
   get typeFilterOptions() {
@@ -111,7 +108,7 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   newColorSchemeWithBase(baseKey) {
-    const base = this.baseColorSchemes.findBy("base_scheme_id", baseKey);
+    const base = this.allBaseColorSchemes.findBy("base_scheme_id", baseKey);
     const newColorScheme = base.copy();
     newColorScheme.setProperties({
       name: i18n("admin.customize.colors.new_name"),
@@ -128,7 +125,7 @@ export default class AdminCustomizeColorsController extends Controller {
   newColorScheme() {
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
-        baseColorSchemes: this.baseColorSchemes,
+        baseColorSchemes: this.allBaseColorSchemes,
         newColorSchemeWithBase: this.newColorSchemeWithBase,
       },
     });
@@ -145,14 +142,12 @@ export default class AdminCustomizeColorsController extends Controller {
     this.store.findAll("theme").then((themes) => {
       const defaultTheme = themes.findBy("default", true);
       if (defaultTheme) {
-        // null is the pre-seeded scheme
-        const schemeId = scheme ? scheme.get("id") : null;
+        const schemeId = scheme?.id ?? null;
         defaultTheme.set("color_scheme_id", schemeId);
 
-        this.set("defaultTheme", defaultTheme);
+        this.defaultTheme = defaultTheme;
 
         defaultTheme.saveChanges("color_scheme_id").then(() => {
-          // refresh to show changes
           window.location.reload();
         });
       }

@@ -1,6 +1,5 @@
 import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
-import { or } from "truth-helpers";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
@@ -72,18 +71,6 @@ export default RouteTemplate(
     {{/if}}
 
     <ul class="color-palette__list">
-      {{! show the built-in "default" color scheme }}
-      {{#if @controller.showBuiltInDefault}}
-        <ColorPaletteListItem
-          @scheme={{null}}
-          @defaultTheme={{@controller.defaultTheme}}
-          @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
-          @toggleUserSelectable={{@controller.toggleUserSelectable}}
-          @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
-          @deleteColorScheme={{@controller.deleteColorScheme}}
-        />
-      {{/if}}
-
       {{#each @controller.filteredColorSchemes as |scheme|}}
         <ColorPaletteListItem
           @scheme={{scheme}}
@@ -97,11 +84,7 @@ export default RouteTemplate(
     </ul>
 
     {{#if @controller.showFilters}}
-      {{#unless
-        (or
-          @controller.filteredColorSchemes.length @controller.showBuiltInDefault
-        )
-      }}
+      {{#unless @controller.filteredColorSchemes.length}}
         <div class="color-palette__no-results">
           <h3>{{i18n "admin.customize.colors.filters.no_results"}}</h3>
           <DButton

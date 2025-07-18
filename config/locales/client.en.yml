@@ -6497,7 +6497,7 @@ en:
           install: "Install"
           themes:
             title: "Themes"
-            description: "Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href=\"%{themeSiteSettingsUrl}\">View theme site settings</a>"
+            description: 'Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href="%{themeSiteSettingsUrl}">View theme site settings</a>'
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -6963,7 +6963,7 @@ en:
             description: "Base palette:"
           title: "Colors"
           edit: "Edit"
-          set_default: "Set as active on default theme"
+          set_default: "Set as active on %{theme}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
           filters:
