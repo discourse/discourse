@@ -252,7 +252,7 @@ export default class User extends RestModel.extend(Evented) {
 
   statusManager = new UserStatusManager(this);
 
-  @discourseComputed("composition_mode")
+  @discourseComputed("user_option.composition_mode")
   useRichEditor(compositionMode) {
     // See UserOption#composition_mode_types on the server
     return compositionMode === 1;
