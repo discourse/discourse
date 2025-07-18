@@ -9,12 +9,32 @@ class WatchedWord < ActiveRecord::Base
   end
 
   before_validation do
-    if self.action == WatchedWord.actions[:link] && self.replacement !~ %r{\Ahttps?://}
-      self.replacement =
-        "#{Discourse.base_url}#{self.replacement&.starts_with?("/") ? "" : "/"}#{self.replacement}"
+    if action == WatchedWord.actions[:link] && replacement.present?
+      if replacement =~ /\A([^\/]+):/
+        scheme = $1.downcase
+
+        next if scheme.in?(%w[http https])
+
+        allowed = SiteSetting
+          .allowed_href_schemes
+          .split(",")
+          .map(&:strip)
+          .map(&:downcase)
+
+        unless allowed.include?(scheme)
+          errors.add(
+            :replacement,
+            "uses a scheme (#{scheme}) not listed in allowed_href_schemes"
+          )
+          throw :abort
+        end
+      else
+        prefix = replacement.start_with?("/") ? "" : "/"
+        self.replacement = "#{Discourse.base_url}#{prefix}#{replacement}"
+      end
     end
   end
-
+  
   validates :word, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :replacement, length: { maximum: 100 }
   validates :action, presence: true
