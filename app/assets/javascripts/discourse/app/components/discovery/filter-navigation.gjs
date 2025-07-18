@@ -1,12 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import DButton from "discourse/components/d-button";
+import FilterTips from "discourse/components/discovery/filter-tips";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
@@ -20,11 +22,17 @@ export default class DiscoveryFilterNavigation extends Component {
 
   @tracked copyIcon = "link";
   @tracked copyClass = "btn-default";
+  @tracked inputElement = null;
   @resettableTracked newQueryString = this.args.queryString;
 
   @bind
   updateQueryString(string) {
     this.newQueryString = string;
+  }
+
+  @action
+  storeInputElement(element) {
+    this.inputElement = element;
   }
 
   @action
@@ -52,6 +60,18 @@ export default class DiscoveryFilterNavigation extends Component {
     this.copyClass = "btn-default";
   }
 
+  @action
+  handleKeydown(event) {
+    if (event.key === "Enter" && this._allowEnterSubmit) {
+      this.args.updateTopicsListQueryParams(this.newQueryString);
+    }
+  }
+
+  @action
+  blockEnterSubmit(value) {
+    this._allowEnterSubmit = !value;
+  }
+
   <template>
     {{bodyClass "navigation-filter"}}
 
@@ -68,11 +88,20 @@ export default class DiscoveryFilterNavigation extends Component {
           <Input
             class="topic-query-filter__filter-term"
             @value={{this.newQueryString}}
-            @enter={{fn @updateTopicsListQueryParams this.newQueryString}}
+            {{on "keydown" this.handleKeydown}}
             @type="text"
             id="queryStringInput"
             autocomplete="off"
+            {{didInsert this.storeInputElement}}
           />
+          {{#if this.newQueryString}}
+            <DButton
+              @icon="xmark"
+              @action={{this.clearInput}}
+              @disabled={{unless this.newQueryString "true"}}
+              class="topic-query-filter__clear-btn btn-flat"
+            />
+          {{/if}}
           {{! EXPERIMENTAL OUTLET - don't use because it will be removed soon  }}
           <PluginOutlet
             @name="below-filter-input"
@@ -81,25 +110,14 @@ export default class DiscoveryFilterNavigation extends Component {
               newQueryString=this.newQueryString
             }}
           />
+          <FilterTips
+            @queryString={{this.newQueryString}}
+            @onSelectTip={{this.updateQueryString}}
+            @tips={{@tips}}
+            @blockEnterSubmit={{this.blockEnterSubmit}}
+            @inputElement={{this.inputElement}}
+          />
         </div>
-        {{#if this.newQueryString}}
-          <div class="topic-query-filter__controls">
-            <DButton
-              @icon="xmark"
-              @action={{this.clearInput}}
-              @disabled={{unless this.newQueryString "true"}}
-            />
-
-            {{#if this.discoveryFilter.q}}
-              <DButton
-                @icon={{this.copyIcon}}
-                @action={{this.copyQueryString}}
-                @disabled={{unless this.newQueryString "true"}}
-                class={{this.copyClass}}
-              />
-            {{/if}}
-          </div>
-        {{/if}}
       </div>
     </section>
   </template>

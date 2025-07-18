@@ -34,6 +34,7 @@ RSpec.describe SidebarSection do
         "FAQ",
         "Groups",
         "Badges",
+        "Filter",
       ],
     )
   end

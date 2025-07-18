@@ -5,6 +5,59 @@ RSpec.describe TopicsFilter do
   fab!(:admin)
   fab!(:group)
 
+  describe "#option_info" do
+    it "should return a correct hash with name and description keys for all" do
+      # also ensures no missing translations
+      options = TopicsFilter.option_info
+      expect(options).to be_an(Array)
+      expect(options).to all(be_a(Hash))
+      expect(options).to all(include(:name, :description))
+      # 10 is arbitray, but better than just checking for 1
+      expect(options.length).to be > 10
+    end
+
+    it "should include nothing about tags when disabled" do
+      SiteSetting.tagging_enabled = false
+      options = TopicsFilter.option_info
+
+      tag_options = options.find { |o| o[:name].include? "tag" }
+      expect(tag_options).to be_nil
+
+      SiteSetting.tagging_enabled = true
+      options = TopicsFilter.option_info
+
+      tag_options = options.find { |o| o[:name].include? "tag" }
+      expect(tag_options).not_to be_nil
+    end
+
+    it "should not include user-specific options for anonymous users" do
+      anon_options = TopicsFilter.option_info(Guardian.new)
+      logged_in_options = TopicsFilter.option_info(Guardian.new(user))
+
+      # Extract option names for easier comparison
+      anon_option_names = anon_options.map { |o| o[:name] }.to_set
+      logged_in_option_names = logged_in_options.map { |o| o[:name] }.to_set
+
+      # User-specific options that should only appear for logged-in users
+      user_specific_options = %w[
+        in:
+        in:pinned
+        in:bookmarked
+        in:watching
+        in:tracking
+        in:muted
+        in:normal
+        in:watching_first_post
+      ]
+
+      # Ensure anonymous users don't have these options
+      user_specific_options.each { |option| expect(anon_option_names).not_to include(option) }
+
+      # Ensure logged-in users do have these options
+      user_specific_options.each { |option| expect(logged_in_option_names).to include(option) }
+    end
+  end
+
   describe "#filter_from_query_string" do
     describe "when filtering with multiple filters" do
       fab!(:tag) { Fabricate(:tag, name: "tag1") }
