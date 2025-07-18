@@ -29,6 +29,7 @@ class Admin::SiteSettingsController < Admin::AdminController
       backfill = params[:update_existing_user]
       settings = [{ setting_name: id, value: params[id], backfill: }]
     end
+
     SiteSetting::Update.call(params: { settings: }, guardian:) do
       on_success { render body: nil }
       on_failed_policy(:settings_are_not_deprecated) do |policy|

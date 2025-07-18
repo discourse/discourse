@@ -461,13 +461,12 @@ RSpec.describe Admin::SiteSettingsController do
         end
 
         it "should update existing users user preference" do
-          perform_enqueued_jobs do
-            put "/admin/site_settings/default_categories_watching.json",
-                params: {
-                  default_categories_watching: category_ids.last(2).join("|"),
-                  update_existing_user: true,
-                }
-          end
+          put "/admin/site_settings/default_categories_watching.json",
+              params: {
+                default_categories_watching: category_ids.last(2).join("|"),
+                update_existing_user: true,
+              }
+
           expect(response.status).to eq(200)
 
           expect(
