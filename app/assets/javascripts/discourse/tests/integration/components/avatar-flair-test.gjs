@@ -3,14 +3,14 @@ import { module, test } from "qunit";
 import AvatarFlair from "discourse/components/avatar-flair";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-function renderComponent(args) {
+function renderComponent(flairArgs) {
   return render(
     <template>
       <AvatarFlair
-        @flairBgColor={{args.flair_bg_color}}
-        @flairColor={{args.flair_color}}
-        @flairName={{args.flair_name}}
-        @flairUrl={{args.flair_url}}
+        @flairBgColor={{flairArgs.flair_bg_color}}
+        @flairColor={{flairArgs.flair_color}}
+        @flairName={{flairArgs.flair_name}}
+        @flairUrl={{flairArgs.flair_url}}
       />
     </template>
   );
@@ -20,14 +20,14 @@ module("Integration | Component | AvatarFlair", function (hooks) {
   setupRenderingTest(hooks);
 
   test("avatar flair with an icon", async function (assert) {
-    const args = {
+    const flairArgs = {
       flair_url: "bars",
       flair_bg_color: "CC0000",
       flair_color: "FFFFFF",
       flair_name: "icon-avatar-flair",
     };
 
-    await renderComponent(args);
+    await renderComponent(flairArgs);
 
     assert
       .dom(".avatar-flair")
@@ -45,12 +45,12 @@ module("Integration | Component | AvatarFlair", function (hooks) {
   });
 
   test("avatar flair with an image", async function (assert) {
-    const args = {
+    const flairArgs = {
       flair_url: "/images/avatar.png",
       flair_name: "image-avatar-flair",
     };
 
-    await renderComponent(args);
+    await renderComponent(flairArgs);
 
     assert
       .dom(".avatar-flair")
