@@ -324,7 +324,7 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
         shell: bash
 
       - name: Check for failed system test artifacts
