@@ -251,4 +251,83 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     await triggerKeyEvent("#q", "keydown", "Escape");
     assert.false(blockEnterValue, "blockEnter false after escape");
   });
+
+  test("prefix support for categories", async function (assert) {
+    // Add prefix data to tips
+    this.tips = [
+      {
+        name: "category:",
+        description: "Filter category",
+        priority: 1,
+        type: "category",
+        prefixes: [
+          { name: "-", description: "Exclude category" },
+          { name: "=", description: "Category without subcategories" },
+        ],
+      },
+      { name: "tag:", description: "Filter tag", priority: 1, type: "tag" },
+    ];
+
+    const self = this;
+    await render(
+      <template>
+        <input id="q" {{didInsert self.capture}} />
+        <FilterTips
+          @tips={{self.tips}}
+          @queryString={{self.query}}
+          @onSelectTip={{self.update}}
+          @blockEnterSubmit={{self.blockEnter}}
+          @inputElement={{self.inputElement}}
+        />
+      </template>
+    );
+
+    await triggerEvent("#q", "focus");
+    await fillIn("#q", "cat");
+
+    const buttons = document.querySelectorAll(".filter-tip__button");
+    const lastButton = buttons[buttons.length - 1];
+
+    assert.dom(lastButton).exists("shows filtered results");
+    assert
+      .dom(lastButton.querySelector(".filter-tip__name"))
+      .hasText("=category:");
+    assert
+      .dom(lastButton.querySelector(".filter-tip__description"))
+      .includesText("without", "shows prefix description");
+
+    // we skip the "category" and go to negative prefix
+    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#q", "keydown", "Tab");
+
+    assert.strictEqual(this.query, "-category:", "prefix included in query");
+    assert.dom("#q").hasValue("-category:");
+
+    assert
+      .dom(".filter-tip__button")
+      .exists({ count: 2 }, "shows category options after prefix");
+    assert
+      .dom(".filter-tip__button:first-child .filter-tip__name")
+      .hasText("-category:bugs", "shows category slug");
+
+    // Select a category
+    await triggerKeyEvent("#q", "keydown", "Tab");
+    assert
+      .dom("#q")
+      .hasValue("-category:bugs", "full filter with prefix applied");
+
+    // Test with equals prefix
+    await fillIn("#q", "=cat");
+    assert
+      .dom(".filter-tip__description")
+      .includesText(
+        "Category without subcategories",
+        "shows = prefix description"
+      );
+
+    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#q", "keydown", "Tab");
+    assert.strictEqual(this.query, "=category:", "equals prefix included");
+  });
 });
