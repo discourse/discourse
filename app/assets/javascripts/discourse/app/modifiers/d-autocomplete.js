@@ -6,7 +6,6 @@ import Modifier from "ember-modifier";
 import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -41,6 +40,8 @@ export default class DAutocompleteModifier extends Modifier {
 
   // Constants
   ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
+  TRIGGER_CHAR_RELATIVE_OFFSET = 9;
+  VERTICAL_RELATIVE_OFFSET = 10;
 
   handleKeyUp = (event) => {
     // Skip if modifier keys are pressed
@@ -143,12 +144,6 @@ export default class DAutocompleteModifier extends Modifier {
   modify(element, [options]) {
     this.targetElement = element;
     this.options = options || {};
-
-    // Always ensure we have a textHandler, create default if not provided
-    // This matches the behavior of the original jQuery autocomplete library
-    if (!this.options.textHandler) {
-      this.options.textHandler = new TextareaAutocompleteHandler(element);
-    }
 
     // Set up event listeners
     element.addEventListener("keyup", this.handleKeyUp);
@@ -317,7 +312,6 @@ export default class DAutocompleteModifier extends Modifier {
 
   @action
   async closeAutocomplete() {
-    // Close the d-menu
     await this.menu.close("d-autocomplete");
 
     this.expanded = false;
@@ -494,13 +488,11 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   createVirtualElementAtCaret() {
-    const marginLeft = 9; //offset to place autocomplete in front of the trigger character (e.g. "@")
-    const marginTop = 10;
     const caretCoords = this.getAbsoluteCaretCoords();
     return {
       getBoundingClientRect: () => ({
-        left: caretCoords.x + marginLeft,
-        top: caretCoords.y + marginTop,
+        left: caretCoords.x + this.TRIGGER_CHAR_RELATIVE_OFFSET,
+        top: caretCoords.y + this.VERTICAL_RELATIVE_OFFSET,
         width: 1,
         height: 10,
       }),
