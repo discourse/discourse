@@ -567,7 +567,7 @@ class TopicQuery
     list.per_page = options[:per_page]&.to_i || per_page_setting
 
     if filter == :filter && options[:include_filter_option_info]
-      list.filter_option_info = TopicsFilter.option_info
+      list.filter_option_info = TopicsFilter.option_info(@guardian)
     end
     list
   end

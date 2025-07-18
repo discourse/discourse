@@ -129,7 +129,7 @@ class TopicsFilter
     @scope
   end
 
-  def self.option_info
+  def self.option_info(guardian = Guardian.new)
     results = [
       {
         name: "category:",
@@ -202,17 +202,6 @@ class TopicsFilter
       { name: "status:unlisted", description: I18n.t("filter.description.status_unlisted") },
       { name: "status:deleted", description: I18n.t("filter.description.status_deleted") },
       { name: "status:public", description: I18n.t("filter.description.status_public") },
-      { name: "in:", description: I18n.t("filter.description.in"), priority: 1 },
-      { name: "in:pinned", description: I18n.t("filter.description.in_pinned") },
-      { name: "in:bookmarked", description: I18n.t("filter.description.in_bookmarked") },
-      { name: "in:watching", description: I18n.t("filter.description.in_watching") },
-      { name: "in:tracking", description: I18n.t("filter.description.in_tracking") },
-      { name: "in:muted", description: I18n.t("filter.description.in_muted") },
-      { name: "in:normal", description: I18n.t("filter.description.in_normal") },
-      {
-        name: "in:watching_first_post",
-        description: I18n.t("filter.description.in_watching_first_post"),
-      },
       { name: "order:", description: I18n.t("filter.description.order"), priority: 1 },
       { name: "order:activity", description: I18n.t("filter.description.order_activity") },
       { name: "order:activity-asc", description: I18n.t("filter.description.order_activity_asc") },
@@ -238,6 +227,24 @@ class TopicsFilter
       { name: "order:read", description: I18n.t("filter.description.order_read") },
       { name: "order:read-asc", description: I18n.t("filter.description.order_read_asc") },
     ]
+
+    if !guardian.anonymous?
+      results.concat(
+        [
+          { name: "in:", description: I18n.t("filter.description.in"), priority: 1 },
+          { name: "in:pinned", description: I18n.t("filter.description.in_pinned") },
+          { name: "in:bookmarked", description: I18n.t("filter.description.in_bookmarked") },
+          { name: "in:watching", description: I18n.t("filter.description.in_watching") },
+          { name: "in:tracking", description: I18n.t("filter.description.in_tracking") },
+          { name: "in:muted", description: I18n.t("filter.description.in_muted") },
+          { name: "in:normal", description: I18n.t("filter.description.in_normal") },
+          {
+            name: "in:watching_first_post",
+            description: I18n.t("filter.description.in_watching_first_post"),
+          },
+        ],
+      )
+    end
 
     if SiteSetting.tagging_enabled?
       results.push(
