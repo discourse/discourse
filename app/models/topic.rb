@@ -2143,8 +2143,14 @@ class Topic < ActiveRecord::Base
   end
 
   def get_localization(locale = I18n.locale)
-    locale_string = locale.to_s.sub("-", "_")
-    topic_localizations.find { |tl| tl.locale == locale_string }
+    locale_str = locale.to_s.sub("-", "_")
+
+    # prioritise exact match
+    if match = topic_localizations.find { |l| l.locale == locale_str }
+      return match
+    end
+
+    topic_localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
 
   private

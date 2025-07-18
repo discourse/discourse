@@ -1330,12 +1330,18 @@ class Post < ActiveRecord::Base
   end
 
   def in_user_locale?
-    locale == I18n.locale.to_s
+    LocaleNormalizer.is_same?(locale, I18n.locale)
   end
 
   def get_localization(locale = I18n.locale)
-    locale_string = locale.to_s.sub("-", "_")
-    post_localizations.find { |tl| tl.locale == locale_string }
+    locale_str = locale.to_s.sub("-", "_")
+
+    # prioritise exact match
+    if match = post_localizations.find { |l| l.locale == locale_str }
+      return match
+    end
+
+    post_localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
 
   private
