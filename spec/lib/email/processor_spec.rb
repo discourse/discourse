@@ -162,6 +162,9 @@ RSpec.describe Email::Processor do
 
   describe "mailinglist mirror" do
     before do
+      SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+      SiteSetting.manual_polling_enabled = true
+      SiteSetting.reply_by_email_enabled = true
       SiteSetting.email_in = true
       Fabricate(:mailinglist_mirror_category)
     end
