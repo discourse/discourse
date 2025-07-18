@@ -215,6 +215,16 @@ export default function setupTests(config) {
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
 
+  window.onunhandledrejection = (event) => {
+    // reports test boot failures to testem, so the browser doesn't hang forever
+    window.Testem?.emit(
+      "top-level-error",
+      event.reason,
+      window.location.href,
+      "0"
+    );
+  };
+
   sinon.config = {
     injectIntoThis: false,
     injectInto: null,
