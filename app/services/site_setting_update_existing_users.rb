@@ -24,39 +24,11 @@ class SiteSettingUpdateExistingUsers
       )
       MessageBus.publish("#{id}", { status: "enqueued" })
     elsif id.start_with?("default_tags_")
-      batch_size = SiteSetting.default_tags_update_batch
-      previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
-      new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
-      now = Time.zone.now
-
-      notification_level = self.tag_notification_level(id)
-
-      TagUser
-        .where(tag_id: (previous_tag_ids - new_tag_ids), notification_level: notification_level)
-        .in_batches(of: batch_size) { |batch| batch.delete_all }
-
-      (new_tag_ids - previous_tag_ids).each do |tag_id|
-        skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
-
-        User
-          .real
-          .where(staged: false)
-          .where.not(id: skip_user_ids)
-          .select(:id)
-          .find_in_batches(batch_size: batch_size) do |users|
-            tag_users = []
-            users.each do |user|
-              tag_users << {
-                tag_id: tag_id,
-                user_id: user.id,
-                notification_level: notification_level,
-                created_at: now,
-                updated_at: now,
-              }
-            end
-            TagUser.insert_all!(tag_users)
-          end
-      end
+      Jobs.enqueue(
+        :site_setting_update_default_tags,
+        { id: id, value: value, previous_value: previous_value },
+      )
+      MessageBus.publish("#{id}", { status: "enqueued" })
     elsif self.is_sidebar_default_setting?(id)
       Jobs.enqueue(
         :backfill_sidebar_site_settings,
