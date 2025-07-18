@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class SiteSettingUpdateDefaultCategories < ::Jobs::Base
+  class SiteSettingUpdateDefaultTags < ::Jobs::Base
     def execute(args)
       DistributedMutex.synchronize("process_site_setting_#{args[:id]}", validity: 10.minutes) do
         id = args[:id]

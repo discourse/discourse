@@ -63,15 +63,25 @@ export default class SiteSettingComponent extends Component {
   constructor() {
     super(...arguments);
     this.isSecret = this.setting?.secret;
-    if (this.setting.setting.includes("default_categories")) {
-      this.messageBus.subscribe(`${this.setting.setting}`, this.onMessage);
+
+    const settingName = this.setting.setting;
+    if (
+      settingName.includes("default_categories") ||
+      settingName.includes("default_tags")
+    ) {
+      this.messageBus.subscribe(`${settingName}`, this.onMessage);
     }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    if (this.setting.setting.includes("default_categories")) {
-      this.messageBus.subscribe(`${this.setting.setting}`, this.onMessage);
+    const settingName = this.setting.setting;
+
+    if (
+      settingName.includes("default_categories") ||
+      settingName.includes("default_tags")
+    ) {
+      this.messageBus.subscribe(`${settingName}`, this.onMessage);
     }
   }
 
