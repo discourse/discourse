@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
