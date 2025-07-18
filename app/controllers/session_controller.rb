@@ -700,11 +700,8 @@ class SessionController < ApplicationController
   end
 
   def get_honeypot_value
-    Rails.logger.warn("!~! in get_honeypot_value")
-    Rails.logger.warn("!~! secure_session_id? #{session["secure_session_id"]}")
     secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
     secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
-    Rails.logger.warn("!~! secure_session_id? #{session["secure_session_id"]}")
 
     render json: {
              value: honeypot_value,
