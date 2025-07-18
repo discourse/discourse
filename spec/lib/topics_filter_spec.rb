@@ -29,6 +29,33 @@ RSpec.describe TopicsFilter do
       tag_options = options.find { |o| o[:name].include? "tag" }
       expect(tag_options).not_to be_nil
     end
+
+    it "should not include user-specific options for anonymous users" do
+      anon_options = TopicsFilter.option_info(Guardian.new)
+      logged_in_options = TopicsFilter.option_info(Guardian.new(user))
+
+      # Extract option names for easier comparison
+      anon_option_names = anon_options.map { |o| o[:name] }.to_set
+      logged_in_option_names = logged_in_options.map { |o| o[:name] }.to_set
+
+      # User-specific options that should only appear for logged-in users
+      user_specific_options = %w[
+        in:
+        in:pinned
+        in:bookmarked
+        in:watching
+        in:tracking
+        in:muted
+        in:normal
+        in:watching_first_post
+      ]
+
+      # Ensure anonymous users don't have these options
+      user_specific_options.each { |option| expect(anon_option_names).not_to include(option) }
+
+      # Ensure logged-in users do have these options
+      user_specific_options.each { |option| expect(logged_in_option_names).to include(option) }
+    end
   end
 
   describe "#filter_from_query_string" do
