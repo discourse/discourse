@@ -568,7 +568,15 @@ class ApplicationController < ActionController::Base
   end
 
   def secure_session
-    SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
+    Rails.logger.warn("In ApplicationController.secure_session, whole session? | #{session&.to_h}")
+    Rails.logger.warn(
+      "!~! In ApplicationController.secure_session, before: #{session["secure_session_id"]}",
+    )
+    return_val = SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
+    Rails.logger.warn(
+      "!~! In ApplicationController.secure_session, after: #{session["secure_session_id"]}",
+    )
+    return_val
   end
 
   def handle_permalink(path)
@@ -937,11 +945,25 @@ class ApplicationController < ActionController::Base
   protected
 
   def honeypot_value
-    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
+    Rails.logger.warn(
+      "!~! In ApplicationController.honeypot_value, before: #{session["secure_session_id"]}",
+    )
+    val = secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
+    Rails.logger.warn(
+      "!~! In ApplicationController.honeypot_value, after: #{session["secure_session_id"]}",
+    )
+    val
   end
 
   def challenge_value
-    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
+    Rails.logger.warn(
+      "!~! In ApplicationController.challenge_value, before: #{session["secure_session_id"]}",
+    )
+    val = secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
+    Rails.logger.warn(
+      "!~! In ApplicationController.challenge_value, after: #{session["secure_session_id"]}",
+    )
+    val
   end
 
   def render_post_json(post, add_raw: true)
