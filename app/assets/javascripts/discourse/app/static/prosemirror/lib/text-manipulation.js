@@ -10,6 +10,7 @@ import { TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
@@ -93,35 +94,24 @@ export default class ProsemirrorTextManipulation {
     next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
   }
 
-  // TODO: DRY - extract this later
-  _setupModernAutocomplete(options) {
-    // Import the modifier dynamically to avoid circular dependencies
-    import("discourse/modifiers/d-autocomplete")
-      .then((module) => {
-        const DAutocompleteModifier = module.default;
+  _setupAutocomplete(options) {
+    // Create and apply the modifier
+    const modifier = new DAutocompleteModifier(getOwnerWithFallback(this), {
+      named: {},
+      positional: [],
+    });
 
-        // Create and apply the modifier
-        const modifier = new DAutocompleteModifier(getOwnerWithFallback(this), {
-          named: {},
-          positional: [],
-        });
+    const modifierOptions = {
+      ...options,
+      textHandler: this.autocompleteHandler,
+    };
 
-        // Adapt options for the modifier
-        const modifierOptions = {
-          ...options,
-          // Use the textarea's autocomplete handler for text manipulation
-          textHandler: this.autocompleteHandler,
-        };
-
-        // Apply the modifier to the textarea
-        modifier.modify(this.view.dom, [modifierOptions]);
-      })
-      .catch(() => {});
+    modifier.modify(this.view.dom, [modifierOptions]);
   }
 
   autocomplete(options) {
     if (this.shouldUseModernAutocomplete) {
-      this._setupModernAutocomplete(options);
+      this._setupAutocomplete(options);
     } else {
       // @ts-ignore
       $(this.view.dom).autocomplete(
