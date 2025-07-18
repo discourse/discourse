@@ -14,8 +14,9 @@ export default class captchaFieldsConnector extends Component {
 
   <template>
     <div class="input-group">
+      {{log this.siteSettings.discourse_hcaptcha_enabled}}
       {{#if this.siteSettings.discourse_hcaptcha_enabled}}
-        <HCaptcha @siteKey={{this.siteSettings.recaptcha_site_key}} />
+        <HCaptcha @siteKey={{this.siteSettings.hcaptcha_site_key}} />
       {{/if}}
       {{#if this.siteSettings.discourse_recaptcha_enabled}}
         <ReCaptcha @siteKey={{this.siteSettings.recaptcha_site_key}} />

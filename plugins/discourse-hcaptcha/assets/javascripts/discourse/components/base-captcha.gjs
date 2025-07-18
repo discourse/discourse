@@ -1,10 +1,8 @@
-// components/base-captcha.gjs
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import InputTip from "discourse/components/input-tip";
-import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 
 export default class BaseCaptcha extends Component {
@@ -13,11 +11,12 @@ export default class BaseCaptcha extends Component {
   @tracked widgetId;
   @tracked configError = "";
 
-  captchaApi = null;
+  siteKey = this.args.siteKey;
+  captchaApi;
 
   constructor() {
     super(...arguments);
-    this.initializeCaptcha(this.args.siteKey);
+    this.initializeCaptcha();
   }
 
   willDestroy() {
@@ -27,46 +26,30 @@ export default class BaseCaptcha extends Component {
     }
   }
 
-  initializeCaptcha(siteKey) {
+  initializeCaptcha() {
     if (this.isCaptchaLoaded()) {
       next(() => {
         if (document.getElementById(this.containerId)) {
-          this.renderCaptcha(siteKey);
+          this.renderCaptcha(this.siteKey);
         }
       });
     } else {
-      this.loadCaptchaScript(siteKey);
+      this.loadCaptchaScript(this.siteKey);
     }
   }
-
 
   isCaptchaLoaded() {
     return typeof this.captchaApi !== "undefined";
   }
 
-  async loadCaptchaScript(siteKey) {
-    this.beforeScriptLoad(siteKey);
-
-    await loadScript(this.scriptUrl);
-
-    this.afterScriptLoad(siteKey);
-  }
-
-  beforeScriptLoad(_siteKey) {}
-
-  afterScriptLoad(siteKey) {
-    this.captchaApi = window[this.captchaApiName];
-    this.renderCaptcha(siteKey);
-  }
-
-  renderCaptcha(siteKey) {
-    if (!this.isCaptchaLoaded() || !siteKey) {
+  renderCaptcha() {
+    if (!this.isCaptchaLoaded() || !this.siteKey) {
       this.configError = i18n(this.configErrorKey);
       return;
     }
 
     this.widgetId = this.captchaApi.render(this.containerId, {
-      sitekey: siteKey,
+      sitekey: this.siteKey,
       callback: (response) => {
         this.captchaService.token = response;
         this.captchaService.invalid = !response;
@@ -79,14 +62,23 @@ export default class BaseCaptcha extends Component {
     this.captchaService.registerWidget(this.captchaApi, this.widgetId);
   }
 
+  async loadCaptchaScript() {
+    return "discourse_captcha.contact_system_administrator";
+  }
 
   get configErrorKey() {
     return "discourse_captcha.contact_system_administrator";
   }
 
   get scriptUrl() {}
-  get captchaApiName() {}
-  get containerId() {}
+
+  get captchaApiName() {
+    throw new Error("Subclasses must implement 'captchaApiName'");
+  }
+
+  get containerId() {
+    throw new Error("Subclasses must implement 'containerId'");
+  }
 
   <template>
     <div
