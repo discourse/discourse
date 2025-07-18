@@ -484,7 +484,7 @@ module("Unit | Model | composer", function (hooks) {
     assert.true(saved);
   });
 
-  test("composerVersion is correct when using 'rich text' composer", async function (assert) {
+  test("composerVersion is correct when using modern 'rich text' composer", async function (assert) {
     this.siteSettings.rich_editor = true;
     this.currentUser.set("user_option.composition_mode", 1);
 
@@ -493,6 +493,8 @@ module("Unit | Model | composer", function (hooks) {
   });
 
   test("composerVersion is correct when using 'classic' composer", async function (assert) {
+    this.currentUser.set("user_option.composition_mode", 0);
+
     const composer = createComposer.call(this, {});
     assert.strictEqual(composer.composerVersion, 1);
   });

@@ -294,6 +294,7 @@ end
 #  enable_smart_lists               :boolean          default(TRUE), not null
 #  hide_profile                     :boolean          default(FALSE), not null
 #  hide_presence                    :boolean          default(FALSE), not null
+#  composition_mode                 :integer          default(1), not null
 #
 # Indexes
 #
