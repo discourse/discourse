@@ -74,18 +74,14 @@ export default class FilterTips extends Component {
 
     // Check if we're in the middle of a filter with a value
     const colonIndex = lastWord.indexOf(":");
+    const prefix = this.extractPrefix(lastWord) || "";
     if (colonIndex > 0) {
-      const prefix = this.extractPrefix(lastWord);
-      const filterName = lastWord.substring(
-        prefix.length,
-        colonIndex + prefix.length
-      );
-      const valueText = lastWord.substring(colonIndex + prefix.length + 1);
+      const filterName = lastWord.substring(prefix.length).split(":")[0];
+      const valueText = lastWord.substring(colonIndex + 1);
 
       // Find matching tip
       const tip = this.args.tips.find((t) => {
-        const tipFilterName = t.name.replace(/^[-=]/, "").split(":")[0];
-        return tipFilterName === filterName;
+        return t.name === filterName + ":";
       });
 
       // If the tip has a type and we have value text, do placeholder search
@@ -95,7 +91,7 @@ export default class FilterTips extends Component {
       }
     }
 
-    // Default filtering logic
+    // This handles blank, the default state when nothing is typed
     if (!this.currentInputValue || lastWord === "") {
       return this.args.tips
         .filter((tip) => tip.priority)
@@ -109,17 +105,27 @@ export default class FilterTips extends Component {
       if (tips.length >= MAX_RESULTS) {
         return;
       }
-      const tipName = tip.name.replace(/^[-=]/, "");
-      const searchTerm = lastWord.replace(/^[-=]/, "");
+      const tipName = tip.name;
+      const searchTerm = lastWord.substring(prefix.length);
 
       // Skip exact matches with colon
       if (searchTerm.endsWith(":") && tipName === searchTerm) {
         return;
       }
 
-      if (tipName.indexOf(searchTerm) > -1) {
-        tips.push(tip);
+      const prefixMatch =
+        searchTerm === "" &&
+        prefix &&
+        tipName.prefixes &&
+        tipName.prefixes.find((p) => p.name === prefix);
+
+      if (prefixMatch || tipName.indexOf(searchTerm) > -1) {
+        this.pushPrefixTips(tip, tips, null, prefix);
+        if (!prefix) {
+          tips.push(tip);
+        }
       } else if (tip.alias && tip.alias.indexOf(searchTerm) > -1) {
+        this.pushPrefixTips(tip, tips, tip.alias, prefix);
         tips.push({
           ...tip,
           name: tip.alias,
@@ -128,9 +134,9 @@ export default class FilterTips extends Component {
     });
 
     return tips.sort((a, b) => {
-      const aName = a.name.replace(/^[-=]/, "");
-      const bName = b.name.replace(/^[-=]/, "");
-      const searchTerm = lastWord.replace(/^[-=]/, "");
+      const aName = a.name;
+      const bName = b.name;
+      const searchTerm = lastWord;
 
       const aStartsWith = aName.startsWith(searchTerm);
       const bStartsWith = bName.startsWith(searchTerm);
@@ -150,6 +156,22 @@ export default class FilterTips extends Component {
 
       return aName.localeCompare(bName);
     });
+  }
+
+  pushPrefixTips(tip, tips, alias = null, currentPrefix = null) {
+    if (tip.prefixes && tip.prefixes.length > 0) {
+      tip.prefixes.forEach((prefix) => {
+        if (currentPrefix && !prefix.name.startsWith(currentPrefix)) {
+          return;
+        }
+        tips.push({
+          ...tip,
+          name: `${prefix.name}${alias || tip.name}`,
+          description: prefix.description || tip.description,
+          isPlaceholderCompletion: true,
+        });
+      });
+    }
   }
 
   extractPrefix(word) {
@@ -348,7 +370,7 @@ export default class FilterTips extends Component {
         prefix.length,
         colonIndex + prefix.length
       );
-      const valueText = lastWord.substring(colonIndex + prefix.length + 1);
+      const valueText = lastWord.substring(colonIndex + 1);
 
       const tip = this.args.tips.find((t) => {
         const tipFilterName = t.name.replace(/^[-=]/, "").split(":")[0];
