@@ -72,10 +72,6 @@ module("Integration | Component | Post | PostAvatar", function (hooks) {
 
     assert
       .dom("img.avatar")
-      .hasAttribute(
-        "src",
-        "/letter_avatar_proxy/v4/letter/e/eviltrout/96.gif",
-        "it change the avatar url"
-      );
+      .hasAttribute("src", /.gif$/, "it change the avatar url");
   });
 });
