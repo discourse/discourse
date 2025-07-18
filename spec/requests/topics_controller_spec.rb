@@ -2535,7 +2535,7 @@ RSpec.describe TopicsController do
           end
 
         queries = queries.filter { |q| q =~ /FROM "?post_localizations"?/ }
-        expect(queries.size).to eq(2)
+        expect(queries.size).to eq(1)
       end
     end
 
