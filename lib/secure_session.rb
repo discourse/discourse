@@ -3,6 +3,7 @@
 # session that is not stored in cookie, expires after 1.hour unconditionally
 class SecureSession
   def initialize(prefix)
+    Rails.logger.warn("!~!~!~! NEW SecureSession prefix: #{prefix}")
     @prefix = prefix
   end
 

@@ -569,6 +569,7 @@ class ApplicationController < ActionController::Base
 
   def secure_session
     Rails.logger.warn("In ApplicationController.secure_session, whole session? #{session}")
+    Rails.logger.warn(session)
     Rails.logger.warn(
       "!~! In ApplicationController.secure_session, before: #{session["secure_session_id"]}",
     )

@@ -705,9 +705,6 @@ class SessionController < ApplicationController
     secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
     secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
     Rails.logger.warn("!~! secure_session_id? #{session["secure_session_id"]}")
-    Rails.logger.warn(
-      "!~! honeypot ttl: #{secure_session.ttl(HONEYPOT_KEY)} | challenge ttl: #{secure_session.ttl(CHALLENGE_KEY)}",
-    )
 
     render json: {
              value: honeypot_value,
