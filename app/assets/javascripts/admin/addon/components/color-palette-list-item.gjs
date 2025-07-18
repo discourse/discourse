@@ -213,7 +213,7 @@ export default class ColorPaletteListItem extends Component {
                       }}
                       @icon="star"
                       @translatedLabel={{this.setAsDefaultLabel}}
-                      class="btn-transparent"
+                      class="btn-transparent btn-palette-default"
                       disabled={{this.isActive}}
                     />
                   </dropdown.item>

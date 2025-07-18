@@ -89,7 +89,7 @@ describe "Admin Color Palettes Features", type: :system do
       within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
 
       expect(page).to have_css(".dropdown-menu")
-      click_button(I18n.t("admin_js.admin.customize.colors.set_default"))
+      click_button(class: "btn-palette-default")
 
       expect(toasts).to have_success(I18n.t("admin_js.admin.customize.colors.saved_refreshing"))
     end
