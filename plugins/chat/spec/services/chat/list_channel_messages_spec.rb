@@ -69,6 +69,13 @@ RSpec.describe Chat::ListChannelMessages do
       it { is_expected.to fail_to_find_a_model(:channel) }
     end
 
+    context "when user cannot view the channel" do
+      let(:private_channel) { Fabricate(:private_category_channel) }
+      let(:channel_id) { private_channel.id }
+
+      it { is_expected.to fail_a_policy(:can_view_channel) }
+    end
+
     context "when target message is not found" do
       let(:optional_params) { { target_message_id: -1 } }
 
@@ -106,10 +113,7 @@ RSpec.describe Chat::ListChannelMessages do
       context "when fetch_from_last_read is true" do
         let(:optional_params) { { fetch_from_last_read: true } }
 
-        before do
-          channel.add(user)
-          channel.membership_for(user).update!(last_read_message: messages.second)
-        end
+        before { channel.membership_for(user).update!(last_read_message: messages.second) }
 
         it "sets target_message to last_read_message_id" do
           expect(result.metadata[:target_message]).to eq(messages.second)
