@@ -2,6 +2,7 @@ en:
   dashboard:
     problem:
       hcaptcha_configuration: "There is a problem with your hCaptcha `site_key` or `secret_key` configuration"
+      recaptcha_configuration: "There is a problem with your ReCaptcha `site_key` or `secret_key` configuration"
 
   admin: 
     site_settings:
@@ -9,8 +10,12 @@ en:
         discourse_hcaptcha: "hCaptcha Plugin"
         
   site_settings:
-    discourse_hcaptcha_enabled: "Enable the hCaptcha Plugin. Requires <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account."
+    discourse_captcha_enabled: "Enable the hCaptcha Plugin. Requires <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account."
+    discourse_hcaptcha_enabled: "Enable captcha providing service hCaptcha"
     hcaptcha_site_key: "hCaptcha Site Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
     hcaptcha_secret_key: "hCaptcha Secret Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
+    discourse_recaptcha_enabled: "Enable captcha providing service reCaptcha"
+    recaptcha_site_key: "ReCaptcha Site Key from your <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> account"
+    recaptcha_secret_key: "ReCaptcha Secret Key from your <a target='blank' href='hhttps://www.google.com/recaptcha'>ReCaptcha</a> account"
 
-  h_captcha_verification_failed: "hCaptcha verification failed"
+  captcha_verification_failed: "Captcha verification failed"
