@@ -1339,6 +1339,8 @@ tr_TR:
       suspended_notice: "Bu kullanıcı %{date} tarihine kadar uzaklaştırıldı."
       suspended_permanently: "Bu kullanıcı uzaklaştırıldı."
       suspended_reason: "Sebep: "
+      silenced_permanently: "Bu kullanıcı susturuldu."
+      silenced_reason: "Neden: "
       github_profile: "Github"
       email_activity_summary: "Aktivite özeti"
       mailing_list_mode:
@@ -1859,7 +1861,8 @@ tr_TR:
         removed: "Kaldırıldı"
         search: "davetlerde aramak için yazın…"
         user: "Davet Edilen Kullanıcı"
-        none: "Görüntülenecek davet yok."
+        none:
+          title: "Görüntülenecek davet yok."
         truncated:
           one: "İlk davet gösteriliyor."
           other: "İlk %{count} davet gösteriliyor."
@@ -2495,7 +2498,6 @@ tr_TR:
       unlist: "listelenmedi"
       add_warning: "Bu resmi bir uyarıdır."
       toggle_whisper: "Fısıltıyı Aç/Kapat"
-      toggle_unlisted: "Liste Dışı Aç/Kapat"
       insert_table: "Tablo ekle"
       posting_not_on_topic: "Hangi konuya yanıt vermek istiyorsunuz?"
       saved_local_draft_tip: "yerel olarak kaydedildi"

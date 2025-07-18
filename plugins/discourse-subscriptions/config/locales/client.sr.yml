@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    discourse_subscriptions:
+      plans:
+        interval:
+          adverb:
+            day: Top dnevne
+            week: Top nedeljne
+            month: Top mesečne
+            year: Top godišnje
+      user:
+        payments:
+          created_at: Napravljeno
+        plans:
+          product: Ime foruma
+        subscriptions:
+          created_at: Napravljeno
+          cancel: otkaži
+      billing:
+        email: E-mail
+      admin:
+        dashboard:
+          title: Komandna Tabla
+          table:
+            head:
+              user: Korisnik
+        products:
+          product:
+            description: Opis
+            active: Aktivni
+            created_at: Napravljeno
+        plans:
+          plan:
+            active: Aktivni
+            created_at: Napravljeno
+        coupons:
+          active: Aktivni?
+          actions: Akcije
+        subscriptions:
+          subscription:
+            user: Korisnik
+            created_at: Napravljeno

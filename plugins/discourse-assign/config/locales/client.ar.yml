@@ -1,0 +1,201 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "تعيين Discourse"
+  js:
+    filters:
+      unassigned:
+        title: "غير معيَّنة"
+        help: "الموضوعات غير المعيَّنة"
+    action_codes:
+      assigned: "تم تعيين %{who} في %{when}"
+      assigned_group: "تم تعيين %{who} في %{when}"
+      assigned_to_post: "تم تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
+      assigned_group_to_post: "تم تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
+      unassigned: "تم إلغاء تعيين %{who} في %{when}"
+      unassigned_group: "تم إلغاء تعيين %{who} في %{when}"
+      unassigned_from_post: "تم إلغاء تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
+      unassigned_group_from_post: "تم إلغاء تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
+      reassigned: "تمت إعادة تعيين %{who} في %{when}"
+      reassigned_group: "تمت إعادة تعيين %{who} في %{when}"
+      details_change: "تم تغيير تفاصيل التعيين لـ %{who} في %{when}"
+      note_change: "تم تغيير ملاحظة التعيين لـ %{who} في %{when}"
+      status_change: "تم تغيير حالة التعيين لـ %{who} في %{when}"
+    discourse_assign:
+      add_unassigned_filter: "إضافة المرشح \"غير المعيَّنة\" إلى الفئة"
+      cant_act: "لا يمكنك اتخاذ إجراء بشأن البلاغات التي تم تعيينها إلى مستخدمين آخرين"
+      cant_act_unclaimed: "يجب عليك المطالبة بملكية هذا الموضوع قبل اتخاذ إجراء بشان البلاغات."
+      topic_search_placeholder: "البحث في الموضوعات بالعنوان أو محتوى المنشور"
+      sidebar_name_filter_placeholder: "الاسم/اسم المستخدم"
+      assigned: "المعيَّنة"
+      group_everyone: "الجميع"
+      assigned_to: "معيَّنة إلى"
+      assigned_topic_to: "تم تعيين الموضوع إلى المستخدم <a href='%{path}'>%{username}</a>"
+      assign_post_to: "تم تعيين المنشور #%{post_number} إلى المستخدم %{username}"
+      assign_post_to_multiple: "#%{post_number} إلى %{username}"
+      assigned_to_w_ellipsis: "معيَّنة إلى..."
+      unassign:
+        title: "إلغاء التعيين"
+        title_w_ellipsis: "إلغاء التعيين..."
+        help: "إلغاء تعيين الموضوع إلى %{username}"
+      assign:
+        title: "تعيين"
+        help: "تعيين الموضوع إلى المستخدم"
+      assign_post:
+        title: "تعيين المنشور"
+      unassign_post:
+        title: "إلغاء تعيين المنشور"
+        help: "إلغاء تعيين المنشور إلى %{username}"
+      reassign:
+        title: "تعديل"
+        title_w_ellipsis: "تعديل التعيين..."
+        to_self: "إعادة التعيين إليَّ"
+        to_self_help: "إعادة تعيين الموضوع إليَّ"
+        help: "تعديل تفاصيل التعيين"
+      reassign_modal:
+        title: "إعادة تعيين الموضوع"
+      topic_level_menu:
+        edit_assignments: "تعديل المهام المعيَّنة..."
+        reassign_topic_to_me: "إعادة تعيين الموضوع إليَّ"
+        unassign_with_ellipsis: "إلغاء تعيين..."
+        unassign_from_post: "إلغاء تعيين @%{assignee} من #%{post_number}"
+        unassign_from_post_help: "إلغاء تعيين @%{assignee} من المنشور #%{post_number}"
+        unassign_from_topic: "إلغاء تعيين @%{username} من الموضوع"
+      assign_modal:
+        title: "تعيين الموضوع"
+        reassign_title: "إعادة تعيين الموضوع"
+        assign: "تعيين"
+        assignee_label: المعيَّن
+        assignment_label: التعيين
+        choose_assignee: اختر مستخدمًا لتعيينه.
+        edit_assignments_title: "تعديل المهام المعيَّنة"
+        note_label: ملاحظة
+        optional_label: "(اختياري)"
+        status_label: الحالة
+        suggestions: الاقتراحات
+      assign_post_modal:
+        title: "تعيين المنشور"
+      claim:
+        title: "المطالبة بالملكية"
+        help: "تعيين الموضوع إلى نفسك"
+      assign_mailer:
+        never: "أبدًا"
+        different_users: "فقط إذا كان المعيِّن والمعيَّن مستخدمَين مختلفَين"
+        always: "دائمًا"
+      reminders_frequency:
+        description: "معدل تكرار تلقي التذكيرات بالموضوعات المعيَّنة"
+        never: "أبدًا"
+        daily: "يوميًا"
+        weekly: "أسبوعيًا"
+        monthly: "شهريًا"
+        quarterly: "ربع سنوي"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "تعيين"
+              assignable_levels:
+                title: "من يمكنه تعيين هذه المجموعة"
+    user:
+      notification_level_when_assigned:
+        label: "عند التعيين"
+        watch_topic: "مراقبة الموضوع"
+        track_topic: "تتبُّع الموضوع"
+        do_nothing: "عدم اتخاذ أي إجراء"
+      messages:
+        assigned_title: "المعيَّنة (%{count})"
+        assigned: "المعيَّنة"
+      no_assignments_title: "ليس لديك أي تعيينات بعد"
+      no_assignments_body: >
+        سيتم إدراج الموضوعات والرسائل المعيَّنة إليك هنا. ستتلقى أيضًا إشعار تذكير دوريًا بتعييناتك، والذي يمكنك تعديله في <a href='%{preferencesUrl}'>تفضيلات المستخدم</a>. <br><br> لتعيين موضوع أو رسالة إلى نفسك أو إلى شخص آخر، ابحث عن %{icon} في الأسفل.
+      dismiss_assigned_tooltip: "وضع علامة مقروءة على كل إشعارات التعيين"
+      assigned_to_group:
+        post: "تم تعيين المنشور إلى %{group_name}"
+        topic: "تم تعيين الموضوع إلى %{group_name}"
+      assigned_to_you:
+        post: "تم تعيين المنشور إليك"
+        topic: "تم تعيين الموضوع إليك"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "أحداث التعيين"
+          assigned: "عندما يقوم المستخدم بتعيين موضوع"
+          unassigned: "عندما يلغي المستخدم تعيين موضوع"
+    search:
+      advanced:
+        in:
+          assigned: "معيَّنة"
+          unassigned: "غير معيَّنة"
+        assigned:
+          label: "معيَّنة إلى"
+    topics:
+      bulk:
+        unassign: "إلغاء تعيين الموضوعات"
+        assign: "تعيين الموضوعات"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: نموذج المنشور
+              description: إذا تم ملؤه، فسيتم إنشاء منشور بهذا النموذج وتعيين مستخدم له بدلًا من الموضوع.
+            assignees_group:
+              label: مجموعة المعيَّنين
+            minimum_time_between_assignments:
+              label: الحد الأدنى لعدد الساعات بين المهام المعيَّنة
+            min_recently_assigned_days:
+              label: الحد الأدنى لعدد الأيام التي يعتبر فيها المستخدم حديث التعيين
+              description: الإعداد الافتراضي هو 14 يومًا.
+            skip_new_users_for_days:
+              label: تخطي المستخدمين الجُدد لأيام
+              description: الإعداد الافتراضي هو 0 يوم (يمكن تعيين المستخدمين بعد التسجيل على الفور).
+            max_recently_assigned_days:
+              label: الحد الأقصى لعدد الأيام التي يعتبر فيها المستخدم حديث التعيين
+              description: المحاولة الأولى لاستبعاد المستخدمين المعيَّنين في الأيام `n` الأخيرة. إذا لم يتبقَّ أي مستخدم، يتم التراجع إلى `min_recently_assigned_days`. الإعداد الافتراضي هو 180 يومًا.
+            assigned_topic:
+              label: مُعرِّف الموضوع المعيَّن
+            in_working_hours:
+              label: المستخدمون في ساعات العمل
+    notification_reason:
+      user: "سترى عدد الردود الجديدة لأن هذا الموضوع معيَّن إليك."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "عيَّنك %{username}"
+      titles:
+        assigned: "تم تعيينك"
+      dismiss_confirmation:
+        body:
+          assigns:
+            zero: "هل أنت متأكد؟ لديك %{count} إشعار تعيين غير مقروء."
+            one: "هل أنت متأكد؟ لديك إشعار تعيين واحد (%{count}) غير مقروء."
+            two: "هل أنت متأكد؟ لديك إشعارا (%{count}) تعيين غير مقروءين."
+            few: "هل أنت متأكد؟ لديك %{count} إشعارات تعيين غير مقروءة."
+            many: "هل أنت متأكد؟ لديك %{count} إشعار تعيين غير مقروء."
+            other: "هل أنت متأكد؟ لديك %{count} إشعار تعيين غير مقروء."
+    user_menu:
+      view_all_assigned: "عرض كل المعيَّنة"
+      tabs:
+        assign_list: "قائمة التعيين"
+        assign_list_with_unread:
+          zero: "قائمة التعيين - %{count} تعيين غير مقروء"
+          one: "قائمة التعيين - تعيين واحد (%{count}) غير مقروء"
+          two: "قائمة التعيين - تعيينان (%{count}) غير مقروءين"
+          few: "قائمة التعيين - %{count} تعيينات غير مقروءة"
+          many: "قائمة التعيين - %{count} تعيينًا غير مقروء"
+          other: "قائمة التعيين - %{count} تعيين غير مقروء"
+    edit_assignments_modal:
+      title: "تعديل المهام المعيَّنة"
+      topic: "الموضوع"
+      post: "المنشور"

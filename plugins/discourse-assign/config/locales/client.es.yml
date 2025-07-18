@@ -1,0 +1,193 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Asignación de Discourse"
+  js:
+    filters:
+      unassigned:
+        title: "Sin asignar"
+        help: "Temas sin asignar"
+    action_codes:
+      assigned: "Asignó a %{who} el %{when}"
+      assigned_group: "Asignó a %{who} el %{when}"
+      assigned_to_post: "Asignó a %{who} a la <a href='%{path}'>publicación</a> el %{when}"
+      assigned_group_to_post: "Asignó a %{who} a la <a href='%{path}'>publicación</a> el %{when}"
+      unassigned: "Anuló la asignación de %{who} el %{when}"
+      unassigned_group: "Anuló la asignación de %{who} el %{when}"
+      unassigned_from_post: "Anuló la asignación de %{who} de <a href='%{path}'>publicación</a> el %{when}"
+      unassigned_group_from_post: "Anuló la asignación de %{who} de <a href='%{path}'>publicación</a> el %{when}"
+      reassigned: "Reasignó a %{who} %{when}"
+      reassigned_group: "Reasignó a %{who} %{when}"
+      details_change: "Detalles de asignación cambiados para %{who} el %{when}"
+      note_change: "Nota de asignación cambiada para %{who} el %{when}"
+      status_change: "Estado de asignación cambiado para %{who} el %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Añadir filtro «sin asignar» a la categoría"
+      cant_act: "No puedes actuar sobre denuncias que han sido asignadas a otros usuarios"
+      cant_act_unclaimed: "Debes reclamar este tema antes de actuar sobre las denuncias."
+      topic_search_placeholder: "Buscar temas por título o contenido"
+      sidebar_name_filter_placeholder: "Nombre/nombre de usuario"
+      assigned: "Asignado"
+      group_everyone: "Todos"
+      assigned_to: "Asignado a"
+      assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Asignado #%{post_number} a %{username}"
+      assign_post_to_multiple: "#%{post_number} a %{username}"
+      assigned_to_w_ellipsis: "Asignado a..."
+      unassign:
+        title: "Anular asignación"
+        title_w_ellipsis: "Anular asignación..."
+        help: "Anular asignación del tema a %{username}"
+      assign:
+        title: "Asignar"
+        help: "Asignar tema al usuario"
+      assign_post:
+        title: "Asignar publicación"
+      unassign_post:
+        title: "Anular asignación de la publicación"
+        help: "Anular la asignación de %{username} de la publicación"
+      reassign:
+        title: "Editar"
+        title_w_ellipsis: "Editar asignación..."
+        to_self: "Reasignar a mí"
+        to_self_help: "Reasignar tema a mí"
+        help: "Editar detalles de la asignación"
+      reassign_modal:
+        title: "Reasignar tema"
+      topic_level_menu:
+        edit_assignments: "Editar asignaciones..."
+        reassign_topic_to_me: "Reasignar tema a mí"
+        unassign_with_ellipsis: "Anular asignación..."
+        unassign_from_post: "Anular asignación de @%{assignee} de #%{post_number}"
+        unassign_from_post_help: "Anular asignación de @%{assignee} de la publicación #%{post_number}"
+        unassign_from_topic: "Anular asignación de @%{username} del tema"
+      assign_modal:
+        title: "Asignar tema"
+        reassign_title: "Reasignar tema"
+        assign: "Asignar"
+        assignee_label: Asignado
+        assignment_label: Asignación
+        choose_assignee: Elige un usuario para asignar.
+        edit_assignments_title: "Editar asignaciones"
+        note_label: Nota
+        optional_label: "(opcional)"
+        status_label: Estado
+        suggestions: sugerencias
+      assign_post_modal:
+        title: "Asignar publicación"
+      claim:
+        title: "reclamar"
+        help: "Asignar tema a ti mismo"
+      assign_mailer:
+        never: "Nunca"
+        different_users: "Solo si quien asigna y quien es asignado son diferentes usuarios"
+        always: "Siempre"
+      reminders_frequency:
+        description: "Frecuencia para recibir recordatorios de temas asignados."
+        never: "Nunca"
+        daily: "Diario"
+        weekly: "Semanal"
+        monthly: "Mensual"
+        quarterly: "Trimestral"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Asignar"
+              assignable_levels:
+                title: "Quién puede asignar este grupo"
+    user:
+      notification_level_when_assigned:
+        label: "Cuando se asigne"
+        watch_topic: "Observar tema"
+        track_topic: "Seguir tema"
+        do_nothing: "No hacer nada"
+      messages:
+        assigned_title: "Asignados (%{count})"
+        assigned: "Asignado"
+      no_assignments_title: "Aún no tienes asignaciones"
+      no_assignments_body: >
+        Tus temas y mensajes asignados aparecerán aquí. También recibirás una notificación periódica de recordatorio de tus asignaciones, que puedes ajustar en tus <a href='%{preferencesUrl}'>preferencias de usuario</a>. <br><br> Para asignar un tema o mensaje a ti mismo o a otra persona, busca el botón %{icon} de asignar en la parte inferior.
+      dismiss_assigned_tooltip: "Marcar todas las notificaciones de asignación no leídas como leídas"
+      assigned_to_group:
+        post: "publicación asignada a %{group_name}"
+        topic: "tema asignado a %{group_name}"
+      assigned_to_you:
+        post: "publicación asignada a ti"
+        topic: "tema asignado a ti"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Asignar eventos"
+          assigned: "Cuando un usuario asigna un tema"
+          unassigned: "Cuando un usuario anula la asignación de un tema"
+    search:
+      advanced:
+        in:
+          assigned: "están asignados"
+          unassigned: "están sin asignar"
+        assigned:
+          label: "Asignado a"
+    topics:
+      bulk:
+        unassign: "Anular asignación de temas"
+        assign: "Asignar temas"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Plantilla de publicación
+              description: Si se completa, se creará una publicación con esta plantilla y se le asignará un usuario en lugar del tema.
+            assignees_group:
+              label: Grupo de asignados
+            minimum_time_between_assignments:
+              label: Horas mínimas entre asignaciones
+            min_recently_assigned_days:
+              label: Días mínimos asignados recientemente
+              description: El valor predeterminado es 14 días.
+            skip_new_users_for_days:
+              label: Omitir a los nuevos usuarios durante días
+              description: El valor predeterminado es 0 días (los usuarios se pueden asignar inmediatamente después de registrarse).
+            max_recently_assigned_days:
+              label: Días máximos asignados recientemente
+              description: Primer intento de excluir a los usuarios asignados en los últimos `n` días. Si no queda ningún usuario, se recurre a `mínimo_días_de_asignación_reciente`. Por defecto, 180 días.
+            assigned_topic:
+              label: ID del tema asignado
+            in_working_hours:
+              label: Usuarios en horario laboral
+    notification_reason:
+      user: "Verás un recuento de nuevas respuestas porque este tema te fue asignado."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} te asignó"
+      titles:
+        assigned: "Asignada"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "¿Seguro? Tienes %{count} notificación de asignación no leída."
+            other: "¿Seguro? Tienes %{count} notificaciones de asignación no leídas."
+    user_menu:
+      view_all_assigned: "ver todas las asignadas"
+      tabs:
+        assign_list: "Asignar lista"
+        assign_list_with_unread:
+          one: "Asignar lista - %{count} asignación no leída"
+          other: "Asignar lista - %{count} asignación no leída"
+    edit_assignments_modal:
+      title: "Editar asignaciones"
+      topic: "Tema"
+      post: "Publicación"

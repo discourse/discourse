@@ -1,0 +1,484 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Abonnements Discourse"
+  site_settings:
+    discourse_subscriptions_enabled: Activer l'extension Discourse Subscription
+    discourse_subscriptions_extra_nav_subscribe: Afficher le bouton « S'abonner » dans le menu de navigation.
+    discourse_subscriptions_pricing_table_id: Ajoutez ici l'identifiant du tableau de tarification à partir du code intégré de la table de tarification.
+    discourse_subscriptions_pricing_table_enabled: Le bouton d'inscription affichera le tableau des prix intégré et Stripe Checkout sera utilisé.
+    discourse_subscriptions_public_key: Clé publique Stripe
+    discourse_subscriptions_secret_key: Clé secrète Stripe
+    discourse_subscriptions_webhook_secret: Secret du Webhook de Stripe
+    discourse_subscriptions_currency: Code de devise par défaut. Cette option peut être remplacée lors de la création d'un plan d'abonnement.
+    discourse_subscriptions_campaign_enabled: Permet de créer une bannière de campagne pour promouvoir le soutien financier de cette communauté.
+    discourse_subscriptions_campaign_goal: L'objectif numérique de votre campagne de soutien (abonnés ou montant récolté).
+    discourse_subscriptions_campaign_type: Sélectionne le type de campagne à mener (abonnés ou montant mensuel collecté).
+    discourse_subscriptions_campaign_banner_location: Sélectionne l'emplacement de la bannière de la campagne (en haut ou dans la barre latérale).
+    discourse_subscriptions_campaign_banner_shadow_color: Sélectionne la couleur de l'ombre portée de la bannière de la campagne.
+    discourse_subscriptions_campaign_banner_bg_image: Téléverse une image personnalisée à utiliser comme arrière-plan de la bannière de la campagne.
+    discourse_subscriptions_campaign_show_contributors: Afficher les avatars des achats les plus récents de produits d'abonnement.
+    discourse_subscriptions_campaign_product: L'identifiant du produit Stripe à envoyer aux supporters lorsqu'ils cliquent sur le bouton de la campagne. Si ce paramètre est vide, les supporters seront dirigés vers la page principale des produits.
+    discourse_subscriptions_enable_automatic_tax: Active le calcul automatique des taxes qui calculera automatiquement les taux d'imposition sur toutes les factures générées par l'abonnement.
+    discourse_subscriptions_enable_verbose_logging: Permet une journalisation plus détaillée pour faciliter le débogage. Veuillez ne pas laisser cette option activée en permanence en production.
+    errors:
+      discourse_patrons_amount_must_be_currency: "Les montants doivent être indiqués sans le symbole du dollar (p. ex., 1,50)"
+  js:
+    filters:
+      subscribe:
+        help: Soutenez ce site en vous abonnant
+    discourse_subscriptions:
+      title: Discourse Subscriptions
+      admin_navigation: Abonnements
+      optional: Facultatif
+      navigation:
+        billing: Facturation
+        payments: Paiements
+        subscriptions: Abonnements
+        subscribe: S'abonner
+        user_activity:
+          payments: Paiements
+      campaign:
+        title: Soutenez-nous
+        body: Nous avons besoin de votre aide pour maintenir cette communauté en activité !
+        success_title: Succès !
+        success_body: Merci de votre aide pour maintenir cette communauté en activité !
+        subscribers: Abonnés
+        goal_comparison: "<strong>%{current}</strong> sur <strong>%{goal}</strong>"
+        raised: Récoltés
+        button: Soutenir
+        recent_contributors: Contributeurs récents
+        goal: Nous avons atteint notre objectif
+        one_click_campaign: Créer automatiquement une campagne d'assistance
+        refresh_campaign: Actualiser les données de campagne
+        refresh_page: Les données de campagne sont maintenant synchronisées à partir de Stripe en arrière-plan. Actualisez la page dans quelques instants pour charger les informations mises à jour.
+        supporter: Supporter
+        supporters: Supporters
+        confirm_creation_title: Vous souhaitez créer automatiquement une campagne pour votre communauté ?
+        confirm_creation: |-
+          <p>En continuant, vous créerez :</p>
+
+          <ul>
+          <li>Un groupe pour récompenser vos supporters avec un titre et un avatar personnalisés</li>
+          <li>Un produit Stripe avec des prix prédéfinis (mensuels et annuels) que vos utilisateurs pourront acheter pour soutenir votre site.</li>
+          </ul>
+
+          <p>Souhaitez-vous continuer ?</p>
+        created: Votre campagne en un clic est créée et prête à être lancée ! Redirection vers les paramètres de la campagne.
+      one_time_payment: Paiement unique
+      plans:
+        purchase: Acheter un abonnement
+        select: Sélectionnez le plan d'abonnement
+        interval:
+          adverb:
+            day: Quotidien
+            week: Hebdomadaire
+            month: Mensuel
+            year: Annuel
+        payment_button: S'abonner
+        success: Merci ! Votre abonnement a été créé.
+        incomplete: Le paiement n'a pas fonctionné. Votre abonnement sera activé lorsque le paiement aura été validé.
+        validate:
+          payment_options:
+            required: Veuillez sélectionner un plan d'abonnement.
+      user:
+        payments:
+          id: Identifiant du paiement
+          amount: Montant
+          created_at: Création
+        payments_help: Il n'y a aucun paiement
+        plans:
+          rate: Taux
+          product: Nom
+        subscriptions_help: Vous n'avez aucun abonnement actif.
+        subscriptions:
+          id: Identifiant de l'abonnement
+          status: Statut
+          discounted: Remise
+          renews: Renouvellements
+          update_card:
+            heading: "Mettre à jour la carte pour l'abonnement : %{sub_id}"
+            single: "Mettre à jour"
+          created_at: Création
+          cancel: annuler
+          cancelled: annulé
+          operations:
+            destroy:
+              confirm: Voulez-vous vraiment annuler cet abonnement ?
+      subscribe:
+        title: S'abonner
+        view_past: Afficher les achats précédents
+        no_products: Il n'y a actuellement aucun produit disponible.
+        unauthenticated: Connectez-vous ou créez un compte pour vous abonner.
+        invalid_coupon: Vous avez saisi un code de coupon invalide. Veuillez réessayer.
+        invalid_cardholder_name: Le nom du titulaire de la carte est requis.
+        invalid_cardholder_country: Le pays est requis.
+        invalid_cardholder_state: L'État est requis.
+        invalid_cardholder_province: La province est requise.
+        transaction_error: Une erreur s'est produite lors du traitement du paiement. Veuillez réessayer.
+        card:
+          title: Paiement
+        customer:
+          title: Informations du client
+        promo_code: Coupon
+        buttons:
+          subscribe: S'abonner
+        purchased: Acheté
+        go_to_billing: Accéder à la facturation
+        already_purchased: Merci beaucoup pour votre achat préalable de ce produit !
+        cardholder_name: Nom du titulaire de la carte
+        cardholder_address:
+          line1: Adresse postale
+          city: Ville
+          state: État
+          province: Province
+          country: Pays
+          postal_code: Code postal
+        countries:
+          AF: "Afghanistan"
+          AX: "Îles d'Åland"
+          AL: "Albanie"
+          DZ: "Algérie"
+          AS: "Samoa américaines"
+          AD: "Andorre"
+          AO: "Angola"
+          AI: "Anguilla"
+          AQ: "Antarctique"
+          AG: "Antigua-et-Barbuda"
+          AR: "Argentine"
+          AM: "Arménie"
+          AW: "Aruba"
+          AU: "Australie"
+          AT: "Autriche"
+          AZ: "Azerbaïdjan"
+          BS: "Bahamas"
+          BH: "Bahreïn"
+          BD: "Bengladesh"
+          BB: "Barbade"
+          BY: "Biélorussie"
+          BE: "Belgique"
+          BZ: "Belize"
+          BJ: "Bénin"
+          BM: "Bermudes"
+          BT: "Bhoutan"
+          BO: "Bolivie, État plurinational de"
+          BQ: "Bonaire, Saint Eustache et Saba"
+          BA: "Bosnie-Herzégovine"
+          BW: "Botswana"
+          BV: "Île Bouvet"
+          BR: "Brésil"
+          IO: "Territoire britannique de l'océan Indien"
+          BN: "Brunéi Darussalam"
+          BG: "Bulgarie"
+          BF: "Burkina Faso"
+          BI: "Burundi"
+          KH: "Cambodge"
+          CM: "Cameroun"
+          CA: "Canada"
+          CV: "Cap-Vert"
+          KY: "Îles Caïmans"
+          CF: "République centrafricaine"
+          TD: "Tchad"
+          CL: "Chili"
+          CN: "Chine"
+          CX: "Île Christmas"
+          CC: "Îles Cocos (Keeling)"
+          CO: "Colombie"
+          KM: "Comores"
+          CG: "Congo"
+          CD: "Congo, République démocratique du"
+          CK: "Îles Cook"
+          CR: "Costa Rica"
+          CI: "Côte d'Ivoire"
+          HR: "Croatie"
+          CU: "Cuba"
+          CW: "Curaçao"
+          CY: "Chypre"
+          CZ: "République tchèque"
+          DK: "Danemark"
+          DJ: "Djibouti"
+          DM: "Dominique"
+          DO: "République dominicaine"
+          EC: "Équateur"
+          EG: "Égypte"
+          SV: "El Salvador"
+          GQ: "Guinée Équatoriale"
+          ER: "Érythrée"
+          EE: "Estonie"
+          ET: "Éthiopie"
+          FK: "Îles Falkland (Malouines)"
+          FO: "Îles Féroé"
+          FJ: "Fidji"
+          FI: "Finlande"
+          FR: "France"
+          GF: "Guyane française"
+          PF: "Polynésie française"
+          TF: "Terres australes françaises"
+          GA: "Gabon"
+          GM: "Gambie"
+          GE: "Géorgie"
+          DE: "Allemagne"
+          GH: "Ghana"
+          GI: "Gibraltar"
+          GR: "Grèce"
+          GL: "Groenland"
+          GD: "Grenade"
+          GP: "Guadeloupe"
+          GU: "Guam"
+          GT: "Guatemala"
+          GG: "Guernesey"
+          GN: "Guinée"
+          GW: "Guinée-Bissau"
+          GY: "Guyane"
+          HT: "Haïti"
+          HM: "Îles Heard et McDonald"
+          VA: "Saint-Siège (État de la Cité du Vatican)"
+          HN: "Honduras"
+          HK: "Hong Kong"
+          HU: "Hongrie"
+          IS: "Islande"
+          IN: "Inde"
+          ID: "Indonésie"
+          IR: "Iran, République islamique d'"
+          IQ: "Irak"
+          IE: "Irlande"
+          IM: "île de Man"
+          IL: "Israël"
+          IT: "Italie"
+          JM: "Jamaïque"
+          JP: "Japon"
+          JE: "Jersey"
+          JO: "Jordanie"
+          KZ: "Kazakhstan"
+          KE: "Kenya"
+          KI: "Kiribati"
+          KP: "République populaire démocratique de Corée"
+          KR: "Corée, République de"
+          KW: "Koweït"
+          KG: "Kirghizistan"
+          LA: "République démocratique populaire laotienne"
+          LV: "Lettonie"
+          LB: "Liban"
+          LS: "Lesotho"
+          LR: "Liberia"
+          LY: "Libye"
+          LI: "Liechtenstein"
+          LT: "Lituanie"
+          LU: "Luxembourg"
+          MO: "Macao"
+          MK: "Macédoine, ancienne République yougoslave de"
+          MG: "Madagascar"
+          MW: "Malawi"
+          MY: "Malaisie"
+          MV: "Maldives"
+          ML: "Mali"
+          MT: "Malte"
+          MH: "Îles Marshall"
+          MQ: "Martinique"
+          MR: "Mauritanie"
+          MU: "Maurice"
+          YT: "Mayotte"
+          MX: "Mexique"
+          FM: "Micronésie, États fédérés de"
+          MD: "Moldavie, République de"
+          MC: "Monaco"
+          MN: "Mongolie"
+          ME: "Monténégro"
+          MS: "Montserrat"
+          MA: "Maroc"
+          MZ: "Mozambique"
+          MM: "Myanmar"
+          NA: "Namibie"
+          NR: "Nauru"
+          NP: "Népal"
+          NL: "Pays-Bas"
+          NC: "Nouvelle-Calédonie"
+          NZ: "Nouvelle-Zélande"
+          NI: "Nicaragua"
+          NE: "Niger"
+          NG: "Nigeria"
+          NU: "Nioué"
+          NF: "Île Norfolk"
+          MP: "Îles Mariannes du Nord"
+          "NO": "Norvège"
+          OM: "Oman"
+          PK: "Pakistan"
+          PW: "Palaos"
+          PS: "Territoire palestinien occupé"
+          PA: "Panama"
+          PG: "Papouasie-Nouvelle-Guinée"
+          PY: "Paraguay"
+          PE: "Pérou"
+          PH: "Philippines"
+          PN: "Pitcairn"
+          PL: "Pologne"
+          PT: "Portugal"
+          PR: "Porto Rico"
+          QA: "Qatar"
+          RE: "Réunion"
+          RO: "Roumanie"
+          RU: "Fédération de Russie"
+          RW: "Rwanda"
+          BL: "Saint-Barthélemy"
+          SH: "Sainte-Hélène, Ascension et Tristan da Cunha"
+          KN: "Saint-Christophe-et-Niévès"
+          LC: "Sainte-Lucie"
+          MF: "Saint Martin (partie française)"
+          PM: "Saint-Pierre-et-Miquelon"
+          VC: "Saint-Vincent-et-les-Grenadines"
+          WS: "Samoa"
+          SM: "Saint-Marin"
+          ST: "Sao Tomé-et-Principe"
+          SA: "Arabie Saoudite"
+          SN: "Sénégal"
+          RS: "Serbie"
+          SC: "Seychelles"
+          SL: "Sierra Leone"
+          SG: "Singapour"
+          SX: "Sint Maarten (partie néerlandaise)"
+          SK: "Slovaquie"
+          SI: "Slovénie"
+          SB: "Îles Salomon"
+          SO: "Somalie"
+          ZA: "Afrique du Sud"
+          GS: "Géorgie du Sud et îles Sandwich du Sud"
+          SS: "Soudan du Sud"
+          ES: "Espagne"
+          LK: "Sri Lanka"
+          SD: "Soudan"
+          SR: "Suriname"
+          SJ: "Svalbard et Jan Mayen"
+          SZ: "Swaziland"
+          SE: "Suède"
+          CH: "Suisse"
+          SY: "République arabe syrienne"
+          TW: "Taïwan, province de Chine"
+          TJ: "Tadjikistan"
+          TZ: "Tanzanie, République-Unie de"
+          TH: "Thaïlande"
+          TL: "Timor oriental"
+          TG: "Togo"
+          TK: "Tokélaou"
+          TO: "Tonga"
+          TT: "Trinité-et-Tobago"
+          TN: "Tunisie"
+          TR: "Turquie"
+          TM: "Turkménistan"
+          TC: "îles Turques-et-Caïques"
+          TV: "Tuvalu"
+          UG: "Ouganda"
+          UA: "Ukraine"
+          AE: "Émirats arabes unis"
+          GB: "Royaume-Uni"
+          US: "États-Unis"
+          UM: "Îles mineures éloignées des États-Unis"
+          UY: "Uruguay"
+          UZ: "Ouzbékistan"
+          VU: "Vanuatu"
+          VE: "Venezuela, République bolivarienne du"
+          VN: "Vietnam"
+          VG: "Îles Vierges britanniques"
+          VI: "Îles Vierges, États-Unis"
+          WF: "Wallis-et-Futuna"
+          EH: "Sahara occidental"
+          YE: "Yémen"
+          ZM: "Zambie"
+          ZW: "Zimbabwe"
+      billing:
+        name: Nom complet
+        email: E-mail
+        phone: Numéro de téléphone
+      confirmation:
+        amount: Montant
+        last4: Numéro de carte
+      buttons:
+        make_payment: Effectuer un paiement
+        confirm_payment: Confirmer le paiement
+        success: Retour
+      admin:
+        unconfigured: 'Stripe n''est pas configuré correctement. Veuillez consulter Discourse Meta pour obtenir plus d''informations.'
+        on_meta: Discourse Subscriptions sur Meta
+        dashboard:
+          title: Tableau de bord
+          table:
+            head:
+              user: Utilisateur
+              payment_intent: Identifiant du paiement
+              receipt_email: E-mail de réception
+              amount: Montant
+        products:
+          title: Produits
+          operations:
+            create: Créer un nouveau produit
+            update: Mettre à jour le produit
+            new: Nouveau produit
+            destroy:
+              confirm: Voulez-vous vraiment supprimer ce produit ?
+          product:
+            product_id: Identifiant du produit
+            name: Nom du produit
+            statement_descriptor: Descripteur du relevé
+            statement_descriptor_help: Informations supplémentaires relatives à un produit qui apparaîtront sur le relevé de carte de crédit de votre client.
+            plan_help: Créez un plan tarifaire pour abonner les clients à ce produit.
+            description: Description
+            description_help: Description de votre produit d'abonnement.
+            repurchaseable: Achat renouvelable ?
+            repurchase_help: Autoriser l'achat multiple du produit et des plans associés
+            active: Actif
+            active_help: Désactivez cette option jusqu'à ce que votre produit soit prêt pour être rendu public.
+            created_at: Création
+            updated_at: Modification
+          product_help: Avant que les clients puissent s'abonner à votre site, vous devez créer au moins un produit et un abonnement associé.
+        plans:
+          title: Plans tarifaires
+          operations:
+            add: Ajouter un nouveau plan
+            create: Créer un plan
+            update: Mettre à jour le plan
+            create_help: Une fois qu'un plan tarifaire est créé, seuls son surnom, sa période d'essai et son groupe d'utilisateurs peuvent être mis à jour.
+            new: Nouveau plan
+            destroy:
+              confirm: Voulez-vous vraiment supprimer ce plan ?
+          plan:
+            nickname: Surnom du plan
+            nickname_help: Cette information ne sera pas visible pour les clients, mais vous aidera à retrouver ce plan plus tard
+            plan_id: ID du plan
+            product: Produit
+            interval: Intervalle de facturation
+            amount: Montant
+            trial: Nombre de jours de la période d'essai
+            trial_help: Les abonnements à ce plan donneront automatiquement droit à cette période d'essai
+            group: Groupe d'utilisateurs
+            group_help: Il s'agit du groupe d'utilisateurs de Discourse auquel le client est ajouté lors de la création de l'abonnement.
+            active: Actif
+            created_at: Création
+            recurring: Plan récurrent ?
+        coupons:
+          title: Coupons
+          code: Code promotionnel
+          discount: Remise
+          times_redeemed: Nombre d'utilisations
+          active: Actif ?
+          actions: Actions
+          create: Créer un coupon
+          promo_code: Code promotionnel (insensible à la casse)
+        subscriptions:
+          title: Abonnements
+          subscription:
+            user: Utilisateur
+            subscription_id: Identifiant de l'abonnement
+            customer: Client
+            product: Produit
+            plan: Plan
+            status: Statut
+            created_at: Création
+        ask_refund: Rembourser le dernier paiement effectué par le client ?
+        canceled: "L'abonnement est annulé."

@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    action_codes:
+      assigned: "اختصاص داده شده %{who} %{when}"
+      assigned_group: "اختصاص داده شده %{who} %{when}"
+      assigned_to_post: "%{who} به <a href='%{path}'>نوشته</a> %{when} اختصاص داده شده است"
+      assigned_group_to_post: "%{who} به <a href='%{path}'>نوشته</a> %{when} اختصاص داده شده است"
+      unassigned: "اختصاص داده نشده %{who} %{when}"
+      unassigned_group: "اختصاص داده نشده %{who} %{when}"
+    discourse_assign:
+      group_everyone: "همه"
+      reassign:
+        title: "ویرایش"
+      assign_modal:
+        note_label: یادداشت
+        optional_label: "(اختیاری)"
+        status_label: وضعیت
+        suggestions: پیشنهادها
+      assign_mailer:
+        never: "هیچ‌وقت"
+        always: "همیشه"
+      reminders_frequency:
+        never: "هیچ‌وقت"
+        daily: "روزانه"
+        weekly: "هفتگی"
+        monthly: "ماهانه"
+        quarterly: "فصلی"
+    user:
+      assignment_description:
+        topic: "%{topic_title}"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+    edit_assignments_modal:
+      topic: "موضوع"
+      post: "نوشته"

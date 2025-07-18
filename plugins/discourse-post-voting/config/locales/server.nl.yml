@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Stemmen op berichten is niet ingeschakeld."
+        replying_to_post_not_permited: "Je mag geen bericht maken als antwoord op een ander bericht."
+        voting_not_permitted: "Je mag niet stemmen op dit bericht."
+        comment_cannot_be_downvoted: "Je kunt alleen reacties omhoog stemmen."
+        self_voting_not_permitted: "Je mag niet stemmen op je eigen bericht of reactie."
+        vote_archived_topic: "Je kunt niet stemmen op gearchiveerde topics."
+        vote_closed_topic: "Je kunt niet stemmen op gesloten topics."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Stemmen op berichten is niet ingeschakeld."
+        subtype_not_allowed: "Het subtype Stemmen op berichten kan alleen worden gebruikt bij reguliere topics."
+        cannot_change_to_post_voting_subtype: "Het wijzigen van het subtype van een topic naar Stemmen op berichten is niet toegestaan."
+      answer_count:
+        one: "%{count} antwoord"
+        other: "%{count} antwoorden"
+  site_settings:
+    qa_tags: "Tags om stemmen op berichten in te schakelen voor een topic"
+    post_voting_enabled: "Plug-in Stemmen op berichten inschakelen"
+    post_voting_enable_likes_on_answers: "Likeknop inschakelen voor antwoorden in topics met Stemmen op berichten"
+    post_voting_undo_vote_action_window: "Aantal minuten waarbinnen gebruikers stemmen in topics met Stemmen op berichten ongedaan kunnen maken (vul 0 in voor geen limiet)"
+    post_voting_comment_limit_per_post: "Aantal toegestane reacties op elk bericht"
+    min_trust_to_flag_posts_voting_comments: "Minimaal vertrouwensniveau om een Stemmen op berichten-reactie te markeren"
+    flag_posts_voting_comments_allowed_groups: "Groepen mogen een reactie op een Stemmen op berichten-reactie markeren"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "Stemmen"
+      description: "Stem op dit bericht"
+      short_description: "Stem op dit bericht"
+      long_form: "op dit bericht gestemd"
+  vote:
+    error:
+      user_has_not_voted: "Gebruiker heeft niet gestemd."
+      user_over_limit: "Je mag het aantal stemmen voor je vertrouwensniveau niet overschrijden."
+      already_voted: "Je kunt maar één keer stemmen per vraag."
+      undo_vote_action_window:
+        one: "Je kunt de stem %{count} minuut na het stemmen niet ongedaan maken."
+        other: "Je kunt de stem %{count} minuten na het stemmen niet ongedaan maken."
+      one_vote_per_post: "Je kunt maar één keer stemmen per bericht."
+      one_vote_per_comment: "Je kunt maar één keer stemmen per reactie."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "Reageren op een bericht dat niet in een topic met Stemmen op berichten staat, is niet toegestaan."
+        not_permitted: "Reageren op het gerelateerde bericht is niet toegestaan."
+        limit_exceeded: "Limiet van %{limit} reacties per bericht is bereikt."
+        perform: "Stemmen op berichten-reactie gemarkeerd met een score die hoog genoeg is om de gebruiker te dempen."
+        auto_silence_from_flags: "Automatisch gedempt wegens markeringen."
+      reviewables:
+        comment_already_handled: "Bedankt, maar we hebben deze reactie al beoordeeld en vastgesteld dat deze niet opnieuw hoeft te worden gemarkeerd."
+        actions:
+          agree_and_keep_comment:
+            title: "Reactie behouden"
+            description: "Ga akkoord met de markering en laat de reactie ongewijzigd."
+          agree_and_keep_deleted:
+            title: "Reactie verwijderd houden"
+            description: "Ga akkoord met de markering en laat de reactie verwijderd."
+          agree_and_suspend:
+            title: "Gebruiker schorsen"
+            description: "Akkoord met markering en de gebruiker schorsen."
+          agree_and_silence:
+            title: "Gebruiker dempen"
+            description: "Akkoord met markering en de gebruiker dempen."
+          agree_and_restore:
+            title: "Reactie herstellen"
+            description: "Herstel de reactie zodat gebruikers deze kunnen zien."
+          agree_and_delete:
+            title: "Reactie verwijderen"
+            description: "Verwijder de reactie zodat gebruikers deze niet kunnen zien."
+          delete_and_agree:
+            title: "Markering negeren en reactie verwijderen"
+            description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder de reactie."
+          disagree_and_restore:
+            title: "Niet akkoord en reactie herstellen"
+            description: "Herstel de reactie zodat alle gebruikers deze kunnen zien."
+          disagree:
+            title: "Niet akkoord"
+          ignore:
+            title: "Niets doen"
+            description: "Negeer de markering door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen."
+        transcript:
+          view: "Transcript van eerdere reacties weergeven"
+      reviewable_score_types:
+        needs_review:
+          title: "Beoordeling nodig"
+        notify_user:
+          comment_pm_title: "Je Stemmen op berichten-reactie"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "Een Stemmen op berichten-reactie vereist aandacht van een medewerker"
+          comment_pm_body: "%{link}\n\n%{comment}"

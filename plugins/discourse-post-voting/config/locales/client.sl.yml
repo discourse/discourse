@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Vnesite vsaj %{count} znak"
+              two: "Vnesite vsaj %{count} znaka"
+              few: "Vnesite vsaj %{count} znake"
+              other: "Vnesite vsaj %{count} znakov"
+          edit: "uredi"
+          cancel: "prekliči"
+          user:
+            deleted: "(uporabnik izbrisan)"
+          reviewables:
+            actions:
+              agree:
+                title: "Strinjam se..."
+              agree_and_suspend:
+                title: "Suspendiraj uporabnika"
+                description: "Strinjam se z prijavo in suspendiraj uporabnika."
+              agree_and_silence:
+                title: "Utišaj uporabnika"
+                description: "Potrdi prijavo in utišaj uporabnika"
+              disagree:
+                title: "Se ne strinjam"
+      topic:
+        sort_by: "Uredi po"
+        activity: "Aktivnost"

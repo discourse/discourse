@@ -1,0 +1,133 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: הצבעה על פוסטים
+  post_voting:
+    reviewables:
+      comment_already_handled: "תודה לך, כבר בדקנו את התגובה הזאת והחלטנו שאין צורך לסמן אותה בדגל פעם נוספת."
+  js:
+    discourse_post_voting:
+      title: "הצבעה על פוסטים"
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "תגובה חדשה"
+      popup:
+        question_answer_user_commented: 'נוספה תגובה מאת %{username} על „%{topic}” - %{site_title}'
+    category:
+      post_voting_settings_heading: מענה על שאלות
+      create_as_post_voting_default: נושאים חדשים מגיעים לשו"ת בקטגוריה זו.
+      only_post_voting_in_this_category: נושאים חדשים יכולים להצביע על פוסטים בנושאים בקטגוריה זו.
+    composer:
+      create_post_voting:
+        label: "יצירת נושא שו\"ת"
+      composer_actions:
+        create_as_post_voting:
+          label: "החלפת מצב שו\"ת"
+          desc: "הנושא ייווצר בתבנית שו\"ת"
+        remove_as_post_voting:
+          label: "הסרת שו\"ת"
+          desc: "הנושא ייווצר בתבנית הרגילה"
+    vote:
+      already_voted: "ניתן להצביע רק פעם אחת לשאלה."
+      user_over_limit: "הגעת לכמות המקסימלית של ההצבעות."
+      one_vote_per_post: "ניתן להצביע רק פעם אחת לפוסט."
+    last_answer_lowercase: תשובה אחרונה
+    answer_lowercase:
+      one: תשובה
+      two: תשובות
+      many: תשובות
+      other: תשובות
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "נא להקליד תו %{count} לפחות"
+              two: "נא להקליד %{count} תווים לפחות"
+              many: "נא להקליד %{count} תווים לפחות"
+              other: "נא להקליד %{count} תווים לפחות"
+            length_ok:
+              one: "נותר תו %{count}…"
+              two: "נותרו %{count} תווים…"
+              many: "נותרו %{count} תווים…"
+              other: "נותרו %{count} תווים…"
+            too_long:
+              one: "תגובה לא יכולה להיות ארוכה מתו %{count}"
+              two: "תגובה לא יכולה להיות ארוכה מ־%{count} תווים"
+              many: "תגובה לא יכולה להיות ארוכה מ־%{count} תווים"
+              other: "תגובה לא יכולה להיות ארוכה מ־%{count} תווים"
+          submit: "הוספת תגובה"
+          edit: "עריכה"
+          cancel: "ביטול"
+          add: "הוספת תגובה"
+          show:
+            one: הצגת תגובה %{count} נוספת
+            two: הצגת %{count} תגובות נוספות
+            many: הצגת %{count} תגובות נוספות
+            other: הצגת %{count} תגובות נוספות
+          delete:
+            confirm: "למחוק את התגובה הזאת?"
+          user:
+            deleted: "(משתמש נמחק)"
+          reviewables:
+            comment_already_handled: "תודה לך, כבר בדקנו את התגובה הזאת והחלטנו שאין צורך לסמן אותה בדגל פעם נוספת."
+            actions:
+              agree:
+                title: "הסכמה…"
+              agree_and_keep_comment:
+                title: "להשאיר את התגובה"
+                description: "הבעת הסכמה עם הדגל והשארת התגובה ללא שינוי."
+              agree_and_keep_deleted:
+                title: "להשאיר את התגובה מחוקה"
+                description: "הבעת הסכמה עם הדגל והשארת התגובה מחוקה."
+              agree_and_suspend:
+                title: "השעיית משתמש"
+                description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
+              agree_and_silence:
+                title: "השתקת משתמש"
+                description: "הבעת הסכמה עם הדגל והשתקת המשתמש."
+              agree_and_restore:
+                title: "שחזור תגובה"
+                description: "לשחזר את התגובה כדי שמשתמשים יוכלו לראות אותה."
+              agree_and_delete:
+                title: "מחיקת תגובה"
+                description: "למחוק את התגובה כדי שמשתמשים לא יוכלו לראות אותה."
+              delete_and_agree:
+                title: "התעלמות מהדגל ומחיקת התגובה"
+                description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת התגובה."
+              disagree_and_restore:
+                title: "לסרב ולשחזר תגובה"
+                description: "לשחזר את התגובה כדי שכל המשתמשים יוכלו לראות אותה."
+              disagree:
+                title: "אי קבלה"
+              ignore:
+                title: "לא לעשות דבר"
+                description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
+            transcript:
+              view: "הצגת תמליל התגובות הקודמות"
+      topic:
+        answer:
+          label: "מענה"
+          help: "התחלת כתיבת תשובה"
+        sort_by: "מיון לפי"
+        votes: "הצבעות"
+        activity: "פעילות"
+        answer_count:
+          one: "תשובה %{count}"
+          two: "%{count} תשובות"
+          many: "%{count} תשובות"
+          other: "%{count} תשובות"
+    review:
+      transcript:
+        view: "הצגת תמליל ההודעות הקודמות"
+      types:
+        reviewable_post_voting_comment:
+          title: "הערה על הצבעת פוסט מסומן"

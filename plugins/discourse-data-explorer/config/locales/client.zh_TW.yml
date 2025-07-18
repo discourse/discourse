@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    explorer:
+      or: "或"
+      import:
+        label: "匯入"
+      help:
+        label: "幫助"
+      schema:
+        filter: "搜尋..."
+      types:
+        bool:
+          yes: "是"
+          no: "否"
+      export: "匯出"
+      save: "儲存變更"
+      edit: "編輯"
+      delete: "刪除"
+      query_groups: "群組"
+      query_description: "描述"
+      reset_params: "重置"
+      search_placeholder: "搜尋..."
+    group:
+      reports: "報告"

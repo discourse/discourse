@@ -33,6 +33,6 @@ es:
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} y %{count} más"
-        other: "%{username} y otros %{count}"
+        other: "%{username} y %{count} más"
       titles:
         reaction: "nueva reacción"

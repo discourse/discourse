@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    gamification:
+      you: "Tu"
+      leaderboard:
+        link_to_settings: "Iestatījumi"
+        refresh: "Pārlādēt"
+        name: "Vārds"
+        period:
+          all_time: "Vienmēr"
+          yearly: "Gada"
+          quarterly: "Ceturkšņa"
+          monthly: "Mēneša"
+          weekly: "Nedēļas"
+          daily: "Dienas"
+      create: "Izveidot"
+      cancel: "Atcelt"
+      close: "Aizvērt"
+      delete: "Dzēst"
+      edit: "Rediģēt"
+      back: "Atpakaļ"
+      save: "Saglabāt"
+      apply: "Pielietot"
+      update_range:
+        last_10_days: "Pēdējās 10 dienas"
+        last_30_days: "Pēdējās 30 dienas"
+        last_90_days: "Pēdējās 90 dienas"
+        all_time: "Vienmēr"
+      custom_range_from: "No"
+      admin:
+        name: "Vārds"

@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    assign_enabled: "割り当てプラグインを有効化"
+    assigns_public: "一般ユーザーがトピックの割り当てを表示することを許可する"
+    assigns_user_url_path: "ユーザー割り当てトピックへのパス（{username} でユーザー名を置き換えます）"
+    assigns_by_staff_mention: "スタッフメンバーが別のスタッフメンバーをメンションすると、トピックは自動的に割り当てられる"
+    unassign_creates_tracking_post: "トピックの割り当てを解除すると、変更を槌焼するためのささやきまたは小さなアクションが作成される"
+    assign_self_regex: "自己割り当てのために渡す必要のある正規表現。例「マイリスト」"
+    assign_other_regex: "メンションによってトピックを別のユーザーに割り当てるために渡す必要のある正規表現。例「あなたのリスト」"
+    unassign_on_group_archive: "メッセージがグループによってアーカイブされると、メッセージの割り当てを解除する（受信トレイに戻されると再割り当てされる）"
+    unassign_on_close: "トピックがクローズされると、トピックの割り当てを解除する"
+    reassign_on_open: "トピックがオープンになると、前に割り当てられたユーザー/グループに再割り当てする"
+    invite_on_assign: "個人メッセージがユーザーまたはグループに割り当てられたときに、それらのユーザーまたはグループがすでに PM に参加していない場合は、PM に招待します。"
+    assign_mailer: "割り当ての通知メールを送信するタイミング"
+    remind_assigns: "保留中の割り当てについてユーザーに通知します。"
+    remind_assigns_frequency: "割り当てられたトピックについてユーザーに通知する頻度です。"
+    pending_assign_reminder_threshold: "リマインダー通知をトリガーする保留中の割り当ての数。"
+    max_assigned_topics: "ユーザーに割り当てられるトピックの最大数。"
+    assign_allowed_on_groups: "これらのグループのユーザーはトピックを割り当てたり、割り当てられたりすることができます。"
+    enable_assign_status: "カスタマイズ可能なステータスフィールドをすべての割り当てに追加します。"
+    assign_statuses: "各割り当てに利用できるステータスのリスト。最初のステータスは、すべての新しい割り当てに適用されるデフォルトのステータスです。"
+    errors:
+      assign_statuses:
+        too_few: "少なくとも 2 つのステータスが利用可能である必要があります。"
+        duplicate: "ステータス値が重複しています。"
+        removed_in_use: "このステータスを使用する割り当てがすでに存在する場合、リストからそのステータスを削除できません。"
+  discourse_assign:
+    assigned_to: "@%{username} に割り当てられたトピック"
+    unassigned: "トピックの割り当てが解除されました"
+    already_claimed: "そのトピックはすでに引き受けられています。"
+    already_assigned: "トピックはすでに @%{username} に割り当てられています"
+    too_many_assigns: "@%{username} はすでに割り当てられるトピックの最大数（%{max}）に達しています。"
+    too_many_assigns_for_topic: "トピック当たり %{limit} 件の割り当て制限に達しています。"
+    forbidden_assign_to: "@%{username} は割り当て可能なグループに属していないため、割り当てられません。"
+    forbidden_assignee_not_pm_participant: "@%{username} にはこの PM へのアクセス権がないため、割り当てられません。@%{username} をこの PM に招待することで、アクセス権を付与できます。"
+    forbidden_assignee_cant_see_topic: "@%{username} にはこのトピックへのアクセス権がないため、割り当てられません。"
+    group_already_assigned: "トピックはすでに @%{group} に割り当てられています"
+    forbidden_group_assign_to: "@%{group} は割り当て可能なグループに属していないため、割り当てられません。"
+    forbidden_group_assignee_not_pm_participant: "@%{group} の一部のメンバーにこの PM へのアクセス権がないため、割り当てられません。"
+    forbidden_group_assignee_cant_see_topic: "@%{group} の一部のメンバーにこのトピックへのアクセス権がないため、割り当てられません。"
+    flag_assigned: "申し訳ありませんが、その通報のトピックは別のユーザーに割り当てられています"
+    flag_unclaimed: "通報に対応する前にそのトピックを引き受ける必要があります"
+    topic_assigned_excerpt: "あなたにトピック「%{title}」を割り当てました"
+    topic_group_assigned_excerpt: "がトピック '%{title}' を @%{group} に割り当てました"
+    reminders_frequency:
+      never: "通知しない"
+      daily: "毎日"
+      weekly: "毎週"
+      monthly: "毎月"
+      quarterly: "3 か月ごとに"
+  assign_mailer:
+    title: "割り当てメール"
+    subject_template: "[%{email_prefix}] %{assignee_name} があなたを「%{topic_title}」に割り当てました！"
+    text_body_template: |
+      %{assignee_name} があなたをディスカッションに**割り当て**ました
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      興味があれば、下のリンクをクリックしてください。
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "保留中の割り当てが %{pending_assignments} 件あります"
+    body: |
+      [保留中の割り当てが %{pending_assignments} 件]あります（%{assignments_link}）。
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      これは、割り当てられたトピックが 2 件以上ある場合に、%{frequency}送信されるリマインダーです。
+    newest: |
+      ### 最新
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### 最古
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: ランダム割り当て
+        no_one: "`@%{group}` のメンバーをランダムに割り当てようとしましたが、割り当て可能なメンバーがいませんでした。"
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} があなたを割り当てました"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "選択されたステータスは無効です（assigned_status サイト設定に含まれていません）。"

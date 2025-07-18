@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    gamification_score: "Živjeli"
+    gamification:
+      score: "Živjeli"
+      you: "Vi"
+      leaderboard:
+        title: "Ljestvice članova"
+        info: "Kako ovo radi?"
+        link_to_settings: "Postavke"
+        refresh: "Osvježi"
+        modal:
+          title: "Kako radi ploča s najboljim rezultatima?"
+          text: "Bodovi se dodjeljuju za interakciju sa zajednicom, kao što su posjete, sviđanje i objavljivanje. Vaš rezultat se ažurira svakih nekoliko minuta. Zato budite od pomoći, aktivni i podržavajte i napredujte kroz činove!"
+        name: "Ime"
+        name_placeholder: "Ime..."
+        confirm_destroy: "Jeste li sigurni da želite izbrisati ovu ploču s najboljim rezultatima?"
+        date:
+          range: "Od/do datumskog raspona"
+        period:
+          all_time: "Oduvijek"
+          yearly: "Godišnje"
+          quarterly: "Tromjesečno"
+          monthly: "Mjesečno"
+          weekly: "Tjedno"
+          daily: "Dnevno"
+      create: "Stvorite"
+      cancel: "Odustani"
+      close: "Zatvori"
+      delete: "Izbriši"
+      edit: "Uredi"
+      back: "Natrag"
+      save: "Spremi"
+      apply: "Primijeni"
+      update_range:
+        last_10_days: "Zadnjih 10 dana"
+        last_30_days: "Zadnjih 30 dana"
+        last_90_days: "Zadnjih 90 dana"
+        all_time: "Oduvijek"
+      custom_range_from: "Od"
+      admin:
+        title: "Gamifikacija"
+        name: "Ime i prezime"

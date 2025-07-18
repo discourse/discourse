@@ -1,0 +1,191 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Assign"
+  js:
+    filters:
+      unassigned:
+        title: "已取消指定"
+        help: "未指定的话题"
+    action_codes:
+      assigned: "于 %{when}指定给 %{who}"
+      assigned_group: "于 %{when}指定给 %{who}"
+      assigned_to_post: "于 %{when}将 %{who} 指定到<a href='%{path}'>帖子</a>"
+      assigned_group_to_post: "于 %{when}将 %{who} 指定到<a href='%{path}'>帖子</a>"
+      unassigned: "于 %{when}取消指定 %{who}"
+      unassigned_group: "于 %{when}取消指定 %{who}"
+      unassigned_from_post: "于 %{when}将 %{who} 从<a href='%{path}'>帖子</a>中取消指定"
+      unassigned_group_from_post: "于 %{when}将 %{who} 从<a href='%{path}'>帖子</a>中取消指定"
+      reassigned: "于 %{when}重新指定 %{who}"
+      reassigned_group: "于 %{when}重新指定 %{who}"
+      details_change: "于 %{when}更改了 %{who} 的指定详细信息"
+      note_change: "于 %{when}更改了 %{who} 的指定注释"
+      status_change: "于 %{when}更改了 %{who} 的指定状态"
+    discourse_assign:
+      add_unassigned_filter: "将“未指定”筛选器添加到类别"
+      cant_act: "您不能对已指定给其他用户的举报采取行动"
+      cant_act_unclaimed: "在对举报采取行动之前，您必须先认领此话题。"
+      topic_search_placeholder: "按标题或帖子内容搜索话题"
+      sidebar_name_filter_placeholder: "名称/用户名"
+      assigned: "已指定"
+      group_everyone: "所有人"
+      assigned_to: "已指定给"
+      assigned_topic_to: "将话题指定给 <a href='%{path}'>%{username}</a>"
+      assign_post_to: "将 #%{post_number} 指定给 %{username}"
+      assign_post_to_multiple: "#%{post_number} 被分配给 %{username}"
+      assigned_to_w_ellipsis: "已指定给…"
+      unassign:
+        title: "取消指定"
+        title_w_ellipsis: "取消指定…"
+        help: "从话题中取消指定 %{username}"
+      assign:
+        title: "指定"
+        help: "将话题指定给用户"
+      assign_post:
+        title: "指定帖子"
+      unassign_post:
+        title: "从帖子中取消指定"
+        help: "从帖子中取消指定 %{username}"
+      reassign:
+        title: "编辑"
+        title_w_ellipsis: "编辑指定…"
+        to_self: "重新指定给我"
+        to_self_help: "将话题重新指定给我"
+        help: "编辑指定详细信息"
+      reassign_modal:
+        title: "重新指定话题"
+      topic_level_menu:
+        edit_assignments: "编辑指定…"
+        reassign_topic_to_me: "将话题重新指定给我"
+        unassign_with_ellipsis: "取消指定…"
+        unassign_from_post: "从 #%{post_number} 中取消指定 @%{assignee}"
+        unassign_from_post_help: "从帖子 #%{post_number} 中取消指定 @%{assignee}"
+        unassign_from_topic: "从话题中取消指定 %{username}"
+      assign_modal:
+        title: "指定话题"
+        reassign_title: "重新指定话题"
+        assign: "指定"
+        assignee_label: 受理人
+        assignment_label: 指定
+        choose_assignee: 选择要指定的用户。
+        edit_assignments_title: "编辑指定"
+        note_label: 注释
+        optional_label: "（可选）"
+        status_label: 状态
+        suggestions: 建议
+      assign_post_modal:
+        title: "指定帖子"
+      claim:
+        title: "认领"
+        help: "将话题指定给自己"
+      assign_mailer:
+        never: "永不"
+        different_users: "仅当指定者和受理人是不同的用户时"
+        always: "始终"
+      reminders_frequency:
+        description: "接收指定话题提醒的频率"
+        never: "永不"
+        daily: "每天"
+        weekly: "每周"
+        monthly: "每月"
+        quarterly: "每季度"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "指定"
+              assignable_levels:
+                title: "谁可以指定此群组"
+    user:
+      notification_level_when_assigned:
+        label: "指定后"
+        watch_topic: "关注话题"
+        track_topic: "跟踪话题"
+        do_nothing: "不进行操作"
+      messages:
+        assigned_title: "已指定 (%{count})"
+        assigned: "已指定"
+      no_assignments_title: "您还没有任何任务指定"
+      no_assignments_body: >
+        指定给您的话题和消息将在此处列出。您还将收到关于您的任务指定的定期提醒通知，您可以在<a href='%{preferencesUrl}'>用户偏好设置</a>中进行调整。 <br><br>要将话题或消息指定给自己或其他人，请查找底部的 %{icon} 指定按钮。
+      dismiss_assigned_tooltip: "将所有未读指定通知标记为已读"
+      assigned_to_group:
+        post: "帖子被指定给 %{group_name}"
+        topic: "话题被指定给 %{group_name}"
+      assigned_to_you:
+        post: "帖子被指定给您"
+        topic: "话题被指定给您"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "指定事件"
+          assigned: "当用户指定主题时"
+          unassigned: "当用户取消指定主题时"
+    search:
+      advanced:
+        in:
+          assigned: "已指定"
+          unassigned: "已被取消指定"
+        assigned:
+          label: "已指定给"
+    topics:
+      bulk:
+        unassign: "取消指定话题"
+        assign: "指定话题"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: 帖子模板
+              description: 填写后，将创建一个使用此模板的帖子，并为其指定一个用户而不是话题。
+            assignees_group:
+              label: 受理人群组
+            minimum_time_between_assignments:
+              label: 两次任务指定之间的最小时数
+            min_recently_assigned_days:
+              label: 最近指定的最小天数
+              description: 默认为 14 天。
+            skip_new_users_for_days:
+              label: 跳过新用户的天数
+              description: 默认设置为 0 天（可以在用户注册后立即向其指定）。
+            max_recently_assigned_days:
+              label: 最近指定的最大天数
+              description: 首先尝试排除在最近 `n` 天内指定的用户。如果不剩任何用户，则回退到 `min_recently_assigned_days`。默认为 180 天。
+            assigned_topic:
+              label: 指定的话题 ID
+            in_working_hours:
+              label: 正在上班的用户
+    notification_reason:
+      user: "由于此话题已被指定给您，您将看到新回复的计数。"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} 已为您指定"
+      titles:
+        assigned: "已指定"
+      dismiss_confirmation:
+        body:
+          assigns:
+            other: "确定吗？您有 %{count} 个未读指定通知。"
+    user_menu:
+      view_all_assigned: "查看所有指定"
+      tabs:
+        assign_list: "指定列表"
+        assign_list_with_unread:
+          other: "指定列表 - %{count} 个未读指定"
+    edit_assignments_modal:
+      title: "编辑指定"
+      topic: "话题"
+      post: "帖子"

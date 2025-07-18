@@ -1212,7 +1212,6 @@ sq:
     sender_body_blank: "përmbajtja është bosh"
   color_schemes:
     base_theme_name: "Baza"
-    default_theme_name: "Paracaktuar"
   edit_this_page: "Modifiko këtë faqe"
   csv_export:
     boolean_yes: "Po"
@@ -1375,7 +1374,6 @@ sq:
       long_description: |
         Kjo stemë jepet herën e parë kur i përgjigjeni një postimi nëpërmjet email-it :e-mail:
   admin_login:
-    success: "Emaili u dërgua"
     email_input: "Admin Email"
     submit_button: "Dërgo Email"
   performance_report:

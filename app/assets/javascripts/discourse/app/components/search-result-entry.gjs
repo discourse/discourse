@@ -29,6 +29,11 @@ import { logSearchLinkClick } from "discourse/lib/search";
 export default class SearchResultEntry extends Component {
   role = "listitem";
 
+  get shouldShowPrivateMessageIcon() {
+    // Only show PM icon if this is a PM AND we're not in a PM-only search
+    return this.post.topic.isPrivateMessage && !this.isPMOnly;
+  }
+
   @action
   logClick(topicId, event) {
     // Avoid click logging when any modifier keys are pressed.
@@ -79,7 +84,7 @@ export default class SearchResultEntry extends Component {
           <TopicStatus
             @topic={{this.post.topic}}
             @disableActions={{true}}
-            @showPrivateMessageIcon={{true}}
+            @showPrivateMessageIcon={{this.shouldShowPrivateMessageIcon}}
           />
 
           <span class="topic-title">

@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    gamification:
+      you: "Ty"
+      leaderboard:
+        link_to_settings: "Ustawienia"
+        refresh: "Odśwież"
+        name: "Nazwa"
+        period:
+          all_time: "Przez cały czas"
+          yearly: "Rocznie"
+          quarterly: "Kwartalnie"
+          monthly: "Miesięcznie"
+          weekly: "Tygodniowo"
+          daily: "Dziennie"
+      create: "Utwórz"
+      cancel: "Anuluj"
+      close: "Zamknij"
+      delete: "Usuń"
+      edit: "Edytuj"
+      back: "Poprzednia"
+      save: "Zapisz"
+      apply: "Zastosuj"
+      update_range:
+        last_10_days: "Ostatnie 10 dni"
+        last_30_days: "Ostatnie 30 dni"
+        last_90_days: "Ostatnie 90 dni"
+        all_time: "Przez cały czas"
+      custom_range_from: "Od"
+      admin:
+        name: "Imię"

@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: Номер тэмы
+    discourse_calendar:
+      disable_holiday: "Адключыць"
+      enable_holiday: "Уключыць"
+      toolbar_button:
+        today: "сёння"
+        month: "месяц"
+        week: "тыдзень"
+        day: "дзень"
+    discourse_post_event:
+      upcoming_events:
+        status: "Статус"
+      models:
+        event:
+          closed: "Закрыта"
+          status:
+            public:
+              title: "грамадскага"
+            private:
+              title: "прыватны"
+      builder_modal:
+        create: "стварыць"
+        update: "захаваць"
+        reminders:
+          units:
+            days: "дзён"
+          periods:
+            before: "перад"
+            after: "пасля"
+        url:
+          label: "URL спасылка"
+        location:
+          label: "размяшчэнне"
+        description:
+          label: "Апісанне"
+        status:
+          label: "Статус"
+      invite_user_or_group:
+        invite: "адправіць"

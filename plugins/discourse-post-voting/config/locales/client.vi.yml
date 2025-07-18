@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              other: "Nhập ít nhất %{count} kí tự"
+          edit: "sửa"
+          cancel: "hủy"
+          user:
+            deleted: "(người dùng đã bị xóa)"
+          reviewables:
+            actions:
+              agree_and_suspend:
+                title: "Tạm ngưng người dùng"
+              agree_and_silence:
+                title: "Người dùng im lặng"
+              disagree:
+                title: "Không đồng ý"
+      topic:
+        sort_by: "Sắp xếp theo"
+        activity: "Hoạt động"

@@ -1,0 +1,216 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  admin_js:
+    admin:
+      calendar: "Ημερολόγιο"
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: Topic ID
+    discourse_calendar:
+      disable_holiday: "Απενεργοποίηση"
+      enable_holiday: "Ενεργοποίηση"
+      date: "Ημερομηνία"
+      region:
+        title: "Περιοχή"
+        none: "Κανένα"
+        use_current_region: "Χρήση τρέχουσας περιοχής"
+        names:
+          ae: "Ηνωμένα Αραβικά Εμιράτα"
+          ar: "Αργεντινή"
+          at: "Αυστρία"
+          au_act: "Αυστραλία (au_act)"
+          au_nsw: "Αυστραλία (au_nsw)"
+          au_nt: "Αυστραλία (au_nt)"
+          au_qld_brisbane: "Αυστραλία (au_qld_brisbane)"
+          au_qld_cairns: "Αυστραλία (au_qld_cairns)"
+          au_qld: "Αυστραλία (au_qld)"
+          au_sa: "Australia (au_sa)"
+          au_tas_north: "Αυστραλία (au_tas_north)"
+          au_tas_south: "Αυστραλία (au_tas_south)"
+          au_tas: "Australia (au_tas)"
+          au_vic_melbourne: "Αυστραλία (au_vic_melbourne)"
+          au_vic: "Αυστραλία (au_vic)"
+          au_wa: "Αυστραλία (au_wa)"
+          au: "Αυστραλία"
+          be_fr: "Βέλγιο (be_fr)"
+          be_nl: "Βέλγιο (be_nl)"
+          bg_bg: "Βουλγαρία (bg_bg)"
+          bg_en: "Βουλγαρία (bg_en)"
+          br: "Βραζιλία"
+          br_sp: "Βραζιλία (br_sp)"
+          br_spcapital: "Βραζιλία (br_spcapital)"
+          ca_ab: "Καναδάς (ca_ab)"
+          ca_bc: "Καναδάς (ca_bc)"
+          ca_mb: "Καναδάς (ca_mb)"
+          ca_nb: "Καναδάς (ca_nb)"
+          ca_nl: "Καναδάς (ca_nl)"
+          ca_ns: "Καναδάς (ca_ns)"
+          ca_nt: "Καναδάς (ca_nt)"
+          ca_nu: "Καναδάς (ca_nu)"
+          ca_on: "Καναδάς (ca_on)"
+          de_bb: "Γερμανία (de_bb)"
+          de_be: "Γερμανία (de_be)"
+          de_bw: "Γερμανία (de_bw)"
+          de_by_augsburg: "Γερμανία (de_by_augsburg)"
+          de_by_cath: "Γερμανία (de_by_cath)"
+          de_by: "Γερμανία (de_by)"
+          de_hb: "Γερμανία (de_hb)"
+          de_he: "Γερμανία (de_he)"
+          de_hh: "Γερμανία (de_hh)"
+          de_mv: "Γερμανία (de_mv)"
+          de_ni: "Γερμανία (de_ni)"
+          de_nw: "Γερμανία (de_nw)"
+          de_rp: "Γερμανία (de_rp)"
+          de_sh: "Γερμανία (de_sh)"
+          de_sl: "Γερμανία (de_sl)"
+          de_sn_sorbian: "Γερμανία (de_sn_sorbian)"
+          de_sn: "Γερμανία (de_sn)"
+          de_st: "Γερμανία (de_st)"
+          de_th_cath: "Γερμανία (de_th_cath)"
+          de_th: "Γερμανία (de_th)"
+          de: "Γερμανία"
+          dk: "Δανία"
+          ee: "Εσθονία"
+          el: "Ελλάδα"
+          es_an: "Ισπανία (es_an)"
+          es_ar: "Ισπανία (es_ar)"
+          es_ce: "Ισπανία (es_ce)"
+          es_cl: "Ισπανία (es_cl)"
+          es_cm: "Ισπανία (es_cm)"
+          es_cn: "Ισπανία (es_cn)"
+          es_ct: "Ισπανία (es_ct)"
+          es_ex: "Ισπανία (es_ex)"
+          es_ga: "Ισπανία (es_ga)"
+          es_ib: "Ισπανία (es_ib)"
+          es_lo: "Ισπανία (es_lo)"
+          es_m: "Ισπανία (es_m)"
+          es_mu: "Ισπανία (es_mu)"
+          es_na: "Ισπανία (es_na)"
+          es_o: "Ισπανία (es_o)"
+          es_pv: "Ισπανία (es_pv)"
+          es_v: "Ισπανία (es_v)"
+          es_vc: "Ισπανία (es_vc)"
+          es: "Ισπανία"
+          fi: "Φινλανδία"
+          fr_a: "Γαλλία (fr_a)"
+          fr_m: "Γαλλία (fr_m)"
+          fr: "Γαλλία"
+          gb_con: "Ηνωμένο Βασίλειο (gb_con)"
+          gb_eaw: "Ηνωμένο Βασίλειο (gb_eaw)"
+          gb_eng: "Ηνωμένο Βασίλειο (gb_eng)"
+          ng: "Νιγηρία"
+          nl: "Ολλανδία"
+          "no": "Νορβηγία"
+          nz_ak: "Νέα Ζηλανδία (nz_ak)"
+          nz_ca: "Νέα Ζηλανδία (nz_ca)"
+          nz_ch: "Νέα Ζηλανδία (nz_ch)"
+          nz_hb: "Νέα Ζηλανδία (nz_hb)"
+          nz_mb: "Νέα Ζηλανδία (nz_mb)"
+          nz_ne: "Νέα Ζηλανδία (nz_ne)"
+          nz_nl: "Νέα Ζηλανδία (nz_nl)"
+          nz_ot: "Νέα Ζηλανδία (nz_ot)"
+          nz_sc: "Νέα Ζηλανδία (nz_sc)"
+          nz_sl: "Νέα Ζηλανδία (nz_sl)"
+          nz_ta: "Νέα Ζηλανδία (nz_ta)"
+          nz_we: "Νέα Ζηλανδία (nz_we)"
+          nz_wl: "Νέα Ζηλανδία (nz_wl)"
+          nz: "Νέα Ζηλανδία"
+          pe: "Περού"
+          ph: "Φιλιππίνες"
+          pl: "Πολωνία"
+          pt_li: "Πορτογαλία (pt_li)"
+          pt_po: "Πορτογαλία (pt_po)"
+          pt: "Πορτογαλία"
+          ro: "Ρουμανία"
+          rs_cyrl: "Σερβία (rs_cyrl)"
+          rs_la: "Σερβία (rs_la)"
+          ru: "Ρωσική Ομοσπονδία"
+          se: "Σουηδία"
+          sa: "Σαουδική Αραβία"
+          sg: "Σιγκαπούρη"
+          si: "Σλοβενία"
+          sk: "Σλοβακία"
+          th: "Ταϊλάνδη"
+          tn: "Τυνησία"
+          tr: "Τουρκία"
+          ua: "Ουκρανία"
+          us_ak: "Ηνωμένες Πολιτείες (us_ak)"
+          us_al: "Ηνωμένες Πολιτείες (us_al)"
+          us_ar: "Ηνωμένες Πολιτείες (us_ar)"
+          us_az: "Ηνωμένες Πολιτείες (us_az)"
+          us_ca: "Ηνωμένες Πολιτείες (us_ca)"
+          us_co: "Ηνωμένες Πολιτείες (us_co)"
+          us_ct: "Ηνωμένες Πολιτείες (us_ct)"
+          us_dc: "Ηνωμένες Πολιτείες (us_dc)"
+          us_de: "Ηνωμένες Πολιτείες (us_de)"
+          us_fl: "Ηνωμένες Πολιτείες (us_fl)"
+          us_ga: "Ηνωμένες Πολιτείες (us_ga)"
+          us_gu: "Ηνωμένες Πολιτείες (us_gu)"
+          us_hi: "Ηνωμένες Πολιτείες (us_hi)"
+          us_ia: "Ηνωμένες Πολιτείες (us_ia)"
+      toolbar_button:
+        today: "Σήμερα"
+        month: "Μήνας"
+        week: "Εβδομάδα"
+        day: "Ημέρα"
+    group_timezones:
+      search: "Αναζήτηση..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "Εμφάνιση όλων"
+      add_to_calendar: "Προσθήκη στο ημερολόγιο"
+      created_by: "Δημιουργήθηκε από"
+      bulk_invite: "Μαζική πρόσκληση"
+      bulk_invite_modal:
+        title: "Μαζική πρόσκληση"
+        success: "Το αρχείο ανέβηκε. Θα ενημερωθείς με ένα μήνυμα όταν ολοκληρωθεί η διαδικασία."
+        error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
+      upcoming_events:
+        status: "Κατάσταση"
+      models:
+        event:
+          closed: "Κλειστό"
+          status:
+            public:
+              title: "Δημόσια"
+            private:
+              title: "Ιδιωτική"
+      builder_modal:
+        custom_fields:
+          placeholder: "Προεραιτικό"
+        create: "Δημιουργία"
+        update: "Αποθήκευση"
+        timezone:
+          label: Ζώνη ώρας
+        reminders:
+          units:
+            hours: "ώρες"
+            days: "ημέρες"
+          periods:
+            before: "πριν"
+            after: "μετά"
+        recurrence:
+          label: "Επανάληψη"
+          none: "Χωρίς επανάληψη"
+          every_day: "Κάθε μέρα"
+        url:
+          label: "URL"
+          placeholder: "Προεραιτικό"
+        location:
+          label: "Τοποθεσία"
+        description:
+          label: "Περιγραφή"
+        status:
+          label: "Κατάσταση"
+      invite_user_or_group:
+        invite: "Αποστολή"

@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    gamification:
+      you: "Vy"
+      leaderboard:
+        link_to_settings: "Nastavenia"
+        refresh: "Obnoviť"
+        name: "Meno"
+        name_placeholder: "Názov..."
+        period:
+          all_time: "Za celú dobu"
+          yearly: "Ročne"
+          quarterly: "Štvrťročne"
+          monthly: "Mesačne"
+          weekly: "Týždenne"
+          daily: "Denne"
+      create: "Vytvoriť"
+      cancel: "Zrušiť"
+      close: "Zavrieť"
+      delete: "Odstrániť"
+      edit: "Upraviť"
+      back: "Späť"
+      save: "Uložiť"
+      apply: "Použi"
+      update_range:
+        last_10_days: "Posledných 10 dní"
+        last_30_days: "Posledných 30 dní"
+        last_90_days: "Posledných 90 dní"
+        all_time: "Za celú dobu"
+      custom_range_from: "Od"
+      admin:
+        name: "Meno"

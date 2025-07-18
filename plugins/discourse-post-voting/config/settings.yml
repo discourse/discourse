@@ -1,0 +1,28 @@
+plugins:
+  post_voting_enabled:
+    client: true
+    default: false
+  post_voting_undo_vote_action_window:
+    default: 10
+  post_voting_comment_limit_per_post:
+    default: 10
+    min: 1
+    client: true
+  post_voting_comment_max_raw_length:
+    client: true
+    hidden: true
+    default: 600
+  post_voting_enable_likes_on_answers:
+    client: true
+    default: false
+  min_trust_to_flag_posts_voting_comments:
+    default: 1
+    enum: "TrustLevelSetting"
+    client: true
+    hidden: true
+  flag_posts_voting_comments_allowed_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"

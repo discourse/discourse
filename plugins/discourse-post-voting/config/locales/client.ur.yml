@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "کم از کم %{count} حرف درج کریں"
+              other: "کم از کم %{count} حروف درج کریں"
+          edit: "ترمیم کریں"
+          cancel: "منسوخ"
+          user:
+            deleted: "(صارف مٹادیا گیا)"
+          reviewables:
+            actions:
+              agree:
+                title: "اتفاق کریں..."
+              agree_and_suspend:
+                title: "صارف معطل کریں"
+                description: "فلَیگ کے ساتھ اتفاق کریں اور صارف معطل کریں۔"
+              agree_and_silence:
+                title: "صارف خاموش کریں"
+                description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
+              disagree:
+                title: "اختلاف کریں"
+      topic:
+        sort_by: "ترتیب بہ"
+        activity: "سرگرمی"

@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: تسجيل الدخول باستخدام Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'المرشحات'
+      group: 'مجموعة'
+      rewards: 'المكافآت'
+      filter: 'مرشح'
+      help_text: 'يمكنك مزامنة مجموعة Discourse مع واحدة أو أكثر من درجات مكافآت Patreon'
+      last_synced: 'آخر مزامنة'
+      edit: 'تعديل'
+      delete: 'حذف'
+      save: 'حفظ'
+      update_data: 'تحديث بيانات Patreon ومجموعات المزامنة'
+      refresh_page: 'تم تنزيل بيانات جديدة من Patreon API. يُرجى تحديث الصفحة.'
+      select_group: 'تحديد مجموعة'
+      field:
+        id: "المُعرِّف"
+        email: "البريد الإلكتروني"
+        amount_cents: "المبلغ (بالسنت)"
+        rewards: "المكافآت"
+        declined_since: "تم رفض التبرع منذ"
+        more_details:
+          label: "المدفوعات والمزيد من التفاصيل"
+          help_text:
+            email_available: "أنظر أسفل يمين الصفحة لعرض سجل تبرعات Patreon هذا."
+            email_not_available: "حدِّد عضو Patreon وانظر أسفل يمين الصفحة لعرض سجل التبرعات."
+      donation_prompt:
+        body: |
+          <h1>مرحبًا أيها القارئ!</h1>
+
+          <p>هل يعجبك موقعنا؟ هل ترغب في التبرع لصالح قضية جيدة؟</p>
+
+          <p>
+            إذا كنت تجد موقعنا مفيدًا وتستمتع بالمجتمع الذي أنشأناه، فسنسعد كثيرًا بتبرعك لموقعنا.
+            تحافظ التبرعات على تشغيل خدماتنا بسلاسة وتضمن استمرار مجتمعنا في العمل لسنوات قادمة.
+            كل دولار يصنع الفارق وسيتم توظيفه جيدًا.
+          </p>
+
+          <p>شكرًا لك على دعمك!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">انضم إلى الرعاة</a>
+          </p>

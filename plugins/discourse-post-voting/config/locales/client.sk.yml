@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Zadajte aspoň %{count} znak"
+              few: "Zadajte aspoň %{count} znakov"
+              many: "Zadajte aspoň %{count} znaky"
+              other: "Zadajte aspoň %{count} znaky"
+          edit: "uprav"
+          cancel: "zrušiť"
+          user:
+            deleted: "(používateľ odstránený)"
+          reviewables:
+            actions:
+              agree:
+                title: "Súhlasím..."
+              agree_and_suspend:
+                title: "Suspendovaný užívateľ"
+                description: "Súhlas s príznakom a pozastavenie používateľa."
+              agree_and_silence:
+                title: "Tichý užívateľ"
+                description: "Súhlas s príznakom a umlčte používateľa."
+              disagree:
+                title: "Nesúhlasiť"
+              ignore:
+                title: "Nerobte nič"
+                description: "Ignorujte príznak jeho odstránením z frontu bez vykonania akejkoľvek akcie."
+      topic:
+        sort_by: "Zoradiť podľa"
+        activity: "Aktivity"
+    review:
+      transcript:
+        view: "Zobraziť prepis predchádzajúcich správ"

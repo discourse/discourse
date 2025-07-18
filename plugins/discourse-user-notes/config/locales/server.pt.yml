@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  site_settings:
+    user_notes_enabled: "Permitir que os utilizadores da equipa anexem notas aos utilizadores"
+  user_notes:
+    official_warning: "Recebeu um aviso oficial de @%{username} -- %{warning_link}"
+  reports:
+    user_notes:
+      labels:
+        user: Utilizador
+        note: Nota
+        moderator: Moderador

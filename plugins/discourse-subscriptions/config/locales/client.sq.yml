@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    discourse_subscriptions:
+      optional: Fakultative
+      plans:
+        interval:
+          adverb:
+            day: Ditore
+            week: Javore
+            month: Mujore
+            year: Vjetore
+      user:
+        payments:
+          created_at: Krijuar
+        plans:
+          product: Emri
+        subscriptions:
+          created_at: Krijuar
+          cancel: anulo
+      billing:
+        email: Email
+      admin:
+        dashboard:
+          title: Paneli i kontrollit
+          table:
+            head:
+              user: User
+        products:
+          product:
+            description: Përshkrimi
+            active: Aktiv
+            created_at: Krijuar
+        plans:
+          plan:
+            active: Aktiv
+            created_at: Krijuar
+        coupons:
+          active: Aktiv?
+          actions: Veprimet
+        subscriptions:
+          subscription:
+            user: User
+            created_at: Krijuar

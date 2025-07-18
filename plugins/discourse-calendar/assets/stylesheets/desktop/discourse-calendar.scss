@@ -1,0 +1,14 @@
+.calendar.fc {
+  table {
+    width: 100%;
+  }
+
+  .fc-list-item-add-to-calendar {
+    float: right;
+    margin-right: 5px;
+  }
+
+  .fc-list-item:hover td {
+    background: var(--highlight-medium);
+  }
+}

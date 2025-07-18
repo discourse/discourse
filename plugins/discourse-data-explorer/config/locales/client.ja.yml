@@ -1,0 +1,114 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "クエリからセミコロンを削除します。"
+        dirty: "クエリは保存してから実行する必要があります。"
+    explorer:
+      or: "または"
+      admins_only: "データエクスプローラーは管理者のみが利用できます。"
+      allow_groups: "このクエリへのアクセスをグループに許可する"
+      title: "データエクスプローラー"
+      create: "新規作成"
+      create_placeholder: "クエリ名..."
+      description_placeholder: "説明をここに入力"
+      import:
+        label: "インポート"
+        modal: "クエリをインポート"
+        unparseable_json: "解析不能な JSON ファイルです。"
+        wrong_json: "不正な JSON ファイル。JSON ファイルには 'query' オブジェクトと、その中に少なくとも 'sql' プロパティが含まれている必要があります。"
+      help:
+        label: "ヘルプ"
+        modal_title: "データエクスプローラーのヘルプ"
+        auto_resolution: "<h2>エンティティの自動解決</h2> <p>クエリがエンティティ ID を返す場合、データエクスプローラーはクエリ結果において、それを自動的にエンティティ名とその他の有用な情報に置き換えることができます。自動解決は、<i><b>user_id</b></i>、<i><b>group_id</b></i>、<i><b>topic_id</b></i>、<i><b>category_id</b></i>、および <i><b>badge_id</b></i> で利用できます。次のクエリを実行して試してください。</p>\n<pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>カスタムパラメーターの作成</h2> <p>クエリのカスタムパラメーターを作成するには、次のコードをクエリの先頭に配置し、フォーマットに従います。</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>注意: 最初の [params] の行は必須です。また、その前と宣言するカスタムパラメーターの前に 2 つのダッシュが必要です。</i></p>"
+        default_values: "<h3>デフォルト値</h3> <p>パラメーターはデフォルト値の有無に関係なく宣言できます。デフォルト値はクエリエディターの下のテキストフィールドに表示され、必要に応じて編集することができます。パラメーターはデフォルト値なしで宣言された場合でもテキストフィールドを生成しますが、空となり、赤でハイライトされます。</p>\n<pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>データ型</h3> <p>以下は、使用できる共通のデータ型です。</p> <ul> <li><b>整数</b> - 符号付き 4 バイト整数</li> <li><b>テキスト</b> - 可変長文字列</li> <li><b>ブール</b> – true/false</li> <li><b>日付</b> - 暦日（年、月、日）</li> </ul> <p>データ型の詳細については、<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>こちらのウェブサイト</a>をご覧ください。</p>"
+      schema:
+        title: "データベーススキーマ"
+        filter: "検索..."
+        sensitive: "この列のコンテンツには、機密性の特に高い情報または個人情報が含まれることがあります。この列のコンテンツを使用する際には十分注意してください。"
+      types:
+        bool:
+          yes: "はい"
+          no: "いいえ"
+          null_: "Null"
+      export: "エクスポート"
+      view_json: "JSON を表示"
+      save: "変更を保存"
+      saverun: "変更を保存して実行"
+      run: "実行"
+      undo: "変更を破棄"
+      edit: "編集"
+      delete: "削除"
+      recover: "クエリの削除を取り消す"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "テーブル"
+      show_graph: "グラフ"
+      others_dirty: "クエリには保存されていない変更があり、移動すると失われます。"
+      run_time: "クエリは %{value} ミリ秒で完了しました。"
+      result_count:
+        other: "%{count} 件の結果。"
+      max_result_count:
+        other: "上位 %{count} 件を表示中。"
+      query_name: "クエリ"
+      query_groups: "グループ"
+      link: "リンク"
+      report_name: "レポート"
+      query_description: "説明"
+      query_time: "最終実行"
+      query_user: "作成者"
+      column: "列 %{number}"
+      explain_label: "クエリプランを含めますか？"
+      save_params: "デフォルトを設定"
+      reset_params: "リセット"
+      search_placeholder: "検索..."
+      no_search_results: "残念ながら、テキストに一致する結果は見つかりませんでした。"
+      form:
+        errors:
+          invalid: "無効です"
+          no_such_category: "そのようなカテゴリはありません"
+          no_such_group: "そのようなグループはありません"
+          invalid_date: "%{date} は無効な日付です"
+          invalid_time: "%{time} は無効な時刻です"
+    group:
+      reports: "レポート"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "データエクスプローラーのクエリを実行します。クエリ ID を指定して、API キーを一連のクエリに制限します。"
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: ユーザー、グループ、またはメールに送る
+            query_id:
+              label: データエクスプローラーのクエリ
+            query_params:
+              label: データエクスプローラーのクエリパラメーター
+            skip_empty:
+              label: 結果がない場合は PM の送信をスキップする
+            attach_csv:
+              label: CSV ファイルを PM に添付する
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: クエリ結果を投稿するトピック
+            query_id:
+              label: データエクスプローラーのクエリ
+            query_params:
+              label: データエクスプローラーのクエリパラメーター
+            skip_empty:
+              label: 結果が無い場合は投稿をスキップする
+            attach_csv:
+              label: CSV ファイルを投稿に添付する

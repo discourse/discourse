@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Verwijder de puntkomma's uit de query."
+        dirty: "Je moet de query opslaan voordat je deze uitvoert."
+    explorer:
+      or: "of"
+      admins_only: "De gegevensverkenner is alleen beschikbaar voor beheerders."
+      allow_groups: "Groepen hebben toegang tot deze query"
+      title: "Gegevensverkenner"
+      create: "Nieuwe maken"
+      create_placeholder: "Querynaam..."
+      description_placeholder: "Voer hier een beschrijving in"
+      import:
+        label: "Importeren"
+        modal: "Een query importeren"
+        unparseable_json: "Onparseerbaar JSON-bestand."
+        wrong_json: "Onjuist JSON-bestand. Een JSON-bestand moet een 'query'-object bevatten, dat minimaal een 'sql'-eigenschap moet hebben."
+      help:
+        label: "Help"
+        modal_title: "Gegevensverkenner-help"
+        auto_resolution: "<h2>Automatische omzetting van entiteiten</h2> <p>Wanneer je query een entiteit-ID retourneert, kan Gegevensverkenner deze automatisch vervangen door de entiteitnaam en andere nuttige informatie in queryresultaten. Automatische omzetting is beschikbaar voor <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> en <i><b>badge_id</b></i>. Voer deze query uit om dit te proberen:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Aangepaste parameters maken</h2> <p>Om aangepaste parameters te maken voor je query's, plaats je dit bovenaan je query en volg je de notatie:</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Opmerking : de eerste regel met [params] is vereist, samen met twee streepjes ervoor en elke aangepaste parameter die je wilt declareren.</i></p>"
+        default_values: "<h3>Standaardwaarden</h3> <p>Je kunt parameters declareren met of zonder standaardwaarde. Standaardwaarden worden weergegeven in een tekstveld onder de query-editor, die je naar wens kunt bewerken. Parameters die zijn gedeclareerd zonder standaardwaarde leveren nog steeds een tekstveld op, maar zijn leeg en rood gemarkeerd.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Gegevenstypen</h3> <p>Hier volgen algemene gegevenstypen die je kunt gebruiken:</p> <ul> <li><b>integer</b> - positief of negatief geheel getal van vier bytes</li> <li><b>text</b> - tekenreeks met variabele lengte</li> <li><b>boolean</b> – true/false</li> <li><b>date</b> - kalenderdatum (jaar, maand, dag)</li> </ul> <p>Ga voor meer informatie over gegevenstypen naar <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>deze website</a>.</p>"
+      schema:
+        title: "Databaseschema"
+        filter: "Zoeken..."
+        sensitive: "De inhoud van deze kolom kan bijzonder gevoelige of privégegevens bevatten. Wees voorzichtig bij gebruik van de inhoud van deze kolom."
+      types:
+        bool:
+          yes: "Ja"
+          no: "Nee"
+          null_: "Null"
+      export: "Exporteren"
+      view_json: "JSON weergeven"
+      save: "Wijzigingen opslaan"
+      saverun: "Wijzigingen opslaan en uitvoeren"
+      run: "Uitvoeren"
+      undo: "Wijzigingen negeren"
+      edit: "Bewerken"
+      delete: "Verwijderen"
+      recover: "Query verwijderen ongedaan maken"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Tabel"
+      show_graph: "Grafiek"
+      others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als je de pagina verlaat."
+      run_time: "Query voltooid in %{value} ms."
+      result_count:
+        one: "%{count} resultaat."
+        other: "%{count} resultaten."
+      max_result_count:
+        one: "Eerste %{count} resultaat wordt weergegeven."
+        other: "Eerste %{count} resultaten worden weergegeven."
+      query_name: "Query"
+      query_groups: "Groepen"
+      link: "Link voor"
+      report_name: "Rapport"
+      query_description: "Beschrijving"
+      query_time: "Laatste uitvoering"
+      query_user: "Gemaakt door"
+      column: "Kolom %{number}"
+      explain_label: "Queryplan bijvoegen?"
+      save_params: "Standaardwaarden instellen"
+      reset_params: "Herstellen"
+      search_placeholder: "Zoeken..."
+      no_search_results: "Er zijn geen resultaten gevonden voor je tekst."
+      form:
+        errors:
+          invalid: "Ongeldig"
+          no_such_category: "Geen dergelijke categorie"
+          no_such_group: "Geen dergelijke groep"
+          invalid_date: "%{date} is een ongeldige datum"
+          invalid_time: "%{time} is een ongeldige tijd"
+    group:
+      reports: "Rapporten"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Voer Gegevensverkenner-query's uit. Beperk de API-sleutel tot een reeks query's door query-ID's op te geven."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Verzenden naar gebruiker, groep of e-mailadres
+            query_id:
+              label: Gegevensverkenner-query
+            query_params:
+              label: Gegevensverkenner-queryparameters
+            skip_empty:
+              label: PB verzenden overslaan als er geen resultaten zijn
+            attach_csv:
+              label: Voeg het CSV-bestand bij de PB
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: Het topic om queryresultaten in te plaatsen
+            query_id:
+              label: Gegevensverkenner-query
+            query_params:
+              label: Gegevensverkenner-queryparameters
+            skip_empty:
+              label: Plaatsen overslaan als er geen resultaten zijn
+            attach_csv:
+              label: Voeg het CSV-bestand bij het bericht

@@ -104,6 +104,7 @@ export default class Types extends Component {
                 <resultType.component
                   @result={{result}}
                   @displayNameWithUser={{@displayNameWithUser}}
+                  @isPMOnly={{@isPMOnly}}
                 />
               </a>
             </li>

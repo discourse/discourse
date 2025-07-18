@@ -14,6 +14,11 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 export default class Results extends Component {
   @service siteSettings;
 
+  get shouldShowPrivateMessageIcon() {
+    // Only show PM icon if this is a PM AND we're not in a PM-only search
+    return this.args.result.topic.isPrivateMessage && !this.args.isPMOnly;
+  }
+
   <template>
     <span class="topic">
       <span class="first-line">
@@ -21,6 +26,7 @@ export default class Results extends Component {
           @topic={{@result.topic}}
           @disableActions={{true}}
           @context="topic-view-title"
+          @showPrivateMessageIcon={{this.shouldShowPrivateMessageIcon}}
         />
         <span class="topic-title" data-topic-id={{@result.topic.id}}>
           {{#if

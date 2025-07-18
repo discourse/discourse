@@ -15,6 +15,8 @@ html.composer-open:not(.has-full-page-chat) {
   cursor: row-resize;
   padding: 0.25em 0;
   background: var(--tertiary);
+  border-top-left-radius: var(--d-border-radius-large);
+  border-top-right-radius: var(--d-border-radius-large);
 
   @media (pointer: coarse) {
     padding: 0.35em 0;
@@ -51,6 +53,8 @@ html.composer-open:not(.has-full-page-chat) {
     min-height 0.2s;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
+  border-top-left-radius: var(--d-border-radius-large);
+  border-top-right-radius: var(--d-border-radius-large);
 
   @media screen and (width <= 1200px) {
     min-width: 0;
@@ -119,7 +123,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.draft,
   &.saving {
-    height: 40px !important;
+    height: 45px !important;
     align-items: center;
     background: var(--tertiary);
     color: var(--secondary);
@@ -719,12 +723,6 @@ html.composer-open:not(.has-full-page-chat) {
 
         &.selected {
           background-color: var(--d-selected);
-
-          .username,
-          .name,
-          .emoji-shortname {
-            font-weight: bold;
-          }
         }
 
         .avatar {
@@ -1128,6 +1126,10 @@ div.ac-wrap {
   &:nth-of-type(2) {
     width: calc(50% - 65px);
   }
+
+  .discourse-tags {
+    font-size: var(--font-down-1);
+  }
 }
 
 .custom-body {
@@ -1199,6 +1201,10 @@ div.ac-wrap {
         height: calc(var(--composer-vh, 1vh) * 100) !important;
       }
 
+      .grippie {
+        display: none;
+      }
+
       .d-editor-preview-wrapper {
         margin-top: 1%;
       }
@@ -1221,10 +1227,6 @@ div.ac-wrap {
       #file-uploading {
         margin-left: 0;
         text-align: initial;
-      }
-
-      .composer-popup {
-        top: 30px;
       }
 
       &::before {

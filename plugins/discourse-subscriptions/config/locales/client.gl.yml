@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  js:
+    discourse_subscriptions:
+      optional: Opcional
+      campaign:
+        success_title: Feito!
+      plans:
+        interval:
+          adverb:
+            day: Diario
+            week: Semanal
+            month: Mensual
+            year: Anual
+      user:
+        payments:
+          created_at: Creado
+        plans:
+          product: Nome
+        subscriptions:
+          status: Estado
+          update_card:
+            single: "Actualizar"
+          created_at: Creado
+          cancel: cancelar
+      billing:
+        email: Correo electrónico
+      admin:
+        dashboard:
+          title: Panel
+          table:
+            head:
+              user: Usuario
+        products:
+          product:
+            description: Descrición
+            active: Activo
+            created_at: Creado
+            updated_at: Actualizado
+        plans:
+          plan:
+            active: Activo
+            created_at: Creado
+        coupons:
+          active: Activo?
+          actions: Accións
+        subscriptions:
+          subscription:
+            user: Usuario
+            status: Estado
+            created_at: Creado

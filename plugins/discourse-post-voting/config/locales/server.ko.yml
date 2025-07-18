@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  post_voting:
+    comment:
+      reviewables:
+        actions:
+          agree_and_suspend:
+            title: "사용자 차단"
+            description: "플래그에 동의하고 사용자를 일시 중지하십시오."
+          agree_and_silence:
+            title: "글 작성 중지 사용자"
+            description: "신고에 동의하고 사용자를 쓰기 금지로 설정합니다."
+          disagree:
+            title: "동의하지 않음"
+      reviewable_score_types:
+        needs_review:
+          title: "검토 필요"
+        notify_user:
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_body: "%{link}\n\n%{comment}"

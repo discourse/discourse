@@ -39,6 +39,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
@@ -685,7 +686,7 @@ export default class TopicController extends Controller {
 
   // Post related methods
   @action
-  replyToPost(post) {
+  async replyToPost(post) {
     const composerController = this.composer;
     const topic = post ? post.get("topic") : this.model;
     const quoteState = this.quoteState;
@@ -729,6 +730,16 @@ export default class TopicController extends Controller {
         opts.post = post;
       } else {
         opts.topic = topic;
+      }
+
+      if (!opts.quote) {
+        const draftData = await Draft.get(opts.draftKey);
+
+        if (draftData.draft) {
+          const data = JSON.parse(draftData.draft);
+          opts.reply = data.reply;
+          opts.draftSequence = draftData.draft_sequence;
+        }
       }
 
       composerController.open(opts);

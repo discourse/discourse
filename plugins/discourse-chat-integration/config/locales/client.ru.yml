@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Интеграция с чатами"
+  js:
+    chat_integration:
+      menu_title: "Интеграция с чатами"
+      settings: "Настройки"
+      no_providers: "Вам нужно включить некоторых провайдеров в настройках плагина"
+      channels_with_errors: "Некоторые каналы этого провайдера не работали в последний раз, когда были отправлены сообщения. Нажмите на иконку(и), чтобы узнать больше."
+      channel_exception: "В момент последней отправки сообщения на этот канал произошла непредвиденная ошибка."
+      group_mention_template: "Упоминания о: @ %{name}"
+      group_message_template: "Сообщения: @ %{name}"
+      choose_group: "(выберите группу)"
+      all_categories: "(все категории)"
+      all_tags: "(все теги)"
+      create_rule: "Создать правило"
+      create_channel: "Создать канал"
+      delete_channel: "Удалить"
+      test_channel: "Тест"
+      edit_channel: "Изменить"
+      channel_delete_confirm: "Вы действительно хотите удалить этот канал? Все связанные правила будут удалены."
+      test_modal:
+        title: "Отправить тестовое сообщение"
+        topic: "Тема"
+        send: "Послать ТЕСТОВОЕ сообщение"
+        close: "Закрыть"
+        error: "При отправке сообщения произошла неизвестная ошибка. Проверьте логи сайта для получения дополнительной информации."
+        success: "Сообщение успешно отправлено"
+      type:
+        normal: Нормальный
+        group_message: Групповое сообщение
+        group_mention: Групповая рассылка
+      filter:
+        mute: 'Отключить'
+        follow: 'Только первый пост'
+        watch: 'Все сообщения и ответы'
+        thread: 'Все сообщения с ответами'
+      rule_table:
+        filter: "Фильтр"
+        category: "Раздел"
+        tags: "Теги"
+        edit_rule: "Редактировать"
+        delete_rule: "Удалить"
+      edit_channel_modal:
+        title: "Редактировать канал"
+        save: "Сохранить канал"
+        cancel: "Отмена"
+        provider: "Провайдер"
+        channel_validation:
+          ok: "Валидный"
+          fail: "Неверный формат"
+      edit_rule_modal:
+        title: Изменить правило
+        save: Сохранить правило
+        cancel: Отмена
+        provider: Провайдер
+        type: Тип
+        channel: Канал
+        filter: Фильтр
+        category: Категория
+        group: Группа
+        tags: Теги
+        instructions:
+          type: "Измените тип, чтобы вызвать уведомления для групповых сообщений или упоминаний"
+          filter: "Уровень уведомлений. Уровень 'Без уведомлений' переопределяет другие правила"
+          category: "Это правило будет применяться только к темам в указанном разделе"
+          group: "Это правило будет применяться к сообщениям, ссылающимся на эту группу"
+          tags: "Если указано, то правило будет применяться к темам, которые имеют хотя бы один из этих тегов"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Канал
+              help: "например, #channel, @username."
+          errors:
+            action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
+            channel_not_found: "Указанный канал не существует в Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Название"
+              help: "Имя для описания канала. Оно не используется для подключения к Telegram."
+            chat_id:
+              title: ID чата
+              help: Номер, данный вам ботом, или идентификатор канала вещания в виде @channelname
+          errors:
+            channel_not_found: "Указанный канал не существует в Telegram"
+            forbidden: "Бот не имеет разрешения на публикацию на этот канал"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Название"
+              help: "Имя для описания канала. Оно не используется для подключения к Discord."
+            webhook_url:
+              title: URL вебхука
+              help: URL-адрес вебхука, созданный в настройках сервера Discord
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "Название"
+              help: "Имя для описания канала. Оно не используется для подключения к Guilded"
+            webhook_url:
+              title: URL вебхука
+              help: URL-адрес вебхука, созданный в настройках сервера Guilded
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Канал
+              help: "например, #channel, @username."
+          errors:
+            channel_not_found: "Указанный канал не существует в Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Название"
+              help: "Имя для описания канала. Оно не используется для подключения к Matrix."
+            room_id:
+              title: "ID комнаты"
+              help: "'Частный идентификатор' для комнаты. Это должно выглядеть примерно как !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Неверный токен доступа"
+            unknown_room: "Номер комнаты недействителен"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Stream"
+              help: "Имя потока Zulip, которому должно быть отправлено сообщение. например, «общий»"
+            subject:
+              title: "Тема"
+              help: "Тема, уведомляющая о том, что, должно быть указано сообщение, отправляемое ботом"
+          errors:
+            does_not_exist: "Этот поток не существует в Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Канал
+              help: "например, #channel, @username."
+          errors:
+            invalid_channel: "Этот канал не существует в Rocket Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Название"
+              help: "Название комнаты Gitter, например, gitterHQ/services."
+            webhook_url:
+              title: "URL вебхука"
+              help: "URL, указанный при создании новой интеграции в комнате Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Flow Token"
+              help: "Токен потока предоставляется после создания источника для потока, в который вы хотите отправлять сообщения."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Имя экземпляра GroupMe"
+              help: "Имя экземпляра Groupme, указанное в настройках сайта. Используйте «все» для отправки всем экземплярам"
+          errors:
+            not_found: "Путь, по которому вы пытались опубликовать ваше сообщение, не найден. Проверьте идентификатор бота в настройках сайта."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "Название"
+              help: "Наименование канала, например 'Дискурс'."
+            webhook_url:
+              title: "URL вебхука"
+              help: "URL-адрес, указанный при создании нового входящего вебхука"
+          errors:
+            invalid_channel: "Этот канал не существует в Microsoft Teams"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "Название"
+              help: "Имя канала (отображается только в интерфейсе администратора Discourse)"
+            webhook_url:
+              title: "URL вебхука"
+              help: "URL-адрес, указанный при создании нового входящего вебхука"
+          errors:
+            invalid_webhook: "Этот URL-адрес вебхука недействителен."
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "Название"
+              help: "Название пространства для общения, например, 'discourse'"
+            webhook_url:
+              title: "URL вебхука"
+              help: "URL-адрес, указанный при создании нового входящего вебхука"
+          errors:
+            invalid_channel: "Этот канал не существует в Webex"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "Название"
+              help: "Имя канала (отображается только в интерфейсе администратора Discourse)"
+            webhook_url:
+              title: "URL вебхука"
+              help: "URL-адрес, указанный при создании нового вебхука"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Отправить Slack-сообщение
+          fields:
+            message:
+              label: Сообщение
+              description: >-
+                Используйте ${TOPIC} для названия темы, ${URL} для используемого URL-адреса, ${REMOVED_TAGS} для удаленных тегов, ${ADDED_TAGS} для добавленных тегов, ${ADDED_AND_REMOVED} для текста по умолчанию. Доступно, только если триггер настроен на изменение тегов темы.
+            url:
+              label: URL
+            channel:
+              label: Канал
+        send_chat_integration_message:
+          title: Отправка сообщения с помощью плагина Chat-Integration
+          fields:
+            channel_name:
+              label: Название канала
+              description: "Название канала можно найти в настройках плагина Chat Integration."
+            provider:
+              label: Поставщик

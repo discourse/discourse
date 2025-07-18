@@ -454,6 +454,7 @@ export default class Post extends Component {
                         @post={{reply}}
                         @above={{true}}
                         @highlightTerm={{@highlightTerm}}
+                        @streamElement={{@streamElement}}
                       />
                     {{/each}}
                   </section>
@@ -509,6 +510,7 @@ export default class Post extends Component {
                         @post={{@post}}
                         @highlightTerm={{@highlightTerm}}
                         @decoratorState={{this.decoratorState}}
+                        @streamElement={{@streamElement}}
                       />
                     </PluginOutlet>
 
@@ -598,6 +600,7 @@ export default class Post extends Component {
                             }}
                             @post={{reply}}
                             @highlightTerm={{@highlightTerm}}
+                            @streamElement={{@streamElement}}
                           />
                         {{/each}}
 

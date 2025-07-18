@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  login:
+    authenticator_error_fetch_user_details: "آپ کی صارف تفصیلات کو حاصل نہیں کیا جا سکا۔ کیا آپ کے پاس ایک فعال اکاؤنٹ ہے؟"
+  site_settings:
+    oauth2_enabled: "اپنی مرضی کا OAuth2 فعال ہے"
+    oauth2_client_id: "اپنی مرضی کے OAuth2 کیلئے کلائنٹ ائی ڈی"
+    oauth2_client_secret: "اپنی مرضی کے OAuth2 کیلئے کلائنٹ سیکرٹ"
+    oauth2_authorize_url: "OAuth2 کے لئے اَوتھرٰیزیشن URL"
+    oauth2_token_url: "OAuth2 کیلئے ٹوکن URL"
+    oauth2_token_url_method: "ٹوکن URL حاصل کرنے کا طریقہ"
+    oauth2_callback_user_id_path: "ٹَوکن جواب میں صارف آئی ڈیکا پاتھ۔ مثال: params.info.uuid"
+    oauth2_callback_user_info_paths: " ٹَوکن جواب میں دیگر صارف خصوصیات کے پاتھ۔ معاون خصوصیات، نام، صارف نام، ایمیل، ایمیل_توثیق_شدہ اور اوتار ہیں۔ فارمیٹ ہے property:path، مثال: name:params.info.name"
+    oauth2_fetch_user_details: "OAuth2 کیلئے صارف JSON حاصل کریں"
+    oauth2_user_json_url: "OAuth2 کیلئے صارف کا JSON حاصل کرنے کا URL (نوٹ کریں کہ ہم :id کو OAuth کال سے حاصل ہوئی id اور :token کو ٹوکن id سے تبدیل کر دیتے ہیں)"
+    oauth2_user_json_url_method: "صارف JSON URL حاصل کرنے کا طریقہ"
+    oauth2_json_user_id_path: "OAuth2 صارف JSON میں صارف آئی ڈی کا پاتھ۔ مثال: user.id"
+    oauth2_json_username_path: "OAuth2 صارف JSON میں صارف نام کا پاتھ۔ مثال: user.username"
+    oauth2_email_verified: "اِس کو چیک لگائیں اگر OAuth2 سائٹ نے ای مَیل کی توثیق کی ہوئی ہے"
+    oauth2_debug_auth: "اپنے لاگز میں رِچ ڈیبگنگ معلومات شامل کریں"
+    oauth2_authorize_options: "جب اَوتھرٰیز کیا جا رہا ہو تو اِن اختیارات کی درخواست کریں"
+    oauth2_scope: "اَوتھرائز کرتے وقت اِس سکَوپ کی درخواست کریں"
+    oauth2_button_title: "OAuth2 بٹن کیلئے متن"
+    oauth2_allow_association_change: صارفین کو OAuth2 فراہم کنندہ سے اپنے ڈِسکَورس اکاؤنٹس کو منقطع اور دوبارہ کنیکٹ کرنے کی اجازت دیں
+    errors:
+      oauth2_fetch_user_details: "oauth2_fetch_user_details غیر فعال کرنے کیلئے oauth2_callback_user_id_path کا موجود ہونا لاذمی ہے"

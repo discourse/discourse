@@ -1,0 +1,81 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          title: Įvykis prasidėjo
+          fields:
+            topic_id:
+              label: Temos ID
+    discourse_calendar:
+      disable_holiday: "Išjungti"
+      enable_holiday: "Įgalinti"
+      date: "Data"
+      region:
+        none: "Nieko"
+      toolbar_button:
+        today: "Šiandien"
+        month: "Per mėnesį"
+        week: "Per savaitę"
+        day: "Diena"
+    group_timezones:
+      search: "Paieška..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "Rodyti viską"
+      add_to_calendar: "Pridėti prie kalendoriaus"
+      created_by: "Sukurta"
+      bulk_invite: "Masinis kvietimas"
+      bulk_invite_modal:
+        confirm: "patvirtinti"
+        title: "Masinis kvietimas"
+        success: "Failas įkeltas sėkmingai, jums bus pranešta kada procesas bus baigtas."
+        error: "Atsiprašome, failas privalo buti CSV formato."
+      upcoming_events:
+        status: "Statusas"
+      models:
+        event:
+          expired: "Baigėsi galiojimo laikas"
+          closed: "Uždaryta"
+          status:
+            public:
+              title: "Vieša"
+            private:
+              title: "Privatu"
+      builder_modal:
+        custom_fields:
+          placeholder: "Pasirinktinai"
+        create: "Sukurti"
+        update: "Išsaugoti"
+        timezone:
+          label: Laiko zona
+        reminders:
+          units:
+            minutes: "minutės"
+            hours: "valandos"
+            days: "dienos"
+          periods:
+            before: "anksčiau"
+            after: "po to"
+        recurrence:
+          label: "Pasikartojimas"
+          none: "Nėra pasikartojimo"
+          every_day: "Kiekvieną dieną"
+        url:
+          label: "Nuoroda"
+          placeholder: "Pasirinktinai"
+        location:
+          label: "Vieta"
+        description:
+          label: "Aprašymas"
+        status:
+          label: "Statusas"
+      invite_user_or_group:
+        invite: "Siųsti"

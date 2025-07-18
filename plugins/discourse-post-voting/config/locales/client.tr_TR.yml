@@ -1,0 +1,119 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Gönderi Oylaması
+  post_voting:
+    reviewables:
+      comment_already_handled: "Teşekkürler, ancak bu yorumu daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "yeni yorum"
+      popup:
+        question_answer_user_commented: '%{username} "%{topic}" - %{site_title} içinde yorum yaptı'
+    category:
+      post_voting_settings_heading: Gönderi Oylaması
+      create_as_post_voting_default: Yeni konular varsayılan olarak bu kategorideki Gönderi Oylaması konularıdır.
+      only_post_voting_in_this_category: Yeni konular yalnızca bu kategorideki Gönderi Oylaması konuları olabilir.
+    composer:
+      create_post_voting:
+        label: "Gönderi oylaması konusu oluşturun"
+      composer_actions:
+        create_as_post_voting:
+          label: "Gönderi Oylamasını değiştir"
+          desc: "Konu oylanabilir gönderilerle oluşturulacak"
+        remove_as_post_voting:
+          label: "Gönderi Oylamasını kaldır"
+          desc: "Konu normal formatta oluşturulacak"
+    vote:
+      already_voted: "Her soru için yalnızca bir kez oy kullanabilirsiniz."
+      user_over_limit: "Güven seviyenize uygun oy sayısını aşamazsınız."
+      one_vote_per_post: "Her gönderi için yalnızca bir kez oy kullanabilirsiniz."
+    last_answer_lowercase: son yanıt
+    answer_lowercase:
+      one: yanıt
+      other: yanıt
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "En az %{count} karakter girin"
+              other: "En az %{count} karakter girin"
+            length_ok:
+              one: "%{count} karakter kaldı..."
+              other: "%{count} karakter kaldı..."
+            too_long:
+              one: "Yorum, %{count} karakterden uzun olamaz"
+              other: "Yorum, %{count} karakterden uzun olamaz"
+          submit: "Yorum ekle"
+          edit: "düzenle"
+          cancel: "iptal et"
+          add: "Yorum ekle"
+          show:
+            one: '%{count} yorum daha göster'
+            other: '%{count} yorum daha göster'
+          delete:
+            confirm: "Bu yorumu silmek istediğinizden emin misiniz?"
+          user:
+            deleted: "(kullanıcı silindi)"
+          reviewables:
+            comment_already_handled: "Teşekkürler, ancak bu yorumu daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
+            actions:
+              agree:
+                title: "Kabul et..."
+              agree_and_keep_comment:
+                title: "Yorumu sakla"
+                description: "Bayrağı kabul edin ve yorumu değiştirmeyin."
+              agree_and_keep_deleted:
+                title: "Yorumu Silinmiş hâlde tut"
+                description: "Bayrağı kabul edin ve yorumu silinmiş olarak bırakın."
+              agree_and_suspend:
+                title: "Kullanıcıyı Askıya Al"
+                description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
+              agree_and_silence:
+                title: "Kullanıcıyı Sustur"
+                description: "Bayrağı kabul edin ve kullanıcıyı susturun."
+              agree_and_restore:
+                title: "Yorumu geri yükle"
+                description: "Kullanıcıların görebilmesi için yorumu geri yükleyin."
+              agree_and_delete:
+                title: "Yorumu sil"
+                description: "Kullanıcıların görememesi için yorumu silin."
+              delete_and_agree:
+                title: "Bayrağı yok say ve yorumu Sil"
+                description: "Kuyruktan kaldırarak bayrağı yok sayın ve yorumu silin."
+              disagree_and_restore:
+                title: "Katılma ve yorumu Geri Yükle"
+                description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
+              disagree:
+                title: "Katılma"
+              ignore:
+                title: "Hiçbir şey yapma"
+                description: "Herhangi bir işlem yapmadan bayrağı kuyruktan kaldırarak yok say."
+            transcript:
+              view: "Önceki yorumların dökümünü görüntüle"
+      topic:
+        answer:
+          label: "Yanıt"
+          help: "yanıt oluşturmaya başlayın"
+        sort_by: "Sıralama ölçütü"
+        votes: "Oylar"
+        activity: "Aktivite"
+        answer_count:
+          one: "%{count} Yanıt"
+          other: "%{count} Yanıt"
+    review:
+      transcript:
+        view: "Önceki mesajların dökümünü görüntüle"
+      types:
+        reviewable_post_voting_comment:
+          title: "Bayraklı Gönderi Oylama Yorumu"

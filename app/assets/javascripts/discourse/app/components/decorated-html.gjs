@@ -14,7 +14,7 @@ const detachedDocument = document.implementation.createHTMLDocument("detached");
 export default class DecoratedHtml extends Component {
   renderGlimmerInfos = new TrackedArray();
 
-  decoratedContent = helperFn((args, on) => {
+  decoratedContent = helperFn(({ decorateArgs }, on) => {
     const cookedDiv = this.elementToDecorate;
 
     const helper = new DecorateHtmlHelper({
@@ -25,12 +25,17 @@ export default class DecoratedHtml extends Component {
     on.cleanup(() => helper.teardown());
 
     const decorateFn = this.args.decorate;
-    untrack(() => decorateFn?.(cookedDiv, helper));
+
+    // force parameters explicity declarated in `decorateArgs` to be tracked despite the
+    // use of `untrack` below
+    decorateArgs && Object.values(decorateArgs);
+
+    untrack(() => decorateFn?.(cookedDiv, helper, decorateArgs));
 
     document.adoptNode(cookedDiv);
 
     const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
-    untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper));
+    untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper, decorateArgs));
 
     return cookedDiv;
   });
@@ -54,7 +59,7 @@ export default class DecoratedHtml extends Component {
   }
 
   <template>
-    {{~this.decoratedContent~}}
+    {{~this.decoratedContent decorateArgs=@decorateArgs~}}
 
     {{~#each this.renderGlimmerInfos as |info|~}}
       {{~#if info.append}}

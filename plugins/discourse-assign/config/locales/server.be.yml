@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  site_settings:
+    assign_enabled: "Ўключэнне прысвойце убудова"
+    assigns_public: "Дазволіць шырокую грамадскасць, каб убачыць тэму прызначэння"
+    assigns_user_url_path: "Шлях да карыстальнікаў прысвойваюцца тэмы (выкарыстанне: {імя карыстальніка} падставіць імя карыстальніка)"
+    assigns_by_staff_mention: "Калі супрацоўнік згадвае іншы супрацоўнік, тэма аўтаматычна прызначаюцца"
+    unassign_creates_tracking_post: "Калі адмяніць прызначэнне тэмы шэпту ці невялікае дзеянне будзе створана, каб адсочваць змены"
+    assign_self_regex: "Regex, які павінен прайсці для самастойнага правапераемніка. Прыклад «мой спіс»"
+    assign_other_regex: "Regex, які неабходна перадаць для прызначэння тым, каб іншыя з дапамогай згадкі. Прыклад «ваш спіс»."
+    unassign_on_group_archive: "Калі паведамленне архівуецца групай, прызначыць паведамленне (прызначыць пры перамяшчэнні назад у паштовую скрыню)"
+    unassign_on_close: "Калі тэма зачынена тэма адмяніць прызначэнне"
+    remind_assigns: "Нагадваць карыстальнікам аб незавершаных правапераемнікаў."
+    remind_assigns_frequency: "Частата для напамінку карыстальнікаў пра прызначаныя тэмах."
+    max_assigned_topics: "Максімальную колькасць тэм, якія могуць быць прызначаныя карыстальнікам."
+  discourse_assign:
+    assigned_to: "Тэма прысвоены @% {імя карыстальніка}"
+    unassigned: "Тэма была Unassigned"
+    already_claimed: "Гэтая тэма ўжо запатрабаваная."
+    already_assigned: "Тэма ўжо прызначана на @% {імя карыстальніка}"
+    too_many_assigns: "@% {Імя карыстальніка} ужо дасягнута максімальная колькасць прысвоеных тэм (% {макс})."
+    flag_assigned: "На жаль, тэма гэтага сцяга прысвойваецца іншаму карыстальніку"
+    flag_unclaimed: "Вы павінны сцвярджаць, што тэма, перш чым дзейнічаць на сцягу"
+    topic_assigned_excerpt: "прызначаны вам тэму «% {назву}»"
+    reminders_frequency:
+      never: "ніколі"
+      daily: "штодня"
+      weekly: "штотыдзень"
+      monthly: "штомесяц"
+      quarterly: "квартальны"
+  assign_mailer:
+    title: "прызначаюць Mailer"
+    subject_template: "[% {Email_prefix}] {% assignee_name} прысвойваецца вам '% {TOPIC_TITLE}'!"
+    text_body_template: |
+      Эй,% {assignee_name} ** ** Вы прызначаныя на абмеркаванне> **% {TOPIC_TITLE} **>>% {Topic_excerpt}Калі вы зацікаўлены, націсніце на спасылку ніжэй:[% {Topic_link}] (% {topic_link})
+  pending_assigns_reminder:
+    title: "У вас ёсць% {pending_assignments} адкладзеныя заданні"
+    body: |
+      У вас [% {} pending_assignments адкладзеных заданняў] (% {assignments_link}).% {Newest_assignments}% {Oldest_assignments}Гэта напамін будзе адпраўлена% {частоты}, калі ў вас ёсць больш чым адзін прызначаная тэма.
+    newest: |
+      ### Новыя% {Topic_0}% {TOPIC_1}% {Topic_2}
+    oldest: |
+      ### Старыя% {Topic_0}% {TOPIC_1}% {Topic_2}

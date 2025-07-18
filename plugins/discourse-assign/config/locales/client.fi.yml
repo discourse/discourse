@@ -1,0 +1,193 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse-osoitus"
+  js:
+    filters:
+      unassigned:
+        title: "Osoittamattomat"
+        help: "Ketjut, joita ei ole osoitettu"
+    action_codes:
+      assigned: "Osoitti käyttäjälle %{who} %{when}"
+      assigned_group: "Osoitti ryhmälle %{who} %{when}"
+      assigned_to_post: "Osoitti käyttäjän %{who} <a href='%{path}'>viestiin</a> %{when}"
+      assigned_group_to_post: "Osoitti käyttäjän %{who} <a href='%{path}'>viestiin</a> %{when}"
+      unassigned: "Perui osoituksen käyttäjälle %{who} %{when}"
+      unassigned_group: "Perui osoituksen ryhmälle %{who} %{when}"
+      unassigned_from_post: "Perui käyttäjän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
+      unassigned_group_from_post: "Perui ryhmän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
+      reassigned: "Osoitti uudelleen käyttäjälle %{who} %{when}"
+      reassigned_group: "Osoitti uudelleen käyttäjälle %{who} %{when}"
+      details_change: "Muutti osoitustiedot käyttäjälle %{who} %{when}"
+      note_change: "Muutti osoitushuomautuksen käyttäjälle %{who} %{when}"
+      status_change: "Muutti osoitustilan käyttäjälle %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Lisää alueille osoittamattomat-suodatin"
+      cant_act: "Et voi käsitellä lippua, joka on osoitettu toiselle käyttäjälle"
+      cant_act_unclaimed: "Sinun täytyy omia ketju ennen kuin käsittelet lippuja."
+      topic_search_placeholder: "Hae ketjuja otsikon tai viestin sisällön perusteella"
+      sidebar_name_filter_placeholder: "Nimi/käyttäjänimi"
+      assigned: "Osoitettu"
+      group_everyone: "Kaikki"
+      assigned_to: "Osoitettu käyttäjälle"
+      assigned_topic_to: "Osoitti ketjun käyttäjälle <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Osoitti viestin %{post_number} käyttäjälle %{username}"
+      assign_post_to_multiple: "#%{post_number} käyttäjälle %{username}"
+      assigned_to_w_ellipsis: "Osoitettu käyttäjälle..."
+      unassign:
+        title: "Peru osoitus"
+        title_w_ellipsis: "Peru osoitus..."
+        help: "Peru käyttäjän %{username} osoitus ketjusta"
+      assign:
+        title: "Osoita"
+        help: "Osoita ketju käyttäjälle"
+      assign_post:
+        title: "Osoita viesti"
+      unassign_post:
+        title: "Peru osoitus viestistä"
+        help: "Peru käyttäjän %{username} osoitus viestistä"
+      reassign:
+        title: "Muokkaa"
+        title_w_ellipsis: "Muokkaa osoitusta..."
+        to_self: "Osoita uudelleen minulle"
+        to_self_help: "Osoita ketju uudelleen minulle"
+        help: "Muokkaa osoituksen tietoja"
+      reassign_modal:
+        title: "Osoita ketju uudelleen"
+      topic_level_menu:
+        edit_assignments: "Muokkaa osoituksia..."
+        reassign_topic_to_me: "Osoita ketju uudelleen minulle"
+        unassign_with_ellipsis: "Peru osoitus..."
+        unassign_from_post: "Peru käyttäjän @%{assignee} osoitus viestistä %{post_number}"
+        unassign_from_post_help: "Peru käyttäjän @%{assignee} osoitus viestistä %{post_number}"
+        unassign_from_topic: "Peru käyttäjän @%{username} osoitus ketjusta"
+      assign_modal:
+        title: "Osoita ketju"
+        reassign_title: "Osoita ketju uudelleen"
+        assign: "Osoita"
+        assignee_label: Osoituksensaaja
+        assignment_label: Osoitus
+        choose_assignee: Valitse osoitettava käyttäjä.
+        edit_assignments_title: "Muokkaa osoituksia"
+        note_label: Huomautus
+        optional_label: "(valinnainen)"
+        status_label: Tila
+        suggestions: ehdotukset
+      assign_post_modal:
+        title: "Osoita viesti"
+      claim:
+        title: "omi"
+        help: "Osoita ketju itsellesi"
+      assign_mailer:
+        never: "Ei koskaan"
+        different_users: "Vain jos osoittaja ja osoitettu ovat eri käyttäjiä"
+        always: "Aina"
+      reminders_frequency:
+        description: "Osoitettujen ketjujen muistutusten toistuvuus"
+        never: "Ei koskaan"
+        daily: "Päivittäin"
+        weekly: "Viikoittain"
+        monthly: "Kuukausittain"
+        quarterly: "Vuosineljännettäin"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Osoita"
+              assignable_levels:
+                title: "Ketkä voivat osoittaa tämän ryhmän"
+    user:
+      notification_level_when_assigned:
+        label: "Kun osoitetaan"
+        watch_topic: "Tarkkailtu ketju"
+        track_topic: "Seurattu ketju"
+        do_nothing: "Älä tee mitään"
+      messages:
+        assigned_title: "Osoitettu (%{count})"
+        assigned: "Osoitettu"
+      no_assignments_title: "Sinulla ei ole vielä osoituksia"
+      no_assignments_body: >
+        Sinulle osoitetut ketjut ja viestit luetellaan tässä. Saat myös ajoittain muistutusilmoituksia osoituksistasi, joita voit muuttaa <a href='%{preferencesUrl}'>käyttäjäasetuksissasi</a>. <br><br> Jos haluat osoittaa ketjun tai viestin itsellesi tai jollekulle toiselle, etsi osoituspainike %{icon} alaosasta.
+      dismiss_assigned_tooltip: "Merkitse kaikki lukemattomat osoitusilmoitukset luetuiksi"
+      assigned_to_group:
+        post: "viesti osoitettu ryhmälle %{group_name}"
+        topic: "ketju osoitettu ryhmälle %{group_name}"
+      assigned_to_you:
+        post: "viesti osoitettu sinulle"
+        topic: "ketju osoitettu sinulle"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Osoitustapahtumat"
+          assigned: "Kun käyttäjä osoittaa ketjun"
+          unassigned: "Kun käyttäjä peruu ketjun osoituksen"
+    search:
+      advanced:
+        in:
+          assigned: "ovat osoitettu"
+          unassigned: "ovat osoittamattomia"
+        assigned:
+          label: "Osoitettu käyttäjälle"
+    topics:
+      bulk:
+        unassign: "Peru ketjujen osoitus"
+        assign: "Osoita ketjut"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Viestimalli
+              description: Jos tämä täytetään, viesti tällä mallilla luodaan, ja käyttäjä osoitetaan sille ketjun sijaan.
+            assignees_group:
+              label: Osoitettujen ryhmä
+            minimum_time_between_assignments:
+              label: Vähimmäismäärä tunteja osoitusten välillä
+            min_recently_assigned_days:
+              label: Hiljattain osoitettujen päivien vähimmäismäärä
+              description: Oletusarvo on 14 päivää.
+            skip_new_users_for_days:
+              label: Ohita uudet käyttäjät päivien ajaksi
+              description: Oletusarvo on 0 päivää (käyttäjät voidaan osoittaa heti rekisteröitymisen jälkeen).
+            max_recently_assigned_days:
+              label: Hiljattain osoitettujen päivien enimmäismäärä
+              description: Ensimmäinen yritys sulkea pois käyttäjiä, jotka on osoitettu viimeisten n:n päivän aikana. Jos käyttäjiä ei ole jäljellä, käytetään `min_recently_assigned_days`-asetusta. Oletusarvo on 180 päivää.
+            assigned_topic:
+              label: Osoitetun ketjun tunnus
+            in_working_hours:
+              label: Käyttäjät työaikana
+    notification_reason:
+      user: "Näet uusien vastausten määrän, koska tämä ketju on osoitettu sinulle."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} osoitti sinut"
+      titles:
+        assigned: "Osoitettu"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Oletko varma? Sinulla on %{count} lukematon osoitusilmoitus."
+            other: "Oletko varma? Sinulla on %{count} lukematonta osoitusilmoitusta."
+    user_menu:
+      view_all_assigned: "näytä kaikki osoitetut"
+      tabs:
+        assign_list: "Osoitusluettelo"
+        assign_list_with_unread:
+          one: "Osoitusluettelo – %{count} lukematon osoitus"
+          other: "Osoitusluettelo – %{count} lukematonta osoitusta"
+    edit_assignments_modal:
+      title: "Muokkaa osoituksia"
+      topic: "Ketju"
+      post: "Viesti"

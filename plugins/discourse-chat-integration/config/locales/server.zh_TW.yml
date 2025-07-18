@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  chat_integration:
+    all_categories: "(所有分類)"
+    topic_tag_changed:
+      added: "已新增 %{added}"
+      removed: "已移除 %{removed}"
+    provider:
+      slack:
+        messaging:
+          topic_tag_changed:
+            added: "已新增 %{added}"
+            removed: "已移除 %{removed}"
+      flowdock:
+        message_title: "發表於"

@@ -1,0 +1,69 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    action_codes:
+      assigned: "%{who}Amepewa %{when}"
+      assigned_group: "%{who}Amepewa %{when}"
+      unassigned: "%{who}Hajakabidhiwa %{when}"
+      unassigned_group: "%{who}Hajakabidhiwa %{when}"
+    discourse_assign:
+      cant_act: "Hauwezi kutumia bendera ambazo zimeshatumiwa na watu wengine"
+      cant_act_unclaimed: "Lazima uimiliki mada kabla ya kuweka bendera."
+      assigned: "Kukabidhi"
+      group_everyone: "Kila Mtu"
+      assigned_to: "Imekabidhiwa kwa"
+      assigned_to_w_ellipsis: "Imekabidhiwa kwa..."
+      unassign:
+        title: "Haijakabithiwa"
+        title_w_ellipsis: "Haijakabithiwa..."
+      assign:
+        title: "Kabidhi"
+        help: "Pangia Mada kwa Mtumiaji"
+      reassign:
+        title: "Hariri"
+      topic_level_menu:
+        unassign_with_ellipsis: "Haijakabithiwa..."
+      assign_modal:
+        title: "Awadha Mada"
+        assign: "Kabidhi"
+        optional_label: "(sio muhimu)"
+      claim:
+        title: "Miliki"
+        help: "Jipe Mada"
+      assign_mailer:
+        never: "Kamwe"
+        always: "Mara kwa mara"
+      reminders_frequency:
+        never: "Kamwe"
+        daily: "Kila siku"
+        weekly: "Kila wiki"
+        monthly: "Klla mwezi"
+        quarterly: "Kila baada ya miezi mitatu"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Kabidhi"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Usifanye chochote"
+      messages:
+        assigned_title: "Amekabidhiwa (%{count})"
+        assigned: "Imekabidhiwa"
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Imekabidhiwa kwa"
+    notifications:
+      titles:
+        assigned: "Kukabidhi"
+    edit_assignments_modal:
+      topic: "Mada"
+      post: "Ujumbe"

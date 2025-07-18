@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Sohbet Entegrasyonları"
+  js:
+    chat_integration:
+      menu_title: "Sohbet Entegrasyonları"
+      settings: "Ayarlar"
+      no_providers: "Eklenti ayarlarında bazı sağlayıcıları etkinleştirmeniz gerekiyor"
+      channels_with_errors: "Bu sağlayıcı için bazı kanallar en son mesaj gönderildiğinde başarısız oldu. Daha fazla bilgi edinmek için hata simgelerine tıklayın."
+      channel_exception: "Bu kanala en son mesaj gönderildiğinde bilinmeyen bir hata oluştu."
+      group_mention_template: "Şu kullanıcıdan bahsedildi: @%{name}"
+      group_message_template: "Şu kullanıcıya mesaj gönderildi: @%{name}"
+      choose_group: "(bir grup seçin)"
+      all_categories: "(tüm kategoriler)"
+      all_tags: "(tüm etiketler)"
+      create_rule: "Kural Oluştur"
+      create_channel: "Kanal Oluştur"
+      delete_channel: "Sil"
+      test_channel: "Test"
+      edit_channel: "Düzenle"
+      channel_delete_confirm: "Bu kanalı silmek istediğinizden emin misiniz? İlişkili tüm kurallar silinecek."
+      test_modal:
+        title: "Test mesajı gönderin"
+        topic: "Konu"
+        send: "Test Mesajı gönderin"
+        close: "Kapat"
+        error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerine bakın."
+        success: "Mesaj başarıyla gönderildi"
+      type:
+        normal: Normal
+        group_message: Grup Mesajı
+        group_mention: Grup Bahsetmesi
+      filter:
+        mute: 'Sessize al'
+        follow: 'Yalnızca ilk gönderi'
+        watch: 'Tüm gönderiler ve yanıtlar'
+        thread: 'Başlıklı yanıt içeren tüm gönderiler'
+      rule_table:
+        filter: "Filtre"
+        category: "Kategori"
+        tags: "Etiketler"
+        edit_rule: "Düzenle"
+        delete_rule: "Sil"
+      edit_channel_modal:
+        title: "Kanalı Düzenle"
+        save: "Kanalı Kaydet"
+        cancel: "İptal et"
+        provider: "Sağlayıcı"
+        channel_validation:
+          ok: "Geçerli"
+          fail: "Geçersiz biçim"
+      edit_rule_modal:
+        title: Kuralı Düzenle
+        save: Kuralı Kaydet
+        cancel: İptal et
+        provider: Sağlayıcı
+        type: Tür
+        channel: Kanal
+        filter: Filtre
+        category: Kategori
+        group: Grup
+        tags: Etiketler
+        instructions:
+          type: "Grup mesajları veya bahsetmeleri için bildirimleri tetikleyecek türü değiştirin"
+          filter: "Bildirim seviyesi. Sessiz, eşleşen diğer kuralları geçersiz kılar"
+          category: "Bu kural yalnızca belirtilen kategorideki konular için geçerlidir"
+          group: "Bu kural, bu grubu referans alan yayınlar için geçerli olacak"
+          tags: "Belirtilirse bu kural yalnızca bu etiketlerden en az birine sahip konular için geçerlidir"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Kanal
+              help: "ör. #kanal, @kullanıcıadı."
+          errors:
+            action_prohibited: "Botun bu kanala gönderi yapma izni yok"
+            channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "İsim"
+              help: "Kanalı tanımlamak için bir ad. Telegram bağlantısı için kullanılmaz."
+            chat_id:
+              title: Sohbet Kimliği
+              help: Bot tarafından size verilen bir numara veya @channelname biçimindeki bir yayın kanalı tanımlayıcısı
+          errors:
+            channel_not_found: "Belirtilen kanal Telegram'da mevcut değil"
+            forbidden: "Botun bu kanala gönderi yapma izni yok"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "İsim"
+              help: "Kanalı tanımlayan bir ad. Discord bağlantısı için kullanılmaz."
+            webhook_url:
+              title: Web kancası URL'si
+              help: Discord sunucu ayarlarınızda oluşturulan web kancası URL'si
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "Ad"
+              help: "Kanalı tanımlamak için bir isim. Guilded bağlantısı için kullanılmaz"
+            webhook_url:
+              title: Web kancası URL'si
+              help: Guilded sunucu ayarlarınızda oluşturulan web kancası URL'si
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Kanal
+              help: "ör. #kanal, @kullanıcıadı."
+          errors:
+            channel_not_found: "Belirtilen kanal Mattermost'ta mevcut değil"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Ad"
+              help: "Kanalı tanımlamak için bir ad. Matrix bağlantısı için kullanılmaz."
+            room_id:
+              title: "Oda Kimliği"
+              help: "Oda için “özel tanımlayıcı”. Şuna benzer !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Erişim jetonu geçersiz"
+            unknown_room: "Oda Kimliği geçersiz"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Akış"
+              help: "Mesajın gönderilmesi gereken Zulip akışının adı. ör. \"genel\""
+            subject:
+              title: "Konu"
+              help: "Bot tarafından gönderilen bu mesajlara verilmesi gereken konu"
+          errors:
+            does_not_exist: "Bu akış Zulip'te mevcut değil"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Kanal
+              help: "ör. #kanal, @kullanıcıadı."
+          errors:
+            invalid_channel: "Bu kanal Rocket Chat'te mevcut değil"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Ad"
+              help: "Gitter odasının adı ör. gitterHQ/services."
+            webhook_url:
+              title: "Web kancası URL'si"
+              help: "Bir Gitter odasında yeni bir entegrasyon oluşturduğunuzda sağlanan URL."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Akış Token'ı"
+              help: "Mesaj göndermek istediğiniz bir akış için bir kaynak oluşturduktan sonra sağlanan akış token'ı."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "GroupMe Örnek Adı"
+              help: "Site Ayarları'nda listelenen Groupme örneğinin adı. Tüm örneklere göndermek için \"all\" kullanın"
+          errors:
+            not_found: "Mesajınızı göndermeye çalıştığınız yol bulunamadı. Site Ayarları'nda Bot Kimliğini kontrol edin."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "Ad"
+              help: "Teams kanal adı, ör. discourse"
+            webhook_url:
+              title: "Web kancası URL'si"
+              help: "Yeni bir gelen web kancası oluşturduğunuzda sağlanan URL"
+          errors:
+            invalid_channel: "Bu kanal Microsoft Teams'te mevcut değil"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "Ad"
+              help: "Kanal için bir ad (yalnızca Discourse yönetici arayüzünde gösterilir)"
+            webhook_url:
+              title: "Web kancası URL'si"
+              help: "Yeni bir gelen web kancası oluşturduğunuzda sağlanan URL"
+          errors:
+            invalid_webhook: "Bu web kancası URL'si geçerli değil."
+        webex:
+          title: "Webex Ekipleri"
+          param:
+            name:
+              title: "Ad"
+              help: "Bir Webex alanı adı, ör. discourse"
+            webhook_url:
+              title: "Web kancası URL'si"
+              help: "Yeni bir gelen web kancası oluşturduğunuzda sağlanan URL"
+          errors:
+            invalid_channel: "Bu kanal Webex'te mevcut değil"
+        google:
+          title: "Google Sohbet"
+          param:
+            name:
+              title: "Ad"
+              help: "Kanal için bir ad (yalnızca Discourse yönetici arayüzünde gösterilir)"
+            webhook_url:
+              title: "Web kancası URL'si"
+              help: "Yeni bir gelen web kancası oluşturduğunuzda sağlanan URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Slack mesajı gönder
+          fields:
+            message:
+              label: Mesaj
+              description: >-
+                Konu adı için ${TOPIC}, kullanılan URL için ${URL}, kaldırılan etiketler için ${REMOVED_TAGS}, eklenen etiketler için ${ADDED_TAGS}, varsayılan metin için ${ADDED_AND_REMOVED} kullanın. Yalnızca tetikleyici, Konu etiketleri değiştirildi olarak ayarlanmışsa kullanılabilir.
+            url:
+              label: URL
+            channel:
+              label: Kanal
+        send_chat_integration_message:
+          title: Chat-Integration mesajı gönderin
+          fields:
+            channel_name:
+              label: Kanal adı
+              description: "Kanal adını Chat Integration ayarlarında bulabilirsiniz"
+            provider:
+              label: Sağlayıcı

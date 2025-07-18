@@ -1,0 +1,83 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discoursen Pelillistäminen"
+  js:
+    gamification_score: "Hurraukset"
+    gamification:
+      score: "Hurraukset"
+      you: "Sinä"
+      leaderboard:
+        title: "Tulostaulukot"
+        info: "Miten tämä toimii?"
+        link_to_settings: "Asetukset"
+        refresh: "Päivitä"
+        modal:
+          title: "Miten tulostaulukko toimii?"
+          text: "Pisteitä annetaan vuorovaikutuksesta yhteisön kanssa, kuten vierailusta, tykkäämisestä ja viestien lähettämisestä. Tuloksesi päivitetään muutaman minuutin välein. Ole siis avulias, aktiivinen ja tukea antava ja nouse sijoituksissa!"
+        name: "Nimi"
+        name_placeholder: "Nimi..."
+        new: "Uusi tulostaulukko"
+        create_success: "Tulostaulukko luotu"
+        delete_success: "Tulostaulukko poistettu"
+        save_success: "Tulostaulukko tallennettu"
+        cta: "Tee ensimmäinen tulostaulukkosi"
+        none: "Tulostaulukoita ei ole vielä luotu."
+        confirm_destroy: "Oletko varma, että haluat poistaa tämän tulostaulukon?"
+        date:
+          range: "Päivämääräalue (alkaen/päättyen)"
+          from: "Alkamispäivä"
+          to: "Päättymispäivä"
+          helper: "Jos päivämäärät jätetään tyhjiksi, tulostaulukko näyttää ansaitut pisteet ilman aikarajoituksia."
+        visible_to_groups: "Näkyy ryhmille"
+        visible_to_groups_help: "Vain näiden ryhmien käyttäjät voivat tarkastella tulostaulukkoa. Salli kaikki jättämällä tyhjäksi."
+        included_groups: "Sisältyvät ryhmät"
+        included_groups_help: "Vain näiden ryhmien käyttäjät sisältyvät tulostaulukkoon. Listaa kaikki jättämällä tyhjäksi."
+        excluded_groups: "Poissuljetut ryhmät"
+        excluded_groups_help: "Jätä näiden ryhmien käyttäjät pois tulostaulukosta. Listaa kaikki jättämällä tyhjäksi."
+        default_period: "Oletusjakso"
+        default_period_help: "Aseta näytettävä oletusaika tälle tulostaulukolle."
+        period_filter_disabled: "Poista ajanjaksosuodatin käytöstä"
+        period:
+          all_time: "Kaikilta ajoilta"
+          yearly: "Vuosittainen"
+          quarterly: "Neljännesvuosittainen"
+          monthly: "Kuukausittainen"
+          weekly: "Viikoittainen"
+          daily: "Päivittäinen"
+        rank: "Sijoitus"
+      create: "Luo"
+      cancel: "Peruuta"
+      close: "Sulje"
+      delete: "Poista"
+      edit: "Muokkaa"
+      back: "Takaisin"
+      save: "Tallenna"
+      apply: "Käytä"
+      recalculate: "Laske pisteet uudelleen"
+      recalculating: "Pisteitä lasketaan uudelleen..."
+      completed: "Valmista! Pisteet on laskettu uudelleen."
+      update_scores_help: "Päivitä kaikkien tulostaulukoiden kaikki tulokset alkaen"
+      update_range:
+        last_10_days: "Viimeiset 10 päivää"
+        last_30_days: "Viimeiset 30 päivää"
+        last_90_days: "Viimeiset 90 päivää"
+        last_year: "Viime vuosi"
+        all_time: "Kaikilta ajoilta"
+        custom_date_range: "Mukautettu ajanjakso"
+      custom_range_from: "Ajalta"
+      daily_update_scores_availability:
+        one: "%{count} päivittäinen uudelleenlasketa jäljellä"
+        other: "%{count} päivittäistä uudelleenlasketaa jäljellä"
+      admin:
+        title: "Pelillistäminen"
+        name: "Nimi"
+        period: "Jakso"

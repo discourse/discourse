@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    topic:
+      create_zendesk_issue: "Utwórz zgłoszenie Zendesk"
+      view_zendesk_issue: "Zobacz w Zendesk"
+    zendesk:
+      credentials_not_setup: Nie skonfigurowałeś swoich danych uwierzytelniających Zendesk.
+      url_not_set: Twój adres URL Zendesk nie jest obecnie ustawiony.
+      general_error: Coś poszło nie tak.
+  site_settings:
+    zendesk_url: Twój adres URL Zendesk. np. https://TWOJA_SUBDOMENA.zendesk.com/api/v2
+    zendesk_enabled: Włącz wtyczkę Zendesk
+    zendesk_autogenerate_all_categories: Automatycznie twórz zgłoszenia dla wszystkich kategorii. Jeśli włączone, `zendesk_autogenerate_categories` jest ignorowane.
+    zendesk_autogenerate_categories: Lista kategorii, które będą automatycznie tworzyć zgłoszenia Zendesk.
+    zendesk_jobs_api_token: Token API do uwierzytelniania Zendesk
+    zendesk_jobs_email: E-mail używany do uwierzytelniania Zendesk
+    zendesk_job_push_all_posts: Przesłać wszystkie posty w temacie jako komentarze Zendesk? Jeśli wyłączone, tylko pierwszy post zostanie wysłany do Zendesk.
+    zendesk_job_push_only_author_posts: Wysyłaj do zendesk tylko posty oryginalnego autora tematu. Dotyczy tylko sytuacji, gdy włączona jest opcja `zendesk_job_push_all_posts`.
+    sync_comments_from_zendesk: Autopostuj komentarze z Zendesk do Discourse. Dotyczy tylko tematów w `zendesk_autogenerate_categories`.
+    zendesk_incoming_webhook_token: Token wysłany w zapytaniu z wychodzącego webhooka Zendesk. Wymagane tylko wtedy, gdy włączone jest `sync_comments_from_zendesk`.
+    zendesk_tags: Lista tagów do dodania do każdego zgłoszenia

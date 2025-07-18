@@ -1,0 +1,84 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  reports:
+    currently_away:
+      title: Användare som för närvarande är borta
+      labels:
+        username: Användarnamn
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Händelsen startad
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Den semesterregion som du angav finns inte."
+    discourse_calendar_enable_holiday_failed: "Denna semester kunde inte aktiveras, den är redan aktiverad eller den är inte inaktiverad."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Evenemang - Massinbjudan lyckades"
+      subject_template: "Massinbjudan har bearbetats framgångsrikt"
+      text_body_template: "Din massinbjudningsfil bearbetades, %{processed} inbjudningar skapades."
+    discourse_post_event_bulk_invite_failed:
+      title: "Evenemang - Massinbjudan misslyckades"
+      subject_template: "Massinbjudan av användare genererade fel"
+      text_body_template: |
+        Din massinbjudningsfil behandlades, %{processed} inbjudningar skickades med %{failed} fel.
+
+        Här är loggen:
+
+        `` text
+        %{logs}
+        ```
+  site_settings:
+    calendar_enabled: "Aktivera tillägget för discourse-kalendern. Detta kommer att lägga till stöd för en [calendar][/calendar]-tagg för första inlägget i ett ämne."
+    displayed_invitees_limit: "Begränsar antalet inbjudna som visas för ett evenemang."
+    display_post_event_date_on_topic_title: "Visar datumet för evenemanget efter ämnesrubriken."
+    discourse_post_event_allowed_on_groups: "Grupper som får skapa evenemang."
+    discourse_post_event_allowed_custom_fields: "Tillåter att varje evenemang anger värdet på anpassade fält."
+    discourse_post_event_edit_notifications_time_extension: "Förlänger (i minuter) perioden efter slutet av ett evenemang när \"närvarande\" inbjudna fortfarande underrättas om redigering i det ursprungliga inlägget."
+    holiday_calendar_topic_id: "Ämnes-ID för personalens semester-/frånvarokalender."
+    delete_expired_event_posts_after: "Inlägg med utgångna evenemang raderas automatiskt efter (n) timmar. Ställ in till -1 för att inaktivera radering."
+    all_day_event_start_time: "Evenemang som inte har en angiven starttid börjar vid denna tidpunkt. Formatet är HH:mm. För kl. 06.00, ange 06:00"
+    all_day_event_end_time: "Evenemang som inte har en angiven starttid börjar vid denna tidpunkt. Formatet är HH:mm. För kl. 18.00, ange 18:00"
+    all_day_event_time_error: "Ogiltig tid. Formatet måste vara HH:mm (t.ex: 08:00)."
+    calendar_categories: "Visa en kalender högst upp i en kategori. Obligatoriska inställningar är categoryId och postId. t.ex.: categoryId=6; postId=453\n Andra giltiga inställningar: tzPicker, weekends och defaultView."
+    calendar_categories_outlet: "Gör det möjligt att ändra vilken utgång som ska visa kategorins kalender."
+    working_days: "Ange arbetsdagar. Du kan visa tillgängligheten för en grupp med hjälp av taggen `timezones` i ett inlägg, t.ex.: `[timezones group=admins][timezones]`"
+    working_day_start_hour: "Starttid för arbetsdagens timmar."
+    working_day_end_hour: "Sluttid för arbetsdagens timmar."
+    close_to_working_day_hours_extension: "Ställ in förlängningstid i arbetsdagstimmar för att markera tidszonerna."
+    events_calendar_categories: "Visa en evenemangskalender högst upp i en kategori."
+  discourse_calendar:
+    invite_user_notification: "%{username} har bjudit in dig till: %{description}"
+    calendar_must_be_in_first_post: "Kalendertaggen kan endast användas i första inlägget i ett ämne."
+    more_than_one_calendar: "Du kan inte ha mer än en kalender i ett inlägg."
+    more_than_two_dates: "Ett inlägg i ett kalenderämne får inte innehålla mer än två datum."
+    event_expired: "Evenemanget har upphört"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} är på väg att börja."
+      after_event_reminder: "%{title} har avslutats."
+      ongoing_event_reminder: "%{title} pågår."
+    errors:
+      bulk_invite:
+        max_invitees: "De första %{max_invittes} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
+        error: "Det uppstod ett problem när filen skulle laddas upp. Vi ber dig försöka igen senare."
+      models:
+        event:
+          only_one_event: "Ett inlägg kan bara ha ett evenemang."
+          must_be_in_first_post: "Ett evenemang kan bara finnas i det första inlägget i ett ämne."
+          raw_invitees_length: "Ett evenemang är begränsat till %{count} användare/grupper."
+          raw_invitees:
+            only_group: "För ett evenemang godkänns endast gruppnamn."
+          ends_at_before_starts_at: "Ett evenemang kan inte avslutas innan det börjar."
+          start_must_be_present_and_a_valid_date: "Ett evenemang kräver ett giltigt startdatum."
+          end_must_be_a_valid_date: "Slutdatumet måste vara ett giltigt datum."
+          invalid_timezone: "Tidszonen känns inte igen."
+          acting_user_not_allowed_to_create_event: "Nuvarande användare får inte skapa evenemang."
+          acting_user_not_allowed_to_act_on_this_event: "Nuvarande användare får inte agera på detta evenemang."
+          custom_field_is_invalid: "Det anpassade fältet `%{field}` är inte tillåtet."
+          name:
+            length: "Namnlängden på evenemanget måste vara mellan %{minimum} och %{maximum} tecken."

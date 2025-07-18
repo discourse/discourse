@@ -1,0 +1,79 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    filters:
+      unassigned:
+        title: "Непризначені"
+        help: "Теми, які не призначені"
+    action_codes:
+      assigned: "Призначено %{who} %{when}"
+      assigned_group: "Призначено %{who} %{when}"
+      unassigned: "Скасовано %{who} %{when}"
+      unassigned_group: "Скасовано %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Додайте фільтр «непризначені» до категорії"
+      cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"
+      cant_act_unclaimed: "Ви повинні претендувати на цю тему, перш ніж реагувати на прапори."
+      assigned: "Призначено"
+      group_everyone: "Усі"
+      assigned_to: "Призначено на"
+      assigned_to_w_ellipsis: "Призначено на..."
+      unassign:
+        title: "Скасувати призначення"
+        title_w_ellipsis: "Скасувати призначення..."
+      assign:
+        title: "Призначити"
+        help: "Призначити тему користувачеві"
+      reassign:
+        title: "Редагувати"
+      topic_level_menu:
+        unassign_with_ellipsis: "Скасувати призначення..."
+      assign_modal:
+        title: "Призначити тему"
+        assign: "Призначити"
+        note_label: Примітка
+        optional_label: "(опціонально)"
+        status_label: Статус
+      claim:
+        title: "претензія"
+        help: "Призначте тему собі"
+      assign_mailer:
+        never: "Ніколи"
+        different_users: "Тільки якщо правонаступник і передавач є різними користувачами"
+        always: "Завжди"
+      reminders_frequency:
+        description: "Частота прийому нагадувань про призначені теми"
+        never: "Ніколи"
+        daily: "Щодня"
+        weekly: "Щотижня"
+        monthly: "Щомісяця"
+        quarterly: "Щоквартала"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Призначити"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Нічого не робити"
+      messages:
+        assigned_title: "Призначено (%{count})"
+        assigned: "Призначено"
+      assignment_description:
+        topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Призначено на"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Призначено"
+    edit_assignments_modal:
+      topic: "Тема"
+      post: "Допис"

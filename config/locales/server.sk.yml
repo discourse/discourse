@@ -2376,6 +2376,7 @@ sk:
     delete_associated_accounts_on_password_reset: "Odstránenie účtu spojeného s používateľom, keď používateľ zmení heslo."
     allow_featured_topic_on_user_profiles: "Umožniť používateľom uviesť odkaz na tému na karte používateľa a v profile."
     show_inactive_accounts: "Umožniť prihláseným používateľom prezerať profily neaktívnych účtov."
+    hide_silencing_reasons: "Nezobrazujte dôvody umlčania verejne v profiloch používateľov."
     hide_suspension_reasons: "Nezobrazujte dôvody pozastavenia verejne v profiloch používateľov."
     log_personal_messages_views: "Zaznamenávanie osobných zobrazení správ administrátorom pre iných používateľov/skupiny."
     ignored_users_count_message_threshold: "Upozorniť moderátorov, ak je konkrétny používateľ ignorovaný týmto počtom iných používateľov."
@@ -2574,6 +2575,7 @@ sk:
     dashboard_hidden_reports: "Povoliť skrytie zadaných správ z hlavného panela."
     dashboard_visible_tabs: "Vyberte, ktoré karty hlavného panela budú viditeľné."
     dashboard_general_tab_activity_metrics: "Na karte Všeobecné vyberte správy, ktoré sa majú zobrazovať ako metriky aktivity."
+    gravatar_enabled: "Používajte službu <a href='https://gravatar.com/'>Gravatar</a> pre avatary používateľov. Zabráni to používateľom prejsť na službu Gravatar pre ich avatary, ale nebude to mať vplyv na používateľov, ktorí ju už používajú."
     gravatar_name: "Zadajte názov poskytovateľa služby Gravatar. Tento názov sa zvyčajne používa na identifikáciu zdroja, ktorý poskytuje avatary Gravatar na lokalitu."
     gravatar_base_url: "Zadajte adresu URL na prístup k rozhraniu API poskytovateľa Gravatar. Toto nastavenie je rozhodujúce pre konverziu e-mailových adries na adresy URL Gravataru, v ktorých sú uložené obrázky avataru."
     gravatar_login_url: "URL relatívna k `gravatar_base_url`, ktorá poskytuje používateľovi prihlásenie do služby Gravatar."
@@ -4440,7 +4442,6 @@ sk:
     solarized_dark_theme_name: "Solarizovaná tma"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
-    default_theme_name: "Predvolené"
     light_theme_name: "Svetlá"
     dark_theme_name: "Tmavá"
     neutral_theme_name: "Neutrálna"
@@ -5071,10 +5072,7 @@ sk:
         Tento odznak sa udeľuje za návštevu 365 po sebe nasledujúcich dní. Páni, celý rok!
     badge_title_metadata: "%{display_name} odznak na stránke %{site_title}"
   admin_login:
-    success: "Email odoslaný"
-    errors:
-      unknown_email_address: "Neznáma e-mailová adresa."
-      invalid_token: "Neplatný token."
+    acknowledgement: "Ak existuje konto správcu s e-mailovou adresou %{email} , dostanete e-mail s odkazom na prihlásenie."
     email_input: "Email administrátora"
     submit_button: "Poslať email"
     safe_mode: "Bezpečný režim: pri prihlásení zakážte všetky témy/pluginy"

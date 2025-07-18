@@ -381,6 +381,7 @@ export default function () {
         this.route("spam", function () {
           this.route("settings", { path: "/" });
         });
+        this.route("theme-site-settings");
 
         this.route(
           "colorPalettes",

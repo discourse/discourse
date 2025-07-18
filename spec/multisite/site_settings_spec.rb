@@ -62,4 +62,24 @@ RSpec.describe "Multisite SiteSettings", type: :multisite do
       test_multisite_connection("second") { SiteSetting.refresh! }
     end
   end
+
+  describe "themeable site settings" do
+    describe "#enable_welcome_banner" do
+      it "should return the right value" do
+        test_multisite_connection("default") do
+          expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
+        end
+
+        test_multisite_connection("second") do
+          Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
+
+          expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(false)
+        end
+
+        test_multisite_connection("default") do
+          expect(SiteSetting.enable_welcome_banner(theme_id: Theme.find_default.id)).to eq(true)
+        end
+      end
+    end
+  end
 end

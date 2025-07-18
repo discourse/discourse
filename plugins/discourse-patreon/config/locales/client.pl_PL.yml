@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtry'
+      group: 'Grupa'
+      rewards: 'Nagrody'
+      filter: 'Filtr'
+      help_text: 'Możesz zsynchronizować grupę Discourse’a z jednym lub większą liczbą progów Patreona.'
+      last_synced: 'Ostatnio zsynchronizowane'
+      edit: 'Edytuj'
+      delete: 'Usuń'
+      save: 'Zapisz'
+      update_data: 'Zaktualizuj dane Patreona i zsynchronizuj grupy'
+      refresh_page: 'Nowe dane są pobierane przez API Patreona. Odśwież stronę.'
+      field:
+        id: "ID"
+        email: "Email"
+        amount_cents: "Liczba (w centach)"
+        rewards: "Nagrody"
+        declined_since: "Wpłata odrzucona od"
+        more_details:
+          label: "Płatność i szczegóły"
+          help_text:
+            email_available: "Sprawdź prawą dolną część strony, by zobaczyć historię wpłat Patreona."
+            email_not_available: "Wybierz użytkownika Patreona i sprawdź prawą dolną część strony, by zobaczyć historię wpłat."

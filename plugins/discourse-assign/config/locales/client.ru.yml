@@ -1,0 +1,197 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Плагин Discourse «Назначение»"
+  js:
+    filters:
+      unassigned:
+        title: "Неназначенные"
+        help: "Неназначенные темы"
+    action_codes:
+      assigned: "Назначил(а) ответственным %{who} %{when}"
+      assigned_group: "Назначил(а) ответственным %{who} %{when}"
+      assigned_to_post: "Назначил(а) ответственного %{who} в <a href='%{path}'>это сообщение</a> %{when}"
+      assigned_group_to_post: "Назначил(а) ответственного %{who} в <a href='%{path}'>это сообщение</a> %{when}"
+      unassigned: "Снял(а) ответственного %{who} %{when}"
+      unassigned_group: "Снял(а) ответственного %{who} %{when}"
+      unassigned_from_post: "Снял(а) ответственного %{who} с <a href='%{path}'>этого сообщения</a> %{when}"
+      unassigned_group_from_post: "Снял(а) ответственного %{who} с <a href='%{path}'>этого сообщения</a> %{when}"
+      reassigned: "Переназначено: %{who} %{when}"
+      reassigned_group: "Переназначено: %{who} %{when}"
+      details_change: "Изменены подробности назначения для %{who} %{when}"
+      note_change: "Изменено примечание назначения для %{who} %{when}"
+      status_change: "Изменен статус назначения для %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Добавить в раздел фильтр 'Неназначенные'"
+      cant_act: "Вы не можете работать с жалобами, назначенными другому сотруднику"
+      cant_act_unclaimed: "Вы должны зарезервировать эту тему прежде чем рассматривать жалобу."
+      topic_search_placeholder: "Поиск тем по заголовку или содержанию сообщения"
+      sidebar_name_filter_placeholder: "Имя / псевдоним"
+      assigned: "Назначенные темы"
+      group_everyone: "Все"
+      assigned_to: "Назначено:"
+      assigned_topic_to: "Назначил(а) тему пользователю <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Назначил(а) ответственным %{username} в сообщение #%{post_number}"
+      assign_post_to_multiple: "#%{post_number} для пользователя %{username}"
+      assigned_to_w_ellipsis: "Назначено..."
+      unassign:
+        title: "Снять ответственного"
+        title_w_ellipsis: "Отменить назначение..."
+        help: "Отменить назначение %{username} из темы"
+      assign:
+        title: "Назначить ответственного"
+        help: "Назначить ответственного в тему"
+      assign_post:
+        title: "Назначить сообщение"
+      unassign_post:
+        title: "Снять назначение"
+        help: "Убрать пользователя %{username} из ответственных за сообщение"
+      reassign:
+        title: "Изменить"
+        title_w_ellipsis: "Изменить назначение..."
+        to_self: "Переназначить мне"
+        to_self_help: "Переназначить тему мне"
+        help: "Изменить детали назначения"
+      reassign_modal:
+        title: "Переназначить тему"
+      topic_level_menu:
+        edit_assignments: "Изменить назначения..."
+        reassign_topic_to_me: "Переназначить тему мне"
+        unassign_with_ellipsis: "Отменить назначение..."
+        unassign_from_post: "Снять ответственного @%{assignee} с публикации #%{post_number}"
+        unassign_from_post_help: "Снять ответственного @%{assignee} с публикации #%{post_number}"
+        unassign_from_topic: "Снять ответственного @%{username} с темы"
+      assign_modal:
+        title: "Назначить ответственного в тему"
+        reassign_title: "Переназначить тему"
+        assign: "Назначить"
+        assignee_label: Назначенный
+        assignment_label: Назначение
+        choose_assignee: Выберите пользователя для назначения.
+        edit_assignments_title: "Изменить назначения"
+        note_label: Примечание
+        optional_label: "(необязательно)"
+        status_label: Статус
+        suggestions: подсказки
+      assign_post_modal:
+        title: "Назначить сообщение"
+      claim:
+        title: "Пожаловаться"
+        help: "Назначить тему себе"
+      assign_mailer:
+        never: "Никогда"
+        different_users: "Только если текущий ответственный и назначаемый ответственный являются разными пользователями"
+        always: "Всегда"
+      reminders_frequency:
+        description: "Частота напоминаний о назначенных темах"
+        never: "Никогда"
+        daily: "Ежедневно"
+        weekly: "Еженедельно"
+        monthly: "Ежемесячно"
+        quarterly: "Ежеквартально"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Назначить"
+              assignable_levels:
+                title: "Кто может назначить эту группу"
+    user:
+      notification_level_when_assigned:
+        label: "Когда назначено"
+        watch_topic: "Наблюдаемая тема"
+        track_topic: "Отслеживаемая тема"
+        do_nothing: "Ничего не делать"
+      messages:
+        assigned_title: "Назначенные (%{count})"
+        assigned: "Назначенные темы"
+      no_assignments_title: "У вас пока нет назначений"
+      no_assignments_body: >
+        Здесь будут перечислены назначенные вами темы и сообщения. Вы также будете получать периодические напоминания о ваших назначениях, которые вы можете изменить в <a href='%{preferencesUrl}'>настройках пользователя</a>. <br><br> Чтобы назначить тему или сообщение себе или кому-то ещё, используйте кнопку %{icon}, расположенную в нижней части темы.
+      dismiss_assigned_tooltip: "Пометить все непрочитанные уведомления о назначении как прочитанные"
+      assigned_to_group:
+        post: "публикация назначена группе %{group_name}"
+        topic: "тема назначена группе %{group_name}"
+      assigned_to_you:
+        post: "публикация, назначенная вам"
+        topic: "тема, назначенная вам"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Назначение событий"
+          assigned: "Когда пользователь назначает тему"
+          unassigned: "Когда пользователь отменяет назначение темы"
+    search:
+      advanced:
+        in:
+          assigned: "С назначенным ответственным"
+          unassigned: "Без назначенного ответственного"
+        assigned:
+          label: "Назначен ответственный"
+    topics:
+      bulk:
+        unassign: "Снять ответственного"
+        assign: "Назначить ответственного"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Шаблон записи
+              description: Если это заполнить, на основе этого шаблона будет создана запись и пользователь будет назначен ей, а не теме целом.
+            assignees_group:
+              label: Группа назначенных
+            minimum_time_between_assignments:
+              label: Минимальное количество часов между назначениями
+            min_recently_assigned_days:
+              label: Минимальное количество дней, в течение которых пользователь считается недавно назначенным
+              description: По умолчанию - 14 дней.
+            skip_new_users_for_days:
+              label: Не назначать новых пользователей в течение указанного количества дней
+              description: По умолчанию 0 дней (пользователей можно назначать сразу после регистрации).
+            max_recently_assigned_days:
+              label: Максимальное количество дней, в течение которых пользователь считается недавно назначенным
+              description: Попытка исключить пользователей, назначенных в течение указанного здесь количества дней. Если ни одного пользователя не осталось, используется значение параметра `min_recently_assigned_days`. По умолчанию — 180 дней.
+            assigned_topic:
+              label: ID назначенной темы
+            in_working_hours:
+              label: В рабочее время
+    notification_reason:
+      user: "Вы увидите количество новых ответов, поскольку эта тема была назначена вам."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} назначил(а) вас"
+      titles:
+        assigned: "Назначение"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Вы уверены? У вас есть %{count} непрочитанное уведомление о назначении."
+            few: "Вы уверены? У вас есть %{count} непрочитанных уведомления о назначении."
+            many: "Вы уверены? У вас есть %{count} непрочитанных уведомлений о назначении."
+            other: "Вы уверены? У вас есть %{count} непрочитанного уведомления о назначении."
+    user_menu:
+      view_all_assigned: "просмотреть все назначения"
+      tabs:
+        assign_list: "Список назначений"
+        assign_list_with_unread:
+          one: "Список назначений - %{count} непрочитанное назначение"
+          few: "Список назначений - %{count} непрочитанных назначения"
+          many: "Список назначений - %{count} непрочитанных назначений"
+          other: "Список назначений - %{count} непрочитанных назначений"
+    edit_assignments_modal:
+      title: "Изменить назначения"
+      topic: "Тема"
+      post: "Публикация"

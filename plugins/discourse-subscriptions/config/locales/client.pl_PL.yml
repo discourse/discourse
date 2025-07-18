@@ -1,0 +1,181 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Subskrypcje Discourse"
+  site_settings:
+    discourse_subscriptions_enabled: Włącz wtyczkę Discourse Subscriptions.
+    discourse_subscriptions_extra_nav_subscribe: Pokaż przycisk subskrypcji w podstawowej nawigacji
+    discourse_subscriptions_secret_key: Sekretny klucz Stripe
+    discourse_subscriptions_webhook_secret: Webhook sekretnego klucza Stripe
+    discourse_subscriptions_currency: Domyślny kod waluty. Można to zmienić podczas tworzenia planu subskrypcji.
+    errors:
+      discourse_patrons_amount_must_be_currency: "Kwoty walut muszą być walutami bez symbolu dolara (np. 1,50)"
+  js:
+    filters:
+      subscribe:
+        help: Wesprzyj tę witrynę subskrybując
+    discourse_subscriptions:
+      title: Subskrypcje Discourse
+      admin_navigation: Subskrypcje
+      optional: Opcjonalnie
+      navigation:
+        billing: Rozliczenia
+        payments: Płatności
+        subscriptions: Subskrypcje
+        subscribe: Subskrybuj
+        user_activity:
+          payments: Płatności
+      campaign:
+        title: Wesprzyj nas
+        success_title: Sukces!
+        subscribers: Subskrybenci
+        supporter: Wspierający
+        supporters: Wspierający
+      one_time_payment: Płatność jednorazowa
+      plans:
+        purchase: Kup subskrypcję
+        select: Wybierz plan subskrypcji
+        interval:
+          adverb:
+            day: Dziennie
+            week: Tygodniowo
+            month: Miesięcznie
+            year: Rocznie
+        payment_button: Subskrybuj
+        success: Dziękujemy! Twoja subskrypcja została utworzona.
+        incomplete: Płatność jest niekompletna. Twoja subskrypcja zostanie zaktualizowana po zakończeniu płatności.
+        validate:
+          payment_options:
+            required: Wybierz plan subskrypcji.
+      user:
+        payments:
+          id: ID płatności
+          amount: Kwota
+          created_at: Utworzono
+        payments_help: Nie ma żadnych płatności
+        plans:
+          rate: Oceń
+          product: Imię
+        subscriptions_help: Nie masz żadnych aktywnych subskrypcji.
+        subscriptions:
+          id: ID subskrypcji
+          status: Status
+          discounted: Zniżka
+          renews: Odnawia się
+          update_card:
+            single: "Aktualizuj"
+          created_at: Utworzono
+          cancel: anuluj
+          cancelled: anulowane
+          operations:
+            destroy:
+              confirm: Czy na pewno chcesz anulować tę subskrypcję?
+      subscribe:
+        title: Subskrybuj
+        view_past: Zobacz poprzednie zakupy
+        no_products: Obecnie nie ma dostępnych produktów.
+        unauthenticated: Zaloguj się lub utwórz konto, aby subskrybować.
+        card:
+          title: Płatność
+        customer:
+          title: Dane klienta
+        promo_code: Kupon
+        buttons:
+          subscribe: Subskrybuj
+        purchased: Zakupione
+        go_to_billing: Przejdź do rozliczenia
+      billing:
+        name: Pełna nazwa
+        email: Email
+        phone: Numer telefonu
+      confirmation:
+        amount: Kwota
+        last4: Numer karty
+      buttons:
+        make_payment: Dokonaj płatności
+        confirm_payment: Potwierdź płatność
+        success: Cofnij
+      admin:
+        unconfigured: 'Stripe nie jest poprawnie skonfigurowany. Więcej informacji można znaleźć w Discourse Meta.'
+        dashboard:
+          title: Raporty
+          table:
+            head:
+              user: Użytkownik
+              payment_intent: ID płatności
+              receipt_email: E-mail z potwierdzeniem
+              amount: Kwota
+        products:
+          title: Produkty
+          operations:
+            create: Utwórz nowy produkt
+            update: Zaktualizuj produkt
+            new: Nowy produkt
+            destroy:
+              confirm: Czy na pewno chcesz usunąć ten produkt?
+          product:
+            product_id: ID produktu
+            name: Nazwa produktu
+            statement_descriptor_help: Dodatkowe informacje o produkcie, które pojawią się na wyciągu z karty kredytowej Twojego klienta.
+            plan_help: Utwórz plan cenowy, aby subskrybować klientów tego produktu.
+            description: Opis
+            description_help: To opisuje produkt objęty subskrypcją.
+            repurchaseable: Możliwość ponownego zakupu?
+            repurchase_help: Zezwalaj na wielokrotne kupowanie produktów i powiązanych planów
+            active: Aktywni
+            active_help: Wyłącz tę opcję, aż produkt będzie gotowy dla konsumentów.
+            created_at: Utworzono
+            updated_at: Zaktualizowane
+        plans:
+          title: Plany cenowe
+          operations:
+            add: Dodaj nowy plan
+            create: Utwórz plan
+            update: Zaktualizuj plan
+            create_help: Po utworzeniu planu cenowego można zaktualizować tylko jego nazwę, okres próbny i grupę użytkowników.
+            new: Nowy plan
+            destroy:
+              confirm: Czy na pewno chcesz usunąć ten plan?
+          plan:
+            nickname: Nazwa planu
+            nickname_help: Nie będzie to widoczne dla klientów, ale pomoże Ci później znaleźć ten plan
+            plan_id: ID planu
+            product: Produkt
+            interval: Okres rozliczeniowy
+            amount: Kwota
+            trial: Dni okresu próbnego
+            trial_help: Subskrypcje do tego planu rozpoczną się automatycznie z bezpłatnym okresem próbnym o tej długości
+            group: Grupa użytkownika
+            group_help: To jest grupa użytkowników Discourse, do której klient zostanie dodany po utworzeniu subskrypcji.
+            active: Aktywni
+            created_at: Utworzono
+            recurring: Plan cykliczny?
+        coupons:
+          title: Kupony
+          code: Kod promocyjny
+          discount: Zniżka
+          times_redeemed: Liczba użyć
+          active: Aktywny?
+          actions: Akcje
+          create: Utwórz kupon
+          promo_code: Kod promocyjny (bez rozróżniania wielkości liter)
+        subscriptions:
+          title: Subskrypcje
+          subscription:
+            user: Użytkownik
+            subscription_id: ID subskrypcji
+            customer: Klient
+            product: Produkt
+            plan: Plan
+            status: Status
+            created_at: Utworzono
+        ask_refund: Zwrócić ostatnią płatność dokonaną przez klienta?
+        canceled: "Subskrypcja została anulowana."

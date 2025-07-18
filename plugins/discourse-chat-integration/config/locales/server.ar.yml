@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    chat_integration_enabled: 'تفعيل المكوِّن الإضافي لتكامل الدردشة في Discourse'
+    chat_integration_discourse_username: 'اسم المستخدم الذي سيظهر به المستخدم عند جلب المحتوى'
+    chat_integration_delay_seconds: 'عدد الثواني التي يجب انتظارها بعد إنشاء المنشور قبل إرسال إشعارات الدردشة'
+    chat_integration_slack_username: "اسم المستخدم لبرنامج الروبوت للنشر تحته على Slack"
+    chat_integration_slack_enabled: 'تفعيل مقدِّم خدمة تكامل الدردشة Slack'
+    chat_integration_slack_access_token: 'رمز وصول OAuth للمصادقة مع Slack'
+    chat_integration_slack_incoming_webhook_token: 'رمز التحقُّق المُستخدَم لمصادقة الطلبات الواردة'
+    chat_integration_slack_excerpt_length: 'طول المقتطف من منشور Slack'
+    chat_integration_slack_icon_url: 'أيقونة لاستخدامها في النشر في Slack (الأيقونة الافتراضية هي أيقونة المنتدى)'
+    chat_integration_slack_outbound_webhook_url: "لاستخدام نظام \"خطاف الويب الوارد\" من Slack بدلًا من OAuth API. لا يوصى بذلك."
+    chat_integration_slack_transcript_quote: هل تريد تضمين نص Slack في علامات [quote]؟
+    errors:
+      chat_integration_slack_api_configs_are_empty: "يجب عليك إدخال عنوان URL لخطاف ويب صادر أو رمز وصول"
+    chat_integration_telegram_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Telegram"
+    chat_integration_telegram_access_token: "رمز وصول برنامج الروبوت الخاص بك من botfather@ على Telegram"
+    chat_integration_telegram_excerpt_length: "طول المقتطف من منشور Telegram"
+    chat_integration_telegram_enable_slash_commands: "السماح بإدارة اشتراكات Telegram باستخدام \"الأوامر التي تبدأ بشرطة مائلة\""
+    chat_integration_discord_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Discord"
+    chat_integration_discord_message_content: "الرسالة التي سيتم تضمينها أعلى الملخص عند إرسال إشعار إلى Discord"
+    chat_integration_discord_excerpt_length: "طول المقتطف من منشور Discord"
+    chat_integration_guilded_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Guilded"
+    chat_integration_guilded_excerpt_length: "طول المقتطف من منشور Guilded"
+    chat_integration_mattermost_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Mattermost"
+    chat_integration_mattermost_webhook_url: 'عنوان URL لخطاف الويب من Mattermost'
+    chat_integration_mattermost_incoming_webhook_token: 'رمز التحقُّق المُستخدَم لمصادقة الطلبات الواردة'
+    chat_integration_mattermost_icon_url: "أيقونة المنشورات في Mattermost (الأيقونة الافتراضية هي أيقونة المنتدى)"
+    chat_integration_mattermost_excerpt_length: "طول المقتطف من منشور Mattermost"
+    chat_integration_matrix_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Matrix"
+    chat_integration_matrix_homeserver: "خادم منزلي للاتصال به. تأكَّد من تضمين البروتوكول"
+    chat_integration_matrix_access_token: "رمز الوصول لحساب Matrix لبرنامج الروبوت"
+    chat_integration_matrix_excerpt_length: "طول المقتطف من منشور Matrix"
+    chat_integration_matrix_use_notice: "استخدام الإشعار بدلًا من الرسالة العادية"
+    chat_integration_zulip_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Zulip"
+    chat_integration_zulip_server: "عنوان URL الأساسي لخادم Zulip الخاص بك. تأكَّد من تضمين http(s)://"
+    chat_integration_zulip_bot_email_address: "عنوان البريد الإلكتروني المرتبط ببرنامج روبوت Zulip الخاص بك"
+    chat_integration_zulip_bot_api_key: "مفتاح API لبرنامج روبوت Zulip الخاص بك"
+    chat_integration_zulip_excerpt_length: "طول المقتطف من منشور Zulip"
+    chat_integration_rocketchat_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Rocket Chat"
+    chat_integration_rocketchat_webhook_url: "عنوان URL لخطاف الويب لتكامل الدردشة Rocket Chat"
+    chat_integration_rocketchat_excerpt_length: "طول المقتطف من منشور Rocket Chat"
+    chat_integration_gitter_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Gitter"
+    chat_integration_flowdock_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Flowdock"
+    chat_integration_flowdock_excerpt_length: "طول المقتطف من منشور Flowdock"
+    chat_integration_groupme_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Groupme"
+    chat_integration_groupme_excerpt_length: "طول المقتطف من منشور Groupme"
+    chat_integration_groupme_bot_ids: "*مطلوب* مُعرِّفات برامج الروبوت، مفصولة بالرمز \",\" إذا كانت عديدة"
+    chat_integration_groupme_instance_names: " * مطلوب * أسماء دردشات GroupMe، مفصولة بالرمز \",\" إذا كانت عديدة (بنفس ترتيب مُعرِّفات برامج الروبوت)"
+    chat_integration_teams_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Microsoft Teams"
+    chat_integration_teams_excerpt_length: "طول المقتطف من منشور Microsoft Teams"
+    chat_integration_powerautomate_enabled: "تفعيل مقدِّم خدمة تكامل Microsoft Power Automate"
+    chat_integration_powerautomate_excerpt_length: "طول المقتطف من منشور Microsoft Power Automate"
+    chat_integration_webex_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Webex Teams"
+    chat_integration_webex_excerpt_length: "طول المقتطف من منشور Webex Team"
+    chat_integration_google_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Google Chat"
+    chat_integration_google_excerpt_length: "طول المقتطف من منشور Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "هناك أخطاء في بعض قنوات تكاملات الدردشة. انتقل إلى <a href='%{base_path}/admin/plugins/chat-integration'>قسم تكامل الدردشة</a> لمعرفة المزيد."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: إرسال رسالة Slack
+      send_chat_integration_message:
+        title: إرسال رسالة Chat-Integration
+  chat_integration:
+    all_categories: "(جميع الفئات)"
+    deleted_category: "(فئة محذوفة)"
+    deleted_group: "(مجموعة محذوفة)"
+    group_mention_template: "الإشارات إلى: @%{name}"
+    group_message_template: "الرسائل إلى: @%{name}"
+    topic_tag_changed:
+      added_and_removed: "تمت إضافة %{added} وإزالة %{removed}"
+      added: "تمت إضافة %{added}"
+      removed: "تمت إزالة %{removed}"
+    provider:
+      slack:
+        status:
+          header: |
+            *قواعد هذه القناة*
+            (إذا تطابقت عدة قواعد مع منشور، فسيتم تنفيذ القاعدة العلوية)
+          no_rules: "لا توجد قواعد معدَّة لهذه القناة. شغِّل `/discourse help` للحصول على التعليمات."
+          rule_string: "*%{index})* *%{filter}* المنشورات في *%{category}*"
+          rule_string_tags_suffix: " يحمل الوسوم: *%{tags}*"
+        parse_error: "عذرًا، لم أفهم ذلك. شغِّل `/discourse help` للحصول على التعليمات."
+        create:
+          created: "تم إنشاء القاعدة بنجاح"
+          updated: "تم تحديث القاعدة بنجاح"
+          error: "عذرًا، حدث خطأ في أثناء إنشاء هذه القاعدة."
+        delete:
+          success: "تم حذف القاعدة بنجاح"
+          error: "عذرًا، حدث خطأ في أثناء حذف هذه القاعدة. شغِّل `/discourse status` للحصول على قائمة بالقواعد."
+        not_found:
+          tag: "يتعذَّر العثور على الوسم *%{name}*."
+          category: "يتعذَّر العثور على الفئة *%{name}*. الفئات المتوفرة: *%{list}*"
+        help: |
+          *قاعدة جديدة:* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          (يجب عليك تحديد نوع قاعدة وفئة أو وسم واحد على الأقل)
+          - *السلسلة* – إرسال إشعار إلى هذه القناة بالموضوعات الجديدة والردود المسلسلة إن أمكن
+          - *المراقبة* – إرسال إشعار إلى هذه القناة بالموضوعات والردود الجديدة
+          - *المتابعة* – إرسال إشعار إلى هذه القناة بالموضوعات الجديدة
+          - *الكتم* – حظر الإشعارات إلى هذه القناة
+
+          *قاعدة الإزالة:* `/discourse remove [rule number]`
+          (يمكن العثور على `[rule number]` بتشغيل `/discourse status`)
+
+          *إدراج القواعد:* `/discourse status`
+
+          *[Experimental] نص المنشور:* `/discourse post [n]`
+          إنشاء مسودة موضوع على Discourse تحتوي على آخر `n` من المنشورات في هذه القناة
+
+          *المساعدة:* `/discourse help`
+        transcript:
+          modal_title: "إنشاء نص"
+          modal_description: "سيتم تجميع كل الرسائل الموجودة في السلسلة في منشور واحد على المنتدى. ستُتاح لك الفرصة لتعديل النص قبل النشر."
+          transcript_ready: "النص جاهز"
+          continue_on_discourse: "المتابعة في المنتدى"
+          error: "عذرًا، حدث خطأ في أثناء إنشاء النص!"
+          post_to_discourse: "انقر هنا لصياغة منشور على Discourse باستخدام نص"
+          api_required: "عذرًا، لم يتم إعداد هذا التكامل لدعم نشر النصوص."
+          view_on_slack: "العرض في %{name} على Slack"
+          first_message_pretext: "بدأ قبل %{n} من الرسائل:"
+          last_message_pretext: "وانتهى قبل %{n} من الرسائل:"
+          posted_in: "نشر في %{name}"
+          change_first_message: "تغيير أول رسالة..."
+          change_last_message: "تغيير آخر رسالة..."
+          loading: "جارٍ تحميل النص..."
+          error_users: "خطأ: يتعذَّر جلب المستخدمين من Slack"
+          error_history: "خطأ: يتعذَّر جلب سجل القناة من Slack"
+          error_ts: "خطأ: يتعذَّر جلب الرسالة المطلوبة من Slack"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "تمت إضافة %{added} وإزالة %{removed}"
+            added: "تمت إضافة %{added}"
+            removed: "تمت إزالة %{removed}"
+      telegram:
+        unknown_chat: "لم يتم إعداد الدردشة على %{site_title}. اطلب من المسؤول إضافة قناة باستخدام \"مُعرِّف الدردشة\" %{chat_id}."
+        known_chat: "تم إعداد هذه الدردشة على %{site_title}. يمكنك إعدادها في لوحة المسؤول. (مُعرِّف الدردشة: %{chat_id})"
+        message: |-
+          نشر <b>%{user}</b> في <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>قواعد هذه القناة</b>
+            (إذا تطابقت عدة قواعد مع منشور، فسيتم تنفيذ القاعدة العلوية)
+          no_rules: "لا توجد قواعد معدَّة لهذه القناة. شغِّل <code>/help</code> للحصول على التعليمات."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> المنشورات في <b>%{category}</b>"
+          rule_string_tags_suffix: " يحمل الوسوم: <b>%{tags}</b>"
+        parse_error: "عذرًا، لم أفهم ذلك. شغِّل <code>/help</code> للحصول على التعليمات."
+        create:
+          created: "تم إنشاء القاعدة بنجاح"
+          updated: "تم تحديث القاعدة بنجاح"
+          error: "عذرًا، حدث خطأ في أثناء إنشاء هذه القاعدة."
+        delete:
+          success: "تم حذف القاعدة بنجاح"
+          error: "عذرًا، حدث خطأ في أثناء حذف هذه القاعدة. شغِّل <code>/status</code> للحصول على قائمة بالقواعد."
+        not_found:
+          tag: "يتعذَّر العثور على الوسم <b>%{name}</b>."
+          category: "يتعذَّر العثور على الفئة <b>%{name}</b>. الفئات المتوفرة: <b>%{list}</b>"
+        help: |
+          <b>قاعدة جديدة:</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          (يجب عليك تحديد نوع قاعدة وفئة أو وسم واحد على الأقل)
+          - <b>المراقبة</b> – إرسال إشعار إلى هذه القناة بالموضوعات والردود الجديدة
+          - <b>المتابعة</b> – nإرسال إشعار إلى هذه القناة بالموضوعات الجديدة
+          - <b>الكتم</b> – حظر الإشعارات إلى هذه القناة
+
+          <b>قاعدة الإزالة:</b> <code>/remove [rule number]</code>
+          (يمكن العثور على <code>[rule number]</code> بتشغيل <code>/status</code>)
+
+          <b>إدراج القواعد:</b> <code>/status</code>
+
+          <b>المساعدة:</b> <code>/help</code>
+      hipchat:
+        message: نشر <b>%{user}</b> في <a href="%{post_url}">%{title}</a>
+      mattermost:
+        status:
+          header: |
+            *قواعد هذه القناة*
+            (إذا تطابقت عدة قواعد مع منشور، فسيتم تنفيذ القاعدة العلوية)
+          no_rules: "لا توجد قواعد معدَّة لهذه القناة. شغِّل `/discourse help` للحصول على التعليمات."
+          rule_string: "*%{index})* *%{filter}* المنشورات في *%{category}*"
+          rule_string_tags_suffix: " يحمل الوسوم: *%{tags}*"
+        parse_error: "عذرًا، لم أفهم ذلك. شغِّل `/discourse help` للحصول على التعليمات."
+        create:
+          created: "تم إنشاء القاعدة بنجاح"
+          updated: "تم تحديث القاعدة بنجاح"
+          error: "عذرًا، حدث خطأ في أثناء إنشاء هذه القاعدة."
+        delete:
+          success: "تم حذف القاعدة بنجاح"
+          error: "عذرًا، حدث خطأ في أثناء حذف هذه القاعدة. شغِّل `/discourse status` للحصول على قائمة بالقواعد."
+        not_found:
+          tag: "يتعذَّر العثور على الوسم *%{name}*."
+          category: "يتعذَّر العثور على الفئة *%{name}*. الفئات المتوفرة: *%{list}*"
+        help: |
+          *قاعدة جديدة:* `/discourse [watch|follow|mute] [category] [tag:name]`
+          (يجب عليك تحديد نوع قاعدة وفئة أو وسم واحد على الأقل)
+          - *المراقبة* – إرسال إشعار إلى هذه القناة بالموضوعات والردود الجديدة
+          - *المتابعة* – إرسال إشعار إلى هذه القناة بالموضوعات الجديدة
+          - *الكتم* – حظر الإشعارات إلى هذه القناة
+
+          *قاعدة الإزالة:* `/discourse remove [rule number]`
+          (يمكن العثور على `[rule number]` بتشغيل `/discourse status`)
+
+          *إدراج القواعد:* `/discourse status`
+
+          *المساعدة:* `/discourse help`
+      matrix:
+        text_message: "نشر %{user} في %{title} - %{post_url}"
+        formatted_message: |
+          نشر <b>%{user}</b> في <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          نشر **%{user}** في **[%{title}](%{post_url})**
+          ~~~الاقتباس
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "تم النشر"
+      google:
+        new_post: "منشور جديد على %{site_title}"
+        new_topic: "منشور جديد على %{site_title}"
+        author: "من قِبل @%{username}"
+        link: "العرض على %{site_title}"
+      groupme:
+        errors:
+          instance_names_issue: "لم يتم إدخال أسماء المثيلات أو أن تنسيقاتها غير صحيحة"

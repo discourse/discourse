@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    gamification:
+      you: "Tu"
+      leaderboard:
+        link_to_settings: "Opțiuni"
+        refresh: "Reîmprospătează"
+        name: "Nume"
+        period:
+          all_time: "Dintotdeauna"
+          yearly: "Anual"
+          quarterly: "Trimestrial"
+          monthly: "Lunar"
+          weekly: "Săptămânal"
+          daily: "Zilnic"
+      create: "Creează"
+      cancel: "Anulare"
+      close: "Închide sondajul"
+      delete: "Șterge"
+      edit: "Modifică"
+      back: "Înapoi"
+      save: "Salvare"
+      apply: "Aplică"
+      update_range:
+        last_10_days: "Ultimele 10 de zile"
+        last_30_days: "Ultimele 30 de zile"
+        last_90_days: "Ultimele 90 de zile"
+        all_time: "Dintotdeauna"
+      custom_range_from: "De la"
+      admin:
+        name: "Nume"

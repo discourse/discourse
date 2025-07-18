@@ -86,6 +86,8 @@ vi:
         italic_text: "văn bản nhấn mạnh"
         bold_text: "chữ in đậm"
         send: "Gửi"
+      quote:
+        copy_success: "Đã sao chép trích dẫn trò chuyện vào bảng tạm"
       notification_levels:
         never: "Không bao giờ"
       settings:

@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    patreon_enabled: 'Włącz wtyczkę discourse‐patreon'
+    patreon_login_enabled: 'Włącz logowanie za pomocą Patreona'
+    patreon_client_id: 'Wygenerowane Client ID Patreona'
+    patreon_client_secret: 'Wygenerowany Patreon Client Secret'
+    patreon_webhook_secret: 'Wygenerowany Patreon Webhook Secret'
+    patreon_creator_discourse_username: "Nazwa konta do zalogowania przez konto kreatora Patreon przy użyciu \"logowania za pomocą Patreona\""
+    patreon_creator_access_token: "Wygenerowany klucz dostępu kreatora Patreon"
+    patreon_creator_refresh_token: "Wygenerowany token odświeżania kreatora Patreon"
+    patreon_declined_pledges_grace_period_days: "Okres karencji (w dniach) przed całkowitym odrzuceniem wpłaty."
+    max_patreon_api_reqs_per_hr: "Maksymalna liczba zapytań o API Patreona na godzinę"
+    max_patreon_api_reqs_per_day: "Maksymalna liczba zapytań o API Patreona na dzień"
+    patreon_verbose_log: 'aktywuj pełne logowanie do ładunku Patreona'
+    patreon_donation_prompt_enabled: "Włączyć zachętę do dotacji?"
+    patreon_donation_prompt_show_after_topics: "Pokaż zachętę do dotacji po n tematach."
+    patreon_donation_prompt_campaign_url: "URL kampanii zachęcającej do dotacji"
+  patreon:
+    error:
+      invalid_response: "Nieprawidłowa odpowiedź z API Patreona"

@@ -1,0 +1,197 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Assign"
+  js:
+    filters:
+      unassigned:
+        title: "Nepřiděleno"
+        help: "Témata, která nejsou přidělena"
+    action_codes:
+      assigned: "Přiděleno %{who} %{when}"
+      assigned_group: "Přiděleno %{who} %{when}"
+      assigned_to_post: "Uživateli %{who} přidělen <a href='%{path}'>příspěvek</a> %{when}"
+      assigned_group_to_post: "Skupině %{who} přidělen <a href='%{path}'>příspěvek</a> %{when}"
+      unassigned: "%{who} zrušeno přidělení %{when}"
+      unassigned_group: "%{who} zrušeno přidělení %{when}"
+      unassigned_from_post: "Uživateli %{who} zrušeno přidělení <a href='%{path}'>příspěvku</a> %{when}"
+      unassigned_group_from_post: "Skupině %{who} zrušeno přidělení <a href='%{path}'>příspěvku</a> %{when}"
+      reassigned: "Uživateli %{who} znovu přiděleno %{when}"
+      reassigned_group: "Skupině %{who} znovu přiděleno %{when}"
+      details_change: "Změněny podrobnosti přidělení pro %{who} %{when}"
+      note_change: "Změněna poznámka přidělení pro %{who} %{when}"
+      status_change: "Změněn stav přidělení pro %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Přidat do kategorie filtr \"Nepřiděleno\""
+      cant_act: "Nemůžete reagovat na nahlášení, která byla přiřazena jiným uživatelům"
+      cant_act_unclaimed: "Než začnete reagovat na nahlášení, musíte si toto téma nárokovat."
+      topic_search_placeholder: "Hledat témata podle názvu nebo obsahu příspěvku"
+      sidebar_name_filter_placeholder: "Jméno/Uživatelské jméno"
+      assigned: "Přiděleno"
+      group_everyone: "Všichni"
+      assigned_to: "Přiděleno"
+      assigned_topic_to: "Téma přiděleno <a href='%{path}'>%{username}</a>"
+      assign_post_to: "#%{post_number} přiděleno %{username}"
+      assign_post_to_multiple: "#%{post_number} uživateli %{username}"
+      assigned_to_w_ellipsis: "Přiděleno..."
+      unassign:
+        title: "Odebrat přidělení"
+        title_w_ellipsis: "Odebrat přidělení..."
+        help: "Zrušit přidělení %{username} k tématu"
+      assign:
+        title: "Přidělit"
+        help: "Zadat téma uživateli"
+      assign_post:
+        title: "Přidělit příspěvek"
+      unassign_post:
+        title: "Zrušit přidělení k příspěvku"
+        help: "Zrušit přidělení %{username} k příspěvku"
+      reassign:
+        title: "Upravit"
+        title_w_ellipsis: "Upravit přidělení..."
+        to_self: "Přidělit sobě"
+        to_self_help: "Přidělit téma sobě"
+        help: "Upravit podrobnosti přidělení"
+      reassign_modal:
+        title: "Změnit přidělení tématu"
+      topic_level_menu:
+        edit_assignments: "Upravit přidělení..."
+        reassign_topic_to_me: "Znovu přiřadit téma mně"
+        unassign_with_ellipsis: "Odebrat přidělení..."
+        unassign_from_post: "Zrušit přiřazení @%{assignee} z #%{post_number}"
+        unassign_from_post_help: "Zrušení přiřazení @%{assignee} z příspěvku #%{post_number}"
+        unassign_from_topic: "Zrušit přiřazení @%{username} k tématu"
+      assign_modal:
+        title: "Zadat téma"
+        reassign_title: "Změnit přidělení tématu"
+        assign: "Zadat"
+        assignee_label: Komu
+        assignment_label: Přiřazení
+        choose_assignee: Vyberte uživatele, kterého chcete přidělit.
+        edit_assignments_title: "Upravit přiřazení"
+        note_label: Poznámka
+        optional_label: "(volitelné)"
+        status_label: Stav
+        suggestions: návrhy
+      assign_post_modal:
+        title: "Přidělit příspěvek"
+      claim:
+        title: "nárok"
+        help: "Přidělte téma sami sobě"
+      assign_mailer:
+        never: "Nikdy"
+        different_users: "Pouze pokud přidělující a přidělený jsou různí uživatelé."
+        always: "Vždy"
+      reminders_frequency:
+        description: "Frekvence upozorňování na přidělená témata"
+        never: "Nikdy"
+        daily: "Denně"
+        weekly: "Týdně"
+        monthly: "Měsíčně"
+        quarterly: "Čtvrtletně"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Přidělit"
+              assignable_levels:
+                title: "Kdo může přidělit této skupině"
+    user:
+      notification_level_when_assigned:
+        label: "Při přidělení"
+        watch_topic: "Hlídat téma"
+        track_topic: "Sledovat téma"
+        do_nothing: "Nic nedělat"
+      messages:
+        assigned_title: "Přiděleno (%{count})"
+        assigned: "Přiděleno"
+      no_assignments_title: "Zatím nemáte žádné úkoly"
+      no_assignments_body: >
+        Zde budou uvedena vám přidělená témata a zprávy. Na vaše úkoly budete také pravidelně dostávat upozornění, která můžete upravit ve <a href='%{preferencesUrl}'>vašich uživatelských předvolbách</a>. <br><br> Chcete-li přidělit téma nebo zprávu sobě nebo někomu jinému, hledejte dole tlačítko %{icon} přidělit .
+      dismiss_assigned_tooltip: "Označit všechna upozornění na přidělení jako přečtená"
+      assigned_to_group:
+        post: "příspěvek přidělen uživateli %{group_name}"
+        topic: "téma přiděleno uživateli %{group_name}"
+      assigned_to_you:
+        post: "příspěvek přidělen vám"
+        topic: "téma přiděleno vám"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Události přidělení"
+          assigned: "Když uživatel přidělí téma"
+          unassigned: "Když uživatel zruší přidělení tématu"
+    search:
+      advanced:
+        in:
+          assigned: "jsou přidělena"
+          unassigned: "nejsou přidělena"
+        assigned:
+          label: "Přiděleno uživateli"
+    topics:
+      bulk:
+        unassign: "Zrušit přidělení témat"
+        assign: "Přidělit témata"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Šablona příspěvku
+              description: Pokud je vyplněno, bude vytvořen příspěvek s touto šablonou a uživatel k němu bude přidělen místo k tématu.
+            assignees_group:
+              label: Skupina přidělených
+            minimum_time_between_assignments:
+              label: Minimální počet hodin mezi přiděleními
+            min_recently_assigned_days:
+              label: Min. počet dní pro "přiděleno v poslední době"
+              description: Výchozí hodnota je 14 dní.
+            skip_new_users_for_days:
+              label: Přeskočit nové uživatele po počet dní
+              description: Výchozí hodnota je 0 dní (uživatelé mohou být přiděleni ihned po registraci).
+            max_recently_assigned_days:
+              label: Max. počet dní pro "přiděleno v poslední době"
+              description: První pokus vyloučit uživatele přidělené v posledních `n` dnech. Pokud žádný uživatel nezůstal, použije se `min_recently_assigned_day`. Výchozí hodnota je 180 dní.
+            assigned_topic:
+              label: Přidělené ID tématu
+            in_working_hours:
+              label: V pracovní době uživatele
+    notification_reason:
+      user: "Uvidíte počet nových odpovědí, protože toto téma vám bylo přiděleno."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} vám přidělil"
+      titles:
+        assigned: "Přiděleno"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Jste si jisti? Máte %{count} nepřečtené přidělení."
+            few: "Jste si jisti? Máte %{count} nepřečtená přidělení."
+            many: "Jste si jisti? Máte %{count} nepřečtených přidělení."
+            other: "Jste si jisti? Máte %{count} nepřečtených přidělení."
+    user_menu:
+      view_all_assigned: "zobrazit všechny přidělené"
+      tabs:
+        assign_list: "Seznam přidělení"
+        assign_list_with_unread:
+          one: "Seznam přidělení - %{count} nepřečtené přidělení"
+          few: "Seznam přidělení - %{count} nepřečtená přidělení"
+          many: "Seznam přidělení - %{count} nepřečtených přidělení"
+          other: "Seznam přidělení - %{count} nepřečtených přidělení"
+    edit_assignments_modal:
+      title: "Upravit přiřazení"
+      topic: "Témata"
+      post: "Příspěvek"

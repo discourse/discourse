@@ -1,0 +1,71 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: Թեմայի ID
+    discourse_calendar:
+      disable_holiday: "Անջատել"
+      enable_holiday: "Միացնել"
+      date: "Ամսաթիվ"
+      region:
+        none: "Ոչ մի"
+      toolbar_button:
+        today: "Այսօրվա"
+        month: "Ամիս"
+        week: "Շաբաթ"
+        day: "Օր"
+    group_timezones:
+      search: "Որոնում..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      bulk_invite: "Զանգվածային Հրավեր"
+      bulk_invite_modal:
+        success: "Ֆայլը հաջողությամբ վերբեռնվել է, Դուք կստանաք ծանուցում հաղորդագրության միջոցով, երբ գործընթացն ավարտվի:"
+        error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
+      upcoming_events:
+        status: "Ստատուս"
+      models:
+        event:
+          closed: "Փակված"
+          status:
+            public:
+              title: "Հանրային"
+            private:
+              title: "Մասնավոր"
+      builder_modal:
+        custom_fields:
+          placeholder: "Ընտրովի"
+        create: "Ստեղծել"
+        update: "Պահպանել"
+        timezone:
+          label: Ժամային գոտի
+        reminders:
+          units:
+            days: "օր"
+          periods:
+            before: "մինչև"
+            after: "հետո"
+        recurrence:
+          label: "Կրկնություն"
+          none: "Կրկնություն չկա"
+        url:
+          label: "URL"
+          placeholder: "Ընտրովի"
+        location:
+          label: "Տեղակայություն"
+        description:
+          label: "Նկարագրությունը"
+        status:
+          label: "Ստատուս"
+      invite_user_or_group:
+        invite: "Ուղարկել"

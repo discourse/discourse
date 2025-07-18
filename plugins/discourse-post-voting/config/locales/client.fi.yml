@@ -1,0 +1,119 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Viestiäänestys
+  post_voting:
+    reviewables:
+      comment_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän kommentin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "uusi kommentti"
+      popup:
+        question_answer_user_commented: '%{username} kommentoi ketjussa "%{topic}" – %{site_title}'
+    category:
+      post_voting_settings_heading: Viestiäänestys
+      create_as_post_voting_default: Uusissa ketjuissa käytetään oletuksena tämän alueen viestiäänestysketjuja.
+      only_post_voting_in_this_category: Uudet ketjut voivat olla vain viestiäänestysketjuja tällä alueella.
+    composer:
+      create_post_voting:
+        label: "Luo viestiäänestysketju"
+      composer_actions:
+        create_as_post_voting:
+          label: "Viestiäänestys käyttöön/pois käytöstä"
+          desc: "Äänestettäviä viestejä sisältävä ketju luodaan"
+        remove_as_post_voting:
+          label: "Poista viestiäänestys"
+          desc: "Ketju luodaan tavallisessa muodossa"
+    vote:
+      already_voted: "Voit äänestää vain yhtä vastausta tähän kysymykseen"
+      user_over_limit: "Et voi ylittää luottamustasosi äänimäärää."
+      one_vote_per_post: "Voit äänestää kutakin viestiä vain kerran."
+    last_answer_lowercase: viimeisin vastaus
+    answer_lowercase:
+      one: vastaus
+      other: vastausta
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Syötä vähintään %{count} merkki"
+              other: "Syötä vähintään %{count} merkkiä"
+            length_ok:
+              one: "%{count} merkki jäljellä..."
+              other: "%{count} merkkiä jäljellä..."
+            too_long:
+              one: "Kommentin pituus voi olla enintään %{count} merkki"
+              other: "Kommentin pituus voi olla enintään %{count} merkkiä"
+          submit: "Lisää kommentti"
+          edit: "muokkaa"
+          cancel: "peruuta"
+          add: "Lisää kommentti"
+          show:
+            one: Näytä %{count} kommentti lisää
+            other: Näytä %{count} kommenttia lisää
+          delete:
+            confirm: "Oletko varma, että haluat poistaa tämän kommentin?"
+          user:
+            deleted: "(käyttäjä poistettu)"
+          reviewables:
+            comment_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän kommentin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
+            actions:
+              agree:
+                title: "Hyväksy..."
+              agree_and_keep_comment:
+                title: "Pidä kommentti"
+                description: "Hyväksy liputus ja pidä kommentti ennallaan."
+              agree_and_keep_deleted:
+                title: "Pidä kommentti poistettuna"
+                description: "Hyväksy liputus ja pidä kommentti poistettuna."
+              agree_and_suspend:
+                title: "Aseta käyttäjä käyttökieltoon"
+                description: "Hyväksy liputus ja aseta käyttäjä käyttökieltoon."
+              agree_and_silence:
+                title: "Hiljennä käyttäjä"
+                description: "Hyväksy liputus ja hiljennä käyttäjä."
+              agree_and_restore:
+                title: "Palauta kommentti"
+                description: "Palauta kommentti, jotta käyttäjät näkevät sen."
+              agree_and_delete:
+                title: "Poista kommentti"
+                description: "Poista kommentti, jotta käyttäjät eivät näe sitä."
+              delete_and_agree:
+                title: "Ohita liputus ja poista kommentti"
+                description: "Ohita lippu poistamalla se jonosta ja poista kommentti."
+              disagree_and_restore:
+                title: "Hylkää ja palauta kommentti"
+                description: "Palauta kommentti, jotta kaikki käyttäjät näkevät sen."
+              disagree:
+                title: "Hylkää"
+              ignore:
+                title: "Älä tee mitään"
+                description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
+            transcript:
+              view: "Näytä aiempien kommenttien transkriptio"
+      topic:
+        answer:
+          label: "Vastaus"
+          help: "ala kirjoittamaan vastausta"
+        sort_by: "Järjestys"
+        votes: "Äänet"
+        activity: "Toiminta"
+        answer_count:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+    review:
+      transcript:
+        view: "Näytä aiempien viestien transkriptio"
+      types:
+        reviewable_post_voting_comment:
+          title: "Liputettu viestiäänestyskommentti"

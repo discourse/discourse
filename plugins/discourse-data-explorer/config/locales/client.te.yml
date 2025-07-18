@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    explorer:
+      or: "లేదా"
+      help:
+        label: "సహాయం"
+      types:
+        bool:
+          yes: "అవును"
+          no: "లేదు"
+      export: "ఎగుమతి"
+      save: "మార్పులను భద్రపరచు"
+      edit: "సవరించు"
+      delete: "తొలగించు"
+      query_groups: "గుంపులు"
+      query_description: "వివరణ"
+      query_user: "సృష్టికర్త"
+      reset_params: "రీసెట్ చేయండి"
+    group:
+      reports: "నివేదికలు"

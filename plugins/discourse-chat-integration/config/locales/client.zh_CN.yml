@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "聊天集成"
+  js:
+    chat_integration:
+      menu_title: "聊天集成"
+      settings: "设置"
+      no_providers: "您需要在插件设置中启用一些提供商"
+      channels_with_errors: "上次发送消息时，此提供商的一些频道失败。点击错误图标了解详情。"
+      channel_exception: "上次向此频道发送消息时发生未知错误。"
+      group_mention_template: "提及：@%{name}"
+      group_message_template: "发送消息给：@%{name}"
+      choose_group: "（选择一个群组）"
+      all_categories: "（所有类别）"
+      all_tags: "（所有标签）"
+      create_rule: "创建规则"
+      create_channel: "创建频道"
+      delete_channel: "删除"
+      test_channel: "测试"
+      edit_channel: "编辑"
+      channel_delete_confirm: "确定要删除此频道吗？所有关联规则都会被删除。"
+      test_modal:
+        title: "发送测试消息"
+        topic: "话题"
+        send: "发送测试信息"
+        close: "关闭"
+        error: "发送消息时遇到未知错误。检查站点日志了解详情。"
+        success: "消息已成功发送"
+      type:
+        normal: 正常
+        group_message: 群发消息
+        group_mention: 群组提及
+      filter:
+        mute: '免打扰'
+        follow: '仅第一个帖子'
+        watch: '所有帖子和回复'
+        thread: '所有带有按线索组织的回复的帖子'
+      rule_table:
+        filter: "筛选器"
+        category: "类别"
+        tags: "标签"
+        edit_rule: "编辑"
+        delete_rule: "删除"
+      edit_channel_modal:
+        title: "编辑频道"
+        save: "保存频道"
+        cancel: "取消"
+        provider: "提供商"
+        channel_validation:
+          ok: "有效"
+          fail: "格式无效"
+      edit_rule_modal:
+        title: 编辑规则
+        save: 保存规则
+        cancel: 取消
+        provider: 提供商
+        type: 类型
+        channel: 频道
+        filter: 筛选器
+        category: 类别
+        group: 群组
+        tags: 标签
+        instructions:
+          type: "更改类型以触发群发消息或提及的通知"
+          filter: "通知级别。免打扰会覆盖其他匹配规则"
+          category: "此规则仅适用于指定类别中的话题"
+          group: "此规则将适用于引用此群组的帖子"
+          tags: "如果指定，此规则将仅适用于至少具有这些标签之一的话题"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: 频道
+              help: "例如：#channel、@username。"
+          errors:
+            action_prohibited: "机器人没有权限在该频道发帖"
+            channel_not_found: "指定的频道在 Slack 上不存在"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "名称"
+              help: "用于描述频道的名称。它不用于连接到 Telegram。"
+            chat_id:
+              title: 聊天 ID
+              help: 一个由机器人提供的号码，或一个 @channelname 格式的广播频道标识符
+          errors:
+            channel_not_found: "指定的频道在 Telegram 上不存在"
+            forbidden: "机器人没有权限在此频道发帖"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "名称"
+              help: "用于描述频道的名称。它不用于连接到 Discord。"
+            webhook_url:
+              title: 网络钩子 URL
+              help: 在您的 Discord 服务器设置中创建的网络钩子 URL
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "名称"
+              help: "用于描述频道的名称。它不用于连接到 Guilded"
+            webhook_url:
+              title: 网络钩子 URL
+              help: 在您的 Guilded 服务器设置中创建的网络钩子 URL
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: 频道
+              help: "例如：#channel、@username。"
+          errors:
+            channel_not_found: "指定的频道在 Mattermost 上不存在"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "名称"
+              help: "用于描述频道的名称。它不用于连接到 Matrix。"
+            room_id:
+              title: "房间 ID"
+              help: "房间的“私有标识符”。看起来应该像 !abcdefg:matrix.org"
+          errors:
+            unknown_token: "访问令牌无效"
+            unknown_room: "房间 ID 无效"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "流"
+              help: "消息应发送到的 Zulip 流的名称。例如 'general'"
+            subject:
+              title: "主题"
+              help: "应提供机器人发送的这些消息的主题"
+          errors:
+            does_not_exist: "流在 Zulip 上不存在"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: 频道
+              help: "例如：#channel、@username。"
+          errors:
+            invalid_channel: "该频道在 Rocket Chat 上不存在"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "名称"
+              help: "Gitter 房间的名称，例如 gitterHQ/services。"
+            webhook_url:
+              title: "网络钩子 URL"
+              help: "在 Gitter 房间中创建新集成时提供的 URL。"
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "流令牌"
+              help: "在为要向其发送消息的流创建源后提供的流令牌。"
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "GroupMe 实例名称"
+              help: "站点设置中列出的 Groupme 实例的名称。使用 'all' 可以发送到所有实例"
+          errors:
+            not_found: "未找到您尝试将消息发布到的路径。检查站点设置中的机器人 ID。"
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "名称"
+              help: "Teams 频道名称，例如 discourse"
+            webhook_url:
+              title: "网络钩子 URL"
+              help: "创建新的入站网络钩子时提供的 URL"
+          errors:
+            invalid_channel: "该频道在 Microsoft Teams 上不存在"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "名称"
+              help: "频道名称（仅在 Discourse 管理界面中显示）"
+            webhook_url:
+              title: "网络钩子 URL"
+              help: "创建新的入站网络钩子时提供的 URL"
+          errors:
+            invalid_webhook: "该网络钩子 URL 无效。"
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "名称"
+              help: "Webex 空间名称，例如 discourse"
+            webhook_url:
+              title: "网络钩子 URL"
+              help: "创建新的入站网络钩子时提供的 URL"
+          errors:
+            invalid_channel: "该频道在 Webex 上不存在"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "名称"
+              help: "频道名称（仅在 Discourse 管理界面中显示）"
+            webhook_url:
+              title: "网络钩子 URL"
+              help: "创建新的网络钩子时提供的 URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: 发送 Slack 消息
+          fields:
+            message:
+              label: 消息
+              description: >-
+                为话题名称使用 ${TOPIC}，为使用的 URL 使用 ${URL}，为移除的标签使用 ${REMOVED_TAGS}，为添加的标签使用 ${ADDED_TAGS}，为默认文本使用 ${ADDED_AND_REMOVED}。仅在触发器设置为“话题标签已更改”时可用。
+            url:
+              label: URL
+            channel:
+              label: 频道
+        send_chat_integration_message:
+          title: 发送聊天集成消息
+          fields:
+            channel_name:
+              label: 频道名称
+              description: "您可以在聊天集成设置中找到频道名称"
+            provider:
+              label: 提供程序

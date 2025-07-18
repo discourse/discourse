@@ -1,0 +1,9 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  site_settings:
+    openid_connect_match_by_email: "از آدرس ایمیلی که برای مطابقت با احراز هویت OpenID متصل به حساب کاربری موجود دیسکورس استفاده کنید."

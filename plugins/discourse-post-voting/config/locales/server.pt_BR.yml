@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "A votação de publicação não está ativada."
+        replying_to_post_not_permited: "Você não tem permissão para criar uma postagem em resposta a outra postagem."
+        voting_not_permitted: "Você não tem permissão para votar nesta postagem."
+        comment_cannot_be_downvoted: "Você só pode votar nos comentários."
+        self_voting_not_permitted: "Você não tem permissão para votar em sua própria postagem ou comentário."
+        vote_archived_topic: "Você não pode votar em tópicos arquivados."
+        vote_closed_topic: "Você não pode votar em tópicos fechados."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "A votação de publicação não está ativada."
+        subtype_not_allowed: "O subtipo da votação de publicação só poder ser usada com tópicos regulares."
+        cannot_change_to_post_voting_subtype: "Não é permitido alterar o subtipo de um tópico de \"Votação de publicação\"."
+      answer_count:
+        one: "%{count} resposta"
+        other: "%{count} respostas"
+  site_settings:
+    qa_tags: "Etiquetas para ativar votação de publicação no tópico"
+    post_voting_enabled: "Ativar plugin de votação em publicação"
+    post_voting_enable_likes_on_answers: "Ative o botão de curtir nas respostas, nos tópicos de votação em publicação"
+    post_voting_undo_vote_action_window: "Número de minutos em que os(as) usuários(as) podem cancelar votos em tópicos de votação em publicação (digite 0 para não ter limite)"
+    post_voting_comment_limit_per_post: "Quantidade de comentários permitidos em cada publicação"
+    min_trust_to_flag_posts_voting_comments: "Nível mínimo de confiança para sinalizar comentário de votação em postagem"
+    flag_posts_voting_comments_allowed_groups: "Grupos com permissão para sinalizar comentário de votação em postagem"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "Votar"
+      description: "Vote nesta postagem"
+      short_description: "Vote nesta postagem"
+      long_form: "votou nesta postagem"
+  vote:
+    error:
+      user_has_not_voted: "O usuário não votou."
+      user_over_limit: "Você não pode exceder o número de votos para seu nível de confiança."
+      already_voted: "Você só pode votar uma vez por pergunta."
+      undo_vote_action_window:
+        one: "Você não pode cancelar a votação %{count} minuto após a votação."
+        other: "Você não pode cancelar a votação %{count} minutos após a votação."
+      one_vote_per_post: "Você só pode votar uma vez em cada postagem."
+      one_vote_per_comment: "Você só pode votar uma vez em cada comentário."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "Não é permitido comentar em uma postagem que não esteja em um tópico de \"Votação de publicação\"."
+        not_permitted: "Não é permitido comentar na postagem associada."
+        limit_exceeded: "O limite de %{limit} comentários por postagem foi atingido."
+        perform: "Comentário de votação em postagem sinalizado com pontuação alta o suficiente para silenciar o(a) usuário(a)."
+        auto_silence_from_flags: "Silenciado(a) automaticamente devido à sinalização."
+      reviewables:
+        comment_already_handled: "Agradecemos, mas já analisamos este comentário e determinamos que não precisa ser sinalizado novamente."
+        actions:
+          agree_and_keep_comment:
+            title: "Manter comentário"
+            description: "Concorde com o sinalizador e mantenha o comentário inalterado."
+          agree_and_keep_deleted:
+            title: "Manter comentário excluído"
+            description: "Concorde com o sinalizador e mantenha o comentário excluído."
+          agree_and_suspend:
+            title: "Suspender usuário(s)"
+            description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
+          agree_and_silence:
+            title: "Silenciar usuário(a)"
+            description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
+          agree_and_restore:
+            title: "Restaurar comentário"
+            description: "Restaure o comentário para que os(as) usuários(as) possam ver."
+          agree_and_delete:
+            title: "Excluir comentário"
+            description: "Exclua o comentário para que os(as) usuários(as) não possam ver."
+          delete_and_agree:
+            title: "Ignorar sinalizador e excluir comentário"
+            description: "Ignore o sinalizador ao removê-lo da fila e exclua o comentário."
+          disagree_and_restore:
+            title: "Discordar e restaurar comentário"
+            description: "Restaure o comentário para que todos(as) usuários(as) possam ver."
+          disagree:
+            title: "Discordar"
+          ignore:
+            title: "Não fazer nada"
+            description: "Ignore o sinalizador ao removê-lo da fila sem realizar nenhuma ação."
+        transcript:
+          view: "Ver transcrição de comentários anteriores"
+      reviewable_score_types:
+        needs_review:
+          title: "Precisa de revisão"
+        notify_user:
+          comment_pm_title: "Seu comentário de votação em postagem"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "Um comentário de votação em postagem requer atenção da equipe"
+          comment_pm_body: "%{link}\n\n%{comment}"

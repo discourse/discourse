@@ -9,3 +9,10 @@ sq:
     discourse_reactions:
       main_reaction:
         add: "Më pëlqen ky postim"
+    notifications:
+      reaction_2_users: "%{username}, %{username2}"
+      reaction_multiple_users:
+        one: "%{username} dhe %{count} tjetër"
+        other: "%{username} dhe %{count} të tjerë"
+      titles:
+        reaction: "reagim i ri"

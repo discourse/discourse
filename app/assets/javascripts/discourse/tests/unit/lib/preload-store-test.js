@@ -19,6 +19,11 @@ module("Unit | Utility | preload-store", function (hooks) {
     );
   });
 
+  test("has", function (assert) {
+    assert.false(PreloadStore.has("joker"), "returns false for a missing key");
+    assert.true(PreloadStore.has("bane"), "returns true for an existing key");
+  });
+
   test("remove", function (assert) {
     PreloadStore.remove("bane");
     assert.blank(

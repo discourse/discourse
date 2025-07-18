@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Introduïu almenys %{count} caràcter"
+              other: "Introduïu almenys %{count} caràcters"
+          edit: "edita"
+          cancel: "cancel·la"
+          user:
+            deleted: "(usuari suprimit)"
+          reviewables:
+            actions:
+              agree:
+                title: "D'acord..."
+              agree_and_suspend:
+                title: "Suspèn l'usuari"
+                description: "D'acord amb la bandera i suspèn l'usuari. "
+              agree_and_silence:
+                title: "Silencia l'usuari"
+                description: "D'acord amb la bandera i silencia l'usuari. "
+              disagree:
+                title: "En desacord"
+      topic:
+        sort_by: "Ordena per"
+        activity: "Activitat"

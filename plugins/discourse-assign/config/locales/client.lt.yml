@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    action_codes:
+      assigned: "Priskirta %{who}%{when}"
+      assigned_group: "Priskirta %{who}%{when}"
+      unassigned: "Nepriskirta %{who}%{when}"
+      unassigned_group: "Nepriskirta %{who}%{when}"
+    discourse_assign:
+      assigned: "Priskirta"
+      group_everyone: "Visi"
+      reassign:
+        title: "Redaguoti"
+      assign_modal:
+        optional_label: "(pasoronktinai)"
+        status_label: Statusas
+      assign_mailer:
+        never: "Niekada"
+        always: "Visada"
+      reminders_frequency:
+        never: "Niekada"
+        daily: "Kasdien"
+        weekly: "Kas savaitę"
+        monthly: "Kas mėnesį"
+        quarterly: "Kas ketvirtį"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Nieko nedaryti"
+      messages:
+        assigned: "Priskirta"
+      assignment_description:
+        topic: "%{topic_title}"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Priskirta"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Įrašai"

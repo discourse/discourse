@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    explorer:
+      or: "või"
+      title: "Andmete eksportija"
+      create: "Loo uus"
+      create_placeholder: "Päringu nimi..."
+      import:
+        label: "Impordi"
+        modal: "Impordi päring"
+      help:
+        label: "Abi"
+      schema:
+        title: "Andmebaasi skeem"
+        filter: "Otsi..."
+      types:
+        bool:
+          yes: "Jah"
+          no: "Ei"
+          null_: "Nulli"
+      export: "Ekspordi"
+      save: "Salvesta muudatused"
+      saverun: "Salvesta muudatused ja käivita"
+      run: "Käivita"
+      undo: "Loobu muudatustest"
+      edit: "Muuda"
+      delete: "Kustuta"
+      download_json: "JSON"
+      download_csv: "CSV"
+      query_groups: "Grupid"
+      query_description: "Kirjeldus"
+      save_params: "Määra vaikeväärtused"
+      reset_params: "Nulli"
+      search_placeholder: "Otsi..."

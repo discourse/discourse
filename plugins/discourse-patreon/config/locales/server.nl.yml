@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    patreon_enabled: 'Discourse-Patreon-plug-in inschakelen'
+    patreon_login_enabled: 'Sociale aanmelding voor Patreon inschakelen'
+    patreon_client_id: 'Gegenereerde Patreon-client-ID'
+    patreon_client_secret: 'Gegenereerd Patreon-clientgeheim'
+    patreon_webhook_secret: 'Gegenereerd Patreon-webhookgeheim'
+    patreon_creator_discourse_username: "Gebruikersnaam van het Discourse-account dat wordt gebruikt voor aanmelding via een Patreon-makersaccount met behulp van 'Sociale aanmelding voor Patreon'"
+    patreon_creator_access_token: "Gegenereerd toegangstoken van Patreon-maker"
+    patreon_creator_refresh_token: "Gegenereerd vernieuwingstoken van Patreon-maker"
+    patreon_declined_pledges_grace_period_days: "Respijtperiode (in dagen) voordat een donatie volledig wordt geweigerd."
+    max_patreon_api_reqs_per_hr: "Maximaal aantal Patreon-API-verzoeken per uur"
+    max_patreon_api_reqs_per_day: "Maximaal aantal Patreon-API-verzoeken per dag"
+    patreon_verbose_log: 'Uitgebreide logging van Patreon-payload inschakelen'
+    patreon_donation_prompt_enabled: "Donatievraag inschakelen?"
+    patreon_donation_prompt_show_after_topics: "Donatievraag weergeven na n topics"
+    patreon_donation_prompt_campaign_url: "Campagne-URL voor donatievraag"
+    errors:
+      patreon_creator_username_not_set: "Je moet de instelling Discourse-gebruikersnaam Patreon-maker instellen voordat je Patreon-aanmelding inschakelt."
+  dashboard:
+    problem:
+      access_token_invalid: "Het toegangs- en het verversingstoken van Patreon Creator zijn onjuist. Je moet nieuwe tokens kopiëren en plakken vanaf de <a href='https://www.patreon.com/platform/documentation/clients'>Patreon-website</a> naar de <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>site-instellingen</a>."
+  patreon:
+    error:
+      invalid_response: "Ongeldig antwoord van Patreon-API"

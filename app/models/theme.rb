@@ -93,6 +93,7 @@ class Theme < ActiveRecord::Base
   has_many :migration_fields,
            -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
+  has_many :theme_site_settings, dependent: :destroy
 
   validate :component_validations
   validate :validate_theme_fields
@@ -107,6 +108,7 @@ class Theme < ActiveRecord::Base
         -> do
           include_basic_relations.includes(
             :theme_settings,
+            :theme_site_settings,
             :settings_field,
             theme_fields: %i[upload theme_settings_migration],
             child_themes: %i[color_scheme locale_fields theme_translation_overrides],
@@ -126,10 +128,9 @@ class Theme < ActiveRecord::Base
           )
         end
 
+  scope :not_components, -> { where(component: false) }
   scope :not_system, -> { where("id > 0") }
   scope :system, -> { where("id < 0") }
-  scope :with_experimental_system_themes,
-        -> { where("id > 0 OR id IN (?)", Theme.experimental_system_theme_ids) }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
@@ -318,6 +319,15 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
+  def self.expire_site_setting_cache!
+    Theme
+      .not_components
+      .pluck(:id)
+      .each do |theme_id|
+        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
+      end
+  end
+
   def self.clear_default!
     SiteSetting.default_theme_id = -1
     expire_site_cache!
@@ -345,12 +355,6 @@ class Theme < ActiveRecord::Base
 
       all_ids - disabled_ids
     end
-  end
-
-  def self.experimental_system_theme_ids
-    Theme::CORE_THEMES
-      .select { |k, v| SiteSetting.experimental_system_themes_map.include?(k) }
-      .values
   end
 
   def set_default!
@@ -1073,7 +1077,12 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [id]).count
+    UserOption.where(theme_ids: [self.id]).count
+  end
+
+  def themeable_site_settings
+    return [] if self.component?
+    ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
   end
 
   def find_or_create_owned_color_palette

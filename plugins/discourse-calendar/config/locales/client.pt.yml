@@ -1,0 +1,80 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          title: Evento iniciado
+          fields:
+            topic_id:
+              label: ID do Tópico
+    discourse_calendar:
+      disable_holiday: "Desativar"
+      enable_holiday: "Ativar"
+      date: "Data"
+      region:
+        none: "Nenhuma"
+      toolbar_button:
+        today: "Hoje"
+        month: "Mês"
+        week: "Semana"
+        day: "Dia"
+    group_timezones:
+      search: "Pesquisar..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "Mostrar tudo"
+      add_to_calendar: "Adicionar ao calendário"
+      bulk_invite: "Convite em massa"
+      bulk_invite_modal:
+        confirm: "confirmar"
+        title: "Convite em massa"
+        success: "Ficheiro enviado corretamente, será notificado via mensagem quando o processo estiver concluído."
+        error: "Desculpe, o ficheiro deverá estar no formato CSV."
+      upcoming_events:
+        status: "Estado"
+      models:
+        event:
+          expired: "Expirado"
+          closed: "Fechado"
+          status:
+            public:
+              title: "Público"
+            private:
+              title: "Privado"
+      builder_modal:
+        custom_fields:
+          placeholder: "Opcional"
+        create: "Criar"
+        update: "Guardar"
+        timezone:
+          label: Zona Horária
+        reminders:
+          units:
+            minutes: "minutos"
+            hours: "horas"
+            days: "dias"
+          periods:
+            before: "antes"
+            after: "depois"
+        recurrence:
+          label: "Recorrência"
+          none: "Nenhuma recorrência"
+          every_day: "Diariamente"
+        url:
+          label: "URL"
+          placeholder: "Opcional"
+        location:
+          label: "Localização"
+        description:
+          label: "Descrição"
+        status:
+          label: "Estado"
+      invite_user_or_group:
+        invite: "Enviar"

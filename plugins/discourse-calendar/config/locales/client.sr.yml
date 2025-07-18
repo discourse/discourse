@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID Teme
+    discourse_calendar:
+      disable_holiday: "Onemogući"
+      enable_holiday: "Omogući"
+      region:
+        none: "Ništa"
+      toolbar_button:
+        today: "Danas"
+        month: "Mesec"
+        week: "Nedelja"
+    discourse_post_event:
+      builder_modal:
+        update: "Sačuvaj"
+        reminders:
+          units:
+            days: "dana"
+          periods:
+            before: "pre"
+        url:
+          label: "URL"
+        location:
+          label: "Lokacija"
+        description:
+          label: "Opis"

@@ -1,0 +1,47 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Fjern semikolonene fra spørringen."
+        dirty: "Du må lagre spørringen før du kjører den."
+    explorer:
+      or: "eller"
+      admins_only: "Datautforskeren er kun tilgjengelig for administratorer."
+      title: "Datautforsker"
+      create: "Opprett ny"
+      create_placeholder: "Spørringsnavn…"
+      import:
+        label: "Importer"
+        modal: "Importer en spørring"
+      help:
+        label: "Hjelp"
+      schema:
+        filter: "Søk…"
+      types:
+        bool:
+          yes: "Ja"
+          no: "Nei"
+          null_: "Null"
+      export: "Eksporter"
+      save: "Lagre endringer"
+      undo: "Forkast endringer"
+      edit: "Rediger"
+      delete: "Slett"
+      recover: "Angre sletting av spørring"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
+      query_groups: "Grupper"
+      query_description: "Beskrivelse"
+      explain_label: "Inkluder spørringsplan?"
+      save_params: "Sett forvalg"
+      reset_params: "Tilbakestill"
+      search_placeholder: "Søk…"
+    group:
+      reports: "Rapporter"

@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    rss_polling_enabled: "[Ankieta RSS] Włącz importowanie osadzonych postów z wielu kanałów RSS"
+    rss_polling_frequency: "[RSS Polling] Częstotliwość aktualizacji strony (w minutach)"
+    rss_polling_use_pubdate: "[RSS Polling] Ustaw datę utworzenia tematu na pubDate znalezioną w kanale RSS."
+    rss_polling_update_tags: "[RSS Polling] Aktualizuj tagi tematów, gdy temat jest aktualizowany. Wyłączenie tej opcji pobiera początkowe tagi, ale wyłącza dalsze zmiany tagów."

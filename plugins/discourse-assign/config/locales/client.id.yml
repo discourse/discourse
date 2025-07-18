@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    discourse_assign:
+      assigned: "Ditugaskan"
+      group_everyone: "Semua orang"
+      reassign:
+        title: "Ubah"
+      assign_modal:
+        optional_label: "(opsional)"
+        status_label: Status
+      assign_mailer:
+        never: "Tidak pernah"
+        always: "Selalu"
+      reminders_frequency:
+        never: "Tidak pernah"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Tidak melakukan apapun"
+      messages:
+        assigned: "Ditugaskan"
+    notifications:
+      titles:
+        assigned: "Ditugaskan"
+    edit_assignments_modal:
+      topic: "Topik"
+      post: "Postingan"

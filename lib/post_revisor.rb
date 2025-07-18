@@ -96,7 +96,7 @@ class PostRevisor
       end
 
       tc.record_change("category_id", current_category&.id, new_category&.id)
-      tc.check_result(tc.topic.change_category_to_id(new_category_id))
+      tc.check_result(tc.topic.change_category_to_id(new_category_id, silent: @silent))
       create_small_action_for_category_change(
         topic: tc.topic,
         user: tc.user,
@@ -215,6 +215,7 @@ class PostRevisor
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
   # - skip_staff_log: skip creating an entry in the staff action log
+  # - silent: don't send notifications to user
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -270,6 +271,9 @@ class PostRevisor
 
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
+
+    @silent = false
+    @silent = @opts[:silent] if @opts.has_key?(:silent)
 
     @post.incoming_email&.update(imap_sync: true) if @post.incoming_email&.imap_uid
 

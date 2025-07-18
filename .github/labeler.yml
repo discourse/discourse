@@ -30,6 +30,86 @@ discourse-reactions:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-reactions/**/*
 
+discourse-apple-auth:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-apple-auth/**/*
+
+discourse-login-with-amazon:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-login-with-amazon/**/*
+
+discourse-lti:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-lti/**/*
+
+discourse-microsoft-auth:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-microsoft-auth/**/*
+
+discourse-oauth2-basic:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-oauth2-basic/**/*
+
+discourse-openid-connect:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-openid-connect/**/*
+
+discourse-zendesk-plugin:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-zendesk-plugin/**/*
+
+discourse-patreon:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-patreon/**/*
+
+discourse-graphviz:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-graphviz/**/*
+
+discourse-rss-polling:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-rss-polling/**/*
+
+discourse-math:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-math/**/*
+
+discourse-chat-integration:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-chat-integration/**/*
+
+discourse-data-explorer:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-data-explorer/**/*
+
+discourse-post-voting:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-post-voting/**/*
+
+discourse-user-notes:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-user-notes/**/*
+
+discourse-assign:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-assign/**/*
+
+discourse-subscriptions:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-subscriptions/**/*
+
+discourse-hcaptcha:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-hcaptcha/**/*
+
+discourse-gamification:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-gamification/**/*
+
+discourse-calendar:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-calendar/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

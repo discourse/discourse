@@ -1,0 +1,28 @@
+months:
+  0:
+  - name: Custom Holiday
+    regions: [custom_single_file]
+    function: custom_method(year, month)
+    function_modifier: 5
+  6:
+  - name: Company Founding
+    regions: [custom_single_file]
+    mday: 20
+methods:
+  custom_method:
+    arguments: year, month
+    source: |
+      d = Date.civil(year, month, 1)
+      d + 2
+
+tests:
+  - given:
+      date: '2013-06-20'
+      regions: [custom_single_file]
+    expect:
+      name: "Company Founding"
+  - given:
+      date: '2015-01-01'
+      regions: [custom_single_file]
+    expect:
+      name: "Custom Holiday"

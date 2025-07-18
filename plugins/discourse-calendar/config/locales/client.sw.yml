@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: Utambulisho wa Mada
+    discourse_calendar:
+      disable_holiday: "Sitisha"
+      enable_holiday: "Wezesha"
+      date: "Tarehe"
+      region:
+        none: "Hakuna"
+      toolbar_button:
+        today: "Leo"
+        month: "Mwezi"
+        week: "Wiki"
+        day: "Siku"
+    group_timezones:
+      search: "Tafuta"
+    discourse_post_event:
+      bulk_invite_modal:
+        success: "Faili limepakiwa kwa mafanikio, utapewa taarifa kwa kupitia Meseji mchakato utakapo kamilika"
+        error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
+      models:
+        event:
+          closed: "Imefungwa"
+          status:
+            public:
+              title: "Umma"
+            private:
+              title: "Binafsi"
+      builder_modal:
+        custom_fields:
+          placeholder: "Sio muhimu"
+        create: "Tengeneza"
+        update: "Hifadhi"
+        reminders:
+          units:
+            days: "siku"
+          periods:
+            before: "kabla"
+            after: "baada"
+        recurrence:
+          label: "Kurudiarudia"
+          none: "Hakuna kurudia"
+        url:
+          label: "Anwani ya mtandao"
+          placeholder: "Sio muhimu"
+        location:
+          label: "Sehemu"
+        description:
+          label: "Elezo"
+      invite_user_or_group:
+        invite: "Tuma"

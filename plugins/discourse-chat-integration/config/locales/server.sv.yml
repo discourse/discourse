@@ -1,0 +1,228 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    chat_integration_enabled: 'Aktivera discourse-chattintegrerings-tillägget'
+    chat_integration_discourse_username: 'Användarnamn för användaren att fungera som vid hämtning av innehåll.'
+    chat_integration_delay_seconds: 'Väntan, uttryckt i sekunder, efter inläggets skapande innan chattaviseringar skickas'
+    chat_integration_slack_username: "Bots användarnamn att skriva till Slack under"
+    chat_integration_slack_enabled: 'Aktivera chattintegreringsleverantören för Slack'
+    chat_integration_slack_access_token: 'OAuth-tillträdesbevis för autentisering med Slack'
+    chat_integration_slack_incoming_webhook_token: 'Verifieringsbevis som används för att autentisera inkommande förfrågningar'
+    chat_integration_slack_excerpt_length: 'Slack-inläggsutdragets längd'
+    chat_integration_slack_icon_url: 'Ikon för inlägg till Slack (standard är forumets logotyp)'
+    chat_integration_slack_outbound_webhook_url: "För att använda Slacks 'inkommande webhook' som system istället för OAuth API. Rekommenderas inte."
+    chat_integration_slack_transcript_quote: Slå in slack transkript i [quote] -taggar?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Du måste ange antingen en utgående webhook-URL, eller ett behörighetsbevis"
+    chat_integration_telegram_enabled: "Aktivera chattintegreringsleverantören för Telegram"
+    chat_integration_telegram_access_token: "Din hjälpredas åtkomstbevis från Telegram-hjälpredefadern"
+    chat_integration_telegram_excerpt_length: "Telegram-inläggsutdragets längd"
+    chat_integration_telegram_enable_slash_commands: "Tillåt att Telegram-prenumerationer hanteras genom 'slash commands'"
+    chat_integration_discord_enabled: "Aktivera chattintegreringsleverantören för Discord"
+    chat_integration_discord_message_content: "Meddelande att inkludera ovanför sammanfattningen vid sändning av en avisering till Discord"
+    chat_integration_discord_excerpt_length: "Discord-inläggsutdragets längd"
+    chat_integration_mattermost_enabled: "Aktivera chattintegreringsleverantören för Mattermost"
+    chat_integration_mattermost_webhook_url: 'URL för Mattermost-webhook'
+    chat_integration_mattermost_incoming_webhook_token: 'Verifieringsbevis som används för att autentisera inkommande förfrågningar'
+    chat_integration_mattermost_icon_url: "Ikon för inlägg till Mattermost (standard är forumets logotyp)"
+    chat_integration_mattermost_excerpt_length: "Mattermost-inläggsutdragets längd"
+    chat_integration_matrix_enabled: "Aktivera chattintegreringsleverantör för Matrix"
+    chat_integration_matrix_homeserver: "Hemserver att ansluta till. Se till att inkludera protokollet"
+    chat_integration_matrix_access_token: "Åtkomstbevis för botens Matrix-konto"
+    chat_integration_matrix_excerpt_length: "Matrix-inläggsutdragets längd"
+    chat_integration_matrix_use_notice: "Använd notis istället för vanligt meddelande"
+    chat_integration_zulip_enabled: "Aktivera chattintegreringsleverantör för Zulip"
+    chat_integration_zulip_server: "Bas-URL för din Zulip-server. Se till att ta med http(s)://"
+    chat_integration_zulip_bot_email_address: "E-postadressen som är kopplad till din Zulip-hjälpreda"
+    chat_integration_zulip_bot_api_key: "API-nyckeln för din Zulip-hjälpreda"
+    chat_integration_zulip_excerpt_length: "Zulip-inläggsutdragets längd"
+    chat_integration_rocketchat_enabled: "Aktivera chattintegreringsleverantör för Rocket Chat"
+    chat_integration_rocketchat_webhook_url: "URL för Rocket Chats integrerings-webhook"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat-inläggsutdragets längd"
+    chat_integration_gitter_enabled: "Aktivera chattintegreringsleverantör för Gitter"
+    chat_integration_flowdock_enabled: "Aktivera chattintegreringsleverantör för Flowdock"
+    chat_integration_flowdock_excerpt_length: "Flowdock-inläggsutdragets längd"
+    chat_integration_groupme_enabled: "Aktivera chattintegreringsleverantör för Groupme"
+    chat_integration_groupme_excerpt_length: "Groupme-inläggsutdragets längd"
+    chat_integration_groupme_bot_ids: "*krävs* Bot-id, avgränsade med ',' om det är flera"
+    chat_integration_groupme_instance_names: " *krävs* Namn på GroupMe-chatten, avgränsade med ',' om det är flera (samma ordning som Bot-ID)"
+    chat_integration_teams_enabled: "Aktivera chattintegreringsleverantören för Microsoft Teams"
+    chat_integration_teams_excerpt_length: "Microsoft Team-inläggsutdragets längd"
+    chat_integration_webex_enabled: "Aktivera chattintegreringsleverantör för Webex Teams"
+    chat_integration_webex_excerpt_length: "Webex Team-inläggsutdragets längd"
+    chat_integration_google_enabled: "Aktivera chattintegreringsleverantör för 'Google Chatt'"
+    chat_integration_google_excerpt_length: "Google Chatt-inläggsutdragets längd"
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Skicka Slack-meddelande
+  chat_integration:
+    all_categories: "(alla kategorier)"
+    deleted_category: "(raderad kategori)"
+    deleted_group: "(raderad grupp)"
+    group_mention_template: "omnämnanden av: @%{name}"
+    group_message_template: "meddelanden till: @%{name}"
+    topic_tag_changed:
+      added_and_removed: "Lade till %{added} och tog bort %{removed}"
+      added: "Lade till %{added}"
+      removed: "Tog bort %{removed}"
+    provider:
+      slack:
+        status:
+          header: |
+            *Regler för denna kanal*
+            (om flera regler matchar ett inlägg verkställs den översta regeln)
+          no_rules: "Det har inte upprättats några regler för denna kanal. Kör `/discourse help` för instruktioner."
+          rule_string: "*%{index})* *%{filter}* inlägg i *%{category}*"
+          rule_string_tags_suffix: " med taggar: *%{tags}*"
+        parse_error: "Tyvärr förstod jag inte det där. Kör `/discourse help` för instruktioner."
+        create:
+          created: "Regel har skapats"
+          updated: "Regel har uppdaterats"
+          error: "Tyvärr uppstod det ett fel när den regeln skapades."
+        delete:
+          success: "Regel har tagits bort"
+          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör `/discourse status` för att visa en lista över regler."
+        not_found:
+          tag: "Taggen *%{name}* kan inte hittas."
+          category: "Kategorin *%{name}* kan inte hittas. Tillgängliga kategorier: *%{list}*"
+        help: |
+          *Ny regel:* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          (du måste specificera en regeltyp samt minst en kategori eller tagg)
+          - *tråd* – avisera denna kanal vid nya ämnen, med trådade svar om möjligt
+          - *bevaka* – avisera denna kanal vid nya ämnen eller nya svar
+          - *följ* – avisera denna kanal vid nya ämnen
+          - *tysta* – blockera aviseringar för denna kanal
+
+          *Ta bort regel:* `/discourse remove [rule number]`
+          (`[rule number]` kan tas fram genom att köra `/discourse status`)
+
+          *Lista över regler:* `/discourse status`
+
+          *[Experimentell] Inläggs transkription:* `/discourse post [n]`
+          Skapa ett ämnesutkast på discourse som innehåller de senaste `n` inläggen för denna kanal
+
+          *Hjälp:* `/discourse help`
+        transcript:
+          modal_title: "Skapa transkript"
+          modal_description: "Alla meddelanden i tråden kommer att samlas i ett enda foruminlägg. Du kommer att få möjlighet att redigera transkriptet innan du publicerar."
+          transcript_ready: "Transkriptet är klart"
+          continue_on_discourse: "Fortsätt i forum"
+          error: "Tyvärr gick något fel när utskriften skapades!"
+          post_to_discourse: "Klicka här för att utarbeta ett inlägg på Discourse genom ett transkript"
+          api_required: "Tyvärr är den här integrationen inte konfigurerad till att stödja transkript som inlägg."
+          view_on_slack: "Visa i %{name} på Slack"
+          first_message_pretext: "startande %{n} meddelanden sedan:"
+          last_message_pretext: "och slutande %{n} meddelanden sedan:"
+          posted_in: "Inlagt i %{name}"
+          change_first_message: "Ändra första meddelandet..."
+          change_last_message: "Ändra sista meddelandet..."
+          loading: "Laddar transkriptet..."
+          error_users: "Fel: Det gick inte att hämta användare från Slack"
+          error_history: "Fel: Det gick inte att hämta kanalhistorik från Slack"
+          error_ts: "Fel: Det gick inte att hämta begärt meddelande från Slack"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Lade till %{added} och tog bort %{removed}"
+            added: "Lade till %{added}"
+            removed: "Tog bort %{removed}"
+      telegram:
+        unknown_chat: "Denna chatt är inte konfigurerad för %{site_title}. Be en administratör att lägga till kanalen med 'Chat ID' %{chat_id}."
+        known_chat: "Denna chatt är konfigurerad för %{site_title}. Konfigurera den från admin-panelen. (chatt-ID: %{chat_id})"
+        message: |-
+          <b>%{user}</b> publicerade i <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Regler för denna kanal</b>
+            (om flera regler matchar ett inlägg, kommer den översta regeln att verkställas)
+          no_rules: "Det har inte konfigurerats regler för denna kanal. Kör <code>/help</code> för instruktioner."
+          rule_string: "<b>%{index})</b><b>%{filter}</b> inlägg i <b>%{category}</b>"
+          rule_string_tags_suffix: " med taggar: <b>%{tags}</b>"
+        parse_error: "Tyvärr förstod jag inte det där. Kör <code>/help</code> för instruktioner."
+        create:
+          created: "Regel har skapats"
+          updated: "Regel har uppdaterats"
+          error: "Tyvärr uppstod det ett fel när den regeln skapades."
+        delete:
+          success: "Regel har tagits bort"
+          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör <code>/status</code> för en lista över regler."
+        not_found:
+          tag: "Taggen <b>%{name}</b> kan inte hittas."
+          category: "Kategorin <b>%{name}</b> kan inte hittas. Tillgängliga kategorier: <b>%{list}</b>"
+        help: |
+          <b>Ny regel:</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          (du måste specificera en regeltyp och åtminstone en kategori eller tagg)
+          -<b>bevaka</b> – avisera denna kanal för nya ämnen och nya svar
+          -<b>följ</b> – avisera denna kanal för nya ämnen
+          -<b>tysta</b> – blockera aviseringar för denna kanal
+
+          <b>Ta bort regel:</b> <code>/remove [rule number]</code>
+          (<code>[rule number]</code> kan hittas genom att köra <code>/status</code>)
+
+          <b>Lista över regler:</b> <code>/status</code>
+
+          <b>Hjälp:</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> publicerade i <a href="%{post_url}">%{title}</a>
+      mattermost:
+        status:
+          header: |
+            *Regler för denna kanal*
+            (om flera regler matchar ett inlägg kommer den översta regeln att verkställas)
+          no_rules: "Det har inte upprättats några regler för denna kanal. Kör `/discourse help` för instruktioner."
+          rule_string: "*%{index})* *%{filter}* inlägg i *%{category}*"
+          rule_string_tags_suffix: " med taggar: *%{tags}*"
+        parse_error: "Tyvärr förstod jag inte det där. Kör `/discourse help` för instruktioner."
+        create:
+          created: "Regel har skapats"
+          updated: "Regel har uppdaterats"
+          error: "Tyvärr uppstod det ett fel när den regeln skapades."
+        delete:
+          success: "Regel har tagits bort"
+          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör `/discourse status` för en lista över regler."
+        not_found:
+          tag: "Taggen *%{name}* kan inte hittas."
+          category: "Kategorin *%{name}* kan inte hittas. Tillgängliga kategorier: *%{list}*"
+        help: |
+          *Ny regel:* `/discource [watch|follow|mute] [category] [tag:name]`
+          (du måste specificera en regeltyp och åtminstone en kategori eller tagg)
+          - *bevaka* – avisera denna kanal för nya ämnen och nya svar
+          - *följ* – avisera denna kanal för nya ämnen
+          - *tysta* – blockera aviseringar för denna kanal
+
+          *Ta bort regel:* `/discource remove [rule number]`
+          (`[rule number]` kan hittas genom att köra `/discourse status` )
+
+          *Lista över regler:* `/discource status`
+
+          *Hjälp:* `/discourse help`
+      matrix:
+        text_message: "%{user} publicerade i %{title} - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> publicerade i <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** publicerade i **[%{title}](%{post_url})**
+          ~~~citat
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "publicerade"
+      google:
+        new_post: "Nytt inlägg på %{site_title}"
+        new_topic: "Nytt ämne på %{site_title}"
+        author: "av @%{username}"
+        link: "Visa på %{site_title}"
+      groupme:
+        errors:
+          instance_names_issue: "instansnamn felaktigt formaterade eller är inte angivna"

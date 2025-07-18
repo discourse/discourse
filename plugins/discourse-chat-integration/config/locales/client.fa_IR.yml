@@ -1,0 +1,158 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "یکپارچگی گفتگو"
+  js:
+    chat_integration:
+      menu_title: "یکپارچگی گفتگو"
+      settings: "تنظیمات"
+      group_mention_template: "اشاره شده: @%{name}"
+      group_message_template: "پیغام‌ها به: @%{name}"
+      choose_group: "(یک گروه را انتخاب کنید)"
+      all_categories: "(تمام دسته بندی ها)"
+      all_tags: "(تمام برچسب‌ها)"
+      create_rule: "ایجاد قانون"
+      create_channel: "ایجاد کانال"
+      delete_channel: "حذف"
+      test_channel: "آزمایش"
+      edit_channel: "ویرایش"
+      channel_delete_confirm: "آیا از حذف این کانال مطمئن هستید؟ تمام قوانین مرتبط حذف خواهد شد."
+      test_modal:
+        title: "ارسال پیغام آزمایشی"
+        topic: "موضوعات"
+        send: "ارسال پیغام آزمایشی"
+        close: "بستن"
+        success: "پیغام با موفقیت ارسال شد"
+      type:
+        normal: معمولی
+        group_message: پیغام گروه
+        group_mention: اشاره گروهی
+      filter:
+        mute: 'بی صدا'
+        follow: 'فقط اولین نوشته'
+        watch: 'همه نوشته‌ها و پاسخ‌ها'
+      rule_table:
+        filter: "فیلتر"
+        category: "دسته‌بندی"
+        tags: "برچسبها"
+        edit_rule: "ویرایش"
+        delete_rule: "حذف"
+      edit_channel_modal:
+        title: "ویرایش کانال"
+        save: "ذخیره کانال"
+        cancel: "لغو کردن"
+        provider: "ارائه‌دهنده"
+        channel_validation:
+          ok: "معتبر"
+      edit_rule_modal:
+        title: ویرایش قانون
+        save: ذخیره قانون
+        cancel: لغو کردن
+        provider: ارائه‌دهنده
+        type: نوع
+        channel: کانال
+        filter: فیلتر
+        category: دسته‌بندی
+        group: گروه
+        tags: برچسبها
+      provider:
+        slack:
+          title: "اسلک"
+          param:
+            identifier:
+              title: کانال
+              help: "به عنوان مثال #channel، @username."
+        telegram:
+          title: "تلگرام"
+          param:
+            name:
+              title: "نام"
+        discord:
+          title: "دیسکورد"
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: نشانی اینترنتی وب‌هوک
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "نام"
+              help: "نامی برای توصیف کانال. برای اتصال به Guilded استفاده نمی‌شود"
+            webhook_url:
+              title: نشانی اینترنتی وب‌هوک
+              help: نشانی اینترنتی وب‌هوک که در سرور Guilded شما ایجاد شده
+        mattermost:
+          param:
+            identifier:
+              title: کانال
+              help: "به عنوان مثال #channel، @username."
+        matrix:
+          param:
+            name:
+              title: "نام"
+        zulip:
+          param:
+            subject:
+              title: "موضوع"
+        rocketchat:
+          param:
+            identifier:
+              title: کانال
+              help: "به عنوان مثال #channel، @username."
+        gitter:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
+        teams:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
+        powerautomate:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
+        webex:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
+        google:
+          param:
+            name:
+              title: "نام"
+            webhook_url:
+              title: "نشانی اینترنتی وب‌هوک"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: ارسال پیام اسلک
+          fields:
+            message:
+              label: پیام
+            url:
+              label: نشانی اینترنتی
+            channel:
+              label: کانال
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: نام کانال
+            provider:
+              label: ارائه‌دهنده

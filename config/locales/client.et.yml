@@ -871,6 +871,8 @@ et:
       suspended_notice: "Selle kasutaja ligipääs on ajutiselt peatatud kuni %{date}."
       suspended_permanently: "Selle kasutaja konto on peatatud."
       suspended_reason: "Põhjus:"
+      silenced_permanently: "See kasutaja on vaigistatud."
+      silenced_reason: "Põhjus:"
       github_profile: "GitHub"
       email_activity_summary: "Tegevuste kokkuvõte"
       mailing_list_mode:
@@ -1151,7 +1153,8 @@ et:
         remove: "Eemalda"
         reinvited: "Kutse uuesti saadetud"
         user: "Kutsutud kasutaja"
-        none: "Pole ühtegi kutset, mida näidata."
+        none:
+          title: "Pole ühtegi kutset, mida näidata."
         truncated:
           one: "Näitan esimest kutset."
           other: "Näitan esimest %{count} kutset."
@@ -1439,7 +1442,6 @@ et:
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
       toggle_whisper: "Lülita sosistamine ümber"
-      toggle_unlisted: "Lülita eemaldamine ümber"
       insert_table: "Sisesta tabel"
       posting_not_on_topic: "Millisesse teemasse soovid vastata?"
       saved_local_draft_tip: "salvestatud lokaalselt"

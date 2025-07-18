@@ -1,0 +1,193 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Uwezo wa kuwasiliana"
+  js:
+    chat_integration:
+      menu_title: "Maongezi Shirikizo"
+      settings: "Mipangilio"
+      no_providers: "Unahitaji kuwawezesha baadhi ya watoa huduma kwenye mpangilio wa programu-jalizi"
+      channels_with_errors: "Baadha ya chaneli za huyu mtumiaji zilishindwa mara ya mwisho zilipotumiwa ujumbe. Bonyeza ikoni za njano kupata taarifa zaidi za (ma)kosa."
+      group_mention_template: "@%{name} Ametajwa:"
+      group_message_template: "Ujumbe kwenda kwa: @%{name}"
+      choose_group: "(chagua kikundi)"
+      all_categories: "(Makundi yote)"
+      all_tags: "(lebo)"
+      create_rule: "Tengeneza Kanuni"
+      create_channel: "Tengeneza Chaneli"
+      delete_channel: "Futa"
+      test_channel: "Majaribio"
+      edit_channel: "Hariri"
+      channel_delete_confirm: "Una uhakika kuwa unataka kuifuta hii chaneli? Kanuni zote zitafutwa."
+      test_modal:
+        title: "Jaribu kutuma ujumbe"
+        topic: "Mada"
+        send: "Tuma Ujumbe wa Kujaribu"
+        close: "Funga"
+        error: "Hitilafu isilojulikana limetokea wakati wa kutuma ujumbe. Angalia logi ya mtandao kwa ajili ya taarifa zaidi."
+        success: "Ujumbe umetumwa Vizuri"
+      type:
+        normal: Kawaida
+        group_message: Ujumbe wa Kikundi
+        group_mention: Kikundi Kimetajwa
+      filter:
+        mute: 'Nyamazisha'
+        follow: 'Taarifa ya kwanza pekee'
+        watch: 'Machapisho yote na majibu'
+      rule_table:
+        filter: "Chuja"
+        category: "Kikundi"
+        tags: "Lebo"
+        edit_rule: "Hariri"
+        delete_rule: "Futa"
+      edit_channel_modal:
+        title: "Hariri Chaneli"
+        save: "Hifadhi Chaneli"
+        cancel: "Batili"
+        provider: "Mkimu"
+        channel_validation:
+          ok: "Sahihi"
+          fail: "Umbiza Batili"
+      edit_rule_modal:
+        title: Hariri Kanuni
+        save: Hifadhi Kanuni
+        cancel: Katisha
+        provider: Mkimu
+        type: Aina
+        channel: Chaneli
+        filter: Chuja
+        category: Kikundi
+        group: Kikundi
+        tags: Lebo
+        instructions:
+          type: "Badilisha jinsi ya kuonyesha aina za taarifa za vikundi au mtu akitajwa"
+          filter: "Kiwango cha Taarifa. Zima kanuni nyongeza"
+          category: "Kanuni hii itatumika kwenye mada zilizo ndani ya kategoria iliyoainika"
+          tags: "Kama ikitumika, kanuni hii itatumika kwenye mada zenye lebo hizi au hii"
+      provider:
+        slack:
+          title: "uzembe"
+          param:
+            identifier:
+              title: Chaneli
+              help: "mfano. #chaneli, @jinalamtumiaji."
+          errors:
+            action_prohibited: "Roboti hana ruhusa kuchapisha ndani ya hiyo chaneli"
+            channel_not_found: "Chaneli iliyochaguliwa haipo slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Jina"
+              help: "Jina linaloelezea chaneli hii. Haitatumika kuunganisha na Telegram."
+            chat_id:
+              title: Utambulisho wa Mawasiliano
+          errors:
+            channel_not_found: "Njia ya mawasiliano uliyoiandika haipo Telegram, mtandao wa kijamii"
+            forbidden: "roboti haruhusiwi kuandika kwenye njia hii ya mawasiliano"
+        discord:
+          title: "Matatizo"
+          param:
+            name:
+              title: "Jina"
+              help: "Jina ulilotumia kuelezea njia ya mawasiliano halitambuliki na Discord"
+            webhook_url:
+              title: Anwani ya Webhook
+        guilded:
+          param:
+            name:
+              title: "Jina"
+            webhook_url:
+              title: Anwani ya Webhook
+        mattermost:
+          title: "Umuhimu zaidi"
+          param:
+            identifier:
+              title: Chaneli
+              help: "e.g. #jinalamawasiliano, @jinalamtumiaji."
+          errors:
+            channel_not_found: "Njia hiyo ya mawasiliano haipo kwenye Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Jina"
+              help: "Jina la kuelezea chaneli. Haitumiki kuunganisha na Matrix."
+            room_id:
+              title: "Utambulisho wa Chumba"
+              help: "'Kitambulishi Binafsi' kwa ajili ya chumba. Inabidi kifanane na hivi !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Ishara ya Ufikivu ni batili"
+            unknown_room: "Utambulisho wa Chumba ni batili"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Mfululizo"
+            subject:
+              title: "Hoja"
+              help: "Udhui wa ujumbe kutoka kwa roboti wakati wa kutuma ujumbe"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Chaneli
+              help: "mfano. #chaneli, @jinalamtumiaji."
+          errors:
+            invalid_channel: "Hii chaneli haipo kwenye Njia ya Mawasiliano ya Rocket Chat"
+        gitter:
+          title: "Gusa"
+          param:
+            name:
+              title: "Jina"
+              help: "Jina la chumba cha Gitter e.g. gitterHQ/huduma."
+            webhook_url:
+              title: "Anwani ya Webhook"
+        flowdock:
+          title: "Flowdock"
+        teams:
+          param:
+            name:
+              title: "Jina"
+            webhook_url:
+              title: "Anwani ya Webhook"
+        powerautomate:
+          param:
+            name:
+              title: "Jina"
+            webhook_url:
+              title: "Anwani ya Webhook"
+        webex:
+          param:
+            name:
+              title: "Jina"
+            webhook_url:
+              title: "Anwani ya Webhook"
+        google:
+          param:
+            name:
+              title: "Jina"
+            webhook_url:
+              title: "Anwani ya Webhook"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Ujumbe
+            url:
+              label: Anwani ya mtandao
+            channel:
+              label: Chaneli
+        send_chat_integration_message:
+          fields:
+            provider:
+              label: Mkimu

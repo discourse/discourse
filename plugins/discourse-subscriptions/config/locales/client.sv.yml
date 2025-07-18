@@ -1,0 +1,208 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse-prenumerationer"
+  site_settings:
+    discourse_subscriptions_enabled: Aktivera tillägget för Discourse-prenumerationer.
+    discourse_subscriptions_extra_nav_subscribe: Visa prenumerationsknappen i den primära navigeringen
+    discourse_subscriptions_public_key: Stripe-publiceringsnyckel
+    discourse_subscriptions_secret_key: Stripe hemlig nyckel
+    discourse_subscriptions_webhook_secret: Stripe Webhook-hemlighet
+    discourse_subscriptions_currency: Standardiserad valutakod. Detta kan åsidosättas vid skapandet av en prenumerationsplan.
+    discourse_subscriptions_campaign_enabled: Aktiverar en kampanjbanderoll för att främja stödet till detta forum ekonomiskt.
+    discourse_subscriptions_campaign_goal: Det numeriska målet för din stödkampanj (prenumeranter eller insamlat belopp).
+    discourse_subscriptions_campaign_type: Väljer vilken typ av kampanj som ska drivas (prenumeranter eller månatligt belopp).
+    discourse_subscriptions_campaign_banner_location: Väljer platsen för kampanjbanderollen (överst eller sidofält).
+    discourse_subscriptions_campaign_banner_shadow_color: Väljer färgen på kampanjbanderollens skugga.
+    discourse_subscriptions_campaign_banner_bg_image: Ladda upp en anpassad bild som ska användas som bakgrund på kampanjbanderollen.
+    discourse_subscriptions_campaign_show_contributors: Visa avatarer för de senaste inköpen av prenumerationsprodukter.
+    discourse_subscriptions_campaign_product: Stripe-produkt-id för plats dit understödjare skickas när de klickar på knappen i kampanjen. Om den här inställningen är tom skickas understödjarna till produkternas huvudsida.
+    errors:
+      discourse_patrons_amount_must_be_currency: "Valutasumman måste vara utan valutasymbol (ex 1,50)"
+  js:
+    filters:
+      subscribe:
+        help: Stöd denna webbplats genom att prenumerera
+    discourse_subscriptions:
+      title: Discourse-prenumerationer
+      admin_navigation: Prenumerationer
+      optional: Valfria
+      navigation:
+        billing: Fakturering
+        payments: Betalningar
+        subscriptions: Prenumerationer
+        subscribe: Prenumerera
+        user_activity:
+          payments: Betalningar
+      campaign:
+        title: Stöd oss
+        body: Vi behöver din hjälp för att hålla igång detta forum!
+        success_title: Klart!
+        success_body: Tack för att du hjälper oss hålla igång detta forum!
+        subscribers: Prenumeranter
+        goal_comparison: "<strong>%{current}</strong> av <strong>%{goal}</strong>"
+        raised: Insamlat
+        button: Stöd
+        recent_contributors: Senaste bidragsgivare
+        goal: Vi har uppfyllt vårt mål
+        one_click_campaign: Auto-skapa stödkampanj
+        refresh_campaign: Uppdatera kampanjdata
+        refresh_page: Kampanjdata synkroniseras nu från Stripe i bakgrunden. Uppdatera sidan om en stund för att ladda den uppdaterade informationen.
+        supporter: Understödjare
+        supporters: Understödjare
+        created: Din kampanj genom ett klick är skapad och klar att börja! Omdirigerar till kampanjinställningarna.
+      one_time_payment: Engångsbetalning
+      plans:
+        purchase: Köp en prenumeration
+        select: Välj en prenumerationsplan
+        interval:
+          adverb:
+            day: Dagligen
+            week: Veckovis
+            month: Månadsvis
+            year: Årsvis
+        payment_button: Prenumerera
+        success: Tack så mycket! Din prenumeration har skapats.
+        incomplete: Din betalning är ofullständig. Din prenumeration kommer att uppdateras när din betalning är fullständig.
+        validate:
+          payment_options:
+            required: Välj en prenumerationsplan.
+      user:
+        payments:
+          id: Betalnings-ID
+          amount: Summa
+          created_at: Skapad
+        payments_help: Det finns inga betalningar
+        plans:
+          rate: Frekvens
+          product: Namn
+        subscriptions_help: Du har inga aktiva prenumerationer
+        subscriptions:
+          id: Prenumerations-ID
+          status: Status
+          discounted: Rabatterad
+          renews: Förnyar
+          update_card:
+            heading: "Uppdatera kort för prenumeration: %{sub_id}"
+            single: "Uppdatera"
+          created_at: Skapad
+          cancel: avbryt
+          cancelled: avbruten
+          operations:
+            destroy:
+              confirm: Är du säker på att du vill avbryta denna prenumeration?
+      subscribe:
+        title: Prenumerera
+        view_past: Visa tidigare köp
+        no_products: Det finns för tillfället inga produkter tillgängliga.
+        unauthenticated: Logga in eller skapa ett konto för att prenumerera.
+        invalid_coupon: Du angav en ogiltig kupongkod. Försök igen.
+        card:
+          title: Betalning
+        customer:
+          title: Kunddetaljer
+        promo_code: Kupong
+        buttons:
+          subscribe: Prenumerera
+        purchased: Köpt
+        go_to_billing: Gå till fakturering
+        already_purchased: Tack så mycket för ditt tidigare köp av den här produkten!
+        countries:
+          MS: "Montserrat"
+      billing:
+        name: Fullständigt namn
+        email: E-post
+        phone: Telefonnummer
+      confirmation:
+        amount: Summa
+        last4: Kortnummer
+      buttons:
+        make_payment: Genomför betalning
+        confirm_payment: Bekräfta betalning
+        success: Gå tillbaka
+      admin:
+        unconfigured: 'Stripe är inte korrekt konfigurerat. Se Discourse Meta för information.'
+        on_meta: Discourse-prenumerationer i Meta
+        dashboard:
+          title: Översiktspanel
+          table:
+            head:
+              user: Användare
+              payment_intent: Betalnings-ID
+              receipt_email: Kvitto per e-post
+              amount: Summa
+        products:
+          title: Produkter
+          operations:
+            create: Skapa ny produkt
+            update: Uppdatera produkt
+            new: Ny produkt
+            destroy:
+              confirm: Är du säker på att du vill ta bort denna produkt?
+          product:
+            product_id: Produkt-ID
+            name: Produktnamn
+            statement_descriptor: Transaktionsbeskrivning
+            statement_descriptor_help: Extra information om en produkt som visas på din kunds kreditkortsutdrag.
+            plan_help: Skapa en prislista för prenumeranter för denna produkt.
+            description: Beskrivning
+            description_help: Detta beskriver din prenumerationsprodukt.
+            repurchaseable: Återköpbar?
+            repurchase_help: Tillåt flera köp av produkten och tillhörande planer
+            active: Aktiv
+            active_help: Avaktivera denna tills din produkt är redo för kunder.
+            created_at: Skapad
+            updated_at: Uppdaterad
+        plans:
+          title: Prisplaner
+          operations:
+            add: Lägg till ny plan
+            create: Skapa plan
+            update: Uppdatera plan
+            create_help: När en prisplan väl är skapad kan enbart dess smeknamn, testperiod och användargrupp uppdateras.
+            new: Ny plan
+            destroy:
+              confirm: Är du säker på att du vill ta bort denna plan?
+          plan:
+            nickname: Planens smeknamn
+            nickname_help: Detta kommer inte visas för kunder, utan enbart hjälpa dig att hitta planen senare
+            plan_id: Plan-ID
+            product: Produkt
+            interval: Betalningsintervall
+            amount: Summa
+            trial: Testperiod i antal dagar
+            trial_help: Prenumerationer för denna plan kommer automatiskt att börja med en gratis testperiod av denna längd
+            group: Användargrupp
+            group_help: Detta är den användargrupp som kunden läggs till i när kundens prenumeration skapas.
+            active: Aktiv
+            created_at: Skapad
+            recurring: Återkommande plan?
+        coupons:
+          title: Rabattkoder
+          code: Kampanjkod
+          discount: Rabatt
+          times_redeemed: Gånger inlösta
+          active: Aktiv?
+          actions: Åtgärder
+          create: Skapa rabattkod
+          promo_code: Kampanjkod (skiftlägesokänslig)
+        subscriptions:
+          title: Prenumerationer
+          subscription:
+            user: Användare
+            subscription_id: Prenumerations-ID
+            customer: Kund
+            product: Produkt
+            plan: Plan
+            status: Status
+            created_at: Skapad
+        ask_refund: Återbetala den senaste betalningen från kunden?
+        canceled: "Prenumerationen har sagts upp."

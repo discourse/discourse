@@ -1,0 +1,80 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ٹاپک ID
+    discourse_calendar:
+      disable_holiday: "غیر فعال کریں"
+      enable_holiday: "فعال کریں"
+      date: "تاریخ"
+      region:
+        none: "کوئی نہیں"
+      toolbar_button:
+        today: "آج"
+        month: "مہینہ"
+        week: "ہفتہ"
+        day: "دن"
+    group_timezones:
+      search: "تلاش کریں..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "تمام دکھائیں"
+      add_to_calendar: "کیلنڈر میں شامل کریں"
+      created_by: "بنائی گئی"
+      bulk_invite: "مجموئی دعوت نامہ"
+      bulk_invite_modal:
+        confirm: "تصدیق کریں"
+        title: "مجموئی دعوت نامہ"
+        success: "فائل کامیابی سے اَپ لوڈ کر دی گئی، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
+        error: "معذرت، فائل CSV فارمیٹ میں ہونا ضروری ہے۔"
+      upcoming_events:
+        status: "سٹیٹس"
+      models:
+        event:
+          expired: "میعاد ختم ہوگئی"
+          closed: "بند"
+          status:
+            public:
+              title: "عوامی"
+            private:
+              title: "ذاتی"
+      builder_modal:
+        custom_fields:
+          placeholder: "اختیاری"
+        create: "بنائیں"
+        update: "محفوظ کریں"
+        timezone:
+          label: ٹائم زون
+        reminders:
+          units:
+            minutes: "منٹ"
+            hours: "گھنٹے"
+            days: "دن"
+          periods:
+            before: "سے پہلے"
+            after: "کے بعد"
+        recurrence:
+          label: "تَقْلِید"
+          none: "تَقْلِید نہیں"
+          every_day: "ہر دن"
+        url:
+          label: "URL"
+          placeholder: "اختیاری"
+        location:
+          label: "محل وقوع"
+        description:
+          label: "تفصیل"
+        status:
+          label: "سٹیٹس"
+      invite_user_or_group:
+        invite: "بھیجیں"

@@ -1,0 +1,242 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Intégrations du chat"
+  js:
+    chat_integration:
+      menu_title: "Intégrations du chat"
+      settings: "Paramètres"
+      no_providers: "Vous devez activer certains fournisseurs dans les paramètres de l'extension"
+      channels_with_errors: "Certains canaux de ce fournisseur ont échoué la dernière fois que des messages ont été envoyés. Cliquez sur les icônes d'erreur pour en savoir plus."
+      channel_exception: "Une erreur inconnue s'est produite lors du dernier envoi d'un message à ce canal."
+      group_mention_template: "Mentions de : @%{name}"
+      group_message_template: "Messages à : @%{name}"
+      choose_group: "(choisir un groupe)"
+      all_categories: "(toutes les catégories)"
+      all_tags: "(toutes les étiquettes)"
+      create_rule: "Créer une règle"
+      create_channel: "Créer un canal"
+      delete_channel: "Supprimer"
+      test_channel: "Test"
+      edit_channel: "Modifier"
+      channel_delete_confirm: "Voulez-vous vraiment supprimer ce canal ? Toutes les règles associées seront supprimées."
+      test_modal:
+        title: "Envoyer un message de test"
+        topic: "Sujet"
+        send: "Envoyer message de test"
+        close: "Fermer"
+        error: "Une erreur inconnue s'est produite lors de l'envoi du message. Consultez les journaux du site pour plus d'informations."
+        success: "Message envoyé avec succès"
+      type:
+        normal: Normal
+        group_message: Message de groupe
+        group_mention: Mention de groupe
+      filter:
+        mute: 'Mettre en sourdine'
+        follow: 'Premier message seulement'
+        watch: 'Tous les messages et réponses'
+        thread: 'Tous les messages avec des réponses par fil'
+      rule_table:
+        filter: "Filtrer"
+        category: "Catégorie"
+        tags: "Étiquettes"
+        edit_rule: "Modifier"
+        delete_rule: "Supprimer"
+      edit_channel_modal:
+        title: "Modifier le canal"
+        save: "Enregistrer le canal"
+        cancel: "Annuler"
+        provider: "Fournisseur"
+        channel_validation:
+          ok: "Valide"
+          fail: "Format invalide"
+      edit_rule_modal:
+        title: Modifier la règle
+        save: Enregistrer la règle
+        cancel: Annuler
+        provider: Fournisseur
+        type: Type
+        channel: Canal
+        filter: Filtrer
+        category: Catégorie
+        group: Groupe
+        tags: Étiquettes
+        instructions:
+          type: "Modifiez le type pour déclencher des notifications en cas de message ou mention de groupe."
+          filter: "Niveau de notification. La mise en sourdine prévaut sur les autres règles correspondantes"
+          category: "Cette règle ne s'appliquera qu'aux sujets de la catégorie spécifiée"
+          group: "Cette règle s'appliquera aux messages qui font référence à ce groupe"
+          tags: "Si elle est spécifiée, cette règle ne s'appliquera qu'aux sujets qui ont au moins une de ces étiquettes"
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Canal
+              help: "p. ex., #canal, @utilisateur."
+          errors:
+            action_prohibited: "Ce bot n'a pas l'autorisation de publier dans ce canal"
+            channel_not_found: "Le canal spécifié n'existe pas dans Slack"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Telegram."
+            chat_id:
+              title: ID du chat
+              help: Un numéro qui vous est donné par le bot ou un identifiant de canal de diffusion sous la forme de @channelname
+          errors:
+            channel_not_found: "Le canal spécifié n'existe pas sur Telegram"
+            forbidden: "Ce bot n'a pas l'autorisation de publier dans ce canal"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Discord."
+            webhook_url:
+              title: URL du webhook
+              help: L'URL du Webhook créée dans les paramètres de votre serveur Discord
+        guilded:
+          title: "Guilded"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Guilded"
+            webhook_url:
+              title: URL du webhook
+              help: L'URL du webhook créée dans les paramètres de votre serveur Guilded
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Canal
+              help: "p. ex., #canal, @utilisateur."
+          errors:
+            channel_not_found: "Le canal spécifié n'existe pas sur Mattermost"
+        matrix:
+          title: "Matrix"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom pour décrire le canal. Il n'est pas utilisé pour la connexion à Matrix."
+            room_id:
+              title: "ID du salon"
+              help: "L'« identifiant privé » du salon. Il devrait ressembler à !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Le jeton d'accès est invalide"
+            unknown_room: "L'ID du salon est invalide"
+        zulip:
+          title: "Zulip"
+          param:
+            stream:
+              title: "Stream"
+              help: "Le nom du flux Zulip dans lequel le message devrait être envoyé. P. ex., « général »"
+            subject:
+              title: "Sujet"
+              help: "Le sujet que devraient avoir ces messages envoyés par le bot"
+          errors:
+            does_not_exist: "Ce flux n'existe pas dans Zulip"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Canal
+              help: "p. ex., #canal, @utilisateur."
+          errors:
+            invalid_channel: "Le canal spécifié n'existe pas sur Rocket.Chat"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom d'espace de discussion Gitter. P. ex., gitterHQ/services."
+            webhook_url:
+              title: "URL du webhook"
+              help: "L'adresse URL fournie lorsque vous créez une nouvelle intégration dans un espace de discussion Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Jeton de flux"
+              help: "Le jeton de flux fourni après avoir créé une source pour un flux dans lequel vous souhaitez envoyer des messages."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Nom de l'instance GroupMe"
+              help: "nom de l'instance GroupMe tel qu'indiqué dans les paramètres du site. Utilisez « tous » pour envoyer à toutes les instances"
+          errors:
+            not_found: "Le chemin vers lequel vous avez tenté de publier votre message n'a pas été trouvé. Vérifiez l'ID du bot dans les paramètres du site."
+        teams:
+          title: "Microsoft Teams"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom de canal Teams, p. ex., « discourse »"
+            webhook_url:
+              title: "URL du webhook"
+              help: "L'adresse URL fournie lorsque vous créez un nouveau webhook entrant"
+          errors:
+            invalid_channel: "Ce canal n'existe pas sur Microsoft Teams"
+        powerautomate:
+          title: "Microsoft Power Automate"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom pour le canal (uniquement affiché dans l'interface d'administration Discourse)"
+            webhook_url:
+              title: "URL du webhook"
+              help: "L'adresse URL fournie lorsque vous créez un nouveau webhook entrant"
+          errors:
+            invalid_webhook: "Cette URL de webhook n'est pas valide."
+        webex:
+          title: "Webex Teams"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom d'espace Webex, p. ex., « discourse »"
+            webhook_url:
+              title: "URL du webhook"
+              help: "L'adresse URL fournie lorsque vous créez un nouveau webhook entrant"
+          errors:
+            invalid_channel: "Le canal spécifié n'existe pas sur Webex"
+        google:
+          title: "Google Chat"
+          param:
+            name:
+              title: "Nom"
+              help: "Un nom pour le canal (uniquement affiché dans l'interface d'administration Discourse)"
+            webhook_url:
+              title: "URL du webhook"
+              help: "L'adresse URL fournie lorsque vous créez un nouveau webhook"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          title: Envoyer un message Slack
+          fields:
+            message:
+              label: Message
+              description: >-
+                Utilisez ${TOPIC} pour le nom du sujet, ${URL} pour l'URL utilisée, ${REMOVED_TAGS} pour les étiquettes supprimées, ${ADDED_TAGS} pour les étiquettes ajoutées, ${ADDED_AND_REMOVED} pour le texte par défaut. Disponible uniquement si le déclencheur est défini sur Étiquettes de sujet modifiées.
+            url:
+              label: URL
+            channel:
+              label: Canal
+        send_chat_integration_message:
+          title: Envoyer un message d'intégration de discussion
+          fields:
+            channel_name:
+              label: Nom du canal
+              description: "Vous pouvez trouver le nom du canal dans les paramètres d'intégration de discussion"
+            provider:
+              label: Fournisseur

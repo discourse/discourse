@@ -1,0 +1,102 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    discourse_calendar:
+      invite_user_notification: "%{username} mengundang Anda ke: %{description}"
+      on_holiday: "Saat Liburan"
+      disable_holiday: "Nonaktifkan"
+      enable_holiday: "Aktifkan"
+      holiday: "Hari Libur"
+      date: "Tanggal"
+      add_to_calendar: "Tambahkan ke Google Kalender"
+      region:
+        title: "Wilayah"
+        none: "Tidak ada"
+        use_current_region: "Gunakan Wilayah Saat Ini"
+        names:
+          ar: "Argentina"
+          at: "Austria"
+          au_act: "Australia (au_act)"
+          au_nsw: "Australia (au_nsw)"
+          au_nt: "Australia (au_nt)"
+          au_qld_brisbane: "Australia (au_qld_brisbane)"
+          au_qld_cairns: "Australia (au_qld_cairns)"
+          au_qld: "Australia (au_qld)"
+          au_sa: "Australia (au_sa)"
+          au_tas_north: "Australia (au_tas_north)"
+          au_tas_south: "Australia (au_tas_south)"
+          au_tas: "Australia (au_tas)"
+          au_vic_melbourne: "Australia (au_vic_melbourne)"
+          au_vic: "Australia (au_vic)"
+          au_wa: "Australia (au_wa)"
+          au: "Australia"
+          be_fr: "Belgia (be_fr)"
+          be_nl: "Belgia (be_nl)"
+          bg_bg: "Bulgaria (bg_bg)"
+          bg_en: "Bulgaria (bg_en)"
+          br: "Brazil"
+          ca_ab: "Kanada (ca_ab)"
+          ca_bc: "Kanada (ca_bc)"
+          ca_mb: "Kanada (ca_mb)"
+          ca_nb: "Kanada (ca_nb)"
+          ca_nl: "Kanada (ca_nl)"
+          ca_ns: "Kanada (ca_ns)"
+          ca_nt: "Kanada (ca_nt)"
+          ca_nu: "Kanada (ca_nu)"
+          ca_on: "Kanada (ca_on)"
+          ca_pe: "Kanada (ca_pe)"
+          ca_qc: "Kanada (ca_qc)"
+          ca_sk: "Kanada (ca_sk)"
+          ca_yt: "Kanada (ca_yt)"
+          ca: "Kanada"
+          ch_ag: "Swiss (ch_ag)"
+          ch_ai: "Swiss (ch_ai)"
+          ch_ar: "Swiss (ch_ar)"
+          ch_be: "Swiss (ch_be)"
+          ch_bl: "Swiss (ch_bl)"
+      toolbar_button:
+        day: "Hari"
+    group_timezones:
+      search: "Cari..."
+    discourse_post_event:
+      bulk_invite_modal:
+        confirm: "konfirmasi"
+        success: "File telah sukses diunggah, anda akan mendapat pesan pemberitahuan saat proses telah selesai."
+        error: "Maaf, file harus dalam format CSV"
+      upcoming_events:
+        status: "Status"
+      models:
+        event:
+          closed: "Tertutup"
+          status:
+            public:
+              title: "Umum"
+            private:
+              title: "Pribadi"
+      builder_modal:
+        custom_fields:
+          placeholder: "Opsional"
+        create: "Buat"
+        update: "Simpan"
+        timezone:
+          label: Zona Waktu
+        reminders:
+          units:
+            minutes: "menit"
+            hours: "jam"
+            days: "hari"
+        recurrence:
+          every_day: "Setiap hari"
+        url:
+          placeholder: "Opsional"
+        location:
+          label: "Lokasi"
+        description:
+          label: "Deskripsi"
+        status:
+          label: "Status"

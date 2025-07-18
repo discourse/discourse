@@ -1,0 +1,89 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    chat_integration:
+      settings: "Ρυθμίσεις"
+      all_categories: "(όλες οι κατηγορίες)"
+      all_tags: "(όλες οι ετικέτες)"
+      delete_channel: "Σβήσιμο"
+      test_channel: "Δοκιμή"
+      edit_channel: "Επεξεργασία"
+      test_modal:
+        topic: "Νήμα"
+        close: "Κλείσιμο"
+      type:
+        normal: Φυσιολογικά
+      filter:
+        mute: 'Σίγαση'
+      rule_table:
+        filter: "Φίλτρο"
+        category: "Κατηγορία"
+        tags: "Ετικέτες"
+        edit_rule: "Επεξεργασία"
+        delete_rule: "Σβήσιμο"
+      edit_channel_modal:
+        cancel: "Άκυρο"
+      edit_rule_modal:
+        cancel: Άκυρο
+        type: Τύπος
+        filter: Φίλτρο
+        category: Κατηγορία
+        group: Ομάδα
+        tags: Ετικέτες
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Όνομα"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Όνομα"
+        guilded:
+          param:
+            name:
+              title: "Όνομα"
+        matrix:
+          param:
+            name:
+              title: "Όνομα"
+        zulip:
+          param:
+            subject:
+              title: "Αντικείμενο"
+        gitter:
+          param:
+            name:
+              title: "Όνομα"
+        teams:
+          param:
+            name:
+              title: "Όνομα"
+        powerautomate:
+          param:
+            name:
+              title: "Όνομα"
+            webhook_url:
+              title: "Webhook URL"
+        webex:
+          param:
+            name:
+              title: "Όνομα"
+        google:
+          param:
+            name:
+              title: "Όνομα"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Μήνυμα
+            url:
+              label: URL

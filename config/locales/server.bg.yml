@@ -1192,7 +1192,6 @@ bg:
     sender_body_blank: "съдържанието е празно"
   color_schemes:
     base_theme_name: "Основа"
-    default_theme_name: "По подразбиране"
   edit_this_page: "Редактирайте тази страница"
   csv_export:
     boolean_yes: "Да"
@@ -1573,10 +1572,6 @@ bg:
     devotee:
       name: Отдаден
   admin_login:
-    success: "Изпратен имейл"
-    errors:
-      unknown_email_address: "Неизвестен имейл адрес"
-      invalid_token: "Невалиден жетон"
     email_input: "Админ имейл"
     submit_button: "Изпрати имейл"
   performance_report:

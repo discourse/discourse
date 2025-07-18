@@ -1,0 +1,225 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    chat_integration_enabled: 'discourse-chat-integration プラグインを有効にする'
+    chat_integration_discourse_username: 'コンテンツを取得するときのユーザーのユーザー名。'
+    chat_integration_delay_seconds: '投稿が作成されてからチャット通知を送信するまでの秒数'
+    chat_integration_slack_username: "Slack に投稿するボットのユーザー名"
+    chat_integration_slack_enabled: 'Slack の chat-integration プロバイダーを有効にする'
+    chat_integration_slack_access_token: 'Slack で認証するための OAuth アクセストークン'
+    chat_integration_slack_incoming_webhook_token: '着信リクエストの認証に使用される検証トークン'
+    chat_integration_slack_excerpt_length: 'Slack 投稿の抜粋の長さ'
+    chat_integration_slack_icon_url: 'Slack に投稿する際のアイコン（デフォルトはフォーラムのロゴ）'
+    chat_integration_slack_outbound_webhook_url: "OAuth API の代わりに Slack の「着信 Webhook」システムを使用する場合。推奨されません。"
+    chat_integration_slack_transcript_quote: Slack トランスクリプトを [quote] タグで囲みますか？
+    errors:
+      chat_integration_slack_api_configs_are_empty: "送信 Webhook URL またはアクセストークンを入力する必要があります"
+    chat_integration_telegram_enabled: "Telegram の chat-integration プロバイダーを有効にする"
+    chat_integration_telegram_access_token: "Telegram ボットファーザーからのボットのアクセストークン"
+    chat_integration_telegram_excerpt_length: "Telegram 投稿の抜粋の長さ"
+    chat_integration_telegram_enable_slash_commands: "「スラッシュコマンド」を使用した Telegram のサブスクリプション管理を許可する"
+    chat_integration_discord_enabled: "Discord の chat-integration プロバイダーを有効にする"
+    chat_integration_discord_message_content: "Discord に通知を送信するときに要約の上に含めるメッセージ"
+    chat_integration_discord_excerpt_length: "Discord 投稿の抜粋の長さ"
+    chat_integration_guilded_enabled: "Guilded チャット統合プロバイダーを有効にする"
+    chat_integration_guilded_excerpt_length: "Guilded 投稿の抜粋の長さ"
+    chat_integration_mattermost_enabled: "Mattermost の chat-integration プロバイダーを有効にする"
+    chat_integration_mattermost_webhook_url: 'Mttermost の Webhook の URL'
+    chat_integration_mattermost_incoming_webhook_token: '着信リクエストの認証に使用される検証トークン'
+    chat_integration_mattermost_icon_url: "Mattermost に投稿する際のアイコン（デフォルトはフォーラムのロゴ）"
+    chat_integration_mattermost_excerpt_length: "Mattermost 投稿の抜粋の長さ"
+    chat_integration_matrix_enabled: "Matrix チャット統合プロバイダーを有効にする"
+    chat_integration_matrix_homeserver: "接続先のホームサーバー。必ずプロトコルを含めてください"
+    chat_integration_matrix_access_token: "ボットの Matrix アカウントのアクセストークン"
+    chat_integration_matrix_excerpt_length: "Matrix 投稿の抜粋の長さ"
+    chat_integration_matrix_use_notice: "プレーンメッセージの代わりに通知を使用する"
+    chat_integration_zulip_enabled: "Zulip チャット統合プロバイダーを有効にする"
+    chat_integration_zulip_server: "Zulip サーバーのベース URL。必ず http(s):// を含めてください"
+    chat_integration_zulip_bot_email_address: "Zulip ボットに関連付けられているメールアドレス"
+    chat_integration_zulip_bot_api_key: "Zulip ボットの API キー"
+    chat_integration_zulip_excerpt_length: "Zulip 投稿の抜粋の長さ"
+    chat_integration_rocketchat_enabled: "Rocket Chat チャット統合プロバイダーを有効にする"
+    chat_integration_rocketchat_webhook_url: "Rocket Chat 統合 Webhook の URL"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat 投稿の抜粋の長さ"
+    chat_integration_gitter_enabled: "Gitter チャット統合プロバイダーを有効にする"
+    chat_integration_flowdock_enabled: "Flowdock チャット統合プロバイダーを有効にする"
+    chat_integration_flowdock_excerpt_length: "Flowdock 投稿の抜粋の長さ"
+    chat_integration_groupme_enabled: "Groupme チャット統合プロバイダーを有効にする"
+    chat_integration_groupme_excerpt_length: "Groupme 投稿の抜粋の長さ"
+    chat_integration_groupme_bot_ids: "*必須*のボット ID。複数ある場合は「,」で区切ります"
+    chat_integration_groupme_instance_names: " *必須*の GroupMe チャットの名前。複数ある場合は「,」で区切ります（ボット ID と同じ順序）。"
+    chat_integration_teams_enabled: "Microsoft Teams チャット統合プロバイダーを有効にする"
+    chat_integration_teams_excerpt_length: "Microsoft Teams 投稿の抜粋の長さ"
+    chat_integration_powerautomate_enabled: "Microsoft Power Automate 統合プロバイダーを有効にする"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate 投稿の抜粋の長さ"
+    chat_integration_webex_enabled: "Webex Teams チャット統合プロバイダーを有効にする"
+    chat_integration_webex_excerpt_length: "Webex Teams 投稿の抜粋の長さ"
+    chat_integration_google_enabled: "Google チャット チャット統合プロバイダーを有効にする"
+    chat_integration_google_excerpt_length: "Google チャット投稿の抜粋の長さ"
+  dashboard:
+    problem:
+      channel_errors: "一部のチャット統合チャンネルにエラーがあります。詳細については、<a href='%{base_path}/admin/plugins/chat-integration'>チャット統合のセクション</a>をご覧ください。"
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Slack メッセージを送信する
+      send_chat_integration_message:
+        title: チャット統合メッセージの送信
+  chat_integration:
+    all_categories: "(すべてのカテゴリ)"
+    deleted_category: "（削除されたカテゴリ）"
+    deleted_group: "（削除されたグループ）"
+    group_mention_template: "メンション: @%{name}"
+    group_message_template: "メッセージの宛先: @%{name}"
+    topic_tag_changed:
+      added_and_removed: "%{added} を追加して %{removed} を削除しました"
+      added: "%{added} を追加しました"
+      removed: "%{removed} を削除しました"
+    provider:
+      slack:
+        status:
+          header: |
+            *このチャンネルのルール*
+            （複数のルールが投稿に一致する場合、最上位のルールが実行されます）
+          no_rules: "このチャンネルに設定されたルールはありません。`/discourse help` で手順を確認できます。"
+          rule_string: "*%{index}）* *%{category}* の投稿を*%{filter}*"
+          rule_string_tags_suffix: " タグ: *%{tags}*"
+        parse_error: "そのコマンドは存在しません。 `/discource help' で利用できるコマンドを確認できます。"
+        create:
+          created: "ルールを正常に作成しました"
+          updated: "ルールを正常に更新しました"
+          error: "申し訳ありませんが、ルールの作成中にエラーが発生しました。"
+        delete:
+          success: "ルールを正常に削除しました"
+          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。\nルール一覧は `/discourse status`で確認できます。"
+        not_found:
+          tag: "*%{name}* タグが見つかりません。"
+          category: "*%{name}* カテゴリが見つかりません。使用可能なカテゴリ: *%{list}*"
+        help: |
+          *新しいルール:* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          （ルールの種類と少なくとも 1 つのカテゴリまたはタグを指定する必要があります）
+          - *thread* - 新しいトピックのためにこのチャンネルに通知し、可能であればスレッドの返信を行う
+          - *watch* - 新しいトピックと新しい返信をこのチャンネルに通知する
+          - *follow* - 新しいトピックをこのチャンネルに通知する
+          - *mute* - このチャンネルへの通知をブロックする
+
+          *ルールの削除:* `/discourse remove [ルール番号]`
+          (`[ルール番号]` は `/discourse status` で確認できます。)
+
+          *ルールの一覧:* `/discourse status`
+
+          *[実験] 投稿のトランスクリプト:* `/discourse post [n]`
+          Discourse にこのチャンネルの最後の `n` 件の投稿を含む下書きトピックを作成する
+
+          *ヘルプ:* `/discourse help`
+        transcript:
+          modal_title: "トランスクリプトの作成"
+          modal_description: "スレッド内のすべてのメッセージは 1 つのフォーラム投稿にまとめられます。投稿する前にトランスクリプトを編集する機会があります。"
+          transcript_ready: "トランスクリプトの準備完了"
+          continue_on_discourse: "フォーラムに進む"
+          error: "トランスクリプトの作成中に問題が発生しました！"
+          post_to_discourse: "トランスクリプトを使用して Discourse の投稿の下書きを作成するにはここをクリックします"
+          api_required: "申し訳ありませんが、この統合はトランスクリプトの投稿をサポートするように設定されていません。"
+          view_on_slack: "Slack で %{name} を表示"
+          first_message_pretext: "%{n} 件前のメッセージから開始:"
+          last_message_pretext: "%{n} 件前のメッセージで終了:"
+          posted_in: "%{name} に投稿しました"
+          change_first_message: "最初のメッセージを変更..."
+          change_last_message: "最後のメッセージを変更..."
+          loading: "トランスクリプトを読み込み中..."
+          error_users: "エラー: Slack からユーザーを取得できません"
+          error_history: "エラー: Slack からチャンネル履歴を取得できません"
+          error_ts: "エラー: Slack からリクエストされたメッセージを取得できません"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "%{added} を追加して %{removed} を削除しました"
+            added: "%{added} を追加しました"
+            removed: "%{removed} を削除しました"
+      telegram:
+        unknown_chat: "このチャットは %{site_title} でセットアップされていません。「チャット ID」%{chat_id} のチャンネルを追加するよう、管理者に依頼してください。"
+        known_chat: "このチャットは %{site_title} でセットアップ済みです。管理者パネルで構成してください。（チャット ID: %{chat_id}）"
+        message: |-
+          <b>%{user}</b> が「<a href="%{post_url}">%{title}</a>」に投稿しました
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>このチャンネルのルール</b>
+            （複数のルールが投稿に一致する場合、最上位のルールが実行されます）
+          no_rules: "このチャンネルに設定されたルールはありません。<code>/help</code> で手順を確認できます。"
+          rule_string: "<b>%{index}）</b> <b>%{category}</b> 内の投稿を<b>%{filter}</b>"
+          rule_string_tags_suffix: " タグ: <b>%{tags}</b>"
+        parse_error: "残念ながら、そのコマンドを理解できません。<code>/help</code> で手順を確認できます。"
+        create:
+          created: "ルールを正常に作成しました"
+          updated: "ルールを正常に更新しました"
+          error: "申し訳ありませんが、ルールの作成中にエラーが発生しました。"
+        delete:
+          success: "ルールを正常に削除しました"
+          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。<code>/status</code> でルールの一覧を確認できます。"
+        not_found:
+          tag: "<b>%{name}</b> タグが見つかりません。"
+          category: "<b>%{name}</b> カテゴリが見つかりません。使用可能なカテゴリ: <b>%{list}</b>"
+        help: |
+          <b>新しいルール:</b> <code>/[watch|follow|mute] [category] [tag:name]</code>
+          （ルールの種類と少なくとも 1 つのカテゴリまたはタグを指定する必要があります）
+          - <b>watch</b> - 新しいトピックや新しい返信をこのチャンネルに通知する
+          - <b>follow</b> - 新しいトピックをこのチャンネルに通知する
+          - <b>mute</b> - このチャンネルへの通知をミュートにする
+
+          <b>ルールの削除:</b> <code>/remove [ルール番号]</code>
+          （<code>[ルール番号]</code>は <code>/status</code> を実行することで見つけることができます)
+
+          <b>ルール一覧:</b> <code>/status</code>
+
+          <b>ヘルプ:</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> が「<a href="%{post_url}">%{title}</a>」に投稿しました
+      mattermost:
+        status:
+          header: |
+            *このチャンネルのルール*
+            （複数のルールが投稿に一致する場合、最上位のルールが実行されます）
+          no_rules: "このチャンネルに設定されたルールはありません。`/discourse help` で手順を確認できます。"
+          rule_string: "*%{index}）* *%{category}* の投稿を*%{filter}*"
+          rule_string_tags_suffix: " タグ: *%{tags}*"
+        parse_error: "残念ながら、そのコマンドを理解できません。`/discourse help` で手順を確認できます。"
+        create:
+          created: "ルールを正常に作成しました"
+          updated: "ルールを正常に更新しました"
+          error: "申し訳ありませんが、ルールの作成中にエラーが発生しました。"
+        delete:
+          success: "ルールを正常に削除しました"
+          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。`/discourse status` でルールの一覧を確認できます。"
+        not_found:
+          tag: "*%{name}* タグが見つかりません。"
+          category: "*%{name}* カテゴリが見つかりません。使用可能なカテゴリ: *%{list}*"
+        help: "*新しいルール:* `/discourse [watch|follow|mute] [category] [tag:name]`\n（ルールの種類と少なくとも 1 つのカテゴリまたはタグを指定する必要があります）\n- *watch* - 新しいトピックと新しい返信をこのチャンネルに通知する\n- *follow* - 新しいトピックをこのチャンネルに通知する\n- *mute* - このチャンネルへの通知をミュートにする\n\n*ルールの削除:* `/discourse remove [ルール番号]` \n(`[ルール番号]` は `/discourse status` で確認できます。)\n\n*ルール一覧:* `/discourse status`\n\n*ヘルプ:* `/discourse help`\n"
+      matrix:
+        text_message: "%{user} が「%{title}」に投稿しました - %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> が「<b><a href='%{post_url}'>%{title}</a></b>」に投稿しました
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** が「**[%{title}]」（%{post_url}）**に投稿しました
+          ~~~quote
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "投稿しました"
+      google:
+        new_post: "「%{site_title}」に新しい投稿があります"
+        new_topic: "「%{site_title}」に新しいトピックがあります"
+        author: "作成者: @%{username}"
+        link: "「%{site_title}」で表示"
+      groupme:
+        errors:
+          instance_names_issue: "インスタンス名のフォーマットが誤っているか、指定されていません"

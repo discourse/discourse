@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Le vote de message n'est pas activé."
+        replying_to_post_not_permited: "Vous n'êtes pas autorisé(e) à créer un message en réponse à un autre message."
+        voting_not_permitted: "Vous n'êtes pas autorisé(e) à voter sur ce message."
+        comment_cannot_be_downvoted: "Vous pouvez uniquement voter pour les commentaires."
+        self_voting_not_permitted: "Vous n'êtes pas autorisé(e) à voter pour votre propre message ou commentaire."
+        vote_archived_topic: "Vous ne pouvez pas voter dans des sujets archivés."
+        vote_closed_topic: "Vous ne pouvez pas voter dans des sujets fermés."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Le vote de message n'est pas activé."
+        subtype_not_allowed: "Le sous-type Vote de message ne peut être utilisé qu'avec des sujets ordinaires."
+        cannot_change_to_post_voting_subtype: "Il n'est pas permis de remplacer le sous-type d'un sujet par Vote de message."
+      answer_count:
+        one: "%{count} réponse"
+        other: "%{count} réponses"
+  site_settings:
+    qa_tags: "Étiquettes permettant d'activer le vote de message sur le sujet"
+    post_voting_enabled: "Activer l'extension de vote de message"
+    post_voting_enable_likes_on_answers: "Activer le bouton J'aime sur les réponses dans les sujets de Vote de message"
+    post_voting_undo_vote_action_window: "Nombre de minutes pendant lesquelles les utilisateurs sont autorisés à annuler les votes dans les sujets de Vote de message (saisissez 0 pour ne fixer aucune limite)"
+    post_voting_comment_limit_per_post: "Nombre de commentaires autorisés sur chaque publication"
+    min_trust_to_flag_posts_voting_comments: "Niveau de confiance minimal pour signaler un commentaire après le vote"
+    flag_posts_voting_comments_allowed_groups: "Groupes autorisés à signaler un commentaire après le vote"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  post_action_types:
+    vote:
+      title: "Vote"
+      description: "Voter pour ce message"
+      short_description: "Voter pour ce message"
+      long_form: "a voté pour ce message"
+  vote:
+    error:
+      user_has_not_voted: "L'utilisateur n'a pas voté."
+      user_over_limit: "Vous ne pouvez pas dépasser le nombre de votes correspondant à votre niveau de confiance."
+      already_voted: "Vous ne pouvez voter qu'une seule fois par question."
+      undo_vote_action_window:
+        one: "Vous ne pouvez pas annuler le vote %{count} minute après avoir voté."
+        other: "Vous ne pouvez pas annuler le vote %{count} minutes après avoir voté."
+      one_vote_per_post: "Vous ne pouvez voter qu'une seule fois pour chaque message."
+      one_vote_per_comment: "Vous ne pouvez voter qu'une seule fois pour chaque commentaire."
+  post_voting:
+    comment:
+      errors:
+        post_voting_not_enabled: "Il n'est pas permis de commenter un message qui n'est pas dans un sujet de Vote de message."
+        not_permitted: "Il n'est pas permis de commenter un message associé."
+        limit_exceeded: "La limite de %{limit} commentaires par message a été atteinte."
+        perform: "Commentaire de vote signalé avec un score suffisamment élevé pour désactiver l'utilisateur."
+        auto_silence_from_flags: "Automatiquement mis en sourdine en raison d'un signalement."
+      reviewables:
+        comment_already_handled: "Merci, mais nous avons déjà examiné ce commentaire et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
+        actions:
+          agree_and_keep_comment:
+            title: "Conserver le commentaire"
+            description: "Accepter le signalement et conserver le commentaire tel quel."
+          agree_and_keep_deleted:
+            title: "Garder le commentaire supprimé"
+            description: "Accepter le signalement et laisser le commentaire supprimé."
+          agree_and_suspend:
+            title: "Suspendre l'utilisateur"
+            description: "Accepter le signalement et suspendre l'utilisateur."
+          agree_and_silence:
+            title: "Désactiver l'utilisateur"
+            description: "Accepter le signalement et désactiver l'utilisateur."
+          agree_and_restore:
+            title: "Restaurer le commentaire"
+            description: "Restaurer le commentaire pour que les utilisateurs puissent le voir."
+          agree_and_delete:
+            title: "Supprimer le commentaire"
+            description: "Supprimer le commentaire pour que les utilisateurs ne puissent pas le voir."
+          delete_and_agree:
+            title: "Ignorer le signalement et supprimer le commentaire"
+            description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le commentaire."
+          disagree_and_restore:
+            title: "Rejeter le signalement et rétablir le commentaire"
+            description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
+          disagree:
+            title: "Refuser"
+          ignore:
+            title: "Ne rien faire"
+            description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
+        transcript:
+          view: "Afficher la transcription des commentaires précédents"
+      reviewable_score_types:
+        needs_review:
+          title: "Nécessite un examen"
+        notify_user:
+          comment_pm_title: "Votre commentaire après le vote"
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_title: "Un commentaire après le vote nécessite l'attention d'un responsable"
+          comment_pm_body: "%{link}\n\n%{comment}"

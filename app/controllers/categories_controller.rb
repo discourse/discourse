@@ -544,9 +544,7 @@ class CategoriesController < ApplicationController
         end
 
         if SiteSetting.content_localization_enabled?
-          conditional_param_keys << {
-            category_localizations_attributes: %i[id category_id locale name description _destroy],
-          }
+          conditional_param_keys << { category_localizations: %i[id locale name description] }
         end
 
         result =

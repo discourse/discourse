@@ -1,0 +1,17 @@
+plugins:
+  enable_login_with_amazon:
+    default: false
+    validator: "EnableLoginWithAmazonValidator"
+  login_with_amazon_client_id:
+    default: ""
+    secret: true
+  login_with_amazon_client_secret:
+    default: ""
+    secret: true
+  login_with_amazon_scope:
+    default: "profile"
+  login_with_amazon_overrides_email:
+    default: false
+  login_with_amazon_email_verified:
+    hidden: true
+    default: true

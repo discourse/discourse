@@ -510,26 +510,6 @@ RSpec.describe Admin::ThemesController do
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
       end
 
-      it "filters experimental system themes" do
-        SiteSetting.experimental_system_themes = ""
-        get "/admin/themes.json"
-        expect(response.status).to eq(200)
-        theme_names = response.parsed_body["themes"].map { |theme| theme[:name] }
-        color_scheme_names =
-          response.parsed_body["extras"]["color_schemes"].map { |scheme| scheme[:name] }
-        expect(theme_names).not_to include("Horizon")
-        expect(color_scheme_names).not_to include("Horizon")
-
-        SiteSetting.experimental_system_themes = "horizon"
-        get "/admin/themes.json"
-        expect(response.status).to eq(200)
-        theme_names = response.parsed_body["themes"].map { |t| t[:name] }
-        color_scheme_names =
-          response.parsed_body["extras"]["color_schemes"].map { |scheme| scheme[:name] }
-        expect(theme_names).to include("Horizon")
-        expect(color_scheme_names).to include("Horizon")
-      end
-
       it "does not result in N+1 queries" do
         # warmup
         get "/admin/themes.json"
@@ -1208,18 +1188,18 @@ RSpec.describe Admin::ThemesController do
         )
         theme.save!
 
-        javascript_cache =
+        javascript_caches =
           theme
             .theme_fields
             .find_by(target_id: Theme.targets[:common], name: :header)
-            .javascript_cache
-        expect(javascript_cache).to_not eq(nil)
+            .raw_javascript_caches
+        expect(javascript_caches.length).to eq(1)
 
         delete "/admin/themes/#{theme.id}.json"
 
         expect(response.status).to eq(204)
         expect { theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect { javascript_cache.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { javascript_caches[0].reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 

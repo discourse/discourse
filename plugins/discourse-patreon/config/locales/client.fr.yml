@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Patreon de Discourse"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Se connecter avec Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtres'
+      group: 'Groupe'
+      rewards: 'Récompenses'
+      filter: 'Filtre'
+      help_text: 'Vous pouvez synchroniser un groupe Discourse avec un ou plusieurs niveaux de récompense Patreon.'
+      last_synced: 'Dernière synchronisation'
+      edit: 'Modifier'
+      delete: 'Supprimer'
+      save: 'Enregistrer'
+      update_data: 'Mettre à jour les données Patreon et synchroniser les groupes'
+      refresh_page: 'Des nouvelles données ont été téléchargées depuis l''API Patreon. Veuillez actualiser la page.'
+      select_group: 'Sélectionner un groupe'
+      field:
+        id: "ID"
+        email: "E-mail"
+        amount_cents: "Montant (en cents)"
+        rewards: "Récompenses"
+        declined_since: "Promesse de don refusée depuis le"
+        more_details:
+          label: "Paiements et autres détails"
+          help_text:
+            email_available: "Vous trouverez l'historique des promesses de don de ce Patreon en bas à droite de cette page."
+            email_not_available: "Sélectionnez le membre Patreon et accédez à l'historique des promesses de dons en bas à droite de la page."
+      donation_prompt:
+        body: |
+          <h1>Bonjour lecteur !</h1>
+
+          <p>Appréciez-vous notre site ? Souhaitez-vous soutenir une bonne cause ?</p>
+
+          <p>
+          Si vous trouvez ce site utile et appréciez la communauté que nous avons formée, nous serions ravis de recevoir vos dons.
+          Les donations permettent le bon fonctionnement de notre service et garantissent que notre communauté reste active pour les années à venir.
+          Chaque montant est important et sera utilisé à bon escient.
+          </p>
+
+          <p>Merci pour votre soutien !<p>
+
+          <p>
+          <a class="btn btn-large btn-danger" href="%{campaignUrl}">Devenir mécène</a>
+          </p>

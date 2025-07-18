@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    user_notes:
+      title: "Benutzer-Notizen"
+      attach: "Benutzer-Notiz hinzufügen"
+      remove: "Benutzer-Notiz entfernen"
+      show: "Benutzer-Notizen (%{count})"
+      delete_confirm: "Bist du sicher, dass du diese Benutzer-Notiz löschen möchtest?"
+      show_post: "Beitrag anzeigen"
+      copy_reviewable_note: "Notiz ins Benutzerprofil kopieren?"

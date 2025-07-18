@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    discourse_gamification_enabled: "Discourse Oyunlaştırma Eklentisini Etkinleştirin"
+    like_received_score_value: "Bir kullanıcı bir beğeni aldığında verilen tezahüratın değeri"
+    like_given_score_value: "Bir kullanıcının verdiği her beğeni için verilen tezahüratın değeri"
+    solution_score_value: "Bir kullanıcının gönderisi çözüm olarak işaretlendiğinde verilen tezahüratın değeri"
+    user_invited_score_value: "Bir kullanıcı bir davetiyeyi kullandığında verilen tezahüratın değeri"
+    time_read_score_value: "Okumak için harcanan her saat için verilen tezahüratın değeri"
+    post_read_score_value: "Bir kullanıcının okuduğu her yüz gönderi için verilen tezahüratın değeri"
+    topic_created_score_value: "Bir kullanıcı bir konu oluşturduğunda verilen tezahüratın değeri"
+    post_created_score_value: "Bir kullanıcı bir gönderi oluşturduğunda verilen tezahüratın değeri"
+    flag_created_score_value: "Bir kullanıcı bir gönderiye bayrak eklendiğinde ve bu bayrak bir personel kullanıcı tarafından kabul edildiğinde verilen tezahüratın değeri"
+    day_visited_score_value: "Bir kullanıcının siteyi ziyaret ettiği her gün için verilen tezahüratın değeri"
+    scorable_categories: "Eylemlerin tezahürat oluşturacağı kategorilerin listesi. Tüm kategorilerde tezahüratları etkinleştirmek için boş bırakın"
+    reaction_received_score_value: "Bir kullanıcı tepki aldığında verilen tezahüratın değeri"
+    reaction_given_score_value: "Bir kullanıcının verdiği her tepki için verilen tezahüratın değeri"
+    chat_reaction_received_score_value: "Bir kullanıcı bir sohbet mesajına tepki aldığında verilen tezahüratın değeri"
+    chat_reaction_given_score_value: "Bir kullanıcının bir sohbet mesajına verdiği her tepki için verilen tezahüratın değeri"
+    chat_message_created_score_value: "Bir kullanıcının sohbette gönderdiği her mesaj için verilen tezahüratın değeri"
+    score_ranking_strategy: "Liderlik tablosu pozisyon sıralama stratejisi"
+  score: "Tezahürat"
+  default_leaderboard_name: "Küresel Liderlik Tablosu"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "Maksimum puan yeniden hesaplama sayısına ulaştınız. Lütfen tekrar denemeden önce %{time_left} bekleyin."
+  errors:
+    leaderboard_positions_not_ready: "Liderlik tablonuzu oluşturuyoruz. Birkaç dakika içinde tekrar deneyin."

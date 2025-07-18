@@ -1414,6 +1414,8 @@ lt:
       suspended_notice: "Šis vartotojas nušalintas iki %{date}."
       suspended_permanently: "Šis narys suspenduotas"
       suspended_reason: "Priežastis:"
+      silenced_permanently: "Šis narys nutildytas."
+      silenced_reason: "Priežastis:"
       github_profile: "GitHub"
       email_activity_summary: "Aktyvumo veikla"
       mailing_list_mode:
@@ -1835,7 +1837,8 @@ lt:
         removed: "Pašalintas"
         search: "įveskite, kad ieškotumete pakvietim"
         user: "Pakviestas vartotojas"
-        none: "Nėra rodomų duomenų."
+        none:
+          title: "Nėra rodomų duomenų."
         truncated:
           one: "Rodomas pirmas pakvietimas"
           few: "Rodomi pirmi %{count} pakvietimai."
@@ -2382,7 +2385,6 @@ lt:
       unlist: "neįtraukta į sąrašą"
       add_warning: "Tai Oficialus Ispėjimas"
       toggle_whisper: "Įjungti Šnabždesį"
-      toggle_unlisted: "Pažymeti iš sarašo"
       posting_not_on_topic: "Kurią temą nori atsakyti?"
       saved_local_draft_tip: "išsaugota lokaliai"
       drafts_offline: "juodraščiai ne ryšio zonoje"

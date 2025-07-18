@@ -121,6 +121,15 @@ export default class SearchMenu extends Component {
     );
   }
 
+  get isPMOnly() {
+    // Check if search is filtered to private messages only
+    const searchTerm = this.search.activeGlobalSearchTerm || "";
+    return (
+      this.inPMInboxContext ||
+      /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(searchTerm)
+    );
+  }
+
   @action
   onKeydown(event) {
     if (event.key === "Escape") {
@@ -472,6 +481,7 @@ export default class SearchMenu extends Component {
           @suggestionResults={{this.suggestionResults}}
           @searchTopics={{this.includesTopics}}
           @inPMInboxContext={{this.inPMInboxContext}}
+          @isPMOnly={{this.isPMOnly}}
           @triggerSearch={{this.triggerSearch}}
           @updateTypeFilter={{this.updateTypeFilter}}
           @closeSearchMenu={{this.close}}
@@ -488,6 +498,7 @@ export default class SearchMenu extends Component {
             @suggestionResults={{this.suggestionResults}}
             @searchTopics={{this.includesTopics}}
             @inPMInboxContext={{this.inPMInboxContext}}
+            @isPMOnly={{this.isPMOnly}}
             @triggerSearch={{this.triggerSearch}}
             @updateTypeFilter={{this.updateTypeFilter}}
             @closeSearchMenu={{this.close}}

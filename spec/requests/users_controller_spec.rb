@@ -4172,6 +4172,17 @@ RSpec.describe UsersController do
         get "/my/preferences"
         expect(response).to redirect_to("/u/#{user.encoded_username}/preferences")
       end
+
+      it "works with mixed case params" do
+        group = Fabricate(:group, name: "MyGroup")
+        group.add(user1)
+        group.save
+
+        sign_in(user1)
+
+        get "/my/messages/group/#{group.name}"
+        expect(response).to redirect_to("/u/#{user1.username}/messages/group/#{group.name}")
+      end
     end
   end
 

@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    discourse_subscriptions:
+      optional: Opcionalno
+      campaign:
+        success_title: Uspjeh!
+      plans:
+        interval:
+          adverb:
+            day: Dnevno
+            week: Popularne Sedmično
+            month: Popularne Mjesečno
+            year: Popularne Godišnje
+      user:
+        payments:
+          created_at: Kreiran
+        plans:
+          product: Ime
+        subscriptions:
+          status: Status
+          created_at: Kreiran
+          cancel: otkaži
+      billing:
+        email: Email
+      admin:
+        dashboard:
+          title: Dashboard
+          table:
+            head:
+              user: User
+        products:
+          product:
+            description: Opis
+            active: Active
+            created_at: Kreiran
+            updated_at: Ažurirano
+        plans:
+          plan:
+            active: Active
+            created_at: Kreiran
+        coupons:
+          active: Active?
+          actions: Akcije
+        subscriptions:
+          subscription:
+            user: User
+            status: Status
+            created_at: Kreiran

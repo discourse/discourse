@@ -59,7 +59,7 @@ RSpec.describe ThemeField do
     expect(theme_field.error).to eq(nil)
   end
 
-  it "only extracts special script tags to an external file" do
+  it "extracts inline javascript to an external file" do
     html = <<~HTML
       <script type="text/discourse-plugin" version="0.8">
         console.log("inline discourse plugin");
@@ -81,30 +81,22 @@ RSpec.describe ThemeField do
 
     theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
-    expect(theme_field.value_baked).to include(
-      "<link rel=\"modulepreload\" href=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"-1\">",
+
+    baked_doc = Nokogiri::HTML5.fragment(theme_field.value_baked)
+
+    extracted_scripts = baked_doc.css("script[src^='/theme-javascripts/']")
+    expect(extracted_scripts.length).to eq(4)
+
+    expect(theme_field.javascript_cache.content).to include("inline discourse plugin")
+
+    raw_js_cache_contents = theme_field.raw_javascript_caches.map(&:content)
+    expect(raw_js_cache_contents).to contain_exactly(
+      'var b = "inline raw script";',
+      'var c = "text/javascript";',
+      'var d = "application/javascript";',
     )
-    expect(theme_field.value_baked).to include("external-script.js")
-    expect(theme_field.value_baked).to include('<script type="text/template"')
-    expect(theme_field.javascript_cache.content).to include('"inline discourse plugin"')
-    expect(theme_field.value_baked).to include('"inline raw script"')
-    expect(theme_field.value_baked).to include('"text/javascript"')
-    expect(theme_field.value_baked).to include('"application/javascript"')
-  end
 
-  it "preserves simple script tags" do
-    html = <<~HTML
-      <script>var a = 10</script>
-      <script>var b = 10</script>
-    HTML
-
-    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
-    theme_field.ensure_baked!
-    expect(theme_field.javascript_cache).to eq(nil)
-    expect(theme_field.value_baked).to eq <<~HTML
-      <script nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">var a = 10</script>
-      <script nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">var b = 10</script>
-    HTML
+    expect(baked_doc.css("script[type='text/template']").length).to eq(1)
   end
 
   it "correctly logs errors for transpiled js" do
@@ -123,6 +115,29 @@ HTML
 
     field.update!(value: "")
     field.ensure_baked!
+  end
+
+  it "correctly extracts and generates errors for raw transpiled js" do
+    html = <<~HTML
+      <script>
+        badJavaScript(;
+      </script>
+    HTML
+
+    field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
+    field.ensure_baked!
+
+    expect(field.error).not_to eq(nil)
+    expect(field.value_baked).to include(
+      "<script defer=\"\" src=\"#{field.raw_javascript_caches[0].url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+    )
+    expect(field.raw_javascript_caches[0].content).to include(
+      "[THEME -1 'Foundation'] Compile error",
+    )
+
+    field.update!(value: "")
+    field.ensure_baked!
+    expect(field.error).to eq(nil)
   end
 
   it "allows us to use theme settings in handlebars templates" do
@@ -789,7 +804,7 @@ HTML
         theme.set_field(
           target: :common,
           name: "head_tag",
-          value: "<script>let c = 'd';</script>",
+          value: "<script type='text/discourse-plugin' version='0.1'>let c = 'd';</script>",
           type: :html,
         )
 

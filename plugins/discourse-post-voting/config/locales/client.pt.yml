@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Insira pelo menos %{count} caráter"
+              other: "Insira pelo menos %{count} carateres"
+          edit: "editar"
+          cancel: "cancelar"
+          user:
+            deleted: "(usuário eliminado)"
+          reviewables:
+            actions:
+              agree_and_suspend:
+                title: "Utilizador Suspenso"
+              agree_and_silence:
+                title: "Silenciar Usuário"
+              disagree:
+                title: "Discordar"
+      topic:
+        sort_by: "Ordenar por"
+        activity: "Actividade"

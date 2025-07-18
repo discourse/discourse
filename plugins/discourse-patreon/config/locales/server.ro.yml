@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    patreon_enabled: 'Activează modulul discourse-patreon'
+    patreon_login_enabled: 'Activează conectarea socială Patreon'
+    patreon_client_id: 'ID client Patreon generat'
+    patreon_client_secret: 'Secret client Patreon generat'
+  dashboard:
+    problem:
+      access_token_invalid: "Valorile jetoanelor de acces și de reîmprospătare ale Creatorului Patreon sunt incorecte. Trebuie să copiezi și să lipești noile jetoane de pe <a href='https://www.patreon.com/platform/documentation/clients'>site-ul Patreon</a> în <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>setările site-ului</a>."

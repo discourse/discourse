@@ -1,0 +1,484 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discoursen tilaukset"
+  site_settings:
+    discourse_subscriptions_enabled: Ota Discoursen Subscriptions-lisäosa käyttöön.
+    discourse_subscriptions_extra_nav_subscribe: Näytä tilauspainike päänavigoinnissa
+    discourse_subscriptions_pricing_table_id: Lisää pricing-table-id hintataulukon upotuskoodista tähän.
+    discourse_subscriptions_pricing_table_enabled: Tilauspainike näyttää upotetun hintataulukon ja Stripe Checkoutia käytetään.
+    discourse_subscriptions_public_key: Stripen Publishable Key
+    discourse_subscriptions_secret_key: Stripen Secret Key
+    discourse_subscriptions_webhook_secret: Stripen Webhook Secret
+    discourse_subscriptions_currency: Oletusvaluuttakoodi. Tämä voidaan ohittaa tilausta luotaessa.
+    discourse_subscriptions_campaign_enabled: Ottaa käyttöön kampanjabannerin tämän yhteisön taloudellisen tukemisen edistämiseksi.
+    discourse_subscriptions_campaign_goal: Tukikampanjasi numeerinen tavoite (tilaajat tai kerätty summa).
+    discourse_subscriptions_campaign_type: Valitsee suoritettavan kampanjan tyypin (tilaajat tai kuukausittain kerättävä summa).
+    discourse_subscriptions_campaign_banner_location: Valitsee kampanjabannerin sijainnin (ylä- tai sivupalkki).
+    discourse_subscriptions_campaign_banner_shadow_color: Valitsee kampanjabannerin varjon värin.
+    discourse_subscriptions_campaign_banner_bg_image: Lataa mukautettu kuva käytettäväksi kampanjabannerin taustana.
+    discourse_subscriptions_campaign_show_contributors: Näytä tilaustuotteiden viimeisimpien ostosten avatarit.
+    discourse_subscriptions_campaign_product: Stripen tuotetunnus, johon tukijat ohjataan, kun he napsauttavat kampanjan painiketta. Jos tämä asetus on tyhjä, tukijat ohjataan päätuotesivulle.
+    discourse_subscriptions_enable_automatic_tax: Ottaa käyttöön automaattisen verolaskelman, joka laskee automaattisesti veroprosentin kaikille tilauksen luomille laskuille.
+    discourse_subscriptions_enable_verbose_logging: Ottaa käyttöön monisanaisemman kirjauksen viankorjauksen helpottamiseksi. Älä jätä sitä pysyvästi käyttöön tuotannossa.
+    errors:
+      discourse_patrons_amount_must_be_currency: "Valuuttasummien täytyy olla valuuttoja ilman dollarimerkkiä (esim. 1,50)"
+  js:
+    filters:
+      subscribe:
+        help: Tue tätä sivustoa tilaamalla
+    discourse_subscriptions:
+      title: Discoursen tilaukset
+      admin_navigation: Tilaukset
+      optional: Ei pakollinen
+      navigation:
+        billing: Laskutus
+        payments: Maksut
+        subscriptions: Tilaukset
+        subscribe: Tilaa
+        user_activity:
+          payments: Maksut
+      campaign:
+        title: Tue meitä
+        body: Tarvitsemme apuasi pitääksemme tämän yhteisön toiminnassa!
+        success_title: Onnistui!
+        success_body: Kiitos avustasi tämän yhteisön ylläpitämisessä!
+        subscribers: Tilaajat
+        goal_comparison: "<strong>%{current}</strong>/<strong>%{goal}</strong>"
+        raised: Kerätty
+        button: Tuki
+        recent_contributors: Viimeisimmät tukijat
+        goal: Olemme saavuttaneet tavoitteemme
+        one_click_campaign: Luo tukikampanja automaattisesti
+        refresh_campaign: Päivitä kampanjatiedot
+        refresh_page: Kampanjan tietoja synkronoidaan nyt Stripesta taustalla. Päivitä sivu hetken kuluttua ladataksesi päivitetyt tiedot.
+        supporter: Tukija
+        supporters: Tukijat
+        confirm_creation_title: Haluatko luoda automaattisesti kampanjan yhteisöllesi?
+        confirm_creation: |-
+          <p>Jatkaminen luo:</p>
+
+          <ul>
+          <li>ryhmän, joka palkitsee tukijasi mukautetulla otsikolla ja avatarilla</li>
+          <li>Stripe-tuotteen ennalta määritetyillä hinnoilla (kuukausittainen ja vuosittainen), jonka käyttäjät voivat ostaa tukeakseen sivustoasi.</li>
+          </ul>
+
+          <p>Haluatko jatkaa?</p>
+        created: Yhden napsautuksen kampanjasi on luotu ja valmis käytettäväksi! Sinut ohjataan kampanja-asetuksiin.
+      one_time_payment: Kertamaksu
+      plans:
+        purchase: Osta tilaus
+        select: Valitse tilaus
+        interval:
+          adverb:
+            day: Päivittäinen
+            week: Viikoittain
+            month: Kuukausittain
+            year: Vuosittain
+        payment_button: Tilaa
+        success: Kiitos! Tilauksesi on luotu.
+        incomplete: Maksu on kesken. Tilauksesi päivitetään, kun maksu on suoritettu.
+        validate:
+          payment_options:
+            required: Valitse tilaus.
+      user:
+        payments:
+          id: Maksun tunnus
+          amount: Summa
+          created_at: Luotu
+        payments_help: Maksuja ei ole
+        plans:
+          rate: Hinta
+          product: Nimi
+        subscriptions_help: Sinulla ei ole aktiivisia tilauksia.
+        subscriptions:
+          id: Tilauksen tunnus
+          status: Tila
+          discounted: Alennettu
+          renews: Uusiutuu
+          update_card:
+            heading: "Päivitä kortti tilaukselle: %{sub_id}"
+            single: "Päivitä"
+          created_at: Luotu
+          cancel: peruuta
+          cancelled: peruutettu
+          operations:
+            destroy:
+              confirm: Haluatko varmasti peruuttaa tämän tilauksen?
+      subscribe:
+        title: Tilaa
+        view_past: Näytä aikaisemmat ostokset
+        no_products: Tuotteita ei ole tällä hetkellä saatavilla.
+        unauthenticated: Kirjaudu sisään tai luo tili tilataksesi.
+        invalid_coupon: Annoit virheellisen kuponkikoodin. Yritä uudelleen.
+        invalid_cardholder_name: Kortinhaltijan nimi on pakollinen.
+        invalid_cardholder_country: Maa on pakollinen.
+        invalid_cardholder_state: Osavaltio on pakollinen.
+        invalid_cardholder_province: Provinssi on pakollinen.
+        transaction_error: Maksun käsittelyssä tapahtui virhe. Yritä uudelleen.
+        card:
+          title: Maksu
+        customer:
+          title: Asiakkaan tiedot
+        promo_code: Kuponki
+        buttons:
+          subscribe: Tilaa
+        purchased: Ostettu
+        go_to_billing: Siirry laskutukseen
+        already_purchased: Kiitos paljon tämän tuotteen aikaisemmasta ostostasi!
+        cardholder_name: Kortinhaltijan nimi
+        cardholder_address:
+          line1: Katuosoite
+          city: Kaupunki
+          state: Osavaltio
+          province: Provinssi
+          country: Maa
+          postal_code: Postinumero
+        countries:
+          AF: "Afganistan"
+          AX: "Ahvenanmaa"
+          AL: "Albania"
+          DZ: "Algeria"
+          AS: "Amerikan Samoa"
+          AD: "Andorra"
+          AO: "Angola"
+          AI: "Anguilla"
+          AQ: "Antarktis"
+          AG: "Antigua ja Barbuda"
+          AR: "Argentiina"
+          AM: "Armenia"
+          AW: "Aruba"
+          AU: "Australia"
+          AT: "Itävalta"
+          AZ: "Azerbaidžan"
+          BS: "Bahama"
+          BH: "Bahrain"
+          BD: "Bangladesh"
+          BB: "Barbados"
+          BY: "Valko-Venäjä"
+          BE: "Belgia"
+          BZ: "Belize"
+          BJ: "Benin"
+          BM: "Bermuda"
+          BT: "Bhutan"
+          BO: "Bolivian monikansainen valtio"
+          BQ: "Bonaire, Sint Eustatius ja Saba"
+          BA: "Bosnia ja Hertsegovina"
+          BW: "Botswana"
+          BV: "Bouvet'nsaari"
+          BR: "Brasilia"
+          IO: "Brittiläinen Intian valtameren alue"
+          BN: "Brunei Darussalam"
+          BG: "Bulgaria"
+          BF: "Burkina Faso"
+          BI: "Burundi"
+          KH: "Kambodža"
+          CM: "Kamerun"
+          CA: "Kanada"
+          CV: "Kap Verde"
+          KY: "Caymansaaret"
+          CF: "Keski-Afrikan tasavalta"
+          TD: "Tšad"
+          CL: "Chile"
+          CN: "Kiina"
+          CX: "Joulusaari"
+          CC: "Kookossaaret (Keeling)"
+          CO: "Kolumbia"
+          KM: "Komorit"
+          CG: "Kongo"
+          CD: "Kongon demokraattinen tasavalta"
+          CK: "Cookinsaaret"
+          CR: "Costa Rica"
+          CI: "Norsunluurannikko"
+          HR: "Kroatia"
+          CU: "Kuuba"
+          CW: "Curaçao"
+          CY: "Kypros"
+          CZ: "Tšekin tasavalta"
+          DK: "Tanska"
+          DJ: "Djibouti"
+          DM: "Dominica"
+          DO: "Dominikaaninen tasavalta"
+          EC: "Ecuador"
+          EG: "Egypti"
+          SV: "El Salvador"
+          GQ: "Päiväntasaajan Guinea"
+          ER: "Eritrea"
+          EE: "Viro"
+          ET: "Etiopia"
+          FK: "Falklandinsaaret (Malvinassaaret)"
+          FO: "Färsaaret"
+          FJ: "Fidži"
+          FI: "Suomi"
+          FR: "Ranska"
+          GF: "Ranskan Guayana"
+          PF: "Ranskan Polynesia"
+          TF: "Ranskan eteläiset alueet"
+          GA: "Gabon"
+          GM: "Gambia"
+          GE: "Georgia"
+          DE: "Saksa"
+          GH: "Ghana"
+          GI: "Gibraltar"
+          GR: "Kreikka"
+          GL: "Grönlanti"
+          GD: "Grenada"
+          GP: "Guadeloupe"
+          GU: "Guam"
+          GT: "Guatemala"
+          GG: "Guernsey"
+          GN: "Guinea"
+          GW: "Guinea-Bissau"
+          GY: "Guyana"
+          HT: "Haiti"
+          HM: "Heard ja McDonaldinsaaret"
+          VA: "Vatikaani"
+          HN: "Honduras"
+          HK: "Hongkong"
+          HU: "Unkari"
+          IS: "Islanti"
+          IN: "Intia"
+          ID: "Indonesia"
+          IR: "Iranin islamilainen tasavalta"
+          IQ: "Irak"
+          IE: "Irlanti"
+          IM: "Mansaari"
+          IL: "Israel"
+          IT: "Italia"
+          JM: "Jamaika"
+          JP: "Japani"
+          JE: "Jersey"
+          JO: "Jordania"
+          KZ: "Kazakstan"
+          KE: "Kenia"
+          KI: "Kiribati"
+          KP: "Korean demokraattinen kansantasavalta"
+          KR: "Korean tasavalta"
+          KW: "Kuwait"
+          KG: "Kirgisia"
+          LA: "Laosin demokraattinen kansantasavalta"
+          LV: "Latvia"
+          LB: "Libanon"
+          LS: "Lesotho"
+          LR: "Liberia"
+          LY: "Libya"
+          LI: "Liechtenstein"
+          LT: "Liettua"
+          LU: "Luxemburg"
+          MO: "Macao"
+          MK: "Pohjois-Makedonia"
+          MG: "Madagaskar"
+          MW: "Malawi"
+          MY: "Malesia"
+          MV: "Malediivit"
+          ML: "Mali"
+          MT: "Malta"
+          MH: "Marshallinsaaret"
+          MQ: "Martinique"
+          MR: "Mauritania"
+          MU: "Mauritius"
+          YT: "Mayotte"
+          MX: "Meksiko"
+          FM: "Mikronesian liittovaltio"
+          MD: "Moldovan tasavalta"
+          MC: "Monaco"
+          MN: "Mongolia"
+          ME: "Montenegro"
+          MS: "Montserrat"
+          MA: "Marokko"
+          MZ: "Mosambik"
+          MM: "Myanmar"
+          NA: "Namibia"
+          NR: "Nauru"
+          NP: "Nepal"
+          NL: "Alankomaat"
+          NC: "Uusi-Kaledonia"
+          NZ: "Uusi-Seelanti"
+          NI: "Nicaragua"
+          NE: "Niger"
+          NG: "Nigeria"
+          NU: "Niue"
+          NF: "Norfolkinsaari"
+          MP: "Pohjois-Mariaanit"
+          "NO": "Norja"
+          OM: "Oman"
+          PK: "Pakistan"
+          PW: "Palau"
+          PS: "Palestiinalaisalue"
+          PA: "Panama"
+          PG: "Papua-Uusi-Guinea"
+          PY: "Paraguay"
+          PE: "Peru"
+          PH: "Filippiinit"
+          PN: "Pitcairn"
+          PL: "Puola"
+          PT: "Portugali"
+          PR: "Puerto Rico"
+          QA: "Qatar"
+          RE: "Réunion"
+          RO: "Romania"
+          RU: "Venäjän federaatio"
+          RW: "Ruanda"
+          BL: "Saint Barthélemy"
+          SH: "Saint Helena, Ascension ja Tristan da Cunha"
+          KN: "Saint Kitts ja Nevis"
+          LC: "Saint Lucia"
+          MF: "Saint Martin (ranskalainen osa)"
+          PM: "Saint-Pierre ja Miquelon"
+          VC: "Saint Vincent ja Grenadiinit"
+          WS: "Samoa"
+          SM: "San Marino"
+          ST: "São Tomé ja Príncipe"
+          SA: "Saudi-Arabia"
+          SN: "Senegal"
+          RS: "Serbia"
+          SC: "Seychellit"
+          SL: "Sierra Leone"
+          SG: "Singapore"
+          SX: "Sint Maarten (alankomaalainen osa)"
+          SK: "Slovakia"
+          SI: "Slovenia"
+          SB: "Salomonsaaret"
+          SO: "Somalia"
+          ZA: "Etelä-Afrikka"
+          GS: "Etelä-Georgia ja Eteläiset Sandwichsaaret"
+          SS: "Etelä-Sudan"
+          ES: "Espanja"
+          LK: "Sri Lanka"
+          SD: "Sudan"
+          SR: "Suriname"
+          SJ: "Huippuvuoret ja Jan Mayen"
+          SZ: "Swazimaa"
+          SE: "Ruotsi"
+          CH: "Sveitsi"
+          SY: "Syyrian arabitasavalta"
+          TW: "Taiwan, Kiinan maakunta"
+          TJ: "Tadžikistan"
+          TZ: "Tansanian yhdistynyt tasavalta"
+          TH: "Thaimaa"
+          TL: "Itä-Timor"
+          TG: "Togo"
+          TK: "Tokelau"
+          TO: "Tonga"
+          TT: "Trinidad ja Tobago"
+          TN: "Tunisia"
+          TR: "Turkki"
+          TM: "Turkmenistan"
+          TC: "Turks- ja Caicossaaret"
+          TV: "Tuvalu"
+          UG: "Uganda"
+          UA: "Ukraina"
+          AE: "Yhdistyneet arabiemiirikunnat"
+          GB: "Yhdistynyt kuningaskunta"
+          US: "Yhdysvallat"
+          UM: "Yhdysvaltain pienet erillissaaret"
+          UY: "Uruguay"
+          UZ: "Uzbekistan"
+          VU: "Vanuatu"
+          VE: "Venezuelan bolivariaaninen tasavalta"
+          VN: "Vietnam"
+          VG: "Brittiläiset Neitsytsaaret"
+          VI: "Yhdysvaltain Neitsytsaaret"
+          WF: "Wallis ja Futuna"
+          EH: "Länsi-Sahara"
+          YE: "Jemen"
+          ZM: "Sambia"
+          ZW: "Zimbabwe"
+      billing:
+        name: Koko nimi
+        email: Sähköposti
+        phone: Puhelinnumero
+      confirmation:
+        amount: Summa
+        last4: Kortin numero
+      buttons:
+        make_payment: Maksa
+        confirm_payment: Vahvista maksu
+        success: Palaa takaisin
+      admin:
+        unconfigured: 'Stripea ei ole määritetty oikein. Katso lisätietoja Discourse Metasta.'
+        on_meta: Discoursen tilaukset Metassa
+        dashboard:
+          title: Hallintapaneeli
+          table:
+            head:
+              user: Käyttäjä
+              payment_intent: Maksun tunnus
+              receipt_email: Kuitin sähköposti
+              amount: Summa
+        products:
+          title: Tuotteet
+          operations:
+            create: Luo uusi tuote
+            update: Päivitä tuote
+            new: Uusi tuote
+            destroy:
+              confirm: Haluatko varmasti tuhota tämän tuotteen?
+          product:
+            product_id: Tuotekoodi
+            name: Tuotteen nimi
+            statement_descriptor: Kuvaus otteella
+            statement_descriptor_help: Tuotteen lisätiedot, jotka näkyvät asiakkaasi luottokorttiotteessa.
+            plan_help: Luo hinnoittelusopimus, jotta asiakkaat voivat tilata tämän tuotteen.
+            description: Kuvaus
+            description_help: Tämä kuvaa tilaustuotettasi.
+            repurchaseable: Ostettavissa uudelleen?
+            repurchase_help: Salli tuotteen ja siihen liittyvien sopimusten ostaminen useita kertoja
+            active: Aktiiviset
+            active_help: Poista tämä käytöstä, kunnes tuotteesi on valmis kuluttajille.
+            created_at: Luotu
+            updated_at: Päivitetty
+          product_help: Ennen kuin asiakkaat voivat tilata sivustosi, sinun täytyy luoda vähintään yksi tuote ja siihen liittyvä sopimus.
+        plans:
+          title: Hinnoittelusopimukset
+          operations:
+            add: Lisää uusi sopimus
+            create: Luo sopimus
+            update: Päivitä sopimus
+            create_help: Kun hinnoittelusopimus on luotu, vain sen lempinimi, kokeilujakso ja käyttäjäryhmä voidaan päivittää.
+            new: Uusi sopimus
+            destroy:
+              confirm: Haluatko varmasti tuhota tämän sopimuksen?
+          plan:
+            nickname: Sopimuksen lempinimi
+            nickname_help: Tämä ei näy asiakkaille, mutta auttaa sinua löytämään tämän sopimuksen myöhemmin
+            plan_id: Sopimuksen tunnus
+            product: Tuote
+            interval: Laskutusväli
+            amount: Summa
+            trial: Kokeilupäiviä
+            trial_help: Tämän sopimuksen tilaukset alkavat automaattisesti tämän pituisella ilmaisella kokeilujaksolla
+            group: Käyttäjäryhmä
+            group_help: Tämä on Discoursen käyttäjäryhmä, johon asiakas lisätään, kun tilaus luodaan.
+            active: Aktiiviset
+            created_at: Luotu
+            recurring: Toistuva sopimus?
+        coupons:
+          title: Kupongit
+          code: Tarjouskoodi
+          discount: Alennus
+          times_redeemed: Lunastuskertoja
+          active: Aktiivinen?
+          actions: Toiminnot
+          create: Luo kuponki
+          promo_code: Tarjouskoodi (kirjainkoolla ei ole väliä)
+        subscriptions:
+          title: Tilaukset
+          subscription:
+            user: Käyttäjä
+            subscription_id: Tilauksen tunnus
+            customer: Asiakas
+            product: Tuote
+            plan: Sopimus
+            status: Tila
+            created_at: Luotu
+        ask_refund: Hyvitetäänkö asiakkaan viimeisin maksu?
+        canceled: "Tilaus on peruutettu."

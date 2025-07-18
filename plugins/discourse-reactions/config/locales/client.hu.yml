@@ -14,7 +14,7 @@ hu:
     discourse_reactions:
       reactions_title: "Reakciók"
       state_panel:
-        more_users: "és %{count} további…"
+        more_users: "és még további %{count}..."
       reaction:
         forbidden: "Ez a reakció túl régen lett létrehozva. Már nem lehet módosítani vagy eltávolítani."
       picker:
@@ -32,7 +32,7 @@ hu:
         other: "%{count} reakciót váltottak ki a bejegyzések"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
-        one: "%{username} és még %{count} fő"
-        other: "%{username} és még %{count} fő"
+        one: "%{username} és még %{count} felhasználó"
+        other: "%{username} és még %{count} felhasználó"
       titles:
         reaction: "új reakció"

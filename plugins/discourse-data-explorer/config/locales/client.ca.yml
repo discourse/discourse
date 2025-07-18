@@ -1,0 +1,63 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Elimina els punts i coma de la consulta."
+        dirty: "Cal desar la consulta abans d'executar-la"
+    explorer:
+      or: "o"
+      admins_only: "L'explorador de dades sols és disponible per a administradors."
+      title: "Explorador de dades"
+      create: "Crea'n un de nou"
+      create_placeholder: "Nom de consulta..."
+      description_placeholder: "Introduïu una descripció aquí"
+      import:
+        label: "Importa"
+        modal: "Importa una consulta"
+      help:
+        label: "Ajuda"
+      schema:
+        title: "Esquema de base de dades"
+        filter: "Cerca..."
+        sensitive: "El contingut d'aquesta columna pot contenir informació particularment sensible o privada. Tingueu precaució quan utilitzeu el contingut d'aquesta columna."
+      types:
+        bool:
+          yes: "Sí"
+          no: "No"
+          null_: "Nul"
+      export: "Exporta"
+      save: "Desa els canvis"
+      saverun: "Desa els canvis i executa"
+      run: "Executa"
+      undo: "Descarta els canvis"
+      edit: "Edita"
+      delete: "Suprimeix"
+      recover: "Restaura la consulta"
+      download_json: "JSON"
+      download_csv: "CSV"
+      others_dirty: "Una consulta té canvis no desats que es perdran si continueu navegant."
+      run_time: "La consulta s'ha completat en %{value} ms."
+      result_count:
+        one: "%{count} resultat."
+        other: "%{count} resultats."
+      query_name: "Consulta"
+      query_groups: "Grups"
+      link: "Enllaç de"
+      report_name: "Report"
+      query_description: "Descripció"
+      query_time: "Darrera execució"
+      query_user: "Creat per"
+      column: "Columna %{number}"
+      explain_label: "Hi incloem pla de consulta?"
+      save_params: "Estableix valors per defecte"
+      reset_params: "Reinicia"
+      search_placeholder: "Cerca..."
+      no_search_results: "Ho sentim, no hem trobat cap resultat que coincideixi amb el vostre text."
+    group:
+      reports: "Reports"

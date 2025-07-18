@@ -1,0 +1,155 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    chat_integration:
+      settings: "Nastavenia"
+      no_providers: "Musíte povoliť niektorích poskytovateľov v nastavení zásuvných modulov"
+      choose_group: "(vyberte skupinu)"
+      all_categories: "(všetky kategórie)"
+      all_tags: "(všetky štítky)"
+      create_rule: "Vytvoriť pravidlo"
+      create_channel: "Vytvoriť kanál"
+      delete_channel: "Vymazať"
+      test_channel: "Test"
+      edit_channel: "Upraviť"
+      test_modal:
+        topic: "Téma"
+        send: "Odoslať testovaciu správu"
+        close: "Zatvoriť"
+        success: "Správa úspešne odoslaná"
+      type:
+        normal: Bežné
+        group_message: Skupinová správa
+        group_mention: Skupinová zmienka
+      filter:
+        mute: 'Ignorovať'
+        follow: 'Iba prvý príspevok'
+        watch: 'Všetky príspevky a odpovede'
+      rule_table:
+        filter: "Filter"
+        category: "Kategória"
+        tags: "Štítky"
+        edit_rule: "Upraviť"
+        delete_rule: "Odstrániť"
+      edit_channel_modal:
+        title: "Upraviť kanál"
+        save: "Uložiť kanál"
+        cancel: "Zrušiť"
+        provider: "Poskytovateľ"
+        channel_validation:
+          ok: "Platné"
+          fail: "Nesprávny formát"
+      edit_rule_modal:
+        title: Upraviť pravidlo
+        save: Uložiť pravidlo
+        cancel: Zrušiť
+        provider: Poskytovateľ
+        type: Typ
+        channel: Kanál
+        filter: Filter
+        category: Kategória
+        group: Skupina
+        tags: Štítky
+      provider:
+        slack:
+          title: "Slack"
+          param:
+            identifier:
+              title: Kanál
+              help: "napr. #kanál, @používateľské_meno"
+        telegram:
+          title: "Telegram"
+          param:
+            name:
+              title: "Meno"
+          errors:
+            channel_not_found: "Zvolený kanál na Telegrame neexistuje"
+            forbidden: "Bot nemá práva na posielanie príspevkov na tento kanál"
+        discord:
+          title: "Discord"
+          param:
+            name:
+              title: "Meno"
+            webhook_url:
+              title: Webová adresa URL
+        guilded:
+          param:
+            name:
+              title: "Meno"
+            webhook_url:
+              title: Webová adresa URL
+        mattermost:
+          title: "Mattermost"
+          param:
+            identifier:
+              title: Kanál
+              help: "napr. #kanál, @používateľské_meno"
+          errors:
+            channel_not_found: "Zvolený kanál neexistuje na Mattermoste."
+        matrix:
+          param:
+            name:
+              title: "Meno"
+        zulip:
+          title: "Zulip"
+          param:
+            subject:
+              title: "Predmet"
+        rocketchat:
+          title: "Rocket.Chat"
+          param:
+            identifier:
+              title: Kanál
+              help: "napr. #kanál, @používateľské_meno"
+        gitter:
+          title: "Gitter"
+          param:
+            name:
+              title: "Meno"
+            webhook_url:
+              title: "Webová adresa URL"
+        teams:
+          param:
+            name:
+              title: "Meno"
+            webhook_url:
+              title: "Webová adresa URL"
+        powerautomate:
+          param:
+            name:
+              title: "Meno"
+            webhook_url:
+              title: "Webová adresa URL"
+        webex:
+          param:
+            name:
+              title: "Meno"
+            webhook_url:
+              title: "Webová adresa URL"
+        google:
+          param:
+            name:
+              title: "Meno"
+            webhook_url:
+              title: "Webová adresa URL"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Správa
+            url:
+              label: URL
+            channel:
+              label: Kanál
+        send_chat_integration_message:
+          fields:
+            channel_name:
+              label: Názov kanála
+            provider:
+              label: Poskytovateľ

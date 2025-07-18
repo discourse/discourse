@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    discourse_subscriptions:
+      campaign:
+        success_title: поспех!
+      plans:
+        interval:
+          adverb:
+            day: штодня
+            week: штотыдзень
+            month: штомесяц
+            year: штогод
+      user:
+        payments:
+          created_at: створаны
+        plans:
+          product: Імя
+        subscriptions:
+          status: Статус
+          created_at: створаны
+          cancel: адмена
+      billing:
+        email: Электронная пошта
+      admin:
+        dashboard:
+          title: Галоўная панэль
+          table:
+            head:
+              user: Карыстальнік
+        products:
+          product:
+            description: Апісанне
+            active: актыўны
+            created_at: створаны
+        plans:
+          plan:
+            active: актыўны
+            created_at: створаны
+        coupons:
+          active: актыўны?
+          actions: дзеянні
+        subscriptions:
+          subscription:
+            user: Карыстальнік
+            status: Статус
+            created_at: створаны

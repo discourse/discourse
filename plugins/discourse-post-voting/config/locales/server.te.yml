@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  post_voting:
+    comment:
+      reviewables:
+        actions:
+          agree_and_suspend:
+            title: "సభ్యుడిని సస్పెండు చేయి"
+            description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని సస్పెండ్ చేయండి."
+          agree_and_silence:
+            title: "సభ్యుని నిశ్శబ్దం చేయండి"
+            description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని నిశబ్దం చేయండి."
+          disagree:
+            title: "ఒప్పుకోకు"
+      reviewable_score_types:
+        notify_user:
+          comment_pm_body: "%{link}\n\n%{comment}"
+        notify_moderators:
+          comment_pm_body: "%{link}\n\n%{comment}"

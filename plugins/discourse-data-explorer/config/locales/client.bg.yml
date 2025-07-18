@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  js:
+    explorer:
+      or: "или"
+      import:
+        label: "Импорт"
+      help:
+        label: "Помощ"
+      schema:
+        filter: "Търсене ... "
+      types:
+        bool:
+          yes: "Да"
+          no: "Не"
+      export: "Експорт "
+      save: "Запази промените"
+      edit: "Редактирай"
+      delete: "Изтрий"
+      result_count:
+        one: "%{count} резултат."
+        other: "%{count} резултата."
+      query_groups: "Групи"
+      query_description: "Описание"
+      reset_params: "Нулиране"
+      search_placeholder: "Търсене ... "

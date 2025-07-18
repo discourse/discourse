@@ -1,0 +1,84 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    chat_integration:
+      settings: "Rregullimet"
+      all_categories: "(të gjitha kategoritë)"
+      delete_channel: "Fshij"
+      edit_channel: "Redakto"
+      test_modal:
+        topic: "Topic"
+        close: "Mbyll"
+      type:
+        normal: Normal
+      filter:
+        mute: 'Hesht'
+      rule_table:
+        filter: "Filtro"
+        category: "Kategori"
+        tags: "Etiketat"
+        edit_rule: "Redakto"
+        delete_rule: "Fshij"
+      edit_channel_modal:
+        cancel: "Anulo"
+      edit_rule_modal:
+        cancel: Anulo
+        type: Lloji
+        filter: Filtro
+        category: Kategori
+        group: Grupi
+        tags: Etiketat
+      provider:
+        telegram:
+          param:
+            name:
+              title: "Emri"
+        discord:
+          param:
+            name:
+              title: "Emri"
+        guilded:
+          param:
+            name:
+              title: "Emri"
+        matrix:
+          param:
+            name:
+              title: "Emri"
+        zulip:
+          param:
+            subject:
+              title: "Subjekti"
+        gitter:
+          param:
+            name:
+              title: "Emri"
+        teams:
+          param:
+            name:
+              title: "Emri"
+        powerautomate:
+          param:
+            name:
+              title: "Emri"
+        webex:
+          param:
+            name:
+              title: "Emri"
+        google:
+          param:
+            name:
+              title: "Emri"
+    discourse_automation:
+      scriptables:
+        send_slack_message:
+          fields:
+            message:
+              label: Mesazh
+            url:
+              label: URL

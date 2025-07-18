@@ -1181,7 +1181,6 @@ nb_NO:
   color_schemes:
     light: "Lys"
     dark: "Mørk"
-    default_theme_name: "Forvalg"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   edit_this_page: "Endre denne siden"
@@ -1271,7 +1270,6 @@ nb_NO:
       name: Gir tilbake
     badge_title_metadata: "%{display_name} merke på %{site_title}"
   admin_login:
-    success: "E-post sendt"
     submit_button: "Send e-post"
   tags:
     title: "Stikkord"

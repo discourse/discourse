@@ -1,0 +1,114 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "从查询中移除分号。"
+        dirty: "您必须先保存查询，然后才能运行。"
+    explorer:
+      or: "或者"
+      admins_only: "数据资源管理器仅供管理员使用。"
+      allow_groups: "允许群组访问此查询"
+      title: "数据资源管理器"
+      create: "创建新查询"
+      create_placeholder: "查询名称…"
+      description_placeholder: "在此处输入描述"
+      import:
+        label: "导入"
+        modal: "导入查询"
+        unparseable_json: "无法解析的 JSON 文件。"
+        wrong_json: "错误的 JSON 文件。JSON 文件应包含一个 'query' 对象，该对象至少应具有一个 'sql' 属性。"
+      help:
+        label: "帮助"
+        modal_title: "数据资源管理器帮助"
+        auto_resolution: "<h2>自动实体解析</h2> <p>当您的查询返回实体 ID 时，数据资源管理器可能会自动将其替换为查询结果中的实体名称和其他有用信息。自动解析适用于 <i><b>USER_ID</b></i>、<i><b>GROUP_ID</b></i>、<i><b>topic_id</b></i>、<i><b>CATEGORY_ID</b></i> 和 <i><b>badge_id</b></i>。要尝试此操作，请运行以下查询：</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>创建自定义参数</h2> <p>要为您的查询创建自定义参数，请将其放在查询的顶部并遵循以下格式：</p> <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>注意：包含 [params] 以及它前面的两个破折号和您要声明的每个自定义参数的第一行是必需的。</i></p>"
+        default_values: "<h3>默认值</h3> <p>您可以声明带或不带默认值的参数。默认值将显示在查询编辑器下方的文本字段中，您可以根据需要对其进行编辑。没有默认值声明的参数仍将生成一个文本字段，但将为空并以红色突出显示。</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>数据类型</h3> <p>以下是您可以使用的常见数据类型：</p> <ul> <li><b>整数</b> - 有符号四字节整数</li> <li><b>文本</b> - 可变长度字符字符串</li> <li><b>布尔值</b> – true/false</li> <li><b>日期</b> - 日历日期（年、月、日）</li> </ul> <p>有关数据类型的更多信息，请访问<a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>此网站</a>。</p>"
+      schema:
+        title: "数据库架构"
+        filter: "搜索…"
+        sensitive: "此列的内容可能包含特别敏感或私人的信息。使用此列的内容时请谨慎。"
+      types:
+        bool:
+          yes: "是"
+          no: "否"
+          null_: "空"
+      export: "导出"
+      view_json: "查看 JSON"
+      save: "保存变更"
+      saverun: "保存变更并运行"
+      run: "运行"
+      undo: "舍弃变更"
+      edit: "编辑"
+      delete: "删除"
+      recover: "取消删除查询"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "表"
+      show_graph: "图表"
+      others_dirty: "查询具有未保存的更改，如果您离开，这些更改将丢失。"
+      run_time: "查询在 %{value} 毫秒内完成。"
+      result_count:
+        other: "%{count} 个结果。"
+      max_result_count:
+        other: "显示前 %{count} 个结果。"
+      query_name: "查询"
+      query_groups: "群组"
+      link: "链接"
+      report_name: "报告"
+      query_description: "描述"
+      query_time: "最后运行"
+      query_user: "创建者"
+      column: "第 %{number} 列"
+      explain_label: "包括查询计划？"
+      save_params: "设置默认值"
+      reset_params: "重置"
+      search_placeholder: "搜索…"
+      no_search_results: "抱歉，我们找不到任何与您的文本匹配的结果。"
+      form:
+        errors:
+          invalid: "无效"
+          no_such_category: "没有此类类别"
+          no_such_group: "没有此类群组"
+          invalid_date: "%{date} 是无效日期"
+          invalid_time: "%{time} 是无效时间"
+    group:
+      reports: "报告"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "运行数据资源管理器查询。通过指定查询 ID 将 API 密钥限制为一组查询。"
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: 发送至用户、群组或电子邮件
+            query_id:
+              label: 数据资源管理器查询
+            query_params:
+              label: 数据资源管理器查询参数
+            skip_empty:
+              label: 如果没有结果，则跳过发送 PM
+            attach_csv:
+              label: 将 CSV 文件附加到私信
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: 发布查询结果的话题
+            query_id:
+              label: 数据资源管理器查询
+            query_params:
+              label: 数据资源管理器查询参数
+            skip_empty:
+              label: 如果没有结果，则跳过发布
+            attach_csv:
+              label: 将 CSV 文件附加到帖子

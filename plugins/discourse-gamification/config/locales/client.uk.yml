@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    gamification:
+      you: "Ви"
+      leaderboard:
+        link_to_settings: "Налаштування"
+        refresh: "Оновити"
+        name: "Назва"
+        name_placeholder: "Назва..."
+        period:
+          all_time: "Весь час"
+          yearly: "Щорічно"
+          quarterly: "Щоквартала"
+          monthly: "Щомісяця"
+          weekly: "Щотижня"
+          daily: "За день"
+      create: "Створити"
+      cancel: "Скасувати"
+      close: "Закрити"
+      delete: "Видалити"
+      edit: "Редагувати"
+      back: "Назад"
+      save: "Зберегти"
+      apply: "Застосувати"
+      update_range:
+        last_10_days: "Останні 10 днів"
+        last_30_days: "Останні 30 днів"
+        last_90_days: "Останні 90 днів"
+        all_time: "Весь час"
+      custom_range_from: "Від"
+      admin:
+        name: "Назва"

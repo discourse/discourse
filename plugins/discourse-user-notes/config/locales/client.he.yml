@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    user_notes:
+      title: "הערות משתמש"
+      attach: "הוספת הערת משתמש"
+      remove: "הסרת הערת משתמש"
+      show: "הערות משתמש (%{count})"
+      delete_confirm: "למחוק את הערת המשתמש הזאת"
+      show_post: "הצגת פוסט"
+      copy_reviewable_note: "להעתיק את ההערה לפרופיל המשתמש?"

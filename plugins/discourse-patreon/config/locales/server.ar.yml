@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    patreon_enabled: 'تفعيل المكوِّن الإضافي discourse-patreon'
+    patreon_login_enabled: 'تفعيل تسجيل الدخول إلى Patreon بحساب تواصل اجتماعي'
+    patreon_client_id: 'مُعرِّف عميل Patreon الذي تم إنشاؤه'
+    patreon_client_secret: 'سر عمل Patreon الذي تم إنشاؤه'
+    patreon_webhook_secret: 'سر خطاف ويب Patreon الذي تم إنشاؤه'
+    patreon_creator_discourse_username: "اسم مستخدم حساب Discourse المستخدم لتسجيل الدخول من خلال أحد حسابات منشئي المحتوى على Patreon باستخدام 'تسجيل الدخول إلى Patreon بحساب تواصل اجتماعي'"
+    patreon_creator_access_token: "رمز وصول منشئ Patreon الذي تم إنشاؤه"
+    patreon_creator_refresh_token: "رمز تحديث منشئ Patreon الذي تم إنشاؤه"
+    patreon_declined_pledges_grace_period_days: "فترة السماح (بالأيام) قبل رفض التبرع تمامًا."
+    max_patreon_api_reqs_per_hr: "أقصى عدد لطلبات Patreon API في الساعة"
+    max_patreon_api_reqs_per_day: "أقصى عدد لطلبات Patreon API في اليوم"
+    patreon_verbose_log: 'تفعيل التسجيل المطوَّل لحمولة Patreon'
+    patreon_donation_prompt_enabled: "هل تريد تفعيل أمر التبرع؟"
+    patreon_donation_prompt_show_after_topics: "عرض أمر التبرع بعد N من الموضوعات"
+    patreon_donation_prompt_campaign_url: "عنوان URL لحملة أوامر التبرع"
+    errors:
+      patreon_creator_username_not_set: "أنت بحاجة إلى ضبط إعداد اسم مستخدم Discourse لمنشئي المحتوى على Patreon قبل تفعيل تسجيل الدخول باستخدام Patreon."
+  dashboard:
+    problem:
+      access_token_invalid: "قيم رمز الوصول والتحديث لمُنشئ Patreon غير صحيحة. يجب عليك نسخ ولصق الرموز الجديدة من <a href='https://www.patreon.com/platform/documentation/clients'>موقع Patreon على الويب</a> إلى <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>إعدادات الموقع</a>."
+  patreon:
+    error:
+      invalid_response: "استجابة غير صالحة من Patreon API"

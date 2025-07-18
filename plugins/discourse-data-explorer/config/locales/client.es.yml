@@ -1,0 +1,116 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Eliminar los punto y coma de la consulta."
+        dirty: "Debes guardar la consulta antes de ejecutarla."
+    explorer:
+      or: "o"
+      admins_only: "El explorador de datos solo esta disponible para administradores."
+      allow_groups: "Permitir a los grupos acceder a esta consulta"
+      title: "Explorador de datos"
+      create: "Crear nueva"
+      create_placeholder: "Nombre de la consulta..."
+      description_placeholder: "Escribe una descripción aquí"
+      import:
+        label: "Importar"
+        modal: "Importar una consulta"
+        unparseable_json: "Archivo JSON no analizable."
+        wrong_json: "Archivo JSON incorrecto. Debería contener un objeto «query», con al menos una propiedad «sql»."
+      help:
+        label: "Ayuda"
+        modal_title: "Ayuda sobre el explorador de datos"
+        auto_resolution: "<h2>Resolución automática de entidades</h2> <p>Cuando tu consulta devuelva el ID de una entidad, puede que el explorador de datos lo sustituya por el nombre de la entidad y otra información útil en los resultados de la consulta. La resolución automática está disponible para <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> y <i><b>badge_id</b></i>. Para probarla, ejecuta esta consulta:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Crear parámetros personalizados</h2><p>Para crear parámetros personalizados en tus consultas, pon lo siguiente al principio siguiendo el formato:</p><pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre> <p><i>Nota: hay que incluir la primera línea con [params], además de los dos guiones que van al principio de la línea, y también debes incluir los guiones en cada parámetro personalizado que quieras declarar.</i></p>"
+        default_values: "<h3>Valores por defecto</h3> <p>Puedes declarar parámetros de manera que tengan o no un valor por defecto. Los valores por defecto aparecerán en un campo de texto debajo del editor de consultas, y puedes editarlos según lo necesites. Los parámetros declarados sin un valor por defecto también crearán un campo de texto, pero estará vacío y marcado en rojo.</p><pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Tipos de datos</h3> <p>Algunos tipos de datos que puedes usar:</p> <ul> <li><b>integer</b> - número entero de 4 bytes, positivo o negativo</li><li><b>text</b> - conjunto de caracteres de longitud variable</li><li><b>boolean</b> - true/false (verdadero/falso)</li><li><b>date</b> - date (año, mes, día)</li></ul><p>Para más información sobre los tipos de datos, visita <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>esta página</a>.</p>"
+      schema:
+        title: "Esquema de base de datos"
+        filter: "Buscar..."
+        sensitive: "Los contenidos de esta columna pueden incluir información particularmente sensible o privada. Ten cuidado cuando la uses."
+      types:
+        bool:
+          yes: "Sí"
+          no: "No"
+          null_: "Nulo"
+      export: "Exportar"
+      view_json: "Ver JSON"
+      save: "Guardar cambios"
+      saverun: "Guardar cambios y ejecutar"
+      run: "Ejecutar"
+      undo: "Descartar cambios"
+      edit: "Editar"
+      delete: "Eliminar"
+      recover: "Recuperar consulta"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Tabla"
+      show_graph: "Gráfico"
+      others_dirty: "Una consulta tiene cambios no guardados que se perderán si sales."
+      run_time: "Consulta completada en %{value} ms."
+      result_count:
+        one: "%{count} resultado."
+        other: "%{count} resultados."
+      max_result_count:
+        one: "Mostrando el mejor resultado (%{count})."
+        other: "Mostrando los mejores %{count} resultados."
+      query_name: "Consulta"
+      query_groups: "Grupos"
+      link: "Enlace para"
+      report_name: "Informe"
+      query_description: "Descripción"
+      query_time: "Última ejecución"
+      query_user: "Creado por"
+      column: "Columna %{number}"
+      explain_label: "¿Incluir plan de consulta?"
+      save_params: "Establecer configuración por defecto"
+      reset_params: "Restablecer"
+      search_placeholder: "Buscar..."
+      no_search_results: "Lo sentimos, no hemos podido encontrar ningún resultado que coincida con tu texto."
+      form:
+        errors:
+          invalid: "No válido"
+          no_such_category: "No existe dicha categoria"
+          no_such_group: "No existe dicho grupo"
+          invalid_date: "%{date} es una fecha no válida"
+          invalid_time: "%{time} es una hora no válida"
+    group:
+      reports: "Informes"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Ejecuta consultas del Explorador de Datos. Restringe la clave API a un conjunto de consultas especificando los ID de las mismas."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Enviar a usuario, grupo o correo electrónico
+            query_id:
+              label: Consulta del explorador de datos
+            query_params:
+              label: Parámetros de consulta del explorador de datos
+            skip_empty:
+              label: Omitir el envío de MP si no hay resultados
+            attach_csv:
+              label: Adjuntar el archivo CSV al MP
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: El tema en el que se publicarán los resultados de la consulta
+            query_id:
+              label: Consulta del Explorador de datos
+            query_params:
+              label: Parámetros de consulta del Explorador de datos
+            skip_empty:
+              label: Omitir la publicación si no hay resultados
+            attach_csv:
+              label: Adjuntar el archivo CSV a la publicación

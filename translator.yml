@@ -115,3 +115,143 @@ files:
   - source_path: plugins/discourse-reactions/config/locales/server.en.yml
     destination_path: plugins/discourse-reactions/server.yml
     label: discourse-reactions
+
+  - source_path: plugins/discourse-apple-auth/config/locales/client.en.yml
+    destination_path: plugins/apple-auth/client.yml
+    label: apple-auth
+  - source_path: plugins/discourse-apple-auth/config/locales/server.en.yml
+    destination_path: plugins/apple-auth/server.yml
+    label: apple-auth
+
+  - source_path: plugins/discourse-login-with-amazon/config/locales/client.en.yml
+    destination_path: plugins/login-with-amazon/client.yml
+    label: login-with-amazon
+  - source_path: plugins/discourse-login-with-amazon/config/locales/server.en.yml
+    destination_path: plugins/login-with-amazon/server.yml
+    label: login-with-amazon
+
+  - source_path: plugins/discourse-lti/config/locales/client.en.yml
+    destination_path: plugins/lti/client.yml
+    label: lti
+  - source_path: plugins/discourse-lti/config/locales/server.en.yml
+    destination_path: plugins/lti/server.yml
+    label: lti
+
+  - source_path: plugins/discourse-microsoft-auth/config/locales/client.en.yml
+    destination_path: plugins/microsoft-auth/client.yml
+    label: microsoft-auth
+  - source_path: plugins/discourse-microsoft-auth/config/locales/server.en.yml
+    destination_path: plugins/microsoft-auth/server.yml
+    label: microsoft-auth
+
+  - source_path: plugins/discourse-oauth2-basic/config/locales/client.en.yml
+    destination_path: plugins/oauth2-basic/client.yml
+    label: oauth2-basic
+  - source_path: plugins/discourse-oauth2-basic/config/locales/server.en.yml
+    destination_path: plugins/oauth2-basic/server.yml
+    label: oauth2-basic
+
+  - source_path: plugins/discourse-openid-connect/config/locales/client.en.yml
+    destination_path: plugins/openid-connect/client.yml
+    label: openid-connect
+  - source_path: plugins/discourse-openid-connect/config/locales/server.en.yml
+    destination_path: plugins/openid-connect/server.yml
+    label: openid-connect
+
+  - source_path: plugins/discourse-zendesk-plugin/config/locales/client.en.yml
+    destination_path: plugins/zendesk-plugin/client.yml
+    label: zendesk-plugin
+  - source_path: plugins/discourse-zendesk-plugin/config/locales/server.en.yml
+    destination_path: plugins/zendesk-plugin/server.yml
+    label: zendesk-plugin
+
+  - source_path: plugins/discourse-patreon/config/locales/client.en.yml
+    destination_path: plugins/patreon/client.yml
+    label: patreon
+  - source_path: plugins/discourse-patreon/config/locales/server.en.yml
+    destination_path: plugins/patreon/server.yml
+    label: patreon
+
+  - source_path: plugins/discourse-graphviz/config/locales/client.en.yml
+    destination_path: plugins/graphviz/client.yml
+    label: graphviz
+  - source_path: plugins/discourse-graphviz/config/locales/server.en.yml
+    destination_path: plugins/graphviz/server.yml
+    label: graphviz
+
+  - source_path: plugins/discourse-rss-polling/config/locales/client.en.yml
+    destination_path: plugins/rss-polling/client.yml
+    label: rss-polling
+  - source_path: plugins/discourse-rss-polling/config/locales/server.en.yml
+    destination_path: plugins/rss-polling/server.yml
+    label: rss-polling
+
+  - source_path: plugins/discourse-math/config/locales/client.en.yml
+    destination_path: plugins/math/client.yml
+    label: math
+  - source_path: plugins/discourse-math/config/locales/server.en.yml
+    destination_path: plugins/math/server.yml
+    label: math
+
+  - source_path: plugins/discourse-chat-integration/config/locales/client.en.yml
+    destination_path: plugins/chat-integration/client.yml
+    label: chat-integration
+  - source_path: plugins/discourse-chat-integration/config/locales/server.en.yml
+    destination_path: plugins/chat-integration/server.yml
+    label: chat-integration
+
+  - source_path: plugins/discourse-data-explorer/config/locales/client.en.yml
+    destination_path: plugins/data-explorer/client.yml
+    label: data-explorer
+  - source_path: plugins/discourse-data-explorer/config/locales/server.en.yml
+    destination_path: plugins/data-explorer/server.yml
+    label: data-explorer
+
+  - source_path: plugins/discourse-post-voting/config/locales/client.en.yml
+    destination_path: plugins/post-voting/client.yml
+    label: post-voting
+  - source_path: plugins/discourse-post-voting/config/locales/server.en.yml
+    destination_path: plugins/post-voting/server.yml
+    label: post-voting
+
+  - source_path: plugins/discourse-user-notes/config/locales/client.en.yml
+    destination_path: plugins/user-notes/client.yml
+    label: user-notes
+  - source_path: plugins/discourse-user-notes/config/locales/server.en.yml
+    destination_path: plugins/user-notes/server.yml
+    label: user-notes
+
+  - source_path: plugins/discourse-assign/config/locales/client.en.yml
+    destination_path: plugins/assign/client.yml
+    label: assign
+  - source_path: plugins/discourse-assign/config/locales/server.en.yml
+    destination_path: plugins/assign/server.yml
+    label: assign
+
+  - source_path: plugins/discourse-subscriptions/config/locales/client.en.yml
+    destination_path: plugins/subscriptions/client.yml
+    label: subscriptions
+  - source_path: plugins/discourse-subscriptions/config/locales/server.en.yml
+    destination_path: plugins/subscriptions/server.yml
+    label: subscriptions
+
+  - source_path: plugins/discourse-hcaptcha/config/locales/client.en.yml
+    destination_path: plugins/hcaptcha/client.yml
+    label: hcaptcha
+  - source_path: plugins/discourse-hcaptcha/config/locales/server.en.yml
+    destination_path: plugins/hcaptcha/server.yml
+    label: hcaptcha
+
+  - source_path: plugins/discourse-gamification/config/locales/client.en.yml
+    destination_path: plugins/gamification/client.yml
+    label: gamification
+  - source_path: plugins/discourse-gamification/config/locales/server.en.yml
+    destination_path: plugins/gamification/server.yml
+    label: gamification
+
+  - source_path: plugins/discourse-calendar/config/locales/client.en.yml
+    destination_path: plugins/calendar/client.yml
+    label: calendar
+  - source_path: plugins/discourse-calendar/config/locales/server.en.yml
+    destination_path: plugins/calendar/server.yml
+    label: calendar

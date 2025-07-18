@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    gamification:
+      you: "آپ "
+      leaderboard:
+        link_to_settings: "ترتیبات"
+        refresh: "رِیفریش"
+        name: "نام"
+        period:
+          all_time: "تمام اوقات"
+          yearly: "سالانہ"
+          quarterly: "سہ ماہی"
+          monthly: "ماہانہ"
+          weekly: "ہفتہ وار"
+          daily: "روزانہ"
+      create: "بنائیں"
+      cancel: "منسوخ"
+      close: "بند کریں"
+      delete: "مٹائیں"
+      edit: "ترمیم کریں"
+      back: "واپس"
+      save: "محفوظ کریں"
+      apply: "لاگو کریں"
+      update_range:
+        last_10_days: "پچھلے 10 دن"
+        last_30_days: "پچھلے 30 دن"
+        last_90_days: "پچھلے 90 دن"
+        all_time: "تمام اوقات"
+      custom_range_from: "سے"
+      admin:
+        name: "نام"

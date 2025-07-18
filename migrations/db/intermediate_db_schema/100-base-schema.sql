@@ -76,6 +76,15 @@ CREATE TABLE categories
     user_id                                   NUMERIC  NOT NULL
 );
 
+CREATE TABLE category_users
+(
+    category_id        NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
+    last_seen_at       DATETIME,
+    notification_level INTEGER  NOT NULL,
+    PRIMARY KEY (category_id, user_id)
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
@@ -129,6 +138,7 @@ CREATE TABLE user_options
     mailing_list_mode                    BOOLEAN,
     mailing_list_mode_frequency          INTEGER,
     new_topic_duration_minutes           INTEGER,
+    notification_level_when_assigned     INTEGER,
     notification_level_when_replying     INTEGER,
     oldest_search_log_date               DATETIME,
     only_chat_push_notifications         BOOLEAN,

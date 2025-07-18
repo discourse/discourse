@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse Gamification"
+  js:
+    gamification_score: "الهتافات"
+    gamification:
+      score: "الهتافات"
+      you: "أنت"
+      leaderboard:
+        title: "لوحات المتصدرين"
+        info: "كيف تسير الأمور؟"
+        link_to_settings: "الإعدادات"
+        refresh: "تحديث"
+        modal:
+          title: "كيف تعمل لوحة المتصدرين؟"
+          text: "يتم منح النقاط مقابل التفاعل مع المجتمع، مثل الزيارة والإعجاب والنشر. يتم تحديث درجاتك كل بضع دقائق. لذا كُن مفيدًا ونشطًا وداعمًا، وارتقِ في الترتيب!"
+        name: "الاسم"
+        name_placeholder: "الاسم..."
+        new: "لوحة متصدرين جديدة"
+        create_success: "تم إنشاء لوحة المتصدرين"
+        delete_success: "تم حذف لوحة المتصدرين"
+        save_success: "تم حفظ لوحة الصدارة"
+        cta: "اصنع لوحة المتصدرين الأولى لك"
+        none: "لم يتم إنشاء أي لوحات متصدرين حتى الآن."
+        confirm_destroy: "هل تريد بالتأكيد حذف لوحة المتصدرين هذه؟"
+        date:
+          range: "نطاق التاريخ من/إلى"
+          from: "من التاريخ"
+          to: "إلى التاريخ"
+          helper: "إذا تم ترك التواريخ فارغة، فستعرض لوحة المتصدرين النقاط المكتسبة دون أي قيود زمنية."
+        visible_to_groups: "مرئية للمجموعات"
+        visible_to_groups_help: "سيتمكن المستخدمون في هذه المجموعات فقط من عرض لوحة المتصدرين. اتركه فارغًا للسماح للجميع."
+        included_groups: "المجموعات المتضمنة"
+        included_groups_help: "سيتم تضمين المستخدمين من هذه المجموعات فقط من عرض لوحة المتصدرين. اتركه فارغًا للسماح للجميع."
+        excluded_groups: "المجموعات المستثناة"
+        excluded_groups_help: "قم بحرمان المستخدمين في هذه المجموعات من التضمين في لوحة المتصدرين. اتركه فارغًا للسماح للجميع."
+        default_period: "الفترة الافتراضية"
+        default_period_help: "قم بتحديد الفترة الزمنية الافتراضية لعرضها في لوحة المتصدرين هذه."
+        period_filter_disabled: "إيقاف عامل تصفية الفترة الزمنية"
+        period:
+          all_time: "طوال الوقت"
+          yearly: "سنويًا"
+          quarterly: "ربع سنوي"
+          monthly: "شهريًا"
+          weekly: "أسبوعيًا"
+          daily: "يوميًا"
+        rank: "الترتيب"
+      create: "إنشاء"
+      cancel: "إلغاء"
+      close: "إغلاق"
+      delete: "حذف"
+      edit: "تعديل"
+      back: "الرجوع"
+      save: "حفظ"
+      apply: "تطبيق"
+      recalculate: "إعادة حساب النقاط"
+      recalculating: "جارٍ إعادة حساب النقاط..."
+      completed: "تم! تمت إعادة حساب النقاط بنجاح."
+      update_scores_help: "تحديث كل النقاط لجميع لوحات المتصدرين من"
+      update_range:
+        last_10_days: "آخر 10 أيام"
+        last_30_days: "آخر 30 يومًا"
+        last_90_days: "آخر 90 يومًا"
+        last_year: "العام الماضي"
+        all_time: "طوال الوقت"
+        custom_date_range: "نطاق مخصَّص"
+      custom_range_from: "من"
+      daily_update_scores_availability:
+        zero: "%{count} مرة إعادة حساب يومية متبقية"
+        one: "مرة إعادة حساب يومية واحدة (%{count}) متبقية"
+        two: "مرتا إعادة حساب يومية متبقيتان"
+        few: "%{count} مرات إعادة حساب يومية متبقية"
+        many: "%{count} مرة إعادة حساب يومية متبقية"
+        other: "%{count} مرة إعادة حساب يومية متبقية"
+      admin:
+        title: "التلعيب"
+        name: "الاسم"
+        period: "الفترة"

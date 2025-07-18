@@ -61,7 +61,9 @@ describe "Edit Category Localizations", type: :system do
         category_page.save_settings
         page.refresh
 
-        expect(CategoryLocalization.where(category_id: category.id).count).to eq(2)
+        try_until_success do
+          expect(CategoryLocalization.where(category_id: category.id).count).to eq(2)
+        end
         expect(CategoryLocalization.where(category_id: category.id, locale: "es").count).to eq(1)
         expect(CategoryLocalization.where(category_id: category.id, locale: "fr").count).to eq(1)
         expect(CategoryLocalization.where(category_id: category.id, locale: "es").first.name).to eq(
@@ -82,13 +84,15 @@ describe "Edit Category Localizations", type: :system do
     describe "when editing a category with localizations" do
       fab!(:category_localization) { Fabricate(:category_localization, category: category) }
 
-      it "should allow you to delete localizations" do
+      it "allows you to delete localizations" do
         expect(CategoryLocalization.where(category_id: category.id).count).to eq(1)
         category_page.visit_edit_localizations(category)
         page.find(".edit-category-tab-localizations .remove-localization").click
         category_page.save_settings
         page.refresh
-        expect(CategoryLocalization.where(category_id: category.id).count).to eq(0)
+        try_until_success do
+          expect(CategoryLocalization.where(category_id: category.id).count).to eq(0)
+        end
       end
     end
   end

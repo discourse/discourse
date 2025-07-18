@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Conectare cu Pateron
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtre'
+      group: 'Grup'
+      rewards: 'Recompense'
+      filter: 'Filtru'
+      help_text: 'Poți sincroniza un grup Discourse cu unul sau mai multe niveluri de recompensă Patreon.'
+      last_synced: 'Ultima sincronizare'
+      edit: 'Editează'
+      delete: 'Șterge'
+      save: 'Salvează'
+      update_data: 'Actualizează date Patreon și sincronizează grupuri'
+      refresh_page: 'Date noi au fost descărcate din API-ul Patreon. Te rugăm să reîmprospătezi pagina.'
+      select_group: 'Selectează un grup'
+      field:
+        id: "ID"
+        email: "Email"
+        amount_cents: "Sumă (în cenți)"
+        rewards: "Recompense"
+        declined_since: "Angajament refuzat din"
+        more_details:
+          label: "Plăți și mai multe detalii"
+          help_text:
+            email_available: "Ajungi în dreapta jos a paginii pentru a vedea istoricul angajamentului acestui Patreon."
+            email_not_available: "Selectează membrul Patreon și ajungi în dreapta jos a paginii pentru a vedea istoricul angajamentului."
+      donation_prompt:
+        body: |
+          <h1>Salut cititorule!</h1>
+
+          <p>Îți place site-ul nostru? Vrei să contribui la o cauză bună?</p>
+
+          <p>
+            Dacă găsești site-ul nostru util și te bucuri de comunitatea pe care am creat-o, ne-ar plăcea dacă ai dona pentru site-ul nostru web.
+            Donațiile mențin serviciile noastre funcționale fără probleme și asigură operaționalitatea comunitatății noastre în anii următori.
+            Fiecare dolar contează și va fi folosit în scopuri bune.
+          </p>
+
+          <p>Îți mulțumim pentru sprijin!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Devino un Patron</a>
+          </p>

@@ -1,0 +1,131 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Голосование по публикациям
+  post_voting:
+    reviewables:
+      comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "новый комментарий"
+      popup:
+        question_answer_user_commented: '%{username} оставил(а) комментарий в теме «%{topic}» — %{site_title}'
+    category:
+      post_voting_settings_heading: Голосование по сообщениям
+      create_as_post_voting_default: Новые темы в этой категории по умолчанию отображаются в формате «Голосование по сообщениям».
+      only_post_voting_in_this_category: Новые темы в этой категории могут отображаться только в формате «Голосование по публикациям».
+    composer:
+      create_post_voting:
+        label: "Cоздать тему с голосованием по сообщению"
+      composer_actions:
+        create_as_post_voting:
+          label: "Включить голосование по сообщениям"
+          desc: "Тема будет создана в формате голосования по сообщениям"
+        remove_as_post_voting:
+          label: "Отключить голосование по сообщениям"
+          desc: "Тема будет создана в обычном формате"
+    vote:
+      already_voted: "Проголосовать можно только один раз за вопрос."
+      user_over_limit: "Нельзя превышать количество голосов, установленное для вашего уровня доверия."
+      one_vote_per_post: "Проголосовать можно только один раз на каждую запись."
+    last_answer_lowercase: последний ответ
+    answer_lowercase:
+      one: ответ
+      few: ответа
+      many: ответов
+      other: ответа
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Введите не менее %{count} символа"
+              few: "Введите не менее %{count} символов"
+              many: "Введите не менее %{count} символов"
+              other: "Введите не менее %{count} символа"
+            length_ok:
+              one: "Остался %{count} символ..."
+              few: "Осталось %{count} символа..."
+              many: "Осталось %{count} символов..."
+              other: "Осталось %{count} символа..."
+            too_long:
+              one: "Комментарий не может быть длиннее %{count} символа"
+              few: "Комментарий не может быть длиннее %{count} символов"
+              many: "Комментарий не может быть длиннее %{count} символов"
+              other: "Комментарий не может быть длиннее %{count} символа"
+          submit: "Добавить комментарий"
+          edit: "изменить"
+          cancel: "отменить"
+          add: "Добавить комментарий"
+          show:
+            one: Показать ещё %{count} комментарий
+            few: Показать ещё %{count} комментария
+            many: Показать ещё %{count} комментариев
+            other: Показать ещё %{count} комментария
+          delete:
+            confirm: "Действительно удалить этот комментарий?"
+          user:
+            deleted: "(пользователь удалён)"
+          reviewables:
+            comment_already_handled: "Спасибо, но мы уже просмотрели этот комментарий и решили, что на него не нужно снова отправлять жалобу."
+            actions:
+              agree:
+                title: "Согласиться…"
+              agree_and_keep_comment:
+                title: "Сохранить комментарий"
+                description: "Согласиться с жалобой, но оставить комментарий без изменений."
+              agree_and_keep_deleted:
+                title: "Оставить комментарий удаленным"
+                description: "Согласиться с жалобой и оставить комментарий удаленным."
+              agree_and_suspend:
+                title: "Блокировка пользователя"
+                description: "Согласиться с жалобой и заблокировать пользователя."
+              agree_and_silence:
+                title: "Заморозка пользователя"
+                description: "Согласиться с жалобой и заморозить пользователя."
+              agree_and_restore:
+                title: "Восстановить комментарий"
+                description: "Восстановить комментарий, чтобы пользователи могли его видеть."
+              agree_and_delete:
+                title: "Удалить комментарий"
+                description: "Удалить комментарий, чтобы пользователи не могли его видеть."
+              delete_and_agree:
+                title: "Игнорировать жалобу и удалить комментарий"
+                description: "Проигнорировать жалобу, удалив ее из очереди, и удалить комментарий."
+              disagree_and_restore:
+                title: "Отклонить жалобу и восстановить комментарий"
+                description: "Восстановить комментарий, чтобы все пользователи могли его видеть."
+              disagree:
+                title: "Отклонить"
+              ignore:
+                title: "Ничего не делать"
+                description: "Проигнорировать жалобу, удалив ее из очереди, не предпринимая никаких действий."
+            transcript:
+              view: "Просмотр содержимого предыдущих комментариев"
+      topic:
+        answer:
+          label: "Ответ"
+          help: "начните писать ответ"
+        sort_by: "Сортировать по"
+        votes: "Голосам"
+        activity: "Активности"
+        answer_count:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответов"
+          other: "%{count} ответа"
+    review:
+      transcript:
+        view: "Просмотр содержимого предыдущих сообщений"
+      types:
+        reviewable_post_voting_comment:
+          title: "Помеченный комментарий к публикации с голосованием"

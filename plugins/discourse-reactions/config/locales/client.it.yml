@@ -14,7 +14,7 @@ it:
     discourse_reactions:
       reactions_title: "Reazioni"
       state_panel:
-        more_users: "e altre %{count}..."
+        more_users: "e %{count} altro..."
       reaction:
         forbidden: "Quella reazione è stata creata troppo tempo fa. Non può più essere modificata né rimossa."
       picker:

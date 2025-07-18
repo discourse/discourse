@@ -45,12 +45,13 @@ end
 #  updated_at     :datetime         not null
 #  theme_id       :bigint
 #  source_map     :text
+#  name           :string
 #
 # Indexes
 #
-#  index_javascript_caches_on_digest          (digest)
-#  index_javascript_caches_on_theme_field_id  (theme_field_id) UNIQUE
-#  index_javascript_caches_on_theme_id        (theme_id) UNIQUE
+#  index_javascript_caches_on_digest                   (digest)
+#  index_javascript_caches_on_theme_field_id_and_name  (theme_field_id,name) UNIQUE WHERE (theme_field_id IS NOT NULL)
+#  index_javascript_caches_on_theme_id                 (theme_id) UNIQUE
 #
 # Foreign Keys
 #

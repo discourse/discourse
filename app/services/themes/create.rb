@@ -63,6 +63,8 @@ class Themes::Create
     step :log_theme_change
   end
 
+  step :refresh_site_setting_cache
+
   private
 
   def ensure_remote_themes_are_not_allowlisted
@@ -81,5 +83,9 @@ class Themes::Create
 
   def log_theme_change(theme:, guardian:)
     StaffActionLogger.new(guardian.user).log_theme_change(nil, theme)
+  end
+
+  def refresh_site_setting_cache
+    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
   end
 end

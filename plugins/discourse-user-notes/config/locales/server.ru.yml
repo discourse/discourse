@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    user_notes_enabled: "Разрешить персоналу прикреплять заметки к пользователям"
+    user_notes_moderators_delete: "Разрешить модераторам удалять заметки пользователей"
+  user_notes:
+    official_warning: "Получено официальное предупреждение от @%{username} -- %{warning_link}"
+    user_suspended: "@%{username} приостановил этот аккаунт до %{suspended_till}. Причина: %{reason}"
+    user_silenced: "@%{username} заблокировал этот аккаунт до %{silenced_till}. Причина: %{reason}"
+  reports:
+    user_notes:
+      title: "Заметки пользователя"
+      description: "Список последних заметок пользователя."
+      labels:
+        user: Пользователь
+        note: Заметка
+        moderator: Модератор

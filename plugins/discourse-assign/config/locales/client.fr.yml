@@ -1,0 +1,193 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Affectation de Discourse"
+  js:
+    filters:
+      unassigned:
+        title: "Désattribué"
+        help: "Sujets qui ne sont pas attribués"
+    action_codes:
+      assigned: "A attribué à %{who} le %{when}"
+      assigned_group: "A attribué à %{who} le %{when}"
+      assigned_to_post: "A attribué %{who} au <a href='%{path}'>message</a> le %{when}"
+      assigned_group_to_post: "A attribué %{who} au <a href='%{path}'>message</a> le %{when}"
+      unassigned: "A annulé l'attribution à %{who} le %{when}"
+      unassigned_group: "A annulé l'attribution à %{who} le %{when}"
+      unassigned_from_post: "A annulé l'attribution de %{who} au <a href='%{path}'>message</a> le %{when}"
+      unassigned_group_from_post: "A annulé l'attribution de %{who} au <a href='%{path}'>message</a> le %{when}"
+      reassigned: "Réattribution à %{who} le %{when}"
+      reassigned_group: "Réattribution à %{who} le %{when}"
+      details_change: "A modifié les détails de l'attribution à %{who} le %{when}"
+      note_change: "A modifié la note de l'attribution à %{who} le %{when}"
+      status_change: "A modifié le statut de l'attribution à %{who} le %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Ajouter le filtre « Non attribués » à la catégorie"
+      cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été attribués à d'autres utilisateurs"
+      cant_act_unclaimed: "Il faut réserver ce sujet avant d'agir sur les signalements."
+      topic_search_placeholder: "Rechercher des sujets par titre ou contenu"
+      sidebar_name_filter_placeholder: "Nom ou nom d'utilisateur"
+      assigned: "Attribué"
+      group_everyone: "Tout le monde"
+      assigned_to: "Attribué à"
+      assigned_topic_to: "A attribué le message à <a href='%{path}'>%{username}</a>"
+      assign_post_to: "A attribué %{post_number} à %{username}"
+      assign_post_to_multiple: "#%{post_number} à %{username}"
+      assigned_to_w_ellipsis: "Attribué à…"
+      unassign:
+        title: "Annuler l'attribution"
+        title_w_ellipsis: "Annuler l'attribution…"
+        help: "Annuler l'attribution de %{username} au sujet"
+      assign:
+        title: "Attribuer"
+        help: "Attribuer le sujet à l'utilisateur"
+      assign_post:
+        title: "Attribuer un message"
+      unassign_post:
+        title: "Annuler l'attribution du message"
+        help: "Annuler l'attribution de %{username} au message"
+      reassign:
+        title: "Modifier"
+        title_w_ellipsis: "Modifier l'attribution…"
+        to_self: "Réattribuer à moi"
+        to_self_help: "Me réattribuer le sujet"
+        help: "Modifier les détails de l'attribution"
+      reassign_modal:
+        title: "Réattribuer le sujet"
+      topic_level_menu:
+        edit_assignments: "Modifier les attributions…"
+        reassign_topic_to_me: "Me réattribuer le sujet"
+        unassign_with_ellipsis: "Annuler l'attribution…"
+        unassign_from_post: "Annuler l'attribution de @%{assignee} à #%{post_number}"
+        unassign_from_post_help: "Annuler l'attribution de @%{assignee} à la publication #%{post_number}"
+        unassign_from_topic: "Annuler l'attribution de @%{username} au sujet"
+      assign_modal:
+        title: "Attribuer le sujet"
+        reassign_title: "Réattribuer le sujet"
+        assign: "Attribuer"
+        assignee_label: Attributaire
+        assignment_label: Attribution
+        choose_assignee: Choisissez un utilisateur à attribuer.
+        edit_assignments_title: "Modifier les attributions"
+        note_label: Note
+        optional_label: "(facultatif)"
+        status_label: Statut
+        suggestions: suggestions
+      assign_post_modal:
+        title: "Attribuer un message"
+      claim:
+        title: "réserver"
+        help: "Attribuer le sujet à vous-même"
+      assign_mailer:
+        never: "Jamais"
+        different_users: "Uniquement si l'utilisateur qui effectue l'attribution et l'utilisateur qui reçoit l'attribution sont différents"
+        always: "Toujours"
+      reminders_frequency:
+        description: "Fréquence à laquelle recevoir des rappels de sujets attribués"
+        never: "Jamais"
+        daily: "Chaque jour"
+        weekly: "Chaque semaine"
+        monthly: "Chaque mois"
+        quarterly: "Chaque trimestre"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Attribuer"
+              assignable_levels:
+                title: "Qui peut attribuer ce groupe"
+    user:
+      notification_level_when_assigned:
+        label: "En cas d'attribution"
+        watch_topic: "Surveiller le sujet"
+        track_topic: "Suivre le sujet"
+        do_nothing: "Ne rien faire"
+      messages:
+        assigned_title: "Attribué(s) (%{count})"
+        assigned: "Attribué(s)"
+      no_assignments_title: "Vous n'avez pas encore d'attribution"
+      no_assignments_body: >
+        Vos sujets et messages attribués seront répertoriés ici. Vous recevrez également une notification de rappel périodique de vos attributions que vous pouvez ajuster dans vos <a href='%{preferencesUrl}'>préférences d'utilisateur</a>. <br><br> Pour attribuer un sujet ou un message à vous-même ou à quelqu'un d'autre, recherchez le bouton d'attribution %{icon} en bas de l'écran.
+      dismiss_assigned_tooltip: "Marquer toutes les notifications d'attribution non lues comme lues"
+      assigned_to_group:
+        post: "message attribué à %{group_name}"
+        topic: "sujet attribué à %{group_name}"
+      assigned_to_you:
+        post: "message attribué à vous"
+        topic: "sujet attribué à vous"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Événements d'attribution"
+          assigned: "Lorsqu'un utilisateur attribue un sujet"
+          unassigned: "Lorsqu'un utilisateur annule l'attribution d'un sujet"
+    search:
+      advanced:
+        in:
+          assigned: "sont attribués"
+          unassigned: "ne sont pas attribués"
+        assigned:
+          label: "Attribué à"
+    topics:
+      bulk:
+        unassign: "Annuler l'attribution des sujets"
+        assign: "Attribuer les sujets"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Modèle de publication
+              description: S'il est rempli, un message avec ce modèle sera créé et un utilisateur lui sera attribué à la place du sujet.
+            assignees_group:
+              label: Groupe d'attributaires
+            minimum_time_between_assignments:
+              label: Nombre minimal d'heures entre les attributions
+            min_recently_assigned_days:
+              label: Nombre minimal de jours récemment attribués
+              description: La valeur par défaut est fixée à 14 jours.
+            skip_new_users_for_days:
+              label: Ignorer les nouveaux utilisateurs pendant plusieurs jours
+              description: La valeur par défaut est de 0 jour (les utilisateurs peuvent être attribués immédiatement après leur inscription).
+            max_recently_assigned_days:
+              label: Nombre maximal de jours récemment attribués
+              description: Première tentative d'exclusion des utilisateurs attribués au cours des « n » derniers jours. Si aucun utilisateur n'est parti, cette valeur revient à « min_recently_assigned_days ». La valeur par défaut est de 180 jours.
+            assigned_topic:
+              label: ID du sujet attribué
+            in_working_hours:
+              label: Utilisateurs pendant les heures de travail
+    notification_reason:
+      user: "Vous verrez le nombre de nouvelles réponses, car ce sujet vous a été attribué."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} vous a attribué"
+      titles:
+        assigned: "Attribué(s)"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Vous avez %{count} notification d'attribution non lue. Voulez-vous continuer ?"
+            other: "Vous avez %{count} notifications d'attribution non lues. Voulez-vous continuer ?"
+    user_menu:
+      view_all_assigned: "voir toutes les attributions"
+      tabs:
+        assign_list: "Liste des attributions"
+        assign_list_with_unread:
+          one: "Liste des attributions - %{count} attribution non lue"
+          other: "Liste des attributions - %{count} attributions non lues"
+    edit_assignments_modal:
+      title: "Modifier les attributions"
+      topic: "Sujet"
+      post: "Publication"

@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Discourse-RSS-Abfrage"
+  js:
+    rss_polling:
+      title: RSS-Abfrage
+    admin:
+      rss_polling:
+        feed: Feed-Einstellungen
+        discourse: Discourse Einstellungen
+        author: Autor
+        feed_url: URL
+        discourse_category: Kategorie
+        discourse_tags: Schlagwörter
+        feed_category_filter: Kategoriefilter
+        documentation: Dokumentation zur Konfiguration von RSS-Abfrage
+        destroy_feed:
+          confirm: "Bist du sicher, dass du diesen Feed löschen möchtest?"

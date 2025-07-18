@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    gamification:
+      you: "Vi"
+      leaderboard:
+        link_to_settings: "Postavke"
+        refresh: "Refresh"
+        name: "Ime"
+        period:
+          all_time: "Oduvijek"
+          yearly: "Godišnje"
+          quarterly: "Kvartalno"
+          monthly: "Mesečno"
+          weekly: "Sedmično"
+          daily: "Dnevno"
+      create: "napravi"
+      cancel: "Odustani"
+      close: "Zatvori"
+      delete: "Delete"
+      edit: "Edit"
+      back: "Prethodno"
+      save: "Save"
+      apply: "Snimi"
+      update_range:
+        all_time: "Oduvijek"
+      custom_range_from: "Od"
+      admin:
+        name: "Ime"

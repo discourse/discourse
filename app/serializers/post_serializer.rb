@@ -660,7 +660,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_localizations_count
-    object.post_localizations.count
+    object.post_localizations.size
   end
 
   def include_has_post_localizations?

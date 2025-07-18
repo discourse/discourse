@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "كەم دېگەندە %{count} ھەرپ كىرگۈزۈلىدۇ"
+              other: "كەم دېگەندە %{count} ھەرپ كىرگۈزۈلىدۇ"
+          edit: "تەھرىر"
+          cancel: "ۋاز كەچ"
+          user:
+            deleted: "(ئىشلەتكۈچى ئۆچۈرۈلدى)"
+          reviewables:
+            actions:
+              agree:
+                title: "قوشۇل…"
+              agree_and_suspend:
+                title: "توختىتىلغان ئىشلەتكۈچى"
+                description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى توختىتىدۇ."
+              agree_and_silence:
+                title: "ئىشلەتكۈچىنى ئۈنسىزلە"
+                description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى ئۈنسىزلەيدۇ."
+              disagree:
+                title: "قوشۇلما"
+              ignore:
+                title: "ھېچ ئىش قىلما"
+                description: "پاش قىلىشنى ئۆچرەتتىن چىقىرىۋېتىپ پەرۋا قىلماي، ھېچقانداق مەشغۇلات قىلمايدۇ."
+      topic:
+        sort_by: "تەرتىپى"
+        activity: "پائالىيەت"
+    review:
+      transcript:
+        view: "ئىلگىرىكى ئۇچۇرلارنىڭ كۆپەيتىلمىسىنى كۆرسىتىدۇ"

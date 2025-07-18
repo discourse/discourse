@@ -1,0 +1,119 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Votación de publicación
+  post_voting:
+    reviewables:
+      comment_already_handled: "Gracias, pero ya hemos revisado este comentario y hemos determinado que no es necesario denunciarlo de nuevo."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "nuevo comentario"
+      popup:
+        question_answer_user_commented: '%{username} comentó en «%{topic}» - %{site_title}'
+    category:
+      post_voting_settings_heading: Votación de publicación
+      create_as_post_voting_default: De forma predeterminada, los temas nuevos son temas de Votar publicación en esta categoría.
+      only_post_voting_in_this_category: Los temas nuevos solo pueden ser temas de Votar publicación en esta categoría.
+    composer:
+      create_post_voting:
+        label: "Crear tema de Votar publicación"
+      composer_actions:
+        create_as_post_voting:
+          label: "Alternar Votar publicación"
+          desc: "El tema se creará con publicaciones votables"
+        remove_as_post_voting:
+          label: "Eliminar Votar publicación"
+          desc: "El tema se creará en el formato normal"
+    vote:
+      already_voted: "Solo puedes votar una vez por pregunta."
+      user_over_limit: "No puedes superar el número de votos para tu nivel de confianza."
+      one_vote_per_post: "Solo puedes votar una vez por cada publicación."
+    last_answer_lowercase: última respuesta
+    answer_lowercase:
+      one: respuesta
+      other: respuestas
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Introduce al menos %{count} carácter"
+              other: "Introduce al menos %{count} caracteres"
+            length_ok:
+              one: "Queda %{count} carácter..."
+              other: "Quedan %{count} caracteres..."
+            too_long:
+              one: "El comentario no puede tener más de %{count} carácter"
+              other: "El comentario no puede tener más de %{count} caracteres"
+          submit: "Añadir un comentario"
+          edit: "editar"
+          cancel: "cancelar"
+          add: "Añadir un comentario"
+          show:
+            one: Mostrar %{count} comentario más
+            other: Mostrar %{count} comentarios más
+          delete:
+            confirm: "¿Seguro que quieres eliminar este comentario?"
+          user:
+            deleted: "(usuario eliminado)"
+          reviewables:
+            comment_already_handled: "Gracias, pero ya hemos revisado este comentario y hemos determinado que no es necesario denunciarlo de nuevo."
+            actions:
+              agree:
+                title: "De acuerdo..."
+              agree_and_keep_comment:
+                title: "Mantener comentario"
+                description: "Estar de acuerdo con la denuncia y mantener el comentario intacto."
+              agree_and_keep_deleted:
+                title: "Mantener el comentario eliminado"
+                description: "Aceptar la denuncia y dejar el comentario eliminado."
+              agree_and_suspend:
+                title: "Suspender al usuario"
+                description: "Aceptar la denuncia y suspender al usuario."
+              agree_and_silence:
+                title: "Silenciar al usuario"
+                description: "Aceptar la denuncia y silenciar al usuario."
+              agree_and_restore:
+                title: "Restaurar comentario"
+                description: "Restaura el comentario para que los usuarios puedan verlo."
+              agree_and_delete:
+                title: "Eliminar comentario"
+                description: "Elimina el comentario para que los usuarios no puedan verlo."
+              delete_and_agree:
+                title: "Ignorar denuncia y eliminar comentario"
+                description: "Ignorar la denuncia eliminándola de la cola y eliminar el comentario."
+              disagree_and_restore:
+                title: "Discrepar y restaurar comentario"
+                description: "Restaura el comentario para que todos los usuarios puedan verlo."
+              disagree:
+                title: "No estoy de acuerdo"
+              ignore:
+                title: "No hacer nada"
+                description: "Ignora la denuncia eliminándola de la cola sin realizar ninguna acción."
+            transcript:
+              view: "Ver la transcripción de los comentarios anteriores"
+      topic:
+        answer:
+          label: "Respuesta"
+          help: "empezar a redactar una respuesta"
+        sort_by: "Ordenar por"
+        votes: "Votos"
+        activity: "Actividad"
+        answer_count:
+          one: "%{count} respuesta"
+          other: "%{count} respuestas"
+    review:
+      transcript:
+        view: "Ver la transcripción de los mensajes anteriores"
+      types:
+        reviewable_post_voting_comment:
+          title: "Comentario de votación de publicación denunciado"

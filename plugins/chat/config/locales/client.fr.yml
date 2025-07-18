@@ -234,9 +234,7 @@ fr:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
         channels_list: "Liste des canaux de discussion"
-      no_direct_message_channels: "Vous n'avez encore rejoint aucun message direct !"
       no_direct_message_channels_cta: "Commencer une conversation"
-      no_public_channels: "Vous n'avez encore rejoint aucune chaîne !"
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       only_chat_push_notifications:

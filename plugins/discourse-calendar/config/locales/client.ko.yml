@@ -1,0 +1,164 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_post_event: "Discourse 이벤트"
+          discourse_calendar: "Discourse 캘린더"
+  js:
+    notifications:
+      titles:
+        event_reminder: "이벤트 알림"
+      popup:
+        event_reminder: 이벤트 알림
+    discourse_automation:
+      triggerables:
+        event_started:
+          title: 이벤트 시작됨
+          fields:
+            topic_id:
+              label: 글 ID
+    discourse_calendar:
+      invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
+      on_holiday: "휴일"
+      disable_holiday: "비활성"
+      enable_holiday: "설정"
+      holiday: "휴일"
+      date: "날짜"
+      add_to_calendar: "구글 캘린더에 추가"
+      region:
+        title: "지역"
+        none: "없음"
+        use_current_region: "현재 지역 사용"
+        names:
+          ar: "아르헨티나"
+          at: "오스트리아"
+          au_act: "오스트레일리아 (au_act)"
+          au_nsw: "오스트레일리아 (au_nsw)"
+          au_nt: "오스트레일리아 (au_nt)"
+          au_qld_brisbane: "오스트레일리아 (au_qld_brisbane)"
+          au_qld_cairns: "오스트레일리아 (au_qld_cairns)"
+          au_qld: "오스트레일리아 (au_qld)"
+          au_sa: "오스트레일리아 (au_sa)"
+          au_tas_north: "오스트레일리아 (au_tas_north)"
+          au_tas_south: "오스트레일리아 (au_tas_south)"
+          au_tas: "오스트레일리아 (au_tas)"
+          au_vic_melbourne: "오스트레일리아 (au_vic_melbourne)"
+          au_vic: "오스트레일리아 (au_vic)"
+          au_wa: "오스트레일리아 (au_wa)"
+          au: "오스트레일리아"
+          be_fr: "벨기에 (be_fr)"
+          be_nl: "벨기에 (be_nl)"
+          bg_bg: "불가리아 (bg_bg)"
+          bg_en: "불가리아 (bg_en)"
+          br: "브라질"
+          ca_ab: "캐나다 (ca_ab)"
+          ca_bc: "캐나다 (ca_bc)"
+          ca_mb: "캐나다 (ca_mb)"
+          ca_nb: "캐나다 (ca_nb)"
+          ca_nl: "캐나다 (ca_nl)"
+          ca_ns: "캐나다 (ca_ns)"
+          ca_nt: "캐나다 (ca_nt)"
+          ca_nu: "캐나다 (ca_nu)"
+          ca_on: "캐나다 (ca_on)"
+          ca_pe: "캐나다 (ca_pe)"
+          ca_qc: "캐나다 (ca_qc)"
+          ca_sk: "캐나다 (ca_sk)"
+          ca_yt: "캐나다 (ca_yt)"
+          ca: "캐나다"
+          ch_ag: "스위스 (ch_ag)"
+          ch_ai: "스위스 (ch_ai)"
+          ch_ar: "스위스 (ch_ar)"
+          hk: "홍콩"
+          hr: "크로아티아"
+          in: "인도"
+          is: "아이슬란드"
+          kr: "한국 (대한민국)"
+      toolbar_button:
+        today: "오늘"
+        month: "월"
+        week: "주"
+        day: "일"
+    group_timezones:
+      search: "검색..."
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      edit_reason: "이벤트 업데이트됨"
+      show_all: "모두 보기"
+      add_to_calendar: "캘린더에 추가"
+      edit_event: "이벤트 편집"
+      export_event: "이벤트 내보내기"
+      created_by: "작성자"
+      bulk_invite: "일괄 초대"
+      close_event: "이벤트 닫기"
+      bulk_invite_modal:
+        confirm: "확인"
+        text: "CSV 파일 업로드"
+        title: "일괄 초대"
+        success: "파일이 성공적으로 업로드되었습니다. 처리가 완료되면 메시지를 통해 알림을 받게됩니다."
+        error: "죄송합니다. 파일은 CSV 형식이어야 합니다."
+        send_bulk_invites: "초대장 보내기"
+        group_selector_placeholder: "그룹 선택..."
+        user_selector_placeholder: "사용자 선택..."
+      upcoming_events:
+        creator: "만든이"
+        status: "상태"
+      models:
+        invitee:
+          status:
+            unknown: "관심 없음"
+            interested: "관심"
+        event:
+          expired: "만료됨"
+          closed: "닫힘"
+          status:
+            public:
+              title: "공개"
+            private:
+              title: "비공개"
+      builder_modal:
+        custom_fields:
+          label: "사용자 정의 필드"
+          placeholder: "선택 사항"
+        create_event_title: "이벤트 만들기"
+        update_event_title: "이벤트 편집"
+        confirm_delete: "이 일정을 삭제하시겠습니까?"
+        create: "만들기"
+        update: "저장"
+        attach: "이벤트 만들기"
+        add_reminder: "알림 추가"
+        timezone:
+          label: 시간대
+        reminders:
+          label: "미리 알림"
+          units:
+            minutes: "분"
+            hours: "시간"
+            days: "일"
+          periods:
+            before: "이전"
+            after: "이후"
+        recurrence:
+          label: "반복"
+          none: "반복 없음"
+          every_day: "매일"
+        url:
+          label: "URL"
+          placeholder: "선택 사항"
+        location:
+          label: "위치"
+        description:
+          label: "내용"
+        name:
+          label: "이벤트 이름"
+        status:
+          label: "상태"
+      invite_user_or_group:
+        invite: "보내기"

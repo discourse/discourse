@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    chat_integration_enabled: '启用 discourse-chat-integration 插件'
+    chat_integration_discourse_username: '获取内容时用作的用户的用户名。'
+    chat_integration_delay_seconds: '创建帖子后发送聊天通知之前等待的秒数'
+    chat_integration_slack_username: "发布到 Slack 时使用的机器人的用户名"
+    chat_integration_slack_enabled: '启用 Slack 聊天集成提供程序'
+    chat_integration_slack_access_token: '用于向 Slack 进行身份验证的 OAuth 访问令牌'
+    chat_integration_slack_incoming_webhook_token: '用于验证传入请求的验证令牌'
+    chat_integration_slack_excerpt_length: 'Slack 帖子摘要长度'
+    chat_integration_slack_icon_url: '发布到 Slack 时使用的图标（默认为论坛徽标）'
+    chat_integration_slack_outbound_webhook_url: "用于使用 Slack 的“传入 Webhook”系统而不是 OAuth API。不建议。"
+    chat_integration_slack_transcript_quote: 将 Slack 语音稿包含到“[quote]”标签中？
+    errors:
+      chat_integration_slack_api_configs_are_empty: "您必须输入出站网络钩子 URL 或访问令牌"
+    chat_integration_telegram_enabled: "启用 Telegram 聊天集成提供程序"
+    chat_integration_telegram_access_token: "来自 Telegram botfather 的机器人访问令牌"
+    chat_integration_telegram_excerpt_length: "Telegram 帖子摘要长度"
+    chat_integration_telegram_enable_slash_commands: "允许使用“斜杠命令”管理 Telegram 订阅"
+    chat_integration_discord_enabled: "启用 Discord 聊天集成提供程序"
+    chat_integration_discord_message_content: "向 Discord 发送通知时要包含在摘要上方的消息"
+    chat_integration_discord_excerpt_length: "Discord 帖子摘要长度"
+    chat_integration_guilded_enabled: "启用 Guilded 聊天集成提供程序"
+    chat_integration_guilded_excerpt_length: "Guilded 帖子摘要长度"
+    chat_integration_mattermost_enabled: "启用 Mattermost 聊天集成提供程序"
+    chat_integration_mattermost_webhook_url: 'Mattermost 网络钩子的 URL'
+    chat_integration_mattermost_incoming_webhook_token: '用于验证传入请求的验证令牌'
+    chat_integration_mattermost_icon_url: "发布到 Mattermost 时使用的图标（默认为论坛徽标）"
+    chat_integration_mattermost_excerpt_length: "Mattermost 帖子摘要长度"
+    chat_integration_matrix_enabled: "启用 Matrix 聊天集成提供程序"
+    chat_integration_matrix_homeserver: "要连接的主服务器。请确保包含协议"
+    chat_integration_matrix_access_token: "机器人的 Matrix 帐户的访问令牌"
+    chat_integration_matrix_excerpt_length: "Matrix 帖子摘要长度"
+    chat_integration_matrix_use_notice: "使用通知代替普通消息"
+    chat_integration_zulip_enabled: "启用 Zulip 聊天集成提供程序"
+    chat_integration_zulip_server: "Zulip 服务器的基础 URL。确保包含 http(s)://"
+    chat_integration_zulip_bot_email_address: "与您的 Zulip 机器人关联的电子邮件地址"
+    chat_integration_zulip_bot_api_key: "Zulip 机器人的 API 密钥"
+    chat_integration_zulip_excerpt_length: "Zulip 帖子摘要长度"
+    chat_integration_rocketchat_enabled: "启用 Rocket Chat 聊天集成提供程序"
+    chat_integration_rocketchat_webhook_url: "Rocket Chat 集成网络钩子的 URL"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat 帖子摘要长度"
+    chat_integration_gitter_enabled: "启用 Gitter 聊天集成提供程序"
+    chat_integration_flowdock_enabled: "启用 Flowdock 聊天集成提供程序"
+    chat_integration_flowdock_excerpt_length: "Flowdock 帖子摘要长度"
+    chat_integration_groupme_enabled: "启用 Groupme 聊天集成提供程序"
+    chat_integration_groupme_excerpt_length: "GroupMe 帖子摘要长度"
+    chat_integration_groupme_bot_ids: "*必填* 机器人 ID，有多个时使用 ',' 分隔"
+    chat_integration_groupme_instance_names: "*必填* GroupMe 聊天的名称，有多个时使用 ',' 分隔（与机器人 ID 的顺序相同）"
+    chat_integration_teams_enabled: "启用 Microsoft Teams 聊天集成提供程序"
+    chat_integration_teams_excerpt_length: "Microsoft Team 帖子摘要长度"
+    chat_integration_powerautomate_enabled: "启用 Microsoft Power Automate 集成提供程序"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate 帖子摘要长度"
+    chat_integration_webex_enabled: "启用 Webex Teams 聊天集成提供程序"
+    chat_integration_webex_excerpt_length: "Webex Team 帖子摘要长度"
+    chat_integration_google_enabled: "启用 Google Chat 聊天集成提供程序"
+    chat_integration_google_excerpt_length: "Google Chat 帖子摘要长度"
+  dashboard:
+    problem:
+      channel_errors: "某些聊天集成频道存在错误。请访问<a href='%{base_path}/admin/plugins/chat-integration'>聊天集成</a>部分了解更多信息。"
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: 发送 Slack 消息
+      send_chat_integration_message:
+        title: 发送聊天集成消息
+  chat_integration:
+    all_categories: "（所有类别）"
+    deleted_category: "（已删除的类别）"
+    deleted_group: "（已删除的群组）"
+    group_mention_template: "提及：@%{name}"
+    group_message_template: "发送消息给：@%{name}"
+    topic_tag_changed:
+      added_and_removed: "添加了 %{added}，移除了 %{removed}"
+      added: "添加了 %{added}"
+      removed: "移除了 %{removed}"
+    provider:
+      slack:
+        status:
+          header: |
+            *此频道的规则*
+            （如果一个帖子匹配多个规则，将执行最顶端的规则）
+          no_rules: "此频道没有设置任何规则。运行 `/discourse help` 获取说明。"
+          rule_string: "*%{index})* *%{filter}**%{category}*中的帖子"
+          rule_string_tags_suffix: "包括标签：*%{tags}*"
+        parse_error: "抱歉，无法识别。运行 `/discourse help` 获取说明。"
+        create:
+          created: "规则成功创建"
+          updated: "规则成功更新"
+          error: "抱歉，创建该规则时出错。"
+        delete:
+          success: "规则成功删除"
+          error: "抱歉，删除该规则时出错。运行 `/discourse help` 获取规则列表。"
+        not_found:
+          tag: "找不到标签 *%{name}*"
+          category: "找不到类别*%{name}*。可用类别：*%{list}*"
+        help: |
+          *新建规则*：`/discourse [thread|watch|follow|mute] [category] [tag:name]`
+          （您必须指定规则类型和至少一个类别或标签）
+          - *thread* – 在此频道有新话题和线索回复（如可能）时通知
+          - *watch* – 在此频道有新话题和新回复时通知
+          - *follow* – 在此频道有新话题时通知
+          - *mute* – 屏蔽此频道的通知
+
+          *移除规则*：`/discourse remove [rule number]`
+          （可以通过运行 `/discourse status` 找到 `[rule number]`）
+
+          *列出规则*：`/discourse status`
+
+          *[实验性] 发布语音稿*：`/discourse post [n]`
+          创建关于包含此频道中最近的 `n` 个帖子的 Discourse 的话题草稿
+
+          *帮助*：`/discourse help`
+        transcript:
+          modal_title: "创建语音稿"
+          modal_description: "线索中的所有消息都将汇集到一个论坛帖子中。您将有机会在发布前编辑语音稿。"
+          transcript_ready: "语音稿已就绪"
+          continue_on_discourse: "在论坛上继续"
+          error: "抱歉，创建语音稿时出错！"
+          post_to_discourse: "点击此处使用语音稿在 Discourse 上创建帖子的草稿"
+          api_required: "抱歉，此集成的设置不支持发布语音稿。"
+          view_on_slack: "在 Slack 上查看%{name}"
+          first_message_pretext: "开始于 %{n} 条消息之前："
+          last_message_pretext: "并且结束于 %{n} 条消息之前："
+          posted_in: "在%{name}中发帖"
+          change_first_message: "更改第一条消息…"
+          change_last_message: "更改最后条消息…"
+          loading: "正在加载语音稿…"
+          error_users: "错误：无法从 Slack 获取用户"
+          error_history: "错误：无法从 Slack 获取频道历史记录"
+          error_ts: "错误：无法从 Slack 获取请求的消息"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "添加了 %{added}，移除了 %{removed}"
+            added: "添加了 %{added}"
+            removed: "移除了 %{removed}"
+      telegram:
+        unknown_chat: "此聊天未在 %{site_title} 上设置。请要求管理员添加一个聊天 ID 为 %{chat_id} 的频道。"
+        known_chat: "此聊天已在 %{site_title} 上设置。在管理面板中进行配置。（聊天 ID：%{chat_id}）"
+        message: |-
+          <b>%{user}</b> 在 <a href="%{post_url}">%{title}</a> 中发帖
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>此频道的规则</b>
+            （如果一个帖子匹配多个规则，将执行最顶端的规则）
+          no_rules: "此频道没有设置任何规则。运行 <code>/help</code> 获取说明。"
+          rule_string: "<b>%{index})</b> <b>%{filter}</b><b>%{category}</b>中的帖子"
+          rule_string_tags_suffix: "包括标签：<b>%{tags}</b>"
+        parse_error: "抱歉，无法识别。运行 <code>/help</code> 获取说明。"
+        create:
+          created: "规则成功创建"
+          updated: "规则成功更新"
+          error: "抱歉，创建该规则时出错。"
+        delete:
+          success: "规则成功删除"
+          error: "抱歉，删除该规则时出错。运行 <code>/status</code> 获取规则列表。"
+        not_found:
+          tag: "找不到标签 <b>%{name}</b>"
+          category: "找不到类别<b>%{name}</b>。可用类别：<b>%{list}</b>"
+        help: |
+          <b>新建规则</b>：<code>/[watch|follow|mute] [category] [tag:name]</code>
+          （您必须指定规则类型和至少一个类别或标签）
+          -<b>watch</b>– 在此频道有新话题和新回复时通知
+          - <b>follow</b>– 在此频道有新话题时通知
+          - <b>mute</b>– 屏蔽此频道的通知
+
+          <b>移除规则</b>：<code>/remove [rule number]</code>
+          （可以通过运行 <code>/status</code> 找到 <code>[rule number]</code>）
+
+          <b>列出规则</b>：<code>/status</code>
+
+          <b>帮助</b>：<code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> 在 <a href="%{post_url}">%{title}</a> 中发帖
+      mattermost:
+        status:
+          header: |
+            *此频道的规则*
+            （如果一个帖子匹配多个规则，将执行最顶端的规则）
+          no_rules: "此频道没有设置任何规则。运行 `/discourse help` 获取说明。"
+          rule_string: "*%{index})* *%{filter}**%{category}*中的帖子"
+          rule_string_tags_suffix: "包括标签：*%{tags}*"
+        parse_error: "抱歉，无法识别。运行 `/discourse help` 获取说明。"
+        create:
+          created: "规则成功创建"
+          updated: "规则成功更新"
+          error: "抱歉，创建该规则时出错。"
+        delete:
+          success: "规则成功删除"
+          error: "抱歉，删除该规则时出错。运行 `/discourse help` 获取规则列表。"
+        not_found:
+          tag: "找不到标签 *%{name}*"
+          category: "找不到类别*%{name}*。可用类别：*%{list}*"
+        help: |
+          *新建规则*：`/discourse [watch|follow|mute] [category] [tag:name]`
+          （您必须指定规则类型和至少一个类别或标签）
+          - *watch* – 在此频道有新话题和新回复时通知
+          - *follow* – 在此频道有新话题时通知
+          - *mute* – 屏蔽此频道的通知
+
+          *移除规则*：`/discourse remove [rule number]`
+          （可以通过运行 `/discourse status` 找到 `[rule number]`）
+
+          *列出规则*：`/discourse status`
+
+          *帮助*：`/discourse help`
+      matrix:
+        text_message: "%{user} 在 %{title} - %{post_url} 中发帖"
+        formatted_message: |
+          <b>%{user}</b> 在 <b><a href='%{post_url}'>%{title}</a></b> 中发帖
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** 在 **[%{title}](%{post_url})** 中发帖
+          ~~~quote
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "已发布"
+      google:
+        new_post: "%{site_title} 上有新帖子"
+        new_topic: "%{site_title} 上有新话题"
+        author: "作者 @%{username}"
+        link: "在 %{site_title} 上查看"
+      groupme:
+        errors:
+          instance_names_issue: "实例名称格式不正确或未提供"

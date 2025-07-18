@@ -47,9 +47,9 @@ export default RouteTemplate(
         </:tabs>
       </DPageHeader>
 
-      <div class="alert alert-info -top-margin admin-plugins-howto">
-        {{icon "circle-info"}}
+      <div class="alert alert-info admin-plugins-howto">
         <a href="https://meta.discourse.org/t/install-a-plugin/19157">
+          {{icon "circle-info"}}
           {{i18n "admin.plugins.howto"}}
         </a>
       </div>

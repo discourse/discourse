@@ -1550,6 +1550,8 @@ he:
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: %{date}."
       suspended_permanently: "משתמש זה מושעה."
       suspended_reason: "הסיבה: "
+      silenced_permanently: "משתמש זה מושתק."
+      silenced_reason: "הסיבה: "
       github_profile: "GitHub"
       email_activity_summary: "סיכום פעילות"
       mailing_list_mode:
@@ -2107,7 +2109,12 @@ he:
         removed: "הוסרה"
         search: "יש להקליד כדי לחפש בהזמנות…"
         user: "משתמשים שהוזמנו"
-        none: "אין הזמנות להצגה"
+        none:
+          title: "אין הזמנות להצגה"
+          cta: "יצירת קישור הזמנה"
+          tip:
+            prefix: "אפשר לשלוח הזמנות במרוכז על ידי"
+            action: "העלאת קובץ CSV"
         truncated:
           one: "מראה את ההזמנה הראשונה."
           two: "מראה את %{count} ההזמנות הראשונות."
@@ -2815,7 +2822,6 @@ he:
       unlist: "לא-רשום"
       add_warning: "זוהי אזהרה רשמית."
       toggle_whisper: "הפעלת לחישה"
-      toggle_unlisted: "סימון/אי-סימון כלא-ברשימות"
       insert_table: "הוספת טבלה"
       posting_not_on_topic: "לאיזה נושא רצית להגיב?"
       saved_local_draft_tip: "נשמר מקומית"
@@ -2928,6 +2934,12 @@ he:
       italic_label: "I"
       italic_title: "נטוי"
       italic_text: "טקסט נטוי"
+      heading_label: "כ"
+      heading_title: "כותרות"
+      heading_level_n: "כותרת %{levelNumber}"
+      heading_level_n_title: "כותרת %{levelNumber}"
+      heading_level_paragraph: "פסקה"
+      heading_level_paragraph_title: "פסקה"
       link_title: "קישור"
       link_description: "הזן תיאור קישור כאן"
       link_dialog_title: "הוספת קישור"
@@ -2940,6 +2952,7 @@ he:
       link_url_placeholder: "אפשר להדביק קישור או לחפש נושאים"
       blockquote_title: "מקטע ציטוט"
       blockquote_text: "בלוק ציטוט"
+      heading_text: "כותרת"
       code_title: "טקסט מעוצב"
       code_text: "הזחה של הטקסט ב-4 רווחים"
       paste_code_text: "הקלידו או הדביקו קוד כאן"
@@ -3006,6 +3019,9 @@ he:
         title: "הוספת תיאור תמונה"
       image_toolbar:
         alt_text: "הוספת תיאור תמונה"
+        zoom_out: "הקטנת התמונה"
+        zoom_in: "הגדלת התמונה"
+        remove: "הסרת התמונה"
       image_scale_button: "שינוי קנה המידה של התמונה לכדי %{percent}%"
       delete_image_button: מחיקת תמונה
       toggle_image_grid: החלפת מצב רשת תמונות
@@ -4144,6 +4160,10 @@ he:
         success: "התרגומים עודכנו בהצלחה"
         post_language_selector:
           none: "ללא"
+        edit_warning:
+          message: "זה פוסט מתורגם.<br><br> האם לערוך את הפוסט המקורי ב%{language} או לערוך את התרגום המסוים הזה?"
+          action_original: "לערוך את הפוסט המקורי"
+          action_translation: "לערוך את התרגום הזה"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -6982,6 +7002,7 @@ he:
           compare_commits: "(צפייה בהגשות חדשות)"
           remote_theme_edits: "אם מעניין אותך לערוך את ערכת העיצוב הזאת, עליך <a href='%{repoURL}' target='_blank'>להגיש שינוי במאגר שלה</a>"
           repo_unreachable: "לא ניתן ליצור קשר עם מאגר ה־git של ערכת העיצוב הזו. הודעת השגיאה:"
+          built_in_description: "ערכת העיצוב הזאת מותקנת מראש ולא ניתן למחוק או לשנות אותה"
           imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.zip"
           settings: "הגדרות"
           colors: "צבעים"

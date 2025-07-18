@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    gamification:
+      you: "Sina"
+      leaderboard:
+        link_to_settings: "Sätted"
+        refresh: "Värskenda"
+        name: "Nimi"
+        period:
+          all_time: "Alates algusest"
+          yearly: "Iga-aastaselt"
+          quarterly: "Kvartaalselt"
+          monthly: "Igakuiselt"
+          weekly: "Iganädalaselt"
+          daily: "Igapäevaselt"
+      create: "Loo"
+      cancel: "Tühista"
+      close: "Sulge"
+      delete: "Kustuta"
+      edit: "Muuda"
+      back: "Tagasi"
+      save: "Salvesta"
+      apply: "Rakenda"
+      update_range:
+        all_time: "Alates algusest"
+      custom_range_from: "Kellelt"
+      admin:
+        name: "Nimi"

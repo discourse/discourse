@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Введіть хоча б %{count} символ"
+              few: "Введіть хоча б %{count} символи"
+              many: "Введіть хоча б %{count} символи"
+              other: "Введіть хоча б %{count} символи"
+          edit: "редагувати"
+          cancel: "скасувати"
+          user:
+            deleted: "(користувача вилучено)"
+          reviewables:
+            actions:
+              agree:
+                title: "Погоджуюся…"
+              agree_and_suspend:
+                title: "Призупинити користувача"
+                description: "Погодитися з прапором та призупинити користувача."
+              agree_and_silence:
+                title: "Заблокувати користувача"
+                description: "Погодитися з прапором та заблокувати користувача."
+              disagree:
+                title: "Відмовити"
+              ignore:
+                title: "Нічого не робити"
+                description: "Ігнорувати прапорець, видаливши його з черги без жодних дій."
+      topic:
+        sort_by: "Сортувати за"
+        activity: "Активність"
+    review:
+      transcript:
+        view: "Показати попередні повідомлення"

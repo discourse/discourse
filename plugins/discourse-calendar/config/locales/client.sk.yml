@@ -1,0 +1,81 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID témy
+    discourse_calendar:
+      disable_holiday: "Zakázať"
+      enable_holiday: "Povoliť"
+      date: "Dátum"
+      region:
+        none: "Žiadny"
+      toolbar_button:
+        today: "Dnes"
+        month: "Mesiac"
+        week: "Týždeň"
+        day: "Deň"
+    group_timezones:
+      search: "Hľadať"
+    discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "Zobraziť všetko"
+      add_to_calendar: "Pridať do kalendára"
+      created_by: "Vytvoril"
+      bulk_invite: "Hromadné pozvanie"
+      bulk_invite_modal:
+        confirm: "potvrďte"
+        title: "Hromadné pozvanie"
+        success: "Súbor bol úspešne odoslaný. Keď sa nahrávanie dokončí, budete na to upozornený cez správu."
+        error: "Prepáčte, súbor musí byť v CSV formáte."
+      upcoming_events:
+        creator: "Tvorca"
+        status: "Stav"
+      models:
+        event:
+          expired: "Vypršala platnosť"
+          closed: "Zatvorené"
+          status:
+            public:
+              title: "Verejné"
+            private:
+              title: "Súkromné"
+      builder_modal:
+        custom_fields:
+          placeholder: "Nepovinné"
+        create: "Vytvoriť"
+        update: "Uložiť"
+        timezone:
+          label: Časové pásmo
+        reminders:
+          units:
+            minutes: "minút"
+            hours: "hodiny"
+            days: "dní"
+          periods:
+            before: "pred"
+            after: "po"
+        recurrence:
+          label: "Opakovanie"
+          none: "Žiadna opakovaná udalosť"
+          every_day: "Každý deň"
+        url:
+          label: "URL"
+          placeholder: "Nepovinné"
+        location:
+          label: "Poloha"
+        description:
+          label: "Popis"
+        status:
+          label: "Stav"
+      invite_user_or_group:
+        invite: "Odoslať"

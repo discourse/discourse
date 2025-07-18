@@ -1,0 +1,193 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Atribuição do Discourse"
+  js:
+    filters:
+      unassigned:
+        title: "Não atribuído"
+        help: "Tópicos que não têm atribuição"
+    action_codes:
+      assigned: "Atribuiu a %{who} %{when}"
+      assigned_group: "Atribuiu a %{who} %{when}"
+      assigned_to_post: "Atribuiu %{who} à <a href='%{path}'>postagem</a> %{when}"
+      assigned_group_to_post: "Atribuiu %{who} à <a href='%{path}'>postagem</a> %{when}"
+      unassigned: "Cancelou atribuição de %{who} %{when}"
+      unassigned_group: "Cancelou atribuição de %{who} %{when}"
+      unassigned_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
+      unassigned_group_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
+      reassigned: "reatribuiu %{who} %{when}"
+      reassigned_group: "reatribuiu %{who} %{when}"
+      details_change: "Detalhes de atribuição alterados para %{who} %{when}"
+      note_change: "Observação de atribuição alterada para %{who} %{when}"
+      status_change: "Status de atribuição alterado para %{who} %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Adicionar o filtro \"não atribuído\" à categoria"
+      cant_act: "Você não pode agir em sinalizações que foram atribuídas a outros(as) usuários(as)"
+      cant_act_unclaimed: "Você precisa reivindicar este tópico antes de agir em sinalizações."
+      topic_search_placeholder: "Procurar tópicos por título ou conteúdo da postagem"
+      sidebar_name_filter_placeholder: "Nome/nome de usuário(a)"
+      assigned: "Atribuiu"
+      group_everyone: "Todos"
+      assigned_to: "Atribuiu a"
+      assigned_topic_to: "Tópico atribuído a <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Atribuiu #%{post_number} a %{username}"
+      assign_post_to_multiple: "#%{post_number} para %{username}"
+      assigned_to_w_ellipsis: "Atribuiu a..."
+      unassign:
+        title: "Remover atribuição"
+        title_w_ellipsis: "Remover atribuição..."
+        help: "Remover atribuição de %{username} do tópico"
+      assign:
+        title: "Atribuir"
+        help: "Atribuir tópico a usuário(a)"
+      assign_post:
+        title: "Atribuir postagem"
+      unassign_post:
+        title: "Remover atribuição da postagem"
+        help: "Remover atribuição de %{username} da postagem"
+      reassign:
+        title: "Editar"
+        title_w_ellipsis: "Editar atribuição..."
+        to_self: "Reatribuir a mim"
+        to_self_help: "Reatribuir tópico a mim"
+        help: "Editar detalhes da atribuição"
+      reassign_modal:
+        title: "Reatribuir tópico"
+      topic_level_menu:
+        edit_assignments: "Editar atribuições..."
+        reassign_topic_to_me: "Reatribuir tópico a mim"
+        unassign_with_ellipsis: "Remover atribuição..."
+        unassign_from_post: "Remover atribuição de @%{assignee} a #%{post_number}"
+        unassign_from_post_help: "Remover atribuição de @%{assignee} à postagem #%{post_number}"
+        unassign_from_topic: "Remover atribuição de @%{username} do tópico"
+      assign_modal:
+        title: "Atribuir tópico"
+        reassign_title: "Reatribuir tópico"
+        assign: "Atribuir"
+        assignee_label: Destinatário(a)
+        assignment_label: Atribuição
+        choose_assignee: Escolha um(a) usuário(a) para atribuir.
+        edit_assignments_title: "Editar atribuições"
+        note_label: Observação
+        optional_label: "(opcional)"
+        status_label: Status
+        suggestions: sugestões
+      assign_post_modal:
+        title: "Atribuir postagem"
+      claim:
+        title: "reivindicar"
+        help: "Atribuir tópico a si"
+      assign_mailer:
+        never: "Nunca"
+        different_users: "Apenas se o(a) atribuidor(a) e destinatário(a) forem usuários(as) diferentes"
+        always: "Sempre"
+      reminders_frequency:
+        description: "Freqüência para receber lembretes de tópicos designados"
+        never: "Nunca"
+        daily: "Diariamente"
+        weekly: "Semanalmente"
+        monthly: "Mensalmente"
+        quarterly: "Trimestralmente"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Atribuir"
+              assignable_levels:
+                title: "Quem pode atribuir este grupo"
+    user:
+      notification_level_when_assigned:
+        label: "Ao atribuir"
+        watch_topic: "Acompanhar tópico"
+        track_topic: "Monitorar tópico"
+        do_nothing: "Não fazer nada"
+      messages:
+        assigned_title: "Atribuiu (%{count})"
+        assigned: "Atribuiu"
+      no_assignments_title: "Você não tem atribuições ainda"
+      no_assignments_body: >
+        Seus tópicos e mensagens atribuídas serão listados aqui. Você receberá uma notificação periódica de lembrete das suas atribuições, que você pode ajustar em suas <a href='%{preferencesUrl}'>preferências de usuário(a)/a>. <br><br> Para atribuir uma mensagem ou tópico a si ou a outra pessoa, procure o botão de atribuir %{icon} na parte inferior.
+      dismiss_assigned_tooltip: "Marcar todas as notificações atribuídas não lidas como lidas"
+      assigned_to_group:
+        post: "postagem atribuída a %{group_name}"
+        topic: "tópico atribuído a %{group_name}"
+      assigned_to_you:
+        post: "postagem atribuída a você"
+        topic: "tópico atribuído a você"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Eventos de atribuição"
+          assigned: "Quando um(a) usuário(a) atribuir um tópico"
+          unassigned: "Quando um(a) usuário(a) cancelar a atribuição de um tópico"
+    search:
+      advanced:
+        in:
+          assigned: "foram atribuídos"
+          unassigned: "tiveram atribuição removida"
+        assigned:
+          label: "Atribuiu a"
+    topics:
+      bulk:
+        unassign: "Remover atribuição de tópicos"
+        assign: "Atribuir tópicos"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Modelo de postagem
+              description: Se preenchida, uma postagem com este modelo será criada e um usuário será atribuído a ela em vez do tópico.
+            assignees_group:
+              label: Grupo de destinatários
+            minimum_time_between_assignments:
+              label: Horas mínimas entre atribuições
+            min_recently_assigned_days:
+              label: Dias mínimos atribuídos recentemente
+              description: O padrão é de 14 dias.
+            skip_new_users_for_days:
+              label: Ignorar novos usuários por dias
+              description: O padrão é 0 dias (os usuários podem ser atribuídos imediatamente após a inscrição).
+            max_recently_assigned_days:
+              label: Dias máximos atribuídos recentemente
+              description: Primeira tentativa de excluir usuários(as) atribuídos(as) nos últimos "n" dias. Se não restar usuários(as), é revertido para "min_recently_assigned_days". O padrão é de 180 dias.
+            assigned_topic:
+              label: ID de tópico atribuído
+            in_working_hours:
+              label: Usuários(as) em horário de trabalho
+    notification_reason:
+      user: "Você verá uma contagem de novas respostas porque este tópico foi atribuído a você."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} atribuiu a você"
+      titles:
+        assigned: "Atribuiu"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Tem certeza? Você tem %{count} notificação atribuída não lida."
+            other: "Tem certeza? Você tem %{count} notificações atribuídas não lidas."
+    user_menu:
+      view_all_assigned: "ver todos os atribuídos"
+      tabs:
+        assign_list: "Lista de atribuições"
+        assign_list_with_unread:
+          one: "Lista de atribuições - %{count} atribuição não lida"
+          other: "Lista de atribuições - %{count} atribuições não lidas"
+    edit_assignments_modal:
+      title: "Editar atribuições"
+      topic: "Tópico"
+      post: "Postar"

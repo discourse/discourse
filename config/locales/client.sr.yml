@@ -1256,6 +1256,7 @@ sr:
       admin_tooltip: "Ovaj korisnik je administrator"
       suspended_notice: "Ovaj korisnik je suspendovan do %{date}."
       suspended_reason: "Razlog:"
+      silenced_reason: "Razlog:"
       email_activity_summary: "Sažetak aktivnosti"
       watched_tags: "Pregledano"
       tracked_tags: "Praćeno"
