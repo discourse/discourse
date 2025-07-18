@@ -486,10 +486,8 @@ module("Unit | Model | composer", function (hooks) {
 
   test("composerVersion is correct when using 'rich text' composer", async function (assert) {
     this.siteSettings.rich_editor = true;
-    this.keyValueStore.set({
-      key: "d-editor-prefers-rich-editor",
-      value: "true",
-    });
+    this.currentUser.set("user_option.composition_mode", 1);
+
     const composer = createComposer.call(this, {});
     assert.strictEqual(composer.composerVersion, 2);
   });

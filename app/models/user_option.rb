@@ -59,6 +59,10 @@ class UserOption < ActiveRecord::Base
     @email_level_type ||= Enum.new(always: 0, only_when_away: 1, never: 2)
   end
 
+  def self.composition_mode_types
+    @composition_mode_types ||= Enum.new(classic: 0, modern: 1)
+  end
+
   validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
   validates :email_level, inclusion: { in: UserOption.email_level_types.values }
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
@@ -99,6 +103,7 @@ class UserOption < ActiveRecord::Base
     self.hide_presence = SiteSetting.default_hide_presence
     self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
     self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
+    self.composition_mode = SiteSetting.default_composition_mode
 
     true
   end
