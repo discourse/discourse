@@ -35,13 +35,8 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   let(:acl_object) { instance_double(Aws::S3::ObjectAcl) }
 
   before do
-    # Set up upload with a valid SHA1
     upload.update!(sha1: new_sha1)
 
-    # Create upload reference for the post
-    Fabricate(:upload_reference, upload: upload, target: post)
-
-    # Stub SecureRandom.hex to return our test SHA1
     allow(SecureRandom).to receive(:hex).with(20).and_return(new_sha1)
 
     allow(SiteSetting).to receive(:video_conversion_enabled).and_return(true)
@@ -65,6 +60,12 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(s3_object).to receive(:size).and_return(1024)
     allow(s3_object).to receive(:acl).and_return(acl_object)
     allow(acl_object).to receive(:put).with(acl: "public-read").and_return(true)
+
+    allow(UploadReference).to receive(:where).with(
+      upload_id: upload.id,
+      target_type: "Post",
+    ).and_return(instance_double(ActiveRecord::Relation, pluck: [post.id]))
+
     allow(Post).to receive(:where).with(id: [post.id]).and_return(post_relation)
     allow(post_relation).to receive(:find_each).and_yield(post)
     allow(post).to receive(:rebake!)

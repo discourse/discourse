@@ -407,12 +407,13 @@ class CookedPostProcessor
           # Look for optimized video
           upload = Upload.get_from_url(src)
           if upload && optimized_video = OptimizedVideo.find_by(upload_id: upload.id)
+            optimized_url = optimized_video.optimized_upload.url
             # Only update if the URL is different
-            if container["data-video-src"] != optimized_video.url
+            if container["data-video-src"] != optimized_url
               container["data-original-video-src"] = container["data-video-src"] unless container[
                 "data-original-video-src"
               ]
-              container["data-video-src"] = optimized_video.url
+              container["data-video-src"] = optimized_url
               changes_made = true
             end
             # Ensure we maintain reference to original upload
