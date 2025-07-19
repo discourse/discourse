@@ -69,7 +69,7 @@ export default class DAutocompleteModifier extends Modifier {
 
   handleKeyUp = (event) => {
     // Skip if modifier keys are pressed
-    if (event.ctrlKey || event.altKey || event.metaKey) {
+    if (this.hasModifierKey(event)) {
       return;
     }
 
@@ -122,12 +122,16 @@ export default class DAutocompleteModifier extends Modifier {
           break;
         case "Backspace":
           // Handle backspace to potentially reopen autocomplete
+          // Skip if modifier keys are pressed (e.g., CMD+Backspace for line deletion)
+          if (!this.hasModifierKey(event)) {
+            return;
+          }
           await this.handleBackspace(event);
           break;
       }
     } else {
       // Handle backspace when closed to potentially reopen
-      if (event.key === "Backspace") {
+      if (event.key === "Backspace" && !this.hasModifierKey(event)) {
         await this.handleBackspace(event);
       }
     }
@@ -154,6 +158,10 @@ export default class DAutocompleteModifier extends Modifier {
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
+  }
+
+  hasModifierKey(event) {
+    return event.ctrlKey || event.altKey || event.metaKey;
   }
 
   modify(element, [options]) {
