@@ -5,12 +5,20 @@ import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ColorInput from "admin/components/color-input";
 import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
 
 export default RouteTemplate(
   <template>
+    <div class="back-to-color-palettes">
+      <LinkTo @route="adminCustomize.colors">
+        {{icon "angle-left"}}
+        {{i18n "admin.customize.colors.back_to_colors"}}
+      </LinkTo>
+    </div>
+
     <div class="color-scheme show-current-style">
       <div class="admin-container">
         <h1>{{#if

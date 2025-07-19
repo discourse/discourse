@@ -1,17 +1,19 @@
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
+import ColorScheme from "admin/models/color-scheme";
 
 export default class AdminCustomizeColorsShowRoute extends Route {
   @service router;
 
   model(params) {
-    const all = this.modelFor("adminCustomize.colors");
-    const model = all.findBy("id", parseInt(params.scheme_id, 10));
-    if (model) {
-      return model;
-    } else {
-      this.router.replaceWith("adminCustomize.colors.index");
-    }
+    return ColorScheme.findAll().then((all) => {
+      const model = all.findBy("id", parseInt(params.scheme_id, 10));
+      if (model) {
+        return model;
+      } else {
+        this.router.replaceWith("adminCustomize.colors");
+      }
+    });
   }
 
   serialize(model) {
@@ -20,6 +22,8 @@ export default class AdminCustomizeColorsShowRoute extends Route {
 
   setupController(controller) {
     super.setupController(...arguments);
-    controller.set("allColors", this.modelFor("adminCustomize.colors"));
+    ColorScheme.findAll().then((all) => {
+      controller.set("allColors", all);
+    });
   }
 }
