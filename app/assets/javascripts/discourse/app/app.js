@@ -19,6 +19,12 @@ import { buildResolver } from "discourse/resolver";
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
+window.moduleBroker = {
+  lookup: function (moduleName) {
+    return require(moduleName);
+  },
+};
+
 class Discourse extends Application {
   modulePrefix = "discourse";
   rootElement = "#main";
