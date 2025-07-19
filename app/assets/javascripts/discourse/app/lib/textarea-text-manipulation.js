@@ -81,7 +81,6 @@ export default class TextareaTextManipulation {
     this.$textarea = $(textarea);
 
     this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
-    this._autocompleteModifier = null;
 
     generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
@@ -902,14 +901,6 @@ export default class TextareaTextManipulation {
     }
   }
 
-  cleanup() {
-    // Clean up autocomplete modifier if it exists
-    if (this._autocompleteModifier) {
-      this._autocompleteModifier.willDestroy();
-      this._autocompleteModifier = null;
-    }
-  }
-
   autocomplete(options) {
     if (this.siteSettings.floatkit_autocomplete_composer) {
       this._setupAutocomplete(options);
@@ -935,8 +926,6 @@ export default class TextareaTextManipulation {
     };
 
     modifier.modify(this.textarea, [modifierOptions]);
-
-    this._autocompleteModifier = modifier;
   }
 }
 
