@@ -212,7 +212,11 @@ module PostGuardian
   end
 
   def can_delete_post_or_topic?(post)
-    post.is_first_post? ? post.topic && can_delete_topic?(post.topic) : can_delete_post?(post)
+    if post.is_first_post?
+      post.topic && can_delete_topic?(post.topic)
+    else
+      can_delete_post?(post)
+    end
   end
 
   def can_delete_post?(post)
