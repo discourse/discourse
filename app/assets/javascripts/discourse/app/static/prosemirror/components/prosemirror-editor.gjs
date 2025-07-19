@@ -225,8 +225,6 @@ export default class ProsemirrorEditor extends Component {
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
       convertToMarkdown: this.convertToMarkdown,
-      shouldUseModernAutocomplete:
-        this.siteSettings.floatkit_autocomplete_composer,
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);
