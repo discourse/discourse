@@ -94,24 +94,14 @@ export default class ProsemirrorTextManipulation {
     next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
   }
 
-  _setupAutocomplete(options) {
-    // Create and apply the modifier
-    const modifier = new DAutocompleteModifier(getOwnerWithFallback(this), {
-      named: {},
-      positional: [],
-    });
-
-    const modifierOptions = {
-      ...options,
-      textHandler: this.autocompleteHandler,
-    };
-
-    modifier.modify(this.view.dom, [modifierOptions]);
-  }
-
   autocomplete(options) {
     if (this.shouldUseModernAutocomplete) {
-      this._setupAutocomplete(options);
+      return DAutocompleteModifier.setupAutocomplete(
+        getOwnerWithFallback(this),
+        this.view.dom,
+        this.autocompleteHandler,
+        options
+      );
     } else {
       // @ts-ignore
       $(this.view.dom).autocomplete(
