@@ -16,7 +16,10 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before { sign_in(current_user) }
+  before do
+    sign_in(current_user)
+    SiteSetting.rich_editor = false
+  end
 
   def visit_topic_and_initiate_autocomplete(initiation_text: "something #co", expected_count: 2)
     topic_page.visit_topic_and_open_composer(topic)

@@ -2681,6 +2681,9 @@ en:
     welcome_banner_location:
       above_topic_content: "Above topic content"
       below_site_header: "Below site header"
+    composition_mode:
+      classic: "Classic"
+      modern: "Modern"
 
     shortcut_modifier_key:
       shift: "Shift"

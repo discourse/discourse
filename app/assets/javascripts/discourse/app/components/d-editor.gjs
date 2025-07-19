@@ -93,10 +93,7 @@ export default class DEditor extends Component {
 
     this.setupToolbar();
 
-    if (
-      this.siteSettings.rich_editor &&
-      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
-    ) {
+    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
       this.editorComponent = await loadRichEditor();
     } else {
       this.editorComponent = TextareaEditor;
@@ -200,6 +197,7 @@ export default class DEditor extends Component {
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
+    this._debounceSaveRichEditorPreference?.cancel();
 
     this._cachedCookFunction = null;
   }
@@ -581,10 +579,23 @@ export default class DEditor extends Component {
       ? TextareaEditor
       : await loadRichEditor();
 
-    this.keyValueStore.set({
-      key: "d-editor-prefers-rich-editor",
-      value: this.isRichEditorEnabled,
-    });
+    // See UserOption#composition_mode_types on server
+    const preference = this.isRichEditorEnabled ? 1 : 0;
+    this.#debounceSaveRichEditorPreference(preference);
+  }
+
+  #debounceSaveRichEditorPreference(preference) {
+    this._debounceSaveRichEditorPreference = discourseDebounce(
+      this,
+      this.#saveRichEditorPreference,
+      preference,
+      1000
+    );
+  }
+
+  #saveRichEditorPreference(preference) {
+    this.currentUser.set("user_option.composition_mode", preference);
+    this.currentUser.save(["composition_mode"]);
   }
 
   @action
