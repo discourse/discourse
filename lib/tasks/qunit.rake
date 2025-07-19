@@ -129,7 +129,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       cmd += ["--parallel", parallel] if parallel
     else
       cmd += ["pnpm", "ember", "exam", "--query", query]
-      cmd += ["--load-balance", "--parallel", parallel] if parallel
+      cmd += ["--load-balance", "--parallel", parallel] if parallel && !ENV["PLUGIN_TARGETS"]
       cmd += ["--filter", filter] if filter
       cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end

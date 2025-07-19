@@ -96,6 +96,7 @@ class ThemeField < ActiveRecord::Base
         yaml: 5,
         js: 6,
         theme_screenshot_upload_var: 7,
+        json: 8,
       )
   end
 
@@ -696,6 +697,13 @@ class ThemeField < ActiveRecord::Base
       names: nil,
       types: :js,
       canonical: ->(h) { "test/#{h[:name]}" },
+    ),
+    ThemeFileMatcher.new(
+      regex: /\Aabout\.json\z/,
+      names: "about",
+      types: :json,
+      targets: :about,
+      canonical: ->(h) { "about.json" },
     ),
     ThemeFileMatcher.new(
       regex: /\Asettings\.ya?ml\z/,
