@@ -1,13 +1,13 @@
 import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib/hashtag-type-registry";
 import discourseLater from "discourse/lib/later";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
+import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
