@@ -1,8 +1,17 @@
 plugins:
-  sign_in_with_apple_enabled: false
-  apple_client_id: ''
-  apple_team_id: ''
-  apple_key_id: ''
+  sign_in_with_apple_enabled:
+    default: false
+    area: "authenticators"
+  apple_client_id:
+    default: ''
+    area: "authenticators"
+  apple_team_id:
+    default: ''
+    area: "authenticators"
+  apple_key_id:
+    default: ''
+    area: "authenticators"
   apple_pem:
     default: ''
     textarea: true
+    area: "authenticators"
