@@ -14,7 +14,7 @@ describe "Post event", type: :system do
     sign_in(admin)
   end
 
-  it "correctly builds the description" do
+  it "correctly builds the description", timezone: "Europe/Paris" do
     visit("/")
 
     time = Time.now.strftime("%Y-%m-%d %H:%M")
