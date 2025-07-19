@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -16,9 +15,6 @@ import DMenu from "float-kit/components/d-menu";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ColorPaletteListItem extends Component {
-  @service toasts;
-  @service i18n;
-
   get isBuiltInDefault() {
     return this.args.scheme?.is_builtin_default || false;
   }
@@ -87,7 +83,7 @@ export default class ColorPaletteListItem extends Component {
   }
 
   @action
-  setDefault() {
+  toggleUserSelectable() {
     this.args.toggleUserSelectable(this.args.scheme);
     this.dMenu.close();
   }
@@ -98,14 +94,9 @@ export default class ColorPaletteListItem extends Component {
   }
 
   @action
-  setAsDefaultWithToast(scheme) {
-    this.toasts.success({
-      duration: "short",
-      data: {
-        message: i18n("admin.customize.colors.saved_refreshing"),
-      },
-    });
+  setAsDefaultColors(scheme) {
     this.args.setAsDefaultThemePalette(scheme);
+    this.dMenu.close();
   }
 
   <template>
@@ -189,7 +180,7 @@ export default class ColorPaletteListItem extends Component {
                   {{#unless this.isBuiltInDefault}}
                     <dropdown.item>
                       <DButton
-                        @action={{this.setDefault}}
+                        @action={{this.toggleUserSelectable}}
                         @icon={{if
                           @scheme.user_selectable
                           "user-xmark"
@@ -207,10 +198,7 @@ export default class ColorPaletteListItem extends Component {
 
                   <dropdown.item>
                     <DButton
-                      @action={{fn
-                        this.setAsDefaultWithToast
-                        (if this.isBuiltInDefault null @scheme)
-                      }}
+                      @action={{fn this.setAsDefaultColors @scheme}}
                       @icon="star"
                       @translatedLabel={{this.setAsDefaultLabel}}
                       class="btn-transparent btn-palette-default"

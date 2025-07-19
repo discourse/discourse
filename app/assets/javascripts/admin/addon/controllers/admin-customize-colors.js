@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
+import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
 
 export default class AdminCustomizeColorsController extends Controller {
   @service router;
@@ -14,6 +15,7 @@ export default class AdminCustomizeColorsController extends Controller {
   @tracked defaultTheme = null;
   @tracked filterValue = "";
   @tracked typeFilter = "all";
+  @tracked isSettingDefault = false;
 
   isDefaultThemeColorScheme = (scheme) => {
     return this.defaultTheme?.color_scheme_id === scheme.id;
@@ -26,17 +28,19 @@ export default class AdminCustomizeColorsController extends Controller {
   get filteredColorSchemes() {
     let schemes = this.model.filter((scheme) => !scheme.is_base);
     // built-in "Light (default)"
-    const builtInDefault = {
-      id: null,
-      is_base: null,
-      theme_id: null,
-      theme_name: null,
-      name: "Light (default)",
-      user_selectable: false,
-      description: i18n("admin.customize.theme.default_light_scheme"),
-      is_builtin_default: true,
-    };
-    schemes.unshift(builtInDefault);
+    const lightBaseScheme = this.allBaseColorSchemes.find(
+      (scheme) => scheme.base_scheme_id === "Light" || scheme.name === "Light"
+    );
+    if (lightBaseScheme) {
+      const builtInDefault = {
+        ...lightBaseScheme,
+        id: null,
+        name: i18n("admin.customize.theme.default_light_scheme"),
+        description: i18n("admin.customize.theme.default_light_scheme"),
+        is_builtin_default: true,
+      };
+      schemes.unshift(builtInDefault);
+    }
 
     if (this.typeFilter !== "all") {
       if (this.typeFilter === "user_selectable") {
@@ -49,10 +53,6 @@ export default class AdminCustomizeColorsController extends Controller {
     if (this.filterValue) {
       const term = this.filterValue.toLowerCase();
       schemes = schemes.filter((scheme) => {
-        if (scheme.is_builtin_default) {
-          return "default light".includes(term);
-        }
-
         const nameMatches = scheme.name?.toLowerCase().includes(term);
         const themeMatches = scheme.theme_name?.toLowerCase().includes(term);
         return nameMatches || themeMatches;
@@ -138,20 +138,22 @@ export default class AdminCustomizeColorsController extends Controller {
   }
 
   @action
-  setAsDefaultThemePalette(scheme) {
-    this.store.findAll("theme").then((themes) => {
-      const defaultTheme = themes.findBy("default", true);
-      if (defaultTheme) {
-        const schemeId = scheme?.id ?? null;
-        defaultTheme.set("color_scheme_id", schemeId);
+  async setAsDefaultThemePalette(scheme) {
+    this.isSettingDefault = true;
 
-        this.defaultTheme = defaultTheme;
-
-        defaultTheme.saveChanges("color_scheme_id").then(() => {
-          window.location.reload();
-        });
-      }
-    });
+    try {
+      this.defaultTheme = await setDefaultColorScheme(scheme, this.store);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Error setting default theme palette", error);
+      this.dialog.alert({
+        message: i18n("admin.customize.colors.default_error", {
+          defaultValue: "Error setting color palette as active",
+        }),
+      });
+    } finally {
+      this.isSettingDefault = false;
+    }
   }
 
   @action
