@@ -4,6 +4,7 @@ import { i18n } from "discourse-i18n";
 
 export default class extends Controller {
   @service currentUser;
+  @service pmTopicTrackingState;
   @service router;
   @controller user;
 
