@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -127,18 +128,9 @@ export default class DAutocompleteModifier extends Modifier {
     }
   };
 
-  willDestroy() {
-    super.willDestroy();
-    this.cleanup();
-
-    if (this.targetElement) {
-      this.targetElement.removeEventListener("keyup", this.handleKeyUp);
-      this.targetElement.removeEventListener("keydown", this.handleKeyDown);
-      this.targetElement.removeEventListener("paste", this.handlePaste);
-      this.targetElement.removeEventListener("click", this.handleElementClick);
-    }
-
-    document.removeEventListener("click", this.handleGlobalClick);
+  constructor(owner, args) {
+    super(owner, args);
+    registerDestructor(this, (instance) => instance.cleanup());
   }
 
   modify(element, [options]) {
@@ -158,8 +150,15 @@ export default class DAutocompleteModifier extends Modifier {
   cleanup() {
     cancel(this.debouncedSearch);
     this.searchPromise?.cancel?.();
-    // Note: closeAutocomplete is async but we can't await in cleanup
     // The menu service will handle cleanup automatically
+    if (this.targetElement) {
+      this.targetElement.removeEventListener("keyup", this.handleKeyUp);
+      this.targetElement.removeEventListener("keydown", this.handleKeyDown);
+      this.targetElement.removeEventListener("paste", this.handlePaste);
+      this.targetElement.removeEventListener("click", this.handleElementClick);
+    }
+
+    document.removeEventListener("click", this.handleGlobalClick);
     this.menu.close("d-autocomplete");
   }
 
