@@ -1,6 +1,7 @@
 // @ts-check
 import { setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
@@ -23,6 +24,8 @@ import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /** @implements {TextManipulation} */
 export default class ProsemirrorTextManipulation {
+  @service siteSettings;
+
   allowPreview = false;
 
   /** @type {import("prosemirror-model").Schema} */
@@ -37,24 +40,13 @@ export default class ProsemirrorTextManipulation {
   state = new TrackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
-  shouldUseModernAutocomplete = false;
 
-  constructor(
-    owner,
-    {
-      schema,
-      view,
-      convertFromMarkdown,
-      convertToMarkdown,
-      shouldUseModernAutocomplete,
-    }
-  ) {
+  constructor(owner, { schema, view, convertFromMarkdown, convertToMarkdown }) {
     setOwner(this, owner);
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
-    this.shouldUseModernAutocomplete = shouldUseModernAutocomplete;
 
     this.placeholder = new ProsemirrorPlaceholderHandler({
       schema,
@@ -95,7 +87,7 @@ export default class ProsemirrorTextManipulation {
   }
 
   autocomplete(options) {
-    if (this.shouldUseModernAutocomplete) {
+    if (this.siteSettings.floatkit_autocomplete_composer) {
       return DAutocompleteModifier.setupAutocomplete(
         getOwnerWithFallback(this),
         this.view.dom,
