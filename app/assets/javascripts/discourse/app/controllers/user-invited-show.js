@@ -51,13 +51,9 @@ export default class UserInvitedShowController extends Controller {
     });
   }
 
-  @discourseComputed("filter")
-  showBulkActionButtons(filter) {
-    return (
-      filter === "pending" &&
-      this.model.invites.length > 0 &&
-      this.currentUser.staff
-    );
+  @discourseComputed("model")
+  showBulkActionButtons(model) {
+    return model.invites.length > 0 && this.currentUser.staff;
   }
 
   @discourseComputed("invitesCount", "filter")
