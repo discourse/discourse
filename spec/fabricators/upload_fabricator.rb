@@ -66,6 +66,9 @@ Fabricator(:video_upload, from: :upload) do
   thumbnail_width nil
   thumbnail_height nil
   extension "mp4"
+  url do |attrs|
+    sequence(:url) { |n| Discourse.store.get_path_for("original", n + 1, attrs[:sha1], ".mp4") }
+  end
 end
 
 Fabricator(:secure_upload, from: :upload) do
@@ -107,4 +110,13 @@ end
 Fabricator(:upload_reference) do
   target
   upload
+end
+
+Fabricator(:optimized_video_upload, from: :upload) do
+  original_filename "video_converted.mp4"
+  filesize 1024
+  extension "mp4"
+  url do |attrs|
+    sequence(:url) { |n| "//bucket.s3.region.amazonaws.com/original/1X/#{attrs[:sha1]}.mp4" }
+  end
 end

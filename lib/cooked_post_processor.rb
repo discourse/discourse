@@ -43,6 +43,7 @@ class CookedPostProcessor
       remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
       post_process_images
+      post_process_videos
       add_blocked_hotlinked_media_placeholders
       post_process_quotes
       optimize_urls
@@ -348,7 +349,7 @@ class CookedPostProcessor
 
     %w[src].each do |selector|
       @doc
-        .css("img[#{selector}]")
+        .css("img[#{selector}], video[#{selector}]")
         .each do |img|
           custom_emoji = img["class"]&.include?("emoji-custom") && Emoji.custom?(img["title"])
           img[selector] = UrlHelper.cook_url(
@@ -390,6 +391,48 @@ class CookedPostProcessor
     extract_images.each do |img|
       still_an_image = process_hotlinked_image(img)
       convert_to_link!(img) if still_an_image
+    end
+  end
+
+  def post_process_videos
+    changes_made = false
+
+    begin
+      @doc
+        .css(".video-placeholder-container")
+        .each do |container|
+          src = container["data-video-src"]
+          next if src.blank?
+
+          # Look for optimized video
+          upload = Upload.get_from_url(src)
+          if upload && optimized_video = OptimizedVideo.find_by(upload_id: upload.id)
+            optimized_url = optimized_video.optimized_upload.url
+            # Only update if the URL is different
+            if container["data-video-src"] != optimized_url
+              container["data-original-video-src"] = container["data-video-src"] unless container[
+                "data-original-video-src"
+              ]
+              container["data-video-src"] = optimized_url
+              changes_made = true
+            end
+            # Ensure we maintain reference to original upload
+            @post.link_post_uploads(fragments: @doc)
+          end
+        end
+
+      # Update the post's cooked content if changes were made
+      if changes_made
+        new_cooked = @doc.to_html
+        @post.cooked = new_cooked
+        if !@post.save
+          Rails.logger.error("Failed to save post: #{@post.errors.full_messages.join(", ")}")
+        end
+      end
+    rescue => e
+      Rails.logger.error("Error in post_process_videos: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      raise
     end
   end
 
