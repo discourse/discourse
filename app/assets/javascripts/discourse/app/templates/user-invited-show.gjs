@@ -70,6 +70,7 @@ export default RouteTemplate(
                   @icon="xmark"
                   @action={{@controller.destroyAllExpired}}
                   @label="user.invited.remove_all"
+                  class="bulk-remove-expired"
                 />
               {{/if}}
 
