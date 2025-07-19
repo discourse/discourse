@@ -5,7 +5,7 @@ import Topics from "discourse/components/discovery/topics";
 
 export default RouteTemplate(
   <template>
-    <Layout @model={{@controller.model}}>
+    <Layout @model={{@controller.model}} @listClass="--filter --topic-list">
       <:navigation>
         <FilterNavigation
           @queryString={{@controller.q}}

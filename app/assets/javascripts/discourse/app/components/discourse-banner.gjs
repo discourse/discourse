@@ -71,8 +71,8 @@ export default class DiscourseBanner extends Component {
   }
 
   <template>
-    <div>
-      {{#if this.visible}}
+    {{#if this.visible}}
+      <div class="container">
         <div class="row">
           <div id="banner">
             <div class="floated-buttons">
@@ -103,7 +103,7 @@ export default class DiscourseBanner extends Component {
             />
           </div>
         </div>
-      {{/if}}
-    </div>
+      </div>
+    {{/if}}
   </template>
 }
