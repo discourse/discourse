@@ -328,7 +328,7 @@ export default class DAutocompleteModifier extends Modifier {
             this.componentInstance = componentInstance;
           },
         },
-        modalForMobile: true,
+        modalForMobile: false,
         onClose: () => {
           this.expanded = false;
           this.options.onClose?.();
