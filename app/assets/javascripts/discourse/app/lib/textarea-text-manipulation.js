@@ -903,7 +903,12 @@ export default class TextareaTextManipulation {
 
   autocomplete(options) {
     if (this.siteSettings.floatkit_autocomplete_composer) {
-      this._setupAutocomplete(options);
+      return DAutocompleteModifier.setupAutocomplete(
+        getOwnerWithFallback(this),
+        this.textarea,
+        this.autocompleteHandler,
+        options
+      );
     } else {
       // @ts-ignore
       this.$textarea.autocomplete(
@@ -912,20 +917,6 @@ export default class TextareaTextManipulation {
           : options
       );
     }
-  }
-
-  _setupAutocomplete(options) {
-    const modifier = new DAutocompleteModifier(getOwnerWithFallback(this), {
-      named: {},
-      positional: [],
-    });
-
-    const modifierOptions = {
-      ...options,
-      textHandler: this.autocompleteHandler,
-    };
-
-    modifier.modify(this.textarea, [modifierOptions]);
   }
 }
 

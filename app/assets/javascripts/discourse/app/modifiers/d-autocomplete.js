@@ -23,6 +23,29 @@ import { INPUT_DELAY } from "discourse/lib/environment";
  * @param {boolean} [autoSelectFirstSuggestion=true] - Auto-select first result
  */
 export default class DAutocompleteModifier extends Modifier {
+  /**
+   * Static helper function to set up autocomplete on any element
+   *
+   * @param {Object} owner - Ember owner
+   * @param {HTMLElement} element - The element to modify with autocomplete functionality
+   * @param {Object} autocompleteHandler - Handler for text operations
+   * @param {Object} options - Autocomplete options
+   */
+  static setupAutocomplete(owner, element, autocompleteHandler, options) {
+    const modifier = new DAutocompleteModifier(owner, {
+      named: {},
+      positional: [],
+    });
+
+    const modifierOptions = {
+      ...options,
+      textHandler: autocompleteHandler,
+    };
+
+    modifier.modify(element, [modifierOptions]);
+    return modifier;
+  }
+
   @service menu;
 
   @tracked expanded = false;
