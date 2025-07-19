@@ -173,7 +173,6 @@ export default class DAutocompleteModifier extends Modifier {
   cleanup() {
     cancel(this.debouncedSearch);
     this.searchPromise?.cancel?.();
-    // The menu service will handle cleanup automatically
     if (this.targetElement) {
       this.targetElement.removeEventListener("keyup", this.handleKeyUp);
       this.targetElement.removeEventListener("keydown", this.handleKeyDown);
@@ -234,6 +233,10 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   async performSearch(term) {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     // Skip if same term (basic caching)
     if (this.previousTerm === term && !this.options.forceRefresh) {
       return;
@@ -262,19 +265,29 @@ export default class DAutocompleteModifier extends Modifier {
       this.searchPromise = this.options.dataSource(term);
       const results = await this.searchPromise;
 
-      if (results === "skip" || results === "__CANCELLED") {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        results === "skip" ||
+        results === "__CANCELLED"
+      ) {
         return;
       }
 
       await this.updateResults(results || []);
-    } catch (error) {
-      if (error.name !== "AbortError") {
+    } catch (e) {
+      if (e.name !== "AbortError") {
         this.results = [];
         await this.closeAutocomplete();
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(e);
       }
     } finally {
-      this.isLoading = false;
-      this.searchPromise = null;
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.isLoading = false;
+        this.searchPromise = null;
+      }
     }
   }
 
@@ -323,12 +336,14 @@ export default class DAutocompleteModifier extends Modifier {
       };
 
       this.menuInstance = await this.menu.show(virtualElement, menuOptions);
+
       this.expanded = true;
 
       // Call onRender callback if provided
       this.options.onRender?.(this.results);
-    } catch {
-      // Error rendering autocomplete
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
     }
   }
 
@@ -496,8 +511,9 @@ export default class DAutocompleteModifier extends Modifier {
           x: textareaRect.left + relativeCoords.left,
           y: textareaRect.top + relativeCoords.top,
         };
-      } catch {
-        // Fall through to fallback
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
       }
     }
 
