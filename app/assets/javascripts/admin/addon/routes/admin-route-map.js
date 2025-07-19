@@ -238,15 +238,12 @@ export default function () {
         });
 
         this.route("about");
-        this.route(
-          "loginAndAuthentication",
-          { path: "/login-and-authentication" },
-          function () {
-            this.route("settings", {
-              path: "/",
-            });
-          }
-        );
+        this.route("login", { path: "/login-and-authentication" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+          this.route("authenticators");
+        });
         this.route("content", function () {
           this.route("categoriesAndTags", { path: "/" });
           this.route("settings");
