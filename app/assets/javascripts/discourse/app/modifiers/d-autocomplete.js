@@ -8,6 +8,8 @@ import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 
+export const CANCELLED_STATUS = "__CANCELLED";
+
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
  * Preserves exact CSS structure for backward compatibility
@@ -67,7 +69,12 @@ export default class DAutocompleteModifier extends Modifier {
   TRIGGER_CHAR_RELATIVE_OFFSET = 9;
   VERTICAL_RELATIVE_OFFSET = 10;
 
-  handleKeyUp = (event) => {
+  constructor(owner, args) {
+    super(owner, args);
+    registerDestructor(this, (instance) => instance.cleanup());
+  }
+
+  handleKeyUp(event) {
     // Skip if modifier keys are pressed
     if (this.hasModifierKey(event)) {
       return;
@@ -88,9 +95,9 @@ export default class DAutocompleteModifier extends Modifier {
     } else {
       this.performAutocomplete(event);
     }
-  };
+  }
 
-  handleKeyDown = async (event) => {
+  async handleKeyDown(event) {
     // Handle navigation when autocomplete is open
     if (this.expanded) {
       switch (event.key) {
@@ -135,29 +142,24 @@ export default class DAutocompleteModifier extends Modifier {
         await this.handleBackspace(event);
       }
     }
-  };
+  }
 
-  handlePaste = (event) => {
+  handlePaste(event) {
     // Trigger autocomplete check after paste
     setTimeout(() => {
       this.performAutocomplete(event);
     }, 50);
-  };
+  }
 
-  handleElementClick = (event) => {
+  handleElementClick(event) {
     // Stop propagation to prevent global click handler from closing
     event.stopPropagation();
-  };
+  }
 
-  handleGlobalClick = async () => {
+  async handleGlobalClick() {
     if (this.expanded) {
       await this.closeAutocomplete();
     }
-  };
-
-  constructor(owner, args) {
-    super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup());
   }
 
   hasModifierKey(event) {
@@ -277,7 +279,7 @@ export default class DAutocompleteModifier extends Modifier {
         this.isDestroying ||
         this.isDestroyed ||
         results === "skip" ||
-        results === "__CANCELLED"
+        results === CANCELLED_STATUS
       ) {
         return;
       }
