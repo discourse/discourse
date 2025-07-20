@@ -135,15 +135,12 @@ export default class DAutocompleteModifier extends Modifier {
           break;
         case "Backspace":
           // Handle backspace to potentially reopen autocomplete
-          // Skip if modifier keys are pressed (e.g., CMD+Backspace for deletion)
-          if (!this.hasModifierKey(event)) {
-            return;
-          }
           await this.handleBackspace(event);
           break;
       }
     } else {
-      // Handle backspace when closed to potentially reopen
+      // Handle backspace when closed to potentially reopen,
+      // skip if modifier keys are pressed - this prevents autocomplete from opening on full deletion
       if (event.key === "Backspace" && !this.hasModifierKey(event)) {
         await this.handleBackspace(event);
       }
