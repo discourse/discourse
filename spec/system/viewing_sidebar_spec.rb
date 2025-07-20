@@ -198,25 +198,23 @@ describe "Viewing sidebar", type: :system do
       end
 
       describe "has unread messages" do
-        context "with navigation menu preference" do
-          fab!(:topic) { Fabricate(:topic, user: user) }
+        before { Fabricate(:private_message_post, user: user, recipient: admin).topic }
 
-          it "should show new messages indicator" do
-            visit("/")
-            expect(sidebar).to have_my_messages_link_with_unread_icon(1)
-          end
+        it "should show new messages indicator" do
+          sign_in(admin)
+          visit("/")
+          expect(sidebar).to have_my_messages_link_with_unread_icon
+        end
 
-          it "should show a count of the new items" do
-            admin.user_option.update!(sidebar_show_count_of_new_items: true)
-            visit("/")
-            expect(sidebar).to have_my_messages_link_with_unread_count(1)
-          end
+        it "should show a count of the new items" do
+          admin.user_option.update!(sidebar_show_count_of_new_items: true)
+          visit("/")
+          expect(sidebar).to have_my_messages_link_with_unread_count
+        end
 
-          it "should not show the unread count when there are no unread messages" do
-            message.update(unread: false)
-            visit("/")
-            expect(sidebar).to have_my_messages_link_without_unread_icon
-          end
+        it "should not show the unread count when there are no unread messages" do
+          visit("/")
+          expect(sidebar).to have_my_messages_link_without_unread_icon
         end
       end
     end

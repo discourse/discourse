@@ -37,14 +37,16 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
       inboxFilter: "user",
     });
     const groupMsgsCount = this.currentUser.groupsWithMessages?.reduce(
-      (count, { name }) => {
-        const newGroupMsgs = this._lookupCount("new", {
+      (count, group) => {
+        const newGroupMsgs = this._lookupCount({
+          type: "new",
           inboxFilter: "group",
-          groupName: name,
+          groupName: group.name,
         });
-        const unreadGroupMsgs = this._lookupCount("unread", {
+        const unreadGroupMsgs = this._lookupCount({
+          type: "unread",
           inboxFilter: "group",
-          groupName: name,
+          groupName: group.name,
         });
 
         return count + newGroupMsgs + unreadGroupMsgs;
@@ -64,7 +66,7 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get showCount() {
-    return !this.currentUser?.sidebarShowCountOfNewItems;
+    return this.currentUser?.sidebarShowCountOfNewItems;
   }
 
   get badgeText() {
@@ -88,7 +90,7 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get suffixValue() {
-    if (!this.showCount) {
+    if (!this.showCount && this.totalCount > 0) {
       return "circle";
     }
   }
