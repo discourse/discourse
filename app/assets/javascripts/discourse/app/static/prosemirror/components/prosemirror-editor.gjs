@@ -65,7 +65,6 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @extends {Component<ProsemirrorEditorSignature>}
  */
 export default class ProsemirrorEditor extends Component {
-  @service siteSettings;
   @service session;
   @service dialog;
   @service menu;
