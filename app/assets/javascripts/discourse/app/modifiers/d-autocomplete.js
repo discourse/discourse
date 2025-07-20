@@ -74,6 +74,7 @@ export default class DAutocompleteModifier extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
+  @action
   handleKeyUp(event) {
     // Skip if modifier keys are pressed
     if (this.hasModifierKey(event)) {
@@ -93,10 +94,15 @@ export default class DAutocompleteModifier extends Modifier {
         INPUT_DELAY
       );
     } else {
-      this.performAutocomplete(event);
+      // Handle potential async errors without blocking the UI
+      this.performAutocomplete(event).catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error("[autocomplete] handleKeyup: ", e);
+      });
     }
   }
 
+  @action
   async handleKeyDown(event) {
     // Handle navigation when autocomplete is open
     if (this.expanded) {
@@ -129,7 +135,7 @@ export default class DAutocompleteModifier extends Modifier {
           break;
         case "Backspace":
           // Handle backspace to potentially reopen autocomplete
-          // Skip if modifier keys are pressed (e.g., CMD+Backspace for line deletion)
+          // Skip if modifier keys are pressed (e.g., CMD+Backspace for deletion)
           if (!this.hasModifierKey(event)) {
             return;
           }
@@ -144,11 +150,17 @@ export default class DAutocompleteModifier extends Modifier {
     }
   }
 
-  handlePaste(event) {
-    // Trigger autocomplete check after paste
-    setTimeout(() => {
-      this.performAutocomplete(event);
-    }, 50);
+  @action
+  async handlePaste(event) {
+    // Trigger autocomplete check after paste with proper async handling
+    try {
+      // Use requestAnimationFrame for better performance than setTimeout - less flickering
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await this.performAutocomplete(event);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] handlePaste: ", e);
+    }
   }
 
   handleElementClick(event) {
@@ -156,9 +168,15 @@ export default class DAutocompleteModifier extends Modifier {
     event.stopPropagation();
   }
 
+  @action
   async handleGlobalClick() {
-    if (this.expanded) {
-      await this.closeAutocomplete();
+    try {
+      if (this.expanded) {
+        await this.closeAutocomplete();
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] handleGlobalClick: ", e);
     }
   }
 
@@ -180,6 +198,7 @@ export default class DAutocompleteModifier extends Modifier {
     document.addEventListener("click", this.handleGlobalClick);
   }
 
+  @action
   cleanup() {
     cancel(this.debouncedSearch);
     this.searchPromise?.cancel?.();
@@ -233,12 +252,17 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   async handleBackspace() {
-    if (this.completeStart === null && this.options.key) {
-      const position = await this.guessCompletePosition({ backSpace: true });
-      if (position.completeStart !== null) {
-        this.completeStart = position.completeStart;
-        await this.performAutocomplete();
+    try {
+      if (this.completeStart === null && this.options.key) {
+        const position = await this.guessCompletePosition({ backSpace: true });
+        if (position.completeStart !== null) {
+          this.completeStart = position.completeStart;
+          await this.performAutocomplete();
+        }
       }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] handleBackspace: ", e);
     }
   }
 
@@ -286,12 +310,14 @@ export default class DAutocompleteModifier extends Modifier {
 
       await this.updateResults(results || []);
     } catch (e) {
-      if (e.name !== "AbortError") {
-        this.results = [];
-        await this.closeAutocomplete();
+      if (e.name === "AbortError") {
+        // Search was cancelled, this is expected behavior
+        return;
       } else {
         // eslint-disable-next-line no-console
-        console.error(e);
+        console.error("[autocomplete] updateResults: ", e);
+        this.results = [];
+        await this.closeAutocomplete();
       }
     } finally {
       if (!this.isDestroying && !this.isDestroyed) {
@@ -353,7 +379,7 @@ export default class DAutocompleteModifier extends Modifier {
       this.options.onRender?.(this.results);
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.error(e);
+      console.error("[autocomplete] renderAutocomplete: ", e);
     }
   }
 
@@ -378,31 +404,42 @@ export default class DAutocompleteModifier extends Modifier {
 
   @action
   async moveSelection(direction) {
-    if (this.results.length === 0) {
-      return;
-    }
+    try {
+      if (this.results.length === 0) {
+        return;
+      }
 
-    // Calculate new selectedIndex
-    const newIndex = Math.max(
-      0,
-      Math.min(this.results.length - 1, this.selectedIndex + direction)
-    );
+      // Calculate new selectedIndex
+      this.selectedIndex = Math.max(
+        0,
+        Math.min(this.results.length - 1, this.selectedIndex + direction)
+      );
 
-    this.selectedIndex = newIndex;
-
-    if (this.componentInstance && this.componentInstance.updateSelectedIndex) {
-      this.componentInstance.updateSelectedIndex(this.selectedIndex);
+      if (
+        this.componentInstance &&
+        this.componentInstance.updateSelectedIndex
+      ) {
+        this.componentInstance.updateSelectedIndex(this.selectedIndex);
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] moveSelection: ", e);
     }
   }
 
   @action
   async selectResult(result, event) {
-    await this.completeTextareaTerm(result, event);
-    await this.closeAutocomplete();
+    try {
+      await this.completeTextareaTerm(result, event);
+      await this.closeAutocomplete();
 
-    // Clear any cached search state to prevent showing stale results
-    this.previousTerm = null;
-    this.searchTerm = "";
+      // Clear any cached search state to prevent showing stale results
+      this.previousTerm = null;
+      this.searchTerm = "";
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] selectResult: ", e);
+    }
   }
 
   @action
@@ -523,7 +560,7 @@ export default class DAutocompleteModifier extends Modifier {
         };
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.error(e);
+        console.error("[autocomplete] getAbsoluteCaretCoords: ", e);
       }
     }
 
