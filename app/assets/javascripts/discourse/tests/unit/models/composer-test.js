@@ -469,6 +469,8 @@ module("Unit | Model | composer", function (hooks) {
       });
     });
     const composer = createComposer.call(this, {});
+    composer.currentUser = User.current();
+    composer.currentUser.set("user_option.composition_mode", 0);
 
     await composer.open({
       action: CREATE_TOPIC,
