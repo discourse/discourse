@@ -62,22 +62,24 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     assert
       .dom(".filter-tip__button")
       .exists({ count: 3 }, "shows tips on focus");
-    assert.dom(".filter-tip__button.selected").doesNotExist("no selection yet");
+    assert
+      .dom(".filter-tip__button.filter-tip__selected")
+      .doesNotExist("no selection yet");
     assert.dom("#filter-input").hasValue("");
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
-      .dom(".filter-tip__button.selected .filter-tip__name")
+      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
       .hasText("category:");
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
-      .dom(".filter-tip__button.selected .filter-tip__name")
+      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
       .hasText("tag:");
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowUp");
     assert
-      .dom(".filter-tip__button.selected .filter-tip__name")
+      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
       .hasText("category:");
   });
 
@@ -146,7 +148,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
-      .dom(".filter-tip__button.selected .filter-tip__name")
+      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
       .hasText("tag:ember");
 
     await triggerKeyEvent("#filter-input", "keydown", "Enter");
