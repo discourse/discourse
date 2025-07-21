@@ -4,8 +4,13 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class UserPrivateMessages extends DiscourseRoute {
   @service composer;
+  @service pmTopicTrackingState;
 
   templateName = "user/messages";
+
+  afterModel() {
+    this.pmTopicTrackingState.startTracking();
+  }
 
   @action
   triggerRefresh() {
