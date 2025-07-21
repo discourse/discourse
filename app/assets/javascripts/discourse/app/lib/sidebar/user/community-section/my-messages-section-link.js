@@ -70,15 +70,7 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get badgeText() {
-    if (!this.showCount) {
-      return;
-    }
-
-    if (this.currentUser.new_new_view_enabled) {
-      return this.totalCount;
-    } else {
-      return i18n("sidebar.sections.community.links.my_messages.content");
-    }
+    return this.showCount && this.totalCount;
   }
 
   get suffixCSSClass() {
