@@ -141,7 +141,9 @@ module TestSetup
     SiteIconManager.disable
     WordWatcher.disable_cache
 
+    Theme.expire_site_setting_cache!
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
