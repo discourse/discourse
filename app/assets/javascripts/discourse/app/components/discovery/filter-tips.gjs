@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { cancel, debounce, later } from "@ember/runloop";
+import { cancel, debounce, later, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -511,14 +511,14 @@ export default class FilterTips extends Component {
 
     this.selectedIndex = -1;
 
-    const updatedValue = this.inputElement.value;
-    this.inputElement.focus();
-    this.inputElement.setSelectionRange(
-      updatedValue.length,
-      updatedValue.length
-    );
-
-    this.updateResults();
+    next(() => {
+      this.inputElement.focus();
+      this.inputElement.setSelectionRange(
+        this.currentInputValue.length,
+        this.currentInputValue.length
+      );
+      this.updateResults();
+    });
   }
 
   updateValue(value) {
