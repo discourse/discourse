@@ -69,6 +69,12 @@ RSpec.describe UserOption do
       user = Fabricate(:user)
       expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
     end
+
+    it "should correctly set composition_mode when `default_composition_mode` site setting is set" do
+      SiteSetting.default_composition_mode = UserOption.composition_mode_types[:classic]
+      user = Fabricate(:user)
+      expect(user.user_option.composition_mode).to eq(UserOption.composition_mode_types[:classic])
+    end
   end
 
   describe "site settings" do
