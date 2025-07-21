@@ -5709,7 +5709,7 @@ en:
           header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         color_palettes:
           title: "Color palettes"
-          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
+          header_description: "These palettes control the colors used throughout your community. When you make a palette user selectable, members can choose their preferred colors from their preferences."
         emoji:
           title: "Emoji"
           header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
