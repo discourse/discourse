@@ -27,15 +27,16 @@ class AddFilterLinkToSidebar < ActiveRecord::Migration[7.0]
     SQL
 
     if !exists
-      position = execute(<<~SQL).first&.fetch("count") || 0
-        SELECT COUNT(*) FROM sidebar_section_links WHERE sidebar_section_id = #{community_section_id}
+      position = execute(<<~SQL).first&.fetch("pos") || 0
+        SELECT MAX(position) pos FROM sidebar_section_links
+        WHERE sidebar_section_id = #{community_section_id}
+        AND user_id = -1
       SQL
       position += 1
       execute(<<~SQL)
         INSERT INTO sidebar_section_links
           (user_id, linkable_id, linkable_type, sidebar_section_id, position, created_at, updated_at)
-        VALUES
-          (-1, #{filter_url_id}, 'SidebarUrl', #{community_section_id}, #{position}, NOW(), NOW())
+        VALUES (-1, #{filter_url_id}, 'SidebarUrl', #{community_section_id}, #{position.to_i}, NOW(), NOW())
       SQL
     end
   end
