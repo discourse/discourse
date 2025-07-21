@@ -28,7 +28,7 @@ describe "Uploading files in the composer", type: :system do
 
     file_path_1 = file_from_fixtures("huge.jpg", "images").path
     cdp.with_slow_upload do
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
       expect(composer).to have_in_progress_uploads
       find("#cancel-file-upload").click
 
@@ -49,7 +49,7 @@ describe "Uploading files in the composer", type: :system do
       topic.fill_in_composer_title("Video upload test")
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
@@ -66,7 +66,7 @@ describe "Uploading files in the composer", type: :system do
       topic.fill_in_composer_title("Video upload test")
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
@@ -100,7 +100,7 @@ describe "Uploading files in the composer", type: :system do
       JS
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
@@ -132,7 +132,7 @@ describe "Uploading files in the composer", type: :system do
       JS
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")

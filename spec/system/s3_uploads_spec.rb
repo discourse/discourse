@@ -41,7 +41,7 @@ describe "Uploading files in the composer to S3", type: :system do
         topic.open_new_topic
 
         file_path = file_from_fixtures("logo.png", "images").path
-        attach_file(file_path) { composer.click_toolbar_button("upload") }
+        attach_file("file-uploader", file_path, make_visible: true)
 
         expect(page).to have_no_css("#file-uploading")
         expect(composer.preview).to have_css(".image-wrapper")
