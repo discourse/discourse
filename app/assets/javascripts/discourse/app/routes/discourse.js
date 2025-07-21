@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { seenUser } from "discourse/lib/user-presence";
 
 export default class DiscourseRoute extends Route {
+  @service currentUser;
   @service pmTopicTrackingState;
 
   willTransition() {
@@ -12,7 +13,9 @@ export default class DiscourseRoute extends Route {
   }
 
   afterModel() {
-    this.pmTopicTrackingState.startTracking();
+    if (this.currentUser?.can_send_private_messages) {
+      this.pmTopicTrackingState.startTracking();
+    }
   }
 
   _refreshTitleOnce() {
