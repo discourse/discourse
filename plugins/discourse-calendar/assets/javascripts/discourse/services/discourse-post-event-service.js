@@ -8,6 +8,8 @@ export default class DiscoursePostEventService extends Service {
     if (this.siteSettings.include_expired_events_on_calendar) {
       params.include_expired = true;
     }
+
+    params.include_details = true;
     const events = await this.discoursePostEventApi.events(params);
     return await events;
   }

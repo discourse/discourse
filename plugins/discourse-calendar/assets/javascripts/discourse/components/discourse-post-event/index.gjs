@@ -100,7 +100,14 @@ export default class DiscoursePostEvent extends Component {
             </div>
             <div class="event-info">
               <span class="name">
-                {{replaceEmoji this.eventName}}
+                {{#if @linkToPost}}
+                  <a
+                    href={{@event.post.url}}
+                    rel="noopener noreferrer"
+                  >{{replaceEmoji this.eventName}}</a>
+                {{else}}
+                  {{replaceEmoji this.eventName}}
+                {{/if}}
               </span>
               <div class="status-and-creators">
                 <PluginOutlet

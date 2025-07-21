@@ -30,16 +30,19 @@ $show-interested: inherit;
   }
 
   .discourse-post-event-widget {
-    box-shadow: 0 0 0 3px var(--primary-100);
-    border: 1px solid var(--primary-300);
     display: flex;
     background: var(--secondary);
-    margin: 5px 0;
     flex-direction: column;
     flex: 1 0 auto;
     max-width: calc(100% - 2px - 6px);
     box-sizing: border-box;
-    border-radius: var(--d-border-radius);
+
+    .cooked & {
+      box-shadow: 0 0 0 3px var(--primary-100);
+      border: 1px solid var(--primary-300);
+      border-radius: var(--d-border-radius);
+      margin: 5px 0;
+    }
 
     section:last-child {
       padding-bottom: 0.75em;
@@ -322,6 +325,7 @@ $show-interested: inherit;
 
         .avatar {
           width: 1.5rem;
+          height: 1.5rem;
         }
 
         .avatar-flair {

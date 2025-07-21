@@ -1,161 +1,5 @@
-.discourse-calendar-wrap {
-  margin: 0.5em 0;
-  border: 5px solid var(--primary-low);
-}
-
-.category-calendar .calendar {
-  overflow-y: scroll;
-}
-
 .before-topic-list-body-outlet.category-calendar {
   display: table-caption;
-}
-
-.calendar.fc {
-  height: 645px; // Must be fixed to prevent height change on load
-  border: 0;
-
-  &.fc-unthemed {
-    tbody,
-    thead,
-    tr {
-      border: none;
-
-      td.fc-widget-content,
-      td.fc-widget-header {
-        border-left: 0;
-
-        &:last-child {
-          border-right: 0;
-        }
-      }
-    }
-    overflow: hidden;
-
-    .fc-scroller {
-      height: 560px !important;
-      padding-bottom: 5px;
-    }
-
-    .fc-basic-view .fc-day-top .fc-day-number {
-      float: left;
-    }
-
-    .fc-bg td.fc-today {
-      background-color: var(--highlight-medium);
-      border-style: solid;
-    }
-
-    .fc-month-view .fc-widget-content,
-    .fc-basicWeek-view .fc-widget-content,
-    .fc-head-container {
-      padding: 0;
-    }
-
-    .fc-bg tbody {
-      border-width: 0;
-    }
-
-    .fc-header-toolbar {
-      padding: 0.5em 0.5em 0 0.5em;
-    }
-
-    .fc-title {
-      @include ellipsis;
-      display: block;
-    }
-
-    .fc-event-container {
-      padding: 3px;
-    }
-
-    .fc-widget-header span {
-      padding: 3px 3px 3px 0.5em;
-    }
-
-    .fc-center {
-      display: none;
-    }
-
-    .fc-button {
-      border-radius: 0;
-      box-shadow: none;
-      background: var(--primary-low);
-      text-transform: capitalize;
-      color: var(--primary);
-      text-shadow: none;
-      border: none;
-      padding: 6px 12px;
-
-      &:hover {
-        background: var(--primary-medium);
-        color: var(--secondary);
-      }
-
-      &.fc-state-active {
-        background: var(--tertiary);
-        color: var(--secondary);
-      }
-    }
-
-    .fc-button-group {
-      // margin-right: 0;
-      .fc-button {
-        margin: 0;
-      }
-    }
-
-    .fc-divider,
-    .fc-list-empty,
-    .fc-list-heading td,
-    .fc-popover .fc-header {
-      background: var(--primary-low);
-    }
-
-    .fc-content,
-    .fc-divider,
-    .fc-list-heading td,
-    .fc-list-view,
-    .fc-popover,
-    .fc-row,
-    tbody,
-    td,
-    th,
-    thead {
-      border-color: var(--primary-low);
-    }
-  }
-
-  .fc-event,
-  .fc-event-dot {
-    background-color: var(--tertiary);
-    border: 1px solid transparent;
-
-    .fc-time {
-      display: none;
-    }
-
-    &.grouped-event {
-      background-color: var(--primary-low);
-      border: 1px solid var(--primary-low-mid);
-      color: var(--primary);
-
-      .emoji {
-        margin-right: 0.25em;
-      }
-    }
-  }
-
-  .fc-left {
-    .fc-button-group:first-child {
-      margin-left: 0;
-    }
-  }
-
-  .fc-list-item-add-to-calendar {
-    color: var(--tertiary);
-    font-size: var(--font-down-1);
-  }
 }
 
 a.holiday {
@@ -164,33 +8,6 @@ a.holiday {
 
 .combo-box.user-timezone {
   min-width: 15em;
-}
-
-.discourse-calendar-header {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  padding: 0.5em;
-  border-bottom: 1px solid var(--primary-low);
-  background: var(--primary-very-low);
-  min-height: 60px;
-
-  .discourse-calendar-timezone-picker {
-    font-size: 16px;
-    margin-bottom: 0;
-    max-width: 50vw;
-  }
-
-  h2.discourse-calendar-title {
-    margin: 0 !important;
-  }
-
-  .title {
-    font-weight: 700;
-    text-transform: capitalize;
-  }
 }
 
 .group-timezones {
@@ -404,30 +221,38 @@ a.holiday {
   height: 15px;
 }
 
-#event-popover {
-  background-color: var(--tertiary-very-low);
-  z-index: z("modal", "tooltip");
-  box-shadow: var(--shadow-dropdown);
-  border-radius: 4px;
-  padding: 0.5em;
-  max-width: min(75vw, 400px);
+.discourse-post-event-upcoming-events {
+  height: 100%;
+}
 
-  [data-popper-arrow],
-  [data-popper-arrow]::before {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: inherit;
-    top: -2px;
+.discourse-calendar-wrap {
+  border: 0;
+  margin-inline: 3px;
+  box-shadow:
+    0 0 0 1px var(--primary-300),
+    0 0 0 3px var(--primary-100);
+
+  // Makes the outer drop shadow radius equal to --d-border-radius
+  border-radius: calc(var(--d-border-radius) - (3px / 2));
+
+  .fc th {
+    font-weight: normal;
+    text-align: center;
   }
 
-  [data-popper-arrow] {
-    visibility: hidden;
+  tr.fc-list-event td {
+    padding: 0.25rem !important;
   }
 
-  [data-popper-arrow]::before {
-    visibility: visible;
-    content: "";
-    transform: rotate(45deg);
+  .fc td,
+  .fc th {
+    padding: 0 !important;
+  }
+
+  .post-calendar {
+    .fc .fc-toolbar.fc-header-toolbar {
+      margin: 0;
+      padding: 0.25rem;
+    }
   }
 }

@@ -1,26 +1,36 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { LinkTo } from "@ember/routing";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { Promise } from "rsvp";
+import moment from "moment";
 import getURL from "discourse/lib/get-url";
-import loadScript from "discourse/lib/load-script";
+import loadFullCalendar from "discourse/lib/load-full-calendar";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import { formatEventName } from "../helpers/format-event-name";
 import addRecurrentEvents from "../lib/add-recurrent-events";
 import fullCalendarDefaultOptions from "../lib/full-calendar-default-options";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
+import FullCalendar from "./full-calendar";
 
 export default class UpcomingEventsCalendar extends Component {
   @service currentUser;
   @service site;
   @service router;
+  @service capabilities;
+  @service siteSettings;
+
+  @tracked resolvedEvents;
 
   _calendar = null;
+
+  constructor() {
+    super(...arguments);
+
+    this.resolvedEvents = this.args.events
+      ? this.args.events
+      : this.args.controller.model;
+  }
 
   get displayFilters() {
     return this.currentUser && this.args.controller;
@@ -33,94 +43,76 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   @action
-  async renderCalendar() {
-    const siteSettings = this.site.siteSettings;
-    const isMobileView = this.site.mobileView;
+  async renderCalendar(calendarNode) {
+    const calendarModule = await loadFullCalendar();
 
-    const calendarNode = document.getElementById("upcoming-events-calendar");
-    if (!calendarNode) {
-      return;
+    let headerToolbar;
+
+    if (!this.capabilities.viewport.sm) {
+      headerToolbar = {
+        left: "title prev,next,today",
+        center: "allEvents,mineEvents timeGridWeek,timeGridDay,listNextYear",
+        right: "",
+      };
+    } else {
+      headerToolbar = {
+        left: "allEvents,mineEvents prev,next,today",
+        center: "title",
+        right: "timeGridWeek,timeGridDay,listNextYear",
+      };
     }
 
-    calendarNode.innerHTML = "";
-
-    await this._loadCalendar();
-
-    const view =
-      this.args.controller?.view || (isMobileView ? "listNextYear" : "month");
-
-    const fullCalendar = new window.FullCalendar.Calendar(calendarNode, {
+    this._calendar = new calendarModule.Calendar(calendarNode, {
       ...fullCalendarDefaultOptions(),
-      timeZone: this.currentUser?.user_option?.timezone || "local",
-      firstDay: 1,
-      height: "auto",
-      defaultView: view,
-      views: {
-        listNextYear: {
-          type: "list",
-          duration: { days: 365 },
-          buttonText: "list",
-          listDayFormat: {
-            month: "long",
-            year: "numeric",
-            day: "numeric",
-            weekday: "long",
-          },
-        },
-      },
-      header: {
-        left: "prev,next today",
-        center: "title",
-        right: "month,basicWeek,listNextYear",
-      },
-      datesRender: (info) => {
-        // this is renamed in FullCalendar v5 / v6 to datesSet
-        // in unit tests we skip
+
+      datesSet: (info) => {
         if (this.router?.transitionTo) {
           this.router.transitionTo({ queryParams: { view: info.view.type } });
         }
       },
-      eventPositioned: (info) => {
-        if (siteSettings.events_max_rows === 0) {
-          return;
-        }
-
-        let fcContent = info.el.querySelector(".fc-content");
-
-        if (!fcContent) {
-          return;
-        }
-
-        let computedStyle = window.getComputedStyle(fcContent);
-        let lineHeight = parseInt(computedStyle.lineHeight, 10);
-
-        if (lineHeight === 0) {
-          lineHeight = 20;
-        }
-        let maxHeight = lineHeight * siteSettings.events_max_rows;
-
-        if (fcContent) {
-          fcContent.style.maxHeight = `${maxHeight}px`;
-        }
-
-        let fcTitle = info.el.querySelector(".fc-title");
-        if (fcTitle) {
-          fcTitle.style.overflow = "hidden";
-          fcTitle.style.whiteSpace = "pre-wrap";
-        }
-        fullCalendar.updateSize();
-      },
+      headerToolbar,
     });
-    this._calendar = fullCalendar;
 
-    const tagsColorsMap = JSON.parse(siteSettings.map_events_to_color);
+    this._calendar.render();
+  }
 
-    const resolvedEvents = this.args.events
-      ? await this.args.events
-      : await this.args.controller.model;
-    const originalEventAndRecurrents = addRecurrentEvents(resolvedEvents);
+  get customButtons() {
+    if (
+      this.router.currentRouteName ===
+      "discourse-post-event-upcoming-events.index"
+    ) {
+      return {
+        mineEvents: {
+          text: i18n("discourse_post_event.upcoming_events.my_events"),
+          click: () => {
+            this.router.transitionTo(
+              "discourse-post-event-upcoming-events.mine"
+            );
+          },
+        },
+      };
+    } else if (
+      this.router.currentRouteName ===
+      "discourse-post-event-upcoming-events.mine"
+    ) {
+      return {
+        allEvents: {
+          text: i18n("discourse_post_event.upcoming_events.all_events"),
+          click: () => {
+            this.router.transitionTo(
+              "discourse-post-event-upcoming-events.index"
+            );
+          },
+        },
+      };
+    }
+  }
 
-    (originalEventAndRecurrents || []).forEach((event) => {
+  get events() {
+    const tagsColorsMap = JSON.parse(this.siteSettings.map_events_to_color);
+    const originalEventAndRecurrents = addRecurrentEvents(this.resolvedEvents);
+
+    return (originalEventAndRecurrents || []).map((event) => {
       const { startsAt, endsAt, post, categoryId } = event;
 
       let backgroundColor;
@@ -151,7 +143,8 @@ export default class UpcomingEventsCalendar extends Component {
         classNames = "fc-past-event";
       }
 
-      this._calendar.addEvent({
+      return {
+        extendedProps: { postEvent: event },
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
         end: endsAt || startsAt,
@@ -159,54 +152,66 @@ export default class UpcomingEventsCalendar extends Component {
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,
         classNames,
-      });
+      };
     });
-
-    this._calendar.render();
   }
 
-  _loadCalendar() {
-    return new Promise((resolve) => {
-      loadScript(
-        "/plugins/discourse-calendar/javascripts/fullcalendar-with-moment-timezone.min.js"
-      ).then(() => {
-        schedule("afterRender", () => {
-          if (this.isDestroying || this.isDestroyed) {
-            return;
-          }
+  get leftHeaderToolbar() {
+    let left = "";
 
-          resolve();
-        });
-      });
-    });
+    if (!this.capabilities.viewport.sm) {
+      left = `title ${this.customButtonName}`;
+    } else {
+      left += this.customButtonName;
+    }
+
+    if (!this.capabilities.viewport.sm) {
+      return left;
+    } else {
+      return `${left} prev,next,today`;
+    }
+  }
+
+  get customButtonName() {
+    if (
+      this.router.currentRouteName ===
+      "discourse-post-event-upcoming-events.index"
+    ) {
+      return "mineEvents";
+    } else if (
+      this.router.currentRouteName ===
+      "discourse-post-event-upcoming-events.mine"
+    ) {
+      return "allEvents";
+    }
+  }
+
+  get rightHeaderToolbar() {
+    if (!this.capabilities.viewport.sm) {
+      return "prev,next timeGridDay,timeGridWeek,dayGridMonth,listYear";
+    } else {
+      return "timeGridDay,timeGridWeek,dayGridMonth,listYear";
+    }
+  }
+
+  get centerHeaderToolbar() {
+    if (!this.capabilities.viewport.sm) {
+      return "";
+    } else {
+      return "title";
+    }
   }
 
   <template>
-    {{#if this.displayFilters}}
-      <ul class="events-filter nav nav-pills">
-        <li>
-          <LinkTo
-            @route="discourse-post-event-upcoming-events.index"
-            class="btn-small"
-          >
-            {{i18n "discourse_post_event.upcoming_events.all_events"}}
-          </LinkTo>
-        </li>
-        <li>
-          <LinkTo
-            @route="discourse-post-event-upcoming-events.mine"
-            class="btn-small"
-          >
-            {{i18n "discourse_post_event.upcoming_events.my_events"}}
-          </LinkTo>
-        </li>
-      </ul>
-    {{/if}}
-
-    <div
-      id="upcoming-events-calendar"
-      {{didInsert this.renderCalendar}}
-      {{willDestroy this.teardown}}
-    ></div>
+    <div id="upcoming-events-calendar">
+      <FullCalendar
+        @events={{this.events}}
+        @initialView={{@controller.view}}
+        @customButtons={{this.customButtons}}
+        @leftHeaderToolbar={{this.leftHeaderToolbar}}
+        @centerHeaderToolbar={{this.centerHeaderToolbar}}
+        @rightHeaderToolbar={{this.rightHeaderToolbar}}
+      />
+    </div>
   </template>
 }
