@@ -330,3 +330,11 @@
 =======
 >>>>>>> b6976c98fb (fix)
 }
+
+.container.list-container.--categories {
+  padding: 0 var(--list-container-categories-padding-x);
+}
+
+.container.list-container.--topic-list {
+  padding: 0 var(--list-container-topiclist-padding-x);
+}
