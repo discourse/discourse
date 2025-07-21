@@ -275,8 +275,9 @@ export default class PostEventBuilder extends Component {
       this.siteSettings
     );
 
-    let description = eventParams.description;
-    description = description ? `${description}\n` : "";
+    const description = eventParams.description
+      ? `${eventParams.description}\n`
+      : "";
     delete eventParams.description;
 
     const markdownParams = [];
