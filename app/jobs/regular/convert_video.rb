@@ -19,7 +19,7 @@ module Jobs
           Jobs.enqueue_in(RETRY_DELAY, :convert_video, args.merge(retry_count: retry_count + 1))
           return
         else
-          Rails.logger.error("Upload #{upload.id} URL remained blank after #{MAX_RETRIES} retries")
+          Rails.logger.error("Upload #{upload.id} URL remained blank after #{MAX_RETRIES} retries when optimizing video")
           return
         end
       end
