@@ -169,9 +169,6 @@ files:
     destination_path: plugins/patreon/server.yml
     label: patreon
 
-  - source_path: plugins/discourse-graphviz/config/locales/client.en.yml
-    destination_path: plugins/graphviz/client.yml
-    label: graphviz
   - source_path: plugins/discourse-graphviz/config/locales/server.en.yml
     destination_path: plugins/graphviz/server.yml
     label: graphviz
@@ -183,9 +180,6 @@ files:
     destination_path: plugins/rss-polling/server.yml
     label: rss-polling
 
-  - source_path: plugins/discourse-math/config/locales/client.en.yml
-    destination_path: plugins/math/client.yml
-    label: math
   - source_path: plugins/discourse-math/config/locales/server.en.yml
     destination_path: plugins/math/server.yml
     label: math
