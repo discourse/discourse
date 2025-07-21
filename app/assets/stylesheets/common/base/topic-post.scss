@@ -653,10 +653,6 @@ aside.quote {
   blockquote {
     margin-top: 0;
 
-    .cooked {
-      padding: 0;
-    }
-
     .expanded-quote {
       overflow: hidden;
 
@@ -1096,14 +1092,11 @@ kbd {
 // we assume blockquotes have their own margins, so all blockquotes
 // will remove margins from first (top) and last (bottom) child elements
 blockquote,
-blockquote .cooked {
+blockquote .quote-cooked {
   > *:first-child {
     margin-top: 0 !important;
   }
-}
 
-blockquote,
-blockquote .cooked {
   > *:last-child {
     margin-bottom: 0 !important;
   }
