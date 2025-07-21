@@ -37,16 +37,6 @@
         outline-offset: -2px;
       }
 
-      &:first-child {
-        border-top-left-radius: var(--d-border-radius);
-        border-top-right-radius: var(--d-border-radius);
-      }
-
-      &:last-child {
-        border-bottom-left-radius: var(--d-border-radius);
-        border-bottom-right-radius: var(--d-border-radius);
-      }
-
       .filter-tip__name {
         font-weight: 600;
         color: var(--primary);
