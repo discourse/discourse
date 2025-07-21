@@ -7,11 +7,12 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
+import User from "discourse/models/user";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
-import { currentUser } from "discourse/tests/helpers/qunit-helpers";
+import { currentUser, logIn } from "discourse/tests/helpers/qunit-helpers";
 
 function createComposer(opts = {}) {
   opts.user ??= currentUser();
@@ -29,6 +30,8 @@ module("Unit | Model | composer", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    logIn();
+
     this.siteSettings = getOwner(this).lookup("service:site-settings");
     this.keyValueStore = getOwner(this).lookup("service:key-value-store");
   });
@@ -486,16 +489,17 @@ module("Unit | Model | composer", function (hooks) {
 
   test("composerVersion is correct when using modern 'rich text' composer", async function (assert) {
     this.siteSettings.rich_editor = true;
-    this.currentUser.set("user_option.composition_mode", 1);
 
     const composer = createComposer.call(this, {});
+    composer.currentUser = User.current();
+    composer.currentUser.set("user_option.composition_mode", 1);
     assert.strictEqual(composer.composerVersion, 2);
   });
 
   test("composerVersion is correct when using 'classic' composer", async function (assert) {
-    this.currentUser.set("user_option.composition_mode", 0);
-
     const composer = createComposer.call(this, {});
+    composer.currentUser = User.current();
+    composer.currentUser.set("user_option.composition_mode", 0);
     assert.strictEqual(composer.composerVersion, 1);
   });
 });
