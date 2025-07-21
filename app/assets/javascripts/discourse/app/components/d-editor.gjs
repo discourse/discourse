@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { schedule, scheduleOnce } from "@ember/runloop";
+import { cancel , schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
@@ -198,7 +198,7 @@ export default class DEditor extends Component {
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
-    this._debounceSaveRichEditorPreference?.cancel();
+    cancel(this._debounceSaveRichEditorPreference);
 
     this._cachedCookFunction = null;
   }
