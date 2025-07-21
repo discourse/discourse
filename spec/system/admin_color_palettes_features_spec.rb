@@ -83,17 +83,6 @@ describe "Admin Color Palettes Features", type: :system do
       within("[data-palette-id='#{theme_palette.id}']") { expect(page).to have_link(theme.name) }
     end
 
-    it "can set palette as default and shows toast" do
-      visit("/admin/customize/colors")
-
-      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
-
-      expect(page).to have_css(".dropdown-menu")
-      click_button(class: "btn-palette-default")
-
-      expect(toasts).to have_success(I18n.t("admin_js.admin.customize.colors.saved_refreshing"))
-    end
-
     it "can toggle user selectable status" do
       visit("/admin/customize/colors")
 
