@@ -219,7 +219,7 @@ export default function setupTests(config) {
     // reports test boot failures to testem, so the browser doesn't hang forever
     window.Testem?.emit(
       "top-level-error",
-      event.reason,
+      String(event.reason),
       window.location.href,
       "0"
     );
