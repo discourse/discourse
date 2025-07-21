@@ -222,6 +222,12 @@ export default class AdminCustomizeColorsController extends Controller {
       didConfirm: () => {
         return scheme.destroy().then(() => {
           this.model.removeObject(scheme);
+
+          // remove from sorted schemes for immediate feedback
+          const index = this._initialSortedSchemes.findIndex(
+            (s) => (s.id || "builtin") === (scheme.id || "builtin")
+          );
+          this._initialSortedSchemes.splice(index, 1);
         });
       },
     });
