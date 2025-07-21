@@ -26,7 +26,7 @@ module Jobs
 
       adapter = VideoConversion::AdapterFactory.get_adapter(upload)
 
-      Rails.logger.error("Video conversion failed for upload #{upload.id}") unless adapter.convert
+      Rails.logger.error("Video conversion failed for upload #{upload.id}") if !adapter.convert
     end
   end
 end
