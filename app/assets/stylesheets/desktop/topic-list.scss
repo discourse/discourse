@@ -318,6 +318,7 @@
 .container.list-container {
   position: relative;
   padding: 0 var(--list-container-padding-x);
+<<<<<<< HEAD
 }
 
 .container.list-container.--categories {
@@ -326,4 +327,6 @@
 
 .container.list-container.--topic-list {
   padding: 0 var(--list-container-topiclist-padding-x);
+=======
+>>>>>>> b6976c98fb (fix)
 }
