@@ -26,6 +26,8 @@ export default class AdminCustomizeColorsController extends Controller {
     return this.defaultTheme?.color_scheme_id === scheme.id;
   };
 
+  _initialUserColorSchemeId = undefined;
+  _initialDefaultThemeColorSchemeId = null;
   _sortedOnce = false;
   _initialSortedSchemes = [];
 
@@ -37,9 +39,19 @@ export default class AdminCustomizeColorsController extends Controller {
     return this.model?.filterBy("is_base", true) || [];
   }
 
+  _captureInitialState() {
+    this._initialUserColorSchemeId = this.session.userColorSchemeId;
+    this._initialDefaultThemeColorSchemeId = this.defaultTheme?.color_scheme_id;
+  }
+
   get changedThemePreferences() {
+    // can't check against null, because the default scheme ID is null
+    if (this._initialUserColorSchemeId === undefined && this.defaultTheme) {
+      this._captureInitialState();
+    }
+
     const changedColors =
-      this.session.userColorSchemeId !== this.defaultTheme?.color_scheme_id;
+      this._initialUserColorSchemeId !== this._initialDefaultThemeColorSchemeId;
     const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
 
     return changedColors || changedTheme;
