@@ -173,7 +173,7 @@ export default class PostQuotedContent extends Component {
     >
       {{#if @wrapperElement}}
         {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
-        we need to handle the attributtes below in the existing wrapper received as @wrapperElement in this case }}
+      we need to handle the attributtes below in the existing wrapper received as @wrapperElement in this case }}
         {{elementClass
           (if this.isQuotedPostIgnored "ignored-user")
           target=@wrapperElement
@@ -254,6 +254,7 @@ export default class PostQuotedContent extends Component {
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
+                    @selectionBarrier={{false}}
                     @streamElement={{@streamElement}}
                   />
                 </div>
@@ -275,7 +276,15 @@ export default class PostQuotedContent extends Component {
               </:error>
             </AsyncContent>
           {{~else~}}
-            {{~@collapsedContent~}}
+            <PostCookedHtml
+              @post={{@post}}
+              @cooked={{@collapsedContent}}
+              @decoratorState={{@decoratorState}}
+              @extraDecorators={{this.extraDecorators}}
+              @highlightTerm={{@highlightTerm}}
+              @selectionBarrier={{false}}
+              @streamElement={{@streamElement}}
+            />
           {{~/if~}}
         {{~/unless~}}
       </blockquote>
