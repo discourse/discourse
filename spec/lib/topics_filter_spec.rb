@@ -910,7 +910,7 @@ RSpec.describe TopicsFilter do
       end
 
       it "should only return topics that are tagged with tag1 and tag2 but not tag3 when query string is `tags:tag1 tags:tag2 -tags:tag3`" do
-        topic_with_tag_and_tag2_and_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
+        _topic_with_tag_and_tag2_and_tag3 = Fabricate(:topic, tags: [tag, tag2, tag3])
 
         expect(
           TopicsFilter
@@ -1382,7 +1382,7 @@ RSpec.describe TopicsFilter do
       describe "when query string is `#{filter}-after:1`" do
         it "should only return topics with #{description} after 1 day ago" do
           freeze_time do
-            old_topic = Fabricate(:topic, column => 2.days.ago)
+            _old_topic = Fabricate(:topic, column => 2.days.ago)
             recent_topic = Fabricate(:topic, column => Time.zone.now)
 
             expect(
@@ -1416,7 +1416,7 @@ RSpec.describe TopicsFilter do
       describe "when query string is `#{filter}-after:0`" do
         it "should only return topics with #{description} after today" do
           freeze_time do
-            old_topic = Fabricate(:topic, column => 2.days.ago)
+            _old_topic = Fabricate(:topic, column => 2.days.ago)
             recent_topic = Fabricate(:topic, column => Time.zone.now)
 
             expect(
@@ -1689,6 +1689,17 @@ RSpec.describe TopicsFilter do
           end
         end
       end
+    end
+
+    it "performs AND search for multiple keywords" do
+      SearchIndexer.enable
+      post1 = Fabricate(:post, raw: "keyword1 keyword2")
+      _post2 = Fabricate(:post, raw: "keyword1")
+      _post3 = Fabricate(:post, raw: "keyword2")
+      guardian = Guardian.new(post1.user)
+      filter = TopicsFilter.new(guardian: guardian)
+      scope = filter.filter_from_query_string("keyword1 keyword2")
+      expect(scope.pluck(:id)).to eq([post1.topic_id])
     end
 
     describe "with a custom filter" do

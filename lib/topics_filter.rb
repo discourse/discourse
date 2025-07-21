@@ -89,6 +89,21 @@ class TopicsFilter
       end
     end
 
+    keywords =
+      query_string.split(/\s+/).reject { |word| word.include?(":") }.map(&:strip).reject(&:empty?)
+
+    if keywords.present? && keywords.join(" ").length >= SiteSetting.min_search_term_length
+      ts_query = Search.ts_query(term: keywords.join(" "))
+      @scope = @scope.where(<<~SQL)
+          topics.id IN (
+            SELECT topic_id
+            FROM post_search_data
+            JOIN posts ON posts.id = post_search_data.post_id
+            WHERE search_data @@ #{ts_query}
+          )
+        SQL
+    end
+
     @scope
   end
 
