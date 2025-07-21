@@ -26,6 +26,7 @@ import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -579,8 +580,9 @@ export default class DEditor extends Component {
       ? TextareaEditor
       : await loadRichEditor();
 
-    // See UserOption#composition_mode_types on server
-    const preference = this.isRichEditorEnabled ? 1 : 0;
+    const preference = this.isRichEditorEnabled
+      ? USER_OPTION_COMPOSITION_MODES.modern
+      : USER_OPTION_COMPOSITION_MODES.classic;
     this.#debounceSaveRichEditorPreference(preference);
   }
 

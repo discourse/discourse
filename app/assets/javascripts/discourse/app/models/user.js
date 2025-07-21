@@ -13,6 +13,7 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -254,8 +255,7 @@ export default class User extends RestModel.extend(Evented) {
 
   @discourseComputed("user_option.composition_mode")
   useRichEditor(compositionMode) {
-    // See UserOption#composition_mode_types on the server
-    return compositionMode === 1;
+    return compositionMode === USER_OPTION_COMPOSITION_MODES.modern;
   }
 
   @discourseComputed("can_be_deleted", "post_count")
