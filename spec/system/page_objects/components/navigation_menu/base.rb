@@ -73,6 +73,7 @@ module PageObjects
 
         def switch_to_chat
           find(".sidebar__panel-switch-button[data-key='chat']").click
+          expect(page).to have_css(".chat-channel.--loaded")
         end
 
         def switch_to_main
