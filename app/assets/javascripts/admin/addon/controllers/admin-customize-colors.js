@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { currentThemeId } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
@@ -13,6 +14,8 @@ export default class AdminCustomizeColorsController extends Controller {
   @service modal;
   @service store;
   @service dialog;
+  @service toasts;
+  @service session;
 
   @tracked defaultTheme = null;
   @tracked filterValue = "";
@@ -24,6 +27,10 @@ export default class AdminCustomizeColorsController extends Controller {
 
   _sortedOnce = false;
   _initialSortedSchemes = [];
+
+  get canPreviewColorScheme() {
+    return currentThemeId() === this.defaultTheme?.id;
+  }
 
   get allBaseColorSchemes() {
     return this.model?.filterBy("is_base", true) || [];
@@ -159,7 +166,23 @@ export default class AdminCustomizeColorsController extends Controller {
   @action
   async setAsDefaultThemePalette(scheme) {
     try {
-      this.defaultTheme = await setDefaultColorScheme(scheme, this.store);
+      if (this.canPreviewColorScheme) {
+        this.defaultTheme = await setDefaultColorScheme(scheme, this.store);
+      }
+
+      if (!this.canPreviewColorScheme) {
+        const schemeName = scheme.description || scheme.name;
+        const themeName = this.defaultTheme.name;
+        this.toasts.success({
+          data: {
+            message: i18n("admin.customize.colors.set_default_success", {
+              schemeName,
+              themeName,
+            }),
+          },
+          duration: 4000,
+        });
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Error setting default theme palette", error);

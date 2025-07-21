@@ -6964,6 +6964,7 @@ en:
           title: "Colors"
           edit: "Edit"
           set_default: "Set as active on %{theme}"
+          set_default_success: "%{schemeName} set as active palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
           filters:
