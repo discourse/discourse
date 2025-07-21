@@ -405,7 +405,7 @@ module PostGuardian
   end
 
   def trusted_with_post_edits?
-    is_staff? || @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+    @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
   end
 
   private
