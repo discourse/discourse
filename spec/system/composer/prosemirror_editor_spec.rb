@@ -1180,19 +1180,19 @@ describe "Composer - ProseMirror editor", type: :system do
 
       find(".composer-image-toolbar__zoom-out").click
 
-      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("75")
+      expect(rich).to have_selector(".composer-image-node img[data-scale='75']")
 
       find(".composer-image-toolbar__zoom-out").click
 
-      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("50")
+      expect(rich).to have_selector(".composer-image-node img[data-scale='50']")
 
       find(".composer-image-toolbar__zoom-in").click
 
-      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("75")
+      expect(rich).to have_selector(".composer-image-node img[data-scale='75']")
 
       find(".composer-image-toolbar__zoom-in").click
 
-      expect(rich.find(".composer-image-node img")["data-scale"]).to eq("100")
+      expect(rich).to have_selector(".composer-image-node img[data-scale='100']")
     end
 
     it "allows removing image via toolbar" do

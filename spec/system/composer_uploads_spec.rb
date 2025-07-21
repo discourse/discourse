@@ -205,9 +205,7 @@ describe "Uploading files in the composer", type: :system do
 
       composer.clear_content
 
-      attach_file("file-uploader", [file_path_4, file_path_5, file_path_6]) do
-        composer.click_toolbar_button("upload")
-      end
+      attach_file("file-uploader", [file_path_4, file_path_5, file_path_6], make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.composer_input.value).to match(

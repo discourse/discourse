@@ -196,8 +196,7 @@ describe "Admin Color Palette Config Area Page", type: :system do
     cdp.allow_clipboard
 
     config_area.visit(color_scheme.id)
-    config_area.copy_to_clipboard_button.click
-
+    config_area.copy_to_clipboard
     clipboard_content = cdp.read_clipboard
     clipboard_scheme = JSON.parse(clipboard_content)
 
