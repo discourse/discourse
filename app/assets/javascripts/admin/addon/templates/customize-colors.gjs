@@ -45,17 +45,6 @@ export default RouteTemplate(
       </:actions>
     </DPageSubheader>
 
-    {{#if @controller.changedThemePreferences}}
-      <div class="alert alert-info">
-        {{htmlSafe
-          (i18n
-            "admin.customize.colors.preference_warning"
-            link="/my/preferences/interface"
-          )
-        }}
-      </div>
-    {{/if}}
-
     {{#if @controller.showFilters}}
       <div class="color-palette__filters">
         <FilterInput
@@ -79,6 +68,17 @@ export default RouteTemplate(
             </select.Option>
           {{/each}}
         </DSelect>
+      </div>
+    {{/if}}
+
+    {{#if @controller.changedThemePreferences}}
+      <div class="alert alert-info">
+        {{htmlSafe
+          (i18n
+            "admin.customize.colors.preference_warning"
+            link="/my/preferences/interface"
+          )
+        }}
       </div>
     {{/if}}
 

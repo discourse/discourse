@@ -6961,7 +6961,7 @@ en:
           select_base:
             title: "Select base color palette"
             description: "Base palette:"
-          preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so color changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
+          preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so palette changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
           title: "Colors"
           edit: "Edit"
           set_default: "Set as active on %{theme}"
