@@ -32,28 +32,6 @@ module(
         .containsText("3", "displays the count value");
     });
 
-    test("renders count when count is greater than 0", async function (assert) {
-      const score = {
-        type: "inappropriate",
-        title: "Inappropriate content",
-        count: 5,
-      };
-
-      await render(
-        <template><ReviewableFlagReason @score={{score}} /></template>
-      );
-
-      assert
-        .dom(".review-item__flag-count")
-        .exists("renders the flag count element");
-      assert
-        .dom(".review-item__flag-count")
-        .hasClass("--inappropriate", "applies correct CSS class to count");
-      assert
-        .dom(".review-item__flag-count")
-        .containsText("5", "displays the count value");
-    });
-
     test("does not render count when invalid", async function (assert) {
       const countScenarios = [
         { count: 0, title: "Zero count", description: "count is 0" },
