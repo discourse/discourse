@@ -94,6 +94,10 @@ module PageObjects
           page.has_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
         end
 
+        def has_my_messages_link_without_unread_icon?
+          page.has_no_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+        end
+
         def has_my_messages_link_with_unread_count?
           page.has_css?("#{my_messages_link_css} .sidebar-section-link-content-badge")
         end

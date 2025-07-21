@@ -198,7 +198,10 @@ describe "Viewing sidebar", type: :system do
       end
 
       describe "has unread messages" do
-        before { Fabricate(:private_message_post, user: user, recipient: admin).topic }
+        fab!(:private_message) do
+          Fabricate(:private_message_post, user: user, recipient: admin).topic
+        end
+        let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
 
         it "should show new messages indicator" do
           sign_in(admin)
@@ -208,13 +211,17 @@ describe "Viewing sidebar", type: :system do
 
         it "should show a count of the new items" do
           admin.user_option.update!(sidebar_show_count_of_new_items: true)
+          sign_in(admin)
           visit("/")
           expect(sidebar).to have_my_messages_link_with_unread_count
         end
 
-        it "should not show the unread count when there are no unread messages" do
-          visit("/")
-          expect(sidebar).to have_my_messages_link_without_unread_icon
+        it "should remove unread icon after all messages are read" do
+          sign_in(admin)
+          user_private_messages_page.visit(admin)
+          user_private_messages_page.click_unseen_private_mesage(private_message.id)
+          expect(sidebar).to have_my_messages_link_with_unread_icon
+          try_until_success { expect(sidebar).to have_my_messages_link_without_unread_icon }
         end
       end
     end
