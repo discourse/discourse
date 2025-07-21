@@ -19,6 +19,16 @@ export function createSiteSettingsFromPreloaded(
     settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
   }
 
+  if (
+    !themeSiteSettingOverrides ||
+    Object.keys(themeSiteSettingOverrides).length === 0
+  ) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[Discourse] themeSiteSettingOverrides is empty or not provided`
+    );
+  }
+
   settings.groupSettingArray = (groupSetting) => {
     const setting = settings[groupSetting];
     if (!setting) {
