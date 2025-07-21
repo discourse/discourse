@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { next } from "@ember/runloop";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
@@ -44,6 +46,15 @@ export default class FKControlWrapper extends Component {
     return name.replace(/\./g, "-");
   }
 
+  @action
+  registerField() {
+    next(() => {
+      // this works around a bug where registration can happen too early
+      // particularly when a field is moved in a form from one place to another
+      this.args.registerField(this.args.field.name, this.args.field);
+    });
+  }
+
   <template>
     <div
       id={{concat "control-" (this.normalizeName @field.name)}}
@@ -58,8 +69,8 @@ export default class FKControlWrapper extends Component {
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
       data-control-type={{this.controlType}}
-      {{didInsert (fn @registerField @field.name @field)}}
       {{willDestroy (fn @unregisterField @field.name)}}
+      {{didInsert this.registerField}}
     >
       {{#unless (eq @field.type "checkbox")}}
         {{#if @field.showTitle}}
