@@ -16,7 +16,7 @@ describe LocaleNormalizer do
 
   describe "#is_same?" do
     it "returns true for the same locale" do
-      expect(described_class.is_same?("en", "en")).to be true
+      expect(described_class.is_same?("en", :en)).to be true
     end
 
     it "returns true for locales with different cases" do

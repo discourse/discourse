@@ -13,6 +13,11 @@ class LocaleNormalizer
     locale
   end
 
+  # Checks if two locales are the same based on exact match and normalized match
+  # - is_same?("a_b", "a-b") == true
+  # - is_same?("a_b", "a") == true
+  # @param locale1 [String,Symbol] the first locale to compare
+  # @param locale2 [String,Symbol] the second locale to compare
   def self.is_same?(locale1, locale2)
     locale1 = locale1.to_s
     locale2 = locale2.to_s
