@@ -16,6 +16,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { resettableTracked } from "discourse/lib/tracked-tools";
+import { i18n } from "discourse-i18n";
 
 export default class DiscoveryFilterNavigation extends Component {
   @service site;
@@ -92,6 +93,7 @@ export default class DiscoveryFilterNavigation extends Component {
             @type="text"
             id="queryStringInput"
             autocomplete="off"
+            placeholder="{{i18n 'filter.placeholder'}}"
             {{didInsert this.storeInputElement}}
           />
           {{#if this.newQueryString}}

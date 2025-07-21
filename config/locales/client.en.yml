@@ -5379,6 +5379,7 @@ en:
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 
     filter:
+      placeholder: "Filter topics by category, tag, or other criteria"
       description:
         yesterday: "Yesterday"
         last_week: "Last week"
