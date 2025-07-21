@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 class EnableRichEditorForAll < ActiveRecord::Migration[7.2]
   def up
+    prev_value = DB.query_single("SELECT value FROM site_settings WHERE name = 'rich_editor'").first
+
+    # The change to default: true will automatically switch the rich editor on for all users
+    return if prev_value.blank?
+
     # Type ID 5 is bool
     DB.exec(<<~SQL)
-      INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
-      VALUES ('rich_editor', 5, 't', NOW(), NOW())
-      ON CONFLICT (name) DO UPDATE
-        SET value = 't', updated_at = NOW()
+      UPDATE site_settings SET value = 't', updated_at = NOW()
+      WHERE name = 'rich_editor'
     SQL
 
     # -1 is system user ID, 3 is site_setting_changed action ID
