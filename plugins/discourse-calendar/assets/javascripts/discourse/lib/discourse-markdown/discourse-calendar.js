@@ -5,22 +5,6 @@ const calendarRule = {
     let wrapperDivToken = state.push("div_calendar_wrap", "div", 1);
     wrapperDivToken.attrs = [["class", "discourse-calendar-wrap"]];
 
-    let headerDivToken = state.push("div_calendar_header", "div", 1);
-    headerDivToken.attrs = [["class", "discourse-calendar-header"]];
-
-    let titleH2Token = state.push("h2_open", "h2", 1);
-    titleH2Token.attrs = [["class", "discourse-calendar-title"]];
-    state.push("h2_close", "h2", -1);
-
-    let timezoneWrapToken = state.push("span_open", "span", 1);
-    timezoneWrapToken.attrs = [["class", "discourse-calendar-timezone-wrap"]];
-    if (info.attrs.tzPicker === "true") {
-      _renderTimezonePicker(state);
-    }
-    state.push("span_close", "span", -1);
-
-    state.push("div_calendar_header", "div", -1);
-
     let mainCalendarDivToken = state.push("div_calendar", "div", 1);
     mainCalendarDivToken.attrs = [
       ["class", "calendar"],
@@ -84,17 +68,9 @@ const groupTimezoneRule = {
   },
 };
 
-function _renderTimezonePicker(state) {
-  const timezoneSelectToken = state.push("select_open", "select", 1);
-  timezoneSelectToken.attrs = [["class", "discourse-calendar-timezone-picker"]];
-
-  state.push("select_close", "select", -1);
-}
-
 export function setup(helper) {
   helper.allowList([
     "div.calendar",
-    "div.discourse-calendar-header",
     "div.discourse-calendar-wrap",
     "select.discourse-calendar-timezone-picker",
     "span.discourse-calendar-timezone-wrap",

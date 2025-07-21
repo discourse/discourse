@@ -1,24 +1,6 @@
 .discourse-calendar-wrap {
   border: 0;
 
-  .discourse-calendar-header {
-    padding: 0;
-    background: none;
-
-    h2.discourse-calendar-title {
-      font-size: var(--font-0);
-      flex-wrap: nowrap;
-      max-width: 75%;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .discourse-calendar-timezone-picker {
-      max-width: 40vw;
-    }
-  }
-
   .fc-view-container {
     .fc-day-header.fc-widget-header {
       text-align: center;
