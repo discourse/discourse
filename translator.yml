@@ -110,11 +110,11 @@ files:
     label: theme
 
   - source_path: plugins/discourse-reactions/config/locales/client.en.yml
-    destination_path: plugins/discourse-reactions/client.yml
-    label: discourse-reactions
+    destination_path: plugins/reactions/client.yml
+    label: reactions
   - source_path: plugins/discourse-reactions/config/locales/server.en.yml
-    destination_path: plugins/discourse-reactions/server.yml
-    label: discourse-reactions
+    destination_path: plugins/reactions/server.yml
+    label: reactions
 
   - source_path: plugins/discourse-apple-auth/config/locales/client.en.yml
     destination_path: plugins/apple-auth/client.yml
@@ -160,9 +160,6 @@ files:
 
   - source_path: plugins/discourse-zendesk-plugin/config/locales/client.en.yml
     destination_path: plugins/zendesk-plugin/client.yml
-    label: zendesk-plugin
-  - source_path: plugins/discourse-zendesk-plugin/config/locales/server.en.yml
-    destination_path: plugins/zendesk-plugin/server.yml
     label: zendesk-plugin
 
   - source_path: plugins/discourse-patreon/config/locales/client.en.yml
