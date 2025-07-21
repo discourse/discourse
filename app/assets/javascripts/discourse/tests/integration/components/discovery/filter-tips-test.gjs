@@ -47,7 +47,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     const self = this;
     await render(
       <template>
-        <input id="q" {{didInsert self.capture}} />
+        <input id="filter-input" {{didInsert self.capture}} />
         <FilterTips
           @tips={{self.tips}}
           @queryString={{self.query}}
@@ -58,24 +58,24 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       </template>
     );
 
-    await triggerEvent("#q", "focus");
+    await triggerEvent("#filter-input", "focus");
     assert
       .dom(".filter-tip__button")
       .exists({ count: 3 }, "shows tips on focus");
     assert.dom(".filter-tip__button.selected").doesNotExist("no selection yet");
-    assert.dom("#q").hasValue("");
+    assert.dom("#filter-input").hasValue("");
 
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
       .dom(".filter-tip__button.selected .filter-tip__name")
       .hasText("category:");
 
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
       .dom(".filter-tip__button.selected .filter-tip__name")
       .hasText("tag:");
 
-    await triggerKeyEvent("#q", "keydown", "ArrowUp");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowUp");
     assert
       .dom(".filter-tip__button.selected .filter-tip__name")
       .hasText("category:");
@@ -85,7 +85,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     const self = this;
     await render(
       <template>
-        <input id="q" {{didInsert self.capture}} />
+        <input id="filter-input" {{didInsert self.capture}} />
         <FilterTips
           @tips={{self.tips}}
           @queryString={{self.query}}
@@ -96,21 +96,23 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       </template>
     );
 
-    await triggerEvent("#q", "focus");
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
-    await triggerKeyEvent("#q", "keydown", "Tab");
+    await triggerEvent("#filter-input", "focus");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "Tab");
 
     assert.strictEqual(this.query, "category:", "tab adds filter");
-    assert.dom("#q").hasValue("category:");
+    assert.dom("#filter-input").hasValue("category:");
 
     assert
       .dom(".filter-tip__button")
       .exists({ count: 2 }, "tips for category shows up");
 
-    await triggerEvent("#q", "focus");
-    await triggerKeyEvent("#q", "keydown", "Tab");
+    await triggerEvent("#filter-input", "focus");
+    await triggerKeyEvent("#filter-input", "keydown", "Tab");
 
-    assert.dom("#q").hasValue("category:bugs", "category slug added");
+    assert
+      .dom("#filter-input")
+      .hasValue("category:bugs", "category slug added");
 
     assert
       .dom(".filter-tip__button")
@@ -124,7 +126,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     const self = this;
     await render(
       <template>
-        <input id="q" {{didInsert self.capture}} />
+        <input id="filter-input" {{didInsert self.capture}} />
         <FilterTips
           @tips={{self.tips}}
           @queryString={{self.query}}
@@ -135,19 +137,19 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       </template>
     );
 
-    await triggerEvent("#q", "focus");
-    await fillIn("#q", "tag:e");
+    await triggerEvent("#filter-input", "focus");
+    await fillIn("#filter-input", "tag:e");
 
     assert.dom(".filter-tip__button").exists("shows tag results");
     assert.dom(".filter-tip__name").hasText("tag:ember");
     assert.dom(".filter-tip__description").hasText("— 1");
 
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
       .dom(".filter-tip__button.selected .filter-tip__name")
       .hasText("tag:ember");
 
-    await triggerKeyEvent("#q", "keydown", "Enter");
+    await triggerKeyEvent("#filter-input", "keydown", "Enter");
     assert.strictEqual(this.query, "tag:ember", "enter selects result");
   });
 
@@ -155,7 +157,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     const self = this;
     await render(
       <template>
-        <input id="q" {{didInsert self.capture}} />
+        <input id="filter-input" {{didInsert self.capture}} />
         <FilterTips
           @tips={{self.tips}}
           @queryString={{self.query}}
@@ -166,16 +168,16 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       </template>
     );
 
-    await triggerEvent("#q", "focus");
+    await triggerEvent("#filter-input", "focus");
     assert.dom(".filter-tip__button").exists("tips visible");
-    await triggerKeyEvent("#q", "keydown", "Escape");
+    await triggerKeyEvent("#filter-input", "keydown", "Escape");
     assert.dom(".filter-tip__button").doesNotExist("tips hidden on escape");
 
-    await fillIn("#q", "status");
-    await triggerEvent("#q", "input");
-    await triggerKeyEvent("#q", "keydown", "Escape");
+    await fillIn("#filter-input", "status");
+    await triggerEvent("#filter-input", "input");
+    await triggerKeyEvent("#filter-input", "keydown", "Escape");
     assert.strictEqual(this.query, "", "query not changed");
-    assert.dom("#q").hasValue("status", "input unchanged");
+    assert.dom("#filter-input").hasValue("status", "input unchanged");
     assert.dom(".filter-tip__button").doesNotExist("tips remain hidden");
   });
 
@@ -192,7 +194,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
 
     await render(
       <template>
-        <input id="q" {{didInsert self.capture}} />
+        <input id="filter-input" {{didInsert self.capture}} />
         <FilterTips
           @tips={{self.tips}}
           @queryString={{self.query}}
@@ -204,7 +206,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     );
 
     // Initially, no selection, so blockEnter should be called with false
-    await triggerEvent("#q", "focus");
+    await triggerEvent("#filter-input", "focus");
     assert.true(blockEnterCalled, "blockEnter was called");
     assert.false(
       blockEnterValue,
@@ -216,7 +218,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     blockEnterValue = null;
 
     // Arrow down to select first item
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert.true(blockEnterCalled, "blockEnter called when selection changes");
     assert.true(
       blockEnterValue,
@@ -225,13 +227,13 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
 
     // Reset and arrow up to wrap to last item
     blockEnterCalled = false;
-    await triggerKeyEvent("#q", "keydown", "ArrowUp");
-    await triggerKeyEvent("#q", "keydown", "ArrowUp");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowUp");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowUp");
     assert.true(blockEnterCalled, "blockEnter called on arrow navigation");
     assert.true(blockEnterValue, "blockEnter still true with selection");
 
     // Select an item with Tab
-    await triggerKeyEvent("#q", "keydown", "Tab");
+    await triggerKeyEvent("#filter-input", "keydown", "Tab");
     assert.true(blockEnterCalled, "blockEnter called after selection");
     assert.false(
       blockEnterValue,
@@ -239,16 +241,16 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     );
 
     // Type to trigger search for tag values
-    await fillIn("#q", "tag:e");
+    await fillIn("#filter-input", "tag:e");
     assert.true(blockEnterCalled, "blockEnter called when typing");
     assert.false(blockEnterValue, "blockEnter false when typing");
 
     // Select a search result
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert.true(blockEnterValue, "blockEnter true when search result selected");
 
     // Escape to clear
-    await triggerKeyEvent("#q", "keydown", "Escape");
+    await triggerKeyEvent("#filter-input", "keydown", "Escape");
     assert.false(blockEnterValue, "blockEnter false after escape");
   });
 
@@ -271,7 +273,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     const self = this;
     await render(
       <template>
-        <input id="q" {{didInsert self.capture}} />
+        <input id="filter-input" {{didInsert self.capture}} />
         <FilterTips
           @tips={{self.tips}}
           @queryString={{self.query}}
@@ -282,8 +284,8 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       </template>
     );
 
-    await triggerEvent("#q", "focus");
-    await fillIn("#q", "cat");
+    await triggerEvent("#filter-input", "focus");
+    await fillIn("#filter-input", "cat");
 
     const buttons = document.querySelectorAll(".filter-tip__button");
     const lastButton = buttons[buttons.length - 1];
@@ -297,12 +299,12 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       .includesText("without", "shows prefix description");
 
     // we skip the "category" and go to negative prefix
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
-    await triggerKeyEvent("#q", "keydown", "Tab");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "Tab");
 
     assert.strictEqual(this.query, "-category:", "prefix included in query");
-    assert.dom("#q").hasValue("-category:");
+    assert.dom("#filter-input").hasValue("-category:");
 
     assert
       .dom(".filter-tip__button")
@@ -312,13 +314,13 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       .hasText("-category:bugs", "shows category slug");
 
     // Select a category
-    await triggerKeyEvent("#q", "keydown", "Tab");
+    await triggerKeyEvent("#filter-input", "keydown", "Tab");
     assert
-      .dom("#q")
+      .dom("#filter-input")
       .hasValue("-category:bugs", "full filter with prefix applied");
 
     // Test with equals prefix
-    await fillIn("#q", "=cat");
+    await fillIn("#filter-input", "=cat");
     assert
       .dom(".filter-tip__description")
       .includesText(
@@ -326,8 +328,8 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
         "shows = prefix description"
       );
 
-    await triggerKeyEvent("#q", "keydown", "ArrowDown");
-    await triggerKeyEvent("#q", "keydown", "Tab");
+    await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
+    await triggerKeyEvent("#filter-input", "keydown", "Tab");
     assert.strictEqual(this.query, "=category:", "equals prefix included");
   });
 });

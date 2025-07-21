@@ -361,7 +361,7 @@ export default class FilterTips extends Component {
     this.selectedIndex = -1;
 
     const words = this.currentInputValue.split(/\s+/);
-    const lastWord = words[words.length - 1];
+    const lastWord = words.at(-1);
     const colonIndex = lastWord.indexOf(":");
 
     if (colonIndex > 0) {
@@ -482,7 +482,7 @@ export default class FilterTips extends Component {
       this.updateResults();
     } else {
       // Handle regular tip selection
-      const lastWord = words[words.length - 1];
+      const lastWord = words.at(-1);
       const prefix = this.extractPrefix(lastWord);
 
       // Check if this tip supports prefixes
