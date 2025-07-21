@@ -1,6 +1,5 @@
 import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
@@ -71,20 +70,18 @@ export default RouteTemplate(
       </div>
     {{/if}}
 
-    <ConditionalLoadingSpinner @condition={{@controller.isSettingDefault}}>
-      <ul class="color-palette__list">
-        {{#each @controller.filteredColorSchemes as |scheme|}}
-          <ColorPaletteListItem
-            @scheme={{scheme}}
-            @defaultTheme={{@controller.defaultTheme}}
-            @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
-            @toggleUserSelectable={{@controller.toggleUserSelectable}}
-            @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
-            @deleteColorScheme={{@controller.deleteColorScheme}}
-          />
-        {{/each}}
-      </ul>
-    </ConditionalLoadingSpinner>
+    <ul class="color-palette__list">
+      {{#each @controller.filteredColorSchemes as |scheme|}}
+        <ColorPaletteListItem
+          @scheme={{scheme}}
+          @defaultTheme={{@controller.defaultTheme}}
+          @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
+          @toggleUserSelectable={{@controller.toggleUserSelectable}}
+          @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+          @deleteColorScheme={{@controller.deleteColorScheme}}
+        />
+      {{/each}}
+    </ul>
 
     {{#if @controller.showFilters}}
       {{#unless @controller.filteredColorSchemes.length}}

@@ -6,6 +6,8 @@ import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
 
+const COUNT_TO_FILTER = 8;
+
 export default class AdminCustomizeColorsController extends Controller {
   @service router;
   @service modal;
@@ -15,39 +17,33 @@ export default class AdminCustomizeColorsController extends Controller {
   @tracked defaultTheme = null;
   @tracked filterValue = "";
   @tracked typeFilter = "all";
-  @tracked isSettingDefault = false;
 
   isDefaultThemeColorScheme = (scheme) => {
     return this.defaultTheme?.color_scheme_id === scheme.id;
   };
+
+  _sortedOnce = false;
+  _initialSortedSchemes = [];
 
   get allBaseColorSchemes() {
     return this.model?.filterBy("is_base", true) || [];
   }
 
   get filteredColorSchemes() {
-    let schemes = this.model.filter((scheme) => !scheme.is_base);
-    // built-in "Light (default)"
-    const lightBaseScheme = this.allBaseColorSchemes.find(
-      (scheme) => scheme.base_scheme_id === "Light" || scheme.name === "Light"
-    );
-    if (lightBaseScheme) {
-      const builtInDefault = {
-        ...lightBaseScheme,
-        id: null,
-        name: i18n("admin.customize.theme.default_light_scheme"),
-        description: i18n("admin.customize.theme.default_light_scheme"),
-        is_builtin_default: true,
-      };
-      schemes.unshift(builtInDefault);
+    // only sort initially, this avoids position jumps when state changes on interaction
+    if (!this._sortedOnce && this.model?.length > 0) {
+      this._doInitialSort();
     }
 
-    if (this.typeFilter !== "all") {
-      if (this.typeFilter === "user_selectable") {
+    let schemes = [...this._initialSortedSchemes];
+
+    switch (this.typeFilter) {
+      case "user_selectable":
         schemes = schemes.filter((scheme) => scheme.user_selectable);
-      } else if (this.typeFilter === "from_theme") {
+        break;
+      case "from_theme":
         schemes = schemes.filter((scheme) => scheme.theme_id);
-      }
+        break;
     }
 
     if (this.filterValue) {
@@ -59,7 +55,27 @@ export default class AdminCustomizeColorsController extends Controller {
       });
     }
 
-    // active first, then user selectable, then alpha
+    return schemes;
+  }
+
+  _doInitialSort() {
+    let schemes = this.model.filter((scheme) => !scheme.is_base);
+
+    // built-in "Light (default)"
+    const lightBaseScheme = this.allBaseColorSchemes.find(
+      (scheme) => scheme.base_scheme_id === "Light" || scheme.name === "Light"
+    );
+    if (lightBaseScheme) {
+      const builtInDefault = {
+        ...lightBaseScheme,
+        id: 0,
+        name: i18n("admin.customize.theme.default_light_scheme"),
+        description: i18n("admin.customize.theme.default_light_scheme"),
+        is_builtin_default: true,
+      };
+      schemes.unshift(builtInDefault);
+    }
+
     schemes.sort((a, b) => {
       const defaultId = this.defaultTheme?.color_scheme_id;
 
@@ -82,11 +98,14 @@ export default class AdminCustomizeColorsController extends Controller {
       return (a.name || "").localeCompare(b.name || "");
     });
 
-    return schemes;
+    this._initialSortedSchemes = schemes;
+    this._sortedOnce = true;
   }
 
   get showFilters() {
-    return this.model.filter((scheme) => !scheme.is_base).length > 8;
+    return (
+      this.model.filter((scheme) => !scheme.is_base).length > COUNT_TO_FILTER
+    );
   }
 
   get typeFilterOptions() {
@@ -139,8 +158,6 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   async setAsDefaultThemePalette(scheme) {
-    this.isSettingDefault = true;
-
     try {
       this.defaultTheme = await setDefaultColorScheme(scheme, this.store);
     } catch (error) {
@@ -151,8 +168,6 @@ export default class AdminCustomizeColorsController extends Controller {
           defaultValue: "Error setting color palette as active",
         }),
       });
-    } finally {
-      this.isSettingDefault = false;
     }
   }
 
