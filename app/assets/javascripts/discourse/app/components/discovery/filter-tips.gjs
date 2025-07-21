@@ -534,7 +534,7 @@ export default class FilterTips extends Component {
             <DButton
               class={{concatClass
                 "filter-tip__button"
-                (if (eq index this.selectedIndex) "selected")
+                (if (eq index this.selectedIndex) "filter-tip__selected")
               }}
               @action={{fn this.selectItem item}}
             >

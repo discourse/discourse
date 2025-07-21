@@ -129,7 +129,7 @@ class TopicsFilter
     @scope
   end
 
-  def self.option_info(guardian = Guardian.new)
+  def self.option_info(guardian)
     results = [
       {
         name: "category:",
@@ -228,7 +228,7 @@ class TopicsFilter
       { name: "order:read-asc", description: I18n.t("filter.description.order_read_asc") },
     ]
 
-    if !guardian.anonymous?
+    if guardian.authenticated?
       results.concat(
         [
           { name: "in:", description: I18n.t("filter.description.in"), priority: 1 },

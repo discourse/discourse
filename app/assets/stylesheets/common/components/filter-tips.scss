@@ -28,11 +28,11 @@
       transition: background-color 0.15s;
 
       &:hover,
-      &.selected {
+      &.filter-tip__selected {
         background-color: var(--tertiary-low);
       }
 
-      &.selected {
+      &.filter-tip__selected {
         outline: 2px solid var(--tertiary);
         outline-offset: -2px;
       }

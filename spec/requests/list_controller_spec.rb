@@ -1448,7 +1448,7 @@ RSpec.describe ListController do
       parsed = response.parsed_body
       expect(response.status).to eq(200)
       expect(parsed["topic_list"]["filter_option_info"].length).to eq(
-        TopicsFilter.option_info.length,
+        TopicsFilter.option_info(Guardian.new).length,
       )
     end
 
