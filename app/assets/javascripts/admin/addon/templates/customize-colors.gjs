@@ -1,4 +1,5 @@
 import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
@@ -43,6 +44,17 @@ export default RouteTemplate(
         </PluginOutlet>
       </:actions>
     </DPageSubheader>
+
+    {{#if @controller.changedThemePreferences}}
+      <div class="alert alert-info">
+        {{htmlSafe
+          (i18n
+            "admin.customize.colors.preference_warning"
+            link="/my/preferences/interface"
+          )
+        }}
+      </div>
+    {{/if}}
 
     {{#if @controller.showFilters}}
       <div class="color-palette__filters">

@@ -16,6 +16,7 @@ export default class AdminCustomizeColorsController extends Controller {
   @service dialog;
   @service toasts;
   @service session;
+  @service site;
 
   @tracked defaultTheme = null;
   @tracked filterValue = "";
@@ -34,6 +35,14 @@ export default class AdminCustomizeColorsController extends Controller {
 
   get allBaseColorSchemes() {
     return this.model?.filterBy("is_base", true) || [];
+  }
+
+  get changedThemePreferences() {
+    const changedColors =
+      this.session.userColorSchemeId !== this.defaultTheme?.color_scheme_id;
+    const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
+
+    return changedColors || changedTheme;
   }
 
   get filteredColorSchemes() {
