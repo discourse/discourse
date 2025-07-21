@@ -8,7 +8,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 **/
 export default class DiscoveryRoute extends DiscourseRoute {
   @service currentUser;
-  @service pmTopicTrackingState;
   @service router;
   @service session;
   @service site;
@@ -42,10 +41,6 @@ export default class DiscoveryRoute extends DiscourseRoute {
         });
       }
     }
-  }
-
-  afterModel() {
-    this.pmTopicTrackingState.startTracking();
   }
 
   // clear a pinned topic

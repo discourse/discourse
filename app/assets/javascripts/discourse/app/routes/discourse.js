@@ -5,10 +5,14 @@ import { service } from "@ember/service";
 import { seenUser } from "discourse/lib/user-presence";
 
 export default class DiscourseRoute extends Route {
-  @service router;
+  @service pmTopicTrackingState;
 
   willTransition() {
     seenUser();
+  }
+
+  afterModel() {
+    this.pmTopicTrackingState.startTracking();
   }
 
   _refreshTitleOnce() {
