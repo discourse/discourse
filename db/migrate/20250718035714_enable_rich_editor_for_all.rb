@@ -11,10 +11,10 @@ class EnableRichEditorForAll < ActiveRecord::Migration[7.2]
 
     # -1 is system user ID, 3 is site_setting_changed action ID
     # Insert a staff action log to record the change
-    # DB.exec(<<~SQL)
-    #   INSERT INTO user_histories (acting_user_id, action, created_at, updated_at, subject, previous_value, new_value, admin_only)
-    #   VALUES (-1, 3, NOW(), NOW(), 'rich_editor', 'f', 't', true)
-    # SQL
+    DB.exec(<<~SQL)
+      INSERT INTO user_histories (acting_user_id, action, created_at, updated_at, subject, previous_value, new_value, admin_only)
+      VALUES (-1, 3, NOW(), NOW(), 'rich_editor', 'f', 't', true)
+    SQL
   end
 
   def down
