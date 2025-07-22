@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  reports:
+    unaccepted-policies:
+      labels:
+        topic_id: ID tématu
+  unsubscribe:
+    policy_emails:
+      never: Nikdy
+      when_away: Jen v nepřítomnosti
+      always: Vždy

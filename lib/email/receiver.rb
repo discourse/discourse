@@ -870,7 +870,7 @@ module Email
         return group if group
 
         category = Category.find_by_email(address)
-        return category if category
+        return category if category && SiteSetting.reply_by_email_enabled?
       end
 
       # reply

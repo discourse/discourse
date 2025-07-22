@@ -274,6 +274,12 @@ export default class PostEventBuilder extends Component {
       this.event,
       this.siteSettings
     );
+
+    const description = eventParams.description
+      ? `${eventParams.description}\n`
+      : "";
+    delete eventParams.description;
+
     const markdownParams = [];
     Object.keys(eventParams).forEach((key) => {
       let value = eventParams[key];
@@ -281,7 +287,7 @@ export default class PostEventBuilder extends Component {
     });
 
     this.args.model.toolbarEvent.addText(
-      `[event ${markdownParams.join(" ")}]\n[/event]`
+      `[event ${markdownParams.join(" ")}]\n${description}[/event]`
     );
     this.args.closeModal();
   }

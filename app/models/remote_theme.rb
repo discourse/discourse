@@ -486,6 +486,8 @@ class RemoteTheme < ActiveRecord::Base
         guardian: Discourse.system_user.guardian,
       ) { |result| }
     end
+
+    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
   end
 
   def github_diff_link

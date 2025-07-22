@@ -8,13 +8,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 7.2.0"
-gem "actionpack", "~> 7.2.0"
-gem "actionview", "~> 7.2.0"
-gem "activemodel", "~> 7.2.0"
-gem "activerecord", "~> 7.2.0"
-gem "activesupport", "~> 7.2.0"
-gem "railties", "~> 7.2.0"
+gem "actionmailer", "~> 8.0.0"
+gem "actionpack", "~> 8.0.0"
+gem "actionview", "~> 8.0.0"
+gem "activemodel", "~> 8.0.0"
+gem "activerecord", "~> 8.0.0"
+gem "activesupport", "~> 8.0.0"
+gem "railties", "~> 8.0.0"
 
 gem "propshaft"
 
@@ -144,7 +144,7 @@ group :test, :development do
 
   gem "rswag-specs"
 
-  gem "annotate"
+  gem "annotaterb"
 
   gem "syntax_tree"
 
@@ -290,3 +290,19 @@ gem "zendesk_api", "1.38.0.rc1", require: false
 
 # for discourse-subscriptions
 gem "stripe", "11.1.0", require: false
+
+# for discourse-github
+gem "sawyer", "0.9.2", require: false
+gem "octokit", "5.6.1", require: false
+
+# for discourse-ai
+gem "tokenizers", "0.5.4", require: false
+gem "tiktoken_ruby", "0.0.11.1", require: false
+gem "discourse_ai-tokenizers", "0.3.1", require: false
+gem "ed25519", "1.2.4" # TODO: remove this as existing ssl gem should handle this
+gem "Ascii85", "2.0.1", require: false
+gem "ruby-rc4", "0.1.5", require: false
+gem "hashery", "2.1.2", require: false
+gem "ttfunk", "1.8.0", require: false
+gem "afm", "0.2.2", require: false
+gem "pdf-reader", "2.14.1", require: false

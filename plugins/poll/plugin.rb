@@ -14,7 +14,6 @@ register_asset "stylesheets/common/poll-breakdown.scss"
 register_svg_icon "far-square-check"
 
 enabled_site_setting :poll_enabled
-hide_plugin
 
 after_initialize do
   module ::DiscoursePoll

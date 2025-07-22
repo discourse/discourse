@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    policy_enabled: "Разрешить политику?"
+    policy_restrict_to_staff_posts: "Политика может применяться только к записям персонала"
+    policy_easy_revoke: "Показывать одновременно кнопки «Принять» и «Отмена»"
+  discourse_policy:
+    errors:
+      user_missing: "Пользователь не существует в группе"
+      group_not_found: "Группа не найдена"
+      no_policy: "Политики для записи не существует"
+      staff_only: "Политика может применяться только к записям персонала"
+  reports:
+    unaccepted-policies:
+      title: Непринятые политики
+      labels:
+        topic_id: ID темы
+        user_id: Идентификатор пользователя
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Политика требует проверки: %{topic_title}"
+      visit_topic: "Открыть тему"
+      visit_link_to_respond: "Чтобы ответить, %{visit_topic_link}."
+      unsubscribe: "Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
+      your_policy_email_settings: "настройки частоты писем о политиках"
+  unsubscribe:
+    policy_emails:
+      select_title: "Частота писем с оповещениями о политиках:"
+      never: Никогда
+      when_away: Если вы находитесь офлайн
+      always: Всегда

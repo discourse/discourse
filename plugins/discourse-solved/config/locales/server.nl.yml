@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  accepted_answer: "Geaccepteerd antwoord"
+  site_settings:
+    solved_enabled: "Solved-plug-in inschakelen, gebruikers kunnen oplossingen voor topics selecteren"
+    allow_solved_on_all_topics: "Sta gebruikers toe om oplossingen te selecteren voor alle topics (indien niet aangevinkt, kunnen oplossingen per categorie of tag worden ingeschakeld)"
+    accept_all_solutions_trust_level: "Minimaal vertrouwensniveau dat vereist is om oplossingen te accepteren bij een topic (ook indien niet de oorspronkelijke auteur)"
+    accept_all_solutions_allowed_groups: "Groepen die oplossingen kunnen accepteren voor elk topic (ook als ze niet de oorspronkelijke plaatser zijn). Beheerders en moderators kunnen dit altijd."
+    empty_box_on_unsolved: "Leeg vak weergeven naast onopgeloste topics"
+    solved_quote_length: "Aantal te citeren tekens bij weergeven van de oplossing onder het eerste bericht"
+    solved_topics_auto_close_hours: "Topic (n) uur na het laatste antwoord automatisch sluiten zodra het topic als opgelost is gemarkeerd. Stel dit in op 0 om automatisch sluiten uit te schakelen."
+    show_filter_by_solved_status: "Een vervolgkeuzelijst weergeven om een topic op oplossingsstatus te filteren."
+    notify_on_staff_accept_solved: "Melding naar de topicmaker sturen wanneer een bericht door een medewerker als oplossing wordt gemarkeerd."
+    ignore_solved_topics_in_assigned_reminder: "Voorkom dat toewijzingsherinneringen opgeloste topics bevatten. Alleen relevant bij gebruik van de plug-in discourse-assign."
+    assignment_status_on_solve: "Wanneer een topic is opgelost, alle toewijzingen bijwerken naar deze status"
+    assignment_status_on_unsolve: "Wanneer een topic niet is opgelost, alle toewijzingen bijwerken naar deze status"
+    disable_solved_education_message: "Schakel educatief bericht uit voor opgeloste topics."
+    accept_solutions_topic_author: "Topicauteur toestaan een oplossing te accepteren."
+    solved_add_schema_markup: "Voeg QAPage-schemaopmaak toe aan HTML."
+    enable_solved_tags: "Tags waarbij gebruikers oplossingen kunnen selecteren."
+    prioritize_solved_topics_in_search: "Geef prioriteit aan opgeloste topics in zoekresultaten."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Geaccepteerde oplossingen"
+      xaxis: "Dag"
+      yaxis: "Totaal"
+  solved:
+    no_solutions:
+      self: "Je hebt nog geen geaccepteerde oplossingen."
+      others: "Geen geaccepteerde oplossingen."
+  badges:
+    solved_1:
+      name: "Opgelost!"
+      description: "Antwoord gemarkeerd als oplossing"
+      long_description: "Deze badge wordt toegekend voor het hebben van een antwoord dat is gemarkeerd als een oplossing voor een topic. :white_check_mark: Goed werk. :+1:"
+    solved_2:
+      name: "Adviseur"
+      description: "10 antwoorden gemarkeerd als oplossing"
+      long_description: "Deze badge wordt toegekend als 10 van je antwoorden zijn gemarkeerd als oplossing voor een topic. :white_check_mark: Je bent een echte aanwinst voor de community."
+    solved_3:
+      name: "Allesweter"
+      description: "50 antwoorden gemarkeerd als oplossing"
+      long_description: "Deze badge wordt toegekend als 50 van je antwoorden zijn gemarkeerd als oplossing voor een topic. :white_check_mark: Je weet echt alles. :clap:"
+    solved_4:
+      name: "Oplossingsinstituut"
+      description: "150 antwoorden gemarkeerd als oplossing"
+      long_description: "Deze badge wordt toegekend als 150 van je antwoorden zijn gemarkeerd als oplossing voor een topic. :white_check_mark: Uitstekend werk. :slightly_smiling_face: Je bent officieel een oplossingsinstituut. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Eerste geaccepteerde oplossing
+        doc: Wordt geactiveerd wanneer voor het eerst een oplossing van een gebruiker wordt geaccepteerd.
+  education:
+    topic_is_solved: |
+      ### Dit topic is opgelost
+
+      Antwoord hier alleen als:
+
+      - Je aanvullende details hebt
+
+      - De oplossing niet werkt voor jou
+
+      Als je een niet-gerelateerd probleem hebt, [start dan een nieuw topic](%{base_url}/new-topic) in plaats daarvan.

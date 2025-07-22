@@ -149,16 +149,18 @@
   &-name {
     font-weight: 700;
     max-width: 80%;
-    margin-bottom: var(--space-1);
+    margin-bottom: 0;
   }
 
   &-author {
     font-size: var(--font-down-1);
     margin-bottom: var(--space-1);
+    color: var(--primary-high);
   }
 
   &-about {
     padding-right: var(--space-4);
+    max-width: 75ch;
 
     @include viewport.until(md) {
       padding-top: var(--space-1);

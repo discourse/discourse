@@ -12,6 +12,7 @@ export default RouteTemplate(
           @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
           @canBulkSelect={{@controller.canBulkSelect}}
           @bulkSelectHelper={{@controller.bulkSelectHelper}}
+          @tips={{@controller.model.topic_list.filter_option_info}}
         />
       </:navigation>
       <:list>

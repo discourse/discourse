@@ -50,9 +50,12 @@ describe "Welcome banner", type: :system do
 
     context "with empty subheader translations (default)" do
       context "with `non-en` default locale and `en` interface locale" do
-        before { SiteSetting.default_locale = "uk" }
+        before do
+          SiteSetting.default_locale = "uk"
+          SiteSetting.allow_user_locale = true
+        end
 
-        xit "hides subheader if active locale key is missing and fallback `en` translation is an empty string" do
+        it "hides subheader if active locale key is missing and fallback `en` translation is an empty string" do
           TranslationOverride.upsert!(
             "uk",
             "js.welcome_banner.subheader.logged_in_members",
@@ -140,6 +143,20 @@ describe "Welcome banner", type: :system do
         page.scroll_to(0, 0)
         expect(banner).to be_visible
         expect(search_page).to have_no_search_icon
+      end
+    end
+
+    context "with interface location setting" do
+      it "shows above topic content" do
+        SiteSetting.welcome_banner_location = "above_topic_content"
+        visit "/"
+        expect(banner).to be_above_topic_content
+      end
+
+      it "shows below site header" do
+        SiteSetting.welcome_banner_location = "below_site_header"
+        visit "/"
+        expect(banner).to be_below_site_header
       end
     end
   end

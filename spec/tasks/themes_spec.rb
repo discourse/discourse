@@ -80,7 +80,7 @@ RSpec.describe "tasks/themes" do
 
       theme.reload
 
-      expect(theme.theme_fields.count).to eq(2)
+      expect(theme.theme_fields.count).to eq(3)
       expect(theme.theme_fields.where(name: "header").first.value).to eq("I AM A HEADER")
       expect(theme.theme_settings_migrations.count).to eq(0)
       expect(theme.remote_theme.commits_behind).to eq(0)
@@ -110,7 +110,7 @@ RSpec.describe "tasks/themes" do
 
       theme.reload
 
-      expect(theme.theme_fields.count).to eq(2)
+      expect(theme.theme_fields.count).to eq(3)
       expect(theme.theme_fields.where(name: "header").first.value).to eq("I AM A HEADER")
       expect(theme.theme_settings_migrations.count).to eq(0)
       expect(theme.remote_theme.commits_behind).to eq(0)

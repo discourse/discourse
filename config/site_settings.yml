@@ -603,6 +603,7 @@ login:
   enable_discourse_id:
     default: false
     hidden: true
+    validator: "EnableDiscourseIdValidator"
   discourse_id_client_id:
     default: ""
     hidden: true
@@ -1618,6 +1619,7 @@ posting:
   rich_editor:
     client: true
     default: false
+    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:
@@ -3648,6 +3650,12 @@ uncategorized:
     themeable: true
     area: "interface"
 
+  welcome_banner_location:
+    client: true
+    enum: "WelcomeBannerLocation"
+    default: "above_topic_content"
+    area: "interface"
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -4061,7 +4069,7 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: disabled
+    default: "auto"
   enable_rich_text_paste:
     client: true
     default: true

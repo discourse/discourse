@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  accepted_answer: "Zaakceptowana odpowiedź"
+  site_settings:
+    solved_enabled: "Aktywuj wtyczkę solved, zezwól użytkownikom wybierać rozwiązania w tematach"
+    allow_solved_on_all_topics: "Zezwalaj użytkownikom na wybieranie rozwiązań dotyczących wszystkich tematów (jeśli to pole nie jest zaznaczone, rozwiązania można włączać dla poszczególnych kategorii lub tagów)"
+    accept_all_solutions_trust_level: "Minimalny poziom zaufania wymagany do zaakceptowania rozwiązania w każdym temacie (nawet jeśli nie jest się jego autorem)"
+    empty_box_on_unsolved: "Wyświetl puste pole obok nierozwiązanych tematów"
+    solved_quote_length: "Liczba znaków do wyświetlenia przy wyświetlaniu rozwiązania pod pierwszym wpisem"
+    solved_topics_auto_close_hours: "Zamknij temat automatycznie po (n) godzinach od ostatniej odpowiedzi, gdy temat został oznaczony jako rozwiązany. Ustaw na 0, aby wyłączyć automatyczne zamykanie."
+    show_filter_by_solved_status: "Pokaż rozwinięcie, aby filtrować listę tematów po statusie rozwiązania"
+    notify_on_staff_accept_solved: "Wyślij powiadomienie do twórcy tematu, gdy post zostanie oznaczony przez personel jako rozwiązanie."
+    disable_solved_education_message: "Wyłącz wiadomość edukacyjną dla rozwiązanych tematów."
+    accept_solutions_topic_author: "Pozwól autorowi tematu zaakceptować rozwiązanie."
+    solved_add_schema_markup: "Dodaj znaczniki schema QAPage do kodu HTML."
+    enable_solved_tags: "Tagi, które pozwolą użytkownikom wybrać rozwiązania."
+    prioritize_solved_topics_in_search: "Priorytetyzuj rozwiązane tematy w wynikach wyszukiwania."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Zaakceptowane rozwiązania"
+      xaxis: "Dzień"
+      yaxis: "Wszystkie"
+  solved:
+    no_solutions:
+      self: "Nie masz jeszcze żadnych akceptowanych rozwiązań."
+      others: "Brak akceptowanych rozwiązań."
+  badges:
+    solved_1:
+      name: "Rozwiązany!"
+      description: "Odpowiedź oznaczona jako rozwiązanie"
+      long_description: "Ta odznaka jest przyznawana za oznaczenie odpowiedzi jako rozwiązanie tematu. :white_check_mark: Dobra robota. :+1:"
+    solved_2:
+      name: "Doradca ds. poradnictwa"
+      description: "10 odpowiedzi oznaczonych jako rozwiązanie"
+      long_description: "Ta odznaka jest przyznana za to, że 10 twoich odpowiedzi zostało oznaczonych jako rozwiązania dla tematów. :white_check_mark: Jesteś prawdziwym atutem dla członków swojej społeczności."
+    solved_3:
+      name: "Wszechwiedzący"
+      description: "50 odpowiedzi oznaczonych jako rozwiązanie"
+      long_description: "Ta odznaka jest przyznana za to, że 50 twoich odpowiedzi zostało oznaczonych jako rozwiązania dla tematów. :white_check_mark: Naprawdę znasz się na rzeczy. :clap:"
+    solved_4:
+      name: "Instytucja rozwiązań"
+      description: "150 odpowiedzi oznaczonych jako rozwiązanie"
+      long_description: "Ta odznaka jest przyznana za to, że 150 twoich odpowiedzi zostało oznaczonych jako rozwiązania dla tematów. :white_check_mark: Doskonała robota. :slightly_smiling_face: Jesteś oficjalnie instytucją rozwiązującą. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Pierwsze zaakceptowane rozwiązanie
+        doc: Uruchamia się, gdy użytkownik otrzymał rozwiązanie zaakceptowane po raz pierwszy.
+  education:
+    topic_is_solved: |
+      ### Ten temat został rozwiązany
+
+      Odpowiadaj tutaj tylko wtedy, gdy:
+
+      - Masz dodatkowe informacje
+
+      - Rozwiązanie nie działa
+
+      Jeśli masz niezwiązany problem, proszę [rozpocznij nowy temat] (%{base_url}/new- topic) zamiast tego.
