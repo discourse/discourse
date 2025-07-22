@@ -108,6 +108,10 @@ export default class MountWidget extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
+    if (this.isDeactivated) {
+      return;
+    }
+
     WidgetClickHook.setupDocumentCallback();
 
     this._rootNode = document.createElement("div");
@@ -136,6 +140,10 @@ export default class MountWidget extends Component {
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._dispatched.forEach((evt) => {
       const [eventName, caller] = evt;
       this.appEvents.off(eventName, this, caller);
@@ -148,6 +156,10 @@ export default class MountWidget extends Component {
   afterPatch() {}
 
   eventDispatched(eventName, key, refreshArg) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     key = typeof key === "function" ? key(refreshArg) : key;
     const onRefresh = camelize(eventName.replace(/:/, "-"));
     this.dirtyKeys.keyDirty(key, { onRefresh, refreshArg });
@@ -155,6 +167,10 @@ export default class MountWidget extends Component {
   }
 
   dispatch(eventName, key) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._childEvents.push(eventName);
 
     const caller = (refreshArg) =>
@@ -164,6 +180,10 @@ export default class MountWidget extends Component {
   }
 
   queueRerender(callback) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     if (callback && !this._renderCallback) {
       this._renderCallback = callback;
     }
@@ -222,15 +242,27 @@ export default class MountWidget extends Component {
   }
 
   mountChildComponent(info) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._childComponents.pushObject(info);
   }
 
   unmountChildComponent(info) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._childComponents.removeObject(info);
   }
 
   didUpdateAttrs() {
     super.didUpdateAttrs(...arguments);
+    if (this.isDeactivated) {
+      return;
+    }
+
     this.queueRerender();
   }
 
