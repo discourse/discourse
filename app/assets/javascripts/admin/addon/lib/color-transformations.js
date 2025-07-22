@@ -17,9 +17,9 @@ function normalizeHex(hex) {
 // matches dc-color-brightness from variables.scss
 function colorBrightness(color) {
   const hex = normalizeHex(color);
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
 
   return r * 0.299 + g * 0.587 + b * 0.114;
 }
@@ -97,9 +97,9 @@ function hslToRgb(h, s, l) {
 // scale color lightness (approximates sass' scale-color)
 function scaleColorLightness(color, lightness) {
   const hex = normalizeHex(color);
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
 
   // convert to HSL
   const [h, s, l] = rgbToHsl(r, g, b);
