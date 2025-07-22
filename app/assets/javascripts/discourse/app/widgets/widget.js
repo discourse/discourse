@@ -35,7 +35,7 @@ import { i18n } from "discourse-i18n";
 export const WIDGET_DEPRECATION_OPTIONS = {
   since: "v3.5.0.beta8-dev",
   id: "discourse.widgets-end-of-life",
-  url: "", // TODO (widgets-end-of-life): Add URL to meta topic
+  url: "https://meta.discourse.org/t/375332/1",
 };
 
 export const POST_STREAM_DEPRECATION_OPTIONS = {
