@@ -52,6 +52,34 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  # TODO (martin) Remove this once we are sure all users have migrated
+  # to the new rich editor preference, or a few months after the 3.5 release.
+  it "saves the old keyValueStore editor preference to the database" do
+    visit "/"
+
+    page.execute_script "window.localStorage.setItem('discourse_d-editor-prefers-rich-editor', 'true');"
+
+    expect(
+      page.evaluate_script("window.localStorage.getItem('discourse_d-editor-prefers-rich-editor')"),
+    ).to eq("true")
+
+    open_composer
+
+    expect(composer).to have_rich_editor
+
+    try_until_success(frequency: 0.5) do
+      expect(user.user_option.reload.composition_mode).to eq(
+        UserOption.composition_mode_types[:rich],
+      )
+    end
+
+    expect(
+      page.evaluate_script(
+        "window.localStorage.getItem('discourse_d-editor-prefers-rich-editor') === null",
+      ),
+    ).to eq(true)
+  end
+
   context "with autocomplete" do
     it "triggers an autocomplete on mention" do
       open_composer
