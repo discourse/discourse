@@ -130,6 +130,10 @@ discourse-solved:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-solved/**/*
 
+discourse-topic-voting:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-topic-voting/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
