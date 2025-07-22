@@ -138,6 +138,10 @@ discourse-templates:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-templates/**/*
 
+discourse-ai:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-ai/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
