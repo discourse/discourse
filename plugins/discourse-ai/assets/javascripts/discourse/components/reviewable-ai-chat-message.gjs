@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { or } from 'truth-helpers';
+import { or } from "truth-helpers";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import htmlSafe from "discourse/helpers/html-safe";
