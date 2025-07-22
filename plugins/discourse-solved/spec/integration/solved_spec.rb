@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Managing Posts solved status" do
-  let(:topic) { Fabricate(:topic) }
+  let(:topic) { Fabricate(:topic_with_op) }
   fab!(:user) { Fabricate(:trust_level_4) }
   let(:p1) { Fabricate(:post, topic: topic) }
 
@@ -238,7 +238,7 @@ RSpec.describe "Managing Posts solved status" do
     it "gives priority to category's solved_topics_auto_close_hours setting" do
       freeze_time
       custom_auto_close_category = Fabricate(:category)
-      topic_2 = Fabricate(:topic, category: custom_auto_close_category)
+      topic_2 = Fabricate(:topic_with_op, category: custom_auto_close_category)
       post_2 = Fabricate(:post, topic: topic_2)
       custom_auto_close_category.custom_fields["solved_topics_auto_close_hours"] = 4
       custom_auto_close_category.save_custom_fields

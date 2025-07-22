@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -13,20 +14,27 @@ export default class SolvedAcceptAnswerButton extends Component {
   @service appEvents;
   @service currentUser;
 
+  @tracked saving = false;
+
   get showLabel() {
     return this.currentUser?.id === this.args.post.topicCreatedById;
   }
 
   @action
-  acceptAnswer() {
+  async acceptAnswer() {
     const post = this.args.post;
 
-    acceptPost(post, this.currentUser);
+    this.saving = true;
+    try {
+      await acceptPost(post, this.currentUser);
+    } finally {
+      this.saving = false;
+    }
 
     this.appEvents.trigger("discourse-solved:solution-toggled", post);
 
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     post.get("topic.postStream.posts").forEach((p) => {
-      p.set("topic_accepted_answer", true);
       this.appEvents.trigger("post-stream:refresh", { id: p.id });
     });
   }
@@ -36,6 +44,7 @@ export default class SolvedAcceptAnswerButton extends Component {
       class="post-action-menu__solved-unaccepted unaccepted"
       ...attributes
       @action={{this.acceptAnswer}}
+      @disabled={{this.saving}}
       @icon="far-square-check"
       @label={{if this.showLabel "solved.solution"}}
       @title="solved.accept_answer"
@@ -43,42 +52,21 @@ export default class SolvedAcceptAnswerButton extends Component {
   </template>
 }
 
-function acceptPost(post, acceptingUser) {
+async function acceptPost(post) {
+  if (!post.can_accept_answer || post.accepted_answer) {
+    return;
+  }
+
   const topic = post.topic;
 
-  clearAccepted(topic);
+  try {
+    const acceptedAnswer = await ajax("/solution/accept", {
+      type: "POST",
+      data: { id: post.id },
+    });
 
-  post.setProperties({
-    can_unaccept_answer: true,
-    can_accept_answer: false,
-    accepted_answer: true,
-  });
-
-  topic.set("accepted_answer", {
-    username: post.username,
-    name: post.name,
-    post_number: post.post_number,
-    excerpt: post.cooked,
-    accepter_username: acceptingUser.username,
-    accepter_name: acceptingUser.name,
-  });
-
-  ajax("/solution/accept", {
-    type: "POST",
-    data: { id: post.id },
-  }).catch(popupAjaxError);
-}
-
-function clearAccepted(topic) {
-  const posts = topic.get("postStream.posts");
-  posts.forEach((post) => {
-    if (post.get("post_number") > 1) {
-      post.setProperties({
-        accepted_answer: false,
-        can_accept_answer: true,
-        can_unaccept_answer: false,
-        topic_accepted_answer: false,
-      });
-    }
-  });
+    topic.setAcceptedSolution(acceptedAnswer);
+  } catch (e) {
+    popupAjaxError(e);
+  }
 }
