@@ -283,6 +283,13 @@ export default class FilterTips extends Component {
         prevTerms,
         lastTerm
       );
+    } else if (type === "number") {
+      results = this.getNumberSuggestions(
+        prefix,
+        filterName,
+        prevTerms,
+        lastTerm
+      );
     }
 
     // special handling for exact matches
@@ -337,6 +344,26 @@ export default class FilterTips extends Component {
       .map((option) => ({
         name: `${prefix}${filterName}:${prevTerms}${option.value}`,
         description: i18n(`filter.description.${option.key}`),
+        isPlaceholderCompletion: true,
+        term: option.value,
+      }));
+  }
+
+  getNumberSuggestions(prefix, filterName, prevTerms, lastTerm) {
+    const numberOptions = [
+      { value: "0" },
+      { value: "1" },
+      { value: "5" },
+      { value: "10" },
+      { value: "20" },
+    ];
+
+    return numberOptions
+      .filter((option) => {
+        return !lastTerm || option.value.includes(lastTerm);
+      })
+      .map((option) => ({
+        name: `${prefix}${filterName}:${prevTerms}${option.value}`,
         isPlaceholderCompletion: true,
         term: option.value,
       }));

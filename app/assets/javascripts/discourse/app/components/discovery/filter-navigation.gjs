@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
@@ -40,6 +41,13 @@ export default class DiscoveryFilterNavigation extends Component {
   clearInput() {
     this.newQueryString = "";
     this.args.updateTopicsListQueryParams(this.newQueryString);
+    next(() => {
+      if (this.inputElement) {
+        // required so child component is aware of the change
+        this.inputElement.dispatchEvent(new Event("input", { bubbles: true }));
+        this.inputElement.focus();
+      }
+    });
   }
 
   @action
