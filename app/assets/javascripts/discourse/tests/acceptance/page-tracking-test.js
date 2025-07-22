@@ -52,8 +52,7 @@ acceptance("Page tracking - loading slider", function (needs) {
       assert,
       tracked: 0,
       untracked: 1,
-      message:
-        "GET '/u/<username>/private-message-topic-tracking-state' is not tracked before app boot",
+      message: "no tracked requests before app boot",
     });
 
     await visit("/");
@@ -96,8 +95,7 @@ acceptance("Page tracking - loading spinner", function (needs) {
       assert,
       tracked: 0,
       untracked: 1,
-      message:
-        "GET '/u/<username>/private-message-topic-tracking-state' is not tracked before app boot",
+      message: "no tracked requests before app boot",
     });
 
     await visit("/");
