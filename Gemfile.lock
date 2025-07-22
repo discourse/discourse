@@ -649,14 +649,14 @@ GEM
     tiktoken_ruby (0.0.11.1-x86_64-linux)
     tiktoken_ruby (0.0.11.1-x86_64-linux-musl)
     timeout (0.4.3)
-    tokenizers (0.5.4)
+    tokenizers (0.5.5)
       rb_sys
-    tokenizers (0.5.4-aarch64-linux)
-    tokenizers (0.5.4-aarch64-linux-musl)
-    tokenizers (0.5.4-arm64-darwin)
-    tokenizers (0.5.4-x86_64-darwin)
-    tokenizers (0.5.4-x86_64-linux)
-    tokenizers (0.5.4-x86_64-linux-musl)
+    tokenizers (0.5.5-aarch64-linux)
+    tokenizers (0.5.5-aarch64-linux-musl)
+    tokenizers (0.5.5-arm64-darwin)
+    tokenizers (0.5.5-x86_64-darwin)
+    tokenizers (0.5.5-x86_64-linux)
+    tokenizers (0.5.5-x86_64-linux-musl)
     trilogy (2.9.0)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
@@ -1179,13 +1179,13 @@ CHECKSUMS
   tiktoken_ruby (0.0.11.1-x86_64-linux) sha256=ab56c936876c2ccba41fd8dc6588097e6555345ad0bdf5f4204be771a3637618
   tiktoken_ruby (0.0.11.1-x86_64-linux-musl) sha256=fd52104cbeb14471136f8519a07eef457ca84d01693bfb9b92b150a1fb3f42f6
   timeout (0.4.3) sha256=9509f079b2b55fe4236d79633bd75e34c1c1e7e3fb4b56cb5fda61f80a0fe30e
-  tokenizers (0.5.4) sha256=a6e31b8f66d22c2602a84574d0c7443e84a4227893e4b0d47627e4dd1019c065
-  tokenizers (0.5.4-aarch64-linux) sha256=fb70857b815ff88e134b98c1e335f97c9dfec535191a588450b81b3f8b184c8e
-  tokenizers (0.5.4-aarch64-linux-musl) sha256=cbdae1af2c51d0a4c27310b8aa1a0bf3d5aec3ae02d76ac3b6715d2066f0295c
-  tokenizers (0.5.4-arm64-darwin) sha256=1a543e121a4fdd23d17990eb3277f17d74a904a4f6be7206f864999e9e881ab3
-  tokenizers (0.5.4-x86_64-darwin) sha256=54df0583a37c7c7fb3f71d57ffca05ad88f2001a21cc0815ba062b0fc80d6055
-  tokenizers (0.5.4-x86_64-linux) sha256=6fef83655dc1b6c384206ad601a82479baee9735b10762fc3e0cc0df248602d1
-  tokenizers (0.5.4-x86_64-linux-musl) sha256=71bd2d5e79c6eb0795055849a4cfe18f3a28c3c9e068699da97fb74f6de83862
+  tokenizers (0.5.5) sha256=7bf1600567a3f253ec3f24da51af338437ecd1c638874122a9c57ea1724f4d92
+  tokenizers (0.5.5-aarch64-linux) sha256=55ac300cdcefcb4dccbe5b1577920d3ab47dab404c4e70a442aa5c97f084790d
+  tokenizers (0.5.5-aarch64-linux-musl) sha256=ddd23414ef60e15860a1ec804496ff053aa817956036594923a086c2897c492a
+  tokenizers (0.5.5-arm64-darwin) sha256=3a1606ce6aa918d89eea816b2de4cba9a7b5ad76ba1b42ad3ff44f6ff6208a85
+  tokenizers (0.5.5-x86_64-darwin) sha256=892594b0406c9890d45b4a2fbf16d75e7075472029a48fd84b776d5ee9863e17
+  tokenizers (0.5.5-x86_64-linux) sha256=e9681afe50dc74beed880bed08d385ebb1d22d51831d9169e285f3836306730c
+  tokenizers (0.5.5-x86_64-linux-musl) sha256=f5ccc321a58b58b45ee85042ea384fb0f99600361ecd1260f77bfd020b8bdb0a
   trilogy (2.9.0) sha256=a2d63b663ba68a4758e15d1f9afb228f5d16efc7fe7cea68699e1c106ef6067f
   ttfunk (1.8.0) sha256=a7cbc7e489cc46e979dde04d34b5b9e4f5c8f1ee5fc6b1a7be39b829919d20ca
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
