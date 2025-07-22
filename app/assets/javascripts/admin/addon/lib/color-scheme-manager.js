@@ -52,27 +52,27 @@ export async function applyColorScheme(scheme, options = {}) {
     let lightTag;
 
     if (replace) {
-      const allStylesheets = document.querySelectorAll(
+      const colorSchemeStylesheets = document.querySelectorAll(
         "link[rel='stylesheet']"
       );
-      const themeStylesheets = Array.from(allStylesheets).filter((link) => {
-        return (
-          link.href.includes("/stylesheets/") &&
-          !link.hasAttribute("data-theme-id") &&
-          !link.hasAttribute("data-target")
-        );
-      });
 
-      themeStylesheets.forEach((link) => {
+      for (const link of colorSchemeStylesheets) {
         if (
-          link.href.includes("dark_scheme") ||
-          link.classList.contains("dark-scheme")
+          link.hasAttribute("data-scheme-id") ||
+          link.classList.contains("dark-scheme") ||
+          link.classList.contains("light-scheme") ||
+          link.href.includes("color-scheme-stylesheet")
         ) {
-          darkTag = darkTag || link;
-        } else {
-          lightTag = lightTag || link;
+          if (
+            link.href.includes("dark_scheme") ||
+            link.classList.contains("dark-scheme")
+          ) {
+            darkTag = darkTag || link;
+          } else {
+            lightTag = lightTag || link;
+          }
         }
-      });
+      }
     } else {
       for (const tag of existingTags) {
         if (tag.classList.contains("dark-scheme")) {
@@ -83,9 +83,11 @@ export async function applyColorScheme(scheme, options = {}) {
       }
     }
 
-    const apiUrl = id
-      ? `/color-scheme-stylesheet/${id}.json`
-      : "/color-scheme-stylesheet/default.json";
+    if (!id) {
+      return;
+    }
+
+    const apiUrl = `/color-scheme-stylesheet/${id}.json`;
 
     const data = await ajax(apiUrl, {
       data: {
