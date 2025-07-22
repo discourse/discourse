@@ -52,6 +52,7 @@ export default RouteTemplate(
               canUsePasskeys=@controller.canUsePasskeys
               passkeyLogin=@controller.passkeyLogin
               loginPassword=@controller.loginPassword
+              loginPasswordChanged=@controller.loginPasswordChanged
               showLoginButtons=@controller.showLoginButtons
               secondFactorMethod=@controller.secondFactorMethod
               secondFactorToken=@controller.secondFactorToken
@@ -63,7 +64,7 @@ export default RouteTemplate(
               otherMethodAllowed=@controller.otherMethodAllowed
               showSecondFactor=@controller.showSecondFactor
               handleForgotPassword=@controller.handleForgotPassword
-              login=@controller.triggerLogin
+              triggerLogin=@controller.triggerLogin
               flashChanged=@controller.flashChanged
               flashTypeChanged=@controller.flashTypeChanged
               securityKeyCredentialChanged=@controller.securityKeyCredentialChanged
@@ -140,6 +141,7 @@ export default RouteTemplate(
                     @canUsePasskeys={{@controller.canUsePasskeys}}
                     @passkeyLogin={{@controller.passkeyLogin}}
                     @loginPassword={{@controller.loginPassword}}
+                    @loginPasswordChanged={{@controller.loginPasswordChanged}}
                     @secondFactorMethod={{@controller.secondFactorMethod}}
                     @secondFactorToken={{@controller.secondFactorToken}}
                     @backupEnabled={{@controller.backupEnabled}}
