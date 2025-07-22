@@ -73,6 +73,7 @@
 !/plugins/discourse-policy
 !/plugins/discourse-github
 !/plugins/discourse-adplugin
+!/plugins/discourse-affiliate
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

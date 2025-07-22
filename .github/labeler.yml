@@ -122,6 +122,10 @@ discourse-adplugin:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-adplugin/**/*
 
+discourse-affiliate:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-affiliate/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
