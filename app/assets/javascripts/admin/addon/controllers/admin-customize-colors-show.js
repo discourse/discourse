@@ -60,7 +60,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
     );
     newColorScheme.save().then(() => {
       this.allColors.pushObject(newColorScheme);
-      this.router.replaceWith("adminCustomize.colors.show", newColorScheme);
+      this.router.replaceWith("adminCustomize.colors-show", newColorScheme);
     });
   }
 

@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    discourse_policy:
+      builder:
+        insert: Vložit
+        groups:
+          label: Skupiny
+        version:
+          label: Verze
+        accept:
+          label: Přijmout
+        revoke:
+          label: zrušit
+        private:
+          label: Soukromé?
+        send-email:
+          label: Odeslat e-mail?
+      preferences:
+        policy_emails:
+          email_frequency_options:
+            never: Nikdy
+            when_away: Jen v nepřítomnosti
+            always: Vždy

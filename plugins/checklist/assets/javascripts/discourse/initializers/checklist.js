@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -58,12 +59,16 @@ export function checklistSyntax(elem, postDecorator) {
   const boxes = [...elem.getElementsByClassName("chcklst-box")];
   addUlClasses(boxes);
 
-  // TODO (glimmer-post-stream): remove this when we remove the legacy post stream code
-  const postWidget = getOwnerWithFallback(this).lookup("service:site")
-    .useGlimmerPostStream
-    ? null
-    : postDecorator?.widget;
   const postModel = postDecorator?.getModel();
+
+  // TODO (glimmer-post-stream): remove this when we remove the legacy post stream code
+  const postWidget = withSilencedDeprecations(
+    "discourse.post-stream-widget-overrides",
+    () =>
+      getOwnerWithFallback(this).lookup("service:site").useGlimmerPostStream
+        ? null
+        : postDecorator?.widget
+  );
 
   if (!postModel?.can_edit) {
     return;

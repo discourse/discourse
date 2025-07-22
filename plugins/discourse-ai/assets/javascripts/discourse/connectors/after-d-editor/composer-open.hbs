@@ -1,0 +1,8 @@
+{{#if this.isAiBotChat}}
+  {{body-class this.aiBotClasses}}
+  {{#if this.renderChatWarning}}
+    <div class="ai-bot-chat-warning">{{i18n
+        "discourse_ai.ai_bot.pm_warning"
+      }}</div>
+  {{/if}}
+{{/if}}

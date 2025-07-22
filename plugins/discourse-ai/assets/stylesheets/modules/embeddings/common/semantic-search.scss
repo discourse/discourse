@@ -1,0 +1,104 @@
+@use "lib/viewport";
+
+.semantic-search__container {
+  margin: 1rem 0 0 0;
+
+  .has-sidebar-page & {
+    @include viewport.until(lg) {
+      border-top: 1px solid var(--primary-low);
+    }
+  }
+
+  body:not(.has-sidebar-page) & {
+    @include viewport.until(md) {
+      border-top: 1px solid var(--primary-low);
+    }
+  }
+
+  .semantic-search__results {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+
+    .ai-indicator-wave {
+      color: var(--primary-medium);
+    }
+
+    .semantic-search {
+      &__searching {
+        display: flex;
+        align-items: center;
+
+        &.in-progress,
+        &.unavailable {
+          .semantic-search__searching-text {
+            color: var(--primary-medium);
+          }
+        }
+
+        svg {
+          font-size: var(--font-down-1);
+          color: var(--primary-high);
+        }
+      }
+
+      &__searching-text {
+        display: inline-block;
+        margin-left: 8px;
+      }
+
+      &__tooltip {
+        margin-left: 4px;
+        font-size: var(--font-down-1);
+      }
+
+      &__entries {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+.search-results {
+  .fps-result {
+    padding: 0.5rem;
+
+    .ai-result__icon {
+      display: none;
+    }
+  }
+
+  .ai-result {
+    border-radius: var(--d-border-radius);
+
+    .ai-result__icon {
+      display: inline;
+      margin-right: 0.5rem;
+      margin-left: auto;
+      font-size: var(--font-up-2);
+      color: var(--tertiary);
+    }
+  }
+}
+
+// Hides other buttons and only shows loader
+// while AI quick search is in progress
+.search-input {
+  .ai-quick-search-spinner ~ a.clear-search,
+  .ai-quick-search-spinner ~ a.show-advanced-search {
+    display: none;
+  }
+}
+
+@include viewport.until(md) {
+  .search-container .search-advanced .semantic-search__container {
+    + .search-info {
+      padding-inline: 1rem;
+    }
+
+    &.search-results {
+      margin-bottom: 0;
+      padding-inline: 1rem;
+    }
+  }
+}

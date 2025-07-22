@@ -1,0 +1,59 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    enable_discourse_github_plugin: "הפעלת התוסף discourse-github"
+    github_linkback_enabled: "קישור תקלות ב־GitHub בחזרה לדיונים בפורום"
+    github_linkback_projects: "רשימות של מיזמים לקשר מהם בחזרה"
+    github_linkback_access_token: 'אסימון גישה תקף למשתמש שיפרסם את הקישור החוזה ולספירת הגשות/תרומות כדי להעניק עיטורים. ניתן לעיין <a href="https://meta.discourse.org/t/99895">כאן</a> להנחיות איך לקבל את האסימון.'
+    github_linkback_maximum_links: "מספר הקישורים החוזרים המרבי ליצירה מפוסט יחיד. כאשר פוסט מכיל יותר קישורים, לא נוצרים כלל."
+    github_permalinks_enabled: "הפעלת שכתוב כתובות קבועות של GitHub"
+    github_permalinks_exclude: "שם קובץ או תיקייה שיוחרגו משכתובי הקישורים הקבועים. יש לספק שם קובץ או נתיב מלא בלבד: user/repository/optional-directory/filename"
+    github_badges_enabled: "הפעלת עיטורים של GitHub"
+    github_badges_repos: "כתובות של מאגרי GitHub לסריקה אחר תרומות והגשות"
+    github_silver_badge_min_commits: "מספר ההגשות המזערי לעיטור כסף"
+    github_gold_badge_min_commits: "מספר ההגשות המזערי לעיטור זהב"
+    errors:
+      invalid_badge_repo: "עליך לספק כתובת GitHub או את שם המאגר בצורה github_user/repository_name"
+      invalid_github_linkback_access_token: "עליך לספק אסימון גישה תקף לקישור חוזר אל GitHub שיש לו גישה למאגרי העיטורים שסיפקת."
+  github_linkback:
+    commit_template: |
+      הגשה (Commit) זו הוזכרה ב־**%{title}**. יכול להיות שיש פרטים קשורים כאן:
+
+      %{post_url}
+    pr_template: |
+      בקשת דחיפה (Pull Request) זו הוזכרה ב־**%{title}**. יכול להיות שיש פרטים קשורים כאן:
+
+      %{post_url}
+    issue_template: |
+      נושא (Issue) זה הוזכר ב־**%{title}**. יכול להיות שיש פרטים קשורים כאן:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "נדרשת פעולה עבור תוסף discourse-github"
+      repository_identifier_invalid_pm: |
+        מאגר שצוין ב־discourse-github שגוי:
+        %{repo_name}
+
+        יש לציין אותם בתור `user/repo` (משתמש/מאגר).
+
+        לא יוענקו עיטורים עד שהשם יתוקן
+        ב<a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">הגדרות האתר של discourse-github</a>
+        ו־„github_badges_enabled” (עיטורים של GitHub פעילים) מופעל בחזרה.
+      repository_not_found_pm_title: "נדרשת פעולה עבור תוסף discourse-github"
+      repository_not_found_pm: |
+        מאגר שצוין ב־discourse-github החזירה שגיאת „לא נמצא”: %{repo_name}
+
+        לא יוענקו עיטורים עד שהשם יתוקן
+        ב<a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">הגדרות האתר של discourse-github</a>
+        ו־„github_badges_enabled” (עיטורים של GitHub פעילים) מופעל בחזרה.
+      invalid_octokit_credentials_pm_title: "נדרשת פעולה עבור תוסף discourse-github"
+      invalid_octokit_credentials_pm: |
+        פרטי הגישה ל־GitHub שסופקו לתוסף discourse-github שגויים. הגדרת האתר „github badges enabled” הושבתה וההגשות לא ימולאו עד לפתרון התקלה.
+
+        כדאי לבדוק את הגדרת האתר „github linkback access token” (אסימון גישה לקישור חוזר ל־GitHub) כדי לוודא שהאסימון נכון ושיש ללו הרשאות לכל המאגרים דרך <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">הגדרות האתר של discourse-github</a>.

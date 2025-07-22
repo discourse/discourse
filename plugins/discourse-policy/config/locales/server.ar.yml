@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    policy_enabled: "هل تريد السماح بالسياسات؟"
+    policy_restrict_to_staff_posts: "قد لا تظهر السياسات إلا على منشورات فريق العمل"
+    policy_easy_revoke: "عرض زرَّي القبول والإلغاء في الوقت نفسه"
+  discourse_policy:
+    errors:
+      user_missing: "المستخدم غير موجود في المجموعة"
+      group_not_found: "لم يتم العثور على المجموعة للسياسة"
+      no_policy: "لا توجد سياسة للمنشور"
+      staff_only: "قد تنطبق السياسات على فريق العمل فقط"
+  reports:
+    unaccepted-policies:
+      title: سياسات غير مقبولة
+      labels:
+        topic_id: معرِّف الموضوع
+        user_id: معرِّف المستخدم
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "تحتاج إحدى السياسات إلى مراجعتك: %{topic_title}"
+      visit_topic: "الانتقال إلى الموضوع"
+      visit_link_to_respond: "%{visit_topic_link} للرد."
+      unsubscribe: "قم بتغيير %{email_preferences_link}أو %{unsubscribe_link} لإلغاء الاشتراك."
+      your_policy_email_settings: "تفضيل مدى تكرار الرسائل الإلكترونية للسياسة"
+  unsubscribe:
+    policy_emails:
+      select_title: "ضبط مدى تكرار الرسائل الإلكترونية لتنبيه السياسة على:"
+      never: أبدًا
+      when_away: عندما أكون غائبًا فقط
+      always: دائمًا

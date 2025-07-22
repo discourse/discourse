@@ -43,3 +43,7 @@ RSpec/InstanceVariable:
   Enabled: true
   Include:
     - spec/models/**/*
+
+RSpec/NamedSubject:
+  Exclude:
+    - plugins/discourse-ai/**/*

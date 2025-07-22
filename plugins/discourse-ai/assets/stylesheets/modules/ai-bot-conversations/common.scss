@@ -1,0 +1,517 @@
+@use "lib/viewport";
+
+// Hide the new question button from the hamburger menu's footer on desktop
+.desktop-view .hamburger-panel .ai-new-question-button {
+  display: none;
+}
+
+body.has-ai-conversations-sidebar {
+  .ai-new-question-button {
+    width: 100%;
+
+    &__wrapper {
+      background: var(--secondary);
+      margin: 1.8em 1em 0;
+
+      .mobile-view & {
+        padding: 1em;
+        position: sticky;
+        top: 0;
+        margin: -0.5em 0 0; // avoid shift when sticking
+        z-index: 1;
+      }
+    }
+  }
+
+  // When the sidebar is empty, we want to hide the "Today" header
+  // and only show the empty state component
+  &.has-empty-ai-conversations-sidebar
+    .sidebar-section[data-section-name="today"]
+    .sidebar-section-header-wrapper {
+    display: none;
+  }
+
+  // When the sidebar isn't empty, BUT "today" is empty, hide
+  // the entire section
+  &:not(.has-empty-ai-conversations-sidebar)
+    .sidebar-section[data-section-name="today"]:has(
+      .ai-bot-sidebar-empty-state
+    ) {
+    display: none;
+  }
+
+  .sidebar-toggle-all-sections {
+    display: none;
+  }
+
+  // topic elements
+  #topic-footer-button-share-and-invite,
+  body:not(.staff) #topic-footer-button-archive,
+  #topic-footer-buttons .topic-notifications-button,
+  .bookmark-menu-trigger,
+  .more-topics__container,
+  .private-message-glyph-wrapper,
+  .topic-header-participants,
+  .topic-above-footer-buttons-outlet,
+  #topic-footer-buttons .topic-footer-main-buttons details {
+    display: none;
+  }
+
+  .topic-timer-info {
+    border: none;
+  }
+
+  .topic-owner .actions .create-flag {
+    // why flag my own post
+    display: none;
+  }
+
+  .container.posts {
+    margin-bottom: 0;
+
+    .topic-navigation.with-timeline {
+      top: calc(var(--header-offset, 60px) + 5.5em);
+    }
+
+    .topic-navigation {
+      .topic-notifications-button {
+        display: none;
+      }
+    }
+  }
+
+  #topic-title {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    .title-wrapper {
+      width: 100%;
+      max-width: 960px;
+    }
+  }
+
+  .small-action,
+  .onscreen-post .row {
+    justify-content: center;
+  }
+
+  #topic-footer-buttons {
+    margin-top: 1em;
+    width: 100%;
+    max-width: 50.5em;
+
+    .topic-footer-main-buttons {
+      justify-content: flex-end;
+    }
+  }
+
+  #topic-progress-wrapper.docked {
+    display: none;
+  }
+
+  @include viewport.until(lg) {
+    .archetype-private_message .topic-post:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  nav.post-controls .actions button {
+    padding: 0.5em 0.65em;
+
+    &.reply {
+      .d-icon {
+        margin-right: 0.45em;
+      }
+    }
+  }
+
+  .ai-bot-conversations {
+    --input-max-width: 46em;
+    display: flex;
+    flex-direction: column;
+    height: calc(100dvh - var(--header-offset) - 5em);
+
+    .persona-llm-selector {
+      display: flex;
+      gap: 0.5em;
+      justify-content: flex-start;
+
+      .select-kit-body {
+        .select-kit-collection {
+          max-height: 50vh;
+          overflow-y: auto;
+        }
+      }
+
+      &__selection-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        @include viewport.until(sm) {
+          .select-kit-header-wrapper {
+            font-size: var(--font-down-1);
+          }
+        }
+
+        label {
+          font-size: var(--font-down-1);
+          font-weight: 300;
+          margin-left: 1em;
+          margin-bottom: 0;
+        }
+
+        .name {
+          display: block;
+
+          @include ellipsis;
+        }
+      }
+
+      .btn {
+        display: flex;
+        justify-content: flex-start;
+        background-color: transparent;
+        font-weight: bold;
+      }
+
+      .btn:hover,
+      .btn:focus {
+        background-color: transparent;
+        color: var(--primary);
+      }
+
+      .btn:hover .d-icon,
+      .btn:focus .d-icon {
+        color: var(--primary);
+      }
+    }
+
+    &__content-wrapper {
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      flex: 1 1 auto;
+      gap: 0.5em;
+
+      .loading-container {
+        display: contents;
+      }
+    }
+
+    &__title {
+      font-size: var(--font-up-5);
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 0.25em;
+      line-height: var(--line-height-medium);
+
+      // optical centering for layout balance
+      @media screen and (min-height: 600px) {
+        margin-top: -6em;
+      }
+    }
+
+    &__input-wrapper {
+      --input-min-height: 2.5em;
+      display: flex;
+      align-items: end;
+      width: 100%;
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-input-border-radius);
+
+      &:has(textarea[disabled]) {
+        background: var(--primary-very-low);
+      }
+
+      @include viewport.from(sm) {
+        width: 80%;
+        max-width: var(--input-max-width);
+      }
+
+      &:focus-within {
+        border-color: var(--tertiary);
+      }
+
+      .ai-conversation-submit {
+        .d-icon {
+          color: var(--primary-medium);
+          padding: 0.5em;
+        }
+
+        &:hover,
+        &:focus-visible {
+          .d-icon {
+            color: var(--primary-medium);
+          }
+        }
+      }
+
+      .ai-bot-upload-btn {
+        min-height: var(--input-min-height);
+        border: none;
+
+        .d-icon {
+          background: var(--primary-low);
+          padding: 0.5em;
+          border-radius: 100%;
+        }
+
+        &:hover,
+        &:focus-visible {
+          .d-icon {
+            color: var(--primary);
+          }
+        }
+      }
+
+      #ai-bot-conversations-input {
+        --scrollbarBg: transparent;
+        --scrollbarThumbBg: var(--primary-low);
+        --scrollbarWidth: 10px;
+        box-sizing: border-box;
+        flex-grow: 1;
+        margin: 0;
+        resize: none;
+        max-height: 30vh;
+        min-height: var(--input-min-height);
+        border-radius: 0 var(--d-button-border-radius)
+          var(--d-button-border-radius) 0;
+        border: none;
+        padding-block: 0.8em;
+        padding-inline: 0;
+        scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+        scrollbar-width: thin;
+        transition: scrollbar-color 0.25s ease-in-out;
+        height: 100%;
+        line-height: var(--line-height-large);
+
+        &::-webkit-scrollbar-thumb {
+          background-color: var(--scrollbarThumbBg);
+          border-radius: calc(var(--scrollbarWidth) / 2);
+          border: calc(var(--scrollbarWidth) / 4) solid var(--secondary);
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+
+        &::-webkit-scrollbar {
+          width: var(--scrollbarWidth);
+        }
+
+        &::-moz-scrollbar-thumb {
+          background-color: var(--scrollbarThumbBg);
+          border-radius: calc(var(--scrollbarWidth) / 2);
+          border: calc(var(--scrollbarWidth) / 4) solid var(--secondary);
+        }
+
+        &::-moz-scrollbar-track {
+          background-color: transparent;
+        }
+
+        &::-moz-scrollbar {
+          width: var(--scrollbarWidth);
+        }
+
+        &:focus-visible {
+          outline: none;
+          border-color: var(--tertiary);
+        }
+
+        &:not(:placeholder-shown) + .ai-conversation-submit {
+          will-change: scale;
+
+          &:hover,
+          &:focus-visible {
+            transform: scale(1.2);
+          }
+
+          .d-icon {
+            color: var(--tertiary);
+          }
+        }
+      }
+    }
+
+    .ai-disclaimer {
+      text-align: center;
+      font-size: var(--font-down-1);
+      color: var(--primary-700);
+      margin: 0;
+
+      @include viewport.from(sm) {
+        width: 80%;
+        max-width: var(--input-max-width);
+      }
+    }
+
+    .sidebar-footer-wrapper {
+      display: flex;
+
+      .powered-by-discourse {
+        display: block;
+      }
+
+      button {
+        display: none;
+      }
+    }
+
+    .topic-footer-main-buttons {
+      justify-content: flex-end;
+    }
+
+    .ai-bot-conversations__uploads-container {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em;
+
+      @include viewport.from(sm) {
+        width: 80%;
+        max-width: var(--input-max-width);
+      }
+    }
+
+    .ai-bot-upload {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--primary-low);
+      border-radius: 10em;
+      padding-left: 0.75em;
+      color: var(--primary-high);
+      font-size: var(--font-down-2);
+
+      &__progress {
+        margin-left: 0.5em;
+      }
+
+      &:hover,
+      &:focus-visible {
+        .d-icon {
+          color: var(--danger);
+        }
+      }
+    }
+  }
+
+  @include viewport.until(sm) {
+    .share-ai-conversation-button {
+      .d-icon {
+        margin: 0;
+      }
+
+      .d-button-label {
+        display: none;
+      }
+    }
+  }
+
+  // custom user card link
+  .user-card-meta__profile-link {
+    display: block;
+    padding: 0.5em 0 0.25em;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      margin-right: 0.15em;
+    }
+  }
+
+  // hide extra buttons
+  .timeline-container .topic-timeline .timeline-footer-controls {
+    display: none;
+  }
+
+  .topic-footer-main-buttons {
+    button:not(
+        .create,
+        .share-ai-conversation-button,
+        .topic-admin-menu-trigger
+      ) {
+      display: none;
+    }
+  }
+
+  .topic-map {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 auto;
+    padding-block: 0.5em;
+
+    .topic-map__views-trigger,
+    .topic-map__likes-trigger,
+    .summarization-button,
+    &__private-message-map,
+    .topic-map__users-list {
+      display: none;
+    }
+
+    &.--bottom {
+      padding-top: 0;
+    }
+
+    section {
+      background: transparent;
+      border-block: 1px solid var(--primary-low);
+    }
+
+    &__contents {
+      padding: 0.5em 1.25em;
+
+      @include viewport.from(sm) {
+        padding: 0.5em 0.5em 0.5em 1.9em;
+      }
+    }
+
+    &__stats {
+      height: 100%;
+      flex-wrap: nowrap;
+      gap: 1em;
+    }
+
+    .ai-conversation__participants {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em 0.25em;
+      align-items: center;
+
+      .avatar {
+        width: 2em;
+        height: 2em;
+      }
+
+      .trigger-group-card {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--primary-low);
+        border-radius: var(--d-button-border-radius);
+        padding: 0.25em 0.5em;
+        font-size: var(--font-down-1);
+
+        span {
+          position: relative;
+          top: -1px;
+        }
+
+        .d-icon {
+          position: relative;
+          top: 1px;
+        }
+
+        a {
+          color: var(--primary-medium);
+        }
+      }
+
+      .btn {
+        font-size: var(--font-down-1);
+        margin-right: 0.5em;
+      }
+    }
+  }
+}
