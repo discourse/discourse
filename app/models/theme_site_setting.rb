@@ -99,6 +99,14 @@ class ThemeSiteSetting < ActiveRecord::Base
     theme_site_setting_values_map
   end
 
+  def self.generate_defaults_map
+    SiteSetting
+      .themeable_site_settings
+      .each_with_object({}) do |setting_name, map|
+        map[setting_name] = SiteSetting.defaults[setting_name]
+      end
+  end
+
   def setting_rb_value
     SiteSetting.type_supervisor.to_rb_value(self.name, self.value, self.data_type)
   end
