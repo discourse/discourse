@@ -27,10 +27,10 @@ describe "Solved", type: :system do
 
         expect(topic_page).to have_css(".post-action-menu__solved-accepted")
 
-        accepted_answer_quote = topic_page.find("aside.accepted-answer.quote")
-        expect(accepted_answer_quote["data-expanded"]).to eq("false")
-        expect(accepted_answer_quote.find("blockquote")).to have_content("The answer is 42")
-
+        expect(topic_page).to have_css("aside.accepted-answer.quote[data-expanded='false']")
+        expect(topic_page.find("aside.accepted-answer.quote blockquote")).to have_content(
+          "The answer is 42",
+        )
         expect(topic_page.find(".title .accepted-answer--solver")).to have_content(
           "Solved by #{solver.username}",
         )
@@ -38,8 +38,8 @@ describe "Solved", type: :system do
           "Marked as solved by #{accepter.username}",
         )
 
-        accepted_answer_quote.find("button.quote-toggle").click
-        expect(accepted_answer_quote["data-expanded"]).to eq("true")
+        topic_page.find("aside.accepted-answer.quote button.quote-toggle").click
+        expect(topic_page).to have_css("aside.accepted-answer.quote[data-expanded='true']")
       end
 
       it "accepts and unaccepts post as solution" do
@@ -56,9 +56,9 @@ describe "Solved", type: :system do
 
         find(".post-action-menu__solved-accepted").click
         expect(topic_page).to have_css(".post-action-menu__solved-unaccepted")
-        expect(topic_page).not_to have_css(".accepted-answer.quote")
-        expect(topic_page).not_to have_css(".title .accepted-answer--solver")
-        expect(topic_page).not_to have_css(".title .accepted-answer--accepter")
+        expect(topic_page).to have_no_css(".accepted-answer.quote")
+        expect(topic_page).to have_no_css(".title .accepted-answer--solver")
+        expect(topic_page).to have_no_css(".title .accepted-answer--accepter")
       end
     end
   end
