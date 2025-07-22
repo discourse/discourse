@@ -185,7 +185,7 @@ export default class ColorPaletteListItem extends Component {
                       <DButton
                         @action={{fn
                           this.handleAsyncAction
-                          this.args.toggleUserSelectable
+                          @toggleUserSelectable
                           @scheme
                         }}
                         @icon={{if
@@ -207,7 +207,7 @@ export default class ColorPaletteListItem extends Component {
                     <DButton
                       @action={{fn
                         this.handleAsyncAction
-                        this.args.setAsDefaultThemePalette
+                        @setAsDefaultThemePalette
                         @scheme
                       }}
                       @icon="star"
@@ -222,7 +222,7 @@ export default class ColorPaletteListItem extends Component {
                       <DButton
                         @action={{fn
                           this.handleAsyncAction
-                          this.args.deleteColorScheme
+                          @deleteColorScheme
                           @scheme
                         }}
                         @icon="trash-can"
