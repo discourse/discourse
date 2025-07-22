@@ -76,6 +76,7 @@
 !/plugins/discourse-affiliate
 !/plugins/discourse-solved
 !/plugins/discourse-topic-voting
+!/plugins/discourse-templates
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

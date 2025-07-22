@@ -288,3 +288,10 @@ files:
   - source_path: plugins/discourse-topic-voting/config/locales/server.en.yml
     destination_path: plugins/topic-voting/server.yml
     label: topic-voting
+
+  - source_path: plugins/discourse-templates/config/locales/client.en.yml
+    destination_path: plugins/templates/client.yml
+    label: templates
+  - source_path: plugins/discourse-templates/config/locales/server.en.yml
+    destination_path: plugins/templates/server.yml
+    label: templates
