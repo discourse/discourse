@@ -2682,8 +2682,8 @@ en:
       above_topic_content: "Above topic content"
       below_site_header: "Below site header"
     composition_mode:
-      classic: "Classic"
-      modern: "Modern"
+      markdown: "Markdown"
+      rich: "Rich text"
 
     shortcut_modifier_key:
       shift: "Shift"

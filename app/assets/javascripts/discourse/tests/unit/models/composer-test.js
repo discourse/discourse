@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import {
   CREATE_TOPIC,
   EDIT,
@@ -494,14 +495,20 @@ module("Unit | Model | composer", function (hooks) {
 
     const composer = createComposer.call(this, {});
     composer.currentUser = User.current();
-    composer.currentUser.set("user_option.composition_mode", 1);
+    composer.currentUser.set(
+      "user_option.composition_mode",
+      USER_OPTION_COMPOSITION_MODES.rich
+    );
     assert.strictEqual(composer.composerVersion, 2);
   });
 
   test("composerVersion is correct when using 'classic' composer", async function (assert) {
     const composer = createComposer.call(this, {});
     composer.currentUser = User.current();
-    composer.currentUser.set("user_option.composition_mode", 0);
+    composer.currentUser.set(
+      "user_option.composition_mode",
+      USER_OPTION_COMPOSITION_MODES.markdown
+    );
     assert.strictEqual(composer.composerVersion, 1);
   });
 });

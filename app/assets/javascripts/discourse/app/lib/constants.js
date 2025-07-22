@@ -105,4 +105,4 @@ export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];
 
 export const INVITE_DESCRIPTION_MAX_LENGTH = 100;
 
-export const USER_OPTION_COMPOSITION_MODES = { classic: 0, modern: 1 };
+export const USER_OPTION_COMPOSITION_MODES = { markdown: 0, rich: 1 };

@@ -255,7 +255,7 @@ export default class User extends RestModel.extend(Evented) {
 
   @discourseComputed("user_option.composition_mode")
   useRichEditor(compositionMode) {
-    return compositionMode === USER_OPTION_COMPOSITION_MODES.modern;
+    return compositionMode === USER_OPTION_COMPOSITION_MODES.rich;
   }
 
   @discourseComputed("can_be_deleted", "post_count")

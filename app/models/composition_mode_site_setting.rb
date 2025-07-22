@@ -9,8 +9,8 @@ class CompositionModeSiteSetting < EnumSiteSetting
 
   def self.values
     @values ||= [
-      { name: "composition_mode.classic", value: 0 },
-      { name: "composition_mode.modern", value: 1 },
+      { name: "composition_mode.markdown", value: 0 },
+      { name: "composition_mode.rich", value: 1 },
     ]
   end
 

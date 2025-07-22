@@ -94,6 +94,10 @@ export default class DEditor extends Component {
 
     this.setupToolbar();
 
+    // TODO (martin) Remove this once we are sure all users have migrated
+    // to the new rich editor preference, or a few months after the 3.5 release.
+    await this.handleOldRichEditorPreference();
+
     if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
       this.editorComponent = await loadRichEditor();
     } else {
@@ -112,6 +116,22 @@ export default class DEditor extends Component {
     if (this.extraButtons) {
       this.extraButtons(this.toolbar);
     }
+  }
+
+  async handleOldRichEditorPreference() {
+    const oldValue = this.keyValueStore.get("d-editor-prefers-rich-editor");
+
+    if (!oldValue) {
+      return;
+    }
+
+    return this.#saveRichEditorPreference(
+      oldValue === "true"
+        ? USER_OPTION_COMPOSITION_MODES.rich
+        : USER_OPTION_COMPOSITION_MODES.markdown
+    ).finally(() => {
+      this.keyValueStore.remove("d-editor-prefers-rich-editor");
+    });
   }
 
   @discourseComputed("placeholder")
@@ -581,8 +601,8 @@ export default class DEditor extends Component {
       : await loadRichEditor();
 
     const preference = this.isRichEditorEnabled
-      ? USER_OPTION_COMPOSITION_MODES.modern
-      : USER_OPTION_COMPOSITION_MODES.classic;
+      ? USER_OPTION_COMPOSITION_MODES.rich
+      : USER_OPTION_COMPOSITION_MODES.markdown;
     this.#debounceSaveRichEditorPreference(preference);
   }
 
@@ -597,7 +617,7 @@ export default class DEditor extends Component {
 
   #saveRichEditorPreference(preference) {
     this.currentUser.set("user_option.composition_mode", preference);
-    this.currentUser.save(["composition_mode"]);
+    return this.currentUser.save(["composition_mode"]);
   }
 
   @action

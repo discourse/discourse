@@ -60,7 +60,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def self.composition_mode_types
-    @composition_mode_types ||= Enum.new(classic: 0, modern: 1)
+    @composition_mode_types ||= Enum.new(markdown: 0, rich: 1)
   end
 
   validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
