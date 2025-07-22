@@ -117,7 +117,7 @@ after_initialize do
         message = { type: :accepted_solution, accepted_answer: }
 
         DiscourseEvent.trigger(:accepted_solution, post)
-        MessageBus.publish("/topic/#{topic.id}", message)
+        MessageBus.publish("/topic/#{topic.id}", message, topic.secure_audience_publish_messages)
 
         accepted_answer
       end
