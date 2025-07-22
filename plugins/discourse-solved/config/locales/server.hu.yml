@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  accepted_answer: "Elfogadott válasz"
+  site_settings:
+    solved_enabled: "Solved plugin engedélyezése, hogy a felhasználók kiválaszthassák a megoldást a témához"
+    allow_solved_on_all_topics: "A felhasználók kiválaszthatják a megoldásokat az összes témában (ha nincs bejelölve, akkor a megoldások kategóriánként vagy címkénként kapcsolhatók be)"
+    accept_all_solutions_trust_level: "Szükséges minimum bizalmi szint a megoldások elfogadásához bármelyik témában (even when not OP)"
+    accept_all_solutions_allowed_groups: "Csoportok, amelyek bármilyen témában elfogadhatnak megoldásokat (még akkor is, ha nem OP). Adminok és moderátorok mindig engedélyezettek."
+    empty_box_on_unsolved: "Egy üres doboz megjelenítése a megoldatlan témák mellett"
+    solved_quote_length: "Idézett karakterek száma amikor a megoldás megjelenik az első bejegyzés alatt"
+    solved_topics_auto_close_hours: "Automatikusan zárja le a témát (n) órával az utolsó válasz után, miután a témát megoldották. Állítsa 0-ra az automatikus lezárás letiltásához."
+    show_filter_by_solved_status: "Legördülő menü megjelenítése a témalista megoldási állapot szerinti szűréséhez."
+    notify_on_staff_accept_solved: "Értesítés küldése a téma létrehozójának, ha egy bejegyzést a stáb megoldásként jelöl meg."
+    ignore_solved_topics_in_assigned_reminder: "Megakadályozhatja, hogy a feladatokra vonatkozó emlékeztetők megoldott témákat is tartalmazzanak. Csak a discourse-assign plugin használata esetén releváns."
+    assignment_status_on_solve: "Ha egy téma megoldódott, frissítse az összes hozzárendelést erre az állapotra."
+    assignment_status_on_unsolve: "Ha egy téma megoldatlan, frissítse az összes hozzárendelést erre az állapotra."
+    disable_solved_education_message: "Oktatási üzenet letiltása a megoldott témáknál."
+    accept_solutions_topic_author: "Engedélyezés, hogy a téma szerzője elfogadjon egy megoldást."
+    solved_add_schema_markup: "QAPage sémaleíró hozzáadása a HTML-hez."
+    enable_solved_tags: "Címkék, amelyek lehetővé teszik a felhasználók számára a megoldások kiválasztását."
+    prioritize_solved_topics_in_search: "A megoldott témák rangsorolása a keresési eredményekben."
+    keywords:
+      accept_all_solutions_allowed_groups: "minden_bizalmiszint_megoldas_elfogadasa"
+  reports:
+    accepted_solutions:
+      title: "Elfogadott megoldások"
+      xaxis: "Nap"
+      yaxis: "Összesen"
+  solved:
+    no_solutions:
+      self: "Még nincs elfogadott megoldásod."
+      others: "Nincs elfogadott megoldás."
+  badges:
+    solved_1:
+      name: "Megoldott!"
+      description: "Megoldásként megjelölt válasz"
+      long_description: "Ez a jelvény akkor jár, ha a válasz egy téma megoldásaként van megjelölve. :white_check_mark: Szép munka. :+1:"
+    solved_2:
+      name: "Tájékoztatási tanácsadó"
+      description: "10 válasz van Megoldásokként megjelölve"
+      long_description: "Ez a jelvény azért jár, mert 10 válaszod megjelölték megoldásként. :white_check_mark: Valódi érték a közösség tagjai számára."
+    solved_3:
+      name: "Mindentudó"
+      description: "50 válasz legyen Megoldásként megjelölve"
+      long_description: "Ez a jelvény azért ját, mert 50 válaszod megjelölték megoldásként. :white_check_mark: Te tényleg tudod a dolgod. :clap:"
+    solved_4:
+      name: "Megoldó Intézmény"
+      description: "150 válasz legyen Megoldásként megjelölve"
+      long_description: "Ez a jelvény azért jár, mert már 150 válaszod meg van jelölve megoldásként. :white_check_mark: Kiváló munka. :slightly_smiling_face: Te hivatalosan is egy Megoldó intézmény vagy. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Első elfogadott megoldás
+        doc: Akkor aktiválódik, amikor a felhasználó megoldását először fogadják el.
+  education:
+    topic_is_solved: |
+      ### Ezt a témát sikerült megoldani
+
+      Csak akkor válaszoljon ide, ha:
+
+      - További információi vannak
+
+      - A megoldás nem működik az Ön számára
+
+      Ha nem kapcsolódó problémája van, inkább [indítson új témát](%{base_url}/new-topic).

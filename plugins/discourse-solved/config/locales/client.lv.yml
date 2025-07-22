@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "apstiprināts"
+    solved:
+      topic_status_filter:
+        all: "Viss"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Uzticības līmenis

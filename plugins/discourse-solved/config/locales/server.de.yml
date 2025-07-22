@@ -1,0 +1,71 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  accepted_answer: "Akzeptierte Antwort"
+  site_settings:
+    solved_enabled: "Aktiviere das solved-Plug-in; erlaubt Benutzern, Lösungen für Themen auszuwählen"
+    allow_solved_on_all_topics: "Benutzern erlauben, Lösungen für alle Themen auszuwählen (wenn diese Option nicht aktiviert ist, können Lösungen nach Kategorie oder Schlagwort aktiviert werden)"
+    accept_all_solutions_trust_level: "Minimale Vertrauensstufe, die das Akzeptieren von Lösungen in jedem Thema erlaubt (auch wenn nicht selbst erstellt)"
+    accept_all_solutions_allowed_groups: "Gruppen, die Lösungen zu jedem Thema akzeptieren dürfen (auch wenn sie nicht Ersteller des Themas sind). Administratoren und Moderatoren haben diese Befugnis grundsätzlich."
+    empty_box_on_unsolved: "Zeige eine leere Box neben ungelösten Themen"
+    solved_quote_length: "Anzahl der Zeichen, die zitiert werden, wenn die Lösung unterhalb des ersten Beitrags angezeigt wird"
+    solved_topics_auto_close_hours: "Thema automatisch (n) Stunden nach der letzten Antwort schließen, sobald das Thema als gelöst markiert wurde. Auf 0 setzen, um automatisches Schließen zu deaktivieren."
+    show_filter_by_solved_status: "Zeige eine Drop-down-Liste, um eine Themenliste nach „Gelöst“-Status zu filtern."
+    notify_on_staff_accept_solved: "Benachrichtigung an den Themenersteller senden, wenn ein Beitrag von einem Team-Mitglied als Lösung markiert wird."
+    ignore_solved_topics_in_assigned_reminder: "Verhindere, dass Erinnerungen für Zuordnungen gelöste Themen betreffen. Nur relevant, wenn das Plugin discourse-assign verwendet wird."
+    assignment_status_on_solve: "Wenn ein Thema als gelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
+    assignment_status_on_unsolve: "Wenn ein Thema als ungelöst markiert wird, aktualisiere alle Zuordnungen auf diesen Status"
+    disable_solved_education_message: "Deaktiviert den Hinweis für gelöste Themen."
+    accept_solutions_topic_author: "Erlaube dem Themenverfasser, eine Lösung zu akzeptieren."
+    solved_add_schema_markup: "Füge QAPage-Schema-Mark-up zu HTML hinzu."
+    enable_solved_tags: "Schlagwörter, die es Benutzern ermöglichen, Lösungen auszuwählen."
+    prioritize_solved_topics_in_search: "Gelöste Themen in den Suchergebnissen priorisieren."
+    show_who_marked_solved: "Zeige, wer das Thema als gelöst markiert hat. Dies wird im ersten Beitrag des Themas und im Antwortbeitrag in einem Tooltip angezeigt."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Akzeptierte Lösungen"
+      xaxis: "Tag"
+      yaxis: "Gesamt"
+  solved:
+    no_solutions:
+      self: "Du hast noch keine akzeptierte Lösung."
+      others: "Keine akzeptierten Lösungen."
+  badges:
+    solved_1:
+      name: "Gelöst!"
+      description: "Eine Antwort wurde als Lösung markiert"
+      long_description: "Dieses Abzeichen bekommst du, wenn deine Antwort als Lösung für ein Thema markiert wurde :white_check_mark: Gute Arbeit :+1:"
+    solved_2:
+      name: "Berater"
+      description: "10 Antworten wurden als Lösungen markiert"
+      long_description: "Dieses Abzeichen bekommst du, wenn 10 deiner Antworten als Lösungen für Themen markiert wurden :white_check_mark: Du bist wahrlich eine Bereicherung für die Mitglieder deiner Community."
+    solved_3:
+      name: "Kluges Köpfchen"
+      description: "50 Antworten wurden als Lösungen markiert"
+      long_description: "Dieses Abzeichen bekommst du, wenn 50 deiner Antworten als Lösungen für Themen markiert wurden :white_check_mark: Du weißt echt, wovon du sprichst :clap:"
+    solved_4:
+      name: "Anlaufstelle für Lösungen"
+      description: "150 Antworten wurden als Lösungen markiert"
+      long_description: "Dieses Abzeichen bekommst du, wenn 150 deiner Antworten als Lösungen für Themen markiert wurden :white_check_mark: Ausgezeichnete Arbeit :slightly_smiling_face: Du bist offiziell eine Anlaufstelle für Lösungen :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Erste akzeptierte Lösung
+        doc: Wird ausgelöst, wenn für einen Benutzer zum ersten Mal eine Lösung akzeptiert wird.
+  education:
+    topic_is_solved: |
+      ### Dieses Thema wurde gelöst
+
+      Antworte hier nur, wenn:
+
+      - du zusätzliche Details hast.
+
+      - die Lösung für dich nicht funktioniert.
+
+      Wenn du ein anderes Problem hast, erstelle bitte stattdessen [ein neues Thema](%{base_url}/new-topic).

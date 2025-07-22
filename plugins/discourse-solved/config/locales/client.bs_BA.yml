@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "prihvaćeno"
+    solved:
+      title: "Riješeno"
+      allow_accepted_answers: "Dopustite vlasniku teme i osoblju da označe odgovor kao rješenje"
+      accept_answer: "Odaberite ako ovaj odgovor rješava problem"
+      accepted_description: "Ovo je prihvaćeno rješenje za ovu temu"
+      has_no_accepted_answer: "Ova tema nema rešenje"
+      unaccept_answer: "Poništite odabir ako ovaj odgovor više ne rješava problem"
+      accepted_answer: "Rešenje"
+      solution: "Rešenje"
+      solution_summary:
+        one: "riješenje"
+        few: "riješenja"
+        other: "riješenja"
+      topic_status_filter:
+        all: "sve"
+        solved: "riješeno"
+        unsolved: "nije riješeno"
+    topic_statuses:
+      solved:
+        help: "Ova tema ima riješenje"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Trust Level

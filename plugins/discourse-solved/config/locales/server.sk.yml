@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  reports:
+    accepted_solutions:
+      title: "Prijaté riešenia"
+      xaxis: "Deň"
+      yaxis: "Celkom"
+  solved:
+    no_solutions:
+      self: "Nemáte zatiaľ prijaté žiadne riešenie."
+      others: "Žiadne prijaté riešenia."

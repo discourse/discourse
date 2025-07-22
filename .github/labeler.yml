@@ -126,6 +126,10 @@ discourse-affiliate:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-affiliate/**/*
 
+discourse-solved:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-solved/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

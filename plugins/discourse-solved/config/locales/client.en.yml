@@ -1,0 +1,78 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse Solved"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "accepted"
+    solutions: "Solutions"
+
+    solved:
+      title: "Solved"
+      allow_accepted_answers: "Allow topic owner and staff to mark a reply as the solution"
+      solved_topics_auto_close_hours: "Auto close topic (n) hours after the last reply once the topic has been marked as solved."
+      accept_answer: "Select if this reply solves the problem"
+      accepted_description: "This is the accepted solution to this topic"
+      has_no_accepted_answer: "This topic has no solution"
+      unaccept_answer: "Unselect if this reply no longer solves the problem"
+      accepted_answer: "Solution"
+      solution: "Solution"
+      solution_summary:
+        one: "solution"
+        other: "solutions"
+      accepted_html: "%{icon} Solved <span class='by'>by <a href data-user-card='%{username_lower}'>%{username}</a></span> in <a href='%{post_path}' class='back'>post #%{post_number}</a>"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "all"
+        solved: "solved"
+        unsolved: "unsolved"
+      no_solved_topics_title: "You haven’t solved any topics yet"
+      no_solved_topics_title_others: "%{username} has not solved any topics yet"
+      no_solved_topics_body: "When you provide a helpful reply to a topic, your reply might be selected as the solution by the topic owner or staff."
+      marked_solved_by: "Marked as solved by <a href data-user-card='%{username_lower}'>%{username}</a></span>"
+
+      no_answer:
+        title: Has your question been answered?
+        description: "Highlight the answer and help others by using the solution button below the correct reply."
+      notification:
+        title: "your post was marked as solution"
+
+    topic_statuses:
+      solved:
+        help: "This topic has a solution"
+
+    search:
+      advanced:
+        statuses:
+          solved: "are solved"
+          unsolved: "are unsolved"
+
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Solved Event"
+          accepted_solution: "When an user marks a post as the accepted answer"
+          unaccepted_solution: "When an user marks a post as the unaccepted answer"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Accept/Unaccept a solution.
+
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Any
+          fields:
+            maximum_trust_level:
+              label: Trust Level
+              description: Users under this Trust Level will trigger this automation

@@ -274,3 +274,10 @@ files:
   - source_path: plugins/discourse-affiliate/config/locales/server.en.yml
     destination_path: plugins/affiliate/server.yml
     label: affiliate
+
+  - source_path: plugins/discourse-solved/config/locales/client.en.yml
+    destination_path: plugins/solved/client.yml
+    label: solved
+  - source_path: plugins/discourse-solved/config/locales/server.en.yml
+    destination_path: plugins/solved/server.yml
+    label: solved
