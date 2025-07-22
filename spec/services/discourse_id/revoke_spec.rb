@@ -55,9 +55,9 @@ RSpec.describe DiscourseId::Revoke do
     end
 
     before do
-      SiteSetting.enable_discourse_id = true
       SiteSetting.discourse_id_client_id = SecureRandom.hex
       SiteSetting.discourse_id_client_secret = SecureRandom.hex
+      SiteSetting.enable_discourse_id = true
     end
 
     context "when discourse id is not properly configured" do

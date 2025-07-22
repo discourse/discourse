@@ -10,7 +10,11 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class PostAvatar extends Component {
   get size() {
-    return this.args.size || "large";
+    return applyValueTransformer(
+      "post-avatar-size",
+      this.args.size || "large",
+      { post: this.args.post }
+    );
   }
 
   @cached

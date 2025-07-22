@@ -472,6 +472,7 @@ class Theme < ActiveRecord::Base
         extra_js: 6,
         tests_js: 7,
         migrations: 8,
+        about: 9,
       )
   end
 

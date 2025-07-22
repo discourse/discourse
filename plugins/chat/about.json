@@ -1,0 +1,8 @@
+{
+  "tests": {
+    "requiredPlugins": [
+      "discourse-lazy-videos",
+      "spoiler-alert"
+    ]
+  }
+}

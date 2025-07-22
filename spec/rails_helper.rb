@@ -77,6 +77,18 @@ class PlaywrightLogger
         }
       end,
     )
+
+    page.on(
+      "pageerror",
+      ->(error) do
+        @logs << {
+          level: "error",
+          message: error.message,
+          timestamp: Time.now.to_i * 1000,
+          source: "pageerror-api",
+        }
+      end,
+    )
   end
 end
 

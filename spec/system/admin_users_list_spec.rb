@@ -214,7 +214,7 @@ describe "Admin Users Page", type: :system do
     it "redirects to groups page" do
       admin_users_page.visit
       admin_users_page.click_tab("groups")
-      expect(page).to have_current_path("/g")
+      expect(page).to have_current_path("/admin/groups")
     end
 
     it "redirect to invites page" do

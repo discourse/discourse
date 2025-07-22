@@ -138,7 +138,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Awesome Theme")
-        expect(json["theme"]["theme_fields"].length).to eq(3)
+        expect(json["theme"]["theme_fields"].length).to eq(4)
       end
     end
 
@@ -337,7 +337,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Header Icons")
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -369,7 +369,7 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Some other name")
         expect(json["theme"]["id"]).to eq(other_existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
 
@@ -399,7 +399,7 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Header Icons")
         expect(json["theme"]["id"]).not_to eq(existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
