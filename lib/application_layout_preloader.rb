@@ -112,7 +112,7 @@ class ApplicationLayoutPreloader
     check_readonly_mode if @readonly_mode.nil?
     @preloaded["site"] = Site.json_for(@guardian)
     @preloaded["siteSettings"] = SiteSetting.client_settings_json
-    @preloaded["currentThemeId"] = @theme_id.to_s
+    @preloaded["currentThemeId"] = @theme_id.present? ? @theme_id.to_s : "NOTHEMEID"
     @preloaded["themeSiteSettingOverrides"] = SiteSetting.theme_site_settings_json(@theme_id)
     @preloaded["customHTML"] = custom_html_json
     @preloaded["banner"] = banner_json
