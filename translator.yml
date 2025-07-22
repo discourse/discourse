@@ -295,3 +295,10 @@ files:
   - source_path: plugins/discourse-templates/config/locales/server.en.yml
     destination_path: plugins/templates/server.yml
     label: templates
+
+  - source_path: plugins/discourse-ai/config/locales/client.en.yml
+    destination_path: plugins/ai/client.yml
+    label: ai
+  - source_path: plugins/discourse-ai/config/locales/server.en.yml
+    destination_path: plugins/ai/server.yml
+    label: ai

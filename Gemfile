@@ -294,3 +294,15 @@ gem "stripe", "11.1.0", require: false
 # for discourse-github
 gem "sawyer", "0.9.2", require: false
 gem "octokit", "5.6.1", require: false
+
+# for discourse-ai
+gem "tokenizers", "0.5.4", require: false
+gem "tiktoken_ruby", "0.0.11.1", require: false
+gem "discourse_ai-tokenizers", "0.3.1", require: false
+gem "ed25519", "1.2.4" # TODO: remove this as existing ssl gem should handle this
+gem "Ascii85", "2.0.1", require: false
+gem "ruby-rc4", "0.1.5", require: false
+gem "hashery", "2.1.2", require: false
+gem "ttfunk", "1.8.0", require: false
+gem "afm", "0.2.2", require: false
+gem "pdf-reader", "2.14.1", require: false
