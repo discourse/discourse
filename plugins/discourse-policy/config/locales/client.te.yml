@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    discourse_policy:
+      builder:
+        groups:
+          label: గుంపులు
+        version:
+          label: సంచిక
+        accept:
+          label: అంగీకరించండి
+        revoke:
+          label: రివోక్
+      preferences:
+        policy_emails:
+          email_frequency_options:
+            never: ఎప్పటికీ వద్దు
+            always: ఎల్లప్పుడూ

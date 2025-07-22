@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    discourse_policy:
+      builder:
+        insert: Wstaw
+        groups:
+          label: Grupy
+        version:
+          label: Wersja
+        accept:
+          label: Zaakceptuj
+        revoke:
+          label: Odbierz
+        private:
+          label: Prywatna?
+        send-email:
+          label: Wyślij Email?
+      preferences:
+        policy_emails:
+          email_frequency_options:
+            never: Nigdy
+            when_away: Tylko gdy jesteś daleko
+            always: Zawsze
