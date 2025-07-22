@@ -93,7 +93,7 @@ export default class DiscoveryFilterNavigation extends Component {
             @type="text"
             id="queryStringInput"
             autocomplete="off"
-            placeholder="{{i18n 'filter.placeholder'}}"
+            placeholder={{i18n "filter.placeholder"}}
             {{didInsert this.storeInputElement}}
           />
           {{#if this.newQueryString}}
