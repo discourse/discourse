@@ -309,7 +309,7 @@ export default class TopicRoute extends DiscourseRoute {
   _replaceUnlessScrolling(url, topicId) {
     const { currentRouteName } = this.router;
 
-    const stillOnTopicRoute = currentRouteName.split(".")[0] === "topic";
+    const stillOnTopicRoute = currentRouteName?.split(".")[0] === "topic";
     if (!stillOnTopicRoute) {
       return;
     }

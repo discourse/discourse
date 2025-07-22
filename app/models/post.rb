@@ -1326,15 +1326,22 @@ class Post < ActiveRecord::Base
   end
 
   def has_localization?(locale = I18n.locale)
-    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+    get_localization(locale).present?
   end
 
   def in_user_locale?
-    locale == I18n.locale.to_s
+    LocaleNormalizer.is_same?(locale, I18n.locale)
   end
 
   def get_localization(locale = I18n.locale)
-    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+    locale_str = locale.to_s.sub("-", "_")
+
+    # prioritise exact match
+    if match = post_localizations.find { |l| l.locale == locale_str }
+      return match
+    end
+
+    post_localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
 
   private

@@ -16,13 +16,9 @@
 #reply-control.hide-preview:not(.draft) {
   @include viewport.from(sm) {
     background: var(--d-content-background);
-    border-top-right-radius: var(--d-border-radius);
-    border-top-left-radius: var(--d-border-radius);
 
     .grippie {
       background: var(--tertiary-low);
-      border-top-right-radius: var(--d-border-radius);
-      border-top-left-radius: var(--d-border-radius);
     }
 
     .user-selector,

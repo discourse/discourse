@@ -250,10 +250,12 @@ export default class PostQuotedContent extends Component {
               <:content as |expandedPost|>
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
+                    @className="post__contents-cooked-quote"
                     @post={{expandedPost}}
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
+                    @selectionBarrier={{false}}
                     @streamElement={{@streamElement}}
                   />
                 </div>
@@ -275,7 +277,16 @@ export default class PostQuotedContent extends Component {
               </:error>
             </AsyncContent>
           {{~else~}}
-            {{~@collapsedContent~}}
+            <PostCookedHtml
+              @className="post__contents-cooked-quote"
+              @post={{@post}}
+              @cooked={{@collapsedContent}}
+              @decoratorState={{@decoratorState}}
+              @extraDecorators={{this.extraDecorators}}
+              @highlightTerm={{@highlightTerm}}
+              @selectionBarrier={{false}}
+              @streamElement={{@streamElement}}
+            />
           {{~/if~}}
         {{~/unless~}}
       </blockquote>
