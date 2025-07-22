@@ -712,7 +712,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  Ascii85 (= 2.0.1)
+  Ascii85
   actionmailer (~> 8.0.0)
   actionpack (~> 8.0.0)
   actionview (~> 8.0.0)
@@ -722,7 +722,7 @@ DEPENDENCIES
   activerecord (~> 8.0.0)
   activesupport (~> 8.0.0)
   addressable
-  afm (= 0.2.2)
+  afm
   annotaterb
   aws-sdk-s3
   aws-sdk-sns
@@ -747,10 +747,10 @@ DEPENDENCIES
   discourse-emojis
   discourse-fonts
   discourse-seed-fu
-  discourse_ai-tokenizers (= 0.3.1)
+  discourse_ai-tokenizers
   discourse_dev_assets
   dry-initializer (~> 3.1)
-  ed25519 (= 1.2.4)
+  ed25519
   email_reply_trimmer
   excon
   execjs
@@ -758,16 +758,16 @@ DEPENDENCIES
   fabrication
   faker
   faraday
-  faraday-multipart (= 1.0.4)
+  faraday-multipart
   faraday-retry
   fast_blank
   fastimage
-  hashery (= 2.1.2)
+  hashery
   highline
   htmlentities
   http_accept_language
   image_optim
-  inflection (= 1.0.0)
+  inflection
   iso8601
   json
   json_schemer
@@ -791,14 +791,14 @@ DEPENDENCIES
   minio_runner
   mocha
   multi_json
-  multipart-post (= 2.2.3)
+  multipart-post
   mustache
   net-http
   net-imap
   net-pop
   net-smtp
   nokogiri
-  octokit (= 5.6.1)
+  octokit
   oj
   omniauth
   omniauth-facebook
@@ -808,7 +808,7 @@ DEPENDENCIES
   omniauth-twitter
   parallel
   parallel_tests
-  pdf-reader (= 2.14.1)
+  pdf-reader
   pg
   propshaft
   pry-byebug
@@ -843,26 +843,26 @@ DEPENDENCIES
   rubocop-discourse
   ruby-prof
   ruby-progressbar
-  ruby-rc4 (= 0.1.5)
+  ruby-rc4
   ruby-readability
   rubyzip
   sanitize
   sassc-embedded
-  sawyer (= 0.9.2)
+  sawyer
   shoulda-matchers
   sidekiq
   simplecov
   sqlite3
   sshkey
   stackprof
-  stripe (= 11.1.0)
+  stripe
   syntax_tree
   test-prof
   thor
-  tiktoken_ruby (= 0.0.11.1)
-  tokenizers (= 0.5.4)
+  tiktoken_ruby
+  tokenizers
   trilogy
-  ttfunk (= 1.8.0)
+  ttfunk
   tzinfo-data
   unf
   unicorn
@@ -871,7 +871,7 @@ DEPENDENCIES
   yaml-lint
   yard
   zeitwerk
-  zendesk_api (= 1.38.0.rc1)
+  zendesk_api
 
 CHECKSUMS
   Ascii85 (2.0.1) sha256=15cb5d941808543cbb9e7e6aea3c8ec3877f154c3461e8b3673e97f7ecedbe5a

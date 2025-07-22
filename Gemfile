@@ -283,26 +283,26 @@ gem "dry-initializer", "~> 3.1"
 gem "parallel"
 
 # for discourse-zendesk-plugin
-gem "inflection", "1.0.0", require: false
-gem "multipart-post", "2.2.3", require: false
-gem "faraday-multipart", "1.0.4", require: false
-gem "zendesk_api", "1.38.0.rc1", require: false
+gem "inflection", require: false
+gem "multipart-post", require: false
+gem "faraday-multipart", require: false
+gem "zendesk_api", require: false
 
 # for discourse-subscriptions
-gem "stripe", "11.1.0", require: false
+gem "stripe", require: false
 
 # for discourse-github
-gem "sawyer", "0.9.2", require: false
-gem "octokit", "5.6.1", require: false
+gem "sawyer", require: false
+gem "octokit", require: false
 
 # for discourse-ai
-gem "tokenizers", "0.5.4", require: false
-gem "tiktoken_ruby", "0.0.11.1", require: false
-gem "discourse_ai-tokenizers", "0.3.1", require: false
-gem "ed25519", "1.2.4" # TODO: remove this as existing ssl gem should handle this
-gem "Ascii85", "2.0.1", require: false
-gem "ruby-rc4", "0.1.5", require: false
-gem "hashery", "2.1.2", require: false
-gem "ttfunk", "1.8.0", require: false
-gem "afm", "0.2.2", require: false
-gem "pdf-reader", "2.14.1", require: false
+gem "tokenizers", require: false
+gem "tiktoken_ruby", require: false
+gem "discourse_ai-tokenizers", require: false
+gem "ed25519" # TODO: remove this as existing ssl gem should handle this
+gem "Ascii85", require: false
+gem "ruby-rc4", require: false
+gem "hashery", require: false
+gem "ttfunk", require: false
+gem "afm", require: false
+gem "pdf-reader", require: false
