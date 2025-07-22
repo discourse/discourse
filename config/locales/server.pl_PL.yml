@@ -795,7 +795,7 @@ pl_PL:
               too_large_group: "Grupa: %{group_name}, ma zbyt wielu użytkowników, aby otrzymać wiadomość. Limit wynosi %{limit}."
               unable_to_update: "Wystąpił błąd przy aktualizacji tego tematu."
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
-              unable_to_unlist: "Przepraszamy, nie możesz utworzyć niepublicznego tematu."
+              unable_to_unlist: "Przepraszamy, nie możesz utworzyć zastrzeżonego tematu."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
         user:
@@ -2453,8 +2453,8 @@ pl_PL:
     embed_topics_list: "Włącz osadzanie list tematów w formacie HTML. To ustawienie umożliwia osadzanie list tematów z Twojego forum na innych stronach internetowych w sposób kompatybilny i łatwy w użyciu."
     embed_set_canonical_url: "Ustaw kanoniczny adres URL dla osadzonych tematów w adresie osadzonej zawartości."
     embed_truncate: "Skróć treść postów osadzonych ze źródeł zewnętrznych. To ustawienie gwarantuje, że po osadzeniu w Twojej witrynie wpisu z zewnętrznego adresu URL będzie wyświetlana tylko początkowa część treści. Jeśli wolisz wyświetlać pełną treść postów zewnętrznych, możesz wyłączyć to ustawienie."
-    embed_unlisted: "Osadzone tematy nie będą wyświetlane, dopóki użytkownik nie odpowie."
-    import_embed_unlisted: "Zaimportowane osadzone tematy nie będą wyświetlane, dopóki użytkownik nie odpowie (nawet jeśli ustawienie `embed unlisted` jest odznaczone)."
+    embed_unlisted: "Osadzone tematy będą zastrzeżone, dopóki użytkownik nie odpowie."
+    import_embed_unlisted: "Zaimportowane osadzone tematy będą zastrzeżone, dopóki użytkownik nie odpowie (nawet jeśli ustawienie `embed unlisted` jest odznaczone)."
     embed_support_markdown: "Obsługa formatowania Markdown dla osadzonych postów."
     allowed_embed_selectors: "Rozdzielana przecinkami lista elementów CSS, które są dozwolone w osadzaniu."
     allowed_href_schemes: "Projekty dozwolone w linkach jako dodatek do http i https."
@@ -4827,7 +4827,7 @@ pl_PL:
       name: Weteran
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Przyznano</a> możliwość globalnej edycji, przypinania, zamykania, archiwizacji, dzielenia i scalania tematów oraz więcej polubień
       long_description: |
-        Ta odznaka jest przyznawana za zdobycie 4. poziomu zaufania. Jesteś wybranym przez zespół administracyjny weteranem i stawiasz dobry przykład reszcie społeczności poprzez swoje akcje i wypowiedzi. Możesz edytować wszystkie wpisy i dokonywać akcji typowych dla moderatorów: przypinania, zamykania, usuwanie z list, archiwizowania, dzielenia i scalania tematów.
+        Ta odznaka jest przyznawana za zdobycie 4. poziomu zaufania. Jesteś wybranym przez zespół administracyjny weteranem i stawiasz dobry przykład reszcie społeczności poprzez swoje akcje i wypowiedzi. Możesz edytować wszystkie wpisy i dokonywać akcji typowych dla moderatorów: przypinania, zamykania, zastrzeżenia, archiwizowania, dzielenia i scalania tematów.
     welcome:
       name: Powitanie
       description: Otrzymano polubienie

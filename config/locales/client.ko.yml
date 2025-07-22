@@ -289,6 +289,7 @@ ko:
       contact_info: "이 사이트에 영향을 미치는 중대한 문제나 긴급한 사안이 발생한 경우 %{contact_info}으로 문의하시기 바랍니다."
       site_activity: "사이트 활동"
       view_more: "자세히 보기"
+      view_less: "간략히"
       activities:
         topics:
           other: "%{formatted_number}개의 글"

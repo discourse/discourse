@@ -287,7 +287,7 @@ hr:
       one: "poveznica"
       few: "poveznica"
       other: "poveznice"
-    faq: "ČPP"
+    faq: "FAQ"
     guidelines: "Vodić za uporabu"
     privacy_policy: "Izjava o privatnosti"
     privacy: "Privatnost"
@@ -4882,7 +4882,7 @@ hr:
               content: "Tema"
               title: "Sve teme"
             faq:
-              content: "ČPP"
+              content: "FAQ"
               title: "Smjernice za korištenje ove stranice"
             guidelines:
               content: "Vodić za uporabu"
@@ -5039,6 +5039,7 @@ hr:
         title: "Popis dostupnih izvještaja"
         meta_doc: "Izvješća su moćan alat koji vam pomaže da shvatite što se događa na vašoj stranici. Mogu vam pomoći u prepoznavanju trendova, uočavanju problema i donošenju odluka na temelju podataka."
         sidebar_title: "Izvještaji"
+        back: "Povratak na sva izvješća"
         sidebar_link:
           all: "Sva izvješća"
       config:
