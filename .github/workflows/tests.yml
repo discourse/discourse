@@ -265,25 +265,25 @@ jobs:
             exit 1
           fi
 
-      # - name: Core RSpec
-      #   if: matrix.build_type == 'backend' && matrix.target == 'core'
-      #   run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
+      - name: Core RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
 
-      # - name: Plugin RSpec
-      #   if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-      #   run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
+      - name: Plugin RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
+        run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
 
-      # - name: Core QUnit
-      #   if: matrix.build_type == 'frontend' && matrix.target == 'core'
-      #   run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
+      - name: Core QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
-      # - name: Plugin QUnit
-      #   if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-      #   run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
+      - name: Plugin QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
 
-      # - name: Theme QUnit
-      #   if: matrix.build_type == 'frontend' && matrix.target == 'themes'
-      #   run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
+      - name: Theme QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'themes'
+        run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend'
@@ -305,19 +305,19 @@ jobs:
           CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
-      # - name: Plugin System Tests
-      #   if: matrix.build_type == 'system' && matrix.target == 'plugins'
-      #   env:
-      #     CHECKOUT_TIMEOUT: 10
-      #   run: |
-      #     RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
-      #   shell: bash
+      - name: Plugin System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        env:
+          CHECKOUT_TIMEOUT: 10
+        run: |
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+        shell: bash
 
-      # - name: Chat System Tests
-      #   if: matrix.build_type == 'system' && matrix.target == 'chat'
-      #   env:
-      #     CHECKOUT_TIMEOUT: 10
-      #   run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+      - name: Chat System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'chat'
+        env:
+          CHECKOUT_TIMEOUT: 10
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
