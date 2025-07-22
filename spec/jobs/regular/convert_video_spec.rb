@@ -49,7 +49,7 @@ RSpec.describe Jobs::ConvertVideo do
           .logger
           .expects(:error)
           .with(
-            "Upload #{upload.id} URL remained blank after #{Jobs::ConvertVideo::MAX_RETRIES} retries",
+            "Upload #{upload.id} URL remained blank after #{Jobs::ConvertVideo::MAX_RETRIES} retries when optimizing video",
           )
         job.execute(args.merge(retry_count: Jobs::ConvertVideo::MAX_RETRIES))
       end
