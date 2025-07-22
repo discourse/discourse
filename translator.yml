@@ -253,3 +253,10 @@ files:
   - source_path: plugins/discourse-policy/config/locales/server.en.yml
     destination_path: plugins/policy/server.yml
     label: policy
+
+  - source_path: plugins/discourse-github/config/locales/client.en.yml
+    destination_path: plugins/github/client.yml
+    label: github
+  - source_path: plugins/discourse-github/config/locales/server.en.yml
+    destination_path: plugins/github/server.yml
+    label: github

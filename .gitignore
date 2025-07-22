@@ -71,6 +71,7 @@
 !/plugins/discourse-gamification
 !/plugins/discourse-calendar
 !/plugins/discourse-policy
+!/plugins/discourse-github
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

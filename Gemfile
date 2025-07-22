@@ -290,3 +290,7 @@ gem "zendesk_api", "1.38.0.rc1", require: false
 
 # for discourse-subscriptions
 gem "stripe", "11.1.0", require: false
+
+# for discourse-github
+gem "sawyer", "0.9.2", require: false
+gem "octokit", "5.6.1", require: false
