@@ -3,12 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { cancel, debounce, later, next } from "@ember/runloop";
+import { cancel, later, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 
 const MAX_RESULTS = 20;
@@ -65,7 +66,7 @@ export default class FilterTips extends Component {
     }
 
     const words = this.currentInputValue.split(/\s+/);
-    const lastWord = words[words.length - 1].toLowerCase();
+    const lastWord = words.at(-1).toLowerCase();
 
     // If we have search results from placeholder search, show those
     if (this.activeFilter && this.searchResults.length > 0) {
@@ -187,7 +188,7 @@ export default class FilterTips extends Component {
       cancel(this.searchTimer);
     }
 
-    this.searchTimer = debounce(
+    this.searchTimer = discourseDebounce(
       this,
       this._performPlaceholderSearch,
       filterName,
@@ -342,7 +343,7 @@ export default class FilterTips extends Component {
   }
 
   @action
-  setupEventListeners(element) {
+  setupEventListeners() {
     this.inputElement = this.args.inputElement;
 
     if (!this.inputElement) {
@@ -350,7 +351,7 @@ export default class FilterTips extends Component {
         "FilterTips requires an inputElement to be passed in the args."
       );
     }
-    this.element = element;
+
     this.inputElement.addEventListener("focus", this.handleInputFocus);
     this.inputElement.addEventListener("blur", this.handleInputBlur);
     this.inputElement.addEventListener("keydown", this.handleKeyDown);
