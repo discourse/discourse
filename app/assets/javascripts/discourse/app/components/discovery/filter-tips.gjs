@@ -288,6 +288,11 @@ export default class FilterTips extends Component {
     if (tip.delimiters) {
       let lastMatches = false;
 
+      results = results.map((r) => {
+        r.delimiters = tip.delimiters;
+        return r;
+      });
+
       results = results.filter((r) => {
         lastMatches ||= lastTerm === r.term;
         if (splitTerms.includes(r.term)) {
@@ -302,6 +307,7 @@ export default class FilterTips extends Component {
             name: `${prefix}${filterName}:${prevTerms}${lastTerm}${delimiter.name}`,
             description: delimiter.description,
             isPlaceholderCompletion: true,
+            delimiters: tip.delimiters,
           });
         });
       }
@@ -473,34 +479,33 @@ export default class FilterTips extends Component {
     const words = this.currentInputValue.split(/\s+/);
 
     if (item.isPlaceholderCompletion) {
-      // Replace the current word with the completed value
       words[words.length - 1] = item.name;
-      const updatedValue = words.join(" ");
+      let updatedValue = words.join(" ");
+
+      if (!item.delimiters || item.delimiters.length < 2) {
+        updatedValue += " ";
+      }
 
       this.updateValue(updatedValue);
       this.searchResults = [];
       this.updateResults();
     } else {
-      // Handle regular tip selection
       const lastWord = words.at(-1);
       const prefix = this.extractPrefix(lastWord);
 
-      // Check if this tip supports prefixes
       const supportsPrefix = item.prefixes && item.prefixes.length > 0;
       const filterName =
         supportsPrefix && prefix ? `${prefix}${item.name}` : item.name;
 
       words[words.length - 1] = filterName;
 
-      // If the filter ends with colon or has separators, don't add space
-      if (!filterName.endsWith(":") && !item.separators?.length) {
+      if (!filterName.endsWith(":") && !item.delimiters?.length) {
         words[words.length - 1] += " ";
       }
 
       const updatedValue = words.join(" ");
       this.updateValue(updatedValue);
 
-      // Check if we should show placeholder search
       const baseFilterName = item.name.replace(/^[-=]/, "").split(":")[0];
 
       if (item.type) {
