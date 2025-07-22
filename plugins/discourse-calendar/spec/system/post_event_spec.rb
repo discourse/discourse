@@ -59,6 +59,26 @@ describe "Post event", type: :system do
       )
       expect(page).to have_css(".event-description a[href='http://example.com']")
     end
+
+    it "correctly builds a multiline description", timezone: "Europe/Paris" do
+      visit("/new-topic")
+
+      time = Time.now.in_time_zone("Europe/Paris").strftime("%Y-%m-%d %H:%M")
+
+      EXPECTED_BBCODE = <<~EVENT
+        [event start="#{time}" status="public" timezone="Europe/Paris" allowedGroups="trust_level_0"]
+        foo
+        bar
+        [/event]
+      EVENT
+
+      find(".toolbar-menu__options-trigger").click
+      click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
+
+      post_event_form_page.fill_description("foo\nbar").submit
+
+      expect(composer).to have_value(EXPECTED_BBCODE.strip)
+    end
   end
 
   context "when showing local time", timezone: "Australia/Brisbane" do

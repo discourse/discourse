@@ -8,9 +8,9 @@ describe Auth::DiscourseIdAuthenticator do
 
   context "with default settings" do
     before do
-      SiteSetting.enable_discourse_id = true
       SiteSetting.discourse_id_client_id = "client_id"
       SiteSetting.discourse_id_client_secret = "client_secret"
+      SiteSetting.enable_discourse_id = true
     end
 
     it "has the right name" do

@@ -59,7 +59,7 @@ export default class AdminUser extends User {
 
   @discourseComputed
   bounceLink() {
-    return getURL("/admin/email/bounced");
+    return getURL("/admin/email-logs/bounced");
   }
 
   resetBounceScore() {
