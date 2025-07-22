@@ -66,6 +66,7 @@ module(
         test(name, async function (assert) {
           this.siteSettings.rich_editor = true;
           this.siteSettings.unicode_usernames = true;
+          this.siteSettings.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]";
 
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
