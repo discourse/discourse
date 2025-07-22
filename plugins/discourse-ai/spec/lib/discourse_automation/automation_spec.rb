@@ -49,11 +49,8 @@ RSpec.describe DiscourseAi::Automation do
 
       expect(models).to match_array(
         [
-          { "translated_name" => "#{llm_model.display_name}", "id" => "custom:#{llm_model.id}" },
-          {
-            "translated_name" => "#{seeded_model.display_name}",
-            "id" => "custom:#{seeded_model.id}",
-          },
+          { "translated_name" => "#{llm_model.display_name}", "id" => llm_model.id.to_s },
+          { "translated_name" => "#{seeded_model.display_name}", "id" => seeded_model.id.to_s },
         ],
       )
     end

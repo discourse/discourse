@@ -57,6 +57,12 @@ module DiscourseAi
       end
 
       def diffusion_prompt(text, user)
+        llm_model =
+          AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)&.default_llm_id ||
+            SiteSetting.ai_default_llm_model
+
+        return nil if llm_model.blank?
+
         prompt =
           DiscourseAi::Completions::Prompt.new(
             <<~TEXT.strip,
@@ -66,7 +72,7 @@ module DiscourseAi
             messages: [{ type: :user, content: text, id: user.username }],
           )
 
-        DiscourseAi::Completions::Llm.proxy(SiteSetting.ai_helper_model).generate(
+        DiscourseAi::Completions::Llm.proxy(llm_model).generate(
           prompt,
           user: user,
           feature_name: "illustrate_post",

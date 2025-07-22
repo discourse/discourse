@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Summarization::FoldContent do
   subject(:summarizer) { DiscourseAi::Summarization.topic_summary(topic) }
 
-  let!(:llm_model) { assign_fake_provider_to(:ai_summarization_model) }
+  let!(:llm_model) { assign_fake_provider_to(:ai_default_llm_model) }
 
   fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
   fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1, raw: "This is a text") }

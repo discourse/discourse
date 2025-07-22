@@ -68,7 +68,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
   fab!(:llm_model) { Fabricate(:vllm_model) }
   fab!(:user)
 
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:vllm_mock) { VllmMock.new(endpoint) }
 
   let(:compliance) do

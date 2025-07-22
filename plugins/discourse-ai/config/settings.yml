@@ -11,6 +11,12 @@ discourse_ai:
       - "lax"
       - "hybrid"
       - "strict"
+  ai_default_llm_model:
+    default: ""
+    type: enum
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    validator: "DiscourseAi::Configuration::LlmValidator"
 
   ai_sentiment_enabled:
     default: false
@@ -103,7 +109,7 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/ai_helper"
-  ai_helper_model:
+  ai_helper_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     allow_any: false
     type: enum
@@ -149,7 +155,7 @@ discourse_ai:
       - "context_menu"
       - "image_caption"
     area: "ai-features/ai_helper"
-  ai_helper_image_caption_model:
+  ai_helper_image_caption_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     type: enum
     enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
@@ -252,12 +258,12 @@ discourse_ai:
     client: true
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/embeddings"
-  ai_embeddings_semantic_search_hyde_model:
+  ai_embeddings_semantic_search_hyde_model:  # Deprecated. TODO(keegan): Remove 2025-09-01
+    hidden: true
     default: ""
     type: enum
     allow_any: false
     enum: "DiscourseAi::Configuration::LlmEnumerator"
-    validator: "DiscourseAi::Configuration::LlmValidator"
     area: "ai-features/embeddings"
   ai_embeddings_semantic_search_hyde_model_allowed_seeded_models:
     default: ""
@@ -308,12 +314,11 @@ discourse_ai:
     client: true
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/summarization"
-  ai_summarization_model:
+  ai_summarization_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     allow_any: false
     type: enum
     enum: "DiscourseAi::Configuration::LlmEnumerator"
-    validator: "DiscourseAi::Configuration::LlmValidator"
     hidden: true
   ai_summarization_persona:
     default: "-11"
@@ -475,12 +480,11 @@ discourse_ai:
     client: true
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/translation"
-  ai_translation_model:
+  ai_translation_model: # Deprecated. TODO(keegan): Remove 2025-09-01
     default: ""
     type: enum
     allow_any: false
     enum: "DiscourseAi::Configuration::LlmEnumerator"
-    validator: "DiscourseAi::Configuration::LlmValidator"
     area: "ai-features/translation"
   ai_translation_locale_detector_persona:
     default: "-27"

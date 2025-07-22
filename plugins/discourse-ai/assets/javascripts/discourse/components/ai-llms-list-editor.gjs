@@ -9,6 +9,7 @@ import I18n, { i18n } from "discourse-i18n";
 import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
 import DTooltip from "float-kit/components/d-tooltip";
+import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiLlmEditor from "./ai-llm-editor";
 
 function isPreseeded(llm) {
@@ -137,6 +138,9 @@ export default class AiLlmsListEditor extends Component {
           }}
           @learnMoreUrl="https://meta.discourse.org/t/discourse-ai-large-language-model-llm-settings-page/319903"
         />
+
+        <AiDefaultLlmSelector />
+
         {{#if this.hasLlmElements}}
           <section class="ai-llms-list-editor__configured">
             <DPageSubheader
