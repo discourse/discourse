@@ -161,7 +161,7 @@
   }
 
   #reply-control {
-    background: var(--secondary);
+    background: var(--secondary) !important;
 
     &.open {
       top: 0;
