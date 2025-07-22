@@ -56,6 +56,7 @@ export default class DAutocompleteModifier extends Modifier {
   @tracked searchTerm = "";
   @tracked isLoading = false;
   @tracked completeStart = null;
+  @tracked completeEnd = null;
 
   // Internal state
   previousTerm = null;
@@ -229,6 +230,7 @@ export default class DAutocompleteModifier extends Modifier {
         const prevChar = value.charAt(caretPosition - 2);
         if (!prevChar || this.ALLOWED_LETTERS_REGEXP.test(prevChar)) {
           this.completeStart = caretPosition - 1;
+          this.completeEnd = caretPosition - 1;
           await this.performSearch("");
         }
       }
@@ -241,6 +243,7 @@ export default class DAutocompleteModifier extends Modifier {
 
       // Validate we're still in autocomplete context
       if (!this.options.key || value[this.completeStart] === this.options.key) {
+        this.completeEnd = caretPosition - 1;
         await this.performSearch(term);
       } else {
         await this.closeAutocomplete();
@@ -254,6 +257,7 @@ export default class DAutocompleteModifier extends Modifier {
         const position = await this.guessCompletePosition({ backSpace: true });
         if (position.completeStart !== null) {
           this.completeStart = position.completeStart;
+          this.completeEnd = this.getCaretPosition() - 1;
           await this.performAutocomplete();
         }
       }
@@ -386,6 +390,7 @@ export default class DAutocompleteModifier extends Modifier {
 
     this.expanded = false;
     this.completeStart = null;
+    this.completeEnd = null;
     this.searchTerm = "";
     this.results = [];
     this.selectedIndex = -1;
@@ -454,78 +459,70 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    // Use external textHandler if provided (for integration with TextareaTextManipulation)
-    if (this.options.textHandler) {
-      const preserveKey = this.options.preserveKey ?? true;
-      const replacement = (preserveKey ? this.options.key || "" : "") + term;
+    const preserveKey = this.options.preserveKey ?? true;
+    const replacement = (preserveKey ? this.options.key || "" : "") + term;
 
-      // Use textHandler's replaceTerm method for consistent behavior
-      this.options.textHandler.replaceTerm(
-        this.completeStart,
-        this.getCaretPosition() - 1,
-        replacement
-      );
+    // Recalculate position like the old autocomplete did to handle text changes
+    const pos = await this.guessCompletePosition({ completeTerm: true });
+    let completeEnd;
+    let completeStart;
+
+    if (pos.completeStart !== undefined && pos.completeEnd !== undefined) {
+      completeStart = pos.completeStart;
+      completeEnd = pos.completeEnd;
     } else {
-      // Simple text replacement (default behavior)
-      const value = this.getValue();
-      const preserveKey = this.options.preserveKey ?? true;
-      const replacement = (preserveKey ? this.options.key || "" : "") + term;
-
-      const newValue =
-        value.substring(0, this.completeStart) +
-        replacement +
-        value.substring(this.getCaretPosition());
-
-      this.targetElement.value = newValue;
-
-      // Set cursor position after replacement
-      const newCaretPos = this.completeStart + replacement.length;
-      this.targetElement.setSelectionRange(newCaretPos, newCaretPos);
-
-      // Trigger input event to notify other listeners
-      this.targetElement.dispatchEvent(new Event("input", { bubbles: true }));
+      completeStart = completeEnd = this.getCaretPosition();
     }
 
-    // Call afterComplete callback
+    // Use textHandler's replaceTerm method for consistent behavior
+    this.options.textHandler.replaceTerm(
+      completeStart,
+      completeEnd,
+      replacement
+    );
+
     this.options.afterComplete?.(this.getValue(), event);
   }
 
   async guessCompletePosition(opts = {}) {
+    let prev, stopFound, term;
+    let prevIsGood = true;
+    let backSpace = opts?.backSpace;
+    let completeTermOption = opts?.completeTerm;
     let caretPos = this.getCaretPosition();
-    const value = this.getValue();
 
-    if (opts.backSpace) {
+    if (backSpace) {
       caretPos -= 1;
     }
 
     let start = null;
-    let term = null;
+    let end = null;
     const initialCaretPos = caretPos;
 
-    while (caretPos >= 0) {
+    while (prevIsGood && caretPos >= 0) {
       caretPos -= 1;
-      const prev = value[caretPos];
+      prev = this.getValue()[caretPos];
 
-      if (prev === this.options.key) {
-        const beforeTrigger = value[caretPos - 1];
+      stopFound = prev === this.options.key;
 
-        if (
-          beforeTrigger === undefined ||
-          this.ALLOWED_LETTERS_REGEXP.test(beforeTrigger)
-        ) {
+      if (stopFound) {
+        prev = this.getValue()[caretPos - 1];
+
+        if (prev === undefined || this.ALLOWED_LETTERS_REGEXP.test(prev)) {
           start = caretPos;
-          term = value.substring(caretPos + 1, initialCaretPos);
+          term = this.getValue().substring(caretPos + 1, initialCaretPos);
+          end = caretPos + term.length;
           break;
         }
       }
 
-      const prevIsGood = !/\s/.test(prev);
-      if (!prevIsGood) {
-        break;
+      prevIsGood = !/\s/.test(prev);
+      if (completeTermOption) {
+        prevIsGood ||= prev === " ";
       }
     }
 
-    return { completeStart: start, term };
+    return { completeStart: start, completeEnd: end, term };
   }
 
   getValue() {
