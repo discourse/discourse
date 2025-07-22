@@ -51,6 +51,7 @@ class Admin::UsersController < Admin::StaffController
       root: false,
       similar_users_count: @user.similar_users.count,
       include_silence_reason: true,
+      include_ip: guardian.can_see_ip?,
     )
   end
 
