@@ -335,7 +335,7 @@ RSpec.describe ApplicationController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"].first).to include(
-        "param is missing or the value is empty: term",
+        "param is missing or the value is empty or invalid: term",
       )
     end
   end

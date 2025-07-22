@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    topic_voting_enabled: 'Разрешить пользователям голосовать по темам?'
+    topic_voting_tl0_vote_limit: 'Сколько активных голосов разрешено пользователям с TL0?'
+    topic_voting_tl1_vote_limit: 'Сколько активных голосов разрешено пользователям с TL1?'
+    topic_voting_tl2_vote_limit: 'Сколько активных голосов разрешено пользователям с TL2?'
+    topic_voting_tl3_vote_limit: 'Сколько активных голосов разрешено пользователям с TL3?'
+    topic_voting_tl4_vote_limit: 'Сколько активных голосов разрешено пользователям с TL4?'
+    topic_voting_show_who_voted: 'Разрешить пользователям видеть проголосовавших?'
+    topic_voting_show_votes_on_profile: 'Разрешить пользователям видеть свои голоса в ленте активности?'
+    topic_voting_alert_votes_left: 'Предупреждать пользователя, когда осталось мало голосов'
+  topic_voting:
+    votes_moved:
+      one: "%{count} голос был перемещен."
+      few: "%{count} голоса было перемещено."
+      many: "%{count} голосов было перемещено."
+      other: "%{count} голоса были перемещены."
+    duplicated_votes:
+      one: "Невозможно переместить %{count} голос, поскольку их пользователи уже голосовали в другой теме."
+      few: "Невозможно переместить %{count} голоса, поскольку их пользователи уже голосовали в другой теме."
+      many: "Невозможно переместить %{count} голосов, поскольку их пользователи уже голосовали в другой теме."
+      other: "Невозможно переместить %{count} голоса, поскольку их пользователи уже голосовали в другой теме."

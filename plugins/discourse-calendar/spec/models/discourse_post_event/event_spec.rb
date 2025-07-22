@@ -8,6 +8,18 @@ describe DiscoursePostEvent::Event do
     SiteSetting.discourse_post_event_enabled = true
   end
 
+  it do
+    is_expected.to validate_length_of(:description).is_at_most(
+      DiscoursePostEvent::Event::MAX_DESCRIPTION_LENGTH,
+    )
+  end
+
+  it do
+    is_expected.to validate_length_of(:name).is_at_least(
+      DiscoursePostEvent::Event::MIN_NAME_LENGTH,
+    ).is_at_most(DiscoursePostEvent::Event::MAX_NAME_LENGTH)
+  end
+
   describe "topic custom fields callback" do
     let(:user) { Fabricate(:user, admin: true) }
     let!(:notified_user) { Fabricate(:user) }

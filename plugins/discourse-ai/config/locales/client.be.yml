@@ -1,0 +1,144 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "сартаваць па"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Номер тэмы"
+            title:
+              label: "Загаловак"
+            categories:
+              label: "катэгорыі"
+            tags:
+              label: "тэгі"
+        llm_triage:
+          fields:
+            category:
+              label: "катэгорыя"
+            tags:
+              label: "тэгі"
+            canned_reply:
+              label: "Адказаць"
+    discourse_ai:
+      features:
+        back: "Назад"
+        disabled: "(адключана)"
+        groups: "групы:"
+        edit: "Рэдагаваць"
+        filters:
+          all: "Усё"
+          reset: "скінуць"
+        search:
+          name: "Пошук"
+        spam:
+          name: "Спам"
+      spam:
+        short_title: "Спам"
+        enable: "Уключыць"
+        test_modal:
+          spam: "Спам"
+      usage:
+        summary: "вынік"
+        username: "Імя карыстальніка"
+        total_requests: "Усяго запытаў"
+      ai_persona:
+        back: "Назад"
+        name: "імя"
+        edit: "рэдагаваць"
+        export: "экспарт"
+        description: "Апісанне"
+        user: карыстальнік
+        save: "Захаваць"
+        delete: "выдаляць"
+        response_format:
+          open_modal: "рэдагаваць"
+        filters:
+          reset: "скінуць"
+      rag:
+        uploads:
+          title: "Загрузкі"
+          uploading: "Запампоўванне ..."
+      tools:
+        back: "Назад"
+        export: "экспарт"
+        name: "імя"
+        description: "Апісанне"
+        summary: "вынік"
+        save: "Захаваць"
+        remove_parameter: "выдаліць"
+        parameter_required: "абавязковыя"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
+      llms:
+        display_name: "імя"
+        save: "Захаваць"
+        edit: "рэдагаваць"
+        back: "Назад"
+        delete: выдаляць
+        quotas:
+          group: "група"
+        usage:
+          ai_spam: "Спам"
+        next:
+          title: "Далей"
+        tests:
+          success: "поспех!"
+        providers:
+          google: "Google"
+      ai_helper:
+        context_menu:
+          cancel: "адмяніць"
+        post_options_menu:
+          close: "зачыніць"
+          copy: "капіяваць"
+          cancel: "адмяніць"
+        image_caption:
+          save_caption: "захаваць"
+          automatic_caption_dialog:
+            confirm: "Уключыць"
+      embeddings:
+        back: "Назад"
+        save: "захаваць"
+        delete: "Выдаліць"
+        edit: "Рэдагаваць"
+        tests:
+          success: "поспех!"
+        display_name: "Імя"
+        providers:
+          google: "Google"
+      ai_bot:
+        debug_ai_modal:
+          request: "запыт"
+          next_log: "Далей"
+        share_modal:
+          copy: "капіяваць"
+        conversations:
+          today: "сёння"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Усё"
+            neutral: "нейтральны"
+          group_types:
+            category: "катэгорыя"
+          table:
+            total_count: "агульны"
+      discobot_discoveries:
+        regular_results: "тэмы"
+        tooltip:
+          actions:
+            disable: "Адключыць"
