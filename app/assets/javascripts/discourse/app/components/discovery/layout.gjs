@@ -41,34 +41,38 @@ const Layout = <template>
   />
 
   <div class={{concatClass "container list-container" @listClass}}>
-    <div id="header-list-area">
-      {{yield to="header"}}
-      <PluginOutlet
-        @name="header-list-container-bottom"
-        @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-      />
+    <div class="row full-width">
+      <div id="header-list-area">
+        {{yield to="header"}}
+        <PluginOutlet
+          @name="header-list-container-bottom"
+          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+        />
+      </div>
     </div>
     <PluginOutlet
       @name="before-list-area"
       @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
     />
-    <div id="list-area">
-      <PluginOutlet
-        @name="discovery-list-area"
-        @outletArgs={{lazyHash
-          category=@model.category
-          tag=@model.tag
-          model=@model
-        }}
-        @defaultGlimmer={{true}}
-      >
+    <div class="row full-width">
+      <div id="list-area">
         <PluginOutlet
-          @name="discovery-list-container-top"
-          @connectorTagName="span"
-          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-        />
-        {{yield to="list"}}
-      </PluginOutlet>
+          @name="discovery-list-area"
+          @outletArgs={{lazyHash
+            category=@model.category
+            tag=@model.tag
+            model=@model
+          }}
+          @defaultGlimmer={{true}}
+        >
+          <PluginOutlet
+            @name="discovery-list-container-top"
+            @connectorTagName="span"
+            @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+          />
+          {{yield to="list"}}
+        </PluginOutlet>
+      </div>
     </div>
   </div>
 
