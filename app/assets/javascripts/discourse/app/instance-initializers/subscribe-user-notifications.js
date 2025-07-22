@@ -20,6 +20,7 @@ import Notification from "discourse/models/notification";
 class SubscribeUserNotificationsInit {
   @service currentUser;
   @service messageBus;
+  @service pmTopicTrackingState;
   @service store;
   @service appEvents;
   @service siteSettings;
@@ -66,6 +67,8 @@ class SubscribeUserNotificationsInit {
     this.messageBus.subscribe("/categories", this.onCategories);
 
     this.messageBus.subscribe("/client_settings", this.onClientSettings);
+
+    this.pmTopicTrackingState.startTracking();
 
     if (!isTesting()) {
       this.messageBus.subscribe(alertChannel(this.currentUser), this.onAlert);
