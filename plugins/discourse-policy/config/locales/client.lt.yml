@@ -8,6 +8,7 @@ lt:
   js:
     discourse_policy:
       builder:
+        save: Išsaugoti pakeitimus
         insert: Įterpti
         groups:
           label: Grupės
@@ -18,7 +19,7 @@ lt:
         revoke:
           label: Pašalinti
         private:
-          label: Privati?
+          label: Privatu?
         send-email:
           label: Siųsti e-paštą?
       preferences:

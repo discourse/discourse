@@ -14,7 +14,7 @@ ja:
     notifications:
       alt:
         solved:
-          accepted_notification: "受け入れられました"
+          accepted_notification: "承諾"
     solutions: "解決策"
     solved:
       title: "解決済み"
@@ -28,7 +28,6 @@ ja:
       solution: "解決策"
       solution_summary:
         other: "解決策"
-      accepted_html: "%{icon} <a href='%{post_path}' class='back'>投稿 #%{post_number}</a> で <span class='by'><a href data-user-card='%{username_lower}'>%{username}</a></span> が解決"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "すべて"

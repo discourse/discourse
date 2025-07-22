@@ -19,7 +19,7 @@ uk:
       channel_exception: "Невідома помилка сталася під час останнього надсилання повідомлення на цей канал."
       group_message_template: "Повідомлення до: @ %{name}"
       choose_group: "(виберіть групу)"
-      all_categories: "(усі категорії)"
+      all_categories: "(усі розділи)"
       all_tags: "(усі теги)"
       create_rule: "Створити правило"
       create_channel: "Створити канал"
@@ -39,20 +39,20 @@ uk:
         group_message: Групове повідомлення
         group_mention: Згадування групи
       filter:
-        mute: 'Приглушено'
-        follow: 'Лише перший пост'
+        mute: 'Приглушити'
+        follow: 'Лише перший допис'
         watch: 'Усі повідомлення та відповіді'
       rule_table:
-        filter: "Фільтр"
-        category: "Категорія"
-        tags: "Теги"
+        filter: "Filter"
+        category: "Розділ"
+        tags: "Теґи"
         edit_rule: "Редагувати"
         delete_rule: "Видалити"
       edit_channel_modal:
         title: "Редагувати канал"
         save: "Зберегти канал"
         cancel: "Скасувати"
-        provider: "Постачальник"
+        provider: "Провайдер"
         channel_validation:
           ok: "Дійсний"
           fail: "Недійсний формат"
@@ -60,13 +60,13 @@ uk:
         title: Редагувати правило
         save: Збережіть правило
         cancel: Скасувати
-        provider: Постачальник
+        provider: Провайдер
         type: Тип
         channel: Канал
-        filter: Фільтр
-        category: Категорія
+        filter: Filter
+        category: Розділ
         group: Група
-        tags: Теги
+        tags: Теґи
         instructions:
           type: "Змініть тип для запуску сповіщень для групових повідомлень чи згадок"
           filter: "Рівень сповіщення. Приглушення замінює інші правила"
@@ -87,7 +87,7 @@ uk:
           title: "Telegram"
           param:
             name:
-              title: "Ім'я"
+              title: "Імʼя"
               help: "Назва для опису каналу. Він не використовується для з’єднання з Telegram."
             chat_id:
               title: Chat ID
@@ -99,17 +99,17 @@ uk:
           title: "Discord"
           param:
             name:
-              title: "Ім'я"
+              title: "Імʼя"
               help: "Назва для опису каналу. Він не використовується для з’єднання з Discord."
             webhook_url:
-              title: Webhook URL
+              title: URL-адреса веб-хука
               help: URL-адреса webhook, створена у налаштуваннях вашого сервера Discord
         guilded:
           param:
             name:
               title: "Імʼя"
             webhook_url:
-              title: Webhook URL
+              title: URL-адреса веб-хука
         mattermost:
           title: "Найважливіше"
           param:
@@ -122,7 +122,7 @@ uk:
           title: "Матриця"
           param:
             name:
-              title: "Ім'я"
+              title: "Імʼя"
               help: "Назва для опису каналу. Він не використовується для з’єднання з Matrix."
             room_id:
               title: "Room ID"
@@ -153,10 +153,10 @@ uk:
           title: "Gitter"
           param:
             name:
-              title: "Ім'я"
+              title: "Імʼя"
               help: "Назва кімнати Gitter, наприклад gitterHQ/services."
             webhook_url:
-              title: "Webhook URL"
+              title: "URL-адреса веб-хука"
               help: "URL-адреса, яка створюється під час створення нової інтеграції з Gitter кімнатою."
         flowdock:
           title: "Flowdock"
@@ -169,7 +169,7 @@ uk:
             name:
               title: "Імʼя"
             webhook_url:
-              title: "Webhook URL"
+              title: "URL-адреса веб-хука"
         powerautomate:
           param:
             name:
@@ -181,13 +181,13 @@ uk:
             name:
               title: "Імʼя"
             webhook_url:
-              title: "Webhook URL"
+              title: "URL-адреса веб-хука"
         google:
           param:
             name:
               title: "Імʼя"
             webhook_url:
-              title: "Webhook URL"
+              title: "URL-адреса веб-хука"
     discourse_automation:
       scriptables:
         send_slack_message:
@@ -203,4 +203,4 @@ uk:
             channel_name:
               label: Назва каналу
             provider:
-              label: Постачальник
+              label: Провайдер

@@ -31,6 +31,8 @@ fa_IR:
             actions:
               agree_and_suspend:
                 title: "کاربر تعلیق شده"
+              agree_and_silence:
+                title: "سکوت کاربر"
               disagree:
                 title: "مخالف"
       topic:

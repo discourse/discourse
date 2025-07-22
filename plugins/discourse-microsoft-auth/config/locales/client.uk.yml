@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 uk:
+  js:
+    login:
+      microsoft_office365:
+        name: "Microsoft"
+        title: "Увійти через Microsoft"

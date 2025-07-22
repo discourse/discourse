@@ -80,7 +80,7 @@ hr:
         save: "Spremi"
         enabled: "Omogućeno?"
         allowed_groups: "Dopuštene grupe"
-        delete: "Pobriši"
+        delete: "Izbriši"
         response_format:
           open_modal: "Uredi"
           modal:
@@ -101,13 +101,14 @@ hr:
         remove_parameter: "Ukloni"
         parameter_required: "Potrebno"
         edit: "Uredi"
-        delete: "Pobriši"
+        delete: "Izbriši"
       llms:
         display_name: "Ime"
+        provider: "Pružatelj usluga"
         save: "Spremi"
         edit: "Uredi"
         back: "Natrag"
-        delete: Pobriši
+        delete: Izbriši
         quotas:
           group: "Grupa"
           max_usages: "Max korisnika"
@@ -141,6 +142,7 @@ hr:
           cancel: "Odustani"
         thumbnail_suggestions:
           select: "Odaberite"
+          selected: "Odabrano"
         image_caption:
           save_caption: "Spremi"
           automatic_caption_dialog:
@@ -148,11 +150,12 @@ hr:
       embeddings:
         back: "Natrag"
         save: "Spremi"
-        delete: "Pobriši"
+        delete: "Izbriši"
         edit: "Uredi"
         tests:
           success: "Uspjeh!"
         display_name: "Ime"
+        provider: "Pružatelj usluga"
         providers:
           google: "Google"
           fake: "Posebna"

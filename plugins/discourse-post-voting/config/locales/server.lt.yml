@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 lt:
+  post_action_types:
+    vote:
+      title: "Balsuoti"
   post_voting:
     comment:
       reviewables:

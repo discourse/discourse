@@ -6,6 +6,19 @@
 
 ug:
   js:
+    category:
+      sort_options:
+        votes: "بېلەت"
     topic_voting:
       vote_title: "بېلەت تاشلاش"
+      vote_title_plural: "بېلەت"
       voting_closed_title: "تاقالدى"
+      votes:
+        one: "%{count} بېلەت"
+        other: "%{count} بېلەت"
+      anonymous_button:
+        one: "بېلەت تاشلاش"
+        other: "بېلەت"
+    filters:
+      votes:
+        title: "بېلەت"

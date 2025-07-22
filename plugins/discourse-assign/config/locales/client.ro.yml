@@ -8,12 +8,14 @@ ro:
   js:
     discourse_assign:
       group_everyone: "Toată lumea"
+      assigned_to: "Atribuit la"
+      assigned_to_w_ellipsis: "Atribuit la..."
       reassign:
-        title: "Modifică"
+        title: "Editează"
       assign_modal:
         note_label: Notă
         optional_label: "(opțional)"
-        status_label: Status
+        status_label: Stare
       assign_mailer:
         never: "Niciodată"
         always: "Întotdeauna"
@@ -25,11 +27,16 @@ ro:
         quarterly: "Trimestrial"
     user:
       notification_level_when_assigned:
+        watch_topic: "Urmărește subiect"
         do_nothing: "Nu face nimic"
       assignment_description:
         topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Atribuit la"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:
-      topic: "Discuție"
+      topic: "Subiect"
       post: "Articol"

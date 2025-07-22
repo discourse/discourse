@@ -11,29 +11,30 @@ hu:
       choose_group: "(válassz egy csoportot)"
       all_categories: "(összes kategória)"
       all_tags: "(összes címke)"
-      delete_channel: "Töröl"
+      delete_channel: "Törlés"
       test_channel: "Teszt"
-      edit_channel: "Szerkeszt"
+      edit_channel: "Szerkesztés"
       test_modal:
         title: "Tesztüzenet küldése"
         topic: "Téma"
         send: "Szöveges üzenet küldése"
-        close: "Bezár"
+        close: "Bezárás"
         success: "Üzenet sikeresen elküldve"
       type:
-        normal: Normális
+        normal: Normál
         group_message: Csoportos üzenet
         group_mention: Csoportos megemlítés
       filter:
         mute: 'Lenémít'
+        follow: 'Csak az első bejegyzés'
       rule_table:
-        filter: "Szűr"
+        filter: "Szűrő"
         category: "Kategória"
         tags: "Címkék"
-        edit_rule: "Szerkeszt"
-        delete_rule: "Töröl"
+        edit_rule: "Szerkesztés"
+        delete_rule: "Törlés"
       edit_channel_modal:
-        cancel: "Visszavon"
+        cancel: "Mégse"
         provider: "Szolgáltató"
         channel_validation:
           ok: "Érvényes"
@@ -41,11 +42,11 @@ hu:
       edit_rule_modal:
         title: Szabály Szerkesztése
         save: Szabály Mentése
-        cancel: Visszavon
+        cancel: Mégse
         provider: Szolgáltató
         type: Típus
         channel: Csatorna
-        filter: Szűr
+        filter: Szűrő
         category: Kategória
         group: Csoport
         tags: Címkék
@@ -144,7 +145,7 @@ hu:
             message:
               label: Üzenet
             url:
-              label: URL
+              label: Webcím
             channel:
               label: Csatorna
         send_chat_integration_message:

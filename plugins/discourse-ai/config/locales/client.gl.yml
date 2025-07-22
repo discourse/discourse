@@ -70,6 +70,7 @@ gl:
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
+        import: "Importar"
         description: "Descrición"
         user: Usuario
         save: "Gardar"
@@ -89,6 +90,7 @@ gl:
       tools:
         back: "Volver"
         export: "Exportar"
+        import: "Importar"
         name: "Nome"
         description: "Descrición"
         summary: "Resumo"
@@ -99,6 +101,7 @@ gl:
         delete: "Eliminar"
       llms:
         display_name: "Nome"
+        provider: "Fornecedor"
         save: "Gardar"
         edit: "Editar"
         back: "Volver"
@@ -143,6 +146,7 @@ gl:
         tests:
           success: "Feito!"
         display_name: "Nome"
+        provider: "Fornecedor"
         providers:
           google: "Google"
           fake: "Personalizado"

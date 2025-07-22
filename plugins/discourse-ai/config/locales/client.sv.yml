@@ -56,10 +56,13 @@ sv:
           name: "Skräppost"
       modals:
         select_option: "Välj ett alternativ..."
+      layout:
+        table: "Tabell"
       spam:
         short_title: "Skräppost"
         last_seven_days: "Senaste 7 dagarna"
         enable: "Aktivera"
+        save_button: "Spara ändringar"
         test_modal:
           spam: "Skräppost"
       usage:
@@ -74,12 +77,13 @@ sv:
         name: "Namn"
         edit: "Redigera"
         export: "Exportera"
+        import: "Importera"
         description: "Beskrivning"
         user: Användare
         save: "Spara"
         enabled: "Aktiverad?"
         allowed_groups: "Tillåtna grupper"
-        delete: "Radera"
+        delete: "Ta bort"
         response_format:
           open_modal: "Redigera"
           modal:
@@ -93,6 +97,7 @@ sv:
       tools:
         back: "Tillbaka"
         export: "Exportera"
+        import: "Importera"
         name: "Namn"
         description: "Beskrivning"
         summary: "Sammanfattning"
@@ -103,10 +108,11 @@ sv:
         delete: "Ta bort"
       llms:
         display_name: "Namn"
+        provider: "Leverantör"
         save: "Spara"
         edit: "Redigera"
         back: "Tillbaka"
-        delete: Radera
+        delete: Ta bort
         quotas:
           group: "Grupp"
           max_usages: "Max antal användningar"
@@ -124,7 +130,7 @@ sv:
         next:
           title: "Nästa"
         tests:
-          success: "Lyckades!"
+          success: "Klart!"
         providers:
           google: "Google"
           fake: "Anpassad"
@@ -151,8 +157,9 @@ sv:
         delete: "Ta bort"
         edit: "Redigera"
         tests:
-          success: "Lyckades!"
+          success: "Klart!"
         display_name: "Namn"
+        provider: "Leverantör"
         providers:
           google: "Google"
           fake: "Anpassad"

@@ -8,7 +8,7 @@ sl:
   js:
     category:
       sort_options:
-        votes: "Glasov"
+        votes: "Glasovi"
     topic_voting:
       reached_limit: "Nimate več glasov, odstranite obstoječega!"
       list_votes: "Prikaži moje glasove"

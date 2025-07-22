@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    discourse_templates:
+      title: "Sablonok"
+  js:
+    templates:
+      source: "Forrás"

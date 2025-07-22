@@ -49,10 +49,10 @@ ja:
     topic_assigned_excerpt: "あなたにトピック「%{title}」を割り当てました"
     topic_group_assigned_excerpt: "がトピック '%{title}' を @%{group} に割り当てました"
     reminders_frequency:
-      never: "通知しない"
+      never: "送信しない"
       daily: "毎日"
       weekly: "毎週"
-      monthly: "毎月"
+      monthly: "月間"
       quarterly: "3 か月ごとに"
   assign_mailer:
     title: "割り当てメール"

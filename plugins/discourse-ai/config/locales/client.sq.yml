@@ -46,7 +46,7 @@ sq:
           other: "(%{count} të tjera)"
         collapse_list: "(shfaq më pak)"
         filters:
-          all: "Të Gjithë"
+          all: "Të gjitha"
           reset: "Rivendosni"
         search:
           name: "Kërko"
@@ -63,14 +63,17 @@ sq:
         summary: "Përmbledhja"
         username: "Emri i përdoruesit"
         total_requests: "Total requests"
+        periods:
+          custom: "Me porosi..."
       ai_persona:
         back: "Kthehu mbrapa"
         name: "Emri"
-        edit: "Redakto"
+        edit: "Redaktoni"
         export: "Eksporto"
+        import: "Importo"
         description: "Përshkrimi"
         user: User
-        save: "Ruaj"
+        save: "Ruani"
         enabled: "Aktivizuar?"
         delete: "Fshij"
         response_format:
@@ -83,18 +86,19 @@ sq:
       tools:
         back: "Kthehu mbrapa"
         export: "Eksporto"
+        import: "Importo"
         name: "Emri"
         description: "Përshkrimi"
         summary: "Përmbledhja"
-        save: "Ruaj"
+        save: "Ruani"
         remove_parameter: "Hiq"
         parameter_required: "E nevojshme"
-        edit: "Redakto"
+        edit: "Redaktoni"
         delete: "Fshij"
       llms:
         display_name: "Emri"
-        save: "Ruaj"
-        edit: "Redakto"
+        save: "Ruani"
+        edit: "Redaktoni"
         back: "Kthehu mbrapa"
         delete: Fshij
         quotas:
@@ -109,6 +113,7 @@ sq:
             custom: "Me porosi..."
           hours: "orë"
         usage:
+          ai_summarization: "Përmblidhni"
           ai_spam: "Spam"
         next:
           title: "Vazhdo përpara"
@@ -118,12 +123,17 @@ sq:
       ai_helper:
         context_menu:
           cancel: "Anulo"
+          confirm: "Konfirmoni"
+          discard: "Harroni"
         post_options_menu:
           close: "Mbyll"
           copy: "Kopjo"
+          copied: "Kopjuar!"
           cancel: "Anulo"
+        thumbnail_suggestions:
+          select: "Zgjidhni"
         image_caption:
-          save_caption: "Ruaj"
+          save_caption: "Ruani"
           automatic_caption_dialog:
             confirm: "Aktivizo"
       embeddings:
@@ -137,6 +147,7 @@ sq:
           fake: "Grupet e krijuara"
       ai_bot:
         debug_ai_modal:
+          request: "Kërkesë"
           next_log: "Vazhdo përpara"
           previous_log: "I kaluar"
         invite_ai_conversation:
@@ -148,11 +159,14 @@ sq:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Të Gjithë"
+            all: "Të gjitha"
           group_types:
             category: "Kategori"
           table:
             total_count: "Total"
+      summarization:
+        chat:
+          summarize: "Përmblidhni"
       discobot_discoveries:
         regular_results: "Topics"
         collapse: "Zvogëloni"

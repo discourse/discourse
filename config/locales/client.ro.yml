@@ -230,18 +230,18 @@ ro:
     themes:
       default_description: "Implicit"
       broken_theme_alert: "Este posibil ca site-ul tău să nu funcționeze pentru că o temă sau componentă are erori."
-      error_caused_by: "Cauzat de '%{name}'. <a target='blank' href='%{path}'>Clic aici</a> pentru a actualiza, reconfigura sau dezactiva."
+      error_caused_by: "Cauzat de „%{name}”. <a target='blank' href='%{path}'>Clic aici</a> pentru a actualiza, reconfigura sau dezactiva."
       only_admins: "(acest mesaj este afișat doar pentru administratorii site-ului)"
     broken_decorator_alert: "Este posibil ca articolele să nu fie afișate corect deoarece unul dintre decoratorii de conținut al articolelor de pe site-ul tău a generat o eroare."
     broken_page_change_alert: "Un gestionar onPageChange a ridicat o eroare. Verifică instrumentele de dezvoltare ale navigatorului pentru mai multe informații."
     broken_plugin_alert: "Cauzat de modulul „%{name}”"
     broken_transformer_alert: "A apărut o eroare. Este posibil ca site-ul tău să nu funcționeze corect."
     critical_deprecation:
-      notice: "<b>[Notificare de administrare]</b> Una dintre temele sau modulele tale necesită actualizare pentru compatibilitate cu modificările viitoare de nucleu ale Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Temă identificată: <a target='_blank' href='%{path}'>„%{name}”</a>."
-      plugin_source: "Modul identificat: „%{name}”"
+      notice: "<b>[Notificare de administrare]</b> %{source} conține cod care necesită actualizare. (id: %{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>află mai multe</em></a>)"
+      theme_source: "Tema <a target='_blank' href='%{path}'>„%{name}”</a>"
+      plugin_source: "Modulul „%{name}”"
+      unknown_source: "Una dintre temele sau modulele tale"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -260,8 +260,8 @@ ro:
         eu_west_2: "UE (Londra)"
         eu_west_3: "EU (Paris)"
         sa_east_1: "America de Sud (São Paulo)"
-        us_east_1: "US East (N. Virginia)"
-        us_east_2: "America de Est (Ohio)"
+        us_east_1: "Estul Statelor Unite (N. Virginia)"
+        us_east_2: "Estul Statelor Unite (Ohio)"
         us_gov_east_1: "AWS GovCloud (SUA-Est)"
         us_gov_west_1: "AWS GovCloud (SUA-Vest)"
         us_west_1: "US West (N. California)"
@@ -1288,8 +1288,9 @@ ro:
       suspended_notice: "Acest utilizator este suspendat până la %{date}."
       suspended_permanently: "Acest utilizator este suspendat."
       suspended_reason: "Motiv: "
-      silenced_permanently: "Acest utilizator este silențios."
-      silenced_reason: "Motivul edit[rii: "
+      silenced_notice: "Acest utilizator este redus la tăcere până la %{date}."
+      silenced_permanently: "Acest utilizator este redus la tăcere."
+      silenced_reason: "Motiv: "
       github_profile: "GitHub"
       email_activity_summary: "Sumar activitate"
       mailing_list_mode:
@@ -1354,6 +1355,10 @@ ro:
           one: '<span class="%{className}">%{count}</span> articol semnalat'
           few: '<span class="%{className}">%{count}</span> articole semnalate'
           other: '<span class="%{className}">%{count}</span> de articole semnalate'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> redus la tăcere'
+          few: '<span class="%{className}">%{count}</span> reduși la tăcere'
+          other: '<span class="%{className}">%{count}</span> de reduși la tăcere'
       messages:
         inbox: "Primite"
         latest: "Cele mai recente"
@@ -1626,7 +1631,11 @@ ro:
         reinvited: "Invitaţia a fost retrimisă"
         user: "Utilizator invitat"
         none:
-          title: "Nu există invitații."
+          title: "Nicio invitație de afișat."
+          cta: "Creează o legătură de invitație"
+          tip:
+            prefix: "Poți trimite și invitații în bloc prin"
+            action: "încărcarea unui fișier CSV"
         truncated:
           one: "Se afișează prima invitație."
           few: "Se afișează primele %{count} invitații."
@@ -2000,6 +2009,9 @@ ro:
       disabled: "Nu afișa"
       sidebar_footer: "Afișează în bara laterală din subsol"
       header: "Afișează în antet"
+    welcome_banner_location:
+      above_topic_content: "Deasupra conținutului subiectului"
+      below_site_header: "Sub antetul site-ului"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2087,6 +2099,8 @@ ro:
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
       remove_featured_link: "Eliminați link-ul din discuție"
       reply_placeholder: "Scrie aici. Utilizează formatarea Markdown, BBCode sau HTML. Trage sau lipește imagini."
+      reply_placeholder_rte: "Tastează aici. Folosește bara de instrumente sau Markdown pentru formatare. Trage sau plasează imagini."
+      reply_placeholder_rte_no_images: "Tastează aici. Folosește bara de instrumente sau Markdown pentru formatare."
       view_new_post: "Vezi noua ta postare."
       saving: "Se salvează"
       saved: "Salvat!"
@@ -2395,6 +2409,9 @@ ro:
         top: "Nu exită niciun subiect de top."
         education:
           topic_tracking_preferences: 'Poți vizualiza și modifica noile tale setări pentru urmărirea subiectelor în <a href="%{basePath}/my/preferences/tracking">preferințele tale</a>.'
+          unread: "Nimic rămas necitit... impresionant!"
+          new_new: "Nimic nou în acest moment... revino în curând!"
+          new: "Nimic nou în acest moment... revino în curând!"
       bottom:
         latest: "Nu mai există niciun subiect recent."
         posted: "Nu mai există subiecte postate."
@@ -2811,6 +2828,10 @@ ro:
         success: "Traducerile au fost actualizate cu succes"
         post_language_selector:
           none: "Nimic"
+        edit_warning:
+          message: "Aceasta este o postare tradusă.<br><br> Vrei să editezi postarea originală în %{language} sau să editezi specific această traducere?"
+          action_original: "Editează postarea originală"
+          action_translation: "Editează această traducere"
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
@@ -3319,6 +3340,20 @@ ro:
         toggle_bulk_select: "%{shortcut} Comută selectare în bloc"
         x: "%{shortcut} Comută selecție (în modul selectare în bloc)"
         log_out: "%{shortcut} Ieșire"
+      composing:
+        bold: "%{shortcut} Aldin"
+        italic: "%{shortcut} Cursiv"
+        link: "%{shortcut} Inserează legătură"
+        preformatted: "%{shortcut} Text pre-formatat"
+        paragraph: "%{shortcut} Paragraf"
+        heading_1: "%{shortcut} Titlu 1"
+        heading_2: "%{shortcut} Titlu 2"
+        heading_3: "%{shortcut} Titlu 3"
+        heading_4: "%{shortcut} Titlu 4"
+        toggle_direction: "%{shortcut} Comută direcție text"
+        ordered_list: "%{shortcut} Listă ordonată"
+        unordered_list: "%{shortcut} Listă neordonată"
+        blockquote: "%{shortcut} Citat"
       bookmarks:
         title: "Semne de carte"
         enter: "%{shortcut} Salvează și închide"
@@ -3541,6 +3576,8 @@ ro:
               content: "Administrator"
             badges:
               content: "Insigne"
+            filter:
+              content: "Filtru"
             topics:
               content: "Subiecte"
             faq:
@@ -3655,6 +3692,9 @@ ro:
           save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
     safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
+    filter:
+      description:
+        yesterday: "Ieri"
     discovery:
       headings:
         multi_tag:
@@ -3848,7 +3888,6 @@ ro:
           header_description: "Cuvintele urmărite sunt instrumente de moderare care pot efectua mai multe acțiuni diferite, inclusiv blocarea, cenzura, legarea sau semnalarea postărilor care conțin anumite cuvinte"
         color_palettes:
           title: "Palete de culori"
-          header_description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stilizare, șabloane și componente suplimentare. Ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
         emoji:
           title: "Emoticon"
           header_description: "Adaugă emoji noi care vor fi disponibile pentru toată lumea. Selectează mai multe fișiere pentru a crea emoji-uri folosind numele acestora. Grupul selectat va fi folosit pentru toate fișierele care sunt adăugate în același timp."
@@ -3919,6 +3958,9 @@ ro:
           title: "Cârlige web"
         embedding:
           title: "Înglobare"
+      theme_site_settings:
+        setting: "Setare"
+        default_value: "Implicit"
       search:
         modal_title: "Caută orice în admin"
         title: "Caută"
@@ -4392,6 +4434,7 @@ ro:
         author: "De %{author}"
         experimental_badge: "experimental"
         learn_more: "Află mai multe"
+        preinstalled: "Pre-instalat"
       navigation_menu:
         sidebar: "Bară laterală"
       backups:
@@ -4537,7 +4580,6 @@ ro:
           update_success: "%{theme} Actualizare finalizată"
           up_to_date: "Tema este actuală, ultima verificare:"
           add: "Adaugă"
-          edit_objects_theme_setting: "Editor de setări ale obiectelor"
           built_in_description: "Această temă este preinstalată și nu poate fi ștearsă sau personalizată"
           settings: "Setări"
           colors: "Culori"
@@ -4587,7 +4629,12 @@ ro:
               too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
           title: "Culori"
-          edit: "Editează paletă de culori"
+          edit: "Editează"
+          filters:
+            all: "Toate"
+            user_selectable: "Selectabilă de către utilizator"
+          active_badge:
+            text: "Activă"
           long_title: "Paletă de culori"
           new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"
@@ -4969,7 +5016,7 @@ ro:
         activity: Activitate
         like_count: Aprecieri acordate / primite
         last_100_days: "în ultimele 100 de zile"
-        private_topics_count: Subiecte private
+        private_topics_count: Mesaje personale
         posts_read_count: Postări citite
         post_count: Postări create
         second_factor_enabled: Autentificare în doi pași (2FA) este activată

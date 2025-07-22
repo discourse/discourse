@@ -9,9 +9,10 @@ ro:
     gamification:
       you: "Tu"
       leaderboard:
-        link_to_settings: "Opțiuni"
+        link_to_settings: "Setări"
         refresh: "Reîmprospătează"
         name: "Nume"
+        excluded_groups: "Grupuri excluse"
         period:
           all_time: "Dintotdeauna"
           yearly: "Anual"
@@ -20,12 +21,12 @@ ro:
           weekly: "Săptămânal"
           daily: "Zilnic"
       create: "Creează"
-      cancel: "Anulare"
-      close: "Închide sondajul"
+      cancel: "Anulează"
+      close: "Închide"
       delete: "Șterge"
-      edit: "Modifică"
+      edit: "Editează"
       back: "Înapoi"
-      save: "Salvare"
+      save: "Salvează"
       apply: "Aplică"
       update_range:
         last_10_days: "Ultimele 10 de zile"

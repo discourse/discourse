@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 hr:
+  admin_js:
+    discourse_templates:
+      title: "Predlošci"
+  js:
+    templates:
+      source: "Izvor"

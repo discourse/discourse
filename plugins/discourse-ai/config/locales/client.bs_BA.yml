@@ -37,15 +37,15 @@ bs_BA:
       features:
         back: "Prethodno"
         disabled: "(neomogućen)"
-        groups: "Groups:"
+        groups: "Grupa:"
         no_groups: "Ništa"
-        edit: "Edit"
+        edit: "Izmijeni"
         expand_list:
           one: "(još %{count})"
           few: "(još %{count})"
           other: "(još %{count})"
         filters:
-          all: "All"
+          all: "Sve"
           reset: "Resetovati"
         search:
           name: "Pretraži"
@@ -64,16 +64,16 @@ bs_BA:
       ai_persona:
         back: "Prethodno"
         name: "Ime"
-        edit: "Edit"
+        edit: "Izmijeni"
         export: "Izvoz"
         description: "Opis"
         user: User
-        save: "Save"
+        save: "Sačuvaj"
         enabled: "Omogućen?"
         allowed_groups: "Dozvoljene grupe"
         delete: "Delete"
         response_format:
-          open_modal: "Edit"
+          open_modal: "Izmijeni"
           modal:
             key_title: "Ključ"
         filters:
@@ -88,15 +88,15 @@ bs_BA:
         name: "Ime"
         description: "Opis"
         summary: "Sažetak"
-        save: "Save"
+        save: "Sačuvaj"
         remove_parameter: "Ukloni"
         parameter_required: "Required"
-        edit: "Edit"
+        edit: "Izmijeni"
         delete: "Delete"
       llms:
         display_name: "Ime"
-        save: "Save"
-        edit: "Edit"
+        save: "Sačuvaj"
+        edit: "Izmijeni"
         back: "Prethodno"
         delete: Delete
         quotas:
@@ -121,14 +121,14 @@ bs_BA:
           copied: "Kopirano!"
           cancel: "Odustani"
         image_caption:
-          save_caption: "Save"
+          save_caption: "Sačuvaj"
           automatic_caption_dialog:
             confirm: "Omogući"
       embeddings:
         back: "Prethodno"
-        save: "Save"
+        save: "Sačuvaj"
         delete: "Delete"
-        edit: "Edit"
+        edit: "Izmijeni"
         tests:
           success: "Uspjeh!"
         display_name: "Ime"
@@ -150,7 +150,7 @@ bs_BA:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "All"
+            all: "Sve"
           group_types:
             category: "Kategorija"
           table:

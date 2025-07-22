@@ -12,8 +12,12 @@ sq:
           label: Grupet
         version:
           label: Versioni
+        accept:
+          label: Pranoni
         revoke:
           label: Revoko
+        private:
+          label: Private?
         send-email:
           label: Dërgo Email?
       preferences:

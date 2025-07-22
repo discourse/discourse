@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 hy:
+  admin_js:
+    discourse_templates:
+      title: "Ձևանմուշներ"
+  js:
+    templates:
+      source: "Աղբյուր"

@@ -5,11 +5,16 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Rozwiązanie Discourse"
   js:
     notifications:
       alt:
         solved:
-          accepted_notification: "przyjęty"
+          accepted_notification: "zaakceptowano"
     solutions: "Rozwiązania"
     solved:
       title: "Rozwiązany"
@@ -20,13 +25,13 @@ pl_PL:
       has_no_accepted_answer: "Ten temat nie ma rozwiązania"
       unaccept_answer: "Odznacz jeśli ta odpowiedź nie rozwiązuje już problemu"
       accepted_answer: "Zaakceptowana odpowiedź"
-      solution: "Rozwiązanie"
+      solution: "Zaakceptowana odpowiedź"
       solution_summary:
-        one: "rozwiązanie"
+        one: "zaakceptowana odpowiedź"
         few: "rozwiązania"
         many: "rozwiązania"
         other: "rozwiązania"
-      accepted_html: "%{icon} Rozwiązany <span class='by'>przez <a href data-user-card='%{username_lower}'>%{username}</a></span> w <a href='%{post_path}' class='back'>poście #%{post_number}</a>"
+      accepted_html: "%{icon} Rozwiązano <span class='by'>przez <a href data-user-card='%{username_lower}'>%{username}</a></span> w <a href='%{post_path}' class='back'>poście nr%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "wszystkie"
@@ -35,6 +40,7 @@ pl_PL:
       no_solved_topics_title: "Nie rozwiązałeś jeszcze żadnych tematów"
       no_solved_topics_title_others: "%{username} nie rozwiązał jeszcze żadnych tematów"
       no_solved_topics_body: "Gdy udzielisz pomocnej odpowiedzi na dany temat, Twoja odpowiedź może zostać wybrana jako rozwiązanie przez właściciela tematu lub personel."
+      marked_solved_by: "Oznaczono jako rozwiązane przez <a href data-user-card='%{username_lower}'>%{username}</a></span>"
       no_answer:
         title: Czy odpowiedź na twoje pytanie została udzielona?
         description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."
@@ -42,7 +48,7 @@ pl_PL:
         title: "twój post został oznaczony jako rozwiązanie"
     topic_statuses:
       solved:
-        help: "Ten temat ma zaakceptowane rozwiązanie"
+        help: "Ten temat ma rozwiązanie"
     search:
       advanced:
         statuses:
@@ -52,6 +58,8 @@ pl_PL:
       web_hooks:
         solved_event:
           group_name: "Zdarzenie rozwiązania"
+          accepted_solution: "Gdy użytkownik oznaczy post jako zaakceptowaną odpowiedź"
+          unaccepted_solution: "Gdy użytkownik oznaczy post jako odpowiedź niezaakceptowaną"
       api:
         scopes:
           descriptions:

@@ -15,7 +15,7 @@ vi:
     discourse_calendar:
       disable_holiday: "Tắt"
       enable_holiday: "Bật"
-      date: "ày"
+      date: "Ngày"
       region:
         none: "Không có gì"
       toolbar_button:
@@ -24,7 +24,7 @@ vi:
         week: "Tuần"
         day: "Ngày"
     group_timezones:
-      search: "Tìm kiến..."
+      search: "Tìm kiếm..."
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
@@ -37,6 +37,7 @@ vi:
         title: "Mời hàng loạt"
         success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
         error: "Xin lỗi, file phải ở định dạng CSV."
+        group_selector_placeholder: "Chọn một nhóm..."
       upcoming_events:
         status: "Trạng thái"
       models:

@@ -7,7 +7,7 @@
 et:
   reports:
     overall_sentiment:
-      yaxis: "Date"
+      yaxis: "Kuupäev"
     emotion_neutral:
       title: "\U0001F610 Neutraalne"
   discourse_ai:

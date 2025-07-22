@@ -21,11 +21,13 @@ ca:
             kb: KB
             mb: MB
             tb: TB
+      percent: "%{count}%"
       short:
         thousands: "%{number}k"
         millions: "%{number}M"
     dates:
       time: "h:mm a"
+      time_short: "h.mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -35,9 +37,11 @@ ca:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "MMM D, AAAA"
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "fa %{date} "
       wrap_on: "el %{date}"
       tiny:
@@ -75,18 +79,33 @@ ca:
         date_month: "D MMM"
         date_year: "MMM YYYY"
       medium:
+        less_than_x_minutes:
+          one: "fa menys de %{count} minut"
+          other: "fa menys de %{count} minuts"
         x_minutes:
           one: "%{count} min"
           other: "%{count} min"
         x_hours:
           one: "%{count} hora"
           other: "%{count} hores"
+        about_x_hours:
+          one: "aproximadament %{count} hora"
+          other: "aproximadament %{count} hores"
         x_days:
           one: "%{count} dia"
           other: "%{count} dies"
+        x_months:
+          one: "%{count} mes"
+          other: "%{count} mesos"
+        about_x_years:
+          one: "aproximadament %{count} any"
+          other: "aproximadament %{count} anys"
         over_x_years:
           one: "més d'%{count} any"
           other: "més de %{count} anys"
+        almost_x_years:
+          one: "gairebé %{count} any"
+          other: "gairebé %{count} anys"
         date_year: "MMM D, AAAA"
       medium_with_ago:
         x_minutes:
@@ -123,6 +142,7 @@ ca:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber} de @%{username}"
       close: "tanca"
+      twitter: "Comparteix a X"
       facebook: "Comparteix en Facebook"
       email: "Envia per correu electrònic"
       url: "Copiar i compartir URL"
@@ -163,18 +183,31 @@ ca:
       banner:
         enabled: "Convertit en bàner %{when}. Apareixerà a dalt de cada pàgina fins que sigui descartat per l'usuari."
         disabled: "Ha suprimit aquest bàner %{when}. No apareixerà més a dalt de cada pàgina."
+      forwarded: "El missatge de dalt s'ha reenviat"
     topic_admin_menu: "accions del tema"
     skip_to_main_content: "Vés al contingut principal"
+    skip_user_nav: "Ves al contingut principal"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
+    emails_are_disabled_non_staff: "El correu electrònic sortint ha estat desactivat per a usuaris que no siguin del personal."
     software_update_prompt:
+      message: "Hem actualitzat aquest lloc, <span>si us plau, refresqueu</span> per mantenir les coses funcionant sense problemes."
       dismiss: "Descarta-ho"
+    bootstrap_mode: "Primers passos"
     back_button: "Enrere"
     welcome_banner:
       header:
+        logged_in_members: "Benvingut de nou, %{preferred_display_name}!"
         anonymous_members: "Benvingut a %{site_name}!"
       search: "Cerca"
     themes:
       default_description: "Per defecte"
+      broken_theme_alert: "És possible que el vostre lloc no funcioni perquè una aparença o component té errors."
+      error_caused_by: "Causat per '%{name}'. <a target='blank' href='%{path}'>Feu clic aquí</a> per actualitzar, tornar a configurar o desactivar."
+      only_admins: "(aquest missatge només es mostra als administradors del lloc)"
+    broken_decorator_alert: "És possible que les publicacions no es mostrin correctament perquè un dels decoradors de contingut de publicacions del vostre lloc web ha generat un error."
+    broken_page_change_alert: "Un controlador onPageChange ha generat un error. Consulteu les eines de desenvolupament del navegador per obtenir més informació."
+    broken_plugin_alert: "Causat pel connector '%{name}'"
+    broken_transformer_alert: "S'ha produït un error. És possible que el vostre lloc web no funcioni correctament."
     s3:
       regions:
         ap_northeast_1: "Àsia Pacífic (Tòquio)"
@@ -279,9 +312,33 @@ ca:
         likes:
           one: "%{formatted_number} 'm'agrada'"
           other: "%{formatted_number} 'm'agrada'"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} visitant}
+            other {{total_formatted_number} visitants}
+          }, aproximadament{ eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } de la Unió Europea
         periods:
           last_7_days: "durant els darrers 7 dies"
           today: "avui"
+          all_time: "sempre"
+      member_count:
+        one: "%{formatted_number} Membre"
+        other: "%{formatted_number} Membres"
+      admin_count:
+        one: "%{formatted_number} Administrador"
+        other: "%{formatted_number} Administradors"
+      moderator_count:
+        one: "%{formatted_number} Moderador"
+        other: "%{formatted_number} Moderadors"
+      report_inappropriate_content: "Si us trobeu amb algun contingut inadequat, no dubteu a iniciar una conversa amb els nostres moderadors i administradors. Recordeu iniciar sessió abans de posar-vos en contacte."
+      site_age:
+        less_than_one_month: "Creat fa < 1 mes"
+        month:
+          one: "Creat fa %{count} mes"
+          other: "Creat fa %{count} mesos"
     bookmarked:
       title: "Preferit"
       edit_bookmark: "Edita el marcador"
@@ -2958,6 +3015,8 @@ ca:
               content: "Administració"
             badges:
               content: "Insígnies"
+            filter:
+              content: "Filtre"
             topics:
               content: "Temes"
             faq:
@@ -2998,6 +3057,9 @@ ca:
       spreadsheet:
         show: "Mostra"
         about: "Quant a"
+    filter:
+      description:
+        yesterday: "Ahir"
     discovery:
       headings:
         multi_tag:
@@ -3121,6 +3183,8 @@ ca:
           title: "Webhooks"
         embedding:
           title: "Incrustant"
+      theme_site_settings:
+        default_value: "Per defecte"
       search:
         title: "Cerca"
         result_types:
@@ -3645,9 +3709,7 @@ ca:
             maximum: "Requereix una versió de Discourse %{version} o inferior."
           up_to_date: "L'aparença és actualitzada, última comprovació:"
           add: "Afegeix"
-          theme_settings: "Configuració de l'aparença"
           no_settings: "Aquesta aparença no té configuració."
-          theme_translations: "Traduccions de l'aparença"
           empty: "Sense elements"
           commits_behind:
             one: "L'aparença és%{count} commit darrere!"
@@ -3681,6 +3743,11 @@ ca:
             title: "Seleccioneu la paleta de colors base"
             description: "Paleta base:"
           title: "Colors"
+          edit: "Edita"
+          filters:
+            all: "Tots"
+          active_badge:
+            text: "Actiu"
           about: "Modifiqueu els colors utilitzats per les vostres aparences. Creeu una nova paleta de colors per a començar."
           copy_name_prefix: "Còpia de"
           undo: "Desfés"
@@ -4071,7 +4138,6 @@ ca:
         activity: Activitat
         like_count: '''M''agrada'' donats/rebuts'
         last_100_days: "durant els darrers 100 dies"
-        private_topics_count: Temes privats
         posts_read_count: Publicacions llegides
         post_count: Publicacions creades
         topics_entered: Temes vists

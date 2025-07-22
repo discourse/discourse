@@ -61,9 +61,6 @@ ja:
     chat_integration_webex_excerpt_length: "Webex Teams 投稿の抜粋の長さ"
     chat_integration_google_enabled: "Google チャット チャット統合プロバイダーを有効にする"
     chat_integration_google_excerpt_length: "Google チャット投稿の抜粋の長さ"
-  dashboard:
-    problem:
-      channel_errors: "一部のチャット統合チャンネルにエラーがあります。詳細については、<a href='%{base_path}/admin/plugins/chat-integration'>チャット統合のセクション</a>をご覧ください。"
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -89,14 +86,14 @@ ja:
           no_rules: "このチャンネルに設定されたルールはありません。`/discourse help` で手順を確認できます。"
           rule_string: "*%{index}）* *%{category}* の投稿を*%{filter}*"
           rule_string_tags_suffix: " タグ: *%{tags}*"
-        parse_error: "そのコマンドは存在しません。 `/discource help' で利用できるコマンドを確認できます。"
+        parse_error: "残念ながら、そのコマンドを理解できません。`/discourse help` で手順を確認できます。"
         create:
           created: "ルールを正常に作成しました"
           updated: "ルールを正常に更新しました"
           error: "申し訳ありませんが、ルールの作成中にエラーが発生しました。"
         delete:
           success: "ルールを正常に削除しました"
-          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。\nルール一覧は `/discourse status`で確認できます。"
+          error: "申し訳ありませんが、ルールの削除中にエラーが発生しました。`/discourse status` でルールの一覧を確認できます。"
         not_found:
           tag: "*%{name}* タグが見つかりません。"
           category: "*%{name}* カテゴリが見つかりません。使用可能なカテゴリ: *%{list}*"

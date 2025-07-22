@@ -18,7 +18,7 @@ ja:
       builder:
         title: ポリシー
         attach: ポリシーを作成
-        save: 変更を保存　
+        save: 変更を保存
         insert: 挿入
         errors:
           group: グループが必要です
@@ -42,7 +42,7 @@ ja:
           label: 同意
           description: 同意ボタンに使用するテキスト
         revoke:
-          label: 同意を取り消す
+          label: 取り消す
           description: 同意の取り消しボタンに使用するテキスト
         private:
           label: 非公開？
@@ -57,6 +57,6 @@ ja:
           away_description: ポリシーのステータスが変更された時点で 10 分以上アクセスがない場合で、新しいアクティビティメールにオプトインしている場合にのみ、メールを送信します。
           label: ポリシーをレビューする必要がある場合にメールで通知を受け取る
           email_frequency_options:
-            never: なし
+            never: 未使用
             when_away: 退席中の時のみ
             always: 常時

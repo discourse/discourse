@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  default_category_template:
+    name: Maler

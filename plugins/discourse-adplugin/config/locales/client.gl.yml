@@ -13,7 +13,7 @@ gl:
       adplugin:
         house_ads:
           new: "Novo"
-          settings: "Axustes"
+          settings: "Configuración"
           save: "Gardar"
           delete: "Eliminar"
           preview: "Visualizar"

@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 te:
+  admin_js:
+    discourse_templates:
+      title: "టెంప్లేట్లు"
+  js:
+    templates:
+      source: "మూలం URL"

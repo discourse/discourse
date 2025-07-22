@@ -15,7 +15,7 @@ ko:
     accepted_solutions:
       title: "허용되는 솔루션"
       xaxis: "일"
-      yaxis: "총"
+      yaxis: "합계"
   solved:
     no_solutions:
       self: "아직 수락 된 솔루션이 없습니다."

@@ -61,10 +61,13 @@ ug:
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"
+        save_button: "ئۆزگەرتىشنى ساقلا"
         test_modal:
           result: "نەتىجە"
+          run: "سىناقنى ئىجرا قىل"
           spam: "ئەخلەت خەت"
       usage:
+        short_title: "ئىشلىتىلىشى"
         summary: "خۇلاسە"
         username: "ئىشلەتكۈچى ئاتى"
         total_requests: "جەمئىي ئىلتىماس"
@@ -101,7 +104,10 @@ ug:
         remove_parameter: "چىقىرىۋەت"
         parameter_required: "زۆرۈر"
         edit: "تەھرىر"
+        test: "سىناقنى ئىجرا قىل"
         delete: "ئۆچۈر"
+        test_modal:
+          run: "سىناقنى ئىجرا قىل"
       llms:
         display_name: "ئىسمى"
         save: "ساقلا"
@@ -125,6 +131,7 @@ ug:
         next:
           title: "كېيىنكى"
         tests:
+          title: "سىناقنى ئىجرا قىل"
           success: "مۇۋەپپەقىيەتلىك!"
         providers:
           google: "Google"

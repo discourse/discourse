@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 sl:
+  default_category_template:
+    name: Predloge

@@ -20,7 +20,7 @@ fr:
       title: Politiques non acceptées
       labels:
         topic_id: ID du sujet
-        user_id: Identifiant d'utilisateur
+        user_id: ID de l'utilisateur
   user_notifications:
     policy_email:
       from: "%{site_name}"

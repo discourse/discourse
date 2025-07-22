@@ -8,3 +8,4 @@ sq:
   js:
     topic_voting:
       vote_title: "Voto"
+      voting_closed_title: "Mbyllur"

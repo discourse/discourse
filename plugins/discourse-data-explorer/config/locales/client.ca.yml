@@ -56,7 +56,7 @@ ca:
       column: "Columna %{number}"
       explain_label: "Hi incloem pla de consulta?"
       save_params: "Estableix valors per defecte"
-      reset_params: "Reinicia"
+      reset_params: "Restableix"
       search_placeholder: "Cerca..."
       no_search_results: "Ho sentim, no hem trobat cap resultat que coincideixi amb el vostre text."
     group:

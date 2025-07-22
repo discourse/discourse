@@ -24,13 +24,13 @@ be:
             categories:
               label: "катэгорыі"
             tags:
-              label: "тэгі"
+              label: "Цэтлікі"
         llm_triage:
           fields:
             category:
-              label: "катэгорыя"
+              label: "Катэгорыя"
             tags:
-              label: "тэгі"
+              label: "Цэтлікі"
             canned_reply:
               label: "Адказаць"
     discourse_ai:
@@ -40,7 +40,7 @@ be:
         groups: "групы:"
         edit: "Рэдагаваць"
         filters:
-          all: "Усё"
+          all: "усе"
           reset: "скінуць"
         search:
           name: "Пошук"
@@ -57,15 +57,15 @@ be:
         total_requests: "Усяго запытаў"
       ai_persona:
         back: "Назад"
-        name: "імя"
-        edit: "рэдагаваць"
+        name: "Імя"
+        edit: "Рэдагаваць"
         export: "экспарт"
         description: "Апісанне"
-        user: карыстальнік
+        user: Карыстальнік
         save: "Захаваць"
-        delete: "выдаляць"
+        delete: "Выдаліць"
         response_format:
-          open_modal: "рэдагаваць"
+          open_modal: "Рэдагаваць"
         filters:
           reset: "скінуць"
       rag:
@@ -75,7 +75,7 @@ be:
       tools:
         back: "Назад"
         export: "экспарт"
-        name: "імя"
+        name: "Імя"
         description: "Апісанне"
         summary: "вынік"
         save: "Захаваць"
@@ -84,13 +84,13 @@ be:
         edit: "Рэдагаваць"
         delete: "Выдаліць"
       llms:
-        display_name: "імя"
+        display_name: "Імя"
         save: "Захаваць"
-        edit: "рэдагаваць"
+        edit: "Рэдагаваць"
         back: "Назад"
-        delete: выдаляць
+        delete: Выдаліць
         quotas:
-          group: "група"
+          group: "Група"
         usage:
           ai_spam: "Спам"
         next:
@@ -101,18 +101,18 @@ be:
           google: "Google"
       ai_helper:
         context_menu:
-          cancel: "адмяніць"
+          cancel: "Адмяніць"
         post_options_menu:
           close: "зачыніць"
           copy: "капіяваць"
-          cancel: "адмяніць"
+          cancel: "Адмяніць"
         image_caption:
-          save_caption: "захаваць"
+          save_caption: "Захаваць"
           automatic_caption_dialog:
             confirm: "Уключыць"
       embeddings:
         back: "Назад"
-        save: "захаваць"
+        save: "Захаваць"
         delete: "Выдаліць"
         edit: "Рэдагаваць"
         tests:
@@ -127,14 +127,14 @@ be:
         share_modal:
           copy: "капіяваць"
         conversations:
-          today: "сёння"
+          today: "Today"
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Усё"
+            all: "усе"
             neutral: "нейтральны"
           group_types:
-            category: "катэгорыя"
+            category: "Катэгорыя"
           table:
             total_count: "агульны"
       discobot_discoveries:

@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 da:
+  post_action_types:
+    vote:
+      title: "Stemmeafgivelse"
   post_voting:
     comment:
       reviewables:

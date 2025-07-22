@@ -141,9 +141,9 @@ tr_TR:
       features:
         back: "Geri"
         disabled: "(devre Dışı)"
-        groups: "Grup:"
+        groups: "Gruplar:"
         no_persona: "Ayarlanmamış"
-        no_groups: "Yok"
+        no_groups: "Hiçbiri"
         edit: "Düzenle"
         expand_list:
           one: "(%{count} tane Daha)"
@@ -168,6 +168,8 @@ tr_TR:
           description: "Seçili LLM'i kullanarak potansiyel istenmeyen içerikleri belirler ve inceleme kuyruğunda site moderatörlerinin incelemesi için işaretler"
       modals:
         select_option: "Seçenek belirleyin..."
+      layout:
+        table: "Tablo"
       spam:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
@@ -250,6 +252,7 @@ tr_TR:
         name: "Ad"
         edit: "Düzenle"
         export: "Dışa Aktar"
+        import: "İçe Aktar"
         description: "Açıklama"
         no_llm_selected: "Dil modeli seçilmedi"
         max_context_posts: "Maksimum bağlam gönderisi sayısı"
@@ -293,7 +296,7 @@ tr_TR:
         new: "Yeni kişilik"
         no_personas: "Henüz herhangi bir kişilik oluşturmadınız"
         title: "Kişilikler"
-        short_title: "Kişiler"
+        short_title: "Kişilikler"
         delete: "Sil"
         temperature: "Sıcaklık"
         temperature_help: "LLM için kullanılacak sıcaklık. Yaratıcılığı artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 2,0 arasında bir değer)"
@@ -332,6 +335,7 @@ tr_TR:
         back: "Geri"
         short_title: "Araçlar"
         export: "Dışa Aktar"
+        import: "İçe Aktar"
         no_tools: "Henüz herhangi bir araç oluşturmadınız"
         name: "Ad"
         new: "Yeni araç"
@@ -427,7 +431,7 @@ tr_TR:
           fake: "Manuel yapılandırma"
           button: "Kur"
         next:
-          title: "İleri"
+          title: "Sonraki"
         tests:
           title: "Testi çalıştır"
           running: "Test çalıştırılıyor..."
@@ -481,6 +485,7 @@ tr_TR:
           trigger: "YZ'ye sor"
           loading: "YZ oluşturuyor"
           cancel: "İptal et"
+          regen: "Tekrar deneyin"
           confirm: "Onayla"
           discard: "Kapat"
           changes: "Önerilen düzenlemeler"
@@ -509,7 +514,7 @@ tr_TR:
         image_caption:
           button_label: "YZ ile alt yazı"
           generating: "Alt yazı oluşturuluyor..."
-          credits: "Alt yazısı YZ tarafından hazırlandı"
+          credits: "AI tarafından altyazılı"
           save_caption: "Kaydet"
           automatic_caption_setting: "Otomatik alt yazıyı etkinleştirin"
           automatic_caption_loading: "Görüntülere alt yazı ekleniyor..."
@@ -678,7 +683,7 @@ tr_TR:
         collapse: "Daralt"
         tooltip:
           actions:
-            disable: "Devredışı"
+            disable: "Devre dışı bırak"
     review:
       types:
         reviewable_ai_post:

@@ -7,11 +7,66 @@
 uk:
   site_settings:
     chat_integration_enabled: 'Увімкнути плагін інтеграції дискурс-чату'
+    chat_integration_slack_outbound_webhook_url: "Для використання системи «Вхідний веб-хук» Slack замість API OAuth. Не рекомендується."
+    chat_integration_slack_transcript_quote: Загорнути стенограму slack у теги [quote]?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Ви повинні ввести або вихідну URL-адресу веб-хука, або маркер доступу"
+    chat_integration_telegram_enabled: "Увімкніть постачальника інтеграції чату Telegram"
+    chat_integration_telegram_access_token: "Токен доступу вашого бота від ботбатька Telegram"
     chat_integration_telegram_excerpt_length: "Довжина витягу телеграмового повідомлення"
+    chat_integration_telegram_enable_slash_commands: "Дозвольте керувати підписками на телеграм за допомогою слеша «косої риски»"
+    chat_integration_discord_enabled: "Увімкніть постачальника послуг з інтеграції чату Discord"
+    chat_integration_discord_message_content: "Повідомлення, яке потрібно додати над текстом під час надсилання сповіщення до Discord"
+    chat_integration_discord_excerpt_length: "Довжина матеріалу від Discord"
+    chat_integration_guilded_enabled: "Увімкнути постачальника інтеграції чату Guilded"
+    chat_integration_guilded_excerpt_length: "Довжина уривку з допису Guilded"
+    chat_integration_mattermost_enabled: "Увімкніть постачальника чат-інтеграції Mattermost"
+    chat_integration_mattermost_webhook_url: 'URL-адреса для веб-хука Mattermost'
+    chat_integration_mattermost_incoming_webhook_token: 'Токен верифікації, який використовується для автентифікації вхідних запитів'
+    chat_integration_mattermost_icon_url: "Іконка для повідомлень на Mattermost (за замовчуванням логотип форуму)"
+    chat_integration_mattermost_excerpt_length: "Найбільша довжина уривку публікації"
+    chat_integration_matrix_enabled: "Увімкнути постачальника інтеграції чату Matrix"
+    chat_integration_matrix_homeserver: "Домашній сервер для підключення. Не забудьте вказати протокол"
+    chat_integration_matrix_access_token: "Токен доступу до облікового запису Matrix бота"
+    chat_integration_matrix_excerpt_length: "Довжина уривку публікації Matrix"
+    chat_integration_matrix_use_notice: "Використовуйте сповіщення замість простого повідомлення"
+    chat_integration_zulip_enabled: "Увімкніть постачальника інтеграції чату Zulip"
+    chat_integration_zulip_server: "Базова URL-адреса вашого сервера Zulip. Обов’язково вкажіть http(s)://"
+    chat_integration_zulip_bot_email_address: "Адреса електронної пошти, пов'язаної з вашим Zulip ботом"
+    chat_integration_zulip_bot_api_key: "Ключ API для вашого бота Zulip"
+    chat_integration_zulip_excerpt_length: "Довжина уривку допису Zulip"
+    chat_integration_rocketchat_enabled: "Увімкнути постачальника інтеграції чату Rocket Chat"
+    chat_integration_rocketchat_webhook_url: "URL-адреса веб-хука для інтеграції з Rocket Chat"
+    chat_integration_rocketchat_excerpt_length: "Довжина уривку допису Rocket Chat"
+    chat_integration_gitter_enabled: "Увімкнути постачальника інтеграції чату Gitter"
+    chat_integration_flowdock_enabled: "Увімкнути постачальника інтеграції чату Flowdock"
+    chat_integration_flowdock_excerpt_length: "Довжина уривку публікації Flowdock"
+    chat_integration_groupme_enabled: "Увімкнути постачальника інтеграції чату Groupme"
+    chat_integration_groupme_excerpt_length: "Довжина уривку допису в Groupme"
+    chat_integration_groupme_bot_ids: "*обов’язково* Ідентифікатори ботів, розділені символом ',' якщо їх декілька"
+    chat_integration_groupme_instance_names: " *обов'язково* Ім’я чату GroupMe, розділене символом ',' якщо їх декілька (у тому ж порядку, що й ідентифікатори ботів)"
+    chat_integration_teams_enabled: "Увімкніть постачальника інтеграції чату Microsoft Teams"
+    chat_integration_teams_excerpt_length: "Довжина фрагмента допису в Microsoft Team"
+    chat_integration_powerautomate_enabled: "Увімкніть постачальника інтеграції Microsoft Power Automate"
+    chat_integration_powerautomate_excerpt_length: "Довжина уривку публікації Microsoft Power Automate"
+    chat_integration_webex_enabled: "Увімкнути постачальника інтеграції чату Webex Teams"
+    chat_integration_webex_excerpt_length: "Довжина уривку публікації Webex Team"
+    chat_integration_google_enabled: "Увімкнути постачальника інтеграції чату «Google Chat»"
+    chat_integration_google_excerpt_length: "Довжина уривку допису в Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "У деяких каналах інтеграції чату є помилки. Відвідайте <a href='%{base_path}/admin/plugins/chat-integration'>розділ інтеграції чату</a> , щоб дізнатися більше."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Надіслати Slack повідомлення
+      send_chat_integration_message:
+        title: Надіслати повідомлення про чат-інтеграцію
   chat_integration:
-    all_categories: "(усі категорії)"
+    all_categories: "(усі розділи)"
     deleted_category: "(видалена категорія)"
     deleted_group: "(видалена група)"
+    group_mention_template: "згадування: @%{name}"
     group_message_template: "повідомлення до: @ %{name}"
     topic_tag_changed:
       added_and_removed: "Додано %{added} і видалено %{removed}"
@@ -20,7 +75,11 @@ uk:
     provider:
       slack:
         status:
+          header: |
+            *Правила для цього каналу*
+            (якщо допис відповідає декільком правилам, виконується найголовніше правило)
           no_rules: "Для цього каналу немає правил. Запустіть `/discourse help` для отримання інструкцій."
+          rule_string: "*%{index})* *%{filter}* повідомлення у *%{category}*"
           rule_string_tags_suffix: "з тегами: * %{tags} *"
         create:
           created: "Правило створено успішно"
@@ -59,5 +118,3 @@ uk:
         delete:
           success: "Правило успішно видалено"
           error: "На жаль, під час видалення цього правила сталася помилка. Запустіть `/discourse status` для списку правил."
-      flowdock:
-        message_title: "опубліковано"

@@ -18,5 +18,5 @@ nl:
       description: "Lijst van meest recente gebruikersnotities."
       labels:
         user: Gebruiker
-        note: Notitie
+        note: Opmerking
         moderator: Moderator

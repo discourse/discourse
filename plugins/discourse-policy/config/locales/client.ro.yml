@@ -8,6 +8,7 @@ ro:
   js:
     discourse_policy:
       builder:
+        save: Salvează modificări
         insert: Introdu
         groups:
           label: Grupuri

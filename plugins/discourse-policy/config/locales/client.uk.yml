@@ -8,6 +8,7 @@ uk:
   js:
     discourse_policy:
       builder:
+        save: Зберегти зміни
         insert: Вставити
         groups:
           label: Групи
@@ -20,7 +21,7 @@ uk:
         private:
           label: Приватні?
         send-email:
-          label: Відправити лист?
+          label: Надіслати ел. листа?
       preferences:
         policy_emails:
           email_frequency_options:

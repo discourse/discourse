@@ -16,14 +16,11 @@ el:
       votes_nav_help: "θέματα με τις περισσότερες ψήφους"
       voted: "Ψηφίσατε για αυτό το θέμα"
       allow_topic_voting: "Να επιτρέπεται στους χρήστες να ψηφίζουν για θέματα αυτής της κατηγορίας"
-      vote_title: "Ψήφος"
+      vote_title: "Ψήφισε"
       vote_title_plural: "Ψήφοι"
       voted_title: "Ψήφισα"
       voting_closed_title: "Κλειστή"
       voting_limit: "Όριο"
-      votes_left:
-        one: "Απομένει %{count} ψήφος, δείτε <a href='%{path}'>τις ψήφους σας</a>."
-        other: "Απομένουν %{count} ψήφοι, δείτε <a href='%{path}'>τις ψήφους σας</a>."
       votes_left_button_title:
         one: "Έχετε %{count} ψήφο ακόμη."
         other: "Έχετε %{count} ψήφους ακόμη."
@@ -31,7 +28,7 @@ el:
         one: "%{count} ψήφος"
         other: "%{count} ψήφοι"
       anonymous_button:
-        one: "Ψήφος"
+        one: "Ψήφισε"
         other: "Ψήφοι"
       remove_vote: "Αφαίρεση ψήφου"
       no_votes_title_self: "Δεν έχετε ψηφίσει σε κανένα θέμα ακόμα"

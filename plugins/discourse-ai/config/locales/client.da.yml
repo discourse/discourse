@@ -55,12 +55,16 @@ da:
           name: "Spam"
       modals:
         select_option: "Vælg en indstilling..."
+      layout:
+        table: "Tabel"
       spam:
         short_title: "Spam"
         last_seven_days: "Seneste 7 dage"
         enable: "Aktiver"
+        save_button: "Gem ændringer"
         test_modal:
           result: "Resultat"
+          run: "Kør test"
           spam: "Spam"
       usage:
         summary: "Statistik"
@@ -74,6 +78,7 @@ da:
         name: "Navn"
         edit: "Rediger"
         export: "Eksporter"
+        import: "Importer"
         description: "Beskrivelse"
         user: Bruger
         save: "Gem"
@@ -93,6 +98,7 @@ da:
       tools:
         back: "Tilbage"
         export: "Eksporter"
+        import: "Importer"
         name: "Navn"
         description: "Beskrivelse"
         summary: "Statistik"
@@ -100,7 +106,10 @@ da:
         remove_parameter: "Fjern"
         parameter_required: "Obligatoriske"
         edit: "Rediger"
+        test: "Kør test"
         delete: "Slet"
+        test_modal:
+          run: "Kør test"
       llms:
         display_name: "Navn"
         save: "Gem"
@@ -119,10 +128,12 @@ da:
             custom: "Tilpasset..."
           hours: "timer"
         usage:
+          ai_summarization: "Opsummer"
           ai_spam: "Spam"
         next:
           title: "Næste"
         tests:
+          title: "Kør test"
           success: "Succes!"
         providers:
           google: "Google"
@@ -149,6 +160,7 @@ da:
         delete: "Slet"
         edit: "Rediger"
         tests:
+          title: "Kør test"
           success: "Succes!"
         display_name: "Navn"
         providers:
@@ -178,6 +190,9 @@ da:
             tag: "Mærke"
           table:
             total_count: "Total"
+      summarization:
+        chat:
+          summarize: "Opsummer"
       discobot_discoveries:
         regular_results: "Emner"
         collapse: "Fold sammen"

@@ -13,6 +13,9 @@ ug:
     solved:
       topic_status_filter:
         all: "ھەممىسى"
+    topic_statuses:
+      solved:
+        help: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"
     discourse_automation:
       triggerables:
         first_accepted_solution:

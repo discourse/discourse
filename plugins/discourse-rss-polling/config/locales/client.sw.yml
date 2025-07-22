@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 sw:
+  js:
+    admin:
+      rss_polling:
+        feed_url: Anwani ya mtandao
+        discourse_category: Kikundi
+        discourse_tags: Lebo

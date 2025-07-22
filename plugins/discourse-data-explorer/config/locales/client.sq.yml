@@ -10,14 +10,19 @@ sq:
       or: "ose"
       import:
         label: "Importo"
+      help:
+        label: "Ndihmë"
       types:
         bool:
           yes: "Po"
           no: "Jo"
       export: "Eksporto"
       save: "Ruaj ndryshimet"
-      edit: "Redakto"
+      edit: "Redaktoni"
       delete: "Fshij"
+      result_count:
+        one: "%{count} rezultat."
+        other: "%{count} rezultate."
       query_groups: "Grupet"
       query_description: "Përshkrimi"
-      reset_params: "Rivendos"
+      reset_params: "Rivendosni"

@@ -8,6 +8,7 @@ da:
   js:
     discourse_policy:
       builder:
+        save: Gem ændringer
         insert: Indsæt
         groups:
           label: Grupper

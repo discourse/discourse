@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ug:
+  js:
+    admin:
+      rss_polling:
+        author: يازغۇچى
+        feed_url: تور ئادرېسى
+        discourse_category: سەھىپە
+        discourse_tags: بەلگە

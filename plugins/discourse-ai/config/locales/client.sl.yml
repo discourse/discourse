@@ -48,7 +48,7 @@ sl:
           other: "(%{count} več)"
         collapse_list: "(manj)"
         filters:
-          all: "Vse"
+          all: "Vsi"
           reset: "Ponastavi"
         search:
           name: "Išči"
@@ -56,6 +56,8 @@ sl:
           name: "Neželeno"
       modals:
         select_option: "Izberi možnost..."
+      layout:
+        table: "Tabela"
       spam:
         short_title: "Neželeno"
         last_seven_days: "Zadnjih 7 dni"
@@ -73,6 +75,7 @@ sl:
         name: "Ime"
         edit: "Uredi"
         export: "Izvozi"
+        import: "Uvozi"
         description: "Opis"
         user: Uporabnik
         save: "Shrani"
@@ -90,6 +93,7 @@ sl:
       tools:
         back: "Nazaj"
         export: "Izvozi"
+        import: "Uvozi"
         name: "Ime"
         description: "Opis"
         summary: "Povzetek"
@@ -164,7 +168,7 @@ sl:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Vse"
+            all: "Vsi"
           group_types:
             category: "Kategorija"
           table:

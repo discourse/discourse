@@ -15,6 +15,7 @@ da:
       tool_summary:
         search: "Søg"
         time: "Tidspunkt"
+        summarize: "Opsummer"
     sentiment:
       reports:
         post_emotion:

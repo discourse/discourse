@@ -32,6 +32,6 @@ ja:
   unsubscribe:
     policy_emails:
       select_title: "ポリシーアラートメールの頻度を次に設定する:"
-      never: なし
+      never: 未使用
       when_away: 退席中の時のみ
       always: 常時

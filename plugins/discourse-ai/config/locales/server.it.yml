@@ -429,7 +429,7 @@ it:
       missing_provider_param: "%{param} non può essere vuoto"
       bedrock_invalid_url: "Compila tutti i campi per utilizzare questo modello."
     ai_staff_action_logger:
-      updated: "aggiornato"
+      updated: "aggiornamento"
       removed: "rimosso"
     errors:
       quota_exceeded: "Hai superato la quota per questo modello. Riprova tra %{relative_time}."

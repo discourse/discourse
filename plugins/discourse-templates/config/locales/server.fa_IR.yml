@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  default_category_template:
+    name: قالب‌ها

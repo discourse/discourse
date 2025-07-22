@@ -36,6 +36,7 @@ gl:
         title: "Convite en grupo"
         success: "O ficheiro cargouse correctamente, notificaráselle por mensaxe cando remate o proceso."
         error: "O ficheiro ten que ter formato CSV."
+        group_selector_placeholder: "Escolla un grupo..."
       upcoming_events:
         status: "Estado"
       models:

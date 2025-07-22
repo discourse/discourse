@@ -9,7 +9,7 @@ ar:
     admin:
       site_settings:
         categories:
-          chat_integration: "تكاملات الدردشة"
+          chat_integration: "تكاملات الدرشة"
   js:
     chat_integration:
       menu_title: "تكاملات الدرشة"
@@ -36,16 +36,16 @@ ar:
         error: "حدث خطأ غير معروف في أثناء إرسال الرسالة. تحقَّق من سجلات الموقع لمزيدٍ من المعلومات."
         success: "تم إرسال الرسالة بنجاح"
       type:
-        normal: عادي
+        normal: طبيعية
         group_message: رسالة مجموعة
         group_mention: إشارة مجموعة
       filter:
         mute: 'صامت'
-        follow: 'أول منشور فقط'
+        follow: 'المنشور الأول فقط'
         watch: 'كل المنشورات والردود'
         thread: 'كل المنشورات ذات الردود المسلسلة'
       rule_table:
-        filter: "تصفية"
+        filter: "عامل التصفية"
         category: "الفئة"
         tags: "الوسوم"
         edit_rule: "تعديل"
@@ -65,7 +65,7 @@ ar:
         provider: مقدِّم الخدمة
         type: النوع
         channel: القناة
-        filter: تصفية
+        filter: عامل التصفية
         category: الفئة
         group: المجموعة
         tags: الوسوم

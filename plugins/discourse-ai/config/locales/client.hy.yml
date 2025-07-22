@@ -24,13 +24,13 @@ hy:
             categories:
               label: "Կատեգորիաներ"
             tags:
-              label: "Թեգեր"
+              label: "Պիտակներ"
         llm_triage:
           fields:
             category:
               label: "Կատեգորիա"
             tags:
-              label: "Թեգեր"
+              label: "Պիտակներ"
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
@@ -45,8 +45,8 @@ hy:
           other: "(%{count} ավելի)"
         collapse_list: "(ցույց տալ ավելի քիչ)"
         filters:
-          all: "Բոլորը"
-          reset: "Զրոյացնել"
+          all: "Բոլոր"
+          reset: "Վերահաստատե;"
         search:
           name: "Որոնում"
         spam:
@@ -67,7 +67,8 @@ hy:
         name: "Անուն"
         edit: "Խմբագրել"
         export: "Արտահանել"
-        description: "Նկարագրությունը"
+        import: "Ներմուծել"
+        description: "Նկարագրություն"
         user: Օգտատեր
         save: "Պահպանել"
         enabled: "Միացվա՞ծ է:"
@@ -77,7 +78,7 @@ hy:
           modal:
             key_title: "Բանալի"
         filters:
-          reset: "Զրոյացնել"
+          reset: "Վերահաստատե;"
       rag:
         uploads:
           title: "Վերբեռնումներ"
@@ -85,8 +86,9 @@ hy:
       tools:
         back: "Ետ"
         export: "Արտահանել"
+        import: "Ներմուծել"
         name: "Անուն"
-        description: "Նկարագրությունը"
+        description: "Նկարագրություն"
         summary: "Ամփոփումը"
         save: "Պահպանել"
         remove_parameter: "Հեռացնել"
@@ -95,6 +97,7 @@ hy:
         delete: "Ջնջել"
       llms:
         display_name: "Անուն"
+        provider: "Մատակարար"
         save: "Պահպանել"
         edit: "Խմբագրել"
         back: "Ետ"
@@ -120,10 +123,12 @@ hy:
       ai_helper:
         context_menu:
           cancel: "Չեղարկել"
-          discard: "Չեղարկել"
+          confirm: "Հաստատել"
+          discard: "Ջնջել"
         post_options_menu:
           close: "Փակել"
           copy: "Կրկնօրինակել"
+          copied: "Պատճենված է!"
           cancel: "Չեղարկել"
         image_caption:
           save_caption: "Պահպանել"
@@ -137,6 +142,7 @@ hy:
         tests:
           success: "Հաջողություն!"
         display_name: "Անուն"
+        provider: "Մատակարար"
         providers:
           google: "Google"
           fake: "Մասնավոր"
@@ -151,16 +157,16 @@ hy:
         share_modal:
           copy: "Կրկնօրինակել"
         conversations:
-          today: "Այսօրվա"
+          today: "Այսօր"
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Բոլորը"
+            all: "Բոլոր"
             neutral: "Նեյտրալ"
           group_types:
             category: "Կատեգորիա"
           table:
-            total_count: "Ամբողջը"
+            total_count: "Ամբողջ"
       discobot_discoveries:
         regular_results: "Թեմաներ"
         collapse: "Կրճատել"

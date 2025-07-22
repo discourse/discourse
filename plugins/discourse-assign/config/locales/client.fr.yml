@@ -16,12 +16,12 @@ fr:
         title: "Désattribué"
         help: "Sujets qui ne sont pas attribués"
     action_codes:
-      assigned: "A attribué à %{who} le %{when}"
-      assigned_group: "A attribué à %{who} le %{when}"
+      assigned: "Attribué à %{who} le %{when}"
+      assigned_group: "Attribué à %{who} le %{when}"
       assigned_to_post: "A attribué %{who} au <a href='%{path}'>message</a> le %{when}"
       assigned_group_to_post: "A attribué %{who} au <a href='%{path}'>message</a> le %{when}"
-      unassigned: "A annulé l'attribution à %{who} le %{when}"
-      unassigned_group: "A annulé l'attribution à %{who} le %{when}"
+      unassigned: "Annulation de l'attribution à %{who} le %{when}"
+      unassigned_group: "Annulation de l'attribution à %{who} le %{when}"
       unassigned_from_post: "A annulé l'attribution de %{who} au <a href='%{path}'>message</a> le %{when}"
       unassigned_group_from_post: "A annulé l'attribution de %{who} au <a href='%{path}'>message</a> le %{when}"
       reassigned: "Réattribution à %{who} le %{when}"
@@ -35,7 +35,7 @@ fr:
       cant_act_unclaimed: "Il faut réserver ce sujet avant d'agir sur les signalements."
       topic_search_placeholder: "Rechercher des sujets par titre ou contenu"
       sidebar_name_filter_placeholder: "Nom ou nom d'utilisateur"
-      assigned: "Attribué"
+      assigned: "Attribué(s)"
       group_everyone: "Tout le monde"
       assigned_to: "Attribué à"
       assigned_topic_to: "A attribué le message à <a href='%{path}'>%{username}</a>"
@@ -93,10 +93,10 @@ fr:
       reminders_frequency:
         description: "Fréquence à laquelle recevoir des rappels de sujets attribués"
         never: "Jamais"
-        daily: "Chaque jour"
-        weekly: "Chaque semaine"
-        monthly: "Chaque mois"
-        quarterly: "Chaque trimestre"
+        daily: "Quotidien"
+        weekly: "Hebdomadaire"
+        monthly: "Mensuel"
+        quarterly: "Trimestriel"
       admin:
         groups:
           manage:

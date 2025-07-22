@@ -15,7 +15,7 @@ da:
           amazon_plugin: "Amazon"
       adplugin:
         house_ads:
-          new: "Ny"
+          new: "Nye"
           settings: "Indstillinger"
           save: "Gem"
           delete: "Slet"

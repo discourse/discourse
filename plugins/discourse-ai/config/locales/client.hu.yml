@@ -19,6 +19,8 @@ hu:
       scriptables:
         llm_report:
           fields:
+            sender:
+              label: "Feladó"
             topic_id:
               label: "Témaazonosító"
             title:
@@ -38,7 +40,7 @@ hu:
     discourse_ai:
       features:
         back: "Vissza"
-        disabled: "(kikapcsolt)"
+        disabled: "(kikapcsolva)"
         groups: "Csoportok:"
         no_persona: "Nincs beállítva"
         no_groups: "Egyik sem"
@@ -56,14 +58,19 @@ hu:
           name: "Kéretlen tartalom"
       modals:
         select_option: "Válasszon egy lehetőséget…"
+      layout:
+        table: "Tábla"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"
         enable: "Engedélyezés"
+        save_button: "Módosítások mentése"
         test_modal:
           result: "Eredmény"
+          run: "Teszt futtatása"
           spam: "Kéretlen tartalom"
       usage:
+        short_title: "Használat"
         summary: "Összefoglaló"
         username: "Felhasználónév"
         total_requests: "Összes kérés"
@@ -75,6 +82,7 @@ hu:
         name: "Név"
         edit: "Szerkesztés"
         export: "Exportálás"
+        import: "Importálás"
         description: "Leírás"
         user: Felhasználó
         save: "Mentés"
@@ -93,16 +101,22 @@ hu:
       tools:
         back: "Vissza"
         export: "Exportálás"
+        import: "Importálás"
         name: "Név"
         description: "Leírás"
         summary: "Összefoglaló"
+        script: "Parancsfájl"
         save: "Mentés"
         remove_parameter: "Eltávolítás"
         parameter_required: "Kötelező"
         edit: "Szerkesztés"
+        test: "Teszt futtatása"
         delete: "Törlés"
+        test_modal:
+          run: "Teszt futtatása"
       llms:
         display_name: "Név"
+        provider: "Szolgáltató"
         save: "Mentés"
         edit: "Szerkesztés"
         back: "Vissza"
@@ -124,6 +138,7 @@ hu:
         next:
           title: "Tovább"
         tests:
+          title: "Teszt futtatása"
           success: "Sikeres!"
         providers:
           google: "Google"
@@ -141,6 +156,7 @@ hu:
           copied: "Másolva!"
           cancel: "Mégse"
         thumbnail_suggestions:
+          select: "Válasszon"
           selected: "Kiválasztott"
         image_caption:
           save_caption: "Mentés"
@@ -155,6 +171,7 @@ hu:
           title: "Teszt futtatása"
           success: "Sikeres!"
         display_name: "Név"
+        provider: "Szolgáltató"
         providers:
           google: "Google"
           fake: "Egyéni"
@@ -181,7 +198,7 @@ hu:
             category: "Kategória"
             tag: "Címke"
           table:
-            total_count: "Összes"
+            total_count: "Összesen"
       summarization:
         chat:
           summarize: "Összefoglalás"

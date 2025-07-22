@@ -7,6 +7,3 @@
 th:
   chat_integration:
     all_categories: "(หมวดหมู่ทั้งหมด)"
-    provider:
-      flowdock:
-        message_title: "โพสต์แล้ว"

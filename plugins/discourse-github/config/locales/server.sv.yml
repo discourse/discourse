@@ -36,28 +36,5 @@ sv:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Åtgärd krävs för insticksprogrammet discourse-github"
-      repository_identifier_invalid_pm: |
-        En databas som anges i insticksprogrammet Discourse-github är ogiltig:
-        %{repo_name}
-
-        De bör anges som `user/repo`.
-
-        Märken tilldelas inte förrän namnet har korrigerats i
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github webbplatsinställningar</a>
-        och ”github_badges_enabled” är aktiverat igen.
       repository_not_found_pm_title: "Åtgärd krävs för insticksprogrammet discourse-github"
-      repository_not_found_pm: |
-        En databas som anges i insticksprogrammet Discourse-github returnerade felet ”Hittas inte”
-        : %{repo_name}
-
-        Märken kommer inte att tilldelas förrän namnet har korrigerats i
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github webbplatsinställningar</a>
-        och ”github_badges_enabled” är aktiverat igen.
       invalid_octokit_credentials_pm_title: "Åtgärd krävs för insticksprogrammet discourse-github"
-      invalid_octokit_credentials_pm: |
-        GitHubs autentiseringsuppgifter som angivits till insticksprogrammet discourse-github är ogiltiga. Inställningen ”github märken aktiverad"
-        har inaktiverats, och åtaganden kommer inte längre att fyllas i förrän problemet är löst.
-
-        Kontrollera inställningen ”github linkback access token” för att säkerställa att token är korrekt och har behörighet till alla
-        depåer via
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github webbplatsinställningar</a>.

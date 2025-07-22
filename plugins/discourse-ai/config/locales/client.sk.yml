@@ -7,6 +7,11 @@
 sk:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Umožňuje vyhľadávanie pomocou AI"
       dashboard:
         reports:
           filters:
@@ -28,13 +33,13 @@ sk:
             categories:
               label: "Kategórie"
             tags:
-              label: "Štítky"
+              label: "Značky"
         llm_triage:
           fields:
             category:
               label: "Kategória"
             tags:
-              label: "Štítky"
+              label: "Značky"
             canned_reply:
               label: "Odpoveď"
     discourse_ai:
@@ -64,10 +69,13 @@ sk:
         short_title: "Spam"
         last_seven_days: "Posledných 7 dní"
         enable: "Povoliť"
+        save_button: "Uloženie zmien"
         test_modal:
           result: "Výsledok"
+          run: "Spustiť test"
           spam: "Spam"
       usage:
+        short_title: "Použitie"
         summary: "Zhrnutie"
         username: "Používateľské meno"
         total_requests: "celkový počet žiadostí"
@@ -78,7 +86,8 @@ sk:
         back: "Späť"
         name: "Meno"
         edit: "Upraviť"
-        export: "Export"
+        export: "Exportovať"
+        import: "Import"
         description: "Popis"
         user: Používateľ
         save: "Uložiť"
@@ -96,7 +105,8 @@ sk:
           uploading: "Načítavam..."
       tools:
         back: "Späť"
-        export: "Export"
+        export: "Exportovať"
+        import: "Import"
         name: "Meno"
         description: "Popis"
         summary: "Zhrnutie"
@@ -105,9 +115,13 @@ sk:
         remove_parameter: "Odstrániť"
         parameter_required: "Povinné"
         edit: "Upraviť"
+        test: "Spustiť test"
         delete: "Odstrániť"
+        test_modal:
+          run: "Spustiť test"
       llms:
         display_name: "Meno"
+        provider: "Poskytovateľ"
         save: "Uložiť"
         edit: "Upraviť"
         back: "Späť"
@@ -129,6 +143,7 @@ sk:
         next:
           title: "Ďalej"
         tests:
+          title: "Spustiť test"
           success: "Úspech!"
         providers:
           google: "Google"
@@ -136,10 +151,11 @@ sk:
       ai_helper:
         context_menu:
           cancel: "Zrušiť"
+          regen: "Skúste to znova"
           confirm: "Potvrďte"
           discard: "Zahodiť"
         post_options_menu:
-          close: "Zavrieť"
+          close: "Zatvoriť"
           copy: "Kopírovať"
           copied: "Skopírované!"
           cancel: "Zrušiť"
@@ -159,6 +175,7 @@ sk:
           title: "Spustiť test"
           success: "Úspech!"
         display_name: "Meno"
+        provider: "Poskytovateľ"
         providers:
           google: "Google"
           fake: "Vlastné"
@@ -185,7 +202,7 @@ sk:
             category: "Kategória"
             tag: "Značka"
           table:
-            total_count: "Celkovo"
+            total_count: "Celkom"
       summarization:
         chat:
           title: "Zhrnutie správ"

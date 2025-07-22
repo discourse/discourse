@@ -22,7 +22,6 @@ ca:
       solution_summary:
         one: "solució"
         other: "solucions"
-      accepted_html: "%{icon} Resolt <span class='by'>per <a href data-user-card='%{username_lower}'>%{username}</a></span> en <a href='%{post_path}' class='back'>la publicació núm. %{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tots"

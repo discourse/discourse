@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 uk:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Увійти через Amazon"
+        message: "Автентифікація за допомогою функції «Вхід через Amazon» (переконайтеся, що блокувальники спливаючих вікон вимкнено)"

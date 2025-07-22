@@ -25,12 +25,13 @@ nb_NO:
         title: "Tildel"
         help: "Tildel emne til bruker"
       reassign:
-        title: "Endre"
+        title: "Rediger"
       topic_level_menu:
         unassign_with_ellipsis: "Fjern tildelning..."
       assign_modal:
         title: "Tildel emne"
         assign: "Tildel"
+        note_label: Merk
         optional_label: "(valgfritt)"
         status_label: Status
       claim:

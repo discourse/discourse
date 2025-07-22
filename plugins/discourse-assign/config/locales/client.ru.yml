@@ -35,7 +35,7 @@ ru:
       cant_act_unclaimed: "Вы должны зарезервировать эту тему прежде чем рассматривать жалобу."
       topic_search_placeholder: "Поиск тем по заголовку или содержанию сообщения"
       sidebar_name_filter_placeholder: "Имя / псевдоним"
-      assigned: "Назначенные темы"
+      assigned: "Назначенные"
       group_everyone: "Все"
       assigned_to: "Назначено:"
       assigned_topic_to: "Назначил(а) тему пользователю <a href='%{path}'>%{username}</a>"
@@ -72,7 +72,7 @@ ru:
       assign_modal:
         title: "Назначить ответственного в тему"
         reassign_title: "Переназначить тему"
-        assign: "Назначить"
+        assign: "Назначить ответственного"
         assignee_label: Назначенный
         assignment_label: Назначение
         choose_assignee: Выберите пользователя для назначения.
@@ -93,26 +93,26 @@ ru:
       reminders_frequency:
         description: "Частота напоминаний о назначенных темах"
         never: "Никогда"
-        daily: "Ежедневно"
-        weekly: "Еженедельно"
-        monthly: "Ежемесячно"
-        quarterly: "Ежеквартально"
+        daily: "За день"
+        weekly: "За неделю"
+        monthly: "За месяц"
+        quarterly: "За квартал"
       admin:
         groups:
           manage:
             interaction:
-              assign: "Назначить"
+              assign: "Назначить ответственного"
               assignable_levels:
                 title: "Кто может назначить эту группу"
     user:
       notification_level_when_assigned:
         label: "Когда назначено"
-        watch_topic: "Наблюдаемая тема"
-        track_topic: "Отслеживаемая тема"
+        watch_topic: "Наблюдать за темой"
+        track_topic: "Отслеживать тему"
         do_nothing: "Ничего не делать"
       messages:
         assigned_title: "Назначенные (%{count})"
-        assigned: "Назначенные темы"
+        assigned: "Назначенные"
       no_assignments_title: "У вас пока нет назначений"
       no_assignments_body: >
         Здесь будут перечислены назначенные вами темы и сообщения. Вы также будете получать периодические напоминания о ваших назначениях, которые вы можете изменить в <a href='%{preferencesUrl}'>настройках пользователя</a>. <br><br> Чтобы назначить тему или сообщение себе или кому-то ещё, используйте кнопку %{icon}, расположенную в нижней части темы.
@@ -138,7 +138,7 @@ ru:
           assigned: "С назначенным ответственным"
           unassigned: "Без назначенного ответственного"
         assigned:
-          label: "Назначен ответственный"
+          label: "Назначено:"
     topics:
       bulk:
         unassign: "Снять ответственного"
@@ -174,7 +174,7 @@ ru:
       popup:
         assigned: "%{username} назначил(а) вас"
       titles:
-        assigned: "Назначение"
+        assigned: "Назначенные"
       dismiss_confirmation:
         body:
           assigns:
@@ -190,7 +190,7 @@ ru:
           one: "Список назначений - %{count} непрочитанное назначение"
           few: "Список назначений - %{count} непрочитанных назначения"
           many: "Список назначений - %{count} непрочитанных назначений"
-          other: "Список назначений - %{count} непрочитанных назначений"
+          other: "Список назначений - %{count} непрочитанных заданий"
     edit_assignments_modal:
       title: "Изменить назначения"
       topic: "Тема"

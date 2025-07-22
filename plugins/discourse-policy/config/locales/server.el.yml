@@ -8,7 +8,7 @@ el:
   reports:
     unaccepted-policies:
       labels:
-        topic_id: Topic ID
+        topic_id: ID Θέματος
   unsubscribe:
     policy_emails:
       never: Ποτέ

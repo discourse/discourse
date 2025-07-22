@@ -18,7 +18,7 @@ zh_CN:
       builder:
         title: 策略
         attach: 创建策略
-        save: 保存变更
+        save: 保存更改
         insert: 插入
         errors:
           group: 群组为必填项

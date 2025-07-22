@@ -12,14 +12,14 @@ sw:
           chat_integration: "Uwezo wa kuwasiliana"
   js:
     chat_integration:
-      menu_title: "Maongezi Shirikizo"
+      menu_title: "Uwezo wa kuwasiliana"
       settings: "Mipangilio"
       no_providers: "Unahitaji kuwawezesha baadhi ya watoa huduma kwenye mpangilio wa programu-jalizi"
       channels_with_errors: "Baadha ya chaneli za huyu mtumiaji zilishindwa mara ya mwisho zilipotumiwa ujumbe. Bonyeza ikoni za njano kupata taarifa zaidi za (ma)kosa."
       group_mention_template: "@%{name} Ametajwa:"
       group_message_template: "Ujumbe kwenda kwa: @%{name}"
       choose_group: "(chagua kikundi)"
-      all_categories: "(Makundi yote)"
+      all_categories: "(Vikundi Vyote)"
       all_tags: "(lebo)"
       create_rule: "Tengeneza Kanuni"
       create_channel: "Tengeneza Chaneli"
@@ -43,7 +43,7 @@ sw:
         follow: 'Taarifa ya kwanza pekee'
         watch: 'Machapisho yote na majibu'
       rule_table:
-        filter: "Chuja"
+        filter: "Ichujwe"
         category: "Kikundi"
         tags: "Lebo"
         edit_rule: "Hariri"
@@ -59,11 +59,11 @@ sw:
       edit_rule_modal:
         title: Hariri Kanuni
         save: Hifadhi Kanuni
-        cancel: Katisha
+        cancel: Batili
         provider: Mkimu
         type: Aina
         channel: Chaneli
-        filter: Chuja
+        filter: Ichujwe
         category: Kikundi
         group: Kikundi
         tags: Lebo
@@ -112,7 +112,7 @@ sw:
           param:
             identifier:
               title: Chaneli
-              help: "e.g. #jinalamawasiliano, @jinalamtumiaji."
+              help: "mfano. #chaneli, @jinalamtumiaji."
           errors:
             channel_not_found: "Njia hiyo ya mawasiliano haipo kwenye Mattermost"
         matrix:

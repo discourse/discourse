@@ -138,7 +138,7 @@ tr_TR:
           assigned: "atanmış"
           unassigned: "atanmamış"
         assigned:
-          label: "Şu kişiye atandı:"
+          label: "Şuraya atandı:"
     topics:
       bulk:
         unassign: "Konuların atamalarını kaldır"

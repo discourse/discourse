@@ -11,6 +11,6 @@ te:
         house_ads:
           new: "కొత్త"
           settings: "అమరికలు"
-          save: "భద్రపరచు"
-          delete: "తొలగించు"
+          save: "సేవ్ చేయండి"
+          delete: "తొలగించండి"
           preview: "ప్రివ్యూ"

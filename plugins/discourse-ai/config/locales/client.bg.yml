@@ -24,13 +24,13 @@ bg:
             categories:
               label: "Категории"
             tags:
-              label: "Тагове"
+              label: "Етикети"
         llm_triage:
           fields:
             category:
               label: "Категория"
             tags:
-              label: "Тагове"
+              label: "Етикети"
             canned_reply:
               label: "Отговорете"
     discourse_ai:
@@ -69,9 +69,10 @@ bg:
           custom: "Ръчно задаване..."
       ai_persona:
         back: "Назад"
-        name: "Име"
+        name: "Име "
         edit: "Редактирай"
         export: "Експорт "
+        import: "Импорт"
         description: "Описание"
         user: Потребител
         save: "Запази "
@@ -89,17 +90,18 @@ bg:
       tools:
         back: "Назад"
         export: "Експорт "
+        import: "Импорт"
         name: "Име"
         description: "Описание"
         summary: "Сумарно"
-        save: "Запази "
+        save: "Запази"
         remove_parameter: "Премахване"
         parameter_required: "Задъжителни"
         edit: "Редактирай"
         delete: "Изтрий"
       llms:
         display_name: "Име"
-        save: "Запази "
+        save: "Запази"
         edit: "Редактирай"
         back: "Назад"
         delete: Изтрий
@@ -123,23 +125,23 @@ bg:
           fake: "По избор"
       ai_helper:
         context_menu:
-          cancel: "Прекрати"
+          cancel: "Отмени"
           discard: "Отхвърляне"
         post_options_menu:
           close: "Затвори"
           copy: "Копирай"
           copied: "Копирано!"
-          cancel: "Прекрати"
+          cancel: "Отмени"
         image_caption:
-          save_caption: "Запази "
+          save_caption: "Запази"
           automatic_caption_dialog:
             confirm: "Позволи"
       embeddings:
         back: "Назад"
-        save: "Запази "
+        save: "Запази"
         delete: "Изтрий"
         edit: "Редактирай"
-        display_name: "Име "
+        display_name: "Име"
         providers:
           google: "Google"
           fake: "По избор"

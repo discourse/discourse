@@ -22,7 +22,7 @@ ko:
             sender:
               label: "발신자"
             topic_id:
-              label: "토픽 ID"
+              label: "글 ID"
             title:
               label: "제목"
             categories:
@@ -47,7 +47,7 @@ ko:
         expand_list:
           other: "(%{count}개 더보기)"
         filters:
-          all: "전체"
+          all: "모두"
           reset: "리셋"
         search:
           name: "검색"
@@ -73,12 +73,13 @@ ko:
         name: "그룹명"
         edit: "편집"
         export: "내보내기"
+        import: "가져오기"
         description: "내용"
         user: 사용자
         save: "저장"
         enabled: "활성화?"
         allowed_groups: "허용 된 그룹"
-        delete: "삭제하기"
+        delete: "삭제"
         response_format:
           open_modal: "편집"
           modal:
@@ -92,6 +93,7 @@ ko:
       tools:
         back: "뒤로"
         export: "내보내기"
+        import: "가져오기"
         name: "그룹명"
         description: "내용"
         summary: "요약"
@@ -99,13 +101,14 @@ ko:
         remove_parameter: "제거"
         parameter_required: "필수"
         edit: "편집"
-        delete: "삭제하기"
+        delete: "삭제"
       llms:
         display_name: "그룹명"
+        provider: "공급자"
         save: "저장"
         edit: "편집"
         back: "뒤로"
-        delete: 삭제하기
+        delete: 삭제
         quotas:
           group: "그룹"
           max_usages: "최대 사용"
@@ -114,6 +117,7 @@ ko:
             hour: "1시간"
             six_hours: "6시간"
             day: "24시간"
+            week: "7 일"
             custom: "사용자 지정..."
           hours: "시간"
         usage:
@@ -145,11 +149,12 @@ ko:
       embeddings:
         back: "뒤로"
         save: "저장"
-        delete: "삭제하기"
+        delete: "삭제"
         edit: "편집"
         tests:
           success: "성공!"
         display_name: "그룹명"
+        provider: "공급자"
         providers:
           google: "구글"
           fake: "사용자 정의"
@@ -170,7 +175,7 @@ ko:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "전체"
+            all: "모두"
             neutral: "중립국"
           group_types:
             category: "카테고리"

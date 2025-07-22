@@ -8,7 +8,7 @@ ko:
   reports:
     unaccepted-policies:
       labels:
-        topic_id: 토픽 ID
+        topic_id: 글 ID
   user_notifications:
     policy_email:
       from: "%{site_name}"

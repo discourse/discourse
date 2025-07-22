@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 th:
+  js:
+    login:
+      amazon:
+        name: "อเมซอน"

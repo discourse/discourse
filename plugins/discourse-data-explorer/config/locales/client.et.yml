@@ -33,7 +33,7 @@ et:
       delete: "Kustuta"
       download_json: "JSON"
       download_csv: "CSV"
-      query_groups: "Grupid"
+      query_groups: "Rühmad"
       query_description: "Kirjeldus"
       save_params: "Määra vaikeväärtused"
       reset_params: "Nulli"

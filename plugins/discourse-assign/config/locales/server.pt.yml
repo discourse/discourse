@@ -51,7 +51,7 @@ pt:
       never: "nunca"
       daily: "diariamente"
       weekly: "semanalmente"
-      monthly: "mensal"
+      monthly: "mensalmente"
       quarterly: "trimestral"
   assign_mailer:
     title: "Atribuir mensageiro(a)"

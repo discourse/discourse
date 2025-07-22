@@ -24,8 +24,7 @@ sv:
       solution_summary:
         one: "lösning"
         other: "lösningar"
-      accepted_html: "%{icon} Löst <span class='by'>av <a href data-user-card='%{username_lower}'>%{username}</a></span> i <a href='%{post_path}' class='back'>inlägg #%{post_number}</a>"
-      accepted_notification: "<p><span>%{username}</span>%{description}</p>"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "alla"
         solved: "lösta"

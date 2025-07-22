@@ -14,7 +14,7 @@ ar:
       comment_already_handled: "شكرًا، لكننا راجعنا هذا التعليق بالفعل وقررنا أنه لا يلزم الإبلاغ عنه مرة أخرى."
   js:
     notifications:
-      question_answer_user_commented: "‏<span>⁨%{username}⁩</span> ‏%{description}"
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
         question_answer_user_commented: "تعليق جديد"
       popup:
@@ -39,12 +39,12 @@ ar:
       one_vote_per_post: "يمكنك التصويت مرة واحدة فقط لكل منشور."
     last_answer_lowercase: الإجابة الأخيرة
     answer_lowercase:
-      zero: إجابة
+      zero: إجابات
       one: إجابة واحدة
       two: إجابتان
       few: إجابات
-      many: إجابة
-      other: إجابة
+      many: إجابات
+      other: إجابات
     post_voting:
       post:
         post_voting_comment:
@@ -92,7 +92,7 @@ ar:
                 title: "الموافقة..."
               agree_and_keep_comment:
                 title: "إبقاء التعليق"
-                description: "الموافقة على البلاغ والاحتفاظ بالتعليق دون تغيير."
+                description: "الموافقة على البلاغ والاحتفاظ بالتعليق دون تغيير"
               agree_and_keep_deleted:
                 title: "إبقاء التعليق محذوفًا"
                 description: "الموافقة على البلاغ وترك التعليق محذوفًا."

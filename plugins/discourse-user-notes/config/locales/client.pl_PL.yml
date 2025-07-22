@@ -7,9 +7,11 @@
 pl_PL:
   js:
     user_notes:
-      title: "Notatki do użytkownika"
-      attach: "Dodaj notatkę do użytkownika"
-      remove: "Usuń notatkę do użytkownika"
-      show: "Notatki do użytkownika (%{count})"
-      delete_confirm: "Czy na pewno chcesz usunąć tę notatkę do użytkownika?"
-      show_post: "Pokaż wiadomość"
+      title: "Uwagi o użytkownikach"
+      attach: "Dodaj uwagę o użytkowniku"
+      attach_note_description: "Dodaj uwagę o tym użytkowniku. Ta uwaga będzie widoczna tylko dla personelu."
+      remove: "Usuń uwagę o użytkowniku"
+      show: "Uwagi o użytkowniku (%{count})"
+      delete_confirm: "Czy na pewno chcesz usunąć tę uwagę o użytkowniku?"
+      show_post: "Pokaż post"
+      copy_reviewable_note: "Skopiować uwagę do profilu użytkownika?"

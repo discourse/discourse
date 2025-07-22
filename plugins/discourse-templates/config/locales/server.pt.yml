@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 pt:
+  default_category_template:
+    name: Templates

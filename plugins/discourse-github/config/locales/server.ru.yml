@@ -36,26 +36,5 @@ ru:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Плагин «discourse-github» требует принятия мер"
-      repository_identifier_invalid_pm: |
-        Репозиторий, указанный в плагине «discourse-github», недействителен:
-        %{repo_name}
-
-        Он должен быть указан как `пользователь/репозиторий`.
-
-        Награды не будут выдаваться до тех пор, пока название не будет исправлено в
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">настройках «discourse-github»</a>
-        и параметр «github_badges_enabled» не будет снова включён.
       repository_not_found_pm_title: "Плагин «discourse-github» требует принятия мер"
-      repository_not_found_pm: |
-        Репозиторий, указанный в плагине discourse-github, выдаёт ошибку «Не найдено»: %{repo_name}
-
-        Награды не будут выдаваться до тех пор, пока название не будет исправлено в
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">настройках «discourse-github»</a>
-        и параметр «github_badges_enabled» не будет снова включён.
       invalid_octokit_credentials_pm_title: "Плагин «discourse-github» требует принятия мер"
-      invalid_octokit_credentials_pm: |
-        Учётные данные GitHub, предоставленные плагину «discourse-github», недействительны. Награды Github отключены, коммиты не будут заполняться, пока проблема не будет решена.
-
-        Проверьте настройку токена доступа Github Linkback: токен должен быть действителен и должен иметь право доступа ко всем
-        репозиториям — см.
-        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">настройки «discourse-github»</a>.

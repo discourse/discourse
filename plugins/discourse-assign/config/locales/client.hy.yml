@@ -31,6 +31,7 @@ hy:
       assign_modal:
         title: "Վերագրել Թեման"
         assign: "Վերագրել"
+        note_label: Նշում
         optional_label: "(ընտրովի)"
         status_label: Ստատուս
       claim:

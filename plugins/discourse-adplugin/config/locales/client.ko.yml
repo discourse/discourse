@@ -21,7 +21,7 @@ ko:
       adplugin:
         house_ads:
           title: "하우스 광고"
-          new: "새값"
+          new: "신규"
           settings: "설정"
           new_name: "새 집 광고"
           save: "저장"

@@ -28,7 +28,7 @@ pt:
       search: "Pesquisar..."
     discourse_post_event:
       notifications:
-        invite_user_notification: "%{username} %{description}"
+        invite_user_notification: "%{username}%{description}"
       show_all: "Mostrar tudo"
       add_to_calendar: "Adicionar ao calendário"
       bulk_invite: "Convite em massa"
@@ -37,6 +37,7 @@ pt:
         title: "Convite em massa"
         success: "Ficheiro enviado corretamente, será notificado via mensagem quando o processo estiver concluído."
         error: "Desculpe, o ficheiro deverá estar no formato CSV."
+        group_selector_placeholder: "Escolher um grupo..."
       upcoming_events:
         status: "Estado"
       models:

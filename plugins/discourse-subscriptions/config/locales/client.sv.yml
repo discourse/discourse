@@ -34,7 +34,7 @@ sv:
     discourse_subscriptions:
       title: Discourse-prenumerationer
       admin_navigation: Prenumerationer
-      optional: Valfria
+      optional: Valfritt
       navigation:
         billing: Fakturering
         payments: Betalningar
@@ -79,7 +79,7 @@ sv:
         payments:
           id: Betalnings-ID
           amount: Summa
-          created_at: Skapad
+          created_at: Skapade
         payments_help: Det finns inga betalningar
         plans:
           rate: Frekvens
@@ -93,7 +93,7 @@ sv:
           update_card:
             heading: "Uppdatera kort för prenumeration: %{sub_id}"
             single: "Uppdatera"
-          created_at: Skapad
+          created_at: Skapade
           cancel: avbryt
           cancelled: avbruten
           operations:
@@ -116,10 +116,69 @@ sv:
         go_to_billing: Gå till fakturering
         already_purchased: Tack så mycket för ditt tidigare köp av den här produkten!
         countries:
+          AR: "Argentina"
+          AU: "Australien"
+          AT: "Österrike"
+          BR: "Brasilien"
+          CA: "Kanada"
+          CL: "Chile"
+          CO: "Colombia"
+          CR: "Costa Rica"
+          HR: "Kroatien"
+          CZ: "Tjeckien"
+          DK: "Danmark"
+          EE: "Estland"
+          FI: "Finland"
+          FR: "Frankrike"
+          GE: "Georgien"
+          DE: "Tyskland"
+          GH: "Ghana"
+          GR: "Grekland"
+          GG: "Guernsey"
+          HK: "Hongkong"
+          HU: "Ungern"
+          IS: "Island"
+          IN: "Indien"
+          IE: "Irland"
+          IM: "Isle of Man"
+          IT: "Italien"
+          JP: "Japan"
+          JE: "Jersey"
+          LV: "Lettland"
+          LI: "Liechtenstein"
+          LT: "Litauen"
+          LU: "Luxemburg"
+          MY: "Malaysia"
+          MX: "Mexiko"
           MS: "Montserrat"
+          MA: "Marocko"
+          NL: "Nederländerna"
+          NZ: "Nya Zeeland"
+          NG: "Nigeria"
+          "NO": "Norge"
+          PE: "Peru"
+          PH: "Filippinerna"
+          PL: "Polen"
+          PT: "Portugal"
+          RO: "Rumänien"
+          RU: "Ryska federationen"
+          SA: "Saudiarabien"
+          SG: "Singapore"
+          SK: "Slovakien"
+          SI: "Slovenien"
+          ZA: "Sydafrika"
+          ES: "Spanien"
+          SE: "Sverige"
+          CH: "Schweiz"
+          TH: "Thailand"
+          TN: "Tunisien"
+          TR: "Turkiet"
+          UA: "Ukraina"
+          GB: "Storbritannien"
+          US: "USA"
       billing:
         name: Fullständigt namn
-        email: E-post
+        email: E-postadress
         phone: Telefonnummer
       confirmation:
         amount: Summa
@@ -159,8 +218,8 @@ sv:
             repurchase_help: Tillåt flera köp av produkten och tillhörande planer
             active: Aktiv
             active_help: Avaktivera denna tills din produkt är redo för kunder.
-            created_at: Skapad
-            updated_at: Uppdaterad
+            created_at: Skapade
+            updated_at: Uppdaterade
         plans:
           title: Prisplaner
           operations:
@@ -183,7 +242,7 @@ sv:
             group: Användargrupp
             group_help: Detta är den användargrupp som kunden läggs till i när kundens prenumeration skapas.
             active: Aktiv
-            created_at: Skapad
+            created_at: Skapade
             recurring: Återkommande plan?
         coupons:
           title: Rabattkoder
@@ -203,6 +262,6 @@ sv:
             product: Produkt
             plan: Plan
             status: Status
-            created_at: Skapad
+            created_at: Skapade
         ask_refund: Återbetala den senaste betalningen från kunden?
         canceled: "Prenumerationen har sagts upp."

@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 ca:
+  admin_js:
+    discourse_templates:
+      title: "Plantilles"
+  js:
+    templates:
+      source: "Origen"

@@ -29,7 +29,7 @@ gl:
           created_at: Creado
           cancel: cancelar
       billing:
-        email: Correo electrónico
+        email: Enderezo de correo
       admin:
         dashboard:
           title: Panel

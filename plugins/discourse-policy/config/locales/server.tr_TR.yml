@@ -20,7 +20,7 @@ tr_TR:
       title: Kabul edilmeyen politikalar
       labels:
         topic_id: Konu kimliği
-        user_id: Kullanıcı kimliği
+        user_id: Kullanıcı Kimliği
   user_notifications:
     policy_email:
       from: "%{site_name}"
