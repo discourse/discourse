@@ -77,6 +77,18 @@ class PlaywrightLogger
         }
       end,
     )
+
+    page.on(
+      "pageerror",
+      ->(error) do
+        @logs << {
+          level: "error",
+          message: error.message,
+          timestamp: Time.now.to_i * 1000,
+          source: "console-api",
+        }
+      end,
+    )
   end
 end
 
@@ -322,6 +334,7 @@ RSpec.configure do |config|
     Discourse::Application.load_tasks
 
     ThemeField.delete_all
+    JavascriptCache.delete_all
     ThemeSiteSetting.delete_all
     Theme.expire_site_setting_cache!
     SiteSetting.refresh!
