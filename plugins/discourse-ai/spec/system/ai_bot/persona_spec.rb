@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI personas", type: :system, js: true do
+RSpec.describe "AI personas", type: :system do
   fab!(:admin)
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
 

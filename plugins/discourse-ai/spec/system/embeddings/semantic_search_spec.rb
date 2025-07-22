@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Composer helper", type: :system, js: true do
+RSpec.describe "AI Composer helper", type: :system do
   let(:search_page) { PageObjects::Pages::Search.new }
   let(:query) { "apple_pie" }
   let(:hypothetical_post) { "This is an hypothetical post generated from the keyword apple_pie" }

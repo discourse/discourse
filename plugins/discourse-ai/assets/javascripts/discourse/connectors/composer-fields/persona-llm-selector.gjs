@@ -19,10 +19,10 @@ function isBotMessage(composer, currentUser) {
 }
 
 export default class BotSelector extends Component {
-  static shouldRender(args, container) {
+  static shouldRender(args, context) {
     return (
-      container?.currentUser?.ai_enabled_personas &&
-      isBotMessage(args.model, container.currentUser)
+      context?.currentUser?.ai_enabled_personas &&
+      isBotMessage(args.model, context.currentUser)
     );
   }
 

@@ -3,8 +3,8 @@ import { LinkTo } from "@ember/routing";
 import { i18n } from "discourse-i18n";
 
 export default class AISentimentDashboard extends Component {
-  static shouldRender(_outletArgs, helper) {
-    return helper.siteSettings.ai_sentiment_enabled;
+  static shouldRender(args, context) {
+    return context.siteSettings.ai_sentiment_enabled;
   }
 
   <template>

@@ -8,7 +8,7 @@ import { isValidSearchTerm, translateResults } from "discourse/lib/search";
 import { i18n } from "discourse-i18n";
 
 export default class AiQuickSemanticSearch extends Component {
-  static shouldRender(_args, { siteSettings }) {
+  static shouldRender(args, { siteSettings }) {
     return siteSettings.ai_embeddings_semantic_quick_search_enabled;
   }
 

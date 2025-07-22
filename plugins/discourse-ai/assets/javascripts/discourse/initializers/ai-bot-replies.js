@@ -2,17 +2,17 @@ import { hbs } from "ember-cli-htmlbars";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerWidgetShim } from "discourse/widgets/render-glimmer";
-import AiBotHeaderIcon from "../discourse/components/ai-bot-header-icon";
-import AiPersonaFlair from "../discourse/components/post/ai-persona-flair";
-import AiCancelStreamingButton from "../discourse/components/post-menu/ai-cancel-streaming-button";
-import AiDebugButton from "../discourse/components/post-menu/ai-debug-button";
-import AiShareButton from "../discourse/components/post-menu/ai-share-button";
+import AiBotHeaderIcon from "../components/ai-bot-header-icon";
+import AiPersonaFlair from "../components/post/ai-persona-flair";
+import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
+import AiDebugButton from "../components/post-menu/ai-debug-button";
+import AiShareButton from "../components/post-menu/ai-share-button";
 import {
   getBotType,
   isGPTBot,
   showShareConversationModal,
-} from "../discourse/lib/ai-bot-helper";
-import { streamPostText } from "../discourse/lib/ai-streamer/progress-handlers";
+} from "../lib/ai-bot-helper";
+import { streamPostText } from "../lib/ai-streamer/progress-handlers";
 
 let allowDebug = false;
 

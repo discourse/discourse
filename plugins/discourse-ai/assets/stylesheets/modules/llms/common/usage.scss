@@ -1,7 +1,7 @@
 .ai-usage {
-  --chart-response-color: rgba(75, 192, 192, 0.8);
-  --chart-request-color: rgba(153, 102, 255, 0.8);
-  --chart-cached-color: rgba(153, 102, 255, 0.4);
+  --chart-response-color: rgb(75, 192, 192, 0.8);
+  --chart-request-color: rgb(153, 102, 255, 0.8);
+  --chart-cached-color: rgb(153, 102, 255, 0.4);
   padding: 1em;
 
   &__filters-dates {
@@ -89,7 +89,7 @@
     gap: 2em;
     margin-top: 2em;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       grid-template-columns: none;
       display: flex;
       flex-direction: column;

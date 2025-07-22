@@ -651,7 +651,7 @@
 
       .desktop-view & {
         // a little extra space for extra narrow desktop view
-        @media screen and (max-width: 675px) {
+        @media screen and (width <= 675px) {
           span {
             display: none;
           }
