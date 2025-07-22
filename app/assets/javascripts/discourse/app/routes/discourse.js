@@ -6,18 +6,9 @@ import { seenUser } from "discourse/lib/user-presence";
 
 export default class DiscourseRoute extends Route {
   @service currentUser;
-  @service pmTopicTrackingState;
-  @service router;
 
   willTransition() {
     seenUser();
-  }
-
-  afterModel() {
-    super.afterModel?.(...arguments);
-    if (this.currentUser?.can_send_private_messages) {
-      this.pmTopicTrackingState.startTracking();
-    }
   }
 
   _refreshTitleOnce() {
