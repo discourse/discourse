@@ -482,7 +482,10 @@ export default class FilterTips extends Component {
       words[words.length - 1] = item.name;
       let updatedValue = words.join(" ");
 
-      if (!item.delimiters || item.delimiters.length < 2) {
+      if (
+        !updatedValue.endsWith(":") &&
+        (!item.delimiters || item.delimiters.length < 2)
+      ) {
         updatedValue += " ";
       }
 

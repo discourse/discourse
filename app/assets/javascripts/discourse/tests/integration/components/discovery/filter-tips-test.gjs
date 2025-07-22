@@ -21,7 +21,16 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
         priority: 1,
         type: "category",
       },
-      { name: "tag:", description: "Filter tag", priority: 1, type: "tag" },
+      {
+        name: "tag:",
+        description: "Filter tag",
+        priority: 1,
+        type: "tag",
+        delimiters: [
+          { name: "+", description: "intersect" },
+          { name: ",", description: "add" },
+        ],
+      },
       { name: "status:", description: "Filter status", priority: 1 },
       { name: "status:open", description: "Open topics" },
     ];
@@ -114,11 +123,11 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
 
     assert
       .dom("#filter-input")
-      .hasValue("category:bugs", "category slug added");
+      .hasValue("category:bugs ", "category slug added");
 
     assert
       .dom(".filter-tip__button")
-      .exists({ count: 1 }, "tips show again for category that remains");
+      .exists({ count: 3 }, "tips for next section shows up");
     assert
       .dom(".filter-tip__button.selected")
       .doesNotExist("selection cleared");
@@ -319,7 +328,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     await triggerKeyEvent("#filter-input", "keydown", "Tab");
     assert
       .dom("#filter-input")
-      .hasValue("-category:bugs", "full filter with prefix applied");
+      .hasValue("-category:bugs ", "full filter with prefix applied");
 
     // Test with equals prefix
     await fillIn("#filter-input", "=cat");
