@@ -329,14 +329,75 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   async updateResults(results) {
+    // Check if results have actually changed to avoid unnecessary re-renders
+    const resultsSame = this.areResultsEqual(this.results, results);
+
     this.results = results;
 
     if (this.results.length === 0) {
       await this.closeAutocomplete();
-    } else {
-      this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
-      await this.renderAutocomplete();
+      return;
     }
+    this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
+
+    // we don't need to re-render if results are the same for an already open menu, just update the selected index to initial position
+    if (
+      resultsSame &&
+      this.expanded &&
+      this.componentInstance &&
+      this.componentInstance.updateSelectedIndex
+    ) {
+      this.componentInstance.updateSelectedIndex(this.selectedIndex);
+    }
+
+    await this.renderAutocomplete();
+  }
+
+  areResultsEqual(oldResults, newResults) {
+    if (
+      !oldResults ||
+      !newResults ||
+      oldResults.length !== newResults.length ||
+      JSON.stringify(oldResults) !== JSON.stringify(newResults)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  updateExistingMenu() {
+    // Update the existing menu component without closing/reopening
+    if (
+      this.menuInstance &&
+      this.menuInstance.expanded &&
+      this.componentInstance
+    ) {
+      try {
+        // Update the component's wrapper element directly with new HTML
+        if (this.componentInstance.wrapperElement && this.options.template) {
+          this.componentInstance.wrapperElement.innerHTML =
+            this.options.template({ options: this.results });
+
+          // Update the component's tracked properties
+          this.componentInstance.selectedIndex = this.selectedIndex;
+          this.componentInstance.isInitialRender = false;
+
+          // Re-run setup to bind new event listeners and mark selection
+          this.componentInstance.setup(this.componentInstance.wrapperElement);
+        }
+
+        // Call onRender callback if provided
+        this.options.onRender?.(this.results);
+
+        return true;
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error("[autocomplete] updateExistingMenu: ", e);
+        return false;
+      }
+    }
+    return false;
   }
 
   async renderAutocomplete() {
@@ -344,7 +405,14 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    // Close any existing menu first
+    // Check if menu is already open and try to update it directly
+    const existingMenu = this.menu.getByIdentifier("d-autocomplete");
+    if (existingMenu && existingMenu.expanded && this.updateExistingMenu()) {
+      // Successfully updated existing menu, no need to close/reopen
+      return;
+    }
+
+    // Close any existing menu first (only if we couldn't update it)
     await this.menu.close("d-autocomplete");
 
     try {
