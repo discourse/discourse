@@ -420,9 +420,10 @@ class InvitesController < ApplicationController
 
   def destroy_all_expired
     guardian.ensure_can_destroy_all_invites!(current_user)
+    user = fetch_user_from_params
 
     Invite
-      .where(invited_by: current_user)
+      .where(invited_by: user)
       .where("expires_at < ?", Time.zone.now)
       .find_each { |invite| invite.trash!(current_user) }
 

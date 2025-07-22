@@ -82,7 +82,7 @@ export default RouteTemplate(
             class="admin-users-tabs__staged"
           />
           <NavItem
-            @route="groups"
+            @route="adminGroups.index"
             @label="groups.index.title"
             class="admin-users-tabs__groups"
           />

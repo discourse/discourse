@@ -66,17 +66,12 @@ export default RouteTemplate(
             {{/if}}
             {{#if @controller.showBulkActionButtons}}
               {{#if @controller.inviteExpired}}
-                {{#if @controller.removedAll}}
-                  <span class="removed-all">
-                    {{i18n "user.invited.removed_all"}}
-                  </span>
-                {{else}}
-                  <DButton
-                    @icon="xmark"
-                    @action={{@controller.destroyAllExpired}}
-                    @label="user.invited.remove_all"
-                  />
-                {{/if}}
+                <DButton
+                  @icon="xmark"
+                  @action={{@controller.destroyAllExpired}}
+                  @label="user.invited.remove_all"
+                  class="bulk-remove-expired"
+                />
               {{/if}}
 
               {{#if @controller.invitePending}}
