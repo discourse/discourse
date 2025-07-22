@@ -6,7 +6,7 @@ Fabricator(:user, class_name: :user) do
   transient refresh_auto_groups: false
   transient trust_level: nil
   transient search_index: false
-  transient composition_mode: UserOption.composition_mode_types[:classic]
+  transient composition_mode: UserOption.composition_mode_types[:markdown]
 
   name "Bruce Wayne"
   username { sequence(:username) { |i| "bruce#{i}" } }

@@ -71,9 +71,9 @@ RSpec.describe UserOption do
     end
 
     it "should correctly set composition_mode when `default_composition_mode` site setting is set" do
-      SiteSetting.default_composition_mode = UserOption.composition_mode_types[:classic]
+      SiteSetting.default_composition_mode = UserOption.composition_mode_types[:markdown]
       user = Fabricate(:user)
-      expect(user.user_option.composition_mode).to eq(UserOption.composition_mode_types[:classic])
+      expect(user.user_option.composition_mode).to eq(UserOption.composition_mode_types[:markdown])
     end
   end
 

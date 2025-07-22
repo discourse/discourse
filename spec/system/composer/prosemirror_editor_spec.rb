@@ -47,7 +47,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
     try_until_success(frequency: 0.5) do
       expect(user.user_option.reload.composition_mode).to eq(
-        UserOption.composition_mode_types[:classic],
+        UserOption.composition_mode_types[:markdown],
       )
     end
   end
