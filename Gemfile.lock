@@ -447,9 +447,9 @@ GEM
       activerecord (>= 6.1, < 9.0)
       concurrent-ruby
       railties (>= 6.1, < 9.0)
-    rails_multisite (6.1.0)
-      activerecord (>= 6.0)
-      railties (>= 6.0)
+    rails_multisite (7.0.0)
+      activerecord (>= 7.1)
+      railties (>= 7.1)
     railties (8.0.2)
       actionpack (= 8.0.2)
       activesupport (= 8.0.2)
@@ -483,7 +483,7 @@ GEM
     redis-namespace (1.11.0)
       redis (>= 4)
     regexp_parser (2.10.0)
-    reline (0.6.1)
+    reline (0.6.2)
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
@@ -1087,7 +1087,7 @@ CHECKSUMS
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.6.2) sha256=35fce2ca8242da8775c83b6ba9c1bcaad6751d9eb73c1abaa8403475ab89a560
   rails_failover (2.3.0) sha256=eed6ea0674fd6f9f6b070ad297ad2ead121ecf9202920f6068b6a4f29d9491c9
-  rails_multisite (6.1.0) sha256=7bd7b83b89e292375d595cc7714ae061e3056e7f295295af8c4575b6271186aa
+  rails_multisite (7.0.0) sha256=7aacf364ed86d2bee73fb679cbfe6c343ce89067b9746b3d5857fffc57f036f2
   railties (8.0.2) sha256=0d7c3f40c49ba74980f1bac1d4bb153a9331c5ee8a9631d89c7bf79db82e5cf9
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1) sha256=aa0eb9ff6834f2d9e232ba688bd49cb30be893bc5a3452e74722c94c1fab4730
@@ -1104,7 +1104,7 @@ CHECKSUMS
   redis-client (0.25.1) sha256=40130f8f95194c9c73eec322516781b0bfdd8293369a67dc175bd7bc391a68bd
   redis-namespace (1.11.0) sha256=e91a1aa2b2d888b6dea1d4ab8d39e1ae6fac3426161feb9d91dd5cca598a2239
   regexp_parser (2.10.0) sha256=cb6f0ddde88772cd64bff1dbbf68df66d376043fe2e66a9ef77fcb1b0c548c61
-  reline (0.6.1) sha256=1afcc9d7cb1029cdbe780d72f2f09251ce46d3780050f3ec39c3ccc6b60675fb
+  reline (0.6.2) sha256=1dad26a6008872d59c8e05244b119347c9f2ddaf4a53dce97856cd5f30a02846
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
   rexml (3.4.1) sha256=c74527a9a0a04b4ec31dbe0dc4ed6004b960af943d8db42e539edde3a871abca
   rinku (2.0.6) sha256=8b60670e3143f3db2b37efa262971ce3619ec23092045498ef9f077d82828d7d
