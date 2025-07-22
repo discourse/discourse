@@ -70,6 +70,7 @@
 !/plugins/discourse-hcaptcha
 !/plugins/discourse-gamification
 !/plugins/discourse-calendar
+!/plugins/discourse-policy
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

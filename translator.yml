@@ -246,3 +246,10 @@ files:
   - source_path: plugins/discourse-calendar/config/locales/server.en.yml
     destination_path: plugins/calendar/server.yml
     label: calendar
+
+  - source_path: plugins/discourse-policy/config/locales/client.en.yml
+    destination_path: plugins/policy/client.yml
+    label: policy
+  - source_path: plugins/discourse-policy/config/locales/server.en.yml
+    destination_path: plugins/policy/server.yml
+    label: policy

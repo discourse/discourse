@@ -110,6 +110,10 @@ discourse-calendar:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-calendar/**/*
 
+discourse-policy:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-policy/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

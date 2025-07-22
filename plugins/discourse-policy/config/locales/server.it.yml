@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    policy_enabled: "Consentire informative?"
+    policy_restrict_to_staff_posts: "Le informative possono apparire solo sui messaggi dello staff"
+    policy_easy_revoke: "Mostra contemporaneamente i pulsanti accetta e revoca"
+  discourse_policy:
+    errors:
+      user_missing: "Utente non esistente nel gruppo"
+      group_not_found: "Gruppo non trovato per l'informativa"
+      no_policy: "Non ci sono informative per il messaggio"
+      staff_only: "Le informative si possono applicare solo ai messaggi dello staff"
+  reports:
+    unaccepted-policies:
+      title: Informative non accettate
+      labels:
+        topic_id: ID dell'argomento
+        user_id: ID utente
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Un'informativa richiede la tua revisione: %{topic_title}"
+      visit_topic: "Visita l'argomento"
+      visit_link_to_respond: "%{visit_topic_link} per rispondere."
+      unsubscribe: "Cambia %{email_preferences_link} o %{unsubscribe_link} per annullare l'iscrizione."
+      your_policy_email_settings: "preferenza di frequenza delle e-mail sulle informative"
+  unsubscribe:
+    policy_emails:
+      select_title: "Imposta la frequenza delle e-mail sulle informative a:"
+      never: Mai
+      when_away: Solo quando non sono collegato
+      always: Sempre
