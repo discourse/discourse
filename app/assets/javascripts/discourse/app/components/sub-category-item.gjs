@@ -3,12 +3,20 @@ import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryUnread from "discourse/components/category-unread";
 import categoryLink from "discourse/helpers/category-link";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 export default class SubCategoryItem extends CategoryListItem {
   <template>
     <PluginOutlet
       @name="sub-category-item"
-      @outletArgs={{lazyHash category=this.category isMuted=this.isMuted hideUnread=this.hideUnread unreadTopicsCount=this.unreadTopicsCount newTopicsCount=this.newTopicsCount}}>
+      @outletArgs={{lazyHash
+        category=this.category
+        isMuted=this.isMuted
+        hideUnread=this.hideUnread
+        unreadTopicsCount=this.unreadTopicsCount
+        newTopicsCount=this.newTopicsCount
+      }}
+    >
       {{#unless this.isMuted}}
         {{#if this.site.mobileView}}
           {{categoryLink this.category}}
