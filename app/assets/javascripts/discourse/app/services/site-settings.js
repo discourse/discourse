@@ -4,9 +4,13 @@ import PreloadStore from "discourse/lib/preload-store";
 
 export function createSiteSettingsFromPreloaded(
   siteSettings,
-  themeSiteSettingOverrides
+  themeSiteSettingOverrides,
+  currentThemeId
 ) {
   const settings = new TrackedObject(siteSettings);
+
+  // eslint-disable-next-line no-console
+  console.warn("[Discourse] Current theme ID:", currentThemeId);
 
   if (themeSiteSettingOverrides) {
     for (const [key, value] of Object.entries(themeSiteSettingOverrides)) {
@@ -52,7 +56,8 @@ export default class SiteSettingsService {
   static create() {
     return createSiteSettingsFromPreloaded(
       PreloadStore.get("siteSettings"),
-      PreloadStore.get("themeSiteSettingOverrides")
+      PreloadStore.get("themeSiteSettingOverrides"),
+      PreloadStore.get("currentThemeId")
     );
   }
 }
