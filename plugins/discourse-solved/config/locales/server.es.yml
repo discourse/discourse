@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  accepted_answer: "Respuesta aceptada"
+  site_settings:
+    solved_enabled: "Activar el complemento de solución, que permite a los usuarios seleccionar soluciones para temas"
+    allow_solved_on_all_topics: "Permitir que los usuarios seleccionen soluciones en todos los temas (si no lo marcas, puedes activarlo individualmente por categoría o etiqueta)"
+    accept_all_solutions_trust_level: "Nivel de confianza mínimo requerido para aceptar soluciones en cualquier tema (incluso cuando no sea el publicador original)"
+    accept_all_solutions_allowed_groups: "Grupos que pueden aceptar soluciones sobre cualquier tema (aunque no sean PO). Los administradores y moderadores siempre están autorizados."
+    empty_box_on_unsolved: "Mostrar un cuadro vacío junto a los temas sin solución"
+    solved_quote_length: "Número de caracteres que se citan al mostrar la solución debajo de la primera publicación"
+    solved_topics_auto_close_hours: "Cerrar automáticamente el tema (n) horas después de la última respuesta una vez que el tema se ha marcado como resuelto. Establecer a 0 para deshabilitar el cierre automático."
+    show_filter_by_solved_status: "Mostrar un menú desplegable para filtrar una lista de temas por estado de solución."
+    notify_on_staff_accept_solved: "Enviar una notificación al creador del tema cuando alguien del personal marque una publicación como solución."
+    ignore_solved_topics_in_assigned_reminder: "Evita que los recordatorios de asignaciones incluyan temas resueltos. Solo es relevante cuando se utiliza el plugin de asignación de Discourse."
+    assignment_status_on_solve: "Cuando se resuelve un tema actualiza todas las asignaciones a este estado"
+    assignment_status_on_unsolve: "Cuando un tema está sin resolver actualiza todas las asignaciones a este estado"
+    disable_solved_education_message: "Desactivar mensajes informativos en los temas resueltos."
+    accept_solutions_topic_author: "Permitir que el autor de un tema marque una respuesta como la solución."
+    solved_add_schema_markup: "Añade el marcado del esquema de QAPage al HTML."
+    enable_solved_tags: "Etiquetas que permitirán a los usuarios seleccionar soluciones."
+    prioritize_solved_topics_in_search: "Prioriza los temas resueltos en los resultados de búsqueda."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Soluciones aceptadas"
+      xaxis: "Día"
+      yaxis: "Total"
+  solved:
+    no_solutions:
+      self: "Todavía no te han marcado ninguna respuesta como solución."
+      others: "No hay soluciones aceptadas."
+  badges:
+    solved_1:
+      name: "¡Solucionado!"
+      description: "Tener una respuesta marcada como Solución"
+      long_description: "Esta insignia se concede por tener una respuesta marcada como Solución a un tema :white_check_mark: Buen trabajo :+1:"
+    solved_2:
+      name: "Orientador"
+      description: "Tener 10 respuestas marcadas como Soluciones"
+      long_description: "Esta insignia se concede por tener 10 de tus respuestas marcadas como Soluciones a temas :white_check_mark: Eres un verdadero activo para tus compañeros de la comunidad."
+    solved_3:
+      name: "Sabelotodo"
+      description: "Tener 50 respuestas marcadas como Soluciones"
+      long_description: "Esta insignia se concede por tener 50 de tus respuestas marcadas como Soluciones a temas :white_check_mark: Realmente sabes lo que haces :clap:"
+    solved_4:
+      name: "Institución de soluciones"
+      description: "Tener 150 respuestas marcadas como Soluciones"
+      long_description: "Esta insignia se concede por tener 150 de tus respuestas marcadas como Soluciones a temas :white_check_mark: Excelente trabajo :slightly_smiling_face: Eres oficialmente una Institución de Soluciones :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Primera solución aceptada
+        doc: Se activa cuando un usuario obtiene una solución aceptada por primera vez.
+  education:
+    topic_is_solved: |
+      ### Este tema está resuelto
+
+      Responde solo si:
+
+      - Puedes aportar más detalles
+
+      - La solución no te ha funcionado
+
+      Si tienes otro problema, [empieza un nuevo tema](%{base_url}/new-topic) en vez de responder aquí.

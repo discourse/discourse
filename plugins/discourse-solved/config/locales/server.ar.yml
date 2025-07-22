@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  accepted_answer: "الإجابة المقبولة"
+  site_settings:
+    solved_enabled: "تفعيل المكوِّن الإضافي للحل السماح للمستخدمين باختيار حلول لمواضيعهم"
+    allow_solved_on_all_topics: "السماح للمستخدمين بتحديد الحلول في جميع الموضوعات (عند إلغاء التحديد، يمكن تفعيل الحلول لكل فئة أو وسم)"
+    accept_all_solutions_trust_level: "الحد الأدنى من مستوى الثقة المطلوب لقبول الحلول في أي موضوع (حتى لو لم يكن الناشر الأصلي)"
+    accept_all_solutions_allowed_groups: "المجموعات المسموح لها بقبول الحلول في أي موضوع (حتى لو لم تكن الناشر الأصلي). مسموح للمسؤولين والمشرفين بقبول الحلول دائمًا."
+    empty_box_on_unsolved: "عرض مربع فارغ بجوار الموضوعات غير المحلولة"
+    solved_quote_length: "عدد الأحرف التي يجب اقتباسها عند عرض الحل تحت المنشور الأول"
+    solved_topics_auto_close_hours: "إغلاق الموضوع تلقائيًا بعد مرور (n) من الساعات على آخر رد بمجرد وضع علامة على الموضوع على أنه محلول. اضبط القيمة على 0 لإيقاف الإغلاق التلقائي."
+    show_filter_by_solved_status: "عرض قائمة منسدلة لتصفية قائمة الموضوعات حسب حالة الحل"
+    notify_on_staff_accept_solved: "إرسال إشعار إلى منشئ الموضوع عندما يتم وضع علامة على أحد المنشورات من قِبل فريق العمل على أنه الحل."
+    ignore_solved_topics_in_assigned_reminder: "منع تذكيرات المهام المعيَّنة من تضمين الموضوعات التي تم حلها. ذات صلة فقط عند استخدام المكوِّن الإضافي discourse-assign."
+    assignment_status_on_solve: "عندما يتم حل موضوع ما، قم بتحديث جميع المهام المعيَّنة إلى هذه الحالة"
+    assignment_status_on_unsolve: "عندما لا يتم حل موضوع ما، قم بتحديث جميع المهام المعيَّنة إلى هذه الحالة"
+    disable_solved_education_message: "إيقاف رسالة الإعلام للموضوعات المحلولة"
+    accept_solutions_topic_author: "السماح لكاتب الموضوع بقبول حل"
+    solved_add_schema_markup: "إضافة علامات مخطط Qapage إلى HTML"
+    enable_solved_tags: "الوسوم التي ستسمح للمستخدمين بتحديد الحلول"
+    prioritize_solved_topics_in_search: "منح الأولوية للموضوعات التي تم حلها في نتائج البحث."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "الحلول المقبولة"
+      xaxis: "اليوم"
+      yaxis: "الإجمالي"
+  solved:
+    no_solutions:
+      self: "ليس لديك أي حلول مقبولة حتى الآن."
+      others: "لا توجد حلول مقبولة."
+  badges:
+    solved_1:
+      name: "تم الحل!"
+      description: "وضع علامة \"حل\" على أحد الردود"
+      long_description: "يتم منح هذه الشارة عند وضع علامة \"حل\" على أحد ردودك في أحد الموضوعات. :white_check_mark: أحسنت. :+1:"
+    solved_2:
+      name: "مستشار التوجيه"
+      description: "وضع علامة \"حل\" على 10 من ردودك"
+      long_description: "يتم منح هذه الشارة عند وضع علامة \"حل\" على 10 من ردودك على الموضوعات. :white_check_mark: أنت تمثِّل قيمة مضافة حقيقة لزملائك من أعضاء المجتمع."
+    solved_3:
+      name: "تعرف كل شيء"
+      description: "وضع علامة \"حل\" على 50 من ردودك"
+      long_description: "يتم منح هذه الشارة عند وضع علامة \"حل\" على 50 من ردودك على الموضوعات. :white_check_mark: أنت تتمتَّع حقًا ببعض المعرفة. :clap:"
+    solved_4:
+      name: "مؤسسة تقديم الحلول"
+      description: "وضع علامة \"حل\" على 150 من ردودك"
+      long_description: "يتم منح هذه الشارة عند وضع علامة \"حل\" على 150 من ردودك على الموضوعات. :white_check_mark: عمل رائع. :slightly_smiling_face: لقد أصبحت رسميًا مؤسسةً لتقديم الحلول. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: أول حل مقبول
+        doc: يتم تشغيله عند قبول حل من أحد المستخدمين للمرة الأولى.
+  education:
+    topic_is_solved: |
+      ### تم حل هذا الموضوع
+
+      لا ترد هنا إلا إذا كان:
+
+      - لديك تفاصيل إضافية
+
+      - الحل لا يناسبك
+
+      إذا كانت لديك مشكلة غير ذات صلة، يُرجى [إنشاء موضوع جديد] (%{base_url}/new-topic) بدلًا من ذلك.
