@@ -118,6 +118,10 @@ discourse-github:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-github/**/*
 
+discourse-adplugin:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-adplugin/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
