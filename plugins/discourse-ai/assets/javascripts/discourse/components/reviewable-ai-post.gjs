@@ -34,4 +34,5 @@ const ReviewableAiPost = <template>
     </div>
   </div>
 </template>;
+
 export default ReviewableAiPost;

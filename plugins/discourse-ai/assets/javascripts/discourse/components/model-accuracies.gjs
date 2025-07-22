@@ -16,4 +16,5 @@ const ModelAccuracies = <template>
     </table>
   {{/if}}
 </template>;
+
 export default ModelAccuracies;
