@@ -26,6 +26,7 @@ class SystemThemesManager
         .first
         &.update!(user_selectable: true)
     end
+    remote_theme.update_column(:enabled, true)
     Stylesheet::Manager.clear_theme_cache!
   end
 end

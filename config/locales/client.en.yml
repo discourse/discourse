@@ -240,11 +240,11 @@ en:
     broken_transformer_alert: "There was an error. Your site may not work properly."
 
     critical_deprecation:
-      notice: "<b>[Admin Notice]</b> One of your themes or plugins needs updating for compatibility with upcoming Discourse core changes."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identified theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identified plugin: '%{name}'"
+      notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>learn more</em></a>)"
+      theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Plugin '%{name}'"
+      unknown_source: "One of your themes or plugins"
 
     s3:
       regions:
@@ -2678,6 +2678,9 @@ en:
       disabled: "Do not display"
       sidebar_footer: "Display in sidebar footer"
       header: "Display in header"
+    welcome_banner_location:
+      above_topic_content: "Above topic content"
+      below_site_header: "Below site header"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -6589,6 +6592,7 @@ en:
         author: "By %{author}"
         experimental_badge: "experimental"
         learn_more: "Learn more"
+        preinstalled: "Preinstalled"
 
       navigation_menu:
         sidebar: "Sidebar"

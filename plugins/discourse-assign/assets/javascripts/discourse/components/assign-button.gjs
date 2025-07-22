@@ -35,6 +35,10 @@ export default class AssignButton extends Component {
 
       await this.taskActions.unassign(post.id, "Post");
       delete post.topic.indirectly_assigned_to[post.id];
+
+      // force the components tracking `topic.indirectly_assigned_to` to update
+      // eslint-disable-next-line no-self-assign
+      post.topic.indirectly_assigned_to = post.topic.indirectly_assigned_to;
     } else {
       this.taskActions.showAssignModal(this.args.post, {
         isAssigned: false,

@@ -152,10 +152,7 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @icon={{this.getIcon option}}
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
-                class={{concatClass
-                  "no-text"
-                  (if (this.getActive option) "--active")
-                }}
+                class={{concatClass (if (this.getActive option) "--active")}}
               />
             </dropdown.item>
           {{/each}}

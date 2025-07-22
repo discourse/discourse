@@ -397,6 +397,7 @@ module DiscoursePostEvent
           recurrence:,
           recurrence_until:,
         ).first
+      return unless next_starts_at
 
       if original_ends_at
         difference = original_ends_at - original_starts_at

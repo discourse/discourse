@@ -2389,12 +2389,29 @@ RSpec.describe Post do
       I18n.locale = "ja"
       post = Fabricate(:post)
       zh_localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+      Fabricate(:post_localization, post: post, locale: "ja_JP")
       ja_localization = Fabricate(:post_localization, post: post, locale: "ja")
 
       expect(post.get_localization(:zh_CN)).to eq(zh_localization)
       expect(post.get_localization("zh-CN")).to eq(zh_localization)
       expect(post.get_localization("xx")).to eq(nil)
       expect(post.get_localization).to eq(ja_localization)
+    end
+
+    it "returns a regional localization (ja_JP) when the user's locale (ja) is not available" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      ja_jp_localization = Fabricate(:post_localization, post: post, locale: "ja_JP")
+
+      expect(post.get_localization).to eq(ja_jp_localization)
+    end
+
+    it "returns a normalized localization (pt) if the user's locale (pt_BR) is not available" do
+      I18n.locale = "pt_BR"
+      post = Fabricate(:post)
+      pt_localization = Fabricate(:post_localization, post: post, locale: "pt")
+
+      expect(post.get_localization).to eq(pt_localization)
     end
   end
 
@@ -2403,6 +2420,8 @@ RSpec.describe Post do
       I18n.locale = "ja"
       post = Fabricate(:post, locale: "ja")
 
+      expect(post.in_user_locale?).to eq(true)
+      post.update!(locale: "ja_JP")
       expect(post.in_user_locale?).to eq(true)
 
       post.update!(locale: "es")

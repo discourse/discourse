@@ -414,18 +414,18 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/search", (request) => {
     if (
-      request.queryParams.q === "discourse" ||
-      request.queryParams.q === "discourse order:latest" ||
-      request.queryParams.q === "discourse order:likes"
+      request.queryParams.q === "consectetur" ||
+      request.queryParams.q === "consectetur order:latest" ||
+      request.queryParams.q === "consectetur order:likes"
     ) {
       return response(fixturesByUrl["/search.json"]);
-    } else if (request.queryParams.q === "discourse visited") {
+    } else if (request.queryParams.q === "consectetur visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
       obj.topics.firstObject.last_read_post_number = 1;
       return response(obj);
     } else if (
-      request.queryParams.q === "discourse in:personal" ||
-      request.queryParams.q === "discourse in:messages"
+      request.queryParams.q === "consectetur in:personal" ||
+      request.queryParams.q === "consectetur in:messages"
     ) {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
       obj.topics.firstObject.archetype = "private_message";

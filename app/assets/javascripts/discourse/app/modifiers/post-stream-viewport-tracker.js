@@ -3,6 +3,7 @@ import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import DiscourseURL from "discourse/lib/url";
 
 /**
@@ -59,7 +60,9 @@ let cloakingEnabled = true;
 /**
  * Globally disables the cloaking mechanism for all posts
  *
- * USE ONLY FOR TESTING PURPOSES.
+ * @returns {void}
+ * @example
+ * disableCloaking(); // Disables cloaking for testing
  */
 export function disableCloaking() {
   cloakingEnabled = false;
@@ -75,6 +78,11 @@ const cloakingPrevented = { topicId: null, posts: new Set() };
  * the DOM nodes can cause side effects, e.g., a video playing
  *
  * @param {number} postId - The ID of the post to prevent from cloaking
+ * @param {boolean} [prevent=true] - Whether to prevent cloaking (true) or allow it (false)
+ * @returns {void}
+ * @example
+ * preventCloaking(123, true); // Prevents post 123 from being cloaked
+ * preventCloaking(123, false); // Allows post 123 to be cloaked again
  */
 export function preventCloaking(postId, prevent = true) {
   if (prevent) {
@@ -86,23 +94,30 @@ export function preventCloaking(postId, prevent = true) {
 
 /**
  * A WeakMap storing post models for DOM elements.
- * Maps elements in the post stream to their corresponding post.
- * Uses WeakMap to avoid memory leaks when elements are removed.
+ * Maps elements in the post stream to their corresponding post models.
+ * Uses WeakMap to avoid memory leaks when elements are removed from the DOM.
  *
  * @type {WeakMap<HTMLElement, Object>}
  */
 const elementsToPost = new WeakMap();
 
+/**
+ * PostStreamViewportTracker manages viewport tracking and cloaking for post streams.
+ * This class provides performance optimization by tracking visible posts and implementing
+ * a cloaking mechanism that replaces off-screen posts with placeholder elements.
+ */
 export default class PostStreamViewportTracker {
   /**
    * Reference to the bottom boundary element used for eyeline calculations
-   * @type {HTMLElement}
+   * @type {HTMLElement|null}
+   * @private
    */
   #bottomBoundaryElement;
 
   /**
    * Distance beyond viewport to keep posts uncloaked (calculated from viewport height)
    * @type {number}
+   * @private
    */
   #cloakOffset;
 
@@ -110,36 +125,42 @@ export default class PostStreamViewportTracker {
    * Map of post IDs to their styles when cloaked
    * Used to maintain correct scroll position when posts are cloaked
    * @type {Object<number, {height: number, margin: string}>}
+   * @private
    */
   #cloakedPostsStyle = {};
 
   /**
    * IntersectionObserver that tracks which posts should be cloaked/uncloaked
-   * @type {IntersectionObserver}
+   * @type {IntersectionObserver|null}
+   * @private
    */
   #cloakingObserver;
 
   /**
    * Callback function to notify when the current post changes
-   * @type {Function}
+   * @type {Function|null}
+   * @private
    */
   #currentPostChanged;
 
   /**
    * Reference to the DOM element of the current post being viewed
-   * @type {HTMLElement}
+   * @type {HTMLElement|null}
+   * @private
    */
   #currentPostElement;
 
   /**
    * Callback function to notify when the scroll position within the current post changes
-   * @type {Function}
+   * @type {Function|null}
+   * @private
    */
   #currentPostScrolled;
 
   /**
    * Debug element used to visualize the eyeline position
-   * @type {HTMLElement}
+   * @type {HTMLElement|null}
+   * @private
    */
   #eyelineDebugElement;
 
@@ -147,12 +168,14 @@ export default class PostStreamViewportTracker {
    * Offset from the top of the viewport for the site header
    * Used in calculations to determine visible posts
    * @type {number}
+   * @private
    */
   #headerOffset;
 
   /**
    * Set of posts' DOM nodes being observed by the intersection observers
    * @type {Set<HTMLElement>}
+   * @private
    */
   #observedPostElements = new Set();
 
@@ -160,6 +183,7 @@ export default class PostStreamViewportTracker {
    * Map of post numbers to their post models and DOM elements that are currently on screen
    * Used to track which posts are visible in the viewport for eyeline calculations and screen tracking
    * @type {Object<number, {post: Object, element: HTMLElement}>}
+   * @private
    */
   #postsOnScreen = {};
 
@@ -167,36 +191,42 @@ export default class PostStreamViewportTracker {
    * Map to store scheduled/debounced timers for various tracker functions
    * Used to track and cancel pending timers when the component is destroyed
    * @type {Map<Function, number>}
+   * @private
    */
   #scheduledTimers = new Map();
 
   /**
    * Reference to the screen track service for tracking post visibility
-   * @type {Object}
+   * @type {Object|null}
+   * @private
    */
   #screenTrackService;
 
   /**
    * Callback function to update the cloaking boundaries in the parent component
-   * @type {Function}
+   * @type {Function|null}
+   * @private
    */
   #setCloakingBoundaries;
 
   /**
    * Set of post numbers that are currently uncloaked (visible or near viewport)
    * @type {Set<number>}
+   * @private
    */
   #uncloakedPostNumbers = new Set();
 
   /**
    * IntersectionObserver that tracks which posts are visible in the viewport
-   * @type {IntersectionObserver}
+   * @type {IntersectionObserver|null}
+   * @private
    */
   #viewportObserver;
 
   /**
    * Reference to the wrapper element containing all posts
-   * @type {HTMLElement}
+   * @type {HTMLElement|null}
+   * @private
    */
   #wrapperElement;
 
@@ -209,6 +239,7 @@ export default class PostStreamViewportTracker {
    * @param {Array} _ - Modifier positional params (unused)
    * @param {Object} trackedArgs - Additional tracked arguments that trigger cleanup when changed
    * @returns {Function} Cleanup function that removes the reference when the element is destroyed
+   * @private
    */
   #registerBottomBoundary = modifier((element, _, trackedArgs) => {
     this.#bottomBoundaryElement = element;
@@ -229,8 +260,9 @@ export default class PostStreamViewportTracker {
    *
    * @type {Modifier}
    * @param {HTMLElement} element - The post element to register
-   * @param {Array} [post] - The post model associated with the element
+   * @param {Array} [post] - Array containing the post model associated with the element
    * @returns {Function} Cleanup function that removes observers when the element is destroyed
+   * @private
    */
   #registerPost = modifier((element, [post]) => {
     elementsToPost.set(element, post);
@@ -266,8 +298,10 @@ export default class PostStreamViewportTracker {
    * @param {number} options.headerOffset - Offset from top of viewport for site header
    * @param {Object} options.screenTrack - Screen tracking service
    * @param {Function} options.setCloakingBoundaries - Callback to update cloaking boundaries
+   * @param {number} options.topicId - ID of the current topic
    * @param {Object} options.trackedArgs - Additional tracked arguments that trigger cleanup when changed
    * @returns {Function} Cleanup function that removes observers, event listeners and clears state
+   * @private
    */
   #setup = modifier(
     (
@@ -310,8 +344,8 @@ export default class PostStreamViewportTracker {
       trackedArgs && Object.values(trackedArgs);
 
       schedule("afterRender", () => {
-        // forces updates performed when the scroll is triggered
-        this.#scrollTriggered();
+        // forces updates performed when the scroll is triggered to be performed after the initial rendering
+        this.#scrollTriggered(true);
       });
 
       // cleanup
@@ -339,6 +373,7 @@ export default class PostStreamViewportTracker {
   /**
    * Cleans up resources when the tracker is destroyed
    * Disconnects intersection observers and clears DOM references
+   * @returns {void}
    */
   destroy() {
     // cancel scheduled timers
@@ -360,7 +395,7 @@ export default class PostStreamViewportTracker {
 
   /**
    * Returns a map of post numbers to their post models and DOM elements that are currently on screen
-   * @returns {Object<number, {post: Object, element: HTMLElement}>}
+   * @returns {Object<number, {post: Object, element: HTMLElement}>} Map of visible posts
    */
   get postsOnScreen() {
     return this.#postsOnScreen;
@@ -368,7 +403,7 @@ export default class PostStreamViewportTracker {
 
   /**
    * Returns the modifier for registering the bottom boundary element
-   * @returns {Modifier}
+   * @returns {Modifier} The bottom boundary registration modifier
    */
   get registerBottomBoundary() {
     return this.#registerBottomBoundary;
@@ -376,7 +411,7 @@ export default class PostStreamViewportTracker {
 
   /**
    * Returns the modifier for registering post elements
-   * @returns {Modifier}
+   * @returns {Modifier} The post registration modifier
    */
   get registerPost() {
     return this.#registerPost;
@@ -384,7 +419,7 @@ export default class PostStreamViewportTracker {
 
   /**
    * Returns the main setup modifier
-   * @returns {Modifier}
+   * @returns {Modifier} The setup modifier
    */
   get setup() {
     return this.#setup;
@@ -437,6 +472,7 @@ export default class PostStreamViewportTracker {
    * Updates the cloaking state based on post visibility
    *
    * @param {IntersectionObserverEntry} entry - The intersection observer entry
+   * @returns {void}
    */
   @bind
   trackCloakedPosts(entry) {
@@ -496,6 +532,7 @@ export default class PostStreamViewportTracker {
    * to update the current post and eyeline position
    *
    * @param {IntersectionObserverEntry} entry - The intersection observer entry
+   * @returns {void}
    */
   @bind
   trackVisiblePosts(entry) {
@@ -527,6 +564,7 @@ export default class PostStreamViewportTracker {
   /**
    * Event handler for scroll events
    * Debounces scroll events to avoid performance issues
+   * @returns {void}
    */
   @bind
   onScroll() {
@@ -541,6 +579,7 @@ export default class PostStreamViewportTracker {
    * Debounces resize events and updates cloaking boundaries
    *
    * @param {Event} event - The resize event
+   * @returns {void}
    */
   @bind
   onWindowResize(event) {
@@ -556,6 +595,64 @@ export default class PostStreamViewportTracker {
   }
 
   /**
+   * Gets the testing wrapper element for test environment
+   * @private
+   * @returns {HTMLElement} The ember-testing container element
+   */
+  get #testWrapperElement() {
+    return document.getElementById("ember-testing");
+  }
+
+  /**
+   * Gets the total document height, accounting for test environment
+   * @private
+   * @returns {number} The total scrollable height of the document
+   */
+  get #documentHeight() {
+    return isTesting()
+      ? this.#testWrapperElement.scrollHeight
+      : Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        );
+  }
+
+  /**
+   * Gets the viewport height, accounting for test environment
+   * @private
+   * @returns {number} The height of the viewport
+   */
+  get #viewportHeight() {
+    return isTesting()
+      ? this.#testWrapperElement.offsetHeight
+      : window.innerHeight;
+  }
+
+  /**
+   * Gets the current scroll position, accounting for test environment
+   * @private
+   * @returns {number} The current vertical scroll position
+   */
+  get #scrollPosition() {
+    return isTesting() ? this.#testWrapperElement.scrollTop : window.scrollY;
+  }
+
+  /**
+   * Gets the top boundary position for post visibility calculations
+   * In production, accounts for header offset if the wrapper element top is less than header offset
+   * @private
+   * @returns {number} The top boundary position in viewport coordinates
+   */
+  get #topBoundary() {
+    return isTesting()
+      ? this.#wrapperElement.getBoundingClientRect().top
+      : Math.max(
+          this.#headerOffset,
+          this.#wrapperElement.getBoundingClientRect().top
+        ) + 1;
+  }
+
+  /**
    * Calculates the position of the "eyeline" - the horizontal line in the viewport
    * that determines which post is considered the current post
    *
@@ -563,22 +660,17 @@ export default class PostStreamViewportTracker {
    * moves from the top of the viewport (when at the beginning of the topic)
    * to the bottom of the viewport (when at the end of the topic)
    *
+   * @private
    * @returns {number} The vertical offset of the eyeline in viewport coordinates
    */
   #calculateEyelineViewportOffset() {
     // Get viewport and scroll data
-    const viewportHeight = window.innerHeight;
-    const scrollPosition = window.scrollY;
-    const documentHeight = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight
-    );
+    const viewportHeight = this.#viewportHeight;
+    const scrollPosition = this.#scrollPosition;
+    const documentHeight = this.#documentHeight;
 
     // Calculate boundaries
-    const topBoundary = Math.max(
-      this.#headerOffset,
-      this.#wrapperElement.getBoundingClientRect().top
-    );
+    const topBoundary = this.#topBoundary;
     const bottomBoundary =
       this.#bottomBoundaryElement?.getBoundingClientRect()?.top ??
       viewportHeight;
@@ -606,7 +698,9 @@ export default class PostStreamViewportTracker {
   /**
    * Notifies the parent component that the current post has changed
    *
+   * @private
    * @param {Object} event - Event data containing the new current post
+   * @returns {void}
    */
   #currentPostWasChanged(event) {
     this.#currentPostChanged(event);
@@ -616,8 +710,10 @@ export default class PostStreamViewportTracker {
    * Notifies the parent component about scroll position changes within the current post
    * Only triggers if the element matches the current post element
    *
+   * @private
    * @param {Object} params - Parameters containing element and scroll data
    * @param {HTMLElement} params.element - The post element
+   * @returns {void}
    */
   #currentPostWasScrolled({ element, ...event }) {
     if (element !== this.#currentPostElement) {
@@ -631,11 +727,24 @@ export default class PostStreamViewportTracker {
    * Finds the post that contains the eyeline position and updates the current post
    * Also calculates the percentage scrolled within that post
    *
+   * @private
    * @param {number} eyeLineOffset - The vertical position of the eyeline
+   * @returns {void}
    */
   #findPostMatchingEyeline(eyeLineOffset) {
     let target, percentScrolled;
-    for (const { element } of Object.values(this.#postsOnScreen)) {
+
+    // Get target elements from posts currently visible on screen
+    let targetElements = Object.values(this.#postsOnScreen).map(
+      (post) => post.element
+    );
+
+    // If no posts are visible on screen, fall back to all observed post elements
+    if (!targetElements.length) {
+      targetElements = this.#observedPostElements;
+    }
+
+    for (const element of targetElements) {
       const { top, bottom } = element.getBoundingClientRect();
 
       if (eyeLineOffset >= top && eyeLineOffset <= bottom) {
@@ -657,6 +766,7 @@ export default class PostStreamViewportTracker {
   /**
    * Creates a new IntersectionObserver with the specified callback and options
    *
+   * @private
    * @param {Function} callback - The function to call when intersection changes
    * @param {Object} options - Observer configuration options
    * @param {string} options.rootMargin - Margin around the root element
@@ -679,6 +789,8 @@ export default class PostStreamViewportTracker {
    * Creates two observers:
    * 1. cloakingObserver - tracks which posts should be cloaked/uncloaked
    * 2. viewportObserver - tracks which posts are visible in the viewport
+   * @private
+   * @returns {void}
    */
   #resetViewportObservers() {
     this.#cloakingObserver?.disconnect();
@@ -710,7 +822,9 @@ export default class PostStreamViewportTracker {
    * Sets up or removes event listeners for scroll and resize events
    * Also handles page show events for back-forward cache
    *
-   * @param {boolean} addListeners - Whether to add (true) or remove (false) listeners
+   * @private
+   * @param {boolean} [addListeners=true] - Whether to add (true) or remove (false) listeners
+   * @returns {void}
    */
   #setupEventListeners(addListeners = true) {
     if (!addListeners) {
@@ -741,7 +855,9 @@ export default class PostStreamViewportTracker {
    * Creates or removes the debug element that visualizes the eyeline position
    * Only active when DEBUG_EYELINE is true
    *
-   * @param {boolean} addElement - Whether to add (true) or remove (false) the debug element
+   * @private
+   * @param {boolean} [addElement=true] - Whether to add (true) or remove (false) the debug element
+   * @returns {void}
    */
   #setupEyelineDebugElement(addElement = true) {
     if (DEBUG_EYELINE) {
@@ -758,22 +874,34 @@ export default class PostStreamViewportTracker {
   }
 
   /**
-   * Handles scroll events by calculating the new eyeline position
-   * and finding the post that matches that position
-   * Also updates the debug element if enabled
+   * Handles scroll events by calculating the new eyeline position and finding the post that matches that position.
+   * The eyeline position determines which post is considered current based on the scroll position.
+   *
+   * When called, this method:
+   * 1. Calculates the current eyeline position in the viewport
+   * 2. Updates post tracking to find the current visible post at that position
+   * 3. Updates the debug visual element if DEBUG_EYELINE is enabled
+   *
+   * @private
+   * @param {boolean} [immediate=false] - If true, processes the eyeline updates synchronously instead of debounced
+   * @returns {void}
    */
-  #scrollTriggered() {
+  #scrollTriggered(immediate = false) {
     const eyelineOffset = this.#calculateEyelineViewportOffset();
 
-    this.#scheduledTimers.set(
-      this.#findPostMatchingEyeline,
-      discourseDebounce(
-        this,
+    if (immediate) {
+      this.#findPostMatchingEyeline(eyelineOffset);
+    } else {
+      this.#scheduledTimers.set(
         this.#findPostMatchingEyeline,
-        eyelineOffset,
-        SCROLL_BATCH_INTERVAL_MS
-      )
-    );
+        discourseDebounce(
+          this,
+          this.#findPostMatchingEyeline,
+          eyelineOffset,
+          SCROLL_BATCH_INTERVAL_MS
+        )
+      );
+    }
 
     if (DEBUG_EYELINE) {
       this.#updateEyelineDebugElementPosition(eyelineOffset);
@@ -784,6 +912,8 @@ export default class PostStreamViewportTracker {
    * Updates the cloaking boundaries based on which posts are currently uncloaked
    * Finds the minimum and maximum post numbers that should remain uncloaked
    * and notifies the parent component
+   * @private
+   * @returns {void}
    */
   #updateCloakBoundaries() {
     const uncloakedPostNumbers = Array.from(this.#uncloakedPostNumbers);
@@ -804,10 +934,11 @@ export default class PostStreamViewportTracker {
    * Updates the cloak offset based on the current viewport height
    * The cloak offset determines how far beyond the viewport posts remain uncloaked
    *
+   * @private
    * @returns {boolean} Whether the offset was changed
    */
   #updateCloakOffset() {
-    const newOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
+    const newOffset = Math.ceil(this.#viewportHeight * SLACK_FACTOR);
 
     if (newOffset === this.#cloakOffset) {
       return false;
@@ -821,7 +952,9 @@ export default class PostStreamViewportTracker {
    * Updates the current post element reference and notifies the parent component
    * if the post model has changed
    *
+   * @private
    * @param {HTMLElement} newElement - The new post element to set as current
+   * @returns {void}
    */
   #updateCurrentPost(newElement) {
     if (this.#currentPostElement === newElement) {
@@ -842,6 +975,8 @@ export default class PostStreamViewportTracker {
   /**
    * Updates the screen tracking service with the list of posts currently on screen
    * Separates posts into all visible posts and read posts
+   * @private
+   * @returns {void}
    */
   #updateScreenTracking() {
     const onScreenPostsNumbers = [];
@@ -861,6 +996,8 @@ export default class PostStreamViewportTracker {
   /**
    * Handles window resize events by updating the cloak offset
    * and resetting the viewport observers if needed
+   * @private
+   * @returns {void}
    */
   #windowResizeTriggered() {
     if (this.#updateCloakOffset()) {
@@ -872,7 +1009,9 @@ export default class PostStreamViewportTracker {
    * Updates the position of the eyeline debug element
    * Only used when DEBUG_EYELINE is true
    *
+   * @private
    * @param {number} viewportOffset - The vertical position for the eyeline
+   * @returns {void}
    */
   #updateEyelineDebugElementPosition(viewportOffset) {
     if (this.#eyelineDebugElement) {

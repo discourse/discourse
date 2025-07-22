@@ -501,4 +501,25 @@ describe DiscoursePostEvent::Event do
       expect(event_1.missing_users.pluck(:id)).to match_array([user_1.id, user_2.id])
     end
   end
+
+  describe "#calculate_next_date" do
+    subject(:next_date) { event.calculate_next_date }
+
+    context "when the event is recurring" do
+      context "when the recurring ends on the next day" do
+        let(:event) do
+          Fabricate(
+            :event,
+            recurrence: "every_day",
+            recurrence_until: "2020-04-25 06:59",
+            original_starts_at: "2020-04-20 13:00",
+          )
+        end
+
+        it "returns nothing" do
+          expect(next_date).to be_blank
+        end
+      end
+    end
+  end
 end

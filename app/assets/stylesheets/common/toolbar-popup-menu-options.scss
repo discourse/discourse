@@ -14,10 +14,9 @@
     z-index: z("header") + 1;
   }
 
-  .dropdown-menu {
-    .btn {
-      gap: var(--space-2);
-    }
+  // eventho mobile composer shouldnt be used in conjuction with fk-d-menu (floating version), on tablets the possibility unfortunately exists
+  .discourse-touch & {
+    z-index: z("mobile-composer");
   }
 
   .shortcut {
