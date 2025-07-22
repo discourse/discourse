@@ -11,7 +11,7 @@ module(
     hooks.beforeEach(function () {
       pretender.get("/composer/mentions", () =>
         response({
-          users: ["eviltrout", "john"],
+          users: ["eviltrout", "john", "käsey"],
           user_reasons: {},
           groups: {
             support: { user_count: 1 },
@@ -54,12 +54,18 @@ module(
         "<p>Hello @invalid, how are you?</p>",
         "Hello @invalid, how are you?",
       ],
+      "mention with unicode": [
+        "Hi @käsey",
+        '<p>Hi <a class="mention" data-name="käsey" contenteditable="false" draggable="true">@käsey</a></p>',
+        "Hi @käsey",
+      ],
     };
 
     Object.entries(testCases).forEach(
       ([name, [markdown, expectedHtml, expectedMarkdown]]) => {
         test(name, async function (assert) {
           this.siteSettings.rich_editor = true;
+          this.siteSettings.unicode_usernames = true;
 
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });

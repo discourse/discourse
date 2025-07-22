@@ -26,11 +26,10 @@ export function setup(helper) {
   });
 
   helper.registerPlugin((md) => {
-    const unicodeEnabled =
-      md.options.discourse.limitedSiteSettings.unicodeUsernames;
-
     const rule = {
-      matcher: mentionRegex(unicodeEnabled),
+      matcher: mentionRegex(
+        md.options.discourse.limitedSiteSettings.unicodeUsernames
+      ),
       onMatch: addMention,
     };
 
