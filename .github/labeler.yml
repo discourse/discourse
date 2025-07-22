@@ -134,6 +134,10 @@ discourse-topic-voting:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-topic-voting/**/*
 
+discourse-templates:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-templates/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
