@@ -50,11 +50,13 @@ const Layout = <template>
         />
       </div>
     </div>
-    <PluginOutlet
-      @name="before-list-area"
-      @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
-    />
     <div class="row full-width">
+
+      <PluginOutlet
+        @name="before-list-area"
+        @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
+      />
+
       <div id="list-area">
         <PluginOutlet
           @name="discovery-list-area"
