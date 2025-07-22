@@ -89,6 +89,21 @@ class TopicsFilter
       end
     end
 
+    keywords =
+      query_string.split(/\s+/).reject { |word| word.include?(":") }.map(&:strip).reject(&:empty?)
+
+    if keywords.present? && keywords.join(" ").length >= SiteSetting.min_search_term_length
+      ts_query = Search.ts_query(term: keywords.join(" "))
+      @scope = @scope.where(<<~SQL)
+          topics.id IN (
+            SELECT topic_id
+            FROM post_search_data
+            JOIN posts ON posts.id = post_search_data.post_id
+            WHERE search_data @@ #{ts_query}
+          )
+        SQL
+    end
+
     @scope
   end
 
@@ -127,6 +142,167 @@ class TopicsFilter
     end
 
     @scope
+  end
+
+  def self.option_info(guardian)
+    results = [
+      {
+        name: "category:",
+        alias: "categories:",
+        description: I18n.t("filter.description.category"),
+        priority: 1,
+        type: "category",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.category_any") }],
+        prefixes: [
+          { name: "-", description: I18n.t("filter.description.exclude_category") },
+          { name: "=", description: I18n.t("filter.description.category_without_subcategories") },
+          {
+            name: "-=",
+            description: I18n.t("filter.description.exclude_category_without_subcategories"),
+          },
+        ],
+      },
+      {
+        name: "activity-before:",
+        description: I18n.t("filter.description.activity_before"),
+        type: "date",
+      },
+      {
+        name: "activity-after:",
+        description: I18n.t("filter.description.activity_after"),
+        type: "date",
+      },
+      {
+        name: "created-before:",
+        description: I18n.t("filter.description.created_before"),
+        type: "date",
+      },
+      {
+        name: "created-after:",
+        description: I18n.t("filter.description.created_after"),
+        priority: 1,
+        type: "date",
+      },
+      {
+        name: "created-by:",
+        description: I18n.t("filter.description.created_by"),
+        type: "username",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
+      },
+      {
+        name: "latest-post-before:",
+        description: I18n.t("filter.description.latest_post_before"),
+        type: "date",
+      },
+      {
+        name: "latest-post-after:",
+        description: I18n.t("filter.description.latest_post_after"),
+        type: "date",
+      },
+      { name: "likes-min:", description: I18n.t("filter.description.likes_min"), type: "number" },
+      { name: "likes-max:", description: I18n.t("filter.description.likes_max"), type: "number" },
+      {
+        name: "likes-op-min:",
+        description: I18n.t("filter.description.likes_op_min"),
+        type: "number",
+      },
+      {
+        name: "likes-op-max:",
+        description: I18n.t("filter.description.likes_op_max"),
+        type: "number",
+      },
+      { name: "posts-min:", description: I18n.t("filter.description.posts_min"), type: "number" },
+      { name: "posts-max:", description: I18n.t("filter.description.posts_max"), type: "number" },
+      {
+        name: "posters-min:",
+        description: I18n.t("filter.description.posters_min"),
+        type: "number",
+      },
+      {
+        name: "posters-max:",
+        description: I18n.t("filter.description.posters_max"),
+        type: "number",
+      },
+      { name: "views-min:", description: I18n.t("filter.description.views_min"), type: "number" },
+      { name: "views-max:", description: I18n.t("filter.description.views_max"), type: "number" },
+      { name: "status:", description: I18n.t("filter.description.status"), priority: 1 },
+      { name: "status:open", description: I18n.t("filter.description.status_open") },
+      { name: "status:closed", description: I18n.t("filter.description.status_closed") },
+      { name: "status:archived", description: I18n.t("filter.description.status_archived") },
+      { name: "status:listed", description: I18n.t("filter.description.status_listed") },
+      { name: "status:unlisted", description: I18n.t("filter.description.status_unlisted") },
+      { name: "status:deleted", description: I18n.t("filter.description.status_deleted") },
+      { name: "status:public", description: I18n.t("filter.description.status_public") },
+      { name: "order:", description: I18n.t("filter.description.order"), priority: 1 },
+      { name: "order:activity", description: I18n.t("filter.description.order_activity") },
+      { name: "order:activity-asc", description: I18n.t("filter.description.order_activity_asc") },
+      { name: "order:category", description: I18n.t("filter.description.order_category") },
+      { name: "order:category-asc", description: I18n.t("filter.description.order_category_asc") },
+      { name: "order:created", description: I18n.t("filter.description.order_created") },
+      { name: "order:created-asc", description: I18n.t("filter.description.order_created_asc") },
+      { name: "order:latest-post", description: I18n.t("filter.description.order_latest_post") },
+      {
+        name: "order:latest-post-asc",
+        description: I18n.t("filter.description.order_latest_post_asc"),
+      },
+      { name: "order:likes", description: I18n.t("filter.description.order_likes") },
+      { name: "order:likes-asc", description: I18n.t("filter.description.order_likes_asc") },
+      { name: "order:likes-op", description: I18n.t("filter.description.order_likes_op") },
+      { name: "order:likes-op-asc", description: I18n.t("filter.description.order_likes_op_asc") },
+      { name: "order:posters", description: I18n.t("filter.description.order_posters") },
+      { name: "order:posters-asc", description: I18n.t("filter.description.order_posters_asc") },
+      { name: "order:title", description: I18n.t("filter.description.order_title") },
+      { name: "order:title-asc", description: I18n.t("filter.description.order_title_asc") },
+      { name: "order:views", description: I18n.t("filter.description.order_views") },
+      { name: "order:views-asc", description: I18n.t("filter.description.order_views_asc") },
+      { name: "order:read", description: I18n.t("filter.description.order_read") },
+      { name: "order:read-asc", description: I18n.t("filter.description.order_read_asc") },
+    ]
+
+    if guardian.authenticated?
+      results.concat(
+        [
+          { name: "in:", description: I18n.t("filter.description.in"), priority: 1 },
+          { name: "in:pinned", description: I18n.t("filter.description.in_pinned") },
+          { name: "in:bookmarked", description: I18n.t("filter.description.in_bookmarked") },
+          { name: "in:watching", description: I18n.t("filter.description.in_watching") },
+          { name: "in:tracking", description: I18n.t("filter.description.in_tracking") },
+          { name: "in:muted", description: I18n.t("filter.description.in_muted") },
+          { name: "in:normal", description: I18n.t("filter.description.in_normal") },
+          {
+            name: "in:watching_first_post",
+            description: I18n.t("filter.description.in_watching_first_post"),
+          },
+        ],
+      )
+    end
+
+    if SiteSetting.tagging_enabled?
+      results.push(
+        {
+          name: "tag:",
+          description: I18n.t("filter.description.tag"),
+          alias: "tags:",
+          priority: 1,
+          type: "tag",
+          delimiters: [
+            { name: ",", description: I18n.t("filter.description.tags_any") },
+            { name: "+", description: I18n.t("filter.description.tags_all") },
+          ],
+          prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag") }],
+        },
+      )
+      results.push(
+        {
+          name: "tag_group:",
+          description: I18n.t("filter.description.tag_group"),
+          type: "tag_group",
+          prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag_group") }],
+        },
+      )
+    end
+
+    results
   end
 
   private
@@ -546,15 +722,15 @@ class TopicsFilter
       column: "topics.views",
     },
     "read" => {
-      column: "tu.last_visited_at",
+      column: "tu1.last_visited_at",
       scope: -> do
         if @guardian.user
           @scope.joins(
-            "JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = #{@guardian.user.id.to_i}",
-          ).where("tu.last_visited_at IS NOT NULL")
+            "JOIN topic_users tu1 ON tu1.topic_id = topics.id AND tu1.user_id = #{@guardian.user.id.to_i}",
+          ).where("tu1.last_visited_at IS NOT NULL")
         else
           # make sure this works for anon
-          @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")
+          @scope.joins("LEFT JOIN topic_users tu1 ON 1 = 0")
         end
       end,
     },
@@ -575,7 +751,7 @@ class TopicsFilter
 
         @scope = @scope.order("#{column_name} #{match_data[:asc] ? "ASC" : "DESC"}")
       else
-        match_data = value.match /^(?<column>.*?)(?:-(?<asc>asc))?$/
+        match_data = value.match(/^(?<column>.*?)(?:-(?<asc>asc))?$/)
         key = "order:#{match_data[:column]}"
         if custom_match =
              DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(key) }
