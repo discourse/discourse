@@ -21,7 +21,9 @@ module DiscourseSolved
 
     def can_accept_answer?(topic, post)
       return false if !authenticated?
-      return false if !topic || topic.private_message? || !post || post.whisper?
+      if !topic || topic.private_message? || !post || post.post_number <= 1 || post.whisper?
+        return false
+      end
       return false if !allow_accepted_answers?(topic.category_id, topic.tags.map(&:name))
 
       return true if is_staff?
