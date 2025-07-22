@@ -250,6 +250,7 @@ export default class PostQuotedContent extends Component {
               <:content as |expandedPost|>
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
+                    @className="post__contents-cooked-quote"
                     @post={{expandedPost}}
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
@@ -277,6 +278,7 @@ export default class PostQuotedContent extends Component {
             </AsyncContent>
           {{~else~}}
             <PostCookedHtml
+              @className="post__contents-cooked-quote"
               @post={{@post}}
               @cooked={{@collapsedContent}}
               @decoratorState={{@decoratorState}}

@@ -151,6 +151,10 @@ export default class PostCookedHtml extends Component {
     );
   }
 
+  get className() {
+    return this.args.className ?? "cooked";
+  }
+
   get cooked() {
     if (this.isIgnored) {
       return i18n("post.ignored");
@@ -189,7 +193,7 @@ export default class PostCookedHtml extends Component {
 
   <template>
     <DecoratedHtml
-      @className="cooked"
+      @className={{this.className}}
       @decorate={{this.decorateBeforeAdopt}}
       @decorateAfterAdopt={{this.decorateAfterAdopt}}
       @decorateArgs={{lazyHash
