@@ -171,6 +171,8 @@ ja:
           description: "選択された LLM を使って潜在的な迷惑行為を識別し、サイトモデレーターがレビューキューで検査できるように通報します"
       modals:
         select_option: "オプションを選択..."
+      layout:
+        table: "テーブル"
       spam:
         short_title: "迷惑"
         title: "迷惑処理の構成"
@@ -196,7 +198,7 @@ ja:
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 または投稿 ID"
           result: "結果"
           scan_log: "スキャンログ"
-          run: "テストの実行"
+          run: "テストを実行"
           spam: "迷惑"
           not_spam: "迷惑ではない"
         stat_tooltips:
@@ -208,7 +210,7 @@ ja:
             action: "修正"
           resolved: "エラーは解決されました！"
       usage:
-        short_title: "使用状況"
+        short_title: "使用方法"
         summary: "要約"
         total_tokens: "合計トークン"
         tokens_over_time: "経時的なトークン使用状況"
@@ -251,6 +253,7 @@ ja:
         name: "名前"
         edit: "編集"
         export: "エクスポート"
+        import: "インポート"
         description: "説明"
         no_llm_selected: "言語モデルは選択されていません"
         max_context_posts: "最大コンテキスト投稿数"
@@ -333,6 +336,7 @@ ja:
         back: "戻る"
         short_title: "ツール"
         export: "エクスポート"
+        import: "インポート"
         no_tools: "ツールをまだ作成していません"
         name: "名前"
         new: "新しいツール"
@@ -428,9 +432,9 @@ ja:
         next:
           title: "次へ"
         tests:
-          title: "テストの実行"
+          title: "テストを実行"
           running: "テストを実行中…"
-          success: "成功!"
+          success: "成功！"
           failure: "モデルに接続しようとした際に、次のエラーが返されました: %{error}"
         hints:
           name: "これを API 呼び出しに含めて、使用するモデルを指定します"
@@ -478,6 +482,7 @@ ja:
           trigger: "AI に尋ねる"
           loading: "AI が生成中です"
           cancel: "キャンセル"
+          regen: "やり直す"
           confirm: "確認"
           discard: "破棄"
           changes: "提案された編集"
@@ -653,7 +658,7 @@ ja:
             tag: "タグ"
           table:
             sentiment: "センチメント"
-            total_count: "総合"
+            total_count: "合計"
       summarization:
         chat:
           title: "メッセージを要約する"

@@ -168,6 +168,7 @@ ko:
     back_button: "뒤로"
     welcome_banner:
       header:
+        logged_in_members: "어서오세요, %{preferred_display_name}님!"
         anonymous_members: "%{site_name}에 오신 것을 환영합니다!"
       search: "검색"
     themes:
@@ -180,11 +181,11 @@ ko:
     broken_plugin_alert: "플러그인 '%{name}'(으)로 인해 발생"
     broken_transformer_alert: "오류가 발생했습니다. 사이트가 제대로 작동하지 않을 수 있습니다."
     critical_deprecation:
-      notice: "<b>[관리자 알림]</b> 예정된 Discourse 핵심 변경 사항과 호환되도록 테마 또는 플러그인을 업데이트해야 합니다."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "식별된 테마: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "식별된 플러그인: '%{name}'"
+      notice: "<b>[관리자 알림]</b> %{source} 에 업데이트가 필요한 코드가 포함되어 있습니다. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>자세히 알아보기</em></a>)"
+      theme_source: "<a target='_blank' href='%{path}'>'%{name}'</a> 테마"
+      plugin_source: "'%{name}' 플러그인"
+      unknown_source: "테마 또는 플러그인 중 하나"
     s3:
       regions:
         ap_northeast_1: "아시아 태평양(도쿄)"
@@ -3643,6 +3644,8 @@ ko:
               content: "관리자"
             badges:
               content: "배지"
+            filter:
+              content: "필터"
             topics:
               content: "글"
               title: "모든 글"
@@ -3695,6 +3698,9 @@ ko:
       spreadsheet:
         show: "보기"
         about: "소개"
+    filter:
+      description:
+        yesterday: "어제"
     discovery:
       headings:
         multi_tag:
@@ -3827,6 +3833,8 @@ ko:
           title: "Webhook"
         embedding:
           title: "삽입(Embedding)"
+      theme_site_settings:
+        default_value: "기본"
       search:
         title: "검색"
         result_types:
@@ -4436,9 +4444,7 @@ ko:
           up_to_date: "테마가 최신입니다. 마지막 확인:"
           has_overwritten_history: "강제 푸시로 Git 히스토리를 덮어 썼으므로 현재 테마 버전이 더 이상 존재하지 않습니다."
           add: "추가"
-          theme_settings: "테마 설정"
           no_settings: "이 테마에는 설정이 없습니다."
-          theme_translations: "테마 번역"
           empty: "항목이 없습니다"
           commits_behind:
             other: "테마에 최신 커밋 %{count}개가 있습니다."
@@ -4489,6 +4495,11 @@ ko:
             title: "베이스 색상 팔레트 선택"
             description: "베이스 팔레트:"
           title: "색상"
+          edit: "편집"
+          filters:
+            all: "모두"
+          active_badge:
+            text: "활성화 사용자"
           about: "테마에 사용되는 색상을 수정합니다. 시작하려면 새 색상 팔레트를 생성하세요."
           copy_name_prefix: "다음의 사본"
           undo: "실행 취소"
@@ -4945,7 +4956,6 @@ ko:
         activity: 활동
         like_count: 좋아요 보냄 / 받음
         last_100_days: "지난 100일간"
-        private_topics_count: 비공개 주제
         posts_read_count: 읽은 게시물
         post_count: 생성한 게시물
         second_factor_enabled: 2단계 인증 활성화됨

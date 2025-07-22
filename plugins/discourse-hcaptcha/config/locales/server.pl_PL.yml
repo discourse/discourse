@@ -7,13 +7,13 @@
 pl_PL:
   dashboard:
     problem:
-      hcaptcha_configuration: "Wystąpił problem z twoją konfiguracją hCaptcha `site_key` lub `secret_key`."
+      hcaptcha_configuration: "Wystąpił problem z konfiguracją `site_key` lub `secret_key` hCaptcha"
   admin:
     site_settings:
       categories:
         discourse_hcaptcha: "Wtyczka hCaptcha"
   site_settings:
-    discourse_hcaptcha_enabled: "Włącz wtyczkę hCaptcha. Wymaga konta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>."
+    discourse_hcaptcha_enabled: "Włącz wtyczkę hCaptcha. Wymagane jest konto <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> ."
     hcaptcha_site_key: "Klucz witryny hCaptcha z Twojego konta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Klucz tajny hCaptcha z Twojego konta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
   h_captcha_verification_failed: "Weryfikacja hCaptcha nie powiodła się"

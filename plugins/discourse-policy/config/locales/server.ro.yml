@@ -8,7 +8,7 @@ ro:
   reports:
     unaccepted-policies:
       labels:
-        topic_id: ID discuție
+        topic_id: ID subiect
   unsubscribe:
     policy_emails:
       never: Niciodată

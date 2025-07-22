@@ -20,7 +20,7 @@ pt_BR:
       title: Políticas não aceitas
       labels:
         topic_id: ID do tópico
-        user_id: ID do usuário
+        user_id: ID de usuário(a)
   user_notifications:
     policy_email:
       from: "%{site_name}"
@@ -33,5 +33,5 @@ pt_BR:
     policy_emails:
       select_title: "Defina a frequência de e-mails de alerta de política para:"
       never: Nunca
-      when_away: Somente quando estiver longe
+      when_away: Só quando estiver ausente
       always: Sempre

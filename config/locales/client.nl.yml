@@ -207,12 +207,6 @@ nl:
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
     broken_transformer_alert: "Er is een fout opgetreden. Je site werkt mogelijk niet goed."
-    critical_deprecation:
-      notice: "<b>[Beheerderskennisgeving]</b> Een van je thema's of plug-ins moet worden bijgewerkt voor compatibiliteit met aankomende kernwijzigingen in Discourse."
-      id: "(ID: <em>%{id}</em>)"
-      linked_id: "(ID: <a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Geïdentificeerd thema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Geïdentificeerde plug-in: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Azië Pacifisch (Tokio)"
@@ -4647,6 +4641,8 @@ nl:
             badges:
               content: "Badges"
               title: "Alle beschikbare badges om te verdienen"
+            filter:
+              content: "Filter"
             topics:
               content: "Topics"
               title: "Alle topics"
@@ -4794,6 +4790,12 @@ nl:
           paste: "Plakken..."
           save: "Opslaan als..."
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
+    filter:
+      description:
+        yesterday: "Gisteren"
+        last_week: "Vorige week"
+        last_month: "Vorige maand"
+        last_year: "Afgelopen jaar"
     discovery:
       headings:
         multi_tag:
@@ -5003,6 +5005,8 @@ nl:
         embedding:
           title: "Insluiting"
           header_description: "Discourse heeft de mogelijkheid om de reacties van een topic in te sluiten op een externe site met behulp van een Javascript-API die een iFRAME maakt"
+      theme_site_settings:
+        default_value: "Standaard"
       search:
         title: "Zoeken"
         result_types:
@@ -5957,11 +5961,7 @@ nl:
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
           has_overwritten_history: "De huidige themaversie bestaat niet meer, omdat de Git-geschiedenis door een afgedwongen push is overschreven."
           add: "Toevoegen"
-          theme_settings: "Thema-instellingen"
-          edit_objects_theme_setting: "Objectinstellingeneditor"
-          overriden_settings_explanation: "Overschreven instellingen zijn gemarkeerd met een punt en een kleur. Druk op de resetknop ernaast om de standaardwaarden van deze instellingen te herstellen."
           no_settings: "Dit thema heeft geen instellingen."
-          theme_translations: "Themavertalingen"
           empty: "Geen items"
           commits_behind:
             one: "Thema loopt %{count} commit achter!"
@@ -6031,7 +6031,12 @@ nl:
             title: "Basiskleurenpalet selecteren"
             description: "Basispalet"
           title: "Kleuren"
-          edit: "Kleurenpaletten bewerken"
+          edit: "Bewerken"
+          filters:
+            all: "Alle"
+            user_selectable: "Door gebruiker te selecteren"
+          active_badge:
+            text: "Actief"
           long_title: "Kleurenpaletten"
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
           new_name: "Nieuw kleurenpalet"
@@ -6663,7 +6668,6 @@ nl:
         activity: Activiteit
         like_count: Gegeven / ontvangen likes
         last_100_days: "de afgelopen 100 dagen"
-        private_topics_count: Privétopics
         posts_read_count: Gelezen berichten
         post_count: Gemaakte berichten
         second_factor_enabled: Tweeledige verificatie ingeschakeld

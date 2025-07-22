@@ -9,7 +9,7 @@ et:
     discourse_policy:
       builder:
         groups:
-          label: Grupid
+          label: Rühmad
         version:
           label: Versioon
         revoke:

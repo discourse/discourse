@@ -44,7 +44,7 @@ ca:
           one: "(%{count} més)"
           other: "(%{count} més)"
         filters:
-          all: "Tot"
+          all: "Tots"
           reset: "Restableix"
         search:
           name: "Cerca"
@@ -69,6 +69,7 @@ ca:
         name: "Nom"
         edit: "Edita"
         export: "Exporta"
+        import: "Importa"
         description: "Descripció"
         user: Usuari
         save: "Desa"
@@ -87,6 +88,7 @@ ca:
       tools:
         back: "Enrere"
         export: "Exporta"
+        import: "Importa"
         name: "Nom"
         description: "Descripció"
         summary: "Resum"
@@ -97,6 +99,7 @@ ca:
         delete: "Suprimeix"
       llms:
         display_name: "Nom"
+        provider: "Proveïdor"
         save: "Desa"
         edit: "Edita"
         back: "Enrere"
@@ -136,6 +139,7 @@ ca:
         tests:
           success: "Èxit!"
         display_name: "Nom"
+        provider: "Proveïdor"
         providers:
           google: "Google"
           fake: "Personalitzat"
@@ -156,7 +160,7 @@ ca:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Tot"
+            all: "Tots"
             neutral: "Neutre"
           group_types:
             category: "Categoria"

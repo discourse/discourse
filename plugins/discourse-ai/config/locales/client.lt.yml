@@ -110,6 +110,8 @@ lt:
             top_p:
               label: "Viršutinė P"
               description: "Viršutinė P, naudojama LLM, padidinkite, kad padidėtų atsitiktinumas (palikite tuščią, jei norite naudoti numatytuosius modelio parametrus)"
+            persona_id:
+              label: "Persona"
         llm_tool_triage:
           fields:
             model:
@@ -144,6 +146,9 @@ lt:
               label: "Slėpti temą"
             model:
               label: "Modelis"
+            temperature:
+              label: "Temperatūra"
+              description: "Temperatūra, kurią naudosite LLM. Padidinkite, kad padidintumėte atsitiktinumą (palikite tuščią, kad naudotumėte numatytuosius modelio parametrus)."
     discourse_ai:
       title: "AI"
       features:
@@ -159,7 +164,7 @@ lt:
           other: "(%{count} daugiau)"
         collapse_list: "(rodyti mažiau)"
         filters:
-          all: "Visos"
+          all: "Visi"
           reset: "Atstatyti"
         search:
           name: "Paieška"
@@ -224,7 +229,7 @@ lt:
       usage:
         summary: "Santrauka"
         model: "Modelis"
-        username: "Vartotojo vardas"
+        username: "Naudotojo vardas"
         total_requests: "Visos užklausos"
         periods:
           last_day: "Paskutinės 24 valandos"
@@ -234,11 +239,14 @@ lt:
         name: "Vardas"
         edit: "Redaguoti"
         export: "Eksportuoti"
+        import: "Importuoti"
         description: "Aprašymas"
         user: Narys
-        save: "Išsaugoti"
+        save: "Saugoti"
         enabled: "Galimas?"
         delete: "Pašalinti"
+        temperature: "Temperatūra"
+        top_p: "Viršutinė P"
         response_format:
           open_modal: "Redaguoti"
           modal:
@@ -252,17 +260,18 @@ lt:
       tools:
         back: "Atgal"
         export: "Eksportuoti"
+        import: "Importuoti"
         name: "Vardas"
         description: "Aprašymas"
         summary: "Santrauka"
-        save: "Išsaugoti"
+        save: "Saugoti"
         remove_parameter: "Pašalinti"
         parameter_required: "Privalomi"
         edit: "Redaguoti"
         delete: "Pašalinti"
       llms:
         display_name: "Vardas"
-        save: "Išsaugoti"
+        save: "Saugoti"
         edit: "Redaguoti"
         back: "Atgal"
         delete: Pašalinti
@@ -274,9 +283,11 @@ lt:
             hour: "1 valanda"
             six_hours: "6 valandos"
             day: "24 valandos"
+            week: "7 dienos"
             custom: "Pasirinktinis..."
           hours: "valandos"
         usage:
+          ai_helper: "Padėjėjas"
           ai_summarization: "Apibendrinti"
           ai_spam: "Šlamštas"
         next:
@@ -292,6 +303,8 @@ lt:
           cancel: "Atšaukti"
           confirm: "Patvirtinti"
           discard: "Išmesti"
+          custom_prompt:
+            title: "Pasirinktinis raginimas"
         post_options_menu:
           trigger: "Paklauskite AI"
           title: "Paklauskite AI"
@@ -299,16 +312,18 @@ lt:
           copy: "Kopijuoti"
           copied: "Nukopijuota!"
           cancel: "Atšaukti"
+        thumbnail_suggestions:
+          select: "Pasirinkite"
         image_caption:
           button_label: "Antraštė su AI"
           generating: "Generuojama antraštė..."
           credits: "Antraštė teikiama AI"
-          save_caption: "Išsaugoti"
+          save_caption: "Saugoti"
           automatic_caption_dialog:
             confirm: "Įgalinti"
       embeddings:
         back: "Atgal"
-        save: "Išsaugoti"
+        save: "Saugoti"
         delete: "Pašalinti"
         edit: "Redaguoti"
         tests:
@@ -318,6 +333,7 @@ lt:
           google: "Google"
           fake: "Išskirtinės"
       ai_bot:
+        persona: "Persona"
         llm: "Modelis"
         debug_ai_modal:
           request: "Užklausa"
@@ -332,13 +348,13 @@ lt:
         bot_names:
           claude-2: "Claude 2"
         conversations:
-          today: "Šiandien"
+          today: "Šandien"
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Visos"
+            all: "Visi"
             neutral: "Neutrali"
           group_types:
             category: "Kategorija"

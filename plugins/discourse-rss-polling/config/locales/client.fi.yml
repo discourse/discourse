@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 fi:
+  js:
+    admin:
+      rss_polling:
+        author: Käyttäjä
+        feed_url: URL
+        discourse_category: Luokka
+        discourse_tags: Tunnisteet

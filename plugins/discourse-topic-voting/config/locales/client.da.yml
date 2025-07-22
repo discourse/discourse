@@ -15,14 +15,11 @@ da:
       votes_nav_help: "emner med flest stemmer"
       voted: "Du stemte i dette emne"
       allow_topic_voting: "Tillad brugere at stemme på emner i denne kategori"
-      vote_title: "Stem"
+      vote_title: "Stemmeafgivelse"
       vote_title_plural: "Stemmer"
       voted_title: "Stemte"
       voting_closed_title: "Lukket"
       voting_limit: "Begrænset"
-      votes_left:
-        one: "Du har %{count} stemme tilbage, se <a href='%{path}'>dine stemmer</a>."
-        other: "Du har %{count} stemmer tilbage, se <a href='%{path}'>dine stemmer</a>."
       votes_left_button_title:
         one: "Du har %{count} stemme tilbage."
         other: "Du har %{count} stemmer tilbage."
@@ -30,7 +27,7 @@ da:
         one: "%{count} stemme"
         other: "%{count} stemmer"
       anonymous_button:
-        one: "Stemme"
+        one: "Stemmeafgivelse"
         other: "Stemmer"
       remove_vote: "Fjern stemme"
     filters:

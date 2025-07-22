@@ -8,7 +8,7 @@ ru:
   js:
     category:
       sort_options:
-        votes: "Голосов"
+        votes: "Голоса"
     topic_voting:
       title: "Голосование по теме"
       reached_limit: "У вас закончились голоса. Удалите часть голосов."
@@ -16,37 +16,32 @@ ru:
       votes_nav_help: "Темы с наибольшим количеством голосов"
       voted: "Вы голосовали по этой теме"
       allow_topic_voting: "Разрешить пользователям голосовать по темам в этой категории"
-      vote_title: "Голос"
-      vote_title_plural: "Голосов"
+      vote_title: "Проголосовать"
+      vote_title_plural: "Голоса"
       voted_title: "Проголосовало"
-      voting_closed_title: "Закрытая"
+      voting_closed_title: "Закрытое"
       voting_limit: "Лимит"
-      votes_left:
-        one: "У вас есть %{count} голос, посмотрите <a href='%{path}'>свои голоса</a>."
-        few: "У вас есть %{count} голоса, посмотрите <a href='%{path}'>свои голоса</a>."
-        many: "У вас есть %{count} голосов, посмотрите <a href='%{path}'>свои голоса</a>."
-        other: "У вас есть %{count} голоса, посмотрите <a href='%{path}'>свои голоса</a>."
       votes_left_button_title:
         one: "У вас остался %{count} голос."
-        few: "У вас осталось %{count} голоса."
+        few: "У вас осталось %{count} голосов."
         many: "У вас осталось %{count} голосов."
         other: "У вас осталось %{count} голоса."
       votes:
         one: "%{count} голос"
         few: "%{count} голоса"
         many: "%{count} голосов"
-        other: "%{count} голоса"
+        other: "%{count} голосов"
       anonymous_button:
-        one: "Голос"
-        few: "Голосов"
-        many: "Голосов"
-        other: "Голосов"
+        one: "Проголосовать"
+        few: "Голоса"
+        many: "Голоса"
+        other: "Голоса"
       remove_vote: "Удалить голос"
       no_votes_title_self: "Вы ещё не проголосовали ни за одну тему"
       no_votes_title_others: "Пользователь %{username} ещё не проголосовал ни за одну тему"
     filters:
       votes:
-        title: "Голосов"
+        title: "Голоса"
         help: "Темы с наибольшим количеством голосов"
       my_votes:
         title: "Мои голоса"

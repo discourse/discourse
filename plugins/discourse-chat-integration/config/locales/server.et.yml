@@ -9,6 +9,8 @@ et:
     all_categories: "(kõik kategooriad)"
     deleted_category: "(kustutatud kategooria)"
     deleted_group: "(kustutatud grupp)"
+    topic_tag_changed:
+      removed: "Eemaldatud %{removed}"
     provider:
       slack:
         delete:
@@ -21,5 +23,3 @@ et:
       mattermost:
         delete:
           success: "Reegel on kustutatud"
-      flowdock:
-        message_title: "postitatud"

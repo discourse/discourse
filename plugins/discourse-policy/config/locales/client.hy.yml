@@ -18,7 +18,7 @@ hy:
         revoke:
           label: Հետ կանչել
         private:
-          label: Գաղտնի?
+          label: Մասնավոր?
         send-email:
           label: Ուղարկել Էլ. նամակ?
       preferences:

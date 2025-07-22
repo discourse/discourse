@@ -13,21 +13,21 @@ fa_IR:
   js:
     chat_integration:
       menu_title: "یکپارچگی گفتگو"
-      settings: "تنظیمات"
+      settings: "تنظیم"
       group_mention_template: "اشاره شده: @%{name}"
       group_message_template: "پیغام‌ها به: @%{name}"
       choose_group: "(یک گروه را انتخاب کنید)"
-      all_categories: "(تمام دسته بندی ها)"
+      all_categories: "(تمام دسته‌بندی‌ها)"
       all_tags: "(تمام برچسب‌ها)"
       create_rule: "ایجاد قانون"
       create_channel: "ایجاد کانال"
       delete_channel: "حذف"
-      test_channel: "آزمایش"
+      test_channel: "آزمایش کردن"
       edit_channel: "ویرایش"
       channel_delete_confirm: "آیا از حذف این کانال مطمئن هستید؟ تمام قوانین مرتبط حذف خواهد شد."
       test_modal:
         title: "ارسال پیغام آزمایشی"
-        topic: "موضوعات"
+        topic: "موضوع"
         send: "ارسال پیغام آزمایشی"
         close: "بستن"
         success: "پیغام با موفقیت ارسال شد"
@@ -36,33 +36,33 @@ fa_IR:
         group_message: پیغام گروه
         group_mention: اشاره گروهی
       filter:
-        mute: 'بی صدا'
+        mute: 'خاموش'
         follow: 'فقط اولین نوشته'
         watch: 'همه نوشته‌ها و پاسخ‌ها'
       rule_table:
         filter: "فیلتر"
         category: "دسته‌بندی"
-        tags: "برچسبها"
+        tags: "برچسب‌ها"
         edit_rule: "ویرایش"
         delete_rule: "حذف"
       edit_channel_modal:
         title: "ویرایش کانال"
         save: "ذخیره کانال"
-        cancel: "لغو کردن"
+        cancel: "لغو"
         provider: "ارائه‌دهنده"
         channel_validation:
           ok: "معتبر"
       edit_rule_modal:
         title: ویرایش قانون
         save: ذخیره قانون
-        cancel: لغو کردن
+        cancel: لغو
         provider: ارائه‌دهنده
         type: نوع
         channel: کانال
         filter: فیلتر
         category: دسته‌بندی
         group: گروه
-        tags: برچسبها
+        tags: برچسب‌ها
       provider:
         slack:
           title: "اسلک"
@@ -103,7 +103,7 @@ fa_IR:
         zulip:
           param:
             subject:
-              title: "موضوع"
+              title: "عنوان"
         rocketchat:
           param:
             identifier:

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  default_category_template:
+    name: Predlošci

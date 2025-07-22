@@ -28,7 +28,7 @@ sw:
         llm_triage:
           fields:
             category:
-              label: "Kategoria"
+              label: "Kikundi"
             tags:
               label: "Lebo"
             canned_reply:
@@ -41,8 +41,8 @@ sw:
         no_groups: "Hakuna"
         edit: "Hariri"
         filters:
-          all: "Vyote"
-          reset: "Anza Upya"
+          all: "Yote"
+          reset: "Weka/Anzisha Upya"
         search:
           name: "Tafuta"
         spam:
@@ -63,7 +63,8 @@ sw:
         name: "Jina"
         edit: "Hariri"
         export: "Hamisha"
-        description: "Elezo"
+        import: "Imeingizwa kutoka sehemu nyingine"
+        description: "Maelezo"
         user: Mtumiaji
         save: "Hifadhi"
         enabled: "Imeruhusiwa?"
@@ -71,7 +72,7 @@ sw:
         response_format:
           open_modal: "Hariri"
         filters:
-          reset: "Anza Upya"
+          reset: "Weka/Anzisha Upya"
       rag:
         uploads:
           title: "Upakiaji"
@@ -79,8 +80,9 @@ sw:
       tools:
         back: "Iliyopita"
         export: "Hamisha"
+        import: "Imeingizwa kutoka sehemu nyingine"
         name: "Jina"
-        description: "Elezo"
+        description: "Maelezo"
         summary: "Muhtasari"
         save: "Hifadhi"
         remove_parameter: "Ondoa"
@@ -89,6 +91,7 @@ sw:
         delete: "Futa"
       llms:
         display_name: "Jina"
+        provider: "Mkimu"
         save: "Hifadhi"
         edit: "Hariri"
         back: "Iliyopita"
@@ -106,11 +109,11 @@ sw:
           fake: "Binafsi"
       ai_helper:
         context_menu:
-          cancel: "Ghairi"
+          cancel: "Batili"
         post_options_menu:
           close: "Funga"
           copy: "Nakili"
-          cancel: "Ghairi"
+          cancel: "Batili"
         image_caption:
           save_caption: "Hifadhi"
           automatic_caption_dialog:
@@ -123,6 +126,7 @@ sw:
         tests:
           success: "Mafanikio!"
         display_name: "Jina"
+        provider: "Mkimu"
         providers:
           google: "Google"
           fake: "Binafsi"
@@ -141,9 +145,9 @@ sw:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Vyote"
+            all: "Yote"
           group_types:
-            category: "Kategoria"
+            category: "Kikundi"
           table:
             total_count: "Jumla"
       discobot_discoveries:

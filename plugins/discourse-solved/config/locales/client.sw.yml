@@ -17,7 +17,7 @@ sw:
       has_no_accepted_answer: "Hii mada haina suluhisho"
       unaccept_answer: "Ondoa chaguo kama jibu halijatatua tatizo"
       accepted_answer: "Jibu"
-      solution: "Suluhisho"
+      solution: "Jibu"
       topic_status_filter:
         all: "Zote"
         solved: "imetatuliwa"

@@ -60,6 +60,10 @@ el:
               label: "Κατηγορίες"
             tags:
               label: "Ετικέτες"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Μοντέλο"
         llm_triage:
           fields:
             category:
@@ -68,6 +72,8 @@ el:
               label: "Ετικέτες"
             canned_reply:
               label: "Απάντηση"
+            model:
+              label: "Μοντέλο"
     discourse_ai:
       features:
         back: "Πίσω"
@@ -93,11 +99,13 @@ el:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"
         enable: "Ενεργοποίηση"
+        save_button: "Αποθήκευση αλλαγών"
         test_modal:
           result: "Αποτέλεσμα"
           spam: "Ανεπιθύμητα"
       usage:
         summary: "Περίληψη"
+        model: "Μοντέλο"
         username: "Όνομα Χρήστη"
         total_requests: "Σύνολο αιτήσεων"
         periods:
@@ -108,6 +116,7 @@ el:
         name: "Όνομα"
         edit: "Επεξεργασία"
         export: "Εξαγωγή"
+        import: "Εισαγωγή"
         description: "Περιγραφή"
         user: Χρήστης
         save: "Αποθήκευση"
@@ -127,6 +136,7 @@ el:
       tools:
         back: "Πίσω"
         export: "Εξαγωγή"
+        import: "Εισαγωγή"
         name: "Όνομα"
         description: "Περιγραφή"
         summary: "Περίληψη"
@@ -153,6 +163,7 @@ el:
             custom: "Προσαρμοσμένο..."
           hours: "ώρες"
         usage:
+          ai_summarization: "Συνοψίστε"
           ai_spam: "Ανεπιθύμητα"
         next:
           title: "Επόμενο"
@@ -163,13 +174,17 @@ el:
           fake: "Προσαρμοσμένο"
       ai_helper:
         context_menu:
-          cancel: "Ακύρωση"
+          cancel: "Άκυρο"
+          confirm: "Επιβεβαίωση"
           discard: "Απόρριψη"
         post_options_menu:
           close: "Κλείσιμο"
           copy: "Αντιγραφή"
           copied: "Αντιγράφηκε!"
-          cancel: "Ακύρωση"
+          cancel: "Άκυρο"
+        thumbnail_suggestions:
+          select: "Επιλογή"
+          selected: "Επιλεγμένα"
         image_caption:
           save_caption: "Αποθήκευση"
           automatic_caption_dialog:
@@ -186,6 +201,7 @@ el:
           google: "Google"
           fake: "Προσαρμοσμένο"
       ai_bot:
+        llm: "Μοντέλο"
         debug_ai_modal:
           request: "Αίτημα"
           response: "Απάντηση"
@@ -205,8 +221,12 @@ el:
             all: "Όλα"
           group_types:
             category: "Κατηγορία"
+            tag: "Ετικέτα"
           table:
             total_count: "Σύνολο"
+      summarization:
+        chat:
+          summarize: "Συνοψίστε"
       discobot_discoveries:
         regular_results: "Θέματα"
         collapse: "Σύμπτυξη"

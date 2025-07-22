@@ -20,9 +20,6 @@ pt:
       voted_title: "Votado"
       voting_closed_title: "Fechado"
       voting_limit: "Limite"
-      votes_left:
-        one: "Resta-me %{count} voto, veja os <a href='%{path}'>seus votos</a>."
-        other: "Restam-me %{count} votos, veja os <a href='%{path}'>seus votos</a>."
       votes:
         one: "%{count} voto"
         other: "%{count} votos"

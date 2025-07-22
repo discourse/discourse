@@ -42,7 +42,7 @@ de:
       local_time: "Ortszeit"
       region:
         title: "Region"
-        none: "Keine"
+        none: "Keiner"
         use_current_region: "Aktuelle Region verwenden"
         names:
           ae: "Vereinigte Arabische Emirate"
@@ -113,7 +113,7 @@ de:
           cl: "Chile"
           co: "Kolumbien"
           cr: "Costa Rica"
-          cz: "Tschechien"
+          cz: "Tschechische Republik"
           de_bb: "Deutschland (de_bb)"
           de_be: "Deutschland (de_be)"
           de_bw: "Deutschland (de_bw)"
@@ -171,7 +171,7 @@ de:
           gb_sct: "Vereinigtes Königreich (gb_sct)"
           gb_wls: "Vereinigtes Königreich (gb_wls)"
           gb: "Vereinigtes Königreich"
-          ge: "Georgia"
+          ge: "Georgien"
           gg: "Guernsey"
           gh: "Ghana"
           hk: "Hongkong"
@@ -240,7 +240,7 @@ de:
           ro: "Rumänien"
           rs_cyrl: "Serbien (rs_cyrl)"
           rs_la: "Serbien (rs_la)"
-          ru: "Russland"
+          ru: "Russische Föderation"
           se: "Schweden"
           sa: "Saudi-Arabien"
           sg: "Singapur"
@@ -359,14 +359,14 @@ de:
       bulk_invite_modal:
         confirm: "bestätigen"
         text: "CSV-Datei hochladen"
-        title: "Massen-Einladung"
+        title: "Masseneinladung"
         success: "Die Datei wurde erfolgreich hochgeladen. Du wirst per Nachricht benachrichtigt, wenn der Vorgang abgeschlossen ist."
         error: "Die Datei sollte im CSV-Format vorliegen."
         confirmation_message: "Du bist dabei, alle in der hochgeladenen Datei zu benachrichtigen."
-        description_public: "Öffentliche Ereignisse akzeptieren nur Benutzernamen für Massen-Einladungen."
-        description_private: "Private Ereignisse akzeptieren nur Gruppennamen für Massen-Einladungen."
+        description_public: "Öffentliche Ereignisse akzeptieren nur Benutzernamen für Masseneinladungen."
+        description_private: "Private Ereignisse akzeptieren nur Gruppennamen für Masseneinladungen."
         download_sample_csv: "Eine Beispiel-CSV-Datei herunterladen"
-        send_bulk_invites: "Einladungen senden"
+        send_bulk_invites: "Einladungen versenden"
         group_selector_placeholder: "Gruppe auswählen …"
         user_selector_placeholder: "Benutzer auswählen …"
         inline_title: "Inline-Masseneinladung"
@@ -401,10 +401,10 @@ de:
             not_going: "Nicht dabei"
             interested: "Interessiert"
             going_count:
-              one: "%{count} nimmt teil"
+              one: "%{count} nehmen teil"
               other: "%{count} nehmen teil"
             not_going_count:
-              one: "%{count} nimmt nicht teil"
+              one: "%{count} nehmen nicht teil"
               other: "%{count} nehmen nicht teil"
             interested_count:
               one: "%{count} interessiert"
@@ -413,7 +413,7 @@ de:
               one: "%{count} Benutzer eingeladen"
               other: "%{count} Benutzer eingeladen"
         event:
-          expired: "Ausgelaufen"
+          expired: "Abgelaufen"
           closed: "Geschlossen"
           status:
             standalone:

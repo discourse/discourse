@@ -7,7 +7,7 @@
 nb_NO:
   site_settings:
     dfp_through_trust_level: "Vis dine reklamer til brukere basert på tillitsnivå. Brukere med tillitsnivå høyere enn denne verdien vil ikke se reklamer."
-    dfp_nth_post_code: "Vis en reklame etter hver N post, der N er denne verdien."
+    dfp_nth_post_code: "Vis en reklame etter hvert N innlegg, der N er denne verdien."
     adsense_through_trust_level: "Vis dine reklamer til brukere basert på tillitsnivå. Brukere med tillitsnivå høyere enn denne verdien vil ikke se reklamer."
     adsense_topic_list_top_ad_sizes: "Velg din reklamestørrelse"
     adsense_mobile_topic_list_top_ad_size: "Velg din reklamestørrelse"
@@ -23,8 +23,8 @@ nb_NO:
     amazon_topic_list_top_ad_height_code: "Velg din reklamehøyde"
     amazon_mobile_topic_list_top_ad_width_code: "Velg din reklamebredde (mobil)"
     amazon_mobile_topic_list_top_ad_height_code: "Velg din reklamehøyde (mobil)"
-    amazon_topic_above_post_stream_ad_width_code: "Skriv inn din reklamebredde"
-    amazon_topic_above_post_stream_ad_height_code: "Skriv inn din reklamehøyde"
+    amazon_topic_above_post_stream_ad_width_code: "Velg din reklamebredde"
+    amazon_topic_above_post_stream_ad_height_code: "Velg din reklamehøyde"
     amazon_mobile_topic_above_post_stream_ad_width_code: "Velg din reklamebredde (mobil)"
     amazon_mobile_topic_above_post_stream_ad_height_code: "Velg din reklamehøyde (mobil)"
     amazon_topic_above_suggested_src_code: "Skriv inn src-kode å vise ved emne over anbefalninger"

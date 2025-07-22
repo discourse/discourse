@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 et:
+  default_category_template:
+    name: Mallid

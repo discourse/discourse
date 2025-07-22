@@ -9,6 +9,9 @@ sq:
     unaccepted-policies:
       labels:
         topic_id: ID e temës
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
   unsubscribe:
     policy_emails:
       never: Asnjëherë

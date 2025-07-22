@@ -205,12 +205,6 @@ hy:
     broken_page_change_alert: "OnPageChange-ի կառավարիչը սխալ է առաջացրել: Լրացուցիչ տեղեկությունների համար ստուգեք բրաուզերի ծրագրավորողի գործիքները:"
     broken_plugin_alert: "Պատճառված է “%{name}” պլագինի պատճառով"
     broken_transformer_alert: "Սխալ է տեղի ունեցել։ Ձեր կայքը կարող է ճիշտ չաշխատել:"
-    critical_deprecation:
-      notice: "<b>[Ծանուցում ադմինիստրատորին]</b> Ձեր թեմաներից կամ պլագիններից մեկը թարմացման կարիք ունի՝ Discourse-ի առաջիկա հիմնական փոփոխությունների հետ համատեղելիության համար:"
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Նույնականացված թեման ՝ <a target='_blank' href='%{path}'>'%{name}'</a>:"
-      plugin_source: "Հայտնաբերված պլագին ՝ '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -3787,6 +3781,8 @@ hy:
               content: "Ադմին"
             badges:
               content: "Կրծքանշաններ"
+            filter:
+              content: "Ֆիլտրել"
             topics:
               content: "Թեմա"
             faq:
@@ -3828,6 +3824,9 @@ hy:
       spreadsheet:
         show: "Ցուցադրել"
         about: "Մասին"
+    filter:
+      description:
+        yesterday: "Երեկվա"
     discovery:
       headings:
         multi_tag:
@@ -3945,6 +3944,8 @@ hy:
           title: "Webhook-ներ"
         embedding:
           title: "Զետեղում"
+      theme_site_settings:
+        default_value: "Լռելյայն"
       search:
         title: "Որոնում"
         result_types:
@@ -4504,9 +4505,7 @@ hy:
             maximum: "Պահանջում է Discourse-ի %{version} կամ ավելի ցածր տարբերակ:"
           up_to_date: "Թեման ամենաթարմ տարբերակում է, վերջին անգամ ստուգվել է՝ "
           add: "Ավելացնել"
-          theme_settings: "Թեմայի Կարգավորումները"
           no_settings: "Այս թեման կարգավորումներ չունի:"
-          theme_translations: "Թեմայի Թարգմանությւոն"
           empty: "Տարրեր չկան"
           commits_behind:
             one: "Թեման գտնվում է %{count} քոմմիթ ետ!"
@@ -4544,6 +4543,11 @@ hy:
             title: "Ընտրել հիմնական գունապնակը"
             description: "Հիմնական գունապնակ՝"
           title: "Գույներ"
+          edit: "Խմբագրել"
+          filters:
+            all: "Բոլոր"
+          active_badge:
+            text: "Ակտիվ"
           about: "Փոփոխեք Ձեր թեմաների կողմից օգտագործված գույները: Ստեղծեք նոր գունապնակ՝ մեկնարկի համար:"
           copy_name_prefix: "Կրկնօրինակ՝ "
           undo: "Ետարկել"
@@ -4948,7 +4952,6 @@ hy:
         activity: Ակտիվություն
         like_count: Տրված/Ստացած Հավանումներ
         last_100_days: "վերջին 100 օրվա ընթացքում"
-        private_topics_count: Գաղտնի Թեմա
         posts_read_count: Կարդացած Գրառում
         post_count: Ստեղծած Գրառում
         topics_entered: Դիտված Թեմաները

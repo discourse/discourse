@@ -307,6 +307,7 @@ zh_CN:
           ve: "委内瑞拉"
           vi: "美属维尔京群岛"
           za: "南非"
+          zw: "津巴布韦"
       toolbar_button:
         today: "今天"
         month: "月"
@@ -343,7 +344,7 @@ zh_CN:
       leave: "离开活动"
       edit_event: "编辑活动"
       export_event: "导出活动"
-      created_by: "创建者："
+      created_by: "创建者"
       bulk_invite: "批量邀请"
       close_event: "关闭活动"
       open_event: "开放活动"
@@ -369,7 +370,7 @@ zh_CN:
         inline_title: "内嵌批量邀请"
         csv_title: "CSV 批量邀请"
       upcoming_events:
-        title: "即将到来的活动"
+        title: "近期活动"
         creator: "创建者"
         status: "状态"
         starts_at: "开始时间"
@@ -436,7 +437,7 @@ zh_CN:
         reminders:
           label: "提醒"
           types:
-            bump_topic: "自动提升话题"
+            bump_topic: "自动顶帖话题"
             notification: "通知参与者"
           units:
             minutes: "分钟"

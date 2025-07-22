@@ -153,7 +153,7 @@ fr:
           all: "Tout"
           reset: "Réinitialiser"
         search:
-          name: "Recherche"
+          name: "Rechercher"
         embeddings:
           name: "Intégrations"
         ai_helper:
@@ -168,6 +168,8 @@ fr:
           description: "Identifie les spams potentiels à l'aide du LLM sélectionné et les signale aux modérateurs du site afin qu'ils les inspectent dans la file d'attente de révision"
       modals:
         select_option: "Sélectionnez une option..."
+      layout:
+        table: "Tableau"
       spam:
         short_title: "Spam"
         title: "Configurer la gestion du spam"
@@ -250,6 +252,7 @@ fr:
         name: "Nom"
         edit: "Modifier"
         export: "Exporter"
+        import: "Importer"
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
         max_context_posts: "Nombre maximal de publications contextuelles"
@@ -332,6 +335,7 @@ fr:
         back: "Retour"
         short_title: "Outils"
         export: "Exporter"
+        import: "Importer"
         no_tools: "Vous n'avez pas encore créé d'outil"
         name: "Nom"
         new: "Nouvel outil"
@@ -480,6 +484,7 @@ fr:
           trigger: "Demander à l'IA"
           loading: "L'IA est en train de générer"
           cancel: "Annuler"
+          regen: "Réessayer"
           confirm: "Confirmer"
           discard: "Abandonner"
           changes: "Modifications suggérées"
@@ -493,7 +498,7 @@ fr:
           title: "Demander à l'IA"
           loading: "L'IA est en train de générer"
           close: "Fermer"
-          copy: "Copier"
+          copy: "Copie"
           copied: "Copié !"
           cancel: "Annuler"
           insert_footnote: "Ajouter une note de bas de page"
@@ -589,7 +594,7 @@ fr:
         llm: "Modèle"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
-        default_pm_prefix: "[Message privé de robot IA sans titre]"
+        default_pm_prefix: "[MD de robot IA sans titre]"
         shortcut_title: "Démarrer une conversation avec un robot IA"
         share: "Copier la conversation avec l'IA"
         conversation_shared: "Conversation copiée"
@@ -640,7 +645,7 @@ fr:
         conversations:
           today: "Aujourd'hui"
           last_7_days: "Ces 7 derniers jours"
-          last_30_days: "Ces 30 derniers jours"
+          last_30_days: "30 derniers jours"
       sentiments:
         dashboard:
           title: "Sentiment"

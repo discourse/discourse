@@ -18,6 +18,6 @@ de:
       title: "Benutzer-Notizen"
       description: "Neueste Benutzer-Notizen anzeigen."
       labels:
-        user: Benutzer
-        note: Notiz
+        user: Nutzer
+        note: Hinweis
         moderator: Moderator

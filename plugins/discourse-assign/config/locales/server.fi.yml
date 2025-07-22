@@ -51,9 +51,9 @@ fi:
     reminders_frequency:
       never: "ei koskaan"
       daily: "päivittäin"
-      weekly: "viikottain"
-      monthly: "kuukausittain"
-      quarterly: "vuosineljännettäin"
+      weekly: "viikoittain"
+      monthly: "kuukausittainen"
+      quarterly: "neljännesvuosittainen"
   assign_mailer:
     title: "Osoitus"
     subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun \"%{topic_title}\"!"

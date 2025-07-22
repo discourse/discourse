@@ -236,6 +236,7 @@ zh_CN:
       invalid_error_type: "提供的错误类型无效"
       unexpected: "发生意外错误"
       bot_user_update_failed: "无法更新垃圾内容扫描机器人用户"
+      logging_subject: "垃圾信息检测"
     ai_bot:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
@@ -418,7 +419,7 @@ zh_CN:
       missing_provider_param: "%{param} 不能为空"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
     ai_staff_action_logger:
-      updated: "更新"
+      updated: "更新时间"
       removed: "已移除"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"

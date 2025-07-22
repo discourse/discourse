@@ -39,13 +39,13 @@ lv:
         disabled: "(atslēgt)"
         groups: "Grupas:"
         no_groups: "Nav"
-        edit: "Rediģēt"
+        edit: "Labot"
         expand_list:
           zero: "(vēl %{count})"
           one: "(vēl %{count})"
           other: "(vēl %{count})"
         filters:
-          all: "Viss"
+          all: "Visi"
           reset: "Atlikt"
         search:
           name: "Meklēt"
@@ -67,15 +67,16 @@ lv:
       ai_persona:
         back: "Atpakaļ"
         name: "Vārds"
-        edit: "Rediģēt"
+        edit: "Labot"
         export: "Eksportēt"
+        import: "Importēt"
         description: "Apraksts"
         user: Lietotājs
         save: "Saglabāt"
         enabled: "Ieslēgts?"
         delete: "Dzēst"
         response_format:
-          open_modal: "Rediģēt"
+          open_modal: "Labot"
         filters:
           reset: "Atlikt"
       rag:
@@ -85,18 +86,19 @@ lv:
       tools:
         back: "Atpakaļ"
         export: "Eksportēt"
+        import: "Importēt"
         name: "Vārds"
         description: "Apraksts"
         summary: "Kopsavilkums"
         save: "Saglabāt"
         remove_parameter: "Atcelt"
         parameter_required: "Nepieciešams"
-        edit: "Rediģēt"
+        edit: "Labot"
         delete: "Dzēst"
       llms:
         display_name: "Vārds"
         save: "Saglabāt"
-        edit: "Rediģēt"
+        edit: "Labot"
         back: "Atpakaļ"
         delete: Dzēst
         quotas:
@@ -129,7 +131,7 @@ lv:
         back: "Atpakaļ"
         save: "Saglabāt"
         delete: "Dzēst"
-        edit: "Rediģēt"
+        edit: "Labot"
         tests:
           success: "Veiksmīgi!"
         display_name: "Vārds"
@@ -146,13 +148,13 @@ lv:
         share_modal:
           copy: "Kopēt"
         conversations:
-          today: "Šodien"
+          today: "Šodienas"
           last_7_days: "Pēdējās 7 dienas"
           last_30_days: "Pēdējās 30 dienas"
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Viss"
+            all: "Visi"
           group_types:
             category: "Sadaļa"
           table:

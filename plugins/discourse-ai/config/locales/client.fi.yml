@@ -23,7 +23,7 @@ fi:
         reports:
           filters:
             sort_by:
-              label: "Järjestä"
+              label: "Järjestys"
             tag:
               label: "Tunniste"
   js:
@@ -168,6 +168,8 @@ fi:
           description: "Tunnistaa mahdollisen roskapostin valitun suuren kielimallin avulla ja liputtaa sen sivuston valvojien tarkastettavaksi tarkastusjonoon"
       modals:
         select_option: "Valitse vaihtoehto..."
+      layout:
+        table: "Taulukko"
       spam:
         short_title: "Roskaposti"
         title: "Määritä roskapostin käsittely"
@@ -250,6 +252,7 @@ fi:
         name: "Nimi"
         edit: "Muokkaa"
         export: "Vie"
+        import: "Tuo"
         description: "Kuvaus"
         no_llm_selected: "Kielimallia ei ole valittu"
         max_context_posts: "Kontekstiviestien enimmäismäärä"
@@ -332,6 +335,7 @@ fi:
         back: "Takaisin"
         short_title: "Työkalut"
         export: "Vie"
+        import: "Tuo"
         no_tools: "Et ole vielä luonut työkaluja"
         name: "Nimi"
         new: "Uusi työkalu"
@@ -480,6 +484,7 @@ fi:
           trigger: "Kysy tekoälyltä"
           loading: "Tekoäly tuottaa"
           cancel: "Peruuta"
+          regen: "Yritä uudelleen"
           confirm: "Vahvista"
           discard: "Hylkää"
           changes: "Ehdotetut muokkaukset"
@@ -674,7 +679,7 @@ fi:
             expanded_description: "tekoäly-yhteenvedoilla"
       discobot_discoveries:
         regular_results: "Aiheet"
-        collapse: "Kutista"
+        collapse: "Supista"
         tooltip:
           actions:
             disable: "Poista käytöstä"

@@ -22,7 +22,7 @@ pt_BR:
         house_ads:
           title: "Anúncios Internos"
           new: "Novo"
-          settings: "Configurações"
+          settings: "Definições"
           new_name: "Novo Anúncio Interno"
           save: "Salvar"
           delete: "Excluir"

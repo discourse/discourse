@@ -30,7 +30,6 @@ sl:
     displayed_invitees_limit: "Omeji število povabljencev na dogodek."
     display_post_event_date_on_topic_title: "Prikaže datum dogodka ob koncu naslova teme."
     discourse_post_event_allowed_on_groups: "Grupe z dovoljenjem za ustvarjanje dogodkov."
-    discourse_post_event_allowed_custom_fields: "Omogoči dodajanje polj po meri za posamezen dogodek."
     discourse_post_event_edit_notifications_time_extension: "Podaljša (v minutah) čas po koncu dogodka, ko so udeleženci s statusom 'pridem' še obveščeni o popravkih prve objave."
     holiday_calendar_topic_id: "ID teme za prikaz koledarja praznikov / odsotnosti osebja."
     delete_expired_event_posts_after: "Objave, ki vsebujejo pretekle časovne obsege, bodo samodejno izbrisane po (n) urah. Nastavi na -1 da preprečiš brisanje."

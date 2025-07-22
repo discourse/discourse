@@ -124,6 +124,7 @@ pl_PL:
       invalid_error_type: "Podano nieprawidłowy typ błędu"
       unexpected: "Wystąpił nieoczekiwany błąd"
       bot_user_update_failed: "Nie udało się zaktualizować użytkownika bota skanującego spam"
+      logging_subject: "Wykrywanie spamu"
     ai_bot:
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie..."
@@ -267,6 +268,7 @@ pl_PL:
         disable_module_first: "Najpierw musisz wyłączyć %{setting}."
         set_llm_first: "Najpierw ustaw %{setting}"
         model_unreachable: "Nie mogliśmy uzyskać odpowiedzi od tego modelu. Sprawdź najpierw swoje ustawienia."
+      cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
     embeddings:
       cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
       configuration:

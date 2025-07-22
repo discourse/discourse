@@ -30,7 +30,7 @@ ur:
         llm_triage:
           fields:
             category:
-              label: "زمرہ"
+              label: "زُمرَہ"
             tags:
               label: "ٹیگز"
             canned_reply:
@@ -72,6 +72,7 @@ ur:
         name: "نام"
         edit: "ترمیم کریں"
         export: "برآمد"
+        import: "درآمد"
         description: "تفصیل"
         user: صارف
         save: "محفوظ کریں"
@@ -90,6 +91,7 @@ ur:
       tools:
         back: "واپس"
         export: "برآمد"
+        import: "درآمد"
         name: "نام"
         description: "تفصیل"
         summary: "Summary"
@@ -100,6 +102,7 @@ ur:
         delete: "مٹائیں"
       llms:
         display_name: "نام"
+        provider: "پرووَائیڈر"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
         back: "واپس"
@@ -146,6 +149,7 @@ ur:
         tests:
           success: "کامیابی!"
         display_name: "نام"
+        provider: "پرووَائیڈر"
         providers:
           google: "گُوگَل"
           fake: "اپنی مرضی کا"
@@ -169,7 +173,7 @@ ur:
             all: "تمام"
             neutral: "نیوٹرل"
           group_types:
-            category: "زمرہ"
+            category: "زُمرَہ"
             tag: "ٹیگ"
           table:
             total_count: "کُل"

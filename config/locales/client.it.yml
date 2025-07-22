@@ -207,12 +207,6 @@ it:
     broken_page_change_alert: "Un gestore onPageChange ha generato un errore. Controlla gli strumenti per sviluppatori del browser per ulteriori informazioni."
     broken_plugin_alert: "Causato dal plugin '%{name}'"
     broken_transformer_alert: "Si è verificato un errore. Il tuo sito potrebbe non funzionare correttamente."
-    critical_deprecation:
-      notice: "<b>[Avviso amministratore]</b> Uno dei tuoi temi o plugin necessita di aggiornamento per compatibilità con le prossime modifiche principali di Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tema identificato: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Plugin identificato: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacifico (Tokyo)"
@@ -4647,6 +4641,8 @@ it:
             badges:
               content: "Distintivi"
               title: "Tutti i distintivi disponibili"
+            filter:
+              content: "Filtro"
             topics:
               content: "Argomenti"
               title: "Tutti gli argomenti"
@@ -4794,6 +4790,12 @@ it:
           paste: "Incolla..."
           save: "Salva come..."
     powered_by_discourse: "Con tecnologia Discourse"
+    filter:
+      description:
+        yesterday: "Ieri"
+        last_week: "Ultima settimana"
+        last_month: "Ultimo mese"
+        last_year: "Ultimo anno"
     discovery:
       headings:
         multi_tag:
@@ -5007,6 +5009,8 @@ it:
         embedding:
           title: "Integrazione"
           header_description: "Discourse ha la capacità di incorporare i commenti di un argomento in un sito remoto utilizzando un'API Javascript che crea un IFRAME"
+      theme_site_settings:
+        default_value: "Predefinito"
       search:
         title: "Cerca"
         result_types:
@@ -5961,11 +5965,7 @@ it:
           up_to_date: "Il tema è aggiornato, ultima verifica:"
           has_overwritten_history: "La versione attuale del tema non esiste più perché la cronologia Git è stata sovrascritta da un push forzato."
           add: "Aggiungi"
-          theme_settings: "Impostazioni Tema"
-          edit_objects_theme_setting: "Editor impostazione oggetti"
-          overriden_settings_explanation: "Le impostazioni sostituite sono contrassegnate da un punto e hanno un colore evidenziato. Per ripristinare queste impostazioni al valore predefinito, premi il pulsante di ripristino accanto a esse."
           no_settings: "Questo tema non ha impostazioni."
-          theme_translations: "Traduzioni Tema"
           empty: "Nessun elemento"
           commits_behind:
             one: "Il tema è indietro di %{count} commit!"
@@ -6035,7 +6035,12 @@ it:
             title: "Seleziona la tavolozza dei colori di base"
             description: "Tavolozza di base:"
           title: "Colori"
-          edit: "Modifica schemi di colori"
+          edit: "Modifica"
+          filters:
+            all: "Tutte"
+            user_selectable: "Selezionabile dall'utente"
+          active_badge:
+            text: "Attivi"
           long_title: "Schemi di colori"
           about: "Modifica i colori usati dal tuo tema. Crea una nuova tavolozza dei colori per iniziare."
           new_name: "Nuovo schema di colori"
@@ -6667,7 +6672,6 @@ it:
         activity: Attività
         like_count: '"Mi piace" Assegnati / Ricevuti'
         last_100_days: "negli ultimi 100 giorni"
-        private_topics_count: Argomenti Privati
         posts_read_count: Messaggi Letti
         post_count: Messaggi Creati
         second_factor_enabled: Autenticazione a due fattori abilitata

@@ -237,6 +237,7 @@ pt_BR:
       invalid_error_type: "Tipo inválido de erro fornecido"
       unexpected: "Ocorreu um erro inesperado"
       bot_user_update_failed: "Falha ao atualizar usuário(a) do bot de verificação de spam"
+      logging_subject: "Detecção de spam"
     ai_bot:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
@@ -417,7 +418,7 @@ pt_BR:
       delete_failed:
         one: "Não foi possível excluir este modelo, pois está sendo usado por %{settings}. Atualize a configuração e tente novamente."
         other: "Não foi possível excluir este modelo, pois está sendo usado por %{settings}. Atualize a configuração e tente novamente."
-      cannot_edit_builtin: "Não é possível eidtar um modelo integrado."
+      cannot_edit_builtin: "Não é possível editar um modelo integrado."
     embeddings:
       delete_failed: "Este modelo está em uso no momento. Atualize o modelo selecionado de incorporações de IA primeiro."
       cannot_edit_builtin: "Não é possível editar um modelo integrado."

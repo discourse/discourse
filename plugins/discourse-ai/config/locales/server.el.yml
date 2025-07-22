@@ -13,6 +13,7 @@ el:
       tool_summary:
         search: "Αναζήτηση"
         time: "Ώρα"
+        summarize: "Συνοψίστε"
     ai_staff_action_logger:
       updated: "ενημερώθηκε"
       removed: "αφαιρέθηκε"

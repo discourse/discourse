@@ -33,5 +33,5 @@ fi:
     policy_emails:
       select_title: "Aseta käytäntöhälytyssähköpostien tiheydeksi:"
       never: Ei koskaan
-      when_away: Vain, kun olen poissa
+      when_away: Vain poissa ollessa
       always: Aina

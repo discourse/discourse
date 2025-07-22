@@ -21,7 +21,7 @@ uk:
       adplugin:
         house_ads:
           title: "House Ads"
-          new: "Новий"
+          new: "Нові"
           settings: "Налаштування"
           new_name: "Новий House Ad"
           save: "Зберегти"

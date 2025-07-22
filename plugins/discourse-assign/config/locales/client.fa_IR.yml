@@ -14,6 +14,7 @@ fa_IR:
       unassigned: "اختصاص داده نشده %{who} %{when}"
       unassigned_group: "اختصاص داده نشده %{who} %{when}"
     discourse_assign:
+      assigned: "اختصاص داده شده"
       group_everyone: "همه"
       reassign:
         title: "ویرایش"
@@ -32,10 +33,18 @@ fa_IR:
         monthly: "ماهانه"
         quarterly: "فصلی"
     user:
+      notification_level_when_assigned:
+        watch_topic: "موضوع را دنبال کنید"
+        track_topic: "موضوع را پیگیری کنید"
+        do_nothing: "هیچ کاری نکن"
+      messages:
+        assigned: "اختصاص داده شده"
       assignment_description:
         topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "اختصاص داده شده"
     edit_assignments_modal:
       topic: "موضوع"
       post: "نوشته"

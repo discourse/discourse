@@ -14,7 +14,7 @@ fa_IR:
         reports:
           filters:
             sort_by:
-              label: "مرتب سازی بر اساس"
+              label: "مرتب‌سازی بر اساس"
             tag:
               label: "برچسب"
   js:
@@ -65,7 +65,7 @@ fa_IR:
         disabled: "(غیرفعال)"
         groups: "گروه‌ها:"
         no_persona: "تنظیم نشده"
-        no_groups: "هیچ کدام"
+        no_groups: "هیچ‌کدام"
         edit: "ویرایش"
         expand_list:
           one: "(%{count} مورد دیگر)"
@@ -84,9 +84,12 @@ fa_IR:
         short_title: "هرز‌نامه"
         last_seven_days: "۷ روز گذشته"
         enable: "فعال کردن"
+        save_button: "ذخیر تغییرات"
         test_modal:
+          run: "اجرا کردن تست"
           spam: "هرز‌نامه"
       usage:
+        short_title: "استفاده"
         summary: "خلاصه"
         model: "مدل"
         username: "نام‌کاربری"
@@ -99,6 +102,7 @@ fa_IR:
         name: "نام"
         edit: "ویرایش"
         export: "خروجی گرفتن"
+        import: "ورود داده‌ها"
         description: "توضیح"
         user: کاربر
         save: "ذخیره"
@@ -117,6 +121,7 @@ fa_IR:
       tools:
         back: "بازگشت"
         export: "خروجی گرفتن"
+        import: "ورود داده‌ها"
         name: "نام"
         description: "توضیح"
         summary: "خلاصه"
@@ -124,9 +129,13 @@ fa_IR:
         remove_parameter: "پاک کردن"
         parameter_required: "مورد نیاز"
         edit: "ویرایش"
+        test: "اجرا کردن تست"
         delete: "حذف"
+        test_modal:
+          run: "اجرا کردن تست"
       llms:
         display_name: "نام"
+        provider: "ارائه‌دهنده"
         save: "ذخیره"
         edit: "ویرایش"
         back: "بازگشت"
@@ -142,11 +151,12 @@ fa_IR:
             custom: "سفارشی..."
           hours: "ساعت"
         usage:
-          ai_summarization: "خلاصه کنید"
+          ai_summarization: "خلاصه کن"
           ai_spam: "هرز‌نامه"
         next:
           title: "بعدی"
         tests:
+          title: "اجرا کردن تست"
           running: "در حال اجرای آزمایش..."
           success: "موفقیت!"
           failure: "در حال ارتباط با مدل این خطا رخ داد: %{error}"
@@ -158,18 +168,20 @@ fa_IR:
         description: "یکی از گزینه‌های زیر را انتخاب کنید و هوش مصنوعی نسخه جدیدی از متن را به شما پیشنهاد می‌کند."
         selection_hint: "نکته: شما همچنین می‌توانید بخشی از متن را قبل از باز کردن راهنما انتخاب کنید، تا فقط آن قسمت بازنویسی شود."
         context_menu:
-          cancel: "انصراف"
+          cancel: "لغو"
+          regen: "دوباره امتحان کنید"
           confirm: "تایید"
           discard: "حذف"
         post_options_menu:
           close: "بستن"
           copy: "کپی"
           copied: "کپی شد!"
-          cancel: "انصراف"
+          cancel: "لغو"
           insert_footnote: "افزودن پاورقی"
           footnote_credits: "توضیح توسط هوش مصنوعی"
         thumbnail_suggestions:
           select: "انتخاب"
+          selected: "انتخاب شده"
         image_caption:
           save_caption: "ذخیره"
           automatic_caption_dialog:
@@ -183,9 +195,11 @@ fa_IR:
         delete: "حذف"
         edit: "ویرایش"
         tests:
+          title: "اجرا کردن تست"
           running: "در حال اجرای آزمایش..."
           success: "موفقیت!"
         display_name: "نام"
+        provider: "ارائه‌دهنده"
         providers:
           google: "گوگل"
           fake: "سفارشی"
@@ -226,10 +240,10 @@ fa_IR:
             total_count: "مجموع"
       summarization:
         chat:
-          summarize: "خلاصه کنید"
+          summarize: "خلاصه کن"
       discobot_discoveries:
         regular_results: "موضوعات"
         collapse: "جمع کردن"
         tooltip:
           actions:
-            disable: "غیرفعال"
+            disable: "غیرفعال کردن"

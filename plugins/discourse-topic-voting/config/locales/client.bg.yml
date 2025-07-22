@@ -16,14 +16,11 @@ bg:
       votes_nav_help: "теми с най-много гласове"
       voted: "Вие гласувахте по тази тема"
       allow_topic_voting: "Позволете на потребителите да гласуват по теми в тази категория"
-      vote_title: "Гласуване"
+      vote_title: "Глас"
       vote_title_plural: "Гласове"
       voted_title: "Гласувано"
       voting_closed_title: "Затворена"
       voting_limit: "Лимит"
-      votes_left:
-        one: "Остава ви %{count} глас, вижте <a href='%{path}'>вашите гласове</a>."
-        other: "Остават ви %{count} гласа, вижте <a href='%{path}'>вашите гласове</a>."
       votes_left_button_title:
         one: "Остава ви %{count} глас."
         other: "Остават ви %{count} гласа."

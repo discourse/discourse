@@ -21,7 +21,7 @@ zh_CN:
       adplugin:
         house_ads:
           title: "自家广告"
-          new: "新建"
+          new: "新"
           settings: "设置"
           new_name: "新建自家广告"
           save: "保存"

@@ -14,7 +14,7 @@ fa_IR:
       send_slack_message:
         title: ارسال پیام اسلک
   chat_integration:
-    all_categories: "(تمام دسته بندی ها)"
+    all_categories: "(تمام دسته‌بندی‌ها)"
     group_mention_template: "اشاره شده: @%{name}"
     group_message_template: "پیغام‌ها به: @%{name}"
     topic_tag_changed:
@@ -25,13 +25,8 @@ fa_IR:
           rule_string: "*%{index})* *%{filter}* نوشته در *%{category}*"
         transcript:
           posted_in: "نوشته شده در %{name}"
-        messaging:
-          topic_tag_changed:
-            added: "%{added} اضافه شد"
       mattermost:
         status:
           rule_string: "*%{index})* *%{filter}* نوشته در *%{category}*"
-      flowdock:
-        message_title: "ارسال شده"
       google:
         new_post: "نوشته جدید در %{site_title}"

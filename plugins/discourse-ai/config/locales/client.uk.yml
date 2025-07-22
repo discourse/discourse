@@ -93,7 +93,7 @@ uk:
             search_for_text:
               label: "Пошук тексту"
             category:
-              label: "Категорія"
+              label: "Розділ"
               description: "Категорія, яку слід застосувати до теми"
             tags:
               label: "Теґи"
@@ -132,7 +132,7 @@ uk:
           other: "(ще %{count})"
         collapse_list: "(показати менше)"
         filters:
-          all: "Все"
+          all: "Всі"
           reset: "Скинути"
         search:
           name: "Пошук"
@@ -144,14 +144,19 @@ uk:
           name: "Спам"
       modals:
         select_option: "Вибрати опцію..."
+      layout:
+        table: "Таблиця"
       spam:
         short_title: "Спам"
         last_seven_days: "Останні 7 днів"
         enable: "Увімкнути"
+        save_button: "Зберегти зміни"
         test_modal:
           result: "Результат"
+          run: "Запустити тест"
           spam: "Спам"
       usage:
+        short_title: "Використання"
         summary: "Підсумок"
         model: "Модель"
         username: "Імʼя користувача"
@@ -174,6 +179,7 @@ uk:
         name: "Імʼя"
         edit: "Редагувати"
         export: "Експорт"
+        import: "Імпорт"
         description: "Опис"
         no_llm_selected: "Мовну модель не вибрано"
         max_context_posts_help: "Максимальна кількість дописів, які ШІ буде використовувати як контекст для відповіді користувачеві. (за замовчуванням порожньо)"
@@ -228,6 +234,7 @@ uk:
         back: "Назад"
         short_title: "Інструменти"
         export: "Експорт"
+        import: "Імпорт"
         name: "Імʼя"
         description: "Опис"
         description_help: "Чіткий опис призначення інструменту для мовної моделі"
@@ -242,9 +249,12 @@ uk:
         enum_value: "Значення переліку"
         add_enum_value: "Додати значення переліку"
         edit: "Редагувати"
+        test: "Запустити тест"
         delete: "Видалити"
         saved: "Інструмент збережено"
         confirm_delete: "Ви впевнені, що хочете видалити цей інструмент?"
+        test_modal:
+          run: "Запустити тест"
       llms:
         short_title: "LLMs"
         no_llms: "Ще немає LLM"
@@ -297,11 +307,14 @@ uk:
         next:
           title: "Далі"
         tests:
+          title: "Запустити тест"
           running: "Виконується тест..."
           success: "Успіх!"
           failure: "Спроба зв’язатися з моделлю повернула таку помилку: %{error}"
         hints:
+          name: "Ми включаємо це у виклик API, щоб визначити, яку модель ми будемо використовувати"
           vision_enabled: "Якщо увімкнено, ШІ намагатиметься зрозуміти зображення. Це залежить від використовуваної моделі, що підтримує зір. Підтримується останніми моделями від Anthropic, Google та OpenAI."
+          enabled_chat_bot: "Якщо увімкнено, користувачі можуть вибрати цю модель під час створення завдань за допомогою ШІ-бота"
         providers:
           aws_bedrock: "AWS Bedrock"
           anthropic: "Anthropic"
@@ -331,6 +344,7 @@ uk:
           trigger: "Запитайте ШІ"
           loading: "ШІ генерує"
           cancel: "Скасувати"
+          regen: "Спробуйте ще раз"
           confirm: "Підтвердити"
           discard: "Відкинути"
           custom_prompt:
@@ -445,7 +459,7 @@ uk:
           title: "Почуття"
         sentiment_analysis:
           filter_types:
-            all: "Все"
+            all: "Всі"
             positive: "Позитивний"
             neutral: "Нейтральна"
             negative: "Негативний"

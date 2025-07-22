@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 hu:
+  default_category_template:
+    name: Sablonok

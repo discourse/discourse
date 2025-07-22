@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 nl:
+  js:
+    admin:
+      rss_polling:
+        author: Auteur
+        feed_url: URL
+        discourse_category: Categorie
+        discourse_tags: Tags

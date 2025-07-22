@@ -27,8 +27,8 @@ hu:
     discourse_calendar:
       invite_user_notification: "%{username} meghívta erre: %{description}"
       on_holiday: "Szabadságon"
-      disable_holiday: "Kikapcsol"
-      enable_holiday: "Engedélyez"
+      disable_holiday: "Letiltás"
+      enable_holiday: "Engedélyezés"
       holiday: "Ünnep"
       date: "Dátum"
       add_to_calendar: "Hozzáadás a Google Naptárhoz"
@@ -308,7 +308,7 @@ hu:
         starts_at: "Az esemény kezdete: %{date}"
         ended_at: "Az esemény véget ért: %{date}"
         ends_in_duration: "Véget ér: %{duration}"
-      show_all: "Mutasd mindet"
+      show_all: "Összes megjelenítése"
       participants:
         one: "%{count} felhasználó vett részt."
         other: "%{count} felhasználó vett részt."
@@ -340,7 +340,7 @@ hu:
         csv_title: "Csoportos meghívás CSV-ből"
       upcoming_events:
         title: "Közelgő események"
-        creator: "Létrehozó"
+        creator: "Szerző"
         status: "Állapot"
         starts_at: "Kezdődik:"
       upcoming_events_list:
@@ -356,7 +356,7 @@ hu:
             interested: "Érdeklődik"
         event:
           expired: "Lejárt"
-          closed: "Zárt"
+          closed: "Lezárt"
           status:
             standalone:
               title: "Önálló"
@@ -400,7 +400,7 @@ hu:
           every_week: "Minden héten ezen a hétköznapon"
           every_two_weeks: "Kéthetente ezen a hétköznapon"
         url:
-          label: "URL"
+          label: "Webcím"
           placeholder: "Nem kötelező"
         location:
           label: "Hely"
@@ -414,5 +414,5 @@ hu:
         status:
           label: "Állapot"
       invite_user_or_group:
-        title: "Felhasználó(k) vagy csoport(ok) értesítése"
+        title: "Felhasználók vagy csoportok értesítése"
         invite: "Küldés"

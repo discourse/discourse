@@ -16,14 +16,11 @@ fi:
       votes_nav_help: "ketjut, joilla on eniten ääniä"
       voted: "Äänestit tässä ketjussa"
       allow_topic_voting: "Salli käyttäjien antaa ääniä ketjuissa tällä alueella"
-      vote_title: "Ääni"
+      vote_title: "Äänestä"
       vote_title_plural: "Äänet"
       voted_title: "Äänestetty"
       voting_closed_title: "Suljettu"
       voting_limit: "Raja"
-      votes_left:
-        one: "Sinulla on %{count} ääni jäljellä, katso <a href='%{path}'>äänesi</a>."
-        other: "Sinulla on %{count} ääntä jäljellä, katso <a href='%{path}'>äänesi</a>."
       votes_left_button_title:
         one: "Sinulla on %{count} ääni jäljellä."
         other: "Sinulla on %{count} ääntä jäljellä."
@@ -31,7 +28,7 @@ fi:
         one: "%{count} ääni"
         other: "%{count} ääntä"
       anonymous_button:
-        one: "Ääni"
+        one: "Äänestä"
         other: "Äänet"
       remove_vote: "Poista ääni"
       no_votes_title_self: "Et ole vielä äänestänyt ketjuja"

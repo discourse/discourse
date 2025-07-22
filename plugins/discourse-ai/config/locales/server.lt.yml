@@ -14,9 +14,25 @@ lt:
       title: "\U0001F610 Neutrali"
   discourse_ai:
     ai_helper:
+      prompts:
+        proofread: Korektūruotas tekstas
+        markdown_table: Sukurti Markdown lentelę
+        explain: "Paaiškinkite"
+        replace_dates: "Išmaniosios datos"
       image_caption:
         attribution: "Antraštė teikiama AI"
     ai_bot:
+      personas:
+        custom_prompt:
+          name: "Pasirinktinis raginimas"
+        smart_dates:
+          name: "Išmaniosios datos"
+        locale_detector:
+          name: "Lokalės detektorius"
+        topic_title_translator:
+          name: "Temos pavadinimo vertėjas"
+        short_text_translator:
+          name: "Trumpų tekstų vertėjas"
       tool_summary:
         search: "Paieška"
         time: "Laikas"

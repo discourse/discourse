@@ -17,3 +17,4 @@ da:
       filter_hint: "Filtrer efter titel..."
       insert_template: "Indsæt skabelon"
       close_templates: "Luk skabelonvælgeren"
+      source: "Kilde"

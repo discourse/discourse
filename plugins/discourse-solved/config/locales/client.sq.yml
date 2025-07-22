@@ -6,6 +6,10 @@
 
 sq:
   js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "pranuar"
     solved:
       topic_status_filter:
         all: "të gjitha"

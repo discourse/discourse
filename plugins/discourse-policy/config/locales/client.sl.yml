@@ -18,7 +18,7 @@ sl:
         revoke:
           label: Odstrani
         private:
-          label: Zasebno?
+          label: Zasebni?
         send-email:
           label: Pošlji e-sporočilo?
       preferences:

@@ -9,4 +9,4 @@ pl_PL:
     customer_not_found: Nie znaleziono klienta
     card:
       declined: Karta odrzucona
-      invalid: Nieprawidłowa karta
+      invalid: Karta nieprawidłowa

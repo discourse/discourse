@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ro:
+  default_category_template:
+    name: Șabloane

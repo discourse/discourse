@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  admin_js:
+    discourse_templates:
+      title: "Maler"

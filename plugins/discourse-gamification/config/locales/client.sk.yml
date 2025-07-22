@@ -9,10 +9,11 @@ sk:
     gamification:
       you: "Vy"
       leaderboard:
-        link_to_settings: "Nastavenia"
+        link_to_settings: "Nastavení"
         refresh: "Obnoviť"
         name: "Meno"
         name_placeholder: "Názov..."
+        excluded_groups: "Vylúčené skupiny"
         period:
           all_time: "Za celú dobu"
           yearly: "Ročne"
@@ -22,7 +23,7 @@ sk:
           daily: "Denne"
       create: "Vytvoriť"
       cancel: "Zrušiť"
-      close: "Zavrieť"
+      close: "Zatvoriť"
       delete: "Odstrániť"
       edit: "Upraviť"
       back: "Späť"

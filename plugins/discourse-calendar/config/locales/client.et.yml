@@ -13,9 +13,9 @@ et:
             topic_id:
               label: Teema ID
     discourse_calendar:
-      disable_holiday: "Lülita välja"
-      enable_holiday: "Lülita sisse"
-      date: "Date"
+      disable_holiday: "Keela"
+      enable_holiday: "Luba"
+      date: "Kuupäev"
       region:
         none: "Pole"
       toolbar_button:
@@ -31,7 +31,8 @@ et:
       show_all: "Näita kõiki"
       bulk_invite_modal:
         success: "Fail edukalt üles laetud. Sulle saabub teade, kui protsess on lõpule jõudnud."
-        error: "Vabandust, fail peab olema CSV vormingus."
+        error: "Vabandust, fail peab olema CSV-vormingus."
+        group_selector_placeholder: "Vali grupp..."
       upcoming_events:
         status: "Staatus"
       models:

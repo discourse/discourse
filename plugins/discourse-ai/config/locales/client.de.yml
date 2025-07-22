@@ -110,6 +110,9 @@ de:
             top_p:
               label: "Top P"
               description: "Top P für die LLM, erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
+            persona_id:
+              label: "Persona"
+              description: "KI Persona zur Berichtserstellung"
         llm_tool_triage:
           fields:
             model:
@@ -179,6 +182,9 @@ de:
             temperature:
               label: "Temperatur"
               description: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
+            max_output_tokens:
+              label: "Maximale Ausgabetoken"
+              description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
     discourse_ai:
       title: "KI"
       features:
@@ -589,7 +595,7 @@ de:
           fake: "Manuelle Konfiguration"
           button: "Einrichten"
         next:
-          title: "Nächstes"
+          title: "Weiter"
         tests:
           title: "Test ausführen"
           running: "Test wird aufgeführt …"
@@ -670,7 +676,7 @@ de:
           trigger: "KI fragen"
           title: "KI fragen"
           loading: "KI generiert"
-          close: "Schließen"
+          close: "Beenden"
           copy: "Kopieren"
           copied: "Kopiert!"
           cancel: "Abbrechen"
@@ -828,14 +834,12 @@ de:
           disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."
           placeholder: "Stell eine Frage ..."
           new: "Neue Frage"
-          min_input_length_message:
-            one: "Nachricht muss mindestens 1 Zeichen lang sein"
-            other: "Nachricht muss mindestens %{count} Zeichen lang sein"
           messages_sidebar_title: "Unterhaltungen"
           today: "Heute"
           last_7_days: "Letzte 7 Tage"
           last_30_days: "Letzte 30 Tage"
           upload_files: "Dateien hochladen"
+          uploads_in_progress: "Absenden nicht möglich, solange Uploads nicht abgeschlossen sind"
       sentiments:
         dashboard:
           title: "Stimmung"

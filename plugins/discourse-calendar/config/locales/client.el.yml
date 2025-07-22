@@ -14,7 +14,7 @@ el:
         event_started:
           fields:
             topic_id:
-              label: Topic ID
+              label: ID Θέματος
     discourse_calendar:
       disable_holiday: "Απενεργοποίηση"
       enable_holiday: "Ενεργοποίηση"
@@ -172,14 +172,17 @@ el:
       created_by: "Δημιουργήθηκε από"
       bulk_invite: "Μαζική πρόσκληση"
       bulk_invite_modal:
+        confirm: "επιβεβαίωση"
         title: "Μαζική πρόσκληση"
         success: "Το αρχείο ανέβηκε. Θα ενημερωθείς με ένα μήνυμα όταν ολοκληρωθεί η διαδικασία."
         error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
       upcoming_events:
+        creator: "Δημιουργός"
         status: "Κατάσταση"
       models:
         event:
-          closed: "Κλειστό"
+          expired: "Έληξε"
+          closed: "Κλειστή"
           status:
             public:
               title: "Δημόσια"
@@ -187,13 +190,14 @@ el:
               title: "Ιδιωτική"
       builder_modal:
         custom_fields:
-          placeholder: "Προεραιτικό"
+          placeholder: "Προαιρετικό"
         create: "Δημιουργία"
         update: "Αποθήκευση"
         timezone:
           label: Ζώνη ώρας
         reminders:
           units:
+            minutes: "λεπτά"
             hours: "ώρες"
             days: "ημέρες"
           periods:
@@ -205,7 +209,7 @@ el:
           every_day: "Κάθε μέρα"
         url:
           label: "URL"
-          placeholder: "Προεραιτικό"
+          placeholder: "Προαιρετικό"
         location:
           label: "Τοποθεσία"
         description:

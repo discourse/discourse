@@ -61,9 +61,6 @@ it:
     chat_integration_webex_excerpt_length: "Lunghezza dell'estratto del messaggio Webex Team"
     chat_integration_google_enabled: "Abilita il fornitore per l'integrazione della chat 'Google Chat'"
     chat_integration_google_excerpt_length: "Lunghezza dell'estratto del messaggio Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "Alcuni canali di integrazione della chat presentano errori. Visita <a href='%{base_path}/admin/plugins/chat-integration'>la sezione di integrazione della chat</a> per saperne di più."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -84,8 +81,8 @@ it:
       slack:
         status:
           header: |
-            * Regole per questo canale *
-            (se ad un messaggio si applicano più regole, viene eseguita la regola più in alto)
+            *Regole per questo canale*
+            (se a un messaggio si applicano più regole, viene eseguita la regola più in alto)
           no_rules: "Non ci sono regole per questo canale. Lancia `/discourse help` per ulteriori istruzioni."
           rule_string: "*%{index})* *%{filter}* messaggi in *%{category}*"
           rule_string_tags_suffix: " con le etichette: *%{tags}*"
@@ -96,10 +93,10 @@ it:
           error: "Spiacenti, si è verificato un errore durante la creazione della regola."
         delete:
           success: "Regola cancellata con successo"
-          error: "Siamo spiacenti, si è verificato un errore durante l'eliminazione della regola. Lancia `/discourse status` per vedere l'elenco delle regole. "
+          error: "Siamo spiacenti, si è verificato un errore durante l'eliminazione di tale regola. Lancia `/discourse status` per vedere l'elenco delle regole. "
         not_found:
-          tag: "Non è stato possibile trovare l'Etichetta *%{name}*."
-          category: "La categoria *%{name}* non può essere trovata. Categorie disponibili: *%{list}*"
+          tag: "Non è stato possibile trovare l'etichetta *%{name}*."
+          category: "La categoria *%{name}* non è stata trovata. Categorie disponibili: *%{list}*"
         help: |
           *Nuova regola:* `/discourse [thread|watch|follow|mute] [category] [tag:name]`
           (devi specificare un tipo di regola e almeno una categoria o tag)

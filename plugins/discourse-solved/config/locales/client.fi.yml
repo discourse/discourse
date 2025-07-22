@@ -29,7 +29,6 @@ fi:
       solution_summary:
         one: "ratkaisu"
         other: "ratkaisua"
-      accepted_html: "%{icon} <span class='by'><a href data-user-card='%{username_lower}'>%{username}</a></span> ratkaisi <a href='%{post_path}' class='back'>viestissä %{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "kaikki"

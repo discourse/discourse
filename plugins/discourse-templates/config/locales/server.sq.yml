@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 sq:
+  default_category_template:
+    name: Shabllonet

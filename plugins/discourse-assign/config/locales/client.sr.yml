@@ -10,15 +10,21 @@ sr:
       group_everyone: "Svi"
       reassign:
         title: "Izmeni"
+      assign_modal:
+        optional_label: "(opciono)"
+        status_label: Status
       assign_mailer:
-        never: "Nikada"
+        never: "Nikad"
         always: "Uvek"
       reminders_frequency:
-        never: "Nikada"
+        never: "Nikad"
         daily: "Top dnevne"
         weekly: "Top nedeljne"
         monthly: "Top mesečne"
         quarterly: "Top kvartalne"
+    user:
+      assignment_description:
+        topic: "%{topic_title}"
     edit_assignments_modal:
       topic: "Tema"
       post: "Post"

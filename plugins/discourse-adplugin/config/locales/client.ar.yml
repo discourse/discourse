@@ -21,7 +21,7 @@ ar:
       adplugin:
         house_ads:
           title: "House Ads"
-          new: "جديد"
+          new: "جديدة"
           settings: "الإعدادات"
           new_name: "New House Ad"
           save: "حفظ"

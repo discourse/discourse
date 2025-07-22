@@ -13,9 +13,9 @@ ro:
         post_voting_comment:
           composer:
             too_short:
-              one: "Introdu cel puțin un caracter"
-              few: "Introdu cel puțin %{count} caractere"
-              other: "Introdu cel puțin %{count} de caractere"
+              one: "Introdu cel puțin %{count} caracter"
+              few: "Introdu cel puțin %{count} de caractere"
+              other: "Introdu cel puțin %{count} caractere"
           edit: "Editează"
           cancel: "Anulează"
           user:
@@ -30,4 +30,5 @@ ro:
                 title: "Nu sunt de acord"
       topic:
         sort_by: "Sortează după"
+        votes: "Evaluări"
         activity: "Activitate"

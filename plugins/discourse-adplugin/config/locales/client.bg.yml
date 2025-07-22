@@ -11,6 +11,6 @@ bg:
         house_ads:
           new: "Нов"
           settings: "Настройки"
-          save: "Запази"
+          save: "Запази "
           delete: "Изтрий"
           preview: "Преглед"

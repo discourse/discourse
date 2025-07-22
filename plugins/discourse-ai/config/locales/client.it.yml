@@ -168,6 +168,8 @@ it:
           description: "Identifica lo spam potenziale utilizzando l'LLM selezionato e lo segnala ai moderatori del sito affinché lo ispezionino nella coda di revisione"
       modals:
         select_option: "Scegli un'opzione..."
+      layout:
+        table: "Tabella"
       spam:
         short_title: "Spam"
         title: "Configura la gestione dello spam"
@@ -250,6 +252,7 @@ it:
         name: "Nome"
         edit: "Modifica"
         export: "Esporta"
+        import: "Importa"
         description: "Descrizione"
         no_llm_selected: "Nessun modello linguistico selezionato"
         max_context_posts: "Numero massimo di messaggi di contesto"
@@ -332,6 +335,7 @@ it:
         back: "Indietro"
         short_title: "Strumenti"
         export: "Esporta"
+        import: "Importa"
         no_tools: "Non hai ancora creato nessuno strumento"
         name: "Nome"
         new: "Nuovo strumento"
@@ -431,7 +435,7 @@ it:
         tests:
           title: "Esegui test"
           running: "Esecuzione del test..."
-          success: "Riuscito!"
+          success: "Operazione riuscita!"
           failure: "Il tentativo di contattare il modello ha restituito questo errore: %{error}"
         hints:
           name: "Lo includiamo nella chiamata API per specificare quale modello utilizzeremo"
@@ -480,6 +484,7 @@ it:
           trigger: "Chiedi all'IA"
           loading: "L'IA sta generando"
           cancel: "Annulla"
+          regen: "Riprova"
           confirm: "Conferma"
           discard: "Elimina"
           changes: "Modifiche suggerite"
@@ -677,7 +682,7 @@ it:
         collapse: "Comprimi"
         tooltip:
           actions:
-            disable: "Disattiva"
+            disable: "Disabilita"
     review:
       types:
         reviewable_ai_post:

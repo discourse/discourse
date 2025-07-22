@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 ug:
+  admin_js:
+    discourse_templates:
+      title: "قېلىپ"
+  js:
+    templates:
+      source: "مەنبە"

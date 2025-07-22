@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 uk:
+  default_category_template:
+    name: Шаблони

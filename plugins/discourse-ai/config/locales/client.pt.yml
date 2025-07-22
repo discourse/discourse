@@ -46,7 +46,7 @@ pt:
           other: "(%{count} mais)"
         collapse_list: "(mostrar menos)"
         filters:
-          all: "Tudo"
+          all: "Todos"
           reset: "Repor"
         search:
           name: "Pesquisar"
@@ -72,6 +72,7 @@ pt:
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
+        import: "Importar"
         description: "Descrição"
         user: Utilizador
         save: "Guardar"
@@ -91,6 +92,7 @@ pt:
       tools:
         back: "Retroceder"
         export: "Exportar"
+        import: "Importar"
         name: "Nome"
         description: "Descrição"
         summary: "Resumo"
@@ -101,6 +103,7 @@ pt:
         delete: "Eliminar"
       llms:
         display_name: "Nome"
+        provider: "Provedor"
         save: "Guardar"
         edit: "Editar"
         back: "Retroceder"
@@ -127,6 +130,7 @@ pt:
       ai_helper:
         context_menu:
           cancel: "Cancelar"
+          confirm: "Confirmar"
           discard: "Descartar"
         post_options_menu:
           close: "Fechar"
@@ -145,6 +149,7 @@ pt:
         delete: "Eliminar"
         edit: "Editar"
         display_name: "Nome"
+        provider: "Provedor"
         providers:
           google: "Google"
           fake: "Personalizar"
@@ -165,7 +170,7 @@ pt:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "Tudo"
+            all: "Todos"
           group_types:
             category: "Categoria"
           table:

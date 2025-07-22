@@ -21,7 +21,7 @@ fa_IR:
         house_ads:
           title: "آگهی خانه"
           new: "جدید"
-          settings: "تنظیمات"
+          settings: "تنظیم"
           new_name: "آگهی خانه جدید"
           save: "ذخیره"
           delete: "حذف"

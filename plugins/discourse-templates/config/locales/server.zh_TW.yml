@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  default_category_template:
+    name: 範本

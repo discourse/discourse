@@ -23,10 +23,9 @@ sl:
       solution: "Rešitev"
       solution_summary:
         one: "rešitev"
-        two: "rešitvi"
-        few: "rešitve"
+        two: "rešitev"
+        few: "rešitev"
         other: "rešitev"
-      accepted_html: "%{icon} <span class='by'>Rešil <a href data-user-card='%{username_lower}'>%{username}</a></span> v <a href='%{post_path}' class='back'>objavi #%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "vse"

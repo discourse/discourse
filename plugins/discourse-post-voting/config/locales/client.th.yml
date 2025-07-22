@@ -24,4 +24,5 @@ th:
                 title: "ไม่เห็นด้วย"
       topic:
         sort_by: "เรียงโดย"
+        votes: "โหวต"
         activity: "กิจกรรม"

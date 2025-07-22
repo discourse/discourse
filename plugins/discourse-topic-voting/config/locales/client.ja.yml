@@ -8,7 +8,7 @@ ja:
   js:
     category:
       sort_options:
-        votes: "票数"
+        votes: "投票"
     topic_voting:
       title: "トピック投票"
       reached_limit: "票数が不足しています。既存の投票を削除してください！"
@@ -21,8 +21,6 @@ ja:
       voted_title: "投票済み"
       voting_closed_title: "終了"
       voting_limit: "制限"
-      votes_left:
-        other: "残り %{count} 票です。<a href='%{path}'>あなたの投票</a>を確認してください。"
       votes_left_button_title:
         other: "残り %{count} 票です。"
       votes:
@@ -34,8 +32,8 @@ ja:
       no_votes_title_others: "%{username} はまだトピックに投票していません"
     filters:
       votes:
-        title: "票数"
-        help: "投票数が最も多いトピック"
+        title: "投票"
+        help: "票数が最も多いトピック"
       my_votes:
         title: "自分の投票"
         help: "投票したトピック"

@@ -13,7 +13,7 @@ vi:
       help:
         label: "Giúp "
       schema:
-        filter: "Tìm kiến..."
+        filter: "Tìm kiếm..."
       types:
         bool:
           yes: "Đồng ý"
@@ -28,6 +28,6 @@ vi:
       query_description: "Mô tả"
       query_user: "Tạo bởi"
       reset_params: "Cài lại"
-      search_placeholder: "Tìm kiến..."
+      search_placeholder: "Tìm kiếm..."
     group:
       reports: "Báo cáo"

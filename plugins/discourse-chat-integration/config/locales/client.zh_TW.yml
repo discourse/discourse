@@ -9,7 +9,7 @@ zh_TW:
     chat_integration:
       settings: "設定"
       all_categories: "(所有分類)"
-      all_tags: "(所有標籤)"
+      all_tags: "(所有標記)"
       delete_channel: "刪除"
       test_channel: "測試"
       edit_channel: "編輯"
@@ -21,9 +21,9 @@ zh_TW:
       filter:
         mute: '靜音'
       rule_table:
-        filter: "過濾"
+        filter: "過濾器"
         category: "分類"
-        tags: "標籤"
+        tags: "標記"
         edit_rule: "編輯"
         delete_rule: "刪除"
       edit_channel_modal:
@@ -31,10 +31,10 @@ zh_TW:
       edit_rule_modal:
         cancel: 取消
         type: 類型
-        filter: 過濾
+        filter: 過濾器
         category: 分類
         group: 群組
-        tags: 標籤
+        tags: 標記
       provider:
         telegram:
           param:

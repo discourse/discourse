@@ -13,6 +13,7 @@ nb_NO:
       tool_summary:
         search: "Søk"
         time: "Tid"
+        summarize: "Oppsummer"
     ai_staff_action_logger:
       updated: "oppdatert"
       removed: "fjernet"

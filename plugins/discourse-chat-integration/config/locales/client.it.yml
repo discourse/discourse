@@ -104,7 +104,7 @@ it:
               title: "Nome"
               help: "Un nome per descrivere il canale. Non è usato per la connessione a Discord."
             webhook_url:
-              title: URL Webhook
+              title: URL webhook
               help: L'URL del webhook creato nelle impostazioni del server Discord
         guilded:
           title: "Guilded"
@@ -113,7 +113,7 @@ it:
               title: "Nome"
               help: "Un nome per descrivere il canale. Non è usato per la connessione a Guilded"
             webhook_url:
-              title: URL Webhook
+              title: URL webhook
               help: L'URL del webhook creato nelle impostazioni del server Guilded
         mattermost:
           title: "Mattermost"
@@ -161,7 +161,7 @@ it:
               title: "Nome"
               help: "Il nome di una stanza Gitter, ad esempio gitterHQ/servizi."
             webhook_url:
-              title: "URL Webhook"
+              title: "URL webhook"
               help: "L'URL fornito quando si crea una nuova integrazione in una stanza Gitter."
         flowdock:
           title: "Flowdock"
@@ -184,7 +184,7 @@ it:
               title: "Nome"
               help: "Il nome di un canale Teams, ad es., discourse"
             webhook_url:
-              title: "URL Webhook"
+              title: "URL webhook"
               help: "L'URL fornito quando si crea una nuovo webhook in ingresso"
           errors:
             invalid_channel: "Quel canale non esiste su Microsoft Teams"
@@ -206,7 +206,7 @@ it:
               title: "Nome"
               help: "Il nome di uno spazio Webex, ad es., discourse"
             webhook_url:
-              title: "URL Webhook"
+              title: "URL webhook"
               help: "L'URL fornito quando si crea una nuovo webhook in ingresso"
           errors:
             invalid_channel: "Quel canale non esiste su Webex"
@@ -217,7 +217,7 @@ it:
               title: "Nome"
               help: "Un nome per il canale (mostrato solo nell'interfaccia di amministrazione di Discourse)"
             webhook_url:
-              title: "URL Webhook"
+              title: "URL webhook"
               help: "L'URL fornito quando si crea una nuovo webhook"
     discourse_automation:
       scriptables:

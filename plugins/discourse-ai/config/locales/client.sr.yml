@@ -23,10 +23,14 @@ sr:
               label: "Naslov"
             categories:
               label: "Kategorije"
+            tags:
+              label: "Tagovi"
         llm_triage:
           fields:
             category:
               label: "Kategorija"
+            tags:
+              label: "Tagovi"
             canned_reply:
               label: "Odgovori"
     discourse_ai:
@@ -42,7 +46,7 @@ sr:
           other: "(još %{count} članova)"
         collapse_list: "(pokaži manje)"
         filters:
-          all: "sve"
+          all: "Sve"
           reset: "Reset"
         search:
           name: "Pretraži"
@@ -98,6 +102,10 @@ sr:
         delete: Obriši
         quotas:
           group: "Grupa"
+          durations:
+            six_hours: "6 sata"
+            day: "24 sata"
+            week: "7 dana"
         usage:
           ai_spam: "Nepoželjno"
         next:
@@ -114,6 +122,8 @@ sr:
           copy: "Kopija"
           copied: "Kopirano!"
           cancel: "Odustani"
+        thumbnail_suggestions:
+          select: "Odaberite"
         image_caption:
           save_caption: "Sačuvaj"
           automatic_caption_dialog:
@@ -142,7 +152,7 @@ sr:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "sve"
+            all: "Sve"
           group_types:
             category: "Kategorija"
           table:

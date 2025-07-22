@@ -19,13 +19,13 @@ ko:
           monthly: "월"
           weekly: "주"
           daily: "일"
-      create: "글"
+      create: "생성"
       cancel: "취소"
       close: "닫기"
-      delete: "삭제하기"
+      delete: "삭제"
       edit: "편집"
       back: "뒤로"
-      save: "저장하기"
+      save: "저장"
       apply: "적용"
       update_range:
         last_10_days: "지난 10일"
@@ -34,4 +34,4 @@ ko:
         all_time: "전체 시간"
       custom_range_from: "보내는사람"
       admin:
-        name: "이름"
+        name: "그룹명"

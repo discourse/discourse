@@ -22,7 +22,7 @@ pl_PL:
         house_ads:
           title: "House Ads"
           new: "Nowi"
-          settings: "Ustawienia"
+          settings: "Ustawień"
           new_name: "New House Ad"
           save: "Zapisz"
           delete: "Usuń"
@@ -32,6 +32,8 @@ pl_PL:
           more_settings: "Więcej ustawień"
           show_to_anons: "Pokaż anonimowym użytkownikom"
           show_to_logged_in_users: "Pokaż zalogowanym użytkownikom"
+          category_chooser_description: "Wybierz kategorie, w których ta reklama ma być wyświetlana, lub pozostaw puste, aby wyświetlać ją wszędzie. Ustawienie witryny `no_ads_for_categories` ma pierwszeństwo przed tym ustawieniem."
+          group_chooser_description: "Wybierz grupy, które mogą oglądać to ogłoszenie lub pozostaw to pole puste, aby ogłoszenie było widoczne dla wszystkich zalogowanych użytkowników."
           preview: "Podgląd"
           topic_list_top:
             title: "Reklama nad listą tematów"

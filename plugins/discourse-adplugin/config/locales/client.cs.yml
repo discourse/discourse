@@ -19,7 +19,7 @@ cs:
           carbonads_plugin: "Uhlíkové reklamy"
       adplugin:
         house_ads:
-          new: "Noví"
+          new: "Nový"
           settings: "Nastavení"
           save: "Uložit"
           delete: "Smazat"

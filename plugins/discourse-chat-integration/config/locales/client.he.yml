@@ -24,7 +24,7 @@ he:
       all_tags: "(כל התגיות)"
       create_rule: "יצירת כלל"
       create_channel: "יצירת ערוץ"
-      delete_channel: "הסרה"
+      delete_channel: "מחיקה"
       test_channel: "נסיון"
       edit_channel: "עריכה"
       channel_delete_confirm: "למחוק את הערוץ הזה? כל הכללים המקושרים אליו ימחקו."
@@ -40,16 +40,16 @@ he:
         group_message: הודעה קבוצתית
         group_mention: איזכור קבוצה
       filter:
-        mute: 'השתק'
+        mute: 'השתקה'
         follow: 'הודעה ראשונה בלבד'
         watch: 'כל הפוסטים והתגובות'
         thread: 'כל הפוסטים עם תגובות בשרשרת'
       rule_table:
-        filter: "סינון"
+        filter: "מסנן"
         category: "קטגוריה"
         tags: "תגיות"
         edit_rule: "עריכה"
-        delete_rule: "הסרה"
+        delete_rule: "מחיקה"
       edit_channel_modal:
         title: "עריכת ערוץ"
         save: "שמירת ערוץ"
@@ -65,7 +65,7 @@ he:
         provider: ספק
         type: סוג
         channel: ערוץ
-        filter: סינון
+        filter: מסנן
         category: קטגוריה
         group: קבוצה
         tags: תגיות

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 lv:
+  default_category_template:
+    name: Veidnes

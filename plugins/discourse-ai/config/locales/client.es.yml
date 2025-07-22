@@ -139,18 +139,18 @@ es:
     discourse_ai:
       title: "IA"
       features:
-        back: "Volver"
+        back: "Atrás"
         disabled: "(desactivado)"
         groups: "Grupos:"
         no_persona: "No establecido"
-        no_groups: "Ninguno"
+        no_groups: "Ninguna"
         edit: "Editar"
         expand_list:
           one: "(%{count} más)"
           other: "(%{count} más)"
         collapse_list: "(mostrar menos)"
         filters:
-          all: "Todos"
+          all: "Todo"
           reset: "Restablecer"
         search:
           name: "Buscar"
@@ -168,6 +168,8 @@ es:
           description: "Identifica el correo no deseado potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
       modals:
         select_option: "Selecciona una opción..."
+      layout:
+        table: "Tabla"
       spam:
         short_title: "Spam"
         title: "Configurar el manejo de correo no deseado"
@@ -193,7 +195,7 @@ es:
           post_url_placeholder: "https://tu-foro.com/t/topic/123/4 o ID de publicación"
           result: "Resultado"
           scan_log: "Registro de escaneo"
-          run: "Realizar prueba"
+          run: "Ejecutar prueba"
           spam: "Spam"
           not_spam: "No es correo no deseado"
         stat_tooltips:
@@ -250,6 +252,7 @@ es:
         name: "Nombre"
         edit: "Editar"
         export: "Exportar"
+        import: "Importar"
         description: "Descripción"
         no_llm_selected: "No se seleccionó ningún modelo de idioma"
         max_context_posts: "Número máximo de publicaciones contextuales"
@@ -332,6 +335,7 @@ es:
         back: "Atrás"
         short_title: "Herramientas"
         export: "Exportar"
+        import: "Importar"
         no_tools: "Aún no has creado ninguna herramienta"
         name: "Nombre"
         new: "Nueva herramienta"
@@ -351,13 +355,13 @@ es:
         enum_value: "Valor de enumeración"
         add_enum_value: "Añadir valor de enumeración"
         edit: "Editar"
-        test: "Realizar prueba"
+        test: "Ejecutar prueba"
         delete: "Eliminar"
         saved: "Herramienta guardada"
         confirm_delete: "¿Seguro que quieres eliminar esta herramienta?"
         test_modal:
           title: "Probar la herramienta de IA"
-          run: "Realizar prueba"
+          run: "Ejecutar prueba"
           result: "Resultado de la prueba"
       llms:
         short_title: "LLM"
@@ -429,9 +433,9 @@ es:
         next:
           title: "Siguiente"
         tests:
-          title: "Realizar prueba"
+          title: "Ejecutar prueba"
           running: "Ejecutando prueba..."
-          success: "Éxito!"
+          success: "¡Éxito!"
           failure: "Al intentar contactar con la modelo, se devolvió este error: %{error}"
         hints:
           name: "Incluimos esto en la llamada a la API para especificar qué modelo utilizaremos"
@@ -441,7 +445,7 @@ es:
           aws_bedrock: "AWS Bedrock"
           anthropic: "Anthropic"
           vllm: "vLLM"
-          hugging_face: "Hugging Face"
+          hugging_face: "Cara de abrazo"
           cohere: "Cohere"
           open_ai: "OpenAI"
           google: "Google"
@@ -480,6 +484,7 @@ es:
           trigger: "Preguntar a la IA"
           loading: "La IA está generando"
           cancel: "Cancelar"
+          regen: "Intentar de nuevo"
           confirm: "Confirmar"
           discard: "Descartar"
           changes: "Ediciones sugeridas"
@@ -489,8 +494,8 @@ es:
             submit: "Enviar instrucción"
           translate_prompt: "Traducir a %{language}"
         post_options_menu:
-          trigger: "Pregúntale a la IA"
-          title: "Pregúntale a la IA"
+          trigger: "Preguntar a la IA"
+          title: "Preguntar a la IA"
           loading: "La IA está generando"
           close: "Cerrar"
           copy: "Copiar"
@@ -534,7 +539,7 @@ es:
         edit: "Editar"
         seeded_warning: "Esto está preconfigurado en tu web y no se puede editar."
         tests:
-          title: "Realizar prueba"
+          title: "Ejecutar prueba"
           running: "Ejecutando prueba..."
           success: "¡Éxito!"
           failure: "El intento de generar una incrustación dio como resultado: %{error}"
@@ -558,7 +563,7 @@ es:
           "<#>": "Producto interno negativo"
           <=>: "Distancia del coseno"
         providers:
-          hugging_face: "Hugging Face"
+          hugging_face: "Cara de abrazo"
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"

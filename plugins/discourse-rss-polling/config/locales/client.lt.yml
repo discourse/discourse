@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 lt:
+  js:
+    admin:
+      rss_polling:
+        author: Autorius
+        feed_url: Nuoroda
+        discourse_category: Kategorija
+        discourse_tags: Žymos

@@ -17,3 +17,4 @@ sv:
       filter_hint: "Filtrera efter titel..."
       insert_template: "Infoga mall"
       close_templates: "Stäng val av mallar"
+      source: "Källa"

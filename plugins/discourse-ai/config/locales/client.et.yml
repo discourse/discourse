@@ -22,13 +22,13 @@ et:
             title:
               label: "Pealkiri"
             categories:
-              label: "Liigid"
+              label: "Kategooriad"
             tags:
               label: "Sildid"
         llm_triage:
           fields:
             category:
-              label: "Foorum"
+              label: "Kategooriad"
             tags:
               label: "Sildid"
             canned_reply:
@@ -45,7 +45,7 @@ et:
           other: "(veel %{count})"
         filters:
           all: "Kõik"
-          reset: "Lähtesta"
+          reset: "Nulli"
         search:
           name: "Otsi"
         spam:
@@ -54,7 +54,7 @@ et:
         select_option: "Vali võimalus..."
       spam:
         short_title: "Spämm"
-        enable: "Lülita sisse"
+        enable: "Luba"
         test_modal:
           spam: "Spämm"
       usage:
@@ -66,6 +66,7 @@ et:
         name: "Nimi"
         edit: "Muuda"
         export: "Ekspordi"
+        import: "Impordi"
         description: "Kirjeldus"
         user: Kasutaja
         save: "Salvesta"
@@ -74,7 +75,7 @@ et:
         response_format:
           open_modal: "Muuda"
         filters:
-          reset: "Lähtesta"
+          reset: "Nulli"
       rag:
         uploads:
           title: "Üleslaadimised"
@@ -82,6 +83,7 @@ et:
       tools:
         back: "Tagasi"
         export: "Ekspordi"
+        import: "Impordi"
         name: "Nimi"
         description: "Kirjeldus"
         summary: "Kokkuvõte"
@@ -92,12 +94,13 @@ et:
         delete: "Kustuta"
       llms:
         display_name: "Nimi"
+        provider: "Teenusepakkuja"
         save: "Salvesta"
         edit: "Muuda"
         back: "Tagasi"
         delete: Kustuta
         quotas:
-          group: "Grupp"
+          group: "Rühm"
           durations:
             hour: "1 tund"
             six_hours: "6 tundi"
@@ -115,16 +118,16 @@ et:
           fake: "Individuaalne"
       ai_helper:
         context_menu:
-          cancel: "Tühista"
+          cancel: "Loobu"
         post_options_menu:
           close: "Sulge"
           copy: "Kopeeri"
           copied: "Kopeeritud!"
-          cancel: "Tühista"
+          cancel: "Loobu"
         image_caption:
           save_caption: "Salvesta"
           automatic_caption_dialog:
-            confirm: "Lülita sisse"
+            confirm: "Luba"
       embeddings:
         back: "Tagasi"
         save: "Salvesta"
@@ -133,12 +136,13 @@ et:
         tests:
           success: "Korras!"
         display_name: "Nimi"
+        provider: "Teenusepakkuja"
         providers:
           google: "Google"
           fake: "Individuaalne"
       ai_bot:
         debug_ai_modal:
-          request: "Päring"
+          request: "Taotle"
           response: "Vastus"
           next_log: "Järgmine"
           previous_log: "Eelmine"
@@ -154,7 +158,7 @@ et:
             all: "Kõik"
             neutral: "Neutraalne"
           group_types:
-            category: "Foorum"
+            category: "Kategooriad"
           table:
             total_count: "Kokku"
       discobot_discoveries:
@@ -162,4 +166,4 @@ et:
         collapse: "Ahenda"
         tooltip:
           actions:
-            disable: "Lülita välja"
+            disable: "Keela"

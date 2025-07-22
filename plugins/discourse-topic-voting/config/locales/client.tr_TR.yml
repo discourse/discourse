@@ -16,14 +16,11 @@ tr_TR:
       votes_nav_help: "en çok oy alan konular"
       voted: "Bu konuyu oyladınız"
       allow_topic_voting: "Kullanıcıların bu kategorideki konularda oy kullanmasına izin verilsin mi?"
-      vote_title: "Oyla"
+      vote_title: "Oy ver"
       vote_title_plural: "Oylar"
       voted_title: "Oylandı"
       voting_closed_title: "Kapalı"
       voting_limit: "Sınır"
-      votes_left:
-        one: "%{count} oyunuz kaldı, <a href='%{path}'>oylarınıza</a> bakın."
-        other: "%{count} oyunuz kaldı, <a href='%{path}'>oylarınıza</a> bakın."
       votes_left_button_title:
         one: "%{count} oyunuz kaldı."
         other: "%{count} oyunuz kaldı."
@@ -31,8 +28,8 @@ tr_TR:
         one: "%{count} oy"
         other: "%{count} oy"
       anonymous_button:
-        one: "Oy"
-        other: "Oy"
+        one: "Oy ver"
+        other: "Oylar"
       remove_vote: "Oyu kaldır"
       no_votes_title_self: "Henüz herhangi bir konu için oy kullanmadınız"
       no_votes_title_others: "%{username} henüz herhangi bir konu için oy kullanmadı"

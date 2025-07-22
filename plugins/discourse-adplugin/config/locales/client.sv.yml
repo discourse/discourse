@@ -21,11 +21,11 @@ sv:
       adplugin:
         house_ads:
           title: "Egna annonser"
-          new: "Ny"
+          new: "Nya"
           settings: "Inställningar"
           new_name: "Ny egen annons"
           save: "Spara"
-          delete: "Radera"
+          delete: "Ta bort"
           description: "Definiera dina egna annonser och var de ska visas."
           get_started: "Börja med att skapa en ny annons."
           filter_placeholder: "Välj annonser..."

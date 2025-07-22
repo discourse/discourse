@@ -61,6 +61,6 @@ de:
           away_description: Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 10 Minuten nicht gesehen haben, wenn sich der Richtlinienstatus ändert, und wenn du dich auch für E-Mails zu neuen Aktivitäten angemeldet hast.
           label: E-Mail an mich, wenn eine Richtlinie meine Überprüfung benötigt
           email_frequency_options:
-            never: niemals
+            never: Nie
             when_away: Nur bei Abwesenheit
             always: Immer

@@ -22,6 +22,9 @@ hr:
       topic_status_filter:
         all: "sve"
         solved: "riješeno"
+    topic_statuses:
+      solved:
+        help: "Ova tema ima rješenje"
     discourse_automation:
       triggerables:
         first_accepted_solution:

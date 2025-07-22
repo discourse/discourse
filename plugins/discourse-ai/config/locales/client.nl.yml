@@ -150,7 +150,7 @@ nl:
           other: "(Nog %{count})"
         collapse_list: "(minder weergeven)"
         filters:
-          all: "Alles"
+          all: "Alle"
           reset: "Resetten"
         search:
           name: "Zoeken"
@@ -168,6 +168,8 @@ nl:
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
       modals:
         select_option: "Selecteer een optie..."
+      layout:
+        table: "Tabel"
       spam:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
@@ -246,10 +248,11 @@ nl:
           replies:
             one: "Alleen toepassen op eerste antwoord"
             other: "Alleen toepassen op eerste %{count} antwoorden"
-        back: "Vorige"
+        back: "Terug"
         name: "Naam"
         edit: "Bewerken"
         export: "Exporteren"
+        import: "Importeren"
         description: "Beschrijving"
         no_llm_selected: "Geen taalmodel geselecteerd"
         max_context_posts: "Maximaal aantal contextberichten"
@@ -329,9 +332,10 @@ nl:
           uploading: "Uploaden..."
           remove: "Upload verwijderen"
       tools:
-        back: "Vorige"
+        back: "Terug"
         short_title: "Tools"
         export: "Exporteren"
+        import: "Importeren"
         no_tools: "Je hebt nog geen tools gemaakt"
         name: "Naam"
         new: "Nieuwe tool"
@@ -375,7 +379,7 @@ nl:
         save: "Opslaan"
         edit: "Bewerken"
         saved: "LLM-model opgeslagen"
-        back: "Vorige"
+        back: "Terug"
         confirm_delete: Weet je zeker dat je dit model wilt verwijderen?
         delete: Verwijderen
         seeded_warning: "Dit model is vooraf geconfigureerd op je site en kan niet worden bewerkt."
@@ -480,6 +484,7 @@ nl:
           trigger: "AI vragen"
           loading: "AI is aan het genereren"
           cancel: "Annuleren"
+          regen: "Opnieuw proberen"
           confirm: "Bevestigen"
           discard: "Weggooien"
           changes: "Voorgestelde bewerkingen"

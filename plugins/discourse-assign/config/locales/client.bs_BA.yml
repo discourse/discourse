@@ -9,7 +9,7 @@ bs_BA:
     discourse_assign:
       group_everyone: "Svatko"
       reassign:
-        title: "Edit"
+        title: "Izmijeni"
       assign_modal:
         optional_label: "(opciono)"
         status_label: Status
@@ -18,9 +18,9 @@ bs_BA:
         always: "Uvijek"
       reminders_frequency:
         never: "Nikad"
-        daily: "Popularne Dnevno"
-        weekly: "Popularne Sedmično"
-        monthly: "Popularne Mjesečno"
+        daily: "Dnevno"
+        weekly: "Sedmično"
+        monthly: "Mesečno"
         quarterly: "Kvartalno"
     user:
       notification_level_when_assigned:

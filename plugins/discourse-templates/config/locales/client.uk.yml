@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    discourse_templates:
+      title: "Шаблони"
+  js:
+    templates:
+      source: "Джерело"

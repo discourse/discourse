@@ -94,6 +94,8 @@ zh_CN:
             top_p:
               label: "Top P"
               description: "用于 LLM 的 Top P 值，增加该值会提高生成内容的随机性（留空则使用模型默认值）"
+            persona_id:
+              label: "角色模型"
         llm_tool_triage:
           fields:
             model:
@@ -147,11 +149,14 @@ zh_CN:
             include_personal_messages:
               label: "包括私信"
               description: "同时扫描私信并对其进行分类"
+            whisper:
+              label: "以 Whisper 模式回复"
             model:
               label: "模型"
               description: "用于分类的语言模型"
             temperature:
               label: "温度"
+              description: "用于 LLM 的温度值，增加该值会提高生成内容的随机性（留空则使用模型默认值）"
     discourse_ai:
       title: "AI"
       features:
@@ -187,6 +192,8 @@ zh_CN:
           description: "使用所选 LLM 识别潜在垃圾内容，并进行标记，使其进入审核队列，以便网站版主可以进行检查"
       modals:
         select_option: "选择一个选项…"
+      layout:
+        table: "表"
       spam:
         short_title: "垃圾内容"
         title: "配置垃圾内容处理"
@@ -224,7 +231,7 @@ zh_CN:
             action: "修复"
           resolved: "错误已解决！"
       usage:
-        short_title: "使用量"
+        short_title: "用法"
         summary: "摘要"
         total_tokens: "词元总数"
         tokens_over_time: "一段时间内的词元数"
@@ -267,6 +274,7 @@ zh_CN:
         name: "名称"
         edit: "编辑"
         export: "导出"
+        import: "导入"
         description: "描述"
         no_llm_selected: "未选择语言模型"
         max_context_posts: "最大上下文帖子数"
@@ -353,6 +361,7 @@ zh_CN:
         back: "返回"
         short_title: "工具"
         export: "导出"
+        import: "导入"
         no_tools: "您还没有创建任何工具"
         name: "名称"
         new: "新工具"
@@ -387,7 +396,7 @@ zh_CN:
         display_name: "名称"
         name: "模型 ID"
         provider: "提供程序"
-        tokenizer: "词元生成器"
+        tokenizer: "分词器"
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
         enabled_chat_bot: "允许 AI 机器人选择器"
@@ -498,6 +507,7 @@ zh_CN:
           trigger: "询问 AI"
           loading: "AI 正在生成"
           cancel: "取消"
+          regen: "重试"
           confirm: "确认"
           discard: "舍弃"
           changes: "建议的编辑"

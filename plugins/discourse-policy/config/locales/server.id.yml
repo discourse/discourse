@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 id:
+  reports:
+    unaccepted-policies:
+      labels:
+        topic_id: ID Topik
   user_notifications:
     policy_email:
       from: "%{site_name}"

@@ -42,8 +42,9 @@ vi:
         edit: "Sửa"
         expand_list:
           other: "(%{count} khác)"
+        collapse_list: "(thu gọn)"
         filters:
-          all: "All"
+          all: "Tất cả"
           reset: "Cài lại"
         search:
           name: "Tìm kiếm"
@@ -69,6 +70,7 @@ vi:
         name: "Tên"
         edit: "Sửa"
         export: "Xuất"
+        import: "Nhập"
         description: "Mô tả"
         user: Người dùng
         save: "Lưu lại"
@@ -87,6 +89,7 @@ vi:
       tools:
         back: "Quay lại"
         export: "Xuất"
+        import: "Nhập"
         name: "Tên"
         description: "Mô tả"
         summary: "Tóm tắt"
@@ -124,14 +127,14 @@ vi:
           fake: "Tùy biến"
       ai_helper:
         context_menu:
-          cancel: "Huỷ"
+          cancel: "Hủy"
           confirm: "Xác nhận"
           discard: "Hủy bỏ"
         post_options_menu:
-          close: "Đóng"
+          close: "Đóng lại"
           copy: "Sao chép"
           copied: "Đã sao chép!"
-          cancel: "Huỷ"
+          cancel: "Hủy"
         thumbnail_suggestions:
           select: "Chọn"
         image_caption:
@@ -166,7 +169,7 @@ vi:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "All"
+            all: "Tất cả"
           group_types:
             category: "Danh mục"
           table:

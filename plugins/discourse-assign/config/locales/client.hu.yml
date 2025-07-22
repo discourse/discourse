@@ -83,10 +83,12 @@ hu:
                 title: "Ki oszthat ki ennek a csoportnak"
     user:
       notification_level_when_assigned:
-        do_nothing: "Ne csinálj semmit"
+        watch_topic: "Téma figyelése"
+        track_topic: "Téma követése"
+        do_nothing: "Ne tegyen semmit"
       messages:
         assigned_title: "Kiosztott (%{count})"
-        assigned: "Kiosztva"
+        assigned: "Kiosztott"
       no_assignments_title: "Még nincsenek kiosztott feladatai"
       no_assignments_body: >
         A kiosztott témák és üzenetek itt jelennek meg. Rendszeresen kap egy emlékeztető értesítést is a kiosztott feladatokról, amelyeket a <a href='%{preferencesUrl}'>felhasználói beállításokban</a> módosíthat. <br><br>Téma vagy üzenet saját magának vagy valaki másnak történő kiosztásához keresse a lenti %{icon} kiosztás gombot.
