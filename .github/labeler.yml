@@ -114,6 +114,10 @@ discourse-policy:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-policy/**/*
 
+discourse-github:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-github/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*
