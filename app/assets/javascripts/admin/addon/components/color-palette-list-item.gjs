@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -15,6 +16,8 @@ import DMenu from "float-kit/components/d-menu";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ColorPaletteListItem extends Component {
+  @tracked isLoading = false;
+
   get isBuiltInDefault() {
     return this.args.scheme?.is_builtin_default || false;
   }
@@ -83,20 +86,19 @@ export default class ColorPaletteListItem extends Component {
   }
 
   @action
-  toggleUserSelectable() {
-    this.args.toggleUserSelectable(this.args.scheme);
+  async handleAsyncAction(asyncFn, ...args) {
     this.dMenu.close();
+    this.isLoading = true;
+    try {
+      await asyncFn(...args);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   @action
   onRegisterApi(api) {
     this.dMenu = api;
-  }
-
-  @action
-  setAsDefaultColors(scheme) {
-    this.args.setAsDefaultThemePalette(scheme);
-    this.dMenu.close();
   }
 
   <template>
@@ -174,13 +176,18 @@ export default class ColorPaletteListItem extends Component {
               @icon="ellipsis"
               @triggers={{array "click"}}
               @onRegisterApi={{this.onRegisterApi}}
+              @isLoading={{this.isLoading}}
             >
               <:content>
                 <DropdownMenu as |dropdown|>
                   {{#unless this.isBuiltInDefault}}
                     <dropdown.item>
                       <DButton
-                        @action={{this.toggleUserSelectable}}
+                        @action={{fn
+                          this.handleAsyncAction
+                          this.args.toggleUserSelectable
+                          @scheme
+                        }}
                         @icon={{if
                           @scheme.user_selectable
                           "user-xmark"
@@ -198,7 +205,11 @@ export default class ColorPaletteListItem extends Component {
 
                   <dropdown.item>
                     <DButton
-                      @action={{fn this.setAsDefaultColors @scheme}}
+                      @action={{fn
+                        this.handleAsyncAction
+                        this.args.setAsDefaultThemePalette
+                        @scheme
+                      }}
                       @icon="star"
                       @translatedLabel={{this.setAsDefaultLabel}}
                       class="btn-transparent btn-palette-default"
@@ -209,7 +220,11 @@ export default class ColorPaletteListItem extends Component {
                   {{#if this.canDelete}}
                     <dropdown.item>
                       <DButton
-                        @action={{fn @deleteColorScheme @scheme}}
+                        @action={{fn
+                          this.handleAsyncAction
+                          this.args.deleteColorScheme
+                          @scheme
+                        }}
                         @icon="trash-can"
                         @label="admin.customize.delete"
                         class="btn-transparent btn-danger"

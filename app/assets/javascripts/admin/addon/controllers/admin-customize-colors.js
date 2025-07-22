@@ -26,10 +26,10 @@ export default class AdminCustomizeColorsController extends Controller {
     return this.defaultTheme?.color_scheme_id === scheme.id;
   };
 
+  @tracked _initialSortedSchemes = [];
   _initialUserColorSchemeId = undefined;
   _initialDefaultThemeColorSchemeId = null;
   _sortedOnce = false;
-  _initialSortedSchemes = [];
 
   get canPreviewColorScheme() {
     return currentThemeId() === this.defaultTheme?.id;
@@ -153,6 +153,11 @@ export default class AdminCustomizeColorsController extends Controller {
     ];
   }
 
+  _resetSortedSchemes() {
+    this._sortedOnce = false;
+    this._initialSortedSchemes = [];
+  }
+
   @action
   newColorSchemeWithBase(baseKey) {
     const base = this.allBaseColorSchemes.findBy("base_scheme_id", baseKey);
@@ -164,6 +169,9 @@ export default class AdminCustomizeColorsController extends Controller {
     newColorScheme.save().then(() => {
       this.model.pushObject(newColorScheme);
       newColorScheme.set("savingStatus", null);
+
+      this._resetSortedSchemes();
+
       this.router.replaceWith("adminCustomize.colors-show", newColorScheme);
     });
   }
@@ -181,7 +189,7 @@ export default class AdminCustomizeColorsController extends Controller {
   @action
   toggleUserSelectable(scheme) {
     scheme.set("user_selectable", !scheme.get("user_selectable"));
-    scheme.updateUserSelectable(scheme.get("user_selectable"));
+    return scheme.updateUserSelectable(scheme.get("user_selectable"));
   }
 
   @action
@@ -217,19 +225,25 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @action
   deleteColorScheme(scheme) {
-    return this.dialog.deleteConfirm({
-      title: i18n("admin.customize.colors.delete_confirm"),
-      didConfirm: () => {
-        return scheme.destroy().then(() => {
-          this.model.removeObject(scheme);
+    return new Promise((resolve, reject) => {
+      this.dialog.deleteConfirm({
+        title: i18n("admin.customize.colors.delete_confirm"),
+        didConfirm: () => {
+          return scheme
+            .destroy()
+            .then(() => {
+              this.model.removeObject(scheme);
 
-          // remove from sorted schemes for immediate feedback
-          const index = this._initialSortedSchemes.findIndex(
-            (s) => (s.id || "builtin") === (scheme.id || "builtin")
-          );
-          this._initialSortedSchemes.splice(index, 1);
-        });
-      },
+              this._resetSortedSchemes();
+
+              resolve();
+            })
+            .catch(reject);
+        },
+        didCancel: () => {
+          reject(new Error("Deletion cancelled"));
+        },
+      });
     });
   }
 
