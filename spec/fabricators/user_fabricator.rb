@@ -26,7 +26,7 @@ Fabricator(:user, class_name: :user) do
     # TODO (martin) It would be good to remove this at some point once specs are updated
     # to use the rich editor by default. Otherwise, if this is not done, there are tons
     # of specs failing when setting SiteSetting.rich_editor default to true and SiteSetting.default_composition_mode
-    # default to modern
+    # default to rich
     user.user_option.update!(composition_mode: transients[:composition_mode])
   end
 

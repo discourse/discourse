@@ -5,7 +5,7 @@ describe "Composer - ProseMirror editor", type: :system do
     Fabricate(
       :user,
       refresh_auto_groups: true,
-      composition_mode: UserOption.composition_mode_types[:modern],
+      composition_mode: UserOption.composition_mode_types[:rich],
     )
   end
   fab!(:tag)
