@@ -31,6 +31,6 @@ describe DiscoursePostEvent::ChatChannelSync do
   it "defaults event name to post title" do
     event = Fabricate(:event, chat_enabled: true, post: admin_post)
 
-    expect(event.chat_channel.name).to eq(post.topic.title)
+    expect(event.chat_channel.name).to eq(admin_post.topic.title)
   end
 end
