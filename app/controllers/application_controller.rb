@@ -568,7 +568,10 @@ class ApplicationController < ActionController::Base
   end
 
   def secure_session
-    SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
+    Rails.logger.warn("In secure_session() before: #{session["secure_session_id"]}")
+    sesh = SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
+    Rails.logger.warn("In secure_session() after: #{session["secure_session_id"]}")
+    sesh
   end
 
   def handle_permalink(path)

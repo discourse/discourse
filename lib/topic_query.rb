@@ -297,6 +297,7 @@ class TopicQuery
 
   # The latest view of topics
   def list_latest
+    sleep 0.5
     create_list(:latest, {}, latest_results)
   end
 
