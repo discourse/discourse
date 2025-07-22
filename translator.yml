@@ -267,3 +267,10 @@ files:
   - source_path: plugins/discourse-adplugin/config/locales/server.en.yml
     destination_path: plugins/adplugin/server.yml
     label: adplugin
+
+  - source_path: plugins/discourse-affiliate/config/locales/client.en.yml
+    destination_path: plugins/affiliate/client.yml
+    label: affiliate
+  - source_path: plugins/discourse-affiliate/config/locales/server.en.yml
+    destination_path: plugins/affiliate/server.yml
+    label: affiliate
