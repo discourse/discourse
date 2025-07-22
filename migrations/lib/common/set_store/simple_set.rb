@@ -25,5 +25,9 @@ module Migrations::SetStore
       @store.merge(records)
       nil
     end
+
+    def empty?
+      @store.empty?
+    end
   end
 end

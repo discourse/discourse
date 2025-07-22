@@ -17,5 +17,9 @@ module Migrations::SetStore
     def bulk_add(records)
       raise NotImplementedError
     end
+
+    def empty?
+      raise NotImplementedError
+    end
   end
 end

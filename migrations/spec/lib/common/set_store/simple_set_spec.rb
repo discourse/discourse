@@ -34,6 +34,12 @@ describe Migrations::SetStore::SimpleSet do
     it "returns false for values not in the set" do
       expect(set.include?(1)).to be false
     end
+
+    it "doesn't create entries for missing keys" do
+      expect(set.empty?).to be true
+      set.include?(1)
+      expect(set.empty?).to be true
+    end
   end
 
   describe "#bulk_add" do
@@ -46,6 +52,17 @@ describe Migrations::SetStore::SimpleSet do
 
     it "returns nil" do
       expect(set.bulk_add([1, 2, 3])).to be_nil
+    end
+  end
+
+  describe "#empty?" do
+    it "returns true for empty sets" do
+      expect(set.empty?).to be true
+    end
+
+    it "returns false for non-empty sets" do
+      set.add(1)
+      expect(set.empty?).to be false
     end
   end
 end

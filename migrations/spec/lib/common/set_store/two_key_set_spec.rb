@@ -44,6 +44,19 @@ describe Migrations::SetStore::TwoKeySet do
       set.add("key1", "key2", 1)
       expect(set.include?("key1", "key3", 1)).to be false
     end
+
+    it "doesn't create entries for missing keys" do
+      expect(set.empty?).to be true
+      set.include?("missing_key1", "missing_key2", 1)
+      expect(set.empty?).to be true
+
+      set.add("existing_key", "subkey", 1)
+      expect(set.include?("existing_key", "subkey", 1)).to be true
+      set.include?("existing_key", "missing_subkey", 1)
+
+      expect(set.include?("existing_key", "subkey", 1)).to be true
+      expect(set.include?("existing_key", "missing_subkey", 1)).to be false
+    end
   end
 
   describe "#bulk_add" do
@@ -55,6 +68,17 @@ describe Migrations::SetStore::TwoKeySet do
 
     it "returns nil" do
       expect(set.bulk_add([["key1", "key2", 1]])).to be_nil
+    end
+  end
+
+  describe "#empty?" do
+    it "returns true for empty sets" do
+      expect(set.empty?).to be true
+    end
+
+    it "returns false for non-empty sets" do
+      set.add("key1", "key2", 1)
+      expect(set.empty?).to be false
     end
   end
 end

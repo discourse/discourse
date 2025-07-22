@@ -5,31 +5,66 @@ module Migrations::SetStore
     include Interface
 
     def initialize
-      @store =
-        Hash.new do |h1, k1|
-          h1[k1] = Hash.new { |h2, k2| h2[k2] = Hash.new { |h3, k3| h3[k3] = Set.new } }
-        end
+      @store = {}
     end
 
     def add(key1, key2, key3, value)
-      @store[key1][key2][key3].add(value)
+      h1 = @store[key1] ||= {}
+      h2 = h1[key2] ||= {}
+      set = h2[key3] ||= Set.new
+      set.add(value)
       self
     end
 
     def add?(key1, key2, key3, value)
-      !!@store[key1][key2][key3].add?(value)
+      h1 = @store[key1] ||= {}
+      h2 = h1[key2] ||= {}
+      set = h2[key3] ||= Set.new
+      !!set.add?(value)
     end
 
     def include?(key1, key2, key3, value)
       h1 = @store[key1] or return false
       h2 = h1[key2] or return false
-      h3 = h2[key3] or return false
-      h3.include?(value)
+      set = h2[key3] or return false
+      set.include?(value)
     end
 
     def bulk_add(records)
-      records.each { |record| @store[record[0]][record[1]][record[2]].add(record[3]) }
+      current_key1 = nil
+      current_key2 = nil
+      current_key3 = nil
+      current_h1 = nil
+      current_h2 = nil
+      current_set = nil
+
+      records.each do |record|
+        key1, key2, key3, value = record
+
+        if key1 != current_key1
+          current_key1 = key1
+          current_h1 = @store[key1] ||= {}
+          current_key2 = key2
+          current_h2 = current_h1[key2] ||= {}
+          current_key3 = key3
+          current_set = current_h2[key3] ||= Set.new
+        elsif key2 != current_key2
+          current_key2 = key2
+          current_h2 = current_h1[key2] ||= {}
+          current_key3 = key3
+          current_set = current_h2[key3] ||= Set.new
+        elsif key3 != current_key3
+          current_key3 = key3
+          current_set = current_h2[key3] ||= Set.new
+        end
+
+        current_set.add(value)
+      end
       nil
+    end
+
+    def empty?
+      @store.empty?
     end
   end
 end

@@ -39,6 +39,12 @@ describe Migrations::SetStore::KeyValueSet do
       set.add("key1", 1)
       expect(set.include?("key2", 1)).to be false
     end
+
+    it "doesn't create entries for missing keys" do
+      expect(set.empty?).to be true
+      set.include?("missing_key", 1)
+      expect(set.empty?).to be true
+    end
   end
 
   describe "#bulk_add" do
@@ -50,6 +56,17 @@ describe Migrations::SetStore::KeyValueSet do
 
     it "returns nil" do
       expect(set.bulk_add([["key1", 1]])).to be_nil
+    end
+  end
+
+  describe "#empty?" do
+    it "returns true for empty sets" do
+      expect(set.empty?).to be true
+    end
+
+    it "returns false for non-empty sets" do
+      set.add("key", 1)
+      expect(set.empty?).to be false
     end
   end
 end

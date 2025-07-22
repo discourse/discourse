@@ -49,6 +49,21 @@ describe Migrations::SetStore::ThreeKeySet do
       set.add("key1", "key2", "key3", 1)
       expect(set.include?("key1", "key2", "key4", 1)).to be false
     end
+
+    it "doesn't create entries for missing keys" do
+      expect(set.empty?).to be true
+      set.include?("missing_key1", "missing_key2", "missing_key3", 1)
+      expect(set.empty?).to be true
+
+      set.add("key1", "key2", "key3", 1)
+
+      set.include?("key1", "missing_key", "any_key", 1)
+      set.include?("key1", "key2", "missing_key", 1)
+
+      expect(set.include?("key1", "key2", "key3", 1)).to be true
+      expect(set.include?("key1", "missing_key", "any_key", 1)).to be false
+      expect(set.include?("key1", "key2", "missing_key", 1)).to be false
+    end
   end
 
   describe "#bulk_add" do
@@ -60,6 +75,17 @@ describe Migrations::SetStore::ThreeKeySet do
 
     it "returns nil" do
       expect(set.bulk_add([["key1", "key2", "key3", 1]])).to be_nil
+    end
+  end
+
+  describe "#empty?" do
+    it "returns true for empty sets" do
+      expect(set.empty?).to be true
+    end
+
+    it "returns false for non-empty sets" do
+      set.add("key1", "key2", "key3", 1)
+      expect(set.empty?).to be false
     end
   end
 end

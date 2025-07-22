@@ -5,26 +5,42 @@ module Migrations::SetStore
     include Interface
 
     def initialize
-      @store = Hash.new { |h, k| h[k] = Set.new }
+      @store = {}
     end
 
     def add(key, value)
-      @store[key].add(value)
+      (@store[key] ||= Set.new).add(value)
       self
     end
 
     def add?(key, value)
-      !!@store[key].add?(value)
+      !!(@store[key] ||= Set.new).add?(value)
     end
 
     def include?(key, value)
-      h = @store[key] or return false
-      h.include?(value)
+      set = @store[key] or return false
+      set.include?(value)
     end
 
     def bulk_add(records)
-      records.each { |record| @store[record[0]].add(record[1]) }
+      current_key = nil
+      current_set = nil
+
+      records.each do |record|
+        key, value = record
+
+        if key != current_key
+          current_key = key
+          current_set = @store[key] ||= Set.new
+        end
+
+        current_set.add(value)
+      end
       nil
+    end
+
+    def empty?
+      @store.empty?
     end
   end
 end
