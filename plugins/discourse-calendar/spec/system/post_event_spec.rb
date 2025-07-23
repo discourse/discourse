@@ -74,8 +74,7 @@ describe "Post event", type: :system do
 
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
-
-      post_event_form_page.fill_description("foo\nbar").submit
+      post_event_form_page.fill_description("foo\nbar").fill_timezone("Europe/Paris").submit
 
       expect(composer).to have_value(EXPECTED_BBCODE.strip)
     end
