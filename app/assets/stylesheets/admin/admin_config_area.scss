@@ -1,6 +1,6 @@
 .admin-config-area-card {
   padding: var(--space-4);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
   background-color: var(--secondary);
 
@@ -118,7 +118,7 @@
 .admin-config-area-empty-list,
 .admin-empty-list {
   padding: 1em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
 
   &__cta-button {
@@ -133,7 +133,7 @@
   gap: var(--space-4);
   flex-direction: column;
   width: calc(100% - 1em);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   padding: 0.5em;
 
   @media (max-width: $mobile-breakpoint) {
@@ -169,7 +169,7 @@
     .form-kit__container {
       padding: 1em;
       width: calc(100% - 2em) !important;
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
     }
   }
 
@@ -199,7 +199,7 @@
       justify-content: space-between;
 
       .admin-fonts-form__button-option {
-        border: 1px solid var(--primary-low);
+        border: 1px solid var(--content-border-color);
         font-size: var(--font-down-1-rem);
         max-height: 4em;
         height: 50px;

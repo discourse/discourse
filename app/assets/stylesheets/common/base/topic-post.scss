@@ -965,7 +965,7 @@ aside.quote {
   }
 
   .group-request {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     padding-top: 0.5em;
   }
 }
@@ -1376,7 +1376,7 @@ span.mention {
 .blocked-hotlinked-placeholder {
   display: inline-flex;
   flex-direction: column;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   align-items: center;
   justify-content: center;
 
