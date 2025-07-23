@@ -31,6 +31,10 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get totalCount() {
+    if (!this.currentUser?.use_experimental_sidebar_messages_count) {
+      return 0;
+    }
+
     const newUserMsgs = this._lookupCount({ type: "new", inboxFilter: "user" });
     const unreadUserMsgs = this._lookupCount({
       type: "unread",
@@ -66,7 +70,10 @@ export default class MyMessagesSectionLink extends BaseSectionLink {
   }
 
   get showCount() {
-    return this.currentUser?.sidebarShowCountOfNewItems;
+    return (
+      this.currentUser?.use_experimental_sidebar_messages_count &&
+      this.currentUser?.sidebarShowCountOfNewItems
+    );
   }
 
   get badgeText() {
