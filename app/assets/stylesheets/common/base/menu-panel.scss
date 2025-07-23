@@ -1,5 +1,14 @@
 @use "lib/viewport";
 
+:root {
+  --d-unread-notification-background: light-dark(
+    var(--tertiary-25),
+    var(--tertiary-200)
+  );
+  --active-shadow: 0 0 0 0.5rem var(--d-sidebar-active-background);
+  --hover-shadow: 0 0 0 0.5rem var(--d-sidebar-highlight-background);
+}
+
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
@@ -32,7 +41,7 @@
 
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
-  right: -10px; // 10px to the right of .panel - adjust as needed
+  right: 5px;
   max-height: calc(100dvh - var(--header-offset) - 1em);
   border-radius: var(--d-border-radius);
 
@@ -45,7 +54,9 @@
 }
 
 .menu-panel {
+  --shadow-dropdown: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
   --list-item-padding: 0.5em 1rem;
+  border: 1px solid var(--primary-low);
   box-shadow: var(--shadow-dropdown);
   background-color: var(--secondary);
   z-index: z("header");
@@ -265,7 +276,6 @@
   --user-menu-border-width: 1px;
   right: 0;
   padding: 0;
-  border-top-right-radius: 0;
   width: unset;
 
   @include viewport.until(sm) {
@@ -279,7 +289,7 @@
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
-    padding: 0;
+    padding: var(--space-half);
     overflow-y: auto;
     overscroll-behavior: contain;
     margin-inline: calc(var(--user-menu-border-width) * -1);
@@ -293,7 +303,7 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.875em 1em 0.875em 0.875em;
+      padding: 0.8125em;
 
       @include viewport.until(sm) {
         padding: 1.2em 1.4em;
@@ -324,14 +334,21 @@
       }
 
       &.active {
-        background-color: var(--d-selected);
+        .d-icon {
+          box-shadow: var(--active-shadow);
+          color: var(--d-sidebar-active-color);
+          background-color: var(--d-sidebar-active-background);
+          border-radius: calc(var(--d-border-radius) * 0.25);
+        }
       }
 
-      .discourse-no-touch & {
-        &:hover {
-          background-color: var(--d-hover);
-          border-left: var(--user-menu-border-width) solid var(--primary-low);
-          padding-left: calc(0.875em - var(--user-menu-border-width));
+      &:not(.active):hover {
+        padding-left: calc(0.875em - var(--user-menu-border-width));
+
+        .d-icon {
+          box-shadow: var(--hover-shadow);
+          background-color: var(--d-sidebar-highlight-background);
+          border-radius: calc(var(--d-border-radius) * 0.25);
         }
       }
     }
@@ -587,7 +604,7 @@
 
     &.unread,
     &.pending {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-unread-notification-background);
     }
 
     &:hover {
@@ -740,6 +757,8 @@
 
       .item-description {
         color: var(--primary);
+
+        @include line-clamp(2);
       }
 
       .icon-avatar {
@@ -749,7 +768,7 @@
         flex-shrink: 0;
         width: 2em;
         height: 2em;
-        margin: 0.3em 1em 0 0;
+        margin: 0.3em 1em auto 0;
 
         .avatar {
           width: 100%;
