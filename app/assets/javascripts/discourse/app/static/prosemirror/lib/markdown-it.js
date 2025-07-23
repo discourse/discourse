@@ -19,6 +19,8 @@ export const parse = (text) => getEngine().parse(text);
 
 export const getLinkify = () => getEngine().linkify;
 
+export const getUnicode = () => getEngine().options.engine.options.unicode;
+
 export const isWhiteSpace = (str, index) =>
   !str || getEngine().options.engine.utils.isWhiteSpace(str.charCodeAt(index));
 

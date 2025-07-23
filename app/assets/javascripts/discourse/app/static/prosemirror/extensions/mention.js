@@ -1,15 +1,14 @@
 import { mentionRegex } from "pretty-text/mentions";
 import { ajax } from "discourse/lib/ajax";
-import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+import {
+  getUnicode,
+  isBoundary,
+} from "discourse/static/prosemirror/lib/markdown-it";
 
 const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
 
-function unicodeEnabled({ getContext }) {
-  return !!getContext().siteSettings.unicode_usernames;
-}
-
-const regExp = mentionRegex(unicodeEnabled);
+const regExp = mentionRegex(getUnicode);
 
 /** @type {RichEditorExtension} */
 const extension = {

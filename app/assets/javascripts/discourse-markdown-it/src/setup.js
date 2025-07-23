@@ -170,6 +170,7 @@ class Setup {
       enableMarkdownLinkify,
       enableMarkdownTypographer,
       traditionalMarkdownLinebreaks,
+      unicodeUsernames,
     } = limitedSiteSettings;
 
     options.allowListed = this.#drain(this.#allowListed);
@@ -181,6 +182,7 @@ class Setup {
       breaks: !traditionalMarkdownLinebreaks,
       xhtmlOut: false,
       linkify: enableMarkdownLinkify,
+      unicode: unicodeUsernames,
       typographer: enableMarkdownTypographer,
     };
 
