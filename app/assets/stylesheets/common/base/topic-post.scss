@@ -653,6 +653,13 @@ aside.quote {
     .quote-controls {
       min-height: 24px; // match avatar height for alignment
     }
+
+    // empty control div can impact layout, so hide it
+    &:not([data-has-quote-controls]) {
+      .quote-controls {
+        display: none;
+      }
+    }
   }
 
   .quote-title__text-content {
@@ -707,13 +714,6 @@ aside.quote {
   .quote-toggle,
   .back {
     padding: 0;
-  }
-}
-
-// empty control div can impact layout, so hide it
-aside .title:not([data-has-quote-controls]) {
-  .quote-controls {
-    display: none;
   }
 }
 
