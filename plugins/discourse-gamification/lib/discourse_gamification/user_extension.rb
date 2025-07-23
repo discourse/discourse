@@ -2,6 +2,14 @@
 
 module ::DiscourseGamification
   module UserExtension
+    extend ActiveSupport::Concern
+
+    prepended do
+      has_many :gamification_scores,
+               class_name: "::DiscourseGamification::GamificationScore",
+               dependent: :destroy
+    end
+
     DEFAULT_SCORE = 0
 
     def gamification_score

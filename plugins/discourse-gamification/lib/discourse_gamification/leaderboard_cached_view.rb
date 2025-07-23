@@ -141,6 +141,10 @@ module ::DiscourseGamification
           AND
             u.staged = FALSE
           AND
+            u.active
+          AND 
+            (u.suspended_till IS NULL OR u.suspended_till < CURRENT_TIMESTAMP)
+          AND
             u.id > 0
           AND
             (
