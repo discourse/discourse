@@ -113,11 +113,11 @@ RSpec.describe SiteSerializer do
 
   it "includes default dark mode scheme" do
     scheme = ColorScheme.last
-    SiteSetting.default_dark_mode_color_scheme_id = scheme.id
+    Theme.find_default.update!(dark_color_scheme_id: scheme.id)
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     default_dark_scheme = expect(serialized[:default_dark_color_scheme][:name]).to eq(scheme.name)
 
-    SiteSetting.default_dark_mode_color_scheme_id = -1
+    Theme.find_default.update!(dark_color_scheme_id: nil)
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
     expect(serialized[:default_dark_color_scheme]).to eq(nil)
   end

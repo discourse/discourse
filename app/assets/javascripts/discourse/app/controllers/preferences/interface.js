@@ -100,9 +100,10 @@ export default class InterfaceController extends Controller {
     return this.siteSettings.available_locales;
   }
 
-  @discourseComputed
-  defaultDarkSchemeId() {
-    return this.siteSettings.default_dark_mode_color_scheme_id;
+  @discourseComputed("currentThemeId")
+  defaultDarkSchemeId(themeId) {
+    const theme = this.userSelectableThemes?.findBy("id", themeId);
+    return theme?.dark_color_scheme_id || -1;
   }
 
   @discourseComputed

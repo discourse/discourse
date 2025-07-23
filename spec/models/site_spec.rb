@@ -11,13 +11,14 @@ RSpec.describe Site do
       Theme
         .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
         .order(:name)
-        .pluck(:id, :name, :color_scheme_id)
-        .map do |id, n, cs|
+        .pluck(:id, :name, :color_scheme_id, :dark_color_scheme_id)
+        .map do |id, name, color_scheme_id, dark_color_scheme_id|
           {
             "theme_id" => id,
-            "name" => n,
+            "name" => name,
             "default" => id == SiteSetting.default_theme_id,
-            "color_scheme_id" => cs,
+            "color_scheme_id" => color_scheme_id,
+            "dark_color_scheme_id" => dark_color_scheme_id,
           }
         end
 

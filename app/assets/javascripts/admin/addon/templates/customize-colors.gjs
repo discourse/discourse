@@ -56,22 +56,6 @@ export default RouteTemplate(
       </div>
     {{/if}}
 
-    {{#unless @controller.changedThemePreferences}}
-      {{! only show one alert at a time, changedThemePreferences takes precedence }}
-      {{#if @controller.isUsingDarkMode}}
-        <div class="alert alert-info">
-          {{htmlSafe
-            (i18n
-              "admin.customize.colors.dark_mode_warning"
-              link=(getUrl
-                "/admin/site_settings/category/all_results?filter=default dark mode"
-              )
-            )
-          }}
-        </div>
-      {{/if}}
-    {{/unless}}
-
     <AdminFilterControls
       @array={{@controller.sortedColorSchemes}}
       @minItemsForFilter={{FILTER_MINIMUM}}
@@ -88,7 +72,8 @@ export default RouteTemplate(
           <ColorPaletteListItem
             @scheme={{scheme}}
             @defaultTheme={{@controller.defaultTheme}}
-            @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
+            @isDefaultThemeLightColorScheme={{@controller.isDefaultThemeLightColorScheme}}
+            @isDefaultThemeDarkColorScheme={{@controller.isDefaultThemeDarkColorScheme}}
             @toggleUserSelectable={{@controller.toggleUserSelectable}}
             @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
             @deleteColorScheme={{@controller.deleteColorScheme}}

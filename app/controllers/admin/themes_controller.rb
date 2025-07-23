@@ -221,7 +221,14 @@ class Admin::ThemesController < Admin::AdminController
       raise Discourse::InvalidAccess.new
     end
 
-    %i[name color_scheme_id user_selectable enabled auto_update].each do |field|
+    %i[
+      name
+      color_scheme_id
+      dark_color_scheme_id
+      user_selectable
+      enabled
+      auto_update
+    ].each do |field|
       @theme.public_send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
 
@@ -432,6 +439,7 @@ class Admin::ThemesController < Admin::AdminController
         params.require(:theme).permit(
           :name,
           :color_scheme_id,
+          :dark_color_scheme_id,
           :default,
           :user_selectable,
           :component,
