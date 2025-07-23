@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Post helper", type: :system, js: true do
+RSpec.describe "AI Post helper", type: :system do
   fab!(:user) { Fabricate(:admin) }
   fab!(:non_member_group) { Fabricate(:group) }
   fab!(:topic)

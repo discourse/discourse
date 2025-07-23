@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .dashboard.dashboard-sentiment {
   .charts {
     display: grid;
@@ -152,7 +154,7 @@
     border-bottom: 1px solid var(--primary-low);
     margin-bottom: 1rem;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       .d-button-label {
         display: none;
       }
@@ -194,17 +196,17 @@
 
     &[data-sentiment-score="positive"] {
       color: rgb(var(--d-sentiment-report-positive-rgb));
-      background: rgba(var(--d-sentiment-report-positive-rgb), 0.1);
+      background: rgb(var(--d-sentiment-report-positive-rgb), 0.1);
     }
 
     &[data-sentiment-score="neutral"] {
       color: rgb(var(--d-sentiment-report-neutral-rgb));
-      background: rgba(var(--d-sentiment-report-neutral-rgb), 0.1);
+      background: rgb(var(--d-sentiment-report-neutral-rgb), 0.1);
     }
 
     &[data-sentiment-score="negative"] {
       color: rgb(var(--d-sentiment-report-negative-rgb));
-      background: rgba(var(--d-sentiment-report-negative-rgb), 0.1);
+      background: rgb(var(--d-sentiment-report-negative-rgb), 0.1);
     }
   }
 

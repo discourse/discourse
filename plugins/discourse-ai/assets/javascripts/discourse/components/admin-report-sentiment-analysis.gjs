@@ -12,7 +12,7 @@ import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav"
 import PostList from "discourse/components/post-list";
 import bodyClass from "discourse/helpers/body-class";
 import categoryBadge from "discourse/helpers/category-badge";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -440,7 +440,7 @@ export default class AdminReportSentimentAnalysis extends Component {
                 class="admin-report-sentiment-analysis-details__post-score"
                 data-sentiment-score={{sentiment.id}}
               >
-                {{dIcon sentiment.icon}}
+                {{icon sentiment.icon}}
                 {{sentiment.text}}
               </span>
             {{/let}}

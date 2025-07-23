@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { computed } from "@ember/object";
 import { service } from "@ember/service";
+import bodyClass from "discourse/helpers/body-class";
 import { i18n } from "discourse-i18n";
 
 export default class extends Component {
@@ -42,4 +43,15 @@ export default class extends Component {
     }
     return false;
   }
+
+  <template>
+    {{#if this.isAiBotChat}}
+      {{bodyClass this.aiBotClasses}}
+      {{#if this.renderChatWarning}}
+        <div class="ai-bot-chat-warning">{{i18n
+            "discourse_ai.ai_bot.pm_warning"
+          }}</div>
+      {{/if}}
+    {{/if}}
+  </template>
 }

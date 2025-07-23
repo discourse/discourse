@@ -1,8 +1,8 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import AiComposerHelperMenu from "../discourse/components/ai-composer-helper-menu";
-import ModalDiffModal from "../discourse/components/modal/diff-modal";
-import { showComposerAiHelper } from "../discourse/lib/show-ai-helper";
+import AiComposerHelperMenu from "../components/ai-composer-helper-menu";
+import ModalDiffModal from "../components/modal/diff-modal";
+import { showComposerAiHelper } from "../lib/show-ai-helper";
 
 function initializeAiHelperTrigger(api) {
   api.onToolbarCreate((toolbar) => {
@@ -21,6 +21,7 @@ function initializeAiHelperTrigger(api) {
         return composerContent;
       }
     };
+
     toolbar.addButton({
       id: "ai-helper-trigger",
       group: "extras",
