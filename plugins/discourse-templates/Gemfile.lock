@@ -1,0 +1,62 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ast (2.4.2)
+    base64 (0.1.1)
+    json (2.6.3)
+    language_server-protocol (3.17.0.3)
+    parallel (1.23.0)
+    parser (3.2.2.3)
+      ast (~> 2.4.1)
+      racc
+    prettier_print (1.2.0)
+    racc (1.7.1)
+    rainbow (3.1.1)
+    regexp_parser (2.8.1)
+    rexml (3.2.6)
+    rubocop (1.56.3)
+      base64 (~> 0.1.1)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
+      parallel (~> 1.10)
+      parser (>= 3.2.2.3)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 1.8, < 3.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.28.1, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 3.0)
+    rubocop-ast (1.29.0)
+      parser (>= 3.2.1.0)
+    rubocop-capybara (2.18.0)
+      rubocop (~> 1.41)
+    rubocop-discourse (3.3.0)
+      rubocop (>= 1.1.0)
+      rubocop-rspec (>= 2.0.0)
+    rubocop-factory_bot (2.23.1)
+      rubocop (~> 1.33)
+    rubocop-rspec (2.23.2)
+      rubocop (~> 1.33)
+      rubocop-capybara (~> 2.17)
+      rubocop-factory_bot (~> 2.22)
+    ruby-progressbar (1.13.0)
+    syntax_tree (5.1.0)
+      prettier_print (>= 1.2.0)
+    unicode-display_width (2.4.2)
+    yaml-lint (0.0.10)
+
+PLATFORMS
+  arm64-darwin-20
+  ruby
+  x86_64-darwin-18
+  x86_64-darwin-19
+  x86_64-darwin-20
+  x86_64-linux
+
+DEPENDENCIES
+  rubocop-discourse
+  syntax_tree
+  yaml-lint
+
+BUNDLED WITH
+   2.3.10

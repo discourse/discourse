@@ -1,0 +1,17 @@
+<details class="template-item" id="template-item-{{@template.id}}">
+  <summary class="template-item-title">
+    <div class="template-item-title-text">{{@template.title}}</div>
+
+    <div class="actions">
+      <DButton
+        class="templates-apply"
+        @action={{action "apply"}}
+        @icon="far-clipboard"
+      />
+    </div>
+  </summary>
+
+  <div class="templates-content">
+    <CookText @rawText={{@template.content}} />
+  </div>
+</details>
