@@ -17,9 +17,11 @@ describe "Uploading files in the composer to S3", type: :system do
 
         find("#edit-avatar").click
         find("#uploaded-avatar").click
-        attach_file(File.absolute_path(file_from_fixtures("logo.jpg"))) do
-          find("#avatar-uploader").click
-        end
+        attach_file(
+          "#avatar-uploader",
+          File.absolute_path(file_from_fixtures("logo.jpg")),
+          make_visible: true,
+        )
         expect(page).to have_css(".avatar-uploader .avatar-uploader__button[data-uploaded]")
         modal.click_primary_button
         expect(modal).to be_closed
