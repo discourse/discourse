@@ -912,8 +912,7 @@ div.ac-wrap {
       }
 
       .submit-panel,
-      .composer-fields,
-      .d-editor-button-bar {
+      .composer-fields {
         // this prevents touch events (i.e. accidental scrolls) from bubbling up
         touch-action: none;
       }
