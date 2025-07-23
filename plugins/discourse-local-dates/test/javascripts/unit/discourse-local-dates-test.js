@@ -1,5 +1,9 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import {
+  logIn,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import freezeTime from "../helpers/freeze-time";
 import { applyLocalDates } from "../initializers/discourse-local-dates";
 
@@ -52,6 +56,29 @@ module("Unit | discourse-local-dates", function (hooks) {
         assert.dom(".relative-time", to).hasText("10:22 PM (Singapore)");
       }
     );
+  });
+
+  test("applyLocalDates sets formatted relative time based on current user timezone preference", async function (assert) {
+    logIn();
+
+    updateCurrentUser({
+      user_option: {
+        timezone: "Europe/Paris",
+      },
+    });
+
+    const from = fromElement();
+    const to = toElement();
+    const dateElements = [from, to];
+
+    freezeTime({ date: "2022-10-07T10:10:10" }, () => {
+      applyLocalDates(dateElements, {
+        discourse_local_dates_enabled: true,
+      });
+
+      assert.dom(".relative-time", from).hasText("Yesterday 11:21 AM");
+      assert.dom(".relative-time", to).hasText("Yesterday 4:22 PM");
+    });
   });
 
   test("applyLocalDates does not fail when a date element has no time", function (assert) {
