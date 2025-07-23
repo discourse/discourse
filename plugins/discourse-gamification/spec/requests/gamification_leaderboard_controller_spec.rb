@@ -12,7 +12,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
     Fabricate(:user, suspended_at: Time.now, suspended_till: 5.days.from_now)
   end
   fab!(:previously_suspended_user) do
-    Fabricate(:user, suspended_at: Time.now, suspended_till: 5.days.from_now)
+    Fabricate(:user, suspended_at: Time.now, suspended_till: 5.days.ago)
   end
 
   fab!(:user_3) { Fabricate(:user) }
