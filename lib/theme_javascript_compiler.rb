@@ -17,7 +17,7 @@ class ThemeJavascriptCompiler
 
   def initialize(theme_id, theme_name, settings = {}, minify: true)
     @theme_id = theme_id
-    @output_tree = []
+    @input_tree = {}
     @theme_name = theme_name
     @minify = minify
     @settings = settings
@@ -26,10 +26,12 @@ class ThemeJavascriptCompiler
   def compile!
     if !@compiled
       @compiled = true
-      @output_tree.freeze
+      @input_tree.freeze
+
+      output_tree = compile_tree!
 
       output =
-        if !has_content?
+        if !output_tree.present?
           { "code" => "" }
         else
           DiscourseJsProcessor::Transpiler.new.rollup(
@@ -76,40 +78,7 @@ class ThemeJavascriptCompiler
     @source_map
   end
 
-  # def raw_content
-  #   @output_tree.map { |filename, source| source }.join("")
-  # end
-
-  def has_content?
-    @output_tree.present?
-  end
-
-  def append_tree(tree, include_variables: true)
-    # Replace legacy extensions
-    tree.transform_keys! do |filename|
-      if filename.ends_with? ".js.es6"
-        filename.sub(/\.js\.es6\z/, ".js")
-      else
-        filename
-      end
-    end
-
-    # Transpile and write to output
-    tree.each_pair { |filename, content| @output_tree << [filename, content] }
-  end
-
-  def append_js_error(filename, message)
-    message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{message}"
-    append_raw_script filename, "console.error(#{message.to_json});"
-  end
-
-  private
-
-  def theme_settings
-    <<~JS
-      const settings = require("discourse/lib/theme-settings-store")
-        .getObjectForTheme(#{@theme_id});
-      const themePrefix = (key) => `theme_translations.#{@theme_id}.${key}`;
-    JS
+  def append_tree(tree)
+    @input_tree.merge!(tree)
   end
 end

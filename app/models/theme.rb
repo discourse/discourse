@@ -1056,7 +1056,7 @@ class Theme < ActiveRecord::Base
 
     compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
     compiler.append_tree(load_all_extra_js)
-    compiler.append_tree(migrations_tree, include_variables: false)
+    compiler.append_tree(migrations_tree)
     compiler.append_tree(tests_tree)
 
     content = compiler.content
