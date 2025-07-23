@@ -253,6 +253,7 @@ end
 #  auto_track_topics_after_msecs    :integer
 #  automatically_unpin_topics       :boolean          default(TRUE), not null
 #  bookmark_auto_delete_preference  :integer          default(3), not null
+#  composition_mode                 :integer          default(1), not null
 #  default_calendar                 :integer          default("none_selected"), not null
 #  digest_after_minutes             :integer
 #  dynamic_favicon                  :boolean          default(FALSE), not null
@@ -289,15 +290,11 @@ end
 #  timezone                         :string
 #  title_count_mode_key             :integer          default(0), not null
 #  topics_unread_when_closed        :boolean          default(TRUE), not null
-#  enable_smart_lists               :boolean          default(TRUE), not null
-#  hide_profile                     :boolean          default(FALSE), not null
-#  hide_presence                    :boolean          default(FALSE), not null
 #  watched_precedence_over_muted    :boolean
 #  color_scheme_id                  :integer
 #  dark_scheme_id                   :integer
 #  homepage_id                      :integer
 #  user_id                          :integer          not null, primary key
-#  composition_mode                 :integer          default(1), not null
 #
 # Indexes
 #
