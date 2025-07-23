@@ -61,7 +61,6 @@ export default class DAutocompleteModifier extends Modifier {
 
   // Internal state
   previousTerm = null;
-  searchPromise = null;
   debouncedSearch = null;
   targetElement = null;
   menuInstance = null;
@@ -200,7 +199,6 @@ export default class DAutocompleteModifier extends Modifier {
   @action
   cleanup() {
     cancel(this.debouncedSearch);
-    this.searchPromise?.cancel?.();
     if (this.targetElement) {
       this.targetElement.removeEventListener("keyup", this.handleKeyUp);
       this.targetElement.removeEventListener("keydown", this.handleKeyDown);
@@ -290,55 +288,47 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    // Cancel previous search
-    if (this.searchPromise?.cancel) {
-      this.searchPromise.cancel();
-    }
-
-    this.isLoading = true;
-
-    try {
-      this.searchPromise = this.options.dataSource(term);
-      const results = await this.searchPromise;
-
-      if (
-        this.isDestroying ||
-        this.isDestroyed ||
-        results === "skip" ||
-        results === CANCELLED_STATUS
-      ) {
-        return;
-      }
-
-      await this.updateResults(results || []);
-    } catch (e) {
-      if (e.name === "AbortError") {
-        // Search was cancelled, this is expected behavior
-        return;
-      } else {
-        // eslint-disable-next-line no-console
-        console.error("[autocomplete] updateResults: ", e);
-        this.results = [];
-        await this.closeAutocomplete();
-      }
-    } finally {
-      if (!this.isDestroying && !this.isDestroyed) {
-        this.isLoading = false;
-        this.searchPromise = null;
-      }
-    }
+    const results = this.options.dataSource(term);
+    this.updateResults(results || []);
   }
 
-  async updateResults(results) {
+  updateResults(results) {
+    if (
+      this.completeStart === null ||
+      results === "skip" ||
+      results === CANCELLED_STATUS
+    ) {
+      return;
+    }
+
+    if (results && results.then && typeof results.then === "function") {
+      this.isLoading = true;
+      results
+        .then((r) => {
+          this.isLoading = false;
+          this.updateResults(r);
+        })
+        .catch((e) => {
+          this.isLoading = false;
+          if (e.name !== "AbortError") {
+            // eslint-disable-next-line no-console
+            console.error("[autocomplete] updateResults: ", e);
+          }
+          this.closeAutocomplete();
+        });
+      return;
+    }
+
     // Check if results have actually changed to avoid unnecessary re-renders
     const resultsSame = this.areResultsEqual(this.results, results);
 
     this.results = results;
 
-    if (this.results.length === 0) {
-      await this.closeAutocomplete();
+    if (!this.results || this.results.length === 0) {
+      this.closeAutocomplete();
       return;
     }
+
     this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
 
     // we don't need to re-render if results are the same for an already open menu, just update the selected index to initial position
@@ -351,7 +341,7 @@ export default class DAutocompleteModifier extends Modifier {
       this.componentInstance.updateSelectedIndex(this.selectedIndex);
     }
 
-    await this.renderAutocomplete();
+    this.renderAutocomplete();
   }
 
   areResultsEqual(oldResults, newResults) {
@@ -474,7 +464,6 @@ export default class DAutocompleteModifier extends Modifier {
     this.componentInstance = null; // Clean up component reference
 
     cancel(this.debouncedSearch);
-    this.searchPromise?.cancel?.();
 
     // Note: onClose callback is handled by the menu's onClose option
   }
