@@ -117,7 +117,12 @@ after_initialize do
         message = { type: :accepted_solution, accepted_answer: }
 
         DiscourseEvent.trigger(:accepted_solution, post)
-        MessageBus.publish("/topic/#{topic.id}", message, topic.secure_audience_publish_messages)
+
+        secure_audience = topic.secure_audience_publish_messages
+        # MessageBus.publish will raise an error if user_ids or group_ids are an empty array.
+        if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+          MessageBus.publish("/topic/#{topic.id}", message, secure_audience)
+        end
 
         accepted_answer
       end
