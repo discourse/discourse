@@ -5874,6 +5874,7 @@ pl_PL:
           header_description: "Obserwowane słowa to narzędzia moderacji, które mogą wykonywać wiele różnych działań, w tym blokowanie, cenzurowanie, linkowanie lub oznaczanie postów zawierających określone słowa"
         color_palettes:
           title: "Palety kolorów"
+          header_description: "Te palety kontrolują kolory używane w Twojej społeczności. Po ustawieniu palety jako dostępnej dla użytkownika członkowie mogą wybrać preferowane kolory z listy."
         emoji:
           title: "Emoji"
           header_description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Wybierz wiele plików, aby utworzyć emoji przy użyciu ich nazw. Wybrana grupa będzie używana dla wszystkich plików dodanych w tym samym czasie."
@@ -7154,13 +7155,25 @@ pl_PL:
           select_base:
             title: "Wybierz podstawową paletę kolorów"
             description: "Paleta podstawowa:"
+          preference_warning: "Zmieniłeś <a href='%{link}'>ustawienia swojego motywu osobistego</a>, więc zmiany palety barw mogą być dla Ciebie niewidoczne. Osoby odwiedzające, które nie zmieniły swoich ustawień domyślnych, nadal zobaczą wprowadzone przez Ciebie zmiany."
           title: "Kolory"
           edit: "Edytuj"
+          set_default: "Ustaw jako aktywne na %{theme}"
+          set_default_success: "%{schemeName} ustawiono jako aktywną paletę dla %{themeName}"
+          saved_refreshing: "Zapisane! Odświeżanie kolorów..."
+          from_theme: "Z motywu: %{name}"
           filters:
+            search_placeholder: "Szukaj według nazwy lub motywu..."
             all: "Wszystkie"
             user_selectable: "Możliwe do wyboru przez użytkownika"
+            from_theme: "Z motywu"
+            no_results: "Nie znaleziono palet kolorów"
+            reset: "Zresetuj filtry"
           active_badge:
             text: "Aktywni"
+            title: "Aktywna paleta kolorów"
+          system_palette: "Jest to wbudowana paleta kolorów, której nie można edytować ani usunąć."
+          back_to_colors: "Powrót do palet kolorów"
           long_title: "Palety kolorów"
           about: "Zmodyfikuj kolory używane w swoich motywach. Utwórz nową paletę kolorów, aby rozpocząć."
           new_name: "Nowa paleta kolorów"
