@@ -629,6 +629,9 @@ aside.quote {
   margin-bottom: 1em;
 
   .title {
+    display: flex;
+    align-items: start;
+    gap: var(--space-2);
     color: var(--primary-high-or-secondary-low);
     padding: 0.8em 0.8em 0 0.8em;
 
@@ -639,13 +642,29 @@ aside.quote {
       cursor: pointer;
     }
 
-    // blockquote is underneath this and has top margin
-    .avatar {
-      margin-right: 0.5em;
+    a {
+      @include ellipsis;
     }
 
-    img {
-      margin-top: -0.26em;
+    .badge-category__wrapper {
+      align-self: center;
+    }
+
+    .quote-controls {
+      min-height: 24px; // match avatar height for alignment
+    }
+  }
+
+  .quote-title__text-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2);
+    min-width: 0;
+
+    .badge-category__wrapper {
+      align-self: auto;
     }
   }
 
@@ -677,9 +696,9 @@ aside.quote {
 }
 
 .quote-controls {
-  float: right;
   display: flex;
   align-items: center;
+  margin-left: auto;
 
   a {
     margin-left: 0.3em;
@@ -688,6 +707,13 @@ aside.quote {
   .quote-toggle,
   .back {
     padding: 0;
+  }
+}
+
+// empty control div can impact layout, so hide it
+aside .title:not([data-has-quote-controls]) {
+  .quote-controls {
+    display: none;
   }
 }
 
