@@ -265,11 +265,11 @@ pl_PL:
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
     critical_deprecation:
-      notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Zidentyfikowany motyw: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Zidentyfikowana wtyczka: '%{name}'"
+      notice: "<b>[Uwaga administratora]</b> %{source} zawiera kod, który wymaga aktualizacji. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>dowiedz się więcej</em></a>)"
+      theme_source: "Motyw <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Wtyczka „%{name}”"
+      unknown_source: "Jeden z Twoich motywów lub wtyczek"
     s3:
       regions:
         ap_northeast_1: "Azja i Pacyfik (Tokio)"
@@ -2736,6 +2736,9 @@ pl_PL:
       disabled: "Nie wyświetlaj"
       sidebar_footer: "Wyświetl w stopce paska bocznego"
       header: "Wyświetl w nagłówku"
+    welcome_banner_location:
+      above_topic_content: "Powyżej treści tematu"
+      below_site_header: "Poniżej nagłówka witryny"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5372,6 +5375,9 @@ pl_PL:
             badges:
               content: "Odznaki"
               title: "Wszystkie odznaki dostępne do zdobycia"
+            filter:
+              content: "Filtr"
+              title: "Filtruj tematy według kategorii, tagu lub innych kryteriów"
             topics:
               content: "Tematy"
               title: "Wszystkie tematy"
@@ -5539,6 +5545,13 @@ pl_PL:
           save: "Zapisz jako..."
     powered_by_discourse: "Obsługiwane przez Discourse"
     safari_15_warning: "Twoja przeglądarka wkrótce będzie niekompatybilna z tą społecznością. Aby nadal w niej uczestniczyć, zaktualizuj przeglądarkę lub <a href='%{url}'>dowiedz się więcej</a>."
+    filter:
+      placeholder: "Filtruj tematy według kategorii, tagu lub innych kryteriów"
+      description:
+        yesterday: "Wczoraj"
+        last_week: "Ostatni tydzień"
+        last_month: "Ostatni miesiąc"
+        last_year: "W ubiegłym roku"
     discovery:
       headings:
         all:
@@ -5662,6 +5675,9 @@ pl_PL:
         legal:
           title: "Prawne"
           header_description: "Skonfiguruj ustawienia prawne, takie jak warunki świadczenia usług, polityka prywatności, dane kontaktowe i kwestie specyficzne dla UE."
+        theme_site_settings:
+          title: "Ustawienia witryny motywu"
+          header_description: "Pokazuje wszystkie ustawienia witryny motywu i motywy, które je obecnie zastępują"
         localization:
           title: "Lokalizacja"
           header_description: "Skonfiguruj język interfejsu społeczności i inne opcje lokalizacji dla swoich członków"
@@ -5858,7 +5874,6 @@ pl_PL:
           header_description: "Obserwowane słowa to narzędzia moderacji, które mogą wykonywać wiele różnych działań, w tym blokowanie, cenzurowanie, linkowanie lub oznaczanie postów zawierających określone słowa"
         color_palettes:
           title: "Palety kolorów"
-          header_description: "Palety kolorów definiują podstawowe kolory używane w interfejsie Twojej witryny, podczas gdy motywy mogą zapewniać dodatkowe stylizacje, układy i komponenty - oba mogą współpracować ze sobą, aby stworzyć unikalny wygląd i styl Twojej witryny, i oba mogą być dostępne dla użytkowników, aby mogli wybrać swoje preferencje."
         emoji:
           title: "Emoji"
           header_description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Wybierz wiele plików, aby utworzyć emoji przy użyciu ich nazw. Wybrana grupa będzie używana dla wszystkich plików dodanych w tym samym czasie."
@@ -5951,6 +5966,14 @@ pl_PL:
         embedding:
           title: "Osadzanie"
           header_description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
+      theme_site_settings:
+        setting: "Ustawienie"
+        overridden_by: "Zastąpione przez"
+        default_value: "Domyślny"
+        overridden_value: "Wartość zastąpiona: %{value}"
+        select_setting: "Wybierz ustawienia witryny, aby zobaczyć aktualne wartości motywu"
+        add: "Przejdź do ustawień witryny motywu"
+        help: "Aktualnie używany motyw to <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Przejdź na stronę konfiguracji motywu <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'></a> , aby zmienić ustawienia witryny motywu, lub kliknij powiązany motyw w poniższej tabeli, aby edytować jego ustawienia."
       search:
         modal_title: "Wyszukaj wszystko w panelu administracyjnym"
         title: "Szukaj"
@@ -6655,7 +6678,7 @@ pl_PL:
           install: "Zainstaluj"
           themes:
             title: "Motywy"
-            description: "Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd i charakter dla wszystkich użytkowników."
+            description: 'Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd dla wszystkich użytkowników. Chcesz sprawdzić, które ustawienia witryny zastępują Twoje motywy? <a href="%{themeSiteSettingsUrl}">Zobacz ustawienia witryny motywu</a>'
             themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
             back: "Powrót do motywów"
@@ -6749,6 +6772,7 @@ pl_PL:
         author: "Przez %{author}"
         experimental_badge: "eksperymentalny"
         learn_more: "Dowiedz się więcej"
+        preinstalled: "Preinstalowane"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -7018,11 +7042,13 @@ pl_PL:
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           add: "Dodaj"
-          theme_settings: "Ustawienia motywu"
+          theme_settings: "Ustawienia motywu niestandardowego"
+          theme_site_settings: "Ustawienia, które motyw może zastąpić"
           edit_objects_theme_setting: "Edytor ustawień obiektów"
-          overriden_settings_explanation: "Zastąpione ustawienia są oznaczone kropką i mają podświetlony kolor. Aby zresetować te ustawienia do wartości domyślnych, naciśnij przycisk resetowania obok nich."
+          overriden_settings_explanation: "Zmiany względem ustawień domyślnych są oznaczone kropką i podświetleniem. Kliknij „Przywróć”, aby przywrócić ustawienia domyślne."
+          overriden_site_settings_explanation: "Ustawienia witryny można dostosować za pomocą motywu. Kliknij Przywróć, aby przywrócić domyślne ustawienia motywu. Jeśli żadne nie są ustawione, używane są domyślne ustawienia witryny. Wszystkie ustawienia witryny zastępowane przez motywy można zobaczyć na stronie konfiguracji ustawień witryny motywu <a href='%{themeSiteSettingsConfigUrl}'></a>."
           no_settings: "Ten temat nie ma żanych ustawień"
-          theme_translations: "Tłumaczenia tematu"
+          theme_translations: "Tłumaczenia motywu"
           empty: "Brak elementu"
           commits_behind:
             one: "Motyw jest %{count} aktualizację w tyle!"
@@ -7090,6 +7116,8 @@ pl_PL:
           active_filter: "Aktywni"
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
+          theme_setting_saved: "Ustawienia motywu zostały zapisane!"
+          theme_site_setting_saved: "Ustawienia motywu witryny zostały zapisane!"
         schema:
           title: "Edytuj ustawienie %{name}"
           back_button: "Powrót do %{name}"
@@ -7127,7 +7155,12 @@ pl_PL:
             title: "Wybierz podstawową paletę kolorów"
             description: "Paleta podstawowa:"
           title: "Kolory"
-          edit: "Edytuj palety kolorów"
+          edit: "Edytuj"
+          filters:
+            all: "Wszystkie"
+            user_selectable: "Możliwe do wyboru przez użytkownika"
+          active_badge:
+            text: "Aktywni"
           long_title: "Palety kolorów"
           about: "Zmodyfikuj kolory używane w swoich motywach. Utwórz nową paletę kolorów, aby rozpocząć."
           new_name: "Nowa paleta kolorów"
@@ -7443,6 +7476,7 @@ pl_PL:
             tag_group_destroy: "usuń grupę tagów"
             tag_group_change: "zmień grupę tagów"
             delete_associated_accounts: "usuń powiązane konta"
+            change_theme_site_setting: "zmień ustawienia motywu witryny"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -7790,7 +7824,7 @@ pl_PL:
         activity: Aktywność
         like_count: Polubienia dane / otrzymane
         last_100_days: "w ostatnich 100 dniach"
-        private_topics_count: Prywatne tematy
+        private_topics_count: Wiadomości osobiste
         posts_read_count: Przeczytane wpisy
         post_count: Napisane wpisy
         second_factor_enabled: Uwierzytelnianie dwuskładnikowe włączone

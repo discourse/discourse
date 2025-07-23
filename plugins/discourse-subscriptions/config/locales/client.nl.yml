@@ -100,7 +100,7 @@ nl:
           product: Naam
         subscriptions_help: Je hebt geen actieve abonnementen.
         subscriptions:
-          id: Abonnements-ID
+          id: Abonnement-ID
           status: Status
           discounted: Met korting
           renews: Wordt verlengd
@@ -394,7 +394,7 @@ nl:
           ZW: "Zimbabwe"
       billing:
         name: Volledige naam
-        email: E-mailadres
+        email: E-mail
         phone: Telefoonnummer
       confirmation:
         amount: Bedrag

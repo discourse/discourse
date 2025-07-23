@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 ro:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Autentificare cu Amazon"
+        message: "Autentificare cu Amazon (asigură-te că blocarea ferestrelor pop-up nu este activată)"

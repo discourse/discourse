@@ -10,7 +10,7 @@ sq:
       settings: "Rregullimet"
       all_categories: "(të gjitha kategoritë)"
       delete_channel: "Fshij"
-      edit_channel: "Redakto"
+      edit_channel: "Redaktoni"
       test_modal:
         topic: "Topic"
         close: "Mbyll"
@@ -22,7 +22,7 @@ sq:
         filter: "Filtro"
         category: "Kategori"
         tags: "Etiketat"
-        edit_rule: "Redakto"
+        edit_rule: "Redaktoni"
         delete_rule: "Fshij"
       edit_channel_modal:
         cancel: "Anulo"
@@ -39,6 +39,7 @@ sq:
             name:
               title: "Emri"
         discord:
+          title: "Discord"
           param:
             name:
               title: "Emri"

@@ -231,7 +231,7 @@ nl:
           nz_wl: "Nieuw-Zeeland (nz_wl)"
           nz: "Nieuw-Zeeland"
           pe: "Peru"
-          ph: "Filippijnen"
+          ph: "Filipijnen"
           pl: "Polen"
           pt_li: "Portugal (pt_li)"
           pt_po: "Portugal (pt_po)"
@@ -307,6 +307,7 @@ nl:
           ve: "Venezuela"
           vi: "Maagdeneilanden (VS)"
           za: "Zuid-Afrika"
+          zw: "Zimbabwe"
       toolbar_button:
         today: "Vandaag"
         month: "Maand"
@@ -315,7 +316,6 @@ nl:
         list: "Lijst"
     group_timezones:
       search: "Zoeken..."
-      group_availability: "Beschikbaarheid %{groep}"
     discourse_post_event:
       notifications:
         before_event_reminder: "Een evenement gaat beginnen"
@@ -330,9 +330,9 @@ nl:
       edit_reason_closed: "Evenement gesloten"
       edit_reason_opened: "Evenement geopend"
       topic_title:
-        starts_at: "Evenement begint: %{datum}"
-        ended_at: "Evenement eindigt: %{datum}"
-        ends_in_duration: "Eindigt %{duur}"
+        starts_at: "Evenement begint: %{date}"
+        ended_at: "Evenement afgelopen: %{date}"
+        ends_in_duration: "Eindigt %{duration}"
       show_all: "Alles weergeven"
       show_participants: "Deelnemers weergeven"
       participants:
@@ -397,13 +397,13 @@ nl:
             not_going: "Niet gaan"
             interested: "Geïnteresseerd"
             going_count:
-              one: "%{count} gaat"
+              one: "%{count} gaan"
               other: "%{count} gaan"
             not_going_count:
-              one: "%{count} gaat niet"
+              one: "%{count} gaan niet"
               other: "%{count} gaan niet"
             interested_count:
-              one: "%{count} is geïnteresseerd"
+              one: "%{count} zijn geïnteresseerd"
               other: "%{count} zijn geïnteresseerd"
             invited_count:
               one: "%{count} gebruiker uitgenodigd"

@@ -80,9 +80,9 @@ pt:
       reminders_frequency:
         description: "Frequência de recebimento de lembretes de tópicos atribuídos"
         never: "Nunca"
-        daily: "Diário"
-        weekly: "Semanal"
-        monthly: "Mensal"
+        daily: "Diariamente"
+        weekly: "Semanalmente"
+        monthly: "Mensalmente"
         quarterly: "Trimestral"
       admin:
         groups:
@@ -92,6 +92,10 @@ pt:
               assignable_levels:
                 title: "Quem pode atribuir este grupo"
     user:
+      notification_level_when_assigned:
+        watch_topic: "Ver tópico"
+        track_topic: "Acompanhar o tópico"
+        do_nothing: "Não faça nada"
       messages:
         assigned_title: "Atribuiu (%{count})"
         assigned: "Atribuído(a)"
@@ -139,7 +143,7 @@ pt:
     notification_reason:
       user: "Você verá uma contagem de respostas novas porque este tópico foi atribuído a você."
     notifications:
-      assigned: "<span>%{username}</span> %{description}"
+      assigned: "<span>%{username}</span>%{description}"
       popup:
         assigned: "%{username} atribuiu você"
       titles:

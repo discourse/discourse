@@ -10,7 +10,7 @@ sk:
       header:
         rules: 'Filtre'
       group: 'Skupina'
-      rewards: 'Odmeny'
+      rewards: 'Odmena'
       filter: 'Filter'
       edit: 'Upraviť'
       delete: 'Odstrániť'

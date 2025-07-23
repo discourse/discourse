@@ -19,17 +19,17 @@ bg:
       filter:
         mute: 'Заглушаване'
       rule_table:
-        filter: "Филтер"
+        filter: "Филтър"
         category: "Категория"
         tags: "Етикети"
         edit_rule: "Редактирай"
         delete_rule: "Изтрий"
       edit_channel_modal:
-        cancel: "Отмени"
+        cancel: "Прекрати"
       edit_rule_modal:
-        cancel: Отмени
+        cancel: Прекрати
         type: Тип
-        filter: Филтер
+        filter: Филтър
         category: Категория
         group: Група
         tags: Етикети
@@ -37,20 +37,20 @@ bg:
         telegram:
           param:
             name:
-              title: "Име"
+              title: "Име "
         discord:
           title: "Discord"
           param:
             name:
-              title: "Име"
+              title: "Име "
         guilded:
           param:
             name:
-              title: "Име"
+              title: "Име "
         matrix:
           param:
             name:
-              title: "Име"
+              title: "Име "
         zulip:
           param:
             subject:
@@ -58,23 +58,23 @@ bg:
         gitter:
           param:
             name:
-              title: "Име"
+              title: "Име "
         teams:
           param:
             name:
-              title: "Име"
+              title: "Име "
         powerautomate:
           param:
             name:
-              title: "Име"
+              title: "Име "
         webex:
           param:
             name:
-              title: "Име"
+              title: "Име "
         google:
           param:
             name:
-              title: "Име"
+              title: "Име "
     discourse_automation:
       scriptables:
         send_slack_message:

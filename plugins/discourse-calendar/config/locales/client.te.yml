@@ -13,8 +13,8 @@ te:
             topic_id:
               label: విషయపు ఐడీ
     discourse_calendar:
-      disable_holiday: "అచేతనం"
-      enable_holiday: "చేతనం"
+      disable_holiday: "నిలిపివేయండి"
+      enable_holiday: "ప్రారంభించండి"
       date: "తేదీ"
       region:
         none: "ఏదీ లేదు"
@@ -49,7 +49,7 @@ te:
         custom_fields:
           placeholder: "ఐచ్ఛికం"
         create: "సృష్టించండి"
-        update: "భద్రపరుచు"
+        update: "సేవ్ చేయండి"
         timezone:
           label: సమయమండలం
         reminders:
@@ -61,7 +61,7 @@ te:
             before: "ముందు"
             after: "తర్వాత"
         url:
-          label: "యూఆర్ యల్"
+          label: "URL"
           placeholder: "ఐచ్ఛికం"
         location:
           label: "ప్రాంతం"

@@ -9,18 +9,18 @@ et:
     gamification:
       you: "Sina"
       leaderboard:
-        link_to_settings: "Sätted"
+        link_to_settings: "Seaded"
         refresh: "Värskenda"
         name: "Nimi"
         period:
           all_time: "Alates algusest"
           yearly: "Iga-aastaselt"
-          quarterly: "Kvartaalselt"
+          quarterly: "Kvartali kaupa"
           monthly: "Igakuiselt"
           weekly: "Iganädalaselt"
           daily: "Igapäevaselt"
       create: "Loo"
-      cancel: "Tühista"
+      cancel: "Loobu"
       close: "Sulge"
       delete: "Kustuta"
       edit: "Muuda"

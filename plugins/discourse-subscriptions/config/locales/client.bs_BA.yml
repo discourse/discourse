@@ -14,17 +14,17 @@ bs_BA:
         interval:
           adverb:
             day: Dnevno
-            week: Popularne Sedmično
-            month: Popularne Mjesečno
-            year: Popularne Godišnje
+            week: Sedmično
+            month: Mesečno
+            year: Godišnje
       user:
         payments:
-          created_at: Kreiran
+          created_at: Stvoreno
         plans:
           product: Ime
         subscriptions:
           status: Status
-          created_at: Kreiran
+          created_at: Stvoreno
           cancel: otkaži
       billing:
         email: Email
@@ -38,12 +38,12 @@ bs_BA:
           product:
             description: Opis
             active: Active
-            created_at: Kreiran
+            created_at: Stvoreno
             updated_at: Ažurirano
         plans:
           plan:
             active: Active
-            created_at: Kreiran
+            created_at: Stvoreno
         coupons:
           active: Active?
           actions: Akcije
@@ -51,4 +51,4 @@ bs_BA:
           subscription:
             user: User
             status: Status
-            created_at: Kreiran
+            created_at: Stvoreno

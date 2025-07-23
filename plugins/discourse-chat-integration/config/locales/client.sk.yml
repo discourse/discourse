@@ -5,22 +5,35 @@
 # https://translate.discourse.org/
 
 sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat_integration: "Integrácie chatu"
   js:
     chat_integration:
-      settings: "Nastavenia"
+      menu_title: "Integrácie chatu"
+      settings: "Nastavení"
       no_providers: "Musíte povoliť niektorích poskytovateľov v nastavení zásuvných modulov"
+      channels_with_errors: "Pri poslednom odosielaní správ zlyhali niektoré kanály pre tohto poskytovateľa. Kliknutím na ikonu(y) chyby sa dozviete viac."
+      channel_exception: "Pri poslednom odoslaní správy na tento kanál došlo k neznámej chybe."
+      group_mention_template: "Zmienky o: @%{name}"
+      group_message_template: "Správy pre: @%{name}"
       choose_group: "(vyberte skupinu)"
       all_categories: "(všetky kategórie)"
       all_tags: "(všetky štítky)"
       create_rule: "Vytvoriť pravidlo"
       create_channel: "Vytvoriť kanál"
-      delete_channel: "Vymazať"
+      delete_channel: "Odstrániť"
       test_channel: "Test"
       edit_channel: "Upraviť"
+      channel_delete_confirm: "Naozaj chcete odstrániť tento kanál? Všetky súvisiace pravidlá budú odstránené."
       test_modal:
+        title: "Odoslať testovaciu správu"
         topic: "Téma"
         send: "Odoslať testovaciu správu"
         close: "Zatvoriť"
+        error: "Pri odosielaní správy sa vyskytla neznáma chyba. Ďalšie informácie nájdete v protokoloch stránky."
         success: "Správa úspešne odoslaná"
       type:
         normal: Bežné
@@ -28,12 +41,13 @@ sk:
         group_mention: Skupinová zmienka
       filter:
         mute: 'Ignorovať'
-        follow: 'Iba prvý príspevok'
+        follow: 'Len prvý príspevok'
         watch: 'Všetky príspevky a odpovede'
+        thread: 'Všetky príspevky s vláknovými odpoveďami'
       rule_table:
         filter: "Filter"
         category: "Kategória"
-        tags: "Štítky"
+        tags: "Značky"
         edit_rule: "Upraviť"
         delete_rule: "Odstrániť"
       edit_channel_modal:
@@ -54,7 +68,13 @@ sk:
         filter: Filter
         category: Kategória
         group: Skupina
-        tags: Štítky
+        tags: Značky
+        instructions:
+          type: "Zmena typu spúšťania oznámení pre skupinové správy alebo zmienky"
+          filter: "Úroveň oznámenia. Stlmenie má prednosť pred ostatnými pravidlami porovnávania"
+          category: "Toto pravidlo sa bude vzťahovať len na témy v uvedenej kategórii"
+          group: "Toto pravidlo sa vzťahuje na príspevky odkazujúce na túto skupinu"
+          tags: "Ak je uvedené, toto pravidlo sa bude vzťahovať len na témy, ktoré majú aspoň jednu z týchto značiek"
       provider:
         slack:
           title: "Slack"
@@ -62,11 +82,18 @@ sk:
             identifier:
               title: Kanál
               help: "napr. #kanál, @používateľské_meno"
+          errors:
+            action_prohibited: "Bot nemá povolenie na odosielanie príspevkov do tohto kanála"
+            channel_not_found: "Zadaný kanál na Slacku neexistuje."
         telegram:
           title: "Telegram"
           param:
             name:
               title: "Meno"
+              help: "Názov popisujúci kanál. Nepoužíva sa na pripojenie k Telegramu."
+            chat_id:
+              title: ID chatu
+              help: Číslo, ktoré vám pridelil bot, alebo identifikátor vysielacieho kanála vo forme @názov_kanála
           errors:
             channel_not_found: "Zvolený kanál na Telegrame neexistuje"
             forbidden: "Bot nemá práva na posielanie príspevkov na tento kanál"
@@ -75,14 +102,19 @@ sk:
           param:
             name:
               title: "Meno"
+              help: "Názov popisujúci kanál. Nepoužíva sa na pripojenie k Discordu."
             webhook_url:
               title: Webová adresa URL
+              help: Adresa URL webhooku vytvorená v nastaveniach servera Discord
         guilded:
+          title: "Guildovaný"
           param:
             name:
               title: "Meno"
+              help: "Názov popisujúci kanál. Nepoužíva sa na pripojenie k Guilded."
             webhook_url:
               title: Webová adresa URL
+              help: Adresa URL webhooku vytvorená v nastaveniach servera Guilded
         mattermost:
           title: "Mattermost"
           param:
@@ -92,64 +124,119 @@ sk:
           errors:
             channel_not_found: "Zvolený kanál neexistuje na Mattermoste."
         matrix:
+          title: "Matrix"
           param:
             name:
               title: "Meno"
+              help: "Názov, ktorý opisuje kanál. Nepoužíva sa pre pripojenie k Matrixu."
+            room_id:
+              title: "ID miestnosti"
+              help: "„Súkromný identifikátor“ miestnosti. Mal by vyzerať nejako takto !abcdefg:matrix.org"
+          errors:
+            unknown_token: "Prístupový token je neplatný"
+            unknown_room: "ID miestnosti je neplatné"
         zulip:
           title: "Zulip"
           param:
+            stream:
+              title: "Stream"
+              help: "Názov streamu Zulip, do ktorého sa má správa odoslať. Napr. „všeobecné“"
             subject:
               title: "Predmet"
+              help: "Predmet, ktorý by mali byť uvedené v týchto správach odoslaných botom"
+          errors:
+            does_not_exist: "Tento stream na Zulip neexistuje."
         rocketchat:
           title: "Rocket.Chat"
           param:
             identifier:
               title: Kanál
               help: "napr. #kanál, @používateľské_meno"
+          errors:
+            invalid_channel: "Tento kanál na Rocket Chat neexistuje"
         gitter:
           title: "Gitter"
           param:
             name:
               title: "Meno"
+              help: "Názov miestnosti Gitter, napr. gitterHQ/services."
             webhook_url:
               title: "Webová adresa URL"
+              help: "Adresa URL poskytnutá pri vytváraní novej integrácie v miestnosti Gitter."
+        flowdock:
+          title: "Flowdock"
+          param:
+            flow_token:
+              title: "Token toku"
+              help: "Token toku poskytnutý po vytvorení zdroja toku, do ktorého chcete posielať správy."
+        groupme:
+          title: "GroupMe"
+          param:
+            groupme_instance_name:
+              title: "Názov inštancie GroupMe"
+              help: "názov inštancie Groupme, ako je uvedený v Nastaveniach lokality. použite \"all\" na odoslanie všetkým inštanciám"
+          errors:
+            not_found: "Cesta, na ktorú ste sa pokúšali odoslať správu, nebola nájdená. Skontrolujte ID bota v Nastaveniach stránky."
         teams:
+          title: "Microsoft Teams"
           param:
             name:
               title: "Meno"
+              help: "Názov kanála Teams, napr. discourse"
             webhook_url:
               title: "Webová adresa URL"
+              help: "Adresa URL zadaná pri vytváraní nového prichádzajúceho webhooku"
+          errors:
+            invalid_channel: "Tento kanál v službe Microsoft Teams neexistuje"
         powerautomate:
+          title: "Microsoft Power Automate"
           param:
             name:
               title: "Meno"
+              help: "Názov kanála (zobrazuje sa len v rozhraní správcu Discourse)"
             webhook_url:
               title: "Webová adresa URL"
+              help: "Adresa URL zadaná pri vytváraní nového prichádzajúceho webhooku"
+          errors:
+            invalid_webhook: "Táto adresa URL webhooku nie je platná."
         webex:
+          title: "Tímy Webex"
           param:
             name:
               title: "Meno"
+              help: "Názov priestoru Webex, napr. discourse"
             webhook_url:
               title: "Webová adresa URL"
+              help: "Adresa URL zadaná pri vytváraní nového prichádzajúceho webhooku"
+          errors:
+            invalid_channel: "Tento kanál v službe Webex neexistuje"
         google:
+          title: "Google Chat"
           param:
             name:
               title: "Meno"
+              help: "Názov kanála (zobrazuje sa len v rozhraní správcu Discourse)"
             webhook_url:
               title: "Webová adresa URL"
+              help: "Adresa URL zadaná pri vytváraní nového webhooku"
     discourse_automation:
       scriptables:
         send_slack_message:
+          title: Odoslať správu v Slacku
           fields:
             message:
               label: Správa
+              description: >-
+                Použite ${TOPIC} pre názov témy, ${URL} pre použitú adresu URL, ${REMOVED_TAGS} pre odstránené značky, ${ADDED_TAGS} pre pridané značky, ${ADDED_AND_REMOVED} pre predvolený text. k dispozícii len vtedy, ak je spúšťač nastavený na možnosť Topic tags changed (Zmena značiek témy).
             url:
               label: URL
             channel:
               label: Kanál
         send_chat_integration_message:
+          title: Odoslanie správy Chat-Integration
           fields:
             channel_name:
               label: Názov kanála
+              description: "Názov kanála nájdete v nastaveniach integrácie chatu"
             provider:
               label: Poskytovateľ

@@ -35,22 +35,22 @@ da:
       type:
         normal: Normal
       filter:
-        mute: 'Mute'
+        mute: 'Ignorer'
       rule_table:
         filter: "Filter"
         category: "Kategori"
-        tags: "Tags"
+        tags: "Mærker"
         edit_rule: "Rediger"
         delete_rule: "Slet"
       edit_channel_modal:
-        cancel: "Afbryd"
+        cancel: "Annuller"
       edit_rule_modal:
-        cancel: Afbryd
+        cancel: Annuller
         type: Type
         filter: Filter
         category: Kategori
         group: Gruppe
-        tags: Tags
+        tags: Mærker
       provider:
         telegram:
           param:
@@ -72,7 +72,7 @@ da:
         zulip:
           param:
             subject:
-              title: "Subjekt"
+              title: "Emne"
         gitter:
           param:
             name:

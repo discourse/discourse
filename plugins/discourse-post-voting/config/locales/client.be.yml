@@ -25,4 +25,5 @@ be:
                 title: "не згаджацца"
       topic:
         sort_by: "сартаваць па"
+        votes: "Галасоў"
         activity: "актыўнасць"

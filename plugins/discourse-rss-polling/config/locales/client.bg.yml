@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 bg:
+  js:
+    admin:
+      rss_polling:
+        feed_url: URL
+        discourse_category: Категория
+        discourse_tags: Етикети

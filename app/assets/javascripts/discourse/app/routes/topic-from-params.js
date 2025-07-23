@@ -11,6 +11,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class TopicFromParams extends DiscourseRoute {
   @service composer;
   @service header;
+  @service router;
 
   // Avoid default model hook
   model(params) {

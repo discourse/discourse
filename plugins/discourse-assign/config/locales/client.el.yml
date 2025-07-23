@@ -8,9 +8,12 @@ el:
   js:
     discourse_assign:
       group_everyone: "Όλοι"
+      assigned_to: "Ανατέθηκε σε"
+      assigned_to_w_ellipsis: "Ανατέθηκε σε..."
       reassign:
         title: "Επεξεργασία"
       assign_modal:
+        note_label: Σημείωση
         optional_label: "(προεραιτικό)"
         status_label: Κατάσταση
       assign_mailer:
@@ -18,17 +21,21 @@ el:
         always: "Πάντα"
       reminders_frequency:
         never: "Ποτέ"
-        daily: "Ημερήσια"
-        weekly: "Εβδομαδιαία"
-        monthly: "Μηνιαία"
+        daily: "Ημερήσιες"
+        weekly: "Εβδομαδιαίες"
+        monthly: "Μηνιαίες"
         quarterly: "Τριμηνιαία"
     user:
       notification_level_when_assigned:
         do_nothing: "Μην κάνετε τίποτα"
       assignment_description:
         topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Ανατέθηκε σε"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:
-      topic: "Νήμα"
+      topic: "Θέμα"
       post: "Ανάρτηση"

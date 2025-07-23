@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 uk:
+  js:
+    login:
+      lti:
+        name: "LTI"
+        title: "з LTI"

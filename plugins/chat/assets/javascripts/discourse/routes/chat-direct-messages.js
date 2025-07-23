@@ -4,6 +4,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class ChatDirectMessagesRoute extends DiscourseRoute {
   @service chat;
   @service chatChannelsManager;
+  @service router;
 
   activate() {
     this.chat.activeChannel = null;

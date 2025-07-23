@@ -179,12 +179,6 @@ ja:
     broken_page_change_alert: "onPageChange ハンドラーでエラーが発生しました。詳細は、ブラウザの開発者ツールを確認してください。"
     broken_plugin_alert: "プラグイン '%{name}' が原因"
     broken_transformer_alert: "エラーが発生しました。サイトが正しく動作しない可能性があります。"
-    critical_deprecation:
-      notice: "<b>[管理者からのお知らせ]</b> 次回の Discourse コアの変更に対応するために、お使いのテーマまたはプラグインの 1 つを更新する必要があります。"
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "検出されたテーマ: <a target='_blank' href='%{path}'>'%{name}'</a>。"
-      plugin_source: "検出されたプラグイン: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"
@@ -4395,6 +4389,8 @@ ja:
             badges:
               content: "バッジ"
               title: "獲得可能なすべてのバッジ"
+            filter:
+              content: "フィルター"
             topics:
               content: "トピック"
               title: "すべてのトピック"
@@ -4536,6 +4532,12 @@ ja:
           paste: "貼り付け..."
           save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
+    filter:
+      description:
+        yesterday: "昨日"
+        last_week: "先週"
+        last_month: "先月"
+        last_year: "昨年"
     discovery:
       headings:
         multi_tag:
@@ -4736,6 +4738,8 @@ ja:
         embedding:
           title: "埋め込み"
           header_description: "Discourse には、IFRAME を作成する JavaScript API を使用して、リモートサイトのトピックのコメントを埋め込む機能があります。"
+      theme_site_settings:
+        default_value: "デフォルト"
       search:
         title: "検索"
         result_types:
@@ -5679,11 +5683,7 @@ ja:
           up_to_date: "テーマは最新です。最終確認日:"
           has_overwritten_history: "現在のテーマのバージョンは、Git 履歴が強制プッシュで上書きされたため、存在しなくなりました。"
           add: "追加"
-          theme_settings: "テーマの設定"
-          edit_objects_theme_setting: "オブジェクト設定エディター"
-          overriden_settings_explanation: "オーバーライドされた設定はドットでマークされ、ハイライト表示されます。これらの設定をデフォルトの値にリセットするには、その横にあるリセットボタンを押します。"
           no_settings: "このテーマには設定がありません。"
-          theme_translations: "テーマの翻訳"
           empty: "項目なし"
           commits_behind:
             other: "テーマは %{count} コミット遅れです！"
@@ -5748,7 +5748,12 @@ ja:
             title: "基本色パレットを選択してください"
             description: "基本パレット:"
           title: "色"
-          edit: "色パレットを編集"
+          edit: "編集"
+          filters:
+            all: "すべて"
+            user_selectable: "ユーザー選択可能"
+          active_badge:
+            text: "アクティブ"
           long_title: "色パレット"
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
           new_name: "新しい色パレット"
@@ -6375,7 +6380,6 @@ ja:
         activity: アクティビティ
         like_count: '「いいね！」した数/された数'
         last_100_days: "過去 100 日間"
-        private_topics_count: 非公開トピック
         posts_read_count: 既読の投稿数
         post_count: 作成した投稿数
         second_factor_enabled: 二要素認証が有効です

@@ -41,7 +41,7 @@ ro:
         follow: 'Doar prima postare'
         watch: 'Toate postările și răspunsurile'
       rule_table:
-        filter: "Filtrează"
+        filter: "Filtru"
         category: "Categorie"
         tags: "Etichete"
         edit_rule: "Editează"

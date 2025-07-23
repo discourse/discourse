@@ -6,6 +6,12 @@
 
 id:
   js:
+    discourse_automation:
+      triggerables:
+        event_started:
+          fields:
+            topic_id:
+              label: ID Topik
     discourse_calendar:
       invite_user_notification: "%{username} mengundang Anda ke: %{description}"
       on_holiday: "Saat Liburan"
@@ -60,6 +66,7 @@ id:
           ch_be: "Swiss (ch_be)"
           ch_bl: "Swiss (ch_bl)"
       toolbar_button:
+        today: "Hari ini"
         day: "Hari"
     group_timezones:
       search: "Cari..."

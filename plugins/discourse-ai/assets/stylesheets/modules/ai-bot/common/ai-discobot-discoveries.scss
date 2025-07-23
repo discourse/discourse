@@ -1,0 +1,285 @@
+@use "lib/viewport";
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.ai-search-discoveries {
+  &__regular-results-title {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+
+  &__completion {
+    margin: 0;
+  }
+
+  &__discovery {
+    &.preview {
+      height: 3.5em; // roughly the loading skeleton height
+      overflow: hidden;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        display: block;
+        background: linear-gradient(rgba(255, 255, 255, 0), var(--secondary));
+        height: 50%;
+        width: 100%;
+        bottom: 0;
+        opacity: 0;
+        animation: fade-in 0.5s ease-in forwards;
+      }
+    }
+  }
+
+  &__discoveries-title,
+  &__regular-results-title {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid var(--primary-low);
+    font-size: var(--font-0);
+
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+
+  &__discoveries-title {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__toggle {
+    padding-left: 0;
+    margin-bottom: 0.5em;
+  }
+
+  .cooked p:first-child {
+    margin-top: 0;
+  }
+
+  &__continue-conversation {
+    margin-block: 1rem;
+  }
+}
+
+.ai-search-discoveries-tooltip {
+  &__content {
+    padding: 0.5rem;
+  }
+
+  &__header {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .btn {
+      padding: 0;
+    }
+  }
+
+  .fk-d-tooltip__trigger {
+    vertical-align: middle;
+  }
+
+  .d-icon {
+    color: var(--primary-medium);
+  }
+}
+
+.full-page-discoveries {
+  padding: 0 1rem;
+
+  @include viewport.until(md) {
+    padding: 0.25rem 1rem 0 1rem;
+  }
+}
+
+.d-icon-discobot {
+  // appears a little undersized next to other icons
+  height: 1.15em;
+  width: 1.15em;
+}
+
+.ai-discobot-discoveries {
+  padding-top: 0.5em;
+}
+
+@include breakpoint("medium", min-width) {
+  .search-menu .menu-panel:has(.ai-search-discoveries__discoveries-title) {
+    width: 80vw;
+    max-width: 900px;
+    transition: width 0.5s;
+
+    .results {
+      display: grid;
+      grid-template-columns: 58% 38%;
+      grid-template-rows: auto auto 1fr;
+      gap: 0 4%;
+
+      * {
+        // covers all non-discovery content
+        grid-column-start: 1;
+      }
+
+      .ai-discobot-discoveries {
+        // always in the second column, always spans all rows
+        grid-column-start: 2;
+        grid-row: 1 / -1;
+        box-sizing: border-box;
+        padding: 0 0.5em 0 2em;
+        margin: 0.75em 0 0 0;
+        border-left: 1px solid var(--primary-low);
+
+        .cooked {
+          font-size: var(--font-down-1);
+        }
+      }
+    }
+
+    .ai-search-discoveries {
+      font-size: var(--font-0);
+      color: var(--primary-high);
+      padding-right: 0.5em;
+    }
+
+    .ai-search-discoveries__regular-results-title {
+      display: none;
+    }
+
+    .ai-search-discoveries__toggle {
+      display: none;
+    }
+
+    .ai-search-discoveries__discovery.preview {
+      height: 100%;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.search-page .ai-search-discoveries__discoveries-wrapper {
+  padding-bottom: 0.5rem;
+}
+
+.ai-search-discoveries__discoveries-title.full-page-discoveries {
+  border: none;
+  padding-top: 1rem;
+}
+
+@mixin discoveries-sidebar {
+  .full-page-discoveries {
+    padding: 1em 10%;
+  }
+
+  &.search-page.has-discoveries {
+    .semantic-search__container {
+      background: transparent;
+      margin: 0;
+    }
+
+    .semantic-search__container .semantic-search__results {
+      .semantic-search__searching {
+        margin-left: 0;
+      }
+
+      .semantic-search__searching-text {
+        margin-left: 1.25em;
+      }
+    }
+
+    .search-container .search-header {
+      padding: 1em 2em;
+    }
+
+    .semantic-search__container .search-results,
+    .search-container .search-advanced .search-results,
+    .search-container .search-advanced .search-info {
+      padding: 1em 2em;
+    }
+
+    .search-results .fps-result {
+      padding: 0;
+      margin-bottom: 2.5em;
+    }
+
+    .search-advanced {
+      display: grid;
+      grid-template-columns: 70% 30%;
+      grid-auto-rows: auto;
+
+      > * {
+        grid-column: 1;
+        align-self: start;
+      }
+    }
+
+    .search-info {
+      grid-row: 1;
+    }
+
+    .ai-search-discoveries__discoveries-title {
+      border: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .ai-search-discoveries__discoveries-wrapper {
+      grid-column: 2 / -1;
+      grid-row: 1 / 5;
+      border-left: 1px solid var(--primary-low);
+      align-self: stretch;
+
+      .cooked {
+        color: var(--primary-high);
+      }
+    }
+  }
+}
+
+body:not(.has-sidebar-page) {
+  @include viewport.from(md) {
+    @include discoveries-sidebar;
+  }
+}
+
+body.has-sidebar-page {
+  @include viewport.from(lg) {
+    @include discoveries-sidebar;
+  }
+
+  @include viewport.between(md, lg) {
+    .ai-search-discoveries__discoveries-wrapper {
+      padding-bottom: 0;
+    }
+
+    .ai-search-discoveries__discoveries-title {
+      padding-top: 1rem;
+    }
+
+    .search-container .search-advanced .search-info,
+    .semantic-search__container.search-results {
+      padding-inline: 10%;
+    }
+
+    .full-page-discoveries {
+      padding-inline: 10%;
+    }
+  }
+}

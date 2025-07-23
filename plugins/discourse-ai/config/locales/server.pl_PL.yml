@@ -1,0 +1,288 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  discourse_automation:
+    ai:
+      flag_types:
+        spam: "Oznacz jako spam i ukryj post"
+        spam_silence: "Oznacz jako spam, ukryj post i wycisz użytkownika"
+    scriptables:
+      llm_triage:
+        title: Oceniaj posty za pomocą sztucznej inteligencji
+        description: "Oceniaj posty przy użyciu dużego modelu językowego"
+      llm_report:
+        title: Raport okresowy z wykorzystaniem AI
+        description: "Okresowy raport oparty na dużym modelu językowym"
+  site_settings:
+    discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
+    ai_toxicity_enabled: "Włącz moduł toksyczności."
+    ai_toxicity_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API modułu toksyczności"
+    ai_toxicity_inference_service_api_key: "Klucz dla API toksyczności"
+    ai_toxicity_inference_service_api_model: "Model używany do wnioskowania. Model wielojęzyczny współpracuje z włoskim, francuskim, rosyjskim, portugalskim, hiszpańskim i tureckim."
+    ai_toxicity_flag_automatically: "Automatycznie oflaguj posty / wiadomości na czacie, które przekraczają skonfigurowane progi."
+    ai_toxicity_flag_threshold_toxicity: "Toksyczność: niegrzeczny, lekceważący lub nierozsądny komentarz, który może sprawić, że opuścisz dyskusję lub zrezygnujesz z dzielenia się swoją perspektywą"
+    ai_toxicity_flag_threshold_severe_toxicity: "Poważna toksyczność: bardzo nienawistny, agresywny lub lekceważący komentarz, który najprawdopodobniej sprawi, że opuścisz dyskusję lub zrezygnujesz z dzielenia się swoją perspektywą"
+    ai_toxicity_flag_threshold_obscene: "Nieprzyzwoity"
+    ai_toxicity_flag_threshold_identity_attack: "Atak na tożsamość"
+    ai_toxicity_flag_threshold_insult: "Znieważenie"
+    ai_toxicity_flag_threshold_threat: "Zagrożenie"
+    ai_toxicity_flag_threshold_sexual_explicit: "Treści erotyczne"
+    ai_toxicity_groups_bypass: "Posty użytkowników w tych grupach nie będą klasyfikowane według modułu toksyczności."
+    ai_sentiment_enabled: "Włącz moduł sentymentu."
+    ai_sentiment_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API dla modułu sentymentu"
+    ai_sentiment_inference_service_api_key: "Klucz dla API sentymentu"
+    ai_sentiment_models: "Modele używane do wnioskowania. Sentyment klasyfikuje post w przestrzeni pozytywnej/neutralnej/negatywnej. Emocje klasyfikuje się w przestrzeni gniewu/wstrętu/strachu/radości/neutralności/smutku/zaskoczenia."
+    ai_nsfw_detection_enabled: "Włącz moduł NSFW."
+    ai_nsfw_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API dla modułu NSFW"
+    ai_nsfw_inference_service_api_key: "Klucz dla NSFW API"
+    ai_nsfw_flag_automatically: "Automatycznie oflaguj posty NSFW, które przekraczają skonfigurowane progi."
+    ai_nsfw_flag_threshold_general: "Ogólny próg dla obrazu, który ma zostać uznany za NSFW."
+    ai_nsfw_flag_threshold_drawings: "Próg uznania rysunku za NSFW."
+    ai_nsfw_flag_threshold_hentai: "Próg uznania obrazu zaklasyfikowanego jako hentai, aby został uznany za NSFW."
+    ai_nsfw_flag_threshold_porn: "Próg uznania obrazu zaklasyfikowanego jako pornograficzny, aby został uznany za NSFW."
+    ai_nsfw_flag_threshold_sexy: "Próg uznania obrazu zaklasyfikowanego jako seksowny, aby został uznany za NSFW."
+    ai_nsfw_models: "Modele używane do wnioskowania NSFW."
+    composer_ai_helper_allowed_groups: "Użytkownicy w tych grupach zobaczą przycisk pomocy AI w kompozytorze."
+    ai_helper_allowed_in_pm: "Włącz asystenta AI kompozytora w PW."
+    ai_helper_model: "Model do użycia dla pomocnika AI."
+    ai_helper_custom_prompts_allowed_groups: "Użytkownicy w tych grupach zobaczą opcję niestandardowego monitu w pomocniku AI."
+    ai_helper_automatic_chat_thread_title_delay: "Opóźnienie w minutach, zanim pomocnik AI automatycznie ustawi tytuł wątku czatu."
+    ai_helper_automatic_chat_thread_title: "Automatycznie ustawiaj tytuły wątków czatu na podstawie zawartości wątku."
+    ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
+    ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
+    ai_embeddings_semantic_related_topics: "Maksymalna liczba tematów do wyświetlenia w sekcji powiązanych tematów."
+    ai_embeddings_backfill_batch_size: "Liczba osadzań do uzupełnienia co 15 minut."
+    ai_embeddings_semantic_search_enabled: "Włącz wyszukiwanie semantyczne na całej stronie."
+    ai_embeddings_semantic_related_include_closed_topics: "Uwzględnij zamknięte tematy w semantycznych wynikach wyszukiwania"
+    ai_embeddings_semantic_search_hyde_model: "Model używany do rozwijania słów kluczowych w celu uzyskania lepszych wyników podczas wyszukiwania semantycznego"
+    ai_summarization_model: "Model używany do podsumowania"
+    ai_custom_summarization_allowed_groups: "Grupy, które mogą tworzyć nowe podsumowania."
+    ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
+    ai_summary_gists_enabled: "Automatycznie generuj krótkie podsumowania najnowszych odpowiedzi w tematach"
+    ai_summary_gists_allowed_groups: "Grupy mogą przeglądać sedno dyskusji na liście gorących tematów."
+    ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
+    ai_bot_enabled: "Włącz moduł bota AI."
+    ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można je zastąpić, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
+    ai_bot_allowed_groups: "Gdy bot GPT uzyska dostęp do PW, odpowie członkom tych grup."
+    ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć PW z botem AI"
+    ai_stability_api_key: "Klucz dla API stability.ai"
+    ai_stability_engine: "Silnik generowania obrazów do wykorzystania w stability.ai API"
+    ai_stability_api_url: "Adres URL interfejsu API stability.ai"
+    ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
+    ai_google_custom_search_cx: "CX dla Google Custom Search API"
+  reviewables:
+    reasons:
+      flagged_by_toxicity: Wtyczka AI oznaczyła to po sklasyfikowaniu jako toksyczne.
+      flagged_by_nsfw: Wtyczka AI oznaczyła to po sklasyfikowaniu co najmniej jednego z załączonych obrazów jako NSFW.
+  reports:
+    overall_sentiment:
+      title: "Ogólny sentyment"
+      xaxis: "Pozytywny(%)"
+      yaxis: "Data"
+    emotion_anger:
+      title: "\U0001F620 Gniew"
+    emotion_disgust:
+      title: "\U0001F922 Niesmak"
+    emotion_fear:
+      title: "\U0001F628 Strach"
+    emotion_neutral:
+      title: "\U0001F610 Neutralne"
+    emotion_sadness:
+      title: "\U0001F62D Smutek"
+    emotion_surprise:
+      title: "\U0001F632 Niespodzianka"
+  discourse_ai:
+    ai_artifact:
+      view_source: "Zobacz źródło"
+      view_changes: "Zobacz zmiany"
+      change_description: "Zmień opis"
+    unknown_model: "Nieznany model AI"
+    ai_helper:
+      errors:
+        completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."
+      prompts:
+        translate: Przetłumacz na %{language}
+        generate_titles: Zaproponuj tytuły tematu
+        proofread: Popraw tekst
+        markdown_table: Wygeneruj tabelę Markdown
+        custom_prompt: "Niestandardowy monit"
+        explain: "Wyjaśnij"
+        illustrate_post: "Zilustruj post"
+    share_ai:
+      read_more: "Przeczytaj pełną transkrypcję"
+      errors:
+        not_allowed: "Nie masz uprawnień do udostępniania tego tematu"
+        failed_to_share: "Nie udało się udostępnić konwersacji"
+        conversation_deleted: "Udostępniona konwersacja została pomyślnie usunięta"
+    spam_detection:
+      flag_reason: "Oznaczono jako spam przez <a href='%{url}'>Discourse AI</a>"
+      silence_reason: "Użytkownik wyciszony automatycznie przez <a href='%{url}'>Discourse AI</a>"
+      invalid_error_type: "Podano nieprawidłowy typ błędu"
+      unexpected: "Wystąpił nieoczekiwany błąd"
+      bot_user_update_failed: "Nie udało się zaktualizować użytkownika bota skanującego spam"
+      logging_subject: "Wykrywanie spamu"
+    ai_bot:
+      default_pm_prefix: "[PW bota AI bez tytułu]"
+      thinking: "Myślenie..."
+      personas:
+        cannot_delete_system_persona: "Person systemowych nie można usunąć, zamiast tego wyłącz je."
+        general:
+          name: Pomocnik forumowy
+          description: "Bot AI ogólnego przeznaczenia zdolny do wykonywania różnych zadań"
+        artist:
+          name: Artysta
+          description: "Bot AI specjalizujący się w generowaniu obrazów"
+        sql_helper:
+          name: Pomocnik SQL
+          description: "Bot AI specjalizujący się w pomaganiu w tworzeniu zapytań SQL na tej instancji Discourse."
+        settings_explorer:
+          name: Eksplorator ustawień
+          description: "Bot AI specjalizujący się w eksploracji ustawień strony Discourse"
+        creative:
+          name: Kreatywny
+          description: "Bot AI bez zewnętrznych integracji specjalizujący się w zadaniach kreatywnych"
+        dall_e3:
+          name: "DALL-E 3"
+          description: "Bot AI specjalizujący się w generowaniu obrazów przy użyciu DALL-E 3"
+        short_summarizer:
+          name: "Podsumowanie (forma krótka)"
+        custom_prompt:
+          name: "Niestandardowy prompt"
+      topic_not_found: "Podsumowanie niedostępne, nie znaleziono tematu!"
+      summarizing: "Podsumowanie tematu"
+      searching: "Wyszukiwanie: '%{query}'"
+      tool_options:
+        researcher:
+          max_results:
+            name: "Maksymalna liczba wyników"
+        update_artifact:
+          update_algorithm:
+            description: "Poproś LLM o pełne zastąpienie lub użyj diff do aktualizacji"
+        google:
+          base_query:
+            name: "Podstawowe zapytanie wyszukiwania"
+        search:
+          max_results:
+            name: "Maksymalna liczba wyników"
+            description: "Maksymalna liczba wyników do uwzględnienia w wyszukiwaniu - jeśli zostaną użyte puste reguły domyślne, liczba zostanie przeskalowana w zależności od użytego modelu. Najwyższa wartość to 100."
+          base_query:
+            name: "Podstawowe zapytanie wyszukiwania"
+            description: "Podstawowe zapytanie używane podczas wyszukiwania. Przykład: '#pilne' spowoduje dodanie '#pilne' do zapytania wyszukiwania i uwzględnienie tylko tematów z kategorią lub tagiem pilne."
+      tool_summary:
+        web_browser: "Przeglądaj sieć"
+        random_picker: "Losowy selektor"
+        categories: "Wymień kategorie"
+        search: "Szukaj"
+        tags: "Wymień tagi"
+        time: "Czas"
+        summarize: "Podsumuj"
+        image: "Wygeneruj obraz"
+        google: "Szukaj w Google"
+        read: "Przeczytaj temat"
+        setting_context: "Wyszukaj kontekst ustawienia witryny"
+        schema: "Wyszukaj schemat bazy danych"
+        search_settings: "Wyszukiwanie ustawień witryny"
+        dall_e: "Wygeneruj obraz"
+      tool_help:
+        random_picker: "Wybierz losową liczbę lub losowy element listy"
+        categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
+        search: "Przeszukaj wszystkie publiczne tematy na forum"
+        tags: "Wymień wszystkie tagi na forum"
+        time: "Znajdź czas w różnych strefach czasowych"
+        summary: "Podsumuj temat"
+        image: "Wygeneruj obraz przy użyciu Stable Diffusion"
+        google: "Wyszukaj zapytanie w Google"
+        read: "Przeczytaj temat publiczny na forum"
+        setting_context: "Wyszukaj kontekst ustawienia witryny"
+        schema: "Wyszukaj schemat bazy danych"
+        search_settings: "Wyszukaj ustawienia witryny"
+        dall_e: "Wygeneruj obraz za pomocą DALL-E 3"
+      tool_description:
+        random_picker: "Wybieranie z %{options}, wybrane: %{result}"
+        read: "Czytanie: <a href='%{url}'>%{title}</a>"
+        time: "Czas w %{timezone} wynosi %{time}"
+        summarize: "Podsumowano <a href='%{url}'>%{title}</a>"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          one: "Znaleziono %{count} kategorię"
+          few: "Znaleziono %{count} kategorie"
+          many: "Znaleziono %{count} kategorii"
+          other: "Znaleziono %{count} kategorii"
+        tags:
+          one: "Znaleziono %{count} tag"
+          few: "Znaleziono %{count} tagi"
+          many: "Znaleziono %{count} tagów"
+          other: "Znaleziono %{count} tagów"
+        search:
+          one: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+          few: "Znaleziono %{count} <a href='%{url}'>wyniki</a> dla '%{query}'"
+          many: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+          other: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+        search_meta_discourse:
+          one: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+          few: "Znaleziono %{count} <a href='%{url}'>wyniki</a> dla '%{query}'"
+          many: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+          other: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+        google:
+          one: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+          few: "Znaleziono %{count} <a href='%{url}'>wyniki</a> dla '%{query}'"
+          many: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+          other: "Znaleziono %{count} <a href='%{url}'>wyników</a> dla '%{query}'"
+        setting_context: "Kontekst czytania dla: %{setting_name}"
+        schema: "%{tables}"
+        search_settings:
+          one: "Znaleziono %{count} wynik dla '%{query}'"
+          few: "Znaleziono %{count} wyniki dla '%{query}'"
+          many: "Znaleziono %{count} wyników dla '%{query}'"
+          other: "Znaleziono %{count} wyników dla '%{query}'"
+    summarization:
+      configuration_hint:
+        one: "Najpierw skonfiguruj ustawienie `%{setting}`."
+        few: "Najpierw skonfiguruj ustawienia: %{settings}"
+        many: "Najpierw skonfiguruj ustawienia: %{settings}"
+        other: "Najpierw skonfiguruj ustawienia: %{settings}"
+      chat:
+        no_targets: "W wybranym okresie nie było żadnych wiadomości."
+    sentiment:
+      reports:
+        post_emotion:
+          sadness: "Smutek \U0001F622"
+          surprise: "Niespodzianka \U0001F631"
+          neutral: "Neutralne \U0001F610"
+          fear: "Strach \U0001F628"
+          anger: "Gniew \U0001F621"
+          disgust: "Niesmak \U0001F922"
+        sentiment_analysis:
+          positive: "Pozytywne"
+          negative: "Negatywne"
+          neutral: "Neutralne"
+    llm:
+      configuration:
+        disable_module_first: "Najpierw musisz wyłączyć %{setting}."
+        set_llm_first: "Najpierw ustaw %{setting}"
+        model_unreachable: "Nie mogliśmy uzyskać odpowiedzi od tego modelu. Sprawdź najpierw swoje ustawienia."
+      cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
+    embeddings:
+      cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
+      configuration:
+        invalid_config: "Wybrałeś nieprawidłową opcję."
+    llm_models:
+      missing_provider_param: "%{param} nie może być pusty"
+      bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
+    ai_staff_action_logger:
+      updated: "zaktualizowane"
+      removed: "usunięto"
+    errors:
+      quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
+      quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
+      no_query_specified: Parametr zapytania jest wymagany, podaj go.
+      no_user_for_persona: Określona persona nie ma powiązanego użytkownika.
+      persona_not_found: Określona persona nie istnieje. Sprawdź parametry persona_name lub persona_id.
+      prompt_message_length: Wiadomość %{idx} przekracza limit 1000 znaków.

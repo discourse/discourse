@@ -175,6 +175,7 @@ jobs:
             ${{ env.LOAD_PLUGINS }}-
             ${{ env.USES_PARALLEL_DATABASES }}-
             ${{ env.PARALLEL_TEST_PROCESSORS }}-
+            ${{ matrix.target }}-
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -186,6 +187,8 @@ jobs:
 
       - name: Create and migrate database
         if: steps.app-cache.outputs.cache-hit != 'true'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
@@ -194,6 +197,8 @@ jobs:
         if: >-
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -227,7 +232,7 @@ jobs:
             directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
           fi
 
-          bin/annotate --models --model-dir $(echo "${directories}" | tr '\n' ',')
+          bin/annotaterb models --model-dir $(echo "${directories}" | tr '\n' ',')
 
           if [ ! -z "$(git status --porcelain ${directories})" ]; then
             echo "Core annotations are not up to date. To resolve, run:"

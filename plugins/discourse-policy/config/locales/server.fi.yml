@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    policy_enabled: "Sallitaanko käytännöt?"
+    policy_restrict_to_staff_posts: "Käytännöt voivat näkyä vain henkilökunnan viesteissä"
+    policy_easy_revoke: "Näytä hyväksymis- ja perumispainikkeet samanaikaisesti"
+  discourse_policy:
+    errors:
+      user_missing: "Käyttäjää ei ole ryhmässä"
+      group_not_found: "Ryhmää ei löydy käytännölle"
+      no_policy: "Viestille ei ole käytäntöä"
+      staff_only: "Käytännöt voivat koskea vain henkilökunnan viestejä"
+  reports:
+    unaccepted-policies:
+      title: Hyväksymättömät käytännöt
+      labels:
+        topic_id: Ketjun tunnus
+        user_id: Käyttäjätunnus
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Käytäntö vaatii tarkistustasi: %{topic_title}"
+      visit_topic: "Vieraile ketjussa"
+      visit_link_to_respond: "%{visit_topic_link} vastataksesi."
+      unsubscribe: "Muuta %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
+      your_policy_email_settings: "käytäntösähköpostien tiheysasetustasi"
+  unsubscribe:
+    policy_emails:
+      select_title: "Aseta käytäntöhälytyssähköpostien tiheydeksi:"
+      never: Ei koskaan
+      when_away: Vain poissa ollessa
+      always: Aina

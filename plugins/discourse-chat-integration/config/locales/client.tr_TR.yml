@@ -32,7 +32,7 @@ tr_TR:
         title: "Test mesajı gönderin"
         topic: "Konu"
         send: "Test Mesajı gönderin"
-        close: "Kapat"
+        close: "Bitir"
         error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerine bakın."
         success: "Mesaj başarıyla gönderildi"
       type:
@@ -41,7 +41,7 @@ tr_TR:
         group_mention: Grup Bahsetmesi
       filter:
         mute: 'Sessize al'
-        follow: 'Yalnızca ilk gönderi'
+        follow: 'Sadece ilk gönderi'
         watch: 'Tüm gönderiler ve yanıtlar'
         thread: 'Başlıklı yanıt içeren tüm gönderiler'
       rule_table:
@@ -89,7 +89,7 @@ tr_TR:
           title: "Telegram"
           param:
             name:
-              title: "İsim"
+              title: "Ad"
               help: "Kanalı tanımlamak için bir ad. Telegram bağlantısı için kullanılmaz."
             chat_id:
               title: Sohbet Kimliği
@@ -101,7 +101,7 @@ tr_TR:
           title: "Discord"
           param:
             name:
-              title: "İsim"
+              title: "Ad"
               help: "Kanalı tanımlayan bir ad. Discord bağlantısı için kullanılmaz."
             webhook_url:
               title: Web kancası URL'si

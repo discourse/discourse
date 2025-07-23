@@ -8,6 +8,7 @@ sr:
   js:
     chat_integration:
       settings: "Podešavanje"
+      all_categories: "(sve kategorije)"
       delete_channel: "Obriši"
       edit_channel: "Izmeni"
       test_modal:
@@ -20,6 +21,7 @@ sr:
       rule_table:
         filter: "Filter"
         category: "Kategorija"
+        tags: "Tagovi"
         edit_rule: "Izmeni"
         delete_rule: "Obriši"
       edit_channel_modal:
@@ -30,6 +32,7 @@ sr:
         filter: Filter
         category: Kategorija
         group: Grupa
+        tags: Tagovi
       provider:
         telegram:
           param:

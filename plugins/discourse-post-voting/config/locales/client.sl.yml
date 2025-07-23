@@ -35,4 +35,5 @@ sl:
                 title: "Se ne strinjam"
       topic:
         sort_by: "Uredi po"
+        votes: "Glasovi"
         activity: "Aktivnost"

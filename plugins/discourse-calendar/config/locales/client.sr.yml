@@ -22,8 +22,20 @@ sr:
         month: "Mesec"
         week: "Nedelja"
     discourse_post_event:
+      upcoming_events:
+        status: "Status"
+      models:
+        event:
+          status:
+            private:
+              title: "Privatna"
       builder_modal:
+        custom_fields:
+          placeholder: "Opciono"
+        create: "Kreiraj"
         update: "Sačuvaj"
+        timezone:
+          label: Vremenska Zona
         reminders:
           units:
             days: "dana"
@@ -31,7 +43,10 @@ sr:
             before: "pre"
         url:
           label: "URL"
+          placeholder: "Opciono"
         location:
           label: "Lokacija"
         description:
           label: "Opis"
+        status:
+          label: "Status"

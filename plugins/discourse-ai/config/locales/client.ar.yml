@@ -1,0 +1,711 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "يسمح بالبحث باستخدام الذكاء الاصطناعي"
+              stream_completion: "يسمح بالتوليد التدريجي للنصوص لشخصيات الذكاء الاصطناعي"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
+      dashboard:
+        emotion:
+          title: "العاطفة"
+          description: "يسرد الجدول عدد المنشورات المصنَّفة بعاطفة محدَّدة. مصنَّفة باستخدام النموذج 'SamLowe/roberta-base-go_emotions'."
+        reports:
+          filters:
+            sort_by:
+              label: "الترتيب حسب"
+            tag:
+              label: "الوسم"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "المُرسِل"
+              description: "المستخدم الذي سيرسل التقرير"
+            receivers:
+              label: "المستلمون"
+              description: "المستخدمون الذين سيستلمون التقرير (سيتم إرسال رسائل إلكترونية مباشرة إلى عناوين البريد الإلكتروني، وسيتم إرسال رسائل خاصة إلى أسماء المستخدمين)"
+            topic_id:
+              label: "معرِّف الموضوع"
+              description: "معرِّف الموضوع الذي سيتم نشر التقرير فيه"
+            title:
+              label: "العنوان"
+              description: "عنوان التقرير"
+            days:
+              label: "الأيام"
+              description: "الفترة الزمنية للتقرير"
+            offset:
+              label: "الإزاحة"
+              description: "قد ترغب في تشغيل التقرير تاريخيًا عند الاختبار، استخدم الإزاحة لبدء التقرير في تاريخ سابق"
+            instructions:
+              label: "التعليمات"
+              description: "التعليمات المقدَّمة إلى النموذج اللغوي الكبير"
+            sample_size:
+              label: "حجم العينة"
+              description: "عدد المنشورات لعينة التقرير"
+            tokens_per_post:
+              label: "الرموز لكل منشور"
+              description: "عدد رموز النموذج اللغوي الكبير التي سيتم استخدامها لكل منشور"
+            model:
+              label: "النموذج"
+              description: "النموذج اللغوي الكبير لاستخدامه في إنشاء التقرير"
+            categories:
+              label: "الفئات"
+              description: "تصفية الموضوعات لهذه الفئات فقط"
+            tags:
+              label: "الوسوم"
+              description: "تصفية الموضوعات لهذه الوسوم فقط"
+            exclude_tags:
+              label: "استبعاد الوسوم"
+              description: "استبعاد الموضوعات التي تحتوي على هذه الوسوم"
+            exclude_categories:
+              label: "استبعاد الفئات"
+              description: "استبعاد الموضوعات التي تحتوي على هذه الفئات"
+            allow_secure_categories:
+              label: "السماح بالفئات الآمنة"
+              description: "السماح بإنشاء التقرير للموضوعات الموجودة في الفئات الآمنة"
+            suppress_notifications:
+              label: "منع الإشعارات"
+              description: "منع الإشعارات التي قد يُنشئها التقرير عن طريق التحويل إلى محتوى. سيؤدي هذا إلى إعادة رسم خريطة الإشارات والروابط الداخلية."
+            debug_mode:
+              label: "وضع تصحيح الأخطاء"
+              description: "فعِّل وضع تصحيح الأخطاء لرؤية المدخلات والمخرجات الأولية للنموذج اللغوي الكبير"
+            priority_group:
+              label: "مجموعة الأولوية"
+              description: "رتِّب أولوية المحتوى من هذه المجموعة في التقرير"
+            temperature:
+              label: "درجة الحرارة"
+            top_p:
+              label: "Top P"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "النموذج"
+        llm_triage:
+          fields:
+            system_prompt:
+              label: "رسالة مطالبة النظام"
+              description: "رسالة المطالبة التي سيتم استخدامها للفرز، تأكَّد من رده بكلمة واحدة يمكنك استخدامها لبدء الإجراء"
+            max_post_tokens:
+              label: "الحد الأقصى لعدد رموز المنشور"
+              description: "الحد الأقصى لعدد الرموز التي سيتم فحصها باستخدام نظام فرز نموذج اللغة الكبير (LLM)"
+            stop_sequences:
+              label: "تسلسلات الإيقاف"
+              description: "أرشد النموذج إلى إيقاف إنشاء الرموز عند الوصول إلى إحدى هذه القيم"
+            search_for_text:
+              label: "البحث عن نص"
+              description: "إذا ظهر النص التالي في رد نموذج اللغة الكبير (LLM)، فطبِّق هذه الإجراءات"
+            category:
+              label: "الفئة"
+              description: "الفئة المراد تطبيقها على الموضوع"
+            tags:
+              label: "الوسوم"
+              description: "الوسوم المراد تطبيقها على الموضوع"
+            canned_reply:
+              label: "الرد"
+              description: "النص الأولي للرد الجاهز المراد نشره في الموضوع"
+            canned_reply_user:
+              label: "اسم المستخدم للرد"
+              description: "اسم المستخدم للمستخدم الذي سينشر الرد الجاهز"
+            hide_topic:
+              label: "إخفاء الموضوع"
+              description: "جعل الموضوع غير مرئي للعامة إذا تم بدؤه"
+            flag_type:
+              label: "نوع البلاغ"
+              description: "نوع البلاغ الذي سيتم تطبيقه على المنشور (منشور عشوائي أو لمجرد التصعيد للمراجعة)"
+            flag_post:
+              label: "الإبلاغ عن المنشور"
+              description: "يبلغ عن المنشور (سواءً كان عشوائيًا أو للمراجعة)"
+            include_personal_messages:
+              label: "تضمين الرسائل الشخصية"
+              description: "افحص الرسائل الشخصية وافرزها أيضًا"
+            model:
+              label: "النموذج"
+              description: "نموذج اللغة المُستخدَم في الفرز"
+            temperature:
+              label: "درجة الحرارة"
+    discourse_ai:
+      title: "الذكاء الاصطناعي"
+      features:
+        back: "الرجوع"
+        disabled: "(متوقفة)"
+        groups: "المجموعات:"
+        no_persona: "غير معيَّن"
+        no_groups: "لا يوجد"
+        edit: "تعديل"
+        expand_list:
+          zero: "(%{count} أكثر)"
+          one: "(%{count} أكثر)"
+          two: "(%{count} أكثر)"
+          few: "(%{count} أكثر)"
+          many: "(%{count} أكثر)"
+          other: "(%{count} أكثر)"
+        collapse_list: "(عرض أقل)"
+        filters:
+          all: "الكل"
+          reset: "إعادة التعيين"
+        search:
+          name: "البحث"
+        embeddings:
+          name: "التضمينات"
+        ai_helper:
+          name: "المساعد"
+          proofread: تدقيق النص لغويًا
+          explain: "الشرح"
+          smart_dates: "التواريخ الذكية"
+          markdown_tables: "إنشاء جدول Markdown"
+          custom_prompt: "رسالة مطالبة مخصَّصة"
+        spam:
+          name: "عشوائي"
+          description: "يحدِّد السلوك العشوائي المُحتمَل باستخدام نموذج اللغة الكبير المُحدَّد، ويضع علامة عليه ليقوم مشرفو الموقع بفحصه في قائمة المراجعة"
+      modals:
+        select_option: "حدِّد خيارًا..."
+      layout:
+        table: "جدول"
+      spam:
+        short_title: "عشوائي"
+        title: "تكوين التعامل مع السلوك العشوائي"
+        select_llm: "تحديد نموذج اللغة الكبير"
+        custom_instructions: "التعليمات المُخصَّصة"
+        custom_instructions_help: "تعليمات مُخصَّصة خاصة بموقعك للمساعدة في توجيه الذكاء الاصطناعي في تحديد السلوك العشوائي؛ على سبيل المثال، \"كُن أكثر شراسة في مسح المنشورات غير المكتوبة باللغة العربية\"."
+        last_seven_days: "آخر 7 أيام"
+        scanned_count: "المنشورات التي تم فحصها"
+        false_positives: "تم الإبلاغ بشكلٍ غير صحيح"
+        false_negatives: "تم تفويت سلوك عشوائي"
+        spam_detected: "تم اكتشاف سلوك عشوائي"
+        custom_instructions_placeholder: "تعليمات خاصة بالموقع للذكاء الاصطناعي للمساعدة في تحديد السلوك العشوائي بشكلٍ أكثر دقة"
+        enable: "تفعيل"
+        spam_tip: "سيفحص نظام اكتشاف السلوك العشوائي بالذكاء الاصطناعي أول 3 منشورات لجميع المستخدمين الجُدد في الموضوعات العامة. وسيقوم بتمييزها للمراجعة وحظر المستخدمين إذا كان من المُرجَّح أن يكون سلوكهم عشوائيًا."
+        settings_saved: "تم حفظ الإعدادات"
+        spam_description: "يحدِّد السلوك العشوائي المُحتمَل باستخدام نموذج اللغة الكبير المُحدَّد، ويضع علامة عليه ليقوم مشرفو الموقع بفحصه في قائمة المراجعة"
+        no_llms: "لا توجد نماذج لغة كبيرة متوفرة"
+        test_button: "اختبار..."
+        save_button: "حفظ التغييرات"
+        test_modal:
+          title: "اختبار اكتشاف السلوك العشوائي"
+          post_url_label: "عنوان URL أو مُعرِّف المنشور"
+          post_url_placeholder: "https://your-forum.com/t/topic/123/4 أو مُعرِّف المنشور"
+          result: "النتيجة"
+          scan_log: "سجل الفحص"
+          run: "تشغيل الاختبار"
+          spam: "عشوائي"
+          not_spam: "ليس سلوكًا عشوائيًا"
+        stat_tooltips:
+          incorrectly_flagged: "العناصر التي أبلغ روبوت الذكاء الاصطناعي عنها أنها عشوائية، ولم يوافق المشرفون على ذلك"
+          missed_spam: "العناصر التي أبلغ المجتمع عنها أنها عشوائية ولم يكتشفها روبوت الذكاء الاصطناعي، ووافق عليها المشرفون"
+        errors:
+          scan_not_admin:
+            message: "تحذير: لن يعمل فحص السلوك العشوائي بشكلٍ صحيح لأن حساب فحص البريد العشوائي ليس مسؤولًا"
+            action: "إصلاح"
+          resolved: "تم إصلاح الخطأ!"
+      usage:
+        short_title: "الاستخدام"
+        summary: "الملخص"
+        total_tokens: "إجمالي الرموز"
+        tokens_over_time: "الرموز بمرور الوقت"
+        features_breakdown: "الاستخدام لكل ميزة"
+        feature: "الميزة"
+        usage_count: "عدد مرات الاستخدام"
+        model: "النموذج"
+        models_breakdown: "الاستخدام لكل نموذج"
+        users_breakdown: "الاستخدام لكل مستخدم"
+        all_features: "كل الميزات"
+        all_models: "كل النماذج"
+        username: "اسم المستخدم"
+        total_requests: "إجمالي الطلبات"
+        request_tokens: "رموز الطلب"
+        response_tokens: "رموز الرد"
+        net_request_tokens: "صافي رموز الطلب"
+        cached_tokens: "الرموز المخزَّنة مؤقتًا"
+        cached_request_tokens: "رموز الطلب المُخزَّنة مؤقتًا"
+        no_users: "لم يتم العثور على بيانات استخدام المستخدم"
+        no_models: "لم يتم العثور على بيانات استخدام نموذجية"
+        no_features: "لم يتم العثور على بيانات استخدام الميزات"
+        subheader_description: "الرموز هي الوحدات الأساسية التي تستخدمها نماذج اللغة الكبيرة لفهم النصوص وتوليدها، وقد تؤثر بيانات الاستخدام على التكاليف"
+        stat_tooltips:
+          total_requests: "جميع الطلبات المُقدَّمة إلى نماذج اللغة الكبيرة من خلال Discourse"
+          total_tokens: "جميع الرموز المُستخدَمة عند إدخال رسالة مطالبة في نموذج لغة كبير"
+          request_tokens: "الرموز المستخدمة عندما يحاول نموذج اللغة الكبير فهم ما تقوله"
+          response_tokens: "الرموز المستخدمة عندما يستجيب نموذج اللغة الكبير لرسالة المطالبة الخاصة بك"
+          cached_tokens: "رموز الطلب التي تمت معالجتها مسبقًا والتي يعيد نموذج اللغة الكبير استخدامها لتحسين الأداء والتكلفة"
+        periods:
+          last_day: "آخر 24 ساعة"
+          last_week: "الأسبوع الماضي"
+          last_month: "الشهر الماضي"
+          custom: "مُخصَّص..."
+      ai_persona:
+        ai_tools: "الأدوات"
+        tool_strategies:
+          all: "التطبيق على كل الردود"
+          replies:
+            zero: "التطبيق على أول %{count} ردًا فقط"
+            one: "التطبيق على الرد الأول فقط"
+            two: "التطبيق على أول ردَّين (%{count}) فقط"
+            few: "التطبيق على أول %{count} ردود فقط"
+            many: "التطبيق على أول %{count} ردًا فقط"
+            other: "التطبيق على أول %{count} ردًا فقط"
+        back: "الرجوع"
+        name: "الاسم"
+        edit: "تعديل"
+        export: "تصدير"
+        import: "استيراد"
+        description: "الوصف"
+        no_llm_selected: "لم يتم تحديد نموذج لغة"
+        max_context_posts: "الحد الأقصى للمنشورات السياقية"
+        max_context_posts_help: "الحد الأقصى لعدد المنشورات التي سيتم استخدامها كسياق للذكاء الاصطناعي عند الرد على مستخدم. (اترك القيمة فارغة للإعداد الافتراضي)"
+        vision_enabled: دعم الرؤية
+        vision_enabled_help: إذا تم تفعيله، فسيحاول الذكاء الاصطناعي فهم الصور التي ينشرها المستخدمون في الموضوع، بناءً على النموذج المُستخدَم لدعم الرؤية. هذه الميزة مدعومة بأحدث النماذج من Anthropic وGoogle وOpenAI.
+        vision_max_pixels: الحجم المدعوم للصور
+        vision_max_pixel_sizes:
+          low: جودة منخفضة - الأرخص (256 × 256)
+          medium: جودة متوسطة (512 × 512)
+          high: جودة عالية - الأبطأ (1024 × 1024)
+        tool_details: عرض تفاصيل الأدوات
+        tool_details_help: ستعرض تفاصيل المستخدمين النهائيين بشأن الأدوات التي قام نموذج اللغة بتشغيلها.
+        mentionable: السماح بالإشارات
+        mentionable_help: إذا تم تفعيله، يمكن للمستخدمين في المجموعات المسموح بها الإشارة إلى هذا المستخدم في المنشورات، وسيرد الذكاء الاصطناعي باعتباره هذا الشخص.
+        user: المستخدم
+        create_user: إنشاء مستخدم
+        create_user_help: يمكنك اختياريًا إرفاق مستخدم بهذه الشخصية. إذا قمت بذلك، فسيستخدم الذكاء الاصطناعي هذا المستخدم للرد على الطلبات.
+        default_llm: نموذج اللغة الافتراضي
+        default_llm_help: نموذج اللغة الافتراضي الذي سيتم استخدامه لهذه الشخصية. مطلوب إذا كنت ترغب في الإشارة إلى شخصية في المنشورات العامة.
+        question_consolidator_llm: نموذج اللغة لتوحيد الأسئلة
+        question_consolidator_llm_help: نموذج اللغة الذي سيتم استخدامه لتوحيد الأسئلة، يمكنك اختيار نموذج أقل قوة للتوفير في التكاليف.
+        system_prompt: رسالة مطالبة النظام
+        forced_tool_strategy: استراتيجية الأداة الإجبارية
+        allow_chat_direct_messages: "السماح بالرسائل المباشرة في الدردشة"
+        allow_chat_direct_messages_help: "إذا تم التفعيل، يمكن للمستخدمين في المجموعات المسموح بها إرسال رسالة مباشرة إلى هذه الشخصية."
+        allow_chat_channel_mentions: "السماح بالإشارات في قناة الدردشة"
+        allow_chat_channel_mentions_help: "إذا تم التفعيل، يمكن للمستخدمين في المجموعات المسموح بها الإشارة إلى هذه الشخصية في قنوات الدردشة."
+        allow_personal_messages: "السماح بالرسائل الشخصية"
+        allow_personal_messages_help: "إذا تم التفعيل، يمكن للمستخدمين في المجموعات المسموح بها إرسال رسائل شخصية إلى هذه الشخصية."
+        allow_topic_mentions: "السماح بالإشارات في الموضوعات"
+        allow_topic_mentions_help: "إذا تم التفعيل، يمكن للمستخدمين في المجموعات المسموح بها الإشارة إلى هذه الشخصية في الموضوعات."
+        force_default_llm: "استخدام نموذج اللغة الافتراضي دائمًا"
+        save: "حفظ"
+        saved: "تم حفظ الشخصية"
+        enabled: "مفعَّلة؟"
+        tools: "الأدوات المفعَّلة"
+        forced_tools: "الأدوات الإجبارية"
+        allowed_groups: "المجموعات المسموح بها"
+        confirm_delete: "هل تريد بالتأكيد حذف هذه الشخصية؟"
+        new: "شخصية جديدة"
+        no_personas: "لم تُنشئ أي شخصيات بعد"
+        title: "الشخصيات"
+        short_title: "الشخصيات"
+        delete: "حذف"
+        temperature: "درجة الحرارة"
+        temperature_help: "درجة الحرارة التي سيتم استخدامها في نموذج اللغة الكبير (LLM)، يزداد الإبداع بزيادة القيمة (اترك القيمة فارغة لاستخدام النموذج الافتراضي، عادةً ما تكون قيمة بين 0.0 و2.0)"
+        top_p: "Top P"
+        top_p_help: "Top P التي سيتم استخدامها في نموذج اللغة الكبير (LLM)، تزداد العشوائية بزيادة القيمة (اترك القيمة فارغة لاستخدام النموذج الافتراضي، عادةً ما تكون قيمة بين 0.0 و1.0)"
+        priority: "الأولوية"
+        priority_help: "يتم عرض الشخصيات ذات الأولوية للمستخدمين في أعلى قائمة الشخصيات. إذا كانت الأولوية لعدة أشخاص، فسيتم فرزهم أبجديًا."
+        tool_options: "خيارات الأداة"
+        rag_conversation_chunks: "البحث في أجزاء المحادثة"
+        rag_conversation_chunks_help: "عدد الأجزاء التي سيتم استخدامها لإي عمليات البحث ضمن نموذج RAG. يزداد مقدار السياق الذي يمكن للذكاء الاصطناعي استخدامه بزيادة القيمة."
+        persona_description: "تُعد الشخصيات ميزة قوية تتيح لك تخصيص سلوك محرك الذكاء الاصطناعي في منتدى Discourse الخاص بك. إنها تعمل بمثابة \"رسالة نظام\" توجِّه ردود الذكاء الاصطناعي وتفاعلاته، مما يساعد في إنشاء تجربة مستخدم أكثر تخصيصًا وتفاعليةً."
+        response_format:
+          open_modal: "تعديل"
+          modal:
+            key_title: "المفتاح"
+        filters:
+          reset: "إعادة التعيين"
+      rag:
+        options:
+          rag_chunk_tokens: "تحميل أجزاء الرموز"
+          rag_chunk_tokens_help: "عدد الرموز المميزة التي سيتم استخدامها لكل جزء في نموذج RAG. يزداد مقدار السياق الذي يمكن للذكاء الاصطناعي استخدامه بزيادة القيمة. (سيؤدي التغيير إلى إعادة فهرسة جميع التحميلات)"
+          rag_chunk_overlap_tokens: "تحميل رموز تداخل الأجزاء"
+          rag_chunk_overlap_tokens_help: "عدد الرموز المميزة التي ستتداخل بين الأجزاء في نموذج RAG. (سيؤدي التغيير إلى إعادة فهرسة جميع التحميلات)"
+          show_indexing_options: "إظهار خيارات التحميل"
+          hide_indexing_options: "إخفاء خيارات التحميل"
+        uploads:
+          title: "التحميلات"
+          button: "إضافة الملفات"
+          filter: "تصفية التحميلات"
+          indexed: "تمت الفهرسة"
+          indexing: "جارٍ الفهرسة"
+          uploaded: "جاهزة للفهرسة"
+          uploading: "جارٍ التحميل..."
+          remove: "إزالة التحميل"
+      tools:
+        back: "رجوع"
+        short_title: "الأدوات"
+        export: "تصدير"
+        import: "استيراد"
+        no_tools: "لم تُنشئ أي أدوات بعد"
+        name: "الاسم"
+        new: "أداة جديدة"
+        description: "الوصف"
+        description_help: "وصف واضح لغرض الأداة بالنسبة إلى نموذج اللغة"
+        subheader_description: "تعمل الأدوات على توسيع قدرات روبوتات الذكاء الاصطناعي باستخدام دوال JavaScript يحدِّدها المستخدم."
+        summary: "الملخص"
+        summary_help: "ملخص الغرض من الأدوات لعرضه للمستخدمين النهائيين"
+        script: "البرنامج النصي"
+        parameters: "المعلمات"
+        save: "حفظ"
+        remove_parameter: "إزالة"
+        parameter_required: "مطلوب"
+        parameter_enum: "Enum"
+        parameter_name: "اسم المعلمة"
+        parameter_description: "وصف المعلمة"
+        enum_value: "قيمة Enum"
+        add_enum_value: "إضافة قيمة enum"
+        edit: "تعديل"
+        test: "تشغيل الاختبار"
+        delete: "حذف"
+        saved: "تم حفظ الأداة"
+        confirm_delete: "هل تريد بالتأكيد حذف هذه الأداة؟"
+        test_modal:
+          title: "اختبار أداة الذكاء الاصطناعي"
+          run: "تشغيل الاختبار"
+          result: "نتيجة الاختبار"
+      llms:
+        short_title: "نماذج اللغة الكبيرة"
+        no_llms: "لا توجد نماذج لغة كبيرة بعد"
+        new: "نموذج جديد"
+        display_name: "الاسم"
+        name: "معرِّف النموذج"
+        provider: "مقدِّم الخدمة"
+        tokenizer: "أداة الترميز"
+        url: "عنوان URL لخدمة استضافة النموذج"
+        api_key: "مفتاح API لخدمة استضافة النموذج"
+        enabled_chat_bot: "السماح بمحدِّد روبوت الذكاء الاصطناعي"
+        vision_enabled: "دعم الرؤية"
+        ai_bot_user: "مستخدم روبوت الذكاء الاصطناعي"
+        save: "حفظ"
+        edit: "تعديل"
+        saved: "تم حفظ نموذج اللغة الكبير (LLM)"
+        back: "رجوع"
+        confirm_delete: هل تريد بالتأكيد حذف هذا النموذج؟
+        delete: حذف
+        seeded_warning: "تم تكوين هذا النموذج مسبقًا على موقعك ولا يمكن تعديله."
+        quotas:
+          title: "حصص الاستخدام"
+          add_title: "إنشاء حصة جديدة"
+          group: "المجموعة"
+          max_tokens: "الحد الأقصى للرموز"
+          max_usages: "الحد الأقصى لمرات الاستخدام"
+          duration: "المدة"
+          confirm_delete: "هل تريد بالتأكيد حذف هذه الحصة؟"
+          add: "إضافة حصة"
+          durations:
+            hour: "ساعة واحدة"
+            six_hours: "6 ساعات"
+            day: "24 ساعة"
+            week: "7 أيام"
+            custom: "مُخصَّص..."
+          hours: "الساعات"
+          max_tokens_help: "الحد الأقصى لعدد الرموز (الكلمات والأحرف) التي يمكن لكل مستخدم في هذه المجموعة استخدامها خلال المدة المُحدَّدة. الرموز هي الوحدات التي تستخدمها نماذج الذكاء الاصطناعي لمعالجة النص - الرمز الواحد يساوي تقريبًا 4 أحرف أو 3/4 كلمة."
+          max_usages_help: "الحد الأقصى لعدد المرات التي يمكن لكل مستخدم في هذه المجموعة استخدام نموذج الذكاء الاصطناعي فيها خلال المدة المُحدَّدة. يتم تتبع هذه الحصة لكل مستخدم على حدة، ولا تتم مشاركتها عبر المجموعة."
+        usage:
+          ai_bot: "روبوت الذكاء الاصطناعي"
+          ai_helper: "المساعد"
+          ai_persona: "الشخصية (%{persona})"
+          ai_summarization: "تلخيص"
+          ai_embeddings_semantic_search: "البحث باستخدام الذكاء الاصطناعي"
+          ai_spam: "عشوائي"
+        in_use_warning:
+          zero: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزات كما هو متوقَّع. "
+          one: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزة كما هو متوقَّع."
+          two: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزتان كما هو متوقَّع. "
+          few: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزات كما هو متوقَّع. "
+          many: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزات كما هو متوقَّع. "
+          other: "هذا النموذج مُستخدَم حاليًا من قِبل %{settings}. إذا تم تكوينه بشكلٍ خاطئ، فلن تعمل الميزات كما هو متوقَّع. "
+        model_description:
+          none: "الإعدادات العامة التي تعمل مع معظم نماذج اللغة"
+          anthropic-claude-opus-4-0: "النموذج الأكثر ذكاءً لدى Anthropic"
+          anthropic-claude-3-5-haiku-latest: "سريع وفعَّال من حيث التكلفة"
+          google-gemini-2-5-flash: "خفيف وسريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
+          samba_nova-Meta-Llama-3-1-8B-Instruct: "نموذج متعدد اللغات خفيف وفعَّال"
+          samba_nova-Meta-Llama-3-3-70B-Instruct": "نموذج قوي متعدد الأغراض"
+          mistral-mistral-large-latest: "النموذج الأقوى لدى Mistral"
+          mistral-pixtral-large-latest: "النموذج القادر على الرؤية الأقوى لدى Mistral"
+        preseeded_model_description: "نموذج مفتوح المصدر تم تكوينه مسبقًا باستخدام %{model}"
+        configured:
+          title: "تم تكوين نماذج اللغة الكبيرة (LLM)"
+        preconfigured_llms: "حدِّد نموذج اللغة الكبير الخاص بك"
+        preconfigured:
+          title_no_llms: "حدِّد قالبًا للبدء"
+          title: "لم يتم تكوين قوالب نماذج اللغة الكبيرة (LLM)"
+          description: "نماذج اللغة الكبيرة (LLM) عبارة عن أدوات ذكاء اصطناعي تم تحسينها لتنفيذ مهام مثل تلخيص المحتوى وإنشاء التقارير وأتمتة تفاعلات العملاء وتسهيل إدارة المنتديات وتقديم الرؤى"
+          fake: "التكوين اليدوي"
+          button: "إعداد"
+        next:
+          title: "التالي"
+        tests:
+          title: "تشغيل الاختبار"
+          running: "جارٍ تشغيل الاختبار..."
+          success: "تم بنجاح!"
+          failure: "أرجعت محاولة التواصل مع النموذج هذا الخطأ: %{error}"
+        hints:
+          name: "إننا نقوم بتضمين هذا في استدعاء واجهة برمجة التطبيقات (API) لتحديد النموذج الذي سنستخدمه"
+          vision_enabled: "إذا تم تفعيله، فسيحاول الذكاء الاصطناعي فهم الصور. إنه يعتمد على النموذج المُستخدَم لدعم الرؤية. هذه الميزة مدعومة بأحدث النماذج من Anthropic وGoogle وOpenAI."
+          enabled_chat_bot: "إذا تم تفعيله، يمكن للمستخدمين تحديد هذا النموذج عند إنشاء الرسائل الخاصة باستخدام روبوت الذكاء الاصطناعي"
+        providers:
+          aws_bedrock: "AWS Bedrock"
+          anthropic: "Anthropic"
+          vllm: "vLLM"
+          hugging_face: "Hugging Face"
+          cohere: "Cohere"
+          open_ai: "OpenAI"
+          google: "Google"
+          azure: "Azure"
+          ollama: "Ollama"
+          CDCK: "CDCK"
+          samba_nova: "SambaNova"
+          mistral: "Mistral"
+          open_router: "OpenRouter"
+          fake: "مخصَّصة"
+        provider_fields:
+          access_key_id: "معرِّف مفتاح الوصول إلى AWS Bedrock"
+          region: "منطقة AWS Bedrock"
+          organization: "معرِّف مؤسسة OpenAI الاختياري"
+          disable_system_prompt: "إيقاف رسالة النظام في رسائل المطالبة"
+          enable_native_tool: "تفعيل دعم الأدوات الأصلية"
+          disable_native_tools: "إيقاف دعم الأدوات الأصلية (استخدام أدوات تعتمد على XML)"
+          provider_order: "ترتيب مقدِّمي الخدمة (قائمة مفصولة بفاصلة)"
+          provider_quantizations: "ترتيب كميات مقدِّمي الخدمة (قائمة مفصولة بفاصلة. على سبيل المثال: fp16,fp8)"
+          disable_streaming: "إيقاف التوليد التدريجي للنصوص (تحويل التوليد التدريجي للنصوص إلى التوليد الكامل للنصوص)"
+      related_topics:
+        title: "الموضوعات ذات الصلة"
+        pill: "موضوعات ذات صلة"
+      ai_helper:
+        title: "اقتراح تغييرات باستخدام الذكاء الاصطناعي"
+        description: "اختر أحد الخيارات أدناه، وسيقترح عليك الذكاء الاصطناعي نسخة جديدة من النص."
+        selection_hint: "تلميح: يمكنك أيضًا تحديد جزء من النص قبل فتح أداة المساعدة لإعادة كتابة ذلك الجزء فقط."
+        suggest: "الاقتراح باستخدام الذكاء الاصطناعي"
+        suggest_errors:
+          too_many_tags:
+            zero: "يمكن أن يكون لديك %{count} وسمًا فقط كحد أقصى"
+            one: "يمكن أن يكون لديك وسم واحد (%{count}) فقط كحد أقصى"
+            two: "يمكن أن يكون لديك وسمان (%{count}) فقط كحد أقصى"
+            few: "يمكن أن يكون لديك %{count} وسوم فقط كحد أقصى"
+            many: "يمكن أن يكون لديك %{count} وسمًا فقط كحد أقصى"
+            other: "يمكن أن يكون لديك %{count} وسمًا فقط كحد أقصى"
+          no_suggestions: "لا توجد اقتراحات متوفرة"
+        missing_content: "يُرجى إدخال بعض المحتوى لإنشاء الاقتراحات."
+        context_menu:
+          trigger: "اسأل الذكاء الاصطناعي"
+          loading: "الذكاء الاصطناعي قيد إنشاء المحتوى"
+          cancel: "إلغاء"
+          regen: "إعادة المحاولة"
+          confirm: "تأكيد"
+          discard: "تجاهل"
+          changes: "التعديلات المقترحة"
+          custom_prompt:
+            title: "رسالة مطالبة مخصَّصة"
+            placeholder: "أدخل رسالة مطالبة مخصَّصة..."
+            submit: "إرسال رسالة مطالبة"
+          translate_prompt: "الترجمة إلى %{language}"
+        post_options_menu:
+          trigger: "اسأل الذكاء الاصطناعي"
+          title: "اسأل الذكاء الاصطناعي"
+          loading: "الذكاء الاصطناعي قيد إنشاء المحتوى"
+          close: "إغلاق"
+          copy: "نسخ"
+          copied: "تم النسخ!"
+          cancel: "إلغاء"
+          insert_footnote: "إضافة حاشية سفلية"
+          footnote_disabled: "تم إيقاف الإدراج التلقائي، انقر على زر النسخ وقم بتعديله يدويًا"
+          footnote_credits: "شرح بواسطة الذكاء الاصطناعي"
+        fast_edit:
+          suggest_button: "اقتراح تعديل"
+        thumbnail_suggestions:
+          title: "الصور المصغَّرة المقترحة"
+          select: "تحديد"
+          selected: "محدَّدة"
+        image_caption:
+          button_label: "التسمية التوضيحية بالذكاء الاصطناعي"
+          generating: "جارٍ إنشاء تسمية توضيحية.."
+          credits: "تم إنشاء التسمية التوضيحية بالذكاء الاصطناعي"
+          save_caption: "حفظ"
+          automatic_caption_setting: "تفعيل التسمية التوضيحية التلقائية"
+          automatic_caption_loading: "جارٍ إنشاء تسميات توضيحية للصور..."
+          automatic_caption_dialog:
+            prompt: "بحتوي هذا المنشور على صور دون تسميات توضيحية. هل ترغب في تمكين التسميات التوضيحية التلقائية عند تحميل الصور؟ (يمكن تغيير هذا في تفضيلاتك لاحقًا)"
+            confirm: "تفعيل"
+            cancel: "لا تسألني مرة أخرى"
+        no_content_error: "ينبغي إضافة المحتوى أولًا لتنفيذ إجراءات الذكاء الاصطناعي عليه"
+      reviewables:
+        model_used: "النموذج المستخدم:"
+        accuracy: "الدقة:"
+      embeddings:
+        short_title: "التضمينات"
+        new: "تضمين جديد"
+        back: "رجوع"
+        save: "حفظ"
+        saved: "تم حفظ تكوين التضمين"
+        delete: "حذف"
+        confirm_delete: هل تريد بالتأكيد إزالة تكوين التضمين هذا؟
+        empty: "لم تقم بإعداد التضمينات بعد"
+        presets: "حدِّد إعدادًا مسبقًا..."
+        configure_manually: "التكوين يدويًا"
+        edit: "تعديل"
+        seeded_warning: "تم تكوين هذا مسبقًا على موقعك ولا يمكن تعديله."
+        tests:
+          title: "تشغيل الاختبار"
+          running: "جارٍ تشغيل الاختبار..."
+          success: "تم بنجاح!"
+          failure: "أدَّت محاولة إنشاء تضمين إلى: %{error}"
+        hints:
+          dimensions_warning: "لا يمكن تغييرها بعد حفظها."
+          matryoshka_dimensions: "تحدِّد حجم التضمينات المتداخلة المُستخدَمة في التمثيل التسلسلي أو متعدد الطبقات للبيانات، وذلك على غرار طريقة ملاءمة الدمى المتداخلة (الماتريوشكا) مع بعضها البعض."
+          sequence_length: "الحد الأقصى لعدد الرموز التي يمكن معالجتها في الوقت نفسه عند إنشاء التضمينات أو معالجة استعلام."
+          distance_function: "تحدِّد كيفية حساب التشابه بين التضمينات، باستخدام إما مسافة جيب التمام (قياس الزاوية بين المتجهات) أو حاصل الضرب الداخلي السلبي (قياس تداخل قيم المتجهات)."
+        display_name: "الاسم"
+        provider: "مقدِّم الخدمة"
+        url: "عنوان URL لخدمة التضمينات"
+        api_key: "مفتاح API لخدمة التضمينات"
+        tokenizer: "أداة الترميز"
+        dimensions: "أبعاد التضمين"
+        max_sequence_length: "طول التسلسل"
+        embed_prompt: "أمر التضمين"
+        search_prompt: "أمر البحث"
+        matryoshka_dimensions: "الأبعاد المتداخلة"
+        distance_function: "دالة المسافة"
+        distance_functions:
+          "<#>": "حاصل الضرب الداخلي السلبي"
+          <=>: "مسافة جيب التمام"
+        providers:
+          hugging_face: "Hugging Face"
+          open_ai: "OpenAI"
+          google: "Google"
+          cloudflare: "Cloudflare"
+          CDCK: "CDCK"
+          fake: "مخصَّصة"
+        provider_fields:
+          model_name: "اسم النموذج"
+        semantic_search: "الموضوعات (دلالية)"
+        semantic_search_loading: "جارٍ البحث عن المزيد من النتائج باستخدام الذكاء الاصطناعي"
+        semantic_search_results:
+          toggle: "جارٍ عرض %{count} من النتائج التي تم العثور عليها باستخدام الذكاء الاصطناعي"
+          toggle_hidden: "جارٍ إخفاء %{count} من النتائج التي تم العثور عليها باستخدام الذكاء الاصطناعي"
+          none: "عذرًا، لم يعثر بحث الذكاء الاصطناعي لدينا على أي موضوعات مطابقة"
+          new: "اضغط على \"بحث\" لبدء البحث عن نتائج جديدة باستخدام الذكاء الاصطناعي"
+          unavailable: "نتائج الذكاء الاصطناعي غير متوفرة"
+        semantic_search_tooltips:
+          results_explanation: "عند التفعيل، سيتم إضافة نتائج بحث الذكاء الاصطناعي الإضافية أدناه."
+          invalid_sort: "يجب فرز نتائج البحث حسب الصلة لعرض نتائج الذكاء الاصطناعي"
+        semantic_search_unavailable_tooltip: "يجب فرز نتائج البحث حسب الصلة لعرض نتائج الذكاء الاصطناعي"
+        ai_generated_result: "تم العثور على نتيجة بحث باستخدام الذكاء الاصطناعي"
+        quick_search:
+          suffix: "في كل الموضوعات والمنشورات بالذكاء الاصطناعي"
+      ai_artifact:
+        expand_view_label: "توسيع العرض"
+        collapse_view_label: "الخروج من وضع ملء الشاشة (ESC أو زر الرجوع)"
+        click_to_run_label: "تشغيل المنتج الثانوي"
+      ai_bot:
+        llm: "النموذج"
+        pm_warning: "تتم مراقبة رسائل روبوت دردشة الذكاء الاصطناعي بانتظام من قِبل المشرفين."
+        cancel_streaming: "إيقاف الرد"
+        default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
+        shortcut_title: "بدء رسالة خاصة باستخدام روبوت ذكاء اصطناعي"
+        share: "نسخ محادثة الذكاء الاصطناعي"
+        conversation_shared: "تم نسخ المحادثة"
+        debug_ai: "عرض طلب الذكاء الاصطناعي الأولي والرد"
+        debug_ai_modal:
+          title: "عرض تفاعل الذكاء الاصطناعي"
+          copy_request: "طلب النسخة"
+          copy_response: "رد النسخة"
+          request_tokens: "رموز الطلب:"
+          response_tokens: "رموز الرد:"
+          request: "طلب"
+          response: "الرد"
+          next_log: "التالي"
+          previous_log: "السابق"
+        share_full_topic_modal:
+          title: "مشاركة المحادثة بشكلٍ علني"
+          share: "مشاركة ونسخ الرابط"
+          update: "تحديث ونسخ الرابط"
+          delete: "حذف المشاركة"
+        share_ai_conversation:
+          name: "مشاركة محادثة الذكاء الاصطناعي"
+          title: "مشاركة هذه المحادثة بشكلٍ علني"
+        invite_ai_conversation:
+          button: "دعوة"
+        ai_label: "الذكاء الاصطناعي"
+        ai_title: "المحادثة مع الذكاء الاصطناعي"
+        share_modal:
+          title: "نسخ محادثة الذكاء الاصطناعي"
+          copy: "نسخ"
+          context: "التفاعلات المراد مشاركتها:"
+          share_tip: "بدلًا من ذلك، يمكنك مشاركة المحادثة بأكملها"
+        bot_names:
+          fake: "Fake Test Bot"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Sonnet"
+          claude-3-haiku: "Claude 3 Haiku"
+          cohere-command-r-plus: "Cohere Command R Plus"
+          gpt-4: "GPT-4"
+          gpt-4-turbo: "GPT-4 Turbo"
+          gpt-4o: "GPT-4 Omni"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+          gemini-1:
+            5-pro: "Gemini"
+          mixtral-8x7B-Instruct-V0:
+            "1": "Mixtral-8x7B V0.1"
+        conversations:
+          today: "اليوم"
+          last_7_days: "آخر 7 أيام"
+          last_30_days: "آخر 30 يومًا"
+      sentiments:
+        dashboard:
+          title: "المشاعر"
+        sentiment_analysis:
+          filter_types:
+            all: "الكل"
+            positive: "إيجابية"
+            neutral: "محايدة"
+            negative: "سلبية"
+          group_types:
+            category: "الفئة"
+            tag: "الوسم"
+          table:
+            sentiment: "المشاعر"
+            total_count: "الإجمالي"
+      summarization:
+        chat:
+          title: "تلخيص الرسائل"
+          description: "حدِّد خيارًا أدناه لتلخيص المحادثة المُرسَلة خلال الإطار الزمني المطلوب."
+          summarize: "تلخيص"
+          since:
+            zero: "آخر %{count} ساعات"
+            one: "آخر ساعة"
+            two: "آخر ساعتين (%{count})"
+            few: "آخر %{count} ساعات"
+            many: "آخر %{count} ساعات"
+            other: "آخر %{count} ساعات"
+        topic:
+          title: "ملخص الموضوع"
+          close: "إغلاق لوحة الملخص"
+        topic_list_layout:
+          button:
+            compact: "مضغوط"
+            expanded: "موسَّع"
+            expanded_description: "مع ملخصات الذكاء الاصطناعي"
+      discobot_discoveries:
+        regular_results: "الموضوعات"
+        collapse: "طي"
+        tooltip:
+          actions:
+            disable: "إيقاف"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "منشور تم الإبلاغ عنه بواسطة الذكاء الاصطناعي"
+        reviewable_ai_chat_message:
+          title: "رسالة دردشة تم الإبلاغ عنها بواسطة الذكاء الاصطناعي"

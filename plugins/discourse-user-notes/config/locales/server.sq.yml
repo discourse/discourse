@@ -9,4 +9,5 @@ sq:
     user_notes:
       labels:
         user: User
+        note: Shënim
         moderator: Moderator

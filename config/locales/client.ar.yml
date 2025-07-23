@@ -319,12 +319,6 @@ ar:
     broken_page_change_alert: "أظهر معالج onPageChange خطأً. تحقَّق من أدوات مطوِّر المتصفح للمزيد من المعلومات."
     broken_plugin_alert: "بسبب المكوِّن الإضافي '%{name}'"
     broken_transformer_alert: "حدث خطأ. قد لا يعمل موقعك بشكلٍ صحيح."
-    critical_deprecation:
-      notice: "‎<b>[إشعار المسؤول]</b> يحتاج أحد السمات أو المكوِّنات الإضافية لديك إلى التحديث للتوافق مع التغييرات الأساسية القادمة في Discourse."
-      id: "‎(المعرِّف:<em>%{id}</em>)"
-      linked_id: "‎(المعرِّف:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "السمة المحدَّدة: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "المكوِّن الإضافي المحدَّد: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "آسيا والمحيط الهادئ (طوكيو)"
@@ -5620,6 +5614,8 @@ ar:
             badges:
               content: "الشارات"
               title: "كل الشارات الممكن منحها لك"
+            filter:
+              content: "عامل التصفية"
             topics:
               content: "الموضوعات"
               title: "كل الموضوعات"
@@ -5792,6 +5788,12 @@ ar:
           save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
     safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>الاطّلاع على المزيد</a>."
+    filter:
+      description:
+        yesterday: "أمس"
+        last_week: "الأسبوع الماضي"
+        last_month: "الشهر الماضي"
+        last_year: "العام الماضي"
     discovery:
       headings:
         multi_tag:
@@ -6015,6 +6017,8 @@ ar:
         embedding:
           title: "التضمين"
           header_description: "يتمتع Discourse بالقدرة على تضمين التعليقات من أحد الموضوعات في موقع بعيد باستخدام واجهة برمجة تطبيقات Javascript التي تُنشئ IFRAME"
+      theme_site_settings:
+        default_value: "افتراضي"
       search:
         title: "البحث"
         result_types:
@@ -7028,11 +7032,7 @@ ar:
           up_to_date: "السمة محدَّثة، تاريخ آخر تحقُّق:"
           has_overwritten_history: "لم يعُد إصدار السمة الحالي موجودًا لأن سجل Git قد تم استبداله إجباريًا."
           add: "إضافة"
-          theme_settings: "إعدادات السمة"
-          edit_objects_theme_setting: "محرِّر إعدادات الكائنات"
-          overriden_settings_explanation: "يتم تمييز الإعدادات المُستبدَلة بنقطة ولون مميَّز. لإعادة تعيين تلك الإعدادات إلى القيمة الافتراضية، اضغط على زر إعادة التعيين بجوارها."
           no_settings: "لا توجد إعدادات لهذه السمة."
-          theme_translations: "ترجمات السمة"
           empty: "لا توجد عناصر"
           commits_behind:
             zero: "السمة متأخرة بعدد %{count} إصدار!"
@@ -7122,7 +7122,12 @@ ar:
             title: "تحديد لوحة الألوان الأساسية"
             description: "لوحة الألوان الأساسية:"
           title: "الألوان"
-          edit: "تعديل لوحات الألوان"
+          edit: "تعديل"
+          filters:
+            all: "الكل"
+            user_selectable: "قابلة للاختيار من قِبل المستخدم"
+          active_badge:
+            text: "نشطة"
           long_title: "لوحات الألوان"
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"
@@ -7774,7 +7779,6 @@ ar:
         activity: النشاط
         like_count: تسجيلات الإعجاب الممنوحة/المتلقاة
         last_100_days: "في آخر 100 يوم"
-        private_topics_count: موضوع خاص
         posts_read_count: منشور مقروء
         post_count: منشور تم إنشاؤه
         second_factor_enabled: المصادقة الثنائية مفعَّلة

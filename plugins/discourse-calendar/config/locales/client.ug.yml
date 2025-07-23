@@ -34,6 +34,7 @@ ug:
         confirm: "جەزملە"
         title: "توپ تەكلىپ"
         error: "كەچۈرۈڭ ، ھۆججەت CSV پىچىمىدا بولۇشى كېرەك."
+        send_bulk_invites: "تەكلىپ يوللا"
       upcoming_events:
         creator: "قۇرغۇچى"
         status: "ھالەت"

@@ -9,25 +9,34 @@ hr:
     discourse_assign:
       sidebar_name_filter_placeholder: "Ime/korisnički nadimak"
       group_everyone: "Svi"
+      assigned_to: "Dodijeljeno"
+      assigned_to_w_ellipsis: "Dodijeljeno..."
       reassign:
         title: "Uredi"
       assign_modal:
+        note_label: Bilješka
         optional_label: "(opcionalno)"
         status_label: Statust
       assign_mailer:
-        never: "Nikada"
+        never: "Nikad"
         always: "Uvijek"
       reminders_frequency:
-        never: "Nikada"
+        never: "Nikad"
         daily: "Dnevno"
         weekly: "Tjedno"
         monthly: "Mjesečno"
         quarterly: "Tromjesečno"
     user:
       notification_level_when_assigned:
+        watch_topic: "Prati temu"
+        track_topic: "Prati temu"
         do_nothing: "Ne radi ništa"
       assignment_description:
         topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "Dodijeljeno"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:

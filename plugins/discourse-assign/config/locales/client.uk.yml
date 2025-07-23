@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Відповідальні"
   js:
     filters:
       unassigned:
@@ -13,24 +18,45 @@ uk:
     action_codes:
       assigned: "Призначено %{who} %{when}"
       assigned_group: "Призначено %{who} %{when}"
+      assigned_to_post: "Призначено %{who} допису <a href='%{path}'></a> %{when}"
+      assigned_group_to_post: "Призначено %{who} допису <a href='%{path}'></a> %{when}"
       unassigned: "Скасовано %{who} %{when}"
       unassigned_group: "Скасовано %{who} %{when}"
+      unassigned_from_post: "Скасовано %{who} з <a href='%{path}'>допису</a> %{when}"
+      unassigned_group_from_post: "Скасовано %{who} з <a href='%{path}'>допису</a> %{when}"
+      reassigned: "Перепризначено %{who} %{when}"
+      reassigned_group: "Перепризначено %{who} %{when}"
+      details_change: "Змінено деталі призначення для %{who} %{when}"
+      note_change: "Змінено призначення для %{who} %{when}"
+      status_change: "Змінено статус призначення для %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Додайте фільтр «непризначені» до категорії"
       cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"
       cant_act_unclaimed: "Ви повинні претендувати на цю тему, перш ніж реагувати на прапори."
+      topic_search_placeholder: "Пошук тем за назвою або змістом публікації"
+      sidebar_name_filter_placeholder: "Ім'я/Ім'я користувача"
       assigned: "Призначено"
       group_everyone: "Усі"
-      assigned_to: "Призначено на"
-      assigned_to_w_ellipsis: "Призначено на..."
+      assigned_to: "Призначено для"
+      assigned_topic_to: "Призначена тема для <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Призначено з #%{post_number} на %{username}"
+      assign_post_to_multiple: "#%{post_number} для %{username}"
+      assigned_to_w_ellipsis: "Призначено для..."
       unassign:
         title: "Скасувати призначення"
         title_w_ellipsis: "Скасувати призначення..."
+        help: "Скасувати призначення %{username} з теми"
       assign:
         title: "Призначити"
         help: "Призначити тему користувачеві"
+      assign_post:
+        title: "Призначити повідомлення"
+      unassign_post:
+        title: "Скасувати призначення з публікації"
+        help: "Скасувати призначення %{username} з публікації"
       reassign:
         title: "Редагувати"
+        title_w_ellipsis: "Редагувати призначення..."
       topic_level_menu:
         unassign_with_ellipsis: "Скасувати призначення..."
       assign_modal:
@@ -49,7 +75,7 @@ uk:
       reminders_frequency:
         description: "Частота прийому нагадувань про призначені теми"
         never: "Ніколи"
-        daily: "Щодня"
+        daily: "За день"
         weekly: "Щотижня"
         monthly: "Щомісяця"
         quarterly: "Щоквартала"
@@ -60,6 +86,8 @@ uk:
               assign: "Призначити"
     user:
       notification_level_when_assigned:
+        watch_topic: "Переглянути тему"
+        track_topic: "Відстежувати тему"
         do_nothing: "Нічого не робити"
       messages:
         assigned_title: "Призначено (%{count})"
@@ -69,11 +97,19 @@ uk:
     search:
       advanced:
         assigned:
-          label: "Призначено на"
+          label: "Призначено для"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Призначено"
+    user_menu:
+      tabs:
+        assign_list_with_unread:
+          one: "Список призначень – %{count} непрочитане завдання"
+          few: "Список призначень – %{count} непрочитані завдання"
+          many: "Список призначень – %{count} непрочитаних завдань"
+          other: "Список призначень – %{count} непрочитаних завданнь"
     edit_assignments_modal:
+      title: "Редагувати призначення"
       topic: "Тема"
       post: "Допис"

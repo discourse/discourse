@@ -1492,6 +1492,8 @@ be:
               content: "адміністратар"
             badges:
               content: "значкі"
+            filter:
+              content: "Filter"
             topics:
               content: "тэмы"
             faq:
@@ -1525,6 +1527,9 @@ be:
           reason: "чаму Вы рэдагуеце паведамленне?"
       spreadsheet:
         about: "Аб тэме"
+    filter:
+      description:
+        yesterday: "учора"
     discovery:
       headings:
         categories: "Усе катэгорыі"
@@ -1625,6 +1630,8 @@ be:
               header_description: "Пералічаныя тут вэб-адрасы выкарыстоўваліся ў паведамленнях карыстальнікаў, якія былі ідэнтыфікаваныя як спамераў"
         embedding:
           title: "узаемадзеянне"
+      theme_site_settings:
+        default_value: "Default"
       search:
         title: "Пошук"
       dashboard:
@@ -1920,6 +1927,11 @@ be:
               too_large: "павінен быць менш або роўны %{count}"
         colors:
           title: "<......"
+          edit: "Рэдагаваць"
+          filters:
+            all: "усе"
+          active_badge:
+            text: "актыўны"
           copy_name_prefix: "капіяваць з"
           undo: "Адмяніць"
           undo_title: "Адмяніць вашыя змены гэтага колеру з часу апошняга захавання."
@@ -2163,7 +2175,6 @@ be:
         permissions: дазволу
         activity: Актыўнасць
         last_100_days: "за апошнія 100 дзён"
-        private_topics_count: прыватных тым
         posts_read_count: паведамленняў прачытана
         post_count: паведамленняў створаны
         topics_entered: тым перагледжаны
