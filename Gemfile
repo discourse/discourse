@@ -16,10 +16,7 @@ gem "activerecord", "~> 8.0.0"
 gem "activesupport", "~> 8.0.0"
 gem "railties", "~> 8.0.0"
 
-gem "hiredis-client"
-
 gem "propshaft"
-
 gem "json"
 
 # this will eventually be added to rails,
@@ -32,6 +29,9 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
+# enable high performance redis client with hiredis
+# it is automatically used by redis gem
+gem "hiredis-client"
 gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
