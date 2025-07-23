@@ -59,7 +59,7 @@ ar:
       close: "إغلاق"
       delete: "حذف"
       edit: "تعديل"
-      back: "الرجوع"
+      back: "رجوع"
       save: "حفظ"
       apply: "تطبيق"
       recalculate: "إعادة حساب النقاط"
@@ -74,13 +74,6 @@ ar:
         all_time: "طوال الوقت"
         custom_date_range: "نطاق مخصَّص"
       custom_range_from: "من"
-      daily_update_scores_availability:
-        zero: "%{count} مرة إعادة حساب يومية متبقية"
-        one: "مرة إعادة حساب يومية واحدة (%{count}) متبقية"
-        two: "مرتا إعادة حساب يومية متبقيتان"
-        few: "%{count} مرات إعادة حساب يومية متبقية"
-        many: "%{count} مرة إعادة حساب يومية متبقية"
-        other: "%{count} مرة إعادة حساب يومية متبقية"
       admin:
         title: "التلعيب"
         name: "الاسم"

@@ -45,9 +45,9 @@ bs_BA:
               title: "Privatno"
       builder_modal:
         custom_fields:
-          placeholder: "Opciono"
+          placeholder: "Opcionalno"
         create: "napravi"
-        update: "Save"
+        update: "Sačuvaj"
         timezone:
           label: Vremenska zona
         reminders:
@@ -62,7 +62,7 @@ bs_BA:
           every_day: "Svaki dan"
         url:
           label: "URL"
-          placeholder: "Opciono"
+          placeholder: "Opcionalno"
         location:
           label: "Lokacija"
         description:

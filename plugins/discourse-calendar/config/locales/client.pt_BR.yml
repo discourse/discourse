@@ -198,7 +198,7 @@ pt_BR:
           it_vi: "Itália (it_vi)"
           it_vr: "Itália (it_vr)"
           it: "Itália"
-          je: "Jersey"
+          je: "Jérsei"
           jp: "Japão"
           ke: "Quênia"
           kr: "Coreia do Norte"
@@ -214,7 +214,7 @@ pt_BR:
           mx: "México"
           my: "Malásia"
           ng: "Nigéria"
-          nl: "Países Baixos"
+          nl: "Holanda"
           "no": "Noruega"
           nz_ak: "Nova Zelândia (nz_ak)"
           nz_ca: "Nova Zelândia (nz_ca)"
@@ -230,7 +230,7 @@ pt_BR:
           nz_we: "Nova Zelândia (nz_we)"
           nz_wl: "Nova Zelândia (nz_wl)"
           nz: "Nova Zelândia"
-          pe: "Peru"
+          pe: "Perú"
           ph: "Filipinas"
           pl: "Polônia"
           pt_li: "Portugal (pt_li)"
@@ -307,6 +307,7 @@ pt_BR:
           ve: "Venezuela"
           vi: "Ilhas Virgens (E.U.A)"
           za: "África do Sul"
+          zw: "Zimbábue"
       toolbar_button:
         today: "Hoje"
         month: "Mês"
@@ -322,7 +323,7 @@ pt_BR:
         after_event_reminder: "Um evento foi encerrado"
         ongoing_event_reminder: "Um evento está em andamento"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} definiu automaticamente sua presença e te convidou para %{description}"
+        invite_user_predefined_attendance_notification_html: "%{username} definiu automaticamente sua presença e convidou para %{description}"
         before_event_reminder_html: "Um evento está prestes a começar %{description}"
         after_event_reminder_html: "Um evento terminou %{description}"
         ongoing_event_reminder_html: "Um evento está em andamento  %{description}"
@@ -344,7 +345,7 @@ pt_BR:
       leave: "Sair do evento"
       edit_event: "Editar evento"
       export_event: "Exportar evento"
-      created_by: "Criador(a):"
+      created_by: "Criado(a) por"
       bulk_invite: "Convite em massa"
       close_event: "Encerrar evento"
       open_event: "Evento aberto"
@@ -360,7 +361,7 @@ pt_BR:
         title: "Convite em massa"
         success: "Arquivo enviado com sucesso, você será notificado(a) por mensagem quando o processo estiver completo."
         error: "Desculpe, o arquivo deve estar no formato CSV."
-        confirmation_message: "Você está prestes a enviar convites por e-mail para todos no arquivo enviado."
+        confirmation_message: "Você está prestes a enviar convites por e-mail para todos(as) no arquivo enviado."
         description_public: "Eventos públicos só aceitam nomes de usuários(as) para convites em massa."
         description_private: "Eventos públicos só aceitam nomes de usuários(as) para convites em massa."
         download_sample_csv: "Faça o download de um arquivo CSV de exemplo"
@@ -371,7 +372,7 @@ pt_BR:
         csv_title: "Convite em massa CSV"
       upcoming_events:
         title: "Próximos eventos"
-        creator: "Criador"
+        creator: "Criador(a)"
         status: "Status"
         starts_at: "Começa"
       upcoming_events_list:
@@ -397,13 +398,13 @@ pt_BR:
             not_going: "Não vou"
             interested: "Interessado"
             going_count:
-              one: "%{count} vai"
+              one: "%{count} vão"
               other: "%{count} vão"
             not_going_count:
-              one: "%{count} não vai"
+              one: "%{count} não vão"
               other: "%{count} não vão"
             interested_count:
-              one: "%{count} tem interesse"
+              one: "%{count} têm interesse"
               other: "%{count} têm interesse"
             invited_count:
               one: "%{count} usuário(a) convidado(a)"
@@ -416,10 +417,10 @@ pt_BR:
               title: "Independente"
               description: "Não é possível entrar em um evento independente."
             public:
-              title: "Público"
+              title: "Público(a)"
               description: "Qualquer pessoa pode participar de um evento público."
             private:
-              title: "Privado"
+              title: "Privado(a)"
               description: "Um evento privado só pode ter a participação de usuários(as) convidados(as)."
       builder_modal:
         custom_fields:

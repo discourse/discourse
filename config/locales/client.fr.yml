@@ -208,12 +208,6 @@ fr:
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     broken_transformer_alert: "Une erreur s'est produite. Votre site risque de ne pas fonctionner correctement."
-    critical_deprecation:
-      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou l'une de vos extensions doit être mise à jour pour assurer la compatibilité avec les prochaines modifications principales de Discourse."
-      id: "(id :<em>%{id}</em>)"
-      linked_id: "(id :<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
-      plugin_source: "Extension identifiée : « %{name} »"
     s3:
       regions:
         ap_northeast_1: "Asie-Pacifique (Tokyo)"
@@ -4649,6 +4643,8 @@ fr:
             badges:
               content: "Badges"
               title: "Tous les badges disponibles à gagner"
+            filter:
+              content: "Filtre"
             topics:
               content: "Sujets"
               title: "Tous les sujets"
@@ -4796,6 +4792,12 @@ fr:
           paste: "Coller..."
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
+    filter:
+      description:
+        yesterday: "Hier"
+        last_week: "La semaine dernière"
+        last_month: "Le mois dernier"
+        last_year: "L'année dernière"
     discovery:
       headings:
         multi_tag:
@@ -5007,6 +5009,8 @@ fr:
         embedding:
           title: "Intégration"
           header_description: "Discourse a la capacité d'intégrer les commentaires d'un sujet dans un site distant à l'aide d'une API JavaScript qui crée un IFRAME"
+      theme_site_settings:
+        default_value: "Par défaut"
       search:
         title: "Recherche"
         result_types:
@@ -5961,11 +5965,7 @@ fr:
           up_to_date: "Thème à jour, dernière vérification :"
           has_overwritten_history: "La version actuelle du thème n'existe plus car l'historique Git a été écrasé par une mise à jour forcée."
           add: "Ajouter"
-          theme_settings: "Paramètres du thème"
-          edit_objects_theme_setting: "Éditeur de configuration d'objets"
-          overriden_settings_explanation: "Les paramètres annulés sont signalés par un point et sont surlignés par une couleur. Pour rétablir la valeur par défaut de ces paramètres, appuyez sur le bouton de réinitialisation situé à côté."
           no_settings: "Ce thème n'a pas de paramètres."
-          theme_translations: "Traductions de thème"
           empty: "Aucun élément"
           commits_behind:
             one: "Le thème est en retard de %{count} commit !"
@@ -6035,7 +6035,12 @@ fr:
             title: "Sélectionner la palette de couleurs de base"
             description: "Palette de base :"
           title: "Couleurs"
-          edit: "Modifier les palettes de couleurs"
+          edit: "Modifier"
+          filters:
+            all: "Tout"
+            user_selectable: "Sélectionnable par l'utilisateur"
+          active_badge:
+            text: "Actif"
           long_title: "Palettes de couleurs"
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
@@ -6667,7 +6672,6 @@ fr:
         activity: Activité
         like_count: '« J''aime » donnés/reçus'
         last_100_days: "au cours des 100 derniers jours"
-        private_topics_count: Sujets privés
         posts_read_count: Messages lus
         post_count: Messages créés
         second_factor_enabled: Validation en deux étapes activée

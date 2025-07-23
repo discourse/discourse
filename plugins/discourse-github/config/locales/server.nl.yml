@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    enable_discourse_github_plugin: "Discourse-Github-plug-in inschakelen"
+    github_linkback_enabled: "GitHub-problemen teruglinken naar forumdiscussies"
+    github_linkback_projects: "Lijst van projecten om van terug te linken"
+    github_linkback_access_token: 'Een geldig toegangstoken voor de gebruiker die de teruglink plaatst en voor het tellen van commits/bijdragen om badges toe te kennen. Zie <a href="https://meta.discourse.org/t/99895">hier</a> voor instructies voor het verkrijgen van een token.'
+    github_linkback_maximum_links: "Maximaal aantal teruglinks om te maken vanuit één enkele post. Als een bericht meer links bevat, wordt er geen gemaakt."
+    github_permalinks_enabled: "Overschrijven van GitHub-permalink inschakelen"
+    github_permalinks_exclude: "Bestandsnaam of map die moet worden uitgesloten van permalinkoverschrijvingen. Geef alleen de bestandsnaam of het volledige pad op: gebruiker/repository/optionele-directory/bestandsnaam"
+    github_badges_enabled: "GitHub-badges inschakelen"
+    github_badges_repos: "URL's van de GitHub-repository's om te scannen op bijdragen en commits"
+    github_silver_badge_min_commits: "Minimaal aantal commits voor zilveren badge"
+    github_gold_badge_min_commits: "Minimaal aantal commits voor gouden badge"
+    errors:
+      invalid_badge_repo: "Je moet een GitHub-URL of de repositorynaam opgeven in de vorm githubgebruiker/repositorynaam"
+      invalid_github_linkback_access_token: "Je moet een geldig GitHub-linkbackaccesstoken opgeven dat toegang heeft tot de door jou opgegeven badgerepository's."
+  github_linkback:
+    commit_template: |
+      Deze commit is vermeld op **%{title}**. Er kunnen relevante details zijn:
+
+      %{post_url}
+    pr_template: |
+      Dit pullverzoek is vermeld op **%{title}**. Er kunnen relevante details zijn:
+
+      %{post_url}
+    issue_template: |
+      Dit probleem is vermeld op **%{title}**. Er kunnen relevante details zijn:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "Actie vereist voor Discourse-Github-plug-in"
+      repository_not_found_pm_title: "Actie vereist voor Discourse-Github-plug-in"
+      invalid_octokit_credentials_pm_title: "Actie vereist voor Discourse-Github-plug-in"

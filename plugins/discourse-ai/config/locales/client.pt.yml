@@ -1,0 +1,186 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Ordenar por"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID do Tópico"
+            title:
+              label: "Título"
+            categories:
+              label: "Categorias"
+            tags:
+              label: "Etiquetas"
+        llm_triage:
+          fields:
+            category:
+              label: "Categoria"
+            tags:
+              label: "Etiquetas"
+            canned_reply:
+              label: "Responder"
+    discourse_ai:
+      features:
+        back: "Retroceder"
+        disabled: "(desativado)"
+        groups: "Grupos:"
+        no_persona: "Não definido"
+        no_groups: "Nenhuma"
+        edit: "Editar"
+        expand_list:
+          one: "(%{count} mais)"
+          other: "(%{count} mais)"
+        collapse_list: "(mostrar menos)"
+        filters:
+          all: "Todos"
+          reset: "Repor"
+        search:
+          name: "Pesquisar"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Selecione uma opção..."
+      spam:
+        short_title: "Spam"
+        last_seven_days: "Últimos 7 Dias"
+        enable: "Ativar"
+        test_modal:
+          spam: "Spam"
+      usage:
+        summary: "Resumo"
+        username: "Nome de Utilizador"
+        total_requests: "Total de pedidos"
+        periods:
+          last_day: "Últimas 24 horas"
+          custom: "Personalizar..."
+      ai_persona:
+        back: "Retroceder"
+        name: "Nome"
+        edit: "Editar"
+        export: "Exportar"
+        import: "Importar"
+        description: "Descrição"
+        user: Utilizador
+        save: "Guardar"
+        enabled: "Ativado?"
+        allowed_groups: "Grupos permitidos"
+        delete: "Eliminar"
+        response_format:
+          open_modal: "Editar"
+          modal:
+            key_title: "Chave"
+        filters:
+          reset: "Repor"
+      rag:
+        uploads:
+          title: "Uploads"
+          uploading: "A enviar…"
+      tools:
+        back: "Retroceder"
+        export: "Exportar"
+        import: "Importar"
+        name: "Nome"
+        description: "Descrição"
+        summary: "Resumo"
+        save: "Guardar"
+        remove_parameter: "Remover"
+        parameter_required: "Necessário"
+        edit: "Editar"
+        delete: "Eliminar"
+      llms:
+        display_name: "Nome"
+        provider: "Provedor"
+        save: "Guardar"
+        edit: "Editar"
+        back: "Retroceder"
+        delete: Eliminar
+        quotas:
+          group: "Grupo"
+          max_usages: "Máximo de utilizações"
+          duration: "Duração"
+          durations:
+            hour: "1 hora"
+            six_hours: "6 horas"
+            day: "24 horas"
+            week: "7 dias"
+            custom: "Personalizar..."
+          hours: "horas"
+        usage:
+          ai_summarization: "Resumir"
+          ai_spam: "Spam"
+        next:
+          title: "Próximo"
+        providers:
+          google: "Google"
+          fake: "Personalizar"
+      ai_helper:
+        context_menu:
+          cancel: "Cancelar"
+          confirm: "Confirmar"
+          discard: "Descartar"
+        post_options_menu:
+          close: "Fechar"
+          copy: "Copiar"
+          copied: "Copiado!"
+          cancel: "Cancelar"
+        thumbnail_suggestions:
+          select: "Selecionar"
+        image_caption:
+          save_caption: "Guardar"
+          automatic_caption_dialog:
+            confirm: "Ativar"
+      embeddings:
+        back: "Retroceder"
+        save: "Guardar"
+        delete: "Eliminar"
+        edit: "Editar"
+        display_name: "Nome"
+        provider: "Provedor"
+        providers:
+          google: "Google"
+          fake: "Personalizar"
+      ai_bot:
+        debug_ai_modal:
+          request: "Pedido"
+          response: "Resposta"
+          next_log: "Próximo"
+          previous_log: "Anterior"
+        invite_ai_conversation:
+          button: "Convidar"
+        share_modal:
+          copy: "Copiar"
+        conversations:
+          today: "Hoje"
+          last_7_days: "Últimos 7 Dias"
+          last_30_days: "Últimos 30 Dias"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Todos"
+          group_types:
+            category: "Categoria"
+          table:
+            total_count: "Total"
+      summarization:
+        chat:
+          summarize: "Resumir"
+      discobot_discoveries:
+        regular_results: "Tópicos"
+        collapse: "Colapsar"
+        tooltip:
+          actions:
+            disable: "Desativar"

@@ -9,4 +9,5 @@ zh_TW:
     user_notes:
       labels:
         user: 使用者
+        note: ' 分類已經沒有其它話題了。'
         moderator: 板主

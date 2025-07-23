@@ -1,0 +1,496 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_ai: "Дискурс ШІ"
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Сортувати за"
+            tag:
+              label: "Теґ"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Відправник"
+              description: "Користувач, який надсилатиме звіт"
+            receivers:
+              label: "Отримувачі"
+              description: "Користувачі, які отримають звіт (електронні листи будуть надіслані безпосередньо на електронну пошту, імена користувачів будуть надіслані в приватному повідомленні)"
+            topic_id:
+              label: "ID теми"
+            title:
+              label: "Назва"
+              description: "Назва звіту"
+            days:
+              label: "Дні"
+              description: "Часові рамки звіту"
+            offset:
+              label: "Зсув"
+              description: "Під час тестування ви можете запустити звіт за минулі періоди, використовуйте зсув, щоб почати звіт із більш ранньої дати"
+            instructions:
+              label: "Інструкції"
+              description: "Інструкції, надані до великої мовної моделі"
+            sample_size:
+              label: "Розмір вибірки"
+              description: "Кількість дописів до вибірки для звіту"
+            tokens_per_post:
+              label: "Токени на пост"
+            model:
+              label: "Модель"
+              description: "LLM для створення звітів"
+            categories:
+              label: "Розділи"
+              description: "Фільтрувати теми лише за цими категоріями"
+            tags:
+              label: "Теґи"
+              description: "Фільтрувати теми лише за цими тегами"
+            exclude_tags:
+              label: "Виключити теги"
+              description: "Виключити теми з цими тегами"
+            exclude_categories:
+              label: "Виключити категорії"
+              description: "Виключити теми з цими категоріями"
+            allow_secure_categories:
+              label: "Дозволити захищені категорії"
+              description: "Дозволити створення звіту для тем у захищених категоріях"
+            suppress_notifications:
+              label: "Вимкнути сповіщення"
+              description: "Приховати сповіщення, які може надсилати звіт шляхом перетворення їх у контент. Це змінить згадки та внутрішні посилання."
+            debug_mode:
+              label: "Режим налагодження"
+              description: "Увімкнути режим налагодження, щоб побачити необроблені вхідні та вихідні дані LLM"
+            priority_group:
+              label: "Пріоритетна група"
+              description: "Визначте пріоритетність контенту з цієї групи у звіті"
+            temperature:
+              label: "Температура"
+            top_p:
+              label: "Top P"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Модель"
+        llm_triage:
+          fields:
+            system_prompt:
+              label: "Системний запит"
+              description: "Підказка, яка буде використана для сортування. Для відповіді використовуйте одне слово, яке ви зможете використовувати для запуску дії"
+            max_post_tokens:
+              label: "Максимальна кількість токенів публікації"
+              description: "Максимальна кількість токенів для сканування за допомогою LLM"
+            search_for_text:
+              label: "Пошук тексту"
+            category:
+              label: "Розділ"
+              description: "Категорія, яку слід застосувати до теми"
+            tags:
+              label: "Теґи"
+              description: "Теги, які слід застосувати до теми"
+            canned_reply:
+              label: "Відповідь"
+            canned_reply_user:
+              label: "Відповідь користувача"
+              description: "Ім’я користувача для публікації стандартної відповіді"
+            hide_topic:
+              label: "Приховати тему"
+            flag_type:
+              label: "Тип прапора"
+              description: "Тип прапорця, який буде застосовано до повідомлення (спам або просто підняти на розгляд)"
+            flag_post:
+              label: "Поскаржитися"
+              description: "Позначає повідомлення (як спам, або для перегляду)"
+            model:
+              label: "Модель"
+              description: "Мовна модель, що використовується для тренування"
+            temperature:
+              label: "Температура"
+    discourse_ai:
+      title: "ШІ"
+      features:
+        back: "Назад"
+        disabled: "(вимкнено)"
+        groups: "Групи:"
+        no_persona: "Не встановлено"
+        no_groups: "Немає"
+        edit: "Редагувати"
+        expand_list:
+          one: "(ще %{count})"
+          few: "(ще %{count})"
+          many: "(ще %{count})"
+          other: "(ще %{count})"
+        collapse_list: "(показати менше)"
+        filters:
+          all: "Всі"
+          reset: "Скинути"
+        search:
+          name: "Пошук"
+        ai_helper:
+          proofread: Перевірити текст
+          explain: "Пояснити"
+          markdown_tables: "Створити таблицю у форматі Markdown"
+        spam:
+          name: "Спам"
+      modals:
+        select_option: "Вибрати опцію..."
+      layout:
+        table: "Таблиця"
+      spam:
+        short_title: "Спам"
+        last_seven_days: "Останні 7 днів"
+        enable: "Увімкнути"
+        save_button: "Зберегти зміни"
+        test_modal:
+          result: "Результат"
+          run: "Запустити тест"
+          spam: "Спам"
+      usage:
+        short_title: "Використання"
+        summary: "Підсумок"
+        model: "Модель"
+        username: "Імʼя користувача"
+        total_requests: "Всього"
+        request_tokens: "Токени запиту"
+        response_tokens: "Токени відповіді"
+        periods:
+          last_day: "Останні 24 години"
+          custom: "Власний…"
+      ai_persona:
+        ai_tools: "Інструменти"
+        tool_strategies:
+          all: "Застосувати до всіх відповідей"
+          replies:
+            one: "Застосувати тільки до першої відповіді"
+            few: "Застосувати тільки до перших %{count} відповідей"
+            many: "Застосувати тільки до перших %{count} відповідей"
+            other: "Застосувати тільки до перших %{count} відповідей"
+        back: "Назад"
+        name: "Імʼя"
+        edit: "Редагувати"
+        export: "Експорт"
+        import: "Імпорт"
+        description: "Опис"
+        no_llm_selected: "Мовну модель не вибрано"
+        max_context_posts_help: "Максимальна кількість дописів, які ШІ буде використовувати як контекст для відповіді користувачеві. (за замовчуванням порожньо)"
+        vision_enabled: Візуальне розпізнавання увімкнено
+        vision_enabled_help: Якщо ввімкнено, ШІ намагатиметься зрозуміти зображення, які користувачі публікують у темі, залежно від моделі, яка використовується для підтримки зору. Підтримується останніми моделями від Anthropic, Google і OpenAI.
+        vision_max_pixels: Підтримуваний розмір зображення
+        tool_details_help: Показуватиме кінцевим користувачам докладні відомості про те, які інструменти запустила мовна модель.
+        mentionable_help: Якщо увімкнено, користувачі в дозволених групах можуть згадувати цього користувача в повідомленнях, ШІ відповідатиме від імені цієї персони.
+        user: Користувач
+        create_user_help: За бажанням ви можете приєднати користувача до цієї персони. Якщо ви це зробите, ШІ використовуватиме цього користувача, щоб відповідати на запити.
+        default_llm_help: Мовна модель за замовчуванням для цієї персони. Обов'язково, якщо ви хочете згадувати персону в публічних публікаціях.
+        question_consolidator_llm: Мовна модель для Question Consolidator
+        question_consolidator_llm_help: Мовна модель для об’єднання запитань, ви можете вибрати менш потужну модель, щоб заощадити кошти.
+        allow_chat_direct_messages_help: "Якщо увімкнено, користувачі з дозволених груп можуть надсилати прямі повідомлення цій персоні."
+        allow_chat_channel_mentions_help: "Якщо увімкнено, користувачі в дозволених групах можуть згадувати цю персону в чаті."
+        allow_personal_messages_help: "Якщо увімкнено, користувачі з дозволених груп можуть надсилати особисті повідомлення цій персоні."
+        allow_topic_mentions_help: "Якщо увімкнено, користувачі в дозволених групах можуть згадувати цю персону в темах."
+        save: "Зберегти"
+        enabled: "Включено?"
+        allowed_groups: "Дозволені групи"
+        confirm_delete: "Ви впевнені, що хочете видалити цю персону?"
+        title: "Персони"
+        short_title: "Персони"
+        delete: "Видалити"
+        temperature: "Температура"
+        top_p: "Top P"
+        top_p_help: "Top P параметр для LLM, збільште, щоб збільшити випадковість (залиште порожнім, щоб використовувати модель за замовчуванням, як правило, значення від 0,0 до 1,0)"
+        priority: "Пріоритет"
+        priority_help: "Пріоритетні персони відображаються користувачам у верхній частині списку персон. Якщо кілька персон мають пріоритет, вони будуть сортовані за алфавітом."
+        rag_conversation_chunks_help: "Кількість фрагментів для пошуку за моделлю RAG. Збільшуйте, щоб збільшити кількість контексту, який може використовувати ШІ."
+        response_format:
+          open_modal: "Редагувати"
+          modal:
+            key_title: "Ключ"
+        list:
+          enabled: "AI Bot?"
+        filters:
+          reset: "Скинути"
+      rag:
+        options:
+          rag_chunk_tokens_help: "Кількість токенів, які будуть використані для кожного фрагмента в моделі RAG. Збільште, щоб збільшити кількість контексту, який може використовувати ШІ. (Зміна призведе до повторної переіндексації всіх завантажень)"
+          rag_chunk_overlap_tokens_help: "Кількість токенів для перекриття між фрагментами в моделі RAG. (Зміна буде переіндексовувати всі завантаження)"
+        uploads:
+          title: "Завантаження"
+          filter: "Фільтр завантажень"
+          indexed: "Індексовано"
+          indexing: "Індексація"
+          uploaded: "Готовий до індексації"
+          uploading: "Надсилання…"
+          remove: "Видалити завантаження"
+      tools:
+        back: "Назад"
+        short_title: "Інструменти"
+        export: "Експорт"
+        import: "Імпорт"
+        name: "Імʼя"
+        description: "Опис"
+        description_help: "Чіткий опис призначення інструменту для мовної моделі"
+        summary: "Підсумок"
+        summary_help: "Короткий опис призначення інструментів для відображення кінцевим користувачам"
+        script: "Скрипт"
+        parameters: "Параметри"
+        save: "Зберегти"
+        remove_parameter: "Вилучити"
+        parameter_required: "Обов'язкові"
+        parameter_enum: "Перерахунок"
+        enum_value: "Значення переліку"
+        add_enum_value: "Додати значення переліку"
+        edit: "Редагувати"
+        test: "Запустити тест"
+        delete: "Видалити"
+        saved: "Інструмент збережено"
+        confirm_delete: "Ви впевнені, що хочете видалити цей інструмент?"
+        test_modal:
+          run: "Запустити тест"
+      llms:
+        short_title: "LLMs"
+        no_llms: "Ще немає LLM"
+        display_name: "Імʼя"
+        name: "ID моделі"
+        provider: "Провайдер"
+        tokenizer: "Токенізатор"
+        url: "URL-адреса сервісу, на якому розміщена модель"
+        api_key: "Ключ API сервісу, на якому розміщена модель"
+        vision_enabled: "Візуальне розпізнавання увімкнено"
+        save: "Зберегти"
+        edit: "Редагувати"
+        back: "Назад"
+        confirm_delete: Ви впевнені, що хочете видалити цей тип?
+        delete: Видалити
+        seeded_warning: "Ця модель попередньо налаштована на вашому сайті і її неможливо редагувати."
+        quotas:
+          group: "Група"
+          max_usages: "Максимальна кількість використань"
+          duration: "Тривалість"
+          durations:
+            hour: "1 година"
+            six_hours: "6 годин"
+            day: "24 години"
+            week: "7 днів"
+            custom: "Власний…"
+          hours: "годин"
+        usage:
+          ai_persona: "Персона (%{persona})"
+          ai_summarization: "Підсумок"
+          ai_spam: "Спам"
+        in_use_warning:
+          one: "Ця модель зараз використовується %{settings}. У разі неправильного налаштування функція не працюватиме належним чином."
+          few: "Ця модель зараз використовується: %{settings}. У разі неправильного налаштування функція не працюватиме належним чином. "
+          many: "Ця модель зараз використовується: %{settings}. У разі неправильного налаштування функція не працюватиме належним чином. "
+          other: "Ця модель зараз використовується: %{settings}. У разі неправильного налаштування функція не працюватиме належним чином. "
+        model_description:
+          none: "Загальні налаштування, що працюють для більшості мовних моделей"
+          anthropic-claude-opus-4-0: "Найрозумніша модель Anthropic"
+          anthropic-claude-3-5-haiku-latest: "Швидко та економічно ефективно"
+          google-gemini-2-5-flash: "Легкий, швидкий та економічний з мультимодальними міркуваннями"
+        configured:
+          title: "Налаштовані LLM"
+        preconfigured_llms: "Виберіть вашу LLM"
+        preconfigured:
+          title_no_llms: "Виберіть шаблон для початку"
+          title: "Неналаштовані шаблони LLM"
+          fake: "Ручне налаштування"
+          button: "Налаштувати"
+        next:
+          title: "Далі"
+        tests:
+          title: "Запустити тест"
+          running: "Виконується тест..."
+          success: "Успіх!"
+          failure: "Спроба зв’язатися з моделлю повернула таку помилку: %{error}"
+        hints:
+          name: "Ми включаємо це у виклик API, щоб визначити, яку модель ми будемо використовувати"
+          vision_enabled: "Якщо увімкнено, ШІ намагатиметься зрозуміти зображення. Це залежить від використовуваної моделі, що підтримує зір. Підтримується останніми моделями від Anthropic, Google та OpenAI."
+          enabled_chat_bot: "Якщо увімкнено, користувачі можуть вибрати цю модель під час створення завдань за допомогою ШІ-бота"
+        providers:
+          aws_bedrock: "AWS Bedrock"
+          anthropic: "Anthropic"
+          vllm: "vLLM"
+          hugging_face: "Hugging Face"
+          cohere: "Cohere"
+          open_ai: "OpenAI"
+          google: "Google"
+          azure: "Azure"
+          ollama: "Ollama"
+          CDCK: "CDCK"
+          samba_nova: "SambaNova"
+          fake: "Користувацька"
+        provider_fields:
+          disable_system_prompt: "Вимкнути системні повідомлення у підказках"
+          enable_native_tool: "Увімкнути підтримку рідних інструментів"
+          disable_native_tools: "Вимкнути підтримку рідних інструментів (використовувати інструменти на основі XML)"
+      related_topics:
+        pill: "Пов'язані"
+      ai_helper:
+        title: "Пропонувати зміни за допомогою ШІ"
+        description: "Виберіть один із варіантів нижче, і ШІ запропонує вам нову версію тексту."
+        selection_hint: "Підказка: Ви також можете вибрати частину тексту перед відкриттям помічника, щоб переписати лише її."
+        suggest: "Підказки від ШІ"
+        missing_content: "Будь ласка, введіть деякий контент для створення пропозицій."
+        context_menu:
+          trigger: "Запитайте ШІ"
+          loading: "ШІ генерує"
+          cancel: "Скасувати"
+          regen: "Спробуйте ще раз"
+          confirm: "Підтвердити"
+          discard: "Відкинути"
+          custom_prompt:
+            placeholder: "Введіть власний запит..."
+          translate_prompt: "Перекласти на %{language}"
+        post_options_menu:
+          trigger: "Запитайте ШІ"
+          title: "Запитайте ШІ"
+          loading: "ШІ генерує"
+          close: "Закрити"
+          copy: "Копіювати"
+          copied: "Скопійовано!"
+          cancel: "Скасувати"
+          insert_footnote: "Додати виноску"
+          footnote_credits: "Пояснення ШІ"
+        thumbnail_suggestions:
+          select: "Вибрати"
+          selected: "Вибрано"
+        image_caption:
+          button_label: "Підпис зі ШІ"
+          generating: "Створення підпису..."
+          credits: "Підпис від ШІ"
+          save_caption: "Зберегти"
+          automatic_caption_loading: "Підписи до зображень..."
+          automatic_caption_dialog:
+            confirm: "Увімкнути"
+            cancel: "Не запитувати знову"
+        no_content_error: "Спочатку додайте вміст, щоб застосувати до нього дії ШІ"
+      reviewables:
+        model_used: "Використана модель:"
+        accuracy: "Точність:"
+      embeddings:
+        back: "Назад"
+        save: "Зберегти"
+        delete: "Видалити"
+        presets: "Виберіть попереднє налаштування..."
+        edit: "Редагувати"
+        tests:
+          title: "Запустити тест"
+          running: "Виконується тест..."
+          success: "Успіх!"
+        display_name: "Імʼя"
+        provider: "Провайдер"
+        tokenizer: "Токенізатор"
+        providers:
+          hugging_face: "Hugging Face"
+          open_ai: "OpenAI"
+          google: "Google"
+          CDCK: "CDCK"
+          fake: "Користувацька"
+        semantic_search: "Теми (семантикв)"
+        semantic_search_loading: "Пошук більшої кількості результатів за допомогою ШІ"
+        semantic_search_results:
+          toggle: "Показати результати %{count} , знайдені за допомогою ШІ"
+          toggle_hidden: "Приховати %{count} результатів, знайдених за допомогою ШІ"
+          none: "Вибачте, наш пошук ШІ не знайшов відповідних тем"
+        ai_generated_result: "Результат пошуку знайдено за допомогою ШІ"
+        quick_search:
+          suffix: "у всіх темах і повідомленнях з ШІ"
+      ai_bot:
+        llm: "Модель"
+        pm_warning: "Повідомлення чат-ботів ШІ регулярно контролюються модераторами."
+        cancel_streaming: "Зупинити відповідь"
+        default_pm_prefix: "[ПП від ШІ-бота без назви]"
+        shortcut_title: "Почніть листування з AI-ботом"
+        share: "Копіювати розмову ШІ"
+        conversation_shared: "Бесіду скопійовано"
+        debug_ai: "Перегляньте необроблений запит і відповідь ШІ"
+        debug_ai_modal:
+          title: "Переглянути взаємодію зі ШІ"
+          copy_request: "Скопіювати запит"
+          copy_response: "Копіювати відповідь"
+          request_tokens: "Токени запиту:"
+          response_tokens: "Токени відповіді:"
+          request: "Запит"
+          response: "відповідь"
+          next_log: "Далі"
+          previous_log: "Попередні"
+        share_ai_conversation:
+          title: "Поділіться цією бесідою зі ШІ публічно"
+        invite_ai_conversation:
+          button: "Запрошення"
+        ai_label: "ШІ"
+        ai_title: "Розмова з ШІ"
+        share_modal:
+          title: "Копіювати розмову ШІ"
+          copy: "Копіювати"
+          context: "Взаємодія для спільного використання:"
+          share_tip: "Крім того, ви можете поділитися усією розмовою"
+        bot_names:
+          fake: "Фальшивий тестовий бот"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Sonnet"
+          claude-3-haiku: "Claude 3 Haiku"
+          cohere-command-r-plus: "Cohere Command R Plus"
+          gpt-4: "GPT-4"
+          gpt-4-turbo: "GPT-4 Turbo"
+          gpt-4o: "GPT-4 Omni"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+          gemini-1:
+            5-pro: "Gemini"
+          mixtral-8x7B-Instruct-V0:
+            "1": "Mixtral-8x7B V0.1"
+        conversations:
+          today: "Сьогодні"
+          last_7_days: "Останні 7 днів"
+          last_30_days: "Останні 30 днів"
+      sentiments:
+        dashboard:
+          title: "Почуття"
+        sentiment_analysis:
+          filter_types:
+            all: "Всі"
+            positive: "Позитивний"
+            neutral: "Нейтральна"
+            negative: "Негативний"
+          group_types:
+            category: "Розділ"
+            tag: "Теґ"
+          table:
+            sentiment: "Почуття"
+            total_count: "Всього"
+      summarization:
+        chat:
+          title: "Підсумкове повідомлення"
+          description: "Виберіть опцію нижче, щоб підсумувати розмову, надіслану протягом визначеного періоду."
+          summarize: "Підсумок"
+          since:
+            one: "Остання година"
+            few: "Останні %{count} години"
+            many: "Останні %{count} годин"
+            other: "Останні %{count} годин"
+        topic:
+          title: "Підсумок теми"
+          close: "Закрити панель підсумків"
+      discobot_discoveries:
+        regular_results: "Теми"
+        collapse: "Згорнути"
+        tooltip:
+          actions:
+            disable: "Вимкнути"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Повідомлення з позначкою ШІ"
+        reviewable_ai_chat_message:
+          title: "Повідомлення чату з прапорцем ШІ"

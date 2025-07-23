@@ -1,0 +1,7 @@
+.ai-persona-editor {
+  &__system_prompt,
+  &__description,
+  .select-kit.multi-select {
+    width: 100%;
+  }
+}

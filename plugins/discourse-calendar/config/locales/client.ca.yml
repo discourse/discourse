@@ -28,10 +28,12 @@ ca:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      created_by: "Creat per"
       bulk_invite_modal:
         confirm: "confirma"
         success: "Fitxer carregat amb èxit. Us notificarem amb un missatge quan s'hagi completat el procés."
         error: "El fitxer hauria de tenir format CSV."
+        group_selector_placeholder: "Trieu un grup..."
       upcoming_events:
         status: "Estat"
       models:

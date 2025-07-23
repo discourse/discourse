@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  js:
+    discourse_policy:
+      title: "Política"
+      accepted_tooltip: "Usuários(as) que aceitaram esta política"
+      not_accepted_tooltip: "Usuários(as) que não aceitaram esta política"
+      accept_policy: "Aceitar política"
+      revoke_policy: "Revogar política"
+      edit_reason: "Configurações de política foram modificadas"
+      no_possible_users: "Esta política não tem usuários possíveis"
+      accept_policy_template: "Aceito esta política"
+      builder:
+        title: Política
+        attach: Criar política
+        save: Salvar alterações
+        insert: Inserir
+        errors:
+          group: O grupo é obrigatório
+          version: A versão é obrigatória
+        groups:
+          label: Grupos
+          description: Os grupos associados a esta política
+        version:
+          label: Versão
+          description: A versão da política, promover a versão obrigará as pessoas a aceitá-la novamente
+        renew:
+          label: Renovar
+          description: Renovar a política a cada x dias
+        renew-start:
+          label: Início da renovação
+          description: Quando a política deve ser renovada
+        reminder:
+          label: Lembrete
+          description: Frequência com que a notificação de lembrete para aceitar a política deve ser enviada
+        accept:
+          label: Aceitar
+          description: Texto usado no botão de aceitar
+        revoke:
+          label: Revogar
+          description: Texto usado no botão de revogar
+        private:
+          label: Privado?
+          description: Manter o status da política privado para administradores(as)
+        send-email:
+          label: Enviar e-mail?
+          description: Notifique os usuários da nova política por e-mail
+      preferences:
+        title: Políticas
+        policy_emails:
+          always_description: Só enviaremos um e-mail se você também tiver optado por receber novos e-mails de atividades.
+          away_description: Só enviaremos um e-mail se não o tivermos visto nos últimos 10 minutos quando o status da política for alterado e somente se você também tiver optado por receber novos e-mails de atividades.
+          label: Envie um e-mail para mim quando uma política precisar da minha revisão
+          email_frequency_options:
+            never: Nunca
+            when_away: Só quando estiver ausente
+            always: Sempre

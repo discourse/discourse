@@ -11,8 +11,9 @@ sl:
       reassign:
         title: "Uredi"
       assign_modal:
+        note_label: Opomba
         optional_label: "(neobvezno)"
-        status_label: Stanje
+        status_label: Status
       assign_mailer:
         never: "Nikoli"
         always: "Vedno"

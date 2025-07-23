@@ -45,7 +45,7 @@ es:
         watch: 'Todas las publicaciones y respuestas'
         thread: 'Todas las publicaciones con respuestas en hilo'
       rule_table:
-        filter: "Filtrar"
+        filter: "Filtro"
         category: "Categoría"
         tags: "Etiquetas"
         edit_rule: "Editar"

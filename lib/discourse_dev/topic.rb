@@ -2,6 +2,7 @@
 
 require "discourse_dev/record"
 require "faker"
+require "sidekiq/api"
 
 module DiscourseDev
   class Topic < Record

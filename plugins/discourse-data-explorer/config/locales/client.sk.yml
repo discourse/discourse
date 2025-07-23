@@ -24,7 +24,7 @@ sk:
       export: "Exportovať"
       save: "Uložiť zmeny"
       edit: "Upraviť"
-      delete: "Zmazať"
+      delete: "Odstrániť"
       download_json: "JSON"
       download_csv: "CSV"
       result_count:
@@ -33,10 +33,12 @@ sk:
         many: "%{count} výsledky."
         other: "%{count} výsledky."
       query_groups: "Skupiny"
+      report_name: "Hlásenie"
       query_description: "Popis"
+      query_time: "Posledný beh"
       query_user: "Vytvoril"
       save_params: "Predvolené"
       reset_params: "Resetovať"
       search_placeholder: "Hľadať"
     group:
-      reports: "Hlásenia"
+      reports: "Hlásení"

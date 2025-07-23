@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 el:
+  js:
+    admin:
+      rss_polling:
+        feed_url: URL
+        discourse_category: Κατηγορία
+        discourse_tags: Ετικέτες

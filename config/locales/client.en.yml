@@ -5214,6 +5214,9 @@ en:
             badges:
               content: "Badges"
               title: "All the badges available to earn"
+            filter:
+              content: "Filter"
+              title: "Filter topics by category, tag, or other criteria"
             topics:
               content: "Topics"
               title: "All topics"
@@ -5375,6 +5378,13 @@ en:
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 
+    filter:
+      placeholder: "Filter topics by category, tag, or other criteria"
+      description:
+        yesterday: "Yesterday"
+        last_week: "Last week"
+        last_month: "Last month"
+        last_year: "Last year"
     discovery:
       headings:
         all:
@@ -5712,7 +5722,7 @@ en:
           header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         color_palettes:
           title: "Color palettes"
-          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
+          header_description: "These palettes control the colors used throughout your community. When you make a palette user selectable, members can choose their preferred colors from their preferences."
         emoji:
           title: "Emoji"
           header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
@@ -6500,7 +6510,7 @@ en:
           install: "Install"
           themes:
             title: "Themes"
-            description: "Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href=\"%{themeSiteSettingsUrl}\">View theme site settings</a>"
+            description: 'Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href="%{themeSiteSettingsUrl}">View theme site settings</a>'
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -6965,8 +6975,25 @@ en:
           select_base:
             title: "Select base color palette"
             description: "Base palette:"
+          preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so palette changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
           title: "Colors"
-          edit: "Edit color palettes"
+          edit: "Edit"
+          set_default: "Set as active on %{theme}"
+          set_default_success: "%{schemeName} set as active palette for %{themeName}"
+          saved_refreshing: "Saved! Refreshing colors..."
+          from_theme: "From theme: %{name}"
+          filters:
+            search_placeholder: "Search by name or theme..."
+            all: "All"
+            user_selectable: "User selectable"
+            from_theme: "From theme"
+            no_results: "No color palettes found"
+            reset: "Reset filters"
+          active_badge:
+            text: "Active"
+            title: "Active color palette"
+          system_palette: "This is a built-in color palette, it cannot be edited or deleted."
+          back_to_colors: "Back to color palettes"
           long_title: "Color palettes"
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"

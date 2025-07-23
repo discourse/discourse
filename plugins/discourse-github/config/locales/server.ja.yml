@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    enable_discourse_github_plugin: "discourse-github プラグインを有効にする"
+    github_linkback_enabled: "GitHub の課題をフォーラムディスカッションにバックリンクする"
+    github_linkback_projects: "バックリンクするプロジェクトのリスト"
+    github_linkback_access_token: 'バックリンクを投稿するユーザー用とバッジを付与するためのコミット数/貢献数をカウントするための有効なアクセストークン。トークンの取得方法については、<a href="https://meta.discourse.org/t/99895">こちら</a>をご覧ください。'
+    github_linkback_maximum_links: "1 つの投稿から作成できるリンクバックの最大数。投稿に複数のリンクが含まれる場合は、何も作成されません。"
+    github_permalinks_enabled: "GitHub パーマリンクの上書きを有効にする"
+    github_permalinks_exclude: "パーマリンクの上書きから除外する必要のあるファイル名またはディレクトリ。ファイル名のみ、またはフルパス（user/repository/optional-directory/filename）を指定します"
+    github_badges_enabled: "GitHub バッジを有効にする"
+    github_badges_repos: "貢献とコミットをスキャンする GitHub リポジトリの URL"
+    github_silver_badge_min_commits: "シルバーバッジの最低コミット数"
+    github_gold_badge_min_commits: "ゴールドバッジの最低コミット数"
+    errors:
+      invalid_badge_repo: "GitHub URL または github_user/repository_name の形式のリポジトリ名を指定する必要があります"
+      invalid_github_linkback_access_token: "指定したバッジリポジトリにアクセスできる有効な GitHub バックリンクアクセストークンを指定する必要があります。"
+  github_linkback:
+    commit_template: |
+      このコミットは **%{title}** でメンションされています。関連する詳細があるかもしれません。
+
+      %{post_url}
+    pr_template: |
+      このプルリクエストは **%{title}** でメンションされています。関連する詳細があるかもしれません。
+
+      %{post_url}
+    issue_template: |
+      この課題は **%{title}** でメンションされています。関連する詳細があるかもしれません。
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "discourse-github プラグインにアクションが必要です"
+      repository_not_found_pm_title: "discourse-github プラグインにアクションが必要です"
+      invalid_octokit_credentials_pm_title: "discourse-github プラグインにアクションが必要です"

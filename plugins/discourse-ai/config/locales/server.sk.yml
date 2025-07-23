@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  reports:
+    overall_sentiment:
+      yaxis: "Dátum"
+    emotion_neutral:
+      title: "\U0001F610 Neutrálna"
+  discourse_ai:
+    spam_detection:
+      logging_subject: "Detekcia spamu"
+    ai_bot:
+      tool_summary:
+        search: "Hľadať"
+        tags: "Zoznam značiek"
+        time: "Čas"
+        summarize: "Zhrnúť"
+    summarization:
+      chat:
+        no_targets: "Počas vybraného obdobia neboli zaznamenané žiadne správy."
+    sentiment:
+      reports:
+        post_emotion:
+          neutral: "Neutrálna \U0001F610"
+        sentiment_analysis:
+          neutral: "Neutrálna"
+    ai_staff_action_logger:
+      updated: "aktualizované"
+      removed: "odstránené"

@@ -45,7 +45,7 @@ ja:
         watch: 'すべての投稿と返信'
         thread: '返信スレッドのあるすべての投稿'
       rule_table:
-        filter: "フィルター"
+        filter: "フィルタ"
         category: "カテゴリ"
         tags: "タグ"
         edit_rule: "編集"
@@ -65,7 +65,7 @@ ja:
         provider: プロバイダー
         type: タイプ
         channel: チャンネル
-        filter: フィルター
+        filter: フィルタ
         category: カテゴリ
         group: グループ
         tags: タグ
@@ -104,7 +104,7 @@ ja:
               title: "名前"
               help: "チャンネルを説明する名前。Discord への接続には使用されません。"
             webhook_url:
-              title: Webhook の URL
+              title: Webhook URL
               help: Discord サーバー設定で作成された Webhook URL
         guilded:
           title: "Guilded"
@@ -113,7 +113,7 @@ ja:
               title: "名前"
               help: "チャンネルを説明する名前。Guilded への接続には使用されません。"
             webhook_url:
-              title: Webhook の URL
+              title: Webhook URL
               help: Guilded サーバー設定で作成された Webhook URL
         mattermost:
           title: "Mattermost"
@@ -161,7 +161,7 @@ ja:
               title: "名前"
               help: "Gitter ルームの名前。例: gitterHQ/services。"
             webhook_url:
-              title: "Webhook の URL"
+              title: "Webhook URL"
               help: "Gitter ルームで新しい統合を作成するときに提供される URL。"
         flowdock:
           title: "Flowdock"
@@ -184,7 +184,7 @@ ja:
               title: "名前"
               help: "Teams チャンネル名。例: discourse"
             webhook_url:
-              title: "Webhook の URL"
+              title: "Webhook URL"
               help: "新しい着信 Webhook を作成するときに提供される URL"
           errors:
             invalid_channel: "そのチャンネルは Microsoft Teams に存在しません"
@@ -206,7 +206,7 @@ ja:
               title: "名前"
               help: "Webex スペース名。例: discourse"
             webhook_url:
-              title: "Webhook の URL"
+              title: "Webhook URL"
               help: "新しい着信 Webhook を作成するときに提供される URL"
           errors:
             invalid_channel: "そのチャンネルは Webex に存在しません"
@@ -217,7 +217,7 @@ ja:
               title: "名前"
               help: "チャンネルの名前（Discourse 管理者インターフェースにのみ表示）"
             webhook_url:
-              title: "Webhook の URL"
+              title: "Webhook URL"
               help: "新しい Webhook を作成するときに提供される URL"
     discourse_automation:
       scriptables:

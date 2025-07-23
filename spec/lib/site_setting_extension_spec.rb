@@ -1055,6 +1055,13 @@ RSpec.describe SiteSettingExtension do
           %Q|{"enable_welcome_banner":false,"search_experience":"search_icon"}|,
         )
       end
+
+      it "returns default JSON when the theme_id is null" do
+        SiteSetting.refresh!
+        expect(SiteSetting.theme_site_settings_json_uncached(nil)).to eq(
+          %Q|{"enable_welcome_banner":true,"search_experience":"search_icon"}|,
+        )
+      end
     end
   end
 

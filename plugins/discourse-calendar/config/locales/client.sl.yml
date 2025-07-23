@@ -284,6 +284,7 @@ sl:
         today: "Danes"
         month: "Mesec"
         week: "Teden"
+        day: "Dan"
     group_timezones:
       search: "Išči..."
       group_availability: "Razpoložljivost %{group}"
@@ -348,8 +349,8 @@ sl:
             not_going: "Ne pridem"
             interested: "Mogoče pridem"
         event:
-          expired: "Končan"
-          closed: "Zaprto"
+          expired: "Poteklo"
+          closed: "Zaprta"
           status:
             standalone:
               title: "Samostojni"
@@ -380,7 +381,7 @@ sl:
           units:
             minutes: "minut"
             hours: "ur"
-            days: "dnevi"
+            days: "dni"
           periods:
             before: "pred"
             after: "po"

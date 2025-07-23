@@ -1,0 +1,38 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "acceptat"
+    solved:
+      title: "Solucionat"
+      allow_accepted_answers: "Permet que el propietari del tema i l'equip responsable marquin una resposta com a solució"
+      accept_answer: "Seleccioneu aquesta resposta si resol el problema"
+      accepted_description: "Aquesta és la solució acceptada per a aquest tema."
+      has_no_accepted_answer: "Aquest tema no té cap solució"
+      unaccept_answer: "Desseleccioneu aquesta resposta si ja no resol el problema"
+      accepted_answer: "Solució"
+      solution: "Solució"
+      solution_summary:
+        one: "solució"
+        other: "solucions"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "tots"
+        solved: "resolt"
+        unsolved: "no resolt"
+    topic_statuses:
+      solved:
+        help: "Aquest tema té una solució"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Nivell de confiança

@@ -11,6 +11,8 @@ sr:
         post_voting_comment:
           edit: "izmeni"
           cancel: "otkaži"
+          user:
+            deleted: "(korisnik izbrisan)"
           reviewables:
             actions:
               agree_and_suspend:
@@ -18,4 +20,5 @@ sr:
               disagree:
                 title: "Odbaci"
       topic:
+        sort_by: "Sortiraj po"
         activity: "Aktivnosti"

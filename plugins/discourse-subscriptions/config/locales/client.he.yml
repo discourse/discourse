@@ -36,7 +36,7 @@ he:
       subscribe:
         help: ניתן לתמוך באתר הזה בהרשמה אל
     discourse_subscriptions:
-      title: מינויי Discourse
+      title: Discourse מינויים
       admin_navigation: מינויים
       optional: רשות
       navigation:
@@ -49,7 +49,7 @@ he:
       campaign:
         title: לתמוך בנו
         body: אנו זקוקים לעזרה שלך כדי שהקהילה הזאת תמשיך להתקיים!
-        success_title: הצלחה!
+        success_title: הצליח!
         success_body: אנו מודים ךף על עזרתך להמשך ביסוס הקהילה הזאת!
         subscribers: מנויים
         goal_comparison: "<strong>%{current}</strong> מתוך <strong>%{goal}</strong>"
@@ -394,7 +394,7 @@ he:
           ZW: "זימבבואה"
       billing:
         name: שם מלא
-        email: כתובת דוא״ל
+        email: דוא״ל
         phone: מספר טלפון
       confirmation:
         amount: סכום

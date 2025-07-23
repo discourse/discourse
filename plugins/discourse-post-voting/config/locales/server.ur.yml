@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 ur:
+  post_action_types:
+    vote:
+      title: "ووٹ"
   post_voting:
     comment:
       reviewables:

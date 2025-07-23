@@ -30,7 +30,6 @@ da:
     displayed_invitees_limit: "Begrænser antallet af inviterede, der vises på en begivenhed."
     display_post_event_date_on_topic_title: "Viser datoen for begivenheden efter emnets titel."
     discourse_post_event_allowed_on_groups: "Grupper, der har lov til at oprette begivenheder."
-    discourse_post_event_allowed_custom_fields: "Tillader, at hver begivenhed kan indstille værdien af brugerdefinerede felter."
     discourse_post_event_edit_notifications_time_extension: "Forlænger (i minutter) perioden efter afslutningen af en begivenhed, hvor \"deltagende\" inviterede stadig underrettes om redigering i det oprindelige indlæg."
     holiday_calendar_topic_id: "Emne ID for personalets ferie / fraværs kalender."
     delete_expired_event_posts_after: "Indlæg med udløbne begivenheder slettes automatisk efter (n) timer. Sæt til -1 for at deaktivere sletning."

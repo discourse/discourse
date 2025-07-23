@@ -3,7 +3,7 @@
 # mixin for all guardian methods dealing with post permissions
 module PostGuardian
   def unrestricted_link_posting?
-    authenticated? && (is_staff? || @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map))
+    authenticated? && @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map)
   end
 
   def link_posting_access
@@ -212,7 +212,11 @@ module PostGuardian
   end
 
   def can_delete_post_or_topic?(post)
-    post.is_first_post? ? post.topic && can_delete_topic?(post.topic) : can_delete_post?(post)
+    if post.is_first_post?
+      post.topic && can_delete_topic?(post.topic)
+    else
+      can_delete_post?(post)
+    end
   end
 
   def can_delete_post?(post)
@@ -401,7 +405,7 @@ module PostGuardian
   end
 
   def trusted_with_post_edits?
-    is_staff? || @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+    @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
   end
 
   private

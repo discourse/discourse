@@ -4,6 +4,7 @@ require "guardian/bookmark_guardian"
 require "guardian/category_guardian"
 require "guardian/ensure_magic"
 require "guardian/group_guardian"
+require "guardian/invite_guardian"
 require "guardian/flag_guardian"
 require "guardian/post_guardian"
 require "guardian/post_revision_guardian"
@@ -20,6 +21,7 @@ class Guardian
   include EnsureMagic
   include FlagGuardian
   include GroupGuardian
+  include InviteGuardian
   include PostGuardian
   include PostRevisionGuardian
   include LocalizationGuardian
@@ -407,61 +409,6 @@ class Guardian
     return true if is_staff?
 
     @user.approved?
-  end
-
-  def can_see_invite_details?(user)
-    is_staff? || is_me?(user)
-  end
-
-  def can_see_invite_emails?(user)
-    is_staff? || is_me?(user)
-  end
-
-  def can_invite_to_forum?(groups = nil)
-    authenticated? && (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
-      (is_staff? || @user.in_any_groups?(SiteSetting.invite_allowed_groups_map)) &&
-      (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
-  end
-
-  def can_invite_to?(object, groups = nil)
-    return false if !authenticated?
-    return false if !object.is_a?(Topic) || !can_see?(object)
-    return false if groups.present?
-
-    if object.is_a?(Topic)
-      if object.private_message?
-        return true if is_admin?
-
-        return false if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
-        return false if object.reached_recipients_limit? && !is_staff?
-      end
-
-      if (category = object.category) && category.read_restricted
-        return category.groups&.where(automatic: false)&.any? { |g| can_edit_group?(g) }
-      end
-    end
-
-    true
-  end
-
-  def can_invite_via_email?(object)
-    return false if !can_invite_to_forum?
-    return false if !can_invite_to?(object)
-
-    (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
-      (!SiteSetting.must_approve_users? || is_staff?)
-  end
-
-  def can_bulk_invite_to_forum?(user)
-    user.admin?
-  end
-
-  def can_resend_all_invites?(user)
-    user.staff?
-  end
-
-  def can_destroy_all_invites?(user)
-    user.staff?
   end
 
   def can_see_private_messages?(user_id)

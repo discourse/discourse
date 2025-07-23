@@ -1,0 +1,445 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  discourse_automation:
+    ai:
+      flag_types:
+        review: "Adicionar postagem à fila de revisão"
+        spam: "Sinalizar como spam e ocultar postagem"
+        spam_silence: "Sinalizar como spam, ocultar postagem e silenciar usuário(a)"
+    scriptables:
+      llm_triage:
+        title: Postagens de triagem usando IA
+        description: "Postagens de triagem usando um modelo de linguagem grande"
+        flagged_post: |
+          <div>Resposta do modelo:</div>
+          <p>%%LLM_RESPONSE%%</p>
+          <b>Acionada pela regra <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+      llm_report:
+        title: Relatório periódico usando IA
+        description: "Relatório periódico baseado em um modelo de linguagem grande"
+  site_settings:
+    discourse_ai_enabled: "Ative o plugin de IA do Discourse."
+    ai_toxicity_enabled: "Ative o módulo de toxicidade."
+    ai_toxicity_inference_service_api_endpoint: "URL em que a API está em execução para o módulo de toxicidade"
+    ai_toxicity_inference_service_api_key: "Chave de API para a API de toxicidade"
+    ai_toxicity_inference_service_api_model: "Modelo usado para inferência. O modelo multilinguístico funciona com italiano, francês, russo, português, espanhol e turco."
+    ai_toxicity_flag_automatically: "Sinalize automaticamente postagens/mensagens de chat que excedem os limites configurados."
+    ai_toxicity_flag_threshold_toxicity: "Toxicidade: comentário grosseiro, desrespeitoso ou insensato com alguma probabilidade de causar a saída da discussão ou desistência de compartilhar opinião."
+    ai_toxicity_flag_threshold_severe_toxicity: "Toxicidade grave: comentário muito desrespeitoso, agressivo ou odioso com alta probabilidade de causar a saída da discussão ou desistência de compartilhar opinião."
+    ai_toxicity_flag_threshold_obscene: "Obsceno"
+    ai_toxicity_flag_threshold_identity_attack: "Ataque à identidade"
+    ai_toxicity_flag_threshold_insult: "Insulto"
+    ai_toxicity_flag_threshold_threat: "Ameaça"
+    ai_toxicity_flag_threshold_sexual_explicit: "Conteúdo sexual explícito"
+    ai_toxicity_groups_bypass: "Os(as) usuários(as) não terão suas postagens classificadas pelo módulo de toxicidade."
+    ai_sentiment_enabled: "Ative o módulo de sentimento."
+    ai_sentiment_inference_service_api_endpoint: "URL em que a API está em execução para o módulo de sentimento"
+    ai_sentiment_inference_service_api_key: "Chave de API para a API de sentimento"
+    ai_sentiment_models: "Modelos usado para inferência. O sentimento classifica a postagem em positiva/neutra/negativa. A emoção classifica em ódio/repúdio/medo/alegria/neutro/tristeza/surpresa."
+    ai_nsfw_detection_enabled: "Ative o módulo NSFW."
+    ai_nsfw_inference_service_api_endpoint: "URL em que a API está em execução para o módulo NSFW"
+    ai_nsfw_inference_service_api_key: "Chave de API para a API de NSFW"
+    ai_nsfw_flag_automatically: "Sinalize automaticamente postagens de NSFW que excedem os limites configurados."
+    ai_nsfw_flag_threshold_general: "Limite geral para uma imagem ser considerada NSFW."
+    ai_nsfw_flag_threshold_drawings: "Limite para um desenho ser considerado NSFW."
+    ai_nsfw_flag_threshold_hentai: "Limite para uma imagem classificada como hentai ser considerada NSFW."
+    ai_nsfw_flag_threshold_porn: "Limite para uma imagem classificada como pornográfica ser considerada NSFW."
+    ai_nsfw_flag_threshold_sexy: "Limite para uma imagem classificada como sensual ser considerada NSFW."
+    ai_nsfw_models: "Modelos usados para inferência de NSFW."
+    ai_helper_enabled: "Habilite o assistente de IA."
+    composer_ai_helper_allowed_groups: "Os usuários desses grupos visualizarão o botão de assistência por IA no compositor."
+    ai_helper_allowed_in_pm: "Ative o ajudante de IA do compositor em MPs."
+    ai_helper_model: "Modelo usado para o ajudante de IA."
+    ai_helper_custom_prompts_allowed_groups: "Os(as) usuários(as) que estiverem nestes grupos verão um prompt personalizado no ajudante da IA."
+    ai_helper_automatic_chat_thread_title_delay: "O atraso, em minutos, até que o ajudante de IA defina automaticamente o título da thread do chat."
+    ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do chat com base no conteúdo delas."
+    ai_helper_illustrate_post_model: "O modelo a ser usado para o ajudante de IA ilustrar o recurso da postagem"
+    ai_helper_enabled_features: "Selecione os recursos para ativar no ajudante de IA."
+    post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
+    ai_helper_image_caption_model: "Selecione o modelo a ser usado para gerar legendas em imagens"
+    ai_auto_image_caption_allowed_groups: "Usuários(as) nestes grupos podem alternar legendas automáticas em imagens."
+    ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
+    ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
+    ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."
+    ai_embeddings_semantic_related_topics: "Número máximo de tópicos na seção do tópico relacionado."
+    ai_embeddings_backfill_batch_size: "O número de incorporações para provisionamento a cada 15 minutos."
+    ai_embeddings_semantic_search_enabled: "Ative pesquisa semântica em toda a página."
+    ai_embeddings_semantic_quick_search_enabled: "Ative opção de busca semântica no pop-up no menu de busca."
+    ai_embeddings_semantic_related_include_closed_topics: "Incluir tópicos fechados em resultados de pesquisa semântica"
+    ai_embeddings_semantic_search_hyde_model: "O modelo usado para expandir palavras-chave e obter resultados melhores durante uma pesquisa semântica"
+    ai_embeddings_per_post_enabled: Gerar incorporações para cada postagem
+    ai_summarization_model: "Modelo a ser usado para geração de resumos"
+    ai_custom_summarization_allowed_groups: "Grupos com permissão para a criação de resumos novos."
+    ai_pm_summarization_allowed_groups: "Grupos autorizados a criar e visualizar resumos em PMs."
+    ai_summary_gists_allowed_groups: "Grupos com permissão para ver gists na lista de tópicos mais acessados."
+    ai_summary_backfill_maximum_topics_per_hour: "Quantidade de tópicos para preencher a cada hora."
+    ai_bot_enabled: "Ative o módulo de Bot com IA."
+    ai_bot_enable_chat_warning: "Exiba um aviso quando o chat por MP for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"
+    ai_bot_allowed_groups: "Quando o Bot com GPT tiver acesso às MPs, ele responderá aos membros destes grupos."
+    ai_bot_debugging_allowed_groups: "Permitir a exibição de um botão de depuração nestes grupos, em postagens em que são exibidas respostas e pedidos de IA não processados"
+    ai_bot_public_sharing_allowed_groups: "Permita que estes grupos compartilhem mensagens pessoais de IA com o público através de um link exclusivo disponível publicamente. Observação: se for preciso entrar com sua conta no site, também será preciso para o compartilhamento."
+    ai_bot_add_to_header: "Exibir botão no cabeçalho para começar uma MP com um Bot de IA"
+    ai_bot_github_access_token: "Token de acesso do GitHub a ser usado com ferramentas de IA do GitHub (necessário para ter compatibilidade com pesquisa)"
+    ai_stability_api_key: "Chave de API para a API stability.ai"
+    ai_stability_engine: "Mecanismo de geração de imagem usado para a API stability.ai"
+    ai_stability_api_url: "URL para a API stability.ai"
+    ai_google_custom_search_api_key: "Chave de API para a API de pesquisa personalizada do Google. Veja: https://developers.google.com/custom-search"
+    ai_google_custom_search_cx: "CX para API de pesquisa personalizada do Google"
+  reviewables:
+    reasons:
+      flagged_by_toxicity: O plugin de IA sinalizou isto após classificar como tóxico.
+      flagged_by_nsfw: O plugin de IA sinalizou isto após classificar pelo menos uma das imagens anexas como NSFW.
+  reports:
+    overall_sentiment:
+      title: "Sentimento geral"
+      description: 'Este gráfico compara a quantidade de postagens classificadas como positiva ou negativa. São calculadas quando as pontuações negativas e positivas forem maiores que a pontuação de limite. Ou seja, postagens neutras não são exibidas. Mensagens pessoais (PM) também não. Classificado com "cardiffnlp/twitter-roberta-base-sentiment-latest"'
+      xaxis: "Positivo (%)"
+      yaxis: "Data"
+    emotion_admiration:
+      title: "\U0001F929 Admiração"
+      description: "Postagens classificadas com o gesto de admiração pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_amusement:
+      title: "\U0001F604 Diversão"
+      description: "Postagens classificadas com o gesto de diversão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_anger:
+      title: "\U0001F620 Raiva"
+      description: "Postagens classificadas com o gesto de raiva pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_annoyance:
+      title: "\U0001F612 Aborrecimento"
+      description: "Postagens classificadas com o gesto de aborrecimento pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_approval:
+      title: "\U0001F44D Aprovação"
+      description: "Postagens classificadas com o gesto de aprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_caring:
+      title: "\U0001F917 Carinho"
+      description: "Postagens classificadas com o gesto de carinho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_confusion:
+      title: "\U0001F615 Confusão"
+      description: "Postagens classificadas com o gesto de confusão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_curiosity:
+      title: "\U0001F914 Curiosidade"
+      description: "Postagens classificadas com o gesto de curiosidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_desire:
+      title: "\U0001F60D Desejo"
+      description: "Postagens classificadas com o gesto de desejo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_disappointment:
+      title: "\U0001F61E Decepção"
+      description: "Postagens classificadas com o gesto de decepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_disapproval:
+      title: "\U0001F44E Desaprovação"
+      description: "Postagens classificadas com o gesto de desaprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_disgust:
+      title: "\U0001F922 Repulsa"
+      description: "Postagens classificadas com o gesto de desgosto pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_embarrassment:
+      title: "\U0001F633 Vergonha"
+      description: "Postagens classificadas com o gesto de vergonha pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_excitement:
+      title: "\U0001F92A Empolgação"
+      description: "Postagens classificadas com o gesto de empolgação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_fear:
+      title: "\U0001F628 Medo"
+      description: "Postagens classificadas com o gesto de medo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_gratitude:
+      title: "\U0001F64F Gratidão"
+      description: "Postagens classificadas com o gesto de gratidão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_grief:
+      title: "\U0001F622 Pesar"
+      description: "Postagens classificadas com o gesto de pesar pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_joy:
+      title: "\U0001F60A Alegria"
+      description: "Postagens classificadas com o gesto de alegria pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_love:
+      title: '❤️ Amor'
+      description: "Postagens classificadas com o gesto de amor pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_nervousness:
+      title: "\U0001F630 Nervosismo"
+      description: "Postagens classificadas com o gesto de nervosismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_neutral:
+      title: "\U0001F610 Neutro"
+      description: "Postagens classificadas com o gesto de neutralidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_optimism:
+      title: "\U0001F31F Otimismo"
+      description: "Postagens classificadas com o gesto de otimismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_pride:
+      title: "\U0001F981 Orgulho"
+      description: "Postagens classificadas com o gesto de orgulho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_realization:
+      title: "\U0001F4A1 Percepção"
+      description: "Postagens classificadas com o gesto de percepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_relief:
+      title: "\U0001F60C Alívio"
+      description: "Postagens classificadas com o gesto de alívio pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_remorse:
+      title: "\U0001F614 Remorso"
+      description: "Postagens classificadas com o gesto de remorso pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_sadness:
+      title: "\U0001F62D Tristeza"
+      description: "Postagens classificadas com o gesto de tristeza pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+    emotion_surprise:
+      title: "\U0001F632 Surpresa"
+      description: "Postagens classificadas com o gesto de surpresa pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
+  discourse_ai:
+    ai_artifact:
+      view_source: "Ver origem"
+      view_changes: "Visualizar alterações"
+    unknown_model: "Modelo de IA desconhecido"
+    tools:
+      custom_name: "%{name} (personalizado)"
+      presets:
+        browse_web_jina:
+          name: "Navegar na Web com (jina.ai)"
+        exchange_rate:
+          name: "Taxa de câmbio"
+        stock_quote:
+          name: "Cotação de ação (AlphaVantage)"
+        image_generation:
+          name: "Gerador de imagem de fluxo (Together.ai)"
+        empty_tool:
+          name: "Começar do zero..."
+    ai_helper:
+      errors:
+        completion_request_failed: "Algo deu errado ao tentar dar sugestões. Tente novamente."
+      prompts:
+        translate: Traduzir para %{language}
+        generate_titles: Sugerir títulos de tópicos
+        proofread: Revisar texto
+        markdown_table: Gerar tabela de Markdown
+        custom_prompt: "Prompt personalizado"
+        explain: "Explicar"
+        illustrate_post: "Ilustrar postagem"
+        replace_dates: "Datas inteligentes"
+      painter:
+        attribution:
+          stable_diffusion_xl: "Imagem criada por Stable Diffusion XL"
+          dall_e_3: "Imagem criada por DALL-E 3"
+      image_caption:
+        attribution: "Legendado por IA"
+    share_ai:
+      read_more: "Ler a transcrição completa"
+      onebox_title: "Convesa de IA com %{llm_name}"
+      formatted_excerpt: "Convesa de IA com %{llm_name}:\n %{excerpt}"
+      title: "%{title} - Conversa de AI - %{site_name}"
+      errors:
+        not_allowed: "Você não tem permissão para compartilhar este tópico"
+        other_people_in_pm: "Não é possível compartilhar publicamente mensagens pessoais com outros humanos"
+        other_content_in_pm: "Não é possível compartilhar publicamente mensagens pessoais que contêm postagens de outras pessoas"
+        failed_to_share: "Falha ao compartilhar conversa"
+        conversation_deleted: "Compartilhamento de conversa excluído"
+    spam_detection:
+      flag_reason: "Sinalizada como spam pelo <a href='%{url}'>Discourse AI</a>"
+      silence_reason: "Usuário(a) silenciado(a) automaticamente pelo <a href='%{url}'>Discourse AI</a>"
+      invalid_error_type: "Tipo inválido de erro fornecido"
+      unexpected: "Ocorreu um erro inesperado"
+      bot_user_update_failed: "Falha ao atualizar usuário(a) do bot de verificação de spam"
+      logging_subject: "Detecção de spam"
+    ai_bot:
+      reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
+      default_pm_prefix: "[MP de bot de IA não identificado]"
+      personas:
+        default_llm_required: "É preciso de um modelo de LLM padrão para ativar o chat"
+        cannot_delete_system_persona: "Personas de sistema não podem ser excluídas, desative"
+        cannot_edit_system_persona: "Personas de sistema só podem ser renomeadas, você não pode editar ferramentas ou prompt de sistema. Desative e faça uma cópia"
+        github_helper:
+          name: "Ajudante do GitHub"
+          description: "Bot de IA especializado em auxiliar em tarefas e perguntas relacionadas ao GitHub"
+        general:
+          name: Ajudante do fórum
+          description: "Bot de IA de propósito geral capaz de realizar várias tarefas"
+        artist:
+          name: Artista
+          description: "Bot de IA especializado em gerar imagens"
+        sql_helper:
+          name: Ajudante SQL
+          description: "Bot de IA especializado em ajudar a criar consultas SQL nesta instância do Discourse"
+        settings_explorer:
+          name: Explorador de configurações
+          description: "Bot de IA especializado em ajudar a explorar as configurações do site do Discourse"
+        creative:
+          name: Criativa
+          description: "Bot de IA sem integrações externas especializado em tarefas criativas"
+        dall_e3:
+          name: "DALL-E 3"
+          description: "Bot de IA especializado em gerar imagens usando o DALL-E 3"
+        discourse_helper:
+          name: "Ajudante do Discourse"
+          description: "Bot de IA especializado em ajudar em tarefas relacionadas ao Discourse"
+        web_artifact_creator:
+          name: "Criador de artefato da web"
+          description: "Bot especializado na criação de artefatos interativos da web"
+        custom_prompt:
+          name: "Prompt personalizado"
+        smart_dates:
+          name: "Datas inteligentes"
+      topic_not_found: "Resumo indisponível, tópico não encontrado!"
+      summarizing: "Resumindo tópico"
+      searching: "Pesquisando: \"%{query}\""
+      tool_options:
+        researcher:
+          max_results:
+            name: "O número máximo de resultados"
+        google:
+          base_query:
+            name: "Consulta de pesquisa básica"
+            description: "Consulta de base para usar em pesquisas. Por exemplo: \"site:example.com\" incluirá apenas resultados de example.com, before:2022-01-01 apenas resultados de 2021 em diante. Presume-se que este texto é a consulta de pesquisa."
+        read:
+          read_private:
+            name: "Ler conteúdo privado"
+            description: "Permitir acesso a todos os tópicos que o(a) usuário(a) pode acessar (por padrão, apenas tópicos públicos estão inclusos)"
+        search:
+          search_private:
+            name: "Pesquisa de conteúdo privado"
+            description: "Incluir todos os tópicos que o(a) usuário(a) pode acessar nos resultados de pesquisa (por padrão, apenas tópicos públicos estão inclusos)"
+          max_results:
+            name: "O número máximo de resultados"
+            description: "A quantidade máxima de resultados para incluir na pesquisa. Se for vazio, serão usadas as regras padrão e a contagem será dimensionada conforme o modelo utilizado. O valor máximo é 100."
+          base_query:
+            name: "Consulta de pesquisa básica"
+            description: "A consulta de base para usar na pesquisa. Exemplo: \"#urgent\" precederá \"#urgent\" para a consulta da pesquisa e incluirá apenas tópicos com a etiqueta ou categoria urgente."
+      tool_summary:
+        update_artifact: "Atualizar um artefato da Web"
+        create_artifact: "Criar artefato da web"
+        web_browser: "Navegar na Web"
+        github_search_files: "Arquivos de pesquisa do GitHub"
+        github_search_code: "Pesquisa de código do GitHub"
+        github_file_content: "Conteúdo de arquivo do GitHub"
+        github_pull_request_diff: "Diferença de solicitação pull do GitHub"
+        random_picker: "Seletor aleatório"
+        categories: "Listar categorias"
+        search: "Pesquisar"
+        tags: "Listar etiquetas"
+        time: "Hora"
+        summarize: "Resumir"
+        image: "Gerar imagem"
+        google: "Pesquisar no Google"
+        read: "Ler tópico"
+        setting_context: "Procurar contexto de configuração do site"
+        schema: "Procurar esquema de banco de dados"
+        search_settings: "Pesquisando configurações do site"
+        dall_e: "Gerar imagem"
+        search_meta_discourse: "Metapesquisa do Discourse"
+        javascript_evaluator: "Avaliar JavaScript"
+      tool_help:
+        update_artifact: "Atualizar um artefato da Web que usa o Bot de IA"
+        create_artifact: "Criar artefato da web usando o Bot de IA"
+        web_browser: "Navegar na página da Web com bot de IA"
+        github_search_code: "Procurar código no repositório do GitHub"
+        github_search_files: "Procurar arquivos no repositório do GitHub"
+        github_file_content: "Recuperar conteúdo de arquivos de um repositório do GitHub"
+        github_pull_request_diff: "Recuperar diferença de solicitação pull do GitHub"
+        random_picker: "Escolher um número ou elemento aleatório de uma lista"
+        categories: "Listar todas as categorias visíveis publicamente no fórum"
+        search: "Pesquisar todos os tópicos públicos no fórum"
+        tags: "Listar todas as etiquetas no fórum"
+        time: "Achar horário em vários fusos horários"
+        summary: "Resumir um tópico"
+        image: "Gerar imagem usando o Stable Diffusion"
+        google: "Pesquisar uma consulta no Google"
+        read: "Ler tópico público no fórum"
+        setting_context: "Procurar contexto de configuração do site"
+        schema: "Procurar esquema de banco de dados"
+        search_settings: "Pesquisar configurações do site"
+        dall_e: "Gerar imagem usando DALL-E 3"
+        search_meta_discourse: "Metapesquisa do Discourse"
+        javascript_evaluator: "Avaliar JavaScript"
+      tool_description:
+        update_artifact: "Artefato da Web que usa o Bot de IA atualizado"
+        web_browser: "Lendo <a href='%{url}'>%{url}</a>"
+        github_search_files: "Pesquisa por \"%{keywords}\" em %{repo}/%{branch}"
+        github_search_code: "Pesquisa por \"%{query}\" em %{repo}"
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_file_content: "Conteúdo recuperado em %{file_paths} de %{repo_name}@%{branch}"
+        random_picker: "Escolhendo %{options}, escolha: %{result}"
+        read: "Lendo: <a href='%{url}'>%{title}</a>"
+        time: "A hora em %{timezone} é %{time}"
+        summarize: "Resumo de <a href='%{url}'>%{title}</a>"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          one: "%{count} categoria encontrada"
+          other: "%{count} categorias encontrada"
+        tags:
+          one: "%{count} etiqueta encontrada"
+          other: "%{count} etiquetas encontradas"
+        search:
+          one: "%{count} <a href='%{url}'>resultado</a> encontrado para \"%{query}\""
+          other: "%{count} <a href='%{url}'>resultados</a> encontrados para \"%{query}\""
+        search_meta_discourse:
+          one: "%{count} <a href='%{url}'>resultado</a> encontrado para \"%{query}\""
+          other: "%{count} <a href='%{url}'>resultados</a> encontrados para \"%{query}\""
+        google:
+          one: "%{count} <a href='%{url}'>resultado</a> encontrado para \"%{query}\""
+          other: "%{count} <a href='%{url}'>resultados</a> encontrados para \"%{query}\""
+        setting_context: "Lendo contexto para: %{setting_name}"
+        schema: "%{tables}"
+        search_settings:
+          one: "%{count} resultado encontrado para \"%{query}\""
+          other: "%{count} resultados encontrados para \"%{query}\""
+    summarization:
+      configuration_hint:
+        one: "Defina a configuração \"%{setting}\" primeiro."
+        other: "Defina estas configurações primeiro: %{settings}"
+      chat:
+        no_targets: "Não houve mensagens durante o período selecionado."
+    sentiment:
+      reports:
+        overall_sentiment: "Opinião geral (Positiva - Negativa)"
+        post_emotion:
+          sadness: "Tristeza \U0001F622"
+          surprise: "Surpresa \U0001F631"
+          neutral: "Neutro \U0001F610"
+          fear: "Medo \U0001F628"
+          anger: "Raiva \U0001F621"
+          joy: "Alegria \U0001F600"
+          disgust: "Repulsa \U0001F922"
+        sentiment_analysis:
+          positive: "Positivo"
+          negative: "Negativo"
+          neutral: "Neutro"
+    llm:
+      configuration:
+        disable_module_first: "Você precisa desativar %{setting} primeiro."
+        set_llm_first: "Defina %{setting} primeiro"
+        model_unreachable: "Não foi possível obter uma resposta deste modelo. Confira as configurações primeiro."
+        invalid_seeded_model: "Não é possível usar este modelo com este recurso"
+        must_select_model: "Selecione um LLM primeiro"
+      endpoints:
+        not_configured: "%{display_name} (não configurado)"
+        configuration_hint:
+          one: "Verifique se a configuração \"%{settings}\" foi definida."
+          other: "Verifique se estas configurações foram definidas: %{settings}"
+      delete_failed:
+        one: "Não foi possível excluir este modelo, pois está sendo usado por %{settings}. Atualize a configuração e tente novamente."
+        other: "Não foi possível excluir este modelo, pois está sendo usado por %{settings}. Atualize a configuração e tente novamente."
+      cannot_edit_builtin: "Não é possível editar um modelo integrado."
+    embeddings:
+      delete_failed: "Este modelo está em uso no momento. Atualize o modelo selecionado de incorporações de IA primeiro."
+      cannot_edit_builtin: "Não é possível editar um modelo integrado."
+      configuration:
+        disable_embeddings: "Você precisa desativar \"incorporações com IA ativadas\" primeiro."
+        choose_model: "Defina o \"modelo selecionado de incorporações com IA\" primeiro."
+    llm_models:
+      missing_provider_param: "%{param} Não pode ficar em branco"
+      bedrock_invalid_url: "Preencha todos os campos para usar este modelo."
+    ai_staff_action_logger:
+      updated: "atualizado(a)"
+      removed: "removido(a)"
+    errors:
+      quota_exceeded: "Você ultrapassou a cota deste modelo. Tente novamente em %{relative_time}."
+      quota_required: "Você deve especificar o máximo de tokens ou usos para este modelo"
+      no_query_specified: Requer parâmetro de consulta, especifique um.
+      no_user_for_persona: A persona especificada não tem usuário(a) associado(a).
+      persona_not_found: A persona especificada não existe. Confira os parâmetros persona_name ou persona_id
+      no_user_specified: Requer o parâmetro username ou user_unique_id. Insira-o.
+      user_not_found: O(a) usuário(a) especificado(a) não existe. Confira o parâmetro username.
+      persona_disabled: A persona especificada está desativada. Confira os parâmetros persona_name ou persona_id
+      no_default_llm: A persona deve ter default_llm definida.
+      user_not_allowed: O(a) usuário(a) não tem permissão para participar do tópico.
+      prompt_message_length: A mensagem %{idx} excede o limite de 1000 caracteres.

@@ -29,15 +29,21 @@ zh_TW:
       notifications:
         invite_user_notification: "%{username} %{description}"
       show_all: "顯示全部"
+      add_to_calendar: "新增至行事曆"
+      created_by: "創建者"
+      bulk_invite: "批量邀請"
       bulk_invite_modal:
+        confirm: "確認"
+        title: "批量邀請"
         success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
         error: "上傳的檔案必須是 csv 格式。"
+        send_bulk_invites: "送出邀請"
       upcoming_events:
         status: "狀態"
       models:
         event:
           expired: "已過期"
-          closed: "不公開"
+          closed: "已關閉"
           status:
             public:
               title: "公開"
@@ -45,9 +51,9 @@ zh_TW:
               title: "私密"
       builder_modal:
         custom_fields:
-          placeholder: "選擇性"
-        create: "創建"
-        update: "保存"
+          placeholder: "可選"
+        create: "建立"
+        update: "儲存"
         timezone:
           label: 時區
         reminders:
@@ -64,12 +70,12 @@ zh_TW:
           every_day: "每天"
         url:
           label: "網址"
-          placeholder: "選擇性"
+          placeholder: "可選"
         location:
           label: "位置"
         description:
-          label: "簡述"
+          label: "描述"
         status:
           label: "狀態"
       invite_user_or_group:
-        invite: "發送"
+        invite: "傳送"

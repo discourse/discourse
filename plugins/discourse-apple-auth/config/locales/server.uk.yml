@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    sign_in_with_apple_enabled: 'Увімкнути вхід за допомогою Apple?'
+    apple_client_id: "(Увійти за допомогою Apple) «Ідентифікатор служби» Apple з консолі розробника. Зазвичай це рядок у стилі зворотного доменного імені (наприклад, com.example.auth) (Увійти за допомогою Apple)"
+    apple_team_id: '(Вхід за допомогою Apple) Apple Team ID (10 символів)'
+    apple_key_id: '(Вхід за допомогою Apple) Apple Key ID (10 символів)'
+    apple_pem: '(Увійдіть за допомогою Apple) Вміст файлу Apple Pem. Включіть рядки BEGIN та END'

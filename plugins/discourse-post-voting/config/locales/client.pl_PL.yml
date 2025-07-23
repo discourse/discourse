@@ -5,17 +5,35 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Głosowanie na posty
   post_voting:
     reviewables:
       comment_already_handled: "Dziękujemy, ale sprawdziliśmy już ten komentarz i stwierdziliśmy, że nie ma potrzeby jego ponownego oznaczania."
   js:
+    discourse_post_voting:
+      title: "Głosowanie na posty"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
         question_answer_user_commented: "nowy komentarz"
+      popup:
+        question_answer_user_commented: '%{username} skomentował w "%{topic}" - %{site_title}'
+    category:
+      post_voting_settings_heading: Głosowanie na posty
+      create_as_post_voting_default: Nowe tematy domyślnie trafiają do tematów Głosowanie na posty w tej kategorii.
+      only_post_voting_in_this_category: Nowe tematy mogą być jedynie tematami głosowania w tej kategorii.
     composer:
+      create_post_voting:
+        label: "Utwórz temat głosowania na posty"
       composer_actions:
+        create_as_post_voting:
+          label: "Przełącz głosowanie na posty"
+          desc: "Temat zostanie utworzony z postami, na które można głosować"
         remove_as_post_voting:
+          label: "Usuń głosowanie na posty"
           desc: "Temat zostanie utworzony w zwykłym formacie"
     vote:
       already_voted: "Na jedno pytanie można oddać tylko jeden głos."
@@ -82,14 +100,23 @@ pl_PL:
               agree_and_delete:
                 title: "Usuń komentarz"
                 description: "Usuń komentarz, aby użytkownicy nie mogli go zobaczyć."
+              delete_and_agree:
+                title: "Zignoruj flagę i usuń komentarz"
+                description: "Zignoruj flagę, usuwając ją z kolejki i usuń komentarz."
               disagree_and_restore:
+                title: "Nie zgadzam się i przywróć komentarz"
                 description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
               disagree:
                 title: "Wycofaj"
               ignore:
                 title: "Nic nie rób"
                 description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+            transcript:
+              view: "Zobacz transkrypt poprzednich komentarzy"
       topic:
+        answer:
+          label: "Odpowiedź"
+          help: "zacznij pisać odpowiedź"
         sort_by: "Sortuj po"
         votes: "Głosy"
         activity: "Aktywność"
@@ -98,6 +125,14 @@ pl_PL:
           few: "%{count} odpowiedzi"
           many: "%{count} odpowiedzi"
           other: "%{count} odpowiedzi"
+        voters_count_diff:
+          one: "i %{count} więcej użytkownika..."
+          few: "i %{count} więcej użytkowników..."
+          many: "i %{count} więcej użytkowników..."
+          other: "i %{count} więcej użytkowników..."
     review:
       transcript:
         view: "Zobacz transkrypcję poprzednich wiadomości"
+      types:
+        reviewable_post_voting_comment:
+          title: "Oznaczono komentarz do głosowania na posty"

@@ -603,6 +603,7 @@ login:
   enable_discourse_id:
     default: false
     hidden: true
+    validator: "EnableDiscourseIdValidator"
   discourse_id_client_id:
     default: ""
     hidden: true
@@ -2267,6 +2268,19 @@ files:
   video_thumbnails_enabled:
     default: true
     client: true
+    hidden: true
+  video_conversion_enabled:
+    default: false
+    validator: "VideoConversionEnabledValidator"
+  video_conversion_service:
+    type: enum
+    default: "aws_mediaconvert"
+    choices:
+      - "aws_mediaconvert"
+  mediaconvert_role_arn:
+    default: ""
+  mediaconvert_endpoint:
+    default: ""
     hidden: true
 
 trust:
@@ -4088,3 +4102,10 @@ experimental:
     client: true
     type: group_list
     default: ""
+  experimental_sidebar_messages_count_enabled_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true

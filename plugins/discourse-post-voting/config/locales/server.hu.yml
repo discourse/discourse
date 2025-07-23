@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 hu:
+  post_action_types:
+    vote:
+      title: "Szavazás"
   post_voting:
     comment:
       reviewables:
@@ -17,6 +20,9 @@ hu:
             description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
           disagree:
             title: "Elutasítás"
+          ignore:
+            title: "Ne csináljon semmit"
+            description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

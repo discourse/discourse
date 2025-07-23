@@ -204,9 +204,6 @@ sv:
     broken_decorator_alert: "Inlägg kanske inte visas korrekt eftersom en av inläggsinnehållsdekoratörerna på din webbplats upptäckte ett fel."
     broken_page_change_alert: "En onPageChange-hanterare meddelar ett fel. Se mer information i webbläsarens utvecklarverktyg."
     broken_plugin_alert: "Orsakas av plugin '%{name}'"
-    critical_deprecation:
-      theme_source: "Identifierat tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifierad plugin: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"
@@ -4245,6 +4242,8 @@ sv:
             badges:
               content: "Utmärkelser"
               title: "Alla utmärkelser som kan förtjänas"
+            filter:
+              content: "Filter"
             topics:
               content: "Ämnen"
               title: "Alla ämnen"
@@ -4385,6 +4384,9 @@ sv:
           copy: "Kopiera..."
           paste: "Klistra in..."
           save: "Spara som..."
+    filter:
+      description:
+        yesterday: "Igår"
     discovery:
       headings:
         multi_tag:
@@ -4522,6 +4524,8 @@ sv:
           title: "Webhookar"
         embedding:
           title: "Inbäddning"
+      theme_site_settings:
+        default_value: "Standard"
       search:
         title: "Sök"
         result_types:
@@ -5289,10 +5293,7 @@ sv:
           up_to_date: "Temat är uppdaterat, senaste kontroll:"
           has_overwritten_history: "Nuvarande temaversion finns inte längre eftersom Git-historiken har skrivits över av en tvingad push."
           add: "Lägg till"
-          theme_settings: "Inställningar för tema"
-          overriden_settings_explanation: "Ersatta inställningar markeras med en färgad punkt. Tryck på återställningsknappen för att återställa till standardvärden."
           no_settings: "Detta tema har inga inställningar."
-          theme_translations: "Översättningar för tema"
           empty: "Inga objekt"
           commits_behind:
             one: "Temat ligger %{count} åtagande efter!"
@@ -5344,6 +5345,11 @@ sv:
             title: "Välj grundfärgspalett"
             description: "Grundpalett:"
           title: "Färger"
+          edit: "Redigera"
+          filters:
+            all: "Alla"
+          active_badge:
+            text: "Aktiv"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
           copy_name_prefix: "Kopia av"
           undo: "Ångra"
@@ -5881,7 +5887,6 @@ sv:
         activity: Aktivitet
         like_count: Gillningar utdelade / mottagna
         last_100_days: "de senaste 100 dagarna"
-        private_topics_count: Privata ämnen
         posts_read_count: Inlägg lästa
         post_count: Inlägg skapade
         second_factor_enabled: Tvåfaktorsautentisering aktiverad

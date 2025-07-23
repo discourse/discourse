@@ -78,18 +78,28 @@ module PageObjects
           I18n.t("js.sidebar.sections.community.links.my_messages.content")
         end
 
-        def has_my_messages_link?(text = my_messages)
-          page.has_css?(
-            ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']",
-            text:,
-          )
+        def my_messages_link_css
+          ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']"
         end
 
-        def has_no_my_messages_link?
-          page.has_no_css?(
-            ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']",
-            text: my_messages,
-          )
+        def has_my_messages_link?(text = my_messages)
+          page.has_css?(my_messages_link_css, text:)
+        end
+
+        def has_no_my_messages_link?(text = my_messages)
+          page.has_no_css?(my_messages_link_css, text:)
+        end
+
+        def has_my_messages_link_with_unread_icon?
+          page.has_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+        end
+
+        def has_my_messages_link_without_unread_icon?
+          page.has_no_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+        end
+
+        def has_my_messages_link_with_unread_count?
+          page.has_css?("#{my_messages_link_css} .sidebar-section-link-content-badge")
         end
       end
     end

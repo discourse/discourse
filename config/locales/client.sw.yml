@@ -2349,6 +2349,8 @@ sw:
               content: "Msimamizi"
             badges:
               content: "Beji"
+            filter:
+              content: "Ichujwe"
             topics:
               content: "Mada"
             faq:
@@ -2383,6 +2385,9 @@ sw:
       spreadsheet:
         show: "Onyesha"
         about: "Kuhusu"
+    filter:
+      description:
+        yesterday: "Jana"
     discovery:
       headings:
         multi_tag:
@@ -2486,6 +2491,8 @@ sw:
               header_description: "Anwani za tovuti zilizo orodheshwa hapa zilitumiwa na mtumiaji anayechapisha taka"
         embedding:
           title: "Ambatanisha"
+      theme_site_settings:
+        default_value: "Halisi"
       search:
         title: "Tafuta"
         result_types:
@@ -2872,7 +2879,6 @@ sw:
           disable: "Sitisha"
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
-          theme_settings: "Mipangilio ya Mandhari"
           no_settings: "Mandhari hii haina mipangilio."
           settings: "Mipangilio"
           colors: "Rangi"
@@ -2896,6 +2902,11 @@ sw:
               too_large: "lazima iwe chini ya au sawa na %{count}"
         colors:
           title: "Rangi"
+          edit: "Hariri"
+          filters:
+            all: "Yote"
+          active_badge:
+            text: "Amilifu"
           copy_name_prefix: "Nakala ya"
           undo: "Tendua"
           undo_title: "tendua madiliko kwenye rangi hii kutoka mara ya mwisho ilivyohifadhiwa."
@@ -3226,7 +3237,6 @@ sw:
         activity: Shughuli
         like_count: Upendo Uliotolewa / Uliopokelewa
         last_100_days: "ndani ya siku 100 zilizopita"
-        private_topics_count: Mada Binafsi
         posts_read_count: Machapisho Yaliosomwa
         post_count: Machapisho Yaliotengenezwa
         topics_entered: Mada Zilizosomwa

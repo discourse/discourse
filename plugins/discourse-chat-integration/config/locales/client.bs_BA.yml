@@ -9,7 +9,7 @@ bs_BA:
     chat_integration:
       settings: "Postavke"
       all_categories: "(sve kategorije)"
-      delete_channel: "Izbriši"
+      delete_channel: "Delete"
       edit_channel: "Izmijeni"
       test_modal:
         topic: "Topic"
@@ -25,9 +25,9 @@ bs_BA:
         edit_rule: "Izmijeni"
         delete_rule: "Delete"
       edit_channel_modal:
-        cancel: "Otkaži"
+        cancel: "Odustani"
       edit_rule_modal:
-        cancel: Otkaži
+        cancel: Odustani
         type: Tip
         filter: Filter
         category: Kategorija

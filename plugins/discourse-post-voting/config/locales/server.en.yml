@@ -27,6 +27,7 @@ en:
     post_voting_comment_limit_per_post: "Number of comments allowed on each post"
     min_trust_to_flag_posts_voting_comments: "Minimum trust level to flag a post voting comment"
     flag_posts_voting_comments_allowed_groups: "Groups allowed to flag a post voting comment"
+    post_voting_comment_enabled: "Enable comments on Post in Post Voting topics"
 
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
@@ -58,6 +59,7 @@ en:
         limit_exceeded: "Limit of %{limit} comments per post has been reached."
         perform: "Post Voting Comment flagged with score high enough to silence user."
         auto_silence_from_flags: "Automatically silenced due to flagging."
+        disabled: "Commenting on a post is not permitted."
       reviewables:
         comment_already_handled: "Thanks, but we've already reviewed this comment and determined it does not need to be flagged again."
         actions:

@@ -19,6 +19,7 @@ id:
       close: "Tutup"
       delete: "Hapus"
       edit: "Ubah"
+      back: "Kembali"
       save: "Simpan"
       apply: "menerapkan"
       update_range:

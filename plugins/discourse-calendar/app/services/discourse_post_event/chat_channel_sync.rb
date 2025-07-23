@@ -48,7 +48,7 @@ module DiscoursePostEvent
     end
 
     def self.ensure_chat_channel!(event, guardian:)
-      name = event.name
+      name = event.name || event.post.topic.title
 
       channel = nil
       Chat::CreateCategoryChannel.call(

@@ -26,7 +26,7 @@ sv:
       select_group: 'Välj en grupp'
       field:
         id: "ID"
-        email: "E-post"
+        email: "E-postadress"
         amount_cents: "Belopp (i cent)"
         rewards: "Belöningar"
         declined_since: "Donation nekad sedan"
@@ -35,20 +35,3 @@ sv:
           help_text:
             email_available: "Längst ner till höger på sidan ser du den här Patreonens donationshistorik."
             email_not_available: "Välj Patreon-medlemmen och gå längst ner till höger på sidan för att se donationshistoriken."
-      donation_prompt:
-        body: |
-          <h1>Hej på dig som läser detta!</h1>
-
-          <p>Gillar du vår webbplats? Vill du bidra till ett gott ändamål?</p>
-
-          <p>
-            Om du tycker att vår webbplats är till nytta, och använder dig av det forum som vi har skapat, skulle vi bli glada om du donerade till webbplatsen.
-            Donationer är det som ser till att våra tjänster fungerar smidigt och säkerställer att vårt forum fungerar under många år framöver.
-            Varje krona räknas och kommer till god användning.
-          </p>
-
-          <p>Tack för ditt stöd!<p>
-
-          <p>
-          <a class="btn btn-large btn-danger" href="%{campaignUrl}">Bli Patreon</a>
-          </p>

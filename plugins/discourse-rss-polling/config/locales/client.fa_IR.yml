@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  js:
+    admin:
+      rss_polling:
+        author: نویسنده
+        feed_url: نشانی اینترنتی
+        discourse_category: دسته‌بندی
+        discourse_tags: برچسب‌ها

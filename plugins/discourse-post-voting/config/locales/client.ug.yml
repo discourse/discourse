@@ -36,6 +36,7 @@ ug:
                 description: "پاش قىلىشنى ئۆچرەتتىن چىقىرىۋېتىپ پەرۋا قىلماي، ھېچقانداق مەشغۇلات قىلمايدۇ."
       topic:
         sort_by: "تەرتىپى"
+        votes: "بېلەت"
         activity: "پائالىيەت"
     review:
       transcript:

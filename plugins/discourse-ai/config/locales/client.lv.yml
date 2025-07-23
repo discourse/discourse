@@ -1,0 +1,167 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Kārtot pēc"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Tēmas ID"
+            title:
+              label: "Virsraksts"
+            categories:
+              label: "Sadaļas"
+            tags:
+              label: "Birkas"
+        llm_triage:
+          fields:
+            category:
+              label: "Sadaļa"
+            tags:
+              label: "Birkas"
+            canned_reply:
+              label: "Atbilde"
+    discourse_ai:
+      features:
+        back: "Atpakaļ"
+        disabled: "(atslēgt)"
+        groups: "Grupas:"
+        no_groups: "Nav"
+        edit: "Labot"
+        expand_list:
+          zero: "(vēl %{count})"
+          one: "(vēl %{count})"
+          other: "(vēl %{count})"
+        filters:
+          all: "Visi"
+          reset: "Atlikt"
+        search:
+          name: "Meklēt"
+        spam:
+          name: "Spams"
+      modals:
+        select_option: "Izvēlieties opciju..."
+      spam:
+        short_title: "Spams"
+        last_seven_days: "Pēdējās 7 dienas"
+        enable: "Ieslēgt"
+        test_modal:
+          spam: "Spams"
+      usage:
+        summary: "Kopsavilkums"
+        username: "Lietotājvārds"
+        periods:
+          last_day: "Pēdējās 24 stundas"
+      ai_persona:
+        back: "Atpakaļ"
+        name: "Vārds"
+        edit: "Labot"
+        export: "Eksportēt"
+        import: "Importēt"
+        description: "Apraksts"
+        user: Lietotājs
+        save: "Saglabāt"
+        enabled: "Ieslēgts?"
+        delete: "Dzēst"
+        response_format:
+          open_modal: "Labot"
+        filters:
+          reset: "Atlikt"
+      rag:
+        uploads:
+          title: "Augšupielādes"
+          uploading: "Notiek ielāde..."
+      tools:
+        back: "Atpakaļ"
+        export: "Eksportēt"
+        import: "Importēt"
+        name: "Vārds"
+        description: "Apraksts"
+        summary: "Kopsavilkums"
+        save: "Saglabāt"
+        remove_parameter: "Atcelt"
+        parameter_required: "Nepieciešams"
+        edit: "Labot"
+        delete: "Dzēst"
+      llms:
+        display_name: "Vārds"
+        save: "Saglabāt"
+        edit: "Labot"
+        back: "Atpakaļ"
+        delete: Dzēst
+        quotas:
+          group: "Grupa"
+          max_usages: "Maksimāli izmantojams"
+          duration: "Ilgums"
+          hours: "stunda"
+        usage:
+          ai_spam: "Spams"
+        next:
+          title: "Nākamais"
+        tests:
+          success: "Veiksmīgi!"
+        providers:
+          google: "Google"
+      ai_helper:
+        context_menu:
+          cancel: "Atcelt"
+          discard: "Izmest"
+        post_options_menu:
+          close: "Aizvērt"
+          copy: "Kopēt"
+          copied: "Nokopēts!"
+          cancel: "Atcelt"
+        image_caption:
+          save_caption: "Saglabāt"
+          automatic_caption_dialog:
+            confirm: "Ieslēgt"
+      embeddings:
+        back: "Atpakaļ"
+        save: "Saglabāt"
+        delete: "Dzēst"
+        edit: "Labot"
+        tests:
+          success: "Veiksmīgi!"
+        display_name: "Vārds"
+        providers:
+          google: "Google"
+      ai_bot:
+        debug_ai_modal:
+          request: "Pieprasījums"
+          response: "Atbilde"
+          next_log: "Nākamais"
+          previous_log: "Iepriekšējais"
+        invite_ai_conversation:
+          button: "Ielūgt"
+        share_modal:
+          copy: "Kopēt"
+        conversations:
+          today: "Šodienas"
+          last_7_days: "Pēdējās 7 dienas"
+          last_30_days: "Pēdējās 30 dienas"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Visi"
+          group_types:
+            category: "Sadaļa"
+          table:
+            total_count: "Kopā"
+      discobot_discoveries:
+        regular_results: "Tēmas"
+        collapse: "Sakļaut"
+        tooltip:
+          actions:
+            disable: "Atslēgt"

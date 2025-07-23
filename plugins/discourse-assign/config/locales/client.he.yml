@@ -37,11 +37,11 @@ he:
       sidebar_name_filter_placeholder: "שם/שם משתמש"
       assigned: "מוקצה"
       group_everyone: "כולם"
-      assigned_to: "מוקצה לטובת"
+      assigned_to: "הוקצה לטובת"
       assigned_topic_to: "נושא הוקצה לטובת <a href='%{path}'>%{username}</a>"
       assign_post_to: "מס׳ %{post_number} הוקצה לטובת %{username}"
       assign_post_to_multiple: "מס׳ %{post_number} אל %{username}"
-      assigned_to_w_ellipsis: "מוקצה לטובת..."
+      assigned_to_w_ellipsis: "הוקצה לטובת..."
       unassign:
         title: "ביטול הקצאה"
         title_w_ellipsis: "ביטול הקצאה..."
@@ -87,12 +87,12 @@ he:
         title: "דרישה"
         help: "הקצאת נושא לעצמך"
       assign_mailer:
-        never: "אף פעם"
+        never: "לעולם לא"
         different_users: "רק אם הצד המקצה או הצד שהוקצה אליו הם משתמשים שונים"
         always: "תמיד"
       reminders_frequency:
         description: "תדירות קבלת תזכורות לנושאים מוקצים"
-        never: "אף פעם"
+        never: "לעולם לא"
         daily: "יומי"
         weekly: "שבועי"
         monthly: "חודשי"
@@ -106,6 +106,7 @@ he:
                 title: "מי יכול להקצות את הקבוצה הזאת"
     user:
       notification_level_when_assigned:
+        watch_topic: "מעקב אחר נושא"
         do_nothing: "לא לעשות דבר"
       messages:
         assigned_title: "מוקצים (%{count})"
@@ -135,7 +136,7 @@ he:
           assigned: "מוקצים"
           unassigned: "אינם מוקצים"
         assigned:
-          label: "מוקצה לטובת"
+          label: "הוקצה לטובת"
     topics:
       bulk:
         unassign: "ביטול הקצאת נושאים"

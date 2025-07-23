@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    discourse_policy:
+      title: "Политика"
+      accepted_tooltip: "Пользователи, принявшие эту политику"
+      not_accepted_tooltip: "Пользователи, которые не приняли эту политику"
+      accept_policy: "Принять политику"
+      revoke_policy: "Отказаться от политики"
+      edit_reason: "Настройки политики были изменены"
+      no_possible_users: "У этой политики нет пользователей"
+      accept_policy_template: "Я принимаю эту политику"
+      builder:
+        title: Политика
+        attach: Создать политику
+        save: Сохранить изменения
+        insert: Вставить
+        errors:
+          group: Требуется группа
+          version: Требуется версия
+        groups:
+          label: Группы
+          description: Группы, связанные с этой политикой
+        version:
+          label: Версия
+          description: Версия политики, при изменении версии политики её необходимо принять заново
+        renew:
+          label: Обновить
+          description: Обновлять политику каждые x дней
+        renew-start:
+          label: Начать обновление
+          description: Когда политика должна быть возобновлена
+        reminder:
+          label: Напоминание
+          description: Как часто следует отправлять напоминания о принятии политики
+        accept:
+          label: Принять
+          description: Текст, используемый на кнопке «Принять»
+        revoke:
+          label: Отозвать
+          description: Текст, используемый на кнопке отмены
+        private:
+          label: Приватные?
+          description: Сохранить статус политики приватным для администраторов
+        send-email:
+          label: Отправить письмо?
+          description: Уведомлять пользователей о новой политике по электронной почте
+      preferences:
+        title: Политики
+        policy_emails:
+          always_description: Мы отправим вам письмо, только если вы также согласились получать письма о новых действиях.
+          away_description: Мы отправим вам письмо, только если вас не было в течение последних 10 минут после изменения статуса политики и вы согласились получать письма о новых действиях.
+          label: Отправлять письмо, когда политика нуждается в проверке
+          email_frequency_options:
+            never: Никогда
+            when_away: Если вы находитесь офлайн
+            always: Всегда

@@ -13,7 +13,7 @@ fa_IR:
       leaderboard:
         title: "تابلو امتیازات"
         info: "این چطور کار می‌کنه؟"
-        link_to_settings: "تنظیمات"
+        link_to_settings: "تنظیم"
         refresh: "تازه‌سازی"
         modal:
           title: "تابلو امتیازات چطور کار می‌کنه؟"
@@ -28,7 +28,7 @@ fa_IR:
           all_time: "همیشه"
           yearly: "سالیانه "
           quarterly: "فصلی"
-          monthly: "ماهیانه"
+          monthly: "ماهانه"
           weekly: "هفتگی"
           daily: "روزانه"
         rank: "رتبه"

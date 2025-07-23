@@ -28,4 +28,5 @@ vi:
                 title: "Không đồng ý"
       topic:
         sort_by: "Sắp xếp theo"
+        votes: "Bình chọn"
         activity: "Hoạt động"

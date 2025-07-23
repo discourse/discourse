@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 te:
+  js:
+    admin:
+      rss_polling:
+        author: రచయిత
+        feed_url: URL
+        discourse_category: వర్గం
+        discourse_tags: ట్యాగులు

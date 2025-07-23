@@ -20,7 +20,7 @@ lt:
       region:
         none: "Nieko"
       toolbar_button:
-        today: "Šiandien"
+        today: "Šandien"
         month: "Per mėnesį"
         week: "Per savaitę"
         day: "Diena"
@@ -53,7 +53,7 @@ lt:
         custom_fields:
           placeholder: "Pasirinktinai"
         create: "Sukurti"
-        update: "Išsaugoti"
+        update: "Saugoti"
         timezone:
           label: Laiko zona
         reminders:

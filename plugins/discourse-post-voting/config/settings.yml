@@ -4,6 +4,9 @@ plugins:
     default: false
   post_voting_undo_vote_action_window:
     default: 10
+  post_voting_comment_enabled:
+    client: true
+    default: true
   post_voting_comment_limit_per_post:
     default: 10
     min: 1

@@ -9,7 +9,7 @@ lv:
     discourse_assign:
       group_everyone: "Ikviens"
       reassign:
-        title: "Rediģēt"
+        title: "Labot"
       assign_modal:
         optional_label: "(pēc izvēles)"
         status_label: Statuss
