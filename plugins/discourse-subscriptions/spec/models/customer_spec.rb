@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseSubscriptions::Customer do
   let(:user) { Fabricate(:user) }
   let(:stripe_customer) { { id: "cus_id4567" } }

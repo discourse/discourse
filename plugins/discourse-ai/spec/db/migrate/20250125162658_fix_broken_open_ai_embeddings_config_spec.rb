@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require Rails.root.join(
           "plugins/discourse-ai/db/migrate/20250125162658_fix_broken_open_ai_embeddings_config",
         )

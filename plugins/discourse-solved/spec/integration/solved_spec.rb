@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "Managing Posts solved status" do
   let(:topic) { Fabricate(:topic_with_op) }
   fab!(:user) { Fabricate(:trust_level_4) }

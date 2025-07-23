@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseDataExplorer::QueryGroupBookmarkable do
   subject(:registered_bookmarkable) do
     RegisteredBookmarkable.new(DiscourseDataExplorer::QueryGroupBookmarkable)

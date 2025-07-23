@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Admin::AiUsageController do
   fab!(:admin)
   fab!(:user)

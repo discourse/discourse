@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::DiscoursePostEventBumpTopic do
   let(:admin_1) { Fabricate(:user, admin: true) }
   let(:topic_1) { Fabricate(:topic, user: admin_1) }

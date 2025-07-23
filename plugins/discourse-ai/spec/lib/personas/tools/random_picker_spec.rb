@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Personas::Tools::RandomPicker do
   before { enable_current_plugin }
 

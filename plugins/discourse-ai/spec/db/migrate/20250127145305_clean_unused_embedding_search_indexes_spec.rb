@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require Rails.root.join(
           "plugins/discourse-ai/db/migrate/20250127145305_clean_unused_embedding_search_indexes",
         )

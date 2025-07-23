@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "aws-sdk-mediaconvert"
 require "aws-sdk-s3" # so Aws::S3::Object::Acl is loaded
 

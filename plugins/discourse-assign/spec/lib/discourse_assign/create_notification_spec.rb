@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAssign::CreateNotification do
   describe ".call" do
     subject(:create_notification) do
