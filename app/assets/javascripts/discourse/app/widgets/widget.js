@@ -142,7 +142,7 @@ export function createWidget(name, opts) {
       ?.deactivate_widgets_rendering
   ) {
     warnWidgetsDeprecation(
-      `Widgets are deactivated and won't be rendered. Your site may not working properly. Affected widget: ${name}.`,
+      `Widgets are deactivated and won't be rendered. Your site may not work properly. Affected widget: ${name}.`,
       false
     );
     return;
