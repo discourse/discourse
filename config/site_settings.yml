@@ -4072,7 +4072,7 @@ experimental:
     default: "auto"
   deactivate_widgets_rendering:
     client: true
-    default: true
+    default: false
   enable_rich_text_paste:
     client: true
     default: true
