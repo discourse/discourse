@@ -14,8 +14,7 @@ module VideoConversion
         # Use FileStore::BaseStore logic to generate the path
         # Create a temporary upload object to leverage the path generation logic
         temp_upload = build_temp_upload_for_path_generation(new_sha1)
-        full_output_path = Discourse.store.get_path_for_upload(temp_upload)
-        output_path = extract_mediaconvert_path(full_output_path)
+        output_path = Discourse.store.get_path_for_upload(temp_upload).sub(/\.mp4$/, "")
 
         # Extract the path from the URL
         # The URL format is: //bucket.s3.dualstack.region.amazonaws.com/path/to/file
@@ -161,13 +160,6 @@ module VideoConversion
         sha1: new_sha1,
         extension: "mp4",
       )
-    end
-
-    def extract_mediaconvert_path(full_path)
-      # Full path format: "/uploads/default/test_0/original/1X/sha1.mp4"
-      # We want: "original/1X/sha1"
-      full_path[FileStore::BaseStore::UPLOAD_PATH_REGEX, 1]&.sub(/\.mp4$/, "") ||
-        raise("Unexpected path format: #{full_path}")
     end
 
     def mediaconvert_client
