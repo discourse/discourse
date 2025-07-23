@@ -1,8 +1,6 @@
-/* eslint-disable qunit/no-loose-assertions */
-/* eslint-disable qunit/no-assert-equal */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
@@ -126,7 +124,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     });
   });
 
-  test("event name is escaped correctly", async (assert) => {
+  test("event name is escaped correctly", async function (assert) {
     await visit("/c/bug/1");
 
     assert
@@ -137,7 +135,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
       );
   });
 
-  test("events display the color configured in the map_events_to_color site setting", async (assert) => {
+  test("events display the color configured in the map_events_to_color site setting", async function (assert) {
     await visit("/c/bug/1");
 
     assert
@@ -153,7 +151,7 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     });
   });
 
-  test("shows event calendar on category page", async (assert) => {
+  test("shows event calendar on category page", async function (assert) {
     await visit("/c/bug/1?foobar=true");
 
     assert
@@ -162,13 +160,15 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     assert.dom(".fc-view-container").exists("FullCalendar is loaded.");
   });
 
-  test("uses current locale to display calendar weekday names", async (assert) => {
+  test("uses current locale to display calendar weekday names", async function (assert) {
     I18n.locale = "pt_BR";
 
     await visit("/c/bug/1");
 
     assert.deepEqual(
-      [...queryAll(".fc-day-header span")].map((el) => el.innerText),
+      [...document.querySelectorAll(".fc-day-header span")].map(
+        (el) => el.innerText
+      ),
       ["seg.", "ter.", "qua.", "qui.", "sex.", "sáb.", "dom."],
       "Week days are translated in the calendar header"
     );
@@ -176,21 +176,21 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     I18n.locale = "en";
   });
 
-  test("event calendar shows recurrent events", async (assert) => {
+  test("event calendar shows recurrent events", async function (assert) {
     await visit("/c/bug/1");
 
-    const [first, second] = queryAll(".fc-event .fc-title");
+    const [first, second] = [...document.querySelectorAll(".fc-event")];
 
-    assert.equal(first.textContent, "Awesome Event");
-    assert.equal(second.textContent, "Awesome Event");
+    assert.dom(".fc-title", first).hasText("Awesome Event");
+    assert.dom(".fc-title", second).hasText("Awesome Event");
 
     const firstCell = first.closest("td");
     const secondCell = second.closest("td");
 
-    assert.notEqual(
+    assert.notStrictEqual(
       firstCell,
       secondCell,
-      "events should be in different days"
+      "events are in different days"
     );
   });
 });

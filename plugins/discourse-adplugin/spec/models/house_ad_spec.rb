@@ -118,7 +118,7 @@ describe AdPlugin::HouseAd do
       end
 
       it "duplicate name" do
-        existing = AdPlugin::HouseAd.create(valid_attrs)
+        AdPlugin::HouseAd.create(valid_attrs)
         ad = AdPlugin::HouseAd.from_hash(valid_attrs)
         expect(ad.save).to eq(false)
         expect(ad).to_not be_valid
@@ -128,7 +128,7 @@ describe AdPlugin::HouseAd do
       end
 
       it "duplicate name, different case" do
-        existing = AdPlugin::HouseAd.create(valid_attrs.merge(name: "mechanic"))
+        AdPlugin::HouseAd.create(valid_attrs.merge(name: "mechanic"))
         ad = AdPlugin::HouseAd.create(valid_attrs.merge(name: "Mechanic"))
         expect(ad.save).to eq(false)
         expect(ad).to_not be_valid

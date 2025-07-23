@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import withEventValue from "discourse/helpers/with-event-value";
 import { debounce } from "discourse/lib/decorators";
 import OneTable from "./explorer-schema/one-table";
 
@@ -152,8 +153,7 @@ export default class ExplorerSchema extends Component {
         <div class="schema-search inline-form full-width">
           <input
             type="text"
-            {{! template-lint-disable no-action }}
-            {{on "input" (action "filterChanged" value="target.value")}}
+            {{on "input" (withEventValue this.filterChanged)}}
           />
           <DButton
             @action={{this.collapseSchema}}

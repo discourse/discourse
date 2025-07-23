@@ -3,7 +3,6 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import {
   acceptance,
-  count,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -44,7 +43,7 @@ acceptance("Mixed Ads", function (needs) {
     },
   });
 
-  test("correct ads show", async (assert) => {
+  test("correct ads show", async function (assert) {
     updateCurrentUser({
       staff: false,
       trust_level: 1,
@@ -53,17 +52,12 @@ acceptance("Mixed Ads", function (needs) {
     });
     await visit("/t/280"); // 20 posts
 
-    const houseAdsCount = count(".house-creative");
-    const dfpAdsCount = count(".google-dfp-ad");
-
-    assert.true(houseAdsCount > 1);
-    assert.true(houseAdsCount < 4);
-    assert.true(dfpAdsCount > 1);
-    assert.true(dfpAdsCount < 4);
+    assert.dom(".house-creative").exists({ count: 2 });
+    assert.dom(".google-dfp-ad").exists({ count: 3 });
 
     await visit("/latest");
     assert
       .dom(".h-topic-list-top, .dfp-ad-topic-list-top")
-      .exists({ count: 1 }, "it should render ad above topic list");
+      .exists({ count: 1 }, "renders ad above topic list");
   });
 });

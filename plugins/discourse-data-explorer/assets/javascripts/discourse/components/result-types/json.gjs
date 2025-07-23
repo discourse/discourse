@@ -35,8 +35,7 @@ export default class Json extends Component {
       <div class="result-json-value">{{@ctx.value}}</div>
       <DButton
         class="result-json-button"
-        {{! template-lint-disable no-action }}
-        @action={{action "viewJson"}}
+        @action={{this.viewJson}}
         @icon="ellipsis"
         @title="explorer.view_json"
       />
