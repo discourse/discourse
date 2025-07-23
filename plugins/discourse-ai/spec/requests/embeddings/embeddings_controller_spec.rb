@@ -70,8 +70,8 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
       before { RateLimiter.enable }
 
       it "will rate limit correctly" do
-        stub_const(subject.class, :MAX_HYDE_SEARCHES_PER_MINUTE, 1) do
-          stub_const(subject.class, :MAX_SEARCHES_PER_MINUTE, 2) do
+        stub_const(described_class, :MAX_HYDE_SEARCHES_PER_MINUTE, 1) do
+          stub_const(described_class, :MAX_SEARCHES_PER_MINUTE, 2) do
             query = "test #{SecureRandom.hex}"
             stub_embedding(query)
             get "/discourse-ai/embeddings/semantic-search.json?q=#{query}&hyde=false"

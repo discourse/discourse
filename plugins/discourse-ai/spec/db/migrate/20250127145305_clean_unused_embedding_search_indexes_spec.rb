@@ -6,6 +6,8 @@ require Rails.root.join(
         )
 
 RSpec.describe CleanUnusedEmbeddingSearchIndexes do
+  subject(:migration) { described_class.new }
+
   let(:connection) { ActiveRecord::Base.connection }
 
   before { enable_current_plugin }
@@ -42,7 +44,7 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
 
     context "when there are no embedding definitions" do
       it "removes all indexes" do
-        subject.up
+        migration.up
 
         remaininig_idxs =
           DB.query_single(
@@ -63,7 +65,7 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
             memo << "ai_#{type}_embeddings_2_1_search_bit"
           end
 
-        subject.up
+        migration.up
 
         remaininig_idxs =
           DB.query_single(
@@ -88,7 +90,7 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
             memo << "ai_#{type}_embeddings_3_1_search_bit"
           end
 
-        subject.up
+        migration.up
 
         remaininig_idxs =
           DB.query_single(
@@ -123,7 +125,7 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
             memo << "ai_#{type}_embeddings_9_1_search_bit"
           end
 
-        subject.up
+        migration.up
 
         other_idxs =
           DB.query_single(
