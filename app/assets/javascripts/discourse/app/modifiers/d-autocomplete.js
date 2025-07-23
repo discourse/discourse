@@ -7,6 +7,7 @@ import Modifier from "ember-modifier";
 import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
 
 export const CANCELLED_STATUS = "__CANCELLED";
 
@@ -422,8 +423,14 @@ export default class DAutocompleteModifier extends Modifier {
       const menuOptions = {
         identifier: "d-autocomplete",
         component: DAutocompleteResults,
+        visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
         placement: "top-start",
-        fallbackPlacements: ["bottom-start", "top-end", "bottom-end"],
+        allowedPlacements: [
+          "top-start",
+          "top-end",
+          "bottom-start",
+          "bottom-end",
+        ],
         data: {
           results: this.results,
           selectedIndex: this.selectedIndex,
