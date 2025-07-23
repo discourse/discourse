@@ -14,6 +14,7 @@ import { minify as terserMinify } from "terser";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
+import BabelCrossThemeImport from "./babel-cross-theme-import";
 import BabelReplaceImports from "./babel-replace-imports";
 import { Preprocessor } from "./content-tag";
 import rollupVirtualImports from "./rollup-virtual-imports";
@@ -186,7 +187,7 @@ globalThis.rollup = function (modules, opts) {
       },
 
       getBabelOutputPlugin({
-        plugins: [BabelReplaceImports],
+        plugins: [BabelReplaceImports, BabelCrossThemeImport],
       }),
       babel({
         extensions: [".js", ".gjs", ".hbs"],
