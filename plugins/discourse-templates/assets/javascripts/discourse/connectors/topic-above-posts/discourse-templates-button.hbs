@@ -1,0 +1,18 @@
+<div class="template-topic-controls">
+  <DButton
+    @icon={{if this.copyConfirm "check" "copy"}}
+    @class={{concat-class
+      "btn-default"
+      "template-copy"
+      (if this.copyConfirm "ok")
+    }}
+    @action={{this.copy}}
+    @label="templates.copy"
+  />
+  <DButton
+    @action={{this.createNewTopic}}
+    @label="templates.new_topic"
+    @icon="plus"
+    @class="template-new-topic"
+  />
+</div>

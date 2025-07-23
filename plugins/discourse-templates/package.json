@@ -1,0 +1,11 @@
+{
+  "name": "discourse-templates",
+  "version": "2.5.0",
+  "repository": "https://github.com/discourse/discourse-templates",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "devDependencies": {
+    "lefthook": "^1.2.0",
+    "eslint-config-discourse": "^4.0.0"
+  }
+}

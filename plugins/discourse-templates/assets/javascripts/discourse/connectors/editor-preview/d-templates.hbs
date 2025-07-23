@@ -1,0 +1,13 @@
+{{#if this.templatesVisible}}
+  <div class="d-templates-container">
+    <DButton
+      class="modal-close close btn-flat"
+      @action={{action "hide"}}
+      @icon="times"
+    />
+    <DTemplates::FilterableList
+      @onInsertTemplate={{this.onInsertTemplate}}
+      @onAfterInsertTemplate={{action "hide"}}
+    />
+  </div>
+{{/if}}

@@ -1,0 +1,10 @@
+node_modules
+/gems
+/auto_generated
+.env
+evals/log
+evals/cases
+config/eval-llms.local.yml
+# this gets rid of search results from ag, ripgrep, etc
+tokenizers/
+public/ai-share/highlight.min.js

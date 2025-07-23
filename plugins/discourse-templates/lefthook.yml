@@ -1,0 +1,116 @@
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop --parallel {staged_files}
+    stree:
+      glob: "*.rb"
+      run: |
+        if test -f .streerc; then
+          bundle exec stree check {staged_files}
+        else
+          echo "Stree config not detected for this repository. Skipping."
+        fi
+    prettier:
+      glob: "*.{js,gjs}"
+      include: "assets/javascripts|test/javascripts"
+      run: yarn prettier --list-different {staged_files}
+    prettier-scss:
+      glob: "*.scss"
+      include: "assets/stylesheets"
+      run: yarn prettier --list-different {staged_files}
+    prettier-hbs:
+      glob: "*.hbs"
+      include: "assets/javascripts|test/javascripts"
+      run: yarn prettier --list-different {staged_files}
+    eslint:
+      glob: "*.{js,gjs}"
+      include: "assets/javascripts|test/javascripts"
+      run: yarn eslint -f compact {staged_files}
+
+commands: &commands
+  bundle-install:
+    files: git diff --name-only HEAD main
+    glob: "{Gemfile,Gemfile.lock,*.gemspec}"
+    run: bundle install
+  yarn-install:
+    files: git diff --name-only HEAD main
+    glob: "{package.json,yarn.lock}"
+    run: yarn install
+
+post-checkout:
+  commands: *commands
+
+post-merge:
+  commands: *commands
+
+post-rewrite:
+  commands: *commands
+
+fix-staged:
+  commands:
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop -a --parallel {staged_files}
+    stree:
+      glob: "*.rb"
+      run: |
+        if test -f .streerc; then
+          bundle exec stree write {staged_files}
+        else
+          echo "Stree config not detected for this repository. Skipping."
+        fi
+    prettier:
+      glob: "*.{js,gjs,hbs,scss}"
+      include: "assets/javascripts|assets/stylesheets|test/javascripts"
+      run: yarn prettier --write {staged_files}
+
+fix-all:
+  commands:
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop -a --parallel {all_files}
+    stree:
+      glob: "*.rb"
+      run: |
+        if test -f .streerc; then
+          bundle exec stree write {all_files}
+        else
+          echo "Stree config not detected for this repository. Skipping."
+        fi
+    prettier:
+      glob: "*.{js,gjs,hbs,scss}"
+      include: "assets/javascripts|assets/stylesheets|test/javascripts"
+      run: yarn prettier --write {all_files}
+
+lints:
+  parallel: true
+  commands:
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop --parallel
+    stree:
+      glob: "*.rb"
+      run: |
+        if test -f .streerc; then
+          bundle exec stree check {staged_files}
+        else
+          echo "Stree config not detected for this repository. Skipping."
+        fi
+    prettier:
+      glob: "*.{js,gjs}"
+      include: "assets/javascripts|test/javascripts"
+      run: yarn prettier --list-different {all_files}
+    prettier-hbs:
+      glob: "*.hbs"
+      include: "assets/javascripts|test/javascripts"
+      run: yarn prettier --list-different {all_files}
+    prettier-scss:
+      glob: "*.scss"
+      include: "assets/stylesheets"
+      run: yarn prettier --list-different {all_files}
+    eslint-assets-js:
+      run: yarn eslint assets/javascripts
+    eslint-test-js:
+      run: yarn eslint test/javascripts

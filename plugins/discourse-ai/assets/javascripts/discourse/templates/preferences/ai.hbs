@@ -1,0 +1,29 @@
+<div class="ai-user-preferences">
+  <legend class="control-label">{{i18n "discourse_ai.title"}}</legend>
+
+  {{#each this.booleanSettings as |setting|}}
+    {{#if setting.isIncluded}}
+      <div class="control-group ai-setting">
+        <PreferenceCheckbox
+          @labelKey={{setting.label}}
+          @checked={{get this.model.user_option setting.key}}
+          data-setting-name={{setting.settingName}}
+          class="pref-{{setting.settingName}}"
+        />
+      </div>
+    {{/if}}
+  {{/each}}
+
+  {{#if (eq this.userSettingAttributes.length 0)}}
+    {{i18n "discourse_ai.user_preferences.empty"}}
+  {{/if}}
+
+  {{#unless (eq this.userSettingAttributes.length 0)}}
+    <SaveControls
+      @id="user_ai_preference_save"
+      @model={{this.model}}
+      @action={{this.save}}
+      @saved={{this.saved}}
+    />
+  {{/unless}}
+</div>
