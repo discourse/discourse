@@ -5,6 +5,6 @@ class ColorSchemeSelectableSerializer < ApplicationSerializer
   has_many :colors, serializer: ColorSchemeColorSerializer, embed: :objects
 
   def is_dark
-    object.is_dark?
+    object.support_dark_mode?
   end
 end

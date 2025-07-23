@@ -420,28 +420,84 @@ class RemoteTheme < ActiveRecord::Base
     missing_scheme_names = Hash[*theme.color_schemes.pluck(:name, :id).flatten]
     ordered_schemes = []
 
-    schemes&.each do |name, colors|
+    # handle backwards compatibility
+    legacy_json_structure = Hash === schemes
+    if legacy_json_structure && theme.id == Theme::CORE_THEMES["horizon"] &&
+         (
+           Discourse.site_creation_date > Date.parse("2025-07-30") # TODO put PR's merge date here
+         )
+      schemes =
+        schemes.inject({}) do |accumulate, (name, palette)|
+          is_dark = name.end_with?(" Dark")
+          name = name.sub(/ Dark\z/, "")
+          accumulate[name] ||= {}
+          if is_dark
+            accumulate[name]["dark"] = palette
+          else
+            accumulate[name]["light"] = palette
+          end
+          accumulate
+        end
+      schemes = schemes.map { |name, palette| { "name" => name, **palette } }
+      legacy_json_structure = false
+    elsif legacy_json_structure
+      schemes = schemes.map { |name, colors| { "name" => name, "light" => colors } }
+    end
+
+    schemes&.each do |scheme|
+      name = scheme["name"]
       missing_scheme_names.delete(name)
       scheme = theme.color_schemes.find_by(name: name) || theme.color_schemes.build(name: name)
 
+      colors = {}
+      color_names = scheme["light"]&.keys || []
+      color_names.concat(scheme["dark"]&.keys || [])
+      color_names.uniq!
+
+      color_names.each do |color_name|
+        hex = normalize_override(scheme["light"]&.[](color_name))
+        dark_hex = normalize_override(scheme["dark"]&.[](color_name))
+        next if !hex && !dark_hex
+        colors[color_name] = [hex, dark_hex]
+      end
+
+      if legacy_json_structure && (primary = colors["primary"]&.[](0)) &&
+           (secondary = colors["secondary"]&.[](0))
+        is_dark = ColorMath.brightness(primary) > ColorMath.brightness(secondary)
+        if is_dark
+          colors.values.each do |light_dark_tuple|
+            light_dark_tuple[1] = light_dark_tuple[0]
+            light_dark_tuple[0] = nil
+          end
+        end
+      end
+
       # Update main colors
       ColorScheme.base.colors_hashes.each do |color|
-        override = normalize_override(colors[color[:name]])
+        light_dark_tuple = colors[color[:name]]
+        next if !light_dark_tuple
+
         color_scheme_color =
           scheme.color_scheme_colors.to_a.find { |c| c.name == color[:name] } ||
             scheme.color_scheme_colors.build(name: color[:name])
-        color_scheme_color.hex = override || color[:hex]
-        theme.notify_color_change(color_scheme_color) if color_scheme_color.hex_changed?
+        color_scheme_color.hex = light_dark_tuple[0]
+        color_scheme_color.dark_hex = light_dark_tuple[1]
+        if color_scheme_color.hex_changed? || color_scheme_color.dark_hex_changed?
+          theme.notify_color_change(color_scheme_color)
+        end
       end
 
       # Update advanced colors
       ColorScheme.color_transformation_variables.each do |variable_name|
-        override = normalize_override(colors[variable_name])
+        light_dark_tuple = colors[variable_name]
         color_scheme_color = scheme.color_scheme_colors.to_a.find { |c| c.name == variable_name }
-        if override
+        if light_dark_tuple
           color_scheme_color ||= scheme.color_scheme_colors.build(name: variable_name)
-          color_scheme_color.hex = override
-          theme.notify_color_change(color_scheme_color) if color_scheme_color.hex_changed?
+          color_scheme_color.hex = light_dark_tuple[0]
+          color_scheme_color.dark_hex = light_dark_tuple[1]
+          if color_scheme_color.hex_changed? || color_scheme_color.dark_hex_changed?
+            theme.notify_color_change(color_scheme_color)
+          end
         elsif color_scheme_color # No longer specified in about.json, delete record
           scheme.color_scheme_colors.delete(color_scheme_color)
           theme.notify_color_change(nil, scheme: scheme)
@@ -451,10 +507,7 @@ class RemoteTheme < ActiveRecord::Base
       ordered_schemes << scheme
     end
 
-    if missing_scheme_names.length > 0
-      ColorScheme.where(id: missing_scheme_names.values).delete_all
-      # we may have stuff pointed at the incorrect scheme?
-    end
+    ColorScheme.where(id: missing_scheme_names.values).delete_all if missing_scheme_names.length > 0
 
     theme.color_scheme = ordered_schemes.first if theme.new_record?
   end

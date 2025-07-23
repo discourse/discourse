@@ -4674,12 +4674,7 @@ en:
     wcag_theme_name: "WCAG Light"
     dracula: "Dracula"
     dracula_theme_name: "Dracula"
-    solarized_light: "Solarized Light"
-    solarized_light_theme_name: "Solarized Light"
-    solarized_dark: "Solarized Dark"
-    solarized_dark_theme_name: "Solarized Dark"
-    wcag_dark: "WCAG Dark"
-    wcag_dark_theme_name: "WCAG Dark"
+    solarized: "Solarized"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"
@@ -4688,6 +4683,11 @@ en:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
+    errors:
+      light_mode_missing_required_colors: "Light mode palette requires at least the primary and the secondary colors to be defined."
+      dark_mode_missing_required_colors: "Dark mode palette requires at least the primary and the secondary colors to be defined."
+      light_mode_colors_invalid: "Light mode palette colors aren't suitable for light mode. The primary (text) color must be darker than the secondary (background) color."
+      dark_mode_colors_invalid: "Dark mode palette colors aren't suitable for dark mode. The primary (text) color must be brighter than the secondary (background) color."
 
   edit_this_page: "Edit this page"
 
