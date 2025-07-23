@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 93
+  BASE_COMPILER_VERSION = 94
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -204,20 +204,19 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def load_all_extra_js
+    theme_fields
+      .where(target_id: Theme.targets[:extra_js])
+      .order(:name, :id)
+      .pluck(:name, :value)
+      .to_h
+  end
+
   def update_javascript_cache!
-    all_extra_js =
-      theme_fields
-        .where(target_id: Theme.targets[:extra_js])
-        .order(:name, :id)
-        .pluck(:name, :value)
-        .to_h
-
+    all_extra_js = load_all_extra_js
     if all_extra_js.present?
-      js_compiler = ThemeJavascriptCompiler.new(id, name)
+      js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
       js_compiler.append_tree(all_extra_js)
-      settings_hash = build_settings_hash
-
-      js_compiler.prepend_settings(settings_hash) if settings_hash.present?
 
       javascript_cache || build_javascript_cache
       javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
@@ -1049,15 +1048,10 @@ class Theme < ActiveRecord::Base
         theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
       )
 
-    compiler = ThemeJavascriptCompiler.new(id, name, minify: false)
-    compiler.append_tree(migrations_tree, include_variables: false)
+    compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
+    compiler.append_tree(load_all_extra_js)
+    compiler.append_tree(migrations_tree)
     compiler.append_tree(tests_tree)
-
-    compiler.append_raw_script "test_setup.js", <<~JS
-      (function() {
-        require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
-      })();
-    JS
 
     content = compiler.content
 
