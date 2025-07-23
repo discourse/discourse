@@ -4,6 +4,7 @@ import MountWidget from "discourse/components/mount-widget";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
 
 // TODO (glimmer-post-stream) remove this test when removing the widget post stream code
@@ -154,7 +155,7 @@ module(
     test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
       const self = this;
 
-      withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
+      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
         withPluginApi("1.6.0", (api) => {
           api.addPostSmallActionClassesCallback((postAttrs) => {
             if (postAttrs.canRecover) {
