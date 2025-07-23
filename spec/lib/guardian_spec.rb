@@ -62,7 +62,7 @@ RSpec.describe Guardian do
     end
   end
 
-  describe "can_send_private_message" do
+  describe "#can_send_private_message?" do
     fab!(:suspended_user) do
       Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
     end
@@ -84,6 +84,10 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(user)).to be_truthy
     end
 
+    it "returns true for staff users" do
+      expect(Guardian.new(admin).can_send_private_message?(user)).to be_truthy
+    end
+
     it "returns false when you are untrusted" do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
       user.update!(trust_level: TrustLevel[0])
@@ -93,13 +97,6 @@ RSpec.describe Guardian do
 
     it "returns true to another user" do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_truthy
-    end
-
-    it "disallows pms to other users if trust level is not met" do
-      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
-      user.update!(trust_level: TrustLevel[1])
-      Group.user_trust_level_change!(user.id, TrustLevel[1])
-      expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
     it "allows plugins to control if user can send PM" do

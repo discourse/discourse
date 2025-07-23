@@ -434,9 +434,8 @@ class Guardian
     authenticated? &&
       # User can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
       (
-        is_staff? || from_bot || from_system ||
-          (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)) ||
-          notify_moderators
+        from_bot || from_system || notify_moderators ||
+          @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
       )
   end
 
