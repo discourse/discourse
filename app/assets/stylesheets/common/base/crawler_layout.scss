@@ -183,7 +183,7 @@ body > noscript {
     }
 
     .topic-list-item {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
       > * {
         padding: 0.75em 0;
@@ -217,7 +217,7 @@ body > noscript {
     margin-top: 1em;
     margin-bottom: 2em;
     padding-top: 1.5em;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .crawler-post-meta {
@@ -257,7 +257,7 @@ body > noscript {
     a {
       display: block;
       padding: 0.5em 0;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
     }
   }
 
@@ -291,7 +291,7 @@ body > noscript {
 
   .md-table {
     tr {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
     }
 
     th {
@@ -301,7 +301,7 @@ body > noscript {
     td,
     th {
       padding: 0.25em;
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
     }
   }
 
