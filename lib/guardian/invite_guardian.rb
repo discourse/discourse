@@ -10,9 +10,11 @@ module InviteGuardian
   end
 
   def can_invite_to_forum?(groups = nil)
-    authenticated? && (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
-      (is_staff? || @user.in_any_groups?(SiteSetting.invite_allowed_groups_map)) &&
-      (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
+    return false if !authenticated?
+    return false if !@user.in_any_groups?(SiteSetting.invite_allowed_groups_map)
+    return false if !SiteSetting.max_invites_per_day.to_i.positive? && !is_staff?
+
+    groups.blank? || groups.all? { |g| can_edit_group?(g) }
   end
 
   def can_invite_to?(object, groups = nil)
