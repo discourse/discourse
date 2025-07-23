@@ -698,7 +698,8 @@
     }
   }
 
-  .read {
+  .read,
+  .bookmark {
     background-color: var(--secondary);
 
     a .d-icon {
