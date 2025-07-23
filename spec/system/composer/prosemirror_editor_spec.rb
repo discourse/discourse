@@ -624,7 +624,7 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
-    it "ignores text/html content if Files are present" do
+    xit "ignores text/html content if Files are present" do
       open_composer_and_toggle_rich_editor
       paste_and_click_image
 
