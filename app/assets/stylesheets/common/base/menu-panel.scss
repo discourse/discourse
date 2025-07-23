@@ -576,21 +576,6 @@
     margin: 0.5em 0;
   }
 
-  .d-icon,
-  &:hover .d-icon {
-    color: var(--primary-medium);
-  }
-
-  .icon {
-    color: var(--primary-high);
-  }
-
-  .btn-primary {
-    .d-icon {
-      color: var(--secondary);
-    }
-  }
-
   ul {
     display: flex;
     flex-flow: column wrap;
@@ -668,16 +653,25 @@
     a {
       display: flex;
       padding: var(--list-item-padding);
+
+      .item-label {
+        font-weight: bold;
+      }
+
+      .item-description {
+        color: var(--primary);
+        overflow: hidden; // clears the text from wrapping below icons
+        overflow-wrap: break-word;
+
+        @include line-clamp(2);
+      }
     }
 
     a,
     button {
       > div {
-        overflow: hidden; // clears the text from wrapping below icons
-        overflow-wrap: anywhere;
-
-        // Truncate items with more than 2 lines.
-        @include line-clamp(2);
+        display: flex;
+        flex-direction: column;
       }
     }
 
@@ -706,6 +700,10 @@
 
   .read {
     background-color: var(--secondary);
+
+    a .d-icon {
+      color: var(--primary-medium);
+    }
   }
 
   .none {
