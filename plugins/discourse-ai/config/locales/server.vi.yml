@@ -9,6 +9,8 @@ vi:
     overall_sentiment:
       yaxis: "Ngày"
   discourse_ai:
+    spam_detection:
+      logging_subject: "Phát hiện rác rưởi"
     ai_bot:
       tool_summary:
         search: "Tìm kiếm"

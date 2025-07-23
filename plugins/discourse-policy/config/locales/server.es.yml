@@ -33,5 +33,5 @@ es:
     policy_emails:
       select_title: "Establecer la frecuencia de correo electrónico de alerta de política a:"
       never: Nunca
-      when_away: Solo cuando no esté en la página
+      when_away: Solo cuando estés ausente
       always: Siempre

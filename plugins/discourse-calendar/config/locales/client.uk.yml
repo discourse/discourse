@@ -27,10 +27,10 @@ uk:
             topic_id:
               label: ID теми
     discourse_calendar:
-      invite_user_notification: "%{username} запросив тебе: %{description}"
+      invite_user_notification: "%{username} запросили Вас на: %{description}"
       on_holiday: "У відпустці"
-      disable_holiday: "Відключити"
-      enable_holiday: "Включити"
+      disable_holiday: "Вимкнути"
+      enable_holiday: "Увімкнути"
       holiday: "Свято"
       holidays:
         header_title: "Свята"
@@ -39,6 +39,7 @@ uk:
       date: "Дата"
       add_to_calendar: "Додати до календаря Google"
       toggle_timezone_offset_title: "Змінити часовий пояс"
+      local_time: "Місцевий час"
       region:
         title: "Регіон"
         none: "Немає"
@@ -347,7 +348,7 @@ uk:
       leave: "Залишити подію"
       edit_event: "Редагувати подію"
       export_event: "Експорт події"
-      created_by: "Ким створено"
+      created_by: "Створено"
       bulk_invite: "Масове запрошення"
       close_event: "Закрити подію"
       open_event: "Відкрити подію"
@@ -374,7 +375,7 @@ uk:
         csv_title: "CSV-масове запрошення"
       upcoming_events:
         title: "Майбутні події"
-        creator: "Творець"
+        creator: "Автор"
         status: "Статус"
         starts_at: "Починається о"
         all_events: "Всі події"
@@ -402,17 +403,17 @@ uk:
             not_going: "Не піду."
             interested: "Цікавить"
             going_count:
-              one: "%{count} йде"
+              one: "%{count} йдуть"
               few: "%{count} йдуть"
               many: "%{count} йдуть"
               other: "%{count} йдуть"
             not_going_count:
-              one: "%{count} не збирається"
+              one: "%{count} не збираються"
               few: "%{count} не збираються"
               many: "%{count} не збираються"
               other: "%{count} не збираються"
             interested_count:
-              one: "%{count} зацікавлений"
+              one: "%{count} зацікавлені"
               few: "%{count} зацікавлені"
               many: "%{count} зацікавлені"
               other: "%{count} зацікавлені"
@@ -461,8 +462,8 @@ uk:
             notification: "сповістити учасників"
           units:
             minutes: "хвилини"
-            hours: "години"
-            days: "дні"
+            hours: "годин"
+            days: "днів"
             weeks: "тижнів"
           periods:
             before: "до"
@@ -488,7 +489,7 @@ uk:
           label: "Посилання"
           placeholder: "Опціонально"
         location:
-          label: "Місцеположення"
+          label: "Місцезнаходження"
           placeholder: "Додайте місце розташування, посилання або щось інше."
         description:
           label: "Опис"

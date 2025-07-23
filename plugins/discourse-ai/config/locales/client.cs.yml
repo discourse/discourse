@@ -19,20 +19,22 @@ cs:
       scriptables:
         llm_report:
           fields:
+            sender:
+              label: "Odesílatel"
             topic_id:
               label: "ID tématu"
             title:
-              label: "Nadpis"
+              label: "Název"
             categories:
               label: "Kategorie"
             tags:
-              label: "Tagy"
+              label: "Štítky"
         llm_triage:
           fields:
             category:
               label: "Kategorie"
             tags:
-              label: "Tagy"
+              label: "Štítky"
             canned_reply:
               label: "Odpověď"
     discourse_ai:
@@ -63,25 +65,32 @@ cs:
         spam:
           name: "Spam"
       modals:
-        select_option: "Zvolit možnost..."
+        select_option: "Vyberte možnost..."
       spam:
         short_title: "Spam"
         last_seven_days: "Posledních 7 dní"
         enable: "Zapnout"
+        save_button: "Uložit změny"
         test_modal:
+          result: "Výsledek"
+          run: "Spustit test"
           spam: "Spam"
       usage:
+        short_title: "Použití"
         summary: "Souhrn"
         username: "Uživatelské jméno"
         total_requests: "Celkem požadavků"
+        request_tokens: "Tokeny požadavku"
+        response_tokens: "Tokeny odpovědi"
         periods:
           last_day: "Posledních 24 hodin"
           custom: "Vlastní…"
       ai_persona:
         back: "Zpět"
-        name: "Jméno"
+        name: "Název"
         edit: "Upravit"
         export: "Export"
+        import: "Import"
         description: "Popis"
         user: Uživatel
         save: "Uložit"
@@ -101,16 +110,20 @@ cs:
       tools:
         back: "Zpět"
         export: "Export"
-        name: "Jméno"
+        import: "Import"
+        name: "Název"
         description: "Popis"
         summary: "Souhrn"
         save: "Uložit"
         remove_parameter: "Smazat"
-        parameter_required: "Nezbytnosti"
+        parameter_required: "Povinné"
         edit: "Upravit"
+        test: "Spustit test"
         delete: "Smazat"
+        test_modal:
+          run: "Spustit test"
       llms:
-        display_name: "Jméno"
+        display_name: "Název"
         save: "Uložit"
         edit: "Upravit"
         back: "Zpět"
@@ -132,6 +145,7 @@ cs:
         next:
           title: "Další"
         tests:
+          title: "Spustit test"
           success: "Úspěch!"
         providers:
           aws_bedrock: "AWS Bedrock"
@@ -168,6 +182,7 @@ cs:
           trigger: "Zeptejte se AI"
           loading: "Umělá inteligence generuje"
           cancel: "Zrušit"
+          regen: "Zkusit znovu"
           confirm: "Potvrdit"
           discard: "Zrušit"
           changes: "Navrhované úpravy"
@@ -192,7 +207,7 @@ cs:
         thumbnail_suggestions:
           title: "Navrhované miniatury"
           select: "Vybrat"
-          selected: "Vybrané"
+          selected: "Zaškrtnuté"
         image_caption:
           button_label: "Popisek pomocí AI"
           generating: "Generování popisku..."
@@ -291,11 +306,6 @@ cs:
           disclaimer: "Generativní umělá inteligence může dělat chyby. Ověřte si důležité informace."
           placeholder: "Zeptejte se..."
           new: "Nová otázka"
-          min_input_length_message:
-            one: "Zpráva musí mít 1 nebo více znaků"
-            few: "Zpráva musí mít %{count} nebo více znaků"
-            many: "Zpráva musí mít %{count} nebo více znaků"
-            other: "Zpráva musí mít %{count} nebo více znaků"
           messages_sidebar_title: "Konverzace"
           today: "Dnes"
           last_7_days: "Posledních 7 dní"

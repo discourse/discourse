@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ko:
+  default_category_template:
+    name: 템플릿

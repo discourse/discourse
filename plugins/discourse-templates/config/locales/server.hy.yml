@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 hy:
+  default_category_template:
+    name: Ձևանմուշներ

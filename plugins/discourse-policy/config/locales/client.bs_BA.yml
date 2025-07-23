@@ -10,7 +10,7 @@ bs_BA:
       builder:
         insert: Unesi
         groups:
-          label: Grupe
+          label: Grupa
         version:
           label: Verzija
         accept:

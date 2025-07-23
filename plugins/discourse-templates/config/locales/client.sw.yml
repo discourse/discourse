@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 sw:
+  admin_js:
+    discourse_templates:
+      title: "Violezo"

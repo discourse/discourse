@@ -3738,6 +3738,8 @@ vi:
               content: "Quản trị"
             badges:
               content: "Huy hiệu"
+            filter:
+              content: "Lọc"
             topics:
               content: "Chủ đề"
               title: "Tất cả các chủ đề"
@@ -3779,6 +3781,9 @@ vi:
       spreadsheet:
         show: "Hiển thị"
         about: "Giới thiệu"
+    filter:
+      description:
+        yesterday: "Hôm qua"
     discovery:
       headings:
         categories: "Tất cả danh mục"
@@ -3904,6 +3909,8 @@ vi:
           title: "Webhooks"
         embedding:
           title: "Nhúng"
+      theme_site_settings:
+        default_value: "Mặc định"
       search:
         title: "Tìm kiếm"
         result_types:
@@ -4557,10 +4564,7 @@ vi:
           up_to_date: "Chủ đề được cập nhật, kiểm tra lần cuối:"
           has_overwritten_history: "Phiên bản chủ đề hiện tại không còn tồn tại vì lịch sử Git đã bị ghi đè bởi một lực đẩy."
           add: "Thêm"
-          theme_settings: "Cài đặt Themes"
-          overriden_settings_explanation: "Cài đặt bị ghi đè được đánh dấu bằng dấu chấm và có màu nổi bật. Để đặt lại các cài đặt này về giá trị mặc định, hãy nhấn nút đặt lại bên cạnh chúng."
           no_settings: "Theme này không có cài đặt."
-          theme_translations: "Bản dịch Theme"
           empty: "Không có mẫu nào"
           commits_behind:
             other: "Có %{count} cập nhật mới cho Theme"
@@ -4610,6 +4614,11 @@ vi:
             title: "Chọn bảng màu cơ bản"
             description: "Bảng màu cơ bản:"
           title: "Màu sắc"
+          edit: "Sửa"
+          filters:
+            all: "Tất cả"
+          active_badge:
+            text: "Kích hoạt"
           about: "Sửa đổi màu sắc mà chủ đề của bạn sử dụng. Tạo một bảng màu mới để bắt đầu."
           copy_name_prefix: "Bản sao của"
           undo: "Hoàn tác"
@@ -5029,7 +5038,6 @@ vi:
         activity: Hoạt động
         like_count: Đã like / Nhận
         last_100_days: "trong 100 ngày gần đây"
-        private_topics_count: Chủ đề riêng tư
         posts_read_count: Đọc bài viết
         post_count: Bài đăng đã được tạo
         second_factor_enabled: Đã bật xác thực hai yếu tố

@@ -61,9 +61,6 @@ he:
     chat_integration_webex_excerpt_length: "אורך מהפוסט שמופיע בתקציר Webex Teams"
     chat_integration_google_enabled: "הפעלת ספק שילוב הצ׳אט עם ‚Google Chat’"
     chat_integration_google_excerpt_length: "אורך מהפוסט שמופיע בתקציר ב־Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "בחלק מערוצי שילובי הצ׳אט יש שגיאות. נא לבקר ב<a href='%{base_path}/admin/plugins/chat-integration'>אגף שילובי הצ׳אט</a> כדי להבין יותר."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -187,7 +184,7 @@ he:
             (אם מספר כללים תואמים לפוסט, יופעל הכלל העליון מביניהם)
           no_rules: "לא מוגדרים כללים לערוץ זה. יש להריץ את הפקודה `‎/discourse help` להנחיות."
           rule_string: "*%{index})* *%{filter}* פוסטים תחת *%{category}*"
-          rule_string_tags_suffix: " עם התגיות: *%{tags}*"
+          rule_string_tags_suffix: " עם תגיות: *%{tags}*"
         parse_error: "לא הצלחתי להבין את זה, סליחה. יש להריץ את הפקודה `‎/discourse help` לקבלת הנחיות."
         create:
           created: "כלל נוצר בהצלחה"

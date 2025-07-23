@@ -36,7 +36,7 @@ ru:
       subscribe:
         help: Подпишитесь и поддержите этот сайт
     discourse_subscriptions:
-      title: Подписки
+      title: Плагин «Подписки» для Discourse
       admin_navigation: Подписки
       optional: Опционально
       navigation:
@@ -49,7 +49,7 @@ ru:
       campaign:
         title: Поддержите нас
         body: Нам нужна ваша помощь для поддержки и продуктивной работы этого сообщества!
-        success_title: Кампания успешно завершена!
+        success_title: Успех!
         success_body: Спасибо за вашу помощь в поддержании работы сообщества!
         subscribers: Подписчики
         goal_comparison: "<strong>%{current}</strong> из <strong>%{goal}</strong>"
@@ -79,7 +79,7 @@ ru:
         select: Выберите тарифный план
         interval:
           adverb:
-            day: Ежедневно
+            day: За день
             week: За неделю
             month: За месяц
             year: За год
@@ -93,11 +93,11 @@ ru:
         payments:
           id: Идентификатор платежа
           amount: Количество
-          created_at: Создано
+          created_at: Создан
         payments_help: Платежи отсутствуют
         plans:
           rate: Ставка
-          product: Имя
+          product: Название
         subscriptions_help: У вас нет активных подписок.
         subscriptions:
           id: ID подписки
@@ -107,8 +107,8 @@ ru:
           update_card:
             heading: "Обновить карту для подписки: %{sub_id}"
             single: "Обновить"
-          created_at: Создано
-          cancel: Отменить
+          created_at: Создан
+          cancel: Отмена
           cancelled: отменён
           operations:
             destroy:
@@ -394,7 +394,7 @@ ru:
           ZW: "Зимбабве"
       billing:
         name: ФИО
-        email: Email
+        email: Эл. почта
         phone: Телефонный номер
       confirmation:
         amount: Количество
@@ -407,7 +407,7 @@ ru:
         unconfigured: 'Сервис Stripe настроен неправильно. За дополнительной информацией обратитесь к описанию плагина: meta.discourse.org/t/discourse-subscriptions'
         on_meta: Подписки на Discourse на Meta
         dashboard:
-          title: Админка
+          title: Панель управления
           table:
             head:
               user: Пользователь
@@ -432,10 +432,10 @@ ru:
             description_help: Описание подписки.
             repurchaseable: Многократная покупка?
             repurchase_help: Разрешить многократную покупку продукта и связанных с ним тарифных планов
-            active: Активный
+            active: Активна
             active_help: Отключите эту настройку, пока ваш продукт не будет готов для потребителей.
-            created_at: Создано
-            updated_at: Обновлено
+            created_at: Создан
+            updated_at: Обновлена
           product_help: Прежде чем клиенты смогут подписаться на ваш сайт, вам нужно создать хотя бы один продукт и соответствующий тарифный план.
         plans:
           title: Планы ценообразования
@@ -458,8 +458,8 @@ ru:
             trial_help: Подписки на этот план автоматически начнутся с бесплатной пробной версии
             group: Группа пользователей
             group_help: Это группа пользователей, к которой добавляется клиент при создании подписки.
-            active: Активный
-            created_at: Создано
+            active: Активна
+            created_at: Создан
             recurring: Повторяющийся план?
         coupons:
           title: Купоны
@@ -479,6 +479,6 @@ ru:
             product: Товар
             plan: План
             status: Статус
-            created_at: Создано
+            created_at: Создан
         ask_refund: Вернуть последний платеж клиента?
         canceled: "Подписка отменена."

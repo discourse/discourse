@@ -8,6 +8,7 @@ cs:
   js:
     discourse_policy:
       builder:
+        save: Uložit změny
         insert: Vložit
         groups:
           label: Skupiny
@@ -16,9 +17,9 @@ cs:
         accept:
           label: Přijmout
         revoke:
-          label: zrušit
+          label: Odvolat
         private:
-          label: Soukromé?
+          label: Soukromá?
         send-email:
           label: Odeslat e-mail?
       preferences:

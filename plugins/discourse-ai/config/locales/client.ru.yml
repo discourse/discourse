@@ -25,7 +25,7 @@ ru:
             sort_by:
               label: "Сортировка"
             tag:
-              label: "Теги"
+              label: "Тег"
   js:
     discourse_automation:
       scriptables:
@@ -143,7 +143,7 @@ ru:
         disabled: "(отключен)"
         groups: "Группы:"
         no_persona: "Не установлен"
-        no_groups: "Нет"
+        no_groups: "Отсутствует"
         edit: "Изменить"
         expand_list:
           one: "(ещё %{count})"
@@ -170,6 +170,8 @@ ru:
           description: "С помощью выбранной LLM определяет потенциальный спам и отправляет его модераторам сайта в очередь проверки"
       modals:
         select_option: "Выберите вариант..."
+      layout:
+        table: "Таблица"
       spam:
         short_title: "Спам"
         title: "Настройте обработку спама"
@@ -195,7 +197,7 @@ ru:
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 или идентификатор публикации"
           result: "Результат"
           scan_log: "Журнал сканирования"
-          run: "Запустить тест"
+          run: "Выполнить тест"
           spam: "Спам"
           not_spam: "Не спам"
         stat_tooltips:
@@ -248,12 +250,13 @@ ru:
           replies:
             one: "Применить только к первому ответу"
             few: "Применить к первым %{count} ответам"
-            many: "Применить к первым %{count} ответам"
+            many: "Применить к стольким первым ответам: %{count}"
             other: "Применить к стольким первым ответам: %{count}"
         back: "Назад"
         name: "Название"
         edit: "Изменить"
         export: "Экспорт"
+        import: "Импорт"
         description: "Описание"
         no_llm_selected: "Языковая модель не выбрана"
         max_context_posts: "Максимум публикаций для учета в контексте"
@@ -336,6 +339,7 @@ ru:
         back: "Назад"
         short_title: "Инструменты"
         export: "Экспорт"
+        import: "Импорт"
         no_tools: "Вы еще не создали ни одного инструмента"
         name: "Название"
         new: "Новый инструмент"
@@ -355,13 +359,13 @@ ru:
         enum_value: "Значение перечисления"
         add_enum_value: "Добавить значение перечисления"
         edit: "Изменить"
-        test: "Запустить тест"
+        test: "Выполнить тест"
         delete: "Удалить"
         saved: "Инструмент сохранен"
         confirm_delete: "Действительно удалить этот инструмент?"
         test_modal:
           title: "Тест AI-инструмента"
-          run: "Запустить тест"
+          run: "Выполнить тест"
           result: "Результат теста"
       llms:
         short_title: "Большие языковые модели"
@@ -435,7 +439,7 @@ ru:
         next:
           title: "Далее"
         tests:
-          title: "Запустить тест"
+          title: "Выполнить тест"
           running: "Запуск теста..."
           success: "Успех!"
           failure: "При попытке связаться с моделью возникла ошибка: %{error}"
@@ -487,7 +491,8 @@ ru:
         context_menu:
           trigger: "Спросить AI"
           loading: "AI генерирует ответ"
-          cancel: "Отменить"
+          cancel: "Нет"
+          regen: "Попробовать снова"
           confirm: "Подтвердить"
           discard: "Отменить"
           changes: "Предлагаемые правки"
@@ -503,7 +508,7 @@ ru:
           close: "Закрыть"
           copy: "Копировать"
           copied: "Скопировано!"
-          cancel: "Отменить"
+          cancel: "Нет"
           insert_footnote: "Добавить сноску"
           footnote_disabled: "Автоматическая вставка отключена, нажмите кнопку «Копировать» и отредактируйте вручную."
           footnote_credits: "Объяснение от AI"
@@ -597,7 +602,7 @@ ru:
         llm: "Модель"
         pm_warning: "Сообщения чат-бота с AI регулярно отслеживаются модераторами."
         cancel_streaming: "Прекратить отвечать"
-        default_pm_prefix: "[Личные сообщения от AI-бота без названия]"
+        default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
         shortcut_title: "Начать личный чат с AI-ботом"
         share: "Копировать разговор с AI"
         conversation_shared: "Разговор скопирован"
@@ -646,7 +651,7 @@ ru:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
-          today: "Сегодня"
+          today: "За сегодня"
           last_7_days: "За последние 7 дней"
           last_30_days: "За последние 30 дней"
       sentiments:
@@ -660,7 +665,7 @@ ru:
             negative: "Негативное"
           group_types:
             category: "Категория"
-            tag: "Теги"
+            tag: "Тег"
           table:
             sentiment: "Настроение"
             total_count: "Всего"
@@ -673,7 +678,7 @@ ru:
             one: "Последний %{count} час"
             few: "Последние %{count} часа"
             many: "Последние %{count} часов"
-            other: "Последние %{count} часа"
+            other: "Последние %{count} часов"
         topic:
           title: "Сводка по теме"
           close: "Закрыть панель сводки"
@@ -683,7 +688,7 @@ ru:
             expanded: "Расширенный"
             expanded_description: "со сводками от AI"
       discobot_discoveries:
-        regular_results: "Новые темы"
+        regular_results: "Темы"
         collapse: "Свернуть"
         tooltip:
           actions:

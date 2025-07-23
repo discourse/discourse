@@ -195,7 +195,7 @@ id:
           title: "Tanya AI"
           loading: "AI sedang menghasilkan"
           close: "Tutup"
-          copy: "Menyalin"
+          copy: "Salin"
           copied: "Disalin!"
           cancel: "Batal"
           insert_footnote: "Tambahkan catatan kaki"
@@ -262,6 +262,7 @@ id:
           claude-3-haiku: "Claude 3 Haiku"
           claude-2: "Claude 2"
         conversations:
+          today: "Hari ini"
           last_7_days: "7 hari terakhir"
           last_30_days: "30 hari terakhir"
       sentiments:
@@ -271,7 +272,7 @@ id:
           group_types:
             category: "Kategori"
           table:
-            total_count: "Total"
+            total_count: "Jumlah"
       summarization:
         chat:
           title: "Meringkas pesan"

@@ -9,6 +9,8 @@ ug:
     discourse_assign:
       assigned: "تەقسىملەنگەن"
       group_everyone: "ھەممەيلەن"
+      assigned_to: "تەقسىم قىلىندى"
+      assigned_to_w_ellipsis: "تەقسىم قىلىندى..."
       reassign:
         title: "تەھرىر"
       assign_modal:
@@ -26,11 +28,17 @@ ug:
         quarterly: "پەسىللىك"
     user:
       notification_level_when_assigned:
+        watch_topic: "كۆزەتتىكى تېما"
+        track_topic: "تېما ئىزلا"
         do_nothing: "ھېچ ئىش قىلما"
       messages:
         assigned: "تەقسىملەنگەن"
       assignment_description:
         topic: "%{topic_title}"
+    search:
+      advanced:
+        assigned:
+          label: "تەقسىم قىلىندى"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:

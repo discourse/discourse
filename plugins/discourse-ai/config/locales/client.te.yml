@@ -34,7 +34,7 @@ te:
             tags:
               label: "ట్యాగులు"
             canned_reply:
-              label: "జవాబు"
+              label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
       features:
         back: "వెనుకకు"
@@ -45,7 +45,7 @@ te:
           one: "(మరో %{count})"
           other: "(మరో %{count})"
         filters:
-          all: "అన్ని"
+          all: "అన్నీ"
           reset: "రీసెట్ చేయండి"
         search:
           name: "శోధించండి"
@@ -67,9 +67,9 @@ te:
         export: "ఎగుమతి"
         description: "వివరణ"
         user: సభ్యుడు
-        save: "భద్రపరుచు"
+        save: "సేవ్ చేయండి"
         enabled: "ప్రారంభించబడిందా?"
-        delete: "తొలగించు"
+        delete: "తొలగించండి"
         response_format:
           open_modal: "సవరించండి"
           modal:
@@ -87,7 +87,7 @@ te:
         description: "వివరణ"
         summary: "సారాంశం"
         save: "సేవ్ చేయండి"
-        remove_parameter: "తొలగించు"
+        remove_parameter: "తీసివేయండి"
         parameter_required: "అవసరం"
         edit: "సవరించండి"
         delete: "తొలగించండి"
@@ -116,19 +116,19 @@ te:
           fake: "అనుకూల"
       ai_helper:
         context_menu:
-          cancel: "రద్దుచేయి"
+          cancel: "రద్దుచేయండి"
           confirm: "నిర్ధారించండి"
           discard: "విస్మరించండి"
         post_options_menu:
-          close: "మూసివేయి"
+          close: "మూసివేయండి"
           copy: "నకలు"
           copied: "కాపీ చేయబడింది!"
-          cancel: "రద్దుచేయి"
+          cancel: "రద్దుచేయండి"
         thumbnail_suggestions:
           select: "ఎంచుకోండి"
           selected: "ఎంపిక చేయబడినవి"
         image_caption:
-          save_caption: "భద్రపరుచు"
+          save_caption: "సేవ్ చేయండి"
           automatic_caption_dialog:
             confirm: "ప్రారంభించండి"
       embeddings:
@@ -155,7 +155,7 @@ te:
       sentiments:
         sentiment_analysis:
           filter_types:
-            all: "అన్ని"
+            all: "అన్నీ"
             neutral: "తటస్థ"
           group_types:
             category: "వర్గం"

@@ -181,11 +181,11 @@ zh_CN:
     broken_plugin_alert: "由插件 '%{name}' 引起"
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
     critical_deprecation:
-      notice: "<b>[管理员通知]</b> 您的一个主题或插件需要更新，以便与即将发布的 Discourse 核心更改兼容。"
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "确定的主题：<a target='_blank' href='%{path}'>'%{name}'</a>。"
-      plugin_source: "确定的插件：'%{name}'"
+      notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。 (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>了解更多</em></a>)"
+      theme_source: "主题 <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "插件 '%{name}'"
+      unknown_source: "您的某个主题或插件"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -1306,6 +1306,7 @@ zh_CN:
       suspended_notice: "此用户已被封禁至 %{date}。"
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
+      silenced_notice: "该用户将被禁言直至 %{date}。"
       silenced_permanently: "此用户已被禁言."
       silenced_reason: "原因："
       github_profile: "GitHub"
@@ -1375,6 +1376,8 @@ zh_CN:
           other: '<span class="%{className}">%{count}</span> 篇被举报的帖子'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 篇删除的帖子'
+        silencings:
+          other: '<span class="%{className}">%{count}</span> 禁言'
         suspensions:
           other: '<span class="%{className}">%{count}</span> 个封禁'
         warnings_received:
@@ -4556,6 +4559,8 @@ zh_CN:
             badges:
               content: "徽章"
               title: "所有可获得的徽章"
+            filter:
+              content: "筛选"
             topics:
               content: "话题"
               title: "所有话题"
@@ -4705,6 +4710,12 @@ zh_CN:
           save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
     safari_15_warning: "您的浏览器很快将与此社区不兼容。若要继续参与此社区，请升级您的浏览器或 <a href='%{url}'>了解更多信息</a>。"
+    filter:
+      description:
+        yesterday: "昨天"
+        last_week: "上周"
+        last_month: "上个月"
+        last_year: "去年"
     discovery:
       headings:
         all:
@@ -4772,13 +4783,13 @@ zh_CN:
       reports:
         title: "可用报告列表"
         meta_doc: "报告是帮助您了解网站上所发生事情的有力工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
-        sidebar_title: "举报"
+        sidebar_title: "报告"
         back: "返回到所有报告"
       config_sections:
         account:
           title: "帐户"
         reports:
-          title: "举报"
+          title: "报告"
         community:
           title: "社区"
         appearance:
@@ -5007,7 +5018,6 @@ zh_CN:
           header_description: "关注词是一种审核工具，可以执行多种不同的操作，包括屏蔽、审查、链接或举报包含某些词的帖子"
         color_palettes:
           title: "调色板"
-          header_description: "调色板定义了整个网站界面使用的核心颜色，而主题可以提供额外的样式、布局和组件。两者可以协同工作，打造出您网站的独特外观和感觉，并且两者都可供用户选择他们喜欢的颜色."
         emoji:
           title: "表情符号"
           header_description: "添加可供所有人使用的新表情符号。选择多个文件，使用其文件名创建表情符号。所选群组将用于同时添加的所有文件。"
@@ -5100,6 +5110,10 @@ zh_CN:
         embedding:
           title: "嵌入"
           header_description: "Discourse 能够使用创建 IFRAME 的 Javascript API 在远程网站中嵌入话题的评论"
+      theme_site_settings:
+        setting: "设置"
+        default_value: "默认"
+        overridden_value: "覆盖值： %{value}"
       search:
         modal_title: "在管理员页面中搜索所有内容"
         title: "搜索"
@@ -6109,11 +6123,7 @@ zh_CN:
           up_to_date: "主题已经是最新版本，上次检查日期："
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
-          theme_settings: "主题设置"
-          edit_objects_theme_setting: "对象设置编辑器"
-          overriden_settings_explanation: "被覆盖的设置标有一个点并具有突出显示的颜色。要将这些设置重置为默认值，请按它们旁边的重置按钮。"
           no_settings: "此主题没有设置。"
-          theme_translations: "主题翻译"
           empty: "无条目"
           commits_behind:
             other: "主题落后了 %{count} 次提交！"
@@ -6199,7 +6209,12 @@ zh_CN:
             title: "选择基础调色板"
             description: "基础调色板："
           title: "颜色"
-          edit: "编辑调色板"
+          edit: "编辑"
+          filters:
+            all: "所有"
+            user_selectable: "用户可选"
+          active_badge:
+            text: "有效"
           long_title: "调色板"
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
@@ -6846,7 +6861,7 @@ zh_CN:
         activity: 活动
         like_count: 点赞/获赞
         last_100_days: "在最近 100 天"
-        private_topics_count: 不公开话题
+        private_topics_count: 个人信息
         posts_read_count: 已读帖子
         post_count: 创建的帖子
         second_factor_enabled: 双重身份验证已启用

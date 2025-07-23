@@ -18,3 +18,4 @@ sr:
       delete: "Obriši"
       query_groups: "Grupe"
       query_description: "Opis"
+      reset_params: "Reset"

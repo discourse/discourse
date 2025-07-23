@@ -36,7 +36,7 @@ tr_TR:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
     vote:
-      title: "Oy verin"
+      title: "Oy ver"
       description: "Bu gönderiye oy verin"
       short_description: "Bu gönderiye oy verin"
       long_form: "bu gönderiye oy verdi"
@@ -62,7 +62,7 @@ tr_TR:
         comment_already_handled: "Teşekkürler, ancak bu yorumu daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
         actions:
           agree_and_keep_comment:
-            title: "Yorumu sakla"
+            title: "Yorumu tut"
             description: "Bayrağı kabul edin ve yorumu değiştirmeyin."
           agree_and_keep_deleted:
             title: "Yorumu Silinmiş hâlde tut"

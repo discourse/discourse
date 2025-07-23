@@ -36,9 +36,9 @@ it:
       subscribe:
         help: Sostieni questo sito abbonandoti
     discourse_subscriptions:
-      title: Abbonamenti a Discourse
+      title: Abbonamenti Discourse
       admin_navigation: Abbonamenti
-      optional: Opzionale
+      optional: Facoltativo
       navigation:
         billing: Fatturazione
         payments: Pagamenti
@@ -49,7 +49,7 @@ it:
       campaign:
         title: Sostienici
         body: Abbiamo bisogno del tuo aiuto per continuare a garantire l'attività di questa community!
-        success_title: Riuscito!
+        success_title: Operazione riuscita!
         success_body: Ti ringraziamo del tuo sostegno che ci aiuta a proseguire l'attività di questa community!
         subscribers: Abbonati
         goal_comparison: "<strong>%{current}</strong> di <strong>%{goal}</strong>"
@@ -93,7 +93,7 @@ it:
         payments:
           id: ID pagamento
           amount: Importo
-          created_at: Creazione
+          created_at: Creato
         payments_help: Non ci sono pagamenti
         plans:
           rate: Tariffa
@@ -107,7 +107,7 @@ it:
           update_card:
             heading: "Aggiorna carta per abbonamento: %{sub_id}"
             single: "Aggiorna"
-          created_at: Creazione
+          created_at: Creato
           cancel: annulla
           cancelled: annullato
           operations:
@@ -434,7 +434,7 @@ it:
             repurchase_help: Consenti l'acquisto multiplo del prodotto e dei relativi piani di abbonamento.
             active: Attivi
             active_help: Disattiva questa opzione finché il tuo prodotto non è pronto per i consumatori.
-            created_at: Creazione
+            created_at: Creato
             updated_at: Aggiornamento
           product_help: Prima che i clienti possano abbonarsi al tuo sito, devi creare almeno un prodotto e un piano tariffario a esso associato.
         plans:
@@ -458,8 +458,8 @@ it:
             trial_help: Gli abbonamenti a questo piano inizieranno automaticamente con una prova gratuita di questa durata
             group: Gruppo di utenti
             group_help: Si tratta del gruppo di utenti Discourse a cui il cliente viene aggiunto alla creazione dell''abbonamento.
-            active: Attivo
-            created_at: Creazione
+            active: Attivi
+            created_at: Creato
             recurring: Piano periodico?
         coupons:
           title: Coupon
@@ -479,6 +479,6 @@ it:
             product: Prodotto
             plan: Piano
             status: Stato
-            created_at: Creazione
+            created_at: Creato
         ask_refund: Rimborsare l'ultimo pagamento effettuato dal cliente?
         canceled: "L'abbonamento è stato annullato."

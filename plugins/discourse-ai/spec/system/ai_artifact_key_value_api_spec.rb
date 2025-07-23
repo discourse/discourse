@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Artifact Key-Value API", type: :system, js: true do
+RSpec.describe "AI Artifact Key-Value API", type: :system do
   fab!(:user)
   fab!(:private_message_topic) { Fabricate(:private_message_topic, user: user) }
   fab!(:private_message_post) { Fabricate(:post, topic: private_message_topic, user: user) }

@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 ko:
+  admin_js:
+    discourse_templates:
+      title: "템플릿"
+  js:
+    templates:
+      source: "출처"

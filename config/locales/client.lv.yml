@@ -2822,6 +2822,8 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
+            filter:
+              content: "Filtrs"
             topics:
               content: "Tēmas"
             faq:
@@ -2857,6 +2859,9 @@ lv:
       spreadsheet:
         show: "Parādīt"
         about: "Par"
+    filter:
+      description:
+        yesterday: "Vakar"
     discovery:
       headings:
         categories: "Visas sadaļas"
@@ -2958,6 +2963,8 @@ lv:
               header_description: "URL kas ir šajā sarakstā tika publicēti no lietotājiem, kas ir identificēti kā spameri"
         embedding:
           title: "Ieguldīšana"
+      theme_site_settings:
+        default_value: "Noklusējums"
       search:
         title: "Meklēt"
         result_types:
@@ -3335,6 +3342,11 @@ lv:
             required: "*nepieciešams"
         colors:
           title: "Krāsas"
+          edit: "Labot"
+          filters:
+            all: "Visi"
+          active_badge:
+            text: "Aktīvs"
           undo: "Atsaukt"
           revert: "Atgriezt"
           primary:
@@ -3600,7 +3612,6 @@ lv:
         activity: Aktivitāte
         like_count: '"Patīk" doti / saņemti'
         last_100_days: "Pēdējās 100 dienās"
-        private_topics_count: Privātas tēmas
         posts_read_count: Ieraksti izlasīti
         post_count: Ieraksti
         topics_entered: Tēmas apskatītas.

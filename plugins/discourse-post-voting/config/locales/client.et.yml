@@ -29,4 +29,5 @@ et:
                 title: "Ei nõustu"
       topic:
         sort_by: "Järjesta"
+        votes: "HInnangud"
         activity: "Aktiivsus"

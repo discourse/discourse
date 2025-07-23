@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 el:
+  default_category_template:
+    name: Πρότυπα

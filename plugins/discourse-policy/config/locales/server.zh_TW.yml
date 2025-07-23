@@ -9,6 +9,7 @@ zh_TW:
     unaccepted-policies:
       labels:
         topic_id: 話題 ID
+        user_id: 使用者 ID
   user_notifications:
     policy_email:
       from: "%{site_name}"

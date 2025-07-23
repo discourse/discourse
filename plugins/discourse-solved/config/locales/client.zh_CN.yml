@@ -28,7 +28,6 @@ zh_CN:
       solution: "解决方案"
       solution_summary:
         other: "解决方案"
-      accepted_html: "已由 <span class='by'><a href data-user-card='%{username_lower}'>%{username}</a></span> 在<a href='%{post_path}' class='back'>帖子 #%{post_number}</a> 中解决 %{icon}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "所有"
@@ -44,7 +43,7 @@ zh_CN:
         title: "您的帖子已被标记为解决方案"
     topic_statuses:
       solved:
-        help: "此话题已有解决方案"
+        help: "此话题有解决方案"
     search:
       advanced:
         statuses:

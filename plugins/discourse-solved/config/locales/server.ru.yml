@@ -29,7 +29,7 @@ ru:
   reports:
     accepted_solutions:
       title: "Решённые вопросы"
-      xaxis: "День"
+      xaxis: "Дата"
       yaxis: "Всего"
   solved:
     no_solutions:

@@ -14,7 +14,7 @@ lv:
               zero: "Ievadiet vismaz %{count} simbolus"
               one: "Ievadiet vismaz %{count} simbolu"
               other: "Ievadiet vismaz %{count} simbolus"
-          edit: "rediģēt"
+          edit: "labot"
           cancel: "atcelt"
           user:
             deleted: "(lietotājs dzēsts)"

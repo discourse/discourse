@@ -8,6 +8,7 @@ ug:
   js:
     discourse_policy:
       builder:
+        save: ئۆزگەرتىشنى ساقلا
         insert: قىستۇر
         groups:
           label: گۇرۇپپا

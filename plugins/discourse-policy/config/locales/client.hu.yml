@@ -8,6 +8,7 @@ hu:
   js:
     discourse_policy:
       builder:
+        save: Módosítások mentése
         insert: Beszúrás
         groups:
           label: Csoportok
@@ -26,4 +27,5 @@ hu:
         policy_emails:
           email_frequency_options:
             never: Soha
+            when_away: Csak ha távol van
             always: Mindig

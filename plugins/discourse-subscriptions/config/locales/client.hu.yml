@@ -7,15 +7,15 @@
 hu:
   js:
     discourse_subscriptions:
-      optional: Opcionális
+      optional: Nem kötelező
       campaign:
-        success_title: Siker!
+        success_title: Sikeres!
       plans:
         interval:
           adverb:
-            day: Napi
-            week: Heti
-            month: Havi
+            day: Naponta
+            week: Hetente
+            month: Havonta
             year: Éves
       user:
         payments:
@@ -28,6 +28,68 @@ hu:
             single: "Frissítés"
           created_at: Létrehozott
           cancel: mégse
+      subscribe:
+        cardholder_address:
+          city: Város
+        countries:
+          AR: "Argentína"
+          AU: "Ausztrália"
+          AT: "Ausztria"
+          BR: "Brazília"
+          CA: "Kanada"
+          CL: "Chile"
+          CO: "Kolumbia"
+          CR: "Costa Rica"
+          HR: "Horvátország"
+          CZ: "Cseh Köztársaság"
+          DK: "Dánia"
+          EE: "Észtország"
+          FI: "Finnország"
+          FR: "Franciaország"
+          GE: "Grúzia"
+          DE: "Németország"
+          GR: "Görögország"
+          GG: "Guernsey"
+          HK: "Hongkong"
+          HU: "Magyarország"
+          IS: "Izland"
+          IN: "India"
+          IE: "Írország"
+          IM: "Man-sziget"
+          IT: "Olaszország"
+          JP: "Japán"
+          JE: "Jersey"
+          LV: "Lettország"
+          LI: "Liechtenstein"
+          LT: "Litvánia"
+          LU: "Luxemburg"
+          MY: "Malajzia"
+          MX: "Mexikó"
+          MA: "Marokkó"
+          NL: "Hollandia"
+          NZ: "Új-Zéland"
+          NG: "Nigéria"
+          "NO": "Norvégia"
+          PE: "Peru"
+          PH: "Fülöp-szigetek"
+          PL: "Lengyelország"
+          PT: "Portugália"
+          RO: "Románia"
+          RU: "Orosz Föderáció"
+          SA: "Szaúd-Arábia"
+          SG: "Szingapúr"
+          SK: "Szlovákia"
+          SI: "Szlovénia"
+          ZA: "Dél-afrikai Köztársaság"
+          ES: "Spanyolország"
+          SE: "Svédország"
+          CH: "Svájc"
+          TH: "Thaiföld"
+          TN: "Tunézia"
+          TR: "Törökország"
+          UA: "Ukrajna"
+          GB: "Egyesült Királyság"
+          US: "Egyesült Államok"
       billing:
         email: E-mail
       admin:

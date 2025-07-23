@@ -384,6 +384,9 @@ de:
         content_creator:
           name: "Inhaltsersteller"
           description: "Standard-Persona für die HyDE-Suche"
+        report_runner:
+          name: "Berichtsausführer"
+          description: "Standard-Persona, die im Automatisierungsskript für Berichte verwendet wird."
       topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
       summarizing: "Thema zusammenfassen"
       searching: "Suche nach: „%{query}“"
@@ -571,7 +574,7 @@ de:
       endpoints:
         not_configured: "%{display_name} (nicht konfiguriert)"
         configuration_hint:
-          one: "Vergewissere dich, dass die Einstellung \"%{settings}\" konfiguriert wurde."
+          one: "Vergewissere dich, dass die Einstellung `%{settings}` konfiguriert wurde."
           other: "Vergewissere dich, dass diese Einstellungen konfiguriert wurden: %{settings}"
       delete_failed:
         one: "Wir konnten dieses Modell nicht löschen, weil es von %{settings} verwendet wird. Aktualisiere die Einstellung und versuche es erneut."
@@ -606,9 +609,6 @@ de:
       user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
       prompt_message_length: Die Nachricht %{idx} hat die 1000-Zeichen-Grenze überschritten.
       persona_already_exists: Eine Persona mit dem Namen %{name} existiert bereits.
-      custom_tool_exists:
-        one: "Ein benutzerdefiniertes Tool mit dem Namen %{names} existiert bereits."
-        other: "Benutzerdefinierte Tools mit den Namen %{names} existieren bereits."
   dashboard:
     problem:
       ai_llm_status: "Bei dem LLM-Modell: %{model_name} treten Probleme auf. Bitte überprüfe <a href='%{url}'>die Konfigurationsseite des Modells</a>."

@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  admin_js:
+    discourse_templates:
+      title: "قالب‌ها"
   js:
     templates:
       filter_hint: "فیلتر بر اساس عنوان..."

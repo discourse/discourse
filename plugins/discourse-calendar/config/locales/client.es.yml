@@ -112,7 +112,7 @@ es:
           cl: "Chile"
           co: "Colombia"
           cr: "Costa Rica"
-          cz: "Republica checa"
+          cz: "República Checa"
           de_bb: "Alemania (de_bb)"
           de_be: "Alemania (de_be)"
           de_bw: "Alemania (de_bw)"
@@ -241,7 +241,7 @@ es:
           rs_la: "Serbia (rs_la)"
           ru: "Federación Rusa"
           se: "Suecia"
-          sa: "Arabia Saudita"
+          sa: "Arabia Saudí"
           sg: "Singapur"
           si: "Eslovenia"
           sk: "Eslovaquia"
@@ -307,6 +307,7 @@ es:
           ve: "Venezuela"
           vi: "Islas Vírgenes (EE. UU.)"
           za: "Sudáfrica"
+          zw: "Zimbabue"
       toolbar_button:
         today: "Hoy"
         month: "Mes"
@@ -322,7 +323,7 @@ es:
         after_event_reminder: "Un evento ha terminado"
         ongoing_event_reminder: "Un evento está en curso"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} ha configurado automáticamente tu asistencia y te ha invitado a %{description}"
+        invite_user_predefined_attendance_notification_html: "%{username} ha establecido automáticamente tu asistencia y te ha invitado a %{description}"
         before_event_reminder_html: "Un evento está a punto de comenzar %{description}"
         after_event_reminder_html: "Un evento ha finalizado %{description}"
         ongoing_event_reminder_html: "Hay un evento en curso %{description}"
@@ -331,7 +332,7 @@ es:
       edit_reason_opened: "Evento abierto"
       topic_title:
         starts_at: "El evento comenzará: %{date}"
-        ended_at: "Evento terminó: %{date}"
+        ended_at: "El evento terminó: %{date}"
         ends_in_duration: "Termina en %{duration}"
       show_all: "Mostrar todos"
       show_participants: "Mostrar participantes"
@@ -357,7 +358,7 @@ es:
       bulk_invite_modal:
         confirm: "confirmar"
         text: "Subir archivo CSV"
-        title: "Invitaciones masivas"
+        title: "Invitaciones en masa"
         success: "Archivo subido correctamente, se te notificará mediante un mensaje cuando se complete el proceso."
         error: "Lo sentimos, el formato del archivo debe ser CSV."
         confirmation_message: "Está a punto de notificar a todos en el archivo subido."
@@ -397,13 +398,13 @@ es:
             not_going: "No asistiré"
             interested: "Estoy interesado"
             going_count:
-              one: "%{count} asistirá"
+              one: "%{count} asistirán"
               other: "%{count} asistirán"
             not_going_count:
-              one: "%{count} no asistirá"
+              one: "%{count} no asistirán"
               other: "%{count} no asistirán"
             interested_count:
-              one: "%{count} interesado"
+              one: "%{count} interesados"
               other: "%{count} interesados"
             invited_count:
               one: "%{count} usuario invitado"

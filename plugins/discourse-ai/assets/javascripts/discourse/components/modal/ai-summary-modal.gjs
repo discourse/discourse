@@ -11,7 +11,7 @@ import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
@@ -210,7 +210,7 @@ export default class AiSummaryModal extends Component {
           {{i18n "summary.summarized_on" date=this.summarizedOn}}
           <DTooltip @placements={{array "top-end"}}>
             <:trigger>
-              {{dIcon "circle-info"}}
+              {{icon "circle-info"}}
             </:trigger>
             <:content>
               {{i18n "summary.model_used" model=this.summarizedBy}}

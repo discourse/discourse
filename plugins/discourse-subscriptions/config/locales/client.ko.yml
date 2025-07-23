@@ -7,7 +7,7 @@
 ko:
   js:
     discourse_subscriptions:
-      optional: 선택사항
+      optional: 선택 사항
       campaign:
         success_title: 성공!
       plans:
@@ -19,17 +19,26 @@ ko:
             year: 연
       user:
         payments:
-          created_at: 생성일자
+          created_at: 생성됨
         plans:
-          product: 이름
+          product: 그룹명
         subscriptions:
           status: 상태
           update_card:
             single: "업데이트"
-          created_at: 생성일자
+          created_at: 생성됨
           cancel: 취소
       subscribe:
         countries:
+          AR: "아르헨티나"
+          AU: "오스트레일리아"
+          AT: "오스트리아"
+          BR: "브라질"
+          CA: "캐나다"
+          HR: "크로아티아"
+          HK: "홍콩"
+          IS: "아이슬란드"
+          IN: "인도"
           MS: "Montserrat"
       billing:
         email: 이메일
@@ -43,12 +52,12 @@ ko:
           product:
             description: 내용
             active: 활성화 사용자
-            created_at: 생성일자
+            created_at: 생성됨
             updated_at: 업데이트
         plans:
           plan:
             active: 활성화 사용자
-            created_at: 생성일자
+            created_at: 생성됨
         coupons:
           active: 활성화 사용자?
           actions: 작업
@@ -56,4 +65,4 @@ ko:
           subscription:
             user: 사용자
             status: 상태
-            created_at: 생성일자
+            created_at: 생성됨

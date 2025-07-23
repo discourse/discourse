@@ -311,7 +311,7 @@ fi:
         github_pull_request_diff: "GitHub-vetopyyntöero"
         random_picker: "Satunnainen valitsin"
         categories: "Listaa alueet"
-        search: "Haku"
+        search: "Hae"
         tags: "Listaa tunnisteet"
         time: "Aika"
         summarize: "Tee yhteenveto"

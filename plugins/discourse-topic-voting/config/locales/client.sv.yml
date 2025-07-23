@@ -15,14 +15,11 @@ sv:
       votes_nav_help: "ämnen med de flesta rösterna"
       voted: "Du röstade i detta ämne"
       allow_topic_voting: "Låt användare rösta om ämnen i denna kategori"
-      vote_title: "Röst"
+      vote_title: "Rösta"
       vote_title_plural: "Röster"
       voted_title: "Röstade"
       voting_closed_title: "Stängd"
       voting_limit: "Begränsa"
-      votes_left:
-        one: "Du har %{count} röst kvar, se <a href='%{path}'>dina röster</a>."
-        other: "Du har %{count} röster kvar, se <a href='%{path}'>dina röster</a>."
       votes_left_button_title:
         one: "Du har %{count} röst kvar."
         other: "Du har %{count} röster kvar."
@@ -30,7 +27,7 @@ sv:
         one: "%{count} röst"
         other: "%{count} röster"
       anonymous_button:
-        one: "Röst"
+        one: "Rösta"
         other: "Röster"
       remove_vote: "Ta bort röst"
       no_votes_title_self: "Du har inte röstat på något ämne ännu"

@@ -37,7 +37,7 @@ et:
         watch: 'Kõik postitused ja vastused'
       rule_table:
         filter: "Filter"
-        category: "Kategooria"
+        category: "Kategooriad"
         tags: "Sildid"
         edit_rule: "Muuda"
         delete_rule: "Kustuta"
@@ -52,13 +52,13 @@ et:
       edit_rule_modal:
         title: Muuda reeglit
         save: Salvesta reegel
-        cancel: Tühista
+        cancel: Loobu
         provider: Teenusepakkuja
         type: Tüüp
         channel: Kanal
         filter: Filter
-        category: Kategooria
-        group: Grupp
+        category: Kategooriad
+        group: Rühm
         tags: Sildid
       provider:
         slack:
@@ -85,7 +85,7 @@ et:
           param:
             identifier:
               title: Kanal
-              help: "nt. #kanal, @kasutajanimi."
+              help: "nt. #channel, @username."
         matrix:
           param:
             name:

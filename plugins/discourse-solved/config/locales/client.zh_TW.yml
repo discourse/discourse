@@ -22,7 +22,6 @@ zh_TW:
       solution: "解決方式"
       solution_summary:
         other: "解決方案"
-      accepted_html: "%{icon} 解決了 <span class='by'>通過 <a href data-user-card='%{username_lower}'>%{username}</a></span> 在 <a href='%{post_path}' class='back'>貼文 ＃%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "全部"

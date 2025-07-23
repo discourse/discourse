@@ -12,8 +12,12 @@ sr:
           label: Grupe
         version:
           label: Verzija
+        accept:
+          label: Prihvati
         revoke:
           label: Povuci
+        private:
+          label: Privatna?
       preferences:
         policy_emails:
           email_frequency_options:

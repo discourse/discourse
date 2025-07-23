@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 sw:
+  default_category_template:
+    name: Violezo

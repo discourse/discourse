@@ -20,7 +20,7 @@ fi:
       group_mention_template: "Maininnat: @%{name}"
       group_message_template: "Viestejä käyttäjälle: @%{name}"
       choose_group: "(valitse ryhmä) "
-      all_categories: "(kaikki alueet)"
+      all_categories: "(kaikki luokat)"
       all_tags: "(kaikki tunnisteet) "
       create_rule: "Luo sääntö"
       create_channel: "Luo kanava"
@@ -46,14 +46,14 @@ fi:
         thread: 'Kaikki viestit, joissa on ketjutettuja vastauksia'
       rule_table:
         filter: "Suodatin"
-        category: "Alue"
+        category: "Luokka"
         tags: "Tunnisteet"
         edit_rule: "Muokkaa"
         delete_rule: "Poista"
       edit_channel_modal:
         title: "Muokkaa kanavaa"
         save: "Tallenna kanava"
-        cancel: "Peru"
+        cancel: "Peruuta"
         provider: "Palveluntarjoaja"
         channel_validation:
           ok: "Voimassa"
@@ -61,12 +61,12 @@ fi:
       edit_rule_modal:
         title: Muokkaa sääntöä
         save: Tallenna sääntö
-        cancel: Peru
+        cancel: Peruuta
         provider: Palveluntarjoaja
         type: Tyyppi
         channel: Kanava
         filter: Suodatin
-        category: Alue
+        category: Luokka
         group: Ryhmä
         tags: Tunnisteet
         instructions:
@@ -104,7 +104,7 @@ fi:
               title: "Nimi"
               help: "Kanavaa kuvaava nimi. Sitä ei käytetä Discordiin yhdistämiseen."
             webhook_url:
-              title: Webhookin URL
+              title: Webhookin URL-osoite
               help: Webhookin URL, joka on luotu Discordin palvelinasetuksissa
         guilded:
           title: "Guilded"
@@ -113,7 +113,7 @@ fi:
               title: "Nimi"
               help: "Kanavaa kuvaava nimi. Sitä ei käytetä Guildediin yhdistämiseen"
             webhook_url:
-              title: Webhookin URL
+              title: Webhookin URL-osoite
               help: Webhookin URL, joka on luotu Guildedin palvelinasetuksissa
         mattermost:
           title: "Mattermost"
@@ -151,7 +151,7 @@ fi:
           param:
             identifier:
               title: Kanava
-              help: "esim. #kanava, @käyttäjänimi"
+              help: "esim. #kanava, @käyttäjänimi."
           errors:
             invalid_channel: "Tätä kanavaa ei ole olemassa Rocket Chatissa"
         gitter:
@@ -161,7 +161,7 @@ fi:
               title: "Nimi"
               help: "Gitter-huoneen nimi, esim. gitterHQ/services."
             webhook_url:
-              title: "Webhookin URL"
+              title: "Webhookin URL-osoite"
               help: "URL-osoite, joka annetaan, kun luot uuden integraation Gitter-huoneessa."
         flowdock:
           title: "Flowdock"
@@ -184,7 +184,7 @@ fi:
               title: "Nimi"
               help: "Teams-kanavan nimi, esim. discourse"
             webhook_url:
-              title: "Webhookin URL"
+              title: "Webhookin URL-osoite"
               help: "URL-osoite, joka annetaan, kun luot uuden saapuvan webhookin"
           errors:
             invalid_channel: "Tätä kanavaa ei ole olemassa Microsoft Teamsissa"
@@ -206,7 +206,7 @@ fi:
               title: "Nimi"
               help: "Webex-tilan nimi, esim. discourse"
             webhook_url:
-              title: "Webhookin URL"
+              title: "Webhookin URL-osoite"
               help: "URL-osoite, joka annetaan, kun luot uuden saapuvan webhookin"
           errors:
             invalid_channel: "Tätä kanavaa ei ole olemassa Webexissä"
@@ -217,7 +217,7 @@ fi:
               title: "Nimi"
               help: "Kanavan nimi (näkyy vain Discoursen ylläpitäjän käyttöliittymässä)"
             webhook_url:
-              title: "Webhookin URL"
+              title: "Webhookin URL-osoite"
               help: "URL-osoite, joka annetaan, kun luot uuden webhookin"
     discourse_automation:
       scriptables:

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 be:
+  default_category_template:
+    name: шаблоны

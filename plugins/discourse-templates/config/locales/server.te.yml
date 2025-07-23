@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 te:
+  default_category_template:
+    name: టెంప్లేట్లు

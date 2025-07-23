@@ -29,7 +29,6 @@ pt_BR:
       solution_summary:
         one: "solução"
         other: "soluções"
-      accepted_html: "%{icon} resolvido <span class='by'>por <a href data-user-card='%{username_lower}'>%{username}</a></span> em <a href='%{post_path}' class='back'>postagem #%{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tudo"

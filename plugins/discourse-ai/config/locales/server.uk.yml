@@ -150,6 +150,8 @@ uk:
         other_content_in_pm: "Особисті повідомлення, що містять дописи інших людей, не можна публікувати публічно"
         failed_to_share: "Не вдалося поділитися розмовою"
         conversation_deleted: "Спільний доступ до розмови успішно видалено"
+    spam_detection:
+      logging_subject: "Виявлення спаму"
     ai_bot:
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
       personas:
@@ -251,7 +253,6 @@ uk:
         web_browser: "Читання <a href='%{url}'>%{url}</a>"
         github_search_files: "Шукав «%{keywords}» в %{repo}/%{branch}"
         github_search_code: "Шукав '%{query}' у %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>%{repo}"
         github_file_content: "Отриманий вміст %{file_paths} з %{repo_name}@%{branch}"
         random_picker: "Вибір із %{options}, вибрано: %{result}"
         read: "Читання: <a href='%{url}'>%{title}</a>"

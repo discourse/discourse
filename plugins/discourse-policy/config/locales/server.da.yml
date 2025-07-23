@@ -9,6 +9,7 @@ da:
     unaccepted-policies:
       labels:
         topic_id: Emne ID
+        user_id: Bruger ID
   user_notifications:
     policy_email:
       from: "%{site_name}"

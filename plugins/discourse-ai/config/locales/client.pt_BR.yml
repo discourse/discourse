@@ -88,7 +88,7 @@ pt_BR:
             temperature:
               label: "Temperatura"
             top_p:
-              label: "Maior P"
+              label: "P Máximo"
         llm_tool_triage:
           fields:
             model:
@@ -168,6 +168,8 @@ pt_BR:
           description: "Identifica possíveis spams usando o LLM selecionado e os sinaliza para inspeção pela moderação do site na fila de revisão"
       modals:
         select_option: "Selecione uma opção..."
+      layout:
+        table: "Tabela"
       spam:
         short_title: "Spam"
         title: "Configurar tratamento de spam"
@@ -193,7 +195,7 @@ pt_BR:
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 ou ID da postagem"
           result: "Resultado"
           scan_log: "Registro de verificação"
-          run: "Rodar teste"
+          run: "Executar teste"
           spam: "Spam"
           not_spam: "Não é spam"
         stat_tooltips:
@@ -250,6 +252,7 @@ pt_BR:
         name: "Nome"
         edit: "Editar"
         export: "Exportar"
+        import: "Importar"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
         max_context_posts: "Máximo de postagens de contexto"
@@ -332,6 +335,7 @@ pt_BR:
         back: "Voltar"
         short_title: "Ferramentas"
         export: "Exportar"
+        import: "Importar"
         no_tools: "Você ainda não criou nenhuma ferramenta"
         name: "Nome"
         new: "Nova ferramenta"
@@ -351,13 +355,13 @@ pt_BR:
         enum_value: "Valor da enumeração"
         add_enum_value: "Adicionar valor da enumeração"
         edit: "Editar"
-        test: "Rodar teste"
+        test: "Executar teste"
         delete: "Excluir"
         saved: "Ferramenta salva"
         confirm_delete: "Tem certeza de que deseja excluir esta ferramenta?"
         test_modal:
           title: "Ferramenta de IA de teste"
-          run: "Rodar teste"
+          run: "Executar teste"
           result: "Resultado do teste"
       llms:
         short_title: "LLMs"
@@ -429,8 +433,8 @@ pt_BR:
         next:
           title: "Próximo"
         tests:
-          title: "Rodar teste"
-          running: "Executando teste..."
+          title: "Executar teste"
+          running: "Rodando teste..."
           success: "Sucesso!"
           failure: "Erro retornado ao tentar entrar em contato com o modelo: %{error}"
         hints:
@@ -480,6 +484,7 @@ pt_BR:
           trigger: "Perguntar à IA"
           loading: "A IA está gerando conteúdo"
           cancel: "Cancelar"
+          regen: "Tentar novamente"
           confirm: "Confirmar"
           discard: "Descartar"
           changes: "Edições sugeridas"
@@ -491,7 +496,7 @@ pt_BR:
         post_options_menu:
           trigger: "Perguntar à IA"
           title: "Perguntar à IA"
-          loading: "A IA está gerando"
+          loading: "A IA está gerando conteúdo"
           close: "Fechar"
           copy: "Copiar"
           copied: "Copiou!"
@@ -534,7 +539,7 @@ pt_BR:
         edit: "Editar"
         seeded_warning: "Isto foi pré-configurado no seu site e não pode ser editado."
         tests:
-          title: "Rodar teste"
+          title: "Executar teste"
           running: "Rodando teste..."
           success: "Sucesso!"
           failure: "Tentando gerar resultado incorporado em %{error}"

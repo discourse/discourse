@@ -39,6 +39,7 @@ he:
       date: "תאריך"
       add_to_calendar: "הוספה ללוח השנה של Google"
       toggle_timezone_offset_title: "החלפת מצב היסט אזור זמן"
+      local_time: "זמן מקומי"
       region:
         title: "אזור"
         none: "ללא"
@@ -108,11 +109,11 @@ he:
           ch_vs: "שוויץ (ch_vs)"
           ch_zg: "שוויץ (ch_zg)"
           ch_zh: "שוויץ (ch_zh)"
-          ch: "שוויץ"
+          ch: "שווייץ"
           cl: "צ׳ילה"
           co: "קולומביה"
           cr: "קוסטה ריקה"
-          cz: "צ׳כיה"
+          cz: "הרפובליקה הצ׳כית"
           de_bb: "גרמניה (de_bb)"
           de_be: "גרמניה (de_be)"
           de_bw: "גרמניה (de_bw)"
@@ -169,7 +170,7 @@ he:
           gb_nir: "אנגליה (gb_nir)"
           gb_sct: "אנגליה (gb_sct)"
           gb_wls: "אנגליה (gb_wls)"
-          gb: "אנגליה"
+          gb: "הממלכה המאוחדת"
           ge: "גאורגיה"
           gg: "גרנזי"
           gh: "גאנה"
@@ -239,8 +240,8 @@ he:
           ro: "רומניה"
           rs_cyrl: "סרביה (rs_cyrl)"
           rs_la: "סרביה (rs_la)"
-          ru: "הפדרציה הרוסית"
-          se: "שבדיה"
+          ru: "רוסיה, פדרציית"
+          se: "שוודיה"
           sa: "ערב הסעודית"
           sg: "סינגפור"
           si: "סלובניה"
@@ -307,6 +308,7 @@ he:
           ve: "ונצואלה"
           vi: "איי הבתולה (ארה״ב)"
           za: "דרום אפריקה"
+          zw: "זימבבואה"
       toolbar_button:
         today: "היום"
         month: "חודש"
@@ -366,7 +368,7 @@ he:
         description_public: "אירועים ציבוריים מקבלים רק שמות משתמשים עבור הזמנות מרוכזות."
         description_private: "אירועים פרטיים מקבלים רק שמות קבוצות עבור הזמנות מרוכזות."
         download_sample_csv: "הורדת קובץ CSV לדוגמה"
-        send_bulk_invites: "משלוח הזמנות"
+        send_bulk_invites: "שליחת הזמנות"
         group_selector_placeholder: "בחירת קבוצה…"
         user_selector_placeholder: "בחירת משתמש…"
         inline_title: "הזמנה מרוכזת בשורה"
@@ -376,12 +378,14 @@ he:
         creator: "יוצר"
         status: "מצב"
         starts_at: "מועד התחלה"
+        all_events: "כל האירועים"
+        my_events: "האירועים שלי"
       upcoming_events_list:
         title: "אירועים קרובים"
         empty: "אין אירועים בקרוב"
         all_day: "יום שלם"
         error: "משיכת האירועים נכשלה"
-        try_again: "לנסות שוב"
+        try_again: "ניסיון נוסף"
         view_all: "להציג הכול"
       category:
         sort_topics_by_event_start_date: "מיון נושאים לפי תאריך תחילת האירוע."
@@ -399,17 +403,17 @@ he:
             not_going: "לא אשתתף"
             interested: "מעניין"
             going_count:
-              one: "%{count} מגיע/ה"
+              one: "%{count} מגיעים/ות"
               two: "%{count} מגיעים/ות"
               many: "%{count} מגיעים/ות"
               other: "%{count} מגיעים/ות"
             not_going_count:
-              one: "%{count} לא מגיע/ה"
+              one: "%{count} לא מגיעים/ות"
               two: "%{count} לא מגיעים/ות"
               many: "%{count} לא מגיעים/ות"
               other: "%{count} לא מגיעים/ות"
             interested_count:
-              one: "%{count} מתעניין/ת"
+              one: "%{count} מתעניינים/ות"
               two: "%{count} מתעניינים/ות"
               many: "%{count} מתעניינים/ות"
               other: "%{count} מתעניינים/ות"
@@ -459,11 +463,13 @@ he:
           units:
             minutes: "דקות"
             hours: "שעות"
-            days: "ימים"
+            days: "יום"
             weeks: "שבועות"
           periods:
             before: "לפני"
             after: "אחרי"
+        recurrence_until:
+          label: "עד (כולל)"
         recurrence:
           label: "חזרה"
           none: "ללא חזרה"
@@ -484,8 +490,10 @@ he:
           placeholder: "רשות"
         location:
           label: "מיקום"
+          placeholder: "הוספת מיקום, קישור או משהו."
         description:
           label: "תיאור"
+          placeholder: "כדאי לספר לאנשים קצת יותר על האירוע שלך. יש תמיכה בשורות חדשות ובקישורים."
         name:
           label: "שם האירוע"
           placeholder: "רשות, ברירת המחדל היא כותרת הנושא"

@@ -3375,6 +3375,8 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            filter:
+              content: "Filtro"
             topics:
               content: "Temas"
             faq:
@@ -3415,6 +3417,9 @@ gl:
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
+    filter:
+      description:
+        yesterday: "Onte"
     discovery:
       headings:
         multi_tag:
@@ -3547,6 +3552,8 @@ gl:
           title: "Enganches de web (webhooks)"
         embedding:
           title: "Incorporando"
+      theme_site_settings:
+        default_value: "Predeterminado"
       search:
         title: "Buscar"
         result_types:
@@ -4122,9 +4129,7 @@ gl:
           up_to_date: "O tema está actualizado, última comprobación:"
           has_overwritten_history: "A versión actual do tema xa non existe porque o historial de Git foi sobrescrito por un push forzado."
           add: "Engadir"
-          theme_settings: "Configuración do tema"
           no_settings: "Este tema non ten axustes."
-          theme_translations: "Traducións do tema"
           empty: "Sen elementos"
           commits_behind:
             one: "O tema está %{count} commit por atrás!"
@@ -4173,6 +4178,11 @@ gl:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
           title: "Cores"
+          edit: "Editar"
+          filters:
+            all: "Todas"
+          active_badge:
+            text: "Activo"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
           undo: "Desfacer"
@@ -4612,7 +4622,6 @@ gl:
         activity: Actividade
         like_count: Valoracións dadas / recibidas
         last_100_days: "nos últimos 100 días"
-        private_topics_count: Temas privados
         posts_read_count: Publicacións lidas
         post_count: Publicacións creadas
         second_factor_enabled: Activada a autenticación de dobre factor

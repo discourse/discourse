@@ -239,12 +239,6 @@ lt:
     broken_page_change_alert: "„onPageChange“ tvarkyklė sukėlė klaidą. Daugiau informacijos rasite naršyklės kūrimo įrankiuose."
     broken_plugin_alert: "Sukėlė įskiepis „%{name}“"
     broken_transformer_alert: "Įvyko klaida. Jūsų svetainė gali neveikti tinkamai."
-    critical_deprecation:
-      notice: "<b>[Administratoriaus pranešimas]</b> Reikia atnaujinti vieną iš jūsų temų ar papildinių, kad jie būtų suderinami su būsimais „Discourse“ pagrindiniais pakeitimais."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Nustatyta tema: <a target='_blank' href='%{path}'>'%{name}'.</a>"
-      plugin_source: "Identifikuotas įskiepis: „%{name}“"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -4055,6 +4049,8 @@ lt:
               content: "Adminas"
             badges:
               content: "Trofėjai"
+            filter:
+              content: "Filtruoti"
             topics:
               content: "Temos"
               title: "Visos temos"
@@ -4096,6 +4092,9 @@ lt:
       spreadsheet:
         show: "Rodyti"
         about: "Apie"
+    filter:
+      description:
+        yesterday: "Vakar"
     discovery:
       headings:
         multi_tag:
@@ -4217,6 +4216,8 @@ lt:
               header_description: "Sąraše esantys URL buvo naudojami vartotojų, kurie yra pažymėti, kaip kenkėjai"
         embedding:
           title: "Įterpimai"
+      theme_site_settings:
+        default_value: "Numatytasis"
       search:
         title: "Paieška"
         result_types:
@@ -4784,9 +4785,7 @@ lt:
             maximum: "Reikalinga Discourse %{version} arba senesnė versija."
           up_to_date: "Tema yra naujausia, psakutinis tikrinimas: "
           add: "Pridėti"
-          theme_settings: "Temos nustatymai"
           no_settings: "Ši tema neturi nustatymų."
-          theme_translations: "Temos vertimai"
           empty: "Nėra elementų"
           compare_commits: "(Žr. naujus įsipareigojimus)"
           repo_unreachable: "Nepavyko susisiekti su šios temos „Git“ saugykla. Klaidos pranešimas:"
@@ -4819,6 +4818,11 @@ lt:
             title: "Pasirinkite pagrindinę spalvų paletę"
             description: "Pagrindinė paletė:"
           title: "Spalvos"
+          edit: "Redaguoti"
+          filters:
+            all: "Visi"
+          active_badge:
+            text: "Aktyvus"
           about: "Pakeiskite temų naudojamas spalvas. Norėdami pradėti, sukurkite naują spalvų paletę."
           copy_name_prefix: "Kopija"
           undo: "Anuliuoti"
@@ -5235,7 +5239,6 @@ lt:
         activity: Aktyvumas
         like_count: Patikimai Duoti / Gauti
         last_100_days: "per paskutines 100 dienų"
-        private_topics_count: Privačios temos
         posts_read_count: Perskaityti pranešimai
         post_count: Sukurta įrašų
         second_factor_enabled: Įgalintas dviejų veiksnių autentifikavimas

@@ -10,7 +10,7 @@ be:
       assigned: "прызначаны"
       group_everyone: "усе"
       reassign:
-        title: "рэдагаваць"
+        title: "Рэдагаваць"
       assign_modal:
         status_label: Статус
       assign_mailer:
@@ -31,5 +31,5 @@ be:
       titles:
         assigned: "прызначаны"
     edit_assignments_modal:
-      topic: "тэма"
+      topic: "Тэма"
       post: "пост"

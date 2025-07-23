@@ -8,25 +8,30 @@ uk:
   js:
     category:
       sort_options:
-        votes: "Голосів"
+        votes: "Голоси"
     topic_voting:
       reached_limit: "У вас немає голосів, видаліть існуюче голосування!"
       list_votes: "Список своїх голосів"
       votes_nav_help: "теми з найбільшою кількістю голосів"
       voted: "Ви проголосували в цій темі"
       allow_topic_voting: "Дозволити користувачам голосувати в темах цієї категорії"
-      vote_title: "Проголосувати"
-      vote_title_plural: "Голосів"
+      vote_title: "Голосувати"
+      vote_title_plural: "Голоси"
       voted_title: "Проголосували"
       voting_closed_title: "Закриті"
       voting_limit: "Обмеження"
+      votes:
+        one: "%{count} голос"
+        few: "%{count} голосів"
+        many: "%{count} голосів"
+        other: "%{count} голосів"
       anonymous_button:
         one: "Голосувати"
-        few: "Голосів"
-        many: "Голосів"
-        other: "Голосів"
+        few: "Голоси"
+        many: "Голоси"
+        other: "Голоси"
       remove_vote: "Вилучити голос"
     filters:
       votes:
-        title: "Голосів"
+        title: "Голоси"
         help: "теми з найбільшою кількістю голосів"

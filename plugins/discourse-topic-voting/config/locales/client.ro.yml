@@ -15,15 +15,11 @@ ro:
       votes_nav_help: "subiecte cu cele mai multe evaluări"
       voted: "Ai evaluat acest subiect"
       allow_topic_voting: "Permite utilizatorilor să evalueze subiectele din această categorie"
-      vote_title: "Evaluează"
+      vote_title: "Votează"
       vote_title_plural: "Evaluări"
       voted_title: "Evaluat"
       voting_closed_title: "Închis"
       voting_limit: "Limită"
-      votes_left:
-        one: "Mai ai %{count} vot rămas, vezi <a href='%{path}'>voturile tale</a>."
-        few: "Mai ai %{count} voturi, vezi <a href='%{path}'>voturile tale</a>."
-        other: "Mai ai %{count} voturi, vezi <a href='%{path}'>voturile tale</a>."
       votes_left_button_title:
         one: "Mai ai %{count} vot."
         few: "Mai ai %{count} voturi."
@@ -33,7 +29,7 @@ ro:
         few: "%{count} voturi"
         other: "%{count} voturi"
       anonymous_button:
-        one: "Evaluează"
+        one: "Votează"
         few: "Evaluări"
         other: "Evaluări"
       remove_vote: "Eliminați votul"

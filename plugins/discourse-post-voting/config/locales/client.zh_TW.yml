@@ -19,7 +19,7 @@ zh_TW:
     vote:
       already_voted: "每個問題只能投票一次。"
       user_over_limit: "您不能投超過您的信任等級的投票數。"
-      one_vote_per_post: "每個發文只能投票一次。"
+      one_vote_per_post: "您只能替每個貼文投票一次。"
     last_answer_lowercase: 最後一個答案
     answer_lowercase:
       other: 回答
@@ -60,7 +60,7 @@ zh_TW:
           label: "回答"
           help: "開始撰寫回答"
         sort_by: "排序"
-        votes: "投票"
+        votes: "票數"
         activity: "活動"
         answer_count:
           other: "%{count} 個回答"

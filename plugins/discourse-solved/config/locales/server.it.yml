@@ -30,7 +30,7 @@ it:
     accepted_solutions:
       title: "Soluzioni accettate"
       xaxis: "Giorno"
-      yaxis: "Totale"
+      yaxis: "Totali"
   solved:
     no_solutions:
       self: "Non hai ancora soluzioni accettate."

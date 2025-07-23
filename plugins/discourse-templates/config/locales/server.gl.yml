@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 gl:
+  default_category_template:
+    name: Modelos

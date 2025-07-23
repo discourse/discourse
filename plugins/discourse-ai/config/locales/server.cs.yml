@@ -19,7 +19,10 @@ cs:
         explain: "Vysvětlit"
         illustrate_post: "Ilustrovat příspěvek"
         replace_dates: "Chytré datumy"
+      image_caption:
+        attribution: "Popisek od AI"
     ai_bot:
+      default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
       personas:
         custom_prompt:
           name: "Vlastní pokyn"
@@ -28,9 +31,10 @@ cs:
       topic_not_found: "Souhrn není k dispozici, téma nebylo nalezeno!"
       summarizing: "Vytvářím souhrn tématu"
       tool_summary:
-        search: "Vyhledat"
+        search: "Vyhledávání"
         tags: "Seznam značek"
         time: "Čas"
+        summarize: "Shrnout"
       tool_help:
         summary: "Shrnout téma"
     ai_staff_action_logger:

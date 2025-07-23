@@ -12,7 +12,11 @@ hu:
       labels:
         topic_id: Témaazonosító
         user_id: Felhasználói azonosító
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
   unsubscribe:
     policy_emails:
       never: Soha
+      when_away: Csak ha távol van
       always: Mindig

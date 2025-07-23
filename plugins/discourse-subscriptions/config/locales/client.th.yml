@@ -13,7 +13,7 @@ th:
       plans:
         interval:
           adverb:
-            day: รายวัน
+            day: วัน
             week: รายสัปดาห์
             month: รายเดือน
             year: รายปี

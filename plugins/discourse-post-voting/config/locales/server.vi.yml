@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 vi:
+  post_action_types:
+    vote:
+      title: "Bình chọn"
   post_voting:
     comment:
       reviewables:

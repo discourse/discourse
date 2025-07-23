@@ -14,7 +14,7 @@ ko:
           composer:
             too_short:
               other: "최소 %{count}자 이상 입력하세요"
-          edit: "수정"
+          edit: "편집"
           cancel: "취소"
           user:
             deleted: "(사용자 삭제됨)"
@@ -32,4 +32,5 @@ ko:
                 title: "동의하지 않음"
       topic:
         sort_by: "정렬 기준"
+        votes: "투표"
         activity: "활동"

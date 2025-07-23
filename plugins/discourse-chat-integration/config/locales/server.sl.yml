@@ -9,6 +9,3 @@ sl:
     chat_integration_enabled: 'Vključi discourse-chat-integration vtičnik'
   chat_integration:
     all_categories: "(vse kategorije)"
-    provider:
-      flowdock:
-        message_title: "objavljeno"

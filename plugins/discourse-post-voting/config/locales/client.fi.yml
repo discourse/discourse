@@ -34,7 +34,7 @@ fi:
           label: "Poista viestiäänestys"
           desc: "Ketju luodaan tavallisessa muodossa"
     vote:
-      already_voted: "Voit äänestää vain yhtä vastausta tähän kysymykseen"
+      already_voted: "Voit äänestää vain yhtä vastausta tähän kysymykseen."
       user_over_limit: "Et voi ylittää luottamustasosi äänimäärää."
       one_vote_per_post: "Voit äänestää kutakin viestiä vain kerran."
     last_answer_lowercase: viimeisin vastaus

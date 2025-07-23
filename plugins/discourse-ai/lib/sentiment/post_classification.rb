@@ -101,7 +101,8 @@ module DiscourseAi
           example_posts = errors.map { |e| e[:target].id }.take(5).join(", ")
           Discourse.warn_exception(
             errors[0][:error],
-            "Discourse AI: Errors during bulk classification: Failed to classify #{errors.count} posts (example ids: #{example_posts})",
+            message:
+              "Discourse AI: Errors during bulk classification: Failed to classify #{errors.count} posts (example ids: #{example_posts})",
           )
         end
       ensure

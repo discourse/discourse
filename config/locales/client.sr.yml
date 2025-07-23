@@ -233,12 +233,6 @@ sr:
     broken_page_change_alert: "onPageChange izvršitelj je prijavio grešku. Proverite pretražvačke razvnojne alate za više informacija."
     broken_plugin_alert: "Izazvano od plugina '%{name}'"
     broken_transformer_alert: "Desila se greška. Vaš sajt možda ne radi kako treba."
-    critical_deprecation:
-      notice: "<b>[Admin Obaveštenje]</b> Jedna od vaših vizuelnih tema ili pluginova se mora unaprediti zbog kompatibilnost sa nadolazećim osnovnim Discourse promenama."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifikovana vizuelna tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifikovani dodatak: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Азија-Пацифик (Токио)"
@@ -2589,6 +2583,8 @@ sr:
               content: "Admin"
             badges:
               content: "Značke"
+            filter:
+              content: "Filter"
             topics:
               content: "Teme"
             faq:
@@ -2620,6 +2616,9 @@ sr:
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
+    filter:
+      description:
+        yesterday: "Juče"
     discovery:
       headings:
         categories: "Sve kategorije"
@@ -2704,6 +2703,8 @@ sr:
               header_description: "URL-ovi s ove liste su korišteni u porukama korisnika koji su identifikovani kao nepoželjni"
         embedding:
           title: "Ugrađivanje"
+      theme_site_settings:
+        default_value: "Подразумевано"
       search:
         title: "Pretraži"
       dashboard:
@@ -2987,6 +2988,11 @@ sr:
             required: "*potrebno"
         colors:
           title: "Boje"
+          edit: "Izmeni"
+          filters:
+            all: "Sve"
+          active_badge:
+            text: "Aktivni"
           copy_name_prefix: "Kopija od"
           undo: "Vrati na prethodno"
           undo_title: "Poništi promene ovoj boji od zadnjeg puta kad su sačuvane."
@@ -3209,7 +3215,6 @@ sr:
         activity: Aktivnost
         like_count: Like-ovi Dati / Primljeni
         last_100_days: "U zadnjih 100 dana"
-        private_topics_count: Privatne Teme
         posts_read_count: Poruka Pročitano
         post_count: Poruka Otvoreno
         topics_entered: Tema Pregledano

@@ -10,7 +10,7 @@ sw:
       builder:
         insert: Weka
         groups:
-          label: Vikundi
+          label: Makundi
         version:
           label: Toleo
         revoke:

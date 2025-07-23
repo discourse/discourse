@@ -17,7 +17,6 @@ gem "activesupport", "~> 8.0.0"
 gem "railties", "~> 8.0.0"
 
 gem "propshaft"
-
 gem "json"
 
 # this will eventually be added to rails,
@@ -30,6 +29,10 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
+# NOTE: hiredis-client is recommended for high performance use of Redis
+# however a recent attempt at an upgrade lead to https://meta.discourse.org/t/rebuild-error/375387
+# for now we are sticking with the socked based implementation that is not sensitive to this issue
+# gem "hiredis-client"
 gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
@@ -59,6 +62,7 @@ gem "fastimage"
 
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sns", require: false
+gem "aws-sdk-mediaconvert", require: false
 gem "excon", require: false
 gem "unf", require: false
 

@@ -26,7 +26,7 @@ he:
             group_by:
               label: "קיבוץ לפי"
             sort_by:
-              label: "מיון על פי"
+              label: "מיון לפי"
             tag:
               label: "תגית"
       logs:
@@ -77,7 +77,7 @@ he:
               label: "אסימונים לפוסט"
               description: "מספר אסימוני ה־LLM לשימוש לפוסט"
             model:
-              label: "דגם"
+              label: "מודל"
               description: "LLM לשימוש להפקת דוחות"
             categories:
               label: "קטגוריות"
@@ -109,6 +109,9 @@ he:
             top_p:
               label: "ה־P המובילים"
               description: "ה־P המוביל לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את האקראיות (להשאיר ריק כדי להשתמש בברירת המחדל של הדגם)"
+            persona_id:
+              label: "דמות"
+              description: "דמות בינה מלאכותית לשימוש להפקת דוחות"
         llm_tool_triage:
           fields:
             model:
@@ -167,6 +170,8 @@ he:
             temperature:
               label: "טמפרטורה"
               description: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את האקראיות (להשאיר ריק כדי להשתמש בברירת המחדל של הדגם)"
+            max_output_tokens:
+              label: "כמות אסימוני פלט מרבית"
     discourse_ai:
       title: "בינה מלאכותית"
       features:
@@ -311,15 +316,11 @@ he:
         ai_tools: "כלים"
         tool_strategies:
           all: "החלה על כל התגובות"
-          replies:
-            one: "החלה על התגובה הראשונה בלבד"
-            two: "החלה על שתי התגובות הראשונות בלבד"
-            many: "החלה על %{count} התגובות הראשונות בלבד"
-            other: "החלה על %{count} התגובות הראשונות בלבד"
         back: "חזרה"
         name: "שם"
         edit: "עריכה"
         export: "ייצוא"
+        import: "ייבוא"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
         use_parent_llm: "להשתמש במודל שפה עם פיצול אישיות"
@@ -430,6 +431,7 @@ he:
         back: "חזרה"
         short_title: "כלים"
         export: "ייצוא"
+        import: "ייבוא"
         no_tools: "לא יצרת כלים עדיין"
         name: "שם"
         name_help: "השם יופיע בממשק המשתמש של Discourse והוא המזהה הקצר שבו יש להשתמש כדי למצוא את הכלי בהגדרות שונות, הוא צריך להיות ייחודי (חובה)"
@@ -502,7 +504,7 @@ he:
             day: "24 שעות"
             week: "7 ימים"
             custom: "התאמה אישית…"
-          hours: "שעתיים"
+          hours: "שעות"
           max_usages_required: "חובה להגדיר אם לא הוגדרה כמות אסימונים מרבית"
         usage:
           ai_bot: "בוט בינה מלאכותית"
@@ -594,11 +596,6 @@ he:
         selection_hint: "עצה: אפשר לבחור חלק מהטקסט בטרם פתיחת המסייע כדי לשכתב רק את החלק הזה."
         suggest: "הצעה עם בינה מלאכותית"
         suggest_errors:
-          too_many_tags:
-            one: "יכולה להיות לך עד תגית אחת"
-            two: "יכולות להיות לך עד שתי תגיות"
-            many: "יכולות להיות לך עד %{count} תגיות"
-            other: "יכולות להיות לך עד %{count} תגיות"
           no_suggestions: "אין הצעות זמינות"
         missing_content: "נא למלא קצת תוכן כדי לחולל הצעות."
         context_menu:
@@ -617,7 +614,7 @@ he:
         post_options_menu:
           trigger: "לשאול בינה מלאכותית"
           title: "לשאול בינה מלאכותית"
-          loading: "הבינה המלאכותית נוצרת"
+          loading: "הבינה המלאכותית מייצרת"
           close: "סגירה"
           copy: "העתקה"
           copied: "הועתק!"
@@ -773,6 +770,7 @@ he:
           last_7_days: "7 הימים האחרונים"
           last_30_days: "30 הימים האחרונים"
           upload_files: "העלאת קבצים"
+          uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
       sentiments:
         dashboard:
           title: "רגש"
@@ -791,17 +789,12 @@ he:
             tag: "תגית"
           table:
             sentiment: "רגש"
-            total_count: "סה״כ"
+            total_count: "סך הכל"
       summarization:
         chat:
           title: "סיכום הודעות"
           description: "נא לבחור אפשרות להלן כדי לסכם את הדיון שנשלח בפרק הזמן המבוקש."
           summarize: "סיכום"
-          since:
-            one: "שעה אחרונה"
-            two: "שעתיים אחרונות"
-            many: "%{count} השעות האחרונות"
-            other: "%{count} השעות האחרונות"
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"

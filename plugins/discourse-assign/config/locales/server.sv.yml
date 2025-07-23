@@ -47,8 +47,8 @@ sv:
     topic_assigned_excerpt: "tilldelade ämnet '%{title}' till dig"
     reminders_frequency:
       never: "aldrig"
-      daily: "dagligen"
-      weekly: "veckovis"
+      daily: "varje dag"
+      weekly: "varje vecka"
       monthly: "månadsvis"
       quarterly: "kvartalsvis"
   assign_mailer:

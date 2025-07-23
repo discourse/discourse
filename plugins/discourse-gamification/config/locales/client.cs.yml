@@ -23,7 +23,7 @@ cs:
         modal:
           title: "Jak tento žebříček funguje?"
           text: "Body se udělují za zapojení do komunity, například za návštěvy, lajkování a příspěvky. Vaše skóre se aktualizuje každých několik minut. Buďte tedy nápomocní, aktivní a podporující a stoupejte v žebříčku!"
-        name: "Jméno"
+        name: "Název"
         name_placeholder: "Název..."
         new: "Nový žebříček"
         create_success: "Žebříček vytvořen"
@@ -81,5 +81,5 @@ cs:
         other: "Zbývá %{count} denních přepočtů"
       admin:
         title: "Gamifikace"
-        name: "Jméno"
+        name: "Název"
         period: "Období"

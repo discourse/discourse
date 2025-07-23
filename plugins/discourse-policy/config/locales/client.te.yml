@@ -9,13 +9,13 @@ te:
     discourse_policy:
       builder:
         groups:
-          label: గుంపులు
+          label: సమూహాలు
         version:
-          label: సంచిక
+          label: సంస్కరణ
         accept:
           label: అంగీకరించండి
         revoke:
-          label: రివోక్
+          label: ఉపసంహరించుకోండి
       preferences:
         policy_emails:
           email_frequency_options:

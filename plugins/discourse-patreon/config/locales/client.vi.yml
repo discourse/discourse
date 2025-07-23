@@ -11,6 +11,6 @@ vi:
       filter: 'Lọc'
       edit: 'Sửa'
       delete: 'Xóa'
-      save: 'Lưu'
+      save: 'Lưu lại'
       field:
         email: "Email"

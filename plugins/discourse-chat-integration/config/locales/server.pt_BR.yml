@@ -61,9 +61,6 @@ pt_BR:
     chat_integration_webex_excerpt_length: "Tamanho do trecho da postagem do Webex Teams"
     chat_integration_google_enabled: "Ative o provedor de integração de bate-papo do \"Google Chat\""
     chat_integration_google_excerpt_length: "Tamanho do trecho da postagem do Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "Alguns canais de integração de bate-papo contêm erros. Acesse <a href='%{base_path}/admin/plugins/chat-integration'>the chat integration section</a> para descobrir mais."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -187,15 +184,15 @@ pt_BR:
             (se várias regras corresponderem a uma postagem, a regra mais alta será executada)
           no_rules: "Não há regras configuradas para este canal. Execute `/discourse help` para instruções."
           rule_string: "*%{index})* *%{filter}* postagens em *%{category}*"
-          rule_string_tags_suffix: "com etiquetas: *%{tags}*"
-        parse_error: "Desculpe, eu não entendi isso. Execute /help para instruções."
+          rule_string_tags_suffix: " com etiquetas: *%{tags}*"
+        parse_error: "Desculpe, eu não entendi isso. Execute `/discourse help` para instruções."
         create:
           created: "Regra criada com sucesso"
           updated: "Regra atualizada com sucesso"
           error: "Desculpe, ocorreu um erro ao criar essa regra."
         delete:
           success: "Regra excluída com sucesso"
-          error: "Desculpe, ocorreu um erro ao excluir aquela regra. Execute `/discourse status` para uma lista de regras."
+          error: "Desculpe, ocorreu um erro ao excluir essa regra. Execute `/discourse status` para uma lista de regras."
         not_found:
           tag: "A etiqueta *%{name}* não pode ser encontrada."
           category: "A categoria *%{name}* não pode ser encontrada. Categorias disponíveis: *%{list}*"

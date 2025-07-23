@@ -255,6 +255,7 @@ he:
       silence_reason: "המשתמש הושתק אוטומטית על ידי <a href='%{url}'>בינה מלאכותית של Discourse</a>"
       invalid_error_type: "סוג השגיאה שסופק לא תקין"
       unexpected: "אירעה שגיאה בלתי צפויה"
+      logging_subject: "זיהוי זבל"
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
       default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
@@ -302,6 +303,15 @@ he:
           name: "בקשה מותאמת אישית"
         smart_dates:
           name: "תאריכים חכמים"
+        locale_detector:
+          name: "מזהה שפה ומקום"
+        topic_title_translator:
+          name: "מתרגם כותרות נושאים"
+        short_text_translator:
+          name: "מתרגם טקסטים קצרים"
+        report_runner:
+          name: "אצן דוחות"
+          description: "דמות ברירת המחדל שסקריפט אוטומציית הדוחות משתמש בה"
       topic_not_found: "תקציר לא זמין, לא נמצא נושא!"
       summarizing: "הנושא מסוכם"
       searching: "חיפוש אחר: ‚%{query}’"
@@ -412,48 +422,8 @@ he:
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
         image: "%{prompt}"
-        categories:
-          one: "נמצאה קטגוריה"
-          two: "נמצאו שתי קטגוריות"
-          many: "נמצאו %{count} קטגוריות"
-          other: "נמצאו %{count} קטגוריות"
-        tags:
-          one: "נמצאה תגית"
-          two: "נמצאו שתי תגיות"
-          many: "נמצאו %{count} תגיות"
-          other: "נמצאו %{count} תגיות"
-        search:
-          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
-          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-        search_meta_discourse:
-          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
-          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-        google:
-          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
-          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
-          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         setting_context: "נקרא הקשר עבור: %{setting_name}"
         schema: "%{tables}"
-        researcher_dry_run:
-          one: "יעדים מוצעים: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
-          two: "יעדים מוצעים: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
-          many: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
-          other: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
-        researcher:
-          one: "במהלך מחקר: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
-          two: "במהלך מחקר: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
-          many: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
-          other: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
-        search_settings:
-          one: "נמצאה תוצאה לחיפוש אחר ‚%{query}’"
-          two: "נמצאו שתי תוצאות לחיפוש אחר ‚%{query}’"
-          many: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
-          other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
     summarization:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."

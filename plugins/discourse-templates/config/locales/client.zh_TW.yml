@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    discourse_templates:
+      title: "範本"
+  js:
+    templates:
+      source: "來源："

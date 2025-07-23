@@ -9,9 +9,9 @@ pl_PL:
     discourse_hCaptcha:
       missing_token: "Proszę ukończyć wyzwanie hCaptcha."
       placeholder: symbol zastępczy
-      contact_system_administrator: "Wystąpił problem z hCaptcha, jeśli problem będzie się powtarzał, skontaktuj się z administratorem systemu."
+      contact_system_administrator: "Wystąpił problem z hCaptcha. Jeśli problem będzie się powtarzał, skontaktuj się z administratorem systemu."
   admin_js:
     admin:
       site_settings:
         categories:
-          discourse_hcaptcha: "Discourse hCaptcha"
+          discourse_hcaptcha: "hCaptcha Discourse"

@@ -9,7 +9,7 @@ be:
     discourse_policy:
       builder:
         groups:
-          label: Групы
+          label: групы
         version:
           label: версія
         revoke:

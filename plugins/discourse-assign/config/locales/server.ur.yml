@@ -34,8 +34,8 @@ ur:
     flag_unclaimed: "فلَیگ پر عمل کرنے سے پہلے آپ کا یہ ٹاپک کلَیم کرنا ضروری ہے"
     topic_assigned_excerpt: "نے ٹاپک '%{title}' اسائین کیا"
     reminders_frequency:
-      never: "کبھی نہیں "
-      daily: "روزانہ "
+      never: "کبھی نہیں"
+      daily: "روزانہ"
       weekly: "ہفتہ وار"
       monthly: "ماہانہ"
       quarterly: "سہ ماہی"

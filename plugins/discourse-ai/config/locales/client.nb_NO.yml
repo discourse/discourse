@@ -40,7 +40,7 @@ nb_NO:
         groups: "Grupper:"
         no_persona: "Ikke angitt"
         no_groups: "Ingen"
-        edit: "Endre"
+        edit: "Rediger"
         expand_list:
           one: "(%{count} mer)"
           other: "(%{count} mer)"
@@ -69,15 +69,16 @@ nb_NO:
       ai_persona:
         back: "Forrige"
         name: "Navn"
-        edit: "Endre"
+        edit: "Rediger"
         export: "Eksporter"
+        import: "Importer"
         description: "Beskrivelse"
         user: Bruker
         save: "Lagre"
         enabled: "Aktivert?"
         delete: "Slett"
         response_format:
-          open_modal: "Endre"
+          open_modal: "Rediger"
         filters:
           reset: "Tilbakestill"
       rag:
@@ -87,18 +88,20 @@ nb_NO:
       tools:
         back: "Forrige"
         export: "Eksporter"
+        import: "Importer"
         name: "Navn"
         description: "Beskrivelse"
         summary: "Sammendrag"
         save: "Lagre"
         remove_parameter: "Fjern"
         parameter_required: "Påkrevd"
-        edit: "Endre"
+        edit: "Rediger"
         delete: "Slett"
       llms:
         display_name: "Navn"
+        provider: "Tilbyder"
         save: "Lagre"
-        edit: "Endre"
+        edit: "Rediger"
         back: "Forrige"
         delete: Slett
         quotas:
@@ -124,12 +127,15 @@ nb_NO:
       ai_helper:
         context_menu:
           cancel: "Avbryt"
+          confirm: "Bekreft"
           discard: "Forkast"
         post_options_menu:
           close: "Lukk"
           copy: "Kopier"
           copied: "Kopiert!"
           cancel: "Avbryt"
+        thumbnail_suggestions:
+          select: "Velg"
         image_caption:
           save_caption: "Lagre"
           automatic_caption_dialog:
@@ -138,10 +144,11 @@ nb_NO:
         back: "Forrige"
         save: "Lagre"
         delete: "Slett"
-        edit: "Endre"
+        edit: "Rediger"
         tests:
           success: "Suksess!"
         display_name: "Navn"
+        provider: "Tilbyder"
         providers:
           google: "Google"
           fake: "Egendefinert"
@@ -166,7 +173,10 @@ nb_NO:
           group_types:
             category: "Kategori"
           table:
-            total_count: "Total"
+            total_count: "Totalt"
+      summarization:
+        chat:
+          summarize: "Oppsummer"
       discobot_discoveries:
         regular_results: "Emner"
         collapse: "Fold sammen"

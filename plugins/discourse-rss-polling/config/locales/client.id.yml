@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 id:
+  js:
+    admin:
+      rss_polling:
+        author: Pengarang
+        discourse_category: Kategori
+        discourse_tags: Label

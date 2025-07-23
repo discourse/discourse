@@ -11,6 +11,8 @@ sk:
     emotion_neutral:
       title: "\U0001F610 Neutrálna"
   discourse_ai:
+    spam_detection:
+      logging_subject: "Detekcia spamu"
     ai_bot:
       tool_summary:
         search: "Hľadať"

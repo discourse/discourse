@@ -15,4 +15,5 @@ nb_NO:
     user_notes:
       labels:
         user: Bruker
+        note: Merk
         moderator: Moderator

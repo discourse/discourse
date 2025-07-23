@@ -208,12 +208,6 @@ tr_TR:
     broken_page_change_alert: "Bir onPageChange işleyicisi hata verdi. Daha fazla bilgi için tarayıcı geliştirici araçlarını kontrol edin."
     broken_plugin_alert: "'%{name}' eklentisinden kaynaklanıyor"
     broken_transformer_alert: "Bir hata oluştu. Siteniz düzgün çalışmayabilir."
-    critical_deprecation:
-      notice: "<b>[Yönetici Bildirisi]</b> Temalarınızdan veya eklentilerinizden birinin, yaklaşan Discourse temel değişiklikleriyle uyumluluk için güncellenmesi gerekiyor."
-      id: "(kimlik:<em>%{id}</em>)"
-      linked_id: "(kimlik:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tanımlanan tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Tanımlanan eklenti: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asya Pasifik (Tokyo)"
@@ -4698,6 +4692,8 @@ tr_TR:
             badges:
               content: "Rozetler"
               title: "Kazanılabilecek tüm rozetler"
+            filter:
+              content: "Filtre"
             topics:
               content: "Konular"
               title: "Tüm konular"
@@ -4845,6 +4841,12 @@ tr_TR:
           paste: "Yapıştır..."
           save: "Farklı kaydet..."
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
+    filter:
+      description:
+        yesterday: "Dün"
+        last_week: "Geçen hafta"
+        last_month: "Geçen ay"
+        last_year: "Geçen yıl"
     discovery:
       headings:
         multi_tag:
@@ -5105,6 +5107,8 @@ tr_TR:
         embedding:
           title: "Gömme"
           header_description: "Discourse, IFRAME oluşturan bir Javascript API'si kullanarak bir konudaki yorumları uzak bir siteye yerleştirme yeteneğine sahiptir"
+      theme_site_settings:
+        default_value: "Varsayılan"
       search:
         title: "Ara"
         result_types:
@@ -6059,11 +6063,7 @@ tr_TR:
           up_to_date: "Tema güncel, son kontrol:"
           has_overwritten_history: "Geçerli tema sürümü artık mevcut değil çünkü Git geçmişi zorla gönderilerek üzerine yazıldı."
           add: "Ekle"
-          theme_settings: "Tema Ayarları"
-          edit_objects_theme_setting: "Nesneler Ayar Düzenleyicisi"
-          overriden_settings_explanation: "Geçersiz kılınan ayarlar bir nokta ile işaretlenir ve vurgulanmış bir renge sahiptir. Bu ayarları varsayılan değere sıfırlamak için yanlarındaki sıfırlama düğmesine basın."
           no_settings: "Bu temanın ayarı yok."
-          theme_translations: "Tema Çevirileri"
           empty: "Öge yok"
           commits_behind:
             one: "Tema %{count} taahhüt geride!"
@@ -6133,7 +6133,12 @@ tr_TR:
             title: "Temel renk paletini seçin"
             description: "Temel palet:"
           title: "Renkler"
-          edit: "Renk paletlerini düzenle"
+          edit: "Düzenle"
+          filters:
+            all: "Hepsi"
+            user_selectable: "Kullanıcı tarafından seçilebilir"
+          active_badge:
+            text: "Aktif"
           long_title: "Renk paletleri"
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
           new_name: "Yeni renk paleti"
@@ -6765,7 +6770,6 @@ tr_TR:
         activity: Aktivite
         like_count: Verilen / Alınan Beğeniler
         last_100_days: "son 100 günde"
-        private_topics_count: Özel Konular
         posts_read_count: Okunan Gönderiler
         post_count: Oluşturulan Gönderiler
         second_factor_enabled: İki Adımlı Kimlik Doğrulama Etkin

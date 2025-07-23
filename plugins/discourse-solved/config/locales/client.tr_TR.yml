@@ -29,7 +29,6 @@ tr_TR:
       solution_summary:
         one: "çözüm"
         other: "çözüm"
-      accepted_html: "%{icon} Çözüldü; <span class='by'> <a href data-user-card='%{username_lower}'>%{username}</a></span> tarafından, <a href='%{post_path}' class='back'>%{post_number}. gönderide</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "tümü"

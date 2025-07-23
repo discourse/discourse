@@ -45,7 +45,7 @@ zh_CN:
         watch: '所有帖子和回复'
         thread: '所有带有按线索组织的回复的帖子'
       rule_table:
-        filter: "筛选器"
+        filter: "筛选"
         category: "类别"
         tags: "标签"
         edit_rule: "编辑"
@@ -54,7 +54,7 @@ zh_CN:
         title: "编辑频道"
         save: "保存频道"
         cancel: "取消"
-        provider: "提供商"
+        provider: "提供程序"
         channel_validation:
           ok: "有效"
           fail: "格式无效"
@@ -62,10 +62,10 @@ zh_CN:
         title: 编辑规则
         save: 保存规则
         cancel: 取消
-        provider: 提供商
+        provider: 提供程序
         type: 类型
         channel: 频道
-        filter: 筛选器
+        filter: 筛选
         category: 类别
         group: 群组
         tags: 标签
@@ -225,7 +225,7 @@ zh_CN:
           title: 发送 Slack 消息
           fields:
             message:
-              label: 消息
+              label: 发送私信
               description: >-
                 为话题名称使用 ${TOPIC}，为使用的 URL 使用 ${URL}，为移除的标签使用 ${REMOVED_TAGS}，为添加的标签使用 ${ADDED_TAGS}，为默认文本使用 ${ADDED_AND_REMOVED}。仅在触发器设置为“话题标签已更改”时可用。
             url:

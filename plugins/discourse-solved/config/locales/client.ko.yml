@@ -9,7 +9,7 @@ ko:
     notifications:
       alt:
         solved:
-          accepted_notification: "승인됨"
+          accepted_notification: "수락됨"
     solved:
       title: "해결됨"
       allow_accepted_answers: "토픽 소유자 및 스태프가 해결책으로 답글을 표시하도록 허용"

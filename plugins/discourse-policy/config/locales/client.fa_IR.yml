@@ -31,9 +31,11 @@ fa_IR:
           label: ابطال
         private:
           label: خصوصی؟
+        send-email:
+          label: ارسال ایمیل?
       preferences:
         policy_emails:
           email_frequency_options:
-            never: هرگز
+            never: هیچ‌وقت
             when_away: فقط وقتی نیستم
             always: همیشه

@@ -7,7 +7,7 @@
 ug:
   js:
     chat_integration:
-      settings: "تەڭشەكلەر"
+      settings: "تەڭشەك"
       all_categories: "(ھەممە سەھىپە)"
       all_tags: "(ھەممە بەلگە)"
       delete_channel: "ئۆچۈر"
@@ -32,11 +32,16 @@ ug:
       edit_rule_modal:
         cancel: ۋاز كەچ
         type: تىپى
+        channel: قانال
         filter: سۈزگۈچ
         category: سەھىپە
         group: گۇرۇپپا
         tags: بەلگە
       provider:
+        slack:
+          param:
+            identifier:
+              title: قانال
         telegram:
           param:
             name:
@@ -54,6 +59,10 @@ ug:
               title: "ئىسمى"
             webhook_url:
               title: تور ئىلمىكى تور ئادرېسى
+        mattermost:
+          param:
+            identifier:
+              title: قانال
         matrix:
           param:
             name:
@@ -62,6 +71,10 @@ ug:
           param:
             subject:
               title: "ماۋزۇ"
+        rocketchat:
+          param:
+            identifier:
+              title: قانال
         gitter:
           param:
             name:
@@ -100,6 +113,8 @@ ug:
               label: ئۇچۇر
             url:
               label: تور ئادرېسى
+            channel:
+              label: قانال
         send_chat_integration_message:
           fields:
             channel_name:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User AI preferences", type: :system, js: true do
+RSpec.describe "User AI preferences", type: :system do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:llm_model)
   let(:user_preferences_ai_page) { PageObjects::Pages::UserPreferencesAi.new }

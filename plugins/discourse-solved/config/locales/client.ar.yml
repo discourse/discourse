@@ -27,13 +27,12 @@ ar:
       accepted_answer: "الحل"
       solution: "الحل"
       solution_summary:
-        zero: "حل"
+        zero: "حلًا"
         one: "حل واحد"
         two: "حلَّان"
         few: "حلول"
         many: "حلًا"
-        other: "حل"
-      accepted_html: "%{icon} تم الحل <span class='by'>من قِبل <a href data-user-card='%{username_lower}'>%{username}</a></span> في <a href='%{post_path}' class='back'>المنشور #%{post_number}</a>"
+        other: "حلًا"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "الكل"

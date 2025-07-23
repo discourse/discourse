@@ -13,7 +13,7 @@ hy:
         post_voting_comment:
           composer:
             too_short:
-              one: "Մուտքագրեք առնվազն %{count} սիմվոլ"
+              one: "Մուտքագրեք առնվազն %{count} նիշ"
               other: "Մուտքագրեք առնվազն %{count} սիմվոլ"
           edit: "խմբագրել"
           cancel: "չեղարկել"
@@ -31,4 +31,5 @@ hy:
                 title: "Չընդունել"
       topic:
         sort_by: "Դասավորել ըստ"
+        votes: "Քվեներ"
         activity: "Ակտիվության"

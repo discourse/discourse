@@ -15,13 +15,13 @@ he:
           ad_plugin: "תוסף פרסום"
           dfp_plugin: "DFP/Ad Manager"
           adsense_plugin: "AdSense"
-          amazon_plugin: "אמזון"
+          amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
       adplugin:
         house_ads:
           title: "מודעות הבית"
-          new: "חדש"
+          new: "חדשות"
           settings: "הגדרות"
           new_name: "מודעת בית חדשה"
           save: "שמירה"

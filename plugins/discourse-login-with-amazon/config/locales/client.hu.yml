@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 hu:
+  js:
+    login:
+      amazon:
+        name: "Amazon"

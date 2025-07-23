@@ -23,32 +23,37 @@ ro:
         plans:
           product: Nume
         subscriptions:
-          status: Status
+          status: Stare
+          update_card:
+            single: "Actualizează"
           created_at: Creat
           cancel: Anulează
+      subscribe:
+        cardholder_address:
+          city: Oraș
       billing:
-        email: Email
+        email: E-mail
       admin:
         dashboard:
           title: Panou de control
           table:
             head:
-              user: Utilizatori
+              user: Utilizator
         products:
           product:
             description: Descriere
-            active: Active
+            active: Activă
             created_at: Creat
             updated_at: Actualizat
         plans:
           plan:
-            active: Active
+            active: Activă
             created_at: Creat
         coupons:
-          active: Active?
+          active: Activă?
           actions: Acțiuni
         subscriptions:
           subscription:
-            user: Utilizatori
-            status: Status
+            user: Utilizator
+            status: Stare
             created_at: Creat

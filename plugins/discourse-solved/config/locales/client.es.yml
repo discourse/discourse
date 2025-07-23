@@ -20,7 +20,6 @@ es:
       title: "Solucionado"
       allow_accepted_answers: "Permitir al propietario del tema y al staff marcar una respuesta como la solución"
       solved_topics_auto_close_hours: "Cierre automático del tema (n) horas después de la última respuesta una vez que el tema se haya marcado como solucionado."
-      accept_answer: "Seleccionar si esta respuesta soluciona el problema"
       accepted_description: "Esta es la solución aceptada para este tema"
       has_no_accepted_answer: "Este tema no tiene una solución"
       unaccept_answer: "Deseleccionar si esta respuesta ya no resuelve el problema"
@@ -29,7 +28,6 @@ es:
       solution_summary:
         one: "solución"
         other: "soluciones"
-      accepted_html: "%{icon} Resuelto <span class='by'>por <a href data-user-card='%{username_lower}'>%{username}</a></span> en la <a href='%{post_path}' class='back'>publicación n° %{post_number}</a>"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "todos"

@@ -8,6 +8,7 @@ sk:
   js:
     discourse_policy:
       builder:
+        save: Uloženie zmien
         insert: Vložiť
         groups:
           label: Skupiny

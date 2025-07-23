@@ -18,8 +18,8 @@ hr:
           no: "Ne"
       export: "Izvoz"
       save: "Zabilježi promjene"
-      edit: "Izmijeni"
-      delete: "Pobriši"
+      edit: "Uredi"
+      delete: "Izbriši"
       result_count:
         one: "%{count} rezultat."
         few: "%{count} rezultata."

@@ -18,7 +18,7 @@ vi:
       adplugin:
         house_ads:
           new: "Mới"
-          settings: "Xác lập"
-          save: "Lưu"
+          settings: "Cài đặt"
+          save: "Lưu lại"
           delete: "Xóa"
           preview: "Xem trước"

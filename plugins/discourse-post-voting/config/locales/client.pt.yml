@@ -7,7 +7,7 @@
 pt:
   js:
     notifications:
-      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      question_answer_user_commented: "<span>%{username}</span>%{description}"
     post_voting:
       post:
         post_voting_comment:
@@ -29,4 +29,5 @@ pt:
                 title: "Discordar"
       topic:
         sort_by: "Ordenar por"
+        votes: "Votos"
         activity: "Actividade"

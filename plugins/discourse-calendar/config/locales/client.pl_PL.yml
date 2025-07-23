@@ -39,11 +39,13 @@ pl_PL:
       date: "Data"
       add_to_calendar: "Dodaj do Kalendarza Google"
       toggle_timezone_offset_title: "Przełącz przesunięcie strefy czasowej"
+      local_time: "Czas lokalny"
       region:
         title: "Region"
         none: "Brak"
         use_current_region: "Użyj bieżącego regionu"
         names:
+          ae: "Emiraty Arabskie"
           ar: "Argentyna"
           at: "Austria"
           au_act: "Australia (au_act)"
@@ -111,7 +113,7 @@ pl_PL:
           cl: "Chile"
           co: "Kolumbia"
           cr: "Kostaryka"
-          cz: "Republika Czeska"
+          cz: "Czechy"
           de_bb: "Niemcy (de_bb)"
           de_be: "Niemcy (de_be)"
           de_bw: "Niemcy (de_bw)"
@@ -183,6 +185,7 @@ pl_PL:
           in_mh: "Indie (w_mh)"
           in_rj: "Indie (in_rj)"
           in_tn: "Indie (w_tn)"
+          in_ka: "Indie (in_ka)"
           is: "Islandia"
           it_bl: "Włochy (it_bl)"
           it_fi: "Włochy (it_fi)"
@@ -305,6 +308,7 @@ pl_PL:
           ve: "Wenezuela"
           vi: "Wyspy Dziewicze (USA)"
           za: "Afryka Południowa"
+          zw: "Zimbabwe"
       toolbar_button:
         today: "Dzisiaj"
         month: "Miesiąc"
@@ -325,11 +329,14 @@ pl_PL:
         after_event_reminder_html: "Wydarzenie zakończyło się %{description}"
         ongoing_event_reminder_html: "Wydarzenie trwa  %{description}"
       edit_reason: "Wydarzenie zaktualizowane"
+      edit_reason_closed: "Wydarzenie zamknięte"
+      edit_reason_opened: "Wydarzenie otwarte"
       topic_title:
         starts_at: "Wydarzenie rozpocznie się: %{date}"
         ended_at: "Wydarzenie zakończyło się: %{date}"
         ends_in_duration: "Kończy się %{duration}"
       show_all: "Pokaż wszystkie"
+      show_participants: "Pokaż uczestników"
       participants:
         one: "%{count} użytkownik wziął udział"
         few: "%{count} użytkowników wzięło udział."
@@ -341,12 +348,16 @@ pl_PL:
       leave: "Opuść wydarzenie"
       edit_event: "Edytuj wydarzenie"
       export_event: "Eksportuj wydarzenie"
-      created_by: "Utworzony przez"
+      created_by: "Stworzone przez"
       bulk_invite: "Zaproszenie zbiorcze"
       close_event: "Zamknij wydarzenie"
+      open_event: "Wydarzenie otwarte"
       invitees_modal:
+        title_invited: "Udział w wydarzeniu"
         title_participated: "Lista użytkowników, którzy wzięli udział"
         filter_placeholder: "Filtruj użytkowników"
+        remove_invitee: "Usuń zaproszonego z listy"
+        add_invitee: "Dodaj zaproszonego do listy"
       bulk_invite_modal:
         confirm: "potwierdź"
         text: "Prześlij plik CSV"
@@ -360,12 +371,15 @@ pl_PL:
         send_bulk_invites: "Wyślij zaproszenia"
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
+        inline_title: "Zaproszenie zbiorcze w trybie inline"
         csv_title: "Zaproszenie zbiorcze CSV"
       upcoming_events:
         title: "Nadchodzące wydarzenia"
         creator: "Twórca"
         status: "Status"
         starts_at: "Zaczyna się o"
+        all_events: "Wszystkie wydarzenia"
+        my_events: "Moje wydarzenia"
       upcoming_events_list:
         title: "Nadchodzące wydarzenia"
         empty: "Brak nadchodzących wydarzeń"
@@ -375,17 +389,39 @@ pl_PL:
         view_all: "Zobacz wszystkie"
       category:
         sort_topics_by_event_start_date: "Sortuj tematy według daty rozpoczęcia wydarzenia."
+        disable_topic_resorting: "Wyłącz sortowanie tematów."
         settings_sections:
           event_sorting: "Sortowanie wydarzeń"
       preview:
         more_than_one_event: "Nie możesz mieć więcej niż jednego wydarzenia."
       models:
         invitee:
+          no_users: "Nie znaleziono użytkowników"
           status:
             unknown: "Nie zainteresowany"
             going: "Wezmę udział"
             not_going: "Nie biorę udziału"
             interested: "Zainteresowany"
+            going_count:
+              one: "%{count} idzie"
+              few: "%{count} idą"
+              many: "%{count} idzie"
+              other: "%{count} idzie"
+            not_going_count:
+              one: "%{count} nie idzie"
+              few: "%{count} nie idą"
+              many: "%{count} nie idzie"
+              other: "%{count} nie idzie"
+            interested_count:
+              one: "%{count} zainteresowany"
+              few: "%{count} zainteresowanych"
+              many: "%{count} zainteresowanych"
+              other: "%{count} zainteresowanych"
+            invited_count:
+              one: "%{count} użytkownik zaproszony"
+              few: "%{count} użytkowników zaproszonych"
+              many: "%{count} użytkowników zaproszonych"
+              other: "%{count} użytkowników zaproszonych"
         event:
           expired: "Wygasły"
           closed: "Zamknięte"
@@ -408,10 +444,14 @@ pl_PL:
         update_event_title: "Edytuj wydarzenie"
         confirm_delete: "Czy na pewno chcesz usunąć to wydarzenie?"
         confirm_close: "Czy na pewno chcesz zamknąć to wydarzenie?"
+        confirm_open: "Czy na pewno chcesz otworzyć to wydarzenie?"
         create: "Utwórz"
         update: "Zapisz"
         attach: "Utwórz wydarzenie"
         add_reminder: "Dodaj przypomnienie"
+        show_local_time:
+          label: "Pokaż czas lokalny"
+          description: "Daty i godziny będą wyświetlane za pomocą: %{timezone}. Użyj tego w przypadku wydarzeń w danej lokalizacji, aby godziny odzwierciedlały strefę czasową, w której wydarzenie ma miejsce."
         timezone:
           label: Strefa czasowa
           remove_timezone: Brak strefy czasowej (UTC)
@@ -428,6 +468,8 @@ pl_PL:
           periods:
             before: "przed"
             after: "po"
+        recurrence_until:
+          label: "Do (włącznie)"
         recurrence:
           label: "Powtarzanie"
           none: "Brak powtarzania"
@@ -440,13 +482,18 @@ pl_PL:
         minimal:
           label: "Minimalne wydarzenie"
           checkbox_label: "Ukryj przyciski Wezmę udział/Nie biorę udziału oraz status zaproszeń"
+        allow_chat:
+          label: "Integracja czatu"
+          checkbox_label: "Twórz i zarządzaj kanałami czatu specyficznymi dla wydarzenia"
         url:
           label: "URL"
           placeholder: "Opcjonalnie"
         location:
           label: "Lokalizacja"
+          placeholder: "Dodaj lokalizację, link lub coś takiego."
         description:
           label: "Opis"
+          placeholder: "Opowiedz ludziom trochę więcej o swoim wydarzeniu. Nowe linie i linki są obsługiwane."
         name:
           label: "Nazwa wydarzenia"
           placeholder: "Opcjonalne, domyślnie jest to tytuł tematu"

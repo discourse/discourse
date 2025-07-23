@@ -16,5 +16,3 @@ te:
           topic_tag_changed:
             added: "%{added} జోడించబడింది"
             removed: "తీసివేయబడింది %{removed}"
-      flowdock:
-        message_title: "పోస్ట్ చేయబడింది"

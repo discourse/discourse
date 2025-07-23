@@ -47,7 +47,7 @@ he:
         default_period_help: "להגדיר את פרק הזמן כברירת המחדל כדי להציג ללוח התוצאות הזה."
         period_filter_disabled: "השבתת מסנן פרק זמן"
         period:
-          all_time: "כל הזמן"
+          all_time: "מאז ומתמיד"
           yearly: "שנתי"
           quarterly: "רבעוני"
           monthly: "חודשי"
@@ -71,14 +71,9 @@ he:
         last_30_days: "30 הימים האחרונים"
         last_90_days: "90 הימים האחרונים"
         last_year: "שנה שעברה"
-        all_time: "כל הזמן"
+        all_time: "מאז ומתמיד"
         custom_date_range: "טווח מותאם אישית"
       custom_range_from: "מאת"
-      daily_update_scores_availability:
-        one: "נותר חישוב ניקוד מחדש יומי אחד"
-        two: "נותרו %{count} חישובים מחדש יומיים"
-        many: "נותרו %{count} חישובים מחדש יומיים"
-        other: "נותרו %{count} חישובים מחדש יומיים"
       admin:
         title: "משחוק"
         name: "שם"

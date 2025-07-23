@@ -10,7 +10,6 @@ da:
     discourse_templates_categories: "Kategorier at hente skabelonerne fra"
     discourse_templates_enable_private_templates: "Aktiverer brug af private skabeloner"
     discourse_templates_groups_allowed_private_templates: "Grupper med tilladelse til at bruge private skabeloner. Personale er altid tilladt."
-    discourse_templates_private_templates_tags: "Mærker, der identificerer en privat besked som en privat skabelon"
   default_category_template:
     name: Skabeloner
     description: |

@@ -20,7 +20,7 @@ ro:
         llm_report:
           fields:
             topic_id:
-              label: "ID discuție"
+              label: "ID subiect"
             title:
               label: "Titlu"
             categories:
@@ -41,7 +41,7 @@ ro:
         disabled: "(dezactivat)"
         groups: "Grupuri:"
         no_groups: "Nimic"
-        edit: "Modifică"
+        edit: "Editează"
         expand_list:
           one: "(încă %{count})"
           few: "(încă %{count})"
@@ -51,7 +51,7 @@ ro:
           all: "Toate"
           reset: "Resetare"
         search:
-          name: "Căutare"
+          name: "Caută"
         spam:
           name: "Spam"
       modals:
@@ -60,7 +60,9 @@ ro:
         short_title: "Spam"
         last_seven_days: "Ultimele 7 zile"
         enable: "Activează"
+        save_button: "Salvează modificări"
         test_modal:
+          run: "Rulează test"
           spam: "Spam"
       usage:
         summary: "Rezumat"
@@ -72,36 +74,42 @@ ro:
       ai_persona:
         back: "Înapoi"
         name: "Nume"
-        edit: "Modifică"
+        edit: "Editează"
         export: "Exportă"
+        import: "Importă"
         description: "Descriere"
-        user: Utilizatori
-        save: "Salvare"
-        enabled: "Activat?"
+        user: Utilizator
+        save: "Salvează"
+        enabled: "Activată?"
         delete: "Șterge"
         response_format:
-          open_modal: "Modifică"
+          open_modal: "Editează"
         filters:
           reset: "Resetare"
       rag:
         uploads:
-          title: "Urcări"
+          title: "Încărcări"
           uploading: "Se încarcă..."
       tools:
         back: "Înapoi"
         export: "Exportă"
+        import: "Importă"
         name: "Nume"
         description: "Descriere"
         summary: "Rezumat"
         save: "Salvează"
         remove_parameter: "Elimină"
         parameter_required: "Necesare"
-        edit: "Modifică"
+        edit: "Editează"
+        test: "Rulează test"
         delete: "Șterge"
+        test_modal:
+          run: "Rulează test"
       llms:
         display_name: "Nume"
+        provider: "Furnizor"
         save: "Salvează"
-        edit: "Modifică"
+        edit: "Editează"
         back: "Înapoi"
         delete: Șterge
         quotas:
@@ -111,6 +119,7 @@ ro:
             hour: "o oră"
             six_hours: "6 de ore"
             day: "24 de ore"
+            week: "7 zile"
             custom: "Personalizat..."
           hours: "de ore"
         usage:
@@ -119,32 +128,35 @@ ro:
         next:
           title: "Următorul"
         tests:
+          title: "Rulează test"
           success: "Succes!"
         providers:
           google: "Google"
           fake: "Personalizat"
       ai_helper:
         context_menu:
-          cancel: "Anulare"
+          cancel: "Anulează"
+          regen: "Încearcă din nou"
           discard: "Renunță"
         post_options_menu:
-          close: "Închide sondajul"
+          close: "Închide"
           copy: "Copiază"
           copied: "Copiat!"
-          cancel: "Anulare"
+          cancel: "Anulează"
         image_caption:
-          save_caption: "Salvare"
+          save_caption: "Salvează"
           automatic_caption_dialog:
             confirm: "Activează"
       embeddings:
         back: "Înapoi"
-        save: "Salvare"
+        save: "Salvează"
         delete: "Șterge"
-        edit: "Modifică"
+        edit: "Editează"
         tests:
           title: "Rulează test"
           success: "Succes!"
         display_name: "Nume"
+        provider: "Furnizor"
         providers:
           google: "Google"
           fake: "Personalizat"
