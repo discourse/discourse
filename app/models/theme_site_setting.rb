@@ -100,11 +100,9 @@ class ThemeSiteSetting < ActiveRecord::Base
   end
 
   def self.generate_defaults_map
-    SiteSetting
-      .themeable_site_settings
-      .each_with_object({}) do |setting_name, map|
-        map[setting_name] = SiteSetting.defaults[setting_name]
-      end
+    SiteSetting.themeable_site_settings.to_h do |setting_name|
+      [setting_name, SiteSetting.defaults[setting_name]]
+    end
   end
 
   def setting_rb_value
