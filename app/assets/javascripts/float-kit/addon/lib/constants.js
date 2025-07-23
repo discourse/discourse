@@ -13,6 +13,11 @@ export const FLOAT_UI_PLACEMENTS = [
   "left-end",
 ];
 
+export const PLACEMENT_STRATEGIES = {
+  FLIP: "flip",
+  AUTO_PLACEMENT: "autoPlacement",
+};
+
 export const TOOLTIP = {
   options: {
     animated: true,
