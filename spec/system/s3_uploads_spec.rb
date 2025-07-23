@@ -18,7 +18,7 @@ describe "Uploading files in the composer to S3", type: :system do
         find("#edit-avatar").click
         find("#uploaded-avatar").click
         attach_file(
-          "#avatar-uploader",
+          "custom-profile-upload",
           File.absolute_path(file_from_fixtures("logo.jpg")),
           make_visible: true,
         )
