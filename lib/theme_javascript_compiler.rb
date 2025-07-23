@@ -28,17 +28,11 @@ class ThemeJavascriptCompiler
       @compiled = true
       @input_tree.freeze
 
-      output_tree = compile_tree!
-
       output =
-        if !output_tree.present?
-          { "code" => "" }
-        else
-          DiscourseJsProcessor::Transpiler.new.rollup(
-            @output_tree.to_h,
-            { themeId: @theme_id, settings: @settings },
-          )
-        end
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          @input_tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
+          { themeId: @theme_id, settings: @settings, minify: @minify && !@@terser_disabled },
+        )
 
       @content = output["code"]
       @source_map = output["map"]
@@ -48,24 +42,6 @@ class ThemeJavascriptCompiler
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{e.message}"
     @content = "console.error(#{message.to_json});\n"
     [@content, @source_map]
-  end
-
-  def terser_config
-    # Based on https://github.com/ember-cli/ember-cli-terser/blob/28df3d90a5/index.js#L12-L26
-    {
-      sourceMap: {
-        includeSources: true,
-        root: "theme-#{@theme_id}/",
-      },
-      compress: {
-        negate_iife: false,
-        sequences: 30,
-        drop_debugger: false,
-      },
-      output: {
-        semicolons: false,
-      },
-    }
   end
 
   def content

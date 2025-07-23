@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeJavascriptCompiler do
-  let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", {}) }
+  let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", minify: false) }
 
   describe "#append_ember_template" do
     it "maintains module names so that discourse-boot.js can correct them" do
@@ -24,7 +24,7 @@ RSpec.describe ThemeJavascriptCompiler do
   describe "connector module name handling" do
     it "separates colocated connectors to avoid module name clash" do
       # Colocated under `/connectors`
-      compiler = ThemeJavascriptCompiler.new(1, "marks")
+      compiler = ThemeJavascriptCompiler.new(1, "marks", minify: false)
       compiler.append_tree(
         {
           "connectors/outlet/blah-1.hbs" => "{{var}}",
@@ -42,7 +42,7 @@ RSpec.describe ThemeJavascriptCompiler do
       )
 
       # Colocated under `/templates/connectors`
-      compiler = ThemeJavascriptCompiler.new(1, "marks")
+      compiler = ThemeJavascriptCompiler.new(1, "marks", minify: false)
       compiler.append_tree(
         {
           "templates/connectors/outlet/blah-1.hbs" => "{{var}}",
@@ -60,7 +60,7 @@ RSpec.describe ThemeJavascriptCompiler do
       )
 
       # Not colocated
-      compiler = ThemeJavascriptCompiler.new(1, "marks")
+      compiler = ThemeJavascriptCompiler.new(1, "marks", minify: false)
       compiler.append_tree(
         {
           "templates/connectors/outlet/blah-1.hbs" => "{{var}}",
@@ -78,7 +78,7 @@ RSpec.describe ThemeJavascriptCompiler do
       )
 
       # colocation in discourse directory
-      compiler = ThemeJavascriptCompiler.new(1, "marks")
+      compiler = ThemeJavascriptCompiler.new(1, "marks", minify: false)
       compiler.append_tree(
         {
           "discourse/connectors/outlet/blah-1.hbs" => "{{var}}",
@@ -160,7 +160,7 @@ RSpec.describe ThemeJavascriptCompiler do
     end
 
     it "applies theme AST transforms to colocated components" do
-      compiler = ThemeJavascriptCompiler.new(12_345_678_910, "my theme name")
+      compiler = ThemeJavascriptCompiler.new(12_345_678_910, "my theme name", minify: false)
       compiler.append_tree(
         { "discourse/components/mycomponent.hbs" => '{{theme-i18n "my_translation_key"}}' },
       )
@@ -179,6 +179,8 @@ RSpec.describe ThemeJavascriptCompiler do
   end
 
   describe "terser compilation" do
+    let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", {}, minify: true) }
+
     it "applies terser and provides sourcemaps" do
       sources = {
         "multiply.js" =>
@@ -190,11 +192,15 @@ RSpec.describe ThemeJavascriptCompiler do
 
       expect(compiler.content).to include("multiply")
       expect(compiler.content).to include("add")
+      expect(compiler.content).not_to include("firstValue")
+      expect(compiler.content).not_to include("secondValue")
 
       map = JSON.parse(compiler.source_map)
       expect(map["sources"]).to include("theme-1/multiply.js", "theme-1/add.js")
       expect(map["sourcesContent"].to_s).to include("const multiply")
       expect(map["sourcesContent"].to_s).to include("const add")
+      expect(map["sourcesContent"].to_s).to include("firstValue")
+      expect(map["sourcesContent"].to_s).to include("secondValue")
     end
 
     it "handles invalid JS" do

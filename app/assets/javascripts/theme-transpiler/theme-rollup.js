@@ -10,7 +10,7 @@ import EmberThisFallback from "ember-this-fallback";
 import MagicString from "magic-string";
 import { memfs } from "memfs";
 import { basename, dirname, join } from "path";
-// import { minify as terserMinify } from "terser";
+import { minify as terserMinify } from "terser";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
@@ -260,20 +260,33 @@ globalThis.rollup = function (modules, opts) {
           },
         },
       },
-      // {
-      //   name: "discourse-terser",
-      //   async renderChunk(code, chunk, outputOptions) {
-      //     const defaultOptions = {
-      //       sourceMap:
-      //         outputOptions.sourcemap === true ||
-      //         typeof outputOptions.sourcemap === "string",
-      //     };
+      {
+        name: "discourse-terser",
+        async renderChunk(code, chunk, outputOptions) {
+          if (!opts.minify) {
+            return;
+          }
 
-      //     defaultOptions.module = true;
+          // Based on https://github.com/ember-cli/ember-cli-terser/blob/28df3d90a5/index.js#L12-L26
+          const defaultOptions = {
+            sourceMap:
+              outputOptions.sourcemap === true ||
+              typeof outputOptions.sourcemap === "string",
+            compress: {
+              negate_iife: false,
+              sequences: 30,
+              drop_debugger: false,
+            },
+            output: {
+              semicolons: false,
+            },
+          };
 
-      //     return await terserMinify(code, defaultOptions);
-      //   },
-      // },
+          defaultOptions.module = true;
+
+          return await terserMinify(code, defaultOptions);
+        },
+      },
     ],
   });
 
