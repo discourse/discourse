@@ -29,9 +29,10 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-# enable high performance redis client with hiredis
-# it is automatically used by redis gem
-gem "hiredis-client"
+# NOTE: hiredis-client is recommended for high performance use of Redis
+# however a recent attempt at an upgrade lead to https://meta.discourse.org/t/rebuild-error/375387
+# for now we are sticking with the socked based implementation that is not sensitive to this issue
+# gem "hiredis-client"
 gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
