@@ -78,7 +78,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   end
 
   describe "#convert" do
-    let(:output_path) { "original/1X/#{new_sha1}" }
+    let(:output_path) { "/uploads/default/test_0/original/1X/#{new_sha1}" }
     let(:job_id) { "job-123" }
 
     before { allow(Jobs).to receive(:enqueue_in) }
