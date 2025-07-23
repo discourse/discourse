@@ -46,15 +46,15 @@ module InviteGuardian
       (!SiteSetting.must_approve_users? || is_staff?)
   end
 
-  def can_bulk_invite_to_forum?(user)
-    user.admin?
+  def can_bulk_invite_to_forum?
+    is_admin?
   end
 
-  def can_resend_all_invites?(user)
-    user.staff?
+  def can_resend_all_invites?
+    is_staff?
   end
 
-  def can_destroy_all_invites?(user)
-    user.staff?
+  def can_destroy_all_invites?
+    is_staff?
   end
 end
