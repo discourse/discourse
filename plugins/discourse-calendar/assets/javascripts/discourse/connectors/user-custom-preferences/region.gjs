@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { classNames, tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 import RegionInput from "../../components/region-input";
 import { TIME_ZONE_TO_REGION } from "../../lib/regions";
 
+@tagName("div")
+@classNames("user-custom-preferences-outlet")
 export default class Region extends Component {
   static shouldRender(args, component) {
     return component.siteSettings.calendar_enabled;
