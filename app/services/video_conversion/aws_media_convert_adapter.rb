@@ -10,7 +10,12 @@ module VideoConversion
 
       begin
         new_sha1 = SecureRandom.hex(20)
-        output_path = "original/1X/#{new_sha1}"
+
+        # Use FileStore::BaseStore logic to generate the path
+        # Create a temporary upload object to leverage the path generation logic
+        temp_upload = build_temp_upload_for_path_generation(new_sha1)
+        full_output_path = Discourse.store.get_path_for_upload(temp_upload)
+        output_path = extract_mediaconvert_path(full_output_path)
 
         # Extract the path from the URL
         # The URL format is: //bucket.s3.dualstack.region.amazonaws.com/path/to/file
@@ -118,13 +123,9 @@ module VideoConversion
       return false if !object&.exists?
 
       begin
-        optimized_video =
-          create_optimized_video_record(
-            output_path,
-            new_sha1,
-            object.size,
-            "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{path}",
-          )
+        url = "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{path}"
+
+        optimized_video = create_optimized_video_record(output_path, new_sha1, object.size, url)
 
         if optimized_video
           update_posts_with_optimized_video
@@ -150,6 +151,23 @@ module VideoConversion
 
     def valid_settings?
       SiteSetting.video_conversion_enabled && SiteSetting.mediaconvert_role_arn.present?
+    end
+
+    def build_temp_upload_for_path_generation(new_sha1)
+      # Create a temporary upload object to leverage FileStore::BaseStore path generation
+      # This object is only used for path generation and won't be saved to the database
+      Upload.new(
+        id: @upload.id, # Use the same ID to get the same depth calculation
+        sha1: new_sha1,
+        extension: "mp4",
+      )
+    end
+
+    def extract_mediaconvert_path(full_path)
+      # Full path format: "/uploads/default/test_0/original/1X/sha1.mp4"
+      # We want: "original/1X/sha1"
+      full_path[FileStore::BaseStore::UPLOAD_PATH_REGEX, 1]&.sub(/\.mp4$/, "") ||
+        raise("Unexpected path format: #{full_path}")
     end
 
     def mediaconvert_client
