@@ -22,8 +22,11 @@ zh_TW:
       save: "儲存變更"
       edit: "編輯"
       delete: "刪除"
+      result_count:
+        other: "%{count} 個結果."
       query_groups: "群組"
       query_description: "描述"
+      query_user: "創建者"
       reset_params: "重置"
       search_placeholder: "搜尋..."
     group:

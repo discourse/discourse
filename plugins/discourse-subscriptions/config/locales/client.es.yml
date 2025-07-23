@@ -36,7 +36,7 @@ es:
       subscribe:
         help: Apoya este sitio suscribiéndote
     discourse_subscriptions:
-      title: Discourse Subscriptions
+      title: Suscripciones de Discourse
       admin_navigation: Suscripciones
       optional: Opcional
       navigation:
@@ -79,10 +79,10 @@ es:
         select: Seleccionar un plan de suscripción
         interval:
           adverb:
-            day: Diario
-            week: Semanal
-            month: Mensual
-            year: Anual
+            day: Diariamente
+            week: Semanalmente
+            month: Mensualmente
+            year: Anualmente
         payment_button: Suscribirse
         success: '¡Gracias! Se ha creado tu suscripción.'
         incomplete: El pago está incompleto. Tu suscripción se actualizará cuando se complete el pago.
@@ -93,7 +93,7 @@ es:
         payments:
           id: ID de pago
           amount: Cantidad
-          created_at: Creado
+          created_at: Creada
         payments_help: No hay pagos
         plans:
           rate: Tarifa
@@ -107,7 +107,7 @@ es:
           update_card:
             heading: "Tarjeta de actualización de la suscripción: %{sub_id}"
             single: "Actualizar"
-          created_at: Creado
+          created_at: Creada
           cancel: cancelar
           cancelled: cancelada
           operations:
@@ -130,7 +130,7 @@ es:
           title: Detalles del cliente
         promo_code: Cupón
         buttons:
-          subscribe: Suscribir
+          subscribe: Suscribirse
         purchased: Comprado
         go_to_billing: Ir a facturación
         already_purchased: '¡Muchas gracias por la compra previa de este producto!'
@@ -432,7 +432,7 @@ es:
             description_help: Esto describe el producto de suscripción.
             repurchaseable: '¿Se puede recomprar?'
             repurchase_help: Permitir que el producto y los planes asociados se compren varias veces
-            active: Activa
+            active: Activo
             active_help: Desactiva esto hasta que el producto esté listo para el consumidor final.
             created_at: Creada
             updated_at: Actualizada
@@ -459,7 +459,7 @@ es:
             group: Grupo de usuarios
             group_help: Este es el grupo de usuarios en Discourse al que se añadirá el cliente cuando se cree la suscripción.
             active: Activo
-            created_at: Creado
+            created_at: Creada
             recurring: '¿Plan recurrente?'
         coupons:
           title: Cupones
@@ -479,6 +479,6 @@ es:
             product: Producto
             plan: Plan
             status: Estado
-            created_at: Creado
+            created_at: Creada
         ask_refund: '¿Reembolsar el último pago realizado por el cliente?'
         canceled: "La suscripción está cancelada."

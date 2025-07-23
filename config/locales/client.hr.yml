@@ -236,12 +236,6 @@ hr:
     broken_page_change_alert: "Upravljač OnPageChange pokrenuo je pogrešku. Provjerite alate preglednika za programere za više informacija."
     broken_plugin_alert: "Uzrokovano dodatkom '%{name}'"
     broken_transformer_alert: "Došlo je do pogreške. Vaša stranica možda neće raditi ispravno."
-    critical_deprecation:
-      notice: "<b>[Administratorska obavijest]</b> Jednu od vaših tema ili dodataka potrebno je ažurirati radi kompatibilnosti s nadolazećim promjenama jezgre Discoursea."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identificirana tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identificirani dodatak: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Azija Pacifik (Tokyo)"
@@ -5066,6 +5060,8 @@ hr:
             badges:
               content: "Značke"
               title: "Sve značke dostupne za osvajanje"
+            filter:
+              content: "Filter"
             topics:
               content: "Tema"
               title: "Sve teme"
@@ -5222,6 +5218,9 @@ hr:
           save: "Spremiti kao..."
     powered_by_discourse: "Pokreće Discourse"
     safari_15_warning: "Vaš preglednik uskoro neće biti kompatibilan s ovom zajednicom. Kako biste ovdje nastavili sudjelovati, nadogradite preglednik ili <a href='%{url}'>saznajte više</a>."
+    filter:
+      description:
+        yesterday: "Jučer"
     discovery:
       headings:
         all:
@@ -5411,6 +5410,8 @@ hr:
           title: "Webhooks"
         embedding:
           title: "Ugrađivanje"
+      theme_site_settings:
+        default_value: "Zadano"
       search:
         title: "Pretraživanje"
         result_types:
@@ -6060,10 +6061,7 @@ hr:
           up_to_date: "Tema je ažurirana, zadnja provjera:"
           has_overwritten_history: "Trenutna verzija teme više ne postoji jer je povijest Gita prepisana prisilnim pritiskom."
           add: "Dodaj"
-          theme_settings: "Postavke teme"
-          overriden_settings_explanation: "Nadjačane postavke označene su točkom i imaju istaknutu boju. Za resetiranje ovih postavki na zadanu vrijednost, pritisnite gumb za resetiranje pored njih."
           no_settings: "Ova tema nema postavke."
-          theme_translations: "Tematski prijevodi"
           empty: "Nema stvari"
           commits_behind:
             one: "Tema je %{count} obrada iza!"
@@ -6114,6 +6112,11 @@ hr:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
           title: "Boje"
+          edit: "Uredi"
+          filters:
+            all: "Sve"
+          active_badge:
+            text: "Aktivno"
           about: "Izmijenite boje koje koriste vaše teme. Za početak izradite novu paletu boja."
           copy_name_prefix: "Kopija"
           undo: "Vrati na prethodno"
@@ -6582,7 +6585,6 @@ hr:
         activity: Aktivnosti
         like_count: Like-ovi dani / primljeni
         last_100_days: "U zadnjih 100 dana"
-        private_topics_count: Privatne teme
         posts_read_count: Objava pročitano
         post_count: Objava stvoreno
         second_factor_enabled: Omogućena dvofaktorska provjera autentičnosti

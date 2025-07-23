@@ -30,6 +30,8 @@ lt:
         quarterly: "Kas ketvirtį"
     user:
       notification_level_when_assigned:
+        watch_topic: "Stebėjimo tema"
+        track_topic: "Sekti temą"
         do_nothing: "Nieko nedaryti"
       messages:
         assigned: "Priskirta"

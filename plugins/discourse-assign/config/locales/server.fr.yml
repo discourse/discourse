@@ -50,10 +50,10 @@ fr:
     topic_group_assigned_excerpt: "a attribué le sujet « %{title} » à @%{group}"
     reminders_frequency:
       never: "jamais"
-      daily: "chaque jour"
-      weekly: "chaque semaine"
-      monthly: "chaque mois"
-      quarterly: "chaque trimestre"
+      daily: "tous les jours"
+      weekly: "toutes les semaines"
+      monthly: "mensuel"
+      quarterly: "trimestriel"
   assign_mailer:
     title: "Attribuer un expéditeur"
     subject_template: "[%{email_prefix}] %{assignee_name} vous a attribué le sujet « %{topic_title} » !"

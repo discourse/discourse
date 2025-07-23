@@ -1,0 +1,196 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sortează după"
+            tag:
+              label: "Etichetă"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID subiect"
+            title:
+              label: "Titlu"
+            categories:
+              label: "Categorii"
+            tags:
+              label: "Etichete"
+        llm_triage:
+          fields:
+            category:
+              label: "Categorie"
+            tags:
+              label: "Etichete"
+            canned_reply:
+              label: "Răspunde"
+    discourse_ai:
+      features:
+        back: "Înapoi"
+        disabled: "(dezactivat)"
+        groups: "Grupuri:"
+        no_groups: "Nimic"
+        edit: "Editează"
+        expand_list:
+          one: "(încă %{count})"
+          few: "(încă %{count})"
+          other: "(încă %{count})"
+        collapse_list: "(arată mai puține)"
+        filters:
+          all: "Toate"
+          reset: "Resetare"
+        search:
+          name: "Caută"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Alege o opțiune..."
+      spam:
+        short_title: "Spam"
+        last_seven_days: "Ultimele 7 zile"
+        enable: "Activează"
+        save_button: "Salvează modificări"
+        test_modal:
+          run: "Rulează test"
+          spam: "Spam"
+      usage:
+        summary: "Rezumat"
+        username: "Nume utilizator"
+        total_requests: "Total cereri"
+        periods:
+          last_day: "Ultimele 24 de ore"
+          custom: "Personalizat..."
+      ai_persona:
+        back: "Înapoi"
+        name: "Nume"
+        edit: "Editează"
+        export: "Exportă"
+        import: "Importă"
+        description: "Descriere"
+        user: Utilizator
+        save: "Salvează"
+        enabled: "Activată?"
+        delete: "Șterge"
+        response_format:
+          open_modal: "Editează"
+        filters:
+          reset: "Resetare"
+      rag:
+        uploads:
+          title: "Încărcări"
+          uploading: "Se încarcă..."
+      tools:
+        back: "Înapoi"
+        export: "Exportă"
+        import: "Importă"
+        name: "Nume"
+        description: "Descriere"
+        summary: "Rezumat"
+        save: "Salvează"
+        remove_parameter: "Elimină"
+        parameter_required: "Necesare"
+        edit: "Editează"
+        test: "Rulează test"
+        delete: "Șterge"
+        test_modal:
+          run: "Rulează test"
+      llms:
+        display_name: "Nume"
+        provider: "Furnizor"
+        save: "Salvează"
+        edit: "Editează"
+        back: "Înapoi"
+        delete: Șterge
+        quotas:
+          group: "Grup"
+          duration: "Durată"
+          durations:
+            hour: "o oră"
+            six_hours: "6 de ore"
+            day: "24 de ore"
+            week: "7 zile"
+            custom: "Personalizat..."
+          hours: "de ore"
+        usage:
+          ai_summarization: "Rezumat"
+          ai_spam: "Spam"
+        next:
+          title: "Următorul"
+        tests:
+          title: "Rulează test"
+          success: "Succes!"
+        providers:
+          google: "Google"
+          fake: "Personalizat"
+      ai_helper:
+        context_menu:
+          cancel: "Anulează"
+          regen: "Încearcă din nou"
+          discard: "Renunță"
+        post_options_menu:
+          close: "Închide"
+          copy: "Copiază"
+          copied: "Copiat!"
+          cancel: "Anulează"
+        image_caption:
+          save_caption: "Salvează"
+          automatic_caption_dialog:
+            confirm: "Activează"
+      embeddings:
+        back: "Înapoi"
+        save: "Salvează"
+        delete: "Șterge"
+        edit: "Editează"
+        tests:
+          title: "Rulează test"
+          success: "Succes!"
+        display_name: "Nume"
+        provider: "Furnizor"
+        providers:
+          google: "Google"
+          fake: "Personalizat"
+      ai_bot:
+        debug_ai_modal:
+          request: "Cere"
+          response: "Răspuns"
+          next_log: "Următorul"
+          previous_log: "Precedent"
+        invite_ai_conversation:
+          button: "Invită"
+        share_modal:
+          copy: "Copiază"
+        conversations:
+          today: "Astăzi"
+          last_7_days: "Ultimele 7 zile"
+          last_30_days: "Ultimele 30 de zile"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Toate"
+          group_types:
+            category: "Categorie"
+            tag: "Etichetă"
+          table:
+            total_count: "Total"
+      summarization:
+        chat:
+          title: "Rezumați mesajele"
+          description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
+          summarize: "Rezumat"
+      discobot_discoveries:
+        regular_results: "Discuții"
+        collapse: "Colaps"
+        tooltip:
+          actions:
+            disable: "Dezactivează"

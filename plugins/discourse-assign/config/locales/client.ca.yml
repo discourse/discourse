@@ -36,6 +36,7 @@ ca:
       assign_modal:
         title: "Assigna el tema"
         assign: "Assigna"
+        note_label: Nota
         optional_label: "(opcional)"
         status_label: Estat
       claim:
@@ -61,7 +62,7 @@ ca:
         do_nothing: "No facis res"
       messages:
         assigned_title: "Assignats (%{count})"
-        assigned: "Assignats"
+        assigned: "Assignat"
       assignment_description:
         topic: "%{topic_title}"
     search:

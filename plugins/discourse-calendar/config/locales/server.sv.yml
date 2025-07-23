@@ -37,7 +37,6 @@ sv:
     displayed_invitees_limit: "Begränsar antalet inbjudna som visas för ett evenemang."
     display_post_event_date_on_topic_title: "Visar datumet för evenemanget efter ämnesrubriken."
     discourse_post_event_allowed_on_groups: "Grupper som får skapa evenemang."
-    discourse_post_event_allowed_custom_fields: "Tillåter att varje evenemang anger värdet på anpassade fält."
     discourse_post_event_edit_notifications_time_extension: "Förlänger (i minuter) perioden efter slutet av ett evenemang när \"närvarande\" inbjudna fortfarande underrättas om redigering i det ursprungliga inlägget."
     holiday_calendar_topic_id: "Ämnes-ID för personalens semester-/frånvarokalender."
     delete_expired_event_posts_after: "Inlägg med utgångna evenemang raderas automatiskt efter (n) timmar. Ställ in till -1 för att inaktivera radering."

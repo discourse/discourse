@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    enable_discourse_github_plugin: "تفعيل المكوِّن الإضافي discourse-github"
+    github_linkback_enabled: "ربط مشكلات GitHub بمناقشات المنتدى"
+    github_linkback_projects: "قائمة المشروعات التي يمكن الربط بها"
+    github_linkback_access_token: 'رمز وصول صالح للمستخدم الذي سينشر الرابط ولإحصاء الإرسالات/المساهمات لمنح الشارات. راجع <a href="https://meta.discourse.org/t/99895">هنا</a> للحصول على الإرشادات بشأن كيفية الحصول على رمز مميَّز.'
+    github_linkback_maximum_links: "الحد الأقصى لعدد الروابط التي يمكن إنشاؤها من منشور واحد. عندما تحتوي إحدى المشاركات على روابط أكثر من الحد، لا يتم إنشاء أيٍّ منها."
+    github_permalinks_enabled: "تفعيل استبدال الرابط الثابت من GitHub"
+    github_permalinks_exclude: "اسم الملف أو الدليل الذي يجب استبعاده من استبدال الرابط الثابت. أدخل اسم الملف أو المسار الكامل فقط: user/repository/optional-directory/filename"
+    github_badges_enabled: "تفعيل شارات GitHub"
+    github_badges_repos: "عناوين URL الخاصة بمستودعات GitHub للبحث عن المساهمات والإرسالات"
+    github_silver_badge_min_commits: "أقل عدد من الإرسالات للحصول على الشارة الفضية"
+    github_gold_badge_min_commits: "أقل عدد من الإرسالات للحصول على الشارة الذهبية"
+    errors:
+      invalid_badge_repo: "يجب عليك إدخال عنوان URL على GitHub أو اسم المستودع بالتنسيق github_user/repository_name"
+      invalid_github_linkback_access_token: "يجب عليك إدخال رمز وصول صالح إلى رابط GitHub والذي يمكنه الوصول إلى مستودعات الشارة التي أدخلتها."
+  github_linkback:
+    commit_template: |
+      تم ذكر هذا الإرسال في **%{title}**. قد تكون هناك تفاصيل ذات صلة هناك:
+
+      %{post_url}
+    pr_template: |
+      تم ذكر طلب السحب هذا في **%{title}**. قد تكون هناك تفاصيل ذات صلة هناك:
+
+      %{post_url}
+    issue_template: |
+      تم ذكر هذه المشكلة في **%{title}**. قد تكون هناك تفاصيل ذات صلة هناك:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "الإجراء المطلوب للمكوِّن الإضافي discourse-github"
+      repository_not_found_pm_title: "الإجراء المطلوب للمكوِّن الإضافي discourse-github"
+      invalid_octokit_credentials_pm_title: "الإجراء المطلوب للمكوِّن الإضافي discourse-github"

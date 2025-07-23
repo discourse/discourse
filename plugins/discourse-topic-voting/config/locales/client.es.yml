@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  js:
+    category:
+      sort_options:
+        votes: "Votos"
+    topic_voting:
+      title: "Votación de temas"
+      reached_limit: "Se te acabaron los votos, ¡elimina un voto existente!"
+      list_votes: "Lista de tus votos"
+      votes_nav_help: "temas con más votos"
+      voted: "Votaste sobre este tema"
+      allow_topic_voting: "Permitir a los usuarios votar sobre temas en esta categoría"
+      vote_title: "Votar"
+      vote_title_plural: "Votos"
+      voted_title: "Votado"
+      voting_closed_title: "Cerrado"
+      voting_limit: "Límite"
+      votes_left_button_title:
+        one: "Te queda %{count} voto."
+        other: "Te quedan %{count} votos."
+      votes:
+        one: "%{count} voto"
+        other: "%{count} votos"
+      anonymous_button:
+        one: "Votar"
+        other: "Votos"
+      remove_vote: "Eliminar voto"
+      no_votes_title_self: "Aún no has votado por ningún tema"
+      no_votes_title_others: "%{username} aún no ha votado por ningún tema"
+    filters:
+      votes:
+        title: "Votos"
+        help: "temas con más votos"
+      my_votes:
+        title: "Mis votos"
+        help: "temas en los que has votado"
+    search:
+      most_votes: "Más votos"
+      advanced:
+        vote:
+          count:
+            label: "Número mínimo de votos"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Evento de votación de tema"
+          topic_upvote: "Cuando un usuario vota sobre un tema"
+          topic_unvote: "Cuando un usuario cancela el voto sobre un tema"

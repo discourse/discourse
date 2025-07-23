@@ -35,12 +35,13 @@ da:
         title: "Tildel"
         help: "Tildel Emne til Bruger"
       reassign:
-        title: "Redigér"
+        title: "Rediger"
       topic_level_menu:
         unassign_with_ellipsis: "Fjern tildeling..."
       assign_modal:
         title: "Tildel Emne"
         assign: "Tildel"
+        note_label: Note
         optional_label: "(valgfri)"
         status_label: Status
       claim:
@@ -64,6 +65,7 @@ da:
               assign: "Tildel"
     user:
       notification_level_when_assigned:
+        track_topic: "Spor emne"
         do_nothing: "Gøre ingenting"
       messages:
         assigned_title: "Tildelt (%{count})"

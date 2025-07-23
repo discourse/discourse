@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "ընդունված"
+    solved:
+      title: "Լուծված է"
+      allow_accepted_answers: "Թույլատրել թեմայի սեփականատիրոջը և անձնակազմին՝ նշել պատասխանը որպես լուծում"
+      accept_answer: "Ընտրեք, թե արդյոք այս պատասխանը լուծում է խնդիրը"
+      has_no_accepted_answer: "Այս թեման լուծում չունի"
+      unaccept_answer: "Ընտրությունից հանել, եթե այս պատասխանը այլևս չի լուծում խնդիրը"
+      accepted_answer: "Լուծում"
+      solution: "Լուծում"
+      solution_summary:
+        one: "լուծում"
+        other: "լուծում"
+      topic_status_filter:
+        all: "բոլոր"
+        solved: "լուծված"
+        unsolved: "չլուծված"
+    topic_statuses:
+      solved:
+        help: "Այս թեման ունի լուծում:"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Վստահության Մակարդակ

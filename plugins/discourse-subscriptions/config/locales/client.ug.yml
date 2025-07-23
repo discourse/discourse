@@ -28,6 +28,9 @@ ug:
             single: "يېڭىلا"
           created_at: قۇرغان ۋاقتى
           cancel: ۋاز كەچ
+      subscribe:
+        cardholder_address:
+          city: شەھەر
       billing:
         email: ئېلخەت
       admin:

@@ -20,7 +20,7 @@ hy:
       group_mention_template: "Նշումներ՝ @%{name}"
       group_message_template: "Հաղորդագրություն դեպի՝ @%{name}"
       choose_group: "(ընտրեք խումբ)"
-      all_categories: "(բոլոր կատեգորիաները)"
+      all_categories: "(Բոլոր կատեգորիաները)"
       all_tags: "(բոլոր թեգերը)"
       create_rule: "Ստեղծել Կանոն"
       create_channel: "Ստեղծել Ալիք"
@@ -44,9 +44,9 @@ hy:
         follow: 'Միայն առաջին գրառումը'
         watch: 'Բոլոր գրառումները և պատասխանները'
       rule_table:
-        filter: "Ֆիլտր"
+        filter: "Ֆիլտրել"
         category: "Կատեգորիա"
-        tags: "Թեգեր"
+        tags: "Պիտակներ"
         edit_rule: "Խմբագրել"
         delete_rule: "Ջնջել"
       edit_channel_modal:
@@ -66,8 +66,8 @@ hy:
         channel: Ալիք
         filter: Ֆիլտրել
         category: Կատեգորիա
-        group: Խումբ
-        tags: Թեգեր
+        group: Խմբավորել
+        tags: Պիտակներ
         instructions:
           type: "Փոփոխել տիպը՝ ծանուցումներ գործարկելու խմբային հաղորդագրությունների կամ նշումների համար"
           filter: "Ծանուցումների մակարդակ: Խլացումը վերասահմանում է այլ համընկնող կանոնները"

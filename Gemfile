@@ -17,7 +17,6 @@ gem "activesupport", "~> 8.0.0"
 gem "railties", "~> 8.0.0"
 
 gem "propshaft"
-
 gem "json"
 
 # this will eventually be added to rails,
@@ -30,6 +29,10 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
+# NOTE: hiredis-client is recommended for high performance use of Redis
+# however a recent attempt at an upgrade lead to https://meta.discourse.org/t/rebuild-error/375387
+# for now we are sticking with the socked based implementation that is not sensitive to this issue
+# gem "hiredis-client"
 gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
@@ -283,10 +286,26 @@ gem "dry-initializer", "~> 3.1"
 gem "parallel"
 
 # for discourse-zendesk-plugin
-gem "inflection", "1.0.0", require: false
-gem "multipart-post", "2.2.3", require: false
-gem "faraday-multipart", "1.0.4", require: false
-gem "zendesk_api", "1.38.0.rc1", require: false
+gem "inflection", require: false
+gem "multipart-post", require: false
+gem "faraday-multipart", require: false
+gem "zendesk_api", require: false
 
 # for discourse-subscriptions
-gem "stripe", "11.1.0", require: false
+gem "stripe", require: false
+
+# for discourse-github
+gem "sawyer", require: false
+gem "octokit", require: false
+
+# for discourse-ai
+gem "tokenizers", require: false
+gem "tiktoken_ruby", require: false
+gem "discourse_ai-tokenizers", require: false
+gem "ed25519" # TODO: remove this as existing ssl gem should handle this
+gem "Ascii85", require: false
+gem "ruby-rc4", require: false
+gem "hashery", require: false
+gem "ttfunk", require: false
+gem "afm", require: false
+gem "pdf-reader", require: false

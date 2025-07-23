@@ -1,0 +1,76 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse opgelost"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "geaccepteerd"
+    solutions: "Oplossingen"
+    solved:
+      title: "Opgelost"
+      allow_accepted_answers: "Topiceigenaar en medewerkers toestaan een antwoord als oplossing te markeren"
+      solved_topics_auto_close_hours: "Topic (n) uur na het laatste antwoord automatisch sluiten zodra het topic als opgelost is gemarkeerd."
+      accept_answer: "Selecteer als dit antwoord het probleem oplost"
+      accepted_description: "Dit is de geaccepteerde oplossing voor dit topic"
+      has_no_accepted_answer: "Dit topic heeft geen oplossing"
+      unaccept_answer: "Deselecteer als dit antwoord het probleem niet meer oplost"
+      accepted_answer: "Oplossing"
+      solution: "Oplossing"
+      solution_summary:
+        one: "oplossing"
+        other: "oplossingen"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "alle"
+        solved: "opgelost"
+        unsolved: "onopgelost"
+      no_solved_topics_title: "Je hebt nog geen topics opgelost"
+      no_solved_topics_title_others: "%{username} heeft nog geen topics opgelost"
+      no_solved_topics_body: "Als je een nuttig antwoord geeft op een topic, kan je antwoord door de eigenaar van het topic of door een medewerker als oplossing worden gekozen."
+      no_answer:
+        title: Is je vraag beantwoord?
+        description: "Markeer het antwoord en help anderen door de oplossingsknop onder het juiste antwoord te gebruiken."
+      notification:
+        title: "Je bericht is gemarkeerd als oplossing"
+    topic_statuses:
+      solved:
+        help: "Dit topic heeft een oplossing"
+    search:
+      advanced:
+        statuses:
+          solved: "zijn opgelost"
+          unsolved: "zijn onopgelost"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Oplossingsgebeurtenis"
+          accepted_solution: "Wanneer een gebruiker een bericht als geaccepteerd antwoord markeert"
+          unaccepted_solution: "Wanneer een gebruiker een bericht als niet-geaccepteerd antwoord markeert"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Accepteer/deaccepteer een oplossing.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Alle
+          fields:
+            maximum_trust_level:
+              label: Vertrouwensniveau
+              description: Gebruikers onder dit vertrouwensniveau activeren deze automatisering

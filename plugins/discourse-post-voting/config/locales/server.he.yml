@@ -40,7 +40,7 @@ he:
     vote:
       title: "הצבעה"
       description: "הצבעה לפוסט"
-      short_description: "הצבעה עבור פוסט"
+      short_description: "הצבעה לפוסט"
       long_form: "הצבעת עבור הפוסט"
   vote:
     error:

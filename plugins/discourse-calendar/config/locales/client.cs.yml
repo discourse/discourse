@@ -22,7 +22,7 @@ cs:
     discourse_automation:
       triggerables:
         event_started:
-          title: Událost zahájena
+          title: Zahájena událost
           fields:
             topic_id:
               label: ID tématu
@@ -410,17 +410,17 @@ cs:
               many: "%{count} se neúčastní"
               other: "%{count} se neúčastní"
             interested_count:
-              one: "%{count} má zájem"
+              one: "%{count} mají zájem"
               few: "%{count} mají zájem"
-              many: "%{count} má zájem"
-              other: "%{count} má zájem"
+              many: "%{count} mají zájem"
+              other: "%{count} mají zájem"
             invited_count:
               one: "%{count} pozván/a"
               few: "%{count} pozváni"
               many: "%{count} pozváno"
               other: "%{count} pozváno"
         event:
-          expired: "Uplynulá"
+          expired: "Platnost vypršela"
           closed: "Zavřené"
           status:
             standalone:
@@ -458,10 +458,10 @@ cs:
             bump_topic: "automaticky pošťouchnout téma"
             notification: "upozornit účastníky"
           units:
-            minutes: "minut"
-            hours: "hodin"
+            minutes: "minuty"
+            hours: "hodiny"
             days: "dnů"
-            weeks: "týdnů"
+            weeks: "týdny"
           periods:
             before: "před"
             after: "po"
@@ -470,7 +470,7 @@ cs:
         recurrence:
           label: "Opakování"
           none: "Bez opakování"
-          every_day: "každý den"
+          every_day: "Každý den"
           every_month: "Každý měsíc v tento den v týdnu"
           every_weekday: "Každý den v týdnu"
           every_week: "Každý týden v tento den"

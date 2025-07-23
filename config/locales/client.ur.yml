@@ -3619,6 +3619,8 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
+            filter:
+              content: "فِلٹر"
             topics:
               content: "ٹاپکس"
             faq:
@@ -3659,6 +3661,9 @@ ur:
       spreadsheet:
         show: "دکھائیں"
         about: "بارے میں"
+    filter:
+      description:
+        yesterday: "کَل"
     discovery:
       headings:
         multi_tag:
@@ -3780,6 +3785,8 @@ ur:
           title: "وَیب ھُوک٘س٘"
         embedding:
           title: "اَیمبَیڈ کرنا"
+      theme_site_settings:
+        default_value: "ڈِیفالٹ"
       search:
         title: "تلاش کریں"
         result_types:
@@ -4381,9 +4388,7 @@ ur:
           up_to_date: "تِھیم اَپ ڈَیٹ ہے، آخری دفعہ چَیک کیا:"
           has_overwritten_history: "موجودہ تھیم ورژن اب موجود نہیں ہے کیونکہ گٹ ہسٹری کو زبردستی دھکا لگا کر اوور رائٹ کر دیا گیا ہے۔"
           add: "شامل کریں"
-          theme_settings: "تھیم کی ترتیبات"
           no_settings: "اِس تھیم کی کوئی ترتیبات نہیں ہیں۔"
-          theme_translations: "تھیم ترجمے"
           empty: "کوئی اشیاء نہیں"
           commits_behind:
             one: "تِھیم %{count} کَمِٹ پیچھے ہے!"
@@ -4432,6 +4437,11 @@ ur:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
             description: "بَیس پیلیٹ:"
           title: "رنگ"
+          edit: "ترمیم کریں"
+          filters:
+            all: "تمام"
+          active_badge:
+            text: "فعال"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
           copy_name_prefix: "نقل از"
           undo: "کالعدم کریں"
@@ -4882,7 +4892,6 @@ ur:
         activity: سرگرمی
         like_count: لائیکس دیے / ملے
         last_100_days: "پچھلے 100 دنوں میں"
-        private_topics_count: نِجی ٹاپک
         posts_read_count: پڑھی گئیں پوسٹس
         post_count: بنائی گئیں پوسٹس
         second_factor_enabled: دو فیکٹر کی توثیق فعال ہے

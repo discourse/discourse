@@ -10,5 +10,9 @@ nb_NO:
     topic_tag_changed:
       added: "Lagt til %{added}"
     provider:
+      slack:
+        messaging:
+          topic_tag_changed:
+            added: "Lagt til %{added}"
       flowdock:
         message_title: "skrevet"

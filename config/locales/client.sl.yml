@@ -3654,6 +3654,8 @@ sl:
               content: "Admin"
             badges:
               content: "Značke"
+            filter:
+              content: "Filter"
             topics:
               content: "Tem"
             faq:
@@ -3724,6 +3726,9 @@ sl:
       spreadsheet:
         show: "Prikaži"
         about: "O nas"
+    filter:
+      description:
+        yesterday: "Včeraj"
     discovery:
       headings:
         categories: "Vse kategorije"
@@ -3834,6 +3839,8 @@ sl:
               header_description: "Spodnji URLji se pogosto uporabljeni v prispevkih uporabnikov, ki so bili identificirani kot spamerji"
         embedding:
           title: "Vdelovanje"
+      theme_site_settings:
+        default_value: "Privzeto"
       search:
         title: "Išči"
         result_types:
@@ -4257,6 +4264,11 @@ sl:
               too_large: "mora biti manj ali enako kot %{count}"
         colors:
           title: "Barve"
+          edit: "Uredi"
+          filters:
+            all: "Vsi"
+          active_badge:
+            text: "Aktivni"
           copy_name_prefix: "Kopija od"
           undo: "Razveljavi"
           revert: "Povrni"
@@ -4558,7 +4570,6 @@ sl:
         activity: Aktivnost
         like_count: Podeljeni / prejeti všečki
         last_100_days: "v zadnjih 100 dnevih"
-        private_topics_count: Privatne teme
         posts_read_count: Prebranih prispevkov
         post_count: Ustvarjenih prispevkov
         topics_entered: Ogledane teme

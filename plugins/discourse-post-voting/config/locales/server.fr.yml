@@ -36,7 +36,7 @@ fr:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
     vote:
-      title: "Vote"
+      title: "Voter"
       description: "Voter pour ce message"
       short_description: "Voter pour ce message"
       long_form: "a voté pour ce message"

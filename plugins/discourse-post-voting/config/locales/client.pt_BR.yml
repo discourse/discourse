@@ -20,7 +20,7 @@ pt_BR:
       popup:
         question_answer_user_commented: '%{username} comentou em "%{topic}" - %{site_title}'
     category:
-      post_voting_settings_heading: Votação de publicação
+      post_voting_settings_heading: Votação em publicação
       create_as_post_voting_default: Novos tópicos padrão para tópicos de "Votação de publicação" nesta categoria.
       only_post_voting_in_this_category: Novos tópicos podem ser apenas tópicos de "votação em postagem" nesta categoria
     composer:
@@ -81,7 +81,7 @@ pt_BR:
                 description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
               agree_and_silence:
                 title: "Silenciar usuário(a)"
-                description: "Concorde com o sinalizador e silencie o(a) usuário(a)."
+                description: "Concorde com a sinalização e silencie o usuário(a)."
               agree_and_restore:
                 title: "Restaurar comentário"
                 description: "Restaure o comentário para que os(as) usuários(as) possam ver."

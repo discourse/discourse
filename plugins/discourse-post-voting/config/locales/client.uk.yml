@@ -5,9 +5,40 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Допис опитування
+  post_voting:
+    reviewables:
+      comment_already_handled: "Дякуємо, але ми вже переглянули цей коментар і вирішили, що його не потрібно позначати повторно."
   js:
+    discourse_post_voting:
+      title: "Допис опитування"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "новий коментар"
+      popup:
+        question_answer_user_commented: '%{username} прокоментував "%{topic}" - %{site_title}'
+    category:
+      post_voting_settings_heading: Допис опитування
+      create_as_post_voting_default: Нові теми за замовчуванням є темами для голосування за публікації в цій категорії.
+      only_post_voting_in_this_category: Нові теми в цій категорії можуть бути лише темами голосування.
+    composer:
+      create_post_voting:
+        label: "Створити тему голосування"
+      composer_actions:
+        create_as_post_voting:
+          label: "Перемикання допису голосування"
+          desc: "Тема буде створена з повідомленнями для голосування"
+        remove_as_post_voting:
+          label: "Видалити голосування"
+          desc: "Тема буде створена в звичайному форматі"
+    vote:
+      already_voted: "Ви можете проголосувати лише один раз за кожне питання."
+      user_over_limit: "Ви не можете перевищити кількість голосів для вашого рівня довіри."
+      one_vote_per_post: "Ви можете проголосувати лише один раз за кожну публікацію."
     post_voting:
       post:
         post_voting_comment:
@@ -38,6 +69,7 @@ uk:
                 description: "Ігнорувати прапорець, видаливши його з черги без жодних дій."
       topic:
         sort_by: "Сортувати за"
+        votes: "Голоси"
         activity: "Активність"
     review:
       transcript:

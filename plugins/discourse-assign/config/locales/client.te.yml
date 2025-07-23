@@ -10,7 +10,7 @@ te:
       assigned: "కేటాయించబడింది"
       group_everyone: "అందరూ"
       reassign:
-        title: "సవరణ"
+        title: "సవరించండి"
       assign_modal:
         optional_label: "(ఐచ్ఛికం)"
         status_label: స్థితి

@@ -208,12 +208,6 @@ fi:
     broken_page_change_alert: "onPageChange-käsittelijä ilmoitti virheen. Katso lisätietoja selaimen kehittäjätyökaluista."
     broken_plugin_alert: "Lisäosan \"%{name}\" aiheuttama"
     broken_transformer_alert: "Tapahtui virhe. Sivustosi ei ehkä toimi oikein."
-    critical_deprecation:
-      notice: "<b>[Ylläpitäjän huomautus]</b> Jokin teemoistasi tai lisäosistasi täytyy päivittää, jotta se olisi yhteensopiva tulevien Discoursen ydinmuutosten kanssa."
-      id: "(tunnus:<em>%{id}</em>)"
-      linked_id: "(tunnus:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tunnistettu teema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Tunnistettu lisäosa: \"%{name}\""
     s3:
       regions:
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
@@ -4747,6 +4741,8 @@ fi:
             badges:
               content: "Kunniamerkit"
               title: "Kaikki ansaittavissa olevat kunniamerkit"
+            filter:
+              content: "Suodatin"
             topics:
               content: "Ketjut"
               title: "Kaikki ketjut"
@@ -4898,6 +4894,12 @@ fi:
           save: "Tallenna nimellä..."
     powered_by_discourse: "Voimanlähteenä Discourse"
     safari_15_warning: "Selaimesi on pian yhteensopimaton tämän yhteisön kanssa. Jos haluat jatkaa osallistumista täällä, päivitä selaimesi tai <a href='%{url}'>lue lisää</a>."
+    filter:
+      description:
+        yesterday: "Eilen"
+        last_week: "Viime viikko"
+        last_month: "Viime kuukausi"
+        last_year: "Viime vuosi"
     discovery:
       headings:
         all:
@@ -5215,7 +5217,6 @@ fi:
           header_description: "Tarkkaillut sanat ovat valvontatyökaluja, jotka voivat suorittaa useita erilaisia toimintoja, kuten estää, sensuroida, linkittää tai liputtaa tiettyjä sanoja sisältäviä viestejä"
         color_palettes:
           title: "Väripaletit"
-          header_description: "Väripaletit määrittelevät ydinvärit, joita käytetään sivuston käyttöliittymässä, kun taas teemat voivat tarjota lisää muotoilua, asetteluja ja komponentteja. Molemmat voivat työskennellä yhdessä luoda sivuston ainutlaatuinen ulkoasu ja tunne, ja molemmat voidaan asettaa saataville käyttäjille valita mieltymys."
         emoji:
           title: "Emojit"
           header_description: "Lisää uusi emoji, joka on kaikkien käytettävissä. Valitse useita tiedostoja luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan."
@@ -5308,6 +5309,9 @@ fi:
         embedding:
           title: "Upottaminen"
           header_description: "Discourse voi upottaa kommentit ketjusta etäsivustolla Javascript APIn avulla, joka luo iframen"
+      theme_site_settings:
+        setting: "Asetus"
+        default_value: "Oletus"
       search:
         modal_title: "Hae kaikkea admin-osiossa"
         title: "Hae"
@@ -5979,7 +5983,6 @@ fi:
           install: "Asenna"
           themes:
             title: "Teemat"
-            description: "Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille."
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
             back: "Takaisin teemoihin"
@@ -6335,11 +6338,7 @@ fi:
           up_to_date: "Teema on ajan tasalla, viimeksi tarkastettu:"
           has_overwritten_history: "Nykyistä teemaversiota ei enää ole, koska pakotettu työntö on korvannut git-historian."
           add: "Lisää"
-          theme_settings: "Teeman asetukset"
-          edit_objects_theme_setting: "Objektien asetuseditori"
-          overriden_settings_explanation: "Ohitetut asetukset on merkitty pisteellä, ja niissä on korostettu väri. Palauta nämä asetukset oletusarvoihin painamalla niiden vieressä olevaa nollauspainiketta."
           no_settings: "Teemalla ei ole asetuksia."
-          theme_translations: "Teeman käännökset"
           empty: "Ei kohteita"
           commits_behind:
             one: "Teema on %{count} solmitun muutoksen jäljessä!"
@@ -6431,7 +6430,12 @@ fi:
             title: "Valitse perusväripaletti"
             description: "Peruspaletti:"
           title: "Värit"
-          edit: "Muokkaa väripaletteja"
+          edit: "Muokkaa"
+          filters:
+            all: "Kaikki"
+            user_selectable: "Käyttäjän valittavissa"
+          active_badge:
+            text: "Aktiivinen"
           long_title: "Väripaletit"
           about: "Muokkaa teemasi käyttämiä värejä. Aloita luomalla uusi väripaletti."
           new_name: "Uusi väripaletti"
@@ -7084,7 +7088,7 @@ fi:
         activity: Toiminta
         like_count: Tykkäyksiä annettu/saatu
         last_100_days: "edellisen 100 päivän aikana"
-        private_topics_count: Yksityiset ketjut
+        private_topics_count: Henkilökohtaiset viestit
         posts_read_count: Luettuja viestejä
         post_count: Kirjoitettuja viestejä
         second_factor_enabled: Kaksivaiheinen tunnistus käytössä

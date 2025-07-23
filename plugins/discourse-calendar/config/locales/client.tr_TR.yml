@@ -155,7 +155,7 @@ tr_TR:
           es_pv: "İspanya (es_pv)"
           es_v: "İspanya (es_v)"
           es_vc: "İspanya (es_vc)"
-          es: "ispanya"
+          es: "İspanya"
           fi: "Finlandiya"
           fr_a: "Fransa (fr_a)"
           fr_m: "Fransa (fr_m)"
@@ -307,6 +307,7 @@ tr_TR:
           ve: "Venezuela"
           vi: "Virgin Adaları (ABD)"
           za: "Güney Afrika"
+          zw: "Zimbabve"
       toolbar_button:
         today: "Bugün"
         month: "Ay"
@@ -359,19 +360,19 @@ tr_TR:
         text: "CSV dosyası yükle"
         title: "Toplu Davet"
         success: "Dosya başarıyla yüklendi, işlem tamamlandığında mesaj yoluyla bilgilendirileceksiniz."
-        error: "Üzgünüz, dosya CSV biçiminde olmalıdır."
+        error: "Üzgünüz, dosya CSV biçiminde olmalı."
         confirmation_message: "Yüklenen dosyadaki herkesi bilgilendirmek üzeresiniz."
         description_public: "Herkese açık etkinlikler yalnızca toplu davetler için kullanıcı adlarını kabul eder."
         description_private: "Özel etkinlikler yalnızca toplu davetler için grup adlarını kabul eder."
         download_sample_csv: "Örnek bir CSV dosyası indirin"
-        send_bulk_invites: "Davet gönderin"
+        send_bulk_invites: "Davet gönder"
         group_selector_placeholder: "Grup seçin..."
         user_selector_placeholder: "Kullanıcı seçin..."
         inline_title: "Satır içi toplu davet"
         csv_title: "CSV toplu daveti"
       upcoming_events:
         title: "Yaklaşan etkinlikler"
-        creator: "Yaratıcı"
+        creator: "Oluşturucu"
         status: "Durum"
         starts_at: "Başlangıç:"
       upcoming_events_list:
@@ -416,7 +417,7 @@ tr_TR:
               title: "Bağımsız"
               description: "Bağımsız bir etkinliğe katılınamaz."
             public:
-              title: "Herkese Açık"
+              title: "Genel"
               description: "Herkese açık bir etkinliğe herkes katılabilir."
             private:
               title: "Özel"
@@ -452,7 +453,7 @@ tr_TR:
             before: "önce"
             after: "sonra"
         recurrence:
-          label: "Yineleme"
+          label: "Yinelenme"
           none: "Yineleme yok"
           every_day: "Her gün"
           every_month: "Her ay bu hafta içi günü"

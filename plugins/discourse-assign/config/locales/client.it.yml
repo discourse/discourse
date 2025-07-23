@@ -107,7 +107,7 @@ it:
     user:
       notification_level_when_assigned:
         label: "Quando assegnato"
-        watch_topic: "Ossera l'argomento"
+        watch_topic: "Osserva l'argomento"
         track_topic: "Traccia l'argomento"
         do_nothing: "Non fare nulla"
       messages:

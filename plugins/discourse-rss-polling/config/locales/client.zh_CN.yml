@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  js:
+    admin:
+      rss_polling:
+        author: 作者
+        feed_url: URL
+        discourse_category: 类别
+        discourse_tags: 标签

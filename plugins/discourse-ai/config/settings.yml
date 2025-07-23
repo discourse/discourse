@@ -1,0 +1,596 @@
+discourse_ai:
+  discourse_ai_enabled:
+    default: false
+    client: true
+  ai_artifact_security:
+    client: true
+    type: enum
+    default: "strict"
+    choices:
+      - "disabled"
+      - "lax"
+      - "hybrid"
+      - "strict"
+
+  ai_sentiment_enabled:
+    default: false
+    client: true
+  ai_sentiment_model_configs:
+    default: ""
+    json_schema: DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema
+  ai_sentiment_backfill_maximum_posts_per_hour:
+    default: 2500
+    min: 0
+    max: 10000
+    hidden: true
+  ai_sentiment_backfill_post_max_age_days:
+    default: 60
+    hidden: true
+
+  ai_openai_image_generation_url: "https://api.openai.com/v1/images/generations"
+  ai_openai_image_edit_url: "https://api.openai.com/v1/images/edits"
+  ai_openai_embeddings_url:
+    hidden: true
+    default: "https://api.openai.com/v1/embeddings"
+  ai_openai_organization:
+    default: ""
+    hidden: true
+  ai_openai_api_key:
+    default: ""
+    secret: true
+  ai_stability_api_key:
+    default: ""
+    secret: true
+  ai_stability_api_url:
+    default: "https://api.stability.ai"
+  ai_stability_engine:
+    default: "stable-diffusion-xl-1024-v1-0"
+    type: enum
+    choices:
+      - "sd3"
+      - "sd3-turbo"
+      - "stable-diffusion-xl-1024-v1-0"
+      - "stable-diffusion-768-v2-1"
+      - "stable-diffusion-v1-5"
+  ai_hugging_face_tei_endpoint:
+    hidden: true
+    default: ""
+  ai_hugging_face_tei_endpoint_srv:
+    default: ""
+    hidden: true
+  ai_hugging_face_tei_api_key:
+    default: ""
+    hidden: true
+  ai_hugging_face_tei_reranker_endpoint:
+    default: ""
+  ai_hugging_face_tei_reranker_endpoint_srv:
+    default: ""
+    hidden: true
+  ai_hugging_face_tei_reranker_api_key: ""
+  ai_google_custom_search_api_key:
+    default: ""
+    secret: true
+  ai_google_custom_search_cx:
+    default: ""
+  ai_cloudflare_workers_account_id:
+    default: ""
+    secret: true
+    hidden: true
+  ai_cloudflare_workers_api_token:
+    default: ""
+    secret: true
+    hidden: true
+  ai_gemini_api_key:
+    default: ""
+    hidden: true
+  ai_strict_token_counting:
+    default: false
+    hidden: true
+
+  ai_helper_enabled:
+    default: false
+    client: true
+    validator: "DiscourseAi::Configuration::LlmDependencyValidator"
+    area: "ai-features/ai_helper"
+  composer_ai_helper_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
+    allow_any: false
+    refresh: true
+    area: "ai-features/ai_helper"
+  ai_helper_allowed_in_pm:
+    default: false
+    client: true
+    area: "ai-features/ai_helper"
+  ai_helper_model:
+    default: ""
+    allow_any: false
+    type: enum
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    hidden: true
+  ai_helper_custom_prompts_allowed_groups: # Deprecated. TODO(roman): Remove 2025-09-01
+    type: group_list
+    list_type: compact
+    default: "3" # 3: @staff
+    allow_any: false
+    refresh: true
+    hidden: true
+  post_ai_helper_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
+    allow_any: false
+    refresh: true
+    area: "ai-features/ai_helper"
+  ai_helper_automatic_chat_thread_title:
+    default: false
+    area: "ai-features/ai_helper"
+  ai_helper_automatic_chat_thread_title_delay:
+    default: 5
+    area: "ai-features/ai_helper"
+  ai_helper_illustrate_post_model:
+    default: disabled
+    type: enum
+    choices:
+      - stable_diffusion_xl
+      - dall_e_3
+      - disabled
+    area: "ai-features/ai_helper"
+  ai_helper_enabled_features:
+    client: true
+    default: "suggestions|context_menu"
+    type: list
+    list_type: compact
+    allow_any: false
+    refresh: true
+    choices:
+      - "suggestions"
+      - "context_menu"
+      - "image_caption"
+    area: "ai-features/ai_helper"
+  ai_helper_image_caption_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
+    hidden: true
+  ai_auto_image_caption_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "10" # 10: @trust_level_0
+    allow_any: false
+    refresh: true
+    area: "ai-features/ai_helper"
+  ai_helper_model_allowed_seeded_models:
+    default: ""
+    hidden: true
+    type: list
+    list_type: compact
+  ai_helper_image_caption_model_allowed_seeded_models:
+    default: ""
+    hidden: true
+    type: list
+    list_type: compact
+  ai_helper_proofreader_persona:
+    default: "-22"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_title_suggestions_persona:
+    default: "-23"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_explain_persona:
+    default: "-24"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_post_illustrator_persona:
+    default: "-21"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_smart_dates_persona:
+    default: "-19"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_translator_persona:
+    default: "-25"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_markdown_tables_persona:
+    default: "-20"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_custom_prompt_persona:
+    default: "-18"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+  ai_helper_image_caption_persona:
+    default: "-26"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
+
+  ai_embeddings_enabled:
+    default: false
+    client: true
+    validator: "DiscourseAi::Configuration::EmbeddingsModuleValidator"
+    area: "ai-features/embeddings"
+  ai_embeddings_selected_model:
+    type: enum
+    default: ""
+    allow_any: false
+    enum: "DiscourseAi::Configuration::EmbeddingDefsEnumerator"
+    validator: "DiscourseAi::Configuration::EmbeddingDefsValidator"
+    area: "ai-features/embeddings"
+  ai_embeddings_backfill_model:
+    type: enum
+    default: ""
+    allow_any: false
+    enum: "DiscourseAi::Configuration::EmbeddingDefsEnumerator"
+    hidden: true
+  ai_embeddings_per_post_enabled:
+    default: false
+    hidden: true
+  ai_embeddings_generate_for_pms:
+    default: false
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_related_topics_enabled:
+    default: false
+    client: true
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_related_topics:
+    default: 5
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_related_include_closed_topics:
+    default: true
+    area: "ai-features/embeddings"
+  ai_embeddings_backfill_batch_size:
+    default: 250
+    hidden: true
+  ai_embeddings_semantic_search_enabled:
+    default: false
+    client: true
+    validator: "DiscourseAi::Configuration::LlmDependencyValidator"
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_search_hyde_model:
+    default: ""
+    type: enum
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    validator: "DiscourseAi::Configuration::LlmValidator"
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_search_hyde_model_allowed_seeded_models:
+    default: ""
+    hidden: true
+    type: list
+    list_type: compact
+  ai_embeddings_semantic_quick_search_enabled:
+    default: false
+    client: true
+    hidden: true
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_search_hyde_persona:
+    default: "-32"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/embeddings"
+
+  ai_embeddings_discourse_service_api_endpoint:
+    default: ""
+    hidden: true
+  ai_embeddings_discourse_service_api_endpoint_srv:
+    default: ""
+    hidden: true
+  ai_embeddings_discourse_service_api_key:
+    hidden: true
+    default: ""
+    secret: true
+  ai_embeddings_model:
+    hidden: true
+    type: enum
+    default: "bge-large-en"
+    allow_any: false
+    choices:
+      - all-mpnet-base-v2
+      - text-embedding-ada-002
+      - text-embedding-3-small
+      - text-embedding-3-large
+      - multilingual-e5-large
+      - bge-large-en
+      - gemini
+      - bge-m3
+  ai_embeddings_pg_connection_string:
+    default: ""
+    hidden: true
+
+  ai_summarization_enabled:
+    default: false
+    client: true
+    validator: "DiscourseAi::Configuration::LlmDependencyValidator"
+    area: "ai-features/summarization"
+  ai_summarization_model:
+    default: ""
+    allow_any: false
+    type: enum
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    validator: "DiscourseAi::Configuration::LlmValidator"
+    hidden: true
+  ai_summarization_persona:
+    default: "-11"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/summarization"
+  ai_pm_summarization_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    area: "ai-features/summarization"
+  ai_custom_summarization_allowed_groups: # Deprecated. TODO(roman): Remove 2025-09-01
+    type: group_list
+    list_type: compact
+    default: "3|13" # 3: @staff, 13: @trust_level_3
+    hidden: true
+  ai_summary_gists_enabled:
+    default: false
+    area: "ai-features/summarization"
+  ai_summary_gists_persona:
+    default: "-12"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/summarization"
+  ai_summary_gists_allowed_groups: # Deprecated. TODO(roman): Remove 2025-09-01
+    type: group_list
+    list_type: compact
+    default: "0" #everyone
+    hidden: true
+  ai_summarization_model_allowed_seeded_models:
+    default: ""
+    hidden: true
+    type: list
+    list_type: compact
+  ai_summary_backfill_topic_max_age_days:
+    default: 30
+    min: 1
+    max: 10000
+    area: "ai-features/summarization"
+  ai_summary_backfill_maximum_topics_per_hour:
+    default: 0
+    min: 0
+    max: 10000
+    area: "ai-features/summarization"
+  ai_summary_backfill_minimum_word_count:
+    default: 200
+    area: "ai-features/summarization"
+
+  ai_bot_enabled:
+    default: false
+    client: true
+    area: "ai-features/bot"
+  ai_bot_enable_chat_warning:
+    default: false
+    client: true
+    area: "ai-features/bot"
+  ai_bot_debugging_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    area: "ai-features/bot"
+  ai_bot_allowed_groups:
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
+    area: "ai-features/bot"
+  ai_bot_public_sharing_allowed_groups:
+    client: false
+    type: group_list
+    list_type: compact
+    default: "1|2" # 1: admins, 2: moderators
+    allow_any: false
+    refresh: true
+    area: "ai-features/bot"
+  ai_bot_add_to_header:
+    default: true
+    client: true
+    area: "ai-features/bot"
+  ai_bot_github_access_token:
+    default: ""
+    secret: true
+    area: "ai-features/bot"
+  ai_bot_allowed_seeded_models:
+    default: ""
+    hidden: true
+    type: list
+    list_type: compact
+    area: "ai-features/bot"
+  ai_bot_discover_persona:
+    default: ""
+    type: enum
+    client: true
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/search"
+  ai_automation_max_triage_per_minute:
+    default: 60
+    hidden: true
+  ai_automation_max_triage_per_post_per_minute:
+    default: 2
+    hidden: true
+  ai_automation_allowed_seeded_models:
+    default: ""
+    hidden: true
+    type: list
+    list_type: compact
+
+  ai_discord_search_enabled:
+    default: false
+    client: true
+    area: "ai-features/discord"
+  ai_discord_app_id:
+    default: ""
+    client: false
+    area: "ai-features/discord"
+  ai_discord_app_public_key:
+    default: ""
+    client: false
+    area: "ai-features/discord"
+  ai_discord_search_mode:
+    default: "search"
+    type: enum
+    choices:
+      - search
+      - persona
+    area: "ai-features/discord"
+  ai_discord_search_persona:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/discord"
+  ai_discord_allowed_guilds:
+    type: list
+    list_type: compact
+    default: ""
+    area: "ai-features/discord"
+
+  ai_spam_detection_enabled:
+    default: false
+    validator: "DiscourseAi::Configuration::SpamDetectionValidator"
+  ai_spam_detection_user_id:
+    default: ""
+    hidden: true
+  ai_spam_detection_model_allowed_seeded_models:
+    default: ""
+    hidden: true
+    type: list
+
+  ai_rag_images_enabled:
+    default: false
+    hidden: true
+
+  ai_bot_enable_dedicated_ux:
+    default: true
+    client: true
+
+  ai_translation_enabled:
+    default: false
+    client: true
+    validator: "DiscourseAi::Configuration::LlmDependencyValidator"
+    area: "ai-features/translation"
+  ai_translation_model:
+    default: ""
+    type: enum
+    allow_any: false
+    enum: "DiscourseAi::Configuration::LlmEnumerator"
+    validator: "DiscourseAi::Configuration::LlmValidator"
+    area: "ai-features/translation"
+  ai_translation_locale_detector_persona:
+    default: "-27"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/translation"
+  ai_translation_post_raw_translator_persona:
+    default: "-28"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/translation"
+  ai_translation_topic_title_translator_persona:
+    default: "-29"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/translation"
+  ai_translation_short_text_translator_persona:
+    default: "-30"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/translation"
+  ai_translation_backfill_hourly_rate:
+    default: 0
+    min: 0
+    max: 1000
+    client: false
+    hidden: true
+    area: "ai-features/translation"
+  ai_translation_backfill_limit_to_public_content:
+    default: true
+    client: false
+    area: "ai-features/translation"
+  ai_translation_max_post_length:
+    default: 10000
+    client: false
+    area: "ai-features/translation"
+  ai_translation_backfill_max_age_days:
+    default: 5
+    min: 0
+    max: 20000
+    client: false
+    area: "ai-features/translation"
+  ai_translation_verbose_logs:
+    default: false
+    client: false
+    hidden: true
+    area: "ai-features/translation"
+
+  inferred_concepts_enabled:
+    default: false
+    client: true
+    area: "ai-features/inference"
+  inferred_concepts_background_match:
+    default: false
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_daily_topics_limit:
+    default: 20
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_min_posts:
+    default: 5
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_min_likes:
+    default: 10
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_min_views:
+    default: 100
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_lookback_days:
+    default: 30
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_daily_posts_limit:
+    default: 30
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_post_min_likes:
+    default: 5
+    client: false
+    area: "ai-features/inference"
+  inferred_concepts_generate_persona:
+    default: "-15"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/inference"
+  inferred_concepts_match_persona:
+    default: "-16"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/inference"
+  inferred_concepts_deduplicate_persona:
+    default: "-17"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/inference"
+  ai_artifact_kv_value_max_length:
+    default: 5000
+    hidden: true
+  ai_artifact_max_keys_per_user_per_artifact:
+    default: 100
+    hidden: true

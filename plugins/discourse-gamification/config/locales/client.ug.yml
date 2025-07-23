@@ -8,10 +8,11 @@ ug:
   js:
     gamification:
       leaderboard:
-        link_to_settings: "تەڭشەكلەر"
+        link_to_settings: "تەڭشەك"
         refresh: "يېڭىلا"
         name: "ئىسمى"
         name_placeholder: "ئىسمى…"
+        excluded_groups: "مۇستەسنا گۇرۇپپا"
         period:
           all_time: "ھەممە ۋاقىت"
           yearly: "يىللىق"

@@ -1,0 +1,180 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Ordenar por"
+            tag:
+              label: "Etiqueta"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID do tema"
+            title:
+              label: "Título"
+            categories:
+              label: "Categorías"
+            tags:
+              label: "Etiquetas"
+        llm_triage:
+          fields:
+            category:
+              label: "Categoría"
+            tags:
+              label: "Etiquetas"
+            canned_reply:
+              label: "Responder"
+    discourse_ai:
+      features:
+        back: "Volver"
+        disabled: "(desactivado)"
+        groups: "Grupos:"
+        no_groups: "Ningunha"
+        edit: "Editar"
+        expand_list:
+          one: "(%{count} máis)"
+          other: "(%{count} máis)"
+        filters:
+          all: "Todas"
+          reset: "Restabelecer"
+        search:
+          name: "Buscar"
+        spam:
+          name: "Lixo"
+      modals:
+        select_option: "Seleccione unha opción..."
+      spam:
+        short_title: "Lixo"
+        enable: "Activar"
+        test_modal:
+          spam: "Lixo"
+      usage:
+        summary: "Resumo"
+        username: "Nome de usuario"
+        total_requests: "Solicitudes totais"
+        periods:
+          custom: "Personalizar..."
+      ai_persona:
+        back: "Volver"
+        name: "Nome"
+        edit: "Editar"
+        export: "Exportar"
+        import: "Importar"
+        description: "Descrición"
+        user: Usuario
+        save: "Gardar"
+        enabled: "Activado?"
+        allowed_groups: "Grupos permitidos"
+        delete: "Eliminar"
+        response_format:
+          open_modal: "Editar"
+          modal:
+            key_title: "Chave"
+        filters:
+          reset: "Restabelecer"
+      rag:
+        uploads:
+          title: "Cargas"
+          uploading: "Cargando..."
+      tools:
+        back: "Volver"
+        export: "Exportar"
+        import: "Importar"
+        name: "Nome"
+        description: "Descrición"
+        summary: "Resumo"
+        save: "Gardar"
+        remove_parameter: "Retirar"
+        parameter_required: "Obrigatorio"
+        edit: "Editar"
+        delete: "Eliminar"
+      llms:
+        display_name: "Nome"
+        provider: "Fornecedor"
+        save: "Gardar"
+        edit: "Editar"
+        back: "Volver"
+        delete: Eliminar
+        quotas:
+          group: "Grupo"
+          duration: "Duración"
+          durations:
+            hour: "1 hora"
+            six_hours: "6 horas"
+            day: "24 horas"
+            custom: "Personalizar..."
+          hours: "horas"
+        usage:
+          ai_spam: "Lixo"
+        next:
+          title: "Seguinte"
+        tests:
+          success: "Feito!"
+        providers:
+          google: "Google"
+          fake: "Personalizado"
+      ai_helper:
+        context_menu:
+          cancel: "Cancelar"
+          confirm: "Confirmar"
+          discard: "Desbotar"
+        post_options_menu:
+          close: "Pechar"
+          copy: "Copiar"
+          copied: "Copiado!"
+          cancel: "Cancelar"
+        image_caption:
+          save_caption: "Gardar"
+          automatic_caption_dialog:
+            confirm: "Activar"
+      embeddings:
+        back: "Volver"
+        save: "Gardar"
+        delete: "Eliminar"
+        edit: "Editar"
+        tests:
+          success: "Feito!"
+        display_name: "Nome"
+        provider: "Fornecedor"
+        providers:
+          google: "Google"
+          fake: "Personalizado"
+      ai_bot:
+        debug_ai_modal:
+          request: "Petición"
+          response: "Resposta"
+          next_log: "Seguinte"
+          previous_log: "Anterior"
+        invite_ai_conversation:
+          button: "Convidar"
+        share_modal:
+          copy: "Copiar"
+        conversations:
+          today: "Hoxe"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Todas"
+            neutral: "Neutro"
+          group_types:
+            category: "Categoría"
+            tag: "Etiqueta"
+          table:
+            total_count: "Total"
+      discobot_discoveries:
+        regular_results: "Temas"
+        collapse: "Pregar"
+        tooltip:
+          actions:
+            disable: "Desactivar"

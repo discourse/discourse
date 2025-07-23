@@ -1,0 +1,51 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    category:
+      sort_options:
+        votes: "投票"
+    topic_voting:
+      title: "トピック投票"
+      reached_limit: "票数が不足しています。既存の投票を削除してください！"
+      list_votes: "投票をリスト"
+      votes_nav_help: "票数が最も多いトピック"
+      voted: "あなたはこのトピックに投票しました"
+      allow_topic_voting: "ユーザーがこのカテゴリのトピックに投票することを許可する"
+      vote_title: "投票"
+      vote_title_plural: "投票"
+      voted_title: "投票済み"
+      voting_closed_title: "終了"
+      voting_limit: "制限"
+      votes_left_button_title:
+        other: "残り %{count} 票です。"
+      votes:
+        other: "%{count} 票"
+      anonymous_button:
+        other: "投票"
+      remove_vote: "投票を削除"
+      no_votes_title_self: "まだトピックに一度も投票していません。"
+      no_votes_title_others: "%{username} はまだトピックに投票していません"
+    filters:
+      votes:
+        title: "投票"
+        help: "票数が最も多いトピック"
+      my_votes:
+        title: "自分の投票"
+        help: "投票したトピック"
+    search:
+      most_votes: "票数の最も多い項目"
+      advanced:
+        vote:
+          count:
+            label: "最低票数"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "トピック投票イベント"
+          topic_upvote: "ユーザーがトピックに投票するとき"
+          topic_unvote: "ユーザーがトピックへの投票を取り消すとき"

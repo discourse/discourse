@@ -79,10 +79,10 @@ ja:
         select: サブスクリプションプランを選択する
         interval:
           adverb:
-            day: 毎日
-            week: 毎週
-            month: 毎月
-            year: 毎年
+            day: 日間
+            week: 週間
+            month: 月間
+            year: 年間
         payment_button: 購読
         success: ありがとうございました！サブスクリプションが作成されました。
         incomplete: お支払いは未完了です。あなたのサブスクリプションはお支払いが完了してから更新されます。
@@ -137,7 +137,7 @@ ja:
         cardholder_name: カード名義人名
         cardholder_address:
           line1: 町名・番地
-          city: 市区郡
+          city: 都市
           state: 都道府県
           province: 都道府県
           country: 国
@@ -394,7 +394,7 @@ ja:
           ZW: "ジンバブエ"
       billing:
         name: 氏名
-        email: Eメール
+        email: メールアドレス
         phone: 電話番号
       confirmation:
         amount: 金額
@@ -467,7 +467,7 @@ ja:
           discount: 割引
           times_redeemed: 引き換え回数
           active: アクティブ？
-          actions: アクション
+          actions: 操作
           create: クーポンを作成
           promo_code: プロモコ―ド（大文字と小文字を区別しない）
         subscriptions:

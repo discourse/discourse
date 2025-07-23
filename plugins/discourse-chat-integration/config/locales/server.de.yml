@@ -86,14 +86,14 @@ de:
           header: |
             *Regeln für diesen Kanal*
             (Wenn mehrere Regeln für einen Beitrag passen, wird die oberste ausgeführt.)
-          no_rules: "Es sind keine Regeln für diesen Kanal eingerichtet. Führe `/discourse help` aus für weitere Anweisungen."
+          no_rules: "Es sind keine Regeln für diesen Kanal konfiguriert. Führe `/discourse help` aus für Anweisungen."
           rule_string: "*%{index})* *%{filter}* Beiträge in *%{category}*"
-          rule_string_tags_suffix: " mit Schlagwörtern: *%{tags}*"
-        parse_error: "Entschuldige, das habe ich nicht verstanden. Führe `/discourse help` aus für weitere Anweisungen."
+          rule_string_tags_suffix: " mit den Schlagwörtern: *%{tags}*"
+        parse_error: "Entschuldige, das habe ich nicht verstanden. Führe `/discourse help` aus für Anweisungen."
         create:
           created: "Regel erfolgreich erstellt"
           updated: "Regel erfolgreich aktualisiert"
-          error: "Entschuldige, ein Fehler ist beim Erstellen der Regel aufgetreten"
+          error: "Entschuldige, ein Fehler ist beim Erstellen dieser Regel aufgetreten."
         delete:
           success: "Regel erfolgreich gelöscht"
           error: "Leider ist beim Löschen dieser Regel ein Fehler aufgetreten. Führe `/discourse status` aus, um eine Liste der Regeln einzusehen."
@@ -192,7 +192,7 @@ de:
         create:
           created: "Regel erfolgreich erstellt"
           updated: "Regel erfolgreich aktualisiert"
-          error: "Entschuldige, beim Erstellen dieser Regel ist ein Fehler aufgetreten."
+          error: "Entschuldige, ein Fehler ist beim Erstellen dieser Regel aufgetreten."
         delete:
           success: "Regel erfolgreich gelöscht"
           error: "Leider ist beim Löschen dieser Regel ein Fehler aufgetreten. Führe `/discourse status` aus, um eine Liste der Regeln einzusehen."

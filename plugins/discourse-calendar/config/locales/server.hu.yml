@@ -23,7 +23,7 @@ hu:
       title: "Esemény – A csoportos meghívás sikertelen"
       subject_template: "Hiba a csoportos meghívás feldolgozása során"
       text_body_template: |
-        A csoportos meghívási fájl feldolgozása megtörtént, %{processed} meghívott jött létre %{failed} hibával.
+        A csoportos meghívás feldolgozása sikeres, %{processed} meghívott létrehozva %{failed} hibával.
 
         Ez a napló:
 
@@ -37,7 +37,7 @@ hu:
     invite_user_notification: "%{username} meghívta erre: %{description}"
     calendar_must_be_in_first_post: "A naptár címke csak a téma első bejegyzésében használható."
     more_than_one_calendar: "Egy bejegyzésben nem lehet több naptár."
-    more_than_two_dates: "Egy naptár téma bejegyzése nem tartalmazhat kettőnél több dátumot."
+    more_than_two_dates: "Egy naptártéma bejegyzése nem tartalmazhat kettőnél több dátumot."
     event_expired: "Az esemény lejárt"
   discourse_post_event:
     notifications:
@@ -47,7 +47,7 @@ hu:
     errors:
       bulk_invite:
         max_invitees: "Az első %{max_invittes} meghívott lett létrehozva. Próbálja meg a fájlt kisebb részekre osztani."
-        error: "Hiba történt a fájl feltöltésekor. Kérlek, próbáld újra később."
+        error: "Hiba történt a fájl feltöltése során. Próbálja újra később."
       models:
         event:
           only_one_event: "Egy bejegyzésnek csak egy eseménye lehet."

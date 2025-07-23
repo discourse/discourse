@@ -14,7 +14,7 @@ cs:
       help:
         label: "Nápověda"
       schema:
-        filter: "Hledat..."
+        filter: "Hledat…"
       types:
         bool:
           yes: "Ano"
@@ -32,8 +32,10 @@ cs:
         many: "%{count} výsledky."
         other: "%{count} výsledků."
       query_groups: "Skupiny"
+      report_name: "Sestava"
       query_description: "Popis"
+      query_user: "Vytvořil/a"
       reset_params: "obnovit výchozí"
-      search_placeholder: "Hledat..."
+      search_placeholder: "Hledat…"
     group:
-      reports: "Přehledy"
+      reports: "Sestav"

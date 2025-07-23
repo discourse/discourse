@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 sk:
+  js:
+    admin:
+      rss_polling:
+        author: Autor
+        feed_url: URL
+        discourse_category: Kategória
+        discourse_tags: Značky

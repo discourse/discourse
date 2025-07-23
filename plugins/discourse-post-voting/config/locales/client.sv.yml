@@ -36,6 +36,7 @@ sv:
                 description: "Ignorera flaggan genom att ta bort den från kön utan att vidta någon åtgärd."
       topic:
         sort_by: "Sortera efter"
+        votes: "Röster"
         activity: "Aktivitet"
     review:
       transcript:

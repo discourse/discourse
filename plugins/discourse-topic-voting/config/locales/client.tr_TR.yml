@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  js:
+    category:
+      sort_options:
+        votes: "Oylar"
+    topic_voting:
+      title: "Konu Oylama"
+      reached_limit: "Oy hakkınız kalmadı, mevcut bir oyunuzu kaldırın!"
+      list_votes: "Oylarınızı listeleyin"
+      votes_nav_help: "en çok oy alan konular"
+      voted: "Bu konuyu oyladınız"
+      allow_topic_voting: "Kullanıcıların bu kategorideki konularda oy kullanmasına izin verilsin mi?"
+      vote_title: "Oy ver"
+      vote_title_plural: "Oylar"
+      voted_title: "Oylandı"
+      voting_closed_title: "Kapalı"
+      voting_limit: "Sınır"
+      votes_left_button_title:
+        one: "%{count} oyunuz kaldı."
+        other: "%{count} oyunuz kaldı."
+      votes:
+        one: "%{count} oy"
+        other: "%{count} oy"
+      anonymous_button:
+        one: "Oy ver"
+        other: "Oylar"
+      remove_vote: "Oyu kaldır"
+      no_votes_title_self: "Henüz herhangi bir konu için oy kullanmadınız"
+      no_votes_title_others: "%{username} henüz herhangi bir konu için oy kullanmadı"
+    filters:
+      votes:
+        title: "Oylar"
+        help: "en çok oy alan konular"
+      my_votes:
+        title: "Oylarım"
+        help: "oy verdiğiniz konular"
+    search:
+      most_votes: "En Çok Oy"
+      advanced:
+        vote:
+          count:
+            label: "En Düşük Oy Sayısı"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Konu Oylama Etkinliği"
+          topic_upvote: "Bir kullanıcı bir konuya oy verdiğinde"
+          topic_unvote: "Bir kullanıcı bir konuya ilişkin oyu iptal ettiğinde"

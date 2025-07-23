@@ -79,7 +79,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :use_glimmer_post_stream_mode_auto_mode,
              :can_localize_content?,
              :effective_locale,
-             :use_reviewable_ui_refresh
+             :use_reviewable_ui_refresh,
+             :use_experimental_sidebar_messages_count
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -346,6 +347,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def use_reviewable_ui_refresh
     scope.can_see_reviewable_ui_refresh?
+  end
+
+  def use_experimental_sidebar_messages_count
+    scope.user.in_any_groups?(SiteSetting.experimental_sidebar_messages_count_enabled_groups_map)
   end
 
   def include_use_reviewable_ui_refresh?

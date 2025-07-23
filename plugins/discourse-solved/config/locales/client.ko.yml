@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "수락됨"
+    solved:
+      title: "해결됨"
+      allow_accepted_answers: "토픽 소유자 및 스태프가 해결책으로 답글을 표시하도록 허용"
+      accept_answer: "이 답변이 문제를 해결할 경우 선택하십시오"
+      accepted_description: "이것이이 주제에 대한 해결책입니다."
+      has_no_accepted_answer: "이 토픽에는 해결책이 없습니다"
+      unaccept_answer: "이 답변으로 더 이상 문제가 해결되지 않으면 선택 취소"
+      accepted_answer: "해결책"
+      solution: "해결책"
+      solution_summary:
+        other: "해결책"
+      topic_status_filter:
+        all: "모두"
+        solved: "해결됨"
+        unsolved: "미해결"
+    topic_statuses:
+      solved:
+        help: "이 토픽에는 해결책이 있습니다"
+    search:
+      advanced:
+        statuses:
+          solved: "해결되다"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "해결 된 이벤트"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: 회원 레벨

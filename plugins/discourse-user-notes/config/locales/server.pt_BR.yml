@@ -18,5 +18,5 @@ pt_BR:
       description: "Listar as anotações de usuário(a) mais recentes."
       labels:
         user: Usuário(a)
-        note: Anotação
-        moderator: Moderador
+        note: Observação
+        moderator: Moderador(a)

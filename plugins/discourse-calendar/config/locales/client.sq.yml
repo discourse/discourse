@@ -13,7 +13,7 @@ sq:
             topic_id:
               label: ID e temës
     discourse_calendar:
-      disable_holiday: "Çaktivizo"
+      disable_holiday: "Çaktivizoni"
       enable_holiday: "Aktivizo"
       region:
         none: "Asnjë"
@@ -21,19 +21,49 @@ sq:
         today: "Sot"
         month: "Këtë muaj"
         week: "Këtë javë"
-        day: "Dit"
+        day: "Day"
     discourse_post_event:
+      notifications:
+        invite_user_notification: "%{username} %{description}"
+      show_all: "Shfaqni të gjitha"
+      bulk_invite: "Ftesë me shumicë"
       bulk_invite_modal:
+        confirm: "konfirmoni"
+        title: "Ftesë me shumicë"
         success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
-        error: "Na vjen keq, skedari duhet të jete i formatit CSV."
+        error: "Na vjen keq, dokumenti duhet të jete i formatit CSV."
+      upcoming_events:
+        status: "Status"
+      models:
+        event:
+          expired: "Skaduar"
+          closed: "Mbyllur"
+          status:
+            public:
+              title: "Publike"
+            private:
+              title: "Private"
       builder_modal:
-        update: "Ruaj"
+        custom_fields:
+          placeholder: "Fakultative"
+        create: "Krijo"
+        update: "Ruani"
+        timezone:
+          label: Zona kohore
         reminders:
           units:
+            minutes: "minuta"
+            hours: "orë"
             days: "ditë"
+          periods:
+            before: "përpara"
+            after: "pas"
         url:
           label: "URL"
+          placeholder: "Fakultative"
         location:
           label: "Vendndodhja"
         description:
           label: "Përshkrimi"
+        status:
+          label: "Status"

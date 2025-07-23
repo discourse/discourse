@@ -41,7 +41,7 @@ ru:
       toggle_timezone_offset_title: "Переключить смещение часового пояса"
       region:
         title: "Регион"
-        none: "Не выбран"
+        none: "Отсутствует"
         use_current_region: "Использовать текущий регион"
         names:
           ae: "Объединенные Арабские Эмираты"
@@ -303,10 +303,11 @@ ru:
           us_wi: "США (us_wi)"
           us_wv: "США (us_wv)"
           us_wy: "США (us_wy)"
-          us: "США"
+          us: "Соединенные Штаты Америки"
           ve: "Венесуэла"
           vi: "Виргинские острова (США)"
           za: "Южная Африка"
+          zw: "Зимбабве"
       toolbar_button:
         today: "За сегодня"
         month: "За месяц"
@@ -314,7 +315,7 @@ ru:
         day: "Дата"
         list: "Список"
     group_timezones:
-      search: "Поиск..."
+      search: "Поиск…"
       group_availability: "доступность %{group}"
     discourse_post_event:
       notifications:
@@ -322,7 +323,7 @@ ru:
         after_event_reminder: "Мероприятие закончилось"
         ongoing_event_reminder: "Мероприятие идет"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} автоматически определил(а) ваше присутствие и пригласил(а) вас на мероприятие «%{description}»"
+        invite_user_predefined_attendance_notification_html: "%{username} автоматически определил(-а) ваше присутствие и пригласил(-а) вас на мероприятие «%{description}»"
         before_event_reminder_html: "Мероприятие скоро начнется: %{description}"
         after_event_reminder_html: "Мероприятие закончилось: %{description}"
         ongoing_event_reminder_html: "Мероприятие идет: %{description}"
@@ -331,7 +332,7 @@ ru:
       edit_reason_opened: "Мероприятие открыто"
       topic_title:
         starts_at: "Мероприятие начнется %{date}"
-        ended_at: "Мероприятие завершится %{date}"
+        ended_at: "Событие завершится: %{date}"
         ends_in_duration: "Окончание %{duration}"
       show_all: "Показать все"
       show_participants: "Показать участников"
@@ -361,7 +362,7 @@ ru:
         text: "Загрузить CSV-файл"
         title: "Массовое приглашение"
         success: "Файл успешно загружен, вы получите сообщение, когда процесс будет завершён."
-        error: "Извините, но файл должен быть в формате CSV."
+        error: "Файл должен быть в формате CSV."
         confirmation_message: "Вы собираетесь уведомить всех адресатов, указанных в загруженном файле."
         description_public: "Публичные мероприятия принимают только имена пользователей для массовых приглашений."
         description_private: "Закрытые мероприятия принимают только имена групп для массовых приглашений."
@@ -373,7 +374,7 @@ ru:
         csv_title: "Массовое приглашение через CSV-файл"
       upcoming_events:
         title: "Предстоящие мероприятия"
-        creator: "Создатель"
+        creator: "Автор"
         status: "Статус"
         starts_at: "Начинается в"
       upcoming_events_list:
@@ -381,7 +382,7 @@ ru:
         empty: "Нет предстоящих мероприятий"
         all_day: "Весь день"
         error: "Не удалось получить мероприятия"
-        try_again: "Попробуйте снова"
+        try_again: "Попробовать снова"
         view_all: "Просмотреть все"
       category:
         sort_topics_by_event_start_date: "Сортировать темы по дате начала мероприятия."
@@ -397,34 +398,34 @@ ru:
             unknown: "Не интересует"
             going: "Участвую"
             not_going: "Не участвую"
-            interested: "Заинтересован"
+            interested: "Интересно"
             going_count:
-              one: "%{count} участвует"
+              one: "%{count} участвуют"
               few: "%{count} участвуют"
               many: "%{count} участвуют"
-              other: "%{count} участвует"
+              other: "%{count} участвуют"
             not_going_count:
-              one: "%{count} не участвует"
+              one: "%{count} не участвуют"
               few: "%{count} не участвуют"
               many: "%{count} не участвуют"
-              other: "%{count} не участвует"
+              other: "%{count} не участвуют"
             interested_count:
-              one: "%{count} интересуется"
+              one: "%{count} интересуются"
               few: "%{count} интересуются"
               many: "%{count} интересуются"
-              other: "%{count} интересуется"
+              other: "%{count} интересуются"
             invited_count:
               one: "%{count} пользователь приглашен"
               few: "%{count} пользователя приглашены"
               many: "%{count} пользователей приглашены"
-              other: "%{count} пользователя приглашены"
+              other: "%{count} пользователей приглашены"
         event:
-          expired: "Истекшие"
+          expired: "Истекший срок"
           closed: "Закрытое"
           status:
             standalone:
-              title: "Автономное"
-              description: "К автономному мероприятию нельзя присоединиться."
+              title: "Обособленное"
+              description: "К обособленному мероприятию нельзя присоединиться."
             public:
               title: "Публичное"
               description: "К публичному мероприятию может присоединиться любой желающий."
@@ -434,7 +435,7 @@ ru:
       builder_modal:
         custom_fields:
           label: "Настраиваемые поля"
-          placeholder: "Необязательно"
+          placeholder: "Опционально"
           description: "Настраиваемые поля разрешены в настройках сайта. Поля используются для передачи данных в другие плагины."
         create_event_title: "Создать мероприятие"
         update_event_title: "Изменить мероприятие"
@@ -443,7 +444,7 @@ ru:
         confirm_open: "Действительно открыть это мероприятие ?"
         create: "Создать"
         update: "Сохранить"
-        attach: "Создать событие"
+        attach: "Создать мероприятие"
         add_reminder: "Добавить напоминание"
         timezone:
           label: Часовой пояс
@@ -455,7 +456,7 @@ ru:
             notification: "уведомление участников"
           units:
             minutes: "мин"
-            hours: "ч"
+            hours: "ч."
             days: "сут."
             weeks: "нед."
           periods:
@@ -471,17 +472,17 @@ ru:
           every_two_weeks: "Каждые две недели в этот будний день"
           every_four_weeks: "Каждые четыре недели в этот будний день"
         minimal:
-          label: "Минимальное событие"
+          label: "Минимальное мероприятие"
           checkbox_label: "Скрыть кнопки «Участвую», «Не участвую» и статус приглашенных"
         url:
-          label: "URL"
-          placeholder: "Необязательно"
+          label: "URL-адрес"
+          placeholder: "Опционально"
         location:
           label: "Расположение"
         description:
           label: "Описание"
         name:
-          label: "Название события"
+          label: "Название мероприятия"
           placeholder: "Необязательно, по умолчанию используется заголовок темы"
         invitees:
           label: "Приглашённые группы"

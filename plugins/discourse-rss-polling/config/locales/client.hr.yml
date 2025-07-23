@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 hr:
+  js:
+    admin:
+      rss_polling:
+        author: Autor
+        feed_url: URL
+        discourse_category: Kategorija
+        discourse_tags: Oznake

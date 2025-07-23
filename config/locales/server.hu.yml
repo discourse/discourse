@@ -581,7 +581,7 @@ hu:
         other: "A következő felhasználók már tagjai ennek a csoportnak: %{username}"
       invalid_domain: "A(z) „%{domain}” nem érvényes domain."
       too_many_domains: "Túl sok domain. Maximum %{max}."
-      invalid_incoming_email: "A(z) „%{email}” nem érvényes e-mail cím."
+      invalid_incoming_email: "A(z) „%{email}” nem érvényes e-mail-cím."
       email_already_used_in_group: "A(z) „%{email}” címet már használja a(z) „%{group_name}” csoport."
       email_already_used_in_category: "A(z) „%{email}” címet már használja a(z) „%{category_name}” kategória."
       cant_allow_membership_requests: "Nem engedélyezheti a tagsági kérelmeket olyan csoport számára, amelynek nincsenek tulajdonosai."
@@ -589,10 +589,10 @@ hu:
       adding_too_many_users:
         one: "Egyszerre legfeljebb %{count} felhasználót adhat hozzá"
         other: "Egyszerre legfeljebb %{count} felhasználót adhat hozzá"
-      usernames_or_emails_required: "Felhasználónév vagy e-mail cím nem található"
+      usernames_or_emails_required: "A felhasználónevek vagy e-mail-címek kötelezőek"
       counting_too_many_email_domains:
-        one: "Egyszerre legfeljebb %{count} e-mail tartományt lehet számolni."
-        other: "Egyszerre legfeljebb %{count} e-mail tartományt lehet számolni."
+        one: "Egyszerre legfeljebb %{count} e-mail-tartományt lehet számolni."
+        other: "Egyszerre legfeljebb %{count} e-mail-tartományt lehet számolni."
       no_invites_with_discourse_connect: "Csak regisztrált felhasználókat hívhat meg, ha a DiscourseConnect engedélyezve van"
       no_invites_without_local_logins: "Csak regisztrált felhasználókat hívhat meg, ha a helyi bejelentkezés le van tiltva"
     default_names:
@@ -668,7 +668,7 @@ hu:
               too_many_users: "Egyszerre csak egy felhasználónak küldhet figyelmeztetést."
               cant_send_pm: "Sajnáljuk, nem küldhet személyes üzenetet ennek a felhasználónak."
               no_user_selected: "Érvényes felhasználót kell választania."
-              reply_by_email_disabled: "Az e-mailes válasz letiltva."
+              reply_by_email_disabled: "Az e-mailes válasz le van tiltva."
               send_to_email_disabled: "Sajnáljuk, nem küldhet személyes üzeneteket e-mailre."
               target_user_not_found: "Az egyik felhasználó, akinek ezt az üzenetet küldi, nem található."
               too_large_group: "%{group_name} csoportnak túl sok felhasználója van ahhoz, hogy üzeneteket kapjon. %{limit} a korlát."
@@ -682,7 +682,7 @@ hu:
             password:
               common: "egy a 10000 leggyakoribb jelszó közül. Használjon biztonságosabb jelszót."
               same_as_username: "azonos a felhasználói nevével. Használjon biztonságosabb jelszót."
-              same_as_email: "azonos az e-mail címével. Használjon biztonságosabb jelszót."
+              same_as_email: "azonos az e-mail-címével. Használjon biztonságosabb jelszót."
               same_as_current: "azonos a jelenlegi jelszavával."
               same_as_name: "megegyezik az Ön nevével."
               unique_characters: "túl sok ismétlődő karaktert tartalmaz. Kérjük, használjon biztonságosabb jelszót."
@@ -698,7 +698,7 @@ hu:
             password:
               common: "egy a 10000 leggyakoribb jelszó közül. Használjon biztonságosabb jelszót."
               same_as_username: "azonos a felhasználói nevével. Használjon biztonságosabb jelszót."
-              same_as_email: "azonos az e-mail címével. Használjon biztonságosabb jelszót."
+              same_as_email: "azonos az e-mail-címével. Használjon biztonságosabb jelszót."
               same_as_current: "azonos a jelenlegi jelszavával."
               same_as_name: "megegyezik az Ön nevével."
               unique_characters: "túl sok ismétlődő karaktert tartalmaz. Kérjük, használjon biztonságosabb jelszót."
@@ -789,7 +789,7 @@ hu:
       uncategorized_parent: "Nem kategorizált elem nem rendelkezhet szülő kategóriával"
       self_parent: "Alkategória szülője nem lehet önmaga"
       depth: "Nem ágyazhat be egy alkategóriát másik alá"
-      invalid_email_in: "A(z) „%{email}” nem érvényes e-mail cím."
+      invalid_email_in: "A(z) „%{email}” nem érvényes e-mail-cím."
       email_already_used_in_group: "A(z) „%{email}” címet már használja a(z) „%{group_name}” csoport."
       email_already_used_in_category: "A(z) „%{email}” címet már használja a(z) „%{category_name}” kategória."
       description_incomplete: "A kategóriát leíró bejegyzésnek legalább egy bekezdésből kell állnia."
@@ -961,8 +961,8 @@ hu:
       windows: "Microsoft Windows"
       unknown: "ismeretlen operációs rendszer"
   change_email:
-    error: "Hiba történt az e-mail cím módosításakor. Lehet, hogy már használatban van?"
-    doesnt_exist: "Ez az e-mail cím nincs társítva a fiókodhoz."
+    error: "Hiba történt az e-mail-cím módosításakor. Lehet, hogy már használatban van?"
+    doesnt_exist: "Ez az e-mail-cím nincs a fiókjához társítva."
     error_staged: "Hiba történt az e-mail címe megváltoztatásában. A címet már használja egy másik felhasználó."
     already_done: "Sajnáljuk, ez a megerősítő link már nem érvényes. Lehet, hogy az e-mail címed már megváltozott?"
     confirm: "Megerősít"
@@ -4131,11 +4131,11 @@ hu:
     sender_text_part_body_blank: "text_part.body üres"
     sender_body_blank: "s szövegmező üres"
     sender_post_deleted: "a választ törölték"
-    sender_message_to_invalid: "a címzett e-mail címe érvénytelen"
-    sender_topic_deleted: "Ez a témakör ki lett törölve"
+    sender_message_to_invalid: "a címzett e-mail-címe érvénytelen"
+    sender_topic_deleted: "a témát törölték"
     group_smtp_post_deleted: "a választ törölték"
-    group_smtp_topic_deleted: "Ez a témakör ki lett törölve"
-    group_smtp_disabled_for_group: "smtp le lett tiltva a csoport számára"
+    group_smtp_topic_deleted: "a témát törölték"
+    group_smtp_disabled_for_group: "az smtp le lett tiltva a csoport számára"
   color_schemes:
     base_theme_name: "Alap"
     light: "Világos"
@@ -4168,7 +4168,7 @@ hu:
   csv_export:
     boolean_yes: "Igen"
     boolean_no: "Nem"
-    rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le. Kérünk, próbáld újra holnap."
+    rate_limit_error: "A bejegyzések naponta csak egyszer töltetők le. Próbálja újra holnap."
   static_topic_first_reply: |
     Szerkessze a téma első bejegyzését a(z) %{page_name} oldal tartalmának módosításához.
   guidelines_topic:

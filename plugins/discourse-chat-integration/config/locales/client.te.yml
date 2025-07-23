@@ -9,28 +9,28 @@ te:
     chat_integration:
       settings: "అమరికలు"
       all_categories: "(అన్ని వర్గాలు)"
-      delete_channel: "తొలగించు"
+      delete_channel: "తొలగించండి"
       test_channel: "పరీక్షించండి"
-      edit_channel: "సవరించు"
+      edit_channel: "సవరించండి"
       test_modal:
         topic: "విషయం"
-        close: "మూసివేయి"
+        close: "మూసివేయండి"
       type:
         normal: సాధారణ పరిమాణం
       filter:
         mute: 'నిశ్శబ్దం'
       rule_table:
-        filter: "జల్లెడ"
+        filter: "ఫిల్టర్ చేయండి"
         category: "వర్గం"
         tags: "ట్యాగులు"
-        edit_rule: "సవరించు"
-        delete_rule: "తొలగించు"
+        edit_rule: "సవరించండి"
+        delete_rule: "తొలగించండి"
       edit_channel_modal:
-        cancel: "రద్దుచేయి"
+        cancel: "రద్దుచేయండి"
       edit_rule_modal:
-        cancel: రద్దుచేయి
+        cancel: రద్దుచేయండి
         type: రకం
-        filter: జల్లెడ
+        filter: ఫిల్టర్ చేయండి
         category: వర్గం
         group: సమూహం
         tags: ట్యాగులు
@@ -55,7 +55,7 @@ te:
         zulip:
           param:
             subject:
-              title: "సబ్జెక్టు"
+              title: "విషయం"
         gitter:
           param:
             name:
@@ -83,4 +83,4 @@ te:
             message:
               label: సందేశం పంపించండి
             url:
-              label: యూఆర్ యల్
+              label: URL

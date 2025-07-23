@@ -5,20 +5,25 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Przypisanie Discourse"
   js:
     filters:
       unassigned:
         title: "Nieprzypisany"
-        help: "Wątki, które nie są przypisane"
+        help: "Tematy, które nie są przypisane"
     action_codes:
       assigned: "Przypisano %{who} %{when}"
       assigned_group: "Przypisano %{who} %{when}"
       assigned_to_post: "Przypisano %{who} do <a href='%{path}'>postu</a> %{when}"
       assigned_group_to_post: "Przypisano %{who} do <a href='%{path}'>postu</a> %{when}"
-      unassigned: "Nieprzypisany %{who} %{when}"
-      unassigned_group: "Nieprzypisany %{who} %{when}"
-      unassigned_from_post: "Cofnieto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
-      unassigned_group_from_post: "Cofnieto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
+      unassigned: "Cofnięto przypisanie %{who} %{when}"
+      unassigned_group: "Cofnięto przypisanie %{who} %{when}"
+      unassigned_from_post: "Cofnięto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
+      unassigned_group_from_post: "Cofnięto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
       reassigned: "Przypisano ponownie %{who} %{when}"
       reassigned_group: "Przypisano ponownie %{who} %{when}"
       details_change: "Zmieniono szczegóły przypisania dla %{who} %{when}"
@@ -35,11 +40,12 @@ pl_PL:
       assigned_to: "Przypisany do"
       assigned_topic_to: "Przypisano temat do <a href='%{path}'>%{username}</a>"
       assign_post_to: "Przypisano #%{post_number} do %{username}"
+      assign_post_to_multiple: "#%{post_number} przez %{username}"
       assigned_to_w_ellipsis: "Przypisano do..."
       unassign:
         title: "Cofnij przypisanie"
         title_w_ellipsis: "Cofnij przypisanie..."
-        help: "Anuluj przypisanie %{username} do tematu"
+        help: "Cofnij przypisanie %{username} do tematu"
       assign:
         title: "Przypisz"
         help: "Przypisz temat do użytkownika"
@@ -57,13 +63,21 @@ pl_PL:
       reassign_modal:
         title: "Przypisz ponownie temat"
       topic_level_menu:
+        edit_assignments: "Edytuj przypisanie..."
+        reassign_topic_to_me: "Przypisz ponownie temat do mnie"
         unassign_with_ellipsis: "Cofnij przypisanie..."
+        unassign_from_post: "Cofnij przypisanie @%{assignee} z #%{post_number}"
+        unassign_from_post_help: "Cofnij przypisanie @%{assignee} z #%{post_number}"
+        unassign_from_topic: "Cofnij przypisanie @%{username} do tematu"
       assign_modal:
         title: "Przypisz temat"
         reassign_title: "Przypisz ponownie temat"
         assign: "Przypisz"
+        assignee_label: Przypisany
+        assignment_label: Przypisanie
         choose_assignee: Wybierz użytkownika do przypisania.
-        note_label: Notatka
+        edit_assignments_title: "Edytuj przypisanie"
+        note_label: Uwaga
         optional_label: "(opcjonalne)"
         status_label: Status
         suggestions: sugestie
@@ -92,13 +106,16 @@ pl_PL:
                 title: "Kto może przypisać tę grupę"
     user:
       notification_level_when_assigned:
+        label: "Po przypisaniu"
+        watch_topic: "Obserwuj temat"
+        track_topic: "Śledź temat"
         do_nothing: "Nic nie rób"
       messages:
         assigned_title: "Przypisano (%{count})"
         assigned: "Przypisany"
-      no_assignments_title: "Nie masz jeszcze żadnych przypisów"
+      no_assignments_title: "Nie masz jeszcze żadnych przypisań"
       no_assignments_body: >
-        Tutaj zostaną wyświetlone Twoje przypisane tematy i wiadomości. Będziesz również otrzymywać okresowe przypomnienie o swoich przypisach, które możesz dostosować w swoich <a href='%{preferencesUrl}'>preferencjach użytkownika</a>. <br><br> Aby przypisać temat lub wiadomość do siebie lub innej osoby, poszukaj przycisku %{icon} przypisywania na dole.
+        Tutaj zostaną wyświetlone Twoje przypisane tematy i wiadomości. Będziesz również otrzymywać okresowe przypomnienie o swoich przypisacniach, które możesz dostosować w swoich <a href='%{preferencesUrl}'>preferencjach użytkownika</a>. <br><br> Aby przypisać temat lub wiadomość do siebie lub innej osoby, poszukaj przycisku %{icon} przypisywania na dole.
       dismiss_assigned_tooltip: "Oznacz wszystkie nieprzeczytane powiadomienia o przypisaniu jako przeczytane"
       assigned_to_group:
         post: "post przypisany do %{group_name}"
@@ -107,12 +124,14 @@ pl_PL:
         post: "post przypisany do Ciebie"
         topic: "temat przypisany do Ciebie"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
     admin:
       web_hooks:
         assign_event:
+          group_name: "Przypisz wydarzenia"
           assigned: "Gdy użytkownik przypisze temat"
-          unassigned: "Gdy użytkownik anuluje przypisanie tematu"
+          unassigned: "Gdy użytkownik cofa przypisanie tematu"
     search:
       advanced:
         in:
@@ -131,16 +150,18 @@ pl_PL:
             post_template:
               label: Szablon postu
               description: Jeśli to pole zostanie wypełnione, zostanie utworzony post z tym szablonem i przypisany do niego użytkownik zamiast tematu.
+            assignees_group:
+              label: Grupa przypisanych
             minimum_time_between_assignments:
               label: Minimalna liczba godzin pomiędzy przypisaniami
             min_recently_assigned_days:
-              label: Minim. ostatnio przypisane dni
+              label: Min. ostatnio przydzielonych dni
               description: Domyślnie 14 dni.
             skip_new_users_for_days:
               label: Pomiń nowych użytkowników przez określoną liczbę dni
               description: Domyślnie 0 dni (użytkowników można przypisać natychmiast po rejestracji).
             max_recently_assigned_days:
-              label: Maks. ostatnio przypisane dni
+              label: Maks. liczba ostatnio przypisanych dni
               description: Pierwsza próba wykluczenia użytkowników przypisanych w ciągu ostatnich `n` dni. Jeśli nie zostanie żaden użytkownik, powraca do `min_recently_assigned_days`. Domyślnie 180 dni.
             assigned_topic:
               label: Przypisany ID tematu
@@ -154,10 +175,23 @@ pl_PL:
         assigned: "%{username} przypisał Ciebie"
       titles:
         assigned: "Przypisany"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Jesteś pewny? Masz %{count} ważne powiadomienie."
+            few: "Jesteś pewny? Masz %{count} ważne powiadomienia."
+            many: "Jesteś pewny? Masz %{count} ważnych powiadomień."
+            other: "Jesteś pewny? Masz %{count} ważnych powiadomień."
     user_menu:
       view_all_assigned: "wyświetl wszystkie przypisania"
       tabs:
         assign_list: "Lista przypisań"
+        assign_list_with_unread:
+          one: "Lista przypisań - %{count} nieprzeczytane przypisanie"
+          few: "Lista przypisań - %{count} nieprzeczytane przypisania"
+          many: "Lista przypisań - %{count} nieprzeczytanych przypisań"
+          other: "Lista przypisań - %{count} nieprzeczytanych przypisań"
     edit_assignments_modal:
+      title: "Edytuj przypisanie"
       topic: "Temat"
       post: "Post"

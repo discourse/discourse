@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ro:
+  js:
+    admin:
+      site_settings:
+        categories:
+          discourse_oauth2_basic: "Autentificare OAuth2"

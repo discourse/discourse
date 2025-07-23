@@ -13,9 +13,9 @@ nb_NO:
         post_voting_comment:
           composer:
             too_short:
-              one: "Skriv inn minst ett tegn"
+              one: "Skriv inn minst %{count} tegn"
               other: "Skriv inn minst %{count} tegn"
-          edit: "endre"
+          edit: "rediger"
           cancel: "avbryt"
           user:
             deleted: "(bruker slettet)"
@@ -31,4 +31,5 @@ nb_NO:
                 title: "Si deg uenig"
       topic:
         sort_by: "Sorter etter"
+        votes: "Stemmer"
         activity: "Aktivitet"

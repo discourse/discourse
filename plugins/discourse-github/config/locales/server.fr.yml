@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    enable_discourse_github_plugin: "Activer l'extension discourse-github"
+    github_linkback_enabled: "Relier les problèmes de GitHub aux discussions du forum"
+    github_linkback_projects: "Liste des projets à partir desquels effectuer le lien"
+    github_linkback_access_token: 'Un jeton d''accès valide pour l''utilisateur qui publiera le lien et pour compter les commits/contributions pour accorder des badges. Consultez <a href="https://meta.discourse.org/t/99895">cette page</a> pour savoir comment obtenir un jeton.'
+    github_linkback_maximum_links: "Nombre maximal de liens à créer à partir d'un seul message. Lorsqu'un message contient plus de liens, aucun d'entre eux n'est créé."
+    github_permalinks_enabled: "Activer les écrasements de permaliens GitHub"
+    github_permalinks_exclude: "Nom de fichier ou répertoire à exclure des remplacements de permaliens. Indiquez uniquement le nom de fichier ou le chemin d'accès complet : user/repository/optional-directory/filename"
+    github_badges_enabled: "Activer les badges GitHub"
+    github_badges_repos: "Adresses URL des dépôts GitHub pour rechercher les contributions et les commits"
+    github_silver_badge_min_commits: "Nombre minimal de commits pour le badge d'argent"
+    github_gold_badge_min_commits: "Nombre minimal de commits pour le badge d'or"
+    errors:
+      invalid_badge_repo: "Vous devez fournir une adresse URL GitHub ou le nom du dépôt au format github_user/repository_name"
+      invalid_github_linkback_access_token: "Vous devez fournir un jeton d'accès de lien GitHub valide qui donne accès aux dépôts de badges que vous avez fournis."
+  github_linkback:
+    commit_template: |
+      Ce commit a été mentionné sur **%{title}**. Il pourrait y avoir des détails pertinents ici :
+
+      %{post_url}
+    pr_template: |
+      Cette requête pull a été mentionnée sur **%{title}**. Il pourrait y avoir des détails pertinents ici :
+
+      %{post_url}
+    issue_template: |
+      Ce problème a été mentionné sur **%{title}**. Il pourrait y avoir des détails pertinents ici :
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "Action requise pour l'extension discourse-github"
+      repository_not_found_pm_title: "Action requise pour l'extension discourse-github"
+      invalid_octokit_credentials_pm_title: "Action requise pour l'extension discourse-github"

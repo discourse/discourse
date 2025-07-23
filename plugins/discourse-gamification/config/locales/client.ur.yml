@@ -9,7 +9,7 @@ ur:
     gamification:
       you: "آپ "
       leaderboard:
-        link_to_settings: "ترتیبات"
+        link_to_settings: "سیٹِنگ"
         refresh: "رِیفریش"
         name: "نام"
         period:
