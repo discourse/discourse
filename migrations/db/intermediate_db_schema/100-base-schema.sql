@@ -97,7 +97,9 @@ CREATE TABLE user_emails
 CREATE TABLE user_options
 (
     user_id                              NUMERIC  NOT NULL PRIMARY KEY,
+    ai_search_discoveries                BOOLEAN,
     allow_private_messages               BOOLEAN,
+    auto_image_caption                   BOOLEAN,
     auto_track_topics_after_msecs        INTEGER,
     automatically_unpin_topics           BOOLEAN,
     bookmark_auto_delete_preference      INTEGER,
@@ -142,6 +144,7 @@ CREATE TABLE user_options
     notification_level_when_replying     INTEGER,
     oldest_search_log_date               DATETIME,
     only_chat_push_notifications         BOOLEAN,
+    policy_email_frequency               INTEGER,
     seen_popups                          INTEGER,
     show_thread_title_prompts            BOOLEAN,
     sidebar_link_to_filtered_list        BOOLEAN,
