@@ -98,13 +98,13 @@ export default class DEditor extends Component {
     // to the new rich editor preference, or a few months after the 3.5 release.
     if (this.siteSettings.rich_editor) {
       await this.handleOldRichEditorPreference();
+
+      if (this.currentUser.useRichEditor) {
+        this.editorComponent = await loadRichEditor();
+      }
     }
 
-    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
-      this.editorComponent = await loadRichEditor();
-    } else {
-      this.editorComponent = TextareaEditor;
-    }
+    this.editorComponent ??= TextareaEditor;
   }
 
   setupToolbar() {
@@ -127,7 +127,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    return this.#saveRichEditorPreference(
+    await this.#saveRichEditorPreference(
       oldValue === "true"
         ? USER_OPTION_COMPOSITION_MODES.rich
         : USER_OPTION_COMPOSITION_MODES.markdown
@@ -558,6 +558,10 @@ export default class DEditor extends Component {
 
   @action
   handleFocusOut() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     this.set("isEditorFocused", false);
   }
 

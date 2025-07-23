@@ -2821,7 +2821,7 @@ en:
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
       navigation_menu: "sidebar|header dropdown"
       purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
-      default_composition_mode: "rte|rich text|composer|markdown"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
 
     placeholder:
       discourse_connect_provider_secrets:
