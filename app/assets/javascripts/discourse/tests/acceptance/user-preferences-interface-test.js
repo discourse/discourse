@@ -161,7 +161,6 @@ acceptance(
   "User Preferences Color Schemes (with default dark scheme)",
   function (needs) {
     needs.user();
-    needs.settings({ default_dark_mode_color_scheme_id: 1 });
     needs.pretender((server, helper) => {
       server.get("/color-scheme-stylesheet/2.json", () => {
         return helper.response({
@@ -179,6 +178,27 @@ acceptance(
     });
 
     test("show option to disable dark mode", async function (assert) {
+      let meta = document.createElement("meta");
+      meta.name = "discourse_theme_id";
+      meta.content = "2";
+      document.getElementsByTagName("head")[0].appendChild(meta);
+
+      let site = Site.current();
+      site.set("user_themes", [
+        { theme_id: 1, name: "Cool Theme", color_scheme_id: 2, default: true },
+        {
+          theme_id: 2,
+          name: "Some Other Theme",
+          color_scheme_id: 3,
+          dark_color_scheme_id: 3,
+          default: false,
+        },
+      ]);
+
+      site.set("user_color_schemes", [
+        { id: 2, name: "Cool Breeze" },
+        { id: 3, name: "Dark Night" },
+      ]);
       await visit("/u/eviltrout/preferences/interface");
 
       assert

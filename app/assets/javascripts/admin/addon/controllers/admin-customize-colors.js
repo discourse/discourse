@@ -19,22 +19,34 @@ export default class AdminCustomizeColorsController extends Controller {
 
   @tracked defaultTheme = null;
 
-  isDefaultThemeColorScheme = (scheme) => {
+  isDefaultThemeLightColorScheme = (scheme) => {
     return this.defaultTheme?.color_scheme_id === scheme.id;
   };
 
+  isDefaultThemeDarkColorScheme = (scheme) => {
+    return this.defaultTheme?.dark_color_scheme_id === scheme.id;
+  };
+
   @tracked _initialSortedSchemes = [];
-  _initialUserColorSchemeId = undefined;
-  _initialDefaultThemeColorSchemeId = null;
+  _initialUserLightColorSchemeId = undefined;
+  _initialUserDarkColorSchemeId = undefined;
+  _initialDefaultThemeLightColorSchemeId = null;
+  _initialDefaultThemeDarkColorSchemeId = null;
   _sortedOnce = false;
 
-  get canPreviewColorScheme() {
+  canPreviewColorScheme(mode) {
     const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
     const usingDefaultLightScheme =
-      this._initialUserColorSchemeId === this._initialDefaultThemeColorSchemeId;
+      this._initialUserLightColorSchemeId ===
+      this._initialDefaultThemeLightColorSchemeId;
+    const usingDefaultDarkScheme =
+      this._initialUserDarkColorSchemeId ===
+      this._initialDefaultThemeDarkColorSchemeId;
 
     return (
-      usingDefaultTheme && usingDefaultLightScheme && !this.isUsingDarkMode
+      usingDefaultTheme &&
+      ((mode === "dark" && this.isUsingDarkMode && usingDefaultDarkScheme) ||
+        (mode === "light" && !this.isUsingDarkMode && usingDefaultLightScheme))
     );
   }
 
@@ -43,18 +55,26 @@ export default class AdminCustomizeColorsController extends Controller {
   }
 
   _captureInitialState() {
-    this._initialUserColorSchemeId = this.session.userColorSchemeId;
-    this._initialDefaultThemeColorSchemeId = this.defaultTheme?.color_scheme_id;
+    this._initialUserLightColorSchemeId = this.session.userColorSchemeId;
+    this._initialUserDarkColorSchemeId = this.session.userDarkSchemeId;
+    this._initialDefaultThemeLightColorSchemeId =
+      this.defaultTheme?.color_scheme_id;
+    this._initialDefaultThemeDarkColorSchemeId =
+      this.defaultTheme?.dark_color_scheme_id;
   }
 
   get changedThemePreferences() {
     // can't check against null, because the default scheme ID is null
-    if (this._initialUserColorSchemeId === undefined && this.defaultTheme) {
+    if (
+      this._initialUserLightColorSchemeId === undefined &&
+      this.defaultTheme
+    ) {
       this._captureInitialState();
     }
 
     const changedColors =
-      this._initialUserColorSchemeId !== this._initialDefaultThemeColorSchemeId;
+      this._initialUserColorSchemeId !==
+      this._initialDefaultThemeLightColorSchemeId;
     const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
 
     return changedColors || changedTheme;
@@ -121,15 +141,16 @@ export default class AdminCustomizeColorsController extends Controller {
     }
 
     schemes.sort((a, b) => {
-      const defaultId = this.defaultTheme?.color_scheme_id;
+      const defaultLightId = this.defaultTheme?.color_scheme_id;
+      const defaultDarkId = this.defaultTheme?.dark_color_scheme_id;
 
       const isDefaultA = a.is_builtin_default
-        ? defaultId === null
-        : a.id === defaultId;
+        ? defaultLightId === null || defaultDarkId === null
+        : a.id === defaultLightId || a.id === defaultDarkId;
 
       const isDefaultB = b.is_builtin_default
-        ? defaultId === null
-        : b.id === defaultId;
+        ? defaultLightId === null || defaultDarkId === null
+        : b.id === defaultLightId || b.id === defaultDarkId;
 
       if (isDefaultA !== isDefaultB) {
         return isDefaultA ? -1 : 1;
@@ -186,12 +207,12 @@ export default class AdminCustomizeColorsController extends Controller {
   }
 
   @action
-  async setAsDefaultThemePalette(scheme) {
+  async setAsDefaultThemePalette(scheme, mode) {
     try {
       let previewMode;
       if (scheme.is_builtin_default) {
         previewMode = "reload";
-      } else if (this.canPreviewColorScheme) {
+      } else if (this.canPreviewColorScheme(mode)) {
         previewMode = "live";
       } else {
         previewMode = "none";
@@ -199,9 +220,10 @@ export default class AdminCustomizeColorsController extends Controller {
 
       this.defaultTheme = await setDefaultColorScheme(scheme, this.store, {
         previewMode,
+        mode,
       });
 
-      if (!this.canPreviewColorScheme) {
+      if (!this.canPreviewColorScheme(mode)) {
         const schemeName = scheme.description || scheme.name;
         const themeName = this.defaultTheme.name;
         this.toasts.success({

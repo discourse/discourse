@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 require "current_user"
 require "canonical_url"
@@ -587,7 +586,7 @@ module ApplicationHelper
       scheme_id
     else
       cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
-        SiteSetting.default_dark_mode_color_scheme_id
+        Theme.find_default.dark_color_scheme_id
     end
   end
 

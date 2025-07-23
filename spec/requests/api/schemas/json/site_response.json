@@ -510,6 +510,12 @@
                 "integer",
                 "null"
               ]
+            },
+            "dark_color_scheme_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
             }
           },
           "required": [
