@@ -222,8 +222,7 @@ export function registerWidgetShim(name, tagName, template) {
       ?.deactivate_widgets_rendering
   ) {
     warnWidgetsDeprecation(
-      `Widgets are deactivated and won't be rendered. Your site may not work properly. Affected widget: ${name}.`,
-      false
+      `Widgets are deactivated and shims can't be registered. Your site may not work properly. Affected widget: ${name}.`
     );
     return;
   } else {

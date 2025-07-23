@@ -44,9 +44,9 @@ export const POST_STREAM_DEPRECATION_OPTIONS = {
   url: "https://meta.discourse.org/t/372063/1",
 };
 
-export function warnWidgetsDeprecation(message, ignoreCore = false) {
+export function warnWidgetsDeprecation(message, dontSkipCore = false) {
   if (
-    (ignoreCore || consolePrefix()) &&
+    (dontSkipCore || consolePrefix()) &&
     !isDeprecationSilenced(POST_STREAM_DEPRECATION_OPTIONS.id)
   ) {
     deprecated(message, WIDGET_DEPRECATION_OPTIONS);
@@ -142,8 +142,7 @@ export function createWidget(name, opts) {
       ?.deactivate_widgets_rendering
   ) {
     warnWidgetsDeprecation(
-      `Widgets are deactivated and won't be rendered. Your site may not work properly. Affected widget: ${name}.`,
-      false
+      `Widgets are deactivated and can't be created. Your site may not work properly. Affected widget: ${name}.`
     );
     return;
   } else {
