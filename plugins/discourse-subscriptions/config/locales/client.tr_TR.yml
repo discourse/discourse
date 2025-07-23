@@ -38,12 +38,12 @@ tr_TR:
     discourse_subscriptions:
       title: Discourse Abonelikleri
       admin_navigation: Abonelikler
-      optional: İsteğe Bağlı
+      optional: İsteğe bağlı
       navigation:
         billing: Faturalandırma
         payments: Ödemeler
         subscriptions: Abonelikler
-        subscribe: Abone Olun
+        subscribe: Abone ol
         user_activity:
           payments: Ödemeler
       campaign:
@@ -83,7 +83,7 @@ tr_TR:
             week: Haftalık
             month: Aylık
             year: Yıllık
-        payment_button: Abone Olun
+        payment_button: Abone ol
         success: Teşekkürler! Aboneliğiniz oluşturuldu.
         incomplete: Ödeme tamamlanamadı. Ödeme tamamlandığında aboneliğiniz güncellenecek.
         validate:
@@ -93,11 +93,11 @@ tr_TR:
         payments:
           id: Ödeme Kimliği
           amount: Miktar
-          created_at: Oluşturuldu
+          created_at: Oluşturulma
         payments_help: Ödeme yok
         plans:
           rate: Fiyat
-          product: İsim
+          product: Ad
         subscriptions_help: Aktif aboneliğiniz yok.
         subscriptions:
           id: Abonelik Kimliği
@@ -107,7 +107,7 @@ tr_TR:
           update_card:
             heading: "Abonelik için Kartı güncelleyin: %{sub_id}"
             single: "Güncelle"
-          created_at: Oluşturuldu
+          created_at: Oluşturulma
           cancel: iptal et
           cancelled: iptal edildi
           operations:
@@ -130,7 +130,7 @@ tr_TR:
           title: Müşteri Bilgileri
         promo_code: Kupon
         buttons:
-          subscribe: Abone Olun
+          subscribe: Abone ol
         purchased: Satın alındı
         go_to_billing: Faturalandırmaya Git
         already_purchased: Bu ürünü daha önce satın aldığınız için çok teşekkürler!
@@ -434,8 +434,8 @@ tr_TR:
             repurchase_help: Ürün ve ilgili planların birden fazla kez satın alınmasına izin verin
             active: Aktif
             active_help: Ürününüz tüketiciler için hazır olana kadar bunu kapatın.
-            created_at: Oluşturuldu
-            updated_at: Güncellenmiş
+            created_at: Oluşturulma
+            updated_at: Güncellendi
           product_help: Müşterilerin sitenize abone olabilmesi için en az bir ürün ve ilgili bir plan oluşturmanız gerekir.
         plans:
           title: Fiyatlandırma Planları
@@ -459,7 +459,7 @@ tr_TR:
             group: Kullanıcı Grubu
             group_help: Bu, abonelik oluşturulduğunda müşterinin ekleneceği Discourse kullanıcı grubudur.
             active: Aktif
-            created_at: Oluşturuldu
+            created_at: Oluşturulma
             recurring: Yinelenen Plan?
         coupons:
           title: Kuponlar
@@ -479,6 +479,6 @@ tr_TR:
             product: Ürün
             plan: Plan
             status: Durum
-            created_at: Oluşturuldu
+            created_at: Oluşturulma
         ask_refund: Müşteri tarafından yapılan son ödeme iade edilsin mi?
         canceled: "Abonelik iptal edildi."

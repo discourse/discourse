@@ -167,7 +167,7 @@ describe "Viewing sidebar", type: :system do
       end
     end
 
-    describe "My messages sidebar link" do
+    describe "when My messages sidebar link" do
       it "should show for user with `can_send_private_messages` permission" do
         sign_in(admin)
         visit("/")
@@ -194,6 +194,49 @@ describe "Viewing sidebar", type: :system do
           sign_in(admin)
           visit("/")
           expect(sidebar).to have_my_messages_link("Overrided")
+        end
+      end
+
+      describe "has unread messages" do
+        fab!(:private_message) do
+          Fabricate(:private_message_post, user: user, recipient: admin).topic
+        end
+        let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
+
+        before do
+          SiteSetting.experimental_sidebar_messages_count_enabled_groups =
+            Group::AUTO_GROUPS[:trust_level_0]
+        end
+
+        it "should show new messages indicator" do
+          sign_in(admin)
+          visit("/")
+          expect(sidebar).to have_my_messages_link_with_unread_icon
+        end
+
+        it "should show a count of the new items" do
+          admin.user_option.update!(sidebar_show_count_of_new_items: true)
+          sign_in(admin)
+          visit("/")
+          expect(sidebar).to have_my_messages_link_with_unread_count
+        end
+
+        it "should remove unread icon after all messages are read" do
+          sign_in(admin)
+          user_private_messages_page.visit(admin)
+          user_private_messages_page.click_unseen_private_mesage(private_message.id)
+          expect(sidebar).to have_my_messages_link_with_unread_icon
+          try_until_success { expect(sidebar).to have_my_messages_link_without_unread_icon }
+        end
+
+        context "when user does not belong to experimental_sidebar_messages_count_enabled_groups" do
+          before { SiteSetting.experimental_sidebar_messages_count_enabled_groups = "" }
+
+          it "does not show new messages indicator" do
+            sign_in(admin)
+            visit("/")
+            expect(sidebar).to have_my_messages_link_without_unread_icon
+          end
         end
       end
     end

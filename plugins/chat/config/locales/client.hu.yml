@@ -124,7 +124,7 @@ hu:
         direct_message_cta: "Személyes csevegés indítása"
         direct_message: "Személyes csevegést is indíthat egy vagy több felhasználóval."
         title: "Nem található csatorna"
-        my_threads: "Még nincsenek témáid. A témák, amelyekben részt veszel, itt fognak megjelenni."
+        my_threads: "Még nincsenek szálai. A szálak, amelyekben részt vesz, itt fognak megjelenni."
       email_frequency:
         description: "Csak akkor küldünk e-mailt, ha az elmúlt 15 percben nem láttuk."
         never: "Soha"
@@ -133,7 +133,7 @@ hu:
       header_indicator_preference:
         title: "Aktivitásjelző megjelenítése a fejlécben"
         all_new: "Minden új üzenet"
-        dm_and_mentions: "Közvetlen üzenetek, említések és figyelt témák"
+        dm_and_mentions: "Közvetlen üzenetek, említések és figyelt szálak"
         only_mentions: "Csak említések"
         never: "Soha"
       separate_sidebar_mode:
@@ -191,15 +191,15 @@ hu:
         title: "A csatornaszintű említések figyelmen kívül hagyása"
         description: "Ne küldjön értesítést a csatornaszintű említésekről (@here és @all)"
       show_thread_title_prompts:
-        title: "Téma címének megjelenítése"
-        description: "Mutass javaslatokat az új témák címének megadásához."
+        title: "Szál címének megjelenítése"
+        description: "Javaslatok az új szálak címének megadásához."
       open: "Csevegés megnyitása"
       open_full_page: "Teljes képernyős csevegés megnyitása"
       close_full_page: "Teljes képernyős csevegés bezárása"
       open_message: "Üzenet megnyitása a csevegésben"
       placeholder_self: "Jegyezzen le valamit"
       placeholder_channel: "Csevegés itt: %{channelName}"
-      placeholder_thread: "Csevegés a témában"
+      placeholder_thread: "Csevegés a szálban"
       placeholder_users: "Csevegés velük: %{commaSeparatedNames}"
       placeholder_group: "Csevegés a csoportban"
       placeholder_new_message_disallowed:
@@ -226,7 +226,7 @@ hu:
       select: "Válasszon"
       return_to_list: "Vissza a csatornákhoz"
       return_to_channel: "Vissza a csatornához"
-      return_to_threads_list: "Vissza a témák listájához"
+      return_to_threads_list: "Vissza a szálakhoz"
       unread_threads_count:
         one: "%{count} olvasatlan beszélgetése van"
         other: "%{count} olvasatlan beszélgetése van"
@@ -242,7 +242,7 @@ hu:
       title_capitalized: "Csevegés"
       upload: "Fájl csatolása"
       upload_to_channel: "Feltöltés ide: %{title}"
-      upload_to_thread: "Feltöltés a témába"
+      upload_to_thread: "Feltöltés a szálba"
       uploaded_files:
         one: "%{count} fájl"
         other: "%{count} fájl"
@@ -264,7 +264,7 @@ hu:
         back: "Vissza"
         title: Csatornák
         filter_all: Összes
-        filter_open: Megnyitás
+        filter_open: Nyitott
         filter_closed: Lezárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint
@@ -399,7 +399,7 @@ hu:
       quote:
         original_channel: 'Eredeti beküldés: <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Csevegési idézet a vágólapra másolva"
-        default_thread_title: "Téma"
+        default_thread_title: "Szál"
       notification_levels:
         never: "Soha"
         mention: "Csak megemlítésnél"
@@ -407,8 +407,8 @@ hu:
       settings:
         channel_wide_mentions_label: "Az @all és @here megemlítések engedélyezése"
         channel_wide_mentions_description: "Engedélyezi a felhasználóknak, hogy értesítsék a #%{channel} összes tagját az @all-al, vagy csak azokat, akik az adott pillanatban aktívak @here"
-        channel_threading_label: "Témázás"
-        channel_threading_description: "Ha engedélyezve van a témázás, a csevegőüzenetekre adott válaszok egy külön beszélgetést hoznak létre, amely a fő csatorna mellett létezik."
+        channel_threading_label: "Szálkezelés"
+        channel_threading_description: "Ha engedélyezve van a szálkezelés, akkor a csevegőüzenetekre adott válaszok egy külön beszélgetést hoznak létre, amely a fő csatorna mellett létezik."
         auto_join_users_label: "Felhasználók automatikus hozzáadása"
         auto_join_users_info: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Add hozzá őket ehhez a csatornához, ha hozzáférnek a %{category} kategóriához."
         auto_join_users_info_no_category: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Adja hozzá őket ehhez a csatornához, ha hozzáfér a kiválasztott kategóriához."
@@ -441,8 +441,8 @@ hu:
           confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-t, ha elkészült."
       my_threads:
-        title: Témáim
-        aria_label: "Váltás a témáim listára"
+        title: Saját szálak
+        aria_label: "Váltás a saját szálakra"
       direct_messages:
         title: "PÜ-k"
         aria_label: "Váltás privát üzenetekre"
@@ -547,12 +547,12 @@ hu:
         no_results: "Nincs találat"
       thread:
         title: "Cím"
-        view_thread: Téma megtekintése
+        view_thread: Szál megtekintése
         replies:
           one: "%{count} válasz"
           other: "%{count} válasz"
-        label: Téma
-        close: "Téma bezárása"
+        label: Szál
+        close: "Szál bezárása"
         original_message:
           started_by: "Indította"
         settings: "Beállítások"
@@ -560,31 +560,31 @@ hu:
         notifications:
           regular:
             title: "Normális"
-            description: "Értesítést kap, ha valaki megemlíti Önt ebben a témában."
+            description: "Értesítést kap, ha valaki megemlíti Önt ebben a szálban."
           tracking:
             title: "Követés"
-            description: "Értesítést kap, ha valaki megemlíti Önt ebben a témában, és láthatja az új válaszok számát a téma listájában."
+            description: "Értesítést kap, ha valaki megemlíti Önt ebben a szálban, és láthatja az új válaszok számát a szálaknál."
           watching:
             title: "Figyelés"
-            description: "Értesítést kaphat a téma összes válaszáról, és láthatja az új válaszok számát a téma listájában."
+            description: "Értesítést kap a szál összes válaszáról, és láthatja az új válaszok számát a szálaknál."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
       thread_title_toast:
-        title: "Témacím beállítása"
+        title: "Szálcím beállítása"
         message: "Segítsen másoknak felfedezni ezt a beszélgetést."
-        dismiss_action: "Ne mutassa újra"
+        dismiss_action: "Ne jelenítse meg újra"
         primary_action: "Cím beállítása"
       thread_title_modal:
-        title: "Téma cím beállítása"
+        title: "Szálcím beállítása"
         input_placeholder: "Mondja el másoknak, miről szól ez a beszélgetés…"
         discourse_ai:
-          title: "Téma címek automatikus generálása"
+          title: "Szálcímek automatikus előállítása"
           description: "Nézze meg a %{url} oldalt, ha többet szeretne megtudni erről és a Discourse-élmény egyéb fejlesztéseiről."
       threads:
-        open: "Nyitott témák"
-        list: "Témák"
-        none: "Nem vesz részt semmilyen témában ebben a csatornában."
+        open: "Nyitott szál"
+        list: "Szálak"
+        none: "Nem vesz részt semmilyen szálban ebben a csatornában."
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Mégse"
@@ -617,7 +617,7 @@ hu:
         chat_mention: "Csevegésben megemlítve"
         chat_invitation: "Meghívás a csevegőcsatornára"
         chat_quoted: "Csevegőüzenet idézve"
-        chat_watched_thread: "Látott csevegés"
+        chat_watched_thread: "Figyelt csevegési szál"
     action_codes:
       chat:
         enabled: '%{who} engedélyezte a <button class="btn-link open-chat">csevegést</button> %{when}'

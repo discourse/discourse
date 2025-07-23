@@ -37,6 +37,7 @@ hr:
         title: "Skupna pozivnica"
         success: "Datoteka je uspješno učitana, biti ćete obaviješteni porukom kada je proces završen."
         error: "Nažalost, datoteka bi trebala biti u CSV formatu."
+        group_selector_placeholder: "Odaberite grupu..."
       upcoming_events:
         status: "Statust"
       models:
@@ -51,7 +52,7 @@ hr:
       builder_modal:
         custom_fields:
           placeholder: "Neobvezno"
-        create: "Kreiraj"
+        create: "Stvorite"
         update: "Spremi"
         timezone:
           label: Vremenska zona

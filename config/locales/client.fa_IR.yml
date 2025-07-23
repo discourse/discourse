@@ -208,12 +208,6 @@ fa_IR:
     broken_page_change_alert: "یک کنترل کننده onPageChange خطایی ایجاد کرد. برای اطلاعات بیشتر، ابزارهای توسعه دهنده مرورگر را بررسی کنید."
     broken_plugin_alert: "ناشی ازافزونه \"%{name}\""
     broken_transformer_alert: "خطایی وجود داشت. ممکن است سایت شما به درستی کار نکند."
-    critical_deprecation:
-      notice: "<b>[اطلاعیه مدیر]</b> یکی از پوسته‌ها یا افزونه‌های شما برای سازگاری با تغییرات آتی هسته Discourse، نیازمند به‌روزرسانی است."
-      id: "(شناسه:<em>%{id}</em>)"
-      linked_id: "(شناسه:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "پوسته شناسایی شده: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "افزونه شناسایی شده: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "آسیا و اقیانوسیه (توکیو)"
@@ -4677,6 +4671,8 @@ fa_IR:
             badges:
               content: "نشان‌ها"
               title: "تمام نشان‌های موجود برای کسب"
+            filter:
+              content: "فیلتر"
             topics:
               content: "موضوعات"
               title: "همه موضوعات"
@@ -4827,6 +4823,10 @@ fa_IR:
           paste: "چسباندن..."
           save: "ذخیره به عنوان..."
     safari_15_warning: "مرورگر شما به زودی دیگر با این انجمن سازگار نخواهد بود. برای ادامه مشارکت در اینجا، لطفا مرورگر خود را ارتقا دهید یا <a href='%{url}'>اطلاعات بیشتری کسب کنید</a>."
+    filter:
+      description:
+        yesterday: "دیروز"
+        last_year: "سال گذشته"
     discovery:
       headings:
         multi_tag:
@@ -5033,6 +5033,9 @@ fa_IR:
           header_description: "Webhooks به Discourse اجازه می دهد تا در صورت وقوع رویدادهای خاصی در سایت شما، سرویس های خارجی را مطلع کند. هنگامی که وب هوک راه‌اندازی می شود، یک درخواست POST به URL های ارائه شده ارسال می شود."
         embedding:
           title: "جاسازی"
+      theme_site_settings:
+        setting: "تنظیم"
+        default_value: "پیش‌فرض"
       search:
         title: "جستجو"
         result_types:
@@ -5976,11 +5979,7 @@ fa_IR:
           update_success: "%{theme} به روز رسانی کامل شد"
           up_to_date: "قالب به روز است،‌ آخرین بررسی در:"
           add: "افزودن"
-          theme_settings: "تنظیمات تم"
-          edit_objects_theme_setting: "ویرایشگر تنظیمات اشیاء"
-          overriden_settings_explanation: "تنظیمات بازنویسی شده، با یک نقطه مشخص شده و دارای رنگ برجسته هستند. برای بازنشانی این تنظیمات به مقدار پیش فرض، دکمه بازنشانی را در کنار آنها فشار دهید."
           no_settings: "این تم تنظیماتی ندارد."
-          theme_translations: "ترجمه تم"
           empty: "هیچ موردی وجود ندارد"
           commits_behind:
             one: "قالب %{count}تغییر دیگر نیاز دارد."
@@ -6054,7 +6053,12 @@ fa_IR:
             title: "پالت رنگ پایه را انتخاب کنید"
             description: "پالت پایه:"
           title: "رنگ‌ها"
-          edit: "ویرایش پالت های رنگ"
+          edit: "ویرایش"
+          filters:
+            all: "همه"
+            user_selectable: "قابل انتخاب توسط کاربر"
+          active_badge:
+            text: "فعال"
           long_title: "پالت‌های رنگ"
           about: "رنگ های استفاده شده توسط پوسته‌های خود را تغییر دهید. برای شروع یک پالت رنگ جدید ایجاد کنید."
           new_name: "پالت رنگی جدید"
@@ -6654,7 +6658,6 @@ fa_IR:
         activity: فعالیت
         like_count: پسند‌های اعطایی / دریافتی
         last_100_days: "در 100 روز گذشته"
-        private_topics_count: موضوعات خصوصی
         posts_read_count: نوشته‌های خوانده شده
         post_count: نوشته‌های ایجاد شده
         second_factor_enabled: احراز هویت دو مرحله‌ای فعال شد

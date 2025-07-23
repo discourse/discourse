@@ -18,8 +18,8 @@ pt_BR:
     action_codes:
       assigned: "Atribuiu a %{who} %{when}"
       assigned_group: "Atribuiu a %{who} %{when}"
-      assigned_to_post: "Atribuiu %{who} à <a href='%{path}'>postagem</a> %{when}"
-      assigned_group_to_post: "Atribuiu %{who} à <a href='%{path}'>postagem</a> %{when}"
+      assigned_to_post: "Atribuiu %{who} a <a href='%{path}'>postagem</a> %{when}"
+      assigned_group_to_post: "Atribuiu %{who} a <a href='%{path}'>postagem</a> %{when}"
       unassigned: "Cancelou atribuição de %{who} %{when}"
       unassigned_group: "Cancelou atribuição de %{who} %{when}"
       unassigned_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
@@ -36,12 +36,12 @@ pt_BR:
       topic_search_placeholder: "Procurar tópicos por título ou conteúdo da postagem"
       sidebar_name_filter_placeholder: "Nome/nome de usuário(a)"
       assigned: "Atribuiu"
-      group_everyone: "Todos"
-      assigned_to: "Atribuiu a"
+      group_everyone: "Todos(as)"
+      assigned_to: "Atribuído a"
       assigned_topic_to: "Tópico atribuído a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Atribuiu #%{post_number} a %{username}"
       assign_post_to_multiple: "#%{post_number} para %{username}"
-      assigned_to_w_ellipsis: "Atribuiu a..."
+      assigned_to_w_ellipsis: "Atribuído a..."
       unassign:
         title: "Remover atribuição"
         title_w_ellipsis: "Remover atribuição..."
@@ -93,10 +93,10 @@ pt_BR:
       reminders_frequency:
         description: "Freqüência para receber lembretes de tópicos designados"
         never: "Nunca"
-        daily: "Diariamente"
-        weekly: "Semanalmente"
-        monthly: "Mensalmente"
-        quarterly: "Trimestralmente"
+        daily: "A cada dia"
+        weekly: "A cada semana"
+        monthly: "Todo mês"
+        quarterly: "Todo semestre"
       admin:
         groups:
           manage:
@@ -138,7 +138,7 @@ pt_BR:
           assigned: "foram atribuídos"
           unassigned: "tiveram atribuição removida"
         assigned:
-          label: "Atribuiu a"
+          label: "Atribuído a"
     topics:
       bulk:
         unassign: "Remover atribuição de tópicos"

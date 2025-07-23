@@ -21,6 +21,11 @@ pl_PL:
     patreon_donation_prompt_enabled: "Włączyć zachętę do dotacji?"
     patreon_donation_prompt_show_after_topics: "Pokaż zachętę do dotacji po n tematach."
     patreon_donation_prompt_campaign_url: "URL kampanii zachęcającej do dotacji"
+    errors:
+      patreon_creator_username_not_set: "Przed włączeniem logowania w serwisie Patreon musisz skonfigurować nazwę użytkownika Discourse w Patreon Creator."
+  dashboard:
+    problem:
+      access_token_invalid: "Wartości tokenów dostępu i odświeżania dla twórcy Patreona są nieprawidłowe. Musisz skopiować i wkleić nowe tokeny ze strony Patreona <a href='https://www.patreon.com/platform/documentation/clients'></a> do ustawień strony <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'></a>."
   patreon:
     error:
       invalid_response: "Nieprawidłowa odpowiedź z API Patreona"

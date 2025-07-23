@@ -18,5 +18,3 @@ bg:
             added_and_removed: "Добавен е %{added} и е премахнат %{removed}"
             added: "Добавен %{added}"
             removed: "Премахнат %{removed}"
-      flowdock:
-        message_title: "публикувано"

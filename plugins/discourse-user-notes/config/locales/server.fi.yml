@@ -18,5 +18,5 @@ fi:
       description: "Listaa viimeisimmät käyttäjähuomiot."
       labels:
         user: Käyttäjä
-        note: Huomio
+        note: Huomautus
         moderator: Valvoja

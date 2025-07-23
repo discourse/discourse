@@ -11,14 +11,14 @@ ro:
         event_started:
           fields:
             topic_id:
-              label: ID discuție
+              label: ID subiect
     discourse_calendar:
       disable_holiday: "Dezactivează"
       enable_holiday: "Activează"
       date: "Dată"
       add_to_calendar: "Adaugă în Google Calendar"
       region:
-        none: "Nimeni"
+        none: "Nimic"
       toolbar_button:
         today: "Astăzi"
         month: "Lună"
@@ -33,13 +33,15 @@ ro:
       add_to_calendar: "Adaugă în calendar"
       send_pm_to_creator: "Trimite PM către %{username}"
       export_event: "Exportă evenimentul"
-      created_by: "Creat de"
+      created_by: "Creată de"
       bulk_invite: "Invitație în masă"
       bulk_invite_modal:
         title: "Invitație în masă"
         success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
         error: "Scuze, fișierul trebuie să fie în format CSV."
         confirmation_message: "Ești pe cale să anunți pe toată lumea din fișierul încărcat."
+        send_bulk_invites: "Trimite invitații"
+        group_selector_placeholder: "Selectează un grup..."
       upcoming_events:
         title: "Evenimente viitoare"
         creator: "Creator"
@@ -71,20 +73,20 @@ ro:
         custom_fields:
           placeholder: "Opțional"
         create: "Creează"
-        update: "Salvare"
+        update: "Salvează"
         timezone:
           label: Fus orar
         reminders:
           units:
-            minutes: "minute"
-            hours: "ore"
-            days: "zile"
+            minutes: "de minute"
+            hours: "de ore"
+            days: "de zile"
           periods:
             before: "înainte"
             after: "după"
         recurrence:
           label: "Recurență"
-          none: "Nicio recurență"
+          none: "Fără recurență"
           every_day: "În fiecare zi"
         url:
           label: "URL"
@@ -94,7 +96,7 @@ ro:
         description:
           label: "Descriere"
         status:
-          label: "Status"
+          label: "Stare"
       invite_user_or_group:
         title: "Notifică utilizatorul (utilizatorii) sau grupul (grupurile)"
         invite: "Trimite"

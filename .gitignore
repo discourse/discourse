@@ -70,6 +70,14 @@
 !/plugins/discourse-hcaptcha
 !/plugins/discourse-gamification
 !/plugins/discourse-calendar
+!/plugins/discourse-policy
+!/plugins/discourse-github
+!/plugins/discourse-adplugin
+!/plugins/discourse-affiliate
+!/plugins/discourse-solved
+!/plugins/discourse-topic-voting
+!/plugins/discourse-templates
+!/plugins/discourse-ai
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

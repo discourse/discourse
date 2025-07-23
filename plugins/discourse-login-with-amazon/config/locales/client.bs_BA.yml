@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  js:
+    login:
+      amazon:
+        name: "Amazona"

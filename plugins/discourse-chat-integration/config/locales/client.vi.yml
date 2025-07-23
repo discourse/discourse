@@ -13,7 +13,7 @@ vi:
   js:
     chat_integration:
       menu_title: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
-      settings: "Xác lập"
+      settings: "Cài đặt"
       no_providers: "Bạn cần thêm một vài dịch vụ Chat trong phần thiết lập plugin."
       channels_with_errors: "Một vài channels từ dịch vụ chat này đã thất bại trong lần gửi tin nhắn cuối cùng. Nhấn chuột vào biểu tượng lỗi để xem thêm."
       choose_group: "(chọn một nhóm)"

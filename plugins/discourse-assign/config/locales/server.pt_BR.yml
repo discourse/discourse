@@ -50,10 +50,10 @@ pt_BR:
     topic_group_assigned_excerpt: "tópico \"%{title}\" atribuído a @%{group}"
     reminders_frequency:
       never: "nunca"
-      daily: "diariamente"
-      weekly: "semanalmente"
-      monthly: "mensalmente"
-      quarterly: "trimestralmente"
+      daily: "a cada dia"
+      weekly: "a cada semana"
+      monthly: "todo mês"
+      quarterly: "todo semestre"
   assign_mailer:
     title: "Atribuir mensageiro"
     subject_template: "[%{email_prefix}] %{assignee_name} atribuiu \"%{topic_title}\" a você!"

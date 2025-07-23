@@ -9,8 +9,8 @@ sq:
     patreon:
       group: 'Grupi'
       filter: 'Filtro'
-      edit: 'Redakto'
+      edit: 'Redaktoni'
       delete: 'Fshij'
-      save: 'Ruaj'
+      save: 'Ruani'
       field:
         email: "Email"

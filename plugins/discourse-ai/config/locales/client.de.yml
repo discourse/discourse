@@ -1,0 +1,900 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Ermöglicht KI-Suche"
+              stream_completion: "Ermöglicht das Streamen von KI-Persona-Vervollständigungen"
+              update_personas: "Ermöglicht die Aktualisierung von KI-Personas"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse-KI"
+      dashboard:
+        emotion:
+          title: "Emotion"
+          description: "Die Tabelle listet die Anzahl der Beiträge auf, die mit einer bestimmten Emotion klassifiziert wurden. Klassifiziert mit dem Modell „SamLowe/roberta-base-go_emotions“."
+        reports:
+          filters:
+            group_by:
+              label: "Gruppieren nach"
+            sort_by:
+              label: "Sortieren nach"
+            tag:
+              label: "Schlagwort"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "LLM-Modell erstellen"
+            update_ai_llm_model: "LLM-Modell aktualisieren"
+            delete_ai_llm_model: "LLM-Modell löschen"
+            create_ai_persona: "KI-Persona erstellen"
+            update_ai_persona: "KI-Persona aktualisieren"
+            delete_ai_persona: "KI-Persona löschen"
+            create_ai_tool: "KI-Tool erstellen"
+            update_ai_tool: "KI-Tool aktualisieren"
+            delete_ai_tool: "KI-Tool löschen"
+            create_ai_embedding: "KI-Einbettung erstellen"
+            update_ai_embedding: "KI-Einbettung aktualisieren"
+            delete_ai_embedding: "KI-Einbettung löschen"
+            update_ai_spam_settings: "KI-Spam-Einstellungen aktualisieren"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Absender"
+              description: "Der Benutzer, der den Bericht senden wird"
+            receivers:
+              label: "Empfänger"
+              description: "Die Benutzer, die den Bericht erhalten sollen (an E-Mail-Adressen wird eine E-Mail verschickt, Benutzernamen erhalten eine PN)"
+            topic_id:
+              label: "Themen-ID"
+              description: "Die Themen-ID für die Veröffentlichung des Berichts"
+            title:
+              label: "Titel"
+              description: "Der Titel des Berichts"
+            days:
+              label: "Tage"
+              description: "Die Zeitspanne des Berichts"
+            offset:
+              label: "Offset"
+              description: "Wenn du den Bericht zu Testzwecken in der Vergangenheit ausführen möchtest, kannst du den Bericht mit einem Offset zu einem früheren Zeitpunkt starten."
+            instructions:
+              label: "Anweisungen"
+              description: "Die Anweisungen für das große Sprachmodell"
+            sample_size:
+              label: "Stichprobengröße"
+              description: "Die Anzahl der Beiträge, die für den Bericht ausgewählt werden sollen"
+            tokens_per_post:
+              label: "Token pro Beitrag"
+              description: "Die Anzahl der pro Beitrag zu verwendenden LLM-Token"
+            model:
+              label: "Modell"
+              description: "LLM zur Berichtserstellung"
+            categories:
+              label: "Kategorien"
+              description: "Themen nur nach diesen Kategorien filtern"
+            tags:
+              label: "Schlagwörter"
+              description: "Themen nur nach diesen Schlagwörtern filtern"
+            exclude_tags:
+              label: "Schlagwörter ausschließen"
+              description: "Themen mit diesen Schlagwörtern ausschließen"
+            exclude_categories:
+              label: "Kategorien ausschließen"
+              description: "Themen mit diesen Kategorien ausschließen"
+            allow_secure_categories:
+              label: "Sichere Kategorien zulassen"
+              description: "Erlaube, dass der Bericht für Themen in sicheren Kategorien erstellt wird"
+            suppress_notifications:
+              label: "Benachrichtigungen unterdrücken"
+              description: "Unterdrücke Benachrichtigungen, die der Bericht durch die Umwandlung in Inhalt erzeugen kann. Dadurch werden Erwähnungen und interne Links umgewandelt."
+            debug_mode:
+              label: "Debug-Modus"
+              description: "Aktiviere den Debug-Modus, um die Roheingabe und -ausgabe des LLM anzuzeigen"
+            priority_group:
+              label: "Prioritätsgruppe"
+              description: "Inhalte aus dieser Gruppe im Bericht hervorheben"
+            temperature:
+              label: "Temperatur"
+              description: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
+            top_p:
+              label: "Top P"
+              description: "Top P für die LLM, erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
+            persona_id:
+              label: "Persona"
+              description: "KI Persona zur Berichtserstellung"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Modell"
+              description: "Das für die Sichtung verwendete Standard-Sprachmodell"
+            tool:
+              label: "Tool"
+              description: "Tool für die Sichtung (das Tool darf keine Parameter definiert haben)"
+        llm_persona_triage:
+          fields:
+            persona:
+              label: "Persona"
+              description: "KI-Persona, die für die Sichtung verwendet werden soll (Standard-LLM und -Benutzer müssen eingestellt sein)"
+            whisper:
+              label: "Als Flüstern antworten"
+              description: "Ob die Antwort der Persona ein Flüstern sein soll"
+            silent_mode:
+              label: "Stiller Modus"
+              description: "Im stillen Modus empfängt die Persona den Inhalt, schreibt aber nichts in das Forum - nützlich bei der Sichtung mit Tools"
+        llm_triage:
+          fields:
+            system_prompt:
+              label: "System-Eingabeaufforderung"
+              description: "Die Eingabeaufforderung, die für die Triage verwendet wird. Achte darauf, dass sie mit einem einzigen Wort antwortet, das du zum Auslösen der Aktion verwenden kannst"
+            max_post_tokens:
+              label: "Max. Beitrags-Token"
+              description: "Die maximale Anzahl von Token, die mit LLM-Triage gescannt werden"
+            stop_sequences:
+              label: "Sequenzen stoppen"
+              description: "Weise das Modell an, die Token-Generierung anzuhalten, wenn einer dieser Werte erreicht wird"
+            search_for_text:
+              label: "Suche nach Text"
+              description: "Wenn der folgende Text in der LLM-Antwort erscheint, wende diese Maßnahmen an"
+            category:
+              label: "Kategorie"
+              description: "Kategorie, die auf das Thema anzuwenden ist"
+            tags:
+              label: "Schlagwörter"
+              description: "Schlagwörter, die auf das Thema anzuwenden sind"
+            canned_reply:
+              label: "Antworten"
+              description: "Rohtext der vorgefertigten Antwort auf einen Beitrag zum Thema"
+            canned_reply_user:
+              label: "Antwortender Benutzer"
+              description: "Benutzername des Benutzers, der die vorgefertigte Antwort posten soll"
+            hide_topic:
+              label: "Thema ausblenden"
+              description: "Thema nicht für die Öffentlichkeit sichtbar machen, wenn ausgelöst"
+            flag_type:
+              label: "Meldungs-Typ"
+              description: "Art der Meldung, die auf den Beitrag angewendet werden soll (Spam oder einfach zur Überprüfung anzeigen)"
+            flag_post:
+              label: "Beitrag melden"
+              description: "Meldet den Beitrag (entweder als Spam oder zur Überprüfung)"
+            include_personal_messages:
+              label: "Persönliche Nachrichten einbeziehen"
+              description: "Auch persönliche Nachrichten scannen und sortieren"
+            whisper:
+              label: "Als Flüstern antworten"
+              description: "Ob die Antwort der KI ein Flüstern sein soll"
+            reply_persona:
+              label: "Antwort Persona"
+              description: "KI-Persona, die für Antworten verwendet werden soll (muss Standard-LLM haben), wird gegenüber vorgefertigten Antworten bevorzugt"
+            model:
+              label: "Modell"
+              description: "Für die Triage verwendetes Sprachmodell"
+            temperature:
+              label: "Temperatur"
+              description: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Zufälligkeit zu erhöhen (leer lassen, um das Standardmodell zu verwenden)"
+            max_output_tokens:
+              label: "Maximale Ausgabetoken"
+              description: "Wenn angegeben, wird eine Obergrenze für die maximale Anzahl von Token festgelegt, die das Modell erzeugen kann. Beachtet die Obergrenze für die Anzahl der ausgegebenen Token des LLM"
+    discourse_ai:
+      title: "KI"
+      features:
+        short_title: "Funktionen"
+        description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
+        back: "Zurück"
+        disabled: "(deaktiviert)"
+        persona:
+          one: "Persona:"
+          other: "Personas:"
+        groups: "Gruppen:"
+        llm:
+          one: "LLM:"
+          other: "LLM:"
+        no_llm: "Kein LLM ausgewählt"
+        no_persona: "Nicht festgelegt"
+        no_groups: "Keiner"
+        edit: "Bearbeiten"
+        expand_list:
+          one: "(%{count} weitere)"
+          other: "(%{count} weitere)"
+        collapse_list: "(weniger anzeigen)"
+        bot:
+          bot: "Chatbot"
+          name: "Bot"
+          description: "Ein Chatbot, der Fragen beantworten und Benutzern in persönlichen Nachrichten, im Forum und im Chat helfen kann"
+        nav:
+          configured: "Konfiguriert"
+          unconfigured: "Nicht konfiguriert"
+        filters:
+          all: "Gesamt"
+          text: "Suche nach Funktionen, Personas, LLMs oder Gruppen..."
+          no_results: "Es wurden keine Funktionen gefunden, die deinen Filtern entsprechen."
+          reset: "Zurücksetzen"
+        summarization:
+          name: "Zusammenfassungen"
+          description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
+          topic_summaries: "Themenzusammenfassungen"
+          gists: "Kurze Zusammenfassungen der in Themenliste"
+        search:
+          name: "Suche"
+          description: "Verbessert das Sucherlebnis durch KI-generierte Antworten auf Suchanfragen"
+          discoveries: "Entdeckungen"
+        embeddings:
+          name: "Einbettungen"
+          description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
+          hyde: "HyDE"
+        discord:
+          name: "Discord-Integration"
+          description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
+          search: "Discord-Suche"
+        inference:
+          name: "Abgeleitete Konzepte"
+          description: "Ordnet Themen und Beiträge in Interessensgebiete / Labels."
+          generate_concepts: "Konzepterkennung"
+          match_concepts: "Passende Konzepte"
+          deduplicate_concepts: "Deduplizierung von Konzepten"
+        ai_helper:
+          name: "Helfer"
+          description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
+          proofread: Text korrekturlesen
+          title_suggestions: "Titel vorschlagen"
+          explain: "Erklären"
+          illustrate_post: "Beitrag illustrieren"
+          smart_dates: "Intelligente Termine"
+          translate: "Übersetzen"
+          markdown_tables: "Markdown-Tabelle generieren"
+          custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
+          image_caption: "Bildbeschriftungen"
+          translator: "Übersetzer"
+        translation:
+          name: "Übersetzen"
+          description: "Übersetzt Inhalte in unterstützte Sprachen"
+          locale_detector: "Sprachdetektor"
+          post_raw_translator: "Übersetzer für die Roheingabe des Beitrags"
+          topic_title_translator: "Thementitel-Übersetzer"
+          short_text_translator: "Kurztext-Übersetzer"
+        spam:
+          name: "Spam"
+          description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
+          inspect_posts: "Beiträge prüfen"
+      modals:
+        select_option: "Wähle eine Option aus..."
+      layout:
+        table: "Tabelle"
+        card: "Karte"
+      spam:
+        short_title: "Spam"
+        title: "Spam-Behandlung konfigurieren"
+        select_llm: "LLM auswählen"
+        select_persona: "Persona auswählen"
+        custom_instructions: "Benutzerdefinierte Anweisungen"
+        custom_instructions_help: "Benutzerdefinierte Anweisungen speziell für deine Website, die der KI beim Identifizieren von Spam helfen, z. B. „Gehe beim Scannen von Posts, die nicht in englischer Sprache sind, aggressiver vor.“"
+        last_seven_days: "Letzte 7 Tage"
+        scanned_count: "Gescannte Beiträge"
+        false_positives: "Falsch gemeldet"
+        false_negatives: "Spam übersehen"
+        spam_detected: "Spam erkannt"
+        custom_instructions_placeholder: "Websitespezifische Anweisungen für die KI zur genaueren Identifizierung von Spam"
+        enable: "Aktivieren"
+        spam_tip: "Die KI-Spamerkennung scannt die ersten 3 Beiträge aller neuen Benutzer zu öffentlichen Themen. Sie meldet sie zur Überprüfung und blockiert Benutzer, wenn es sich wahrscheinlich um Spam handelt."
+        settings_saved: "Einstellungen gespeichert"
+        spam_description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
+        no_llms: "Keine LLMs verfügbar"
+        test_button: "Test …"
+        save_button: "Änderungen speichern"
+        test_modal:
+          title: "Testen der Spam-Erkennung"
+          post_url_label: "Beitrags-URL oder -ID"
+          post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
+          result: "Ergebnis"
+          scan_log: "Scan-Protokoll"
+          run: "Test ausführen"
+          spam: "Spam"
+          not_spam: "Kein Spam"
+        stat_tooltips:
+          incorrectly_flagged: "Inhalte, die der KI-Bot als Spam gemeldet hat und bei denen die Moderatoren anderer Meinung waren"
+          missed_spam: "Von der Community als Spam gemeldete und von Moderatoren als solche bestätigte Inhalte, die vom KI-Bot nicht erkannt wurden"
+        errors:
+          scan_not_admin:
+            message: "Warnung: Spam-Scannen wird nicht korrekt funktionieren, da das Spam-Scan-Konto kein Administrator ist"
+            action: "Beheben"
+          resolved: "Der Fehler wurde behoben!"
+      usage:
+        short_title: "Verwendung"
+        summary: "Zusammenfassung"
+        total_tokens: "Token gesamt"
+        tokens_over_time: "Token im Laufe der Zeit"
+        features_breakdown: "Nutzung pro Funktion"
+        feature: "Funktion"
+        usage_count: "Nutzungsanzahl"
+        model: "Modell"
+        models_breakdown: "Nutzung pro Modell"
+        users_breakdown: "Nutzung pro Benutzer"
+        all_features: "Alle Funktionen"
+        all_models: "Alle Modelle"
+        username: "Benutzername"
+        total_requests: "Gesamte Anfragen"
+        request_tokens: "Anfrage-Token"
+        response_tokens: "Antwort-Token"
+        net_request_tokens: "Token für Netzanfragen"
+        cached_tokens: "Zwischengespeicherte Token"
+        cached_request_tokens: "Zwischengespeicherte Anfragetoken"
+        total_spending: "Geschätzte Kosten"
+        no_users: "Keine Benutzernutzungsdaten gefunden"
+        no_models: "Keine Modellnutzungsdaten gefunden"
+        no_features: "Keine Funktionsnutzungsdaten gefunden"
+        subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
+        stat_tooltips:
+          total_requests: "Alle Anfragen an LLMs über Discourse"
+          total_tokens: "Alle Token, die bei der Abfrage einer LLM verwendet werden"
+          request_tokens: "Tokens, die verwendet werden, wenn das LLM versucht zu verstehen, was du sagst"
+          response_tokens: "Token, die verwendet werden, wenn die LLM auf deine Aufforderung antwortet"
+          cached_tokens: "Zuvor verarbeitete Anfragetoken, die das LLM wiederverwendet, um Leistung und Kosten zu optimieren"
+          total_spending: "Kumulierte Kosten aller von den LLM verwendeten Token auf Grundlage der spezifischen Kostenmetriken, die zu den LLM-Konfigurationseinstellungen hinzugefügt wurden"
+        periods:
+          last_day: "Letzte 24 Stunden"
+          last_week: "Letzte Woche"
+          last_month: "Letzter Monat"
+          custom: "Benutzerdefiniert …"
+      ai_persona:
+        ai_tools: "Tools"
+        tool_strategies:
+          all: "Auf alle Antworten anwenden"
+          replies:
+            one: "Nur auf die erste Antwort anwenden"
+            other: "Auf die ersten %{count} Antworten anwenden"
+        back: "Zurück"
+        name: "Name"
+        edit: "Bearbeiten"
+        export: "Exportieren"
+        import: "Importieren"
+        import_error_conflict: "Beim Importieren von %{name} wurde ein Konflikt erkannt. Möchtest du die vorhandene Persona aktualisieren?"
+        overwrite: "Überschreiben"
+        description: "Beschreibung"
+        no_llm_selected: "Kein Sprachmodell ausgewählt"
+        use_parent_llm: "Verwende das Personas Sprachmodell"
+        max_context_posts: "Max. Kontext-Beiträge"
+        max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Nutzer verwenden soll (leer für Standardwert)."
+        vision_enabled: Sehen aktiviert
+        vision_enabled_help: Wenn diese Funktion aktiviert ist, versucht die KI, die Bilder zu verstehen, die Nutzer im Thema posten (abhängig davon, ob das verwendete Modell Sehen unterstützt). Unterstützt von den neuesten Modellen von Anthropic, Google und OpenAI.
+        vision_max_pixels: Unterstützte Bildgröße
+        vision_max_pixel_sizes:
+          low: Niedrige Qualität – am günstigsten (256 x 256)
+          medium: Mittlere Qualität (512 x 512)
+          high: Hohe Qualität – am langsamsten (1024 x 1024)
+        tool_details: Tool-Details anzeigen
+        tool_details_help: Zeigt den Endnutzern Details darüber, welche Tools das Sprachmodell ausgelöst hat.
+        mentionable: Erwähnungen zulassen
+        mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
+        user: Nutzer
+        create_user: Benutzer erstellen
+        create_user_help: Du kannst dieser Persona optional einen Nutzer zuordnen. Wenn du das tust, wird die KI diesen Nutzer verwenden, um auf Anfragen zu antworten.
+        default_llm: Standard-Sprachmodell
+        default_llm_help: Das Standard-Sprachmodell, das für diese Persona verwendet werden soll. Erforderlich, wenn du die Persona in öffentlichen Beiträgen erwähnen möchtest.
+        question_consolidator_llm: Sprachmodell für Fragenkonsolidierer
+        question_consolidator_llm_help: Das Sprachmodell, das für den Fragenkonsolidierer verwendet werden soll. Du kannst ein weniger leistungsfähiges Modell wählen, um Kosten zu sparen.
+        system_prompt: System-Eingabeaufforderung
+        forced_tool_strategy: Erzwungene Tool-Strategie
+        allow_chat_direct_messages: "Chat-Direktnachrichten zulassen"
+        allow_chat_direct_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen Direktnachrichten an diese Person senden."
+        allow_chat_channel_mentions: "Chat-Kanal-Erwähnungen zulassen"
+        allow_chat_channel_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diese Persona in Chatkanälen erwähnen."
+        allow_personal_messages: "Persönliche Nachrichten zulassen"
+        allow_personal_messages_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen persönliche Nachrichten an diese Persona senden."
+        allow_topic_mentions: "Themenerwähnungen zulassen"
+        allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diese Persona in Themen erwähnen."
+        force_default_llm: "Immer das Standard-Sprachmodell verwenden"
+        save: "Speichern"
+        saved: "Persona gespeichert"
+        enabled: "Aktiviert?"
+        tools: "Aktivierte Tools"
+        forced_tools: "Erzwungene Tools"
+        allowed_groups: "Zulässige Gruppen"
+        confirm_delete: "Bist du sicher, dass du diese Persona löschen willst?"
+        new: "Neue Persona"
+        no_personas: "Du hast noch keine Personas erstellt"
+        title: "Personas"
+        short_title: "Personas"
+        delete: "Löschen"
+        temperature: "Temperatur"
+        temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
+        top_p: "Top P"
+        top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
+        priority: "Priorität"
+        priority_help: "Personas mit Priorität werden den Benutzern am Anfang der Persona-Liste angezeigt. Wenn mehrere Personas Priorität haben, werden sie alphabetisch sortiert."
+        tool_options: "Tool-Optionen"
+        rag_conversation_chunks: "Unterhaltungs-Chunks durchsuchen"
+        rag_conversation_chunks_help: "Die Anzahl der Chunks, die für die RAG-Modell-Suche verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann."
+        persona_description: "Personas sind eine leistungsstarke Funktion, mit der du das Verhalten der KI-Engine in deinem Discourse-Forum anpassen kannst. Sie fungieren als „Systemnachricht“, welche die Antworten und Interaktionen der KI steuert und dazu beiträgt, ein persönlicheres und ansprechenderes Erlebnis für Benutzer zu schaffen."
+        response_format:
+          title: "JSON-Antwortformat"
+          no_format: "Kein JSON-Format angegeben"
+          open_modal: "Bearbeiten"
+          modal:
+            root_title: "Antwortstruktur"
+            key_title: "Schlüssel"
+        examples:
+          title: Beispiele
+          examples_help: Simuliere frühere Interaktionen mit dem LLM und erde es, um bessere Ergebnisse zu erzielen.
+          new: Neues Beispiel
+          remove: Beispiel löschen
+          collapsable_title: "Beispiel #%{number}"
+          user: "Nachricht des Benutzers"
+          model: "Antwort des Modells"
+        list:
+          enabled: "KI-Bot?"
+        ai_bot:
+          title: "KI-Bot-Optionen"
+          save_first: "Weitere KI-Bot-Optionen werden verfügbar, sobald du die Persona gespeichert hast."
+        filters:
+          text: "Finde eine Persona"
+          reset: "Zurücksetzen"
+          no_results: "Es wurden keine Personas gefunden, die deinen Filtern entsprechen."
+          all_features: "Jede Funktion"
+        features_list:
+          one: "Funktion:"
+          other: "Funktionen:"
+        llms_list: "LLM:"
+      rag:
+        title: "RAG"
+        options:
+          rag_chunk_tokens: "Chunk-Token hochladen"
+          rag_chunk_tokens_help: "Die Anzahl der Token, die für jeden Chunk im RAG-Modell verwendet werden. Erhöhen, um die Menge des Kontexts zu steigern, den die KI verwenden kann. (Eine Änderung führt zu einer Neuindizierung aller Uploads.)"
+          rag_chunk_overlap_tokens: "Chunk-Überlappungs-Token hochladen"
+          rag_chunk_overlap_tokens_help: "Die Anzahl der Token, die sich zwischen den Chunks im RAG-Modell überlappen sollen. (Eine Änderung führt zu einer Neuindizierung aller Uploads.)"
+          rag_llm_model: "Indizierungssprachmodell"
+          rag_llm_model_help: "Das für die OCR bei der Indizierung von PDFs und Bildern verwendete Sprachmodell"
+          show_indexing_options: "Upload-Optionen anzeigen"
+          hide_indexing_options: "Upload-Optionen ausblenden"
+        uploads:
+          title: "Uploads"
+          description: "PDF (.pdf), Klartext (.txt) oder Markdown (.md)"
+          description_with_images: "Klartext (.txt), Markdown (.md), PDF (.pdf) oder Bild (.png, .jpeg)"
+          button: "Dateien hinzufügen"
+          filter: "Uploads filtern"
+          indexed: "Indiziert"
+          indexing: "Indizierung"
+          uploaded: "Bereit zur Indizierung"
+          uploading: "Wird hochgeladen …"
+          remove: "Upload entfernen"
+      tools:
+        back: "Zurück"
+        short_title: "Tools"
+        export: "Exportieren"
+        import: "Importieren"
+        import_error_conflict: "Tool existiert bereits, möchtest du es aktualisieren?"
+        overwrite: "Überschreiben"
+        no_tools: "Du hast noch keine Tools erstellt"
+        name: "Name"
+        name_help: "Der Name wird in der Discourse-Benutzeroberfläche angezeigt und ist die Kurzkennung, die du verwendest, um das Tool in verschiedenen Einstellungen zu finden. Er sollte eindeutig sein (er ist erforderlich)."
+        new: "Neues Tool"
+        tool_name: "Name des Tools"
+        tool_name_help: "Der Werkzeugname wird dem großen Sprachmodell präsentiert. Es ist nicht eindeutig, aber es ist von Person zu Person unterschiedlich. (Persona wird beim Speichern validiert)"
+        description: "Beschreibung"
+        description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
+        subheader_description: "Tools erweitern die Fähigkeiten von KI-Bots mit benutzerdefinierten JavaScript-Funktionen."
+        summary: "Zusammenfassung"
+        summary_help: "Zusammenfassung des Zwecks der Tools, die den Endnutzern angezeigt werden soll"
+        script: "Skript"
+        parameters: "Parameter"
+        save: "Speichern"
+        parameter_type: "Parametertyp"
+        add_parameter: "Parameter hinzufügen"
+        remove_parameter: "Entfernen"
+        parameter_required: "Erforderlich"
+        parameter_enum: "Aufzählung"
+        parameter_name: "Parametername"
+        parameter_description: "Parameterbeschreibung"
+        enum_value: "Aufzählungswert"
+        add_enum_value: "Aufzählungswert hinzufügen"
+        edit: "Bearbeiten"
+        test: "Test ausführen"
+        delete: "Löschen"
+        saved: "Tool gespeichert"
+        confirm_delete: "Bist du sicher, dass du dieses Tool löschen willst?"
+        test_modal:
+          title: "KI-Tool testen"
+          run: "Test ausführen"
+          result: "Testergebnis"
+      llms:
+        short_title: "LLM"
+        no_llms: "Noch keine LLM"
+        new: "Neues Modell"
+        display_name: "Name"
+        name: "Modell-ID"
+        provider: "Anbieter"
+        tokenizer: "Tokenizer"
+        max_prompt_tokens: "Kontextfenster"
+        max_output_tokens: "Maximale Ausgabetoken"
+        url: "URL des Dienstes, der das Modell hostet"
+        api_key: "API-Schlüssel des Dienstes, der das Modell hostet"
+        enabled_chat_bot: "KI-Bot-Auswahl zulassen"
+        vision_enabled: "Sehen aktiviert"
+        ai_bot_user: "KI-Bot-Benutzer"
+        cost_input: "Eingabekosten"
+        cost_cached_input: "Eingabekosten für Zwischengespeichertes"
+        cost_output: "Ausgabekosten"
+        save: "Speichern"
+        edit: "Bearbeiten"
+        saved: "LLM-Modell gespeichert"
+        back: "Zurück"
+        confirm_delete: Bist du sicher, dass du dieses Modell löschen willst?
+        delete: Löschen
+        seeded_warning: "Dieses Modell ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
+        quotas:
+          title: "Nutzungskontingente"
+          add_title: "Neues Kontingent erstellen"
+          group: "Gruppe"
+          max_tokens: "Max. Token"
+          max_usages: "Max. Verwendungen"
+          duration: "Dauer"
+          confirm_delete: "Bist du sicher, dass du dieses Kontingent löschen willst?"
+          add: "Kontingent hinzufügen"
+          durations:
+            hour: "1 Stunde"
+            six_hours: "6 Stunden"
+            day: "24 Stunden"
+            week: "7 Tage"
+            custom: "Benutzerdefiniert …"
+          hours: "Stunden"
+          max_tokens_help: "Maximale Anzahl von Token (Wörtern und Zeichen), die jeder Benutzer in dieser Gruppe innerhalb der angegebenen Dauer verwenden kann. Token sind die Einheiten, die von KI-Modellen zur Textverarbeitung verwendet werden – etwa 1 Token = 4 Zeichen oder 3/4 eines Wortes."
+          max_tokens_required: "Muss gesetzt werden, wenn die maximale Nutzung nicht festgelegt ist"
+          max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
+          max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
+        usage:
+          ai_bot: "KI-Bot"
+          ai_helper: "Helfer"
+          ai_helper_image_caption: "Bildbeschriftungen"
+          ai_persona: "Persona (%{persona})"
+          ai_summarization: "Zusammenfassen"
+          ai_embeddings_semantic_search: "KI-Suche"
+          ai_spam: "Spam"
+          automation: "Automatisierung (%{persona})"
+        in_use_warning:
+          one: "Dieses Modell wird derzeit von %{settings} verwendet. Wenn es falsch konfiguriert ist, wird die Funktion nicht wie erwartet funktionieren."
+          other: "Dieses Modell wird derzeit verwendet von: %{settings}. Wenn es falsch konfiguriert ist, werden die Funktionen nicht wie erwartet funktionieren. "
+        model_description:
+          none: "Allgemeine Einstellungen, die für die meisten Sprachmodelle funktionieren"
+          anthropic-claude-opus-4-0: "Das intelligenteste Modell von Anthropic"
+          anthropic-claude-sonnet-4-0: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
+          anthropic-claude-3-7-sonnet-latest: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten (vorherige Generation)"
+          anthropic-claude-3-5-haiku-latest: "Schnell und kosteneffizient"
+          google-gemini-2-5-pro: "Großes multimodales Modell, das eine Vielzahl von Aufgaben bewältigen kann"
+          google-gemini-2-0-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation (vorherige Generation)"
+          google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
+          google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
+          open_ai-o3: "Das leistungsfähigste Argumentationsmodell von Open AI"
+          open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
+          open_ai-gpt-4-1: "Das Vorzeigemodell von Open AI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-4-1-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
+          open_ai-gpt-4-1-nano: "Das schnellste und kostengünstigste GPT-4.1-Modell."
+          samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
+          samba_nova-Meta-Llama-3-3-70B-Instruct": "Leistungsstarkes Mehrzweckmodell"
+          mistral-mistral-large-latest: "Das leistungsstärkste Modell von Mistral"
+          mistral-pixtral-large-latest: "Das leistungsstärkste Modell von Mistral mit Sichtfunktion"
+          open_router-x-ai-grok-3-beta: "Das neueste Modell von xAI"
+          open_router-deepseek-deepseek-r1-0528-free: "DeepSeeks neuestes Argumentationsmodell"
+          open_router-meta-llama-3-3-70b-instruct: "Leistungsstarkes mehrsprachiges Modell"
+        preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
+        configured:
+          title: "Konfigurierte LLMs"
+        preconfigured_llms: "Wähle dein LLM"
+        preconfigured:
+          title_no_llms: "Wähle eine Vorlage aus, um loszulegen"
+          title: "Unkonfigurierte LLM-Vorlagen"
+          description: "LLMs (Large Language Models) sind KI-Tools, die für Aufgaben wie die Zusammenfassung von Inhalten, die Erstellung von Berichten, die Automatisierung von Kundeninteraktionen und die Erleichterung der Forenmoderation und -einsicht optimiert sind"
+          fake: "Manuelle Konfiguration"
+          button: "Einrichten"
+        next:
+          title: "Weiter"
+        tests:
+          title: "Test ausführen"
+          running: "Test wird aufgeführt …"
+          success: "Erfolg!"
+          failure: "Beim Versuch, das Modell zu kontaktieren, wurde dieser Fehler zurückgegeben: %{error}"
+        hints:
+          max_prompt_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage verarbeiten kann"
+          max_output_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage generieren kann"
+          display_name: "Der Name, der verwendet wird, um dieses Modell in der Benutzeroberfläche deiner Website zu referenzieren."
+          name: "Wir fügen dies in den API-Aufruf ein, um anzugeben, welches Modell wir verwenden werden"
+          vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
+          enabled_chat_bot: "Wenn diese Option aktiviert ist, können Benutzer dieses Modell auswählen, wenn sie PN mit dem KI-Bot erstellen"
+          cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
+          cost_cached_input: "Die Kosten für die Eingabe von Zwischengespeichertem pro 1 Million Token für dieses Modell"
+          cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
+          cost_measure: "$/1M Token"
+        providers:
+          aws_bedrock: "AWS Bedrock"
+          anthropic: "Anthropic"
+          vllm: "vLLM"
+          hugging_face: "Hugging Face"
+          cohere: "Cohere"
+          open_ai: "OpenAI"
+          google: "Google"
+          azure: "Azure"
+          ollama: "Ollama"
+          CDCK: "CDCK"
+          samba_nova: "SambaNova"
+          mistral: "Mistral"
+          open_router: "OpenRouter"
+          fake: "Benutzerdefiniert"
+        provider_fields:
+          access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
+          region: "AWS-Bedrock-Region"
+          organization: "Optionale OpenAI-Organisations-ID"
+          disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
+          enable_native_tool: "Aktiviere native Tool-Unterstützung"
+          disable_native_tools: "Native Tool-Unterstützung deaktivieren (XML-basierte Tools verwenden)"
+          provider_order: "Anbieterreihenfolge (kommagetrennte Liste)"
+          provider_quantizations: "Reihenfolge der Provider-Quantisierungen (kommagetrennte Liste, z. B.: fp16,fp8)"
+          disable_streaming: "Streaming-Vervollständigung deaktivieren (Streaming-Anfragen in Nicht-Streaming-Anfragen umwandeln)"
+          reasoning_effort: "Argumentationsaufwand (gilt nur für Argumentationsmodelle)"
+          enable_reasoning: "Argumentation aktivieren (nur für Argumentationsmodelle anwendbar)"
+          enable_thinking: "Denken aktivieren (nur bei entsprechenden Modellen, z.B.: Flash 2.5)"
+          thinking_tokens: "Anzahl der zum Denken verwendeten Token"
+          reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
+          disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
+          disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
+          enable_responses_api: "Aktiviere die Antwort-API (bei bestimmten OpenAI-Modellen erforderlich)"
+      related_topics:
+        title: "Verwandte Themen"
+        pill: "Verwandt"
+      ai_helper:
+        title: "Änderungen mit KI vorschlagen"
+        description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
+        selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
+        suggest: "Mit KI vorschlagen"
+        suggest_errors:
+          too_many_tags:
+            one: "Du kannst höchstens %{count} Schlagwort haben."
+            other: "Du kannst höchstens %{count} Schlagwörter haben."
+          no_suggestions: "Keine Vorschläge verfügbar"
+        missing_content: "Bitte gib einige Inhalte ein, um Vorschläge zu generieren."
+        context_menu:
+          trigger: "KI fragen"
+          loading: "KI generiert"
+          cancel: "Abbrechen"
+          regen: "Erneut versuchen"
+          confirm: "Bestätigen"
+          discard: "Verwerfen"
+          changes: "Empfohlene Änderungen"
+          custom_prompt:
+            title: "Benutzerdefinierte Eingabeaufforderung"
+            placeholder: "Benutzerdefinierte Eingabeaufforderung …"
+            submit: "Aufforderung senden"
+          translate_prompt: "Übersetzen in %{language}"
+        post_options_menu:
+          trigger: "KI fragen"
+          title: "KI fragen"
+          loading: "KI generiert"
+          close: "Beenden"
+          copy: "Kopieren"
+          copied: "Kopiert!"
+          cancel: "Abbrechen"
+          insert_footnote: "Fußnote hinzufügen"
+          footnote_disabled: "Automatisches Einfügen deaktiviert. Klicke auf die Schaltfläche „Kopieren“ und bearbeite es manuell"
+          footnote_credits: "Erklärung durch KI"
+        fast_edit:
+          suggest_button: "Bearbeitung vorschlagen"
+        thumbnail_suggestions:
+          title: "Vorgeschlagene Miniaturansichten"
+          select: "Auswählen"
+          selected: "Ausgewählt"
+        image_caption:
+          button_label: "Beschriftung mit KI"
+          generating: "Beschriftung wird generiert …"
+          credits: "Beschriftet durch KI"
+          save_caption: "Speichern"
+          automatic_caption_setting: "Automatische Beschriftung einschalten"
+          automatic_caption_loading: "Bilder werden beschriftet …"
+          automatic_caption_dialog:
+            prompt: "Dieser Beitrag enthält nicht beschriftete Bilder. Möchtest du automatische Beschriftungen für hochgeladene Bilder aktivieren? (Das kannst du später in deinen Einstellungen ändern.)"
+            confirm: "Aktivieren"
+            cancel: "Nicht noch einmal fragen"
+        no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
+      reviewables:
+        model_used: "Verwendetes Modell:"
+        accuracy: "Genauigkeit:"
+      embeddings:
+        short_title: "Einbettungen"
+        description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
+        new: "Neue Einbettung"
+        back: "Zurück"
+        save: "Speichern"
+        saved: "Einbettungskonfiguration gespeichert"
+        delete: "Löschen"
+        confirm_delete: Bist du sicher, dass du diese Einbettungskonfiguration entfernen möchtest?
+        empty: "Du hast noch keine Einbettungen eingerichtet"
+        presets: "Wähle eine Voreinstellung aus …"
+        configure_manually: "Manuell konfigurieren"
+        edit: "Bearbeiten"
+        seeded_warning: "Dies ist auf deiner Website vorkonfiguriert und kann nicht bearbeitet werden."
+        tests:
+          title: "Test ausführen"
+          running: "Test wird aufgeführt …"
+          success: "Erfolg!"
+          failure: "Der Versuch, eine Einbettung zu generieren, ergab: %{error}"
+        hints:
+          dimensions_warning: "Einmal gespeichert, kann dieser Wert nicht mehr geändert werden."
+          matryoshka_dimensions: "Legt die Größe der verschachtelten Einbettungen fest, die zur hierarchischen oder mehrschichtigen Darstellung von Daten verwendet werden, ähnlich wie verschachtelte Puppen ineinander passen."
+          embed_prompt: "Präfix für Aufgabenanweisungen beim Generieren von Einbettungen von Foreninhalten. NUR für Einbettungsmodelle, die Präfixe erfordern, wie nomic-embed oder stella. Für die meisten Modelle nicht erforderlich."
+          search_prompt: "Präfix für Task-Anweisungen beim Generieren von Einbettungen von Suchanfragen. NUR für Einbettungsmodelle, die Präfixe erfordern, wie nomic-embed oder stella. Für die meisten Modelle nicht erforderlich."
+          sequence_length: "Die maximale Anzahl von Token, die bei der Erstellung von Einbettungen oder der Bearbeitung einer Abfrage auf einmal verarbeitet werden können."
+          distance_function: "Legt fest, wie die Ähnlichkeit zwischen Einbettungen berechnet wird. Dabei wird entweder der Kosinusabstand (der den Winkel zwischen Vektoren misst) oder das negative innere Produkt (das die Überlappung von Vektorwerten misst) verwendet."
+        display_name: "Name"
+        provider: "Anbieter"
+        url: "URL des Einbettungsdienstes"
+        api_key: "API-Schlüssel für den Einbettungsdienst"
+        tokenizer: "Tokenizer"
+        dimensions: "Einbettungsdimensionen"
+        max_sequence_length: "Länge der Sequenz"
+        embed_prompt: "Einbettungsaufforderung"
+        search_prompt: "Suchaufforderung"
+        matryoshka_dimensions: "Matrjoschka-Abmessungen"
+        distance_function: "Distanzfunktion"
+        distance_functions:
+          "<#>": "Negatives inneres Produkt"
+          <=>: "Kosinusdistanz"
+        providers:
+          hugging_face: "Hugging Face"
+          open_ai: "OpenAI"
+          google: "Google"
+          cloudflare: "Cloudflare"
+          CDCK: "CDCK"
+          fake: "Benutzerdefiniert"
+        provider_fields:
+          model_name: "Modellname"
+        semantic_search: "Themen (semantisch)"
+        semantic_search_loading: "Suche mehr Ergebnisse mithilfe der KI"
+        semantic_search_results:
+          toggle: "%{count} Ergebnisse, die mit KI gefunden wurden, werden angezeigt"
+          toggle_hidden: "%{count} mit KI gefundene Ergebnisse werden ausgeblendet"
+          none: "Entschuldigung, unsere KI-Suche hat keine passenden Themen gefunden"
+          new: "Drücke auf „Suchen“, um mit der KI nach neuen Ergebnissen zu suchen"
+          unavailable: "KI-Ergebnisse nicht verfügbar"
+        semantic_search_tooltips:
+          results_explanation: "Wenn diese Funktion aktiviert ist, werden zusätzliche KI-Suchergebnisse unten hinzugefügt."
+          invalid_sort: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
+        semantic_search_unavailable_tooltip: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
+        ai_generated_result: "Suchergebnis mit KI gefunden"
+        quick_search:
+          suffix: "in allen Themen und Beiträgen mit KI"
+      ai_artifact:
+        expand_view_label: "Ansicht erweitern"
+        collapse_view_label: "Vollbild verlassen (ESC- oder Zurück-Taste)"
+        click_to_run_label: "Artefakt ausführen"
+      ai_bot:
+        persona: "Persona"
+        llm: "Modell"
+        pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
+        cancel_streaming: "Antwort abbrechen"
+        default_pm_prefix: "[KI-Bot-PN ohne Titel]"
+        shortcut_title: "Starte eine PN mit einem KI-Bot"
+        share: "KI-Unterhaltung kopieren"
+        conversation_shared: "Unterhaltung kopiert"
+        embed_copied: "Einbettung in die Zwischenablage kopiert"
+        debug_ai: "Rohdaten der KI-Anfrage und -Antwort anzeigen"
+        sidebar_empty: "Der Verlauf der Bot-Konversation wird hier angezeigt."
+        debug_ai_modal:
+          title: "KI-Interaktion ansehen"
+          copy_request: "Anfrage kopieren"
+          copy_response: "Antwort kopieren"
+          request_tokens: "Anfrage-Token:"
+          response_tokens: "Antwort-Token:"
+          request: "Anfrage"
+          response: "Antwort"
+          next_log: "Weiter"
+          previous_log: "Zurück"
+        share_full_topic_modal:
+          title: "Unterhaltung öffentlich teilen"
+          share: "Link teilen und kopieren"
+          update: "Link aktualisieren und kopieren"
+          delete: "Freigabe löschen"
+        share_ai_conversation:
+          name: "KI-Unterhaltung teilen"
+          title: "Diese KI-Unterhaltung öffentlich teilen"
+        invite_ai_conversation:
+          button: "Einladen"
+          title: "Zur KI-Konversation einladen"
+        ai_label: "KI"
+        ai_title: "Unterhaltung mit KI"
+        share_modal:
+          title: "KI-Unterhaltung kopieren"
+          copy: "Kopieren"
+          context: "Interaktionen zum Teilen:"
+          share_tip: "Alternativ kannst du auch die gesamte Unterhaltung teilen"
+        bot_names:
+          fake: "Fake-Test-Bot"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Sonett"
+          claude-3-haiku: "Claude 3 Haiku"
+          cohere-command-r-plus: "Cohere Command R Plus"
+          gpt-4: "GPT-4"
+          gpt-4-turbo: "GPT-4 Turbo"
+          gpt-4o: "GPT-4 Omni"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+          gemini-1:
+            5-pro: "Gemini"
+          mixtral-8x7B-Instruct-V0:
+            "1": "Mixtral-8x7B V0.1"
+        conversations:
+          header: "Wie kann ich helfen?"
+          submit: "Frage abschicken"
+          disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."
+          placeholder: "Stell eine Frage ..."
+          new: "Neue Frage"
+          messages_sidebar_title: "Unterhaltungen"
+          today: "Heute"
+          last_7_days: "Letzte 7 Tage"
+          last_30_days: "Letzte 30 Tage"
+          upload_files: "Dateien hochladen"
+          uploads_in_progress: "Absenden nicht möglich, solange Uploads nicht abgeschlossen sind"
+      sentiments:
+        dashboard:
+          title: "Stimmung"
+        sidebar:
+          overview: "Stimmungsübersicht"
+          analysis: "Stimmungsanalyse"
+        sentiment_analysis:
+          share_chart: "Link zur Tabelle kopieren"
+          filter_types:
+            all: "Gesamt"
+            positive: "Positiv"
+            neutral: "Neutral"
+            negative: "Negativ"
+          group_types:
+            category: "Kategorie"
+            tag: "Schlagwort"
+          table:
+            sentiment: "Stimmung"
+            total_count: "Gesamt"
+      summarization:
+        chat:
+          title: "Nachrichten zusammenfassen"
+          description: "Wähle unten eine Option aus, um die im gewünschten Zeitraum gesendete Unterhaltung zusammenzufassen."
+          summarize: "Zusammenfassen"
+          since:
+            one: "Letzte Stunde"
+            other: "Letzte %{count} Stunden"
+        topic:
+          title: "Zusammenfassung des Themas"
+          close: "Zusammenfassungspanel schließen"
+        topic_list_layout:
+          button:
+            compact: "Kompakt"
+            expanded: "Erweitert"
+            expanded_description: "mit KI-Zusammenfassungen"
+      discobot_discoveries:
+        main_title: "Discobot Entdeckungen"
+        regular_results: "Themen"
+        tell_me_more: "Erzähl mir mehr..."
+        continue_convo: "Unterhaltung fortsetzen..."
+        loading_convo: "Unterhaltung wird geladen"
+        collapse: "Zuklappen"
+        timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+        user_setting: "Suchentdeckungen aktivieren"
+        tooltip:
+          header: "KI-gestützte Suche"
+          content: "Natürliche Sprachsuche unterstützt von %{model}"
+          actions:
+            info: "Wie funktioniert es?"
+            disable: "Deaktivieren"
+      user_preferences:
+        empty: "Zurzeit sind keine relevanten Einstellungen verfügbar"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "KI-gemeldeter Beitrag"
+        reviewable_ai_chat_message:
+          title: "KI-gemeldete Chat-Nachricht"

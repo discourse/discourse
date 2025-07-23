@@ -48,8 +48,8 @@ sw:
           success: "Kanuni imefutwa kwa mafanikio"
           error: "Samahani, hitilafu imetokea wakati wa kufuta kanuni. Andika `/discourse hali` kupata orodha ya kanuni."
         not_found:
-          tag: " *%{name}* nembo haijapatikana"
-          category: "*%{name}* kikundi hakipatikani. Vikundi vilivyopo ni: *%{list}*"
+          tag: "Lebo ya *%{name}* haijapatikana."
+          category: "Kikundi kinachoitwa %{name} hakijapatikana. Vikundi vilivyopo ni: *%{list}*"
         transcript:
           error: "Hitilafu imetokea wakati wa kutengeneza manukuu, samahani!"
           post_to_discourse: "Bonyeza hapa kuandika taarifa kwenye Discourse kwa kutumia manuku"
@@ -75,9 +75,9 @@ sw:
           rule_string_tags_suffix: "na nembo: <b> %{tags} </b>"
         parse_error: "Samahani, Sijaelewa ulichokiandika. Tafadhali andika <code>/msaada</code>kupata maelezo."
         create:
-          created: "Kanuni imetengenezwa kwa mafanikio"
-          updated: "Kanuni imesasishwa kwa mafanikio"
-          error: "Samahani, hitilafu imetokea wakati wa kutengeneza kanuni hiyo."
+          created: "Kanuni imetengenezwa bila tatizo"
+          updated: "Kanuni imesasishwa vizuri"
+          error: "Samahani, hitilafu imetokea wakati wa kutengeneza hiyo kanuni."
         delete:
           success: "Kanuni imefutwa kwa mafanikio"
           error: "Samahani, hitilafu imetokea wakati wa kufuta kanuni. Andika <code>/hali</code>kupata orodha ya kanuni."
@@ -104,17 +104,17 @@ sw:
           header: |
             *Kanuni cha chaneli*
             (Kama kanuni nyingi zinaendana na taarifa, kanuni ya kwanza itapewa kipaumbele)
-          no_rules: "Hakuna kanuni zilizoandaliwa kwenye hii chaneli. Andika `/discourse msaada` kwa maelezo zaidi."
-          rule_string: "*%{index})* *%{filter}* machapisho ndani ya %{category}*"
+          no_rules: "Hii chaneli haina kanuni. Andika `/discourse-help` kupata maelezo zaidi."
+          rule_string: "*%{index})* *%{filter}* machapisho ndani ya *%{category}*"
           rule_string_tags_suffix: "na nembo: *%{tags}*"
-        parse_error: "Samahani, Sijakuelewa. Andika `/discourse msaada` kwa maelezo zaidi."
+        parse_error: "Samahani, sijakuelewa. Andika `/discourse help` kupata maelekezo."
         create:
-          created: "Kanuni imetengenezwa kwa mafanikio"
-          updated: "Kanuni imesasishwa kwa mafanikio"
-          error: "Samahani, hitilafu imetokea wakati wa kutengeneza kanuni hiyo."
+          created: "Kanuni imetengenezwa bila tatizo"
+          updated: "Kanuni imesasishwa vizuri"
+          error: "Samahani, hitilafu imetokea wakati wa kutengeneza hiyo kanuni."
         delete:
           success: "Kanuni imefutwa kwa mafanikio"
-          error: "Samahani, itilafu imetokea wakati wa kufuta hiyo kanuni. Andika `/discourse hali` kupata orodha ya kanuni."
+          error: "Samahani, hitilafu imetokea wakati wa kufuta kanuni. Andika `/discourse hali` kupata orodha ya kanuni."
         not_found:
           tag: "Lebo ya *%{name}* haijapatikana."
           category: "Kikundi kinachoitwa %{name} hakijapatikana. Vikundi vilivyopo ni: *%{list}*"

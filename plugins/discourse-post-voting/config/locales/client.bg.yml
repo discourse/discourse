@@ -23,4 +23,5 @@ bg:
                 title: "Не съм съгласен "
       topic:
         sort_by: "Сортирай по"
+        votes: "Гласове"
         activity: "Активност"

@@ -9,7 +9,7 @@ pl_PL:
     currently_away:
       title: Użytkownicy aktualnie nieobecni
       labels:
-        username: Nazwa konta
+        username: Nazwa użytkownika
   discourse_automation:
     triggerables:
       event_started:
@@ -24,20 +24,43 @@ pl_PL:
     discourse_post_event_bulk_invite_failed:
       title: "Zdarzenie — zaproszenie zbiorcze nie powiodło się"
       subject_template: "Zaproszenie zbiorcze zostało przetworzone z błędami"
+      text_body_template: |
+        Twój plik z zaproszeniami zbiorczymi został przetworzony, %{processed} zaproszonych osób zostało utworzonych z %{failed} błędami.
+
+        Oto dziennik:
+
+        ```tekst
+        %{logs}
+        ```
   site_settings:
     events_max_rows: "Maksymalna liczba wierszy tekstu na wydarzenie w kalendarzu."
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
+    map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
+    calendar_enabled: "Włącz wtyczkę discourse-calendar. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
+    discourse_post_event_enabled: "Włącza funkcje wydarzeń. Uwaga: wymagane jest również włączenie opcji „kalendarz włączony”."
     displayed_invitees_limit: "Ogranicza liczbę zaproszeń wyświetlanych w wydarzeniu."
     display_post_event_date_on_topic_title: "Wyświetla datę wydarzenia po tytule tematu."
     use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."
     discourse_post_event_allowed_on_groups: "Grupy, które mogą tworzyć wydarzenia."
+    discourse_post_event_allowed_custom_fields: "Umożliwia każdemu zdarzeniu ustawienie wartości pól niestandardowych."
     discourse_post_event_edit_notifications_time_extension: "Wydłuża (w minutach) okres po zakończeniu wydarzenia, w którym osoby zaproszone są nadal powiadamiane o edycji w oryginalnym poście."
     holiday_calendar_topic_id: "Identyfikator tematu kalendarza świąt/nieobecności personelu."
     holiday_status_emoji: Określa emoji używane dla statusu świąt.
+    delete_expired_event_posts_after: "Posty z wygasłymi wydarzeniami zostaną automatycznie usunięte po (n) godzinach. Ustaw na -1, aby wyłączyć usuwanie."
+    all_day_event_start_time: "Wydarzenia, dla których nie określono godziny rozpoczęcia, rozpoczną się o tej godzinie. Format: GG:mm. Aby ustawić godzinę 6:00, wpisz 06:00."
+    all_day_event_end_time: "Wydarzenia, dla których nie określono godziny zakończenia, zakończą się o tej godzinie. Format: GG:mm. Aby ustawić godzinę 18:00, wpisz 18:00."
+    all_day_event_time_error: "Nieprawidłowy czas. Format to GG:mm (np. 08:00)."
+    calendar_categories: "Wyświetl kalendarz na górze kategorii. Obowiązkowe ustawienia to categoryId i postId. Np.: categoryId=6;postId=453\n Inne prawidłowe ustawienia: tzPicker, weekendy i defaultView."
+    calendar_categories_outlet: "Umożliwia zmianę, w którym punkcie sprzedaży ma być wyświetlany kalendarz kategorii."
     working_days: "Ustaw dni robocze. Możesz wyświetlić dostępność grupy za pomocą tagu `timezones` w poście, np.: `[timezones group=admins][timezones]`"
+    working_day_start_hour: "Godziny rozpoczęcia dnia roboczego."
+    working_day_end_hour: "Godzina zakończenia dnia roboczego."
+    close_to_working_day_hours_extension: "Ustaw czas przedłużenia w godzinach dnia roboczego, aby wyróżnić strefy czasowe."
     events_calendar_categories: "Wyświetl kalendarz wydarzeń na górze kategorii."
     sort_categories_by_event_start_date_enabled: "Włącz sortowanie tematów kategorii według daty rozpoczęcia wydarzenia."
+    disable_resorting_on_categories_enabled: "Zezwalaj na kategorie, aby wyłączyć możliwość sortowania według kategorii wydarzeń przez użytkowników."
     calendar_automatic_holidays_enabled: "Automatycznie ustawiaj status świąt na podstawie regionu użytkownika (uwaga: możesz wyłączyć określone automatyczne święta w ustawieniach wtyczki)"
+    event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     include_expired_events_on_calendar: "Uwzględnij minione/wygasłe wydarzenia w widokach kalendarza kategorii i nadchodzących wydarzeń."
   discourse_calendar:
@@ -55,6 +78,7 @@ pl_PL:
       ongoing_event_reminder: "%{title} trwa."
     errors:
       bulk_invite:
+        max_invitees: "Pierwsze %{max_invittes} osób zostało utworzonych. Spróbuj podzielić plik na mniejsze części."
         error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
       models:
         event:

@@ -27,16 +27,16 @@ ur:
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
       topic_search_placeholder: "عنوان یا پوسٹ مواد کے ذریعہ موضوعات تلاش کریں"
       sidebar_name_filter_placeholder: "نام/صارف نام"
-      assigned: "اسائین کردہ"
+      assigned: "تفویض کردہ"
       group_everyone: "ہر کوئی"
-      assigned_to: "جس کو اسائین کیا گیا"
+      assigned_to: "کو تفویض"
       assigned_to_w_ellipsis: "کو تفویض..."
       unassign:
         title: "غیر اسائین کریں"
         title_w_ellipsis: "غیر تفویض کریں..."
         help: "موضوع سے %{username} کو غیر متعین کریں"
       assign:
-        title: "اسائین کریں"
+        title: "تفویض"
         help: "صارف کو ٹاپک اسائین کریں"
       assign_post:
         title: "پوسٹ تفویض کریں"
@@ -54,7 +54,8 @@ ur:
       assign_modal:
         title: "ٹاپک اسائین کریں"
         reassign_title: "موضوع دوبارہ تفویض کریں"
-        assign: "اسائین کریں"
+        assign: "تفویض"
+        note_label: نوٹ
         optional_label: "(اختیاری)"
         status_label: سٹیٹس
       assign_post_modal:
@@ -63,13 +64,13 @@ ur:
         title: "کلیم کریں"
         help: "اپنے آپ کو ٹاپک اسائین کریں"
       assign_mailer:
-        never: "کبھی نہیں "
+        never: "کبھی نہیں"
         different_users: "صرف اس صورت میں جب تفویض کرنے والے اور تفویض کرنے والے مختلف صارفین ہیں"
         always: "ہمیشہ"
       reminders_frequency:
         description: "اسائین کردہ ٹاپکس کے بارے میں یاد دہانیاں وصول کرنے کی فریکوئینسی"
-        never: "کبھی نہیں "
-        daily: "روزانہ "
+        never: "کبھی نہیں"
+        daily: "روزانہ"
         weekly: "ہفتہ وار"
         monthly: "ماہانہ"
         quarterly: "سہ ماہی"
@@ -85,7 +86,7 @@ ur:
         do_nothing: "کچھ نہ کریں"
       messages:
         assigned_title: "اسائین کردہ (%{count})"
-        assigned: "اسائین کردہ"
+        assigned: "تفویض کردہ"
       no_assignments_title: "آپ کے پاس ابھی تک کوئی اسائنمنٹ نہیں ہے"
       no_assignments_body: >
         آپ کے تفویض کردہ عنوانات اور پیغامات یہاں درج ہوں گے۔ آپ کو اپنے اسائنمنٹس کی وقفے وقفہ سے یاد دہانی کا نوٹیفکیشن بھی ملے گا ، جسے آپ اپنی <a href='%{preferencesUrl}'>صارف ترجیحات</a>میں ایڈجسٹ کرسکتے ہیں۔ <br><br> اپنے آپ کو یا کسی اور کو موضوع یا پیغام تفویض کرنے کے لئے ، %{icon} تفویض والے بٹن کو تلاش کریں۔

@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    solved_enabled: "Увімкнути плагін рішення, дозволити користувачам обирати рішення для тем"
+    accept_all_solutions_trust_level: "Мінімальний рівень довіри, необхідний для прийняття рішень в будь-якій темі (навіть коли це не ОП)"
+    empty_box_on_unsolved: "Показуйте порожнє поле поруч із невирішеними темами"
+    solved_quote_length: "Кількість символів, які потрібно цитувати під час відображення рішення під першим дописом"
+    show_filter_by_solved_status: "Показати випадаюче меню для фільтрації списку тем зі статусом вирішених."
+  reports:
+    accepted_solutions:
+      title: "Прийняті рішення"
+      xaxis: "День"
+      yaxis: "Всього"
+  solved:
+    no_solutions:
+      self: "У вас ще немає прийнятих рішень."
+      others: "Немає прийнятих рішень."
+  badges:
+    solved_1:
+      name: "Вирішено!"

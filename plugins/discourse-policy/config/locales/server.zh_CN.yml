@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    policy_enabled: "允许策略？"
+    policy_restrict_to_staff_posts: "策略可能只适用于管理人员帖子"
+    policy_easy_revoke: "同时显示接受和撤销按钮"
+  discourse_policy:
+    errors:
+      user_missing: "用户在群组中不存在"
+      group_not_found: "找不到策略的群组"
+      no_policy: "帖子没有策略"
+      staff_only: "策略可能只适用于管理人员帖子"
+  reports:
+    unaccepted-policies:
+      title: 未接受的策略
+      labels:
+        topic_id: 话题 ID
+        user_id: 用户 ID
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "一项策略需要您的审核：%{topic_title}"
+      visit_topic: "访问话题"
+      visit_link_to_respond: "%{visit_topic_link}以回复。"
+      unsubscribe: "更改您的%{email_preferences_link}，或者%{unsubscribe_link}以取消订阅。"
+      your_policy_email_settings: "策略电子邮件频率偏好设置"
+  unsubscribe:
+    policy_emails:
+      select_title: "将接收策略提醒电子邮件的频率设为："
+      never: 永不
+      when_away: 仅在离开时
+      always: 始终

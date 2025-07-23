@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    category:
+      sort_options:
+        votes: "Голоси"
+    topic_voting:
+      reached_limit: "У вас немає голосів, видаліть існуюче голосування!"
+      list_votes: "Список своїх голосів"
+      votes_nav_help: "теми з найбільшою кількістю голосів"
+      voted: "Ви проголосували в цій темі"
+      allow_topic_voting: "Дозволити користувачам голосувати в темах цієї категорії"
+      vote_title: "Голосувати"
+      vote_title_plural: "Голоси"
+      voted_title: "Проголосували"
+      voting_closed_title: "Закриті"
+      voting_limit: "Обмеження"
+      votes:
+        one: "%{count} голос"
+        few: "%{count} голосів"
+        many: "%{count} голосів"
+        other: "%{count} голосів"
+      anonymous_button:
+        one: "Голосувати"
+        few: "Голоси"
+        many: "Голоси"
+        other: "Голоси"
+      remove_vote: "Вилучити голос"
+    filters:
+      votes:
+        title: "Голоси"
+        help: "теми з найбільшою кількістю голосів"

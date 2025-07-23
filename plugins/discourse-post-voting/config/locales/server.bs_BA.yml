@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  post_action_types:
+    vote:
+      title: "Glasaj"
   post_voting:
     comment:
       reviewables:

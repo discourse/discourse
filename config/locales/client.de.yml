@@ -209,11 +209,11 @@ de:
     broken_plugin_alert: "Verursacht durch das Plug-in „%{name}“"
     broken_transformer_alert: "Es ist ein Fehler aufgetreten. Deine Website funktioniert möglicherweise nicht richtig."
     critical_deprecation:
-      notice: "<b>[Hinweis für Administratoren]</b> Eines deiner Themes oder Plug-ins muss aktualisiert werden, um die Kompatibilität mit den bevorstehenden Discourse-Kernänderungen zu gewährleisten."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifiziertes Theme: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifiziertes Plug-in: „%{name}“"
+      notice: "<b>[Admin-Hinweis]</b> %{source} enthält Code, der aktualisiert werden muss. (ID:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>mehr erfahren</em></a>)"
+      theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Plug-in '%{name}'"
+      unknown_source: "Eines deiner Themes oder Plug-ins"
     s3:
       regions:
         ap_northeast_1: "Asien-Pazifik (Tokio)"
@@ -2483,6 +2483,9 @@ de:
       disabled: "Nicht anzeigen"
       sidebar_footer: "In der Fußzeile der Seitenleiste anzeigen"
       header: "In der Kopfzeile anzeigen"
+    welcome_banner_location:
+      above_topic_content: "Über Themeninhalt"
+      below_site_header: "Unter der Kopfzeile"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -4863,6 +4866,8 @@ de:
             badges:
               content: "Abzeichen"
               title: "Alle Abzeichen, die es zu verdienen gibt"
+            filter:
+              content: "Filter"
             topics:
               content: "Themen"
               title: "Alle Themen"
@@ -5018,6 +5023,12 @@ de:
           save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
     safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
+    filter:
+      description:
+        yesterday: "Gestern"
+        last_week: "Letzte Woche"
+        last_month: "Letzter Monat"
+        last_year: "Letztes Jahr"
     discovery:
       headings:
         all:
@@ -5141,6 +5152,9 @@ de:
         legal:
           title: "Rechtliches"
           header_description: "Konfiguriere rechtliche Einstellungen, z. B. Nutzungsbedingungen, die Datenschutzerklärung, Kontaktinformationen und EU-spezifische Überlegungen"
+        theme_site_settings:
+          title: "Theme-spezifische Website-Einstellungen"
+          header_description: "Zeigt alle Theme-spezifischen Website-Einstellungen und die Themes, die sie derzeit überschreiben"
         localization:
           title: "Lokalisierung"
           header_description: "Konfiguriere die Sprache der Benutzeroberfläche deiner Community und andere Lokalisierungsoptionen für deine Mitglieder"
@@ -5335,7 +5349,6 @@ de:
           header_description: "Beobachtete Wörter sind Moderationswerkzeuge, die verschiedene Aktionen durchführen können, z. B. das Blockieren, Zensieren, Verlinken oder Melden von Beiträgen, die bestimmte Wörter enthalten"
         color_palettes:
           title: "Farbpaletten"
-          header_description: "Farbpaletten legen die Grundfarben fest, die auf deiner Website verwendet werden, während Themes zusätzliche Designs, Layouts und Komponenten bereitstellen – beide können zusammenwirken, um das einzigartige Erscheinungsbild deiner Website zu gestalten, und beide können den Benutzern zur Verfügung gestellt werden, um ihren Präferenzen gerecht zu werden."
         emoji:
           title: "Emoji"
           header_description: "Füge neue Emojis hinzu, die dann für alle verfügbar sind. Wähle mehrere Dateien aus, um Emojis unter Verwendung ihrer Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden."
@@ -5428,6 +5441,14 @@ de:
         embedding:
           title: "Einbettung"
           header_description: "Discourse bietet die Möglichkeit, die Kommentare eines Themas auf einer entfernten Website einzubetten. Dazu wird eine Javascript-API verwendet, die einen IFRAME erstellt"
+      theme_site_settings:
+        setting: "Einstellung"
+        overridden_by: "Überschrieben von"
+        default_value: "Standard"
+        overridden_value: "Überschriebener Wert: %{value}"
+        select_setting: "Wähle eine Website-Einstellung aus, um die aktuellen Werte des Themes zu sehen"
+        add: "Gehe zu den Theme-spezifischen Website-Einstellungen"
+        help: "Das Theme, das du derzeit verwendest, ist <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Gehe auf die <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>Theme-Konfigurationsseite</a>, um die Theme-spezifischen Website-Einstellungen zu ändern, oder klicke auf ein verlinktes Theme in der Tabelle unten, um seine Einstellungen zu bearbeiten."
       search:
         modal_title: "Durchsuche alles im Adminbereich"
         title: "Suche"
@@ -6100,7 +6121,7 @@ de:
           install: "Installieren"
           themes:
             title: "Themes"
-            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
+            description: 'Website-weite Themes, die das gesamte Erscheinungsbild deiner Website für alle Benutzer ändern. Willst du wissen, welche Website-Einstellungen deine Themes außer Kraft setzen? <a href="%{themeSiteSettingsUrl}">Theme-spezifische Website-Einstellungen ansehen</a>'
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
@@ -6192,6 +6213,7 @@ de:
         author: "Von %{author}"
         experimental_badge: "experimentell"
         learn_more: "Mehr erfahren"
+        preinstalled: "Vorinstalliert"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"
@@ -6457,9 +6479,11 @@ de:
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
-          theme_settings: "Theme-Einstellungen"
+          theme_settings: "Theme-eigene Einstellungen"
+          theme_site_settings: "Einstellungen, die das Theme überschreiben kann"
           edit_objects_theme_setting: "Editor für Objekteinstellungen"
-          overriden_settings_explanation: "Überschriebene Einstellungen sind mit einem Punkt gekennzeichnet und farblich hervorgehoben. Um diese Einstellungen auf die Standardwerte zurückzusetzen, drücke auf die Schaltfläche „Zurücksetzen“ daneben."
+          overriden_settings_explanation: "Änderungen gegenüber der Standardeinstellung werden mit einem Punkt und einer Hervorhebung gekennzeichnet. Klicke auf Zurücksetzen, um die Standardeinstellungen wiederherzustellen."
+          overriden_site_settings_explanation: "Website-Einstellungen, die das Theme anpassen kann. Klicke auf Zurücksetzen, um die Standardeinstellungen des Themes wiederherzustellen. Wenn nichts eingestellt ist, wird der Standard der Website-Einstellung verwendet. Du kannst alle Website-Einstellungen, die von Themes überschrieben werden, auf der <a href='%{themeSiteSettingsConfigUrl}'>Konfigurationsseite der Theme-spezifischen Website-Einstellungen</a> sehen."
           no_settings: "Dieses Theme hat keine Einstellungen."
           theme_translations: "Theme-Übersetzungen"
           empty: "Keine Elemente"
@@ -6525,6 +6549,8 @@ de:
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
           updates_available_filter: "Updates verfügbar"
+          theme_setting_saved: "Theme-Einstellung wurde gespeichert!"
+          theme_site_setting_saved: "Theme-spezifische Website-Einstellung wurde gespeichert!"
         schema:
           title: "Einstellung „%{name}“ bearbeiten"
           back_button: "Zurück zu %{name}"
@@ -6554,7 +6580,12 @@ de:
             title: "Wähle Basis-Farbpalette"
             description: "Basis-Palette:"
           title: "Farben"
-          edit: "Farbpaletten bearbeiten"
+          edit: "Bearbeiten"
+          filters:
+            all: "Gesamt"
+            user_selectable: "Vom Benutzer wählbar"
+          active_badge:
+            text: "Aktiv"
           long_title: "Farbpaletten"
           about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."
           new_name: "Neue Farbpalette"
@@ -6870,6 +6901,7 @@ de:
             tag_group_destroy: "Schlagwortgruppe löschen"
             tag_group_change: "Schlagwortgruppe ändern"
             delete_associated_accounts: "verknüpfte Konten löschen"
+            change_theme_site_setting: "Theme-spezifische Website-Einstellung ändern"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -7207,7 +7239,7 @@ de:
         activity: Aktivität
         like_count: Abgegebene/Erhaltene „Gefällt mir“
         last_100_days: "in den letzten 100 Tagen"
-        private_topics_count: Private Themen
+        private_topics_count: Persönliche Nachrichten
         posts_read_count: Gelesene Beiträge
         post_count: Erstellte Beiträge
         second_factor_enabled: Zwei-Faktor-Authentifizierung aktiviert

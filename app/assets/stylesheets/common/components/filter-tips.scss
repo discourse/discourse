@@ -1,0 +1,50 @@
+.filter-tips {
+  position: relative;
+
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    box-shadow: var(--shadow-dropdown);
+    z-index: z("dropdown") + 1;
+    margin-top: 0.25em;
+    max-height: 300px;
+    overflow-y: auto;
+
+    .filter-tip__button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5em 1em;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: var(--font-down-1);
+      color: var(--primary);
+      transition: background-color 0.15s;
+
+      &:hover,
+      &.filter-tip__selected {
+        background-color: var(--tertiary-low);
+      }
+
+      &.filter-tip__selected {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+
+      .filter-tip__name {
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .filter-tip__description {
+        color: var(--primary-high);
+      }
+    }
+  }
+}

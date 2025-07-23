@@ -32,7 +32,7 @@ de:
         data_types: "<h3>Datentypen</h3> <p>Hier sind gängige Datentypen, die du verwenden kannst:</p> <ul> <li><b>Ganzzahl</b> - vorzeichenbehaftete Vier-Byte-Ganzzahl</li> <li><b>Text</b> - Zeichenkette mit variabler Länge</li> <li><b>Boolean</b> – wahr/falsch</li> <li><b>Datum</b> - Kalenderdatum (Jahr, Monat, Tag)</li> </ul> <p>Weitere Informationen über Datentypen findest du auf <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>dieser Website</a>.</p>"
       schema:
         title: "Datenbank-Schema"
-        filter: "Suchen …"
+        filter: "Suche …"
         sensitive: "Die Inhalte dieser Spalte enthalten möglicherweise besonders sensible oder persönliche Informationen. Bitte gehe behutsam mit den Inhalten dieser Spalte um."
       types:
         bool:
@@ -71,7 +71,7 @@ de:
       explain_label: "Anfrageplan einbeziehen?"
       save_params: "Standards festlegen"
       reset_params: "Zurücksetzen"
-      search_placeholder: "Suchen …"
+      search_placeholder: "Suche …"
       no_search_results: "Leider konnten wir keine Ergebnisse finden, die deinem Text entsprechen."
       form:
         errors:

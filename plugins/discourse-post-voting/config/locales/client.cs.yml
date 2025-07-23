@@ -23,14 +23,23 @@ cs:
             deleted: "(uživatel smazán)"
           reviewables:
             actions:
+              agree:
+                title: "Souhlas..."
               agree_and_suspend:
-                title: "Zakázat uživatele"
+                title: "Pozastavit uživatele"
                 description: "Schválit nahlášení a pozastavit uživatele."
               agree_and_silence:
-                title: "Ztišit uživatele"
+                title: "Ztišení uživatele"
                 description: "Schválit nahlášení a ztišit uživatele."
               disagree:
                 title: "Neschvaluji"
+              ignore:
+                title: "Nedělat nic"
+                description: "Ignorovat nahlášení odstraněním z fronty bez jakékoli akce."
       topic:
-        sort_by: "Seřadil"
+        sort_by: "Řadit podle"
+        votes: "Hlasy"
         activity: "Aktivita"
+    review:
+      transcript:
+        view: "Zobrazit přepis předchozích zpráv"

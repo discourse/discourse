@@ -205,12 +205,6 @@ nb_NO:
     broken_page_change_alert: "En onPageChange-hendelsesbehandler utløste en feil. Sjekk nettleserens utviklerverktøy for mer informasjon."
     broken_plugin_alert: "Forårsaket av utvidinga '%{name}'"
     broken_transformer_alert: "Det oppstod en feil. Det kan hende at nettstedet ditt ikke fungerer som det skal."
-    critical_deprecation:
-      notice: "<b>[Adminsvarsel]</b> Et av temaene eller utvidingene dine må oppdateres for kompatibilitet med kommende endringer i Discourse-kjernen."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifisert tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifisert utviding: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Stillehavet (Tokyo)"
@@ -4338,6 +4332,8 @@ nb_NO:
               content: "Administrator"
             badges:
               content: "Merker"
+            filter:
+              content: "Filter"
             topics:
               content: "Emner"
             faq:
@@ -4378,6 +4374,9 @@ nb_NO:
       spreadsheet:
         show: "Vis"
         about: "Om"
+    filter:
+      description:
+        yesterday: "I går"
     discovery:
       headings:
         categories: "Alle kategorier"
@@ -4500,6 +4499,8 @@ nb_NO:
           title: "Webhooker"
         embedding:
           title: "Innbygging"
+      theme_site_settings:
+        default_value: "Forvalg"
       search:
         title: "Søk"
         result_types:
@@ -5018,7 +5019,6 @@ nb_NO:
           disabled: "Denne komponenten har blitt deaktivert."
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
-          theme_settings: "Draktinnstillinger"
           no_settings: "Denne drakten har ingen innstillinger."
           commits_behind:
             one: "Drakten er én utgave foreldet!"
@@ -5050,6 +5050,11 @@ nb_NO:
               too_large: "må være lik eller mindre enn %{count}"
         colors:
           title: "Farger"
+          edit: "Rediger"
+          filters:
+            all: "Alle"
+          active_badge:
+            text: "Aktiv"
           copy_name_prefix: "Kopi av"
           undo: "Angre"
           undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."
@@ -5448,7 +5453,6 @@ nb_NO:
         activity: Aktivitet
         like_count: Likes tildelt / mottatt
         last_100_days: "de siste 100 dagene"
-        private_topics_count: Private emner
         posts_read_count: Innlegg lest
         post_count: Innlegg skrevet
         topics_entered: Emner Lest

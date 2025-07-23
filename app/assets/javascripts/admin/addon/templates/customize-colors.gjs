@@ -1,22 +1,20 @@
-import { LinkTo } from "@ember/routing";
+import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
+import DPageSubheader from "discourse/components/d-page-subheader";
+import DSelect from "discourse/components/d-select";
+import FilterInput from "discourse/components/filter-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
+import ColorPaletteListItem from "admin/components/color-palette-list-item";
 
 export default RouteTemplate(
   <template>
-    <DPageHeader
-      @titleLabel={{i18n "admin.config.color_palettes.title"}}
-      @descriptionLabel={{i18n
-        "admin.config.color_palettes.header_description"
-      }}
-      @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
-      @hideTabs={{true}}
-    >
+    <DPageHeader @hideTabs={{true}}>
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
@@ -26,36 +24,89 @@ export default RouteTemplate(
       </:breadcrumbs>
     </DPageHeader>
 
-    <div class="content-list color-schemes">
-      <ul>
-        {{#each @controller.model as |scheme|}}
-          {{#unless scheme.is_base}}
-            <li>
-              <LinkTo
-                @route="adminCustomize.colors.show"
-                @model={{scheme}}
-                @replace={{true}}
-              >
-                {{icon "paintbrush"}}
-                {{scheme.description}}
-              </LinkTo>
-            </li>
-          {{/unless}}
-        {{/each}}
-      </ul>
+    <DPageSubheader
+      @titleLabel={{i18n "admin.config.color_palettes.title"}}
+      @descriptionLabel={{i18n
+        "admin.config.color_palettes.header_description"
+      }}
+      @learnMoreUrl="https://meta.discourse.org/t/allow-users-to-select-new-color-palettes/60857"
+    >
+      <:actions as |actions|>
+        <PluginOutlet
+          @name="admin-customize-colors-new-button"
+          @outletArgs={{lazyHash actions=actions controller=@controller}}
+        >
+          <actions.Primary
+            @label="admin.customize.new"
+            @action={{@controller.newColorScheme}}
+            @icon="plus"
+          />
+        </PluginOutlet>
+      </:actions>
+    </DPageSubheader>
 
-      <PluginOutlet @name="admin-customize-colors-new-button">
-        <DButton
-          @action={{@controller.newColorScheme}}
-          @icon="plus"
-          @label="admin.customize.new"
-          class="btn-default"
+    {{#if @controller.showFilters}}
+      <div class="color-palette__filters">
+        <FilterInput
+          placeholder={{i18n
+            "admin.customize.colors.filters.search_placeholder"
+          }}
+          @filterAction={{@controller.onFilterChange}}
+          @value={{@controller.filterValue}}
+          class="admin-filter__input"
+          @icons={{hash left="magnifying-glass"}}
         />
-      </PluginOutlet>
-    </div>
+        <DSelect
+          @value={{@controller.typeFilter}}
+          @includeNone={{false}}
+          @onChange={{@controller.onTypeFilterChange}}
+          as |select|
+        >
+          {{#each @controller.typeFilterOptions as |option|}}
+            <select.Option @value={{option.value}}>
+              {{option.label}}
+            </select.Option>
+          {{/each}}
+        </DSelect>
+      </div>
+    {{/if}}
 
-    {{outlet}}
+    {{#if @controller.changedThemePreferences}}
+      <div class="alert alert-info">
+        {{htmlSafe
+          (i18n
+            "admin.customize.colors.preference_warning"
+            link="/my/preferences/interface"
+          )
+        }}
+      </div>
+    {{/if}}
 
-    <div class="clearfix"></div>
+    <ul class="color-palette__list">
+      {{#each @controller.filteredColorSchemes as |scheme|}}
+        <ColorPaletteListItem
+          @scheme={{scheme}}
+          @defaultTheme={{@controller.defaultTheme}}
+          @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
+          @toggleUserSelectable={{@controller.toggleUserSelectable}}
+          @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+          @deleteColorScheme={{@controller.deleteColorScheme}}
+        />
+      {{/each}}
+    </ul>
+
+    {{#if @controller.showFilters}}
+      {{#unless @controller.filteredColorSchemes.length}}
+        <div class="color-palette__no-results">
+          <h3>{{i18n "admin.customize.colors.filters.no_results"}}</h3>
+          <DButton
+            @icon="arrow-rotate-left"
+            @label="admin.customize.colors.filters.reset"
+            @action={{@controller.resetFilters}}
+            class="btn-default"
+          />
+        </div>
+      {{/unless}}
+    {{/if}}
   </template>
 );

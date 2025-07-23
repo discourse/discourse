@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "已接受"
+    solutions: "解決方案"
+    solved:
+      title: "已解決"
+      allow_accepted_answers: "允許主題擁有者與管理員標示回覆為解決方式"
+      accept_answer: "選擇此回覆是否解決了問題"
+      accepted_description: "這是本主題被接受的答案"
+      has_no_accepted_answer: "這個主題沒有解決方式"
+      unaccept_answer: "如果此回覆已不能解決問題，請取消選取"
+      accepted_answer: "解決方式"
+      solution: "解決方式"
+      solution_summary:
+        other: "解決方案"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "全部"
+        solved: "已解決"
+        unsolved: "未解答"
+      no_solved_topics_title: "您還沒有解決過任何主題"
+      no_solved_topics_title_others: "%{username} 尚未解決任何主題"
+      no_solved_topics_body: "當您對某個主題提供有用的回覆時，主題擁有者或工作人員可能會選取您的回覆作為解決方案。"
+      no_answer:
+        title: 您的問題已得到解答嗎？
+        description: "在正確的回覆下方按下解答按鈕以突顯解決方案來幫助他人。"
+    topic_statuses:
+      solved:
+        help: "這個主題有解決方式"
+    search:
+      advanced:
+        statuses:
+          solved: "解決了"
+          unsolved: "未解決的"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "已解決的事件"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: 任何
+          fields:
+            maximum_trust_level:
+              label: 信任等級
+              description: 此信任等級下的使用者將觸發此自動化操作

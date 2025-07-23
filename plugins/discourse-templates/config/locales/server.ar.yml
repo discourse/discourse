@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    discourse_templates_enabled: "السماح للمستخدمين ذوي إذن الوصول إلى العرض في الفئة المحدَّدة أدناه باستخدام القوالب المتاحة"
+    discourse_templates_categories: "الفئات لجلب القوالب منها"
+    discourse_templates_enable_private_templates: "يفعِّل استخدام القوالب الخاصة"
+    discourse_templates_groups_allowed_private_templates: "المجموعات المسموح لها باستخدام قوالب خاصة. مسموح بذلك دائمًا لأعضاء فريق العمل."
+  default_category_template:
+    name: القوالب
+    description: |
+      يتم استخدام هذه الفئة لتخزين القوالب.
+
+      تسمح القوالب للمستخدمين بتخزين المحتوى للاستخدام المتكرر.
+
+      يمثِّل كل موضوع في هذه الفئة قالبًا مختلفًا. يتم استخدام **أول منشور** لكل موضوع كنموذج للقالب.
+
+      لاحظ أنه سيتم السماح لكل مستخدم لديه إذن الوصول في هذه الفئة باستخدام القوالب.

@@ -327,6 +327,8 @@ class Theme < ActiveRecord::Base
       .each do |theme_id|
         Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
       end
+
+    Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(nil))
   end
 
   def self.clear_default!

@@ -13,7 +13,7 @@ ro:
       reviewables:
         actions:
           agree_and_suspend:
-            title: "Suspendă utilizator"
+            title: "Suspendă Utilizator"
           agree_and_silence:
             title: "Reducere la tăcere utilizator"
           disagree:

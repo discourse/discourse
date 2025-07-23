@@ -1,0 +1,221 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Umožňuje vyhľadávanie pomocou AI"
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Zoradiť podľa"
+            tag:
+              label: "Značka"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Odosielateľ"
+            topic_id:
+              label: "ID témy"
+            title:
+              label: "Názov"
+            categories:
+              label: "Kategórie"
+            tags:
+              label: "Značky"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategória"
+            tags:
+              label: "Značky"
+            canned_reply:
+              label: "Odpoveď"
+    discourse_ai:
+      features:
+        back: "Späť"
+        disabled: "(vypnuté)"
+        groups: "Skupiny:"
+        no_persona: "Nie je nastavené"
+        no_groups: "Žiadny"
+        edit: "Upraviť"
+        expand_list:
+          one: "(%{count} ďalší)"
+          few: "(%{count} ďalšie)"
+          many: "(%{count} ďalších)"
+          other: "(%{count} ďalší)"
+        collapse_list: "(zobraziť menej)"
+        filters:
+          all: "Všetky"
+          reset: "Resetovať"
+        search:
+          name: "Hľadať"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Vyberte možnosť..."
+      spam:
+        short_title: "Spam"
+        last_seven_days: "Posledných 7 dní"
+        enable: "Povoliť"
+        save_button: "Uloženie zmien"
+        test_modal:
+          result: "Výsledok"
+          run: "Spustiť test"
+          spam: "Spam"
+      usage:
+        short_title: "Použitie"
+        summary: "Zhrnutie"
+        username: "Používateľské meno"
+        total_requests: "celkový počet žiadostí"
+        periods:
+          last_day: "Posledných 24 hodín"
+          custom: "Vlastné..."
+      ai_persona:
+        back: "Späť"
+        name: "Meno"
+        edit: "Upraviť"
+        export: "Exportovať"
+        import: "Import"
+        description: "Popis"
+        user: Používateľ
+        save: "Uložiť"
+        enabled: "Povolené?"
+        delete: "Odstrániť"
+        response_format:
+          open_modal: "Upraviť"
+          modal:
+            key_title: "Kľúč"
+        filters:
+          reset: "Resetovať"
+      rag:
+        uploads:
+          title: "Nahrávanie"
+          uploading: "Načítavam..."
+      tools:
+        back: "Späť"
+        export: "Exportovať"
+        import: "Import"
+        name: "Meno"
+        description: "Popis"
+        summary: "Zhrnutie"
+        script: "Skript"
+        save: "Uložiť"
+        remove_parameter: "Odstrániť"
+        parameter_required: "Povinné"
+        edit: "Upraviť"
+        test: "Spustiť test"
+        delete: "Odstrániť"
+        test_modal:
+          run: "Spustiť test"
+      llms:
+        display_name: "Meno"
+        provider: "Poskytovateľ"
+        save: "Uložiť"
+        edit: "Upraviť"
+        back: "Späť"
+        delete: Odstrániť
+        quotas:
+          group: "Skupina"
+          max_usages: "Maximálne využitie"
+          duration: "Trvanie"
+          durations:
+            hour: "1 hodina"
+            six_hours: "6 hodiny"
+            day: "24 hodín"
+            week: "7 dní"
+            custom: "Vlastné..."
+          hours: "hodiny"
+        usage:
+          ai_summarization: "Zhrnúť"
+          ai_spam: "Spam"
+        next:
+          title: "Ďalej"
+        tests:
+          title: "Spustiť test"
+          success: "Úspech!"
+        providers:
+          google: "Google"
+          fake: "Vlastné"
+      ai_helper:
+        context_menu:
+          cancel: "Zrušiť"
+          regen: "Skúste to znova"
+          confirm: "Potvrďte"
+          discard: "Zahodiť"
+        post_options_menu:
+          close: "Zatvoriť"
+          copy: "Kopírovať"
+          copied: "Skopírované!"
+          cancel: "Zrušiť"
+        thumbnail_suggestions:
+          select: "Vyberte"
+          selected: "Vybrané"
+        image_caption:
+          save_caption: "Uložiť"
+          automatic_caption_dialog:
+            confirm: "Povoliť"
+      embeddings:
+        back: "Späť"
+        save: "Uložiť"
+        delete: "Odstrániť"
+        edit: "Upraviť"
+        tests:
+          title: "Spustiť test"
+          success: "Úspech!"
+        display_name: "Meno"
+        provider: "Poskytovateľ"
+        providers:
+          google: "Google"
+          fake: "Vlastné"
+      ai_bot:
+        debug_ai_modal:
+          request: "Požiadavka"
+          response: "Odpoveď"
+          next_log: "Ďalej"
+          previous_log: "Predchádzajúci"
+        invite_ai_conversation:
+          button: "Pozvi"
+        share_modal:
+          copy: "Kopírovať"
+        conversations:
+          today: "Dnes"
+          last_7_days: "Posledných 7 dní"
+          last_30_days: "Posledných 30 dní"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Všetky"
+            neutral: "Neutrálna"
+          group_types:
+            category: "Kategória"
+            tag: "Značka"
+          table:
+            total_count: "Celkom"
+      summarization:
+        chat:
+          title: "Zhrnutie správ"
+          description: "Ak chcete zhrnúť konverzáciu odoslanú počas požadovaného časového obdobia, vyberte nižšie uvedenú možnosť."
+          summarize: "Zhrnúť"
+          since:
+            one: "Posledná hodina"
+            few: "Posledných %{count} hodín"
+            many: "Posledných %{count} hodín"
+            other: "Posledných %{count} hodín"
+      discobot_discoveries:
+        regular_results: "Témy"
+        collapse: "Zbaliť"
+        tooltip:
+          actions:
+            disable: "Zakázať"

@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "accepteret"
+    solved:
+      allow_accepted_answers: "Tillad ejer af emne og stab at markere svar som en løsning"
+      accepted_answer: "Løsning"
+      solution: "Løsning"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "alle"
+    topic_statuses:
+      solved:
+        help: "Dette svar har en løsning"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Tillidsniveau

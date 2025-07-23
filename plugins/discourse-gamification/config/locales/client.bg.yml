@@ -11,7 +11,7 @@ bg:
       leaderboard:
         link_to_settings: "Настройки"
         refresh: "Обнови"
-        name: "Име"
+        name: "Име "
         period:
           all_time: "От началото"
           yearly: "Годишно"
@@ -34,4 +34,4 @@ bg:
         all_time: "От началото"
       custom_range_from: "От"
       admin:
-        name: "Име"
+        name: "Име "

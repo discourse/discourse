@@ -1443,6 +1443,15 @@ RSpec.describe ListController do
       end
     end
 
+    it "should include filter_option_info in the response" do
+      get "/filter.json"
+      parsed = response.parsed_body
+      expect(response.status).to eq(200)
+      expect(parsed["topic_list"]["filter_option_info"].length).to eq(
+        TopicsFilter.option_info(Guardian.new).length,
+      )
+    end
+
     it "should filter with tag_group option" do
       topic_with_tag = Fabricate(:topic, tags: [tag])
       topic2_with_tag = Fabricate(:topic, tags: [tag])
@@ -1604,7 +1613,7 @@ RSpec.describe ListController do
       fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
       it "does not return topics that are unlisted when `q` query param is `status:unlisted` for a user that cannot view unlisted topics" do
-        Topic.update_all(deleted_at: true)
+        Topic.update_all(deleted_at: Time.current)
         topic.update!(visible: false)
 
         sign_in(user)

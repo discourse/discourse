@@ -26,7 +26,7 @@ be:
         cancel: "Адмяніць"
       edit_rule_modal:
         cancel: Адмяніць
-        type: тып
+        type: Тып
         filter: Filter
         category: Катэгорыя
         group: Група
@@ -35,19 +35,19 @@ be:
         telegram:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         discord:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         guilded:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         matrix:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         zulip:
           param:
             subject:
@@ -55,23 +55,23 @@ be:
         gitter:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         teams:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         powerautomate:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         webex:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
         google:
           param:
             name:
-              title: "Назва"
+              title: "Імя"
     discourse_automation:
       scriptables:
         send_slack_message:

@@ -11,8 +11,9 @@ uk:
       leaderboard:
         link_to_settings: "Налаштування"
         refresh: "Оновити"
-        name: "Назва"
+        name: "Імʼя"
         name_placeholder: "Назва..."
+        excluded_groups: "Виключені групи"
         period:
           all_time: "Весь час"
           yearly: "Щорічно"
@@ -35,4 +36,5 @@ uk:
         all_time: "Весь час"
       custom_range_from: "Від"
       admin:
-        name: "Назва"
+        name: "Імʼя"
+        period: "Період"

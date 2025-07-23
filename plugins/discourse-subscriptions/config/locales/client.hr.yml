@@ -21,7 +21,7 @@ hr:
         payments:
           created_at: Stvoreno
         plans:
-          product: Ime i prezime
+          product: Ime
         subscriptions:
           status: Statust
           update_card:

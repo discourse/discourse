@@ -1,0 +1,156 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "เรียงโดย"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "หมายเลขกระทู้"
+            title:
+              label: "ชื่อเรื่อง"
+            categories:
+              label: "หมวดหมู่"
+            tags:
+              label: "ป้าย"
+        llm_triage:
+          fields:
+            category:
+              label: "หมวดหมู่"
+            tags:
+              label: "ป้าย"
+            canned_reply:
+              label: "ตอบ"
+    discourse_ai:
+      features:
+        back: "กลับ"
+        disabled: "(ปิดใช้งานแล้ว)"
+        groups: "กลุ่ม:"
+        no_groups: "ไม่มี"
+        edit: "แก้ไข"
+        expand_list:
+          other: "(อีก %{count})"
+        filters:
+          all: "ทั้งหมด"
+        search:
+          name: "ค้นหา"
+        spam:
+          name: "ขยะ"
+      modals:
+        select_option: "เลือกตัวเลือก..."
+      spam:
+        short_title: "ขยะ"
+        last_seven_days: "7 วันที่ผ่านมา"
+        enable: "เปิดใช้งาน"
+        test_modal:
+          spam: "ขยะ"
+      usage:
+        summary: "สรุป"
+        username: "ชื่อผู้ใช้"
+        periods:
+          last_day: "24 ชั่วโมงที่ผ่านมา"
+      ai_persona:
+        back: "กลับ"
+        name: "ชื่อ"
+        edit: "แก้ไข"
+        export: "ส่งออก"
+        description: "รายละเอียด"
+        user: ผู้ใช้
+        save: "บันทึก"
+        enabled: "เปิดใช้"
+        delete: "ลบ"
+        response_format:
+          open_modal: "แก้ไข"
+      rag:
+        uploads:
+          title: "อัปโหลด"
+          uploading: "กำลังอัปโหลด..."
+      tools:
+        back: "กลับ"
+        export: "ส่งออก"
+        name: "ชื่อ"
+        description: "รายละเอียด"
+        summary: "สรุป"
+        save: "บันทึก"
+        remove_parameter: "ลบ"
+        parameter_required: "ต้องการ"
+        edit: "แก้ไข"
+        delete: "ลบ"
+      llms:
+        display_name: "ชื่อ"
+        save: "บันทึก"
+        edit: "แก้ไข"
+        back: "กลับ"
+        delete: ลบ
+        quotas:
+          group: "กลุ่ม"
+          duration: "ช่วงเวลา"
+        usage:
+          ai_spam: "ขยะ"
+        next:
+          title: "ต่อไป"
+        tests:
+          success: "สำเร็จ!"
+        providers:
+          google: "กูเกิล"
+      ai_helper:
+        context_menu:
+          cancel: "ยกเลิก"
+        post_options_menu:
+          close: "ปิด"
+          copy: "คัดลอก"
+          copied: "คัดลอกแล้ว!"
+          cancel: "ยกเลิก"
+        image_caption:
+          save_caption: "บันทึก"
+          automatic_caption_dialog:
+            confirm: "เปิดใช้งาน"
+      embeddings:
+        back: "กลับ"
+        save: "บันทึก"
+        delete: "ลบ"
+        edit: "แก้ไข"
+        tests:
+          success: "สำเร็จ!"
+        display_name: "ชื่อ"
+        providers:
+          google: "กูเกิล"
+      ai_bot:
+        debug_ai_modal:
+          request: "ร้องขอ"
+          next_log: "ต่อไป"
+          previous_log: "ก่อนหน้า"
+        invite_ai_conversation:
+          button: "เชิญ"
+        share_modal:
+          copy: "คัดลอก"
+        conversations:
+          today: "วันนี้"
+          last_7_days: "7 วันที่ผ่านมา"
+          last_30_days: "30 วันที่ผ่านมา"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "ทั้งหมด"
+          group_types:
+            category: "หมวดหมู่"
+          table:
+            total_count: "ทั้งหมด"
+      discobot_discoveries:
+        regular_results: "หัวข้อ"
+        collapse: "ย่อ"
+        tooltip:
+          actions:
+            disable: "ปิดใช้งาน"

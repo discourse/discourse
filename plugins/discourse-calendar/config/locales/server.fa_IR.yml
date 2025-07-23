@@ -23,7 +23,7 @@ fa_IR:
   discourse_post_event:
     errors:
       bulk_invite:
-        error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
+        error: "خطایی هنگام آپلود فایل رخ داده است. لطفا بعدا امتحان کنید."
       models:
         event:
           invalid_timezone: "منطقه‌زمانی شناسایی نشد."

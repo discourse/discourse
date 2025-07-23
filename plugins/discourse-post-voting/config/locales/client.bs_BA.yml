@@ -32,4 +32,5 @@ bs_BA:
                 title: "Disagree"
       topic:
         sort_by: "Sortiraj po"
+        votes: "Glasovi"
         activity: "Activity"

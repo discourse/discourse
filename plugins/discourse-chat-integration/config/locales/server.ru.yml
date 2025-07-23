@@ -61,9 +61,6 @@ ru:
     chat_integration_webex_excerpt_length: "Размер сообщения в Webex Teams"
     chat_integration_google_enabled: "Включить провайдера для чат-интеграции c Google Chat"
     chat_integration_google_excerpt_length: "Размер сообщения в Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "В некоторых каналах интеграции чата есть ошибки. Подробнее — в <a href='%{base_path}/admin/plugins/chat-integration'>разделе интеграции чата</a>."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -84,9 +81,10 @@ ru:
       slack:
         status:
           header: |
-            Этот чат настроен на %{site_title}. Настройте его в панели администратора. (Идентификатор чата: %{chat_id})
+            *Правила для этого канала*
+            (если сообщение соответствует нескольким правилам, то выполняется самое верхнее правило)
           no_rules: "Для этого канала нет правил. Запустите `/discourse help` для получения инструкций."
-          rule_string: "*%{index})* *%{filter}* сообщений в разделе *%{category}*"
+          rule_string: "*%{index})* *%{filter} *сообщений в разделе *%{category}*"
           rule_string_tags_suffix: " с тегами: *%{tags}*"
         parse_error: "Непонятно. Для получения инструкций запустите `/discourse help`."
         create:
@@ -157,7 +155,7 @@ ru:
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
-          error: "Извините, произошла ошибка при создании этого правила."
+          error: "Извините, при создании этого правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
           error: "При удалении этого правила произошла ошибка. Запустить <code>/status</code> для получения списка правил."
@@ -187,17 +185,17 @@ ru:
           no_rules: "Для этого канала нет правил. Запустите `/discourse help` для получения инструкций."
           rule_string: "*%{index})* *%{filter} *сообщений в разделе *%{category}*"
           rule_string_tags_suffix: " с тегами: *%{tags}*"
-        parse_error: "Извини, я этого не понял. Запустите `/discourse help` для получения инструкций."
+        parse_error: "Непонятно. Для получения инструкций запустите `/discourse help`."
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
-          error: "Извините, произошла ошибка при создании этого правила."
+          error: "Извините, при создании этого правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
           error: "При удалении этого правила произошла ошибка. Запустите `/discourse status` для получения списка правил."
         not_found:
           tag: "Тег *%{name}* не найден."
-          category: "Категория * %{name} * не найдена. Доступные категории: * %{list} *"
+          category: "Раздел *%{name}* не найден. Доступные разделы: *%{list}*"
         help: |
           *Новое правило:* `/discourse [watch|follow|mute] [категория] [tag:название]`
           (необходимо указать тип правила и хотя бы одну категорию или тег)

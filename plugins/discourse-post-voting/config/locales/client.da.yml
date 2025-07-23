@@ -15,7 +15,7 @@ da:
             too_short:
               one: "Indtast mindst %{count} tegn"
               other: "Indtast mindst %{count} tegn"
-          edit: "redigér"
+          edit: "rediger"
           cancel: "annuller"
           user:
             deleted: "(bruger slettet)"
@@ -33,4 +33,5 @@ da:
                 title: "Gør ingenting"
       topic:
         sort_by: "Sorter efter"
+        votes: "Stemmer"
         activity: "Aktivitet"

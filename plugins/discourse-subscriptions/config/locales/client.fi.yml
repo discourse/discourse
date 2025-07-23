@@ -38,7 +38,7 @@ fi:
     discourse_subscriptions:
       title: Discoursen tilaukset
       admin_navigation: Tilaukset
-      optional: Ei pakollinen
+      optional: Valinnainen
       navigation:
         billing: Laskutus
         payments: Maksut
@@ -80,9 +80,9 @@ fi:
         interval:
           adverb:
             day: Päivittäinen
-            week: Viikoittain
-            month: Kuukausittain
-            year: Vuosittain
+            week: Viikoittainen
+            month: Kuukausittainen
+            year: Vuosittainen
         payment_button: Tilaa
         success: Kiitos! Tilauksesi on luotu.
         incomplete: Maksu on kesken. Tilauksesi päivitetään, kun maksu on suoritettu.
@@ -432,7 +432,7 @@ fi:
             description_help: Tämä kuvaa tilaustuotettasi.
             repurchaseable: Ostettavissa uudelleen?
             repurchase_help: Salli tuotteen ja siihen liittyvien sopimusten ostaminen useita kertoja
-            active: Aktiiviset
+            active: Aktiivinen
             active_help: Poista tämä käytöstä, kunnes tuotteesi on valmis kuluttajille.
             created_at: Luotu
             updated_at: Päivitetty
@@ -458,7 +458,7 @@ fi:
             trial_help: Tämän sopimuksen tilaukset alkavat automaattisesti tämän pituisella ilmaisella kokeilujaksolla
             group: Käyttäjäryhmä
             group_help: Tämä on Discoursen käyttäjäryhmä, johon asiakas lisätään, kun tilaus luodaan.
-            active: Aktiiviset
+            active: Aktiivinen
             created_at: Luotu
             recurring: Toistuva sopimus?
         coupons:

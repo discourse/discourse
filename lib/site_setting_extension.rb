@@ -186,7 +186,7 @@ module SiteSettingExtension
   end
 
   def themeable_site_settings
-    themeable.select { |_, value| value }.keys
+    themeable.select { |_, value| value }.keys.sort
   end
 
   def client_settings_json
@@ -234,7 +234,16 @@ module SiteSettingExtension
 
   def theme_site_settings_json_uncached(theme_id)
     begin
-      MultiJson.dump(theme_site_settings[theme_id])
+      # There are a few legit scenarios where the current
+      # theme ID may be blank, such as safe mode. In this
+      # case it will be better to return default site setting
+      # values rather than to cause random/undefined behaviour
+      # in the UI.
+      if theme_id.blank?
+        MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
+      else
+        MultiJson.dump(theme_site_settings[theme_id])
+      end
     rescue => err
       # If something goes wrong here we really need to be aware of it in tests.
       raise err if Rails.env.test?
@@ -377,6 +386,8 @@ module SiteSettingExtension
   end
 
   def self.theme_site_settings_cache_key(theme_id)
+    theme_id = "notheme" if theme_id.blank?
+
     # NOTE: we use the git version in the key to ensure
     # that we don't end up caching the incorrect version
     # in cases where we are cycling unicorns

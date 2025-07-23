@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 pt:
+  post_action_types:
+    vote:
+      title: "Voto"
   post_voting:
     comment:
       reviewables:

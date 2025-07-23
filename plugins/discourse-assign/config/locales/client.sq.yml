@@ -9,7 +9,11 @@ sq:
     discourse_assign:
       group_everyone: "Të gjithë"
       reassign:
-        title: "Redakto"
+        title: "Redaktoni"
+      assign_modal:
+        note_label: Shënim
+        optional_label: "(opsionale)"
+        status_label: Status
       assign_mailer:
         never: "Asnjëherë"
         always: "Gjithmonë"
@@ -20,8 +24,12 @@ sq:
         monthly: "Mujore"
         quarterly: "Tremujorsh"
     user:
+      notification_level_when_assigned:
+        track_topic: "Ndiqni temën"
       assignment_description:
         topic: "%{topic_title}"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:
       topic: "Topic"
       post: "Postim"

@@ -19,8 +19,8 @@ th:
       reminders_frequency:
         never: "ไม่เคย"
         daily: "วัน"
-        weekly: "อาทิตย์"
-        monthly: "เดือน"
+        weekly: "รายสัปดาห์"
+        monthly: "รายเดือน"
         quarterly: "สามเดือน"
     notifications:
       assigned: "<span>%{username}</span>%{description}"

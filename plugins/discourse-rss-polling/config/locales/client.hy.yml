@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 hy:
+  js:
+    admin:
+      rss_polling:
+        author: Հեղինակ
+        feed_url: URL
+        discourse_category: Կատեգորիա
+        discourse_tags: Պիտակներ

@@ -10,7 +10,7 @@ te:
       you: "మీరు"
       leaderboard:
         link_to_settings: "అమరికలు"
-        refresh: "తాజాపరుచు"
+        refresh: "రిఫ్రెష్ చేయండి"
         name: "పేరు"
         period:
           all_time: "ఆల్ టైమ్"
@@ -20,13 +20,13 @@ te:
           weekly: "వారానికోసారి"
           daily: "రోజువారీ"
       create: "సృష్టించండి"
-      cancel: "రద్దుచేయి"
-      close: "మూసివేయి"
-      delete: "తొలగించు"
-      edit: "సవరణ"
+      cancel: "రద్దుచేయండి"
+      close: "మూసివేయండి"
+      delete: "తొలగించండి"
+      edit: "సవరించండి"
       back: "వెనుకకు"
-      save: "భద్రపరుచు"
-      apply: "ఆపాదించు"
+      save: "సేవ్ చేయండి"
+      apply: "దరఖాస్తు చేసుకోండి"
       update_range:
         all_time: "ఆల్ టైమ్"
       custom_range_from: "నుండి"

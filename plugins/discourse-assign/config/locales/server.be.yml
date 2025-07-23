@@ -19,14 +19,10 @@ be:
     remind_assigns_frequency: "Частата для напамінку карыстальнікаў пра прызначаныя тэмах."
     max_assigned_topics: "Максімальную колькасць тэм, якія могуць быць прызначаныя карыстальнікам."
   discourse_assign:
-    assigned_to: "Тэма прысвоены @% {імя карыстальніка}"
     unassigned: "Тэма была Unassigned"
     already_claimed: "Гэтая тэма ўжо запатрабаваная."
-    already_assigned: "Тэма ўжо прызначана на @% {імя карыстальніка}"
-    too_many_assigns: "@% {Імя карыстальніка} ужо дасягнута максімальная колькасць прысвоеных тэм (% {макс})."
     flag_assigned: "На жаль, тэма гэтага сцяга прысвойваецца іншаму карыстальніку"
     flag_unclaimed: "Вы павінны сцвярджаць, што тэма, перш чым дзейнічаць на сцягу"
-    topic_assigned_excerpt: "прызначаны вам тэму «% {назву}»"
     reminders_frequency:
       never: "ніколі"
       daily: "штодня"
@@ -35,14 +31,3 @@ be:
       quarterly: "квартальны"
   assign_mailer:
     title: "прызначаюць Mailer"
-    subject_template: "[% {Email_prefix}] {% assignee_name} прысвойваецца вам '% {TOPIC_TITLE}'!"
-    text_body_template: |
-      Эй,% {assignee_name} ** ** Вы прызначаныя на абмеркаванне> **% {TOPIC_TITLE} **>>% {Topic_excerpt}Калі вы зацікаўлены, націсніце на спасылку ніжэй:[% {Topic_link}] (% {topic_link})
-  pending_assigns_reminder:
-    title: "У вас ёсць% {pending_assignments} адкладзеныя заданні"
-    body: |
-      У вас [% {} pending_assignments адкладзеных заданняў] (% {assignments_link}).% {Newest_assignments}% {Oldest_assignments}Гэта напамін будзе адпраўлена% {частоты}, калі ў вас ёсць больш чым адзін прызначаная тэма.
-    newest: |
-      ### Новыя% {Topic_0}% {TOPIC_1}% {Topic_2}
-    oldest: |
-      ### Старыя% {Topic_0}% {TOPIC_1}% {Topic_2}

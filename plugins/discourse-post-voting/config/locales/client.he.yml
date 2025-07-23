@@ -22,7 +22,7 @@ he:
       popup:
         question_answer_user_commented: 'נוספה תגובה מאת %{username} על „%{topic}” - %{site_title}'
     category:
-      post_voting_settings_heading: מענה על שאלות
+      post_voting_settings_heading: הצבעה על פוסטים
       create_as_post_voting_default: נושאים חדשים מגיעים לשו"ת בקטגוריה זו.
       only_post_voting_in_this_category: נושאים חדשים יכולים להצביע על פוסטים בנושאים בקטגוריה זו.
     composer:
@@ -36,9 +36,9 @@ he:
           label: "הסרת שו\"ת"
           desc: "הנושא ייווצר בתבנית הרגילה"
     vote:
-      already_voted: "ניתן להצביע רק פעם אחת לשאלה."
-      user_over_limit: "הגעת לכמות המקסימלית של ההצבעות."
-      one_vote_per_post: "ניתן להצביע רק פעם אחת לפוסט."
+      already_voted: "אפשר להצביע רק פעם אחת לכל שאלה."
+      user_over_limit: "אסור לחרוג מכמות ההצבעות לדרגת האמון שלך."
+      one_vote_per_post: "אפשר להצביע רק פעם אחת לכל פוסט."
     last_answer_lowercase: תשובה אחרונה
     answer_lowercase:
       one: תשובה

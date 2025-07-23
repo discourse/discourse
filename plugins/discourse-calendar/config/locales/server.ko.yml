@@ -8,7 +8,7 @@ ko:
   reports:
     currently_away:
       labels:
-        username: 사용자명
+        username: 아이디
   discourse_automation:
     triggerables:
       event_started:

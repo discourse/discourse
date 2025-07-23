@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  js:
+    adplugin:
+      advertisement_label: "PUBLICIDADE"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          ad_plugin: "Plugin de Anúncios"
+          dfp_plugin: "Gerenciador de Anúncios"
+          adsense_plugin: "AdSense"
+          amazon_plugin: "Amazon"
+          carbonads_plugin: "Carbon Ads"
+          adbutler_plugin: "AdButler"
+      adplugin:
+        house_ads:
+          title: "Anúncios Internos"
+          new: "Novo"
+          settings: "Definições"
+          new_name: "Novo Anúncio Interno"
+          save: "Salvar"
+          delete: "Excluir"
+          description: "Defina seus próprios anúncios e onde eles devem ser exibidos."
+          get_started: "Comece criando um novo anúncio."
+          filter_placeholder: "Selecionar anúncios…"
+          more_settings: "Mais Configurações"
+          show_to_anons: "Mostrar para usuários(as) anônimos(as)"
+          show_to_logged_in_users: "Mostrar para usuários(as) logados(as)"
+          category_chooser_description: "Escolha as categorias nas quais este anúncio deve ser exibido ou deixe vazio para exibir em todos os lugares. A configuração do site \"no_ads_for_categories\" tem prioridade em relação a esta configuração."
+          group_chooser_description: "Escolha os grupos que podem visualizar este anúncio ou deixe vazio para exibir o anúncio a todos(as) os(as) usuários(as) que entraram com a conta."
+          preview: "Pré-visualizar"
+          topic_list_top:
+            title: "Principais anúncios da lista de tópicos"
+            description: "Anúncios para mostrar no topo das páginas da lista de tópicos."
+          topic_above_post_stream:
+            title: "Tópico acima do fluxo de postagens"
+            description: "Anúncios para mostrar acima do título de um tópico na página do tópico."
+          topic_above_suggested:
+            title: "Tópico acima de sugeridos"
+            description: "Anúncios para mostrar após a última postagem em um tópico, acima dos tópicos sugeridos."
+          post_bottom:
+            title: "Entre postagens"
+            description: "Anúncios para mostrar entre postagens, após cada N postagens."
+          topic_list_between:
+            title: "Entre tópicos"
+            description: "Anúncios para mostrar entre tópicos, após cada N tópicos."

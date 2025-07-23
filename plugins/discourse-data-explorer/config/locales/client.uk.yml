@@ -22,9 +22,11 @@ uk:
         modal: "Імпорт запиту"
       help:
         label: "Довідка"
+        default_values: "<h3>Значення за замовчуванням</h3> <p>Ви можете оголошувати параметри зі значеннями за замовчуванням або без них. Значення за замовчуванням відображатимуться в текстовому полі під редактором запитів, яке ви можете редагувати відповідно до своїх потреб. Параметри, оголошені без значень за замовчуванням, все одно генеруватимуть текстове поле, але будуть порожніми та виділеними червоним кольором.</p> <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Типи даних</h3> <p>Ось поширені типи даних, які ви можете використовувати:</p> <ul> <li><b>ціле число</b> - чотирибайтове ціле число зі знаком</li> <li><b>текст</b> - рядок символів змінної довжини</li> <li><b>логічне число</b> – true/false</li> <li><b>дата</b> - календарна дата (рік, місяць, день)</li> </ul> <p>Для отримання додаткової інформації про типи даних відвідайте <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>цей вебсайт</a>.</p>"
       schema:
         title: "Схема бази даних"
-        filter: "Пошук..."
+        filter: "Пошук…"
         sensitive: "Вміст цього стовпця може містити особливо чутливу або приватну інформацію. Будьте обережні, використовуючи вміст цього стовпця."
       types:
         bool:
@@ -32,6 +34,7 @@ uk:
           no: "Ні"
           null_: "Null"
       export: "Експорт"
+      view_json: "Переглянути JSON"
       save: "Зберегти зміни"
       saverun: "Збережіть зміни та запустіть"
       run: "Запуск"
@@ -41,12 +44,20 @@ uk:
       recover: "Видалити запит"
       download_json: "JSON"
       download_csv: "CSV"
+      show_table: "Таблиця"
+      show_graph: "Графік"
       others_dirty: "У запиті є не збережені зміни, які будуть втрачені, якщо ви перейдете далі."
+      run_time: "Запит виконано за %{value} мс."
       result_count:
         one: "%{count} результат."
         few: "%{count} результатів."
         many: "%{count} результатів."
         other: "%{count} результатів."
+      max_result_count:
+        one: "Показано %{count} найкращий результат."
+        few: "Показано %{count} найкращі результати"
+        many: "Показано %{count} найкращих результатів"
+        other: "Показано %{count} найкращих результатів"
       query_name: "Запит"
       query_groups: "Групи"
       link: "Посилання для"
@@ -54,10 +65,52 @@ uk:
       query_description: "Опис"
       query_time: "Останній запуск"
       query_user: "Створено"
+      column: "Колонка %{number}"
       explain_label: "Включити план запитів?"
       save_params: "Встановити значення за замовчуванням"
       reset_params: "Скинути"
-      search_placeholder: "Пошук ..."
+      search_placeholder: "Пошук…"
       no_search_results: "На жаль, не вдалося знайти жодного результату, відповідного вашому тексту."
+      form:
+        errors:
+          invalid: "Недійсний"
+          no_such_category: "Немає такої категорії"
+          no_such_group: "Немає такої групи"
+          invalid_date: "%{date} – недійсна дата"
+          invalid_time: "%{time} – недійсний час"
     group:
       reports: "Звіти"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Запустіть запити Data Explorer. Обмежте ключ API набором запитів, вказавши ідентифікатори запитів."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Надіслати користувачеві, групі або електронною поштою
+            query_id:
+              label: Запит Провідника даних
+            query_params:
+              label: Параметри запиту Провідника даних
+            skip_empty:
+              label: Пропустити відправку ПП якщо немає результатів
+            attach_csv:
+              label: Прикріпити файл CSV до ПП
+            users_from_group:
+              label: Відправляти індивідуальне повідомлення учаснику групи
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: Тема для публікації результатів запиту
+            query_id:
+              label: Запит Провідника даних
+            query_params:
+              label: Параметри запиту Провідника даних
+            skip_empty:
+              label: Пропустити публікацію, якщо немає результатів
+            attach_csv:
+              label: Прикріпіть CSV-файл до листа
