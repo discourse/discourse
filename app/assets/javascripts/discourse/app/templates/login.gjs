@@ -53,7 +53,6 @@ export default RouteTemplate(
               passkeyLogin=@controller.passkeyLogin
               loginPassword=@controller.loginPassword
               loginPasswordChanged=@controller.loginPasswordChanged
-              showLoginButtons=@controller.showLoginButtons
               secondFactorMethod=@controller.secondFactorMethod
               secondFactorToken=@controller.secondFactorToken
               backupEnabled=@controller.backupEnabled
@@ -68,17 +67,12 @@ export default RouteTemplate(
               flashChanged=@controller.flashChanged
               flashTypeChanged=@controller.flashTypeChanged
               securityKeyCredentialChanged=@controller.securityKeyCredentialChanged
-              adminLoginPath=@controller.adminLoginPath
-              desktopView=@controller.site.desktopView
-              mobileView=@controller.site.mobileView
               externalLoginAction=@controller.externalLoginAction
               canLoginLocal=@controller.canLoginLocal
               loginButtonLabel=@controller.loginButtonLabel
               loginDisabled=@controller.loginDisabled
               showSignupLink=@controller.showSignupLink
               loggingIn=@controller.loggingIn
-              hasAtLeastOneLoginButton=@controller.hasAtLeastOneLoginButton
-              hasNoLoginOptions=@controller.hasNoLoginOptions
             }}
           >
             {{#if @controller.hasNoLoginOptions}}
