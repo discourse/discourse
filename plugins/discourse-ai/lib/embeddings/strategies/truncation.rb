@@ -72,11 +72,18 @@ module DiscourseAi
             text << "\n\n"
           end
 
+          posts_text = +""
+          posts_text_size = 0
+
           topic.posts.find_each do |post|
-            text << Nokogiri::HTML5.fragment(post.cooked).text
-            break if tokenizer.size(text) >= max_length #maybe keep a partial counter to speed this up?
+            posts_text_size += tokenizer.size(post.cooked)
+            posts_text << post.cooked
+            break if posts_text_size >= max_length
+
             text << "\n\n"
           end
+
+          text << Nokogiri::HTML5.fragment(posts_text).text
 
           tokenizer.truncate(text, max_length, strict: SiteSetting.ai_strict_token_counting)
         end
