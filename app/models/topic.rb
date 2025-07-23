@@ -2086,8 +2086,7 @@ class Topic < ActiveRecord::Base
       target_audience[:user_ids] |= allowed_users.pluck(:id)
       target_audience[:user_ids] |= allowed_group_users.pluck(:id)
     else
-      group_ids = secure_group_ids
-      target_audience[:group_ids] = secure_group_ids if group_ids.present?
+      target_audience[:group_ids] = secure_group_ids
     end
 
     target_audience
