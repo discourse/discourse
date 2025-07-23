@@ -2602,6 +2602,7 @@ pl_PL:
     show_preview_for_form_templates: "Włącz podgląd funkcji szablonów formularzy"
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     experimental_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
+    experimental_sidebar_messages_count_enabled_groups: "Wyświetlaj wskaźnik nieprzeczytanych wiadomości lub licznik obok łącza „Moje wiadomości” na pasku bocznym, w zależności od preferencji nawigacyjnych użytkownika"
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."

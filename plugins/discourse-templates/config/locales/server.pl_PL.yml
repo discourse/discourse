@@ -10,6 +10,7 @@ pl_PL:
     discourse_templates_categories: "Kategorie, z których mają zostać pobrane szablony"
     discourse_templates_enable_private_templates: "Umożliwia korzystanie z prywatnych szablonów"
     discourse_templates_groups_allowed_private_templates: "Grupy uprawnione do korzystania z prywatnych szablonów. Członkowie personelu są zawsze dozwoleni"
+    discourse_templates_private_templates_tags: "Tagi identyfikujące wiadomość osobistą jako szablon prywatny"
   default_category_template:
     name: Szablony
     description: |
