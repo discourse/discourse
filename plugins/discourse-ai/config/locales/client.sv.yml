@@ -1,0 +1,205 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sortera efter"
+            tag:
+              label: "Tagg"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Ämnes-ID"
+            title:
+              label: "Rubrik"
+            categories:
+              label: "Kategorier"
+            tags:
+              label: "Taggar"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategori"
+            tags:
+              label: "Taggar"
+            canned_reply:
+              label: "Svara"
+    discourse_ai:
+      features:
+        back: "Tillbaka"
+        disabled: "(inaktiverad)"
+        groups: "Grupper:"
+        no_persona: "Inte inställd"
+        no_groups: "Ingen"
+        edit: "Redigera"
+        expand_list:
+          one: "(ytterligare %{count})"
+          other: "(ytterligare %{count})"
+        collapse_list: "(visa mindre)"
+        filters:
+          all: "Alla"
+          reset: "Återställ"
+        search:
+          name: "Sök"
+        spam:
+          name: "Skräppost"
+      modals:
+        select_option: "Välj ett alternativ..."
+      layout:
+        table: "Tabell"
+      spam:
+        short_title: "Skräppost"
+        last_seven_days: "Senaste 7 dagarna"
+        enable: "Aktivera"
+        save_button: "Spara ändringar"
+        test_modal:
+          spam: "Skräppost"
+      usage:
+        summary: "Sammanfattning"
+        username: "Användarnamn"
+        total_requests: "Totalt antal efterfrågningar"
+        periods:
+          last_day: "Senaste 24 timmarna"
+          custom: "Anpassad..."
+      ai_persona:
+        back: "Tillbaka"
+        name: "Namn"
+        edit: "Redigera"
+        export: "Exportera"
+        import: "Importera"
+        description: "Beskrivning"
+        user: Användare
+        save: "Spara"
+        enabled: "Aktiverad?"
+        allowed_groups: "Tillåtna grupper"
+        delete: "Ta bort"
+        response_format:
+          open_modal: "Redigera"
+          modal:
+            key_title: "Key"
+        filters:
+          reset: "Återställ"
+      rag:
+        uploads:
+          title: "Uppladdningar"
+          uploading: "Laddar upp..."
+      tools:
+        back: "Tillbaka"
+        export: "Exportera"
+        import: "Importera"
+        name: "Namn"
+        description: "Beskrivning"
+        summary: "Sammanfattning"
+        save: "Spara"
+        remove_parameter: "Ta bort"
+        parameter_required: "Krävs"
+        edit: "Redigera"
+        delete: "Ta bort"
+      llms:
+        display_name: "Namn"
+        provider: "Leverantör"
+        save: "Spara"
+        edit: "Redigera"
+        back: "Tillbaka"
+        delete: Ta bort
+        quotas:
+          group: "Grupp"
+          max_usages: "Max antal användningar"
+          duration: "Varaktighet"
+          durations:
+            hour: "1 timme"
+            six_hours: "6 timmar"
+            day: "24 timmar"
+            week: "7 dagar"
+            custom: "Anpassad..."
+          hours: "timmar"
+        usage:
+          ai_summarization: "Sammanfatta"
+          ai_spam: "Skräppost"
+        next:
+          title: "Nästa"
+        tests:
+          success: "Klart!"
+        providers:
+          google: "Google"
+          fake: "Anpassad"
+      ai_helper:
+        context_menu:
+          cancel: "Avbryt"
+          confirm: "Bekräfta"
+          discard: "Förkasta"
+        post_options_menu:
+          close: "Stäng"
+          copy: "Kopiera"
+          copied: "Kopierad!"
+          cancel: "Avbryt"
+        thumbnail_suggestions:
+          select: "Välj"
+          selected: "Markerat"
+        image_caption:
+          save_caption: "Spara"
+          automatic_caption_dialog:
+            confirm: "Aktivera"
+      embeddings:
+        back: "Tillbaka"
+        save: "Spara"
+        delete: "Ta bort"
+        edit: "Redigera"
+        tests:
+          success: "Klart!"
+        display_name: "Namn"
+        provider: "Leverantör"
+        providers:
+          google: "Google"
+          fake: "Anpassad"
+      ai_bot:
+        debug_ai_modal:
+          request: "Förfrågning"
+          response: "Svar"
+          next_log: "Nästa"
+          previous_log: "Föregående"
+        invite_ai_conversation:
+          button: "Bjud in"
+        share_modal:
+          copy: "Kopiera"
+        conversations:
+          today: "Idag"
+          last_7_days: "Senaste 7 dagarna"
+          last_30_days: "Senaste 30 dagarna"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Alla"
+            neutral: "Neutralt"
+          group_types:
+            category: "Kategori"
+            tag: "Tagg"
+          table:
+            total_count: "Totalt"
+      summarization:
+        chat:
+          title: "Sammanfatta meddelanden"
+          description: "Välj ett alternativ nedan för att sammanfatta samtalet som skickades under den önskade tidsramen."
+          summarize: "Sammanfatta"
+          since:
+            one: "Senaste timmen"
+            other: "Senaste %{count} timmarna"
+        topic:
+          title: "Sammanfattning av ämne"
+      discobot_discoveries:
+        regular_results: "Ämnen"
+        collapse: "Förminska"
+        tooltip:
+          actions:
+            disable: "Inaktivera"

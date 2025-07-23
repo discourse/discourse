@@ -8,7 +8,7 @@ bg:
   js:
     patreon:
       group: 'Група'
-      filter: 'Филтер'
+      filter: 'Филтър'
       edit: 'Редактирай'
       delete: 'Изтрий'
       save: 'Запази'

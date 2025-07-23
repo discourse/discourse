@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    discourse_templates_enabled: "לאפשר למשתמשים עם גישת צפייה לגשת לקטגוריה שצוינה להלן כדי להשתמש בתבניות הזמינות"
+    discourse_templates_categories: "קטגוריות מהן למשוך את התבניות"
+    discourse_templates_enable_private_templates: "לאפשר שימוש בתבניות פרטיות"
+    discourse_templates_groups_allowed_private_templates: "קבוצות מורשות להשתמש בתבניות פרטיות. לחברי הסגל תמיד מותר."
+  default_category_template:
+    name: תבניות

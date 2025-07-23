@@ -71,7 +71,7 @@ tr_TR:
               agree:
                 title: "Kabul et..."
               agree_and_keep_comment:
-                title: "Yorumu sakla"
+                title: "Yorumu tut"
                 description: "Bayrağı kabul edin ve yorumu değiştirmeyin."
               agree_and_keep_deleted:
                 title: "Yorumu Silinmiş hâlde tut"

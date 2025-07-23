@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_openid_connect: "Discourse OpenID Connect"
+  js:
+    login:
+      oidc:
+        name: "OpenID Connect"
+        title: "з OpenID Connect"
+        message: "Автентифікація за допомогою OpenID Connect"

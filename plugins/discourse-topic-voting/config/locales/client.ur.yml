@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    category:
+      sort_options:
+        votes: "ووٹ"
+    topic_voting:
+      reached_limit: "آپ کے ووٹ ختم ہو چکے ہیں، کسی موجودہ ووٹ کو ہٹا ئیں!"
+      list_votes: "اپنے ووٹوں کی فہرست"
+      votes_nav_help: "سب سے زیادہ ووٹوں والے ٹاپک"
+      voted: "آپ نے اِس ٹاپک پر ووٹ کیا"
+      allow_topic_voting: "صارفین کو اس زمرہ کے ٹاپکس پر ووٹ کرنے کی اجازت دیں"
+      vote_title: "ووٹ"
+      vote_title_plural: "ووٹ"
+      voted_title: "ووٹ کیا"
+      voting_closed_title: "بند"
+      voting_limit: "حد"
+      anonymous_button:
+        one: "ووٹ"
+        other: "ووٹ"
+      remove_vote: "ووٹ ہٹا دیں"
+    filters:
+      votes:
+        title: "ووٹ"
+        help: "سب سے زیادہ ووٹوں والے ٹاپک"

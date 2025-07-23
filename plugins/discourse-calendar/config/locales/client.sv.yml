@@ -364,14 +364,14 @@ sv:
             not_going: "Kommer inte"
             interested: "Intresserad"
         event:
-          expired: "Förfallen"
+          expired: "Utgången"
           closed: "Stängd"
           status:
             standalone:
               title: "Fristående"
               description: "Ett fristående evenemang kan inte anslutas."
             public:
-              title: "Offentligt"
+              title: "Publikt"
               description: "Ett offentligt evenemang kan besökas av vem som helst."
             private:
               title: "Privat"

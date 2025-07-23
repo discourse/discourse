@@ -18,16 +18,18 @@ vi:
         optional_label: "(tùy chọn)"
         status_label: Trạng thái
       assign_mailer:
-        never: "Không"
+        never: "Không bao giờ"
         always: "Luôn luôn"
       reminders_frequency:
-        never: "Không"
-        daily: "Hàng ngày"
+        never: "Không bao giờ"
+        daily: "hằng ngày"
         weekly: "Hàng tuần"
         monthly: "Hàng tháng"
         quarterly: "Hàng quý"
     user:
       notification_level_when_assigned:
+        watch_topic: "Quan sát chủ đề"
+        track_topic: "Theo dõi chủ đề"
         do_nothing: "Không làm gì cả"
       messages:
         assigned: "Được chỉ định"

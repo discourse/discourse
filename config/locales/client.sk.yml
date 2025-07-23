@@ -265,11 +265,11 @@ sk:
     broken_plugin_alert: "Spôsobené rozšírením „%{name}“"
     broken_transformer_alert: "Vyskytla sa chyba. Vaša stránka nemusí fungovať správne."
     critical_deprecation:
-      notice: "<b>[Upozornenie pre administrátorov]</b> Jedna z vašich tém alebo pluginov potrebuje aktualizáciu pre kompatibilitu s nadchádzajúcimi zmenami v jadre Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifikovaná téma: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifikovaný zásuvný modul: '%{name}'"
+      notice: "<b>[Upozornenie pre administrátorov]</b> %{source} obsahuje kód, ktorý je potrebné aktualizovať. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>dozvedieť sa viac</em></a>)"
+      theme_source: "Téma <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "Doplnok '%{name}'"
+      unknown_source: "Jedna z vašich tém alebo doplnkov"
     s3:
       regions:
         ap_northeast_1: "Ázia Tichomorie (Tokio)"
@@ -2749,6 +2749,9 @@ sk:
       disabled: "Nezobrazovať"
       sidebar_footer: "Zobraziť v päte bočného panela"
       header: "Zobraziť v hlavičke"
+    welcome_banner_location:
+      above_topic_content: "Obsah vyššie uvedenej témy"
+      below_site_header: "Pod hlavičkou stránky"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5385,6 +5388,9 @@ sk:
             badges:
               content: "Odznaky"
               title: "Všetky odznaky, ktoré môžete získať"
+            filter:
+              content: "Filter"
+              title: "Filtrovanie tém podľa kategórie, značky alebo iných kritérií"
             topics:
               content: "Témy"
               title: "Všetky témy"
@@ -5552,6 +5558,13 @@ sk:
           save: "Uložiť ako..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Váš prehliadač bude čoskoro nekompatibilný s touto komunitou. Ak sa chcete naďalej zúčastňovať, aktualizujte svoj prehliadač alebo <a href='%{url}'>sa dozviete viac.</a>"
+    filter:
+      placeholder: "Filtrovať témy podľa kategórie, značky alebo iných kritérií"
+      description:
+        yesterday: "Včera"
+        last_week: "Minulý týždeň"
+        last_month: "Minulý mesiac"
+        last_year: "Minulý rok"
     discovery:
       headings:
         all:
@@ -5675,6 +5688,9 @@ sk:
         legal:
           title: "Právne záležitosti"
           header_description: "Konfigurácia právnych nastavení, ako sú podmienky poskytovania služieb, zásady ochrany osobných údajov, kontaktné údaje a aspekty špecifické pre EÚ."
+        theme_site_settings:
+          title: "Nastavenia témy webu"
+          header_description: "Zobrazí všetky nastavenia lokality témy a témy, ktoré ich aktuálne prekrývajú"
         localization:
           title: "Lokalizácia"
           header_description: "Konfigurácia jazyka rozhrania vašej komunity a ďalších možností lokalizácie pre vašich členov"
@@ -5871,7 +5887,7 @@ sk:
           header_description: "Sledované slová sú moderátorské nástroje, ktoré môžu vykonávať viacero rôznych činností vrátane blokovania, cenzurovania, odkazovania alebo označovania príspevkov obsahujúcich určité slová."
         color_palettes:
           title: "Palety farieb"
-          header_description: "Palety farieb definujú základné farby používané v rozhraní webu, zatiaľ čo témy môžu poskytovať ďalšie štýly, rozloženia a komponenty. Obe môžu spolupracovať na vytvorení jedinečného vzhľadu vášho webu a obe môžu byť k dispozícii používateľom, aby si mohli vybrať svoje preferencie."
+          header_description: "Tieto palety určujú farby používané v celej komunite. Keď paletu nastavíte tak, aby si ju mohol vybrať používateľ, členovia si môžu vybrať preferované farby zo svojich preferencií."
         emoji:
           title: "Emoji"
           header_description: "Pridajte nové emotikony, ktoré budú dostupné pre všetkých. Vyberte viacero súborov a vytvorte emotikony pomocou ich názvov. Vybraná skupina sa použije pre všetky súčasne pridané súbory."
@@ -5964,6 +5980,14 @@ sk:
         embedding:
           title: "Vkladám"
           header_description: "Discourse má možnosť vložiť komentáre z témy na vzdialenú stránku pomocou rozhrania API pre Javascript, ktoré vytvorí okno IFRAME"
+      theme_site_settings:
+        setting: "Nastavenie"
+        overridden_by: "Prevzaté"
+        default_value: "Predvolené"
+        overridden_value: "Prevzatá hodnota: %{value}"
+        select_setting: "Výberom nastavenia lokality zobrazíte aktuálne hodnoty témy"
+        add: "Prejdite na nastavenia témy stránky"
+        help: "Téma, ktorú v súčasnosti používate, je <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Prejdite na <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>stránku s konfiguráciou témy</a>, aby ste zmenili nastavenia stránky témy, alebo kliknite na prepojenú tému v tabuľke nižšie, aby ste upravili jej nastavenia."
       search:
         modal_title: "Vyhľadať všetko v administrácii"
         title: "Hľadať"
@@ -6668,7 +6692,7 @@ sk:
           install: "Inštalácia"
           themes:
             title: "Témy"
-            description: "Témy pre celú stránku, ktoré menia celkový vzhľad a dojem z vašej stránky pre všetkých používateľov."
+            description: 'Témy pre celú lokalitu, ktoré zmenia celkový vzhľad lokality pre všetkých používateľov. Chcete skontrolovať, ktoré nastavenia lokality vaše témy prepisujú? <a href="%{themeSiteSettingsUrl}">Zobraziť nastavenia témy lokality</a>'
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
             new_theme: "Nová téma"
             back: "Späť na témy"
@@ -6762,6 +6786,7 @@ sk:
         author: "Od %{author}"
         experimental_badge: "experimentálne"
         learn_more: "Zistite viac"
+        preinstalled: "Predinštalované"
       navigation_menu:
         sidebar: "Bočný panel"
         header_dropdown: "Rozbaľovacia ponuka hlavičky"
@@ -7031,9 +7056,11 @@ sk:
           up_to_date: "Téma je aktuálna, naposledy skontrolovaná:"
           has_overwritten_history: "Aktuálna verzia témy už neexistuje, pretože história systému Git bola prepísaná."
           add: "Pridať"
-          theme_settings: "Nastavenie tém"
+          theme_settings: "Vlastné nastavenia témy"
+          theme_site_settings: "Nastavenia, ktoré môže téma prepísať"
           edit_objects_theme_setting: "Editor nastavenia objektov"
-          overriden_settings_explanation: "Prepísané nastavenia sú označené bodkou a zvýraznené farbou. Ak chcete tieto nastavenia obnoviť na predvolenú hodnotu, stlačte tlačidlo resetovania vedľa nich."
+          overriden_settings_explanation: "Zmeny oproti predvolenému nastaveniu sú označené bodkou a zvýraznené. Kliknutím na tlačidlo Obnoviť obnovíte predvolené nastavenie."
+          overriden_site_settings_explanation: "Nastavenia stránky, ktoré môže téma prispôsobiť. Kliknutím na tlačidlo Obnoviť obnovíte predvolené nastavenie témy. Ak nie je nastavené žiadne, použije sa predvolené nastavenie lokality. Všetky nastavenia lokality, ktoré sú prepísané témami, môžete vidieť na <a href='%{themeSiteSettingsConfigUrl}'>konfiguračnej stránke nastavení lokality témy</a>."
           no_settings: "Táto téma nemá žiadne nastavenia."
           theme_translations: "Preklady tém"
           empty: "Žiadne položky"
@@ -7103,6 +7130,8 @@ sk:
           active_filter: "Aktívny"
           inactive_filter: "Neaktívne"
           updates_available_filter: "Dostupné aktualizácie"
+          theme_setting_saved: "Nastavenie témy uložené!"
+          theme_site_setting_saved: "Nastavenie témy webu bolo uložené!"
         schema:
           title: "Úprava nastavenia %{name}"
           back_button: "Späť na %{name}"
@@ -7139,8 +7168,25 @@ sk:
           select_base:
             title: "Vyberte základnú paletu farieb"
             description: "Základná paleta:"
+          preference_warning: "Zmenili ste <a href='%{link}'>osobné nastavenia témy</a>, takže zmeny palety nemusia byť viditeľné. Návštevníci, ktorí nezmenili svoje predvolené nastavenia, budú stále vidieť zmeny, ktoré tu vykonáte."
           title: "Farby"
-          edit: "Úprava paliet farieb"
+          edit: "Upraviť"
+          set_default: "Nastavenie ako aktívne na stránke %{theme}"
+          set_default_success: "%{schemeName} nastaviť ako aktívnu paletu pre %{themeName}"
+          saved_refreshing: "Uložené! Osviežujúce farby..."
+          from_theme: "Z témy: %{name}"
+          filters:
+            search_placeholder: "Hľadať podľa názvu alebo témy..."
+            all: "Všetky"
+            user_selectable: "Voliteľné používateľom"
+            from_theme: "Z témy"
+            no_results: "Neboli nájdené žiadne farebné palety"
+            reset: "Obnovenie filtrov"
+          active_badge:
+            text: "Aktívny"
+            title: "Aktívna paleta farieb"
+          system_palette: "Ide o vstavanú paletu farieb, nie je možné ju upraviť ani odstrániť."
+          back_to_colors: "Späť na palety farieb"
           long_title: "Palety farieb"
           about: "Upravte farby používané v témach. Na začiatok vytvorte novú paletu farieb."
           new_name: "Nová paleta farieb"
@@ -7456,6 +7502,7 @@ sk:
             tag_group_destroy: "odstrániť skupinu značiek"
             tag_group_change: "zmeniť skupinu značiek"
             delete_associated_accounts: "odstrániť priradené účty"
+            change_theme_site_setting: "zmena nastavenia témy stránky"
         screened_emails:
           title: "Preverené e-maily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
@@ -7809,7 +7856,7 @@ sk:
         activity: Aktivita
         like_count: '"Páči sa" Rozdané / Prijaté'
         last_100_days: "za posledných 100 dní"
-        private_topics_count: Súkromné témy
+        private_topics_count: Osobné správy
         posts_read_count: Prečítané príspevky
         post_count: Vytvorené príspevky
         second_factor_enabled: Povolené dvojfaktorové overovanie

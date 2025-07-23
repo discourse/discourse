@@ -5,6 +5,8 @@ module DiscoursePostEvent
     PUBLIC_GROUP = "trust_level_0"
     MIN_NAME_LENGTH = 5
     MAX_NAME_LENGTH = 255
+    MAX_DESCRIPTION_LENGTH = 1000
+
     self.table_name = "discourse_post_event_events"
     self.ignored_columns = %w[starts_at ends_at]
 
@@ -27,6 +29,7 @@ module DiscoursePostEvent
                 in: MIN_NAME_LENGTH..MAX_NAME_LENGTH,
               },
               unless: ->(event) { event.name.blank? }
+    validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
 
     validate :raw_invitees_length
     validate :ends_before_start

@@ -37,6 +37,9 @@ nb_NO:
       download_json: "JSON"
       download_csv: "CSV"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
+      result_count:
+        one: "%{count} resultat."
+        other: "%{count} resultater."
       query_groups: "Grupper"
       query_description: "Beskrivelse"
       explain_label: "Inkluder spørringsplan?"

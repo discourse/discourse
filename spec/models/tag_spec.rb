@@ -27,7 +27,7 @@ RSpec.describe Tag do
 
       expect { tag_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(13).to(11)
+      }.by(-2)
       expect(
         SidebarSectionLink.where(
           id: [tag_sidebar_section_link.id, tag_sidebar_section_link_2.id],

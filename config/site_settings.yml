@@ -603,6 +603,7 @@ login:
   enable_discourse_id:
     default: false
     hidden: true
+    validator: "EnableDiscourseIdValidator"
   discourse_id_client_id:
     default: ""
     hidden: true
@@ -4093,3 +4094,10 @@ experimental:
     client: true
     type: group_list
     default: ""
+  experimental_sidebar_messages_count_enabled_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true

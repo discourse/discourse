@@ -43,7 +43,7 @@ pt_BR:
         billing: Cobrança
         payments: Pagamentos
         subscriptions: Assinaturas
-        subscribe: Assinar
+        subscribe: Fazer assinatura
         user_activity:
           payments: Pagamentos
       campaign:
@@ -79,11 +79,11 @@ pt_BR:
         select: Selecione um plano de assinatura
         interval:
           adverb:
-            day: Diário
-            week: Semanalmente
-            month: Mensalmente
-            year: Anualmente
-        payment_button: Assinar
+            day: A cada dia
+            week: A cada semana
+            month: Todo mês
+            year: Todo ano
+        payment_button: Fazer assinatura
         success: Obrigado! Sua assinatura foi criada.
         incomplete: O pagamento está incompleto. Sua assinatura será atualizada quando o pagamento for aceito.
         validate:
@@ -93,28 +93,28 @@ pt_BR:
         payments:
           id: ID do Pagamento
           amount: Quantia
-          created_at: Criado
+          created_at: Criado(a)
         payments_help: Não existem pagamentos
         plans:
           rate: Taxa
           product: Nome
         subscriptions_help: Você não possui assinaturas ativas.
         subscriptions:
-          id: ID da Assinatura
+          id: ID de Assinatura
           status: Status
           discounted: Descontado
           renews: Renovada
           update_card:
             heading: "Atualizar Cartão para assinatura: %{sub_id}"
             single: "Atualizar"
-          created_at: Criada
+          created_at: Criado(a)
           cancel: cancelar
           cancelled: cancelado
           operations:
             destroy:
               confirm: Tem certeza que deseja cancelar essa assinatura?
       subscribe:
-        title: Assinar
+        title: Fazer assinatura
         view_past: Ver compras anteriores
         no_products: No momento não existem produtos disponíveis.
         unauthenticated: Entre ou crie uma conta para se inscrever.
@@ -407,7 +407,7 @@ pt_BR:
         unconfigured: 'O Stripe não está configurado corretamente. Acesse o Meta do Discourse para mais informações.'
         on_meta: Assinaturas do Discourse no Meta
         dashboard:
-          title: Painel de Controle
+          title: Painel de controle
           table:
             head:
               user: Usuário(a)
@@ -432,10 +432,10 @@ pt_BR:
             description_help: Isso descreve o seu produto de assinatura.
             repurchaseable: É possível comprar novamente?
             repurchase_help: Permitir que produtos e planos associados sejam comprados várias vezes
-            active: Ativos
+            active: Ativo(a)
             active_help: Desative isso até que seu produto esteja pronto para os(as) consumidores(as).
-            created_at: Criado
-            updated_at: Atualizado
+            created_at: Criado(a)
+            updated_at: Atualizado(a)
           product_help: Antes que os(as) clientes possam fazer assinatura no seu site, é preciso criar pelo menos um produto e um plano associado.
         plans:
           title: Preços dos planos
@@ -458,8 +458,8 @@ pt_BR:
             trial_help: As assinaturas para esse plano iniciarão automaticamente com a avaliação gratuita com essa duração.
             group: Grupo de Usuários(as)
             group_help: Esse é o grupo de usuários(as) em que o cliente será adicionado ao criar a assinatura.
-            active: Ativos
-            created_at: Criado
+            active: Ativo(a)
+            created_at: Criado(a)
             recurring: Plano recorrente?
         coupons:
           title: Cupons
@@ -479,6 +479,6 @@ pt_BR:
             product: Produto
             plan: Plano
             status: Status
-            created_at: Criado
+            created_at: Criado(a)
         ask_refund: Reembolsar o último pagamento efetuado pelo(a) cliente?
         canceled: "A assinatura foi cancelada."

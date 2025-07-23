@@ -30,7 +30,7 @@ ko:
     flag_unclaimed: "깃발에 행동하기 전에 그 주제를 주장해야합니다"
     topic_assigned_excerpt: "&#39;%{title}&#39;주제를 지정했습니다"
     reminders_frequency:
-      never: "하지않음"
+      never: "알림 받지 않음"
       daily: "매일"
       weekly: "매주"
       monthly: "월간 간행물"

@@ -16,7 +16,7 @@ be:
       disable_holiday: "Адключыць"
       enable_holiday: "Уключыць"
       toolbar_button:
-        today: "сёння"
+        today: "Today"
         month: "месяц"
         week: "тыдзень"
         day: "дзень"
@@ -33,7 +33,7 @@ be:
               title: "прыватны"
       builder_modal:
         create: "стварыць"
-        update: "захаваць"
+        update: "Захаваць"
         reminders:
           units:
             days: "дзён"

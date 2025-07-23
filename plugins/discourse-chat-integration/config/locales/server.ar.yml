@@ -61,9 +61,6 @@ ar:
     chat_integration_webex_excerpt_length: "طول المقتطف من منشور Webex Team"
     chat_integration_google_enabled: "تفعيل مقدِّم خدمة تكامل الدردشة Google Chat"
     chat_integration_google_excerpt_length: "طول المقتطف من منشور Google Chat"
-  dashboard:
-    problem:
-      channel_errors: "هناك أخطاء في بعض قنوات تكاملات الدردشة. انتقل إلى <a href='%{base_path}/admin/plugins/chat-integration'>قسم تكامل الدردشة</a> لمعرفة المزيد."
   discourse_automation:
     scriptables:
       send_slack_message:

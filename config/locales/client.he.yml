@@ -265,11 +265,11 @@ he:
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     broken_transformer_alert: "אירעה שגיאה. יכול להיות שהאתר שלך לא יפעל כראוי."
     critical_deprecation:
-      notice: "<b>[הודעת הנהלה]</b> אחת מערכות העיצוב או התוספים שלך זקוקים לעדכון לצורך תאימות לשינויים שיתרחשו בקרוב בליבה של Discourse."
-      id: "(מזהה:<em>%{id}</em>)"
-      linked_id: "(מזהה:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "זוהתה ערכת עיצוב: <a target='_blank' href='%{path}'>‚%{name}’</a>."
-      plugin_source: "זוהה תוסף: ‚%{name}’"
+      notice: "<b>[הודעת הנהלה]</b> %{source} מכיל קוד שדורש עדכון. (מזהה:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>מידע נוסף</em></a>)"
+      theme_source: "ערכת העיצוב <a target='_blank' href='%{path}'>‚%{name}’</a>"
+      plugin_source: "תוסף ‚%{name}’"
+      unknown_source: "אחד מערכות העיצוב או התוספים שלך"
     s3:
       regions:
         ap_northeast_1: "אסיה ומדינות האוקיינוס השקט (טוקיו)"
@@ -1550,6 +1550,7 @@ he:
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: %{date}."
       suspended_permanently: "משתמש זה מושעה."
       suspended_reason: "הסיבה: "
+      silenced_notice: "המשתמש הזה מושתק עד %{date}."
       silenced_permanently: "משתמש זה מושתק."
       silenced_reason: "הסיבה: "
       github_profile: "GitHub"
@@ -1628,6 +1629,11 @@ he:
           two: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
           many: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
           other: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
+        silencings:
+          one: '<span class="%{className}">%{count}</span> הושתק/ה'
+          two: '<span class="%{className}">%{count}</span> הושתקו'
+          many: '<span class="%{className}">%{count}</span> הושתקו'
+          other: '<span class="%{className}">%{count}</span> הושתקו'
         suspensions:
           one: 'השעיה <span class="%{className}">%{count}</span>'
           two: '<span class="%{className}">%{count}</span> השעיות'
@@ -2729,6 +2735,9 @@ he:
       disabled: "לא להציג"
       sidebar_footer: "להציג בתחתית סרגל הצד"
       header: "הצגה בכותרת"
+    welcome_banner_location:
+      above_topic_content: "מעל תוכן הנושא"
+      below_site_header: "מתחת לכותרת האתר"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2917,6 +2926,8 @@ he:
       remove_featured_link: "הסר קישור מנושא"
       reply_placeholder: "ניתן להקליד כאן. אפשר להשתמש ב־Markdown,‏ BBCode או HTML כעיצוב. גרירת או הדבקת תמונות גם היא אפשרית."
       reply_placeholder_no_images: "ניתן להקליד כאן. אפשר להשתמש ב־Markdown,‏ BBCode או HTML כעיצוב."
+      reply_placeholder_rte: "נא להקליד כאן. אפשר להשתמש בסרגל הכלים או ב־Markdown לעיצוב. כמו כן גם לגרור או להדביק תמונות."
+      reply_placeholder_rte_no_images: "נא להקליד כאן. אפשר להשתמש בסרגל הכלים או ב־Markdown לעיצוב."
       reply_placeholder_choose_category: "נא לבחור בקטגוריה בטרם תחילת ההקלדה כאן."
       view_new_post: "הצגת הפוסט החדש שלך."
       saving: "שומר"
@@ -4904,6 +4915,19 @@ he:
         return: "%{shortcut} חזרה לכתיבת פוסט"
         fullscreen: "%{shortcut} כתיבת פוסט במסך מלא"
         insert_current_time: "%{shortcut} הוספת השעה הנוכחית"
+        bold: "%{shortcut} מודגש"
+        italic: "%{shortcut} נטוי"
+        link: "%{shortcut} הוספת קישור"
+        preformatted: "%{shortcut} טקסט מעוצב מראש"
+        paragraph: "%{shortcut} פסקה"
+        heading_1: "%{shortcut} כותרת 1"
+        heading_2: "%{shortcut} כותרת 2"
+        heading_3: "%{shortcut} כותרת 3"
+        heading_4: "%{shortcut} כותרת 4"
+        toggle_direction: "%{shortcut} החלפת כיוון טקסט"
+        ordered_list: "%{shortcut} רשימה מסודרת"
+        unordered_list: "%{shortcut} רשימה לא מסודרת"
+        blockquote: "%{shortcut} מקטע ציטוט"
       bookmarks:
         title: "ניהול סימניות"
         enter: "%{shortcut} שמירה וסגירה"
@@ -5345,6 +5369,8 @@ he:
             badges:
               content: "עיטורים"
               title: "כל העיטורים שאפשר לקבל"
+            filter:
+              content: "מסנן"
             topics:
               content: "נושאים"
               title: "כל הנושאים"
@@ -5512,6 +5538,12 @@ he:
           save: "שמירה בשם…"
     powered_by_discourse: "מופעל על גבי Discourse"
     safari_15_warning: "בקרוב הדפדפן שלך לא יהיה תואם לקהילה הזו. כדי להמשיך להשתתף כאן, נא לשדרג את הדפדפן שלך או <a href='%{url}'>לקרוא על כך עוד</a>."
+    filter:
+      description:
+        yesterday: "אתמול"
+        last_week: "בשבוע שעבר"
+        last_month: "בחודש שעבר"
+        last_year: "שנה שעברה"
     discovery:
       headings:
         all:
@@ -5830,7 +5862,6 @@ he:
           header_description: "מילים במעקב הן כלי פיקוח שיכול לבצע מספר פעולות לרבות חסימה, צנזור, קישור או סימון פוסטים שמכילים מילים מסוימות"
         color_palettes:
           title: "ערכות צבעים"
-          header_description: "לוחות צבעים מגדירים את צבעי היסוד שממשק האתר שלך משתמש בהם, על אף שערכות עיצוב יכולות לספק עיצוב, פריסות ורכיבים בנוסף - שני אלו יכולים לעבוד יחד כדי ליצור את המראה והתחושה הייחודיים של האתר שלך ואת שניהם אפשר להגיש למשתמשים כדי שיוכלו לבחור מביניהם."
         emoji:
           title: "אמוג׳י"
           header_description: "הוספת אמוג׳י חדש שיהיה נגיש לכולם. נא לבחור מספר קבצים כדי ליצור אמוג׳ים עם שמות הקבצים שלהם. הקבוצה הנבחרת תשמש לכל הקבצים שנוספים יחד."
@@ -5922,6 +5953,13 @@ he:
         embedding:
           title: "שילוב (embedding)"
           header_description: "ל־Discourse יש יכולת להטמיע הערות מנושא לאתר מרוחק עם API ב־Javascript שיוצר IFRAME (חלונית פנימית)"
+      theme_site_settings:
+        setting: "הגדרה"
+        overridden_by: "נדרס על ידי"
+        default_value: "ברירת מחדל"
+        overridden_value: "ערך שנדרס: %{value}"
+        select_setting: "נא לבחור הגדרת אתר כדי לצפות בערכי ערכת העיצוב הנוכחיים"
+        help: "ערכת הנושא בשימוש כרגע היא <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. יש לגשת אל <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>עמוד הגדרות ערכת העיצוב</a> כדי לשנות את הגדרות ערכת העיצוב של האתר או ללחוץ על ערכת עיצוב מקושרת בטבלה שלהלן כדי לערוך את ההגדרות שלה."
       search:
         modal_title: "חיפוש בכול הניהול"
         title: "חיפוש"
@@ -6625,7 +6663,6 @@ he:
           install: "התקנה"
           themes:
             title: "תמות"
-            description: "ערכות עיצוב של האתר שמשנות את המראה והתחושה הכלליים של האתר שלך לכל המשתמשים."
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
             new_theme: "ערכת עיצוב חדשה"
             back: "חזרה לערכות עיצוב"
@@ -6988,9 +7025,9 @@ he:
           up_to_date: "ערכת העיצוב עדכנית, מועד הבדיקה האחרונה:"
           has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
-          theme_settings: "הגדרות ערכת עיצוב"
+          theme_site_settings: "הגדרות שערכת העיצוב יכולה להשפיע עליהן"
           edit_objects_theme_setting: "עורך הגדרות עצמים"
-          overriden_settings_explanation: "הגדרות שנדרסו מסומנות בנקודה ומודגשות. כדי לאפס את ההגדרות האלו לערך ברירת המחדל, יש ללחוץ על כפתור האיפוס שלצידן."
+          overriden_settings_explanation: "שינויים מברירת המחדל מסומנים בנקודה ומודגשים. יש ללחוץ על איפוס כדי לאפס לברירת המחדל."
           no_settings: "לערכת עיצוב זו אין הגדרות."
           theme_translations: "תרגומים של ערכות עיצוב"
           empty: "אין פריטים"
@@ -7060,6 +7097,8 @@ he:
           active_filter: "פעיל"
           inactive_filter: "לא פעיל"
           updates_available_filter: "עדכונים זמינים"
+          theme_setting_saved: "הגדרת ערכת העיצוב נשמרה!"
+          theme_site_setting_saved: "הגדרת ערכת העיצוב של האתר נשמרה!"
         schema:
           title: "עריכת הגדרת %{name}"
           back_button: "חזרה אל %{name}"
@@ -7097,7 +7136,12 @@ he:
             title: "בחירת לוח צבעים בסיסי"
             description: "לוח בסיסי:"
           title: "צבעים"
-          edit: "עריכת לוחות צבעים"
+          edit: "עריכה"
+          filters:
+            all: "הכול"
+            user_selectable: "לבחירת המשתמש"
+          active_badge:
+            text: "פעיל"
           long_title: "ערכות צבעים"
           about: "שינוי הצבעים המכהנים בערכות העיצוב שלך. עליך ליצור לוח צבעים כדי להתחיל."
           new_name: "לוח צבעים חדש"
@@ -7413,6 +7457,7 @@ he:
             tag_group_destroy: "מחיקת קבוצת תגיות"
             tag_group_change: "החלפת קבוצת תגיות"
             delete_associated_accounts: "מחיקת חשבונות משויכים"
+            change_theme_site_setting: "שנוי הגדרות ערכת עיצוב של האתר"
         screened_emails:
           title: "הודעות דוא״ל מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -7760,7 +7805,7 @@ he:
         activity: פעילות
         like_count: לייקים שהוענקו / התקבלו
         last_100_days: "ב־100 הימים האחרונים"
-        private_topics_count: נושאים פרטיים
+        private_topics_count: הודעות פרטיות
         posts_read_count: פוסטים שנקראו
         post_count: פוסטים שנוצרו
         second_factor_enabled: אימות דו־שלבי מופעל

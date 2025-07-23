@@ -33,4 +33,5 @@ gl:
                 title: "Discrepar"
       topic:
         sort_by: "Ordenar por"
+        votes: "Votos"
         activity: "Actividade"

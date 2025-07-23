@@ -2667,6 +2667,8 @@ et:
               content: "Adminn"
             badges:
               content: "Märgised"
+            filter:
+              content: "Filter"
             topics:
               content: "Teemad"
             faq:
@@ -2706,6 +2708,9 @@ et:
       spreadsheet:
         show: "Näita"
         about: "Teave"
+    filter:
+      description:
+        yesterday: "Eile"
     discovery:
       headings:
         multi_tag:
@@ -2815,6 +2820,8 @@ et:
           title: "Veebihaagid"
         embedding:
           title: "Sängitamine"
+      theme_site_settings:
+        default_value: "Vaikimisi"
       search:
         title: "Otsi"
         result_types:
@@ -3220,7 +3227,6 @@ et:
           enable: "Luba"
           disable: "Keela"
           add: "Lisa"
-          theme_settings: "Teema seaded"
           settings: "Seaded"
           colors: "Värvid"
           colors_title: "Värvid"
@@ -3244,6 +3250,11 @@ et:
               too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
           title: "Värvid"
+          edit: "Muuda"
+          filters:
+            all: "Kõik"
+          active_badge:
+            text: "Aktiivne"
           copy_name_prefix: "Koopia sellest"
           undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
@@ -3555,7 +3566,6 @@ et:
         activity: Tegevused
         like_count: Meeldimisi antud / saadud
         last_100_days: "viimase 100 päeva jooksul"
-        private_topics_count: Privaatsed teemad
         posts_read_count: Positusi loetud
         post_count: Postitusi loodud
         topics_entered: Vaadatud teemasid

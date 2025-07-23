@@ -31,9 +31,11 @@ nb_NO:
       show_all: "Vis alle"
       bulk_invite: "Bulk invitasjon"
       bulk_invite_modal:
+        confirm: "bekreft"
         title: "Bulk invitasjon"
         success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
         error: "Beklager, fila må være i CSV-format."
+        group_selector_placeholder: "Velg en gruppe..."
       upcoming_events:
         status: "Status"
       models:

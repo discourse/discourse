@@ -44,8 +44,12 @@ da:
       download_csv: "CSV"
       show_table: "Tabel"
       show_graph: "Graf"
+      result_count:
+        one: "%{count} resultat."
+        other: "%{count} resultater."
       query_name: "Forespørgsel"
-      query_groups: "grupper"
+      query_groups: "Grupper"
+      report_name: "Rapport"
       query_description: "Beskrivelse"
       query_user: "Oprettet af"
       reset_params: "Nulstil"

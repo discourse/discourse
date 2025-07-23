@@ -130,7 +130,6 @@ sv:
           topic_tag_changed:
             added_and_removed: "Lade till %{added} och tog bort %{removed}"
             added: "Lade till %{added}"
-            removed: "Tog bort %{removed}"
       telegram:
         unknown_chat: "Denna chatt är inte konfigurerad för %{site_title}. Be en administratör att lägga till kanalen med 'Chat ID' %{chat_id}."
         known_chat: "Denna chatt är konfigurerad för %{site_title}. Konfigurera den från admin-panelen. (chatt-ID: %{chat_id})"
@@ -175,7 +174,7 @@ sv:
         status:
           header: |
             *Regler för denna kanal*
-            (om flera regler matchar ett inlägg kommer den översta regeln att verkställas)
+            (om flera regler matchar ett inlägg verkställs den översta regeln)
           no_rules: "Det har inte upprättats några regler för denna kanal. Kör `/discourse help` för instruktioner."
           rule_string: "*%{index})* *%{filter}* inlägg i *%{category}*"
           rule_string_tags_suffix: " med taggar: *%{tags}*"
@@ -186,7 +185,7 @@ sv:
           error: "Tyvärr uppstod det ett fel när den regeln skapades."
         delete:
           success: "Regel har tagits bort"
-          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör `/discourse status` för en lista över regler."
+          error: "Tyvärr uppstod det ett fel vid radering av den regeln. Kör `/discourse status` för att visa en lista över regler."
         not_found:
           tag: "Taggen *%{name}* kan inte hittas."
           category: "Kategorin *%{name}* kan inte hittas. Tillgängliga kategorier: *%{list}*"

@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 ur:
+  js:
+    login:
+      amazon:
+        name: "اَیمَیزَون"

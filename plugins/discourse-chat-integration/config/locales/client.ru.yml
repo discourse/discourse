@@ -25,7 +25,7 @@ ru:
       create_rule: "Создать правило"
       create_channel: "Создать канал"
       delete_channel: "Удалить"
-      test_channel: "Тест"
+      test_channel: "Тестирование слов"
       edit_channel: "Изменить"
       channel_delete_confirm: "Вы действительно хотите удалить этот канал? Все связанные правила будут удалены."
       test_modal:
@@ -36,34 +36,34 @@ ru:
         error: "При отправке сообщения произошла неизвестная ошибка. Проверьте логи сайта для получения дополнительной информации."
         success: "Сообщение успешно отправлено"
       type:
-        normal: Нормальный
+        normal: Обычный
         group_message: Групповое сообщение
         group_mention: Групповая рассылка
       filter:
         mute: 'Отключить'
-        follow: 'Только первый пост'
+        follow: 'Только первая публикация'
         watch: 'Все сообщения и ответы'
         thread: 'Все сообщения с ответами'
       rule_table:
         filter: "Фильтр"
-        category: "Раздел"
+        category: "Категория"
         tags: "Теги"
-        edit_rule: "Редактировать"
+        edit_rule: "Изменить"
         delete_rule: "Удалить"
       edit_channel_modal:
         title: "Редактировать канал"
         save: "Сохранить канал"
-        cancel: "Отмена"
-        provider: "Провайдер"
+        cancel: "Нет"
+        provider: "Поставщик"
         channel_validation:
           ok: "Валидный"
           fail: "Неверный формат"
       edit_rule_modal:
         title: Изменить правило
         save: Сохранить правило
-        cancel: Отмена
-        provider: Провайдер
-        type: Тип
+        cancel: Нет
+        provider: Поставщик
+        type: Тип опроса
         channel: Канал
         filter: Фильтр
         category: Категория
@@ -142,7 +142,7 @@ ru:
               title: "Stream"
               help: "Имя потока Zulip, которому должно быть отправлено сообщение. например, «общий»"
             subject:
-              title: "Тема"
+              title: "Субъект"
               help: "Тема, уведомляющая о том, что, должно быть указано сообщение, отправляемое ботом"
           errors:
             does_not_exist: "Этот поток не существует в Zulip"
@@ -229,7 +229,7 @@ ru:
               description: >-
                 Используйте ${TOPIC} для названия темы, ${URL} для используемого URL-адреса, ${REMOVED_TAGS} для удаленных тегов, ${ADDED_TAGS} для добавленных тегов, ${ADDED_AND_REMOVED} для текста по умолчанию. Доступно, только если триггер настроен на изменение тегов темы.
             url:
-              label: URL
+              label: URL-адрес
             channel:
               label: Канал
         send_chat_integration_message:

@@ -51,8 +51,8 @@ acceptance("Page tracking - loading slider", function (needs) {
     assertRequests({
       assert,
       tracked: 0,
-      untracked: 0,
-      message: "no requests before app boot",
+      untracked: 1,
+      message: "no tracked requests before app boot",
     });
 
     await visit("/");
@@ -94,8 +94,8 @@ acceptance("Page tracking - loading spinner", function (needs) {
     assertRequests({
       assert,
       tracked: 0,
-      untracked: 0,
-      message: "no requests before app boot",
+      untracked: 1,
+      message: "no tracked requests before app boot",
     });
 
     await visit("/");

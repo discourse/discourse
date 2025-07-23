@@ -155,6 +155,8 @@ function setupToolbar() {
     select.value ||= "core";
     select.querySelector("option:not([value])").remove();
     select.querySelector("option[value=-----]").disabled = true;
+    select.querySelector("option[value=plugins]").innerText =
+      "all plugins (not recommended)";
     select.querySelector("option[value=all]").innerText =
       "all (not recommended)";
   });
@@ -212,6 +214,16 @@ export default function setupTests(config) {
 
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
+
+  window.onunhandledrejection = (event) => {
+    // reports test boot failures to testem, so the browser doesn't hang forever
+    window.Testem?.emit(
+      "top-level-error",
+      String(event.reason),
+      window.location.href,
+      "0"
+    );
+  };
 
   sinon.config = {
     injectIntoThis: false,

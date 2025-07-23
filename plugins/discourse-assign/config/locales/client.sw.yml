@@ -31,6 +31,7 @@ sw:
       assign_modal:
         title: "Awadha Mada"
         assign: "Kabidhi"
+        note_label: Ujumbe
         optional_label: "(sio muhimu)"
       claim:
         title: "Miliki"
@@ -54,7 +55,7 @@ sw:
         do_nothing: "Usifanye chochote"
       messages:
         assigned_title: "Amekabidhiwa (%{count})"
-        assigned: "Imekabidhiwa"
+        assigned: "Kukabidhi"
       assignment_description:
         topic: "%{topic_title}"
     search:

@@ -32,7 +32,7 @@ de:
         title: "Test-Nachricht senden"
         topic: "Thema"
         send: "Test-Nachricht senden"
-        close: "Schließen"
+        close: "Beenden"
         error: "Ein unbekannter Fehler ist beim Senden der Nachricht aufgetreten. Bitte überprüfe die Website-Protokolle für weitere Informationen."
         success: "Nachricht erfolgreich versendet"
       type:
@@ -41,7 +41,7 @@ de:
         group_mention: Gruppenerwähnung
       filter:
         mute: 'Stummschalten'
-        follow: 'Nur der erste Beitrag'
+        follow: 'Nur erster Beitrag'
         watch: 'Alle Beiträge und Antworten'
         thread: 'Alle Beiträge mit Thread-Antworten'
       rule_table:
@@ -54,7 +54,7 @@ de:
         title: "Kanal bearbeiten"
         save: "Kanal speichern"
         cancel: "Abbrechen"
-        provider: "Provider"
+        provider: "Anbieter"
         channel_validation:
           ok: "Gültig"
           fail: "Ungültiges Format"
@@ -62,8 +62,8 @@ de:
         title: Regel bearbeiten
         save: Regel speichern
         cancel: Abbrechen
-        provider: Provider
-        type: Typ
+        provider: Anbieter
+        type: Art
         channel: Kanal
         filter: Filter
         category: Kategorie

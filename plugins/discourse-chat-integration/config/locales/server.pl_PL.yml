@@ -16,6 +16,7 @@ pl_PL:
     chat_integration_slack_excerpt_length: 'Długość skrótu wpisu na Slacku'
     chat_integration_slack_icon_url: 'Ikona do wysyłania wiadomości na Slacku (domyślna to logo forum)'
     chat_integration_slack_outbound_webhook_url: "Dla używania slackowego systemu \"Incoming Webhook\" zamiast API OAuth. Niezalecane."
+    chat_integration_slack_transcript_quote: Czy zamieścić transkrypt Slacka w tagach [cytat]?
     errors:
       chat_integration_slack_api_configs_are_empty: "Musisz wpisać URL wychodzącego webhooka albo token dostępu."
     chat_integration_telegram_enabled: "Włącz integrację z Telegramem"
@@ -25,6 +26,8 @@ pl_PL:
     chat_integration_discord_enabled: "Włącz integrację z Discordem"
     chat_integration_discord_message_content: "Wiadomość do dołączenia powyżej podsumowania przy wysyłaniu powiadomienia na Discorda"
     chat_integration_discord_excerpt_length: "Długość skrótu wpisu na Discordzie"
+    chat_integration_guilded_enabled: "Włącz dostawcę integracji czatu Guilded"
+    chat_integration_guilded_excerpt_length: "Długość fragmentu postu Guilded"
     chat_integration_mattermost_enabled: "Włącz integrację z Mattermost"
     chat_integration_mattermost_webhook_url: 'URL webhooka Mattermost'
     chat_integration_mattermost_incoming_webhook_token: 'Token weryfikacji używany do weryfikacji żądań przychodzących'
@@ -52,14 +55,21 @@ pl_PL:
     chat_integration_groupme_instance_names: " *wymagana* Nazwa czatu GroupMe, rozdzielona przez ',' jeśli istnieje wiele (taka sama kolejność jak identyfikatory botów)"
     chat_integration_teams_enabled: "Włącz integrację z Microsoft Teams"
     chat_integration_teams_excerpt_length: "Długość fragmentu postu Microsoft Team"
+    chat_integration_powerautomate_enabled: "Włącz dostawcę integracji Microsoft Power Automate"
+    chat_integration_powerautomate_excerpt_length: "Długość fragmentu posta Microsoft Power Automate"
     chat_integration_webex_enabled: "Włącz dostawcę integracji czatu Webex Teams"
     chat_integration_webex_excerpt_length: "Długość skrótu wpisu na Webex Team"
     chat_integration_google_enabled: "Włącz integrację z Google Chat"
     chat_integration_google_excerpt_length: "Długość fragmentu posta na czacie Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "Niektóre kanały integracji czatu zawierają błędy. Odwiedź <a href='%{base_path}/admin/plugins/chat-integration'>sekcję integracji czatu</a> , aby dowiedzieć się więcej."
   discourse_automation:
     scriptables:
       send_slack_message:
         title: Wyślij wiadomość Slack
+      send_chat_integration_message:
+        title: Wyślij wiadomość dotyczącą integracji czatu
   chat_integration:
     all_categories: "(wszystkie kategorie)"
     deleted_category: "(usunięta kategoria)"
@@ -108,6 +118,7 @@ pl_PL:
 
           *Pomoc:* `/discourse help`
         transcript:
+          modal_title: "Utwórz transkrypt"
           modal_description: "Wszystkie wiadomości w wątku zostaną zebrane w jeden post na forum. Będziesz mieć możliwość edytowania transkrypcji przed opublikowaniem."
           transcript_ready: "Transkrypcja gotowa"
           continue_on_discourse: "Kontynuuj na forum"

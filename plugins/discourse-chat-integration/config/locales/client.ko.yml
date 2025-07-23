@@ -26,28 +26,28 @@ ko:
       create_channel: "채널 만들기"
       delete_channel: "삭제"
       test_channel: "테스트"
-      edit_channel: "수정"
+      edit_channel: "편집"
       channel_delete_confirm: "이 채널을 삭제 하시겠습니까? 관련된 모든 규칙이 삭제됩니다."
       test_modal:
         title: "테스트 메시지 보내기"
-        topic: "토픽"
+        topic: "글"
         send: "테스트 메시지 보내기"
         close: "닫기"
         error: "메시지를 보내는 동안 알 수없는 오류가 발생했습니다. 자세한 내용은 사이트 로그를 확인하십시오."
         success: "메세지가 성공적으로 전송되었습니다"
       type:
-        normal: '알림 : 일반'
+        normal: 일반
         group_message: 그룹 메시지
         group_mention: 그룹 언급
       filter:
-        mute: '알림 끄기'
+        mute: '알림끔'
         follow: '첫 번째 게시물 만'
         watch: '모든 게시물과 답글'
       rule_table:
         filter: "필터"
         category: "카테고리"
         tags: "태그"
-        edit_rule: "수정"
+        edit_rule: "편집"
         delete_rule: "삭제"
       edit_channel_modal:
         title: "채널 수정"
@@ -88,7 +88,7 @@ ko:
           title: "텔레그램"
           param:
             name:
-              title: "이름"
+              title: "그룹명"
               help: "채널을 설명하는 이름입니다. Telegram에 연결하는 데 사용되지 않습니다."
             chat_id:
               title: 채팅 ID
@@ -97,10 +97,10 @@ ko:
             channel_not_found: "지정된 채널이 텔레 그램에 없습니다"
             forbidden: "봇은이 채널에 게시 할 권한이 없습니다"
         discord:
-          title: "불일치"
+          title: "디스코드"
           param:
             name:
-              title: "이름"
+              title: "그룹명"
               help: "채널을 설명하는 이름입니다. Discord 연결에는 사용되지 않습니다."
             webhook_url:
               title: 웹 후크 URL
@@ -123,7 +123,7 @@ ko:
           title: "매트릭스"
           param:
             name:
-              title: "이름"
+              title: "그룹명"
               help: "채널을 설명하는 이름입니다. Matrix에 연결하는 데 사용되지 않습니다."
             room_id:
               title: "방 ID"
@@ -146,7 +146,7 @@ ko:
         gitter:
           param:
             name:
-              title: "이름"
+              title: "그룹명"
             webhook_url:
               title: "웹 후크 URL"
         teams:

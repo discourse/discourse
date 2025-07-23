@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 sk:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Prihláste sa cez Amazon"
+        message: "Overovanie pomocou služby Prihlásenie pomocou služby Amazon (uistite sa, že nie sú povolené blokátory vyskakovacích okien)"

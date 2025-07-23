@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  accepted_answer: "Réponse acceptée"
+  site_settings:
+    solved_enabled: "Activer l'extension permettant aux utilisateurs de sélectionner des solutions aux sujets"
+    allow_solved_on_all_topics: "Autoriser les utilisateurs à sélectionner des solutions sur tous les sujets (lorsque cette option n'est pas activée, les solutions peuvent être activées par catégorie ou étiquette)"
+    accept_all_solutions_trust_level: "Niveau de confiance minimal requis pour accepter des solutions sur n'importe quel sujet (même sans en être l'auteur)"
+    accept_all_solutions_allowed_groups: "Groupes autorisés à accepter des solutions sur n'importe quel sujet (même s'il n'est pas OP). Les administrateurs et modérateurs sont toujours autorisés."
+    empty_box_on_unsolved: "Afficher une case vide à côté des sujets non résolus"
+    solved_quote_length: "Nombre de caractères à citer lors de l'affichage de la solution sous le premier message"
+    solved_topics_auto_close_hours: "Fermer automatiquement le sujet (n) heures après la dernière réponse, une fois que le sujet a été marqué comme résolu. Mettre à 0 pour désactiver la fermeture automatique."
+    show_filter_by_solved_status: "Afficher une liste déroulante pour filtrer les sujets par état de résolution."
+    notify_on_staff_accept_solved: "Envoyer une notification au créateur du sujet lorsqu'un message est marqué comme une solution par un responsable."
+    ignore_solved_topics_in_assigned_reminder: "Empêcher les rappels pour les attributions d'inclure des sujets résolus. Ne s'applique que lorsque vous utilisez l'extension discourse-assign."
+    assignment_status_on_solve: "Lorsqu'un sujet est résolu, mettre à jour toutes les attributions ayant ce statut"
+    assignment_status_on_unsolve: "Lorsqu'un sujet n'est pas résolu, mettre à jour toutes les attributions ayant ce statut"
+    disable_solved_education_message: "Désactiver les messages éducatifs pour les sujets résolus."
+    accept_solutions_topic_author: "Permettre à l'auteur du sujet d'accepter une solution."
+    solved_add_schema_markup: "Ajouter le marquage du schéma QAPage au code HTML."
+    enable_solved_tags: "Étiquettes qui permettront aux utilisateurs de sélectionner des solutions."
+    prioritize_solved_topics_in_search: "Prioriser les sujets résolus dans les résultats de recherche."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Solutions acceptées"
+      xaxis: "Jour"
+      yaxis: "Total"
+  solved:
+    no_solutions:
+      self: "Vous n'avez pas encore de solutions acceptées."
+      others: "Aucune solution acceptée."
+  badges:
+    solved_1:
+      name: "Résolu !"
+      description: "Faire marquer une réponse comme solution"
+      long_description: "Ce badge est accordé lorsqu'une réponse est marquée comme solution à un sujet. :white_check_mark: Bon travail. :+1:"
+    solved_2:
+      name: "Conseiller d'orientation"
+      description: "Faites marquer 10 réponses comme solutions"
+      long_description: "Ce badge est accordé lorsque 10 de vos réponses sont marquées comme des solutions à des sujets. :white_check_mark: Vous êtes un véritable atout pour les autres membres de votre communauté."
+    solved_3:
+      name: "Personne-ressource"
+      description: "Faites marquer 50 réponses comme solutions"
+      long_description: "Ce badge est accordé lorsque 50 de vos réponses sont marquées comme des solutions à des sujets. :white_check_mark: Vous vous y connaissez. :clap:"
+    solved_4:
+      name: "Institution de solution"
+      description: "Faites marquer 150 réponses comme solutions"
+      long_description: "Ce badge est accordé lorsque 150 de vos réponses sont marquées comme des solutions à des sujets. :white_check_mark: Excellent travail. :slightly_smiling_face: Vous êtes officiellement une institution de solutions. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Première solution acceptée
+        doc: Se déclenche lorsqu'une solution est acceptée pour la première fois par un utilisateur.
+  education:
+    topic_is_solved: |
+      ### Ce sujet a été résolu
+
+      Répondez uniquement si :
+
+      - Vous avez des informations supplémentaires
+
+      - La solution ne fonctionne pas pour vous
+
+      Si vous avez un problème sans lien avec le sujet, veuillez [créer un nouveau sujet](%{base_url}/nouveau- sujet) à la place.

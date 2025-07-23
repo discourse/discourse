@@ -50,7 +50,6 @@ export default RouteTemplate(
           {{icon "circle-plus"}}
           <span>{{@controller.unreadLinkText}}</span>
         </DNavigationItem>
-
       {{/if}}
 
       <DNavigationItem

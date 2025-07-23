@@ -7,7 +7,7 @@
 da:
   js:
     discourse_subscriptions:
-      optional: Valgfrit
+      optional: Valgfri
       campaign:
         success_title: Succes!
       plans:
@@ -28,8 +28,70 @@ da:
             single: "Opdater"
           created_at: Oprettet
           cancel: annuller
+      subscribe:
+        cardholder_address:
+          city: By
+        countries:
+          AR: "Argentina"
+          AU: "Australien"
+          AT: "Østrig"
+          BR: "Brasilien"
+          CA: "Canada"
+          CL: "Chile"
+          CO: "Kolumbien"
+          CR: "Costa Rica"
+          HR: "Kroatien"
+          CZ: "Tjekkiet"
+          DK: "Danmark"
+          EE: "Estland"
+          FI: "Finland"
+          FR: "Frankrig"
+          GE: "Georgien"
+          DE: "Tyskland"
+          GR: "Grækenland"
+          GG: "Guernsey"
+          HK: "Hongkong"
+          HU: "Ungarn"
+          IS: "Island"
+          IN: "Indien"
+          IE: "Irland"
+          IM: "Isle of Man"
+          IT: "Italien"
+          JP: "Japan"
+          JE: "Jersey"
+          LV: "Letland"
+          LI: "Liechtenstein"
+          LT: "Litauen"
+          LU: "Luxembourg"
+          MY: "Malaysia"
+          MX: "Mexico"
+          MA: "Marokko"
+          NL: "Holland"
+          NZ: "New Zealand"
+          NG: "Nigeria"
+          "NO": "Norge"
+          PE: "Peru"
+          PH: "Filippinerne"
+          PL: "Polen"
+          PT: "Portugal"
+          RO: "Rumænien"
+          RU: "Den Russiske Føderation"
+          SA: "Saudi Arabien"
+          SG: "Singapore"
+          SK: "Slovakiet"
+          SI: "Slovenien"
+          ZA: "Sydafrika"
+          ES: "Spanien"
+          SE: "Sverige"
+          CH: "Schweiz"
+          TH: "Thailand"
+          TN: "Tunesien"
+          TR: "Tyrkiet"
+          UA: "Ukraine"
+          GB: "Storbritanien"
+          US: "USA"
       billing:
-        email: Email
+        email: E-mail
       admin:
         dashboard:
           title: Dashboard

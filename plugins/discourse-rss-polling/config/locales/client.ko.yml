@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ko:
+  js:
+    admin:
+      rss_polling:
+        author: 저자
+        feed_url: URL
+        discourse_category: 카테고리
+        discourse_tags: 태그

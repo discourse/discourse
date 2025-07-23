@@ -38,7 +38,7 @@ de:
     vote:
       already_voted: "Du kannst nur einmal pro Frage abstimmen."
       user_over_limit: "Du kannst nicht öfter abstimmen, als es deine Vertrauensstufe erlaubt."
-      one_vote_per_post: "Du kannst nur einmal für jeden Beitrag abstimmen."
+      one_vote_per_post: "Du kannst nur einmal pro Beitrag abstimmen."
     last_answer_lowercase: letzte Antwort
     answer_lowercase:
       one: Antwort

@@ -3116,6 +3116,8 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
+            filter:
+              content: "Filter"
             topics:
               content: "Topics"
             faq:
@@ -3151,6 +3153,9 @@ bs_BA:
       spreadsheet:
         show: "Show"
         about: "O nama"
+    filter:
+      description:
+        yesterday: "Yesterday"
     discovery:
       headings:
         categories: "Sve kategorije"
@@ -3271,6 +3276,8 @@ bs_BA:
           title: "Webhooks"
         embedding:
           title: "Embedding"
+      theme_site_settings:
+        default_value: "Uobičajen"
       search:
         title: "Pretraži"
         result_types:
@@ -3798,9 +3805,7 @@ bs_BA:
             maximum: "Potrebna je diskursna verzija %{version} ili ispod."
           up_to_date: "Tema je ažurna, posljednja provjerena:"
           add: "Dodaj"
-          theme_settings: "Postavke teme"
           no_settings: "Ova tema nema podešavanja."
-          theme_translations: "Theme Translations"
           empty: "Nema stavki"
           commits_behind:
             one: "Tema je %{count} početi iza sebe!"
@@ -3831,6 +3836,11 @@ bs_BA:
             title: "Odaberite osnovnu paletu boja"
             description: "Osnovna paleta:"
           title: "Colors"
+          edit: "Izmijeni"
+          filters:
+            all: "Sve"
+          active_badge:
+            text: "Active"
           about: "Izmijenite boje koje koriste vaše teme. Kreirajte novu paletu boja za početak."
           copy_name_prefix: "Copy of"
           undo: "Vrati nazad"
@@ -4216,7 +4226,6 @@ bs_BA:
         activity: Activity
         like_count: Likes Given / Received
         last_100_days: "in the last 100 days"
-        private_topics_count: Private Topics
         posts_read_count: Posts Read
         post_count: Posts Created
         topics_entered: Topics Viewed

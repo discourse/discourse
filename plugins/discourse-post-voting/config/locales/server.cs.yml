@@ -13,14 +13,19 @@ cs:
       reviewables:
         actions:
           agree_and_suspend:
-            title: "Zakázat uživatele"
+            title: "Pozastavit uživatele"
             description: "Schválit nahlášení a pozastavit uživatele."
           agree_and_silence:
-            title: "Ztišit uživatele"
+            title: "Ztišení uživatele"
             description: "Schválit nahlášení a ztišit uživatele."
           disagree:
             title: "Neschvaluji"
+          ignore:
+            title: "Nedělat nic"
+            description: "Ignorovat nahlášení odstraněním z fronty bez jakékoli akce."
       reviewable_score_types:
+        needs_review:
+          title: "Potřebuje revizi"
         notify_user:
           comment_pm_body: "%{link}\\n\\n%{comment}\n"
         notify_moderators:

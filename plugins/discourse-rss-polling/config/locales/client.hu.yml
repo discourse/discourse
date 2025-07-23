@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 hu:
+  js:
+    admin:
+      rss_polling:
+        author: Szerző
+        feed_url: Webcím
+        discourse_category: Kategória
+        discourse_tags: Címkék
