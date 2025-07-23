@@ -48,31 +48,6 @@ module DiscourseAi
             root: false,
           )
         end
-
-        plugin.add_to_serializer(:current_user, :user_allowed_ai_auto_image_captions) do
-          scope.user.in_any_groups?(SiteSetting.ai_auto_image_caption_allowed_groups_map)
-        end
-
-        UserUpdater::OPTION_ATTR.push(:auto_image_caption)
-        plugin.add_to_serializer(
-          :user_option,
-          :auto_image_caption,
-          include_condition: -> do
-            SiteSetting.ai_helper_enabled &&
-              SiteSetting.ai_helper_enabled_features.include?("image_caption") &&
-              scope.user.in_any_groups?(SiteSetting.ai_auto_image_caption_allowed_groups_map)
-          end,
-        ) { object.auto_image_caption }
-
-        plugin.add_to_serializer(
-          :current_user_option,
-          :auto_image_caption,
-          include_condition: -> do
-            SiteSetting.ai_helper_enabled &&
-              SiteSetting.ai_helper_enabled_features.include?("image_caption") &&
-              scope.user.in_any_groups?(SiteSetting.ai_auto_image_caption_allowed_groups_map)
-          end,
-        ) { object.auto_image_caption }
       end
     end
   end

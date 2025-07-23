@@ -13,22 +13,6 @@ export default class PreferencesAiController extends Controller {
   get booleanSettings() {
     return [
       {
-        key: "auto_image_caption",
-        label: "discourse_ai.ai_helper.image_caption.automatic_caption_setting",
-        settingName: "auto-image-caption",
-        checked: this.model.user_option.auto_image_caption,
-        isIncluded: (() => {
-          const aiHelperEnabledFeatures =
-            this.siteSettings.ai_helper_enabled_features.split("|");
-
-          return (
-            this.model?.user_allowed_ai_auto_image_captions &&
-            aiHelperEnabledFeatures.includes("image_caption") &&
-            this.siteSettings.ai_helper_enabled
-          );
-        })(),
-      },
-      {
         key: "ai_search_discoveries",
         label: "discourse_ai.discobot_discoveries.user_setting",
         settingName: "ai-search-discoveries",
