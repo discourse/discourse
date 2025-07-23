@@ -333,26 +333,6 @@
     }
   }
 
-  &__wrapper {
-    position: relative;
-
-    @include viewport.until(sm) {
-      &::after {
-        content: "";
-        position: absolute;
-        right: 0;
-        top: 3px; // avoiding overlapping with border-radius
-        bottom: 0;
-        width: var(--space-2);
-        background: linear-gradient(
-          to right,
-          transparent,
-          var(--secondary) 100%
-        );
-      }
-    }
-  }
-
   .composer-toggle-switch {
     padding: 0 0.5rem;
   }
