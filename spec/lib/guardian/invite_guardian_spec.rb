@@ -259,15 +259,15 @@ RSpec.describe InviteGuardian do
 
   describe "#can_bulk_invite_to_forum?" do
     it "returns true for admin users" do
-      expect(Guardian.new(admin).can_bulk_invite_to_forum?(admin)).to be_truthy
+      expect(Guardian.new(admin).can_bulk_invite_to_forum?).to be_truthy
     end
 
     it "returns false for moderators" do
-      expect(Guardian.new(moderator).can_bulk_invite_to_forum?(moderator)).to be_falsey
+      expect(Guardian.new(moderator).can_bulk_invite_to_forum?).to be_falsey
     end
 
     it "returns false for regular users" do
-      expect(Guardian.new(user).can_bulk_invite_to_forum?(user)).to be_falsey
+      expect(Guardian.new(user).can_bulk_invite_to_forum?).to be_falsey
     end
   end
 
@@ -275,15 +275,15 @@ RSpec.describe InviteGuardian do
 
   describe "#can_resend_all_invites?" do
     it "returns true for admin users" do
-      expect(Guardian.new(admin).can_resend_all_invites?(admin)).to be_truthy
+      expect(Guardian.new(admin).can_resend_all_invites?).to be_truthy
     end
 
     it "returns true for moderators" do
-      expect(Guardian.new(moderator).can_resend_all_invites?(moderator)).to be_truthy
+      expect(Guardian.new(moderator).can_resend_all_invites?).to be_truthy
     end
 
     it "returns false for regular users" do
-      expect(Guardian.new(user).can_resend_all_invites?(user)).to be_falsey
+      expect(Guardian.new(user).can_resend_all_invites?).to be_falsey
     end
   end
 
@@ -291,15 +291,15 @@ RSpec.describe InviteGuardian do
 
   describe "#can_destroy_all_invites?" do
     it "returns true for admin users" do
-      expect(Guardian.new(admin).can_destroy_all_invites?(admin)).to be_truthy
+      expect(Guardian.new(admin).can_destroy_all_invites?).to be_truthy
     end
 
     it "returns true for moderators" do
-      expect(Guardian.new(moderator).can_destroy_all_invites?(moderator)).to be_truthy
+      expect(Guardian.new(moderator).can_destroy_all_invites?).to be_truthy
     end
 
     it "returns false for regular users" do
-      expect(Guardian.new(user).can_destroy_all_invites?(user)).to be_falsey
+      expect(Guardian.new(user).can_destroy_all_invites?).to be_falsey
     end
   end
 end
