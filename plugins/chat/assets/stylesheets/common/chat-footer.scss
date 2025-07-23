@@ -1,7 +1,7 @@
 .c-footer {
   grid-area: footer;
   background: var(--secondary);
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;

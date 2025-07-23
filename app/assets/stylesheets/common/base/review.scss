@@ -46,14 +46,14 @@
       margin-bottom: var(--space-3);
 
       &:not(:last-child) {
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
       }
     }
   }
 
   &__flag-summary {
     border-radius: var(--d-border-radius);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     margin-bottom: var(--space-6);
   }
 
@@ -92,7 +92,7 @@
     row-gap: var(--space-3);
     align-items: start;
     padding: var(--space-5) var(--space-4);
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
   }
 
   &__meta-content {
@@ -286,7 +286,7 @@
     padding-bottom: var(--space-3);
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
     }
   }
 
@@ -364,7 +364,7 @@
     background: var(--secondary);
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
     }
 
     &__icon {
@@ -466,7 +466,7 @@
 // Reviewable Note Form Styles
 .reviewable-note-form {
   background-color: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
   padding: var(--space-4);
   margin-bottom: var(--space-4);

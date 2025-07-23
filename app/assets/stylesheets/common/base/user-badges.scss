@@ -6,7 +6,7 @@
 .user-badge {
   padding: 3px 8px;
   color: var(--primary);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   line-height: var(--line-height-large);
   display: inline-flex;
   align-items: center;
@@ -319,7 +319,7 @@
   .badge-set-title {
     flex: 0 1 auto;
     padding: 1.5em;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     .badge-title {
       height: 100%;

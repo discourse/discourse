@@ -144,7 +144,7 @@
     z-index: z("modal", "tooltip");
 
     &:focus-within {
-      outline: 1px solid var(--primary-low);
+      outline: 1px solid var(--content-border-color);
     }
 
     &::before {

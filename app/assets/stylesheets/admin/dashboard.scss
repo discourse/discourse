@@ -17,7 +17,7 @@
   .nav {
     display: flex;
     margin: 0 0 2em 0;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     font-size: var(--font-up-1);
     white-space: nowrap;
     flex-wrap: nowrap;
@@ -119,7 +119,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       padding-bottom: 0.5em;
 
       @media screen and (width <= 400px) {
@@ -218,7 +218,7 @@
 
   .misc {
     display: flex;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     .storage-stats,
     .last-dashboard-update {
@@ -232,7 +232,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
 
       .backups,
       .uploads {
@@ -257,7 +257,7 @@
         display: block;
         margin: 0 20px 20px 20px;
         padding: 20px 0 0 0;
-        border-top: 1px solid var(--primary-low);
+        border-top: 1px solid var(--content-border-color);
         border-left: none;
       }
     }
@@ -344,7 +344,7 @@
     display: grid;
     flex: 1 0 auto;
     grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-bottom: 0;
     font-weight: 700;
     text-align: right;
@@ -353,7 +353,7 @@
   }
 
   .admin-report .main {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     &:hover {
       background-color: var(--primary-very-low);
@@ -376,7 +376,7 @@
     padding: 0.5em 0.25em;
     align-items: flex-start;
     justify-content: flex-start;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
 
     .title {
       font-size: var(--font-0);
@@ -579,7 +579,7 @@
 
   .section-title {
     flex: 1 1 100%;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     padding-bottom: 0.5em;
   }
 
@@ -777,7 +777,7 @@
 .admin-new-feature-item {
   display: flex;
   align-items: flex-start;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 
   &:not(:first-child) {
     margin-top: var(--space-4);

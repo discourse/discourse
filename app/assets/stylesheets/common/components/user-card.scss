@@ -307,7 +307,7 @@
     .user-badge {
       @include ellipsis;
       background: var(--primary-very-low);
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       color: var(--primary);
     }
 

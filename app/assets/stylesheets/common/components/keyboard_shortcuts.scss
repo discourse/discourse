@@ -37,7 +37,7 @@
 }
 
 .shortcut-category {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
 
   h2 {
     font-size: var(--font-0);
@@ -83,7 +83,7 @@
       flex-wrap: nowrap;
       flex-direction: row-reverse;
       justify-content: space-between;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       padding: 0.25rem 1rem;
     }
 

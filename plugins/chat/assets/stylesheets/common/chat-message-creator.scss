@@ -98,7 +98,7 @@
       display: flex;
       flex-grow: 1;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
     }
 
     &__input {
@@ -121,7 +121,7 @@
     &-container {
       display: flex;
       flex-grow: 1;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
     }
   }
 
@@ -175,7 +175,7 @@
     flex-grow: 1;
     justify-content: flex-end;
     padding-top: 1rem;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
 
     &-container {
       display: flex;

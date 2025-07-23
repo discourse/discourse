@@ -159,7 +159,7 @@ pre.codeblock-buttons:hover {
 }
 
 .embedded-posts {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
 
   h1,
   h2,
@@ -191,7 +191,7 @@ pre.codeblock-buttons:hover {
     position: absolute;
     color: var(--primary-medium);
     background: var(--secondary);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
 
