@@ -211,6 +211,8 @@ GEM
     hashie (5.0.0)
     highline (3.1.2)
       reline
+    hiredis-client (0.25.1)
+      redis-client (= 0.25.1)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
     i18n (1.14.7)
@@ -764,6 +766,7 @@ DEPENDENCIES
   fastimage
   hashery
   highline
+  hiredis-client
   htmlentities
   http_accept_language
   image_optim
@@ -973,6 +976,7 @@ CHECKSUMS
   hashery (2.1.2) sha256=d239cc2310401903f6b79d458c2bbef5bf74c46f3f974ae9c1061fb74a404862
   hashie (5.0.0) sha256=9d6c4e51f2a36d4616cbc8a322d619a162d8f42815a792596039fc95595603da
   highline (3.1.2) sha256=67cbd34d19f6ef11a7ee1d82ffab5d36dfd5b3be861f450fc1716c7125f4bb4a
+  hiredis-client (0.25.1) sha256=7078b6df1db6a23bb54681ed98f197dfa98e042e51e5927007adb523e576cb4a
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
   i18n (1.14.7) sha256=ceba573f8138ff2c0915427f1fc5bdf4aa3ab8ae88c8ce255eb3ecf0a11a5d0f

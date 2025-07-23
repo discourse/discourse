@@ -16,6 +16,8 @@ gem "activerecord", "~> 8.0.0"
 gem "activesupport", "~> 8.0.0"
 gem "railties", "~> 8.0.0"
 
+gem "hiredis-client"
+
 gem "propshaft"
 
 gem "json"
