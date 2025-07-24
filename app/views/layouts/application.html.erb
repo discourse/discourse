@@ -33,7 +33,11 @@
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request, include_admin_asset: staff?).each do |file| %>
-      <%= preload_script file %>
+      <%if file.include?("chat") %>
+        <link rel="modulepreload" href="/plugin-javascripts/chat" nonce="<%= csp_nonce_placeholder %>" data-theme-id="0">
+      <% else %>
+        <%= preload_script file %>
+      <% end %>
     <%- end %>
 
     <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
