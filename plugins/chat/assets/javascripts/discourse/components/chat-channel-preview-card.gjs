@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
-import ChannelTitle from "./channel-title";
+import ChannelTitle from "./channel-title/index";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
 export default class ChatChannelPreviewCard extends Component {
