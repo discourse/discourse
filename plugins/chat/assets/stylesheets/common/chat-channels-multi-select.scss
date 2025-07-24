@@ -1,0 +1,9 @@
+.chat-channels-multi-select__loading {
+  justify-content: flex-start;
+  width: 300px;
+  border: 1px solid var(--primary-medium);
+
+  .d-icon {
+    animation: rotate-forever 1s infinite linear;
+  }
+}
