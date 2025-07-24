@@ -11,7 +11,8 @@ module Jobs
       Upload
         .by_users
         .where(
-          "retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours",
+          "retain_hours IS NULL OR created_at < DATE(:now) - interval '1 hour' * retain_hours",
+          now: Time.current,
         )
         .where("created_at < ?", grace_period.hour.ago)
         .where(url: "")
@@ -37,7 +38,8 @@ module Jobs
       result =
         result
           .where(
-            "uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours",
+            "uploads.retain_hours IS NULL OR uploads.created_at < DATE(:now) - interval '1 hour' * uploads.retain_hours",
+            now: Time.current,
           )
           .where("uploads.created_at < ?", grace_period.hour.ago)
           .where(
