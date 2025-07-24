@@ -235,7 +235,7 @@ acceptance("User Card - Restricted reason HTML", function (needs) {
       .dom(".user-card .card-row .silence-reason a")
       .hasProperty(
         "href",
-        "https://example.com/admin/plugins/disocurse-user-ai/ai-spam",
+        "https://example.com/admin/plugins/discourse-user-ai/ai-spam",
         "links are allowed"
       );
   });
