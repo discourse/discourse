@@ -49,7 +49,7 @@ export default class PostLanguageSelector extends Component {
               data-menu-option-id={{locale.value}}
             >
               <DButton
-                @translatedLabel={{locale.name}}
+                @label={{locale.name}}
                 @title={{locale.value}}
                 @action={{fn this.selectPostLanguage locale.value}}
               />

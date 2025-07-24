@@ -1,6 +1,7 @@
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
+import i18n from "discourse-i18n";
 
 export function createSiteSettingsFromPreloaded(
   siteSettings,
@@ -17,6 +18,20 @@ export function createSiteSettingsFromPreloaded(
       );
     }
     settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
+  }
+
+  if (settings.available_locales) {
+    const locales = JSON.parse(settings.available_locales);
+    const localizedLocales = locales.map(({ native_name, value, name }) => {
+      const localized_name = i18n.t(name);
+      const displayName =
+        localized_name && localized_name !== native_name
+          ? `${localized_name} (${native_name})`
+          : native_name;
+      return { value, name: displayName };
+    });
+
+    settings.available_locales = JSON.stringify(localizedLocales);
   }
 
   settings.groupSettingArray = (groupSetting) => {

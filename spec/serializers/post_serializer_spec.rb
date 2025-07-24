@@ -788,7 +788,7 @@ RSpec.describe PostSerializer do
       SiteSetting.content_localization_enabled = true
       post.update!(locale: "ja")
 
-      expect(json[:language]).to eq("日本語")
+      expect(json[:language]).to eq("ja")
     end
 
     it "defaults to locale if language does not exist" do
