@@ -44,10 +44,34 @@ async function loadThemeFromModulePreload(link) {
   }
 }
 
+async function loadPluginFromModulePreload(link) {
+  const pluginName = link.dataset.pluginName;
+  try {
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/plugins/${pluginName}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      error
+    );
+    //fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
+  }
+}
+
 export async function loadThemes() {
   const promises = [
-    ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
-  ].map(loadThemeFromModulePreload);
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+    ].map(loadThemeFromModulePreload),
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
+    ].map(loadPluginFromModulePreload),
+  ];
+
   await Promise.all(promises);
 }
 

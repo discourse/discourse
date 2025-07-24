@@ -1,7 +1,7 @@
 import MagicString from "magic-string";
 import { basename, dirname, join } from "path";
 
-export default function discourseColocation({ themeBase }) {
+export default function discourseColocation({ basePath }) {
   return {
     name: "discourse-colocation",
     async resolveId(source, context) {
@@ -12,8 +12,8 @@ export default function discourseColocation({ themeBase }) {
 
       if (
         !(
-          resolvedSource.startsWith(`${themeBase}discourse/components/`) ||
-          resolvedSource.startsWith(`${themeBase}admin/components/`)
+          resolvedSource.startsWith(`${basePath}discourse/components/`) ||
+          resolvedSource.startsWith(`${basePath}admin/components/`)
         )
       ) {
         return;
@@ -53,8 +53,8 @@ export default function discourseColocation({ themeBase }) {
     transform: {
       async handler(input, id) {
         if (
-          !id.startsWith(`${themeBase}discourse/components/`) &&
-          !id.startsWith(`${themeBase}admin/components/`)
+          !id.startsWith(`${basePath}discourse/components/`) &&
+          !id.startsWith(`${basePath}admin/components/`)
         ) {
           return;
         }
