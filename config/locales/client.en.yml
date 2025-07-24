@@ -6976,6 +6976,7 @@ en:
             title: "Select base color palette"
             description: "Base palette:"
           preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so palette changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
+          dark_mode_warning: "You're currently using dark mode. When setting an active color palette the colors will be applied to the light mode of the theme. If you want to change the default dark mode colors, please edit the <a href='%{link}'>dark mode site setting</a>."
           title: "Colors"
           edit: "Edit"
           set_default: "Set as active on %{theme}"
