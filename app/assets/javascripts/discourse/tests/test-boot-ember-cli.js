@@ -2,18 +2,12 @@ import loadEmberExam from "ember-exam/test-support/load";
 import { setupEmberOnerrorValidation, start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
+import { loadThemes } from "discourse/app";
 import setupTests from "discourse/tests/setup-tests";
 import config from "../config/environment";
 
 document.addEventListener("discourse-init", async () => {
-  for (const link of document.querySelectorAll("link[rel=modulepreload]")) {
-    const themeId = link.dataset.themeId;
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
-    for (const [key, mod] of Object.entries(compatModules)) {
-      define(`discourse/theme-${themeId}/${key}`, () => mod);
-    }
-  }
+  await loadThemes();
 
   if (!window.EmberENV.TESTS_FILE_LOADED) {
     throw new Error(
