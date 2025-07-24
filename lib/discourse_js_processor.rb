@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require "mini_racer"
 
 class DiscourseJsProcessor
   class TranspileError < StandardError
