@@ -553,7 +553,7 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" />
+          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}" />
         HTML
       end
     when :translations

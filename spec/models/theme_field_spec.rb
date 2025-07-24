@@ -84,16 +84,20 @@ RSpec.describe ThemeField do
 
     baked_doc = Nokogiri::HTML5.fragment(theme_field.value_baked)
 
-    extracted_scripts = baked_doc.css("script[src^='/theme-javascripts/']")
-    expect(extracted_scripts.length).to eq(4)
+    simple_extracted_scripts = baked_doc.css("script[src^='/theme-javascripts/']")
+    expect(simple_extracted_scripts.length).to eq(3)
+
+    extracted_module_preloads =
+      baked_doc.css("link[rel=modulepreload][href^='/theme-javascripts/']")
+    expect(extracted_module_preloads.length).to eq(1)
 
     expect(theme_field.javascript_cache.content).to include("inline discourse plugin")
 
     raw_js_cache_contents = theme_field.raw_javascript_caches.map(&:content)
     expect(raw_js_cache_contents).to contain_exactly(
-      'var b = "inline raw script";',
-      'var c = "text/javascript";',
-      'var d = "application/javascript";',
+      'console.log("inline raw script");',
+      'console.log("text/javascript");',
+      'console.log("application/javascript");',
     )
 
     expect(baked_doc.css("script[type='text/template']").length).to eq(1)
@@ -109,7 +113,7 @@ HTML
     field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     field.ensure_baked!
     expect(field.value_baked).to include(
-      "<link rel=\"modulepreload\" href=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\">",
+      "<link rel=\"modulepreload\" href=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\">",
     )
     expect(field.javascript_cache.content).to include("[THEME -1 'Foundation'] Compile error")
 
@@ -158,7 +162,7 @@ HTML
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include(
-      "<link rel=\"modulepreload\" href=\"#{javascript_cache.url}\" data-theme-id=\"-1\">",
+      "<link rel=\"modulepreload\" href=\"#{javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\">",
     )
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
