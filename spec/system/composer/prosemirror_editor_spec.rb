@@ -483,7 +483,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("h1", text: "With text")
 
       composer.send_keys(:home)
-      delay
+      wait_for_timeout
       composer.send_keys(:backspace)
 
       expect(rich).to have_css("p", text: "With text")
@@ -493,7 +493,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("```code block")
       composer.send_keys(:home)
-      delay
+      wait_for_timeout
       composer.send_keys(:backspace)
 
       expect(rich).to have_css("p", text: "code block")

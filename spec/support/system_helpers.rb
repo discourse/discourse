@@ -354,7 +354,7 @@ module SystemHelpers
 
   # should be used only on very rare occasion when you need to wait for something
   # that is not visually changing on the page
-  def delay(ms = 100)
+  def wait_for_timeout(ms = 100)
     page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(ms) }
   end
 end
