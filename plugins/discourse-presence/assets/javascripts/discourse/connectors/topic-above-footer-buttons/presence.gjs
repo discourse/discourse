@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
+import htmlSafe from "discourse/helpers/html-safe";
 import { translateSize } from "discourse/lib/avatar-utils";
 import TopicPresenceDisplay from "discourse/plugins/discourse-presence/discourse/components/topic-presence-display";
 
@@ -11,7 +13,9 @@ export default class Presence extends Component {
 
   <template>
     <div
-      style="--avatar-min-height: {{this.avatarDimensions}}px"
+      style={{htmlSafe
+        (concat "--avatar-min-height: " this.avatarDimensions "px")
+      }}
       class="topic-above-footer-buttons-outlet presence"
     >
       <TopicPresenceDisplay
