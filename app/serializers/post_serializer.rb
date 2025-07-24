@@ -688,7 +688,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def language
-    LocaleSiteSetting.get_language_name(object.locale) || locale
+    locale
   end
 
   def include_language?
