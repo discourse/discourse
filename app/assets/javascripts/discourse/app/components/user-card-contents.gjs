@@ -33,7 +33,7 @@ import { durationTiny } from "discourse/lib/formatter";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { emojiUnescape } from "discourse/lib/text";
+import { emojiUnescape, sanitize } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -237,6 +237,14 @@ export default class UserCardContents extends CardContentsBase {
   @onEvent("didDestroyElement")
   _destroyed() {
     this.appEvents.off("dom:clean", this, this.cleanUp);
+  }
+
+  get suspendReasonHtml() {
+    return sanitize(this.user.suspend_reason);
+  }
+
+  get silenceReasonHtml() {
+    return sanitize(this.user.silence_reason);
   }
 
   async _showCallback(username) {
@@ -571,9 +579,9 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="suspension-reason-title">{{i18n
                         "user.suspended_reason"
                       }}</span>
-                    <span
-                      class="suspension-reason-description"
-                    >{{this.user.suspend_reason}}</span>
+                    <span class="suspension-reason-description">{{htmlSafe
+                        this.suspendReasonHtml
+                      }}</span>
                   </div>
                 </div>
               {{/if}}
@@ -594,9 +602,9 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="silence-reason-title">{{i18n
                         "user.silenced_reason"
                       }}</span>
-                    <span
-                      class="silence-reason-description"
-                    >{{this.user.silence_reason}}</span>
+                    <span class="silence-reason-description">{{htmlSafe
+                        this.silenceReasonHtml
+                      }}</span>
                   </div>
                 </div>
               {{/if}}

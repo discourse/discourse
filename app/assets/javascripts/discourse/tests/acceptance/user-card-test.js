@@ -207,3 +207,45 @@ acceptance("User Card - Restricted user", function (needs) {
       .hasText(i18n("user.suspended_notice", { date: longDate(tomorrow) }));
   });
 });
+
+acceptance("User Card - Restricted reason HTML", function (needs) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  needs.user();
+  needs.pretender((server, helper) => {
+    const cardResponse = cloneJSON(userFixtures["/u/eviltrout/card.json"]);
+    cardResponse.user.silence_reason = `User silenced automatically by <a href="https://example.com/admin/plugins/disocurse-user-ai/ai-spam">Discourse AI</a>`;
+    cardResponse.user.silenced_till = tomorrow.toISOString();
+    cardResponse.user.suspend_reason = `test <script>alert('XSS Test')</script>`;
+    cardResponse.user.suspended_till = tomorrow.toISOString();
+    server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
+  });
+
+  test("it correctly shows html", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click('a[data-user-card="eviltrout"]');
+
+    assert
+      .dom(".user-card .card-row .silence-reason")
+      .hasText(
+        i18n("user.silenced_reason") +
+          "User silenced automatically by Discourse AI"
+      );
+
+    assert
+      .dom(".user-card .card-row .silence-reason a")
+      .hasProperty(
+        "href",
+        "https://example.com/admin/plugins/disocurse-user-ai/ai-spam",
+        "links are allowed"
+      );
+
+    assert
+      .dom(".user-card .card-row .suspension-reason")
+      .hasText(
+        i18n("user.suspended_reason") + "test",
+        "XSS should be sanitized"
+      );
+  });
+});
