@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "Managing Posts solved status" do
-  let(:topic) { Fabricate(:topic) }
+  let(:topic) { Fabricate(:topic_with_op) }
   fab!(:user) { Fabricate(:trust_level_4) }
   let(:p1) { Fabricate(:post, topic: topic) }
 
@@ -238,7 +238,7 @@ RSpec.describe "Managing Posts solved status" do
     it "gives priority to category's solved_topics_auto_close_hours setting" do
       freeze_time
       custom_auto_close_category = Fabricate(:category)
-      topic_2 = Fabricate(:topic, category: custom_auto_close_category)
+      topic_2 = Fabricate(:topic_with_op, category: custom_auto_close_category)
       post_2 = Fabricate(:post, topic: topic_2)
       custom_auto_close_category.custom_fields["solved_topics_auto_close_hours"] = 4
       custom_auto_close_category.save_custom_fields
@@ -444,16 +444,16 @@ RSpec.describe "Managing Posts solved status" do
       end
 
       it "does not update the assignee when a post is accepted" do
-        user_1 = Fabricate(:user)
+        user = Fabricate(:user)
         user_2 = Fabricate(:user)
         user_3 = Fabricate(:user)
-        group.add(user_1)
+        group.add(user)
         group.add(user_2)
         group.add(user_3)
 
-        topic_question = Fabricate(:topic, user: user_1)
+        topic_question = Fabricate(:topic, user: user)
 
-        Fabricate(:post, topic: topic_question, user: user_1)
+        Fabricate(:post, topic: topic_question, user: user)
         Fabricate(:post, topic: topic_question, user: user_2)
 
         result = Assigner.new(topic_question, user_2).assign(user_2)
@@ -462,7 +462,7 @@ RSpec.describe "Managing Posts solved status" do
         post_response = Fabricate(:post, topic: topic_question, user: user_3)
         Assigner.new(post_response, user_3).assign(user_3)
 
-        DiscourseSolved.accept_answer!(post_response, user_1)
+        DiscourseSolved.accept_answer!(post_response, user)
 
         expect(topic_question.assignment.assigned_to_id).to eq(user_2.id)
         expect(post_response.assignment.assigned_to_id).to eq(user_3.id)
@@ -584,6 +584,84 @@ RSpec.describe "Managing Posts solved status" do
           guardian: user.guardian,
         ).map(&:post_id),
       ).to contain_exactly p3.id
+    end
+  end
+
+  describe "publishing messages" do
+    fab!(:private_user, :user)
+    fab!(:admin)
+
+    before do
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_posts = true
+      SiteSetting.show_who_marked_solved = true
+    end
+
+    it "publishes MessageBus messages" do
+      topic = Fabricate(:topic, user:)
+      reply = Fabricate(:post, topic:, user:, post_number: 2)
+
+      messages =
+        MessageBus.track_publish("/topic/#{reply.topic.id}") do
+          DiscourseSolved.accept_answer!(reply, admin)
+          DiscourseSolved.unaccept_answer!(reply)
+        end
+      expect(messages.count).to eq(2)
+      expect(messages.map(&:data).map { |m| m[:type] }.uniq).to match_array(
+        %i[accepted_solution unaccepted_solution],
+      )
+
+      accepted_message = messages.find { |m| m.data[:type] == :accepted_solution }
+      expect(accepted_message.data[:accepted_answer][:post_number]).to eq(2)
+      expect(accepted_message.data[:accepted_answer][:username]).to eq(user.username)
+      expect(accepted_message.data[:accepted_answer][:name]).to eq(user.name)
+      expect(accepted_message.data[:accepted_answer][:excerpt]).to eq(reply.excerpt)
+      expect(accepted_message.data[:accepted_answer][:accepter_name]).to eq(admin.name)
+      expect(accepted_message.data[:accepted_answer][:accepter_username]).to eq(admin.username)
+
+      unaccepted_message = messages.find { |m| m.data[:type] == :unaccepted_solution }
+      expect(unaccepted_message.data[:accepted_answer]).to eq(nil)
+    end
+
+    it "publishes MessageBus messages securely for PMs" do
+      private_topic = Fabricate(:private_message_topic, user: private_user, recipient: admin)
+      private_post = Fabricate(:post, topic: private_topic)
+      reply = Fabricate(:post, topic: private_topic, user:, post_number: 2)
+
+      messages =
+        MessageBus.track_publish("/topic/#{private_post.topic.id}") do
+          DiscourseSolved.accept_answer!(reply, admin)
+        end
+
+      expect(messages.count).to eq(1)
+
+      authorized_user_messages = messages.find { |m| m.user_ids.include?(private_user.id) }
+      expect(authorized_user_messages.data[:type]).to eq(:accepted_solution)
+
+      unauthorized_user_messages = messages.find { |m| m.user_ids.include?(user.id) }
+      expect(unauthorized_user_messages).to eq(nil)
+    end
+
+    it "publishes MessageBus messages securely for secure categories" do
+      group = Fabricate(:group).tap { |g| g.add(private_user) }
+      other_group = Fabricate(:group).tap { |g| g.add(user) }
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_post = Fabricate(:post, topic: private_topic)
+      private_reply = Fabricate(:post, topic: private_topic, post_number: 2)
+
+      messages =
+        MessageBus.track_publish("/topic/#{private_post.topic.id}") do
+          DiscourseSolved.accept_answer!(private_reply, admin)
+        end
+
+      expect(messages.count).to eq(1)
+
+      authorized_user_messages = messages.find { |m| m.group_ids.include?(group.id) }
+      expect(authorized_user_messages.data[:type]).to eq(:accepted_solution)
+
+      unauthorized_user_messages = messages.find { |m| m.group_ids.include?(other_group.id) }
+      expect(unauthorized_user_messages).to eq(nil)
     end
   end
 end

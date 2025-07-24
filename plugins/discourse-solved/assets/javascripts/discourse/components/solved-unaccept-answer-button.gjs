@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
@@ -10,43 +12,11 @@ import { formatUsername } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
-function unacceptPost(post) {
-  if (!post.can_unaccept_answer) {
-    return;
-  }
-  const topic = post.topic;
-
-  post.setProperties({
-    can_accept_answer: true,
-    can_unaccept_answer: false,
-    accepted_answer: false,
-  });
-
-  topic.set("accepted_answer", undefined);
-
-  ajax("/solution/unaccept", {
-    type: "POST",
-    data: { id: post.id },
-  }).catch(popupAjaxError);
-}
-
 export default class SolvedUnacceptAnswerButton extends Component {
   @service appEvents;
   @service siteSettings;
 
-  @action
-  unacceptAnswer() {
-    const post = this.args.post;
-
-    unacceptPost(post);
-
-    this.appEvents.trigger("discourse-solved:solution-toggled", post);
-
-    post.get("topic.postStream.posts").forEach((p) => {
-      p.set("topic_accepted_answer", false);
-      this.appEvents.trigger("post-stream:refresh", { id: p.id });
-    });
-  }
+  @tracked saving = false;
 
   get solvedBy() {
     if (!this.siteSettings.show_who_marked_solved) {
@@ -67,9 +37,30 @@ export default class SolvedUnacceptAnswerButton extends Component {
     }
   }
 
+  @action
+  async unacceptAnswer() {
+    const post = this.args.post;
+
+    this.saving = true;
+    try {
+      await unacceptPost(post);
+
+      this.appEvents.trigger("discourse-solved:solution-toggled", post);
+
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
+      post.get("topic.postStream.posts").forEach((p) => {
+        this.appEvents.trigger("post-stream:refresh", { id: p.id });
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.saving = false;
+    }
+  }
+
   <template>
     <span class="extra-buttons">
-      {{#if @post.can_unaccept_answer}}
+      {{#if (and @post.can_accept_answer @post.accepted_answer)}}
         {{#if this.solvedBy}}
           <DTooltip @identifier="post-action-menu__solved-accepted-tooltip">
             <:trigger>
@@ -91,6 +82,7 @@ export default class SolvedUnacceptAnswerButton extends Component {
             class="post-action-menu__solved-accepted accepted fade-out"
             ...attributes
             @action={{this.unacceptAnswer}}
+            @disabled={{this.saving}}
             @icon="square-check"
             @label="solved.solution"
             @title="solved.unaccept_answer"
@@ -109,4 +101,23 @@ export default class SolvedUnacceptAnswerButton extends Component {
       {{/if}}
     </span>
   </template>
+}
+
+async function unacceptPost(post) {
+  if (!post.can_accept_answer || !post.accepted_answer) {
+    return;
+  }
+
+  const topic = post.topic;
+
+  try {
+    await ajax("/solution/unaccept", {
+      type: "POST",
+      data: { id: post.id },
+    });
+
+    topic.setAcceptedSolution(undefined);
+  } catch (e) {
+    popupAjaxError(e);
+  }
 }

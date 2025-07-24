@@ -2269,6 +2269,19 @@ files:
     default: true
     client: true
     hidden: true
+  video_conversion_enabled:
+    default: false
+    validator: "VideoConversionEnabledValidator"
+  video_conversion_service:
+    type: enum
+    default: "aws_mediaconvert"
+    choices:
+      - "aws_mediaconvert"
+  mediaconvert_role_arn:
+    default: ""
+  mediaconvert_endpoint:
+    default: ""
+    hidden: true
 
 trust:
   default_trust_level:
@@ -4070,6 +4083,9 @@ experimental:
       - auto
       - enabled
     default: "auto"
+  deactivate_widgets_rendering:
+    client: true
+    default: false
   enable_rich_text_paste:
     client: true
     default: true

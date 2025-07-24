@@ -10,7 +10,7 @@ import DPageSubheader from "discourse/components/d-page-subheader";
 import DStatTiles from "discourse/components/d-stat-tiles";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/components/d-tooltip";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -218,7 +218,7 @@ export default class AiSpam extends Component {
         <div class="ai-spam__errors">
           {{#each this.errors as |e|}}
             <div class="alert alert-error">
-              {{dIcon "triangle-exclamation"}}
+              {{icon "triangle-exclamation"}}
               <p>{{e.message}}</p>
               <DButton
                 @action={{e.button.action}}

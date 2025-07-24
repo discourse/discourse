@@ -2,7 +2,7 @@
 
 include SystemHelpers
 
-RSpec.describe "AI Composer Proofreading Features", type: :system, js: true do
+RSpec.describe "AI Composer Proofreading Features", type: :system do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   before do

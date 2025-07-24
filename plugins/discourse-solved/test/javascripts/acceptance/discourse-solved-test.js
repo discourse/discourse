@@ -30,8 +30,9 @@ import { postStreamWithAcceptedAnswerExcerpt } from "../helpers/discourse-solved
         assert.dom(".quote blockquote").hasText("this is an excerpt");
 
         await visit("/t/without-excerpt/12");
-        assert.dom(".quote blockquote").doesNotExist();
-        assert.dom(".quote .title.title-only").exists();
+
+        assert.dom(".quote blockquote").hasNoText();
+        assert.dom(".quote.title-only .title").exists();
       });
 
       test("Full page search displays solved status", async function (assert) {

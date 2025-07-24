@@ -8,8 +8,8 @@ import AiPostHelperMenu from "../../components/ai-post-helper-menu";
 import { showPostAIHelper } from "../../lib/show-ai-helper";
 
 export default class AiPostHelperTrigger extends Component {
-  static shouldRender(outletArgs, helper) {
-    return showPostAIHelper(outletArgs, helper);
+  static shouldRender(args, context) {
+    return showPostAIHelper(args, context);
   }
 
   @service menu;

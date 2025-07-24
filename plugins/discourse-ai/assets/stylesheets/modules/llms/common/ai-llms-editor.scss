@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .ai-llms-list-editor {
   &__header {
     display: flex;
@@ -52,7 +54,7 @@
       background: inherit;
     }
 
-    @include breakpoint("tablet", min-width) {
+    @include viewport.from(md) {
       th,
       td {
         &:first-child {
@@ -84,7 +86,7 @@
     gap: 0;
     margin-bottom: 2em;
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       margin-bottom: 3em;
     }
   }
@@ -95,7 +97,7 @@
     line-height: var(--line-height-large);
     align-self: start;
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       max-width: 17em;
     }
   }
@@ -135,7 +137,7 @@
   font-size: var(--font-down-1);
 }
 
-@include breakpoint("tablet") {
+@include viewport.until(md) {
   .ai-llm-list__description {
     max-width: 80%;
   }

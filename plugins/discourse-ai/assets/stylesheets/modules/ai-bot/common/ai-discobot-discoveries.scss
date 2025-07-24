@@ -30,7 +30,7 @@
         content: "";
         position: absolute;
         display: block;
-        background: linear-gradient(rgba(255, 255, 255, 0), var(--secondary));
+        background: linear-gradient(rgb(255, 255, 255, 0), var(--secondary));
         height: 50%;
         width: 100%;
         bottom: 0;
@@ -118,7 +118,7 @@
   padding-top: 0.5em;
 }
 
-@include breakpoint("medium", min-width) {
+@include viewport.from(lg) {
   .search-menu .menu-panel:has(.ai-search-discoveries__discoveries-title) {
     width: 80vw;
     max-width: 900px;

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Managing Embeddings configurations", type: :system, js: true do
+RSpec.describe "Managing Embeddings configurations", type: :system do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }

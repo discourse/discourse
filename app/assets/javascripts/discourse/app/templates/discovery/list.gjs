@@ -12,6 +12,7 @@ export default RouteTemplate(
       @model={{@controller.model}}
       @createTopicDisabled={{@controller.createTopicDisabled}}
       @toggleTagInfo={{@controller.toggleTagInfo}}
+      @listClass="--topic-list"
     >
       <:navigation>
         <Navigation

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "AI Spam Configuration", type: :system, js: true do
+RSpec.describe "AI Spam Configuration", type: :system do
   fab!(:admin)
   let(:llm_model) { Fabricate(:llm_model) }
 

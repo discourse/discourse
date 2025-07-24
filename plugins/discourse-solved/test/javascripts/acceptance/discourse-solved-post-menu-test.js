@@ -15,7 +15,11 @@ acceptance(
     });
 
     needs.pretender((server, helper) => {
-      server.post("/solution/accept", () => helper.response({ success: "OK" }));
+      server.post("/solution/accept", () =>
+        helper.response(
+          postStreamWithAcceptedAnswerExcerpt(null).accepted_answer
+        )
+      );
       server.post("/solution/unaccept", () =>
         helper.response({ success: "OK" })
       );

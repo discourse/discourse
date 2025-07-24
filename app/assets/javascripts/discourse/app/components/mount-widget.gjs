@@ -1,12 +1,17 @@
 import ArrayProxy from "@ember/array/proxy";
 import Component from "@ember/component";
 import { cancel, scheduleOnce } from "@ember/runloop";
+import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { diff, patch } from "virtual-dom";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { getRegister } from "discourse/lib/get-owner";
 import { WidgetClickHook } from "discourse/widgets/hooks";
-import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
+import {
+  queryRegistry,
+  traverseCustomWidgets,
+  warnWidgetsDeprecation,
+} from "discourse/widgets/widget";
 
 let _cleanCallbacks = {};
 
@@ -34,6 +39,8 @@ export function resetWidgetCleanCallbacks() {
 }
 
 export default class MountWidget extends Component {
+  @service siteSettings;
+
   dirtyKeys = null;
   _tree = null;
   _rootNode = null;
@@ -46,6 +53,18 @@ export default class MountWidget extends Component {
   init() {
     super.init(...arguments);
     const name = this.widget;
+
+    if (this.isDeactivated) {
+      warnWidgetsDeprecation(
+        `Widgets are deactivated and won't be rendered. Your site may not work properly. Affected widget: ${name}.`,
+        true
+      );
+      return;
+    } else {
+      warnWidgetsDeprecation(
+        `The \`MountWidget\` component is deprecated and will soon stop working. Use Glimmer components instead. Affected widget: ${name}.`
+      );
+    }
 
     if (name === "post-cooked") {
       throw [
@@ -83,8 +102,16 @@ export default class MountWidget extends Component {
     this.dirtyKeys = new DirtyKeys(name);
   }
 
+  get isDeactivated() {
+    return this.siteSettings.deactivate_widgets_rendering;
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
+    if (this.isDeactivated) {
+      return;
+    }
+
     WidgetClickHook.setupDocumentCallback();
 
     this._rootNode = document.createElement("div");
@@ -93,6 +120,10 @@ export default class MountWidget extends Component {
   }
 
   willClearRender() {
+    if (this.isDeactivated) {
+      return;
+    }
+
     super.willClearRender(...arguments);
     const callbacks = _cleanCallbacks[this.widget];
     if (callbacks) {
@@ -109,6 +140,10 @@ export default class MountWidget extends Component {
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._dispatched.forEach((evt) => {
       const [eventName, caller] = evt;
       this.appEvents.off(eventName, this, caller);
@@ -121,6 +156,10 @@ export default class MountWidget extends Component {
   afterPatch() {}
 
   eventDispatched(eventName, key, refreshArg) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     key = typeof key === "function" ? key(refreshArg) : key;
     const onRefresh = camelize(eventName.replace(/:/, "-"));
     this.dirtyKeys.keyDirty(key, { onRefresh, refreshArg });
@@ -128,6 +167,10 @@ export default class MountWidget extends Component {
   }
 
   dispatch(eventName, key) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._childEvents.push(eventName);
 
     const caller = (refreshArg) =>
@@ -137,6 +180,10 @@ export default class MountWidget extends Component {
   }
 
   queueRerender(callback) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     if (callback && !this._renderCallback) {
       this._renderCallback = callback;
     }
@@ -147,6 +194,10 @@ export default class MountWidget extends Component {
   buildArgs() {}
 
   rerenderWidget() {
+    if (this.isDeactivated) {
+      return;
+    }
+
     cancel(this._timeout);
 
     if (this._rootNode) {
@@ -191,26 +242,40 @@ export default class MountWidget extends Component {
   }
 
   mountChildComponent(info) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._childComponents.pushObject(info);
   }
 
   unmountChildComponent(info) {
+    if (this.isDeactivated) {
+      return;
+    }
+
     this._childComponents.removeObject(info);
   }
 
   didUpdateAttrs() {
     super.didUpdateAttrs(...arguments);
+    if (this.isDeactivated) {
+      return;
+    }
+
     this.queueRerender();
   }
 
   <template>
-    {{#each this._childComponents as |info|}}
-      {{#in-element info.element insertBefore=null}}
-        <info.component
-          @data={{info.data}}
-          @setWrapperElementAttrs={{info.setWrapperElementAttrs}}
-        />
-      {{/in-element}}
-    {{/each}}
+    {{#unless this.isDeactivated}}
+      {{#each this._childComponents as |info|}}
+        {{#in-element info.element insertBefore=null}}
+          <info.component
+            @data={{info.data}}
+            @setWrapperElementAttrs={{info.setWrapperElementAttrs}}
+          />
+        {{/in-element}}
+      {{/each}}
+    {{/unless}}
   </template>
 }

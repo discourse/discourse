@@ -108,7 +108,7 @@ HTML
 
     field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     field.ensure_baked!
-    expect(field.error).not_to eq(nil)
+    expect(field.error).to eq(nil)
     expect(field.value_baked).to include(
       "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
@@ -300,9 +300,10 @@ HTML
       "discourse/controllers/discovery.js",
       "discourse/templates/discovery.js",
       "discourse/templates/other_discovery.hbr",
+      "settings.js",
     )
     expect(map["sourceRoot"]).to eq("theme-#{theme.id}/")
-    expect(map["sourcesContent"].length).to eq(5)
+    expect(map["sourcesContent"].length).to eq(6)
   end
 
   def create_upload_theme_field!(name)

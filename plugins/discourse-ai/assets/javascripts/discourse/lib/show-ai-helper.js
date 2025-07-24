@@ -17,10 +17,10 @@ export function showComposerAiHelper(
   return enableHelper && enableAssistant && enableFeature;
 }
 
-export function showPostAIHelper(outletArgs, helper) {
+export function showPostAIHelper(outletArgs, context) {
   return (
-    _helperEnabled(helper.siteSettings) &&
-    helper.currentUser?.can_use_assistant_in_post
+    _helperEnabled(context.siteSettings) &&
+    context.currentUser?.can_use_assistant_in_post
   );
 }
 

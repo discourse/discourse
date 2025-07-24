@@ -9,13 +9,4 @@ module.exports = {
     "no-action": true,
     "require-strict-mode": true,
   },
-  overrides: [
-    ...templateLint.overrides,
-    {
-      files: ["plugins/discourse-ai/**/*"],
-      rules: {
-        "require-strict-mode": false, // some AI plugin templates are not strict mode compatible
-      },
-    },
-  ],
 };
