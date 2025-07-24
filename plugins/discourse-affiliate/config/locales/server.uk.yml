@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 uk:
+  site_settings:
+    affiliate_enabled: 'Увімкніть плагін Партнера. Якщо ви зміните це, ви повинні перепекти всі повідомлення за допомогою: «rake posts:rebaker».'
+    affiliate_amazon_ca: "Ваш ідентифікатор партнерів amazon.ca (Канада)."

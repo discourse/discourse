@@ -10,6 +10,7 @@ de:
     discourse_templates_categories: "Kategorien, aus denen die Vorlagen abgerufen werden sollen"
     discourse_templates_enable_private_templates: "Aktiviert die Verwendung von privaten Vorlagen"
     discourse_templates_groups_allowed_private_templates: "Gruppen, die private Vorlagen verwenden dürfen. Team-Mitgliedern ist dies immer erlaubt."
+    discourse_templates_private_templates_tags: "Schlagwörter, die eine persönliche Nachricht als private Vorlage identifizieren"
   default_category_template:
     name: Vorlagen
     description: |

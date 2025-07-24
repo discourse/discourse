@@ -2117,6 +2117,8 @@ he:
     composer_media_optimization_image_resize_dimensions_threshold: "רוחב תמונה מזערי להפעלת שינוי גודל בצד הלקוח"
     composer_media_optimization_image_resize_width_target: "תמונות שרוחבן עולה על `composer_media_optimization_image_dimensions_resize_threshold`, גודלן ישתנה לרוחב זה. הערך חייב להיות >= לעומת `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "איכות קידוד JPG המשמשת בתהליך הקידוד מחדש."
+    video_conversion_enabled: "הפעלת המרת וידאו עבור קובצי וידאו שהועלו. כך מתאפשר להמיר סרטונים לתסדירים תואמי אינטרנט."
+    video_conversion_service: "שירות המרת הווידאו לעיבוד הסרטונים שהועלו."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
     default_invitee_trust_level: "דרגת האמון כברירת המחדל למשתמשים שהוזמנו (0‏-4)"
@@ -2704,6 +2706,12 @@ he:
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
     audio: "[שמע]"
     video: "[וידאו]"
+  filter:
+    description:
+      status: "סינון נושאים לפי המצב שלהם"
+      in: "סינון נושאים לפי רשימות אישיות"
+      order: "מיון נושאים לפי שדה מסוים"
+      category: "הצגת נושאים בקטגוריה מסוימת"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."

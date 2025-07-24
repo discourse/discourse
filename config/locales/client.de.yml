@@ -4868,6 +4868,7 @@ de:
               title: "Alle Abzeichen, die es zu verdienen gibt"
             filter:
               content: "Filter"
+              title: "Themen nach Kategorie, Tag oder anderen Kriterien filtern"
             topics:
               content: "Themen"
               title: "Alle Themen"
@@ -5024,6 +5025,7 @@ de:
     powered_by_discourse: "Bereitgestellt von Discourse"
     safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
     filter:
+      placeholder: "Themen nach Kategorie, Tag oder anderen Kriterien filtern"
       description:
         yesterday: "Gestern"
         last_week: "Letzte Woche"
@@ -6483,7 +6485,7 @@ de:
           theme_site_settings: "Einstellungen, die das Theme überschreiben kann"
           edit_objects_theme_setting: "Editor für Objekteinstellungen"
           overriden_settings_explanation: "Änderungen gegenüber der Standardeinstellung werden mit einem Punkt und einer Hervorhebung gekennzeichnet. Klicke auf Zurücksetzen, um die Standardeinstellungen wiederherzustellen."
-          overriden_site_settings_explanation: "Website-Einstellungen, die das Theme anpassen kann. Klicke auf Zurücksetzen, um die Standardeinstellungen des Themes wiederherzustellen. Wenn nichts eingestellt ist, wird der Standard der Website-Einstellung verwendet. Du kannst alle Website-Einstellungen, die von Themes überschrieben werden, auf der <a href='%{themeSiteSettingsConfigUrl}'>Konfigurationsseite der Theme-spezifischen Website-Einstellungen</a> sehen."
+          overriden_site_settings_explanation: "Website-Einstellungen, die das Theme anpassen kann. Klicke auf „Zurücksetzen“, um die Standardeinstellung der Website wiederherzustellen. Wenn nichts eingestellt ist, wird der Standard der Website-Einstellung verwendet. Du kannst alle Website-Einstellungen, die von Themes überschrieben werden, auf der <a href='%{themeSiteSettingsConfigUrl}'>Konfigurationsseite der Theme-spezifischen Website-Einstellungen</a> sehen."
           no_settings: "Dieses Theme hat keine Einstellungen."
           theme_translations: "Theme-Übersetzungen"
           empty: "Keine Elemente"
@@ -6586,6 +6588,8 @@ de:
             user_selectable: "Vom Benutzer wählbar"
           active_badge:
             text: "Aktiv"
+            title: "Aktive Farbpalette"
+          back_to_colors: "Zurück zu Farbpaletten"
           long_title: "Farbpaletten"
           about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."
           new_name: "Neue Farbpalette"
