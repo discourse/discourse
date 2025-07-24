@@ -51,11 +51,10 @@ export default {
     return output;
   },
   "virtual:init-settings": (_, { themeId, settings }) => {
-    return cleanMultiline(`
-      import { registerSettings } from "discourse/lib/theme-settings-store";
-
-      registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});
-    `);
+    return (
+      `import { registerSettings } from "discourse/lib/theme-settings-store";\n\n` +
+      `registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});\n`
+    );
   },
   "virtual:theme": (_, { themeId }) => {
     return cleanMultiline(`
