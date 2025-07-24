@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseChatIntegration::Provider::WebexProvider do
   let(:post) { Fabricate(:post) }
 

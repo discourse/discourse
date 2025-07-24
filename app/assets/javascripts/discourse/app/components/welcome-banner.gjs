@@ -9,7 +9,6 @@ import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class WelcomeBanner extends Component {
@@ -80,16 +79,7 @@ export default class WelcomeBanner extends Component {
   }
 
   get shouldDisplay() {
-    const enabled = applyValueTransformer(
-      "site-setting-enable-welcome-banner",
-      this.siteSettings.enable_welcome_banner
-    );
-
-    if (!enabled) {
-      return false;
-    }
-
-    return this.displayForRoute;
+    return this.siteSettings.enable_welcome_banner && this.displayForRoute;
   }
 
   get bodyClasses() {

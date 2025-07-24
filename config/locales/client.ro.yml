@@ -4580,6 +4580,7 @@ ro:
           update_success: "%{theme} Actualizare finalizată"
           up_to_date: "Tema este actuală, ultima verificare:"
           add: "Adaugă"
+          overriden_site_settings_explanation: "Setările site-ului pe care tema le poate personaliza. Dă clic pe Resetare pentru a reveni la valorile implicite a setărilor site-ului. Poți vedea toate setările site-ului suprascrise de teme în <a href='%{themeSiteSettingsConfigUrl}'>pagina de configurare a setărilor temei site-ului</a>."
           built_in_description: "Această temă este preinstalată și nu poate fi ștearsă sau personalizată"
           settings: "Setări"
           colors: "Culori"

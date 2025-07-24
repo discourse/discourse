@@ -147,10 +147,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
 
           file_path_1 = file_from_fixtures("logo.png", "images").path
           file_path_2 = file_from_fixtures("logo.jpg", "images").path
-
-          attach_file([file_path_1, file_path_2]) do
-            find(".ai-bot-upload-btn", visible: true).click
-          end
+          attach_file("ai-bot-file-uploader", [file_path_1, file_path_2], make_visible: true)
 
           expect(page).to have_css(".ai-bot-upload", count: 2)
 
@@ -178,9 +175,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           ai_pm_homepage.input.fill_in(with: "Some message to send to AI with uploads")
 
           cdp.with_slow_upload do
-            attach_file([file_path_1, file_path_2]) do
-              find(".ai-bot-upload-btn", visible: true).click
-            end
+            attach_file("ai-bot-file-uploader", [file_path_1, file_path_2], make_visible: true)
             expect(page).to have_css(".ai-bot-upload--in-progress", count: 2)
 
             ai_pm_homepage.submit
@@ -195,7 +190,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(ai_pm_homepage).to have_homepage
 
           file_path = file_from_fixtures("logo.png", "images").path
-          attach_file([file_path]) { find(".ai-bot-upload-btn", visible: true).click }
+          attach_file("ai-bot-file-uploader", file_path, make_visible: true)
           expect(page).to have_css(".ai-bot-upload", count: 1)
 
           find(".ai-bot-upload__remove").click

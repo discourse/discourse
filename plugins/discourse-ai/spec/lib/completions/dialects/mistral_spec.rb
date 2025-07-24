@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "dialect_context"
 
 RSpec.describe DiscourseAi::Completions::Dialects::Mistral do

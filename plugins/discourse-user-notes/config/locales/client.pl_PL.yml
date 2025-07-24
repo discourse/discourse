@@ -7,7 +7,7 @@
 pl_PL:
   js:
     user_notes:
-      title: "Uwagi o użytkownikach"
+      title: "Dodaj uwagę o użytkowniku"
       attach: "Dodaj uwagę o użytkowniku"
       attach_note_description: "Dodaj uwagę o tym użytkowniku. Ta uwaga będzie widoczna tylko dla personelu."
       remove: "Usuń uwagę o użytkowniku"

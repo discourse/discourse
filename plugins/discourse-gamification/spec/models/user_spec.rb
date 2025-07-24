@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe User, type: :model do
   fab!(:user)
   fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }

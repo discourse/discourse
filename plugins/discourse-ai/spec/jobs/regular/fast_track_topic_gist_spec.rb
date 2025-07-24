@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::FastTrackTopicGist do
+  subject(:job) { described_class.new }
+
   describe "#execute" do
     fab!(:topic_1) { Fabricate(:topic) }
     fab!(:post_1) { Fabricate(:post, topic: topic_1, post_number: 1) }
@@ -28,7 +30,7 @@ RSpec.describe Jobs::FastTrackTopicGist do
       context "when it's up to date" do
         it "does nothing" do
           DiscourseAi::Completions::Llm.with_prepared_responses([updated_gist]) do
-            subject.execute(topic_id: topic_1.id)
+            job.execute(topic_id: topic_1.id)
           end
 
           gist = AiSummary.gist.find_by(target: topic_1)
@@ -42,7 +44,7 @@ RSpec.describe Jobs::FastTrackTopicGist do
 
         it "regenerates the gist using the latest data" do
           DiscourseAi::Completions::Llm.with_prepared_responses([updated_gist]) do
-            subject.execute(topic_id: topic_1.id)
+            job.execute(topic_id: topic_1.id)
           end
 
           gist = AiSummary.gist.find_by(target: topic_1)
@@ -55,7 +57,7 @@ RSpec.describe Jobs::FastTrackTopicGist do
           ai_gist.update!(created_at: 2.minutes.ago)
 
           DiscourseAi::Completions::Llm.with_prepared_responses([updated_gist]) do
-            subject.execute(topic_id: topic_1.id)
+            job.execute(topic_id: topic_1.id)
           end
 
           gist = AiSummary.gist.find_by(target: topic_1)
@@ -68,7 +70,7 @@ RSpec.describe Jobs::FastTrackTopicGist do
 
     context "when the topic doesn't have a hot topic score" do
       it "creates gist" do
-        subject.execute(topic_id: topic_1.id)
+        job.execute(topic_id: topic_1.id)
 
         gist = AiSummary.gist.find_by(target: topic_1)
         expect(gist).to be_present
@@ -79,7 +81,7 @@ RSpec.describe Jobs::FastTrackTopicGist do
       before { TopicHotScore.create!(topic_id: topic_1.id, score: 0.1) }
 
       it "creates gist" do
-        subject.execute(topic_id: topic_1.id)
+        job.execute(topic_id: topic_1.id)
 
         gist = AiSummary.gist.find_by(target: topic_1)
         expect(gist).to be_present

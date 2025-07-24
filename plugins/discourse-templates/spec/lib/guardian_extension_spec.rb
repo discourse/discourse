@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseTemplates::GuardianExtension do
   fab!(:moderator) do
     moderator = Fabricate(:moderator)

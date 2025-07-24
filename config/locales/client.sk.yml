@@ -7060,7 +7060,7 @@ sk:
           theme_site_settings: "Nastavenia, ktoré môže téma prepísať"
           edit_objects_theme_setting: "Editor nastavenia objektov"
           overriden_settings_explanation: "Zmeny oproti predvolenému nastaveniu sú označené bodkou a zvýraznené. Kliknutím na tlačidlo Obnoviť obnovíte predvolené nastavenie."
-          overriden_site_settings_explanation: "Nastavenia stránky, ktoré môže téma prispôsobiť. Kliknutím na tlačidlo Obnoviť obnovíte predvolené nastavenie témy. Ak nie je nastavené žiadne, použije sa predvolené nastavenie lokality. Všetky nastavenia lokality, ktoré sú prepísané témami, môžete vidieť na <a href='%{themeSiteSettingsConfigUrl}'>konfiguračnej stránke nastavení lokality témy</a>."
+          overriden_site_settings_explanation: "Nastavenia stránky, ktoré môže téma prispôsobiť. Kliknutím na tlačidlo Obnoviť obnovíte predvolenú hodnotu nastavenia stránky. Všetky nastavenia lokality, ktoré sú prepísané témami, si môžete pozrieť na <a href='%{themeSiteSettingsConfigUrl}'>konfiguračnej stránke nastavení lokality témy</a>."
           no_settings: "Táto téma nemá žiadne nastavenia."
           theme_translations: "Preklady tém"
           empty: "Žiadne položky"

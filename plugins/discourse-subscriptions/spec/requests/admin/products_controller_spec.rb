@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseSubscriptions::Admin::ProductsController do
   before { SiteSetting.discourse_subscriptions_enabled = true }
 

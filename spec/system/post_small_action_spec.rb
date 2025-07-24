@@ -40,9 +40,8 @@ describe "Post small actions", type: :system do
     expect(topic_page).to have_post_number(post.post_number)
 
     find(".small-action-buttons .small-action-edit").click
-    attach_file file_from_fixtures("animated.gif").path do
-      composer.click_toolbar_button("upload")
-    end
+
+    attach_file("file-uploader", file_from_fixtures("animated.gif").path, make_visible: true)
 
     expect(composer).to have_no_in_progress_uploads
     composer.submit
