@@ -5,12 +5,12 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { i18n } from "discourse-i18n";
 
 @disableImplicitInjections
-export default class hCaptchaService extends Service {
+export default class CaptchaService extends Service {
   @tracked invalid = true;
   @tracked submitted = false;
   @tracked token = null;
   widgetId = null;
-  hCaptcha = null;
+  captcha = null;
 
   get submitFailed() {
     return this.submitted && this.invalid;
@@ -19,12 +19,12 @@ export default class hCaptchaService extends Service {
   get inputValidation() {
     return EmberObject.create({
       failed: this.invalid,
-      reason: i18n("discourse_hCaptcha.missing_token"),
+      reason: i18n("discourse_captcha.missing_token"),
     });
   }
 
-  registerWidget(hCaptcha, id) {
-    this.hCaptcha = hCaptcha;
+  registerWidget(captcha, id) {
+    this.captcha = captcha;
     this.widgetId = id;
   }
 
@@ -32,6 +32,6 @@ export default class hCaptchaService extends Service {
     this.invalid = true;
     this.submitted = false;
     this.token = null;
-    this.hCaptcha.reset(this.widgetId);
+    this.captcha.reset(this.widgetId);
   }
 }
