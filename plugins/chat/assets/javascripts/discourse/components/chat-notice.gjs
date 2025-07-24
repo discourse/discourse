@@ -14,7 +14,6 @@ export default class ChatNotices extends Component {
 
   @action
   clearNotice() {
-    console.log("clearNotice", this.args.notice);
     this.noticesManager.clearNotice(this.args.notice);
   }
 
