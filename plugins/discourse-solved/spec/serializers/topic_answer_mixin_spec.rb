@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseSolved::TopicAnswerMixin do
   let(:topic) { Fabricate(:topic) }
   let(:post) { Fabricate(:post, topic: topic) }

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "webmock/rspec"
 
 RSpec.describe DiscourseAi::Inference::CloudflareWorkersAi do

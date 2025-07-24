@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe PrettyText do
   context "with discourse math" do
     before { SiteSetting.discourse_math_enabled = true }

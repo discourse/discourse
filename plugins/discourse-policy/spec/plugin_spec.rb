@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscoursePolicy do
   fab!(:user1) { Fabricate(:user) }
 

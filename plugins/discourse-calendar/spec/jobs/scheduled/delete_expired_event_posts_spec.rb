@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseCalendar::DeleteExpiredEventPosts do
   before do
     Jobs.run_immediately!

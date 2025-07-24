@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Configuration::Feature do
   fab!(:llm_model)
   fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }

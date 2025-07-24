@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseGithubPlugin::GithubRepo do
   before { enable_current_plugin }
 

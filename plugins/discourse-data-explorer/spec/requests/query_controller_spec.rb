@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseDataExplorer::QueryController do
   def response_json
     response.parsed_body
