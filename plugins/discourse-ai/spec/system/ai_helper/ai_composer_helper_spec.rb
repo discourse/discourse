@@ -296,8 +296,8 @@ RSpec.describe "AI Composer helper", type: :system do
       wait_for { ai_suggestion_dropdown.has_dropdown? }
       suggestion = category_2.name
       ai_suggestion_dropdown.select_suggestion_by_name(suggestion)
-      category_selector = page.find(".category-chooser summary")
-      expect(category_selector["data-name"]).to eq(suggestion)
+
+      expect(page).to have_css(".category-chooser summary[data-name='#{suggestion}']")
     end
   end
 
