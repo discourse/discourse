@@ -56,12 +56,8 @@ export default class PostTranslationEditor extends Component {
     return this.siteSettings.available_content_localization_locales
       .filter(({ value }) => value !== originalPostLocale)
       .map(({ native_name, name, value }) => {
-        name =
-          i18n(name) === native_name
-            ? native_name
-            : `${i18n(name)} (${native_name})`;
-
-        return { name, value };
+        const displayName = i18n(name) || native_name;
+        return { name: displayName, value };
       });
   }
 
