@@ -10,7 +10,6 @@ import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { sanitize } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
 export default class UserController extends Controller {
@@ -229,16 +228,6 @@ export default class UserController extends Controller {
         action_name: "suspend_user",
       },
     };
-  }
-
-  @discourseComputed("model.suspend_reason")
-  suspendReasonHtml(suspendReason) {
-    return sanitize(suspendReason);
-  }
-
-  @discourseComputed("model.silence_reason")
-  silenceReasonHtml(silenceReason) {
-    return sanitize(silenceReason);
   }
 
   @action

@@ -217,8 +217,6 @@ acceptance("User Card - Restricted reason HTML", function (needs) {
     const cardResponse = cloneJSON(userFixtures["/u/eviltrout/card.json"]);
     cardResponse.user.silence_reason = `User silenced automatically by <a href="https://example.com/admin/plugins/disocurse-user-ai/ai-spam">Discourse AI</a>`;
     cardResponse.user.silenced_till = tomorrow.toISOString();
-    cardResponse.user.suspend_reason = `test <script>alert('XSS Test')</script>`;
-    cardResponse.user.suspended_till = tomorrow.toISOString();
     server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
   });
 
@@ -239,13 +237,6 @@ acceptance("User Card - Restricted reason HTML", function (needs) {
         "href",
         "https://example.com/admin/plugins/disocurse-user-ai/ai-spam",
         "links are allowed"
-      );
-
-    assert
-      .dom(".user-card .card-row .suspension-reason")
-      .hasText(
-        i18n("user.suspended_reason") + "test",
-        "XSS should be sanitized"
       );
   });
 });

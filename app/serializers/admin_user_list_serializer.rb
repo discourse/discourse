@@ -114,7 +114,7 @@ class AdminUserListSerializer < BasicUserSerializer
   end
 
   def silence_reason
-    PrettyText.cleanup(object.silence_reason)
+    object.silence_reason
   end
 
   def include_silence_reason?
