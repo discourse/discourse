@@ -2,11 +2,11 @@ const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 
 export default {
   "virtual:main": (tree, { themeId }) => {
-    let output = `
+    let output = cleanMultiline(`
       import "virtual:init-settings";
-    `;
 
-    output += "const themeCompatModules = {};\n";
+      const themeCompatModules = {};
+    `);
 
     let i = 1;
     for (const moduleFilename of Object.keys(tree)) {
@@ -41,7 +41,7 @@ export default {
       }
 
       output += `import * as Mod${i} from "./${filenameWithoutExtension}";\n`;
-      output += `themeCompatModules["${compatModuleName}"] = Mod${i};\n`;
+      output += `themeCompatModules["${compatModuleName}"] = Mod${i};\n\n`;
 
       i += 1;
     }
@@ -51,13 +51,14 @@ export default {
     return output;
   },
   "virtual:init-settings": (_, { themeId, settings }) => {
-    return `
+    return cleanMultiline(`
       import { registerSettings } from "discourse/lib/theme-settings-store";
-      registerSettings(${themeId}, ${JSON.stringify(settings)});
-    `;
+
+      registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});
+    `);
   },
   "virtual:theme": (_, { themeId }) => {
-    return `
+    return cleanMultiline(`
       import { getObjectForTheme } from "discourse/lib/theme-settings-store";
 
       export const settings = getObjectForTheme(${themeId});
@@ -65,6 +66,23 @@ export default {
       export function themePrefix(key) {
         return \`theme_translations.${themeId}.\${key}\`;
       }
-    `;
+    `);
   },
 };
+
+function cleanMultiline(str) {
+  const lines = str.split("\n");
+
+  if (lines.at(0).trim() === "") {
+    lines.shift();
+  }
+  if (lines.at(-1).trim() === "") {
+    lines.pop();
+  }
+
+  const minLeadingWhitspace = Math.min(
+    ...lines.filter(Boolean).map((line) => line.match(/^\s*/)[0].length)
+  );
+
+  return lines.map((line) => line.slice(minLeadingWhitspace)).join("\n") + "\n";
+}
