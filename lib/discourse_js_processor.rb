@@ -1,8 +1,5 @@
 # frozen_string_literal: true
-require "execjs"
 require "mini_racer"
-
-# MiniRacer::Platform.set_flags!(:trace_wasm_memory)
 
 class DiscourseJsProcessor
   class TranspileError < StandardError
