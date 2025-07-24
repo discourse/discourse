@@ -138,7 +138,7 @@
     "qunit-dom": "^3.4.0",
     "select-kit": "workspace:1.0.0",
     "sinon": "^21.0.0",
-    "source-map": "^0.7.4",
+    "source-map": "^0.7.6",
     "terser": "^5.43.1",
     "testem": "^3.16.0",
     "truth-helpers": "workspace:1.0.0",
