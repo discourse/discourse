@@ -61,13 +61,18 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     const descriptions = [];
     ["common", "desktop", "mobile"].forEach((target) => {
       const fields = this.editedFieldsForTarget(target);
+      if (target === "common" && this.model.getField("common", "js")) {
+        fields.push({
+          name: "js",
+        });
+      }
       if (fields.length < 1) {
         return;
       }
       let resultString = i18n("admin.customize.theme." + target);
       const formattedFields = fields
         .map((f) => i18n("admin.customize.theme." + f.name + ".text"))
-        .join(" , ");
+        .join(", ");
       resultString += `: ${formattedFields}`;
       descriptions.push(resultString);
     });
