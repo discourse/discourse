@@ -129,7 +129,7 @@ export default class FileTypesList extends Component {
       @action={{fn this.insertDefaultTypes "audio"}}
       @label="admin.site_settings.file_types_list.add_audio_types"
       @translatedTitle={{i18n
-        "admin.site_settings.file_types_list.add_types_title audio"
+        "admin.site_settings.file_types_list.add_types_title"
         types=AUDIO_TYPES_STRING
       }}
       class="btn btn-small btn-default file-types-list__button"
