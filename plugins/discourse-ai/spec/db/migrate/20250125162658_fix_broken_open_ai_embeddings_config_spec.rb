@@ -5,6 +5,8 @@ require Rails.root.join(
         )
 
 RSpec.describe FixBrokenOpenAiEmbeddingsConfig do
+  subject(:migration) { described_class.new }
+
   let(:connection) { ActiveRecord::Base.connection }
 
   def store_setting(name, val)
@@ -29,7 +31,7 @@ RSpec.describe FixBrokenOpenAiEmbeddingsConfig do
       before { store_setting("ai_embeddings_selected_model", embedding_definition.id) }
 
       it "does nothing" do
-        subject.up
+        migration.up
 
         expect(configured_model_id).to eq(embedding_definition.id.to_s)
       end
@@ -37,7 +39,7 @@ RSpec.describe FixBrokenOpenAiEmbeddingsConfig do
 
     context "when there is no previous config" do
       it "does nothing" do
-        subject.up
+        migration.up
 
         expect(configured_model_id).to be_blank
       end
@@ -50,7 +52,7 @@ RSpec.describe FixBrokenOpenAiEmbeddingsConfig do
       end
 
       it "does nothing" do
-        subject.up
+        migration.up
 
         expect(configured_model_id).to be_blank
       end
@@ -63,7 +65,7 @@ RSpec.describe FixBrokenOpenAiEmbeddingsConfig do
       end
 
       it "copies the config" do
-        subject.up
+        migration.up
 
         embedding_def = EmbeddingDefinition.last
 

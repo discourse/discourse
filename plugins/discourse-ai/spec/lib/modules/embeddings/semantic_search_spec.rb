@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
+  subject(:semantic_search) { described_class.new(Guardian.new(user)) }
+
   fab!(:post)
   fab!(:user)
+  fab!(:vector_def) { Fabricate(:embedding_definition) }
 
   let(:query) { "test_query" }
-  let(:subject) { described_class.new(Guardian.new(user)) }
-
-  fab!(:vector_def) { Fabricate(:embedding_definition) }
 
   before do
     enable_current_plugin
@@ -29,7 +29,7 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
 
     def trigger_search(query)
       DiscourseAi::Completions::Llm.with_prepared_responses([hypothetical_post]) do
-        subject.search_for_topics(query)
+        semantic_search.search_for_topics(query)
       end
     end
 
