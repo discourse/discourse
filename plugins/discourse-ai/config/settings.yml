@@ -264,7 +264,6 @@ discourse_ai:
     type: enum
     allow_any: false
     enum: "DiscourseAi::Configuration::LlmEnumerator"
-    area: "ai-features/embeddings"
   ai_embeddings_semantic_search_hyde_model_allowed_seeded_models:
     default: ""
     hidden: true
@@ -485,7 +484,7 @@ discourse_ai:
     type: enum
     allow_any: false
     enum: "DiscourseAi::Configuration::LlmEnumerator"
-    area: "ai-features/translation"
+    hidden: true
   ai_translation_locale_detector_persona:
     default: "-27"
     type: enum
