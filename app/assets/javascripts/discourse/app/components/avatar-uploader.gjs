@@ -52,6 +52,7 @@ export default class AvatarUploader extends Component {
 
   <template>
     <input
+      id="custom-profile-upload"
       {{didInsert this.uppyUpload.setup}}
       class="hidden-upload-field"
       disabled={{this.uploading}}

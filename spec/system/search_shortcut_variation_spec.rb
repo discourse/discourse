@@ -21,10 +21,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_visible
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#welcome-banner-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
 
@@ -35,10 +35,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           fake_scroll_down_long
           expect(search_page).to have_search_field
           expect(welcome_banner).to be_invisible
-          page.send_keys("/")
+          send_keys("/")
           expect(search_page).to have_search_menu
           expect(page).to have_css("#header-search-input:focus")
-          page.send_keys(:escape)
+          send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
       end
@@ -52,10 +52,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       it "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_hidden
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#header-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
     end
@@ -74,10 +74,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       it "displays and focuses welcome banner search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_visible
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#welcome-banner-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
 
@@ -88,10 +88,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           fake_scroll_down_long
           expect(search_page).to have_search_icon
           expect(welcome_banner).to be_invisible
-          page.send_keys("/")
+          send_keys("/")
           expect(search_page).to have_search_menu
           expect(page).to have_css("#icon-search-input:focus")
-          page.send_keys(:escape)
+          send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
       end
@@ -105,10 +105,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
       it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
         visit("/")
         expect(welcome_banner).to be_hidden
-        page.send_keys("/")
+        send_keys("/")
         expect(search_page).to have_search_menu
         expect(page).to have_css("#icon-search-input:focus")
-        page.send_keys(:escape)
+        send_keys(:escape)
         expect(search_page).to have_no_search_menu_visible
       end
 
@@ -120,10 +120,10 @@ describe "Search | Shortcuts for variations of search input", type: :system do
 
         it "opens search on first press of /, and closes when Escape is pressed" do
           visit "/t/#{topic.slug}/#{topic.id}"
-          page.send_keys("/")
+          send_keys("/")
           expect(search_page).to have_search_menu
           expect(page).to have_css("#icon-search-input:focus")
-          page.send_keys(:escape)
+          send_keys(:escape)
           expect(search_page).to have_no_search_menu_visible
         end
       end
