@@ -8,8 +8,6 @@ import { emojiUrlFor } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 import { showUserNotes } from "../../lib/user-notes";
 
-const EMOJI_URL = emojiUrlFor("memo");
-
 export default class ShowUserNotesOnFlags extends Component {
   static shouldRender(args, { siteSettings }) {
     return siteSettings.user_notes_enabled && args.user;
@@ -40,7 +38,7 @@ export default class ShowUserNotesOnFlags extends Component {
         >
           {{#if this.siteSettings.enable_emoji}}
             <img
-              src={{EMOJI_URL}}
+              src={{emojiUrlFor "memo"}}
               title={{i18n "user_notes.show" count=this.userNotesCount}}
               alt
               class="emoji"
