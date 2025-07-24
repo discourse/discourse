@@ -1,22 +1,28 @@
 import rollupVirtualImports from "../rollup-virtual-imports";
 
-export default function discourseVirtualLoader({ themeBase, modules, opts }) {
+export default function discourseVirtualLoader({ basePath, modules, opts }) {
+  const availableVirtualImports = opts.isTheme
+    ? rollupVirtualImports
+    : {
+        "virtual:main": rollupVirtualImports["virtual:main"],
+      };
+
   return {
     name: "discourse-virtual-loader",
     resolveId(source) {
-      if (rollupVirtualImports[source]) {
-        return `${themeBase}${source}`;
+      if (availableVirtualImports[source]) {
+        return `${basePath}${source}`;
       }
     },
     load(id) {
-      if (!id.startsWith(themeBase)) {
+      if (!id.startsWith(basePath)) {
         return;
       }
 
-      const fromBase = id.slice(themeBase.length);
+      const fromBase = id.slice(basePath.length);
 
-      if (rollupVirtualImports[fromBase]) {
-        return rollupVirtualImports[fromBase](modules, opts);
+      if (availableVirtualImports[fromBase]) {
+        return availableVirtualImports[fromBase](modules, opts);
       }
     },
   };

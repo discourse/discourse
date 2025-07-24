@@ -458,7 +458,7 @@ module Discourse
       if args[:include_admin_asset] && plugin.admin_js_asset_exists?
         assets << "plugins/#{plugin.directory_name}_admin"
       end
-      assets
+      assets.map { |asset| { asset: asset, plugin: plugin } }
     end
   end
 
