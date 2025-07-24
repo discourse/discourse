@@ -68,9 +68,7 @@ export default class AdminCustomizeColorsController extends Controller {
     // check if user has dark mode available and is using it
     return (
       this.session.darkModeAvailable &&
-      (this.session.userDarkSchemeId ===
-        this.siteSettings.default_dark_mode_color_scheme_id ||
-        this.session.userDarkSchemeId !== -1) &&
+      this.session.userDarkSchemeId !== -1 &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
     );
   }
