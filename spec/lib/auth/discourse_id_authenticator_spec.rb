@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Auth::DiscourseIdAuthenticator do
   let(:authenticator) { described_class.new }
   let(:user) { Fabricate(:user) }

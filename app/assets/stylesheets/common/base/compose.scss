@@ -744,8 +744,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       .submit-panel,
-      .composer-fields,
-      .d-editor-button-bar {
+      .composer-fields {
         // this prevents touch events (i.e. accidental scrolls) from bubbling up
         touch-action: none;
       }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::UpdateScoresForToday do
   fab!(:user)
   fab!(:user_2) { Fabricate(:user) }

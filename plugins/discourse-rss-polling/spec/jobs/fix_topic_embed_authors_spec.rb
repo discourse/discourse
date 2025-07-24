@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::DiscourseRssPolling::FixTopicEmbedAuthors do
   let(:job) { Jobs::DiscourseRssPolling::FixTopicEmbedAuthors.new }
 

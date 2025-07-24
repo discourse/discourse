@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseReactions do
   before do
     SiteSetting.discourse_reactions_enabled = true

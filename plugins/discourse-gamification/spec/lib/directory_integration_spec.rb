@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseGamification::DirectoryIntegration do
   fab!(:user_1) { Fabricate(:admin) }
   fab!(:user_2) { Fabricate(:user) }

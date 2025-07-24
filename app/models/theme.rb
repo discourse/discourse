@@ -363,8 +363,10 @@ class Theme < ActiveRecord::Base
     if component
       raise Discourse::InvalidParameters.new(I18n.t("themes.errors.component_no_default"))
     end
+
+    # NOTE: The cache is expired in the 014-track-setting-changes.rb
+    # initializer, so we don't need to do it here.
     SiteSetting.default_theme_id = id
-    Theme.expire_site_cache!
   end
 
   def default?

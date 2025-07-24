@@ -5,11 +5,47 @@
 # https://translate.discourse.org/
 
 uk:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Голосування після публікації не включено."
+        replying_to_post_not_permited: "Вам не дозволено створювати допис у відповідь на інший допис."
+        voting_not_permitted: "Ви не маєте права голосувати за цю публікацію."
+        comment_cannot_be_downvoted: "Ви можете голосувати тільки за коментарі."
+        self_voting_not_permitted: "Ви не маєте права голосувати за власний допис чи коментар."
+        vote_archived_topic: "Ви не можете голосувати за заархівовані теми."
+        vote_closed_topic: "Ви не можете голосувати за закриті теми."
+  topic:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Голосування після публікації не ввімкнено."
+        subtype_not_allowed: "Підтип «Голосування після публікації» можна використовувати лише зі звичайними темами."
+        cannot_change_to_post_voting_subtype: "Зміна підтипу теми на «Голосування за публікацію» не дозволяється."
+      answer_count:
+        one: "%{count} Відповідь"
+        few: "%{count} Відповіді"
+        many: "%{count} Відповідей"
+        other: "%{count} Відповідей"
+  site_settings:
+    qa_tags: "Теги для активації голосування за публікації в темі"
+    post_voting_enabled: "Увімкнути плагін для голосування після публікації"
+    post_voting_enable_likes_on_answers: "Увімкнути кнопку «Подобається» для відповідей у темах голосування за публікації"
+    post_voting_undo_vote_action_window: "Кількість хвилин, протягом яких користувачі можуть скасувати голосування в темах після голосування (введіть 0, якщо обмеження немає)"
+    post_voting_comment_limit_per_post: "Кількість дозволених коментарів в кожному повідомленні"
+    min_trust_to_flag_posts_voting_comments: "Мінімальний рівень довіри для позначення коментаря з голосуванням за допис"
+    flag_posts_voting_comments_allowed_groups: "Групам дозволено позначати коментар до публікації з голосуванням"
+    post_voting_comment_enabled: "Дозволити коментування дописів у темах для голосування"
+    keywords:
+      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
     vote:
       title: "Голосувати"
+      description: "Проголосуйте за цю публікацію"
+      short_description: "Проголосуйте за цю публікацію"
+      long_form: "проголосували за цю публікацію"
   vote:
     error:
+      user_has_not_voted: "Користувач не проголосував."
       user_over_limit: "Ви не можете перевищити кількість голосів для вашого рівня довіри."
       already_voted: "Ви можете проголосувати лише один раз за одне питання."
       undo_vote_action_window:
@@ -27,6 +63,7 @@ uk:
         limit_exceeded: "Досягнуто ліміту %{limit} коментарів до публікації."
         perform: "Коментар до голосування за публікацію позначено з достатньо високим балом, щоб заглушити користувача."
         auto_silence_from_flags: "Автоматично вимкнено звук через позначку."
+        disabled: "Коментування публікації заборонено."
       reviewables:
         comment_already_handled: "Дякуємо, але ми вже переглянули цей коментар і вирішили, що його не потрібно позначати повторно."
         actions:

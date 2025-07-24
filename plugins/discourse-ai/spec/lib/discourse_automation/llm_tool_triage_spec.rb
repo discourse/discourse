@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Automation::LlmToolTriage do
   fab!(:solver) { Fabricate(:user) }
   fab!(:new_user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 1.day.ago) }

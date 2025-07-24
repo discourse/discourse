@@ -6,7 +6,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
   fab!(:ai_persona)
   fab!(:group)
 
-  subject { described_class.new(admin) }
+  subject(:ai_staff_action_logger) { described_class.new(admin) }
 
   before { enable_current_plugin }
 
@@ -29,7 +29,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
       # Setup model with sensitive data
       llm_model.update!(api_key: "secret_key")
 
-      subject.log_creation("llm_model", llm_model, field_config, entity_details)
+      ai_staff_action_logger.log_creation("llm_model", llm_model, field_config, entity_details)
 
       expect(staff_action_logger).to have_received(:log_custom).with(
         "create_ai_llm_model",
@@ -57,7 +57,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
 
       field_config = { name: {}, description: {}, system_prompt: { type: :large_text } }
 
-      subject.log_creation("persona", ai_persona, field_config, entity_details)
+      ai_staff_action_logger.log_creation("persona", ai_persona, field_config, entity_details)
 
       # Verify with have_received
       expect(staff_action_logger).to have_received(:log_custom).with(
@@ -97,7 +97,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
         display_name: llm_model.display_name,
       }
 
-      subject.log_creation("llm_model", llm_model, field_config, entity_details)
+      ai_staff_action_logger.log_creation("llm_model", llm_model, field_config, entity_details)
 
       expect(staff_action_logger).to have_received(:log_custom).with(
         "create_ai_llm_model",
@@ -131,7 +131,13 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
       # Create entity details
       entity_details = { persona_id: ai_persona.id, persona_name: ai_persona.name }
 
-      subject.log_update("persona", ai_persona, initial_attributes, field_config, entity_details)
+      ai_staff_action_logger.log_update(
+        "persona",
+        ai_persona,
+        initial_attributes,
+        field_config,
+        entity_details,
+      )
 
       # Verify with have_received
       expect(staff_action_logger).to have_received(:log_custom).with(
@@ -173,7 +179,13 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
         display_name: llm_model.display_name,
       }
 
-      subject.log_update("llm_model", llm_model, initial_attributes, field_config, entity_details)
+      ai_staff_action_logger.log_update(
+        "llm_model",
+        llm_model,
+        initial_attributes,
+        field_config,
+        entity_details,
+      )
 
       # Verify with have_received
       expect(staff_action_logger).to have_received(:log_custom).with(
@@ -208,7 +220,13 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
         display_name: llm_model.display_name,
       }
 
-      subject.log_update("llm_model", llm_model, initial_attributes, field_config, entity_details)
+      ai_staff_action_logger.log_update(
+        "llm_model",
+        llm_model,
+        initial_attributes,
+        field_config,
+        entity_details,
+      )
 
       # Verify log_custom was not called
       expect(staff_action_logger).not_to have_received(:log_custom)
@@ -244,7 +262,13 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
         display_name: llm_model.display_name,
       }
 
-      subject.log_update("llm_model", llm_model, initial_attributes, field_config, entity_details)
+      ai_staff_action_logger.log_update(
+        "llm_model",
+        llm_model,
+        initial_attributes,
+        field_config,
+        entity_details,
+      )
 
       # Provider should not appear in the logged changes
       expect(staff_action_logger).to have_received(:log_custom).with(
@@ -281,7 +305,13 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
       # Create entity details
       entity_details = { persona_id: ai_persona.id, persona_name: ai_persona.name }
 
-      subject.log_update("persona", ai_persona, initial_attributes, field_config, entity_details)
+      ai_staff_action_logger.log_update(
+        "persona",
+        ai_persona,
+        initial_attributes,
+        field_config,
+        entity_details,
+      )
 
       # Verify with have_received
       expect(staff_action_logger).to have_received(:log_custom).with(
@@ -308,7 +338,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
         name: llm_model.name,
       }
 
-      subject.log_deletion("llm_model", details)
+      ai_staff_action_logger.log_deletion("llm_model", details)
 
       # Verify with have_received
       expect(staff_action_logger).to have_received(:log_custom).with(
@@ -330,7 +360,7 @@ RSpec.describe DiscourseAi::Utils::AiStaffActionLogger do
 
       details = { key: "value" }
 
-      subject.log_custom("custom_action_type", details)
+      ai_staff_action_logger.log_custom("custom_action_type", details)
 
       # Verify with have_received
       expect(staff_action_logger).to have_received(:log_custom).with(

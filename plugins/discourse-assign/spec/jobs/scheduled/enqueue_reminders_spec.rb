@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::EnqueueReminders do
   fab!(:assign_allowed_group) { Fabricate(:group) }
   fab!(:user) { Fabricate(:user, groups: [assign_allowed_group]) }

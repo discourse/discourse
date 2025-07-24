@@ -3,6 +3,8 @@
 require_relative "../../../support/sentiment_inference_stubs"
 
 RSpec.describe DiscourseAi::Sentiment::PostClassification do
+  subject(:post_classification) { described_class.new }
+
   before do
     enable_current_plugin
     SiteSetting.ai_sentiment_enabled = true
@@ -26,7 +28,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     it "does nothing if the post content is blank" do
       post_1.update_columns(raw: "")
 
-      subject.classify!(post_1)
+      post_classification.classify!(post_1)
 
       expect(ClassificationResult.where(target: post_1).count).to be_zero
     end
@@ -35,7 +37,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       expected_analysis = DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values.length
       SentimentInferenceStubs.stub_classification(post_1)
 
-      subject.classify!(post_1)
+      post_classification.classify!(post_1)
 
       expect(ClassificationResult.where(target: post_1).count).to eq(expected_analysis)
     end
@@ -43,14 +45,14 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     it "classification results must be { emotion => score }" do
       SentimentInferenceStubs.stub_classification(post_1)
 
-      subject.classify!(post_1)
+      post_classification.classify!(post_1)
       check_classification_for(post_1)
     end
 
     it "does nothing if there are no classification model" do
       SiteSetting.ai_sentiment_model_configs = ""
 
-      subject.classify!(post_1)
+      post_classification.classify!(post_1)
 
       expect(ClassificationResult.where(target: post_1).count).to be_zero
     end
@@ -58,7 +60,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     it "don't reclassify everything when a model config changes" do
       SentimentInferenceStubs.stub_classification(post_1)
 
-      subject.classify!(post_1)
+      post_classification.classify!(post_1)
       first_classified_at = 2.days.ago
       ClassificationResult.update_all(created_at: first_classified_at)
 
@@ -67,7 +69,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       SiteSetting.ai_sentiment_model_configs = current_models.to_json
 
       SentimentInferenceStubs.stub_classification(post_1)
-      subject.classify!(post_1.reload)
+      post_classification.classify!(post_1.reload)
 
       new_classifications = ClassificationResult.where("created_at > ?", first_classified_at).count
       expect(new_classifications).to eq(1)
@@ -83,7 +85,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       SentimentInferenceStubs.stub_classification(post_1)
       SentimentInferenceStubs.stub_classification(post_2)
 
-      subject.bulk_classify!(Post.where(id: [post_1.id, post_2.id]))
+      post_classification.bulk_classify!(Post.where(id: [post_1.id, post_2.id]))
 
       expect(ClassificationResult.where(target: post_1).count).to eq(expected_analysis)
       expect(ClassificationResult.where(target: post_2).count).to eq(expected_analysis)
@@ -93,7 +95,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       SentimentInferenceStubs.stub_classification(post_1)
       SentimentInferenceStubs.stub_classification(post_2)
 
-      subject.bulk_classify!(Post.where(id: [post_1.id, post_2.id]))
+      post_classification.bulk_classify!(Post.where(id: [post_1.id, post_2.id]))
 
       check_classification_for(post_1)
       check_classification_for(post_2)
@@ -102,7 +104,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     it "does nothing if there are no classification model" do
       SiteSetting.ai_sentiment_model_configs = ""
 
-      subject.bulk_classify!(Post.where(id: [post_1.id, post_2.id]))
+      post_classification.bulk_classify!(Post.where(id: [post_1.id, post_2.id]))
 
       expect(ClassificationResult.where(target: post_1).count).to be_zero
       expect(ClassificationResult.where(target: post_2).count).to be_zero
@@ -111,7 +113,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
     it "don't reclassify everything when a model config changes" do
       SentimentInferenceStubs.stub_classification(post_1)
 
-      subject.bulk_classify!(Post.where(id: [post_1.id]))
+      post_classification.bulk_classify!(Post.where(id: [post_1.id]))
       first_classified_at = 2.days.ago
       ClassificationResult.update_all(created_at: first_classified_at)
 
@@ -120,7 +122,7 @@ RSpec.describe DiscourseAi::Sentiment::PostClassification do
       SiteSetting.ai_sentiment_model_configs = current_models.to_json
 
       SentimentInferenceStubs.stub_classification(post_1)
-      subject.bulk_classify!(Post.where(id: [post_1.id]))
+      post_classification.bulk_classify!(Post.where(id: [post_1.id]))
 
       new_classifications = ClassificationResult.where("created_at > ?", first_classified_at).count
       expect(new_classifications).to eq(1)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseGamification::GamificationLeaderboardController do
   fab!(:group)
   fab!(:current_user) { Fabricate(:user, group_ids: [group.id]) }

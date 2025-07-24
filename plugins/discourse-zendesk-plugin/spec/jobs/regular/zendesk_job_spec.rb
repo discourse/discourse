@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::ZendeskJob do
   subject(:execute) { job.execute(job_args) }
 
