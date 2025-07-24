@@ -241,12 +241,14 @@
 
     .btn {
       background-color: var(--primary-very-low);
-      color: var(--primary-high);
+
+      --d-button-default-icon-color: var(--primary-high);
 
       &:hover,
       &:focus-visible {
-        background: var(--primary-low);
-        color: var(--primary);
+        background-color: var(--primary-low);
+
+        --d-button-default-icon-color--hover: var(--primary);
       }
     }
   }
@@ -342,7 +344,9 @@
         }
       }
 
-      &:not(.active):hover {
+      &:not(.active):hover,
+      &:not(.active):focus-visible {
+        background: none;
         padding-left: calc(0.875em - var(--user-menu-border-width));
 
         .d-icon {
