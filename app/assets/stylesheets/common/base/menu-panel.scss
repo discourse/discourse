@@ -249,6 +249,7 @@
         background-color: var(--primary-low);
 
         --d-button-default-icon-color--hover: var(--primary);
+        --d-button-default-text-color--hover: var(--primary);
       }
     }
   }
@@ -585,6 +586,20 @@
     flex-flow: column wrap;
     overflow: hidden;
     max-height: 100%;
+  }
+
+  .user-menu-button-profile {
+    li svg {
+      color: var(--d-button-flat-icon-color);
+    }
+
+    li:hover svg {
+      color: var(--d-button-flat-icon-color--hover);
+    }
+
+    .item-label {
+      font-weight: normal;
+    }
   }
 
   li {
