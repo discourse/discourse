@@ -37,12 +37,12 @@ module DiscourseAi
           .present?
       end
 
-      def modules_using(llm_model)
-        in_use_llms = AiPersona.where.not(default_llm_id: nil).pluck(:default_llm_id)
-        default_llm = SiteSetting.ai_default_llm_model.presence&.to_i
+      def is_using(llm_model)
+        in_use_by = AiPersona.where(default_llm_id: llm_model.id).pluck(:name)
 
-        combined_llms = (in_use_llms + [default_llm]).compact.uniq
-        combined_llms
+        in_use_by << "ai_default_llm_model" if SiteSetting.ai_default_llm_model.to_i == llm_model.id
+
+        in_use_by
       end
 
       def error_message
