@@ -29,7 +29,6 @@ en:
         ```
 
   site_settings:
-    events_max_rows: "Maximum text rows per event in the Calendar."
     map_events_to_color: "Assign a color to each tag or category."
     map_events_title: "Overwrites 'Events' in the 'Upcoming Events' sidebar title per category."
     calendar_enabled: "Enable the discourse-calendar plugin. This will add support for a [calendar][/calendar] tag in the first post of a topic."
