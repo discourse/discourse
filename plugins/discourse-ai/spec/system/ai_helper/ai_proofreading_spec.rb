@@ -33,7 +33,7 @@ RSpec.describe "AI Composer Proofreading Features", type: :system do
         composer.composer_input.send_keys(keyboard_shortcut)
         expect(diff_modal).to have_diff("worldd", "world")
         diff_modal.confirm_changes
-        expect(composer.composer_input.value).to eq("hello world !")
+        expect(composer).to have_value("hello world !")
       end
     end
 
@@ -46,7 +46,7 @@ RSpec.describe "AI Composer Proofreading Features", type: :system do
         composer.composer_input.send_keys(keyboard_shortcut)
         expect(diff_modal).to have_diff("worrld", "world")
         diff_modal.confirm_changes
-        expect(composer.composer_input.value).to eq("hello world")
+        expect(composer).to have_value("hello world")
       end
     end
 
