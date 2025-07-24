@@ -12,6 +12,7 @@ import Bookmark from "discourse/models/bookmark";
 export default class PostBookmarkManager {
   @service currentUser;
   @service bookmarkApi;
+  @service appEvents;
   @controller("topic") topicController;
 
   @tracked trackedBookmark;
@@ -29,6 +30,10 @@ export default class PostBookmarkManager {
           bookmark.bookmarkable_id === this.model.id &&
           bookmark.bookmarkable_type === this.type
       ) || this.bookmarkApi.buildNewBookmark(this.type, this.model.id);
+    this.reset();
+  }
+
+  reset() {
     this.trackedBookmark = new BookmarkFormData(this.bookmarkModel);
   }
 
@@ -37,15 +42,25 @@ export default class PostBookmarkManager {
       .create(this.trackedBookmark)
       .then((updatedBookmark) => {
         this.trackedBookmark = updatedBookmark;
+        this._syncBookmarks(updatedBookmark.saveData);
+        return this.trackedBookmark;
       });
   }
 
   delete() {
-    return this.bookmarkApi.delete(this.trackedBookmark.id);
+    return this.bookmarkApi
+      .delete(this.trackedBookmark.id)
+      .then((deleteResponse) => {
+        this.topicController.model.removeBookmark(this.trackedBookmark.id);
+        return deleteResponse;
+      });
   }
 
   save() {
-    return this.bookmarkApi.update(this.trackedBookmark);
+    return this.bookmarkApi.update(this.trackedBookmark).then(() => {
+      this._syncBookmarks(this.trackedBookmark.saveData);
+      return this.trackedBookmark;
+    });
   }
 
   afterModalClose(closeData) {
@@ -58,7 +73,7 @@ export default class PostBookmarkManager {
       closeData.initiatedBy === CLOSE_INITIATED_BY_ESC ||
       closeData.initiatedBy === CLOSE_INITIATED_BY_BUTTON
     ) {
-      this.model.appEvents.trigger("post-stream:refresh", {
+      this.appEvents.trigger("post-stream:refresh", {
         id: this.model.id,
       });
     }
@@ -68,6 +83,7 @@ export default class PostBookmarkManager {
     this.trackedBookmark = bookmarkFormData;
     this._syncBookmarks(bookmarkFormData.saveData);
     this.topicController.model.set("bookmarking", false);
+    this.topicController.model.incrementProperty("bookmarksWereChanged");
     this.model.createBookmark(bookmarkFormData.saveData);
     this.topicController.model.afterPostBookmarked(
       this.model,
@@ -87,13 +103,14 @@ export default class PostBookmarkManager {
   }
 
   _syncBookmarks(data) {
-    if (!this.topicController.bookmarks) {
-      this.topicController.set("bookmarks", []);
+    if (!this.topicController.model.bookmarks) {
+      this.topicController.model.set("bookmarks", []);
     }
 
-    const bookmark = this.topicController.bookmarks.findBy("id", data.id);
+    const bookmark = this.topicController.model.bookmarks.findBy("id", data.id);
     if (!bookmark) {
-      this.topicController.bookmarks.pushObject(Bookmark.create(data));
+      this.topicController.model.bookmarks.pushObject(Bookmark.create(data));
+      this.topicController.model.incrementProperty("bookmarksWereChanged");
     } else {
       bookmark.reminder_at = data.reminder_at;
       bookmark.name = data.name;

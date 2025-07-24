@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { concat, hash } from "@ember/helper";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { attributeBindings } from "@ember-decorators/component";
@@ -42,6 +42,39 @@ export default class TopicFooterButtons extends Component {
   @alias("currentUser.user_option.enable_defer") canDefer;
   @or("topic.archived", "topic.closed", "topic.deleted") inviteDisabled;
 
+  //   init() {
+  //     super.init(...arguments);
+  //     this.topicBookmarkManager = new TopicBookmarkManager(
+  //       getOwner(this),
+  //       this.topic
+  //     );
+  //     // this.appEvents.on("bookmarks:changed", this, this.handleBookmarksChanged);
+  //   }
+
+  // willDestroyElement() {
+  //   super.willDestroyElement(...arguments);
+  //   this.appEvents.off("bookmarks:changed", this, this.handleBookmarksChanged);
+  // }
+
+  // handleBookmarksChanged(data, other) {
+  //   console.log(data, other);
+  //   if (other.targetId !== this.topic.id || other.target !== "topic") {
+  //     return;
+  //   }
+
+  //   // The bookmark has been deleted by "Clear Bookmarks"
+  //   if (!data) {
+  //     this.topicBookmarkManager.reset();
+  //     return;
+  //   }
+  // }
+  //
+  //
+  @computed("topic")
+  get topicBookmarkManager() {
+    return new TopicBookmarkManager(getOwner(this), this.topic);
+  }
+
   @discourseComputed("canSendPms", "topic.isPrivateMessage")
   canArchive(canSendPms, isPM) {
     return canSendPms && isPM;
@@ -49,17 +82,13 @@ export default class TopicFooterButtons extends Component {
 
   @computed("inlineButtons.[]", "inlineDropdowns.[]")
   get inlineActionables() {
+    console.log("recomputing inlineActionables");
     return this.inlineButtons
       .filterBy("dropdown", false)
       .filterBy("anonymousOnly", false)
       .concat(this.inlineDropdowns)
       .sortBy("priority")
       .reverse();
-  }
-
-  @computed("topic")
-  get topicBookmarkManager() {
-    return new TopicBookmarkManager(getOwner(this), this.topic);
   }
 
   // topic.assigned_to_user is for backward plugin support
@@ -105,6 +134,32 @@ export default class TopicFooterButtons extends Component {
     return !isPM;
   }
 
+  @action
+  onShowBookmarkMenu() {
+    console.log("onshow");
+    this.set("_bookmarkMenuVisible", true);
+  }
+
+  @action
+  onCloseBookmarkMenu() {
+    console.log("onclose");
+    this.set("_bookmarkMenuVisible", false);
+  }
+
+  @discourseComputed("topic.bookmarkCount", "_bookmarkMenuVisible")
+  showBookmarkButton() {
+    console.log("should show?", this._bookmarkMenuVisible);
+    if (this._bookmarkMenuVisible) {
+      return false;
+    }
+
+    if (this.topic.bookmarkCount > 1) {
+      return true;
+    }
+
+    return false;
+  }
+
   <template>
     <div class="topic-footer-main-buttons">
       <div class="topic-footer-main-buttons__actions">
@@ -127,14 +182,32 @@ export default class TopicFooterButtons extends Component {
           @buttonClasses="topic-footer-button"
         />
 
+        {{! TODO: This is recomputed all the time by instance-initializers/topic-footer-buttons.js which destroys the BookmarkMenu and closes it, making the topic bookmark button kind of unusable. Clear works fine though, and edit (kinda) }}
         {{#each this.inlineActionables as |actionable|}}
           {{#if (eq actionable.type "inline-button")}}
             {{#if (eq actionable.id "bookmark")}}
-              <BookmarkMenu
-                @showLabel={{this.showBookmarkLabel}}
-                @bookmarkManager={{this.topicBookmarkManager}}
-                @buttonClasses="btn-default topic-footer-button"
-              />
+              {{#if this.showBookmarkButton}}
+                <DButton
+                  @action={{actionable.action}}
+                  @icon={{actionable.icon}}
+                  @translatedLabel={{actionable.label}}
+                  @translatedTitle={{actionable.title}}
+                  @translatedAriaLabel={{actionable.ariaLabel}}
+                  @disabled={{actionable.disabled}}
+                  id={{concat "topic-footer-button-" actionable.id}}
+                  class={{concatClass
+                    "btn-default"
+                    "topic-footer-button"
+                    actionable.classNames
+                  }}
+                />
+              {{else}}
+                <BookmarkMenu
+                  @showLabel={{this.showBookmarkLabel}}
+                  @bookmarkManager={{this.topicBookmarkManager}}
+                  @buttonClasses="btn-default topic-footer-button"
+                />
+              {{/if}}
             {{else}}
               <DButton
                 @action={{actionable.action}}
