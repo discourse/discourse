@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -165,15 +166,16 @@ export default class AiFeaturesList extends Component {
                         @maxItemsToShow={{5}}
                         as |persona index isLastItem|
                       >
-                        <DButton
-                          class="btn-flat ai-feature-card__persona-button btn-text"
-                          @translatedLabel={{concat
+                        <LinkTo
+                          @route="adminPlugins.show.discourse-ai-personas.edit"
+                          @model={{persona.id}}
+                          class="ai-feature-card__persona-link"
+                        >
+                          {{concat
                             persona.name
                             (unless (isLastItem index) ", ")
                           }}
-                          @route="adminPlugins.show.discourse-ai-personas.edit"
-                          @routeModels={{persona.id}}
-                        />
+                        </LinkTo>
                       </ExpandableList>
                     {{else}}
                       <span class="ai-feature-card__label">
@@ -196,15 +198,13 @@ export default class AiFeaturesList extends Component {
                         @maxItemsToShow={{5}}
                         as |llm index isLastItem|
                       >
-                        <DButton
-                          class="btn-flat ai-feature-card__llm-button"
-                          @translatedLabel={{concat
-                            llm.name
-                            (unless (isLastItem index) ", ")
-                          }}
+                        <LinkTo
                           @route="adminPlugins.show.discourse-ai-llms.edit"
-                          @routeModels={{llm.id}}
-                        />
+                          @model={{llm.id}}
+                          class="ai-feature-card__llm-link"
+                        >
+                          {{concat llm.name (unless (isLastItem index) ", ")}}
+                        </LinkTo>
                       </ExpandableList>
                     {{else}}
                       <span class="ai-feature-card__label">
