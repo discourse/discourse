@@ -15,6 +15,11 @@ export default function discourseExtensionSearch() {
         }
       }
 
+      const resolvedIndex = await this.resolve(`${source}/index`, context);
+      if (resolvedIndex) {
+        return resolvedIndex;
+      }
+
       return null;
     },
   };
