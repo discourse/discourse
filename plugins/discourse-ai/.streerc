@@ -1,2 +1,0 @@
---print-width=100
---plugins=plugin/trailing_comma,plugin/disable_auto_ternary
