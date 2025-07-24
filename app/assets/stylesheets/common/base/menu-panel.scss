@@ -587,6 +587,20 @@
     max-height: 100%;
   }
 
+  .user-menu-button-profile {
+    li svg {
+      color: var(--d-button-flat-icon-color);
+    }
+
+    li:hover svg {
+      color: var(--d-button-flat-icon-color--hover);
+    }
+
+    .item-label {
+      font-weight: normal;
+    }
+  }
+
   li {
     box-sizing: border-box;
     list-style-type: none;
