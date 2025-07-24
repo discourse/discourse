@@ -23,7 +23,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
   describe ".process_command" do
     describe "add new rule" do
       # Not testing how filters are merged here, that's done in .smart_create_rule
-      # We just want to make sure the commands are being interpretted correctly
+      # We just want to make sure the commands are being interpreted correctly
 
       it "should add a new rule correctly" do
         response = DiscourseChatIntegration::Helper.process_command(chan1, ["watch", category.slug])
@@ -387,7 +387,7 @@ RSpec.describe DiscourseChatIntegration::Manager do
 
       ttl = Discourse.redis.pttl("chat_integration:transcript:#{key}")
 
-      # Slight hack since freeze_time doens't work on redis
+      # Slight hack since freeze_time doesn't work on redis
       expect(Discourse.redis.pttl("chat_integration:transcript:#{key}")).to be <= (3601 * 1000)
       expect(Discourse.redis.pttl("chat_integration:transcript:#{key}")).to be >= (3599 * 1000)
     end

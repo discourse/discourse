@@ -9,8 +9,8 @@ en:
     github_permalinks_exclude: "Filename or directory that should be excluded from permalink overwrites. Provide only filename or full path: user/repository/optional-directory/filename"
     github_badges_enabled: "Enable GitHub badges"
     github_badges_repos: "URLs of the GitHub repos to scan for contributions and commits"
-    github_silver_badge_min_commits: "Minumum number of commits for silver badge"
-    github_gold_badge_min_commits: "Minumum number of commits for gold badge"
+    github_silver_badge_min_commits: "Minimum number of commits for silver badge"
+    github_gold_badge_min_commits: "Minimum number of commits for gold badge"
 
     errors:
       invalid_badge_repo: "You must provide a GitHub URL or the repository name in the format github_user/repository_name"
