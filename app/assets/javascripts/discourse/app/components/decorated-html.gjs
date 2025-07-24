@@ -107,7 +107,7 @@ class DecorateHtmlHelper {
 
   constructor({ renderGlimmerInfos, model, context }) {
     this.#renderGlimmerInfos = renderGlimmerInfos;
-    this.#model = model || {};
+    this.#model = model;
     this.#context = context;
   }
 
