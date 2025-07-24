@@ -768,6 +768,10 @@ aside.quote {
   opacity: 0.4;
 }
 
+.post-stream--cloaked {
+  min-height: 1px; // ensures that cloaked items have a minimum height to force the intersection observers to work
+}
+
 .quote-button {
   flex-direction: column;
 
