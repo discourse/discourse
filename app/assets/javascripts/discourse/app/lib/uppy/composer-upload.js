@@ -640,7 +640,9 @@ export default class UppyComposerUpload {
     }
 
     const uploadingImagePattern = new RegExp(
-      "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\.\\w+…\\]\\(\\)",
+      "\\[" +
+        uploadingTextMatch[0].trim() +
+        "\\s?: ([^\\]]+?)\\.\\w+…\\]\\(\\)",
       "g"
     );
 
@@ -654,7 +656,7 @@ export default class UppyComposerUpload {
       imagePlaceholder = imagePlaceholder.trim();
 
       const filenamePattern = new RegExp(
-        "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\…\\]\\(\\)"
+        "\\[" + uploadingTextMatch[0].trim() + "\\s?: ([^\\]]+?)\\…\\]\\(\\)"
       );
 
       const filenameMatch = imagePlaceholder.match(filenamePattern);
