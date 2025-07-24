@@ -63,7 +63,7 @@ describe DiscourseSolved::GuardianExtensions do
       expect(guardian.can_accept_answer?(topic, post)).to eq(true)
     end
 
-    it "returns false if the user is trust level 4 but the trust level 4 group is not allowd to accept solutions" do
+    it "returns false if the user is trust level 4 but the trust level 4 group is not allowed to accept solutions" do
       SiteSetting.accept_all_solutions_allowed_groups = Fabricate(:group).id
       user.update!(trust_level: TrustLevel[4])
       expect(guardian.can_accept_answer?(topic, post)).to eq(false)

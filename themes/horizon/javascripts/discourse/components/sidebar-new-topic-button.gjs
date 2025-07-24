@@ -71,7 +71,7 @@ export default class SidebarNewTopicButton extends Component {
   }
 
   @action
-  getCategoryandTag() {
+  getCategoryAndTag() {
     this.category = this.router.currentRoute.attributes?.category || null;
     this.tag = this.router.currentRoute.attributes?.tag || null;
   }
@@ -96,8 +96,8 @@ export default class SidebarNewTopicButton extends Component {
     {{#if this.shouldRender}}
       <div
         class="sidebar-new-topic-button__wrapper"
-        {{didInsert this.getCategoryandTag}}
-        {{didUpdate this.getCategoryandTag this.router.currentRoute}}
+        {{didInsert this.getCategoryAndTag}}
+        {{didUpdate this.getCategoryAndTag this.router.currentRoute}}
         {{didInsert this.watchForComposer}}
         {{willDestroy this.stopWatchingForComposer}}
       >
