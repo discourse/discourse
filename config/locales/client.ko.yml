@@ -290,32 +290,59 @@ ko:
       active_user_count: "활성 사용자"
       visitor_count: "방문자"
       eu_visitor_count: "유럽 연합 방문자"
+      traffic_info_footer_MF: |
+        지난 6개월 동안 이 사이트는 매달 약 { total_visitors, plural, other {#명 } }의 사람들에게 콘텐츠를 제공했으며, 그 중 약 {eu_visitors, plural, other {#명} }은 유럽 연합(EU)에서 방문했습니다.
       contact: "문의하기"
       contact_info: "이 사이트에 영향을 미치는 중대한 문제나 긴급한 사안이 발생한 경우 %{contact_info}으로 문의하시기 바랍니다."
       site_activity: "사이트 활동"
       view_more: "자세히 보기"
+      view_less: "간략히"
       activities:
         topics:
           other: "%{formatted_number}개의 글"
         posts:
           other: "글 %{formatted_number}개"
+        active_users:
+          other: "활성 사용자 %{formatted_number} 명"
+        sign_ups:
+          other: "가입 %{formatted_number} 명"
         likes:
           other: "좋아요 %{formatted_number}"
+        visitors_MF: |
+          총 방문자 { total_count, plural, other {{total_formatted_number}명}}, 이 중 약 { eu_count, plural, other {{eu_formatted_number} 명} }은 EU에서 방문함
         periods:
           last_7_days: "지난 7일간"
           today: "오늘"
+          all_time: "전체"
       member_count:
         other: "회원 %{formatted_number}명"
+      admin_count:
+        other: "관리자 %{formatted_number} 명"
+      moderator_count:
+        other: "운영진 %{formatted_number} 명"
+      report_inappropriate_content: "부적절한 콘텐츠를 발견하시면 주저하지 말고 저희 관리자와 운영진에게 문의해 주세요. 문의하기 전에 로그인해 주세요."
+      site_age:
+        less_than_one_month: "1개월 이내에 생성됨"
+        month:
+          other: "%{count}개월 전에 생성됨"
+        year:
+          other: "%{count}년 전에 생성됨"
     bookmarked:
       title: "북마크"
       edit_bookmark: "북마크 편집"
       clear_bookmarks: "북마크 지우기"
       help:
+        bookmark: "이 주제를 북마크하려면 클릭하세요"
+        edit_bookmark: "이 주제에 대한 북마크를 편집하려면 클릭하세요"
         edit_bookmark_for_topic: "이 주제의 북마크를 편집하려면 클릭하세요"
         unbookmark: "이 주제의 모든 북마크를 제거하려면 클릭하세요"
         unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오"
     bookmarks:
+      also_set_reminder: "알림도 설정하시겠습니까?"
       bookmarked_success: "북마크에 추가했습니다!"
+      deleted_bookmark_success: "북마크를 삭제했습니다"
+      reminder_set_success: "알림을 설정했습니다"
+      reminder_clear_success: "미리 알림을 해제했습니다"
       created: "이 게시물을 북마크했습니다. %{name}"
       created_generic: "%{name}을 북마크했습니다."
       create: "북마크 만들기"
@@ -3251,6 +3278,8 @@ ko:
       unseen:
         title: "읽지 않음"
         lower_title: "읽지 않음"
+      hot:
+        title: "인기"
       new:
         lower_title_with_count:
           other: "%{count} new"

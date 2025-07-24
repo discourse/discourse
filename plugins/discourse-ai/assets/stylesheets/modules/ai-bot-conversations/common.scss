@@ -210,7 +210,7 @@ body.has-ai-conversations-sidebar {
       line-height: var(--line-height-medium);
 
       // optical centering for layout balance
-      @media screen and (min-height: 600px) {
+      @media screen and (height >= 600px) {
         margin-top: -6em;
       }
     }

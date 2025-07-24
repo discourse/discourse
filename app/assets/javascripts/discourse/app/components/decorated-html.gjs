@@ -4,7 +4,7 @@ import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import helperFn from "discourse/helpers/helper-fn";
 import deprecated from "discourse/lib/deprecated";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/post-stream";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 

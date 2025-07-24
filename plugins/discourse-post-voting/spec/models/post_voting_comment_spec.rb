@@ -11,6 +11,20 @@ describe PostVotingComment do
   before { SiteSetting.post_voting_enabled = true }
 
   describe "validations" do
+    it "does not allow comments to be created when `post_voting_comment_enabled` site setting is false" do
+      SiteSetting.post_voting_comment_enabled = false
+
+      post_2 = Fabricate(:post, topic:)
+
+      comment = PostVotingComment.new(raw: "this is a **post**", post: post_2, user:)
+
+      expect(comment.valid?).to eq(false)
+
+      expect(comment.errors.full_messages).to contain_exactly(
+        I18n.t("post_voting.comment.errors.disabled"),
+      )
+    end
+
     it "does not allow comments to be created when post is in reply to another post" do
       post_2 = Fabricate(:post, topic: topic)
 

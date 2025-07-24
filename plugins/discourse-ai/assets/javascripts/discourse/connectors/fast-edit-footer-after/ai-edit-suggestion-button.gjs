@@ -8,8 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { showPostAIHelper } from "../../lib/show-ai-helper";
 
 export default class AiEditSuggestionButton extends Component {
-  static shouldRender(outletArgs, helper) {
-    return showPostAIHelper(outletArgs, helper);
+  static shouldRender(args, context) {
+    return showPostAIHelper(args, context);
   }
 
   @service currentUser;

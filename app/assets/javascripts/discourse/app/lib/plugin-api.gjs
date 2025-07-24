@@ -146,7 +146,6 @@ import {
 } from "discourse/widgets/post-small-action";
 import {
   addPostTransformCallback,
-  POST_STREAM_DEPRECATION_OPTIONS,
   preventCloak,
 } from "discourse/widgets/post-stream";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
@@ -154,8 +153,10 @@ import {
   changeSetting,
   createWidget,
   decorateWidget,
+  POST_STREAM_DEPRECATION_OPTIONS,
   queryRegistry,
   reopenWidget,
+  warnWidgetsDeprecation,
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
@@ -750,7 +751,7 @@ class PluginApi {
     }
 
     // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
+    withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
       decorateWidget(`poster-name:${loc}`, (dec) => {
         const attrs = dec.attrs;
         let results = cb(attrs.userCustomFields || {}, attrs);
@@ -3451,6 +3452,10 @@ class PluginApi {
       deprecated(
         `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
         POST_STREAM_DEPRECATION_OPTIONS
+      );
+    } else {
+      warnWidgetsDeprecation(
+        `Using \`api.${override}\` is deprecated and will soon stop working. Affected widget: ${widgetName}.`
       );
     }
   }

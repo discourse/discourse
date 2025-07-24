@@ -7,7 +7,7 @@ import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 import AiSearchDiscoveriesTooltip from "../../components/ai-search-discoveries-tooltip";
 
 export default class AiFullPageDiscobotDiscoveries extends Component {
-  static shouldRender(_args, { siteSettings, currentUser }) {
+  static shouldRender(args, { siteSettings, currentUser }) {
     return (
       siteSettings.ai_bot_discover_persona &&
       currentUser?.can_use_ai_bot_discover_persona &&

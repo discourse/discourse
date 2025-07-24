@@ -112,7 +112,19 @@ after_initialize do
           WebHook.enqueue_solved_hooks(:accepted_solution, post, payload)
         end
 
+        accepted_answer = topic.reload.accepted_answer_post_info
+
+        message = { type: :accepted_solution, accepted_answer: }
+
         DiscourseEvent.trigger(:accepted_solution, post)
+
+        secure_audience = topic.secure_audience_publish_messages
+        # MessageBus.publish will raise an error if user_ids or group_ids are an empty array.
+        if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
+          MessageBus.publish("/topic/#{topic.id}", message, secure_audience)
+        end
+
+        accepted_answer
       end
     end
 
@@ -140,7 +152,9 @@ after_initialize do
           payload = WebHook.generate_payload(:post, post)
           WebHook.enqueue_solved_hooks(:unaccepted_solution, post, payload)
         end
+
         DiscourseEvent.trigger(:unaccepted_solution, post)
+        MessageBus.publish("/topic/#{topic.id}", type: :unaccepted_solution)
       end
     end
 
@@ -252,9 +266,7 @@ after_initialize do
       .count
   end
   add_to_serializer(:user_summary, :solved_count) { object.solved_count }
-  add_to_serializer(:post, :can_accept_answer) do
-    scope.can_accept_answer?(topic, object) && object.post_number > 1 && !accepted_answer
-  end
+  add_to_serializer(:post, :can_accept_answer) { scope.can_accept_answer?(topic, object) }
   add_to_serializer(:post, :can_unaccept_answer) do
     scope.can_accept_answer?(topic, object) && accepted_answer
   end

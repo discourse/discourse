@@ -4,8 +4,8 @@ import AiSplitTopicSuggester from "../../components/ai-split-topic-suggester";
 import { showPostAIHelper } from "../../lib/show-ai-helper";
 
 export default class AiCategorySuggestion extends Component {
-  static shouldRender(outletArgs, helper) {
-    return showPostAIHelper(outletArgs, helper);
+  static shouldRender(args, context) {
+    return showPostAIHelper(args, context);
   }
 
   @service siteSettings;

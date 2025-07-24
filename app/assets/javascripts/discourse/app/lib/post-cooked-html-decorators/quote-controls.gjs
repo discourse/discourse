@@ -67,9 +67,9 @@ export default function quoteControls(element, context) {
       quotedPostNotFound: aside.classList.contains("quote-post-not-found"),
       quotedPostNumber,
       quotedTopicId,
+      quotedUsername: username,
       streamElement,
       title,
-      username,
       wrapperElement: aside,
     };
 

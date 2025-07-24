@@ -3,11 +3,11 @@ import AiTitleSuggester from "../../components/suggestion-menus/ai-title-suggest
 import { showComposerAiHelper } from "../../lib/show-ai-helper";
 
 export default class AiTitleSuggestion extends Component {
-  static shouldRender(outletArgs, helper) {
+  static shouldRender(args, context) {
     return showComposerAiHelper(
-      outletArgs?.composer,
-      helper.siteSettings,
-      helper.currentUser,
+      args?.composer,
+      context.siteSettings,
+      context.currentUser,
       "suggestions"
     );
   }

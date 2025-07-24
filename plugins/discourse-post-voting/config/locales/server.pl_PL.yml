@@ -34,6 +34,7 @@ pl_PL:
     post_voting_comment_limit_per_post: "Liczba komentarzy dozwolonych pod każdym postem"
     min_trust_to_flag_posts_voting_comments: "Minimalny poziom zaufania wymagany do oznaczenia postu i głosowania nad komentarzem"
     flag_posts_voting_comments_allowed_groups: "Grupy, które mogą oznaczać posty głosowaniem na komentarz"
+    post_voting_comment_enabled: "Włącz komentarze do postów w tematach głosowania na posty"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_zaufanie_do_głosowania_w_komentarzach_w_postach"
   post_action_types:
@@ -62,6 +63,7 @@ pl_PL:
         limit_exceeded: "Osiągnięto limit %{limit} komentarzy na wpis."
         perform: "Dodaj głosujący komentarz, który został oznaczony na tyle wysoko, że uciszył użytkownika."
         auto_silence_from_flags: "Automatyczne wyciszenie z powodu zgłoszenia."
+        disabled: "Komentowanie wpisów jest niedozwolone."
       reviewables:
         comment_already_handled: "Dziękujemy, ale sprawdziliśmy już ten komentarz i stwierdziliśmy, że nie ma potrzeby jego ponownego oznaczania."
         actions:

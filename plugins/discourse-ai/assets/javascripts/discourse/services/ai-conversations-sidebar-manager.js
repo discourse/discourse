@@ -8,7 +8,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
-import AiBotSidebarEmptyState from "../../discourse/components/ai-bot-sidebar-empty-state";
+import AiBotSidebarEmptyState from "../components/ai-bot-sidebar-empty-state";
 
 export const AI_CONVERSATIONS_PANEL = "ai-conversations";
 const SCROLL_BUFFER = 100;

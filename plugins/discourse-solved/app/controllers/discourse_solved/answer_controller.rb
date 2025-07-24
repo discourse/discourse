@@ -13,9 +13,9 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
     guardian.ensure_can_accept_answer!(topic, post)
 
-    DiscourseSolved.accept_answer!(post, current_user, topic: topic)
+    accepted_answer = DiscourseSolved.accept_answer!(post, current_user, topic: topic)
 
-    render json: success_json
+    render_json_dump(accepted_answer)
   end
 
   def unaccept

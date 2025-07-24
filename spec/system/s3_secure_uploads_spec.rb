@@ -18,8 +18,11 @@ describe "Uploading files in the composer to S3", type: :system do
     def expect_first_post_to_have_secure_upload
       img = first_post_img
       expect(img["src"]).to include("/secure-uploads")
-      topic = topic_page.current_topic
-      expect(topic.first_post.uploads.first.secure).to eq(true)
+
+      try_until_success do
+        topic = topic_page.current_topic
+        expect(topic.first_post.uploads.first.secure).to eq(true)
+      end
     end
 
     it "marks uploads inside of private message posts as secure" do

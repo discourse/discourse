@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin AI features configuration", type: :system, js: true do
+RSpec.describe "Admin AI features configuration", type: :system do
   fab!(:admin)
   fab!(:llm_model)
   fab!(:summarization_persona) { Fabricate(:ai_persona) }

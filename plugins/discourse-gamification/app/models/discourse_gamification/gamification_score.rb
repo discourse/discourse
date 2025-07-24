@@ -31,7 +31,10 @@ module ::DiscourseGamification
           WHERE date >= :since
           GROUP BY 1, 2
         ) AS source
+        JOIN users AS u ON u.id = source.user_id
         WHERE user_id IS NOT NULL
+          AND (u.suspended_till IS NULL OR u.suspended_till < CURRENT_TIMESTAMP)
+          AND u.active
         GROUP BY 1, 2
         ON CONFLICT (user_id, date) DO UPDATE
         SET score = EXCLUDED.score;

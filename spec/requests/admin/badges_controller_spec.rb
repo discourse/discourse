@@ -351,22 +351,49 @@ RSpec.describe Admin::BadgesController do
 
       context "when there is a user with a title granted using the badge" do
         fab!(:user_with_badge_title, :active_user)
-        fab!(:badge) { Fabricate(:badge, name: "Oathbreaker", allow_title: true) }
 
-        before do
-          BadgeGranter.grant(badge, user_with_badge_title)
-          user_with_badge_title.update(title: "Oathbreaker")
+        before { BadgeGranter.grant(badge, user_with_badge_title) }
+
+        context "when the name of the badge hasn't changed" do
+          it "does not fire a title updating job" do
+            expect_not_enqueued_with(job: :bulk_user_title_update) do
+              put "/admin/badges/#{badge.id}.json", params: { name: badge.name }
+            end
+          end
         end
 
-        it "updates the user title in a job" do
-          expect_enqueued_with(
-            job: :bulk_user_title_update,
-            args: {
-              new_title: "Shieldbearer",
-              granted_badge_id: badge.id,
-              action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
-            },
-          ) { put "/admin/badges/#{badge.id}.json", params: { name: "Shieldbearer" } }
+        context "when using default locale" do
+          it "updates the user title in a job" do
+            user_with_badge_title.update(title: "First Like")
+
+            expect_enqueued_with(
+              job: :bulk_user_title_update,
+              args: {
+                new_title: "First Ever Like",
+                granted_badge_id: badge.id,
+                action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
+              },
+            ) { put "/admin/badges/#{badge.id}.json", params: { name: "First Ever Like" } }
+          end
+        end
+
+        context "when using a custom locale" do
+          it "updates the title in the custom locale" do
+            SiteSetting.default_locale = "sv"
+
+            user_with_badge_title.update(title: "Första Gillningen")
+
+            expect_enqueued_with(
+              job: :bulk_user_title_update,
+              args: {
+                new_title: "Första Gillningen Någonsin",
+                granted_badge_id: badge.id,
+                action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
+              },
+            ) do
+              put "/admin/badges/#{badge.id}.json", params: { name: "Första Gillningen Någonsin" }
+            end
+          end
         end
       end
     end
