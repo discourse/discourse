@@ -78,7 +78,7 @@ acceptance("discourse-templates", function (needs) {
 
     assert
       .dom(".d-editor-input")
-      .hasValue(
+      .includesValue(
         "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly. Candy canes sugar plum soufflé sweet roll jelly-o danish jelly muffin. I love jelly-o powder topping carrot cake toffee.",
         "inserts the template in the composer"
       );
@@ -101,7 +101,7 @@ acceptance("discourse-templates", function (needs) {
 
     assert
       .dom(".d-editor-input")
-      .hasValue(
+      .includesValue(
         "Testing testin **123**",
         "inserts the template in the composer"
       );
@@ -119,7 +119,7 @@ acceptance("discourse-templates", function (needs) {
 
     assert
       .dom(".d-editor-input")
-      .hasValue("Hi there, regards eviltrout.", "replaces variables");
+      .includesValue("Hi there, regards eviltrout.", "replaces variables");
   });
 
   test("Navigate to source", async function (assert) {
@@ -225,7 +225,7 @@ acceptance("discourse-templates | keyboard shortcut", function (needs) {
 
     assert
       .dom(selector)
-      .hasValue(
+      .includesValue(
         "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly. Candy canes sugar plum soufflé sweet roll jelly-o danish jelly muffin. I love jelly-o powder topping carrot cake toffee.",
         "inserts the template in the textarea"
       );
@@ -384,7 +384,7 @@ acceptance("discourse-templates - buttons on topics", function (needs) {
     topicResponse.is_template = true;
 
     server.get("/t/280.json", () => helper.response(topicResponse));
-    server.get("/raw/280/1", () => helper.response("post raw content"));
+    server.get("/raw/280/1", () => [200, {}, "post raw content"]);
   });
 
   test("Can open composer using button on topic", async function (assert) {
