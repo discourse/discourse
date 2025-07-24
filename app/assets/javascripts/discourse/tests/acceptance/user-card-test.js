@@ -215,7 +215,7 @@ acceptance("User Card - Restricted reason HTML", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     const cardResponse = cloneJSON(userFixtures["/u/eviltrout/card.json"]);
-    cardResponse.user.silence_reason = `User silenced automatically by <a href="https://example.com/admin/plugins/disocurse-user-ai/ai-spam">Discourse AI</a>`;
+    cardResponse.user.silence_reason = `User silenced automatically by <a href="https://example.com/admin/plugins/discourse-user-ai/ai-spam">Discourse AI</a>`;
     cardResponse.user.silenced_till = tomorrow.toISOString();
     server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
   });
