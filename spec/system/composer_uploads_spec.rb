@@ -155,38 +155,25 @@ describe "Uploading files in the composer", type: :system do
   context "when multiple images are uploaded" do
     before { SiteSetting.experimental_auto_grid_images = true }
 
-    context "when the locale is fr" do
-      before { SiteSetting.default_locale = "fr" }
+    %w[en fr de].each do |locale|
+      before { SiteSetting.default_locale = locale }
 
-      it "works with the French locale" do
-        visit "/new-topic"
-        expect(composer).to be_opened
+      context "when the locale is #{locale}" do
+        it "automatically wraps images in [grid] tags on 3 or more images" do
+          visit "/new-topic"
+          expect(composer).to be_opened
 
-        file_path_1 = file_from_fixtures("logo.png", "images").path
-        file_path_2 = file_from_fixtures("logo.jpg", "images").path
-        file_path_3 = file_from_fixtures("downsized.png", "images").path
-        attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+          file_path_1 = file_from_fixtures("logo.png", "images").path
+          file_path_2 = file_from_fixtures("logo.jpg", "images").path
+          file_path_3 = file_from_fixtures("downsized.png", "images").path
+          attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
 
-        expect(composer).to have_no_in_progress_uploads
-        expect(composer.composer_input.value).to match(
-          %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
-        )
+          expect(composer).to have_no_in_progress_uploads
+          expect(composer.composer_input.value).to match(
+            %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
+          )
+        end
       end
-    end
-
-    it "automatically wraps images in [grid] tags on 3 or more images" do
-      visit "/new-topic"
-      expect(composer).to be_opened
-
-      file_path_1 = file_from_fixtures("logo.png", "images").path
-      file_path_2 = file_from_fixtures("logo.jpg", "images").path
-      file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
-
-      expect(composer).to have_no_in_progress_uploads
-      expect(composer.composer_input.value).to match(
-        %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
-      )
     end
 
     it "does not wrap [grid] tags on less than 3 images" do

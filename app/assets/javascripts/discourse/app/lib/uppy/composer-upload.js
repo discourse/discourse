@@ -633,7 +633,9 @@ export default class UppyComposerUpload {
     const uploadingText = i18n("uploading_filename", {
       filename: "%placeholder%",
     });
-    const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);
+    const uploadingTextMatch = uploadingText.match(
+      /^.*(?=: %placeholder%\s?…)/
+    );
 
     if (!uploadingTextMatch || !uploadingTextMatch[0]) {
       return;
@@ -642,7 +644,7 @@ export default class UppyComposerUpload {
     const uploadingImagePattern = new RegExp(
       "\\[" +
         uploadingTextMatch[0].trim() +
-        "\\s?: ([^\\]]+?)\\.\\w+…\\]\\(\\)",
+        "\\s?: ([^\\]]+?)\\.\\w+\\s?…\\]\\(\\)",
       "g"
     );
 
@@ -656,7 +658,9 @@ export default class UppyComposerUpload {
       imagePlaceholder = imagePlaceholder.trim();
 
       const filenamePattern = new RegExp(
-        "\\[" + uploadingTextMatch[0].trim() + "\\s?: ([^\\]]+?)\\…\\]\\(\\)"
+        "\\[" +
+          uploadingTextMatch[0].trim() +
+          "\\s?: ([^\\]]+?)\\s?\\…\\]\\(\\)"
       );
 
       const filenameMatch = imagePlaceholder.match(filenamePattern);
