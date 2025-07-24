@@ -7047,7 +7047,7 @@ pl_PL:
           theme_site_settings: "Ustawienia, które motyw może zastąpić"
           edit_objects_theme_setting: "Edytor ustawień obiektów"
           overriden_settings_explanation: "Zmiany względem ustawień domyślnych są oznaczone kropką i podświetleniem. Kliknij „Przywróć”, aby przywrócić ustawienia domyślne."
-          overriden_site_settings_explanation: "Ustawienia witryny można dostosować za pomocą motywu. Kliknij Przywróć, aby przywrócić domyślne ustawienia motywu. Jeśli żadne nie są ustawione, używane są domyślne ustawienia witryny. Wszystkie ustawienia witryny zastępowane przez motywy można zobaczyć na stronie konfiguracji ustawień witryny motywu <a href='%{themeSiteSettingsConfigUrl}'></a>."
+          overriden_site_settings_explanation: "Ustawienia witryny można dostosować za pomocą motywu. Kliknij Przywróć, aby przywrócić domyślną wartość ustawień witryny. Wszystkie ustawienia witryny zastępowane przez motywy można zobaczyć na stronie konfiguracji ustawień witryny motywu <a href='%{themeSiteSettingsConfigUrl}'></a>."
           no_settings: "Ten temat nie ma żanych ustawień"
           theme_translations: "Tłumaczenia motywu"
           empty: "Brak elementu"

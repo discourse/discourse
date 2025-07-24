@@ -5371,6 +5371,7 @@ he:
               title: "כל העיטורים שאפשר לקבל"
             filter:
               content: "מסנן"
+              title: "סינון נושאים לפי קטגוריה, תגית או תנאים אחרים"
             topics:
               content: "נושאים"
               title: "כל הנושאים"
@@ -5539,6 +5540,7 @@ he:
     powered_by_discourse: "מופעל על גבי Discourse"
     safari_15_warning: "בקרוב הדפדפן שלך לא יהיה תואם לקהילה הזו. כדי להמשיך להשתתף כאן, נא לשדרג את הדפדפן שלך או <a href='%{url}'>לקרוא על כך עוד</a>."
     filter:
+      placeholder: "סינון נושאים לפי קטגוריה, תגית או תנאים אחרים"
       description:
         yesterday: "אתמול"
         last_week: "בשבוע שעבר"
@@ -6756,6 +6758,7 @@ he:
         author: "מאת %{author}"
         experimental_badge: "ניסיוני"
         learn_more: "מידע נוסף"
+        preinstalled: "מותקן מראש"
       navigation_menu:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
@@ -7025,6 +7028,7 @@ he:
           up_to_date: "ערכת העיצוב עדכנית, מועד הבדיקה האחרונה:"
           has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
+          theme_settings: "הגדרות ערכת עיצוב מותאמות אישית"
           theme_site_settings: "הגדרות שערכת העיצוב יכולה להשפיע עליהן"
           edit_objects_theme_setting: "עורך הגדרות עצמים"
           overriden_settings_explanation: "שינויים מברירת המחדל מסומנים בנקודה ומודגשים. יש ללחוץ על איפוס כדי לאפס לברירת המחדל."
