@@ -24,32 +24,37 @@ export default class HouseAdsSetting extends Component {
   }
 
   @action
-  save() {
-    if (!this.get("saving")) {
-      this.setProperties({
-        saving: true,
-        savingStatus: i18n("saving"),
-      });
+  async save() {
+    if (this.get("saving")) {
+      return;
+    }
 
-      ajax(`/admin/plugins/pluginad/house_settings/${this.get("name")}.json`, {
-        type: "PUT",
-        data: { value: this.get("adValue") },
-      })
-        .then(() => {
-          const adSettings = this.get("adSettings");
-          adSettings.set(this.get("name"), this.get("adValue"));
-          this.setProperties({
-            value: this.get("adValue"),
-            savingStatus: i18n("saved"),
-          });
-        })
-        .catch(popupAjaxError)
-        .finally(() => {
-          this.setProperties({
-            saving: false,
-            savingStatus: "",
-          });
-        });
+    this.setProperties({
+      saving: true,
+      savingStatus: i18n("saving"),
+    });
+
+    try {
+      await ajax(
+        `/admin/plugins/pluginad/house_settings/${this.get("name")}.json`,
+        {
+          type: "PUT",
+          data: { value: this.get("adValue") },
+        }
+      );
+      const adSettings = this.get("adSettings");
+      adSettings.set(this.get("name"), this.get("adValue"));
+      this.setProperties({
+        value: this.get("adValue"),
+        savingStatus: i18n("saved"),
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.setProperties({
+        saving: false,
+        savingStatus: "",
+      });
     }
   }
 
@@ -63,9 +68,8 @@ export default class HouseAdsSetting extends Component {
     <TextField @value={{this.adValue}} @classNames="house-ads-text-input" />
     <div class="setting-controls">
       {{#if this.changed}}
-        {{! template-lint-disable no-action }}
-        <DButton class="ok" @action={{action "save"}} @icon="check" />
-        <DButton class="cancel" @action={{action "cancel"}} @icon="xmark" />
+        <DButton class="ok" @action={{this.save}} @icon="check" />
+        <DButton class="cancel" @action={{this.cancel}} @icon="xmark" />
       {{/if}}
     </div>
     <p class="help">{{this.help}}</p>

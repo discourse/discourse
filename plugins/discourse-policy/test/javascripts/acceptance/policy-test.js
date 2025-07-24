@@ -1,5 +1,3 @@
-/* eslint-disable qunit/no-loose-assertions */
-/* eslint-disable qunit/no-assert-equal */
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
@@ -58,7 +56,7 @@ acceptance("Discourse Policy - post", function (needs) {
 
     let raw = document.querySelector("textarea.d-editor-input").value;
 
-    assert.equal(
+    assert.strictEqual(
       raw.trim(),
       '[policy reminder="daily" version="1" groups="staff"]\nI accept this policy\n[/policy]'
     );

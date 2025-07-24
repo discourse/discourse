@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -42,8 +43,7 @@ export default class NotificationLevelWhenAssigned extends Component {
           @content={{this.notificationLevelsWhenAssigned}}
           @value={{@outletArgs.model.user_option.notification_level_when_assigned}}
           @valueProperty="value"
-          {{! template-lint-disable no-action }}
-          @onChange={{action
+          @onChange={{fn
             (mut @outletArgs.model.user_option.notification_level_when_assigned)
           }}
         />
