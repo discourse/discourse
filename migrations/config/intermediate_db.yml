@@ -49,6 +49,10 @@ schema:
         exclude:
           - "created_at"
           - "id"
+    muted_users:
+      columns:
+        exclude:
+          - "id"
     user_emails:
       columns:
         include:
@@ -236,7 +240,6 @@ schema:
         - "message_bus"
         - "model_accuracies"
         - "moved_posts"
-        - "muted_users"
         - "notifications"
         - "oauth2_user_infos"
         - "onceoff_logs"
