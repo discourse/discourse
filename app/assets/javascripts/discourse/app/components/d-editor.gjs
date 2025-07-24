@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { schedule, scheduleOnce } from "@ember/runloop";
+import { cancel, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
@@ -26,6 +26,7 @@ import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -93,14 +94,17 @@ export default class DEditor extends Component {
 
     this.setupToolbar();
 
-    if (
-      this.siteSettings.rich_editor &&
-      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
-    ) {
-      this.editorComponent = await loadRichEditor();
-    } else {
-      this.editorComponent = TextareaEditor;
+    // TODO (martin) Remove this once we are sure all users have migrated
+    // to the new rich editor preference, or a few months after the 3.5 release.
+    if (this.siteSettings.rich_editor) {
+      await this.handleOldRichEditorPreference();
+
+      if (this.currentUser.useRichEditor) {
+        this.editorComponent = await loadRichEditor();
+      }
     }
+
+    this.editorComponent ??= TextareaEditor;
   }
 
   setupToolbar() {
@@ -114,6 +118,22 @@ export default class DEditor extends Component {
     if (this.extraButtons) {
       this.extraButtons(this.toolbar);
     }
+  }
+
+  async handleOldRichEditorPreference() {
+    const oldValue = this.keyValueStore.get("d-editor-prefers-rich-editor");
+
+    if (!oldValue) {
+      return;
+    }
+
+    await this.#saveRichEditorPreference(
+      oldValue === "true"
+        ? USER_OPTION_COMPOSITION_MODES.rich
+        : USER_OPTION_COMPOSITION_MODES.markdown
+    ).finally(() => {
+      this.keyValueStore.remove("d-editor-prefers-rich-editor");
+    });
   }
 
   @discourseComputed("placeholder")
@@ -200,6 +220,7 @@ export default class DEditor extends Component {
   @onEvent("willDestroyElement")
   _shutDown() {
     this._previewMutationObserver?.disconnect();
+    cancel(this._debounceSaveRichEditorPreference);
 
     this._cachedCookFunction = null;
   }
@@ -537,6 +558,10 @@ export default class DEditor extends Component {
 
   @action
   handleFocusOut() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     this.set("isEditorFocused", false);
   }
 
@@ -581,10 +606,24 @@ export default class DEditor extends Component {
       ? TextareaEditor
       : await loadRichEditor();
 
-    this.keyValueStore.set({
-      key: "d-editor-prefers-rich-editor",
-      value: this.isRichEditorEnabled,
-    });
+    const preference = this.isRichEditorEnabled
+      ? USER_OPTION_COMPOSITION_MODES.rich
+      : USER_OPTION_COMPOSITION_MODES.markdown;
+    this.#debounceSaveRichEditorPreference(preference);
+  }
+
+  #debounceSaveRichEditorPreference(preference) {
+    this._debounceSaveRichEditorPreference = discourseDebounce(
+      this,
+      this.#saveRichEditorPreference,
+      preference,
+      1000
+    );
+  }
+
+  #saveRichEditorPreference(preference) {
+    this.currentUser.set("user_option.composition_mode", preference);
+    return this.currentUser.save(["composition_mode"]);
   }
 
   @action

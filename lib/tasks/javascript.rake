@@ -189,6 +189,8 @@ task "javascript:update_constants" => :environment do
     export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json};
 
     export const INVITE_DESCRIPTION_MAX_LENGTH = #{Invite::DESCRIPTION_MAX_LENGTH};
+
+    export const USER_OPTION_COMPOSITION_MODES = #{UserOption.composition_mode_types.to_json};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

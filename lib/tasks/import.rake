@@ -203,6 +203,7 @@ def insert_user_options
                   hide_presence,
                   sidebar_link_to_filtered_list,
                   sidebar_show_count_of_new_items
+                  composition_mode
                 )
              SELECT u.id
                   , #{SiteSetting.default_email_mailing_list_mode}
@@ -229,6 +230,7 @@ def insert_user_options
                   , #{SiteSetting.default_hide_presence}
                   , #{SiteSetting.default_sidebar_link_to_filtered_list}
                   , #{SiteSetting.default_sidebar_show_count_of_new_items}
+                  , #{SiteSetting.default_composition_mode}
                FROM users u
           LEFT JOIN user_options uo ON uo.user_id = u.id
               WHERE uo.user_id IS NULL

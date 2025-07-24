@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
-import { cancel, scheduleOnce } from "@ember/runloop";
+import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
@@ -605,7 +605,7 @@ export default class ComposerService extends Service {
   }
 
   _focusAndInsertText(insertText) {
-    document.querySelector("textarea.d-editor-input")?.focus();
+    next(() => document.querySelector("textarea.d-editor-input")?.focus());
 
     if (insertText) {
       this.model.appendText(insertText, null, { new_line: true });

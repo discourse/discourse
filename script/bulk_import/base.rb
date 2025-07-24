@@ -616,6 +616,7 @@ class BulkImport::Base
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     timezone
+    composition_mode
   ]
 
   USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
@@ -1401,6 +1402,7 @@ class BulkImport::Base
     hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
     sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
+    composition_mode: SiteSetting.default_composition_mode,
   }
 
   def process_user_option(user_option)

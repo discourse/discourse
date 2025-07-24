@@ -902,15 +902,36 @@ third line`
     assert.dom(".d-editor-button-bar button.not-shown").doesNotExist();
   });
 
-  test("toolbar buttons tabindex", async function (assert) {
-    await render(<template><DEditor /></template>);
-    const buttons = queryAll(".d-editor-button-bar .btn");
+  testCase(
+    "toolbar buttons tabindex when not using rich_editor",
+    async function (assert) {
+      this.siteSettings.rich_editor = false;
+      await render(<template><DEditor /></template>);
+      const buttons = queryAll(".d-editor-button-bar .btn");
 
-    assert
-      .dom(buttons[0])
-      .hasAttribute("tabindex", "0", "it makes the first button focusable");
-    assert.dom(buttons[1]).hasAttribute("tabindex", "-1");
-  });
+      assert
+        .dom(buttons[0])
+        .hasAttribute("tabindex", "0", "it makes the first button focusable");
+      assert.dom(buttons[1]).hasAttribute("tabindex", "-1");
+    }
+  );
+
+  testCase(
+    "toolbar buttons tabindex when using rich_editor",
+    async function (assert) {
+      this.siteSettings.rich_editor = true;
+      await render(<template><DEditor /></template>);
+      const buttons = queryAll(".d-editor-button-bar .btn");
+
+      assert
+        .dom(buttons[0])
+        .hasAttribute(
+          "tabindex",
+          "-1",
+          "it does not make the first button focusable"
+        );
+    }
+  );
 
   testCase("replace-text event by default", async function (assert) {
     this.set("value", "red green blue");

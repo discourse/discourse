@@ -13,6 +13,7 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -134,6 +135,7 @@ let userOptionFields = [
   "sidebar_show_count_of_new_items",
   "watched_precedence_over_muted",
   "topics_unread_when_closed",
+  "composition_mode",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -231,6 +233,7 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("should_be_redirected_to_top") should_be_redirected_to_top;
   @userOption("redirected_to_top") redirected_to_top;
   @userOption("treat_as_new_topic_start_date") treat_as_new_topic_start_date;
+  @userOption("composition_mode") composition_mode;
 
   @gt("private_messages_stats.all", 0) hasPMs;
   @gt("private_messages_stats.mine", 0) hasStartedPMs;
@@ -249,6 +252,11 @@ export default class User extends RestModel.extend(Evented) {
   numGroupsToDisplay = 2;
 
   statusManager = new UserStatusManager(this);
+
+  @discourseComputed("user_option.composition_mode")
+  useRichEditor(compositionMode) {
+    return compositionMode === USER_OPTION_COMPOSITION_MODES.rich;
+  }
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
