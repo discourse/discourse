@@ -15,6 +15,7 @@ export default function (babel) {
           return;
         }
 
+        const namespaceImports = [];
         const properties = path.node.specifiers
           .map((specifier) => {
             if (specifier.type === "ImportDefaultSpecifier") {
@@ -23,7 +24,7 @@ export default function (babel) {
                 t.identifier(specifier.local.name)
               );
             } else if (specifier.type === "ImportNamespaceSpecifier") {
-              // TODO
+              namespaceImports.push(t.identifier(specifier.local.name));
             } else {
               return t.objectProperty(
                 t.identifier(specifier.imported.name),
@@ -33,25 +34,43 @@ export default function (babel) {
           })
           .filter(Boolean);
 
-        const replacement = t.variableDeclaration("const", [
-          t.variableDeclarator(
-            t.objectPattern(properties),
-            t.awaitExpression(
-              t.callExpression(
-                t.memberExpression(
-                  t.memberExpression(
-                    t.identifier("window"),
-                    t.identifier("moduleBroker")
-                  ),
-                  t.identifier("lookup")
-                ),
-                [t.stringLiteral(moduleName)]
-              )
-            )
-          ),
-        ]);
+        const replacements = [];
 
-        path.replaceWith(replacement);
+        const moduleBrokerLookup = t.awaitExpression(
+          t.callExpression(
+            t.memberExpression(
+              t.memberExpression(
+                t.identifier("window"),
+                t.identifier("moduleBroker")
+              ),
+              t.identifier("lookup")
+            ),
+            [t.stringLiteral(moduleName)]
+          )
+        );
+
+        if (properties.length) {
+          replacements.push(
+            t.variableDeclaration("const", [
+              t.variableDeclarator(
+                t.objectPattern(properties),
+                moduleBrokerLookup
+              ),
+            ])
+          );
+        }
+
+        if (namespaceImports.length) {
+          for (const namespaceImport of namespaceImports) {
+            replacements.push(
+              t.variableDeclaration("const", [
+                t.variableDeclarator(namespaceImport, moduleBrokerLookup),
+              ])
+            );
+          }
+        }
+
+        path.replaceWithMultiple(replacements);
       },
     },
   };
