@@ -6,7 +6,12 @@ class SeedAiDefaultLlmModel < ActiveRecord::Migration[7.2]
     last_model_id = DB.query_single("SELECT id FROM llm_models ORDER BY id DESC LIMIT 1").first
 
     if last_model_id.present?
-      execute "UPDATE site_settings SET value = '#{last_model_id}' WHERE name = 'ai_default_llm_model' AND (value IS NULL OR value = '');"
+      DB.exec(<<~SQL, llm_setting: "ai_default_llm_model", default: "#{last_model_id}")
+        INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
+        VALUES (:llm_setting, 1, :default, NOW(), NOW())
+        ON CONFLICT (name)
+        DO NOTHING
+      SQL
     end
   end
 
