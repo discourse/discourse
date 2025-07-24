@@ -15,7 +15,7 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   FLOAT_UI_PLACEMENTS,
-  PLACEMENT_STRATEGIES,
+  VISIBILITY_OPTIMIZERS,
 } from "float-kit/lib/constants";
 
 const centerOffset = offset(({ rects }) => {
@@ -35,12 +35,12 @@ export async function updatePosition(trigger, content, options) {
     boundary: options.boundary,
   };
 
-  // Determine which placement middleware to use
-  const placementStrategy =
-    options.placementStrategy ?? PLACEMENT_STRATEGIES.FLIP;
+  // Determine which visibility optimizer middleware to use
+  const visibilityOptimizer =
+    options.visibilityOptimizer ?? VISIBILITY_OPTIMIZERS.FLIP;
 
-  const placementStrategyMiddleware =
-    placementStrategy === PLACEMENT_STRATEGIES.AUTO_PLACEMENT
+  const visibilityOptimizerMiddleware =
+    visibilityOptimizer === VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT
       ? autoPlacement({
           allowedPlacements: options.allowedPlacements ?? FLOAT_UI_PLACEMENTS,
           ...detectOverflowOptions,
@@ -62,7 +62,7 @@ export async function updatePosition(trigger, content, options) {
       middleware.push(inline());
     }
 
-    middleware.push(placementStrategyMiddleware);
+    middleware.push(visibilityOptimizerMiddleware);
 
     let limiter;
     if (options.limitShift) {

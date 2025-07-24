@@ -13,7 +13,7 @@ export const FLOAT_UI_PLACEMENTS = [
   "left-end",
 ];
 
-export const PLACEMENT_STRATEGIES = {
+export const VISIBILITY_OPTIMIZERS = {
   FLIP: "flip",
   AUTO_PLACEMENT: "autoPlacement",
 };
@@ -37,7 +37,7 @@ export const TOOLTIP = {
     triggers: { mobile: ["click"], desktop: ["hover", "click"] },
     untriggers: { mobile: ["click"], desktop: ["hover", "click"] },
     placement: "top",
-    placementStrategy: PLACEMENT_STRATEGIES.FLIP,
+    visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
@@ -69,7 +69,7 @@ export const MENU = {
     triggers: ["click"],
     untriggers: ["click"],
     placement: "bottom-start",
-    placementStrategy: PLACEMENT_STRATEGIES.FLIP,
+    visibilityOptimizer: VISIBILITY_OPTIMIZERS.FLIP,
     fallbackPlacements: FLOAT_UI_PLACEMENTS,
     autoUpdate: true,
     trapTab: true,
