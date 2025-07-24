@@ -40,7 +40,7 @@ class ThemeJavascriptCompiler
     [@content, @source_map]
   rescue DiscourseJsProcessor::TranspileError => e
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{e.message}"
-    @content = "console.error(#{message.to_json});\n"
+    @content = "throw new Error(#{message.to_json});\n"
     [@content, @source_map]
   end
 

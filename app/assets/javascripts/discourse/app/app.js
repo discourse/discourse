@@ -27,10 +27,19 @@ window.moduleBroker = {
 
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
-  const compatModules = (await import(/* webpackIgnore: true */ link.href))
-    .default;
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/theme-${themeId}/${key}`, () => mod);
+  try {
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/theme-${themeId}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
+      error
+    );
+    fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
 }
 

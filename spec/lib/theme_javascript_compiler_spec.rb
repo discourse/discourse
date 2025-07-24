@@ -205,7 +205,7 @@ RSpec.describe ThemeJavascriptCompiler do
 
     it "handles invalid JS" do
       compiler.append_tree({ "filename.js" => "if(someCondition" })
-      expect(compiler.content).to include('console.error("[THEME 1')
+      expect(compiler.content).to include('throw new Error("[THEME 1')
       expect(compiler.content).to include("Unexpected token")
     end
   end
