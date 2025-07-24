@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseSubscriptions::AdminController do
   let(:admin) { Fabricate(:admin) }
 

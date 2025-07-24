@@ -107,8 +107,8 @@ importers:
         specifier: 1.8.2
         version: 1.8.2
       playwright:
-        specifier: 1.52.0
-        version: 1.52.0
+        specifier: 1.54.1
+        version: 1.54.1
       prettier:
         specifier: 3.5.3
         version: 3.5.3
@@ -586,8 +586,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       jsuites:
-        specifier: ^5.11.1
-        version: 5.11.1
+        specifier: ^5.12.0
+        version: 5.12.0
       loader.js:
         specifier: ^4.7.0
         version: 4.7.0
@@ -6018,8 +6018,8 @@ packages:
   jspreadsheet-ce@4.15.0:
     resolution: {integrity: sha512-1A1q7uxICxzXRiql3ZhXldFPjdt5VcFcoHSEvfvBFw9DcU7bq/gAEaqyKMJPeG+6zibpO4r+b8Dk88nIR7NKng==}
 
-  jsuites@5.11.1:
-    resolution: {integrity: sha512-ts1y3ub13ckqxLynIbobGhWiPYnutjx+66dLOOcVIvAQkLlxzgSRbrHmeaQFvF91zWSjIaasYUal5fjluzm2XA==}
+  jsuites@5.12.0:
+    resolution: {integrity: sha512-t/tqa+b+8OsRDA3Sw/Ye+V2swsab6TQU1Hz9Seav4UTG3csb+kK0Lh9cD/p4dl+C3oKK8ExkNiOaLdMuf1oLBg==}
 
   just-diff-apply@5.5.0:
     resolution: {integrity: sha512-OYTthRfSh55WOItVqwpefPtNt2VdKsq5AnAK6apdtR6yCH8pr0CmSr710J0Mf+WdQy7K/OzMy7K2MgAfdQURDw==}
@@ -7078,13 +7078,13 @@ packages:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
     engines: {node: '>=8'}
 
-  playwright-core@1.52.0:
-    resolution: {integrity: sha512-l2osTgLXSMeuLZOML9qYODUQoPPnUsKsb5/P6LJ2e6uPKXUdPK5WYhN4z03G+YNbWmGDY4YENauNu4ZKczreHg==}
+  playwright-core@1.54.1:
+    resolution: {integrity: sha512-Nbjs2zjj0htNhzgiy5wu+3w09YetDx5pkrpI/kZotDlDUaYk0HVA5xrBVPdow4SAUIlhgKcJeJg4GRKW6xHusA==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.52.0:
-    resolution: {integrity: sha512-JAwMNMBlxJ2oD1kce4KPtMkDeKGHQstdpFPcPH3maElAXon/QZeTvtsfXmTMRyO9TslfoYOXkSsvao2nE1ilTw==}
+  playwright@1.54.1:
+    resolution: {integrity: sha512-peWpSwIBmSLi6aW2auvrUtf2DqY16YYcCMO8rTVx486jKmDTJg7UAhyrraP98GB8BoPURZP8+nxO7TSd4cPr5g==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -15359,9 +15359,9 @@ snapshots:
   jspreadsheet-ce@4.15.0:
     dependencies:
       '@jspreadsheet/formula': 2.0.2
-      jsuites: 5.11.1
+      jsuites: 5.12.0
 
-  jsuites@5.11.1: {}
+  jsuites@5.12.0: {}
 
   just-diff-apply@5.5.0: {}
 
@@ -16448,11 +16448,11 @@ snapshots:
     dependencies:
       find-up: 3.0.0
 
-  playwright-core@1.52.0: {}
+  playwright-core@1.54.1: {}
 
-  playwright@1.52.0:
+  playwright@1.54.1:
     dependencies:
-      playwright-core: 1.52.0
+      playwright-core: 1.54.1
     optionalDependencies:
       fsevents: 2.3.2
 

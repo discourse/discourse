@@ -35,7 +35,7 @@ RSpec.describe "AI image caption", type: :system do
     it "should not show an image caption button" do
       visit("/latest")
       page.find("#create-topic").click
-      attach_file([file_path]) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path, make_visible: true)
       wait_for { composer.has_no_in_progress_uploads? }
       expect(popup).to have_no_generate_caption_button
     end
@@ -56,7 +56,7 @@ RSpec.describe "AI image caption", type: :system do
       DiscourseAi::Completions::Llm.with_prepared_responses([caption]) do
         visit("/latest")
         page.find("#create-topic").click
-        attach_file([file_path]) { composer.click_toolbar_button("upload") }
+        attach_file("file-uploader", file_path, make_visible: true)
         popup.click_generate_caption
         expect(popup.has_caption_popup_value?(caption_with_attrs)).to eq(true)
         popup.save_caption
@@ -69,7 +69,7 @@ RSpec.describe "AI image caption", type: :system do
       DiscourseAi::Completions::Llm.with_prepared_responses([caption]) do
         visit("/latest")
         page.find("#create-topic").click
-        attach_file([file_path]) { composer.click_toolbar_button("upload") }
+        attach_file("file-uploader", file_path, make_visible: true)
         popup.click_generate_caption
         popup.cancel_caption
         expect(popup).to have_no_disabled_generate_button
@@ -82,7 +82,7 @@ RSpec.describe "AI image caption", type: :system do
       DiscourseAi::Completions::Llm.with_prepared_responses([caption]) do
         visit("/latest")
         page.find("#create-topic").click
-        attach_file([file_path]) { page.find(".mobile-file-upload").click }
+        attach_file("file-uploader", file_path, make_visible: true)
         page.find(".mobile-preview").click
         popup.click_generate_caption
         wait_for { page.find(".image-wrapper img")["alt"] == caption_with_attrs }

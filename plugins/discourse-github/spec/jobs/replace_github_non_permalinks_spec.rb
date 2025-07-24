@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::ReplaceGithubNonPermalinks do
   let(:job) { described_class.new }
   let(:github_url) do

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseGithubPlugin::GithubBadges do
   let(:bronze_user) { Fabricate(:user) }
   let(:bronze_user_repo_2) { Fabricate(:user) }

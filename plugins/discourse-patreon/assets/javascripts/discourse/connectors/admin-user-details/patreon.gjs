@@ -21,22 +21,27 @@ export default class Patreon extends Component {
   }
 
   @action
-  checkPatreonEmail(user) {
-    ajax(userPath(`${user.username_lower}/patreon_email.json`), {
-      data: {
-        context: window.location.pathname,
-      },
-    }).then((result) => {
-      if (result) {
-        const email = result.email;
-        let url = "https://patreon.com/members";
-        if (email) {
-          url = `${url}?query=${email}`;
-        }
-        this.set("patreon_email", email);
-        this.set("patron_url", url);
+  async checkPatreonEmail() {
+    const result = await ajax(
+      userPath(`${this.model.username_lower}/patreon_email.json`),
+      {
+        data: {
+          context: window.location.pathname,
+        },
       }
-    });
+    );
+
+    if (result) {
+      const email = result.email;
+
+      let url = "https://patreon.com/members";
+      if (email) {
+        url = `${url}?query=${email}`;
+      }
+
+      this.set("patreon_email", email);
+      this.set("patron_url", url);
+    }
   }
 
   <template>
@@ -54,8 +59,7 @@ export default class Patreon extends Component {
               {{this.patreon_email}}
             {{else}}
               <DButton
-                {{! template-lint-disable no-action }}
-                @action={{action "checkPatreonEmail" this.model}}
+                @action={{this.checkPatreonEmail}}
                 @icon="far-envelope"
                 @label="admin.users.check_email.text"
                 @title="admin.users.check_email.title"

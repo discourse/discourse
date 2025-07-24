@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 module DiscourseAi
   module Automation
     describe ReportRunner do

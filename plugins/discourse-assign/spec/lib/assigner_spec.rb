@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Assigner do
   before do
     SiteSetting.assign_enabled = true

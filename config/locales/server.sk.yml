@@ -2123,6 +2123,9 @@ sk:
     composer_media_optimization_image_resize_dimensions_threshold: "Minimálna šírka obrázka na spustenie zmeny veľkosti na strane klienta"
     composer_media_optimization_image_resize_width_target: "Obrázky so šírkou väčšou ako `composer_media_optimization_image_dimensions_resize_threshold` budú zmenené na túto šírku. Musí byť >= ako `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "Kvalita kódovania JPG použitá v procese opätovného kódovania."
+    video_conversion_enabled: "Povolenie konverzie videa pre nahrané videosúbory. To umožňuje konvertovať videá do formátov kompatibilných s webom."
+    video_conversion_service: "Služba na konverziu videa, ktorá sa má použiť na spracovanie nahraných videí."
+    mediaconvert_role_arn: "Rola AWS IAM ARN pre službu MediaConvert. Vyžaduje sa pri používaní služby AWS MediaConvert na konverziu videa."
     min_ratio_to_crop: "Pomer používaný na orezávanie vysokých obrázkov. Zadajte výsledok šírka / výška."
     simultaneous_uploads: "Maximálny počet súborov, ktoré možno v aplikácii Kompozer pretiahnuť a pustiť"
     default_invitee_trust_level: "Predvolená stupeň dôvery (0-4) pre pozvaných používateľov."
@@ -2598,6 +2601,7 @@ sk:
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
     glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie postreamu \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
+    deactivate_widgets_rendering: "Zakázanie staršieho vykresľovacieho jadra widgetov. Tým sa zakážu všetky widgety, ktoré neboli aktualizované na komponenty Glimmer, a tiež sa bezpodmienečne povolí Glimmer Post Stream bez ohľadu na hodnotu nastavenia `glimmer_post_stream_mode`. Toto nastavenie sa neodporúča pre produkčné stránky, pretože môže narušiť existujúce témy a doplnky."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
@@ -2697,6 +2701,8 @@ sk:
       invalid_search_ranking_weights: "Hodnota je neplatná pre nastavenie stránky search_ranking_weights. Príklad: \"{0.1,0.2,0.3,1.0}\". Všimnite si, že maximálna hodnota pre každú váhu je 1,0."
       content_localization_locale_limit: "Počet podporovaných lokálnych jazykov nemôže prekročiť %{max}."
       content_localization_anon_language_switcher_requirements: "Prepínač jazykov vyžaduje, aby bolo povolené nastavenie stránky `nastaviť lokálnosť zo súboru cookie` a aby v poli `lokalizácia obsahu podporovaná lokálnymi jazykmi` bol aspoň jeden jazyk."
+      mediaconvert_role_arn_required: "Pri používaní AWS MediaConvert na konverziu videa sa vyžaduje rola AWS IAM ARN."
+      s3_credentials_required_for_video_conversion: "Na konverziu videa sú potrebné poverenia S3. Nakonfigurujte prístupové kľúče S3 alebo povoľte profil IAM."
     keywords:
       clean_up_inactive_users_after_days: "deaktivované|neaktívne|neaktivované"
       navigation_menu: "bočný panel|rozbaľovacie okno záhlavia"

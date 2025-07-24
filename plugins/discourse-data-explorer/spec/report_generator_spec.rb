@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseDataExplorer::ReportGenerator do
   fab!(:user)
   fab!(:unauthorised_user) { Fabricate(:user) }

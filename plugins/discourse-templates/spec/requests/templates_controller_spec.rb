@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../helpers/topics_helper"
 
 RSpec.configure { |c| c.include DiscourseTemplates::TopicsHelper }

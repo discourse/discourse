@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require Rails.root.join(
           "plugins/discourse-topic-voting/db/migrate/20240711102255_ensure_consistency.rb",
         )

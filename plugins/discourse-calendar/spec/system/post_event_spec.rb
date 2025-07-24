@@ -63,7 +63,7 @@ describe "Post event", type: :system do
     it "correctly builds a multiline description", timezone: "Europe/Paris" do
       visit("/new-topic")
 
-      time = Time.now.in_time_zone("Europe/Paris").strftime("%Y-%m-%d %H:%M")
+      time = Time.now.strftime("%Y-%m-%d %H:%M")
 
       EXPECTED_BBCODE = <<~EVENT
         [event start="#{time}" status="public" timezone="Europe/Paris" allowedGroups="trust_level_0"]
@@ -74,8 +74,7 @@ describe "Post event", type: :system do
 
       find(".toolbar-menu__options-trigger").click
       click_button(I18n.t("js.discourse_post_event.builder_modal.attach"))
-
-      post_event_form_page.fill_description("foo\nbar").submit
+      post_event_form_page.fill_description("foo\nbar").fill_timezone("Europe/Paris").submit
 
       expect(composer).to have_value(EXPECTED_BBCODE.strip)
     end

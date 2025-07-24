@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "../../lib/omniauth_apple"
-require "rails_helper"
 
 pem = ::OpenSSL::PKey::EC.generate("prime256v1").to_pem
 

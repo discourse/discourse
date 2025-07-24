@@ -1,5 +1,3 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { module, test } from "qunit";
 import {
   addProgressDot,
@@ -128,9 +126,9 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
 
     let done = await applyProgress(status, streamUpdater);
 
-    assert.notOk(done, "The update should not be done.");
+    assert.false(done, "The update should not be done.");
 
-    assert.equal(
+    assert.strictEqual(
       streamUpdater.raw,
       status.raw.substring(0, MIN_LETTERS_PER_INTERVAL),
       "The raw content should delta update."
@@ -138,9 +136,9 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
 
     done = await applyProgress(status, streamUpdater);
 
-    assert.notOk(done, "The update should not be done.");
+    assert.false(done, "The update should not be done.");
 
-    assert.equal(
+    assert.strictEqual(
       streamUpdater.raw,
       status.raw.substring(0, MIN_LETTERS_PER_INTERVAL * 2),
       "The raw content should delta update."
@@ -150,7 +148,7 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
     await applyProgress(status, streamUpdater);
 
     const innerHtml = streamUpdater.element.innerHTML;
-    assert.equal(
+    assert.strictEqual(
       innerHtml,
       "<p>some raw content</p>",
       "The cooked content should be updated."
@@ -161,7 +159,7 @@ module("Discourse AI | Unit | Lib | ai-streamer", function () {
 
     await applyProgress(status, streamUpdater);
 
-    assert.equal(
+    assert.strictEqual(
       streamUpdater.element.innerHTML,
       "<p>updated cooked</p>",
       "The cooked content should be updated."

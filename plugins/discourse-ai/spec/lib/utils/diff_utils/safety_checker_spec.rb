@@ -4,7 +4,7 @@ RSpec.describe DiscourseAi::Utils::DiffUtils::SafetyChecker do
   before { enable_current_plugin }
 
   describe "#safe?" do
-    subject { described_class.new(text).safe? }
+    subject(:safety_checker) { described_class.new(text).safe? }
 
     context "with safe text" do
       let(:text) { "This is a simple safe text without issues." }

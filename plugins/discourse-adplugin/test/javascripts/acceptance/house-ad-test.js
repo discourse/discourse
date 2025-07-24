@@ -2,7 +2,6 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -53,7 +52,7 @@ import {
         },
       });
 
-      test("correct ads show", async (assert) => {
+      test("correct ads show", async function (assert) {
         updateCurrentUser({
           staff: false,
           trust_level: 1,
@@ -63,15 +62,15 @@ import {
 
         assert
           .dom(".h-above-post-stream")
-          .exists({ count: 1 }, "it should render ad at top of topic");
+          .exists({ count: 1 }, "renders ad at top of topic");
 
         assert
           .dom(".h-above-suggested")
-          .exists({ count: 1 }, "it should render ad above suggested topics");
+          .exists({ count: 1 }, "renders ad above suggested topics");
 
         assert
           .dom(".h-post")
-          .exists({ count: 3 }, "it should render 3 ads between posts");
+          .exists({ count: 3 }, "renders 3 ads between posts");
 
         assert
           .dom("#post_6 + .ad-connector .h-post")
@@ -89,15 +88,15 @@ import {
 
         assert
           .dom(".h-topic-list")
-          .exists({ count: 1 }, "it should render ad above topic list");
-        const originalTopAdElement = query(".h-topic-list");
+          .exists({ count: 1 }, "renders ad above topic list");
+        const originalTopAdElement = document.querySelector(".h-topic-list");
 
         assert
           .dom(".h-between-topic-list")
-          .exists({ count: 5 }, "it should render 5 ads between topics");
+          .exists({ count: 5 }, "renders 5 ads between topics");
 
         await visit("/top");
-        const newTopAdElement = query(".h-topic-list");
+        const newTopAdElement = document.querySelector(".h-topic-list");
 
         assert.notStrictEqual(
           originalTopAdElement,
@@ -159,7 +158,7 @@ import {
         },
       });
 
-      test("displays ad to users when current category id is included in ad category_ids", async (assert) => {
+      test("displays ad to users when current category id is included in ad category_ids", async function (assert) {
         updateCurrentUser({
           staff: false,
           trust_level: 1,
@@ -198,7 +197,7 @@ import {
         },
       });
 
-      test("hides ad to users when current category id is not included in ad category_ids", async (assert) => {
+      test("hides ad to users when current category id is not included in ad category_ids", async function (assert) {
         updateCurrentUser({
           staff: false,
           trust_level: 1,
@@ -236,7 +235,7 @@ import {
         },
       });
 
-      test("hides ad to anon users when current category id is not included in ad category_ids", async (assert) => {
+      test("hides ad to anon users when current category id is not included in ad category_ids", async function (assert) {
         await visit("/c/bug/1");
         assert
           .dom(".h-topic-list")
@@ -269,7 +268,7 @@ import {
         },
       });
 
-      test("hides ad to anon users when current category id is not included in ad category_ids", async (assert) => {
+      test("hides ad to anon users when current category id is not included in ad category_ids", async function (assert) {
         await visit("/c/bug/1");
         assert
           .dom(".h-topic-list")
@@ -302,7 +301,7 @@ import {
         },
       });
 
-      test("shows ad to anon users when current category id is included in ad category_ids", async (assert) => {
+      test("shows ad to anon users when current category id is included in ad category_ids", async function (assert) {
         await visit("/c/bug/1");
         assert
           .dom(".h-topic-list")
@@ -338,7 +337,7 @@ import {
         },
       });
 
-      test("shows non-restricted ad to anon users", async (assert) => {
+      test("shows non-restricted ad to anon users", async function (assert) {
         await visit("/c/bug/1");
         assert
           .dom(".h-topic-list-two")

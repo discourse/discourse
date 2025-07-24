@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe TopicQuery do
   fab!(:user0) { Fabricate(:user) }
   fab!(:category1) { Fabricate(:category) }

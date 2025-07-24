@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Personas::Tools::GithubPullRequestDiff do
   let(:bot_user) { Fabricate(:user) }
   fab!(:llm_model)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::DiscoursePostEventSendReminder do
   let(:admin_1) { Fabricate(:user, admin: true) }
   let(:going_user) { Fabricate(:user) }

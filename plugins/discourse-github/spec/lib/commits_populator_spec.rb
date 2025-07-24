@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseGithubPlugin::CommitsPopulator do
   subject(:populator) { described_class.new(repo) }
 
