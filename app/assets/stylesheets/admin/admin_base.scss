@@ -825,14 +825,19 @@ $mobile-breakpoint: 700px;
   box-sizing: border-box;
   position: relative; // The admin-nav becomes a slide-out menu at the mobile-nav breakpoint
 
-  @media (max-width: $mobile-breakpoint) {
-    position: absolute;
-    z-index: z("base") - 1;
-    width: 250px;
+  @include viewport.until(sm) {
+    width: 0;
+    transition: width 0.3s ease;
   }
 
-  @media (width <= 500px) {
-    width: 50%;
+  &__wrapper {
+    display: flex;
+
+    &.mobile-open {
+      .admin-nav {
+        width: 50%;
+      }
+    }
   }
 
   .nav-stacked {
@@ -859,18 +864,6 @@ $mobile-breakpoint: 700px;
   @media (max-width: $mobile-breakpoint) {
     width: 100%;
     border: none;
-  }
-}
-
-.admin-detail.mobile-open {
-  @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: translateX(250px);
-  }
-
-  @media (width <= 500px) {
-    transition: transform 0.3s ease;
-    transform: translateX(50%);
   }
 }
 
