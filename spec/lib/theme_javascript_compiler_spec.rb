@@ -38,7 +38,6 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/connectors/outlet/blah-1.js",
-        # "theme-1/templates/connectors/outlet/blah-1.js",
       )
 
       # Colocated under `/templates/connectors`
@@ -55,7 +54,6 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
-        # "connectors/outlet/blah-1.js",
         "theme-1/templates/connectors/outlet/blah-1.js",
       )
 
@@ -74,7 +72,6 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/connectors/outlet/blah-1.js",
-        # "templates/connectors/outlet/blah-1.js",
       )
 
       # colocation in discourse directory
@@ -92,7 +89,6 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/discourse/connectors/outlet/blah-1.js",
-        # "theme-1/templates/connectors/outlet/blah-1.js",
       )
     end
   end

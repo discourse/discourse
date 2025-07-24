@@ -24,9 +24,6 @@ document.addEventListener("discourse-init", async () => {
 
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target") || "core";
-  const testingTheme = !!document.querySelector(
-    "link[rel=modulepreload][data-theme-id]"
-  );
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
   const hasThemeJs = !!document.querySelector(
     "link[rel=modulepreload][data-theme-id]"
@@ -43,7 +40,7 @@ document.addEventListener("discourse-init", async () => {
     `
   );
 
-  const testingCore = !testingTheme && target === "core";
+  const testingCore = !hasThemeJs && target === "core";
   if (testingCore) {
     setupEmberOnerrorValidation();
   }
