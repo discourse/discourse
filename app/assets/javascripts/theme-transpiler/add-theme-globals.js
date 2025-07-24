@@ -6,10 +6,16 @@ export default function (babel) {
       const importDeclarations = [];
 
       if (path.scope.bindings.themePrefix) {
-        if (path.scope.bindings.themePrefix.kind !== "module") {
-          throw new Error("duplicate themePrefix");
-        } else {
-          // TODO: maybe check the import path
+        const themePrefix = path.scope.bindings.themePrefix;
+
+        if (themePrefix.kind !== "module") {
+          throw new Error(
+            "`themePrefix` is already defined. Unable to add import."
+          );
+        } else if (themePrefix.path.parent.source.value !== "virtual:theme") {
+          throw new Error(
+            "`themePrefix` is already imported. Unable to add import from `virtual:theme`."
+          );
         }
       } else {
         importDeclarations.push(
@@ -21,10 +27,15 @@ export default function (babel) {
       }
 
       if (path.scope.bindings.settings) {
-        if (path.scope.bindings.settings.kind !== "module") {
-          throw new Error("duplicate settings");
-        } else {
-          // TODO: maybe check the import path
+        const settings = path.scope.bindings.settings;
+        if (settings.kind !== "module") {
+          throw new Error(
+            "`settings` is already defined. Unable to add import."
+          );
+        } else if (settings.path.parent.source.value !== "virtual:theme") {
+          throw new Error(
+            "`settings` is already imported. Unable to add import from `virtual:theme`."
+          );
         }
       } else {
         importDeclarations.push(
@@ -33,7 +44,7 @@ export default function (babel) {
       }
 
       if (importDeclarations.length > 0) {
-        path.node.body.push(
+        path.node.body.unshift(
           t.importDeclaration(
             importDeclarations,
             t.stringLiteral("virtual:theme")
