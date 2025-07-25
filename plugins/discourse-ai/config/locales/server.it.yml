@@ -62,7 +62,6 @@ it:
     ai_helper_enabled_features: "Seleziona le funzionalità da abilitare nell'assistente IA."
     post_ai_helper_allowed_groups: "Gruppi di utenti autorizzati ad accedere alle funzionalità dell'assistente IA nei post"
     ai_helper_image_caption_model: "Seleziona il modello da utilizzare per generare le didascalie delle immagini"
-    ai_auto_image_caption_allowed_groups: "Gli utenti di questi gruppi possono attivare/disattivare i sottotitoli automatici delle immagini."
     ai_embeddings_selected_model: "Usa il modello selezionato per generare le integrazioni."
     ai_embeddings_generate_for_pms: "Genera integrazioni per messaggi personali."
     ai_embeddings_semantic_related_topics_enabled: "Usa la ricerca semantica per argomenti correlati."

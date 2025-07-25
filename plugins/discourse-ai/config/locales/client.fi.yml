@@ -515,12 +515,6 @@ fi:
           generating: "Luodaan kuvatekstiä..."
           credits: "Tekoälyn laatima kuvateksti"
           save_caption: "Tallenna"
-          automatic_caption_setting: "Ota automaattinen kuvateksti käyttöön"
-          automatic_caption_loading: "Luodaan kuvatekstejä kuville..."
-          automatic_caption_dialog:
-            prompt: "Tämä viesti sisältää kuvia, joilla ei ole kuvatekstiä. Haluatko ottaa automaattiset kuvatekstit käyttöön ladattaessa kuvia verkkoon? (Voit muuttaa tätä myöhemmin asetuksissasi)"
-            confirm: "Ota käyttöön"
-            cancel: "Älä kysy uudelleen"
         no_content_error: "Lisää ensin sisältöä tehdäksesi tekoälytoimia sille"
       reviewables:
         model_used: "Käytetty malli:"

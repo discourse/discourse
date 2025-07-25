@@ -2868,6 +2868,9 @@ th:
         change_settings_short: "การตั้งค่า"
         author: "โดย %{author}"
         learn_more: "เรียนรู้เพิ่มเติม"
+        filters:
+          all: "ทั้งหมด"
+          disabled: "ปิดใช้งานแล้ว"
       backups:
         title: "สำรอง"
         menu:

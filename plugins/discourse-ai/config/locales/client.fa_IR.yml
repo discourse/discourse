@@ -184,8 +184,6 @@ fa_IR:
           selected: "انتخاب شده"
         image_caption:
           save_caption: "ذخیره"
-          automatic_caption_dialog:
-            confirm: "فعال کردن"
       reviewables:
         model_used: "مدل مورد استفاده:"
         accuracy: "دقت:"

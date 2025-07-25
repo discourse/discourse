@@ -4595,6 +4595,11 @@ lt:
         howto: "Kaip galiu instaliuoti plungin'us?"
         author: "Pagal %{author}"
         learn_more: "Sužinoti daugiau"
+        filters:
+          all: "Visi"
+          enabled: "Galimas"
+          disabled: "Uždrausta"
+          reset: "Atstatyti"
       backups:
         title: "Atsarginės kopijos"
         menu:

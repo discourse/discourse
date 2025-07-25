@@ -151,8 +151,6 @@ ug:
           selected: "تاللاندى"
         image_caption:
           save_caption: "ساقلا"
-          automatic_caption_dialog:
-            confirm: "قوزغات"
       embeddings:
         back: "كەينى"
         save: "ساقلا"

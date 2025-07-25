@@ -62,7 +62,6 @@ pt_BR:
     ai_helper_enabled_features: "Selecione os recursos para ativar no ajudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuários(as) com permissão para acessar recursos do ajudante de IA nas postagens"
     ai_helper_image_caption_model: "Selecione o modelo a ser usado para gerar legendas em imagens"
-    ai_auto_image_caption_allowed_groups: "Usuários(as) nestes grupos podem alternar legendas automáticas em imagens."
     ai_embeddings_selected_model: "Use o modelo selecionado para gerar incorporações"
     ai_embeddings_generate_for_pms: "Gere incorporações para mensagens pessoais."
     ai_embeddings_semantic_related_topics_enabled: "Use Pesquisa semântica para tópicos relacionados."

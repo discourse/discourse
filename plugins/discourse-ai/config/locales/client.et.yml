@@ -126,8 +126,6 @@ et:
           cancel: "Loobu"
         image_caption:
           save_caption: "Salvesta"
-          automatic_caption_dialog:
-            confirm: "Luba"
       embeddings:
         back: "Tagasi"
         save: "Salvesta"

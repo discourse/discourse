@@ -3531,6 +3531,11 @@ ca:
         howto: "Com s'instal·len els connectors?"
         author: "Per %{author}"
         learn_more: "Per a saber-ne més"
+        filters:
+          all: "Tots"
+          enabled: "Activat"
+          disabled: "Desactivat"
+          reset: "Restableix"
       backups:
         title: "Còpies de seguretat"
         menu:

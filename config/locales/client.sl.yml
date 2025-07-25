@@ -4153,6 +4153,11 @@ sl:
         author: "Od %{author}"
         experimental_badge: "eksperimentalno"
         learn_more: "Več o tem"
+        filters:
+          all: "Vsi"
+          enabled: "Vključeno"
+          disabled: "Onemogočeno"
+          reset: "Ponastavi"
       backups:
         title: "Varnostne kopije"
         menu:

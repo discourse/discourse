@@ -4317,6 +4317,10 @@ hy:
         howto: "Ինչպե՞ս կարող եմ ես տեղադրել հավելումներ:"
         author: "%{author}-Ի կողմԻց"
         learn_more: "Իմանալ ավելին"
+        filters:
+          all: "Բոլոր"
+          disabled: "Անջատված"
+          reset: "Վերահաստատե;"
       backups:
         title: "Պահուստներ"
         menu:

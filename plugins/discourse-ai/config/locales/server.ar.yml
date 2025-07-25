@@ -62,7 +62,6 @@ ar:
     ai_helper_enabled_features: "حدِّد الميزات التي تريد تفعيلها في مساعد الذكاء الاصطناعي."
     post_ai_helper_allowed_groups: "مجموعات المستخدمين المسموح لها بالوصول إلى ميزات مساعد الذكاء الاصطناعي في المنشورات"
     ai_helper_image_caption_model: "حدِّد النموذج الذي سيتم استخدامه لإنشاء التسميات التوضيحية للصور"
-    ai_auto_image_caption_allowed_groups: "يمكن للمستخدمين في هذه المجموعات تشغيل التسميات التوضيحية التلقائية للصور."
     ai_embeddings_selected_model: "استخدم النموذج المُحدَّد لتوليد التضمينات."
     ai_embeddings_generate_for_pms: "إنشاء تضمينات للرسائل الشخصية."
     ai_embeddings_semantic_related_topics_enabled: "استخدام البحث الدلالي للموضوعات ذات الصلة."

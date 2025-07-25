@@ -62,7 +62,6 @@ fr:
     ai_helper_enabled_features: "Sélectionnez les fonctionnalités à activer dans l’assistant IA."
     post_ai_helper_allowed_groups: "Les groupes d'utilisateurs autorisés à accéder aux fonctionnalités d'AI Helper dans les publications"
     ai_helper_image_caption_model: "Sélectionnez le modèle à utiliser pour générer des légendes d'images"
-    ai_auto_image_caption_allowed_groups: "Les utilisateurs de ces groupes peuvent activer ou désactiver les légendes automatiques des images."
     ai_embeddings_selected_model: "Utilisez le modèle sélectionné pour générer des intégrations."
     ai_embeddings_generate_for_pms: "Générez des intégrations pour les messages privés."
     ai_embeddings_semantic_related_topics_enabled: "Utilisez la recherche sémantique pour les sujets connexes."

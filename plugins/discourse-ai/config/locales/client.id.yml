@@ -208,8 +208,6 @@ id:
           generating: "Menghasilkan keterangan..."
           credits: "Keterangan oleh AI"
           save_caption: "Simpan"
-          automatic_caption_dialog:
-            confirm: "Aktifkan"
       reviewables:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"

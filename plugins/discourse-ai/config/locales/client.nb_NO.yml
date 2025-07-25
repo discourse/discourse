@@ -138,8 +138,6 @@ nb_NO:
           select: "Velg"
         image_caption:
           save_caption: "Lagre"
-          automatic_caption_dialog:
-            confirm: "Aktiver"
       embeddings:
         back: "Forrige"
         save: "Lagre"

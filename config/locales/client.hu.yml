@@ -5313,7 +5313,6 @@ hu:
               header_description: "Az elvégzett keresések naplójának megtekintése"
         plugins:
           title: "Telepített bővítmények"
-          header_description: "Ebben a listában megjelenik minden olyan Discourse bővítmény, amelyet telepített, vagy amely a Discourse tárhelyen előre telepítve van"
         api_keys:
           title: "API kulcsok"
           header_description: "Az API-kulcsok funkció lehetővé teszi a Discourse külső rendszerekkel való biztonságos integrálását és a műveletek automatizálását. A rendszergazdák meghatározott hatókörű kulcsokat hozhatnak létre az erőforrásokhoz és az érzékeny adatokhoz való hozzáférés szabályozására. A hatókör korlátozza a funkcionalitást, és fokozott biztonságot biztosít."
@@ -6091,6 +6090,11 @@ hu:
         author: "Szerző %{author}"
         experimental_badge: "kísérleti"
         learn_more: "Tudjon meg többet"
+        filters:
+          all: "Összes"
+          enabled: "Bekapcsolva"
+          disabled: "Kikapcsolva"
+          reset: "Alaphelyzetbe állítás"
       navigation_menu:
         sidebar: "Oldalsáv"
         header_dropdown: "Fejléc legördülő menü"

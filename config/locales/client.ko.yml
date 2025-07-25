@@ -4278,6 +4278,11 @@ ko:
         howto: "플러그인은 어떻게 설치하나요?"
         author: "%{author}에 의해"
         learn_more: "더 보기"
+        filters:
+          all: "모두"
+          enabled: "활성화"
+          disabled: "비활성"
+          reset: "리셋"
       navigation_menu:
         sidebar: "사이드바"
       backups:

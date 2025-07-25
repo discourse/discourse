@@ -515,12 +515,6 @@ pt_BR:
           generating: "Gerando legenda..."
           credits: "Legendado por IA"
           save_caption: "Salvar"
-          automatic_caption_setting: "Ativar legenda automática"
-          automatic_caption_loading: "Legendando imagens..."
-          automatic_caption_dialog:
-            prompt: "Esta postagem contém imagens sem legendas. Gostaria de ativar legendas automáticas em envios de imagem? (Altere nas preferências mais tarde)"
-            confirm: "Ativar"
-            cancel: "Não perguntar novamente"
         no_content_error: "Primeiro adicione conteúdo para realizar ações de IA nele"
       reviewables:
         model_used: "Modelo usado:"

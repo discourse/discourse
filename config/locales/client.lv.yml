@@ -3213,6 +3213,11 @@ lv:
         change_settings_short: "Iestatījumi"
         howto: "Kā instalēt spraudņus?"
         learn_more: "Uzzināt vairāk"
+        filters:
+          all: "Visi"
+          enabled: "Ieslēgts"
+          disabled: "Atslēgt"
+          reset: "Atlikt"
       backups:
         title: "Rezerves kopijas"
         menu:

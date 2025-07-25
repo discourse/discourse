@@ -139,8 +139,6 @@ ur:
           cancel: "منسوخ"
         image_caption:
           save_caption: "محفوظ کریں"
-          automatic_caption_dialog:
-            confirm: "فعال کریں"
       embeddings:
         back: "واپس"
         save: "محفوظ کریں"
