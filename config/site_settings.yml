@@ -1637,7 +1637,7 @@ content_localization:
     default: ""
     type: list
     client: true
-    list_type: enum
+    list_type: locale
     allow_any: false
     enum: "LocaleSiteSetting"
     area: "localization"
