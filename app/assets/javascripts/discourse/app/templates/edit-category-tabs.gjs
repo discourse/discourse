@@ -93,6 +93,7 @@ export default RouteTemplate(
       <Form
         @data={{@controller.formData}}
         @onDirtyCheck={{@controller.isLeavingForm}}
+        class="edit-category-form"
         as |form transientData|
       >
         <form.Section
