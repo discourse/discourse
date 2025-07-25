@@ -189,7 +189,7 @@ gem "htmlentities", require: false
 
 gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
-gem "unicorn", require: false, platform: :ruby
+gem "pitchfork", require: false
 gem "puma", require: false
 
 gem "rbtrace", require: false, platform: :mri
