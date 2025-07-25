@@ -50,7 +50,7 @@
     <script type="module" src="/@embroider/virtual/test-support.js"></script>
 
     <script type="module">
-      import { setEnvironment } from "discourse-common/config/environment";
+      import { setEnvironment } from "discourse/config/environment";
       setEnvironment("testing");
     </script>
 
@@ -59,7 +59,7 @@
     <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/admin.js" data-embroider-ignore></script>
     <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/wizard.js" data-embroider-ignore></script>
     <script src="{{rootURL}}assets/test-site-settings.js" data-embroider-ignore></script>
-    
+
     <script type="module" src="/discourse.js"></script>
     <script type="module" src="/admin.js"></script>
 
@@ -92,7 +92,7 @@
       {{content-for "test-plugin-css"}}
       {{content-for "test-plugin-js"}}
       {{content-for "test-plugin-tests-js"}}
-      
+
       {{content-for "body-footer"}} {{content-for "test-body-footer"}}
     </template> -->
 
