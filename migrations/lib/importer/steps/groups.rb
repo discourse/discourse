@@ -51,22 +51,27 @@ module Migrations::Importer::Steps
 
     total_rows_query <<~SQL, MappingType::GROUPS
       SELECT COUNT(*)
-      FROM groups g
-           LEFT JOIN mapped.ids mapped_groups
-            ON g.original_id = mapped_groups.original_id AND mapped_groups.type = ?
-      WHERE mapped_groups.original_id IS NULL
+      FROM groups
+           LEFT JOIN mapped.ids mapped_group
+            ON groups.original_id = mapped_group.original_id AND mapped_group.type = ?
+      WHERE mapped_group.original_id IS NULL
     SQL
 
     rows_query <<~SQL, MappingType::GROUPS, MappingType::UPLOADS
-      SELECT g.*,
-             mapped_flair_upload.discourse_id AS discourse_flair_upload_id
-      FROM groups g
-           LEFT JOIN mapped.ids mapped_groups
-             ON g.original_id = mapped_groups.original_id AND mapped_groups.type = ?1
+      SELECT groups.*,
+             mapped_flair_upload.discourse_id AS discourse_flair_upload_id,
+             EXISTS (
+               SELECT 1
+               FROM group_users
+               WHERE group_users.group_id = groups.original_id AND group_users.owner = 1
+             ) AS has_owner
+      FROM groups
+           LEFT JOIN mapped.ids mapped_group
+             ON groups.original_id = mapped_group.original_id AND mapped_group.type = ?1
             LEFT JOIN mapped.ids mapped_flair_upload
-              ON g.flair_upload_id = mapped_flair_upload.original_id AND mapped_flair_upload.type = ?2
-      WHERE mapped_groups.original_id IS NULL
-      ORDER BY g.ROWID
+              ON groups.flair_upload_id = mapped_flair_upload.original_id AND mapped_flair_upload.type = ?2
+      WHERE mapped_group.original_id IS NULL
+      ORDER BY groups.ROWID
     SQL
 
     def initialize(intermediate_db, discourse_db, shared_data)
@@ -97,11 +102,14 @@ module Migrations::Importer::Steps
         MAX_MEMBER_REQUEST_TEMPLATE_LENGTH,
       )
 
-      # TODO(selase):
-      #   We need to ensure this isn't set to true for groups that are imported without an owner.
-      #   Maybe we can do this as part of some other step after group users or potentially just
-      #   join on group_users table here to determine if the group has an owner
-      row[:allow_membership_requests] ||= false
+      allow_membership_requests = row[:allow_membership_requests] == 1
+      has_owner = row[:has_owner] == 1
+
+      if allow_membership_requests && !has_owner
+        puts "    #{row[:name]}: An owner is required to enable allow_membership_requests"
+      end
+
+      row[:allow_membership_requests] = allow_membership_requests && has_owner
       row[:allow_unknown_sender_topic_replies] ||= false
       row[:primary_group] ||= false
       row[:public_admission] ||= false
@@ -158,7 +166,7 @@ module Migrations::Importer::Steps
 
             if domain.length > Group::MAX_EMAIL_DOMAIN_LENGTH
               puts "    #{row[:name]}: Invalid automatic_membership_email_domain. Domain '#{domain}' is too long " \
-                     "(Max: #{Group::MAX_EMAIL_DOMAIN_LENGTH})."
+                     "(Max: #{Group::MAX_EMAIL_DOMAIN_LENGTH})"
               next
             end
 
@@ -166,7 +174,7 @@ module Migrations::Importer::Steps
           end
 
         if valid_domains.size > @max_domains
-          puts "    #{row[:name]}: Invalid automatic_membership_email_domain. Too many domains (Max: #{@max_domains})."
+          puts "    #{row[:name]}: Invalid automatic_membership_email_domain. Too many domains (Max: #{@max_domains})"
 
           valid_domains = valid_domains.take(@max_domains)
         end
@@ -180,12 +188,10 @@ module Migrations::Importer::Steps
     end
 
     def resolve_existing_id(existing_id)
-      if existing_id.match?(/\A\d+\z/)
-        id = existing_id.to_i
-        @existing_ids.include?(id) ? id : nil
-      else
-        @ids_by_name[existing_id]
-      end
+      numeric_id = Integer(existing_id, exception: false)
+      return numeric_id if numeric_id && @existing_ids.include?(numeric_id)
+
+      @ids_by_name[existing_id]
     end
 
     def sanitize_string(value, max_length = nil)

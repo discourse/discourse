@@ -18,15 +18,15 @@ module Migrations::Converters::Discourse
 
     def items
       @source_db.query <<~SQL
-        SELECT g.*,
-               up.url               AS flair_url,
-               up.original_filename AS flair_filename,
-               up.origin            AS flair_origin,
-               up.user_id           AS flair_user_id,
-               CASE WHEN g.automatic THEN g.name END AS existing_id
-        FROM groups g
-             LEFT JOIN uploads up ON g.flair_upload_id = up.id
-        ORDER BY g.id
+        SELECT groups.*,
+               uploads.url               AS flair_url,
+               uploads.original_filename AS flair_filename,
+               uploads.origin            AS flair_origin,
+               uploads.user_id           AS flair_user_id,
+               CASE WHEN groups.automatic THEN groups.id END AS existing_id
+        FROM groups
+             LEFT JOIN uploads ON groups.flair_upload_id = uploads.id
+        ORDER BY groups.id
       SQL
     end
 
