@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -13,6 +14,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
+import DTooltip from "float-kit/components/d-tooltip";
 
 // number of runs required to show the runs count for the period
 const RUN_THRESHOLD = 10;
@@ -202,10 +204,28 @@ export default class AutomationList extends Component {
                         "discourse_automation.models.automation.enabled.label"
                       }}
                     </div>
-                    <DToggleSwitch
-                      @state={{automation.enabled}}
-                      {{on "click" (fn this.toggleEnabled automation)}}
-                    />
+                    <span class="enabled-toggle-with-tooltip">
+                      {{#if (or automation.enabled automation.canBeEnabled)}}
+                        <DToggleSwitch
+                          @state={{automation.enabled}}
+                          {{on "click" (fn this.toggleEnabled automation)}}
+                        />
+                      {{else}}
+                        <DTooltip @identifier="automation-enabled-toggle">
+                          <:trigger>
+                            <DToggleSwitch
+                              disabled={{true}}
+                              @state={{automation.enabled}}
+                            />
+                          </:trigger>
+                          <:content>
+                            {{i18n
+                              "discourse_automation.models.automation.enable_toggle_disabled"
+                            }}
+                          </:content>
+                        </DTooltip>
+                      {{/if}}
+                    </span>
                   </td>
                 {{/if}}
 

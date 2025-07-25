@@ -1,14 +1,16 @@
-import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import { and } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
 import DButton from "discourse/components/d-button";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
 import TextField from "discourse/components/text-field";
 import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ComboBox from "select-kit/components/combo-box";
+import DTooltip from "float-kit/components/d-tooltip";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import FormError from "discourse/plugins/automation/admin/components/form-error";
 
@@ -22,6 +24,42 @@ export default RouteTemplate(
         @route="adminPlugins.show.automation.index"
         class="discourse-automation-back"
       />
+
+      {{#if @controller.automationForm.trigger}}
+        <AdminConfigAreaCard class="automation-enabled-card">
+          <:content>
+            <div class="control-group automation-enabled">
+              <label>{{i18n
+                  "discourse_automation.models.automation.enabled.label"
+                }}</label>
+
+              <span class="enabled-toggle-with-tooltip">
+                {{#if @controller.disableEnabledToggle}}
+                  <DTooltip @identifier="automation-enabled-toggle">
+                    <:trigger>
+                      <DToggleSwitch
+                        disabled={{true}}
+                        @state={{@controller.model.automation.enabled}}
+                      />
+                    </:trigger>
+                    <:content>
+                      {{i18n
+                        "discourse_automation.models.automation.enable_toggle_disabled"
+                      }}
+                    </:content>
+                  </DTooltip>
+                {{else}}
+                  <DToggleSwitch
+                    @state={{@controller.model.automation.enabled}}
+                    {{on "click" @controller.toggleEnabled}}
+                  />
+                {{/if}}
+              </span>
+            </div>
+          </:content>
+        </AdminConfigAreaCard>
+      {{/if}}
+
       <AdminConfigAreaCard @heading="discourse_automation.select_script">
         <:content>
           <form class="form-horizontal">
@@ -177,25 +215,6 @@ export default RouteTemplate(
                     {{/each}}
                   </div>
                 </section>
-              {{/if}}
-
-              {{#if @controller.automationForm.trigger}}
-                <div
-                  class="control-group automation-enabled alert
-                    {{if
-                      @controller.automationForm.enabled
-                      'alert-info'
-                      'alert-warning'
-                    }}"
-                >
-                  <span>{{i18n
-                      "discourse_automation.models.automation.enabled.label"
-                    }}</span>
-                  <Input
-                    @type="checkbox"
-                    @checked={{@controller.automationForm.enabled}}
-                  />
-                </div>
               {{/if}}
 
               <div class="control-group">
