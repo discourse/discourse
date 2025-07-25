@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import MentionWithoutMembership from "discourse/plugins/chat/discourse/components/chat/notices/mention_without_membership";
@@ -21,8 +22,7 @@ export default class ChatNotices extends Component {
   }
 
   <template>
-    <div class="chat-notices__notice">
-
+    <div class="chat-notices__notice" {{willDestroy this.clearNotice}}>
       {{#if @notice.textContent}}
         <p class="chat-notices__notice__content">
           {{@notice.textContent}}

@@ -39,7 +39,7 @@ export default class ChatChannelSubscriptionManager {
   }
 
   @bind
-  onMessage(busData) {
+  onMessage(busData, _, lastMessageBusId) {
     switch (busData.type) {
       case "sent":
         this.handleSentMessage(busData);
@@ -81,6 +81,8 @@ export default class ChatChannelSubscriptionManager {
         this.handleNotice(busData);
         break;
     }
+
+    this.channel.channelMessageBusLastId = lastMessageBusId;
   }
 
   handleSentMessage(data) {
