@@ -855,9 +855,8 @@ export default class PostStream extends RestModel {
   async triggerChangedPost(postId, updatedAt, opts = {}) {
     opts ||= {};
 
-    const resolved = Promise.resolve();
     if (!postId) {
-      return resolved;
+      return;
     }
 
     const existing = this._identityMap[postId];
@@ -880,8 +879,6 @@ export default class PostStream extends RestModel {
       // Update the post in the post stream's identity map
       this.storePost(updatedPost);
     }
-
-    return resolved;
   }
 
   triggerLikedPost(postId, likesCount, userID, eventType) {
