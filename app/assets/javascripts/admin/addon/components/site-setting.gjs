@@ -43,7 +43,7 @@ const CUSTOM_TYPES = [
   "file_size_restriction",
   "file_types_list",
   "font_list",
-  "enum_list",
+  "locale_list",
 ];
 
 export default class SiteSettingComponent extends Component {
