@@ -566,21 +566,23 @@ export default class FilterTips extends Component {
     <div class="filter-tips" {{didInsert this.setupEventListeners}}>
       {{#if (and this.showTips this.currentItems.length)}}
         <div class="filter-tips__dropdown">
-          {{#each this.currentItems as |item index|}}
-            <DButton
-              class={{concatClass
-                "filter-tip__button"
-                (if (eq index this.selectedIndex) "filter-tip__selected")
-              }}
-              @action={{fn this.selectItem item}}
-            >
-              <span class="filter-tip__name">{{item.name}}</span>
-              {{#if item.description}}
-                <span class="filter-tip__description">—
-                  {{item.description}}</span>
-              {{/if}}
-            </DButton>
-          {{/each}}
+          <ul class="filter-tips__list">
+            {{#each this.currentItems as |item index|}}
+              <li
+                class={{concatClass
+                  "filter-tips__list-item"
+                  (if (eq index this.selectedIndex) "filter-tip__selected")
+                }}
+                onClick={{fn this.selectItem item}}
+              >
+                <span class="filter-tip__name">{{item.name}}</span>
+                {{#if item.description}}
+                  <span class="filter-tip__description">—
+                    {{item.description}}</span>
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
         </div>
       {{/if}}
     </div>
