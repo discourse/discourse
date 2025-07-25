@@ -1,5 +1,7 @@
 import { fn, get, hash } from "@ember/helper";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
+import PinnedButton from "discourse/components/pinned-button";
+import PinnedOptions from "discourse/components/pinned-options";
 import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
 import CategoriesAdminDropdown from "select-kit/components/categories-admin-dropdown";
 import CategoryChooser from "select-kit/components/category-chooser";
@@ -11,8 +13,6 @@ import IconPicker from "select-kit/components/icon-picker";
 import ListSetting from "select-kit/components/list-setting";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 import MultiSelect from "select-kit/components/multi-select";
-import PinnedButton from "select-kit/components/pinned-button";
-import PinnedOptions from "select-kit/components/pinned-options";
 import UserNotificationsDropdown from "select-kit/components/user-notifications-dropdown";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
