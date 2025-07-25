@@ -31,7 +31,7 @@ export function createSiteSettingsFromPreloaded(
       return { value, name: displayName };
     });
 
-    settings.available_locales = JSON.stringify(localizedLocales);
+    settings.available_locales = localizedLocales;
   }
 
   settings.groupSettingArray = (groupSetting) => {

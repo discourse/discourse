@@ -6,7 +6,7 @@ export default class LanguageNameLookup extends Service {
   @service siteSettings;
 
   getLanguageName(locale) {
-    const name = JSON.parse(this.siteSettings.available_locales).find(
+    const name = this.siteSettings.available_locales.find(
       ({ value }) => value === locale
     )?.name;
     return name || locale;
