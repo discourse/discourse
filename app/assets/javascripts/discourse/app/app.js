@@ -75,8 +75,7 @@ window.moduleBroker = {
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
+    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
     for (const [key, mod] of Object.entries(compatModules)) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
