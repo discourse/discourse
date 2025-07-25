@@ -15,12 +15,13 @@ class ThemeJavascriptCompiler
     @@terser_disabled = false
   end
 
-  def initialize(theme_id, theme_name, settings = {}, minify: true)
+  def initialize(theme_id, theme_name, settings = {}, minify: true, cache: nil)
     @theme_id = theme_id
     @input_tree = {}
     @theme_name = theme_name
     @minify = minify
     @settings = settings
+    @cache = cache
   end
 
   def compile!
@@ -31,11 +32,18 @@ class ThemeJavascriptCompiler
       output =
         DiscourseJsProcessor::Transpiler.new.rollup(
           @input_tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
-          { themeId: @theme_id, settings: @settings, minify: @minify && !@@terser_disabled },
+          {
+            themeId: @theme_id,
+            settings: @settings,
+            minify: @minify && !@@terser_disabled,
+            cache: @cache,
+          },
         )
 
       @content = output["code"]
       @source_map = output["map"]
+      @cache = output["cache"]
+      puts "Cache present #{@cache.present?}"
     end
     [@content, @source_map]
   rescue DiscourseJsProcessor::TranspileError => e
@@ -52,6 +60,11 @@ class ThemeJavascriptCompiler
   def source_map
     compile!
     @source_map
+  end
+
+  def cache
+    compile!
+    @cache
   end
 
   def append_tree(tree)

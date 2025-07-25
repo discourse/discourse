@@ -28,6 +28,7 @@ globalThis.rollup = function (modules, opts) {
 
   const { vol } = memfs(modules, themeBase);
 
+  console.warn("used cache", !!opts.cache);
   const resultPromise = rollup({
     input: "virtual:main",
     logLevel: "info",
@@ -90,10 +91,14 @@ globalThis.rollup = function (modules, opts) {
       discourseGjs(),
       discourseTerser({ opts }),
     ],
+    cache: opts.cache && JSON.parse(opts.cache),
   });
+
+  let cache;
 
   resultPromise
     .then((bundle) => {
+      cache = bundle.cache;
       return bundle.generate({
         format: "es",
         sourcemap: "hidden",
@@ -103,6 +108,7 @@ globalThis.rollup = function (modules, opts) {
       lastRollupResult = {
         code: output[0].code,
         map: JSON.stringify(output[0].map),
+        cache: JSON.stringify(cache),
       };
     })
     .catch((error) => {
