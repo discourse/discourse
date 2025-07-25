@@ -6,7 +6,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq } from "truth-helpers";
-import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
@@ -566,21 +565,23 @@ export default class FilterTips extends Component {
     <div class="filter-tips" {{didInsert this.setupEventListeners}}>
       {{#if (and this.showTips this.currentItems.length)}}
         <div class="filter-tips__dropdown">
-          {{#each this.currentItems as |item index|}}
-            <DButton
-              class={{concatClass
-                "filter-tip__button"
-                (if (eq index this.selectedIndex) "filter-tip__selected")
-              }}
-              @action={{fn this.selectItem item}}
-            >
-              <span class="filter-tip__name">{{item.name}}</span>
-              {{#if item.description}}
-                <span class="filter-tip__description">—
-                  {{item.description}}</span>
-              {{/if}}
-            </DButton>
-          {{/each}}
+          <ul class="filter-tips__list">
+            {{#each this.currentItems as |item index|}}
+              <li
+                class={{concatClass
+                  "filter-tips__list-item"
+                  (if (eq index this.selectedIndex) "--selected")
+                }}
+                onClick={{fn this.selectItem item}}
+              >
+                <span class="filter-tip__name">{{item.name}}</span>
+                {{#if item.description}}
+                  <span class="filter-tip__description">—
+                    {{item.description}}</span>
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
         </div>
       {{/if}}
     </div>
