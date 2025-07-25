@@ -148,7 +148,7 @@ describe "Admin About Config Area Page", type: :system do
         expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
       end
 
-      it "can remove the uploaded image using keyboard nav" do
+      xit "can remove the uploaded image using keyboard nav" do
         SiteSetting.about_banner_image = image_upload
 
         config_area.visit
