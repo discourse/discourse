@@ -132,11 +132,11 @@ module PageObjects
       end
 
       def status_selector
-        PageObjects::Components::DSelect.new(find(".admin-config-components__status-filter select"))
+        PageObjects::Components::DSelect.new(find(".admin-filter-controls__dropdown"))
       end
 
       def name_filter_input
-        find(".admin-config-components__name-filter input")
+        find(".admin-filter-controls__input")
       end
 
       def has_no_components?
@@ -158,19 +158,19 @@ module PageObjects
       end
 
       def has_name_filter_input?
-        has_css?(".admin-config-components__name-filter")
+        has_css?(".admin-filter-controls__input")
       end
 
       def has_status_selector?
-        has_css?(".admin-config-components__status-filter")
+        has_css?(".admin-filter-controls__dropdown")
       end
 
       def has_no_name_filter_input?
-        has_no_css?(".admin-config-components__name-filter")
+        has_no_css?(".admin-filter-controls__input")
       end
 
       def has_no_status_selector?
-        has_no_css?(".admin-config-components__status-filter")
+        has_no_css?(".admin-filter-controls__dropdown")
       end
 
       def has_no_components_installed_text?

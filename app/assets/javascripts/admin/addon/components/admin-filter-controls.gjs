@@ -4,21 +4,29 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
-import { and, eq } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
 
 /**
- *  admin filter controls component for filtering
+ * admin filter controls component that support both client-side and server-side filtering
+ *
+ * client: provide searchableProps and filterFn in dropdownOptions
+ * server: provide onTextFilterChange or onDropdownFilterChange callbacks
  *
  * @component AdminFilterControls
- * @param {Array} array - The dataset to filter (must be an array)
- * @param {Array} searchableProps - Array of property names to search in for text filtering
- * @param {Array} dropdownOptions - Array of dropdown options [{value: "all", label: "All", filterFn: (item) => boolean}, ...]
- * @param {String} inputPlaceholder - Placeholder text for search input
- * @param {String} defaultDropdown - Default dropdown value (default: "all")
- * @param {String} noResultsMessage - Message to show when no results found (optional)
+ * @param {Array} array - The dataset to display
+ * @param {Array} [searchableProps] - Property names to search for client-side text filtering
+ * @param {Array} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]
+ * @param {String} [inputPlaceholder] - Placeholder text for search input
+ * @param {String} [defaultDropdown="all"] - Default dropdown value
+ * @param {String} [noResultsMessage] - Message shown when no results found
+ * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
+ * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
+ * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
+ * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode)
+ * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  */
 
 export default class AdminFilterControls extends Component {
@@ -49,6 +57,12 @@ export default class AdminFilterControls extends Component {
     return this.args.defaultDropdown || "all";
   }
 
+  get showFilters() {
+    return this.args.minItemsForFilter
+      ? this.array.length >= this.args.minItemsForFilter
+      : true;
+  }
+
   get hasActiveFilters() {
     return (
       this.textFilter.length > 0 || this.dropdownFilter !== this.defaultDropdown
@@ -57,6 +71,13 @@ export default class AdminFilterControls extends Component {
 
   get filteredData() {
     let filtered = [...this.array];
+
+    // skip if we have external callbacks (server-side)
+    const hasExternalCallbacks =
+      this.args.onTextFilterChange || this.args.onDropdownFilterChange;
+    if (hasExternalCallbacks) {
+      return filtered;
+    }
 
     if (this.textFilter.length > 0) {
       const term = this.textFilter.toLowerCase();
@@ -98,11 +119,15 @@ export default class AdminFilterControls extends Component {
   @action
   onTextFilterChange(event) {
     this.textFilter = event.target?.value || "";
+
+    this.args.onTextFilterChange?.(event);
   }
 
   @action
   onDropdownFilterChange(value) {
     this.dropdownFilter = value;
+
+    this.args.onDropdownFilterChange?.(value);
   }
 
   @action
@@ -110,46 +135,48 @@ export default class AdminFilterControls extends Component {
     this.textFilter = "";
     this.dropdownFilter = this.defaultDropdown;
 
+    if (this.args.onResetFilters) {
+      this.args.onResetFilters();
+    }
+
     schedule("afterRender", () => {
-      document
-        .querySelector(".admin-filter-controls .admin-filter__input")
-        ?.focus();
+      document.querySelector(".admin-filter-controls__input")?.focus();
     });
   }
 
   <template>
-    <div class="admin-filter-controls" {{didInsert this.setupComponent}}>
-      <FilterInput
-        placeholder={{@inputPlaceholder}}
-        @filterAction={{this.onTextFilterChange}}
-        @value={{this.textFilter}}
-        class="admin-filter-controls__input"
-        @icons={{hash left="magnifying-glass"}}
-      />
+    {{#if this.showFilters}}
+      <div class="admin-filter-controls" {{didInsert this.setupComponent}}>
+        <FilterInput
+          placeholder={{@inputPlaceholder}}
+          @filterAction={{this.onTextFilterChange}}
+          @value={{this.textFilter}}
+          class="admin-filter-controls__input"
+          @icons={{hash left="magnifying-glass"}}
+        />
 
-      {{#if this.showDropdownFilter}}
-        <DSelect
-          @value={{this.dropdownFilter}}
-          @includeNone={{false}}
-          @onChange={{this.onDropdownFilterChange}}
-          class="admin-filter-controls__dropdown"
-          as |select|
-        >
-          {{#each this.dropdownOptions as |option|}}
-            <select.Option @value={{option.value}}>
-              {{option.label}}
-            </select.Option>
-          {{/each}}
-        </DSelect>
-      {{/if}}
-
-    </div>
+        {{#if this.showDropdownFilter}}
+          <DSelect
+            @value={{this.dropdownFilter}}
+            @includeNone={{false}}
+            @onChange={{this.onDropdownFilterChange}}
+            class="admin-filter-controls__dropdown"
+            as |select|
+          >
+            {{#each this.dropdownOptions as |option|}}
+              <select.Option @value={{option.value}}>
+                {{option.label}}
+              </select.Option>
+            {{/each}}
+          </DSelect>
+        {{/if}}
+      </div>
+    {{/if}}
 
     {{#if this.filteredData.length}}
       {{yield this.filteredData}}
-    {{else}}
-
-      {{#if (and this.hasActiveFilters (eq this.filteredData.length 0))}}
+    {{else if this.showFilters}}
+      {{#if (and this.hasActiveFilters (not @loading))}}
         <div class="admin-filter-controls__no-results">
           {{#if @noResultsMessage}}
             <p>{{@noResultsMessage}}</p>
@@ -162,6 +189,8 @@ export default class AdminFilterControls extends Component {
           />
         </div>
       {{/if}}
+    {{else}}
+      {{yield this.array}}
     {{/if}}
   </template>
 }
