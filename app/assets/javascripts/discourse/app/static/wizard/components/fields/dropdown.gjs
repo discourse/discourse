@@ -74,9 +74,7 @@ export default class Dropdown extends Component {
     }
 
     if (this.args.field.id === "default_locale") {
-      this.args.field.choices = JSON.parse(
-        this.siteSettings.available_locales
-      ).map(
+      this.args.field.choices = this.siteSettings.available_locales.map(
         (locale) =>
           new Choice({
             id: locale.value,
