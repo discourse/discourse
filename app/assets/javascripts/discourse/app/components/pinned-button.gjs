@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import PinnedOptions from "discourse/components/pinned-options";
 import { i18n } from "discourse-i18n";
-import PinnedOptions from "select-kit/components/pinned-options";
 
 export default class PinnedButton extends Component {
   get reasonText() {

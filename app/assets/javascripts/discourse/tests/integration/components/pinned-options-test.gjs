@@ -1,18 +1,16 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import PinnedOptions from "discourse/components/pinned-options";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import PinnedOptions from "select-kit/components/pinned-options";
 
-module("Integration | Component | select-kit/pinned-options", function (hooks) {
+module("Integration | Component | pinned-options", function (hooks) {
   setupRenderingTest(hooks);
 
   test("unpinning", async function (assert) {
     const self = this;
 
     this.siteSettings.automatically_unpin_topics = false;
-    this.set("subject", selectKit());
 
     const store = getOwner(this).lookup("service:store");
     this.set(
@@ -31,19 +29,21 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
       </template>
     );
 
-    assert.strictEqual(this.subject.header().name(), "pinned");
+    assert.dom(".pinned-options-trigger-btn .d-button-label").hasText("Pinned");
 
-    await this.subject.expand();
-    await this.subject.selectRowByValue("unpinned");
+    await click(".pinned-options-trigger-btn");
 
-    assert.strictEqual(this.subject.header().name(), "unpinned");
+    await click('[data-pinned-state="unpinned"]');
+
+    assert.false(this.topic.pinned, "topic should be unpinned");
+    assert.true(this.topic.unpinned, "topic should be marked as unpinned");
   });
 
   test("pinning", async function (assert) {
     const self = this;
 
     this.siteSettings.automatically_unpin_topics = false;
-    this.set("subject", selectKit());
+
     const store = getOwner(this).lookup("service:store");
     this.set(
       "topic",
@@ -52,6 +52,7 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
         title: "Qunit Test Topic",
         deleted_at: new Date(),
         pinned: false,
+        unpinned: true,
       })
     );
 
@@ -61,11 +62,15 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
       </template>
     );
 
-    assert.strictEqual(this.subject.header().name(), "unpinned");
+    assert
+      .dom(".pinned-options-trigger-btn .d-button-label")
+      .hasText("Unpinned");
 
-    await this.subject.expand();
-    await this.subject.selectRowByValue("pinned");
+    await click(".pinned-options-trigger-btn");
 
-    assert.strictEqual(this.subject.header().name(), "pinned");
+    await click('[data-pinned-state="pinned"]');
+
+    assert.true(this.topic.pinned, "topic should be pinned");
+    assert.false(this.topic.unpinned, "topic should not be marked as unpinned");
   });
 });
