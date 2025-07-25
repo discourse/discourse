@@ -9,6 +9,14 @@ export default class LocaleList extends Component {
 
   @service siteSettings;
 
+  get choices() {
+    const allLocales = this.siteSettings.available_locales;
+    return this.setting.validValues.map(({ value, name }) => ({
+      name: allLocales.find((locale) => locale.value === value)?.name || name,
+      value,
+    }));
+  }
+
   @computed("value")
   get settingValue() {
     return this.value.toString().split(this.tokenSeparator).filter(Boolean);
@@ -19,21 +27,11 @@ export default class LocaleList extends Component {
     this.set("value", value.join(this.tokenSeparator));
   }
 
-  @action
-  modifyContent(content) {
-    const allLocales = this.siteSettings.available_locales;
-    return content.map(({ value, name }) => ({
-      name: allLocales.find((locale) => locale.value === value)?.name || name,
-      value,
-    }));
-  }
-
   <template>
     <ListSetting
       @value={{this.settingValue}}
       @settingName={{this.setting.setting}}
-      @choices={{this.setting.validValues}}
-      @modifyContent={{this.modifyContent}}
+      @choices={{this.choices}}
       @nameProperty="name"
       @valueProperty="value"
       @onChange={{this.onChangeListSetting}}

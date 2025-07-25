@@ -61,6 +61,7 @@ class SiteSettings::TypeSupervisor
         tag_group_list: 26,
         file_size_restriction: 27,
         objects: 28,
+        locale_enum: 29,
       )
   end
 
