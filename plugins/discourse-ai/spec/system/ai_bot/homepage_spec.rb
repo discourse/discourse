@@ -246,6 +246,20 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(sidebar).to have_section_link(pm.title)
         end
 
+        it "removes persona from selector when allow_personal_messages is disabled" do
+          persona.update!(allow_personal_messages: false)
+          ai_pm_homepage.visit
+          ai_pm_homepage.persona_selector.expand
+          expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+        end
+
+        it "includes persona in selector when allow_personal_messages is enabled" do
+          # default is true
+          ai_pm_homepage.visit
+          ai_pm_homepage.persona_selector.expand
+          expect(ai_pm_homepage.persona_selector).to have_option_name(persona.name)
+        end
+
         it "shows empty state when no PMs exist" do
           pm.destroy!
 

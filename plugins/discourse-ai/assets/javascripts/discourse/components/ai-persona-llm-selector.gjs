@@ -43,6 +43,9 @@ export default class AiPersonaLlmSelector extends Component {
     }
 
     let enabledPersonas = this.currentUser.ai_enabled_personas;
+    enabledPersonas = enabledPersonas.filter(
+      (persona) => persona.allow_personal_messages
+    );
 
     if (!this.hasLlmSelector) {
       enabledPersonas = enabledPersonas.filter((persona) => persona.username);
