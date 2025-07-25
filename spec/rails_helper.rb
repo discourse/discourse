@@ -77,6 +77,18 @@ class PlaywrightLogger
         }
       end,
     )
+
+    page.on(
+      "pageerror",
+      ->(error) do
+        @logs << {
+          level: "error",
+          message: error.message,
+          timestamp: Time.now.to_i * 1000,
+          source: "pageerror-api",
+        }
+      end,
+    )
   end
 end
 
@@ -142,6 +154,7 @@ module TestSetup
     WordWatcher.disable_cache
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
@@ -319,6 +332,10 @@ RSpec.configure do |config|
     Discourse.current_user_provider = TestCurrentUserProvider
     Discourse::Application.load_tasks
 
+    SystemThemesManager.clear_system_theme_user_history!
+    ThemeField.delete_all
+    JavascriptCache.delete_all
+    ThemeSiteSetting.delete_all
     SiteSetting.refresh!
 
     # Rebase defaults

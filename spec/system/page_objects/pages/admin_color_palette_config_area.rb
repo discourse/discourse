@@ -46,19 +46,23 @@ module PageObjects
       end
 
       def duplicate_button
-        page.find(".duplicate-palette")
+        find(".duplicate-palette")
       end
 
-      def copy_to_clipboard_button
-        page.find(".copy-to-clipboard")
+      def copy_to_clipboard
+        find(".copy-to-clipboard").click
+
+        expect(PageObjects::Components::Toasts.new).to have_success(
+          I18n.t("admin_js.admin.config_areas.color_palettes.copied_to_clipboard"),
+        )
       end
 
       def has_unsaved_changes_indicator?
-        page.has_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
+        has_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
       end
 
       def has_no_unsaved_changes_indicator?
-        page.has_no_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
+        has_no_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
       end
     end
   end

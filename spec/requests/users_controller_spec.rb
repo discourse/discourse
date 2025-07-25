@@ -1181,7 +1181,7 @@ RSpec.describe UsersController do
       context "with an admin api key" do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
 
-        it "creates the user as active with a an admin key" do
+        it "creates the user as active with an admin key" do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
@@ -1934,7 +1934,7 @@ RSpec.describe UsersController do
                  username: "dude",
                  password: "P4ssw0rd$$",
                  user_fields: {
-                   [tennis_field.id] => "Nadal",
+                   tennis_field.id => "Nadal",
                  },
                )
 
@@ -6473,7 +6473,7 @@ RSpec.describe UsersController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"][0]).to eq(
-        "param is missing or the value is empty: name",
+        "param is missing or the value is empty or invalid: name",
       )
     end
 

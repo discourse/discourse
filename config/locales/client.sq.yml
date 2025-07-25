@@ -206,11 +206,6 @@ sq:
     broken_page_change_alert: "Një trajtues/menaxhues i OnPageChange ngriti një gabim. Kontrolloni mjetet e zhvilluesit të shfletuesit për më shumë informacion."
     broken_plugin_alert: "Shkaktuar nga shtojca '%{name}'"
     broken_transformer_alert: "Ka pasur një gabim. Faqja juaj mund të mos funksionojë siç duhet."
-    critical_deprecation:
-      notice: "<b>[Njoftim Admin]</b> Një nga temat apo shtojcat tuaja ka nevojë për përditësim që të jetë në përputhshmëri me ndryshimet kryesore të Diskursit (Discourse) të ardhshëm."
-      id: "(id:<em>%{id}</em>)"
-      theme_source: "Tema e identifikuar: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Shtojca e identifikuar: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -1310,6 +1305,8 @@ sq:
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_permanently: "Ky përdorues është pezulluar."
       suspended_reason: "Arsyeja:"
+      silenced_permanently: "Ky përdorues është heshtur."
+      silenced_reason: "Arsyeja:"
       github_profile: "GitHub"
       email_activity_summary: "Përmbledhja e aktivitetit"
       mailing_list_mode:
@@ -1825,7 +1822,8 @@ sq:
         removed: "U hoq"
         search: "shtypni për të kërkuar ftesat…"
         user: "Anëtari i ftuar"
-        none: "Asnjë ftesë për të shfaqur."
+        none:
+          title: "Asnjë ftesë për të shfaqur."
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen %{count} ftesat e para."
@@ -2440,7 +2438,6 @@ sq:
       unlist: "çlistuar"
       add_warning: "Ky është një paralajmërim zyrtar."
       toggle_whisper: "Pëshpëritje?"
-      toggle_unlisted: "Toggle Unlisted"
       insert_table: "Futni tabelën"
       posting_not_on_topic: "Cilës temë doni t'i përgjigjeni?"
       saved_local_draft_tip: "ruajtur lokalisht"
@@ -3954,6 +3951,8 @@ sq:
               content: "Admin"
             badges:
               content: "Stemat"
+            filter:
+              content: "Filtro"
             topics:
               content: "Topics"
             faq:
@@ -3987,6 +3986,9 @@ sq:
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
+    filter:
+      description:
+        yesterday: "Dje"
     discovery:
       headings:
         categories: "Të gjitha kategoritë"
@@ -4088,6 +4090,8 @@ sq:
           title: "Webhooks"
         embedding:
           title: "Embedding"
+      theme_site_settings:
+        default_value: "Paracaktuar"
       search:
         title: "Kërko"
       dashboard:
@@ -4422,6 +4426,11 @@ sq:
               too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
+          edit: "Redaktoni"
+          filters:
+            all: "Të gjitha"
+          active_badge:
+            text: "Aktiv"
           copy_name_prefix: "Kopje e"
           undo: "Çbëj"
           undo_title: "Anullo ndryshimet e bëra në këtë skemë, rikthe versionin e ruajtur herën e fundit. "
@@ -4681,7 +4690,6 @@ sq:
         activity: Aktiviteti
         like_count: Pëlqime të dhëna / të marra
         last_100_days: "në 100 ditët e fundit"
-        private_topics_count: Diskutime Private
         posts_read_count: Postime të lexuara
         post_count: Postime të krijuara
         topics_entered: Tema të shikuara

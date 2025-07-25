@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 118
+  BASE_COMPILER_VERSION = 97
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -93,6 +93,7 @@ class Theme < ActiveRecord::Base
   has_many :migration_fields,
            -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
+  has_many :theme_site_settings, dependent: :destroy
 
   validate :component_validations
   validate :validate_theme_fields
@@ -107,6 +108,7 @@ class Theme < ActiveRecord::Base
         -> do
           include_basic_relations.includes(
             :theme_settings,
+            :theme_site_settings,
             :settings_field,
             theme_fields: %i[upload theme_settings_migration],
             child_themes: %i[color_scheme locale_fields theme_translation_overrides],
@@ -126,6 +128,7 @@ class Theme < ActiveRecord::Base
           )
         end
 
+  scope :not_components, -> { where(component: false) }
   scope :not_system, -> { where("id > 0") }
   scope :system, -> { where("id < 0") }
 
@@ -316,6 +319,17 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
+  def self.expire_site_setting_cache!
+    Theme
+      .not_components
+      .pluck(:id)
+      .each do |theme_id|
+        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
+      end
+
+    Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(nil))
+  end
+
   def self.clear_default!
     SiteSetting.default_theme_id = -1
     expire_site_cache!
@@ -349,8 +363,10 @@ class Theme < ActiveRecord::Base
     if component
       raise Discourse::InvalidParameters.new(I18n.t("themes.errors.component_no_default"))
     end
+
+    # NOTE: The cache is expired in the 014-track-setting-changes.rb
+    # initializer, so we don't need to do it here.
     SiteSetting.default_theme_id = id
-    Theme.expire_site_cache!
   end
 
   def default?
@@ -460,6 +476,7 @@ class Theme < ActiveRecord::Base
         extra_js: 6,
         tests_js: 7,
         migrations: 8,
+        about: 9,
       )
   end
 
@@ -538,15 +555,7 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" />
-          <!-- TODO - multiple importmaps are not supported in all browsers. Combine into one -->
-          <script type="importmap" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
-            {
-              "imports": {
-                "discourse/theme-#{c.theme_id}": "#{c.url}"
-              }
-            }
-          </script>
+          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}" />
         HTML
       end
     when :translations
@@ -1043,7 +1052,7 @@ class Theme < ActiveRecord::Base
 
     compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
     compiler.append_tree(load_all_extra_js)
-    compiler.append_tree(migrations_tree, include_variables: false)
+    compiler.append_tree(migrations_tree)
     compiler.append_tree(tests_tree)
 
     content = compiler.content
@@ -1065,7 +1074,12 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [id]).count
+    UserOption.where(theme_ids: [self.id]).count
+  end
+
+  def themeable_site_settings
+    return [] if self.component?
+    ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
   end
 
   def find_or_create_owned_color_palette

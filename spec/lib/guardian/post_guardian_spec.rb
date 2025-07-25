@@ -15,6 +15,7 @@ RSpec.describe PostGuardian do
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:post) { Fabricate(:post, topic: topic) }
+  fab!(:second_post) { Fabricate(:post, topic: topic) }
   fab!(:hidden_post) { Fabricate(:post, topic: topic, hidden: true) }
   fab!(:staff_post) { Fabricate(:post, topic: topic, user: moderator) }
 
@@ -276,8 +277,28 @@ RSpec.describe PostGuardian do
   end
 
   describe "#can_lock_post?" do
-    xit do
-      # TODO: Add coverage
+    it "returns false for a regular user allowed to see the post" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:can_see_post?).returns(true)
+
+      expect(guardian.can_lock_post?(post)).to be_falsey
+    end
+
+    it "returns false for a staff user not allowed to see the post" do
+      guardian = Guardian.new(moderator)
+
+      guardian.stubs(:can_see_post?).returns(false)
+
+      expect(guardian.can_lock_post?(post)).to be_falsey
+    end
+
+    it "returns true for a staff user allowed to see the post" do
+      guardian = Guardian.new(moderator)
+
+      guardian.stubs(:can_see_post?).returns(true)
+
+      expect(guardian.can_lock_post?(post)).to be_truthy
     end
   end
 
@@ -320,14 +341,36 @@ RSpec.describe PostGuardian do
   end
 
   describe "#can_unhide?" do
-    xit do
-      # TODO: Add coverage
+    it "returns false when the post is not hidden" do
+      post.update!(hidden: false)
+
+      expect(Guardian.new(moderator).can_unhide?(post)).to be_falsey
+    end
+
+    it "returns false for a regular user" do
+      post.update!(hidden: true)
+
+      expect(Guardian.new(user).can_unhide?(post)).to be_falsey
+    end
+
+    it "returns true for a staff user" do
+      post.update!(hidden: true)
+
+      expect(Guardian.new(moderator).can_unhide?(post)).to be_truthy
     end
   end
 
   describe "#can_skip_bump?" do
-    xit do
-      # TODO: Add coverage
+    it "returns false for a regular user" do
+      expect(Guardian.new(user).can_skip_bump?).to be_falsey
+    end
+
+    it "returns true for a staff user" do
+      expect(Guardian.new(moderator).can_skip_bump?).to be_truthy
+    end
+
+    it "returns true for a TL4 user" do
+      expect(Guardian.new(trust_level_4).can_skip_bump?).to be_truthy
     end
   end
 
@@ -491,7 +534,7 @@ RSpec.describe PostGuardian do
     end
 
     it "returns true even if the topic is closed" do
-      topic.update(closed: true)
+      topic.update!(closed: true)
 
       post.update!(user: user)
       guardian = Guardian.new(user)
@@ -501,26 +544,80 @@ RSpec.describe PostGuardian do
   end
 
   describe "#can_edit_hidden_post?" do
-    xit do
-      # TODO: Add coverage
+    it "returns true if the post is not hidden" do
+      post.update!(hidden: false)
+
+      expect(Guardian.new(user).can_edit_hidden_post?(post)).to be_truthy
+    end
+
+    it "returns true when the cooldown has passed" do
+      post.update!(
+        hidden: true,
+        hidden_at: SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago - 1.minute,
+      )
+
+      expect(Guardian.new(user).can_edit_hidden_post?(post)).to be_truthy
+    end
+
+    it "returns false when the cooldown hasn't passed" do
+      post.update!(
+        hidden: true,
+        hidden_at: SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago + 1.minute,
+      )
+
+      expect(Guardian.new(user).can_edit_hidden_post?(post)).to be_falsey
     end
   end
 
   describe "#can_change_post_owner?" do
-    xit do
-      # TODO: Add coverage
+    it "returns false for a regular user" do
+      expect(Guardian.new(user).can_change_post_owner?).to be_falsey
+    end
+
+    it "returns true for an admin" do
+      expect(Guardian.new(admin).can_change_post_owner?).to be_truthy
+    end
+
+    it "returns true for a moderator when allowed" do
+      SiteSetting.moderators_change_post_ownership = true
+
+      expect(Guardian.new(moderator).can_change_post_owner?).to be_truthy
+    end
+
+    it "returns true for a moderator when not allowed" do
+      SiteSetting.moderators_change_post_ownership = false
+
+      expect(Guardian.new(moderator).can_change_post_owner?).to be_falsey
     end
   end
 
   describe "#can_change_post_timestamps?" do
-    xit do
-      # TODO: Add coverage
+    it "returns false for a regular user" do
+      expect(Guardian.new(user).can_change_post_timestamps?).to be_falsey
+    end
+
+    it "returns true for a staff user" do
+      expect(Guardian.new(moderator).can_change_post_timestamps?).to be_truthy
     end
   end
 
   describe "#trusted_with_post_edits?" do
-    xit do
-      # TODO: Add coverage
+    it "returns true for staff users" do
+      SiteSetting.edit_post_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(moderator).trusted_with_post_edits?).to be_truthy
+    end
+
+    it "returns true for users in allowed groups" do
+      SiteSetting.edit_post_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).trusted_with_post_edits?).to be_truthy
+    end
+
+    it "returns false for users not in allowed groups" do
+      SiteSetting.edit_post_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_0).trusted_with_post_edits?).to be_falsey
     end
   end
 
@@ -547,20 +644,165 @@ RSpec.describe PostGuardian do
   ###### DELETING ######
 
   describe "#can_delete_post?" do
-    xit do
-      # TODO: Add coverage
+    it "returns false if the user can't see the post" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:can_see_post?).returns(false)
+
+      expect(guardian.can_delete_post?(post)).to be_falsey
+    end
+
+    it "returns false if it's the first post of a topic" do
+      expect(Guardian.new(admin).can_delete_post?(topic.first_post)).to be_falsey
+    end
+
+    it "returns true for a staff user" do
+      expect(Guardian.new(moderator).can_delete_post?(second_post)).to be_truthy
+    end
+
+    it "returns true for a group category moderator" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:is_category_group_moderator?).returns(true)
+
+      expect(guardian.can_delete_post?(second_post)).to be_truthy
+    end
+
+    it "returns true for a user in allowed groups" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_delete_post?(second_post)).to be_truthy
+    end
+
+    it "returns false if the topic is archived" do
+      topic.update!(archived: true)
+
+      expect(Guardian.new(user).can_delete_post?(second_post)).to be_falsey
+    end
+
+    it "returns false for a regular user" do
+      expect(Guardian.new(user).can_delete_post?(second_post)).to be_falsey
+    end
+
+    it "returns true for the post owner if not already deleted" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:is_my_own?).returns(true)
+
+      expect(guardian.can_delete_post?(second_post)).to be_truthy
+    end
+
+    it "returns false for the post owner if already deleted" do
+      second_post.update!(user_deleted: true)
+
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:is_my_own?).returns(true)
+
+      expect(guardian.can_delete_post?(second_post)).to be_falsey
+    end
+
+    it "returns false for the post owner if rate limit set to zero" do
+      SiteSetting.max_post_deletions_per_day = 0
+
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:is_my_own?).returns(true)
+
+      expect(guardian.can_delete_post?(second_post)).to be_falsey
     end
   end
 
   describe "#can_delete_post_or_topic?" do
-    xit do
-      # TODO: Add coverage
+    it "returns true when deleting first post and allowed to delete topics" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:can_delete_topic?).returns(true)
+
+      expect(guardian.can_delete_post_or_topic?(topic.first_post)).to be_truthy
+    end
+
+    it "returns false when deleting first post and not allowed to delete topics" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:can_delete_topic?).returns(false)
+
+      expect(guardian.can_delete_post_or_topic?(topic.first_post)).to be_falsey
+    end
+
+    it "returns true when deleting second post and allowed to delete posts" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:can_delete_post?).returns(true)
+
+      expect(guardian.can_delete_post_or_topic?(second_post)).to be_truthy
+    end
+
+    it "returns false when deleting second post and not allowed to delete posts" do
+      guardian = Guardian.new(user)
+
+      guardian.stubs(:can_delete_post?).returns(false)
+
+      expect(guardian.can_delete_post_or_topic?(second_post)).to be_falsey
     end
   end
 
   describe "#can_permanently_delete_post?" do
-    xit do
-      # TODO: Add coverage
+    it "returns false whe permanent deletion is disabled" do
+      SiteSetting.can_permanently_delete = false
+
+      expect(Guardian.new(admin).can_permanently_delete_post?(second_post)).to be_falsey
+    end
+
+    it "returns false for the first post in the topic" do
+      SiteSetting.can_permanently_delete = true
+
+      expect(Guardian.new(admin).can_permanently_delete_post?(topic.first_post)).to be_falsey
+    end
+
+    it "returns false for a regular user" do
+      SiteSetting.can_permanently_delete = true
+
+      expect(Guardian.new(user).can_permanently_delete_post?(second_post)).to be_falsey
+    end
+
+    it "returns false if the post is not deleted" do
+      SiteSetting.can_permanently_delete = true
+
+      expect(Guardian.new(admin).can_permanently_delete_post?(second_post)).to be_falsey
+    end
+
+    it "returns false when the cooldown has not passed yet" do
+      SiteSetting.can_permanently_delete = true
+
+      second_post.update!(
+        deleted_at: Post::PERMANENT_DELETE_TIMER.ago + 1.minute,
+        deleted_by_id: admin.id,
+      )
+
+      expect(Guardian.new(admin).can_permanently_delete_post?(second_post)).to be_falsey
+    end
+
+    it "returns true when the cooldown has passed" do
+      SiteSetting.can_permanently_delete = true
+
+      second_post.update!(
+        deleted_at: Post::PERMANENT_DELETE_TIMER.ago - 1.minute,
+        deleted_by_id: admin.id,
+      )
+
+      expect(Guardian.new(admin).can_permanently_delete_post?(second_post)).to be_truthy
+    end
+
+    it "returns true within cooldown when original delete was by another user" do
+      SiteSetting.can_permanently_delete = true
+
+      second_post.update!(
+        deleted_at: Post::PERMANENT_DELETE_TIMER.ago + 1.minute,
+        deleted_by_id: moderator.id,
+      )
+
+      expect(Guardian.new(admin).can_permanently_delete_post?(second_post)).to be_truthy
     end
   end
 
@@ -967,14 +1209,52 @@ RSpec.describe PostGuardian do
   end
 
   describe "#can_view_edit_history?" do
-    xit do
-      # TODO: Add coverage
+    it "returns true for wiki posts" do
+      post.update!(wiki: true)
+
+      expect(Guardian.new(user).can_view_edit_history?(post)).to be_truthy
+    end
+
+    it "returns true when edit history is configured to be public" do
+      SiteSetting.edit_history_visible_to_public = true
+
+      expect(Guardian.new(user).can_view_edit_history?(post)).to be_truthy
+    end
+
+    it "returns true for staff viewing a hidden post" do
+      post.update!(hidden: true)
+
+      expect(Guardian.new(admin).can_view_edit_history?(post)).to be_truthy
+    end
+
+    it "returns true for post owner viewing a hidden post" do
+      post.update!(hidden: true)
+
+      expect(Guardian.new(post.user).can_view_edit_history?(post)).to be_truthy
+    end
+
+    it "returns false when user can not see post" do
+      post.update!(hidden: true)
+
+      guardian = Guardian.new(moderator)
+
+      guardian.stubs(:can_see_post?).returns(false)
+
+      expect(guardian.can_view_edit_history?(post)).to be_falsey
     end
   end
 
   describe "#can_view_raw_email?" do
-    xit do
-      # TODO: Add coverage
+    it "returns true for a user in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_view_raw_email?(post)).to be_truthy
+    end
+
+    it "returns false for a user not in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_0).can_view_raw_email?(post)).to be_falsey
     end
   end
 

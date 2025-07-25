@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    microsoft_auth_enabled: "Benutzern erlauben, sich mit Microsoft zu authentifizieren?"
+    microsoft_auth_client_id: 'Microsoft-App-ID/-Client-ID (NICHT die Secret-ID) – besuche zur Einrichtung <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
+    microsoft_auth_client_secret: "Microsoft-Secret-Passwort (verwende den Wert, NICHT die Secret-ID)"
+    microsoft_auth_email_verified: "Alle Microsoft-E-Mails standardmäßig als verifiziert behandeln. WARNUNG: Aktiviere diese Option nur, wenn du sicher bist, dass alle deine Benutzer verifizierte E-Mails haben."
+    microsoft_auth_tenant_id: 'Microsoft Tenant ID (common ist Standard, ist ein MUSS für alle Fälle außer Single Tenant) - um die ID zu finden, besuche <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

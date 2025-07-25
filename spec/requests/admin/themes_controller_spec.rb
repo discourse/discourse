@@ -138,7 +138,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Awesome Theme")
-        expect(json["theme"]["theme_fields"].length).to eq(3)
+        expect(json["theme"]["theme_fields"].length).to eq(4)
       end
     end
 
@@ -337,7 +337,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Header Icons")
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -369,7 +369,7 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Some other name")
         expect(json["theme"]["id"]).to eq(other_existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
 
@@ -399,7 +399,7 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Header Icons")
         expect(json["theme"]["id"]).not_to eq(existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -1184,22 +1184,22 @@ RSpec.describe Admin::ThemesController do
         theme.set_field(
           target: :common,
           name: :header,
-          value: '<script type="text/discourse-plugin" version="0.1">console.log("test")</script>',
+          value: '<script>console.log("test")</script>',
         )
         theme.save!
 
-        javascript_cache =
+        javascript_caches =
           theme
             .theme_fields
             .find_by(target_id: Theme.targets[:common], name: :header)
-            .javascript_cache
-        expect(javascript_cache).to_not eq(nil)
+            .raw_javascript_caches
+        expect(javascript_caches.length).to eq(1)
 
         delete "/admin/themes/#{theme.id}.json"
 
         expect(response.status).to eq(204)
         expect { theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect { javascript_cache.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { javascript_caches[0].reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 

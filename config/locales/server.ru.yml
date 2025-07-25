@@ -4342,7 +4342,6 @@ ru:
     solarized_dark_theme_name: "Солнечная тёмная"
     wcag_dark: "WCAG тёмная"
     wcag_dark_theme_name: "WCAG тёмная"
-    default_theme_name: "По умолчанию"
     light_theme_name: "Светлая"
     dark_theme_name: "Тёмная"
     neutral_theme_name: "Нейтральная"
@@ -4970,10 +4969,6 @@ ru:
         Эта награда выдаётся при посещении форума 365 дней подряд. Ух ты, целый год!
     badge_title_metadata: "Награда «%{display_name}» на сайте %{site_title}"
   admin_login:
-    success: "Письмо отправлено"
-    errors:
-      unknown_email_address: "Неизвестный адрес электронной почты."
-      invalid_token: "Неверный токен."
     email_input: "Адрес эл. почты администратора"
     submit_button: "Отправить письмо"
     safe_mode: "Безопасный режим: отключение всех тем и плагинов при входе в систему"

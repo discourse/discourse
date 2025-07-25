@@ -74,6 +74,7 @@ he:
     bad_color_scheme: "לא ניתן לעדכן ערכת עיצוב, מבחר הצבעים שגוי"
     other_error: "משהו השתבש בעת עדכון ערכת העיצוב"
     ember_selector_error: "עמך הסליחה – השימוש בבוררי ה־CSS‏ ‎#ember או ‎.ember-view אסור, כיוון שאלו שמות שנוצרים אוטומטית בזמן ההפעלה והם יישתנו עם הזמן, מה שיוביל לפגם ב־CSS. נא לנסות בורר אחר."
+    setting_not_themeable: "ההגדרה ‚%{name}’ אינה מושפעת מערכת עיצוב."
     import_error:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
       upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
@@ -2116,6 +2117,8 @@ he:
     composer_media_optimization_image_resize_dimensions_threshold: "רוחב תמונה מזערי להפעלת שינוי גודל בצד הלקוח"
     composer_media_optimization_image_resize_width_target: "תמונות שרוחבן עולה על `composer_media_optimization_image_dimensions_resize_threshold`, גודלן ישתנה לרוחב זה. הערך חייב להיות >= לעומת `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "איכות קידוד JPG המשמשת בתהליך הקידוד מחדש."
+    video_conversion_enabled: "הפעלת המרת וידאו עבור קובצי וידאו שהועלו. כך מתאפשר להמיר סרטונים לתסדירים תואמי אינטרנט."
+    video_conversion_service: "שירות המרת הווידאו לעיבוד הסרטונים שהועלו."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
     default_invitee_trust_level: "דרגת האמון כברירת המחדל למשתמשים שהוזמנו (0‏-4)"
@@ -2370,6 +2373,7 @@ he:
     delete_associated_accounts_on_password_reset: "למחוק את החשבון המשויך למשתמש כשהמשתמש משנה את הסיסמה"
     allow_featured_topic_on_user_profiles: "לאפשר למשתמשים להציג קישור לנושא בכרטיס המשתמש ובפרופיל שלהם."
     show_inactive_accounts: "לאפשר למשתמשים שנכנסו לעיין בפרופילים של חשבונות לא פעילים."
+    hide_silencing_reasons: "לא להציג את סיבות ההשתקה באופן ציבורי בפרופילי המשתמשים."
     hide_suspension_reasons: "לא להציג את סיבות ההשעיה באופן ציבורי בפרופילי המשתמשים."
     log_personal_messages_views: "תיעוד צפיות הודעות אישיות של מנהלים עבור משתמשים/קבוצות אחרות."
     ignored_users_count_message_threshold: "להודיע למפקחים במקרה שמשתמש מסוים זכה לחסימות מצד משתמשים רבים אחרים."
@@ -2568,6 +2572,7 @@ he:
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
     dashboard_general_tab_activity_metrics: "נא לבחור דיווחים שיופיעו בתור מדדי פעילות בלשונית הכללית."
+    gravatar_enabled: "אפשר להשתמש בשירות <a href='https://gravatar.com/'>Gravatar</a> לתמונות ייצוגיות של משתמשים. ההגדרה הזאת תמנע ממשתמשים לעבור ל־Gravatar עבור התמונות ייצוגיות שלהם, אך לא תשפיע על משתמשים שכבר עשו זאת."
     gravatar_name: "נא לציין את שם ספק שירות Gravatar. השם הזה בדרך כלל ישמש לזיהוי ספק מקור תמונות ה־Gravatar הייצוגיות באתר."
     gravatar_base_url: "נא לציין את כתובת הגישה ל־API של ספק Gravatar. ההגדרה הזאת הכרחית להמרת כתובות דוא״ל לכתובות Gravatar בה מאוחסנות התמונות הייצוגיות."
     gravatar_login_url: "כתובת ביחס אל `gravatar_base_url` (כתובת הבסיס של Gravatar) שמספקת למשתמש גישה לשירות Gravatar."
@@ -2701,6 +2706,12 @@ he:
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
     audio: "[שמע]"
     video: "[וידאו]"
+  filter:
+    description:
+      status: "סינון נושאים לפי המצב שלהם"
+      in: "סינון נושאים לפי רשימות אישיות"
+      order: "מיון נושאים לפי שדה מסוים"
+      category: "הצגת נושאים בקטגוריה מסוימת"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."
@@ -4407,7 +4418,6 @@ he:
     solarized_dark_theme_name: "חשיפה כהה לשמש"
     wcag_dark: "נגיש כהה"
     wcag_dark_theme_name: "נגיש כהה"
-    default_theme_name: "ברירת מחדל"
     light_theme_name: "בהיר"
     dark_theme_name: "כהה"
     neutral_theme_name: "נייטרלי"
@@ -5026,10 +5036,7 @@ he:
         עיטור זה מוענק על ביקור יומיומי במשך 365 ימים. ואו, שנה שלמה!
     badge_title_metadata: "עיטור ב-%{site_title} של %{display_name}"
   admin_login:
-    success: "הודעת דוא״ל נשלחה"
-    errors:
-      unknown_email_address: "כתובת הדוא״ל שגויה."
-      invalid_token: "אסימון שגוי."
+    acknowledgement: "אם קיים חשבון ניהול עם כתובת הדוא״ל %{email}, תתקבל אצל הודעה עם קישור לכניסה."
     email_input: "דוא״ל של המנהל"
     submit_button: "שליחת דוא״ל"
     safe_mode: "מצב בטוח: השבתת כל ערכות העיצוב/תוספים בעת כניסה"

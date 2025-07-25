@@ -1,0 +1,119 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Votazioni dei messaggi
+  post_voting:
+    reviewables:
+      comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "nuovo commento"
+      popup:
+        question_answer_user_commented: '%{username} ha commentato in "%{topic}" - %{site_title}'
+    category:
+      post_voting_settings_heading: Votazioni dei messaggi
+      create_as_post_voting_default: I nuovi argomenti hanno come impostazione predefinita la votazione dei messaggi in questa categoria.
+      only_post_voting_in_this_category: I nuovi argomenti possono essere solo messaggi a votazione in questa categoria.
+    composer:
+      create_post_voting:
+        label: "Crea un argomento di votazione dei messaggi"
+      composer_actions:
+        create_as_post_voting:
+          label: "Attiva/disattiva votazione dei messaggi"
+          desc: "L'argomento verrà creato con messaggi votabili"
+        remove_as_post_voting:
+          label: "Rimuovi votazione dei messaggi"
+          desc: "L'argomento verrà creato nel formato normale"
+    vote:
+      already_voted: "Puoi votare una sola volta per domanda."
+      user_over_limit: "Non puoi superare il numero di voti per il tuo livello di attendibilità."
+      one_vote_per_post: "Puoi votare una sola volta per messaggio."
+    last_answer_lowercase: ultima risposta
+    answer_lowercase:
+      one: risposta
+      other: risposte
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Inserisci almeno %{count} carattere"
+              other: "Inserisci almeno %{count} caratteri"
+            length_ok:
+              one: "%{count} carattere rimasto..."
+              other: "%{count} caratteri rimasti..."
+            too_long:
+              one: "Il commento non può essere più lungo di %{count} carattere"
+              other: "Il commento non può essere più lungo di %{count} caratteri"
+          submit: "Aggiungi un commento"
+          edit: "modifica"
+          cancel: "annulla"
+          add: "Aggiungi un commento"
+          show:
+            one: Mostra %{count} altro commento
+            other: Mostra altri %{count} commenti
+          delete:
+            confirm: "Vuoi davvero eliminare questo commento?"
+          user:
+            deleted: "(utente eliminato)"
+          reviewables:
+            comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
+            actions:
+              agree:
+                title: "Accetta..."
+              agree_and_keep_comment:
+                title: "Mantieni il commento"
+                description: "Accetta la segnalazione e mantieni invariato il commento."
+              agree_and_keep_deleted:
+                title: "Mantieni il commento cancellato"
+                description: "Accetta segnalazione e conferma eliminazione del commento."
+              agree_and_suspend:
+                title: "Sospendi utente"
+                description: "Accetta segnalazione e sospendi l'utente."
+              agree_and_silence:
+                title: "Silenzia utente"
+                description: "Accetta segnalazione e silenzia l'utente."
+              agree_and_restore:
+                title: "Ripristina il commento"
+                description: "Ripristina il commento in modo che gli utenti possano vederlo."
+              agree_and_delete:
+                title: "Elimina il commento"
+                description: "Elimina il commento in modo che gli utenti non possano vederlo."
+              delete_and_agree:
+                title: "Ignora segnalazione ed elimina commento"
+                description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il commento."
+              disagree_and_restore:
+                title: "Esprimi disaccordo e ripristina il commento"
+                description: "Ripristina il commento in modo che tutti gli utenti possano vederlo."
+              disagree:
+                title: "Rifiuta"
+              ignore:
+                title: "Non fare nulla"
+                description: "Ignora la segnalazione rimuovendola dalla coda senza intraprendere alcuna azione."
+            transcript:
+              view: "Visualizza la trascrizione dei commenti precedenti"
+      topic:
+        answer:
+          label: "Risposta"
+          help: "iniziare a comporre una risposta"
+        sort_by: "Ordina per"
+        votes: "Voti"
+        activity: "Attività"
+        answer_count:
+          one: "%{count} risposta"
+          other: "%{count} risposte"
+    review:
+      transcript:
+        view: "Visualizza la trascrizione dei messaggi precedenti"
+      types:
+        reviewable_post_voting_comment:
+          title: "Commento sulla votazione del messaggio contrassegnato"

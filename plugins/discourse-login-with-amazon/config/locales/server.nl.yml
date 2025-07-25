@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    enable_login_with_amazon: "Schakel verificatie via Aanmelden met Amazon in, vereist 'login with amazon client id' en 'login with amazon client secret'."
+    login_with_amazon_client_id: "Client-ID voor Aanmelden met Amazon"
+    login_with_amazon_client_secret: "Clientgeheim voor Aanmelden met Amazon"
+    login_with_amazon_scope: "OAuth2-bereiken voor Aanmelden met Amazon (gescheiden door spaties)"
+    login_with_amazon_overrides_email: "Overschrijft het e-mailadres van het Discourse-gebruikersaccount."
+    errors:
+      login_with_amazon_client_id_is_blank: "Je moet 'login with amazon client id' instellen voordat je deze instelling inschakelt."
+      login_with_amazon_client_secret_is_blank: "Je moet 'login with amazon client secret' instellen voordat je deze instelling inschakelt."

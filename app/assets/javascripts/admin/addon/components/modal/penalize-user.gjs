@@ -112,8 +112,8 @@ export default class PenalizeUser extends Component {
       if (this.successCallback) {
         await this.successCallback(result);
       }
-    } catch {
-      this.flash = extractError(result);
+    } catch (error) {
+      this.flash = result ? extractError(result) : extractError(error);
     } finally {
       this.penalizing = false;
     }

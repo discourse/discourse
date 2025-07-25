@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  js:
+    discourse_policy:
+      title: "Política"
+      accepted_tooltip: "Usuarios que aceptaron esta política"
+      not_accepted_tooltip: "Usuarios que no aceptaron esta política"
+      accept_policy: "Aceptar política"
+      revoke_policy: "Rechazar política"
+      edit_reason: "Se ha modificado la configuración de la política"
+      no_possible_users: "Esta política no tiene usuarios posibles"
+      accept_policy_template: "Acepto esta política"
+      builder:
+        title: Política
+        attach: Crear política
+        save: Guardar cambios
+        insert: Insertar
+        errors:
+          group: El grupo es obligatorio
+          version: La versión es obligatoria
+        groups:
+          label: Grupos
+          description: Los grupos asociados a esta política
+        version:
+          label: Versión
+          description: La versión de la política, cambiar la versión obligará a las personas a volver a aceptarla
+        renew:
+          label: Renovar
+          description: Renovar la política cada x días
+        renew-start:
+          label: Inicio de la renovación
+          description: Cuándo debe renovarse la política
+        reminder:
+          label: Recordatorio
+          description: Con qué frecuencia se debe enviar una notificación de recordatorio para aceptar la política
+        accept:
+          label: Aceptar
+          description: Texto utilizado en el botón aceptar
+        revoke:
+          label: Revocar
+          description: Texto utilizado en el botón de revocación
+        private:
+          label: '¿Privado?'
+          description: Mantener el estado de la política en privado para los administradores
+        send-email:
+          label: '¿Enviar correo electrónico?'
+          description: Notificar a los usuarios la nueva política por correo electrónico
+      preferences:
+        title: Políticas
+        policy_emails:
+          always_description: Solo te enviaremos un correo electrónico si también has optado por recibir correos electrónicos de nuevas actividades.
+          away_description: Solo te enviaremos un correo electrónico si no te hemos visto en los últimos 10 minutos cuando cambie el estado de la política, y solo si también has optado por recibir correos electrónicos con nuevas actividades.
+          label: Envíame un correo electrónico cuando una política necesite mi revisión
+          email_frequency_options:
+            never: Nunca
+            when_away: Solo cuando estés ausente
+            always: Siempre

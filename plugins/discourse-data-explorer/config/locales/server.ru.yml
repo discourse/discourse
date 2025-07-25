@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    data_explorer_enabled: "Включить проводник данных в /admin/plugins/explorer"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: Запланировать личное сообщение с результатами от проводника данных
+        description: Отправка запланированных отчетов сообщением
+        no_csv_allowed: "При использовании поля `attach_csv` необходимо добавить `csv` в список разрешенных расширений в настройках сайта."
+      recurring_data_explorer_result_topic:
+        title: Запланировать публикацию в теме с результатами от проводника данных
+        description: Отправка запланированных отчетов через публикацию в определенной теме
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "Запланированный отчет по запросу «%{query_name}»"
+      upload_appendix: "Приложение: [%{filename}|вложение](%{short_url})"

@@ -1,0 +1,9 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    data_explorer_enabled: "/ admin / plugins / explorer에서 데이터 탐색기를 활성화하십시오."

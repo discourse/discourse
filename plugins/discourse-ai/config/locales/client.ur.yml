@@ -1,0 +1,188 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "ترتیب بہ"
+            tag:
+              label: "ٹیگ"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ٹاپک ID"
+            title:
+              label: "عنوان"
+            categories:
+              label: "اقسام"
+            tags:
+              label: "ٹیگز"
+        llm_triage:
+          fields:
+            category:
+              label: "زُمرَہ"
+            tags:
+              label: "ٹیگز"
+            canned_reply:
+              label: "جواب"
+    discourse_ai:
+      features:
+        back: "واپس"
+        disabled: "(غیر فعال)"
+        groups: "گروپس:"
+        no_groups: "کوئی نہیں"
+        edit: "ترمیم کریں"
+        expand_list:
+          one: "(%{count} مزید)"
+          other: "(%{count} مزید)"
+        filters:
+          all: "تمام"
+          reset: "رِی سَیٹ"
+        search:
+          name: "تلاش کریں"
+        spam:
+          name: "سپَیم"
+      modals:
+        select_option: "ایک آپشن منتخب کریں..."
+      spam:
+        short_title: "سپَیم"
+        last_seven_days: "پچھلے 7 دن"
+        enable: "فعال کریں"
+        test_modal:
+          spam: "سپَیم"
+      usage:
+        summary: "Summary"
+        username: "صارف نام"
+        total_requests: "کُل درخواستیں"
+        periods:
+          last_day: "پچھلے 24 گھنٹے"
+          custom: "ترمیم..."
+      ai_persona:
+        back: "واپس"
+        name: "نام"
+        edit: "ترمیم کریں"
+        export: "برآمد"
+        import: "درآمد"
+        description: "تفصیل"
+        user: صارف
+        save: "محفوظ کریں"
+        enabled: "فعال؟"
+        delete: "مٹائیں"
+        response_format:
+          open_modal: "ترمیم کریں"
+          modal:
+            key_title: "کی"
+        filters:
+          reset: "رِی سَیٹ"
+      rag:
+        uploads:
+          title: "اَپ لوڈز"
+          uploading: "اَپ لوڈ کیا جا رہا ہے..."
+      tools:
+        back: "واپس"
+        export: "برآمد"
+        import: "درآمد"
+        name: "نام"
+        description: "تفصیل"
+        summary: "Summary"
+        save: "محفوظ کریں"
+        remove_parameter: "خارج کریں"
+        parameter_required: "درکار"
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+      llms:
+        display_name: "نام"
+        provider: "پرووَائیڈر"
+        save: "محفوظ کریں"
+        edit: "ترمیم کریں"
+        back: "واپس"
+        delete: مٹائیں
+        quotas:
+          group: "گروپ"
+          max_usages: "زیادہ سے زیادہ استعمال"
+          duration: "دورانیہ"
+          durations:
+            hour: "1 گھنٹہ"
+            six_hours: "6 گھنٹے"
+            day: "24 گھنٹے"
+            custom: "ترمیم..."
+          hours: "گھنٹے"
+        usage:
+          ai_summarization: "خلاصہ"
+          ai_spam: "سپَیم"
+        next:
+          title: "اگلا"
+        tests:
+          success: "کامیابی!"
+        providers:
+          google: "گُوگَل"
+          fake: "اپنی مرضی کا"
+      ai_helper:
+        context_menu:
+          cancel: "منسوخ"
+          confirm: "تصدیق کریں"
+          discard: "منسوخ"
+        post_options_menu:
+          close: "بند کریں"
+          copy: "کاپی"
+          copied: "کاپی کر لیا!"
+          cancel: "منسوخ"
+        image_caption:
+          save_caption: "محفوظ کریں"
+          automatic_caption_dialog:
+            confirm: "فعال کریں"
+      embeddings:
+        back: "واپس"
+        save: "محفوظ کریں"
+        delete: "مٹائیں"
+        edit: "ترمیم کریں"
+        tests:
+          success: "کامیابی!"
+        display_name: "نام"
+        provider: "پرووَائیڈر"
+        providers:
+          google: "گُوگَل"
+          fake: "اپنی مرضی کا"
+      ai_bot:
+        debug_ai_modal:
+          request: "ریکویسٹ"
+          response: "جواب"
+          next_log: "اگلا"
+          previous_log: "پچھلی"
+        invite_ai_conversation:
+          button: "دعوت دیں"
+        share_modal:
+          copy: "کاپی"
+        conversations:
+          today: "آج"
+          last_7_days: "پچھلے 7 دن"
+          last_30_days: "پچھلے 30 دن"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "تمام"
+            neutral: "نیوٹرل"
+          group_types:
+            category: "زُمرَہ"
+            tag: "ٹیگ"
+          table:
+            total_count: "کُل"
+      summarization:
+        chat:
+          summarize: "خلاصہ"
+      discobot_discoveries:
+        regular_results: "ٹاپک"
+        collapse: "بند کریں"
+        tooltip:
+          actions:
+            disable: "غیر فعال کریں"

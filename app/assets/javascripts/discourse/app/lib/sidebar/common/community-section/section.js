@@ -5,6 +5,7 @@ import AboutSectionLink from "discourse/lib/sidebar/common/community-section/abo
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
 import FAQSectionLink from "discourse/lib/sidebar/common/community-section/faq-section-link";
+import FilterSectionLink from "discourse/lib/sidebar/common/community-section/filter-section-link";
 import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
 import UsersSectionLink from "discourse/lib/sidebar/common/community-section/users-section-link";
 import {
@@ -27,6 +28,7 @@ const SPECIAL_LINKS_MAP = {
   "/my/messages": MyMessagesSectionLink,
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
+  "/filter": FilterSectionLink,
   "/admin": AdminSectionLink,
   "/g": GroupsSectionLink,
   "/new-invite": InviteSectionLink,

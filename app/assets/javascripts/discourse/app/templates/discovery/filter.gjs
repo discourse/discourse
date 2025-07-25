@@ -5,13 +5,14 @@ import Topics from "discourse/components/discovery/topics";
 
 export default RouteTemplate(
   <template>
-    <Layout @model={{@controller.model}}>
+    <Layout @model={{@controller.model}} @listClass="--filter --topic-list">
       <:navigation>
         <FilterNavigation
           @queryString={{@controller.q}}
           @updateTopicsListQueryParams={{@controller.updateTopicsListQueryParams}}
           @canBulkSelect={{@controller.canBulkSelect}}
           @bulkSelectHelper={{@controller.bulkSelectHelper}}
+          @tips={{@controller.model.topic_list.filter_option_info}}
         />
       </:navigation>
       <:list>

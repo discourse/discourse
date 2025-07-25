@@ -64,12 +64,35 @@ if (PreloadStore.get("currentUser")?.staff) {
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
-for (const link of document.querySelectorAll("link[rel=modulepreload]")) {
+window.moduleBroker = {
+  async lookup(moduleName) {
+    return require(moduleName);
+  },
+};
+
+async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
-  const compatModules = (await import(/* @vite-ignore */ link.href)).default;
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/theme-${themeId}/${key}`, () => mod);
+  try {
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/theme-${themeId}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
+      error
+    );
+    fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
+}
+
+export async function loadThemes() {
+  const promises = [
+    ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+  ].map(loadThemeFromModulePreload);
+  await Promise.all(promises);
 }
 
 class Discourse extends Application {

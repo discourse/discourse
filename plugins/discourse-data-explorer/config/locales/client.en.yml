@@ -1,0 +1,134 @@
+en:
+  js:
+    errors:
+      explorer:
+        no_semicolons: "Remove the semicolons from the query."
+        dirty: "You must save the query before running."
+    explorer:
+      or: "or"
+      admins_only: "The data explorer is only available to admins."
+      allow_groups: "Allow groups to access this query"
+      title: "Data Explorer"
+      create: "Create New"
+      create_placeholder: "Query name..."
+      description_placeholder: "Enter a description here"
+      import:
+        label: "Import"
+        modal: "Import A Query"
+        unparseable_json: "Unparseable JSON file."
+        wrong_json: "Wrong JSON file. A JSON file should contain a 'query' object, which should at least have an 'sql' property."
+      help:
+        label: "Help"
+        modal_title: "Data Explorer Help"
+        auto_resolution: "<h2>Automatic Entity Resolution</h2>
+          <p>When your query returns an entity id, Data Explorer may automatically substitute it with
+          the entity name and other useful information in query results. Automatic resolution is available for
+          <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i>
+          and <i><b>badge_id</b></i>. To try this out run this query:</p>
+          <pre><code>SELECT user_id\nFROM posts</code></pre>"
+        custom_params: "<h2>Creating Custom Parameters</h2>
+          <p>To create custom parameters for your queries, put this at the top of your query and follow the format:</p>
+          <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre>
+          <p><i>Note: the first line with [params] is required, along with two dashes preceding it and every
+          custom parameter you want to declare.</i></p>"
+        default_values: "<h3>Default Values</h3>
+          <p>You can declare parameters with or without default values. Default values will show up in a text field
+          below the query editor, which you can edit to your needs. Parameters declared without default values will
+          still generate a text field, but will be empty and highlighted red.</p>
+          <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
+        data_types: "<h3>Data Types</h3>
+          <p>Here are common data types you can use:</p>
+          <ul>
+          <li><b>integer</b> - signed four-byte Integer</li>
+          <li><b>text</b> - variable-length character string</li>
+          <li><b>boolean</b> – true/false</li>
+          <li><b>date</b> - calendar date (year, month, day)</li>
+          </ul>
+          <p>For more information on data types, visit
+          <a href='http://www.postgresql.org/docs/9.3/static/datatype.html#DATATYPE-TABLE' target='_blank'>this website</a>.</p>"
+      schema:
+        title: "Database Schema"
+        filter: "Search..."
+        sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
+      types:
+        bool:
+          yes: "Yes"
+          no: "No"
+          null_: "Null"
+      export: "Export"
+      view_json: "View JSON"
+      save: "Save Changes"
+      saverun: "Save Changes and Run"
+      run: "Run"
+      undo: "Discard Changes"
+      edit: "Edit"
+      delete: "Delete"
+      recover: "Undelete Query"
+      download_json: "JSON"
+      download_csv: "CSV"
+      show_table: "Table"
+      show_graph: "Graph"
+      others_dirty: "A query has unsaved changes that will be lost if you navigate away."
+      run_time: "Query completed in %{value} ms."
+      result_count:
+        one: "%{count} result."
+        other: "%{count} results."
+      max_result_count:
+        one: "Showing top %{count} result."
+        other: "Showing top %{count} results."
+      query_name: "Query"
+      query_groups: "Groups"
+      link: "Link for"
+      report_name: "Report"
+      query_description: "Description"
+      query_time: "Last run"
+      query_user: "Created by"
+      column: "Column %{number}"
+      explain_label: "Include query plan?"
+      save_params: "Set Defaults"
+      reset_params: "Reset"
+      search_placeholder: "Search..."
+      no_search_results: "Sorry, we couldn't find any results matching your text."
+      form:
+        errors:
+          invalid: "Invalid"
+          no_such_category: "No such category"
+          no_such_group: "No such group"
+          invalid_date: "%{date} is a invalid date"
+          invalid_time: "%{time} is a invalid time"
+    group:
+      reports: "Reports"
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_data_explorer:
+              run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
+    discourse_automation:
+      scriptables:
+        recurring_data_explorer_result_pm:
+          fields:
+            recipients:
+              label: Send to User, Group or Email
+            query_id:
+              label: Data Explorer Query
+            query_params:
+              label: Data Explorer Query parameters
+            skip_empty:
+              label: Skip sending PM if there are no results
+            attach_csv:
+              label: Attach the CSV file to the PM
+            users_from_group:
+              label: Send individual PM to each group member
+        recurring_data_explorer_result_topic:
+          fields:
+            topic_id:
+              label: The topic to post query results in
+            query_id:
+              label: Data Explorer Query
+            query_params:
+              label: Data Explorer Query parameters
+            skip_empty:
+              label: Skip posting if there are no results
+            attach_csv:
+              label: Attach the CSV file to the post

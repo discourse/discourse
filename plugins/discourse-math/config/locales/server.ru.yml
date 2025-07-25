@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    discourse_math_enabled: "Включить плагин Discourse Math (добавит специальную обработку в блоки $ и $$)"
+    discourse_math_provider: "Математический провайдер по умолчанию"
+    discourse_math_zoom_on_hover: "Увеличение 200% при наведении (только MathJax)"
+    discourse_math_enable_accessibility: "Включить специальные возможности (только MathJax)"
+    discourse_math_enable_asciimath: "Включить asciimath (добавит специальную обработку к вводу с разделителями %) (только MathJax)"

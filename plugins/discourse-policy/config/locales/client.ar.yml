@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    discourse_policy:
+      title: "السياسة"
+      accepted_tooltip: "المستخدمون الذين قبلوا هذه السياسة"
+      not_accepted_tooltip: "المستخدمون الذين لم يقبلوا هذه السياسة"
+      accept_policy: "قبول السياسة"
+      revoke_policy: "إلغاء السياسة"
+      edit_reason: "تم تعديل إعدادات السياسة"
+      no_possible_users: "لا يوجد مستخدمون محتملون لهذه السياسة"
+      accept_policy_template: "أقبل هذه السياسة"
+      builder:
+        title: السياسة
+        attach: إنشاء سياسة
+        save: احفظ التغييرات
+        insert: إدراج
+        errors:
+          group: المجموعة مطلوبة
+          version: الإصدار مطلوب
+        groups:
+          label: المجموعات
+          description: المجموعات المرتبطة بهذه السياسة
+        version:
+          label: الإصدار
+          description: نسخة السياسة، ستجبر ترقية السياسة الأشخاص على قبولها مرة أخرى
+        renew:
+          label: تجديد
+          description: إعادة تجديد السياسة كل x من الأيام
+        renew-start:
+          label: بدء التجديد
+          description: موعد تجديد السياسة
+        reminder:
+          label: تذكير
+          description: عدد المرات التي يجب فيها إرسال إشعار التذكير بقبول السياسة
+        accept:
+          label: قبول
+          description: النص المستخدم على زر القبول
+        revoke:
+          label: إلغاء
+          description: النص المستخدم على زر الإلغاء
+        private:
+          label: خاصة?
+          description: إبقاء حالة السياسة خاصة للمشرفين
+        send-email:
+          label: هل تريد إرسال رسالة إلكترونية؟
+          description: إرسال إشعار بالسياسة الجديدة إلى المستخدمين عبر البريد الإلكتروني
+      preferences:
+        title: السياسات
+        policy_emails:
+          always_description: سنراسلك عبر البريد الإلكتروني فقط إذا كنت قد اشتركت أيضًا في الرسائل الإلكترونية للنشاط الجديد.
+          away_description: سنراسلك عبر البريد الإلكتروني فقط إذا لم نرك في آخر 10 دقائق عندما تتغيَّر حالة السياسة، وفقط إذا اشتركت في الرسائل الإلكترونية للنشاط الجديد.
+          label: مراسلتي عبر البريد الإلكتروني عندما تحتاج إحدى السياسات إلى مراجعتي
+          email_frequency_options:
+            never: أبدًا
+            when_away: عندما أكون غائبًا فقط
+            always: دائمًا

@@ -9,7 +9,9 @@ module Migrations::Database::IntermediateDB
     SQL = <<~SQL
       INSERT INTO user_options (
         user_id,
+        ai_search_discoveries,
         allow_private_messages,
+        auto_image_caption,
         auto_track_topics_after_msecs,
         automatically_unpin_topics,
         bookmark_auto_delete_preference,
@@ -50,9 +52,11 @@ module Migrations::Database::IntermediateDB
         mailing_list_mode,
         mailing_list_mode_frequency,
         new_topic_duration_minutes,
+        notification_level_when_assigned,
         notification_level_when_replying,
         oldest_search_log_date,
         only_chat_push_notifications,
+        policy_email_frequency,
         seen_popups,
         show_thread_title_prompts,
         sidebar_link_to_filtered_list,
@@ -69,13 +73,16 @@ module Migrations::Database::IntermediateDB
       )
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?
       )
     SQL
 
     def self.create(
       user_id:,
+      ai_search_discoveries: nil,
       allow_private_messages: nil,
+      auto_image_caption: nil,
       auto_track_topics_after_msecs: nil,
       automatically_unpin_topics: nil,
       bookmark_auto_delete_preference: nil,
@@ -116,9 +123,11 @@ module Migrations::Database::IntermediateDB
       mailing_list_mode: nil,
       mailing_list_mode_frequency: nil,
       new_topic_duration_minutes: nil,
+      notification_level_when_assigned: nil,
       notification_level_when_replying: nil,
       oldest_search_log_date: nil,
       only_chat_push_notifications: nil,
+      policy_email_frequency: nil,
       seen_popups: nil,
       show_thread_title_prompts: nil,
       sidebar_link_to_filtered_list: nil,
@@ -136,7 +145,9 @@ module Migrations::Database::IntermediateDB
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
         user_id,
+        ::Migrations::Database.format_boolean(ai_search_discoveries),
         ::Migrations::Database.format_boolean(allow_private_messages),
+        ::Migrations::Database.format_boolean(auto_image_caption),
         auto_track_topics_after_msecs,
         ::Migrations::Database.format_boolean(automatically_unpin_topics),
         bookmark_auto_delete_preference,
@@ -177,9 +188,11 @@ module Migrations::Database::IntermediateDB
         ::Migrations::Database.format_boolean(mailing_list_mode),
         mailing_list_mode_frequency,
         new_topic_duration_minutes,
+        notification_level_when_assigned,
         notification_level_when_replying,
         ::Migrations::Database.format_datetime(oldest_search_log_date),
         ::Migrations::Database.format_boolean(only_chat_push_notifications),
+        policy_email_frequency,
         seen_popups,
         ::Migrations::Database.format_boolean(show_thread_title_prompts),
         ::Migrations::Database.format_boolean(sidebar_link_to_filtered_list),

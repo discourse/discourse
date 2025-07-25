@@ -8,6 +8,7 @@ class ThemeSerializer < BasicThemeSerializer
              :auto_update,
              :remote_theme_id,
              :settings,
+             :themeable_site_settings,
              :errors,
              :supported?,
              :enabled?,
@@ -73,6 +74,20 @@ class ThemeSerializer < BasicThemeSerializer
   rescue ThemeSettingsParser::InvalidYaml => e
     @errors << e.message
     nil
+  end
+
+  # Components always return an empty array here
+  def themeable_site_settings
+    # UI for editing settings always expects the value + default to be a string
+    # to compare whether the setting has been changed or not.
+    object.themeable_site_settings.each do |tss|
+      tss[:default] = tss[:default].to_s
+      tss[:value] = tss[:value].to_s
+    end
+  end
+
+  def include_themeable_site_settings?
+    !object.component?
   end
 
   def include_child_themes?

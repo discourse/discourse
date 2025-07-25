@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Report do
   fab!(:user_1, :user)
   fab!(:user_2, :user)

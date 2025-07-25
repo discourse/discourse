@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    user_notes:
+      title: "Notes d'utilisateur"
+      attach: "Ajouter une note d'utilisateur"
+      remove: "Supprimer la note d'utilisateur"
+      show: "Notes d'utilisateur (%{count})"
+      delete_confirm: "Voulez-vous vraiment supprimer cette note d'utilisateur ?"
+      show_post: "Afficher le message"

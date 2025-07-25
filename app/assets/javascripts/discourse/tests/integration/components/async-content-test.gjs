@@ -286,7 +286,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
       assert.dom(".empty").doesNotExist();
     });
 
-    test("it displays the content block if the the empty block is not provided", async function (assert) {
+    test("it displays the content block if the empty block is not provided", async function (assert) {
       const promise = Promise.resolve(null);
 
       await render(

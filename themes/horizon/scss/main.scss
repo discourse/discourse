@@ -7,7 +7,7 @@
 html:not(:has(.has-full-page-chat)) {
   background-color: var(--background-color);
 
-  @include viewport.until(sm) {
+  @include viewport.until(lg) {
     background-color: var(--d-content-background);
   }
 }

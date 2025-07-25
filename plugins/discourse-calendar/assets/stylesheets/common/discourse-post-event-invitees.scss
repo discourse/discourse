@@ -1,0 +1,90 @@
+.post-event-invitees-modal {
+  .modal-body {
+    padding: 0;
+  }
+
+  .modal-inner-container {
+    min-width: 350px;
+  }
+
+  .loading-container {
+    height: 40vh;
+    overflow-y: scroll;
+
+    .no-users {
+      text-align: center;
+      font-size: var(--font-up-1);
+    }
+  }
+
+  .invitees-type-filter {
+    margin-bottom: 9px;
+    display: flex;
+
+    .btn {
+      width: calc(100% / 3);
+      margin: 0;
+      border-radius: 0;
+      padding: 0.75em 0;
+    }
+  }
+
+  .filter {
+    width: calc(100% - 2em);
+    margin-bottom: 1em;
+  }
+
+  .invitees,
+  .possible-invitees {
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+
+    .invitee {
+      list-style: none;
+      display: flex;
+      flex: 1;
+      padding: 0.5em;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--primary-low);
+
+      &:last-child {
+        border: none;
+      }
+
+      .user {
+        max-width: 175px;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+
+        .username {
+          margin-left: 0.5em;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          color: var(--primary-high-or-secondary-low);
+          font-weight: bold;
+        }
+      }
+
+      .status {
+        margin-left: auto;
+        margin-right: 0.5em;
+
+        &.going {
+          color: var(--success);
+        }
+
+        &.not_going {
+          color: var(--danger);
+        }
+      }
+    }
+  }
+
+  .possible-invitees {
+    margin-top: 1em;
+    background-color: var(--primary-very-low);
+  }
+}

@@ -1082,6 +1082,8 @@ ur:
       suspended_notice: "یہ صارف %{date} تک معطل ہے۔"
       suspended_permanently: "یہ صارف معطل ہے۔"
       suspended_reason: "وجہ: "
+      silenced_permanently: "یہ صارف خاموش کیا ہوا ہے."
+      silenced_reason: "وجہ: "
       github_profile: "گِٹ ہَب"
       email_activity_summary: "سرگرمی کا خلاصہ"
       mailing_list_mode:
@@ -1469,7 +1471,8 @@ ur:
         reinvited: "دعوت دوبارہ بھیج دی گئی"
         removed: "ہٹا دیا"
         user: "مدعو کیا گیا صارف"
-        none: "ظاہر کرنے کے لئے کوئی دعوتیں نہیں ہیں۔"
+        none:
+          title: "ظاہر کرنے کے لئے کوئی دعوتیں نہیں ہیں۔"
         truncated:
           one: "پہلی دعوت دکھائی جا رہی ہیں۔"
           other: "پہلی %{count} دعوتیں دکھائی جا رہی ہیں۔"
@@ -1878,7 +1881,6 @@ ur:
       unlist: "غیر مندرج"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
       toggle_whisper: "سرگوشی ٹَوگل کریں"
-      toggle_unlisted: "غیر مندرج ٹَوگل کریں"
       posting_not_on_topic: "کون سے ٹاپک کا آپ جواب دینا چاہتے ہیں؟"
       saved_local_draft_tip: "مقامی طور پر محفوظ کر لیا گیا"
       drafts_offline: "ڈرافٹس آف لائن"
@@ -3617,6 +3619,8 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
+            filter:
+              content: "فِلٹر"
             topics:
               content: "ٹاپکس"
             faq:
@@ -3657,6 +3661,9 @@ ur:
       spreadsheet:
         show: "دکھائیں"
         about: "بارے میں"
+    filter:
+      description:
+        yesterday: "کَل"
     discovery:
       headings:
         multi_tag:
@@ -3778,6 +3785,8 @@ ur:
           title: "وَیب ھُوک٘س٘"
         embedding:
           title: "اَیمبَیڈ کرنا"
+      theme_site_settings:
+        default_value: "ڈِیفالٹ"
       search:
         title: "تلاش کریں"
         result_types:
@@ -4379,9 +4388,7 @@ ur:
           up_to_date: "تِھیم اَپ ڈَیٹ ہے، آخری دفعہ چَیک کیا:"
           has_overwritten_history: "موجودہ تھیم ورژن اب موجود نہیں ہے کیونکہ گٹ ہسٹری کو زبردستی دھکا لگا کر اوور رائٹ کر دیا گیا ہے۔"
           add: "شامل کریں"
-          theme_settings: "تھیم کی ترتیبات"
           no_settings: "اِس تھیم کی کوئی ترتیبات نہیں ہیں۔"
-          theme_translations: "تھیم ترجمے"
           empty: "کوئی اشیاء نہیں"
           commits_behind:
             one: "تِھیم %{count} کَمِٹ پیچھے ہے!"
@@ -4430,6 +4437,11 @@ ur:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
             description: "بَیس پیلیٹ:"
           title: "رنگ"
+          edit: "ترمیم کریں"
+          filters:
+            all: "تمام"
+          active_badge:
+            text: "فعال"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
           copy_name_prefix: "نقل از"
           undo: "کالعدم کریں"
@@ -4880,7 +4892,6 @@ ur:
         activity: سرگرمی
         like_count: لائیکس دیے / ملے
         last_100_days: "پچھلے 100 دنوں میں"
-        private_topics_count: نِجی ٹاپک
         posts_read_count: پڑھی گئیں پوسٹس
         post_count: بنائی گئیں پوسٹس
         second_factor_enabled: دو فیکٹر کی توثیق فعال ہے

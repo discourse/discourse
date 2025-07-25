@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    category:
+      sort_options:
+        votes: "Glasovi"
+    topic_voting:
+      reached_limit: "Ponestalo vam je glasova, uklonite postojeći glas!"
+      list_votes: "Prikažite svoje glasove"
+      votes_nav_help: "teme s najviše glasova"
+      voted: "Glasali ste na ovoj temi"
+      allow_topic_voting: "Dopusti korisnicima da glasaju na temama u ovoj kategoriji?"
+      vote_title: "Glasaj"
+      vote_title_plural: "Glasovi"
+      voted_title: "Glasovao"
+      voting_closed_title: "Zatvoreno"
+      voting_limit: "Limit"
+      anonymous_button:
+        one: "Glas"
+        few: "Glasa"
+        other: "Glasova"
+      remove_vote: "Ukloni glas"
+    filters:
+      votes:
+        title: "Glasovi"
+        help: "teme s najviše glasova"

@@ -47,7 +47,9 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @filterBy("model.theme_fields", "target", "extra_js") extraFiles;
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
+  @notEmpty("model.themeable_site_settings") hasThemeableSiteSettings;
   @readOnly("model.settings") settings;
+  @readOnly("model.themeable_site_settings") themeSiteSettings;
 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
@@ -59,13 +61,18 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     const descriptions = [];
     ["common", "desktop", "mobile"].forEach((target) => {
       const fields = this.editedFieldsForTarget(target);
+      if (target === "common" && this.model.getField("common", "js")) {
+        fields.push({
+          name: "js",
+        });
+      }
       if (fields.length < 1) {
         return;
       }
       let resultString = i18n("admin.customize.theme." + target);
       const formattedFields = fields
         .map((f) => i18n("admin.customize.theme." + f.name + ".text"))
-        .join(" , ");
+        .join(", ");
       resultString += `: ${formattedFields}`;
       descriptions.push(resultString);
     });

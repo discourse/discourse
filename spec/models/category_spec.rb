@@ -52,7 +52,7 @@ RSpec.describe Category do
 
       expect { category_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(13).to(11)
+      }.by(-2)
       expect(
         SidebarSectionLink.where(
           id: [category_sidebar_section_link.id, category_sidebar_section_link_2.id],

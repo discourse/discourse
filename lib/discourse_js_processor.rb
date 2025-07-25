@@ -1,8 +1,4 @@
 # frozen_string_literal: true
-require "execjs"
-require "mini_racer"
-
-# MiniRacer::Platform.set_flags!(:trace_wasm_memory)
 
 class DiscourseJsProcessor
   class TranspileError < StandardError
@@ -29,16 +25,12 @@ class DiscourseJsProcessor
     end
 
     def self.build_theme_transpiler
-      FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
-      result =
-        Discourse::Utils.execute_command(
-          "pnpm",
-          "-C=app/assets/javascripts/theme-transpiler",
-          "node",
-          "build.js",
-        )
-      # File.write("app/assets/javascripts/theme-transpiler/theme-transpiler.js", result)
-      result
+      Discourse::Utils.execute_command(
+        "pnpm",
+        "-C=app/assets/javascripts/theme-transpiler",
+        "node",
+        "build.js",
+      )
     end
 
     def self.build_production_theme_transpiler
@@ -51,8 +43,8 @@ class DiscourseJsProcessor
       ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
 
       # General shims
-      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(puts(err)) })
-      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(puts(err)) })
+      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
+      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       source =
@@ -116,7 +108,14 @@ class DiscourseJsProcessor
       @skip_module = skip_module
     end
 
-    def perform(source, root_path = nil, logical_path = nil, theme_id: nil, extension: nil)
+    def perform(
+      source,
+      root_path = nil,
+      logical_path = nil,
+      theme_id: nil,
+      extension: nil,
+      generate_map: false
+    )
       self.class.v8_call(
         "transpile",
         source,
@@ -126,6 +125,7 @@ class DiscourseJsProcessor
           filename: logical_path || "unknown",
           extension: extension,
           themeId: theme_id,
+          generateMap: generate_map,
         },
       )
     end

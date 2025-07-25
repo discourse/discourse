@@ -4130,7 +4130,6 @@ fr:
     solarized_dark_theme_name: "Sombre solarisé"
     wcag_dark: "WCAG Sombre"
     wcag_dark_theme_name: "WCAG Sombre"
-    default_theme_name: "Par défaut"
     light_theme_name: "Clair"
     dark_theme_name: "Sombre"
     neutral_theme_name: "Neutre"
@@ -4755,10 +4754,6 @@ fr:
         Ce badge est attribué lorsque vous vous connectez 365 jours de suite. Ouah ! Une année entière !
     badge_title_metadata: "Badge %{display_name} sur %{site_title}"
   admin_login:
-    success: "Email envoyé"
-    errors:
-      unknown_email_address: "Adresse e-mail inconnue."
-      invalid_token: "Jeton invalide."
     email_input: "E-mail de l'administrateur"
     submit_button: "Envoyer un e-mail"
     safe_mode: "Mode sans échec : désactivez tous les thèmes ou extensions lors de la connexion"

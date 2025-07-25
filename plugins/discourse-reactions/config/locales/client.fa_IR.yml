@@ -12,7 +12,7 @@ fa_IR:
           discourse_reactions: "واکنش‌های دیسکورس"
   js:
     discourse_reactions:
-      reactions_title: "واکنش‌ها"
+      reactions_title: "واکنش‌‌ها"
       state_panel:
         more_users: "و %{count} نفر دیگر..."
       reaction:
@@ -22,7 +22,7 @@ fa_IR:
         cant_remove_reaction: "شما دیگر واکنش خود را نمی‌توانید حذف کنید"
         remove_reaction: "حذف این %{reaction} واکنش"
       main_reaction:
-        add: "پسندیدن این نوشته"
+        add: "پسندیدن این فرسته"
         remove: "حذف واکنش پسندیدن"
         cant_remove: "شما دیگر پسندیدن خود را نمی‌توانید حذف کنید"
     notifications:
@@ -31,4 +31,4 @@ fa_IR:
         one: "%{username} و %{count} نفر دیگر"
         other: "%{username} و %{count} نفر دیگر"
       titles:
-        reaction: "واکنش‌ جدید"
+        reaction: "واکنش جدید"

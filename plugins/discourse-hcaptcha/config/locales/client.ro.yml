@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    discourse_hCaptcha:
+      missing_token: "Te rugăm să completezi provocarea hCaptcha."
+      placeholder: substituent
+      contact_system_administrator: "A apărut o problemă cu hCaptcha, dacă această problemă persistă, te rugăm să contactezi un administrator de sistem"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_hcaptcha: "Discourse hCaptcha"

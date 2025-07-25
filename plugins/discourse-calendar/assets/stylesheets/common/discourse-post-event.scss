@@ -1,0 +1,448 @@
+$interested: #fb985d;
+$show-interested: inherit;
+
+.cooked > .discourse-post-event {
+  display: none;
+}
+
+.discourse-post-event {
+  display: flex;
+  justify-content: center;
+
+  .event__section {
+    padding: 0.5em 0.75rem;
+
+    &:first-child {
+      border-top: 1px solid var(--primary-low);
+    }
+
+    p {
+      margin: 0;
+    }
+
+    > .d-icon {
+      padding-right: 0.25em;
+    }
+
+    .discourse-local-date .d-icon {
+      padding-right: 0.25em;
+    }
+  }
+
+  .discourse-post-event-widget {
+    box-shadow: 0 0 0 3px var(--primary-100);
+    border: 1px solid var(--primary-300);
+    display: flex;
+    background: var(--secondary);
+    margin: 5px 0;
+    flex-direction: column;
+    flex: 1 0 auto;
+    max-width: calc(100% - 2px - 6px);
+    box-sizing: border-box;
+    border-radius: var(--d-border-radius);
+
+    section:last-child {
+      padding-bottom: 0.75em;
+    }
+
+    .widget-dropdown {
+      margin: 0;
+
+      .widget-dropdown-header.disabled {
+        pointer-events: none;
+      }
+
+      .widget-dropdown-item {
+        &:not(.separator) {
+          padding: 0.5em;
+        }
+
+        .d-icon + span {
+          margin-left: 0.5em;
+        }
+      }
+    }
+  }
+
+  &.is-loading {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.has-event {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .event-header {
+    column-gap: 1em;
+    display: flex;
+    align-items: flex-start;
+    padding: 0.75em;
+
+    .more-dropdown {
+      margin-left: auto;
+      align-self: flex-start;
+
+      &.has-no-actions {
+        display: none;
+      }
+
+      .widget-dropdown {
+        .widget-dropdown-header {
+          .d-icon {
+            margin: 0;
+          }
+
+          .label {
+            display: none;
+          }
+        }
+
+        .item-closeEvent {
+          .d-icon,
+          span {
+            color: var(--danger);
+          }
+        }
+      }
+    }
+  }
+
+  .event-date {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3em;
+    height: 3em;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    flex-direction: column;
+
+    .month {
+      text-align: center;
+      color: red;
+      font-size: var(--font-down-2);
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .day {
+      text-align: center;
+      font-size: var(--font-up-1);
+      font-weight: 400;
+    }
+  }
+
+  .event-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin-right: 0.5rem;
+
+    .name {
+      @include ellipsis;
+      max-width: 45vw;
+      font-size: var(--font-up-2);
+      font-weight: 400;
+    }
+
+    .status-and-creators {
+      display: flex;
+      align-items: center;
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      font-weight: 400;
+      margin: 0;
+
+      .separator {
+        margin: 0 0.25em;
+      }
+
+      .created-by {
+        margin-right: 0.25em;
+
+        @media screen and (width <= 450px) {
+          display: none;
+        }
+      }
+
+      .username {
+        margin-left: 0.25em;
+        color: var(--primary);
+      }
+
+      .creators {
+        display: flex;
+        align-items: center;
+
+        .event-creator {
+          .topic-invitee-avatar {
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+
+      .status {
+        &.expired,
+        &.closed {
+          color: var(--danger-medium);
+        }
+
+        .d-icon {
+          margin-right: 0.5em;
+        }
+      }
+    }
+  }
+
+  .event-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75em;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--primary-low);
+
+    &.event-status {
+      margin: 0;
+      gap: 0.75em;
+
+      .btn {
+        flex: 1;
+      }
+
+      .interested-button {
+        display: $show-interested;
+      }
+
+      &.status-going .going-button .d-icon {
+        color: var(--success);
+      }
+
+      &.status-interested .interested-button .d-icon {
+        color: $interested;
+      }
+
+      &.status-not_going .not-going-button .d-icon {
+        color: var(--danger);
+      }
+
+      .not-going-button span {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .event-creator {
+    .username {
+      margin-left: 0.25em;
+    }
+  }
+
+  .event-invitees {
+    min-height: 1.75em;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    flex-direction: column;
+
+    .header {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1em;
+      width: 100%;
+
+      .show-all {
+        margin-left: 0.5em;
+      }
+
+      .event-invitees-status {
+        font-weight: 700;
+        display: flex;
+
+        span:not(:last-child)::after {
+          content: "-";
+          font-weight: 400;
+          margin: 0 0.3em;
+        }
+
+        .event-status-invited {
+          font-weight: 600;
+          color: var(--primary-medium);
+        }
+      }
+    }
+
+    .event-invitees-avatars {
+      padding: 0;
+      margin: 0;
+      gap: 0.25em;
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+
+      .event-invitee {
+        list-style: none;
+        opacity: 0.25;
+
+        &.status-going,
+        &.status-not_going,
+        &.status-interested {
+          opacity: 1;
+        }
+
+        &.status-interested {
+          display: $show-interested;
+        }
+
+        &.status-going .avatar-flair .d-icon {
+          color: var(--success);
+        }
+
+        &.status-not_going .avatar-flair .d-icon {
+          color: var(--danger);
+        }
+
+        &.status-interested .avatar-flair .d-icon {
+          color: $interested;
+        }
+      }
+
+      .topic-invitee-avatar {
+        position: relative;
+        display: inline-block;
+        padding-right: 0.5em;
+
+        .avatar {
+          width: 1.5rem;
+        }
+
+        .avatar-flair {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          background: var(--secondary);
+          border-radius: 50%;
+          height: 1rem;
+          width: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--primary-medium);
+          box-shadow: 0 0 0 1px var(--primary-100);
+
+          .d-icon {
+            font-size: var(--font-down-2);
+          }
+        }
+      }
+    }
+  }
+
+  hr {
+    margin: 0;
+  }
+
+  .event-description {
+    display: flex;
+  }
+
+  .event-location,
+  .event-url,
+  .event-dates,
+  .event-chat-channel,
+  .event-invitees-avatars-container {
+    display: grid;
+    grid-template-columns: 3em 1fr;
+    grid-column-gap: 1em;
+    align-items: center;
+    height: min-content;
+
+    > .d-icon {
+      color: var(--primary-high);
+      margin: 0 auto;
+      padding: 0;
+    }
+  }
+
+  .event-url {
+    .url {
+      max-width: 80%;
+
+      @include ellipsis;
+    }
+  }
+
+  .cooked-date,
+  .participants,
+  .event-url .url {
+    font-size: var(--base-font-size);
+    font-weight: 400;
+    border-bottom: none;
+    margin: 0;
+  }
+
+  .event__section.no-rsvp {
+    display: grid;
+    grid-template-columns: 3em 1fr;
+    grid-column-gap: 1em;
+    align-items: center;
+  }
+
+  p.no-rsvp-description {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 400;
+    grid-column-start: 2;
+  }
+
+  .event-invitees-icon {
+    position: relative;
+    display: flex;
+    margin: 0 auto;
+    color: var(--primary-high);
+  }
+
+  .event-invitees-icon .going {
+    font-size: var(--font-down-3);
+    position: absolute;
+    right: -2px;
+    bottom: -8px;
+    background: var(--secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-medium);
+  }
+}
+
+.event-dates {
+  // hardcoded as cooking date is async and will change height after initial rendering otherwise
+  // not ideal but a decent low tech solution
+  height: 24px;
+
+  .participants {
+    margin-left: 0.5em;
+    color: var(--primary-medium);
+  }
+
+  .discourse-local-date {
+    .d-icon {
+      display: none;
+    }
+  }
+
+  .separator {
+    color: var(--primary-high);
+    margin: 0 0.5em;
+    text-align: center;
+  }
+}

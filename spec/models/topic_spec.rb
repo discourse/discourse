@@ -3640,13 +3640,29 @@ describe Topic do
     it "returns the localization with the specified locale" do
       I18n.locale = "ja"
       topic = Fabricate(:topic)
-      zh_localization = Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
-      ja_localization = Fabricate(:topic_localization, topic: topic, locale: "ja")
+      zh_localization = Fabricate(:topic_localization, topic:, locale: "zh_CN")
+      ja_localization = Fabricate(:topic_localization, topic:, locale: "ja")
 
       expect(topic.get_localization(:zh_CN)).to eq(zh_localization)
       expect(topic.get_localization("zh-CN")).to eq(zh_localization)
       expect(topic.get_localization("xx")).to eq(nil)
       expect(topic.get_localization).to eq(ja_localization)
+    end
+
+    it "returns a regional localization (ja_JP) when the user's locale (ja) is not available" do
+      I18n.locale = "ja"
+      topic = Fabricate(:topic)
+      ja_jp_localization = Fabricate(:topic_localization, topic:, locale: "ja_JP")
+
+      expect(topic.get_localization).to eq(ja_jp_localization)
+    end
+
+    it "returns a normalized localization (pt) if the user's locale (pt_BR) is not available" do
+      I18n.locale = "pt_BR"
+      topic = Fabricate(:topic)
+      pt_localization = Fabricate(:topic_localization, topic:, locale: "pt")
+
+      expect(topic.get_localization).to eq(pt_localization)
     end
   end
 

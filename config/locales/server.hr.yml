@@ -2251,8 +2251,6 @@ hr:
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
-  color_schemes:
-    default_theme_name: "Zadano"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"

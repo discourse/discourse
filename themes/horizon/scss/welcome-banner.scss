@@ -1,18 +1,34 @@
 @use "lib/viewport";
 
 .welcome-banner {
-  &__wrap {
-    display: grid;
-    grid-template-rows: 0.33fr 0.33fr 0.33fr;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 1em;
-    grid-row-gap: 0.5em;
-    border-bottom: 1px solid var(--primary-300);
-    padding: 1.5em 0 2.5em;
-    margin-bottom: 0;
+  &.--below-site-header {
+    background-color: var(--background-color);
+    border-radius: 0;
 
-    @media screen and (width <= 768px) {
-      padding: 1em;
+    @include viewport.until(lg) {
+      margin-bottom: var(--space-4);
+    }
+  }
+
+  &__inner-wrapper {
+    container-type: inline-size;
+  }
+
+  &__wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    border-bottom: 1px solid var(--primary-300);
+    margin-block: 0;
+    padding-block: var(--space-4) var(--space-8);
+
+    @include viewport.from(xl) {
+      justify-content: center;
+    }
+
+    @include viewport.until(md) {
+      flex-direction: column;
+      gap: var(--space-4);
     }
 
     @include viewport.until(sm) {
@@ -21,29 +37,42 @@
       margin-top: 0;
     }
 
+    .--below-site-header & {
+      border-bottom: 0;
+      padding: var(--space-4) var(--space-4) var(--space-8);
+
+      @include viewport.from(xl) {
+        margin-left: max(var(--d-sidebar-width), var(--space-4));
+      }
+
+      @include viewport.until(lg) {
+        padding: var(--space-8) var(--space-4) var(--space-8);
+      }
+    }
+
+    .--above-topic-content & {
+      @container (width <= 800px) {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+
+      @include viewport.until(lg) {
+        padding-inline: var(--space-4);
+      }
+    }
+
     .search-menu {
-      grid-column: 2/3;
-      grid-row: 1/-1;
       width: 100%;
       align-self: center;
 
-      @media screen and (width <= 1028px) {
-        grid-row: 2/-1;
-        grid-column: 1/-1;
+      .--above-topic-content & {
+        @container (width >= 800px) {
+          width: 50cqw;
+        }
       }
 
-      @media screen and (width <= 768px) {
-        grid-column: 2/-1;
-        grid-row: 1/-1;
-      }
-
-      @media screen and (width <= 600px) {
-        grid-row: 2/-1;
-        grid-column: 1/-1;
-      }
-
-      @include viewport.until(sm) {
-        display: none;
+      @include viewport.from(xl) {
+        margin-inline: unset;
       }
     }
 
@@ -80,38 +109,39 @@
   }
 
   &__title {
-    grid-column: 1/2;
-    grid-row: 1/-1;
     text-align: left;
-    align-self: center;
     margin: 0;
-    font-weight: 400;
     color: var(--search-color);
 
-    @media screen and (width <= 1028px) {
+    .--above-topic-content & {
+      @container (width >= 800px) {
+        flex-grow: 1;
+      }
+
+      @container (width <= 800px) {
+        white-space: nowrap;
+        text-align: center;
+      }
+    }
+
+    @include viewport.from(xl) {
+      margin-inline: unset;
+    }
+
+    @include viewport.from(md) {
+      font-size: clamp(var(--font-up-4), 4vw, var(--font-up-6));
+    }
+
+    @include viewport.until(md) {
       font-size: var(--font-up-4);
-      grid-column: 1/-1;
-      grid-row: 1;
-      text-align: center;
-      margin-bottom: 0.5em;
-    }
-
-    @media screen and (width <= 768px) {
-      text-align: left;
-      grid-column: 1/2;
-      grid-row: 1/-1;
-      font-size: var(--font-up-3);
-    }
-
-    @media screen and (width <= 600px) {
-      grid-column: 1/-1;
-      grid-row: 1;
-      text-align: center;
-      margin-bottom: 0.5em;
     }
 
     @include viewport.until(sm) {
       font-size: var(--font-up-2);
     }
+  }
+
+  &__subheader {
+    white-space: wrap;
   }
 }

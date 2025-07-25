@@ -1,0 +1,80 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "حل بواسطة Discourse"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "تم القبول"
+    solutions: "الحلول"
+    solved:
+      title: "تم الحل"
+      allow_accepted_answers: "السماح لصاحب الموضوع وفريق العمل بوضع علامة على أحد الردود على أنه الحل"
+      solved_topics_auto_close_hours: "إغلاق الموضوع تلقائيًا بعد مرور (n) من الساعات على آخر رد بمجرد وضع علامة على الموضوع على أنه محلول."
+      accept_answer: "التحديد إذا كان هذا الرد يحل المشكلة"
+      accepted_description: "هذا هو الحل المقبول لهذا الموضوع"
+      has_no_accepted_answer: "لا يوجد حل لهذا الموضوع"
+      unaccept_answer: "إلغاء التحديد إذا كان هذا الرد لم يعُد يحل المشكلة"
+      accepted_answer: "الحل"
+      solution: "الحل"
+      solution_summary:
+        zero: "حلًا"
+        one: "حل واحد"
+        two: "حلَّان"
+        few: "حلول"
+        many: "حلًا"
+        other: "حلًا"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "الكل"
+        solved: "محلول"
+        unsolved: "غير محلول"
+      no_solved_topics_title: "لم تحل أي موضوعات بعد"
+      no_solved_topics_title_others: "لم يحل %{username} أي موضوعات حتى الآن"
+      no_solved_topics_body: "عندما تقدِّم ردًا مفيدًا على أحد الموضوعات، فقد يحدِّد مالك الموضوع أو فريق العمل ردك على أنه الحل."
+      no_answer:
+        title: هل تمت الإجابة على سؤالك؟
+        description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."
+      notification:
+        title: "تم وضع علامة \"حل\" على منشورك"
+    topic_statuses:
+      solved:
+        help: "هناك حل لهذا الموضوع"
+    search:
+      advanced:
+        statuses:
+          solved: "محلولة"
+          unsolved: "غير محلولة"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "حدث تم حله"
+          accepted_solution: "عندما يضع مستخدم علامة على أحد المنشورات على أنه الإجابة المقبولة"
+          unaccepted_solution: "عندما يضع مستخدم علامة على أحد المنشورات على أنه الإجابة غير المقبولة"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: قبول/عدم قبول حل.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < مستوى الثقة 1
+            tl2: < مستوى الثقة 2
+            tl3: < مستوى الثقة 3
+            tl4: < مستوى الثقة 4
+            any: أي
+          fields:
+            maximum_trust_level:
+              label: مستوى الثقة
+              description: سيقوم المستخدمون تحت مستوى الثقة هذا بتشغيل هذه الأتمتة

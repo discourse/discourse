@@ -4,6 +4,7 @@ import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import { loadCompatModules } from "discourse/compat-modules";
 import config from "discourse/config/environment";
+import { loadThemes } from "discourse/app";
 import setupTests from "discourse/tests/setup-tests";
 
 loadCompatModules(
@@ -14,14 +15,7 @@ loadCompatModules(
 );
 
 document.addEventListener("discourse-init", async () => {
-  for (const link of document.querySelectorAll("link[rel=modulepreload]")) {
-    const themeId = link.dataset.themeId;
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
-    for (const [key, mod] of Object.entries(compatModules)) {
-      define(`discourse/theme-${themeId}/${key}`, () => mod);
-    }
-  }
+  await loadThemes();
 
   if (!window.EmberENV.TESTS_FILE_LOADED) {
     throw new Error(
@@ -38,9 +32,6 @@ document.addEventListener("discourse-init", async () => {
 
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target") || "core";
-  const testingTheme = !!document.querySelector(
-    "link[rel=modulepreload][data-theme-id]"
-  );
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
   const hasThemeJs = !!document.querySelector(
     "link[rel=modulepreload][data-theme-id]"
@@ -57,7 +48,7 @@ document.addEventListener("discourse-init", async () => {
     `
   );
 
-  const testingCore = !testingTheme && target === "core";
+  const testingCore = !hasThemeJs && target === "core";
   if (testingCore) {
     setupEmberOnerrorValidation();
   }
@@ -81,7 +72,7 @@ document.addEventListener("discourse-init", async () => {
     }
 
     const isPlugin = name.match(/\/plugins\//);
-    const isTheme = name.match(/\/theme-\d+\//);
+    const isTheme = name.match(/\/theme--?\d+\//);
     const isCore = !isPlugin && !isTheme;
     const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
 

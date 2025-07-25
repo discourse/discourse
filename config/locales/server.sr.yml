@@ -459,8 +459,6 @@ sr:
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"
-  color_schemes:
-    default_theme_name: "zadato"
   csv_export:
     boolean_yes: "Da"
     boolean_no: "Ne"

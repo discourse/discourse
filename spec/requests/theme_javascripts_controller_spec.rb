@@ -137,7 +137,7 @@ RSpec.describe ThemeJavascriptsController do
       component.save!
     end
 
-    it "forces theme settings default values" do
+    it "sets theme settings default values" do
       component.update_setting(:num_setting, 643)
       _, digest = component.baked_js_tests_with_digest
 

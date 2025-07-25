@@ -1646,8 +1646,6 @@ sl:
     unauthorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
   flag_reason:
     sockpuppet: "Nov uporabnik je ustvaril temo in drugi novi uporabnik z enakim IP naslovom (%{ip_address}) je odgovoril. Preverite <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nastavitev strani."
-  color_schemes:
-    default_theme_name: "Privzeto"
   edit_this_page: "Uredi to stran"
   csv_export:
     boolean_yes: "Da"
@@ -1893,10 +1891,6 @@ sl:
         Ta značka vam je podeljena za obiskovanje 365 zaporednih dni. Neverjetno, celo leto!
     badge_title_metadata: "%{display_name} značka na %{site_title}"
   admin_login:
-    success: "E-sporočilo poslano"
-    errors:
-      unknown_email_address: "Neznan e-naslov."
-      invalid_token: "Napačen žeton."
     email_input: "Administratorjev e-naslov"
     submit_button: "Pošlji e-sporočilo"
   tags:

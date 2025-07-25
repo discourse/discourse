@@ -593,11 +593,7 @@ export default class ReviewableItem extends Component {
 
                 <div class="review-item__flag-badges">
                   {{#each this.scoreSummary as |score|}}
-                    <ReviewableFlagReason
-                      @type={{score.type}}
-                      @count={{score.count}}
-                      @title={{score.title}}
-                    />
+                    <ReviewableFlagReason @score={{score}} />
                   {{/each}}
                 </div>
               </div>

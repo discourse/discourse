@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    discourse_math_enabled: "Discourse Math-plug-in inschakelen (voegt speciale verwerking toe aan $- en $$-blokken)"
+    discourse_math_provider: "Standaard provider voor wiskundige weergave"
+    discourse_math_zoom_on_hover: "200% zoomen bij muis over (alleen MathJax)"
+    discourse_math_enable_accessibility: "Toegankelijkheidsfuncties inschakelen (alleen MathJax)"
+    discourse_math_enable_asciimath: "Asciimath inschakelen (voegt speciale verwerking toe aan invoer gescheiden door %) (alleen MathJax)"

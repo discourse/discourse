@@ -264,12 +264,6 @@ cs:
     broken_page_change_alert: "Handler onPageChange vyvolal chybu. Další informace najdete v nástrojích pro vývojáře prohlížeče."
     broken_plugin_alert: "Způsobeno pluginem '%{name}'"
     broken_transformer_alert: "Došlo k chybě. Vaše stránka nemusí fungovat správně."
-    critical_deprecation:
-      notice: "<b>[Upozornění správce]</b> Jeden z vašich motivů nebo pluginů potřebuje aktualizaci, aby byl kompatibilní s nadcházejícími změnami jádra Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifikovaný motiv: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifikovaný plugin: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -866,17 +860,58 @@ cs:
         reviewable_post:
           title: "Příspěvek"
           noun: "příspěvek"
+      flagged_as: "Nahlášeno jako"
+      assigned_to: "Přiřazeno"
+      moderator_actions: "Akce moderátora"
+      timeline_and_notes: "Časová osa a poznámky"
+      timeline:
+        target_created: "Příspěvek vytvořen"
+        target_created_by: "Příspěvek vytvořil/a %{username} - %{relativeDate}"
+        flagged: "Nahlášeno"
+        flagged_as_by: "Nahlášeno jako %{flagReason} uživatelem %{username} · %{relativeDate}"
+        claimed: "Nárokováno"
+        claimed_by: "Nárokováno uživatelem %{username} · %{relativeDate}"
+        reviewed: "Zkontrolováno"
+        reviewed_by: "Zkontroloval/a %{username} - %{relativeDate}"
+        view_conversation: "zobrazit SZ"
+        note_added: "Poznámka moderátora"
+        note_added_by: "Poznámka moderátora od %{username} · %{relativeDate}"
+        no_events: "Na časové ose nejsou k zobrazení žádné události"
       notes:
+        add_note_description: "Viditelné pouze pro moderátory. Tuto poznámku použijte k přidání kontextu nebo rozhodnutí o kontrole."
+        add_note_button: "Přidat poznámku"
+        placeholder: "Napište sem svoji poznámku..."
+        chars_remaining: "Zbývá %{count} znaků"
+        delete_note: "Smazat tuto poznámku"
         delete: "Smazat"
+      new_topic_label: "Nové téma"
+      queued_user: "Uživatel ve frontě"
+      posted_in: "Zveřejněno v"
+      flagged_user: "Nahlášený uživatel"
       review_user: "Uživatel"
+      need_help: "Potřebujete pomoc?"
       copy_link: "Kopírovat odkaz"
+      view_source: "Zobrazit zdroj"
       insights:
+        flag_volume: "Objem nahlášení"
+        flagged_by_users:
+          one: "Nahlášeno %{count} unikátním uživatelem"
+          few: "Nahlášeno %{count} unikátními uživateli"
+          many: "Nahlášeno %{count} unikátními uživateli"
+          other: "Nahlášeno %{count} unikátními uživateli"
+        similar_posts: "Podobné minulé příspěvky"
+        flagged_in_timeframe: "%{count} předchozích nahlášení"
+        user_activity: "Aktivita uživatelů"
         activities:
+          new_account: "nový účet"
+          trust_level: "úroveň důvěry: %{trustLevelName}"
           posts:
             one: "%{count} příspěvek"
             few: "%{count} příspěvky"
             many: "%{count} příspěvků"
             other: "%{count} příspěvků"
+        solution_marked: "Řešení označeno"
+        topic_has_solution: "Toto téma má řešení"
         visibility: "Viditelnost"
       approval:
         title: "Příspěvek potřebuje schválení"
@@ -1509,6 +1544,7 @@ cs:
       suspended_notice: "Uživatel je pozastaven do %{date}."
       suspended_permanently: "Tento uživatel je pozastaven."
       suspended_reason: "Důvod: "
+      silenced_reason: "Důvod: "
       github_profile: "GitHub"
       email_activity_summary: "Souhrn aktivit"
       mailing_list_mode:
@@ -2063,7 +2099,8 @@ cs:
         removed: "Odstraněno"
         search: "pište pro hledání v pozvánkách..."
         user: "Pozvaný uživatel"
-        none: "Nejsou žádné pozvánky k zobrazení."
+        none:
+          title: "Nejsou žádné pozvánky k zobrazení."
         truncated:
           one: "Zobrazena první pozvánka."
           few: "Zobrazeny první %{count} pozvánky."
@@ -2774,7 +2811,6 @@ cs:
       unlist: "skryto"
       add_warning: "Toto je oficiální varování."
       toggle_whisper: "Přepnout šeptání"
-      toggle_unlisted: "Přepnout skrytí"
       insert_table: "Vložit tabulku"
       posting_not_on_topic: "Na jaké téma chcete odpovědět?"
       saved_local_draft_tip: "uloženo lokálně"
@@ -4734,6 +4770,7 @@ cs:
         replies: "Odpovědi"
         replies_with_count: "Odpovědi (%{count})"
       posted:
+        title: "Mé příspěvky"
         help: "témata, do kterých jste přispěli"
       bookmarks:
         title: "Záložky"
@@ -5278,6 +5315,8 @@ cs:
             badges:
               content: "Odznaky"
               title: "Všechny odznaky, které lze získat"
+            filter:
+              content: "Filtr"
             topics:
               content: "Témata"
               title: "Všechna témata"
@@ -5294,6 +5333,8 @@ cs:
               content: "Uživatelé"
               title: "Seznam všech uživatelů"
             my_posts:
+              content: "Mé příspěvky"
+              content_drafts: "Mé koncepty"
               title: "Moje nedávná aktivita k tématům"
               title_drafts: "Moje nezveřejněné koncepty"
               draft_count:
@@ -5312,6 +5353,9 @@ cs:
             invite:
               content: "Pozvat"
               title: "Pozvat nové členy"
+            my_messages:
+              content: "Mé zprávy"
+              title: "Mé soukromé zprávy"
         global_section: "Globální sekce viditelná pro všechny"
       panels:
         forum:
@@ -5440,6 +5484,10 @@ cs:
           save: "Uložit jako..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Váš prohlížeč brzy nebude s touto komunitou kompatibilní. Chcete-li se zde i nadále účastnit, aktualizujte si prosím prohlížeč nebo <a href='%{url}'>zjistěte více</a>."
+    filter:
+      description:
+        yesterday: "Včera"
+        last_year: "Minulý rok"
     discovery:
       headings:
         all:
@@ -5759,7 +5807,6 @@ cs:
           header_description: "Sledovaná slova jsou moderátorské nástroje, které mohou provádět různé akce včetně blokování, cenzurování, propojování nebo nahlašování příspěvků obsahujících určitá slova."
         color_palettes:
           title: "Palety barev"
-          header_description: "Barevné palety definují základní barvy používané napříč rozhraním vašich stránek, zatímco motivy mohou poskytnout další styly, rozložení a komponenty. Obojí se podílí na vytvoření jedinečného vzhledu a pocitu vašeho webu. Mohou být také zpřístupněny uživatelům k výběru jejich předvolby."
         emoji:
           title: "Smajlíky :)"
           header_description: "Přidejte nové emotikony, které budou dostupné všem. Vyberte více souborů a vytvořte emotikony pomocí jejich názvů souborů. Vybraná skupina bude použita pro všechny soubory, které jsou přidány současně."
@@ -5852,6 +5899,9 @@ cs:
         embedding:
           title: "Zabudování"
           header_description: "Diskuse má schopnost vložit komentáře z tématu na vzdálený web pomocí Javascript API, které vytváří IFRAME"
+      theme_site_settings:
+        setting: "Nastavení"
+        default_value: "Výchozí"
       search:
         modal_title: "Hledat vše v administraci"
         title: "Vyhledat"
@@ -6556,7 +6606,6 @@ cs:
           install: "Instalovat"
           themes:
             title: "Motivy"
-            description: "Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele."
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
             new_theme: "Nový motiv"
             back: "Zpět na motivy"
@@ -6919,11 +6968,7 @@ cs:
           up_to_date: "Motiv je aktuální, naposledy zkontrolováno: "
           has_overwritten_history: "Aktuální verze motivu již neexistuje, protože historie Git byla přepsána pomocí force push."
           add: "Přidat"
-          theme_settings: "Nastavení motivu"
-          edit_objects_theme_setting: "Editor nastavení objektů"
-          overriden_settings_explanation: "Přepsaná nastavení jsou označena tečkou a mají zvýrazněnou barvu. Chcete-li obnovit tato nastavení na výchozí hodnotu, stiskněte vedle ní tlačítko Resetovat."
           no_settings: "Tento motiv nemá nastavení"
-          theme_translations: "Překlady motivů"
           empty: "Žádné položky"
           commits_behind:
             one: "Tento motiv je %{count} commit pozadu!"
@@ -6933,6 +6978,7 @@ cs:
           compare_commits: "(viz nové commity)"
           remote_theme_edits: "Pokud chcete tento motiv upravit, musíte <a href='%{repoURL}' target='_blank'>odeslat změnu do jeho repozitáře</a>"
           repo_unreachable: "Nelze kontaktovat Git repozitář tohoto motivu. Chybová zpráva:"
+          built_in_description: "Tento motiv je předinstalován a nemůže být smazán nebo přizpůsoben"
           imported_from_archive: "Tento motiv byl importován ze souboru .zip"
           settings: "Nastavení"
           colors: "Barvy"
@@ -7027,7 +7073,12 @@ cs:
             title: "Vyberte základní paletu barev"
             description: "Základní paleta:"
           title: "Barvy"
-          edit: "Upravit palety barev"
+          edit: "Upravit"
+          filters:
+            all: "Vše"
+            user_selectable: "Volitelný uživatelem"
+          active_badge:
+            text: "Aktivní"
           long_title: "Palety barev"
           about: "Upravte barvy používané motivy. Pro začátek vytvořte novou paletu barev."
           new_name: "Nová paleta barev"
@@ -7700,7 +7751,6 @@ cs:
         activity: Aktivita
         like_count: Rozdaných / obdržených "Líbí se"
         last_100_days: "Za posledních 100 dní"
-        private_topics_count: Počet soukromých témat
         posts_read_count: Přečteno příspěvků
         post_count: Vytvořeno příspěvků
         second_factor_enabled: Dvoufaktorové ověřování povoleno
@@ -8030,6 +8080,7 @@ cs:
           basic: "Základní nastavení"
           users: "Uživatelé"
           posting: "Přispívání"
+          content_localization: "Lokalizace obsahu"
           email: "Emaily"
           files: "Soubory"
           trust: "Úrovně důvěry"

@@ -360,12 +360,14 @@ export default class StoreService extends Service {
             return;
           }
 
-          const hydrated = obj[k].map((id) =>
-            this._lookupSubType(subType, type, id, root)
-          );
+          const hydrated = obj[k]
+            .map((id) => this._lookupSubType(subType, type, id, root))
+            .compact();
 
-          obj[this.pluralize(subType)] = hydrated || [];
-          delete obj[k];
+          obj[this.pluralize(subType)] = hydrated;
+          if (hydrated.length !== 0) {
+            delete obj[k];
+          }
         } else {
           const hydrated = this._lookupSubType(subType, type, obj[k], root);
           if (hydrated) {

@@ -1152,6 +1152,8 @@ sl:
       suspended_notice: "Ta uporabnik je suspendiran do %{date}."
       suspended_permanently: "Ta uporabnik je suspendiran"
       suspended_reason: "Razlog: "
+      silenced_permanently: "Ta uporabnik je utišan."
+      silenced_reason: "Razlog: "
       github_profile: "GitHub"
       email_activity_summary: "Povzetek aktivnosti"
       mailing_list_mode:
@@ -1524,7 +1526,8 @@ sl:
         reinvited: "Povabilo ponovno poslano"
         search: "pričnite tipkati za iskanje vabil..."
         user: "Povabljen uporabnik"
-        none: "Ni povabil za prikaz."
+        none:
+          title: "Ni povabil za prikaz."
         truncated:
           one: "Prikazano prvo povabilo."
           two: "Prikazana prva %{count} povabila."
@@ -1980,7 +1983,6 @@ sl:
       unlist: "izločeno"
       add_warning: "To je uradno opozorilo."
       toggle_whisper: "Preklopi šepet"
-      toggle_unlisted: "Preklopi izločeno"
       posting_not_on_topic: "Na katero temo bi radi odgovorili?"
       saved_local_draft_tip: "shranjeno lokalno"
       drafts_offline: "osnutki brez povezave"
@@ -3652,6 +3654,8 @@ sl:
               content: "Admin"
             badges:
               content: "Značke"
+            filter:
+              content: "Filter"
             topics:
               content: "Tem"
             faq:
@@ -3722,6 +3726,9 @@ sl:
       spreadsheet:
         show: "Prikaži"
         about: "O nas"
+    filter:
+      description:
+        yesterday: "Včeraj"
     discovery:
       headings:
         categories: "Vse kategorije"
@@ -3832,6 +3839,8 @@ sl:
               header_description: "Spodnji URLji se pogosto uporabljeni v prispevkih uporabnikov, ki so bili identificirani kot spamerji"
         embedding:
           title: "Vdelovanje"
+      theme_site_settings:
+        default_value: "Privzeto"
       search:
         title: "Išči"
         result_types:
@@ -4255,6 +4264,11 @@ sl:
               too_large: "mora biti manj ali enako kot %{count}"
         colors:
           title: "Barve"
+          edit: "Uredi"
+          filters:
+            all: "Vsi"
+          active_badge:
+            text: "Aktivni"
           copy_name_prefix: "Kopija od"
           undo: "Razveljavi"
           revert: "Povrni"
@@ -4556,7 +4570,6 @@ sl:
         activity: Aktivnost
         like_count: Podeljeni / prejeti všečki
         last_100_days: "v zadnjih 100 dnevih"
-        private_topics_count: Privatne teme
         posts_read_count: Prebranih prispevkov
         post_count: Ustvarjenih prispevkov
         topics_entered: Ogledane teme

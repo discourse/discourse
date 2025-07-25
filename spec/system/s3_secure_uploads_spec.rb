@@ -18,8 +18,11 @@ describe "Uploading files in the composer to S3", type: :system do
     def expect_first_post_to_have_secure_upload
       img = first_post_img
       expect(img["src"]).to include("/secure-uploads")
-      topic = topic_page.current_topic
-      expect(topic.first_post.uploads.first.secure).to eq(true)
+
+      try_until_success do
+        topic = topic_page.current_topic
+        expect(topic.first_post.uploads.first.secure).to eq(true)
+      end
     end
 
     it "marks uploads inside of private message posts as secure" do
@@ -32,7 +35,7 @@ describe "Uploading files in the composer to S3", type: :system do
       composer.select_pm_user("otherguy")
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file(file_path) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path, make_visible: true)
 
       expect(page).to have_no_css("#file-uploading")
       expect(composer.preview).to have_css(".image-wrapper")
@@ -53,7 +56,7 @@ describe "Uploading files in the composer to S3", type: :system do
       composer.switch_category(private_category.name)
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file(file_path) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path, make_visible: true)
 
       expect(page).to have_no_css("#file-uploading")
       expect(composer.preview).to have_css(".image-wrapper")
@@ -73,7 +76,7 @@ describe "Uploading files in the composer to S3", type: :system do
       composer.fill_title("This is a test PM for secure uploads")
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file(file_path) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path, make_visible: true)
 
       expect(page).to have_no_css("#file-uploading")
       expect(composer.preview).to have_css(".image-wrapper")
@@ -92,7 +95,7 @@ describe "Uploading files in the composer to S3", type: :system do
       composer.fill_title("This is a test PM for secure uploads")
 
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file(file_path) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path, make_visible: true)
 
       expect(page).to have_no_css("#file-uploading")
       expect(composer.preview).to have_css(".image-wrapper")

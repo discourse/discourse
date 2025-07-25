@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: '過濾器'
+      group: '群組'
+      rewards: '獎勵'
+      filter: '過濾器'
+      help_text: '您可以將 Discourse 群組與一個或多個 Patreon 獎勵等級同步。'
+      edit: '編輯'
+      delete: '刪除'
+      save: '儲存'
+      update_data: '更新 Patreon 資料與同步群組'
+      field:
+        email: "電子信箱"
+        rewards: "獎勵"

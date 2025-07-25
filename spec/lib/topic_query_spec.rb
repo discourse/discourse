@@ -2371,4 +2371,41 @@ RSpec.describe TopicQuery do
       end
     end
   end
+
+  describe "content_localization enabled" do
+    fab!(:user)
+    fab!(:topics) { Fabricate.times(3, :topic) }
+    fab!(:topic_localization1) do
+      Fabricate(
+        :topic_localization,
+        topic: topics[0],
+        locale: "fr",
+        title: "Bonjour",
+        fancy_title: "Bonjour",
+      )
+    end
+    fab!(:topic_localization2) do
+      Fabricate(
+        :topic_localization,
+        topic: topics[1],
+        locale: "es",
+        title: "Hola",
+        fancy_title: "Hola",
+      )
+    end
+
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "doesn't generate N+1 queries when accessing a localization's fancy_title" do
+      topic_query = TopicQuery.new(user)
+      topic_list = topic_query.list_latest
+
+      expect(topic_list.topics.first.association(:topic_localizations).loaded?).to eq(true)
+
+      queries =
+        track_sql_queries { topic_list.topics.each { |topic| topic.get_localization&.fancy_title } }
+
+      expect(queries.select { |q| q.include?("topic_localizations") }).to be_empty
+    end
+  end
 end

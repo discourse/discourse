@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Patreon でログイン
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'フィルター'
+      group: 'グループ'
+      rewards: '報酬'
+      filter: 'フィルター'
+      help_text: 'Discourse グループを 1 つ以上の Patreon 報酬ランクと同期できます。'
+      last_synced: '最終同期'
+      edit: '編集'
+      delete: '削除'
+      save: '保存'
+      update_data: 'Patreon データを更新してグループを同期'
+      refresh_page: 'Patreon API から新しいデータがダウンロードされました。ページを更新してください。'
+      select_group: 'グループを選択'
+      field:
+        id: "ID"
+        email: "メールアドレス"
+        amount_cents: "金額（セント単位）"
+        rewards: "報酬"
+        declined_since: "誓約拒否"
+        more_details:
+          label: "支払いとその他の詳細"
+          help_text:
+            email_available: "ページの右下に移動し、この Patreon の誓約履歴を確認してください。"
+            email_not_available: "Patreon メンバーを選択し、ページの右下に移動して、誓約履歴を確認してください。"

@@ -44,8 +44,11 @@ export default class Invite extends EmberObject {
     return ajax("/invites/reinvite-all", { type: "POST" });
   }
 
-  static destroyAllExpired() {
-    return ajax("/invites/destroy-all-expired", { type: "POST" });
+  static destroyAllExpired(user) {
+    return ajax("/invites/destroy-all-expired", {
+      type: "POST",
+      data: { username: user.username },
+    });
   }
 
   @alias("topics.firstObject.id") topicId;

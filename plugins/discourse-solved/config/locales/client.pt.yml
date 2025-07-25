@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "aceite"
+    solved:
+      title: "Resolvido"
+      allow_accepted_answers: "Permitir que o autor do tópico e a equipa marquem uma resposta como solução"
+      solved_topics_auto_close_hours: "Fechar automaticamente o tópico (n) horas depois do tópico ser marcado como solução."
+      accept_answer: "Selecionar se esta resposta resolver o problema"
+      has_no_accepted_answer: "Este tópico não tem solução"
+      unaccept_answer: "Desselecionar se esta resposta já não resolver o problema"
+      accepted_answer: "Solução"
+      solution: "Solução"
+      solution_summary:
+        one: "solução"
+        other: "soluções"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "todos"
+        solved: "resolvido"
+    topic_statuses:
+      solved:
+        help: "Este tópico tem uma solução"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Nível de Confiança

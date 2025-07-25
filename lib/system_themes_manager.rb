@@ -26,6 +26,20 @@ class SystemThemesManager
         .first
         &.update!(user_selectable: true)
     end
+    remote_theme.update_column(:enabled, true)
     Stylesheet::Manager.clear_theme_cache!
+  end
+
+  # Don't want user history created from theme site setting changes
+  # from system themes polluting specs.
+  def self.clear_system_theme_user_history!
+    return if !Rails.env.test?
+
+    Theme::CORE_THEMES.each_key do |theme_name|
+      UserHistory
+        .where(action: UserHistory.actions[:change_theme_site_setting])
+        .where("subject ILIKE :theme_name", theme_name: "#{theme_name}:%")
+        .destroy_all
+    end
   end
 end

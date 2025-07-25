@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    user_notes:
+      title: "صارف نوٹس"
+      attach: "صارف نوٹ شامل کریں"
+      remove: "صارف نوٹ ہٹائیں"
+      delete_confirm: "کیا آپ واقعی وہ صارف نوٹ حذف کرنا چاہتے ہیں؟"
+      show_post: "پوسٹ دکھائیں"

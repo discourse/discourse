@@ -14,7 +14,7 @@ fr:
     discourse_reactions:
       reactions_title: "Réactions"
       state_panel:
-        more_users: "et %{count} de plus…"
+        more_users: "et %{count} de plus..."
       reaction:
         forbidden: "Cette réaction a été créée il y a trop longtemps. Elle ne peut plus être modifiée ou supprimée."
       picker:
@@ -22,7 +22,7 @@ fr:
         cant_remove_reaction: "Vous ne pouvez plus supprimer votre réaction"
         remove_reaction: "Supprimer cette réaction %{reaction}"
       main_reaction:
-        add: "Attribuer un « J'aime » à ce message"
+        add: "Aimer ce message"
         remove: "Supprimer ce « J'aime »"
         cant_remove: "Vous ne pouvez plus supprimer votre J'aime"
         unauthenticated: "Veuillez vous inscrire ou vous connecter pour aimer cet article"

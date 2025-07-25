@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    data_explorer_enabled: "请在 /admin/plugins/explorer 下启用数据资源管理器"
+  discourse_automation:
+    scriptables:
+      recurring_data_explorer_result_pm:
+        title: 使用数据资源管理器结果安排 PM
+        description: 将定时报告发送到您的消息中
+        no_csv_allowed: "使用 `attach_csv` 字段时，必须将 `csv` 添加到网站设置中的授权扩展程序列表中。"
+      recurring_data_explorer_result_topic:
+        title: 使用数据资源管理器结果安排某一话题的帖子
+        description: 将定时报告发布到特定话题
+  data_explorer:
+    report_generator:
+      private_message:
+        title: "%{query_name} 的定时报告"
+      upload_appendix: "附录：[%{filename}|附件](%{short_url})"

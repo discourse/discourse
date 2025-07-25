@@ -1,0 +1,290 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_ai: "Discourse"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Pengirim"
+              description: "Pengguna yang akan mengirim laporan"
+            receivers:
+              label: "Penerima"
+              description: "Pengguna yang akan menerima laporan (email akan dikirim email langsung, nama pengguna akan dikirim PM)"
+            topic_id:
+              label: "ID Topik"
+            title:
+              label: "Judul"
+              description: "Judul laporan"
+            days:
+              label: "Hari"
+              description: "Rentang waktu laporan"
+            offset:
+              label: "Offset"
+              description: "Saat menguji, Anda mungkin ingin mengoperasikan laporan secara historis, gunakan offset untuk memulai laporan pada tanggal yang lebih awal"
+            instructions:
+              label: "Instruksi"
+              description: "Instruksi diberikan kepada model bahasa besar"
+            sample_size:
+              label: "Ukuran sampel"
+              description: "Jumlah posting yang akan dijadikan sampel laporan"
+            tokens_per_post:
+              label: "Token per posting"
+            model:
+              label: "Model"
+              description: "LLM yang akan digunakan untuk pembuatan laporan"
+            categories:
+              label: "Kategori"
+              description: "Filter topik hanya ke kategori ini"
+            tags:
+              label: "Label"
+              description: "Filter topik hanya ke tag ini"
+            exclude_tags:
+              label: "Kecualikan Tag"
+              description: "Kecualikan topik dengan tag ini"
+            exclude_categories:
+              label: "Kecualikan Kategori"
+              description: "Kecualikan topik dengan kategori ini"
+            allow_secure_categories:
+              label: "Izinkan kategori aman"
+              description: "Izinkan laporan dibuat untuk topik dalam kategori aman"
+            suppress_notifications:
+              label: "Tiadakan Notifikasi"
+              description: "Tiadakan notifikasi yang mungkin dihasilkan laporan dengan mengubahnya menjadi konten. Ini akan memetakan kembali sebutan dan tautan internal."
+            debug_mode:
+              label: "Mode Debug"
+              description: "Aktifkan mode debug untuk melihat input dan output mentah LLM"
+            priority_group:
+              label: "Kelompok Prioritas"
+              description: "Prioritaskan konten dari grup ini dalam laporan"
+            temperature:
+              label: "Temperatur"
+            top_p:
+              label: "Top P"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Model"
+        llm_triage:
+          fields:
+            system_prompt:
+              label: "Perintah Sistem"
+              description: "Perintah yang akan digunakan untuk melakukan triase, pastikan untuk membalas dengan satu kata yang dapat Anda gunakan untuk memicu tindakan"
+            search_for_text:
+              label: "Cari teks"
+            category:
+              label: "Kategori"
+              description: "Kategori untuk diterapkan pada topik"
+            tags:
+              label: "Label"
+            canned_reply:
+              label: "Balas"
+            model:
+              label: "Model"
+            temperature:
+              label: "Temperatur"
+    discourse_ai:
+      title: "AI"
+      features:
+        back: "Kembali"
+        disabled: "(dinonaktifkan)"
+        groups: "Grup:"
+        no_groups: "Tidak ada"
+        edit: "Ubah"
+        expand_list:
+          other: "(%{count} lainnya)"
+        collapse_list: "(tampilkan lebih sedikit)"
+        filters:
+          all: "Semua"
+          reset: "Reset"
+        search:
+          name: "Cari"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Memilih sebuah pilihan..."
+      spam:
+        short_title: "Spam"
+        last_seven_days: "7 hari terakhir"
+        enable: "Aktifkan"
+        test_modal:
+          spam: "Spam"
+      usage:
+        summary: "Ringkasan"
+        model: "Model"
+        username: "Nama Pengguna"
+        periods:
+          last_day: "24 jam terakhir"
+      ai_persona:
+        back: "Kembali"
+        name: "Nama"
+        edit: "Ubah"
+        export: "Ekspor"
+        description: "Deskripsi"
+        mentionable_help: Jika diaktifkan, pengguna di grup yang diizinkan dapat menyebut pengguna ini di posting, AI akan merespons sebagai persona ini.
+        user: Pengguna
+        question_consolidator_llm: Model Bahasa untuk Konsolidator Pertanyaan
+        question_consolidator_llm_help: Model bahasa yang digunakan untuk konsolidator pertanyaan, Anda dapat memilih model yang kurang kuat untuk menghemat biaya.
+        save: "Simpan"
+        enabled: "Diaktifkan?"
+        allowed_groups: "Grup yang diizinkan"
+        delete: "Hapus"
+        temperature: "Temperatur"
+        top_p: "Top P"
+        response_format:
+          open_modal: "Ubah"
+        filters:
+          reset: "Reset"
+      rag:
+        uploads:
+          uploading: "Mengunggah..."
+      tools:
+        back: "Kembali"
+        export: "Ekspor"
+        name: "Nama"
+        description: "Deskripsi"
+        summary: "Ringkasan"
+        save: "Simpan"
+        remove_parameter: "Hapus"
+        edit: "Ubah"
+        delete: "Hapus"
+      llms:
+        display_name: "Nama"
+        save: "Simpan"
+        edit: "Ubah"
+        back: "Kembali"
+        delete: Hapus
+        quotas:
+          duration: "Durasi"
+          durations:
+            six_hours: "6 jam"
+            day: "24 jam"
+            week: "7 hari"
+          hours: "jam"
+        usage:
+          ai_summarization: "Meringkas"
+          ai_spam: "Spam"
+        tests:
+          running: "Tes berlangsung..."
+          success: "Sukses!"
+          failure: "Mencoba menghubungi model menghasilkan kesalahan ini: %{error}"
+        providers:
+          google: "Google"
+      ai_helper:
+        missing_content: "Silakan masukkan beberapa konten untuk menghasilkan saran."
+        context_menu:
+          trigger: "Tanya AI"
+          loading: "AI sedang menghasilkan"
+          cancel: "Batal"
+          confirm: "Konfirmasi"
+          discard: "Batalkan"
+          custom_prompt:
+            placeholder: "Masukkan perintah khusus..."
+        post_options_menu:
+          trigger: "Tanya AI"
+          title: "Tanya AI"
+          loading: "AI sedang menghasilkan"
+          close: "Tutup"
+          copy: "Salin"
+          copied: "Disalin!"
+          cancel: "Batal"
+          insert_footnote: "Tambahkan catatan kaki"
+          footnote_credits: "Penjelasan oleh AI"
+        thumbnail_suggestions:
+          select: "Pilih"
+          selected: "Dipilih"
+        image_caption:
+          button_label: "Keterangan dengan AI"
+          generating: "Menghasilkan keterangan..."
+          credits: "Keterangan oleh AI"
+          save_caption: "Simpan"
+          automatic_caption_dialog:
+            confirm: "Aktifkan"
+      reviewables:
+        model_used: "Model yang digunakan:"
+        accuracy: "Akurasi:"
+      embeddings:
+        back: "Kembali"
+        save: "Simpan"
+        delete: "Hapus"
+        edit: "Ubah"
+        tests:
+          running: "Tes berlangsung..."
+          success: "Sukses!"
+        display_name: "Nama"
+        providers:
+          google: "Google"
+        semantic_search: "Topik (Semantik)"
+        semantic_search_loading: "Mencari hasil lebih banyak menggunakan AI"
+        semantic_search_results:
+          toggle: "Menampilkan %{count} hasil yang ditemukan menggunakan AI"
+          toggle_hidden: "Menyembunyikan %{count} hasil yang ditemukan menggunakan AI"
+          none: "Maaf, pencarian AI kami tidak menemukan topik yang cocok"
+        ai_generated_result: "Hasil pencarian ditemukan menggunakan AI"
+        quick_search:
+          suffix: "di semua topik dan posting dengan AI"
+      ai_bot:
+        llm: "Model"
+        pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."
+        cancel_streaming: "Berhenti membalas"
+        default_pm_prefix: "[PM bot AI tanpa judul]"
+        shortcut_title: "Mulai PM dengan bot AI"
+        share: "Salin percakapan AI"
+        conversation_shared: "Percakapan disalin"
+        debug_ai_modal:
+          request: "Pinta"
+        share_ai_conversation:
+          name: "Bagikan percakapan AI"
+          title: "Bagikan percakapan AI ini secara publik"
+        invite_ai_conversation:
+          button: "Undang"
+        ai_label: "AI"
+        ai_title: "Percakapan dengan AI"
+        share_modal:
+          title: "Salin percakapan AI"
+          copy: "Salin"
+          context: "Interaksi untuk dibagikan:"
+          share_tip: "Alternatifnya, Anda dapat membagikan seluruh percakapan"
+        bot_names:
+          fake: "Bot Tes Palsu"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Soneta"
+          claude-3-haiku: "Claude 3 Haiku"
+          claude-2: "Claude 2"
+        conversations:
+          today: "Hari ini"
+          last_7_days: "7 hari terakhir"
+          last_30_days: "30 hari terakhir"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Semua"
+          group_types:
+            category: "Kategori"
+          table:
+            total_count: "Jumlah"
+      summarization:
+        chat:
+          title: "Meringkas pesan"
+          description: "Pilih opsi di bawah untuk meringkas percakapan yang dikirim selama jangka waktu yang diinginkan."
+          summarize: "Meringkas"
+          since:
+            other: "%{count} jam terakhir"
+        topic:
+          title: "Ringkasan topik"
+      discobot_discoveries:
+        regular_results: "Topik"
+        collapse: "Persempit"
+        tooltip:
+          actions:
+            disable: "Nonaktifkan"

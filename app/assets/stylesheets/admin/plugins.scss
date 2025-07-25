@@ -58,6 +58,11 @@
         margin-right: var(--space-1);
       }
     }
+
+    &__about-link {
+      white-space: nowrap;
+      display: block;
+    }
   }
 }
 
@@ -136,6 +141,13 @@
 
 .admin-plugin-filtered-site-settings {
   &__filter {
+    width: 100%;
+  }
+}
+
+.admin-plugins-howto {
+  a {
+    display: inline-block;
     width: 100%;
   }
 }
