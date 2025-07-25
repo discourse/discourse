@@ -3763,6 +3763,11 @@ bg:
         howto: "Как да инсталирам софтуерни приставки?"
         author: "От %{author}"
         learn_more: "Научете повече"
+        filters:
+          all: "Всички"
+          enabled: "Да е включен"
+          disabled: "Деактивирани"
+          reset: "Нулиране"
       navigation_menu:
         sidebar: "Странична лента"
       backups:

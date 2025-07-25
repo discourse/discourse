@@ -149,8 +149,6 @@ sv:
           selected: "Markerat"
         image_caption:
           save_caption: "Spara"
-          automatic_caption_dialog:
-            confirm: "Aktivera"
       embeddings:
         back: "Tillbaka"
         save: "Spara"

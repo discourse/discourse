@@ -5433,6 +5433,11 @@ ja:
         author: "作成者: %{author}"
         experimental_badge: "実験的"
         learn_more: "もっと詳しく"
+        filters:
+          all: "すべて"
+          enabled: "有効"
+          disabled: "無効"
+          reset: "リセット"
       navigation_menu:
         sidebar: "サイドバー"
         header_dropdown: "ヘッダードロップダウン"

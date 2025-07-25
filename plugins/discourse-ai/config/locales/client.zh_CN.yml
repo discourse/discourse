@@ -538,12 +538,6 @@ zh_CN:
           generating: "正在生成标题…"
           credits: "由 AI 生成标题"
           save_caption: "保存"
-          automatic_caption_setting: "启用自动标题"
-          automatic_caption_loading: "正在为图片生成标题…"
-          automatic_caption_dialog:
-            prompt: "此帖子包含无标题图片。要在上传图片时启用自动生成标题功能吗？（稍后可以在偏好设置中进行更改）"
-            confirm: "启用"
-            cancel: "不再询问"
         no_content_error: "先添加内容，然后对其执行 AI 操作"
       reviewables:
         model_used: "使用的模型："

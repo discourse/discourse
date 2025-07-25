@@ -1833,6 +1833,10 @@ be:
         name: "Назва"
         version: "версія"
         change_settings_short: "Налады"
+        filters:
+          all: "усе"
+          disabled: "Адключана"
+          reset: "скінуць"
       backups:
         title: "Бэкапы"
         menu:

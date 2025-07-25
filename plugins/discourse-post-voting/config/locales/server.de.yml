@@ -32,6 +32,7 @@ de:
     post_voting_comment_limit_per_post: "Anzahl der zulässigen Kommentare zu jedem Beitrag"
     min_trust_to_flag_posts_voting_comments: "Mindestvertrauensstufe zum Melden eines Beitragsabstimmungskommentars"
     flag_posts_voting_comments_allowed_groups: "Gruppen, die einen Beitragsabstimmungskommentar melden dürfen"
+    post_voting_comment_enabled: "Kommentare zu Beiträgen in Beitragsabstimmungsthemen aktivieren"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   post_action_types:
@@ -58,6 +59,7 @@ de:
         limit_exceeded: "Das Limit von %{limit} Kommentaren pro Beitrag wurde erreicht."
         perform: "Beitragsabstimmungskommentar wurde mit einer Punktzahl gemeldet, die hoch genug ist, um den Benutzer stummzuschalten."
         auto_silence_from_flags: "Aufgrund von Meldungen automatisch stummgeschaltet."
+        disabled: "Das Kommentieren von Beiträgen ist nicht erlaubt."
       reviewables:
         comment_already_handled: "Danke, aber wir haben diesen Kommentar bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
         actions:

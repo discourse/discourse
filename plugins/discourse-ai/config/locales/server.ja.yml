@@ -62,7 +62,6 @@ ja:
     ai_helper_enabled_features: "AI ヘルパーで有効にする機能を選択します。"
     post_ai_helper_allowed_groups: "投稿内で AI ヘルパー機能にアクセスできるユーザーグループ"
     ai_helper_image_caption_model: "画像キャプションの生成に使用するモデルを選択します"
-    ai_auto_image_caption_allowed_groups: "これらのグループのユーザーは画像の自動キャプション作成を切り替えられます。"
     ai_embeddings_selected_model: "選択したモデルを使用して、埋め込みを生成します。"
     ai_embeddings_generate_for_pms: "個人メッセージの埋め込みを生成します。"
     ai_embeddings_semantic_related_topics_enabled: "関連トピックのセマンティック検索を使用します。"

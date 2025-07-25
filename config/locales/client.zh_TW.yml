@@ -4840,7 +4840,6 @@ zh_TW:
               header_description: "檢視已執行的搜尋記錄"
         plugins:
           title: "已安裝外掛"
-          header_description: "您安裝的任何 Discourse 插件，或由 Discourse 托管預安裝的插件都將出現在此清單中"
         api_keys:
           title: "API 密鑰"
           header_description: "API 金鑰功能可讓您安全地將 Discourse 與外部系統整合，並自動執行動作。管理員可以建立具有特定範圍的金鑰，以控制對資源和敏感資料的存取權限。範圍限制功能，確保增強安全性。"
@@ -5526,6 +5525,11 @@ zh_TW:
         author: "作者 %{author}"
         experimental_badge: "實驗性"
         learn_more: "了解更多"
+        filters:
+          all: "全部"
+          enabled: "啟用"
+          disabled: "停用"
+          reset: "重置"
       navigation_menu:
         sidebar: "側選單"
         header_dropdown: "標題下拉選單"

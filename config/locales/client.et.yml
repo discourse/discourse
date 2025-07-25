@@ -3109,6 +3109,11 @@ et:
         howto: "Kuidas pluginaid paigaldada?"
         author: "Autor %{author}"
         learn_more: "Uuri veel"
+        filters:
+          all: "Kõik"
+          enabled: "Sisse lülitatud"
+          disabled: "Välja lülitatud"
+          reset: "Nulli"
       backups:
         title: "Varukoopiad"
         menu:

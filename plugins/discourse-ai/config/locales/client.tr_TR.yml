@@ -516,12 +516,6 @@ tr_TR:
           generating: "Alt yazı oluşturuluyor..."
           credits: "AI tarafından altyazılı"
           save_caption: "Kaydet"
-          automatic_caption_setting: "Otomatik alt yazıyı etkinleştirin"
-          automatic_caption_loading: "Görüntülere alt yazı ekleniyor..."
-          automatic_caption_dialog:
-            prompt: "Bu gönderide alt yazısız görüntüler bulunuyor. Görüntü yüklemelerinde otomatik alt yazıları etkinleştirmek ister misiniz? (Bu daha sonra tercihlerinizden değiştirilebilir)"
-            confirm: "Etkinleştir"
-            cancel: "Bir daha sorma"
         no_content_error: "Üzerinde YZ eylemleri gerçekleştirmek için önce içerik ekleyin"
       reviewables:
         model_used: "Kullanılan model:"

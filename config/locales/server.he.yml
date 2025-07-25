@@ -2688,6 +2688,7 @@ he:
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
       content_localization_locale_limit: "מספר השפות הנתמכות לא יכול לחרוג מעבר ל־%{max}."
       content_localization_anon_language_switcher_requirements: "בורר השפות דורש שהגדרת האתר `set locale from cookie` (הגדרת שפה מעוגייה) תהיה פעילה ושתחת `content localization supported locales` (שפות שנתמכות לתרגום תוכן) תופיע לפחות שפה אחת."
+      s3_credentials_required_for_video_conversion: "יש לספק פרטי גישה ל־S3 להמרת וידאו. נא להגדיר מפתחות גישה ל־S3 ולהפעיל פרופיל IAM."
     keywords:
       clean_up_inactive_users_after_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
       navigation_menu: "סרגל צד|כותרת נפתחת|כותרת מתרחבת"
@@ -2712,6 +2713,7 @@ he:
       in: "סינון נושאים לפי רשימות אישיות"
       order: "מיון נושאים לפי שדה מסוים"
       category: "הצגת נושאים בקטגוריה מסוימת"
+      exclude_category: "החרגת נושאים מקטגוריה מסוימת"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."

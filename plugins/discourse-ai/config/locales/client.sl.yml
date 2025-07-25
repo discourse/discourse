@@ -139,8 +139,6 @@ sl:
           cancel: "Prekliči"
         image_caption:
           save_caption: "Shrani"
-          automatic_caption_dialog:
-            confirm: "Omogoči"
       embeddings:
         back: "Nazaj"
         save: "Shrani"
