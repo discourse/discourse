@@ -5857,3 +5857,4 @@ en:
       duplicate_ids: "has duplicate ids"
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
+      invalid_tag_group: "has invalid tag group: %{tag_group_name}"
