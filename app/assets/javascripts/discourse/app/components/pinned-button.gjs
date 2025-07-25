@@ -22,11 +22,7 @@ export default class PinnedButton extends Component {
 
   <template>
     {{#unless this.isHidden}}
-      <div
-        class="pinned-button"
-        class={{if this.isHidden "is-hidden"}}
-        ...attributes
-      >
+      <div class="pinned-button" ...attributes>
         {{#if @appendReason}}
           <p class="reason">
             <PinnedOptions @value={{@pinned}} @topic={{@topic}} />
