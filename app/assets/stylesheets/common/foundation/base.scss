@@ -64,14 +64,8 @@ a {
   text-decoration: none;
   cursor: pointer;
 
-  &:visited {
-    color: var(--link-color);
-  }
-
-  &:hover {
-    color: var(--link-color);
-  }
-
+  &:visited,
+  &:hover,
   &:active {
     color: var(--link-color);
   }
