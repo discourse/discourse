@@ -50,12 +50,12 @@ class FormTemplate < ActiveRecord::Base
         ordered_field[key] = value
 
         ordered_field["choices"] = tags.map(&:name) if key == "id"
-        if key == "attributes"
-          ordered_field["attributes"]["tag_group"] = tag_group_name
-          translated_tags = tags.select { |t| t.description }.to_h { |t| [t.name, t.description] }
-          ordered_field["attributes"]["tag_choices"] = translated_tags
-        end
       end
+
+      ordered_field["attributes"] ||= {}
+      ordered_field["attributes"]["tag_group"] = tag_group_name
+      translated_tags = tags.select { |t| t.description }.to_h { |t| [t.name, t.description] }
+      ordered_field["attributes"]["tag_choices"] = translated_tags
 
       ordered_field
     end
