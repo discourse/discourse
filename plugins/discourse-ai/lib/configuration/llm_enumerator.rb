@@ -119,7 +119,7 @@ module DiscourseAi
         builder.query_hash.map(&:symbolize_keys)
       end
 
-      def self.values(allowed_seeded_llms: [])
+      def self.values(allowed_seeded_llms: nil)
         values = DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT display_name AS name, id AS value
           FROM llm_models

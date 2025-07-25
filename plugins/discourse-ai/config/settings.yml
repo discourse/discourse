@@ -160,12 +160,12 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
     hidden: true
-  ai_helper_model_allowed_seeded_models:
+  ai_helper_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
     default: ""
     hidden: true
     type: list
     list_type: compact
-  ai_helper_image_caption_model_allowed_seeded_models:
+  ai_helper_image_caption_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
     default: ""
     hidden: true
     type: list
@@ -264,7 +264,7 @@ discourse_ai:
     type: enum
     allow_any: false
     enum: "DiscourseAi::Configuration::LlmEnumerator"
-  ai_embeddings_semantic_search_hyde_model_allowed_seeded_models:
+  ai_embeddings_semantic_search_hyde_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
     default: ""
     hidden: true
     type: list
@@ -347,7 +347,7 @@ discourse_ai:
     list_type: compact
     default: "0" #everyone
     hidden: true
-  ai_summarization_model_allowed_seeded_models:
+  ai_summarization_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
     default: ""
     hidden: true
     type: list
@@ -419,7 +419,7 @@ discourse_ai:
   ai_automation_max_triage_per_post_per_minute:
     default: 2
     hidden: true
-  ai_automation_allowed_seeded_models:
+  ai_automation_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
     default: ""
     hidden: true
     type: list
@@ -461,7 +461,7 @@ discourse_ai:
   ai_spam_detection_user_id:
     default: ""
     hidden: true
-  ai_spam_detection_model_allowed_seeded_models:
+  ai_spam_detection_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
     default: ""
     hidden: true
     type: list
