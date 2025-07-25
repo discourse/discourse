@@ -69,26 +69,26 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
 
     await triggerEvent("#filter-input", "focus");
     assert
-      .dom(".filter-tip__button")
+      .dom(".filter-tips__list-item")
       .exists({ count: 3 }, "shows tips on focus");
     assert
-      .dom(".filter-tip__button.filter-tip__selected")
+      .dom(".filter-tips__list-item.filter-tip__selected")
       .doesNotExist("no selection yet");
     assert.dom("#filter-input").hasValue("");
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
-      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
+      .dom(".filter-tips__list-item.filter-tip__selected .filter-tip__name")
       .hasText("category:");
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
-      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
+      .dom(".filter-tips__list-item.filter-tip__selected .filter-tip__name")
       .hasText("tag:");
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowUp");
     assert
-      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
+      .dom(".filter-tips__list-item.filter-tip__selected .filter-tip__name")
       .hasText("category:");
   });
 
@@ -115,7 +115,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     assert.dom("#filter-input").hasValue("category:");
 
     assert
-      .dom(".filter-tip__button")
+      .dom(".filter-tips__list-item")
       .exists({ count: 2 }, "tips for category shows up");
 
     await triggerEvent("#filter-input", "focus");
@@ -126,10 +126,10 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
       .hasValue("category:bugs ", "category slug added");
 
     assert
-      .dom(".filter-tip__button")
+      .dom(".filter-tips__list-item")
       .exists({ count: 3 }, "tips for next section shows up");
     assert
-      .dom(".filter-tip__button.selected")
+      .dom(".filter-tips__list-item.selected")
       .doesNotExist("selection cleared");
   });
 
@@ -151,13 +151,13 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     await triggerEvent("#filter-input", "focus");
     await fillIn("#filter-input", "tag:e");
 
-    assert.dom(".filter-tip__button").exists("shows tag results");
+    assert.dom(".filter-tips__list-item").exists("shows tag results");
     assert.dom(".filter-tip__name").hasText("tag:ember");
     assert.dom(".filter-tip__description").hasText("— 1");
 
     await triggerKeyEvent("#filter-input", "keydown", "ArrowDown");
     assert
-      .dom(".filter-tip__button.filter-tip__selected .filter-tip__name")
+      .dom(".filter-tips__list-item.filter-tip__selected .filter-tip__name")
       .hasText("tag:ember");
 
     await triggerKeyEvent("#filter-input", "keydown", "Enter");
@@ -180,16 +180,16 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     );
 
     await triggerEvent("#filter-input", "focus");
-    assert.dom(".filter-tip__button").exists("tips visible");
+    assert.dom(".filter-tips__list-item").exists("tips visible");
     await triggerKeyEvent("#filter-input", "keydown", "Escape");
-    assert.dom(".filter-tip__button").doesNotExist("tips hidden on escape");
+    assert.dom(".filter-tips__list-item").doesNotExist("tips hidden on escape");
 
     await fillIn("#filter-input", "status");
     await triggerEvent("#filter-input", "input");
     await triggerKeyEvent("#filter-input", "keydown", "Escape");
     assert.strictEqual(this.query, "", "query not changed");
     assert.dom("#filter-input").hasValue("status", "input unchanged");
-    assert.dom(".filter-tip__button").doesNotExist("tips remain hidden");
+    assert.dom(".filter-tips__list-item").doesNotExist("tips remain hidden");
   });
 
   test("blockEnterSubmit is called correctly", async function (assert) {
@@ -298,7 +298,7 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     await triggerEvent("#filter-input", "focus");
     await fillIn("#filter-input", "cat");
 
-    const buttons = document.querySelectorAll(".filter-tip__button");
+    const buttons = document.querySelectorAll(".filter-tips__list-item");
     const lastButton = buttons[buttons.length - 1];
 
     assert.dom(lastButton).exists("shows filtered results");
@@ -318,10 +318,10 @@ module("Integration | Component | discovery | filter-tips", function (hooks) {
     assert.dom("#filter-input").hasValue("-category:");
 
     assert
-      .dom(".filter-tip__button")
+      .dom(".filter-tips__list-item")
       .exists({ count: 2 }, "shows category options after prefix");
     assert
-      .dom(".filter-tip__button:first-child .filter-tip__name")
+      .dom(".filter-tips__list-item:first-child .filter-tip__name")
       .hasText("-category:bugs", "shows category slug");
 
     // Select a category
