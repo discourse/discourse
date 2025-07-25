@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Personas::SettingsExplorer do
-  let(:settings_explorer) { subject }
+  subject(:settings_explorer) { described_class.new }
 
   before { enable_current_plugin }
 

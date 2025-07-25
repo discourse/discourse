@@ -12,7 +12,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 
 export default RouteTemplate(
   <template>
-    <Layout @model={{@controller.model}}>
+    <Layout @model={{@controller.model}} @listClass="--categories">
       <:navigation>
         <Navigation
           @category={{@controller.model.parentCategory}}

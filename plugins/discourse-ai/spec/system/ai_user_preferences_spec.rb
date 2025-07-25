@@ -17,33 +17,6 @@ RSpec.describe "User AI preferences", type: :system do
     sign_in(user)
   end
 
-  describe "automatic image caption setting" do
-    context "when ai helper is disabled" do
-      before { SiteSetting.ai_helper_enabled = false }
-
-      it "should not have the setting present in the user preferences page" do
-        user_preferences_ai_page.visit(user)
-        expect(user_preferences_ai_page).to have_no_ai_preference("pref-auto-image-caption")
-      end
-    end
-
-    context "when toggling the setting from the user preferences page" do
-      before do
-        SiteSetting.ai_helper_enabled = true
-        SiteSetting.ai_helper_enabled_features = "image_caption"
-        user.user_option.update!(auto_image_caption: false)
-      end
-
-      it "should update the preference to enabled" do
-        user_preferences_ai_page.visit(user)
-        user_preferences_ai_page.toggle_setting("pref-auto-image-caption")
-        user_preferences_ai_page.save_changes
-        wait_for(timeout: 5) { user.reload.user_option.auto_image_caption }
-        expect(user.reload.user_option.auto_image_caption).to eq(true)
-      end
-    end
-  end
-
   describe "search discoveries setting" do
     context "when discoveries are enabled" do
       before { SiteSetting.ai_bot_enabled = true }
@@ -72,7 +45,6 @@ RSpec.describe "User AI preferences", type: :system do
 
     it "should not have any AI preferences and should show a message" do
       user_preferences_ai_page.visit(user)
-      expect(user_preferences_ai_page).to have_no_ai_preference("pref-auto-image-caption")
       expect(user_preferences_ai_page).to have_no_ai_preference("pref-ai-search-discoveries")
       expect(page).to have_content(I18n.t("js.discourse_ai.user_preferences.empty"))
     end

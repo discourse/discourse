@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseSolved::GuardianExtensions do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:topic)
+  fab!(:topic) { Fabricate(:topic_with_op) }
   fab!(:post) { Fabricate(:post, topic: topic, user: other_user) }
 
   let(:guardian) { user.guardian }
@@ -17,9 +15,10 @@ describe DiscourseSolved::GuardianExtensions do
       expect(Guardian.new.can_accept_answer?(topic, post)).to eq(false)
     end
 
-    it "returns false if the topic is nil, the post is nil, or for whispers" do
+    it "returns false if the topic is nil, the post is nil, for the first post or for whispers" do
       expect(guardian.can_accept_answer?(nil, post)).to eq(false)
       expect(guardian.can_accept_answer?(topic, nil)).to eq(false)
+      expect(guardian.can_accept_answer?(topic, topic.first_post)).to eq(false)
 
       post.update!(post_type: Post.types[:whisper])
       expect(guardian.can_accept_answer?(topic, post)).to eq(false)
@@ -64,7 +63,7 @@ describe DiscourseSolved::GuardianExtensions do
       expect(guardian.can_accept_answer?(topic, post)).to eq(true)
     end
 
-    it "returns false if the user is trust level 4 but the trust level 4 group is not allowd to accept solutions" do
+    it "returns false if the user is trust level 4 but the trust level 4 group is not allowed to accept solutions" do
       SiteSetting.accept_all_solutions_allowed_groups = Fabricate(:group).id
       user.update!(trust_level: TrustLevel[4])
       expect(guardian.can_accept_answer?(topic, post)).to eq(false)

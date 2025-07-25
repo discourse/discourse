@@ -5469,6 +5469,7 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
       filter_reports: Filter reports
+      filter_reports_no_results: "No reports match your filter"
 
       tags:
         remove_muted_tags_from_latest:
@@ -5803,7 +5804,7 @@ en:
               header_description: "View a log of searches that have been performed"
         plugins:
           title: "Installed plugins"
-          header_description: "Any Discourse plugins that you have installed, or plugins that come preinstalled with Discourse hosting, will appear in this list"
+          header_description: "Plugins enhance your community with additional features. Both preinstalled and custom plugins are listed below."
         api_keys:
           title: "API keys"
           header_description: "The API keys feature lets you securely integrate Discourse with external systems and automate actions. Admins can create keys with specific scopes to control access to resources and sensitive data. Scopes limit functionality, ensuring enhanced security."
@@ -6603,6 +6604,14 @@ en:
         experimental_badge: "experimental"
         learn_more: "Learn more"
         preinstalled: "Preinstalled"
+        filters:
+          all: "All"
+          enabled: "Enabled"
+          disabled: "Disabled"
+          preinstalled: "Preinstalled"
+          search_placeholder: "Search plugins..."
+          reset: "Reset"
+          no_results: "No plugins found matching your filters"
 
       navigation_menu:
         sidebar: "Sidebar"
@@ -6878,7 +6887,7 @@ en:
           theme_site_settings: "Settings the theme can override"
           edit_objects_theme_setting: "Objects setting editor"
           overriden_settings_explanation: "Changes from the default are marked with a dot and highlight. Click Reset to reset to the default."
-          overriden_site_settings_explanation: "Site settings the theme can customize. Click Reset to restore the theme’s default. If none is set, the site setting default is used. You can see all site settings being overridden by themes at <a href='%{themeSiteSettingsConfigUrl}'>the theme site settings config page</a>."
+          overriden_site_settings_explanation: "Site settings the theme can customize. Click Reset to restore to the site setting's default value. You can see all site settings being overridden by themes at <a href='%{themeSiteSettingsConfigUrl}'>the theme site settings config page</a>."
           no_settings: "This theme has no settings."
           theme_translations: "Theme translations"
           empty: "No items"

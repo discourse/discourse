@@ -62,9 +62,15 @@ aside.quote.accepted-answer {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+  }
 
-    &.quote__title--can-toggle-content {
-      cursor: pointer;
+  &:not(.accepted-answer--has-excerpt) {
+    > .title {
+      padding: 0.8em;
+    }
+
+    > blockquote {
+      display: none;
     }
   }
 

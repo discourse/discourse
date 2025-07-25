@@ -830,9 +830,9 @@ module SiteSettingExtension
 
           # If the theme hasn't overridden any theme site settings (or changed defaults)
           # then we will just fall back further down bellow to the current site setting value.
-          settings_overriden_for_theme = theme_site_settings[scoped_to[:theme_id]]
-          if settings_overriden_for_theme && settings_overriden_for_theme.key?(clean_name)
-            return settings_overriden_for_theme[clean_name]
+          settings_overridden_for_theme = theme_site_settings[scoped_to[:theme_id]]
+          if settings_overridden_for_theme && settings_overridden_for_theme.key?(clean_name)
+            return settings_overridden_for_theme[clean_name]
           end
         end
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAutomation::Stat do
   let(:automation_id) { 42 }
   let(:another_automation_id) { 43 }

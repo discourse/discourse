@@ -120,7 +120,7 @@
     padding-top: 0;
 
     li.notification {
-      padding: 0.25em 0;
+      padding: var(--space-3);
       border-bottom: 1px solid var(--primary-low);
 
       a {
@@ -129,23 +129,14 @@
 
       .d-icon {
         color: var(--primary-medium);
+        padding-top: 0;
+        font-size: var(--font-up-2);
       }
 
       .relative-date {
         margin-left: auto;
         padding-top: 0;
         float: none;
-      }
-    }
-
-    &:not(.show-avatars) {
-      li.notification {
-        padding: var(--space-3);
-
-        .d-icon {
-          padding-top: 0;
-          font-size: var(--font-up-2);
-        }
       }
     }
   }

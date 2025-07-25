@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::EnqueueReminders do
   fab!(:assign_allowed_group) { Fabricate(:group) }
   fab!(:user) { Fabricate(:user, groups: [assign_allowed_group]) }
@@ -37,7 +35,7 @@ RSpec.describe Jobs::EnqueueReminders do
       assert_reminders_enqueued(0)
     end
 
-    it "enqueues a reminder when the user has one assignement if `pending_assign_reminder_threshold` is set to one" do
+    it "enqueues a reminder when the user has one assignment if `pending_assign_reminder_threshold` is set to one" do
       assign_one_task_to(user)
 
       SiteSetting.pending_assign_reminder_threshold = 1

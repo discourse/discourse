@@ -1,4 +1,3 @@
-/* eslint-disable qunit/no-loose-assertions */
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
@@ -303,15 +302,18 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
     appendChildStub.restore();
     removeChildStub.restore();
 
-    assert.ok(window.open.called, "window.open was called for downloading");
-    assert.ok(formStub.called, "form was created for downloading");
-    assert.ok(formElement.submit.called, "form was submitted for downloading");
+    assert.true(window.open.called, "window.open was called for downloading");
+    assert.true(formStub.called, "form was created for downloading");
+    assert.true(
+      formElement.submit.called,
+      "form was submitted for downloading"
+    );
 
-    assert.ok(
+    assert.true(
       formElement.setAttribute.calledWith("action"),
       "form action attribute was set"
     );
-    assert.ok(
+    assert.true(
       formElement.setAttribute.calledWith("method", "post"),
       "form method attribute was set to POST"
     );

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "AI Tool Management", type: :system do
   fab!(:admin)
   let(:page_header) { PageObjects::Components::DPageHeader.new }

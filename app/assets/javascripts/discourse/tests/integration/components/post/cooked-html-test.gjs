@@ -32,10 +32,17 @@ module("Integration | Component | Post | PostCookedHtml", function (hooks) {
   });
 
   test("quotes with no username and no valid topic", async function (assert) {
-    this.post.cooked = `<aside class=\"quote no-group quote-post-not-found\" data-post=\"1\" data-topic=\"123456\">\n<blockquote>\n<p>abcd</p>\n</blockquote>\n</aside>\n<p>Testing the issue</p>`;
+    this.post.cooked = `<aside class=\"quote no-group quote-post-not-found\" data-username=\"unknown\" data-post=\"1\" data-topic=\"123456\">\n<blockquote>\n<p>abcd</p>\n</blockquote>\n</aside>\n<p>Testing the issue</p>`;
 
     await renderComponent(this.post);
 
+    assert
+      .dom("aside.quote .title")
+      .hasText("unknown")
+      .doesNotHaveAttribute("data-has-quote-controls")
+      .doesNotHaveAttribute("data-can-toggle-quote")
+      .doesNotHaveAttribute("data-can-navigate-to-post");
+    assert.dom(".quote-controls").doesNotExist();
     assert.dom("blockquote").hasText("abcd");
   });
 });

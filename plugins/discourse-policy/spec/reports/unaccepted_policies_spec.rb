@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Report do
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }

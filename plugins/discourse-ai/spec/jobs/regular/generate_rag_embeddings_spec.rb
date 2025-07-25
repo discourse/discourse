@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::GenerateRagEmbeddings do
+  subject(:job) { described_class.new }
+
   before { enable_current_plugin }
 
   describe "#execute" do
@@ -29,7 +31,7 @@ RSpec.describe Jobs::GenerateRagEmbeddings do
     it "generates a new vector for each fragment" do
       expected_embeddings = 2
 
-      subject.execute(fragment_ids: [rag_document_fragment_1.id, rag_document_fragment_2.id])
+      job.execute(fragment_ids: [rag_document_fragment_1.id, rag_document_fragment_2.id])
 
       embeddings_count =
         DB.query_single(
@@ -43,7 +45,7 @@ RSpec.describe Jobs::GenerateRagEmbeddings do
       it "sends an update through mb after a batch finishes" do
         updates =
           MessageBus.track_publish("/discourse-ai/rag/#{rag_document_fragment_1.upload_id}") do
-            subject.execute(fragment_ids: [rag_document_fragment_1.id])
+            job.execute(fragment_ids: [rag_document_fragment_1.id])
           end
 
         upload_index_stats = updates.last.data

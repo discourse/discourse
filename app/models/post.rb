@@ -554,6 +554,10 @@ class Post < ActiveRecord::Base
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
   end
 
+  def is_last_reply?
+    topic.try(:highest_post_number) == post_number && post_number != 1
+  end
+
   def is_category_description?
     topic.present? && topic.is_category_topic? && is_first_post?
   end
@@ -1162,6 +1166,7 @@ class Post < ActiveRecord::Base
         "track/@src",
         "video/@poster",
         "div/@data-video-src",
+        "div/@data-original-video-src",
       )
 
     links =

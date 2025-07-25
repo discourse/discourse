@@ -1181,7 +1181,7 @@ RSpec.describe UsersController do
       context "with an admin api key" do
         fab!(:api_key, refind: false) { Fabricate(:api_key, user: admin) }
 
-        it "creates the user as active with a an admin key" do
+        it "creates the user as active with an admin key" do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 

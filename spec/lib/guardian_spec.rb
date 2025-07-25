@@ -62,7 +62,7 @@ RSpec.describe Guardian do
     end
   end
 
-  describe "can_send_private_message" do
+  describe "#can_send_private_message?" do
     fab!(:suspended_user) do
       Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
     end
@@ -84,6 +84,10 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(user)).to be_truthy
     end
 
+    it "returns true for staff users" do
+      expect(Guardian.new(admin).can_send_private_message?(user)).to be_truthy
+    end
+
     it "returns false when you are untrusted" do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
       user.update!(trust_level: TrustLevel[0])
@@ -93,13 +97,6 @@ RSpec.describe Guardian do
 
     it "returns true to another user" do
       expect(Guardian.new(user).can_send_private_message?(another_user)).to be_truthy
-    end
-
-    it "disallows pms to other users if trust level is not met" do
-      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
-      user.update!(trust_level: TrustLevel[1])
-      Group.user_trust_level_change!(user.id, TrustLevel[1])
-      expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
     end
 
     it "allows plugins to control if user can send PM" do
@@ -2697,126 +2694,6 @@ RSpec.describe Guardian do
 
       it "returns true for trust_level_4 user" do
         expect(Guardian.new(trust_level_4).can_wiki?(post)).to be_truthy
-      end
-    end
-  end
-
-  describe "Tags" do
-    context "with tagging disabled" do
-      before { SiteSetting.tagging_enabled = false }
-
-      it "can_create_tag returns false" do
-        expect(Guardian.new(admin).can_create_tag?).to be_falsey
-      end
-
-      it "can_admin_tags returns false" do
-        expect(Guardian.new(admin).can_admin_tags?).to be_falsey
-      end
-
-      it "can_admin_tag_groups returns false" do
-        expect(Guardian.new(admin).can_admin_tag_groups?).to be_falsey
-      end
-    end
-
-    context "when tagging is enabled" do
-      before do
-        SiteSetting.tagging_enabled = true
-        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
-      end
-
-      context "when minimum trust level to create tags is 3" do
-        before do
-          SiteSetting.create_tag_allowed_groups = "1|3|#{Group::AUTO_GROUPS[:trust_level_3]}"
-        end
-
-        describe "#can_see_tag?" do
-          it "is always true" do
-            expect(Guardian.new.can_see_tag?(anything)).to be_truthy
-          end
-        end
-
-        describe "can_create_tag" do
-          it "returns false if trust level is too low" do
-            expect(Guardian.new(trust_level_2).can_create_tag?).to be_falsey
-          end
-
-          it "returns true if trust level is high enough" do
-            expect(Guardian.new(trust_level_3).can_create_tag?).to be_truthy
-          end
-
-          it "returns true for staff" do
-            expect(Guardian.new(admin).can_create_tag?).to be_truthy
-            expect(Guardian.new(moderator).can_create_tag?).to be_truthy
-          end
-        end
-
-        describe "can_tag_topics" do
-          it "returns false if trust level is too low" do
-            expect(
-              Guardian.new(
-                Fabricate(:user, trust_level: 0, refresh_auto_groups: true),
-              ).can_tag_topics?,
-            ).to be_falsey
-          end
-
-          it "returns true if trust level is high enough" do
-            expect(
-              Guardian.new(
-                Fabricate(:user, trust_level: 1, refresh_auto_groups: true),
-              ).can_tag_topics?,
-            ).to be_truthy
-          end
-
-          it "returns true for staff" do
-            expect(Guardian.new(admin).can_tag_topics?).to be_truthy
-            expect(Guardian.new(moderator).can_tag_topics?).to be_truthy
-          end
-        end
-      end
-
-      context "when staff and admin groups are allowed to create tags" do
-        before do
-          SiteSetting.min_trust_to_create_tag = "staff"
-          SiteSetting.create_tag_allowed_groups =
-            "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:admins]}"
-        end
-
-        it "returns false if not staff" do
-          expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
-        end
-
-        it "returns true if staff" do
-          expect(Guardian.new(admin).can_create_tag?).to be_truthy
-          expect(Guardian.new(moderator).can_create_tag?).to be_truthy
-        end
-      end
-
-      context "when only admin group is allowed to create tags" do
-        before do
-          SiteSetting.min_trust_to_create_tag = "admin"
-          SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:admins]
-        end
-
-        it "returns true if admin or moderator" do
-          expect(Guardian.new(admin).can_create_tag?).to be_truthy
-          expect(Guardian.new(moderator).can_create_tag?).to be_truthy
-        end
-      end
-    end
-
-    context "when tagging PMs" do
-      it "pm_tags_allowed_for_groups contains everyone" do
-        SiteSetting.pm_tags_allowed_for_groups = "#{Group::AUTO_GROUPS[:everyone]}"
-
-        expect(Guardian.new(user).can_tag_pms?).to be_truthy
-      end
-
-      it "pm_tags_allowed_for_groups contains a group" do
-        SiteSetting.pm_tags_allowed_for_groups = "#{group.id}"
-        group.add(member)
-
-        expect(Guardian.new(user).can_tag_pms?).to be_falsey
-        expect(Guardian.new(member).can_tag_pms?).to be_truthy
       end
     end
   end

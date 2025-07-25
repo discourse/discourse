@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Jobs::DiscourseRssPolling::PollAllFeeds do
   SiteSetting.rss_polling_enabled = true
   let(:job) { Jobs::DiscourseRssPolling::PollAllFeeds.new }

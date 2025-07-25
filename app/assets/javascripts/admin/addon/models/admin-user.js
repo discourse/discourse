@@ -259,7 +259,13 @@ export default class AdminUser extends User {
     return ajax(`/admin/users/${this.id}/unsilence`, {
       type: "PUT",
     })
-      .then((result) => this.setProperties(result.unsilence))
+      .then((result) => {
+        this.setProperties({
+          silence_reason: result.unsilence.silence_reason,
+          silenced_at: result.unsilence.silence_at,
+          silenced_till: result.unsilence.silence_till,
+        });
+      })
       .finally(() => this.set("silencingUser", false));
   }
 
@@ -270,7 +276,14 @@ export default class AdminUser extends User {
       type: "PUT",
       data,
     })
-      .then((result) => this.setProperties(result.silence))
+      .then((result) => {
+        this.setProperties({
+          silence_reason: result.silence.silence_reason,
+          silenced_at: result.silence.silenced_at,
+          silenced_by: result.silence.silenced_by,
+          silenced_till: result.silence.silenced_till,
+        });
+      })
       .finally(() => this.set("silencingUser", false));
   }
 

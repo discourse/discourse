@@ -332,6 +332,7 @@ RSpec.configure do |config|
     Discourse.current_user_provider = TestCurrentUserProvider
     Discourse::Application.load_tasks
 
+    SystemThemesManager.clear_system_theme_user_history!
     ThemeField.delete_all
     JavascriptCache.delete_all
     ThemeSiteSetting.delete_all

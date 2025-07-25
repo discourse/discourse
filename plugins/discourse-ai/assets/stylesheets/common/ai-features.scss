@@ -55,17 +55,14 @@
     @include ellipsis;
   }
 
-  &__persona-button,
-  &__llm-button {
+  &__persona-link,
+  &__llm-link {
     padding: 0;
     margin-right: var(--space-1);
     overflow: hidden;
+    min-height: 1.5em;
 
-    .d-button-label {
-      min-height: 1.5em;
-
-      @include ellipsis;
-    }
+    @include ellipsis;
   }
 
   &__groups {

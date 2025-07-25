@@ -110,6 +110,15 @@ export async function withSilencedDeprecationsAsync(deprecationIds, callback) {
   }
 }
 
+/**
+ * Checks if a given deprecation ID is currently silenced
+ * @param {String} id The deprecation id to check
+ * @returns {boolean} True if the deprecation is silenced, false otherwise
+ */
+export function isDeprecationSilenced(id) {
+  return id && disabledDeprecations.has(id);
+}
+
 function ensureEmberDeprecationSilencer() {
   if (emberDeprecationSilencer) {
     return;

@@ -24,6 +24,7 @@ uk:
     zendesk_autogenerate_all_categories: Автоматично створювати тікети для всіх категорій. Якщо увімкнено, `zendesk_autogenerate_categories` ігнорується.
     zendesk_autogenerate_categories: Список категорій, для яких будуть автоматично створюватися тікети Zendesk.
     zendesk_jobs_api_token: Токен API для автентифікації Zendesk
+    zendesk_jobs_email: Електронна пошта для автентифікації в Zendesk
     zendesk_job_push_all_posts: Надсилати всі повідомлення в темі як коментарі до Zendesk? Якщо вимкнено, до Zendesk буде відправлено лише перше повідомлення.
     zendesk_job_push_only_author_posts: Виштовхувати до zendesk лише дописи авторів оригінальних тем. Застосовується, якщо увімкнено `zendesk_job_push_all_posts`.
     sync_comments_from_zendesk: Автопост коментарів із Zendesk до Дискурсу. Застосовується лише до тем у `zendesk_autogenerate_categories`.

@@ -138,7 +138,7 @@ export function _addTransformerName(name, transformerType) {
     console.warn(
       `${prefix()}: transformer "${name}" matches existing core transformer "${
         existingInfo.name
-      }" and shouldn't be re-registered using the the API.`
+      }" and shouldn't be re-registered using the API.`
     );
     return;
   }

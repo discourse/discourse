@@ -3671,4 +3671,60 @@ RSpec.describe User do
       expect(user.similar_users).to eq([])
     end
   end
+
+  describe "#silence_reason" do
+    before { user.update!(silenced_till: 1.day.from_now) }
+
+    it "returns sanitized silence reason" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.silence_reason).to eq("foo  bar")
+    end
+
+    it "allows links" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:silence_user],
+        target_user: user,
+        details: 'foo <a href="https://example.com">link</a> bar',
+      )
+
+      expect(user.silence_reason).to eq(
+        "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
+      )
+    end
+  end
+
+  describe "#suspend_reason" do
+    before { user.update!(suspended_till: 1.day.from_now) }
+
+    it "returns sanitized suspend reason" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        target_user: user,
+        details: "foo <script>alert('XSS Test')</script> bar",
+      )
+
+      expect(user.suspend_reason).to eq("foo  bar")
+    end
+
+    it "allows links" do
+      Fabricate(
+        :user_history,
+        action: UserHistory.actions[:suspend_user],
+        target_user: user,
+        details: 'foo <a href="https://example.com">link</a> bar',
+      )
+
+      expect(user.suspend_reason).to eq(
+        "foo <a href=\"https://example.com\" rel=\"noopener nofollow ugc\">link</a> bar",
+      )
+    end
+  end
 end

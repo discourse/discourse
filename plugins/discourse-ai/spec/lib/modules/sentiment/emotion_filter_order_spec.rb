@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
   let(:plugin) { Plugin::Instance.new }
   let(:model_used) { "SamLowe/roberta-base-go_emotions" }

@@ -15,7 +15,7 @@ describe "User preferences | Account", type: :system do
 
       avatar_selector_modal.select_avatar_upload_option
       file_path = File.absolute_path(file_from_fixtures("logo.jpg"))
-      attach_file(file_path) { avatar_selector_modal.click_avatar_upload_button }
+      attach_file("custom-profile-upload", file_path, make_visible: true)
       expect(avatar_selector_modal).to have_user_avatar_image_uploaded
       avatar_selector_modal.click_primary_button
       expect(avatar_selector_modal).to be_closed

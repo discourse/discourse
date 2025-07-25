@@ -1278,4 +1278,46 @@ RSpec.describe PostDestroyer do
       end
     end
   end
+
+  describe "deleting a last reply" do
+    let!(:topic) { post.topic }
+    let!(:second_last_reply) do
+      freeze_time 1.day.from_now
+      create_post(topic:, user: coding_horror)
+    end
+    fab!(:user)
+    let!(:last_reply) do
+      freeze_time 2.days.from_now
+      create_post(topic:, user:)
+    end
+
+    context "when deleting by the creator" do
+      before { PostDestroyer.new(user, last_reply).destroy }
+
+      it "will reset the topic's bumped_at" do
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+
+      it "still can see the post" do
+        last_reply.reload
+
+        expect(last_reply.deleted_at).to be_blank
+        expect(last_reply.deleted_by).to be_blank
+        expect(last_reply.user_deleted).to eq(true)
+        expect(last_reply.raw).to eq(I18n.t("js.post.deleted_by_author_simple"))
+      end
+    end
+
+    context "when deleting by a staff user" do
+      before { PostDestroyer.new(moderator, last_reply).destroy }
+
+      it "will reset the topic's bumped_at" do
+        topic.reload
+
+        expect(topic.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+    end
+  end
 end

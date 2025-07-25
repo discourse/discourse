@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseGamification::GamificationLeaderboard, type: :model do
   fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
 

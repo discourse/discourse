@@ -932,7 +932,7 @@ users:
     client: true
     hidden: true
   anonymous_posting_allowed_groups:
-    default: "3|11" # auto group staff and trust_level_1
+    default: "1|2|11" # auto group admins, moderators and trust_level_1
     type: group_list
     allow_any: false
     refresh: true
@@ -1224,7 +1224,7 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   shared_drafts_allowed_groups:
-    default: "3" # auto group staff
+    default: "1|2" # auto group admins and moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -2268,6 +2268,19 @@ files:
   video_thumbnails_enabled:
     default: true
     client: true
+    hidden: true
+  video_conversion_enabled:
+    default: false
+    validator: "VideoConversionEnabledValidator"
+  video_conversion_service:
+    type: enum
+    default: "aws_mediaconvert"
+    choices:
+      - "aws_mediaconvert"
+  mediaconvert_role_arn:
+    default: ""
+  mediaconvert_endpoint:
+    default: ""
     hidden: true
 
 trust:
@@ -4070,6 +4083,9 @@ experimental:
       - auto
       - enabled
     default: "auto"
+  deactivate_widgets_rendering:
+    client: true
+    default: false
   enable_rich_text_paste:
     client: true
     default: true

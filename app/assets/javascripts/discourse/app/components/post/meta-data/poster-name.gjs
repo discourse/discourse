@@ -157,7 +157,10 @@ export default class PostMetaDataPosterName extends Component {
               {{this.name}}
               {{#if this.showGlyph}}
                 {{#if (or @post.moderator @post.group_moderator)}}
-                  {{icon "shield-halved" title=(i18n "user.moderator_tooltip")}}
+                  {{icon
+                    "shield-halved"
+                    translatedTitle=(i18n "user.moderator_tooltip")
+                  }}
                 {{/if}}
               {{/if}}
             </UserLink>
