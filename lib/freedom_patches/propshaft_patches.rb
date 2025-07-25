@@ -1,18 +1,5 @@
 # frozen_string_literal: true
 
-Propshaft::Asset.prepend(
-  Module.new do
-    def already_digested?
-      puts logical_path
-      Rails.logger.warn(
-        "Propshaft: Checking if asset is already digested: #{logical_path} #{logical_path.to_s.match?(/-\w{8}\.js(\.map)?$/)}",
-      )
-      logical_path.to_s.start_with?("chunk.") || logical_path.to_s.match?(/-\w{8}\.js(\.map)?$/) ||
-        super
-    end
-  end,
-)
-
 Propshaft::Helper.prepend(
   Module.new do
     def compute_asset_path(path, options = {})

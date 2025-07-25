@@ -104,6 +104,10 @@ export default defineConfig(({ mode, command }) => {
             : undefined),
         },
         output: {
+          hashCharacters: "base36",
+          assetFileNames: "assets/[name]-[hash].digested[extname]",
+          chunkFileNames: "assets/[name]-[hash].digested.js",
+          entryFileNames: "assets/[name]-[hash].digested.js",
           // manualChunks(id, { getModuleInfo }) {
           //   if (id.includes("node_modules")) {
           //     return "vendor";
