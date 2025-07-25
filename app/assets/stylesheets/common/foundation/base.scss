@@ -64,19 +64,8 @@ a {
   text-decoration: none;
   cursor: pointer;
 
-<<<<<<< HEAD
   &:visited,
   &:hover,
-=======
-  &:visited {
-    color: var(--link-color);
-  }
-
-  &:hover {
-    color: var(--link-color);
-  }
-
->>>>>>> 04bc9b9afa (table-hover)
   &:active {
     color: var(--link-color);
   }
