@@ -41,11 +41,15 @@ module DiscourseAi
         def as_llm_messages(contents)
           resource_path = "#{Discourse.base_path}/t/-/#{target.id}"
           content_title = target.title
+          category_name = target.category&.name
+          tags = target.tags&.map(&:name)
           input =
             contents.map { |item| "(#{item[:id]} #{item[:poster]} said: #{item[:text]} " }.join
 
           [{ type: :user, content: <<~TEXT.strip }]
             #{content_title.present? ? "The discussion title is: " + content_title + ".\n" : ""}
+            #{category_name.present? ? "Category: " + category_name + ".\n" : ""}
+            #{tags.present? ? "Tags: " + tags.join(", ") + ".\n" : ""}
             Here are the posts, inside <input></input> XML tags:
 
             <input>
