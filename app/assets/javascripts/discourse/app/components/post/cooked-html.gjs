@@ -196,13 +196,13 @@ export default class PostCookedHtml extends Component {
       @className={{this.className}}
       @decorate={{this.decorateBeforeAdopt}}
       @decorateAfterAdopt={{this.decorateAfterAdopt}}
-      @decorateArgs={{lazyHash
+      @html={{htmlSafe this.cooked}}
+      @model={{@post}}
+      @context={{lazyHash
         highlightTerm=this.highlightTerm
         isIgnored=this.isIgnored
         ignoredUsers=this.ignoredUsers
       }}
-      @html={{htmlSafe this.cooked}}
-      @model={{@post}}
     />
   </template>
 }

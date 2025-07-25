@@ -15,24 +15,24 @@ const detachedDocument = document.implementation.createHTMLDocument("detached");
 export default class DecoratedHtml extends Component {
   renderGlimmerInfos = new TrackedArray();
 
-  decoratedContent = helperFn(({ decorateArgs }, on) => {
+  decoratedContent = helperFn(({ context }, on) => {
     const cookedDiv = this.elementToDecorate;
 
     const helper = new DecorateHtmlHelper({
       renderGlimmerInfos: this.renderGlimmerInfos,
       model: this.args.model,
-      context: this.args.context,
+      context,
     });
     on.cleanup(() => helper.teardown());
 
     const decorateFn = this.args.decorate;
 
-    // force parameters explicity declarated in `decorateArgs` to be tracked despite the
+    // force parameters explicity declarated in `context` to be tracked regardless of the
     // use of `untrack` below
-    decorateArgs && Object.values(decorateArgs);
+    context && Object.values(context);
 
     try {
-      untrack(() => decorateFn?.(cookedDiv, helper, decorateArgs));
+      untrack(() => decorateFn?.(cookedDiv, helper));
     } catch (e) {
       if (isRailsTesting() || isTesting()) {
         throw e;
@@ -49,7 +49,7 @@ export default class DecoratedHtml extends Component {
 
     try {
       const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
-      untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper, decorateArgs));
+      untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper));
     } catch (e) {
       if (isRailsTesting() || isTesting()) {
         throw e;
@@ -84,7 +84,7 @@ export default class DecoratedHtml extends Component {
   }
 
   <template>
-    {{~this.decoratedContent decorateArgs=@decorateArgs~}}
+    {{~this.decoratedContent context=@context~}}
 
     {{~#each this.renderGlimmerInfos as |info|~}}
       {{~#if info.append}}
