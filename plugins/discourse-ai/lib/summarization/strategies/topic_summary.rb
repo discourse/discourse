@@ -42,7 +42,7 @@ module DiscourseAi
           resource_path = "#{Discourse.base_path}/t/-/#{target.id}"
           content_title = target.title
           category_name = target.category&.name
-          tags = target.tags&.map(&:name)
+          tags = target.tags&.map(&:name)&.sort
           input =
             contents.map { |item| "(#{item[:id]} #{item[:poster]} said: #{item[:text]} " }.join
 
