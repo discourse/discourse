@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -44,5 +44,66 @@ module("Integration | Component | Post | PostCookedHtml", function (hooks) {
       .doesNotHaveAttribute("data-can-navigate-to-post");
     assert.dom(".quote-controls").doesNotExist();
     assert.dom("blockquote").hasText("abcd");
+  });
+
+  test("it keeps the opened state of the `details` tag between renders", async function (assert) {
+    this.post.cooked = `<details><summary>Quote Summary</summary><p>Quote Content</p></details>`;
+
+    await renderComponent(this.post);
+
+    assert
+      .dom("details")
+      .exists()
+      .doesNotHaveAttribute("open", "the details tag is closed by default");
+
+    await click("details > summary");
+    assert
+      .dom("details")
+      .hasAttribute(
+        "open",
+        "",
+        "the details tag is opened after clicking the summary"
+      );
+
+    this.post.cooked += '<p class="new-content">New Content</p>';
+    await settled();
+    assert
+      .dom("p.new-content")
+      .exists()
+      .hasText("New Content", "ensure the cooked content was updated");
+    assert
+      .dom("details")
+      .exists()
+      .hasAttribute(
+        "open",
+        "",
+        "the details tag remains opened after re-rendering"
+      );
+
+    await click("details > summary");
+    assert
+      .dom("details")
+      .doesNotHaveAttribute(
+        "open",
+        "the details tag is closed after clicking the summary again"
+      );
+
+    this.post.cooked += '<p class="another-content">Another Content</p>';
+    await settled();
+
+    assert
+      .dom("p.another-content")
+      .exists()
+      .hasText(
+        "Another Content",
+        "ensure the cooked content was updated again"
+      );
+    assert
+      .dom("details")
+      .exists()
+      .doesNotHaveAttribute(
+        "open",
+        "the details tag remains closed after re-rendering"
+      );
   });
 });
