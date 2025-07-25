@@ -100,7 +100,6 @@ gem "rinku"
 gem "sidekiq"
 gem "mini_scheduler"
 
-gem "execjs", require: false
 gem "mini_racer"
 
 gem "highline", require: false

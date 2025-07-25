@@ -157,7 +157,6 @@ GEM
     erubi (1.13.1)
     excon (1.2.5)
       logger
-    execjs (2.10.0)
     exifr (1.4.1)
     extralite-bundle (2.12)
     fabrication (3.0.0)
@@ -758,7 +757,6 @@ DEPENDENCIES
   ed25519
   email_reply_trimmer
   excon
-  execjs
   extralite-bundle
   fabrication
   faker
@@ -945,7 +943,6 @@ CHECKSUMS
   erb (5.0.2) sha256=d30f258143d4300fb4ecf430042ac12970c9bb4b33c974a545b8f58c1ec26c0f
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
-  execjs (2.10.0) sha256=6bcb8be8f0052ff9d370b65d1c080f2406656e150452a0abdb185a133048450d
   exifr (1.4.1) sha256=768374cc6b6ff3743acba57c1c35229bdd8c6b9fbc1285952047fc1215c4b894
   extralite-bundle (2.12) sha256=9c9912b7ab592e7064089ee608cf86ab9edd81d20065acb87d1f4fed06052987
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3

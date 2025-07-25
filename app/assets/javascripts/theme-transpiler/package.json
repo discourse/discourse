@@ -6,9 +6,17 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "keywords": [],
+  "scripts": {
+    "test": "vitest"
+  },
   "dependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.28.0",
     "@babel/standalone": "^7.28.2",
     "@csstools/postcss-light-dark-function": "^2.0.9",
+    "@rollup/browser": "^4.45.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "abort-controller": "^3.0.0",
     "autoprefixer": "^10.4.21",
     "babel-plugin-ember-template-compilation": "^2.4.1",
     "content-tag": "^4.0.0",
@@ -20,11 +28,14 @@
     "ember-source": "~5.12.0",
     "ember-this-fallback": "^0.4.0",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
+    "magic-string": "^0.30.17",
+    "memfs": "^4.17.2",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss": "^8.5.6",
     "postcss-js": "^4.0.1",
     "postcss-media-minmax": "^5.0.0",
+    "readable-stream": "^4.7.0",
     "source-map-js": "^1.2.1",
     "terser": "^5.43.1"
   },
@@ -33,5 +44,8 @@
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }
