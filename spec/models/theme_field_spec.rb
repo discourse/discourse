@@ -789,7 +789,7 @@ HTML
 
     after { upload_file.unlink }
 
-    skip "correctly handles local JS asset caching" do
+    it "correctly handles local JS asset caching" do
       # todo - make this a system spec
       upload =
         UploadCreator.new(upload_file, "test.js", for_theme: true).create_for(
@@ -827,30 +827,19 @@ HTML
         theme.reload.javascript_cache.content,
         common_field.reload.javascript_cache.content,
       ].each do |js|
-        js_to_eval = <<~JS
-          var settings;
-          var window = {};
-          var require = function(name) {
-            if(name == "discourse/lib/theme-settings-store") {
-              return({
-                registerSettings: function(id, s) {
-                  settings = s;
-                }
-              });
+        expected_local_js_cache_url = js_field.javascript_cache.local_url
+        expect(expected_local_js_cache_url).to start_with("/theme-javascripts/")
+        expect(js).to include(<<~JS)
+          registerSettings(#{theme.id}, {
+            "hello": "world",
+            "theme_uploads": {
+              "test_js": "#{js_field.upload.url}"
+            },
+            "theme_uploads_local": {
+              "test_js": "#{js_field.javascript_cache.local_url}"
             }
-          }
-          window.require = require;
-          #{js}
-          settings
+          });
         JS
-
-        ctx = MiniRacer::Context.new
-        val = ctx.eval(js_to_eval)
-        ctx.dispose
-
-        expect(val["theme_uploads"]["test_js"]).to eq(js_field.upload.url)
-        expect(val["theme_uploads_local"]["test_js"]).to eq(js_field.javascript_cache.local_url)
-        expect(val["theme_uploads_local"]["test_js"]).to start_with("/theme-javascripts/")
       end
 
       # this is important, we do not want local_js_urls to leak into scss
