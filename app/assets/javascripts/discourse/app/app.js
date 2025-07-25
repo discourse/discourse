@@ -61,6 +61,8 @@ if (PreloadStore.get("currentUser")?.staff) {
   adminCompatModules = (await import("admin/compat-modules")).default;
 }
 
+await loadThemes();
+
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 

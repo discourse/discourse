@@ -4,7 +4,6 @@ import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import { loadCompatModules } from "discourse/compat-modules";
 import config from "discourse/config/environment";
-import { loadThemes } from "discourse/app";
 import setupTests from "discourse/tests/setup-tests";
 
 loadCompatModules(
@@ -15,8 +14,6 @@ loadCompatModules(
 );
 
 document.addEventListener("discourse-init", async () => {
-  await loadThemes();
-
   if (!window.EmberENV.TESTS_FILE_LOADED) {
     throw new Error(
       'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
