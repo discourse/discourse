@@ -95,31 +95,31 @@ module Migrations::Importer
     end
 
     def query_array(sql, *params)
-      query_result_set(sql, *params).rows
+      query_result(sql, *params).rows
     end
 
-    def query_result_set(sql, *params)
+    def query_result(sql, *params)
       @connection.send_query_params(sql, params)
       @connection.set_single_row_mode
 
       first_result = @connection.get_result
-
       return QueryResult.new(rows: Enumerator.new {}, column_count: 0) unless first_result
 
       column_count = first_result.nfields
+      single_column = column_count == 1
 
-      enum =
+      rows_enumerator =
         Enumerator.new do |y|
-          first_result.stream_each_row { |row| y.yield(row) }
+          first_result.stream_each_row { |row| single_column ? y << row[0] : y << row }
           first_result.clear
 
           while (result = @connection.get_result)
-            result.stream_each_row { |row| y.yield(row) }
+            result.stream_each_row { |row| single_column ? y << row[0] : y << row }
             result.clear
           end
         end
 
-      QueryResult.new(rows: enum, column_count:)
+      QueryResult.new(rows: rows_enumerator, column_count:)
     end
 
     def close
