@@ -7,8 +7,6 @@ import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
 
-const COUNT_TO_FILTER = 8;
-
 export default class AdminCustomizeColorsController extends Controller {
   @service router;
   @service modal;
@@ -19,8 +17,6 @@ export default class AdminCustomizeColorsController extends Controller {
   @service site;
 
   @tracked defaultTheme = null;
-  @tracked filterValue = "";
-  @tracked typeFilter = "all";
 
   isDefaultThemeColorScheme = (scheme) => {
     return this.defaultTheme?.color_scheme_id === scheme.id;
@@ -57,33 +53,37 @@ export default class AdminCustomizeColorsController extends Controller {
     return changedColors || changedTheme;
   }
 
-  get filteredColorSchemes() {
+  get sortedColorSchemes() {
     // only sort initially, this avoids position jumps when state changes on interaction
     if (!this._sortedOnce && this.model?.length > 0) {
       this._doInitialSort();
     }
 
-    let schemes = [...this._initialSortedSchemes];
+    return [...this._initialSortedSchemes];
+  }
 
-    switch (this.typeFilter) {
-      case "user_selectable":
-        schemes = schemes.filter((scheme) => scheme.user_selectable);
-        break;
-      case "from_theme":
-        schemes = schemes.filter((scheme) => scheme.theme_id);
-        break;
-    }
+  get searchableProps() {
+    return ["name", "theme_name"];
+  }
 
-    if (this.filterValue) {
-      const term = this.filterValue.toLowerCase();
-      schemes = schemes.filter((scheme) => {
-        const nameMatches = scheme.name?.toLowerCase().includes(term);
-        const themeMatches = scheme.theme_name?.toLowerCase().includes(term);
-        return nameMatches || themeMatches;
-      });
-    }
-
-    return schemes;
+  get dropdownOptions() {
+    return [
+      {
+        value: "all",
+        label: i18n("admin.customize.colors.filters.all"),
+        filterFn: () => true,
+      },
+      {
+        value: "user_selectable",
+        label: i18n("admin.customize.colors.filters.user_selectable"),
+        filterFn: (scheme) => scheme.user_selectable,
+      },
+      {
+        value: "from_theme",
+        label: i18n("admin.customize.colors.filters.from_theme"),
+        filterFn: (scheme) => scheme.theme_id,
+      },
+    ];
   }
 
   _doInitialSort() {
@@ -128,29 +128,6 @@ export default class AdminCustomizeColorsController extends Controller {
 
     this._initialSortedSchemes = schemes;
     this._sortedOnce = true;
-  }
-
-  get showFilters() {
-    return (
-      this.model.filter((scheme) => !scheme.is_base).length > COUNT_TO_FILTER
-    );
-  }
-
-  get typeFilterOptions() {
-    return [
-      {
-        value: "all",
-        label: i18n("admin.customize.colors.filters.all"),
-      },
-      {
-        value: "user_selectable",
-        label: i18n("admin.customize.colors.filters.user_selectable"),
-      },
-      {
-        value: "from_theme",
-        label: i18n("admin.customize.colors.filters.from_theme"),
-      },
-    ];
   }
 
   _resetSortedSchemes() {
@@ -245,22 +222,5 @@ export default class AdminCustomizeColorsController extends Controller {
         },
       });
     });
-  }
-
-  @action
-  onFilterChange(event) {
-    this.filterValue = event.target?.value || "";
-  }
-
-  @action
-  onTypeFilterChange(value) {
-    this.typeFilter = value;
-  }
-
-  @action
-  resetFilters() {
-    this.filterValue = "";
-    this.typeFilter = "all";
-    document.querySelector(".admin-filter__input")?.focus();
   }
 }
