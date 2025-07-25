@@ -10,12 +10,11 @@ class LocaleSiteSetting < EnumSiteSetting
   end
 
   def self.values
-    @values ||=
-      supported_locales.map do |locale|
-        lang = language_names[locale] || language_names[locale.split("_").first]
-        native_name = lang&.dig("nativeName")
-        { native_name:, value: locale, name: "languages.#{locale}.name" }
-      end
+    supported_locales.map do |locale|
+      lang = language_names[locale] || language_names[locale.split("_").first]
+      native_name = lang&.dig("nativeName")
+      { native_name:, value: locale, name: "languages.#{locale}.name" }
+    end
   end
 
   @lock = Mutex.new
