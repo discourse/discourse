@@ -380,4 +380,26 @@ RSpec.describe DiscourseJsProcessor do
 
     expect(result["code"]).not_to include("../components/my-component")
   end
+
+  it "handles relative import of gjs index file" do
+    mod_1 = <<~JS.chomp
+      import MyComponent from "./other-component";
+      console.log(MyComponent);
+    JS
+
+    mod_2 = <<~JS.chomp
+      export default "test";
+    JS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/my-component.gjs" => mod_1,
+          "discourse/components/other-component/index.gjs" => mod_2,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).not_to include("../components/my-component")
+  end
 end

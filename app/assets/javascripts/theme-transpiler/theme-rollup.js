@@ -16,6 +16,7 @@ import discourseExtensionSearch from "./rollup-plugins/discourse-extension-searc
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
+import discourseIndexSearch from "./rollup-plugins/discourse-index-search";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
@@ -37,6 +38,7 @@ globalThis.rollup = function (modules, opts) {
     },
     plugins: [
       discourseExtensionSearch(),
+      discourseIndexSearch(),
       discourseVirtualLoader({
         themeBase,
         modules,
