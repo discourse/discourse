@@ -6,7 +6,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, later, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq } from "truth-helpers";
-import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
