@@ -246,6 +246,16 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(sidebar).to have_section_link(pm.title)
         end
 
+        it "allows navigating to a specific LLM and persona" do
+          # url encode name
+          persona_name = CGI.escape(persona.name)
+          llm_name = CGI.escape(claude_2_dup.display_name)
+          visit "/discourse-ai/ai-bot/conversations?persona=#{persona_name}&llm=#{llm_name}"
+
+          expect(ai_pm_homepage.persona_selector).to have_selected_name(persona.name)
+          expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
+        end
+
         it "removes persona from selector when allow_personal_messages is disabled" do
           persona.update!(allow_personal_messages: false)
           ai_pm_homepage.visit

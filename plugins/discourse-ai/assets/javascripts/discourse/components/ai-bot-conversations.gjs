@@ -294,6 +294,8 @@ export default class AiBotConversations extends Component {
         @showLabels={{true}}
         @setPersonaId={{this.setPersonaId}}
         @setTargetRecipient={{this.setTargetRecipient}}
+        @personaName={{@controller.persona}}
+        @llmName={{@controller.llm}}
       />
 
       <div class="ai-bot-conversations__content-wrapper">
