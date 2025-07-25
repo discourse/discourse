@@ -22,8 +22,8 @@
     "discourse-i18n": "workspace:1.0.0",
     "ember-auto-import": "^2.10.0",
     "markdown-it": "14.0.0",
-    "pretty-text": "workspace:1.0.0",
-    "truth-helpers": "workspace:1.0.0",
+    "pretty-text": "workspace:*",
+    "truth-helpers": "workspace:*",
     "xss": "^1.0.15"
   },
   "peerDependencies": {

@@ -96,8 +96,8 @@ export default {
     const interval = setInterval(() => {
       if (document.readyState === "complete") {
         if (
-          router.currentRouteName === "topic.fromParams" ||
-          router.currentRouteName === "topic.fromParamsNear"
+          router.currentRouteName === "topic.from-params" ||
+          router.currentRouteName === "topic.from-params-near"
         ) {
           _deferredViewTopicId = router.currentRoute.parent.params.id;
         }

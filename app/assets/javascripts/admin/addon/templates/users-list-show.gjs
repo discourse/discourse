@@ -1,4 +1,4 @@
-import { concat, fn, get } from "@ember/helper";
+import { array, concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
@@ -269,7 +269,10 @@ export default RouteTemplate(
                   >
                     {{avatar user imageSize="small"}}
                   </a>
-                  <LinkTo @route="adminUser" @model={{user}}>
+                  <LinkTo
+                    @route="adminUser"
+                    @models={{array user.id user.username}}
+                  >
                     {{user.username}}
                   </LinkTo>
                   {{#if user.staged}}
