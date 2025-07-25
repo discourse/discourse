@@ -571,7 +571,7 @@ export default class FilterTips extends Component {
               <li
                 class={{concatClass
                   "filter-tips__list-item"
-                  (if (eq index this.selectedIndex) "filter-tip__selected")
+                  (if (eq index this.selectedIndex) "--selected")
                 }}
                 onClick={{fn this.selectItem item}}
               >
