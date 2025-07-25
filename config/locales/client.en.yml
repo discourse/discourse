@@ -7000,7 +7000,6 @@ en:
             user_selectable: "User selectable"
             from_theme: "From theme"
             no_results: "No color palettes found"
-            reset: "Reset filters"
           active_badge:
             text: "Active"
             title: "Active color palette"
