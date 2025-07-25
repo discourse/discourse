@@ -18,81 +18,17 @@ class SiteSettingUpdateExistingUsers
 
       UserOption.human_users.where(user_option => previous_value).update_all(attrs)
     elsif id.start_with?("default_categories_")
-      previous_category_ids = previous_value.split("|")
-      new_category_ids = new_value.split("|")
-
-      notification_level = self.category_notification_level(id)
-
-      categories_to_unwatch = previous_category_ids - new_category_ids
-      CategoryUser.where(
-        category_id: categories_to_unwatch,
-        notification_level: notification_level,
-      ).delete_all
-      TopicUser
-        .joins(:topic)
-        .where(
-          notification_level: TopicUser.notification_levels[:watching],
-          notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
-          topics: {
-            category_id: categories_to_unwatch,
-          },
-        )
-        .update_all(notification_level: TopicUser.notification_levels[:regular])
-
-      (new_category_ids - previous_category_ids).each do |category_id|
-        skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
-
-        User
-          .real
-          .where(staged: false)
-          .where.not(id: skip_user_ids)
-          .select(:id)
-          .find_in_batches do |users|
-            category_users = []
-            users.each do |user|
-              category_users << {
-                category_id: category_id,
-                user_id: user.id,
-                notification_level: notification_level,
-              }
-            end
-            CategoryUser.insert_all!(category_users)
-          end
-      end
+      Jobs.enqueue(
+        :site_setting_update_default_categories,
+        { id: id, value: value, previous_value: previous_value },
+      )
+      MessageBus.publish("#{id}", { status: "enqueued" })
     elsif id.start_with?("default_tags_")
-      previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
-      new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
-      now = Time.zone.now
-
-      notification_level = self.tag_notification_level(id)
-
-      TagUser.where(
-        tag_id: (previous_tag_ids - new_tag_ids),
-        notification_level: notification_level,
-      ).delete_all
-
-      (new_tag_ids - previous_tag_ids).each do |tag_id|
-        skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
-
-        User
-          .real
-          .where(staged: false)
-          .where.not(id: skip_user_ids)
-          .select(:id)
-          .find_in_batches do |users|
-            tag_users = []
-            users.each do |user|
-              tag_users << {
-                tag_id: tag_id,
-                user_id: user.id,
-                notification_level: notification_level,
-                created_at: now,
-                updated_at: now,
-              }
-            end
-            TagUser.insert_all!(tag_users)
-          end
-      end
+      Jobs.enqueue(
+        :site_setting_update_default_tags,
+        { id: id, value: value, previous_value: previous_value },
+      )
+      MessageBus.publish("#{id}", { status: "enqueued" })
     elsif self.is_sidebar_default_setting?(id)
       Jobs.enqueue(
         :backfill_sidebar_site_settings,

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 RSpec.describe Admin::SiteSettingsController do
   fab!(:admin)
   fab!(:moderator)
@@ -457,6 +456,8 @@ RSpec.describe Admin::SiteSettingsController do
             notification_level: tracking,
             user: user2,
           )
+
+          Jobs.run_immediately!
         end
 
         it "should update existing users user preference" do
@@ -467,9 +468,11 @@ RSpec.describe Admin::SiteSettingsController do
               }
 
           expect(response.status).to eq(200)
+
           expect(
             CategoryUser.where(category_id: category_ids.first, notification_level: watching).count,
           ).to eq(0)
+
           expect(
             CategoryUser.where(category_id: category_ids.last, notification_level: watching).count,
           ).to eq(User.real.where(staged: false).count - 1)
@@ -566,6 +569,7 @@ RSpec.describe Admin::SiteSettingsController do
         before do
           SiteSetting.default_tags_watching = tags.first(2).pluck(:name).join("|")
           TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
+          Jobs.run_immediately!
         end
 
         it "should update existing users user preference" do
