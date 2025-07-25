@@ -32,7 +32,7 @@ class FormTemplateYamlValidator < ActiveModel::Validator
         check_descriptions_html(record, field)
       end
 
-      check_tag_groups(record, yaml.map { |f| f["tag_group"] }.compact.map(&:downcase).uniq)
+      check_tag_groups(record, yaml.map { |f| f["tag_group"] })
     rescue Psych::SyntaxError
       record.errors.add(:template, I18n.t("form_templates.errors.invalid_yaml"))
     end
@@ -85,6 +85,7 @@ class FormTemplateYamlValidator < ActiveModel::Validator
   end
 
   def check_tag_groups(record, tag_group_names)
+    tag_group_names = tag_group_names.compact.map(&:downcase).uniq
     valid_tag_group_names =
       TagGroup.where("lower(name) IN (?)", tag_group_names).pluck(:name).map(&:downcase)
     invalid_tag_groups = tag_group_names - valid_tag_group_names
