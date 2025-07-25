@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  reports:
+    overall_sentiment:
+      yaxis: "Dată"
+  discourse_ai:
+    spam_detection:
+      logging_subject: "Detectare spam"
+    ai_bot:
+      tool_summary:
+        search: "Caută"
+        time: "Oră"
+        summarize: "Rezumat"
+    ai_staff_action_logger:
+      updated: "actualizat"

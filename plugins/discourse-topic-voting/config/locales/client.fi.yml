@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    category:
+      sort_options:
+        votes: "Äänet"
+    topic_voting:
+      title: "Ketjun äänestys"
+      reached_limit: "Sinulla ei ole enempää ääniä, poista antamasi ääni!"
+      list_votes: "Kaikki antamasi äänet"
+      votes_nav_help: "ketjut, joilla on eniten ääniä"
+      voted: "Äänestit tässä ketjussa"
+      allow_topic_voting: "Salli käyttäjien antaa ääniä ketjuissa tällä alueella"
+      vote_title: "Äänestä"
+      vote_title_plural: "Äänet"
+      voted_title: "Äänestetty"
+      voting_closed_title: "Suljettu"
+      voting_limit: "Raja"
+      votes_left_button_title:
+        one: "Sinulla on %{count} ääni jäljellä."
+        other: "Sinulla on %{count} ääntä jäljellä."
+      votes:
+        one: "%{count} ääni"
+        other: "%{count} ääntä"
+      anonymous_button:
+        one: "Äänestä"
+        other: "Äänet"
+      remove_vote: "Poista ääni"
+      no_votes_title_self: "Et ole vielä äänestänyt ketjuja"
+      no_votes_title_others: "%{username} ei ole vielä äänestänyt ketjuja"
+    filters:
+      votes:
+        title: "Äänet"
+        help: "ketjut, joilla on eniten ääniä"
+      my_votes:
+        title: "Omat äänet"
+        help: "ketjut, joissa olet äänestänyt"
+    search:
+      most_votes: "Eniten ääniä"
+      advanced:
+        vote:
+          count:
+            label: "Vähimmäisäänimäärä"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Ketjunäänestystapahtuma"
+          topic_upvote: "Kun käyttäjä äänestää ketjua"
+          topic_unvote: "Kun käyttäjä poistaa äänen ketjulta"

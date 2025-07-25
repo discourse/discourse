@@ -15,7 +15,7 @@ id:
         topic: "Topik"
         close: "Tutup"
       type:
-        normal: normal
+        normal: Normal
       filter:
         mute: 'Bisu'
       rule_table:

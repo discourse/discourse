@@ -49,11 +49,11 @@ ru:
     topic_assigned_excerpt: "назначил вам тему '%{title}'"
     topic_group_assigned_excerpt: "назначил(а) тему «%{title}» группе «@%{group}»"
     reminders_frequency:
-      never: "никогда"
+      never: "Никогда"
       daily: "ежедневно"
       weekly: "еженедельно"
-      monthly: "ежемесячно"
-      quarterly: "ежеквартально"
+      monthly: "за месяц"
+      quarterly: "за квартал"
   assign_mailer:
     title: "Уведомление о назначении"
     subject_template: "[%{email_prefix}] %{assignee_name} назначил(а) Вас ответственным в теме '%{topic_title}'!"

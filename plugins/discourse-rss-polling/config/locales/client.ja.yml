@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ja:
+  js:
+    admin:
+      rss_polling:
+        author: 作成者
+        feed_url: URL
+        discourse_category: カテゴリ
+        discourse_tags: タグ

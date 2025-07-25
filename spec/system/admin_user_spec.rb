@@ -69,6 +69,30 @@ describe "Admin User Page", type: :system do
           I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
         )
       end
+
+      it "suspends the user" do
+        admin_user_page.click_suspend_button
+        suspend_user_modal.fill_in_reason("spamming")
+        suspend_user_modal.set_future_date("tomorrow")
+        suspend_user_modal.perform
+        expect(suspend_user_modal).to be_closed
+      end
+
+      it "displays error when used is already suspended" do
+        admin_user_page.click_suspend_button
+        suspend_user_modal.fill_in_reason("spamming")
+        suspend_user_modal.set_future_date("tomorrow")
+
+        user.update!(suspended_till: 1.day.from_now)
+        StaffActionLogger.new(current_user).log_user_suspend(user, "spamming")
+
+        suspend_user_modal.perform
+
+        expect(suspend_user_modal).to have_error_message(
+          "User was already suspended by #{current_user.username} just now.",
+        )
+        expect(suspend_user_modal).to be_open
+      end
     end
 
     describe "the silence user modal" do

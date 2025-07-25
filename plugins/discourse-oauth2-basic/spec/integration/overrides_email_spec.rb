@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "OAuth2 Overrides Email", type: :request do
   fab!(:initial_email) { "initial@example.com" }
   fab!(:new_email) { "new@example.com" }

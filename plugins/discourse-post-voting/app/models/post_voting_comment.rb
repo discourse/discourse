@@ -51,7 +51,9 @@ class PostVotingComment < ActiveRecord::Base
   end
 
   def ensure_can_comment
-    if !post.is_post_voting_topic?
+    if !SiteSetting.post_voting_comment_enabled
+      errors.add(:base, I18n.t("post_voting.comment.errors.disabled"))
+    elsif !post.is_post_voting_topic?
       errors.add(:base, I18n.t("post_voting.comment.errors.post_voting_not_enabled"))
     elsif post.reply_to_post_number.present?
       errors.add(:base, I18n.t("post_voting.comment.errors.not_permitted"))

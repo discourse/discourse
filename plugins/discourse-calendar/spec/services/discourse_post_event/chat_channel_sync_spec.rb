@@ -8,7 +8,7 @@ describe DiscoursePostEvent::ChatChannelSync do
   fab!(:admin_post) { Fabricate(:post, user: admin) }
 
   it "is able to create a chat channel and sync members" do
-    event = Fabricate(:event, chat_enabled: true, post: admin_post)
+    event = Fabricate(:event, chat_enabled: true, post: admin_post, name: "Test Event")
 
     expect(event.chat_channel_id).to be_present
     expect(event.chat_channel.name).to eq(event.name)
@@ -26,5 +26,11 @@ describe DiscoursePostEvent::ChatChannelSync do
     event = Fabricate(:event, chat_enabled: true, post: post)
 
     expect(event.chat_channel_id).to be_nil
+  end
+
+  it "defaults event name to post title" do
+    event = Fabricate(:event, chat_enabled: true, post: admin_post)
+
+    expect(event.chat_channel.name).to eq(admin_post.topic.title)
   end
 end

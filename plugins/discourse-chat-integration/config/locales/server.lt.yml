@@ -7,6 +7,5 @@
 lt:
   chat_integration:
     all_categories: "(Visos kategorijos)"
-    provider:
-      flowdock:
-        message_title: "paskelbta"
+    topic_tag_changed:
+      added: "Pridėta %{added}"

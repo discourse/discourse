@@ -33,4 +33,5 @@ ca:
                 title: "En desacord"
       topic:
         sort_by: "Ordena per"
+        votes: "Vots"
         activity: "Activitat"

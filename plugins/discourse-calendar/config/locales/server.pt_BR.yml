@@ -9,7 +9,7 @@ pt_BR:
     currently_away:
       title: Usuários ausentes no momento
       labels:
-        username: Usuário
+        username: Nome de usuário(a)
   discourse_automation:
     triggerables:
       event_started:

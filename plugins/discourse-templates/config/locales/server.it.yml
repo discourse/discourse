@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    discourse_templates_enabled: "Consenti agli utenti con accesso alla visualizzazione nella categoria specificata di seguito di utilizzare i modelli disponibili"
+    discourse_templates_categories: "Categorie da cui prelevare i modelli"
+    discourse_templates_enable_private_templates: "Consente l'uso di modelli privati"
+    discourse_templates_groups_allowed_private_templates: "Gruppi autorizzati a utilizzare modelli privati. I membri dello staff sono sempre autorizzati."
+  default_category_template:
+    name: Modelli
+    description: |
+      Questa categoria è utilizzata per archiviare i modelli.
+
+      I modelli consentono agli utenti di archiviare contenuti per un uso ripetuto frequente.
+
+      Ciascun argomento in questa categoria rappresenta un modello diverso. **Il primo messaggio** di ogni argomento viene utilizzato come formato per il modello.
+
+      Si noti che tutti gli utenti con accesso a questa categoria potranno utilizzare i modelli.

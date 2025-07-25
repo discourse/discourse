@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    policy_enabled: "Politikalara izin verilsin mi?"
+    policy_restrict_to_staff_posts: "Politikalar yalnızca personel gönderilerinde görünebilir"
+    policy_easy_revoke: "Kabul et ve iptal et düğmelerini aynı anda göster"
+  discourse_policy:
+    errors:
+      user_missing: "Kullanıcı grupta mevcut değil"
+      group_not_found: "Politika için grup bulunamadı"
+      no_policy: "Gönderi için politika yok"
+      staff_only: "Politikalar yalnızca personel gönderileri için geçerli olabilir"
+  reports:
+    unaccepted-policies:
+      title: Kabul edilmeyen politikalar
+      labels:
+        topic_id: Konu kimliği
+        user_id: Kullanıcı Kimliği
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "Bir politikayı incelemeniz gerekiyor: %{topic_title}"
+      visit_topic: "Konuyu ziyaret et"
+      visit_link_to_respond: "Yanıtlamak için %{visit_topic_link}."
+      unsubscribe: "Aboneliğinizi iptal etmek için %{email_preferences_link} veya %{unsubscribe_link} bağlantınızı değiştirin."
+      your_policy_email_settings: "politika e-postaları sıklığı tercihi"
+  unsubscribe:
+    policy_emails:
+      select_title: "Politika uyarısı e-postalarının sıklığını şu şekilde ayarlayın:"
+      never: Asla
+      when_away: Yalnızca uzaktayken
+      always: Her zaman

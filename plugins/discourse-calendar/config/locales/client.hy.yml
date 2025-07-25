@@ -19,7 +19,7 @@ hy:
       region:
         none: "Ոչ մի"
       toolbar_button:
-        today: "Այսօրվա"
+        today: "Այսօր"
         month: "Ամիս"
         week: "Շաբաթ"
         day: "Օր"
@@ -28,15 +28,20 @@ hy:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      created_by: "Ստեղծել է՝"
       bulk_invite: "Զանգվածային Հրավեր"
       bulk_invite_modal:
+        confirm: "հաստատել"
+        title: "Զանգվածային Հրավեր"
         success: "Ֆայլը հաջողությամբ վերբեռնվել է, Դուք կստանաք ծանուցում հաղորդագրության միջոցով, երբ գործընթացն ավարտվի:"
         error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
+        group_selector_placeholder: "Ընտրեք խումբ..."
       upcoming_events:
         status: "Ստատուս"
       models:
         event:
-          closed: "Փակված"
+          expired: "Ժամկետանց"
+          closed: "Փակված է"
           status:
             public:
               title: "Հանրային"
@@ -51,6 +56,8 @@ hy:
           label: Ժամային գոտի
         reminders:
           units:
+            minutes: "րոպե"
+            hours: "ժամ"
             days: "օր"
           periods:
             before: "մինչև"
@@ -64,7 +71,7 @@ hy:
         location:
           label: "Տեղակայություն"
         description:
-          label: "Նկարագրությունը"
+          label: "Նկարագրություն"
         status:
           label: "Ստատուս"
       invite_user_or_group:

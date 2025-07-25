@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe CalendarEvent do
   let(:calendar_post) { create_post(raw: "[calendar]\n[/calendar]") }
 

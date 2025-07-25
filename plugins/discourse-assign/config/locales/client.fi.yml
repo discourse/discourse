@@ -17,13 +17,13 @@ fi:
         help: "Ketjut, joita ei ole osoitettu"
     action_codes:
       assigned: "Osoitti käyttäjälle %{who} %{when}"
-      assigned_group: "Osoitti ryhmälle %{who} %{when}"
+      assigned_group: "Osoitti käyttäjälle %{who} %{when}"
       assigned_to_post: "Osoitti käyttäjän %{who} <a href='%{path}'>viestiin</a> %{when}"
       assigned_group_to_post: "Osoitti käyttäjän %{who} <a href='%{path}'>viestiin</a> %{when}"
       unassigned: "Perui osoituksen käyttäjälle %{who} %{when}"
-      unassigned_group: "Perui osoituksen ryhmälle %{who} %{when}"
+      unassigned_group: "Perui osoituksen käyttäjälle %{who} %{when}"
       unassigned_from_post: "Perui käyttäjän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
-      unassigned_group_from_post: "Perui ryhmän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
+      unassigned_group_from_post: "Perui käyttäjän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
       reassigned: "Osoitti uudelleen käyttäjälle %{who} %{when}"
       reassigned_group: "Osoitti uudelleen käyttäjälle %{who} %{when}"
       details_change: "Muutti osoitustiedot käyttäjälle %{who} %{when}"
@@ -93,10 +93,10 @@ fi:
       reminders_frequency:
         description: "Osoitettujen ketjujen muistutusten toistuvuus"
         never: "Ei koskaan"
-        daily: "Päivittäin"
-        weekly: "Viikoittain"
-        monthly: "Kuukausittain"
-        quarterly: "Vuosineljännettäin"
+        daily: "Päivittäinen"
+        weekly: "Viikoittainen"
+        monthly: "Kuukausittainen"
+        quarterly: "Neljännesvuosittainen"
       admin:
         groups:
           manage:
@@ -107,8 +107,8 @@ fi:
     user:
       notification_level_when_assigned:
         label: "Kun osoitetaan"
-        watch_topic: "Tarkkailtu ketju"
-        track_topic: "Seurattu ketju"
+        watch_topic: "Tarkkaile ketjua"
+        track_topic: "Seuraa ketjua"
         do_nothing: "Älä tee mitään"
       messages:
         assigned_title: "Osoitettu (%{count})"

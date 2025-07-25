@@ -1,0 +1,51 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    category:
+      sort_options:
+        votes: "投票"
+    topic_voting:
+      title: "话题投票"
+      reached_limit: "您无法再投票了，请移除现有投票！"
+      list_votes: "列出您的投票"
+      votes_nav_help: "得票最多的话题"
+      voted: "您已经为为话题投过票了"
+      allow_topic_voting: "允许用户为此类别中的话题投票"
+      vote_title: "投票"
+      vote_title_plural: "投票"
+      voted_title: "已投票"
+      voting_closed_title: "已关闭"
+      voting_limit: "限制"
+      votes_left_button_title:
+        other: "您还有 %{count} 次投票机会。"
+      votes:
+        other: "%{count} 票"
+      anonymous_button:
+        other: "投票"
+      remove_vote: "移除投票"
+      no_votes_title_self: "您还没有为任何话题投票"
+      no_votes_title_others: "%{username} 还没有为任何话题投票"
+    filters:
+      votes:
+        title: "投票"
+        help: "得票最多的话题"
+      my_votes:
+        title: "我的投票"
+        help: "您投过票的话题"
+    search:
+      most_votes: "票数最多"
+      advanced:
+        vote:
+          count:
+            label: "最小投票数"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "话题投票事件"
+          topic_upvote: "当用户对某个话题投票时"
+          topic_unvote: "当用户对某个话题取消投票时"

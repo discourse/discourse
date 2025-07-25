@@ -30,12 +30,13 @@ ko:
         title: "할당"
         help: "사용자에게 토픽 할당"
       reassign:
-        title: "수정"
+        title: "편집"
       topic_level_menu:
         unassign_with_ellipsis: "할당 해제..."
       assign_modal:
         title: "토픽 할당"
         assign: "할당"
+        note_label: 노트
         optional_label: "(선택 사항)"
         status_label: 상태
       claim:
@@ -44,7 +45,7 @@ ko:
       assign_mailer:
         never: "알림 받지 않기"
         different_users: "담당자와 담당자가 다른 사용자 인 경우에만"
-        always: "항상 알림받기"
+        always: "항상"
       reminders_frequency:
         description: "할당 된 주제 알림 수신 빈도"
         never: "알림 받지 않기"
@@ -59,6 +60,7 @@ ko:
               assign: "할당"
     user:
       notification_level_when_assigned:
+        track_topic: "주제 추적"
         do_nothing: "아무것도하지 않음"
       messages:
         assigned_title: "할당됨 (%{count})"

@@ -575,9 +575,9 @@ export default RouteTemplate(
           </div>
           <div class="controls">
             <strong>{{i18n "admin.user.suspend_reason"}}</strong>:
-            <div
-              class="full-reason"
-            >{{@controller.model.full_suspend_reason}}</div>
+            <div class="full-reason">{{htmlSafe
+                @controller.model.full_suspend_reason
+              }}</div>
           </div>
         </div>
       {{/if}}

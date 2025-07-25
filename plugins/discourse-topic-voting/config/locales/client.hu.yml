@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    category:
+      sort_options:
+        votes: "Szavazatok"
+    topic_voting:
+      reached_limit: "Kifogytál a szavazatokból, törölj egy korábbi szavazatot!"
+      list_votes: "Szavazataid listázása"
+      votes_nav_help: "legtöbb szavazatot kapott témák"
+      voted: "Már szavaztál erre a témára"
+      allow_topic_voting: "Engedélyezi a felhasználóknak, hogy szavazannak a bejegyzésekre ebben a kategóriában. "
+      vote_title: "Szavazás"
+      vote_title_plural: "Szavazatok"
+      voted_title: "Szavazott"
+      voting_closed_title: "Lezárt"
+      voting_limit: "Limit"
+      votes:
+        one: "%{count} szavazat"
+        other: "%{count} szavazat"
+      anonymous_button:
+        one: "Szavazás"
+        other: "Szavazatok"
+      remove_vote: "Szavazat eltávolítása"
+    filters:
+      votes:
+        title: "Szavazatok"
+        help: "legtöbb szavazatot kapott témák"

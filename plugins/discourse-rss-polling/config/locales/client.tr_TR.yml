@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  js:
+    admin:
+      rss_polling:
+        author: Yazar
+        feed_url: URL
+        discourse_category: Kategori
+        discourse_tags: Etiketler

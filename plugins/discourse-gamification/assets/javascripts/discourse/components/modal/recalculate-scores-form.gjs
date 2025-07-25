@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
@@ -155,8 +156,7 @@ export default class RecalculateScoresForm extends Component {
                 @valueProperty="value"
                 @content={{this.updateRange}}
                 @value={{this.updateRangeValue}}
-                {{! template-lint-disable no-action }}
-                @onChange={{action (mut this.updateRangeValue)}}
+                @onChange={{fn (mut this.updateRangeValue)}}
               />
 
               {{#if (eq this.updateRangeValue 5)}}
@@ -166,8 +166,7 @@ export default class RecalculateScoresForm extends Component {
                     @id="custom-from-date"
                     @placeholder="yyyy-mm-dd"
                     @value={{this.recalculateFromDate}}
-                    {{! template-lint-disable no-action }}
-                    @onSelect={{action (mut this.recalculateFromDate)}}
+                    @onSelect={{fn (mut this.recalculateFromDate)}}
                     class="date-input"
                   />
                 </div>

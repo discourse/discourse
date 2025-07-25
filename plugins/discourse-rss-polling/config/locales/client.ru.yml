@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ru:
+  js:
+    admin:
+      rss_polling:
+        author: Автор
+        feed_url: URL-адрес
+        discourse_category: Категория
+        discourse_tags: Теги

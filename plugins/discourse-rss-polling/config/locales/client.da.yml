@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 da:
+  js:
+    admin:
+      rss_polling:
+        author: Forfatter
+        feed_url: URL
+        discourse_category: Kategori
+        discourse_tags: Mærker

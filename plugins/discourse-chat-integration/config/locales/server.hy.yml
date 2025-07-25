@@ -26,7 +26,7 @@ hy:
     chat_integration_discord_excerpt_length: "Discord գրառման հատվածի երկարություն"
     chat_integration_mattermost_enabled: "Միացրեք Mattermost զրույցի-ինտեգրումների մատակարարը"
     chat_integration_mattermost_webhook_url: 'URL Mattermost webhook -ի համար'
-    chat_integration_mattermost_incoming_webhook_token: 'Մուտքային հարցումների նույնականացման համար օգտագործվող վավերացման տոկեն'
+    chat_integration_mattermost_incoming_webhook_token: 'Մուտքային հարցումների նույնականացման համար օգտագործվող հաստատման տոկենը'
     chat_integration_mattermost_icon_url: "Mattermost-ում գրառում կատարելու պատկերակ (լռելյայն նույնն է, ինչ ֆորումի լոգոն)"
     chat_integration_mattermost_excerpt_length: "Mattermost գրառման հատվածի երկարություն"
     chat_integration_matrix_enabled: "Միացրեք Matrix զրույցի-ինտեգրումների մատակարարը"
@@ -51,6 +51,8 @@ hy:
     deleted_group: "(ջնջված խումբ)"
     group_mention_template: "նշումներ՝ @%{name}"
     group_message_template: "հաղորդագրություն դեպի՝ @%{name}"
+    topic_tag_changed:
+      added: "Ավելացվել է %{added}"
     provider:
       slack:
         status:
@@ -98,7 +100,7 @@ hy:
           rule_string_tags_suffix: "հետևյալ թեգերով՝ <b>%{tags}</b>"
         parse_error: "Ներողություն, Ես չհասկացա դա: Գործարկեք <code>/help</code> հրահանգների համար:"
         create:
-          created: "Կանոնը հաջողությամբ ստեղծված է"
+          created: "Կանոնը հաջողությամբ ստեղված է"
           updated: "Կանոնը հաջողությամբ թարմացված է"
           error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
         delete:
@@ -125,22 +127,22 @@ hy:
       mattermost:
         status:
           header: |
-            *Կանոններ այս ալիքի համարl*
+            *Կանոններ այս ալիքի համար*
             (եթե գրառմանը համընկնում են բազմակի կանոններ, դուրս է բերվում ամենավերին կանոնը)
           no_rules: "Այս ալիքի համար սահմանված կանոններ չկան: Գործարկեք `/discourse help` հրահանգների համար: "
-          rule_string: "*%{index})* *%{filter}* գրառումները *%{category}* -ում"
+          rule_string: "*%{index})* *%{filter}* գրառում *%{category}* -ում"
           rule_string_tags_suffix: "հետևյալ թեգերով՝ *%{tags}*"
         parse_error: "Ներողություն, ես չհասկացա դա: Գործարկեք `/discourse help` հրահանգների համար:"
         create:
-          created: "Կանոնը հաջողությամբ ստեղծվել է"
+          created: "Կանոնը հաջողությամբ ստեղված է"
           updated: "Կանոնը հաջողությամբ թարմացված է"
           error: "Ներողություն, այդ կանոնը ստեղծելիս տեղի է ունեցել սխալ:"
         delete:
           success: "Կանոնը հաջողությամբ ջնջվել է"
           error: "Ներողություն, այդ կանոնը ջնջելիս տեղի է ունեցել սխալ: Գործարկեք `/discourse status` կանոնների ցանկի համար:"
         not_found:
-          tag: " *%{name}* թեգը չի գտնվել"
-          category: " *%{name}* կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ *%{list}*"
+          tag: " *%{name}* թեգը չի գտնվել:"
+          category: "*%{name}* կատեգորիան չի գտնվել: Հասանելի կատեգորիաներ՝ *%{list}*"
         help: |
           *Նոր կանոն՝* `/discourse [watch|follow|mute] [category] [tag:name]`
           (Դուք պետք է սահմանեք կանոնի տիպ և առնվազն մեկ կատեգորիա կամ թեգ )

@@ -2544,6 +2544,9 @@ th:
       spreadsheet:
         show: "แสดง"
         about: "เกี่ยวกับ"
+    filter:
+      description:
+        yesterday: "เมื่อวาน"
     discovery:
       headings:
         categories: "หมวดหมู่ทั้งหมด"
@@ -2625,6 +2628,8 @@ th:
               title: "ถูกปฏิเสธ"
         embedding:
           title: "ฝั่ง"
+      theme_site_settings:
+        default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
         result_types:
@@ -2940,7 +2945,6 @@ th:
           enable: "เปิดใช้งาน"
           disable: "ปิดใช้งาน"
           add: "เพิ่ม"
-          theme_settings: "การตั้งค่าธีม"
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
           settings: "การตั้งค่า"
           colors: "สี"
@@ -2959,6 +2963,11 @@ th:
             required: "*ต้องการ"
         colors:
           title: "สี"
+          edit: "แก้ไข"
+          filters:
+            all: "ทั้งหมด"
+          active_badge:
+            text: "ใช้งานอยู่"
           undo: "เลิกทำ"
           revert: "ย้อนกลับ"
           primary:
@@ -3195,7 +3204,6 @@ th:
         suspend: "ระงับการใช้งาน"
         activity: กิจกรรม
         last_100_days: "ใน 100 วันที่ผ่านมา"
-        private_topics_count: กระทู้ส่วนตัว
         posts_read_count: โพสต์ที่อ่าน
         post_count: โพสต์ที่สร้าง
         topics_entered: กระทู้ที่ดู

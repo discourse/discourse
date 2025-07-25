@@ -6,6 +6,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
+import AdminFilterControls from "admin/components/admin-filter-controls";
 import AdminPluginsList from "admin/components/admin-plugins-list";
 
 export default RouteTemplate(
@@ -55,7 +56,16 @@ export default RouteTemplate(
       </div>
 
       {{#if @controller.model.length}}
-        <AdminPluginsList @plugins={{@controller.model}} />
+        <AdminFilterControls
+          @array={{@controller.model}}
+          @searchableProps={{@controller.searchableProps}}
+          @dropdownOptions={{@controller.dropdownOptions}}
+          @inputPlaceholder={{i18n "admin.plugins.filters.search_placeholder"}}
+          @noResultsMessage={{i18n "admin.plugins.filters.no_results"}}
+          as |filteredPlugins|
+        >
+          <AdminPluginsList @plugins={{filteredPlugins}} />
+        </AdminFilterControls>
       {{else}}
         <p>{{i18n "admin.plugins.none_installed"}}</p>
       {{/if}}

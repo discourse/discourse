@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    category:
+      sort_options:
+        votes: "Hlasy"
+    topic_voting:
+      title: "Hlasování o tématu"
+      reached_limit: "Došly vám hlasy. Odeberte jiný hlas."
+      list_votes: "Seznam vašich hlasů"
+      votes_nav_help: "témata s nejvíce hlasy"
+      voted: "Pro toto téma jste hlasovali"
+      allow_topic_voting: "Povolit uživatelům hlasovat pro témata v této kategorii"
+      vote_title: "Hlasovat"
+      vote_title_plural: "Hlasy"
+      voted_title: "Hlasováno"
+      voting_closed_title: "Zavřené"
+      voting_limit: "limit"
+      votes_left_button_title:
+        one: "Zbývá vám %{count} hlas."
+        few: "Zbývají vám %{count} hlasy."
+        many: "Zbývá vám %{count} hlasů."
+        other: "Zbývá vám %{count} hlasů."
+      votes:
+        one: "%{count} hlas"
+        few: "%{count} hlasy"
+        many: "%{count} hlasy"
+        other: "%{count} hlasy"
+      anonymous_button:
+        one: "Hlasovat"
+        few: "Hlasy"
+        many: "Hlasy"
+        other: "Hlasy"
+      remove_vote: "Odebrat hlas"
+      no_votes_title_self: "Zatím jste nehlasovali o žádném tématu"
+      no_votes_title_others: "%{username} zatím nehlasoval/a o žádném tématu"
+    filters:
+      votes:
+        title: "Hlasy"
+        help: "témata s nejvíce hlasy"
+      my_votes:
+        title: "Moje hlasy"
+        help: "témata, o kterých jste hlasovali"
+    search:
+      most_votes: "Nejvíce hlasů"
+      advanced:
+        vote:
+          count:
+            label: "Minimální počet hlasů"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Událost hlasování o tématu"
+          topic_upvote: "Když uživatel hlasuje o tématu"
+          topic_unvote: "Když uživatel odebere hlas z tématu"

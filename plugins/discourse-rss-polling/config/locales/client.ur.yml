@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ur:
+  js:
+    admin:
+      rss_polling:
+        author: مصنف
+        feed_url: URL
+        discourse_category: زُمرَہ
+        discourse_tags: ٹیگز

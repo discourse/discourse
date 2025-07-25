@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    discourse_templates_enabled: "Salli käyttäjien, joilla on alla määritetyn luokan tarkasteluoikeudet, käyttää käytettävissä olevia malleja"
+    discourse_templates_categories: "Alueet, joista malleja haetaan"
+    discourse_templates_enable_private_templates: "Mahdollistaa yksityisten mallien käytön"
+    discourse_templates_groups_allowed_private_templates: "Ryhmät saavat käyttää yksityisiä malleja. Henkilökunnan jäsenet saavat aina käyttää niitä."
+  default_category_template:
+    name: Mallit
+    description: |
+      Tätä aluetta käytetään mallien tallentamiseen.
+
+      Mallien avulla käyttäjät voivat tallentaa sisältöä toistuvaa käyttöä varten.
+
+      Jokainen tämän alueen aihe edustaa eri mallia. Kunkin ketjun **ensimmäistä viestiä** käytetään mallin mallina.
+
+      Jokainen käyttäjä, jolla on tämän alueen käyttöoikeus, voi käyttää malleja.

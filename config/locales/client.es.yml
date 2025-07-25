@@ -207,12 +207,6 @@ es:
     broken_page_change_alert: "Un controlador onPageChange ha generado un error. Comprueba las herramientas de desarrollo del navegador para obtener más información."
     broken_plugin_alert: "Causado por el plugin «%{name}»"
     broken_transformer_alert: "Hubo un error. Es posible que su sitio no funcione correctamente."
-    critical_deprecation:
-      notice: "<b>[Aviso al administrador]</b> Uno de tus temas o plugins necesita actualizarse para ser compatible con los próximos cambios en el núcleo de Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tema identificado: <a target='_blank' href='%{path}'>«%{name}»</a>."
-      plugin_source: "Plugin identificado: «%{name}»"
     s3:
       regions:
         ap_northeast_1: "Asia-Pacífico (Tokio)"
@@ -4647,6 +4641,8 @@ es:
             badges:
               content: "Medallas"
               title: "Todas las medallas disponibles para ganar"
+            filter:
+              content: "Filtro"
             topics:
               content: "Temas"
               title: "Todos los temas"
@@ -4794,6 +4790,12 @@ es:
           paste: "Pegar..."
           save: "Guardar como..."
     powered_by_discourse: "Desarrollado por Discourse"
+    filter:
+      description:
+        yesterday: "Ayer"
+        last_week: "Última semana"
+        last_month: "Último mes"
+        last_year: "El año pasado"
     discovery:
       headings:
         multi_tag:
@@ -5005,6 +5007,8 @@ es:
         embedding:
           title: "Incrustado"
           header_description: "Discourse tiene la capacidad de incrustar los comentarios de un tema en un sitio remoto utilizando una API Javascript que crea un IFRAME"
+      theme_site_settings:
+        default_value: "Por defecto"
       search:
         title: "Buscar"
         result_types:
@@ -5958,11 +5962,7 @@ es:
           up_to_date: "El tema está actualizado. Última comprobación:"
           has_overwritten_history: "La versión actual del tema ya no existe porque el historial de Git ha sido sobrescrito por un force push."
           add: "Añadir"
-          theme_settings: "Ajustes del tema"
-          edit_objects_theme_setting: "Editor de ajustes de objetos"
-          overriden_settings_explanation: "Los ajustes anulados están marcados con un punto y tienen un color resaltado. Para restablecer estos ajustes al valor por defecto, pulsa el botón de reinicio que hay junto a ellos."
           no_settings: "Este tema no tiene ajustes."
-          theme_translations: "Traducciones del tema"
           empty: "No hay elementos"
           commits_behind:
             one: "¡El tema está %{count} commit detrás!"
@@ -6032,7 +6032,12 @@ es:
             title: "Seleccionar paleta base de color"
             description: "Paleta base:"
           title: "Colores"
-          edit: "Editar paletas de colores"
+          edit: "Editar"
+          filters:
+            all: "Todo"
+            user_selectable: "Seleccionable por el usuario"
+          active_badge:
+            text: "Activo"
           long_title: "Paletas de colores"
           about: "Modifica los colores utilizados en tus temas. Crea una nueva paleta de color para empezar."
           new_name: "Nueva paleta de colores"
@@ -6664,7 +6669,6 @@ es:
         activity: Actividad
         like_count: Me gusta dados / recibidos
         last_100_days: "en los últimos 100 días"
-        private_topics_count: Temas privados
         posts_read_count: Publicaciones leídas
         post_count: Publicaciones creadas
         second_factor_enabled: activar autenticación de dos factores

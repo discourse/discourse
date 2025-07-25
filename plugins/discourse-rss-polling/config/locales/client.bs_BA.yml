@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  js:
+    admin:
+      rss_polling:
+        feed_url: URL
+        discourse_category: Kategorija
+        discourse_tags: Oznake

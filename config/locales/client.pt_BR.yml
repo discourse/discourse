@@ -208,12 +208,6 @@ pt_BR:
     broken_page_change_alert: "Houve um erro no identificador onPageChange. Confira as ferramentas de desenvolvedor do navegador para obter mais informações."
     broken_plugin_alert: "Causado(a) pelo plugin \"%{name}\""
     broken_transformer_alert: "Ocorreu um erro. Seu site pode não funcionar corretamente."
-    critical_deprecation:
-      notice: "<b>[Aviso da administração]</b> Um dos seus temas ou plugins precisa ser atualizado para ser compatível com as próximas mudanças do Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Tema identificado: <a target='_blank' href='%{path}'>\"%{name}\"</a>."
-      plugin_source: "Plugin identificado: \"%{name}\""
     s3:
       regions:
         ap_northeast_1: "Ásia Pacífico (Tóquio)"
@@ -4835,6 +4829,8 @@ pt_BR:
             badges:
               content: "Emblemas"
               title: "Todos os emblemas disponíveis para ganhar"
+            filter:
+              content: "Filtro"
             topics:
               content: "Tópicos"
               title: "Todos os tópicos"
@@ -4990,6 +4986,12 @@ pt_BR:
           save: "Salvar como..."
     powered_by_discourse: "Com tecnologia Discourse"
     safari_15_warning: "Em breve, seu navegador se tornará incompatível com esta comunidade. Para continuar participando, por favor, atualize seu navegador ou <a href='%{url}'>saiba mais</a>."
+    filter:
+      description:
+        yesterday: "Ontem"
+        last_week: "Semana passada"
+        last_month: "Mês passado"
+        last_year: "Ano passado"
     discovery:
       headings:
         all:
@@ -5279,6 +5281,9 @@ pt_BR:
         embedding:
           title: "Incorporar"
           header_description: "Com o Discourse, você pode incorporar os componentes de um tópico em um site remoto através de uma API de java que cria um IFRAME"
+      theme_site_settings:
+        setting: "Configuração"
+        default_value: "Padrão"
       search:
         title: "Pesquisar"
         result_types:
@@ -6249,11 +6254,7 @@ pt_BR:
           up_to_date: "O tema está atualizado. Última verificação:"
           has_overwritten_history: "A versão atual do tema não existe mais porque o histórico de Git foi sobrescrito por um envio de push forçado."
           add: "Adicionar"
-          theme_settings: "Configurações do tema"
-          edit_objects_theme_setting: "Editor de configurações de objetos"
-          overriden_settings_explanation: "As configurações substituídas são marcadas com um ponto e têm uma cor destacada. Para redefinir essas configurações para o valor padrão, pressione o botão de reinicialização próximo a elas."
           no_settings: "Este tema não tem configurações."
-          theme_translations: "Traduções do tema"
           empty: "Nenhum item"
           commits_behind:
             one: "O tema tem uma diferença de %{count} confirmação!"
@@ -6339,7 +6340,12 @@ pt_BR:
             title: "Selecionar paleta de cores básicas"
             description: "Paleta básica:"
           title: "Cores"
-          edit: "Editar paletas de cores"
+          edit: "Editar"
+          filters:
+            all: "Tudo"
+            user_selectable: "Selecionável por usuário(a)"
+          active_badge:
+            text: "Ativo(a)"
           long_title: "Paletas de cores"
           about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
           new_name: "Nova paleta de cores"
@@ -6971,7 +6977,7 @@ pt_BR:
         activity: Atividade
         like_count: Curtidas dadas/recebidas
         last_100_days: "nos últimos 100 dias"
-        private_topics_count: Tópicos privados
+        private_topics_count: Mensagens pessoais
         posts_read_count: Postagens lidas
         post_count: Postagens criadas
         second_factor_enabled: Autenticação de dois fatores ativada

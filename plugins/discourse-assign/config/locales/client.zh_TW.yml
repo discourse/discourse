@@ -30,6 +30,7 @@ zh_TW:
       assign_modal:
         title: "指派主題"
         assign: "指派"
+        note_label: ' 分類已經沒有其它話題了。'
         optional_label: "(選擇性)"
         status_label: 狀態
       claim:
@@ -51,6 +52,8 @@ zh_TW:
               assign: "指派"
     user:
       notification_level_when_assigned:
+        watch_topic: "關注主題"
+        track_topic: "追蹤主題"
         do_nothing: "不做任何動作"
       messages:
         assigned: "已指派"

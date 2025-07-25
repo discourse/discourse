@@ -11,7 +11,7 @@ be:
       leaderboard:
         link_to_settings: "Налады"
         refresh: "абнавіць"
-        name: "імя"
+        name: "Імя"
         period:
           all_time: "За ўвесь час"
           yearly: "штогод"
@@ -20,15 +20,15 @@ be:
           weekly: "штотыдзень"
           daily: "штодня"
       create: "стварыць"
-      cancel: "адмяніць"
+      cancel: "Адмяніць"
       close: "зачыніць"
-      delete: "выдаляць"
-      edit: "рэдагаваць"
+      delete: "Выдаліць"
+      edit: "Рэдагаваць"
       back: "Назад"
-      save: "захаваць"
+      save: "Захаваць"
       apply: "прымяніць"
       update_range:
         all_time: "За ўвесь час"
       custom_range_from: "ад"
       admin:
-        name: "імя"
+        name: "Імя"

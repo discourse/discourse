@@ -18,7 +18,7 @@ ko:
       filter: '필터'
       help_text: 'Discourse 그룹을 하나 이상의 Patreon 보상 계층과 동기화 할 수 있습니다.'
       last_synced: '마지막 동기화'
-      edit: '수정'
+      edit: '편집'
       delete: '삭제'
       save: '저장'
       update_data: 'Patreon 데이터 및 동기화 그룹 업데이트'

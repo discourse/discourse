@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "схвалено"
+    solved:
+      title: "Вирішено"
+      allow_accepted_answers: "Дозвольте власнику теми та персоналу позначити відповідь як рішення"
+      solved_topics_auto_close_hours: "Автоматично закрити тему (n) годин після останньої відповіді, як тільки тема позначена як вирішена."
+      accept_answer: "Виберіть, чи вирішує ця відповідь проблему"
+      accepted_description: "Це прийняте рішення цієї теми"
+      has_no_accepted_answer: "Ця тема не має рішення"
+      unaccept_answer: "Зніміть вибір, якщо ця відповідь більше не вирішує проблему"
+      accepted_answer: "Рішення"
+      solution: "Рішення"
+      solution_summary:
+        one: "рішення"
+        few: "рішення"
+        many: "рішення"
+        other: "рішення"
+      topic_status_filter:
+        all: "всі"
+        solved: "вирішено"
+        unsolved: "невирішено"
+    topic_statuses:
+      solved:
+        help: "Ця тема має рішення"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Рівень довіри

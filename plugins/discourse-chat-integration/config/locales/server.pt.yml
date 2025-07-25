@@ -34,6 +34,8 @@ pt:
     deleted_group: "(grupo eliminado)"
     group_mention_template: "menções de: @%{name}"
     group_message_template: "mensagens para: @%{name}"
+    topic_tag_changed:
+      added: "Adicionado em %{added}"
     provider:
       slack:
         status:

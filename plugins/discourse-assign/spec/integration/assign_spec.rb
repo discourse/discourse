@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require_relative "../support/assign_allowed_group"
 require_relative "../fabricators/assign_hook_fabricator.rb"
 
@@ -190,7 +189,7 @@ describe "integration tests" do
       expect(assignment.target_id).to eq(new_topic.id)
     end
 
-    it "assigment is still post assignment when not first post" do
+    it "assignment is still post assignment when not first post" do
       post.update!(topic: new_topic, post_number: "3")
       DiscourseEvent.trigger(:post_moved, post, old_topic.id)
       assignment.reload

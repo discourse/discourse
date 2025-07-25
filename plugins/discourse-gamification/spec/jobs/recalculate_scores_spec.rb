@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::RecalculateScores do
   fab!(:current_user) { Fabricate(:admin) }
 

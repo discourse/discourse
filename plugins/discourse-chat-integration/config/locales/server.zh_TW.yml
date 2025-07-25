@@ -16,5 +16,3 @@ zh_TW:
           topic_tag_changed:
             added: "已新增 %{added}"
             removed: "已移除 %{removed}"
-      flowdock:
-        message_title: "發表於"

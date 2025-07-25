@@ -24,6 +24,8 @@ hy:
           product: Անուն
         subscriptions:
           status: Ստատուս
+          update_card:
+            single: "Թարմացնել"
           created_at: Ստեղծված
           cancel: չեղարկել
       billing:

@@ -1,0 +1,480 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  discourse_automation:
+    ai:
+      flag_types:
+        review: "إضافة المنشور إلى قائمة انتظار المراجعة"
+        spam: "وضع علامة \"عشوائي\" على المنشور وإخفاؤه"
+        spam_silence: "وضع علامة عشوائي على المنشور وإخفاؤه وكتم المستخدم"
+    scriptables:
+      llm_triage:
+        title: فرز المنشورات باستخدام الذكاء الاصطناعي
+        description: "فرز المنشورات باستخدام نموذج لغوي كبير"
+        flagged_post: |
+          <div>استجابة من النموذج:</div>
+          <p>%%LLM_RESPONSE%%</p>
+          <b>تم تشغيله من قِبل <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> القاعدة.</b>
+      llm_report:
+        title: التقرير الدوري باستخدام الذكاء الاصطناعي
+        description: "تقرير دوري قائم على نموذج لغوي كبير"
+  site_settings:
+    discourse_ai_enabled: "تفعيل المكوِّن الإضافي Discourse AI."
+    ai_toxicity_enabled: "تفعيل وحدة السلبية."
+    ai_toxicity_inference_service_api_endpoint: "عنوان URL حيث تعمل واجهة API لوحدة السلبية"
+    ai_toxicity_inference_service_api_key: "مفتاح API لواجهة API الخاصة بنموذج السلبية"
+    ai_toxicity_inference_service_api_model: "النموذج المراد استخدامه في الاستدلال. نموذج متعدد اللغات يعمل مع اللغة الإيطالية والفرنسية والروسية والبرتغالية والإسبانية والتركية."
+    ai_toxicity_flag_automatically: "الإبلاغ تلقائيًا عن المنشورات/رسائل الدردشة التي تتجاوز الحدود التي تم تكوينها."
+    ai_toxicity_flag_threshold_toxicity: "السلبية: تعليق فظ أو غير محترم أو غير معقول، والذي من المحتمل بعض الشيء أن يجعلك تغادر مناقشة أو تتخلى عن مشاركة وجهة نظرك"
+    ai_toxicity_flag_threshold_severe_toxicity: "السلبية الشديدة: تعليق شديد الكراهية أو هجومي أو غير محترم، والذي من المحتمل جدًا أن يجعلك تغادر مناقشة أو تتخلى عن مناقشة وجهة نظرك"
+    ai_toxicity_flag_threshold_obscene: "فاحش"
+    ai_toxicity_flag_threshold_identity_attack: "هجوم انتحال الشخصية"
+    ai_toxicity_flag_threshold_insult: "إهانة"
+    ai_toxicity_flag_threshold_threat: "تهديد"
+    ai_toxicity_flag_threshold_sexual_explicit: "محتوى جنسي صريح"
+    ai_toxicity_groups_bypass: "لن يتم تصنيف منشورات المستخدمين في هذه المجموعات حسب وحدة السلبية."
+    ai_sentiment_enabled: "تفعيل وحدة المشاعر."
+    ai_sentiment_inference_service_api_endpoint: "عنوان URL حيث تعمل واجهة API لوحدة المشاعر"
+    ai_sentiment_inference_service_api_key: "مفتاح API لواجهة API الخاصة بنموذج المشاعر"
+    ai_sentiment_models: "النماذج المراد استخدامها في الاستدلال. يصنِّف نموذج المشاعر المنشورات إلى إيجابية/محايدة/سلبية. ويصنِّفها نموذج العاطفة إلى غضب/اشمئزاز/خوف/فرح/حياد/حزن/مفاجأة."
+    ai_nsfw_detection_enabled: "تفعيل وحدة NSFW (غير آمن لبيئة العمل)."
+    ai_nsfw_inference_service_api_endpoint: "عنوان URL حيث تعمل واجهة API لوحدة NSFW (غير آمن لبيئة العمل)"
+    ai_nsfw_inference_service_api_key: "مفتاح API لواجهة API الخاصة بنموذج NSFW (غير آمن لبيئة العمل)"
+    ai_nsfw_flag_automatically: "الإبلاغ تلقائيًا عن المنشورات غير الآمنة للعمل التي تتجاوز الحدود التي تم تكوينها."
+    ai_nsfw_flag_threshold_general: "الحد العام للصورة ليتم اعتبارها غير آمنة لبيئة العمل."
+    ai_nsfw_flag_threshold_drawings: "الحد الأدنى للرسمة ليتم اعتبارها غير آمنة لبيئة العمل."
+    ai_nsfw_flag_threshold_hentai: "الحد الأدنى للصورة المصنَّفة كمحتوى \"هنتاي\" ليتم اعتبارها غير آمنة لبيئة العمل."
+    ai_nsfw_flag_threshold_porn: "الحد الأدنى للصورة المصنَّفة كمحتوى إباحي ليتم اعتبارها غير آمنة لبيئة العمل."
+    ai_nsfw_flag_threshold_sexy: "الحد الأدنى للصورة المصنَّفة كمحتوى جنسي ليتم اعتبارها غير آمنة لبيئة العمل."
+    ai_nsfw_models: "نماذج المراد استخدامها في الاستدلال على المحتوى غير الآمن لبيئة العمل."
+    ai_helper_enabled: "تفعيل مساعد الذكاء الاصطناعي"
+    composer_ai_helper_allowed_groups: "سيرى المستخدمون في هذه المجموعات زر مساعد الذكاء الاصطناعي في أداة الإنشاء."
+    ai_helper_allowed_in_pm: "تفعيل مساعد الذكاء الاصطناعي في الرسائل الخاصة."
+    ai_helper_model: "النموذج المراد استخدامه لمساعد الذكاء الاصطناعي."
+    ai_helper_custom_prompts_allowed_groups: "سيرى المستخدمون في هذه المجموعات خيار رسالة المطالبة المخصَّصة في مساعد الذكاء الاصطناعي."
+    ai_helper_automatic_chat_thread_title_delay: "التأخير بالدقائق قبل أن يقوم مساعد الذكاء الاصطناعي بتعيين عنوان سلسلة الدردشة تلقائيًا."
+    ai_helper_automatic_chat_thread_title: "تعيين عناوين سلسلة الدردشة تلقائيًا بناءً على محتويات السلسلة."
+    ai_helper_illustrate_post_model: "النموذج المراد استخدامه لميزة تزويد المنشور بالصور من مساعد الذكاء الاصطناعي في أداة الإنشاء"
+    ai_helper_enabled_features: "حدِّد الميزات التي تريد تفعيلها في مساعد الذكاء الاصطناعي."
+    post_ai_helper_allowed_groups: "مجموعات المستخدمين المسموح لها بالوصول إلى ميزات مساعد الذكاء الاصطناعي في المنشورات"
+    ai_helper_image_caption_model: "حدِّد النموذج الذي سيتم استخدامه لإنشاء التسميات التوضيحية للصور"
+    ai_auto_image_caption_allowed_groups: "يمكن للمستخدمين في هذه المجموعات تشغيل التسميات التوضيحية التلقائية للصور."
+    ai_embeddings_selected_model: "استخدم النموذج المُحدَّد لتوليد التضمينات."
+    ai_embeddings_generate_for_pms: "إنشاء تضمينات للرسائل الشخصية."
+    ai_embeddings_semantic_related_topics_enabled: "استخدام البحث الدلالي للموضوعات ذات الصلة."
+    ai_embeddings_semantic_related_topics: "أقصى عدد من الموضوعات لعرضها في قسم الموضوع ذي الصلة."
+    ai_embeddings_backfill_batch_size: "عدد التضمينات المراد إعادة ملئها كل 15 دقيقة."
+    ai_embeddings_semantic_search_enabled: "تفعيل البحث الدلالي في الصفحة كاملةً."
+    ai_embeddings_semantic_quick_search_enabled: "تفعيل خيار البحث الدلالي في قائمة البحث المنبثقة."
+    ai_embeddings_semantic_related_include_closed_topics: "تضمين الموضوعات المغلقة في نتائج البحث الدلالي"
+    ai_embeddings_semantic_search_hyde_model: "النموذج المُستخدَم لتوسيع الكلمات الرئيسية للحصول على نتائج أفضل في أثناء البحث الدلالي"
+    ai_embeddings_per_post_enabled: إنشاء التضمينات لكل منشور
+    ai_summarization_model: "النموذج الذي سيتم استخدامه في التلخيص"
+    ai_custom_summarization_allowed_groups: "المجموعات المسموح لها بإنشاء ملخصات جديدة."
+    ai_pm_summarization_allowed_groups: "المجموعات المسموح لها بإنشاء الملخصات وعرضها في الرسائل الخاصة"
+    ai_summary_gists_allowed_groups: "المجموعات المسموح لها برؤية ملخصات الموضوعات في قائمة الموضوعات الساخنة"
+    ai_summary_backfill_maximum_topics_per_hour: "عدد ملخصات الموضوعات المطلوب ملؤها في الساعة."
+    ai_bot_enabled: "تفعيل وحدة روبوت الذكاء الاصطناعي"
+    ai_bot_enable_chat_warning: "عرض تحذير عند بدء الدردشة في رسالة خاصة. يمكن تجاوزه عن طريق تعديل سلسلة الترجمة: discourse_ai.ai_bot.pm_warning"
+    ai_bot_allowed_groups: "عندما يتمكن GPT Bot من الوصول إلى الرسالة الخاصة، فإنه سيرد على أعضاء هذه المجموعات."
+    ai_bot_debugging_allowed_groups: "السماح لهذه المجموعات برؤية زر تصحيح الأخطاء في المنشورات التي تعرض طلب الذكاء الاصطناعي الأولي والرد"
+    ai_bot_public_sharing_allowed_groups: "السماح لهذه المجموعات بمشاركة رسائل الذكاء الاصطناعي الشخصية مع العامة عبر رابط فريد متاح بشكلٍ علني. ملاحظة: إذا كان موقعك يتطلَّب تسجيل الدخول، فستتطلب المشاركة تسجيل الدخول أيضًا."
+    ai_bot_add_to_header: "عرض زر في الرأس لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
+    ai_bot_github_access_token: "رمز وصول GitHub للاستخدام مع أدوات الذكاء الاصطناعي من GitHub (مطلوب لدعم البحث)"
+    ai_stability_api_key: "مفتاح API لواجهة API المسماة stability.ai"
+    ai_stability_engine: "محرك إنشاء الصور المراد استخدامه لواجهة برمجة التطبيقات المسماة stability.ai"
+    ai_stability_api_url: "عنوان URL لواجهة API المسماة stability.ai"
+    ai_google_custom_search_api_key: "مفتاح API لواجهة API الخاصة ببحث Google المخصَّص، راجع: https://developers.google.com/custom-search"
+    ai_google_custom_search_cx: "تجربة العملاء لواجهة بحث Google المخصَّصة"
+  reviewables:
+    reasons:
+      flagged_by_toxicity: أبلغ المكوِّن الإضافي الذي يعمل بالذكاء الاصطناعي عن هذا بعد تصنيفه كسلبي.
+      flagged_by_nsfw: أبلغ المكوِّن الإضافي الذي يعمل بالذكاء الاصطناعي عن هذا بعد تصنيفه كسلبي لصورة واحدة على الأقل من الصور الملحقة على أنها غير آمنة لبيئة العمل.
+  reports:
+    overall_sentiment:
+      title: "المشاعر العامة"
+      description: 'يقارن الرسم البياني عدد المنشورات المصنَّفة على أنها إما إيجابية أو سلبية. يتم حساب هذه النتائج عندما تكون الدرجات الإيجابية أو السلبية > درجة الحد المحدَّدة. وهذا يعني عدم عرض المنشورات المحايدة. يتم أيضًا استبعاد الرسائل الخاصة (PM). يتم تصنيفها باستخدام "cardiffnlp/twitter-roberta-base-sentiment-latest"'
+      xaxis: "إيجابية (%)"
+      yaxis: "التاريخ"
+    emotion_admiration:
+      title: "\U0001F929 الإعجاب"
+      description: "المنشورات المصنَّفة برمز الإعجاب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_amusement:
+      title: "\U0001F604 التسلية"
+      description: "المنشورات المصنَّفة برمز التسلية عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_anger:
+      title: "\U0001F620 الغضب"
+      description: "المنشورات المصنَّفة برمز الغضب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_annoyance:
+      title: "\U0001F612 الإزعاج"
+      description: "المنشورات المصنَّفة برمز الإزعاج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_approval:
+      title: "\U0001F44D الموافقة"
+      description: "المنشورات المصنَّفة برمز الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_caring:
+      title: "\U0001F917 الاهتمام"
+      description: "المنشورات المصنَّفة برمز الاهتمام عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_confusion:
+      title: "\U0001F615 الارتباك"
+      description: "المنشورات المصنَّفة برمز الارتباك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_curiosity:
+      title: "\U0001F914 الفضول"
+      description: "المنشورات المصنَّفة برمز الفضول عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_desire:
+      title: "\U0001F60D الرغبة"
+      description: "المنشورات المصنَّفة برمز الرغبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_disappointment:
+      title: "\U0001F61E خيبة الأمل"
+      description: "المنشورات المصنَّفة برمز خيبة الأمل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_disapproval:
+      title: "\U0001F44E عدم الموافقة"
+      description: "المنشورات المصنَّفة برمز عدم الموافقة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_disgust:
+      title: "\U0001F922 الاشمئزاز"
+      description: "المنشورات المصنَّفة برمز الاشمئزاز عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_embarrassment:
+      title: "\U0001F633 الإحراج"
+      description: "المنشورات المصنَّفة برمز الإحراج عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_excitement:
+      title: "\U0001F92A الإثارة"
+      description: "المنشورات المصنَّفة برمز الإثارة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_fear:
+      title: "\U0001F628 الخوف"
+      description: "المنشورات المصنَّفة برمز الخوف عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_gratitude:
+      title: "\U0001F64F الامتنان"
+      description: "المنشورات المصنَّفة برمز الامتنان عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_grief:
+      title: "\U0001F622 الكآبة"
+      description: "المنشورات المصنَّفة برمز الكآبة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_joy:
+      title: "\U0001F60A المرح"
+      description: "المنشورات المصنَّفة برمز الفرح عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_love:
+      title: '❤️ الحب'
+      description: "المنشورات المصنَّفة برمز الحب عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_nervousness:
+      title: "\U0001F630 التوتر"
+      description: "المنشورات المصنَّفة برمز التوتر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_neutral:
+      title: "\U0001F610 محايدة"
+      description: "المنشورات المصنَّفة برمز الحياد عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_optimism:
+      title: "\U0001F31F التفاؤل"
+      description: "المنشورات المصنَّفة برمز التفاؤل عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_pride:
+      title: "\U0001F981 الفخر"
+      description: "المنشورات المصنَّفة برمز الفخر عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_realization:
+      title: "\U0001F4A1 الإدراك"
+      description: "المنشورات المصنَّفة برمز الإدراك عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_relief:
+      title: "\U0001F60C الراحة"
+      description: "المنشورات المصنَّفة برمز الراحة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_remorse:
+      title: "\U0001F614 الندم"
+      description: "المنشورات المصنَّفة برمز الندم عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_sadness:
+      title: "\U0001F62D الحزن"
+      description: "المنشورات المصنَّفة برمز الحزن عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+    emotion_surprise:
+      title: "\U0001F632 المفاجأة"
+      description: "المنشورات المصنَّفة برمز المفاجأة عن طريق الذكاء الاصطناعي، باستخدام نموذج \"Samlowe/roberta-base-go_emotions\""
+  discourse_ai:
+    ai_artifact:
+      view_source: "عرض المصدر"
+      view_changes: "عرض التغييرات"
+    unknown_model: "نموذج ذكاء اصطناعي غير معروف"
+    tools:
+      custom_name: "%{name} (custom)"
+      presets:
+        browse_web_jina:
+          name: "تصفح الويب (jina.ai)"
+        exchange_rate:
+          name: "سعر الصرف"
+        stock_quote:
+          name: "أسعار الأسهم (AlphaVantage)"
+        image_generation:
+          name: "مولِّد صور Flux (Together.ai)"
+        empty_tool:
+          name: "ابدأ من لا شيء..."
+    ai_helper:
+      errors:
+        completion_request_failed: "حدث خطأ في أثناء محاولة تقديم اقتراحات. يُرجى إعادة المحاولة."
+      prompts:
+        translate: الترجمة إلى %{language}
+        generate_titles: اقتراح عناوين للموضوعات
+        proofread: تدقيق النص لغويًا
+        markdown_table: إنشاء جدول Markdown
+        custom_prompt: "رسالة مطالبة مخصَّصة"
+        explain: "الشرح"
+        illustrate_post: "تزويد المنشور بالصور"
+        replace_dates: "التواريخ الذكية"
+      painter:
+        attribution:
+          stable_diffusion_xl: "الصورة بواسطة Stable Diffusion XL"
+          dall_e_3: "الصورة بواسطة DALL-E 3"
+      image_caption:
+        attribution: "تم إنشاء التسمية التوضيحية بالذكاء الاصطناعي"
+    share_ai:
+      read_more: "قراءة النص الكامل"
+      onebox_title: "محادثة الذكاء الاصطناعي مع %{llm_name}"
+      formatted_excerpt: "محادثة الذكاء الاصطناعي مع %{llm_name}:\n %{excerpt}"
+      title: "%{title} - محادثة الذكاء الاصطناعي - %{site_name}"
+      errors:
+        not_allowed: "غير مسموح لك بمشاركة هذا الموضوع"
+        other_people_in_pm: "لا يمكن مشاركة الرسائل الشخصية مع البشر الآخرين بشكلٍ علني"
+        other_content_in_pm: "لا يمكن مشاركة الرسائل الشخصية التي تحتوي على منشورات من أشخاص آخرين بشكلٍ علني"
+        failed_to_share: "فشلت مشاركة المحادثة"
+        conversation_deleted: "تم حذف مشاركة المحادثة بنجاح"
+    spam_detection:
+      flag_reason: "تم الإبلاغ عنه كسلوكٍ عشوائي بواسطة <a href='%{url}'>Discourse AI</a>"
+      silence_reason: "تم إسكات المستخدم تلقائيًا بواسطة <a href='%{url}'>Discourse AI</a>"
+      invalid_error_type: "تم إدخال نوع خطأ غير صالح"
+      unexpected: "حدث خطأ غير متوقع"
+      bot_user_update_failed: "فشل تحديث مستخدم روبوت فحص السلوك العشوائي"
+    ai_bot:
+      reply_error: "عذراً، يبدو أن نظامنا واجه مشكلة غير متوقعة أثناء محاولة الرد.\n\n[details='Error details']\n%{details}\n[/details]"
+      default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
+      personas:
+        default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
+        cannot_delete_system_persona: "لا يمكن حذف شخصيات النظام، يُرجى إيقافها بدلًا من ذلك"
+        cannot_edit_system_persona: "يمكن إعادة تسمية شخصيات النظام فقط، ولا يجوز لك تعديل الأدوات أو رسائل مطالبة النظام. قم بإيقافها وعمل نسخة منها بدلًا من ذلك."
+        github_helper:
+          name: "مساعد GitHub"
+          description: "روبوت ذكاء اصطناعي متخصص في المساعدة في المهام والأسئلة المتعلقة بمنصة GitHub"
+        general:
+          name: مساعد المنتدى
+          description: "روبوت ذكاء اصطناعي للأغراض العامة قادر على أداء مهام مختلفة"
+        artist:
+          name: فنان
+          description: "روبوت ذكاء اصطناعي متخصص في إنشاء الصور"
+        sql_helper:
+          name: مساعد SQL
+          description: "روبوت ذكاء اصطناعي متخصص في المساعدة في صياغة استعلامات SQL في مثيل Discourse هذا"
+        settings_explorer:
+          name: مستكشف الإعدادات
+          description: "روبوت ذكاء اصطناعي متخصص في المساعدة في استكشاف إعدادات موقع Discourse"
+        creative:
+          name: المبدع
+          description: "روبوت ذكاء اصطناعي من دون تكاملات خارجية متخصصة في المهام الإبداعية"
+        dall_e3:
+          name: "DALL-E 3"
+          description: "روبوت ذكاء اصطناعي متخصص في إنشاء الصور باستخدام DALL-E 3"
+        discourse_helper:
+          name: "مساعد Discourse"
+          description: "روبوت ذكاء اصطناعي متخصص في المساعدة في المهام المتعلقة بمنصة Discourse"
+        web_artifact_creator:
+          name: "مُنشئ الملفات الثانوية على الويب"
+          description: "روبوت الذكاء الاصطناعي المتخصص في إنشاء ملفات ثانوية تفاعلية على الويب"
+        custom_prompt:
+          name: "رسالة مطالبة مخصَّصة"
+        smart_dates:
+          name: "التواريخ الذكية"
+      topic_not_found: "الملخص غير متوفر، الموضوع غير موجود!"
+      summarizing: "جارٍ تلخيص الموضوع"
+      searching: "جارٍ البحث عن: '%{query}'"
+      tool_options:
+        researcher:
+          max_results:
+            name: "الحد الأقصى لعدد النتائج"
+        google:
+          base_query:
+            name: "استعلام البحث الأساسي"
+            description: "الاستعلام الأساسي الذي سيتم استخدامه عند البحث. الأمثلة: سيتضمَّن \"site:example.com\" النتائج من example.com فقط، بينما سيتضمَّن before:2022-01-01 النتائج من عام 2021 وما قبله فقط. تتم إضافة هذا النص إلى استعلام البحث."
+        read:
+          read_private:
+            name: "قراءة خاصة"
+            description: "السماح بالوصول إلى جميع الموضوعات التي يمكن للمستخدم الوصول إليها (يتم تضمين الموضوعات العامة فقط بشكلٍ افتراضي)"
+        search:
+          search_private:
+            name: "بحث خاص"
+            description: "تضمين جميع الموضوعات التي يمكن للمستخدم الوصول إليها في نتائج البحث (يتم تضمين الموضوعات العامة فقط بشكلٍ افتراضي)"
+          max_results:
+            name: "الحد الأقصى لعدد النتائج"
+            description: "الحد الأقصى لعدد النتائج المطلوب تضمينها في البحث - في حال ترك الحقل فارغًا، سيتم استخدام القواعد الافتراضية وستتم زيادة العدد وفقًا للنموذج المُستخدَم. أعلى قيمة هي 100."
+          base_query:
+            name: "استعلام البحث الأساسي"
+            description: "استعلام البحث الأساسي الذي سيتم استخدامه عند البحث. على سبيل المثال: سيسبق \"#urgent\" \"#urgent\" في استعلام البحث وسيتضمن الموضوعات ذات الفئة أو الوسم العاجل فقط."
+      tool_summary:
+        update_artifact: "تحديث ملف ثانوي على الويب"
+        create_artifact: "إنشاء ملف ثانوي على الويب"
+        web_browser: "تصفح الويب"
+        github_search_files: "ملفات بحث GitHub"
+        github_search_code: "البحث عن رمز برمجي على GitHub"
+        github_file_content: "محتوى ملف GitHub"
+        github_pull_request_diff: "الفروقات في طلب السحب على GitHub"
+        random_picker: "منتقي عشوائي"
+        categories: "إدراج الفئات"
+        search: "البحث"
+        tags: "إدراج الوسوم"
+        time: "الوقت"
+        summarize: "تلخيص"
+        image: "إنشاء صورة"
+        google: "البحث في Google"
+        read: "قراءة الموضوع"
+        setting_context: "البحث عن سياق إعداد الموقع"
+        schema: "البحث عن مخطط قاعدة البيانات"
+        search_settings: "جارٍ البحث في إعدادات الموقع"
+        dall_e: "إنشاء صورة"
+        search_meta_discourse: "البحث في Meta Discourse"
+        javascript_evaluator: "تقييم JavaScript"
+      tool_help:
+        update_artifact: "تحديث ملف ثانوي على الويب باستخدام روبوت الذكاء الاصطناعي"
+        create_artifact: "إنشاء ملف ثانوي على الويب باستخدام روبوت الذكاء الاصطناعي"
+        web_browser: "تصفح صفحة الويب باستخدام روبوت ذكاء اصطناعي"
+        github_search_code: "البحث عن رمز برمجي في مستودع GitHub"
+        github_search_files: "البحث عن ملفات في مستودع GitHub"
+        github_file_content: "استعادة محتوى ملفات من مستودع GitHub"
+        github_pull_request_diff: "استعادة الفروقات في طلب السحب على GitHub"
+        random_picker: "اختر رقمًا عشوائيًا أو عنصرًا عشوائيًا من القائمة"
+        categories: "إدراج جميع الفئات المرئية بشكلٍ عام في المنتدى"
+        search: "البحث في جميع الموضوعات العامة في المنتدى"
+        tags: "إدراج جميع الوسوم في المنتدى"
+        time: "البحث عن الوقت في مناطق زمنية مختلفة"
+        summary: "تلخيص موضوع"
+        image: "إنشاء صورة باستخدام Stable Diffusion"
+        google: "البحث في Google عن استعلام"
+        read: "قراءة الموضوع العام في المنتدى"
+        setting_context: "البحث عن سياق إعداد الموقع"
+        schema: "البحث عن مخطط قاعدة البيانات"
+        search_settings: "البحث في إعدادات الموقع"
+        dall_e: "إنشاء صورة باستخدام DALL-E 3"
+        search_meta_discourse: "البحث في Meta Discourse"
+        javascript_evaluator: "تقييم JavaScript"
+      tool_description:
+        update_artifact: "تم تحديث ملف ثانوي على الويب باستخدام روبوت الذكاء الاصطناعي"
+        web_browser: "قراءة <a href='%{url}'>%{url}</a>"
+        github_search_files: "تم البحث عن '%{keywords}' في %{repo}/%{branch}"
+        github_search_code: "تم البحث عن '%{query}' في %{repo}"
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_file_content: "تم استعادة محتوى %{file_paths} من %{repo_name}@%{branch}"
+        random_picker: "الاختيار من %{options}، تم اختيار: %{result}"
+        read: "القراءة: <a href='%{url}'>%{title}</a>"
+        time: "الوقت في المنطقة الزمنية %{timezone} هو %{time}"
+        summarize: "تم تلخيص <a href='%{url}'>%{title}</a>"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          zero: "تم العثور على %{count} فئات"
+          one: "تم العثور على فئة واحدة (%{count})"
+          two: "تم العثور على فئتين (%{count})"
+          few: "تم العثور على %{count} فئات"
+          many: "تم العثور على %{count} فئات"
+          other: "تم العثور على %{count} فئات"
+        tags:
+          zero: "تم العثور على %{count} وسمًا"
+          one: "تم العثور على وسم واحد (%{count})"
+          two: "تم العثور على وسمين (%{count})"
+          few: "تم العثور على %{count} وسوم"
+          many: "تم العثور على %{count} وسمًا"
+          other: "تم العثور على %{count} وسمًا"
+        search:
+          zero: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          one: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
+          two: "تم العثور على <a href='%{url}'>نتيجتين (%{count})</a> لاستعلام البحث '%{query}'"
+          few: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          many: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          other: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+        search_meta_discourse:
+          zero: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          one: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
+          two: "تم العثور على <a href='%{url}'>نتيجتين (%{count})</a> لاستعلام البحث '%{query}'"
+          few: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          many: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          other: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+        google:
+          zero: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          one: "تم العثور على %{count} <a href='%{url}'>نتيجة</a> لاستعلام البحث '%{query}'"
+          two: "تم العثور على <a href='%{url}'>نتيجتين (%{count})</a> لاستعلام البحث '%{query}'"
+          few: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          many: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+          other: "تم العثور على %{count} <a href='%{url}'>نتائج</a> لاستعلام البحث '%{query}'"
+        setting_context: "سياق القراءة لـ: %{setting_name}"
+        schema: "%{tables}"
+        search_settings:
+          zero: "تم العثور على %{count} نتائج لـ '%{query}'"
+          one: "تم العثور على نتيجة واحدة (%{count}) لـ '%{query}'"
+          two: "تم العثور على نتيجتين (%{count}) لـ '%{query}'"
+          few: "تم العثور على %{count} نتائج لـ '%{query}'"
+          many: "تم العثور على %{count} نتائج لـ '%{query}'"
+          other: "تم العثور على %{count} نتائج لـ '%{query}'"
+    summarization:
+      configuration_hint:
+        zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
+        one: "قم بتكوين الإعداد `%{setting}` أولًا."
+        two: "قم بتكوين هذين الإعدادين أولًا: %{settings}"
+        few: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
+        many: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
+        other: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
+      chat:
+        no_targets: "لم تكن هناك رسائل خلال الفترة المحدَّدة."
+    sentiment:
+      reports:
+        overall_sentiment: "المشاعر العامة (إيجابية - سلبية)"
+        post_emotion:
+          sadness: "الحزن \U0001F622"
+          surprise: "المفاجأة \U0001F631"
+          neutral: "محايدة \U0001F610"
+          fear: "الخوف \U0001F628"
+          anger: "الغضب \U0001F621"
+          joy: "المرح \U0001F600"
+          disgust: "الاشمئزاز \U0001F922"
+        sentiment_analysis:
+          positive: "إيجابية"
+          negative: "سلبية"
+          neutral: "محايدة"
+    llm:
+      configuration:
+        disable_module_first: "يجب عليك إيقاف %{setting} أولًا."
+        set_llm_first: "اضبط %{setting} أولًا"
+        model_unreachable: "لم نتمكن من الحصول على رد من هذا النموذج. تحقَّق من إعداداتك أولًا."
+        invalid_seeded_model: "لا يمكنك استخدام هذا النموذج مع هذه الميزة"
+        must_select_model: "يجب عليك تحديد نموذج لغة كبير أولًا"
+      endpoints:
+        not_configured: "%{display_name} (not configured)"
+        configuration_hint:
+          zero: "تأكَّد من تكوين الإعدادات `%{settings}`."
+          one: "تأكد من تكوين الإعداد `%{settings}`."
+          two: "تأكَّد من تكوين الإعدادَين `%{settings}`."
+          few: "تأكَّد من تكوين الإعدادات `%{settings}`."
+          many: "تأكَّد من تكوين الإعدادات `%{settings}`."
+          other: "تأكَّد من تكوين الإعدادات `%{settings}`."
+      delete_failed:
+        zero: "لم نتمكن من حذف هذا النموذج لأن %{settings} تستخدمه. قم بتحديث الإعدادات وحاول مرة أخرى."
+        one: "لم نتمكن من حذف هذا النموذج لأن %{settings} يستخدمه. قم بتحديث الإعداد وحاول مرة أخرى."
+        two: "لم نتمكن من حذف هذا النموذج لأن %{settings} يستخدمانه. قم بتحديث الإعدادَين وحاول مرة أخرى."
+        few: "لم نتمكن من حذف هذا النموذج لأن %{settings} تستخدمه. قم بتحديث الإعدادات وحاول مرة أخرى."
+        many: "لم نتمكن من حذف هذا النموذج لأن %{settings} تستخدمه. قم بتحديث الإعدادات وحاول مرة أخرى."
+        other: "لم نتمكن من حذف هذا النموذج لأن %{settings} تستخدمه. قم بتحديث الإعدادات وحاول مرة أخرى."
+      cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
+    embeddings:
+      delete_failed: "هذا النموذج قيد الاستخدام حاليًا. قم بتحديث `ai embeddings selected model` أولًا."
+      cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
+      configuration:
+        disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
+        choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."
+    llm_models:
+      missing_provider_param: "لا يمكن ترك %{param} فارغة"
+      bedrock_invalid_url: "يُرجى ملء جميع الحقول لاستخدام هذا النموذج."
+    ai_staff_action_logger:
+      updated: "تاريخ التحديث"
+      removed: "تمت إزالتها"
+    errors:
+      quota_exceeded: "لقد تجاوزت الحصة المُخصَّصة لهذا النموذج. يُرجى إعادة المحاولة بعد %{relative_time}."
+      quota_required: "يجب عليك تحديد الحد الأقصى للرموز أو الاستخدامات لهذا النموذج"
+      no_query_specified: معلمة الاستعلام مطلوبة، يُرجى تحديدها.
+      no_user_for_persona: لا تملك الشخصية المحدَّدة مستخدمًا مرتبطًا بها.
+      persona_not_found: الشخصية المحدَّدة غير موجودة. تحقَّق من معلمتَي persona_name أو persona_id.
+      no_user_specified: اسم المستخدم أو معلمة user_unique_id مطلوبة، يُرجى تحديدها.
+      user_not_found: المستخدم المحدَّد غير موجود. تحقَّق من معلمة username.
+      persona_disabled: الشخصية المحدَّدة متوقفة. تحقَّق من معلمتَي persona_name أو persona_id.
+      no_default_llm: يجب أن يكون للشخصية معلمة default_llm محدَّدة.
+      user_not_allowed: غير مسموح للمستخدم بالمشاركة في الموضوع.
+      prompt_message_length: تتجاوز الرسالة الحد الأقصى لعدد الحروف، والبالغ 1000 حرف، بمقدار %{idx}.

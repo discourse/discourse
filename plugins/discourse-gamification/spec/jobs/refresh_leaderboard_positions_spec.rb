@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::RefreshLeaderboardPositions do
   fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }

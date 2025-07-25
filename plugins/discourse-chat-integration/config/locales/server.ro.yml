@@ -8,13 +8,13 @@ ro:
   chat_integration:
     all_categories: "(toate categoriile)"
     topic_tag_changed:
+      added_and_removed: "%{added} a fost adăugat și %{removed} a fost eliminat"
       added: "Adăugată în %{added}"
-      removed: "A eliminat pe %{removed}"
+      removed: "Eliminată %{removed}"
     provider:
       slack:
         messaging:
           topic_tag_changed:
+            added_and_removed: "%{added} a fost adăugat și %{removed} a fost eliminat"
             added: "Adăugată în %{added}"
-            removed: "A eliminat pe %{removed}"
-      flowdock:
-        message_title: "postat(e)"
+            removed: "Eliminată %{removed}"

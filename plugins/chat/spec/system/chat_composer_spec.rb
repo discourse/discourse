@@ -240,15 +240,11 @@ RSpec.describe "Chat composer", type: :system do
 
       file_path = file_from_fixtures("logo.png", "images").path
       cdp.with_slow_upload do
-        attach_file(file_path) do
-          channel_page.open_action_menu
-          channel_page.click_action_button("chat-upload-btn")
-        end
-
+        attach_file("channel-file-uploader", file_path, make_visible: true)
         expect(page).to have_css(".chat-composer-upload--in-progress")
         expect(page).to have_css(".chat-composer.is-send-disabled")
-        page.find(".chat-composer-upload").hover
-        page.find(".chat-composer-upload__remove-btn").click
+        find(".chat-composer-upload").hover
+        find(".chat-composer-upload__remove-btn").click
       end
     end
   end

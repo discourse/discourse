@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseGamification::AdminGamificationScoreEventController do
   let(:current_user) { Fabricate(:admin) }
   let(:another_user) { Fabricate(:user) }

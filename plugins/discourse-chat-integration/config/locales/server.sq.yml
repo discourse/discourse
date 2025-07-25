@@ -7,3 +7,11 @@
 sq:
   chat_integration:
     all_categories: "(të gjitha kategoritë)"
+    topic_tag_changed:
+      added_and_removed: "U shtua %{added} dhe u hoq %{removed}"
+      added: "Shtuar %{added}"
+    provider:
+      slack:
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "U shtua %{added} dhe u hoq %{removed}"

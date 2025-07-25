@@ -44,7 +44,7 @@ be:
             created_at: створаны
         coupons:
           active: актыўны?
-          actions: дзеянні
+          actions: Дзеянні
         subscriptions:
           subscription:
             user: Карыстальнік

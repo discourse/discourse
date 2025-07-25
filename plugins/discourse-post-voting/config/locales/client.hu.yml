@@ -13,14 +13,16 @@ hu:
         post_voting_comment:
           composer:
             too_short:
-              one: "Nem lehet rövidebb, mint %{count} karakter"
-              other: "Nem lehet rövidebb, mint %{count} karakter"
+              one: "Nem lehet %{count} karakternél rövidebb"
+              other: "Adjon meg legalább %{count} karaktert"
           edit: "szerkesztés"
           cancel: "mégse"
           user:
             deleted: "(felhasználó törölve)"
           reviewables:
             actions:
+              agree:
+                title: "Egyetértek…"
               agree_and_suspend:
                 title: "Felhasználó felfüggesztése"
                 description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
@@ -29,6 +31,13 @@ hu:
                 description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
               disagree:
                 title: "Elutasítás"
+              ignore:
+                title: "Ne csináljon semmit"
+                description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
       topic:
         sort_by: "Rendezés"
+        votes: "Szavazatok"
         activity: "Tevékenység"
+    review:
+      transcript:
+        view: "Korábbi üzenetek átirata"

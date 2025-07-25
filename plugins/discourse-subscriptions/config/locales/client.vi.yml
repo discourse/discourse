@@ -7,7 +7,7 @@
 vi:
   js:
     discourse_subscriptions:
-      optional: Tuỳ chọn
+      optional: Tùy chọn
       campaign:
         success_title: Thành công!
       plans:

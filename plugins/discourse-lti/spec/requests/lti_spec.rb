@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe "LTI Plugin" do
   let(:authorize_url) { "https://example.com/authorize" }
   let(:platform_private_key) { OpenSSL::PKey::RSA.generate 2048 }

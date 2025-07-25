@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseSubscriptions::User::PaymentsController do
   before { SiteSetting.discourse_subscriptions_enabled = true }
 

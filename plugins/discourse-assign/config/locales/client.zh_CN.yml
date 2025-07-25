@@ -77,7 +77,7 @@ zh_CN:
         assignment_label: 指定
         choose_assignee: 选择要指定的用户。
         edit_assignments_title: "编辑指定"
-        note_label: 注释
+        note_label: 备注
         optional_label: "（可选）"
         status_label: 状态
         suggestions: 建议

@@ -49,7 +49,7 @@ zh_CN:
     topic_assigned_excerpt: "向您指定了话题 '%{title}'"
     topic_group_assigned_excerpt: "将话题“%{title}”指定给 @%{group}"
     reminders_frequency:
-      never: "永不"
+      never: "从不"
       daily: "每天"
       weekly: "每周"
       monthly: "每月"

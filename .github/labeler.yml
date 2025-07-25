@@ -110,6 +110,38 @@ discourse-calendar:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-calendar/**/*
 
+discourse-policy:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-policy/**/*
+
+discourse-github:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-github/**/*
+
+discourse-adplugin:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-adplugin/**/*
+
+discourse-affiliate:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-affiliate/**/*
+
+discourse-solved:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-solved/**/*
+
+discourse-topic-voting:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-topic-voting/**/*
+
+discourse-templates:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-templates/**/*
+
+discourse-ai:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-ai/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

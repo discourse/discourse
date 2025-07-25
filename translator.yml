@@ -246,3 +246,59 @@ files:
   - source_path: plugins/discourse-calendar/config/locales/server.en.yml
     destination_path: plugins/calendar/server.yml
     label: calendar
+
+  - source_path: plugins/discourse-policy/config/locales/client.en.yml
+    destination_path: plugins/policy/client.yml
+    label: policy
+  - source_path: plugins/discourse-policy/config/locales/server.en.yml
+    destination_path: plugins/policy/server.yml
+    label: policy
+
+  - source_path: plugins/discourse-github/config/locales/client.en.yml
+    destination_path: plugins/github/client.yml
+    label: github
+  - source_path: plugins/discourse-github/config/locales/server.en.yml
+    destination_path: plugins/github/server.yml
+    label: github
+
+  - source_path: plugins/discourse-adplugin/config/locales/client.en.yml
+    destination_path: plugins/adplugin/client.yml
+    label: adplugin
+  - source_path: plugins/discourse-adplugin/config/locales/server.en.yml
+    destination_path: plugins/adplugin/server.yml
+    label: adplugin
+
+  - source_path: plugins/discourse-affiliate/config/locales/client.en.yml
+    destination_path: plugins/affiliate/client.yml
+    label: affiliate
+  - source_path: plugins/discourse-affiliate/config/locales/server.en.yml
+    destination_path: plugins/affiliate/server.yml
+    label: affiliate
+
+  - source_path: plugins/discourse-solved/config/locales/client.en.yml
+    destination_path: plugins/solved/client.yml
+    label: solved
+  - source_path: plugins/discourse-solved/config/locales/server.en.yml
+    destination_path: plugins/solved/server.yml
+    label: solved
+
+  - source_path: plugins/discourse-topic-voting/config/locales/client.en.yml
+    destination_path: plugins/topic-voting/client.yml
+    label: topic-voting
+  - source_path: plugins/discourse-topic-voting/config/locales/server.en.yml
+    destination_path: plugins/topic-voting/server.yml
+    label: topic-voting
+
+  - source_path: plugins/discourse-templates/config/locales/client.en.yml
+    destination_path: plugins/templates/client.yml
+    label: templates
+  - source_path: plugins/discourse-templates/config/locales/server.en.yml
+    destination_path: plugins/templates/server.yml
+    label: templates
+
+  - source_path: plugins/discourse-ai/config/locales/client.en.yml
+    destination_path: plugins/ai/client.yml
+    label: ai
+  - source_path: plugins/discourse-ai/config/locales/server.en.yml
+    destination_path: plugins/ai/server.yml
+    label: ai

@@ -263,12 +263,6 @@ ru:
     broken_page_change_alert: "В обработчике OnPageChange возникла ошибка. Дополнительные сведения см. в инструментах для разработчиков браузера."
     broken_plugin_alert: "Причина — плагин '%{name}'"
     broken_transformer_alert: "Произошла ошибка. Ваш сайт может работать некорректно."
-    critical_deprecation:
-      notice: "<b>[Уведомление администратора]</b> Вашу тему или плагин необходимо обновить для совместимости с предстоящими изменениями ядра Discourse."
-      id: "(ID:<em>%{id}</em>)"
-      linked_id: "(ID:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Выявленная тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Выявленный плагин: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Азиатско-Тихоокеанский регион (Токио)"
@@ -5151,6 +5145,8 @@ ru:
             badges:
               content: "Награды"
               title: "Все награды, которые можно получить"
+            filter:
+              content: "Фильтр"
             topics:
               content: "Темы"
               title: "Все темы"
@@ -5310,6 +5306,12 @@ ru:
           paste: "Вставить..."
           save: "Сохранить как..."
     powered_by_discourse: "На платформе Discourse"
+    filter:
+      description:
+        yesterday: "Вчера"
+        last_week: "На прошлой неделе"
+        last_month: "В прошлом месяце"
+        last_year: "За последний год"
     discovery:
       headings:
         multi_tag:
@@ -5519,6 +5521,8 @@ ru:
         embedding:
           title: "Встраивание"
           header_description: "Discourse имеет возможность встраивать комментарии из темы на удаленный сайт с помощью API Javascript, который создает IFRAME"
+      theme_site_settings:
+        default_value: "Домашнюю страницу"
       search:
         title: "Найти"
         result_types:
@@ -6501,11 +6505,7 @@ ru:
           up_to_date: "Установлена актуальная версия темы, последняя проверка:"
           has_overwritten_history: "Текущая версия темы больше не существует, поскольку история Git-репозитория была принудительно перезаписана."
           add: "Добавить"
-          theme_settings: "Настройки темы"
-          edit_objects_theme_setting: "Редактор настроек объектов"
-          overriden_settings_explanation: "Переопределенные настройки отмечены точкой и выделены цветом. Чтобы сбросить эти настройки до значения по умолчанию, нажмите кнопку сброса рядом с ними."
           no_settings: "Эта тема не имеет настроек."
-          theme_translations: "Перевод темы"
           empty: "Нет компонентов"
           commits_behind:
             one: "Тема отстает на %{count} коммит!"
@@ -6585,7 +6585,12 @@ ru:
             title: "Выберите базовую цветовую палитру"
             description: "Базовая палитра:"
           title: "Цвета"
-          edit: "Редактировать цветовые палитры"
+          edit: "Изменить"
+          filters:
+            all: "Все настройки"
+            user_selectable: "Выбирается пользователем"
+          active_badge:
+            text: "Активна"
           long_title: "Цветовые палитры"
           about: "Измените цвета, используемые в темах. Создайте новую цветовую палитру."
           new_name: "Новая цветовая палитра"
@@ -7237,7 +7242,6 @@ ru:
         activity: Активность
         like_count: Лайков поставлено / получено
         last_100_days: "за последние 100 дней"
-        private_topics_count: Личные темы
         posts_read_count: Прочитано сообщений
         post_count: Создано сообщений
         second_factor_enabled: Двухфакторная аутентификация включена

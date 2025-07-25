@@ -25,9 +25,9 @@ fr:
           title: L'événement a commencé
           fields:
             topic_id:
-              label: Identifiant du sujet
+              label: ID du sujet
     discourse_calendar:
-      invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
+      invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
       on_holiday: "En vacances"
       disable_holiday: "Désactiver"
       enable_holiday: "Activer"
@@ -41,7 +41,7 @@ fr:
       toggle_timezone_offset_title: "Activer/désactiver le décalage horaire"
       region:
         title: "Région"
-        none: "Aucune"
+        none: "Jamais"
         use_current_region: "Utiliser la région actuelle"
         names:
           ae: "Émirats arabes unis"
@@ -112,7 +112,7 @@ fr:
           cl: "Chili"
           co: "Colombie"
           cr: "Costa Rica"
-          cz: "République Tchèque"
+          cz: "République tchèque"
           de_bb: "Allemagne (de_bb)"
           de_be: "Allemagne (de_be)"
           de_bw: "Allemagne (de_bw)"
@@ -178,7 +178,7 @@ fr:
           hu: "Hongrie"
           id: "Indonésie"
           ie: "Irlande"
-          im: "Île de Man"
+          im: "île de Man"
           in: "Inde"
           in_gj: "Inde (in_gj)"
           in_mh: "Inde (in_mh)"
@@ -307,6 +307,7 @@ fr:
           ve: "Venezuela"
           vi: "Îles Vierges (États-Unis)"
           za: "Afrique du Sud"
+          zw: "Zimbabwe"
       toolbar_button:
         today: "Aujourd'hui"
         month: "Mois"
@@ -332,7 +333,7 @@ fr:
       topic_title:
         starts_at: "Début de l'événement : %{date}"
         ended_at: "Événement terminé : %{date}"
-        ends_in_duration: "Se termine %{duration}"
+        ends_in_duration: "Se termine dans %{duration}"
       show_all: "Tout afficher"
       show_participants: "Afficher les participants"
       participants:
@@ -364,7 +365,7 @@ fr:
         description_public: "Les événements publics n'acceptent que les noms d'utilisateur pour les invitations groupées."
         description_private: "Les événements privés n'acceptent que les noms de groupes pour les invitations groupées."
         download_sample_csv: "Télécharger un exemple de fichier CSV"
-        send_bulk_invites: "Envoyer les invitations"
+        send_bulk_invites: "Envoyer des invitations"
         group_selector_placeholder: "Choisir un groupe…"
         user_selector_placeholder: "Choisir un utilisateur…"
         inline_title: "Invitation groupée en ligne"
@@ -397,19 +398,19 @@ fr:
             not_going: "Ne participera pas"
             interested: "Intéressé(e)"
             going_count:
-              one: "%{count} utilisateur participera"
+              one: "%{count} utilisateurs participeront"
               other: "%{count} utilisateurs participeront"
             not_going_count:
-              one: "%{count} utilisateur ne participera pas"
+              one: "%{count} utilisateurs ne participeront pas"
               other: "%{count} utilisateurs ne participeront pas"
             interested_count:
-              one: "%{count} utilisateur est intéressé"
+              one: "%{count} utilisateurs sont intéressés"
               other: "%{count} utilisateurs sont intéressés"
             invited_count:
               one: "%{count} utilisateur est invité"
               other: "%{count} utilisateurs sont invités"
         event:
-          expired: "Expiré"
+          expired: "Expirées"
           closed: "Fermé"
           status:
             standalone:

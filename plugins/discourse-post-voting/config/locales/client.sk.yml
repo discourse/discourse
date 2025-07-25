@@ -38,6 +38,7 @@ sk:
                 description: "Ignorujte príznak jeho odstránením z frontu bez vykonania akejkoľvek akcie."
       topic:
         sort_by: "Zoradiť podľa"
+        votes: "Hlasy"
         activity: "Aktivity"
     review:
       transcript:

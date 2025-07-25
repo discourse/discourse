@@ -24,7 +24,7 @@ sl:
       update_data: 'Posodobi Patreon podatke & sinhroniziraj skupine'
       field:
         id: "Id"
-        email: "Email"
+        email: "E-naslov"
         amount_cents: "Vrednost (v centih)"
         rewards: "Nagrade"
         more_details:

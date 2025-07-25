@@ -7,6 +7,3 @@
 lv:
   chat_integration:
     all_categories: "(Visas kategorijas)"
-    provider:
-      flowdock:
-        message_title: "ierakstīts"
