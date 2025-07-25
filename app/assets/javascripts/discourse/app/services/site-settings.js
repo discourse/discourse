@@ -24,7 +24,10 @@ export function createSiteSettingsFromPreloaded(
     const locales = JSON.parse(settings.available_locales);
     const localizedLocales = locales.map(({ native_name, value, name }) => {
       const localized_name = i18n.t(name);
-      const displayName = localized_name || native_name;
+      const displayName =
+        localized_name && localized_name !== native_name
+          ? `${localized_name} (${native_name})`
+          : native_name;
       return { value, name: displayName };
     });
 
