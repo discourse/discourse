@@ -5,21 +5,73 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: گپ شپ
   js:
     admin:
       site_settings:
         chat_separate_sidebar_mode:
           always: "ہمیشہ"
+          fullscreen: "جب چیٹ پوری اسکرین میں ہو۔"
           never: "کبھی نہیں"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_delete: "چیٹ چینل حذف کر دیا گیا۔"
+            chat_auto_remove_membership: "چینلز سے رکنیتیں خود بخود ہٹا دی گئیں"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "ایک مخصوص چینل میں چیٹ پیغام بنائیں۔"
+      web_hooks:
+        chat_event:
+          group_name: "چیٹ کے واقعات"
+          chat_message_created: "پیغام بن گیا"
+          chat_message_edited: "پیغام میں ترمیم"
+          chat_message_trashed: "پیغام ضائع ہوگیا"
+          chat_message_restored: "پیغام بحال ہوا"
+    about:
+      chat_messages_count: "چیٹ پیغامات"
+      chat_channels_count: "چیٹ چینلز"
+      chat_users_count: "چیٹ صارفین"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} چیٹ پیغام"
+          other: "%{formatted_number} چیٹ کے پیغامات"
     chat:
+      text_copied: متن کلپ بورڈ پر کاپی ہوا
+      link_copied: لنک کلپ بورڈ پر کاپی ہو ئے
+      back_to_forum: "فورم"
       deleted_chat_username: حذف کردہ
       dates:
         yesterday: "کَل"
+      all_loaded: "تمام پیغامات دکھا رہے"
+      already_enabled: "اس موضوع پر چیٹ پہلے ہی فعال ہے۔ براہ کرم ریفریش کریں۔"
+      disabled_for_topic: "اس موضوع پر چیٹ غیر فعال ہے۔"
+      bot: "بوٹ"
       create: "بنائیں"
       cancel: "منسوخ"
+      cancel_reply: "جواب منسوخ کریں"
+      chat_channels: "چینلز"
+      browse_all_channels: "تمام چینلز کو براؤز کریں"
+      see_in: "میں دیکھیں"
+      move_to_channel:
+        title: "پیغامات کو چینل پر منتقل کریں"
+        confirm_move: "پیغامات کو منتقل کریں"
+      delete_messages:
+        confirm:
+          one: "کیا آپ واقعی اس پیغام کو حذف کرنا چاہتے ہیں؟"
+          other: "کیا آپ واقعی ان %{count} پیغامات کو حذف کرنا چاہتے ہیں؟"
       channel_settings:
+        title: "چینل کی ترتیبات"
         edit: "ترمیم کریں"
         add: "اضافہ کریں"
+        close_channel: "چینل بند"
+        open_channel: "چینل کھولیں"
         join: "شمولیت اختیار کریں"
         leave: "چھوڑ دیں"
       close: "بند کریں"
