@@ -9,6 +9,10 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
+      this.siteSettings.rich_editor = true;
+      this.siteSettings.unicode_usernames = true;
+      this.siteSettings.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]";
+
       pretender.get("/composer/mentions", () =>
         response({
           users: ["eviltrout", "john", "käsey"],
@@ -64,10 +68,6 @@ module(
     Object.entries(testCases).forEach(
       ([name, [markdown, expectedHtml, expectedMarkdown]]) => {
         test(name, async function (assert) {
-          this.siteSettings.rich_editor = true;
-          this.siteSettings.unicode_usernames = true;
-          this.siteSettings.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]";
-
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
       }
