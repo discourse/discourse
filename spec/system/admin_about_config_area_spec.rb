@@ -133,7 +133,8 @@ describe "Admin About Config Area Page", type: :system do
 
         config_area.general_settings_section.submit
         expect(config_area.general_settings_section).to have_saved_successfully
-        expect(SiteSetting.about_banner_image).to eq(nil)
+
+        try_until_success { expect(SiteSetting.about_banner_image).to eq(nil) }
       end
 
       it "can upload an image using keyboard nav" do
