@@ -312,7 +312,7 @@ export default RouteTemplate(
                       {{#if @controller.model.suspend_reason}}
                         <div class="suspension-reason">
                           <b>{{i18n "user.suspended_reason"}}</b>
-                          {{@controller.model.suspend_reason}}
+                          {{htmlSafe @controller.model.suspend_reason}}
                         </div>
                       {{/if}}
                     </div>
@@ -335,7 +335,7 @@ export default RouteTemplate(
                       {{#if @controller.model.silence_reason}}
                         <div class="silence-reason">
                           <b>{{i18n "user.silenced_reason"}}</b>
-                          {{@controller.model.silence_reason}}
+                          {{htmlSafe @controller.model.silence_reason}}
                         </div>
                       {{/if}}
                     </div>
