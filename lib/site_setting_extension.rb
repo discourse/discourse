@@ -273,7 +273,7 @@ module SiteSettingExtension
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
       category: "required",
       description: description("default_locale"),
-      type: SiteSetting.types[SiteSetting.types[:enum]],
+      type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,
       value: self.default_locale,
       valid_values: LocaleSiteSetting.values,
