@@ -21,6 +21,9 @@ sq:
         plans:
           product: Emri
         subscriptions:
+          status: Status
+          update_card:
+            single: "Përditëso"
           created_at: Krijuar
           cancel: anulo
       billing:
@@ -46,4 +49,5 @@ sq:
         subscriptions:
           subscription:
             user: User
+            status: Status
             created_at: Krijuar

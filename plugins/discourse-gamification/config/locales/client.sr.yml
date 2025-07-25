@@ -9,7 +9,7 @@ sr:
     gamification:
       you: "Ti"
       leaderboard:
-        link_to_settings: "Podešavanja"
+        link_to_settings: "Podešavanje"
         refresh: "Osveži"
         name: "Ime foruma"
         period:
@@ -19,6 +19,7 @@ sr:
           monthly: "Top mesečne"
           weekly: "Top nedeljne"
           daily: "Top dnevne"
+      create: "Kreiraj"
       cancel: "Odustani"
       close: "Zatvori"
       delete: "Obriši"

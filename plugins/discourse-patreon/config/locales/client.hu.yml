@@ -17,10 +17,10 @@ hu:
       rewards: 'Jutalmak'
       filter: 'Szűr'
       last_synced: 'Utoljára szinkronizálva'
-      edit: 'Szerkeszt'
-      delete: 'Töröl'
+      edit: 'Szerkesztés'
+      delete: 'Törlés'
       save: 'Mentés'
       field:
         id: "Id"
-        email: "Email"
+        email: "E-mail:"
         rewards: "Jutalmak"

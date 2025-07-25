@@ -1,0 +1,165 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sortiraj po"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID Teme"
+            title:
+              label: "Naslov"
+            categories:
+              label: "Kategorije"
+            tags:
+              label: "Tagovi"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategorija"
+            tags:
+              label: "Tagovi"
+            canned_reply:
+              label: "Odgovori"
+    discourse_ai:
+      features:
+        back: "Nazad"
+        disabled: "(isključeno)"
+        groups: "Grupe:"
+        no_groups: "Ništa"
+        edit: "Izmeni"
+        expand_list:
+          one: "(još %{count} članova)"
+          few: "(još %{count} člana)"
+          other: "(još %{count} članova)"
+        collapse_list: "(pokaži manje)"
+        filters:
+          all: "Sve"
+          reset: "Reset"
+        search:
+          name: "Pretraži"
+        spam:
+          name: "Nepoželjno"
+      modals:
+        select_option: "Izaberi jednu od opcija..."
+      spam:
+        short_title: "Nepoželjno"
+        last_seven_days: "Последњих 7 дана"
+        enable: "Omogući"
+        test_modal:
+          spam: "Nepoželjno"
+      usage:
+        summary: "Rezime"
+        username: "Korisničko Ime"
+        periods:
+          last_day: "Последња 24 сата"
+      ai_persona:
+        back: "Nazad"
+        name: "Ime foruma"
+        edit: "Izmeni"
+        export: "Izvoz"
+        description: "Opis"
+        user: Korisnik
+        save: "Sačuvaj"
+        enabled: "Omgućeno"
+        allowed_groups: "Dozvoljene grupe"
+        delete: "Obriši"
+        response_format:
+          open_modal: "Izmeni"
+        filters:
+          reset: "Reset"
+      rag:
+        uploads:
+          uploading: "Uploading..."
+      tools:
+        back: "Nazad"
+        export: "Izvoz"
+        name: "Ime foruma"
+        description: "Opis"
+        summary: "Rezime"
+        save: "Sačuvaj"
+        remove_parameter: "Ukloni"
+        parameter_required: "Potrebno"
+        edit: "Izmeni"
+        delete: "Obriši"
+      llms:
+        display_name: "Ime foruma"
+        save: "Sačuvaj"
+        edit: "Izmeni"
+        back: "Nazad"
+        delete: Obriši
+        quotas:
+          group: "Grupa"
+          durations:
+            six_hours: "6 sata"
+            day: "24 sata"
+            week: "7 dana"
+        usage:
+          ai_spam: "Nepoželjno"
+        next:
+          title: "Dalje"
+        providers:
+          google: "Google"
+          fake: "Posebna"
+      ai_helper:
+        context_menu:
+          cancel: "Odustani"
+          discard: "Odbaci"
+        post_options_menu:
+          close: "Zatvori"
+          copy: "Kopija"
+          copied: "Kopirano!"
+          cancel: "Odustani"
+        thumbnail_suggestions:
+          select: "Odaberite"
+        image_caption:
+          save_caption: "Sačuvaj"
+          automatic_caption_dialog:
+            confirm: "Omogući"
+      embeddings:
+        back: "Nazad"
+        save: "Sačuvaj"
+        delete: "Obriši"
+        edit: "Izmeni"
+        display_name: "Ime foruma"
+        providers:
+          google: "Google"
+          fake: "Posebna"
+      ai_bot:
+        debug_ai_modal:
+          next_log: "Dalje"
+          previous_log: "Prethodno"
+        invite_ai_conversation:
+          button: "Pozovite"
+        share_modal:
+          copy: "Kopija"
+        conversations:
+          today: "Danas"
+          last_7_days: "Последњих 7 дана"
+          last_30_days: "Последњих 30 дана"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Sve"
+          group_types:
+            category: "Kategorija"
+          table:
+            total_count: "Ukupno"
+      discobot_discoveries:
+        regular_results: "Teme"
+        collapse: "Spusti"
+        tooltip:
+          actions:
+            disable: "Onemogući"

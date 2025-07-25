@@ -357,7 +357,7 @@ fa_IR:
         error: "با عرض پوزش، نوع فایل باید CSV باشد."
         confirmation_message: "شما می خواهید به همه افراد موجود در فایل آپلود شده اطلاع دهید."
         download_sample_csv: "یک فایل CSV نمونه را بارگیری کنید."
-        send_bulk_invites: "ارسال دعوتنامه"
+        send_bulk_invites: "ارسال دعوت‌نامه"
         group_selector_placeholder: "یک گروه را انتخاب کنید..."
         user_selector_placeholder: "کاربر را انتخاب کنید..."
       upcoming_events:
@@ -415,7 +415,7 @@ fa_IR:
           units:
             minutes: "دقیقه"
             hours: "ساعت"
-            days: "روز"
+            days: "روزها"
             weeks: "هفته"
           periods:
             before: "قبل از"

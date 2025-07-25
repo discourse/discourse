@@ -100,8 +100,8 @@ hu:
         one: "Nem hozhat létre közvetlen üzenetet több mint %{count} másik felhasználóval."
         other: "Nem hozhat létre közvetlen üzenetet több mint %{count} másik felhasználóval."
       original_message_not_found: "Az üzenet előzménye, amelyre válaszolni próbál, nem található vagy törölték."
-      thread_invalid_for_channel: "A téma nem része a megadott csatornának."
-      thread_does_not_match_parent: "A téma nem egyezik a szülő üzenettel."
+      thread_invalid_for_channel: "A szál nem része a megadott csatornának."
+      thread_does_not_match_parent: "A szál nem egyezik a szülőüzenettel."
       invalid_direct_message: "Ez a közvetlen üzenet nem hozható létre."
     reviewables:
       message_already_handled: "Köszönjük, de már megvizsgáltuk ezt az üzenetet, és megállapítottuk, hogy nem kell újra megjelölni."
@@ -239,11 +239,11 @@ hu:
           one: "[%{site_name}] Új üzenet"
           other: "[%{site_name}] Új üzenetek"
         watched_thread:
-          one: "[%{site_name}] Új téma üzenet itt: %{channel}"
-          other: "[%{site_name}] Új téma üzenetek itt: %{channel}"
+          one: "[%{site_name}] Új szálüzenet itt: %{channel}"
+          other: "[%{site_name}] Új szálüzenetek itt: %{channel}"
         watched_threads:
-          one: "[%{site_name}] Új téma üzenet a %{channel} és %{count} további csoportban"
-          other: "[%{site_name}] Új téma üzenet a %{channel} és %{count} további csoportban"
+          one: "[%{site_name}] Új szálüzenet a(z) %{channel} és %{count} további csoportban"
+          other: "[%{site_name}] Új szálüzenet a(z) %{channel} és %{count} további csoportban"
         chat_dm_1:
           one: "[%{site_name}] Új üzenet tőle: %{name}"
           other: "[%{site_name}] Új üzenetek tőle: %{name}"

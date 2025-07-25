@@ -17,7 +17,7 @@ be:
       edit: "Рэдагаваць"
       delete: "Выдаліць"
       query_groups: "групы"
-      query_description: "апісанне"
+      query_description: "Апісанне"
       reset_params: "скінуць"
     group:
       reports: "Справаздачы"

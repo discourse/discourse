@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Assigner do
   before do
     SiteSetting.assign_enabled = true
@@ -43,7 +41,7 @@ RSpec.describe Assigner do
       )
     end
 
-    describe "when user watchs topic when assigned" do
+    describe "when user watches topic when assigned" do
       before { moderator.user_option.watch_topic_when_assigned! }
 
       it "respects 'when assigned' user preference" do

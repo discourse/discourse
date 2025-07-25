@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ar:
+  js:
+    admin:
+      rss_polling:
+        author: المؤلف
+        feed_url: عنوان URL
+        discourse_category: الفئة
+        discourse_tags: الوسوم

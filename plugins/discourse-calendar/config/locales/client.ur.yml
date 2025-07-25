@@ -30,13 +30,14 @@ ur:
         invite_user_notification: "%{username} %{description}"
       show_all: "تمام دکھائیں"
       add_to_calendar: "کیلنڈر میں شامل کریں"
-      created_by: "بنائی گئی"
+      created_by: "نے بنایا"
       bulk_invite: "مجموئی دعوت نامہ"
       bulk_invite_modal:
         confirm: "تصدیق کریں"
         title: "مجموئی دعوت نامہ"
         success: "فائل کامیابی سے اَپ لوڈ کر دی گئی، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
         error: "معذرت، فائل CSV فارمیٹ میں ہونا ضروری ہے۔"
+        group_selector_placeholder: "ایک گروپ منتخب کریں..."
       upcoming_events:
         status: "سٹیٹس"
       models:

@@ -24,7 +24,7 @@ sv:
       all_tags: "(alla taggar)"
       create_rule: "Skapa regel"
       create_channel: "Skapa kanal"
-      delete_channel: "Radera"
+      delete_channel: "Ta bort"
       test_channel: "Testa"
       edit_channel: "Redigera"
       channel_delete_confirm: "Är du säker på att du vill radera den här kanalen? Alla tillhörande regler kommer att raderas."
@@ -49,7 +49,7 @@ sv:
         category: "Kategori"
         tags: "Taggar"
         edit_rule: "Redigera"
-        delete_rule: "Radera"
+        delete_rule: "Ta bort"
       edit_channel_modal:
         title: "Redigera kanal"
         save: "Spara kanal"

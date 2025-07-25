@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 sk:
+  js:
+    login:
+      lti:
+        name: "LTI"
+        title: "s LTI"

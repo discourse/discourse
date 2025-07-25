@@ -35,7 +35,7 @@ es:
       cant_act_unclaimed: "Debes reclamar este tema antes de actuar sobre las denuncias."
       topic_search_placeholder: "Buscar temas por título o contenido"
       sidebar_name_filter_placeholder: "Nombre/nombre de usuario"
-      assigned: "Asignado"
+      assigned: "Asignada"
       group_everyone: "Todos"
       assigned_to: "Asignado a"
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
@@ -93,10 +93,10 @@ es:
       reminders_frequency:
         description: "Frecuencia para recibir recordatorios de temas asignados."
         never: "Nunca"
-        daily: "Diario"
-        weekly: "Semanal"
-        monthly: "Mensual"
-        quarterly: "Trimestral"
+        daily: "Diariamente"
+        weekly: "Semanalmente"
+        monthly: "Mensualmente"
+        quarterly: "Trimestralmente"
       admin:
         groups:
           manage:
@@ -107,12 +107,12 @@ es:
     user:
       notification_level_when_assigned:
         label: "Cuando se asigne"
-        watch_topic: "Observar tema"
+        watch_topic: "Ver tema"
         track_topic: "Seguir tema"
         do_nothing: "No hacer nada"
       messages:
         assigned_title: "Asignados (%{count})"
-        assigned: "Asignado"
+        assigned: "Asignada"
       no_assignments_title: "Aún no tienes asignaciones"
       no_assignments_body: >
         Tus temas y mensajes asignados aparecerán aquí. También recibirás una notificación periódica de recordatorio de tus asignaciones, que puedes ajustar en tus <a href='%{preferencesUrl}'>preferencias de usuario</a>. <br><br> Para asignar un tema o mensaje a ti mismo o a otra persona, busca el botón %{icon} de asignar en la parte inferior.

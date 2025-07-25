@@ -1,0 +1,201 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sorter efter"
+            tag:
+              label: "Mærke"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Emne ID"
+            title:
+              label: "Titel"
+            categories:
+              label: "Kategorier"
+            tags:
+              label: "Mærker"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategori"
+            tags:
+              label: "Mærker"
+            canned_reply:
+              label: "Svar"
+    discourse_ai:
+      features:
+        back: "Tilbage"
+        disabled: "(deaktiveret)"
+        groups: "Grupper:"
+        no_groups: "Ingen"
+        edit: "Rediger"
+        expand_list:
+          one: "(%{count} mere)"
+          other: "(%{count} mere)"
+        collapse_list: "(vis mindre)"
+        filters:
+          all: "Alle"
+          reset: "Nulstil"
+        search:
+          name: "Søg"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Vælg en indstilling..."
+      layout:
+        table: "Tabel"
+      spam:
+        short_title: "Spam"
+        last_seven_days: "Seneste 7 dage"
+        enable: "Aktiver"
+        save_button: "Gem ændringer"
+        test_modal:
+          result: "Resultat"
+          run: "Kør test"
+          spam: "Spam"
+      usage:
+        summary: "Statistik"
+        username: "Brugernavn"
+        total_requests: "Total antal anmodninger"
+        periods:
+          last_day: "Seneste 24 timer"
+          custom: "Tilpasset..."
+      ai_persona:
+        back: "Tilbage"
+        name: "Navn"
+        edit: "Rediger"
+        export: "Eksporter"
+        import: "Importer"
+        description: "Beskrivelse"
+        user: Bruger
+        save: "Gem"
+        enabled: "Aktiveret?"
+        allowed_groups: "Tilladte grupper"
+        delete: "Slet"
+        response_format:
+          open_modal: "Rediger"
+          modal:
+            key_title: "Nøgle"
+        filters:
+          reset: "Nulstil"
+      rag:
+        uploads:
+          title: "Overførsler"
+          uploading: "Overfører…"
+      tools:
+        back: "Tilbage"
+        export: "Eksporter"
+        import: "Importer"
+        name: "Navn"
+        description: "Beskrivelse"
+        summary: "Statistik"
+        save: "Gem"
+        remove_parameter: "Fjern"
+        parameter_required: "Obligatoriske"
+        edit: "Rediger"
+        test: "Kør test"
+        delete: "Slet"
+        test_modal:
+          run: "Kør test"
+      llms:
+        display_name: "Navn"
+        save: "Gem"
+        edit: "Rediger"
+        back: "Tilbage"
+        delete: Slet
+        quotas:
+          group: "Gruppe"
+          max_usages: "Maks. anvendelser"
+          duration: "Varighed"
+          durations:
+            hour: "1 time"
+            six_hours: "6 timer"
+            day: "24 timer"
+            week: "7 dage"
+            custom: "Tilpasset..."
+          hours: "timer"
+        usage:
+          ai_summarization: "Opsummer"
+          ai_spam: "Spam"
+        next:
+          title: "Næste"
+        tests:
+          title: "Kør test"
+          success: "Succes!"
+        providers:
+          google: "Google"
+          fake: "Tilpasset"
+      ai_helper:
+        context_menu:
+          cancel: "Annuller"
+          confirm: "Bekræft"
+          discard: "Kassér"
+        post_options_menu:
+          close: "Luk"
+          copy: "Kopier"
+          copied: "Kopieret!"
+          cancel: "Annuller"
+        thumbnail_suggestions:
+          select: "Vælg"
+        image_caption:
+          save_caption: "Gem"
+          automatic_caption_dialog:
+            confirm: "Aktiver"
+      embeddings:
+        back: "Tilbage"
+        save: "Gem"
+        delete: "Slet"
+        edit: "Rediger"
+        tests:
+          title: "Kør test"
+          success: "Succes!"
+        display_name: "Navn"
+        providers:
+          google: "Google"
+          fake: "Tilpasset"
+      ai_bot:
+        debug_ai_modal:
+          request: "Anmod om medlemskab"
+          response: "Svar"
+          next_log: "Næste"
+          previous_log: "Forrige"
+        invite_ai_conversation:
+          button: "Invitér"
+        share_modal:
+          copy: "Kopier"
+        conversations:
+          today: "I dag"
+          last_7_days: "Seneste 7 dage"
+          last_30_days: "Seneste 30 dage"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Alle"
+            neutral: "Neutral"
+          group_types:
+            category: "Kategori"
+            tag: "Mærke"
+          table:
+            total_count: "Total"
+      summarization:
+        chat:
+          summarize: "Opsummer"
+      discobot_discoveries:
+        regular_results: "Emner"
+        collapse: "Fold sammen"
+        tooltip:
+          actions:
+            disable: "Deaktiver"

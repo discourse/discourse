@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 sw:
+  post_action_types:
+    vote:
+      title: "Piga kura"
   post_voting:
     comment:
       reviewables:

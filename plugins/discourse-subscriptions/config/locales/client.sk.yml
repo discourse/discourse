@@ -28,6 +28,9 @@ sk:
             single: "Aktualizovať"
           created_at: Vytvorené
           cancel: zrušiť
+      subscribe:
+        cardholder_address:
+          city: Mesto
       billing:
         email: Email
       admin:

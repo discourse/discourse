@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { fn } from "@ember/helper";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -40,8 +41,7 @@ export default class RemindAssignsFrequency extends Component {
           @valueProperty="value"
           @content={{this.availableFrequencies}}
           @value={{this.selectedFrequency}}
-          {{! template-lint-disable no-action }}
-          @onChange={{action
+          @onChange={{fn
             (mut this.user.custom_fields.remind_assigns_frequency)
           }}
         />

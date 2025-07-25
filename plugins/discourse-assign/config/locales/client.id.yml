@@ -12,6 +12,7 @@ id:
       reassign:
         title: "Ubah"
       assign_modal:
+        note_label: Catatan
         optional_label: "(opsional)"
         status_label: Status
       assign_mailer:

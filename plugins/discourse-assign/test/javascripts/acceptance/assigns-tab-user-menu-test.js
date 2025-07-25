@@ -1,10 +1,7 @@
-/* eslint-disable qunit/no-loose-assertions */
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
@@ -174,80 +171,79 @@ acceptance("Discourse Assign | user menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-assign-list");
 
-    const notifications = queryAll(
-      "#quick-access-assign-list .notification.unread"
-    );
-    assert.strictEqual(
-      notifications.length,
-      1,
-      "there is one unread notification"
-    );
-    assert.true(
-      notifications[0].classList.contains("unread"),
-      "the notification is unread"
-    );
-    assert.true(
-      notifications[0].classList.contains("assigned"),
-      "the notification is of type assigned"
-    );
+    assert
+      .dom("#quick-access-assign-list .notification.unread")
+      .exists({ count: 1 }, "there is one unread notification");
+    assert
+      .dom("#quick-access-assign-list .notification.unread")
+      .hasClass("assigned", "the notification is of type assigned");
 
-    const assigns = queryAll("#quick-access-assign-list .assigned");
-    assert.strictEqual(assigns.length, 2, "there are 2 assigns");
+    assert
+      .dom("#quick-access-assign-list .assigned")
+      .exists({ count: 2 }, "there are 2 assigns");
 
-    const userAssign = assigns[0];
-    const groupAssign = assigns[1];
-    assert.ok(
-      userAssign.querySelector(".d-icon-user-plus"),
-      "user assign has the right icon"
-    );
-    assert.ok(
-      groupAssign.querySelector(".d-icon-group-plus"),
-      "group assign has the right icon"
-    );
+    assert
+      .dom("#quick-access-assign-list .assigned:nth-child(1) .d-icon-user-plus")
+      .exists("user assign has the right icon");
+    assert
+      .dom(
+        "#quick-access-assign-list .assigned:nth-child(2) .d-icon-group-plus"
+      )
+      .exists("group assign has the right icon");
 
-    assert.true(
-      userAssign
-        .querySelector("a")
-        .href.endsWith("/t/test-poll-topic-please-bear-with-me/227"),
-      "user assign links to the assigned topic"
-    );
-    assert.true(
-      groupAssign
-        .querySelector("a")
-        .href.endsWith("/t/test-poll-topic-please-bear-with-me-2/228"),
-      "group assign links to the assigned topic"
-    );
+    assert
+      .dom("#quick-access-assign-list .assigned:nth-child(1) a")
+      .hasAttribute(
+        "href",
+        /\/t\/test-poll-topic-please-bear-with-me\/227$/,
+        "user assign links to the assigned topic"
+      );
+    assert
+      .dom("#quick-access-assign-list .assigned:nth-child(2) a")
+      .hasAttribute(
+        "href",
+        /\/t\/test-poll-topic-please-bear-with-me-2\/228$/,
+        "group assign links to the assigned topic"
+      );
 
-    assert.strictEqual(
-      userAssign.textContent.trim(),
-      "Test poll topic please bear with me",
-      "user assign contains the topic title"
-    );
-    assert.ok(
-      userAssign.querySelector(".item-description img.emoji"),
-      "emojis are rendered in user assign"
-    );
+    assert
+      .dom("#quick-access-assign-list .assigned:nth-child(1)")
+      .hasText(
+        "Test poll topic please bear with me",
+        "user assign contains the topic title"
+      );
+    assert
+      .dom(
+        "#quick-access-assign-list .assigned:nth-child(1) .item-description img.emoji"
+      )
+      .exists("emojis are rendered in user assign");
 
-    assert.strictEqual(
-      groupAssign.textContent.trim().replaceAll(/\s+/g, " "),
-      "Team Test poll topic please bear with me 2",
-      "group assign contains the topic title"
-    );
-    assert.ok(
-      groupAssign.querySelector(".item-description img.emoji"),
-      "emojis are rendered in group assign"
-    );
+    assert
+      .dom("#quick-access-assign-list .assigned:nth-child(2)")
+      .hasText(
+        "Team Test poll topic please bear with me 2",
+        "group assign contains the topic title"
+      );
+    assert
+      .dom(
+        "#quick-access-assign-list .assigned:nth-child(2) .item-description img.emoji"
+      )
+      .exists("emojis are rendered in group assign");
 
-    assert.strictEqual(
-      userAssign.querySelector("a").title,
-      i18n("user.assigned_to_you.topic"),
-      "user assign has the right title"
-    );
-    assert.strictEqual(
-      groupAssign.querySelector("a").title,
-      i18n("user.assigned_to_group.topic", { group_name: "Team" }),
-      "group assign has the right title"
-    );
+    assert
+      .dom("#quick-access-assign-list .assigned:nth-child(1) a")
+      .hasAttribute(
+        "title",
+        i18n("user.assigned_to_you.topic"),
+        "user assign has the right title"
+      );
+    assert
+      .dom("#quick-access-assign-list .assigned:nth-child(2) a")
+      .hasAttribute(
+        "title",
+        i18n("user.assigned_to_group.topic", { group_name: "Team" }),
+        "group assign has the right title"
+      );
   });
 
   test("dismiss button", async function (assert) {
@@ -261,13 +257,12 @@ acceptance("Discourse Assign | user menu", function (needs) {
 
     await click(".notifications-dismiss");
     assert.false(markRead, "mark-read request isn't sent");
-    assert.strictEqual(
-      query(
-        ".dismiss-notification-confirmation .d-modal__body"
-      ).textContent.trim(),
-      i18n("notifications.dismiss_confirmation.body.assigns", { count: 173 }),
-      "dismiss confirmation modal is shown"
-    );
+    assert
+      .dom(".dismiss-notification-confirmation .d-modal__body")
+      .hasText(
+        i18n("notifications.dismiss_confirmation.body.assigns", { count: 173 }),
+        "dismiss confirmation modal is shown"
+      );
 
     await click(".d-modal__footer .btn-primary");
     assert.true(markRead, "mark-read request is sent");
@@ -298,12 +293,13 @@ acceptance("Discourse Assign | user menu", function (needs) {
     assert
       .dom(".empty-state-body .d-icon-user-plus")
       .exists("empty state body has user-plus icon");
-    assert.true(
-      query(".empty-state-body a").href.endsWith(
-        "/my/preferences/notifications"
-      ),
-      "empty state body has user-plus icon"
-    );
+    assert
+      .dom(".empty-state-body a")
+      .hasAttribute(
+        "href",
+        /\/my\/preferences\/notifications$/,
+        "empty state body has user-plus icon"
+      );
   });
 
   test("renders the confirmation modal when dismiss assign notifications", async function (assert) {

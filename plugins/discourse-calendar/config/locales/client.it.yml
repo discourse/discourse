@@ -25,7 +25,7 @@ it:
           title: Evento iniziato
           fields:
             topic_id:
-              label: ID argomento
+              label: ID dell'argomento
     discourse_calendar:
       invite_user_notification: "%{username} ti ha invitato a: %{description}"
       on_holiday: "In vacanza"
@@ -198,7 +198,7 @@ it:
           it_vi: "Italia (it_vi)"
           it_vr: "Italia (it_vr)"
           it: "Italia"
-          je: "Jersey"
+          je: "Maglia"
           jp: "Giappone"
           ke: "Kenya"
           kr: "Corea (Repubblica di)"
@@ -214,7 +214,7 @@ it:
           mx: "Messico"
           my: "Malesia"
           ng: "Nigeria"
-          nl: "Paesi Bassi"
+          nl: "Olanda"
           "no": "Norvegia"
           nz_ak: "Nuova Zelanda (nz_ak)"
           nz_ca: "Nuova Zelanda (nz_ca)"
@@ -247,7 +247,7 @@ it:
           sk: "Slovacchia"
           th: "Tailandia"
           tn: "Tunisia"
-          tr: "Turchia"
+          tr: "Tacchino"
           ua: "Ucraina"
           us_ak: "Stati Uniti (us_ak)"
           us_al: "Stati Uniti (us_al)"
@@ -307,6 +307,7 @@ it:
           ve: "Venezuela"
           vi: "Isole Vergini (USA)"
           za: "Sud Africa"
+          zw: "Zimbabwe"
       toolbar_button:
         today: "Oggi"
         month: "Mese"
@@ -364,14 +365,14 @@ it:
         description_public: "Gli eventi pubblici accettano solo nomi utente per inviti collettivi."
         description_private: "Gli eventi pubblici accettano solo nomi di gruppi per inviti collettivi."
         download_sample_csv: "Scarica un file CSV di esempio"
-        send_bulk_invites: "Manda inviti"
+        send_bulk_invites: "Invia inviti"
         group_selector_placeholder: "Scegli un gruppo..."
         user_selector_placeholder: "Scegli utente..."
         inline_title: "Invito collettivo inline"
         csv_title: "Invito collettivo CSV"
       upcoming_events:
         title: "Prossimi eventi"
-        creator: "Creatore"
+        creator: "Autore"
         status: "Stato"
         starts_at: "Inizia alle"
       upcoming_events_list:
@@ -392,18 +393,18 @@ it:
         invitee:
           no_users: "Nessun utente trovato"
           status:
-            unknown: "Non interessato"
+            unknown: "Nessun interesse"
             going: "Parteciperò"
             not_going: "Non parteciperò"
             interested: "Interessato"
             going_count:
-              one: "%{count} partecipa"
+              one: "%{count} partecipano"
               other: "%{count} partecipano"
             not_going_count:
-              one: "%{count} non partecipa"
+              one: "%{count} non partecipano"
               other: "%{count} non partecipano"
             interested_count:
-              one: "%{count} interessato"
+              one: "%{count} interessati"
               other: "%{count} interessati"
             invited_count:
               one: "%{count} utente invitato"
@@ -426,7 +427,7 @@ it:
           label: "Campi personalizzati"
           placeholder: "Facoltativo"
           description: "I campi personalizzati consentiti sono definiti nelle impostazioni del sito. I campi personalizzati sono utilizzati per trasmettere dati ad altri plugin."
-        create_event_title: "Crea Evento"
+        create_event_title: "Crea evento"
         update_event_title: "Modifica evento"
         confirm_delete: "Vuoi davvero eliminare questo evento?"
         confirm_close: "Vuoi davvero chiudere questo evento?"
@@ -452,7 +453,7 @@ it:
             before: "prima del"
             after: "dopo il"
         recurrence:
-          label: "Periodico"
+          label: "Ricorrenza"
           none: "Non periodico"
           every_day: "Ogni giorno"
           every_month: "Ogni mese in questo giorno feriale"
@@ -461,7 +462,7 @@ it:
           every_two_weeks: "Ogni due settimane in questo giorno feriale"
           every_four_weeks: "Ogni quattro settimane in questo giorno feriale"
         minimal:
-          label: "Evento minimo"
+          label: "Evento minimale"
           checkbox_label: "Nascondi i pulsanti Parteciperò/Non parteciperò e lo stato degli invitati"
         url:
           label: "URL"

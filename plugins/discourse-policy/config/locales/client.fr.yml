@@ -1,0 +1,62 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    discourse_policy:
+      title: "Politique"
+      accepted_tooltip: "Utilisateurs ayant accepté cette politique"
+      not_accepted_tooltip: "Utilisateurs qui n'ont pas accepté cette politique"
+      accept_policy: "Accepter la politique"
+      revoke_policy: "Refuser la politique"
+      edit_reason: "Les paramètres de la politique ont été modifiés"
+      no_possible_users: "Cette politique n'a aucun utilisateur possible"
+      accept_policy_template: "J'accepte cette politique"
+      builder:
+        title: Politique
+        attach: Créer une politique
+        save: Enregistrer les modifications
+        insert: Insérer
+        errors:
+          group: Le groupe est requis
+          version: La version est requise
+        groups:
+          label: Groupes
+          description: Les groupes associés à cette politique
+        version:
+          label: Version
+          description: La version de la politique, la modification de la version forcera les utilisateurs à devoir l'accepter à nouveau
+        renew:
+          label: Renouveler
+          description: Renouveler la police tous les x jours
+        renew-start:
+          label: Début du renouvellement
+          description: Quand la politique doit être renouvelée
+        reminder:
+          label: Rappel
+          description: La fréquence à laquelle une notification de rappel doit être envoyée pour accepter la police
+        accept:
+          label: Accepter
+          description: Texte utilisé sur le bouton d'acceptation
+        revoke:
+          label: Révoquer
+          description: Texte utilisé sur le bouton de révocation
+        private:
+          label: Rendre privé ?
+          description: Garder le statut de la politique privé pour les administrateurs
+        send-email:
+          label: Envoyer un e-mail ?
+          description: Informer les utilisateurs de la nouvelle politique par e-mail
+      preferences:
+        title: Politiques
+        policy_emails:
+          always_description: Nous ne vous enverrons un e-mail que si vous avez également choisi de recevoir de nouveaux e-mails d'activité.
+          away_description: Nous ne vous enverrons un e-mail que si nous ne vous avons pas vu au cours des 10 dernières minutes avant le changement de statut de la politique, et uniquement si vous avez également accepté de recevoir de nouveaux e-mails d'activité.
+          label: Envoyez-moi un e-mail lorsqu'une politique nécessite mon examen
+          email_frequency_options:
+            never: Jamais
+            when_away: Seulement en cas d'absence
+            always: Toujours

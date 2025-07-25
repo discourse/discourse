@@ -5,12 +5,56 @@
 # https://translate.discourse.org/
 
 uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
   js:
+    login:
+      patreon:
+        name: Patreon
+        title: Увійдіть за допомогою Patreon
     patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Фільтри'
       group: 'Група'
+      rewards: 'Нагороди'
       filter: 'Filter'
+      help_text: 'Ви можете синхронізувати групу Discourse з одним або кількома рівнями винагород Patreon.'
+      last_synced: 'Востаннє синхронізовано'
       edit: 'Редагувати'
       delete: 'Видалити'
       save: 'Зберегти'
+      update_data: 'Оновити дані Patreon і синхронізувати групи'
+      refresh_page: 'Нові дані були завантажені з Patreon API. Будь ласка, оновіть сторінку.'
+      select_group: 'Виберіть групу'
       field:
-        email: "Електронна пошта"
+        id: "Id"
+        email: "E-mail"
+        amount_cents: "Сума (в центах)"
+        rewards: "Нагороди"
+        declined_since: "Пожертвування відхилено з"
+        more_details:
+          label: "Платежі та додаткова інформація"
+          help_text:
+            email_available: "У правому нижньому куті сторінки ви побачите історію збору коштів на цьому Patreon."
+            email_not_available: "Виберіть учасника Patreon і перейдіть до нижньої правої частини сторінки, щоб побачити історію пожертвувань."
+      donation_prompt:
+        body: |
+          <h1>Привіт, читачу!</h1>
+
+          <p>Вам подобається наш вебсайт? Бажаєте зробити свій внесок у добру справу?</p>
+
+          <p>
+            Якщо ви вважаєте наш вебсайт корисним і вам подобається спільнота, яку ми створили, ми будемо раді, якщо ви зробите пожертву на його розвиток.
+            Пожертви забезпечують безперебійну роботу наших послуг і гарантують, що наша спільнота працюватиме довгі роки.
+            Кожен долар має значення і буде використаний з користю.
+          </p>
+
+          <p>Дякуємо за вашу підтримку!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Стати меценатом</a>
+          </p>

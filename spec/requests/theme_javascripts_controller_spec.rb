@@ -137,13 +137,13 @@ RSpec.describe ThemeJavascriptsController do
       component.save!
     end
 
-    it "forces theme settings default values" do
+    it "sets theme settings default values" do
       component.update_setting(:num_setting, 643)
       _, digest = component.baked_js_tests_with_digest
 
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.body).to include(
-        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{component.id}, {\"num_setting\":5}, { force: true });",
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{component.id}, {\"num_setting\":5});",
       )
       expect(response.body).to include("assert.ok(true);")
     end
@@ -171,7 +171,7 @@ RSpec.describe ThemeJavascriptsController do
         "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
           "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
           "\"/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
-          "\"/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost\"}}, { force: true });",
+          "\"/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost\"}});",
       )
       expect(response.body).to include("assert.ok(true);")
     ensure

@@ -9,4 +9,5 @@ hr:
     user_notes:
       labels:
         user: Korisnik
+        note: Bilješka
         moderator: Moderator

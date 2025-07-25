@@ -6,7 +6,6 @@
 
 sv:
   site_settings:
-    openid_connect_enabled: Aktivera OpenID Connect-autentisering. Anpassa användargränssnittets text <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>här</a>
     openid_connect_discovery_document: "Webbadress för OpenID Connect-identifieringsdokument. Finns normalt på 'https://your.domain/.well-known/openid-configuration'"
     openid_connect_client_id: "OpenID Connect-klient-ID"
     openid_connect_client_secret: "OpenID Connect-klienthemlighet"

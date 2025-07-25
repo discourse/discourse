@@ -24,13 +24,13 @@ hr:
       all_tags: "(sve oznake)"
       create_rule: "Stvori pravilo"
       create_channel: "Stvori kanal"
-      delete_channel: "Pobriši"
+      delete_channel: "Izbriši"
       test_channel: "Test"
-      edit_channel: "Izmijeni"
+      edit_channel: "Uredi"
       channel_delete_confirm: "Jeste li sigurni da želite izbrisati ovaj kanal? Sva pridružena pravila bit će izbrisana."
       test_modal:
         title: "Pošaljite probnu poruku"
-        topic: "Teme"
+        topic: "Tema"
         send: "Pošalji testnu poruku"
         close: "Zatvori"
         error: "Došlo je do nepoznate pogreške prilikom slanja poruke. Više podataka potražite u zapisnicima web mjesta."
@@ -48,8 +48,8 @@ hr:
         filter: "Filter"
         category: "Kategorija"
         tags: "Oznake"
-        edit_rule: "Izmijeni"
-        delete_rule: "Pobriši"
+        edit_rule: "Uredi"
+        delete_rule: "Izbriši"
       edit_channel_modal:
         title: "Uredi kanal"
         save: "Spremi kanal"
@@ -118,7 +118,7 @@ hr:
         zulip:
           param:
             subject:
-              title: "predmet"
+              title: "Predmet"
         rocketchat:
           param:
             identifier:

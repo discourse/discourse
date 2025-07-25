@@ -41,11 +41,11 @@ fr:
         group_mention: Mention de groupe
       filter:
         mute: 'Mettre en sourdine'
-        follow: 'Premier message seulement'
+        follow: 'Première publication uniquement'
         watch: 'Tous les messages et réponses'
         thread: 'Tous les messages avec des réponses par fil'
       rule_table:
-        filter: "Filtrer"
+        filter: "Filtre"
         category: "Catégorie"
         tags: "Étiquettes"
         edit_rule: "Modifier"
@@ -65,7 +65,7 @@ fr:
         provider: Fournisseur
         type: Type
         channel: Canal
-        filter: Filtrer
+        filter: Filtre
         category: Catégorie
         group: Groupe
         tags: Étiquettes

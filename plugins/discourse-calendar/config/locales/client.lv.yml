@@ -19,7 +19,7 @@ lv:
       region:
         none: "Nav"
       toolbar_button:
-        today: "Šodien"
+        today: "Šodienas"
         month: "Mēneša"
         week: "Nedēļas"
         day: "Diena"

@@ -29,7 +29,7 @@ ur:
       types:
         bool:
           yes: "ہاں "
-          no: "نہیں "
+          no: "نہیں"
           null_: "خالی"
       export: "برآمد"
       save: "تبدیلیاں محفوظ کریں"
@@ -37,7 +37,7 @@ ur:
       run: "چلائیں"
       undo: "تبدیلیاں منسوخ کریں"
       edit: "ترمیم کریں"
-      delete: "حذف کریں"
+      delete: "مٹائیں"
       recover: "ڈیٹا کمانڈ کا حذف کرنا منسوخ کریں"
       download_json: "JSON"
       download_csv: "CSV"

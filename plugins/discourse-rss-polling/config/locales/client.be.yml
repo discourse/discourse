@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 be:
+  js:
+    admin:
+      rss_polling:
+        author: аўтар
+        feed_url: URL спасылка
+        discourse_category: Катэгорыя
+        discourse_tags: Цэтлікі

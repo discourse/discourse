@@ -18,5 +18,3 @@ cs:
             added_and_removed: "Přidáno %{added} a odebráno %{removed}"
             added: "Přidáno %{added}"
             removed: "Odebráno %{removed}"
-      flowdock:
-        message_title: "zveřejněno"

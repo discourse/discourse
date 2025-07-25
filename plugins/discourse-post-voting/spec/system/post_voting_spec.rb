@@ -11,6 +11,21 @@ RSpec.describe "Post voting", type: :system do
     before { SiteSetting.glimmer_post_stream_mode = value }
 
     context "when glimmer_post_stream_mode=#{value}" do
+      it "does not display button to add a comment and does not show comments when `post_voting_comment_enabled` site setting is false" do
+        SiteSetting.post_voting_comment_enabled = false
+        SiteSetting.post_voting_enabled = true
+
+        topic = Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE, user: user2)
+        post_1 = Fabricate(:post, topic: topic)
+        post_2 = Fabricate(:post, topic: topic)
+
+        sign_in(user1)
+
+        topic_page.visit_topic(topic)
+
+        expect(topic_page).to have_no_comment_menu
+      end
+
       it "disallows voting on archived or closed topics" do
         SiteSetting.post_voting_enabled = true
         topic = Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE, user: user2, archived: true)

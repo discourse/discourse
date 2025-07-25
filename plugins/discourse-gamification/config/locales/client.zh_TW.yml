@@ -11,22 +11,22 @@ zh_TW:
       leaderboard:
         link_to_settings: "設定"
         refresh: "重新整理"
-        name: "名字"
+        name: "名稱"
         name_placeholder: "名字..."
         period:
-          all_time: "所以時間"
+          all_time: "所有時間"
           yearly: "年"
           quarterly: "季度"
           monthly: "月"
           weekly: "周"
           daily: "日"
-      create: "創建"
+      create: "建立"
       cancel: "取消"
       close: "關閉"
       delete: "刪除"
       edit: "編輯"
       back: "上一步"
-      save: "保存"
+      save: "儲存"
       apply: "套用"
       update_range:
         last_10_days: "過去 10 天"
@@ -35,4 +35,4 @@ zh_TW:
         all_time: "所有時間"
       custom_range_from: "來自"
       admin:
-        name: "名字"
+        name: "名稱"

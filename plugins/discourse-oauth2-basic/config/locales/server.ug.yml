@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    oauth2_token_url_method: "پەرمان تاختا تور ئادرېسىغا ئېرىشىشتە قوللىنىدىغان ئۇسۇل"

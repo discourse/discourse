@@ -6,7 +6,6 @@
 
 ru:
   site_settings:
-    openid_connect_enabled: Включить аутентификацию OpenID Connect. Настройте текст пользовательского интерфейса <a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>здесь</a>
     openid_connect_discovery_document: "URL-адрес документа обнаружения OpenID Connect. Обычно находится по адресу «https://ваш.домен/.общеизвестный/openid-configuration»"
     openid_connect_client_id: "ID клиента OpenID Connect"
     openid_connect_client_secret: "Секретный ключ клиента OpenID Connect"

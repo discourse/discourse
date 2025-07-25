@@ -14,10 +14,10 @@ el:
       test_channel: "Δοκιμή"
       edit_channel: "Επεξεργασία"
       test_modal:
-        topic: "Νήμα"
+        topic: "Θέμα"
         close: "Κλείσιμο"
       type:
-        normal: Φυσιολογικά
+        normal: Φυσιολογικό
       filter:
         mute: 'Σίγαση'
       rule_table:
@@ -31,11 +31,16 @@ el:
       edit_rule_modal:
         cancel: Άκυρο
         type: Τύπος
+        channel: Κανάλι
         filter: Φίλτρο
         category: Κατηγορία
         group: Ομάδα
         tags: Ετικέτες
       provider:
+        slack:
+          param:
+            identifier:
+              title: Κανάλι
         telegram:
           param:
             name:
@@ -45,10 +50,18 @@ el:
           param:
             name:
               title: "Όνομα"
+            webhook_url:
+              title: Webhook URL
         guilded:
           param:
             name:
               title: "Όνομα"
+            webhook_url:
+              title: Webhook URL
+        mattermost:
+          param:
+            identifier:
+              title: Κανάλι
         matrix:
           param:
             name:
@@ -57,14 +70,22 @@ el:
           param:
             subject:
               title: "Αντικείμενο"
+        rocketchat:
+          param:
+            identifier:
+              title: Κανάλι
         gitter:
           param:
             name:
               title: "Όνομα"
+            webhook_url:
+              title: "Webhook URL"
         teams:
           param:
             name:
               title: "Όνομα"
+            webhook_url:
+              title: "Webhook URL"
         powerautomate:
           param:
             name:
@@ -75,10 +96,14 @@ el:
           param:
             name:
               title: "Όνομα"
+            webhook_url:
+              title: "Webhook URL"
         google:
           param:
             name:
               title: "Όνομα"
+            webhook_url:
+              title: "Webhook URL"
     discourse_automation:
       scriptables:
         send_slack_message:
@@ -87,3 +112,5 @@ el:
               label: Μήνυμα
             url:
               label: URL
+            channel:
+              label: Κανάλι

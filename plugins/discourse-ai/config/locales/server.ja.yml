@@ -1,0 +1,434 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  discourse_automation:
+    ai:
+      flag_types:
+        review: "レビューキューに投稿を追加"
+        spam: "迷惑として通報して投稿を非表示"
+        spam_silence: "迷惑として通報し、投稿を非表示にしてユーザーを投稿禁止にする"
+    scriptables:
+      llm_triage:
+        title: AI を使った投稿のトリアージ
+        description: "大規模言語モデルを使って投稿に優先順位を付けます"
+        flagged_post: |
+          <div>モデルからの応答:</div>
+          <p>%%LLM_RESPONSE%%</p>
+          <b><a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> ルールによってトリガーされました。</b>
+      llm_report:
+        title: AI を使った定期レポート
+        description: "大規模言語モデルに基づく定期レポート"
+  site_settings:
+    discourse_ai_enabled: "Discourse AI プラグインを有効にします。"
+    ai_toxicity_enabled: "毒コメントモジュールを有効にします。"
+    ai_toxicity_inference_service_api_endpoint: "毒コメントモジュールの API が実行している URL"
+    ai_toxicity_inference_service_api_key: "毒コメント API の API キー"
+    ai_toxicity_inference_service_api_model: "推論に使用するモデル。多言語モデルは、イタリア語、フランス語、ロシア語、ポルトガル語、スペイン語、およびトルコ語で動作します。"
+    ai_toxicity_flag_automatically: "構成されたしきい値を超える投稿 / チャットメッセージを自動的に通報します。"
+    ai_toxicity_flag_threshold_toxicity: "毒コメント: ディスカッションから退出したり、自分の意見の共有を諦めたりさせられる可能性がある程度ある、失礼、無礼、または不合理なコメント"
+    ai_toxicity_flag_threshold_severe_toxicity: "深刻な毒コメント: ディスカッションから退出したり、自分の意見の共有を諦めたりさせられる可能性が高い、非常に憎しみに満ちた、攻撃的、または無礼なコメント"
+    ai_toxicity_flag_threshold_obscene: "わいせつ"
+    ai_toxicity_flag_threshold_identity_attack: "アイデンティティ攻撃"
+    ai_toxicity_flag_threshold_insult: "侮辱"
+    ai_toxicity_flag_threshold_threat: "脅迫"
+    ai_toxicity_flag_threshold_sexual_explicit: "露骨な性的表現"
+    ai_toxicity_groups_bypass: "このグループのユーザーの投稿は、毒コメントモジュールによって分類されません。"
+    ai_sentiment_enabled: "センチメントモジュールを有効にします。"
+    ai_sentiment_inference_service_api_endpoint: "センチメントモジュールの API が実行している URL"
+    ai_sentiment_inference_service_api_key: "センチメント API の API キー"
+    ai_sentiment_models: "推論に使用するモデル。センチメントは、投稿をポジティブ、ニュートラル、ネガティブの空間に分類します。感情は、怒り、嫌悪、恐怖、喜び、ニュートラル、悲しみ、驚きの空間に分類されます。"
+    ai_nsfw_detection_enabled: "NSFW モジュールを有効にします。"
+    ai_nsfw_inference_service_api_endpoint: "NSFW モジュールの API が実行している URL"
+    ai_nsfw_inference_service_api_key: "NSFW API の API キー"
+    ai_nsfw_flag_automatically: "構成されたしきい値を超える NSFW 投稿を自動的に通報します。"
+    ai_nsfw_flag_threshold_general: "NSFW と見なされる画像の一般しきい値。"
+    ai_nsfw_flag_threshold_drawings: "描画が NSFW と見なされるしきい値。"
+    ai_nsfw_flag_threshold_hentai: "エロアニメとして分類された画像が NSFW として見なされるためのしきい値。"
+    ai_nsfw_flag_threshold_porn: "ポルノとして分類された画像が NSFW として見なされるためのしきい値。"
+    ai_nsfw_flag_threshold_sexy: "官能的として分類された画像が NSFW として見なされるためのしきい値。"
+    ai_nsfw_models: "NSFW 推論に使用するモデル。"
+    ai_helper_enabled: "AI ヘルパーを有効にします。"
+    composer_ai_helper_allowed_groups: "これらのグループのユーザーの作成ツールには、AI ヘルパーボタンが表示されます。"
+    ai_helper_allowed_in_pm: "PM で作成ツールの AI ヘルパーを有効にします。"
+    ai_helper_model: "AI ヘルパーに使用するモデル。"
+    ai_helper_custom_prompts_allowed_groups: "これらのグループのユーザーには、AI ヘルパーにカスタムプロンプトオプションが表示されます。"
+    ai_helper_automatic_chat_thread_title_delay: "AI ヘルパーがチャットスレッドのタイトルを自動的に設定するまでの遅延 (分単位)。"
+    ai_helper_automatic_chat_thread_title: "スレッドのコンテンツに基づいてチャットスレッドのタイトルを自動的に設定する。"
+    ai_helper_illustrate_post_model: "作成ツールの AI ヘルパーのイラスト投稿機能に使用するモデル"
+    ai_helper_enabled_features: "AI ヘルパーで有効にする機能を選択します。"
+    post_ai_helper_allowed_groups: "投稿内で AI ヘルパー機能にアクセスできるユーザーグループ"
+    ai_helper_image_caption_model: "画像キャプションの生成に使用するモデルを選択します"
+    ai_auto_image_caption_allowed_groups: "これらのグループのユーザーは画像の自動キャプション作成を切り替えられます。"
+    ai_embeddings_selected_model: "選択したモデルを使用して、埋め込みを生成します。"
+    ai_embeddings_generate_for_pms: "個人メッセージの埋め込みを生成します。"
+    ai_embeddings_semantic_related_topics_enabled: "関連トピックのセマンティック検索を使用します。"
+    ai_embeddings_semantic_related_topics: "関連トピックセクションに表示する最大トピック数。"
+    ai_embeddings_backfill_batch_size: "15 分ごとにバックフィルする埋め込みの数。"
+    ai_embeddings_semantic_search_enabled: "全ページのセマンティック検索を有効にします。"
+    ai_embeddings_semantic_quick_search_enabled: "検索メニューポップアップのセマンティック検索オプションを有効にします。"
+    ai_embeddings_semantic_related_include_closed_topics: "閉鎖トピックをセマンティック検索結果に含める"
+    ai_embeddings_semantic_search_hyde_model: "セマンティック検索中に得られる結果を改善するためにキーワードの拡張に使用されるモデル"
+    ai_embeddings_per_post_enabled: 各投稿の埋め込みを生成する
+    ai_custom_summarization_allowed_groups: "新しい要約の作成に使用できるグループ。"
+    ai_pm_summarization_allowed_groups: "PM での要約の作成と表示が許可されたグループ。"
+    ai_summary_gists_allowed_groups: "ホットなトピックリストで gist の表示が許可されたグループ。"
+    ai_summary_backfill_maximum_topics_per_hour: "1 時間あたりにバックフィルするトピック要約の数。"
+    ai_bot_enabled: "AI ボットモジュールを有効にします。"
+    ai_bot_enable_chat_warning: "PM チャットが開始されたら警告を表示する。翻訳文字列の discourse_ai.ai_bot.pm_warning を編集して上書き可能"
+    ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"
+    ai_bot_debugging_allowed_groups: "これらのグループが生の AI リクエストと応答を表示するデバッグボタンを投稿に表示することを許可する"
+    ai_bot_public_sharing_allowed_groups: "これらのグループが、一意の公開リンクを介して AI 個人メッセージを公開共有することを許可します。注意: サイトにログインが必要な場合、共有にもログインが必要です。"
+    ai_bot_add_to_header: "AI ボットとの PM を開始するためのボタンをヘッダーに表示する"
+    ai_bot_github_access_token: "GitHub AI ツールで使用する GitHub アクセストークン (検索サポートに必要)"
+    ai_stability_api_key: "stability.ai API の API キー"
+    ai_stability_engine: "stability.ai API に使用する画像生成エンジン"
+    ai_stability_api_url: "stability.ai API の URL"
+    ai_google_custom_search_api_key: "Google カスタム検索 API の API キーは https://developers.google.com/custom-search を参照してください"
+    ai_google_custom_search_cx: "Google カスタム検索 API の CX"
+  reviewables:
+    reasons:
+      flagged_by_toxicity: AI プラグインは、これを毒コメントとして分類した後に通報しました。
+      flagged_by_nsfw: AI プラグインは、添付画像の少なくとも 1 つを NSFW として分類した後に通報しました。
+  reports:
+    overall_sentiment:
+      title: "全体的なセンチメント"
+      description: 'チャートは肯定的または否定的のいずれかに分類された投稿の数を比較しています。これらは、肯定的または否定的なスコアが既定のしきい値スコアを超えた場合に計算されます。つまり、中立的な投稿は表示されません。個人メッセージ (PM) も除外されます。"cardiffnlp/twitter-roberta-base-sentiment-latest" で分類されています。'
+      xaxis: "ポジティブ(%)"
+      yaxis: "日付"
+    emotion_admiration:
+      title: "\U0001F929 賞賛"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「賞賛」の感情で分類された投稿。"
+    emotion_amusement:
+      title: "\U0001F604 楽しい"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「楽しい」の感情で分類された投稿。"
+    emotion_anger:
+      title: "\U0001F620 怒り"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「怒り」の感情で分類された投稿。"
+    emotion_annoyance:
+      title: "\U0001F612 煩わしい"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「煩わしい」の感情で分類された投稿。"
+    emotion_approval:
+      title: "\U0001F44D 承認"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「承認」の感情で分類された投稿。"
+    emotion_caring:
+      title: "\U0001F917 思いやり"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「思いやり」の感情で分類された投稿。"
+    emotion_confusion:
+      title: "\U0001F615 混乱"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「混乱」の感情で分類された投稿。"
+    emotion_curiosity:
+      title: "\U0001F914 好奇心"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「好奇心」の感情で分類された投稿。"
+    emotion_desire:
+      title: "\U0001F60D 欲望"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「欲望」の感情で分類された投稿。"
+    emotion_disappointment:
+      title: "\U0001F61E 失望"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「失望」の感情で分類された投稿。"
+    emotion_disapproval:
+      title: "\U0001F44E 却下"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「却下」の感情で分類された投稿。"
+    emotion_disgust:
+      title: "\U0001F922 嫌悪"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「嫌悪」の感情で分類された投稿。"
+    emotion_embarrassment:
+      title: "\U0001F633 恥ずかしい"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「恥ずかしい」の感情で分類された投稿。"
+    emotion_excitement:
+      title: "\U0001F92A 興奮"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「興奮」の感情で分類された投稿。"
+    emotion_fear:
+      title: "\U0001F628 恐怖"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「恐怖」の感情で分類された投稿。"
+    emotion_gratitude:
+      title: "\U0001F64F 感謝"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「感謝」の感情で分類された投稿。"
+    emotion_grief:
+      title: "\U0001F622 悲嘆"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「悲嘆」の感情で分類された投稿。"
+    emotion_joy:
+      title: "\U0001F60A 喜び"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「喜び」の感情で分類された投稿。"
+    emotion_love:
+      title: '❤️ 愛'
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「愛」の感情で分類された投稿。"
+    emotion_nervousness:
+      title: "\U0001F630 緊張"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「緊張」の感情で分類された投稿。"
+    emotion_neutral:
+      title: "\U0001F610 ニュートラル"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「ニュートラル」の感情で分類された投稿。"
+    emotion_optimism:
+      title: "\U0001F31F 楽観的"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「楽観的」の感情で分類された投稿。"
+    emotion_pride:
+      title: "\U0001F981 プライド"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「プライド」の感情で分類された投稿。"
+    emotion_realization:
+      title: "\U0001F4A1 思いつき"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「思いつき」の感情で分類された投稿。"
+    emotion_relief:
+      title: "\U0001F60C 安心"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「安心」の感情で分類された投稿。"
+    emotion_remorse:
+      title: "\U0001F614 後悔"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「後悔」の感情で分類された投稿。"
+    emotion_sadness:
+      title: "\U0001F62D 悲しみ"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「悲しみ」の感情で分類された投稿。"
+    emotion_surprise:
+      title: "\U0001F632 驚き"
+      description: "SamLowe/roberta-base-go_emotions' モデルを使って AI によって「驚き」の感情で分類された投稿。"
+  discourse_ai:
+    ai_artifact:
+      view_source: "ソースを表示"
+      view_changes: "変更を表示"
+    unknown_model: "不明な AI モデル"
+    tools:
+      custom_name: "%{name} (カスタム)"
+      presets:
+        browse_web_jina:
+          name: "ウェブを閲覧 (jina.ai)"
+        exchange_rate:
+          name: "為替レート"
+        stock_quote:
+          name: "下部か (AlphaVantage)"
+        image_generation:
+          name: "Flux 画像ジェネレーター (Together.ai)"
+        empty_tool:
+          name: "空白から始める..."
+    ai_helper:
+      errors:
+        completion_request_failed: "提案しようとしたときに問題が発生しました。もう一度お試しください。"
+      prompts:
+        translate: '%{language} に翻訳する'
+        generate_titles: トピックのタイトルを提案
+        proofread: テキストを構成
+        markdown_table: Markdown テーブルを生成
+        custom_prompt: "カスタムプロンプト"
+        explain: "説明"
+        illustrate_post: "イラスト投稿"
+        replace_dates: "スマート日付"
+      painter:
+        attribution:
+          stable_diffusion_xl: "Stable Diffusion XL による画像"
+          dall_e_3: "DALL-E 3 による画像"
+      image_caption:
+        attribution: "AI によるキャプション"
+    share_ai:
+      read_more: "トランスクリプト全文を読む"
+      onebox_title: "%{llm_name} で AI 会話"
+      formatted_excerpt: "%{llm_name} で AI 会話:\n %{excerpt}"
+      title: "%{title} - AI 会話 - %{site_name}"
+      errors:
+        not_allowed: "このトピックを共有できません"
+        other_people_in_pm: "他の人との個人メッセージは公開共有できません"
+        other_content_in_pm: "他の人の投稿を含む個人メッセージは公開共有できません"
+        failed_to_share: "会話を共有できませんでした"
+        conversation_deleted: "会話の共有が削除されました"
+    spam_detection:
+      flag_reason: "<a href='%{url}'>Discourse AI</a> によって迷惑として通報されました"
+      silence_reason: "ユーザーは <a href='%{url}'>Discourse AI</a> によって自動的に投稿禁止になりました"
+      invalid_error_type: "無効なエラータイプが指定されました"
+      unexpected: "予期しないエラーが発生しました"
+      bot_user_update_failed: "迷惑スキャンボットユーザーの更新に失敗しました"
+    ai_bot:
+      reply_error: "返信中に予期しない問題が発生したようです。\n\n\n[details='エラーの詳細']\n%{details}\n[/details]"
+      default_pm_prefix: "[無題の AI ボット PM]"
+      personas:
+        default_llm_required: "チャットを有効にする前に、デフォルトの LLM モデルが必要です"
+        cannot_delete_system_persona: "システムペルソナは削除できません。代わりに無効にしてください"
+        cannot_edit_system_persona: "システムペルソナは名前変更のみ可能です。ツールまたはシステムプロンプトは編集できません。代わりに無効にするかコピーを作成してください"
+        github_helper:
+          name: "GitHub ヘルパー"
+          description: "GitHub 関連タスクと質問の支援を専門とする AI ボット"
+        general:
+          name: フォーラムヘルパー
+          description: "さまざまなタスクを実行できる汎用 AI ボット"
+        artist:
+          name: アーティスト
+          description: "画像の生成を専門とする AI ボット"
+        sql_helper:
+          name: SQL ヘルパー
+          description: "この Discourse インスタンスでの SQL クエリの作成支援を専門とする AI ボット"
+        settings_explorer:
+          name: 設定エクスプローラー
+          description: "Discourse のサイト設定のナビ支援を専門とする AI ボット"
+        creative:
+          name: クリエイティブ
+          description: "外部統合のないクリエイティブ系タスクを専門とする AI ボット"
+        dall_e3:
+          name: "DALL-E 3"
+          description: "DALL-E 3 を使って画像の生成を専門とする AI ボット"
+        discourse_helper:
+          name: "Discourse ヘルパー"
+          description: "Discourse 関連タスクの支援を専門とする AI ボット"
+        web_artifact_creator:
+          name: "ウェブアーティファクトクリエーター"
+          description: "インタラクティブなウェブアーティファクトの作成に特化した AI ボット"
+        custom_prompt:
+          name: "カスタムプロンプト"
+        smart_dates:
+          name: "スマート日付"
+      topic_not_found: "要約がありません。トピックが見つかりません！"
+      summarizing: "トピックの要約を生成中"
+      searching: "検索中: '%{query}'"
+      tool_options:
+        researcher:
+          max_results:
+            name: "結果の最大件数"
+        google:
+          base_query:
+            name: "ベース検索クエリ"
+            description: "検索時に使用する基本クエリ。例: 「site:example.com」には example.com からの結果のみが含まれ、「before:2022-01-01」には 2021 年以前の結果のみが含まれます。このテキストは検索クエリの先頭に追加されます。"
+        read:
+          read_private:
+            name: "非公開を読む"
+            description: "ユーザーがアクセスできるすべてのトピックへのアクセスを許可します (デフォルトでは公開トピックのみが含まれます)"
+        search:
+          search_private:
+            name: "非公開を検索"
+            description: "検索結果にユーザーがアクセスできるすべてのトピックを含めます (デフォルトでは公開トピックのみが含まれます)"
+          max_results:
+            name: "結果の最大件数"
+            description: "検索に含める結果の最大件数 - 空白の場合はデフォルトのルールが使用され、件数は使用されるモデルに応じて調整されます。最高値は 100 です。"
+          base_query:
+            name: "ベース検索クエリ"
+            description: "検索時に使用するベースクエリ。例: '#urgent' は検索クエリの先頭に '#urgent' を追加し、緊急のカテゴリまたはタグを持つトピックのみが含まれます。"
+      tool_summary:
+        update_artifact: "ウェブアーティファクトの更新"
+        create_artifact: "ウェブアーティファクトを作成します"
+        web_browser: "ウェブを閲覧"
+        github_search_files: "GitHub 検索ファイル"
+        github_search_code: "GitHub コード検索"
+        github_file_content: "GitHub ファイルコンテンツ"
+        github_pull_request_diff: "GitHub プルリクエストの差分"
+        random_picker: "ランダムピッカー"
+        categories: "カテゴリをリスト表示"
+        search: "検索"
+        tags: "タグをリスト"
+        time: "時刻"
+        summarize: "要約"
+        image: "画像を生成"
+        google: "Google で検索"
+        read: "トピックを読む"
+        setting_context: "サイト設定のコンテキストを検索します"
+        schema: "データベーススキーマを検索します"
+        search_settings: "サイト設定を検索中"
+        dall_e: "画像を生成"
+        search_meta_discourse: "Discrouse Meta を検索"
+        javascript_evaluator: "JavaScript を評価"
+      tool_help:
+        update_artifact: "AI ボットを使ってウェブアーティファクトを更新します"
+        create_artifact: "AI ボットを使用してウェブアーティファクトを作成します"
+        web_browser: "AI ボットを使ってウェブページを閲覧する"
+        github_search_code: "GitHub リポジトリでコードを検索する"
+        github_search_files: "GitHub リポジトリでファイルを検索する"
+        github_file_content: "GitHub リポジトリからファイルのコンテンツを取得する"
+        github_pull_request_diff: "GitHub プルリクエストの差分を取得する"
+        random_picker: "ランダムな数字またはリストのランダムな要素を選択する"
+        categories: "フォーラムのすべての公開カテゴリをリストします"
+        search: "フォーラムのすべての公開トピックを検索します"
+        tags: "フォーラムのすべてのタグをリストします"
+        time: "様々なタイムゾーンの時間を調べます"
+        summary: "トピックを要約します"
+        image: "Stable Diffusion を使って画像を生成します"
+        google: "Googleでクエリを検索します"
+        read: "フォーラムの公開トピックを読み取ります"
+        setting_context: "サイト設定のコンテキストを検索します"
+        schema: "データベーススキーマを検索します"
+        search_settings: "サイト設定を検索します"
+        dall_e: "DALL-E 3 を使って画像を生成します"
+        search_meta_discourse: "Discrouse Meta を検索"
+        javascript_evaluator: "JavaScript を評価"
+      tool_description:
+        update_artifact: "AI ボットを使ってウェブアーティファクトを更新しました"
+        web_browser: "読み取り中: <a href='%{url}'>%{url}</a>"
+        github_search_files: "%{repo}/%{branch} で「%{keywords}」を検索しました"
+        github_search_code: "%{repo} で「%{query}」を検索しました"
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_file_content: "%{repo_name}@%{branch} から %{file_paths} のコンテンツを取得しました"
+        random_picker: "%{options} から選択。選択: %{result}"
+        read: "読み取り中: <a href='%{url}'>%{title}</a>"
+        time: "%{timezone} の時刻は %{time} です"
+        summarize: "<a href='%{url}'>%{title}</a> の要約"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          other: "%{count} 個のカテゴリが見つかりました"
+        tags:
+          other: "%{count} 個のタグが見つかりました"
+        search:
+          other: "「%{query}」の<a href='%{url}'>結果</a>が %{count} 件見つかりました"
+        search_meta_discourse:
+          other: "「%{query}」の<a href='%{url}'>結果</a>が %{count} 件見つかりました"
+        google:
+          other: "「%{query}」の<a href='%{url}'>結果</a>が %{count} 件見つかりました"
+        setting_context: "コンテキストを読み取り中: %{setting_name}"
+        schema: "%{tables}"
+        search_settings:
+          other: "「%{query}」の結果が %{count} 件見つかりました"
+    summarization:
+      configuration_hint:
+        other: "先に次の設定を構成します: %{settings}"
+      chat:
+        no_targets: "選択された期間中にメッセージはありませんでした。"
+    sentiment:
+      reports:
+        overall_sentiment: "全体的なセンチメント (肯定的 - 否定的)"
+        post_emotion:
+          sadness: "悲しみ \U0001F622"
+          surprise: "驚き \U0001F631"
+          neutral: "ニュートラル \U0001F610"
+          fear: "恐怖 \U0001F628"
+          anger: "怒り \U0001F621"
+          joy: "喜び \U0001F600"
+          disgust: "嫌悪 \U0001F922"
+        sentiment_analysis:
+          positive: "ポジティブ"
+          negative: "ネガティブ"
+          neutral: "ニュートラル"
+    llm:
+      configuration:
+        disable_module_first: "まず %{setting} を無効にする必要があります"
+        set_llm_first: "先に %{setting} を設定します"
+        model_unreachable: "このモデルから応答を得られませんでした。まず設定を確認してください。"
+        invalid_seeded_model: "この機能ではこのモデルを使用できません"
+        must_select_model: "先に LLM を選択する必要があります"
+      endpoints:
+        not_configured: "%{display_name} (未構成)"
+        configuration_hint:
+          other: "次の設定が構成されていることを確認してください: %{settings}"
+      delete_failed:
+        other: "%{settings} が使用中であるため、このモデルを削除できませんでした。設定を更新してもう一度お試しください。"
+      cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
+    embeddings:
+      delete_failed: "このモデルは使用中です。先に `ai embeddings selected model` を更新してください。"
+      cannot_edit_builtin: "組み込みのモデルを編集することはできません。"
+      configuration:
+        disable_embeddings: "まず「AI 埋め込み対応」を無効にしてください。"
+        choose_model: "先に「AI 埋め込みに選択されたモデル」を設定してください。"
+    llm_models:
+      missing_provider_param: "%{param} は空白にできません"
+      bedrock_invalid_url: "このモデルを使用するには、すべてのフィールドに入力してください。"
+    ai_staff_action_logger:
+      updated: "更新"
+      removed: "削除"
+    errors:
+      quota_exceeded: "このモデルの使用量制限を超過しました。%{relative_time}後にもう一度お試しください。"
+      quota_required: "このモデルのトークンまたは使用量の上限を指定する必要があります"
+      no_query_specified: クエリパラメーターは必須です。指定してください。
+      no_user_for_persona: 指定されたペルソナにはユーザーが関連付けられていません。
+      persona_not_found: 指定されたペルソナは存在しません。persona_name または persona_id パラメーターを確認してください。
+      no_user_specified: username または user_unique_id パラメーターは必須です。指定してください。
+      user_not_found: 指定されたユーザーは存在しません。username パラメーターを確認してください。
+      persona_disabled: 指定されたペルソナは無効化されています。persona_name または persona_id パラメーターを確認してください。
+      no_default_llm: ペルソナには default_llm が定義されている必要があります。
+      user_not_allowed: ユーザーはトピックに参加できません。
+      prompt_message_length: メッセージ %{idx} は 1000 文字の上限を超えています。

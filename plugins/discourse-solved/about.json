@@ -1,0 +1,7 @@
+{
+  "tests": {
+    "requiredPlugins": [
+      "discourse-assign"
+    ]
+  }
+}

@@ -55,9 +55,11 @@ describe "Table Builder", type: :system do
             | |  |  | |
           TABLE
 
-          expect(normalize_value(composer.composer_input.value)).to eq(
-            normalize_value(created_table),
-          )
+          try_until_success do
+            expect(normalize_value(composer.composer_input.value)).to eq(
+              normalize_value(created_table),
+            )
+          end
         end
 
         context "when cancelling table creation" do

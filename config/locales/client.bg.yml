@@ -3409,6 +3409,8 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
+            filter:
+              content: "Филтър"
             topics:
               content: "Теми"
             faq:
@@ -3446,6 +3448,9 @@ bg:
       spreadsheet:
         show: "Покажи"
         about: "Относно"
+    filter:
+      description:
+        yesterday: "Вчера"
     discovery:
       headings:
         categories: "Всички категории"
@@ -3541,6 +3546,8 @@ bg:
               header_description: "Адресите тук са използвани от потребители, идентифицирани като спамери"
         embedding:
           title: "Ембедване"
+      theme_site_settings:
+        default_value: "По подразбиране"
       search:
         title: "Търсене"
       dashboard:
@@ -3881,6 +3888,11 @@ bg:
               too_large: "трябва да бъде по-малко или равно на %{count}"
         colors:
           title: "Цветове"
+          edit: "Редактирай"
+          filters:
+            all: "Всички"
+          active_badge:
+            text: "Активни"
           copy_name_prefix: "Копие на"
           undo: "Отмени"
           undo_title: "Върнете промените направени на този цвят до последно запазените."
@@ -4207,7 +4219,6 @@ bg:
         activity: Активност
         like_count: Харесвания Дадени / Получени
         last_100_days: "В последните 100 дни "
-        private_topics_count: Частни теми
         posts_read_count: Прочетени публикации
         post_count: Създадени публикации
         topics_entered: Прегледани теми

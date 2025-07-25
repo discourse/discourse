@@ -15,10 +15,10 @@ th:
         period:
           all_time: "ตลอดเวลา"
           yearly: "รายปี"
-          quarterly: "รายไตรมาส"
+          quarterly: "สามเดือน"
           monthly: "รายเดือน"
           weekly: "รายสัปดาห์"
-          daily: "รายวัน"
+          daily: "วัน"
       create: "สร้าง"
       cancel: "ยกเลิก"
       close: "ปิด"

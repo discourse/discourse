@@ -20,5 +20,3 @@ hr:
             added_and_removed: "Dodano %{added} i uklonjeno %{removed}"
             added: "Dodano %{added}"
             removed: "je uklonio %{removed}"
-      flowdock:
-        message_title: "objavljeno"

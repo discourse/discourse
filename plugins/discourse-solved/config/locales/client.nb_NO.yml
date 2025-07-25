@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "godtatt"
+    solved:
+      title: "Løst"
+      allow_accepted_answers: "Tillat enmeeier og personale å markere et svar som løsning"
+      solved_topics_auto_close_hours: "Lukk emnet automatisk (n) timer etter siste svar når det har blitt merket som løst."
+      accept_answer: "Velg hvis dette svaret løser problemet"
+      has_no_accepted_answer: "Dette emnet har ingen løsning"
+      unaccept_answer: "Fravelg dette hvis svaret ikke lenger løser problemet"
+      accepted_answer: "Løsning"
+      solution: "Løsning"
+      topic_status_filter:
+        all: "alle"
+        solved: "løst"
+    topic_statuses:
+      solved:
+        help: "Dette emnet har en løsning"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Tillitsnivå

@@ -18,13 +18,13 @@ cs:
     action_codes:
       assigned: "Přiděleno %{who} %{when}"
       assigned_group: "Přiděleno %{who} %{when}"
-      assigned_to_post: "Uživateli %{who} přidělen <a href='%{path}'>příspěvek</a> %{when}"
+      assigned_to_post: "Skupině %{who} přidělen <a href='%{path}'>příspěvek</a> %{when}"
       assigned_group_to_post: "Skupině %{who} přidělen <a href='%{path}'>příspěvek</a> %{when}"
       unassigned: "%{who} zrušeno přidělení %{when}"
       unassigned_group: "%{who} zrušeno přidělení %{when}"
-      unassigned_from_post: "Uživateli %{who} zrušeno přidělení <a href='%{path}'>příspěvku</a> %{when}"
+      unassigned_from_post: "Skupině %{who} zrušeno přidělení <a href='%{path}'>příspěvku</a> %{when}"
       unassigned_group_from_post: "Skupině %{who} zrušeno přidělení <a href='%{path}'>příspěvku</a> %{when}"
-      reassigned: "Uživateli %{who} znovu přiděleno %{when}"
+      reassigned: "Skupině %{who} znovu přiděleno %{when}"
       reassigned_group: "Skupině %{who} znovu přiděleno %{when}"
       details_change: "Změněny podrobnosti přidělení pro %{who} %{when}"
       note_change: "Změněna poznámka přidělení pro %{who} %{when}"
@@ -36,8 +36,8 @@ cs:
       topic_search_placeholder: "Hledat témata podle názvu nebo obsahu příspěvku"
       sidebar_name_filter_placeholder: "Jméno/Uživatelské jméno"
       assigned: "Přiděleno"
-      group_everyone: "Všichni"
-      assigned_to: "Přiděleno"
+      group_everyone: "Kdokoliv"
+      assigned_to: "Přiřazeno"
       assigned_topic_to: "Téma přiděleno <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} přiděleno %{username}"
       assign_post_to_multiple: "#%{post_number} uživateli %{username}"
@@ -72,7 +72,7 @@ cs:
       assign_modal:
         title: "Zadat téma"
         reassign_title: "Změnit přidělení tématu"
-        assign: "Zadat"
+        assign: "Přidělit"
         assignee_label: Komu
         assignment_label: Přiřazení
         choose_assignee: Vyberte uživatele, kterého chcete přidělit.
@@ -138,7 +138,7 @@ cs:
           assigned: "jsou přidělena"
           unassigned: "nejsou přidělena"
         assigned:
-          label: "Přiděleno uživateli"
+          label: "Přiřazeno"
     topics:
       bulk:
         unassign: "Zrušit přidělení témat"
@@ -193,5 +193,5 @@ cs:
           other: "Seznam přidělení - %{count} nepřečtených přidělení"
     edit_assignments_modal:
       title: "Upravit přiřazení"
-      topic: "Témata"
+      topic: "Téma"
       post: "Příspěvek"

@@ -18,25 +18,28 @@ class ThemeJavascriptCompiler
     @@terser_disabled = false
   end
 
-  def initialize(theme_id, theme_name, minify: true)
+  def initialize(theme_id, theme_name, settings = {}, minify: true)
     @theme_id = theme_id
-    @output_tree = []
+    @input_tree = {}
     @theme_name = theme_name
     @minify = minify
+    @settings = settings
   end
 
   def compile!
     if !@compiled
       @compiled = true
-      @output_tree.freeze
+      @input_tree.freeze
+
+      output_tree = compile_tree!
 
       output =
-        if !has_content?
+        if !output_tree.present?
           { "code" => "" }
         elsif @@terser_disabled || !@minify
-          { "code" => raw_content }
+          { "code" => output_tree.map { |filename, source| source }.join("") }
         else
-          DiscourseJsProcessor::Transpiler.new.terser(@output_tree.to_h, terser_config)
+          DiscourseJsProcessor::Transpiler.new.terser(output_tree, terser_config)
         end
 
       @content = output["code"]
@@ -77,27 +80,17 @@ class ThemeJavascriptCompiler
     @source_map
   end
 
-  def raw_content
-    @output_tree.map { |filename, source| source }.join("")
+  def append_tree(tree)
+    @input_tree.merge!(tree)
   end
 
-  def has_content?
-    @output_tree.present?
-  end
+  private
 
-  def prepend_settings(settings_hash)
-    @output_tree.prepend ["settings.js", <<~JS]
-      (function() {
-        if ('require' in window) {
-          require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
-        }
-      })();
-    JS
-  end
+  def compile_tree!
+    input_tree = @input_tree.dup
 
-  def append_tree(tree, include_variables: true)
     # Replace legacy extensions
-    tree.transform_keys! do |filename|
+    input_tree.transform_keys! do |filename|
       if filename.ends_with? ".js.es6"
         filename.sub(/\.js\.es6\z/, ".js")
       else
@@ -106,7 +99,7 @@ class ThemeJavascriptCompiler
     end
 
     # Some themes are colocating connector JS under `/connectors`. Move template to /templates to avoid module name clash
-    tree.transform_keys! do |filename|
+    input_tree.transform_keys! do |filename|
       match = COLOCATED_CONNECTOR_REGEX.match(filename)
       next filename if !match
 
@@ -123,7 +116,7 @@ class ThemeJavascriptCompiler
     end
 
     # Handle colocated components
-    tree.dup.each_pair do |filename, content|
+    input_tree.dup.each_pair do |filename, content|
       is_component_template =
         filename.end_with?(".hbs") &&
           filename.start_with?("discourse/components/", "admin/components/")
@@ -139,7 +132,7 @@ class ThemeJavascriptCompiler
       JS
 
       js_filename = filename.sub(/\.hbs\z/, ".js")
-      js_contents = tree[js_filename] # May be nil for template-only component
+      js_contents = input_tree[js_filename] # May be nil for template-only component
       if js_contents && !js_contents.include?("export default")
         message =
           "#{filename} does not contain a `default export`. Did you forget to export the component class?"
@@ -156,27 +149,37 @@ class ThemeJavascriptCompiler
 
       js_contents = prefix + js_contents
 
-      tree[js_filename] = js_contents
-      tree.delete(filename)
+      input_tree[js_filename] = js_contents
+      input_tree.delete(filename)
     end
 
+    output_tree = {}
+
+    register_settings(@settings, tree: output_tree)
+
     # Transpile and write to output
-    tree.each_pair do |filename, content|
+    input_tree.each_pair do |filename, content|
       module_name, extension = filename.split(".", 2)
 
       if extension == "js" || extension == "gjs"
-        append_module(content, module_name, extension, include_variables:)
+        append_module(content, module_name, extension, tree: output_tree)
       elsif extension == "hbs"
-        append_ember_template(module_name, content)
+        append_ember_template(module_name, content, tree: output_tree)
       else
-        append_js_error(filename, "unknown file extension '#{extension}' (#{filename})")
+        append_js_error(
+          filename,
+          "unknown file extension '#{extension}' (#{filename})",
+          tree: output_tree,
+        )
       end
     rescue CompileError => e
-      append_js_error filename, "#{e.message} (#{filename})"
+      append_js_error filename, "#{e.message} (#{filename})", tree: output_tree
     end
+
+    output_tree
   end
 
-  def append_ember_template(name, hbs_template)
+  def append_ember_template(name, hbs_template, tree:)
     module_name = name
     module_name = "/#{module_name}" if !module_name.start_with?("/")
     module_name = "discourse/theme-#{@theme_id}#{module_name}"
@@ -189,7 +192,7 @@ class ThemeJavascriptCompiler
     JS
 
     template_module = DiscourseJsProcessor.transpile(script, "", module_name, theme_id: @theme_id)
-    @output_tree << ["#{name}.js", <<~JS]
+    tree["#{name}.js"] = <<~JS
       if ('define' in window) {
       #{template_module}
       }
@@ -198,18 +201,18 @@ class ThemeJavascriptCompiler
     raise CompileError.new ex.message
   end
 
-  def append_raw_script(filename, script)
-    @output_tree << [filename, script + "\n"]
+  def append_raw_script(filename, script, tree:)
+    tree[filename] = script + "\n"
   end
 
-  def append_module(script, name, extension, include_variables: true)
+  def append_module(script, name, extension, include_variables: true, tree:)
     original_filename = name
     name = "discourse/theme-#{@theme_id}/#{name}"
 
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
 
-    @output_tree << ["#{original_filename}.#{extension}", <<~JS]
+    tree["#{original_filename}.#{extension}"] = <<~JS
       if ('define' in window) {
       #{transpiler.perform(script, "", name, theme_id: @theme_id, extension: extension).strip}
       }
@@ -218,12 +221,20 @@ class ThemeJavascriptCompiler
     raise CompileError.new ex.message
   end
 
-  def append_js_error(filename, message)
+  def append_js_error(filename, message, tree:)
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{message}"
-    append_raw_script filename, "console.error(#{message.to_json});"
+    append_raw_script filename, "console.error(#{message.to_json});", tree:
   end
 
-  private
+  def register_settings(settings_hash, tree:)
+    append_raw_script("settings.js", <<~JS, tree:)
+      (function() {
+        if ('require' in window) {
+          require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
+        }
+      })();
+    JS
+  end
 
   def theme_settings
     <<~JS

@@ -13,7 +13,7 @@ pt_BR:
   js:
     chat_integration:
       menu_title: "Integrações de bate-papo"
-      settings: "Configurações"
+      settings: "Definições"
       no_providers: "Você precisa habilitar alguns provedores nas configurações do plugin"
       channels_with_errors: "Alguns canais deste provedor falharam na última vez em que as mensagens foram enviadas. Clique no(s) ícone(s) de erro para saber mais."
       channel_exception: "Um erro desconhecido ocorreu na última vez que uma mensagem foi enviada para este canal."
@@ -41,7 +41,7 @@ pt_BR:
         group_mention: Menção de Grupo
       filter:
         mute: 'Silenciar'
-        follow: 'Somente a primeira postagem'
+        follow: 'Apenas primeira postagem'
         watch: 'Todas as postagens e respostas'
         thread: 'Todas as postagens encadeadas'
       rule_table:
@@ -104,7 +104,7 @@ pt_BR:
               title: "Nome"
               help: "Um nome para descrever o canal. Não é usado para a conexão ao Discord."
             webhook_url:
-              title: URL do Webhook
+              title: URL do webhook
               help: A URL do webhook criada nas configurações do seu servidor Discord
         guilded:
           title: "Guilded"
@@ -113,7 +113,7 @@ pt_BR:
               title: "Nome"
               help: "Um nome para descrever o canal. Não é usado para a conexão ao Guilded"
             webhook_url:
-              title: URL do Webhook
+              title: URL do webhook
               help: A URL do webhook criada nas configurações do seu servidor Guilded
         mattermost:
           title: "Mattermost"
@@ -161,7 +161,7 @@ pt_BR:
               title: "Nome"
               help: "O nome de uma sala Gitter, ex.: gitterHQ/services."
             webhook_url:
-              title: "URL do Webhook"
+              title: "URL do webhook"
               help: "A URL fornecida quando você cria uma nova integração em uma sala Gitter."
         flowdock:
           title: "Flowdock"
@@ -184,7 +184,7 @@ pt_BR:
               title: "Nome"
               help: "Um nome de canal do Teams, por exemplo: discourse"
             webhook_url:
-              title: "Webhook URL"
+              title: "URL do webhook"
               help: "A URL fornecida ao criar um novo webhook de entrada"
           errors:
             invalid_channel: "Este canal não existe no Microsoft Teams"
@@ -206,7 +206,7 @@ pt_BR:
               title: "Nome"
               help: "Um nome de espaço do Webex, exemplo: discourse"
             webhook_url:
-              title: "URL do Webhook"
+              title: "URL do webhook"
               help: "A URL fornecida ao criar um novo webhook de entrada"
           errors:
             invalid_channel: "Este canal não existe no Webex"
@@ -217,7 +217,7 @@ pt_BR:
               title: "Nome"
               help: "Um nome para o canal (exibido apenas na interface de administração do Discourse)"
             webhook_url:
-              title: "URL do Webhook"
+              title: "URL do webhook"
               help: "A URL fornecida quando você cria um novo webhook de entrada"
     discourse_automation:
       scriptables:

@@ -264,12 +264,6 @@ cs:
     broken_page_change_alert: "Handler onPageChange vyvolal chybu. Další informace najdete v nástrojích pro vývojáře prohlížeče."
     broken_plugin_alert: "Způsobeno pluginem '%{name}'"
     broken_transformer_alert: "Došlo k chybě. Vaše stránka nemusí fungovat správně."
-    critical_deprecation:
-      notice: "<b>[Upozornění správce]</b> Jeden z vašich motivů nebo pluginů potřebuje aktualizaci, aby byl kompatibilní s nadcházejícími změnami jádra Discourse."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifikovaný motiv: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifikovaný plugin: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -5321,6 +5315,8 @@ cs:
             badges:
               content: "Odznaky"
               title: "Všechny odznaky, které lze získat"
+            filter:
+              content: "Filtr"
             topics:
               content: "Témata"
               title: "Všechna témata"
@@ -5488,6 +5484,10 @@ cs:
           save: "Uložit jako..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Váš prohlížeč brzy nebude s touto komunitou kompatibilní. Chcete-li se zde i nadále účastnit, aktualizujte si prosím prohlížeč nebo <a href='%{url}'>zjistěte více</a>."
+    filter:
+      description:
+        yesterday: "Včera"
+        last_year: "Minulý rok"
     discovery:
       headings:
         all:
@@ -5807,7 +5807,6 @@ cs:
           header_description: "Sledovaná slova jsou moderátorské nástroje, které mohou provádět různé akce včetně blokování, cenzurování, propojování nebo nahlašování příspěvků obsahujících určitá slova."
         color_palettes:
           title: "Palety barev"
-          header_description: "Barevné palety definují základní barvy používané napříč rozhraním vašich stránek, zatímco motivy mohou poskytnout další styly, rozložení a komponenty. Obojí se podílí na vytvoření jedinečného vzhledu a pocitu vašeho webu. Mohou být také zpřístupněny uživatelům k výběru jejich předvolby."
         emoji:
           title: "Smajlíky :)"
           header_description: "Přidejte nové emotikony, které budou dostupné všem. Vyberte více souborů a vytvořte emotikony pomocí jejich názvů souborů. Vybraná skupina bude použita pro všechny soubory, které jsou přidány současně."
@@ -5900,6 +5899,9 @@ cs:
         embedding:
           title: "Zabudování"
           header_description: "Diskuse má schopnost vložit komentáře z tématu na vzdálený web pomocí Javascript API, které vytváří IFRAME"
+      theme_site_settings:
+        setting: "Nastavení"
+        default_value: "Výchozí"
       search:
         modal_title: "Hledat vše v administraci"
         title: "Vyhledat"
@@ -6604,7 +6606,6 @@ cs:
           install: "Instalovat"
           themes:
             title: "Motivy"
-            description: "Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele."
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
             new_theme: "Nový motiv"
             back: "Zpět na motivy"
@@ -6967,11 +6968,7 @@ cs:
           up_to_date: "Motiv je aktuální, naposledy zkontrolováno: "
           has_overwritten_history: "Aktuální verze motivu již neexistuje, protože historie Git byla přepsána pomocí force push."
           add: "Přidat"
-          theme_settings: "Nastavení motivu"
-          edit_objects_theme_setting: "Editor nastavení objektů"
-          overriden_settings_explanation: "Přepsaná nastavení jsou označena tečkou a mají zvýrazněnou barvu. Chcete-li obnovit tato nastavení na výchozí hodnotu, stiskněte vedle ní tlačítko Resetovat."
           no_settings: "Tento motiv nemá nastavení"
-          theme_translations: "Překlady motivů"
           empty: "Žádné položky"
           commits_behind:
             one: "Tento motiv je %{count} commit pozadu!"
@@ -7076,7 +7073,12 @@ cs:
             title: "Vyberte základní paletu barev"
             description: "Základní paleta:"
           title: "Barvy"
-          edit: "Upravit palety barev"
+          edit: "Upravit"
+          filters:
+            all: "Vše"
+            user_selectable: "Volitelný uživatelem"
+          active_badge:
+            text: "Aktivní"
           long_title: "Palety barev"
           about: "Upravte barvy používané motivy. Pro začátek vytvořte novou paletu barev."
           new_name: "Nová paleta barev"
@@ -7749,7 +7751,6 @@ cs:
         activity: Aktivita
         like_count: Rozdaných / obdržených "Líbí se"
         last_100_days: "Za posledních 100 dní"
-        private_topics_count: Počet soukromých témat
         posts_read_count: Přečteno příspěvků
         post_count: Vytvořeno příspěvků
         second_factor_enabled: Dvoufaktorové ověřování povoleno

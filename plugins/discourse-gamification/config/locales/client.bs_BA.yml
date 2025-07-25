@@ -23,9 +23,9 @@ bs_BA:
       cancel: "Odustani"
       close: "Zatvori"
       delete: "Delete"
-      edit: "Edit"
+      edit: "Izmijeni"
       back: "Prethodno"
-      save: "Save"
+      save: "Sačuvaj"
       apply: "Snimi"
       update_range:
         all_time: "Oduvijek"

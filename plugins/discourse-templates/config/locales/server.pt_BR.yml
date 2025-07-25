@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    discourse_templates_enabled: "Permitir que usuários com acesso de visualização na categoria especificada abaixo usem os modelos disponíveis"
+    discourse_templates_categories: "Categorias para buscar os modelos"
+    discourse_templates_enable_private_templates: "Permitir o uso de modelos privados"
+    discourse_templates_groups_allowed_private_templates: "Grupos autorizados a usar modelos privados. Os membros da equipe são sempre permitidos."
+  default_category_template:
+    name: Modelos

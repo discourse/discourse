@@ -178,12 +178,6 @@ zh_TW:
     broken_page_change_alert: "onPageChange 處理器產生錯誤。請檢查瀏覽器開發工具以取得更多資訊。"
     broken_plugin_alert: "由外掛程式引起 '%{name}'"
     broken_transformer_alert: "出現錯誤。您的網站可能無法正常運作。"
-    critical_deprecation:
-      notice: "<b>[管理員通知]</b>您的主題或外掛之一需要更新，以相容於即將發生的 Discourse 核心變更。"
-      id: "（編號：<em>%{id}</em>）"
-      linked_id: "（編號：<a href='%{url}' target='_blank'><em>%{id}</em></a>）"
-      theme_source: "已識別的主題：<a target='_blank' href='%{path}'>'%{name}'</a>。"
-      plugin_source: "已識別的外掛程式：'%{name}'"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -4424,6 +4418,8 @@ zh_TW:
             badges:
               content: "徽章"
               title: "所有可獲得的徽章"
+            filter:
+              content: "過濾器"
             topics:
               content: "討論話題"
               title: "所有話題"
@@ -4566,6 +4562,9 @@ zh_TW:
           save: "另存為..."
     powered_by_discourse: "由 Discourse 提供支持"
     safari_15_warning: "您的瀏覽器與這個社群站不相容，要持續互動的話，請升級您的瀏覽器或是 <a href='%{url}'>瞭解更多</a>。"
+    filter:
+      description:
+        yesterday: "昨天"
     discovery:
       headings:
         multi_tag:
@@ -4853,6 +4852,8 @@ zh_TW:
         embedding:
           title: "嵌入"
           header_description: "Discourse 能夠使用創建 IFRAME 的 Javascript API 將主題中的註釋嵌入遠程網站中"
+      theme_site_settings:
+        default_value: "預設"
       search:
         title: "搜索"
         result_types:
@@ -5779,11 +5780,7 @@ zh_TW:
           up_to_date: "佈景主題已是最新版本，上次檢查時間："
           has_overwritten_history: "目前的主題版本不再存在，因為 Git 歷史記錄被強制推覆了。"
           add: "新增"
-          theme_settings: "佈景主題設定"
-          edit_objects_theme_setting: "物件設定編輯器"
-          overriden_settings_explanation: "覆蓋的設定以點標記並以突出顯示的顏色顯示。若要將這些設定重設為預設值，請按下旁邊的重設按鈕。"
           no_settings: "此佈景主題無設定"
-          theme_translations: "佈景主題轉譯"
           empty: "沒有物件"
           commits_behind:
             other: "佈景主題落後了%{count}個變更！"
@@ -5864,7 +5861,12 @@ zh_TW:
             title: "選擇調色盤"
             description: "基本顏色："
           title: "顏色"
-          edit: "編輯調色盤"
+          edit: "編輯"
+          filters:
+            all: "全部"
+            user_selectable: "使用者可選"
+          active_badge:
+            text: "啟用"
           long_title: "調色盤"
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
           new_name: "新的調色盤"
@@ -6491,7 +6493,6 @@ zh_TW:
         activity: 活動
         like_count: 已給出 / 收到的讚
         last_100_days: "在過去 100 天內"
-        private_topics_count: 私人話題
         posts_read_count: 讀過的貼文
         post_count: 已發表的貼文
         second_factor_enabled: 啟用雙重認證

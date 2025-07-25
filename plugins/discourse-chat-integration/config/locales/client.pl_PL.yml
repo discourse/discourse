@@ -13,7 +13,7 @@ pl_PL:
   js:
     chat_integration:
       menu_title: "Integracje czatu"
-      settings: "Ustawienia"
+      settings: "Ustawień"
       no_providers: "Musisz włączyć niektórych dostawców w ustawieniach wtyczki"
       channels_with_errors: "Niektóre kanały dla tego dostawcy nie powiodły się, gdy zostały wysłane ostatnie wiadomości. Kliknij ikonę błędu, aby dowiedzieć się więcej."
       channel_exception: "Wystąpił nieznany błąd, gdy wiadomość została ostatnio wysłana na ten kanał."
@@ -22,8 +22,8 @@ pl_PL:
       choose_group: "(wybierz grupę)"
       all_categories: "(wszystkie kategorie)"
       all_tags: "(wszystkie tagi)"
-      create_rule: "Stwórz Regułę"
-      create_channel: "Stwórz Kanał"
+      create_rule: "Utwórz regułę"
+      create_channel: "Utwórz kanał"
       delete_channel: "Usuń"
       test_channel: "Sprawdź"
       edit_channel: "Edytuj"
@@ -31,17 +31,17 @@ pl_PL:
       test_modal:
         title: "Wyślij wiadomość testową"
         topic: "Temat"
-        send: "Wyślij Wiadomość Testową"
+        send: "Wyślij wiadomość testową"
         close: "Zamknij"
         error: "Wystąpił nieznany błąd, w trakcie wysyłania wiadomości na ten kanał. Sprawdź logi witryny, aby uzyskać więcej informacji."
         success: "Wiadomość wysłana poprawnie"
       type:
         normal: Normalny
-        group_message: Wiadomość Grupowa
+        group_message: Wiadomość grupowa
         group_mention: Wzmianka grupy
       filter:
         mute: 'Wycisz'
-        follow: 'Tylko pierwszy wpis'
+        follow: 'Tylko pierwszy post'
         watch: 'Wszystkie wpisy i odpowiedzi'
         thread: 'Wszystkie posty z odpowiedziami w wątkach'
       rule_table:
@@ -51,16 +51,16 @@ pl_PL:
         edit_rule: "Edytuj"
         delete_rule: "Usuń"
       edit_channel_modal:
-        title: "Edytuj Kanał"
-        save: "Zapisz Kanał"
+        title: "Edytuj kanał"
+        save: "Zapisz kanał"
         cancel: "Anuluj"
         provider: "Dostawca"
         channel_validation:
           ok: "Poprawny"
           fail: "Niepoprawny format"
       edit_rule_modal:
-        title: Edytuj Regułę
-        save: Zapisz Regułę
+        title: Edytuj regułę
+        save: Zapisz regułę
         cancel: Anuluj
         provider: Dostawca
         type: Typ
@@ -104,7 +104,7 @@ pl_PL:
               title: "Nazwa"
               help: "Nazwa opisująca kanał. Nie służy do połączenia z Discord."
             webhook_url:
-              title: Adres URL webhooka
+              title: URL webhooka
               help: URL webhooka stworzony w ustawienia serwera Discorda.
         guilded:
           title: "Guilded"
@@ -161,14 +161,14 @@ pl_PL:
               title: "Nazwa"
               help: "Nazwa pokoju Glitter, np. gitterHQ/services."
             webhook_url:
-              title: "Adres URL webhooka"
+              title: "URL webhooka"
               help: "Adres URL podany podczas tworzenia nowej integracji w pokoju Gitter."
         flowdock:
           title: "Flowdock"
           param:
             flow_token:
-              title: "Flow Token"
-              help: "Flow token nadany w trakcie tworzenia źródła flowu w którym zamierzasz wysyłać wiadomości."
+              title: "Token Flow"
+              help: "Token Flow nadany w trakcie tworzenia źródła flowu, w którym zamierzasz wysyłać wiadomości."
         groupme:
           title: "GroupMe"
           param:
@@ -189,13 +189,16 @@ pl_PL:
           errors:
             invalid_channel: "Ten kanał nie istnieje w Microsoft Teams"
         powerautomate:
+          title: "Microsoft Power Automate"
           param:
             name:
               title: "Nazwa"
               help: "Nazwa kanału (wyświetlana tylko w interfejsie administratora Discourse)"
             webhook_url:
-              title: "URL webhook"
+              title: "URL webhooka"
               help: "Adres URL podany podczas tworzenia nowego przychodzącego webhooka"
+          errors:
+            invalid_webhook: "Ten adres URL webhooka jest nieprawidłowy."
         webex:
           title: "Zespoły Webex"
           param:
@@ -214,7 +217,7 @@ pl_PL:
               title: "Nazwa"
               help: "Nazwa kanału (wyświetlana tylko w interfejsie administratora Discourse)"
             webhook_url:
-              title: "URL webhook"
+              title: "URL webhooka"
               help: "Adres URL podany podczas tworzenia nowego webhooka"
     discourse_automation:
       scriptables:
@@ -223,13 +226,17 @@ pl_PL:
           fields:
             message:
               label: Wiadomość
+              description: >-
+                Użyj ${TOPIC} dla nazwy tematu, ${URL} dla użytego adresu URL, ${REMOVED_TAGS} dla usuniętych tagów, ${ADDED_TAGS} dla dodanych tagów, ${ADDED_AND_REMOVED} dla domyślnego tekstu. Dostępne tylko, gdy wyzwalacz jest ustawiony na Zmieniono tagi tematu.
             url:
               label: URL
             channel:
               label: Kanał
         send_chat_integration_message:
+          title: Wyślij wiadomość dotyczącą integracji czatu
           fields:
             channel_name:
               label: Nazwa kanału
+              description: "Nazwę kanału znajdziesz w ustawieniach integracji czatu"
             provider:
               label: Dostawca

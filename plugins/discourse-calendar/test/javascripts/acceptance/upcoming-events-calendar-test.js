@@ -1,13 +1,7 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { tomorrow, twoDays } from "discourse/lib/time-utils";
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
   needs.site({
@@ -15,7 +9,7 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
       {
         id: 1,
         name: "Category 1",
-        slug: "caetgory-1",
+        slug: "category-1",
         color: "0f78be",
       },
       {
@@ -87,47 +81,49 @@ acceptance("Discourse Calendar - Upcoming Events Calendar", function (needs) {
     });
   });
 
-  test("shows upcoming events calendar", async (assert) => {
+  test("shows upcoming events calendar", async function (assert) {
     await visit("/upcoming-events");
 
-    assert.ok(
-      exists("#upcoming-events-calendar"),
-      "Upcoming Events calendar is shown."
-    );
+    assert
+      .dom("#upcoming-events-calendar")
+      .exists("Upcoming Events calendar is shown");
 
-    assert.ok(exists(".fc-view-container"), "FullCalendar is loaded.");
+    assert.dom(".fc-view-container").exists("FullCalendar is loaded");
   });
 
-  test("upcoming events category colors", async (assert) => {
+  test("upcoming events category colors", async function (assert) {
     await visit("/upcoming-events");
 
-    assert.strictEqual(
-      queryAll(".fc-event")[0].style.backgroundColor,
-      "rgb(190, 10, 10)",
-      "Event item uses the proper color from category 1"
-    );
+    const [first, second] = [...document.querySelectorAll(".fc-event")];
+    assert
+      .dom(first)
+      .hasStyle(
+        { backgroundColor: "rgb(190, 10, 10)" },
+        "Event item uses the proper color from category 1"
+      );
 
-    assert.strictEqual(
-      queryAll(".fc-event")[1].style.backgroundColor,
-      "rgb(15, 120, 190)",
-      "Event item uses the proper color from category 2"
-    );
+    assert
+      .dom(second)
+      .hasStyle(
+        { backgroundColor: "rgb(15, 120, 190)" },
+        "Event item uses the proper color from category 2"
+      );
   });
 
-  test("upcoming events calendar shows recurrent events", async (assert) => {
+  test("upcoming events calendar shows recurrent events", async function (assert) {
     await visit("/upcoming-events");
 
-    const [, first, second] = queryAll(".fc-event .fc-title");
-    assert.equal(first.textContent, "Awesome Event");
-    assert.equal(second.textContent, "Awesome Event");
+    const [, second, third] = [...document.querySelectorAll(".fc-event")];
+    assert.dom(".fc-title", second).hasText("Awesome Event");
+    assert.dom(".fc-title", third).hasText("Awesome Event");
 
-    const firstCell = first.closest("td");
     const secondCell = second.closest("td");
+    const thirdCell = third.closest("td");
 
-    assert.notEqual(
-      firstCell,
+    assert.notStrictEqual(
       secondCell,
-      "events should be in different days"
+      thirdCell,
+      "events are in different days"
     );
   });
 });

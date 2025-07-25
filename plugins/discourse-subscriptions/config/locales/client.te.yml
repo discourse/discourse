@@ -25,12 +25,12 @@ te:
           update_card:
             single: "నవీకరించండి"
           created_at: సృష్టించిన
-          cancel: రద్దు
+          cancel: రద్దు చేయండి
       billing:
         email: ఈమెయిల్
       admin:
         dashboard:
-          title: రంగస్థలం
+          title: ప్రధాన పేజీ
           table:
             head:
               user: సభ్యుడు

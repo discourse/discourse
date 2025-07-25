@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 be:
+  post_action_types:
+    vote:
+      title: "Галасаваць"
   post_voting:
     comment:
       reviewables:

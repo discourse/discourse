@@ -30,4 +30,5 @@ hr:
                 title: "Odbaci"
       topic:
         sort_by: "Sortiraj po"
+        votes: "Glasovi"
         activity: "Aktivnosti"
