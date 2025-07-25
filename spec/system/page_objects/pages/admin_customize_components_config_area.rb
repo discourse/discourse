@@ -132,7 +132,7 @@ module PageObjects
       end
 
       def status_selector
-        PageObjects::Components::DSelect.new(find(".admin-config-components__status-filter select"))
+        PageObjects::Components::DSelect.new(find(".admin-filter-controls__dropdown"))
       end
 
       def name_filter_input

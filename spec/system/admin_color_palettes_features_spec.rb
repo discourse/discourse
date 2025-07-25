@@ -51,7 +51,7 @@ describe "Admin Color Palettes Features", type: :system do
 
       find(".admin-filter-controls__input").fill_in(with: "bananas")
 
-      expect(page).to have_css(".color-palette__no-results")
+      expect(page).to have_css(".admin-filter-controls__no-results")
       expect(page).to have_css(
         "button",
         text: I18n.t("admin_js.admin.customize.colors.filters.reset"),
