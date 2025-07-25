@@ -95,15 +95,17 @@ RSpec.describe FormTemplate, type: :model do
     fab!(:tag4, :tag)
     fab!(:tag5, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3]) }
+    fab!(:tag_group2) { Fabricate(:tag_group, tags: [tag4, tag5]) }
 
     it "automatically adds tags choices to the template" do
       template = <<~YAML
         - type: tag-chooser
           id: tag-chooser
           tag_group: "#{tag_group.name}"
+        - type: tag-chooser
+          id: tag-chooser2
+          tag_group: "#{tag_group2.name}"
           attributes:
-            none_label: "Select an item"
-            label: "Enter label here"
             multiple: true
       YAML
 
@@ -112,10 +114,11 @@ RSpec.describe FormTemplate, type: :model do
 
       form_template.process!(guardian)
 
-      processed = YAML.safe_load(form_template.template).first
+      g1, g2 = YAML.safe_load(form_template.template)
 
-      expect(processed["choices"]).to eq([tag1.name, tag2.name, tag3.name])
-      expect(processed["attributes"]["tag_group"]).to eq(tag_group.name)
+      expect(g1["choices"]).to eq([tag1.name, tag2.name, tag3.name])
+      expect(g2["attributes"]["tag_group"]).to eq(tag_group2.name)
+      expect(g2["attributes"]["multiple"]).to eq(true)
     end
   end
 end
