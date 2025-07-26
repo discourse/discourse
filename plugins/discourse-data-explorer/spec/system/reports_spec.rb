@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Reports", type: :system, js: true do
+RSpec.describe "Reports", type: :system do
   fab!(:group) { Fabricate(:group, name: "group") }
   fab!(:user) { Fabricate(:admin) }
   fab!(:group_user) { Fabricate(:group_user, user: user, group: group) }
