@@ -57,6 +57,7 @@ export default function buildOptions(state) {
     lookupAvatarByPostNumber,
     lookupPrimaryUserGroupByPostNumber,
     formatUsername,
+    unicodeUsernames: siteSettings.unicode_usernames,
     emojiUnicodeReplacer,
     lookupUploadUrls,
     censoredRegexp,

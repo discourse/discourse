@@ -14,7 +14,6 @@ module(
     hooks.beforeEach(function () {
       this.siteSettings.rich_editor = true;
       this.siteSettings.unicode_usernames = true;
-      this.siteSettings.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]";
 
       pretender.get("/composer/mentions", () =>
         response({
