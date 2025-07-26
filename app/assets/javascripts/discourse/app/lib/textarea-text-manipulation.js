@@ -7,6 +7,7 @@ import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
@@ -18,6 +19,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -900,12 +902,21 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    // @ts-ignore
-    this.$textarea.autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
-    );
+    if (this.siteSettings.floatkit_autocomplete_composer) {
+      return DAutocompleteModifier.setupAutocomplete(
+        getOwnerWithFallback(this),
+        this.textarea,
+        this.autocompleteHandler,
+        options
+      );
+    } else {
+      // @ts-ignore
+      this.$textarea.autocomplete(
+        options instanceof Object
+          ? { textHandler: this.autocompleteHandler, ...options }
+          : options
+      );
+    }
   }
 }
 
