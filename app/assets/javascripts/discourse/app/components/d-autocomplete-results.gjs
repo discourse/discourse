@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { htmlSafe } from "@ember/template";
 
 /**
@@ -14,23 +15,28 @@ import { htmlSafe } from "@ember/template";
  * @param {Function} data.template - Template function for rendering
  */
 export default class DAutocompleteResults extends Component {
-  @tracked selectedIndex = this.args.data.selectedIndex || 0;
   wrapperElement;
   isInitialRender = true;
+  clickHandler;
 
   constructor(owner, args) {
     super(owner, args);
-    // Register this component instance so the modifier can call its methods
-    if (this.args.data.registerComponent) {
-      this.args.data.registerComponent(this);
+    registerDestructor(this, (instance) => instance.cleanup());
+  }
+
+  cleanup() {
+    if (this.clickHandler && this.wrapperElement) {
+      this.wrapperElement.removeEventListener("click", this.clickHandler);
     }
   }
 
-  @action
-  updateSelectedIndex(newIndex) {
-    this.selectedIndex = newIndex;
-    this.isInitialRender = false;
-    this.markSelected();
+  // Use getters that access modifier's tracked properties for reactivity
+  get results() {
+    return this.args.data.getResults?.() || [];
+  }
+
+  get selectedIndex() {
+    return this.args.data.getSelectedIndex?.() || 0;
   }
 
   markSelected() {
@@ -60,43 +66,82 @@ export default class DAutocompleteResults extends Component {
     }
   }
 
+  attachClickHandlers() {
+    if (this.args.data.template && this.wrapperElement) {
+      // Remove existing click handler if it exists
+      if (this.clickHandler) {
+        this.wrapperElement.removeEventListener("click", this.clickHandler);
+      }
+
+      // Use event delegation - attach single handler to wrapper element
+      this.clickHandler = (event) => {
+        try {
+          // Find the clicked link and its index
+          const clickedLink = event.target.closest("li a");
+          if (!clickedLink) {return;}
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          // Find the index of the clicked link
+          const links = this.wrapperElement.querySelectorAll("li a");
+          const index = Array.from(links).indexOf(clickedLink);
+
+          if (index >= 0) {
+            // Call onSelect and handle any promise returned
+            const result = this.args.data.onSelect(
+              this.results[index],
+              index,
+              event
+            );
+            if (result && typeof result.then === "function") {
+              result.catch((e) => {
+                // eslint-disable-next-line no-console
+                console.error("[autocomplete] onSelect promise rejected: ", e);
+              });
+            }
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error("[autocomplete] Click handler error: ", e);
+        }
+      };
+
+      this.wrapperElement.addEventListener("click", this.clickHandler);
+    }
+  }
+
   @action
   setup(element) {
     this.wrapperElement = element;
-
-    if (this.args.data.template) {
-      const links = this.wrapperElement.querySelectorAll("li a");
-
-      links.forEach((link, index) => {
-        link.addEventListener("click", (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          this.args.data.onSelect(this.args.data.results[index], index, event);
-        });
-      });
-    }
-
+    this.attachClickHandlers();
     this.markSelected();
   }
 
   @action
-  handleClick(result, index, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.args.data.onSelect(result, index, event);
+  updateSelection() {
+    // Called when template or selection changes
+    this.isInitialRender = false;
+
+    // Re-attach click handlers since DOM may have been updated
+    this.attachClickHandlers();
+
+    this.markSelected();
   }
 
   get templateHTML() {
     if (!this.args.data.template) {
       return "";
     }
-    return htmlSafe(
-      this.args.data.template({ options: this.args.data.results })
-    );
+
+    return htmlSafe(this.args.data.template({ options: this.results }));
   }
 
   <template>
-    <div {{didInsert this.setup}}>
+    <div
+      {{didInsert this.setup}}
+      {{didUpdate this.updateSelection this.selectedIndex this.templateHTML}}
+    >
       {{this.templateHTML}}
     </div>
   </template>
