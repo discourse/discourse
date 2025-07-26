@@ -20,6 +20,7 @@ export default class FormTemplateForm extends Component {
 
   @tracked formSubmitted = false;
   @tracked templateContent = this.args.model?.template || "";
+  @tracked processedTemplateContent = "";
   @tracked templateName = this.args.model?.name || "";
   @tracked showFormTemplateFormPreview;
 
@@ -139,7 +140,8 @@ export default class FormTemplateForm extends Component {
     }
 
     FormTemplate.validateTemplate(data)
-      .then(() => {
+      .then(({ form_template }) => {
+        this.processedTemplateContent = form_template.template;
         this.showFormTemplateFormPreview = true;
       })
       .catch(popupAjaxError);
@@ -224,7 +226,7 @@ export default class FormTemplateForm extends Component {
     {{#if this.showFormTemplateFormPreview}}
       <FormTemplateFormPreview
         @closeModal={{fn (mut this.showFormTemplateFormPreview) false}}
-        @content={{this.templateContent}}
+        @content={{this.processedTemplateContent}}
       />
     {{/if}}
   </template>
