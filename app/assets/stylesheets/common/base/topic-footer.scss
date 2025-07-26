@@ -79,6 +79,11 @@
       align-items: center;
       gap: 0.5rem;
       margin: 0;
+
+      details,
+      button {
+        flex: 1 0 auto;
+      }
     }
   }
 }
