@@ -99,7 +99,7 @@ class LlmModel < ActiveRecord::Base
   end
 
   def identifier
-    "custom:#{id}"
+    "#{id}"
   end
 
   def toggle_companion_user

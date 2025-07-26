@@ -4,7 +4,7 @@ require_relative "endpoint_compliance"
 RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   let(:url) { "https://api.anthropic.com/v1/messages" }
   fab!(:model) { Fabricate(:anthropic_model, name: "claude-3-opus", vision_enabled: true) }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(model) }
   let(:image100x100) { plugin_file_from_fixtures("100x100.jpg") }
   let(:upload100x100) do
     UploadCreator.new(image100x100, "image.jpg").create_for(Discourse.system_user.id)
@@ -376,7 +376,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
     model.provider_params["reasoning_tokens"] = 10_000
     model.save!
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
     result = proxy.generate(prompt, user: Discourse.system_user)
     expect(result).to eq("Hello!")
 
@@ -434,7 +434,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       },
     ).to_return(status: 200, body: body)
 
-    proxy = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+    proxy = DiscourseAi::Completions::Llm.proxy(model)
     result = proxy.generate(prompt, user: Discourse.system_user)
     expect(result).to eq("Hello!")
 

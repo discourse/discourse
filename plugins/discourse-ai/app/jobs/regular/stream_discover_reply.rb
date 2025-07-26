@@ -16,7 +16,9 @@ module Jobs
       if ai_persona_klass.nil? || !user.in_any_groups?(ai_persona_klass.allowed_group_ids.to_a)
         return
       end
-      return if (llm_model = LlmModel.find_by(id: ai_persona_klass.default_llm_id)).nil?
+
+      llm_model_id = ai_persona_klass.default_llm_id || SiteSetting.default_llm_id
+      return if (llm_model = LlmModel.find_by(id: llm_model_id)).nil?
 
       bot =
         DiscourseAi::Personas::Bot.as(

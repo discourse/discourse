@@ -69,9 +69,13 @@ module DiscourseAi
       end
 
       def self.preferred_llm_model(persona_klass)
-        id = persona_klass.default_llm_id || SiteSetting.ai_translation_model&.split(":")&.last
-        return nil if id.blank?
-        LlmModel.find_by(id:)
+        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
+
+        if model_id.present?
+          LlmModel.find_by(id: model_id)
+        else
+          LlmModel.last
+        end
       end
     end
   end

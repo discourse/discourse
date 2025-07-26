@@ -187,6 +187,10 @@ en:
     discourse_ai:
       title: "AI"
 
+      default_llm:
+        title: "Default LLM model"
+        description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or persona. If no default LLM is specified, the last created LLM will be used."
+
       features:
         short_title: "Features"
         description: "These are the AI features available to visitors on your site. These can be configured to use specific personas and LLMs, and can be access controlled by groups."
@@ -569,7 +573,7 @@ en:
           max_usages_required: "Must be set if max tokens is not set"
         usage:
           ai_bot: "AI bot"
-          ai_helper: "Helper"
+          ai_helper: "Helper (%{persona})"
           ai_helper_image_caption: "Image caption"
           ai_persona: "Persona (%{persona})"
           ai_summarization: "Summarize"

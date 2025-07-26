@@ -100,7 +100,7 @@ module DiscourseAi
           return render_json_error(I18n.t("discourse_ai.llm.cannot_delete_builtin"), status: 403)
         end
 
-        in_use_by = DiscourseAi::Configuration::LlmValidator.new.modules_using(llm_model)
+        in_use_by = DiscourseAi::Configuration::LlmValidator.new.is_using(llm_model)
 
         if !in_use_by.empty?
           return(

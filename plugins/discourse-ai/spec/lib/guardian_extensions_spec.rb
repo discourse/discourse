@@ -8,7 +8,7 @@ describe DiscourseAi::GuardianExtensions do
   before do
     enable_current_plugin
     group.add(user)
-    assign_fake_provider_to(:ai_summarization_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
     SiteSetting.ai_summary_gists_enabled = true
   end

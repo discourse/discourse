@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Personas::Tools::GithubSearchCode do
   let(:bot_user) { Fabricate(:user) }
   fab!(:llm_model)
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:tool) { described_class.new({ repo: repo, query: query }, bot_user: bot_user, llm: llm) }
 
   before { enable_current_plugin }

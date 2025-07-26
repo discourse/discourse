@@ -48,9 +48,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
         body: result,
       )
       result = +""
-      described_class
-        .proxy("custom:#{model.id}")
-        .generate(prompt, user: user) { |partial| result << partial }
+      described_class.proxy(model).generate(prompt, user: user) { |partial| result << partial }
 
       expect(result).to eq("Hello")
       log = AiApiAuditLog.order("id desc").first
@@ -77,7 +75,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
       )
 
       result =
-        described_class.proxy("custom:#{model.id}").generate(
+        described_class.proxy(model).generate(
           "Hello",
           user: user,
           feature_name: "llm_triage",
@@ -101,7 +99,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
       DiscourseAi::Completions::Endpoints::Fake.chunk_count = 10
     end
 
-    let(:llm) { described_class.proxy("custom:#{fake_model.id}") }
+    let(:llm) { described_class.proxy(fake_model) }
 
     let(:prompt) do
       DiscourseAi::Completions::Prompt.new(

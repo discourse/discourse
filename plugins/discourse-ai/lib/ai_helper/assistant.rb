@@ -312,18 +312,9 @@ module DiscourseAi
 
       # Priorities are:
       #   1. Persona's default LLM
-      #   2. Hidden `ai_helper_model` setting, or `ai_helper_image_caption_model` for image_caption.
-      #   3. Newest LLM config
+      #   2. SiteSetting.ai_default_llm_id (or newest LLM if not set)
       def self.find_ai_helper_model(helper_mode, persona_klass)
-        model_id = persona_klass.default_llm_id
-
-        if !model_id
-          if helper_mode == IMAGE_CAPTION
-            model_id = SiteSetting.ai_helper_image_caption_model&.split(":")&.last
-          else
-            model_id = SiteSetting.ai_helper_model&.split(":")&.last
-          end
-        end
+        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
         if model_id.present?
           LlmModel.find_by(id: model_id)

@@ -14,7 +14,7 @@ RSpec.describe "Admin AI features configuration", type: :system do
     enable_current_plugin
     summarization_persona.allowed_group_ids = [group_1.id, group_2.id]
     summarization_persona.save!
-    assign_fake_provider_to(:ai_summarization_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
     SiteSetting.ai_summarization_persona = summarization_persona.id
     sign_in(admin)

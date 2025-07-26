@@ -7,10 +7,8 @@ describe Jobs::DetectTranslateTopic do
   let(:locales) { %w[en ja] }
 
   before do
+    assign_fake_provider_to(:ai_default_llm_model)
     enable_current_plugin
-    Fabricate(:fake_model).tap do |fake_llm|
-      SiteSetting.public_send("ai_translation_model=", "custom:#{fake_llm.id}")
-    end
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")
   end

@@ -292,6 +292,8 @@ module DiscourseAi
           llm_model =
             if model.is_a?(LlmModel)
               model
+            elsif model.is_a?(Numeric)
+              LlmModel.find_by(id: model)
             else
               model_name_without_prov = model.split(":").last.to_i
 

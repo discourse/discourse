@@ -13,7 +13,7 @@ RSpec.describe Jobs::StreamTopicAiSummary do
 
     before do
       Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
-      assign_fake_provider_to(:ai_summarization_model)
+      assign_fake_provider_to(:ai_default_llm_model)
       SiteSetting.ai_summarization_enabled = true
     end
 

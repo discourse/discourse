@@ -7,7 +7,7 @@ RSpec.describe DiscourseAi::Personas::Tools::DiscourseMetaSearch do
 
   fab!(:llm_model) { Fabricate(:llm_model, max_prompt_tokens: 8192) }
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(llm_model.name) }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 
   let(:mock_search_json) { plugin_file_from_fixtures("search.json", "search_meta").read }

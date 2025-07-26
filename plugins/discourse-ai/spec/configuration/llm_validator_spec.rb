@@ -4,19 +4,40 @@ RSpec.describe DiscourseAi::Configuration::LlmValidator do
   before { enable_current_plugin }
 
   describe "#valid_value?" do
-    context "when the parent module is enabled and we try to reset the selected model" do
-      before do
-        assign_fake_provider_to(:ai_summarization_model)
-        SiteSetting.ai_summarization_enabled = true
-      end
+    let(:validator) { described_class.new(name: :ai_default_llm_model) }
+    fab!(:llm_model)
 
-      it "returns false and displays an error message" do
-        validator = described_class.new(name: :ai_summarization_model)
+    before do
+      assign_fake_provider_to(:ai_default_llm_model)
+      SiteSetting.ai_helper_enabled = false
+      SiteSetting.ai_summarization_enabled = false
+      SiteSetting.ai_embeddings_semantic_search_enabled = false
+      SiteSetting.ai_translation_enabled = false
+    end
 
-        value = validator.valid_value?("")
+    it "returns true when no modules are enabled and value is empty string" do
+      expect(validator.valid_value?("")).to eq(true)
+    end
 
-        expect(value).to eq(false)
-        expect(validator.error_message).to include("ai_summarization_enabled")
+    it "returns false when a module is enabled and value is empty string" do
+      SiteSetting.ai_helper_enabled = true
+      expect(validator.valid_value?("")).to eq(false)
+      expect(validator.error_message).to include("ai_helper_enabled")
+    end
+
+    it "returns false when multiple modules are enabled and value is empty string" do
+      SiteSetting.ai_helper_enabled = true
+      SiteSetting.ai_summarization_enabled = true
+      expect(validator.valid_value?("")).to eq(false)
+      expect(validator.error_message).to include("ai_helper_enabled, ai_summarization_enabled")
+    end
+
+    it "returns true for non-empty values regardless of module state" do
+      SiteSetting.ai_helper_enabled = true
+      SiteSetting.ai_summarization_enabled = true
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([true]) do
+        expect(validator.valid_value?(llm_model)).to eq(true)
       end
     end
   end

@@ -145,7 +145,8 @@ RSpec.describe DiscourseAi::Utils::Search do
       end
 
       it "includes semantic search results when enabled" do
-        assign_fake_provider_to(:ai_embeddings_semantic_search_hyde_model)
+        assign_fake_provider_to(:ai_default_llm_model)
+
         vector_def = Fabricate(:embedding_definition)
         SiteSetting.ai_embeddings_selected_model = vector_def.id
         SiteSetting.ai_embeddings_semantic_search_enabled = true
@@ -169,7 +170,8 @@ RSpec.describe DiscourseAi::Utils::Search do
       end
 
       it "can disable semantic search with hyde parameter" do
-        assign_fake_provider_to(:ai_embeddings_semantic_search_hyde_model)
+        assign_fake_provider_to(:ai_default_llm_model)
+
         vector_def = Fabricate(:embedding_definition)
         SiteSetting.ai_embeddings_selected_model = vector_def.id
         SiteSetting.ai_embeddings_semantic_search_enabled = true

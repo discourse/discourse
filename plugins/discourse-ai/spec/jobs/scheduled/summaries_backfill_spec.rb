@@ -11,7 +11,7 @@ RSpec.describe Jobs::SummariesBackfill do
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_summarization_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
     SiteSetting.ai_summary_backfill_maximum_topics_per_hour = limit
     SiteSetting.ai_summary_gists_enabled = true

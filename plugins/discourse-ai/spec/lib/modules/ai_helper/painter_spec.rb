@@ -7,7 +7,7 @@ RSpec.describe DiscourseAi::AiHelper::Painter do
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_helper_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_stability_api_url = "https://api.stability.dev"
     SiteSetting.ai_stability_api_key = "abc"
     SiteSetting.ai_openai_api_key = "abc"

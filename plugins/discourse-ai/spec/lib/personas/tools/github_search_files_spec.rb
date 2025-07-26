@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::Personas::Tools::GithubSearchFiles do
   fab!(:llm_model)
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model.id) }
 
   let(:tool) do
     described_class.new(

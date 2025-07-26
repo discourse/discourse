@@ -12,7 +12,7 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
   before do
     enable_current_plugin
     SiteSetting.ai_embeddings_selected_model = vector_def.id
-    assign_fake_provider_to(:ai_embeddings_semantic_search_hyde_model)
+    assign_fake_provider_to(:ai_default_llm_model)
   end
 
   describe "#search_for_topics" do

@@ -7,7 +7,7 @@ describe DiscourseAi::AiHelper::EntryPoint do
   before { enable_current_plugin }
 
   it "will correctly localize available prompts" do
-    assign_fake_provider_to(:ai_helper_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.default_locale = "en"
     SiteSetting.allow_user_locale = true
     SiteSetting.ai_helper_enabled = true

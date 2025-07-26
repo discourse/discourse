@@ -6,7 +6,8 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_helper_model)
+    assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_helper_enabled = true
   end
 
   describe "#stream_suggestion" do
@@ -309,8 +310,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
     end
     let(:bad_caption) { "A picture of a cat \nsitting on a |table|" }
 
-    before { assign_fake_provider_to(:ai_helper_image_caption_model) }
-
     def request_caption(params, caption = "A picture of a cat sitting on a table")
       DiscourseAi::Completions::Llm.with_prepared_responses([caption]) do
         post "/discourse-ai/ai-helper/caption_image", params: params
@@ -416,7 +415,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
           enable_current_plugin
           setup_s3
           stub_s3_store
-          assign_fake_provider_to(:ai_helper_image_caption_model)
           SiteSetting.secure_uploads = true
           SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
 

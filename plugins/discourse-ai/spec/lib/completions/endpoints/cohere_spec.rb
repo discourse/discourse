@@ -3,7 +3,7 @@ require_relative "endpoint_compliance"
 
 RSpec.describe DiscourseAi::Completions::Endpoints::Cohere do
   fab!(:cohere_model)
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{cohere_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(cohere_model) }
   fab!(:user)
 
   let(:prompt) do

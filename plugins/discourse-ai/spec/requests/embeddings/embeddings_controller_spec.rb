@@ -121,7 +121,7 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
     end
 
     it "doesn't skip HyDE if the hyde param is missing" do
-      assign_fake_provider_to(:ai_embeddings_semantic_search_hyde_model)
+      assign_fake_provider_to(:ai_default_llm_model)
       index(topic)
       index(topic_in_subcategory)
 

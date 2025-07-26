@@ -16,8 +16,6 @@ module DiscourseAi
           WHERE vision_enabled
         SQL
 
-        values.each { |value_h| value_h[:value] = "custom:#{value_h[:value]}" }
-
         values
       end
     end

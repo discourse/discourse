@@ -263,8 +263,9 @@ module DiscourseAi
               DiscourseAi::Embeddings::SemanticSearch.new(nil).find_ai_hyde_model(persona_klass)
             end
 
-          if llm_model.blank? && persona.default_llm_id
-            llm_model = LlmModel.find_by(id: persona.default_llm_id)
+          if llm_model.blank?
+            llm_model_id = persona.default_llm_id || SiteSetting.ai_default_llm_model
+            llm_model = LlmModel.find_by(id: llm_model_id)
           end
 
           llm_models << llm_model if llm_model
