@@ -24,7 +24,7 @@ loaderShim("discourse-common/helpers/fa-icon", () =>
   importSync("discourse/helpers/fa-icon")
 );
 loaderShim("discourse-common/helpers/get-url", () =>
-  importSync("discourse/helpers/get-url")
+  importSync("discourse/lib/get-url")
 );
 loaderShim("discourse-common/helpers/html-safe", () =>
   importSync("discourse/helpers/html-safe")

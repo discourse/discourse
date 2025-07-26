@@ -3,10 +3,10 @@ import { alias } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import getUrl from "discourse/helpers/get-url";
 import htmlSafe from "discourse/helpers/html-safe";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 
 @classNames("admin-report-storage-stats")
