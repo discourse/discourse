@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Param input", type: :system, js: true do
+RSpec.describe "Param input", type: :system do
   ALL_PARAMS_SQL = <<~SQL
     -- [params]
     -- int          :int
