@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -15,20 +14,7 @@ import { htmlSafe } from "@ember/template";
  * @param {Function} data.template - Template function for rendering
  */
 export default class DAutocompleteResults extends Component {
-  wrapperElement;
   isInitialRender = true;
-  clickHandler;
-
-  constructor(owner, args) {
-    super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup());
-  }
-
-  cleanup() {
-    if (this.clickHandler && this.wrapperElement) {
-      this.wrapperElement.removeEventListener("click", this.clickHandler);
-    }
-  }
 
   // Use getters that access modifier's tracked properties for reactivity
   get results() {
@@ -39,13 +25,13 @@ export default class DAutocompleteResults extends Component {
     return this.args.data.getSelectedIndex?.() || 0;
   }
 
-  markSelected() {
+  markSelected(element) {
     // This is a more imperative approach that's meant to be compatible with the pre-existing autocomplete templates,
     // we should refactor in future to use component templates that are more declarative in setting the `selected` class.
 
     // Find all links in the autocomplete menu and update selection
-    if (this.wrapperElement) {
-      const links = this.wrapperElement.querySelectorAll("li a");
+    if (element) {
+      const links = element.querySelectorAll("li a");
 
       // Remove 'selected' class from all links
       links.forEach((link) => link.classList.remove("selected"));
@@ -66,15 +52,12 @@ export default class DAutocompleteResults extends Component {
     }
   }
 
-  attachClickHandlers() {
-    if (this.args.data.template && this.wrapperElement) {
-      // Remove existing click handler if it exists
-      if (this.clickHandler) {
-        this.wrapperElement.removeEventListener("click", this.clickHandler);
-      }
-
-      // Use event delegation - attach single handler to wrapper element
-      this.clickHandler = (event) => {
+  attachClickHandlers(element) {
+    if (this.args.data.template && element) {
+      // Use event delegation - attach handler to wrapper element
+      // Note: We create a new handler each time and rely on DOM cleanup
+      // when the element is replaced, rather than manual cleanup
+      const clickHandler = (event) => {
         try {
           // Find the clicked link and its index
           const clickedLink = event.target.closest("li a");
@@ -84,7 +67,7 @@ export default class DAutocompleteResults extends Component {
           event.stopPropagation();
 
           // Find the index of the clicked link
-          const links = this.wrapperElement.querySelectorAll("li a");
+          const links = element.querySelectorAll("li a");
           const index = Array.from(links).indexOf(clickedLink);
 
           if (index >= 0) {
@@ -107,26 +90,25 @@ export default class DAutocompleteResults extends Component {
         }
       };
 
-      this.wrapperElement.addEventListener("click", this.clickHandler);
+      element.addEventListener("click", clickHandler);
     }
   }
 
   @action
   setup(element) {
-    this.wrapperElement = element;
-    this.attachClickHandlers();
-    this.markSelected();
+    this.attachClickHandlers(element);
+    this.markSelected(element);
   }
 
   @action
-  updateSelection() {
+  updateSelection(element) {
     // Called when template or selection changes
     this.isInitialRender = false;
 
     // Re-attach click handlers since DOM may have been updated
-    this.attachClickHandlers();
+    this.attachClickHandlers(element);
 
-    this.markSelected();
+    this.markSelected(element);
   }
 
   get templateHTML() {
