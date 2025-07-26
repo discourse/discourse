@@ -73,8 +73,8 @@
   }
 
   .full-page-chat {
-    border-left: 1px solid var(--primary-low);
-    border-right: 1px solid var(--primary-low);
+    border-left: 1px solid var(--content-border-color);
+    border-right: 1px solid var(--content-border-color);
   }
 
   &.has-sidebar-page .full-page-chat {

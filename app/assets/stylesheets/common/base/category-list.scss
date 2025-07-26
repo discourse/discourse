@@ -237,7 +237,7 @@
     }
 
     .subcategory-box-inner {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       border-left: none;
       padding: 0.5em 0.5em 0.4em 0.5em;
     }
@@ -364,7 +364,7 @@
 .category-list.subcategories-with-subcategories {
   margin-top: 1em;
   margin-bottom: 0;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
 
   .category-description {
     font-size: var(--font-down-1);
@@ -393,7 +393,7 @@
 }
 
 .muted-categories-link {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   display: flex;
   justify-content: space-between;
   padding: 0.75em;

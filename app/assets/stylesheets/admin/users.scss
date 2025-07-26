@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   padding: 10px 5px;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
 
   &:nth-of-type(1) {
     border-top: 0;

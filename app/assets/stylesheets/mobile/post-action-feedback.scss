@@ -21,7 +21,7 @@
   color: var(--primary);
   overflow: hidden;
   background-color: var(--tertiary-very-low);
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   box-shadow: var(--shadow-dropdown);
   overflow-wrap: break-word;
   animation: d-toast-opening 0.3s ease-in-out;

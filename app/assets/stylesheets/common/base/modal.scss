@@ -31,7 +31,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .modal-close {
       margin-left: auto;
@@ -119,7 +119,7 @@
     flex-wrap: wrap;
     align-items: center;
     padding: 1rem 1.5rem;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     gap: 0.5rem;
   }
 
@@ -231,7 +231,7 @@
   .nav {
     padding: 10px 30px 10px 15px;
     background-color: var(--secondary);
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     li > a {
       font-size: var(--font-0);
@@ -391,7 +391,7 @@
     .incoming-email-html-part {
       height: 95%;
       border: none;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
       padding-top: 10px;
       width: 100%;
     }

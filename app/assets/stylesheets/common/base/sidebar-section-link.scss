@@ -45,7 +45,7 @@
     &.active {
       background: var(--d-sidebar-active-background);
       color: var(--d-sidebar-active-color);
-      font-weight: bold;
+      font-weight: var(--d-sidebar-active-font-weight);
 
       .sidebar-section-link-prefix {
         &.icon {

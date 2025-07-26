@@ -101,7 +101,7 @@
   @include viewport.until(md) {
     display: block;
     margin-bottom: var(--space-3);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
   }
 
   &.has-update {
@@ -115,7 +115,7 @@
 
   @include viewport.until(md) {
     display: block;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   &:first-child {

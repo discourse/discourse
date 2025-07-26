@@ -109,7 +109,7 @@
     .btn {
       margin: 0;
       padding-block: 0.65rem;
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       flex: 1 1 calc(50% - 0.25em);
       font-size: var(--font-down-1);
       white-space: nowrap;
@@ -135,7 +135,7 @@
   }
 
   .login-or-separator {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     position: relative;
     margin-block: 1rem;
 

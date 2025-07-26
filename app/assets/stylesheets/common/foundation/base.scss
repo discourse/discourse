@@ -60,20 +60,14 @@ html {
 // Links
 // --------------------------------------------------
 a {
-  color: var(--tertiary);
+  color: var(--link-color);
   text-decoration: none;
   cursor: pointer;
 
-  &:visited {
-    color: var(--tertiary);
-  }
-
-  &:hover {
-    color: var(--tertiary);
-  }
-
+  &:visited,
+  &:hover,
   &:active {
-    color: var(--tertiary);
+    color: var(--link-color);
   }
 }
 
@@ -84,7 +78,7 @@ hr {
   height: 1px;
   margin: 1em 0;
   border: 0;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   padding: 0;
 }
 
