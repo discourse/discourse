@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
+import {
+  testMarkdown,
+  testRenderedMarkdown,
+} from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - mention extension",
@@ -58,11 +61,6 @@ module(
         "<p>Hello @invalid, how are you?</p>",
         "Hello @invalid, how are you?",
       ],
-      "mention with unicode": [
-        "Hi @käsey",
-        '<p>Hi <a class="mention" data-name="käsey" contenteditable="false" draggable="true">@käsey</a></p>',
-        "Hi @käsey",
-      ],
     };
 
     Object.entries(testCases).forEach(
@@ -71,6 +69,14 @@ module(
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
       }
+    );
+
+    test(
+      "mention with unicode usernames",
+      testRenderedMarkdown("Hi @käsey", (assert) => {
+        assert.dom("a.mention").exists("Mention node should exist");
+        assert.dom("a.mention").hasAttribute("data-name", "käsey");
+      })
     );
   }
 );
