@@ -51,12 +51,18 @@ export default class PostTranslationEditor extends Component {
   }
 
   get availableContentLocalizationLocales() {
-    const originalPostLocale =
-      this.composer.model?.post?.locale || this.siteSettings.default_locale;
+    const originalPostLocale = this.composer.model?.post?.locale;
 
-    return this.siteSettings.available_content_localization_locales.filter(
-      (locale) => locale.value !== originalPostLocale
-    );
+    return this.siteSettings.available_content_localization_locales
+      .filter(({ value }) => value !== originalPostLocale)
+      .map(({ native_name, name, value }) => {
+        name =
+          i18n(name) === native_name
+            ? native_name
+            : `${i18n(name)} (${native_name})`;
+
+        return { name, value };
+      });
   }
 
   @action

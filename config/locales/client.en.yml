@@ -155,6 +155,105 @@ en:
       placeholder: date
       from_placeholder: "from date"
       to_placeholder: "to date"
+    languages:
+      ar:
+        name: Arabic
+      be:
+        name: Belarusian
+      bg:
+        name: Bulgarian
+      bs_BA:
+        name: Bosnian
+      ca:
+        name: Catalan
+      cs:
+        name: Czech
+      da:
+        name: Danish
+      de:
+        name: German
+      el:
+        name: Greek
+      en:
+        name: English (US)
+      en_GB:
+        name: English (UK)
+      es:
+        name: Spanish
+      et:
+        name: Estonian
+      fa_IR:
+        name: Persian
+      fi:
+        name: Finnish
+      fr:
+        name: French
+      gl:
+        name: Galician
+      he:
+        name: Hebrew
+      hr:
+        name: Croatian
+      hu:
+        name: Hungarian
+      hy:
+        name: Armenian
+      id:
+        name: Indonesian
+      it:
+        name: Italian
+      ja:
+        name: Japanese
+      ko:
+        name: Korean
+      lt:
+        name: Lithuanian
+      lv:
+        name: Latvian
+      nb_NO:
+        name: Norwegian Bokmål
+      nl:
+        name: Dutch
+      pl_PL:
+        name: Polish
+      pt:
+        name: Portuguese
+      pt_BR:
+        name: Portuguese
+      ro:
+        name: Romanian
+      ru:
+        name: Russian
+      sk:
+        name: Slovak
+      sl:
+        name: Slovene
+      sq:
+        name: Albanian
+      sr:
+        name: Serbian
+      sv:
+        name: Swedish
+      sw:
+        name: Swahili
+      te:
+        name: Telugu
+      th:
+        name: Thai
+      tr_TR:
+        name: Turkish
+      ug:
+        name: Uyghur
+      uk:
+        name: Ukrainian
+      ur:
+        name: Urdu
+      vi:
+        name: Vietnamese
+      zh_TW:
+        name: Chinese
+      zh_CN:
+        name: Chinese Simplified
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
