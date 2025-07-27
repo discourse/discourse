@@ -1,20 +1,9 @@
-.filter-tips {
-  position: relative;
 
+.filter-tips {
   &__dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-dropdown);
-    z-index: z("dropdown") + 1;
-    margin-top: 0.25em;
     max-height: 300px;
     overflow-y: auto;
-
+    
     .filter-tip__button {
       display: block;
       width: 100%;
