@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Assign | User Preferences", type: :system, js: true do
+describe "Assign | User Preferences", type: :system do
   fab!(:user)
 
   let(:selector) { "[data-setting-name='user-notification-level-when-assigned'] .combobox" }
