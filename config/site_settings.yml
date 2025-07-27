@@ -571,7 +571,7 @@ basic:
     area: "interface"
   floatkit_autocomplete_composer:
     client: true
-    default: false
+    default: true
     area: "interface"
 
 login:
