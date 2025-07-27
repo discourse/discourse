@@ -116,6 +116,9 @@ export default class DAutocompleteResults extends Component {
     // Called when template or selection changes
     this.isInitialRender = false;
     this.markSelected(wrapperElement);
+    
+    // Call onRender callback after DOM is ready, matching original autocomplete.js behavior
+    this.args.data.onRender?.(this.results);
   }
 
   get templateHTML() {

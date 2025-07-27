@@ -55,7 +55,6 @@ export default class DAutocompleteModifier extends Modifier {
   @tracked results = [];
   @tracked selectedIndex = -1;
   @tracked searchTerm = "";
-  @tracked isLoading = false;
   @tracked completeStart = null;
   @tracked completeEnd = null;
 
@@ -63,7 +62,6 @@ export default class DAutocompleteModifier extends Modifier {
   previousTerm = null;
   debouncedSearch = null;
   targetElement = null;
-  menuInstance = null;
 
   // Constants
   ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
@@ -306,14 +304,11 @@ export default class DAutocompleteModifier extends Modifier {
     }
 
     if (results && results.then && typeof results.then === "function") {
-      this.isLoading = true;
       results
         .then((r) => {
-          this.isLoading = false;
           this.updateResults(r);
         })
         .catch((e) => {
-          this.isLoading = false;
           if (e.name !== "AbortError") {
             // eslint-disable-next-line no-console
             console.error("[autocomplete] updateResults: ", e);
@@ -323,60 +318,26 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    // Check if results have actually changed to avoid unnecessary re-renders
+    // Check if results have actually changed between autocomplete searches within an open menu to avoid unnecessary re-renders
     const resultsSame = this.areResultsEqual(this.results, results);
-    const wasExpanded = this.expanded;
 
     this.results = results;
+
+    // If results are the same and menu is already open, just return early, any updates are handled by reactive getters
+    if (this.expanded && resultsSame) {
+      return;
+    }
 
     if (!this.results || this.results.length === 0) {
       this.closeAutocomplete();
       return;
     }
 
-    // If results are the same and menu is already open, don't close/reopen
-    if (resultsSame && wasExpanded) {
-      return;
-    }
-
-    this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
-
-    this.renderAutocomplete();
+    this.openAutocomplete();
   }
 
-  async renderAutocomplete() {
-    if (this.results.length === 0) {
-      return;
-    }
-
-    // If menu is already open, update the existing menu data instead of closing/reopening
-    if (this.expanded && this.menuInstance) {
-      try {
-        // Update the menu data for the existing instance
-        this.menuInstance.options.data = {
-          getResults: () => this.results,
-          getSelectedIndex: () => this.selectedIndex,
-          onSelect: (result, index, event) => this.selectResult(result, event),
-          template: this.options.template,
-        };
-
-        // Call onRender callback if provided
-        this.options.onRender?.(this.results);
-        return;
-      } catch (e) {
-        // If updating fails, fall back to close/reopen
-        // eslint-disable-next-line no-console
-        console.error(
-          "[autocomplete] renderAutocomplete update failed, falling back: ",
-          e
-        );
-        await this.menu.close("d-autocomplete");
-      }
-    } else {
-      // Close any existing menu if we're not in the expected state
-      await this.menu.close("d-autocomplete");
-    }
-
+  async openAutocomplete() {
+    this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
     try {
       // Create virtual element positioned at the caret location
       const virtualElement = this.createVirtualElementAtCaret();
@@ -397,6 +358,7 @@ export default class DAutocompleteModifier extends Modifier {
           getSelectedIndex: () => this.selectedIndex,
           onSelect: (result, index, event) => this.selectResult(result, event),
           template: this.options.template,
+          onRender: this.options.onRender,
         },
         modalForMobile: false,
         onClose: () => {
@@ -405,12 +367,8 @@ export default class DAutocompleteModifier extends Modifier {
         },
       };
 
-      this.menuInstance = await this.menu.show(virtualElement, menuOptions);
-
+      await this.menu.show(virtualElement, menuOptions);
       this.expanded = true;
-
-      // Call onRender callback if provided
-      this.options.onRender?.(this.results);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error("[autocomplete] renderAutocomplete: ", e);
@@ -428,7 +386,6 @@ export default class DAutocompleteModifier extends Modifier {
     this.results = [];
     this.selectedIndex = -1;
     this.previousTerm = null;
-    this.menuInstance = null;
 
     cancel(this.debouncedSearch);
 
