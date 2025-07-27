@@ -86,4 +86,198 @@ describe "User preferences | Interface", type: :system do
       end
     end
   end
+
+  describe "the color mode selector" do
+    let(:interface_color_mode) { PageObjects::Components::InterfaceColorMode.new }
+    let(:mode_selector_in_sidebar) do
+      PageObjects::Components::InterfaceColorSelector.new(".sidebar-footer-actions")
+    end
+
+    before { SiteSetting.interface_color_selector = "sidebar_footer" }
+
+    context "when changing own preferences" do
+      it "can change the color mode for the current device only" do
+        user_preferences_interface_page.visit(user)
+
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::AUTO_MODE,
+        ),
+        "the default value should be auto mode"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.auto"),
+        ),
+        "the default value should be auto mode"
+
+        user_preferences_interface_page.color_mode_dropdown.expand
+        user_preferences_interface_page.color_mode_dropdown.select_row_by_value(
+          UserOption::DARK_MODE,
+        )
+
+        user_preferences_interface_page.default_palette_and_mode_for_all_devices_checkbox.click
+        expect do user_preferences_interface_page.save_changes end.to not_change {
+          user.user_option.reload.interface_color_mode
+        }
+        expect(user.user_option.interface_color_mode).to eq(UserOption::AUTO_MODE),
+        "the user option in the database doesn't change"
+
+        expect(interface_color_mode).to have_dark_mode_forced, "the interface switches to dark mode"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should show dark mode as selected"
+
+        page.refresh
+
+        expect(interface_color_mode).to have_dark_mode_forced,
+        "the interface should still be in dark mode after a page refresh"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should still show dark mode as selected"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::DARK_MODE,
+        ),
+        "the dropdown should still have dark mode selected after a page refresh"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.dark"),
+        ),
+        "the dropdown should still have dark mode selected after a page refresh"
+      end
+
+      it "can change the default color mode for all devices" do
+        user.user_option.update!(interface_color_mode: UserOption::LIGHT_MODE)
+        user_preferences_interface_page.visit(user)
+
+        expect(interface_color_mode).to have_light_mode_forced,
+        "the interface should be in light mode"
+        user_preferences_interface_page.color_mode_dropdown.expand
+        user_preferences_interface_page.color_mode_dropdown.select_row_by_value(
+          UserOption::DARK_MODE,
+        )
+
+        expect do user_preferences_interface_page.save_changes end.to change {
+          user.user_option.reload.interface_color_mode
+        }.to(UserOption::DARK_MODE)
+
+        expect(interface_color_mode).to have_dark_mode_forced, "the interface switches to dark mode"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should show dark mode as selected"
+
+        page.refresh
+
+        expect(interface_color_mode).to have_dark_mode_forced,
+        "the interface should still be in dark mode after a page refresh"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should still show dark mode as selected"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::DARK_MODE,
+        ),
+        "the dropdown should still have dark mode selected after a page refresh"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.dark"),
+        ),
+        "the dropdown should still have dark mode selected after a page refresh"
+      end
+
+      it "updates the selected color mode in preferences when the color mode is changed in the sidebar" do
+        user_preferences_interface_page.visit(user)
+
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::AUTO_MODE,
+        ),
+        "the default value should be auto mode"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.auto"),
+        ),
+        "the default value should be auto mode"
+
+        mode_selector_in_sidebar.expand
+        mode_selector_in_sidebar.dark_option.click
+
+        expect(interface_color_mode).to have_dark_mode_forced, "the interface switches to dark mode"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should show dark mode as selected"
+
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::DARK_MODE,
+        ),
+        "the dropdown should now have dark mode selected"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.dark"),
+        ),
+        "the dropdown should now have dark mode selected"
+
+        page.refresh
+
+        expect(interface_color_mode).to have_dark_mode_forced,
+        "the interface should still be in dark mode after a page refresh"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should still show dark mode as selected after a page refresh"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::DARK_MODE,
+        ),
+        "the dropdown should still have dark mode selected after a page refresh"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.dark"),
+        ),
+        "the dropdown should still have dark mode selected after a page refresh"
+      end
+    end
+
+    context "when changing another user's preferences as an admin" do
+      fab!(:admin)
+
+      before do
+        sign_in(admin)
+        admin.user_option.update!(interface_color_mode: UserOption::DARK_MODE)
+        user.user_option.update!(interface_color_mode: UserOption::LIGHT_MODE)
+      end
+
+      it "doesn't affect the viewing admin preferences and changes the target user's default preference for all devices" do
+        user_preferences_interface_page.visit(user)
+
+        expect(interface_color_mode).to have_dark_mode_forced,
+        "the interface should be in dark mode for the admin"
+
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::LIGHT_MODE,
+        ),
+        "the dropdown should have light mode selected for the target user"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.light"),
+        ),
+        "the dropdown should have light mode selected for the target user"
+
+        user_preferences_interface_page.color_mode_dropdown.expand
+        user_preferences_interface_page.color_mode_dropdown.select_row_by_value(
+          UserOption::AUTO_MODE,
+        )
+        expect(
+          user_preferences_interface_page,
+        ).to have_no_default_palette_and_mode_for_all_devices_checkbox,
+        "the checkbox for applying the color mode to the current device is not present when editing another user's preferences"
+
+        expect do user_preferences_interface_page.save_changes end.to change {
+          user.user_option.reload.interface_color_mode
+        }.to(UserOption::AUTO_MODE).and not_change { admin.user_option.reload.interface_color_mode }
+
+        expect(interface_color_mode).to have_dark_mode_forced,
+        "the interface should still be in dark mode for the admin"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should still show dark mode as selected for the admin"
+
+        page.refresh
+
+        expect(interface_color_mode).to have_dark_mode_forced,
+        "the interface should still be in dark mode for the admin after a page refresh"
+        expect(mode_selector_in_sidebar).to have_dark_as_current_mode,
+        "the selector in the sidebar should still show dark mode as selected for the admin after a page refresh"
+
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_value(
+          UserOption::AUTO_MODE,
+        ),
+        "the dropdown should still have auto mode selected after a page refresh"
+        expect(user_preferences_interface_page.color_mode_dropdown).to have_selected_name(
+          I18n.t("js.user.color_schemes.interface_modes.auto"),
+        ),
+        "the dropdown should still have auto mode selected after a page refresh"
+      end
+    end
+  end
 end

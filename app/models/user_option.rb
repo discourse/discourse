@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  # matches controllers/preferences/interface.js
+  AUTO_MODE = 1
+  LIGHT_MODE = 2
+  DARK_MODE = 3
+
   HOMEPAGES = {
     # -1 => reserved for "custom homepage"
     1 => "latest",
@@ -114,6 +119,14 @@ class UserOption < ActiveRecord::Base
 
   def redirected_to_top_yet?
     last_redirected_to_top_at.present?
+  end
+
+  def light_mode_forced?
+    interface_color_mode == LIGHT_MODE
+  end
+
+  def dark_mode_forced?
+    interface_color_mode == DARK_MODE
   end
 
   def update_last_redirected_to_top!

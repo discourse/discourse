@@ -759,13 +759,21 @@ module ApplicationHelper
   end
 
   def forced_light_mode?
-    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "light" &&
-      !dark_color_scheme?
+    return false if dark_color_scheme?
+
+    cookie = cookies[:forced_color_mode]
+    return cookie == "light" if cookie.present?
+
+    !!(current_user&.user_option&.light_mode_forced?)
   end
 
   def forced_dark_mode?
-    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "dark" &&
-      dark_scheme_id != -1
+    return false if dark_scheme_id == -1
+
+    cookie = cookies[:forced_color_mode]
+    return cookie == "dark" if cookie.present?
+
+    !!(current_user&.user_option&.dark_mode_forced?)
   end
 
   def light_color_hex_for_name(name)

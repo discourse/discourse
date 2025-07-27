@@ -24,6 +24,18 @@ module PageObjects
         page.find('.dark-mode input[type="checkbox"]')
       end
 
+      def color_mode_dropdown
+        PageObjects::Components::SelectKit.new(".interface-color-mode .select-kit")
+      end
+
+      def default_palette_and_mode_for_all_devices_checkbox
+        find(".color-scheme-checkbox input[type='checkbox']")
+      end
+
+      def has_no_default_palette_and_mode_for_all_devices_checkbox?
+        has_no_css?(".color-scheme-checkbox input[type='checkbox']")
+      end
+
       def save_changes
         click_button "Save Changes"
         expect(page).to have_content(I18n.t("js.saved"))
