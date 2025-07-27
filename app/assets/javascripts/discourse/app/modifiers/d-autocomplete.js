@@ -278,6 +278,22 @@ export default class DAutocompleteModifier extends Modifier {
     }
 
     const results = this.options.dataSource(term);
+
+    if (results && results.then && typeof results.then === "function") {
+      try {
+        const resolvedResults = await results;
+        this.updateResults(resolvedResults || []);
+      } catch (e) {
+        if (e.name !== "AbortError") {
+          // eslint-disable-next-line no-console
+          console.error("[autocomplete] performSearch: ", e);
+        }
+        await this.closeAutocomplete();
+      }
+      return;
+    }
+
+    // For handling non-async dataSources
     this.updateResults(results || []);
   }
 
@@ -300,21 +316,6 @@ export default class DAutocompleteModifier extends Modifier {
       results === "skip" ||
       results === CANCELLED_STATUS
     ) {
-      return;
-    }
-
-    if (results && results.then && typeof results.then === "function") {
-      results
-        .then((r) => {
-          this.updateResults(r);
-        })
-        .catch((e) => {
-          if (e.name !== "AbortError") {
-            // eslint-disable-next-line no-console
-            console.error("[autocomplete] updateResults: ", e);
-          }
-          this.closeAutocomplete();
-        });
       return;
     }
 
