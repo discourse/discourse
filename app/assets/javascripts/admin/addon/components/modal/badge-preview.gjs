@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import DModal from "discourse/components/d-modal";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 

@@ -5,7 +5,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import PluginOutlet from "discourse/components/plugin-outlet";
 import basePath from "discourse/helpers/base-path";
 import formatDate from "discourse/helpers/format-date";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";

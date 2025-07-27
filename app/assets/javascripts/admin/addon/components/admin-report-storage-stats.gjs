@@ -3,7 +3,7 @@ import { alias } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";

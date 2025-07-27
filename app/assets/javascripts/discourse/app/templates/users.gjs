@@ -11,7 +11,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import basePath from "discourse/helpers/base-path";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";

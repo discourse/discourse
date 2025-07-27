@@ -11,7 +11,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";

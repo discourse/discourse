@@ -6,7 +6,7 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("td")

@@ -4,7 +4,7 @@ import { equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import { eq } from "truth-helpers";
 import TextField from "discourse/components/text-field";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 export default class ChangesBanner extends Component {
   @tracked isSaving = false;

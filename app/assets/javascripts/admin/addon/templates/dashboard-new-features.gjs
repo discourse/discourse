@@ -1,6 +1,6 @@
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
 import DashboardNewFeatures from "admin/components/dashboard-new-features";
 

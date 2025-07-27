@@ -9,7 +9,7 @@ import { service } from "@ember/service";
 import { gt, lte } from "truth-helpers";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";

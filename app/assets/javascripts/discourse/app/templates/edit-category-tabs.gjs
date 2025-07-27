@@ -6,7 +6,7 @@ import BreadCrumbs from "discourse/components/bread-crumbs";
 import DButton from "discourse/components/d-button";
 import EditCategoryTab from "discourse/components/edit-category-tab";
 import Form from "discourse/components/form";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 function lookupComponent(context, name) {
   return getOwner(context).resolveRegistration(`component:${name}`);

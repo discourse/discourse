@@ -4,7 +4,7 @@ import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import LoadMore from "discourse/components/load-more";
 import formatDuration from "discourse/helpers/format-duration";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(

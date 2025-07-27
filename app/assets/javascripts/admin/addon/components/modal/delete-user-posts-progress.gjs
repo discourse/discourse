@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import DModal from "discourse/components/d-modal";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";

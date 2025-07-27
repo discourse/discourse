@@ -8,7 +8,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTag from "discourse/helpers/discourse-tag";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
 import Chart from "admin/components/chart";
 import ComboBox from "select-kit/components/combo-box";

@@ -8,7 +8,7 @@ import { not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import avatar from "discourse/helpers/avatar";
 import formatDuration from "discourse/helpers/format-duration";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
