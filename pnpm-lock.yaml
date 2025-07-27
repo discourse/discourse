@@ -481,8 +481,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       babel-plugin-ember-template-compilation:
-        specifier: ^2.4.1
-        version: 2.4.1
+        specifier: ^3.0.0
+        version: 3.0.0
       broccoli-asset-rev:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1055,8 +1055,8 @@ importers:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
       babel-plugin-ember-template-compilation:
-        specifier: ^2.4.1
-        version: 2.4.1
+        specifier: ^3.0.0
+        version: 3.0.0
       content-tag:
         specifier: ^4.0.0
         version: 4.0.0
@@ -3427,6 +3427,10 @@ packages:
   babel-plugin-ember-template-compilation@2.4.1:
     resolution: {integrity: sha512-n+ktQ3JeyWrpRutSyPn2PsHeH+A94SVm+iUoogzf9VUqpP47FfWem24gpQXhn+p6+x5/BpuFJXMLXWt7ZoYAKA==}
     engines: {node: '>= 12.*'}
+
+  babel-plugin-ember-template-compilation@3.0.0:
+    resolution: {integrity: sha512-tIZh1sgvswtJqtjiAQLZEtfje37HvsFsivV3jOrkruq0K1JzewP5VUJxx72qK3vwqFOG6XtiVXYBNyEJFmdXgQ==}
+    engines: {node: '>= 18.*'}
 
   babel-plugin-htmlbars-inline-precompile@5.3.1:
     resolution: {integrity: sha512-QWjjFgSKtSRIcsBhJmEwS2laIdrA6na8HAlc/pEAhjHgQsah/gMiBFRZvbQTy//hWxR4BMwV7/Mya7q5H8uHeA==}
@@ -5829,6 +5833,9 @@ packages:
   import-from@3.0.0:
     resolution: {integrity: sha512-CiuXOFFSzkU5x/CR0+z7T91Iht4CXgfCxVOFRhh2Zyhg5wOpWvvDLQUsWl+gcN+QscYBjez8hDCt85O7RLDttQ==}
     engines: {node: '>=8'}
+
+  import-meta-resolve@4.1.0:
+    resolution: {integrity: sha512-I6fiaX09Xivtk+THaMfAwnA3MVA5Big1WHF1Dfx9hFuvNIWpXnorlkzhcQf6ehrqQiiZECRt1poOAkPmer3ruw==}
 
   imports-loader@5.0.0:
     resolution: {integrity: sha512-tXgL8xxZFjOjQLLiE7my00UUQfktg4G8fdpXcZphL0bJWbk9eCxKKFaCwmFRcwyRJQl95GXBL1DoE1rCS/tcPw==}
@@ -12138,6 +12145,12 @@ snapshots:
       '@glimmer/syntax': 0.94.9
       babel-import-util: 3.0.1
 
+  babel-plugin-ember-template-compilation@3.0.0:
+    dependencies:
+      '@glimmer/syntax': 0.94.9
+      babel-import-util: 3.0.1
+      import-meta-resolve: 4.1.0
+
   babel-plugin-htmlbars-inline-precompile@5.3.1:
     dependencies:
       babel-plugin-ember-modules-api-polyfill: 3.5.0
@@ -15538,6 +15551,8 @@ snapshots:
   import-from@3.0.0:
     dependencies:
       resolve-from: 5.0.0
+
+  import-meta-resolve@4.1.0: {}
 
   imports-loader@5.0.0(webpack@5.100.2(@swc/core@1.13.2)(esbuild@0.25.8)):
     dependencies:
