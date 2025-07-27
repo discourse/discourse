@@ -1,8 +1,13 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { htmlSafe } from "@ember/template";
+
+// CSS selectors for autocomplete result items
+const RESULT_ITEM_SELECTOR = "li a";
+const SELECTED_RESULT_SELECTOR = "li a.selected";
+const SELECTED_CLASS = "selected";
 
 /**
  * Component for rendering autocomplete results in a d-menu
@@ -25,90 +30,92 @@ export default class DAutocompleteResults extends Component {
     return this.args.data.getSelectedIndex?.() || 0;
   }
 
-  markSelected(element) {
+  _applySelectedClass(wrapperElement, selectedIndex) {
+    const links = wrapperElement.querySelectorAll(RESULT_ITEM_SELECTOR);
+
+    // Always remove existing selected classes first
+    const selectedElements = wrapperElement.querySelectorAll(
+      SELECTED_RESULT_SELECTOR
+    );
+    selectedElements.forEach((element) =>
+      element.classList.remove(SELECTED_CLASS)
+    );
+
+    // Add selected class to new selection if valid
+    if (selectedIndex >= 0 && links[selectedIndex]) {
+      links[selectedIndex].classList.add(SELECTED_CLASS);
+    }
+
+    return links;
+  }
+
+  markSelected(wrapperElement) {
     // This is a more imperative approach that's meant to be compatible with the pre-existing autocomplete templates,
     // we should refactor in future to use component templates that are more declarative in setting the `selected` class.
 
+    if (!wrapperElement) {
+      return;
+    }
     // Find all links in the autocomplete menu and update selection
-    if (element) {
-      const links = element.querySelectorAll("li a");
+    const links = this._applySelectedClass(wrapperElement, this.selectedIndex);
 
-      // Remove 'selected' class from all links
-      links.forEach((link) => link.classList.remove("selected"));
+    // Handle scrolling (only during navigation, not initial render)
+    if (
+      !this.isInitialRender &&
+      this.selectedIndex >= 0 &&
+      links[this.selectedIndex]
+    ) {
+      links[this.selectedIndex].scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }
 
-      // Add 'selected' class to current selection
-      if (this.selectedIndex >= 0 && links[this.selectedIndex]) {
-        const selectedLink = links[this.selectedIndex];
-        selectedLink.classList.add("selected");
+  @action
+  handleClick(event) {
+    if (!this.args.data.template) {
+      return;
+    }
 
-        // Only scroll during navigation, not initial render
-        if (!this.isInitialRender) {
-          selectedLink.scrollIntoView({
-            block: "nearest",
-            behavior: "smooth",
+    try {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const clickedLink = event.target.closest(RESULT_ITEM_SELECTOR);
+      if (!clickedLink) {
+        return;
+      }
+
+      // Find the index of the clicked link
+      const links = event.currentTarget.querySelectorAll(RESULT_ITEM_SELECTOR);
+      const index = Array.from(links).indexOf(clickedLink);
+
+      if (index >= 0) {
+        // Call onSelect and handle any promise returned
+        const result = this.args.data.onSelect(
+          this.results[index],
+          index,
+          event
+        );
+        if (result && typeof result.then === "function") {
+          result.catch((e) => {
+            // eslint-disable-next-line no-console
+            console.error("[autocomplete] onSelect promise rejected: ", e);
           });
         }
       }
-    }
-  }
-
-  attachClickHandlers(element) {
-    if (this.args.data.template && element) {
-      // Use event delegation - attach handler to wrapper element
-      // Note: We create a new handler each time and rely on DOM cleanup
-      // when the element is replaced, rather than manual cleanup
-      const clickHandler = (event) => {
-        try {
-          // Find the clicked link and its index
-          const clickedLink = event.target.closest("li a");
-          if (!clickedLink) {return;}
-
-          event.preventDefault();
-          event.stopPropagation();
-
-          // Find the index of the clicked link
-          const links = element.querySelectorAll("li a");
-          const index = Array.from(links).indexOf(clickedLink);
-
-          if (index >= 0) {
-            // Call onSelect and handle any promise returned
-            const result = this.args.data.onSelect(
-              this.results[index],
-              index,
-              event
-            );
-            if (result && typeof result.then === "function") {
-              result.catch((e) => {
-                // eslint-disable-next-line no-console
-                console.error("[autocomplete] onSelect promise rejected: ", e);
-              });
-            }
-          }
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error("[autocomplete] Click handler error: ", e);
-        }
-      };
-
-      element.addEventListener("click", clickHandler);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] Click handler error: ", e);
     }
   }
 
   @action
-  setup(element) {
-    this.attachClickHandlers(element);
-    this.markSelected(element);
-  }
-
-  @action
-  updateSelection(element) {
+  updateSelection(wrapperElement) {
     // Called when template or selection changes
     this.isInitialRender = false;
-
-    // Re-attach click handlers since DOM may have been updated
-    this.attachClickHandlers(element);
-
-    this.markSelected(element);
+    this.markSelected(wrapperElement);
   }
 
   get templateHTML() {
@@ -116,13 +123,23 @@ export default class DAutocompleteResults extends Component {
       return "";
     }
 
-    return htmlSafe(this.args.data.template({ options: this.results }));
+    const template = this.args.data.template({ options: this.results });
+
+    if (!this.isInitialRender || this.selectedIndex < 0) {
+      return htmlSafe(template);
+    }
+
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = template;
+    this._applySelectedClass(tempDiv, this.selectedIndex);
+
+    return htmlSafe(tempDiv.innerHTML);
   }
 
   <template>
     <div
-      {{didInsert this.setup}}
       {{didUpdate this.updateSelection this.selectedIndex this.templateHTML}}
+      {{on "click" this.handleClick}}
     >
       {{this.templateHTML}}
     </div>

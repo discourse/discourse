@@ -77,13 +77,11 @@ export default class DAutocompleteModifier extends Modifier {
 
   @action
   handleKeyUp(event) {
-    // Skip if modifier keys are pressed
-    if (this.hasModifierKey(event)) {
-      return;
-    }
-
-    // Skip enter/escape as they're handled in keydown
-    if (["Enter", "Escape"].includes(event.key)) {
+    // Skip if modifier keys are pressed or other keys handled in KeyDown
+    if (
+      this.hasModifierKey(event) ||
+      ["Enter", "Escape", "Tab"].includes(event.key)
+    ) {
       return;
     }
 
@@ -94,13 +92,13 @@ export default class DAutocompleteModifier extends Modifier {
         event,
         INPUT_DELAY
       );
-    } else {
-      // Handle potential async errors without blocking the UI
-      this.performAutocomplete(event).catch((e) => {
-        // eslint-disable-next-line no-console
-        console.error("[autocomplete] handleKeyup: ", e);
-      });
+      return;
     }
+    // Handle potential async errors without blocking the UI
+    this.performAutocomplete(event).catch((e) => {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] handleKeyup: ", e);
+    });
   }
 
   @action
@@ -161,11 +159,6 @@ export default class DAutocompleteModifier extends Modifier {
     }
   }
 
-  handleElementClick(event) {
-    // Stop propagation to prevent global click handler from closing
-    event.stopPropagation();
-  }
-
   @action
   async handleGlobalClick() {
     try {
@@ -190,7 +183,6 @@ export default class DAutocompleteModifier extends Modifier {
     element.addEventListener("keyup", this.handleKeyUp);
     element.addEventListener("keydown", this.handleKeyDown);
     element.addEventListener("paste", this.handlePaste);
-    element.addEventListener("click", this.handleElementClick);
 
     // Global click handler to close autocomplete
     document.addEventListener("click", this.handleGlobalClick);
@@ -203,7 +195,6 @@ export default class DAutocompleteModifier extends Modifier {
       this.targetElement.removeEventListener("keyup", this.handleKeyUp);
       this.targetElement.removeEventListener("keydown", this.handleKeyDown);
       this.targetElement.removeEventListener("paste", this.handlePaste);
-      this.targetElement.removeEventListener("click", this.handleElementClick);
     }
 
     document.removeEventListener("click", this.handleGlobalClick);
@@ -293,40 +284,13 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   areResultsEqual(oldResults, newResults) {
-    if (!oldResults || !newResults) {
+    if (
+      !oldResults ||
+      !newResults ||
+      oldResults.length !== newResults.length ||
+      JSON.stringify(oldResults) !== JSON.stringify(newResults)
+    ) {
       return false;
-    }
-
-    if (oldResults.length !== newResults.length) {
-      return false;
-    }
-
-    // Compare each result item more precisely
-    for (let i = 0; i < oldResults.length; i++) {
-      const oldResult = oldResults[i];
-      const newResult = newResults[i];
-
-      // For simple equality, we can compare key properties that would affect rendering
-      if (oldResult === newResult) {
-        continue;
-      }
-
-      if (typeof oldResult !== typeof newResult) {
-        return false;
-      }
-
-      // For objects, compare key identifying properties
-      if (typeof oldResult === "object") {
-        // Compare common identifying properties used in autocomplete
-        const keysToCompare = ["id", "ref", "text", "username", "name", "slug"];
-        for (const key of keysToCompare) {
-          if (oldResult[key] !== newResult[key]) {
-            return false;
-          }
-        }
-      } else if (oldResult !== newResult) {
-        return false;
-      }
     }
 
     return true;
@@ -370,13 +334,12 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
-
     // If results are the same and menu is already open, don't close/reopen
     if (resultsSame && wasExpanded) {
-      // The tracked property changes (selectedIndex) will automatically trigger re-render
       return;
     }
+
+    this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
 
     this.renderAutocomplete();
   }
