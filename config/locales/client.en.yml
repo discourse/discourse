@@ -1543,7 +1543,7 @@ en:
         description: "Skip new user onboarding tips and badges"
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
-      color_scheme_default_on_all_devices: "Set default color palette on all my devices"
+      color_scheme_default_on_all_devices: "Set default color palette and mode on all my devices"
       color_scheme: "Color Palette"
       color_schemes:
         default_description: "Theme default"
@@ -1553,6 +1553,12 @@ en:
         regular: "Regular"
         dark: "Dark mode"
         default_dark_scheme: "(site default)"
+        interface_mode: "Mode"
+        interface_mode_instructions: "‘Auto’ uses your system’s preferences for light or dark mode."
+        interface_modes:
+          auto: "Auto"
+          light: "Light"
+          dark: "Dark"
       dark_mode: "Dark Mode"
       dark_mode_enable: "Enable automatic dark mode color palette"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"

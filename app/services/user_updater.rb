@@ -28,6 +28,7 @@ class UserUpdater
     enable_defer
     color_scheme_id
     dark_scheme_id
+    interface_color_mode
     dynamic_favicon
     automatically_unpin_topics
     digest_after_minutes

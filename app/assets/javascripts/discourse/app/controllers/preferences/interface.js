@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { not, reads } from "@ember/object/computed";
@@ -18,6 +19,7 @@ import {
 } from "discourse/lib/theme-selector";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import { INTERFACE_COLOR_MODES } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES
@@ -36,15 +38,18 @@ const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default class InterfaceController extends Controller {
+  @service interfaceColor;
   @service session;
   @controller("preferences") preferencesController;
 
+  @tracked selectedInterfaceColorModeId = null;
   currentThemeId = currentThemeId();
   previewingColorScheme = false;
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
 
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
+  @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
 
   @reads("userSelectableColorSchemes.length") showColorSchemeSelector;
@@ -80,6 +85,7 @@ export default class InterfaceController extends Controller {
       "color_scheme_id",
       "dark_scheme_id",
       "bookmark_auto_delete_preference",
+      "interface_color_mode",
     ];
 
     if (makeThemeDefault) {
@@ -251,6 +257,41 @@ export default class InterfaceController extends Controller {
     return darkSchemes && darkSchemes.length > minToShow;
   }
 
+  get interfaceColorModes() {
+    return [
+      {
+        id: INTERFACE_COLOR_MODES.AUTO,
+        name: i18n("user.color_schemes.interface_modes.auto"),
+      },
+      {
+        id: INTERFACE_COLOR_MODES.LIGHT,
+        name: i18n("user.color_schemes.interface_modes.light"),
+      },
+      {
+        id: INTERFACE_COLOR_MODES.DARK,
+        name: i18n("user.color_schemes.interface_modes.dark"),
+      },
+    ];
+  }
+
+  get selectedInterfaceColorMode() {
+    if (this.selectedInterfaceColorModeId) {
+      return this.selectedInterfaceColorModeId;
+    }
+    if (this.isViewingOwnProfile) {
+      if (this.interfaceColor.colorModeCookieForcesAuto) {
+        return INTERFACE_COLOR_MODES.AUTO;
+      }
+      if (this.interfaceColor.colorModeCookieForcesLight) {
+        return INTERFACE_COLOR_MODES.LIGHT;
+      }
+      if (this.interfaceColor.colorModeCookieForcesDark) {
+        return INTERFACE_COLOR_MODES.DARK;
+      }
+    }
+    return this.model.user_option.interface_color_mode;
+  }
+
   getSelectedColorSchemeId() {
     if (!this.session.userColorSchemeId) {
       return;
@@ -290,6 +331,12 @@ export default class InterfaceController extends Controller {
       this.set("model.user_option.color_scheme_id", null);
     } else if (this.makeColorSchemeDefault) {
       this.set("model.user_option.color_scheme_id", this.selectedColorSchemeId);
+      if (this.selectedInterfaceColorModeId) {
+        this.set(
+          "model.user_option.interface_color_mode",
+          this.selectedInterfaceColorModeId
+        );
+      }
     }
 
     if (this.showDarkModeToggle) {
@@ -349,6 +396,20 @@ export default class InterfaceController extends Controller {
           }
         }
 
+        if (this.selectedInterfaceColorModeId) {
+          if (this.isViewingOwnProfile) {
+            const modeId = this.selectedInterfaceColorModeId;
+            if (modeId === INTERFACE_COLOR_MODES.AUTO) {
+              this.interfaceColor.useAutoMode();
+            } else if (modeId === INTERFACE_COLOR_MODES.LIGHT) {
+              this.interfaceColor.forceLightMode();
+            } else if (modeId === INTERFACE_COLOR_MODES.DARK) {
+              this.interfaceColor.forceDarkMode();
+            }
+          }
+          this.selectedInterfaceColorModeId = null;
+        }
+
         this.homeChanged();
 
         if (this.themeId && this.themeId !== this.currentThemeId) {
@@ -380,10 +441,10 @@ export default class InterfaceController extends Controller {
   loadColorScheme(colorSchemeId) {
     this.setProperties({
       selectedColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.canPreviewColorScheme,
+      previewingColorScheme: this.isViewingOwnProfile,
     });
 
-    if (!this.canPreviewColorScheme) {
+    if (!this.isViewingOwnProfile) {
       return;
     }
 
@@ -405,10 +466,10 @@ export default class InterfaceController extends Controller {
   loadDarkColorScheme(colorSchemeId) {
     this.setProperties({
       selectedDarkColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.canPreviewColorScheme,
+      previewingColorScheme: this.isViewingOwnProfile,
     });
 
-    if (!this.canPreviewColorScheme) {
+    if (!this.isViewingOwnProfile) {
       return;
     }
 
@@ -423,10 +484,17 @@ export default class InterfaceController extends Controller {
   }
 
   @action
+  selectColorMode(modeId) {
+    this.selectedInterfaceColorModeId = modeId;
+    this.set("previewingColorScheme", this.isViewingOwnProfile);
+  }
+
+  @action
   undoColorSchemePreview() {
     this.setProperties({
       selectedColorSchemeId: this.session.userColorSchemeId,
       selectedDarkColorSchemeId: this.session.userDarkSchemeId,
+      selectedInterfaceColorModeId: null,
       previewingColorScheme: false,
     });
     const darkStylesheet = document.querySelector("link#cs-preview-dark"),
