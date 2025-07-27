@@ -99,7 +99,7 @@ updates:
           - "@uppy*"
       lint:
         patterns:
-          - "@discourse/lint-config"
+          - "@discourse/lint-configs"
           - "eslint"
           - "prettier"
           - "ember-template-lint"
