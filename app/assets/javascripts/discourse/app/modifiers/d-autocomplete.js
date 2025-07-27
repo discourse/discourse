@@ -297,19 +297,6 @@ export default class DAutocompleteModifier extends Modifier {
     this.updateResults(results || []);
   }
 
-  areResultsEqual(oldResults, newResults) {
-    if (
-      !oldResults ||
-      !newResults ||
-      oldResults.length !== newResults.length ||
-      JSON.stringify(oldResults) !== JSON.stringify(newResults)
-    ) {
-      return false;
-    }
-
-    return true;
-  }
-
   updateResults(results) {
     if (
       this.completeStart === null ||
@@ -319,18 +306,20 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    // Check if results have actually changed between autocomplete searches within an open menu to avoid unnecessary re-renders
-    const resultsSame = this.areResultsEqual(this.results, results);
-
+    const oldResults = this.results;
     this.results = results;
-
-    // If results are the same and menu is already open, just return early, any updates are handled by reactive getters
-    if (this.expanded && resultsSame) {
-      return;
-    }
 
     if (!this.results || this.results.length === 0) {
       this.closeAutocomplete();
+      return;
+    }
+
+    // If menu is already open, reactive getters update based on results
+    if (this.expanded) {
+      // This ensures we only reset the selected style if results changed between typing of search term
+      if (JSON.stringify(oldResults) !== JSON.stringify(results)) {
+        this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
+      }
       return;
     }
 

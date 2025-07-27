@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { htmlSafe } from "@ember/template";
 
@@ -21,7 +22,6 @@ const SELECTED_CLASS = "selected";
 export default class DAutocompleteResults extends Component {
   isInitialRender = true;
 
-  // Use getters that access modifier's tracked properties for reactivity
   get results() {
     return this.args.data.getResults?.() || [];
   }
@@ -41,7 +41,6 @@ export default class DAutocompleteResults extends Component {
       element.classList.remove(SELECTED_CLASS)
     );
 
-    // Add selected class to new selection if valid
     if (selectedIndex >= 0 && links[selectedIndex]) {
       links[selectedIndex].classList.add(SELECTED_CLASS);
     }
@@ -49,7 +48,7 @@ export default class DAutocompleteResults extends Component {
     return links;
   }
 
-  markSelected(wrapperElement) {
+  scrollToSelected(wrapperElement) {
     // This is a more imperative approach that's meant to be compatible with the pre-existing autocomplete templates,
     // we should refactor in future to use component templates that are more declarative in setting the `selected` class.
 
@@ -59,17 +58,19 @@ export default class DAutocompleteResults extends Component {
     // Find all links in the autocomplete menu and update selection
     const links = this._applySelectedClass(wrapperElement, this.selectedIndex);
 
-    // Handle scrolling (only during navigation, not initial render)
-    if (
-      !this.isInitialRender &&
-      this.selectedIndex >= 0 &&
-      links[this.selectedIndex]
-    ) {
-      links[this.selectedIndex].scrollIntoView({
-        block: "nearest",
-        behavior: "smooth",
-      });
+    if (!links || links.length === 0 || !links[this.selectedIndex]) {
+      return;
     }
+
+    links[this.selectedIndex].scrollIntoView({
+      block: "nearest",
+      behavior: "smooth",
+    });
+  }
+
+  @action
+  handleInitialRender() {
+    this.args.data.onRender?.(this.results);
   }
 
   @action
@@ -112,12 +113,10 @@ export default class DAutocompleteResults extends Component {
   }
 
   @action
-  updateSelection(wrapperElement) {
-    // Called when template or selection changes
+  handleUpdate(wrapperElement) {
     this.isInitialRender = false;
-    this.markSelected(wrapperElement);
-    
-    // Call onRender callback after DOM is ready, matching original autocomplete.js behavior
+    this.scrollToSelected(wrapperElement);
+    // Call onRender callback after DOM is ready
     this.args.data.onRender?.(this.results);
   }
 
@@ -141,7 +140,8 @@ export default class DAutocompleteResults extends Component {
 
   <template>
     <div
-      {{didUpdate this.updateSelection this.selectedIndex this.templateHTML}}
+      {{didInsert this.handleInitialRender}}
+      {{didUpdate this.handleUpdate this.selectedIndex this.templateHTML}}
       {{on "click" this.handleClick}}
     >
       {{this.templateHTML}}
