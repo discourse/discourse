@@ -392,7 +392,11 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
-    pg (1.5.9)
+    pg (1.6.0)
+    pg (1.6.0-aarch64-linux)
+    pg (1.6.0-arm64-darwin)
+    pg (1.6.0-x86_64-darwin)
+    pg (1.6.0-x86_64-linux)
     playwright-ruby-client (1.54.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
@@ -1065,7 +1069,11 @@ CHECKSUMS
   parallel_tests (5.3.1) sha256=e1c4b3046cec3b8dcfff35e45e8b8d09477ff595e45743963e83baca531c2e3d
   parser (3.3.9.0) sha256=94d6929354b1a6e3e1f89d79d4d302cc8f5aa814431a6c9c7e0623335d7687f2
   pdf-reader (2.14.1) sha256=b45a4521c249a394ad7ad9e691bfd46d4d00998cfc4f019e4525afb4963b411b
-  pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
+  pg (1.6.0) sha256=26ea1694e4ed2e387a8292373acbb62ff9696d691d3a1b8b76cf56eb1d9bd40b
+  pg (1.6.0-aarch64-linux) sha256=23690afbe8d4374a399a6ff683e2aee713002e27767b3e40be0c112d90a9a648
+  pg (1.6.0-arm64-darwin) sha256=1ee9bf9858a532020e69483a0939b51eff52b369ee6cb2ce267c4d06e211f3e6
+  pg (1.6.0-x86_64-darwin) sha256=b0f631bd96f914a4a54267d2fb33a25caa7e6004670734f517b04e82b6a74f06
+  pg (1.6.0-x86_64-linux) sha256=5e0054765ab94f80152cbfbf986da54348b145e436663579df3d1e1d667d5e39
   playwright-ruby-client (1.54.0) sha256=d4053c946c3e5fa4044d4942feeb6661cf67f1bcfb3445e992bc887e737a4381
   pp (0.6.2) sha256=947ec3120c6f92195f8ee8aa25a7b2c5297bb106d83b41baa02983686577b6ff
   prettier_print (1.2.1) sha256=a72838b5f23facff21f90a5423cdcdda19e4271092b41f4ea7f50b83929e6ff9
