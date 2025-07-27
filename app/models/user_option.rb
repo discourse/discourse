@@ -285,6 +285,7 @@ end
 #  hide_profile                     :boolean          default(FALSE), not null
 #  hide_profile_and_presence        :boolean          default(FALSE), not null
 #  include_tl0_in_digests           :boolean          default(FALSE)
+#  interface_color_mode             :integer          default(1), not null
 #  last_redirected_to_top_at        :datetime
 #  like_notification_frequency      :integer          default(1), not null
 #  mailing_list_mode                :boolean          default(FALSE), not null
