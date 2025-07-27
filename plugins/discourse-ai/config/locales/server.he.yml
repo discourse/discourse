@@ -68,7 +68,6 @@ he:
     ai_helper_enabled_features: "נא לבחור יכולות להפעלה במסייע הבינה המלאכותית."
     post_ai_helper_allowed_groups: "קבוצות משתמשים שמורשות לגשת ליכולות מסייע בינה מלאכותית בפוסטים"
     ai_helper_image_caption_model: "נא לבחור את הדגם שישמש ליצירת כותרות לתמונות"
-    ai_auto_image_caption_allowed_groups: "משתמשים בקבוצות האלה יכולים להפעיל או לכבות כותרות אוטומטיות לתמונות."
     ai_embeddings_generate_for_pms: "יצירת הטמעות להודעות פרטיות."
     ai_embeddings_semantic_related_topics_enabled: "להשתמש בחיפוש סמנטי לנושאים קשורים."
     ai_embeddings_semantic_related_topics: "מספר הנושאים המרבי להצגה בסעיף הנושאים הקשורים."

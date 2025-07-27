@@ -38,6 +38,7 @@ zh_CN:
         reminder:
           label: 提醒
           description: 发送接受策略提醒通知的频率
+          no_reminder: (无提醒)
         accept:
           label: 接受
           description: 接受按钮上使用的文本
@@ -50,6 +51,9 @@ zh_CN:
         send-email:
           label: 发送电子邮件？
           description: 通过电子邮件通知用户新策略
+        add-users-to-group:
+          label: 将用户添加到群组
+          description: 当用户接受此策略时，将其添加到以下组中
       preferences:
         title: 策略
         policy_emails:

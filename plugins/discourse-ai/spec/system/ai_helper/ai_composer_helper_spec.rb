@@ -232,13 +232,10 @@ RSpec.describe "AI Composer helper", type: :system do
       composer.fill_content(input)
       DiscourseAi::Completions::Llm.with_prepared_responses([titles]) do
         ai_suggestion_dropdown.click_suggest_titles_button
-
         wait_for { ai_suggestion_dropdown.has_dropdown? }
-
         ai_suggestion_dropdown.select_suggestion_by_value(1)
-        expected_title = "Plane-Bound Delights"
 
-        expect(find("#reply-title").value).to eq(expected_title)
+        expect(page).to have_field("reply-title", with: "Plane-Bound Delights")
       end
     end
 
@@ -299,8 +296,8 @@ RSpec.describe "AI Composer helper", type: :system do
       wait_for { ai_suggestion_dropdown.has_dropdown? }
       suggestion = category_2.name
       ai_suggestion_dropdown.select_suggestion_by_name(suggestion)
-      category_selector = page.find(".category-chooser summary")
-      expect(category_selector["data-name"]).to eq(suggestion)
+
+      expect(page).to have_css(".category-chooser summary[data-name='#{suggestion}']")
     end
   end
 

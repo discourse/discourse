@@ -5887,7 +5887,6 @@ cs:
               header_description: "Zobrazit protokol o provedených vyhledáváních"
         plugins:
           title: "Nainstalované pluginy"
-          header_description: "V tomto seznamu se zobrazí všechny pluginy Discourse, které jste nainstalovali, nebo pluginy, které jsou předinstalovány s hostingem Discourse"
         api_keys:
           title: "Klíče API"
           header_description: "Funkce klíčů API umožňuje bezpečně integrovat Discourse s externími systémy a automatizovat akce. Správci mohou vytvářet klíče se specifickým rozsahem pro řízení přístupu ke zdrojům a citlivým datům. Rozsahy omezují funkčnost, čímž zajišťují vyšší bezpečnost."
@@ -6699,6 +6698,11 @@ cs:
         author: "Od uživatele %{author}"
         experimental_badge: "experimentální"
         learn_more: "Zjistit více"
+        filters:
+          all: "Vše"
+          enabled: "Zapnuto"
+          disabled: "Vypnuto"
+          reset: "obnovit výchozí"
       navigation_menu:
         sidebar: "Postranní panel"
         header_dropdown: "Rozbalovací nabídka záhlaví"

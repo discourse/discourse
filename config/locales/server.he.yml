@@ -2117,6 +2117,8 @@ he:
     composer_media_optimization_image_resize_dimensions_threshold: "רוחב תמונה מזערי להפעלת שינוי גודל בצד הלקוח"
     composer_media_optimization_image_resize_width_target: "תמונות שרוחבן עולה על `composer_media_optimization_image_dimensions_resize_threshold`, גודלן ישתנה לרוחב זה. הערך חייב להיות >= לעומת `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "איכות קידוד JPG המשמשת בתהליך הקידוד מחדש."
+    video_conversion_enabled: "הפעלת המרת וידאו עבור קובצי וידאו שהועלו. כך מתאפשר להמיר סרטונים לתסדירים תואמי אינטרנט."
+    video_conversion_service: "שירות המרת הווידאו לעיבוד הסרטונים שהועלו."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
     default_invitee_trust_level: "דרגת האמון כברירת המחדל למשתמשים שהוזמנו (0‏-4)"
@@ -2686,6 +2688,7 @@ he:
       invalid_search_ranking_weights: "הערך שגוי להגדרת האתר search_ranking_weights (משקלי דירוג חיפוש). למשל: ‚{0.1,0.2,0.3,1.0}’. נא לשים לב שהערך המרבי לכל משקל הוא 1.0."
       content_localization_locale_limit: "מספר השפות הנתמכות לא יכול לחרוג מעבר ל־%{max}."
       content_localization_anon_language_switcher_requirements: "בורר השפות דורש שהגדרת האתר `set locale from cookie` (הגדרת שפה מעוגייה) תהיה פעילה ושתחת `content localization supported locales` (שפות שנתמכות לתרגום תוכן) תופיע לפחות שפה אחת."
+      s3_credentials_required_for_video_conversion: "יש לספק פרטי גישה ל־S3 להמרת וידאו. נא להגדיר מפתחות גישה ל־S3 ולהפעיל פרופיל IAM."
     keywords:
       clean_up_inactive_users_after_days: "מושבת|מושבתת|כבוי|כבויה|מנוטרל|מנוטרלת"
       navigation_menu: "סרגל צד|כותרת נפתחת|כותרת מתרחבת"
@@ -2704,6 +2707,13 @@ he:
     results_page: "תוצאות לחיפוש אחר ‚%{term}’"
     audio: "[שמע]"
     video: "[וידאו]"
+  filter:
+    description:
+      status: "סינון נושאים לפי המצב שלהם"
+      in: "סינון נושאים לפי רשימות אישיות"
+      order: "מיון נושאים לפי שדה מסוים"
+      category: "הצגת נושאים בקטגוריה מסוימת"
+      exclude_category: "החרגת נושאים מקטגוריה מסוימת"
   discourse_connect:
     login_error: "שגיאת כניסה"
     not_found: "החשבון שלך לא נמצא. נא ליצור קשר עם הנהלת האתר."

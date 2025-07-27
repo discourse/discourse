@@ -147,10 +147,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
 
           file_path_1 = file_from_fixtures("logo.png", "images").path
           file_path_2 = file_from_fixtures("logo.jpg", "images").path
-
-          attach_file([file_path_1, file_path_2]) do
-            find(".ai-bot-upload-btn", visible: true).click
-          end
+          attach_file("ai-bot-file-uploader", [file_path_1, file_path_2], make_visible: true)
 
           expect(page).to have_css(".ai-bot-upload", count: 2)
 
@@ -178,9 +175,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           ai_pm_homepage.input.fill_in(with: "Some message to send to AI with uploads")
 
           cdp.with_slow_upload do
-            attach_file([file_path_1, file_path_2]) do
-              find(".ai-bot-upload-btn", visible: true).click
-            end
+            attach_file("ai-bot-file-uploader", [file_path_1, file_path_2], make_visible: true)
             expect(page).to have_css(".ai-bot-upload--in-progress", count: 2)
 
             ai_pm_homepage.submit
@@ -195,7 +190,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(ai_pm_homepage).to have_homepage
 
           file_path = file_from_fixtures("logo.png", "images").path
-          attach_file([file_path]) { find(".ai-bot-upload-btn", visible: true).click }
+          attach_file("ai-bot-file-uploader", file_path, make_visible: true)
           expect(page).to have_css(".ai-bot-upload", count: 1)
 
           find(".ai-bot-upload__remove").click
@@ -249,6 +244,30 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(ai_pm_homepage).to have_homepage
           expect(sidebar).to have_section("Today")
           expect(sidebar).to have_section_link(pm.title)
+        end
+
+        it "allows navigating to a specific LLM and persona" do
+          # url encode name
+          persona_name = CGI.escape(persona.name)
+          llm_name = CGI.escape(claude_2_dup.display_name)
+          visit "/discourse-ai/ai-bot/conversations?persona=#{persona_name}&llm=#{llm_name}"
+
+          expect(ai_pm_homepage.persona_selector).to have_selected_name(persona.name)
+          expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
+        end
+
+        it "removes persona from selector when allow_personal_messages is disabled" do
+          persona.update!(allow_personal_messages: false)
+          ai_pm_homepage.visit
+          ai_pm_homepage.persona_selector.expand
+          expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+        end
+
+        it "includes persona in selector when allow_personal_messages is enabled" do
+          # default is true
+          ai_pm_homepage.visit
+          ai_pm_homepage.persona_selector.expand
+          expect(ai_pm_homepage.persona_selector).to have_option_name(persona.name)
         end
 
         it "shows empty state when no PMs exist" do

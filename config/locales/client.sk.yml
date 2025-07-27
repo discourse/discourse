@@ -5638,6 +5638,7 @@ sk:
       title: "Administrátor Discourse"
       moderator: "Moderátor"
       filter_reports: Filtrovať prehľady
+      filter_reports_no_results: "Vášmu filtru nevyhovujú žiadne správy"
       tags:
         remove_muted_tags_from_latest:
           always: "vždy"
@@ -5968,7 +5969,7 @@ sk:
               header_description: "Zobrazenie denníka vykonaných vyhľadávaní"
         plugins:
           title: "Nainštalované doplnky"
-          header_description: "V tomto zozname sa zobrazia všetky nainštalované zásuvné moduly Discourse alebo zásuvné moduly, ktoré sú predinštalované v rámci hostingu Discourse"
+          header_description: "Pluginy vylepšujú vašu komunitu o ďalšie funkcie. Nižšie sú uvedené predinštalované aj vlastné pluginy."
         api_keys:
           title: "Kľúče API"
           header_description: "Funkcia kľúčov API umožňuje bezpečne integrovať Discourse s externými systémami a automatizovať akcie. Správcovia môžu vytvárať kľúče so špecifickým rozsahom na kontrolu prístupu k zdrojom a citlivým údajom. Rozsahy obmedzujú funkčnosť, čím zabezpečujú zvýšenú bezpečnosť."
@@ -6787,6 +6788,14 @@ sk:
         experimental_badge: "experimentálne"
         learn_more: "Zistite viac"
         preinstalled: "Predinštalované"
+        filters:
+          all: "Všetky"
+          enabled: "Povolené"
+          disabled: "Vypnuté"
+          preinstalled: "Predinštalované"
+          search_placeholder: "Hľadať pluginy..."
+          reset: "Resetovať"
+          no_results: "Nenašli sa žiadne pluginy zodpovedajúce vašim filtrom"
       navigation_menu:
         sidebar: "Bočný panel"
         header_dropdown: "Rozbaľovacia ponuka hlavičky"
@@ -7060,7 +7069,7 @@ sk:
           theme_site_settings: "Nastavenia, ktoré môže téma prepísať"
           edit_objects_theme_setting: "Editor nastavenia objektov"
           overriden_settings_explanation: "Zmeny oproti predvolenému nastaveniu sú označené bodkou a zvýraznené. Kliknutím na tlačidlo Obnoviť obnovíte predvolené nastavenie."
-          overriden_site_settings_explanation: "Nastavenia stránky, ktoré môže téma prispôsobiť. Kliknutím na tlačidlo Obnoviť obnovíte predvolené nastavenie témy. Ak nie je nastavené žiadne, použije sa predvolené nastavenie lokality. Všetky nastavenia lokality, ktoré sú prepísané témami, môžete vidieť na <a href='%{themeSiteSettingsConfigUrl}'>konfiguračnej stránke nastavení lokality témy</a>."
+          overriden_site_settings_explanation: "Nastavenia stránky, ktoré môže téma prispôsobiť. Kliknutím na tlačidlo Obnoviť obnovíte predvolenú hodnotu nastavenia stránky. Všetky nastavenia lokality, ktoré sú prepísané témami, si môžete pozrieť na <a href='%{themeSiteSettingsConfigUrl}'>konfiguračnej stránke nastavení lokality témy</a>."
           no_settings: "Táto téma nemá žiadne nastavenia."
           theme_translations: "Preklady tém"
           empty: "Žiadne položky"

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe OAuth2BasicAuthenticator do
   describe "after_authenticate" do
     before { SiteSetting.oauth2_user_json_url = "https://provider.com/user" }

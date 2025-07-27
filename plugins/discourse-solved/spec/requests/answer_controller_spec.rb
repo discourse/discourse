@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseSolved::AnswerController do
   fab!(:user)
   fab!(:staff_user) { Fabricate(:admin) }

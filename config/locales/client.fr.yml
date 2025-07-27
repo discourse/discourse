@@ -5000,7 +5000,6 @@ fr:
               title: "Journaux de recherche"
         plugins:
           title: "Extensions installées"
-          header_description: "Toutes les extensions Discourse que vous avez installées, ou les extensions préinstallées avec l'hébergement Discourse, apparaîtront dans cette liste"
         api_keys:
           title: "Clés d'API"
           header_description: "La fonctionnalité des clés d'API vous permet d'intégrer Discourse à des systèmes externes en toute sécurité et d'automatiser les actions. Les administrateurs peuvent créer des clés avec des autorisations spécifiques pour contrôler l'accès aux ressources et aux données sensibles. Les autorisations limitent les fonctionnalités et garantissent ainsi une sécurité accrue."
@@ -5713,6 +5712,11 @@ fr:
         author: "Par %{author}"
         experimental_badge: "expérimental"
         learn_more: "En savoir plus"
+        filters:
+          all: "Tout"
+          enabled: "Activé"
+          disabled: "Désactivée"
+          reset: "Réinitialiser"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"

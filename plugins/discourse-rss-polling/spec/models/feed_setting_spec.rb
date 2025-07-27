@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseRssPolling::FeedSetting do
   SiteSetting.rss_polling_enabled = true
   let(:feed_url) { "https://blog.discourse.org/feed/" }

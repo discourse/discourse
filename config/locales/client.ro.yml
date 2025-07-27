@@ -3950,7 +3950,6 @@ ro:
               title: "Caută jurnale"
         plugins:
           title: "Module instalate"
-          header_description: "Toate modulele Discourse pe care le-ai instalat sau modulele care sunt preinstalate odată cu găzduirea Discourse vor apărea în această listă"
         api_keys:
           title: "Chei API"
           header_description: "Funcția de chei API îți permite să integrezi în siguranță Discourse cu sisteme externe și să automatizezi acțiunile. Administratorii pot crea chei cu scopuri specifice pentru a controla accesul la resurse și la datele sensibile. Scopurile limitează funcționalitatea, asigurând securitate sporită."
@@ -4435,6 +4434,12 @@ ro:
         experimental_badge: "experimental"
         learn_more: "Află mai multe"
         preinstalled: "Pre-instalat"
+        filters:
+          all: "Toate"
+          enabled: "Activată"
+          disabled: "Dezactivat"
+          preinstalled: "Pre-instalat"
+          reset: "Resetare"
       navigation_menu:
         sidebar: "Bară laterală"
       backups:
@@ -4580,6 +4585,7 @@ ro:
           update_success: "%{theme} Actualizare finalizată"
           up_to_date: "Tema este actuală, ultima verificare:"
           add: "Adaugă"
+          overriden_site_settings_explanation: "Setările site-ului pe care tema le poate personaliza. Dă clic pe Resetare pentru a reveni la valorile implicite a setărilor site-ului. Poți vedea toate setările site-ului suprascrise de teme în <a href='%{themeSiteSettingsConfigUrl}'>pagina de configurare a setărilor temei site-ului</a>."
           built_in_description: "Această temă este preinstalată și nu poate fi ștearsă sau personalizată"
           settings: "Setări"
           colors: "Culori"

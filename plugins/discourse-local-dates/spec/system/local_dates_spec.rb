@@ -92,7 +92,7 @@ describe "Local dates", type: :system do
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
       insert_datetime_modal.click_primary_button
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} timezone=\"#{timezone}\"]",
       )
     end
@@ -108,7 +108,7 @@ describe "Local dates", type: :system do
       insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
       insert_datetime_modal.click_primary_button
 
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
       )
     end
@@ -129,7 +129,7 @@ describe "Local dates", type: :system do
       insert_datetime_modal.calendar_date_time_picker.fill_time("12:45")
 
       insert_datetime_modal.click_primary_button
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date-range from=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")}T11:45:00 to=#{Date.parse("#{year}-#{month}-23").strftime("%Y-%m-%d")}T12:45:00 timezone=\"#{timezone}\"]",
       )
     end
@@ -154,7 +154,7 @@ describe "Local dates", type: :system do
       insert_datetime_modal.delete_to
       insert_datetime_modal.click_primary_button
 
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
       )
     end

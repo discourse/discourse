@@ -4307,6 +4307,11 @@ sq:
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
         learn_more: "Mëso më shumë"
+        filters:
+          all: "Të gjitha"
+          enabled: "Aktivizuar"
+          disabled: "E çaktivizuar"
+          reset: "Rivendosni"
       backups:
         title: "Rezervat"
         menu:

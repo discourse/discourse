@@ -718,12 +718,6 @@ en:
           generating: "Generating caption..."
           credits: "Captioned by AI"
           save_caption: "Save"
-          automatic_caption_setting: "Enable auto caption"
-          automatic_caption_loading: "Captioning images..."
-          automatic_caption_dialog:
-            prompt: "This post contains non-captioned images. Would you like to enable automatic captions on image uploads? (This can be changed in your preferences later)"
-            confirm: "Enable"
-            cancel: "Don't ask again"
         no_content_error: "Add content first to perform AI actions on it"
 
       reviewables:

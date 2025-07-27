@@ -81,7 +81,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 });
 
-    await fillIn(".admin-reports-header__filter", "flags");
+    await fillIn(".admin-filter-controls__input", "flags");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
@@ -96,7 +96,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "navigating back and forth resets filter");
 
-    await fillIn(".admin-reports-header__filter", "activities");
+    await fillIn(".admin-filter-controls__input", "activities");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")

@@ -3023,6 +3023,8 @@ he:
         toggle_topic_bump:
           label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
+        toggle_unlisted:
+          desc: נושאים מוסתרים נגישים לחברים רק באמצעות קישור ישיר
       reload: "ריענון"
       ignore: "התעלמות"
       image_alt_text:
@@ -5371,6 +5373,7 @@ he:
               title: "כל העיטורים שאפשר לקבל"
             filter:
               content: "מסנן"
+              title: "סינון נושאים לפי קטגוריה, תגית או תנאים אחרים"
             topics:
               content: "נושאים"
               title: "כל הנושאים"
@@ -5539,6 +5542,7 @@ he:
     powered_by_discourse: "מופעל על גבי Discourse"
     safari_15_warning: "בקרוב הדפדפן שלך לא יהיה תואם לקהילה הזו. כדי להמשיך להשתתף כאן, נא לשדרג את הדפדפן שלך או <a href='%{url}'>לקרוא על כך עוד</a>."
     filter:
+      placeholder: "סינון נושאים לפי קטגוריה, תגית או תנאים אחרים"
       description:
         yesterday: "אתמול"
         last_week: "בשבוע שעבר"
@@ -5617,6 +5621,7 @@ he:
       title: "ניהול Discourse"
       moderator: "מפקח"
       filter_reports: סינון דוחות
+      filter_reports_no_results: "אין דוחות שעונים למסנן שלך"
       tags:
         remove_muted_tags_from_latest:
           always: "תמיד"
@@ -5667,6 +5672,8 @@ he:
         legal:
           title: "משפטי"
           header_description: "הגדרת התצוגה המשפטית, כגון תנאי השירות, מדיניות פרטיות, פרטי יצירת קשר ונושאים נקודתיים לאיחוד האירופי"
+        theme_site_settings:
+          title: "הגדרות ערכת העיצוב של האתר"
         localization:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
@@ -5941,7 +5948,7 @@ he:
               header_description: "הצגת יומן של חיפושים שבוצעו"
         plugins:
           title: "תוספים מותקנים"
-          header_description: "תוספי Discourse שהתקנת או תוספים שמותקנים באירוח של Discourse באופן מובנה, כל אלו יופיעו ברשימה הזאת"
+          header_description: "תוספים מחזקים את הקהילה שלך עם יכולות נוספות. תוספים מותקנים מראש ומותאמים אישית מפורטים להלן."
         api_keys:
           title: "מפתחות API"
           header_description: "יכולת מפתחות ה־API מאפשר לך לשלב את Discourse מול מערכות חיצוניות ולבצע פעולות אוטומטית. מנהלים יכולים ליצור מפתחות עם תחומי הרשאה מסוימים כדי לשלוט בגישה למשאבים ולנתונים רגישים. תחומי הרשאה מגבילים יכולות, כדי לשפר את אבטחת המידע."
@@ -6756,6 +6763,15 @@ he:
         author: "מאת %{author}"
         experimental_badge: "ניסיוני"
         learn_more: "מידע נוסף"
+        preinstalled: "מותקן מראש"
+        filters:
+          all: "הכול"
+          enabled: "פעיל"
+          disabled: "כבוי"
+          preinstalled: "מותקן מראש"
+          search_placeholder: "חיפוש תוספים…"
+          reset: "איפוס"
+          no_results: "לא נמצאו תוספים שתואמים למסננים שלך"
       navigation_menu:
         sidebar: "סרגל צד"
         header_dropdown: "שורת כותרת נגללת"
@@ -7025,6 +7041,7 @@ he:
           up_to_date: "ערכת העיצוב עדכנית, מועד הבדיקה האחרונה:"
           has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
+          theme_settings: "הגדרות ערכת עיצוב מותאמות אישית"
           theme_site_settings: "הגדרות שערכת העיצוב יכולה להשפיע עליהן"
           edit_objects_theme_setting: "עורך הגדרות עצמים"
           overriden_settings_explanation: "שינויים מברירת המחדל מסומנים בנקודה ומודגשים. יש ללחוץ על איפוס כדי לאפס לברירת המחדל."
@@ -7137,11 +7154,20 @@ he:
             description: "לוח בסיסי:"
           title: "צבעים"
           edit: "עריכה"
+          saved_refreshing: "נשמרה! צבעים מרעננים…"
+          from_theme: "מערכת העיצוב: %{name}"
           filters:
+            search_placeholder: "חיפוש לפי שם או ערכת עיצוב…"
             all: "הכול"
             user_selectable: "לבחירת המשתמש"
+            from_theme: "מערכת עיצוב"
+            no_results: "לא נמצאו ערכות צבעים"
+            reset: "איפוס מסננים"
           active_badge:
             text: "פעיל"
+            title: "ערכת צבעים פעילה"
+          system_palette: "זאת ערכת צבעים מובנית, אי אפשר לערוך או למחוק אותה."
+          back_to_colors: "חזרה לערכות צבעים"
           long_title: "ערכות צבעים"
           about: "שינוי הצבעים המכהנים בערכות העיצוב שלך. עליך ליצור לוח צבעים כדי להתחיל."
           new_name: "לוח צבעים חדש"

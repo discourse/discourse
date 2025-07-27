@@ -62,7 +62,6 @@ es:
     ai_helper_enabled_features: "Selecciona las funciones que quieres activar en el ayudante de IA."
     post_ai_helper_allowed_groups: "Grupos de usuarios autorizados a acceder a las funciones del ayudante de IA en las publicaciones"
     ai_helper_image_caption_model: "Selecciona el modelo que se utilizará para generar pies de foto"
-    ai_auto_image_caption_allowed_groups: "Los usuarios de estos grupos pueden activar el subtitulado automático de imágenes."
     ai_embeddings_selected_model: "Utiliza el modelo seleccionado para generar incrustaciones."
     ai_embeddings_generate_for_pms: "Generar incrustaciones para mensajes personales."
     ai_embeddings_semantic_related_topics_enabled: "Utilizar la Búsqueda semántica para temas relacionados."

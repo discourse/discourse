@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseSubscriptions::Campaign do
   describe "campaign data is refreshed" do
     let(:user) { Fabricate(:user) }

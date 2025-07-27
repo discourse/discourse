@@ -40,6 +40,10 @@ updates:
         versions:
           - "> 1.2.0"
           - "< 2"
+      - dependency-name: aws-sdk-mediaconvert
+        versions:
+          - "> 1.160.0"
+          - "< 2"
     groups:
       rails:
         patterns:
@@ -93,3 +97,10 @@ updates:
       uppy:
         patterns:
           - "@uppy*"
+      lint:
+        patterns:
+          - "@discourse/lint-configs"
+          - "eslint"
+          - "prettier"
+          - "ember-template-lint"
+          - "stylelint"

@@ -4360,6 +4360,10 @@ vi:
         howto: "Plugin cài như thế nào?"
         author: "Bởi %{author}"
         learn_more: "Tìm hiểu thêm"
+        filters:
+          all: "Tất cả"
+          disabled: "Vô hiệu hóa"
+          reset: "Cài lại"
       navigation_menu:
         sidebar: "Thanh bên"
       backups:

@@ -1,5 +1,3 @@
-/* eslint-disable qunit/no-assert-equal */
-/* eslint-disable qunit/no-loose-assertions */
 import { module, test } from "qunit";
 import AiPersona from "discourse/plugins/discourse-ai/discourse/admin/models/ai-persona";
 
@@ -20,8 +18,8 @@ module("Discourse AI | Unit | Model | ai-persona", function () {
       "ToolName2",
       "ToolName3",
     ]);
-    assert.equal(aiPersonaPOJO.toolOptions["ToolName"].option1, "value1");
-    assert.equal(aiPersonaPOJO.toolOptions["ToolName"].option2, "value2");
+    assert.strictEqual(aiPersonaPOJO.toolOptions["ToolName"].option1, "value1");
+    assert.strictEqual(aiPersonaPOJO.toolOptions["ToolName"].option2, "value2");
   });
 
   test("fromPOJO", function (assert) {

@@ -515,12 +515,6 @@ es:
           generating: "Generando subtítulo..."
           credits: "Subtitulado por IA"
           save_caption: "Guardar"
-          automatic_caption_setting: "Activar subtítulos automáticos"
-          automatic_caption_loading: "Subtitulando imágenes..."
-          automatic_caption_dialog:
-            prompt: "Esta publicación contiene imágenes sin subtítulos. ¿Te gustaría activar los subtítulos automáticos en las imágenes subidas? (Puedes cambiarlo en tus preferencias más adelante)"
-            confirm: "Activar"
-            cancel: "No volver a preguntar"
         no_content_error: "Añade contenido primero para realizar acciones de IA sobre él"
       reviewables:
         model_used: "Modelo utilizado:"

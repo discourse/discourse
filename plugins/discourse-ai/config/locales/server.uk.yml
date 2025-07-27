@@ -9,16 +9,29 @@ uk:
     ai:
       flag_types:
         review: "Додати повідомлення до черги рецензування"
+        review_hide: "Додати публікацію до черги на розгляд та приховати публікацію"
         spam: "Позначити як спам і приховати повідомлення"
+        spam_silence: "Позначити як спам, приховати публікацію та вимкнути користувача"
     scriptables:
+      llm_tool_triage:
+        title: Сортування постів за допомогою інструмента штучного інтелекту
+        description: "Сортування постів за допомогою спеціальної логіки в інструменті штучного інтелекту"
+      llm_persona_triage:
+        title: Сортування постів за допомогою ШІ Persona
+        description: "Відповідайте на дописи, використовуючи певну персону ШІ"
       llm_triage:
         title: Сортування повідомлень за допомогою ШІ
         description: "Сортування повідомлень за допомогою великої мовної моделі"
+        flagged_post: |
+          <div>Відповідь від моделі:</div>
+          <p>%%LLM_RESPONSE%%</p>
+          <b>Запущено правилом <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> .</b>
       llm_report:
         title: Періодичний звіт з використанням ШІ
         description: "Періодичний звіт на основі великої мовної моделі"
   site_settings:
     discourse_ai_enabled: "Увімкнкти плагін ШІ для Discourse"
+    ai_artifact_security: "Система артефактів штучного інтелекту генерує IFRAME з виконуваним кодом. Строгий режим вимагає додаткового кліку для запуску коду. Нечіткий режим запускає код негайно. Гібридний режим дозволяє користувачеві вказати data-ai-artifact-autorun для негайного відображення. Вимкнений режим вимикає систему артефактів."
     ai_toxicity_enabled: "Увімкнути модуль перевірки на токсичність"
     ai_toxicity_inference_service_api_endpoint: "URL-адреса, де працює API для модуля перевірки на токсичність"
     ai_toxicity_inference_service_api_key: "Ключ API для API токсичності"
@@ -46,6 +59,10 @@ uk:
     ai_nsfw_flag_threshold_porn: "Поріг для зображення, яке класифікується як порно, щоб вважатися NSFW."
     ai_nsfw_flag_threshold_sexy: "Поріг для зображення, класифікованого як сексуальне, щоб вважатися NSFW."
     ai_nsfw_models: "Моделі для використання NSFW умов."
+    ai_spam_detection_enabled: "Увімкнути модуль виявлення спаму зі штучним інтелектом"
+    ai_openai_api_key: "Ключ API для OpenAI API. Використовується ТІЛЬКИ для створення та редагування зображень. Для GPT використовуйте вкладку конфігурації LLM."
+    ai_openai_image_generation_url: "URL-адреса API генерації зображень OpenAI"
+    ai_openai_image_edit_url: "URL-адреса для API редагування зображень OpenAI"
     ai_helper_enabled: "Увімкнути помічника ШІ."
     composer_ai_helper_allowed_groups: "Користувачі цих груп бачитимуть кнопку помічника ШІ в композиторі."
     ai_helper_allowed_in_pm: "Увімкнути Помічник ШІ в особистих повідомленнях."
@@ -57,7 +74,7 @@ uk:
     ai_helper_enabled_features: "Оберіть функції для активації в ШІ-помічнику."
     post_ai_helper_allowed_groups: "Групи користувачів, яким дозволено доступ до функцій ШІ-помічника в публікаціях"
     ai_helper_image_caption_model: "Виберіть модель для генерації підписів до зображень"
-    ai_auto_image_caption_allowed_groups: "Користувачі в цих групах можуть вмикати автоматичне додавання підписів до зображень."
+    ai_embeddings_selected_model: "Використовуйте обрану модель для генерації вбудовувань."
     ai_embeddings_generate_for_pms: "Створюйте вбудовування для особистих повідомлень."
     ai_embeddings_semantic_related_topics_enabled: "Використовуйте семантичний пошук для пов’язаних тем."
     ai_embeddings_semantic_related_topics: "Максимальна кількість тем для показу в розділі пов’язаних тем."
@@ -67,9 +84,12 @@ uk:
     ai_embeddings_semantic_related_include_closed_topics: "Включити закриті теми в результати семантичного пошуку"
     ai_embeddings_semantic_search_hyde_model: "Модель, що використовується для розширення ключових слів для отримання кращих результатів під час семантичного пошуку"
     ai_embeddings_per_post_enabled: Згенерувати вкладення для кожного повідомлення
+    ai_summarization_enabled: "Увімкнути функцію підсумовування"
     ai_summarization_model: "Модель для узагальнення"
+    ai_summarization_persona: "Персона для використання у функції підсумовування"
     ai_custom_summarization_allowed_groups: "Групи, яким дозволено створювати нові зведення."
     ai_pm_summarization_allowed_groups: "Групи дозволили створювати та переглядати підсумки в особистих повідомленнях."
+    ai_summary_gists_enabled: "Автоматично генерувати короткі зведення останніх відповідей у темах"
     ai_summary_gists_allowed_groups: "Групи, яким дозволено бачити суть у списку гарячих тем."
     ai_summary_backfill_maximum_topics_per_hour: "Кількість підсумків тем для заповнення на годину."
     ai_bot_enabled: "Увімкніть модуль AI Bot."
@@ -84,17 +104,60 @@ uk:
     ai_stability_api_url: "URL для API Stability.ai"
     ai_google_custom_search_api_key: "Ключ API для Google Custom Search API див. за посиланням: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX для API для пошуку Google"
+    ai_discord_search_enabled: "Вмикає функцію пошуку в Discord"
+    ai_discord_app_id: "Ідентифікатор програми Discord, до якої ви хочете підключити пошук Discord"
+    ai_discord_app_public_key: "Відкритий ключ програми Discord, до якої ви хочете підключити пошук Discord"
+    ai_discord_search_mode: "Виберіть режим пошуку для пошуку Discord"
+    ai_discord_search_persona: "Персона, яку слід використовувати для пошуку Discord."
+    ai_discord_allowed_guilds: "Гільдії Discord (сервери), де боту дозволено шукати"
+    ai_bot_enable_dedicated_ux: "Дозвольте повноекранний інтерфейс бота замість PM"
+    ai_translation_enabled: "Вмикає функцію перекладу ШІ"
+    ai_translation_model: "Модель, яка використовуватиметься для перекладу. Ця модель має підтримувати переклад. Персони можуть перевизначити цей параметр."
+    ai_translation_backfill_limit_to_public_content: "Якщо ввімкнено, перекладатиметься лише контент із загальнодоступних категорій. Якщо вимкнено, на переклад також надсилатиметься контент із особистих повідомлень групи та приватних категорій."
+    ai_translation_max_post_length: "Максимальна довжина допису для перекладу. Дописи, довші за цю довжину, не будуть перекладені."
+    ai_translation_backfill_max_age_days: "Максимальний вік допису та теми, які потрібно перекласти. Дописи та теми, старіші за цей вік, не будуть перекладені. 0 вимикає зворотне заповнення, але не вимикає переклад нових дописів."
   reviewables:
     reasons:
       flagged_by_toxicity: Плагін ШІ позначив його, класифікувавши як токсичний.
       flagged_by_nsfw: Плагін AI позначив це після того, як класифікував принаймні одне з прикріплених зображень як NSFW.
   reports:
+    sentiment_analysis:
+      title: "Аналіз настроїв"
+      description: "Цей звіт містить аналіз настроїв для публікацій, згрупованих за категоріями, з позитивними, негативними та нейтральними оцінками для кожної публікації та категорії."
     overall_sentiment:
       title: "Загальний настрій"
+      description: 'На діаграмі порівнюється кількість публікацій, які були класифіковані як позитивні або негативні. Вони підраховуються, коли кількість позитивних або негативних оцінок перевищує встановлене порогове значення. Це означає, що нейтральні дописи не відображаються. Особисті повідомлення (ПМ) також не враховуються. Віднесені до "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Позитивні (%)"
       yaxis: "Дата"
+    emotion_admiration:
+      title: "\U0001F929 Захоплення"
+      description: "Дописи, класифіковані з емоцією захоплення за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_amusement:
+      title: "\U0001F604 Розваги"
+      description: "Дописи, класифіковані з емоцією розваги за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_anger:
       title: "\U0001F620 Гнів"
+      description: "Пости класифіковані за емоцією гнів за допомогою штучного інтелекту, використовуючи модель «SamLowe/roberta-base-go_emotions»."
+    emotion_annoyance:
+      title: "\U0001F612 Роздратування"
+      description: "Дописи, класифіковані за емоцією роздратування за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_approval:
+      title: "\U0001F44D Схвалення"
+      description: "Дописи, класифіковані зі схваленням емоцій за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_caring:
+      title: "\U0001F917 Турбота"
+      description: "Дописи класифіковані з урахуванням емоцій за допомогою штучного інтелекту, використовуючи модель «SamLowe/roberta-base-go_emotions»."
+    emotion_confusion:
+      title: "\U0001F615 Плутанина"
+      description: "Дописи, класифіковані з плутаниною емоцій за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_curiosity:
+      title: "\U0001F914 Цікавість"
+      description: "Дописи класифіковані з урахуванням емоційної цікавості за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_desire:
+      title: "\U0001F60D Бажання"
+      description: "Дописи класифіковані за бажаністю емоції за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_disappointment:
+      title: "\U0001F61E Розчарування"
     emotion_disgust:
       title: "\U0001F922 Огида"
     emotion_fear:
@@ -187,8 +250,34 @@ uk:
       searching: "Пошук: '%{query}'"
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+          max_tokens_per_batch:
+            name: "Максимальна кількість токенів на пакет"
+            description: "Максимальна кількість токенів для використання в кожній партії дослідження"
+          max_tokens_per_post:
+            name: "Максимальна кількість токенів на публікацію"
+            description: "Максимальна кількість токенів для використання для кожної публікації в дослідженні"
           max_results:
             name: "Максимальна кількість результатів"
+            description: "Максимальна кількість результатів для включення до фільтра"
+          include_private:
+            name: "Включити приватне"
+            description: "Включити приватні теми до фільтрів"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Мовна модель для створення артефактів"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Мовна модель для редагування артефактів"
+          update_algorithm:
+            name: "Оновити алгоритм"
+            description: "Попросіть LLM повністю замінити, або використовуйте diff для оновлення"
+          do_not_echo_artifact:
+            name: "Не повторювати артефакт"
+            description: "Обмежить витрати, однак ефективність оновлень артефактів буде знижена"
         google:
           base_query:
             name: "Базовий пошуковий запит"
@@ -208,6 +297,9 @@ uk:
             name: "Базовий пошуковий запит"
             description: "Базовий запит для пошуку. Приклад: \"#urgent\" додасть \"#urgent\" до пошукового запиту і знайде лише теми з категорією або тегом \"терміново\"."
       tool_summary:
+        read_artifact: "Читати артефакти"
+        update_artifact: "Оновлення веб-артефакту"
+        create_artifact: "Створити веб-артефакт"
         web_browser: "Перегляд веб-сторінок"
         github_search_files: "Пошук файлів на GitHub"
         github_search_code: "Пошук коду на GitHub"
@@ -228,7 +320,14 @@ uk:
         dall_e: "Створити зображення"
         search_meta_discourse: "Пошук на Meta Discourse"
         javascript_evaluator: "Оцініть JavaScript"
+        create_image: "Створення зображення"
+        edit_image: "Редагування зображення"
+        researcher: "Дослідження"
+        researcher_dry_run: "Підготовка дослідження"
       tool_help:
+        read_artifact: "Читати веб-артефакти за допомогою ШІ Бота"
+        update_artifact: "Оновити вебартефакт за допомогою ШІ Бота"
+        create_artifact: "Створіть артефакт за допомогою ШІ Бота"
         web_browser: "Переглядайте веб-сторінки за допомогою AI Bot"
         github_search_code: "Пошук коду в репозиторії GitHub"
         github_search_files: "Пошук файлів у репозиторії GitHub"
@@ -241,6 +340,8 @@ uk:
         time: "Знайти час в різних часових поясах"
         summary: "Підсумувати тему"
         image: "Створити зображення за допомогою Stable Diffusion"
+        create_image: "Створити зображення, використовуючи Open AI GPT образ моделі"
+        edit_image: "Редагувати зображення за допомогою Open AI GPT моделі"
         google: "Пошук запиту в Google"
         read: "Читати публічну тему на форумі"
         setting_context: "Пошук контексту налаштування сайту"
@@ -249,10 +350,15 @@ uk:
         dall_e: "Створити зображення за допомогою DALL-E 3"
         search_meta_discourse: "Пошук на Meta Discourse"
         javascript_evaluator: "Оцініть JavaScript"
+        researcher: "Дослідження інформації форуму за допомогою AI Bot"
       tool_description:
+        read_artifact: "Зчитайте веб-артефакт за допомогою AI Bot"
+        update_artifact: "Оновлено артефакт за допомогою ШІ Бота"
+        create_artifact: "Створено веб-сайт: %{name} - %{specification}"
         web_browser: "Читання <a href='%{url}'>%{url}</a>"
         github_search_files: "Шукав «%{keywords}» в %{repo}/%{branch}"
         github_search_code: "Шукав '%{query}' у %{repo}"
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
         github_file_content: "Отриманий вміст %{file_paths} з %{repo_name}@%{branch}"
         random_picker: "Вибір із %{options}, вибрано: %{result}"
         read: "Читання: <a href='%{url}'>%{title}</a>"
@@ -289,6 +395,11 @@ uk:
           other: "Знайдено %{count} <a href='%{url}'>результатів</a> для \"%{query}\""
         setting_context: "Читання контексту для: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "Запропоновані цілі: %{goals}\n\nЗнайдено %{count} повідомлення, що відповідає '%{filter}'"
+          few: "Запропоновані цілі: %{goals}\n\nЗнайдено %{count} повідомлення, що відповідають '%{filter}'"
+          many: "Запропоновані цілі: %{goals}\n\nЗнайдено %{count} повідомлення, що відповідають '%{filter}'"
+          other: "Запропоновані цілі: %{goals}\n\nЗнайдено %{count} повідомлень, що відповідають '%{filter}'"
         search_settings:
           one: "Знайдено %{count} результат для '%{query}'"
           few: "Знайдено %{count} результати для '%{query}'"

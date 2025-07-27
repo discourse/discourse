@@ -145,8 +145,6 @@ hr:
           selected: "Odabrano"
         image_caption:
           save_caption: "Spremi"
-          automatic_caption_dialog:
-            confirm: "Omogućiti"
       embeddings:
         back: "Natrag"
         save: "Spremi"

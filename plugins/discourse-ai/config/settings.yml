@@ -154,14 +154,6 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
     hidden: true
-  ai_auto_image_caption_allowed_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: "10" # 10: @trust_level_0
-    allow_any: false
-    refresh: true
-    area: "ai-features/ai_helper"
   ai_helper_model_allowed_seeded_models:
     default: ""
     hidden: true

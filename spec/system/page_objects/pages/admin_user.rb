@@ -27,8 +27,16 @@ module PageObjects
         find(".btn-danger.suspend-user").click
       end
 
+      def click_unsuspend_button
+        find(".btn-danger.unsuspend-user").click
+      end
+
       def click_silence_button
         find(".btn-danger.silence-user").click
+      end
+
+      def click_unsilence_button
+        find(".btn-danger.unsilence-user").click
       end
 
       def similar_users_warning

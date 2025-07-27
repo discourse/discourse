@@ -160,8 +160,6 @@ hu:
           selected: "Kiválasztott"
         image_caption:
           save_caption: "Mentés"
-          automatic_caption_dialog:
-            confirm: "Engedélyezés"
       embeddings:
         back: "Vissza"
         save: "Mentés"

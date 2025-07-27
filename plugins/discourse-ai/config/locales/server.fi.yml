@@ -62,7 +62,6 @@ fi:
     ai_helper_enabled_features: "Valitse ominaisuudet, jotka otetaan käyttöön tekoälyavustajassa."
     post_ai_helper_allowed_groups: "Käyttäjäryhmät, joilla on oikeus käyttää tekoälyavustajan ominaisuuksia viesteissä"
     ai_helper_image_caption_model: "Valitse malli, jota käytetään kuvien kuvatekstien luomiseen"
-    ai_auto_image_caption_allowed_groups: "Näiden ryhmien käyttäjät voivat ottaa automaattisen kuvatekstityksen käyttöön tai poistaa sen käytöstä."
     ai_embeddings_selected_model: "Käytä valittua mallia upotusten luomiseen."
     ai_embeddings_generate_for_pms: "Luo upotuksia yksityisviesteille."
     ai_embeddings_semantic_related_topics_enabled: "Käytä semanttista hakua aiheeseen liittyviä ketjuja varten."

@@ -4781,6 +4781,11 @@ da:
         author: "Af %{author}"
         experimental_badge: "eksperimentel"
         learn_more: "Lær mere"
+        filters:
+          all: "Alle"
+          enabled: "Aktiveret"
+          disabled: "Deaktiveret"
+          reset: "Nulstil"
       navigation_menu:
         sidebar: "Sidebjælke"
       backups:

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::ReplaceGithubNonPermalinks do
   let(:job) { described_class.new }
   let(:github_url) do
@@ -83,11 +81,11 @@ describe Jobs::ReplaceGithubNonPermalinks do
     it "works with multiple github urls in the post" do
       stub_request(:get, github_permanent_url).to_return(status: 200, body: "")
       stub_request(:get, github_permanent_url2.gsub(/#.+$/, "")).to_return(status: 200, body: "")
-      post = Fabricate(:post, raw: "#{github_url} #{github_url2} htts://github.com")
+      post = Fabricate(:post, raw: "#{github_url} #{github_url2} https://github.com")
       job.execute(post_id: post.id)
       post.reload
 
-      updated_post = "#{github_permanent_url} #{github_permanent_url2} htts://github.com"
+      updated_post = "#{github_permanent_url} #{github_permanent_url2} https://github.com"
       expect(post.raw).to eq(updated_post)
     end
   end

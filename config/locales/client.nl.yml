@@ -4996,7 +4996,6 @@ nl:
               title: "Zoeklogs"
         plugins:
           title: "Geïnstalleerde plug-ins"
-          header_description: "Alle Discourse-plug-ins die je hebt geïnstalleerd, of plug-ins die vooraf zijn geïnstalleerd bij Discourse-hosting, worden in deze lijst weergegeven"
         api_keys:
           title: "API-sleutels"
           header_description: "Met de functie API-sleutels kun je Discourse veilig integreren met externe systemen en handelingen automatiseren. Beheerders kunnen sleutels met specifieke bereiken maken om de toegang tot bronnen en gevoelige gegevens te controleren. Bereiken beperken de functionaliteit en zorgen voor een betere beveiliging."
@@ -5709,6 +5708,11 @@ nl:
         author: "Van %{author}"
         experimental_badge: "experimenteel"
         learn_more: "Meer informatie"
+        filters:
+          all: "Alles"
+          enabled: "Ingeschakeld"
+          disabled: "Uitgeschakeld"
+          reset: "Resetten"
       navigation_menu:
         sidebar: "Zijbalk"
         header_dropdown: "Vervolgkeuzelijst kop"

@@ -4846,6 +4846,11 @@ nb_NO:
         howto: "Hvordan installerer jeg utvidelser?"
         author: "Av %{author}"
         learn_more: "Finn ut mer"
+        filters:
+          all: "Alle"
+          enabled: "Aktivert"
+          disabled: "Deaktivert"
+          reset: "Tilbakestill"
       backups:
         title: "Sikkerhetskopier"
         menu:

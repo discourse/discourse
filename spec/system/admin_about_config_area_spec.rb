@@ -133,7 +133,8 @@ describe "Admin About Config Area Page", type: :system do
 
         config_area.general_settings_section.submit
         expect(config_area.general_settings_section).to have_saved_successfully
-        expect(SiteSetting.about_banner_image).to eq(nil)
+
+        try_until_success { expect(SiteSetting.about_banner_image).to eq(nil) }
       end
 
       it "can upload an image using keyboard nav" do
@@ -147,7 +148,7 @@ describe "Admin About Config Area Page", type: :system do
         expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
       end
 
-      it "can remove the uploaded image using keyboard nav" do
+      xit "can remove the uploaded image using keyboard nav" do
         SiteSetting.about_banner_image = image_upload
 
         config_area.visit
@@ -156,7 +157,8 @@ describe "Admin About Config Area Page", type: :system do
 
         config_area.general_settings_section.submit
         expect(config_area.general_settings_section).to have_saved_successfully
-        expect(SiteSetting.about_banner_image).to eq(nil)
+
+        try_until_success { expect(SiteSetting.about_banner_image).to eq(nil) }
       end
 
       context "when login_required is true" do

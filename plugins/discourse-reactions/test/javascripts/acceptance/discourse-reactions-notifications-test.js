@@ -1,7 +1,6 @@
-/* eslint-disable qunit/no-loose-assertions */
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Discourse Reactions - Notifications", function (needs) {
@@ -140,106 +139,107 @@ acceptance("Discourse Reactions - Notifications", function (needs) {
     });
   });
 
-  test("reaction notifications", async (assert) => {
+  test("reaction notifications", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    const notifications = queryAll(
-      "#quick-access-all-notifications ul li.notification.reaction a"
-    );
+    assert
+      .dom("#quick-access-all-notifications ul li.notification.reaction a")
+      .exists({ count: 5 });
 
-    assert.strictEqual(notifications.length, 5);
+    assert
+      .dom("li.notification.reaction:nth-child(1) a")
+      .hasText(
+        "krus Topic with one reaction from a user",
+        "notification for one like from one user has the right content"
+      );
+    assert
+      .dom("li.notification.reaction:nth-child(1) a")
+      .hasAttribute(
+        "href",
+        /\/t\/topic-with-one-reaction-from-a-user\/8432\/12$/,
+        "notification for one like from one user links to the topic"
+      );
+    assert
+      .dom("li.notification.reaction:nth-child(1) a .d-icon-heart")
+      .exists("notification for one like from one user has heart icon");
 
-    assert.strictEqual(
-      notifications[0].textContent.replaceAll(/\s+/g, " ").trim(),
-      "krus Topic with one reaction from a user",
-      "notification for one like from one user has the right content"
-    );
-    assert.ok(
-      notifications[0].href.endsWith(
-        "/t/topic-with-one-reaction-from-a-user/8432/12"
-      ),
-      "notification for one like from one user links to the topic"
-    );
-    assert.ok(
-      notifications[0].querySelector(".d-icon-heart"),
-      "notification for one like from one user has heart icon"
-    );
-
-    assert.strictEqual(
-      notifications[1].textContent.replaceAll(/\s+/g, " ").trim(),
+    assert.dom("li.notification.reaction:nth-child(2) a").hasText(
       `${i18n("notifications.reaction_2_users", {
         username: "jammed-radio",
         username2: "broken-radio",
       })} Topic with 2 likes (total) from 2 users`,
       "notification for 2 likes from 2 users has the right content"
     );
-    assert.ok(
-      notifications[1].href.endsWith(
-        "/t/topic-with-2-likes-total-from-2-users/138/3"
-      ),
-      "notification for 2 likes from 2 users links to the topic"
-    );
-    assert.ok(
-      notifications[1].querySelector(".d-icon-heart"),
-      "notification for 2 likes from 2 users has the heart icon"
-    );
+    assert
+      .dom("li.notification.reaction:nth-child(2) a")
+      .hasAttribute(
+        "href",
+        /\/t\/topic-with-2-likes-total-from-2-users\/138\/3$/,
+        "notification for 2 likes from 2 users links to the topic"
+      );
+    assert
+      .dom("li.notification.reaction:nth-child(2) a .d-icon-heart")
+      .exists("notification for 2 likes from 2 users has the heart icon");
 
-    assert.strictEqual(
-      notifications[2].textContent.replaceAll(/\s+/g, " ").trim(),
+    assert.dom("li.notification.reaction:nth-child(3) a").hasText(
       `${i18n("notifications.reaction_multiple_users", {
         username: "jam-and-cheese",
         count: 2,
       })} Topic with likes from multiple users`,
       "notification for likes from 3 or more users has the right content"
     );
-    assert.ok(
-      notifications[2].href.endsWith(
-        "/t/topic-with-likes-from-multiple-users/832/31"
-      ),
-      "notification for likes from 3 or more users links to the topic"
-    );
-    assert.ok(
-      notifications[2].querySelector(".d-icon-heart"),
-      "notification for 2 likes from 3 or more users has the heart icon"
-    );
+    assert
+      .dom("li.notification.reaction:nth-child(3) a")
+      .hasAttribute(
+        "href",
+        /\/t\/topic-with-likes-from-multiple-users\/832\/31$/,
+        "notification for likes from 3 or more users links to the topic"
+      );
+    assert
+      .dom("li.notification.reaction:nth-child(3) a .d-icon-heart")
+      .exists(
+        "notification for 2 likes from 3 or more users has the heart icon"
+      );
 
-    assert.strictEqual(
-      notifications[3].textContent.replaceAll(/\s+/g, " ").trim(),
+    assert.dom("li.notification.reaction:nth-child(4) a").hasText(
       `${i18n("notifications.reaction_multiple_users", {
         username: "nuclear-reactor",
         count: 3,
       })} Topic with likes and reactions`,
       "notification for reactions from 3 or more users has the right content"
     );
-    assert.ok(
-      notifications[3].href.endsWith(
-        "/t/topic-with-likes-and-reactions/913/31"
-      ),
-      "notification for reactions from 3 or more users links to the topic"
-    );
-    assert.ok(
-      notifications[3].querySelector(".d-icon-discourse-emojis"),
-      "notification for 2 reactions from 3 or more users has the emojis icon"
-    );
+    assert
+      .dom("li.notification.reaction:nth-child(4) a")
+      .hasAttribute(
+        "href",
+        /\/t\/topic-with-likes-and-reactions\/913\/31$/,
+        "notification for reactions from 3 or more users links to the topic"
+      );
+    assert
+      .dom("li.notification.reaction:nth-child(4) a .d-icon-discourse-emojis")
+      .exists(
+        "notification for 2 reactions from 3 or more users has the emojis icon"
+      );
 
-    assert.strictEqual(
-      notifications[4].textContent.replaceAll(/\s+/g, " ").trim(),
+    assert.dom("li.notification.reaction:nth-child(5) a").hasText(
       `johnny ${i18n("notifications.reaction_1_user_multiple_posts", {
         count: 2,
       })}`,
       "notification for reactions from 1 users on multiple posts has the right content"
     );
-    assert.ok(
-      notifications[4].href.endsWith(
-        "/u/eviltrout/notifications/reactions-received?acting_username=johnny&include_likes=true"
-      ),
-      "notification for reactions from 1 users on multiple posts links the reactions-received page of the user"
-    );
-    assert.ok(
-      notifications[4].querySelector(".d-icon-discourse-emojis"),
-      "notification for reactions from 1 users on multiple posts has the emojis icon"
-    );
+    assert
+      .dom("li.notification.reaction:nth-child(5) a")
+      .hasAttribute(
+        "href",
+        /\/u\/eviltrout\/notifications\/reactions-received\?acting_username=johnny&include_likes=true$/,
+        "notification for reactions from 1 users on multiple posts links the reactions-received page of the user"
+      );
+    assert
+      .dom("li.notification.reaction:nth-child(5) a .d-icon-discourse-emojis")
+      .exists(
+        "notification for reactions from 1 users on multiple posts has the emojis icon"
+      );
   });
 });
 

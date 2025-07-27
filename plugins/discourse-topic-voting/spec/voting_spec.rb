@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseTopicVoting do
   let!(:user0) { Fabricate(:user) }
   let!(:user1) { Fabricate(:user) }

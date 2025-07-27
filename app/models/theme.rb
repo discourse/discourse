@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 94
+  BASE_COMPILER_VERSION = 97
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -555,7 +555,7 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
+          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}" />
         HTML
       end
     when :translations

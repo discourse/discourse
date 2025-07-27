@@ -3935,6 +3935,11 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
+        filters:
+          all: "Todas"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          reset: "Restabelecer"
       backups:
         title: "Copias de seguranza"
         menu:

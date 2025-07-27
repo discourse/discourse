@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe DiscourseRssPolling::FeedSettingFinder do
   before do
     DiscourseRssPolling::RssFeed.create!(url: "https://blog.discourse.org/feed/", author: "system")

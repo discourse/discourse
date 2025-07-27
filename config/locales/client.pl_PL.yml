@@ -5625,6 +5625,7 @@ pl_PL:
       title: "Administrator Discourse"
       moderator: "Moderator"
       filter_reports: Filtruj zgłoszenia
+      filter_reports_no_results: "Żadne raporty nie pasują do Twojego filtra"
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -5955,7 +5956,7 @@ pl_PL:
               header_description: "Wyświetl dziennik przeprowadzonych wyszukiwań"
         plugins:
           title: "Zainstalowane wtyczki"
-          header_description: "Wszystkie zainstalowane przez Ciebie wtyczki Discourse lub wtyczki preinstalowane wraz z hostingiem Discourse pojawią się na tej liście"
+          header_description: "Wtyczki wzbogacają Twoją społeczność o dodatkowe funkcje. Poniżej znajdziesz zarówno wtyczki preinstalowane, jak i niestandardowe."
         api_keys:
           title: "Klucze API"
           header_description: "Funkcja kluczy API umożliwia bezpieczną integrację Discourse z systemami zewnętrznymi i automatyzację działań. Administratorzy mogą tworzyć klucze z określonymi zakresami, aby kontrolować dostęp do zasobów i poufnych danych. Zakresy ograniczają funkcjonalność, zapewniając większe bezpieczeństwo."
@@ -6774,6 +6775,14 @@ pl_PL:
         experimental_badge: "eksperymentalny"
         learn_more: "Dowiedz się więcej"
         preinstalled: "Preinstalowane"
+        filters:
+          all: "Wszystkie"
+          enabled: "Włączona"
+          disabled: "Wyłączone"
+          preinstalled: "Preinstalowane"
+          search_placeholder: "Wyszukaj wtyczki..."
+          reset: "Przywróć"
+          no_results: "Nie znaleziono wtyczek pasujących do Twoich filtrów"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
@@ -7047,7 +7056,7 @@ pl_PL:
           theme_site_settings: "Ustawienia, które motyw może zastąpić"
           edit_objects_theme_setting: "Edytor ustawień obiektów"
           overriden_settings_explanation: "Zmiany względem ustawień domyślnych są oznaczone kropką i podświetleniem. Kliknij „Przywróć”, aby przywrócić ustawienia domyślne."
-          overriden_site_settings_explanation: "Ustawienia witryny można dostosować za pomocą motywu. Kliknij Przywróć, aby przywrócić domyślne ustawienia motywu. Jeśli żadne nie są ustawione, używane są domyślne ustawienia witryny. Wszystkie ustawienia witryny zastępowane przez motywy można zobaczyć na stronie konfiguracji ustawień witryny motywu <a href='%{themeSiteSettingsConfigUrl}'></a>."
+          overriden_site_settings_explanation: "Ustawienia witryny można dostosować za pomocą motywu. Kliknij Przywróć, aby przywrócić domyślną wartość ustawień witryny. Wszystkie ustawienia witryny zastępowane przez motywy można zobaczyć na stronie konfiguracji ustawień witryny motywu <a href='%{themeSiteSettingsConfigUrl}'></a>."
           no_settings: "Ten temat nie ma żanych ustawień"
           theme_translations: "Tłumaczenia motywu"
           empty: "Brak elementu"

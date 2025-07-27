@@ -5851,6 +5851,11 @@ hr:
         broken_route: "Nije moguće konfigurirati vezu na '%{name}'. Provjerite jesu li programi za blokiranje oglasa onemogućeni i pokušajte ponovno učitati stranicu."
         author: "Od %{author}"
         learn_more: "Saznajte više"
+        filters:
+          all: "Sve"
+          enabled: "Omogućeno"
+          disabled: "Onemogućeno"
+          reset: "Resetirati"
       navigation_menu:
         sidebar: "Bočna traka"
         header_dropdown: "Padajući izbornik zaglavlja"

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "mini_racer"
 require "json"
 
 module DiscourseAi

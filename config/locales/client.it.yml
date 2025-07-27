@@ -5000,7 +5000,6 @@ it:
               title: "Log di ricerca"
         plugins:
           title: "Plugin installati"
-          header_description: "Tutti i plugin di Discourse che hai installato o quelli preinstallati con l'hosting di Discourse appariranno in questo elenco"
         api_keys:
           title: "Chiavi API"
           header_description: "La funzionalità delle chiavi API consente di integrare in modo sicuro Discourse con sistemi esterni e automatizzare le azioni. Gli amministratori possono creare chiavi con ambiti specifici per controllare l'accesso alle risorse e ai dati sensibili. Gli ambiti limitano la funzionalità, garantendo una maggiore sicurezza."
@@ -5713,6 +5712,11 @@ it:
         author: "Da %{author}"
         experimental_badge: "sperimentale"
         learn_more: "Ulteriori informazioni"
+        filters:
+          all: "Tutte"
+          enabled: "Abilitato"
+          disabled: "Disabilitati"
+          reset: "Reimposta"
       navigation_menu:
         sidebar: "Barra laterale"
         header_dropdown: "Intestazione a discesa"
