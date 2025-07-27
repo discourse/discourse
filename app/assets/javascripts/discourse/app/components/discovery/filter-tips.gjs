@@ -7,10 +7,12 @@ import { cancel, later, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 
 const MAX_RESULTS = 20;
 
@@ -21,6 +23,8 @@ export default class FilterTips extends Component {
   @tracked showTips = false;
   @tracked currentInputValue = "";
   @tracked searchResults = [];
+
+  dMenu = null;
 
   activeFilter = null;
   searchTimer = null;
@@ -45,6 +49,8 @@ export default class FilterTips extends Component {
       this.inputElement.removeEventListener("keydown", this.handleKeyDown);
       this.inputElement.removeEventListener("input", this.handleInput);
     }
+
+    this.dMenu?.destroy();
   }
 
   get selectedIndex() {
@@ -386,6 +392,15 @@ export default class FilterTips extends Component {
   }
 
   @action
+  onRegisterApi(api) {
+    this.dMenu = api;
+    if (this.args.inputElement) {
+      this.dMenu.trigger = this.args.inputElement;
+      this.dMenu.detachedTrigger = true;
+    }
+  }
+
+  @action
   handleInput() {
     this.currentInputValue = this.inputElement.value;
     this.updateResults();
@@ -429,6 +444,7 @@ export default class FilterTips extends Component {
     this.currentInputValue = this.inputElement.value;
     this.showTips = true;
     this.selectedIndex = -1;
+    this.dMenu?.show();
   }
 
   @action
@@ -499,6 +515,7 @@ export default class FilterTips extends Component {
 
   hideTips() {
     this.showTips = false;
+    this.dMenu?.close();
     this.args.blockEnterSubmit(false);
   }
 
@@ -563,26 +580,37 @@ export default class FilterTips extends Component {
   }
 
   <template>
-    <div class="filter-tips" {{didInsert this.setupEventListeners}}>
-      {{#if (and this.showTips this.currentItems.length)}}
-        <div class="filter-tips__dropdown">
-          {{#each this.currentItems as |item index|}}
-            <DButton
-              class={{concatClass
-                "filter-tip__button"
-                (if (eq index this.selectedIndex) "filter-tip__selected")
-              }}
-              @action={{fn this.selectItem item}}
-            >
-              <span class="filter-tip__name">{{item.name}}</span>
-              {{#if item.description}}
-                <span class="filter-tip__description">—
-                  {{item.description}}</span>
-              {{/if}}
-            </DButton>
-          {{/each}}
-        </div>
-      {{/if}}
-    </div>
+    <DMenu
+      class="filter-tips"
+      @triggerComponent={{element "div"}}
+      @onRegisterApi={{this.onRegisterApi}}
+      @contentClass="filter-tips__dropdown"
+      {{didInsert this.setupEventListeners}}
+    >
+      <:trigger></:trigger>
+      <:content>
+        {{#if (and this.showTips this.currentItems.length)}}
+          <DropdownMenu as |dropdown|>
+            {{#each this.currentItems as |item index|}}
+              <dropdown.item>
+                <DButton
+                  class={{concatClass
+                    "filter-tip__button"
+                    (if (eq index this.selectedIndex) "filter-tip__selected")
+                  }}
+                  @action={{fn this.selectItem item}}
+                >
+                  <span class="filter-tip__name">{{item.name}}</span>
+                  {{#if item.description}}
+                    <span class="filter-tip__description">—
+                      {{item.description}}</span>
+                  {{/if}}
+                </DButton>
+              </dropdown.item>
+            {{/each}}
+          </DropdownMenu>
+        {{/if}}
+      </:content>
+    </DMenu>
   </template>
 }
