@@ -1,5 +1,6 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import HtmlWithLinks from "discourse/components/html-with-links";
@@ -9,7 +10,6 @@ import UserProfileAvatar from "discourse/components/user-profile-avatar";
 import UserStatusMessage from "discourse/components/user-status-message";
 import icon from "discourse/helpers/d-icon";
 import formatUsername from "discourse/helpers/format-username";
-import { htmlSafe } from "@ember/template";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";

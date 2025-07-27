@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { htmlSafe } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
@@ -6,7 +7,6 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
-import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("th")

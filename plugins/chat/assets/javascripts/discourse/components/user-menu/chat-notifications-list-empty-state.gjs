@@ -1,5 +1,5 @@
-import EmptyState from "discourse/components/empty-state";
 import { htmlSafe } from "@ember/template";
+import EmptyState from "discourse/components/empty-state";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 

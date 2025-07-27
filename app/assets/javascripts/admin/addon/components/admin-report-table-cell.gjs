@@ -1,12 +1,12 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("td")

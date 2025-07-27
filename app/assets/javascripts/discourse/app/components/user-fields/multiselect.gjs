@@ -1,6 +1,6 @@
 import { concat, fn, hash } from "@ember/helper";
-import InputTip from "discourse/components/input-tip";
 import { htmlSafe } from "@ember/template";
+import InputTip from "discourse/components/input-tip";
 import { i18n } from "discourse-i18n";
 import MultiSelect from "select-kit/components/multi-select";
 import UserFieldBase from "./base";
