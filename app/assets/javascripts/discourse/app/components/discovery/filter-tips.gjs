@@ -9,6 +9,7 @@ import { and, eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
+import element from "discourse/helpers/element";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
@@ -587,7 +588,6 @@ export default class FilterTips extends Component {
       @contentClass="filter-tips__dropdown"
       {{didInsert this.setupEventListeners}}
     >
-      <:trigger></:trigger>
       <:content>
         {{#if (and this.showTips this.currentItems.length)}}
           <DropdownMenu as |dropdown|>
