@@ -1010,7 +1010,7 @@ describe "Composer - ProseMirror editor", type: :system do
       it "renders unicode mentions as nodes" do
         unicode_user = Fabricate(:unicode_user)
 
-        open_composer_and_toggle_rich_editor
+        open_composer
 
         composer.type_content("Hey @#{unicode_user.username} - how are you?")
 
