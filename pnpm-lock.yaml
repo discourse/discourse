@@ -1608,12 +1608,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-runtime@7.26.10':
-    resolution: {integrity: sha512-NWaL2qG6HRpONTnj4JvDU6th4jYeZOJgu3QhmFTCihib0ermtOJqktA5BduGm3suhhVe9EMP9c9+mfJ/I9slqw==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   '@babel/plugin-transform-runtime@7.28.0':
     resolution: {integrity: sha512-dGopk9nZrtCs2+nfIem25UuHyt5moSJamArzIoh9/vezUQPmYDOzjaHDCkAzuGJibCIkPup8rMT2+wYB6S73cA==}
     engines: {node: '>=6.9.0'}
@@ -1702,10 +1696,6 @@ packages:
 
   '@babel/runtime@7.12.18':
     resolution: {integrity: sha512-BogPQ7ciE6SYAUPtlm9tWbgI9+2AgqSam6QivMgXgAT+fKbgppaj4ZX15MHeLC1PVF5sNk70huBu20XxWOs8Cg==}
-
-  '@babel/runtime@7.27.6':
-    resolution: {integrity: sha512-vbavdySgbTTrmFE+EsiqUTzlOr5bzlnJtUv9PynGCAKvfQqjIXbvFdumPM/GxMDfyuGMJaJAU6TO4zc1Jf1i8Q==}
-    engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.28.2':
     resolution: {integrity: sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==}
@@ -1900,15 +1890,6 @@ packages:
       '@embroider/core': ^3.5.7
       webpack: ^5
 
-  '@embroider/macros@1.16.12':
-    resolution: {integrity: sha512-cgaEbzCvUOZF7Xs9FNMGknSCTgE01A1cXkkEhSTuaPbf6F/2z9pZAdQpVrBbTvo1Sg8CwMsm+piahjy43KoGuA==}
-    engines: {node: 12.* || 14.* || >= 16}
-    peerDependencies:
-      '@glint/template': ^1.0.0
-    peerDependenciesMeta:
-      '@glint/template':
-        optional: true
-
   '@embroider/macros@1.18.1':
     resolution: {integrity: sha512-hOQyzFBT1Rd6RdY4AbRSSGSeXyUzUrU9o6GWGD/kxg7cggKQax4R486KE10ZVSPRNqhRiNUcqe2VWc/+e8Z0MQ==}
     engines: {node: 12.* || 14.* || >= 16}
@@ -1928,10 +1909,6 @@ packages:
     peerDependenciesMeta:
       '@embroider/core':
         optional: true
-
-  '@embroider/shared-internals@2.9.0':
-    resolution: {integrity: sha512-8untWEvGy6av/oYibqZWMz/yB+LHsKxEOoUZiLvcpFwWj2Sipc0DcXeTJQZQZ++otNkLCWyDrDhOLrOkgjOPSg==}
-    engines: {node: 12.* || 14.* || >= 16}
 
   '@embroider/shared-internals@2.9.1':
     resolution: {integrity: sha512-8PJBsa37GD++SAfHf8rcJzlwDwuAQCBo0fr+eGxg9l8XhBXsTnE/7706dM4OqWew9XNqRXn39wfIGHZoBpjNMw==}
@@ -3466,11 +3443,6 @@ packages:
 
   babel-plugin-polyfill-corejs2@0.4.14:
     resolution: {integrity: sha512-Co2Y9wX854ts6U8gAAPXfn0GmAyctHuK8n0Yhfjd6t30g7yvKjspvvOo9yG+z52PZRgFErt7Ka2pYnXCjLKEpg==}
-    peerDependencies:
-      '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
-
-  babel-plugin-polyfill-corejs3@0.11.1:
-    resolution: {integrity: sha512-yGCqvBT4rwMczo28xkH/noxJ6MZ4nJfkVYdoDaC/utLtWrXxv27HVrzAeSbqR8SxDsp46n0YF47EbHoixy6rXQ==}
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0-0 <8.0.0
 
@@ -9942,18 +9914,6 @@ snapshots:
       '@babel/core': 7.28.0(supports-color@8.1.1)
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-transform-runtime@7.26.10(@babel/core@7.28.0)':
-    dependencies:
-      '@babel/core': 7.28.0(supports-color@8.1.1)
-      '@babel/helper-module-imports': 7.27.1(supports-color@8.1.1)
-      '@babel/helper-plugin-utils': 7.27.1
-      babel-plugin-polyfill-corejs2: 0.4.14(@babel/core@7.28.0)(supports-color@8.1.1)
-      babel-plugin-polyfill-corejs3: 0.11.1(@babel/core@7.28.0)
-      babel-plugin-polyfill-regenerator: 0.6.5(@babel/core@7.28.0)(supports-color@8.1.1)
-      semver: 6.3.1
-    transitivePeerDependencies:
-      - supports-color
-
   '@babel/plugin-transform-runtime@7.28.0(@babel/core@7.28.0)':
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
@@ -10128,8 +10088,6 @@ snapshots:
   '@babel/runtime@7.12.18':
     dependencies:
       regenerator-runtime: 0.13.11
-
-  '@babel/runtime@7.27.6': {}
 
   '@babel/runtime@7.28.2': {}
 
@@ -10460,21 +10418,6 @@ snapshots:
       '@embroider/core': 4.1.3(@glint/template@1.4.1-unstable.34c4510)
       webpack: 5.100.2(@swc/core@1.13.2)(esbuild@0.25.8)
 
-  '@embroider/macros@1.16.12(@glint/template@1.4.1-unstable.34c4510)':
-    dependencies:
-      '@embroider/shared-internals': 2.9.0
-      assert-never: 1.4.0
-      babel-import-util: 2.1.1
-      ember-cli-babel: 7.26.11
-      find-up: 5.0.0
-      lodash: 4.17.21
-      resolve: 1.22.10
-      semver: 7.7.2
-    optionalDependencies:
-      '@glint/template': 1.4.1-unstable.34c4510
-    transitivePeerDependencies:
-      - supports-color
-
   '@embroider/macros@1.18.1(@glint/template@1.4.1-unstable.34c4510)':
     dependencies:
       '@embroider/shared-internals': 3.0.0
@@ -10503,23 +10446,6 @@ snapshots:
       '@embroider/core': 4.1.3(@glint/template@1.4.1-unstable.34c4510)
     transitivePeerDependencies:
       - '@glint/template'
-      - supports-color
-
-  '@embroider/shared-internals@2.9.0':
-    dependencies:
-      babel-import-util: 2.1.1
-      debug: 4.4.1(supports-color@8.1.1)
-      ember-rfc176-data: 0.3.18
-      fs-extra: 9.1.0
-      is-subdir: 1.2.0
-      js-string-escape: 1.0.1
-      lodash: 4.17.21
-      minimatch: 3.1.2
-      pkg-entry-points: 1.1.1
-      resolve-package-path: 4.0.3
-      semver: 7.7.2
-      typescript-memoize: 1.1.1
-    transitivePeerDependencies:
       - supports-color
 
   '@embroider/shared-internals@2.9.1(supports-color@8.1.1)':
@@ -12271,14 +12197,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-polyfill-corejs3@0.11.1(@babel/core@7.28.0):
-    dependencies:
-      '@babel/core': 7.28.0(supports-color@8.1.1)
-      '@babel/helper-define-polyfill-provider': 0.6.5(@babel/core@7.28.0)(supports-color@8.1.1)
-      core-js-compat: 3.44.0
-    transitivePeerDependencies:
-      - supports-color
-
   babel-plugin-polyfill-corejs3@0.13.0(@babel/core@7.28.0)(supports-color@8.1.1):
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
@@ -13502,8 +13420,8 @@ snapshots:
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.28.0)
       '@babel/plugin-transform-class-static-block': 7.27.1(@babel/core@7.28.0)(supports-color@8.1.1)
       '@babel/preset-env': 7.28.0(@babel/core@7.28.0)(supports-color@8.1.1)
-      '@embroider/macros': 1.16.12(@glint/template@1.4.1-unstable.34c4510)
-      '@embroider/shared-internals': 2.9.0
+      '@embroider/macros': 1.18.1(@glint/template@1.4.1-unstable.34c4510)
+      '@embroider/shared-internals': 2.9.1(supports-color@8.1.1)
       babel-loader: 8.4.1(@babel/core@7.28.0)(webpack@5.100.2(@swc/core@1.13.2)(esbuild@0.25.8))
       babel-plugin-ember-modules-api-polyfill: 3.5.0
       babel-plugin-ember-template-compilation: 2.4.1
@@ -13588,7 +13506,7 @@ snapshots:
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.28.0)
       '@babel/plugin-proposal-private-property-in-object': 7.21.11(@babel/core@7.28.0)
       '@babel/plugin-transform-modules-amd': 7.27.1(@babel/core@7.28.0)(supports-color@8.1.1)
-      '@babel/plugin-transform-runtime': 7.26.10(@babel/core@7.28.0)
+      '@babel/plugin-transform-runtime': 7.28.0(@babel/core@7.28.0)
       '@babel/plugin-transform-typescript': 7.27.1(@babel/core@7.28.0)
       '@babel/polyfill': 7.12.1
       '@babel/preset-env': 7.28.0(@babel/core@7.28.0)(supports-color@8.1.1)
@@ -13624,7 +13542,7 @@ snapshots:
       '@babel/plugin-proposal-private-property-in-object': 7.21.11(@babel/core@7.28.0)
       '@babel/plugin-transform-class-static-block': 7.27.1(@babel/core@7.28.0)(supports-color@8.1.1)
       '@babel/plugin-transform-modules-amd': 7.27.1(@babel/core@7.28.0)(supports-color@8.1.1)
-      '@babel/plugin-transform-runtime': 7.26.10(@babel/core@7.28.0)
+      '@babel/plugin-transform-runtime': 7.28.0(@babel/core@7.28.0)
       '@babel/plugin-transform-typescript': 7.27.1(@babel/core@7.28.0)
       '@babel/preset-env': 7.28.0(@babel/core@7.28.0)(supports-color@8.1.1)
       '@babel/runtime': 7.12.18
@@ -15910,7 +15828,7 @@ snapshots:
 
   is-language-code@3.1.0:
     dependencies:
-      '@babel/runtime': 7.27.6
+      '@babel/runtime': 7.28.2
 
   is-map@2.0.3: {}
 
