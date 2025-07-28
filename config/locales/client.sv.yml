@@ -198,7 +198,6 @@ sv:
       search: "Sök"
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
       error_caused_by: "Orsakas av '%{name}'. <a target='blank' href='%{path}'>Klicka här</a> för att uppdatera, konfigurera eller inaktivera."
       only_admins: "(detta meddelande visas endast för webbplatsadministratörer)"
     broken_decorator_alert: "Inlägg kanske inte visas korrekt eftersom en av inläggsinnehållsdekoratörerna på din webbplats upptäckte ett fel."

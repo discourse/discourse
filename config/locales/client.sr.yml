@@ -226,7 +226,6 @@ sr:
       search: "Pretraži"
     themes:
       default_description: "Подразумевано"
-      broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
       error_caused_by: "Izazvano od '%{name}'. <a target='blank' href='%{path}'>Klikni ovde</a> da unaprediš, rekonfigurišeš ili onemogućiš."
       only_admins: "(ova poruka je prikazana samo sajt administratorima)"
     broken_decorator_alert: "Objava se možda neće prikazivati korektno zato što jedna od post dekoratora na vašem sajtu je imala grešku."

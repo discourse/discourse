@@ -229,7 +229,6 @@ ro:
       search: "Caută"
     themes:
       default_description: "Implicit"
-      broken_theme_alert: "Este posibil ca site-ul tău să nu funcționeze pentru că o temă sau componentă are erori."
       error_caused_by: "Cauzat de „%{name}”. <a target='blank' href='%{path}'>Clic aici</a> pentru a actualiza, reconfigura sau dezactiva."
       only_admins: "(acest mesaj este afișat doar pentru administratorii site-ului)"
     broken_decorator_alert: "Este posibil ca articolele să nu fie afișate corect deoarece unul dintre decoratorii de conținut al articolelor de pe site-ul tău a generat o eroare."
@@ -2012,6 +2011,9 @@ ro:
     welcome_banner_location:
       above_topic_content: "Deasupra conținutului subiectului"
       below_site_header: "Sub antetul site-ului"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Text îmbogățit"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -3578,6 +3580,7 @@ ro:
               content: "Insigne"
             filter:
               content: "Filtru"
+              title: "Filtrează subiectele după categorie, etichetă sau alte criterii"
             topics:
               content: "Subiecte"
             faq:
@@ -3693,8 +3696,12 @@ ro:
     powered_by_discourse: "Propulsat de Discourse"
     safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
     filter:
+      placeholder: "Filtrează subiectele după categorie, etichetă sau alte criterii"
       description:
         yesterday: "Ieri"
+        last_week: "Săptămâna trecută"
+        last_month: "Luna trecută"
+        last_year: "Anul trecut"
     discovery:
       headings:
         multi_tag:
@@ -3707,6 +3714,7 @@ ro:
       title: "Admin Discourse"
       moderator: "Moderator"
       filter_reports: Filtrează rapoarte
+      filter_reports_no_results: "Niciun raport nu corespunde filtrului tău"
       tags:
         remove_muted_tags_from_latest:
           always: "întotdeauna"
@@ -3888,6 +3896,7 @@ ro:
           header_description: "Cuvintele urmărite sunt instrumente de moderare care pot efectua mai multe acțiuni diferite, inclusiv blocarea, cenzura, legarea sau semnalarea postărilor care conțin anumite cuvinte"
         color_palettes:
           title: "Palete de culori"
+          header_description: "Aceste palete controlează culorile utilizate în comunitatea ta. Când faci o paletă selectabilă de către utilizator, membrii își pot alege culorile preferate din preferințele lor."
         emoji:
           title: "Emoticon"
           header_description: "Adaugă emoji noi care vor fi disponibile pentru toată lumea. Selectează mai multe fișiere pentru a crea emoji-uri folosind numele acestora. Grupul selectat va fi folosit pentru toate fișierele care sunt adăugate în același timp."
@@ -3950,6 +3959,7 @@ ro:
               title: "Caută jurnale"
         plugins:
           title: "Module instalate"
+          header_description: "Modulele îți îmbunătățesc comunitatea cu funcționalități suplimentare. Atât modulele preinstalate cât și cele personalizate sunt listate mai jos."
         api_keys:
           title: "Chei API"
           header_description: "Funcția de chei API îți permite să integrezi în siguranță Discourse cu sisteme externe și să automatizezi acțiunile. Administratorii pot crea chei cu scopuri specifice pentru a controla accesul la resurse și la datele sensibile. Scopurile limitează funcționalitatea, asigurând securitate sporită."
@@ -4436,10 +4446,12 @@ ro:
         preinstalled: "Pre-instalat"
         filters:
           all: "Toate"
-          enabled: "Activată"
-          disabled: "Dezactivat"
-          preinstalled: "Pre-instalat"
-          reset: "Resetare"
+          enabled: "Activate"
+          disabled: "Dezactivate"
+          preinstalled: "Pre-instalate"
+          search_placeholder: "Caută module..."
+          reset: "Resetează"
+          no_results: "Nu am găsit niciun modul care să corespundă filtrelor tale"
       navigation_menu:
         sidebar: "Bară laterală"
       backups:
@@ -4634,13 +4646,25 @@ ro:
               too_small: "trebuie să fie mai mare sau egal cu %{count}"
               too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
+          preference_warning: "Ai modificat <a href='%{link}'>setările personale ale temei</a>, așadar modificările paletei de culori ar putea să nu fie vizibile pentru tine. Vizitatorii care nu și-au modificat setările implicite vor vedea în continuare modificările pe care le faci aici."
           title: "Culori"
           edit: "Editează"
+          set_default: "Setează ca activă în %{theme}"
+          set_default_success: "%{schemeName} setează ca paletă activă pentru %{themeName}"
+          saved_refreshing: "Salvată! Se reîmprospătează culorile..."
+          from_theme: "Din tema: %{name}"
           filters:
+            search_placeholder: "Caută după nume sau temă..."
             all: "Toate"
             user_selectable: "Selectabilă de către utilizator"
+            from_theme: "Din temă"
+            no_results: "Nu am găsit palete de culori"
+            reset: "Resetează filtre"
           active_badge:
             text: "Activă"
+            title: "Paletă de culori activă"
+          system_palette: "Aceasta este o paletă de culori încorporată, nu poate fi editată sau ștearsă."
+          back_to_colors: "Înapoi la paletele de culori"
           long_title: "Paletă de culori"
           new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"

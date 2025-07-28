@@ -84,8 +84,41 @@ sk:
     ai_embeddings_semantic_related_include_closed_topics: "Zahrnutie uzavretých tém do výsledkov sémantického vyhľadávania"
     ai_embeddings_semantic_search_hyde_model: "Model používaný na rozšírenie kľúčových slov s cieľom získať lepšie výsledky počas sémantického vyhľadávania"
     ai_embeddings_per_post_enabled: Generovanie vložených príspevkov pre každý príspevok
+    ai_summarization_enabled: "Povolenie funkcie sumarizácie"
+    ai_summarization_model: "Model, ktorý sa má použiť na sumarizáciu"
+    ai_summarization_persona: "Persona, ktorá sa má použiť pre funkciu zhrnutia"
+    ai_custom_summarization_allowed_groups: "Skupiny majú povolené vytvárať nové súhrny."
+    ai_pm_summarization_allowed_groups: "Skupiny môžu vytvárať a zobrazovať súhrny v PM."
+    ai_summary_gists_enabled: "Automatické generovanie stručných zhrnutí najnovších odpovedí v témach"
+    ai_summary_gists_allowed_groups: "Skupiny majú povolené zobraziť témy v zozname horúcich tém."
+    ai_summary_backfill_maximum_topics_per_hour: "Počet tematických súhrnov na doplnenie za hodinu."
+    ai_bot_enabled: "Povolenie modulu AI Bot."
+    ai_bot_enable_chat_warning: "Zobrazenie upozornenia pri spustení PM chatu. Možno prepísať úpravou prekladového reťazca: discourse_ai.ai_bot.pm_warning"
+    ai_bot_allowed_groups: "Keď má bot GPT prístup k PM, bude odpovedať členom týchto skupín."
+    ai_bot_debugging_allowed_groups: "Povoľte týmto skupinám zobrazenie tlačidla na ladenie príspevkov, ktoré zobrazuje nespracovanú požiadavku a odpoveď AI."
+    ai_bot_public_sharing_allowed_groups: "Umožnite týmto skupinám zdieľať osobné správy AI s verejnosťou prostredníctvom jedinečného verejne dostupného prepojenia. Poznámka: ak vaša stránka vyžaduje prihlásenie, aj zdieľania budú vyžadovať prihlásenie."
+    ai_bot_add_to_header: "Zobrazenie tlačidla v záhlaví na spustenie PM s AI Bot"
+    ai_bot_github_access_token: "Prístupový token GitHub na použitie s nástrojmi AI GitHub (vyžaduje sa pre podporu vyhľadávania)"
+    ai_stability_api_key: "Kľúč API pre rozhranie API stability.ai"
+    ai_stability_engine: "Generátor obrázkov, ktorý sa má použiť pre API stability.ai"
+    ai_stability_api_url: "URL pre rozhranie API stability.ai"
+    ai_google_custom_search_api_key: "Kľúč API pre rozhranie Google Custom Search API pozri: https://developers.google.com/custom-search"
+    ai_google_custom_search_cx: "CX pre Google Custom Search API"
+    ai_discord_search_enabled: "Povolí funkciu vyhľadávania v službe Discord"
+    ai_discord_app_id: "ID aplikácie Discord, ku ktorej chcete pripojiť vyhľadávanie Discord"
+    ai_discord_app_public_key: "Verejný kľúč aplikácie Discord, ku ktorej chcete prepojiť vyhľadávanie Discord"
+    ai_discord_search_mode: "Vyberte režim vyhľadávania, ktorý chcete použiť na vyhľadávanie v službe Discord"
+    ai_discord_search_persona: "Persona, ktorá sa má použiť pri vyhľadávaní na Discorde."
+    ai_discord_allowed_guilds: "Discord cechy (servery), kde môže bot vyhľadávať"
+    ai_bot_enable_dedicated_ux: "Umožniť rozhranie bota na celú obrazovku namiesto PM"
+    ai_translation_enabled: "Umožňuje funkciu prekladu pomocou AI"
+    ai_translation_model: "Model, ktorý sa má použiť na preklad. Tento model musí podporovať preklad. Personas môžu toto nastavenie prepísať."
+    ai_translation_backfill_limit_to_public_content: "Ak je táto možnosť povolená, preloží sa iba obsah verejných kategórií. Ak je vypnuté, na preklad sa bude posielať aj obsah v skupinových PM a súkromných kategóriách."
+    ai_translation_max_post_length: "Maximálna dĺžka príspevku, ktorý sa má preložiť. Príspevky dlhšie ako táto hodnota nebudú preložené."
+    ai_translation_backfill_max_age_days: "Maximálny vek príspevku a témy, ktoré sa majú preložiť. Príspevky a témy staršie ako táto hodnota nebudú preložené. Hodnota 0 zakáže spätné dopĺňanie, ale nezakáže preklad nových príspevkov."
   reviewables:
     reasons:
+      flagged_by_toxicity: Plugin AI to označil po tom, čo to klasifikoval ako toxické.
       flagged_by_nsfw: Plugin umelej inteligencie to označil po tom, čo klasifikoval aspoň jeden z priložených obrázkov ako NSFW.
   reports:
     sentiment_analysis:
@@ -164,8 +197,85 @@ sk:
       description: "Príspevky klasifikované pomocou emócie optimizmus pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
       title: "\U0001F981 Hrdosť"
+      description: "Príspevky klasifikované s emóciou hrdosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
+    emotion_realization:
+      title: "\U0001F4A1 Realizácia"
+      description: "Príspevky klasifikované pomocou realizácie emócií pomocou AI s použitím modelu 'SamLowe/roberta-base-go_emotions'."
+    emotion_relief:
+      title: "\U0001F60C Úľava"
+      description: "Príspevky klasifikované s úľavou od emócií prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
+    emotion_remorse:
+      title: "\U0001F614 Výčitky svedomia"
+      description: "Príspevky klasifikované s emóciou ľútosti prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
+    emotion_sadness:
+      title: "\U0001F62D Smútok"
+      description: "Príspevky klasifikované pomocou emócie smútku pomocou AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
+    emotion_surprise:
+      title: "\U0001F632 Prekvapenie"
+      description: "Príspevky klasifikované s emóciou prekvapenia prostredníctvom AI s použitím modelu „SamLowe/roberta-base-go_emotions“."
   discourse_ai:
+    ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "V artefakte môžete mať iba kľúč %{count} ."
+          few: "V artefakte môžete mať iba %{count} kľúčov."
+          many: "V artefakte môžete mať iba %{count} kľúčov."
+          other: "V artefakte môžete mať iba %{count} kľúče."
+      link: "Zobraziť na novej karte"
+      copy_embed: "Kopírovať vloženie"
+      view_source: "Zobraziť zdroj"
+      view_changes: "Zobraziť zmeny"
+      change_description: "Popis zmeny"
+      copied: "Skopírované do schránky"
+    unknown_model: "Neznámy model AI"
+    tools:
+      custom_name: "%{name} (vlastné)"
+      presets:
+        browse_web_jina:
+          name: "Prehľadávať web (jina.ai)"
+        exchange_rate:
+          name: "Výmenný kurz"
+        stock_quote:
+          name: "Cena akcií (AlphaVantage)"
+        image_generation:
+          name: "Generátor obrázkov Flux (Together.ai)"
+        empty_tool:
+          name: "Začnite od prázdneho..."
+      name:
+        characters: "musí obsahovať iba čísla, písmená a podčiarkovníky"
+    ai_helper:
+      errors:
+        completion_request_failed: "Pri pokuse o poskytnutie návrhov sa niečo pokazilo. Prosím, skúste to znova."
+      prompts:
+        translate: Preložiť do %{language}
+        generate_titles: Navrhnite názvy tém
+        proofread: Korektúra textu
+        markdown_table: Generovať tabuľku Markdown
+        custom_prompt: "Vlastný prompt"
+        explain: "Vysvetlite"
+        illustrate_post: "Ilustrovať príspevok"
+        replace_dates: "Inteligentné dátumy"
+      painter:
+        attribution:
+          stable_diffusion_xl: "Obrázok od Stable Diffusion XL"
+          dall_e_3: "Obrázok od DALL-E 3"
+      image_caption:
+        attribution: "S titulkami od AI"
+    share_ai:
+      read_more: "Prečítať celý prepis"
+      onebox_title: "Konverzácia AI s %{llm_name}"
+      formatted_excerpt: "Konverzácia AI s %{llm_name}:\n %{excerpt}"
+      title: "%{title} - Konverzácia AI - %{site_name}"
+      errors:
+        not_allowed: "Nemáte povolené zdieľať túto tému"
+        other_people_in_pm: "Osobné správy s inými ľuďmi nie je možné zdieľať verejne"
+        other_content_in_pm: "Osobné správy obsahujúce príspevky od iných osôb nemožno verejne zdieľať"
+        failed_to_share: "Zdieľanie konverzácie zlyhalo"
+        conversation_deleted: "Zdieľanie konverzácie bolo úspešne odstránené"
     spam_detection:
+      flag_reason: "Označené ako spam používateľom <a href='%{url}'>Discourse AI</a>"
+      silence_reason: "Používateľa automaticky umlčala <a href='%{url}'>Discourse AI</a>"
+      invalid_error_type: "Zadaný neplatný typ chyby"
       unexpected: "Vyskytla sa neočakávaná chyba"
       bot_user_update_failed: "Nepodarilo sa aktualizovať používateľa bota na skenovanie spamu"
       configuration_missing: "Chýba konfigurácia detekcie nevyžiadanej pošty AI. Pred povolením pridajte konfiguráciu do \"Admin > Plugins > Discourse AI > Spam\"."
@@ -239,9 +349,86 @@ sk:
         markdown_table_generator:
           name: "Generátor tabuliek Markdown"
           description: "Predvolená persona, ktorá poháňa funkciu generovania tabuliek Markdown v Helperovi"
+        post_illustrator:
+          name: "Ilustrátor príspevkov"
+          description: "Generuje výzvy StableDiffusion na podporu funkcie ilustrácie príspevkov Helpera"
+        proofreader:
+          name: "Korektor"
+          description: "Predvolená persona, ktorá obsluhuje funkciu korektúry textu pomocníka"
+        titles_generator:
+          name: "Generátor titulov"
+          description: "Predvolená persona, ktorá poháňa funkciu navrhovania názvov tém Pomocníka"
+        tutor:
+          name: "Školiteľ"
+          description: "Predvolená persona, ktorá ovláda funkciu vysvetlenia pomocníka"
+        translator:
+          name: "Prekladateľ"
+          description: "Predvolená persona, ktorá ovláda funkciu prekladača Pomocníka"
+        image_captioner:
+          name: "Popisy obrázkov"
+          description: "Predvolená persona, ktorá ovláda funkciu popisu obrázkov Pomocníka"
+        locale_detector:
+          name: "Detektor lokality"
+          description: "Napája funkciu prekladu zisťovaním lokality daného textu (príspevky, názvy atď.)"
+        post_raw_translator:
+          name: "Prekladateľ príspevkov"
+          description: "Ovláda funkciu prekladu prekladom príspevkov obsahujúcich Discourse Markdown"
+        topic_title_translator:
+          name: "Prekladač názvov tém"
+          description: "Ovláda funkciu prekladu prekladom názvov tém"
+        short_text_translator:
+          name: "Prekladač krátkych textov"
+          description: "Používa funkciu prekladu ako všeobecný textový prekladač, ktorý sa používa pre krátke texty, ako sú názvy kategórií alebo značky"
+        spam_detector:
+          name: "Detektor spamu"
+          description: "Predvolená persona, ktorá poháňa našu funkciu detekcie spamu"
+        content_creator:
+          name: "Tvorca obsahu"
+          description: "Predvolená persona, ktorá ovláda vyhľadávanie HyDE"
+        report_runner:
+          name: "Správca"
+          description: "Predvolená persona použitá v skripte automatizácie zostáv"
+      topic_not_found: "Súhrn nie je k dispozícii, téma sa nenašla!"
+      summarizing: "Zhrnutie témy"
+      searching: "Hľadá sa: '%{query}'"
       tool_options:
+        researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Jazykový model, ktorý sa má použiť na výskum (predvolene LLM aktuálna persona)"
+          max_tokens_per_batch:
+            name: "Maximálny počet tokenov na dávku"
+            description: "Maximálny počet tokenov, ktoré sa majú použiť pre každú dávku vo výskume"
+          max_tokens_per_post:
+            name: "Maximálny počet tokenov na príspevok"
+            description: "Maximálny počet tokenov, ktoré sa dajú použiť pre každý príspevok vo výskume"
+          max_results:
+            name: "Maximálny počet výsledkov"
+            description: "Maximálny počet výsledkov, ktoré sa majú zahrnúť do filtra"
+          include_private:
+            name: "Zahrnúť súkromné"
+            description: "Zahrnúť do filtrov súkromné témy"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Jazykový model, ktorý sa má použiť na vytvorenie artefaktu"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Jazykový model, ktorý sa má použiť na úpravy artefaktov"
+          update_algorithm:
+            name: "Algoritmus aktualizácie"
+            description: "Požiadajte LLM o úplnú náhradu alebo použite diff na aktualizáciu"
+          do_not_echo_artifact:
+            name: "Neopakovať artefakt"
+            description: "Obmedzí náklady, avšak zníži sa účinnosť aktualizácií artefaktov."
+        google:
+          base_query:
+            name: "Základný vyhľadávací dopyt"
+            description: "Základný dopyt, ktorý sa má použiť pri vyhľadávaní. Príklady: „site:example.com“ bude obsahovať iba výsledky z example.com, before:2022-01-01 bude obsahovať iba výsledky z roku 2021 a starších. Tento text sa pridá pred vyhľadávací dopyt."
         read:
           read_private:
+            name: "Čítať súkromne"
             description: "Povolenie prístupu ku všetkým témam, ku ktorým má používateľ prístup (v predvolenom nastavení sú zahrnuté len verejné témy)"
         search:
           search_private:
@@ -302,15 +489,154 @@ sk:
         google: "Vyhľadávanie v službe Google"
         read: "Prečítajte si verejnú tému na fóre"
         setting_context: "Vyhľadanie kontextu nastavenia lokality"
+        schema: "Vyhľadať schému databázy"
+        search_settings: "Nastavenia vyhľadávania na webe"
+        dall_e: "Generovanie obrazu pomocou DALL-E 3"
+        search_meta_discourse: "Vyhľadávanie Meta Discourse"
+        javascript_evaluator: "Vyhodnotiť JavaScript"
+        researcher: "Preskúmajte informácie na fóre pomocou AI Bot"
+      tool_description:
+        read_artifact: "Čítanie webového artefaktu pomocou AI Bot"
+        update_artifact: "Aktualizácia webového artefaktu pomocou AI Bot"
+        create_artifact: "Vytvorený webový artefakt: %{name} - %{specification}"
+        web_browser: "Čítanie <a href='%{url}'>%{url}</a>"
+        github_search_files: "Vyhľadávanie '%{keywords}' v %{repo}/%{branch}"
+        github_search_code: "Hľadané výrazy „%{query}“ v %{repo}"
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_file_content: "Prevzatý obsah %{file_paths} z %{repo_name}@%{branch}"
+        random_picker: "Výber z %{options}, vybrané: %{result}"
+        read: "Čítanie: <a href='%{url}'>%{title}</a>"
+        time: "Čas v %{timezone} je %{time}"
+        summarize: "Zhrnuté <a href='%{url}'>%{title}</a>"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          one: "Nájdená kategória %{count}"
+          few: "Nájdených %{count} kategórií"
+          many: "Nájdených %{count} kategórií"
+          other: "Nájdené %{count} kategórie"
+        tags:
+          one: "Nájdená %{count} značka"
+          few: "Nájdených %{count} značiek"
+          many: "Nájdených %{count} značiek"
+          other: "Nájdené %{count} značky"
+        search:
+          one: "Nájdený %{count} <a href='%{url}'>výsledok</a> pre '%{query}'"
+          few: "Nájdených %{count} <a href='%{url}'>výsledkov</a> pre '%{query}'"
+          many: "Nájdených %{count} <a href='%{url}'>výsledkov</a> pre '%{query}'"
+          other: "Nájdené %{count} <a href='%{url}'>výsledky</a> pre '%{query}'"
+        search_meta_discourse:
+          one: "Nájdený %{count} <a href='%{url}'>výsledok</a> pre '%{query}'"
+          few: "Nájdených %{count} <a href='%{url}'>výsledkov</a> pre '%{query}'"
+          many: "Nájdených %{count} <a href='%{url}'>výsledkov</a> pre '%{query}'"
+          other: "Nájdené %{count} <a href='%{url}'>výsledky</a> pre '%{query}'"
+        google:
+          one: "Nájdený %{count} <a href='%{url}'>výsledok</a> pre '%{query}'"
+          few: "Nájdených %{count} <a href='%{url}'>výsledkov</a> pre '%{query}'"
+          many: "Nájdených %{count} <a href='%{url}'>výsledkov</a> pre '%{query}'"
+          other: "Nájdené %{count} <a href='%{url}'>výsledky</a> pre '%{query}'"
+        setting_context: "Kontext čítania pre: %{setting_name}"
+        schema: "%{tables}"
+        researcher_dry_run:
+          one: "Navrhované ciele: %{goals}\n\nNájdený %{count} príspevok zodpovedajúci '%{filter}'"
+          few: "Navrhované ciele: %{goals}\n\nNájdených %{count} príspevkov zodpovedajúcich '%{filter}'"
+          many: "Navrhované ciele: %{goals}\n\nNájdených %{count} príspevkov zodpovedajúcich '%{filter}'"
+          other: "Navrhované ciele: %{goals}\n\nNájdené %{count} príspevky zodpovedajúce '%{filter}'"
+        researcher:
+          one: "Prebieha prieskum: %{goals}\n\nNájdený %{count} príspevok zodpovedajúci '%{filter}'"
+          few: "Navrhované ciele: %{goals}\n\nNájdených %{count} príspevkov zodpovedajúcich '%{filter}'"
+          many: "Navrhované ciele: %{goals}\n\nNájdených %{count} príspevkov zodpovedajúcich '%{filter}'"
+          other: "Navrhované ciele: %{goals}\n\nNájdené %{count} príspevky zodpovedajúce '%{filter}'"
+        search_settings:
+          one: "Nájdený %{count} výsledok pre '%{query}'"
+          few: "Nájdených %{count} výsledkov pre '%{query}'"
+          many: "Nájdených %{count} výsledkov pre '%{query}'"
+          other: "Nájdené %{count} výsledky pre '%{query}'"
+      discoveries:
+        continue_conversation:
+          title: "Konverzácia o objavovaní: Hľadať %{query}"
+          raw: "Pri hľadaní na stránke %{query}ste mi ukázali tieto informácie:\n\n%{context}\n\nPokračujme v konverzácii."
     summarization:
+      configuration_hint:
+        one: "Najprv nakonfigurujte nastavenie `%{setting}`."
+        few: "Najskôr nakonfigurujte tieto nastavenia: %{settings}"
+        many: "Najskôr nakonfigurujte tieto nastavenia: %{settings}"
+        other: "Najskôr nakonfigurujte tieto nastavenia: %{settings}"
       chat:
         no_targets: "Počas vybraného obdobia neboli zaznamenané žiadne správy."
     sentiment:
       reports:
+        overall_sentiment: "Celkový sentiment (pozitívny - negatívny)"
         post_emotion:
+          sadness: "Smútok \U0001F622"
+          surprise: "Prekvapenie \U0001F631"
           neutral: "Neutrálna \U0001F610"
+          fear: "Strach \U0001F628"
+          anger: "Hnev \U0001F621"
+          joy: "Radosť \U0001F600"
+          disgust: "Znechutenie \U0001F922"
         sentiment_analysis:
+          positive: "Pozitívne"
+          negative: "Negatívne"
           neutral: "Neutrálna"
+    llm:
+      configuration:
+        create_llm: "Pred povolením tejto funkcie je potrebné nastaviť LLM."
+        disable_module_first: "Najprv musíte vypnúť %{setting} ."
+        set_llm_first: "Najprv nastavte %{setting}"
+        model_unreachable: "Od tohto modelu sa nám nepodarilo získať odpoveď. Najprv skontrolujte nastavenia."
+        invalid_seeded_model: "Tento model s touto funkciou nemôžete použiť"
+        invalid_persona_response_format: "Vybraná persona musí mať formát odpovede s boolovským názvom polí „spam“."
+        must_select_model: "Najprv si musíte vybrať LLM"
+      endpoints:
+        not_configured: "%{display_name} (nenakonfigurované)"
+        configuration_hint:
+          one: "Uistite sa, že nastavenie `%{settings}` bolo nakonfigurované."
+          few: "Uistite sa, že nastavenia `%{settings}` boli nakonfigurované."
+          many: "Uistite sa, že nastavenia `%{settings}` boli nakonfigurované."
+          other: "Uistite sa, že nastavenia `%{settings}` boli nakonfigurované."
+      delete_failed:
+        one: "Tento model sa nám nepodarilo odstrániť, pretože ho používa %{settings} . Aktualizujte nastavenie a skúste to znova."
+        few: "Tento model sa nám nepodarilo odstrániť, pretože ho používa %{settings} . Aktualizujte nastavenie a skúste to znova."
+        many: "Tento model sa nám nepodarilo odstrániť, pretože ho používa %{settings} . Aktualizujte nastavenie a skúste to znova."
+        other: "Tento model sa nám nepodarilo odstrániť, pretože ho používa %{settings} . Aktualizujte nastavenie a skúste to znova."
+      cannot_edit_builtin: "Vstavaný model nie je možné upravovať."
+    personas:
+      malformed_examples: "Uvedené príklady majú nesprávny formát."
+    embeddings:
+      delete_failed: "Tento model sa momentálne používa. Najprv aktualizujte „vybraný model vloženia AI“."
+      cannot_edit_builtin: "Vstavaný model nie je možné upravovať."
+      configuration:
+        disable_embeddings: "Najprv musíte vypnúť možnosť „povolené vkladanie AI“."
+        invalid_config: "Vybrali ste neplatnú možnosť."
+        choose_model: "Najprv nastavte „vybraný model pre vloženie AI“."
+    llm_models:
+      missing_provider_param: "%{param} nemôže byť prázdne"
+      bedrock_invalid_url: "Pre použitie tohto modelu vyplňte všetky polia."
     ai_staff_action_logger:
       updated: "aktualizované"
+      set: "nastaviť"
       removed: "odstránené"
+    errors:
+      quota_exceeded: "Prekročili ste kvótu pre tento model. Skúste to prosím znova na stránke %{relative_time}."
+      quota_required: "Pre tento model je potrebné zadať maximálny počet tokenov alebo použití"
+      no_query_specified: Parameter dopytu je povinný, prosím, zadajte ho.
+      no_user_for_persona: K zadanej persona nie je priradený žiadny používateľ.
+      persona_not_found: Zadaná persona neexistuje. Skontrolujte parametre persona_name alebo persona_id.
+      no_user_specified: Používateľské meno alebo parameter user_unique_id je povinný, prosím, zadajte ho.
+      user_not_found: Zadaný používateľ neexistuje. Skontrolujte parameter používateľské meno.
+      persona_disabled: Zadaná persona je zakázaná. Skontrolujte parametre persona_name alebo persona_id.
+      no_default_llm: Persona musí mať definovaný default_llm.
+      user_not_allowed: Používateľ sa nemôže zapojiť do témy.
+      prompt_message_length: Správa %{idx} prekračuje limit 1000 znakov.
+      persona_already_exists: Persona s menom %{name} už existuje.
+      custom_tool_exists:
+        one: "Vlastný nástroj s názvom %{names} už existuje."
+        few: "Vlastné nástroje s názvom %{names} už existujú."
+        many: "Vlastné nástroje s názvom %{names} už existujú."
+        other: "Vlastné nástroje s názvom %{names} už existujú."
+  dashboard:
+    problem:
+      ai_llm_status: "Model LLM: %{model_name} má problémy. Skontrolujte konfiguračnú stránku modelu <a href='%{url}'></a>."

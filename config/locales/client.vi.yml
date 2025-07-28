@@ -170,7 +170,6 @@ vi:
       search: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
-      broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
       error_caused_by: "Gây ra bởi '%{name}'. <a target='blank' href='%{path}'>Nhấp vào đây</a> để cập nhật, cấu hình lại hoặc tắt."
       only_admins: "(thông báo này chỉ được hiển thị cho quản trị viên trang web)"
     broken_decorator_alert: "Bài đăng có thể không hiển thị chính xác vì một trong những người trang trí nội dung bài đăng trên trang web của bạn đã mắc lỗi."

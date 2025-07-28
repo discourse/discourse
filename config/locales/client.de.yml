@@ -201,7 +201,6 @@ de:
       search: "Suche"
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
       error_caused_by: "Verursacht durch „%{name}“. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
       only_admins: "(Diese Nachricht wird nur Website-Administratoren angezeigt)"
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
@@ -2486,6 +2485,9 @@ de:
     welcome_banner_location:
       above_topic_content: "Über Themeninhalt"
       below_site_header: "Unter der Kopfzeile"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Rich Text"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"

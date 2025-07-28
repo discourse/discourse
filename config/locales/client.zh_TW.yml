@@ -171,7 +171,6 @@ zh_TW:
       search: "搜索"
     themes:
       default_description: "預設"
-      broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
       error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>按一下這裡</a> 以更新、重新設定或停用。"
       only_admins: "（此消息僅向網站管理員顯示）"
     broken_decorator_alert: "貼文可能無法正確顯示，因為您網站上的帖子內容裝飾器之一引發了錯誤。"

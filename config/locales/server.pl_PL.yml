@@ -2617,6 +2617,7 @@ pl_PL:
     adobe_analytics_tags_url: "Adres URL znaczników Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
     rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
+    default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
     viewport_based_mobile_mode: "EKSPERYMENTALNE: wyłącz tryby mobilne/komputerowe oparte na agencie użytkownika i zamiast tego użyj szerokości obszaru widoku."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
@@ -2707,7 +2708,7 @@ pl_PL:
       clean_up_inactive_users_after_days: "dezaktywowany|nieaktywny|nieaktywowany"
       navigation_menu: "menu rozwijane paska bocznego|nagłówka"
       purge_unactivated_users_grace_period_days: "dezaktywowany|nieaktywny|nieaktywowany"
-      rich_editor: "rte|tekst wzbogacony|kompozytor"
+      default_composition_mode: "rte|tekst sformatowany|kompozytor|markdown|edytor tekstu sformatowanego"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
