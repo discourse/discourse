@@ -60,20 +60,20 @@ html {
 // Links
 // --------------------------------------------------
 a {
-  color: var(--link-color);
+  color: var(--tertiary);
   text-decoration: none;
   cursor: pointer;
 
   &:visited {
-    color: var(--link-color);
+    color: var(--tertiary);
   }
 
   &:hover {
-    color: var(--link-color);
+    color: var(--tertiary);
   }
 
   &:active {
-    color: var(--link-color);
+    color: var(--tertiary);
   }
 }
 
