@@ -137,17 +137,6 @@
         float: none;
       }
     }
-
-    &:not(.show-avatars) {
-      li.notification {
-        padding: var(--space-3);
-
-        .d-icon {
-          padding-top: 0;
-          font-size: var(--font-up-2);
-        }
-      }
-    }
   }
 
   .expand-item,
