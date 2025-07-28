@@ -104,19 +104,17 @@ a.hashtag {
       gap: var(--space-2);
     }
 
-    // .d-icon {
-    //   margin-right: 0.25em;
-    // }
+    span[class^="hashtag-category"] {
+      display: inline-flex;
+    }
+
     .hashtag-category-square,
     .hashtag-category-icon .svg-icon,
     .hashtag-category-emoji .emoji,
     .d-icon-tag,
     .d-icon-comment {
-      flex: 0 0 auto;
       width: 0.93em;
       height: 0.93em;
-      vertical-align: -0.125em;
-      display: inline-block;
     }
   }
 
