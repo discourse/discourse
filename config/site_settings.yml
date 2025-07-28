@@ -1618,7 +1618,8 @@ posting:
     hidden: true
   rich_editor:
     client: true
-    default: false
+    default: true
+    hidden: true
     area: "posts_and_topics"
 
 content_localization:
@@ -3815,6 +3816,10 @@ user_preferences:
   default_sidebar_show_count_of_new_items:
     default: false
     area: "navigation"
+  default_composition_mode:
+    default: 1
+    enum: "CompositionModeSiteSetting"
+    area: "posts_and_topics|user_defaults"
 
 api:
   retain_web_hook_events_period_days:

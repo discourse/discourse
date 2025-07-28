@@ -203,7 +203,7 @@ export default class Composer extends RestModel {
 
   @service dialog;
   @service siteSettings;
-  @service keyValueStore;
+  @service currentUser;
 
   @tracked topic;
   @tracked post;
@@ -366,10 +366,7 @@ export default class Composer extends RestModel {
   }
 
   get composerVersion() {
-    if (
-      this.siteSettings.rich_editor &&
-      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
-    ) {
+    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
       return 2;
     }
 
