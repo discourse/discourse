@@ -31,7 +31,8 @@ a.hashtag {
 
   .d-icon,
   .hashtag-icon-placeholder {
-    font-size: var(--font-down-1);
+    width: 0.93em;
+    height: 0.93em;
     margin: 0;
   }
 
@@ -47,16 +48,17 @@ a.hashtag {
 
   .hashtag-category-square {
     flex: 0 0 auto;
-    width: 0.72em;
-    height: 0.72em;
-    margin-right: 0.25em;
+    width: 0.93em;
+    height: 0.93em;
     margin-left: 0.1em;
     display: inline-block;
+    border: 0.1em solid var(--primary-low);
+    box-sizing: border-box;
   }
 
   .hashtag-category-icon,
   .hashtag-category-emoji {
-    display: inline-block;
+    display: contents;
   }
 }
 
@@ -95,28 +97,26 @@ a.hashtag {
   }
 
   &__link {
-    align-items: center;
-    display: flex;
-
-    .d-icon {
-      margin-right: 0.25em;
+    // very silly but got to overrule the main autocomplete styles which unfortunately use direct ul,li,a selectors
+    .hashtag-autocomplete & {
+      align-items: center;
+      display: flex;
+      gap: var(--space-2);
     }
 
+    // .d-icon {
+    //   margin-right: 0.25em;
+    // }
     .hashtag-category-square,
-    .hashtag-category-icon,
-    .hashtag-category-emoji {
+    .hashtag-category-icon .svg-icon,
+    .hashtag-category-emoji .emoji,
+    .d-icon-tag,
+    .d-icon-comment {
       flex: 0 0 auto;
       width: 0.93em;
       height: 0.93em;
-      margin-right: 5px;
+      vertical-align: -0.125em;
       display: inline-block;
-    }
-
-    .hashtag-category-icon .svg-icon,
-    .hashtag-category-emoji .emoji {
-      width: 0.93em;
-      height: 0.93em;
-      vertical-align: middle;
     }
   }
 
