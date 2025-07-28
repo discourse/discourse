@@ -19,6 +19,7 @@ class Admin::ScreenedIpAddressesController < Admin::StaffController
     begin
       screened_ip_addresses = screened_ip_addresses.to_a
     rescue ActiveRecord::StatementInvalid
+      # postgresql throws a PG::InvalidTextRepresentation exception when filter isn't a valid cidr expression
       screened_ip_addresses = []
     end
 
