@@ -9,6 +9,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
 
+export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
 
 /**
@@ -214,7 +215,14 @@ export default class DAutocompleteModifier extends Modifier {
 
     // Check if we should trigger autocomplete
     if (this.completeStart === null && caretPosition > 0) {
-      if (key === this.options.key) {
+      // Try backwards scanning first to find existing autocomplete context
+      const position = await this.guessCompletePosition();
+      if (position.completeStart !== null) {
+        this.completeStart = position.completeStart;
+        this.completeEnd = caretPosition - 1;
+        await this.performSearch(position.term || "");
+      } else if (key === this.options.key) {
+        // Fallback to original trigger logic for new autocomplete sessions
         const prevChar = value.charAt(caretPosition - 2);
         if (!prevChar || this.ALLOWED_LETTERS_REGEXP.test(prevChar)) {
           this.completeStart = caretPosition - 1;
@@ -300,7 +308,7 @@ export default class DAutocompleteModifier extends Modifier {
   updateResults(results) {
     if (
       this.completeStart === null ||
-      results === "skip" ||
+      results === SKIP ||
       results === CANCELLED_STATUS
     ) {
       return;
