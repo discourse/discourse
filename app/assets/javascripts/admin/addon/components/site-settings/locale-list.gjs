@@ -5,9 +5,11 @@ import { service } from "@ember/service";
 import ListSetting from "select-kit/components/list-setting";
 
 export default class LocaleList extends Component {
-  tokenSeparator = "|";
-
   @service siteSettings;
+
+tokenSeparator = "|";
+
+
 
   get choices() {
     const allLocales = this.siteSettings.available_locales;

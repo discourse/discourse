@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import ComboBox from "select-kit/components/combo-box";
 import { service } from "@ember/service";
+import ComboBox from "select-kit/components/combo-box";
 
 export default class LocaleEnum extends Component {
   @service languageNameLookup;

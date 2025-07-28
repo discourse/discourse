@@ -20,6 +20,8 @@ export function createSiteSettingsFromPreloaded(
     settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
   }
 
+  // localize locale names here as they are not localized in the backend
+  // due to initialization order and caching
   if (settings.available_locales) {
     const locales = JSON.parse(settings.available_locales);
     const localizedLocales = locales.map(({ native_name, value, name }) => {
