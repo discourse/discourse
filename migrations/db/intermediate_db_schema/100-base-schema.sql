@@ -93,6 +93,16 @@ CREATE TABLE category_users
     PRIMARY KEY (category_id, user_id)
 );
 
+CREATE TABLE group_users
+(
+    group_id           NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
+    created_at         DATETIME,
+    notification_level INTEGER,
+    owner              BOOLEAN,
+    PRIMARY KEY (group_id, user_id)
+);
+
 CREATE TABLE "groups"
 (
     original_id                        NUMERIC  NOT NULL PRIMARY KEY,
@@ -122,16 +132,6 @@ CREATE TABLE "groups"
     visibility_level                   INTEGER
 );
 
-CREATE TABLE group_users
-(
-    group_id           NUMERIC  NOT NULL,
-    user_id            NUMERIC  NOT NULL,
-    created_at         DATETIME,
-    notification_level INTEGER,
-    owner              BOOLEAN,
-    PRIMARY KEY (group_id, user_id)
-);
-
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
@@ -159,6 +159,7 @@ CREATE TABLE user_options
     chat_separate_sidebar_mode           INTEGER,
     chat_sound                           TEXT,
     color_scheme_id                      NUMERIC,
+    composition_mode                     INTEGER,
     dark_scheme_id                       NUMERIC,
     default_calendar                     INTEGER,
     digest_after_minutes                 INTEGER,

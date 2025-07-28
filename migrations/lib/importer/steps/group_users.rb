@@ -7,6 +7,9 @@ module Migrations::Importer::Steps
 
     depends_on :groups, :users
 
+    requires_set :existing_group_users,
+                 "SELECT group_id, user_id FROM group_users WHERE user_id > 0"
+
     column_names %i[group_id user_id created_at updated_at owner notification_level]
 
     total_rows_query <<~SQL, MappingType::GROUPS, MappingType::USERS
@@ -30,24 +33,13 @@ module Migrations::Importer::Steps
       ORDER BY discourse_group_id, discourse_user_id
     SQL
 
-    def execute
-      # TODO: Remove once SetStore has been merged
-      @existing_group_users = Hash.new { |h, k| h[k] = Set.new }
-
-      @discourse_db
-        .query_array("SELECT group_id, user_id FROM group_users WHERE user_id > 0")
-        .each { |row| @existing_group_users[row[0]].add(row[1]) }
-
-      super
-    end
-
     private
 
     def transform_row(row)
       group_id = row[:discourse_group_id]
       user_id = row[:discourse_user_id]
 
-      return nil unless @existing_group_users[group_id].add?(user_id)
+      return nil unless @existing_group_users.add?(group_id, user_id)
 
       row[:owner] ||= false
       row[:group_id] = group_id
