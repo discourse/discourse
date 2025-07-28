@@ -31,7 +31,7 @@ class ChatSetupInit {
     setOwner(this, owner);
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
-    withPluginApi("0.12.1", (api) => {
+    withPluginApi((api) => {
       api.addAboutPageActivity("chat_messages", (periods) => {
         const count = periods["7_days"];
         if (count) {

@@ -29,7 +29,7 @@ module("Integration | Component | select-kit/api", function (hooks) {
 
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
-    withPluginApi("0.8.43", (api) => {
+    withPluginApi((api) => {
       api.modifySelectKit("combo-box").appendContent(() => {
         return {
           id: "alpaca",
@@ -71,7 +71,7 @@ module("Integration | Component | select-kit/api", function (hooks) {
 
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
-    withPluginApi("0.8.43", (api) => {
+    withPluginApi((api) => {
       api.modifySelectKit("combo-box").prependContent(() => {
         return {
           id: "alpaca",
@@ -113,7 +113,7 @@ module("Integration | Component | select-kit/api", function (hooks) {
 
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
-    withPluginApi("0.8.43", (api) => {
+    withPluginApi((api) => {
       api.modifySelectKit("combo-box").onChange((component, value, item) => {
         document.querySelector("#test").innerText = item.name;
       });
@@ -140,7 +140,7 @@ module("Integration | Component | select-kit/api", function (hooks) {
 
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
-    withPluginApi("0.8.43", (api) => {
+    withPluginApi((api) => {
       api.modifySelectKit("combo-box").replaceContent(() => {
         return {
           id: "alpaca",

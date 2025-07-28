@@ -8,8 +8,8 @@ import DPageSubheader from "discourse/components/d-page-subheader";
 import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import getUrl from "discourse/helpers/get-url";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import ColorPaletteListItem from "admin/components/color-palette-list-item";
 

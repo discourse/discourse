@@ -1,10 +1,10 @@
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import LoadMore from "discourse/components/load-more";
 import formatDuration from "discourse/helpers/format-duration";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(

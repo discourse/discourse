@@ -259,7 +259,7 @@ export default {
       return;
     }
 
-    withPluginApi("1.13.0", (api) => {
+    withPluginApi((api) => {
       initPlugin(api, container);
     });
   },

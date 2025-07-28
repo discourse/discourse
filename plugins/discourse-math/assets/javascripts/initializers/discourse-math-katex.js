@@ -89,7 +89,7 @@ export default {
       siteSettings.discourse_math_enabled &&
       siteSettings.discourse_math_provider === "katex"
     ) {
-      withPluginApi("0.5", function (api) {
+      withPluginApi(function (api) {
         initializeMath(api);
       });
     }

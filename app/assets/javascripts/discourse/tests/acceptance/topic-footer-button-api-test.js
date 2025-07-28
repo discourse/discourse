@@ -10,7 +10,7 @@ acceptance(
 
     test("adds topic footer button through API", async function (assert) {
       const done = assert.async();
-      withPluginApi("0.13.1", (api) => {
+      withPluginApi((api) => {
         api.registerTopicFooterButton({
           id: "my-button",
           icon: "gear",
@@ -28,7 +28,7 @@ acceptance(
     });
 
     test("doesn't show footer button if anonymousOnly is true", async function (assert) {
-      withPluginApi("0.13.1", (api) => {
+      withPluginApi((api) => {
         api.registerTopicFooterButton({
           id: "my-button",
           icon: "gear",
@@ -48,7 +48,7 @@ acceptance(
   function () {
     test("adds topic footer button through API", async function (assert) {
       const done = assert.async();
-      withPluginApi("0.13.1", (api) => {
+      withPluginApi((api) => {
         api.registerTopicFooterButton({
           id: "my-button",
           icon: "gear",
@@ -67,7 +67,7 @@ acceptance(
     });
 
     test("doesn't show footer button if anonymousOnly is false/unset", async function (assert) {
-      withPluginApi("0.13.1", (api) => {
+      withPluginApi((api) => {
         api.registerTopicFooterButton({
           id: "my-button",
           icon: "gear",

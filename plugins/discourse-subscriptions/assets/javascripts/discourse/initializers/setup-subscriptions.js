@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 export default {
   name: "setup-subscriptions",
   initialize(container) {
-    withPluginApi("0.8.11", (api) => {
+    withPluginApi((api) => {
       const siteSettings = container.lookup("service:site-settings");
       const isNavLinkEnabled =
         siteSettings.discourse_subscriptions_extra_nav_subscribe;

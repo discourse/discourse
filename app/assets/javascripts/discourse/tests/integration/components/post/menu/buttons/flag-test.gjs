@@ -36,7 +36,7 @@ module("Integration | Component | Post Menu Flag Button", function (hooks) {
   });
 
   test("shouldRender returns false when 'flag-button-render-decision' transformer returns false", function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("flag-button-render-decision", () => false);
     });
     assert.false(
@@ -46,7 +46,7 @@ module("Integration | Component | Post Menu Flag Button", function (hooks) {
   });
 
   test("'flag-button-disabled-state' transformer to true causes DButton to be disabled", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("flag-button-render-decision", () => true); // Ensure component renders
       api.registerValueTransformer("flag-button-disabled-state", () => true);
     });
@@ -63,7 +63,7 @@ module("Integration | Component | Post Menu Flag Button", function (hooks) {
 
   test("'flag-button-dynamic-class' transformer applies the given style", async function (assert) {
     const testClass = "my-special-flag-style";
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("flag-button-render-decision", () => true); // Ensure component renders
       api.registerValueTransformer(
         "flag-button-dynamic-class",
