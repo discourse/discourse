@@ -259,6 +259,8 @@ export default RouteTemplate(
           {{/if}}
         </div>
       </div>
+    {{/if}}
+
 
       {{#if @controller.showBadges}}
         <div class="display-row">
