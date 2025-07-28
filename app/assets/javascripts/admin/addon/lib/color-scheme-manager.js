@@ -1,24 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 
 /**
- * determine if a scheme is the built-in default
- * @param {Object} scheme
- * @returns {boolean} true if built-in default scheme
- */
-function isBuiltInDefault(scheme) {
-  return !scheme || scheme?.is_builtin_default;
-}
-
-/**
- * get the scheme ID for API calls
- * @param {Object} scheme
- * @returns {number|null}
- */
-function getSchemeId(scheme) {
-  return isBuiltInDefault(scheme) ? null : scheme?.id;
-}
-
-/**
  * apply color scheme by updating stylesheet links
  *
  * @param {Object} scheme - color scheme to apply
@@ -36,8 +18,7 @@ export async function applyColorScheme(scheme, options = {}) {
       await scheme.save({ forceSave: true });
     }
 
-    const id = getSchemeId(scheme);
-    const isBuiltIn = isBuiltInDefault(scheme);
+    const id = scheme?.id;
 
     let existingTags = [];
     if (id) {
@@ -101,7 +82,7 @@ export async function applyColorScheme(scheme, options = {}) {
 
       if (replace && id) {
         lightTag.setAttribute("data-scheme-id", id);
-      } else if (replace && isBuiltIn) {
+      } else if (replace && !id) {
         lightTag.removeAttribute("data-scheme-id");
       }
     }
@@ -111,7 +92,7 @@ export async function applyColorScheme(scheme, options = {}) {
 
       if (replace && id) {
         darkTag.setAttribute("data-scheme-id", id);
-      } else if (replace && isBuiltIn) {
+      } else if (replace && !id) {
         darkTag.removeAttribute("data-scheme-id");
       }
     }
@@ -129,19 +110,34 @@ export async function applyColorScheme(scheme, options = {}) {
  *
  * @param {Object} scheme - color scheme to set as default
  * @param {Object} options
- * @param {boolean} options.reload - reload the page after setting? (default: false)
+ * @param {string} options.previewMode - preview mode: "live", "none", or "reload" (default: auto-detect)
  * @returns {Promise}
  */
 
 export async function setDefaultColorScheme(scheme, store, options = {}) {
-  const { reload = false } = options;
+  const { previewMode = "live" } = options;
 
   try {
-    // can't live preview if isBuiltInDefault
-    const isBuiltIn = isBuiltInDefault(scheme);
-    const shouldReload = reload || isBuiltIn;
+    // Determine preview behavior
+    let shouldPreview = false;
+    let shouldReload = false;
 
-    if (!shouldReload) {
+    switch (previewMode) {
+      case "live":
+        shouldPreview = true;
+        shouldReload = false;
+        break;
+      case "none":
+        shouldPreview = false;
+        shouldReload = false;
+        break;
+      case "reload":
+        shouldPreview = false;
+        shouldReload = true;
+        break;
+    }
+
+    if (shouldPreview) {
       await applyColorScheme(scheme, { replace: true });
     }
 
@@ -152,7 +148,7 @@ export async function setDefaultColorScheme(scheme, store, options = {}) {
       throw new Error("Could not find default theme");
     }
 
-    const schemeId = getSchemeId(scheme);
+    const schemeId = scheme?.id || null;
     defaultTheme.set("color_scheme_id", schemeId);
 
     await defaultTheme.saveChanges("color_scheme_id");
