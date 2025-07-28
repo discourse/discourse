@@ -209,7 +209,7 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (siteSettings.discourse_reactions_enabled) {
-      withPluginApi("1.34.0", initializeDiscourseReactions);
+      withPluginApi(initializeDiscourseReactions);
     }
   },
 

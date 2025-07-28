@@ -12,7 +12,7 @@ export default {
       return;
     }
 
-    withPluginApi("1.18.0", (api) => {
+    withPluginApi((api) => {
       api.registerNotificationTypeRenderer(
         "question_answer_user_commented",
         (NotificationTypeBase) => {

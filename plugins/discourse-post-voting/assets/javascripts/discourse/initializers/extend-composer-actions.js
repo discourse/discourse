@@ -13,7 +13,7 @@ export default {
       return;
     }
 
-    withPluginApi("0.13.0", (api) => {
+    withPluginApi((api) => {
       api.serializeOnCreate("create_as_post_voting", "createAsPostVoting");
       api.serializeOnCreate(
         "only_post_voting_in_this_category",

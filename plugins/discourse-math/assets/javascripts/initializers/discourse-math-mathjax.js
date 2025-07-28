@@ -144,7 +144,7 @@ export default {
       siteSettings.discourse_math_enabled &&
       siteSettings.discourse_math_provider === "mathjax"
     ) {
-      withPluginApi("0.5", function (api) {
+      withPluginApi(function (api) {
         initializeMath(api, discourse_math_opts);
       });
     }

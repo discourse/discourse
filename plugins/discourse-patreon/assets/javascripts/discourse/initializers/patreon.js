@@ -22,6 +22,6 @@ function initWithApi(api) {
 export default {
   name: "patreon",
   initialize() {
-    withPluginApi("0.8", initWithApi);
+    withPluginApi(initWithApi);
   },
 };

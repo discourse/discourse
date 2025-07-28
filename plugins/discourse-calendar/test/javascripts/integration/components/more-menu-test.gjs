@@ -25,7 +25,7 @@ module("Integration | Component | MoreMenu", function (hooks) {
   });
 
   test("value transformer works", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "discourse-calendar-event-more-menu-should-show-participants",
         () => {

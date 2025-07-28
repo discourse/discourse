@@ -1,5 +1,5 @@
+import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 

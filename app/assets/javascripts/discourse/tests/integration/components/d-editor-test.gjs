@@ -805,7 +805,7 @@ third line`
   test("toolbar event supports replaceText", async function (assert) {
     const self = this;
 
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "replace-text",
@@ -876,7 +876,7 @@ third line`
   });
 
   test("Toolbar buttons are only rendered when condition is met", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "shown",
@@ -1487,7 +1487,7 @@ module("Integration | Component | d-editor | rich editor", function (hooks) {
 
     const initialValue = "Hello\n\n* world\n* am am here $";
 
-    withPluginApi("2.1.0", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "replace-text",

@@ -1,8 +1,8 @@
 import { Input } from "@ember/component";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
-import htmlSafe from "discourse/helpers/html-safe";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { i18n } from "discourse-i18n";
 import LoginRequired from "../../components/login-required";

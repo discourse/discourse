@@ -7,7 +7,7 @@ import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel
 export default {
   name: "chat-user-menu",
   initialize(container) {
-    withPluginApi("1.3.0", (api) => {
+    withPluginApi((api) => {
       const chat = container.lookup("service:chat");
 
       if (!chat.userCanChat) {

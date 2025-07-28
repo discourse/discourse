@@ -6,7 +6,7 @@ module("Unit | Controller | full-page-search", function (hooks) {
   setupTest(hooks);
 
   test("full-page-search-load-more behavior transformer", function (assert) {
-    withPluginApi("2.0.0", (api) => {
+    withPluginApi((api) => {
       const controller = this.owner.lookup("controller:full-page-search");
       controller.model = {
         grouped_search_result: { more_full_page_results: true },

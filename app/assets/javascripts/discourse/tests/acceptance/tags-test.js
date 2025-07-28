@@ -730,7 +730,7 @@ acceptance("Tag separator customization", function (needs) {
   });
 
   test("applying a value transformation for custom tag separator", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("tag-separator", () => {
         return " | ";
       });

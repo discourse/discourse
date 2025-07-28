@@ -1014,7 +1014,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("modified placeholder with composer-editor-reply-placeholder is rendered", async function (assert) {
-        withPluginApi("0.8.14", (api) => {
+        withPluginApi((api) => {
           api.registerValueTransformer(
             "composer-editor-reply-placeholder",
             () => {
@@ -1164,7 +1164,7 @@ import { i18n } from "discourse-i18n";
       }
 
       needs.hooks.beforeEach(() => {
-        withPluginApi("0.8.14", (api) => {
+        withPluginApi((api) => {
           api.customizeComposerText({
             actionTitle(model) {
               if (customComposerAction(model)) {
@@ -1208,7 +1208,7 @@ import { i18n } from "discourse-i18n";
       });
 
       needs.hooks.beforeEach(() => {
-        withPluginApi("1.5.0", (api) => {
+        withPluginApi((api) => {
           api.addComposerSaveErrorCallback((error) => {
             if (error.match(/PLUGIN_XYZ ERROR/)) {
               // handle error
@@ -1479,7 +1479,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("buttons can support a shortcut", async function (assert) {
-        withPluginApi("0", (api) => {
+        withPluginApi((api) => {
           api.addComposerToolbarPopupMenuOption({
             action: (toolbarEvent) => {
               toolbarEvent.applySurround("**", "**");
@@ -1561,7 +1561,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("buttons can support a shortcut that triggers a custom action", async function (assert) {
-        withPluginApi("1.37.1", (api) => {
+        withPluginApi((api) => {
           api.onToolbarCreate((toolbar) => {
             toolbar.addButton({
               id: "smile",
@@ -1647,7 +1647,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("buttons can be added conditionally", async function (assert) {
-        withPluginApi("0", (api) => {
+        withPluginApi((api) => {
           api.addComposerToolbarPopupMenuOption({
             action: (toolbarEvent) => {
               toolbarEvent.applySurround("**", "**");
