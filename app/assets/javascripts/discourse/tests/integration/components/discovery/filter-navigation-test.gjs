@@ -62,26 +62,34 @@ module(
         </template>
       );
 
-      await triggerEvent("#queryStringInput", "focus");
+      await triggerEvent("#topic-query-filter-input", "focus");
       assert
         .dom(".filter-navigation__tip-button")
         .exists({ count: 3 }, "tips appear");
 
-      await triggerKeyEvent("#queryStringInput", "keydown", "ArrowDown");
+      await triggerKeyEvent(
+        "#topic-query-filter-input",
+        "keydown",
+        "ArrowDown"
+      );
       assert
         .dom(
           ".filter-navigation__tip-button--selected .filter-navigation__tip-name"
         )
         .hasText("category:");
 
-      await triggerKeyEvent("#queryStringInput", "keydown", "ArrowDown");
+      await triggerKeyEvent(
+        "#topic-query-filter-input",
+        "keydown",
+        "ArrowDown"
+      );
       assert
         .dom(
           ".filter-navigation__tip-button--selected .filter-navigation__tip-name"
         )
         .hasText("tag:");
 
-      await triggerKeyEvent("#queryStringInput", "keydown", "ArrowUp");
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "ArrowUp");
       assert
         .dom(
           ".filter-navigation__tip-button--selected .filter-navigation__tip-name"
@@ -101,15 +109,19 @@ module(
         </template>
       );
 
-      await triggerEvent("#queryStringInput", "focus");
-      await triggerKeyEvent("#queryStringInput", "keydown", "ArrowDown");
-      await triggerKeyEvent("#queryStringInput", "keydown", "Tab");
+      await triggerEvent("#topic-query-filter-input", "focus");
+      await triggerKeyEvent(
+        "#topic-query-filter-input",
+        "keydown",
+        "ArrowDown"
+      );
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "Tab");
 
       assert.strictEqual(this.query, "category:", "category filter added");
 
-      await triggerKeyEvent("#queryStringInput", "keydown", "Tab");
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "Tab");
       assert
-        .dom("#queryStringInput")
+        .dom("#topic-query-filter-input")
         .hasValue("category:bugs ", "category value selected");
     });
 
@@ -124,14 +136,18 @@ module(
         </template>
       );
 
-      await triggerEvent("#queryStringInput", "focus");
-      await fillIn("#queryStringInput", "tag:e");
+      await triggerEvent("#topic-query-filter-input", "focus");
+      await fillIn("#topic-query-filter-input", "tag:e");
 
       assert
         .dom(".filter-navigation__tip-button")
         .exists("tag search results shown");
-      await triggerKeyEvent("#queryStringInput", "keydown", "ArrowDown");
-      await triggerKeyEvent("#queryStringInput", "keydown", "Enter");
+      await triggerKeyEvent(
+        "#topic-query-filter-input",
+        "keydown",
+        "ArrowDown"
+      );
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "Enter");
 
       assert.strictEqual(this.query, "tag:ember", "tag result selected");
     });
@@ -148,12 +164,12 @@ module(
         </template>
       );
 
-      await triggerEvent("#queryStringInput", "focus");
+      await triggerEvent("#topic-query-filter-input", "focus");
       assert
         .dom(".filter-navigation__tip-button")
         .exists("tips visible after focus");
 
-      await triggerKeyEvent("#queryStringInput", "keydown", "Escape");
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "Escape");
       assert
         .dom(".filter-navigation__tip-button")
         .doesNotExist("tips hidden after escape");
@@ -184,15 +200,23 @@ module(
         </template>
       );
 
-      await triggerEvent("#queryStringInput", "focus");
-      await fillIn("#queryStringInput", "cat");
+      await triggerEvent("#topic-query-filter-input", "focus");
+      await fillIn("#topic-query-filter-input", "cat");
 
-      await triggerKeyEvent("#queryStringInput", "keydown", "ArrowDown");
-      await triggerKeyEvent("#queryStringInput", "keydown", "ArrowDown");
-      await triggerKeyEvent("#queryStringInput", "keydown", "Tab");
+      await triggerKeyEvent(
+        "#topic-query-filter-input",
+        "keydown",
+        "ArrowDown"
+      );
+      await triggerKeyEvent(
+        "#topic-query-filter-input",
+        "keydown",
+        "ArrowDown"
+      );
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "Tab");
 
       assert
-        .dom("#queryStringInput")
+        .dom("#topic-query-filter-input")
         .hasValue("-category:", "negative prefix applied");
     });
   }
