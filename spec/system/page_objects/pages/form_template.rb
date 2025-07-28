@@ -68,7 +68,11 @@ module PageObjects
         find(".form-templates__preview-button:enabled").click
       end
 
-      def has_input_field?(type, name)
+      def has_input_field?(type)
+        find(".form-template-field__#{type}", visible: :all).present?
+      end
+
+      def has_input_field_with_name?(type, name)
         if type == "tag-chooser"
           # currently the tag chooser is rendered as a multi-select element
           find(".form-template-field__multi-select[name=#{name}]", visible: :all).present?

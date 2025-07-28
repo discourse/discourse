@@ -157,7 +157,9 @@ describe "Admin Customize Form Templates", type: :system do
 
       YAML
         .safe_load(template)
-        .each { |field| expect(form_template_page).to have_input_field(field["type"], field["id"]) }
+        .each do |field|
+          expect(form_template_page).to have_input_field_with_name(field["type"], field["id"])
+        end
 
       tag_group.tags.each { |tag| expect(form_template_page).to have_tag_chooser_tag(tag) }
     end
