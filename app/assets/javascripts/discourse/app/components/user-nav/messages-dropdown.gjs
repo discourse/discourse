@@ -1,12 +1,26 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class MessagesDropdown extends Component {
+  @service currentUser;
+
   get currentSelection() {
     return this.args.content.find((item) => item.id === this.args.value);
+  }
+
+  get showUnreadIcon() {
+    return (
+      this.currentUser?.use_experimental_sidebar_messages_count &&
+      !this.currentUser?.sidebarShowCountOfNewItems
+    );
   }
 
   @action
@@ -24,9 +38,13 @@ export default class MessagesDropdown extends Component {
     <DMenu
       @icon={{this.currentSelection.icon}}
       @label={{this.currentSelection.name}}
+      @title={{i18n "user.messages.all"}}
       @identifier="messages-dropdown"
       @onRegisterApi={{this.onRegisterApi}}
     >
+      <:trigger>
+        {{icon "angle-down"}}
+      </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
           {{#each @content as |item|}}
@@ -34,9 +52,16 @@ export default class MessagesDropdown extends Component {
               <DButton
                 @translatedLabel={{item.name}}
                 @icon={{item.icon}}
-                class="btn-transparent"
+                class={{concatClass
+                  "btn-transparent"
+                  (if (eq this.currentSelection.name item.name) "is-selected")
+                }}
                 @action={{this.openInbox item.id}}
-              />
+              >
+                {{#if item.hasUnread}}
+                  {{icon "circle" class="d-icon-d-unread"}}
+                {{/if}}
+              </DButton>
             </dropdown.item>
           {{/each}}
         </DropdownMenu>

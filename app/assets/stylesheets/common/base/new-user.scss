@@ -194,6 +194,25 @@
   }
 }
 
+.user-messages-page {
+  .messages-dropdown-content {
+    .dropdown-menu__item {
+      .d-icon-d-unread {
+        font-size: var(--font-down-4);
+        margin-left: 0.625rem;
+
+        &.d-icon-d-unread {
+          color: var(--tertiary);
+        }
+      }
+      .btn.is-selected {
+        background: var(--d-selected);
+        color: var(--primary);
+      }
+    }
+  }
+}
+
 @include viewport.until(sm) {
   .user-content {
     margin-top: 1em;
