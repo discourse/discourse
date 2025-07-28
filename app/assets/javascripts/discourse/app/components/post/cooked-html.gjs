@@ -14,11 +14,13 @@ import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions
 import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quote-controls";
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
+import decorateStatefulHtmlElements from "discourse/lib/post-cooked-html-decorators/stateful-html-elements";
 import { i18n } from "discourse-i18n";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
 const POST_COOKED_DECORATORS = [
+  decorateStatefulHtmlElements,
   decorateQuoteControls,
   decorateLinkCounts,
   decorateSearchHighlight,
