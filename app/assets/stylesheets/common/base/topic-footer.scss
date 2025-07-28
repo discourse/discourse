@@ -82,7 +82,7 @@
 
       details,
       button {
-        flex: 1 0 auto;
+        flex-shrink: 0;
       }
     }
   }
