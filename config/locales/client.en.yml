@@ -229,7 +229,7 @@ en:
 
     themes:
       default_description: "Default"
-      broken_theme_alert: "Your site may not work because a theme / component has errors."
+      broken_theme_alert: "Your site may not work because a theme / component has errors. Check the browser console for more information."
       error_caused_by: "Caused by '%{name}'. <a target='blank' href='%{path}'>Click here</a> to update, reconfigure or disable."
       only_admins: "(this message is only shown to site administrators)"
 
