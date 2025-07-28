@@ -79,6 +79,12 @@ schema:
           - "publish_read_state"
           - "title"
           - "visibility_level"
+    group_users:
+      primary_key_column_names: [ "group_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+          - "first_unread_pm_at"
     user_emails:
       columns:
         include:
@@ -242,7 +248,6 @@ schema:
         - "group_mentions"
         - "group_requests"
         - "group_tag_notification_defaults"
-        - "group_users"
         - "groups_web_hooks"
         - "ignored_users"
         - "imap_sync_logs"
