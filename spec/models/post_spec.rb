@@ -1559,6 +1559,42 @@ RSpec.describe Post do
       t.reload
       expect(t.visible).to eq(false)
     end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper])
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "hiding whisper will not reset the topic's bumped_at" do
+        whisper_post.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "hiding last visible reply will reset the topic's bumped_at" do
+        last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+
+      it "hiding other reply will not reset the topic's bumped_at" do
+        second_last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+    end
   end
 
   describe "#unhide!" do
