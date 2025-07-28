@@ -52,9 +52,9 @@
     box-sizing: border-box;
     width: 100%;
     flex-direction: row;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-chat-input-border-color);
     border-radius: var(--d-border-radius-large);
-    background: rgb(var(--primary-very-low-rgb), 0.5);
+    background: var(--d-chat-input-bg-color);
     min-height: 50px;
     overflow: hidden;
 
