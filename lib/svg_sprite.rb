@@ -207,6 +207,7 @@ module SvgSprite
         palette
         paper-plane
         pause
+        pen
         pencil
         play
         plug
