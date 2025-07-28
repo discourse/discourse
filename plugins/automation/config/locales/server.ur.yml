@@ -6,6 +6,9 @@
 
 ur:
   discourse_automation:
+    models:
+      fields:
+        invalid_field: فیلڈ کا جزو `%{component}` `%{target}:%{target_name}پر قابل استعمال نہیں ہے۔`
     triggerables:
       topic:
         title: ٹاپک
