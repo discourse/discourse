@@ -11,10 +11,6 @@ export function createSiteSettingsFromPreloaded(
   if (themeSiteSettingOverrides) {
     for (const [key, value] of Object.entries(themeSiteSettingOverrides)) {
       settings[key] = value;
-      // eslint-disable-next-line no-console
-      console.info(
-        `[Discourse] Overriding site setting ${key} with theme site setting value: ${value}`
-      );
     }
     settings.themeSiteSettingOverrides = themeSiteSettingOverrides;
   }
