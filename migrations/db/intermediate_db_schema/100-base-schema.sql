@@ -132,6 +132,13 @@ CREATE TABLE "groups"
     visibility_level                   INTEGER
 );
 
+CREATE TABLE muted_users
+(
+    created_at    DATETIME,
+    muted_user_id NUMERIC  NOT NULL,
+    user_id       NUMERIC  NOT NULL
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,

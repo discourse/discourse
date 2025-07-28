@@ -49,6 +49,12 @@ schema:
         exclude:
           - "created_at"
           - "id"
+    group_users:
+      primary_key_column_names: [ "group_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+          - "first_unread_pm_at"
     groups:
       columns:
         add:
@@ -79,12 +85,10 @@ schema:
           - "publish_read_state"
           - "title"
           - "visibility_level"
-    group_users:
-      primary_key_column_names: [ "group_id", "user_id" ]
+    muted_users:
       columns:
         exclude:
           - "id"
-          - "first_unread_pm_at"
     user_emails:
       columns:
         include:
@@ -270,7 +274,6 @@ schema:
         - "message_bus"
         - "model_accuracies"
         - "moved_posts"
-        - "muted_users"
         - "notifications"
         - "oauth2_user_infos"
         - "onceoff_logs"
