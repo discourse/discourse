@@ -103,7 +103,7 @@
       display: flex;
       flex-wrap: wrap;
       padding: 1em 10%;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
       @include viewport.until(lg) {
         padding: 0.5em 0;
