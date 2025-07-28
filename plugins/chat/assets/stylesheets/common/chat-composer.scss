@@ -1,9 +1,3 @@
-:root {
-  --d-chat-input-border-color: var(--primary-low);
-  --d-chat-input-bg-color: rgb(var(--primary-very-low-rgb), 0.5);
-  --d-chat-input-focused-shadow: 0 0 1px 0 var(--tertiary);
-}
-
 .chat-composer {
   &__wrapper {
     display: flex;
@@ -59,7 +53,7 @@
     overflow: hidden;
 
     .chat-composer.is-focused & {
-      box-shadow: var(--d-chat-input-focused-shadow);
+      box-shadow: 0 0 1px 0 var(--tertiary);
     }
 
     .chat-composer.is-disabled & {
