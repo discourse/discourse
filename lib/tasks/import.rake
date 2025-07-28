@@ -202,7 +202,7 @@ def insert_user_options
                   hide_profile,
                   hide_presence,
                   sidebar_link_to_filtered_list,
-                  sidebar_show_count_of_new_items
+                  sidebar_show_count_of_new_items,
                   composition_mode
                 )
              SELECT u.id
