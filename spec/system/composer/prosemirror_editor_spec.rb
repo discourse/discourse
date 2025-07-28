@@ -118,11 +118,11 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
-  describe "with composer messages" do
-    fab!(:category) { Fabricate(:category, name: "General") }
+  context "with composer messages" do
+    fab!(:category)
 
     it "shows a popup" do
-      open_composer_and_toggle_rich_editor
+      open_composer
       composer.type_content("Maybe @staff can help?")
 
       expect(composer).to have_popup_content(
