@@ -418,7 +418,15 @@ export default class StoreService extends Service {
         klass = RestModel;
       }
 
-      existing.setProperties(klass.munge(obj));
+      const updatedProperties = klass.munge(obj);
+      // update only the properties that the value changed to prevent unnecessary rerenders in Glimmer
+      updatedProperties &&
+        Object.keys(updatedProperties).forEach((key) => {
+          if (existing[key] !== updatedProperties[key]) {
+            existing.set(key, updatedProperties[key]);
+          }
+        });
+
       obj[adapter.primaryKey] = id;
       return existing;
     }

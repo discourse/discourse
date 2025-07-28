@@ -843,27 +843,42 @@ export default class PostStream extends RestModel {
     return Promise.resolve();
   }
 
-  triggerChangedPost(postId, updatedAt, opts) {
-    opts = opts || {};
+  /**
+   * Updates a post in the stream when it has been changed on the server.
+   *
+   * @param {number} postId - The ID of the post to update
+   * @param {string} updatedAt - The timestamp when the post was last updated
+   * @param {Object} opts - Additional options for updating the post
+   * @param {boolean} [opts.preserveCooked] - Whether to preserve the cooked HTML content
+   * @returns {Promise} A promise that resolves when the post has been updated
+   */
+  async triggerChangedPost(postId, updatedAt, opts = {}) {
+    opts ||= {};
 
-    const resolved = Promise.resolve();
     if (!postId) {
-      return resolved;
+      return;
     }
 
     const existing = this._identityMap[postId];
-    if (existing && existing.updated_at !== updatedAt) {
-      const url = "/posts/" + postId;
-      const store = this.store;
-      return ajax(url).then((p) => {
-        if (opts.preserveCooked) {
-          p.cooked = existing.get("cooked");
-        }
 
-        this.storePost(store.createRecord("post", p));
-      });
+    // Only fetch and update if the post exists and has a different updated timestamp
+    if (existing && existing.updated_at !== updatedAt) {
+      // Fetch the latest post data from the server
+      const updatedData = await ajax(`/posts/${postId}`);
+
+      // Preserve the existing cooked HTML content if requested
+      if (opts.preserveCooked) {
+        updatedData.cooked = existing.cooked;
+      }
+
+      // Create a new post record with updated data and store it in the identity map.
+      // Creating a new record will update the existing one in the map, which will then
+      // trigger re-rendering of UI components that use the tracked data that was updated.
+      const updatedPost = this.store.createRecord("post", updatedData);
+
+      // Update the post in the post stream's identity map
+      this.storePost(updatedPost);
     }
-    return resolved;
   }
 
   triggerLikedPost(postId, likesCount, userID, eventType) {
@@ -1098,7 +1113,9 @@ export default class PostStream extends RestModel {
         return existing;
       }
 
-      post.set("topic", this.topic);
+      if (post.topic !== this.topic) {
+        post.topic = this.topic;
+      }
       this._identityMap[post.get("id")] = post;
     }
     return post;
