@@ -822,7 +822,7 @@ DEPENDENCIES
   pry-rails
   pry-stack_explorer
   puma
-  rack
+  rack (< 3)
   rack-mini-profiler
   rack-protection
   rails-dom-testing
