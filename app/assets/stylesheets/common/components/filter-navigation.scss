@@ -17,7 +17,7 @@
 
       &:hover,
       &--selected {
-        background-color: var(--tertiary-low);
+        background-color: var(--d-hover);
       }
 
       &--selected {
@@ -34,5 +34,11 @@
         color: var(--primary-high);
       }
     }
+  }
+}
+
+.fk-d-menu[data-identifier="filter-navigation-menu"] {
+  .fk-d-menu__inner-content {
+    width: 100%;
   }
 }

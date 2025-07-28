@@ -78,6 +78,7 @@ export default class Menu extends Service {
   }
 
   newInstance(trigger, options) {
+    console.log(options);
     const instance = new DMenuInstance(getOwner(this), options);
     instance.trigger = trigger;
     instance.detachedTrigger = true;

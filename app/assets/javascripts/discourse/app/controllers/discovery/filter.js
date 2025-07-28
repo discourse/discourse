@@ -10,6 +10,7 @@ export default class extends Controller {
   bulkSelectHelper = new BulkSelectHelper(this);
 
   get canBulkSelect() {
+    console.log(this.currentUser.canManageTopic, "canManageTopic");
     return this.currentUser?.canManageTopic;
   }
 
