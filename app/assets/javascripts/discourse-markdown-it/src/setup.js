@@ -156,7 +156,6 @@ class Setup {
       markdownTypographerQuotationMarks:
         siteSettings.markdown_typographer_quotation_marks,
       markdownLinkifyTlds: siteSettings.markdown_linkify_tlds,
-      unicodeUsernames: siteSettings.unicode_usernames,
     };
 
     this.#context.options = options.discourse = discourse;
@@ -170,7 +169,6 @@ class Setup {
       enableMarkdownLinkify,
       enableMarkdownTypographer,
       traditionalMarkdownLinebreaks,
-      unicodeUsernames,
     } = limitedSiteSettings;
 
     options.allowListed = this.#drain(this.#allowListed);
@@ -182,7 +180,6 @@ class Setup {
       breaks: !traditionalMarkdownLinebreaks,
       xhtmlOut: false,
       linkify: enableMarkdownLinkify,
-      unicode: unicodeUsernames,
       typographer: enableMarkdownTypographer,
     };
 
