@@ -120,7 +120,6 @@ export default class PostTranslationEditor extends Component {
       </div>
     {{/if}}
 
-        @hijackPreview={{this.composer.hijackPreview}}
     <DEditor
       class="translation-editor"
       @value={{readonly this.composer.model.reply}}
