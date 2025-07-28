@@ -1,10 +1,12 @@
 import { warn } from "@ember/debug";
 import { set } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse/lib/get-owner";
+import { deepEqual } from "discourse/lib/object";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
@@ -418,16 +420,19 @@ export default class StoreService extends Service {
         klass = RestModel;
       }
 
-      const updatedProperties = klass.munge(obj);
-      // update only the properties that the value changed to prevent unnecessary rerenders in Glimmer
-      updatedProperties &&
-        Object.keys(updatedProperties).forEach((key) => {
-          if (existing[key] !== updatedProperties[key]) {
-            existing.set(key, updatedProperties[key]);
-          }
-        });
+      schedule("afterRender", () => {
+        const updatedProperties = klass.munge(obj);
+        // update only the properties that the value changed to prevent unnecessary rerenders in Glimmer
+        updatedProperties &&
+          Object.keys(updatedProperties).forEach((key) => {
+            if (!deepEqual(existing[key], updatedProperties[key])) {
+              existing.set(key, updatedProperties[key]);
+            }
+          });
+      });
 
       obj[adapter.primaryKey] = id;
+
       return existing;
     }
 
