@@ -14,7 +14,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["good"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         hide_topic: true,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
@@ -29,7 +29,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         hide_topic: true,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
@@ -46,7 +46,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         category_id: category.id,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
@@ -62,7 +62,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         canned_reply: "test canned reply 123",
@@ -81,7 +81,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -99,7 +99,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -116,7 +116,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -134,7 +134,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -160,7 +160,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -176,7 +176,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["Bad.\n\nYo"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -193,7 +193,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "BAD",
         flag_post: true,
@@ -212,7 +212,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -231,7 +231,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do |spy|
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,
@@ -251,7 +251,7 @@ describe DiscourseAi::Automation::LlmTriage do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(
         post: post,
-        model: "custom:#{llm_model.id}",
+        model: llm_model.id.to_s,
         system_prompt: "test %%POST%%",
         search_for_text: "bad",
         flag_post: true,

@@ -8,7 +8,7 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
   before do
     enable_current_plugin
-    assign_fake_provider_to(:ai_helper_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     Group.refresh_automatic_groups!
   end
 
