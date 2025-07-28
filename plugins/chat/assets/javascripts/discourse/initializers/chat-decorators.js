@@ -126,9 +126,7 @@ export default {
 
   initialize(container) {
     if (container.lookup("service:chat").userCanChat) {
-      withPluginApi((api) =>
-        this.initializeWithPluginApi(api, container)
-      );
+      withPluginApi((api) => this.initializeWithPluginApi(api, container));
     }
   },
 };
