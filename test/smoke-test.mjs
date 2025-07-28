@@ -214,6 +214,12 @@ import puppeteer from "puppeteer-core";
       document.getElementById("reply-title").value = "";
     });
 
+    await exec("composer is open", () => {
+      return page.waitForSelector("#reply-control .d-editor-input", {
+        visible: true,
+      });
+    });
+
     await exec("compose new topic", () => {
       const date = `(${+new Date()})`;
       const title = `This is a new topic ${date}`;
