@@ -1,10 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import {
-  testMarkdown,
-  testRenderedMarkdown,
-} from "discourse/tests/helpers/rich-editor-helper";
+import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
 module(
   "Integration | Component | prosemirror-editor - mention extension",
@@ -12,12 +9,9 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.siteSettings.rich_editor = true;
-      this.siteSettings.unicode_usernames = true;
-
       pretender.get("/composer/mentions", () =>
         response({
-          users: ["eviltrout", "john", "käsey"],
+          users: ["eviltrout", "john"],
           user_reasons: {},
           groups: {
             support: { user_count: 1 },
@@ -65,17 +59,11 @@ module(
     Object.entries(testCases).forEach(
       ([name, [markdown, expectedHtml, expectedMarkdown]]) => {
         test(name, async function (assert) {
+          this.siteSettings.rich_editor = true;
+
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
       }
-    );
-
-    test(
-      "mention with unicode usernames",
-      testRenderedMarkdown("Hi @käsey", (assert) => {
-        assert.dom("a.mention").exists("Mention node should exist");
-        assert.dom("a.mention").hasAttribute("data-name", "käsey");
-      })
     );
   }
 );

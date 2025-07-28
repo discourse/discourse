@@ -996,6 +996,31 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_no_css("a.mention", text: "@InvalidGroup")
     end
+
+    describe "with unicode usernames" do
+      fab!(:category)
+
+      before do
+        SiteSetting.external_system_avatars_enabled = true
+        SiteSetting.external_system_avatars_url =
+          "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
+        SiteSetting.unicode_usernames = true
+      end
+
+      it "renders unicode mentions as nodes" do
+        unicode_user = Fabricate(:unicode_user)
+
+        open_composer_and_toggle_rich_editor
+
+        composer.type_content("Hey @#{unicode_user.username} - how are you?")
+
+        expect(rich).to have_css("a.mention", text: unicode_user.username)
+
+        composer.toggle_rich_editor
+
+        expect(composer).to have_value("Hey @#{unicode_user.username} - how are you?")
+      end
+    end
   end
 
   describe "link toolbar" do
