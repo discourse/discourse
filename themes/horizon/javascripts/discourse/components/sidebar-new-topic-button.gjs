@@ -41,30 +41,6 @@ export default class SidebarNewTopicButton extends Component {
     }
   }
 
-  get tagRestricted() {
-    return this.tag?.staff;
-  }
-
-  get createTopicDisabled() {
-    return (
-      (this.category && !this.createTopicTargetCategory) ||
-      (this.tagRestricted && !this.currentUser.staff)
-    );
-  }
-
-  get categoryReadOnlyBanner() {
-    if (this.category && this.currentUser && this.createTopicDisabled) {
-      return this.category.read_only_banner;
-    }
-  }
-
-  get createTopicClass() {
-    const baseClasses = "btn-default sidebar-new-topic-button";
-    return this.categoryReadOnlyBanner
-      ? `${baseClasses} disabled`
-      : baseClasses;
-  }
-
   @action
   createNewTopic() {
     this.composer.openNewTopic({ category: this.category, tags: this.tag?.id });
@@ -104,10 +80,8 @@ export default class SidebarNewTopicButton extends Component {
         <CreateTopicButton
           @canCreateTopic={{this.canCreateTopic}}
           @action={{this.createNewTopic}}
-          @disabled={{this.createTopicDisabled}}
           @label="topic.create"
-          @btnClass={{this.createTopicClass}}
-          @canCreateTopicOnTag={{not this.tagRestricted}}
+          @btnClass="btn-default sidebar-new-topic-button"
           @showDrafts={{gt this.draftCount 0}}
         />
       </div>
