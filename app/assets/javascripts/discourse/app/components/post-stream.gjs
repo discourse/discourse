@@ -7,8 +7,10 @@ import { service } from "@ember/service";
 import { and, eq, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
@@ -362,6 +364,13 @@ export default class PostStream extends Component {
             class="post-stream__bottom-boundary"
             {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
           ></div>
+          {{! this pluging outlet is only inserted when the real bottom of the post-stream is rendered
+           this is useful for plugins that want to render something at the bottom of the post-stream
+           e.g. a "no more posts" message }}
+          <PluginOutlet
+            @name="post-stream-bottom"
+            @outletArgs={{lazyHash posts=this.posts topic=@topic}}
+          />
         {{/if}}
       {{/unless}}
 
