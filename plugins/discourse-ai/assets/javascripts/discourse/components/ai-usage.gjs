@@ -48,6 +48,7 @@ export default class AiUsage extends Component {
         data: {
           start_date: moment(this.startDate).format("YYYY-MM-DD"),
           end_date: moment(this.endDate).format("YYYY-MM-DD"),
+          timezone: moment.tz.guess(),
           feature: this.selectedFeature,
           model: this.selectedModel,
         },
