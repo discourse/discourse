@@ -14,4 +14,4 @@ fr:
     admin:
       site_settings:
         categories:
-          discourse_hcaptcha: "Discours hCaptcha"
+          discourse_hcaptcha: "Discourse hCaptcha"

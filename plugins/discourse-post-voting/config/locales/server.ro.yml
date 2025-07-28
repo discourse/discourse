@@ -10,6 +10,8 @@ ro:
       title: "Votează"
   post_voting:
     comment:
+      errors:
+        disabled: "Comentariile la o postare nu sunt permise."
       reviewables:
         actions:
           agree_and_suspend:

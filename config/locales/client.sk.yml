@@ -257,7 +257,6 @@ sk:
       search: "Hľadať"
     themes:
       default_description: "Predvolené"
-      broken_theme_alert: "Vaša stránka nemusí fungovať, pretože téma/komponent obsahuje chyby."
       error_caused_by: "Spôsobené '%{name}'. <a target='blank' href='%{path}'>Kliknutím sem</a> aktualizujte, prekonfigurujte alebo deaktivujte."
       only_admins: "(táto správa sa zobrazuje iba správcom stránok)"
     broken_decorator_alert: "Príspevky sa nemusia zobrazovať správne, pretože jeden z dekoratérov obsahu príspevku na vašom webe vyvolal chybu."
@@ -2752,6 +2751,9 @@ sk:
     welcome_banner_location:
       above_topic_content: "Obsah vyššie uvedenej témy"
       below_site_header: "Pod hlavičkou stránky"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Formátovaný text"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"

@@ -7,6 +7,14 @@
 ug:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
       dashboard:
         reports:
           filters:

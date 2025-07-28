@@ -257,7 +257,7 @@ he:
       search: "חיפוש"
     themes:
       default_description: "ברירת מחדל"
-      broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
+      broken_theme_alert: "יתכן שהאתר שלך לא עובד עקב שגיאות ערכת עיצוב / רכיב. במסוף הדפדפן יופיעו פרטים נוספים על הנושא."
       error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
     broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
@@ -2738,6 +2738,9 @@ he:
     welcome_banner_location:
       above_topic_content: "מעל תוכן הנושא"
       below_site_header: "מתחת לכותרת האתר"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "טקסט עשיר"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -7154,6 +7157,7 @@ he:
             description: "לוח בסיסי:"
           title: "צבעים"
           edit: "עריכה"
+          set_default: "הגדרה כפעיל ב־%{theme}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"
           filters:

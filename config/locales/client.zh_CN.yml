@@ -173,7 +173,6 @@ zh_CN:
       search: "搜索"
     themes:
       default_description: "默认"
-      broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向网站管理员显示）"
     broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发了错误。"
@@ -2334,6 +2333,9 @@ zh_CN:
       disabled: "不显示"
       sidebar_footer: "在侧边栏页脚中显示"
       header: "在页眉中显示"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "富文本"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"

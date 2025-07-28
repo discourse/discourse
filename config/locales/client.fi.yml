@@ -201,7 +201,6 @@ fi:
       search: "Hae"
     themes:
       default_description: "Oletus"
-      broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
       error_caused_by: "Aiheuttaja: '%{name}'. Päivitä, määritä uudelleen tai poista se käytöstä <a target='blank' href='%{path}'>klikkaamalla tätä</a>."
       only_admins: "(tämä viesti näytetään vain sivuston ylläpitäjille)"
     broken_decorator_alert: "Viestit eivät välttämättä näy oikein, koska yksi sivustosi viestien sisällön somistajista ilmoitti virheestä."

@@ -232,7 +232,6 @@ lt:
       search: "Paieška"
     themes:
       default_description: "Numatytasis"
-      broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
       error_caused_by: "Sukėlė '%{name}'. <a target='blank' href='%{path}'>Spustelėkite čia</a> norėdami atnaujinti, iš naujo sukonfigūruoti arba išjungti."
       only_admins: "(šis pranešimas rodomas tik svetainės administratoriams)"
     broken_decorator_alert: "Įrašai gali būti rodomi netinkamai, nes vienas iš jūsų svetainės įrašo turinio dekoratorių iškėlė klaidą."

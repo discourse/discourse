@@ -257,7 +257,6 @@ pl_PL:
       search: "Szukaj"
     themes:
       default_description: "Domyślny"
-      broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
       error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
       only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
     broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
@@ -2739,6 +2738,9 @@ pl_PL:
     welcome_banner_location:
       above_topic_content: "Powyżej treści tematu"
       below_site_header: "Poniżej nagłówka witryny"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Tekst sformatowany"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
