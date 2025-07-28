@@ -97,7 +97,7 @@ export default class extends Controller {
       {
         id: this.router.urlFor("userPrivateMessages.user", usernameLower),
         name: inboxName,
-        hasUnread: !!userMsgsCount,
+        showUnreadIcon: !!userMsgsCount && !this.showCount,
       },
     ];
 
@@ -126,7 +126,7 @@ export default class extends Controller {
         ),
         name: groupName,
         icon: "inbox",
-        hasUnread: !!groupMsgsCount,
+        showUnreadIcon: !!groupMsgsCount && !this.showCount,
       });
     });
 

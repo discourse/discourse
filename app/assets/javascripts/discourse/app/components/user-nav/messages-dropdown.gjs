@@ -43,6 +43,9 @@ export default class MessagesDropdown extends Component {
       @onRegisterApi={{this.onRegisterApi}}
     >
       <:trigger>
+        {{#if this.currentSelection.showUnreadIcon}}
+          {{icon "circle" class="d-icon-d-unread"}}
+        {{/if}}
         {{icon "angle-down"}}
       </:trigger>
       <:content>
@@ -58,7 +61,7 @@ export default class MessagesDropdown extends Component {
                 }}
                 @action={{this.openInbox item.id}}
               >
-                {{#if item.hasUnread}}
+                {{#if item.showUnreadIcon}}
                   {{icon "circle" class="d-icon-d-unread"}}
                 {{/if}}
               </DButton>

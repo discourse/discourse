@@ -194,17 +194,25 @@
   }
 }
 
+%unread-icon {
+  font-size: var(--font-down-4);
+  margin: 0 0.375rem;
+  color: var(--tertiary);
+}
+
 .user-messages-page {
+  .messages-dropdown-trigger {
+    .d-icon-d-unread {
+      @extend %unread-icon;
+    }
+  }
+
   .messages-dropdown-content {
     .dropdown-menu__item {
       .d-icon-d-unread {
-        font-size: var(--font-down-4);
-        margin-left: 0.625rem;
-
-        &.d-icon-d-unread {
-          color: var(--tertiary);
-        }
+        @extend %unread-icon;
       }
+
       .btn.is-selected {
         background: var(--d-selected);
         color: var(--primary);
