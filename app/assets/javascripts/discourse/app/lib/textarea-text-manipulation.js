@@ -1,5 +1,5 @@
 // @ts-check
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -7,7 +7,6 @@ import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
@@ -904,7 +903,7 @@ export default class TextareaTextManipulation {
   autocomplete(options) {
     if (this.siteSettings.floatkit_autocomplete_composer) {
       return DAutocompleteModifier.setupAutocomplete(
-        getOwnerWithFallback(this),
+        getOwner(this),
         this.textarea,
         this.autocompleteHandler,
         options
