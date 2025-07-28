@@ -4,6 +4,8 @@ module Migrations::Importer::Steps
   class MutedUsers < ::Migrations::Importer::CopyStep
     depends_on :users
 
+    requires_set :existing_muted_users, "SELECT user_id, muted_user_id FROM muted_users"
+
     column_names %i[muted_user_id user_id created_at]
 
     total_rows_query <<~SQL, MappingType::USERS
@@ -25,24 +27,13 @@ module Migrations::Importer::Steps
       ORDER BY user_id, muted_user_id
     SQL
 
-    def execute
-      # TODO: Remove once SetStore is available
-      @existing_muted_users = Hash.new { |h, k| h[k] = Set.new }
-
-      @discourse_db
-        .query_array("SELECT user_id, muted_user_id FROM muted_users")
-        .each { |row| @existing_muted_users[row[0]].add(row[1]) }
-
-      super
-    end
-
     private
 
     def transform_row(row)
       user_id = row[:discourse_user_id]
       muted_user_id = row[:discourse_muted_user_id]
 
-      return nil unless @existing_muted_users[user_id].add?(muted_user_id)
+      return nil unless @existing_muted_users.add?(user_id, muted_user_id)
 
       row[:user_id] = user_id
       row[:muted_user_id] = muted_user_id
