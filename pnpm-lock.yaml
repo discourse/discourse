@@ -13810,7 +13810,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.0(@babel/core@7.28.0)(eslint@9.32.0)
-      '@glimmer/syntax': 0.94.9
+      '@glimmer/syntax': 0.93.1
       content-tag: 2.0.3
       eslint-scope: 7.2.2
       html-tags: 3.3.1
