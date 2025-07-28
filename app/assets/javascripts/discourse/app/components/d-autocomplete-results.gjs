@@ -143,6 +143,7 @@ export default class DAutocompleteResults extends Component {
       {{didInsert this.handleInitialRender}}
       {{didUpdate this.handleUpdate this.selectedIndex this.templateHTML}}
       {{on "click" this.handleClick}}
+      tabindex="-1"
     >
       {{this.templateHTML}}
     </div>

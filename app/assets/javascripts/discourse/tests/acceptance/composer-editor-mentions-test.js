@@ -21,7 +21,10 @@ acceptance("Composer - editor mentions", function (needs) {
   };
 
   needs.user();
-  needs.settings({ enable_mentions: true, allow_uncategorized_topics: true });
+  needs.settings({
+    enable_mentions: true,
+    allow_uncategorized_topics: true,
+  });
   needs.hooks.afterEach(() => clock?.restore());
 
   needs.pretender((server, helper) => {
@@ -63,6 +66,7 @@ acceptance("Composer - editor mentions", function (needs) {
   });
 
   test("selecting user mentions", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/");
     await click("#create-topic");
 
@@ -74,6 +78,7 @@ acceptance("Composer - editor mentions", function (needs) {
   });
 
   test("selecting user mentions after deleting characters", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/");
     await click("#create-topic");
 
@@ -85,6 +90,7 @@ acceptance("Composer - editor mentions", function (needs) {
   });
 
   test("selecting user mentions after deleting characters mid sentence", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/");
     await click("#create-topic");
 
@@ -98,6 +104,7 @@ acceptance("Composer - editor mentions", function (needs) {
   });
 
   test("shows status on search results when mentioning a user", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     const timezone = loggedInUser().user_option.timezone;
     const now = moment(status.ends_at).add(-1, "hour").format();
     clock = fakeTime(now, timezone, true);
@@ -117,6 +124,7 @@ acceptance("Composer - editor mentions", function (needs) {
   });
 
   test("metadata matches are moved to the end", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/");
     await click("#create-topic");
 
@@ -136,6 +144,7 @@ acceptance("Composer - editor mentions", function (needs) {
   });
 
   test("shows users immediately when @ is typed in a reply", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/");
     await click(".topic-list-item .title");
     await click(".btn-primary.create");
@@ -164,7 +173,6 @@ acceptance("Composer - editor mentions with floatkit", function (needs) {
   needs.settings({
     enable_mentions: true,
     allow_uncategorized_topics: true,
-    floatkit_autocomplete_composer: true,
   });
   needs.hooks.afterEach(() => clock?.restore());
 

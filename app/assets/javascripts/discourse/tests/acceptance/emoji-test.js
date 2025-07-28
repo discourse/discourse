@@ -21,11 +21,11 @@ acceptance("Emoji", function (needs) {
   });
 
   test("emoji is cooked properly", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
     await simulateKeys(".d-editor-input", "a :blonde_woman\t");
-
     assert
       .dom(".d-editor-preview")
       .hasHtml(
@@ -34,13 +34,14 @@ acceptance("Emoji", function (needs) {
   });
 
   test("emoji can be picked from the emoji-picker using the mouse", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
     await simulateKeys(".d-editor-input", "a :man_b");
 
-    // the 5th item in the list is the "more..."
-    await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
+    // the 6th item in the list is the "more..."
+    await click(".autocomplete.ac-emoji ul li:nth-of-type(6) a");
     await emojiPicker().select("man_biking");
 
     assert
@@ -51,6 +52,7 @@ acceptance("Emoji", function (needs) {
   });
 
   test("skin toned emoji is cooked properly", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -66,6 +68,7 @@ acceptance("Emoji", function (needs) {
   needs.settings({ emoji_autocomplete_min_chars: 2 });
 
   test("siteSetting:emoji_autocomplete_min_chars", async function (assert) {
+    this.siteSettings.floatkit_autocomplete_composer = false;
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
@@ -79,7 +82,6 @@ acceptance("Emoji", function (needs) {
 
 acceptance("Emoji with floatkit", function (needs) {
   needs.user();
-  needs.settings({ floatkit_autocomplete_composer: true });
 
   needs.pretender((server, helper) => {
     server.get("/emojis/search-aliases.json", () => {
@@ -109,8 +111,8 @@ acceptance("Emoji with floatkit", function (needs) {
 
     await simulateKeys(".d-editor-input", "a :man_b");
 
-    // the 5th item in the list is the "more..."
-    await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
+    // the 6th item in the list is the "more..."
+    await click(".autocomplete.ac-emoji ul li:nth-of-type(6) a");
     await emojiPicker().select("man_biking");
 
     assert

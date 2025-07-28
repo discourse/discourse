@@ -5,6 +5,7 @@ describe "Composer", type: :system do
   let(:composer) { PageObjects::Components::Composer.new }
 
   before { sign_in(user) }
+  before { SiteSetting.floatkit_autocomplete_composer = false }
 
   it "displays user cards in preview" do
     page.visit "/new-topic"
