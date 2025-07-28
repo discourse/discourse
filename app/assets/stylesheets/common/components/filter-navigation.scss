@@ -1,9 +1,9 @@
-.filter-tips {
-  &__dropdown {
+.filter-navigation__tips {
+  &-dropdown {
     max-height: 300px;
     overflow-y: auto;
 
-    .filter-tip__button {
+    .filter-navigation__tip-button {
       display: block;
       width: 100%;
       text-align: left;
@@ -16,21 +16,21 @@
       transition: background-color 0.15s;
 
       &:hover,
-      &.filter-tip__selected {
+      &--selected {
         background-color: var(--tertiary-low);
       }
 
-      &.filter-tip__selected {
+      &--selected {
         outline: 2px solid var(--tertiary);
         outline-offset: -2px;
       }
 
-      .filter-tip__name {
+      .filter-navigation__tip-name {
         font-weight: 600;
         color: var(--primary);
       }
 
-      .filter-tip__description {
+      .filter-navigation__tip-description {
         color: var(--primary-high);
       }
     }
