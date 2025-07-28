@@ -17,11 +17,11 @@ export default class InterfaceColor extends Service {
   @tracked colorMode;
 
   get lightModeForced() {
-    return this.selectorAvailable && this.colorModeCookieForcesLight;
+    return this.selectorAvailable && this.colorModeIsLight;
   }
 
   get darkModeForced() {
-    return this.selectorAvailable && this.colorModeCookieForcesDark;
+    return this.selectorAvailable && this.colorModeIsDark;
   }
 
   get selectorAvailable() {
@@ -30,15 +30,15 @@ export default class InterfaceColor extends Service {
     );
   }
 
-  get colorModeCookieForcesLight() {
+  get colorModeIsLight() {
     return this.colorMode === LIGHT_VALUE_FOR_COOKIE;
   }
 
-  get colorModeCookieForcesDark() {
+  get colorModeIsDark() {
     return this.colorMode === DARK_VALUE_FOR_COOKIE;
   }
 
-  get colorModeCookieForcesAuto() {
+  get colorModeIsAuto() {
     return this.colorMode === AUTO_VALUE_FOR_COOKIE;
   }
 
