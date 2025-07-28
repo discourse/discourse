@@ -653,8 +653,8 @@ ur:
         one: "< %{count}منٹ "
         other: "< %{count}m"
       x_minutes:
-        one: "%{count}منٹ"
-        other: "%{count}منٹ "
+        one: "%{count}m"
+        other: "%{count}m"
       about_x_hours:
         one: "%{count}گھنٹا"
         other: "%{count}گھنٹے"

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 ur:
+  js:
+    spoiler:
+      title: بلر سپوئلر
+      label:
+        show: "چھپا ہوا مواد دکھائیں"
+    composer:
+      spoiler_text: "یہ متن دھندلا ہو جائے گا"
