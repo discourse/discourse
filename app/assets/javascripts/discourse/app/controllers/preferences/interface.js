@@ -279,13 +279,13 @@ export default class InterfaceController extends Controller {
       return this.selectedInterfaceColorModeId;
     }
     if (this.isViewingOwnProfile) {
-      if (this.interfaceColor.colorModeCookieForcesAuto) {
+      if (this.interfaceColor.colorModeIsAuto) {
         return INTERFACE_COLOR_MODES.AUTO;
       }
-      if (this.interfaceColor.colorModeCookieForcesLight) {
+      if (this.interfaceColor.colorModeIsLight) {
         return INTERFACE_COLOR_MODES.LIGHT;
       }
-      if (this.interfaceColor.colorModeCookieForcesDark) {
+      if (this.interfaceColor.colorModeIsDark) {
         return INTERFACE_COLOR_MODES.DARK;
       }
     }
