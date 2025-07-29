@@ -30,6 +30,12 @@ export default apiInitializer((api) => {
   }
 
   api.decorateCookedElement((elem) => {
+    if (
+      !api.container.lookup("service:site-settings").display_footnotes_inline
+    ) {
+      return;
+    }
+
     const footnoteRefs = elem.querySelectorAll("sup.footnote-ref");
 
     footnoteRefs.forEach((footnoteRef) => {
