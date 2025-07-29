@@ -8,9 +8,15 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
   "localizations"
 ) {
   @service siteSettings;
+  @service languageNameLookup;
 
   get availableLocales() {
-    return this.siteSettings.available_content_localization_locales;
+    return this.siteSettings.available_content_localization_locales.map(
+      ({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      })
+    );
   }
 
   <template>

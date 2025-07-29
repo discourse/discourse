@@ -13,6 +13,7 @@ import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 export default class PostTranslationEditor extends Component {
   @service composer;
   @service siteSettings;
+  @service languageNameLookup;
 
   constructor() {
     super(...arguments);
@@ -55,14 +56,10 @@ export default class PostTranslationEditor extends Component {
 
     return this.siteSettings.available_content_localization_locales
       .filter(({ value }) => value !== originalPostLocale)
-      .map(({ native_name, name, value }) => {
-        name =
-          i18n(name) === native_name
-            ? native_name
-            : `${i18n(name)} (${native_name})`;
-
-        return { name, value };
-      });
+      .map(({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      }));
   }
 
   @action
