@@ -1,3 +1,4 @@
+import { untrack } from "@glimmer/validator";
 import { warn } from "@ember/debug";
 import { set } from "@ember/object";
 import Service from "@ember/service";
@@ -418,8 +419,26 @@ export default class StoreService extends Service {
         klass = RestModel;
       }
 
-      existing.setProperties(klass.munge(obj));
+      const updatedProperties = klass.munge(obj);
+
+      // When running property comparisons, we need to prevent Glimmer from creating tracking contexts
+      // which would otherwise cause "already used in same computation" errors when the values update
+      untrack(() => {
+        // Only update properties whose values actually changed to optimize rerenders
+        // If a property value is unchanged, remove it from the update list
+        updatedProperties &&
+          Object.keys(updatedProperties).forEach((key) => {
+            if (existing[key] === updatedProperties[key]) {
+              delete updatedProperties[key];
+            }
+          });
+      });
+
+      // Apply all property updates in a single batch to trigger just one rerender
+      existing.setProperties(updatedProperties);
+
       obj[adapter.primaryKey] = id;
+
       return existing;
     }
 
