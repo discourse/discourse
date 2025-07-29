@@ -166,7 +166,7 @@ async function fetchMentions(names, context) {
   }
 
   const response = await ajax("/composer/mentions", {
-    data: { names },
+    data: { names, topic_id: context.topicId },
   });
 
   const lowerGroupNames = Object.keys(response.groups).map((groupName) =>
@@ -190,14 +190,13 @@ async function fetchMentions(names, context) {
 }
 
 function checkMentionWarning(name, response, context) {
+  const hereCount = parseInt(response?.here_count, 10) || 0;
   const maxMentions = parseInt(
     response?.max_users_notified_per_group_mention,
     10
   );
-  const hereCount = parseInt(response?.here_count, 10);
+
   let reason;
-  let userCount = 0;
-  let notifiedCount = 0;
   let body;
 
   if (hereCount > 0) {
@@ -205,10 +204,7 @@ function checkMentionWarning(name, response, context) {
       here: context.siteSettings.here_mention,
       count: hereCount,
     });
-  }
-
-  // user mention warnings
-  if (response.users.includes(name)) {
+  } else if (response.users.includes(name)) {
     reason = response.user_reasons?.[name];
 
     if (reason) {
@@ -216,13 +212,10 @@ function checkMentionWarning(name, response, context) {
         username: name,
       });
     }
-  }
-
-  // group mention warnings
-  if (response.groups[name]) {
+  } else if (response.groups[name]) {
+    const userCount = response.groups[name]?.user_count || 0;
+    const notifiedCount = response.groups[name]?.notified_count || 0;
     reason = response.group_reasons?.[name];
-    userCount = response.groups[name]?.user_count || 0;
-    notifiedCount = response.groups[name]?.notified_count || 0;
 
     const groupLink = getURL(`/g/${name}/members`);
 
