@@ -26,6 +26,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {boolean} [preserveKey=true] - Include trigger key in completion
  * @param {boolean} [autoSelectFirstSuggestion=true] - Auto-select first result
  * @param {Function} [triggerRule] - Function to determine if autocomplete should trigger: (element, opts) => Promise<boolean>
+ * @param {Function} [onKeyUp] - Function to extract search patterns from text on keyup: (text, caretPosition) => Array<string>
  */
 export default class DAutocompleteModifier extends Modifier {
   /**
@@ -227,6 +228,16 @@ export default class DAutocompleteModifier extends Modifier {
     return this.options.debounced ?? false;
   }
 
+  // [introduced in https://github.com/discourse/discourse/commit/e02cc98092f5a889d0313cd741b29926be7430ab]
+  // By default, when the autocomplete popup is rendered it has the
+  // first suggestion 'selected', and pressing enter key inserts
+  // the first suggestion into the input box.
+  // If you want to stop that behavior, i.e. have the popup renders
+  // with no suggestions selected, set the `autoSelectFirstSuggestion`
+  // option to false.
+  // With this option set to false, users will have to select
+  // a suggestion via the up/down arrow keys and then press enter
+  // to insert it.
   get autoSelectFirstSuggestion() {
     return this.options.autoSelectFirstSuggestion ?? true;
   }
@@ -236,9 +247,21 @@ export default class DAutocompleteModifier extends Modifier {
     const value = this.getValue();
     const key = value[caretPosition - 1];
 
+    // onKeyUp for additional custom trigger logic
+    if (this.options.key && this.options.onKeyUp && key !== this.options.key) {
+      const match = this.options.onKeyUp(value, caretPosition);
+      if (match && (await this.shouldTrigger())) {
+        this.completeStart = caretPosition - match[0].length;
+        this.completeEnd = caretPosition - 1;
+        const term = match[0].substring(1, match[0].length);
+        await this.performSearch(term);
+        return;
+      }
+    }
+
     // Check if we should trigger autocomplete
     if (this.completeStart === null && caretPosition > 0) {
-      // Try backwards scanning first to find existing autocomplete context
+      // Try backwards scanning to find existing autocomplete context
       const position = await this.guessCompletePosition();
       if (position.completeStart !== null) {
         this.completeStart = position.completeStart;
@@ -472,7 +495,12 @@ export default class DAutocompleteModifier extends Modifier {
     const preserveKey = this.options.preserveKey ?? true;
     const replacement = (preserveKey ? this.options.key || "" : "") + term;
 
-    // Recalculate position like the old autocomplete did to handle text changes
+    // [introduced in https://github.com/discourse/discourse/commit/5fb6dd9bfaf6191393b7809fa0ac11b952a70a23]
+    // After completion is done our position for completeStart may have
+    // drifted. This can happen if the TEXTAREA changed out-of-band between
+    // the time autocomplete was first displayed and the time of completion
+    // Specifically this may happen due to uploads which inject a placeholder
+    // which is later replaced with a different length string.
     const pos = await this.guessCompletePosition({ completeTerm: true });
     let completeEnd;
     let completeStart;
