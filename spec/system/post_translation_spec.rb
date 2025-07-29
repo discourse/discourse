@@ -28,6 +28,8 @@ describe "Post translations", type: :system do
 
   context "when a post does not have translations" do
     it "should only show the languages listed in the site setting" do
+      post.update!(locale: "en")
+
       topic_page.visit_topic(topic)
       find("#post_#{post.post_number} .post-action-menu__add-translation").click
       translation_selector.expand
@@ -156,9 +158,9 @@ describe "Post translations", type: :system do
       page.find("#create-topic").click
       post_language_selector.expand
       expect(post_language_selector).to have_content("English (US)") # default locale
-      expect(post_language_selector).to have_content("Français")
-      expect(post_language_selector).to have_content("Español")
-      expect(post_language_selector).to have_content("Português (BR)")
+      expect(post_language_selector).to have_content("French (Français)")
+      expect(post_language_selector).to have_content("Spanish (Español)")
+      expect(post_language_selector).to have_content("Portuguese (Português (BR))")
       expect(post_language_selector).to have_content(
         I18n.t("js.post.localizations.post_language_selector.none"),
       )

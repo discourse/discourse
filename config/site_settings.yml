@@ -1638,9 +1638,9 @@ content_localization:
     default: ""
     type: list
     client: true
-    list_type: named
+    list_type: locale
     allow_any: false
-    choices: "LocaleSiteSetting.values"
+    enum: "LocaleSiteSetting"
     area: "localization"
     validator: "ContentLocalizationLocalesValidator"
   content_localization_max_locales:
