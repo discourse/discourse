@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { and, gt } from "truth-helpers";
 import BreadCrumbs from "discourse/components/bread-crumbs";
@@ -116,6 +117,35 @@ export default class DNavigation extends Component {
     }
   }
 
+  @discourseComputed(
+    "createTopicDisabled",
+    "categoryReadOnlyBanner",
+    "canCreateTopicOnTag",
+    "tag.id"
+  )
+  createTopicButtonDisabled(
+    createTopicDisabled,
+    categoryReadOnlyBanner,
+    canCreateTopicOnTag,
+    tagId
+  ) {
+    if (tagId && !canCreateTopicOnTag) {
+      return true;
+    } else if (categoryReadOnlyBanner) {
+      return false;
+    }
+    return createTopicDisabled;
+  }
+
+  @discourseComputed("categoryReadOnlyBanner")
+  createTopicClass(categoryReadOnlyBanner) {
+    let classNames = ["btn-default"];
+    if (categoryReadOnlyBanner) {
+      classNames.push("disabled");
+    }
+    return classNames.join(" ");
+  }
+
   @discourseComputed("category.can_edit")
   showCategoryEdit(canEdit) {
     return canEdit;
@@ -195,7 +225,11 @@ export default class DNavigation extends Component {
 
   @action
   clickCreateTopicButton() {
-    this.createTopic();
+    if (this.categoryReadOnlyBanner) {
+      this.dialog.alert({ message: htmlSafe(this.categoryReadOnlyBanner) });
+    } else {
+      this.createTopic();
+    }
   }
 
   <template>
@@ -299,7 +333,10 @@ export default class DNavigation extends Component {
       <CreateTopicButton
         @canCreateTopic={{this.canCreateTopic}}
         @action={{this.clickCreateTopicButton}}
+        @disabled={{this.createTopicButtonDisabled}}
         @label={{this.createTopicLabel}}
+        @btnClass={{this.createTopicClass}}
+        @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
         @showDrafts={{if (gt this.draftCount 0) true false}}
       />
 
