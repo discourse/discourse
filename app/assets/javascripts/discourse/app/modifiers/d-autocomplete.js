@@ -25,6 +25,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {boolean} [debounced=false] - Enable debounced search
  * @param {boolean} [preserveKey=true] - Include trigger key in completion
  * @param {boolean} [autoSelectFirstSuggestion=true] - Auto-select first result
+ * @param {Function} [triggerRule] - Function to determine if autocomplete should trigger: (element, opts) => Promise<boolean>
  */
 export default class DAutocompleteModifier extends Modifier {
   /**
@@ -174,6 +175,28 @@ export default class DAutocompleteModifier extends Modifier {
     return event.ctrlKey || event.altKey || event.metaKey;
   }
 
+  async shouldTrigger(opts = {}) {
+    if (!this.options.triggerRule) {
+      return true;
+    }
+
+    try {
+      const triggerContext = {
+        ...opts,
+        inCodeBlock: () => this.options.textHandler.inCodeBlock(),
+      };
+      const triggerRuleResult = await this.options.triggerRule(
+        this.targetElement,
+        triggerContext
+      );
+      return triggerRuleResult ?? true;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] triggerRule error: ", e);
+      return true; // Default to allowing autocomplete on error
+    }
+  }
+
   modify(element, [options]) {
     this.targetElement = element;
     this.options = options || {};
@@ -224,7 +247,10 @@ export default class DAutocompleteModifier extends Modifier {
       } else if (key === this.options.key) {
         // Fallback to original trigger logic for new autocomplete sessions
         const prevChar = value.charAt(caretPosition - 2);
-        if (!prevChar || this.ALLOWED_LETTERS_REGEXP.test(prevChar)) {
+        if (
+          (!prevChar || this.ALLOWED_LETTERS_REGEXP.test(prevChar)) &&
+          (await this.shouldTrigger())
+        ) {
           this.completeStart = caretPosition - 1;
           this.completeEnd = caretPosition - 1;
           await this.performSearch("");
@@ -491,8 +517,12 @@ export default class DAutocompleteModifier extends Modifier {
 
       if (stopFound) {
         prev = this.getValue()[caretPos - 1];
+        const shouldTrigger = await this.shouldTrigger({ backSpace });
 
-        if (prev === undefined || this.ALLOWED_LETTERS_REGEXP.test(prev)) {
+        if (
+          shouldTrigger &&
+          (prev === undefined || this.ALLOWED_LETTERS_REGEXP.test(prev))
+        ) {
           start = caretPos;
           term = this.getValue().substring(caretPos + 1, initialCaretPos);
           end = caretPos + term.length;
