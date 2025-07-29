@@ -1,3 +1,4 @@
+import { untrack } from "@glimmer/validator";
 import { warn } from "@ember/debug";
 import { set } from "@ember/object";
 import Service from "@ember/service";
@@ -5,6 +6,7 @@ import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse/lib/get-owner";
+import { deepEqual } from "discourse/lib/object";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
@@ -419,15 +421,25 @@ export default class StoreService extends Service {
       }
 
       const updatedProperties = klass.munge(obj);
-      // update only the properties that the value changed to prevent unnecessary rerenders in Glimmer
-      updatedProperties &&
-        Object.keys(updatedProperties).forEach((key) => {
-          if (existing[key] !== updatedProperties[key]) {
-            existing.set(key, updatedProperties[key]);
-          }
-        });
+
+      // When running property comparisons, we need to prevent Glimmer from creating tracking contexts
+      // which would otherwise cause "already used in same computation" errors when the values update
+      untrack(() => {
+        // Only update properties whose values actually changed to optimize rerenders
+        // If a property value is unchanged, remove it from the update list
+        updatedProperties &&
+          Object.keys(updatedProperties).forEach((key) => {
+            if (deepEqual(existing[key], updatedProperties[key])) {
+              delete updatedProperties[key];
+            }
+          });
+      });
+
+      // Apply all property updates in a single batch to trigger just one rerender
+      existing.setProperties(updatedProperties);
 
       obj[adapter.primaryKey] = id;
+
       return existing;
     }
 
