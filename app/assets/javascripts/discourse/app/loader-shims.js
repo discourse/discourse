@@ -58,6 +58,9 @@ loaderShim("@ember/render-modifiers/modifiers/did-update", () =>
 loaderShim("@ember/runloop", () => importSync("@ember/runloop"));
 loaderShim("@ember/service", () => importSync("@ember/service"));
 loaderShim("@ember/component", () => importSync("@ember/component"));
+loaderShim("@ember/component/template-only", () =>
+  importSync("@ember/component/template-only")
+);
 loaderShim("@glimmer/tracking", () => importSync("@glimmer/tracking"));
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
 loaderShim("@ember-compat/tracked-built-ins", () =>

@@ -4,7 +4,6 @@ const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const { compatBuild } = require("@embroider/compat");
 // const { globSync } = require("glob");
 
-const allRoutes = [];
 // globSync("app/routes/**/*.js").forEach((file) => {
 //   const route = file.match(/app\/routes\/(.*)\.js/)[1];
 //   if (route === "application") {
@@ -14,14 +13,12 @@ const allRoutes = [];
 // });
 // console.log(allRoutes);
 
-module.exports = function (defaults) {
+module.exports = async function (defaults) {
   let app = new EmberApp(defaults, {});
+  const { buildOnce } = await import("@embroider/vite");
 
-  return compatBuild(app, {
-    staticComponents: true,
-    staticHelpers: true,
-    staticModifiers: true,
-    splitAtRoutes: allRoutes,
+  return compatBuild(app, buildOnce, {
+    splitAtRoutes: [/^[^.]+$/],
     staticAppPaths: [
       "static",
       "config",
