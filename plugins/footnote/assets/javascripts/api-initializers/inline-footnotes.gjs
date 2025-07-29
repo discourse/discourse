@@ -1,6 +1,5 @@
 import { htmlSafe } from "@ember/template";
 import { apiInitializer } from "discourse/lib/api";
-import { iconHTML } from "discourse/lib/icon-library";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 const TooltipContentComponent = <template>
