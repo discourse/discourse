@@ -105,16 +105,12 @@ module PageObjects
         self
       end
 
-      def reply_button
-        find("#{COMPOSER_ID} .btn-primary")
-      end
-
       def reply_button_focused?
         page.has_css?("#{COMPOSER_ID} .btn-primary:focus")
       end
 
       def create
-        reply_button.click
+        find("#{COMPOSER_ID} .btn-primary").click
       end
 
       def action(action_title)
