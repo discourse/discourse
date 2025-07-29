@@ -42,7 +42,7 @@
     display: flex;
     border-radius: var(--d-border-radius);
     background-color: var(--secondary);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     box-shadow: var(--shadow-dropdown);
     overscroll-behavior: contain;
     overflow: auto;

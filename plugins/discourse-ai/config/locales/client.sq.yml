@@ -134,8 +134,6 @@ sq:
           select: "Zgjidhni"
         image_caption:
           save_caption: "Ruani"
-          automatic_caption_dialog:
-            confirm: "Aktivizo"
       embeddings:
         back: "Kthehu mbrapa"
         save: "Ruani"

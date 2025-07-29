@@ -91,7 +91,7 @@ export default class InterfaceController extends Controller {
 
   @discourseComputed()
   availableLocales() {
-    return JSON.parse(this.siteSettings.available_locales);
+    return this.siteSettings.available_locales;
   }
 
   @discourseComputed

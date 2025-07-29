@@ -9,7 +9,7 @@ export default {
       return;
     }
 
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.addAdminPluginConfigurationNav("discourse-ai", [
         {
           label: "discourse_ai.features.short_title",

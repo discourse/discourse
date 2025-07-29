@@ -1,7 +1,7 @@
 import Component, { Textarea } from "@ember/component";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";

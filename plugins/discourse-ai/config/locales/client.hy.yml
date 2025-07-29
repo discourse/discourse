@@ -132,8 +132,6 @@ hy:
           cancel: "Չեղարկել"
         image_caption:
           save_caption: "Պահպանել"
-          automatic_caption_dialog:
-            confirm: "Միացնել"
       embeddings:
         back: "Ետ"
         save: "Պահպանել"

@@ -147,8 +147,6 @@ zh_TW:
           selected: "已選"
         image_caption:
           save_caption: "儲存"
-          automatic_caption_dialog:
-            confirm: "啟用"
       embeddings:
         back: "上一步"
         save: "儲存"

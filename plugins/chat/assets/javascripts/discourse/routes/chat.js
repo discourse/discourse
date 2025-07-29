@@ -54,7 +54,7 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   activate() {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       api.setSidebarPanel(CHAT_PANEL);
 
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
@@ -80,7 +80,7 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate(transition) {
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       initSidebarState(api, this.currentUser);
     });
 

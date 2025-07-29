@@ -21,8 +21,8 @@ ur:
       one: "پول کی %{count} سے کم آپشن ہونا ضروری ہے۔"
       other: "پول میں %{count} سے کم آپشنز ہوناچاھیے۔"
     named_poll_must_have_less_options:
-      one: "پول جس کا نام <strong>%{نام}</strong> ہے، کی %{count} سے کم آپشن ہونا ضروری ہے۔"
-      other: "<strong>%{name}</strong> نامی پول میں %{count} سے کم آپشنز ہونا چاھیے۔"
+      one: "<strong>%{name}</strong> نامی پول میں %{count} سے کم اختیار ہونا ضروری ہے۔"
+      other: "<strong>%{name}</strong> نامی پول میں %{count} سے کم اختیارات ہونے چاہئیں۔"
     default_poll_must_have_different_options: "پول کی مختلف آپشنز ہونا ضروری ہے۔"
     named_poll_must_have_different_options: "<strong>%{name}</strong> نامی پول میں مختلف آپشنزہونے چاہئیں۔"
     default_poll_must_not_have_any_empty_options: "پول میں کوئی خالی آپشن نہیں ہونا چاہیے۔"

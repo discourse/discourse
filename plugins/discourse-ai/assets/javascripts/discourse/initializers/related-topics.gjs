@@ -33,7 +33,7 @@ export default {
       return;
     }
 
-    withPluginApi("1.37.2", (api) => {
+    withPluginApi((api) => {
       api.registerMoreTopicsTab({
         id: "related-topics",
         name: i18n("discourse_ai.related_topics.pill"),

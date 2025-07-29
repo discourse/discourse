@@ -155,3 +155,51 @@
 .ai-expanded-list__toggle-button {
   padding: 0;
 }
+
+.ai-configure-default-llm {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--primary-very-low);
+  padding: 1rem;
+  margin-block: 1rem;
+  border-radius: var(--d-border-radius);
+
+  &__header {
+    flex: 3;
+  }
+
+  &__setting {
+    flex: 2;
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
+
+    .setting-controls__undo {
+      display: none;
+    }
+  }
+
+  h3 {
+    color: var(--primary);
+    font-size: var(--font-0);
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-top: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high-or-secondary-low);
+  }
+
+  .select-kit,
+  .btn {
+    font-size: var(--font-down-1);
+  }
+
+  .setting-label,
+  .desc {
+    display: none;
+  }
+}

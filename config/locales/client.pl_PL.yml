@@ -257,7 +257,6 @@ pl_PL:
       search: "Szukaj"
     themes:
       default_description: "Domyślny"
-      broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
       error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
       only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
     broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
@@ -2739,6 +2738,9 @@ pl_PL:
     welcome_banner_location:
       above_topic_content: "Powyżej treści tematu"
       below_site_header: "Poniżej nagłówka witryny"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Tekst sformatowany"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5625,6 +5627,7 @@ pl_PL:
       title: "Administrator Discourse"
       moderator: "Moderator"
       filter_reports: Filtruj zgłoszenia
+      filter_reports_no_results: "Żadne raporty nie pasują do Twojego filtra"
       tags:
         remove_muted_tags_from_latest:
           always: "zawsze"
@@ -5955,7 +5958,7 @@ pl_PL:
               header_description: "Wyświetl dziennik przeprowadzonych wyszukiwań"
         plugins:
           title: "Zainstalowane wtyczki"
-          header_description: "Wszystkie zainstalowane przez Ciebie wtyczki Discourse lub wtyczki preinstalowane wraz z hostingiem Discourse pojawią się na tej liście"
+          header_description: "Wtyczki wzbogacają Twoją społeczność o dodatkowe funkcje. Poniżej znajdziesz zarówno wtyczki preinstalowane, jak i niestandardowe."
         api_keys:
           title: "Klucze API"
           header_description: "Funkcja kluczy API umożliwia bezpieczną integrację Discourse z systemami zewnętrznymi i automatyzację działań. Administratorzy mogą tworzyć klucze z określonymi zakresami, aby kontrolować dostęp do zasobów i poufnych danych. Zakresy ograniczają funkcjonalność, zapewniając większe bezpieczeństwo."
@@ -6774,6 +6777,14 @@ pl_PL:
         experimental_badge: "eksperymentalny"
         learn_more: "Dowiedz się więcej"
         preinstalled: "Preinstalowane"
+        filters:
+          all: "Wszystkie"
+          enabled: "Włączona"
+          disabled: "Wyłączone"
+          preinstalled: "Preinstalowane"
+          search_placeholder: "Wyszukaj wtyczki..."
+          reset: "Przywróć"
+          no_results: "Nie znaleziono wtyczek pasujących do Twoich filtrów"
       navigation_menu:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"

@@ -115,7 +115,7 @@ export default {
     document.body.append(buildTooltip());
     window.addEventListener("click", footnoteEventHandler, true);
 
-    withPluginApi("0.8.9", (api) => {
+    withPluginApi((api) => {
       api.decorateCookedElement((elem) => applyInlineFootnotes(elem), {
         onlyStream: true,
         id: "inline-footnotes",

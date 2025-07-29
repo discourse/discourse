@@ -62,7 +62,6 @@ nl:
     ai_helper_enabled_features: "Selecteer de functies die je wilt inschakelen in de AI-helper."
     post_ai_helper_allowed_groups: "Gebruikersgroepen die toegang hebben tot AI-helperfuncties in berichten"
     ai_helper_image_caption_model: "Selecteer het te gebruiken model voor het genereren van afbeeldingsbijschriften"
-    ai_auto_image_caption_allowed_groups: "Gebruikers in deze groepen kunnen automatische afbeeldingsbijschriften in- en uitschakelen."
     ai_embeddings_selected_model: "Gebruik het geselecteerde model voor het genereren van insluitingen."
     ai_embeddings_generate_for_pms: "Genereer insluitingen voor persoonlijke berichten."
     ai_embeddings_semantic_related_topics_enabled: "Gebruik semantisch zoeken voor gerelateerde topics."

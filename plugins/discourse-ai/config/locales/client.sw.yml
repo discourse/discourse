@@ -116,8 +116,6 @@ sw:
           cancel: "Batili"
         image_caption:
           save_caption: "Hifadhi"
-          automatic_caption_dialog:
-            confirm: "Wezesha"
       embeddings:
         back: "Iliyopita"
         save: "Hifadhi"

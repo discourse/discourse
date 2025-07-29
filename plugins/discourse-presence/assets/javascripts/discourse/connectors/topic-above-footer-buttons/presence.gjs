@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import htmlSafe from "discourse/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import { translateSize } from "discourse/lib/avatar-utils";
 import TopicPresenceDisplay from "discourse/plugins/discourse-presence/discourse/components/topic-presence-display";
 

@@ -629,6 +629,7 @@ class Post < ActiveRecord::Base
       )
 
     hiding_again = hidden_at.present?
+    should_reset_bumped_at = is_last_reply? && !whisper?
 
     Post.transaction do
       self.skip_validation = true
@@ -679,6 +680,8 @@ class Post < ActiveRecord::Base
         message_options: options,
       )
     end
+
+    topic.reset_bumped_at if should_reset_bumped_at
   end
 
   def unhide!

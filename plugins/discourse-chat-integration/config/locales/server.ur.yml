@@ -60,7 +60,7 @@ ur:
             (اگر ایک سے زیادہ اصول ایک پوسٹ سے مماثلت رکھیں گے، تو سب سے اوپر والا اصول فعال ہو گا)
           no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
           rule_string: "*%{index})* *%{filter}* پوسٹس *%{category}* میں"
-          rule_string_tags_suffix: "ٹیگز کے ساتھ: *%{tags}*"
+          rule_string_tags_suffix: " ٹیگز کے ساتھ: *%{tags}*"
         parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
         create:
           created: "اصول کامیای سے بنا لیا گیا"
@@ -76,10 +76,10 @@ ur:
           error: "ٹرانسکرِپٹ بناتے وقت کچھ غلط ہو گیا، معذرت!"
           post_to_discourse: "ٹرانسکرِپٹ کے ساتھ ڈِسکورس پر ایک پوسٹ ڈرافٹ کرنے کیلئے یہاں کلک کریں"
           api_required: "معذرت، یہ اِنٹیگرَیشَن ٹرانسکرِپٹس شائع کرنے کیلئے سیٹ اَپ نہیں ہے۔"
-          view_on_slack: "%{name}میں سلَّیک پر دیکھیں "
+          view_on_slack: "%{name}میں سلَّیک پر دیکھیں"
           first_message_pretext: "شروع %{n} پیغامات قبل:"
           last_message_pretext: "اور ختم %{n} پیغامات قبل:"
-          posted_in: "%{name}میں پوسٹ کیا گیا "
+          posted_in: "%{name}میں پوسٹ کیا گیا"
           change_first_message: "پہلا پیغام تبدیل کریں..."
           change_last_message: "آخری پیغام تبدیل کریں..."
           loading: "ٹرانسکرِپٹ لوڈ ہو رہی ہے..."
@@ -95,8 +95,8 @@ ur:
             <b>اِس چَینل کے اصول</b>
             (اگر ایک سے زیادہ اصول ایک پوسٹ سے مماثلت رکھیں گے، تو سب سے اوپر والا اصول فعال ہو گا)
           no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے <code>help/</code> رَن کریں۔"
-          rule_string: "<b>%{index})</b> <b>%{filter}</b>پوسٹس <b>%{category}</b> میں "
-          rule_string_tags_suffix: "ٹیگز کے ساتھ: <b>%{tags}</b>"
+          rule_string: "<b>%{index})</b> <b>%{filter}</b>پوسٹس <b>%{category}</b> میں"
+          rule_string_tags_suffix: " ٹیگز کے ساتھ: <b>%{tags}</b>"
         parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے <code>help/</code> رَن کریں۔"
         create:
           created: "اصول کامیای سے بنا لیا گیا"
@@ -122,7 +122,7 @@ ur:
 
           <b>مدد:</b> <code>help/</code>
       hipchat:
-        message: <b>%{user}</b> نے <a href="%{post_url}">%{title}</a> میں پوسٹ کیا۔
+        message: <b>%{user}</b> نے <a href="%{post_url}">%{title}</a> میں پوسٹ کیا
       mattermost:
         status:
           header: |
@@ -130,7 +130,7 @@ ur:
             (اگر ایک سے زیادہ اصول ایک پوسٹ سے مماثلت رکھیں گے، تو سب سے اوپر والا اصول فعال ہو گا)
           no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
           rule_string: "*%{index})* *%{filter}* پوسٹس *%{category}* میں"
-          rule_string_tags_suffix: "ٹیگز کے ساتھ: *%{tags}*"
+          rule_string_tags_suffix: " ٹیگز کے ساتھ: *%{tags}*"
         parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
         create:
           created: "اصول کامیای سے بنا لیا گیا"

@@ -51,12 +51,18 @@ export default class PostTranslationEditor extends Component {
   }
 
   get availableContentLocalizationLocales() {
-    const originalPostLocale =
-      this.composer.model?.post?.locale || this.siteSettings.default_locale;
+    const originalPostLocale = this.composer.model?.post?.locale;
 
-    return this.siteSettings.available_content_localization_locales.filter(
-      (locale) => locale.value !== originalPostLocale
-    );
+    return this.siteSettings.available_content_localization_locales
+      .filter(({ value }) => value !== originalPostLocale)
+      .map(({ native_name, name, value }) => {
+        name =
+          i18n(name) === native_name
+            ? native_name
+            : `${i18n(name)} (${native_name})`;
+
+        return { name, value };
+      });
   }
 
   @action
@@ -120,25 +126,24 @@ export default class PostTranslationEditor extends Component {
       </div>
     {{/if}}
 
-    <div class="d-editor translation-editor">
-      <DEditor
-        @value={{readonly this.composer.model.reply}}
-        @change={{this.handleInput}}
-        @placeholder="composer.translations.placeholder"
-        @forcePreview={{true}}
-        @processPreview={{false}}
-        @loading={{this.composer.loading}}
-        @hijackPreview={{this.composer.hijackPreview}}
-        @disabled={{this.composer.disableTextarea}}
-        @onSetup={{@setupEditor}}
-        @disableSubmit={{this.composer.disableSubmit}}
-        @topicId={{this.composer.model.topic.id}}
-        @categoryId={{this.composer.model.category.id}}
-        @outletArgs={{lazyHash
-          composer=this.composer.model
-          editorType="composer"
-        }}
-      />
-    </div>
+    <DEditor
+      class="translation-editor"
+      @value={{readonly this.composer.model.reply}}
+      @change={{this.handleInput}}
+      @placeholder="composer.translations.placeholder"
+      @forcePreview={{true}}
+      @processPreview={{false}}
+      @loading={{this.composer.loading}}
+      @hijackPreview={{this.composer.hijackPreview}}
+      @disabled={{this.composer.disableTextarea}}
+      @onSetup={{@setupEditor}}
+      @disableSubmit={{this.composer.disableSubmit}}
+      @topicId={{this.composer.model.topic.id}}
+      @categoryId={{this.composer.model.category.id}}
+      @outletArgs={{lazyHash
+        composer=this.composer.model
+        editorType="composer"
+      }}
+    />
   </template>
 }

@@ -141,8 +141,6 @@ pt:
           select: "Selecionar"
         image_caption:
           save_caption: "Guardar"
-          automatic_caption_dialog:
-            confirm: "Ativar"
       embeddings:
         back: "Retroceder"
         save: "Guardar"

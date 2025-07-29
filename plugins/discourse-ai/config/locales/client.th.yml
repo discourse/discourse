@@ -115,8 +115,6 @@ th:
           cancel: "ยกเลิก"
         image_caption:
           save_caption: "บันทึก"
-          automatic_caption_dialog:
-            confirm: "เปิดใช้งาน"
       embeddings:
         back: "กลับ"
         save: "บันทึก"

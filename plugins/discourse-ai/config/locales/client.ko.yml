@@ -144,8 +144,6 @@ ko:
           select: "선택"
         image_caption:
           save_caption: "저장"
-          automatic_caption_dialog:
-            confirm: "활성화"
       embeddings:
         back: "뒤로"
         save: "저장"

@@ -3629,6 +3629,11 @@ bs_BA:
         howto: "Kako instaliram pluginove?"
         author: "Od %{author}"
         learn_more: "Saznaj više"
+        filters:
+          all: "Sve"
+          enabled: "Omogućen"
+          disabled: "Neomogućen"
+          reset: "Resetovati"
       backups:
         title: "Backups"
         menu:

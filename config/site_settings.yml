@@ -1618,7 +1618,8 @@ posting:
     hidden: true
   rich_editor:
     client: true
-    default: false
+    default: true
+    hidden: true
     area: "posts_and_topics"
 
 content_localization:
@@ -1637,9 +1638,9 @@ content_localization:
     default: ""
     type: list
     client: true
-    list_type: named
+    list_type: locale
     allow_any: false
-    choices: "LocaleSiteSetting.values"
+    enum: "LocaleSiteSetting"
     area: "localization"
     validator: "ContentLocalizationLocalesValidator"
   content_localization_max_locales:
@@ -2526,7 +2527,8 @@ trust:
     hidden: true
     area: "trust_levels"
   delete_all_posts_and_topics_allowed_groups:
-    default: ""
+    default: "1|2" # auto group admins, moderators
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -3815,6 +3817,10 @@ user_preferences:
   default_sidebar_show_count_of_new_items:
     default: false
     area: "navigation"
+  default_composition_mode:
+    default: 1
+    enum: "CompositionModeSiteSetting"
+    area: "posts_and_topics|user_defaults"
 
 api:
   retain_web_hook_events_period_days:

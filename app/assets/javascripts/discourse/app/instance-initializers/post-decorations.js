@@ -17,7 +17,7 @@ import { i18n } from "discourse-i18n";
 
 export default {
   initialize(owner) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       const siteSettings = owner.lookup("service:site-settings");
       const session = owner.lookup("service:session");
       const site = owner.lookup("service:site");

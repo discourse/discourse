@@ -7,7 +7,7 @@
 ur:
   js:
     gamification:
-      you: "آپ "
+      you: "آپ"
       leaderboard:
         link_to_settings: "سیٹِنگ"
         refresh: "رِیفریش"

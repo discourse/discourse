@@ -273,7 +273,7 @@ $mobile-breakpoint: 700px;
 
   .site-text {
     cursor: pointer;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     margin-bottom: 0.5em;
 
     &.overridden {
@@ -360,7 +360,7 @@ $mobile-breakpoint: 700px;
     }
 
     .outdated {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       box-sizing: border-box;
       color: var(--primary);
       margin-bottom: 1em;
@@ -851,7 +851,7 @@ $mobile-breakpoint: 700px;
 .admin-detail {
   background-color: var(--secondary);
   margin-left: 0;
-  border-left: solid 1px var(--primary-low);
+  border-left: solid 1px var(--content-border-color);
   padding: 30px 0 90px 30px;
   width: 82%;
   box-sizing: border-box;

@@ -68,7 +68,6 @@ he:
     ai_helper_enabled_features: "נא לבחור יכולות להפעלה במסייע הבינה המלאכותית."
     post_ai_helper_allowed_groups: "קבוצות משתמשים שמורשות לגשת ליכולות מסייע בינה מלאכותית בפוסטים"
     ai_helper_image_caption_model: "נא לבחור את הדגם שישמש ליצירת כותרות לתמונות"
-    ai_auto_image_caption_allowed_groups: "משתמשים בקבוצות האלה יכולים להפעיל או לכבות כותרות אוטומטיות לתמונות."
     ai_embeddings_generate_for_pms: "יצירת הטמעות להודעות פרטיות."
     ai_embeddings_semantic_related_topics_enabled: "להשתמש בחיפוש סמנטי לנושאים קשורים."
     ai_embeddings_semantic_related_topics: "מספר הנושאים המרבי להצגה בסעיף הנושאים הקשורים."
@@ -424,6 +423,11 @@ he:
         image: "%{prompt}"
         setting_context: "נקרא הקשר עבור: %{setting_name}"
         schema: "%{tables}"
+        search_settings:
+          one: "נמצאה תוצאה לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי תוצאות לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
     summarization:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
@@ -467,6 +471,8 @@ he:
         many: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
         other: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
+    personas:
+      malformed_examples: "הדוגמה הבאה היא בתבנית שגויה."
     embeddings:
       delete_failed: "זה המודל שנמצא בשימוש. יש לעדכן את `ai embeddings selected model`."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
@@ -492,6 +498,12 @@ he:
       no_default_llm: לדמות חייב להיות מוגדר default_llm (מודל ברירת מחדל).
       user_not_allowed: המשתמש לא מורשה להשתתף בנושא.
       prompt_message_length: ההודעה %{idx} חורגת ממגבלת 1000 התווים.
+      persona_already_exists: כבר קיימת דמות בשם %{name}.
+      custom_tool_exists:
+        one: "כבר קיים כלי מותאם בשם %{names}."
+        two: "כבר קיימים כלים מותאמים בשמות %{names}."
+        many: "כבר קיימים כלים מותאמים בשמות %{names}."
+        other: "כבר קיימים כלים מותאמים בשמות %{names}."
   dashboard:
     problem:
       ai_llm_status: "מודל השפה הגדול: %{model_name} נתקל בקשיים. נא לגשת ל<a href='%{url}'>עמוד ההגדרות של המודל</a>."

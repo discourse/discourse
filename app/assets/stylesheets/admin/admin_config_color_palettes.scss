@@ -6,10 +6,10 @@
     }
 
     li {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
       &:first-of-type {
-        border-top: 1px solid var(--primary-low);
+        border-top: 1px solid var(--content-border-color);
       }
 
       a {

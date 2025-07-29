@@ -104,7 +104,8 @@ gem "mini_racer"
 
 gem "highline", require: false
 
-gem "rack"
+# When unicorn is not used anymore, we can use Rack 3
+gem "rack", "< 3"
 
 gem "rack-protection" # security
 gem "cbor", require: false

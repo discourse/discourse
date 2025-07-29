@@ -139,8 +139,6 @@ vi:
           select: "Chọn"
         image_caption:
           save_caption: "Lưu lại"
-          automatic_caption_dialog:
-            confirm: "Bật"
       embeddings:
         back: "Quay lại"
         save: "Lưu lại"

@@ -65,6 +65,7 @@ class SiteSetting < ActiveRecord::Base
     default_navigation_menu_tags
     default_sidebar_link_to_filtered_list
     default_sidebar_show_count_of_new_items
+    default_composition_mode
   ]
 
   extend GlobalPath

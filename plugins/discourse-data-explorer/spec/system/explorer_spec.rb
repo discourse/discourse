@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Explorer", type: :system, js: true do
+RSpec.describe "Explorer", type: :system do
   fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "group") }
   fab!(:group_user) { Fabricate(:group_user, user: admin, group: group) }

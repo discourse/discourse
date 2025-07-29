@@ -28,7 +28,7 @@ export default {
     this.siteSettings = container.lookup("service:site-settings");
     this.currentUser = container.lookup("service:current-user");
 
-    withPluginApi("1.8.0", (api) => {
+    withPluginApi((api) => {
       const chatStateManager = container.lookup("service:chat-state-manager");
 
       api.addSidebarPanel(
@@ -47,7 +47,7 @@ export default {
       initSidebarState(api, api.getCurrentUser());
     });
 
-    withPluginApi("1.3.0", (api) => {
+    withPluginApi((api) => {
       const chatChannelsManager = container.lookup(
         "service:chat-channels-manager"
       );

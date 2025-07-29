@@ -513,12 +513,6 @@ ja:
           generating: "キャプションを生成中..."
           credits: "AI によるキャプション"
           save_caption: "保存"
-          automatic_caption_setting: "自動キャプションを有効にする"
-          automatic_caption_loading: "画像のキャプションを作成中..."
-          automatic_caption_dialog:
-            prompt: "この投稿にはキャプションのない画像が含まれています。画像アップロード時に、自動キャプションを有効にしますか？(これは後で設定で変更できます)"
-            confirm: "有効化"
-            cancel: "今後表示しない"
         no_content_error: "先に AI アクションを実行するコンテンツを追加してください"
       reviewables:
         model_used: "使用モデル:"

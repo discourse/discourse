@@ -16,7 +16,7 @@
 .tags-list {
   margin-top: 2em;
   padding-bottom: 1em;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 #list-area .tags-list h3 {
@@ -338,7 +338,7 @@ section.tag-info {
   gap: 1em;
   margin: 1em 0;
   padding: 2em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
 
   .edit-tag-wrapper {
     display: flex;

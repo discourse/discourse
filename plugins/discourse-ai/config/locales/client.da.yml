@@ -152,8 +152,6 @@ da:
           select: "Vælg"
         image_caption:
           save_caption: "Gem"
-          automatic_caption_dialog:
-            confirm: "Aktiver"
       embeddings:
         back: "Tilbage"
         save: "Gem"

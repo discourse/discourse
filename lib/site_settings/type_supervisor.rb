@@ -61,6 +61,7 @@ class SiteSettings::TypeSupervisor
         tag_group_list: 26,
         file_size_restriction: 27,
         objects: 28,
+        locale_enum: 29,
       )
   end
 
@@ -180,9 +181,10 @@ class SiteSettings::TypeSupervisor
   def type_hash(name)
     name = name.to_sym
     type = get_type(name)
+    list_type = get_list_type(name)
     result = { type: type.to_s }
 
-    if type == :enum
+    if type == :enum || list_type == "locale"
       if (klass = get_enum_class(name))
         result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
       else
@@ -231,7 +233,7 @@ class SiteSettings::TypeSupervisor
   end
 
   def validate_value(name, type, val)
-    if type == self.class.types[:enum]
+    if type == self.class.types[:enum] || get_list_type(name) == "locale"
       if get_enum_class(name)
         unless get_enum_class(name).valid_value?(val)
           raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
@@ -243,9 +245,7 @@ class SiteSettings::TypeSupervisor
 
         raise Discourse::InvalidParameters.new(:value) if choice.exclude?(val)
       end
-    end
-
-    if type == self.class.types[:list] || type == self.class.types[:string]
+    elsif type == self.class.types[:list] || type == self.class.types[:string]
       if @allow_any.key?(name) && !@allow_any[name]
         split = val.to_s.split("|")
         resolved_choices = @choices[name]

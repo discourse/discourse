@@ -84,7 +84,7 @@ export default {
   name: "discourse-ai-helper",
 
   initialize() {
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       initializeAiHelperTrigger(api);
     });
   },

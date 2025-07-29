@@ -49,6 +49,7 @@ export default {
         timezone: "Australia/Brisbane",
         skip_new_user_tips: false,
         should_be_redirected_to_top: false,
+        composition_mode: 0,
       },
       sidebar_sections: [
         {
