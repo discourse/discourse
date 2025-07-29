@@ -1924,7 +1924,9 @@ class Topic < ActiveRecord::Base
 
   def reset_bumped_at(post_id = nil)
     post =
-      (
+      if post_id.is_a?(Post)
+        post_id
+      else
         if post_id
           Post.find_by(id: post_id)
         else
@@ -1934,7 +1936,7 @@ class Topic < ActiveRecord::Base
             post_type: Post.types[:regular],
           ).last || first_post
         end
-      )
+      end
 
     return if !post
 
