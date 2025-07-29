@@ -63,6 +63,10 @@
       white-space: nowrap;
       display: block;
     }
+
+    &__preinstalled {
+      color: var(--primary-medium);
+    }
   }
 }
 
@@ -146,8 +150,5 @@
 }
 
 .admin-plugins-howto {
-  a {
-    display: inline-block;
-    width: 100%;
-  }
+  margin-left: 0.35em;
 }
