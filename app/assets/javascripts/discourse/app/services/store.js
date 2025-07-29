@@ -6,7 +6,6 @@ import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse/lib/get-owner";
-import { deepEqual } from "discourse/lib/object";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
@@ -429,7 +428,7 @@ export default class StoreService extends Service {
         // If a property value is unchanged, remove it from the update list
         updatedProperties &&
           Object.keys(updatedProperties).forEach((key) => {
-            if (deepEqual(existing[key], updatedProperties[key])) {
+            if (existing[key] === updatedProperties[key]) {
               delete updatedProperties[key];
             }
           });
