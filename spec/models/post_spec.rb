@@ -1583,7 +1583,7 @@ RSpec.describe Post do
         expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
       end
 
-      it "hiding last visible reply will reset the topic's bumped_at" do
+      it "resets the topic's bumped_at when hiding the last visible reply" do
         last_reply.hide!(PostActionType.types[:off_topic])
 
         expect(topic.reload.bumped_at).to eq_time(second_last_reply.created_at)
