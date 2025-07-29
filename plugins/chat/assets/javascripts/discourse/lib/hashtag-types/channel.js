@@ -25,16 +25,16 @@ export default class ChannelHashtagType extends HashtagTypeBase {
       : channelOrHashtag.chatable.color;
 
     return [
-      `.d-icon.hashtag-color--${this.type}-${channelOrHashtag.id} { color: #${color} }`,
+      `.hashtag-color--${this.type}-${channelOrHashtag.id} { color: #${color} }`,
     ];
   }
 
   generateIconHTML(hashtag) {
     hashtag.colors ? this.onLoad(hashtag) : this.load(hashtag.id);
 
-    return iconHTML(hashtag.icon, {
-      class: `hashtag-color--${this.type}-${hashtag.id}`,
-    });
+    const iconHtml = iconHTML(hashtag.icon);
+    const colorCssClass = `hashtag-color--${this.type}-${hashtag.id}`;
+    return `<span class="hashtag-channel-icon ${colorCssClass}">${iconHtml}</span>`;
   }
 
   isLoaded(id) {
