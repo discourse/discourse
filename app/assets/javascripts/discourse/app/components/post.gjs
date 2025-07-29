@@ -75,6 +75,7 @@ export default class Post extends Component {
   get additionalArticleClasses() {
     return applyValueTransformer("post-article-class", [], {
       post: this.args.post,
+      prevPost: this.args.prevPost,
     });
   }
 
@@ -408,6 +409,7 @@ export default class Post extends Component {
             )
             decoratorState=this.decoratorState
             topicPageQueryParams=@topicPageQueryParams
+            prevPost=@prevPost
           )
           as |postOutletArgs|
         }}
