@@ -73,4 +73,21 @@ describe "Composer", type: :system do
       )
     end
   end
+
+  it "focuses the reply button when tabbing out of both editor modes" do
+    page.visit "/new-topic"
+    expect(composer).to be_opened
+    composer.focus
+
+    page.send_keys(:tab)
+
+    expect(composer.reply_button_focused?).to eq(true)
+
+    composer.toggle_rich_editor
+    composer.focus
+
+    page.send_keys(:tab)
+
+    expect(composer.reply_button_focused?).to eq(true)
+  end
 end

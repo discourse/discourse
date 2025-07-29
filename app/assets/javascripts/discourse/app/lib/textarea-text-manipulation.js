@@ -726,9 +726,9 @@ export default class TextareaTextManipulation {
     if (newValue.trim() !== "") {
       this.replaceText(value, newValue, { skipNewSelection: true });
       this.selectText(this.value.indexOf(newValue), newValue.length);
-    }
 
-    return true;
+      return true;
+    }
   }
 
   @bind
