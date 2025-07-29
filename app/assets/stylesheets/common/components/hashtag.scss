@@ -1,19 +1,18 @@
-a.hashtag {
-  color: var(--primary-or-primary-low-mid);
-  font-weight: bold;
+// a.hashtag {
+//   color: var(--primary-or-primary-low-mid);
+//   font-weight: bold;
 
-  &:visited,
-  &:hover {
-    color: var(--primary-or-primary-low-mid);
-  }
+//   &:visited,
+//   &:hover {
+//     color: var(--primary-or-primary-low-mid);
+//   }
 
-  &:hover {
-    span {
-      text-decoration: underline;
-    }
-  }
-}
-
+//   &:hover {
+//     span {
+//       text-decoration: underline;
+//     }
+//   }
+// }
 .hashtag-cooked {
   @include mention;
 
@@ -27,38 +26,23 @@ a.hashtag {
     height: 0.72em;
     display: inline-block;
     color: var(--primary-medium);
+    margin-right: var(--space-1);
   }
 
-  .d-icon,
-  .hashtag-icon-placeholder {
-    width: 0.93em;
-    height: 0.93em;
-    margin: 0;
-  }
-
-  img.emoji {
-    width: 0.93em;
-    height: 0.93em;
-    vertical-align: middle;
-  }
-
+  img.emoji,
   svg {
-    display: inline;
+    width: 0.93em;
+    height: 0.93em;
+    vertical-align: -0.125em;
+    margin-right: var(--space-1);
   }
 
   .hashtag-category-square {
-    flex: 0 0 auto;
-    width: 0.93em;
-    height: 0.93em;
-    margin-left: 0.1em;
     display: inline-block;
-    border: 0.1em solid var(--primary-low);
-    box-sizing: border-box;
-  }
-
-  .hashtag-category-icon,
-  .hashtag-category-emoji {
-    display: contents;
+    width: 0.72em;
+    height: 0.72em;
+    margin-left: 0.1em;
+    margin-right: var(--space-1);
   }
 }
 
@@ -97,24 +81,28 @@ a.hashtag {
   }
 
   &__link {
-    // very silly but got to overrule the main autocomplete styles which unfortunately use direct ul,li,a selectors
-    .hashtag-autocomplete & {
-      align-items: center;
-      display: flex;
+    .autocomplete & {
+      // silly but needed to overrule the autocomplete styles
       gap: var(--space-2);
     }
 
-    span[class^="hashtag-category"] {
-      display: inline-flex;
+    .hashtag-category-icon,
+    .hashtag-category-emoji {
+      width: 1em;
+      height: 1em;
     }
 
-    .hashtag-category-square,
-    .hashtag-category-icon .svg-icon,
-    .hashtag-category-emoji .emoji,
-    .d-icon-tag,
-    .d-icon-comment {
+    .hashtag-category-square {
       width: 0.93em;
       height: 0.93em;
+      display: inline-block;
+    }
+
+    img.emoji,
+    svg {
+      width: 0.93em;
+      height: 0.93em;
+      vertical-align: top;
     }
   }
 
