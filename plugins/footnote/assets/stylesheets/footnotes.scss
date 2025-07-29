@@ -1,21 +1,18 @@
 .inline-footnotes {
+  counter-reset: inline-footnote;
+
   a.expand-footnote {
     user-select: none;
-    padding: 0 0.4em;
-    color: var(--primary-low-mid-or-secondary-high);
-    background: var(--primary-low);
-    border-radius: 3px;
-    min-height: 1.25em;
-    display: inline-flex;
-    align-items: center;
+    display: inline-block;
 
-    &:hover {
-      background: var(--primary-medium);
-      color: var(--secondary);
-    }
-
-    > * {
-      pointer-events: none;
+    &::after {
+      padding: 0 0.125em;
+      display: inline-block;
+      content: "[" counter(inline-footnote) "]";
+      vertical-align: super;
+      font-size: 0.75rem;
+      line-height: 1;
+      counter-increment: inline-footnote;
     }
   }
 

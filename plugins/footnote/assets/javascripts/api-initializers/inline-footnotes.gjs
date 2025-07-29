@@ -49,7 +49,6 @@ export default apiInitializer((api) => {
 
       const expandableFootnote = document.createElement("a");
       expandableFootnote.classList.add("expand-footnote");
-      expandableFootnote.innerHTML = iconHTML("ellipsis");
       expandableFootnote.href = "";
       expandableFootnote.role = "button";
       expandableFootnote.dataset.footnoteId = footnoteId;
