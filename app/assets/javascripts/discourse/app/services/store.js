@@ -1,6 +1,6 @@
+import { untrack } from "@glimmer/validator";
 import { warn } from "@ember/debug";
 import { set } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
@@ -420,16 +420,23 @@ export default class StoreService extends Service {
         klass = RestModel;
       }
 
-      schedule("afterRender", () => {
-        const updatedProperties = klass.munge(obj);
+      const updatedProperties = klass.munge(obj);
+
+      // untracking is necessary to prevent the comparison from creating a tracking context in Glimmer
+      // which could cause a
+      untrack(() => {
         // update only the properties that the value changed to prevent unnecessary rerenders in Glimmer
         updatedProperties &&
           Object.keys(updatedProperties).forEach((key) => {
-            if (!deepEqual(existing[key], updatedProperties[key])) {
-              existing.set(key, updatedProperties[key]);
+            if (deepEqual(existing[key], updatedProperties[key])) {
+              // remove the properties from the values that will be updated if the values are equal
+              delete updatedProperties[key];
             }
           });
       });
+
+      // setProperties will batch the property changes and trigger a single rerender
+      existing.setProperties(updatedProperties);
 
       obj[adapter.primaryKey] = id;
 
