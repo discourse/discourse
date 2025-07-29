@@ -50,14 +50,11 @@ acceptance("Category Banners", function (needs) {
     await visit("/c/test-read-only-with-banner");
 
     await click("#create-topic");
-    assert.dom(".d-editor").exists("opens composer");
+    assert.dom(".dialog-body").exists("pops up a modal");
 
-    assert
-      .dom(".d-editor .selected-name[data-name='test-read-only-with-banner']")
-      .doesNotExist("does not show read-only category in composer");
-
+    await click(".dialog-footer .btn-primary");
+    assert.dom(".dialog-body").doesNotExist("closes the modal");
     assert.dom(".category-read-only-banner").exists("shows a banner");
-
     assert
       .dom(".category-read-only-banner .inner")
       .exists({ count: 1 }, "allows staff to embed html in the message");
