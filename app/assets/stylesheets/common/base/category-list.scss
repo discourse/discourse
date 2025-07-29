@@ -127,6 +127,8 @@
     border-left-width: 0;
     border-style: solid;
     border-color: var(--primary-low);
+    border-top-right-radius: var(--d-border-radius);
+    border-bottom-right-radius: var(--d-border-radius);
   }
 
   &.no-logos {
