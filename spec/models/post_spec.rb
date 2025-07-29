@@ -1577,7 +1577,7 @@ RSpec.describe Post do
 
       before { topic.update_columns(bumped_at: 1.day.from_now) }
 
-      it "hiding whisper will not reset the topic's bumped_at" do
+      it "does not reset the topic's bumped_at when hiding a whisper" do
         whisper_post.hide!(PostActionType.types[:off_topic])
 
         expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
