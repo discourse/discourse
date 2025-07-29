@@ -58,6 +58,14 @@ a.hashtag {
   .hashtag-category-emoji {
     display: inline-block;
   }
+
+  &[data-type="channel"] {
+    align-items: baseline;
+
+    .d-icon {
+      align-self: center;
+    }
+  }
 }
 
 .hashtag-autocomplete {
@@ -110,13 +118,15 @@ a.hashtag {
       height: 0.93em;
       margin-right: 5px;
       display: inline-block;
+      line-height: 1;
     }
 
     .hashtag-category-icon .svg-icon,
     .hashtag-category-emoji .emoji {
+      vertical-align: unset;
       width: 0.93em;
       height: 0.93em;
-      vertical-align: middle;
+      line-height: 1;
     }
   }
 
