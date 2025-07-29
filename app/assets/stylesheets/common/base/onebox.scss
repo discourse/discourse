@@ -1,11 +1,16 @@
 @use "lib/viewport";
 
+:root {
+  --onebox-shadow-color: var(--primary-100);
+  --onebox-border-color: var(--primary-300);
+}
+
 @mixin onebox-shadow($thickness) {
   border: 0;
   margin-inline: $thickness;
   box-shadow:
-    0 0 0 1px var(--primary-300),
-    0 0 0 $thickness var(--primary-100);
+    0 0 0 1px var(--onebox-border-color),
+    0 0 0 $thickness var(--onebox-shadow-color);
 
   // Makes the outer drop shadow radius equal to --d-border-radius
   border-radius: calc(var(--d-border-radius) - ($thickness / 2));
