@@ -101,8 +101,8 @@ export default class AiPersonaToolOptions extends Component {
               {{/let}}
             </div>
           {{/each}}
-        </@form.Object>
-      </@form.Container>
+        </form.Object>
+      </form.Container>
     {{/if}}
   </template>
 }
