@@ -148,6 +148,18 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE permalinks
+(
+    url          TEXT     NOT NULL PRIMARY KEY,
+    category_id  NUMERIC,
+    created_at   DATETIME,
+    external_url TEXT,
+    post_id      NUMERIC,
+    tag_id       NUMERIC,
+    topic_id     NUMERIC,
+    user_id      NUMERIC
+);
+
 CREATE TABLE tag_group_memberships
 (
     tag_group_id NUMERIC  NOT NULL,
@@ -233,6 +245,7 @@ CREATE TABLE user_fields
     requirement       INTEGER,
     searchable        BOOLEAN,
     show_on_profile   BOOLEAN,
+    show_on_signup    BOOLEAN,
     show_on_user_card BOOLEAN
 );
 
