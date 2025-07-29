@@ -25,6 +25,7 @@ import ComboBox from "select-kit/components/combo-box";
 
 export default class AiUsage extends Component {
   @service store;
+  @service currentUser;
 
   @tracked startDate = moment().subtract(30, "days").toDate();
   @tracked endDate = new Date();
@@ -48,6 +49,8 @@ export default class AiUsage extends Component {
         data: {
           start_date: moment(this.startDate).format("YYYY-MM-DD"),
           end_date: moment(this.endDate).format("YYYY-MM-DD"),
+          timezone:
+            this.currentUser?.user_option?.timezone || moment.tz.guess(),
           feature: this.selectedFeature,
           model: this.selectedModel,
         },

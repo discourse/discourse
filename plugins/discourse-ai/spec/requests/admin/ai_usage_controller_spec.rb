@@ -154,6 +154,46 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
         expect(data_by_hour.first[1]["total_tokens"]).to eq(150)
       end
     end
+
+    context "with different timezones" do
+      before { freeze_time Time.parse("2024-07-28 00:30:00 UTC") }
+
+      let(:base_time) { Time.parse("2024-07-28 00:30:00 UTC") } # 8:30 AM Singapore
+      let(:singapore_tz) { "Asia/Singapore" }
+
+      let!(:log_sg1) do
+        AiApiAuditLog.create!(
+          provider_id: 1,
+          feature_name: "summarize",
+          language_model: "gpt-4",
+          request_tokens: 1000,
+          response_tokens: 50,
+          created_at: base_time,
+        )
+      end
+
+      let!(:log_sg2) do
+        AiApiAuditLog.create!(
+          provider_id: 1,
+          feature_name: "summarize",
+          language_model: "gpt-4",
+          request_tokens: 1000,
+          response_tokens: 50,
+          created_at: base_time - 1.hour,
+        )
+      end
+
+      it "shows correct data across timezone boundaries" do
+        report =
+          DiscourseAi::Completions::Report.new(
+            start_date: base_time.in_time_zone(singapore_tz).beginning_of_day,
+            end_date: base_time.in_time_zone(singapore_tz).end_of_day,
+            timezone: singapore_tz,
+          )
+
+        expect(report.tokens_by_period(:hour).count).to eq(2)
+      end
+    end
   end
 
   context "when not admin" do

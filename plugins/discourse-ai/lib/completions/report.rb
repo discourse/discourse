@@ -5,11 +5,16 @@ module DiscourseAi
       UNKNOWN_FEATURE = "unknown"
       USER_LIMIT = 50
 
-      attr_reader :start_date, :end_date, :base_query
+      attr_reader :start_date, :end_date, :base_query, :timezone
 
-      def initialize(start_date: 30.days.ago, end_date: Time.current)
+      def initialize(start_date: 30.days.ago, end_date: Time.current, timezone: Time.zone.name)
+        @timezone = timezone
+
+        Time.zone = timezone # Set the timezone for parsing dates in the user's timezone
         @start_date = start_date.beginning_of_day
         @end_date = end_date.end_of_day
+        Time.zone = nil # Reset to default timezone
+
         @base_query = AiApiAuditLog.where(created_at: @start_date..@end_date)
       end
 
@@ -100,16 +105,23 @@ module DiscourseAi
 
       def tokens_by_period(period = nil)
         period = guess_period(period)
-        base_query
-          .group("DATE_TRUNC('#{period}', created_at)")
-          .order("DATE_TRUNC('#{period}', created_at)")
-          .select(
-            "DATE_TRUNC('#{period}', created_at) as period",
-            "SUM(COALESCE(request_tokens + response_tokens, 0)) as total_tokens",
-            "SUM(COALESCE(cached_tokens,0)) as total_cached_tokens",
-            "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
-            "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
-          )
+        results =
+          base_query
+            .group("DATE_TRUNC('#{period}', created_at)")
+            .order("DATE_TRUNC('#{period}', created_at)")
+            .select(
+              "DATE_TRUNC('#{period}', created_at) as period",
+              "SUM(COALESCE(request_tokens + response_tokens, 0)) as total_tokens",
+              "SUM(COALESCE(cached_tokens,0)) as total_cached_tokens",
+              "SUM(COALESCE(request_tokens,0)) as total_request_tokens",
+              "SUM(COALESCE(response_tokens,0)) as total_response_tokens",
+            )
+
+        # Convert periods to user's timezone
+        results.map do |row|
+          row.period = row.period.in_time_zone(timezone)
+          row
+        end
       end
 
       def user_breakdown
