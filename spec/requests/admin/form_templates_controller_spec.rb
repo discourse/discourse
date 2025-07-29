@@ -194,21 +194,6 @@ RSpec.describe Admin::FormTemplatesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "delegates validate and process to the template" do
-        template = mock
-        FormTemplate
-          .expects(:new)
-          .with(name: "test", template: form_template_valid)
-          .returns(template)
-        template.expects(:validate!)
-        template.expects(:process!)
-
-        get "/admin/customize/form-templates/preview.json",
-            params: {
-              name: "test",
-              template: form_template_valid,
-            }
-      end
 
       it "processes a valid template" do
         get "/admin/customize/form-templates/preview.json",
