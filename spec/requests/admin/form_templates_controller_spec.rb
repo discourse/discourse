@@ -188,7 +188,7 @@ RSpec.describe Admin::FormTemplatesController do
           id: dumplicated
           attributes:
             label: "label"
-            placeholder: "placeholder"      
+            placeholder: "placeholder"
       YAML
 
     context "when logged in as an admin" do
