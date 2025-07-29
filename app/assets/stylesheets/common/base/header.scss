@@ -180,16 +180,11 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
-      background-color: var(--primary-low);
+      background-color: var(--d-hover);
 
       > .d-icon {
         color: var(--primary-medium);
       }
-    }
-
-    &:active {
-      color: var(--primary);
-      background-color: var(--primary-low);
     }
   }
 

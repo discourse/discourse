@@ -59,22 +59,13 @@ html {
 
 // Links
 // --------------------------------------------------
-a {
-  color: var(--tertiary);
+a,
+a:visited,
+a:hover,
+a:active {
+  color: var(--d-link-color);
   text-decoration: none;
   cursor: pointer;
-
-  &:visited {
-    color: var(--tertiary);
-  }
-
-  &:hover {
-    color: var(--tertiary);
-  }
-
-  &:active {
-    color: var(--tertiary);
-  }
 }
 
 // Typography
