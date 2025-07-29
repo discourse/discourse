@@ -1,8 +1,16 @@
+performance.mark("discourse-init");
+const initEvent = new CustomEvent("discourse-init");
+document.dispatchEvent(initEvent);
+
 import "./setup-deprecation-workflow";
 import "decorator-transforms/globals";
+import "./loader"; // todo, loader.js from npm?
 import "./loader-shims";
 import "./discourse-common-loader-shims";
 import "./global-compat";
+import "./compat-modules";
+import { importSync } from "@embroider/macros";
+import compatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 
 // Register Discourse's standard implicit injections on common framework classes.
@@ -10,11 +18,50 @@ registerDiscourseImplicitInjections();
 
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
-import require from "require";
+import "discourse/lib/theme-settings-store";
+// import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import PreloadStore from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
+
+function populatePreloadStore() {
+  let setupData;
+  const setupDataElement = document.getElementById("data-discourse-setup");
+  if (setupDataElement) {
+    setupData = setupDataElement.dataset;
+  }
+
+  let preloaded;
+  const preloadedDataElement = document.getElementById("data-preloaded");
+  if (preloadedDataElement) {
+    preloaded = JSON.parse(preloadedDataElement.dataset.preloaded);
+  }
+
+  const keys = Object.keys(preloaded);
+  if (keys.length === 0) {
+    throw "No preload data found in #data-preloaded. Unable to boot Discourse.";
+  }
+
+  keys.forEach(function (key) {
+    PreloadStore.store(key, JSON.parse(preloaded[key]));
+
+    if (setupData.debugPreloadedAppData === "true") {
+      // eslint-disable-next-line no-console
+      console.log(key, PreloadStore.get(key));
+    }
+  });
+}
+
+populatePreloadStore();
+
+let adminCompatModules = {};
+if (PreloadStore.get("currentUser")?.staff) {
+  adminCompatModules = (await import("admin/compat-modules")).default;
+}
+
+await loadThemes();
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -28,8 +75,7 @@ window.moduleBroker = {
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
+    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
     for (const [key, mod] of Object.entries(compatModules)) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
@@ -58,7 +104,17 @@ class Discourse extends Application {
     paste: "paste",
   };
 
-  Resolver = buildResolver("discourse");
+  Resolver = buildResolver("discourse").withModules({
+    ...compatModules,
+
+    "discourse/templates/discovery/list": importSync(
+      "discourse/templates/discovery/list"
+    ),
+    "discourse/controllers/discovery/list": importSync(
+      "discourse/controllers/discovery/list"
+    ),
+    ...adminCompatModules,
+  });
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {

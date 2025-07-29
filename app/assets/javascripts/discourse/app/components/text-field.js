@@ -1,4 +1,4 @@
-import { TextField } from "@ember/legacy-built-in-components";
+import TextField from "@ember/legacy-built-in-components/components/text-field";
 import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { attributeBindings } from "@ember-decorators/component";

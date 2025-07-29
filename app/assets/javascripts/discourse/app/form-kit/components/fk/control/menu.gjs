@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DMenu from "discourse/components/d-menu";
+import DMenu from "float-kit/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import FKControlMenuContainer from "discourse/form-kit/components/fk/control/menu/container";
 import FKControlMenuDivider from "discourse/form-kit/components/fk/control/menu/divider";
