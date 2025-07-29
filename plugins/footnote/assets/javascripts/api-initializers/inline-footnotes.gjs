@@ -1,6 +1,5 @@
 import { htmlSafe } from "@ember/template";
 import { apiInitializer } from "discourse/lib/api";
-import { iconHTML } from "discourse/lib/icon-library";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 const TooltipContentComponent = <template>
@@ -49,7 +48,6 @@ export default apiInitializer((api) => {
 
       const expandableFootnote = document.createElement("a");
       expandableFootnote.classList.add("expand-footnote");
-      expandableFootnote.innerHTML = iconHTML("ellipsis");
       expandableFootnote.href = "";
       expandableFootnote.role = "button";
       expandableFootnote.dataset.footnoteId = footnoteId;
