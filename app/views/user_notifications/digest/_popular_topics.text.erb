@@ -1,6 +1,6 @@
 <%- if @popular_topics.present? %>
   <%= digest_custom_text("above_popular_topics") %>
-  <%=t 'user_notifications.digest.popular_topics' %>
+  ### <%=t 'user_notifications.digest.popular_topics' %>
 
   <%- @popular_topics.each_with_index do |t,i| %>
     <%= raw(@markdown_linker.create(t.title, t.url)) %>
