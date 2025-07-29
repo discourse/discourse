@@ -171,7 +171,6 @@
     padding: 0.2143em;
     text-decoration: none;
     cursor: pointer;
-    border: 1px solid transparent;
     outline: none;
 
     img.avatar {
@@ -182,9 +181,6 @@
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
       background-color: var(--primary-low);
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
 
       > .d-icon {
         color: var(--primary-medium);
