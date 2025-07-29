@@ -5,6 +5,7 @@ import DPageHeader from "discourse/components/d-page-header";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import AdminFilterControls from "admin/components/admin-filter-controls";
 import ColorPaletteListItem from "admin/components/color-palette-list-item";
@@ -49,11 +50,27 @@ export default RouteTemplate(
         {{htmlSafe
           (i18n
             "admin.customize.colors.preference_warning"
-            link="/my/preferences/interface"
+            link=(getUrl "/my/preferences/interface")
           )
         }}
       </div>
     {{/if}}
+
+    {{#unless @controller.changedThemePreferences}}
+      {{! only show one alert at a time, changedThemePreferences takes precedence }}
+      {{#if @controller.isUsingDarkMode}}
+        <div class="alert alert-info">
+          {{htmlSafe
+            (i18n
+              "admin.customize.colors.dark_mode_warning"
+              link=(getUrl
+                "/admin/site_settings/category/all_results?filter=default dark mode"
+              )
+            )
+          }}
+        </div>
+      {{/if}}
+    {{/unless}}
 
     <AdminFilterControls
       @array={{@controller.sortedColorSchemes}}

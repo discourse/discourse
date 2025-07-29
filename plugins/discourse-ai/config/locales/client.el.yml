@@ -187,8 +187,6 @@ el:
           selected: "Επιλεγμένα"
         image_caption:
           save_caption: "Αποθήκευση"
-          automatic_caption_dialog:
-            confirm: "Ενεργοποίηση"
       embeddings:
         back: "Πίσω"
         save: "Αποθήκευση"

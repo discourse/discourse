@@ -1,10 +1,10 @@
 import { fn } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import UppyBackupUploader from "admin/components/uppy-backup-uploader";

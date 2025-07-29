@@ -200,7 +200,6 @@ es:
       search: "Buscar"
     themes:
       default_description: "Por defecto"
-      broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
       error_caused_by: "Causado por «%{name}». <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o desctivar."
       only_admins: "(este mensaje solo lo ven los administradores del sitio)"
     broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
@@ -4998,7 +4997,6 @@ es:
               title: "Registros de búsqueda"
         plugins:
           title: "Plugins instalados"
-          header_description: "En esta lista aparecerán todos los plugins de Discourse que tengas instalados o los que vienen preinstalados con el alojamiento de Discourse"
         api_keys:
           title: "Claves API"
           header_description: "La característica de claves API te permite integrar Discourse de forma segura con sistemas externos y automatizar acciones. Los administradores pueden crear claves con ámbitos específicos para controlar el acceso a recursos y datos sensibles. Los ámbitos limitan la funcionalidad, garantizando una mayor seguridad."
@@ -5710,6 +5708,11 @@ es:
         author: "Por %{author}"
         experimental_badge: "experimental"
         learn_more: "Más información"
+        filters:
+          all: "Todo"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          reset: "Restablecer"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"

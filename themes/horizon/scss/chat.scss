@@ -45,6 +45,19 @@ body.has-full-page-chat {
   }
 }
 
+// the below are elements whose z-index needs to be adjusted due to the above change
+.chat-message-actions-container {
+  .chat-drawer.is-expanded & {
+    z-index: calc(z("composer", "dropdown") + 1);
+  }
+}
+
+.fk-d-menu[data-identifier="usercard"] {
+  .has-drawer-chat & {
+    z-index: z("modal", "dialog");
+  }
+}
+
 .chat-drawer {
   .peek-mode-active & {
     max-width: 90vw;

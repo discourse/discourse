@@ -121,6 +121,6 @@ export default {
   name: "extend-for-poll",
 
   initialize() {
-    withPluginApi("0.8.7", initializePolls);
+    withPluginApi(initializePolls);
   },
 };

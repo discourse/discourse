@@ -13,6 +13,7 @@ export default function buildOptions(options) {
     emojiDenyList: context.site.denied_emojis,
     siteSettings: context.siteSettings,
     formatUsername,
+    unicodeUsernames: context.siteSettings.unicode_usernames,
     watchedWordsReplace: context.site.watched_words_replace,
     watchedWordsLink: context.site.watched_words_link,
     additionalOptions: context.site.markdown_additional_options,

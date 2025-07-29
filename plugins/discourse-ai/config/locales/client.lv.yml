@@ -125,8 +125,6 @@ lv:
           cancel: "Atcelt"
         image_caption:
           save_caption: "Saglabāt"
-          automatic_caption_dialog:
-            confirm: "Ieslēgt"
       embeddings:
         back: "Atpakaļ"
         save: "Saglabāt"

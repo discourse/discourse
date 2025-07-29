@@ -5,7 +5,7 @@
 .chat-channel-row {
   margin: 0;
   border-radius: 0;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   transition:
     height 0.25s ease-in-out,
     opacity 0.25s ease-out;

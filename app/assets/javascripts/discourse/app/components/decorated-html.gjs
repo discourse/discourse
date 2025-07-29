@@ -4,6 +4,7 @@ import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import helperFn from "discourse/helpers/helper-fn";
 import deprecated from "discourse/lib/deprecated";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
@@ -30,12 +31,36 @@ export default class DecoratedHtml extends Component {
     // use of `untrack` below
     decorateArgs && Object.values(decorateArgs);
 
-    untrack(() => decorateFn?.(cookedDiv, helper, decorateArgs));
+    try {
+      untrack(() => decorateFn?.(cookedDiv, helper, decorateArgs));
+    } catch (e) {
+      if (isRailsTesting() || isTesting()) {
+        throw e;
+      } else {
+        // in case one of the decorators throws an error we want to surface it to the console but prevent
+        // the application from crashing
+
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    }
 
     document.adoptNode(cookedDiv);
 
-    const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
-    untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper, decorateArgs));
+    try {
+      const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
+      untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper, decorateArgs));
+    } catch (e) {
+      if (isRailsTesting() || isTesting()) {
+        throw e;
+      } else {
+        // in case one of the decorators throws an error we want to surface it to the console but prevent
+        // the application from crashing
+
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    }
 
     return cookedDiv;
   });

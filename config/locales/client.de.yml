@@ -201,7 +201,6 @@ de:
       search: "Suche"
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
       error_caused_by: "Verursacht durch „%{name}“. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
       only_admins: "(Diese Nachricht wird nur Website-Administratoren angezeigt)"
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
@@ -2486,6 +2485,9 @@ de:
     welcome_banner_location:
       above_topic_content: "Über Themeninhalt"
       below_site_header: "Unter der Kopfzeile"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Rich Text"
     shortcut_modifier_key:
       shift: "Umschalt"
       ctrl: "Strg"
@@ -4868,7 +4870,7 @@ de:
               title: "Alle Abzeichen, die es zu verdienen gibt"
             filter:
               content: "Filter"
-              title: "Themen nach Kategorie, Tag oder anderen Kriterien filtern"
+              title: "Themen nach Kategorie, Schlagwort oder anderen Kriterien filtern"
             topics:
               content: "Themen"
               title: "Alle Themen"
@@ -5025,7 +5027,7 @@ de:
     powered_by_discourse: "Bereitgestellt von Discourse"
     safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
     filter:
-      placeholder: "Themen nach Kategorie, Tag oder anderen Kriterien filtern"
+      placeholder: "Themen nach Kategorie, Schlagwort oder anderen Kriterien filtern"
       description:
         yesterday: "Gestern"
         last_week: "Letzte Woche"
@@ -5104,6 +5106,7 @@ de:
       title: "Discourse-Administrator"
       moderator: "Moderator"
       filter_reports: Berichte filtern
+      filter_reports_no_results: "Keine Berichte entsprechen deinem Filter"
       tags:
         remove_muted_tags_from_latest:
           always: "immer"
@@ -5351,6 +5354,7 @@ de:
           header_description: "Beobachtete Wörter sind Moderationswerkzeuge, die verschiedene Aktionen durchführen können, z. B. das Blockieren, Zensieren, Verlinken oder Melden von Beiträgen, die bestimmte Wörter enthalten"
         color_palettes:
           title: "Farbpaletten"
+          header_description: "Diese Paletten steuern die Farben, die in deiner Community verwendet werden. Wenn du eine Palette für Benutzer auswählbar machst, können die Mitglieder ihre bevorzugten Farben in ihren Einstellungen wählen."
         emoji:
           title: "Emoji"
           header_description: "Füge neue Emojis hinzu, die dann für alle verfügbar sind. Wähle mehrere Dateien aus, um Emojis unter Verwendung ihrer Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden."
@@ -5431,7 +5435,7 @@ de:
               header_description: "Sieh dir ein Protokoll der durchgeführten Suchvorgänge an"
         plugins:
           title: "Installierte Plug-ins"
-          header_description: "Alle Discourse-Plug-ins, die du installiert hast, oder Plug-ins, die beim Discourse-Hosting vorinstalliert sind, erscheinen in dieser Liste"
+          header_description: "Plug-ins erweitern deine Community um zusätzliche Funktionen. Im Folgenden sind sowohl vorinstallierte als auch eigene Plug-ins aufgeführt."
         api_keys:
           title: "API-Schlüssel"
           header_description: "Mit den API-Schlüsseln kannst du Discourse sicher mit externen Systemen verbinden und Aktionen automatisieren. Admins können Schlüssel mit bestimmten Gültigkeitsbereichen erstellen, um den Zugriff auf Ressourcen und sensible Daten zu kontrollieren. Bereiche schränken die Funktionalität ein und sorgen für mehr Sicherheit."
@@ -6216,6 +6220,14 @@ de:
         experimental_badge: "experimentell"
         learn_more: "Mehr erfahren"
         preinstalled: "Vorinstalliert"
+        filters:
+          all: "Alle"
+          enabled: "Aktiviert"
+          disabled: "Deaktiviert"
+          preinstalled: "Vorinstalliert"
+          search_placeholder: "Plug-ins suchen..."
+          reset: "Zurücksetzen"
+          no_results: "Keine Plug-ins gefunden, die deinen Filtern entsprechen"
       navigation_menu:
         sidebar: "Seitenleiste"
         header_dropdown: "Kopfzeilen-Drop-down"
@@ -6581,14 +6593,24 @@ de:
           select_base:
             title: "Wähle Basis-Farbpalette"
             description: "Basis-Palette:"
+          preference_warning: "Du hast <a href='%{link}'>deine persönlichen Theme-Einstellungen</a> geändert, sodass die Änderungen an der Palette für dich möglicherweise nicht sichtbar sind. Besucher, die ihre Standardeinstellungen nicht geändert haben, sehen trotzdem die Änderungen, die du hier vornimmst."
           title: "Farben"
           edit: "Bearbeiten"
+          set_default: "Als aktiv für %{theme} festlegen"
+          set_default_success: "%{schemeName} als aktive Palette für %{themeName} festgelegt"
+          saved_refreshing: "Gespeichert! Aktualisiere Farben..."
+          from_theme: "Vom Theme: %{name}"
           filters:
+            search_placeholder: "Suche nach Name oder Theme..."
             all: "Gesamt"
             user_selectable: "Vom Benutzer wählbar"
+            from_theme: "Vom Theme"
+            no_results: "Keine Farbpaletten gefunden"
+            reset: "Filter zurücksetzen"
           active_badge:
             text: "Aktiv"
             title: "Aktive Farbpalette"
+          system_palette: "Dies ist eine integrierte Farbpalette, sie kann nicht bearbeitet oder gelöscht werden."
           back_to_colors: "Zurück zu Farbpaletten"
           long_title: "Farbpaletten"
           about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."

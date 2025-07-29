@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 ur:
+  site_settings:
+    enable_markdown_footnotes: اس سائٹ پر فوٹ نوٹ مارک ڈاؤن کو فعال کریں
+    display_footnotes_inline: فوٹ نوٹ کی ان لائن توسیع کو فعال کریں

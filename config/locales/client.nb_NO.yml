@@ -198,7 +198,6 @@ nb_NO:
       search: "Søk"
     themes:
       default_description: "Forvalg"
-      broken_theme_alert: "Det kan hende at nettstedet ditt ikke fungerer fordi et tema/en komponent har feil."
       error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
       only_admins: "(denne meldingen vises bare til nettstedets administratorer)"
     broken_decorator_alert: "Innlegg vises kanskje ikke riktig fordi en av dekoratorene for innleggsinnhold på nettstedet ditt har gitt en feil."
@@ -4846,6 +4845,11 @@ nb_NO:
         howto: "Hvordan installerer jeg utvidelser?"
         author: "Av %{author}"
         learn_more: "Finn ut mer"
+        filters:
+          all: "Alle"
+          enabled: "Aktivert"
+          disabled: "Deaktivert"
+          reset: "Tilbakestill"
       backups:
         title: "Sikkerhetskopier"
         menu:

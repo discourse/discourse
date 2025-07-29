@@ -43,6 +43,9 @@ export default class AiPersonaLlmSelector extends Component {
     }
 
     let enabledPersonas = this.currentUser.ai_enabled_personas;
+    enabledPersonas = enabledPersonas.filter(
+      (persona) => persona.allow_personal_messages
+    );
 
     if (!this.hasLlmSelector) {
       enabledPersonas = enabledPersonas.filter((persona) => persona.username);
@@ -130,8 +133,30 @@ export default class AiPersonaLlmSelector extends Component {
     return this.allowLLMSelector && this.llmOptions.length > 1;
   }
 
+  #getPersonaIdFromAttrs() {
+    const personaName = this.args?.personaName;
+    if (personaName) {
+      const persona = this.botOptions.find((p) => p.name === personaName);
+      if (persona) {
+        return persona.id;
+      }
+    }
+  }
+
+  #getLlmIdFromAttrs() {
+    const llmName = this.args?.llmName;
+    if (llmName) {
+      const llm = this.llmOptions.find((l) => l.name === llmName);
+      if (llm) {
+        return llm.id;
+      }
+    }
+  }
+
   #loadStoredPersona() {
-    let personaId = this.keyValueStore.getItem(PERSONA_SELECTOR_KEY);
+    let personaId =
+      this.#getPersonaIdFromAttrs() ||
+      this.keyValueStore.getItem(PERSONA_SELECTOR_KEY);
 
     this._value = this.botOptions[0].id;
     if (personaId) {
@@ -148,7 +173,9 @@ export default class AiPersonaLlmSelector extends Component {
     this.setAllowLLMSelector();
 
     if (this.hasLlmSelector) {
-      let llmId = this.keyValueStore.getItem(LLM_SELECTOR_KEY);
+      let llmId =
+        this.#getLlmIdFromAttrs() ||
+        this.keyValueStore.getItem(LLM_SELECTOR_KEY);
       if (llmId) {
         llmId = parseInt(llmId, 10);
       }

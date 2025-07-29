@@ -85,7 +85,7 @@ export default {
   name: "extend-for-policy",
 
   initialize() {
-    withPluginApi("0.8.7", function (api) {
+    withPluginApi(function (api) {
       api.decorateCookedElement(attachPolicy, {
         onlyStream: false,
         id: "discourse-policy",

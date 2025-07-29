@@ -515,12 +515,6 @@ it:
           generating: "Generazione didascalia in corso..."
           credits: "Didascalia da IA"
           save_caption: "Salva"
-          automatic_caption_setting: "Abilita sottotitoli automatici"
-          automatic_caption_loading: "Generazione delle didascalie delle immagini..."
-          automatic_caption_dialog:
-            prompt: "Questo post contiene immagini senza didascalie. Desideri abilitare le didascalie automatiche sui caricamenti di immagini? (Questa opzione può essere modificata nelle tue preferenze in seguito)"
-            confirm: "Abilita"
-            cancel: "Non chiedermelo più"
         no_content_error: "Aggiungi prima il contenuto per eseguire azioni IA su di esso"
       reviewables:
         model_used: "Modello utilizzato:"

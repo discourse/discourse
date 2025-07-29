@@ -39,6 +39,7 @@ cs:
       date: "Datum"
       add_to_calendar: "Přidat do Kalendáře Google"
       toggle_timezone_offset_title: "Přepnout posun časového pásma"
+      local_time: "Místní čas"
       region:
         title: "Region"
         none: "Žádná"
@@ -377,6 +378,8 @@ cs:
         creator: "Vytvořil/a"
         status: "Stav"
         starts_at: "Začíná v"
+        all_events: "Všechny události"
+        my_events: "Moje události"
       upcoming_events_list:
         title: "Nadcházející události"
         empty: "Žádné nadcházející události"
@@ -487,8 +490,10 @@ cs:
           placeholder: "Volitelné"
         location:
           label: "Poloha"
+          placeholder: "Přidejte místo, odkaz, atp."
         description:
           label: "Popis"
+          placeholder: "Řekněte lidem o své akci něco víc. Podporovány jsou nové řádky a odkazy."
         name:
           label: "Název události"
           placeholder: "Volitelný, ve výchozím stavu název tématu"

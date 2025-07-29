@@ -225,7 +225,7 @@ module PostGuardian
     # Can't delete the first post
     return false if post.is_first_post?
 
-    return true if is_staff? || is_category_group_moderator?(post.topic&.category)
+    return true if is_category_group_moderator?(post.topic&.category)
 
     return true if user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
 
@@ -388,7 +388,7 @@ module PostGuardian
   end
 
   def can_see_deleted_posts?(category = nil)
-    is_staff? || is_category_group_moderator?(category) ||
+    is_category_group_moderator?(category) ||
       @user.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 

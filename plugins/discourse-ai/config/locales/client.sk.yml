@@ -708,12 +708,6 @@ sk:
           generating: "Generovanie titulkov..."
           credits: "S titulkami od AI"
           save_caption: "Uložiť"
-          automatic_caption_setting: "Povolenie automatického podpisu"
-          automatic_caption_loading: "Podpisovanie obrázkov..."
-          automatic_caption_dialog:
-            prompt: "Tento príspevok obsahuje obrázky bez titulkov. Chcete povoliť automatické popisky pri nahrávaní obrázkov? (Toto môžete neskôr zmeniť v nastaveniach)"
-            confirm: "Povoliť"
-            cancel: "Nepýtaj sa znova"
         no_content_error: "Najprv pridajte obsah, aby ste na ňom mohli vykonávať akcie AI"
       reviewables:
         model_used: "Použitý model:"

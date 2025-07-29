@@ -78,90 +78,6 @@ RSpec.describe DiscourseJsProcessor do
     expect(result).to include("static #_ = (() => dt7948.n")
   end
 
-  it "correctly transpiles widget hbs" do
-    result = DiscourseJsProcessor.transpile(<<~JS, "blah", "blah/mymodule")
-      import hbs from "discourse/widgets/hbs-compiler";
-      const template = hbs`{{somevalue}}`;
-    JS
-    expect(result).to eq <<~JS.strip
-      define("blah/mymodule", [], function () {
-        "use strict";
-
-        const template = function (attrs, state) {
-          var _r = [];
-          _r.push(somevalue);
-          return _r;
-        };
-      });
-    JS
-  end
-
-  it "correctly transpiles ember hbs" do
-    result = DiscourseJsProcessor.transpile(<<~JS, "blah", "blah/mymodule")
-      import { hbs } from 'ember-cli-htmlbars';
-      const template = hbs`{{somevalue}}`;
-    JS
-    expect(result).to eq <<~JS.strip
-      define("blah/mymodule", ["@ember/template-factory"], function (_templateFactory) {
-        "use strict";
-
-        const template = (0, _templateFactory.createTemplateFactory)(
-        /*
-          {{somevalue}}
-        */
-        {
-          "id": null,
-          "block": "[[[1,[35,0]]],[],false,[\\"somevalue\\"]]",
-          "moduleName": "/blah/mymodule",
-          "isStrictMode": false
-        });
-      });
-    JS
-  end
-
-  describe "Ember template transformations" do
-    # For the Ember (Glimmer) templates, serverside rendering is not trivial,
-    # so we compile the expected result with the standard compiler and compare to the theme compiler
-    let(:theme_id) { 22 }
-
-    def theme_compile(template)
-      script = <<~JS
-        import { hbs } from 'ember-cli-htmlbars';
-        export default hbs(#{template.to_json});
-      JS
-      result = DiscourseJsProcessor.transpile(script, "", "theme/blah", theme_id: theme_id)
-      result.gsub(%r{/\*(.*)\*/}m, "/* (js comment stripped) */")
-    end
-
-    def standard_compile(template)
-      script = <<~JS
-        import { hbs } from 'ember-cli-htmlbars';
-        export default hbs(#{template.to_json});
-      JS
-      result = DiscourseJsProcessor.transpile(script, "", "theme/blah")
-      result.gsub(%r{/\*(.*)\*/}m, "/* (js comment stripped) */")
-    end
-
-    it "adds the theme id to the helpers" do
-      expect(theme_compile "{{theme-prefix 'translation_key'}}").to eq(
-        standard_compile "{{theme-prefix #{theme_id} 'translation_key'}}"
-      )
-
-      expect(theme_compile "{{theme-i18n 'translation_key'}}").to eq(
-        standard_compile "{{theme-i18n #{theme_id} 'translation_key'}}"
-      )
-
-      expect(theme_compile "{{theme-setting 'setting_key'}}").to eq(
-        standard_compile "{{theme-setting #{theme_id} 'setting_key'}}"
-      )
-
-      # Works when used inside other statements
-      expect(theme_compile "{{dummy-helper (theme-prefix 'translation_key')}}").to eq(
-        standard_compile "{{dummy-helper (theme-prefix #{theme_id} 'translation_key')}}"
-      )
-    end
-  end
-
   describe "Transpiler#terser" do
     it "can minify code and provide sourcemaps" do
       sources = {
@@ -190,5 +106,216 @@ RSpec.describe DiscourseJsProcessor do
       expect(map["sources"]).to contain_exactly(*sources.keys)
       expect(map["sourcesContent"]).to contain_exactly(*sources.values)
     end
+  end
+
+  describe "Transpiler#rollup" do
+    it "can rollup code" do
+      sources = { "discourse/initializers/hello.gjs" => <<~JS }
+          someDecorator = () => {}
+          export default class MyClass {
+            @someDecorator
+            myMethod() {
+              console.log("hello world");
+            }
+            <template>
+              <div>template content</div>
+            </template>
+          }
+        JS
+
+      result = DiscourseJsProcessor::Transpiler.new.rollup(sources, {})
+
+      code = result["code"]
+      expect(code).to include('"hello world"')
+      expect(code).to include("dt7948") # Decorator transform
+
+      expect(result["map"]).not_to be_nil
+    end
+
+    it "supports decorators and class properties without error" do
+      script = <<~JS.chomp
+        export default class MyClass {
+          classProperty = 1;
+          #privateProperty = 1;
+          #privateMethod() {
+            console.log("hello world");
+          }
+          @decorated
+          myMethod(){
+          }
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          {},
+        )
+      expect(result["code"]).to include("() => dt7948.n")
+    end
+
+    it "supports object literal decorators without errors" do
+      script = <<~JS.chomp
+        export default {
+          @decorated foo: "bar",
+
+          @decorated
+          myMethod() {
+            console.log("hello world");
+          }
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          {},
+        )
+      expect(result["code"]).to include("dt7948")
+    end
+
+    it "can use themePrefix in a template" do
+      script = <<~JS.chomp
+        themePrefix();
+        export default class Foo {
+          <template>{{themePrefix "bar"}}</template>
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.gjs" => script },
+          { themeId: 22 },
+        )
+      expect(result["code"]).to include(
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+      )
+    end
+
+    it "can use themePrefix not in a template" do
+      script = <<~JS.chomp
+        export default function foo() {
+          return themePrefix("bar");
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          { themeId: 22 },
+        )
+      expect(result["code"]).to include(
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+      )
+    end
+  end
+
+  it "can compile hbs" do
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        { "discourse/connectors/outlet-name/foo.hbs" => template },
+        { themeId: 22 },
+      )
+    expect(result["code"]).to include("createTemplateFactory")
+  end
+
+  it "handles colocation" do
+    js = <<~JS.chomp
+      import Component from "@glimmer/component";
+      export default class MyComponent extends Component {}
+    JS
+
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    onlyTemplate = <<~HBS.chomp
+      {{log "hello galaxy"}}
+    HBS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/foo.js" => js,
+          "discourse/components/foo.hbs" => template,
+          "discourse/components/bar.hbs" => onlyTemplate,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).to include("setComponentTemplate")
+    expect(result["code"]).to include(
+      "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
+    )
+  end
+
+  it "handles relative imports from one module to another" do
+    mod_1 = <<~JS.chomp
+      export default "test";
+    JS
+
+    mod_2 = <<~JS.chomp
+      import MyComponent from "../components/my-component";
+      console.log(MyComponent);
+    JS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/my-component.js" => mod_1,
+          "discourse/components/other-component.js" => mod_2,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).not_to include("../components/my-component")
+  end
+
+  it "handles relative import of index file" do
+    mod_1 = <<~JS.chomp
+      import MyComponent from "./other-component";
+      console.log(MyComponent);
+    JS
+
+    mod_2 = <<~JS.chomp
+      export default "test";
+    JS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/my-component.js" => mod_1,
+          "discourse/components/other-component/index.js" => mod_2,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).not_to include("../components/my-component")
+  end
+
+  it "handles relative import of gjs index file" do
+    mod_1 = <<~JS.chomp
+      import MyComponent from "./other-component";
+      console.log(MyComponent);
+    JS
+
+    mod_2 = <<~JS.chomp
+      export default "test";
+    JS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/my-component.gjs" => mod_1,
+          "discourse/components/other-component/index.gjs" => mod_2,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).not_to include("../components/my-component")
   end
 end

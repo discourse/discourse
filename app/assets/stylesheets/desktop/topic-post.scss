@@ -17,7 +17,7 @@
   float: left;
   min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   padding: var(--space-3) 0 0 0;
 
   .topic-meta-data {
@@ -159,7 +159,7 @@ pre.codeblock-buttons:hover {
 }
 
 .embedded-posts {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
 
   h1,
   h2,
@@ -191,7 +191,7 @@ pre.codeblock-buttons:hover {
     position: absolute;
     color: var(--primary-medium);
     background: var(--secondary);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
 
@@ -522,7 +522,7 @@ video {
 }
 
 .topic-avatar {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   padding-top: var(--space-4);
   width: var(--topic-avatar-width);
   float: left;

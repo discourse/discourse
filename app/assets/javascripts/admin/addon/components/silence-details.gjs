@@ -1,7 +1,7 @@
 import Component, { Textarea } from "@ember/component";
+import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import TextField from "discourse/components/text-field";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 
 @tagName("")

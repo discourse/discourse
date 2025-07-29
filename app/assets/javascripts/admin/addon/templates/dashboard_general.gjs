@@ -1,13 +1,13 @@
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import basePath from "discourse/helpers/base-path";
 import formatDate from "discourse/helpers/format-date";
-import getUrl from "discourse/helpers/get-url";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import AdminReport from "admin/components/admin-report";
 import DashboardPeriodSelector from "admin/components/dashboard-period-selector";

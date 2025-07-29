@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 
 @classNames("product")

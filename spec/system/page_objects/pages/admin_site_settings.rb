@@ -41,6 +41,16 @@ module PageObjects
         self
       end
 
+      def select_enum_value(setting_name, value)
+        setting =
+          PageObjects::Components::SelectKit.new(
+            ".row.setting[data-setting='#{setting_name}'] .single-select",
+          )
+        setting.expand
+        setting.select_row_by_value(value)
+        self
+      end
+
       def has_setting?(setting_name)
         has_css?(".row.setting[data-setting=\"#{setting_name}\"]")
       end

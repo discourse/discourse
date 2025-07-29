@@ -197,7 +197,6 @@ da:
       search: "Søg"
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi et tema/en komponent har fejl."
       error_caused_by: "Forårsaget af '%{name}'. <a target='blank' href='%{path}'>Klik her</a> for at opdatere, omkonfigurere, eller slå fra."
       only_admins: "(denne meddelelse vises kun til webstedsadministratorer)"
     broken_decorator_alert: "Indlæg vises muligvis ikke korrekt, fordi en af indlægsindholddekoratørerne på dit websted gav en fejl."
@@ -4781,6 +4780,11 @@ da:
         author: "Af %{author}"
         experimental_badge: "eksperimentel"
         learn_more: "Lær mere"
+        filters:
+          all: "Alle"
+          enabled: "Aktiveret"
+          disabled: "Deaktiveret"
+          reset: "Nulstil"
       navigation_menu:
         sidebar: "Sidebjælke"
       backups:

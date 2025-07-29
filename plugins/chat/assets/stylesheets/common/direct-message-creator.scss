@@ -7,7 +7,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .title {
       font-weight: 700;
@@ -20,7 +20,7 @@
     padding: 1rem;
     display: flex;
     align-items: flex-start;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     cursor: text;
     position: relative;
 
@@ -112,7 +112,7 @@
     display: flex;
     margin: 0;
     flex-wrap: wrap;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     box-shadow: var(--shadow-card);
     position: absolute;
     width: 100%;

@@ -14,7 +14,7 @@ hu:
     ai_bot:
       tool_summary:
         search: "Keresés"
-        tags: "Címkék listázása"
+        tags: "Címkék felsorolása"
         time: "Idő"
         summarize: "Összefoglalás"
     sentiment:

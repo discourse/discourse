@@ -191,11 +191,16 @@ describe "Content Localization" do
     let(:banner) { PageObjects::Components::AdminChangesBanner.new }
 
     it "does not allow more than the maximum number of locales" do
+      SiteSetting.content_localization_supported_locales = "en|ja"
       SiteSetting.content_localization_max_locales = 2
       sign_in(admin)
 
       settings_page.visit("content_localization_supported_locales")
-      settings_page.select_list_values("content_localization_supported_locales", %w[en ja es])
+      expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
+        "English (US), Japanese",
+      )
+
+      settings_page.select_list_values("content_localization_supported_locales", %w[es])
       settings_page.save_setting("content_localization_supported_locales")
       expect(settings_page.error_message("content_localization_supported_locales")).to have_content(
         I18n.t(

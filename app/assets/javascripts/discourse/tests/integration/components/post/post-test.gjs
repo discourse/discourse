@@ -292,29 +292,35 @@ module("Integration | Component | Post", function (hooks) {
 
   test("language", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "English";
+    this.post.language = "en";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
 
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").hasText(
       i18n("post.original_language", {
-        language: "English",
+        language: "English (US)",
       })
     );
   });
 
   test("outdated localization", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "English";
+    this.post.language = "en";
     this.post.localization_outdated = true;
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
 
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").hasText(
       i18n("post.original_language_and_outdated", {
-        language: "English",
+        language: "English (US)",
       })
     );
   });

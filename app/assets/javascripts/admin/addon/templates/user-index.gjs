@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { and, gt } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -9,7 +10,6 @@ import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
-import htmlSafe from "discourse/helpers/html-safe";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
@@ -575,9 +575,9 @@ export default RouteTemplate(
           </div>
           <div class="controls">
             <strong>{{i18n "admin.user.suspend_reason"}}</strong>:
-            <div
-              class="full-reason"
-            >{{@controller.model.full_suspend_reason}}</div>
+            <div class="full-reason">{{htmlSafe
+                @controller.model.full_suspend_reason
+              }}</div>
           </div>
         </div>
       {{/if}}

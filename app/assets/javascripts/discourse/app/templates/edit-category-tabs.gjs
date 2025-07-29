@@ -1,12 +1,12 @@
 import { fn } from "@ember/helper";
 import { getOwner } from "@ember/owner";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { and, not } from "truth-helpers";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import DButton from "discourse/components/d-button";
 import EditCategoryTab from "discourse/components/edit-category-tab";
 import Form from "discourse/components/form";
-import htmlSafe from "discourse/helpers/html-safe";
 
 function lookupComponent(context, name) {
   return getOwner(context).resolveRegistration(`component:${name}`);

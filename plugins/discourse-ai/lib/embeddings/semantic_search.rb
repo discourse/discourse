@@ -6,8 +6,8 @@ module DiscourseAi
       def self.clear_cache_for(query)
         digest = OpenSSL::Digest::SHA1.hexdigest(query)
 
-        hyde_key =
-          "semantic-search-#{digest}-#{SiteSetting.ai_embeddings_semantic_search_hyde_model}"
+        hyde_model_id = find_ai_hyde_model_id
+        hyde_key = "semantic-search-#{digest}-#{hyde_model_id}"
 
         Discourse.cache.delete(hyde_key)
         Discourse.cache.delete("#{hyde_key}-#{SiteSetting.ai_embeddings_selected_model}")
@@ -20,12 +20,9 @@ module DiscourseAi
 
       def cached_query?(query)
         digest = OpenSSL::Digest::SHA1.hexdigest(query)
+        hyde_model_id = self.class.find_ai_hyde_model_id
         embedding_key =
-          build_embedding_key(
-            digest,
-            SiteSetting.ai_embeddings_semantic_search_hyde_model,
-            SiteSetting.ai_embeddings_selected_model,
-          )
+          build_embedding_key(digest, hyde_model_id, SiteSetting.ai_embeddings_selected_model)
 
         Discourse.cache.read(embedding_key).present?
       end
@@ -36,14 +33,11 @@ module DiscourseAi
 
       def hyde_embedding(search_term)
         digest = OpenSSL::Digest::SHA1.hexdigest(search_term)
-        hyde_key = build_hyde_key(digest, SiteSetting.ai_embeddings_semantic_search_hyde_model)
+        hyde_model_id = self.class.find_ai_hyde_model_id
+        hyde_key = build_hyde_key(digest, hyde_model_id)
 
         embedding_key =
-          build_embedding_key(
-            digest,
-            SiteSetting.ai_embeddings_semantic_search_hyde_model,
-            SiteSetting.ai_embeddings_selected_model,
-          )
+          build_embedding_key(digest, hyde_model_id, SiteSetting.ai_embeddings_selected_model)
 
         hypothetical_post =
           Discourse
@@ -111,6 +105,7 @@ module DiscourseAi
         max_semantic_results_per_page = 100
         search = Search.new(query, { guardian: guardian })
         search_term = search.term
+        hyde_model_id = self.class.find_ai_hyde_model_id
 
         return [] if search_term.nil? || search_term.length < SiteSetting.min_search_term_length
 
@@ -119,11 +114,7 @@ module DiscourseAi
         digest = OpenSSL::Digest::SHA1.hexdigest(search_term)
 
         embedding_key =
-          build_embedding_key(
-            digest,
-            SiteSetting.ai_embeddings_semantic_search_hyde_model,
-            SiteSetting.ai_embeddings_selected_model,
-          )
+          build_embedding_key(digest, hyde_model_id, SiteSetting.ai_embeddings_selected_model)
 
         search_term_embedding =
           Discourse
@@ -210,15 +201,28 @@ module DiscourseAi
 
       # Priorities are:
       #   1. Persona's default LLM
-      #   2. `ai_embeddings_semantic_search_hyde_model` setting.
+      #   2. SiteSetting.ai_default_llm_id (or newest LLM if not set)
       def find_ai_hyde_model(persona_klass)
-        model_id =
-          persona_klass.default_llm_id ||
-            SiteSetting.ai_embeddings_semantic_search_hyde_model&.split(":")&.last
+        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
-        return if model_id.blank?
+        if model_id.present?
+          LlmModel.find_by(id: model_id)
+        else
+          LlmModel.last
+        end
+      end
 
-        LlmModel.find_by(id: model_id)
+      def self.find_ai_hyde_model_id
+        persona_llm_id =
+          AiPersona.find_by(
+            id: SiteSetting.ai_embeddings_semantic_search_hyde_persona,
+          )&.default_llm_id
+
+        if persona_llm_id.present?
+          persona_llm_id
+        else
+          SiteSetting.ai_default_llm_model.to_i || LlmModel.last&.id
+        end
       end
 
       private

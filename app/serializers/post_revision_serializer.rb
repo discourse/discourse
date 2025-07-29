@@ -194,9 +194,8 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def locale_changes
-    prev = LocaleSiteSetting.get_language_name(previous["locale"])
-    cur = LocaleSiteSetting.get_language_name(current["locale"])
-
+    prev = previous["locale"].presence
+    cur = current["locale"].presence
     { previous: prev, current: cur }
   end
 

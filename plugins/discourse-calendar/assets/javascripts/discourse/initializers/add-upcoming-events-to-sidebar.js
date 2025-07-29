@@ -10,7 +10,7 @@ export default {
       siteSettings.discourse_post_event_enabled &&
       siteSettings.sidebar_show_upcoming_events
     ) {
-      withPluginApi("0.8.7", (api) => {
+      withPluginApi((api) => {
         api.addCommunitySectionLink((baseSectionLink) => {
           return class UpcomingEventsSectionLink extends baseSectionLink {
             name = "upcoming-events";

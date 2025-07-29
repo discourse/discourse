@@ -173,7 +173,6 @@ zh_CN:
       search: "搜索"
     themes:
       default_description: "默认"
-      broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向网站管理员显示）"
     broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发了错误。"
@@ -2334,6 +2333,9 @@ zh_CN:
       disabled: "不显示"
       sidebar_footer: "在侧边栏页脚中显示"
       header: "在页眉中显示"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "富文本"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -5099,7 +5101,6 @@ zh_CN:
               header_description: "查看已执行搜索的日志"
         plugins:
           title: "安装的插件"
-          header_description: "您安装的任何 Discourse 插件，或由 Discourse 托管预安装的插件都将出现在此列表中"
         api_keys:
           title: "API 密钥"
           header_description: "API 密钥功能可让您安全地将 Discourse 与外部系统集成并自动执行操作。管理员可以创建具有特定范围的密钥来控制对资源和敏感数据的访问。范围限制功能，确保增强的安全性。"
@@ -5861,6 +5862,11 @@ zh_CN:
         author: "作者 %{author}"
         experimental_badge: "实验性"
         learn_more: "了解详情"
+        filters:
+          all: "所有"
+          enabled: "已启用"
+          disabled: "已禁用"
+          reset: "重置"
       navigation_menu:
         sidebar: "边栏"
         header_dropdown: "标题下拉菜单"

@@ -15,6 +15,7 @@ export default class AdminCustomizeColorsController extends Controller {
   @service toasts;
   @service session;
   @service site;
+  @service siteSettings;
 
   @tracked defaultTheme = null;
 
@@ -28,7 +29,13 @@ export default class AdminCustomizeColorsController extends Controller {
   _sortedOnce = false;
 
   get canPreviewColorScheme() {
-    return currentThemeId() === this.defaultTheme?.id;
+    const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
+    const usingDefaultLightScheme =
+      this._initialUserColorSchemeId === this._initialDefaultThemeColorSchemeId;
+
+    return (
+      usingDefaultTheme && usingDefaultLightScheme && !this.isUsingDarkMode
+    );
   }
 
   get allBaseColorSchemes() {
@@ -51,6 +58,15 @@ export default class AdminCustomizeColorsController extends Controller {
     const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
 
     return changedColors || changedTheme;
+  }
+
+  get isUsingDarkMode() {
+    // check if user has dark mode available and is using it
+    return (
+      this.session.darkModeAvailable &&
+      this.session.userDarkSchemeId !== -1 &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
   }
 
   get sortedColorSchemes() {
@@ -96,7 +112,7 @@ export default class AdminCustomizeColorsController extends Controller {
     if (lightBaseScheme) {
       const builtInDefault = {
         ...lightBaseScheme,
-        id: 0,
+        id: null,
         name: i18n("admin.customize.theme.default_light_scheme"),
         description: i18n("admin.customize.theme.default_light_scheme"),
         is_builtin_default: true,
@@ -172,9 +188,18 @@ export default class AdminCustomizeColorsController extends Controller {
   @action
   async setAsDefaultThemePalette(scheme) {
     try {
-      if (this.canPreviewColorScheme) {
-        this.defaultTheme = await setDefaultColorScheme(scheme, this.store);
+      let previewMode;
+      if (scheme.is_builtin_default) {
+        previewMode = "reload";
+      } else if (this.canPreviewColorScheme) {
+        previewMode = "live";
+      } else {
+        previewMode = "none";
       }
+
+      this.defaultTheme = await setDefaultColorScheme(scheme, this.store, {
+        previewMode,
+      });
 
       if (!this.canPreviewColorScheme) {
         const schemeName = scheme.description || scheme.name;

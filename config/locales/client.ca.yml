@@ -201,7 +201,6 @@ ca:
       search: "Cerca"
     themes:
       default_description: "Per defecte"
-      broken_theme_alert: "És possible que el vostre lloc no funcioni perquè una aparença o component té errors."
       error_caused_by: "Causat per '%{name}'. <a target='blank' href='%{path}'>Feu clic aquí</a> per actualitzar, tornar a configurar o desactivar."
       only_admins: "(aquest missatge només es mostra als administradors del lloc)"
     broken_decorator_alert: "És possible que les publicacions no es mostrin correctament perquè un dels decoradors de contingut de publicacions del vostre lloc web ha generat un error."
@@ -3531,6 +3530,11 @@ ca:
         howto: "Com s'instal·len els connectors?"
         author: "Per %{author}"
         learn_more: "Per a saber-ne més"
+        filters:
+          all: "Tots"
+          enabled: "Activat"
+          disabled: "Desactivat"
+          reset: "Restableix"
       backups:
         title: "Còpies de seguretat"
         menu:

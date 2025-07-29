@@ -235,6 +235,7 @@ he:
           custom_prompt: "בקשה מותאמת אישית"
           image_caption: "הוספת כותרות לתמונות"
         translation:
+          name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
           locale_detector: "מזהה שפה ומקום"
           post_raw_translator: "מתרגם פוסטים גולמי"
@@ -242,6 +243,7 @@ he:
           short_text_translator: "מתרגם טקסטים קצרים"
         spam:
           name: "ספאם"
+          inspect_posts: "בדיקת פוסטים"
       modals:
         select_option: "בחירת אפשרות…"
       layout:
@@ -251,6 +253,7 @@ he:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
+        select_persona: "בחירת דמות"
         custom_instructions: "הנחיות מותאמות אישית"
         last_seven_days: "7 הימים האחרונים"
         scanned_count: "פוסטים נסרקו"
@@ -533,6 +536,9 @@ he:
           samba_nova-Meta-Llama-3-3-70B-Instruct": "מודל רב־תכליתי חזק"
           mistral-mistral-large-latest: "המודל החזק ביותר של Mistral"
           mistral-pixtral-large-latest: "המודל החזק ביותר של Mistral שבנוי לעיבוד חזותי"
+          open_router-x-ai-grok-3-beta: "המודל האחרון של xAI"
+          open_router-deepseek-deepseek-r1-0528-free: "מודל ההנמקה העדכני ביותר של DeepSeek"
+          open_router-meta-llama-3-3-70b-instruct: "מודל רב־לשוני עם יכולות גבוהות"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -633,12 +639,6 @@ he:
           generating: "הכותרת מתחוללת…"
           credits: "הכותרת נוספה ע״י בינה מלאכותית"
           save_caption: "שמירה"
-          automatic_caption_setting: "הפעלת כותרת אוטומטית"
-          automatic_caption_loading: "נוספות כותרות לתמונות…"
-          automatic_caption_dialog:
-            prompt: "הפוסט מכיל תמונות בלי כותרת. להפעיל כותרות אוטומטיות לתמונות שנשלחות? (אפשר לשנות את זה בהעדפות שלך מאוחר יותר)"
-            confirm: "הפעלה"
-            cancel: "לא לשאול שוב"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
       reviewables:
         model_used: "דגם בשימוש:"

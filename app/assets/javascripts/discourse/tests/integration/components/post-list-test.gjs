@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostList from "discourse/components/post-list";
+import { cloneJSON } from "discourse/lib/object";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import postModel from "../../fixtures/post-list";
 
@@ -8,7 +9,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   setupRenderingTest(hooks);
 
   test("@posts", async function (assert) {
-    const posts = postModel;
+    const posts = cloneJSON(postModel);
     await render(<template><PostList @posts={{posts}} /></template>);
     assert.dom(".post-list").exists();
     assert.dom(".post-list__empty-text").doesNotExist();
@@ -16,7 +17,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   });
 
   test("@additionalItemClasses", async function (assert) {
-    const posts = postModel;
+    const posts = cloneJSON(postModel);
     const additionalClasses = ["first-class", "second-class"];
     await render(
       <template>
@@ -31,7 +32,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   });
 
   test("@titleAriaLabel", async function (assert) {
-    const posts = postModel;
+    const posts = cloneJSON(postModel);
     const titleAriaLabel = "My custom aria title label";
     await render(
       <template>
@@ -54,7 +55,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   });
 
   test("@showUserInfo", async function (assert) {
-    const posts = postModel;
+    const posts = cloneJSON(postModel);
     await render(
       <template><PostList @posts={{posts}} @showUserInfo={{false}} /></template>
     );
@@ -62,7 +63,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   });
 
   test("@titlePath", async function (assert) {
-    const posts = postModel.map((post) => {
+    const posts = cloneJSON(postModel).map((post) => {
       post.topic_html_title = `Fancy title`;
       return post;
     });
@@ -75,7 +76,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   });
 
   test("@idPath", async function (assert) {
-    const posts = postModel.map((post) => {
+    const posts = cloneJSON(postModel).map((post) => {
       post.post_id = post.id;
       return post;
     });
@@ -86,7 +87,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   });
 
   test("@urlPath", async function (assert) {
-    const posts = postModel.map((post) => {
+    const posts = cloneJSON(postModel).map((post) => {
       post.postUrl = `/t/${post.topic_id}/${post.id}`;
       return post;
     });
@@ -99,7 +100,7 @@ module("Integration | Component | PostList | Index", function (hooks) {
   });
 
   test("@usernamePath", async function (assert) {
-    const posts = postModel.map((post) => {
+    const posts = cloneJSON(postModel).map((post) => {
       post.draft_username = "john";
       return post;
     });

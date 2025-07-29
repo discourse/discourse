@@ -201,7 +201,6 @@ pt_BR:
       search: "Pesquisar"
     themes:
       default_description: "Padrão"
-      broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
       error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é mostrada somente aos(às) administradores(es) do site)"
     broken_decorator_alert: "As postagens podem não ser exibidas corretamente porque um dos decoradores de conteúdo de postagem em seu site gerou um erro."
@@ -5271,7 +5270,6 @@ pt_BR:
               header_description: "Ver um log de pesquisas que foram realizadas"
         plugins:
           title: "Plugins instalados"
-          header_description: "Plugins do Discourse instalados ou que já vêm pré-instalados com a hospedagem do Discourse serão mostrados nesta lista"
         api_keys:
           title: "Chaves de API"
           header_description: "Com o recurso de chaves de API, você pode integrar o Discourse com sistemas externos e automatizar ações de forma segura. Os(as) administradores(as) podem criar chaves com escopos específicos para controlar o acesso a recursos e dados confidenciais. Com o escopo, essa funcionalidade é limitada, melhorando a segurança."
@@ -6000,6 +5998,11 @@ pt_BR:
         author: "De %{author}"
         experimental_badge: "experimental"
         learn_more: "Saiba mais"
+        filters:
+          all: "Todos"
+          enabled: "Ativada"
+          disabled: "Desativada"
+          reset: "Redefinir"
       navigation_menu:
         sidebar: "Barra lateral"
         header_dropdown: "Menu dropdown de cabeçalho"

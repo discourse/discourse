@@ -515,12 +515,6 @@ nl:
           generating: "Bijschrift genereren..."
           credits: "Bijschrift door AI"
           save_caption: "Opslaan"
-          automatic_caption_setting: "Automatische bijschriften inschakelen"
-          automatic_caption_loading: "Afbeeldingsbijschriften genereren..."
-          automatic_caption_dialog:
-            prompt: "Dit bericht bevat afbeeldingen zonder bijschrift. Wil je automatische bijschriften inschakelen bij het uploaden van afbeeldingen? (Je kunt dit later wijzigen in je voorkeuren)"
-            confirm: "Inschakelen"
-            cancel: "Niet meer vragen"
         no_content_error: "Voeg eerst inhoud toe om er AI-acties op uit te voeren"
       reviewables:
         model_used: "Gebruikt model:"

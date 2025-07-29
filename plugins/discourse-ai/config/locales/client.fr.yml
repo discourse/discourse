@@ -515,12 +515,6 @@ fr:
           generating: "Génération de la légende..."
           credits: "Légende par l'IA"
           save_caption: "Enregistrer"
-          automatic_caption_setting: "Activer le sous-titrage automatique"
-          automatic_caption_loading: "Ajout des légendes des images..."
-          automatic_caption_dialog:
-            prompt: "Cette publication contient des images non légendées. Souhaitez-vous activer les légendes automatiques lors du téléversement d'images ? (Cela peut être modifié ultérieurement dans vos préférences)"
-            confirm: "Activer"
-            cancel: "Ne plus demander"
         no_content_error: "Ajoutez d'abord du contenu pour y effectuer des actions d'IA"
       reviewables:
         model_used: "Modèle utilisé :"
