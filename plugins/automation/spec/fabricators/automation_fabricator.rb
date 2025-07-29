@@ -5,5 +5,5 @@ Fabricator(:automation, from: DiscourseAutomation::Automation) do
   script "something_about_us"
   trigger DiscourseAutomation::Triggers::TOPIC
   last_updated_by_id Discourse.system_user.id
-  enabled false
+  enabled true
 end
