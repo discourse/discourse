@@ -194,7 +194,6 @@ RSpec.describe Admin::FormTemplatesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-
       it "processes a valid template" do
         get "/admin/customize/form-templates/preview.json",
             params: {
