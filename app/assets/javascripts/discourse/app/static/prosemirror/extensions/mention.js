@@ -6,10 +6,10 @@ const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
 
 function unicodeEnabled({ getContext }) {
-  return !!getContext().siteSettings.unicodeUsernames;
+  return getContext().siteSettings.unicodeUsernames;
 }
 
-const regExp = mentionRegex(unicodeEnabled);
+const resolvedMentionRegex = mentionRegex(unicodeEnabled);
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -44,7 +44,10 @@ const extension = {
     },
   },
   inputRules: {
-    match: new RegExp(`(^|\\W)(${regExp.source}) $`, `${regExp.flags}`),
+    match: new RegExp(
+      `(^|\\W)(${resolvedMentionRegex.source}) $`,
+      `${resolvedMentionRegex.flags}`
+    ),
     handler: (state, match, start, end) => {
       const { $from } = state.selection;
       if ($from.nodeBefore?.type === state.schema.nodes.mention) {
