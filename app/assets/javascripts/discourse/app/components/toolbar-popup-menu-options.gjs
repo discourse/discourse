@@ -137,8 +137,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       @onKeydown={{@onKeydown}}
       tabindex="-1"
       @triggerClass={{concatClass "toolbar__button" @class}}
-      @class="toolbar-popup-menu-options"
-      title={{@title}}
+      @class="toolbar-popup-menu-options btn-transparent"
     >
       <:trigger>
         {{icon (this.getIcon this.args)}}

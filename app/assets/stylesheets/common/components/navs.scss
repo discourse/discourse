@@ -40,6 +40,8 @@
       align-items: center;
       background-color: var(--d-nav-bg-color);
       transition: var(--d-button-transition);
+      box-shadow: var(--d-box-shadow);
+      border: var(--d-nav-border);
 
       .d-icon {
         margin-right: 5px;
@@ -55,6 +57,16 @@
     a.active,
     button.active {
       @include nav-active;
+    }
+  }
+}
+
+.admin-content,
+.user-navigation {
+  .nav-pills > li {
+    a,
+    button {
+      box-shadow: none;
     }
   }
 }

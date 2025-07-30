@@ -14,6 +14,7 @@
   --d-input-border--disabled: 1px solid var(--primary-low);
   --d-nav-color: var(--primary);
   --d-nav-bg-color: transparent;
+  --d-nav-border: none;
   --d-nav-color--hover: var(--tertiary);
   --d-nav-bg-color--hover: transparent;
   --d-nav-color--active: var(--tertiary);
@@ -70,6 +71,14 @@
   --topic-list-item-background-color--visited: var(--secondary);
   --list-container-padding-x: 0em;
   --d-topic-list-header-font-size: initial;
+  --x-shadow-offset: 0px;
+  --y-shadow-offset: 0px;
+  --blur-shadow: 0px;
+  --spread-shadow: 0px;
+  --d-shadow-color: rgb(0, 0, 0, 0.1);
+  --d-box-shadow: var(--x-shadow-offset) var(--y-shadow-offset)
+    var(--blur-shadow) var(--spread-shadow) var(--d-shadow-color);
+  --d-popover-box-shadow: var(--shadow-dropdown);
 }
 
 // Animation Keyframes
