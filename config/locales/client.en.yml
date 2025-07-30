@@ -7090,7 +7090,7 @@ en:
           dark_mode_warning: "You're currently using dark mode. When setting an active color palette the colors will be applied to the light mode of the theme. If you want to change the default dark mode colors, please edit the <a href='%{link}'>dark mode site setting</a>."
           title: "Colors"
           edit: "Edit"
-          set_default: "Set as active on %{theme}"
+          set_default: "Activate on default theme (%{theme})"
           set_default_success: "%{schemeName} set as active palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"

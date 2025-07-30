@@ -1,13 +1,13 @@
 import { cancel } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { camelCaseToSnakeCase } from "discourse/lib/case-converter";
 import discourseDebounce from "discourse/lib/debounce";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
+import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 
 let cache = {},
   cacheKey,

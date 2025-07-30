@@ -12,8 +12,6 @@
   --d-input-bg-color--disabled: var(--primary-very-low);
   --d-input-text-color--disabled: var(--primary-medium);
   --d-input-border--disabled: 1px solid var(--primary-low);
-  --d-input-padding-h: 0.65em;
-  --d-input-padding-v: 0.5em;
   --d-nav-color: var(--primary);
   --d-nav-bg-color: transparent;
   --d-nav-color--hover: var(--tertiary);
@@ -25,23 +23,23 @@
   --d-nav-font-size: initial;
   --d-input-focused-color: var(--tertiary);
   --d-category-border-box-width: 2px;
-  --d-category-box-background-color: none;
+  --d-category-box-background-color: var(--secondary);
   --d-category-border-accent-width: 6px;
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
   --nav-space: var(--space-3);
   --nav-horizontal-padding: 0em;
   --d-main-content-gap: var(--space-8);
   --main-outlet-padding-top: var(--space-6);
-  --main-outlet-padding-v: 0em;
+  --main-outlet-padding-x: 0em;
   --main-outlet-padding-bottom: 0em;
   --table-border-width: 1px;
   --d-topic-list-avatar-size: 24px;
   --d-topic-list-title-font-size: var(--font-up-1);
   --d-topic-list-metadata-top-space: var(--space-1);
-  --d-topic-list-data-padding-h: var(--space-3);
-  --d-topic-list-data-padding-v: var(--space-1);
-  --d-topic-list-header-data-padding-h: var(--space-3);
-  --d-topic-list-header-data-padding-v: var(--space-1);
+  --d-topic-list-data-padding-y: var(--space-3);
+  --d-topic-list-data-padding-x: var(--space-1);
+  --d-topic-list-header-data-padding-y: var(--space-3);
+  --d-topic-list-header-data-padding-x: var(--space-1);
   --d-topic-list-likes-views-posts-width: 4.3em;
   --d-topic-list-data-padding-inline-start: var(--space-3);
   --d-topic-list-data-padding-inline-end: var(--space-3);
@@ -49,8 +47,8 @@
   --category-boxes-text-alignment: center;
   --d-topic-list-header-background-color: var(--secondary);
   --d-topic-list-header-text-color: var(--primary-medium);
-  --d-topic-list-margin-h: 0em;
-  --d-topic-list-margin-v: 0em;
+  --d-topic-list-margin-y: 0em;
+  --d-topic-list-margin-x: 0em;
   --d-topic-list-margin-bottom: 10px;
   --d-tag-horizontal-padding: 0em;
   --d-tag-font-weight: initial;
@@ -63,14 +61,14 @@
   --category-boxes-title-font-size: var(--font-up-2);
   --d-category-boxes-margin-top: var(--space-4);
   --d-categories-list-title-margin-bottom: 0em;
-  --d-header-padding-v: 0.67em;
+  --d-header-padding-x: 0.67em;
   --d-table-border-top-height: 3px;
-  --d-wrap-padding-h: 0.67em;
+  --d-wrap-padding-x: 0.67em;
   --topic-title-font-weight: 400;
   --topic-title-font-weight--visited: 400;
   --topic-list-item-background-color: var(--secondary);
   --topic-list-item-background-color--visited: var(--secondary);
-  --list-container-horizontal-padding: 0em;
+  --list-container-padding-x: 0em;
   --d-topic-list-header-font-size: initial;
 }
 
@@ -472,7 +470,7 @@ textarea {
   .discourse-no-touch & {
     &:hover,
     &:focus {
-      background-color: var(--primary-low);
+      background-color: var(--d-hover);
     }
   }
 
@@ -517,7 +515,7 @@ textarea {
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
-  padding: 0 var(--d-wrap-padding-h);
+  padding: 0 var(--d-wrap-padding-x);
 
   @include viewport.until(sm) {
     min-width: 0;
@@ -799,7 +797,7 @@ form {
 }
 
 #main-outlet {
-  padding: var(--main-outlet-padding-top) var(--main-outlet-padding-v)
+  padding: var(--main-outlet-padding-top) var(--main-outlet-padding-x)
     var(--main-outlet-padding-bottom);
 
   .mobile-view & {

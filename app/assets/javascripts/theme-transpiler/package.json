@@ -14,7 +14,7 @@
     "@babel/preset-env": "^7.28.0",
     "@babel/standalone": "^7.28.2",
     "@csstools/postcss-light-dark-function": "^2.0.9",
-    "@rollup/browser": "^4.46.1",
+    "@rollup/browser": "^4.46.2",
     "@rollup/plugin-babel": "^6.0.4",
     "abort-controller": "^3.0.0",
     "autoprefixer": "^10.4.21",

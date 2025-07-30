@@ -996,6 +996,31 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_no_css("a.mention", text: "@InvalidGroup")
     end
+
+    describe "with unicode usernames" do
+      fab!(:category)
+
+      before do
+        SiteSetting.external_system_avatars_enabled = true
+        SiteSetting.external_system_avatars_url =
+          "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
+        SiteSetting.unicode_usernames = true
+      end
+
+      it "renders unicode mentions as nodes" do
+        unicode_user = Fabricate(:unicode_user)
+
+        open_composer
+
+        composer.type_content("Hey @#{unicode_user.username} - how are you?")
+
+        expect(rich).to have_css("a.mention", text: unicode_user.username)
+
+        composer.toggle_rich_editor
+
+        expect(composer).to have_value("Hey @#{unicode_user.username} - how are you?")
+      end
+    end
   end
 
   describe "link toolbar" do
@@ -1030,7 +1055,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       upsert_hyperlink_modal.fill_in_link_text("Updated Example")
       upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
-      upsert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.send_enter_link_text
 
       expect(rich).to have_css("a[href='https://updated-example.com']", text: "Updated Example")
 

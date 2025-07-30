@@ -109,8 +109,6 @@ export default class UpsertHyperlink extends Component {
             ".internal-link-results .search-link"
           )[this.selectedRow];
           this.selectLink(selected);
-          event.preventDefault();
-          event.stopPropagation();
         }
 
         // this would ideally be handled by nesting a submit button within the form tag
@@ -118,6 +116,9 @@ export default class UpsertHyperlink extends Component {
         if (event.target.tagName === "INPUT") {
           this.formApi.submit();
         }
+
+        event.preventDefault();
+        event.stopPropagation();
 
         break;
       case "Escape":
@@ -151,16 +152,8 @@ export default class UpsertHyperlink extends Component {
       return;
     }
 
-    const linkText = data.linkText || "";
-
-    if (linkText.length) {
-      this.args.model.toolbarEvent.addText(`[${linkText}](${linkUrl})`);
-    } else if (sel.value) {
-      this.args.model.toolbarEvent.addText(`[${sel.value}](${linkUrl})`);
-    } else {
-      this.args.model.toolbarEvent.addText(`[${origLink}](${linkUrl})`);
-      this.args.model.toolbarEvent.selectText(sel.start + 1, origLink.length);
-    }
+    const linkText = data.linkText || sel.value || origLink || "";
+    this.args.model.toolbarEvent.addText(`[${linkText.trim()}](${linkUrl})`);
 
     this.args.closeModal();
   }

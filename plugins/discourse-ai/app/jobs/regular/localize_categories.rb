@@ -11,17 +11,17 @@ module Jobs
       limit = args[:limit]
       raise Discourse::InvalidParameters.new(:limit) if limit.nil?
       return if limit <= 0
-      locales = SiteSetting.content_localization_supported_locales.split("|")
 
-      categories = Category.where("locale IS NOT NULL")
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
-        categories = categories.where(read_restricted: false)
-      end
-      categories = categories.order(:id).limit(limit)
+      categories =
+        DiscourseAi::Translation::CategoryCandidates
+          .get
+          .where("locale IS NOT NULL")
+          .order(:id)
+          .limit(limit)
       return if categories.empty?
 
       remaining_limit = limit
-
+      locales = SiteSetting.content_localization_supported_locales.split("|")
       categories.each do |category|
         break if remaining_limit <= 0
 

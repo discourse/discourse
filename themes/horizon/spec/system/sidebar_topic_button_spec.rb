@@ -34,10 +34,10 @@ RSpec.describe "Sidebar New Topic Button", system: true do
       expect(page).to have_css(".sidebar-new-topic-button__wrapper .topic-drafts-menu-trigger")
     end
 
-    it "does not disable button when visiting read-only category" do
+    it "disables button when visiting read-only category" do
       visit("/c/#{private_category.slug}/#{private_category.id}")
 
-      expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
+      expect(page).to have_css(".sidebar-new-topic-button[disabled]")
 
       visit("/c/#{category.slug}/#{category.id}")
 

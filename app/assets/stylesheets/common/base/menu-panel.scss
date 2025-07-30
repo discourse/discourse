@@ -278,10 +278,8 @@
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
-    padding: var(--space-half);
     overflow-y: auto;
     overscroll-behavior: contain;
-    margin-inline: calc(var(--user-menu-border-width) * -1);
   }
 
   .tabs-list {
@@ -292,20 +290,22 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.8125em;
+      padding: 0.375em; // 6px
 
       @include viewport.until(sm) {
-        padding: 1.2em 1.4em;
+        padding: 0.75em 0.875em; // 12px 14px
       }
 
       @media screen and (height <= 400px) {
         // helps with 400% zoom level
         font-size: var(--font-down-1);
-        padding: 0.5em 0.875em;
+        padding: 0.125em 0.375em; // 2px 6px
       }
 
       .d-icon {
+        border-radius: var(--d-border-radius);
         color: var(--primary-medium);
+        padding: 0.5em; // 8px
       }
 
       .badge-notification {
@@ -317,29 +317,24 @@
 
         @media screen and (height <= 400px) {
           // helps with 400% zoom level
-          right: 0;
+          right: 3px;
           top: 0;
         }
       }
 
       &.active {
         .d-icon {
-          box-shadow: var(--active-shadow);
           color: var(--d-sidebar-active-color);
           background-color: var(--d-sidebar-active-background);
-          border-radius: calc(var(--d-border-radius) * 0.25);
         }
       }
 
       &:not(.active):hover,
       &:not(.active):focus-visible {
         background: none;
-        padding-left: calc(0.875em - var(--user-menu-border-width));
 
         .d-icon {
-          box-shadow: var(--hover-shadow);
           background-color: var(--d-sidebar-highlight-background);
-          border-radius: calc(var(--d-border-radius) * 0.25);
         }
       }
     }
@@ -679,6 +674,7 @@
       > div {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
     }
 

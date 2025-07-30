@@ -27,7 +27,7 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     const rule = {
-      matcher: mentionRegex(md.options.discourse.features.unicodeUsernames),
+      matcher: mentionRegex(md.options.discourse.unicodeUsernames),
       onMatch: addMention,
     };
 
