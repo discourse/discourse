@@ -27,7 +27,7 @@ module("Integration | Component | about-page", function (hooks) {
   setupRenderingTest(hooks);
 
   test("custom site activities registered via the plugin API", async function (assert) {
-    withPluginApi("1.37.0", (api) => {
+    withPluginApi((api) => {
       api.addAboutPageActivity("my_custom_activity", (periods) => {
         return {
           icon: "eye",

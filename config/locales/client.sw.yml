@@ -2754,6 +2754,11 @@ sw:
         howto: "Ninawekaje programu-jalizi?"
         author: "Na %{author}"
         learn_more: "Jifunze zaidi"
+        filters:
+          all: "Yote"
+          enabled: "Imeruhusiwa"
+          disabled: "Imezuiwa"
+          reset: "Weka/Anzisha Upya"
       backups:
         title: "Machelezo"
         menu:

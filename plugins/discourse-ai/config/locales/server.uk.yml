@@ -74,7 +74,6 @@ uk:
     ai_helper_enabled_features: "Оберіть функції для активації в ШІ-помічнику."
     post_ai_helper_allowed_groups: "Групи користувачів, яким дозволено доступ до функцій ШІ-помічника в публікаціях"
     ai_helper_image_caption_model: "Виберіть модель для генерації підписів до зображень"
-    ai_auto_image_caption_allowed_groups: "Користувачі в цих групах можуть вмикати автоматичне додавання підписів до зображень."
     ai_embeddings_selected_model: "Використовуйте обрану модель для генерації вбудовувань."
     ai_embeddings_generate_for_pms: "Створюйте вбудовування для особистих повідомлень."
     ai_embeddings_semantic_related_topics_enabled: "Використовуйте семантичний пошук для пов’язаних тем."

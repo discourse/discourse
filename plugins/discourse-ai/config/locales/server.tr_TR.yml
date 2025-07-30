@@ -62,7 +62,6 @@ tr_TR:
     ai_helper_enabled_features: "YZ yardımcısında etkinleştirilecek özellikleri seçin."
     post_ai_helper_allowed_groups: "Gönderilerde YZ Yardımcısı özelliklerine erişmesine izin verilen kullanıcı grupları"
     ai_helper_image_caption_model: "Görüntü alt yazıları oluşturmak için kullanılacak modeli seçin"
-    ai_auto_image_caption_allowed_groups: "Bu gruplardaki kullanıcılar otomatik görüntü alt yazısı eklemeyi değiştirebilir."
     ai_embeddings_selected_model: "Gömme oluşturmak için seçili modeli kullanın."
     ai_embeddings_generate_for_pms: "Kişisel mesajlar için gömmeler oluşturun."
     ai_embeddings_semantic_related_topics_enabled: "İlgili konular için Semantik Arama'yı kullanın."

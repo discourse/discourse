@@ -708,12 +708,6 @@ pl_PL:
           generating: "Generowanie napisów..."
           credits: "Napisy z AI"
           save_caption: "Zapisz"
-          automatic_caption_setting: "Włącz automatyczne napisy"
-          automatic_caption_loading: "Dodawanie podpisów do obrazów..."
-          automatic_caption_dialog:
-            prompt: "Ten post zawiera obrazy bez podpisów. Czy chcesz włączyć automatyczne podpisy przy przesyłaniu zdjęć? (Można to później zmienić w preferencjach)."
-            confirm: "Włącz"
-            cancel: "Nie pytaj ponownie"
         no_content_error: "Najpierw dodaj zawartość, aby wykonać na niej działania AI."
       reviewables:
         model_used: "Zastosowany model:"

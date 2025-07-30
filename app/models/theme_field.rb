@@ -260,8 +260,8 @@ class ThemeField < ActiveRecord::Base
       javascript_cache.source_map = js_compiler.source_map
       javascript_cache.save!
 
-      doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
-        <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
+      doc.add_child(<<~HTML.html_safe)
+        <link rel="modulepreload" href="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{CSP_NONCE_PLACEHOLDER}" />
       HTML
     else
       javascript_cache&.destroy!

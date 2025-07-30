@@ -282,6 +282,11 @@ jobs:
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
+      - name: Theme Transpiler Tests
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
+        working-directory: app/assets/javascripts/theme-transpiler
+        run: pnpm test
+
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: bin/rake plugin:qunit['*']

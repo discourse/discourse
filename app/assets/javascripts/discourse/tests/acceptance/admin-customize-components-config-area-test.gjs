@@ -13,7 +13,7 @@ acceptance("Admin - Config areas - Components", function (needs) {
   });
 
   test("admin-config-area-components-new-button plugin outlet", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.renderInOutlet(
         "admin-config-area-components-new-button",
         <template>
@@ -38,7 +38,7 @@ acceptance("Admin - Config areas - Components", function (needs) {
   });
 
   test("admin-config-area-components-empty-list-bottom plugin outlet", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.renderInOutlet(
         "admin-config-area-components-empty-list-bottom",
         <template>

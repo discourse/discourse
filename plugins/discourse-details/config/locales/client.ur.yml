@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "ڈِسکورس کی تفصیلات"
   js:
     details:
       title: Hide Details

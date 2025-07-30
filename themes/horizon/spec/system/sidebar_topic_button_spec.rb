@@ -41,7 +41,7 @@ RSpec.describe "Sidebar New Topic Button", system: true do
 
       visit("/c/#{category.slug}/#{category.id}")
 
-      expect(page).not_to have_css(".sidebar-new-topic-button[disabled]")
+      expect(page).to have_no_css(".sidebar-new-topic-button[disabled]")
     end
   end
 

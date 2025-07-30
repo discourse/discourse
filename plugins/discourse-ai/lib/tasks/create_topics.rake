@@ -88,7 +88,7 @@ namespace :ai do
           messages: [{ type: :user, content: prompt, id: "user" }],
         )
 
-      DiscourseAi::Completions::Llm.proxy(SiteSetting.ai_helper_model).generate(
+      DiscourseAi::Completions::Llm.proxy(SiteSetting.ai_defaulit_llm_model).generate(
         prompt,
         user: Discourse.system_user,
         feature_name: "topic-generator",

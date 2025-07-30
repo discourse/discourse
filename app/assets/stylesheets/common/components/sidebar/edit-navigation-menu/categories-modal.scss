@@ -2,7 +2,7 @@
   .sidebar-categories-form__row {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-left: 4px solid;
     margin-bottom: 1em;
     padding: 0;
@@ -11,7 +11,7 @@
   .sidebar-categories-form__category-row[data-category-level="0"]:not(
       :only-child
     ) {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
   }
 
   .sidebar-categories-form__category-row[data-category-level="1"] {
@@ -21,12 +21,12 @@
   .sidebar-categories-form__category-row[data-category-level="1"]:not(
       :nth-of-type(2)
     ) {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .sidebar-categories-form__category-row[data-category-level="2"] {
     margin-left: 2em;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .sidebar-categories-form__category-label {

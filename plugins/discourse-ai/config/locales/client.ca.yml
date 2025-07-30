@@ -129,8 +129,6 @@ ca:
           cancel: "Cancel·la"
         image_caption:
           save_caption: "Desa"
-          automatic_caption_dialog:
-            confirm: "Activa"
       embeddings:
         back: "Enrere"
         save: "Desa"

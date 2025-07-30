@@ -13,7 +13,7 @@ RSpec.describe DiscourseAi::Personas::Tools::CreateImage do
   end
 
   let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{gpt_35_turbo.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(gpt_35_turbo) }
   let(:progress_blk) { Proc.new {} }
 
   let(:create_image) { described_class.new({ prompts: prompts }, llm: llm, bot_user: bot_user) }

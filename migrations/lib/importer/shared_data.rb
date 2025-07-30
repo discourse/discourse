@@ -7,7 +7,13 @@ module Migrations::Importer
     end
 
     def load_set(sql)
-      @discourse_db.query_array(sql).map(&:first).to_set
+      result = @discourse_db.query_result(sql)
+      depth = result.column_count - 1
+
+      set = Migrations::SetStore.create(depth)
+      set.bulk_add(result.rows)
+
+      set
     end
 
     def load_mapping(sql)

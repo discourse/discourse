@@ -273,7 +273,7 @@ module SiteSettingExtension
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
       category: "required",
       description: description("default_locale"),
-      type: SiteSetting.types[SiteSetting.types[:enum]],
+      type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,
       value: self.default_locale,
       valid_values: LocaleSiteSetting.values,
@@ -963,10 +963,8 @@ module SiteSettingExtension
 
       plugins[name] = opts[:plugin] if opts[:plugin]
 
-      type_supervisor.load_setting(
-        name,
-        opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS),
-      )
+      choices_opts = opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS)
+      type_supervisor.load_setting(name, choices_opts)
 
       if !shadowed_val.nil?
         setup_shadowed_methods(name, shadowed_val)

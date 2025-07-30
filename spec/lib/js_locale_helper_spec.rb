@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "mini_racer"
-
 RSpec.describe JsLocaleHelper do
   let(:v8_ctx) do
     discourse_node_modules = "#{Rails.root}/app/assets/javascripts/discourse/node_modules"

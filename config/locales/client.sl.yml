@@ -210,7 +210,6 @@ sl:
       search: "Išči"
     themes:
       default_description: "Privzeto"
-      broken_theme_alert: "Vaše spletno mesto morda ne bo delovalo, ker ima tema/komponenta napake."
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -4153,6 +4152,11 @@ sl:
         author: "Od %{author}"
         experimental_badge: "eksperimentalno"
         learn_more: "Več o tem"
+        filters:
+          all: "Vsi"
+          enabled: "Vključeno"
+          disabled: "Onemogočeno"
+          reset: "Ponastavi"
       backups:
         title: "Varnostne kopije"
         menu:

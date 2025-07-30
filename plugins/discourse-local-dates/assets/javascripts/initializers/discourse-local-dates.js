@@ -345,7 +345,7 @@ class LocalDatesInit {
     window.addEventListener("click", this.showDatePopover, { passive: true });
 
     if (this.siteSettings.discourse_local_dates_enabled) {
-      withPluginApi("0.8.8", initializeDiscourseLocalDates);
+      withPluginApi(initializeDiscourseLocalDates);
     }
   }
 

@@ -285,7 +285,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   get availableLocales() {
-    return JSON.parse(this.siteSettings.available_locales);
+    return this.siteSettings.available_locales;
   }
 
   get locale() {

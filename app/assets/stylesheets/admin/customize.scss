@@ -144,6 +144,7 @@
   .show-current-style {
     display: inline-block;
     vertical-align: top;
+    max-width: var(--admin-content-max-width);
 
     .title {
       font-family: var(--heading-font-family);
@@ -689,7 +690,7 @@
 .admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 }
 
@@ -796,7 +797,7 @@
   .user-field {
     padding-block: 0.5em;
     margin-bottom: 1em;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .form-display {
       width: 25%;
@@ -933,7 +934,7 @@
 
     .btn {
       &:not(:last-of-type) {
-        border-right: 1px solid var(--primary-low);
+        border-right: 1px solid var(--content-border-color);
       }
     }
   }

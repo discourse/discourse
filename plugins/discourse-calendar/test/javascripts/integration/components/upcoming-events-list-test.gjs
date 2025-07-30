@@ -1,5 +1,4 @@
 import { hash } from "@ember/helper";
-import Service from "@ember/service";
 import { click, currentURL, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -10,26 +9,15 @@ import UpcomingEventsList, {
   DEFAULT_TIME_FORMAT,
 } from "../../discourse/components/upcoming-events-list";
 
-class RouterStub extends Service {
-  currentRoute = { attributes: { category: { id: 1, slug: "announcements" } } };
-  currentRouteName = "discovery.latest";
-
-  on() {}
-  off() {}
-}
-
 const today = "2100-02-01T08:00:00";
 const tomorrowAllDay = "2100-02-02T00:00:00";
 const nextMonth = "2100-03-02T08:00:00";
 const nextWeek = "2100-02-09T08:00:00";
 
 module("Integration | Component | upcoming-events-list", function (hooks) {
-  setupRenderingTest(hooks);
+  setupRenderingTest(hooks, { stubRouter: true });
 
   hooks.beforeEach(function () {
-    this.owner.unregister("service:router");
-    this.owner.register("service:router", RouterStub);
-
     this.siteSettings.events_calendar_categories = "1";
 
     this.appEvents = this.owner.lookup("service:app-events");

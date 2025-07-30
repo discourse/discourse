@@ -28,6 +28,6 @@ export default {
   name: "apply-details",
 
   initialize() {
-    withPluginApi("1.14.0", initializeDetails);
+    withPluginApi(initializeDetails);
   },
 };

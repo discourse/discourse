@@ -261,7 +261,7 @@ module(
     });
 
     test("various aspects can be customized according to the notification's render director", async function (assert) {
-      withPluginApi("0.1", (api) => {
+      withPluginApi((api) => {
         api.registerNotificationTypeRenderer(
           "linked",
           (NotificationTypeBase) => {
@@ -352,7 +352,7 @@ module(
     });
 
     test("description can be omitted", async function (assert) {
-      withPluginApi("0.1", (api) => {
+      withPluginApi((api) => {
         api.registerNotificationTypeRenderer(
           "linked",
           (NotificationTypeBase) => {
@@ -389,7 +389,7 @@ module(
     });
 
     test("label can be omitted", async function (assert) {
-      withPluginApi("0.1", (api) => {
+      withPluginApi((api) => {
         api.registerNotificationTypeRenderer(
           "linked",
           (NotificationTypeBase) => {

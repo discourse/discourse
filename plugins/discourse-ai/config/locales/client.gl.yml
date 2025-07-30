@@ -136,8 +136,6 @@ gl:
           cancel: "Cancelar"
         image_caption:
           save_caption: "Gardar"
-          automatic_caption_dialog:
-            confirm: "Activar"
       embeddings:
         back: "Volver"
         save: "Gardar"

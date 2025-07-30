@@ -629,6 +629,7 @@ class Post < ActiveRecord::Base
       )
 
     hiding_again = hidden_at.present?
+    should_reset_bumped_at = is_last_reply? && !whisper?
 
     Post.transaction do
       self.skip_validation = true
@@ -679,6 +680,8 @@ class Post < ActiveRecord::Base
         message_options: options,
       )
     end
+
+    topic.reset_bumped_at if should_reset_bumped_at
   end
 
   def unhide!
@@ -702,6 +705,8 @@ class Post < ActiveRecord::Base
         )
         should_update_user_stat = false
       end
+
+      self.topic.reset_bumped_at(self) if is_last_reply? && !whisper?
 
       # We need to do this because TopicStatusUpdater also does the increment
       # and we don't want to double count for the OP.

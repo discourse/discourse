@@ -319,8 +319,6 @@ lt:
           generating: "Generuojama antraštė..."
           credits: "Antraštė teikiama AI"
           save_caption: "Saugoti"
-          automatic_caption_dialog:
-            confirm: "Įgalinti"
       embeddings:
         back: "Atgal"
         save: "Saugoti"

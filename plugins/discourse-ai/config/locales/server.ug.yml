@@ -28,6 +28,12 @@ ug:
           neutral: "بىتەرەپ \U0001F610"
         sentiment_analysis:
           neutral: "بىتەرەپ"
+    llm:
+      configuration:
+        invalid_seeded_model: "بۇ مودېلدا مەزكۇر ئىقتىدارنى ئىشلىتەلمەيسىز"
+        must_select_model: "ئالدى بىلەن LLM نى تاللىشىڭىز كېرەك"
+      endpoints:
+        not_configured: "%{display_name} (سەپلەنمىگەن)"
     ai_staff_action_logger:
       updated: "يېڭىلاندى"
       removed: "چىقىرىۋېتىلدى"

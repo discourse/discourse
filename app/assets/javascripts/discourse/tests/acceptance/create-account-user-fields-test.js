@@ -9,7 +9,7 @@ const CUSTOM_VALIDATION_REASON = "bad choice";
 
 acceptance("Create Account - User Fields", function (needs) {
   needs.hooks.beforeEach(function () {
-    withPluginApi("1.33.0", (api) => {
+    withPluginApi((api) => {
       api.addCustomUserFieldValidationCallback((userField) => {
         if (userField.field.id === 37 && userField.value !== "red") {
           return EmberObject.create({

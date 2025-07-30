@@ -571,9 +571,9 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="suspension-reason-title">{{i18n
                         "user.suspended_reason"
                       }}</span>
-                    <span
-                      class="suspension-reason-description"
-                    >{{this.user.suspend_reason}}</span>
+                    <span class="suspension-reason-description">{{htmlSafe
+                        this.user.suspend_reason
+                      }}</span>
                   </div>
                 </div>
               {{/if}}
@@ -594,9 +594,9 @@ export default class UserCardContents extends CardContentsBase {
                     <span class="silence-reason-title">{{i18n
                         "user.silenced_reason"
                       }}</span>
-                    <span
-                      class="silence-reason-description"
-                    >{{this.user.silence_reason}}</span>
+                    <span class="silence-reason-description">{{htmlSafe
+                        this.user.silence_reason
+                      }}</span>
                   </div>
                 </div>
               {{/if}}

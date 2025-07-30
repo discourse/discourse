@@ -145,8 +145,6 @@ ro:
           cancel: "Anulează"
         image_caption:
           save_caption: "Salvează"
-          automatic_caption_dialog:
-            confirm: "Activează"
       embeddings:
         back: "Înapoi"
         save: "Salvează"

@@ -74,7 +74,6 @@ pl_PL:
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
     ai_helper_image_caption_model: "Wybierz model, którego chcesz użyć do generowania podpisów do obrazów"
-    ai_auto_image_caption_allowed_groups: "Użytkownicy tych grup mogą włączać i wyłączać automatyczne dodawanie podpisów do obrazów."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
     ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."

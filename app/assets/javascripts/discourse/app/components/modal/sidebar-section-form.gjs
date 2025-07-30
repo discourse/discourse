@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import Component, { Input } from "@ember/component";

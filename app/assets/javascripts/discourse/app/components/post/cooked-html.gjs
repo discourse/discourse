@@ -16,6 +16,7 @@ import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions
 import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quote-controls";
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
+import decorateStatefulHtmlElements from "discourse/lib/post-cooked-html-decorators/stateful-html-elements";
 import { i18n } from "discourse-i18n";
 
 const POST_COOKED_DECORATORS_BEFORE_ADOPT = [
@@ -24,7 +25,10 @@ const POST_COOKED_DECORATORS_BEFORE_ADOPT = [
   decorateSearchHighlight,
 ];
 
-const POST_COOKED_DECORATORS_AFTER_ADOPT = [decorateMentions];
+const POST_COOKED_DECORATORS_AFTER_ADOPT = [
+  decorateMentions,
+  decorateStatefulHtmlElements,
+];
 
 export default class PostCookedHtml extends Component {
   @service appEvents;

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import Service from "@ember/service";
 import { render } from "@ember/test-helpers";

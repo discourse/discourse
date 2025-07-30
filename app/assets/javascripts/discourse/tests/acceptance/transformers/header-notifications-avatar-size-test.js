@@ -7,7 +7,7 @@ acceptance("header-notifications-avatar-size transformer", function (needs) {
   needs.user();
 
   test("applying a value transformation", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "header-notifications-avatar-size",
         () => "huge"

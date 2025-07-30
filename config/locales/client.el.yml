@@ -4793,6 +4793,11 @@ el:
         author: "Του/της %{author}"
         experimental_badge: "πειραματικό"
         learn_more: "Μάθε περισσότερα"
+        filters:
+          all: "Όλα"
+          enabled: "Ενεργοποιημένα"
+          disabled: "Απενεργοποιημένο"
+          reset: "Επαναφορά"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:

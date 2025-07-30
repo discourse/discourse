@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { cached, tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";

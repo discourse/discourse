@@ -17,7 +17,7 @@ module("Plugin Outlet - Decorator", function (hooks) {
     registerTemporaryModule(`${PREFIX}/my-outlet-name/foo`, hbs`FOO`);
     registerTemporaryModule(`${PREFIX}/my-outlet-name/bar`, hbs`BAR`);
 
-    withPluginApi("0.8.38", (api) => {
+    withPluginApi((api) => {
       withSilencedDeprecations("discourse.decorate-plugin-outlet", () => {
         api.decoratePluginOutlet(
           "my-outlet-name",

@@ -694,12 +694,6 @@ de:
           generating: "Beschriftung wird generiert …"
           credits: "Beschriftet durch KI"
           save_caption: "Speichern"
-          automatic_caption_setting: "Automatische Beschriftung einschalten"
-          automatic_caption_loading: "Bilder werden beschriftet …"
-          automatic_caption_dialog:
-            prompt: "Dieser Beitrag enthält nicht beschriftete Bilder. Möchtest du automatische Beschriftungen für hochgeladene Bilder aktivieren? (Das kannst du später in deinen Einstellungen ändern.)"
-            confirm: "Aktivieren"
-            cancel: "Nicht noch einmal fragen"
         no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
       reviewables:
         model_used: "Verwendetes Modell:"
@@ -834,6 +828,9 @@ de:
           disclaimer: "Generative KI kann Fehler machen. Überprüfe wichtige Informationen."
           placeholder: "Stell eine Frage ..."
           new: "Neue Frage"
+          min_input_length_message:
+            one: "Nachricht muss mindestens %{count} Zeichen lang sein"
+            other: "Nachricht muss mindestens %{count} Zeichen lang sein"
           messages_sidebar_title: "Unterhaltungen"
           today: "Heute"
           last_7_days: "Letzte 7 Tage"

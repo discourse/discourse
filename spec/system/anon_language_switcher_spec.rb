@@ -45,8 +45,8 @@ RSpec.describe "Anonymous user language switcher", type: :system do
 
     switcher.expand
     expect(switcher).to have_content("English (US)")
-    expect(switcher).to have_content("日本語")
-    expect(switcher).to have_content("Español")
+    expect(switcher).to have_content("Japanese (日本語)")
+    expect(switcher).to have_content("Spanish (Español)")
 
     SiteSetting.content_localization_supported_locales = "ja"
     visit("/")

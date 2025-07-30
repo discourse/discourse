@@ -29,7 +29,7 @@ describe DiscourseAi::Automation::LlmTriage do
     SiteSetting.tagging_enabled = true
     add_automation_field("system_prompt", "hello %%POST%%")
     add_automation_field("search_for_text", "bad")
-    add_automation_field("model", "custom:#{llm_model.id}")
+    add_automation_field("model", llm_model.id)
     add_automation_field("category", category.id, type: "category")
     add_automation_field("tags", %w[aaa bbb], type: "tags")
     add_automation_field("hide_topic", true, type: "boolean")

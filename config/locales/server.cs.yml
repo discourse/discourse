@@ -676,12 +676,25 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
+    "new-topic": |
+      Děkujeme, že jste přispěli na %{site_name}!
+
+      Než začnete psát, vyberte prosím kategorii nebo štítek, abyste toto téma seskupili do souvisejících diskusí a ostatní ho snadno našli.
+
+      Další tipy a rady týkající se účasti v naší komunitě naleznete [v pokynech pro komunitu](%{base_path}/guidelines).
+    "new-reply": |
+      Děkujeme, že jste přispěli na %{site_name}!
+
+      Nezapomeňte, že všichni jsme skuteční lidé. Buďte prosím ke svým kolegům z komunity laskaví.
+
+      Další tipy a rady týkající se účasti v naší komunitě naleznete [v pokynech pro komunitu](%{base_path}/guidelines).
     dominating_topic: Do tohoto tématu jste toho hodně napsali! Zvažte, zda byste neměli dát i ostatním příležitost se zapojit.
     get_a_room:
       one: Již jste jednou odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       few: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       many: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       other: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
+    dont_feed_the_trolls: Tento příspěvek byl nahlášen moderátorovi. Odpovídání na negativní obsah může podnítit další negativní chování – opravdu chcete pokračovat?
   activerecord:
     attributes:
       category:

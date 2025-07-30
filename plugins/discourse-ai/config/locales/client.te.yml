@@ -129,8 +129,6 @@ te:
           selected: "ఎంపిక చేయబడినవి"
         image_caption:
           save_caption: "సేవ్ చేయండి"
-          automatic_caption_dialog:
-            confirm: "ప్రారంభించండి"
       embeddings:
         back: "వెనుకకు"
         save: "సేవ్ చేయండి"

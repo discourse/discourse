@@ -122,8 +122,6 @@ bs_BA:
           cancel: "Odustani"
         image_caption:
           save_caption: "Sačuvaj"
-          automatic_caption_dialog:
-            confirm: "Omogući"
       embeddings:
         back: "Prethodno"
         save: "Sačuvaj"

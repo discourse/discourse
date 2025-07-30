@@ -95,11 +95,7 @@ export default class PostQuotedContent extends Component {
   }
 
   get shouldDisplayNavigateToPostButton() {
-    return (
-      !this.args.quotedPostNotFound &&
-      this.quotedPostUrl &&
-      !this.isQuotedPostIgnored
-    );
+    return !this.args.quotedPostNotFound && this.quotedPostUrl;
   }
 
   get shouldDisplayQuoteControls() {

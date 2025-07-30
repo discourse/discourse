@@ -1037,7 +1037,7 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.calendar_enabled) {
-      withPluginApi("0.8.22", initializeDiscourseCalendar);
+      withPluginApi(initializeDiscourseCalendar);
     }
   },
 };

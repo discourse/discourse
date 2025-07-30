@@ -11,6 +11,10 @@ module PageObjects
         find(LINK_TEXT_SELECTOR).fill_in(with: text)
       end
 
+      def send_enter_link_text
+        find(LINK_TEXT_SELECTOR).send_keys(:enter)
+      end
+
       def fill_in_link_url(url)
         find(LINK_URL_SELECTOR).fill_in(with: url)
       end

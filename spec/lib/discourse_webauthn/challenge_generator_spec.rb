@@ -12,7 +12,7 @@ RSpec.describe DiscourseWebauthn::ChallengeGenerator do
       let(:user) { Fabricate(:user) }
 
       it "stores the challenge in the provided session object" do
-        secure_session = {}
+        secure_session = SecureSession.new("some-prefix")
         generated_session = DiscourseWebauthn::ChallengeGenerator.generate
         generated_session.commit_to_session(secure_session, user)
 

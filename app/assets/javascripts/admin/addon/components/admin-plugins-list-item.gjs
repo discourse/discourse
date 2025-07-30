@@ -121,14 +121,9 @@ export default class AdminPluginsListItem extends Component {
           >
             {{@plugin.version}}<br />
             {{#if this.isPreinstalled}}
-              <a
-                href="https://meta.discourse.org/t/bundling-more-popular-plugins-with-discourse-core/373574"
-                rel="noopener noreferrer"
-                target="_blank"
-                class="admin-plugins-list__preinstalled-link"
-              >
+              <span class="admin-plugins-list__preinstalled">
                 {{i18n "admin.plugins.preinstalled"}}
-              </a>
+              </span>
             {{else}}
               <PluginCommitHash @plugin={{@plugin}} />
             {{/if}}

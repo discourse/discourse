@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { array, concat, fn } from "@ember/helper";
@@ -6,10 +7,10 @@ import { action, computed } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { gt, lte } from "truth-helpers";
 import AceEditor from "discourse/components/ace-editor";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";

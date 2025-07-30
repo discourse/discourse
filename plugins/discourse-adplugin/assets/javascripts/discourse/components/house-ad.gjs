@@ -1,10 +1,10 @@
+import { htmlSafe } from "@ember/template";
 import { isBlank } from "@ember/utils";
 import {
   attributeBindings,
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import htmlSafe from "discourse/helpers/html-safe";
 import discourseComputed from "discourse/lib/decorators";
 import AdComponent from "./ad-component";
 

@@ -679,7 +679,7 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/");
     await click("#search-button");
 
-    withPluginApi("1.20.0", (api) => {
+    withPluginApi((api) => {
       api.addSearchMenuAssistantSelectCallback((args) => {
         if (args.usage === "recent-search") {
           args.searchTermChanged("hijacked!");

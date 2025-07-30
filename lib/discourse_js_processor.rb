@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require "execjs"
-require "mini_racer"
 
 class DiscourseJsProcessor
   class TranspileError < StandardError
@@ -27,7 +25,6 @@ class DiscourseJsProcessor
     end
 
     def self.build_theme_transpiler
-      FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
       Discourse::Utils.execute_command(
         "pnpm",
         "-C=app/assets/javascripts/theme-transpiler",
@@ -56,6 +53,8 @@ class DiscourseJsProcessor
         else
           @processor_mutex.synchronize { build_theme_transpiler }
         end
+
+      # source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
 
       ctx.eval(source, filename: "theme-transpiler.js")
 
@@ -154,6 +153,10 @@ class DiscourseJsProcessor
 
     def terser(tree, opts)
       self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    end
+
+    def rollup(tree, opts)
+      self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
     end
 
     def post_css(css:, map:, source_map_file:)

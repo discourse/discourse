@@ -15,7 +15,7 @@ export default {
   initialize(container) {
     const router = container.lookup("service:router");
 
-    withPluginApi("1.39.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "topic-list-columns",
         ({ value: columns }) => {

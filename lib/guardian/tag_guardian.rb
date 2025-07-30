@@ -16,7 +16,7 @@ module TagGuardian
 
   def can_tag_pms?
     return false if !SiteSetting.tagging_enabled
-    return false if @user.blank?
+    return false if !authenticated?
     return true if @user == Discourse.system_user
 
     group_ids = SiteSetting.pm_tags_allowed_for_groups_map

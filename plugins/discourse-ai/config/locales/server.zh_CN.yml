@@ -62,7 +62,6 @@ zh_CN:
     ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_image_caption_model: "选择用于生成图片标题的模型"
-    ai_auto_image_caption_allowed_groups: "这些群组中的用户可以切换自动生成图片标题。"
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
     ai_embeddings_generate_for_pms: "为个人消息生成嵌入向量。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
