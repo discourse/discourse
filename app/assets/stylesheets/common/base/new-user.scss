@@ -205,12 +205,28 @@
     .d-icon-d-unread {
       @extend %unread-icon;
     }
+
+    .btn:hover {
+      .d-icon-d-unread {
+        color: var(--tertiary);
+      }
+    }
+
+    .d-icon-angle-down {
+      margin-right: 0;
+    }
   }
 
   .messages-dropdown-content {
     .dropdown-menu__item {
       .d-icon-d-unread {
         @extend %unread-icon;
+      }
+
+      .btn:hover {
+        .d-icon-d-unread {
+          color: var(--tertiary);
+        }
       }
 
       .btn.is-selected {
