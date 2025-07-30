@@ -456,6 +456,7 @@
     width: 100%;
     height: var(--d-sidebar-row-height);
     cursor: pointer;
+    box-shadow: none;
 
     &:focus {
       outline: none;

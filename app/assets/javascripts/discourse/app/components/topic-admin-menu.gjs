@@ -107,6 +107,7 @@ export default class TopicAdminMenu extends Component {
                   @label="topic.actions.multi_select"
                   @action={{fn this.onButtonAction "toggleMultiSelect"}}
                   @icon="list-check"
+                  class="btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
@@ -123,7 +124,7 @@ export default class TopicAdminMenu extends Component {
                     @label="topic.actions.delete"
                     @action={{fn this.onButtonAction "deleteTopic"}}
                     @icon="trash-can"
-                    class="popup-menu-btn-danger btn-danger"
+                    class="popup-menu-btn-danger btn-danger btn-transparent"
                   />
                 </dropdown.item>
               {{else if this.canRecover}}
@@ -132,6 +133,7 @@ export default class TopicAdminMenu extends Component {
                     @label="topic.actions.recover"
                     @action={{fn this.onButtonAction "recoverTopic"}}
                     @icon="arrow-rotate-left"
+                    class="btn-transparent"
                   />
                 </dropdown.item>
               {{/if}}
@@ -153,6 +155,7 @@ export default class TopicAdminMenu extends Component {
                   }}
                   @action={{fn this.onButtonAction "toggleClosed"}}
                   @icon={{if @topic.closed "topic.opened" "topic.closed"}}
+                  class="btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
@@ -173,6 +176,7 @@ export default class TopicAdminMenu extends Component {
                   }}
                   @action={{fn this.onButtonAction "showFeatureTopic"}}
                   @icon="thumbtack"
+                  class="btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
@@ -189,6 +193,7 @@ export default class TopicAdminMenu extends Component {
                   }}
                   @action={{fn this.onButtonAction "toggleArchived"}}
                   @icon="folder"
+                  class="btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
@@ -203,6 +208,7 @@ export default class TopicAdminMenu extends Component {
                   }}
                   @action={{fn this.onButtonAction "toggleVisibility"}}
                   @icon={{if this.visible "far-eye-slash" "far-eye"}}
+                  class="btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
@@ -215,6 +221,7 @@ export default class TopicAdminMenu extends Component {
                     "topic.actions.make_public"
                     "topic.actions.make_private"
                   }}
+                  class="btn-transparent"
                   @action={{fn
                     this.onButtonAction
                     (if
@@ -236,6 +243,7 @@ export default class TopicAdminMenu extends Component {
                   @label="topic.actions.timed_update"
                   @action={{fn this.onButtonAction "showTopicTimerModal"}}
                   @icon="far-clock"
+                  class="btn-transparent"
                 />
               </dropdown.item>
 
@@ -245,6 +253,7 @@ export default class TopicAdminMenu extends Component {
                     @label="topic.change_timestamp.title"
                     @action={{fn this.onButtonAction "showChangeTimestamp"}}
                     @icon="calendar-days"
+                    class="btn-transparent"
                   />
                 </dropdown.item>
               {{/if}}
@@ -254,6 +263,7 @@ export default class TopicAdminMenu extends Component {
                   @label="topic.actions.reset_bump_date"
                   @action={{fn this.onButtonAction "resetBumpDate"}}
                   @icon="anchor"
+                  class="btn-transparent"
                 />
               </dropdown.item>
 
@@ -262,6 +272,7 @@ export default class TopicAdminMenu extends Component {
                   @label="topic.actions.slow_mode"
                   @action={{fn this.onButtonAction "showTopicSlowModeUpdate"}}
                   @icon="hourglass-start"
+                  class="btn-transparent"
                 />
               </dropdown.item>
             {{/if}}
@@ -275,6 +286,7 @@ export default class TopicAdminMenu extends Component {
                     @label="review.moderation_history"
                     @href={{this.topicModerationHistoryUrl}}
                     @icon="list"
+                    class="btn-transparent"
                   />
                 </dropdown.item>
               {{/if}}
