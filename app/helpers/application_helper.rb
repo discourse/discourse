@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 require "current_user"
 require "canonical_url"

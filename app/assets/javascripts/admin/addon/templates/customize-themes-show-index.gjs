@@ -138,7 +138,7 @@ export default RouteTemplate(
                 {{#if @controller.colorSchemeId}}
                   <DButton
                     @icon="pencil"
-                    @action={{@controller.editColorScheme}}
+                    @action={{@controller.editLightColorScheme}}
                     @title="admin.customize.theme.edit_color_scheme"
                   />
                 {{/if}}
