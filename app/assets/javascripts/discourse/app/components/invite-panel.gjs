@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";

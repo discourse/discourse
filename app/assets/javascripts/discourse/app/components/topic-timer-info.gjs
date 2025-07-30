@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { attributeBindings, tagName } from "@ember-decorators/component";
 import $ from "jquery";

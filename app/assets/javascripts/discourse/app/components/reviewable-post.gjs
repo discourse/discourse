@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";

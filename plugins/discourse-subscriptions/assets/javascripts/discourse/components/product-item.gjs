@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";

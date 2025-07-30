@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
