@@ -231,9 +231,8 @@ export default class ChatDrawer extends Component {
 
   <template>
     {{#if this.chatStateManager.isDrawerActive}}
-      {{bodyClass "chat-drawer-active"}}
       {{htmlClass "has-drawer-chat" "has-chat"}}
-      {{bodyClass "has-drawer-chat" "has-chat"}}
+      {{bodyClass "has-drawer-chat" "has-chat" "chat-drawer-active"}}
     {{/if}}
 
     {{#if this.chatStateManager.isDrawerExpanded}}

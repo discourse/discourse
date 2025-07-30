@@ -30,7 +30,7 @@ export default class ElementClassesService extends Service {
 
   removeUnusedClasses(element, classes) {
     const remainingClasses = new Set(
-      ...this.#helpers
+      this.#helpers
         .values()
         .filter(({ element: el }) => el === element)
         .flatMap(({ classes: cls }) => cls)
