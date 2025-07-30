@@ -196,6 +196,16 @@ RSpec.describe TopicGuardian do
       expect(Guardian.new(admin).can_delete_topic?(tos_topic)).to be_falsey
     end
 
+    it "returns false when topic is trashed" do
+      topic.stubs(:trashed?).returns(true)
+      expect(Guardian.new(admin).can_delete_topic?(topic)).to be_falsey
+    end
+
+    it "returns false when topic is category topic" do
+      topic.stubs(:is_category_topic?).returns(true)
+      expect(Guardian.new(admin).can_delete_topic?(topic)).to be_falsey
+    end
+
     it "returns true for own topics with no replies" do
       topic.update_attribute(:posts_count, 1)
       topic.update_attribute(:created_at, Time.zone.now)
