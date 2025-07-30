@@ -6,6 +6,12 @@ require "fileutils"
 require "tempfile"
 require "open3"
 require "json"
+require "time"
+
+require_relative "../lib/version"
+
+DOWNLOAD_PRE_BUILT_ASSETS = ENV["DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS"] == "1"
+PRE_BUILD_ROOT = "https://get.discourse.org/discourse-assets"
 
 BUILD_INFO_FILE = "dist/BUILD_INFO.json"
 
@@ -15,6 +21,10 @@ def capture(*args)
   output, status = Open3.capture2(*args)
   raise "Command failed: #{args.inspect}" if status != 0
   output
+end
+
+def log(message)
+  STDERR.puts "[assemble_ember_build] #{message}"
 end
 
 # Returns a git tree-hash representing the current state of Discourse core.
@@ -41,7 +51,7 @@ def low_memory_environment?
 end
 
 def resolved_ember_env
-  ENV["EMBER_ENV"] || "production"
+  ENV["EMBER_ENV"] || "development"
 end
 
 def build_info
@@ -50,7 +60,7 @@ end
 
 def existing_core_build_usable?
   if !File.exist?(BUILD_INFO_FILE)
-    STDERR.puts "No existing build info file found."
+    log "No existing build info file found."
     return false
   end
 
@@ -60,13 +70,51 @@ def existing_core_build_usable?
   if existing == expected
     true
   else
-    STDERR.puts <<~MSG
+    log <<~MSG
       Existing build is not reusable.
       - Existing: #{existing.inspect}
       - Current: #{expected.inspect}
     MSG
     false
   end
+end
+
+def download_prebuild_assets!
+  return false if !DOWNLOAD_PRE_BUILT_ASSETS
+
+  git_is_clean = capture("git", "status", "--porcelain").strip.empty?
+  if !git_is_clean
+    log "Git working directory is not clean. Cannot download prebuilt assets."
+    return false
+  end
+
+  core_commit_hash = capture("git", "rev-parse", "HEAD").strip
+  version_string = "#{Discourse::VERSION::STRING}-#{core_commit_hash.slice(0, 8)}"
+
+  url = "#{PRE_BUILD_ROOT}/#{version_string}/#{resolved_ember_env}.tar.gz"
+  puts "Fetching and extracting #{url}..."
+
+  temp_file = "#{__dir__}/../tmp/assets.tar.gz"
+  begin
+    system("curl", "--fail-with-body", "-L", url, "-o", temp_file, exception: true)
+  rescue RuntimeError => e
+    log "Failed to download prebuilt assets: #{e.message}"
+    return false
+  end
+
+  FileUtils.rm_rf("dist")
+  FileUtils.mkdir_p("dist")
+  begin
+    system("tar", "--strip-components=1", "-xzf", temp_file, "-C", "dist", exception: true)
+  rescue RuntimeError => e
+    log "Failed to extract prebuilt assets: #{e.message}"
+    return false
+  end
+
+  FileUtils.rm_f(temp_file)
+
+  puts "Prebuilt assets downloaded and extracted successfully."
+  true
 end
 
 build_cmd = %w[pnpm ember build]
@@ -78,7 +126,7 @@ if Etc.nprocessors > 2
 end
 
 if low_memory_environment?
-  STDERR.puts "Node.js heap_size_limit is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
+  log "Node.js heap_size_limit is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
   build_env["NODE_OPTIONS"] = "--max_old_space_size=2048"
   build_env["CHEAP_SOURCE_MAPS"] = "1"
   build_env["JOBS"] = "1"
@@ -86,8 +134,8 @@ end
 
 build_cmd << "-prod" if resolved_ember_env == "production"
 
-if existing_core_build_usable?
-  STDERR.puts "Reusing existing core ember build. Only building plugins..."
+if existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
+  log "Reusing existing core ember build. Only building plugins..."
   build_env["SKIP_CORE_BUILD"] = "1"
   build_cmd << "-o" << "dist/_plugin_only_build"
   begin
@@ -97,9 +145,9 @@ if existing_core_build_usable?
   ensure
     FileUtils.rm_rf("dist/_plugin_only_build")
   end
-  STDERR.puts "Plugin build successfully integrated into dist"
+  log "Plugin build successfully integrated into dist"
 else
-  STDERR.puts "Running full core build..."
+  log "Running full core build..."
   system(build_env, *build_cmd, exception: true)
   File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
 end
