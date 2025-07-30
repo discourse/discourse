@@ -2,9 +2,9 @@ name: Publish Assets
 
 on:
   push:
-    # branches:
-    #   - main
-    #   - stable
+    branches:
+      - main
+      - stable
 
 concurrency:
   group: publish-assets-${{ format('{0}-{1}', github.ref, github.job) }}
