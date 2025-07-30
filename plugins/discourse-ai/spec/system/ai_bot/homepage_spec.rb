@@ -261,6 +261,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           ai_pm_homepage.visit
           ai_pm_homepage.persona_selector.expand
           expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+          persona.update!(allow_personal_messages: true)
         end
 
         it "includes persona in selector when allow_personal_messages is enabled" do
