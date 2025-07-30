@@ -55,9 +55,9 @@ export default class MessagesDropdown extends Component {
               <DButton
                 @translatedLabel={{item.name}}
                 @icon={{item.icon}}
-                class={{concatClass
-                  "btn-transparent"
-                  (if (eq this.currentSelection.name item.name) "is-selected")
+                class={{if
+                  (eq this.currentSelection.name item.name)
+                  "is-selected"
                 }}
                 @action={{this.openInbox item.id}}
               >
