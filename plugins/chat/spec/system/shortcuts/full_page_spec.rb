@@ -19,7 +19,7 @@ RSpec.describe "Shortcuts | full page", type: :system do
 
       page.send_keys("e")
 
-      expect(find(".chat-composer__input").value).to eq("e")
+      expect(page).to have_field("channel-composer", with: "e")
     end
   end
 end
