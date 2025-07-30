@@ -111,7 +111,7 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    withPluginApi("1.24.0", (api) => {
+    withPluginApi((api) => {
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link",
         label: "admin.plugins.title",
@@ -236,7 +236,7 @@ acceptance(
       _locale = I18n.locale;
       I18n.locale = "fr_FOO";
 
-      withPluginApi("1.24.0", (api) => {
+      withPluginApi((api) => {
         api.addAdminSidebarSectionLink("root", {
           name: "test_section_link",
           label: "admin.plugins.title",

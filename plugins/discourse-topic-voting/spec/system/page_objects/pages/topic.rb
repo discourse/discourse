@@ -7,6 +7,17 @@ module TopicVotingTopic
     find(".voting .vote-count")
   end
 
+  def has_votes_left_popup?(count)
+    expected_html =
+      I18n
+        .t("js.topic_voting.votes_left", count:, path: "/my/activity/votes")
+        .gsub(/'([^']*)'/) { "\"#{$1}\"" }
+    selector = ".voting-popup-menu"
+    has_css?(selector)
+    actual_html = find(selector)[:innerHTML].strip
+    actual_html.include?(expected_html)
+  end
+
   def vote_popup
     find(".voting-popup-menu")
   end

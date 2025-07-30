@@ -664,7 +664,7 @@ acceptance(
 
     test("addUserMessagesNavigationDropdownRow plugin api", async function (assert) {
       try {
-        withPluginApi("1.5.0", (api) => {
+        withPluginApi((api) => {
           api.addUserMessagesNavigationDropdownRow(
             "preferences",
             "test nav",

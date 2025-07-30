@@ -167,6 +167,7 @@ module DiscourseAi
                 description: persona.description,
                 force_default_llm: persona.force_default_llm,
                 username: persona.username,
+                allow_personal_messages: persona.allow_personal_messages,
               }
             end
         end

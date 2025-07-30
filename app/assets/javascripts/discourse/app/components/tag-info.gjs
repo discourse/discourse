@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Textarea } from "@ember/component";
 import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";

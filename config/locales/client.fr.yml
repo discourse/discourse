@@ -201,7 +201,6 @@ fr:
       search: "Recherche"
     themes:
       default_description: "Par défaut"
-      broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
       error_caused_by: "Causée par « %{name} ». <a target='blank' href='%{path}'>Cliquez ici</a> pour mettre à jour, reconfigurer or désactiver."
       only_admins: "(ce message n'est visible que pour les administrateurs du site)"
     broken_decorator_alert: "Les publications risquent de ne pas s'afficher correctement, car l'un des décorateurs de contenu de publication de votre site a généré une erreur."

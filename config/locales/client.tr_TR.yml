@@ -201,7 +201,6 @@ tr_TR:
       search: "Ara"
     themes:
       default_description: "Varsayılan"
-      broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
       error_caused_by: "\"%{name}\" neden oldu. Güncellemek, yeniden yapılandırmak veya devre dışı bırakmak için <a target='blank' href='%{path}'>buraya tıklayın</a>."
       only_admins: "(bu mesaj sadece site yöneticilerine gösterilir)"
     broken_decorator_alert: "Sitenizdeki içerik dekoratörlerinden biri bir hataya neden olduğundan gönderiler doğru görüntülenmeyebilir."

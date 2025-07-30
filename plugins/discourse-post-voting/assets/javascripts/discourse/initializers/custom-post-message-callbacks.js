@@ -9,7 +9,7 @@ export default {
       return;
     }
 
-    withPluginApi("1.2.0", (api) => {
+    withPluginApi((api) => {
       api.registerCustomPostMessageCallback(
         "post_voting_post_comment_edited",
         (topicController, message) => {

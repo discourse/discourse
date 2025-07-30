@@ -9,7 +9,7 @@ RSpec.describe DiscourseAi::Summarization::ChatSummaryController do
 
     group.add(current_user)
 
-    assign_fake_provider_to(:ai_summarization_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
     SiteSetting.ai_custom_summarization_allowed_groups = group.id
 

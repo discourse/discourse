@@ -25,6 +25,7 @@ en:
         description: "Periodic report based on a large language model"
   site_settings:
     discourse_ai_enabled: "Enable the discourse AI plugin."
+    ai_default_llm_model: "The default LLM model to use for all AI features"
     ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
     ai_toxicity_enabled: "Enable the toxicity module."
     ai_toxicity_inference_service_api_endpoint: "URL where the API is running for the toxicity module"
@@ -581,7 +582,7 @@ en:
     llm:
       configuration:
         create_llm: "You need to setup an LLM before enabling this feature"
-        disable_module_first: "You have to disable %{setting} first."
+        disable_modules_first: "You must disable these modules first: %{settings}"
         set_llm_first: "Set %{setting} first"
         model_unreachable: "We couldn't get a response from this model. Check your settings first."
         invalid_seeded_model: "You can't use this model with this feature"

@@ -200,7 +200,6 @@ nl:
       search: "Zoeken"
     themes:
       default_description: "Standaard"
-      broken_theme_alert: "Je website werkt mogelijk niet, omdat het thema/onderdeel fouten bevat."
       error_caused_by: "Veroorzaakt door '%{name}'. <a target='blank' href='%{path}'>Klik hier</a> om bij te werken, opnieuw te configureren of uit te schakelen."
       only_admins: "(dit bericht wordt alleen getoond aan sitebeheerders)"
     broken_decorator_alert: "Berichten worden mogelijk niet correct weergegeven omdat een van de bewerkers van de inhoud op je site een fout heeft gemeld."

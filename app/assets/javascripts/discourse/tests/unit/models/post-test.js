@@ -33,7 +33,7 @@ module("Unit | Model | post", function (hooks) {
   });
 
   test("updateFromPost", function (assert) {
-    withPluginApi("1.39.0", (api) => {
+    withPluginApi((api) => {
       api.addTrackedPostProperties("plugin_property", "other_plugin_property");
     });
 

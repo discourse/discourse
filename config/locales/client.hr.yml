@@ -229,7 +229,6 @@ hr:
       search: "Pretraživanje"
     themes:
       default_description: "Zadano"
-      broken_theme_alert: "Vaša stranica možda neće raditi jer tema/komponenta ima greške."
       error_caused_by: "Uzrokuje '%{name}'. <a target='blank' href='%{path}'>Kliknite ovdje</a> za ažuriranje, ponovnu konfiguraciju ili onemogućivanje."
       only_admins: "(ova se poruka prikazuje samo administratorima stranice)"
     broken_decorator_alert: "Postovi se možda neće ispravno prikazati jer je jedan od dekoratora sadržaja postova na vašoj web-lokaciji pokrenuo pogrešku."

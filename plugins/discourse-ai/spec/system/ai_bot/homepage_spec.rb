@@ -246,6 +246,35 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(sidebar).to have_section_link(pm.title)
         end
 
+        it "allows navigating to a specific LLM and persona" do
+          # url encode name
+          persona_name = CGI.escape(persona.name)
+          llm_name = CGI.escape(claude_2_dup.display_name)
+          visit "/discourse-ai/ai-bot/conversations?persona=#{persona_name}&llm=#{llm_name}"
+
+          ai_pm_homepage.persona_selector.expand # not needed, but helps to see what the list has
+          expect(ai_pm_homepage.persona_selector).to have_selected_name(persona.name)
+          expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
+        end
+
+        it "removes persona from selector when allow_personal_messages is disabled" do
+          begin
+            persona.update!(allow_personal_messages: false)
+            ai_pm_homepage.visit
+            ai_pm_homepage.persona_selector.expand
+            expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+          ensure
+            persona.update!(allow_personal_messages: true)
+          end
+        end
+
+        it "includes persona in selector when allow_personal_messages is enabled" do
+          # default is true
+          ai_pm_homepage.visit
+          ai_pm_homepage.persona_selector.expand
+          expect(ai_pm_homepage.persona_selector).to have_option_name(persona.name)
+        end
+
         it "shows empty state when no PMs exist" do
           pm.destroy!
 

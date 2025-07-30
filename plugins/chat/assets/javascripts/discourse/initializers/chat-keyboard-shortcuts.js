@@ -138,7 +138,7 @@ export default {
       }
     };
 
-    withPluginApi("0.12.1", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+k`,
         openQuickChannelSelector,

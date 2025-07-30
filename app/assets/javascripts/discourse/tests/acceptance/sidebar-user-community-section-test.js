@@ -981,7 +981,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   test("adding section link via plugin API with Object", async function (assert) {
-    withPluginApi("1.2.0", (api) => {
+    withPluginApi((api) => {
       api.addCommunitySectionLink({
         name: "unread",
         route: "discovery.unread",
@@ -1023,7 +1023,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("adding section link via plugin API with callback function", async function (assert) {
     let teardownCalled = false;
 
-    withPluginApi("1.2.0", (api) => {
+    withPluginApi((api) => {
       api.addCommunitySectionLink((baseSectionLink) => {
         return class CustomSectionLink extends baseSectionLink {
           get name() {

@@ -46,6 +46,6 @@ export default {
   },
 
   initialize() {
-    withPluginApi("1.2.0", this.initWithApi);
+    withPluginApi(this.initWithApi);
   },
 };

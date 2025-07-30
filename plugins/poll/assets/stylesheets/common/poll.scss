@@ -3,7 +3,7 @@
 div.poll-outer {
   div.poll {
     margin: 1em 0;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     display: grid;
     grid-template-areas: "poll" "info" "buttons";
 
@@ -103,7 +103,7 @@ div.poll-outer {
       color: var(--primary-medium);
 
       @include viewport.until(sm) {
-        border-top: 1px solid var(--primary-low);
+        border-top: 1px solid var(--content-border-color);
         flex-direction: row-reverse;
 
         &_counts,
@@ -115,7 +115,7 @@ div.poll-outer {
       @include viewport.from(sm) {
         gap: 0 1em;
         padding: 1em;
-        border-left: 1px solid var(--primary-low);
+        border-left: 1px solid var(--content-border-color);
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -210,7 +210,7 @@ div.poll-outer {
           padding-top: 1.25em;
 
           &:not(:empty) {
-            border-top: 1px solid var(--primary-low);
+            border-top: 1px solid var(--content-border-color);
           }
         }
 
@@ -220,7 +220,7 @@ div.poll-outer {
           flex: 1 1 auto;
 
           &:not(:empty) {
-            border-right: 1px solid var(--primary-low);
+            border-right: 1px solid var(--content-border-color);
           }
         }
 
@@ -297,7 +297,7 @@ div.poll-outer {
     }
 
     .poll-title {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       margin-bottom: 0.5em;
       padding-bottom: 0.5em;
     }
@@ -310,7 +310,7 @@ div.poll-outer {
       gap: 0.5em;
       width: 100%;
       padding: 1em;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
 
       button {
         white-space: nowrap;
@@ -534,7 +534,7 @@ body.crawler {
 
 .ProseMirror {
   .poll {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-radius: var(--d-border-radius);
     padding: 1rem;
     margin-bottom: 1rem;

@@ -6,7 +6,7 @@ import Toolbar from "./toolbar";
 export function init() {
   patchConnectors();
 
-  withPluginApi("0.8", (api) => {
+  withPluginApi((api) => {
     api.renderInOutlet("above-site-header", Toolbar);
   });
 }

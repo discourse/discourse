@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";

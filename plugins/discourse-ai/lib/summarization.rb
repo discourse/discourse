@@ -54,11 +54,9 @@ module DiscourseAi
 
       # Priorities are:
       #   1. Persona's default LLM
-      #   2. Hidden `ai_summarization_model` setting
-      #   3. Newest LLM config
+      #   2. SiteSetting.ai_default_llm_id (or newest LLM if not set)
       def find_summarization_model(persona_klass)
-        model_id =
-          persona_klass.default_llm_id || SiteSetting.ai_summarization_model&.split(":")&.last # Remove legacy custom provider.
+        model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
         if model_id.present?
           LlmModel.find_by(id: model_id)
@@ -73,7 +71,7 @@ module DiscourseAi
         persona = persona_klass.new
         user = User.find_by(id: persona_klass.user_id) || Discourse.system_user
 
-        bot = DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm_model)
+        DiscourseAi::Personas::Bot.as(user, persona: persona, model: llm_model)
       end
     end
   end

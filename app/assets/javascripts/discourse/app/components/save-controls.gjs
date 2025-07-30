@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { or } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";

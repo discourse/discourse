@@ -27,6 +27,11 @@ cs:
         cant_remove: "Své Líbí se již nelze odebrat"
         unauthenticated: "Chcete-li dát Líbí se na tento příspěvek, zaregistrujte se nebo se přihlaste"
     notifications:
+      reaction_1_user_multiple_posts:
+        one: "reagoval/a na váš příspěvek"
+        few: "reagoval/a na %{count} vaše příspěvky"
+        many: "reagoval/a na %{count} vašich příspěvků"
+        other: "reagoval/a na %{count} vašich příspěvků"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
         one: "%{username} a %{count} další"

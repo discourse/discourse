@@ -1,12 +1,13 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
 import {
   attributeBindings,
   classNameBindings,
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import htmlSafe from "discourse/helpers/html-safe";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("td")

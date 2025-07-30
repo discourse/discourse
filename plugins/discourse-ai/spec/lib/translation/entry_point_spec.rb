@@ -2,10 +2,8 @@
 
 describe DiscourseAi::Translation::EntryPoint do
   before do
+    assign_fake_provider_to(:ai_default_llm_model)
     enable_current_plugin
-    Fabricate(:fake_model).tap do |fake_llm|
-      SiteSetting.public_send("ai_translation_model=", "custom:#{fake_llm.id}")
-    end
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = "en"
   end
@@ -58,9 +56,8 @@ describe DiscourseAi::Translation::EntryPoint do
     fab!(:non_first_post) { Fabricate(:post, post_number: 2) }
 
     before do
-      Fabricate(:fake_model).tap do |fake_llm|
-        SiteSetting.public_send("ai_translation_model=", "custom:#{fake_llm.id}")
-      end
+      enable_current_plugin
+      assign_fake_provider_to(:ai_default_llm_model)
     end
 
     it "enqueues detect topic locale and translate topic job" do

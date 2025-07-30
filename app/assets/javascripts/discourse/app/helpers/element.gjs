@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import ClassicComponent from "@ember/component";
 
 const empty = <template>

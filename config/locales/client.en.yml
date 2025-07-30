@@ -155,6 +155,105 @@ en:
       placeholder: date
       from_placeholder: "from date"
       to_placeholder: "to date"
+    languages:
+      ar:
+        name: Arabic
+      be:
+        name: Belarusian
+      bg:
+        name: Bulgarian
+      bs_BA:
+        name: Bosnian
+      ca:
+        name: Catalan
+      cs:
+        name: Czech
+      da:
+        name: Danish
+      de:
+        name: German
+      el:
+        name: Greek
+      en:
+        name: English (US)
+      en_GB:
+        name: English (UK)
+      es:
+        name: Spanish
+      et:
+        name: Estonian
+      fa_IR:
+        name: Persian
+      fi:
+        name: Finnish
+      fr:
+        name: French
+      gl:
+        name: Galician
+      he:
+        name: Hebrew
+      hr:
+        name: Croatian
+      hu:
+        name: Hungarian
+      hy:
+        name: Armenian
+      id:
+        name: Indonesian
+      it:
+        name: Italian
+      ja:
+        name: Japanese
+      ko:
+        name: Korean
+      lt:
+        name: Lithuanian
+      lv:
+        name: Latvian
+      nb_NO:
+        name: Norwegian Bokmål
+      nl:
+        name: Dutch
+      pl_PL:
+        name: Polish
+      pt:
+        name: Portuguese
+      pt_BR:
+        name: Portuguese
+      ro:
+        name: Romanian
+      ru:
+        name: Russian
+      sk:
+        name: Slovak
+      sl:
+        name: Slovene
+      sq:
+        name: Albanian
+      sr:
+        name: Serbian
+      sv:
+        name: Swedish
+      sw:
+        name: Swahili
+      te:
+        name: Telugu
+      th:
+        name: Thai
+      tr_TR:
+        name: Turkish
+      ug:
+        name: Uyghur
+      uk:
+        name: Ukrainian
+      ur:
+        name: Urdu
+      vi:
+        name: Vietnamese
+      zh_TW:
+        name: Chinese
+      zh_CN:
+        name: Chinese Simplified
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
@@ -229,7 +328,7 @@ en:
 
     themes:
       default_description: "Default"
-      broken_theme_alert: "Your site may not work because a theme / component has errors."
+      broken_theme_alert: "Your site may not work because a theme / component has errors. Check the browser console for more information."
       error_caused_by: "Caused by '%{name}'. <a target='blank' href='%{path}'>Click here</a> to update, reconfigure or disable."
       only_admins: "(this message is only shown to site administrators)"
 
@@ -2681,6 +2780,9 @@ en:
     welcome_banner_location:
       above_topic_content: "Above topic content"
       below_site_header: "Below site header"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Rich text"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -6985,9 +7087,10 @@ en:
             title: "Select base color palette"
             description: "Base palette:"
           preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so palette changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
+          dark_mode_warning: "You're currently using dark mode. When setting an active color palette the colors will be applied to the light mode of the theme. If you want to change the default dark mode colors, please edit the <a href='%{link}'>dark mode site setting</a>."
           title: "Colors"
           edit: "Edit"
-          set_default: "Set as active on %{theme}"
+          set_default: "Activate on default theme (%{theme})"
           set_default_success: "%{schemeName} set as active palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"

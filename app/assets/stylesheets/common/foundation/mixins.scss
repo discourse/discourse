@@ -246,14 +246,13 @@ $hpad: 0.65em;
 }
 
 @mixin mention() {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25em;
+  // memo to self: do not make this inline-flex because it breaks text alignments and causes a whole avalance of unpleasant consequences
+  display: inline-block;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
   padding: 0.2em 0.34em;
-  background: var(--primary-low);
+  background: var(--mention-background-color);
   border-radius: 0.6em;
   text-decoration: none;
   text-wrap: nowrap;

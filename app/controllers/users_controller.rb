@@ -2270,7 +2270,7 @@ class UsersController < ApplicationController
   end
 
   def summary_cache_key(user)
-    "user_summary:#{user.id}:#{current_user ? current_user.id : 0}"
+    "user_summary:#{user.id}:#{current_user ? current_user.id : 0}:#{I18n.locale}"
   end
 
   def render_invite_error(message)

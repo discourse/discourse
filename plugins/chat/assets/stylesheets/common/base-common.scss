@@ -178,7 +178,7 @@ body.has-full-page-chat {
   .alert-success,
   .alert-warning {
     margin: 0;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
   }
 }
 
@@ -238,7 +238,7 @@ body.has-full-page-chat {
 .chat-channel-status {
   background: var(--secondary);
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 }
 
 html.has-full-page-chat {

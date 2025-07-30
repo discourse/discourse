@@ -1,9 +1,10 @@
+import { concat } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import AdminFilterControls from "admin/components/admin-filter-controls";
@@ -15,8 +16,14 @@ export default RouteTemplate(
 
       <DPageHeader
         @titleLabel={{i18n "admin.config.plugins.title"}}
-        @descriptionLabel={{i18n "admin.config.plugins.header_description"}}
-        @learnMoreUrl="https://www.discourse.org/plugins"
+        @descriptionLabel={{htmlSafe
+          (concat
+            (i18n "admin.config.plugins.header_description")
+            '<a class="admin-plugins-howto" href="https://meta.discourse.org/t/install-a-plugin/19157">'
+            (i18n "admin.plugins.howto")
+            "</a>"
+          )
+        }}
       >
         <:breadcrumbs>
           <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
@@ -47,13 +54,6 @@ export default RouteTemplate(
           {{/each}}
         </:tabs>
       </DPageHeader>
-
-      <div class="alert alert-info admin-plugins-howto">
-        <a href="https://meta.discourse.org/t/install-a-plugin/19157">
-          {{icon "circle-info"}}
-          {{i18n "admin.plugins.howto"}}
-        </a>
-      </div>
 
       {{#if @controller.model.length}}
         <AdminFilterControls

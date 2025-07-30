@@ -34,7 +34,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
           DemoComponent
         );
 
-        withPluginApi(0, (api) => {
+        withPluginApi((api) => {
           api.decorateCookedElement(
             (cooked, helper) => {
               if (helper.getModel().post_number !== 1) {

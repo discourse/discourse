@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";

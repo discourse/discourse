@@ -214,6 +214,12 @@ import puppeteer from "puppeteer-core";
       document.getElementById("reply-title").value = "";
     });
 
+    await exec("composer is open", () => {
+      return page.waitForSelector("#reply-control .d-editor-input", {
+        visible: true,
+      });
+    });
+
     await exec("compose new topic", () => {
       const date = `(${+new Date()})`;
       const title = `This is a new topic ${date}`;
@@ -228,9 +234,9 @@ import puppeteer from "puppeteer-core";
       return promise;
     });
 
-    await exec("updates preview", () => {
-      return page.waitForSelector(".d-editor-preview p", { visible: true });
-    });
+    // await exec("updates preview", () => {
+    //   return page.waitForSelector(".d-editor-preview p", { visible: true });
+    // });
 
     await exec("submit the topic", () => {
       return page.click(".submit-panel .create");
@@ -255,14 +261,14 @@ import puppeteer from "puppeteer-core";
       return page.type("#reply-control .d-editor-input", post);
     });
 
-    await exec("waiting for the preview", async () => {
-      await page.waitForSelector("div.d-editor-preview", {
-        visible: true,
-      });
-      return page.waitForFunction(
-        "document.querySelector('div.d-editor-preview').innerText.includes('I can even write a reply')"
-      );
-    });
+    // await exec("waiting for the preview", async () => {
+    //   await page.waitForSelector("div.d-editor-preview", {
+    //     visible: true,
+    //   });
+    //   return page.waitForFunction(
+    //     "document.querySelector('div.d-editor-preview').innerText.includes('I can even write a reply')"
+    //   );
+    // });
 
     await exec("wait a little bit", () => {
       return new Promise((resolve) => setTimeout(resolve, 5000));

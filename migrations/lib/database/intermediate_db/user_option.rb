@@ -24,6 +24,7 @@ module Migrations::Database::IntermediateDB
         chat_separate_sidebar_mode,
         chat_sound,
         color_scheme_id,
+        composition_mode,
         dark_scheme_id,
         default_calendar,
         digest_after_minutes,
@@ -74,7 +75,7 @@ module Migrations::Database::IntermediateDB
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?
+        ?, ?, ?
       )
     SQL
 
@@ -95,6 +96,7 @@ module Migrations::Database::IntermediateDB
       chat_separate_sidebar_mode: nil,
       chat_sound: nil,
       color_scheme_id: nil,
+      composition_mode: nil,
       dark_scheme_id: nil,
       default_calendar: nil,
       digest_after_minutes: nil,
@@ -160,6 +162,7 @@ module Migrations::Database::IntermediateDB
         chat_separate_sidebar_mode,
         chat_sound,
         color_scheme_id,
+        composition_mode,
         dark_scheme_id,
         default_calendar,
         digest_after_minutes,
