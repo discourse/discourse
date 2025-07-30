@@ -34,11 +34,21 @@ module DiscourseAi
       end
 
       def self.get_completion_per_locale(locale)
-        done = get.where(locale:).count
-        done += PostLocalization.where(locale:).count
-
         total = get.count
+        return 1.0 if total.zero?
 
+        base_locale = "#{locale.split("_").first}%"
+        sql = <<~SQL
+          WITH eligible_posts AS (
+            #{get.to_sql}
+          )
+          SELECT COUNT(DISTINCT p.id)
+          FROM eligible_posts p
+          LEFT JOIN post_localizations pl ON p.id = pl.post_id AND pl.locale LIKE :base_locale
+          WHERE p.locale LIKE :base_locale OR pl.post_id IS NOT NULL
+        SQL
+
+        done = DB.query_single(sql, base_locale:).first.to_i || 0
         done / total.to_f
       end
     end
