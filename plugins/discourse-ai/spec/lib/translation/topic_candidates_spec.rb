@@ -54,9 +54,10 @@ describe DiscourseAi::Translation::TopicCandidates do
   describe ".get_completion_per_locale" do
     context "when (scenario A) percentage determined by topic's locale" do
       it "returns 100% completion if all topics are in the locale" do
-        locale = "es"
+        locale = "pt_BR"
         Fabricate(:topic, locale:)
         Topic.update_all(locale: locale)
+        Fabricate(:topic, locale: "pt")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1.0)
@@ -65,6 +66,7 @@ describe DiscourseAi::Translation::TopicCandidates do
       it "returns X% completion if some topics are in the locale" do
         locale = "es"
         Fabricate(:topic, locale:)
+        Fabricate(:topic, locale: "not_es")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1 / Topic.count.to_f)
@@ -73,9 +75,10 @@ describe DiscourseAi::Translation::TopicCandidates do
 
     context "when (scenario B) percentage determined by topic localizations" do
       it "returns 100% completion if all topics have a localization in the locale" do
-        locale = "es"
+        locale = "pt_BR"
         Fabricate(:topic)
         Topic.all.each { |topic| Fabricate(:topic_localization, topic:, locale:) }
+        Fabricate(:topic_localization, locale: "pt")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1.0)
@@ -83,8 +86,8 @@ describe DiscourseAi::Translation::TopicCandidates do
 
       it "returns X% completion if some topics have a localization in the locale" do
         locale = "es"
-        topic = Fabricate(:topic)
-        Fabricate(:topic_localization, topic:, locale:)
+        Fabricate(:topic_localization, locale:)
+        Fabricate(:topic_localization, locale: "not_es")
 
         completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1 / Topic.count.to_f)
@@ -93,12 +96,41 @@ describe DiscourseAi::Translation::TopicCandidates do
 
     it "returns the correct percentage based on (scenario A & B) `topic.locale` and `TopicLocalization` in the specified locale" do
       locale = "es"
+
+      # translated candidates
       Fabricate(:topic, locale:)
-      topic = Fabricate(:topic)
+      topic2 = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic2, locale:)
+
+      # untranslated candidate
+      topic4 = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic4, locale: "zh_CN")
+
+      # not a candidate as it is a bot topic
+      topic3 = Fabricate(:topic, user: Discourse.system_user)
+      Fabricate(:topic_localization, topic: topic3, locale:)
+
+      completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
+      translated_candidates = 2 # topic1 + topic2
+      total_candidates = Topic.count - 1 # excluding the bot topic
+      expect(completion).to eq(translated_candidates / total_candidates.to_f)
+    end
+
+    it "does not exceed 100% completion when topic.locale and topic_localization both exist" do
+      locale = "es"
+      topic = Fabricate(:topic, locale:)
       Fabricate(:topic_localization, topic:, locale:)
 
       completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale(locale)
-      expect(completion).to eq(2 / Topic.count.to_f)
+      expect(completion).to be(1.0)
+    end
+
+    it "returns 100% if no topics" do
+      SiteSetting.ai_translation_backfill_max_age_days = 0
+      SiteSetting.ai_translation_backfill_limit_to_public_content = false
+
+      completion = DiscourseAi::Translation::TopicCandidates.get_completion_per_locale("es")
+      expect(completion).to eq(1.0)
     end
   end
 end

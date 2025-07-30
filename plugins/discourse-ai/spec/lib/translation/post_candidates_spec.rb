@@ -62,9 +62,10 @@ describe DiscourseAi::Translation::PostCandidates do
   describe ".get_completion_per_locale" do
     context "when (scenario A) percentage determined by post's locale" do
       it "returns 100% completion if all posts are in the locale" do
-        locale = "es"
+        locale = "pt_BR"
         Fabricate(:post, locale:)
         Post.update_all(locale: locale)
+        Fabricate(:post, locale: "pt")
 
         completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1.0)
@@ -73,6 +74,7 @@ describe DiscourseAi::Translation::PostCandidates do
       it "returns X% completion if some posts are in the locale" do
         locale = "es"
         Fabricate(:post, locale:)
+        Fabricate(:post, locale: "not_es")
 
         completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1 / Post.count.to_f)
@@ -81,9 +83,10 @@ describe DiscourseAi::Translation::PostCandidates do
 
     context "when (scenario B) percentage determined by post localizations" do
       it "returns 100% completion if all posts have a localization in the locale" do
-        locale = "es"
+        locale = "pt_BR"
         Fabricate(:post)
         Post.all.each { |post| Fabricate(:post_localization, post:, locale:) }
+        Fabricate(:post_localization, locale: "pt")
 
         completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1.0)
@@ -91,8 +94,8 @@ describe DiscourseAi::Translation::PostCandidates do
 
       it "returns X% completion if some posts have a localization in the locale" do
         locale = "es"
-        post = Fabricate(:post)
-        Fabricate(:post_localization, post:, locale:)
+        Fabricate(:post_localization, locale:)
+        Fabricate(:post_localization, locale: "not_es")
 
         completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
         expect(completion).to eq(1 / Post.count.to_f)
@@ -101,12 +104,40 @@ describe DiscourseAi::Translation::PostCandidates do
 
     it "returns the correct percentage based on (scenario A & B) `post.locale` and `PostLocalization` in the specified locale" do
       locale = "es"
+
+      # translated candidates
       Fabricate(:post, locale:)
-      post = Fabricate(:post)
+      post2 = Fabricate(:post)
+      Fabricate(:post_localization, post: post2, locale:)
+
+      # untranslated candidate
+      post4 = Fabricate(:post)
+      Fabricate(:post_localization, post: post4, locale: "zh_CN")
+
+      # not a candidate as it is a bot post
+      post3 = Fabricate(:post, user: Discourse.system_user)
+      Fabricate(:post_localization, post: post3, locale:)
+
+      completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
+      translated_candidates = 2 # post1 + post2
+      total_candidates = Post.count - 1 # excluding the bot post
+      expect(completion).to eq(translated_candidates / total_candidates.to_f)
+    end
+
+    it "does not exceed 100% completion when post.locale and post_localization both exist" do
+      locale = "es"
+      post = Fabricate(:post, locale:)
       Fabricate(:post_localization, post:, locale:)
 
       completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale(locale)
-      expect(completion).to eq(2 / Post.count.to_f)
+      expect(completion).to be(1.0)
+    end
+
+    it "returns 100% completion when no posts are present" do
+      SiteSetting.ai_translation_backfill_max_age_days = 0
+
+      completion = DiscourseAi::Translation::PostCandidates.get_completion_per_locale("es")
+      expect(completion).to eq(1.0)
     end
   end
 end
