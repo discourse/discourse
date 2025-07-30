@@ -1055,7 +1055,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       upsert_hyperlink_modal.fill_in_link_text("Updated Example")
       upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
-      upsert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.send_enter_link_text
 
       expect(rich).to have_css("a[href='https://updated-example.com']", text: "Updated Example")
 
