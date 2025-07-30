@@ -89,6 +89,12 @@ schema:
       columns:
         exclude:
           - "id"
+    tags:
+      columns:
+        exclude:
+          - "pm_topic_count"
+          - "public_topic_count"
+          - "staff_topic_count"
     user_emails:
       columns:
         include:
@@ -341,7 +347,6 @@ schema:
         - "tag_groups"
         - "tag_search_data"
         - "tag_users"
-        - "tags"
         - "tags_web_hooks"
         - "theme_color_schemes"
         - "theme_fields"
