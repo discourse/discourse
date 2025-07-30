@@ -12,6 +12,11 @@ export default function (element, context) {
   const { post, owner, helper } = context;
 
   const extractedMentions = extractMentions(element, post);
+  if (!extractedMentions?.length) {
+    // No mentions found, nothing to do
+    return;
+  }
+
   const userStatusService = owner.lookup("service:user-status");
 
   const updateUserStatus = (updatedUser) => {
@@ -72,12 +77,10 @@ function renderUserStatusOnMentions(mentions, user, helper) {
 }
 
 function extractMentions(element, post) {
-  return (
-    post?.mentioned_users?.map((user) => {
-      const href = getURL(`/u/${user.username.toLowerCase()}`);
-      const mentions = element.querySelectorAll(`a.mention[href="${href}"]`);
+  return post?.mentioned_users?.map((user) => {
+    const href = getURL(`/u/${user.username.toLowerCase()}`);
+    const mentions = element.querySelectorAll(`a.mention[href="${href}"]`);
 
-      return { user, mentions };
-    }) || []
-  );
+    return { user, mentions };
+  });
 }

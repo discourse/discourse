@@ -7,7 +7,8 @@ import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
-const detachedDocument = document.implementation.createHTMLDocument("detached");
+export const DETACHED_DOCUMENT =
+  document.implementation.createHTMLDocument("detached");
 
 /**
  * Reactively renders cooked HTML with decorations applied.
@@ -70,7 +71,7 @@ export default class DecoratedHtml extends Component {
     if (!isHTMLSafe(cooked)) {
       throw "@cooked must be an htmlSafe string";
     }
-    const cookedDiv = detachedDocument.createElement("div");
+    const cookedDiv = DETACHED_DOCUMENT.createElement("div");
     cookedDiv.innerHTML = cooked.toString();
 
     if (this.args.id) {

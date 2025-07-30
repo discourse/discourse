@@ -4,7 +4,9 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DecoratedHtml, {
+  DETACHED_DOCUMENT,
+} from "discourse/components/decorated-html";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -16,20 +18,19 @@ import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/s
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
 import { i18n } from "discourse-i18n";
 
-const detachedDocument = document.implementation.createHTMLDocument("detached");
-
-const POST_COOKED_DECORATORS = [
+const POST_COOKED_DECORATORS_BEFORE_ADOPT = [
   decorateQuoteControls,
   decorateLinkCounts,
   decorateSearchHighlight,
-  decorateMentions,
 ];
+
+const POST_COOKED_DECORATORS_AFTER_ADOPT = [decorateMentions];
 
 export default class PostCookedHtml extends Component {
   @service appEvents;
   @service currentUser;
 
-  #pendingDecoratorCleanup = [];
+  #pendingCleanup = {};
   #decoratorState = this.args.decoratorState || new TrackedMap();
 
   willDestroy() {
@@ -47,108 +48,45 @@ export default class PostCookedHtml extends Component {
 
   @bind
   decorateBeforeAdopt(element, helper, args) {
-    this.#cleanupDecorations();
-
-    const decorators = [...POST_COOKED_DECORATORS, ...this.extraDecorators];
+    const extraDecorators = this.extraDecorators;
+    const decorators = [
+      ...POST_COOKED_DECORATORS_BEFORE_ADOPT,
+      ...extraDecorators,
+    ];
     if (this.shouldAddSelectionBarrier) {
       decorators.push(decorateSelectionBarrier);
     }
 
-    decorators.forEach((decorator) => {
-      try {
-        let decoratorState;
-        if (this.#decoratorState.has(decorator)) {
-          decoratorState = this.#decoratorState.get(decorator);
-        } else {
-          decoratorState = new TrackedMap();
-          this.#decoratorState.set(decorator, decoratorState);
-        }
-
-        const owner = getOwner(this);
-        const renderNestedPostCookedHtml = (
-          nestedElement,
-          nestedPost,
-          extraDecorators,
-          extraArguments
-        ) => {
-          const nestedArguments = {
-            ...extraArguments,
-            post: nestedPost,
-            decoratorState,
-            streamElement: this.isStreamElement,
-            highlightTerm: args.highlightTerm,
-            extraDecorators: [
-              ...this.extraDecorators,
-              ...makeArray(extraDecorators),
-            ],
-          };
-
-          helper.renderGlimmer(
-            nestedElement,
-            curryComponent(PostCookedHtml, nestedArguments, owner)
-          );
-        };
-
-        const decorationCleanup = decorator(element, {
-          data: {
-            post: this.args.post,
-            cooked: this.cooked,
-            highlightTerm: args.highlightTerm,
-            isIgnored: args.isIgnored,
-            ignoredUsers: args.ignoredUsers,
-          },
-          decoratorState,
-          cooked: this.cooked,
-          createDetachedElement: this.#createDetachedElement,
-          currentUser: this.currentUser,
-          extraDecorators: this.extraDecorators,
-          helper,
-          highlightTerm: args.highlightTerm,
-          ignoredUsers: args.ignoredUsers,
-          isIgnored: args.isIgnored,
-          owner,
-          post: this.args.post,
-          renderGlimmer: helper.renderGlimmer,
-          renderNestedPostCookedHtml,
-          streamElement: this.isStreamElement,
-        });
-
-        if (typeof decorationCleanup === "function") {
-          this.#pendingDecoratorCleanup.push(decorationCleanup);
-        }
-      } catch (e) {
-        if (isRailsTesting() || isTesting()) {
-          throw e;
-        } else {
-          // in case one of the decorators throws an error we want to surface it to the console but prevent
-          // the application from crashing
-
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
-      }
-    });
-
-    this.appEvents.trigger(
-      this.isStreamElement
+    this.#decorate("beforeAdopt", {
+      element,
+      helper,
+      decorators,
+      extraDecorators,
+      args,
+      decorateCookedEvent: this.isStreamElement
         ? "decorate-post-cooked-element:before-adopt"
         : "decorate-non-stream-cooked-element",
-      element,
-      helper
-    );
+    });
   }
 
   @bind
-  decorateAfterAdopt(element, helper) {
-    if (!this.isStreamElement) {
-      return;
-    }
+  decorateAfterAdopt(element, helper, args) {
+    const extraDecorators = this.extraDecoratorsAfterAdopt;
+    const decorators = [
+      ...POST_COOKED_DECORATORS_AFTER_ADOPT,
+      ...extraDecorators,
+    ];
 
-    this.appEvents.trigger(
-      "decorate-post-cooked-element:after-adopt",
+    this.#decorate("afterAdopt", {
       element,
-      helper
-    );
+      helper,
+      decorators,
+      extraDecorators,
+      args,
+      decorateCookedEvent: this.isStreamElement
+        ? "decorate-post-cooked-element:after-adopt"
+        : null,
+    });
   }
 
   get className() {
@@ -171,6 +109,10 @@ export default class PostCookedHtml extends Component {
     return makeArray(this.args.extraDecorators);
   }
 
+  get extraDecoratorsAfterAdopt() {
+    return makeArray(this.args.extraDecoratorsAfterAdopt);
+  }
+
   get ignoredUsers() {
     return this.currentUser?.ignored_users;
   }
@@ -182,13 +124,134 @@ export default class PostCookedHtml extends Component {
     );
   }
 
-  #cleanupDecorations() {
-    this.#pendingDecoratorCleanup.forEach((teardown) => teardown());
-    this.#pendingDecoratorCleanup = [];
+  #cleanupDecorations(filter) {
+    const phases = makeArray(filter || Object.keys(this.#pendingCleanup));
+
+    phases.forEach((phase) => {
+      if (!this.#pendingCleanup[phase]?.length) {
+        return;
+      }
+
+      this.#pendingCleanup[phase].forEach((teardown) => teardown());
+      this.#pendingCleanup[phase] = [];
+    });
   }
 
   #createDetachedElement(nodeName) {
-    return detachedDocument.createElement(nodeName);
+    return DETACHED_DOCUMENT.createElement(nodeName);
+  }
+
+  #decorate(
+    phase,
+    { element, helper, decorators, extraDecorators, args, decorateCookedEvent }
+  ) {
+    this.#cleanupDecorations(phase);
+
+    decorators.forEach((decorator) => {
+      try {
+        let decoratorState;
+        if (this.#decoratorState.has(decorator)) {
+          decoratorState = this.#decoratorState.get(decorator);
+        } else {
+          decoratorState = new TrackedMap();
+          this.#decoratorState.set(decorator, decoratorState);
+        }
+
+        const owner = getOwner(this);
+
+        const decorationCleanup = decorator(element, {
+          cooked: this.cooked,
+          createDetachedElement: this.#createDetachedElement,
+          currentUser: this.currentUser,
+          decoratorState,
+          extraDecorators: this.extraDecorators,
+          helper,
+          highlightTerm: args.highlightTerm,
+          ignoredUsers: args.ignoredUsers,
+          isIgnored: args.isIgnored,
+          owner,
+          post: this.args.post,
+          renderGlimmer: helper.renderGlimmer,
+          renderNestedPostCookedHtml: this.#renderNestedPostCookedHtml(helper, {
+            args,
+            decoratorState,
+            decorators: extraDecorators,
+            isStreamElement: this.isStreamElement,
+            owner,
+          }),
+          streamElement: this.isStreamElement,
+        });
+
+        if (typeof decorationCleanup === "function") {
+          if (!this.#pendingCleanup[phase]) {
+            this.#pendingCleanup[phase] = [];
+          }
+          this.#pendingCleanup[phase].push(decorationCleanup);
+        }
+      } catch (e) {
+        if (isRailsTesting() || isTesting()) {
+          throw e;
+        } else {
+          // in case one of the decorators throws an error we want to surface it to the console but prevent
+          // the application from crashing
+
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
+      }
+    });
+
+    if (decorateCookedEvent) {
+      try {
+        this.appEvents.trigger(decorateCookedEvent, element, helper);
+      } catch (e) {
+        if (isRailsTesting() || isTesting()) {
+          throw e;
+        } else {
+          // in case one of the decorators throws an error we want to surface it to the console but prevent
+          // the application from crashing
+
+          // eslint-disable-next-line no-console
+          console.error(e);
+        }
+      }
+    }
+  }
+
+  #renderNestedPostCookedHtml(
+    helper,
+    {
+      args,
+      decoratorState,
+      decorators,
+      decoratorsAfterAdopt,
+      streamElement,
+      owner,
+    }
+  ) {
+    return (
+      element,
+      post,
+      { extraDecorators, extraDecoratorsAfterAdopt, extraArguments }
+    ) => {
+      const nestedArguments = {
+        ...extraArguments,
+        post,
+        decoratorState,
+        streamElement,
+        highlightTerm: args.highlightTerm,
+        extraDecorators: [...decorators, ...makeArray(extraDecorators)],
+        extraDecoratorsAfterAdopt: [
+          ...decoratorsAfterAdopt,
+          ...makeArray(extraDecoratorsAfterAdopt),
+        ],
+      };
+
+      helper.renderGlimmer(
+        element,
+        curryComponent(PostCookedHtml, nestedArguments, owner)
+      );
+    };
   }
 
   <template>
