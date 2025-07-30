@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer - ProseMirror editor", type: :system do
-  fab!(:user) do
+  fab!(:current_user) do
     Fabricate(
       :user,
       refresh_auto_groups: true,
@@ -14,7 +14,7 @@ describe "Composer - ProseMirror editor", type: :system do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
 
-  before { sign_in(user) }
+  before { sign_in(current_user) }
 
   def open_composer
     page.visit "/new-topic"
@@ -40,16 +40,29 @@ describe "Composer - ProseMirror editor", type: :system do
     expect(composer).to have_composer_preview_toggle
   end
 
-  it "saves the user's rich editor preference to the database" do
+  it "saves the user's rich editor preference and remembers it when reopening the composer" do
     open_composer
+    expect(composer).to have_rich_editor_active
     composer.toggle_rich_editor
-    expect(page).to have_css(".composer-toggle-switch.--markdown")
+    expect(composer).to have_markdown_editor_active
 
     try_until_success(frequency: 0.5) do
-      expect(user.user_option.reload.composition_mode).to eq(
+      expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:markdown],
       )
     end
+
+    visit("/")
+    open_composer
+    expect(composer).to have_markdown_editor_active
+  end
+
+  it "remembers the user's rich editor preference when starting a new PM" do
+    current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
+    page.visit("/u/#{current_user.username}/messages")
+    find(".new-private-message").click
+    expect(composer).to be_opened
+    expect(composer).to have_rich_editor_active
   end
 
   # TODO (martin) Remove this once we are sure all users have migrated
@@ -68,7 +81,7 @@ describe "Composer - ProseMirror editor", type: :system do
     expect(composer).to have_rich_editor
 
     try_until_success(frequency: 0.5) do
-      expect(user.user_option.reload.composition_mode).to eq(
+      expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:rich],
       )
     end
@@ -83,7 +96,7 @@ describe "Composer - ProseMirror editor", type: :system do
   context "with autocomplete" do
     it "triggers an autocomplete on mention" do
       open_composer
-      composer.type_content("@#{user.username}")
+      composer.type_content("@#{current_user.username}")
 
       expect(composer).to have_mention_autocomplete
     end
@@ -939,19 +952,19 @@ describe "Composer - ProseMirror editor", type: :system do
 
     before do
       Draft.set(
-        user,
+        current_user,
         topic.draft_key,
         0,
-        { reply: "hey @#{user.username} and @unknown - how are you?" }.to_json,
+        { reply: "hey @#{current_user.username} and @unknown - how are you?" }.to_json,
       )
     end
 
     it "validates manually typed mentions" do
       open_composer
 
-      composer.type_content("Hey @#{user.username} ")
+      composer.type_content("Hey @#{current_user.username} ")
 
-      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_css("a.mention", text: current_user.username)
 
       composer.type_content("and @invalid_user - how are you?")
 
@@ -959,7 +972,9 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("Hey @#{user.username} and @invalid_user - how are you?")
+      expect(composer).to have_value(
+        "Hey @#{current_user.username} and @invalid_user - how are you?",
+      )
     end
 
     it "validates mentions in drafts" do
@@ -967,7 +982,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to be_opened
 
-      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_css("a.mention", text: current_user.username)
       expect(rich).to have_no_css("a.mention", text: "@unknown")
     end
 

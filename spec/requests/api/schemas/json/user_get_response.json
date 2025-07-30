@@ -815,6 +815,9 @@
             },
             "topics_unread_when_closed": {
               "type": "boolean"
+            },
+            "composition_mode": {
+              "type": "integer"
             }
           },
           "required": [

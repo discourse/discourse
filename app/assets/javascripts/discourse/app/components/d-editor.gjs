@@ -94,9 +94,9 @@ export default class DEditor extends Component {
 
     this.setupToolbar();
 
-    // TODO (martin) Remove this once we are sure all users have migrated
-    // to the new rich editor preference, or a few months after the 3.5 release.
     if (this.siteSettings.rich_editor) {
+      // TODO (martin) Remove this once we are sure all users have migrated
+      // to the new rich editor preference, or a few months after the 3.5 release.
       await this.handleOldRichEditorPreference();
 
       if (this.currentUser.useRichEditor) {

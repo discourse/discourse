@@ -204,7 +204,7 @@ RSpec.describe Admin::FormTemplatesController do
         expect(response.status).to eq(200)
         processed_tag_group =
           YAML.safe_load(response.parsed_body["form_template"]["template"]).first
-        expect(processed_tag_group["choices"]).to eq([tag1.name, tag2.name, tag3.name])
+        expect(processed_tag_group["choices"]).to eq([tag1.name, tag2.name, tag3.name].sort)
       end
 
       it "rejects invalid templates" do
