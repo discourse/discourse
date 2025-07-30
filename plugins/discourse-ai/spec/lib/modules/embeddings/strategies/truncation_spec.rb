@@ -63,8 +63,6 @@ RSpec.describe DiscourseAi::Embeddings::Strategies::Truncation do
 
         prepared_text = truncation.prepare_target_text(large_topic, open_ai_embedding_def)
 
-        pp prepared_text
-
         # Should still be within max_length after HTML stripping and tokenization
         expect(tokenizer.size(prepared_text)).to be <= max_length
 
