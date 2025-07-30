@@ -50,6 +50,41 @@ export default class PostCookedHtml extends Component {
     return this.args.selectionBarrier ?? true;
   }
 
+  get className() {
+    return this.args.className ?? "cooked";
+  }
+
+  get cooked() {
+    if (this.isIgnored) {
+      return i18n("post.ignored");
+    }
+
+    return this.args.cooked ?? this.args.post.cooked;
+  }
+
+  get highlightTerm() {
+    return this.args.highlightTerm;
+  }
+
+  get extraDecorators() {
+    return makeArray(this.args.extraDecorators);
+  }
+
+  get extraDecoratorsAfterAdopt() {
+    return makeArray(this.args.extraDecoratorsAfterAdopt);
+  }
+
+  get ignoredUsers() {
+    return this.currentUser?.ignored_users;
+  }
+
+  get isIgnored() {
+    return (
+      (this.args.post.firstPost || this.args.embeddedPost) &&
+      this.ignoredUsers?.includes?.(this.args.post.username)
+    );
+  }
+
   @bind
   decorateBeforeAdopt(element, helper, args) {
     const extraDecorators = this.extraDecorators;
@@ -93,66 +128,62 @@ export default class PostCookedHtml extends Component {
     });
   }
 
-  get className() {
-    return this.args.className ?? "cooked";
-  }
-
-  get cooked() {
-    if (this.isIgnored) {
-      return i18n("post.ignored");
-    }
-
-    return this.args.cooked ?? this.args.post.cooked;
-  }
-
-  get highlightTerm() {
-    return this.args.highlightTerm;
-  }
-
-  get extraDecorators() {
-    return makeArray(this.args.extraDecorators);
-  }
-
-  get extraDecoratorsAfterAdopt() {
-    return makeArray(this.args.extraDecoratorsAfterAdopt);
-  }
-
-  get ignoredUsers() {
-    return this.currentUser?.ignored_users;
-  }
-
-  get isIgnored() {
-    return (
-      (this.args.post.firstPost || this.args.embeddedPost) &&
-      this.ignoredUsers?.includes?.(this.args.post.username)
-    );
-  }
-
+  /**
+   * Cleans up any pending decorations for specified phases.
+   *
+   * @param {string|string[]|undefined} filter - Optional phase(s) to clean up. If not provided, cleans up all phases.
+   * @private
+   */
   #cleanupDecorations(filter) {
+    // Convert filter to array if single phase provided, or use all phase keys if no filter
     const phases = makeArray(filter || Object.keys(this.#pendingCleanup));
 
     phases.forEach((phase) => {
       if (!this.#pendingCleanup[phase]?.length) {
+        // Skip if no cleanup functions exist for this phase
         return;
       }
 
+      // Execute all cleanup functions and reset the array
       this.#pendingCleanup[phase].forEach((teardown) => teardown());
       this.#pendingCleanup[phase] = [];
     });
   }
 
+  /**
+   * Creates a detached DOM element with the specified node name
+   *
+   * @param {string} nodeName - The name of the DOM node to create
+   * @returns {HTMLElement} A new detached DOM element
+   * @private
+   */
   #createDetachedElement(nodeName) {
     return DETACHED_DOCUMENT.createElement(nodeName);
   }
 
+  /**
+   * Applies decorators to the cooked HTML element
+   *
+   * @param {string} phase - The decoration phase ('beforeAdopt' or 'afterAdopt')
+   * @param {Object} options - The decoration options
+   * @param {HTMLElement} options.element - The DOM element to decorate
+   * @param {Object} options.helper - Helper object containing utility functions
+   * @param {Array<Function>} options.decorators - List of decorator functions to apply
+   * @param {Array<Function>} options.extraDecorators - Additional decorator functions
+   * @param {Object} options.args - Arguments passed to decorators
+   * @param {string|null} options.decorateCookedEvent - Event name to trigger after decoration
+   * @private
+   */
   #decorate(
     phase,
     { element, helper, decorators, extraDecorators, args, decorateCookedEvent }
   ) {
+    // Clean up any existing decorations for this phase
     this.#cleanupDecorations(phase);
 
     decorators.forEach((decorator) => {
       try {
+        // Get or create state storage for this decorator
         let decoratorState;
         if (this.#decoratorState.has(decorator)) {
           decoratorState = this.#decoratorState.get(decorator);
@@ -163,6 +194,7 @@ export default class PostCookedHtml extends Component {
 
         const owner = getOwner(this);
 
+        // Apply the decorator with all required context
         const decorationCleanup = decorator(element, {
           cooked: this.cooked,
           createDetachedElement: this.#createDetachedElement,
@@ -186,6 +218,7 @@ export default class PostCookedHtml extends Component {
           streamElement: this.isStreamElement,
         });
 
+        // Store cleanup function if returned
         if (typeof decorationCleanup === "function") {
           if (!this.#pendingCleanup[phase]) {
             this.#pendingCleanup[phase] = [];
@@ -205,6 +238,7 @@ export default class PostCookedHtml extends Component {
       }
     });
 
+    // Trigger an event to handle the decorations added using `api.decorateCooked`
     if (decorateCookedEvent) {
       try {
         this.appEvents.trigger(decorateCookedEvent, element, helper);
@@ -222,6 +256,20 @@ export default class PostCookedHtml extends Component {
     }
   }
 
+  /**
+   * Renders a nested PostCookedHtml component inside the specified element.
+   *
+   * @param {Object} helper - Helper object containing utility functions
+   * @param {Object} options - Configuration options
+   * @param {Object} options.args - Arguments passed from parent component
+   * @param {TrackedMap} options.decoratorState - State storage for decorators
+   * @param {Array<Function>} options.decorators - List of decorator functions to apply
+   * @param {Array<Function>} options.decoratorsAfterAdopt - List of decorator functions to apply after adoption
+   * @param {boolean} options.streamElement - Whether this is a stream element
+   * @param {Object} options.owner - The owner of the component
+   * @returns {Function} A function that renders the nested PostCookedHtml component
+   * @private
+   */
   #renderNestedPostCookedHtml(
     helper,
     {
@@ -238,19 +286,23 @@ export default class PostCookedHtml extends Component {
       post,
       { extraDecorators, extraDecoratorsAfterAdopt, extraArguments }
     ) => {
+      // Merge base arguments with extra arguments and post details
       const nestedArguments = {
         ...extraArguments,
         post,
         decoratorState,
         streamElement,
         highlightTerm: args.highlightTerm,
+        // Combine base decorators with any extra decorators passed
         extraDecorators: [...decorators, ...makeArray(extraDecorators)],
+        // Combine base after-adopt decorators with any extra after-adopt decorators
         extraDecoratorsAfterAdopt: [
           ...decoratorsAfterAdopt,
           ...makeArray(extraDecoratorsAfterAdopt),
         ],
       };
 
+      // Render a new PostCookedHtml component inside the element
       helper.renderGlimmer(
         element,
         curryComponent(PostCookedHtml, nestedArguments, owner)
