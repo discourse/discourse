@@ -1922,9 +1922,9 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at(post_id = nil)
+  def reset_bumped_at(post_or_post_id = nil)
     post =
-      if post_id.is_a?(Post)
+      if post_or_post_id.is_a?(Post)
         post_id
       else
         if post_id
