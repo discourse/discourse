@@ -25,26 +25,15 @@ export default class DiscoveryFilterNavigation extends Component {
   @tracked copyClass = "btn-default";
   @tracked inputElement = null;
   @tracked showTips = false;
-  @tracked inputValue = "";
   @tracked
   trackedMenuData = new TrackedObject({
     tips: this.args.tips,
-    inputValue: "",
+    inputValue: this.filterQueryString,
     onChange: this.updateQueryString,
     focusInputWithSelection: this.focusInputWithSelection,
+    closeMenu: this.closeMenu,
   });
   @resettableTracked filterQueryString = this.args.queryString;
-
-  searchTimer = null;
-  handleBlurTimer = null;
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    cancel(this.searchTimer);
-    cancel(this.handleBlurTimer);
-
-    this.dMenu?.destroy();
-  }
 
   get currentItems() {
     return this.filteredTips;
@@ -53,6 +42,7 @@ export default class DiscoveryFilterNavigation extends Component {
   @bind
   updateQueryString(newQueryString) {
     this.filterQueryString = newQueryString;
+    this.trackedMenuData.inputValue = this.filterQueryString;
   }
 
   @action
@@ -62,8 +52,8 @@ export default class DiscoveryFilterNavigation extends Component {
 
   @action
   clearInput() {
-    this.trackedMenuData.inputValue = "";
     this.filterQueryString = "";
+    this.trackedMenuData.inputValue = this.filterQueryString;
     this.args.updateTopicsListQueryParams(this.filterQueryString);
   }
 
@@ -76,15 +66,25 @@ export default class DiscoveryFilterNavigation extends Component {
   handleKeydown(event) {
     if (event.key === "Enter") {
       this.args.updateTopicsListQueryParams(this.filterQueryString);
+      this.closeMenu();
     }
+  }
+
+  @action
+  async closeMenu() {
+    return this.menuInstance?.close();
   }
 
   @action
   focusInputWithSelection() {
     this.inputElement.focus();
+
+    // We want the cursor to be the end of the input string,
+    // e.g. if the input is "category:Uncategorized " then
+    // we want the cursor to be after "Uncategorized".
     this.inputElement.setSelectionRange(
-      this.inputValue.length,
-      this.inputValue.length
+      this.filterQueryString.length,
+      this.filterQueryString.length
     );
   }
 
