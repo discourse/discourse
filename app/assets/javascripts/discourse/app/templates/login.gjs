@@ -97,6 +97,9 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="login-wrapper"
+                  @outletArgs={{lazyHash
+                    externalLoginAction=@controller.externalLoginAction
+                  }}
                 >
                   <LocalLoginForm
                     @loginName={{@controller.loginName}}
