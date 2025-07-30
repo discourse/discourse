@@ -13,6 +13,8 @@ export default class ChatNavbarFullPageButton extends Component {
   async openInFullPage() {
     this.chatStateManager.storeAppURL();
     this.chatStateManager.prefersFullPage();
+    this.chatStateManager.isDrawerExpanded = false;
+    this.chatStateManager.isDrawerActive = false;
     this.chat.activeChannel = null;
 
     await new Promise((resolve) => next(resolve));

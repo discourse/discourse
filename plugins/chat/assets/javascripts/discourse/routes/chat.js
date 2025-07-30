@@ -73,6 +73,11 @@ export default class ChatRoute extends DiscourseRoute {
     this.chat.updatePresence();
 
     schedule("afterRender", () => {
+      document.body.classList.remove("has-drawer-chat", "chat-drawer-expanded");
+      document.documentElement.classList.remove(
+        "has-drawer-chat",
+        "chat-drawer-expanded"
+      );
       document.body.classList.add("has-full-page-chat", "has-chat");
       document.documentElement.classList.add("has-full-page-chat", "has-chat");
       scrollTop();
