@@ -80,12 +80,15 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
       },
     ) do
       with_tag(
-        "svg",
+        "span",
         with: {
-          class:
-            "fa d-icon d-icon-comment svg-icon hashtag-color--channel-#{channel2.id} svg-string",
+          class: "hashtag-channel-icon hashtag-color--channel-#{channel2.id}",
         },
-      ) { with_tag("use", with: { href: "#comment" }) }
+      ) do
+        with_tag("svg", with: { class: "fa d-icon d-icon-comment svg-icon svg-string" }) do
+          with_tag("use", with: { href: "#comment" })
+        end
+      end
     end
 
     expect(cooked_hashtags[1]["outerHTML"]).to have_tag(
