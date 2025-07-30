@@ -38,7 +38,17 @@
 }
 
 .fk-d-menu[data-identifier="filter-navigation-menu"] {
+  max-height: 300px;
+
   .fk-d-menu__inner-content {
     width: 100%;
+
+    .dropdown-menu {
+      width: 100%;
+    }
+
+    .dropdown-menu-item {
+      width: 100%;
+    }
   }
 }

@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { cancel, later, next } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { and, eq } from "truth-helpers";
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
@@ -18,34 +18,41 @@ export default class FilterNavigationMenu extends Component {
   @service currentUser;
   @service site;
 
-  @tracked searchResults = [];
-  @tracked activeFilter = null;
-  @tracked currentInputValue = this.args.data.inputValue;
-  @tracked _selectedIndex = -1;
+  @tracked filteredTips = [];
+  @tracked selectedIndex = -1;
 
-  get selectedIndex() {
-    return this._selectedIndex;
+  searchResults = [];
+  activeFilter = null;
+
+  constructor() {
+    super(...arguments);
+    this.buildFilteredTips();
   }
 
-  set selectedIndex(value) {
-    this._selectedIndex = value;
-    // this.blockEnterSubmit(value !== -1);
+  clearSelection() {
+    this.selectedIndex = -1;
   }
 
-  get filteredTips() {
+  get nothingSelected() {
+    return this.selectedIndex === -1;
+  }
+
+  async buildFilteredTips() {
     if (!this.args.data.tips) {
-      return [];
+      this.filteredTips = [];
+      return;
     }
 
-    const words = this.currentInputValue.split(/\s+/);
+    const words = this.args.data.inputValue.split(/\s+/);
     const lastWord = words.at(-1).toLowerCase();
 
     if (this.activeFilter && this.searchResults.length > 0) {
-      return this.searchResults;
+      this.filteredTips = this.searchResults;
+      return;
     }
 
     const colonIndex = lastWord.indexOf(":");
-    const prefix = this.extractPrefix(lastWord) || "";
+    const prefix = this.#extractPrefix(lastWord) || "";
 
     if (colonIndex > 0) {
       const filterName = lastWord.substring(prefix.length).split(":")[0];
@@ -53,18 +60,32 @@ export default class FilterNavigationMenu extends Component {
       const tip = this.args.data.tips.find((t) => t.name === filterName + ":");
 
       if (tip?.type && valueText !== undefined) {
-        this.handlePlaceholderSearch(filterName, valueText, tip, prefix);
-        return this.searchResults.length > 0 ? this.searchResults : [];
+        // this.handleFilterSuggestionSearch(filterName, valueText, tip, prefix);
+        await this.#performFilterSuggestionSearch(
+          filterName,
+          valueText,
+          tip,
+          prefix,
+          { rebuildFilteredTips: false }
+        );
+        this.filteredTips =
+          this.searchResults.length > 0 ? this.searchResults : [];
+        return;
       }
     }
 
-    if (!this.currentInputValue || lastWord === "") {
-      return this.args.data.tips
+    if (!this.args.data.inputValue || lastWord === "") {
+      this.filteredTips = this.args.data.tips
         .filter((tip) => tip.priority)
         .sort((a, b) => (b.priority || 0) - (a.priority || 0))
         .slice(0, MAX_RESULTS);
+      return;
     }
 
+    this.filteredTips = this.filteredTipsFromTipData(lastWord, prefix);
+  }
+
+  filteredTipsFromTipData(lastWord, prefix) {
     const tips = [];
     this.args.data.tips.forEach((tip) => {
       if (tips.length >= MAX_RESULTS) {
@@ -84,12 +105,12 @@ export default class FilterNavigationMenu extends Component {
         tipName.prefixes.find((p) => p.name === prefix);
 
       if (prefixMatch || tipName.indexOf(searchTerm) > -1) {
-        this.pushPrefixTips(tip, tips, null, prefix);
+        this.#pushPrefixTips(tip, tips, null, prefix);
         if (!prefix) {
           tips.push(tip);
         }
       } else if (tip.alias && tip.alias.indexOf(searchTerm) > -1) {
-        this.pushPrefixTips(tip, tips, tip.alias, prefix);
+        this.#pushPrefixTips(tip, tips, tip.alias, prefix);
         tips.push({ ...tip, name: tip.alias });
       }
     });
@@ -113,14 +134,14 @@ export default class FilterNavigationMenu extends Component {
   }
 
   updateResults() {
-    this.selectedIndex = -1;
+    this.clearSelection();
 
-    const words = this.currentInputValue.split(/\s+/);
+    const words = this.args.data.inputValue.split(/\s+/);
     const lastWord = words.at(-1);
     const colonIndex = lastWord.indexOf(":");
 
     if (colonIndex > 0) {
-      const prefix = this.extractPrefix(lastWord);
+      const prefix = this.#extractPrefix(lastWord);
       const filterName = lastWord.substring(
         prefix.length,
         colonIndex + prefix.length
@@ -134,7 +155,8 @@ export default class FilterNavigationMenu extends Component {
 
       if (tip?.type) {
         this.activeFilter = filterName;
-        this.handlePlaceholderSearch(filterName, valueText, tip, prefix);
+        console.log("updateResults handleFilterSuggestionSearch");
+        this.handleFilterSuggestionSearch(filterName, valueText, tip, prefix);
       } else {
         this.activeFilter = null;
         this.searchResults = [];
@@ -145,21 +167,6 @@ export default class FilterNavigationMenu extends Component {
     }
   }
 
-  // @action
-  // handleInputBlur() {
-  //   if (this.handleBlurTimer) {
-  //     cancel(this.handleBlurTimer);
-  //   }
-  //   this.handleBlurTimer = later(() => this.hideTipsIfNeeded(), 200);
-  // }
-
-  // hideTipsIfNeeded() {
-  //   this.handleBlurTimer = null;
-  //   if (document.activeElement !== this.inputElement && this.showTips) {
-  //     this.hideTips();
-  //   }
-  // }
-
   @action
   handleKeyDownTips(event) {
     if (this.filteredTips.length === 0) {
@@ -169,24 +176,22 @@ export default class FilterNavigationMenu extends Component {
     switch (event.key) {
       case "ArrowDown":
         event.preventDefault();
-        this.selectedIndex =
-          this.selectedIndex === -1
-            ? 0
-            : (this.selectedIndex + 1) % this.filteredTips.length;
+        this.selectedIndex = this.nothingSelected
+          ? 0
+          : (this.selectedIndex + 1) % this.filteredTips.length;
         break;
       case "ArrowUp":
         event.preventDefault();
-        this.selectedIndex =
-          this.selectedIndex === -1
-            ? this.filteredTips.length - 1
-            : (this.selectedIndex - 1 + this.filteredTips.length) %
-              this.filteredTips.length;
+        this.selectedIndex = this.nothingSelected
+          ? this.filteredTips.length - 1
+          : (this.selectedIndex - 1 + this.filteredTips.length) %
+            this.filteredTips.length;
         break;
       case "Tab":
         event.preventDefault();
         event.stopPropagation();
         this.selectItem(
-          this.filteredTips[this.selectedIndex === -1 ? 0 : this.selectedIndex]
+          this.filteredTips[this.nothingSelected ? 0 : this.selectedIndex]
         );
         break;
       case "Enter":
@@ -203,13 +208,8 @@ export default class FilterNavigationMenu extends Component {
     }
   }
 
-  //   hideTips() {
-  //     this.showTips = false;
-  //     this.dMenu?.close();
-  //     this.blockEnterSubmit(false);
-  //   }
-
-  pushPrefixTips(tip, tips, alias = null, currentPrefix = null) {
+  // Prefixes are modifiers for filters, like -, =, and -=
+  #pushPrefixTips(tip, tips, alias = null, currentPrefix = null) {
     if (tip.prefixes && tip.prefixes.length > 0) {
       tip.prefixes.forEach((prefix) => {
         if (currentPrefix && !prefix.name.startsWith(currentPrefix)) {
@@ -219,26 +219,25 @@ export default class FilterNavigationMenu extends Component {
           ...tip,
           name: `${prefix.name}${alias || tip.name}`,
           description: prefix.description || tip.description,
-          isPlaceholderCompletion: true,
+          isSuggestion: true,
         });
       });
     }
   }
 
-  extractPrefix(word) {
+  // Prefixes are modifiers for filters, like -, =, and -=
+  #extractPrefix(word) {
     const match = word.match(/^(-=|=-|-|=)/);
     return match ? match[0] : "";
   }
 
   @action
-  handlePlaceholderSearch(filterName, valueText, tip, prefix = "") {
+  handleFilterSuggestionSearch(filterName, valueText, tip, prefix = "") {
     this.activeFilter = filterName;
-    if (this.searchTimer) {
-      cancel(this.searchTimer);
-    }
+    cancel(this.searchTimer);
     this.searchTimer = discourseDebounce(
       this,
-      this._performPlaceholderSearch,
+      this.#performFilterSuggestionSearch,
       filterName,
       valueText,
       tip,
@@ -247,7 +246,108 @@ export default class FilterNavigationMenu extends Component {
     );
   }
 
-  async _performPlaceholderSearch(filterName, valueText, tip, prefix) {
+  // item here is a filter tip object either from the initial list of tips
+  // from the server or from the suggested results based on the last word.
+  //
+  // The structure looks like this:
+  //
+  // {
+  //  "name": "category:",
+  //  "alias": "categories:",
+  //  "description": "Show topics in a specific category",
+  //  "priority": 1,
+  //  "type": "category",
+  //  "delimiters": [
+  //      {
+  //          "name": ",",
+  //          "description": "Show topics in any of the specified categories (comma-separated)"
+  //      }
+  //  ],
+  //  "prefixes": [
+  //      {
+  //          "name": "-",
+  //          "description": "Exclude topics from a specific category"
+  //      },
+  //      {
+  //          "name": "=",
+  //          "description": "Show topics only in the parent category, excluding subcategories"
+  //      },
+  //      {
+  //          "name": "-=",
+  //          "description": "Exclude topics only from the parent category, not subcategories"
+  //      }
+  //  ]
+  // }
+  //
+  // c.f. TopicsFilter.option_info on the server-side.
+  @action
+  selectItem(item) {
+    // Split up the string from the text input into words.
+    const words = this.args.data.inputValue.split(/\s+/);
+
+    // If we are selecting an item that was suggested based on the initial
+    // word selected (e.g. after picking a "category:" the user selects a
+    // category from the list), we replace the last word with the selected item.
+    if (item.isSuggestion) {
+      words[words.length - 1] = item.name;
+      let updatedInputQueryString = words.join(" ");
+      if (
+        !updatedInputQueryString.endsWith(":") &&
+        (!item.delimiters || item.delimiters.length < 2)
+      ) {
+        updatedInputQueryString += " ";
+      }
+      this.#updateTextInput(updatedInputQueryString);
+      this.searchResults = [];
+      this.updateResults();
+    } else {
+      // Otherwise if the user is selecting a filter from the initial tips,
+      // we add a colon to the end of it as needed, and fire off the
+      // suggestion search based on the filter type.
+      const lastWord = words.at(-1);
+      const prefix = this.#extractPrefix(lastWord);
+      const supportsPrefix = item.prefixes && item.prefixes.length > 0;
+      const filterName =
+        supportsPrefix && prefix ? `${prefix}${item.name}` : item.name;
+
+      words[words.length - 1] = filterName;
+      if (!filterName.endsWith(":") && !item.delimiters?.length) {
+        words[words.length - 1] += " ";
+      }
+
+      const updatedInputQueryString = words.join(" ");
+      this.#updateTextInput(updatedInputQueryString);
+
+      const baseFilterName = item.name.replace(/^[-=]/, "").split(":")[0];
+      if (item.type) {
+        console.log("selectitem handleFilterSuggestionSearch");
+        this.handleFilterSuggestionSearch(baseFilterName, "", item, prefix);
+      }
+    }
+
+    this.clearSelection();
+
+    this.args.data.closeMenu().then(() => {
+      schedule("afterRender", () => {
+        this.args.data.focusInputWithSelection();
+        this.updateResults();
+      });
+    });
+  }
+
+  // Updates the actual input element value with the new query string
+  // within DiscoveryFilterNavigation.
+  #updateTextInput(updatedInputQueryString) {
+    this.args.data.onChange(updatedInputQueryString);
+  }
+
+  async #performFilterSuggestionSearch(
+    filterName,
+    valueText,
+    tip,
+    prefix,
+    options = {}
+  ) {
     const type = tip.type;
     let lastTerm = valueText;
     let results = [];
@@ -264,67 +364,51 @@ export default class FilterNavigationMenu extends Component {
 
     lastTerm = (lastTerm || "").toLowerCase().trim();
 
-    if (type === "tag") {
-      try {
-        const response = await ajax("/tags/filter/search.json", {
-          data: { q: lastTerm || "", limit: 5 },
-        });
-        results = response.results.map((tag) => ({
-          name: `${prefix}${filterName}:${prevTerms}${tag.name}`,
-          description: `${tag.count}`,
-          isPlaceholderCompletion: true,
-          term: tag.name,
-        }));
-      } catch {
-        results = [];
-      }
-    } else if (type === "category") {
-      const categories = this.site.categories || [];
-      results = categories
-        .filter((c) => {
-          const name = c.name.toLowerCase();
-          const slug = c.slug.toLowerCase();
-          return name.includes(lastTerm) || slug.includes(lastTerm);
-        })
-        .slice(0, 10)
-        .map((c) => ({
-          name: `${prefix}${filterName}:${prevTerms}${c.slug}`,
-          description: `${c.name}`,
-          isPlaceholderCompletion: true,
-          term: c.slug,
-        }));
-    } else if (type === "username") {
-      try {
-        const data = { limit: 10 };
-        if ((lastTerm || "").length > 0) {
-          data.term = lastTerm;
-        } else {
-          data.last_seen_users = true;
-        }
-        const response = await ajax("/u/search/users.json", { data });
-        results = response.users.map((user) => ({
-          name: `${prefix}${filterName}:${prevTerms}${user.username}`,
-          description: user.name || "",
-          term: user.username,
-          isPlaceholderCompletion: true,
-        }));
-      } catch {
-        results = [];
-      }
-    } else if (type === "date") {
-      results = this.getDateSuggestions(
-        prefix,
-        filterName,
-        prevTerms,
-        lastTerm
-      );
-    } else if (type === "number") {
-      results = this.getNumberSuggestions(
-        prefix,
-        filterName,
-        prevTerms,
-        lastTerm
-      );
+    switch (type) {
+      case "tag":
+        results = await this.#getTagSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
+        break;
+
+      case "category":
+        results = this.#getCategorySuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
+        break;
+
+      case "username":
+        results = await this.#getUserSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
+        break;
+
+      case "date":
+        results = this.#getDateSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
+        break;
+
+      case "number":
+        results = this.#getNumberSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
+        break;
     }
 
     if (tip.delimiters) {
@@ -347,7 +431,7 @@ export default class FilterNavigationMenu extends Component {
           results.push({
             name: `${prefix}${filterName}:${prevTerms}${lastTerm}${delimiter.name}`,
             description: delimiter.description,
-            isPlaceholderCompletion: true,
+            isSuggestion: true,
             delimiters: tip.delimiters,
           });
         });
@@ -355,9 +439,72 @@ export default class FilterNavigationMenu extends Component {
     }
 
     this.searchResults = results;
+
+    // We call this from within buildFilteredTips, so in this case we don't need
+    // to initiate the rebuild again.
+    if (options.rebuildFilteredTips) {
+      this.buildFilteredTips();
+    }
   }
 
-  getDateSuggestions(prefix, filterName, prevTerms, lastTerm) {
+  async #getTagSuggestions(prefix, filterName, prevTerms, lastTerm) {
+    let results = [];
+    try {
+      const response = await ajax("/tags/filter/search.json", {
+        data: { q: lastTerm || "", limit: 5 },
+      });
+      results = response.results.map((tag) => ({
+        name: `${prefix}${filterName}:${prevTerms}${tag.name}`,
+        description: `${tag.count}`,
+        isSuggestion: true,
+        term: tag.name,
+      }));
+    } catch {
+      results = [];
+    }
+    return results;
+  }
+
+  async #getUserSuggestions(prefix, filterName, prevTerms, lastTerm) {
+    let results = [];
+    try {
+      const data = { limit: 10 };
+      if ((lastTerm || "").length > 0) {
+        data.term = lastTerm;
+      } else {
+        data.last_seen_users = true;
+      }
+      const response = await ajax("/u/search/users.json", { data });
+      results = response.users.map((user) => ({
+        name: `${prefix}${filterName}:${prevTerms}${user.username}`,
+        description: user.name || "",
+        term: user.username,
+        isSuggestion: true,
+      }));
+    } catch {
+      results = [];
+    }
+    return results;
+  }
+
+  #getCategorySuggestions(prefix, filterName, prevTerms, lastTerm) {
+    const categories = this.site.categories || [];
+    return categories
+      .filter((category) => {
+        const name = category.name.toLowerCase();
+        const slug = category.slug.toLowerCase();
+        return name.includes(lastTerm) || slug.includes(lastTerm);
+      })
+      .slice(0, 10)
+      .map((category) => ({
+        name: `${prefix}${filterName}:${prevTerms}${category.slug}`,
+        description: `${category.name}`,
+        isSuggestion: true,
+        term: category.slug,
+      }));
+  }
+
+  #getDateSuggestions(prefix, filterName, prevTerms, lastTerm) {
     const dateOptions = [
       { value: "1", key: "yesterday" },
       { value: "7", key: "last_week" },
@@ -377,12 +524,12 @@ export default class FilterNavigationMenu extends Component {
       .map((option) => ({
         name: `${prefix}${filterName}:${prevTerms}${option.value}`,
         description: i18n(`filter.description.${option.key}`),
-        isPlaceholderCompletion: true,
+        isSuggestion: true,
         term: option.value,
       }));
   }
 
-  getNumberSuggestions(prefix, filterName, prevTerms, lastTerm) {
+  #getNumberSuggestions(prefix, filterName, prevTerms, lastTerm) {
     const numberOptions = [
       { value: "0" },
       { value: "1" },
@@ -395,60 +542,9 @@ export default class FilterNavigationMenu extends Component {
       .filter((option) => !lastTerm || option.value.includes(lastTerm))
       .map((option) => ({
         name: `${prefix}${filterName}:${prevTerms}${option.value}`,
-        isPlaceholderCompletion: true,
+        isSuggestion: true,
         term: option.value,
       }));
-  }
-
-  @action
-  selectItem(item) {
-    const words = this.currentInputValue.split(/\s+/);
-
-    if (item.isPlaceholderCompletion) {
-      words[words.length - 1] = item.name;
-      let updatedValue = words.join(" ");
-      if (
-        !updatedValue.endsWith(":") &&
-        (!item.delimiters || item.delimiters.length < 2)
-      ) {
-        updatedValue += " ";
-      }
-      this.updateValue(updatedValue);
-      this.searchResults = [];
-      this.updateResults();
-    } else {
-      const lastWord = words.at(-1);
-      const prefix = this.extractPrefix(lastWord);
-      const supportsPrefix = item.prefixes && item.prefixes.length > 0;
-      const filterName =
-        supportsPrefix && prefix ? `${prefix}${item.name}` : item.name;
-
-      words[words.length - 1] = filterName;
-      if (!filterName.endsWith(":") && !item.delimiters?.length) {
-        words[words.length - 1] += " ";
-      }
-
-      const updatedValue = words.join(" ");
-      this.updateValue(updatedValue);
-
-      const baseFilterName = item.name.replace(/^[-=]/, "").split(":")[0];
-      if (item.type) {
-        this.activeFilter = baseFilterName;
-        this.handlePlaceholderSearch(baseFilterName, "", item, prefix);
-      }
-    }
-
-    this.selectedIndex = -1;
-
-    next(() => {
-      this.args.data.focusInputWithSelection();
-      this.updateResults();
-    });
-  }
-
-  updateValue(updatedValue) {
-    this.currentInputValue = updatedValue;
-    this.args.data.onChange(updatedValue);
   }
 
   <template>
