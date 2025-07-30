@@ -206,7 +206,7 @@ RSpec.describe TopicGuardian do
       expect(Guardian.new(admin).can_delete_topic?(topic)).to be_falsey
     end
 
-    it "returns true for own topics with no replies" do
+    it "returns true for own topic with no replies" do
       topic.update_attribute(:posts_count, 1)
       topic.update_attribute(:created_at, Time.zone.now)
       expect(Guardian.new(topic.user).can_delete_topic?(topic)).to be_truthy
