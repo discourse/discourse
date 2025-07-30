@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import Controller from "@ember/controller";
 import EmberObject, { computed } from "@ember/object";

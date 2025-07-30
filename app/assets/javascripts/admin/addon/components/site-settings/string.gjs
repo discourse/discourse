@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Input, Textarea } from "@ember/component";
 import TextField from "discourse/components/text-field";
 

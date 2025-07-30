@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { setComponentTemplate } from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import { click, doubleClick, render } from "@ember/test-helpers";

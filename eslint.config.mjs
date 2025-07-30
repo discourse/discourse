@@ -6,6 +6,7 @@ export default [
     rules: {
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
+      "ember/no-classic-components": "error",
     },
   },
   {
