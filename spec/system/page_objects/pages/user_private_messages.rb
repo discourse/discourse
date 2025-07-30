@@ -14,7 +14,7 @@ module PageObjects
       end
 
       def has_right_inbox_dropdown_value?(value)
-        has_css?(".user-nav-messages-dropdown .combo-box-header[data-name='#{value}']")
+        has_css?(".messages-dropdown-trigger", exact_text: value)
       end
 
       def click_unseen_private_mesage(topic_id)
