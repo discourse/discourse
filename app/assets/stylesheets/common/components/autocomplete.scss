@@ -2,7 +2,6 @@
 
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
-  position: absolute;
   max-width: 370px;
   min-width: 300px;
   background-color: var(--secondary);

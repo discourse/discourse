@@ -569,6 +569,10 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
+  floatkit_autocomplete_composer:
+    client: true
+    default: true
+    area: "interface"
 
 login:
   invite_only:
