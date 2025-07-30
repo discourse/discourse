@@ -145,8 +145,14 @@
     margin: 0 0.5em;
   }
 
-  button {
-    margin-left: auto;
+  .control-btn-group {
+    flex: 1 0 auto;
+    display: flex;
+    justify-content: flex-end;
+
+    > button {
+      margin-left: 0.2em;
+    }
   }
 
   a.filter {
@@ -158,6 +164,10 @@
       margin-left: 0.5em;
     }
   }
+}
+
+.filter-date-dropdown {
+  padding: 1em;
 }
 
 .screened-email-export {

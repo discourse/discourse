@@ -5,6 +5,8 @@ import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DateTimeInputRange from "discourse/components/date-time-input-range";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import LoadMore from "discourse/components/load-more";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
@@ -12,6 +14,7 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import StaffActions from "admin/components/staff-actions";
 import ComboBox from "select-kit/components/combo-box";
+import DMenu from "float-kit/components/d-menu";
 
 export default RouteTemplate(
   <template>
@@ -89,12 +92,36 @@ export default RouteTemplate(
         />
       {{/if}}
 
-      <DButton
-        @action={{@controller.exportStaffActionLogs}}
-        @label="admin.export_csv.button_text"
-        @icon="download"
-        class="btn-default"
-      />
+      <div class="control-btn-group">
+        <DMenu
+          @icon="calendar-days"
+          @title={{i18n "admin.logs.staff_actions.filter_date"}}
+        >
+          <:content>
+            <DropdownMenu class="filter-date-dropdown" as |dropdown|>
+              <dropdown.item>
+                <label class="filter-label">
+                  {{i18n "admin.logs.staff_actions.filter_date"}}
+                </label>
+                <DateTimeInputRange
+                  @from={{@controller.startDate}}
+                  @to={{@controller.endDate}}
+                  @onChange={{@controller.onChangeDateRange}}
+                  @showFromTime={{true}}
+                  @showToTime={{true}}
+                />
+              </dropdown.item>
+            </DropdownMenu>
+          </:content>
+        </DMenu>
+
+        <DButton
+          @action={{@controller.exportStaffActionLogs}}
+          @label="admin.export_csv.button_text"
+          @icon="download"
+          class="btn-default"
+        />
+      </div>
     </div>
 
     <div class="clearfix"></div>
