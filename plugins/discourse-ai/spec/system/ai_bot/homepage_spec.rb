@@ -252,15 +252,20 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           llm_name = CGI.escape(claude_2_dup.display_name)
           visit "/discourse-ai/ai-bot/conversations?persona=#{persona_name}&llm=#{llm_name}"
 
+          ai_pm_homepage.persona_selector.expand # not needed, but helps to see what the list has
           expect(ai_pm_homepage.persona_selector).to have_selected_name(persona.name)
           expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
         end
 
         it "removes persona from selector when allow_personal_messages is disabled" do
-          persona.update!(allow_personal_messages: false)
-          ai_pm_homepage.visit
-          ai_pm_homepage.persona_selector.expand
-          expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+          begin
+            persona.update!(allow_personal_messages: false)
+            ai_pm_homepage.visit
+            ai_pm_homepage.persona_selector.expand
+            expect(ai_pm_homepage.persona_selector).to have_no_option_name(persona.name)
+          ensure
+            persona.update!(allow_personal_messages: true)
+          end
         end
 
         it "includes persona in selector when allow_personal_messages is enabled" do
