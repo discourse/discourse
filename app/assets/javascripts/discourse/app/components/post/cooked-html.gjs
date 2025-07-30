@@ -58,7 +58,6 @@ export default class PostCookedHtml extends Component {
     if (this.isIgnored) {
       return i18n("post.ignored");
     }
-
     return this.args.cooked ?? this.args.post.cooked;
   }
 
@@ -87,45 +86,139 @@ export default class PostCookedHtml extends Component {
 
   @bind
   decorateBeforeAdopt(element, helper, args) {
-    const extraDecorators = this.extraDecorators;
     const decorators = [
       ...POST_COOKED_DECORATORS_BEFORE_ADOPT,
-      ...extraDecorators,
+      ...this.extraDecorators,
     ];
+
     if (this.shouldAddSelectionBarrier) {
       decorators.push(decorateSelectionBarrier);
     }
+
+    const eventName = this.isStreamElement
+      ? "decorate-post-cooked-element:before-adopt"
+      : "decorate-non-stream-cooked-element";
 
     this.#decorate("beforeAdopt", {
       element,
       helper,
       decorators,
-      extraDecorators,
+      extraDecorators: this.extraDecorators,
       args,
-      decorateCookedEvent: this.isStreamElement
-        ? "decorate-post-cooked-element:before-adopt"
-        : "decorate-non-stream-cooked-element",
+      decorateCookedEvent: eventName,
     });
   }
 
   @bind
   decorateAfterAdopt(element, helper, args) {
-    const extraDecorators = this.extraDecoratorsAfterAdopt;
     const decorators = [
       ...POST_COOKED_DECORATORS_AFTER_ADOPT,
-      ...extraDecorators,
+      ...this.extraDecoratorsAfterAdopt,
     ];
+
+    const eventName = this.isStreamElement
+      ? "decorate-post-cooked-element:after-adopt"
+      : null;
 
     this.#decorate("afterAdopt", {
       element,
       helper,
       decorators,
-      extraDecorators,
+      extraDecorators: this.extraDecoratorsAfterAdopt,
       args,
-      decorateCookedEvent: this.isStreamElement
-        ? "decorate-post-cooked-element:after-adopt"
-        : null,
+      decorateCookedEvent: eventName,
     });
+  }
+
+  /**
+   * Safely executes a function and handles errors appropriately for testing vs production
+   * @param {Function} fn - Function to execute
+   * @private
+   */
+  #safeExecute(fn) {
+    try {
+      return fn();
+    } catch (e) {
+      if (isRailsTesting() || isTesting()) {
+        throw e;
+      } else {
+        // Log errors in production to prevent application crashes
+        console.error(e);
+      }
+    }
+  }
+
+  /**
+   * Gets or creates decorator state for a given decorator function
+   * @param {Function} decorator - The decorator function to get state for
+   * @returns {TrackedMap} The decorator's state storage
+   * @private
+   */
+  #getDecoratorState(decorator) {
+    if (this.#decoratorState.has(decorator)) {
+      return this.#decoratorState.get(decorator);
+    }
+
+    // Create new state storage for this decorator
+    const decoratorState = new TrackedMap();
+    this.#decoratorState.set(decorator, decoratorState);
+    return decoratorState;
+  }
+
+  /**
+   * Creates the context object passed to decorator functions
+   * @param {HTMLElement} element - The DOM element being decorated
+   * @param {Object} helper - Helper object containing utility functions
+   * @param {Object} args - Arguments passed to the decorator
+   * @param {TrackedMap} decoratorState - State storage for the decorator
+   * @param {Array<Function>} extraDecorators - Additional decorator functions
+   * @returns {Object} The decorator context object
+   * @private
+   */
+  #createDecoratorContext(
+    element,
+    helper,
+    args,
+    decoratorState,
+    extraDecorators
+  ) {
+    const owner = getOwner(this);
+
+    return {
+      cooked: this.cooked,
+      createDetachedElement: this.#createDetachedElement,
+      currentUser: this.currentUser,
+      decoratorState,
+      extraDecorators: this.extraDecorators,
+      helper,
+      highlightTerm: args.highlightTerm,
+      ignoredUsers: args.ignoredUsers,
+      isIgnored: args.isIgnored,
+      owner,
+      post: this.args.post,
+      renderGlimmer: helper.renderGlimmer,
+      renderNestedPostCookedHtml: this.#renderNestedPostCookedHtml(helper, {
+        args,
+        decoratorState,
+        decorators: extraDecorators,
+        isStreamElement: this.isStreamElement,
+        owner,
+      }),
+      streamElement: this.isStreamElement,
+    };
+  }
+
+  /**
+   * Stores cleanup function for a decoration phase
+   * @param {string} phase - The decoration phase ('beforeAdopt' or 'afterAdopt')
+   * @param {Function} cleanupFn - The cleanup function to store
+   * @private
+   */
+  #storeCleanupFunction(phase, cleanupFn) {
+    if (!this.#pendingCleanup[phase]) {
+      this.#pendingCleanup[phase] = [];
+    }
+    this.#pendingCleanup[phase].push(cleanupFn);
   }
 
   /**
@@ -137,13 +230,11 @@ export default class PostCookedHtml extends Component {
   #cleanupDecorations(filter) {
     // Convert filter to array if single phase provided, or use all phase keys if no filter
     const phases = makeArray(filter || Object.keys(this.#pendingCleanup));
-
     phases.forEach((phase) => {
       if (!this.#pendingCleanup[phase]?.length) {
         // Skip if no cleanup functions exist for this phase
         return;
       }
-
       // Execute all cleanup functions and reset the array
       this.#pendingCleanup[phase].forEach((teardown) => teardown());
       this.#pendingCleanup[phase] = [];
@@ -182,77 +273,29 @@ export default class PostCookedHtml extends Component {
     this.#cleanupDecorations(phase);
 
     decorators.forEach((decorator) => {
-      try {
-        // Get or create state storage for this decorator
-        let decoratorState;
-        if (this.#decoratorState.has(decorator)) {
-          decoratorState = this.#decoratorState.get(decorator);
-        } else {
-          decoratorState = new TrackedMap();
-          this.#decoratorState.set(decorator, decoratorState);
-        }
-
-        const owner = getOwner(this);
-
-        // Apply the decorator with all required context
-        const decorationCleanup = decorator(element, {
-          cooked: this.cooked,
-          createDetachedElement: this.#createDetachedElement,
-          currentUser: this.currentUser,
-          decoratorState,
-          extraDecorators: this.extraDecorators,
+      this.#safeExecute(() => {
+        const decoratorState = this.#getDecoratorState(decorator);
+        const context = this.#createDecoratorContext(
+          element,
           helper,
-          highlightTerm: args.highlightTerm,
-          ignoredUsers: args.ignoredUsers,
-          isIgnored: args.isIgnored,
-          owner,
-          post: this.args.post,
-          renderGlimmer: helper.renderGlimmer,
-          renderNestedPostCookedHtml: this.#renderNestedPostCookedHtml(helper, {
-            args,
-            decoratorState,
-            decorators: extraDecorators,
-            isStreamElement: this.isStreamElement,
-            owner,
-          }),
-          streamElement: this.isStreamElement,
-        });
+          args,
+          decoratorState,
+          extraDecorators
+        );
+        const decorationCleanup = decorator(element, context);
 
-        // Store cleanup function if returned
+        // Store cleanup function if the decorator returned one
         if (typeof decorationCleanup === "function") {
-          if (!this.#pendingCleanup[phase]) {
-            this.#pendingCleanup[phase] = [];
-          }
-          this.#pendingCleanup[phase].push(decorationCleanup);
+          this.#storeCleanupFunction(phase, decorationCleanup);
         }
-      } catch (e) {
-        if (isRailsTesting() || isTesting()) {
-          throw e;
-        } else {
-          // in case one of the decorators throws an error we want to surface it to the console but prevent
-          // the application from crashing
-
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
-      }
+      });
     });
 
     // Trigger an event to handle the decorations added using `api.decorateCooked`
     if (decorateCookedEvent) {
-      try {
+      this.#safeExecute(() => {
         this.appEvents.trigger(decorateCookedEvent, element, helper);
-      } catch (e) {
-        if (isRailsTesting() || isTesting()) {
-          throw e;
-        } else {
-          // in case one of the decorators throws an error we want to surface it to the console but prevent
-          // the application from crashing
-
-          // eslint-disable-next-line no-console
-          console.error(e);
-        }
-      }
+      });
     }
   }
 
