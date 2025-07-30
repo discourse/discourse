@@ -39,6 +39,39 @@ RSpec.describe DiscourseAi::Embeddings::Strategies::Truncation do
 
       expect(prepared_text.starts_with?(prefix)).to eq(true)
     end
+
+    context "if topic contains more tokens in cooked posts than embeddings max sequence lenght" do
+      before { open_ai_embedding_def.update!(max_sequence_length: 100) }
+
+      it "applies TEXT_TO_HTML_TOKEN_RATIO multiplier for post content collection" do
+        # Create posts with known token counts to test the ratio logic
+        large_topic = Fabricate(:topic)
+        post_content = "This is a test post with some content"
+        first_reply = Fabricate(:post, topic: large_topic, raw: "1: #{post_content}")
+        tokenizer = open_ai_embedding_def.tokenizer
+        max_length = open_ai_embedding_def.max_sequence_length - 2
+
+        # Create posts that would exceed max_length but not max_length * 3
+        expected_size = tokenizer.size(first_reply.cooked)
+
+        # Calculate how many posts we need to exceed max_length but stay under max_length * 3
+        posts_needed = (max_length / expected_size) + 1
+
+        posts_needed.times do |i|
+          Fabricate(:post, topic: large_topic, raw: "#{i + 1}: #{post_content}")
+        end
+
+        prepared_text = truncation.prepare_target_text(large_topic, open_ai_embedding_def)
+
+        pp prepared_text
+
+        # Should still be within max_length after HTML stripping and tokenization
+        expect(tokenizer.size(prepared_text)).to be <= max_length
+
+        # Should contain content from multiple posts due to the 3x multiplier
+        expect(prepared_text).to include("#{posts_needed}: This is a test post with some content")
+      end
+    end
   end
 
   describe "#prepare_query_text" do
