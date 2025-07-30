@@ -86,6 +86,7 @@
 
   @include form-item-sizing;
   border: var(--d-button-border);
+  box-shadow: var(--d-box-shadow);
 
   &:visited {
     /* covers cases where we add button classes to links */
@@ -345,6 +346,7 @@
   border: 0;
   line-height: var(--line-height-small);
   transition: var(--d-button-transition);
+  box-shadow: none;
 
   .d-icon {
     color: var(--d-button-flat-icon-color);
@@ -490,6 +492,7 @@
     background: transparent;
     border: 0;
     color: var(--d-button-transparent-text-color);
+    box-shadow: none;
 
     .d-icon {
       color: var(--d-button-transparent-icon-color);
