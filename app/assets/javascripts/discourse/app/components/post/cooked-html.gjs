@@ -142,7 +142,7 @@ export default class PostCookedHtml extends Component {
       if (isRailsTesting() || isTesting()) {
         throw e;
       } else {
-        // Log errors in production to prevent application crashes
+        // eslint-disable-next-line no-console
         console.error(e);
       }
     }
