@@ -3,6 +3,8 @@
 module DiscourseAi
   module Translation
     class BaseCandidates
+      COMPLETION_CACHE_TTL = 1.hour
+
       # ModelType that are eligible for translation based on site settings
       # @return [ActiveRecord::Relation] the ActiveRecord relation of the candidates
       def self.get
@@ -15,11 +17,15 @@ module DiscourseAi
       def self.get_completion_per_locale(locale)
         Discourse
           .cache
-          .fetch(get_completion_cache_key(locale), expires_in: 1.hour) do
+          .fetch(get_completion_cache_key(locale), expires_in: COMPLETION_CACHE_TTL) do
             done, total = calculate_completion_per_locale(locale)
             return 1.0 if total.zero?
             done / total.to_f
           end
+      end
+
+      def self.clear_completion_cache(locale)
+        Discourse.cache.delete(get_completion_cache_key(locale))
       end
 
       private
