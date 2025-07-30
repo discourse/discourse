@@ -1922,13 +1922,13 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at(post_or_post_id = nil)
+  def reset_bumped_at( = nil)
     post =
       if post_or_post_id.is_a?(Post)
-        post_id
+        post_or_post_id
       else
-        if post_id
-          Post.find_by(id: post_id)
+        if post_or_post_id
+          Post.find_by(id: post_or_post_id)
         else
           ordered_posts.where(
             user_deleted: false,
