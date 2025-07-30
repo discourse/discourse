@@ -464,7 +464,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  editColorScheme() {
+  editLightColorScheme() {
     this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
   }
 

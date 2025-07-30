@@ -72,6 +72,14 @@ acceptance("User Preferences - Interface", function (needs) {
 
   test("shows light/dark color scheme pickers", async function (assert) {
     let site = Site.current();
+    site.set("user_themes", [
+      {
+        theme_id: 2,
+        name: "Cool Theme",
+        color_scheme_id: 3,
+        dark_color_scheme_id: 3,
+      },
+    ]);
     site.set("user_color_schemes", [
       { id: 2, name: "Cool Breeze" },
       { id: 3, name: "Dark Night", is_dark: true },
@@ -167,7 +175,17 @@ acceptance(
           success: "OK",
         });
       });
+      server.get("/color-scheme-stylesheet/2/2.json", () => {
+        return helper.response({
+          success: "OK",
+        });
+      });
       server.get("/color-scheme-stylesheet/3.json", () => {
+        return helper.response({
+          new_href: "3.css",
+        });
+      });
+      server.get("/color-scheme-stylesheet/3/2.json", () => {
         return helper.response({
           new_href: "3.css",
         });
@@ -363,10 +381,18 @@ acceptance(
     test("preview the color scheme only in current user's profile", async function (assert) {
       let site = Site.current();
 
-      site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
+      site.set("user_themes", [
+        {
+          theme_id: 2,
+          name: "Cool Theme",
+          color_scheme_id: 2,
+          dark_color_scheme_id: 3,
+        },
+      ]);
+
       site.set("user_color_schemes", [
-        { id: 2, name: "Cool Breeze" },
-        { id: 3, name: "Dark Night", is_dark: true },
+        { id: 2, name: "Cool Breeze", theme_id: 2 },
+        { id: 3, name: "Dark Night", theme_id: 2, is_dark: true },
       ]);
 
       await visit("/u/eviltrout/preferences/interface");
