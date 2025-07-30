@@ -145,7 +145,7 @@ export default class CardContentsBase extends Component {
 
     // Mention click
     this._showCardOnClick(event, this.mentionSelector, (el) =>
-      el.innerText.replace(/^@/, "")
+      el.innerText.trim().replace(/^@/, "")
     );
   }
 
