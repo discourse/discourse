@@ -13,6 +13,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
+import FilterSuggestions from "discourse/lib/filter-suggestions";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
@@ -39,7 +40,7 @@ const MAX_RESULTS = 20;
 export default class FilterNavigationMenu extends Component {
   @service currentUser;
   @service menu;
-  @service filterSuggestions;
+  @service site;
 
   @resettableTracked currentInputValue = this.args.initialInputValue || "";
 
@@ -429,52 +430,14 @@ export default class FilterNavigationMenu extends Component {
 
     lastTerm = (lastTerm || "").toLowerCase().trim();
 
-    switch (type) {
-      case "tag":
-        results = await this.filterSuggestions.getTagSuggestions(
-          prefix,
-          filterName,
-          prevTerms,
-          lastTerm
-        );
-        break;
-
-      case "category":
-        results = this.filterSuggestions.getCategorySuggestions(
-          prefix,
-          filterName,
-          prevTerms,
-          lastTerm
-        );
-        break;
-
-      case "username":
-        results = await this.filterSuggestions.getUserSuggestions(
-          prefix,
-          filterName,
-          prevTerms,
-          lastTerm
-        );
-        break;
-
-      case "date":
-        results = this.filterSuggestions.getDateSuggestions(
-          prefix,
-          filterName,
-          prevTerms,
-          lastTerm
-        );
-        break;
-
-      case "number":
-        results = this.filterSuggestions.getNumberSuggestions(
-          prefix,
-          filterName,
-          prevTerms,
-          lastTerm
-        );
-        break;
-    }
+    results = await FilterSuggestions.getFilterSuggestionsByType(
+      type,
+      prefix,
+      filterName,
+      prevTerms,
+      lastTerm,
+      { site: this.site }
+    );
 
     if (tip.delimiters) {
       let lastMatches = false;
