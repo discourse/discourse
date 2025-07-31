@@ -3,6 +3,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
@@ -25,6 +26,8 @@ export function resetCustomUserNavMessagesDropdownRows() {
 }
 
 export default class extends Controller {
+  @service currentUser;
+  @service pmTopicTrackingState;
   @service router;
   @controller user;
   @controller userTopicsList;
@@ -64,26 +67,66 @@ export default class extends Controller {
     return value;
   }
 
+  get showUnread() {
+    return this.currentUser?.use_experimental_sidebar_messages_count;
+  }
+
+  get showCount() {
+    return this.showUnread && this.currentUser?.sidebarShowCountOfNewItems;
+  }
+
   @cached
   get messagesDropdownContent() {
     const usernameLower = this.model.username_lower;
-
+    let inboxName = i18n("user.messages.inbox");
+    let userMsgsCount = 0;
+    if (this.showUnread) {
+      userMsgsCount = ["new", "unread"].reduce((count, type) => {
+        return (
+          count +
+          this.pmTopicTrackingState.lookupCount(type, {
+            inboxFilter: "user",
+          })
+        );
+      }, userMsgsCount);
+      if (userMsgsCount && this.showCount) {
+        inboxName = htmlSafe(`${inboxName}&nbsp;(${userMsgsCount})`);
+      }
+    }
     const content = [
       {
         id: this.router.urlFor("userPrivateMessages.user", usernameLower),
-        name: i18n("user.messages.inbox"),
+        name: inboxName,
+        showUnreadIcon: !!userMsgsCount && !this.showCount,
       },
     ];
 
-    this.model.groupsWithMessages.forEach((group) => {
+    this.model.groupsWithMessages.forEach(({ name }) => {
+      let groupName = name;
+      let groupMsgsCount = 0;
+      if (this.showUnread) {
+        groupMsgsCount = ["new", "unread"].reduce((count, type) => {
+          return (
+            count +
+            this.pmTopicTrackingState.lookupCount(type, {
+              inboxFilter: "group",
+              groupName: name,
+            })
+          );
+        }, groupMsgsCount);
+        if (groupMsgsCount && this.showCount) {
+          groupName = htmlSafe(`${name}&nbsp;(${groupMsgsCount})`);
+        }
+      }
       content.push({
         id: this.router.urlFor(
           "userPrivateMessages.group",
           usernameLower,
-          group.name
+          name
         ),
-        name: group.name,
+        name: groupName,
         icon: "inbox",
+        showUnreadIcon: !!groupMsgsCount && !this.showCount,
       });
     });
 
