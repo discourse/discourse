@@ -1,30 +1,54 @@
-import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
-export default class FilterSuggestions extends Service {
-  @service site;
+export default class FilterSuggestions {
+  static async getFilterSuggestionsByType(
+    type,
+    prefix,
+    filterName,
+    prevTerms,
+    lastTerm,
+    deps = {}
+  ) {
+    switch (type) {
+      case "category":
+        return await FilterSuggestions.getCategorySuggestions(
+          deps.site,
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
+      case "tag":
+      case "username":
+      case "date":
+      case "number":
+        return await FilterSuggestions.getNumberSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
+    }
+  }
 
-  async getTagSuggestions(prefix, filterName, prevTerms, lastTerm) {
-    let results = [];
+  static async getTagSuggestions(prefix, filterName, prevTerms, lastTerm) {
     try {
       const response = await ajax("/tags/filter/search.json", {
         data: { q: lastTerm || "", limit: 5 },
       });
-      results = response.results.map((tag) => ({
+      return response.results.map((tag) => ({
         name: `${prefix}${filterName}:${prevTerms}${tag.name}`,
         description: `${tag.count}`,
         isSuggestion: true,
         term: tag.name,
       }));
     } catch {
-      results = [];
+      return [];
     }
-    return results;
   }
 
-  async getUserSuggestions(prefix, filterName, prevTerms, lastTerm) {
-    let results = [];
+  static async getUserSuggestions(prefix, filterName, prevTerms, lastTerm) {
     try {
       const data = { limit: 10 };
       if ((lastTerm || "").length > 0) {
@@ -33,20 +57,25 @@ export default class FilterSuggestions extends Service {
         data.last_seen_users = true;
       }
       const response = await ajax("/u/search/users.json", { data });
-      results = response.users.map((user) => ({
+      return response.users.map((user) => ({
         name: `${prefix}${filterName}:${prevTerms}${user.username}`,
         description: user.name || "",
         term: user.username,
         isSuggestion: true,
       }));
     } catch {
-      results = [];
+      return [];
     }
-    return results;
   }
 
-  getCategorySuggestions(prefix, filterName, prevTerms, lastTerm) {
-    const categories = this.site.categories || [];
+  static async getCategorySuggestions(
+    site,
+    prefix,
+    filterName,
+    prevTerms,
+    lastTerm
+  ) {
+    const categories = site.categories || [];
     return categories
       .filter((category) => {
         const name = category.name.toLowerCase();
@@ -62,7 +91,7 @@ export default class FilterSuggestions extends Service {
       }));
   }
 
-  getDateSuggestions(prefix, filterName, prevTerms, lastTerm) {
+  static async getDateSuggestions(prefix, filterName, prevTerms, lastTerm) {
     const dateOptions = [
       { value: "1", key: "yesterday" },
       { value: "7", key: "last_week" },
@@ -87,7 +116,7 @@ export default class FilterSuggestions extends Service {
       }));
   }
 
-  getNumberSuggestions(prefix, filterName, prevTerms, lastTerm) {
+  static async getNumberSuggestions(prefix, filterName, prevTerms, lastTerm) {
     const numberOptions = [
       { value: "0" },
       { value: "1" },
