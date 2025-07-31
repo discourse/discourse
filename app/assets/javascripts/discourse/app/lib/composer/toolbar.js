@@ -193,7 +193,6 @@ export default class Toolbar extends ToolbarBase {
       active: ({ state }) => state.inItalic,
     });
 
-
     this.addButton({
       id: "heading",
       group: "fontStyles",
