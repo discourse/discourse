@@ -94,14 +94,15 @@ export default RouteTemplate(
 
       <div class="control-btn-group">
         <DMenu
+          class="date-time-filter"
           @icon="calendar-days"
-          @title={{i18n "admin.logs.staff_actions.filter_date"}}
+          @title={{i18n "admin.logs.staff_actions.filter_date_time"}}
         >
           <:content>
             <DropdownMenu class="filter-date-dropdown" as |dropdown|>
               <dropdown.item>
                 <label class="filter-label">
-                  {{i18n "admin.logs.staff_actions.filter_date"}}
+                  {{i18n "admin.logs.staff_actions.filter_date_time"}}
                 </label>
                 <DateTimeInputRange
                   @from={{@controller.startDate}}
@@ -119,7 +120,7 @@ export default RouteTemplate(
           @action={{@controller.exportStaffActionLogs}}
           @label="admin.export_csv.button_text"
           @icon="download"
-          class="btn-default"
+          class="btn-default export-staff-action-logs"
         />
       </div>
     </div>
