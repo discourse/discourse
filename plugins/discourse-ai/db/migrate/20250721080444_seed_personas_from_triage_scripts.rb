@@ -29,7 +29,7 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
         else
           name =
             (
-              if field["name"].pesent?
+              if field["name"].present?
                 "#{field["name"]} triage automation"
               else
                 "Unnamed triage automation script ID #{field["automation_id"]}"
@@ -46,8 +46,6 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
           SQL
         end
       end
-
-    pp automation_to_persona_ids
 
     new_fields =
       automation_to_persona_ids
