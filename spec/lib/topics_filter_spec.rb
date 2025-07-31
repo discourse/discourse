@@ -50,6 +50,37 @@ RSpec.describe TopicsFilter do
       user_specific_options.each { |option| expect(anon_option_names).not_to include(option) }
       user_specific_options.each { |option| expect(logged_in_option_names).to include(option) }
     end
+
+    it "should apply the topics_filter_options modifier for authenticated users" do
+      DiscoursePluginRegistry.register_modifier(:topics_filter_options) do |results, guardian|
+        if guardian&.authenticated?
+          results << {
+            name: "custom-filter:",
+            description: "A custom filter option from modifier",
+            type: "text"
+          }
+        end
+        results
+      end
+
+      anon_options = TopicsFilter.option_info(Guardian.new)
+      logged_in_options = TopicsFilter.option_info(Guardian.new(user))
+
+      anon_option_names = anon_options.map { |o| o[:name] }
+      logged_in_option_names = logged_in_options.map { |o| o[:name] }
+
+      expect(anon_option_names).not_to include("custom-filter:")
+      expect(logged_in_option_names).to include("custom-filter:")
+
+      custom_option = logged_in_options.find { |o| o[:name] == "custom-filter:" }
+      expect(custom_option).to include(
+        name: "custom-filter:",
+        description: "A custom filter option from modifier",
+        type: "text"
+      )
+    ensure
+      DiscoursePluginRegistry.reset_register!(:modifiers)
+    end
   end
 
   describe "#filter_from_query_string" do

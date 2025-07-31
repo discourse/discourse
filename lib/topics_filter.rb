@@ -275,6 +275,8 @@ class TopicsFilter
           },
         ],
       )
+
+      DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
     end
 
     if SiteSetting.tagging_enabled?

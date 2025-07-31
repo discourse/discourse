@@ -3,6 +3,46 @@
 RSpec.describe DiscourseAssign do
   before { SiteSetting.assign_enabled = true }
 
+  describe "discourse-assign topics_filter_options modifier" do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      SiteSetting.assign_allowed_on_groups = "#{Group.find(Group::AUTO_GROUPS[:staff]).id}"
+      user.update!(admin: true)
+    end
+
+    it "adds assigned filter option for users who can assign" do
+      guardian = Guardian.new(user)
+      options = TopicsFilter.option_info(guardian)
+
+      assigned_option = options.find { |o| o[:name] == "assigned:" }
+      expect(assigned_option).to be_present
+      expect(assigned_option).to include(
+        name: "assigned:",
+        description: I18n.t("discourse_assign.filter.description.assigned"),
+        type: "username",
+        priority: 1,
+      )
+    end
+
+    it "does not add assigned filter option for users who cannot assign" do
+      regular_user = Fabricate(:user)
+      guardian = Guardian.new(regular_user)
+      options = TopicsFilter.option_info(guardian)
+
+      assigned_option = options.find { |o| o[:name] == "assigned:" }
+      expect(assigned_option).to be_nil
+    end
+
+    it "does not add assigned filter option for anonymous users" do
+      guardian = Guardian.new
+      options = TopicsFilter.option_info(guardian)
+
+      assigned_option = options.find { |o| o[:name] == "assigned:" }
+      expect(assigned_option).to be_nil
+    end
+  end
+
   describe "Events" do
     describe "on 'user_removed_from_group'" do
       let(:group) { Fabricate(:group) }
