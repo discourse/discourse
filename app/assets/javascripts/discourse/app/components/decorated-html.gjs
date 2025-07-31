@@ -102,6 +102,7 @@ export default class DecoratedHtml extends Component {
     const result = info.element.ownerDocument === document;
 
     if (!isProduction() && !result) {
+      // eslint-disable-next-line no-console
       console.warn(
         "The `renderGlimmer` definition below was unable to render the decorated HTML because the target element is not in the " +
           "current document. This likely occurred because the element was removed by another decorator.\n",
