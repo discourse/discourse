@@ -10,7 +10,7 @@ require "time"
 
 require_relative "../lib/version"
 
-DOWNLOAD_PRE_BUILT_ASSETS = ENV["DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS"] == "1"
+DOWNLOAD_PRE_BUILT_ASSETS = ENV["DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS"] != "0"
 DOWNLOAD_TEMP_FILE = "#{__dir__}/../tmp/assets.tar.gz"
 
 PRE_BUILD_ROOT = "https://get.discourse.org/discourse-assets"
