@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import { INTERFACE_COLOR_MODES } from "discourse/lib/constants";
 import cookie from "discourse/lib/cookie";
 
 const COOKIE_NAME = "forced_color_mode";
@@ -69,20 +68,11 @@ export default class InterfaceColor extends Service {
       this.forceLightMode({ flipStylesheets: false });
     } else if (cookieValue === DARK_VALUE_FOR_COOKIE) {
       this.forceDarkMode({ flipStylesheets: false });
-    } else if (
-      this.currentUser?.user_option?.interface_color_mode ===
-      INTERFACE_COLOR_MODES.AUTO
-    ) {
+    } else if (this.currentUser?.prefersAutoColor) {
       this.colorMode = AUTO_VALUE_FOR_COOKIE;
-    } else if (
-      this.currentUser?.user_option?.interface_color_mode ===
-      INTERFACE_COLOR_MODES.LIGHT
-    ) {
+    } else if (this.currentUser?.prefersLightColor) {
       this.colorMode = LIGHT_VALUE_FOR_COOKIE;
-    } else if (
-      this.currentUser?.user_option?.interface_color_mode ===
-      INTERFACE_COLOR_MODES.DARK
-    ) {
+    } else if (this.currentUser?.prefersDarkColor) {
       this.colorMode = DARK_VALUE_FOR_COOKIE;
     }
   }
