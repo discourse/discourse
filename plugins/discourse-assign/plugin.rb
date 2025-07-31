@@ -907,6 +907,18 @@ after_initialize do
     end
   end
 
+  register_modifier(:topics_filter_options) do |results, guardian|
+    if guardian&.can_assign?
+      results << {
+        name: "assigned:",
+        description: I18n.t("discourse_assign.filter.description.assigned"),
+        type: "username",
+        priority: 1
+      }
+    end
+    results
+  end
+
   register_search_advanced_filter(/in:assigned/) do |posts|
     next if !@guardian.can_assign?
 
