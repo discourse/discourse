@@ -3,6 +3,7 @@
 RSpec.describe TagGuardian do
   fab!(:user)
   fab!(:admin)
+  fab!(:tag)
   fab!(:trust_level_0)
   fab!(:trust_level_1)
   fab!(:trust_level_2)
@@ -31,6 +32,24 @@ RSpec.describe TagGuardian do
 
     it "returns true when user is in an allowed group" do
       expect(Guardian.new(trust_level_3).can_create_tag?).to be_truthy
+    end
+  end
+
+  ###### EDITING ######
+
+  describe "#can_edit_tag?" do
+    it "returns false when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      expect(Guardian.new(admin).can_edit_tag?(tag)).to be_falsey
+    end
+
+    it "returns false when user is not in an allowed group" do
+      expect(Guardian.new(trust_level_2).can_edit_tag?(tag)).to be_falsey
+    end
+
+    it "returns true when user is in an allowed group" do
+      expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to be_truthy
     end
   end
 

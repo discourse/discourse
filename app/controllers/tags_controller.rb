@@ -419,9 +419,11 @@ class TagsController < ::ApplicationController
   end
 
   def destroy_synonym
-    guardian.ensure_can_admin_tags!
     synonym = Tag.where_name(params[:synonym_id]).first
     raise Discourse::NotFound unless synonym
+
+    guardian.ensure_can_edit_tag!(synonym)
+
     if synonym.target_tag == @tag
       synonym.update!(target_tag: nil)
       render json: success_json
