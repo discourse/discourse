@@ -29,6 +29,7 @@ class SiteSerializer < ApplicationSerializer
     :topic_featured_link_allowed_category_ids,
     :user_themes,
     :user_color_schemes,
+    :default_light_color_scheme,
     :default_dark_color_scheme,
     :censored_regexp,
     :shared_drafts_category_id,
@@ -84,6 +85,13 @@ class SiteSerializer < ApplicationSerializer
         each_serializer: ColorSchemeSelectableSerializer,
       ).as_json
     end
+  end
+
+  def default_light_color_scheme
+    ColorSchemeSerializer.new(
+      ColorScheme.find_by_id(Theme.find_default&.color_scheme_id || -1),
+      root: false,
+    ).as_json
   end
 
   def default_dark_color_scheme

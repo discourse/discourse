@@ -28,6 +28,18 @@ export function listColorSchemes(site, options = {}) {
     }
   });
 
+  const defaultLightColorScheme = site.get("default_light_color_scheme");
+  if (defaultLightColorScheme) {
+    const existing = schemes.findBy("id", defaultLightColorScheme.id);
+    if (!existing) {
+      results.unshift({
+        id: defaultLightColorScheme.id,
+        name: `${i18n("user.color_schemes.default_description")}`,
+        theme_id: defaultLightColorScheme.theme_id,
+        colors: defaultLightColorScheme.colors,
+      });
+    }
+  }
   if (options.darkOnly) {
     const defaultDarkColorScheme = site.get("default_dark_color_scheme");
     if (defaultDarkColorScheme) {
