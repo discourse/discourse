@@ -49,14 +49,14 @@ export default RouteTemplate(
                 <td>{{formatDate l.created_at}}</td>
                 <td>
                   {{#if l.user}}
-                    <LinkTo @route="adminUser" @model={{l.user}}>{{avatar
-                        l.user
-                        imageSize="tiny"
-                      }}</LinkTo>
-                    <LinkTo
-                      @route="adminUser"
-                      @model={{l.user}}
-                    >{{l.user.username}}</LinkTo>
+                    <span class="email-logs-user">
+                      <LinkTo @route="adminUser" @model={{l.user}}>
+                        {{avatar l.user imageSize="tiny"}}
+                      </LinkTo>
+                      <LinkTo @route="adminUser" @model={{l.user}}>
+                        {{l.user.username}}
+                      </LinkTo>
+                    </span>
                   {{else}}
                     &mdash;
                   {{/if}}

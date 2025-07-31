@@ -59,14 +59,14 @@ export default RouteTemplate(
                 <td class="sent-email-date">{{formatDate l.created_at}}</td>
                 <td class="sent-email-username">
                   {{#if l.user}}
-                    <LinkTo @route="adminUser" @model={{l.user}}>{{avatar
-                        l.user
-                        imageSize="tiny"
-                      }}</LinkTo>
-                    <LinkTo
-                      @route="adminUser"
-                      @model={{l.user}}
-                    >{{l.user.username}}</LinkTo>
+                    <span class="email-logs-user">
+                      <LinkTo @route="adminUser" @model={{l.user}}>
+                        {{avatar l.user imageSize="tiny"}}
+                      </LinkTo>
+                      <LinkTo @route="adminUser" @model={{l.user}}>
+                        {{l.user.username}}
+                      </LinkTo>
+                    </span>
                   {{else}}
                     &mdash;
                   {{/if}}
@@ -141,12 +141,13 @@ export default RouteTemplate(
                     <a href={{l.post_url}}>
                       {{l.post_description}}
                     </a>
-                    {{i18n "admin.email.logs.post_id" post_id=l.post_id}}
-                    <br />
-                    /{{/if}}
-                  <code
-                    title={{l.smtp_transaction_response}}
-                  >{{l.smtp_transaction_response}}</code>
+                    <div>
+                      {{i18n "admin.email.logs.post_id" post_id=l.post_id}}
+                    </div>
+                  {{/if}}
+                  <code title={{l.smtp_transaction_response}}>
+                    {{l.smtp_transaction_response}}
+                  </code>
                 </td>
               </tr>
             {{else}}
