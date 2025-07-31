@@ -31,12 +31,16 @@ module PageObjects
         !is_expanded?
       end
 
-      def option(selector, match = nil)
-        within("#d-menu-portals") { find(selector, match: match) }
+      def option(selector, match)
+        params = {}
+        params[:match] = match if match
+        within("#d-menu-portals") { find(selector, **params) }
       end
 
-      def has_option?(selector, text = nil)
-        within("#d-menu-portals") { has_css?(selector, text: text) }
+      def has_option?(selector, text)
+        params = {}
+        params[:text] = text if text
+        within("#d-menu-portals") { has_css?(selector, **params) }
       end
 
       def has_no_option?(selector)
