@@ -913,7 +913,7 @@ after_initialize do
         name: "assigned:",
         description: I18n.t("discourse_assign.filter.description.assigned"),
         type: "username",
-        priority: 1
+        priority: 1,
       }
     end
     results

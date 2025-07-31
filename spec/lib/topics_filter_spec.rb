@@ -57,7 +57,7 @@ RSpec.describe TopicsFilter do
           results << {
             name: "custom-filter:",
             description: "A custom filter option from modifier",
-            type: "text"
+            type: "text",
           }
         end
         results
@@ -76,7 +76,7 @@ RSpec.describe TopicsFilter do
       expect(custom_option).to include(
         name: "custom-filter:",
         description: "A custom filter option from modifier",
-        type: "text"
+        type: "text",
       )
     ensure
       DiscoursePluginRegistry.reset_register!(:modifiers)
