@@ -1593,7 +1593,6 @@ ar:
         description: "تخطي نصائح وشارات تهيئة المستخدم الجديد"
       reset_seen_user_tips: "عرض نصائح المستخدم مرة أخرى"
       theme_default_on_all_devices: "جعل هذه السمة الافتراضية على كل أجهزتي"
-      color_scheme_default_on_all_devices: "تعيين لوحة الألوان الافتراضية على جميع أجهزتي"
       color_scheme: "لوحة الألوان"
       color_schemes:
         default_description: "السمة الافتراضية"
@@ -1603,6 +1602,9 @@ ar:
         regular: "العادي"
         dark: "الوضع الداكن"
         default_dark_scheme: "(الوضع الافتراضي للموقع)"
+        interface_modes:
+          light: "فاتح"
+          dark: "داكن"
       dark_mode: "الوضع الداكن"
       dark_mode_enable: "تفعيل لوحة الألوان في الوضع الداكن تلقائيًا"
       text_size_default_on_all_devices: "جعل هذا الحجم الافتراضي للنص على جميع أجهزتي"

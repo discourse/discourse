@@ -187,6 +187,9 @@ pl_PL:
               description: "Po określeniu, ustawia górną granicę maksymalnej liczby tokenów, jaką model może wygenerować. Szanuje limit maksymalnej liczby tokenów wyjściowych LLM."
     discourse_ai:
       title: "AI"
+      default_llm:
+        title: "Domyślny model LLM"
+        description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub osobowości nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
       features:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych person i LLM, a dostęp do nich może być kontrolowany przez grupy."
@@ -562,7 +565,7 @@ pl_PL:
           max_usages_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnej liczby tokenów"
         usage:
           ai_bot: "Bot AI"
-          ai_helper: "Pomocnik"
+          ai_helper: "Pomocnik (%{persona})"
           ai_helper_image_caption: "Podpis pod obrazkiem"
           ai_persona: "Persona (%{persona})"
           ai_summarization: "Podsumuj"

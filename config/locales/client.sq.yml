@@ -1269,7 +1269,6 @@ sq:
         description: "Kapërceni këshillat dhe distinktivët për hyrjen e përdoruesve të rinj"
       reset_seen_user_tips: "Shfaq përsëri këshillat për përdoruesit"
       theme_default_on_all_devices: "Bëje këtë temë të paracaktuar në të gjitha pajisjet e mia"
-      color_scheme_default_on_all_devices: "Cakto paletën e parazgjedhur të ngjyrave në të gjitha pajisjet e mia"
       color_scheme: "Paleta e ngjyrave"
       color_schemes:
         default_description: "Tema e paracaktuar"

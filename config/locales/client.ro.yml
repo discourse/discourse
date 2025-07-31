@@ -1258,7 +1258,6 @@ ro:
       skip_new_user_tips:
         description: "Omite sfaturi și insigne de înscriere pentru utilizatori noi"
       theme_default_on_all_devices: "Faceți ca aceasta să fie tema implicită pe toate dispozitivele mele"
-      color_scheme_default_on_all_devices: "Setează paleta de culori implicită pe toate dispozitivele mele"
       color_scheme: "Paletă de culori"
       color_schemes:
         default_description: "Tema implicită"
@@ -1267,6 +1266,10 @@ ro:
         undo: "Resetare"
         regular: "Utilizator frecvent"
         dark: "Mod întunecat"
+        interface_modes:
+          auto: "Auto"
+          light: "Luminos"
+          dark: "Întunecat"
       dark_mode: "Mod întunecat"
       dark_mode_enable: "Activează paleta de culori automată pentru modul întunecat"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
@@ -4648,7 +4651,6 @@ ro:
           preference_warning: "Ai modificat <a href='%{link}'>setările personale ale temei</a>, așadar modificările paletei de culori ar putea să nu fie vizibile pentru tine. Vizitatorii care nu și-au modificat setările implicite vor vedea în continuare modificările pe care le faci aici."
           title: "Culori"
           edit: "Editează"
-          set_default: "Setează ca activă în %{theme}"
           set_default_success: "%{schemeName} setează ca paletă activă pentru %{themeName}"
           saved_refreshing: "Salvată! Se reîmprospătează culorile..."
           from_theme: "Din tema: %{name}"

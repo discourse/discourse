@@ -1279,7 +1279,6 @@ nl:
         description: "Introductietips en badges voor nieuwe gebruikers overslaan"
       reset_seen_user_tips: "Gebruikerstips opnieuw weergeven"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
-      color_scheme_default_on_all_devices: "Standaard kleurenpalet instellen op al mijn apparaten"
       color_scheme: "Kleurenpalet"
       color_schemes:
         default_description: "Standaard voor thema"
@@ -1289,6 +1288,9 @@ nl:
         regular: "Normaal"
         dark: "Donkere modus"
         default_dark_scheme: "(standaard voor website)"
+        interface_modes:
+          light: "Licht"
+          dark: "Donker"
       dark_mode: "Donkere modus"
       dark_mode_enable: "Automatisch kleurenpalet voor donkere modus inschakelen"
       text_size_default_on_all_devices: "Dit de standaard tekstgrootte maken op al mijn apparaten"

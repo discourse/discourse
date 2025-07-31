@@ -413,7 +413,6 @@ ru:
           neutral: "Нейтральность"
     llm:
       configuration:
-        disable_module_first: "Сначала вам нужно отключить %{setting}."
         set_llm_first: "Сначала задайте %{setting}"
         model_unreachable: "Мы не смогли получить ответ от этой модели. Проверьте настройки."
         invalid_seeded_model: "Эту модель нельзя использовать с этой функцией"
