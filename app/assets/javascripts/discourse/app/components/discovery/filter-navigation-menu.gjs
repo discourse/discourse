@@ -18,16 +18,10 @@ export default class FilterNavigationMenu extends Component {
   @service currentUser;
   @service site;
 
-  @tracked filteredTips = [];
   @tracked selectedIndex = -1;
 
   searchResults = [];
   activeFilter = null;
-
-  constructor() {
-    super(...arguments);
-    this.buildFilteredTips();
-  }
 
   clearSelection() {
     this.selectedIndex = -1;
@@ -37,18 +31,16 @@ export default class FilterNavigationMenu extends Component {
     return this.selectedIndex === -1;
   }
 
-  async buildFilteredTips() {
+  get filteredTips() {
     if (!this.args.data.tips) {
-      this.filteredTips = [];
-      return;
+      return [];
     }
 
     const words = this.args.data.inputValue.split(/\s+/);
     const lastWord = words.at(-1).toLowerCase();
 
     if (this.activeFilter && this.searchResults.length > 0) {
-      this.filteredTips = this.searchResults;
-      return;
+      return this.searchResults;
     }
 
     const colonIndex = lastWord.indexOf(":");
@@ -60,29 +52,19 @@ export default class FilterNavigationMenu extends Component {
       const tip = this.args.data.tips.find((t) => t.name === filterName + ":");
 
       if (tip?.type && valueText !== undefined) {
-        // this.handleFilterSuggestionSearch(filterName, valueText, tip, prefix);
-        await this.#performFilterSuggestionSearch(
-          filterName,
-          valueText,
-          tip,
-          prefix,
-          { rebuildFilteredTips: false }
-        );
-        this.filteredTips =
-          this.searchResults.length > 0 ? this.searchResults : [];
-        return;
+        this.handleFilterSuggestionSearch(filterName, valueText, tip, prefix);
+        return this.searchResults.length > 0 ? this.searchResults : [];
       }
     }
 
     if (!this.args.data.inputValue || lastWord === "") {
-      this.filteredTips = this.args.data.tips
+      return this.args.data.tips
         .filter((tip) => tip.priority)
         .sort((a, b) => (b.priority || 0) - (a.priority || 0))
         .slice(0, MAX_RESULTS);
-      return;
     }
 
-    this.filteredTips = this.filteredTipsFromTipData(lastWord, prefix);
+    return this.filteredTipsFromTipData(lastWord, prefix);
   }
 
   filteredTipsFromTipData(lastWord, prefix) {
@@ -155,7 +137,6 @@ export default class FilterNavigationMenu extends Component {
 
       if (tip?.type) {
         this.activeFilter = filterName;
-        console.log("updateResults handleFilterSuggestionSearch");
         this.handleFilterSuggestionSearch(filterName, valueText, tip, prefix);
       } else {
         this.activeFilter = null;
@@ -234,7 +215,6 @@ export default class FilterNavigationMenu extends Component {
   @action
   handleFilterSuggestionSearch(filterName, valueText, tip, prefix = "") {
     this.activeFilter = filterName;
-    cancel(this.searchTimer);
     this.searchTimer = discourseDebounce(
       this,
       this.#performFilterSuggestionSearch,
@@ -320,18 +300,16 @@ export default class FilterNavigationMenu extends Component {
 
       const baseFilterName = item.name.replace(/^[-=]/, "").split(":")[0];
       if (item.type) {
-        console.log("selectitem handleFilterSuggestionSearch");
+        this.activeFilter = baseFilterName;
         this.handleFilterSuggestionSearch(baseFilterName, "", item, prefix);
       }
     }
 
     this.clearSelection();
 
-    this.args.data.closeMenu().then(() => {
-      schedule("afterRender", () => {
-        this.args.data.focusInputWithSelection();
-        this.updateResults();
-      });
+    schedule("afterRender", () => {
+      this.args.data.focusInputWithSelection();
+      this.updateResults();
     });
   }
 
@@ -341,13 +319,7 @@ export default class FilterNavigationMenu extends Component {
     this.args.data.onChange(updatedInputQueryString);
   }
 
-  async #performFilterSuggestionSearch(
-    filterName,
-    valueText,
-    tip,
-    prefix,
-    options = {}
-  ) {
+  async #performFilterSuggestionSearch(filterName, valueText, tip, prefix) {
     const type = tip.type;
     let lastTerm = valueText;
     let results = [];
@@ -442,9 +414,9 @@ export default class FilterNavigationMenu extends Component {
 
     // We call this from within buildFilteredTips, so in this case we don't need
     // to initiate the rebuild again.
-    if (options.rebuildFilteredTips) {
-      this.buildFilteredTips();
-    }
+    // if (options.rebuildFilteredTips) {
+    //   this.buildFilteredTips();
+    // }
   }
 
   async #getTagSuggestions(prefix, filterName, prevTerms, lastTerm) {

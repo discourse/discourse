@@ -21,10 +21,7 @@ export default class DiscoveryFilterNavigation extends Component {
   @service site;
   @service menu;
 
-  @tracked copyIcon = "link";
-  @tracked copyClass = "btn-default";
   @tracked inputElement = null;
-  @tracked showTips = false;
   @tracked
   trackedMenuData = new TrackedObject({
     tips: this.args.tips,
@@ -34,10 +31,6 @@ export default class DiscoveryFilterNavigation extends Component {
     closeMenu: this.closeMenu,
   });
   @resettableTracked filterQueryString = this.args.queryString;
-
-  get currentItems() {
-    return this.filteredTips;
-  }
 
   @bind
   updateQueryString(newQueryString) {
@@ -72,7 +65,9 @@ export default class DiscoveryFilterNavigation extends Component {
 
   @action
   async closeMenu() {
-    return this.menuInstance?.close();
+    return this.menuInstance?.close().then(() => {
+      this.focusInputWithSelection();
+    });
   }
 
   @action
