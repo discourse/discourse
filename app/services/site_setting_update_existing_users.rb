@@ -192,7 +192,7 @@ class SiteSettingUpdateExistingUsers
       users_scope[:tag_id] = User.real.where(staged: false).where.not(id: skip_user_ids[:tag_id])
     end
 
-    total_users_to_process = users_scope.values.count.sum
+    total_users_to_process = users_scope.values.map(&:count).sum
     processed_total = 0
 
     modified_tags.each do |tag_id|

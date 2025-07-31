@@ -136,6 +136,7 @@
     .job.site-setting {
       display: flex;
       flex-direction: row;
+
       p {
         margin: 0;
       }
@@ -145,6 +146,7 @@
         background-color: transparent;
         padding: 0;
       }
+
       .success {
         color: var(--success);
       }
