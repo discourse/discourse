@@ -1,27 +1,66 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel, schedule } from "@ember/runloop";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
-import { ajax } from "discourse/lib/ajax";
+import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 const MAX_RESULTS = 20;
 
+/**
+ * This component provides an input field and parsing logic for filter
+ * queries. Every time the input changes, we recalculate the list of
+ * filter tips that match the current input value.
+ *
+ * We start from an initial list of tips provided by the server
+ * (see TopicsFilter.option_info) which are reduced to a list of "high priority/top-level"
+ * filters if there is no user input value.
+ *
+ * Once the user starts typing, we parse the input value to determine
+ * the last word and its prefix (if any). If the last word contains a colon,
+ * we treat it as a filter name and look for matching tips via the FilterSuggestions service.
+ * For example after "category:" is typed we show a list of categories the user
+ * has access to.
+ *
+ * Each filter tip can have prefixes (like "-", "=", and "-=") that modify the filter behavior,
+ * as well as delimiters (like ",") that allow for multiple values.
+ */
 export default class FilterNavigationMenu extends Component {
   @service currentUser;
-  @service site;
+  @service menu;
+  @service filterSuggestions;
 
-  @tracked selectedIndex = -1;
+  @resettableTracked currentInputValue = this.args.initialInputValue || "";
 
-  searchResults = [];
+  filterSuggessionResults = [];
   activeFilter = null;
+  trackedMenuListData = new TrackedObject({
+    filteredTips: this.filteredTips,
+    selectedIndex: null,
+    selectItem: this.selectItem,
+  });
+
+  @tracked _selectedIndex = -1;
+
+  get selectedIndex() {
+    return this._selectedIndex;
+  }
+
+  set selectedIndex(value) {
+    this._selectedIndex = value;
+    this.trackedMenuListData.selectedIndex = value;
+  }
 
   clearSelection() {
     this.selectedIndex = -1;
@@ -32,44 +71,65 @@ export default class FilterNavigationMenu extends Component {
   }
 
   get filteredTips() {
-    if (!this.args.data.tips) {
+    if (!this.args.tips) {
       return [];
     }
 
-    const words = this.args.data.inputValue.split(/\s+/);
+    const words = this.currentInputValue.split(/\s+/);
     const lastWord = words.at(-1).toLowerCase();
 
-    if (this.activeFilter && this.searchResults.length > 0) {
-      return this.searchResults;
+    // If we're already filtering by a type like "category:" that has suggestions,
+    // we want to only show those suggestions.
+    if (this.activeFilter && this.filterSuggessionResults.length > 0) {
+      return this.filterSuggessionResults;
     }
 
+    // We are filtering by a type here like "category:", "tag:", etc.
+    // since the last word contains a colon.
     const colonIndex = lastWord.indexOf(":");
     const prefix = this.#extractPrefix(lastWord) || "";
-
     if (colonIndex > 0) {
       const filterName = lastWord.substring(prefix.length).split(":")[0];
       const valueText = lastWord.substring(colonIndex + 1);
-      const tip = this.args.data.tips.find((t) => t.name === filterName + ":");
+      const tip = this.args.tips.find((t) => t.name === filterName + ":");
 
       if (tip?.type && valueText !== undefined) {
         this.handleFilterSuggestionSearch(filterName, valueText, tip, prefix);
-        return this.searchResults.length > 0 ? this.searchResults : [];
+        return this.filterSuggessionResults.length > 0
+          ? this.filterSuggessionResults
+          : [];
       }
     }
 
-    if (!this.args.data.inputValue || lastWord === "") {
-      return this.args.data.tips
+    // Get a list of the "top-level" filters that have a priority of 1,
+    // such as category:, created-after:, tags:, etc.
+    if (!this.currentInputValue || lastWord === "") {
+      return this.args.tips
         .filter((tip) => tip.priority)
         .sort((a, b) => (b.priority || 0) - (a.priority || 0))
         .slice(0, MAX_RESULTS);
     }
 
-    return this.filteredTipsFromTipData(lastWord, prefix);
+    return this.filterAllTips(lastWord, prefix);
   }
 
-  filteredTipsFromTipData(lastWord, prefix) {
+  /**
+   * Filters all available tips based on a search term from the user input
+   *
+   * This method searches through the complete list of filter tips and finds matches based on:
+   * 1. Direct name matches with the search term
+   * 2. Matches against tip aliases
+   * 3. Support for prefixed tips (like "-", "=", "-=")
+   *
+   * Results are sorted to prioritize exact matches first and are limited to MAX_RESULTS
+   *
+   * @param {string} lastWord - The last word in the input string (what user is currently typing)
+   * @param {string} prefix - Any detected prefix modifier like "-", "=", or "-="
+   * @returns {Array} - Array of matching tip objects for display in the menu
+   */
+  filterAllTips(lastWord, prefix) {
     const tips = [];
-    this.args.data.tips.forEach((tip) => {
+    this.args.tips.forEach((tip) => {
       if (tips.length >= MAX_RESULTS) {
         return;
       }
@@ -98,10 +158,10 @@ export default class FilterNavigationMenu extends Component {
     });
 
     return tips.sort((a, b) => {
-      const aName = a.name;
-      const bName = b.name;
-      const aStartsWith = aName.startsWith(lastWord);
-      const bStartsWith = bName.startsWith(lastWord);
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
+      const aStartsWith = aName.startsWith(lastWord.toLowerCase());
+      const bStartsWith = bName.startsWith(lastWord.toLowerCase());
       if (aStartsWith && !bStartsWith) {
         return -1;
       }
@@ -115,10 +175,24 @@ export default class FilterNavigationMenu extends Component {
     });
   }
 
+  /**
+   * Updates the component state based on the current input value
+   *
+   * Unlike the filteredTips getter which just returns the current suggestions,
+   * this method actively parses the input and updates internal state:
+   *
+   * - Resets selection state
+   * - Sets or clears the activeFilter based on detected filter types
+   * - Triggers filter-specific suggestion searches when appropriate
+   * - Updates the reactive state to ensure UI reflects current filter state
+   *
+   * This method should be called after actions that modify the input value
+   * to ensure the component's internal state is synchronized with the input.
+   */
   updateResults() {
     this.clearSelection();
 
-    const words = this.args.data.inputValue.split(/\s+/);
+    const words = this.currentInputValue.split(/\s+/);
     const lastWord = words.at(-1);
     const colonIndex = lastWord.indexOf(":");
 
@@ -130,7 +204,7 @@ export default class FilterNavigationMenu extends Component {
       );
       const valueText = lastWord.substring(colonIndex + 1);
 
-      const tip = this.args.data.tips.find((t) => {
+      const tip = this.args.tips.find((t) => {
         const tipFilterName = t.name.replace(/^[-=]/, "").split(":")[0];
         return tipFilterName === filterName && t.type;
       });
@@ -140,16 +214,158 @@ export default class FilterNavigationMenu extends Component {
         this.handleFilterSuggestionSearch(filterName, valueText, tip, prefix);
       } else {
         this.activeFilter = null;
-        this.searchResults = [];
+        this.filterSuggessionResults = [];
       }
     } else {
       this.activeFilter = null;
-      this.searchResults = [];
+      this.filterSuggessionResults = [];
+    }
+
+    this.trackedMenuListData.filteredTips = this.filteredTips;
+  }
+
+  #pushPrefixTips(tip, tips, alias = null, currentPrefix = null) {
+    if (tip.prefixes && tip.prefixes.length > 0) {
+      tip.prefixes.forEach((prefix) => {
+        if (currentPrefix && !prefix.name.startsWith(currentPrefix)) {
+          return;
+        }
+        tips.push({
+          ...tip,
+          name: `${prefix.name}${alias || tip.name}`,
+          description: prefix.description || tip.description,
+          isSuggestion: true,
+        });
+      });
     }
   }
 
+  #extractPrefix(word) {
+    const match = word.match(/^(-=|=-|-|=)/);
+    return match ? match[0] : "";
+  }
+
   @action
-  handleKeyDownTips(event) {
+  storeInputElement(element) {
+    this.inputElement = element;
+  }
+
+  @action
+  handleFilterSuggestionSearch(filterName, valueText, tip, prefix = "") {
+    this.activeFilter = filterName;
+    this.searchTimer = discourseDebounce(
+      this,
+      this.#performFilterSuggestionSearch,
+      filterName,
+      valueText,
+      tip,
+      prefix,
+      300
+    );
+  }
+
+  /**
+   * Handles selection of a filter tip item from the dropdown menu.
+   * See TopicsFilter.option_info for the structure of the item
+   * on the server.
+   *
+   * @param {Object} item - A filter tip object from the initial list or from the filter suggestions
+   * @param {string} item.name - The name of the filter (e.g. "category:", "tag:")
+   * @param {string} [item.alias] - Alternative name for the filter (e.g. "categories:")
+   * @param {string} [item.description] - Human-readable description of the filter
+   * @param {number} [item.priority] - Priority value for sorting (higher appears first)
+   * @param {string} [item.type] - Type of filter for suggestions (category, tag, username, date, number)
+   * @param {Array<Object>} [item.delimiters] - Delimiter options for multiple values
+   * @param {Array<Object>} [item.prefixes] - Prefix modifiers for this filter (-, =, -=)
+   * @param {boolean} [item.isSuggestion] - Whether this is a suggestion for a specific filter value
+   */
+  @action
+  selectItem(item) {
+    // Split up the string from the text input into words.
+    const words = this.currentInputValue.split(/\s+/);
+
+    // If we are selecting an item that was suggested based on the initial
+    // word selected (e.g. after picking a "category:" the user selects a
+    // category from the list), we replace the last word with the selected item.
+    if (item.isSuggestion) {
+      words[words.length - 1] = item.name;
+      let updatedInputValue = words.join(" ");
+      if (
+        !updatedInputValue.endsWith(":") &&
+        (!item.delimiters || item.delimiters.length < 2)
+      ) {
+        updatedInputValue += " ";
+      }
+      this.updateInput(updatedInputValue);
+      this.filterSuggessionResults = [];
+      this.updateResults();
+    } else {
+      // Otherwise if the user is selecting a filter from the initial tips,
+      // we add a colon to the end of it as needed, and fire off the
+      // suggestion search based on the filter type.
+      const lastWord = words.at(-1);
+      const prefix = this.#extractPrefix(lastWord);
+      const supportsPrefix = item.prefixes && item.prefixes.length > 0;
+      const filterName =
+        supportsPrefix && prefix ? `${prefix}${item.name}` : item.name;
+
+      words[words.length - 1] = filterName;
+      if (!filterName.endsWith(":") && !item.delimiters?.length) {
+        words[words.length - 1] += " ";
+      }
+
+      const updatedInputValue = words.join(" ");
+      this.updateInput(updatedInputValue);
+
+      const baseFilterName = item.name.replace(/^[-=]/, "").split(":")[0];
+      if (item.type) {
+        this.activeFilter = baseFilterName;
+        this.handleFilterSuggestionSearch(baseFilterName, "", item, prefix);
+      }
+    }
+
+    this.clearSelection();
+
+    schedule("afterRender", () => {
+      this.updateResults();
+    });
+  }
+
+  @action
+  updateInput(updatedInputValue, refreshQuery = false) {
+    this.currentInputValue = updatedInputValue;
+    this.args.onChange(updatedInputValue, refreshQuery);
+    this.trackedMenuListData.filteredTips = this.filteredTips;
+    this.updateResults();
+  }
+
+  @action
+  clearInput() {
+    this.updateInput("", true);
+    this.inputElement.focus();
+  }
+
+  @action
+  async openFilterMenu() {
+    this.dMenuInstance = await this.menu.show(this.inputElement, {
+      identifier: "filter-navigation-menu-list",
+      component: FilterNavigationMenuList,
+      data: this.trackedMenuListData,
+      maxWidth: 1000,
+    });
+
+    // HACK: We don't have a nice way for DMenu to be the same width as
+    // the input element, so we set it manually.
+    schedule("afterRender", () => {
+      if (this.dMenuInstance?.content) {
+        this.dMenuInstance.content.style.width =
+          this.inputElement.offsetWidth + "px";
+      }
+    });
+  }
+
+  @action
+  handleKeydown(event) {
     if (this.filteredTips.length === 0) {
       return;
     }
@@ -175,148 +391,31 @@ export default class FilterNavigationMenu extends Component {
           this.filteredTips[this.nothingSelected ? 0 : this.selectedIndex]
         );
         break;
+      case " ":
+        if (!this.dmenuInstance) {
+          this.openFilterMenu();
+        }
+        break;
       case "Enter":
         if (this.selectedIndex >= 0) {
           event.preventDefault();
           event.stopPropagation();
-          event.stopImmediatePropagation();
           this.selectItem(this.filteredTips[this.selectedIndex]);
+        } else {
+          if (!this.dmenuInstance) {
+            this.args.onChange(this.currentInputValue, true);
+            return;
+          }
+
+          this.dmenuInstance?.close().then(() => {
+            this.args.onChange(this.currentInputValue, true);
+          });
         }
         break;
       case "Escape":
-        this.hideTips();
+        this.dmenuInstance?.close();
         break;
     }
-  }
-
-  // Prefixes are modifiers for filters, like -, =, and -=
-  #pushPrefixTips(tip, tips, alias = null, currentPrefix = null) {
-    if (tip.prefixes && tip.prefixes.length > 0) {
-      tip.prefixes.forEach((prefix) => {
-        if (currentPrefix && !prefix.name.startsWith(currentPrefix)) {
-          return;
-        }
-        tips.push({
-          ...tip,
-          name: `${prefix.name}${alias || tip.name}`,
-          description: prefix.description || tip.description,
-          isSuggestion: true,
-        });
-      });
-    }
-  }
-
-  // Prefixes are modifiers for filters, like -, =, and -=
-  #extractPrefix(word) {
-    const match = word.match(/^(-=|=-|-|=)/);
-    return match ? match[0] : "";
-  }
-
-  @action
-  handleFilterSuggestionSearch(filterName, valueText, tip, prefix = "") {
-    this.activeFilter = filterName;
-    this.searchTimer = discourseDebounce(
-      this,
-      this.#performFilterSuggestionSearch,
-      filterName,
-      valueText,
-      tip,
-      prefix,
-      300
-    );
-  }
-
-  // item here is a filter tip object either from the initial list of tips
-  // from the server or from the suggested results based on the last word.
-  //
-  // The structure looks like this:
-  //
-  // {
-  //  "name": "category:",
-  //  "alias": "categories:",
-  //  "description": "Show topics in a specific category",
-  //  "priority": 1,
-  //  "type": "category",
-  //  "delimiters": [
-  //      {
-  //          "name": ",",
-  //          "description": "Show topics in any of the specified categories (comma-separated)"
-  //      }
-  //  ],
-  //  "prefixes": [
-  //      {
-  //          "name": "-",
-  //          "description": "Exclude topics from a specific category"
-  //      },
-  //      {
-  //          "name": "=",
-  //          "description": "Show topics only in the parent category, excluding subcategories"
-  //      },
-  //      {
-  //          "name": "-=",
-  //          "description": "Exclude topics only from the parent category, not subcategories"
-  //      }
-  //  ]
-  // }
-  //
-  // c.f. TopicsFilter.option_info on the server-side.
-  @action
-  selectItem(item) {
-    // Split up the string from the text input into words.
-    const words = this.args.data.inputValue.split(/\s+/);
-
-    // If we are selecting an item that was suggested based on the initial
-    // word selected (e.g. after picking a "category:" the user selects a
-    // category from the list), we replace the last word with the selected item.
-    if (item.isSuggestion) {
-      words[words.length - 1] = item.name;
-      let updatedInputQueryString = words.join(" ");
-      if (
-        !updatedInputQueryString.endsWith(":") &&
-        (!item.delimiters || item.delimiters.length < 2)
-      ) {
-        updatedInputQueryString += " ";
-      }
-      this.#updateTextInput(updatedInputQueryString);
-      this.searchResults = [];
-      this.updateResults();
-    } else {
-      // Otherwise if the user is selecting a filter from the initial tips,
-      // we add a colon to the end of it as needed, and fire off the
-      // suggestion search based on the filter type.
-      const lastWord = words.at(-1);
-      const prefix = this.#extractPrefix(lastWord);
-      const supportsPrefix = item.prefixes && item.prefixes.length > 0;
-      const filterName =
-        supportsPrefix && prefix ? `${prefix}${item.name}` : item.name;
-
-      words[words.length - 1] = filterName;
-      if (!filterName.endsWith(":") && !item.delimiters?.length) {
-        words[words.length - 1] += " ";
-      }
-
-      const updatedInputQueryString = words.join(" ");
-      this.#updateTextInput(updatedInputQueryString);
-
-      const baseFilterName = item.name.replace(/^[-=]/, "").split(":")[0];
-      if (item.type) {
-        this.activeFilter = baseFilterName;
-        this.handleFilterSuggestionSearch(baseFilterName, "", item, prefix);
-      }
-    }
-
-    this.clearSelection();
-
-    schedule("afterRender", () => {
-      this.args.data.focusInputWithSelection();
-      this.updateResults();
-    });
-  }
-
-  // Updates the actual input element value with the new query string
-  // within DiscoveryFilterNavigation.
-  #updateTextInput(updatedInputQueryString) {
-    this.args.data.onChange(updatedInputQueryString);
   }
 
   async #performFilterSuggestionSearch(filterName, valueText, tip, prefix) {
@@ -338,7 +437,7 @@ export default class FilterNavigationMenu extends Component {
 
     switch (type) {
       case "tag":
-        results = await this.#getTagSuggestions(
+        results = await this.filterSuggestions.getTagSuggestions(
           prefix,
           filterName,
           prevTerms,
@@ -347,7 +446,7 @@ export default class FilterNavigationMenu extends Component {
         break;
 
       case "category":
-        results = this.#getCategorySuggestions(
+        results = this.filterSuggestions.getCategorySuggestions(
           prefix,
           filterName,
           prevTerms,
@@ -356,7 +455,7 @@ export default class FilterNavigationMenu extends Component {
         break;
 
       case "username":
-        results = await this.#getUserSuggestions(
+        results = await this.filterSuggestions.getUserSuggestions(
           prefix,
           filterName,
           prevTerms,
@@ -365,7 +464,7 @@ export default class FilterNavigationMenu extends Component {
         break;
 
       case "date":
-        results = this.#getDateSuggestions(
+        results = this.filterSuggestions.getDateSuggestions(
           prefix,
           filterName,
           prevTerms,
@@ -374,7 +473,7 @@ export default class FilterNavigationMenu extends Component {
         break;
 
       case "number":
-        results = this.#getNumberSuggestions(
+        results = this.filterSuggestions.getNumberSuggestions(
           prefix,
           filterName,
           prevTerms,
@@ -385,14 +484,14 @@ export default class FilterNavigationMenu extends Component {
 
     if (tip.delimiters) {
       let lastMatches = false;
-      results = results.map((r) => {
-        r.delimiters = tip.delimiters;
-        return r;
+      results = results.map((result) => {
+        result.delimiters = tip.delimiters;
+        return result;
       });
 
-      results = results.filter((r) => {
-        lastMatches ||= lastTerm === r.term;
-        if (splitTerms.includes(r.term)) {
+      results = results.filter((result) => {
+        lastMatches ||= lastTerm === result.term;
+        if (splitTerms.includes(result.term)) {
           return false;
         }
         return true;
@@ -410,141 +509,63 @@ export default class FilterNavigationMenu extends Component {
       }
     }
 
-    this.searchResults = results;
-
-    // We call this from within buildFilteredTips, so in this case we don't need
-    // to initiate the rebuild again.
-    // if (options.rebuildFilteredTips) {
-    //   this.buildFilteredTips();
-    // }
-  }
-
-  async #getTagSuggestions(prefix, filterName, prevTerms, lastTerm) {
-    let results = [];
-    try {
-      const response = await ajax("/tags/filter/search.json", {
-        data: { q: lastTerm || "", limit: 5 },
-      });
-      results = response.results.map((tag) => ({
-        name: `${prefix}${filterName}:${prevTerms}${tag.name}`,
-        description: `${tag.count}`,
-        isSuggestion: true,
-        term: tag.name,
-      }));
-    } catch {
-      results = [];
-    }
-    return results;
-  }
-
-  async #getUserSuggestions(prefix, filterName, prevTerms, lastTerm) {
-    let results = [];
-    try {
-      const data = { limit: 10 };
-      if ((lastTerm || "").length > 0) {
-        data.term = lastTerm;
-      } else {
-        data.last_seen_users = true;
-      }
-      const response = await ajax("/u/search/users.json", { data });
-      results = response.users.map((user) => ({
-        name: `${prefix}${filterName}:${prevTerms}${user.username}`,
-        description: user.name || "",
-        term: user.username,
-        isSuggestion: true,
-      }));
-    } catch {
-      results = [];
-    }
-    return results;
-  }
-
-  #getCategorySuggestions(prefix, filterName, prevTerms, lastTerm) {
-    const categories = this.site.categories || [];
-    return categories
-      .filter((category) => {
-        const name = category.name.toLowerCase();
-        const slug = category.slug.toLowerCase();
-        return name.includes(lastTerm) || slug.includes(lastTerm);
-      })
-      .slice(0, 10)
-      .map((category) => ({
-        name: `${prefix}${filterName}:${prevTerms}${category.slug}`,
-        description: `${category.name}`,
-        isSuggestion: true,
-        term: category.slug,
-      }));
-  }
-
-  #getDateSuggestions(prefix, filterName, prevTerms, lastTerm) {
-    const dateOptions = [
-      { value: "1", key: "yesterday" },
-      { value: "7", key: "last_week" },
-      { value: "30", key: "last_month" },
-      { value: "365", key: "last_year" },
-    ];
-
-    return dateOptions
-      .filter((option) => {
-        const description = i18n(`filter.description.days.${option.key}`);
-        return (
-          !lastTerm ||
-          option.value.includes(lastTerm) ||
-          description.toLowerCase().includes(lastTerm.toLowerCase())
-        );
-      })
-      .map((option) => ({
-        name: `${prefix}${filterName}:${prevTerms}${option.value}`,
-        description: i18n(`filter.description.${option.key}`),
-        isSuggestion: true,
-        term: option.value,
-      }));
-  }
-
-  #getNumberSuggestions(prefix, filterName, prevTerms, lastTerm) {
-    const numberOptions = [
-      { value: "0" },
-      { value: "1" },
-      { value: "5" },
-      { value: "10" },
-      { value: "20" },
-    ];
-
-    return numberOptions
-      .filter((option) => !lastTerm || option.value.includes(lastTerm))
-      .map((option) => ({
-        name: `${prefix}${filterName}:${prevTerms}${option.value}`,
-        isSuggestion: true,
-        term: option.value,
-      }));
+    this.filterSuggessionResults = results;
+    this.trackedMenuListData.filteredTips = this.filteredTips;
   }
 
   <template>
-    <DropdownMenu as |dropdown|>
-      {{#if this.filteredTips.length}}
-        {{#each this.filteredTips as |item index|}}
-          <dropdown.item>
-            <DButton
-              class={{concatClass
-                "filter-navigation__tip-button"
-                (if
-                  (eq index this.selectedIndex)
-                  "filter-navigation__tip-button--selected"
-                )
-              }}
-              @action={{fn this.selectItem item}}
-            >
-              <span class="filter-navigation__tip-name">
-                {{item.name}}
-              </span>
-              {{#if item.description}}
-                <span class="filter-navigation__tip-description">—
-                  {{item.description}}</span>
-              {{/if}}
-            </DButton>
-          </dropdown.item>
-        {{/each}}
+    <div class="topic-query-filter__input">
+      <DButton @icon="filter" class="topic-query-filter__icon btn-flat" />
+
+      <input
+        class="topic-query-filter__filter-term"
+        value={{this.currentInputValue}}
+        {{on "keydown" this.handleKeydown}}
+        {{on "input" (withEventValue this.updateInput)}}
+        {{on "focus" this.openFilterMenu}}
+        {{didInsert this.storeInputElement}}
+        type="text"
+        id="topic-query-filter-input"
+        autocomplete="off"
+        placeholder={{i18n "filter.placeholder"}}
+      />
+
+      {{#if this.currentInputValue}}
+        <DButton
+          @icon="xmark"
+          @action={{this.clearInput}}
+          class="topic-query-filter__clear-btn btn-flat"
+        />
       {{/if}}
-    </DropdownMenu>
+    </div>
   </template>
 }
+
+const FilterNavigationMenuList = <template>
+  {{#if @data.filteredTips.length}}
+    <DropdownMenu as |dropdown|>
+      {{#each @data.filteredTips as |item index|}}
+        <dropdown.item>
+          <DButton
+            class={{concatClass
+              "filter-navigation__tip-button"
+              (if
+                (eq index @data.selectedIndex)
+                "filter-navigation__tip-button--selected"
+              )
+            }}
+            @action={{fn @data.selectItem item}}
+          >
+            <span class="filter-navigation__tip-name">
+              {{item.name}}
+            </span>
+            {{#if item.description}}
+              <span class="filter-navigation__tip-description">—
+                {{item.description}}</span>
+            {{/if}}
+          </DButton>
+        </dropdown.item>
+      {{/each}}
+    </DropdownMenu>
+  {{/if}}
+</template>;

@@ -171,7 +171,6 @@ export default class DMenu extends Component {
           {{/if}}
         </DModal>
       {{else}}
-        {{log @contentClass}}
         <DFloatBody
           @instance={{this.menuInstance}}
           @trapTab={{this.options.trapTab}}

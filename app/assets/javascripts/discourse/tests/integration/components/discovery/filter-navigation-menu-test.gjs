@@ -5,12 +5,13 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import FilterNavigation from "discourse/components/discovery/filter-navigation";
+import FilterNavigationMenu from "discourse/components/discovery/filter-navigation-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import DMenus from "float-kit/components/d-menus";
 
 module(
-  "Integration | Component | discovery | filter-navigation",
+  "Integration | Component | discovery | filter-navigation-menu",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -54,11 +55,12 @@ module(
     test("keyboard navigation through tips", async function (assert) {
       await render(
         <template>
-          <FilterNavigation
+          <FilterNavigationMenu
             @tips={{this.tips}}
-            @queryString={{this.query}}
-            @updateQueryString={{this.update}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
+          <DMenus />
         </template>
       );
 
@@ -97,15 +99,16 @@ module(
         .hasText("category:");
     });
 
-    /* selecting a tip ------------------------------------------------------- */
     test("selecting a tip with Tab", async function (assert) {
       await render(
         <template>
-          <FilterNavigation
+          <FilterNavigationMenu
             @tips={{this.tips}}
-            @queryString={{this.query}}
-            @updateQueryString={{this.update}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
+
+          <DMenus />
         </template>
       );
 
@@ -116,10 +119,12 @@ module(
         "ArrowDown"
       );
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Tab");
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "Enter");
 
       assert.strictEqual(this.query, "category:", "category filter added");
 
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Tab");
+      await triggerKeyEvent("#topic-query-filter-input", "keydown", "Enter");
       assert
         .dom("#topic-query-filter-input")
         .hasValue("category:bugs ", "category value selected");
@@ -128,11 +133,12 @@ module(
     test("searching tag values", async function (assert) {
       await render(
         <template>
-          <FilterNavigation
+          <FilterNavigationMenu
             @tips={{this.tips}}
-            @queryString={{this.query}}
-            @updateQueryString={{this.update}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
+          <DMenus />
         </template>
       );
 
@@ -155,12 +161,12 @@ module(
     test("escape hides suggestions", async function (assert) {
       await render(
         <template>
-          <FilterNavigation
+          <FilterNavigationMenu
             @tips={{this.tips}}
-            @queryString={{this.query}}
-            @updateQueryString={{this.update}}
-            @blockEnterSubmit={{this.blockEnter}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
+          <DMenus />
         </template>
       );
 
@@ -191,12 +197,12 @@ module(
 
       await render(
         <template>
-          <FilterNavigation
+          <FilterNavigationMenu
             @tips={{this.tips}}
-            @queryString={{this.query}}
-            @updateQueryString={{this.update}}
-            @blockEnterSubmit={{this.blockEnter}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
+          <DMenus />
         </template>
       );
 
