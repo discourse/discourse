@@ -297,8 +297,6 @@ export default class FilterNavigationMenu extends Component {
         updatedInputValue += " ";
       }
       this.updateInput(updatedInputValue);
-      this.filterSuggessionResults = [];
-      this.updateResults();
     } else {
       // Otherwise if the user is selecting a filter from the initial tips,
       // we add a colon to the end of it as needed, and fire off the
@@ -325,10 +323,6 @@ export default class FilterNavigationMenu extends Component {
     }
 
     this.clearSelection();
-
-    schedule("afterRender", () => {
-      this.updateResults();
-    });
   }
 
   @action
