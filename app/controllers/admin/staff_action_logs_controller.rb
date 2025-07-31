@@ -9,8 +9,8 @@ class Admin::StaffActionLogsController < Admin::StaffController
     page = (params[:page] || 0).to_i
     page_size = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
-    start_date = params[:start_date]&.to_date
-    end_date = params[:end_date]&.to_date
+    start_date = params[:start_date]&.to_time
+    end_date = params[:end_date]&.to_time
 
     query = UserHistory
     query = query.where("created_at >= ?", start_date) if start_date.present?
