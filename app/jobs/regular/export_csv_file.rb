@@ -148,8 +148,8 @@ module Jobs
     end
 
     def staff_action_export
-      start_date = @extra[:start_date]&.to_time
-      end_date = @extra[:end_date]&.to_time
+      start_date = @extra[:start_date]&.to_time if @extra
+      end_date = @extra[:end_date]&.to_time if @extra
 
       query = UserHistory
       query = query.where("created_at >= ?", start_date) if start_date.present?
