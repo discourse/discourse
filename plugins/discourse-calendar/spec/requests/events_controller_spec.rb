@@ -340,7 +340,7 @@ module DiscoursePostEvent
     end
 
     context "with a private event" do
-      let(:moderator) { Fabricate(:user, moderator: true) }
+      let(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic, user: moderator) }
       let(:first_post) { Fabricate(:post, user: moderator, topic: topic) }
       let(:private_event) { Fabricate(:event, post: first_post, status: Event.statuses[:private]) }
