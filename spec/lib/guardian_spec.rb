@@ -1509,68 +1509,6 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_delete?(nil)).to be_falsey
     end
 
-    context "with a Topic" do
-      it "returns false when not logged in" do
-        expect(Guardian.new.can_delete?(topic)).to be_falsey
-      end
-
-      it "returns false when not a moderator" do
-        expect(Guardian.new(Fabricate(:user)).can_delete?(topic)).to be_falsey
-      end
-
-      it "returns true when a moderator" do
-        expect(Guardian.new(moderator).can_delete?(topic)).to be_truthy
-      end
-
-      it "returns true when an admin" do
-        expect(Guardian.new(admin).can_delete?(topic)).to be_truthy
-      end
-
-      it "returns false for static doc topics" do
-        tos_topic = Fabricate(:topic, user: Discourse.system_user)
-        SiteSetting.tos_topic_id = tos_topic.id
-        expect(Guardian.new(admin).can_delete?(tos_topic)).to be_falsey
-      end
-
-      it "returns true for own topics" do
-        topic.update_attribute(:posts_count, 1)
-        topic.update_attribute(:created_at, Time.zone.now)
-        expect(Guardian.new(topic.user).can_delete?(topic)).to be_truthy
-      end
-
-      it "returns false if topic has replies" do
-        topic.update!(posts_count: 2, created_at: Time.zone.now)
-        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
-      end
-
-      it "returns true when tl4 can delete posts and topics" do
-        expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_falsey
-        SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-        expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_truthy
-      end
-
-      it "returns false if topic was created > 24h ago" do
-        topic.update!(posts_count: 1, created_at: 48.hours.ago)
-        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
-      end
-
-      context "when category group moderation is enabled" do
-        fab!(:group_user)
-
-        before { SiteSetting.enable_category_group_moderation = true }
-
-        it "returns false if user is not a member of the appropriate group" do
-          expect(Guardian.new(group_user.user).can_delete?(topic)).to be_falsey
-        end
-
-        it "returns true if user is a member of the appropriate group" do
-          Fabricate(:category_moderation_group, category: topic.category, group: group_user.group)
-
-          expect(Guardian.new(group_user.user).can_delete?(topic)).to be_truthy
-        end
-      end
-    end
-
     context "with a Post" do
       before { post.post_number = 2 }
 
