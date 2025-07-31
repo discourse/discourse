@@ -34,7 +34,7 @@ export default class InterfaceColorSelector extends Component {
 
   @action
   switchToAuto(dMenu) {
-    this.interfaceColor.removeColorModeOverride();
+    this.interfaceColor.useAutoMode();
     dMenu.close();
   }
 
@@ -45,6 +45,7 @@ export default class InterfaceColorSelector extends Component {
       @identifier="interface-color-selector"
       @animated={{false}}
       class="interface-color-selector icon"
+      data-current-mode={{this.interfaceColor.colorMode}}
     >
       <:content as |dMenu|>
         <DropdownMenu as |dropdown|>

@@ -80,6 +80,18 @@ export default RouteTemplate(
                 />
               </div>
             </div>
+            <div class="control-subgroup interface-color-mode">
+              <div class="instructions">{{i18n
+                  "user.color_schemes.interface_mode"
+                }}</div>
+              <div class="controls">
+                <ComboBox
+                  @content={{@controller.interfaceColorModes}}
+                  @value={{@controller.selectedInterfaceColorMode}}
+                  @onChange={{@controller.selectColorMode}}
+                />
+              </div>
+            </div>
           {{/if}}
         </div>
         {{#if @controller.previewingColorScheme}}
@@ -100,7 +112,7 @@ export default RouteTemplate(
         {{/if}}
         {{#if @controller.showDarkColorSchemeSelector}}
           <div class="instructions">
-            {{i18n "user.color_schemes.dark_instructions"}}
+            {{i18n "user.color_schemes.interface_mode_instructions"}}
           </div>
         {{/if}}
       </fieldset>
