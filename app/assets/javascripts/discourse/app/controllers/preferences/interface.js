@@ -11,6 +11,7 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
+import { INTERFACE_COLOR_MODES } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import {
   currentThemeId,
@@ -19,7 +20,6 @@ import {
 } from "discourse/lib/theme-selector";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import { INTERFACE_COLOR_MODES } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES

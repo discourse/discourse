@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import { INTERFACE_COLOR_MODES } from "discourse/lib/constants";
 import cookie from "discourse/lib/cookie";
-import { INTERFACE_COLOR_MODES } from "discourse/models/user";
 
 const COOKIE_NAME = "forced_color_mode";
 const DARK_VALUE_FOR_COOKIE = "dark";

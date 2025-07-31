@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
-  # matches controllers/preferences/interface.js
   AUTO_MODE = 1
   LIGHT_MODE = 2
   DARK_MODE = 3

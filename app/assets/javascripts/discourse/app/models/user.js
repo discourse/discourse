@@ -42,13 +42,6 @@ import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
 import { i18n } from "discourse-i18n";
 
-// matches models/user_option.rb
-export const INTERFACE_COLOR_MODES = {
-  AUTO: 1,
-  LIGHT: 2,
-  DARK: 3,
-};
-
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
