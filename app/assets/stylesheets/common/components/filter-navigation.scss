@@ -29,11 +29,6 @@
         background-color: var(--d-hover);
       }
 
-      &--selected {
-        outline: 2px solid var(--tertiary);
-        outline-offset: -2px;
-      }
-
       .filter-navigation__tip-name {
         font-weight: 600;
         color: var(--primary);
