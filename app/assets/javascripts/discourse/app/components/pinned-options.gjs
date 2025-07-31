@@ -11,6 +11,7 @@ import DMenu from "float-kit/components/d-menu";
 
 const UNPINNED = "unpinned";
 const PINNED = "pinned";
+const GLOBALLY = "_globally";
 
 class PinnedOptionsTrigger extends Component {
   @service site;
@@ -23,19 +24,24 @@ class PinnedOptionsTrigger extends Component {
     return this.site.desktopView && (this.args.showCaret ?? true);
   }
 
-  get currentState() {
-    const pinnedGlobally = this.args.topic?.pinned_globally;
-    const pinned = this.args.value;
-    const globally = pinnedGlobally ? "_globally" : "";
-    return pinned ? `pinned${globally}` : UNPINNED;
+  get pinnedKey() {
+    if (!this.args.value) {
+      return UNPINNED;
+    }
+
+    if (this.args.topic?.pinned_globally) {
+      return `${PINNED}${GLOBALLY}`;
+    }
+
+    return PINNED;
   }
 
   get title() {
-    return i18n(`topic_statuses.${this.currentState}.title`);
+    return i18n(`topic_statuses.${this.pinnedKey}.title`);
   }
 
   get iconName() {
-    return this.currentState === UNPINNED ? "thumbtack unpinned" : "thumbtack";
+    return this.pinnedKey === UNPINNED ? "thumbtack unpinned" : "thumbtack";
   }
 
   <template>
@@ -88,7 +94,7 @@ export default class PinnedOptions extends Component {
   }
 
   get options() {
-    const globally = this.args.topic?.pinned_globally ? "_globally" : "";
+    const globally = this.args.topic?.pinned_globally ? GLOBALLY : "";
 
     return [
       {
@@ -117,7 +123,6 @@ export default class PinnedOptions extends Component {
       }}
       @contentClass={{@contentClass}}
       @onRegisterApi={{this.registerDmenuApi}}
-      @title="Pinned Options"
       @autofocus={{false}}
       @triggerComponent={{component
         PinnedOptionsTrigger

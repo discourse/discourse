@@ -70,7 +70,7 @@ module("Integration | Component | pinned-options", function (hooks) {
 
     await click('[data-pinned-state="pinned"]');
 
-    assert.true(this.topic.pinned, "topic should be pinned");
-    assert.false(this.topic.unpinned, "topic should not be marked as unpinned");
+    assert.true(this.topic.pinned, "topic is pinned");
+    assert.false(this.topic.unpinned, "topic isn't unpinned");
   });
 });
