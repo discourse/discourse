@@ -148,6 +148,14 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE tag_group_memberships
+(
+    tag_group_id NUMERIC  NOT NULL,
+    tag_id       NUMERIC  NOT NULL,
+    created_at   DATETIME,
+    PRIMARY KEY (tag_group_id, tag_id)
+);
+
 CREATE TABLE tag_group_permissions
 (
     group_id        NUMERIC  NOT NULL,

@@ -90,6 +90,11 @@ schema:
       columns:
         exclude:
           - "id"
+    tag_group_memberships:
+      primary_key_column_names: [ "tag_group_id", "tag_id" ]
+      columns:
+        exclude:
+          - "id"
     tag_group_permissions:
       primary_key_column_names: [ "tag_group_id", "group_id", "permission_type" ]
       columns:
@@ -349,7 +354,6 @@ schema:
         - "skipped_email_logs"
         - "stylesheet_cache"
         - "summary_sections"
-        - "tag_group_memberships"
         - "tag_search_data"
         - "tag_users"
         - "tags_web_hooks"
