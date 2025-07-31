@@ -1131,6 +1131,9 @@ ko:
         regular: "일반"
         dark: "다크 모드"
         default_dark_scheme: "(사이트 디폴트)"
+        interface_modes:
+          light: "라이트"
+          dark: "다크"
       dark_mode: "다크 모드"
       text_size_default_on_all_devices: "모든 디바이스에서 디폴트 텍스트 크기로 설정"
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"

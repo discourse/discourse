@@ -1257,6 +1257,9 @@ hy:
         regular: "Սովորական"
         dark: "Մութ ռեժիմ"
         default_dark_scheme: "(լռելյայն գունային սխեման)"
+        interface_modes:
+          light: "Բաց"
+          dark: "Մութ"
       dark_mode: "Մութ ռեժիմ"
       text_size_default_on_all_devices: "Դարձնել սա լռելյայն տեքստի չափ իմ բոլոր սարքավորում համար"
       allow_private_messages: "Թույլ տալ այլ օգտատերերին ուղարկել ինձ անձնական հաղորդագրություններ"

@@ -287,7 +287,6 @@ lt:
             custom: "Pasirinktinis..."
           hours: "valandos"
         usage:
-          ai_helper: "Padėjėjas"
           ai_summarization: "Apibendrinti"
           ai_spam: "Šlamštas"
         next:

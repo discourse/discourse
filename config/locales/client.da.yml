@@ -1220,6 +1220,10 @@ da:
         regular: "Almindelig"
         dark: "Mørk tilstand"
         default_dark_scheme: "(standard for websted)"
+        interface_modes:
+          auto: "Auto"
+          light: "Lys"
+          dark: "Mørk"
       dark_mode: "Mørk Tilstand"
       text_size_default_on_all_devices: "Gør dette til standard tekststørrelse på alle mine enheder"
       allow_private_messages: "Tillad andre brugere at sende mig personlige beskeder"

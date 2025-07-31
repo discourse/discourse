@@ -404,7 +404,6 @@ fi:
           neutral: "Neutraali"
     llm:
       configuration:
-        disable_module_first: "Sinun täytyy ensin poistaa %{setting} käytöstä."
         set_llm_first: "Aseta %{setting} ensin"
         model_unreachable: "Emme saaneet vastausta tästä mallista. Tarkista ensin asetuksesi."
         invalid_seeded_model: "Et voi käyttää tätä mallia tämän ominaisuuden kanssa"
