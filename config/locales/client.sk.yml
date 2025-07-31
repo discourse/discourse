@@ -2961,7 +2961,6 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
-      heading_label: "H"
       heading_title: "Nadpisy"
       heading_level_n: "Nadpis %{levelNumber}"
       heading_level_n_title: "Nadpis %{levelNumber}"

@@ -2948,7 +2948,6 @@ pl_PL:
       italic_label: "I"
       italic_title: "Wyróżnienie"
       italic_text: "wyróżniony tekst"
-      heading_label: "N"
       heading_title: "Nagłówki"
       heading_level_n: "Nagłówek %{levelNumber}"
       heading_level_n_title: "Nagłówek %{levelNumber}"
