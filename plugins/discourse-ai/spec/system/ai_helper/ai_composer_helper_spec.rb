@@ -326,9 +326,8 @@ RSpec.describe "AI Composer helper", type: :system do
 
       suggestion = ai_suggestion_dropdown.suggestion_name(0)
       ai_suggestion_dropdown.select_suggestion_by_value(0)
-      tag_selector = page.find(".mini-tag-chooser summary")
 
-      expect(tag_selector["data-name"]).to eq(suggestion)
+      expect(page).to have_css(".mini-tag-chooser summary[data-name='#{suggestion}']")
     end
 
     it "does not suggest tags that already exist" do
