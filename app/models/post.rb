@@ -706,6 +706,8 @@ class Post < ActiveRecord::Base
         should_update_user_stat = false
       end
 
+      self.topic.reset_bumped_at(self) if is_last_reply? && !whisper?
+
       # We need to do this because TopicStatusUpdater also does the increment
       # and we don't want to double count for the OP.
       UserStatCountUpdater.increment!(self) if should_update_user_stat
