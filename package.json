@@ -35,7 +35,7 @@
     "prettier": "3.5.3",
     "puppeteer-core": "^24.15.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
-    "stylelint": "16.22.0",
+    "stylelint": "16.23.0",
     "terser": "^5.43.1",
     "typescript": "5.6.x"
   },
