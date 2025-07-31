@@ -57,10 +57,12 @@ export default RouteTemplate(
                 <td class="username">
                   <div>
                     {{#if email.user}}
-                      <LinkTo @route="adminUser" @model={{email.user}}>
-                        {{avatar email.user imageSize="tiny"}}
-                        {{email.from_address}}
-                      </LinkTo>
+                      <span class="email-logs-user">
+                        <LinkTo @route="adminUser" @model={{email.user}}>
+                          {{avatar email.user imageSize="tiny"}}
+                          {{email.from_address}}
+                        </LinkTo>
+                      </span>
                     {{else}}
                       {{#if email.from_address}}
                         <a
@@ -74,10 +76,10 @@ export default RouteTemplate(
                 </td>
                 <td class="addresses">
                   {{#each email.to_addresses as |to|}}
-                    <p><a href="mailto:{{to}}" title="TO">{{to}}</a></p>
+                    <a href="mailto:{{to}}" title="TO">{{to}}</a>
                   {{/each}}
                   {{#each email.cc_addresses as |cc|}}
-                    <p><a href="mailto:{{cc}}" title="CC">{{cc}}</a></p>
+                    <a href="mailto:{{cc}}" title="CC">{{cc}}</a>
                   {{/each}}
                 </td>
                 <td>{{email.subject}}</td>

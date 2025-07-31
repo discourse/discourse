@@ -48,10 +48,12 @@ export default RouteTemplate(
                 <td class="username">
                   <div>
                     {{#if email.user}}
-                      <LinkTo @route="adminUser" @model={{email.user}}>
-                        {{avatar email.user imageSize="tiny"}}
-                        {{email.from_address}}
-                      </LinkTo>
+                      <span class="email-logs-user">
+                        <LinkTo @route="adminUser" @model={{email.user}}>
+                          {{avatar email.user imageSize="tiny"}}
+                          {{email.from_address}}
+                        </LinkTo>
+                      </span>
                     {{else}}
                       &mdash;
                     {{/if}}

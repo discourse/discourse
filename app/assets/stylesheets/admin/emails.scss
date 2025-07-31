@@ -45,7 +45,16 @@
     // prevent long links from breaking the layout
     display: inline-block;
     max-width: 300px;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
+
+    + a {
+      margin-top: var(--space-2);
+    }
+
+    &[href^="mailto:"] {
+      // don't agressively wrap email addresses
+      min-width: 250px;
+    }
   }
 
   code {
