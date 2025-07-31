@@ -1,7 +1,16 @@
-.filter-navigation__tips {
-  &-dropdown {
-    max-height: 300px;
-    overflow-y: auto;
+.fk-d-menu[data-identifier="filter-navigation-menu-list"] {
+  max-height: 300px;
+
+  .fk-d-menu__inner-content {
+    width: 100%;
+
+    .dropdown-menu {
+      width: 100%;
+    }
+
+    .dropdown-menu-item {
+      width: 100%;
+    }
 
     .filter-navigation__tip-button {
       display: block;
@@ -33,22 +42,6 @@
       .filter-navigation__tip-description {
         color: var(--primary-high);
       }
-    }
-  }
-}
-
-.fk-d-menu[data-identifier="filter-navigation-menu"] {
-  max-height: 300px;
-
-  .fk-d-menu__inner-content {
-    width: 100%;
-
-    .dropdown-menu {
-      width: 100%;
-    }
-
-    .dropdown-menu-item {
-      width: 100%;
     }
   }
 }
