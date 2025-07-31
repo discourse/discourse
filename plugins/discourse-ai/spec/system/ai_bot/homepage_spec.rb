@@ -153,6 +153,8 @@ RSpec.describe "AI Bot - Homepage", type: :system do
 
           ai_pm_homepage.input.fill_in(with: "Here are two image attachments")
 
+          expect(page).to have_no_css(".ai-bot-upload--in-progress")
+
           responses = ["hello user", "topic title"]
           DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
             ai_pm_homepage.submit
