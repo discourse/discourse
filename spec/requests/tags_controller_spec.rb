@@ -1348,6 +1348,7 @@ RSpec.describe TagsController do
     end
 
     it "succeeds when user in allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
       sign_in(regular_user)
       post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
       expect(response.status).to eq(200)

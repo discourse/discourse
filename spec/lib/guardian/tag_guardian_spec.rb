@@ -45,10 +45,12 @@ RSpec.describe TagGuardian do
     end
 
     it "returns false when user is not in an allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
       expect(Guardian.new(trust_level_2).can_edit_tag?(tag)).to be_falsey
     end
 
     it "returns true when user is in an allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
       expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to be_truthy
     end
   end
