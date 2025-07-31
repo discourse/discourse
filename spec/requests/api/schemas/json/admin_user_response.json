@@ -494,6 +494,9 @@
     },
     "external_ids": {
       "type": "object"
+    },
+    "include_ip": {
+      "type": "boolean"
     }
   },
   "required": [
@@ -553,6 +556,7 @@
     "suspended_by",
     "silenced_by",
     "groups",
-    "external_ids"
+    "external_ids",
+    "include_ip"
   ]
 }

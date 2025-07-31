@@ -31,7 +31,7 @@ export default RouteTemplate(
             @label="admin.config.staff_action_logs.sub_pages.screened_emails.title"
           />
         {{/if}}
-        {{#if this.currentUser.can_see_ip}}
+        {{#if @controller.currentUser.can_see_ip}}
           <NavItem
             @route="adminLogs.screenedIpAddresses"
             @label="admin.config.staff_action_logs.sub_pages.screened_ips.title"
