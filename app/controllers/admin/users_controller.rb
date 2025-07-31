@@ -439,6 +439,7 @@ class Admin::UsersController < Admin::StaffController
 
   def ip_info
     params.require(:ip)
+    raise Discourse::InvalidAccess.new unless guardian.can_see_ip?
 
     render json: DiscourseIpInfo.get(params[:ip], resolve_hostname: true)
   end

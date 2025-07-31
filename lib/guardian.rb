@@ -502,9 +502,9 @@ class Guardian
 
   def can_see_ip?
     return true if is_admin?
-    return false if !SiteSetting.moderators_view_ips && is_moderator?
+    return true if is_moderator? && SiteSetting.moderators_view_ips
 
-    true
+    false
   end
 
   def can_mute_user?(target_user)

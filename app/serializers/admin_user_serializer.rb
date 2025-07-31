@@ -8,7 +8,8 @@ class AdminUserSerializer < AdminUserListSerializer
              :can_deactivate,
              :can_approve,
              :ip_address,
-             :registration_ip_address
+             :registration_ip_address,
+             :include_ip
 
   has_one :single_sign_on_record, serializer: SingleSignOnRecordSerializer, embed: :objects
 
@@ -50,5 +51,9 @@ class AdminUserSerializer < AdminUserListSerializer
 
   def include_can_be_deleted?
     true
+  end
+
+  def include_ip
+    @options[:include_ip]
   end
 end
