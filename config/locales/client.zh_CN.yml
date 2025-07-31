@@ -2501,7 +2501,6 @@ zh_CN:
       italic_label: "I"
       italic_title: "强调"
       italic_text: "强调文本"
-      heading_label: "H"
       heading_title: "标题"
       heading_level_n: "标题 %{levelNumber}"
       heading_level_n_title: "标题 %{levelNumber}"

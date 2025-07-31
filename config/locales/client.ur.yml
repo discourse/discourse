@@ -2668,7 +2668,6 @@ ur:
       italic_label: "I"
       italic_title: "آئیٹیلک"
       italic_text: "زور دیا گیا ٹَیکسٹ"
-      heading_label: "H"
       heading_title: "سرخیاں"
       heading_level_n: "سرخی %{levelNumber}"
       heading_level_n_title: "سرخی %{levelNumber}"

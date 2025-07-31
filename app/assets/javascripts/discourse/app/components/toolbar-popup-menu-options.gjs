@@ -138,6 +138,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       tabindex="-1"
       @triggerClass={{concatClass "toolbar__button" @class}}
       @class="toolbar-popup-menu-options"
+      title={{@title}}
     >
       <:trigger>
         {{icon (this.getIcon this.args)}}
