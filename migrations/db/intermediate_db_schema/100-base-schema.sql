@@ -139,6 +139,14 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE tag_group_memberships
+(
+    tag_group_id NUMERIC  NOT NULL,
+    tag_id       NUMERIC  NOT NULL,
+    created_at   DATETIME,
+    PRIMARY KEY (tag_group_id, tag_id)
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
@@ -190,6 +198,7 @@ CREATE TABLE user_options
     homepage_id                          NUMERIC,
     ignore_channel_wide_mention          BOOLEAN,
     include_tl0_in_digests               BOOLEAN,
+    interface_color_mode                 INTEGER,
     last_redirected_to_top_at            DATETIME,
     like_notification_frequency          INTEGER,
     mailing_list_mode                    BOOLEAN,
