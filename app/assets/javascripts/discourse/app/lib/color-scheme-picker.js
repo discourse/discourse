@@ -35,9 +35,7 @@ export function listColorSchemes(site, options = {}) {
       if (!existing) {
         results.unshift({
           id: defaultDarkColorScheme.id,
-          name: `${defaultDarkColorScheme.name} ${i18n(
-            "user.color_schemes.default_dark_scheme"
-          )}`,
+          name: `${i18n("user.color_schemes.default_description")}`,
           theme_id: defaultDarkColorScheme.theme_id,
           colors: defaultDarkColorScheme.colors,
         });
