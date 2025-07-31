@@ -54,7 +54,7 @@
     }
 
     &[href^="mailto:"] {
-      // don't agressively wrap email addresses
+      // don't aggressively wrap email addresses
       min-width: 250px;
     }
   }
