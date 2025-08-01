@@ -65,23 +65,6 @@ acceptance("User Preferences - Interface", function (needs) {
     removeCookie("text_size");
   });
 
-  test("does not show option to disable dark mode by default", async function (assert) {
-    await visit("/u/eviltrout/preferences/interface");
-    assert.dom(".control-group.dark-mode").doesNotExist("option not visible");
-  });
-
-  test("shows light/dark color scheme pickers", async function (assert) {
-    let site = Site.current();
-    site.set("user_color_schemes", [
-      { id: 2, name: "Cool Breeze" },
-      { id: 3, name: "Dark Night", is_dark: true },
-    ]);
-
-    await visit("/u/eviltrout/preferences/interface");
-    assert.dom(".light-color-scheme").exists("has regular dropdown");
-    assert.dom(".dark-color-scheme").exists("has dark color scheme dropdown");
-  });
-
   test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
     let site = Site.current();
     site.set("user_themes", [
@@ -181,23 +164,6 @@ acceptance(
       meta.name = "discourse_theme_id";
       meta.content = "2";
       document.getElementsByTagName("head")[0].appendChild(meta);
-    });
-
-    test("show option to disable dark mode", async function (assert) {
-      let site = Site.current();
-      site.set("user_themes", [
-        {
-          theme_id: 2,
-          name: "Cool Theme",
-          color_scheme_id: 3,
-          dark_color_scheme_id: 1,
-        },
-      ]);
-      await visit("/u/eviltrout/preferences/interface");
-
-      assert
-        .dom(".control-group.dark-mode")
-        .exists("has the option to disable dark mode");
     });
 
     test("no color scheme picker by default", async function (assert) {
@@ -339,11 +305,6 @@ acceptance(
         selectKit(".dark-color-scheme .combobox").rowByValue(1).exists(),
         "default dark scheme is included"
       );
-
-      await selectKit(".dark-color-scheme .combobox").selectRowByValue(-1);
-
-      await savePreferences();
-      assert.strictEqual(cookie("dark_scheme_id"), "-1", "cookie is set");
 
       await click("button.undo-preview");
       assert.strictEqual(

@@ -89,14 +89,14 @@ class SiteSerializer < ApplicationSerializer
 
   def default_light_color_scheme
     ColorSchemeSerializer.new(
-      ColorScheme.find_by_id(Theme.find_default&.color_scheme_id || -1),
+      ColorScheme.find_by_id(Theme.find_default&.color_scheme_id),
       root: false,
     ).as_json
   end
 
   def default_dark_color_scheme
     ColorSchemeSerializer.new(
-      ColorScheme.find_by_id(Theme.find_default&.dark_color_scheme_id || -1),
+      ColorScheme.find_by_id(Theme.find_default&.dark_color_scheme_id),
       root: false,
     ).as_json
   end

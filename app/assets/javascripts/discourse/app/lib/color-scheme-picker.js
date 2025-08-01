@@ -29,7 +29,7 @@ export function listColorSchemes(site, options = {}) {
   });
 
   const defaultLightColorScheme = site.get("default_light_color_scheme");
-  if (defaultLightColorScheme) {
+  if (defaultLightColorScheme && !options.darkOnly) {
     const existing = schemes.findBy("id", defaultLightColorScheme.id);
     if (!existing) {
       results.unshift({
@@ -53,11 +53,6 @@ export function listColorSchemes(site, options = {}) {
         });
       }
     }
-
-    results.unshift({
-      id: -1,
-      name: i18n("user.color_schemes.disable_dark_scheme"),
-    });
   }
 
   return results.length === 0 ? null : results;
