@@ -139,6 +139,18 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE permalinks
+(
+    url          TEXT     NOT NULL PRIMARY KEY,
+    category_id  NUMERIC,
+    created_at   DATETIME,
+    external_url TEXT,
+    post_id      NUMERIC,
+    tag_id       NUMERIC,
+    topic_id     NUMERIC,
+    user_id      NUMERIC
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,

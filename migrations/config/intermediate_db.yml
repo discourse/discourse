@@ -89,6 +89,11 @@ schema:
       columns:
         exclude:
           - "id"
+    permalinks:
+      primary_key_column_names: [ "url" ]
+      columns:
+        exclude:
+          - "id"
     user_emails:
       columns:
         include:
@@ -279,7 +284,6 @@ schema:
         - "onceoff_logs"
         - "optimized_images"
         - "optimized_videos"
-        - "permalinks"
         - "plugin_store_rows"
         - "policy_users"
         - "poll_options"
