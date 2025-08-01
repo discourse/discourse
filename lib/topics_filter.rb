@@ -477,8 +477,23 @@ class TopicsFilter
       )
   end
 
+  def apply_custom_filter!(scope:, filter_name:, values:)
+    values.dup.each do |value|
+      custom_key = "#{filter_name}:#{value}"
+      if custom_match =
+           DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(custom_key) }
+        scope = custom_match[custom_key].call(scope, custom_key, @guardian) || scope
+        values.delete(value)
+      end
+    end
+    scope
+  end
+
   def filter_in(values:)
     values.uniq!
+
+    # handle edge case of comma-separated values
+    values.map! { |value| value.split(",") }.flatten!
 
     if values.delete("pinned")
       @scope =
@@ -487,6 +502,8 @@ class TopicsFilter
           Time.zone.now,
         )
     end
+
+    @scope = apply_custom_filter!(scope: @scope, filter_name: "in", values:)
 
     if @guardian.user
       if values.delete("bookmarked")
@@ -508,12 +525,14 @@ class TopicsFilter
             end
         end
 
-        @scope =
-          @scope.joins(:topic_users).where(
-            "topic_users.notification_level IN (:topic_notification_levels) AND topic_users.user_id = :user_id",
-            topic_notification_levels: @topic_notification_levels.to_a,
-            user_id: @guardian.user.id,
-          )
+        if @topic_notification_levels.present?
+          @scope =
+            @scope.joins(:topic_users).where(
+              "topic_users.notification_level IN (:topic_notification_levels) AND topic_users.user_id = :user_id",
+              topic_notification_levels: @topic_notification_levels.to_a,
+              user_id: @guardian.user.id,
+            )
+        end
       end
     elsif values.present?
       @scope = @scope.none

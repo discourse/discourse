@@ -52,7 +52,11 @@ RSpec.describe TopicsFilter do
     end
 
     it "should apply the topics_filter_options modifier for authenticated users" do
-      DiscoursePluginRegistry.register_modifier(:topics_filter_options) do |results, guardian|
+      plugin_instance = Plugin::Instance.new
+      DiscoursePluginRegistry.register_modifier(
+        plugin_instance,
+        :topics_filter_options,
+      ) do |results, guardian|
         if guardian&.authenticated?
           results << {
             name: "custom-filter:",
@@ -1754,6 +1758,64 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("foo:bar")
             .pluck(:id),
         ).to contain_exactly(topic.id)
+      end
+    end
+  end
+
+  describe "custom filter mappings for in: and status: operators" do
+    fab!(:topic)
+    fab!(:solved_topic) { Fabricate(:topic, closed: true) }
+
+    describe "custom in: filter" do
+      before do
+        plugin_instance = Plugin::Instance.new
+        DiscoursePluginRegistry.register_modifier(
+          plugin_instance,
+          :topics_filter_options,
+        ) do |results, guardian|
+          results << { name: "in:solved", description: "Topics that are solved", type: "text" }
+          results
+        end
+
+        Plugin::Instance.new.add_filter_custom_filter(
+          "in:solved",
+          &->(scope, value, guardian) { scope.where(closed: true) }
+        )
+      end
+
+      after do
+        DiscoursePluginRegistry.reset_register!(:custom_filter_mappings)
+        DiscoursePluginRegistry.reset_register!(:modifiers)
+      end
+
+      it "applies custom in: filter" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new(user))
+            .filter_from_query_string("in:solved")
+            .pluck(:id),
+        ).to contain_exactly(solved_topic.id)
+      end
+
+      it "handles comma-separated values with custom filters" do
+        TopicUser.change(
+          user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+
+        TopicUser.change(
+          user.id,
+          solved_topic.id,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new(user))
+            .filter_from_query_string("in:watching,solved")
+            .pluck(:id),
+        ).to contain_exactly(solved_topic.id)
       end
     end
   end
