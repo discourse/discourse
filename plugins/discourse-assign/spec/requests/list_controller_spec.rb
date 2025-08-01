@@ -409,6 +409,142 @@ describe ListController do
           response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
         ).to contain_exactly(topic_2.id)
       end
+
+      it "filters topics by multiple assigned users and groups" do
+        add_to_assign_allowed_group(user)
+        user2 = Fabricate(:user)
+        add_to_assign_allowed_group(user2)
+
+        # Assign topics to different users and groups
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        Assigner.new(topic_3, admin).assign(user2)
+
+        # Test filtering by multiple users and groups (comma-separated)
+        get "/filter",
+            params: {
+              q: "assigned:#{user.username_lower},#{group.name},#{user2.username_lower}",
+              format: :json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
+
+      it "filters topics by subset of multiple assigned users and groups" do
+        add_to_assign_allowed_group(user)
+        user2 = Fabricate(:user)
+        add_to_assign_allowed_group(user2)
+
+        # Assign topics to different users and groups
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        # topic_3 remains unassigned
+
+        # Test filtering by specific users only
+        get "/filter",
+            params: {
+              q: "assigned:#{user.username_lower},#{user2.username_lower}",
+              format: :json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "filters topics by assigned:*" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        # topic_3 remains unassigned
+
+        get "/filter", params: { q: "assigned:*", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id)
+      end
+
+      it "filters topics by assigned:nobody" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        # topic_3 remains unassigned
+
+        get "/filter", params: { q: "assigned:nobody", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_3.id)
+      end
+
+      it "handles empty multi-value assigned filter gracefully" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+
+        # Test with empty values and spaces
+        get "/filter", params: { q: "assigned:,  ,", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
+
+      it "handles non-existent users and groups in multi-value filter" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+
+        # Test with mix of existing and non-existing users/groups
+        get "/filter",
+            params: {
+              q: "assigned:#{user.username_lower},nonexistent_user,nonexistent_group",
+              format: :json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id)
+      end
+    end
+
+    describe "when user cannot assign" do
+      it "ignores the assigned:* filter" do
+        add_to_assign_allowed_group(admin)
+
+        Assigner.new(topic_1, admin).assign(admin)
+
+        get "/filter", params: { q: "assigned:*", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
+
+      it "ignores the assigned:nobody filter" do
+        add_to_assign_allowed_group(admin)
+
+        Assigner.new(topic_1, admin).assign(admin)
+
+        get "/filter", params: { q: "assigned:nobody", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
     end
   end
 end
