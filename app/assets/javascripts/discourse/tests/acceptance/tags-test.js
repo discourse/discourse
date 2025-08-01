@@ -443,7 +443,7 @@ acceptance("Tag info", function (needs) {
   });
 
   test("tag info hides only current tag in synonyms dropdown", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true });
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
     await visit("/tag/happy-monkey");
     assert.dom("#show-tag-info").exists();
@@ -465,7 +465,7 @@ acceptance("Tag info", function (needs) {
   });
 
   test("edit tag is showing input for name and description", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true });
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
     await visit("/tag/happy-monkey");
     assert.dom("#show-tag-info").exists();
@@ -577,7 +577,7 @@ acceptance("Tag info", function (needs) {
   });
 
   test("admin can manage tags", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true });
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
     await visit("/tag/planters");
     assert.dom("#show-tag-info").exists();
