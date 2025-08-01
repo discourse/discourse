@@ -26,6 +26,8 @@ describe "Composer - ProseMirror editor", type: :system do
     cdp.allow_clipboard
     cdp.copy_test_image
     cdp.paste
+    # account for the debounced resolution
+    sleep 0.2
     rich.find(".composer-image-node img").click
   end
 
