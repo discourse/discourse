@@ -728,6 +728,10 @@ export default class Topic extends RestModel {
       }
     });
     this.set("bookmarks", []);
+    this.appEvents.trigger("bookmarks:changed", null, {
+      target: "topic",
+      targetId: this.id,
+    });
 
     return postIds;
   }
