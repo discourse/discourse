@@ -5806,7 +5806,7 @@ ar:
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"
-      filter_reports: تصفية التقارير
+      filter_reports: "تصفية التقارير..."
       tags:
         remove_muted_tags_from_latest:
           always: "دائمًا"
@@ -6900,7 +6900,8 @@ ar:
           theme: "السمة"
           component: "المكوِّن"
           components: "المكوِّنات"
-          search_placeholder: "اكتب للبحث…"
+          filter_all: "الكل"
+          filter_user_selectable: "قابلة للاختيار من قِبل المستخدم"
           theme_name: "اسم السمة"
           component_name: "اسم المكوِّن"
           themes_intro: "حدِّد سمة موجودة أو ثبِّت سمة جديدة للبدء"

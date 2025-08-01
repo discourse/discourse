@@ -1455,6 +1455,7 @@ de:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
       reset_seen_user_tips: "Benutzertipps erneut anzeigen"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
+      color_scheme_default_on_all_devices: "Standard-Farbpalette und Modus auf allen meinen Geräten festlegen"
       color_scheme: "Farbpalette"
       color_schemes:
         default_description: "Theme-Standard"
@@ -1464,6 +1465,8 @@ de:
         regular: "Regulär"
         dark: "Dunkler Modus"
         default_dark_scheme: "(Website-Standard)"
+        interface_mode: "Modus"
+        interface_mode_instructions: "„Auto“ verwendet die Einstellungen deines Systems für den hellen oder dunklen Modus."
         interface_modes:
           auto: "Automatisch"
           light: "Hell"
@@ -5207,7 +5210,7 @@ de:
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
-      filter_reports: Berichte filtern
+      filter_reports: "Berichte filtern..."
       filter_reports_no_results: "Keine Berichte entsprechen deinem Filter"
       tags:
         remove_muted_tags_from_latest:
@@ -6265,7 +6268,6 @@ de:
             filter_by_used: "Verwendet"
             filter_by_unused: "Nicht verwendet"
             filter_by_updates_available: "Updates verfügbar"
-            search_components: "Gib einen Komponentennamen ein"
             new_update_for_component: "Neues Update verfügbar für %{name}!"
             component_up_to_date: '„%{name}“ ist aktuell.'
             updated_successfully: '„%{name}“ wurde erfolgreich aktualisiert.'
@@ -6455,7 +6457,8 @@ de:
           theme: "Theme"
           component: "Komponente"
           components: "Komponenten"
-          search_placeholder: "zum Suchen etwas eingeben …"
+          filter_all: "Alle"
+          filter_user_selectable: "Vom Benutzer wählbar"
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
@@ -6704,12 +6707,10 @@ de:
           saved_refreshing: "Gespeichert! Aktualisiere Farben..."
           from_theme: "Vom Theme: %{name}"
           filters:
-            search_placeholder: "Suche nach Name oder Theme..."
             all: "Gesamt"
             user_selectable: "Vom Benutzer wählbar"
             from_theme: "Vom Theme"
             no_results: "Keine Farbpaletten gefunden"
-            reset: "Filter zurücksetzen"
           active_badge:
             text: "Aktiv"
             title: "Aktive Farbpalette"

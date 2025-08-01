@@ -2308,7 +2308,7 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      filter_reports: Filter laporan
+      filter_reports: "Filter laporan..."
       tags:
         remove_muted_tags_from_latest:
           always: "selalu"
@@ -2572,6 +2572,7 @@ id:
           disabled_filter: "Dinonaktifkan"
         theme:
           theme: "Tema"
+          filter_all: "Semua"
           customize_desc: "Sesuaikan:"
           create: "Buat"
           create_type: "Tipe"

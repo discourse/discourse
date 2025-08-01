@@ -5641,7 +5641,7 @@ sk:
     admin:
       title: "Administrátor Discourse"
       moderator: "Moderátor"
-      filter_reports: Filtrovať prehľady
+      filter_reports: "Filtrovať prehľady..."
       filter_reports_no_results: "Vášmu filtru nevyhovujú žiadne správy"
       tags:
         remove_muted_tags_from_latest:
@@ -6735,7 +6735,6 @@ sk:
             filter_by_used: "Použité"
             filter_by_unused: "Nepoužité"
             filter_by_updates_available: "Dostupné aktualizácie"
-            search_components: "Zadajte názov komponentu"
             new_update_for_component: "Nová aktualizácia je k dispozícii pre %{name}!"
             component_up_to_date: '„%{name}“ je aktuálne.'
             updated_successfully: '"%{name}" bol úspešne aktualizovaný.'
@@ -6925,7 +6924,8 @@ sk:
           theme: "Téma"
           component: "Komponent"
           components: "Komponenty"
-          search_placeholder: "zadajte vyhľadávanie…"
+          filter_all: "Všetky"
+          filter_user_selectable: "Voliteľné používateľom"
           theme_name: "Názov témy"
           component_name: "Názov komponentu"
           themes_intro: "Vyberte si existujúcu tému alebo si nainštalujte novú a začnite"
@@ -7188,12 +7188,10 @@ sk:
           saved_refreshing: "Uložené! Osviežujúce farby..."
           from_theme: "Z témy: %{name}"
           filters:
-            search_placeholder: "Hľadať podľa názvu alebo témy..."
             all: "Všetky"
             user_selectable: "Voliteľné používateľom"
             from_theme: "Z témy"
             no_results: "Neboli nájdené žiadne farebné palety"
-            reset: "Obnovenie filtrov"
           active_badge:
             text: "Aktívny"
             title: "Aktívna paleta farieb"

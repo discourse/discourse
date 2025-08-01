@@ -1614,6 +1614,7 @@ he:
         description: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים"
       reset_seen_user_tips: "הצגת עצות למשתמש שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
+      color_scheme_default_on_all_devices: "הגדרת ערכת צבעים ומצב כברירת מחדל לכל המכשירים שלי"
       color_scheme: "לוח צבעים"
       color_schemes:
         default_description: "ברירת המחדל לערכת העיצוב"
@@ -1623,6 +1624,8 @@ he:
         regular: "רגילה"
         dark: "מצב כהה"
         default_dark_scheme: "(ברירת המחדל של האתר)"
+        interface_mode: "מצב"
+        interface_mode_instructions: "‚אוט’ משתמש בהעדפות המערכת שלך בנוגע למצב בהיר או כהה."
         interface_modes:
           auto: "אוט׳"
           light: "בהיר"
@@ -5724,7 +5727,7 @@ he:
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
-      filter_reports: סינון דוחות
+      filter_reports: "סינון דוחות..."
       filter_reports_no_results: "אין דוחות שעונים למסנן שלך"
       tags:
         remove_muted_tags_from_latest:
@@ -6811,7 +6814,6 @@ he:
             filter_by_used: "בשימוש"
             filter_by_unused: "לא בשימוש"
             filter_by_updates_available: "עדכונים זמינים"
-            search_components: "נא למלא שם רכיב"
             new_update_for_component: "עדכון חדש זמין עבור %{name}!"
             component_up_to_date: '„%{name}” עדכני.'
             updated_successfully: '„%{name}” עודכן בהצלחה.'
@@ -7001,7 +7003,8 @@ he:
           theme: "ערכת עיצוב"
           component: "רכיב"
           components: "רכיבים"
-          search_placeholder: "נא להקליד כדי לחפש…"
+          filter_all: "הכול"
+          filter_user_selectable: "לבחירת המשתמש"
           theme_name: "שם ערכת העיצוב"
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
@@ -7259,16 +7262,15 @@ he:
           dark_mode_warning: "בחרת בעיצוב כהה. כשמגדירים ערכת צבעים פעילה הצבעים יחולו על ההגוון הבהיר של ערכת העיצוב. כדי לשנות את צבעי ברירת המחדל של המצב הכהה, נא לערוך את <a href='%{link}'>הגדרות האתר במצב כהה</a>."
           title: "צבעים"
           edit: "עריכה"
+          set_default: "הפעלה על ערכת הנושא שהיא ברירת המחדל (%{theme})"
           set_default_success: "%{schemeName} הוגדרה כערכה פעילה עבור %{themeName}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"
           filters:
-            search_placeholder: "חיפוש לפי שם או ערכת עיצוב…"
             all: "הכול"
             user_selectable: "לבחירת המשתמש"
             from_theme: "מערכת עיצוב"
             no_results: "לא נמצאו ערכות צבעים"
-            reset: "איפוס מסננים"
           active_badge:
             text: "פעיל"
             title: "ערכת צבעים פעילה"

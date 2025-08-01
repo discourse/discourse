@@ -4578,7 +4578,7 @@ zh_TW:
     admin:
       title: "論壇管理員"
       moderator: "板主"
-      filter_reports: 過濾報告
+      filter_reports: "過濾報告..."
       tags:
         remove_muted_tags_from_latest:
           always: "總是"
@@ -5657,7 +5657,8 @@ zh_TW:
           theme: "佈景主題"
           component: "元件"
           components: "元件"
-          search_placeholder: "輸入以搜尋…"
+          filter_all: "全部"
+          filter_user_selectable: "使用者可選"
           theme_name: "佈景主題名稱"
           component_name: "元件名稱"
           themes_intro: "選擇現有或安裝新佈景主題以開始"

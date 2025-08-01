@@ -2959,6 +2959,7 @@ sr:
         component:
           all_filter: "sve"
         theme:
+          filter_all: "Sve"
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
           create_name: "Ime foruma"

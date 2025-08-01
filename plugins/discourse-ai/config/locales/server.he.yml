@@ -15,6 +15,8 @@ he:
     scriptables:
       llm_tool_triage:
         title: מיון ראשוני של פוסטים באמצעות כלי בינה מלאכותית
+      llm_persona_triage:
+        description: "תגובה לפוסטים באמצעות דמות בינה מלאכותית מסוימת"
       llm_triage:
         title: מיון ראשוני של פוסטים באמצעות בינה מלאכותית
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
@@ -27,6 +29,7 @@ he:
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
   site_settings:
     discourse_ai_enabled: "הפעלת תוסף הבינה המלאכותית של Discourse."
+    ai_default_llm_model: "מודל ה־LLM/מש״ג כברירת מחדל לשימוש ליכולות בינה מלאכותית"
     ai_artifact_security: "מערכת התוצרים של הבינה המלאכותית מייצרת חלוניות (IFRAME) עם קוד שניתן להריץ. מצב נוקשה מאלץ לחיצה נוספת כדי להריץ קוד. מצב Lax מריץ קוד ישירות. מצב משולב מאפשר למשתמש לספק data-ai-artifact-autorun שיופיע מיידית. מצב מושבת משבית את מערכת התוצרים."
     ai_toxicity_enabled: "הפעלת מודול הרעילות."
     ai_toxicity_inference_service_api_endpoint: "הכתובת בה נמצא ה־API הפעיל עבור מודול הרעילות"
@@ -55,6 +58,7 @@ he:
     ai_nsfw_flag_threshold_porn: "סף לתמונה שמוגדרת כארוטית כדי שתיחשב פוגענית."
     ai_nsfw_flag_threshold_sexy: "סף לתמונה שמוגדרת כמינית כדי שתיחשב פוגענית."
     ai_nsfw_models: "מודלים לשימוש להסקת פוגענות."
+    ai_spam_detection_enabled: "הפעלת מודול זיהוי זבל עם בינה מלאכותית"
     ai_openai_api_key: "מפתח API ל־API של OpenAI. משמש רק ליצירת ועריכת תמונות. בשביל GPT יש להשתמש בלשונית הגדרת ה־LLM."
     ai_openai_image_generation_url: "כתובת ל־API ליצירת תמונות מבית OpenAI"
     ai_openai_image_edit_url: "כתובת ל־API לעריכת תמונות מבית OpenAI"
@@ -69,6 +73,7 @@ he:
     ai_helper_enabled_features: "נא לבחור יכולות להפעלה במסייע הבינה המלאכותית."
     post_ai_helper_allowed_groups: "קבוצות משתמשים שמורשות לגשת ליכולות מסייע בינה מלאכותית בפוסטים"
     ai_helper_image_caption_model: "נא לבחור את הדגם שישמש ליצירת כותרות לתמונות"
+    ai_embeddings_selected_model: "להשתמש במודל הנבחר ליצירת הטמעות."
     ai_embeddings_generate_for_pms: "יצירת הטמעות להודעות פרטיות."
     ai_embeddings_semantic_related_topics_enabled: "להשתמש בחיפוש סמנטי לנושאים קשורים."
     ai_embeddings_semantic_related_topics: "מספר הנושאים המרבי להצגה בסעיף הנושאים הקשורים."

@@ -3792,7 +3792,7 @@ vi:
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
-      filter_reports: Lọc báo cáo
+      filter_reports: "Lọc báo cáo..."
       tags:
         remove_muted_tags_from_latest:
           always: "luôn luôn"
@@ -4464,6 +4464,7 @@ vi:
           theme: "Giao diện"
           component: "Thành phần"
           components: "Các thành phần"
+          filter_all: "Tất cả"
           theme_name: "Tên chủ đề"
           component_name: "Tên thành phần"
           themes_intro: "Chọn một chủ đề hiện có hoặc cài đặt một chủ đề mới để bắt đầu"

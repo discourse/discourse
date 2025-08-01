@@ -4098,7 +4098,7 @@ da:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filtrer rapporter
+      filter_reports: "Filtrer rapporter..."
       tags:
         remove_muted_tags_from_latest:
           always: "altid"
@@ -4898,6 +4898,8 @@ da:
           theme: "Tema"
           component: "Komponent"
           components: "komponenter"
+          filter_all: "Alle"
+          filter_user_selectable: "Kan vælges af brugeren"
           theme_name: "Tema navn"
           component_name: "Komponent navn"
           themes_intro: "Vælg et eksisterende tema, eller installer et nyt for at komme i gang"

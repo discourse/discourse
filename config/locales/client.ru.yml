@@ -5324,7 +5324,7 @@ ru:
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"
-      filter_reports: Фильтр отчетов
+      filter_reports: "Фильтр отчетов..."
       tags:
         remove_muted_tags_from_latest:
           always: "Всегда"
@@ -6379,7 +6379,8 @@ ru:
           theme: "Тема"
           component: "Компонент"
           components: "Компоненты"
-          search_placeholder: "введите для поиска…"
+          filter_all: "Все"
+          filter_user_selectable: "Выбирается пользователем"
           theme_name: "Название темы"
           component_name: "Название компонента"
           themes_intro: "Для начала выберите существующую тему или установите новую"

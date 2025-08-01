@@ -3852,6 +3852,7 @@ bg:
           disabled_filter: "Деактивирани"
         theme:
           theme: "Тема"
+          filter_all: "Всички"
           customize_desc: "Персонализация:"
           create: "Създай"
           create_type: "Тип"

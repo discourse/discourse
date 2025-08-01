@@ -3743,7 +3743,7 @@ ko:
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
-      filter_reports: 보고서 필터링
+      filter_reports: "보고서 필터링..."
       tags:
         remove_muted_tags_from_latest:
           always: "항상 알림 받기"
@@ -4380,6 +4380,7 @@ ko:
           theme: "테마"
           component: "구성 요소"
           components: "구성 요소"
+          filter_all: "모두"
           theme_name: "테마명"
           component_name: "구성 요소 이름"
           themes_intro: "기존 테마를 선택하거나 새 테마를 설치하여 시작하세요."

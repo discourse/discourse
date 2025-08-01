@@ -5215,7 +5215,7 @@ ug:
     admin:
       title: "Discourse باشقۇرغۇچى"
       moderator: "رىياسەتچى"
-      filter_reports: سۈزگۈچ دوكلاتى
+      filter_reports: "سۈزگۈچ دوكلاتى..."
       filter_reports_no_results: "سۈزگۈچىڭىزگە ھېچقانداق دوكلات ماس كەلمەيدۇ"
       tags:
         remove_muted_tags_from_latest:
@@ -6264,7 +6264,6 @@ ug:
             filter_by_used: "ئىشلىتىلگەن"
             filter_by_unused: "ئىشلىتىلمىگەن"
             filter_by_updates_available: "يېڭىلانما بار"
-            search_components: "بۆلەك ئىسمى كىرگۈزۈلىدۇ"
             new_update_for_component: "%{name} نىڭ يېڭى يېڭىلانمىسى بار!"
             component_up_to_date: '«%{name}» يېڭىلاندى.'
             updated_successfully: '«%{name}» مۇۋەپپەقىيەتلىك يېڭىلانغان.'
@@ -6454,7 +6453,8 @@ ug:
           theme: "ئۆرنەك"
           component: "پارچە"
           components: "بۆلەك"
-          search_placeholder: "كىرگۈزگەننى ئىزدەيدۇ…"
+          filter_all: "ھەممىسى"
+          filter_user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
           theme_name: "ئۆرنەك ئىسمى"
           component_name: "بۆلەك ئىسمى"
           themes_intro: "باشلاش ئۈچۈن مەۋجۇت ئۆرنەكتىن بىرى تاللىنىدۇ ياكى يېڭىسى ئورنىتىلىدۇ"
@@ -6698,12 +6698,10 @@ ug:
           saved_refreshing: "ساقلاندى! رەڭنى يېڭىلاۋاتىدۇ…"
           from_theme: "ئۆرنەك ئورنى: %{name}"
           filters:
-            search_placeholder: "ئىسىم ياكى ئۆرنەك بويىچە ئىزدەيدۇ…"
             all: "ھەممىسى"
             user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
             from_theme: "ئۆرنەكتىن"
             no_results: "ھېچقانداق رەڭ تاختىسى تېپىلمىدى"
-            reset: "سۈزگۈچنى ئەسلىگە قايتۇرىدۇ"
           active_badge:
             text: "ئاكتىپ"
             title: "رەڭ تاختىسىنى ئاكتىپلايدۇ"

@@ -3736,7 +3736,7 @@ sl:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filtriraj poročila
+      filter_reports: "Filtriraj poročila..."
       tags:
         remove_muted_tags_from_latest:
           always: "vedno"
@@ -4217,6 +4217,7 @@ sl:
           disabled_filter: "Onemogočeno"
         theme:
           theme: "Videz"
+          filter_all: "Vsi"
           theme_name: "Ime videza"
           customize_desc: "Prilagodi:"
           title: "Videzi"

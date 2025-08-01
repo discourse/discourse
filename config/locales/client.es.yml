@@ -4808,7 +4808,7 @@ es:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar informes
+      filter_reports: "Filtrar informes..."
       tags:
         remove_muted_tags_from_latest:
           always: "siempre"
@@ -5840,7 +5840,8 @@ es:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
-          search_placeholder: "escribe para buscar..."
+          filter_all: "Todo"
+          filter_user_selectable: "Seleccionable por el usuario"
           theme_name: "Nombre del tema"
           component_name: "Nombre del componente"
           themes_intro: "Selecciona un tema existente o instala uno nuevo para empezar"

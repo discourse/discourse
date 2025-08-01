@@ -1621,6 +1621,7 @@ uk:
         description: "Пропустити поради щодо створення користувача та значків"
       reset_seen_user_tips: "Знову показати поради користувача"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
+      color_scheme_default_on_all_devices: "Встановити палітру кольорів і режим за замовчуванням на всіх моїх пристроях"
       color_scheme: "Колірна палітра"
       color_schemes:
         default_description: "Типова тема"
@@ -1630,6 +1631,8 @@ uk:
         regular: "Звичайний"
         dark: "Темний режим"
         default_dark_scheme: "(типово для сайту)"
+        interface_mode: "Режим"
+        interface_mode_instructions: "«Авто» використовує налаштування вашої системи для світлого або темного режиму."
         interface_modes:
           auto: "Авто"
           light: "Світла"
@@ -5735,7 +5738,7 @@ uk:
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
-      filter_reports: Фільтр звітів
+      filter_reports: "Фільтр звітів..."
       filter_reports_no_results: "Немає звітів, що відповідають вашому фільтру"
       tags:
         remove_muted_tags_from_latest:
@@ -6829,7 +6832,7 @@ uk:
             filter_by_used: "Використано"
             filter_by_unused: "Невикористаний"
             filter_by_updates_available: "Доступні оновлення"
-            search_components: "Введіть назву компонента"
+            search_components: "Фільтрувати за назвою або описом компонента..."
             new_update_for_component: "Нове оновлення доступне для %{name}!"
             component_up_to_date: '"%{name}" оновлено.'
             updated_successfully: '"%{name}" успішно оновлено.'
@@ -7019,7 +7022,10 @@ uk:
           theme: "Тема"
           component: "Компонент"
           components: "Компоненти"
-          search_placeholder: "введіть для пошуку…"
+          search_placeholder: "Фільтрувати за назвою або описом теми..."
+          filter_all: "Всі"
+          filter_user_selectable: "Вибір користувача"
+          no_themes_found: "Немає тем, що відповідають вашим фільтрам"
           theme_name: "Назва теми"
           component_name: "Назва компонента"
           themes_intro: "Виберіть існуючу тему, або встановіть нову, щоб почати роботу"
@@ -7284,12 +7290,11 @@ uk:
           saved_refreshing: "Збережено! Оновлення кольорів..."
           from_theme: "З теми: %{name}"
           filters:
-            search_placeholder: "Пошук за назвою або темою..."
+            search_placeholder: "Фільтрувати за палітрою або назвою теми..."
             all: "Всі"
             user_selectable: "Вибір користувача"
             from_theme: "З теми"
             no_results: "Палітри кольорів не знайдено"
-            reset: "Скинути фільтри"
           active_badge:
             text: "Активний"
             title: "Активна палітра кольорів"

@@ -5731,7 +5731,7 @@ pl_PL:
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
-      filter_reports: Filtruj zgłoszenia
+      filter_reports: "Filtruj zgłoszenia..."
       filter_reports_no_results: "Żadne raporty nie pasują do Twojego filtra"
       tags:
         remove_muted_tags_from_latest:
@@ -6825,7 +6825,7 @@ pl_PL:
             filter_by_used: "Używany"
             filter_by_unused: "Nieużywany"
             filter_by_updates_available: "Dostępne aktualizacje"
-            search_components: "Wpisz nazwę komponentu"
+            search_components: "Filtruj według nazwy lub opisu komponentu..."
             new_update_for_component: "Nowa aktualizacja dostępna dla %{name}!"
             component_up_to_date: '"%{name}" jest aktualny.'
             updated_successfully: '"%{name}" został pomyślnie zaktualizowany.'
@@ -7015,7 +7015,10 @@ pl_PL:
           theme: "Motyw"
           component: "Komponent"
           components: "Komponenty"
-          search_placeholder: "wpisz, aby wyszukać…"
+          search_placeholder: "Filtruj według nazwy motywu lub opisu..."
+          filter_all: "Wszystkie"
+          filter_user_selectable: "Możliwe do wyboru przez użytkownika"
+          no_themes_found: "Brak motywów pasujących do Twoich filtrów"
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
@@ -7280,12 +7283,11 @@ pl_PL:
           saved_refreshing: "Zapisane! Odświeżanie kolorów..."
           from_theme: "Z motywu: %{name}"
           filters:
-            search_placeholder: "Szukaj według nazwy lub motywu..."
+            search_placeholder: "Filtruj według palety lub nazwy motywu..."
             all: "Wszystkie"
             user_selectable: "Możliwe do wyboru przez użytkownika"
             from_theme: "Z motywu"
             no_results: "Nie znaleziono palet kolorów"
-            reset: "Zresetuj filtry"
           active_badge:
             text: "Aktywni"
             title: "Aktywna paleta kolorów"

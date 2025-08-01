@@ -5016,7 +5016,7 @@ pt_BR:
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
-      filter_reports: Filtrar relatórios
+      filter_reports: "Filtrar relatórios..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -6131,7 +6131,8 @@ pt_BR:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
-          search_placeholder: "digite para pesquisar…"
+          filter_all: "Todos"
+          filter_user_selectable: "Selecionável por usuário(a)"
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"

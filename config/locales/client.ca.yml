@@ -3072,7 +3072,7 @@ ca:
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtra reports
+      filter_reports: "Filtra reports..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3632,6 +3632,7 @@ ca:
           theme: "Aparença"
           component: "Component"
           components: "Components"
+          filter_all: "Tots"
           theme_name: "Nom de l'aparença"
           component_name: "Nom del component"
           themes_intro: "Seleccioneu una aparença existent o instal·leu-ne una de nova per a començar"

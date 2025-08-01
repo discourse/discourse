@@ -2847,6 +2847,7 @@ sw:
           disabled_filter: "Imezuiwa"
         theme:
           theme: "Mandhari"
+          filter_all: "Yote"
           customize_desc: "Geuza Kukufaa:"
           title: "Mandhari"
           create: "Tengeneza"

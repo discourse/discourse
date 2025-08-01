@@ -5104,7 +5104,7 @@ hu:
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
-      filter_reports: Jelentések szűrése
+      filter_reports: "Jelentések szűrése..."
       filter_reports_no_results: "Egyetlen jelentés sem felel meg a szűrőnek"
       tags:
         remove_muted_tags_from_latest:
@@ -6158,7 +6158,6 @@ hu:
             filter_by_used: "Használt"
             filter_by_unused: "Nem használt"
             filter_by_updates_available: "Frissítések elérhetők"
-            search_components: "Írja be az összetevő nevét"
             new_update_for_component: "%{name} Új frissítés érhető el"
             component_up_to_date: '"%{name}" naprakész.'
             updated_successfully: '"%{name}" sikeresen frissítve.'
@@ -6348,7 +6347,8 @@ hu:
           theme: "Téma"
           component: "Összetevő"
           components: "Összetevők"
-          search_placeholder: "írj be a kereséshez…"
+          filter_all: "Összes"
+          filter_user_selectable: "Felhasználó által választható"
           theme_name: "A téma neve"
           component_name: "Összetevő neve"
           themes_intro: "A kezdéshez válasszon egy meglévő témát, vagy telepítsen újat"
@@ -6595,7 +6595,6 @@ hu:
           saved_refreshing: "Mentve! Frissítő színek..."
           from_theme: "Téma forrása: %{name}"
           filters:
-            search_placeholder: "Keresés név vagy téma alapján..."
             all: "Összes"
             user_selectable: "Felhasználó által választható"
           active_badge:

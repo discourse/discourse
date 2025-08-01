@@ -4388,7 +4388,7 @@ nb_NO:
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
-      filter_reports: Filtrer rapporter
+      filter_reports: "Filtrer rapporter..."
       tags:
         remove_muted_tags_from_latest:
           always: "alltid"
@@ -4948,6 +4948,7 @@ nb_NO:
           theme: "Drakt"
           component: "Komponent"
           components: "Komponenter"
+          filter_all: "Alle"
           theme_name: "Navn på tema"
           component_name: "Komponent navn"
           themes_intro: "Velg et eksisterende tema eller installer et nytt for å komme i gang"
