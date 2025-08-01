@@ -9,6 +9,7 @@ import GroupsField from "admin/components/schema-setting/types/groups";
 import IntegerField from "admin/components/schema-setting/types/integer";
 import StringField from "admin/components/schema-setting/types/string";
 import TagsField from "admin/components/schema-setting/types/tags";
+import UploadField from "admin/components/schema-setting/types/upload";
 
 export default class SchemaSettingField extends Component {
   get component() {
@@ -31,6 +32,8 @@ export default class SchemaSettingField extends Component {
         return TagsField;
       case "groups":
         return GroupsField;
+      case "upload":
+        return UploadField;
       default:
         throw new Error(`unknown type ${type}`);
     }
