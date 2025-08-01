@@ -33,7 +33,11 @@
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request, include_admin_asset: staff?).each do |file| %>
-      <%= preload_script file %>
+      <%if file.include?("_extra") %>
+        <%= preload_script file %>
+      <% else %>
+        <link rel="modulepreload" href="<%= file %>" nonce="<%= csp_nonce_placeholder %>" data-plugin-name="<%= file.split('/').last %>">
+      <% end %>
     <%- end %>
 
     <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>

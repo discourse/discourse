@@ -1073,6 +1073,8 @@ Discourse::Application.routes.draw do
         :format => true
     get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
+    get "plugin-javascripts/:plugin_name" => "plugin_javascripts#show"
+
     post "uploads/lookup-metadata" => "uploads#metadata"
     post "uploads" => "uploads#create"
     post "uploads/lookup-urls" => "uploads#lookup_urls"
