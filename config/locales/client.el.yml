@@ -4278,7 +4278,7 @@ el:
     admin:
       title: "Διαχειριστής"
       moderator: "Συντονιστής"
-      filter_reports: Φιλτράρισμα αναφορών
+      filter_reports: "Φιλτράρισμα αναφορών..."
       tags:
         remove_muted_tags_from_latest:
           always: "πάντα"
@@ -4905,7 +4905,7 @@ el:
           theme: "Θέμα"
           component: "Συστατικό"
           components: "Συστατικά"
-          search_placeholder: "πληκτρολογήστε για αναζήτηση…"
+          filter_all: "Όλα"
           theme_name: "Όνομα θέματος"
           component_name: "Όνομα συστατικού"
           themes_intro: "Επιλέξτε ένα υπάρχον θέμα ή εγκαταστήστε ένα νέο για να ξεκινήσετε"

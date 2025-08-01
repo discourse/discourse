@@ -3839,7 +3839,7 @@ hy:
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
-      filter_reports: Ֆիլտրել հաշվետվությունները
+      filter_reports: "Ֆիլտրել հաշվետվությունները..."
       tags:
         remove_muted_tags_from_latest:
           always: "միշտ"
@@ -4415,6 +4415,7 @@ hy:
           theme: "Թեմա"
           component: "Բաղադրիչ"
           components: "Բաղադրիչներ"
+          filter_all: "Բոլոր"
           theme_name: "Թեմայի անվանում"
           component_name: "Բաղադրիչի անուն"
           themes_intro: "Ընտրել գոյություն ունեցող թեմա կամ տեղադրել նորը՝ մեկնարկի համար"

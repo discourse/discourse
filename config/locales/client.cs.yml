@@ -5648,7 +5648,7 @@ cs:
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
-      filter_reports: Filtrovat sestavy
+      filter_reports: "Filtrovat sestavy..."
       filter_reports_no_results: "Vašim filtrům neodpovídají žádné sestavy"
       tags:
         remove_muted_tags_from_latest:
@@ -6742,7 +6742,6 @@ cs:
             filter_by_used: "Použitý"
             filter_by_unused: "Nepoužitý"
             filter_by_updates_available: "Dostupné aktualizace"
-            search_components: "Zadejte název komponenty"
             new_update_for_component: "K dispozici je nová aktualizace pro %{name}!"
             component_up_to_date: '„%{name}“ je aktuální.'
             updated_successfully: '"%{name}" byla úspěšně aktualizována.'
@@ -6932,7 +6931,8 @@ cs:
           theme: "Motiv"
           component: "Komponenta"
           components: "Komponenty"
-          search_placeholder: "pište pro vyhledávání…"
+          filter_all: "Vše"
+          filter_user_selectable: "Volitelný uživatelem"
           theme_name: "Název motivu"
           component_name: "Název komponenty"
           themes_intro: "Začněte výběrem existujícího motivu nebo nainstalujte nový"
@@ -7195,12 +7195,10 @@ cs:
           saved_refreshing: "Uloženo! Obnovuji barvy..."
           from_theme: "Z motivu: %{name}"
           filters:
-            search_placeholder: "Hledat podle jména nebo motivu..."
             all: "Vše"
             user_selectable: "Volitelný uživatelem"
             from_theme: "Z motivu"
             no_results: "Nebyly nalezeny žádné palety barev"
-            reset: "Odstranit filtry"
           active_badge:
             text: "Aktivní"
             title: "Aktivní paleta barev"

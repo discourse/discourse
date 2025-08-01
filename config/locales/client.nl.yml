@@ -4808,7 +4808,7 @@ nl:
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
-      filter_reports: Rapporten filteren
+      filter_reports: "Rapporten filteren..."
       tags:
         remove_muted_tags_from_latest:
           always: "altijd"
@@ -5839,7 +5839,8 @@ nl:
           theme: "Thema"
           component: "Onderdeel"
           components: "Onderdelen"
-          search_placeholder: "typ om te zoeken…"
+          filter_all: "Alles"
+          filter_user_selectable: "Door gebruiker te selecteren"
           theme_name: "Themanaam"
           component_name: "Onderdeelnaam"
           themes_intro: "Selecteer een bestaand of installeer een nieuw thema om te beginnen"

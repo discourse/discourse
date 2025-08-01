@@ -4974,7 +4974,7 @@ fi:
     admin:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"
-      filter_reports: Suodata raportteja
+      filter_reports: "Suodata raportteja..."
       tags:
         remove_muted_tags_from_latest:
           always: "aina"
@@ -6019,7 +6019,6 @@ fi:
             filter_by_used: "Käytetty"
             filter_by_unused: "Käyttämätön"
             filter_by_updates_available: "Päivityksiä saatavilla"
-            search_components: "Kirjoita komponentin nimi"
             new_update_for_component: "Uusi päivitys saatavilla %{name}!"
             component_up_to_date: '"%{name}" on ajan tasalla.'
             updated_successfully: '"%{name}" on päivitetty onnistuneesti.'
@@ -6204,7 +6203,8 @@ fi:
           theme: "Teema"
           component: "Komponentti"
           components: "Komponentit"
-          search_placeholder: "kirjoita etsiäksesi…"
+          filter_all: "Kaikki"
+          filter_user_selectable: "Käyttäjän valittavissa"
           theme_name: "Teeman nimi"
           component_name: "Komponentin nimi"
           themes_intro: "Aloita valitsemalla olemassa oleva teema tai asenna uusi"
