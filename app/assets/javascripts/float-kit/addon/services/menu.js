@@ -17,7 +17,7 @@ export default class Menu extends Service {
    * @param {Object} [options] - options
    * @param {String | Element | Component} [options.content] - Specifies the content of the menu
    * @param {Integer} [options.maxWidth] - Specifies the maximum width of the content
-   * @param {Object} [options.data] - An object which will be passed as the `@data` argument when content is a `Component`
+   * @param {Object} [options.data] - Arguments to be passed when content is a `Component`. Will also be passed as the `@data` argument for backwards compatibility
    * @param {Boolean} [options.arrow] - Determines if the menu has an arrow
    * @param {Boolean} [options.offset] - Displaces the content from its reference trigger in pixels
    * @param {String} [options.identifier] - Add a data-identifier attribute to the trigger and the content, multiple menus can have the same identifier,
