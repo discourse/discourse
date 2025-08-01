@@ -25,6 +25,7 @@ module.exports = function (defaults) {
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   DeprecationSilencer.silence(console, "warn");
+  DeprecationSilencer.silence(console, "log");
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
   const isProduction = EmberApp.env().includes("production");
