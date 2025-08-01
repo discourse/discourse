@@ -26,6 +26,8 @@ describe "Composer - ProseMirror editor", type: :system do
     cdp.allow_clipboard
     cdp.copy_test_image
     cdp.paste
+    # account for the debounced resolution
+    sleep 0.2
     rich.find(".composer-image-node img").click
   end
 
@@ -1326,6 +1328,51 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css(".composer-image-node img[width]")
       expect(rich).to have_css(".composer-image-node img[height]")
+    end
+  end
+
+  describe "image URL resolution" do
+    it "resolves upload URLs and displays images correctly" do
+      open_composer
+      cdp.allow_clipboard
+
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
+      short_url1 = "upload://#{Upload.base62_sha1(upload1.sha1)}"
+      short_url2 = "upload://#{Upload.base62_sha1(upload2.sha1)}"
+
+      page.execute_script(<<~JS)
+        window.urlLookupRequests = 0;
+
+        const originalXHROpen = window.XMLHttpRequest.prototype.open;
+        window.XMLHttpRequest.prototype.open = function(method, url) {
+          if (url.toString().endsWith('/uploads/lookup-urls')) {
+            window.urlLookupRequests++;
+          }
+          return originalXHROpen.apply(this, arguments);
+        };
+      JS
+
+      markdown = "![image 1](#{short_url1})\n\n![image 2](#{short_url2})"
+      cdp.copy_paste(markdown)
+
+      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
+      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+
+      # loaded in a single api call
+      initial_request_count = page.evaluate_script("window.urlLookupRequests")
+      expect(initial_request_count).to eq(1)
+
+      composer.toggle_rich_editor
+      composer.toggle_rich_editor
+
+      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
+      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+
+      # loaded from cache, no new request
+      final_request_count = page.evaluate_script("window.urlLookupRequests")
+      expect(final_request_count).to eq(initial_request_count)
     end
   end
 
