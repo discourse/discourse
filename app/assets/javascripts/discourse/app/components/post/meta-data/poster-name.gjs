@@ -69,8 +69,18 @@ export default class PostMetaDataPosterName extends Component {
     return this.args.post.user;
   }
 
+  get userTitle() {
+    return applyValueTransformer(
+      "poster-name-user-title",
+      this.args.post.user_title,
+      {
+        post: this.args.post,
+      }
+    );
+  }
+
   get titleClassNames() {
-    const classNames = [this.args.post.user_title];
+    const classNames = [this.userTitle];
 
     if (this.args.post.title_is_group && this.args.post.primary_group_name) {
       classNames.push(this.args.post.primary_group_name);
@@ -195,17 +205,17 @@ export default class PostMetaDataPosterName extends Component {
             </span>
           {{/if}}
 
-          {{#if @post.user_title}}
+          {{#if this.userTitle}}
             <span class={{concatClass "user-title" this.titleClassNames}}>
               {{#if (and @post.primary_group_name @post.title_is_group)}}
                 <GroupLink
                   @name={{@post.primary_group_name}}
                   @href={{this.primaryGroupHref}}
                 >
-                  {{@post.user_title}}
+                  {{this.userTitle}}
                 </GroupLink>
               {{else}}
-                {{@post.user_title}}
+                {{this.userTitle}}
               {{/if}}
             </span>
           {{/if}}
