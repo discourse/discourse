@@ -47,21 +47,6 @@ export default class DecoratedHtml extends Component {
 
     document.adoptNode(cookedDiv);
 
-    try {
-      const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
-      untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper, decorateArgs));
-    } catch (e) {
-      if (isRailsTesting() || isTesting()) {
-        throw e;
-      } else {
-        // in case one of the decorators throws an error we want to surface it to the console but prevent
-        // the application from crashing
-
-        // eslint-disable-next-line no-console
-        console.error(e);
-      }
-    }
-
     return cookedDiv;
   });
 
