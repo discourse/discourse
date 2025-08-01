@@ -69,6 +69,10 @@ module PageObjects
         post.find(".post-info.edits").click
       end
 
+      def mentions_of(user)
+        post.all("a.mention[href='/u/#{user.username}']")
+      end
+
       private
 
       def post_id

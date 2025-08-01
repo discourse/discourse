@@ -429,7 +429,7 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (2.2.17)
-    rack-mini-profiler (4.0.0)
+    rack-mini-profiler (4.0.1)
       rack (>= 1.2.0)
     rack-protection (3.2.0)
       base64 (>= 0.1.0)
@@ -537,7 +537,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.79.0)
+    rubocop (1.79.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -547,7 +547,6 @@ GEM
       regexp_parser (>= 2.9.3, < 3.0)
       rubocop-ast (>= 1.46.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      tsort (>= 0.2.0)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.46.0)
       parser (>= 3.3.7.2)
@@ -664,7 +663,6 @@ GEM
     tokenizers (0.5.5-x86_64-linux)
     tokenizers (0.5.5-x86_64-linux-musl)
     trilogy (2.9.0)
-    tsort (0.2.0)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
     tzinfo (2.0.6)
@@ -1090,7 +1088,7 @@ CHECKSUMS
   puma (6.6.0) sha256=f25c06873eb3d5de5f0a4ebc783acc81a4ccfe580c760cfe323497798018ad87
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rack (2.2.17) sha256=5fe02a1ca80d6fb2271dba00985ee2962d6f5620b6f46dfed89f5301ac4699dd
-  rack-mini-profiler (4.0.0) sha256=c37bedcb7d01e33ad4addd8c4e742986e75db7cd8908cba3432c60b4e812e00f
+  rack-mini-profiler (4.0.1) sha256=485810c23211f908196c896ea10cad72ed68780ee2998bec1f1dfd7558263d78
   rack-protection (3.2.0) sha256=3c74ba7fc59066453d61af9bcba5b6fe7a9b3dab6f445418d3b391d5ea8efbff
   rack-session (1.0.2) sha256=a02115e5420b4de036839b9811e3f7967d73446a554b42aa45106af335851d76
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
@@ -1135,7 +1133,7 @@ CHECKSUMS
   rss (0.3.1) sha256=b46234c04551b925180f8bedfc6f6045bf2d9998417feda72f300e7980226737
   rswag-specs (2.16.0) sha256=8ba26085c408b0bd2ed21dc8015c80f417c7d34c63720ab7133c2549b5bd2a91
   rtlcss (0.2.1) sha256=213d5a00bf61267f93a7a516d699d77e1cc5f396743abb33c01e3f3243a7bf60
-  rubocop (1.79.0) sha256=c709e83b16f9fced295d83d190a3a5bbcc46c419d8f9b85f259b99ba6faf5bbe
+  rubocop (1.79.1) sha256=32e05778282d5c869f6dbb6410c4b765efc11c55d90abd6ce1b4adf4efd99891
   rubocop-ast (1.46.0) sha256=0da7f6ad5b98614f89b74f11873c191059c823eae07d6ffd40a42a3338f2232b
   rubocop-capybara (2.22.1) sha256=ced88caef23efea53f46e098ff352f8fc1068c649606ca75cb74650970f51c0c
   rubocop-discourse (3.12.1) sha256=ebf7e2224f053047372071419052828c3e3a01bccb14ea1f282ac143547df9bc
@@ -1198,7 +1196,6 @@ CHECKSUMS
   tokenizers (0.5.5-x86_64-linux) sha256=e9681afe50dc74beed880bed08d385ebb1d22d51831d9169e285f3836306730c
   tokenizers (0.5.5-x86_64-linux-musl) sha256=f5ccc321a58b58b45ee85042ea384fb0f99600361ecd1260f77bfd020b8bdb0a
   trilogy (2.9.0) sha256=a2d63b663ba68a4758e15d1f9afb228f5d16efc7fe7cea68699e1c106ef6067f
-  tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   ttfunk (1.8.0) sha256=a7cbc7e489cc46e979dde04d34b5b9e4f5c8f1ee5fc6b1a7be39b829919d20ca
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   tzinfo-data (1.2025.2) sha256=a92375a1fbb47d38fe88fd514c40a38cc8f97d168da2a6479f15185e86470939

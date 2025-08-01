@@ -404,7 +404,6 @@ nl:
           neutral: "Neutraal"
     llm:
       configuration:
-        disable_module_first: "Je moet eerst %{setting} uitschakelen."
         set_llm_first: "Stel eerst %{setting} in"
         model_unreachable: "We konden geen antwoord krijgen van dit model. Controleer eerst je instellingen."
         invalid_seeded_model: "Je kunt dit model niet gebruiken met deze functie"

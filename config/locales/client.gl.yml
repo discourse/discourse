@@ -1001,6 +1001,9 @@ gl:
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(predeterminado do sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Escuro"
       dark_mode: "Modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"

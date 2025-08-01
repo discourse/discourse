@@ -59,7 +59,7 @@ hu:
       modals:
         select_option: "Válasszon egy lehetőséget…"
       layout:
-        table: "Tábla"
+        table: "Táblázat"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"

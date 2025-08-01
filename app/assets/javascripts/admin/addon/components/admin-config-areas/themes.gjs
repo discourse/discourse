@@ -106,8 +106,6 @@ export default class AdminConfigAreasThemes extends Component {
         </PluginOutlet>
       </:actions>
     </DPageSubheader>
-    <div class="admin-detail">
-      <ThemesGrid @themes={{@themes}} />
-    </div>
+    <ThemesGrid @themes={{@themes}} />
   </template>
 }

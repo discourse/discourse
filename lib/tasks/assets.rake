@@ -6,7 +6,7 @@ task "assets:precompile:build" do
 
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
-    compile_command = "#{Rails.root}/script/assemble_ember_build.rb"
+    compile_command = "EMBER_ENV=production #{Rails.root}/script/assemble_ember_build.rb"
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")

@@ -193,7 +193,9 @@ after_initialize do
   end
 
   TopicView.on_preload do |topic_view|
-    topic_view.instance_variable_set(:@posts, topic_view.posts.includes(:assignment))
+    if SiteSetting.assign_enabled
+      topic_view.instance_variable_set(:@posts, topic_view.posts.includes(:assignment))
+    end
   end
 
   TopicList.on_preload do |topics, topic_list|

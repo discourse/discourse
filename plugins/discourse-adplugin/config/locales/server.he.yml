@@ -96,6 +96,7 @@ he:
     carbonads_exclude_groups: "פרסומות לא תופענה לחברים בקבוצות האלו"
     carbonads_topic_list_top_enabled: "הצגת פרסומת מעל לרשימת הנושאים"
     carbonads_above_post_stream_enabled: "הצגת פרסומת מעל שרשור הפוסט"
+    adbutler_publisher_id: "מזהה מפיץ AdButler. לתשומת ליבך: יש לעדכן את ההגדרה ‚content security policy script src’ (מקור סקריפט מדיניות אבטחת תוכן). יש לעיין ב<a href='https://meta.discourse.org/t/33734' target='_blank'>נושא הזה</a> לקבלת הנחיות עדכניות."
     adbutler_mobile_topic_list_top_zone_id: "מזהה Zone למיקום עליון ברשימת נושאים בנייד"
     adbutler_mobile_topic_above_post_stream_zone_id: "מזהה Zone למיקום מעל תזרים פוסט בנייד"
     adbutler_mobile_post_bottom_zone_id: "מזהה Zone למיקום מתחת לפוסט בנייד"

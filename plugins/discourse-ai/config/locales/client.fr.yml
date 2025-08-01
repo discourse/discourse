@@ -403,7 +403,6 @@ fr:
           max_usages_help: "Nombre maximal de fois que chaque utilisateur de ce groupe peut utiliser le modèle d'IA dans la durée spécifiée. Ce quota est suivi par utilisateur individuel et n'est pas partagé au sein du groupe."
         usage:
           ai_bot: "Robot IA"
-          ai_helper: "Assistant"
           ai_persona: "Personnage (%{persona})"
           ai_summarization: "Résumer"
           ai_embeddings_semantic_search: "Recherche IA"

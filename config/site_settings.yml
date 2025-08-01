@@ -2542,7 +2542,8 @@ trust:
     type: group_list
     area: "group_permissions"
   edit_all_post_groups:
-    default: "14"
+    default: "1|2|14" # auto group admins, moderators, and TL4
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     area: "group_permissions"
 

@@ -1543,7 +1543,7 @@ en:
         description: "Skip new user onboarding tips and badges"
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
-      color_scheme_default_on_all_devices: "Set default color palette on all my devices"
+      color_scheme_default_on_all_devices: "Set default color palette and mode on all my devices"
       color_scheme: "Color Palette"
       color_schemes:
         default_description: "Theme default"
@@ -1553,6 +1553,12 @@ en:
         regular: "Regular"
         dark: "Dark mode"
         default_dark_scheme: "(site default)"
+        interface_mode: "Mode"
+        interface_mode_instructions: "‘Auto’ uses your system’s preferences for light or dark mode."
+        interface_modes:
+          auto: "Auto"
+          light: "Light"
+          dark: "Dark"
       dark_mode: "Dark Mode"
       dark_mode_enable: "Enable automatic dark mode color palette"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
@@ -2978,7 +2984,6 @@ en:
       italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      heading_label: "H"
       heading_title: "Headings"
       heading_level_n: "Heading %{levelNumber}"
       heading_level_n_title: "Heading %{levelNumber}"
@@ -5570,7 +5575,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filter reports
+      filter_reports: "Filter reports..."
       filter_reports_no_results: "No reports match your filter"
 
       tags:
@@ -6649,7 +6654,7 @@ en:
             filter_by_used: "Used"
             filter_by_unused: "Unused"
             filter_by_updates_available: "Updates available"
-            search_components: "Type a component name"
+            search_components: "Filter by component name or description..."
             new_update_for_component: "New update available for %{name}!"
             component_up_to_date: '"%{name}" is up to date.'
             updated_successfully: '"%{name}" has been updated successfully.'
@@ -6845,7 +6850,10 @@ en:
           theme: "Theme"
           component: "Component"
           components: "Components"
-          search_placeholder: "type to search…"
+          search_placeholder: "Filter by theme name or description..."
+          filter_all: "All"
+          filter_user_selectable: "User selectable"
+          no_themes_found: "No themes match your filters"
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
@@ -7095,12 +7103,11 @@ en:
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
           filters:
-            search_placeholder: "Search by name or theme..."
+            search_placeholder: "Filter by palette or theme name..."
             all: "All"
             user_selectable: "User selectable"
             from_theme: "From theme"
             no_results: "No color palettes found"
-            reset: "Reset filters"
           active_badge:
             text: "Active"
             title: "Active color palette"

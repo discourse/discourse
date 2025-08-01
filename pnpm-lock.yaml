@@ -98,8 +98,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0(ember-template-lint@7.9.1)
       lint-to-the-future-eslint:
-        specifier: ^3.1.0
-        version: 3.1.0(eslint@9.32.0)
+        specifier: ^3.2.0
+        version: 3.2.0(eslint@9.32.0)
       magnific-popup:
         specifier: 1.1.0
         version: 1.1.0
@@ -430,8 +430,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8))
       '@floating-ui/dom':
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.7.3
+        version: 1.7.3
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.28.0)
@@ -782,8 +782,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(@glint/template@1.6.0-alpha.2)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.28.0))(@glint/template@1.6.0-alpha.2)(rsvp@4.8.5)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8)))
       '@floating-ui/dom':
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.7.3
+        version: 1.7.3
       ember-auto-import:
         specifier: ^2.10.0
         version: 2.10.0(@glint/template@1.6.0-alpha.2)(webpack@5.101.0(@swc/core@1.13.3)(esbuild@0.25.8))
@@ -1088,8 +1088,8 @@ importers:
         specifier: ^0.30.17
         version: 0.30.17
       memfs:
-        specifier: ^4.23.0
-        version: 4.23.0
+        specifier: ^4.26.0
+        version: 4.26.0
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2140,11 +2140,11 @@ packages:
     resolution: {integrity: sha512-OEl393iCOoo/z8bMezRlJu+GlRGlsKbUAN7jKB6LhnKoqKve5DXRpalbItIIcwnCjs1k/FOPjFzcA6Qn+H+YbA==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
-  '@floating-ui/core@1.7.2':
-    resolution: {integrity: sha512-wNB5ooIKHQc+Kui96jE/n69rHFWAVoxn5CAzL1Xdd8FG03cgY3MLO+GF9U3W737fYDSgPWA6MReKhBQBop6Pcw==}
+  '@floating-ui/core@1.7.3':
+    resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
 
-  '@floating-ui/dom@1.7.2':
-    resolution: {integrity: sha512-7cfaOQuCS27HD7DX+6ib2OrnW+b4ZBwDNnCcT0uTyidcmyWb03FnQqJybDBoCnpdxwBSfA94UAYlRCt7mV+TbA==}
+  '@floating-ui/dom@1.7.3':
+    resolution: {integrity: sha512-uZA413QEpNuhtb3/iIKoYMSK07keHPYeXF02Zhd6e213j+d1NamLix/mCLxBUDW/Gx52sPH2m+chlUsyaBs/Ag==}
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
@@ -6357,8 +6357,8 @@ packages:
     peerDependencies:
       ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
 
-  lint-to-the-future-eslint@3.1.0:
-    resolution: {integrity: sha512-JejnF+vL2fy1orNBRZy+Ufwy7bWZge1dLatkVMVcLWwzwm4a1fI3cu85ydftCy08JSXVo4H0uLDwi1iMZHjT4A==}
+  lint-to-the-future-eslint@3.2.0:
+    resolution: {integrity: sha512-PIW/zL85BglNuNeEwzNOg1pBdQQxN6Xk5LFv1sfqH9v4ZykCtGoz40nOlUN1gCNO5WELCbvVIP/WMYV5PlFkrA==}
     engines: {node: 10.* || >= 12.*}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -6588,8 +6588,8 @@ packages:
     resolution: {integrity: sha512-qvwipnozMohxLXG1pOqoLiZKNkC4r4qqRucSoDwXowsNGDSULiqFTRUF05vcZWnwJSG22qTsynQhxbaMtnX9gw==}
     engines: {node: '>=8'}
 
-  memfs@4.23.0:
-    resolution: {integrity: sha512-SucHN2lcWf0jrnw+jP6FoVW6l/zGJiXfNMdApZzG0x/0mAIMdwAeR5mjfsCH5U3BoqpUEtqzz+dSQSO0H/eqxg==}
+  memfs@4.26.0:
+    resolution: {integrity: sha512-2ZtDVcPolyWmuriS7S2cuE20jK5QWgP+qNuZ3cZzch+/6sY0mnHgVvf2YLQKKR4Cl4MW0nJsoZuUPOkQwp0+JQ==}
     engines: {node: '>= 4.0.0'}
 
   memory-streams@0.1.3:
@@ -10557,13 +10557,13 @@ snapshots:
 
   '@faker-js/faker@9.9.0': {}
 
-  '@floating-ui/core@1.7.2':
+  '@floating-ui/core@1.7.3':
     dependencies:
       '@floating-ui/utils': 0.2.10
 
-  '@floating-ui/dom@1.7.2':
+  '@floating-ui/dom@1.7.3':
     dependencies:
-      '@floating-ui/core': 1.7.2
+      '@floating-ui/core': 1.7.3
       '@floating-ui/utils': 0.2.10
 
   '@floating-ui/utils@0.2.10': {}
@@ -13789,7 +13789,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.0(@babel/core@7.28.0)(eslint@9.32.0)
-      '@glimmer/syntax': 0.94.9
+      '@glimmer/syntax': 0.93.1
       content-tag: 2.0.3
       eslint-scope: 7.2.2
       html-tags: 3.3.1
@@ -16002,7 +16002,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  lint-to-the-future-eslint@3.1.0(eslint@9.32.0):
+  lint-to-the-future-eslint@3.2.0(eslint@9.32.0):
     dependencies:
       eslint: 9.32.0
       globby: 14.1.0
@@ -16241,7 +16241,7 @@ snapshots:
       mimic-fn: 2.1.0
       p-is-promise: 2.1.0
 
-  memfs@4.23.0:
+  memfs@4.26.0:
     dependencies:
       '@jsonjoy.com/json-pack': 1.4.0(tslib@2.8.1)
       '@jsonjoy.com/util': 1.8.0(tslib@2.8.1)

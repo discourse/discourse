@@ -584,7 +584,6 @@ sk:
     llm:
       configuration:
         create_llm: "Pred povolením tejto funkcie je potrebné nastaviť LLM."
-        disable_module_first: "Najprv musíte vypnúť %{setting} ."
         set_llm_first: "Najprv nastavte %{setting}"
         model_unreachable: "Od tohto modelu sa nám nepodarilo získať odpoveď. Najprv skontrolujte nastavenia."
         invalid_seeded_model: "Tento model s touto funkciou nemôžete použiť"

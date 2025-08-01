@@ -403,7 +403,6 @@ fi:
           max_usages_help: "Enimmäismäärä kertoja, jonka kukin tämän ryhmän käyttäjä voi käyttää tekoälymallia määritetyn ajan kuluessa. Tätä kiintiötä seurataan yksittäistä käyttäjää kohti, eikä sitä jaeta ryhmän kesken."
         usage:
           ai_bot: "Tekoälyrobotti"
-          ai_helper: "Apuri"
           ai_persona: "Persoona (%{persona})"
           ai_summarization: "Tee yhteenveto"
           ai_embeddings_semantic_search: "Tekoälyhaku"

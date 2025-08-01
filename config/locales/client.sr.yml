@@ -1222,7 +1222,6 @@ sr:
         description: "Preskoči savete i značke za novog korisnika"
       reset_seen_user_tips: "Prikaži korisničke savete ponovo"
       theme_default_on_all_devices: "Postavi za podrazumevanu vizuelnu temu na svim mojim uređajima"
-      color_scheme_default_on_all_devices: "Postavi kao podrazumevanu paletu boja na svim mojim uređajima"
       color_scheme: "Paleta Boja"
       color_schemes:
         default_description: "Podrzumevane vrednosti vizuelne teme"
