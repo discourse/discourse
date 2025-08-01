@@ -1,0 +1,42 @@
+.fk-d-menu[data-identifier="filter-navigation-menu-list"] {
+  max-height: 300px;
+
+  .fk-d-menu__inner-content {
+    width: 100%;
+
+    .dropdown-menu {
+      width: 100%;
+    }
+
+    .dropdown-menu-item {
+      width: 100%;
+    }
+
+    .filter-navigation__tip-button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5em 1em;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: var(--font-down-1);
+      color: var(--primary);
+      transition: background-color 0.15s;
+
+      &:hover,
+      &.--selected {
+        background-color: var(--d-hover);
+      }
+
+      .filter-navigation__tip-name {
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .filter-navigation__tip-description {
+        color: var(--primary-high);
+      }
+    }
+  }
+}
