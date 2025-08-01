@@ -316,5 +316,35 @@ RSpec.describe DiscoursePluginRegistry do
       sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
       expect(sum).to eq(42)
     end
+
+    context "when return value type does not match initial value" do
+      subject(:apply_modifier) { DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2) }
+
+      before do
+        DiscoursePluginRegistry.register_modifier(plugin_instance, :magic_sum_modifier) { "42" }
+      end
+
+      context "when in production env" do
+        let(:fake_logger) { FakeLogger.new }
+
+        before do
+          allow(Rails.env).to receive(:local?).and_return(false)
+          Rails.logger.broadcast_to(fake_logger)
+        end
+
+        after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
+        it "warns about the error" do
+          apply_modifier
+          expect(fake_logger.warnings).to include(/Type mismatch/)
+        end
+      end
+
+      context "when in local env" do
+        it "raises an error" do
+          expect { apply_modifier }.to raise_error(DiscoursePluginRegistry::TypeMismatchError)
+        end
+      end
+    end
   end
 end
