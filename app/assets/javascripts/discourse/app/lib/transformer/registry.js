@@ -1,5 +1,6 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "composer-apply-topic-template",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",

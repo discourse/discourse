@@ -14,6 +14,7 @@ import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
@@ -807,29 +808,38 @@ export default class Composer extends RestModel {
   }
 
   applyTopicTemplate(oldCategoryId, categoryId) {
-    if (this.action !== CREATE_TOPIC) {
-      return;
-    }
+    applyBehaviorTransformer(
+      "composer-apply-topic-template",
+      () => {
+        if (this.action !== CREATE_TOPIC) {
+          return;
+        }
 
-    let reply = this.reply;
+        let reply = this.reply;
+        // If the user didn't change the template, clear it
+        if (oldCategoryId) {
+          const oldCat = Category.findById(oldCategoryId);
+          if (oldCat && oldCat.topic_template === reply) {
+            reply = "";
+          }
+        }
 
-    // If the user didn't change the template, clear it
-    if (oldCategoryId) {
-      const oldCat = Category.findById(oldCategoryId);
-      if (oldCat && oldCat.topic_template === reply) {
-        reply = "";
+        if (!isEmpty(reply)) {
+          return;
+        }
+
+        const category = Category.findById(categoryId);
+        if (category) {
+          this.set("reply", category.topic_template || "");
+          this.set("originalText", category.topic_template || "");
+        }
+      },
+      {
+        composer: this,
+        oldCategoryId,
+        categoryId,
       }
-    }
-
-    if (!isEmpty(reply)) {
-      return;
-    }
-
-    const category = Category.findById(categoryId);
-    if (category) {
-      this.set("reply", category.topic_template || "");
-      this.set("originalText", category.topic_template || "");
-    }
+    );
   }
 
   /**
