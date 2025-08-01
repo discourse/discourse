@@ -228,35 +228,39 @@ export default RouteTemplate(
         />
       </div>
 
-      <div class="display-row last-ip">
-        <div class="field">{{i18n "user.ip_address.title"}}</div>
-        <div class="value">{{@controller.model.ip_address}}</div>
-        <div class="controls">
-          {{#if @controller.currentUser.staff}}
-            {{#if @controller.model.ip_address}}
-              <IpLookup
-                @ip={{@controller.model.ip_address}}
-                @userId={{@controller.model.id}}
-              />
+      {{#if @controller.model.include_ip}}
+        <div class="display-row last-ip">
+          <div class="field">{{i18n "user.ip_address.title"}}</div>
+          <div class="value">{{@controller.model.ip_address}}</div>
+          <div class="controls">
+            {{#if @controller.currentUser.can_see_ip}}
+              {{#if @controller.model.ip_address}}
+                <IpLookup
+                  @ip={{@controller.model.ip_address}}
+                  @userId={{@controller.model.id}}
+                />
+              {{/if}}
             {{/if}}
-          {{/if}}
+          </div>
         </div>
-      </div>
+      {{/if}}
 
-      <div class="display-row registration-ip">
-        <div class="field">{{i18n "user.registration_ip_address.title"}}</div>
-        <div class="value">{{@controller.model.registration_ip_address}}</div>
-        <div class="controls">
-          {{#if @controller.currentUser.staff}}
-            {{#if @controller.model.registration_ip_address}}
-              <IpLookup
-                @ip={{@controller.model.registration_ip_address}}
-                @userId={{@controller.model.id}}
-              />
+      {{#if @controller.model.include_ip}}
+        <div class="display-row registration-ip">
+          <div class="field">{{i18n "user.registration_ip_address.title"}}</div>
+          <div class="value">{{@controller.model.registration_ip_address}}</div>
+          <div class="controls">
+            {{#if @controller.currentUser.can_see_ip}}
+              {{#if @controller.model.registration_ip_address}}
+                <IpLookup
+                  @ip={{@controller.model.registration_ip_address}}
+                  @userId={{@controller.model.id}}
+                />
+              {{/if}}
             {{/if}}
-          {{/if}}
+          </div>
         </div>
-      </div>
+      {{/if}}
 
       {{#if @controller.showBadges}}
         <div class="display-row">
