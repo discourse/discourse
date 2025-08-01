@@ -2,8 +2,6 @@
 
 # Upstream feature request: https://github.com/rspec/rspec/issues/231
 
-require "rspec/mocks"
-
 module RSpec
   module Mocks
     class MessageExpectation
@@ -20,10 +18,7 @@ module RSpec
       end
     end
 
-    class MethodDouble
-      # Store original proxy_method_invoked
-      alias_method :original_proxy_method_invoked, :proxy_method_invoked
-
+    module MethodDoubleExtensions
       attr_accessor :from_described_class_only
 
       # Override proxy_method_invoked to check caller context before processing expectations
@@ -34,7 +29,7 @@ module RSpec
         end
 
         # Process normally through RSpec's expectation/stub system
-        original_proxy_method_invoked(obj, *args, &block)
+        super
       end
 
       private
@@ -73,6 +68,10 @@ module RSpec
 
         false
       end
+    end
+
+    class MethodDouble
+      prepend MethodDoubleExtensions
     end
   end
 end
