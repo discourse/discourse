@@ -31,6 +31,7 @@ module RSpec
         # Process normally through RSpec's expectation/stub system
         super
       end
+      ruby2_keywords :proxy_method_invoked if respond_to?(:ruby2_keywords, true)
 
       private
 
