@@ -28,7 +28,7 @@ export default class PostAvatar extends Component {
     // returns a proxy object to user which overrides the avatarTemplate
     return new Proxy(user, {
       get(target, prop) {
-        if (prop === "avatarTemplate") {
+        if (prop === "avatar_template") {
           return avatarTemplate;
         }
         return target[prop];
