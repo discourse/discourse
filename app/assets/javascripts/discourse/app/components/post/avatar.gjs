@@ -58,40 +58,41 @@ export default class PostAvatar extends Component {
 
   <template>
     <div class={{concatClass "topic-avatar" this.additionalClasses}}>
-      <PluginOutlet
-        @name="post-avatar"
-        @outletArgs={{lazyHash
+      {{#let
+        (lazyHash
           post=@post
           size=this.size
           user=this.user
           userWasDeleted=this.userWasDeleted
-        }}
-      >
-        <div class="post-avatar">
-          {{#if this.userWasDeleted}}
-            {{icon "trash-can" class="deleted-user-avatar"}}
-          {{else}}
-            <UserAvatar
-              class="main-avatar"
-              tabindex="-1"
-              @hideTitle={{true}}
-              @lazy={{true}}
-              @size={{this.size}}
-              @user={{this.user}}
-            />
-            <UserAvatarFlair @user={{@post}} />
-            <div>
+        )
+        as |avatarOutletArgs|
+      }}
+        <PluginOutlet @name="post-avatar" @outletArgs={{avatarOutletArgs}}>
+          <div class="post-avatar">
+            {{#if this.userWasDeleted}}
+              {{icon "trash-can" class="deleted-user-avatar"}}
+            {{else}}
+              <UserAvatar
+                class="main-avatar"
+                tabindex="-1"
+                @hideTitle={{true}}
+                @lazy={{true}}
+                @size={{this.size}}
+                @user={{this.user}}
+              />
               <PluginOutlet
                 @name="post-avatar-flair"
-                @outletArgs={{lazyHash user=this.user}}
-              />
-            </div>
-          {{/if}}
-          {{#if @displayPosterName}}
-            <div class="post-avatar-user-info"></div>
-          {{/if}}
-        </div>
-      </PluginOutlet>
+                @outletArgs={{avatarOutletArgs}}
+              >
+                <UserAvatarFlair @user={{this.user}} />
+              </PluginOutlet>
+            {{/if}}
+            {{#if @displayPosterName}}
+              <div class="post-avatar-user-info"></div>
+            {{/if}}
+          </div>
+        </PluginOutlet>
+      {{/let}}
     </div>
   </template>
 }
