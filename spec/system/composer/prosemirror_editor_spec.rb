@@ -131,6 +131,19 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  context "with composer messages" do
+    fab!(:category)
+
+    it "shows a popup" do
+      open_composer
+      composer.type_content("Maybe @staff can help?")
+
+      expect(composer).to have_popup_content(
+        I18n.t("js.composer.cannot_see_group_mention.not_mentionable", group: "staff"),
+      )
+    end
+  end
+
   context "with inputRules" do
     it "supports > to create a blockquote" do
       open_composer
