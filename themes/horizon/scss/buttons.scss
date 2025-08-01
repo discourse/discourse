@@ -108,3 +108,15 @@
     );
   }
 }
+
+// DiscoToc plugin
+.d-toc-main,
+.timeline-footer-controls {
+  .btn.timeline-toggle {
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    bottom: var(--main-grid-gap);
+  }
+}
