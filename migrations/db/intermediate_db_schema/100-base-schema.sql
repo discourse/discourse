@@ -139,6 +139,15 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE tag_groups
+(
+    original_id   NUMERIC  NOT NULL PRIMARY KEY,
+    created_at    DATETIME,
+    name          TEXT     NOT NULL,
+    one_per_topic BOOLEAN,
+    parent_tag_id NUMERIC
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
