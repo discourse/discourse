@@ -107,6 +107,7 @@ const extension = {
           processMentionNodes(view) {
             const mentionNames = [];
             const mentionNodes = [];
+            const hereMention = getContext().siteSettings.here_mention;
 
             if (this._processingMentionNodes) {
               return;
@@ -132,7 +133,6 @@ const extension = {
 
               for (const mentionNode of mentionNodes) {
                 const { name, node, pos } = mentionNode;
-                const hereMention = getContext().siteSettings.here_mention;
 
                 if (VALID_MENTIONS.has(name) || hereMention === name) {
                   continue;
