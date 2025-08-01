@@ -1300,16 +1300,6 @@ export default class PostStream extends RestModel {
   }
 
   _initUserModels(post) {
-    post.user = this.store.createRecord("user", {
-      id: post.user_id,
-      username: post.username,
-      avatar_template: post.avatar_template,
-    });
-
-    if (post.user_status) {
-      post.user.status = post.user_status;
-    }
-
     if (post.mentioned_users) {
       post.mentioned_users = post.mentioned_users.map((u) =>
         this.store.createRecord("user", u)
