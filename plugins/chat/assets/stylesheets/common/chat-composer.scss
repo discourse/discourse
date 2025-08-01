@@ -132,3 +132,7 @@
     margin-left: auto;
   }
 }
+
+body.has-full-page-chat:not(.peek-mode-active) .chat-composer__outer-container {
+  padding-bottom: var(--composer-height);
+}
