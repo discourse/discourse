@@ -24,9 +24,11 @@ import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 let lastRollupResult;
 let lastRollupError;
 globalThis.rollup = function (modules, opts) {
-  const themeBase = `theme-${opts.themeId}/`;
+  let basePath = opts.pluginName
+    ? `discourse/plugins/${opts.pluginName}/`
+    : `theme-${opts.themeId}/`;
 
-  const { vol } = memfs(modules, themeBase);
+  const { vol } = memfs(modules, basePath);
 
   const resultPromise = rollup({
     input: "virtual:main",
@@ -40,12 +42,13 @@ globalThis.rollup = function (modules, opts) {
       discourseExtensionSearch(),
       discourseIndexSearch(),
       discourseVirtualLoader({
-        themeBase,
+        isTheme: !!opts.themeId,
+        basePath,
         modules,
         opts,
       }),
-      discourseExternalLoader(),
-      discourseColocation({ themeBase }),
+      discourseExternalLoader({ basePath }),
+      discourseColocation({ basePath }),
       getBabelOutputPlugin({
         plugins: [BabelReplaceImports],
       }),
@@ -54,7 +57,7 @@ globalThis.rollup = function (modules, opts) {
         babelHelpers: "bundled",
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
-          AddThemeGlobals,
+          opts.themeId ? AddThemeGlobals : null,
           colocatedBabelPlugin,
           WidgetHbsCompiler,
           [
@@ -75,7 +78,7 @@ globalThis.rollup = function (modules, opts) {
               ],
             },
           ],
-        ],
+        ].filter(Boolean),
         presets: [
           [
             BabelPresetEnv,

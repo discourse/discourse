@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PluginJavascriptsController < ApplicationController
-  @@cache = nil
-
   skip_before_action :check_xhr,
                      :preload_json,
                      :redirect_to_login_if_required,
@@ -21,11 +19,10 @@ class PluginJavascriptsController < ApplicationController
     end
     puts "Loaded #{files.size} files from plugin '#{plugin}' in #{Time.now - start}s"
 
-    compiler = ThemeJavascriptCompiler.new(0, "#{plugin} plugin", {}, minify: false, cache: @@cache)
+    compiler = PluginJavascriptCompiler.new(plugin, minify: false)
     compiler.append_tree(tree)
     compiler.compile!
-    @@cache = compiler.cache
-    puts "Compiled plugin '#{plugin}' in #{Time.now - start}s with cache size #{@@cache.size}"
+    puts "Compiled plugin '#{plugin}' in #{Time.now - start}s"
 
     content = compiler.content
     if compiler.source_map
