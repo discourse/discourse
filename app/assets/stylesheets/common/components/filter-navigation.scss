@@ -25,7 +25,7 @@
       transition: background-color 0.15s;
 
       &:hover,
-      &--selected {
+      &.--selected {
         background-color: var(--d-hover);
       }
 

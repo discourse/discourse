@@ -346,7 +346,7 @@ export default class FilterNavigationMenu extends Component {
       identifier: "filter-navigation-menu-list",
       component: FilterNavigationMenuList,
       data: this.trackedMenuListData,
-      maxWidth: 1000,
+      maxWidth: 2000,
     });
 
     // HACK: We don't have a nice way for DMenu to be the same width as
@@ -508,7 +508,7 @@ const FilterNavigationMenuList = <template>
               "filter-navigation__tip-button"
               (if
                 (eq index @data.selectedIndex)
-                "filter-navigation__tip-button--selected"
+                "--selected"
               )
             }}
             @action={{fn @data.selectItem item}}
