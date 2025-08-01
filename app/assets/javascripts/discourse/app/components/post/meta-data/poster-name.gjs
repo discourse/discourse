@@ -70,7 +70,7 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   get userTitle() {
-    return applyValueTransformer("post-user-title", this.args.post.user_title, {
+    return applyValueTransformer("poster-name-user-title", this.args.post.user_title, {
       post: this.args.post,
     });
   }

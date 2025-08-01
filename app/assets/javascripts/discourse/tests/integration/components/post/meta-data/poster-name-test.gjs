@@ -210,12 +210,12 @@ module(
       assert.dom("span.another-class").exists();
     });
 
-    test("post-user-title transformer", async function (assert) {
+    test("poster-name-user-title transformer", async function (assert) {
       this.post.username = "eviltrout";
       this.post.user_title = "Original Title";
 
       withPluginApi((api) => {
-        api.registerValueTransformer("post-user-title", ({ value }) => {
+        api.registerValueTransformer("poster-name-user-title", ({ value }) => {
           return value + " - Transformed";
         });
       });
