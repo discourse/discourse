@@ -61,7 +61,6 @@ export default RouteTemplate(
               </div>
             </div>
           {{else}}
-
             {{#if @controller.site.mobileView}}
               <WelcomeHeader @header={{i18n "login.header_title"}}>
                 <PluginOutlet
