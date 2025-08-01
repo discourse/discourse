@@ -7,6 +7,8 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
 
   queryParams = {
     filters: { refreshModel: true },
+    startDate: { refreshModel: true },
+    endDate: { refreshModel: true },
   };
 
   beforeModel(transition) {
@@ -21,6 +23,9 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
     if (urlKey === "filters" && value) {
       return EmberObject.create(JSON.parse(decodeURIComponent(value)));
     }
+    if (urlKey === "startDate" || urlKey === "endDate") {
+      return value ? moment(value) : null;
+    }
 
     return super.deserializeQueryParam(value, urlKey, defaultValueType);
   }
@@ -32,6 +37,9 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
       } else {
         return null;
       }
+    }
+    if (urlKey === "startDate" || urlKey === "endDate") {
+      return value ? value.toISOString() : null;
     }
 
     return super.serializeQueryParam(value, urlKey, defaultValueType);
