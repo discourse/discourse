@@ -27,6 +27,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {boolean} [autoSelectFirstSuggestion=true] - Auto-select first result
  * @param {Function} [triggerRule] - Function to determine if autocomplete should trigger: (element, opts) => Promise<boolean>
  * @param {Function} [onKeyUp] - Function to extract search patterns from text on keyup: (text, caretPosition) => Array<string>
+ * @param {boolean} [fixedTextareaPosition=false] - If true, positions autocomplete relative to textarea bounds instead of cursor position
  */
 export default class DAutocompleteModifier extends Modifier {
   /**
@@ -386,8 +387,10 @@ export default class DAutocompleteModifier extends Modifier {
   async openAutocomplete() {
     this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
     try {
-      // Create virtual element positioned at the caret location
-      const virtualElement = this.createVirtualElementAtCaret();
+      // Create virtual element with appropriate positioning
+      const virtualElement = this.options.fixedTextareaPosition
+        ? this.createVirtualElementAtTextarea()
+        : this.createVirtualElementAtCaret();
 
       const menuOptions = {
         identifier: "d-autocomplete",
@@ -616,6 +619,18 @@ export default class DAutocompleteModifier extends Modifier {
         top: caretCoords.y + this.VERTICAL_RELATIVE_OFFSET,
         width: 1,
         height: 10,
+      }),
+    };
+  }
+
+  createVirtualElementAtTextarea() {
+    const textareaRect = this.targetElement.getBoundingClientRect();
+    return {
+      getBoundingClientRect: () => ({
+        left: textareaRect.left,
+        top: textareaRect.top,
+        width: textareaRect.width,
+        height: 2,
       }),
     };
   }
