@@ -38,16 +38,18 @@ module DiscourseAi
       end
 
       def self.get_relocalize_quota(post, locale)
-        Discourse.redis.get(relocalize_key(post, locale)) || 0
+        Discourse.redis.get(relocalize_key(post, locale)).to_i || 0
       end
 
       def self.incr_relocalize_quota(post, locale)
         key = relocalize_key(post, locale)
 
-        if get_relocalize_quota(post, locale).blank?
+        if (count = get_relocalize_quota(post, locale)).zero?
           Discourse.redis.set(key, 1, ex: 1.day.to_i)
         else
-          Discourse.redis.incr(key)
+          ttl = Discourse.redis.ttl(key)
+          incr = count.to_i + 1
+          Discourse.redis.set(key, incr, ex: ttl)
         end
       end
     end
