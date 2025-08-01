@@ -62,13 +62,14 @@ async function loadPluginFromModulePreload(link) {
 }
 
 export async function loadThemes() {
-  const promises =
-    [
+  const promises = [
+    ...[
       ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
-    ].map(loadThemeFromModulePreload) +
-    [
+    ].map(loadThemeFromModulePreload),
+    ...[
       ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
-    ].map(loadPluginFromModulePreload);
+    ].map(loadPluginFromModulePreload),
+  ];
 
   await Promise.all(promises);
 }

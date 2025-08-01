@@ -36,10 +36,10 @@ class PluginJavascriptCompiler
       @source_map = output["map"]
     end
     [@content, @source_map]
-    # rescue DiscourseJsProcessor::TranspileError => e
-    #   message = "[PLUGIN #{@plugin_name}] Compile error: #{e.message}"
-    #   @content = "throw new Error(#{message.to_json});\n"
-    #   [@content, @source_map]
+  rescue DiscourseJsProcessor::TranspileError => e
+    message = "[PLUGIN #{@plugin_name}] Compile error: #{e.message}"
+    @content = "throw new Error(#{message.to_json});\n"
+    [@content, @source_map]
   end
 
   def content
