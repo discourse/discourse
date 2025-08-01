@@ -892,18 +892,52 @@ after_initialize do
   add_filter_custom_filter("assigned") do |scope, filter_values, guardian|
     next if !guardian.can_assign? || filter_values.blank?
 
-    user_or_group_name = filter_values.compact.first
+    # Handle multiple comma-separated values (user1,group1,user2)
+    names =
+      filter_values.compact.flat_map { |value| value.to_s.split(",") }.map(&:strip).reject(&:blank?)
 
-    next if user_or_group_name.blank?
+    next if names.blank?
 
-    if user_id = User.find_by_username(user_or_group_name)&.id
-      scope.where(<<~SQL, user_id)
-        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
-      SQL
-    elsif group_id = Group.find_by(name: user_or_group_name)&.id
-      scope.where(<<~SQL, group_id)
-        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
-      SQL
+    if names.include?("nobody")
+      next scope.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
+    end
+
+    if names.include?("*")
+      next scope.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
+    end
+
+    user_ids = []
+    group_ids = []
+
+    names.each do |name|
+      if user_id = User.find_by_username(name)&.id
+        user_ids << user_id
+      elsif group_id = Group.find_by(name: name)&.id
+        group_ids << group_id
+      end
+    end
+
+    conditions = []
+    params = []
+
+    if user_ids.present?
+      conditions << "a.assigned_to_id IN (?) AND a.assigned_to_type = 'User' AND a.active"
+      params << user_ids
+    end
+
+    if group_ids.present?
+      conditions << "a.assigned_to_id IN (?) AND a.assigned_to_type = 'Group' AND a.active"
+      params << group_ids
+    end
+
+    if conditions.present?
+      sql_conditions = conditions.join(" OR ")
+      scope.where(
+        "topics.id IN (SELECT a.topic_id FROM assignments a WHERE #{sql_conditions})",
+        *params,
+      )
+    else
+      scope
     end
   end
 
