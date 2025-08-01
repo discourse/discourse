@@ -1547,7 +1547,6 @@ en:
       color_scheme: "Color Palette"
       color_schemes:
         default_description: "Theme default"
-        disable_dark_scheme: "Same as regular"
         dark_instructions: "You can preview the dark mode color palette by toggling your device's dark mode."
         undo: "Reset"
         regular: "Light mode"

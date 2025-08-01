@@ -346,18 +346,10 @@ export default class InterfaceController extends Controller {
         this.enableDarkMode ? null : -1
       );
     } else {
-      // if chosen dark scheme matches site dark scheme, no need to store
-      if (
-        this.defaultDarkSchemeId > 0 &&
-        this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
-      ) {
-        this.set("model.user_option.dark_scheme_id", null);
-      } else {
-        this.set(
-          "model.user_option.dark_scheme_id",
-          this.selectedDarkColorSchemeId
-        );
-      }
+      this.set(
+        "model.user_option.dark_scheme_id",
+        this.selectedDarkColorSchemeId
+      );
     }
 
     return this.model

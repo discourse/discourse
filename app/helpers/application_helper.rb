@@ -587,7 +587,7 @@ module ApplicationHelper
       scheme_id
     else
       cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
-        Theme.find_default.dark_color_scheme_id
+        (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
     end
   end
 
