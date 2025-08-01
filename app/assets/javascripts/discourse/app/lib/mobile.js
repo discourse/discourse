@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { isTesting } from "discourse/lib/environment";
 
 let mobileForced = false;
@@ -9,9 +8,10 @@ const Mobile = {
   mobileView: false,
 
   init() {
-    const $html = $("html");
-    this.isMobileDevice = mobileForced || $html.hasClass("mobile-device");
-    this.mobileView = mobileForced || $html.hasClass("mobile-view");
+    const documentClassList = document.documentElement.classList;
+    this.isMobileDevice =
+      mobileForced || documentClassList.contains("mobile-device");
+    this.mobileView = mobileForced || documentClassList.contains("mobile-view");
 
     if (isTesting() || mobileForced) {
       return;
@@ -66,5 +66,7 @@ export function resetMobile() {
   mobileForced = false;
   Mobile.init();
 }
+
+Mobile.init();
 
 export default Mobile;
