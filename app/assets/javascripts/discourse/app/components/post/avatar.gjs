@@ -12,19 +12,11 @@ export default class PostAvatar extends Component {
   @cached
   get user() {
     const user = this.args.post.user;
-
     const avatarTemplate = applyValueTransformer(
       "post-avatar-template",
       this.args.post.avatar_template,
-      {
-        decoratorState: this.args.decoratorState,
-        keyboardSelected: this.args.keyboardSelected,
-        post: this.args.post,
-        user,
-        userWasDeleted: this.userWasDeleted,
-      }
+      this.#transformerContext(user)
     );
-
     // returns a proxy object to user which overrides the avatarTemplate
     return new Proxy(user, {
       get(target, prop) {
@@ -40,13 +32,7 @@ export default class PostAvatar extends Component {
     return applyValueTransformer(
       "post-avatar-size",
       this.args.size || "large",
-      {
-        decoratorState: this.args.decoratorState,
-        keyboardSelected: this.args.keyboardSelected,
-        post: this.args.post,
-        user: this.user,
-        userWasDeleted: this.userWasDeleted,
-      }
+      this.#transformerContext()
     );
   }
 
@@ -55,13 +41,21 @@ export default class PostAvatar extends Component {
   }
 
   get additionalClasses() {
-    return applyValueTransformer("post-avatar-class", [], {
+    return applyValueTransformer(
+      "post-avatar-class",
+      [],
+      this.#transformerContext()
+    );
+  }
+
+  #transformerContext(user = this.user) {
+    return {
       decoratorState: this.args.decoratorState,
       keyboardSelected: this.args.keyboardSelected,
       post: this.args.post,
-      user: this.user,
+      user,
       userWasDeleted: this.userWasDeleted,
-    });
+    };
   }
 
   <template>
