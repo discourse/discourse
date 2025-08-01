@@ -12,7 +12,7 @@ module UserGuardian
     # can always pick blank avatar
     return true if !upload
     return true if user_avatar.contains_upload?(upload.id)
-    return true if upload.user_id == user_avatar.user_id || upload.user_id == user.id
+    return true if upload.user_id == user_avatar.user_id || is_my_own?(upload)
 
     UserUpload.exists?(upload_id: upload.id, user_id: user.id)
   end
@@ -112,12 +112,12 @@ module UserGuardian
 
   def can_see_suspension_reason?(user)
     return true unless SiteSetting.hide_suspension_reasons?
-    user == @user || is_staff?
+    is_me?(user) || is_staff?
   end
 
   def can_see_silencing_reason?(user)
     return true unless SiteSetting.hide_silencing_reasons?
-    user == @user || is_staff?
+    is_me?(user) || is_staff?
   end
 
   def can_disable_second_factor?(user)
@@ -156,7 +156,7 @@ module UserGuardian
   end
 
   def can_see_user_actions?(user, action_types)
-    return true if !@user.anonymous? && (@user.id == user.id || is_admin?)
+    return true if !@user.anonymous? && (is_me?(user) || is_admin?)
     return false if SiteSetting.hide_user_activity_tab?
     (action_types & UserAction.private_types).empty?
   end

@@ -3,11 +3,8 @@
 #mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
   def can_remove_allowed_users?(topic, target_user = nil)
-    is_staff? || (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
-      (
-        topic.allowed_users.count > 1 && topic.user != target_user &&
-          !!(target_user && user == target_user)
-      )
+    is_staff? || (is_my_own?(topic) && @user.has_trust_level?(TrustLevel[2])) ||
+      (topic.allowed_users.count > 1 && topic.user != target_user && !!(is_me?(target_user)))
   end
 
   def can_review_topic?(topic)
@@ -281,7 +278,7 @@ module TopicGuardian
     can_see_category?(category) &&
       (
         !category.read_restricted || !is_staged? || secure_category_ids.include?(category.id) ||
-          topic.user == user
+          is_my_own?(topic)
       )
   end
 
