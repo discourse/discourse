@@ -9,38 +9,45 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class PostAvatar extends Component {
-  get size() {
-    return applyValueTransformer(
-      "post-avatar-size",
-      this.args.size || "large",
-      { post: this.args.post }
-    );
-  }
-
   @cached
   get user() {
-    const username = this.args.post.username;
-    const name = this.args.post.name;
-    const path = this.args.post.usernameUrl;
+    const user = this.args.post.user;
+
     const avatarTemplate = applyValueTransformer(
       "post-avatar-template",
       this.args.post.avatar_template,
       {
-        post: this.args.post,
-        keyboardSelected: this.args.keyboardSelected,
-        username,
-        name,
-        path,
         decoratorState: this.args.decoratorState,
+        keyboardSelected: this.args.keyboardSelected,
+        post: this.args.post,
+        user,
+        userWasDeleted: this.userWasDeleted,
       }
     );
 
-    return {
-      avatar_template: avatarTemplate,
-      username,
-      name,
-      path,
-    };
+    // returns a proxy object to user which overrides the avatarTemplate
+    return new Proxy(user, {
+      get(target, prop) {
+        if (prop === "avatarTemplate") {
+          return avatarTemplate;
+        }
+        return target[prop];
+      },
+    });
+  }
+
+  get size() {
+    return applyValueTransformer(
+      "post-avatar-size",
+      this.args.size || "large",
+      {
+        decoratorState: this.args.decoratorState,
+        keyboardSelected: this.args.keyboardSelected,
+        post: this.args.post,
+        user: this.user,
+        userWasDeleted: this.userWasDeleted,
+      }
+    );
   }
 
   get userWasDeleted() {
@@ -49,10 +56,11 @@ export default class PostAvatar extends Component {
 
   get additionalClasses() {
     return applyValueTransformer("post-avatar-class", [], {
+      decoratorState: this.args.decoratorState,
+      keyboardSelected: this.args.keyboardSelected,
       post: this.args.post,
       user: this.user,
       userWasDeleted: this.userWasDeleted,
-      size: this.size,
     });
   }
 

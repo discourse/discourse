@@ -149,6 +149,7 @@ export default class Post extends RestModel {
 
   @service currentUser;
   @service site;
+  @service store;
 
   @tracked customShare = null;
 
@@ -203,7 +204,6 @@ export default class Post extends RestModel {
   @trackedPostProperty topic_id;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;
-  @trackedPostProperty user;
   @trackedPostProperty user_deleted;
   @trackedPostProperty user_id;
   @trackedPostProperty user_suspended;
@@ -440,6 +440,28 @@ export default class Post extends RestModel {
     }
 
     return this.likeAction && (this.liked || this.canToggleLike);
+  }
+
+  @cached
+  get user() {
+    return this.store.createRecord("user", {
+      id: this.user_id,
+      username: this.username,
+      name: this.display_username,
+      admin: this.admin,
+      avatar_template: this.avatar_template,
+      flair_bg_color: this.flair_bg_color,
+      flair_color: this.flair_color,
+      flair_group_id: this.flair_group_id,
+      flair_name: this.flair_name,
+      flair_url: this.flair_url,
+      moderator: this.moderator,
+      primary_group_name: this.primary_group_name,
+      status: this.user_status,
+      title: this.user_title,
+      trust_level: this.trust_level,
+      custom_fields: this.user_custom_fields,
+    });
   }
 
   afterUpdate(res) {
