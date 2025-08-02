@@ -91,9 +91,15 @@ export default class DiscoveryNavigation extends Component {
 
       <section class="category-heading">
         {{#if @category.uploaded_logo.url}}
-          <CategoryLogo @category={{@category}} />
+          <CategoryLogo
+            @category={{@category}}
+            class="category-heading__logo"
+          />
           {{#if @category.description}}
-            <p>{{dirSpan @category.description htmlSafe="true"}}</p>
+            <p class="category-heading__description">{{dirSpan
+                @category.description
+                htmlSafe="true"
+              }}</p>
           {{/if}}
         {{/if}}
 

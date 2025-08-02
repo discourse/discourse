@@ -47,8 +47,15 @@
 .category-heading {
   max-width: 100%;
   font-size: var(--font-up-3);
+  display: flex;
+  gap: var(--space-4);
 
-  p {
+  &__logo.category-logo.aspect-image {
+    height: 2em;
+    width: 2em;
+  }
+
+  &__description {
     margin-top: 0;
     line-height: var(--line-height-large);
   }
