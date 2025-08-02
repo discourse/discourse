@@ -68,22 +68,31 @@ describe Jobs::DetectTranslatePost do
     job.execute({ post_id: post.id })
   end
 
-  it "skips translating if the post is already localized" do
-    post.update(locale: "en")
-    Fabricate(:post_localization, post:, locale: "ja")
+  context "when translation exists and retranslation quota hit" do
+    before do
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:has_relocalize_quota?)
+        .with(post, "ja")
+        .returns(false)
+    end
 
-    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+    it "skips translating if the post is already localized" do
+      post.update(locale: "en")
+      Fabricate(:post_localization, post:, locale: "ja")
 
-    job.execute({ post_id: post.id })
-  end
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).never
 
-  it "does not translate to language of similar variant" do
-    post.update(locale: "en_GB")
-    Fabricate(:post_localization, post: post, locale: "ja_JP")
+      job.execute({ post_id: post.id })
+    end
 
-    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+    it "does not translate to language of similar variant" do
+      post.update(locale: "en_GB")
+      Fabricate(:post_localization, post: post, locale: "ja_JP")
 
-    job.execute({ post_id: post.id })
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+      job.execute({ post_id: post.id })
+    end
   end
 
   it "handles translation errors gracefully" do
