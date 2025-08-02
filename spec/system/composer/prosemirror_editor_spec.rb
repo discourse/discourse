@@ -1497,4 +1497,18 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("h2", text: "This is a test")
     end
   end
+
+  describe "quote node" do
+    it "keeps the cursor outside quote when pasted" do
+      open_composer
+
+      markdown = "[quote]\nThis is a quote\n\n[/quote]"
+      cdp.copy_paste(markdown)
+      composer.type_content("This is a test")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(markdown + "\n\nThis is a test")
+    end
+  end
 end
