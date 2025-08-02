@@ -263,6 +263,7 @@ export default class ProsemirrorEditor extends Component {
       "addToHistory",
       false
     );
+
     this.view.updateState(this.view.state.apply(tr));
   }
 

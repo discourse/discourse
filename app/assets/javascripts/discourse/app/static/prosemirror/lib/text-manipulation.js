@@ -82,7 +82,19 @@ export default class ProsemirrorTextManipulation {
 
   putCursorAtEnd() {
     this.focus();
-    next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
+
+    next(() => {
+      this.view.dispatch(
+        this.view.state.tr
+          .setSelection(
+            TextSelection.create(
+              this.view.state.doc,
+              this.view.state.doc.content.size
+            )
+          )
+          .scrollIntoView()
+      );
+    });
   }
 
   autocomplete(options) {
