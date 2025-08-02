@@ -259,12 +259,21 @@ export default class ProsemirrorEditor extends Component {
     const doc = this.convertFromMarkdown(value);
 
     const tr = this.view.state.tr;
-    tr.replaceWith(0, this.view.state.doc.content.size, doc.content);
-    tr.setMeta("addToHistory", false);
 
     if (value.endsWith("\n\n")) {
-      tr.insert(tr.doc.content.size, this.schema.nodes.paragraph.create());
+      tr.replaceWith(
+        0,
+        this.view.state.doc.content.size,
+        Fragment.from([
+          ...doc.content.content,
+          this.schema.nodes.paragraph.create(),
+        ])
+      );
+    } else {
+      tr.replaceWith(0, this.view.state.doc.content.size, doc.content);
     }
+
+    tr.setMeta("addToHistory", false);
 
     this.view.updateState(this.view.state.apply(tr));
   }
