@@ -1,4 +1,0 @@
-CREATE TABLE second_table
-(
-    id INTEGER TEXT NOT NULL PRIMARY KEY
-);

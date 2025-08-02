@@ -1,9 +1,0 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-ro:
-  theme_metadata:
-    description: "O temă simplă și frumoasă care îmbunătățește experiența de utilizare pentru site-urile Discourse."

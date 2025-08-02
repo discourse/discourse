@@ -1,5 +1,0 @@
-second:
-  adapter: postgresql
-  database: discourse_test_multisite
-  host_names:
-    - test2.localhost

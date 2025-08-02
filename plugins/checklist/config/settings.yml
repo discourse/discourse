@@ -1,4 +1,0 @@
-plugins:
-  checklist_enabled:
-    default: true
-    client: true

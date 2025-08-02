@@ -1,8 +1,0 @@
-{
-  "tests": {
-    "requiredPlugins": [
-      "https://github.com/discourse/discourse-prometheus",
-      "https://github.com/discourse/discourse-solved.git"
-    ]
-  }
-}

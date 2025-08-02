@@ -1,4 +1,0 @@
-en:
-  site_settings:
-    discourse_graphviz_enabled: "Enable the Graphviz plugin"
-    graphviz_default_svg: "Default to SVG rendering instead of image rendering, can be customized per graph with `svg=true|false` element."

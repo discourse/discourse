@@ -1,5 +1,0 @@
-foo:
-  items:
-    one: "one item"
-    few: "some items"
-    other: "%{count} items"

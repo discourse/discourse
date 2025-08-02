@@ -1,4 +1,0 @@
-plugins:
-  spoiler_enabled:
-    default: true
-    client: true

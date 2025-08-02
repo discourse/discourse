@@ -1,9 +1,0 @@
-<% if @disable_email_custom_styles %>
-  <%= yield %>
-  <% if defined?(html_body) %><%= html_body %><% end %>
-<% else %>
-  <%= email_html_template do %>
-    <%= yield %>
-    <% if defined?(html_body) %><%= html_body %><% end %>
-  <% end %>
-<% end %>

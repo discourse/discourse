@@ -1,5 +1,0 @@
-# at the moment only cdn77 is supported
-provider: cdn77
-password: your api password
-login: your login
-id: your cdn id

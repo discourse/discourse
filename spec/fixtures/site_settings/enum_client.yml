@@ -1,5 +1,0 @@
-basics:
-  default_locale:
-    client: true
-    default: 'en'
-    enum: 'LocaleSiteSetting'

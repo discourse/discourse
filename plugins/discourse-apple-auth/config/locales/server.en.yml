@@ -1,7 +1,0 @@
-en:
-  site_settings:
-    sign_in_with_apple_enabled: 'Enable sign in with Apple?'
-    apple_client_id: "(Sign in with Apple) The Apple 'Service Identifier' from the developer console. Normally a reverse-domain name style string (e.g. com.example.auth) (Sign in with Apple)"
-    apple_team_id: '(Sign in with Apple) Apple Team ID (10 characters)'
-    apple_key_id: '(Sign in with Apple) Apple Key ID (10 characters)'
-    apple_pem: '(Sign in with Apple) Apple Pem File Content. Include the BEGIN and END lines'

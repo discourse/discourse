@@ -1,8 +1,0 @@
-en:
-  site_settings:
-    lti_enabled: Enable LTI 1.3 authentication
-    lti_authorization_endpoint: The LTI platform's Authorization Endpoint
-    lti_client_ids: The client ids for this tool
-    lti_platform_issuer_id: The issuer ID for the LTI Platform. Normally a URL, including https://
-    lti_platform_public_key: The LTI Platform's public key
-    lti_email_verified: Enable if email addresses from the Platform have been verified.

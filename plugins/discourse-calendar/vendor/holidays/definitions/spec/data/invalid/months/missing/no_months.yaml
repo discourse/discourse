@@ -1,9 +1,0 @@
----
-methods:
-  test:
-    arguments: year
-    source: |
-      true
-
-tests: |
-  test

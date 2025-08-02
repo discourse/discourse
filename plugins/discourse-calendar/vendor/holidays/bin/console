@@ -1,7 +1,0 @@
-#!/usr/bin/env ruby
-
-require "bundler/setup"
-require "holidays"
-
-require "irb"
-IRB.start
