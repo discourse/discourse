@@ -17,6 +17,7 @@ import * as ProsemirrorHistory from "prosemirror-history";
 import { history } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import * as ProsemirrorModel from "prosemirror-model";
+import { Fragment } from "prosemirror-model";
 import * as ProsemirrorState from "prosemirror-state";
 import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
