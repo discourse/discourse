@@ -334,26 +334,29 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  applyDefault() {
-    const model = this.model;
-    model.saveChanges("default").then(() => {
-      if (model.get("default")) {
-        this.allThemes.forEach((theme) => {
-          if (theme !== model && theme.get("default")) {
-            theme.set("default", false);
-          }
-        });
-      }
-    });
+  async applyDefault(value) {
+    this.model.set("default", value);
+
+    await this.model.saveChanges("default");
+
+    if (this.model.get("default")) {
+      this.allThemes.forEach((theme) => {
+        if (theme !== this.model && theme.get("default")) {
+          theme.set("default", false);
+        }
+      });
+    }
   }
 
   @action
-  applyUserSelectable() {
+  applyUserSelectable(value) {
+    this.model.set("user_selectable", value);
     this.model.saveChanges("user_selectable");
   }
 
   @action
-  applyAutoUpdateable() {
+  applyAutoUpdateable(value) {
+    this.model.set("auto_update", value);
     this.model.saveChanges("auto_update");
   }
 
