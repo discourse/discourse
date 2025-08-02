@@ -17,7 +17,6 @@ import * as ProsemirrorHistory from "prosemirror-history";
 import { history } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import * as ProsemirrorModel from "prosemirror-model";
-import { Fragment } from "prosemirror-model";
 import * as ProsemirrorState from "prosemirror-state";
 import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
@@ -260,21 +259,10 @@ export default class ProsemirrorEditor extends Component {
     const doc = this.convertFromMarkdown(value);
 
     const tr = this.view.state.tr;
-
-    if (value.endsWith("\n\n")) {
-      tr.replaceWith(
-        0,
-        this.view.state.doc.content.size,
-        Fragment.from([
-          ...doc.content.content,
-          this.schema.nodes.paragraph.create(),
-        ])
-      );
-    } else {
-      tr.replaceWith(0, this.view.state.doc.content.size, doc.content);
-    }
-
-    tr.setMeta("addToHistory", false);
+    tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(
+      "addToHistory",
+      false
+    );
 
     this.view.updateState(this.view.state.apply(tr));
   }
