@@ -1,0 +1,21 @@
+.select-kit {
+  &.combo-box {
+    &.category-drop {
+      .category-drop-header {
+        font-size: var(--font-0);
+
+        .d-icon {
+          font-size: var(--font-0);
+        }
+      }
+
+      .select-kit-row {
+        font-weight: normal;
+      }
+
+      .category-name {
+        max-width: 70vw;
+      }
+    }
+  }
+}

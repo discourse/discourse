@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        description: Khi người dùng được thăng cấp từ cấp độ tin cậy này sang cấp độ tin cậy khác
+      topic:
+        title: Chủ đề
+    scriptables:
+      pin_topic:
+        title: Ghim Chủ Đề
+      close_topic:
+        title: Đóng Chủ Đề
+      append_last_checked_by:
+        button_text: Hoàn tất

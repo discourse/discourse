@@ -1,0 +1,159 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Kysely"
+  js:
+    poll:
+      voters:
+        one: "äänestäjä"
+        other: "äänestäjää"
+      total_votes:
+        one: "ääni"
+        other: "ääntä"
+      votes:
+        one: "%{count} ääni"
+        other: "%{count} ääntä"
+      average_rating: "Keskiarvo: <strong>%{average}</strong>"
+      public:
+        title: "Äänet ovat <strong>julkisia</strong>."
+      results:
+        groups:
+          title: "Sinun täytyy olla ryhmien %{groups} jäsen, jotta voit äänestää tässä kyselyssä."
+        vote:
+          title: "Tulokset näytetään <strong>kyselyn jälkeen</strong>."
+        closed:
+          title: "Tulokset näytetään kyselyn <strong>sulkeuduttua</strong>."
+        staff:
+          title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille."
+        tabs:
+          votes: "Äänet"
+          outcome: "Tulos"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Valitse ainakin <strong>%{count} vaihtoehto</strong>."
+            other: "Valitse ainakin <strong>%{count} vaihtoehtoa</strong>."
+          up_to_max_options:
+            one: "Valitse enintään <strong>%{count} vaihtoehto</strong>."
+            other: "Valitse enintään <strong>%{count} vaihtoehtoa</strong>."
+          x_options:
+            one: "Valitse <strong>%{count} vaihtoehto</strong>."
+            other: "Valitse <strong>%{count} vaihtoehtoa</strong>."
+          between_min_and_max_options: "Valitse <strong>%{min}–%{max} vaihtoehtoa</strong>."
+      cast-votes:
+        title: "Antakaa äänenne"
+        label: "Äänestä nyt!"
+      show-results:
+        title: "Näytä kyselyn tulos"
+        label: "Tulokset"
+      show-tally:
+        title: "Näytä äänestystulokset äänien määrän mukaan"
+        label: "Näytä lukumäärä"
+      show-percentage:
+        title: "Näytä äänestystulokset prosentteina"
+        label: "Näytä prosentteina"
+      remove-vote:
+        title: "Poista äänesi"
+        label: "Kumoa äänestys"
+      hide-results:
+        title: "Palaa äänestysvalintaasi"
+        label: "Äänestä"
+      group-results:
+        title: "Lajittele äänet käyttäjäkentän perusteella"
+        label: "Näytä erittely"
+      export-results:
+        title: "Vie kyselyn tulos"
+        label: "Vie"
+      open:
+        title: "Avaa kysely"
+        label: "Avaa"
+        confirm: "Avataanko kysely?"
+      close:
+        title: "Sulje kysely"
+        label: "Sulje"
+        confirm: "Suljetaanko kysely?"
+      automatic_close:
+        closes_in: "Sulkeutuu <strong>%{timeLeft}</strong> kuluttua"
+        age: "Sulkeutui <strong>%{age}</strong>"
+      breakdown:
+        title: "Kyselyn tulokset"
+        votes: "%{count} ääntä"
+        breakdown: "Erittely"
+        percentage: "Prosenttiosuus"
+        count: "Lukumäärä"
+      ranked_choice:
+        title:
+          rounds: "Kierrokset"
+          outcome: "Tulos"
+        none: "Ei valittu"
+        majority: "Enemmistö"
+        eliminated: "Eliminoitu"
+        round: "Kierros"
+        winner:
+          one: "Voittaja oli %{winner} yhden kierroksen jälkeen."
+          other: "Voittaja oli %{winner} %{count} kierroksen jälkeen."
+        tied:
+          one: "Tasatulos yhden kierroksen jälkeen seuraavien ehdokkaiden välillä:"
+          other: "Tasatulos %{count} kierroksen jälkeen seuraavien ehdokkaiden välillä:"
+      options:
+        label: "Asetukset"
+        ranked_choice:
+          abstain: "Pidättäydy äänestämästä"
+          highest_priority: "(korkein prioriteetti)"
+          lowest_priority: "(matalin prioriteetti)"
+          login: "Kirjaudu sisään äänestääksesi!"
+      error_while_toggling_status: "Kyselyn tilaa muutettaessa tapahtui virhe."
+      error_while_casting_votes: "Ääntä annettaessa tapahtui virhe."
+      error_while_fetching_voters: "Äänestäneiden näyttämisessä tapahtui virhe."
+      error_while_exporting_results: "Kyselyn tuloksen vienti epäonnistui."
+      ui_builder:
+        title: Luo kysely
+        insert: Lisää kysely
+        help:
+          options_min_count: Syötä vähintään 1 vaihtoehto.
+          options_max_count: Syötä enintään %{count} vaihtoehtoa.
+          invalid_min_value: Vähimmäisarvon on oltava vähintään 1.
+          invalid_max_value: Enimmäisarvon on oltava vähintään 1, mutta pienempi tai yhtä suuri kuin vaihtoehtojen määrä.
+          invalid_values: Vähimmäisarvon täytyy olla enimmäisarvoa pienempi.
+          min_step_value: Askelvälin on oltava vähintään 1
+        poll_type:
+          label: Tyyppi
+          regular: Yksi valinta
+          multiple: Monivalinta
+          ranked_choice: Sijoitettu valinta
+          number: Numeroarviointi
+        poll_result:
+          label: Näytä tulokset...
+          always: Aina näkyvissä
+          vote: Vasta äänestämisen jälkeen
+          closed: Kun kysely on suljettu
+          staff: Vain henkilökunnalle
+        poll_groups:
+          label: Rajoita äänestys näihin ryhmiin
+        poll_chart_type:
+          label: Tuloskaavio
+          bar: Pylväs
+          pie: Ympyrä
+        poll_config:
+          max: Valintoja enintään
+          min: Valintoja vähintään
+          step: Askelväli
+        poll_public:
+          label: Näytä äänestäneet
+        poll_title:
+          label: Otsikko (valinnainen)
+        poll_options:
+          label: Valittavat vaihtoehdot (yksi per rivi)
+          add: Lisää vaihtoehto
+        automatic_close:
+          label: Sulje kysely automaattisesti
+        show_advanced: "Näytä lisäasetukset"
+        hide_advanced: "Piilota lisäasetukset"

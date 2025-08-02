@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Danas %{time}
+        tomorrow: Sutra %{time}
+        yesterday: Jučer %{time}
+        countdown:
+          passed: datum je prošao
+      title: Umetni datum / vrijeme
+      create:
+        form:
+          insert: Umetni
+          advanced_mode: Napredni način rada
+          simple_mode: Jednostavni način rada
+          format_description: "Format koji se koristi za prikaz datuma korisniku. Pomoću Z možete prikazati pomak i zz za naziv vremenske zone."
+          timezones_title: Vremenske zone za prikazati
+          timezones_description: Vremenske zone će se koristiti za prikaz datuma u predprikazu i rezervnom prikazu.
+          recurring_title: Ponavljanje
+          recurring_description: "Definirajte ponavljanje događaja. Možete ručno urediti ponavljajuču opciju koju je izgenerirala forma, te koristiti neku od sljedećih ključnih riječi: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Nema ponavljanja
+          invalid_date: Nevažeći datum, provjerite ispravnost datuma i vremena
+          date_title: Datum
+          time_title: Vrijeme
+          format_title: Format datuma
+          timezone: Vremenska zona
+          until: Do...
+          current_timezone: "Trenutna vremenska zona:"
+          recurring:
+            every_day: "Svaki dan"
+            every_week: "Svaki tjedan"
+            every_two_weeks: "Svaka dva tjedna"
+            every_month: "Svaki mjesec"
+            every_two_months: "Svaka dva mjeseca"
+            every_three_months: "Svaka tri mjeseca"
+            every_six_months: "Svakih šest mjeseci"
+            every_year: "Svake godine"
+      default_title: "%{site_name} Događaj"

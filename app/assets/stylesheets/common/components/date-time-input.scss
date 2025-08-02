@@ -1,0 +1,31 @@
+.d-date-time-input {
+  display: flex;
+  box-sizing: border-box;
+  position: relative;
+
+  .date-picker {
+    max-width: unset;
+  }
+
+  .d-date-time-input {
+    margin-left: auto;
+    flex: 1 1 auto;
+  }
+
+  .d-time-input {
+    width: 90px;
+
+    .select-kit-header {
+      border-color: transparent;
+      width: 90px;
+    }
+  }
+
+  .d-date-input + .d-time-input {
+    margin-left: 1px;
+  }
+
+  .d-time-input + .d-date-input {
+    margin-right: 1px;
+  }
+}

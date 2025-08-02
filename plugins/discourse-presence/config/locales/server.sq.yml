@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  site_settings:
+    presence_enabled: "Të tregohen përdoruesit që aktualisht po i përgjigjen temës aktuale, apo po redaktojnë postimin aktual?"
+    presence_max_users_shown: "Numri maksimal i përdoruesve të shfaqur."

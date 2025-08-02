@@ -1,0 +1,126 @@
+name: Migration Tests
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/migration-tests.yml"
+      - "migrations/**"
+  push:
+    branches:
+      - main
+      - stable
+    paths:
+      - ".github/workflows/migration-tests.yml"
+      - "migrations/**"
+
+concurrency:
+  group: migration-tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Tests
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12-8core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 20
+
+    env:
+      RAILS_ENV: test
+      PGUSER: discourse
+      PGPASSWORD: discourse
+      LOAD_PLUGINS: 1
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
+
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -E -u postgres script/start_test_db.rb
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+
+      - name: Setup gems
+        run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle config --local with migrations
+          bundle install --jobs $(($(nproc) - 1))
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Get CPU cores
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+
+      - name: Fetch app state cache
+        uses: actions/cache@v4
+        id: app-cache
+        with:
+          path: tmp/app-cache
+          key: >-
+            ${{ runner.os }}-
+            ${{ steps.cpu-info.outputs.cpu-cores }}-
+            ${{ hashFiles('.github/workflows/migration-tests.yml') }}-
+            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ hashFiles('config/environments/test.rb') }}
+
+      - name: Restore database from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+
+      - name: Restore uploads from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+
+      - name: Create and migrate database
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: |
+          bin/rake db:create
+          script/silence_successful_output bin/rake db:migrate
+
+      - name: Dump database for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+
+      - name: Dump uploads for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
+
+      - name: Validate IntermediateDB schema
+        run: |
+          migrations/bin/cli schema generate --db=intermediate_db
+
+          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/)" ]; then
+            echo "IntermediateDB schema is not up to date."
+            echo "---------------------------------------------"
+            git -c color.ui=always diff migrations/db/intermediate_db_schema/
+            exit 1
+          fi
+
+      - name: RSpec
+        run: bin/rspec --default-path migrations/spec

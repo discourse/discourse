@@ -1,0 +1,50 @@
+.form-kit__input-group {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+
+  .form-kit-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    white-space: nowrap;
+    padding-inline: 0.5em;
+    line-height: 2em;
+    background-color: var(--primary-low);
+    color: var(--primary-high);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-input-border-radius);
+  }
+
+  .--col-12 {
+    width: auto;
+  }
+
+  .form-kit__control-input {
+    z-index: 1;
+    width: 100% !important;
+    min-width: auto !important;
+
+    &:hover,
+    &:focus {
+      z-index: 2;
+    }
+  }
+
+  > :not(:last-child) {
+    .form-kit__control-input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  > :not(:first-child) {
+    margin-left: -1px;
+
+    .form-kit__control-input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}

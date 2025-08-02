@@ -1,0 +1,67 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    poll_enabled: "Permettere i sondaggi?"
+    poll_maximum_options: "Numero massimo di opzioni permesse in un sondaggio."
+    poll_edit_window_mins: "Numero di minuti dopo la creazione di un messaggio durante i quali i sondaggi possono ancora essere modificati."
+    poll_minimum_trust_level_to_create: "Definisce il minimo livello di attendibilità necessario per poter creare sondaggi."
+    poll_create_allowed_groups: "Gruppi a cui è consentito creare sondaggi."
+    poll_groupable_user_fields: "Un insieme di nomi di campi utente che possono essere utilizzati per raggruppare e filtrare i risultati del sondaggio."
+    poll_export_data_explorer_query_id: "ID della query Data Explorer da utilizzare per l'esportazione dei risultati del sondaggio (0 per disabilitare)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID della query di Data Explorer da utilizzare per esportare i risultati del sondaggio sul ballottaggio immediato."
+    poll_default_public: "Quando si crea un nuovo sondaggio, abilita l'opzione \"mostra chi ha votato\" per impostazione predefinita."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "sondaggio"
+    invalid_argument: "Valore '%{value}' non valido per l'argomento '%{argument}'."
+    multiple_polls_without_name: "Quando crei più sondaggi, includi nomi univoci aggiungendo <code>name=esempio</code> alle tue etichette <code>[poll]</code>."
+    multiple_polls_with_same_name: "Ci sono più sondaggi con lo stesso nome: <strong>%{name}</strong>. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
+    default_poll_must_have_at_least_1_option: " Il sondaggio deve avere almeno 1 opzione."
+    named_poll_must_have_at_least_1_option: "Il sondaggio di nome <strong>%{name}</strong> deve avere almeno 1 opzione."
+    default_poll_must_have_less_options:
+      one: "Il sondaggio deve avere meno di una opzione."
+      other: "Il sondaggio deve avere meno di %{count} opzioni."
+    named_poll_must_have_less_options:
+      one: "Il sondaggio <strong>%{name}</strong> deve avere meno di %{count} opzione."
+      other: "Il sondaggio <strong>%{name}</strong> deve avere meno di %{count} opzioni."
+    default_poll_must_have_different_options: "Il sondaggio deve avere opzioni diverse."
+    named_poll_must_have_different_options: "Il sondaggio di nome <strong>%{name}</strong> deve avere opzioni diverse."
+    default_poll_must_not_have_any_empty_options: "Il sondaggio non deve avere opzioni vuote."
+    named_poll_must_not_have_any_empty_options: "Il sondaggio di nome <strong>%{name}</strong>non deve avere opzioni vuote."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Il sondaggio a scelta multipla ha parametri non validi."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Il sondaggio a scelta multipla di nome <strong>%{name}</strong> ha parametri non validi."
+    requires_at_least_1_valid_option: "Devi scegliere almeno una opzione valida."
+    requires_that_at_least_one_option_is_ranked: "Nei sondaggi a scelta classificata, è necessario classificare almeno un'opzione."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Non puoi modificare un sondaggio dopo i primi %{minutes} minuti."
+      cannot_edit_named_poll_with_votes: "Non puoi cambiare il nome del sondaggio <strong>${name}</strong> dopo i primi %{minutes} minuti."
+    no_poll_with_this_name: "Nessun sondaggio avente nome <strong>%{name}</strong> è associato a questo messaggio."
+    post_is_deleted: "Non è possibile operare su un messaggio cancellato."
+    user_cant_post_in_topic: "Non puoi votare perché non puoi pubblicare messaggi in questo argomento."
+    topic_must_be_open_to_vote: "L'argomento deve essere aperto per poter votare."
+    poll_must_be_open_to_vote: "Il sondaggio deve essere aperto per poter votare."
+    one_vote_per_user: "È consentito solo 1 voto per questo sondaggio."
+    max_vote_per_user:
+      one: È consentito solo %{count} voto per questo sondaggio.
+      other: È consentito un massimo di %{count} voti per questo sondaggio.
+    min_vote_per_user:
+      one: Almeno %{count} voto è richiesto per questo sondaggio.
+      other: Almeno %{count} voti sono richiesti per questo sondaggio.
+    ranked_choice:
+      vote_options_mismatch: "Per il ballottaggio immediato, il numero di scelte fatte in una votazione deve corrispondere al numero di opzioni. Il numero di opzioni è %{count} e il numero di scelte fatte era %{provided}."
+      no_group_results_support: "Tipo di sondaggio non valido, ranking_choice non supporta risultati raggruppati."
+    topic_must_be_open_to_toggle_status: "L'argomento deve essere aperto per commutare lo stato."
+    only_staff_or_op_can_toggle_status: "Solo un membro dello staff o l'autore originale possono commutare lo stato di un sondaggio."
+    errors:
+      poll_not_found: "Sondaggio non trovato, conferma i parametri."
+    insufficient_rights_to_create: "Non sei autorizzato a creare sondaggi."
+    email:
+      link_to_poll: "Clicca per vedere il sondaggio."
+    user_field:
+      no_data: "Nessun Dato"

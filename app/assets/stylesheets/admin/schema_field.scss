@@ -1,0 +1,78 @@
+@use "lib/viewport";
+
+.schema-field {
+  margin-bottom: 1em;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 25% 1fr;
+  gap: 1em;
+
+  @include viewport.until(sm) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0;
+  }
+
+  .schema-field__label {
+    word-break: break-all;
+  }
+
+  &[data-type="boolean"] .schema-field__input {
+    flex-direction: row;
+  }
+
+  .schema-field__input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+
+    input {
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    input[type="checkbox"] {
+      width: auto;
+    }
+
+    .select-kit {
+      width: 100%;
+
+      &.--invalid {
+        summary {
+          border-color: var(--danger);
+        }
+      }
+    }
+
+    .schema-field__input-description {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+  }
+
+  .schema-field__input-supporting-text {
+    display: flex;
+    flex-direction: row;
+    margin-top: 0.2em;
+    width: 100%;
+    gap: 0 0.5em;
+
+    .schema-field__input-count {
+      margin-left: auto;
+      font-size: var(--font-down-1);
+
+      &.--error {
+        color: var(--danger);
+      }
+    }
+
+    .schema-field__input-error {
+      font-size: var(--font-down-1);
+      color: var(--danger);
+    }
+  }
+}

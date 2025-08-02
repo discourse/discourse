@@ -1,0 +1,427 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: 自動化を削除
+    discourse_automation:
+      title: 自動化
+      back: 戻る
+      edit: 編集
+      select_script: スクリプトを選択
+      select_trigger: トリガーを選択
+      confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
+      confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
+      filter_placeholder: 名前または説明でフィルタ...
+      edit_automation:
+        trigger_section:
+          forced: このトリガーはスクリプトで強制されています。
+          next_pending_automation: "次の自動化がトリガーされるタイミング: %{date}"
+          trigger_now: "今すぐトリガー"
+          title: いつ/何を...
+        fields_section:
+          title: スクリプトのオプション
+      destroy_automation:
+        confirm: "`%{name}` を削除してもよろしいですか？"
+      fields:
+        key_value:
+          label_without_count: "構成"
+          label_with_count:
+            other: "構成の編集 (%{count})"
+        user:
+          label: ユーザー
+        pm:
+          title:
+            label: タイトル
+          raw:
+            label: 本文
+        pms:
+          confirm_remove_pm: "この PM を削除してもよろしいですか？"
+          placeholder_title: PM のタイトル
+          add_pm: PM を追加
+          no_pm_created: まだ PM を作成していません。PM は自動化がトリガーされると送信されます。
+          title:
+            label: タイトル
+          raw:
+            label: 本文
+          delay:
+            label: 遅延 (分)
+          prefers_encrypt:
+            label: 可能な場合は PM を暗号化する
+        group:
+          label: グループ
+        text:
+          label: テキスト
+      triggerables:
+        not_found: 自動化 `%{automation}` のトリガー `%{trigger}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
+        user_badge_granted:
+          fields:
+            badge:
+              label: バッジ
+            only_first_grant:
+              label: 初回付与時のみ
+        stalled_topic:
+          durations:
+            PT1H: "1 時間"
+            P1D: "1 日"
+            P1W: "1 週間"
+            P2W: "2 週間"
+            P1M: "1 か月"
+            P3M: "3 か月"
+            P6M: "6 か月"
+            P1Y: "1 年"
+          fields:
+            categories:
+              label: カテゴリ限定
+            tags:
+              label: タグ限定
+            stalled_after:
+              label: 次の後失速
+        recurring:
+          every: 毎
+          frequencies:
+            minute: 分
+            hour: 時間
+            day: 日
+            weekday: 平日
+            week: 週
+            month: 月
+            year: 年
+          fields:
+            recurrence:
+              label: 繰り返し
+            start_date:
+              label: 開始日
+        stalled_wiki:
+          durations:
+            PT1H: "1 時間"
+            P1D: "1 日"
+            P1W: "1 週間"
+            P2W: "2 週間"
+            P1M: "1 か月"
+            P3M: "3 か月"
+            P6M: "6 か月"
+            P1Y: "1 年"
+          fields:
+            restricted_category:
+              label: カテゴリに限定
+            stalled_after:
+              label: トリガー遅延
+              description: 最後の Wiki 編集と自動化のトリガーの間の遅延を定義します
+            retriggered_after:
+              label: 再トリガー遅延
+              description: 最初のトリガーの後にまだWikiが編集されていない場合に、最初のトリガーと次のトリガーの間の遅延を定義します。
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: 追跡中のグループ
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: 追跡中のグループ
+        user_promoted:
+          fields:
+            restricted_group:
+              label: グループに限定
+            trust_level_transition:
+              label: 信頼レベルの移行
+          trust_levels:
+            ALL: "すべての信頼レベル"
+            TL01: "TL0 から TL1"
+            TL12: "TL1 から TL2"
+            TL23: "TL2 から TL3"
+            TL34: "TL3 から TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: 実行時間
+        topic:
+          fields:
+            restricted_topic:
+              label: トピック ID
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: 元の投稿のみ
+              description: 投稿がトピック内のオリジナルの投稿である場合にのみトリガーされます
+            action_type:
+              label: 操作のタイプ
+              description: "オプション。トリガーを作成または編集されたイベントのみに制限します"
+            valid_trust_levels:
+              label: 有効な信頼レベル
+              description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
+            restricted_tags:
+              label: タグ
+              description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
+            restricted_categories:
+              label: カテゴリ
+            restricted_inbox_groups:
+              description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
+            ignore_automated:
+              label: 自動送信元を無視
+              description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された投稿にのみ適用されます。
+            first_post_only:
+              label: 最初の投稿のみ
+              description: 投稿がユーザーが作成した最初の投稿である場合にのみトリガーされます。
+            first_topic_only:
+              label: 最初のトピックのみ
+              description: トピックがユーザーが作成した最初のトピックである場合にのみトリガーされます。
+            skip_via_email:
+              label: "メールの場合はスキップ"
+              description: "投稿がメールで作成された場合はトリガーをスキップします"
+          created: 作成
+          edited: 編集
+          with_images: 画像
+          with_links: リンク
+          with_code: コード
+          with_uploads: アップロード
+        user_updated:
+          fields:
+            user_profile:
+              label: ユーザープロファイルのフィールド
+              description: ユーザーがこれらすべてのフィールドに入力した場合にのみトリガーされます
+            custom_fields:
+              label: ユーザーカスタムフィールド
+              description: ユーザーがこれらすべてのフィールドに入力した場合にのみトリガーされます
+            once_per_user:
+              label: ユーザーごとに 1 回
+              description: ユーザーごとに 1 回のみトリガーされます
+            new_users_only:
+              label: 新規ユーザーのみ
+              description: この自動化が有効化された後に参加する新規ユーザーに対してのみトリガーされます
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: 親カテゴリ
+              description: オプション。トリガーの実行をこのカテゴリに限定できます
+        pm_created:
+          fields:
+            restricted_user:
+              label: ユーザー
+              description: このユーザーに送信された PM に対してのみトリガーされます。
+            restricted_group:
+              label: グループ
+              description: このグループに送信された PM に対してのみトリガーされます
+            ignore_staff:
+              label: スタッフを無視する
+              description: 送信者がスタッフユーザーである場合は、トリガーをスキップします
+            ignore_group_members:
+              label: グループメンバーを無視
+              description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
+            ignore_automated:
+              label: 自動送信元を無視
+              description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された PM にのみ適用されます。
+            valid_trust_levels:
+              label: 有効な信頼レベル
+              description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: タグの追加または削除
+            tags_added: タグの追加
+            tags_removed: タグの削除
+          fields:
+            watching_categories:
+              label: ウォッチ中のカテゴリ
+              description: トピックがこれらのいずれかのカテゴリに該当する場合にのみトリガーされます
+            watching_tags:
+              label: ウォッチ中のタグ
+              description: トピックにこれらのいずれかのタグが設定されている場合にのみトリガーされます
+            trigger_on:
+              label: 次の場合にトリガー
+            trigger_with_pms:
+              label: PM でトリガー
+              description: タグが PM で変更された場合でもトリガーされます
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: 有効な信頼レベル
+              description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
+            restricted_category:
+              label: カテゴリ
+              description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
+            restricted_tags:
+              label: タグ
+              description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
+      scriptables:
+        not_found: 自動化 `%{automation}` のスクリプト `%{script}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook URL
+              description: "有効な Zpier webhook URL が必要です。例: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: 1 回
+              description: トピックごとに 1 回だけ応答します
+            word_answer_list:
+              label: 単語/回答ペアのリスト
+              description: "キー/値グループのリストを定義します。`key` は検索語で、`value` は返信のテキストです。`key` を空白にすると、コンテンツに関係なくすべてのトリガーに応答します。`value` は、返信で `key` の値を置換するプレースホルダーとして `{{key}}` を受け入れます。`key` は正規表現として評価され、`.` などの特殊文字については、実際にドットを意味する場合は `\\.` のようにエスケープする必要があることに注意してください。"
+            answering_user:
+              label: 回答するユーザー
+              description: デフォルトでシステムユーザー
+        auto_tag_topic:
+          fields:
+            tags:
+              label: タグ
+              description: トピックに追加するタグのリスト。
+        post:
+          fields:
+            creator:
+              label: 作成者
+              post_creator_context: 投稿の作成者
+              updated_user_context: 更新されたユーザー
+            topic:
+              label: トピック ID
+            post:
+              label: 投稿内容
+        topic:
+          fields:
+            creator:
+              label: 作成者
+              updated_user_context: 更新されたユーザー
+            body:
+              label: トピック本文
+            title:
+              label: トピックタイトル
+            category:
+              label: トピックのカテゴリ
+            tags:
+              label: トピックのタグ
+        group_category_notification_default:
+          fields:
+            group:
+              label: グループ
+            notification_level:
+              label: 通知レベル
+            update_existing_members:
+              label: 既存のメンバーを更新する
+              description: 既存のグループメンバーの通知レベルを更新します
+        user_global_notice:
+          fields:
+            level:
+              label: レベル
+            notice:
+              label: お知らせ
+              description: HTML を使用できます。信頼できない入力を入力しないでください！
+          levels:
+            warning: 警告
+            info: 情報
+            success: 成功
+            error: エラー
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: バッジ名
+            group:
+              label: グループ
+              description: ターゲットグループ。指定されたバッジを持つユーザーがこのグループに追加されます。
+            update_user_title_and_flair:
+              label: ユーザーのタイトルとフレアを更新
+              description: オプション。ユーザーのタイトルとフレアを更新します。
+            remove_members_without_badge:
+              label: バッジのない既存のメンバーを削除
+              description: オプション。指定されたバッジのない既存のグループメンバーを削除します。
+            badge:
+              label: バッジ
+              description: バッジの選択
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: 凍結期間 (デフォルト)
+            reason:
+              label: 理由 (デフォルト)
+            actor:
+              label: ユーザー
+              description: "凍結を管理するユーザー (デフォルト: システム)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: トピック ID
+            pinned_globally:
+              label: グローバルに固定
+            pinned_until:
+              label: 固定期間
+        banner_topic:
+          fields:
+            topic_id:
+              label: トピック ID
+            banner_until:
+              label: バナー設定期間
+            user:
+              label: ユーザー
+              description: "バナーを作成するユーザー (デフォルト: システム)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: チェックした単語
+        topic_required_words:
+          fields:
+            words:
+              label: 必要な単語リスト
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: 参加者のグループ名
+            giftee_assignment_messages:
+              label: 贈り主に送信されるメッセージ
+        send_pms:
+          add_a_pm_btn:
+            label: PM を追加
+          fields:
+            receiver:
+              label: PM 受信者
+            sendable_pms:
+              label: PM
+            sender:
+              label: PM 送信者
+        close_topic:
+          fields:
+            topic:
+              label: トピック ID
+            message:
+              label: 閉鎖メッセージ
+              description: "トピック閉鎖レコードに表示されるオプションのメッセージ"
+            user:
+              label: ユーザー
+              description: "トピックを閉鎖するユーザー (デフォルト: システム)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "ユーザーカスタムフィールド名"
+      unnamed_automation: "無題の自動化"
+      models:
+        script:
+          name:
+            label: スクリプト
+        trigger:
+          name:
+            label: トリガー
+        automation:
+          name:
+            label: 名前
+          trigger:
+            label: トリガー
+          script:
+            label: スクリプト
+          version:
+            label: バージョン
+          status:
+            label: ステータス
+          enabled:
+            label: 有効
+          disabled:
+            label: 無効
+          placeholders:
+            label: プレースホルダー
+          last_updated_at:
+            label: 最終更新
+          last_updated_by:
+            label: 更新者

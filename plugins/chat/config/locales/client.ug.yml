@@ -1,0 +1,741 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: سۆھبەت
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "ھەمىشە"
+          fullscreen: "پۈتۈن ئېكراندا پاراڭلاشقاندا"
+          never: "ھەرگىز"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "سۆھبەت قانىلىنىڭ ھالىتى ئۆزگەردى"
+            chat_channel_delete: "سۆھبەت قانىلى ئۆچۈرۈلدى"
+            chat_auto_remove_membership: "ئەزالىق قانالدىن ئۆزلۈكىدىن ئۆچۈرۈلىدۇ"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "بەلگىلەنگەن قانالدا سۆھبەت قۇرىدۇ."
+      web_hooks:
+        chat_event:
+          group_name: "سۆھبەت پائالىيىتى"
+          chat_message_created: "ئۇچۇر قۇرۇلدى"
+          chat_message_edited: "ئۇچۇر تەھرىرلەندى"
+          chat_message_trashed: "ئۇچۇر ئەخلەتخانىغا تاشلاندى"
+          chat_message_restored: "ئۇچۇر ئەسلىگە قايتۇرۇلدى"
+    about:
+      chat_messages_count: "سۆھبەت ئۇچۇرى"
+      chat_channels_count: "سۆھبەت قانىلى"
+      chat_users_count: "سۆھبەت ئىشلەتكۈچى"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} سۆھبەت ئۇچۇرى"
+          other: "%{formatted_number} سۆھبەت ئۇچۇرى"
+    chat:
+      text_copied: تېكىست چاپلاش تاختىسىغا كۆچۈرۈلدى
+      link_copied: ئۇلانما چاپلاش تاختىسىغا كۆچۈرۈلدى
+      back_to_forum: "مۇنبەر"
+      deleted_chat_username: ئۆچۈرۈلدى
+      dates:
+        yesterday: "تۈنۈگۈن"
+      all_loaded: "بارلىق ئۇچۇر كۆرسىتىلىدۇ"
+      already_enabled: "بۇ تېمىدا سۆھبەتلىشىش ئاللىقاچان قوزغىتىلغان. يېڭىلاڭ."
+      disabled_for_topic: "بۇ تېمىدا سۆھبەتلىشىش چەكلەنگەن."
+      bot: "ماشىنا ئادەم"
+      create: "قۇر"
+      cancel: "ۋاز كەچ"
+      cancel_reply: "جاۋابتىن ۋازكەچ"
+      chat_channels: "قانال"
+      browse_all_channels: "بارلىق قانالغا كۆز يۈگۈرتىدۇ"
+      see_in: "قاراڭ"
+      move_to_channel:
+        title: "ئۇچۇرنى قانالغا يۆتكەيدۇ"
+        instructions:
+          one: "سىز <strong>%{count}</strong> ئۇچۇرنى يۆتكەۋاتىسىز. نىشان قانالنى تاللاڭ. <strong>%{channelTitle}</strong> قانالدا ئورۇن بەلگىسى ئۇچۇرىنى قۇرۇپ، بۇ ئۇچۇرلارنىڭ يۆتكەلگەنلىكىنى بىلدۈرىدۇ. ئەسكەرتىش يېڭى قانالدا ئىنكاس ئۇلانمىسىنى ساقلاپ قالمايدۇ، كونا قانالدىكى ئۇچۇر يۆتكەلگەن ئۇچۇرنىڭ جاۋاب ئىنكاسىنى كۆرسەتمەيدۇ."
+          other: "سىز <strong>%{count}</strong> ئۇچۇرنى يۆتكەۋاتىسىز. نىشان قانالنى تاللاڭ. <strong>%{channelTitle}</strong> قانالدا ئورۇن بەلگىسى ئۇچۇرىنى قۇرۇپ، بۇ ئۇچۇرلارنىڭ يۆتكەلگەنلىكىنى بىلدۈرىدۇ. ئەسكەرتىش يېڭى قانالدا ئىنكاس ئۇلانمىسىنى ساقلاپ قالمايدۇ، كونا قانالدىكى ئۇچۇر يۆتكەلگەن ئۇچۇرنىڭ جاۋاب ئىنكاسىنى كۆرسەتمەيدۇ."
+        confirm_move: "ئۇچۇر يۆتكە"
+      delete_messages:
+        confirm:
+          one: "بۇ ئۇچۇرنى راستتىنلا ئۆچۈرەمسىز؟"
+          other: "بۇ %{count} ئۇچۇرنى راستتىنلا ئۆچۈرەمسىز؟"
+      channel_settings:
+        title: "قانال تەڭشىكى"
+        edit: "تەھرىر"
+        add: "قوش"
+        close_channel: "قانالنى تاقا"
+        open_channel: "ئوچۇق قانال"
+        archive_channel: "ئارخىپ قانىلى"
+        delete_channel: "قانالنى ئۆچۈر"
+        join_channel: "قانالغا قوشۇلۇڭ"
+        leave_channel: "قانالدىن ئايرىل"
+        leave_groupchat_info: "بۇ گۇرۇپپا سۆھبىتىدىن ئايرىلسىڭىز، ئەمدى ئۇنى زىيارەت قىلالمايسىز ھەمدە ئۇنىڭغا ئائىت ئۇقتۇرۇشلارنى تاپشۇرۇۋالمايسىز. گۇرۇپپىغا قايتا قوشۇلۇش ئۈچۈن، سۆھبەت گۇرۇپپىسىنىڭ ئەزاسى سىزگە قايتا تەكلىپ ئەۋەتىشى كېرەك."
+        join: "قوشۇل"
+        leave: "ئايرىل"
+        save_label:
+          mute_channel: "ئۈنسىز قانال مايىللىقى ساقلاندى"
+          desktop_notification: "ئۈستەل يۈزى ئۇقتۇرۇشى مايىللىقى ساقلاندى"
+          mobile_notification: "كۆچمە ئىتتىرىش ئۇقتۇرۇش مايىللىقى ساقلاندى"
+      channel_archive:
+        title: "ئارخىپ قانىلى"
+        instructions: "<p>قانال ئارخىپلاشتۇرۇلسا پەقەت ئوقۇشقىلا بولىدىغان ھالەتكە كىرىدۇ ھەمدە شۇ قانالدىكى ھەممە ئۇچۇرنى يېڭى ياكى مەۋجۇت تېمىغا يۆتكەيدۇ. ئۇچۇر يوللىغىلى بولمايدۇ، مەۋجۇت ئۇچۇرلارنى تەھرىرلىگىلى ياكى ئۆچۈرگىلىمۇ بولمايدۇ. </p><p>سىز راستتىنلا <strong>%{channelTitle}</strong> قانالنى ئارخىپلاشتۇرامسىز؟</p>"
+        process_started: "ئارخىپلاشتۇرۇش جەريانى باشلاندى. بۇ كۆزنەك تېزلا تاقىلىدۇ، ئارخىپلاشتۇرۇش جەريانى تاماملانغاندىن كېيىن شەخسىي ئۇچۇر تاپشۇرۇۋالىسىز."
+        retry: "قايتا سىنا"
+      channel_open:
+        title: "قانال ئاچ"
+        instructions: "قانالنى قايتا ئاچىدۇ، ھەممە ئىشلەتكۈچىلەر ئۇچۇر يوللاپ، مەۋجۇت ئۇچۇرلىرىنى تەھرىرلىيەلەيدۇ."
+      channel_close:
+        title: "قانالنى تاقا"
+        instructions: "قانالنى تاقايدۇ باشقۇرغۇچى بولمىغان ئىشلەتكۈچىلەر يېڭى ئۇچۇر يوللىيالمايدۇ ياكى مەۋجۇت ئۇچۇرنى تەھرىرلىيەلمەيدۇ. راستتىنلا بۇ قانالنى تاقامسىز؟"
+      channel_delete:
+        title: "قانالنى ئۆچۈر"
+        instructions: "<p><strong>%{name}</strong> نىڭ قانال ۋە سۆھبەت تارىخىنى ئۆچۈرىدۇ. ئىنكاس ۋە يۈكلەنمىگە ئوخشاش بارلىق ئۇچۇر ۋە مۇناسىۋەتلىك سانلىق مەلۇمات مەڭگۈلۈك ئۆچۈرۈلىدۇ. ئەگەر قانالنىڭ تارىخ خاتىرىسىنى ساقلاپ قېلىپ ئۇنى توختاتماقچى بولسىڭىز، قانالنى ئارخىپلاشتۇرۇشقا ئېھتىياجلىق بولۇشىڭىز مۇمكىن.</p><p>سىز بۇ قانالنى راستتىنلا <strong>مەڭگۈلۈك ئۆچۈر</strong>ەمسىز؟ جەزملىسىڭىز، تۆۋەنگە قانالنىڭ ئىسمىنى كىرگۈزۈڭ.</p>"
+        confirm: "ئاقىۋىتىنى چۈشىنىمەن، قانالنى ئۆچۈر"
+        confirm_channel_name: "قانال ئىسمى كىرگۈزۈلىدۇ"
+        process_started: "قانالنى ئۆچۈرۈش جەريانى باشلاندى. بۇ كۆزنەك تېزلا تاقىلىدۇ، ئۆچۈرۈلگەن قانالنى ئەمدى كۆرەلمەيسىز."
+      channels_list_popup:
+        browse: "قانالغا كۆز يۈگۈرت"
+        create: "يېڭى قانال"
+      close: "تاقا"
+      remove: "چىقىرىۋەت"
+      collapse: "سۆھبەت تارتمىسىنى يىغ"
+      expand: "سۆھبەت تارتمىسىنى ياي"
+      confirm_flag: "سىز راستتىنلا %{username} نىڭ ئۇچۇرىنى پاش قىلامسىز؟"
+      deleted:
+        one: "%{count} ئۇچۇر ئۆچۈرۈلدى. [ھەممىنى كۆرسەت]"
+        other: "%{count} ئۇچۇر ئۆچۈرۈلدى. [ھەممىنى كۆرسەت]"
+      hidden: "بىر ئۇچۇر يوشۇرۇن.[كۆرسەت]"
+      delete: "ئۆچۈر"
+      edited: "تەھرىرلەندى"
+      muted: "ئۈنسىزلەندى"
+      joined: "قوشۇلدى"
+      empty_state:
+        direct_message_cta: "شەخسىي سۆھبەت باشلايدۇ"
+        direct_message: "سىزمۇ بىر ياكى بىر قانچە ئىشلەتكۈچى بىلەن شەخسىي سۆھبەت باشلىيالايسىز."
+        title: "ھېچقانداق قانال تېپىلمىدى"
+        my_threads: "ھازىرچە ھېچقانداق تېما يوق. سىز قاتناشقان تېما بۇ يەردە كۆرسىتىلىدۇ."
+      email_frequency:
+        description: "ئەگەر بىز ئاخىرقى 15 مىنۇتتا سىزنى كۆرەلمىسەك سىزگە ئېلخەت يوللىيالايمىز."
+        never: "ھەرگىز"
+        title: "ئېلخەت ئۇقتۇرۇشى"
+        when_away: "ئايرىلغاندىلا"
+      header_indicator_preference:
+        title: "ماۋزۇدا پائالىيەت كۆرسەتكۈچىنى كۆرسەت"
+        all_new: "بارلىق يېڭى ئۇچۇر"
+        dm_and_mentions: "بىۋاسىتە ئۇچۇر، ئاتاش ۋە كۆزەتتىكى تېما"
+        only_mentions: "ئاتاشلا"
+        never: "ھەرگىز"
+      separate_sidebar_mode:
+        title: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ"
+      send_shortcut:
+        enter:
+          label: "Enter بېسىلسا يوللايدۇ"
+          description: "Shift + Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
+        meta_enter:
+          label: "%{meta_key} + Enter بېسىلسا يوللايدۇ"
+          description: "Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
+      enable: "سۆھبەتنى قوزغات"
+      flag: "پاش قىل"
+      emoji: "چىراي ئىپادە قىستۇر"
+      flagged: "بۇ ئۇچۇر تەكشۈرۈش ئۈچۈن پاش قىلىنغان"
+      invalid_access: "سىزنىڭ بۇ سۆھبەت قانىلىنى كۆرۈش ئىجازىتىڭىز يوق"
+      invitation_notification: "<span>%{username}</span><span> سىزنى سۆھبەت قانىلىغا تەكلىپ قىلدى</span>"
+      in_reply_to: "جاۋاب"
+      heading: "سۆھبەت"
+      join: "قوشۇل"
+      last_visit: "ئاخىرقى زىيارەت"
+      mention_warning:
+        invitations_sent:
+          one: "تەكلىپ يوللاندى"
+          other: "تەكلىپ يوللاندى"
+        invite: "قانالغا تەكلىپ قىل"
+        channel_wide_mentions_disallowed: "بۇ قانالدا @here ۋە @all ئاتاش چەكلەنگەن."
+        groups:
+          header:
+            some: "بەزى ئىشلەتكۈچىلەرگە ئۇقتۇرۇلمايدۇ"
+            all: "ھېچكىمگە ئۇقتۇرۇلمايدۇ"
+          unreachable_1: "@%{group} ئاتاشنقا يول قويمايدۇ."
+          unreachable_2: "@%{group1} ۋە @%{group2} ئاتاشنقا يول قويمايدۇ."
+          unreachable_multiple:
+            one: "@%{group} ۋە باشقا %{count} گۇرۇپپا ئاتاشنقا يول قويمايدۇ."
+            other: "@%{group} ۋە باشقا %{count} گۇرۇپپا ئاتاشنقا يول قويمايدۇ."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Mentioning @{group1} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                              other {Mentioning @{group1} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                              other {@{group1} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                            other {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                            other {@{group1} ۋە @{group2} ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ <a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                            other {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ<a href="{siteSettingUrl}" target="_blank">ئۇقتۇرۇش چېكى</a> دىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                            other {بۇ {groupCount} گۇرۇپپىنى ئاتاش # ئىشلەتكۈچىنىڭ ئۇقتۇرۇش چېكىدىن ئېشىپ كەتتى.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "بۇ ئۇچۇر %{count} قېتىم ئاتاش ئۇقتۇرۇش چەكلىمىسىدىن ئېشىپ كەتتى."
+          other: "بۇ ئۇچۇر %{count} قېتىم ئاتاش ئۇقتۇرۇش چەكلىمىسىدىن ئېشىپ كەتتى."
+        too_many_mentions_admin:
+          one: 'بۇ ئۇچۇر %{count} قېتىم ئاتاش<a href="%{siteSettingUrl}" target="_blank"> ئۇقتۇرۇش چەكلىمىسى</a>دىن ئېشىپ كەتتى.'
+          other: 'بۇ ئۇچۇر %{count} قېتىم ئاتاش<a href="%{siteSettingUrl}" target="_blank"> ئۇقتۇرۇش چەكلىمىسى</a>دىن ئېشىپ كەتتى.'
+      aria_roles:
+        header: "سۆھبەت ماۋزۇسى"
+        composer: "سۆھبەت يازغۇچ"
+        channels_list: "سۆھبەت قانال تىزىمى"
+      no_direct_message_channels: "سىز تېخى ھېچقانداق بىۋاسىتە ئۇچۇرغا قاتناشمىغان!"
+      no_direct_message_channels_cta: "يېڭى سۆھبەت باشلا"
+      no_public_channels: "سىز تېخى ھېچقانداق قانالغا قاتناشمىدىڭىز!"
+      no_public_channels_cta: "قانالغا كۆز يۈگۈرت"
+      kicked_from_channel: "ئەمدى بۇ قانالنى زىيارەت قىلالمايسىز."
+      only_chat_push_notifications:
+        title: "پەقەت سۆھبەت تارقىتىش ئۇقتۇرۇشىنىلا ئەۋەتىدۇ"
+        description: "بارلىق سۆھبەت بولمىغان تارقىتىش ئۇقتۇرۇشى يوللاشنى توسىدۇ"
+      ignore_channel_wide_mention:
+        title: "قانال دائىرىسىدە ئاتاشقا پەرۋا قىلمايدۇ"
+        description: "قانال دائىرىسىدە ئاتاش (@here ۋە @all) ئۇقتۇرۇشى يوللىمايدۇ"
+      show_thread_title_prompts:
+        title: "سۆزلىشىش ماۋزۇ ئەسكەرتىشىنى كۆرسەت"
+        description: "يېڭى سۆزلىشىش ماۋزۇسىنىڭ ئەسكەرتىشىنى كۆرسەت"
+      open: "سۆھبەتنى ئاچ"
+      open_full_page: "پۈتۈن ئېكرانلىق سۆھبەتنى ئاچ"
+      close_full_page: "پۈتۈن ئېكرانلىق سۆھبەتنى تاقا"
+      open_message: "سۆھبەتتە ئۇچۇرنى ئاچ"
+      placeholder_self: "بىر نەرسە خاتىرىلەڭ"
+      placeholder_channel: "%{channelName} دا سۆھبەت"
+      placeholder_thread: "تېمىدا سۆھبەتلىشىڭ"
+      placeholder_users: "%{commaSeparatedNames} بىلەن سۆھبەت"
+      placeholder_group: "گۇرۇپپا ئىچىدە پاراڭلىشىش"
+      placeholder_new_message_disallowed:
+        archived: "قانال ئارخىپلاشتۇرۇلغان، ھازىر يېڭى ئۇچۇر يوللىيالمايسىز."
+        closed: "قانال تاقالغان، ھازىر يېڭى ئۇچۇر يوللىيالمايسىز."
+        read_only: "قانالنى ئوقۇشقىلا بولىدۇ، ھازىر يېڭى ئۇچۇر يوللىيالمايسىز."
+      placeholder_silenced: "بۇ ۋاقىتتا ئۇچۇر يوللىيالمايسىز."
+      remove_upload: "ھۆججەت چىقىرىۋەت"
+      react: "چىراي ئىپادىسىدە ئىنكاس قايتۇر"
+      reply: "جاۋاب"
+      edit: "تەھرىر"
+      copy_link: "ئۇلانما كۆچۈر"
+      copy_text: "تېكىستنى كۆچۈر"
+      rebake_message: "HTML نى قايتا قۇر"
+      message_too_long: "ئۇچۇر بەك ئۇزۇن، ئەڭ كۆپ بولغاندا %{count} ھەرپ بولۇشى كېرەك."
+      retry_staged_message:
+        title: "تور خاتالىقى"
+        action: "قايتا يوللامدۇ؟"
+      unreliable_network: "تور مۇقىم ئەمەس، ئۇچۇر يوللاش ۋە دەسلەپكى نۇسخىدا ساقلاش ئىشلىمەسلىكى مۇمكىن"
+      bookmark_message: "خەتكۈچ"
+      bookmark_message_edit: "خەتكۈچ تەھرىر"
+      restore: "ئۆچۈرۈلگەن ئۇچۇرنى ئەسلىگە قايتۇر"
+      save: "ساقلا"
+      select: "تاللا"
+      return_to_list: "قانال تىزىمىغا قايت"
+      return_to_channel: "قانالغا قايت"
+      return_to_threads_list: "تېما تىزىمىغا قايت"
+      unread_threads_count:
+        one: "سىز تېخى ئوقۇمىغان %{count} سۆھبەت بار"
+        other: "سىز تېخى ئوقۇمىغان %{count} سۆھبەت بار"
+      scroll_to_bottom: "ئەڭ ئاستىغا دومىلات"
+      scroll_to_new_messages: "يېڭى ئۇچۇرنى كۆرسەت"
+      sound:
+        title: "ئۈستەل يۈزى سۆھبەت ئۇقتۇرۇشىنىڭ ئاۋازى"
+      sounds:
+        none: "يوق"
+        bell: "قوڭغۇراق"
+        ding: "دىڭ"
+      title: "سۆھبەت"
+      title_capitalized: "سۆھبەت"
+      upload: "ھۆججەت يۈكلە"
+      upload_to_channel: "%{title} غا يۈكلە"
+      upload_to_thread: "تېمىغا يۈكلە"
+      uploaded_files:
+        one: "%{count} ھۆججەت"
+        other: "%{count} ھۆججەت"
+      you_flagged: "بۇ ئۇچۇرنى پاش قىلدىڭىز"
+      exit: "كەينى"
+      channel_status:
+        read_only_header: "قانال پەقەت ئوقۇلىدۇ"
+        read_only: "پەقەت ئوقۇلىدۇ"
+        archived_header: "قانال ئارخىپلاشتۇرۇلغان"
+        archived: "ئارخىپلاشتۇرۇلغان"
+        archive_failed: "قانالنى ئارخىپلاشتۇرالمىدى. %{completed}/%{total} ئۇچۇر ئارخىپلاشتۇرۇلدى. <a target=\"_blank\" href=\"%{topic_url}\">نىشان تېما</a> قۇرۇلدى. قايتا سىنانى چېكىپ ئارخىپلاشتۇرۇشنى تاماملاڭ."
+        archive_failed_no_topic: "قانالنى ئارخىپلاشتۇرالمىدى. %{completed}/%{total} ئۇچۇر ئارخىپلاشتۇرۇلدى. نىشان تېما قۇرۇلمىدى. قايتا سىنانى چېكىپ ئارخىپلاشتۇرۇشنى تاماملاڭ."
+        archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">ئارخىپ تېما</a>نى كۆرۈڭ"
+        closed_header: "قانال تاقالدى"
+        closed: "تاقالدى"
+        open_header: "قانال ئوچۇق"
+        open: "ئاچ"
+      browse:
+        back: "كەينى"
+        title: قانال
+        filter_all: ھەممىسى
+        filter_open: ئاچ
+        filter_closed: تاقالدى
+        filter_archived: ئارخىپلاشتۇرۇلغان
+        filter_input_placeholder: ئىسمى بويىچە قانال ئىزدە
+      chat_message_separator:
+        today: بۈگۈن
+        yesterday: تۈنۈگۈن
+      members_view:
+        filter_placeholder: ئەزا ئىزدە
+        add_member: ئەزا قوش
+        back_to_settings: "تەڭشەكلەرگە قايت"
+      about_view:
+        associated_topic: ئۇلانغان تېما
+        associated_category: ئۇلانغان سەھىپە
+        title: ماۋزۇ
+        name: ئىسمى
+        description: چۈشەندۈرۈش
+      channel_info:
+        back_to_all_channels: "بارلىق قانالل"
+        back_to_channel: "كەينى"
+        tabs:
+          members: ئەزا
+          settings: تەڭشەك
+        remove_member: "چىقىرىۋەت"
+      new_message_modal:
+        title: ئۇچۇر يوللا
+        add_user_long: <kbd>shift + چېكىش</kbd> ياكى <kbd>shift + enter</kbd><span>قوش @%{username}</span>
+        add_user_short: <span>ئىشلەتكۈچى قوش</span>
+        open_channel: <span>قانال ئاچ</span>
+        default_search_placeholder: "#بىر-قانال، @بىرسى ياكى خالىغان مەزمۇن"
+        default_channel_search_placeholder: "#بىر-قانال"
+        default_user_search_placeholder: "@بىرسى"
+        user_search_placeholder: "... تېخىمۇ كۆپ ئەزا قوش"
+        disabled_user: "سۆھبەت چەكلەنگەن"
+        no_items: "تۈر يوق"
+        create_group_placeholder: "گۇرۇپپا سۆھبەت ئىسمى (تاللاشچان)"
+        participants_counter: "%{selection_count}/%{max} قاتناشقۇچى"
+        new_group_chat: "يېڭى گۇرۇپپا سۆھبىتى"
+        filter: "سۈزگۈچ"
+        cant_add_more_members: "ئەزا سانى يۇقىرى چەككە يەتتى"
+        create_new_group_chat: "گۇرۇپپا سۆھبىتى قۇر"
+        group_with_too_many_members: "ئەزالىرى بەك كۆپ (%{membersCount})"
+      channel_edit_name_slug_modal:
+        title: قانال تەھرىر
+        input_placeholder: ئات قوش
+        slug_description: تور ئادرېسىدا قانال ئىسمىنى ئىشلەتمەي قانال قىسقارتىلما ئىشلىتىدۇ
+        name: قانال ئىسمى
+        slug: قانال قىسقارتىلمىسى (تاللاشچان)
+      channel_edit_description_modal:
+        title: چۈشەندۈرۈش تەھرىر
+        input_placeholder: چۈشەندۈرۈش قوش
+        description: كىشىلەرگە بۇ قانال ھەققىدە چۈشەندۈرۈش بېرىدۇ
+      direct_message_creator:
+        add_to_channel: "قانالغا قوش"
+        title: يېڭى ئۇچۇر
+        prefix: "كىمگە:"
+        no_results: نەتىجە يوق
+        selected_user_title: "%{username} نى تاللىما"
+        group_name: "گۇرۇپپا سۆھبەت ئىسمى (تاللاشچان)"
+        members_counter:
+          one: "%{count}/%{max} ئەزا"
+          other: "%{count}/%{max} ئەزا"
+      channel:
+        no_memberships: بۇ قانالنىڭ ھېچقانداق ئەزاسى يوق
+        no_memberships_found: ھېچقانداق ئەزا تېپىلمىدى
+        memberships_count:
+          one: "%{count} ئەزا"
+          other: "%{count} ئەزا"
+      create_channel:
+        threading:
+          label: "تېما رەتلەشنى قوزغات"
+        auto_join_users:
+          public_category_warning: "%{category} ئاشكارا سەھىپە. يېقىنقى بارلىق ئاكتىپ ئەزالارنى مەزكۇر قانالغا ئۆزلۈكىدىن قوشسۇنمۇ؟"
+          warning_1_group:
+            one: "%{group} دىن %{count} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشسۇنمۇ؟"
+            other: "%{group} دىن %{count} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشسۇنمۇ؟"
+          warning_2_groups:
+            one: "%{group1} ۋە %{group2} دىن %{count} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشسۇنمۇ؟"
+            other: "%{group1} ۋە %{group2} دىن %{count} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشسۇنمۇ؟"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {{GroupName} ۋە باشقا {groupCount}  گۇرۇپپىدىن {userCount} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشامدۇ؟}
+                        other {{GroupName} ۋە باشقا {groupCount}  گۇرۇپپىدىن {userCount} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشامدۇ؟}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {{GroupName} ۋە باشقا {groupCount}  گۇرۇپپىدىن {userCount} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشامدۇ؟}
+                        other {{GroupName} ۋە باشقا {groupCount}  گۇرۇپپىدىن {userCount} ئىشلەتكۈچىنى ئۆزلۈكىدىن قوشامدۇ؟}
+                      }
+                    }
+            }
+        choose_category:
+          label: "سەھىپە تاللىنىدۇ"
+          none: "بىرى تاللىنىدۇ…"
+          default_hint: <a href=%{link} target="_blank">%{category} بىخەتەرلىك تەڭشىكى</a> زىيارىتىنىڭ ئىجازىتىنى باشقۇرىدۇ
+          hint_1_group: '%{group} دىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
+          hint_2_groups: '%{group1} ۋە %{group2} دىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
+          hint_multiple_groups:
+            one: '%{group} ۋە باشقا %{count} گۇرۇپپىدىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
+            other: '%{group} ۋە باشقا %{count} گۇرۇپپىدىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
+        create: "قانال قۇر"
+        description: "چۈشەندۈرۈش (تاللاشچان)"
+        name: "قانال ئىسمى"
+        slug: "قانال قىسقارتىلمىسى (تاللاشچان)"
+        title: "يېڭى قانال"
+        type: "تىپى"
+        types:
+          category: "سەھىپە"
+          topic: "تېما"
+      reviewable:
+        type: "سۆھبەت ئۇچۇرى"
+      reactions:
+        only_you: "<span>سىز </span>:%{emoji}بىلەن ئىنكاس قايتۇردىڭىز:"
+        you_and_single_user: "<span>سىز ۋە %{username} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
+        you_and_multiple_users: "<span>سىز، %{commaSeparatedUsernames} ۋە %{username} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
+        you_multiple_users_and_more:
+          one: "<span>سىز، %{commaSeparatedUsernames} ۋە باشقا %{count} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
+          other: "<span>سىز، %{commaSeparatedUsernames} ۋە باشقا %{count} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
+        single_user: "<span>%{username}</span>:%{emoji} بىلەن ئىنكاس قايتۇردى:"
+        multiple_users: "<span>%{commaSeparatedUsernames} ۋە %{username} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
+        multiple_users_and_more:
+          one: "<span>سىز، %{commaSeparatedUsernames} ۋە باشقا %{count} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
+          other: "<span>سىز، %{commaSeparatedUsernames} ۋە باشقا %{count} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
+      composer:
+        toggle_toolbar: "قورال بالداقنى ئالماشتۇر"
+        italic_text: "يانتۇ تېكىست"
+        bold_text: "توم تېكىست"
+        code_text: "كود تېكىستى"
+        send: "يوللا"
+      quote:
+        original_channel: 'دەسلەپتە <a href="%{channelLink}">%{channel}</a> دا يوللاندى'
+        copy_success: "سۆھبەت نەقىلى چاپلاش تاختىسىغا كۆچۈرۈلدى"
+        default_thread_title: "تېما"
+      notification_levels:
+        never: "ھەرگىز"
+        mention: "ئاتاشلا"
+        always: "ھەممە پائالىيەت ئۈچۈن"
+      settings:
+        channel_wide_mentions_label: "@All ۋە @here ئاتاشقا يول قويىدۇ"
+        channel_wide_mentions_description: "ئىشلەتكۈچى @all ئارقىلىق #%{channel} نىڭ ھەممە ئەزالىرىغا ياكى @here ئارقىلىق نۆۋەتتىكى ئاكتىپ ئىشلەتكۈچىگە ئۇقتۇرالايدۇ"
+        channel_threading_label: "تېما رەتلەش"
+        channel_threading_description: "تېما رەتلەش قوزغىتىلسا، سۆھبەت ئۇچۇرىغا جاۋاب بېرىش ئايرىم سۆھبەت ھاسىل قىلىدۇ، بۇ ئاساسىي قانالنىڭ يېنىدا بولىدۇ."
+        auto_join_users_label: "ئىشلەتكۈچىنى ئاپتوماتىك قوش"
+        auto_join_users_info: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار %{category} سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
+        auto_join_users_info_no_category: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار تاللانغان سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
+        auto_join_users_warning: "بۇ قانالنىڭ ئەزاسى ئەمەس ھەمدە %{category} سەھىپىنى زىيارەت قىلالايدىغان ئىشلەتكۈچىنىڭ ھەممىسى قوشۇلىدۇ. جەزملەمسىز؟"
+        notification_level: "ئىتتىرىش ئۇقتۇرۇشى يوللايدۇ"
+        follow: "قوشۇل"
+        followed: "قوشۇلدى"
+        mute: "قانالنى ئۈنسىزلە"
+        threading_enabled: "قوزغىتىلدى"
+        threading_disabled: "چەكلەندى"
+        muted_on: "ئوچۇق"
+        muted_off: "تاقاق"
+        notifications: "ئۇقتۇرۇش"
+        preview: "ئالدىن كۆزەت"
+        save: "ساقلا"
+        saved: "ساقلاندى"
+        unfollow: "ئايرىل"
+        admin_title: "باشقۇرغۇچى"
+        settings_title: "تەڭشەك"
+        info_title: "قانال ئۇچۇرى"
+        category_label: "سەھىپە"
+        history_label: "تارىخ"
+        members_label: "ئەزا"
+      admin:
+        title: "سۆھبەت"
+        export_messages:
+          title: "سۆھبەت ئۇچۇرىنى چىقار"
+          description: "بۇ بارلىق قانالدىكى ھەممە ئۇچۇرنى چىقىرىدۇ."
+          create_export: "چىقىرىش قۇر"
+          confirm_export: "بارلىق قاناللاردىن ھەممە ئۇچۇرنى چىقىرىپ نەتىجىسىنى شەخسىي ئۇچۇردا سىزگە يوللايدۇ. راستتىنلا چىقىرامسىز؟"
+          export_has_started: "چىقىرىش باشلاندى. چىقىرىش تەييار بولغاندا بىر شەخسىي ئۇچۇر تاپشۇرۇۋالىسىز."
+      my_threads:
+        title: تېمام
+        aria_label: "تېما تىزىمىمغا ئالماش"
+      direct_messages:
+        title: "بىۋاسىتە ئۇچۇر"
+        aria_label: "بىۋاسىتە ئۇچۇرغا ئالماشتۇر"
+        new: "شەخسىي سۆھبەت قۇر"
+        create: "باشلا"
+        leave: "بۇ شەخسىي سۆھبەتتىن ئايرىل"
+        close: "بۇ شەخسىي سۆھبەتنى تاقا"
+        cannot_create: "كەچۈرۈڭ، بىۋاسىتە ئۇچۇر يوللىيالمايسىز."
+      channel_list:
+        title: "قانال"
+        aria_label: "قانال تىزىمىغا ئالماش"
+      incoming_webhooks:
+        back: "كەينى"
+        channel_placeholder: "قانال تاللىنىدۇ"
+        channel: "قانال"
+        confirm_destroy: "كەلگەن تور ئىلمىكىنى راستتىنلا ئۆچۈرەمسىز؟ بۇنى ئارقىغا ياندۇرغىلى بولمايدۇ."
+        current_emoji: "نۆۋەتتىكى چىراي ئىپادە"
+        description: "چۈشەندۈرۈش"
+        delete: "ئۆچۈر"
+        emoji: "چىراي ئىپادە"
+        emoji_instructions: "ئەگەر بوش قالدۇرۇلسا سىستېمىدىكى سىما ئىشلىتىلىدۇ."
+        name: "ئىسمى"
+        name_placeholder: "ئىسمى…"
+        new: "كەلگەن يېڭى تور ئىلمىكى"
+        none: "مەۋجۇت كەلگەن تور ئىلمىكى قۇرۇلمىدى."
+        no_emoji: "ھېچقانداق چىراي ئىپادە تاللانمىدى"
+        post_to: "يازما ئورنى"
+        reset_emoji: "چىراي ئىپادىنى ئەسلىگە قايتۇر"
+        save: "ساقلا"
+        edit: "تەھرىر"
+        select_emoji: "چىراي ئىپادە تاللا"
+        system: "سىستېما"
+        title: "كەلگەن تور ئىلمىكى"
+        header_description: "سىرتقى سىستېما كەلگەن تور ئىلمىكىنى ئىشلىتىپ ئۇچۇرنى ماشىنا ئادەم ئىشلەتكۈچى سۈپىتىدە بەلگىلەنگەن سۆھبەت قانىلىغا يوللاشتا قوللىنىدۇ"
+        url: "تور ئادرېسى"
+        url_instructions: "بۇ تور ئادرېسىنىڭ مەخپىي قىممىتى بار- ئۇنى بىخەتەر ساقلاڭ."
+        username: "ئىشلەتكۈچى ئاتى"
+        username_instructions: "قانالغا يوللىنىدىغان ماشىنا ئادەمنىڭ ئىسمى. بوش قالدۇرۇلسا كۆڭۈلدىكى ئەھۋالدا «سىستېما»."
+        instructions: "سىرتقى سىستېما كەلگەن تور ئىلمىكىنى ئىشلىتىپ ماشىنا ئادەم ئىشلەتكۈچى سۈپىتىدە <code>/hooks/:key</code> ئاخىرقى نۇقتا ئارقىلىق ئۇچۇرنى بەلگىلەنگەن سۆھبەت قانىلىغا تارقىتالايدۇ. ئۈنۈملۈك يۈكى يەككە <code>text</code> پارامېتىرىدىن تەشكىل تاپىدۇ، 2000 ھەرپتە چەكلىنىدۇ. \n<br><br>بىز يەنە چەكلىك بولغان Slack پىچىمىدىكى <code>text</code> پارامېتىرى ۋە <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> ئاساسىدىكى پىچىملىق ئۇلانما ۋە ئاتاشنى قوللايدۇ، ئەمما بۇنىڭغا چوقۇم <code>/hooks/:key/slack</code> ئاخىرقى نۇقتا ئىشلىتىش كېرەك."
+        saved: "تور ئىلمىكىنىڭ ئۆزگىرىشلىرى ساقلاندى"
+        created: "تور ئىلمىكى قۇرۇلدى"
+      selection:
+        cancel: "ۋاز كەچ"
+        quote_selection: "تېمىدىكى نەقىل"
+        copy: "كۆچۈر"
+        delete: "ئۆچۈر (%{selectionCount}/%{totalCount})"
+        move_selection_to_channel: "قانالغا يۆتكە"
+        error: "سۆھبەت ئۇچۇرىنى يۆتكەۋاتقاندا خاتالىق كۆرۈلدى"
+        title: "سۆھبەتنى تېمىغا يۆتكەيدۇ"
+        new_topic:
+          title: "يېڭى تېمىغا يۆتكەيدۇ"
+          instructions:
+            one: "سىز يېڭى بىر سۆھبەت قۇرۇپ تاللىغان <b>%{count}</b> سۆھبەت ئۇچۇرى بىلەن تولدۇرىسىز."
+            other: "سىز يېڭى بىر سۆھبەت قۇرۇپ تاللىغان <b>%{count}</b> سۆھبەت ئۇچۇرى بىلەن تولدۇرىسىز."
+          instructions_channel_archive: "سىز يېڭى تېمىدىن بىرنى قۇرۇپ، قانال ئۇچۇرلىرىنى ئۇنىڭغا ئارخىپلاشتۇرىسىز."
+        existing_topic:
+          title: "مەۋجۇت تېمىغا يۆتكەل"
+          instructions:
+            one: "بۇ سۆھبەتتىكى <b>%{count}</b> ئۇچۇرنى يۆتكىمەكچى بولغان تېمىنى تاللاڭ."
+            other: "بۇ سۆھبەتتىكى <b>%{count}</b> ئۇچۇرنى يۆتكىمەكچى بولغان تېمىنى تاللاڭ."
+          instructions_channel_archive: "قانال ئۇچۇرىنى ئارخىپلاشتۇرىدىغان تېمىنى تاللاڭ:"
+        new_message:
+          title: "يېڭى ئۇچۇرغا يۆتكە"
+          instructions:
+            one: "سىز يېڭى بىر ئۇچۇر قۇرۇپ تاللىغان سۆھبەت ئۇچۇرى بىلەن تولدۇرىسىز."
+            other: "سىز يېڭى بىر ئۇچۇر قۇرۇپ تاللىغان <b>%{count}</b> سۆھبەت ئۇچۇرى بىلەن تولدۇرىسىز."
+      replying_indicator:
+        single_user: "%{username} يېزىۋاتىدۇ"
+        multiple_users: "%{commaSeparatedUsernames} ۋە %{lastUsername} يېزىۋاتىدۇ"
+        many_users:
+          one: "%{commaSeparatedUsernames} ۋە باشقا %{count} كىشى يېزىۋاتىدۇ"
+          other: "%{commaSeparatedUsernames} ۋە باشقا %{count} كىشى يېزىۋاتىدۇ"
+      retention_reminders:
+        indefinitely_short: "مۇددەتسىز"
+        indefinitely_long: "سۆھبەت تەڭشەكلىرى قانال ئۇچۇرلىرىنى مۇددەتسىز ساقلاپ قېلىشقا تەڭشەلدى."
+        short:
+          one: "%{count} كۈن"
+          other: "%{count} كۈن"
+        long:
+          one: "سۆھبەت تەڭشەكلىرى قانال ئۇچۇرلىرىنى %{count} كۈن ساقلاپ قېلىشقا تەڭشەلدى."
+          other: "سۆھبەت تەڭشەكلىرى قانال ئۇچۇرلىرىنى %{count} كۈن ساقلاپ قېلىشقا تەڭشەلدى."
+      flags:
+        off_topic: "بۇ ئۇچۇر بىلەن قانال ماۋزۇسىدا بەلگىلەنگەن نۆۋەتتىكى سۆھبەت بىلەن مۇناسىۋەتسىز، باشقا جايغا يۆتكەش لازىم بولۇشى مۇمكىن."
+        inappropriate: "ئەقىللىق ئادەم بۇ ئۇچۇردا ھۇجۇم، ھاقارەت ياكى <a href=\"%{basePath}/guidelines\">جامائەت مىزانىمىز</a>غا خىلاپ مەزمۇن بار دەپ قارايدۇ."
+        illegal: "بۇ يازمىغا باشقۇرغۇچى دىققەت قىلىشى زۆرۈر چۈنكى ئۇنىڭدا قانۇنسىز مەزمۇن بارلىقىغا ئىشىنىمەن."
+        spam: "بۇ ئۇچۇر ئېلان ياكى بۇزغۇنچىلىق. ئۇ نۆۋەتتىكى قانالغا پايدىسىز ياكى مۇناسىۋەتسىز."
+        notify_user: "مەن ئۇلارنىڭ ئۇچۇرى ھەققىدە بۇ كىشى بىلەن بىۋاسىتە ۋە ئۆزۈم سۆزلەشمەكچى."
+        notify_moderators: "ئۈستىدە تىزىلمىغان باشقا بىر سەۋەب تۈپەيلىدىن، بۇ ئۇچۇرغا باشقۇرغۇچىلار دىققەت قىلىشى كېرەك."
+      flagging:
+        action: "ئۇچۇر پاش قىل"
+      emoji_picker:
+        favorites: "دائىم ئىشلىتىدىغان"
+        smileys_&_emotion: "چىراي ئىپادە ۋە تۇيغۇ"
+        objects: "جىسىم"
+        people_&_body: "ئادەم ۋە بەدەن"
+        travel_&_places: "ساياھەت ۋە ئورۇن"
+        animals_&_nature: "ھايۋان ۋە تەبىئەت"
+        food_&_drink: "يېمەكلىك ۋە ئىچىملىك"
+        activities: "پائالىيەت"
+        flags: "بايراق"
+        symbols: "بەلگە"
+        search_placeholder: "چىراي ئىپادە ئىسمى ۋە لەقىمى بىلەن ئىزدەيدۇ…"
+        no_results: "نەتىجە يوق"
+      thread:
+        title: "ماۋزۇ"
+        view_thread: تېما كۆرسەت
+        replies:
+          one: "%{count} جاۋاب"
+          other: "%{count} جاۋاب"
+        label: تېما
+        close: "تېما تاقا"
+        original_message:
+          started_by: "باشلىغۇچى"
+        settings: "تەڭشەكلەر"
+        last_reply: "ئاخىرقى جاۋاب"
+        notifications:
+          regular:
+            title: "ئادەتتىكى"
+            description: "باشقىلار بۇ تېمىدا سىزنى تىلغا ئالغاندا خەۋەر قىلىنىسىز."
+          tracking:
+            title: "ئىزلاش"
+            description: "باشقىلار سىزنى بۇ تېمىدا تىلغا ئالغاندا خەۋەر قىلىنىسىز ۋە تېما تىزىمىدىكى يېڭى جاۋابلارنىڭ سانى كۆرۈنىدۇ."
+          watching:
+            title: "كۆزىتىۋاتىدۇ"
+            description: "بۇ تېمىدىكى بارلىق جاۋابلاردىن خەۋەردار قىلىنىسىز ۋە تېما تىزىمىدىكى يېڭى جاۋابلارنىڭ سانى كۆرۈنىدۇ."
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
+      thread_title_toast:
+        title: "سۆزلىشىش ماۋزۇسىنى تەڭشەيدۇ"
+        message: "باشقىلارنىڭ بۇ سۆھبەتنى بايقىشىغا ياردەم قىلىدۇ."
+        dismiss_action: "قايتا كۆرسەتمە"
+        primary_action: "ماۋزۇ تەڭشەك"
+      thread_title_modal:
+        title: "سۆزلىشىش ماۋزۇسىنى تەڭشەيدۇ"
+        input_placeholder: "باشقىلارغا بۇ سۆھبەتنىڭ نېمە ھەققىدە ئىكەنلىكىنى بىلدۈرىدۇ…"
+        discourse_ai:
+          title: "سۆزلىتىش ماۋزۇسىنى ئۆزلۈكىدىن ھاسىللايدۇ"
+          description: "%{url} نى كۆرۈپ مەزكۇر ئىقتىدار ۋە Discourse ئىشلىتىش كەچۈرمىشىنىڭ باشقا كۈچەيتىلگەن ئىقتىدارلىرى ھەققىدىكى تەپسىلىي ئۇچۇرلانى بىلەلەيسىز."
+      threads:
+        open: "تېما ئاچ"
+        list: "تېما"
+        none: "سىز بۇ قانالدىكى ھېچقانداق تېمىغا قاتناشماپسىز."
+      draft_channel_screen:
+        header: "يېڭى ئۇچۇر"
+        cancel: "ۋاز كەچ"
+      quick_reaction_type:
+        title: "بىر چېكىپ پاراڭلىشىش ئىنكاسى"
+        options:
+          frequent: "دائىم ئىشلىتىلىدىغان پاراڭلىشىش ئىنكاسى"
+          custom: "ئىختىيارى ئىنكاس"
+    notifications:
+      chat_invitation: "سۆھبەت قانىلىغا تەكلىپ قىلىندىڭىز"
+      chat_invitation_html: "<span>%{username}</span> <span>سىزنى سۆھبەت قانىلىغا تەكلىپ قىلدى</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} ۋە %{username2}"
+        other: "%{username} ۋە باشقا %{count} كىشى"
+      popup:
+        chat_mention:
+          direct: '«%{channel}» دا ئاتالدىڭىز'
+          direct_html: '<span>%{username}</span> <span>«%{channel}» دا سىزنى ئاتىدى</span>'
+          other_plain: '«%{channel}» دا «%{identifier}» ئاتالدى'
+          other_html: '<span>%{username}</span> <span>«%{channel}» دا %{identifier} ئاتالدى</span>'
+        direct_message_chat_mention:
+          direct: "شەخسىي سۆھبەتتە ئاتالدىڭىز"
+          direct_html: "<span>%{username}</span> <span>شەخسىي سۆھبەتتە سىزنى ئاتىدى</span>"
+          other_plain: "شەخسىي سۆھبەتتە %{identifier} ئاتالدى"
+          other_html: "<span>%{username}</span> <span>شەخسىي سۆھبەتتە %{identifier} ئاتالدى</span>"
+        chat_message: "يېڭى سۆھبەت ئۇچۇرى"
+        chat_quoted: "سۆھبەت ئۇچۇرىڭىزنى %{username} نەقىل ئالدى"
+      titles:
+        chat_mention: "سۆھبەتتە تىلغا ئالغان"
+        chat_invitation: "سۆھبەت قانىلىغا تەكلىپ قىلىنغان"
+        chat_quoted: "سۆھبەت ئۇچۇرى نەقىل ئېلىنغان"
+        chat_watched_thread: "سۆھبەت تېمىسى كۆزىتىلگەن"
+    action_codes:
+      chat:
+        enabled: '%{when} دە %{who} <button class="btn-link open-chat">سۆھبەت</button>نى قوزغاتتى'
+        disabled: "%{when} دە %{who} سۆھبەتنى تاقىدى"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: سۆھبەت ئۇچۇرى يوللا
+          fields:
+            chat_channel_id:
+              label: سۆھبەت قانال كىملىكى
+            message:
+              label: ئۇچۇر
+            sender:
+              label: يوللىغۇچى
+              description: كۆڭۈلدىكىسى سىستېما
+    review:
+      transcript:
+        view: "ئىلگىرىكى ئۇچۇرلارنىڭ كۆپەيتىلمىسىنى كۆرسىتىدۇ"
+      types:
+        chat_reviewable_message:
+          title: "پاش قىلىنغان سۆھبەت ئۇچۇرى"
+        reviewable_chat_message:
+          title: "بايراقلىق سۆھبەت ئۇچۇرى"
+          noun: "سۆھبەت ئۇچۇرى"
+    keyboard_shortcuts_help:
+      chat:
+        title: "سۆھبەت"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} قانال ئالماشتۇر"
+          switch__unread_channel_arrows: "%{shortcut} ئوقۇلمىغان قانالغا ئالماشتۇرىدۇ"
+          open_quick_channel_selector: "%{shortcut} تېز قانال تاللىغۇچنى ئاچ"
+          open_insert_link_modal: "%{shortcut} ئۇلانما قىستۇر (كىرگۈزۈش كۆزنىكىلا)"
+          composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"
+          composer_italic: "%{shortcut} يانتۇ (كىرگۈزۈش كۆزنىكىلا)"
+          composer_code: "%{shortcut} كود (كىرگۈزۈش كۆزنىكىلا)"
+          drawer_open: "%{shortcut} سۆھبەت تارتمىسىنى ئاچ"
+          drawer_close: "%{shortcut} سۆھبەت تارتمىسىنى ياپ"
+          mark_all_channels_read: "%{shortcut} ھەممە قانالغا ئوقۇلدى بەلگىسى سال"
+    topic_statuses:
+      chat:
+        help: "بۇ تېمىدا سۆھبەتلىشىش قوزغىتىلغان"
+    user:
+      allow_private_messages: "باشقا ئىشلەتكۈچىلەرنىڭ ماڭا شەخسىي ئۇچۇر ۋە سۆھبەت بىۋاسىتە ئۇچۇرى يوللىشىغا يول قويىدۇ"
+      muted_users_instructions: "بۇ ئىشلەتكۈچىلەردىن كېلىدىغان بارلىق ئۇقتۇرۇش، شەخسىي ئۇچۇر ۋە سۆھبەت بىۋاسىتە ئۇچۇرىنى چەكلەيدۇ."
+      allowed_pm_users_instructions: "بۇ ئىشلەتكۈچىلەردىن شەخسىي ئۇچۇر ياكى سۆھبەت بىۋاسىتە ئۇچۇرىغا يول قويىدۇ."
+      allow_private_messages_from_specific_users: "بەلگىلەنگەن ئىشلەتكۈچىلەرنىڭلا ماڭا شەخسىي ئۇچۇر ياكى سۆھبەت بىۋاسىتە ئۇچۇرى يوللىشىغا يول قويىدۇ"
+      ignored_users_instructions: "بۇ ئىشلەتكۈچىلەردىن كېلىدىغان بارلىق يازما، ئۇچۇر، ئۇقتۇرۇش، شەخسىي ئۇچۇر ۋە سۆھبەت بىۋاسىتە ئۇچۇرىنى چەكلەيدۇ."
+    user_menu:
+      no_chat_notifications_title: "ھازىرچە ھېچقانداق سۆھبەت ئۇقتۇرۇشىڭىز يوق"
+      no_chat_notifications_body: >
+        بىرەيلەن سۆھبەتتە سىزگە بىۋاسىتە ئۇچۇر يوللىسا ياكى <b>@</b> ئاتىسا، بۇ تاختىدا ئۇقتۇرۇش تاپشۇرۇۋالىسىز. بىر مەزگىل تىزىمغا كىرمىگەن بولسىڭى، ئۇقتۇرۇش ئېلخىتىڭىزگىمۇ يوللىنىدۇ. <br><br>خالىغان سۆھبەت قانىلىنىڭ چوققىسىدىكى ماۋزۇسىنى چېكىپ شۇ قانالدا ئۇقتۇرۇش تاپشۇرۇۋېلىش تەڭشىكىنى سەپلىيەلەيسىز. تەپسىلاتىنى <a href='%{preferencesUrl}'>ئۇقتۇرۇش مايىللىقى</a>دىن كۆرۈڭ.
+      tabs:
+        chat_notifications: "سۆھبەت ئۇقتۇرۇشى"
+        chat_notifications_with_unread:
+          one: "سۆھبەت ئۇقتۇرۇشى - %{count} ئوقۇلمىغان ئۇقتۇرۇش"
+          other: "سۆھبەت ئۇقتۇرۇشى - %{count} ئوقۇلمىغان ئۇقتۇرۇش"
+    styleguide:
+      sections:
+        chat:
+          title: سۆھبەت
+    sidebar:
+      panels:
+        chat:
+          label: "سۆھبەت"

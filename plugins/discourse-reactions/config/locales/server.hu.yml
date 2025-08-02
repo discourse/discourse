@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  site_settings:
+    discourse_reactions_reaction_for_like: "Meghatározza a Kedvelés művelethez társított reakciót. Ha ez a beállítás megváltozik, a régebbi reakciók nem módosulnak, ezért <strong>erősen ajánlott</strong> , hogy ezt a beállítást soha ne módosítsa."
+    discourse_reactions_enabled: "A discourse-reaction bővítmény engedélyezése."
+    discourse_reactions_enabled_reactions: "Meghatározza az engedélyezett reakciók listáját, itt minden emodzsi engedélyezett."
+    discourse_reactions_desaturated_reaction_panel: "Csökkenti a reakciók vizuális zaját azáltal, hogy ki vannak szürkítve, ameddig föléjük nem viszi az egeret."
+    discourse_reactions_excluded_from_like: "Olyan reakciók, amelyek nem számítanak Kedvelésnek. Azok a reakciók, amelyek nem szerepelnek ezen a listán, Kedvelésenk számítanak a jelvények, a jelentéstétel és egyéb célok érdekében."
+    discourse_reactions_like_sync_enabled: "Ha ez be van kapcsolva, az előzményreakciókhoz a megfelelő Like-rekordok jönnek létre, kivéve a „discourse_reactions_excluded_from_like” paraméterben meghatározott reakciókat. Ez a szinkronizálás rendszeresen megtörténik a háttérben, és akkor is, ha módosítja a `discourse_reactions_excluded_from_like` paramétert."
+    errors:
+      invalid_excluded_emoji: "Nem zárhatja ki azokat a hangulatjeleket, amelyek nem szerepelnek a „beszédreakciók engedélyezett reakcióiban”, és nem zárhatók ki a „beszédreakciók hasonlóra adott reakciói” emojik sem."
+  badges:
+    first_reaction:
+      name: Első reakció
+      description: Reagált a bejegyzésre
+      long_description: |
+        Ezt a jelvényt akkor kapja meg, amikor először reagál egy bejegyzésre. A bejegyzésekre reagálás nagyszerű módja annak, hogy a közösség tagjai tudják, hogy amit közzé tettek, érdekesek, hasznosak, jók vagy szórakoztatók voltak az Ön számára. Ossza meg a reakcióját!
+  reports:
+    reactions:
+      title: "Reakciók"
+      description: "A legutóbbi reakciók felsorolása."
+      labels:
+        day: "Nap"

@@ -1,0 +1,46 @@
+<div itemscope itemtype='http://schema.org/WebPage'>
+  <meta itemprop='lastReviewed' content='<%= @topic.first_post.updated_at.to_date.to_formatted_s(:iso_8601) %>'>
+  <ul class='nav-pills' role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+    <% unless SiteSetting.login_required? && current_user.nil? %>
+      <li class="nav-item-about"><%= link_to t('js.about.simple_title'), about_index_path %></a></li>
+      <% if @faq_overridden %>
+        <li class='nav-item-guidelines'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%= guidelines_path %>'><%= t 'js.guidelines' %></a></li>
+        <li class='nav-item-faq'><a href='<%= faq_path %>'><%= t 'js.faq' %></a></li>
+      <% elsif @experimental_rename_faq_to_guidelines %>
+        <li class='nav-item-guidelines'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%=guidelines_path%>'><%= t 'js.guidelines' %></a></li>
+      <% else %>
+        <li class='nav-item-faq'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%=faq_path%>'><%= t 'js.faq' %></a></li>
+      <% end %>
+    <% end %>
+    <% if tos_url.present? %>
+      <li class='nav-item-tos'><a href='<%= tos_url %>' class='<%= @page == 'tos' ? 'active' : '' %>'><%= t 'js.tos' %></a></li>
+    <% end %>
+    <% if privacy_policy_url.present? %>
+      <li class='nav-item-privacy'><a href='<%= privacy_policy_url %>' class='<%= @page == 'privacy' ? 'active' : '' %>'><%= t 'js.privacy' %></a></li>
+    <% end %>
+  </ul>
+
+  <% if staff? %>
+    <p><a href='<%= @topic.url %>'>
+      <svg class="fa d-icon d-icon-pencil svg-icon" xmlns="http://www.w3.org/2000/svg">
+        <use href="#pencil"></use>
+      </svg>
+      <%= t 'edit_this_page' %>
+    </a></p>
+  <% end %>
+
+  <div itemprop='mainContentOfPage'>
+    <%= @body.html_safe %>
+  </div>
+</div>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: @title, description: SiteSetting.site_description) %>
+  <% end %>
+<% else %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+  <% end %>
+<% end %>

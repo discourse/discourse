@@ -1,0 +1,47 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  site_settings:
+    poll_enabled: "Permitir enquisas?"
+    poll_maximum_options: "Número máximo de opcións permitidas nunha enquisa."
+    poll_edit_window_mins: "Número de minutos en que se permite editar a enquisa desde o momento en que se crea unha publicación"
+    poll_minimum_trust_level_to_create: "Defina o nivel de confianza mínimo para crear enquisas"
+    poll_groupable_user_fields: "Un conxunto de nomes de campo de usuario que se poden empregar para agrupar e filtrar os resultados da votación."
+  poll:
+    poll: "enquisa"
+    invalid_argument: "O valor «%{value}» non é válido para o argumento «%{argument}»."
+    multiple_polls_with_same_name: "Hai múltiplas enquisas co mesmo nome: <strong>%{name}</strong>. Utiliza o atributo «<code>nome</code>» para singularizar as súas enquisas."
+    default_poll_must_have_at_least_1_option: "A enquisa debe ter polo menos unha opción"
+    named_poll_must_have_at_least_1_option: "A enquisa chamada <strong>%{name}</strong> debe ter polo menos 1 opción."
+    default_poll_must_have_less_options:
+      one: "A enquisa debe ter cando menos %{count} opción."
+      other: "A enquisa debe ter cando menos %{count} opcións."
+    named_poll_must_have_less_options:
+      one: "A enquisa chamada <strong>%{name}</strong> debe ter menos de %{count} opción."
+      other: "A enquisa chamada <strong>%{name}</strong> debe ter menos de %{count} opcións."
+    default_poll_must_have_different_options: "A enquisa debe ter diferentes opcións."
+    named_poll_must_have_different_options: "A enquisa chamada strong>%{name}</strong> debe ter diferentes opcións."
+    default_poll_must_not_have_any_empty_options: "A enquisa non pode ter ningunha opción baleira."
+    named_poll_must_not_have_any_empty_options: "A enquisa chamada <strong>%{name}</strong> non debe ter ningunha opción baleira."
+    default_poll_with_multiple_choices_has_invalid_parameters: "A enquisa con varios apartados ten parámetros incorrectos."
+    named_poll_with_multiple_choices_has_invalid_parameters: "A enquisa chamada <strong>%{name}</strong> con varios apartados ten parámetros incorrectos."
+    requires_at_least_1_valid_option: "Debe seleccionar cando menos 1 opción válida."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Non pode cambiar unha enquisa despois dos primeiros %{minutes} minutos."
+      cannot_edit_named_poll_with_votes: "Non pode cambiar o nome da enquisa <strong>${name}</strong> despois dos primeiros %{minutes} minutos."
+    no_poll_with_this_name: "Non hai ningunha enquisa chamada <strong>%{name}</strong> asociada con esta publicación."
+    post_is_deleted: "Non se pode actuar sobre unha publicación eliminada."
+    user_cant_post_in_topic: "Non pode votar porque non pode publicar neste tema."
+    topic_must_be_open_to_vote: "O tema debe estar aberto para votalo."
+    poll_must_be_open_to_vote: "A enquisa debe estar aberta para votala."
+    topic_must_be_open_to_toggle_status: "O tema debe estar aberto para trocalo de estado."
+    only_staff_or_op_can_toggle_status: "Soamente un membro do equipo ou quen publicou orixinalmente poden trocar o estado dunha enquisa."
+    insufficient_rights_to_create: "Non ten permiso para crear enquisas"
+    email:
+      link_to_poll: "Prema para ver a enquisa."
+    user_field:
+      no_data: "Non hai datos"

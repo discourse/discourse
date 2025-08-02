@@ -1,0 +1,28 @@
+.c-channel-settings {
+  width: 100%;
+
+  .c-channel-settings__slug {
+    max-width: 250px;
+
+    @include ellipsis;
+  }
+
+  .chat-retention-reminder-text {
+    color: var(--primary-medium);
+  }
+
+  &__leave-info {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  .chat-form__section.--leave-channel {
+    .chat-form__section-content {
+      gap: 0.25rem 0.5rem;
+    }
+  }
+}

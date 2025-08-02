@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    styleguide:
+      title: "風格指南"
+      categories:
+        atoms: 原子
+        molecules: 分子
+      sections:
+        typography:
+          example: "歡迎來到 Discourse"
+        colors:
+          title: "顏色"
+        icons:
+          title: "圖標"
+        buttons:
+          title: "按鈕"
+        dropdowns:
+          title: "下拉選單"
+        categories:
+          title: "分類"
+        navigation:
+          title: "導航"
+        categories_list:
+          title: "分類清單"
+        topic_timer_info:
+          title: "話題計時器"
+        post:
+          title: "貼文"
+        suggested_topics:
+          title: "推薦的話題"
+        tooltips:
+          description: "簡述"
+          header: "頁首"

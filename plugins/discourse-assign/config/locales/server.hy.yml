@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  site_settings:
+    assign_enabled: "Միացնել պլագինի վերագրումը"
+    assigns_public: "Թույլատրել հանրությանը տեսնել թեմայի վերագրումները"
+    assigns_user_url_path: "Օգտատերերին վերագրված թեմաների ուղի (օգտագործեք {օգտանուն} ՝ օգտանունը փոխարինելու համար)"
+    assigns_by_staff_mention: "Եթե անձնակազմի որևէ անդամ ում է մեկ այլ անդամի, թեման ավտոմատ կերպով վերագրվում է"
+    unassign_creates_tracking_post: "Եթե Դուք ետ եք կանչում թեմայի վերագրումը, կստեղծվի շշուկ կամ փոքրիկ գործողություն՝ փոփոխությանը հետևելու համար"
+    assign_self_regex: "Կարգավորում, որը պետք է անցնի ինքնավերագրում: Օրինակ՝ 'իմ ցանկը'"
+    assign_other_regex: "Կարգավորում, որը պետք է թեմաների վերագրման համար անցնի այլոց նշման շնորհիվ: Օրինակ՝ 'Ձեր ցանկը'"
+    unassign_on_group_archive: "Երբ հաղորդագրությունը արխիվացվում է խմբի կողմից, ետ կանչել հաղորդագրության վերագրումը (վերականգնել այն, եթե վերադարձվում է մուտքային արկղ)"
+    unassign_on_close: "Երբ թեման փակվում է, ետ կանչել թեմայի վերագրումը"
+  discourse_assign:
+    assigned_to: "Թեման վերագրված է՝ @%{username}"
+    unassigned: "Թեմայի վերագրումը ետկանչված է"
+    already_claimed: "Այդ թեման արդեն պահանջված է:"
+    already_assigned: "Թեման արդեն վերագրված է @%{username} -ին"
+    group_already_assigned: "Թեման արդեն վերագրված է @%{group} -ին"
+    flag_assigned: "Ներողություն, այդ դրոշակի թեման վերագրված է մեկ այլ օգտատիրոջ"
+    flag_unclaimed: "Դուք պետք է պահանջեք այդ թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
+    topic_assigned_excerpt: "վերագրել է Ձեզ '%{title}' թեմային"
+    reminders_frequency:
+      never: "երբեք"
+      daily: "օրը մեկ"
+      weekly: "շաբաթական"
+      monthly: "ամսվա Ընթացքում"
+      quarterly: "եռամսյակի Ընթացքում"
+  assign_mailer:
+    title: "Վերագրել Ուղարկողին"
+    subject_template: "[%{email_prefix}] %{assignee_name} -ը վերագրել է Ձեզ '%{topic_title}'!"
+    text_body_template: |
+      Հեյ, %{assignee_name} -ը **վերագրել է** Ձեզ քննարկում
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Եթե Դուք հետաքրքրված եք, սեղմեք ներքևում գտնվող հղումը՝
+      [%{topic_link}](%{topic_link})

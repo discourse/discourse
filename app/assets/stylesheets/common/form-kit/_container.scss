@@ -1,0 +1,66 @@
+.form-kit__container {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &.--column {
+    .form-kit__container-content {
+      flex-direction: column;
+    }
+  }
+
+  &-title {
+    display: inline;
+    gap: 0.25em;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+    font-weight: bold;
+    padding-bottom: 0.25em;
+  }
+
+  &-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+    padding-bottom: 0.25em;
+
+    > * {
+      margin: 0;
+    }
+  }
+
+  &-optional {
+    font-size: var(--font-down-2-rem);
+    color: var(--primary-high-or-secondary-low);
+    font-weight: normal;
+  }
+
+  &-content {
+    display: flex;
+    gap: 0.25em;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 100%;
+
+    &.--small {
+      width: var(--form-kit-small-input) !important;
+    }
+
+    &.--medium {
+      width: var(--form-kit-medium-input);
+    }
+
+    &.--large {
+      width: var(--form-kit-large-input);
+    }
+
+    &.--full {
+      width: 100% !important;
+    }
+  }
+}

@@ -1,0 +1,153 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    discourse_automation_enabled: "تفعيل المكوِّن الإضافي discourse-automation"
+  discourse_automation:
+    models:
+      fields:
+        required_field: يجب ملء الحقل `%{name}` في `%{target}:%{target_name}`.
+        invalid_metadata: بيانات الحقل `%{field}` غير صالحة أو المكوِّن `%{component}` غير معروف.
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "يجب إدخال مشغِّل واحد على الأقل من بين‎ 'custom_fields' ‎أو‎ 'user_profile'."
+      user_badge_granted:
+        title: تم منح شارة المستخدم
+        doc: يشغِّل الأتمتة عند منح المستخدم شارة.
+      user_first_logged_in:
+        title: تسجيل المستخدم الدخول لأول مرة
+        doc: يشغِّل الأتمتة عندما يسجِّل أحد المستخدمين الدخول لأول مرة.
+      stalled_topic:
+        title: موضوع متوقف
+        doc: يشغِّل الأتمتة عندما لا يتلقى الموضوع ردًا جديدًا من مالك الموضوع لفترة زمنية محدَّدة. يوصى بتوسيع نطاق هذا المشغِّل إلى وسم/فئة لأن عدد الموضوعات المتأثرة يمكن أن يكون مرتفعًا جدًا. كإجراء أمني، تم تحديد عدد الموضوعات المتأثرة بـ 250 موضوعًا.
+      api_call:
+        title: استدعاء API
+        description: إنشاء طلب منشور لتشغيل الأتمتة
+        doc: ينبغي إجراء طلب المنشور إلى `/automations/:id/trigger.json` باستخدام مفتاح API عام.
+      category_created_edited:
+        title: تم إنشاء/تحرير الفئة
+        description: يتم تشغيل الأتمتة عند إنشاء أو تعديل منشور
+      recurring:
+        title: متكرر
+      point_in_time:
+        title: النقطة الزمنية
+        description: عند الوصول إلى التاريخ، سيتم تشغيل الأتمتة.
+      user_added_to_group:
+        title: تمت إضافة المستخدم إلى المجموعة
+        description: عند إضافة مستخدم إلى المجموعة المحدَّدة، سيتم تشغيل الأتمتة.
+      user_removed_from_group:
+        title: تمت إزالة المستخدم من المجموعة
+        description: عند إزالة مستخدم من المجموعة المحدَّدة، سيتم تشغيل الأتمتة.
+      user_promoted:
+        title: تمت ترقية المستخدم
+        description: عندما تتم ترقية المستخدم من مستوى ثقة إلى آخر
+        transition_placeholder: "من %{from_level_name} إلى %{to_level_name}"
+      stalled_wiki:
+        title: Wiki متوقفة
+        description: عندما تظل Wiki دون تعديل لفترة أطول من المحدَّدة، سيتم تشغيل الأتمتة
+      post_created_edited:
+        title: تم إنشاء/تعديل المنشور
+        description: عند تعديل أو إنشاء منشور صالح، سيتم تشغيل الأتمتة
+      pm_created:
+        title: تم إنشاء رسالة شخصية
+        description: عند إنشاء رسالة شخصية صالحة، سيتم تشغيل الأتمتة
+      topic_tags_changed:
+        title: تم تغيير وسوم الموضوع
+        description: سيتم تشغيل الأتمتة عند تغيير وسوم أحد الموضوعات.
+      topic:
+        title: الموضوع
+        description: سيتم استخدام البرنامج النصي المرتبط مع الموضوع المحدَّد فقط، وهذا مفيد للبرامج النصية التي تجري التحقق على سبيل المثال
+      after_post_cook:
+        title: بعد معالجة المنشور
+        description: عند معالجة محتوى المنشور، سيتم تشغيل الأتمتة
+      user_updated:
+        title: بعد تحديث المستخدم
+        description: عندما يقوم المستخدم بتحديث أي معلومات، سيتم تشغيل الأتمتة
+    scriptables:
+      post:
+        title: إنشاء منشور
+        description: إنشاء منشور في الموضوع المحدَّد
+      topic:
+        title: إنشاء موضوع
+        description: إنشاء موضوع كمستخدمٍ محدَّد
+      flag_post_on_words:
+        title: الإبلاغ عن منشور حسب كلمات معيَّنة
+        description: يُبلغ عن المنشور إذا احتوى على كلمات معيَّنة
+        flag_message: "يحتوي المنشور على كلمات غير مسموح بها: %{words}"
+        doc: سيتم الإبلاغ عن المنشورات التي تحتوي على كل الكلمات المحدَّدة وإخفاؤها. يُرجى ملاحظة أنه عند تحديد عدة كلمات مفصولة بفاصلة، سيتم استخدامها كمركَّب (يجب أن تكون كل الكلمات موجودة).
+      zapier_webhook:
+        title: خطاف ويب Zapier
+        description: يستدعي Zap في سياق استخدام المشغِّل كنص
+      auto_responder:
+        title: المستجيب التلقائي
+        description: ينشر ردًا على منشور يتضمَّن كلمات رئيسية محدَّدة
+      auto_tag_topic:
+        title: التوسيم التلقائي للموضوع
+        description: يضيف الوسوم تلقائيًا إلى الموضوع
+      pin_topic:
+        title: تثبيت الموضوع
+        description: يثبِّت موضوعًا محدَّدًا في تاريخ معيَّن
+      banner_topic:
+        title: إنشاء موضوع من بانر
+        description: تحويل الموضوع إلى بانر
+      gift_exchange:
+        title: تبادل الهدايا
+        description: يسمح بإقران مستخدمي المجموعة بشكلٍٍ مجهول لإرسال هدية لبعضهم البعض.
+        doc: يتطلَّب تبادل الهدايا وجود مجموعة حالية تضم 3 مستخدمين على الأقل. سيتم إقران كل مستخدم في المجموعة بمُرسل هدايا واحد ومستقبل هدايا واحد في التاريخ المختار.
+      send_pms:
+        title: إرسال رسائل شخصية
+        description: يسمح بإرسال الرسائل الشخصية (ربما تتأخر).
+        doc: يسمح بإرسال عدة رسائل شخصية إلى المستخدم. وتقبل كل رسالة شخصية التأخير.
+      suspend_user_by_email:
+        title: تعليق المستخدم باستخدام البريد الإلكتروني
+        description: تعليق الحساب تلقائيًا بناءً على عنوان البريد الإلكتروني
+      user_global_notice:
+        title: الإشعار العام للمستخدم
+        description: يسمح بعرض إشعار عام للمستخدم
+      user_group_membership_through_badge:
+        title: عضوية مجموعة المستخدمين من خلال الشارة
+        description: تعديل عضوية مجموعة المستخدمين حسب الشارة
+      suspend_user_by_email_with_api_call:
+        doc: عند تشغيل `suspend_user_by_email` باستخدام استدعاء API، تتوقع نقطة النهاية وجود `email` صالح في المعلمات المُرسلة. يمكن أيضًا استخدام `reasons` و`suspend_until (ISO 8601 format)` لتجاوز قيم الحقول الافتراضية.
+      user_global_notice_with_stalled_topic:
+        doc: عند التشغيل عبر موضوع المتوقف، سيتلقى مالك الموضوع الإشعار العام.
+      user_global_notice_with_first_accepted_solution:
+        doc: يتلقى مؤلف الحل الإشعار العام عند تشغيل الأتمتة من خلال أول حل تم قبوله.
+      send_pms_with_api_call:
+        doc: عند استخدام البرنامج النصي `send pms` مع المشغِّل `api call`، سيتم استخدام معلمة `usernames` لطلبك لملء قائمة المستلمين.
+      topic_required_words:
+        title: الكلمات المطلوبة للموضوع
+        description: يسمح بتحديد قائمة الكلمات المطلوبة لموضوعٍ ما، ويجب استخدام واحدة على الأقل في كل منشور.
+        doc: تتطلَّب الكلمات المطلوبة للموضوع موضوعًا. عند تعديل المنشور أو إنشائه، سيتم التحقق من المنشور مقابل قائمة الكلمات، ولا بد من وجود واحدة على الأقل.
+        errors:
+          must_include_word: "يجب أن تتضمَّن المشاركة واحدة من تلك الكلمات على الأقل: %{words}"
+      close_topic:
+        title: إغلاق الموضوع
+        description: يغلق الموضوع برسالة ختامية اختيارية
+      append_last_edited_by:
+        title: إلحاق "آخر تعديل بواسطة"
+        description: يضيف تفاصيل "آخر تعديل بواسطة" للمنشور إلى أسفل المحتوى الذي تمت معالجته.
+        text: "آخر تعديل بواسطة @%{username} %{date_time}"
+      append_last_checked_by:
+        title: إلحاق "آخر تحقق بواسطة"
+        description: يضيف تفاصيل "آخر تحقق بواسطة" للمنشور إلى أسفل المحتوى الذي تمت معالجته.
+        text: "آخر تحقق بواسطة @%{username} %{date_time}"
+        summary: التحقق من المستند
+        details: "التحقق من المستند: "
+        button_text: تم
+      add_user_to_group_through_custom_field:
+        title: "إضافة مستخدم إلى المجموعة عبر الحقل المخصَّص للمستخدمين"
+        description: "إضافة المستخدمين إلى المجموعات تلقائيًا عند تسجيل الدخول أو من خلال فحص متكرر"
+      group_category_notification_default:
+        title: "الإعداد الافتراضي لإشعارات فئة المجموعة"
+        description: "يضبط مستوى الإشعارات الافتراضي للفئة لأعضاء المجموعة"
+      send_chat_message:
+        title: "إرسال رسالة دردشة"
+        description: "إرسال رسالة دردشة مخصَّصة إلى قناة"
+      random_assign:
+        title: "تعيين عشوائي"
+        description: "تعيين الموضوعات عشوائيًا إلى مجموعة"

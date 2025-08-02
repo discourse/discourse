@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    details_enabled: 'Включить возможность скрывать текст сообщения под спойлер. Эту функцию можно найти в выпадающем меню на панели инструментов редактора. Если вы измените эту настройку, то необходимо перезаписать все сообщения, выполнив команду «rake posts:rebake».'
+  details:
+    excerpt_details: "(нажмите для более подробной информации)"

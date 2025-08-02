@@ -1,0 +1,469 @@
+@use "lib/viewport";
+
+@mixin user-item-flex {
+  display: flex;
+  flex-direction: column;
+  line-height: var(--line-height-medium);
+  color: var(--primary-high-or-secondary-low);
+}
+
+@mixin separator {
+  border-top: 1px solid var(--content-border-color);
+}
+
+:root {
+  --search-result-element-padding: var(--space-2) var(--space-4);
+}
+
+.search-menu.glimmer-search-menu .search-input-wrapper {
+  @include viewport.until(sm) {
+    position: fixed;
+    left: var(--space-4);
+    right: 0.35rem; // to compensate for cancel button padding
+    top: 0;
+    padding-block: var(--space-2);
+    background-color: var(--secondary);
+    z-index: z("base");
+  }
+}
+
+.search-menu,
+.search-menu-container {
+  .menu-panel .panel-body-contents {
+    overflow-y: auto;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .search-menu-panel & {
+      @include viewport.from(sm) {
+        padding: var(--space-3) var(--space-4) 0;
+      }
+    }
+  }
+
+  .search-input {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    background: var(--d-input-bg-color);
+    border: var(--d-input-border);
+    border-radius: var(--d-input-border-radius);
+    padding: var(--space-1) 0;
+
+    input.search-term__input {
+      background: none;
+      border: 0;
+      margin-bottom: 0;
+      width: auto;
+      flex-grow: 1;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .btn.search-context {
+      margin: 2px;
+      margin-right: 0;
+      white-space: nowrap;
+      background-color: var(--primary-200);
+
+      &:hover {
+        background-color: var(--primary-medium);
+      }
+    }
+
+    &:focus-within {
+      @include default-focus;
+    }
+  }
+
+  .menu-panel {
+    padding: 0; // overrule generic menu panels to achieve full width hover effect
+
+    @include viewport.from(sm) {
+      // alignment adjustment for search menu panel (within topic) on desktop to align with results
+      .search-input {
+        padding-right: calc(1rem - 0.65em);
+      }
+
+      .search-term__input {
+        padding-left: var(--space-4);
+      }
+    }
+  }
+
+  &.menu-panel-results {
+    position: relative;
+
+    .menu-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: unset;
+      width: unset;
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  .search-context {
+    white-space: nowrap;
+    background-color: var(--primary-200);
+
+    @include viewport.from(sm) {
+      margin-left: var(--space-4);
+      margin-right: 0;
+    }
+
+    @include viewport.until(sm) {
+      position: fixed;
+      top: calc(var(--header-offset) + var(--space-3));
+      left: var(--space-4);
+      padding: var(--space-1) var(--space-2);
+    }
+
+    &:hover {
+      background-color: var(--primary-medium);
+    }
+  }
+
+  .results {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--d-border-radius);
+    padding-top: var(--space-3);
+
+    .heading {
+      padding: var(--space-2) 0 0 var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .menu-panel & {
+        padding: var(--space-2) var(--space-2) 0 var(--space-4);
+      }
+
+      .filter {
+        padding: 0 5px;
+      }
+
+      h4 {
+        color: var(--primary-medium);
+        font-weight: normal;
+        margin-bottom: 0;
+      }
+
+      .clear-recent-searches {
+        cursor: pointer;
+        color: var(--primary-low-mid);
+      }
+    }
+  }
+
+  .search-link {
+    padding: var(--search-result-element-padding);
+
+    &.category,
+    &.user,
+    &.tag {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: var(--space-2);
+    }
+
+    // This is purposefully redundant
+    // the search widget can be used outside of the header
+    // and the focus/hover styles from the header in those cases wouldn't follow
+    &:focus,
+    &:hover {
+      background-color: var(--d-hover);
+    }
+
+    @include viewport.until(sm) {
+      padding-block: var(--space-2);
+    }
+
+    .search-item-tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      color: var(--primary-high);
+
+      .d-icon {
+        align-self: center;
+      }
+    }
+
+    // overrules for legacy css
+    .topic-statuses {
+      float: none;
+
+      .topic-status .d-icon {
+        height: 1em;
+        width: 1em;
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .topic {
+      display: block;
+    }
+
+    .topic-title {
+      font-size: var(--font-up-1-rem);
+      color: var(--tertiary);
+      overflow-wrap: anywhere;
+      margin-right: var(--space-1);
+    }
+  }
+
+  .search-menu-initial-options,
+  .search-result-tag,
+  .search-result-user,
+  .search-result-category {
+    .search-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+  }
+
+  .search-menu-initial-options {
+    + .search-result-tag,
+    + .search-result-category,
+    + .search-result-user,
+    + .search-result-group {
+      @include separator;
+    }
+
+    .search-menu-recent {
+      @include separator;
+    }
+  }
+
+  .search-result-category {
+    .badge-category__wrapper {
+      font-size: var(--font-0);
+
+      .badge-category {
+        gap: var(--space-2);
+      }
+    }
+
+    .widget-link {
+      margin-bottom: 0;
+    }
+  }
+
+  .search-result-topic,
+  .search-result-post {
+    .list {
+      min-width: 100px;
+
+      .search-link {
+        padding-block: var(--space-2);
+      }
+
+      .first-line {
+        display: block;
+        line-height: var(--line-height-medium);
+      }
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 var(--space-2);
+      }
+
+      .item {
+        .blurb {
+          // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          word-break: break-word;
+          hyphens: auto;
+          color: var(--primary-high);
+          font-size: var(--font-down-1);
+        }
+      }
+    }
+  }
+
+  .search-result-group .group-result {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+
+    &:not(.--with-flair) {
+      svg {
+        padding: 0.36em; // matching avatar-flair width
+        background: var(--primary-200);
+        border-radius: 50%;
+      }
+    }
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+
+    .avatar-flair {
+      width: 1.62em;
+      height: 1.6em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--primary-200);
+      color: var(--primary-medium);
+      border-radius: 50%;
+
+      &.avatar-flair-image {
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .d-icon {
+        font-size: var(--font-down-2);
+        color: currentcolor;
+      }
+    }
+
+    .group-names {
+      @include user-item-flex;
+      min-width: 0;
+
+      .name,
+      .slug {
+        @include ellipsis;
+      }
+
+      &.--group-with-slug {
+        .name {
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .search-result-category,
+  .search-result-tag {
+    + .search-result-user,
+    + .search-result-group {
+      @include separator;
+    }
+  }
+
+  .user-titles {
+    @include user-item-flex;
+
+    .name {
+      font-weight: 700;
+    }
+
+    .username,
+    .name,
+    .custom-field {
+      color: var(--primary-high-or-secondary-low);
+    }
+
+    .custom-field {
+      font-size: var(--font-down-2);
+    }
+  }
+
+  .user-result {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-1);
+  }
+
+  .search-result-user .user-result img.avatar,
+  .search-item-user {
+    display: flex;
+    align-self: center;
+    gap: var(--space-2);
+
+    img.avatar {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .label-suffix {
+    color: var(--primary-medium);
+  }
+
+  .extra-hint {
+    color: var(--primary-low-mid);
+    font-size: var(--font-down-1);
+  }
+
+  .search-item-slug {
+    overflow-wrap: anywhere;
+    white-space: wrap;
+    min-width: 0;
+
+    .keyword {
+      margin-right: var(--space-1);
+    }
+
+    .badge-wrapper {
+      font-size: var(--font-0);
+      margin-left: 2px;
+    }
+  }
+}
+
+.search-random-quick-tip {
+  padding: 0 var(--space-4) var(--space-3);
+  font-size: var(--font-down-2);
+  color: var(--primary-medium);
+
+  .tip-label {
+    background-color: rgb(var(--tertiary-rgb), 0.1);
+    margin-right: var(--space-1);
+    padding: 2px 4px;
+    display: inline-block;
+    border: none;
+
+    &.tip-clickable {
+      cursor: pointer;
+    }
+  }
+}
+
+.searching {
+  display: flex;
+  align-items: center;
+
+  .spinner {
+    width: var(--space-3); // 12px
+    height: var(--space-3); // 12px
+    border-width: var(--space-half); // 2px
+    margin: 0 $hpad 0 0;
+  }
+
+  .show-advanced-search,
+  .clear-search {
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:focus,
+    &:hover {
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+  }
+}
+
+.no-results {
+  padding: var(--search-result-element-padding);
+}

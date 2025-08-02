@@ -1,0 +1,40 @@
+plugins:
+  poll_enabled:
+    default: true
+    client: true
+  poll_maximum_options:
+    default: 20
+    min: 2
+    max: 100
+    client: true
+  poll_edit_window_mins:
+    default: 5
+    min: 0
+  poll_minimum_trust_level_to_create:
+    default: 1
+    client: true
+    enum: "TrustLevelSetting"
+    hidden: true
+  poll_create_allowed_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: false
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
+    area: "group_permissions"
+  poll_groupable_user_fields:
+    default: ""
+    type: list
+    client: true
+  poll_export_data_explorer_query_id:
+    default: -16
+    min: -9999
+    client: true
+  poll_export_ranked_choice_data_explorer_query_id:
+    default: -19
+    min: -9999
+    client: true
+  poll_default_public:
+    default: true
+    client: true

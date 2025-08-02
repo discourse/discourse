@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  site_settings:
+    lazy_videos_enabled: "ھۇرۇن سىن قىستۇرمىسىنى قوزغات"
+    lazy_youtube_enabled: "YouTube سىڭدۈرمىسىگە ھۇرۇن يۈكلەشنى قوزغات"
+    lazy_vimeo_enabled: "Vimeo سىڭدۈرمىسىگە ھۇرۇن يۈكلەشنى قوزغات"
+    lazy_tiktok_enabled: "TikTok سىڭدۈرمىسىگە ھورۇن يۈكلەشنى قوزغات (تەجرىبە)"

@@ -1,0 +1,545 @@
+:root {
+  // global
+  --d-button-border-radius: var(--d-border-radius);
+  --d-button-transition: none;
+  --d-button-border: 1px solid transparent;
+
+  // .btn-default
+  --d-button-default-text-color: var(--primary);
+  --d-button-default-text-color--hover: var(--secondary);
+  --d-button-default-bg-color: var(--primary-low);
+  --d-button-default-bg-color--hover: var(--primary-medium);
+  --d-button-default-icon-color: var(--primary-high);
+  --d-button-default-icon-color--hover: var(--primary-low);
+
+  // .btn-primary
+  --d-button-primary-text-color: var(--secondary);
+  --d-button-primary-text-color--hover: var(--secondary);
+  --d-button-primary-bg-color: var(--tertiary);
+  --d-button-primary-bg-color--hover: var(--tertiary-hover);
+  --d-button-primary-icon-color: var(--secondary);
+  --d-button-primary-icon-color--hover: var(--secondary);
+
+  // .btn-danger and .btn.cancel
+  --d-button-danger-text-color: var(--secondary);
+  --d-button-danger-text-color--hover: var(--secondary);
+  --d-button-danger-bg-color: var(--danger);
+  --d-button-danger-bg-color--hover: var(--danger-hover);
+  --d-button-danger-icon-color: var(--danger-low);
+  --d-button-danger-icon-color--hover: var(--danger-low);
+
+  // .btn-success and .btn.ok
+  --d-button-success-text-color: var(--secondary);
+  --d-button-success-text-color--hover: var(--secondary);
+  --d-button-success-bg-color: var(--success);
+  --d-button-success-bg-color--hover: var(--success-hover);
+  --d-button-success-icon-color: var(--success-low);
+  --d-button-success-icon-color--hover: var(--success-low);
+
+  // .btn-flat
+  --d-button-flat-text-color: var(--tertiary);
+  --d-button-flat-text-color--hover: var(--primary);
+  --d-button-flat-icon-color: var(--primary-low-mid);
+  --d-button-flat-icon-color--hover: var(--primary);
+  --d-button-flat-bg-color: transparent;
+  --d-button-flat-bg-color--hover: transparent;
+  --d-button-flat-bg-color--focus: var(--primary-low);
+  --d-button-flat-text-color--disabled: var(--primary);
+
+  // .btn-flat.close
+  --d-button-flat-close-text-color: var(--primary-high);
+  --d-button-flat-close-bg-color: transparent;
+  --d-button-flat-close-icon-color: var(--primary-high);
+  --d-button-flat-close-icon-color--hover: var(--primary);
+
+  // .btn-transparent
+  --d-button-transparent-text-color: var(--primary);
+  --d-button-transparent-text-color--hover: var(--tertiary-hover);
+  --d-button-transparent-icon-color: var(--primary-high);
+  --d-button-transparent-icon-color--hover: var(--tertiary-hover);
+}
+
+/* Base */
+@mixin btn(
+  $text-color: var(--d-button-default-text-color),
+  $bg-color: var(--d-button-default-bg-color),
+  $icon-color: var(--d-button-default-icon-color),
+  $hover-text-color: var(--d-button-default-text-color--hover),
+  $hover-bg-color: var(--d-button-default-bg-color--hover),
+  $hover-icon-color: var(--d-button-default-icon-color--hover)
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-weight: normal;
+  color: $text-color;
+  background-color: $bg-color;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(0, 0, 0, 0),
+    rgb(0, 0, 0, 0)
+  );
+  border-radius: var(--d-button-border-radius);
+  transition: var(--d-button-transition);
+  cursor: pointer;
+
+  @include form-item-sizing;
+  border: var(--d-button-border);
+
+  &:visited {
+    /* covers cases where we add button classes to links */
+    color: $text-color;
+  }
+
+  .d-icon {
+    color: $icon-color;
+    margin-right: 0.45em;
+    transition: var(--d-button-transition);
+
+    /* For Windows High Contrast (see whcm.scss for more) */
+    @media (forced-colors: active) {
+      color: ButtonText;
+    }
+  }
+
+  .d-button-label + .d-icon {
+    margin-left: 0.45em;
+    margin-right: 0;
+  }
+
+  &.no-text {
+    .d-icon {
+      margin-right: 0;
+    }
+  }
+
+  @include hover {
+    background-color: $hover-bg-color;
+    color: $hover-text-color;
+
+    .d-icon {
+      color: $hover-icon-color;
+
+      /* For Windows High Contrast (see whcm.scss for more) */
+      @media (forced-colors: active) {
+        color: Highlight;
+      }
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+    background-color: $hover-bg-color;
+    color: $hover-text-color;
+
+    .d-icon {
+      color: $hover-icon-color;
+
+      @media (forced-colors: active) {
+        color: Highlight;
+      }
+    }
+  }
+
+  .discourse-no-touch &:active:not(:hover, :focus),
+  .discourse-no-touch &.btn-active:not(:hover, :focus),
+  &:active:not(:hover, :focus),
+  &.btn-active:not(:hover, :focus) {
+    @include darken-background($bg-color, 0.6);
+    color: $hover-text-color;
+
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
+
+  .discourse-no-touch &:active,
+  .discourse-no-touch &.btn-active,
+  &:active,
+  &.btn-active {
+    @include darken-background($bg-color, 0.3);
+    color: $hover-text-color;
+
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
+
+  &[disabled],
+  &.disabled {
+    cursor: not-allowed;
+
+    &:not(.is-loading) {
+      opacity: 0.4;
+    }
+
+    &:hover {
+      color: $text-color;
+      background: $bg-color;
+
+      .d-icon {
+        color: $icon-color;
+      }
+    }
+  }
+
+  .loading-container {
+    display: none;
+    margin: 0 6.75px 0 0;
+  }
+
+  &.is-loading {
+    &.btn-text {
+      &.btn-small {
+        .loading-icon {
+          font-size: var(--font-down-1);
+          margin-right: 0.2em;
+        }
+      }
+    }
+
+    .loading-icon {
+      animation:
+        rotate-forever 1s infinite linear,
+        fadein 1s;
+    }
+  }
+}
+
+/* Default button */
+.btn {
+  @include btn;
+}
+
+/* Primary button */
+.btn-primary {
+  @include btn(
+    $text-color: var(--d-button-primary-text-color),
+    $bg-color: var(--d-button-primary-bg-color),
+    $icon-color: var(--d-button-primary-icon-color),
+    $hover-text-color: var(--d-button-primary-text-color--hover),
+    $hover-bg-color: var(--d-button-primary-bg-color--hover),
+    $hover-icon-color: var(--d-button-primary-icon-color--hover)
+  );
+}
+
+/* Danger button */
+.btn-danger,
+.btn.cancel {
+  @include btn(
+    $text-color: var(--d-button-danger-text-color),
+    $bg-color: var(--d-button-danger-bg-color),
+    $icon-color: var(--d-button-danger-icon-color),
+    $hover-text-color: var(--d-button-danger-text-color--hover),
+    $hover-bg-color: var(--d-button-danger-bg-color--hover),
+    $hover-icon-color: var(--d-button-danger-icon-color--hover)
+  );
+}
+
+/* Success button */
+.btn-success,
+.btn.ok {
+  @include btn(
+    $text-color: var(--d-button-success-text-color),
+    $bg-color: var(--d-button-success-bg-color),
+    $icon-color: var(--d-button-success-icon-color),
+    $hover-text-color: var(--d-button-success-text-color--hover),
+    $hover-bg-color: var(--d-button-success-bg-color--hover),
+    $hover-icon-color: var(--d-button-success-icon-color--hover)
+  );
+}
+
+/* Social buttons */
+.btn-social {
+  color: #000;
+  background: #fff;
+  border-radius: var(--d-border-radius);
+
+  &:focus-visible {
+    outline: 1px solid #000;
+  }
+
+  &[href] {
+    color: var(--secondary);
+  }
+
+  &::before {
+    margin-right: 9px;
+    font-size: var(--font-0);
+  }
+
+  .d-icon,
+  &.btn:hover .d-icon {
+    color: #000;
+  }
+
+  &.cas {
+    .d-icon {
+      color: var(--cas);
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--cas);
+      }
+    }
+  }
+
+  &.twitter {
+    .d-icon {
+      color: var(--twitter);
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--twitter);
+      }
+    }
+  }
+
+  &.github {
+    .d-icon {
+      color: var(--github);
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--github);
+      }
+    }
+  }
+
+  &.discord {
+    .d-icon {
+      color: var(--discord);
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--discord);
+      }
+    }
+  }
+
+  /* https://developers.facebook.com/docs/facebook-login/userexperience/#buttondesign 
+  if you are unable to use Facebook blue, revert to black and white. */
+}
+
+/* Button Sizes */
+
+/* Small */
+.btn-small {
+  font-size: var(--font-down-1);
+  min-height: 20px;
+}
+
+/* Large */
+.btn-large {
+  font-size: var(--font-up-1);
+}
+
+/* Bonus Buttons */
+.btn-flat {
+  background: var(--d-button-flat-bg-color);
+  border: 0;
+  line-height: var(--line-height-small);
+  transition: var(--d-button-transition);
+
+  .d-icon {
+    color: var(--d-button-flat-icon-color);
+    transition: var(--d-button-transition);
+  }
+
+  .discourse-no-touch & {
+    &:hover,
+    &:focus-visible {
+      color: var(--d-button-flat-text-color--hover);
+
+      .d-icon {
+        color: var(--d-button-flat-icon-color--hover);
+      }
+    }
+
+    &:hover {
+      background: var(--d-button-flat-bg-color--hover);
+    }
+
+    &:focus-visible {
+      background: var(--d-button-flat-bg-color--focus);
+    }
+  }
+
+  &.close {
+    background: var(--d-button-flat-close-bg-color);
+    font-size: var(--font-up-2);
+
+    .d-icon {
+      color: var(--d-button-flat-close-icon-color);
+    }
+
+    .discourse-no-touch & {
+      &:hover,
+      &:focus-visible {
+        background: var(--d-button-flat-close-bg-color);
+
+        .d-icon {
+          color: var(--d-button-flat-close-icon-color--hover);
+        }
+      }
+    }
+
+    &:focus-visible {
+      background: var(--d-button-flat-close-bg-color);
+
+      .d-icon {
+        color: var(--d-button-flat-close-icon-color--hover);
+      }
+    }
+  }
+
+  &.btn-text {
+    color: var(--d-button-flat-text-color);
+
+    &[disabled] {
+      &,
+      .discourse-no-touch & {
+        &:hover,
+        &.btn-hover,
+        &:focus-visible {
+          color: var(--d-button-flat-text-color--disabled);
+        }
+      }
+
+      .discourse-no-touch & {
+        &:not([disabled]) {
+          &:hover,
+          &.btn-hover,
+          &:focus-visible {
+            color: var(--d-button-flat-text-color--hover);
+          }
+        }
+
+        &:active,
+        &.btn-active {
+          @include darken-background(transparent, 0.2);
+        }
+      }
+    }
+  }
+
+  &:focus-visible {
+    outline: none;
+    background: var(--primary-low);
+
+    .d-icon {
+      color: var(--primary);
+    }
+  }
+
+  &.back-button {
+    margin-bottom: 1em;
+  }
+}
+
+.btn-link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--tertiary);
+
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--tertiary);
+      background: transparent;
+    }
+  }
+
+  &:focus-visible {
+    color: var(--tertiary);
+    background: transparent;
+
+    @include default-focus;
+  }
+}
+
+@mixin btn-colors($btn-type) {
+  color: var(--d-button-#{$btn-type}-bg-color);
+
+  .d-icon {
+    color: currentcolor;
+  }
+
+  &:focus-visible {
+    color: var(--d-button-#{$btn-type}-bg-color--hover);
+  }
+
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--d-button-#{$btn-type}-bg-color--hover);
+    }
+  }
+}
+
+.btn-transparent {
+  &,
+  &.btn-default,
+  &.btn-text,
+  &.btn-icon,
+  &.no-text {
+    background: transparent;
+    border: 0;
+    color: var(--d-button-transparent-text-color);
+
+    .d-icon {
+      color: var(--d-button-transparent-icon-color);
+    }
+
+    &:focus-visible {
+      background: transparent;
+      color: var(--d-button-transparent-text-color--hover);
+
+      .d-icon {
+        color: currentcolor;
+      }
+    }
+
+    .discourse-no-touch & {
+      &:hover {
+        background: transparent;
+        color: var(--d-button-transparent-text-color--hover);
+
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+    }
+  }
+
+  &.btn-primary {
+    @include btn-colors("primary");
+  }
+
+  &.btn-danger {
+    @include btn-colors("danger");
+  }
+
+  &.btn-success {
+    @include btn-colors("success");
+  }
+}
+
+.btn-mini-toggle {
+  border-radius: var(--d-border-radius);
+  padding: 0.4em 0.467em;
+
+  .d-icon {
+    color: var(--primary-medium);
+  }
+
+  @include hover {
+    .d-icon {
+      color: var(--primary);
+    }
+  }
+}

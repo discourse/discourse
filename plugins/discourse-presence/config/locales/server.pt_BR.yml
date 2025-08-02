@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    presence_enabled: "Mostrar usuários(as) que estão agora respondendo ao tópico atual, ou editando a postagem atual?"
+    presence_max_users_shown: "Quantidade máximo de usuários(as) exibidos(as)."

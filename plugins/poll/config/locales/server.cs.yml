@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  site_settings:
+    poll_enabled: "Povolit hlasování?"
+    poll_maximum_options: "Maximální počet možností povolených v hlasování."
+    poll_edit_window_mins: "Počet minut po vytvoření příspěvku, po kterých je ještě možné upravit hlasování."
+    poll_minimum_trust_level_to_create: "Nastav minimální úroveň důvěry pro vytvoření hlasování."
+    poll_create_allowed_groups: "Skupiny, které mají povoleno vytvářet hlasování."
+    poll_groupable_user_fields: "Sada názvů uživatelských polí, které lze použít k seskupování a filtrování výsledků hlasování."
+    poll_export_data_explorer_query_id: "ID dotazu data explorer, který se má použít pro export výsledků průzkumu (0 pro deaktivaci)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID dotazu data explorer, který se má použít k exportu výsledků preferenčního hlasování."
+    poll_default_public: "Při vytváření nového hlasování povolit ve výchozím nastavení možnost \"zobrazit, kdo hlasoval\"."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "hlasování"
+    invalid_argument: "Neplatná hodnota '%{value}' pro argument '%{argument}'."
+    multiple_polls_without_name: "Při vytváření více hlasování uvádět jedinečné názvy přidáním <code>name=example</code> ke štítkům <code>[poll]</code> ."
+    multiple_polls_with_same_name: "Více hlasování má stejné jméno: <strong>%{name}</strong>. Použijte atribut '<code>name</code>' pro jednoznačnou identifikaci Vaše hlasování."
+    default_poll_must_have_at_least_1_option: "Hlasování musí mít alespoň 1 možnost."
+    named_poll_must_have_at_least_1_option: "Hlasování s názvem <strong>%{name}</strong> musí mít alespoň 1 možnost."
+    default_poll_must_have_less_options:
+      one: "Hlasování nesmí mít více než %{count} možnost."
+      few: "Hlasování nesmí mít více než %{count} možnosti."
+      many: "Hlasování nesmí mít více než %{count} možností."
+      other: "Hlasování nesmí mít více než %{count} možností."
+    named_poll_must_have_less_options:
+      one: "Hlasování <strong>%{name}</strong> nesmí mít více než %{count} možnost."
+      few: "Hlasování <strong>%{name}</strong> nesmí mít více než %{count} možnosti."
+      many: "Hlasování <strong>%{name}</strong> nesmí mít více než %{count} možností."
+      other: "Hlasování <strong>%{name}</strong> nesmí mít více než %{count} možností."
+    default_poll_must_have_different_options: "Hlasování musí mít různé odpovědi."
+    named_poll_must_have_different_options: "Hlasování <strong>%{name}</strong> musí mít různé odpovědi."
+    default_poll_must_not_have_any_empty_options: "Hlasování nesmí mít žádné prázdné možnosti."
+    named_poll_must_not_have_any_empty_options: "Hlasování s názvem <strong>%{name}</strong> nesmí obsahovat žádné prázdné možnosti."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Hlasování s více možnostmi má neplatné parametry."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Hlasování <strong>%{name}</strong> s více možnostmi má neplatné parametry."
+    requires_at_least_1_valid_option: "Musíte vybrat alespoň jednu platnou odpověď."
+    requires_that_at_least_one_option_is_ranked: "V anketách s hodnocenou volbou musíte hodnotit alespoň jednu možnost."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Po prvních %{minutes} minutách již nelze hlasování změnit."
+      cannot_edit_named_poll_with_votes: "Hlasování s názvem <strong>${name}</strong> nelze změnit po prvních %{minutes} minutách."
+    no_poll_with_this_name: "Tento příspěvek nemá žádné hlasování se jménem <strong>%{name}</strong>. "
+    post_is_deleted: "Operaci na smazaném příspěvku nelze provést."
+    user_cant_post_in_topic: "Nemůžete hlasovat, protože v tomto tématu nemůžete odesílat příspěvky."
+    topic_must_be_open_to_vote: "Téma musí být otevřené, aby bylo možné hlasovat."
+    poll_must_be_open_to_vote: "Hlasování musí být otevřené, aby bylo možné hlasovat."
+    one_vote_per_user: "Pro toto hlasování je povolen pouze 1 hlas."
+    max_vote_per_user:
+      one: V tomto hlasování je povolen pouze %{count} hlas.
+      few: V tomto hlasování jsou povoleny pouze %{count} hlasy.
+      many: V tomto hlasování je povoleno pouze %{count} hlasů.
+      other: V tomto hlasování je povoleno pouze %{count} hlasů.
+    min_vote_per_user:
+      one: Pro toto hlasování je potřeba minimálně %{count} hlas.
+      few: Pro toto hlasování jsou potřeba minimálně %{count} hlasy.
+      many: Pro toto hlasování je potřeba minimálně %{count} hlasů.
+      other: Pro toto hlasování je potřeba minimálně %{count} hlasů.
+    ranked_choice:
+      vote_options_mismatch: "V případě preferenčního hlasování musí počet voleb v hlasování odpovídat počtu možností.  Počet možností je %{count} a počet provedených voleb byl %{provided}."
+      no_group_results_support: "Neplatný typ hlasování, ranked_choice nepodporuje seskupené výsledky."
+    topic_must_be_open_to_toggle_status: "Téma musí být otevřené, aby bylo možné změnit status."
+    only_staff_or_op_can_toggle_status: "Pouze člen redakce nebo tvůrce původního příspěvku může změnit status hlasování."
+    errors:
+      poll_not_found: "Anketa nebyla nalezena, potvrďte prosím parametry."
+    insufficient_rights_to_create: "Nemáte oprávnění k vytvoření hlasování."
+    email:
+      link_to_poll: "Klikněte pro zobrazení hlasování."
+    user_field:
+      no_data: "Žádná data"

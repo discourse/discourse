@@ -1,0 +1,149 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    discourse_automation:
+      back: واپس
+      edit: ترمیم کریں
+      fields:
+        user:
+          label: صارف
+        pm:
+          title:
+            label: عنوان
+          raw:
+            label: متن
+        pms:
+          title:
+            label: عنوان
+          raw:
+            label: متن
+        group:
+          label: گروپ
+        text:
+          label: ٹیکسٹ
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: بَیج
+        stalled_topic:
+          durations:
+            P2W: "دو ہفتے"
+            P3M: "تین مہینے"
+            P6M: "چھ مہینے"
+            P1Y: "ایک سال"
+        recurring:
+          frequencies:
+            minute: منٹ
+            hour: گھنٹہ
+            day: دن
+            week: ہفتہ
+            month: مہینہ
+            year: سال
+          fields:
+            recurrence:
+              label: تَقْلِید
+        stalled_wiki:
+          durations:
+            P2W: "دو ہفتے"
+            P3M: "تین مہینے"
+            P6M: "چھ مہینے"
+            P1Y: "ایک سال"
+        topic:
+          fields:
+            restricted_topic:
+              label: ٹاپک ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: ٹیگز
+            restricted_categories:
+              label: اقسام
+          created: بنایا گیا
+          with_images: تصاویر
+          with_links: لنکس
+          with_code: کَوڈ
+          with_uploads: اَپ لوڈز
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: بالائی زمرہ
+        pm_created:
+          fields:
+            restricted_user:
+              label: صارفین
+            restricted_group:
+              label: گروپ
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: زمرہ
+            restricted_tags:
+              label: ٹیگز
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: ٹیگز
+        post:
+          fields:
+            topic:
+              label: ٹاپک ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: گروپ
+        user_global_notice:
+          fields:
+            level:
+              label: لَیول
+          levels:
+            info: معلومات
+            success: کامیابی
+            error: خرابی
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: گروپ
+            badge:
+              label: بَیج
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: صارف
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ٹاپک ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: ٹاپک ID
+            user:
+              label: صارف
+        close_topic:
+          fields:
+            topic:
+              label: ٹاپک ID
+            user:
+              label: صارف
+      models:
+        trigger:
+          name:
+            label: محرکات
+        automation:
+          name:
+            label: نام
+          trigger:
+            label: محرکات
+          version:
+            label: ورژن
+          status:
+            label: سٹیٹس
+          disabled:
+            label: غیر فعال

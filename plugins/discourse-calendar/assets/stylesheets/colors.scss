@@ -1,0 +1,15 @@
+/* stylelint-disable scss/no-global-function-names */
+:root {
+  --calendar-normal: #{dark-light-choose(
+      lighten($tertiary, 55%),
+      darken($tertiary, 25%)
+    )};
+  --calendar-close-to-working-hours: #{dark-light-choose(
+      desaturate(lighten($tertiary, 45%), 15%),
+      darken($tertiary, 15%)
+    )};
+  --calendar-in-working-hours: #{dark-light-choose(
+      desaturate(lighten($tertiary, 40%), 20%),
+      darken($tertiary, 10%)
+    )};
+}

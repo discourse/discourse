@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  site_settings:
+    poll_enabled: "Թույլատրե՞լ հարցումները:"
+    poll_maximum_options: "Հարցման մեջ թույլատրված տարբերակների առավելագույն քանակը:"
+    poll_edit_window_mins: "Գրառման ստեղծումից հետո րոպեների քանակը, որոնց ընթացքում հարցումները կարող են խմբագրվել:"
+    poll_minimum_trust_level_to_create: "Սահմանել հարցումներ ստեղծելու համար անհրաժեշտ վստահության նվազագույն մակարդակը"
+  poll:
+    invalid_argument: "'%{argument}' արգումենտի %{value} արժեքը սխալ է:"
+    multiple_polls_with_same_name: "Կան նույն անվամբ բազմակի հարցումներ՝ <strong>%{name}</strong>: Օգտագործեք '<code>անուն</code>' ատրիբուտը՝ Ձեր հարցւոմները եզակիորեն նույնականացնելու համար:"
+    default_poll_must_have_less_options:
+      one: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
+      other: "Հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ"
+    named_poll_must_have_less_options:
+      one: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ:"
+      other: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ավելի քիչ քան %{count} տարբերակ:"
+    default_poll_must_have_different_options: "Հարցումը պետք է ունենա ընտրության տարբեր տարբերակներ:"
+    named_poll_must_have_different_options: " <strong>%{name}</strong> անվամբ հարցումը պետք է ունենա ընտրության տարբեր տարբերակներ:"
+    default_poll_with_multiple_choices_has_invalid_parameters: "Բազմակի ընտրանքներով հարցումը ունի անվավեր պարամետրեր:"
+    named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong> անվամբ բազմակի ընտրանքներով հարցումը ունի անվավեր պարամետրեր:"
+    requires_at_least_1_valid_option: "Դուք պետք է ընտրեք առնվազն 1 վավեր տարբերակ:"
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Դուք չեք կարող խմբագրել հարցումը %{minutes} րոպե անցնելուց հետո:"
+      cannot_edit_named_poll_with_votes: "Դուք չեք կարող փոխել հարցման <strong>${name}</strong> անունը %{minutes} րոպե անցնելուց հետո:"
+    no_poll_with_this_name: " <strong>%{name}</strong> անվամբ ոչ մի հարցում կապակցված չէ այս գրառմանը:"
+    post_is_deleted: "Հնարավոր չէ գործողություն կատարել ջնջված գրառման վրա:"
+    user_cant_post_in_topic: "Դուք չեք կարող քվեարկել, քանի որ չեք կարող գրառում կատարել այս թեմայում:"
+    topic_must_be_open_to_vote: "Քվեարկելու համար թեման պետք է բաց լինի:"
+    poll_must_be_open_to_vote: "Քվեարկելու համար հարցումը պետք է բաց լինի:"
+    topic_must_be_open_to_toggle_status: "Թեման պետք է բաց լինի կարգավիճակը փոխելու համար:"
+    only_staff_or_op_can_toggle_status: "Միայն անձնակազմի անդամը կամ սկզբնական հրապարակողը կարող է փոխել հարցման կարգավիճակը:"
+    insufficient_rights_to_create: "Ձեզ չի թույլատրվում հարցումներ ստեղծել:"
+    email:
+      link_to_poll: "Սեղմեք՝ հարցումը դիտելու համար:"

@@ -1,0 +1,682 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Chatt
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          fullscreen: "När chatten är i helskärm"
+          never: "Aldrig"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Chattkanalens status har ändrats"
+            chat_channel_delete: "Chattkanal raderad"
+            chat_auto_remove_membership: "Medlemskap tas automatiskt bort från kanaler"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Skapa ett chattmeddelande i en angiven kanal."
+      web_hooks:
+        chat_event:
+          group_name: "Chatthändelser"
+          chat_message_created: "Meddelandet skapas"
+          chat_message_edited: "Meddelandet redigeras"
+          chat_message_trashed: "Meddelandet kastas"
+          chat_message_restored: "Meddelandet återställs"
+    about:
+      chat_messages_count: "Chattmeddelanden"
+      chat_channels_count: "Chattkanaler"
+      chat_users_count: "Chattanvändare"
+    chat:
+      text_copied: Texten har kopierats till urklipp
+      link_copied: Länken har kopierats till urklipp
+      back_to_forum: "Forum"
+      deleted_chat_username: raderat
+      dates:
+        yesterday: "Igår"
+      all_loaded: "Visar alla meddelanden"
+      already_enabled: "Chatt är redan aktiverat för detta ämne. Vänligen uppdatera."
+      disabled_for_topic: "Chatt är inaktiverat för detta ämne."
+      bot: "bot"
+      create: "Skapa"
+      cancel: "Avbryt"
+      cancel_reply: "Avbryt svar"
+      chat_channels: "Kanaler"
+      browse_all_channels: "Bläddra bland alla kanaler"
+      see_in: "Se i"
+      move_to_channel:
+        title: "Flytta meddelanden till kanal"
+        instructions:
+          one: "Du flyttar <strong>%{count}</strong> meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats. Observera att svarskedjor inte kommer att bevaras i den nya kanalen, och meddelanden i den gamla kanalen kommer inte längre att visas som svar på flyttade meddelanden."
+          other: "Du flyttar <strong>%{count}</strong> meddelanden. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att dessa meddelanden har flyttats. Observera att svarskedjor inte kommer att bevaras i den nya kanalen, och meddelanden i den gamla kanalen kommer inte längre att visas som svar på flyttade meddelanden."
+        confirm_move: "Flytta meddelanden"
+      channel_settings:
+        title: "Kanalinställningar"
+        edit: "Redigera"
+        add: "Lägg till"
+        close_channel: "Stäng kanal"
+        open_channel: "Öppna kanal"
+        archive_channel: "Arkivera kanal"
+        delete_channel: "Radera kanal"
+        join_channel: "Gå med i kanal"
+        leave_channel: "Lämna kanal"
+        leave_groupchat_info: "Genom att lämna den här gruppchatten har du inte längre tillgång till den och kommer inte att få aviseringar relaterade till den. För att gå med igen måste du bjudas in igen av en medlem av gruppchatten."
+        join: "Gå med"
+        leave: "Lämna"
+        save_label:
+          mute_channel: "Inställningen för att tysta kanalen har sparats"
+          desktop_notification: "Inställningen för skrivbordsaviseringar har sparats"
+          mobile_notification: "Inställningen för mobila push-aviseringar har sparats"
+      channel_archive:
+        title: "Arkivera kanal"
+        instructions: "<p>Arkivering av en kanal sätter den i skrivskyddat läge och flyttar alla meddelanden från kanalen till ett nytt eller existerande ämne. Inga nya meddelanden kan skickas och inga befintliga meddelanden kan redigeras eller raderas.</p><p>Är du säker på att du vill arkivera kanalen <strong>%{channelTitle}</strong>?</p>"
+        process_started: "Arkiveringsprocessen har påbörjats. Denna modal kommer snart att stängas och du får ett personligt meddelande när arkiveringen är klar."
+        retry: "Försök igen"
+      channel_open:
+        title: "Öppna kanal"
+        instructions: "Öppnar kanalen igen, alla användare kommer att kunna skicka meddelanden och redigera sina befintliga meddelanden."
+      channel_close:
+        title: "Stäng kanal"
+        instructions: "Genom att stänga kanalen hindras användare som inte är personal att skicka nya meddelanden eller redigera befintliga meddelanden. Är du säker på att du vill stänga denna kanal?"
+      channel_delete:
+        title: "Radera kanal"
+        instructions: "<p>Tar bort kanalen <strong>%{name}</strong> och chatthistoriken. Alla meddelanden och relaterad data, såsom reaktioner och uppladdningar, kommer att raderas permanent. Om du vill bevara kanalhistoriken och avveckla den, kanske du vill arkivera kanalen istället.</p> <p>Är du säker på att du vill <strong>ta bort kanalen permanent</strong>? Bekräfta genom att skriva in kanalens namn i rutan nedan.</p>"
+        confirm: "Jag förstår konsekvenserna, radera kanalen"
+        confirm_channel_name: "Ange kanalnamn"
+        process_started: "Processen för att radera kanalen har påbörjats. Denna modal kommer att stängas inom kort och du kommer inte längre att se den raderade kanalen någonstans."
+      channels_list_popup:
+        browse: "Bläddra bland kanaler"
+        create: "Ny kanal"
+      close: "Stäng"
+      remove: "Ta bort"
+      collapse: "Komprimera chattruta"
+      expand: "Expandera chattlådan"
+      confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"
+      deleted:
+        one: "Ett meddelande raderades. [view]"
+        other: "%{count} meddelanden raderades. [visa alla]"
+      hidden: "Ett meddelande doldes. [view]"
+      delete: "Radera"
+      edited: "redigerad"
+      muted: "tystat"
+      joined: "gick med"
+      empty_state:
+        direct_message_cta: "Starta en personlig chatt"
+        direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
+        title: "Inga kanaler hittades"
+        my_threads: "Du har inga trådar än. Trådar du deltar i kommer att visas här."
+      email_frequency:
+        description: "Vi skickar bara e-post till dig om vi inte har sett dig under de senaste 15 minuterna."
+        never: "Aldrig"
+        title: "E-postaviseringar"
+        when_away: "Endast när du är borta"
+      header_indicator_preference:
+        title: "Visa aktivitetsindikator i sidhuvudet"
+        all_new: "Alla nya meddelanden"
+        only_mentions: "Bara omnämnanden"
+        never: "Aldrig"
+      separate_sidebar_mode:
+        title: "Visa separata sidofältslägen för forum och chatt"
+      enable: "Aktivera chatt"
+      flag: "Flagga"
+      emoji: "Infoga emoji"
+      flagged: "Detta meddelande har flaggats för granskning"
+      invalid_access: "Du har inte tillgång till den här chattkanalen"
+      invitation_notification: "<span>%{username}</span> <span>bjöd in dig att gå med i en chattkanal</span>"
+      in_reply_to: "Som svar på"
+      heading: "Chatt"
+      join: "Gå med"
+      last_visit: "senaste besök"
+      mention_warning:
+        invitations_sent:
+          one: "Inbjudan skickad"
+          other: "Inbjudningar skickade"
+        invite: "Bjud in till kanal"
+        channel_wide_mentions_disallowed: "@här och @alla omnämnanden har inaktiverats i den här kanalen."
+        groups:
+          header:
+            some: "Vissa användare kommer inte att aviseras"
+            all: "Ingen kommer att aviseras"
+          unreachable_1: "@%{group} tillåter inte omnämnanden."
+          unreachable_2: "@%{group1} och @%{group2} tillåter inte omnämnanden."
+          unreachable_multiple:
+            one: "@%{group} och ytterligare %{count} grupp tillåter inte omnämnanden."
+            other: "@%{group} och ytterligare %{count} grupper tillåter inte omnämnanden."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                              other {Att nämna @{group1} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} överstiger aviseringsgränsen som är # användare.}
+                              other {Att nämna @{group1} överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} och @{group2} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                            other {Att nämna @{group1} och @{group2} överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna @{group1} och @{group2} överstiger aviseringsgränsen som är # användare.}
+                            other {Att nämna @{group1} och @{group2} överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Att nämna dessa {groupCount} grupper överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                            other {Att nämna dessa {groupCount} grupper överstiger <a href="{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är # användare.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Att nämna dessa {groupCount} grupper överstiger aviseringsgränsen som är # användare.}
+                            other {Att nämna dessa {groupCount} grupper överstiger aviseringsgränsen som är # användare.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "Detta meddelande överstiger aviseringsgränsen, som är %{count} omnämnande."
+          other: "Detta meddelande överstiger aviseringsgränsen, som är %{count} omnämnanden."
+        too_many_mentions_admin:
+          one: 'Det här meddelandet överstiger <a href="%{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är %{count} omnämnande.'
+          other: 'Det här meddelandet överstiger <a href="%{siteSettingUrl}" target="_blank">aviseringsgränsen</a> som är %{count} omnämnanden.'
+      aria_roles:
+        header: "Chatthuvud"
+        composer: "Chattkompositör"
+        channels_list: "Lista över chattkanaler"
+      kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
+      only_chat_push_notifications:
+        title: "Skicka bara push-meddelanden för chatt"
+        description: "Blockera alla push-meddelanden som inte är chattmeddelanden från att skickas"
+      ignore_channel_wide_mention:
+        title: "Ignorera omnämnanden i hela kanalen"
+        description: "Skicka inte meddelanden för kanalövergripande omnämnanden (@here och @all)."
+      open: "Öppna chatt"
+      open_full_page: "Öppna chatt i helskärmsläge"
+      close_full_page: "Stäng helskärmschatt"
+      open_message: "Öppna meddelande i chatten"
+      placeholder_self: "Gör en anteckning"
+      placeholder_channel: "Chatta i %{channelName}"
+      placeholder_thread: "Chatta i tråden"
+      placeholder_users: "Chatta med %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Kanalen är arkiverad, och du kan inte skicka nya meddelanden just nu."
+        closed: "Kanalen är stängd, och du kan inte skicka nya meddelanden just nu."
+        read_only: "Kanalen är lässkyddad, och du kan inte skicka nya meddelanden just nu."
+      placeholder_silenced: "Du kan inte skicka meddelanden just nu."
+      remove_upload: "Ta bort fil"
+      react: "Reagera med emoji"
+      reply: "Svara"
+      edit: "Redigera"
+      copy_link: "Kopiera länk"
+      copy_text: "Kopiera text"
+      rebake_message: "Generera HTML"
+      message_too_long: "Meddelandet är för långt. Meddelanden får högst innehålla %{count} tecken."
+      retry_staged_message:
+        title: "Nätverksfel"
+        action: "Skicka igen?"
+      unreliable_network: "Nätverket är opålitligt, det fungerar kanske inte att skicka meddelanden och spara utkast"
+      bookmark_message: "Bokmärk"
+      bookmark_message_edit: "Redigera bokmärke"
+      restore: "Återställ raderat meddelande"
+      save: "Spara"
+      select: "Välj"
+      return_to_list: "Återgå till listan över kanaler"
+      return_to_channel: "Återgå till kanal"
+      return_to_threads_list: "Återgå till trådlistan"
+      unread_threads_count:
+        one: "Du har %{count} oläst diskussion"
+        other: "Du har %{count} olästa diskussioner"
+      scroll_to_bottom: "Scrolla till botten"
+      scroll_to_new_messages: "Se nya meddelanden"
+      sound:
+        title: "Meddelandeljud för chatt via dator"
+      sounds:
+        none: "Ingen"
+        bell: "Bell"
+        ding: "Ding"
+      title: "chatt"
+      title_capitalized: "Chatt"
+      upload: "Bifoga en fil"
+      upload_to_channel: "Ladda upp till %{title}"
+      upload_to_thread: "Ladda upp till tråd"
+      uploaded_files:
+        one: "%{count} fil"
+        other: "%{count} filer"
+      you_flagged: "Du flaggade detta meddelande"
+      exit: "tillbaka"
+      channel_status:
+        read_only_header: "Kanalen är skrivskyddad"
+        read_only: "Endast läsning"
+        archived_header: "Kanalen är arkiverad"
+        archived: "Arkiverad"
+        archive_failed: "Arkivering av kanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. <a target=\"_blank\" href=\"%{topic_url}\">Målämnet</a> skapades. Tryck på försök igen för att försöka slutföra arkivet."
+        archive_failed_no_topic: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. Målämnet skapades inte. Tryck på försök igen för att försöka slutföra arkiveringen."
+        archive_completed: "Se det <a target=\"_blank\" href=\"%{topic_url}\">arkiverade ämnet</a>"
+        closed_header: "Kanalen är stängd"
+        closed: "Stängd"
+        open_header: "Kanalen är öppen"
+        open: "Öppen"
+      browse:
+        back: "Tillbaka"
+        title: Kanaler
+        filter_all: Alla
+        filter_open: Öppen
+        filter_closed: Stängd
+        filter_archived: Arkiverad
+        filter_input_placeholder: Sök kanal efter namn
+      chat_message_separator:
+        today: Idag
+        yesterday: Igår
+      members_view:
+        filter_placeholder: Hitta medlemmar
+        add_member: Lägg till medlem
+        back_to_settings: "Tillbaka till inställningarna"
+      about_view:
+        associated_topic: Länkat ämne
+        associated_category: Länkad kategori
+        title: Rubrik
+        name: Namn
+        description: Beskrivning
+      channel_info:
+        back_to_all_channels: "Alla kanaler"
+        back_to_channel: "Tillbaka"
+        tabs:
+          members: Medlemmar
+          settings: Inställningar
+        remove_member: "Ta bort"
+      new_message_modal:
+        title: Skicka meddelande
+        add_user_long: <kbd>skift + klicka</kbd> eller <kbd>skift + enter</kbd><span>Lägg till @%{username}</span>
+        add_user_short: <span>Lägg till användare</span>
+        open_channel: <span>Öppna kanal</span>
+        default_search_placeholder: "#a-kanal, @någon eller något"
+        default_channel_search_placeholder: "#en-kanal"
+        default_user_search_placeholder: "@någon"
+        user_search_placeholder: "...lägg till fler medlemmar"
+        disabled_user: "har inaktiverat chatten"
+        no_items: "Inga objekt"
+        create_group_placeholder: "Gruppchattnamn (valfritt)"
+        participants_counter: "%{selection_count}/%{max} deltagare"
+        new_group_chat: "Ny gruppchatt"
+        filter: "Filter"
+        cant_add_more_members: "Maximalt antal medlemmar nått"
+        create_new_group_chat: "Skapa gruppchatt"
+        group_with_too_many_members: "har för många medlemmar (%{membersCount})"
+      channel_edit_name_slug_modal:
+        title: Redigera kanal
+        input_placeholder: Lägg till ett namn
+        slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
+        name: Kanalnamn
+        slug: Dynamiskt kanalfält (valfritt)
+      channel_edit_description_modal:
+        title: Redigera beskrivning
+        input_placeholder: Lägg till en beskrivning
+        description: Berätta för folk vad den här kanalen handlar om
+      direct_message_creator:
+        add_to_channel: "Lägg till i kanal"
+        title: Nytt meddelande
+        prefix: "Till:"
+        no_results: Inga resultat
+        selected_user_title: "Avmarkera %{username}"
+        group_name: "Gruppchattnamn (valfritt)"
+        members_counter:
+          one: "%{count}/%{max} medlem"
+          other: "%{count}/%{max} medlemmar"
+      channel:
+        no_memberships: Denna kanal har inga medlemmar
+        no_memberships_found: Inga medlemmar hittades
+        memberships_count:
+          one: "%{count} medlem"
+          other: "%{count} medlemmar"
+      create_channel:
+        threading:
+          label: "Aktivera trådning"
+        auto_join_users:
+          public_category_warning: "%{category} är en offentlig kategori. Vill du automatiskt lägga till alla nyligen aktiva användare till den här kanalen?"
+          warning_1_group:
+            one: "Vill du automatiskt lägga till %{count} användare från %{group}?"
+            other: "Vill du automatiskt lägga till %{count} användare från %{group}?"
+          warning_2_groups:
+            one: "Vill du automatiskt lägga till %{count} användare från %{group1} och %{group2}?"
+            other: "Vill du automatiskt lägga till %{count} användare från %{group1} och %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupp?}
+                        other {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupp?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupper?}
+                        other {Vill du automatiskt lägga till {userCount} användare från {groupName} och ytterligare {groupCount} grupper?}
+                      }
+                    }
+            }
+        choose_category:
+          label: "Välj en kategori"
+          none: "Välj en..."
+          default_hint: Hantera åtkomst genom att besöka <a href=%{link} target="_blank">%{category} säkerhetsinställningar</a>
+          hint_1_group: 'Användare i %{group} kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningar</a>'
+          hint_2_groups: 'Användare i %{group1} och %{group2} kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningar</a>'
+          hint_multiple_groups:
+            one: 'Användare i %{group} och ytterligare %{count} grupp kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
+            other: 'Användare i %{group} och ytterligare %{count} grupper kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
+        create: "Skapa kanal"
+        description: "Beskrivning (valfritt)"
+        name: "Kanalnamn"
+        slug: "Dynamiskt kanalfält (valfritt)"
+        title: "Ny kanal"
+        type: "Typ"
+        types:
+          category: "Kategori"
+          topic: "Ämne"
+      reviewable:
+        type: "Chatt meddelande"
+      reactions:
+        only_you: "<span>Du reagerade med </span>:%{emoji}:"
+        you_and_single_user: "<span>Du och %{username} reagerade med </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Du, %{commaSeparatedUsernames} och %{username} reagerade med </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Du, %{commaSeparatedUsernames} och %{count} annan reagerade med </span>:%{emoji}:"
+          other: "<span>Du, %{commaSeparatedUsernames} och %{count} andra reagerade med </span>:%{emoji}:"
+        single_user: "<span>%{username} reagerade med </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} och %{username} reagerade med </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} och %{count} annan reagerade med </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} och %{count} andra reagerade med </span>:%{emoji}:"
+      composer:
+        toggle_toolbar: "Växla verktygsfält"
+        italic_text: "kursiv text"
+        bold_text: "fet text"
+        code_text: "kod text"
+        send: "Skicka"
+      quote:
+        original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Chattcitat kopierat till urklipp"
+        default_thread_title: "Tråd"
+      notification_levels:
+        never: "Aldrig"
+        mention: "Endast för omnämnanden"
+        always: "För all aktivitet"
+      settings:
+        channel_wide_mentions_label: "Tillåt @all och @here omnämnanden"
+        channel_wide_mentions_description: "Tillåt användare att avisera alla #%{channel}-medlemmar med @all eller bara de som är aktiva för tillfället med @here"
+        channel_threading_label: "Trådning"
+        channel_threading_description: "När trådning är aktiverat kommer svar på ett chattmeddelande att skapa ett separat samtal som existerar parallellt med huvudkanalen."
+        auto_join_users_label: "Lägg till användare automatiskt"
+        auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till kategorin %{category}."
+        auto_join_users_info_no_category: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till vald kategori."
+        auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
+        follow: "Gå med"
+        followed: "Gick med"
+        mute: "Tysta kanal"
+        threading_enabled: "Aktiverad"
+        threading_disabled: "Inaktiverad"
+        muted_on: "På"
+        muted_off: "Av"
+        notifications: "Aviseringar"
+        preview: "Förhandsgranska"
+        save: "Spara"
+        saved: "Sparad"
+        unfollow: "Lämna"
+        admin_title: "Admin"
+        settings_title: "Inställningar"
+        info_title: "Kanalinfo"
+        category_label: "Kategori"
+        history_label: "Historik"
+        members_label: "Medlemmar"
+      admin:
+        title: "Chatt"
+        export_messages:
+          title: "Exportera chattmeddelanden"
+          description: "Detta exporterar alla meddelanden från alla kanaler."
+          create_export: "Skapa export"
+          export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
+      my_threads:
+        title: Mina trådar
+        aria_label: "Byt till min trådlista"
+      direct_messages:
+        title: "DM"
+        aria_label: "Byt till direktmeddelanden"
+        new: "Skapa en personlig chatt"
+        create: "Kör"
+        leave: "Lämna den här personliga chatten"
+        close: "Stäng den här personliga chatten"
+        cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."
+      channel_list:
+        title: "Kanaler"
+        aria_label: "Växla till kanallistan"
+      incoming_webhooks:
+        back: "Tillbaka"
+        channel_placeholder: "Välj en kanal"
+        confirm_destroy: "Är du säker på att du vill ta bort denna inkommande webhook? Detta kan inte ångras."
+        current_emoji: "Nuvarande emoji"
+        description: "Beskrivning"
+        delete: "Ta bort"
+        emoji: "Emoji"
+        emoji_instructions: "Systemavatar kommer att användas om emoji lämnas tom."
+        name: "Namn"
+        name_placeholder: "namn..."
+        new: "Ny inkommande webhook"
+        none: "Inga befintliga inkommande webhooks har skapats."
+        no_emoji: "Ingen emoji har valts"
+        post_to: "Posta till"
+        reset_emoji: "Återställ emoji"
+        save: "Spara"
+        edit: "Redigera"
+        select_emoji: "Välj emoji"
+        system: "system"
+        title: "Inkommande webhooks"
+        url: "URL"
+        url_instructions: "Den här webbadressen innehåller ett hemligt värde - håll det säkert."
+        username: "Användarnamn"
+        username_instructions: "Användarnamn på bot som gör inlägg på kanalen. Standardinställning är 'system' när det lämnas tomt."
+        instructions: "Inkommande webhooks kan användas av externa system för att skicka meddelanden till en utsedd chattkanal som botanvändare via <code>/hooks/:key</code> -slutpunkten. Försändelsen består av en enda <code>text</code>-parameter, som är begränsad till 2000 tecken.<br><br>Vi stöder också begränsade Slack-formaterade <code>text</code>-parametrar, extraherar länkar och omnämnanden baserat på formatet på <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, men <code>/hooks/:key/ slack</code>-slutpunkten måste användas för detta."
+      selection:
+        cancel: "Avbryt"
+        quote_selection: "Citat i ämne"
+        copy: "Kopiera"
+        move_selection_to_channel: "Flytta till kanal"
+        error: "Det uppstod ett fel när chattmeddelanden skulle flyttas"
+        title: "Flytta chatt till ämne"
+        new_topic:
+          title: "Flytta till nytt ämne"
+          instructions:
+            one: "Du håller på att skapa ett nytt ämne och fylla det med chattmeddelandet du har valt."
+            other: "Du håller på att skapa ett nytt ämne och fylla det med de <b>%{count}</b> chattmeddelanden du har valt."
+          instructions_channel_archive: "Du håller på att skapa ett nytt ämne och arkivera kanalmeddelandena till det."
+        existing_topic:
+          title: "Flytta till befintligt ämne"
+          instructions:
+            one: "Välj det ämne du vill flytta chattmeddelandet till."
+            other: "Välj det ämne du vill flytta dessa <b>%{count}</b> chattmeddelanden till."
+          instructions_channel_archive: "Välj vilket ämne du vill arkivera kanalmeddelanden till."
+        new_message:
+          title: "Flytta till nytt meddelande"
+          instructions:
+            one: "Du håller på att skapa ett nytt meddelande och fylla det med chattmeddelandet du har valt."
+            other: "Du håller på att skapa ett nytt ämne och fylla det med de <b>%{count}</b> chattmeddelanden du har valt."
+      replying_indicator:
+        single_user: "%{username} skriver"
+        multiple_users: "%{commaSeparatedUsernames} och %{lastUsername} skriver"
+        many_users:
+          one: "%{commaSeparatedUsernames} och %{count} skriver"
+          other: "%{commaSeparatedUsernames} och %{count} andra skriver"
+      retention_reminders:
+        indefinitely_short: "på obestämd tid"
+        indefinitely_long: "Chattinställningarna har ställts in för att behålla kanalmeddelanden på obestämd tid."
+        short:
+          one: "%{count} dag"
+          other: "%{count} dagar"
+        long:
+          one: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dag."
+          other: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dagar."
+      flags:
+        off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
+        inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."
+        illegal: "Det här inlägget kräver personalens uppmärksamhet eftersom jag tror att det innehåller innehåll som är olagligt."
+        spam: "Det här meddelandet är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på den aktuella kanalen."
+        notify_user: "Jag vill prata med den här personen direkt och privat om meddelandet."
+        notify_moderators: "Detta meddelande kräver personalens uppmärksamhet av en annan anledning som inte anges ovan."
+      flagging:
+        action: "Flagga meddelande"
+      emoji_picker:
+        favorites: "Används ofta"
+        smileys_&_emotion: "Smileys och emojis"
+        objects: "Objekt"
+        people_&_body: "Människor och kropp"
+        travel_&_places: "Resor och platser"
+        animals_&_nature: "Djur och natur"
+        food_&_drink: "Mat och dryck"
+        activities: "Aktiviteter"
+        flags: "Flaggor"
+        symbols: "Symboler"
+        search_placeholder: "Sök efter emojinamn och alias..."
+        no_results: "Inga resultat"
+      thread:
+        title: "Rubrik"
+        view_thread: Visa tråd
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        label: Tråd
+        close: "Stäng tråd"
+        original_message:
+          started_by: "Startad av"
+        settings: "Webbplatsinställningar"
+        last_reply: "senaste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Följer"
+          watching:
+            title: "Bevakar"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
+      threads:
+        open: "Öppna tråd"
+        list: "Trådar"
+        none: "Du deltar inte i några trådar i den här kanalen."
+      draft_channel_screen:
+        header: "Nytt meddelande"
+        cancel: "Avbryt"
+    notifications:
+      chat_invitation: "bjöd in dig att gå med i en chattkanal"
+      chat_invitation_html: "<span>%{username}</span> <span>bjöd in dig att gå med i en chattkanal</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: 'nämnde dig i "%{channel}"'
+          direct_html: '<span>%{username}</span> <span>nämnde dig i "%{channel}"</span>'
+          other_plain: 'nämnde %{identifier} i "%{channel}"'
+          other_html: '<span>%{username}</span> <span>nämnde %{identifier} i "%{channel}"</span>'
+        direct_message_chat_mention:
+          direct: "nämnde dig i personlig chatt"
+          direct_html: "<span>%{username}</span> <span>nämnde dig i en personlig chatt</span>"
+          other_plain: "nämnde %{identifier} i personlig chatt"
+          other_html: "<span>%{username}</span> <span>nämnde %{identifier} i personlig chatt</span>"
+        chat_message: "Nytt chattmeddelande"
+        chat_quoted: "%{username} citerade ditt chattmeddelande"
+    action_codes:
+      chat:
+        enabled: '%{who} aktiverade <button class="btn-link open-chat">chatt</button> %{when}'
+        disabled: "%{who} stängde chatten %{when}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: Skicka chattmeddelande
+          fields:
+            chat_channel_id:
+              label: Chattkanal-ID
+            message:
+              label: Meddelande
+            sender:
+              label: Avsändare
+              description: Standard är system
+    review:
+      transcript:
+        view: "Visa tidigare meddelandens avskrift"
+      types:
+        chat_reviewable_message:
+          title: "Flaggat chattmeddelande"
+        reviewable_chat_message:
+          title: "Flaggat chattmeddelande"
+          noun: "chattmeddelande"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chatt"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Byt kanal"
+          open_quick_channel_selector: "%{shortcut} Öppna snabbval av kanal"
+          open_insert_link_modal: "%{shortcut} Infoga hyperlänk (endast kompositör)"
+          composer_bold: "%{shortcut} Fet (endast kompositör)"
+          composer_italic: "%{shortcut} Kursiv (endast kompositör)"
+          composer_code: "%{shortcut} Kod (endast kompositör)"
+          drawer_open: "%{shortcut} Öppna chattmenyn"
+          drawer_close: "%{shortcut} Stäng chattmenyn"
+          mark_all_channels_read: "%{shortcut} Markera alla kanaler som lästa"
+    topic_statuses:
+      chat:
+        help: "Chatt är aktiverat för detta ämne"
+    user:
+      allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden och chattmeddelanden"
+      muted_users_instructions: "Neka alla meddelanden, personliga meddelanden och direkta chattmeddelanden från dessa användare."
+      allowed_pm_users_instructions: "Tillåt endast personliga meddelanden eller chattmeddelanden från dessa användare."
+      allow_private_messages_from_specific_users: "Tillåt endast specifika användare att skicka personliga meddelanden eller chattmeddelanden"
+      ignored_users_instructions: "Neka alla inlägg, meddelanden, notifikationer, personliga meddelanden eller direkta chattmeddelanden från dessa användare."
+    user_menu:
+      no_chat_notifications_title: "Du har inga chattaviseringar än"
+      no_chat_notifications_body: >
+        Du kommer att aviseras i den här panelen när någon skickar direktmeddelanden till dig eller <b>@nämner</b> dig i chatten. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Klicka på titeln överst på valfri chattkanal för att konfigurera vilka aviseringar du får i den kanalen. För mer, se dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
+      tabs:
+        chat_notifications: "Chattaviseringar"
+        chat_notifications_with_unread:
+          one: "Chattaviseringar - %{count} oläst avisering"
+          other: "Chattaviseringar - %{count} olästa aviseringar"
+    styleguide:
+      sections:
+        chat:
+          title: Chatt
+    sidebar:
+      panels:
+        chat:
+          label: "Chatt"

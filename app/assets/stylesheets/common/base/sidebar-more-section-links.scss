@@ -1,0 +1,15 @@
+.sidebar-more-section-content {
+  z-index: z("modal", "dropdown");
+
+  .sidebar-row {
+    padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
+  }
+}
+
+.sidebar-more-section-trigger {
+  justify-content: flex-start;
+
+  .d-icon {
+    color: var(--d-sidebar-link-icon-color);
+  }
+}

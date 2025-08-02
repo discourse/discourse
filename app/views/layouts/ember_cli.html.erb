@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
+
+  <%= discourse_stylesheet_link_tag(:ember_cli) %>
+
+</head>
+<body class="requires-ember-cli">
+  <div class='warning'>
+    <h1>Ember CLI is Required in Development Mode</h1>
+
+    <p>To run Ember CLI in development mode, please do the following:</p>
+
+    <pre><code>$ bin/ember-cli</code></pre>
+
+    <p>Then visit the following URL to use Discourse:</p>
+
+    <h3><a href="http://<%= Discourse.current_hostname %>:4200<%= Discourse.base_path %>">http://<%= Discourse.current_hostname %>:4200<%= Discourse.base_path %></a></h3>
+
+    <p>To disable this warning and allow direct Rails access, start the server with <code>ALLOW_EMBER_CLI_PROXY_BYPASS=1</code></p>
+  </div>
+</body>
+</html>

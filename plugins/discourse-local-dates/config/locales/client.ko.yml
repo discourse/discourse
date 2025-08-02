@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: 오늘 %{time}
+        tomorrow: 내일 %{time}
+        yesterday: 어제 %{time}
+        countdown:
+          passed: 날짜가 지났습니다
+      title: 날짜 / 시간 삽입
+      create:
+        form:
+          insert: 삽입
+          advanced_mode: 고급 모드
+          simple_mode: 단순 모드
+          format_description: "사용자에게 날짜를 표시할 때 사용하는 형식입니다. 오프셋을 표시하려면 Z를, 표준 시간대 이름을 표시하려면 zz를 사용합니다."
+          timezones_title: 표시 할 시간대
+          timezones_description: 시간대는 미리보기 및 폴백으로 날짜를 표시하는 데 사용됩니다.
+          recurring_title: 반복
+          recurring_description: "이벤트의 반복을 정의하십시오. 양식에서 생성 된 반복 옵션을 수동으로 편집하고 연도, 분기, 월, 주, 일, 시, 분, 초, 밀리 초 중 하나를 사용할 수 있습니다."
+          recurring_none: 반복 없음
+          invalid_date: 날짜가 잘못되었습니다. 날짜와 시간이 올바른지 확인하십시오
+          date_title: 날짜
+          time_title: 시간
+          format_title: 날짜 형식
+          timezone: 시간대
+          until: 까지...
+          current_timezone: "현재 시간대:"
+          recurring:
+            every_day: "매일"
+            every_week: "매주"
+            every_two_weeks: "2주마다"
+            every_month: "매월"
+            every_two_months: "2개월마다"
+            every_three_months: "3개월마다"
+            every_six_months: "6개월마다"
+            every_year: "매년"
+      default_title: "%{site_name} 이벤트"

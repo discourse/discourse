@@ -1,0 +1,14 @@
+<div class='container unsubscribe'>
+  <br>
+  <h2><%=t "unsubscribed.title"%></h2>
+  <br>
+  <p>
+    <%=t("unsubscribed.description", email: @email, url: path("/my/preferences")).html_safe %>
+  </p>
+
+  <% if @topic %>
+    <p><%=t("unsubscribed.topic_description", link: render_topic_title(@topic)).html_safe%></p>
+  <% elsif @topic_id %>
+    <p><%=t("unsubscribed.private_topic_description")%></p>
+  <% end %>
+</div>

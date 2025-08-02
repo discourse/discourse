@@ -1,0 +1,294 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: 聊天
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "總是"
+          never: "永不"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "聊天頻道狀態已變更"
+            chat_channel_delete: "聊天頻道已刪除"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "在指定頻道中建立聊天訊息。"
+    about:
+      chat_messages_count: "聊天訊息"
+      chat_channels_count: "聊天頻道"
+      chat_users_count: "聊天使用者"
+    chat:
+      back_to_forum: "論壇"
+      deleted_chat_username: 已刪除
+      dates:
+        yesterday: "昨天"
+      all_loaded: "顯示所有訊息"
+      already_enabled: "此主題已啟用聊天功能。請重新整理。"
+      disabled_for_topic: "此主題的聊天功能已停用。"
+      bot: "機器人"
+      create: "創建"
+      cancel: "取消"
+      cancel_reply: "取消回覆"
+      chat_channels: "頻道"
+      browse_all_channels: "瀏覽所有頻道"
+      move_to_channel:
+        title: "將訊息移至頻道"
+        confirm_move: "移動訊息"
+      channel_settings:
+        title: "頻道設定"
+        edit: "編輯"
+        add: "加入"
+        close_channel: "關閉頻道"
+        open_channel: "開放頻道"
+        archive_channel: "封存頻道"
+        delete_channel: "刪除頻道"
+        join_channel: "加入頻道"
+        leave_channel: "離開頻道"
+        join: "加入"
+        leave: "離開"
+        save_label:
+          mute_channel: "靜音頻道偏好已儲存"
+      channel_archive:
+        title: "封存頻道"
+        retry: "重試"
+      channel_open:
+        title: "開放頻道"
+      channel_close:
+        title: "關閉頻道"
+      channel_delete:
+        title: "刪除頻道"
+        confirm_channel_name: "輸入頻道名稱"
+      channels_list_popup:
+        browse: "瀏覽頻道"
+      close: "關閉"
+      remove: "移除"
+      delete: "刪除"
+      edited: "已編輯"
+      muted: "靜音"
+      joined: "建立日期"
+      empty_state:
+        direct_message_cta: "開始個人聊天"
+        direct_message: "您還可以與一個或多個使用者開始個人聊天。"
+      email_frequency:
+        never: "永不"
+      header_indicator_preference:
+        all_new: "所有新訊息"
+        never: "永不"
+      enable: "啟用聊天"
+      flag: "檢舉"
+      heading: "聊天"
+      join: "加入"
+      last_visit: "上次到訪"
+      no_public_channels_cta: "瀏覽頻道"
+      remove_upload: "移除檔案"
+      react: "用表情符號反應"
+      reply: "回覆"
+      edit: "編輯"
+      copy_link: "複製連結"
+      rebake_message: "重建 HTML"
+      message_too_long: "訊息過長，不得超過 %{count} 個字元。"
+      retry_staged_message:
+        title: "網路錯誤"
+        action: "再次發送？"
+      bookmark_message: "書籤"
+      bookmark_message_edit: "編輯書籤"
+      restore: "還原已刪除的訊息"
+      save: "保存"
+      select: "選擇"
+      scroll_to_bottom: "捲動到底部"
+      scroll_to_new_messages: "查看新訊息"
+      sound:
+        title: "桌面聊天通知聲音"
+      sounds:
+        none: "無"
+        bell: "鐘聲"
+      title: "聊天"
+      title_capitalized: "聊天"
+      upload_to_channel: "上傳至 %{title}"
+      exit: "上一步"
+      channel_status:
+        read_only_header: "頻道為唯讀"
+        read_only: "唯讀"
+        archived_header: "頻道已封存"
+        archived: "已封存"
+        closed: "不公開"
+        open: "開啟"
+      browse:
+        back: "上一步"
+        title: 頻道
+        filter_all: 全部
+        filter_open: 開啟
+        filter_closed: 不公開
+        filter_archived: 已封存
+      chat_message_separator:
+        today: 今天
+        yesterday: 昨天
+      about_view:
+        associated_topic: 連結的主題
+        associated_category: 連結的類別
+        title: 標題
+        name: 名字
+        description: 簡述
+      channel_info:
+        back_to_all_channels: "所有頻道"
+        back_to_channel: "上一步"
+        tabs:
+          members: 成員
+          settings: 設定
+        remove_member: "移除"
+      new_message_modal:
+        title: 傳送訊息
+        add_user_short: <span>新增使用者</span>
+        open_channel: <span>開啟頻道</span>
+        no_items: "沒有項目"
+        filter: "過濾"
+      channel_edit_name_slug_modal:
+        title: 編輯頻道
+        name: 變更名稱
+      channel_edit_description_modal:
+        title: 編輯描述
+        input_placeholder: 新增描述
+      direct_message_creator:
+        title: 新訊息
+        prefix: "發至:"
+        no_results: 沒有結果
+        selected_user_title: "取消選取 %{username}"
+      channel:
+        memberships_count:
+          other: "%{count} 位成員"
+      create_channel:
+        name: "變更名稱"
+        type: "類型"
+        types:
+          category: "分類"
+          topic: "話題"
+      reviewable:
+        type: "聊天訊息"
+      composer:
+        italic_text: "斜體字"
+        bold_text: "粗體字"
+        send: "傳送"
+      quote:
+        default_thread_title: "討論串"
+      notification_levels:
+        never: "永不"
+      settings:
+        auto_join_users_label: "自動新增使用者"
+        follow: "加入"
+        followed: "建立日期"
+        threading_enabled: "啟用"
+        threading_disabled: "停用"
+        muted_on: "開啟"
+        muted_off: "關閉"
+        notifications: "通知"
+        preview: "預覽"
+        save: "保存"
+        saved: "已儲存"
+        unfollow: "離開"
+        admin_title: "管理員"
+        settings_title: "設定"
+        category_label: "分類"
+        history_label: "歷史記錄"
+        members_label: "成員"
+      admin:
+        title: "聊天"
+        export_messages:
+          title: "匯出聊天訊息"
+          create_export: "建立匯出"
+      direct_messages:
+        create: "開始"
+        cannot_create: "抱歉，您無法傳送私訊。"
+      channel_list:
+        title: "頻道"
+      incoming_webhooks:
+        back: "上一步"
+        description: "簡述"
+        delete: "刪除"
+        emoji: "Emoji"
+        name: "姓名"
+        name_placeholder: "名字..."
+        save: "保存"
+        edit: "編輯"
+        select_emoji: "選擇表情符號"
+        system: "系統"
+        url: "網址"
+        username: "使用者名稱"
+      selection:
+        cancel: "取消"
+        copy: "複製"
+        new_topic:
+          title: "移至新話題"
+        existing_topic:
+          title: "移至已存在的話題"
+        new_message:
+          title: "移動到新訊息"
+      retention_reminders:
+        short:
+          other: "%{count} 天"
+      flagging:
+        action: "檢舉訊息"
+      emoji_picker:
+        objects: "物品"
+        activities: "活動"
+        flags: "投訴"
+        symbols: "象徵<br>"
+        no_results: "沒有結果"
+      thread:
+        title: "標題"
+        view_thread: 檢視討論串
+        replies:
+          other: "%{count}個回覆"
+        label: 討論串
+        close: "關閉討論串"
+        settings: "設定"
+        last_reply: "最新回覆"
+        notifications:
+          regular:
+            title: "一般"
+          tracking:
+            title: "跟蹤"
+          watching:
+            title: "關注中"
+        participants_other_count:
+          other: "+%{count}"
+      threads:
+        open: "開啟討論串"
+      draft_channel_screen:
+        header: "新訊息"
+        cancel: "取消"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: 訊息
+    review:
+      types:
+        reviewable_chat_message:
+          noun: "聊天訊息"
+    keyboard_shortcuts_help:
+      chat:
+        title: "聊天"
+    styleguide:
+      sections:
+        chat:
+          title: 聊天
+    sidebar:
+      panels:
+        chat:
+          label: "聊天"

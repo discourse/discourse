@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    discourse_local_dates_enabled: "Aktywuj funkcję discourse‐local‐dates. Sprawi to, że dodane zostanie wsparcie dla lokalnych stref czasowych w elemencie [date] wpisów"
+    discourse_local_dates_default_formats: "Najczęściej używane formaty dat, zobacz: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>format linii w momentjs</a>"
+    discourse_local_dates_default_timezones: "Domyślna lista stref czasowych, musi być prawidłową <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>strefą</a>"
+    discourse_local_dates_email_format: "Format używany do wyświetlania daty w wiadomościach e-mail, przykłady: „LLLL”, „llll” lub „RRRR-MM-DDTHH:mm:ss[Z]”. Zobacz: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>format ciągu momentjs</a>"
+    discourse_local_dates_email_timezone: "Strefa czasowa używana do wyświetlania dat w wiadomościach e-mail musi być poprawną strefą <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

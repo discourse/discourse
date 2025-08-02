@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    details:
+      title: Masquer le texte
+    composer:
+      details_title: Résumé
+      details_text: "Ce texte sera masqué"

@@ -1,0 +1,175 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse anketa"
+  js:
+    poll:
+      voters:
+        one: "volič"
+        few: "voliči"
+        many: "účastníci"
+        other: "účastníci"
+      total_votes:
+        one: "hlas celkom"
+        few: "hlasy celkom"
+        many: "hlasov celkom"
+        other: "hlasov celkom"
+      votes:
+        one: "%{count} hlas"
+        few: "%{count} hlasov"
+        many: "%{count} hlasov"
+        other: "%{count} hlasy"
+      average_rating: "Priemerné hodnotenie: <strong>%{average}</strong>."
+      public:
+        title: "Hlasy sú <strong>verejné</strong>."
+      results:
+        groups:
+          title: "Ak chcete hlasovať v tejto ankete, musíte byť členom %{groups} ."
+        vote:
+          title: "Výsledky sa zobrazia na stránke <strong>hlasovanie</strong>."
+        closed:
+          title: "Výsledky sa zobrazia po <strong>uzavretí</strong>"
+        staff:
+          title: "Výsledky sa zobrazujú len <strong>zamestnancom</strong>."
+        tabs:
+          votes: "Hlasy"
+          outcome: "Výsledok"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Vyberte aspoň <strong>%{count} možnosť </strong>."
+            few: "Vyberte aspoň <strong>%{count}</strong> možnosti."
+            many: "Vyberte aspoň <strong>%{count}</strong> možností."
+            other: "Vyberte aspoň <strong>%{count}</strong> možností."
+          up_to_max_options:
+            one: "Vyberte si <strong>%{count} možnosť </strong>."
+            few: "Vyberte až <strong>%{count}</strong> možnosti."
+            many: "Vyberte až <strong>%{count} možností</strong>."
+            other: "Vyberte až <strong>%{count} možností</strong>."
+          x_options:
+            one: "Vyberte <strong>%{count} možnosť</strong>."
+            few: "Vyberte <strong>%{count} možnosti</strong>."
+            many: "Vyberte <strong>%{count}</strong> možností."
+            other: "Vyberte <strong>%{count}</strong> možností."
+          between_min_and_max_options: "Vyberte od <strong>%{min} do %{max} možností</strong>."
+      cast-votes:
+        title: "Hlasovať"
+        label: "Hlasuj teraz!"
+      show-results:
+        title: "Zobraziť výsledky hlasovania"
+        label: "Výsledky"
+      show-tally:
+        title: "Zobraziť výsledky hlasovania podľa počtu hlasov"
+        label: "Zobraziť súčet"
+      show-percentage:
+        title: "Zobraziť výsledky hlasovania v percentách"
+        label: "Zobraziť v percentách"
+      remove-vote:
+        title: "Odstrániť hlas"
+        label: "Zrušiť hlas"
+      hide-results:
+        title: "Návrat na odovzdané hlasy"
+        label: "Hlasovať"
+      group-results:
+        title: "Zoskupenie hlasov podľa poľa používateľa"
+        label: "Zobraziť sumár"
+      export-results:
+        title: "Export výsledkov ankety"
+        label: "Export"
+      open:
+        title: "Zahájiť hlasovanie"
+        label: "Zahájiť"
+        confirm: "Ste si istý, že chcete zahájiť toto hlasovanie?"
+      close:
+        title: "Uzavrieť hlasovanie"
+        label: "Zavrieť"
+        confirm: "Ste si istý, že chcete uzavrieť toto hlasovanie?"
+      automatic_close:
+        closes_in: "Uzatvára sa za <strong>%{timeLeft}</strong>."
+        age: "Uzavreté <strong>%{age}</strong>"
+      breakdown:
+        title: "Výsledky ankety"
+        votes: "%{count} hlasov"
+        breakdown: "Sumár"
+        percentage: "Percento"
+        count: "Počet"
+      ranked_choice:
+        title:
+          rounds: "Kolá"
+          outcome: "Výsledok"
+        none: "Žiadny"
+        majority: "Väčšina"
+        eliminated: "Eliminované"
+        round: "Kolo"
+        winner:
+          one: "Víťazom sa stal %{winner} po jednom kole."
+          few: "Víťazom sa stal %{winner} po %{count} kolách."
+          many: "Víťazom sa stal %{winner} po %{count} kolách."
+          other: "Víťazom sa stal %{winner} po %{count} kolách."
+        tied:
+          one: "Rovnosť hlasov po jednom kole medzi týmito kandidátmi:"
+          few: "Rovnosť bodov po %{count} kolách medzi týmito kandidátmi:"
+          many: "Rovnosť bodov po %{count} kolách medzi týmito kandidátmi:"
+          other: "Rovnosť bodov po %{count} kolách medzi týmito kandidátmi:"
+      options:
+        label: "Možnosti"
+        ranked_choice:
+          abstain: "Zdržať sa hlasovania"
+          highest_priority: "(najvyššia priorita)"
+          lowest_priority: "(najnižšia priorita)"
+          login: "Prihláste sa a hlasujte!"
+      error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."
+      error_while_casting_votes: "Ľutujeme, nastala chyba pri prideľovaní Vašich hlasov."
+      error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazení účastníkov."
+      error_while_exporting_results: "Ospravedlňujeme sa, došlo k chybe pri exporte výsledkov ankety."
+      ui_builder:
+        title: Vytvoriť hlasovanie
+        insert: Vložiť hlasovanie
+        help:
+          options_min_count: Zadajte aspoň 1 možnosť.
+          options_max_count: Zadajte najviac %{count} možností.
+          invalid_min_value: Minimálna hodnota musí byť aspoň 1.
+          invalid_max_value: Maximálna hodnota musí byť aspoň 1, ale menšia alebo rovná počtu možností.
+          invalid_values: Minimálna hodnota musí byť menšia ako maximálna hodnota.
+          min_step_value: Minimálna hodnota pre krok je 1
+        poll_type:
+          label: Typ
+          regular: Jedna možnosť
+          multiple: Viacero možností
+          ranked_choice: Hodnotená voľba
+          number: Číselné hodnotenie
+        poll_result:
+          label: Zobraziť výsledky...
+          always: Vždy viditeľné
+          vote: Až po hlasovaní
+          closed: Po uzavretí ankety
+          staff: Len pre zamestnancov
+        poll_groups:
+          label: Obmedziť hlasovanie pre tieto skupiny
+        poll_chart_type:
+          label: Graf výsledkov
+          bar: Lišta
+          pie: Koláč
+        poll_config:
+          max: Max. možností
+          min: Min. možností
+          step: Krok
+        poll_public:
+          label: Ukázať kto hlasoval
+        poll_title:
+          label: Názov (nepovinné)
+        poll_options:
+          label: Možnosti (jedna na riadok)
+          add: Pridať možnosť
+        automatic_close:
+          label: Automaticky zatvoriť hlasovanie
+        show_advanced: "Zobraziť rozšírené možnosti"
+        hide_advanced: "Skryť rozšírené možnosti"

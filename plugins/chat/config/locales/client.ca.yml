@@ -1,0 +1,153 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Mai"
+    chat:
+      deleted_chat_username: suprimit
+      dates:
+        yesterday: "Ahir"
+      create: "Crea"
+      cancel: "Cancel·la"
+      channel_settings:
+        edit: "Edita"
+        add: "Afegeix"
+        join: "Registre"
+        leave: "Abandona"
+      close: "Tanca"
+      remove: "Elimina"
+      delete: "Suprimeix"
+      edited: "editat"
+      muted: "silenciat"
+      joined: "registrat"
+      email_frequency:
+        never: "Mai"
+      header_indicator_preference:
+        never: "Mai"
+      flag: "Bandera"
+      join: "Registre"
+      last_visit: "darrera visita"
+      reply: "Respon"
+      edit: "Edita"
+      rebake_message: "Refés HTML"
+      bookmark_message: "Preferit"
+      bookmark_message_edit: "Edita el marcador"
+      save: "Desa"
+      sounds:
+        none: "Cap"
+      exit: "enrere"
+      channel_status:
+        closed: "Tancat"
+        open: "Obre"
+      browse:
+        back: "Enrere"
+        filter_all: Tot
+        filter_open: Obre
+        filter_closed: Tancat
+      chat_message_separator:
+        today: Avui
+        yesterday: Ahir
+      about_view:
+        title: Títol
+        name: Nom
+        description: Descripció
+      channel_info:
+        back_to_channel: "Enrere"
+        tabs:
+          members: Membres
+          settings: Configuració
+        remove_member: "Elimina"
+      new_message_modal:
+        no_items: "Sense elements"
+        filter: "Filtre"
+      direct_message_creator:
+        title: Missatge nou
+        prefix: "A:"
+      create_channel:
+        type: "Tipus"
+        types:
+          category: "Categoria"
+          topic: "Tema"
+      composer:
+        italic_text: "text en cursiva"
+        bold_text: "text en negreta"
+        send: "Envia"
+      notification_levels:
+        never: "Mai"
+      settings:
+        follow: "Registre"
+        followed: "Registrat"
+        threading_enabled: "Activat"
+        threading_disabled: "Desactivat"
+        notifications: "Notificacions"
+        preview: "Previsualitza"
+        save: "Desa"
+        saved: "Desat"
+        unfollow: "Abandona"
+        admin_title: "Administració"
+        settings_title: "Configuració"
+        category_label: "Categoria"
+        history_label: "Historial"
+        members_label: "Membres"
+      incoming_webhooks:
+        back: "Enrere"
+        description: "Descripció"
+        delete: "Suprimeix"
+        emoji: "Emoji"
+        name: "Nom"
+        save: "Desa"
+        edit: "Edita"
+        system: "sistema"
+        url: "URL"
+        username: "Nom d'usuari "
+      selection:
+        cancel: "Cancel·la"
+        copy: "Còpia"
+        new_topic:
+          title: "Mou a un tema nou"
+        existing_topic:
+          title: "Mou a un tema existent"
+        new_message:
+          title: "Mou a missatge nou"
+      retention_reminders:
+        short:
+          one: "%{count} dia"
+          other: "%{count} dies"
+      emoji_picker:
+        objects: "Objectes"
+        activities: "Activitats"
+        flags: "Banderes"
+        symbols: "Símbols"
+      thread:
+        title: "Títol"
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        settings: "Configuració"
+        last_reply: "darrera resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguint"
+          watching:
+            title: "Vigilant"
+      draft_channel_screen:
+        header: "Missatge nou"
+        cancel: "Cancel·la"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Missatge

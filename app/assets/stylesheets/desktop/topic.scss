@@ -1,0 +1,39 @@
+.post-actions {
+  @include unselectable;
+  clear: both;
+  text-align: right;
+  margin-bottom: 10px;
+
+  .post-action {
+    display: inline-block;
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+}
+
+.post-menu-area {
+  margin: 20px 0;
+}
+
+#topic-title {
+  .remove-featured-link {
+    float: right;
+    text-transform: lowercase;
+    color: var(--primary-med-or-secondary-med);
+    font-size: 0.857rem;
+  }
+}
+
+#topic-filter {
+  background-color: var(--highlight-bg);
+  padding: 8px;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  font-size: var(--font-0);
+  z-index: z("dropdown");
+}
+
+.onscreen-post .row {
+  display: flex; // children should never wrap
+}

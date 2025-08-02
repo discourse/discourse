@@ -1,0 +1,264 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    chat_separate_sidebar_mode: "Mostra modalità separate della barra laterale per forum e chat."
+    chat_enabled: "Abilita chat."
+    enable_public_channels: "Abilita i canali pubblici in base alle categorie."
+    chat_allowed_groups: "Gli utenti in questi gruppi possono chattare. N.B. Amministratori e moderatori possono sempre accedere alla chat."
+    chat_channel_retention_days: "I messaggi di chat nei canali normali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
+    chat_dm_retention_days: "I messaggi di chat nei canali di chat personali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
+    chat_auto_silence_duration: "Numero di minuti per i quali gli utenti verranno silenziati quando superano il limite di velocità di creazione dei messaggi di chat. Imposta il valore su '0' per disabilitare il silenziamento automatico."
+    chat_allowed_messages_for_trust_level_0: "Numero di messaggi che gli utenti con livello di attendibilità 0 possono inviare in 30 secondi. Imposta su '0' per disabilitare il limite."
+    chat_allowed_messages_for_other_trust_levels: "Numero di messaggi che gli utenti con livello di attendibilità 1-4 possono inviare in 30 secondi. Imposta su '0' per disabilitare il limite."
+    chat_silence_user_sensitivity: "La probabilità che un utente segnalato in chat venga automaticamente silenziato."
+    chat_auto_silence_from_flags_duration: "Numero di minuti per i quali gli utenti verranno silenziati automaticamente a causa di messaggi di chat segnalati."
+    chat_duplicate_message_sensitivity: "La probabilità che un messaggio duplicato dello stesso mittente venga bloccato in breve tempo. Numero decimale compreso tra 0 e 1,0, dove 1,0 è l'impostazione più alta (blocca i messaggi più frequentemente in un lasso di tempo più breve). Imposta su `0` per consentire messaggi duplicati."
+    chat_minimum_message_length: "Numero minimo di caratteri per un messaggio di chat."
+    chat_allow_uploads: "Consenti caricamenti nei canali di chat pubblici e nei canali di messaggistica diretta."
+    chat_archive_destination_topic_status: "Lo stato che dovrebbe avere l'argomento di destinazione una volta completata l'archiviazione di un canale. Questa opzione si applica solo quando l'argomento di destinazione è nuovo, non già esistente."
+    direct_message_enabled_groups: "Consenti agli utenti all'interno di questi gruppi di creare chat personali da utente a utente. Nota: lo staff può sempre creare chat personali e gli utenti potranno rispondere alle chat personali avviate da utenti che dispongono dell'autorizzazione per crearle."
+    chat_message_flag_allowed_groups: "Agli utenti di questi gruppi è consentito segnalare i messaggi in chat. N.B. Ad amministratori e moderatori è sempre consentito segnalare i messaggi in chat."
+    max_mentions_per_chat_message: "Numero massimo di notifiche @name che un utente può utilizzare in un messaggio di chat."
+    chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
+    chat_allow_archiving_channels: "Consenti allo staff di archiviare i messaggi in un argomento alla chiusura di un canale."
+    chat_editing_grace_period: "Per (n) secondi dopo l'invio di una chat, la modifica non visualizzerà l'etichetta (modificato) accanto al messaggio di chat."
+    chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
+    chat_preferred_index: "Scheda preferita per il caricamento di /chat."
+    errors:
+      chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
+      direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
+      chat_upload_not_allowed_secure_uploads: "I caricamenti di chat non sono consentiti quando l'impostazione del sito per i caricamenti sicuri è abilitata."
+  system_messages:
+    private_channel_title: "Canale %{id}"
+    chat_channel_archive_complete:
+      title: "Archiviazione canale chat completata"
+      subject_template: "Archiviazione del canale di chat completata correttamente"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name} è stata completata con successo. I messaggi sono stati copiati nell'argomento [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Archiviazione canale chat non riuscita"
+      subject_template: "Archiviazione canale chat non riuscita"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name} non è riuscita. %{messages_archived} messaggi sono stati archiviati. I messaggi parzialmente archiviati sono stati copiati nell'argomento [%{topic_title}](%{topic_url}). Visita il canale in %{channel_url} per riprovare.
+    chat_channel_archive_failed_no_topic:
+      title: "Archiviazione canale chat non riuscita"
+      subject_template: "Archiviazione canale chat non riuscita"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name} non è andata a buon fine. Nessun messaggio è stato archiviato. L'argomento non è stato creato correttamente per i seguenti motivi:
+
+          %{topic_validation_errors}
+
+        Visita il canale su %{channel_url} per riprovare.
+  chat:
+    deleted_chat_username: eliminato
+    errors:
+      users_cant_be_added_to_channel: "Impossibile aggiungere membri a questo canale."
+      channel_exists_for_category: "Esiste già un canale per questa categoria e questo nome"
+      channel_new_message_disallowed:
+        archived: "Il canale è archiviato, non è possibile inviare nuovi messaggi"
+        closed: "Il canale è chiuso, non è possibile inviare nuovi messaggi"
+        read_only: "Il canale è di sola lettura, non è possibile inviare nuovi messaggi"
+      channel_modify_message_disallowed:
+        archived: "Il canale è archiviato, nessun messaggio può essere modificato o cancellato"
+        closed: "Il canale è chiuso, nessun messaggio può essere modificato o cancellato"
+        read_only: "Il canale è a sola lettura, nessun messaggio può essere modificato o cancellato"
+      user_cannot_send_message: "In questo momento non puoi inviare messaggi."
+      rate_limit_exceeded: "Superato il limite dei messaggi di chat che possono essere inviati in 30 secondi"
+      auto_silence_from_flags: "Messaggio di chat contrassegnato con un punteggio sufficientemente alto per silenziare l'utente."
+      channel_cannot_be_archived: "Il canale non può essere archiviato in questo momento, deve essere chiuso o aperto per l'archiviazione."
+      duplicate_message: "Hai pubblicato un messaggio identico troppo di recente."
+      delete_channel_failed: "Eliminazione del canale non riuscita, riprova."
+      minimum_length_not_met:
+        one: "Il messaggio è troppo breve, deve contenere almeno %{count} carattere."
+        other: "Il messaggio è troppo breve, deve contenere almeno %{count} caratteri."
+      message_too_long:
+        one: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{count} carattere."
+        other: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{count} caratteri."
+      draft_too_long: "La bozza è troppo lunga."
+      max_reactions_limit_reached: "Non sono consentite nuove reazioni su questo messaggio."
+      message_move_invalid_channel: "I canali di origine e di destinazione devono essere canali pubblici."
+      message_move_no_messages_found: "Nessun messaggio è stato trovato con gli ID messaggio forniti."
+      cant_update_direct_message_channel: "Le proprietà del canale dei messaggi diretti come il nome e la descrizione non possono essere aggiornate."
+      not_accepting_dms: "Spiacenti, %{username} non accetta messaggi al momento."
+      actor_ignoring_target_user: "Stai ignorando %{username}, quindi non puoi inviare messaggi a questo destinatario."
+      actor_muting_target_user: "Hai silenziato %{username}, quindi non puoi inviare messaggi a questo destinatario."
+      actor_disallowed_dms: "Hai scelto di impedire agli utenti di inviarti messaggi personali e diretti, quindi non puoi creare nuovi messaggi diretti."
+      actor_preventing_target_user_from_dm: "Hai scelto di impedire a %{username} di inviarti messaggi personali e diretti, quindi non puoi creare nuovi messaggi diretti per questo destinatario."
+      user_cannot_send_direct_messages: "Spiacenti, non puoi inviare messaggi diretti."
+      over_chat_max_direct_message_users_allow_self: "Puoi creare solo un messaggio diretto a te stesso."
+      over_chat_max_direct_message_users:
+        one: "Non puoi creare un messaggio diretto con più di %{count} altro utente."
+        other: "Non puoi creare un messaggio diretto con più di altri %{count} utenti."
+      original_message_not_found: "L'antenato del messaggio a cui stai rispondendo non è stato trovato o è stato eliminato."
+      thread_invalid_for_channel: "Il thread non fa parte del canale fornito."
+      thread_does_not_match_parent: "Il thread non corrisponde al messaggio principale."
+      invalid_direct_message: "Non hai i permessi per creare questo messaggio diretto."
+    reviewables:
+      message_already_handled: "Grazie, ma abbiamo già esaminato questo messaggio e stabilito che non è necessario contrassegnarlo di nuovo."
+      actions:
+        agree:
+          title: "Accetta..."
+        agree_and_keep_message:
+          title: "Conserva messaggio"
+          description: "Accetta segnalazione e mantieni il messaggio invariato."
+        agree_and_keep_deleted:
+          title: "Conferma eliminazione del messaggio"
+          description: "Accetta segnalazione e conferma eliminazione del messaggio."
+        agree_and_suspend:
+          title: "Sospendi utente"
+          description: "Accetta segnalazione e sospendi l'utente."
+        agree_and_silence:
+          title: "Silenzia utente"
+          description: "Accetta segnalazione e silenzia l'utente."
+        agree_and_restore:
+          title: "Ripristina messaggio"
+          description: "Ripristina il messaggio in modo che gli utenti possano vederlo."
+        agree_and_delete:
+          title: "Elimina messaggio"
+          description: "Elimina il messaggio in modo che gli utenti non possano vederlo."
+        delete_and_agree:
+          title: "Ignora segnalazione ed elimina messaggio"
+          description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il messaggio."
+        disagree_and_restore:
+          title: "Rifiuta e ripristina il messaggio"
+          description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
+        disagree:
+          title: "Rifiuta"
+        ignore:
+          title: "Non fare nulla"
+          description: "Ignora la segnalazione rimuovendola dalla coda senza intraprendere alcuna azione."
+      direct_messages:
+        transcript_title: "Trascrizione dei messaggi precedenti in %{channel_name}"
+        transcript_body: "Per darti più contesto, abbiamo incluso una trascrizione dei messaggi precedenti in questa conversazione (fino a dieci):\n\n%{transcript}"
+    channel:
+      users_invited_to_channel:
+        one: "%{invited_users} ha ricevuto un invito da %{inviting_user}."
+        other: "%{invited_users} hanno ricevuto un invito da %{inviting_user}."
+      archive:
+        first_post_raw: "Questo argomento è un archivio del canale di chat [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "@%{acting_username} ha spostato un messaggio nel canale [%{channel_name}](%{first_moved_message_url})."
+        other: "@%{acting_username} ha spostato %{count} messaggi sul canale [%{channel_name}](%{first_moved_message_url})."
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} e %{count} altro"
+          other: "%{comma_separated_usernames} e altri %{count}"
+    mention_warning:
+      dismiss: "ignora"
+      cannot_see: "%{first_identifier} non può accedere a questo canale e non ha ricevuto avvisi."
+      cannot_see_multiple:
+        one: "%{first_identifier} e %{count} altro utente non possono accedere a questo canale e non hanno ricevuto avvisi."
+        other: "%{first_identifier} e altri %{count} utenti non possono accedere a questo canale e non hanno ricevuto avvisi."
+      invitations_sent:
+        one: "Invito inviato"
+        other: "Inviti inviati"
+      invite: "Invita al canale"
+      without_membership: "%{first_identifier} non ha partecipato a questo canale."
+      without_membership_multiple:
+        one: "%{first_identifier} e %{count} altro utente non si sono uniti a questo canale."
+        other: "%{first_identifier} e altri %{count} utenti non si sono uniti a questo canale."
+      group_mentions_disabled: "%{first_identifier} non consente menzioni."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} e %{count} altro gruppo non consentono menzioni."
+        other: "%{first_identifier} e altri %{count} gruppi non consentono menzioni."
+      global_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
+      too_many_members: "%{first_identifier} ha troppi membri. Nessuno è stato avvisato."
+      too_many_members_multiple:
+        one: "%{first_identifier} e %{count} altro gruppo hanno troppi membri. Nessuno è stato avvisato."
+        other: "%{first_identifier} e altri %{count} gruppi hanno troppi membri. Nessuno è stato avvisato."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "contiene caratteri non-ascii"
+        is_already_in_use: "è già in uso"
+    bookmarkable:
+      notification_title: "messaggio in %{channel_name}"
+    personal_chat: "chat personale"
+    onebox:
+      inline_to_message: "Messaggio n.%{message_id} per %{username} – n.%{chat_channel}"
+      inline_to_channel: "Chat n. %{chat_channel}"
+      inline_to_topic_channel: "Chat per l'argomento %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Thread in #%{chat_channel}"
+      thread_title_connector: "in"
+      x_members:
+        one: "%{count} membro"
+        other: "%{count} membri"
+      and_x_others:
+        one: "e %{count} altro"
+        other: "e %{count} altri"
+    transcript:
+      default_thread_title: "Thread"
+      split_thread_range: "messaggi da %{start} a %{end} di %{total}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} ti ha menzionato in "%{channel}"'
+        other_type: '%{username} ha menzionato %{identifier} in "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} ti ha menzionato nella chat personale"
+        other_type: "%{username} ha menzionato %{identifier} nella chat personale"
+      new_chat_message: '%{username} ha inviato un messaggio in "%{channel}"'
+      new_direct_chat_message: "%{username} ha inviato un messaggio nella chat personale"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Invia messaggio di chat
+  reviewable_score_types:
+    needs_review:
+      title: "Necessita di revisione"
+    notify_user:
+      chat_pm_title: 'Tuo messaggio di chat in "%{channel_name}"'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'Un messaggio di chat in "%{channel_name}" richiede l''attenzione del personale'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Un membro dello staff ritiene che questo messaggio di chat debba essere rivisto."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Utente eliminato"
+      description:
+        one: "Hai un nuovo messaggio di chat"
+        other: "Hai nuovi messaggi di chat"
+      from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Nuovo messaggio"
+          other: "[%{site_name}] Nuovi messaggi"
+        chat_dm_1:
+          one: "[%{site_name}] Nuovo messaggio da %{name}"
+          other: "[%{site_name}] Nuovi messaggi da %{name}"
+        chat_dm_2: "[%{site_name}] Nuovi messaggi da %{name_1} e %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nuovi messaggi da %{name} e altri %{count}"
+        chat_channel_1:
+          one: "[%{site_name}] Nuovo messaggio in %{channel}"
+          other: "[%{site_name}] Nuovi messaggi in %{channel}"
+        chat_channel_2: "[%{site_name}] Nuovi messaggi in %{channel_1} e %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nuovi messaggi in %{channel} e altri %{count}"
+        chat_channel_and_dm: "[%{site_name}] Nuovi messaggi in %{channel} e da %{name}"
+      unsubscribe: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link} o %{unsubscribe_link} per annullare l'iscrizione."
+      unsubscribe_no_link: "Questo riepilogo della chat viene inviato da %{site_link} quando non ci sei. Modifica %{email_preferences_link}."
+      view_messages:
+        one: "Visualizza messaggio"
+        other: "Visualizza %{count} messaggi"
+      view_more:
+        one: "Visualizza %{count} altro messaggio"
+        other: "Visualizza altri %{count} messaggi"
+      your_chat_settings: "preferenza di frequenza e-mail della chat"
+  unsubscribe:
+    chat_summary:
+      select_title: "Imposta la frequenza delle e-mail di riepilogo della chat su:"
+      never: Mai
+      when_away: Solo quando non sono collegato
+  category:
+    cannot_delete:
+      has_chat_channels: "Impossibile eliminare questa categoria perché ha canali di chat."

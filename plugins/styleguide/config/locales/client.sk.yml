@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Sprievodca štýlom Discourse"
+  js:
+    styleguide:
+      title: "Sprievodca štýlom"
+      welcome: "Ak chcete začať, vyberte si z ponuky na ľavej strane."
+      categories:
+        syntax: Syntax
+        atoms: Atómy
+        molecules: Molekuly
+        organisms: Organizmy
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typografia"
+          example: "Vitajte v Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud cvičenie ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Okrem sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Pole pre dátum a čas"
+        menus:
+          title: "Menu"
+        multi_select:
+          title: "Viacnásobný výber"
+        toasts:
+          title: "Toasty"
+        font_scale:
+          title: "Systém typov písma"
+        colors:
+          title: "Farby"
+        icons:
+          title: "Ikony"
+          full_list: "Zobraziť celý zoznam Font Awesome Icons"
+        forms:
+          title: "Formuláre"
+        buttons:
+          title: "Tlačidlá"
+        dropdowns:
+          title: "Rozbaľovacie ponuky"
+        categories:
+          title: "Kategórie"
+        bread_crumbs:
+          title: "Omrvinková navigácia"
+        navigation:
+          title: "Navigácia"
+        navigation_bar:
+          title: "Navigačný panel"
+        navigation_stacked:
+          title: "Navigácia"
+        categories_list:
+          title: "Zoznam kategórií"
+        topic_link:
+          title: "Odkaz na tému"
+        topic_list_item:
+          title: "Položka zoznamu tém"
+        topic_statuses:
+          title: "Stavy tém"
+        topic_list:
+          title: "Zoznam tém"
+        basic_topic_list:
+          title: "Základný zoznam tém"
+        footer_message:
+          title: "Správa v päte"
+        signup_cta:
+          title: "Tlačidlo pre registráciu"
+        topic_timer_info:
+          title: "Časovače tém"
+        topic_footer_buttons:
+          title: "Tlačidlá témy v päte"
+        topic_notifications:
+          title: "Oznámenia o témach"
+        post:
+          title: "Príspevok"
+        post_list:
+          title: "Zoznam príspevkov"
+          empty_example: "<PostList /> prázdny stav"
+          populated_example: "<PostList /> zverejnený stav"
+        topic_map:
+          title: "Mapa tém"
+        site_header:
+          title: "Záhlavie stránky"
+        suggested_topics:
+          title: "Odporúčané témy"
+        post_menu:
+          title: "Ponuka príspevkov"
+        modal:
+          title: "Okno"
+          header: "Nadpis okna"
+          footer: "Päta okna"
+        user_about:
+          title: "O používateľovi"
+        header_icons:
+          title: "Ikony záhlavia"
+        spinners:
+          title: "Načítavanie"
+        empty_state:
+          title: "Prázdny stav"
+        tooltips:
+          title: "Tipy na nástroje"
+          description: "Popis"
+          header: "Hlavička"
+          hover_to_see: "Ak chcete zobraziť nápovedu, prejdite myšou"
+        char_counter:
+          title: "Počítadlo znakov"
+          placeholder: "Tu zadajte svoj text..."

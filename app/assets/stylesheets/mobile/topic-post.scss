@@ -1,0 +1,465 @@
+/* hide the reply border above the time gap notices */
+.time-gap + .topic-post article {
+  border-top: none;
+}
+
+.time-gap {
+  .topic-avatar {
+    display: none;
+  }
+}
+
+.topic-post-visited {
+  + .topic-post > article {
+    border-top: none;
+  }
+}
+
+.topic-post > article {
+  border-top: 1px solid var(--content-border-color);
+  padding: 15px 0 8px 0;
+}
+
+span.badge-posts {
+  margin-right: 5px;
+}
+
+.show-replies {
+  display: none;
+}
+
+nav.post-controls {
+  // for consistency, try to control spacing by editing these variables
+  --control-space: 0.58em;
+  --control-space-small: calc(var(--control-space) / 2);
+  --control-space-large: calc(var(--control-space) * 1.3);
+
+  // on small devices with many buttons this can overflow
+  overflow-x: scroll;
+
+  .actions {
+    // using an auto margin on first-child instead of justify-content on the parent
+    // because justify-content breaks overflow scrolling
+    :first-child {
+      margin-left: auto;
+    }
+
+    // Some buttons can be doubled up, like likes or flags
+    .double-button {
+      button {
+        &.button-count {
+          padding: var(--control-space);
+
+          + .toggle-like,
+          + .create-flag {
+            padding: var(--control-space) var(--control-space-large)
+              var(--control-space) var(--control-space-small);
+          }
+
+          &.regular-likes {
+            padding: var(--control-space) var(--control-space-small)
+              var(--control-space) var(--control-space-large);
+          }
+        }
+      }
+    }
+
+    button {
+      padding: var(--control-space) var(--control-space-large);
+
+      &.expand-post {
+        margin: var(--control-space) 0 var(--control-space) 0;
+      }
+    }
+  }
+
+  .show-replies {
+    display: flex;
+    align-items: center;
+    padding: 9px;
+    border-radius: var(--d-button-border-radius);
+
+    .d-icon {
+      padding-left: var(--control-space);
+      margin-left: 0 !important;
+    }
+
+    &[aria-expanded="true"] {
+      background: var(--primary-low);
+      color: var(--primary-high);
+      box-shadow: 0 0 0 1px var(--primary-300);
+      z-index: 1;
+      margin-left: 1px;
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+  }
+
+  &.replies-button-visible {
+    display: flex;
+    align-items: center;
+
+    .show-replies {
+      display: flex;
+
+      + .reply {
+        margin-left: 0;
+      }
+
+      .d-icon {
+        padding-left: var(--control-space);
+      }
+    }
+
+    .actions {
+      flex-grow: 2;
+    }
+  }
+}
+
+nav.post-controls button.reply .d-icon {
+  color: var(--primary-high);
+}
+
+.post-admin-menu {
+  bottom: -50px;
+  left: 135px;
+
+  @media screen and (width <= 374px) {
+    left: 50px;
+  }
+}
+
+.embedded-posts {
+  position: relative;
+  padding: 0.75em 0.5em 0.75em 0;
+  max-width: 100%;
+  margin-left: 0;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 1.5em;
+
+    .row {
+      // Main reply line
+      &::before {
+        content: "";
+        position: absolute;
+        top: calc(-2px - 0.75em);
+        width: 1px;
+        height: calc(100% + 1.5em + 5px);
+        background: var(--primary-300);
+        left: 24px;
+      }
+    }
+
+    .topic-avatar {
+      position: sticky;
+      top: calc(var(--header-offset) + 0.5em);
+      margin-right: 15px;
+    }
+
+    .topic-body {
+      display: flex;
+      flex-direction: column;
+      max-width: calc(100% - 32px);
+      margin-left: auto;
+      gap: 0.25em 0;
+      padding-bottom: 1.5em;
+
+      .topic-meta-data.embedded-reply {
+        margin-left: 0;
+
+        h5 a {
+          margin-left: 10px;
+        }
+
+        .names {
+          margin-bottom: 0.25em;
+
+          .user-title {
+            display: none;
+          }
+
+          .second {
+            flex-basis: auto;
+          }
+        }
+
+        .post-link-arrow {
+          position: absolute;
+          bottom: 0;
+
+          .post-info.arrow {
+            padding: 0.5em 0;
+            margin-right: 0;
+            color: var(--primary-med-or-secondary-high);
+            line-height: 1;
+
+            &:hover,
+            &:focus {
+              color: var(--primary-high);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .collapse-up {
+    position: relative;
+    padding: 6px;
+    color: var(--primary-high);
+    background: var(--primary-low);
+    z-index: 1;
+    transform: translate(25%, -30%);
+    box-shadow: 0 0 0 1px var(--primary-300);
+
+    .archetype-private_message & {
+      display: flex;
+    }
+
+    .d-icon {
+      transform: scale(0.871);
+    }
+
+    &:hover,
+    &:focus {
+      background: var(--primary-300);
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
+
+  .load-more-replies {
+    font-size: var(--font-down-1);
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 150%);
+    padding: 0.35em 0.5em;
+  }
+}
+
+.post-action {
+  float: right;
+  margin-right: 10px;
+  clear: right;
+}
+
+.post-action .relative-date {
+  margin-left: 5px;
+}
+
+a.reply-to-tab {
+  z-index: z("base") + 1;
+  color: var(--primary-med-or-secondary-med);
+  margin-right: 0.5em;
+}
+
+.topic-post .boxed .contents {
+  clear: both;
+}
+
+span.post-count {
+  background: var(--primary);
+  color: var(--secondary);
+  opacity: 0.8;
+}
+
+#topic-title {
+  z-index: z("base") + 1;
+  margin: 0;
+  padding: 0 0 1em;
+}
+
+.quote-button.visible {
+  z-index: z("tooltip");
+}
+
+.btn-group {
+  margin-top: 25px;
+  position: relative;
+}
+
+.dropdown-toggle {
+  float: left;
+  position: relative;
+}
+
+.selected-posts {
+  padding: 0.1em 0.7em;
+}
+
+// hide the full set of selection buttons on mobile
+.select-posts button {
+  display: none;
+}
+
+// unhide the simple "select just this post" button
+button.select-post {
+  display: inline-block;
+}
+
+.deleted-user-avatar {
+  font-size: var(--font-up-5);
+}
+
+span.btn-text {
+  display: none;
+}
+
+blockquote {
+  clear: both;
+
+  /* leave browser defaults for top and bottom here */
+  margin-left: 0;
+  margin-right: 0;
+}
+
+pre.codeblock-buttons code {
+  padding-right: 2.75em;
+}
+
+.gap {
+  padding: 0.25em 0;
+}
+
+.posts-wrapper {
+  position: relative;
+}
+
+span.highlighted {
+  background-color: var(--highlight-bg);
+}
+
+.topic-avatar {
+  float: left;
+  margin-right: 10px;
+  z-index: z("base") + 1;
+
+  /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
+}
+
+.topic-meta-data {
+  margin-left: 50px;
+  font-size: var(--font-down-1);
+
+  .names {
+    line-height: var(--line-height-medium);
+    display: flex;
+    flex-wrap: wrap;
+
+    .full-name {
+      font-weight: bold;
+    }
+
+    .first {
+      order: 1;
+    }
+
+    .poster-icon {
+      order: 2;
+    }
+
+    .user-status-message-wrap {
+      order: 2;
+    }
+
+    .second {
+      order: 3;
+      flex-basis: 100%;
+    }
+
+    .user-title {
+      order: 4;
+      flex-basis: 100%;
+    }
+
+    .user-badge-buttons {
+      order: 5;
+
+      .user-badge {
+        padding-top: 0;
+      }
+    }
+
+    span {
+      margin-right: 0.26em;
+    }
+  }
+}
+
+.username.new-user a {
+  color: var(--primary-low-mid);
+}
+
+.user-title {
+  color: var(--primary-medium);
+  overflow: hidden;
+  margin-right: 50px;
+}
+
+.read-state {
+  // contained within the padding to prevent vertical overflow
+  max-width: var(--d-wrap-padding-h);
+  right: calc(var(--d-wrap-padding-h) * -1);
+  font-size: 6px; // static size to avoid overflow issues
+
+  svg {
+    right: -2px;
+  }
+}
+
+.post-notice {
+  box-sizing: border-box;
+  margin-bottom: 1em;
+
+  &.old {
+    border-top: none;
+    padding-top: 0;
+  }
+}
+
+.posts-filtered-notice {
+  padding-right: 8.5em;
+  padding-bottom: max(1em, env(safe-area-inset-bottom));
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 1em -9px;
+  z-index: 101;
+
+  .filtered-replies-show-all {
+    position: absolute;
+    right: 1em;
+  }
+
+  .filtered-replies-viewing {
+    text-align: left;
+    width: 100%;
+  }
+
+  .filtered-avatar {
+    margin-left: 0;
+
+    img.avatar {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.open-popup-link {
+  opacity: 100%;
+  margin-bottom: 1rem;
+}
+
+.placeholder .topic-body {
+  width: 100%;
+}

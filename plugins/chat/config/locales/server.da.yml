@@ -1,0 +1,83 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  site_settings:
+    chat_separate_sidebar_mode: "Vis separate sidebjælke-tilstande for forum og chat."
+    chat_enabled: "Aktiver chat."
+  chat:
+    deleted_chat_username: slettet
+    errors:
+      duplicate_message: "Det er for kort tid siden, at du oprettede en identisk besked."
+      max_reactions_limit_reached: "Nye reaktioner er ikke tilladt på denne besked."
+      not_accepting_dms: "Beklager, %{username} accepterer ikke meddelelser i øjeblikket."
+    reviewables:
+      actions:
+        agree:
+          title: "Enig..."
+        agree_and_suspend:
+          title: "Suspendér Bruger"
+        agree_and_silence:
+          title: "Ignorer Bruger"
+        agree_and_restore:
+          title: "Gendan Besked"
+          description: "Gendan meddelelsen, så brugerne kan se den."
+        agree_and_delete:
+          title: "Slet Besked"
+          description: "Slet meddelelsen, så brugerne ikke kan se den."
+        disagree:
+          title: "Uenig"
+        ignore:
+          title: "Gør ingenting"
+    channel:
+      archive:
+        first_post_raw: "Dette emne er et arkiv af chatkanalen [%{channel_name}] (%{channel_url})."
+      dm_title:
+        single_user: "%{username}"
+    mention_warning:
+      dismiss: "afvis"
+      invitations_sent:
+        one: "Invitation sendt"
+        other: "Invitationer sendt"
+      invite: "Inviter til kanal"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "indeholder ikke-ascii- tegn"
+    bookmarkable:
+      notification_title: "besked i %{channel_name}"
+    personal_chat: "personlig chat"
+    onebox:
+      thread_title_connector: "i"
+    transcript:
+      default_thread_title: "Tråd"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} nævnte dig i "%{channel}"'
+        other_type: '%{username} nævnte %{identifier} i "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} nævnte dig i personlig chat"
+        other_type: "%{username} nævnte %{identifier} i personlig chat"
+      new_chat_message: '%{username} sendte en besked i "%{channel}"'
+      new_direct_chat_message: "%{username} sendte en besked i personlig chat"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Send chatbesked
+  reviewable_score_types:
+    needs_review:
+      title: "Behøver Gennemgang"
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Slettet bruger"
+      from: "%{site_name}"
+  unsubscribe:
+    chat_summary:
+      never: Aldrig

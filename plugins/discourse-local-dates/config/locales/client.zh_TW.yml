@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: 今天%{time}
+        tomorrow: 明天%{time}
+        yesterday: 昨天%{time}
+        countdown:
+          passed: 已結束
+      title: 插入日期/時間
+      create:
+        form:
+          insert: 插入
+          advanced_mode: 進階模式
+          simple_mode: 簡單模式
+          format_description: "日期的顯示格式。可用 Z 來顯示時區偏移量或 zz 來顯示時區名稱。"
+          timezones_title: 時區顯示
+          timezones_description: 時區決定顯示的日期及時間。
+          recurring_title: 週期
+          recurring_description: "定義事件的重複發生。您還可以手動編輯表單生成的重複選項並使用以下鍵之一：年、季度、月、週、日、小時、分鐘、秒、毫秒。"
+          recurring_none: 單一
+          invalid_date: 無效的日期，請再次確認日期及時間。
+          date_title: 日期
+          time_title: 時間
+          format_title: 日期格式
+          timezone: 時區
+          until: 直到
+          current_timezone: "目前時區："
+          recurring:
+            every_day: "每天"
+            every_week: "每周"
+            every_two_weeks: "每兩周"
+            every_month: "每月"
+            every_two_months: "每兩個月"
+            every_three_months: "每三個月"
+            every_six_months: "每半年"
+            every_year: "每年"
+      default_title: "%{site_name} 事件"

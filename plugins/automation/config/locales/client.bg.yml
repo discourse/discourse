@@ -1,0 +1,142 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  js:
+    discourse_automation:
+      back: Назад
+      edit: Редактирай
+      fields:
+        user:
+          label: Потребител
+        pm:
+          title:
+            label: Заглавие
+          raw:
+            label: Тяло
+        pms:
+          title:
+            label: Заглавие
+          raw:
+            label: Тяло
+        group:
+          label: Група
+        text:
+          label: Текст
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Значка
+        stalled_topic:
+          durations:
+            P2W: "Две седмици"
+            P3M: "Три месеца"
+            P6M: "Шест месеца"
+            P1Y: "Една година"
+        recurring:
+          frequencies:
+            minute: минута
+            hour: час
+            day: ден
+            week: седмица
+            month: месец
+            year: година
+        stalled_wiki:
+          durations:
+            P2W: "Две седмици"
+            P3M: "Три месеца"
+            P6M: "Шест месеца"
+            P1Y: "Една година"
+        topic:
+          fields:
+            restricted_topic:
+              label: Тема ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Тагове
+            restricted_categories:
+              label: Категории
+          created: Създадени
+          with_images: Изображения
+          with_links: Връзки
+          with_code: Код
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Главна категория
+        pm_created:
+          fields:
+            restricted_user:
+              label: Потребители
+            restricted_group:
+              label: Група
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Категория
+            restricted_tags:
+              label: Тагове
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Тагове
+        post:
+          fields:
+            topic:
+              label: Тема ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Група
+        user_global_notice:
+          levels:
+            error: Грешка
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Група
+            badge:
+              label: Значка
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Потребител
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Тема ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: Тема ID
+            user:
+              label: Потребител
+        close_topic:
+          fields:
+            topic:
+              label: Тема ID
+            user:
+              label: Потребител
+      models:
+        trigger:
+          name:
+            label: Тригер
+        automation:
+          name:
+            label: Име
+          trigger:
+            label: Тригер
+          version:
+            label: Версия
+          status:
+            label: Статус
+          enabled:
+            label: Да е включен
+          disabled:
+            label: Деактивирани

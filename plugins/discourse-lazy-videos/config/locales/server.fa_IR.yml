@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  site_settings:
+    lazy_videos_enabled: "فعال‌سازی افزونه‌ی Lazy Videos"
+    lazy_youtube_enabled: "فعال‌سازی بارگذاری lazy برای تعبیه‌های یوتیوب"
+    lazy_vimeo_enabled: "فعال‌سازی بارگذاری lazy برای تعبیه‌های Vimeo"
+    lazy_tiktok_enabled: "فعال‌سازی بارگذاری lazy برای تعبیه‌های TikTok (آزمایشی)"

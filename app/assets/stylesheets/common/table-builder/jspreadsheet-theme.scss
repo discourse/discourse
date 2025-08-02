@@ -1,0 +1,260 @@
+:root {
+  --jexcel_header_color: var(--primary-high);
+  --jexcel_header_color_highlighted: var(--primary-high);
+  --jexcel_header_background: var(--primary-very-low);
+  --jexcel_header_background_highlighted: var(--primary-low);
+  --jexcel_content_color: var(--primary);
+  --jexcel_content_color_highlighted: var(--primary-high);
+  --jexcel_content_background: var(--secondary);
+  --jexcel_content_background_highlighted: var(--tertiary-very-low);
+  --jexcel_menu_background: var(--secondary);
+  --jexcel_menu_background_highlighted: var(--secondary-very-high);
+  --jexcel_menu_color: var(--primary-medium);
+  --jexcel_menu_color_highlighted: var(--primary);
+  --jexcel_border_color: var(--primary-low-mid);
+  --jexcel_border_color_highlighted: var(--tertiary-high);
+  --active_color: var(--primary-very-low);
+  --active-color: var(--active_color);
+}
+
+.jexcel {
+  border-bottom: 1px solid var(--jexcel_border_color);
+  border-right: transparent;
+  background-color: transparent;
+}
+
+table.jexcel > thead > tr > td {
+  border-left: 1px solid transparent;
+  padding: 10px;
+  font-weight: bold;
+  border-top: 1px solid var(--jexcel_border_color);
+  border-right: 1px solid var(--jexcel_border_color);
+  border-bottom: 1px solid var(--jexcel_border_color);
+  background-color: var(--jexcel_header_background);
+
+  &:first-child {
+    border-left: 1px solid var(--jexcel_border_color);
+  }
+}
+
+table.jexcel > tbody > tr > td {
+  padding: 8px;
+  border-left: 1px solid transparent;
+  border-right: 1px solid var(--jexcel_border_color);
+
+  &:first-child {
+    border-left: 1px solid var(--jexcel_border_color);
+    background-color: var(--jexcel_header_background);
+  }
+}
+
+table.jexcel {
+  border-bottom: 1px solid var(--jexcel_border_color);
+}
+
+.jcontextmenu.jexcel_contextmenu hr {
+  border-color: var(--jexcel_border_color);
+}
+
+.jexcel_container .jcontextmenu > div a {
+  color: var(--jexcel_menu_color);
+}
+
+.jexcel_corner {
+  background-color: var(--tertiary);
+}
+
+.jexcel > tbody > tr > td,
+.jexcel > thead > tr > td {
+  border-top: 1px solid var(--jexcel_border_color);
+  border-left: 1px solid var(--jexcel_border_color);
+  background-color: var(--jexcel_content_background);
+  color: var(--jexcel_content_color);
+}
+
+.jexcel > tbody > tr > td:first-child,
+.jexcel > thead > tr > td {
+  background-color: var(--jexcel_header_background);
+  color: var(--jexcel_header_color);
+}
+
+.jexcel > thead > tr > td.selected,
+.jexcel > tbody > tr.selected > td:first-child {
+  background-color: var(--jexcel_header_background_highlighted);
+  color: var(--jexcel_header_color_highlighted);
+}
+
+table.jexcel > tbody > tr.selected > td:first-child {
+  background-color: var(--jexcel_header_background_highlighted);
+}
+
+.jexcel > tbody > tr > td.jexcel_cursor a {
+  color: var(--active-color);
+}
+
+.jexcel_pagination > div > div {
+  color: var(--jexcel_header_color);
+  background: var(--jexcel_header_background);
+  border: 1px solid var(--jexcel_border_color);
+}
+
+.jexcel_page,
+.jexcel_container input,
+.jexcel_container select {
+  color: var(--jexcel_header_color);
+  background: var(--jexcel_header_background);
+  border: 1px solid var(--jexcel_border_color);
+}
+
+.jexcel_contextmenu.jcontextmenu {
+  border: 1px solid var(--jexcel_border_color);
+  background: var(--jexcel_menu_background);
+  color: var(--jexcel_menu_color);
+  box-shadow: 0 12px 12px rgb(0, 0, 0, 0.15);
+}
+
+.jcontextmenu > div a {
+  color: var(--jexcel_menu_color);
+}
+
+.jcontextmenu > div:not(.contextmenu-line):hover a {
+  color: var(--jexcel_menu_color_highlighted);
+}
+
+.jcontextmenu > div:not(.contextmenu-line):hover {
+  background: var(--jexcel_menu_background_highlighted);
+}
+
+.jexcel_dropdown .jdropdown-container,
+.jexcel_dropdown .jdropdown-content {
+  background-color: var(--jexcel_content_background);
+  color: var(--jexcel_content_color);
+}
+
+.jexcel_dropdown .jdropdown-item {
+  color: var(--jexcel_content_color);
+}
+
+.jexcel_dropdown .jdropdown-item:hover,
+.jexcel_dropdown .jdropdown-selected,
+.jexcel_dropdown .jdropdown-cursor {
+  background-color: var(--jexcel_content_background_highlighted);
+  color: var(--jexcel_content_color_highlighted);
+}
+
+.jexcel .jcalendar-content {
+  background-color: var(--jexcel_header_background);
+  color: var(--jexcel_header_color);
+}
+
+.jexcel .jcalendar-content > table {
+  background-color: var(--jexcel_content_background);
+  color: var(--jexcel_content_color);
+}
+
+.jexcel .jcalendar-weekday {
+  background-color: var(--jexcel_content_background_highlighted);
+  color: var(--jexcel_content_color_highlighted);
+}
+
+.jexcel .jcalendar-sunday {
+  color: var(--jexcel_header_color);
+}
+
+.jexcel .jcalendar-selected {
+  background-color: var(--jexcel_content_background_highlighted);
+  color: var(--jexcel_content_color_highlighted);
+}
+
+.jexcel_toolbar i.jexcel_toolbar_item {
+  color: var(--jexcel_content_color);
+}
+
+.jexcel_toolbar i.jexcel_toolbar_item:hover {
+  background: var(--jexcel_content_background_highlighted);
+  color: var(--jexcel_content_color_highlighted);
+}
+
+.jexcel_toolbar {
+  background: var(--jexcel_header_background);
+}
+
+.jexcel_content::-webkit-scrollbar-track {
+  background: var(--jexcel_background_head);
+}
+
+.jexcel_content::-webkit-scrollbar-thumb {
+  background: var(--jexcel_background_head_highlighted);
+}
+
+.jexcel_border_main {
+  border: 1px solid #000;
+  border-color: var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .highlight {
+  background-color: var(--jexcel_content_background_highlighted);
+}
+
+.jexcel .highlight-bottom {
+  border-bottom: 1.5px solid var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .highlight-right {
+  border-right: 1.5px solid var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .highlight-left {
+  border-left: 1.5px solid var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .highlight-top {
+  border-top: 1.5px solid var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .copying-top {
+  border-top-color: var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .copying-right {
+  border-right-color: var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .copying-left {
+  border-left-color: var(--jexcel_border_color_highlighted);
+}
+
+.jexcel .copying-bottom {
+  border-bottom-color: var(--jexcel_border_color_highlighted);
+}
+
+.jexcel_border_main,
+.jexcel .highlight-top.highlight-left,
+.jexcel .highlight-top,
+.jexcel .highlight-left {
+  box-shadow: unset;
+}
+
+table.jexcel > thead > tr > td.selected {
+  background-color: var(--jexcel_header_background_highlighted);
+  color: var(--jexcel_header_color_highlighted);
+}
+
+// Hides about item in context menu
+.jcontextmenu > div:not(.contextmenu-line):last-child {
+  display: none;
+}
+
+.jexcel_container {
+  min-width: 100%;
+  padding: 0;
+
+  .jexcel_content {
+    min-width: 100%;
+    padding: 0;
+
+    table.jexcel {
+      min-width: 100%;
+    }
+  }
+}

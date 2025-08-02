@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Lokalne daty Discourse"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Dziś %{time}
+        tomorrow: Jutro %{time}
+        yesterday: Wczoraj %{time}
+        countdown:
+          passed: data minęła
+      title: Wprowadź datę / czas
+      create:
+        form:
+          insert: Wstaw
+          advanced_mode: Tryb zaawansowany
+          simple_mode: Tryb prosty
+          format_description: "Format używany do wyświetlania daty dla użytkownika. Użyj Z, aby wyświetlić różnicę i zz dla nazwy strefy czasowej."
+          timezones_title: Strefy czasowe do wyświetlenia
+          timezones_description: Strefy czasowe zostaną użyte do wyświetlenia dat w podglądzie i fallbacku
+          recurring_title: Powtarzanie
+          recurring_description: "Ustaw powtarzanie wydarzenia. Możesz też manualnie edytować opcję powtarzania generowaną przez formularz przy użyciu jednej z poniższych formuł: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Brak powtarzania
+          invalid_date: Niewłaściwa data, sprawdź, czy poprawnie ustawiono datę i czas
+          date_title: Data
+          time_title: Czas
+          format_title: Format daty
+          timezone: Strefa czasowa
+          until: Do…
+          current_timezone: "Aktualna strefa czasowa:"
+          recurring:
+            every_day: "Codziennie"
+            every_week: "Co tydzień"
+            every_two_weeks: "Co dwa tygodnie"
+            every_month: "Co miesiąc"
+            every_two_months: "Co dwa miesiące"
+            every_three_months: "Co trzy miesiące"
+            every_six_months: "Co sześć miesięcy"
+            every_year: "Co roku"
+      default_title: "Wydarzenie %{site_name}"

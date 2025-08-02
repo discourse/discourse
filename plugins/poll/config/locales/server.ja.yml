@@ -1,0 +1,63 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    poll_enabled: "投票を許可？"
+    poll_maximum_options: "投票で許可されるオプションの最大数。"
+    poll_edit_window_mins: "投稿作成後に投票を編集できる時間 (分)"
+    poll_minimum_trust_level_to_create: "投票の作成に必要な最低信頼レベルを定義します。"
+    poll_create_allowed_groups: "投票を作成できるグループ。"
+    poll_groupable_user_fields: "投票結果をグループ化およびフィルタするために使用できるユーザーフィールド名のセット。"
+    poll_export_data_explorer_query_id: "投票結果のエクスポートに使用するデータエクスプローラークエリの ID (無効にする場合は 0)。"
+    poll_export_ranked_choice_data_explorer_query_id: "即時決選投票の結果をエクスポートするために使用するデータエクスプローラークエリの ID。"
+    poll_default_public: "新しい投票を作成する際に、デフォルトで '投票者を表示する' オプションを有効にします。"
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "投票"
+    invalid_argument: "引数 '%{argument}' の値 '%{value}' が無効です。"
+    multiple_polls_without_name: "複数の投票を作成する際は、<code>name=example</code> を <code>[poll]</code> タグに追加して固有の名前を付けます。"
+    multiple_polls_with_same_name: "同じ名前の投票が複数あります: <strong>%{name}</strong>。投票を一意に識別できるよう、'<code>name</code>' 属性を使用してください。"
+    default_poll_must_have_at_least_1_option: "投票には少なくとも 1 つのオプションが必要です。"
+    named_poll_must_have_at_least_1_option: "<strong>%{name}</strong> という名前の投票には、少なくとも 1 つのオプションが必要です。"
+    default_poll_must_have_less_options:
+      other: "投票のオプションは %{count} 個未満である必要があります。"
+    named_poll_must_have_less_options:
+      other: "<strong>%{name}</strong> という名前の投票のオプションは、%{count} 個未満である必要があります。"
+    default_poll_must_have_different_options: "投票には異なるオプションが必要です。"
+    named_poll_must_have_different_options: "<strong>%{name}</strong> という名前の投票には異なるオプションが必要です。"
+    default_poll_must_not_have_any_empty_options: "投票には空のオプションがあってはいけません。"
+    named_poll_must_not_have_any_empty_options: "<strong>%{name}</strong> という名前の投票には、空のオプションがあってはいけません。"
+    default_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ投票に無効なパラメーターがあります。"
+    named_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ <strong>%{name}</strong> という名前の投票に無効なパラメーターがあります。"
+    requires_at_least_1_valid_option: "少なくとも 1 つの有効なオプションを選択する必要があります。"
+    requires_that_at_least_one_option_is_ranked: "ランク付け選択式投票では、少なくとも 1 つのオプションをランク付けする必要があります。"
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "%{minutes} 分を過ぎると、投票を変更できません。"
+      cannot_edit_named_poll_with_votes: "%{minutes} 分を過ぎると、<strong>${name}</strong> という名前の投票を変更することはできません。"
+    no_poll_with_this_name: "この投稿に関連付けられた <strong>%{name}</strong> という名前の投票はありません。"
+    post_is_deleted: "削除された投稿を操作することはできません。"
+    user_cant_post_in_topic: "このトピックに投稿できないため投票できません。"
+    topic_must_be_open_to_vote: "トピックは投票できるようにオープンである必要があります。"
+    poll_must_be_open_to_vote: "投票はオープンである必要があります。"
+    one_vote_per_user: "この投票には 1 票のみ投票できます。"
+    max_vote_per_user:
+      other: この投票では %{count} 票まで投票できます。
+    min_vote_per_user:
+      other: この投票には最低 %{count} 票が必要です。
+    ranked_choice:
+      vote_options_mismatch: "即時決選では、投票で選択される選択肢の数は選択肢の数と一致する必要があります。選択肢の数は %{count} 個ですが、%{provided} が選択されました。"
+      no_group_results_support: "投票タイプが無効です。ranked_choice はグループ化された結果をサポートしていません。"
+    topic_must_be_open_to_toggle_status: "ステータスを切り替えるには、トピックがオープンになっている必要があります。"
+    only_staff_or_op_can_toggle_status: "スタッフメンバーまたは元の投稿者のみが投票のステータスを切り替えることができます。"
+    errors:
+      poll_not_found: "投票が見つかりません。パラメーターを確認してください。"
+    insufficient_rights_to_create: "投票を作成することは許可されていません。"
+    email:
+      link_to_poll: "クリックして投票を表示します。"
+    user_field:
+      no_data: "データはありません"

@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    presence:
+      replying:
+        one: "odgovara"
+        few: "odgovara"
+        other: "odgovara"
+      editing:
+        one: "menja"
+        few: "menja"
+        other: "menja"
+      replying_to_topic:
+        one: "odgovara"
+        few: "odgovara"
+        other: "odgovara"

@@ -1,0 +1,170 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    poll:
+      voters:
+        one: "проголосовавший"
+        few: "проголосовавших"
+        many: "проголосовавших"
+        other: "проголосовавшего"
+      total_votes:
+        one: "голос"
+        few: "голоса"
+        many: "голосов"
+        other: "голосов"
+      votes:
+        one: "%{count} голос"
+        few: "%{count} голоса"
+        many: "%{count} голосов"
+        other: "%{count} голоса"
+      average_rating: "Средний рейтинг: <strong>%{average}</strong>."
+      public:
+        title: "Голосов <strong>публичных</strong>."
+      results:
+        groups:
+          title: "Вы должны быть участником группы %{groups}, чтобы голосовать в этом опросе."
+        vote:
+          title: "Результаты будут показаны при <strong>голосовании</strong>."
+        closed:
+          title: "Результаты будут показаны после <strong>завершения опроса</strong>."
+        staff:
+          title: "Результаты будут показаны только <strong>персоналу</strong>."
+        tabs:
+          votes: "Голоса"
+          outcome: "Результат"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Выберите как минимум <strong>%{count} вариант</strong>."
+            few: "Выберите как минимум <strong>%{count} варианта</strong>."
+            many: "Выберите как минимум <strong>%{count} вариантов</strong>."
+            other: "Выберите как минимум <strong>%{count} варианта</strong>."
+          up_to_max_options:
+            one: "Выберите максимум <strong>%{count} вариант</strong>."
+            few: "Выберите максимум <strong>%{count} варианта</strong>."
+            many: "Выберите максимум <strong>%{count} вариантов</strong>."
+            other: "Выберите максимум <strong>%{count} варианта</strong>."
+          x_options:
+            one: "Выберите <strong>%{count} вариант</strong>."
+            few: "Выберите <strong>%{count} варианта</strong>."
+            many: "Выберите <strong>%{count} вариантов</strong>."
+            other: "Выберите <strong>%{count} варианта</strong>."
+          between_min_and_max_options: "Выберите <strong>варианты в количестве от %{min} до %{max}</strong>."
+      cast-votes:
+        title: "Проголосуйте"
+        label: "Проголосовать!"
+      show-results:
+        title: "Показать результаты опроса"
+        label: "Результаты"
+      show-tally:
+        title: "Показать результаты голосования по количеству голосов"
+        label: "Показать подсчет"
+      show-percentage:
+        title: "Показать результаты голосования в процентах"
+        label: "Отображать в процентах"
+      remove-vote:
+        title: "Удалить свой голос"
+        label: "Забрать голос"
+      hide-results:
+        title: "Вернуться к опросу"
+        label: "Проголосовать"
+      group-results:
+        title: "Группировать голоса по пользователям"
+        label: "Показать распределение"
+      export-results:
+        title: "Экспорт результатов опроса"
+        label: "Экспорт"
+      open:
+        title: "Снова открыть опрос"
+        label: "Открыть"
+        confirm: "Действительно открыть этот опрос и принимать новые голоса?"
+      close:
+        title: "Завершить этот опрос, не принимать новые голоса"
+        label: "Завершить"
+        confirm: "Действительно завершить этот опрос и больше не принимать голоса?"
+      automatic_close:
+        closes_in: "Закроется через <strong>%{timeLeft}</strong>."
+        age: "Закрыто <strong>%{age}</strong>"
+      breakdown:
+        title: "Результаты опроса"
+        votes: "%{count} голосов"
+        breakdown: "Распределение"
+        percentage: "Процент"
+        count: "Количество"
+      ranked_choice:
+        title:
+          rounds: "Раунды"
+          outcome: "Результат"
+        none: "Нет"
+        majority: "Большинство"
+        eliminated: "Не выбрано"
+        round: "Раунд"
+        winner:
+          one: "Победителем после %{count} раунда стал пользователь %{winner}."
+          few: "Победителем после %{count} раундов стал пользователь %{winner}."
+          many: "Победителем после %{count} раундов стал пользователь %{winner}."
+          other: "Победителем после %{count} раунда стал пользователь %{winner}."
+        tied:
+          one: "Ничья после %{count} раунда между следующими кандидатами:"
+          few: "Ничья после %{count} раундов между следующими кандидатами:"
+          many: "Ничья после %{count} раундов между следующими кандидатами:"
+          other: "Ничья после %{count} раунда между следующими кандидатами:"
+      options:
+        label: "Параметры"
+        ranked_choice:
+          abstain: "Воздержаться"
+          highest_priority: "(наивысший приоритет)"
+          lowest_priority: "(самый низкий приоритет)"
+          login: "Войдите, чтобы проголосовать!"
+      error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
+      error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
+      error_while_fetching_voters: "Произошла ошибка в процессе получения списка проголосовавших."
+      error_while_exporting_results: "Произошла ошибка в процессе экспорта результатов опроса."
+      ui_builder:
+        title: Создать опрос
+        insert: Вставить опрос в сообщение
+        help:
+          options_min_count: Введите хотя бы 1 вариант.
+          options_max_count: Введите не более %{count} вариантов.
+          invalid_min_value: Минимальное значение должно быть не менее 1.
+          invalid_max_value: Максимальное значение должно быть не менее 1, но меньше или равно количеству вариантов.
+          invalid_values: Минимальное значение должно быть меньше максимального значения.
+          min_step_value: Минимальное значение шага = 1
+        poll_type:
+          label: Тип опроса
+          regular: Выбор одного варианта из списка
+          multiple: Выбор нескольких вариантов из списка
+          ranked_choice: Рейтинговое голосование
+          number: Шкала из чисел
+        poll_result:
+          label: Показывать результаты…
+          always: Всегда
+          vote: После голосования
+          closed: После закрытия опроса
+          staff: Только для персонала
+        poll_groups:
+          label: Ограничить голосование этими группами
+        poll_chart_type:
+          label: Таблица результатов
+          bar: Гистограмма
+          pie: Круговая
+        poll_config:
+          max: Максимальный выбор
+          min: Минимальный выбор
+          step: Шаг
+        poll_public:
+          label: Показывать проголосовавших (не отмечайте, если голосование анонимное)
+        poll_title:
+          label: Заголовок (необязательно)
+        poll_options:
+          label: Варианты (по одному на строку)
+          add: Добавить вариант
+        automatic_close:
+          label: Автоматически закрыть опрос
+        show_advanced: "Показать дополнительные параметры"
+        hide_advanced: "Скрыть дополнительные параметры"

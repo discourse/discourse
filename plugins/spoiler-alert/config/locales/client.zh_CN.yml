@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse 剧透警告"
+  js:
+    spoiler:
+      title: 模糊剧透
+      label:
+        show: "显示隐藏内容"
+    composer:
+      spoiler_text: "此文本将被模糊处理"

@@ -1,0 +1,81 @@
+@use "lib/viewport";
+
+.more-topics__container {
+  position: relative;
+  padding-bottom: max(env(safe-area-inset-bottom), 1em);
+  max-width: calc(var(--d-max-width) * 0.87);
+
+  .nav {
+    margin-block: 0;
+
+    @include viewport.until(lg) {
+      font-size: var(--font-down-1);
+    }
+
+    li {
+      .btn {
+        color: var(--primary);
+        background-color: transparent;
+        padding: calc(0.8em - var(--d-nav-underline-height)) 0.8em; // match th block padding minus border
+        border-radius: 0;
+
+        .discourse-no-touch & {
+          &:hover {
+            background: var(--d-hover);
+          }
+        }
+
+        .d-icon,
+        &:hover .d-icon,
+        &:active .d-icon {
+          color: var(--primary-high);
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .more-topics__lists {
+    &:not(.single-list) {
+      .more-topics__list-title {
+        display: none;
+      }
+    }
+  }
+
+  .more-topics__list {
+    .topic-list-header::after {
+      content: "";
+      display: block;
+      height: 12px;
+    }
+
+    .topic-list-body {
+      border-top: none;
+
+      .topic-list-item {
+        &:first-child td {
+          padding-top: 0;
+        }
+
+        &:last-of-type {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  // Target the .badge-category text, the bullet icon needs to maintain `display: block`
+  .suggested-topics-message .badge-category__wrapper .badge-category {
+    display: inline;
+    vertical-align: baseline;
+    margin-right: 0;
+    line-height: 0.8;
+    max-width: 150px;
+  }
+
+  .more-topics__list-title,
+  .more-topics__browse-more {
+    padding-left: 0.5em;
+  }
+}

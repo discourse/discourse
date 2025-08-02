@@ -1,0 +1,28 @@
+.chat-message-thread-indicator {
+  .c-routes.--threads & {
+    background: var(--secondary);
+  }
+  grid-template-areas:
+    "avatar info info participants"
+    "excerpt excerpt excerpt replies";
+
+  .chat-thread-participants {
+    .avatar {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  &__last-reply-excerpt {
+    white-space: wrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-top: 0.5rem;
+    margin-right: 0.25rem;
+  }
+
+  &__replies-count {
+    grid-area: replies;
+  }
+}

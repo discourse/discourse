@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Vandaag %{time}
+        tomorrow: Morgen %{time}
+        yesterday: Gisteren %{time}
+        countdown:
+          passed: datum is verstreken
+      title: Datum / tijd invoegen
+      create:
+        form:
+          insert: Invoegen
+          advanced_mode: Geavanceerde modus
+          simple_mode: Simpele modus
+          format_description: "Gebruikte notatie om de datum aan de gebruiker weer te geven. Gebruik Z om de offset weer te geven en zz voor de tijdzonenaam."
+          timezones_title: Tijdzones om weer te geven
+          timezones_description: Tijdzones worden gebruikt voor het weergeven van datums in voorbeeld en terugval.
+          recurring_title: Herhaling
+          recurring_description: "Definieer de herhaling van een gebeurtenis. Je kunt de door het formulier gegenereerde herhalingsoptie ook handmatig bewerken en een van de volgende sleutels gebruiken: jaren, kwartalen, maanden, weken, dagen, uren, minuten, seconden, milliseconden."
+          recurring_none: Geen herhaling
+          invalid_date: Ongeldige datum; zorg dat de datum en tijd juist zijn
+          date_title: Datum
+          time_title: Tijd
+          format_title: Datumnotatie
+          timezone: Tijdzone
+          until: Tot...
+          current_timezone: "Huidige tijdzone:"
+          recurring:
+            every_day: "Elke dag"
+            every_week: "Elke week"
+            every_two_weeks: "Elke twee weken"
+            every_month: "Elke maand"
+            every_two_months: "Elke twee maanden"
+            every_three_months: "Elke drie maanden"
+            every_six_months: "Elke zes maanden"
+            every_year: "Elk jaar"
+      default_title: "%{site_name} Evenement"

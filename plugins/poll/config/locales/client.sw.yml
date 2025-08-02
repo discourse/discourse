@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    poll:
+      voters:
+        one: "wapiga kura"
+        other: "wapiga kura"
+      total_votes:
+        one: "jumla ya kura"
+        other: "jumla ya kura"
+      average_rating: "Wastani wa tathmini:<strong>%{average}</strong>"
+      public:
+        title: "Kura zina <strong>onwa na kila mtu</strong>."
+      cast-votes:
+        title: "Piga kura zako"
+        label: "Piga kura sasa!"
+      show-results:
+        title: "Onyesha matokeo ya uchaguzi"
+        label: "Majibu"
+      hide-results:
+        title: "Rudi kwenye kura zako"
+      export-results:
+        label: "Hamisha"
+      open:
+        title: "Fungua uchaguzi"
+        label: "Fungua"
+        confirm: "Unauhakika unataka kufungua uchaguzi huu?"
+      close:
+        title: "Funga uchaguzi"
+        label: "Funga"
+        confirm: "Unauhakika unataka kufunga uchaguzi huu?"
+      ranked_choice:
+        none: "Hakuna"
+      options:
+        label: "Machaguo"
+      error_while_toggling_status: "Samahani kulikuwa na hitilafu kwenye kubadilisha hali ya uchaguzi huu."
+      error_while_casting_votes: "Samahani kulikuwa na hitilafu kwenye kupiga kura."
+      error_while_fetching_voters: "Samahani kulikuwa na hitilafu kwenye kuonyesha wapiga kura."
+      ui_builder:
+        title: Jenga uchaguzi
+        insert: Ingiza uchaguzi
+        help:
+          invalid_values: Kiwango cha chini lazima kiwe kidogo kuliko kiwango cha juu.
+          min_step_value: Kiasi cha Kipimo cha chini ni 1
+        poll_type:
+          label: Aina
+          regular: Chaguo Moja
+          multiple: Machaguo Mengi
+          number: Thaminisha kwa kutumia namba
+        poll_config:
+          step: Hatua
+        poll_public:
+          label: Onyesha waliopiga kura
+        automatic_close:
+          label: funga maoni moja kwa moja

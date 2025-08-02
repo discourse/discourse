@@ -1,0 +1,245 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    chat_separate_sidebar_mode: "フォーラムとチャットに個別のサイドバーモードを表示します。"
+    chat_enabled: "チャットを有効にする。"
+    enable_public_channels: "カテゴリに基づいて公開チャンネルを有効にします。"
+    chat_allowed_groups: "これらのグループのユーザーがチャットできます。管理者とモデレーターはいつでもチャットにアクセスできます。"
+    chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
+    chat_dm_retention_days: "パーソナルチャットチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
+    chat_auto_silence_duration: "チャットメッセージの作成速度制限を超えた場合にユーザーが投稿禁止になる分数。自動投稿禁止を無効にするには '0' に設定します。"
+    chat_allowed_messages_for_trust_level_0: "信頼レベル 0 のユーザーが 30 秒間に送信できるメッセージの件数。'0' に設定すると、制限が無効になります。"
+    chat_allowed_messages_for_other_trust_levels: "信頼レベル 1～4 のユーザーが 30 秒間に送信できるメッセージの件数。'0' に設定すると、制限が無効になります。"
+    chat_silence_user_sensitivity: "チャットで通報されたユーザーが自動的に投稿禁止にされる可能性。"
+    chat_auto_silence_from_flags_duration: "チャットメッセージの通報によって自動的に投稿禁止にされる場合に、ユーザーが投稿禁止になる分数。"
+    chat_duplicate_message_sensitivity: "同じ送信者による重複したメッセージが短期間でブロックされる可能性。0～1.0 の 10 進数で、1.0 が最高の設定です (より短期間でより頻繁にメッセージをブロックします)。'0' に設定すると、重複メッセージが許可されます。"
+    chat_minimum_message_length: "チャットメッセージの最低文字数。"
+    chat_allow_uploads: "公開チャットチャンネルとダイレクトメッセージチャンネルでアップロードを許可します。"
+    chat_archive_destination_topic_status: "チャンネルのアーカイブが完了した後のアーカイブ先トピックのステータス。これは、アーカイブ先のトピックが既存のトピックではなく新しいトピックである場合にのみ適用されます。"
+    direct_message_enabled_groups: "これらのグループのユーザーがユーザー間のパーソナルチャットを作成することを許可します。注意: スタッフはいつでもパーソナルチャットを作成でき、ユーザーは作成権限のあるユーザーが開始したパーソナルチャットに返信できます。"
+    chat_message_flag_allowed_groups: "これらのグループに属するユーザーは、チャットメッセージを通報できます。管理者とモデレーターは、チャットメッセージをいつでも通報できます。"
+    max_mentions_per_chat_message: "ユーザーがチャットメッセージで @name 通知を行える最大回数。"
+    chat_max_direct_message_users: "ユーザーは、新しいダイレクトメッセージを作成する際に、この数を超えるユーザーを追加できません。自分宛のメッセージのみを許可する場合は 0 に設定します。スタッフはこの設定から除外されます。"
+    chat_allow_archiving_channels: "チャンネルを閉じる時に、スタッフがメッセージをトピックにアーカイブすることを許可します。"
+    chat_editing_grace_period: "チャットを送信してから (n) 秒間は、チャットメッセージを編集しても (編集済み) タグは表示されません。"
+    chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
+    chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
+    chat_preferred_index: "/chat を読み込む際の優先タブ。"
+    errors:
+      chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
+      direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"
+      chat_upload_not_allowed_secure_uploads: "安全なアップロードのサイト設定が有効でない場合、チャットのアップロードは行えません。"
+  system_messages:
+    private_channel_title: "チャンネル %{id}"
+    chat_channel_archive_complete:
+      title: "チャットチャンネルのアーカイブ完了"
+      subject_template: "チャットチャンネルのアーカイブが正常に完了しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブが正常に完了しました。メッセージはトピック [%{topic_title}](%{topic_url}) にコピーされました。
+    chat_channel_archive_failed:
+      title: "チャットチャンネルのアーカイブ失敗"
+      subject_template: "チャットチャンネルのアーカイブに失敗しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブに失敗しました。%{messages_archived} 件のメッセージがアーカイブされました。部分的にアーカイブされたメッセージは、トピック [%{topic_title}](%{topic_url}) にコピーされました。%{channel_url} よりチャンネルにアクセスして、再試行してください。
+    chat_channel_archive_failed_no_topic:
+      title: "チャットチャンネルのアーカイブ失敗"
+      subject_template: "チャットチャンネルのアーカイブに失敗しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブに失敗しました。アーカイブされたメッセージはありません。次の理由により、トピックは正常に作成されませんでした:
+
+          %{topic_validation_errors}
+
+        %{channel_url} からチャンネルにアクセスして再試行してください。
+  chat:
+    deleted_chat_username: 削除済み
+    errors:
+      users_cant_be_added_to_channel: "このチャンネルにはユーザーを追加できません。"
+      channel_exists_for_category: "このカテゴリと名前のチャンネルはすでに存在します"
+      channel_new_message_disallowed:
+        archived: "チャンネルはアーカイブされているため、新しいメッセージを送信できません"
+        closed: "チャンネルは閉鎖されているため、新しいメッセージを送信できません"
+        read_only: "チャンネルは読み取り専用であるため、新しいメッセージを送信できません"
+      channel_modify_message_disallowed:
+        archived: "チャンネルはアーカイブされているため、メッセージを編集または削除できません"
+        closed: "チャンネルは閉鎖されているため、メッセージを編集または削除できません"
+        read_only: "チャンネルは読み取り専用であるため、メッセージを編集または削除できません"
+      user_cannot_send_message: "現在、メッセージを送信できません。"
+      rate_limit_exceeded: "30 秒間で送信できるチャットメッセージの件数制限を超えました"
+      auto_silence_from_flags: "ユーザーを投稿禁止にするのに十分なスコアで通報されたチャットメッセージ。"
+      channel_cannot_be_archived: "現在、チャンネルをアーカイブできません。アーカイブするには閉鎖されているかオープンである必要があります。"
+      duplicate_message: "同一のメッセージを最近投稿しました。"
+      delete_channel_failed: "チャンネルの削除に失敗しました。もう一度お試しください。"
+      minimum_length_not_met:
+        other: "メッセージが短すぎます。最低 %{count} 文字が必要です。"
+      message_too_long:
+        other: "メッセージが長すぎます。メッセージは最大 %{count} 文字までです。"
+      draft_too_long: "下書きが長すぎます。"
+      max_reactions_limit_reached: "このメッセージでは、新しいリアクションは許可されていません。"
+      message_move_invalid_channel: "移動元と移動先のチャンネルは公開チャンネルである必要があります。"
+      message_move_no_messages_found: "指定されたメッセージ ID を持つメッセージは見つかりませんでした。"
+      cant_update_direct_message_channel: "名前や説明などのダイレクトメッセージのチャンネルプロパティを更新できません。"
+      not_accepting_dms: "%{username} は現在、メッセージを受け付けていません。"
+      actor_ignoring_target_user: "%{username} を無視しているため、メッセージを送信できません。"
+      actor_muting_target_user: "%{username} をミュートしているため、メッセージを送信できません。"
+      actor_disallowed_dms: "ユーザーがあなたに個人メッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
+      actor_preventing_target_user_from_dm: "%{username} があなたに個人メッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
+      user_cannot_send_direct_messages: "ダイレクトメッセージを送信できません。"
+      over_chat_max_direct_message_users_allow_self: "自分自身へのダイレクトメッセージのみを作成できます。"
+      over_chat_max_direct_message_users:
+        other: "%{count} 人を超えるユーザーを含むダイレクトメッセージを作成できません。"
+      original_message_not_found: "返信しようとしているメッセージの先祖が見つからないか、削除されています。"
+      thread_invalid_for_channel: "スレッドは指定されたチャンネルの一部ではありません。"
+      thread_does_not_match_parent: "スレッドは親メッセージに一致しません。"
+      invalid_direct_message: "このダイレクトメッセージを作成できません。"
+    reviewables:
+      message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
+      actions:
+        agree:
+          title: "同意…"
+        agree_and_keep_message:
+          title: "メッセージを維持"
+          description: "通報に同意し、メッセージを未変更のままにします。"
+        agree_and_keep_deleted:
+          title: "メッセージの削除を維持"
+          description: "通報に同意し、メッセージを削除したままにします。"
+        agree_and_suspend:
+          title: "ユーザーを凍結"
+          description: "通報に同意し、ユーザーを凍結します。"
+        agree_and_silence:
+          title: "ユーザーを投稿禁止"
+          description: "通報に同意し、ユーザーを投稿禁止にします。"
+        agree_and_restore:
+          title: "メッセージを復元"
+          description: "ユーザーが閲覧できるようにメッセージを復元します。"
+        agree_and_delete:
+          title: "メッセージを削除"
+          description: "ユーザーが閲覧できないようにメッセージを削除します。"
+        delete_and_agree:
+          title: "通報を無視してメッセージを削除"
+          description: "キューから削除して通報を無視し、そのメッセージを削除します。"
+        disagree_and_restore:
+          title: "同意せずにメッセージを復元"
+          description: "すべてのユーザーが閲覧できるようにメッセージを復元します。"
+        disagree:
+          title: "同意しない"
+        ignore:
+          title: "何もしない"
+          description: "何もアクションを起こさずに、キューから削除して通報を無視します。"
+      direct_messages:
+        transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
+        transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
+    channel:
+      users_invited_to_channel:
+        other: "%{invited_users} 人が %{inviting_user} から招待されました。"
+      archive:
+        first_post_raw: "このトピックは、[%{channel_name}](%{channel_url}) チャットチャンネルのアーカイブです。"
+      messages_moved:
+        other: "@%{acting_username} が %{count} 件のメッセージを [%{channel_name}](%{first_moved_message_url}) チャンネルに移動しました。"
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          other: "%{comma_separated_usernames} および他 %{count} 人"
+    mention_warning:
+      dismiss: "閉じる"
+      cannot_see: "%{first_identifier} はこのチャンネルにアクセスできないため通知されませんでした。"
+      cannot_see_multiple:
+        other: "%{first_identifier} と他 %{count} 人のユーザーはこのチャンネルにアクセスできないため通知されませんでした。"
+      invitations_sent:
+        other: "招待状を送信しました"
+      invite: "チャンネルに招待する"
+      without_membership: "%{first_identifier} はこのチャンネルに参加していません。"
+      without_membership_multiple:
+        other: "%{first_identifier} と他 %{count} 人のユーザーはこのチャンネルに参加していません。"
+      group_mentions_disabled: "%{first_identifier} はメンションを許可していません。"
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} と他 %{count} 個のグループはメンションを許可していません。"
+      global_mentions_disallowed: "このチャンネルでは @here と @all メンションが無効になっています。"
+      too_many_members: "%{first_identifier} のメンバーが多すぎます。誰にも通知されませんでした。"
+      too_many_members_multiple:
+        other: "%{first_identifier} と他 %{count} 個のグループのメンバーが多すぎます。誰にも通知されませんでした."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"
+        is_already_in_use: "はすでに使用されています"
+    bookmarkable:
+      notification_title: "%{channel_name} のメッセージ"
+    personal_chat: "パーソナルチャット"
+    onebox:
+      inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"
+      inline_to_channel: "チャット #%{chat_channel}"
+      inline_to_topic_channel: "トピック %{topic_title} のチャット"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "#%{chat_channel} のスレッド"
+      thread_title_connector: "場所:"
+      x_members:
+        other: "%{count} 人のメンバー"
+      and_x_others:
+        other: "および他 %{count} 人"
+    transcript:
+      default_thread_title: "スレッド"
+      split_thread_range: "メッセージ %{start}～%{end} / %{total}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} があなたを "%{channel}" でメンションしました'
+        other_type: '%{username} が %{identifier} を "%{channel}" でメンションしました'
+      direct_message_chat_mention:
+        direct: "%{username} がパーソナルチャットであなたをメンションしました"
+        other_type: "%{username} が %{identifier} をパーソナルチャットでメンションしました"
+      new_chat_message: '%{username} が "%{channel}" でメッセージを送信しました'
+      new_direct_chat_message: "%{username} がパーソナルチャットでメッセージを送信しました"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: チャットメッセージを送信する
+  reviewable_score_types:
+    needs_review:
+      title: "要レビュー"
+    notify_user:
+      chat_pm_title: '"%{channel_name}" のあなたのチャットメッセージ'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: '"%{channel_name}" のチャットメッセージには、スタッフの注意が必要です'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "スタッフメンバーは、このチャットメッセージにレビューが必要だと考えています。"
+  user_notifications:
+    chat_summary:
+      deleted_user: "削除されたユーザー"
+      description:
+        other: "新しいチャットメッセージがあります"
+      from: "%{site_name}"
+      subject:
+        private_email:
+          other: "[%{site_name}] 新しいメッセージ"
+        chat_dm_1:
+          other: "[%{site_name}] %{name} からの新しいメッセージ"
+        chat_dm_2: "[%{site_name}] %{name_1} と %{name_2} からの新しいメッセージ"
+        chat_dm_3_or_more: "[%{site_name}] %{name} と他 %{count} 人からの新しいメッセージ"
+        chat_channel_1:
+          other: "[%{site_name}] %{channel} の新しいメッセージ"
+        chat_channel_2: "[%{site_name}] %{channel_1} と%{channel_2} の新しいメッセージ"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} と他 %{count} 個のチャンネルの新しいメッセージ"
+        chat_channel_and_dm: "[%{site_name}] %{channel} に %{name} からの新しいメッセージがあります"
+      unsubscribe: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} から購読を停止します。"
+      unsubscribe_no_link: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更します。"
+      view_messages:
+        other: "%{count} 件のメッセージを表示"
+      view_more:
+        other: "さらに %{count} 件のメッセージを表示"
+      your_chat_settings: "チャットのメール送信頻度設定"
+  unsubscribe:
+    chat_summary:
+      select_title: "チャット要約メールの頻度を設定:"
+      never: なし
+      when_away: 退席中の時のみ
+  category:
+    cannot_delete:
+      has_chat_channels: "このカテゴリにはチャットチャンネルがあるため削除できません。"

@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Aujourd'hui %{time}
+        tomorrow: Demain %{time}
+        yesterday: Hier %{time}
+        countdown:
+          passed: la date est passée
+      title: Insérer une date et une heure
+      create:
+        form:
+          insert: Insérer
+          advanced_mode: Mode avancé
+          simple_mode: Mode simple
+          format_description: "Format utilisé pour afficher la date à l'utilisateur. Utilisez « Z » pour afficher le décalage et « zz » pour le nom du fuseau horaire."
+          timezones_title: Fuseaux horaires à afficher
+          timezones_description: Les fuseaux horaires seront utilisés pour afficher les dates en mode aperçu et en mode secours.
+          recurring_title: Périodicité
+          recurring_description: "Définir la périodicité d'un événement. Vous pouvez aussi modifier manuellement l'option de périodicité générée par le formulaire et utiliser une des clés suivantes : years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Pas de périodicité
+          invalid_date: Date invalide, vérifiez que la date et l'heure sont correctes
+          date_title: Date
+          time_title: Heure
+          format_title: Format de la date
+          timezone: Fuseau horaire
+          until: Jusqu'à…
+          current_timezone: "Fuseau horaire actuel :"
+          recurring:
+            every_day: "Tous les jours"
+            every_week: "Toutes les semaines"
+            every_two_weeks: "Tous les 15 jours"
+            every_month: "Tous les mois"
+            every_two_months: "Tous les deux mois"
+            every_three_months: "Tous les trois mois"
+            every_six_months: "Tous les six mois"
+            every_year: "Tous les ans"
+      default_title: "Événement de %{site_name}"

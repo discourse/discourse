@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    discourse_local_dates_enabled: "הפעלת תכונת התאריכים המקומיים ב־Discourse. הגדרה זו תוסיף תמיכה בתארוך שמודע לאזור הזמן המקומי בעת שימוש ברכיב [date]"
+    discourse_local_dates_default_formats: "תבניות זמן נפוצות, מידע נוסף: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>תבנית מחרוזת momentjs</a>"
+    discourse_local_dates_default_timezones: "רשימת בררת מחדל של אזורי זמן, חיי להיות <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>אזור זמן</a> תקני"
+    discourse_local_dates_email_format: "תבנית שמשמשת להצגת תאריך בהודעות דוא״ל, דוגמאות: ‚LLLL’,‏ ‚llll’ או ‚YYYY-MM-DDTHH:mm:ss[Z]’. לפרטים: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>תבנית מחרוזת momentjs</a>"
+    discourse_local_dates_email_timezone: "אזור זמן משמש להצגת תאריכים בהודעות דוא״ל, חייב להיות בתבנית <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> נכונה"

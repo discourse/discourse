@@ -1,0 +1,24 @@
+{
+  "type": "array",
+  "minItems": 1,
+  "uniqueItems": true,
+  "items": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "type": "string"
+      },
+      "size": {
+        "type": "integer"
+      },
+      "last_modified": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "filename",
+      "size",
+      "last_modified"
+    ]
+  }
+}

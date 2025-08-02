@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  site_settings:
+    poll_enabled: "نظرسنجی مجاز است؟"
+    poll_maximum_options: "حداکثر تعداد گزینه برای نظرسنجی‌ها."
+    poll_edit_window_mins: "چند دقیقه بعد از ارسال نظر می توان آن را ویرایش کرد"
+    poll_minimum_trust_level_to_create: "حداقل سطح اعتماد مورد نیاز برای ایجاد نظرسنجی را تعریف کنید."
+    poll_groupable_user_fields: "مجموعه‌ای از نام‌های فیلد کاربر که می‌تواند برای گروه‌بندی و فیلتر کردن نتایج نظرسنجی مورد استفاده قرار گیرند."
+  poll:
+    poll: "نظرسنجی"
+    multiple_polls_with_same_name: "چند نظرسنجی با اسم مشابه وجود دارند: <strong>%{name}</strong>. از ویژگی '<code>اسم</code>' برای شناسایی منحصر به فرد رای‌گیری‌های خود استفاده کنید."
+    default_poll_must_have_less_options:
+      one: "نظرسنجی باید کمتر از %{count} گزینه داشته باشد."
+      other: "نظرسنجی باید کمتر از %{count} گزینه داشته باشد."
+    named_poll_must_have_less_options:
+      one: "نظرسنجی با نام <strong>%{name}</strong> باید کمتر از %{count} گزینه داشته باشد."
+      other: "نظرسنجی با نام <strong>%{name}</strong> باید کمتر از %{count} گزینه داشته باشد."
+    default_poll_must_have_different_options: "نظرسنجی باید گزینه های متفاوت داشته باشد. "
+    named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
+    default_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای پارامترهای نامعتبری وجود دارد."
+    named_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای با نام <strong>%{name}</strong> پارامترهای نامعتبری وجود دارد."
+    requires_at_least_1_valid_option: "باید حداقل یک گزینه معتبر انتخاب کنید."
+    no_poll_with_this_name: "هیچ نظرسنجی اسم گزاری شده با اسم <strong>%{name}</strong> با این نوشته مرتبط نیست."
+    post_is_deleted: "این کار را نمی‌توان روی یک نوشته حذف شده انجام داد."
+    topic_must_be_open_to_vote: "موضوع باید برای رای گزاری باز باشد. "
+    poll_must_be_open_to_vote: "نظرسنجی باید باز باشد برای رای گیری."
+    one_vote_per_user: "تنها ۱ رای برای این نظرسنجی مجاز است."
+    topic_must_be_open_to_toggle_status: "موضوع باید برای تغییر وضیعت باز باشد. "
+    only_staff_or_op_can_toggle_status: "فقط همکاران یا ارسال کنندگان پست می توانند وضعیت نظرسنجی را تغییر دهند. "
+    insufficient_rights_to_create: "شما مجاز به ایجاد نظرسنجی نیستید."
+    email:
+      link_to_poll: "برای دیدن نظرسنجی کلیک کنید."
+    user_field:
+      no_data: "هیچ اطلاعاتی وجود ندارد"

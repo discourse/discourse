@@ -1,0 +1,211 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Συνομιλία
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Πάντα"
+          fullscreen: "Όταν η συνομιλία είναι σε πλήρη οθόνη"
+          never: "Ποτέ"
+      web_hooks:
+        chat_event:
+          group_name: "Συμβάντα συνομιλίας"
+          chat_message_created: "Μήνυμα δημιουργήθηκε"
+          chat_message_edited: "Μήνυμα έχει επεξεργαστεί"
+          chat_message_trashed: "Μήνυμα έχει απορριφθεί"
+          chat_message_restored: "Μήνυμα έχει αποκατασταθεί"
+    about:
+      chat_messages_count: "Μηνύματα συνομιλίας"
+      chat_channels_count: "Κανάλια συνομιλίας"
+      chat_users_count: "Χρήστες συνομιλίας"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} μήνυμα συνομιλίας"
+          other: "%{formatted_number} μηνύματα συνομιλίας"
+    chat:
+      back_to_forum: "Φόρουμ"
+      deleted_chat_username: διεγράφη
+      dates:
+        yesterday: "Χτες"
+      all_loaded: "Εμφάνιση όλων των μηνυμάτων"
+      already_enabled: "Η συνομιλία είναι ήδη ενεργοποιημένη σε αυτό το θέμα. Κάντε ανανέωση."
+      disabled_for_topic: "Η συνομιλία είναι απενεργοποιημένη σε αυτό το θέμα."
+      create: "Δημιουργία"
+      cancel: "Ακύρωση"
+      chat_channels: "Κανάλια"
+      browse_all_channels: "Περιήγηση σε όλα τα κανάλια"
+      move_to_channel:
+        title: "Μετακίνηση μηνυμάτων στο κανάλι"
+        confirm_move: "Μετακίνηση Μηνυμάτων"
+      channel_settings:
+        title: "Ρυθμίσεις καναλιού"
+        edit: "Επεξεργασία"
+        add: "Προσθήκη"
+        close_channel: "Κλείσιμο καναλιού"
+        open_channel: "Άνοιγμα καναλιού"
+        archive_channel: "Αρχειοθέτηση καναλιού"
+        delete_channel: "Διαγραφή καναλιού"
+        join_channel: "Εγγραφή στο κανάλι"
+        leave_channel: "Αποχώρηση από το κανάλι"
+        join: "Γίνετε μέλος"
+        leave: "Αποχώρηση"
+      channel_archive:
+        title: "Αρχειοθέτηση Καναλιού"
+        retry: "Επανάληψη"
+      channel_open:
+        title: "Άνοιγμα Καναλιού"
+      channel_close:
+        title: "Κλείσιμο Καναλιού"
+      channel_delete:
+        title: "Διαγραφή Καναλιού"
+      close: "Κλείσιμο"
+      remove: "Αφαίρεση"
+      delete: "Σβήσιμο"
+      edited: "επεξεργάστηκε"
+      muted: "σε σίγαση"
+      joined: "έγινε μέλος"
+      email_frequency:
+        never: "Ποτέ"
+      header_indicator_preference:
+        never: "Ποτέ"
+      flag: "Επισήμανση"
+      join: "Γίνετε μέλος"
+      last_visit: "τελευταία επίσκεψη"
+      placeholder_group: "Συνομιλία στην ομάδα"
+      reply: "Απάντηση"
+      edit: "Επεξεργασία"
+      rebake_message: "Ανανέωση HTML"
+      bookmark_message: "Σελιδοδείκτης"
+      bookmark_message_edit: "Επεξεργασία Σελιδοδείκτη"
+      save: "Αποθήκευση"
+      select: "Επιλογή"
+      sounds:
+        none: "Κανένα"
+      exit: "πίσω"
+      channel_status:
+        closed: "Κλειστό"
+        open: "Ξεκίνημα"
+      browse:
+        back: "Πίσω"
+        filter_all: Όλα
+        filter_open: Ξεκίνημα
+        filter_closed: Κλειστό
+      chat_message_separator:
+        today: Σήμερα
+        yesterday: Χτες
+      about_view:
+        title: Τίτλος
+        name: Όνομα
+        description: Περιγραφή
+      channel_info:
+        back_to_channel: "Πίσω"
+        tabs:
+          members: Μέλη
+          settings: Ρυθμίσεις
+        remove_member: "Αφαίρεση"
+      new_message_modal:
+        no_items: "Δεν υπάρχουν στοιχεία"
+        filter: "Φίλτρο"
+      direct_message_creator:
+        title: Νέο Μήνυμα
+        prefix: "Προς:"
+        no_results: Δεν υπάρχουν αποτελέσματα
+      channel:
+        memberships_count:
+          one: "%{count} μέλος"
+          other: "%{count} μέλη"
+      create_channel:
+        type: "Τύπος"
+        types:
+          category: "Κατηγορία"
+          topic: "Θέμα"
+      composer:
+        italic_text: "κείμενο σε έμφαση"
+        bold_text: "έντονη γραφή"
+        send: "Αποστολή"
+      notification_levels:
+        never: "Ποτέ"
+      settings:
+        follow: "Γίνετε μέλος"
+        followed: "Έγινε μέλος"
+        threading_enabled: "Ενεργοποιημένα"
+        threading_disabled: "Απενεργοποιημένο"
+        notifications: "Ειδοποιήσεις"
+        preview: "Προεπισκόπηση"
+        save: "Αποθήκευση"
+        saved: "Αποθηκεύτηκε! "
+        unfollow: "Αποχώρηση"
+        admin_title: "Διαχειριστής"
+        settings_title: "Ρυθμίσεις"
+        category_label: "Κατηγορία"
+        history_label: "Ιστορικό"
+        members_label: "Μέλη"
+      incoming_webhooks:
+        back: "Πίσω"
+        channel: "Κανάλι"
+        description: "Περιγραφή"
+        delete: "Σβήσιμο"
+        emoji: "Emoji"
+        name: "Όνομα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        system: "σύστημα"
+        url: "URL"
+        username: "Όνομα Χρήστη"
+      selection:
+        cancel: "Ακύρωση"
+        copy: "Αντιγραφή"
+        new_topic:
+          title: "Μετακίνηση σε Νέο Θέμα"
+        existing_topic:
+          title: "Μετακίνηση σε Υπάρχον Θέμα"
+        new_message:
+          title: "Μετακίνηση σε νέο μήνυμα"
+      retention_reminders:
+        short:
+          one: "%{count} ημ"
+          other: "%{count} ημ"
+      emoji_picker:
+        objects: "Αντικείμενα"
+        activities: "Δραστηριότητες"
+        flags: "Σημάνσεις"
+        symbols: "Σύμβολα"
+        no_results: "Δεν υπάρχουν αποτελέσματα"
+      thread:
+        title: "Τίτλος"
+        replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        settings: "Ρυθμίσεις"
+        last_reply: "τελευταία απάντηση"
+        notifications:
+          regular:
+            title: "Φυσιολογικό"
+          tracking:
+            title: "Παρακολουθείται"
+          watching:
+            title: "Επιτηρείται"
+      draft_channel_screen:
+        header: "Νέο Μήνυμα"
+        cancel: "Ακύρωση"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} και %{username2}"
+        other: "%{username} και %{count} ακόμη"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Μήνυμα

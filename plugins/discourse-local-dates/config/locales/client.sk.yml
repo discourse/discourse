@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Lokálne dátumy Discourse"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Dnes %{time}
+        tomorrow: Zajtra %{time}
+        yesterday: Včera %{time}
+        countdown:
+          passed: dátum uplynul
+      title: Vložte dátum/čas
+      create:
+        form:
+          insert: Vložiť
+          advanced_mode: Pokročilý režim
+          simple_mode: Jednoduchý režim
+          format_description: "Formát používaný na zobrazenie dátumu používateľovi. Použite Z na zobrazenie posunu a zz pre názov časového pásma."
+          timezones_title: Časové pásma na zobrazenie
+          timezones_description: Časové pásma sa použijú na zobrazenie dátumov v náhľade a núdzových situáciách.
+          recurring_title: Opakovanie
+          recurring_description: "Definujte opakovanie udalosti. Môžete tiež manuálne upraviť opakovanú možnosť generovanú formulárom a použiť jeden z nasledujúcich kľúčov: roky, štvrťroky, mesiace, týždne, dni, hodiny, minúty, sekundy, milisekundy."
+          recurring_none: Žiadna opakovaná udalosť
+          invalid_date: Neplatný dátum, uistite sa, že dátum a čas sú správne
+          date_title: Dátum
+          time_title: Čas
+          format_title: Formát dátumu
+          timezone: Časové pásmo
+          until: Až kým...
+          current_timezone: "Aktuálne časové pásmo:"
+          recurring:
+            every_day: "Každý deň"
+            every_week: "Každý týždeň"
+            every_two_weeks: "Každé dva týždne"
+            every_month: "Každý mesiac"
+            every_two_months: "Každé dva mesiace"
+            every_three_months: "Každé tri mesiace"
+            every_six_months: "Každých šesť mesiacov"
+            every_year: "Každý rok"
+      default_title: "%{site_name} Udalosť"

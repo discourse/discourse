@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Inicia el tutorial d'usuari nou per a tots els usuaris nous."
+        welcome_message: "Envia a tots els usuaris nous un missatge de benvinguda amb una guia ràpida d'iniciació."

@@ -1,0 +1,366 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    discourse_narrative_bot_enabled: "Discourse 이야기봇 사용 (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Discourse 이야기봇 환영 포스트 비활성화"
+    discourse_narrative_bot_ignored_usernames: "Discourse 이야기봇이 무시할 사용자 아이디"
+    discourse_narrative_bot_disable_public_replies: "Discourse 이야기봇의 공개 답글 비활성화"
+    discourse_narrative_bot_welcome_post_type: "Discourse 이야기봇이 보낼 환영 포스트 종류"
+    discourse_narrative_bot_welcome_post_delay: "Discourse 이야기봇의 환영 포스트 전송 전 대기시간(단위: 초)"
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot 안내 건너 뛰기"
+  badges:
+    certified:
+      name: 인증받은 사용자
+      description: "새 사용자 튜토리얼을 완료하였습니다."
+      long_description: |
+        이 배지는 유저 튜토리얼을 성공적으로 마친 유저들에게 부여됩니다. 토론을 위한 기본적인 도구를 익혀 인증받은 사용자가 되었습니다!
+    licensed:
+      name: 고급 라이센스
+      description: "고급 사용자 튜토리얼을 완료하였습니다"
+      long_description: |
+        이 배지는 고급 유저 튜토리얼을 성공적으로 완료한 사용자에게 부여됩니다. 당신은 고급 토론 도구를 숙지하여 면허를 취득하였습니다!
+  discourse_narrative_bot:
+    bio: "안녕하세요, 저는 진짜 사람이 아닙니다. 나는 이 사이트에 대해 알려주는 봇입니다. 저와 소통하려면 저에게 메시지를 보내거나 이름으로 저를 멘션하세요."
+    tl2_promotion_message:
+      subject_template: "이제 승격 했으므로 몇 가지 고급 기능에 대해 알아볼 차례입니다!"
+      text_body_template: |
+        `@%{discobot_username} %{reset_trigger}` 로 이 메시지에 회신하고 사용자님이 무엇을 할 수 있는지에 대해 알아보세요.
+    timeout:
+      message: |-
+        안녕 @%{username}, 너한테서 소식이 없어서 한 번 말 걸어봤어.
+
+        - 계속 하려면 언제든 나한테 답장을 하면 돼.
+
+        - 이 단계를 건너뛰고 싶다면 `%{skip_trigger}` 라고 말하면 돼.
+
+        - 다시 시작하고 싶으면 `%{reset_trigger}`라고 말해.
+
+        뭐, 다 싫어도, 괜찮아. 난 로봇이라서 나빠질 기분이 없거든. :sob:
+    dice:
+      trigger: "굴리기"
+      invalid: |-
+        미안, 수학적으로 그 조합의 주사위는 돌릴 수 없어. :confounded:
+      out_of_range: |-
+        수학적으로 균등한 주사위의 [최대 면 수] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 가 120이라는 사실을 알고 계셨나요?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "명언"
+      "1":
+        quote: "\"모든 역경속에는 기회가 있다\""
+        author: "알베르트 아인슈타인"
+      "2":
+        quote: "자유가 실수를 저지를 수 있는 자유를 내포하지 않는다면 가질 만한 가치가 없다."
+        author: "마하트마 간디"
+      "3":
+        quote: "\"끝났다고 울지말고, 그 시간을 떠올리며 웃으렴.\""
+        author: "수스(Seuss) 박사"
+      "4":
+        quote: "\"올바른 것을 원한다면, 스스로 성취하라\""
+        author: "샤를-기욤 에티엔"
+      "5":
+        quote: "\"스스로를 믿는다면 이미 절반은 이룬 것이나 다름없다\""
+        author: "시어도어 루즈벨트"
+      "6":
+        quote: "\"인생은 초콜릿상자 같은 거야, 다음에 어떤 초콜릿을 집게 될지는 아무도 모른단다.\""
+        author: "포레스트 검프의 엄마"
+      "7":
+        quote: "\"끝났다고 울지말고, 그 시간을 떠올리며 웃으렴.\""
+        author: "닐 암스트롱"
+      "8":
+        quote: "\"당신이 두려워하는 일을 매일하라\""
+        author: "엘리너 루즈벨트"
+      "9":
+        quote: "실수를 인정할 용기가 있다면 실수는 언제나 용서받을 수 있다."
+        author: "이소룡"
+      "10":
+        quote: "\"당신은 당신이 상상하고 믿는 모든 것들을 이룰 수 있다.\""
+        author: "나폴레온 힐"
+      "11":
+        quote: "가정에 평화, 세계에 평화."
+        author: "무스타파 케말 아타튀르크"
+      "12":
+        quote: "교육은 빈곤에서 벗어나는 방법이 아니라 빈곤과 싸우는 방법이다."
+        author: "줄리어스 니에레레"
+      "13":
+        quote: "천 리 길도 한 걸음부터"
+        author: "노자"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: "운세"
+      answers:
+        "1": "이건 확실해."
+        "2": "이건 분명히 돼."
+        "3": "의심할 여지가 없지."
+        "4": "응, 당연히 그래."
+        "5": "믿어도 좋아."
+        "6": "맞아."
+        "7": "거의 확실해."
+        "8": "좋을 전망."
+        "9": "응."
+        "10": "괜찮아 보이는군."
+        "11": "흐릿한 답글, 다시 시도"
+        "12": "다음에 다시 물어봐."
+        "13": "지금은 말하지 않는 편이 낫겠어."
+        "14": "지금은 예측할 수 없어."
+        "15": "집중해서 다시 물어봐."
+        "16": "꿈도 꾸지마."
+        "17": "내 대답은 '아니다'야."
+        "18": "내 정보에 의하면 '아니오'야."
+        "19": "안좋을 전망."
+        "20": "아주 의심스러워."
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "시작하기"
+      skip_trigger: "건너뛰기"
+      help_trigger: "도움말 표시"
+      random_mention:
+        reply: |-
+          내가 뭘 할 수 있는지 알고 싶다면 `@%{discobot_username} %{help_trigger}` 라고 말하렴.
+        tracks: |-
+          저는 현재 어떻게 해야 하는지 다음과 같은 방법을 알고 있습니다:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > 개인 메시지에서 사용자님을 위해 안내를 시작합니다. `{name-of-tutorial}` 다음중 하나: `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: 답글을 쓸 수 있습니다
+        discobot_disabled: 사용자님이 기본 설정에서 봇을 비활성화했습니다. 새 사용자 온 보딩 팁이 상호 작용하도록 허용해야합니다.
+      do_not_understand:
+        first_response: |-
+          우와, 답글을 써줘서 고마워!
+
+          그런데 애석하게도 나는 프로그래밍된 로봇이라서 그게 무슨 말인 지 알수가 없단다. :frowning:
+        track_response: 다시 해볼 수 있어. 이 단계를 건너뛰고 싶으면 `%{skip_trigger}`라고 말해. 다시 시작하시고 싶으면 `%{reset_trigger}`라고 말하면 돼.
+        second_response: |-
+          오 미안. 아직도 무슨 말인지 모르겠어. :anguished:
+
+          난 그냥 로봇일 뿐이야. 진짜 사람한테 연락하고 싶다면 [우리 연락처 페이지](%{base_path}/about) 를 참고해.
+
+          그럼, 난 잠시 자리를 비워줄게.
+    new_user_narrative:
+      reset_trigger: "튜토리얼"
+      title: "새로운 사용자 튜토리얼 수료증"
+      cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
+      hello:
+        title: "인사말!"
+        message: |-
+          %{title}에 가입해 주셔서 감사합니다.
+
+          - 나는 단지 로봇 일뿐입니다. 그러나 [사이트 관리자](%{base_uri}/about)는 사용자들에게 도움을주기 위해 여기에 있습니다.
+
+          - 신규 사용자가 할 수 있는 일은 일시적으로 제한됩니다. 곧 [새로운 기능]들을 알게 될 것입니다. 또한 이곳에서 [badges](%{base_uri}/배지)) 를 얻을 수 있습니다.
+
+          - 항상 [올바른 커뮤니티 활동](%{base_uri}/지침) 을 해 줄것을 당부 드립니다.
+      onebox:
+        reply: |-
+          좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해. 딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
+      images:
+        instructions: |-
+          유니콘 사진이야.
+
+          <img src="%{base_path}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">%{base_uri}/images/unicorn.png" width="520" height="520">
+
+          (당연히 그렇겠지만) 맘에 들면 이 포스트 아래에 있는 '좋아요'버튼을 눌러봐.
+
+          **사진으로 답글쓰기**를 할 수 있니? 어떤 그림이든 상관없어. 드래그&드랍으로 땡겨와서 업로드 버튼을 눌러봐. 복사&붙여넣기도 가능해.
+        reply: |-
+          멋진 사진이네. 내가 얼마나 좋아하는 지:heart_eyes: 알려주고 싶어서 좋아요:heart:를 눌렀단다.
+        like_not_found: |-
+          [내글에](%{url})좋아요:heart: 안 눌러 줄거니? :crying_cat_face:
+        not_found: |-
+          이미지를 업로드하지 않으신것 같아 좋아할만한 사진을 선택했습니다.
+
+          <%{image_url}>
+
+          업로드하거나 링크를 붙여 넣으십시오!
+      likes:
+        instructions: |-
+          다음은 유니콘 사진입니다.
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          마음에 들면 글 아래의 좋아요 :heart: 버튼을 눌러 알려주세요.
+        reply: |-
+          내 게시물을 좋아해줘서 고마워!
+        not_found: |-
+          내 글(%{url})에 좋아요 :heart: 안 눌러 줄거에요? :crying_cat_face:
+      formatting:
+        instructions: |-
+          답글에서 글을 **진하게** 만들거나 _이탤릭_처리를 할 수 있니?
+
+          - `**진하게**` 또는 `_이탤릭_`이라고 써봐.
+
+          - 아니면 에디터에서 <kbd><b>B</b></kbd> 또는 <kbd><i>I</i></kbd> 버튼을 눌러도 돼.
+        reply: |-
+          훌륭해! HTML 이나 BBCode 로도 글을 꾸밀 수 있어. [이 튜토리얼을 참고해봐.](https://commonmark.org/help) :nerd:
+        not_found: |-
+          어, 니 답글은 꾸며진 글이 없는 거 같은데. :pencil2:
+
+          다시 한 번 해볼래? 에디터에서 <kbd><b>B</b></kbd> 버튼을 누르면 진하게 되고 <kbd><i>I</i></kbd> 버튼을 누르면 이탤릭처리가 된단다.
+      quoting:
+        instructions: |-
+          내 글에 답글을 쓸 때, 네가 나의 어떤 말에 답하는 지 알 수 있도록 인용을 해줄 수 있겠니?
+
+          > 이게 커피라면 차를 주시고, 차라면 커피를 주세요.
+          >
+          > 혼잣말의 장점은 최소한 한 사람은 듣고있다는 거죠.
+          >
+          > 어떤 사람은 말재주만 좋지만, 다른 사람들은... 음, 재주가 없네.
+
+          위에 쓴 글에서 무엇이든 선택해서 &uarr; 선택한 영역 부근에 뜨는 **인용하기** 버튼을 눌러 봐. 아니면 이 포스트 아래에 있는 **답글쓰기** 버튼을 눌러도 돼.
+
+          인용을 다했으면, 선택한 문구에 대하여 한 두마디 적어봐. 뭐라 이야기할지 궁금하군. :thinking:
+        reply: |-
+          잘했어. 내가 제일 좋아하는 말을 선택했네! :left_speech_bubble:
+        not_found: |-
+          흠, 아무 것도 인용하지 않은 것 같은데?
+
+          내 포스트에서 아무 글이나 선택해도 <kbd>**인용하기**</kbd> 버튼이 뜰거야. 글을 선택하고 **답글쓰기** 를 눌러도 돼! 다시 한 번 해 볼래?
+      bookmark:
+        instructions: |-
+          자세한 내용을 알아 보려면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 아래와 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인 메시지를 북마크하십시오 **. 당신이하는 경우 : 선물 : 미래에있을 수 있습니다!
+        not_found: |-
+          어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
+      emoji:
+        instructions: |-
+          내가 답글에서 조그마한 그림을 쓰는 걸 봤겠지?:blue_car::dash: 이런 걸 [이모지](https://en.wikipedia.org/wiki/Emoji)라고 해. 너도 답글에 **이모지를 추가**해 볼래? 아래 중에서 아무거나 해도 돼.
+
+          - `:) ;) :D :P :O` 라고 입력하기
+
+          - 콜론<kbd>:</kbd>을 입력하고 이모지 이름 `:tada:`를 완성해봐.
+
+          - 에디터에서 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> 이모지 버튼을 누르거나, 모바일 키보드를 사용해봐.
+        reply: |-
+          그것은 :sparkles: _이모티콘입니다!_ :sparkles:
+        not_found: |-
+          어라, 답글에서 이모지를 못찾겠는데? 안돼! :sob:
+
+          콜론 <kbd>:</kbd> 을 입력하면 이모지 선택기를 띄울 수 있어. 그럼 몇자만 입력해도 원하는 이모지를 찾을 수 있지. 예를 들어 ':bird:'라고 입력하면 돼.
+
+          아니면, 편집기에서 이모지 버튼 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> 을 눌러도 상관없어.
+
+          (모바일 기기를 가지고 있으면, 키보드에서 이모지를 바로 입력할 수도 있어.)
+      mention:
+        instructions: |-
+          그 사람글에 직접 답글을 쓰는 건 아니어도, 어떤 사람의 관심이 필요할 때가 있지. 그럴 때는 `@` 다음에 그 사람의 아이디를 입력해서 멘션을 날리면 돼.
+
+          답글에 **`@%{discobot_username}`** 를 써서 멘션을 날려볼래?
+        reply: |-
+          _내 이름 부른 사람!?_ :raised_hand: 너인 거 같은데! :wave: 그래, 난 여깄어! 내 얘기해줘서 고마워. :ok_hand:
+        not_found: |-
+          내 이름을 못찾겠네. :frowning: `@%{discobot_username}` 라고 쳐서 나한테 멘션을 날려줄래?
+
+          (그래, 내 아이디는 _disco_, 라고 써. 1970년대 토요일밤의 열기처럼 말이야. 난 [밤을 사랑하는 댄서라고!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        not_found: |-
+          이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
+      search:
+        hidden_message: |-
+          이 capybara를 어떻게 그리워 했습니까? :눈짓: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/> 당신이 지금 처음에 돌아 왔음을 알았습니까? `%{search_answer}` 그림 이모티콘 **을 사용하여이 가난한 배고픈 카피 바라에게 먹이를 주면 자동으로 끝납니다.
+        reply: |-
+          예이, 찾았네! :tada:
+
+          - 더 자세히 검색하려면, [전체 검색 페이지](%{search_url})로 가보렴.
+
+          - 긴 대화에서 원하는 곳으로 건너 뛰려면, 우측에 있는 토픽 타임라인 컨트롤을 사용해봐 (모바일 기기에는 아래쪽에 있어).
+
+          - 진짜 실물 :keyboard:가 있다면, <kbd>?</kbd>를 눌러서 간편한 단축키가 뭐가 있는지 알아봐.
+        not_found: |-
+          흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
+      end:
+        message: |-
+          @ %{username}와 함께 해 주셔서 감사합니다! 나는 당신을 위해 이것을 만들었다, 나는 당신이 그것을 얻은 것 같아 : %{certificate} 그게 다야! [** 최신 토론 주제 **] (%{base_uri} / latest) 또는 [** 토론 범주 **] (%{base_uri} / categories)를 확인하십시오. : 선글라스 : (더 많은 것을 배우기 위해 다시 나와 이야기하고 싶다면 언제든지 메시지를 보내거나`@ %{discobot_username} &#39;를 언급하십시오!)
+      certificate:
+        alt: "목표달성 인증"
+    advanced_user_narrative:
+      reset_trigger: "고급 튜토리얼"
+      cert_title: "고급 사용자 튜토리얼을 훌륭하게 완료한 것에 대한 보상으로"
+      title: ":arrow_up: 고급 사용자 기능"
+      start_message: |-
+        _advanced_ 사용자로서 [기본 설정 페이지] (%{base_uri} / my / preferences)를 방문했지만 아직 @ %{username}? 어둡거나 밝은 테마를 선택하는 등 다양한 방법으로 경험을 사용자 지정할 수 있습니다. 그러나 나는 출발한다, 시작하자!
+      edit:
+        bot_created_post_raw: "@%{discobot_username}는 내가 아는 한, 현존하는 가장 쿨한 봇이지:wink:"
+        instructions: |-
+          누구나 실수해. 걱정마, 편집을 하면 그 실수를 언제든지 바로잡을 수 있거든!
+
+          내가 너 대신 만든 이 포스트를 **편집**하는 걸로 시작해 볼래 ?
+        not_found: |-
+          내가 만들어준 [post](%{url}) 편집이 다 안끝난 것 같네. 다시 해볼래?
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> 아이콘을 눌러서 에디터를 띄워보렴.
+        reply: |-
+          아주 잘했어!
+
+          편집된 글은 5분뒤에 수정본으로 공개되고, 우측 상단에 작은 연필 아이콘과 함께 수정 횟수가 뜬다는 걸 기억하렴.
+      delete:
+        instructions: |-
+          작성한 포스트를 없애고 싶으면, 삭제를 하면 돼.
+
+          위에 있는 포스트 중에서 어떤 것이든 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **삭제하기** 기능으로 **삭제**해보렴. 그래도 첫번째 포스트는 삭제하지마!
+        not_found: |-
+          삭제된 포스트가 없는 것 같은데? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 더보기를 통해서 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> 삭제하기를 볼 수 있어.
+        reply: |-
+          우와! :boom:
+
+          토론이 잘 진행될 수 있도록, 곧장 삭제되지는 않아. 어느 정도 시간이 지나면 포스트가 없어질거야.
+      recover:
+        deleted_post_raw: "왜 @%{discobot_username}가 내 포스트를 지웠지? :anguished:"
+        instructions: |-
+          오 이런! 너한테 만들어 준 새 포스트를 실수로 삭제해버린 것 같아.
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **삭제 취소하기**를 부탁해도 될까?
+        not_found: |-
+          잘 안되니? <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 더 보기를 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> 삭제 취소하기가 보일거야.
+        reply: |-
+          휴, 그것은 가까운 사람이었다! : wink : 게시물을 삭제 취소 할 수있는 시간은 %{deletion_after}입니다.
+      category_hashtag:
+        instructions: |-
+          게시물에서 카테고리와 태그를 참조할 수 있다는 거 알고 있었어? 예를 들어, %{category} 카테고리를 본 적 있어?
+
+          문장 아무 곳에나 `#`을 입력하고 아무 카테고리나 태그를 선택해 봐.
+        not_found: |-
+          음, 문장에 카테고리가 안 보이네. 다음 문장을 복사해 줄 수 있어?
+
+          ```text
+          나는 카테고리 링크를 만들 수 있어. 이렇게 #
+          ```
+        reply: |-
+          훌륭해! 태그가 활성화되어 있으면 카테고리와 태그 둘 다 적용된다는 걸 기억해.
+      change_topic_notification_level:
+        not_found: |-
+          아직도보고있는 것 같습니다 : 눈 :이 주제! 찾는 데 문제가 있으면 알림 수준 버튼이 주제 하단에 있습니다.
+        reply: |-
+          멋진 일! 나는 때때로 약간 대화가 가능하기 때문에이 주제를 무시하지 않기를 바랍니다. : grin :. 주제에 응답하거나 몇 분 이상 주제를 읽으면 자동으로 &#39;추적&#39;알림 레벨로 설정됩니다. [사용자 환경 설정] (%{base_uri} / my / preferences)에서이를 변경할 수 있습니다.
+      poll:
+        reply: |-
+          여보세요, 여론 조사! 내가 당신을 가르치는 데 어떻게 했습니까? [폴] * : +1 : * : -1 : [/ 폴]
+      details:
+        not_found: |-
+          세부 사항 위젯을 작성하는 데 문제가 있습니까? 다음 답장에 다음 내용을 포함시켜보십시오.
+        reply: |-
+          훌륭합니다. _detail_에 대한 관심은 훌륭합니다!
+      end:
+        message: |-
+          정말 _고급 사용자_처럼 잘 해냈군! :bow:
+
+          %{certificate}
+
+          내가 준비한 내용은 여기까지야.
+
+          이제 안녕! 다시 이야기하고 싶으면 언제든지 메시지 해 :sunglasses:
+      certificate:
+        alt: "고급 사용자 과정 수료증"

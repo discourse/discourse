@@ -1,0 +1,94 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  js:
+    poll:
+      voters:
+        one: "votante"
+        other: "votantes"
+      total_votes:
+        one: "votos totais"
+        other: "votos totais"
+      average_rating: "Valoración media: <strong>%{average}</strong>."
+      public:
+        title: "Os votos son <strong>públicos</strong>."
+      results:
+        groups:
+          title: "Debe ser membro de %{groups} para votar nesta enquisa."
+        vote:
+          title: "Os resultados amosaranse en <strong>voto</strong>."
+        closed:
+          title: "Os resultados amosaranse logo de <strong>pechada</strong>."
+        staff:
+          title: "Os resultados só se amosan a membros do <strong>equipo</strong>."
+      cast-votes:
+        title: "Vote"
+        label: "Vote agora!"
+      show-results:
+        title: "Amosar os resultados da enquisa"
+        label: "Resultados"
+      hide-results:
+        title: "Volver aos seus votos"
+      group-results:
+        title: "Agrupar votos por campo de usuario"
+        label: "Amosar en detalle"
+      export-results:
+        title: "Exportar os resultados da enquisa"
+        label: "Exportar"
+      open:
+        title: "Abrir a enquisa"
+        label: "Abrir"
+        confirm: "Confirma a apertura da enquisa?"
+      close:
+        title: "Pechar a enquisa"
+        label: "Pechar"
+        confirm: "Confirma o peche desta enquisa?"
+      automatic_close:
+        closes_in: "Pechará en <strong>%{timeLeft}</strong>."
+        age: "Pechado desde <strong>%{age}</strong>"
+      breakdown:
+        title: "Resultados da enquisa"
+        votes: "%{count} votos"
+        breakdown: "Detalle"
+        percentage: "Porcentaxe"
+        count: "Conta"
+      ranked_choice:
+        none: "Ningunha"
+      options:
+        label: "Opcións"
+      error_while_toggling_status: "Desculpe, produciuse un erro ao trocar o status desta enquisa."
+      error_while_casting_votes: "Desculpe, produciuse un erro na emisión dos seus votos."
+      error_while_fetching_voters: "Desculpe, produciuse un erro ao presentar os votantes."
+      error_while_exporting_results: "Desculpe, produciuse un erro ao exportar os resultados da enquisa."
+      ui_builder:
+        title: Construír a enquisa
+        insert: Inserir enquisa
+        help:
+          options_min_count: Introducir cando menos 1 opción.
+          invalid_values: O valor mínimo ten de ser menor có valor máximo.
+          min_step_value: O valor mínimo do paso é 1
+        poll_type:
+          label: Tipo
+          regular: Escolla única
+          multiple: Escolla múltipla
+          number: Valoración numérica
+        poll_result:
+          always: Sempre visíbel
+          staff: Soamente ao equipo
+        poll_chart_type:
+          bar: Barra
+          pie: Torta
+        poll_config:
+          step: Paso
+        poll_public:
+          label: Amosar quen votou
+        poll_title:
+          label: Título (opcional)
+        automatic_close:
+          label: Pechar automaticamente a enquisa
+        show_advanced: "Amosar opcións avanzadas"
+        hide_advanced: "Agochar opcións avanzadas"

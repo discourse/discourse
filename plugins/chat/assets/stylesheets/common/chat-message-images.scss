@@ -1,0 +1,88 @@
+$max_image_height: 150px;
+
+.chat-message {
+  // append selectors to set images to a
+  // max height of $max_image_height
+  .onebox img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
+  img.onebox,
+  .chat-uploads img,
+  p img,
+  aside.onebox .onebox-body .aspect-image-full-size,
+  aside.onebox .onebox-body .aspect-image-full-size img,
+  .chat-message-text p img:not(.emoji) {
+    object-fit: contain;
+    max-height: $max_image_height;
+    max-width: 100%;
+    width: unset;
+    overflow: hidden;
+  }
+
+  .onebox {
+    &:not(img) {
+      container-type: inline-size;
+    }
+
+    .thumbnail {
+      &.onebox-avatar {
+        max-height: 100px;
+        width: 20%;
+        max-width: 60px;
+        margin-right: 0.5rem;
+      }
+    }
+
+    .onebox-body .aspect-image {
+      max-width: 50%;
+    }
+  }
+
+  .onebox:not(.githubpullrequest, .githubcommit, .githubissue) {
+    @container (width < 400px) {
+      .onebox-body {
+        display: flex;
+        flex-direction: column;
+
+        .thumbnail.onebox-avatar {
+          display: none;
+          max-width: 20%;
+          margin-right: 0.5rem;
+        }
+
+        .thumbnail {
+          max-width: 100% !important;
+          margin: 0;
+        }
+
+        .aspect-image {
+          margin-right: 0;
+          max-width: 100%;
+
+          + h3 {
+            margin-top: 0.25rem;
+          }
+        }
+
+        h3 {
+          margin-block: 0.75rem 0;
+        }
+
+        p {
+          margin-top: 0.5rem;
+        }
+      }
+    }
+  }
+
+  .chat-message-collapser
+    .chat-message-collapser-header
+    + div
+    .chat-message-collapser-lazy-video {
+    object-fit: contain;
+    max-height: $max_image_height;
+    max-width: calc(#{$max_image_height} / 9 * 16);
+
+    &:has(div[data-provider-name="tiktok"]) {
+      max-height: unset;
+    }
+  }
+}

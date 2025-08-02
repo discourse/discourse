@@ -1,0 +1,106 @@
+.select-kit {
+  &.multi-select {
+    width: 300px;
+    background: var(--secondary);
+
+    .select-kit-filter {
+      & + .selected-content,
+      & + .select-kit-collection {
+        border-top: 1px solid var(--content-border-color);
+      }
+    }
+
+    .select-kit-row {
+      min-height: 1px;
+    }
+
+    &.is-disabled {
+      .multi-select-header {
+        background: var(--primary-low);
+        border-color: var(--primary-low-mid);
+        color: var(--primary-medium);
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
+      }
+    }
+
+    .selected-content {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      border-bottom: 1px solid var(--content-border-color);
+      padding: 0.25em 0.25em 0 0.25em;
+
+      .disabled {
+        margin: 0 0.25em 0.25em 0;
+        align-content: center;
+      }
+
+      .selected-choice {
+        margin: 0 0.25em 0.25em 0;
+        font-size: var(--font-down-1);
+
+        &.selected-choice-color {
+          border-bottom: 2px solid transparent;
+        }
+      }
+    }
+
+    .multi-select-header {
+      background: var(--secondary);
+      border-color: var(--primary-400);
+
+      .formatted-selection {
+        margin: 0;
+        cursor: pointer;
+
+        @include ellipsis;
+        display: inline-block;
+      }
+
+      .select-kit-header--filter {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -0.35em;
+        margin-left: -0.25em;
+        position: relative;
+
+        .selected-choice {
+          margin: 0.125em 0.25em 0.125em 0;
+          padding: 0.2em 0.3em;
+          font-size: var(--font-down-1);
+
+          &.selected-choice-color {
+            border-bottom: 2px solid transparent;
+          }
+        }
+
+        .select-kit-filter {
+          display: inline-flex;
+          flex: 1 1 30px;
+          width: auto;
+          margin-left: 0.25em;
+          position: static;
+          min-height: 28px;
+
+          &.is-expanded {
+            padding: 0;
+          }
+
+          .filter-input {
+            min-height: auto;
+          }
+        }
+      }
+    }
+
+    &.is-expanded .multi-select-header,
+    .multi-select-header:focus {
+      @include default-focus;
+    }
+  }
+}

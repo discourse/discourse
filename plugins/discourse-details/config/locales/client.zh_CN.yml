@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Discourse 细节"
+  js:
+    details:
+      title: 隐藏详细信息
+    composer:
+      details_title: 总结
+      details_text: "此文本将被隐藏"

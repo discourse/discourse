@@ -1,0 +1,67 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    poll_enabled: "Sallitaanko kyselyt?"
+    poll_maximum_options: "Kyselyn vaihtoehtojen suurin sallittu määrä."
+    poll_edit_window_mins: "Kuinka monta minuuttia on aikaa muokata kyselyä sen luomisen jälkeen."
+    poll_minimum_trust_level_to_create: "Vähimmäisluottamustaso, jolla voi luoda kyselyitä."
+    poll_create_allowed_groups: "Ryhmät, joilla on oikeus luoda kyselyitä."
+    poll_groupable_user_fields: "Käyttäjäkenttäluokat, joiden mukaan kyselyiden tuloksia voi ryhmitellä ja suodattaa."
+    poll_export_data_explorer_query_id: "Tietoselauskyselyn tunnus, jota käytetään äänestystulosten viemiseen (poista käytöstä arvolla 0)."
+    poll_export_ranked_choice_data_explorer_query_id: "Tietoselauskyselyn tunnus, jota käytetään IRV-äänestystulosten viemiseen."
+    poll_default_public: "Ota \"Näytä äänestäneet\" -valinta käyttöön oletuksena luotaessa uutta kyselyä."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "kysely"
+    invalid_argument: "Arvo \"%{value}\" ei kelpaa argumentiksi \"%{argument}\"."
+    multiple_polls_without_name: "Luotaessa useita kyselyitä lisää yksilölliset nimet lisäämällä <code>name=example</code> <code>[poll]</code>-tunnisteisiisi."
+    multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määritteellä kyselyidesi yksilöimiseksi."
+    default_poll_must_have_at_least_1_option: "Kyselyssä täytyy olla ainakin 1 vaihtoehto."
+    named_poll_must_have_at_least_1_option: "Kyselyssä <strong>%{name}</strong> täytyy olla ainakin 1 vaihtoehto."
+    default_poll_must_have_less_options:
+      one: "Kyselyssä täytyy olla vähemmän kuin %{count} vaihtoehto."
+      other: "Kyselyssä täytyy olla vähemmän kuin %{count} vaihtoehtoa."
+    named_poll_must_have_less_options:
+      one: "Kyselyssä <strong>%{name}</strong> täytyy olla vähemmän kuin %{count} vaihtoehto."
+      other: "Kyselyssä <strong>%{name}</strong> täytyy olla vähemmän kuin %{count} vaihtoehtoa."
+    default_poll_must_have_different_options: "Kyselyn vaihtoehtojen on erottava toisistaan."
+    named_poll_must_have_different_options: "Kyselyn <strong>%{name}</strong> vaihtoehtojen on erottava toisistaan."
+    default_poll_must_not_have_any_empty_options: "Kyselyssä ei voi olla tyhjiä vaihtoehtoja."
+    named_poll_must_not_have_any_empty_options: "Kyselyssä <strong>%{name}</strong> ei voi olla tyhjiä vaihtoehtoja."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Kysely, jossa on useita vaihtoehtoja, sisältää epäkelpoja parametreja."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Kysely <strong>%{name}</strong>, jossa on useampia vaihtoehtoja, sisältää epäkelpoja parametreja."
+    requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
+    requires_that_at_least_one_option_is_ranked: "Sijoitetun valinnan kyselyissä sinun täytyy sijoittaa vähintään yksi vaihtoehto."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Et voi muuttaa kyselyä, kun %{minutes} minuuttia on kulunut."
+      cannot_edit_named_poll_with_votes: "Et voi muuttaa kyselyn nimeä <strong>${name}</strong>, kun %{minutes} minuuttia on kulunut."
+    no_poll_with_this_name: "Tämä viesti ei sisällä kyselyä nimeltä <strong>%{name}</strong>."
+    post_is_deleted: "Ei voi tehdä poistetulle viestille."
+    user_cant_post_in_topic: "Et voi äänestää, koska sinulla ei ole oikeutta kirjoittaa ketjuun."
+    topic_must_be_open_to_vote: "Vain avoimessa ketjussa voi äänestää."
+    poll_must_be_open_to_vote: "Vain avoimessa kyselyssä voi äänestää."
+    one_vote_per_user: "Tähän kyselyyn voi antaa vain yhden äänen."
+    max_vote_per_user:
+      one: Tähän kyselyyn voi antaa vain %{count} äänen.
+      other: Tähän kyselyyn voi antaa enintään %{count} ääntä.
+    min_vote_per_user:
+      one: Tähän kyselyyn vaaditaan vähintään %{count} ääni.
+      other: Tähän kyselyyn vaaditaan vähintään %{count} ääntä.
+    ranked_choice:
+      vote_options_mismatch: "IRV-äänestyksessä äänessä tehtyjen valintojen määrän täytyy vastata vaihtoehtojen määrää. Vaihtoehtojen määrä on %{count}, ja tehtyjen valintojen määrä oli %{provided}."
+      no_group_results_support: "Virheellinen kyselytyyppi, ranked_choice ei tue ryhmiteltyjä tuloksia."
+    topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa kyselyn tilaa."
+    only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa kyselyn tilaa."
+    errors:
+      poll_not_found: "Kyselyä ei löydy, vahvista parametrit."
+    insufficient_rights_to_create: "Sinulla ei ole oikeutta luoda kyselyitä."
+    email:
+      link_to_poll: "Näytä kysely napsauttamalla tätä."
+    user_field:
+      no_data: "Ei tietoja"

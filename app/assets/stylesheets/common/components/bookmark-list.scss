@@ -1,0 +1,93 @@
+$mobile-breakpoint: 700px;
+
+.bookmark-list {
+  .topic-list-data.post-metadata {
+    text-align: center;
+  }
+}
+
+.bookmark-list-item {
+  .topic-list-data.post-metadata {
+    text-align: center;
+  }
+
+  @media (max-width: $mobile-breakpoint) {
+    .main-link {
+      padding-right: 0.5em;
+    }
+  }
+
+  .author-avatar img.avatar {
+    height: 24px;
+    width: 24px;
+  }
+
+  .main-link.topic-list-data {
+    .bookmark-status-with-link {
+      a.title {
+        padding: 0;
+      }
+    }
+  }
+
+  .d-icon.bookmark-pinned {
+    font-size: var(--font-down-2);
+    margin-right: 0.2em;
+  }
+
+  .bookmark-metadata {
+    font-size: var(--font-down-2);
+    margin-bottom: 0.25em;
+
+    &-item {
+      display: inline-block;
+      margin-right: 1em;
+      margin-bottom: 0.25em;
+      line-height: var(--line-height-medium);
+
+      span {
+        word-break: break-word;
+      }
+
+      &.bookmark-expired-reminder {
+        color: var(--danger);
+      }
+    }
+
+    .d-icon {
+      margin-right: 0.25em;
+    }
+  }
+
+  .bookmark-status-with-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .mobile-view & {
+      margin-bottom: 0.15em;
+    }
+
+    .topic-statuses {
+      float: none;
+    }
+  }
+
+  .post-excerpt {
+    overflow: hidden;
+    padding-right: 1em;
+  }
+
+  .mobile-view & {
+    .avatar {
+      float: left;
+      margin: 0.27em 0.27em 0 0;
+    }
+  }
+}
+
+.select-kit.bookmark-actions-dropdown {
+  .select-kit-body {
+    max-width: 350px;
+  }
+}

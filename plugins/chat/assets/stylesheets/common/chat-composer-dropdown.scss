@@ -1,0 +1,30 @@
+.chat-composer-dropdown__trigger-btn {
+  margin-left: 0.2rem;
+
+  .d-icon {
+    padding: 5px;
+    background: var(--primary-low);
+    border-radius: 100%;
+  }
+
+  &:focus,
+  &:hover,
+  &:active {
+    .d-icon {
+      color: var(--primary) !important;
+    }
+    background: none !important;
+    background-image: none !important;
+  }
+}
+
+.chat-composer-dropdown__list {
+  margin: 0;
+  list-style: none;
+  padding: 0.5rem;
+}
+
+.chat-composer-dropdown__action-btn {
+  width: 100%;
+  justify-content: flex-start;
+}

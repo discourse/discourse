@@ -1,0 +1,38 @@
+img.emoji {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-bottom;
+
+  h1 &,
+  h2 &,
+  h3 &,
+  h4 &,
+  h5 &,
+  h6 & {
+    vertical-align: middle;
+  }
+}
+
+img.emoji.only-emoji {
+  width: 32px;
+  height: 32px;
+  margin: 0.5em 0;
+}
+
+a,
+.md-table,
+.poll,
+li {
+  img.emoji.only-emoji {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
+}
+
+small img.emoji,
+sub img.emoji,
+sup img.emoji {
+  height: 1.1em;
+  width: 1.1em;
+}

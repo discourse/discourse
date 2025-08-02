@@ -1,0 +1,117 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Sondaj Discourse"
+  js:
+    poll:
+      voters:
+        one: "participant"
+        few: "participanți"
+        other: "de participanți"
+      total_votes:
+        one: "un vot"
+        few: "total voturi"
+        other: "total voturi"
+      average_rating: "Media: <strong>%{average}</strong>."
+      public:
+        title: "Voturile sunt <strong>publice</strong>."
+      results:
+        groups:
+          title: "Trebuie să fii membru al %{groups} pentru a vota în acest sondaj."
+        vote:
+          title: "Rezultatele vor fi afișate după <strong>vot</strong>."
+        closed:
+          title: "Rezultatele vor fi afișate odată cu închiderea <strong>votului</strong>."
+        staff:
+          title: "Rezultatele sunt afișate numai pentru <strong>membrii personalului</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Alege cel puțin <strong>%{count} opțiune</strong>."
+            few: "Alegeți cel puțin <strong>%{count}</strong> opțiuni."
+            other: "Alege cel puțin <strong>%{count} opțiuni</strong>."
+          up_to_max_options:
+            one: "Alege până la <strong>%{count} </strong> opțiune."
+            few: "Alegeți până la <strong>%{count} </strong> opțiuni."
+            other: "Alege până la <strong>%{count} </strong> opțiuni."
+          between_min_and_max_options: "Alege între <strong>%{min} și %{max} opțiuni</strong>."
+      cast-votes:
+        title: "Exprimă-ți votul"
+        label: "Votează acum!"
+      show-results:
+        title: "Afişează rezultatele sondajului"
+        label: "Rezultate"
+      remove-vote:
+        label: "Anulează votul"
+      hide-results:
+        title: "Înapoi la voturile tale"
+        label: "Votează"
+      export-results:
+        title: "Exportează rezultatele sondajului"
+        label: "Exportă"
+      open:
+        title: "Deschide sondaj"
+        label: "Deschide"
+        confirm: "Ești sigur că vrei să deschizi acest sondaj?"
+      close:
+        title: "Închide sondajul"
+        label: "Închide sondajul"
+        confirm: "Ești sigur că vrei să închizi acest sondaj?"
+      automatic_close:
+        closes_in: "Se închide în <strong>%{timeLeft}</strong>."
+        age: "Închis <strong>%{age}</strong>"
+      breakdown:
+        title: "Rezultatele sondajului"
+        votes: "%{count} voturi"
+        percentage: "Procent"
+        count: "Număr"
+      ranked_choice:
+        none: "Nimeni"
+      options:
+        label: "Opțiuni"
+        ranked_choice:
+          highest_priority: "(cel mai mare prioritate)"
+          lowest_priority: "(cea mai mică prioritate)"
+      error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."
+      error_while_casting_votes: "Ne pare rău, a apărut o eroare la exercitarea voturilor tale."
+      error_while_fetching_voters: "Ne pare rău, a apărut o eroare la afișarea votanților."
+      error_while_exporting_results: "Ne pare rău, a apărut o eroare la exportarea rezultatelor sondajului."
+      ui_builder:
+        title: Creează sondaj
+        insert: Introdu sondaj
+        help:
+          options_min_count: Introduceți cel puțin o opțiune.
+          invalid_values: Valoarea minimă trebuie să fie mai mică decât valoarea maximă.
+          min_step_value: Valoarea minimă a pasului este 1
+        poll_type:
+          label: Tip
+          regular: Opțiune unică
+          multiple: Opțiune multiplă
+          number: Ordonare numerică
+        poll_result:
+          label: Afișați rezultatele...
+          always: Întotdeauna vizibil
+          vote: Numai după vot
+          staff: Doar pentru personal
+        poll_groups:
+          label: Limitați votul la aceste grupuri
+        poll_config:
+          step: Pas
+        poll_public:
+          label: Arată cine a votat
+        poll_title:
+          label: Titlu (opţional)
+        poll_options:
+          add: Adaugă opțiune
+        automatic_close:
+          label: Închide sondaj automat
+        show_advanced: "Afișați opțiunile avansate"
+        hide_advanced: "Ascundeți opțiunile avansate"

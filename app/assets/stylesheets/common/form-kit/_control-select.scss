@@ -1,0 +1,10 @@
+@use "lib/viewport";
+
+.form-kit__control-select {
+  height: 2em;
+  border: 1px solid var(--primary-low-mid);
+
+  @include viewport.until(sm) {
+    height: 2.25em;
+  }
+}

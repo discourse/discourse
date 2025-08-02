@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    details_enabled: 'Includi la possibilità di aggiungere dettagli espandibili a un messaggio. Questa funzione può essere trovata nel menu a comparsa della barra degli strumenti del composer. Se modifichi questa impostazione, devi aggiornare tutti i messaggi con il comando "rake posts:rebake".'
+  details:
+    excerpt_details: "(clicca per ulteriori dettagli)"

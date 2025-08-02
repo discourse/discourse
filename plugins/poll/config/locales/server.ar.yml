@@ -1,0 +1,83 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    poll_enabled: "السماح باستطلاعات الرأي؟"
+    poll_maximum_options: "الحد الأقصى لعدد الخيارات المسموح بها في الاستطلاع"
+    poll_edit_window_mins: "عدد الدقائق بعد إنشاء المنشور والتي يمكن خلالها تعديل الاستطلاعات"
+    poll_minimum_trust_level_to_create: "الحد الأدنى لمستوى الثقة المطلوب لإنشاء استطلاعات الرأي"
+    poll_create_allowed_groups: "المجموعات المسموح لها بإنشاء استطلاعات الرأي."
+    poll_groupable_user_fields: "مجموعة أسماء حقول المستخدم التي يمكن استخدامها لتجميع نتائج الاستطلاع وتصفيتها"
+    poll_export_data_explorer_query_id: "معرِّف استعلام مستكشف البيانات الذي سيتم استخدامه لتصدير نتائج الاستطلاع (اضبط القيمة على 0 للإيقاف)."
+    poll_export_ranked_choice_data_explorer_query_id: "معرِّف استعلام مستكشف البيانات المطلوب استخدامه لتصدير نتائج استطلاع تصويت جولة الإعادة الفورية."
+    poll_default_public: "تفعيل الخيار \"إظهار من قام بالتصويت\" افتراضيًا عند إنشاء استطلاع جديد."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "استطلاع"
+    invalid_argument: "القيمة غير صالحة '%{value}' للوسيطة '%{argument}'."
+    multiple_polls_without_name: "تضمين أسماء فريدة عند إنشاء استطلاعات متعددة عن طريق إضافة <code>name=example</code> إلى وسوم <code>[poll]</code>."
+    multiple_polls_with_same_name: "توجد استطلاعات متعددة بالاسم نفسه: <strong>%{name}</strong>. استخدم السمة '<code>name</code>' لتحديد استطلاعاتك بشكلٍٍ فريد."
+    default_poll_must_have_at_least_1_option: "يجب أن يحتوي الاستطلاع على خيار واحد على الأقل."
+    named_poll_must_have_at_least_1_option: "يجب أن يحتوي الاستطلاع الذي يحمل الاسم <strong>%{name}</strong> على خيار واحد على الأقل."
+    default_poll_must_have_less_options:
+      zero: "يجب أن يحتوي الاستطلاع على خيارات أقل من %{count}."
+      one: "يجب أن يحتوي الاستطلاع على خيارات أقل من %{count}."
+      two: "يجب أن يحتوي الاستطلاع على خيارات أقل من %{count}."
+      few: "يجب أن يحتوي الاستطلاع على خيارات أقل من %{count}."
+      many: "يجب أن يحتوي الاستطلاع على خيارات أقل من %{count}."
+      other: "يجب أن يحتوي الاستطلاع على خيارات أقل من %{count}."
+    named_poll_must_have_less_options:
+      zero: "يجب أن يحتوي الاستطلاع المسمى <strong>%{name}</strong> على أقل من %{count} خيار."
+      one: "يجب أن يحتوي الاستطلاع المسمى <strong>%{name}</strong> على أقل من خيار واحد (%{count})."
+      two: "يجب أن يحتوي الاستطلاع المسمى <strong>%{name}</strong> على أقل من خيارين (%{count})."
+      few: "يجب أن يحتوي الاستطلاع المسمى <strong>%{name}</strong> على أقل من %{count} خيارات."
+      many: "يجب أن يحتوي الاستطلاع المسمى <strong>%{name}</strong> على أقل من %{count} خيارًا."
+      other: "يجب أن يحتوي الاستطلاع المسمى <strong>%{name}</strong> على أقل من %{count} خيار."
+    default_poll_must_have_different_options: "يجب أن يحتوي الاستطلاع على خيارات مختلفة."
+    named_poll_must_have_different_options: "يجب أن يحتوي الاستطلاع المسمى <strong>%{name}</strong> على خيارات مختلفة."
+    default_poll_must_not_have_any_empty_options: "يجب ألا يحتوي الاستطلاع على أي خيارات فارغة."
+    named_poll_must_not_have_any_empty_options: "يجب ألا يحتوي الاستطلاع الذي يحمل الاسم <strong>%{name} </strong> على أي خيارات فارغة."
+    default_poll_with_multiple_choices_has_invalid_parameters: "توجد معلمات غير صالحة في الاستطلاع متعدد الخيارات."
+    named_poll_with_multiple_choices_has_invalid_parameters: "توجد معلمات غير صالحة في الاستطلاع متعدد الخيارات المسمى <strong>%{name}</strong>."
+    requires_at_least_1_valid_option: "يجب عليك تحديد خيار واحد صالح على الأقل."
+    requires_that_at_least_one_option_is_ranked: "في استطلاعات الاختيار حسب الترتيب، يجب عليك ترتيب خيار واحد على الأقل."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "لا يمكنك تغيير استطلاع بعد أول %{minutes} دقيقة."
+      cannot_edit_named_poll_with_votes: "لا يمكنك تغيير اسم الاستطلاع <strong>${name}</strong> بعد أول %{minutes} دقيقة."
+    no_poll_with_this_name: "لا يوجد استطلاع باسم <strong>%{name}</strong> مرتبط بهذا المنشور."
+    post_is_deleted: "لا يمكن اتخاذ إجراء على منشور محذوف."
+    user_cant_post_in_topic: "لا يمكنك التصويت لأنه لا يمكنك النشر في هذا الموضوع."
+    topic_must_be_open_to_vote: "يجب أن يكون الموضوع مفتوحًا للتصويت."
+    poll_must_be_open_to_vote: "يجب أن يكون الاستطلاع مفتوحًا للتصويت."
+    one_vote_per_user: "مسموح بصوت واحد فقط لهذا الاستطلاع."
+    max_vote_per_user:
+      zero: مسموح بعدد %{count} صوت فقط لهذا الاستطلاع.
+      one: مسموح بصوت واحد (%{count}) فقط لهذا الاستطلاع.
+      two: مسموح بصوتين (%{count}) فقط لهذا الاستطلاع.
+      few: مسموح بعدد %{count} أصوات فقط لهذا الاستطلاع.
+      many: مسموح بعدد %{count} صوتًا فقط لهذا الاستطلاع.
+      other: مسموح بعدد %{count} صوت فقط لهذا الاستطلاع.
+    min_vote_per_user:
+      zero: مطلوب ما لا يقل عن %{count} صوت لهذا الاستطلاع.
+      one: مطلوب ما لا يقل عن صوت واحد (%{count}) لهذا الاستطلاع.
+      two: مطلوب ما لا يقل عن صوتين (%{count}) لهذا الاستطلاع.
+      few: مطلوب ما لا يقل عن %{count} أصوات لهذا الاستطلاع.
+      many: مطلوب ما لا يقل عن %{count} صوتًا لهذا الاستطلاع.
+      other: مطلوب ما لا يقل عن %{count} صوت لهذا الاستطلاع.
+    ranked_choice:
+      vote_options_mismatch: "بالنسبة إلى جولة الإعادة الفورية، يجب أن يتطابق عدد الاختيارات التي تم إجراؤها في التصويت مع عدد الخيارات. عدد الخيارات هو %{count} وعدد الاختيارات التي تم إجراؤها هو %{provided}."
+      no_group_results_support: "نوع الاستطلاع غير صالح، لا يدعم‎ ranking_choice ‎النتائج المجمَّعة‎."
+    topic_must_be_open_to_toggle_status: "يجب أن يكون الموضوع مفتوحًا لتبديل الحالة."
+    only_staff_or_op_can_toggle_status: "يمكن لعضو فريق العمل أو الناشر الأصلي فقط تبديل حالة الاستطلاع."
+    errors:
+      poll_not_found: "لم يتم العثور على الاستطلاع، يُرجى تأكيد المعلمات‎."
+    insufficient_rights_to_create: "غير مسموح لك بإنشاء استطلاعات."
+    email:
+      link_to_poll: "انقر لعرض الاستطلاع."
+    user_field:
+      no_data: "لا توجد بيانات"

@@ -1,0 +1,51 @@
+.select-kit {
+  &.combobox {
+    &.future-date-input-selector {
+      min-width: 50%;
+
+      .future-date-input-selector-header {
+        .btn-clear {
+          line-height: var(--line-height-large);
+        }
+      }
+
+      .future-date-input-selector-datetime {
+        color: var(--primary-medium);
+        margin-left: auto;
+        white-space: nowrap;
+
+        + svg {
+          margin-left: 0.25em;
+        }
+      }
+
+      .future-date-input-selector-icons {
+        margin-right: 5px;
+      }
+
+      .btn-clear {
+        padding: 0;
+        margin-left: 5px;
+      }
+
+      .future-date-input-selector-row {
+        .future-date-input-selector-icons {
+          color: var(--primary-medium);
+        }
+      }
+    }
+  }
+}
+
+.future-date-input {
+  .future-date-input-date-picker,
+  .future-date-input-time-picker {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+
+    input {
+      margin-bottom: 0;
+      margin-left: 5px;
+    }
+  }
+}

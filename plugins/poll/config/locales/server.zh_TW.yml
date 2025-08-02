@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  site_settings:
+    poll_maximum_options: "投票允許的最大選項數。"
+    poll_edit_window_mins: "投票創建後多少分鐘內可以編輯？"
+  poll:
+    poll: "投票"
+    multiple_polls_with_same_name: "有多個投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”屬性區分各投票。"
+    default_poll_must_have_less_options:
+      other: "投票選項必須少於%{count}個。"
+    named_poll_must_have_less_options:
+      other: "“<strong>%{name}</strong>”投票的選項必須少於%{count}個。"
+    default_poll_must_have_different_options: "投票必須有不同的選項。"
+    named_poll_must_have_different_options: "投票“<strong>%{name}</strong>”的選項必須有不同的選項。"
+    default_poll_with_multiple_choices_has_invalid_parameters: "多選投票有無效選項。"
+    named_poll_with_multiple_choices_has_invalid_parameters: "“<strong>%{name}</strong>”多選投票有無效參數。"
+    requires_at_least_1_valid_option: "你必須選擇至少 1 個有效的選項。"
+    no_poll_with_this_name: "投票“<strong>%{name}</strong>”沒有被關聯到帖子。"
+    post_is_deleted: "帖子已經刪除，無法操作。"
+    topic_must_be_open_to_vote: "主題必須未被鎖定才能投票。"
+    poll_must_be_open_to_vote: "投票必須開啟。"
+    topic_must_be_open_to_toggle_status: "主題必須未被鎖定才能改變狀態。"
+    only_staff_or_op_can_toggle_status: "只有管理人員或者發佈投票的人才能改變投票狀態。"
+    email:
+      link_to_poll: "點擊查看投票。"
+    user_field:
+      no_data: "無資料"

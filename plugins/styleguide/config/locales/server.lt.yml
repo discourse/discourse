@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  site_settings:
+    styleguide_enabled: 'Įgalinkite „/stiliaus vadovos“ kelią, padedantį formuoti Discourse'
+    styleguide_admin_only: "Apriboja stiliaus vadovo matomumą administratoriams"

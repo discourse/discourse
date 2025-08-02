@@ -1,0 +1,110 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    poll:
+      voters:
+        one: "glasač"
+        few: "glasača"
+        other: "glsača"
+      total_votes:
+        one: "ukupno glasova"
+        few: "ukupno glasova"
+        other: "ukupno glasova"
+      average_rating: "Prosečan rejting: <strong>%{average}</strong>."
+      public:
+        title: "Glasovi su <strong>javni</strong>."
+      results:
+        groups:
+          title: "Morate biti član grupe %{groups} da biste glasali u ovoj anketi."
+        vote:
+          title: "Rezultati će biti prikazani nakon <strong>glasanja</strong>."
+        closed:
+          title: "Rezultati će biti prikazani nakon <strong>zatvaranja</strong>."
+        staff:
+          title: "Rezultati će biti prikazani samo članovima <strong>osoblja</strong> ."
+      cast-votes:
+        title: "Daj svoj glas"
+        label: "Glasaj sada!"
+      show-results:
+        title: "Prikaži rezultate ankete"
+        label: "Rezultati"
+      hide-results:
+        title: "Nazad ka vašim glasovima"
+      group-results:
+        title: "Grupiraj glasove prema korisničkom polju"
+        label: "Prikaži raspodelu"
+      export-results:
+        title: "Izvezi rezultate ankete"
+        label: "Izvoz"
+      open:
+        title: "Otvori anketu"
+        label: "Otvori"
+        confirm: "Da li ste sigurni da želite da otvorite ovu anketu?"
+      close:
+        title: "Zatvori anketu"
+        label: "Zatvori"
+        confirm: "Da li ste sigurni da želite da zatvorite ovu anketu?"
+      automatic_close:
+        closes_in: "Zatvara se za <strong>%{timeLeft}</strong>."
+        age: "Zatvoreno <strong>%{age}</strong>"
+      breakdown:
+        title: "Rezultati ankete"
+        votes: "%{count} glasova"
+        breakdown: "Detalji"
+        percentage: "Procenat"
+        count: "Broj"
+      ranked_choice:
+        none: "Ništa"
+      options:
+        label: "Opcije"
+      error_while_toggling_status: "Žao nam je, došlo je do greške pri prikazivanju statusa ove ankete."
+      error_while_casting_votes: "Žao nam je, došlo je do greške prilikom glasanja."
+      error_while_fetching_voters: "Žao nam je, došlo je do greške prilikom prikazivanja glasača."
+      error_while_exporting_results: "Žao nam je, došlo je do greške prilikom izvoza rezultata ankete."
+      ui_builder:
+        title: Napravi anketu
+        insert: Unesi anketu
+        help:
+          options_min_count: Unesite najmanje 1 opciju.
+          options_max_count: Унесите највише %{count} опција.
+          invalid_min_value: Минимална вредност мора бити најмање 1.
+          invalid_max_value: Максимална вредност мора бити најмање 1, али мања или једнака броју опција.
+          invalid_values: Minimalna vrednost mora biti manja od maksimalne.
+          min_step_value: Minimalna vrednost koraka je 1
+        poll_type:
+          label: Tip
+          regular: Jedan odabir
+          multiple: Višestruki odabir
+          number: Broj rejtinga
+        poll_result:
+          label: Prikaži rezultate...
+          always: Uvek vidljivi
+          vote: Тек након гласања
+          closed: Kada je glasanje zatvoreno
+          staff: Samo članovi osoblja
+        poll_groups:
+          label: Ograničite glasanje na ove grupe
+        poll_chart_type:
+          label: Графикон резултата
+          bar: Dijagram
+          pie: Strukturni krug
+        poll_config:
+          max: Maksimalni broj izbora
+          min: Minimalni broj izbora
+          step: Korak
+        poll_public:
+          label: Prikaži ko je glasao
+        poll_title:
+          label: Naslov (opciono)
+        poll_options:
+          label: Опције (по једна у реду)
+          add: Додај опцију
+        automatic_close:
+          label: Automatski zatvorite anketu
+        show_advanced: "Прикажи напредне опције"
+        hide_advanced: "Сакриј напредне опције"

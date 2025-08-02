@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    category:
+      sort_options:
+        votes: "Voti"
+    topic_voting:
+      title: "Votazione per argomenti"
+      reached_limit: "Hai terminato i voti, rimuovi un voto esistente!"
+      list_votes: "Elenca i tuoi voti"
+      votes_nav_help: "argomenti con il maggior numero di voti"
+      voted: "Hai votato su questo argomento"
+      allow_topic_voting: "Permetti agli utenti di votare gli argomenti in questa categoria"
+      vote_title: "Vota"
+      vote_title_plural: "Voti"
+      voted_title: "Votato"
+      voting_closed_title: "Chiuso"
+      voting_limit: "Limite"
+      votes_left_button_title:
+        one: "Hai ancora %{count} voto."
+        other: "Hai ancora %{count} voti."
+      votes:
+        one: "%{count} voto"
+        other: "%{count} voti"
+      anonymous_button:
+        one: "Vota"
+        other: "Voti"
+      remove_vote: "Rimuovi voto"
+      no_votes_title_self: "Non hai ancora votato per nessun argomento"
+      no_votes_title_others: "%{username} non ha ancora votato per nessun argomento"
+    filters:
+      votes:
+        title: "Voti"
+        help: "argomenti con il maggior numero di voti"
+      my_votes:
+        title: "I miei voti"
+        help: "argomenti su cui hai votato"
+    search:
+      most_votes: "I più votati"
+      advanced:
+        vote:
+          count:
+            label: "Numero minimo di voti"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Evento di votazione dell'argomento"
+          topic_upvote: "Quando un utente vota su un argomento"
+          topic_unvote: "Quando un utente annulla il voto su un argomento"

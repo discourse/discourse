@@ -1,0 +1,20 @@
+<div class="user-crawler">
+	<img src='<%= ::UrlHelper.local_cdn_url(get_absolute_image_url(@user.small_avatar_url)) %>' alt='<%= @user.username %>' title='<%= @user.username %>' />
+	<h2 class='username'><%= @user.username %></h2>
+</div>
+
+<% unless @restrict_fields %>
+<p><%= raw @user.user_profile.bio_processed %></p>
+<% end %>
+
+<% content_for :head do %>
+  <% if @restrict_fields %>
+    <%= raw crawlable_meta_data(title: @user.username, image: @user.small_avatar_url) %>
+  <% else %>
+    <%= raw crawlable_meta_data(title: @user.username, description: @user.user_profile.bio_summary, image: @user.small_avatar_url) %>
+  <% end %>
+<% end %>
+
+<% content_for :title do %>
+  <%= t("js.user.profile")%> - <%= @user.username %> - <%= SiteSetting.title %>
+<% end %>

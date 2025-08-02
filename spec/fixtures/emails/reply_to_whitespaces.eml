@@ -1,0 +1,12 @@
+From: "'John Doe' via Forwarder" <team@bar.com>
+To: "team@bar.com" <team@bar.com>
+Subject: Greetings
+Date: Wed, 01 Jan 2021 12:00:00 +0000
+Message-ID: <TXULO4v6YU0TzeL2buFAJNU2MK21c7t4@example.com>
+X-Original-Sender: johndoe@example.com
+X-Original-From: "John Doe"
+    <johndoe@example.com>
+Reply-To: "John Doe"
+    <johndoe@example.com>
+
+Hello world!

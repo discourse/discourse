@@ -1,0 +1,354 @@
+# frozen_string_literal: true
+
+RSpec.describe UserProfile do
+  describe "Validations" do
+    subject(:profile) { user.user_profile }
+
+    fab!(:user)
+    fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
+
+    describe "#location" do
+      context "when it contains watched words" do
+        before { profile.location = location }
+
+        context "when watched words are of type 'Block'" do
+          let(:location) { "bad location" }
+
+          it "is not valid" do
+            profile.valid?
+            expect(profile.errors[:base].size).to eq(1)
+            expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+          end
+        end
+
+        context "when watched words are of type 'Censor'" do
+          let!(:censored_word) do
+            Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
+          end
+          let(:location) { "censored location" }
+
+          it "censors the words upon saving" do
+            expect { profile.save! }.to change { profile.location }.to eq "■■■■■■■■ location"
+          end
+        end
+
+        context "when watched words are of type 'Replace'" do
+          let(:location) { "word to replace" }
+          let!(:replace_word) do
+            Fabricate(
+              :watched_word,
+              word: "to replace",
+              replacement: "replaced",
+              action: WatchedWord.actions[:replace],
+            )
+          end
+
+          it "replaces the words upon saving" do
+            expect { profile.save! }.to change { profile.location }.to eq "word replaced"
+          end
+        end
+      end
+
+      context "when it is > 3000 characters" do
+        before { profile.location = "a" * 3500 }
+
+        it "is not valid" do
+          expect(profile.valid?).to eq(false)
+          expect(profile.errors.full_messages).to include(
+            /Location is too long \(maximum is 3000 characters\)/,
+          )
+        end
+      end
+
+      context "when it does not contain watched words" do
+        it { is_expected.to be_valid }
+      end
+
+      it "is not cooked" do
+        profile.location = "https://discourse.org"
+        expect { profile.save! }.not_to change { profile.location }
+      end
+    end
+
+    describe "#bio_raw" do
+      context "when it contains watched words" do
+        before { profile.bio_raw = "bad bio" }
+
+        it "is not valid" do
+          profile.valid?
+          expect(profile.errors[:base].size).to eq(1)
+          expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+        end
+      end
+
+      context "when it is > 3000 characters" do
+        before { profile.bio_raw = "a" * 3500 }
+
+        it "is not valid" do
+          expect(profile.valid?).to eq(false)
+          expect(profile.errors.full_messages).to include(
+            /About Me is too long \(maximum is 3000 characters\)/,
+          )
+        end
+      end
+
+      context "when it does not contain watched words" do
+        it { is_expected.to be_valid }
+      end
+    end
+  end
+
+  it "is created automatically when a user is created" do
+    user = Fabricate(:evil_trout)
+    expect(user.user_profile).to be_present
+  end
+
+  describe "rebaking" do
+    it "correctly rebakes bio" do
+      user_profile = Fabricate(:evil_trout).user_profile
+      user_profile.update_columns(bio_raw: "test", bio_cooked: "broken", bio_cooked_version: nil)
+
+      problems = UserProfile.rebake_old(10)
+      expect(problems.length).to eq(0)
+
+      user_profile.reload
+      expect(user_profile.bio_cooked).to eq("<p>test</p>")
+      expect(user_profile.bio_cooked_version).to eq(UserProfile::BAKED_VERSION)
+    end
+  end
+
+  describe "new" do
+    let(:user_profile) { UserProfile.new(bio_raw: "test") }
+
+    it "is not valid without user" do
+      expect(user_profile.valid?).to be false
+    end
+
+    it "is is valid with user" do
+      user_profile.user = Fabricate.build(:user)
+      expect(user_profile.valid?).to be true
+    end
+
+    it "doesn't support really long bios" do
+      user_profile = Fabricate.build(:user_profile_long)
+      expect(user_profile).not_to be_valid
+    end
+
+    context "with website validation" do
+      let(:user_profile) { Fabricate.build(:user_profile, user: Fabricate(:user)) }
+
+      it "should not allow invalid URLs" do
+        user_profile.website = "http://https://google.com"
+        expect(user_profile).to_not be_valid
+      end
+
+      it "validates website domain if allowed_user_website_domains setting is present" do
+        SiteSetting.allowed_user_website_domains = "discourse.org"
+
+        user_profile.website = "https://google.com"
+        expect(user_profile).not_to be_valid
+
+        user_profile.website = "http://discourse.org"
+        expect(user_profile).to be_valid
+      end
+
+      it "doesn't blow up with an invalid URI" do
+        SiteSetting.allowed_user_website_domains = "discourse.org"
+
+        user_profile.website = "user - https://forum.example.com/user"
+        expect { user_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "does not allow > 3000 characters" do
+        user_profile.website = "a" * 3500
+        expect(user_profile).to_not be_valid
+      end
+    end
+
+    describe "after save" do
+      fab!(:user)
+
+      before do
+        user.user_profile.bio_raw = "my bio"
+        user.user_profile.save
+      end
+
+      it "has cooked bio" do
+        expect(user.user_profile.bio_cooked).to be_present
+      end
+
+      it "has bio summary" do
+        expect(user.user_profile.bio_summary).to be_present
+      end
+    end
+  end
+
+  describe "changing bio" do
+    fab!(:user)
+
+    before do
+      user.user_profile.bio_raw = "**turtle power!**"
+      user.user_profile.save
+      user.user_profile.reload
+    end
+
+    it "should markdown the raw_bio and put it in cooked_bio" do
+      expect(user.user_profile.bio_cooked).to eq("<p><strong>turtle power!</strong></p>")
+    end
+  end
+
+  describe "bio excerpt emojis" do
+    fab!(:user)
+    fab!(:upload)
+
+    before do
+      CustomEmoji.create!(name: "test", upload: upload)
+      Emoji.clear_cache
+
+      user.user_profile.update!(bio_raw: "hello :test: :woman_scientist:t5: 🤔")
+    end
+
+    it "supports emoji images" do
+      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq(
+        "hello <img src=\"#{upload.url}?v=#{Emoji::EMOJI_VERSION}\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/thinking.png?v=#{Emoji::EMOJI_VERSION}\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\" loading=\"lazy\" width=\"20\" height=\"20\">",
+      )
+    end
+  end
+
+  describe "bio link stripping" do
+    it "returns an empty string with no bio" do
+      expect(Fabricate.build(:user_profile).bio_excerpt).to be_blank
+    end
+
+    context "with a user that has a link in their bio" do
+      let(:user_profile) { Fabricate.build(:user_profile, bio_raw: "I love http://discourse.org") }
+      let(:user) do
+        user = Fabricate.build(:user, user_profile: user_profile)
+        user_profile.user = user
+        user
+      end
+
+      fab!(:created_user) do
+        user = Fabricate(:user)
+        user.user_profile.bio_raw = "I love http://discourse.org"
+        user.user_profile.save!
+        user
+      end
+
+      it "includes the link as nofollow if the user is not new" do
+        user.user_profile.send(:cook)
+        expect(user_profile.bio_excerpt).to match_html(
+          "I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>",
+        )
+        expect(user_profile.bio_processed).to match_html(
+          "<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>",
+        )
+      end
+
+      it "removes the link if the user is new" do
+        user.trust_level = TrustLevel[0]
+        user_profile.send(:cook)
+        expect(user_profile.bio_excerpt).to match_html("I love http://discourse.org")
+        expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
+      end
+
+      it "removes the link if the user is suspended" do
+        user.suspended_till = 1.month.from_now
+        user_profile.send(:cook)
+        expect(user_profile.bio_excerpt).to match_html("I love http://discourse.org")
+        expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
+      end
+
+      context "when tl3_links_no_follow is false" do
+        before { SiteSetting.tl3_links_no_follow = false }
+
+        it "includes the link without nofollow if the user is trust level 3 or higher" do
+          user.trust_level = TrustLevel[3]
+          user_profile.send(:cook)
+          expect(user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org'>http://discourse.org</a>",
+          )
+          expect(user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>",
+          )
+        end
+
+        it "removes nofollow from links in bio when trust level is increased" do
+          created_user.change_trust_level!(TrustLevel[3])
+          expect(created_user.user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org'>http://discourse.org</a>",
+          )
+          expect(created_user.user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>",
+          )
+        end
+
+        it "adds nofollow to links in bio when trust level is decreased" do
+          created_user.trust_level = TrustLevel[3]
+          created_user.save
+          created_user.reload
+          created_user.change_trust_level!(TrustLevel[2])
+          expect(created_user.user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>",
+          )
+          expect(created_user.user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>",
+          )
+        end
+      end
+
+      context "when tl3_links_no_follow is true" do
+        before { SiteSetting.tl3_links_no_follow = true }
+
+        it "includes the link with nofollow if the user is trust level 3 or higher" do
+          user.trust_level = TrustLevel[3]
+          user_profile.send(:cook)
+          expect(user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>",
+          )
+          expect(user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>",
+          )
+        end
+      end
+    end
+  end
+
+  describe ".import_url_for_user" do
+    fab!(:user)
+
+    before do
+      stub_request(:any, "thisfakesomething.something.com").to_return(
+        body: "abc",
+        status: 404,
+        headers: {
+          "Content-Length" => 3,
+        },
+      )
+    end
+
+    describe "when profile_background_url returns an invalid status code" do
+      it "should not do anything" do
+        url = "http://thisfakesomething.something.com/"
+
+        UserProfile.import_url_for_user(url, user, is_card_background: false)
+
+        user.reload
+
+        expect(user.profile_background_upload).to eq(nil)
+      end
+    end
+
+    describe "when card_background_url returns an invalid status code" do
+      it "should not do anything" do
+        url = "http://thisfakesomething.something.com/"
+
+        UserProfile.import_url_for_user(url, user, is_card_background: true)
+
+        user.reload
+
+        expect(user.card_background_upload).to eq(nil)
+      end
+    end
+  end
+end

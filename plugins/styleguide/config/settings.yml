@@ -1,0 +1,14 @@
+plugins:
+  styleguide_enabled:
+    default: false
+  styleguide_admin_only:
+    default: true
+    hidden: true
+  styleguide_allowed_groups:
+    default: "1" # auto group admins
+    type: group_list
+    client: false
+    allow_any: false
+    refresh: true
+    validator: "AtLeastOneGroupValidator"
+    area: "group_permissions"

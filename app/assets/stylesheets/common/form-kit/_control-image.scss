@@ -1,0 +1,10 @@
+.form-kit__control-image {
+  width: 100%;
+
+  .uploaded-image-preview {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    border-radius: var(--d-input-border-radius);
+  }
+}

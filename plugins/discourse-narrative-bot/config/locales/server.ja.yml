@@ -1,0 +1,416 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    discourse_narrative_bot_enabled: "Discourse Narrative Bot (discobot) を有効化"
+    disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot のウェルカム投稿を無効にする"
+    discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot が無視するユーザー名"
+    discourse_narrative_bot_disable_public_replies: "Discourse Narrative Bot の公開返信を無効にする"
+    discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot が送信するウェルカム投稿のタイプ"
+    discourse_narrative_bot_welcome_post_delay: "Discourse Narrative Bot のウェルカム投稿を送信するまで (n) 秒待ちます。"
+    discourse_narrative_bot_skip_tutorials: "スキップする Discourse Narrative Bot チュートリアル"
+  badges:
+    certified:
+      name: 修了証
+      description: "新しいユーザーチュートリアルを修了"
+      long_description: |
+        このバッジは新しいインタラクティブチュートリアルを修了したときに与えられます。ディスカッションの基本ツールを学習し、修了したことを証します！
+    licensed:
+      name: ライセンス取得
+      description: "上級ユーザーチュートリアルを修了"
+      long_description: |
+        このバッジは上級インタラクティブユーザーチュートリアルを修了したときに与えられます。ディスカッションの高度なツールをマスターし、ディスカッションユーザーのライセンスを取得しました！
+  discourse_narrative_bot:
+    bio: "こんにちは。私は人ではありません。このサイトを案内するボットです。対話するには、私にメッセージを送るか、名前でメンションしてください。"
+    tl2_promotion_message:
+      subject_template: "昇格されたので、高度な機能についていくつか学びましょう！"
+      text_body_template: |
+        何ができるかを確認するには、`@%{discobot_username} %{reset_trigger}` という内容でこのメッセージに返信してください。
+    timeout:
+      message: |-
+        %{username} さん、こんにちは。しばらくログインしていないようなので、こちらから連絡してみました。
+
+        - 会話を続ける場合は、いつでも私に返信してください。
+
+        - このステップを省略する場合は、「%{skip_trigger}」を入力してください。
+
+        - 始めからやり直す場合は、「%{reset_trigger}」を入力してください。
+
+        何もしない場合は、それでも結構。私は単なるロボットなので、傷ついたりしませんよ。:sob:
+    dice:
+      trigger: "サイコロを振る"
+      invalid: |-
+        ごめんなさい。このサイコロの組み合わせを出すのは数学的に無理です。:confounded:
+      not_enough_dice:
+        other: "サイコロが %{count} 個しかありません。残念です！"
+      out_of_range: |-
+        数学的に公正なサイコロの[目の最大数](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)は 120 であることを知っていますか？
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "引用"
+      "1":
+        quote: "困難の中に、機会がある。"
+        author: "アルベルト・アインシュタイン"
+      "2":
+        quote: "過ちを犯す自由がないのならば、自由を持つ価値はない。"
+        author: "マハトマガンジー"
+      "3":
+        quote: "終わってしまったことを嘆くのではなく、それを経験したことを喜ぼう。"
+        author: "ドクター・スース"
+      "4":
+        quote: "うまくいくことを望むのなら自分でやりたまえ。"
+        author: "シャルル＝ギヨーム・エティアンヌ"
+      "5":
+        quote: "自分はできると信じなさい。そうすれば、目的の半分は達成されている。"
+        author: "セオドア・ルーズベルト"
+      "6":
+        quote: "人生はチョコレートの箱。 開けてみないと分からない。"
+        author: "フォレスト・ガンプのお母さん"
+      "7":
+        quote: "男にとっては小さな一歩だが、人類にとっては偉大な一歩である。"
+        author: "二―ル・アームストロング"
+      "8":
+        quote: "恐れていることに毎日 1 つずつ取り組みなさい。"
+        author: "エレノア・ルーズベルト"
+      "9":
+        quote: "失敗は、それを認める勇気さえあれば、いつでも許されるものだ。"
+        author: "ブルース・リー"
+      "10":
+        quote: "人の心が思い描き信じたものは何でも、実現可能である。"
+        author: "ナポレオン・ヒル"
+      "11":
+        quote: "家庭に平和を、世界に平和を。"
+        author: "ムスタファ・ケマル・アタテュルク"
+      "12":
+        quote: "教育は貧困から逃れるための手段ではなく、貧困に立ち向かうための手段である。"
+        author: "ジュリアス・ニエレレ"
+      "13":
+        quote: "千里の道も一歩から。"
+        author: "老子"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: "フォーチュン"
+      answers:
+        "1": "確かです"
+        "2": "ズバリそうです"
+        "3": "間違いありません"
+        "4": "絶対にそうです"
+        "5": "期待していいですよ"
+        "6": "そうなるのが見えます"
+        "7": "きっとそうでしょう"
+        "8": "見通しは良好です"
+        "9": "はい"
+        "10": "そうなる兆しがあります"
+        "11": "曇っています。もう一度試してください"
+        "12": "後でまた尋ねてください"
+        "13": "今は答えを聞かないほうがいいでしょう"
+        "14": "今は予測できません"
+        "15": "集中して、もう一度尋ねてください"
+        "16": "当てにしてはいけません"
+        "17": "私の答えは「いいえ」です"
+        "18": "私の情報源は「いいえ」と言っています"
+        "19": "見通しはあまり良好ではありません"
+        "20": "とても怪しいです"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "始める"
+      skip_trigger: "スキップ"
+      help_trigger: "ヘルプを表示"
+      random_mention:
+        reply: |-
+          こんにちは！私ができることを知るには `@%{discobot_username} %{help_trigger}` と言ってください。
+        tracks: |-
+          今のところ次のやり方を知っています。
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > あなただけのインタラクティブなチュートリアルを開始します。`{name-of-tutorial}` は次のいずれかです: `%{tracks}`
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3、6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: 期待していいですよ
+        discobot_disabled: 設定で私を無効にしましたね。私と対話するには新規ユーザーのオンボーディングヒントを許可する必要があります。
+      do_not_understand:
+        first_response: |-
+          返信してくれてありがとう！
+
+          残念ながら、プログラムがまだ不十分なボットなので、そのことがあまりよくわかりません。:frowning:
+        track_response: もう一度試すことができます。もしくは、このステップをスキップするなら `%{skip_trigger}` 、最初からやり直すには `%{reset_trigger}` と言ってください。
+        second_response: |-
+          ごめんなさい。まだ意味がわかりません。 :anguished:
+
+          私はただのボットですが、人と話す場合は、[お問い合わせページ](%{base_path}/about)をご覧ください。
+
+          それまでは、あなたの邪魔にならないようにします。
+    new_user_narrative:
+      reset_trigger: "チュートリアル"
+      title: "新規ユーザーチュートリアルの修了証書"
+      cert_title: "新規ユーザーチュートリアルを修了したことをここに証します"
+      hello:
+        title: "こんにちは！"
+        message: |-
+          ようこそ。そして %{title} に参加してくれてありがとう！
+
+          - 私はただのロボットですが、人間と話がしたいなら、気さくなスタッフ (%{base_uri}/about) もお手伝いできます。
+
+          - セキュリティの都合上、新規ユーザーはできることには限られています。使用回数が増えれば、新しい機能 (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (とバッジ (%{base_uri}/badges)) を得られます。
+
+          - コミュニティーでは常に礼節ある行動 (%{base_uri}/guidelines) を取ってもらえると信じています。
+      onebox:
+        reply: |-
+          うまくいきましたね！この方法は、ほとんどの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> リンクで使用できます。_リンクだけ_を 1 行に入力し、前後にリンクに含まれない文字などを含めないようにしましょう。
+      images:
+        instructions: |-
+          ここにユニコーンの画像があります。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          これが気に入ったら (気に入らないわけないですよね！)、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
+
+          **画像付きで返信**できますか？どんな画像でもかまいません！画像をドラッグアンドドロップしてアップロードボタンを押すか、コピーして貼り付けるだけでもアップロードできます。
+        reply: |-
+          いい画像ですね – 「いいね！」:heart: ボタンを押して、画像を気に入ったことを伝えましたよ :heart_eyes:
+        like_not_found: |-
+          私の[投稿](%{url})に「いいね！」:heart: し忘れてませんか？:crying_cat_face:
+        not_found: |-
+          画像をアップロードしなかったようなので、_絶対に_あなたが気に入ると思う画像を選びました。
+
+          <%{image_url}>
+
+          この画像をアップロードしてみてください。またはリンクを独立した行に貼り付けてみましょう！
+      likes:
+        instructions: |-
+          ここにユニコーンの画像があります。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          これが気に入ったら (気に入らないわけないですよね！)、この投稿の下にある「いいね！」:heart: ボタンを押して気に入ったことを教えてください。
+        reply: |-
+          投稿に「いいね！」してくれてありがとう！
+        not_found: |-
+          私の[投稿](%{url})に「いいね！」:heart: し忘れてませんか？:crying_cat_face:
+      formatting:
+        instructions: |-
+          返信の文字を**太字**や_斜体_にできますか？
+
+          - `**太字**` または `_斜体_` と入力してみましょう。
+
+          - または、エディタの <kbd><b>B</b></kbd> または <kbd><i>I</i></kbd> ボタンを押すこともできます。
+        reply: |-
+          よくできました！HTML と BBCode はフォーマットにも使用できます。さらに詳しくは、[こちらのチュートリアルを試してみましょう](https://commonmark.org/help) :nerd:
+        not_found: |-
+          あれれ？返信にフォーマットが付けられていないようです。:pencil2:
+
+          もう一度試してもらえますか？迷ったら、エディタの <kbd><b>B</b></kbd> の太字か <kbd><i>I</i></kbd> の斜体ボタンを使ってください。
+      quoting:
+        instructions: |-
+          何に対して返信しているのかがわかるように、返信に引用を含めてみましょう。
+
+          > これがコーヒーなら紅茶を持ってきてください。紅茶ならコーヒーを持ってきてください。
+          >
+          > 独り言には、少なくとも誰かが聞いてくれているというメリットがあります。
+          >
+          > 言葉をうまく操れる人もいれば、為す術がない人もいます。
+
+          &uarr; から好きな引用を選択して、**引用**ボタンを押すと、選択がポップアップ表示されます。またはこの投稿の**返信**ボタンを押します。
+
+          引用の下になぜそれを選んだのか簡単な理由を入力してください。興味があります :thinking:
+        reply: |-
+          よくできました。私のお気に入りの引用を選びましたね！:left_speech_bubble:
+        not_found: |-
+          うーん、返信に私を引用しなかったようですね。
+
+          投稿内のテキストを選択すると、<kbd>**引用**</kbd>ボタンが表示されます。テキストを選択して**返信**を押すこともできますよ！もう一度試してみてください。
+      bookmark:
+        instructions: |-
+          もっと詳しく知るには、下の <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を選択して<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **この個人メッセージをブックマーク**してください。ブックマークすると、後で :gift: がもらえるかも！
+        reply: |-
+          お見事！これで、[プロファイルのブックマークタブ](%{bookmark_url})からこの会話にいつでも簡単に戻れるようになりました。右上のプロファイル写真を選択するだけです &#8599;
+        not_found: |-
+          あれ？このトピックにはブックマークがありませんね。投稿の下にあるブックマークを見つけられましたか？必要であれば、もっと表示 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使うと、ほかの操作を表示できます。
+      emoji:
+        instructions: |-
+          返信に小さな画像を使用していたのに気づきましたか？:blue_car::dash: これらは[emoji](https://en.wikipedia.org/wiki/Emoji)と呼ばれています。次のいずれかの方法で、返信に**絵文字を追加**してみましょう。
+
+          - `:) ;) :D :P :O` と入力します。
+
+          - コロン <kbd>:</kbd> を入力して、絵文字名を補完します `:tada:`
+
+          - エディタの絵文字ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> を押すか、モバイルキーボードの絵文字ボタンを押します。
+        reply: |-
+          :sparkles: _素敵な絵文字になりました!_ :sparkles:
+        not_found: |-
+          おっとっと。返信に絵文字がないようです。なんてこった！:sob:
+
+          コロン <kbd>:</kbd> を入力すると、絵文字ピッカーが表示されるので、`:bird:` のような語の最初の数文字を入力してください。
+
+          または、エディターの絵文字ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> も使用できます。
+
+          (モバイルデバイスを使用している場合は、キーボードから直接絵文字を入力することもできます。)
+      mention:
+        instructions: |-
+          直接返信せずに誰かの注意を引きたいことがあるかもしれません。`@` を入力してから相手のユーザー名を入力すると、メンションすることができます。
+
+          返信で **`@%{discobot_username}`** をメンションできますか？
+        reply: |-
+          _誰か私を呼びましたか？_ :raised_hand: あなたですよね！:wave: 参上しました！メンションしてくれてありがとう。:ok_hand:
+        not_found: |-
+          どこにも私の名前がないようです :frowning: `@%{discobot_username}` と入力して、もう一度私をメンションしてみてください。
+
+          (そうです。私のユーザー名は 70年代ダンスブームの _disco_ と綴ります。[ナイトライフ万歳!
+          ](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          ディスカッションを友好的に保ちたいと思っています。そこで、[マナーを維持](%{guidelines_url})するにはあなたの力が必要です。問題に遭遇したら、作成者に知らせるか、[スタッフ](%{about_url})に通報してください。投稿を通報する理由は、無害なトピックの分割から明確なコミュニティー規則の違反までさまざまです。**その他**を選択すると、モデレーターと個人メッセージでのディスカッションを始められます。さらに詳しく質問できます。
+
+          > :imp: 不愉快なことを書き込みました
+
+          早速**この投稿を通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> して、理由に「**不適切**」を選択しましょう！
+        reply: |-
+          この通報は[スタッフ](%{group_url})に非公開で通知されます。十分な数のコミュニティーメンバーからこの投稿への通報が寄せられた場合は、予防措置として自動的に非表示になります。(実際には、不愉快な内容は書き込まなかった :angel: ので、この通報は取り消しておきました。)
+        not_found: |-
+          おや？私の不愉快な投稿はまだ不適切の通報を受けていないようです。:worried: **通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> を使って投稿を不適切だと通報してみてください。投稿の操作をさらに表示するには、もっと表示ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使用してくださいね。
+      search:
+        instructions: |-
+          _トントン_ … このトピックにサプライズを仕掛けましたよ。受けて立つなら、右上&#8599; にある**検索アイコンを選択** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">し、'このトピック' を選択してからサプライズを検索してみましょう。
+
+          このトピックから "カピ&#8203;バラ" という言葉を探してみましょう
+        hidden_message: |-
+          カピバラを見逃しましたか？:wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          先頭に戻ったことに気づきましたか？**`%{search_answer}` 絵文字を使って返信**し、このお腹を空かせた可哀そうなカピバラにエサを上げましょう。自動的に、最後に移動されます。
+        reply: |-
+          わーい！よく見つけましたね :tada:
+
+          - より詳細な検索機能については、[フル検索ページ](%{search_url})をご覧ください。
+
+          - 長いディスカッションの好きな場所にジャンプするには、右側 (モバイルでは下) にあるトピックのタイムラインコントロールを使ってください。
+
+          - 物理的な :keyboard: を使っている場合は、<kbd>?</kbd> を押すと、便利なキーボードショートカットが表示されます。
+        not_found: |-
+          うーん… うまくいかないようですね。**カピ&#8203;バラ** という語を検索 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> しましたか？
+      end:
+        message: |-
+          @%{username} さん、最後まで付き合ってくれてありがとう！あなただけに作りました。あなたの努力の賜物です。
+
+          %{certificate}
+
+          これで以上です！[**ディスカッションの最新のトピック**](%{base_uri}/latest)か[**ディスカッションのカテゴリ**](%{base_uri}/categories)をご覧ください。:sunglasses:
+
+          (また私と話すことがあれば、`@%{discobot_username}` を使っていつでもメッセージを送るか、メンションしてくださいね！)
+      certificate:
+        alt: "修了証書"
+    advanced_user_narrative:
+      reset_trigger: "上級チュートリアル"
+      cert_title: "上級ユーザーチュートリアルを修了したことをここに証します"
+      title: ":arrow_up:上級ユーザーの機能"
+      start_message: |-
+        @%{username} さん、_上級_ユーザーとして、[あなたの設定ページ](%{base_uri}/my/preferences)にアクセスしましたか？ダークテーマやライトテーマなど、エクスペリエンスをカスタマイズする方法がたくさんあります。
+
+        話がはずれましたね。それでは始めましょう！
+      edit:
+        bot_created_post_raw: "@%{discobot_username} は、私が知っている中でも最もクールなボットです :wink:"
+        instructions: |-
+          誰でもミスは起こします。でも心配する必要はありません。投稿はいつでも編集して修正することができます！
+
+          まずは、あなたの代わりに作成した投稿を**編集**することから始めましょう。
+        not_found: |-
+          あなたのために私が作成した[post](%{url})をまだ編集していないようです。もう一度やってみましょう。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> アイコンを使って、エディタを開いてください。
+        reply: |-
+          よくできました！
+
+          5 分後に行った編集は、公開編集リビジョンとして表示され、右上にリビジョン番号とともに小さな鉛筆アイコンが表示されます。
+      delete:
+        instructions: |-
+          作成した投稿を取り消す場合は、削除できます。
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **削除** 操作で、上の投稿をどれか**削除してみましょう**。ただし、最初の投稿は削除しないでくださいね！
+        not_found: |-
+          投稿が削除されていないようですね。<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">もっと表示を使うと、<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> 削除が表示されますよ。
+        reply: |-
+          おっと！:boom:
+
+          ディスカッションの継続性を維持するために、削除はすぐには行われません。この投稿はしばらくしてから削除されます。
+      recover:
+        deleted_post_raw: "なぜ @%{discobot_username} は私の投稿を削除したのですか？:anguished:"
+        instructions: |-
+          どうしよう！作成したばかりの新しい投稿を誤って削除してしまったようです。
+
+          私の代わりに投稿の<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **削除を取り消し** てもらえませんか？
+        not_found: |-
+          うまく行きませんか？<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">「もっと表示」を使うと<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">「削除を取り消す」が表示されますよ。
+        reply: |-
+          よかった！あれは複製した投稿でした。助けてくれてありがとう :wink:
+
+          投稿の削除を取り消せるのは %{deletion_after} 時間以内ですので、注意しましょう。
+      category_hashtag:
+        instructions: |-
+          投稿内でカテゴリとタグを参照できることをご存知ですか？たとえば %{category} カテゴリというのを見たことがありませんか？
+
+          文中で `#` を入力すると、カテゴリまたはタグを選択できます。
+        not_found: |-
+          あれ？カテゴリがどこにも見当たりません。次の返信に、これをコピーしてみてください。
+
+          ```text
+          # を使ってカテゴリリンクを作成できます
+          ```
+        reply: |-
+          お見事！これはカテゴリだけでなく、_さらに_タグが有効になっている場合にはタグでも動作します。
+      change_topic_notification_level:
+        instructions: |-
+          すべてのトピックに通知レベルがあります。誰かがあなたに直接話しかけている場合にのみ通知される '通常' で始まります。
+
+          デフォルトでは、個人メッセージの通知レベルは最高レベルの 'ウォッチ中' に設定されています。この設定では、新しい返信があるたびに通知が届きます。ただし、トピックの通知レベルを 'ウォッチ'、'追跡'、または 'ミュート' にオーバーライドすることができます。
+
+          このトピックの通知レベルを変更してみましょう。トピックの一番下に、このトピックを**ウォッチ中**と示されています。この通知レベルを**追跡**に変更できますか？
+        not_found: |-
+          まだこのトピックをウォッチ中 :eyes: のようです！設定の場所がわかりませんか？通知レベルボタンは、トピックの一番下にあります。
+        reply: |-
+          よくできました！私がおしゃべりしすぎだからといって、このトピックをミュートしていませんよね？:grin:
+
+          トピックに返信する際、またはトピックを数分以上閲覧している場合は、自動的に通知レベルが '追跡' に設定されます。この設定は[ユーザー設定](%{base_uri}/my/preferences)で変更可能です。
+      poll:
+        reply: |-
+          素敵な投票ですね！私の教え方はどうですか？
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        not_found: |-
+          詳細ウィジェットを作成できませんか？次の返信に以下のテキストを含めてみてください。
+
+          ```text
+          [details=選択して詳細を表示]
+          これが詳細です
+          [/details]
+          ```
+        reply: |-
+          上出来です - _細部_への気配りにあっぱれです！
+      end:
+        message: |-
+          まさに_上級ユーザー_のようにこのチュートリアルを完了しました :bow:
+
+          %{certificate}
+
+          これで以上です。
+
+          それでは今日はこの辺で！また私と話すことがあれば、いつでもメッセージを送ってください :sunglasses:
+      certificate:
+        alt: "上級ユーザートラック修了証"

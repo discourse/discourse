@@ -1,0 +1,558 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "username": {
+      "type": "string"
+    },
+    "name": {
+      "type": ["string", "null"]
+    },
+    "avatar_template": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "admin": {
+      "type": "boolean"
+    },
+    "moderator": {
+      "type": "boolean"
+    },
+    "last_seen_at": {
+      "type": ["string", "null"]
+    },
+    "last_emailed_at": {
+      "type": ["string", "null"]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "last_seen_age": {
+      "type": ["number", "null"]
+    },
+    "last_emailed_age": {
+      "type": ["number", "null"]
+    },
+    "created_at_age": {
+      "type": ["number", "null"]
+    },
+    "trust_level": {
+      "type": "integer"
+    },
+    "manual_locked_trust_level": {
+      "type": ["string", "null"]
+    },
+    "title": {
+      "type": ["string", "null"]
+    },
+    "time_read": {
+      "type": "integer"
+    },
+    "staged": {
+      "type": "boolean"
+    },
+    "days_visited": {
+      "type": "integer"
+    },
+    "posts_read_count": {
+      "type": "integer"
+    },
+    "topics_entered": {
+      "type": "integer"
+    },
+    "post_count": {
+      "type": "integer"
+    },
+    "associated_accounts": {
+      "type": "array",
+      "items": {}
+    },
+    "can_send_activation_email": {
+      "type": "boolean"
+    },
+    "can_activate": {
+      "type": "boolean"
+    },
+    "can_deactivate": {
+      "type": "boolean"
+    },
+    "ip_address": {
+      "type": "string"
+    },
+    "registration_ip_address": {
+      "type": ["string", "null"]
+    },
+    "can_grant_admin": {
+      "type": "boolean"
+    },
+    "can_revoke_admin": {
+      "type": "boolean"
+    },
+    "can_grant_moderation": {
+      "type": "boolean"
+    },
+    "can_revoke_moderation": {
+      "type": "boolean"
+    },
+    "can_impersonate": {
+      "type": "boolean"
+    },
+    "like_count": {
+      "type": "integer"
+    },
+    "like_given_count": {
+      "type": "integer"
+    },
+    "topic_count": {
+      "type": "integer"
+    },
+    "flags_given_count": {
+      "type": "integer"
+    },
+    "flags_received_count": {
+      "type": "integer"
+    },
+    "private_topics_count": {
+      "type": "integer"
+    },
+    "can_delete_all_posts": {
+      "type": "boolean"
+    },
+    "can_be_deleted": {
+      "type": "boolean"
+    },
+    "can_be_anonymized": {
+      "type": "boolean"
+    },
+    "can_be_merged": {
+      "type": "boolean"
+    },
+    "full_suspend_reason": {
+      "type": ["string", "null"]
+    },
+    "latest_export": {
+      "type": ["object", "null"]
+    },
+    "silence_reason": {
+      "type": ["string", "null"]
+    },
+    "post_edits_count": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "primary_group_id": {
+      "type": ["integer", "null"]
+    },
+    "badge_count": {
+      "type": "integer"
+    },
+    "warnings_received_count": {
+      "type": "integer"
+    },
+    "bounce_score": {
+      "type": ["integer", "null"]
+    },
+    "reset_bounce_score_after": {
+      "type": ["string", "null"]
+    },
+    "can_view_action_logs": {
+      "type": "boolean"
+    },
+    "can_disable_second_factor": {
+      "type": "boolean"
+    },
+    "can_delete_sso_record": {
+      "type": "boolean"
+    },
+    "api_key_count": {
+      "type": "integer"
+    },
+    "similar_users_count": {
+      "type": "integer"
+    },
+    "single_sign_on_record": {
+      "type": ["string", "null"]
+    },
+    "approved_by": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "username": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar_template": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "username", "name", "avatar_template"]
+    },
+    "suspended_by": {
+      "type": ["string", "null"]
+    },
+    "silenced_by": {
+      "type": ["string", "null"]
+    },
+    "penalty_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "silenced": {
+          "type": "integer"
+        },
+        "suspended": {
+          "type": "integer"
+        }
+      },
+      "required": ["silenced", "suspended"]
+    },
+    "next_penalty": {
+      "type": "string"
+    },
+    "tl3_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "time_period": {
+          "type": "integer"
+        },
+        "requirements_met": {
+          "type": "boolean"
+        },
+        "requirements_lost": {
+          "type": "boolean"
+        },
+        "trust_level_locked": {
+          "type": "boolean"
+        },
+        "on_grace_period": {
+          "type": "boolean"
+        },
+        "days_visited": {
+          "type": "integer"
+        },
+        "min_days_visited": {
+          "type": "integer"
+        },
+        "num_topics_replied_to": {
+          "type": "integer"
+        },
+        "min_topics_replied_to": {
+          "type": "integer"
+        },
+        "topics_viewed": {
+          "type": "integer"
+        },
+        "min_topics_viewed": {
+          "type": "integer"
+        },
+        "posts_read": {
+          "type": "integer"
+        },
+        "min_posts_read": {
+          "type": "integer"
+        },
+        "topics_viewed_all_time": {
+          "type": "integer"
+        },
+        "min_topics_viewed_all_time": {
+          "type": "integer"
+        },
+        "posts_read_all_time": {
+          "type": "integer"
+        },
+        "min_posts_read_all_time": {
+          "type": "integer"
+        },
+        "num_flagged_posts": {
+          "type": "integer"
+        },
+        "max_flagged_posts": {
+          "type": "integer"
+        },
+        "num_flagged_by_users": {
+          "type": "integer"
+        },
+        "max_flagged_by_users": {
+          "type": "integer"
+        },
+        "num_likes_given": {
+          "type": "integer"
+        },
+        "min_likes_given": {
+          "type": "integer"
+        },
+        "num_likes_received": {
+          "type": "integer"
+        },
+        "min_likes_received": {
+          "type": "integer"
+        },
+        "num_likes_received_days": {
+          "type": "integer"
+        },
+        "min_likes_received_days": {
+          "type": "integer"
+        },
+        "num_likes_received_users": {
+          "type": "integer"
+        },
+        "min_likes_received_users": {
+          "type": "integer"
+        },
+        "penalty_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "silenced": {
+              "type": "integer"
+            },
+            "suspended": {
+              "type": "integer"
+            },
+            "total": {
+              "type": "integer"
+            }
+          },
+          "required": ["silenced", "suspended", "total"]
+        }
+      },
+      "required": [
+        "time_period",
+        "requirements_met",
+        "requirements_lost",
+        "trust_level_locked",
+        "on_grace_period",
+        "days_visited",
+        "min_days_visited",
+        "num_topics_replied_to",
+        "min_topics_replied_to",
+        "topics_viewed",
+        "min_topics_viewed",
+        "posts_read",
+        "min_posts_read",
+        "topics_viewed_all_time",
+        "min_topics_viewed_all_time",
+        "posts_read_all_time",
+        "min_posts_read_all_time",
+        "num_flagged_posts",
+        "max_flagged_posts",
+        "num_flagged_by_users",
+        "max_flagged_by_users",
+        "num_likes_given",
+        "min_likes_given",
+        "num_likes_received",
+        "min_likes_received",
+        "num_likes_received_days",
+        "min_likes_received_days",
+        "num_likes_received_users",
+        "min_likes_received_users",
+        "penalty_counts"
+      ]
+    },
+    "groups": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "automatic": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "display_name": {
+              "type": "string"
+            },
+            "user_count": {
+              "type": "integer"
+            },
+            "mentionable_level": {
+              "type": "integer"
+            },
+            "messageable_level": {
+              "type": "integer"
+            },
+            "visibility_level": {
+              "type": "integer"
+            },
+            "primary_group": {
+              "type": "boolean"
+            },
+            "title": {
+              "type": ["string", "null"]
+            },
+            "grant_trust_level": {
+              "type": ["string", "null"]
+            },
+            "incoming_email": {
+              "type": ["string", "null"]
+            },
+            "has_messages": {
+              "type": "boolean"
+            },
+            "flair_url": {
+              "type": ["string", "null"]
+            },
+            "flair_bg_color": {
+              "type": ["string", "null"]
+            },
+            "flair_color": {
+              "type": ["string", "null"]
+            },
+            "flair_group_id": {
+              "type": ["integer", "null"]
+            },
+            "bio_raw": {
+              "type": ["string", "null"]
+            },
+            "bio_cooked": {
+              "type": ["string", "null"]
+            },
+            "bio_excerpt": {
+              "type": ["string", "null"]
+            },
+            "public_admission": {
+              "type": "boolean"
+            },
+            "public_exit": {
+              "type": "boolean"
+            },
+            "allow_membership_requests": {
+              "type": "boolean"
+            },
+            "full_name": {
+              "type": ["string", "null"]
+            },
+            "default_notification_level": {
+              "type": "integer"
+            },
+            "membership_request_template": {
+              "type": ["string", "null"]
+            },
+            "members_visibility_level": {
+              "type": "integer"
+            },
+            "can_see_members": {
+              "type": "boolean"
+            },
+            "can_admin_group": {
+              "type": "boolean"
+            },
+            "publish_read_state": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "automatic",
+            "name",
+            "display_name",
+            "user_count",
+            "mentionable_level",
+            "messageable_level",
+            "visibility_level",
+            "primary_group",
+            "title",
+            "grant_trust_level",
+            "incoming_email",
+            "has_messages",
+            "flair_url",
+            "flair_bg_color",
+            "flair_color",
+            "bio_raw",
+            "bio_cooked",
+            "bio_excerpt",
+            "public_admission",
+            "public_exit",
+            "allow_membership_requests",
+            "full_name",
+            "default_notification_level",
+            "membership_request_template",
+            "members_visibility_level",
+            "can_see_members",
+            "can_admin_group",
+            "publish_read_state"
+          ]
+        }
+    },
+    "external_ids": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "username",
+    "name",
+    "avatar_template",
+    "active",
+    "admin",
+    "moderator",
+    "last_seen_at",
+    "last_emailed_at",
+    "created_at",
+    "last_seen_age",
+    "last_emailed_age",
+    "created_at_age",
+    "trust_level",
+    "manual_locked_trust_level",
+    "title",
+    "time_read",
+    "staged",
+    "days_visited",
+    "posts_read_count",
+    "topics_entered",
+    "post_count",
+    "can_send_activation_email",
+    "can_activate",
+    "can_deactivate",
+    "ip_address",
+    "registration_ip_address",
+    "can_grant_admin",
+    "can_revoke_admin",
+    "can_grant_moderation",
+    "can_revoke_moderation",
+    "can_impersonate",
+    "like_count",
+    "like_given_count",
+    "topic_count",
+    "flags_given_count",
+    "flags_received_count",
+    "private_topics_count",
+    "can_delete_all_posts",
+    "can_be_anonymized",
+    "can_be_merged",
+    "full_suspend_reason",
+    "primary_group_id",
+    "badge_count",
+    "warnings_received_count",
+    "bounce_score",
+    "reset_bounce_score_after",
+    "can_view_action_logs",
+    "can_disable_second_factor",
+    "can_delete_sso_record",
+    "api_key_count",
+    "single_sign_on_record",
+    "approved_by",
+    "suspended_by",
+    "silenced_by",
+    "groups",
+    "external_ids"
+  ]
+}

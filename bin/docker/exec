@@ -1,0 +1,14 @@
+#!/bin/bash
+
+exec docker exec \
+  -it \
+  -u discourse:discourse \
+  -w '/src' \
+  -e RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 \
+  -e LD_PRELOAD=/usr/lib/libjemalloc.so \
+  -e CI \
+  -e RAILS_ENV \
+  -e NO_EMBER_CLI \
+  -e QUNIT_RAILS_ENV \
+  discourse_dev \
+  "$@"

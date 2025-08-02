@@ -1,0 +1,121 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  site_settings:
+    discourse_narrative_bot_enabled: "Bật Bot Hướng Dẫn Discourse (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Tắt tính năng gửi lời chào từ Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "Những tên người dùng mà Bot tường thuật diễn văn nên bỏ qua"
+  badges:
+    certified:
+      name: Đã chứng nhận
+      description: "Đã hoàn thành hướng dẫn thành viên mới của chúng tôi"
+      long_description: |
+        Huy hiệu này được cấp khi hoàn thành thành công hướng dẫn tương tác cho thành viên mới. Bạn đã chủ động tìm hiểu các công cụ thảo luận cơ bản và giờ bạn đã được chứng nhận!
+    licensed:
+      name: Đã cấp phép
+      description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
+  discourse_narrative_bot:
+    quote:
+      trigger: "trích dẫn"
+      "3":
+        quote: "Đừng khóc vì nó đã qua, hãy cười vì điều đó đã xảy ra."
+      "4":
+        quote: "Nếu bạn muốn một cái gì đó được thực hiện đúng theo ý bạn, hãy tự làm nó."
+      "5":
+        quote: "Hãy tin rằng bạn có thể và bạn đã làm được một nửa."
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      answers:
+        "2": "Nó được quyết định như vậy"
+        "9": "Đồng ý"
+        "11": "Trả lời không rõ ràng, hãy thử lại"
+        "15": "Tập trung và hỏi lại lần nữa"
+        "20": "Rất đáng ngờ"
+    track_selector:
+      random_mention:
+        reply: |-
+          Chào! Để biết tôi có thể làm gì, hãy nói `@%{discobot_username} %{help_trigger}`.
+    new_user_narrative:
+      hello:
+        message: |-
+          Cảm ơn bạn đã tham gia %{title}, và chào mừng bạn!
+
+          - Tôi chỉ là người máy, nhưng [nhân viên thân thiện của chúng tôi](%{base_uri}/about) cũng sẵn sàng trợ giúp nếu bạn cần tiếp cận một người.
+
+          - Vì lý do an toàn, chúng tôi tạm thời giới hạn những gì người dùng mới có thể làm. Bạn sẽ đạt được [khả năng mới](https://blog.discourse.org/2018/06/undilities-discourse-trust-levels/) (là [badges](%{base_uri}/badges)) khi chúng tôi làm quen với bạn.
+
+          - Chúng tôi tin tưởng vào [hành vi cộng đồng văn minh](%{base_uri}/guidelines) mọi lúc.
+      images:
+        reply: |-
+          Hình ảnh tiện lợi - Tôi nhấn nút like :heart: để cho bạn biết tôi đánh giá cao nó như thế nào :heart_eyes:
+      quoting:
+        reply: |-
+          Làm tốt lắm, bạn đã chọn câu nói yêu thích của tôi! :left_speech_bubble:
+        not_found: |-
+          Hmm có vẻ như bạn đã không trích dẫn tôi trong thư trả lời của bạn?
+
+          Chọn bất kỳ văn bản nào trong bài đăng của tôi sẽ hiển thị nút <kbd>**Trích dẫn**</kbd> . Và nhấn **Trả lời** với bất kỳ văn bản nào được chọn cũng sẽ hoạt động! Bạn có thể thử lại được không?
+      bookmark:
+        instructions: |-
+          Nếu bạn muốn tìm hiểu thêm, hãy chọn nút <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> bên dưới và chọn <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> để **đánh dấu tin nhắn cá nhân này**. Nếu bạn làm như vậy, bạn có thể có một :gift: trong tương lai!
+        not_found: |-
+          Rất tiếc, tôi không thấy bất kỳ dấu trang nào trong chủ đề này. Bạn có tìm thấy dấu trang dưới mỗi bài viết không? Sử dụng hiển thị thêm <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> để hiển thị các hành động bổ sung nếu cần.
+      emoji:
+        instructions: |-
+          Bạn có thể đã thấy tôi sử dụng những hình ảnh nhỏ trong câu trả lời của tôi :blue_car::dash: , những hình ảnh đó được gọi là [emoji](https://en.wikipedia.org/wiki/Emoji). Bạn có thể **thêm biểu tượng cảm xúc** vào câu trả lời của mình không? Bất kỳ cái nào trong số này sẽ hoạt động:
+
+          - Nhập `:) ;) :D :P :O`
+
+          - Nhập dấu hai chấm <kbd>:</kbd> rồi điền tên biểu tượng cảm xúc `:tada:`
+
+          - Nhấn nút biểu tượng cảm xúc <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> trong trình chỉnh sửa hoặc trên bàn phím di động
+        reply: |-
+          Đó là :sparkles: _emojitastic!_ :sparkles:
+        not_found: |-
+          Rất tiếc, tôi không thấy bất kỳ Biểu tượng cảm xúc nào trong câu trả lời của bạn? Ôi không! :sob:
+
+          Thử nhập dấu hai chấm <kbd>:</kbd> để hiển thị bộ chọn biểu tượng cảm xúc, sau đó nhập một vài chữ cái đầu tiên của những gì bạn muốn, chẳng hạn như `:bird:'`
+
+          Hoặc, nhấn nút biểu tượng cảm xúc <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> trong trình chỉnh sửa.
+
+          (Nếu bạn đang sử dụng thiết bị di động, bạn cũng có thể nhập Biểu tượng cảm xúc trực tiếp từ bàn phím của mình.)
+      mention:
+        instructions: |-
+          Đôi khi bạn có thể muốn thu hút sự chú ý của một người, ngay cả khi bạn không trực tiếp trả lời họ. Gõ `@` sau đó điền tên người dùng của họ để đề cập đến họ.
+
+          Bạn có thể đề cập đến **`@%{discobot_username}`** trong câu trả lời của mình không?
+        reply: |-
+          _Có ai đó nói tên tôi không !? _ :raised_hand: Tôi tin là bạn đã làm vậy! :wave: Chà, tôi đây! Cảm ơn vì đã nhắc đến tôi. :ok_hand:
+        not_found: |-
+          Tôi không thấy tên mình ở đâu cả :frowning: Bạn có thể thử nhắc lại tôi là `@%{discobot_username}` được không?
+
+          (Và vâng, tên người dùng của tôi được đánh vần là _disco_, như trong cơn sốt khiêu vũ của những năm 1970. Tôi [yêu cuộc sống về đêm!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      search:
+        reply: |-
+          Bạn có thể tìm thấy nó :tada:
+
+          - Để tìm kiếm chi tiết hơn, hãy đến [trang tìm kiếm đầy đủ](%{search_url}).
+
+          - Để nhảy đến bất cứ nơi nào trong một cuộc thảo luận dài, hãy thử các điều khiển dòng thời gian của chủ đề ở bên phải (và dưới cùng, trên thiết bị di động).
+
+          - Nếu bạn có :keyboard: vật lý, nhấn <kbd>? </kbd>để xem các phím tắt tiện dụng của chúng tôi.
+      certificate:
+        alt: "Giấy chứng nhận thành tích"
+    advanced_user_narrative:
+      title: ":arrow_up: Người dùng nâng cao"
+      start_message: |-
+        Là người dùng _advanced_, bạn đã truy cập [trang tùy chọn của bạn](%{base_uri}/my/ferences) chưa @%{username}? Có rất nhiều cách để tùy chỉnh trải nghiệm của bạn, chẳng hạn như chọn chủ đề tối hoặc sáng.
+
+        Nhưng tôi lạc đề, hãy bắt đầu!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} cho đến nay là bot thú vị nhất mà tôi biết :wink:"
+      recover:
+        deleted_post_raw: "Tại sao @%{discobot_username} xóa bài đăng của tôi? :anguished:"
+      category_hashtag:
+        reply: |-
+          Xuất sắc! Hãy nhớ điều này hoạt động cho cả hai loại danh mục và  thẻ, nếu thẻ được bật.

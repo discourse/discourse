@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Керівництво по стилю Discourse"
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "Для початку оберіть розділ у меню ліворуч."
+      categories:
+        syntax: Синтаксис
+        atoms: Атоми
+        molecules: Молекули
+        organisms: Організми
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Типографіка"
+          example: "Ласкаво просимо в Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Введення дати / часу"
+        menus:
+          title: "Меню"
+        multi_select:
+          title: "Множинний вибір"
+        toasts:
+          title: "Тости"
+        font_scale:
+          title: "Шрифти"
+        colors:
+          title: "Кольори"
+        icons:
+          title: "Іконки"
+          full_list: "Перегляньте повний список значків Font Awesome"
+        forms:
+          title: "Форми"
+        buttons:
+          title: "Кнопки"
+        dropdowns:
+          title: "Випадаючі списки"
+        categories:
+          title: "Категорії"
+        bread_crumbs:
+          title: "Хлібні крихти"
+        navigation:
+          title: "Навігація"
+        navigation_bar:
+          title: "Панель навігації"
+        navigation_stacked:
+          title: "Панель вибору налаштувань"
+        categories_list:
+          title: "Список категорій"
+        topic_link:
+          title: "Посилання на тему"
+        topic_list_item:
+          title: "Тема у списку тем"
+        topic_statuses:
+          title: "Статуси тем"
+        topic_list:
+          title: "Список тем"
+        basic_topic_list:
+          title: "Основний список тем"
+        footer_message:
+          title: "Повідомлення нижнього колонтитула"
+        signup_cta:
+          title: "Реєстрація CTA"
+        topic_timer_info:
+          title: "Таймери теми"
+        topic_footer_buttons:
+          title: "Кнопки нижнього колонтитула"
+        topic_notifications:
+          title: "Сповіщення теми"
+        post:
+          title: "Допис"
+        post_list:
+          title: "Список публікацій"
+          empty_example: "<PostList /> порожній стан"
+          populated_example: "<PostList /> заповнений стан"
+        topic_map:
+          title: "Карта теми"
+        site_header:
+          title: "Заголовок сайту"
+        suggested_topics:
+          title: "Схожі теми"
+        post_menu:
+          title: "Меню повідомлення"
+        modal:
+          title: "Модальний"
+          header: "Модальний заголовок"
+          footer: "Модальний нижній колонтитул"
+        user_about:
+          title: "Вікно «Про користувача»"
+        header_icons:
+          title: "Значки заголовків"
+        spinners:
+          title: "Спінери"
+        empty_state:
+          title: "Порожній стан"
+        tooltips:
+          title: "Підказки"
+          description: "Опис"
+          header: "Шапка"
+          hover_to_see: "Наведіть курсор, щоб побачити підказку"
+        char_counter:
+          title: "Лічильник символів"
+          placeholder: "Введіть свій текст тут..."

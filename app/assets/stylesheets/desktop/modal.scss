@@ -1,0 +1,113 @@
+html.modal-open {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+.d-modal {
+  --modal-max-width: 600px;
+  --modal-width: 30em; // set in ems to scale with user font-size
+  --modal-min-width: 400px;
+
+  &__container {
+    max-width: var(--modal-max-width);
+    min-width: var(--modal-min-width);
+    min-height: var(--modal-min-height); // unset, optional theme utility
+
+    .d-modal.-large & {
+      max-width: 800px;
+    }
+
+    .d-modal.-max & {
+      max-width: 90vw;
+    }
+  }
+}
+
+.modal.in {
+  animation: fade 0.25s;
+
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
+}
+
+.close {
+  font-size: var(--font-up-3);
+  text-decoration: none;
+  cursor: pointer;
+
+  &:visited {
+    color: var(--primary-high);
+  }
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.modal {
+  .category-chooser {
+    width: 50%;
+  }
+}
+
+.choose-topic-modal {
+  #choosing-topic {
+    // prevents content from moving when user selects different move options 525px
+    // is the same width we set on category edit modal
+    width: 525px;
+
+    p {
+      margin-top: 0;
+    }
+
+    .radios {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+
+      .radio-label {
+        display: inline-block;
+        padding-right: 15px;
+      }
+    }
+
+    button {
+      margin-top: 10px;
+      display: block;
+    }
+
+    form {
+      width: 95%;
+      margin-top: 20px;
+
+      .participant-selector {
+        width: 100%;
+      }
+
+      div.ac-wrap {
+        width: 100%;
+        margin-bottom: 9px;
+      }
+    }
+  }
+}
+
+.create-invite-modal,
+.create-invite-bulk-modal,
+.share-topic-modal {
+  .title {
+    align-items: center;
+    display: flex;
+
+    .subtitle {
+      margin-left: 0.5em;
+    }
+  }
+
+  .alert-error {
+    label {
+      display: inline-block;
+    }
+  }
+}

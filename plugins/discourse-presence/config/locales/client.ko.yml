@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    presence:
+      replying:
+        other: "댓글 작성중"
+      editing:
+        other: "수정중"
+      replying_to_topic:
+        other: "댓글 작성중"

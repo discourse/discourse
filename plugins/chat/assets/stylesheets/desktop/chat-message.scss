@@ -1,0 +1,24 @@
+.chat-message-actions {
+  .react-btn,
+  .reply-btn,
+  .chat-message-thread-btn,
+  .bookmark-btn {
+    border: 1px solid transparent;
+    border-bottom-color: var(--primary-300);
+    border-radius: 0;
+    border-top-color: var(--primary-300);
+
+    &:first-child {
+      border-left-color: var(--primary-300);
+      border-top-left-radius: var(--d-border-radius);
+      border-bottom-left-radius: var(--d-border-radius);
+    }
+
+    &:hover {
+      background: var(--primary-low);
+      border-color: var(--primary-low-mid);
+      color: var(--primary-medium);
+      z-index: 1;
+    }
+  }
+}

@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse Lokale Daten"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Heute %{time}
+        tomorrow: Morgen %{time}
+        yesterday: Gestern %{time}
+        countdown:
+          passed: Datum liegt in der Vergangenheit
+      title: Datum/Uhrzeit einfügen
+      create:
+        form:
+          insert: Einfügen
+          advanced_mode: Erweiterter Modus
+          simple_mode: Einfacher Modus
+          format_description: "Format, mit dem das Datum dem Benutzer angezeigt wird. Verwende „Z” zum Anzeigen der Differenz zu UTC und „zz” für den Zeitzonen-Namen."
+          timezones_title: Anzuzeigende Zeitzonen
+          timezones_description: Zeitzonen werden verwendet, um Datumsangaben in der Vorschau und als Ausweichlösung anzuzeigen.
+          recurring_title: Wiederholung
+          recurring_description: "Definiere die Wiederholung eines Ereignisses. Du kannst die vom Formular generierte Wiederholung auch manuell ändern und einen der folgenden Schlüssel verwenden: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Keine Wiederholung
+          invalid_date: Ungültige Datumsangabe. Stelle sicher, dass Datum und Uhrzeit korrekt sind.
+          date_title: Datum
+          time_title: Uhrzeit
+          format_title: Datumsformat
+          timezone: Zeitzone
+          until: Bis …
+          current_timezone: "Aktuelle Zeitzone:"
+          recurring:
+            every_day: "Jeden Tag"
+            every_week: "Jede Woche"
+            every_two_weeks: "Alle 2 Wochen"
+            every_month: "Jeden Monat"
+            every_two_months: "Alle 2 Monate"
+            every_three_months: "Alle 3 Monate"
+            every_six_months: "Alle 6 Monate"
+            every_year: "Jedes Jahr"
+      default_title: "%{site_name}-Ereignis"

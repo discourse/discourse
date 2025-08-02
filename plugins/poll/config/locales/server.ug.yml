@@ -1,0 +1,67 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  site_settings:
+    poll_enabled: "راي سىناشقا يول قويامدۇ؟"
+    poll_maximum_options: "راي سىناشتا يول قويىدىغان تاللانمىنىڭ ئەڭ كۆپ سانى."
+    poll_edit_window_mins: "يازما قۇرۇلۇپ قانچىلىك ۋاقىتتىن كېيىن راي سىناشنى تەھرىرلىگىلى بولىدىغان مىنۇت سانى."
+    poll_minimum_trust_level_to_create: "راي سىناش قۇرۇشتا زۆرۈر بولغان ئەڭ تۆۋەن ئىشەنچ دەرىجىسى بەلگىلىنىدۇ."
+    poll_create_allowed_groups: "راي سىناشقا ئىجازەت بېرىلگەن گۇرۇپپىلار."
+    poll_groupable_user_fields: "راي سىناش نەتىجىسىنى گۇرۇپپىلاش ۋە سۈزۈشكە ئىشلىتىدىغان بىر يۈرۈش ئىشلەتكۈچى ئىسىم توپلىمى."
+    poll_export_data_explorer_query_id: "راي سىناش نەتىجىسىنى چىقىرىشقا ئىشلىتىدىغان سانلىق مەلۇمات مەنبە باشقۇرغۇچ سۈرۈشتۈرىدىغان كىملىك (0 چەكلەيدۇ)."
+    poll_export_ranked_choice_data_explorer_query_id: "شۇئان ئاخىرقى راي سىناش نەتىجىسىنى چىقىرىشقا ئىشلىتىدىغان سانلىق مەلۇمات مەنبە باشقۇرغۇچ سۈرۈشتۈرىدىغان كىملىك."
+    poll_default_public: "يېڭى راي سىناش قۇرغاندا، كۆڭۈلدىكى ئەھۋالدا «كىمنىڭ بېلەت تاشلىغانلىقىنى كۆرسىتىش» تاللانمىسى قوزغىتىلىدۇ."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "راي سىناش"
+    invalid_argument: "پارامېتىر «%{argument}» نىڭ قىممىتى «%{value}» ئىناۋەتسىز."
+    multiple_polls_without_name: "كۆپ راي سىناش قۇرغاندا، <code>name=example</code> نى <code>[poll]</code> بەلگىسى ئارقىلىق بىردىنبىر ئىسىم قوشۇلىدۇ."
+    multiple_polls_with_same_name: "ئوخشاش ئىسىمدىكى بىر قانچە راي سىناش بار: <strong>%{name}</strong>. ھەر بىر راي سىنىشىڭىزنى «<code>name</code>» خاسلىقى ئارقىلىق پەرقلەندۈرىدۇ."
+    default_poll_must_have_at_least_1_option: "راي سىناشتا كەم دېگەندە 1 تاللانمىسى بولۇشى كېرەك."
+    named_poll_must_have_at_least_1_option: "راي سىناش ئىسمى <strong>%{name}</strong> كەم دېگەندە 1 تاللانمىسى بولۇشى كېرەك."
+    default_poll_must_have_less_options:
+      one: "راي سىناشنىڭ ئاز دېگەندە %{count} تاللانمىسى بولۇشى كېرەك."
+      other: "راي سىناشنىڭ ئاز دېگەندە %{count} تاللانمىسى بولۇشى كېرەك."
+    named_poll_must_have_less_options:
+      one: "<strong>%{name}</strong> ئاتلىق راي سىناشنىڭ كەم دېگەندە %{count} تاللانمىسى بولۇشى كېرەك."
+      other: "<strong>%{name}</strong> ئاتلىق راي سىناشنىڭ كەم دېگەندە %{count} تاللانمىسى بولۇشى كېرەك."
+    default_poll_must_have_different_options: "راي سىناشنىڭ پەرقلىق تاللانمىسى بولۇشى كېرەك."
+    named_poll_must_have_different_options: "<strong>%{name}</strong> ئاتلىق راي سىناشنىڭ چوقۇم پەرقلىق تاللانمىسى بولۇشى كېرەك."
+    default_poll_must_not_have_any_empty_options: "راي سىناشنىڭ بوش تاللانمىسى بولماسلىقى كېرەك."
+    named_poll_must_not_have_any_empty_options: "<strong>%{name}</strong> ئاتلىق راي سىناشنىڭ چوقۇم ھېچقانداق بوش تاللانمىسى بولماسلىقى كېرەك."
+    default_poll_with_multiple_choices_has_invalid_parameters: "كۆپ تاللاشلىق راي سىناشنىڭ ئىناۋەتسىز پارامېتىرى بار."
+    named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong> ئاتلىق كۆپ تاللاشلىق راي سىناشنىڭ ئىناۋەتسىز پارامېتىرى بار."
+    requires_at_least_1_valid_option: "كەم دېگەندە 1 ئۈنۈملۈك تاللانمىنى تاللىشىڭىز كېرەك."
+    requires_that_at_least_one_option_is_ranked: "رەتكە تىزىدىغان راي سىناشتا چوقۇم كەم دېگەندە بىر تاللاشنى تاللىغان بولۇشىڭىز كېرەك."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "راي سىناش قۇرۇلۇپ %{minutes} مىنۇتتىن كېيىن ئۆزگەرتەلمەيسىز."
+      cannot_edit_named_poll_with_votes: "راي سىناش قۇرۇلۇپ %{minutes} مىنۇتتىن كېيىن <strong>${name}</strong> ئاتلىق راي سىناشنى ئۆزگەرتەلمەيسىز."
+    no_poll_with_this_name: "بۇ يازمىغا مۇناسىۋەتلىك <strong>%{name}</strong> ئاتلىق راي سىناش يوق."
+    post_is_deleted: "ئۆچۈرۈلگەن يازمىغا مەشغۇلات قىلغىلى بولمايدۇ."
+    user_cant_post_in_topic: "سىز بۇ تېمىغا يازما يوللىيالمىغاچقا بېلەت تاشلىيالمايسىز."
+    topic_must_be_open_to_vote: "تېما بېلەت تاشلاشقا ئوچۇق بولۇشى كېرەك."
+    poll_must_be_open_to_vote: "راي سىناش بېلەت تاشلاشقا چوقۇم ئوچۇق بولۇشى كېرەك."
+    one_vote_per_user: "بۇ راي سىناشقا پەقەت بىرلا بېلەت تاشلاشقا يول قويۇلىدۇ."
+    max_vote_per_user:
+      one: بۇ راي سىناشقا %{count} بېلەت تاشلاشقا يول قويۇلىدۇ.
+      other: بۇ راي سىناشقا %{count} بېلەت تاشلاشقا يول قويۇلىدۇ.
+    min_vote_per_user:
+      one: بۇ راي سىناشقا كەم دېگەندە %{count} بېلەت تاشلاش كېرەك.
+      other: بۇ راي سىناشقا كەم دېگەندە %{count} بېلەت تاشلاش كېرەك.
+    ranked_choice:
+      vote_options_mismatch: "شۇئان ئاخىرقى راي سىناش نەتىجخسىدە، بېلەت تاشلىغاندىكى تاللاش سانى چوقۇم تاللانما سانىغا ماس كېلىشى كېرەك. تاللانما سانى %{count}، بېلەت تاشلىغاندىكى تاللاش سانى %{provided}."
+      no_group_results_support: "راي سىناش تۈرى ئىناۋەتسىز. ranked_choice گۇرۇپپىلانغان نەتىجىنى قوللىمايدۇ."
+    topic_must_be_open_to_toggle_status: "تېما بېلەت تاشلاشقا ئوچۇق بولغاندىلا ھالىتىنى ئالماشتۇرغىلى بولىدۇ."
+    only_staff_or_op_can_toggle_status: "پەقەت خىزمەتچى ئەزالار ياكى ئەسلى يازما يوللىغۇچى بېلەت تاشلاش ھالىتىنى ئۆزگەرتەلەيدۇ."
+    errors:
+      poll_not_found: "راي سىناش تېپىلمىدى، پارامېتىرلارنى جەزملەڭ."
+    insufficient_rights_to_create: "راي سىناش قۇرۇش ئىجازىتىڭىز يوق."
+    email:
+      link_to_poll: "چېكىلسە راي سىناشنى كۆرسىتىدۇ."
+    user_field:
+      no_data: "سانلىق مەلۇمات يوق"

@@ -1,0 +1,22 @@
+.relative-time-picker {
+  display: flex;
+  flex-wrap: wrap;
+
+  input[type="text"] {
+    flex: 1;
+  }
+
+  .relative-time-duration {
+    margin-bottom: 0;
+  }
+
+  .select-kit {
+    flex: 1;
+    width: auto;
+    margin-left: 5px;
+  }
+
+  &:last-child {
+    margin-right: auto;
+  }
+}

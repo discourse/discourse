@@ -1,0 +1,52 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "suspension": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "suspend_reason": {
+          "type": "string"
+        },
+        "full_suspend_reason": {
+          "type": "string"
+        },
+        "suspended_till": {
+          "type": "string"
+        },
+        "suspended_at": {
+          "type": "string"
+        },
+        "suspended_by": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "avatar_template": {
+              "type": "string"
+            }
+          },
+          "required": ["id", "username", "name", "avatar_template"]
+        }
+      },
+      "required": [
+        "suspend_reason",
+        "full_suspend_reason",
+        "suspended_till",
+        "suspended_at",
+        "suspended_by"
+      ]
+    }
+  },
+  "required": [
+    "suspension"
+  ]
+}

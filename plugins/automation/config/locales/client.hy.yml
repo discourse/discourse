@@ -1,0 +1,149 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    discourse_automation:
+      back: Ետ
+      edit: Խմբագրել
+      fields:
+        user:
+          label: Օգտատեր
+        pm:
+          title:
+            label: Վերնագիր
+          raw:
+            label: Մարմին
+        pms:
+          title:
+            label: Վերնագիր
+          raw:
+            label: Մարմին
+        group:
+          label: Խմբավորել
+        text:
+          label: Տեքստ
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Կրծքանշան
+        stalled_topic:
+          durations:
+            P2W: "Երկու շաբաթից"
+            P3M: "Երեք ամսից"
+            P6M: "Վեց ամսից"
+            P1Y: "Մեկ տարուց"
+        recurring:
+          frequencies:
+            minute: րոպե
+            hour: ժամ
+            day: օր
+            week: շաբաթ
+            month: ամիս
+            year: տարի
+          fields:
+            recurrence:
+              label: Կրկնություն
+        stalled_wiki:
+          durations:
+            P2W: "Երկու շաբաթից"
+            P3M: "Երեք ամսից"
+            P6M: "Վեց ամսից"
+            P1Y: "Մեկ տարուց"
+        topic:
+          fields:
+            restricted_topic:
+              label: Թեմայի ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Թեգեր
+            restricted_categories:
+              label: Կատեգորիաներ
+          created: Ստեղծված
+          with_images: Նկարներ
+          with_links: Հղումներ
+          with_code: Կոդ
+          with_uploads: Վերբեռնումներ
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Մայր Կատեգորիա
+        pm_created:
+          fields:
+            restricted_user:
+              label: Օգտատերեր
+            restricted_group:
+              label: Խմբավորել
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Կատեգորիա
+            restricted_tags:
+              label: Թեգեր
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Թեգեր
+        post:
+          fields:
+            topic:
+              label: Թեմայի ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Խմբավորել
+        user_global_notice:
+          fields:
+            level:
+              label: Մակարդակ
+          levels:
+            info: Ինֆորմացիա
+            success: Հաջողություն
+            error: Սխալ
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Խմբավորել
+            badge:
+              label: Կրծքանշան
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Օգտատեր
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Թեմայի ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: Թեմայի ID
+            user:
+              label: Օգտատեր
+        close_topic:
+          fields:
+            topic:
+              label: Թեմայի ID
+            user:
+              label: Օգտատեր
+      models:
+        trigger:
+          name:
+            label: Գործարկել
+        automation:
+          name:
+            label: Անուն
+          trigger:
+            label: Գործարկել
+          version:
+            label: Տարբերակ
+          status:
+            label: Ստատուս
+          disabled:
+            label: Անջատված

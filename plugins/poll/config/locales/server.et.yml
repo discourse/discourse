@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  site_settings:
+    poll_enabled: "Lubada küsitlused?"
+    poll_maximum_options: "Maksimaalne valikute arv, mis on küsitluses lubatud."
+    poll_edit_window_mins: "Minutite arv peale loomist, mille jooksul saab küsitlust veel muuta."
+  poll:
+    multiple_polls_with_same_name: "Mitu küsitlust on sama nimega: <strong>%{name}</strong>. Kasuta atribuuti '<code>name</code>' küsitluse unikaalsuse tagamiseks."
+    default_poll_must_have_less_options:
+      one: "Küsitlusel peab olema vähemalt %{count} valik."
+      other: "Küsitlusel peab olema vähem, kui %{count} valikut."
+    named_poll_must_have_less_options:
+      one: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähem kui %{count} valik."
+      other: "Küsitlusel nimega <strong>%{name}</strong> peab olema vähem kui %{count} valikut."
+    default_poll_must_have_different_options: "Küsitlusel peavad olema erinevad valikud."
+    named_poll_must_have_different_options: "Küsitlus nimega <strong>%{name}</strong> peab sisaldama erinevaid valikuid."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Erinevate valikutega küsitlusel pole korrektsed parameetrid."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Mitme valikuga küsitlusel nimega <strong>%{name}</strong> on vigaseid parameetreid."
+    requires_at_least_1_valid_option: "Pead tegema vähemalt 1 korrektse valiku."
+    no_poll_with_this_name: "Küsitlust nimega <strong>%{name}</strong> pole selle teemaga seotud."
+    post_is_deleted: "Kustutatud postitusega ei saa midagi teha."
+    topic_must_be_open_to_vote: "Teema peab olema avatud, et hääletada."
+    poll_must_be_open_to_vote: "Hääletamiseks peab küsitlus olema avatud."
+    topic_must_be_open_to_toggle_status: "Teema peab olema avatud, et staatust muuta."
+    only_staff_or_op_can_toggle_status: "Ainult meeskonnaliige või postitaja ise saavad küsitluse staatust muuta."
+    email:
+      link_to_poll: "Vaata küsitlust"
+    user_field:
+      no_data: "Andmed puuduvad"

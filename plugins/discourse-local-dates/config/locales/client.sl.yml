@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: danes %{time}
+        tomorrow: jutri %{time}
+        yesterday: včeraj %{time}
+        countdown:
+          passed: datum je minil
+      title: Vstavi datum / uro
+      create:
+        form:
+          insert: Dodaj
+          advanced_mode: Napredni način
+          simple_mode: Enostavni način
+          format_description: "Format, uporabljen za prikaz datuma uporabniku. Uporabite Z, da prikažete odmik in zz za ime časovnega pasu."
+          timezones_title: Časovni pas za prikaz
+          timezones_description: Časovni pas bo uporabljen za prikaz v predogledu ali kot rezerva.
+          recurring_title: Ponovitev
+          recurring_description: "Določite ponovitev dogodka. Lahko ročno vnesete ponovitev pripravljeno iz obrazca in uporabite naslednje ključe: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Brez ponovitve
+          invalid_date: Napačen datum - poskrbite, da sta datum in čas pravilna
+          date_title: Datum
+          time_title: Čas
+          format_title: Oblika datuma
+          timezone: Časovni pas
+          until: Do...
+          recurring:
+            every_day: "Vsak dan"
+            every_week: "Vsak teden"
+            every_two_weeks: "Vsaka dva tedna"
+            every_month: "Vsak mesec"
+            every_two_months: "Vsaka dva meseca"
+            every_three_months: "Vsake tri mesece"
+            every_six_months: "Vsakih šest mesecev"
+            every_year: "Vsako leto"

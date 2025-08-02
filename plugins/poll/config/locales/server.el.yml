@@ -1,0 +1,36 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  site_settings:
+    poll_enabled: "Επιτρέπονται οι ψηφοφορίες;"
+    poll_maximum_options: "Μέγιστος αριθμός επιλογών σε μια ψηφοφορία."
+    poll_edit_window_mins: "Αριθμός λεπτών μετά την δημιουργία ανάρτησης που οι ψηφοφορίες μπορούν να αλλαχθούν "
+    poll_minimum_trust_level_to_create: "Ελάχιστο απαιτούμενο επίπεδο εμπιστοσύνης για την δημιουργία ψηφοφοριών."
+    poll_groupable_user_fields: "Ένα σύνολο ονομάτων πεδίων χρήστη που μπορούν να χρησιμοποιηθούν για την ομαδοποίηση και το φιλτράρισμα των αποτελεσμάτων δημοσκόπησης."
+  poll:
+    poll: "δημοσκόπηση"
+    multiple_polls_with_same_name: "Υπάρχουν πολλές ψηφοφορίες με το ίδιο όνομα: <strong>%{name}</strong>. Χρησιμοποίησε την ιδιότητα '<code>name</code>' για να κάνεις τις ψηφοφορίες σου μοναδικά αναγνωρίσιμες."
+    default_poll_must_have_less_options:
+      one: "Η Δημοσκόπηση πρέπει να έχει λιγότερη από %{count} επιλογή."
+      other: "Η ψηφοφορία πρέπει να έχει λιγότερες από %{count} επιλογές."
+    named_poll_must_have_less_options:
+      one: "Η Ψηφοφορία με το όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερο απο %{count} επιλογή. "
+      other: "Η ψηφοφορία με όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερες απο %{count} επιλογές. "
+    default_poll_must_have_different_options: "Η ψηφοφορία πρέπει να έχει διαφορετικές επιλογές."
+    named_poll_must_have_different_options: "Η ψηφοφορία <strong>%{name}</strong> πρέπει να έχει διαφορετικές επιλογές."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Η ψηφοφορία με πολλαπλές επιλογές έχει μη έγκυρες παραμέτρους."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Η ψηφοφορία με όνομα <strong>%{name}</strong> και με πολλαπλές επιλογές έχει μη έγγυρες παραμέτρους"
+    requires_at_least_1_valid_option: "Πρέπει να κάνεις τουλάχιστον 1 έγκυρη επιλογή."
+    no_poll_with_this_name: "Σε αυτή την ανάρτηση δεν υπάρχουν ψηφοφορίες με το όνομα <strong>%{name}</strong>."
+    post_is_deleted: "Δεν μπορείτε να ενεργήσετε σε διεγραμένη ανάρτηση."
+    topic_must_be_open_to_vote: "Το νήμα πρέπει να είναι ανοιχτό για ψηφοφορίες."
+    poll_must_be_open_to_vote: "Η ψηφοφορία πρέπει να έχει ξεκινήσει πρώτα."
+    topic_must_be_open_to_toggle_status: "Για να μπορεί να αλλάξει η κατάσταση του νήματος, πρέπει να είναι ανοιχτό."
+    only_staff_or_op_can_toggle_status: "Η κατάσταση της ψηφοφορίας μπορεί να αλλάξει μόνο από συντονιστές ή από τον δημιουργό του νήματος."
+    insufficient_rights_to_create: "Δεν σας επιτρέπεται η δημιουργία ψηφοφοριών."
+    email:
+      link_to_poll: "Κάντε κλικ για να δείτε την ψηφοφορία."

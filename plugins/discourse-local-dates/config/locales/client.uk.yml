@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse локальні дати"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Сьогодні %{time}
+        tomorrow: Завтра %{time}
+        yesterday: Вчора %{time}
+        countdown:
+          passed: дата минула
+      title: Вставити дату / час
+      create:
+        form:
+          insert: Вставити
+          advanced_mode: Розширений режим
+          simple_mode: Простий режим
+          format_description: "Формат, що використовується для відображення дати користувачеві. Використовуйте Z для відображення зміщення та zz для назви часового поясу."
+          timezones_title: Часові пояси показати
+          timezones_description: Часові пояси будуть використовуватися для відображення дат у попередньому та резервному режимі.
+          recurring_title: Повторення
+          recurring_description: "Визначте повторення події. Ви можете вручну редагувати повторюваний параметр, створений формою, і скористатися однією з таких клавіш: роки, квартали, місяці, тижні, дні, години, хвилини, секунди, мілісекунди."
+          recurring_none: Без повторів
+          invalid_date: Недійсна дата, переконайтесь, що дата та час є правильними
+          date_title: Дата
+          time_title: Час
+          format_title: Формат дати
+          timezone: Часовий пояс
+          until: Поки...
+          current_timezone: "Поточний часовий пояс:"
+          recurring:
+            every_day: "Щодня"
+            every_week: "Щотижня"
+            every_two_weeks: "Кожні два тижні"
+            every_month: "Щомісяця"
+            every_two_months: "Кожні два місяці"
+            every_three_months: "Кожні три місяці"
+            every_six_months: "Кожні півроку"
+            every_year: "Щороку"
+      default_title: "Подія на сайті %{site_name}"

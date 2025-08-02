@@ -1,0 +1,190 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Vestlus
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alati"
+          never: "Mitte kunagi"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Vestluskanali staatus muutus"
+            chat_channel_delete: "Vestlus on kustutatud"
+    chat:
+      back_to_forum: "Foorum"
+      deleted_chat_username: kustutatud
+      dates:
+        yesterday: "Eile"
+      bot: "bot"
+      create: "Loo"
+      cancel: "Tühista"
+      cancel_reply: "Tühista vastus"
+      chat_channels: "Kanalid"
+      browse_all_channels: "Sirvi kõiki kanaleid"
+      channel_settings:
+        edit: "Muuda"
+        add: "Lisa"
+        close_channel: "Sulge kanal"
+        open_channel: "Ava kanal"
+        archive_channel: "Arhiveeri kanal"
+        join: "Liitu"
+        leave: "Lahku"
+      close: "Sulge"
+      remove: "Eemalda"
+      delete: "Kustuta"
+      muted: "vaigistatud"
+      joined: "liitus"
+      email_frequency:
+        never: "Mitte kunagi"
+      header_indicator_preference:
+        never: "Mitte kunagi"
+      flag: "Tähis"
+      heading: "Vestlus"
+      join: "Liitu"
+      last_visit: "viimane visiit"
+      reply: "Vasta"
+      edit: "Muuda"
+      rebake_message: "Rekonstrueeri HTML"
+      bookmark_message: "Järjehoidja"
+      save: "Salvesta"
+      sounds:
+        none: "Pole"
+      title: "vestlus"
+      title_capitalized: "Vestlus"
+      exit: "tagasi"
+      channel_status:
+        closed: "Suletud"
+        open: "Ava"
+      browse:
+        back: "Tagasi"
+        title: Kanalid
+        filter_all: Kõik
+        filter_open: Ava
+        filter_closed: Suletud
+      chat_message_separator:
+        today: Täna
+        yesterday: Eile
+      about_view:
+        title: Pealkiri
+        name: Nimi
+        description: Kirjeldus
+      channel_info:
+        back_to_channel: "Tagasi"
+        tabs:
+          members: Liikmed
+          settings: Sätted
+        remove_member: "Eemalda"
+      new_message_modal:
+        filter: "Filter"
+        create_new_group_chat: "Looge grupivestlus"
+      direct_message_creator:
+        title: Uus sõnum
+        prefix: "Kellele:"
+      create_channel:
+        type: "Tüüp"
+        types:
+          category: "Foorum"
+          topic: "Teema"
+      composer:
+        italic_text: "esiletõstetud tekst"
+        bold_text: "rasvane tekst"
+        send: "Saada"
+      notification_levels:
+        never: "Mitte kunagi"
+      settings:
+        follow: "Liitu"
+        followed: "Liitus"
+        threading_enabled: "Sisse lülitatud"
+        threading_disabled: "Välja lülitatud"
+        notifications: "Teavitus"
+        preview: "Eelvaade"
+        save: "Salvesta"
+        saved: "Salvestatud"
+        unfollow: "Lahku"
+        admin_title: "Admin"
+        settings_title: "Sätted"
+        info_title: "Kanali info"
+        category_label: "Foorum"
+        history_label: "Ajalugu"
+        members_label: "Liikmed"
+      admin:
+        title: "Vestlus"
+      channel_list:
+        title: "Kanalid"
+      incoming_webhooks:
+        back: "Tagasi"
+        description: "Kirjeldus"
+        delete: "Kustuta"
+        emoji: "Emotikon"
+        name: "Nimi"
+        save: "Salvesta"
+        edit: "Muuda"
+        system: "süsteem"
+        url: "URL"
+        username: "Kasutajanimi"
+      selection:
+        cancel: "Tühista"
+        copy: "Kopeeri"
+        new_topic:
+          title: "Liiguta uue teema alla"
+        existing_topic:
+          title: "Liiguta olemasolevasse teemasse"
+        new_message:
+          title: "Liiguta uude sõnumisse"
+      retention_reminders:
+        short:
+          one: "%{count} päev"
+          other: "%{count} päeva"
+      emoji_picker:
+        objects: "Objektid"
+        flags: "Tähised"
+      thread:
+        title: "Pealkiri"
+        replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        settings: "Sätted"
+        last_reply: "viimane vastus"
+        notifications:
+          regular:
+            title: "Normaalne"
+          tracking:
+            title: "Jälgimine"
+          watching:
+            title: "Vaatlemine"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
+      draft_channel_screen:
+        header: "Uus sõnum"
+        cancel: "Tühista"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Sõnum
+    keyboard_shortcuts_help:
+      chat:
+        title: "Vestlus"
+    styleguide:
+      sections:
+        chat:
+          title: Vestlus
+    sidebar:
+      panels:
+        chat:
+          label: "Vestlus"

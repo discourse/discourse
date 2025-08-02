@@ -1,0 +1,459 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    discourse_narrative_bot_enabled: "הפעלת בוט העלילות של Discourse‏ (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "השבתת פוסט קבלת הפנים מאת בוט העלילות של Discourse"
+    discourse_narrative_bot_ignored_usernames: "שמות משתמשים שבוט העלילות של Discourse צריך להתעלם מהם"
+    discourse_narrative_bot_disable_public_replies: "השבתת תגובות ציבוריות מבוט העלילות של Discourse"
+    discourse_narrative_bot_welcome_post_type: "סוג פוסט קבלת הפנים שבוט העלילות של Discourse אמור לשלוח"
+    discourse_narrative_bot_welcome_post_delay: "להמתין (n) שניות בטרם שליחת פוסט קבלת פנים של בוט העלילות של Discourse."
+    discourse_narrative_bot_skip_tutorials: "מדריכים של בוט העלילות של Discourse לדילוג"
+  badges:
+    certified:
+      name: הסמכה
+      description: "השלמת הדרכת המשתמשים החדשים שלנו"
+      long_description: |
+        עיטור זה מוענק עם השלמת המדריך האינטראקטיבי למשתמש חדש בהצלחה. נקטת יוזמה ללמוד כלים בסיסיים להתדיינות וכעת הוסמכת!
+    licensed:
+      name: ברישיון
+      description: "השלמת הדרכת המשתמשים המתקדמים שלנו"
+      long_description: |
+        עיטור זה מוענק עם השלמת המדריך האינטראקטיבי משתמשים מתקדמים אינטראקטיבי בהצלחה. צברת מומחיות בתחום כלי הדיון המתקדמים וכעת קיבלת רישיון!
+  discourse_narrative_bot:
+    bio: "היי, אני לא בן אדם אמיתי. אני בוט שיכול ללמד אותך על האתר הזה. כדי לתקשר איתי, אפשר לשלוח אלי הודעה או לאזכר אותי בשמי."
+    tl2_promotion_message:
+      subject_template: "עכשיו מכשקודמת, הגיע הזמן ללמוד על כמה מהתכונות המתקדמות!"
+      text_body_template: |
+        יש להגיב להודעה הזאת עם `‎@%{discobot_username} %{reset_trigger}` כדי ללמוד עוד על מה שניתן לעשות.
+    timeout:
+      message: |-
+        היי @%{username}, מוודא מה אתך כי לא שמעתי ממך זמן מה.
+
+        - כדי להמשיך, עליך פשוט לענות לי בכל עת שמתאים לך.
+
+        - כדי לדלג על שלב זה, יש לשלוח לי את הביטוי `%{skip_trigger}`.
+
+        - כדי להתחיל מחדש יש לשלוח לי את הביטוי `%{reset_trigger}`.
+
+        אם לא מתאים לך, זה לגמרי בסדר. אני רובוט. זה לא פוגע ברגשות שלי. :sob:
+    dice:
+      trigger: "גלגול"
+      invalid: |-
+        עוד לא נוסח הכלל במתמטיקה שמאפשר שילוב כזה של קוביות, עמך הסליחה. :confounded:
+      not_enough_dice:
+        one: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
+        two: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
+        many: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
+        other: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
+      out_of_range: |-
+        ידעת ש[מספר הפאות המרבי](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) לקובייה הוגנת מתמטית הוא 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "ציטוט"
+      "1":
+        quote: "בלב ליבו של הקושי מונחת ההזדמנות"
+        author: "אלברט איינשטיין"
+      "2":
+        quote: "חופש לא שווה כלום אם הוא לא כולל את החופש לטעות."
+        author: "מהאטמה גנדי"
+      "3":
+        quote: "אל תבכה כי זה נגמר, חייך כי זה קרה."
+        author: "ד״ר סוס"
+      "4":
+        quote: "אם אתם רוצים שמשהו יתבצע כמו שצריך, עשו זאת בעצמכם."
+        author: "שארל־גיום אטיין"
+      "5":
+        quote: "האמינו שאתם יכולים ואתם מחצית הדרך לשם."
+        author: "תאודור רוזוולט"
+      "6":
+        quote: "החיים הם כמו קופסת שוקולד. אתם אף פעם לא יודעים מה תקבלו."
+        author: "אימא של פורסט גאמפ"
+      "7":
+        quote: "זהו צעד אחד קטן לאדם, צעד גדול לאנושות."
+        author: "ניל ארמסטרונג"
+      "8":
+        quote: "עשו דבר אחד בכל יום שמפחיד אתכם"
+        author: "אלינור רוזוולט"
+      "9":
+        quote: "טעויות תמיד נסלחות, אם יש את האומץ להודות בהן."
+        author: "ברוס לי"
+      "10":
+        quote: "מה ששכל האדם מסוגל להגות ולהאמין, ניתן להשגה."
+        author: "נפוליאון היל"
+      "11":
+        quote: "שלום בבית, שלום בעולם."
+        author: "מוסטפא כמאל אטאטורק"
+      "12":
+        quote: "חינוך זאת אינה הדרך להימלט מעוני, זו הדרך להילחם בו."
+        author: "ג׳וליוס נייררה"
+      "13":
+        quote: "מסע של אלף קילומטרים חייב להתחיל בצעד אחד."
+        author: "לאו דזה"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: "מזלות"
+      answers:
+        "1": "בוודאות מוחלטת"
+        "2": "כך הוחלט"
+        "3": "ללא ספק"
+        "4": "כן כמובן"
+        "5": "אפשר לסמוך על זה"
+        "6": "בעיני, כן"
+        "7": "קרוב לוודאי"
+        "8": "תחזית טובה"
+        "9": "כן"
+        "10": "הסימנים מראים שכן"
+        "11": "תגובה מעורפלת, נא לנסות שוב"
+        "12": "כדאי לשאול שוב מאוחר יותר"
+        "13": "עדיף לא לענות עכשיו"
+        "14": "קשה לחזות עכשיו"
+        "15": "נא להתרכז ולשאול שוב"
+        "16": "לא כדאי לסמוך על זה"
+        "17": "התשובה שלי היא לא"
+        "18": "המקורות שלי אומרים לא"
+        "19": "תחזית לא כל כך טובה"
+        "20": "מאוד בספק"
+      result: |-
+        > :crystal_ball:‏ %{result}
+    track_selector:
+      reset_trigger: "התחלה"
+      skip_trigger: "דילוג"
+      help_trigger: "הצגת עזרה"
+      random_mention:
+        reply: |-
+          היי! כדי לגלות מה אני יכול לעשות, יש להקליד `‎@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          אלו הפעולות שאני יודע לבצע נכון להיום:
+
+          ‎`@%{discobot_username} %{reset_trigger} {name-of-tutorial}`‎
+          > מתחיל מדריך אינטראקטיבי עבורך בלבד, בהודעה פרטית. `{name-of-tutorial}` יכול להיות כל אחד מבין: `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: אפשר לסמוך על זה
+        discobot_disabled: השבתת אותי בהעדפות שלך. עליך לאפשר עצות קבלת פנים למשתמשים חדשים כדי לתפעל אותי.
+      do_not_understand:
+        first_response: |-
+          הי, תודה על התגובה!
+
+          לצערי, כבוט שתוכנת בצורה גרועה, אני לא ממש מבין את זה. :frowning:
+        track_response: אתם יכולים לנסות שוב, או אם אתם מעדיפים לדלג על שלב זה, אימרו `%{skip_trigger}`. אחרת, כדי להתחיל מחדש, אימרו `%{reset_trigger}`.
+        second_response: |-
+          אויש, סליחה. עדיין לא הצלחתי להבין. :anguished:
+
+          אני רק רובוט, כדי לפנות למפעיל בשר ודם, כדאי לבקר ב[דף יצירת הקשר](%{base_path}/about).
+
+          בינתיים, אשב פה בצד בשקט.
+    new_user_narrative:
+      reset_trigger: "מדריך"
+      title: "תעודת השלמת הדרכה למשתמשים חדשים"
+      cert_title: "כהוקרה על סיום מוצלח של מדריך המשתמשים החדשים"
+      hello:
+        title: "ברכות!"
+        message: |-
+          תודה לך על הצטרפותך אל %{title} וברוך בואך!
+
+          - אני בסך הכול רובוט, אך [הסגל הידידותי שלנו](%{base_uri}/about) כאן כדי לסייע אם נדרשת התערבות מצד גורם אנושי.
+
+          - מטעמי אבטחה, אנו מגבילים את חופש הפעולה למשתמשים חדשים באופן זמני. עם הזמן יתאפשר לך לצבור [מיומנויות חדשות](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (לרבות [עיטורים](%{base_uri}/badges)) בהתאם לרמת ההיכרות אתך.
+
+          - אנו דוגלים ב[התנהלות קהילתית מתורבתת](%{base_uri}/guidelines) בכל עת.
+      onebox:
+        instructions: |-
+          עכשיו, אוכל לבקש ממך לשתף איתי את אחד מהקישורים האלה? יש להגיב עם **הקישור בשורה נפרדת**, והוא יתרחב אוטומטית כדי לכלול תקציר מגניב עליו.
+
+          כדי להעתיק קישור כלשהו, יש להקיש ולהחזיק במכשירים ניידים, או לחיצה ימנית בהתקן ההצבעה שלך (עכבר/משטח מגע וכו׳):
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
+        reply: |-
+          אחלה! השיטה הזו אמורה לעבוד עבור כל הקישורים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. אך חשוב לזכור, הוא חייב להיות בשורה _עצמאית_, ללא שום דבר לפני או אחרי.
+        not_found: |-
+          לא הצלחתי למצוא את הקישור בתגובה שלך, סליחה! :cry:
+
+          אפשר לנסות להוסיף את הקישור הבא בשורה נפרדת בתגובה הבאה שלך?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
+      images:
+        instructions: |-
+          הנה תמונה של חד־קרן:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          אם הוא נושא חן בעיניך (ברור שכן!) אז כפתור הלייק :heart: שמתחת לפוסט הזה מחכה ללחיצה ממך כדי שאדע שאהבת.
+
+          אפשר לבקש ממך **להגיב עם תמונה?** לא משנה איזו תמונה! צריך פשוט לגרור ולהשליך, ללחוץ על כפתור ההעלאה או להדביק אותה.
+        reply: |-
+          אחלה תמונה - לחצתי על כפתור הלייק :heart: כדי להביע את הערכתי :heart_eyes:
+        like_not_found: |-
+          שכחת לעשות לייק :heart: ל[פוסט](%{url}) שלי? :crying_cat_face:
+        not_found: |-
+          נראה שלא העלית תמונה אז בחרתי תמונה שאני _בטוח_ שתתאים לטעמך.
+
+          <%{image_url}>
+
+          עכשיו יש לנסות להעלות אותה, או להדביק את הקישור בשורה נפרדת!
+      likes:
+        instructions: |-
+          הנה תמונה של חד־קרן:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          אם הוא נושא חן בעיניך (ברור שכן!) אז כפתור הלייק :heart: שמתחת לפוסט הזה מחכה ללחיצה ממך כדי שאדע שאהבת.
+        reply: |-
+          תודה שסימנת את הפוסט שלי בלייק!
+        not_found: |-
+          שכחת לעשות לייק :heart: ל[פוסט](%{url}) שלי? :crying_cat_face:
+      formatting:
+        instructions: |-
+          למה שלא **נדגיש** או _נטה_ מספר מילים בתגובה שלך?
+
+          - יש להקליד את הצירופים **מודגש** או `נטוי`
+
+          - או ללחוץ על הכפתורים <kbd><b>B</b></kbd> או <kbd><i>I</i></kbd> בעורך
+        reply: |-
+          כל הכבוד! ניתן להשתמש גם ב־HTML וב־BBCode כדי לעצב - למידע נוסף, [ניתן להתנסות עם המדריך הזה](https://commonmark.org/help) :nerd:
+        not_found: |-
+          אללי, לא מצאתי סימוני עיצוב בתגובה שלך. :pencil2:
+
+          אולי ננסה שוב? כדאי לנסות להשתמש בכפתורי <kbd><b>B</b></kbd> להדגשה או <kbd><i>I</i></kbd> להטיה בעורך אם משהו לא מסתדר.
+      quoting:
+        instructions: |-
+          אפשר לנסות לצטט אותי בתגובה, כדי שאדע בדיוק על איזה חלק התגובה בחרת לענות?
+
+          > אם זה קפה, בבקשה תביאו לי תה; אבל אם זה תה, בבקשה תביאו לי קפה.
+          >
+          > אחד היתרונות של לדבר לעצמך זה שברור לך שלפחות מישהו או מישהי מקשיבים.
+          >
+          > יש אנשים שיודעים להשתמש במילים, ואחרים… המממ, לא ממש יודעים.
+
+          יש לבחור את הטקסט של &uarr; הציטוט המועדף עליך וללחוץ על הכפתור **ציטוט** שמופיע על גבי הבחירה שלך - או על הכפתור **מענה** בתחתית פוסט זה.
+
+          מתחת לציטוט, יש להוסיף מילה או שתיים לגבי הסיבה שבחרת בו, בגלל שאני סקרן :thinking:
+        reply: |-
+          נפלא, בחרת את הציטוט האהוב עלי! :left_speech_bubble:
+        not_found: |-
+          הממ יכול להיות שלא ציטטת אותי בתגובה שלך?
+
+          בחירה של טקסט כלשהו מתוך הפוסט שלי תקפיץ את הכפתור <kbd>**ציטוט**</kbd>. לאחר מכן לחיצה על **תגובה** עם כל טקסט שהוא תעשה את העבודה גם כן! אולי ננסה שוב?
+      bookmark:
+        instructions: |-
+          אם מעניין אותך לדעת עוד, יש לבחור ב־<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> להלן ולהוסיף<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **הודעה אישית זו לסימניות**. ביצוע המשימה בשלמותה עשוי לזכות אותך ב־:gift: עתידית!
+        reply: |-
+          מצוין! מעתה יתאפשר לך למצוא את דרכך חזרה אל הדיון בכל עת, הישר מתוך [לשונית הסימניות שבפרופיל שלך](%{bookmark_url}). עליך פשוט לבחור בתמונת הפרופיל שלך בפינה השמאלית העליונה&#8599;
+        not_found: |-
+          שוד ושבר, לא מצאתי סימניות בנושא זה. מצאת את הסימניות מתחת לכל פוסט? יש להשתמש בסמל להציג פעולות נוספות <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף אותן במקרה הצורך.
+      emoji:
+        instructions: |-
+          ייתכן שהבחנת בסמלים קטנים שהשתמשתי בהם בתגובות שלי :blue_car::dash: קוראים להם [אמוג׳י](https://he.wikipedia.org/wiki/אמוג'י). אפשר לבקש ממך **להוסיף אמוג׳י** לתגובה שלך? כל אחד מאלה יספיק:
+
+          - הקלדה של `:) ;) :D :P :O`
+
+          - יש להקליד <kbd>:</kbd> ואז להשלים את שם האמוג׳י `:tada:`
+
+          - ניתן ללחוץ על כפתור האמוג׳י <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> בעורך או במקלדת של המכשיר הנייד שלך
+        reply: |-
+          זה :sparkles: _emojitastic!_ :sparkles:
+        not_found: |-
+          איזו באסה, יש מצב שפספסת את האמוג׳י בתגובה שלך? מר הוא גורלי! :sob:
+
+          ממליץ לנסות להקליד נקודתיים <kbd>:</kbd> כדי להעלות את בוחר האמוג׳ים, לאחר מכן להקליד את האותיות הראשונות של מה שברצונך להציג, למשל: `:bird:`
+
+          לחלופין, ללחוץ על כפתור האמוג׳י <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> בעורך.
+
+          (אם העריכה היא דרך המכשיר הנייד, ניתן להקליד את האמוג׳י ישירות גם באמצעות המקלדת שלך.)
+      mention:
+        instructions: |-
+          לפעמים יעניין אותך לקבל התייחסות של חברים אחרים בפורום אפילו אם לא הגבת להם ישירות. יש להקליד `@` ואז להשלים את שם המשתמש כדי לאזכר אותם.
+
+          אפשר לבקש ממך לאזכר את **`@%{discobot_username}`** בתגובה שלך?
+        reply: |-
+          _קראתם בשמי!?_ :raised_hand: אני מאמין שכן! :wave: ובכן, אני כאן! תודה שאיזכרתם אותי. :ok_hand:
+        not_found: |-
+          איני מצליח למצוא את השם שלי בשום מקום :frowning: אפשר לבקש ממך לאזכר אותי בשם `‎@%{discobot_username}‎` שוב?
+
+          (וכן, שם המשתמש שלי מתחיל ב_disco_ (דיסקו) כמו טירוף הריקודים של שנות השבעים. אני גם [אוהב את חיי הלילה!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          אנחנו אוהבים לשמור על הדיונים שלנו חברותיים ואנו זקוקים לעזרתך [לשמור על תרבות הדיון](%{guidelines_url}). אם נתקלת בבעיה, נא לסמן את המפגע כדי לאפשר למי שכתב או ל[סגל המועיל שלנו](%{about_url}) לדעת על כך באופן פרטי. יש מגוון סיבות לסמן פוסט, החל מהצעה בלתי מזיקה לפצל נושא עד הפרה בוטה של כללי הקהילה. אם בחרת באפשרות **משהו אחר** ייפתח דיון פרטי מול המפקחים בו ניתן לשאול שאלות נוספות.
+
+          > :imp: כתבתי כאן משהו מגעיל
+
+          קדימה, נא **לסמן את הפוסט הזה** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ולבחור ב**לא ראוי** כסיבה!
+        reply: |-
+          [הסגל שלנו](%{group_url}) יקבל התראה פרטית על הסימון שלך. אם מספיק חברים בקהילה מסמנים פוסט בדגל, הוא יוסתר ליתר ביטחון. (מאחר שלא באמת כתבתי כאן משהו נבזי :angel:, הרשיתי לעצמי להסיר את סימון הדגל בינתיים.)
+        not_found: |-
+          אללי, הפוסט הנבזי שלי עדיין לא סומן בגדל כבלתי הולם. :worried: אפשר לבקש ממך לסמן אותו ב**דגל** כתוכן בלתי הולם <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
+      search:
+        instructions: |-
+          _פססט_ … החבאתי הפתעה בנושא הזה. אם מעניין אותך להיענות לאתגר, **עליך לבחור בסמל החיפוש** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> שבפינה השמאלית העליונה &#8599;, לבחור את ‚בנושא הזה’ ואז לחפש אותה.
+
+          יש לנסות לחפש את הביטוי „capy&#8203;bara” בנושא הזה
+        hidden_message: |-
+          איך החמצת את הקפיברה הזאת? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          שמת לב שחזרת להתחלה? יש להאכיל את הקפיברה המסכנה על ידי שליחת תגובה עם ** האמוג׳י `%{search_answer}`** ומיד תתבצע הקפצה לסוף.
+        reply: |-
+          הידד! מצאת אותה :tada:
+
+          - לחיפושים מורכבים יותר, יש לגשת אל [עמוד החיפוש המלא](%{search_url}).
+
+          - כדי לקפוץ למיקום כלשהו בתוך דיון ארוך, יש לנסות להשתמש בפקדי ציר הזמן שמשמאל (ומלמטה במכשירים ניידים).
+
+          - אם יש לך :keyboard: פיזית, יש לנסות ללחוץ על <kbd>?</kbd> כדי לצפות בקיצורי המקלדת השימושיים שלנו.
+        not_found: |-
+          המממ… נראה כאילו הסתבכת קצת. מתנצלים. חיפשת <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> אחר הביטוי **capy&#8203;bara**?
+      end:
+        message: |-
+          תודה שנשארת אתי עד כאן ‎@%{username}‎! הכנתי את זה עבורך, הרווחת את זה ביושר:
+
+          %{certificate}
+
+          זה הכול לבינתיים! כדאי לבקר ב[**נושאי הדיון העדכניים ביותר שלנו**](%{base_uri}/latest) או ב[**קטגוריות דיון**](%{base_uri}/categories). :sunglasses:
+
+          (אם בא לך לדבר אתי שוב, עליך פשוט לאזכר את `‎@%{discobot_username}‎` בכל עת!)
+      certificate:
+        alt: "תעודת הישג"
+    advanced_user_narrative:
+      reset_trigger: "מדריך מתקדם"
+      cert_title: "כהוקרה על סיום של מדריך המשתמשים המתקדמים בהצלחה"
+      title: ":arrow_up: יכולות משתמשים מתקדמים"
+      start_message: |-
+        ממרום הוותק שצברת בשימוש _מתקדם_, יצא לך כבר לבקר ב[עמוד ההעדפות שלך](%{base_uri}/my/preferences) ‎@%{username}‎? ישנן דרכים רבות להתאים את החוויה שלך, כגון בחירת ערכת עיצוב כהה או בהירה.
+
+        אך זאת כבר סטייה מהנושא, נצא לדרך!
+      edit:
+        bot_created_post_raw: "‎@%{discobot_username}‎ הוא, עד כה, הבוט המגניב ביותר שאני מכיר :wink:"
+        instructions: |-
+          כולם טועים לפעמים. אך אל חשש, תמיד ניתן לערוך את הפוסטים שלך כדי לתקן אותם!
+
+          אולי נתחיל ב**עריכת** הפוסט שיצרתי בשמך?
+        not_found: |-
+          נראה לי שטרם ערכת את ה[פוסט](%{url}) שיצרתי עבורך. אולי ננסה שוב?
+
+          יש להשתמש בסמל <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> כדי להעלות את העורך.
+        reply: |-
+          מרשים ביותר!
+
+          נא לשים לב ששינויים שנערכו לאחר 5 דקות יופיעו כמהדורות עריכה ציבוריות ויופיע סמל קטן של עיפרון בפינה השמאלית העליונה לצד מספר המהדורות.
+      delete:
+        instructions: |-
+          אם ברצונך למשוך פוסט שיצרת, באפשרותך למחוק אותו.
+
+          קדימה, נא לגשת ו**למחוק** כל אחד מהפוסטים שלעיל באמצעות פעולת <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> ה**מחיקה**. עם זאת, לא למחוק את הפוסט הראשון!
+        not_found: |-
+          ייתכן שלא הבחנתי בפוסטים שנמחקו עדיין? להזכירך, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> להציג עוד יחשוף את <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> המחיקה.
+        reply: |-
+          ואו! :boom:
+
+          כדי לשמר את המשכיות הדיון, המחיקות אינן מיידיות, לכן הפוסט יוסר לאחר זמן מה.
+      recover:
+        deleted_post_raw: "מדוע הפוסט שלי נמחק על ידי ‎@%{discobot_username}?‏ :anguished:"
+        instructions: |-
+          שוד ושבר! נראה שמחקתי לך בטעות פוסט חדש שהרגע יצרתי עבורך.
+
+          יש מצב לבקש ממך <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **לבטל את המחיקה** שלו?
+        not_found: |-
+          הסתבכת? כדאי לזכור כי <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> להציג עוד יחשוף את <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> ביטול המחיקה.
+        reply: |-
+          ואו, זה היה קרוב! תודה שתיקנת את זה :wink:
+
+          מוטב לשים לב כי לרשותך %{deletion_after} שעות לבטל מחיקת פוסט.
+      category_hashtag:
+        instructions: |-
+          ידעת שיש לך אפשרות להתייחס לקטגוריות ולתגיות בפוסט שלך? למשל, ראית את הקטגוריה %{category}?
+
+          יש להקליד `#` בכל מקום שהוא לאורך משפט ולבחור בקטגוריה או תגית כלשהם.
+        not_found: |-
+          המממ, אני לא רואה שם קטגוריה בשום מקום. אפשר לבקש ממך להעתיק את זה בתגובה הבאה שלך?
+
+          ```text
+          אוכל ליצור קישור לקטגוריה דרך #
+          ```
+        reply: |-
+          מצוין! חשוב לזכור שזה עובד על קטגוריות _וגם_ על תגיות, אם תגיות פעילות.
+      change_topic_notification_level:
+        instructions: |-
+          לכל נושא יש רמת התראה. החל מ־‚רגילה’, שתודיע רק כאשר מתבצעת פנייה ישירה אליך.
+
+          כבררת מחדל, רמת ההתראה כבררת מחדל להודעה פרטית מוגדרת לרמה הגבוהה ביותר ‚מעקב צמוד’, המשמעות היא שתישלח התראה על כל תגובה חדשה. ניתן לדרוס את רמת ההתראה של _כל נושא שהוא_ לכדי ‚מעקב צמוד’, ‚מעקב’ או ‚השתקה’.
+
+          הבה נשנה את רמת ההתראה של הנושא הזה. בתחתית הנושא יופיע כפתור שמציין שהנושא הזה **במעקב צמוד** שלך. אפשר לבקש ממך לשנות את רמת ההתראה לכדי **מעקב** בלבד?
+        not_found: |-
+          נראה כאילו העיניים :eyes: שלך עדיין כאן! אם לא הצלחת למצוא אותו, כפתור רמת ההתראות ממוקם בתחתית הנושא.
+        reply: |-
+          עבודה נפלאה! אני מאוד מקווה שלא השתקת את הנושא הזה כיוון שלפעמים יש לי נטייה לקשקשנות :grin:.
+
+          נא לשים לב שבעת תגובה לנושא או קריאת נושא במשך למעלה ממספר דקות, רמת ההתראות משתנה אוטומטית למצב ‚במעקב’. ניתן לשנות זאת ב[העדפות המשתמש שלך](%{base_uri}/my/preferences).
+      poll:
+        instructions: |-
+          ידעת שאפשר להוסיף סקר לכל פוסט שהוא? נא לנסות להשתמש בסמל <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> בעורך כדי **להרכיב סקר**.
+        not_found: |-
+          אופס! לא היה אף סקר בתגובה שלך.
+
+          יש להשתמש בסמל גלגל השיניים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> שבעורך, או להעתיק ולהדביק את הסקר הזה בתגובה הבאה שלך:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
+        reply: |-
+          פששש, אחלה סקר! איך לימדתי אותך?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        instructions: |-
+          לפעמים יכול להיות שיעניין אותך **להסתיר פרטים** בתגובות שלך:
+
+          - בעת דיון על נקודות עלילה בסרט או בסדרת טלוויזיה שתיחשבנה לקלקלן (ספוילר).
+
+          - כשבפוסט שלך יש הרבה פרטי רשות שעשויים להציף אם נקראים בבת אחת.
+
+          [details=יש לבחור את זה כדי לראות אם זה עובד!]
+          1. יש לבחור את סמל גלגל השיניים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> בעורך.
+          2. לבחור ב„הסתרת פרטים”.
+          3. לערוך את תקציר הפרטים ולהוסיף את התוכן שלך.
+          [/details]
+
+          אפשר לבקש ממך להשתמש בסמל גלגל השינויים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> בעורך כדי להוסיף סעיף פרטים בתגובה הבאה?
+        not_found: |-
+          מתקשה ביצירת וידג׳ט פירוט? נא לנסות לכלול את הסימון שלהלן בתגובה הבאה שלך:
+
+          ```text
+          [details=יש לבחור אותי לקבלת פרטים]
+          להלן הפרטים
+          [/details]
+          ```
+        reply: |-
+          עבודה מעולה — תשומת הלב שלך _לפרטים_ ראויה להערצה!
+      end:
+        message: |-
+          חרכת את הדרך ממש כמו _משתמש מתקדם_ :bow:
+
+          %{certificate}
+
+          זה כל מה שרציתי לומר לך.
+
+          להתראות לבינתיים! אם בא לך לדבר אתי שוב, תמיד אפשר לשלוח לי הודעה :sunglasses:
+      certificate:
+        alt: "תעודת סיום, מסלול משתמש מתקדם"

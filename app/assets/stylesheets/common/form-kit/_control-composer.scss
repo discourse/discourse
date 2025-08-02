@@ -1,0 +1,32 @@
+.form-kit__control-composer {
+  // same default effective height (150px) than a text control
+  height: 189px;
+  width: 100%;
+
+  .d-editor-preview-wrapper {
+    display: none;
+  }
+
+  &.--preview {
+    .d-editor-preview-wrapper {
+      display: block;
+    }
+  }
+
+  .d-editor-button-bar {
+    > .btn {
+      border-radius: 0;
+    }
+  }
+
+  .d-editor-textarea-wrapper {
+    @include default-input {
+      padding: 0 !important;
+    }
+  }
+
+  .d-editor-input {
+    // same padding than a text control
+    padding: 0.5em;
+  }
+}

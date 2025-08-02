@@ -1,0 +1,149 @@
+<section id="d-splash">
+  <style>
+    html {
+      overflow-y: hidden !important;
+    }
+
+    /* user picked a theme where the "regular" scheme is dark */
+    <%- if dark_color_scheme? %>
+      html {
+        background-color: #<%= light_color_hex_for_name("secondary") %>;
+      }
+
+      #d-splash {
+        --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
+      }
+    <%- elsif forced_light_mode? %>
+      html {
+        background-color: #<%= light_color_hex_for_name("secondary") %>;
+      }
+
+      #d-splash {
+        --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
+      }
+    <%- elsif forced_dark_mode? %>
+      html {
+        background-color: #<%= dark_color_hex_for_name("secondary") %>;
+      }
+
+      #d-splash {
+        --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
+      }
+    <%- else %>
+      /* user picked a theme a light scheme and also enabled a dark scheme */
+
+      /* deal with light scheme first */
+      @media (prefers-color-scheme: light) {
+        html {
+          background-color: #<%= light_color_hex_for_name("secondary") %>;
+        }
+
+        #d-splash {
+          --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
+        }
+      }
+
+      /* then deal with dark scheme */
+      @media (prefers-color-scheme: dark) {
+        html {
+          background-color: #<%= dark_color_hex_for_name("secondary") %>;
+        }
+
+        #d-splash {
+          --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
+        }
+      }
+    <%- end %>
+
+    #d-splash {
+      display: grid;
+      place-items: center;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      z-index: 1001;
+    }
+
+    #d-splash .preloader-image {
+      --splash-dot-size: max(1vw, 25px);
+      --splash-dot-spacing: calc(var(--splash-dot-size) * 1.5);
+      width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
+      height: 100vh;
+      background-size: cover;
+    }
+
+    @keyframes d-splash-fade-in {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .dots {
+      animation-name: d-splash-loader;
+      animation-timing-function: ease-in-out;
+      animation-duration: 3s;
+      animation-iteration-count: infinite;
+      animation-delay: calc(var(--n) * 0.15s);
+
+      position: absolute;
+      top: calc(50% - var(--splash-dot-size) / 2);
+      left: calc((50% - var(--splash-dot-size) / 2) + (var(--n) * var(--splash-dot-spacing)));
+      transform-origin: calc((var(--splash-dot-spacing) * var(--n) * -1) + var(--splash-dot-size)/2) center;
+
+      width: var(--splash-dot-size);
+      height: var(--splash-dot-size);
+      border-radius: 50%;
+
+      background-color: var(--dot-color);
+      filter: saturate(2) opacity(0.85);
+      opacity: 0;
+    }
+
+    @keyframes d-splash-loader {
+      0% {
+        opacity: 0;
+        transform: scale(1);
+      }
+      45% {
+        opacity: 1;
+        transform: scale(0.7);
+      }
+      65% {
+        opacity: 1;
+        transform: scale(0.7);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+    }
+  </style>
+
+  <div class="preloader-image" elementtiming="discourse-splash-visible">
+    <div class="dots" style="--n:-2;"></div>
+    <div class="dots" style="--n:-1;"></div>
+    <div class="dots" style="--n:0;"></div>
+    <div class="dots" style="--n:1;"></div>
+    <div class="dots" style="--n:2;"></div>
+  </div>
+  <script nonce="<%= csp_nonce_placeholder %>">
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><!-- LCP candidate image ${".".repeat(5000)} --></svg>`;
+    document.querySelector("#d-splash .preloader-image").style.backgroundImage = `url('data:image/svg+xml,${svg}')`
+  </script>
+
+  <noscript>
+    <style>
+      html {
+        overflow-y: revert !important;
+      }
+
+      #d-splash {
+        display: none;
+      }
+    </style>
+  </noscript>
+</section>

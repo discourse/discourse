@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Переглянути посібник для нових користувачів"
+        welcome_message: "Надіслати всім новим користувачам - вітальне повідомлення з швидким переходом до посібника користувача"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Наративний бот Discourse"

@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  site_settings:
+    presence_enabled: "Ցուցադրե՞լ այն օգտատերերին, որոնք այս պահին պատասխանում են ներկայիս թեմային կամ խմբագրում են ներկայիս գրառումը:"
+    presence_max_users_shown: "Ցուցադրված օգտատերերի առավելագույն քանակը:"

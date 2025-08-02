@@ -1,0 +1,11 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "with_uploads": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "with_uploads"
+  ]
+}

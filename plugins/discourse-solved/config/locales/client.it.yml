@@ -1,0 +1,76 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Risoluzione Discourse"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "accettata"
+    solutions: "Soluzioni"
+    solved:
+      title: "Risolti"
+      allow_accepted_answers: "Consenti al proprietario dell'argomento e allo staff di contrassegnare una risposta come soluzione"
+      solved_topics_auto_close_hours: "Chiudi automaticamente l'argomento (n) ore dopo l'ultima risposta una volta che l'argomento è stato contrassegnato come risolto."
+      accept_answer: "Selezionare se questa risposta risolve il problema"
+      accepted_description: "Questa è la soluzione accettata per questo argomento"
+      has_no_accepted_answer: "Questo argomento non ha soluzioni"
+      unaccept_answer: "Deselezionare se questa risposta non risolve più il problema"
+      accepted_answer: "Soluzione"
+      solution: "Soluzione"
+      solution_summary:
+        one: "soluzione"
+        other: "soluzioni"
+      accepted_notification: "<p> <span>%{username}</span> %{description} </p>"
+      topic_status_filter:
+        all: "tutti"
+        solved: "risolto"
+        unsolved: "non risolto"
+      no_solved_topics_title: "Non hai ancora risolto nessun argomento"
+      no_solved_topics_title_others: "%{username} non ha ancora risolto nessun argomento"
+      no_solved_topics_body: "Quando fornisci una risposta utile a un argomento, la tua risposta potrà essere selezionata come soluzione dal proprietario dell'argomento o dallo staff."
+      no_answer:
+        title: La tua domanda ha avuto risposta?
+        description: "Evidenzia la risposta e aiuta gli altri utilizzando il pulsante della soluzione sotto la risposta corretta."
+      notification:
+        title: "il tuo messaggio è stato contrassegnato come soluzione"
+    topic_statuses:
+      solved:
+        help: "Questo argomento ha una soluzione"
+    search:
+      advanced:
+        statuses:
+          solved: "sono risolti"
+          unsolved: "non sono risolti"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Evento risolto"
+          accepted_solution: "Quando un utente contrassegna un messaggio come risposta accettata"
+          unaccepted_solution: "Quando un utente contrassegna un messaggio come risposta non accettata"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Accetta/Rifiuta una soluzione.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Qualsiasi
+          fields:
+            maximum_trust_level:
+              label: Livello di attendibilità
+              description: Gli utenti sotto questo livello di attendibilità attiveranno questa automazione

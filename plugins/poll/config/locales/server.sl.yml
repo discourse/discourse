@@ -1,0 +1,51 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  site_settings:
+    poll_enabled: "Dovoli ankete?"
+    poll_maximum_options: "Največje dovoljeno število izbir v anketi."
+    poll_edit_window_mins: "Število minut po objavi prispevka, ko je možno anketo še spreminjati."
+    poll_minimum_trust_level_to_create: "Določite najnižjo stopnjo zaupanja za dodajanje anket."
+    poll_groupable_user_fields: "Nabor imen uporabniških polj, ki jih lahko uporabite za združevanje in filtriranje rezultatov ankete."
+  poll:
+    poll: "anketa"
+    invalid_argument: "Napačna vrednost '%{value}' za parameter '%{argument}'."
+    multiple_polls_with_same_name: "Vnesli ste več anket z enakim imenom: <strong>%{name}</strong>. Uporabite '<code>name</code>' lastnost za enolično določanje imena ankete."
+    default_poll_must_have_at_least_1_option: "Anketa mora vsebovati vsaj eno izbiro."
+    named_poll_must_have_at_least_1_option: "Anketa z imenom <strong>%{name}</strong> mora vsebovati vsaj eno izbiro."
+    default_poll_must_have_less_options:
+      one: "Anketa mora imeti manj kot %{count} izbiro."
+      two: "Anketa mora imeti manj kot %{count} izbiri."
+      few: "Anketa mora imeti manj kot %{count} izbire."
+      other: "Anketa mora imeti manj kot %{count} izbir."
+    named_poll_must_have_less_options:
+      one: "Anketa z imenom <strong>%{name}</strong> mora imeti manj kot %{count} izbiro."
+      two: "Anketa z imenom <strong>%{name}</strong> mora imeti manj kot %{count} izbiri."
+      few: "Anketa z imenom <strong>%{name}</strong> mora imeti manj kot %{count} izbire."
+      other: "Anketa z imenom <strong>%{name}</strong> mora imeti manj kot %{count} izbir."
+    default_poll_must_have_different_options: "Anketa mora imeti različne izbire."
+    named_poll_must_have_different_options: "Anketa z imenom <strong>%{name}</strong> mora imeti različne izbire."
+    default_poll_must_not_have_any_empty_options: "Anketa ne sme vsebovati praznih izbir."
+    named_poll_must_not_have_any_empty_options: "Anketa z imenom <strong>%{name}</strong> ne sme vsebovati praznih izbir."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Anketa z več možnostjo več izbirami ima napačne parametre."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Anketa z imenom <strong>%{name}</strong> z možnostjo več izbirami ima napačne parametre."
+    requires_at_least_1_valid_option: "Izbrati morate vsaj 1 izbiro."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Ne morete več spremeniti ankete po prvih %{minutes} minutah."
+      cannot_edit_named_poll_with_votes: "Ne morete več spremeniti ankete <strong>${name}</strong> po prvih %{minutes} minutah."
+    no_poll_with_this_name: "Nobena anketa z imenom <strong>%{name}</strong> povezna z tem prispevkom."
+    post_is_deleted: "Ne more delovati na izbrisanem prispevku."
+    user_cant_post_in_topic: "Ne morete glasovati, ker nimate pravice objavljati v tej temi."
+    topic_must_be_open_to_vote: "Tema mora biti odprta, da se lahko glasuje."
+    poll_must_be_open_to_vote: "Anketa mora biti odprta, da se lahko glasuje."
+    topic_must_be_open_to_toggle_status: "Tema mora biti odprta, da se lahko preklopi status."
+    only_staff_or_op_can_toggle_status: "Samo član osebja ali avtor lahko preklopi status ankete."
+    insufficient_rights_to_create: "Nimate dovoljenja za ustvarjanje anket."
+    email:
+      link_to_poll: "Kliknite za prikaz ankete."
+    user_field:
+      no_data: "Ni podatkov"

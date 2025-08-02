@@ -1,0 +1,164 @@
+p > code,
+li > code,
+strong > code,
+em > code {
+  padding: 2px 4px;
+  background: var(--inline-code-bg);
+  white-space: pre-wrap;
+  color: var(--primary);
+}
+
+a > code {
+  padding: 2px 4px;
+  background: var(--inline-code-bg);
+  white-space: pre-wrap;
+  color: var(--tertiary);
+}
+
+code {
+  color: var(--primary-very-high);
+  background: var(--hljs-bg);
+  border-radius: var(--d-border-radius);
+  font-size: 14px;
+  line-height: calc((13 + 4) / 13);
+}
+
+pre > code {
+  display: block;
+  padding: 12px;
+  max-height: 500px;
+}
+
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+  font-size: inherit;
+}
+
+.hljs-comment,
+.hljs-doctag,
+.hljs-code,
+.hljs-meta {
+  color: var(--hljs-comment);
+  font-style: italic;
+}
+
+.hljs-color {
+  color: var(--hljs-color);
+}
+
+.hljs-keyword,
+.hljs-subst,
+.hljs-request,
+.hljs-status {
+  color: var(--hljs-keyword);
+}
+
+.hljs-number {
+  color: var(--hljs-number);
+}
+
+.hljs-tag,
+.hljs-tag .hljs-title {
+  color: var(--hljs-tag);
+  font-weight: normal;
+}
+
+.hljs-string,
+.hljs-tag .hljs-string,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type {
+  color: var(--hljs-string);
+}
+
+.hljs-title {
+  color: var(--hljs-title);
+}
+
+.hljs-quote,
+.hljs-operator,
+.hljs-selector-pseudo,
+.hljs-selector-tag,
+.hljs-link {
+  color: var(--hljs-string);
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-literal,
+.hljs-class .hljs-title {
+  color: var(--hljs-title);
+}
+
+.hljs-name {
+  color: var(--hljs-name);
+}
+
+.hljs-punctuation {
+  color: var(--hljs-punctuation);
+}
+
+.hljs-attr {
+  color: var(--hljs-attr);
+}
+
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  color: var(--hljs-attr);
+}
+
+.hljs-variable {
+  color: var(--hljs-variable);
+}
+
+.hljs-attribute {
+  color: var(--hljs-attribute);
+}
+
+.hljs-regexp {
+  color: var(--success);
+}
+
+.hljs-symbol,
+.hljs-prompt {
+  color: var(--hljs-symbol);
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: var(--hljs-name);
+}
+
+.hljs-deletion {
+  background: var(--danger-low);
+  color: var(--hljs-deletion);
+}
+
+.hljs-addition {
+  background: var(--success-low);
+  color: var(--hljs-addition);
+}
+
+.hljs-section {
+  color: var(--hljs-name);
+}
+
+.hljs-bullet {
+  color: var(--hljs-attribute);
+}
+
+.hljs-emphasis {
+  color: var(--hljs-comment);
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

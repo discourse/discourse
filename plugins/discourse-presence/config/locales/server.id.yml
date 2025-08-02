@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  site_settings:
+    presence_enabled: "Tampilkan pengguna yang sedang membalas topik saat ini, atau mengedit posting saat ini?"
+    presence_max_users_shown: "Jumlah maksimum pengguna yang ditampilkan."

@@ -1,0 +1,135 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    discourse_automation:
+      back: Tagasi
+      edit: Muuda
+      fields:
+        user:
+          label: Kasutaja
+        pm:
+          title:
+            label: Pealkiri
+          raw:
+            label: Sisu
+        pms:
+          title:
+            label: Pealkiri
+          raw:
+            label: Sisu
+        group:
+          label: Grupp
+        text:
+          label: Tekst
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Märgis
+        recurring:
+          frequencies:
+            minute: minut
+            hour: tund
+            day: päev
+            week: nädal
+            month: kuu
+            year: aasta
+        topic:
+          fields:
+            restricted_topic:
+              label: Teema ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Sildid
+            restricted_categories:
+              label: Liigid
+          created: Loodud
+          with_images: Pildid
+          with_links: Viited
+          with_code: Kood
+          with_uploads: Üleslaadimised
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Emafoorum
+        pm_created:
+          fields:
+            restricted_user:
+              label: Kasutajad
+            restricted_group:
+              label: Grupp
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Foorum
+            restricted_tags:
+              label: Sildid
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Sildid
+        post:
+          fields:
+            topic:
+              label: Teema ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupp
+        user_global_notice:
+          fields:
+            level:
+              label: Tase
+          levels:
+            success: Korras
+            error: Viga
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupp
+            badge:
+              label: Märgis
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Kasutaja
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Teema ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: Teema ID
+            user:
+              label: Kasutaja
+        close_topic:
+          fields:
+            topic:
+              label: Teema ID
+            user:
+              label: Kasutaja
+      models:
+        trigger:
+          name:
+            label: Päästik
+        automation:
+          name:
+            label: Nimi
+          trigger:
+            label: Päästik
+          version:
+            label: Versioon
+          status:
+            label: Staatus
+          enabled:
+            label: Sisse lülitatud
+          disabled:
+            label: Välja lülitatud

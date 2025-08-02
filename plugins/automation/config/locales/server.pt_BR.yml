@@ -1,0 +1,153 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    discourse_automation_enabled: "Ativar plugin discourse-automation"
+  discourse_automation:
+    models:
+      fields:
+        required_field: O campo `%{name}` deve ser preenchido em `%{target}:%{target_name}`.
+        invalid_metadata: Os dados para `%{field}` são inválidos ou o componente `%{component}` é desconhecido.
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Pelo menos um dos 'custom_fields' ou 'user_profile' deve ser fornecido."
+      user_badge_granted:
+        title: Emblema de usuário(a) concedido
+        doc: Aciona uma automação quando um(a) usuário(a) recebe um emblema.
+      user_first_logged_in:
+        title: Usuário(a) logado(a) pela primeira vez
+        doc: Aciona uma automação quando um(a) usuário(a) fizer login pela primeira vez.
+      stalled_topic:
+        title: Tópico parado
+        doc: Aciona uma automação quando o tópico não receber uma nova resposta do(a) proprietário(a) do tópico por um período de tempo especificado. É recomendável definir o escopo desse acionador para uma tag/categoria, pois o número de tópicos impactados pode ser muito alto. Como medida de segurança, o número de tópicos impactados é limitado a 250.
+      api_call:
+        title: Chamada de API
+        description: Fazendo uma solicitação POST para acionar uma automação
+        doc: A solicitação POST deve ser feita para `/automations/:id/trigger.json` com uma chave de API global.
+      category_created_edited:
+        title: Categoria criada/editada
+        description: Quando uma categoria for criada ou editada, a automação será acionada
+      recurring:
+        title: Recorrente
+      point_in_time:
+        title: Ponto no tempo
+        description: Quando a data for atingida, a automação será acionada
+      user_added_to_group:
+        title: Usuário(a) adicionado(a) ao grupo
+        description: Quando um(a) usuário(a) é adicionado(a) ao grupo especificado, a automação será acionada
+      user_removed_from_group:
+        title: Usuário(a) removido(a) do grupo
+        description: Quando um(a) usuário(a) for removido(a) do grupo especificado, a automação será acionada
+      user_promoted:
+        title: Usuário(a) promovido(a)
+        description: Quando um(a) usuário(a) for promovido de um nível de confiança para outro
+        transition_placeholder: "de %{from_level_name} para %{to_level_name}"
+      stalled_wiki:
+        title: Wiki parada
+        description: Quando uma wiki não for editada por um período maior que o definido, a automação será acionada
+      post_created_edited:
+        title: Postagem criada/editada
+        description: Quando uma postagem válida for editada ou criada, a automação será acionada
+      pm_created:
+        title: Mensagem pessoal criada
+        description: Quando uma MP válida for criada, a automação será acionada
+      topic_tags_changed:
+        title: Etiquetas de tópico alteradas
+        description: A automatização será ativada quando as etiquetas forem alteradas.
+      topic:
+        title: Tópico
+        description: O script associado será usado apenas no tópico especificado, isso é útil para scripts fazendo validação, por exemplo
+      after_post_cook:
+        title: Depois da falsificação da postagem
+        description: Quando o conteúdo de uma postagem for falsificado, a automação será acionada
+      user_updated:
+        title: Após atualização do(a) usuário(a)
+        description: Quando um(a) usuário(a) atualizar alguma informação, a automação será acionada
+    scriptables:
+      post:
+        title: Criar uma postagem
+        description: Criar uma postagem em um tópico específico
+      topic:
+        title: Criar um tópico
+        description: Criar um tópico como um(a) usuário(a) específico(a)
+      flag_post_on_words:
+        title: Sinalizar postagem em palavras
+        description: Sinaliza uma postagem se ela contiver palavras especificadas
+        flag_message: "A postagem contém palavras não permitidas: %{words}"
+        doc: A postagem contendo todas as palavras dadas de uma só vez será sinalizada e ocultada. Observe que definir várias palavras delimitadas por vírgula será usado como entidade composta (cada palavra deve estar presente).
+      zapier_webhook:
+        title: Webhook Zapier
+        description: Chama um zap com o contexto de um acionador como corpo
+      auto_responder:
+        title: Respondente automático
+        description: Posta uma resposta a uma postagem incluindo as palavras-chave especificadas
+      auto_tag_topic:
+        title: Marcar tópico automaticamente
+        description: Adiciona automaticamente etiquetas a um tópico
+      pin_topic:
+        title: Fixar tópico
+        description: Fixa um tópico especificado em uma determinada data
+      banner_topic:
+        title: Criar tópico de banner
+        description: Transformar tópico em um banner
+      gift_exchange:
+        title: Troca de presentes
+        description: Permite parear anonimamente os(as) usuários(as) de um grupo para trocarem presentes.
+        doc: A troca de presentes requer um grupo existente com pelo menos três usuários(as). Na data escolhida, cada usuário(a) do grupo será pareado com um(a) presenteador(a) e um(a) presenteado(a).
+      send_pms:
+        title: Enviar MPs
+        description: Permite o envio de MPs (possivelmente atrasadas).
+        doc: Permite enviar várias MPs para um(a) usuário(a). Cada MP aceita um atraso.
+      suspend_user_by_email:
+        title: Suspender usuário(a) por e-mail
+        description: Suspenda automaticamente uma conta com base no endereço de e-mail
+      user_global_notice:
+        title: Aviso global do(a) usuário(a)
+        description: Permite exibir um aviso global para um(a) usuário(a)
+      user_group_membership_through_badge:
+        title: Assinatura de grupo de usuários(as) sem emblema
+        description: Modificar assinatura de grupo de usuários(as) com base no emblema
+      suspend_user_by_email_with_api_call:
+        doc: Ao acionar `suspend_user_by_email` com uma chamada de API, o endpoint espera que um `email` válido esteja presente nos parâmetros enviados. `reasons` e `suspend_until (formato ISO 8601)` também podem ser usados para substituir valores de campos padrão.
+      user_global_notice_with_stalled_topic:
+        doc: Após o acionamento por meio de um tópico parado, o(a) proprietário(a) do tópico receberá o aviso global.
+      user_global_notice_with_first_accepted_solution:
+        doc: Após o acionamento por meio da primeira solução aceita, o(a) autor(a) da solução receberá o aviso global.
+      send_pms_with_api_call:
+        doc: Ao usar o script `send pms` com o acionador `api call`, o parâmetro `usernames` da sua solicitação será usado para preencher a lista de receptores.
+      topic_required_words:
+        title: Palavras obrigatórias do tópico
+        description: Permite definir uma lista de palavras obrigatórias em um tópico, pelo menos uma deve ser usada em cada postagem.
+        doc: As palavras obrigatórias do tópico requerem um tópico. Quando uma postagem for editada/criada, ela será validada em relação à lista de palavras, pelo menos uma deve estar presente.
+        errors:
+          must_include_word: "A postagem deve incluir pelo menos uma destas palavras: %{words}"
+      close_topic:
+        title: Fechar tópico
+        description: Fecha um tópico com uma mensagem de encerramento opcional
+      append_last_edited_by:
+        title: Anexar última edição por
+        description: Adiciona os detalhes de "última edição por" da postagem na parte inferior do conteúdo preparado.
+        text: "Última edição por @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Anexar última verificação por
+        description: Adiciona os detalhes de "última verificação por" da postagem na parte inferior do conteúdo preparado.
+        text: "Última verificação por @%{username} %{date_time}"
+        summary: Verificar documento
+        details: "Realizar verificação no documento: "
+        button_text: Concluído(a)
+      add_user_to_group_through_custom_field:
+        title: "Adicionar usuário(a) ao grupo por meio do campo personalizado do(a) usuário(a)"
+        description: "Adicione usuários(as) automaticamente aos grupos quando fizerem login com uma verificação recorrente"
+      group_category_notification_default:
+        title: "Notificação de categoria de grupo por padrão"
+        description: "Definir o nível de notificação padrão de uma categoria para membros de um grupo"
+      send_chat_message:
+        title: "Enviar mensagem de chat"
+        description: "Envie uma mensagem de chat personalizada para um canal"
+      random_assign:
+        title: "Atribuição aleatória"
+        description: "Atribua tópicos a um grupo aleatoriamente"

@@ -1,0 +1,374 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  site_settings:
+    discourse_narrative_bot_enabled: "Omogoči Discourse pripovednega robota (Discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Onemogoči sporočilo dobrodošlice od Discobota"
+    discourse_narrative_bot_ignored_usernames: "Uporabniška imena, ki naj jih Discobot ignorira"
+    discourse_narrative_bot_disable_public_replies: "Onemogočite javne odgovore od Discobota"
+    discourse_narrative_bot_welcome_post_type: "Napišite sporočilo dobrodošlice, ki naj ga Discobot pošlje novim uporabnikom"
+    discourse_narrative_bot_welcome_post_delay: "Počakajte (n) sekund preden Discobot pošlje sporočilo dobrodošlice."
+    discourse_narrative_bot_skip_tutorials: "Preskoči vaje Discourse pripovednega robota"
+  badges:
+    certified:
+      name: Certificirani
+      description: "Dokončali naš vodič za nove uporabnike"
+      long_description: |
+        Ta značka je podeljena po uspešno opravljenem vodiču za nove uporabnike. Prevzeli ste pobudo, da ste se naučili osnovnih orodij za razprave in ste sedaj certificirani!
+    licensed:
+      name: Licencirani
+      description: "Dokončali ste naš napredni vodič"
+      long_description: |
+        Ta značka vam je podeljena po uspešno opravljenem vodiču za napredne uporabnike. Sedaj obvladate napredna orodja za razpravo - in tako ste licencirani!
+  discourse_narrative_bot:
+    bio: "Pozdravljeni, jaz nisem prava oseba. Sem robot, ki te lahko naučim o tej strani. Za pogovor z menoj mi pošlji sporočilo ali omeni moje ime."
+    tl2_promotion_message:
+      subject_template: "Zdaj, ko ste napredovali, je čas, da se seznanite z nekaterimi naprednimi funkcijami!"
+      text_body_template: |
+        Odgovorite na to sporočilo z `@%{discobot_username} %{reset_trigger}`, če želite izvedeti več o tem, kaj lahko storite.
+    timeout:
+      message: |-
+        Pozdravljeni @%{username}, samo preverjam, ker vas že nekaj časa nisem slišal.
+
+        - Za nadaljevanje, mi pošlji sporočilo - kadarkoli.
+
+        - Če bi rad preskočil ta korak, mi recite `%{skip_trigger}`.
+
+        - Za začetek znova recite `%{reset_trigger}`.
+
+        Če pa nočete nadaljevati, pa tudi prav. Sem robot. Ne boste me prizadeli. :sob:
+    dice:
+      trigger: "kocke"
+      invalid: |-
+        Oprostite, matematično ni mogoče vreči to kombinacijo kock. :confounded:
+      out_of_range: |-
+        Ali ste vedeli da je [največje število stranic](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematično pravično kocko 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "citati"
+      "1":
+        quote: "V centru vsake težave leži priložnost"
+        author: "Albert Einstein"
+      "2":
+        quote: "Svobodo se ne splača imeti, če ne vključuje tudi pravico do napake."
+        author: "Mahatma Gandhi"
+      "3":
+        quote: "Ne jokaj zato ker je konec, ampak se nasmej ker se je zgodilo."
+        author: "Dr Seuss"
+      "4":
+        quote: "Če hočeš da je nekaj narejeno pravilno, potem naredi sam."
+        author: "Charles-Guillaume Étienne"
+      "5":
+        quote: "Verjemi da zmoreš in si že na pol poti."
+        author: "Theodore Roosevelt"
+      "6":
+        quote: "Življenje je kot škatla s čokoladicami. Nikoli ne veš, katero boš dobil."
+        author: "Forrest Gumpova mama"
+      "7":
+        quote: "To je majhen korak za človeka, velik za človeštvo."
+        author: "Neil Armstrong"
+      "8":
+        quote: "Vsak dan naredi eno stvar ki te straši."
+        author: "Eleanor Roosevelt"
+      "9":
+        quote: "Napake so vedno odpustljive, če le imaš pogum da jih priznaš."
+        author: "Bruce Lee"
+      "10":
+        quote: "Karkoli si človek lahko zamisli ali verjame, lahko tudi doseže."
+        author: "Napoleon Hill"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: "prihodnost"
+      answers:
+        "1": "Zagotovo"
+        "2": "Zatrdno je tako"
+        "3": "Brez dvoma"
+        "4": "Ja, zagotovo"
+        "5": "Lahko računaš na to"
+        "6": "Kakor jaz vidim, da"
+        "7": "Najbrž"
+        "8": "Dober obet"
+        "9": "Ja"
+        "10": "Znaki kažejo na da"
+        "11": "Odgovor meglen, poskusi znova"
+        "12": "Vprašaj ponovno kasneje"
+        "13": "Trenutno bolje da ti ne povem"
+        "14": "Trenutno ne morem predvideti"
+        "15": "Osredotoči se in vprašaj ponovno"
+        "16": "Ne računaj na to"
+        "17": "Moj odgovor je ne"
+        "18": "Moji viri trdijo da ne"
+        "19": "Obeti niso najboljši"
+        "20": "Zelo dvomljivo"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "začni"
+      skip_trigger: "preskoči"
+      help_trigger: "prikaži pomoč"
+      random_mention:
+        reply: |-
+          Pozdravljeni! Da izveste, kaj znam, recite `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Trenutno znam narediti naslednje stvari:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > V osebnem sporočilu za vas prične interaktivni vodič.`{name-of-tutorial}"je lahko eden od:"%{tracks}«.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Lahko se zanesete nanjo
+        discobot_disabled: Onemogočili ste me v svojih nastavitvah. Za interakcijo z mano morate dovoliti namige novim uporabnikom.
+      do_not_understand:
+        first_response: |-
+          Hvala za odgovor!
+
+          Na žalost, kot slabo sprogramiran robot, tega čisto ne razumem. :frowning:
+        track_response: Lahko poskusite znova, ali če hočete preskočiti ta korak, recite `%{skip_trigger}`. Za ponoven začetek recite `%{reset_trigger}`.
+        second_response: |-
+          Se opravičujem. Še vedno ne razumem. :anguished:
+
+          Sem samo robot, ampak če hočete govoriti s pravo osebo, pojdite na [O nas stran](%{base_path}/about).
+
+          Medtem vas ne bom motil.
+    new_user_narrative:
+      reset_trigger: "vodič"
+      title: "Priznanje o opravljenem vodiču za novega uporabnika"
+      cert_title: "Priznanje za uspešno končan vodič za nove uporabnike."
+      hello:
+        title: "Pozdravljeni!"
+        message: |-
+          Dobrodošli - zahvaljujemo se vam za pridružitev %{title}!
+
+          - Jaz sem samo robot ampak [naše osebje](%{base_uri}/about) je tudi na voljo, če potrebujete pomoč prave osebe.
+
+          - Iz varnostnih razlogov je omejeno kaj lahko novi uporabniki počnete. Ko vas bolje spoznamo, boste dobili [nove zmožnosti](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (in [značke](%{base_uri}/badges)).
+
+          - Verjamemo v [prijazno obnašanje v skupnosti](%{base_uri}/guidelines).
+      onebox:
+        reply: |-
+          Super! To bo delovalo za večino <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> povezav. Zapomnite si le, da mora biti povezava _sama v vrstici_, brez česarkoli pred ali za njo.
+      images:
+        instructions: |-
+          Tu je slika samoroga:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Če vam je všeč (in komu ni?), potem izberite :heart: gumb pod tem sporočilom, da mi to sporočite.
+
+          Ali lahko **odgovorite s sliko?** Katerakoli slika bo zadoščala! Povlecite in spustite, pritisnite gumb za prenos slike ali celo kopirajte in prilepite v urejevalnik.
+        reply: |-
+          Lepa slika – pritisnil sem :heart: gumb, da vam povem kako zelo mi je všeč. :heart_eyes:
+        like_not_found: |-
+          Ali ste pozabili všečkati :heart: moj [prispevek?](%{url}) :crying_cat_face:
+        not_found: |-
+          Kaže da niste uspeli naložiti slike, zato sem jaz izbral takšno, ki vam bo _zagotovo_ všeč.
+
+          <%{image_url}>
+
+          Poskusite naložiti to sliko ali pa prilepite povezavo do slike v svojo vrstico!
+      likes:
+        instructions: |-
+          Tu je slika samoroga:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Če vam je všeč (in komu ne bi bila?), potem izberite gumb :heart: pod tem sporočilom, da mi to sporočite.
+        reply: |-
+          Hvala, da ste všečkali mojo objavo!
+        not_found: |-
+          Ali ste pozabili všečkati :heart: moj [prispevek?](%{url}) :crying_cat_face:
+      formatting:
+        instructions: |-
+          Ali lahko naredite nekaj besed **krepkih** ali _poudarjenih_ v vašem odgovoru?
+
+          - napišite `**krepko**` ali `_poudarjeno_`
+
+          - ali pritisnite <kbd><b>B</b></kbd> ali <kbd><i>I</i></kbd> gumba v urejevalniku
+        reply: |-
+          Super opravljeno! Uporabite lahko tudi HTML ali BBCode za oblikovanje – več lahko izveste [v tem vodniku](https://commonmark.org/help) :nerd:
+        not_found: |-
+          Ah, nisem našel nobenega oblikovanja v vašem odgovoru. :pencil2:
+
+          Ali lahko poskusite ponovno? Uporabite <kbd><b>B</b></kbd> krepko ali <kbd><i>I</i></kbd> poudarjeno gumbe v vašem urejevalniku.
+      quoting:
+        instructions: |-
+          Ali me lahko poskusite citirati v svojem odgovoru, tako da bom vedel na kateri del sporočila odgovarjate?
+
+          > Če je to kava, mi prosim prinesite čaj; če pa je čaj, pa mi prinesite kavo.
+          >
+          > Ena prednost pogovora s samim seboj je v tem, da veste da vsaj nekdo posluša.
+          >
+          > Nekateri ljudje znajo z besedami, spet drugi… oh, ah, pač ne znajo.
+
+          Izberite katerikoli del &uarr; besedila hočete in potem pritisnete **Citiraj** gumb, ki se bo pojavil nad vašo izbiro – ali **Odgovori** gumb pod tem sporočilom.
+
+          Pod citiranim besedilom napišite besedo ali dve zakaj ste izbrali prav tega, ker me res zanima :thinking:
+        reply: |-
+          Enkratno, izbrali ste moj najljubši citat! :left_speech_bubble:
+        not_found: |-
+          Izgleda, da me niste citirali v vašem odgovoru?
+
+          Z izbiro poljubnega besedila v mojem prispevku se vam bo prikazal <kbd>**Citiraj**</kbd> gumb. Tudi pritisk na **Odgovori** pri izbranem besedilu bo zadoščal! Ali lahko poskusite znova?
+      bookmark:
+        instructions: |-
+          Da se naučite kaj novega, kliknite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> spodaj in <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **zaznamujte to zasebno sporočilo**. Če to storite se vam v prihodnje mogoče obeta :gift:!
+        not_found: |-
+          Oh, ne vidim nobenega zaznamka v tej temi. Ali ste našli zaznamek pod vsakim prispevkom? Uporabite prikaži več <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> za prikaz ostalih akcij.
+      emoji:
+        instructions: |-
+          Mogoče ste opazili, da uporabljam male sličice v svojih odgovorih :blue_car::dash: to so [emojiji](https://en.wikipedia.org/wiki/Emoji). Ali lahko vi **dodate emoji** v vaš odgovor? Katerikoli način od spodnjih bo deloval:
+
+          - Napišite `:) ;) :D :P :O`
+
+          - Vnesite dvopičje <kbd>:</kbd> in potem vnesite ime emojija `:tada:`
+
+          - Pritisnite emoji gumb <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> v urejevalniku ali na vaši mobilni tipkovnici.
+        reply: |-
+          To je :sparkles: _emoji-kratno!_ :sparkles:
+        not_found: |-
+          Oops, ne najdem nobenega Emoji v vašem odgovou? Ne! :sob:
+
+          Poskusite vnesti dvopičje <kbd>:</kbd>, da se vam prikaže izbira emoji, potem pa napišite nekaj znakov besede, ki jo hočete, recimo `:bird:`
+
+          Ali pa pritisnite na emoji gumb <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> v urejevalniku.
+
+          (Če ste na mobilni napravi, lahko vnesete Emoji tudi neposredno na vaši tipkovnici.)
+      mention:
+        instructions: |-
+          Kdaj boste hoteli nekoga opozoriti na razpravo, tudi če mu ne boste odgovorili neposredno. Vnestite `@` in potem vnesite ime uporabnika za omembo.
+
+          Ali lahko omenite **`@%{discobot_username}`** v svojem odgovoru?
+        reply: |-
+          _Ali je nekdo omenil moje ime!?_ :raised_hand: Če se ne motim ste bili to vi! :wave: No, tukaj sem! Hvala, ker ste me omenili. :ok_hand:
+        not_found: |-
+          Nikjer ne vidim svojega imena :frowning: Ali lahko me lahko poskusite še enkrat omeniti kot `@%{discobot_username}` ?
+
+          (In ja, moje ime se črkuje kot _disco_, kot plesna norost iz 1970s. Imam rad [nočno življenje!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        not_found: |-
+          Oh ne, moja grda objava še vedno ni bila označena kot neprimerna. :worried: Ali jo lahko označite kot neprimerno z uporabo **zastavice** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne pozabite uporabiti gumba <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , ki razkrije več dejanj za vsako objavo.
+      search:
+        hidden_message: |-
+          Kako ste lahko zgrešili to kapibaro? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Ste opazili, da ste zopet na začetku? Nahranite to ubogo lačno kapibaro tako, da **odgovorite z emojijem "%{search_answer}"** in samodejno boste skočili na konec.
+        reply: |-
+          Super, našli ste ga :tada:
+
+          - Za bolj natančna iskanja, pojdite na [napredno iskanje](%{search_url}).
+
+          - Za premik kamorkoli v dolgem pogovoru, uporabite časovnico teme na desni (ali spodaj na mobilnih napravah).
+
+          - Če imate fizično :keyboard:, pritisnite <kbd>?</kbd> za prikaz uporabnih bližnjic na tipkovnici.
+        not_found: |-
+          Hmm… izgleda da imate težave. Res mi je žal. Ali ste iskali <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> besedo **capy&#8203;bara**?
+      end:
+        message: |-
+          Hvala, ker ste vztrajali z menoj, @%{username}! Ker ste ga res zaslužili sem vam izdelal:
+
+          %{certificate}
+
+          Hvala zaenkrat! Preverite [**naše najnovejše teme**](%{base_uri}/latest) ali [**kategorije**](%{base_uri}/categories). :sunglasses:
+
+          (Če si boste zaželeli ponovno pogovoriti z menoj, da se naučite še več, mi samo pošljite zasebno sporočilo ali me kadarkoli omenite `@%{discobot_username}` !)
+      certificate:
+        alt: "Priznanje"
+    advanced_user_narrative:
+      reset_trigger: "napredni vodič"
+      cert_title: "Priznanje za uspešno končan vodič za napredne uporabnike."
+      title: ":arrow_up: Napredne uporabniške funkcije"
+      start_message: |-
+        Ali ste kot _napredni_ uporabnik obiskali [vaše uporabniške nastavitve](%{base_uri}/my/preferences), @%{username}? Tam je veliko prilagoditev vaše izkušnje, kot je recimo izbira svetlega ali temnega izgleda.
+
+        Da ne zaidem, začnimo!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} je, daleč najbolj, kul robot, ki ga poznam :wink:"
+        instructions: |-
+          Vsakdo naredi napako. Ampak ne skrbite, vedno lahko uredite svoj prispevek in popravite napake!
+
+          Lahko začnete tako, da **uredite** prispevek, ki sem ga naredil v vašem imenu?
+        not_found: |-
+          Izgleda, da še vedno niste uredili [prispevka](%{url}), ki sem ga naredil za vas. Ali lahko poskusite znova?
+
+          Uporabite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> ikono, da odprete urejevalnik.
+        reply: |-
+          Enkratno!
+
+          Vse spremembe narejene po 5 minutah bodo vidne kot verzije in se bodo prikazale kot majhna svinčnik ikona zgoraj desno z številom verzij.
+      delete:
+        instructions: |-
+          Če bi radi umaknili prispevek, ki ste ga objavili, ga lahko enostavno izbrišete.
+
+          Pojdite in **izbrišite** katerikoli od vaših prispevkov zgoraj tako da pritisnete na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **zbriši** akcijo. Samo ne izbrišite prvega prispevka!
+        not_found: |-
+          Še vedno ne vidim izbrisanega sporočila? Zapomnite se da bo izbira prikaži več <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> razkril akcijo <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> izbriši.
+        reply: |-
+          Hej! :boom:
+
+          Zato da ohranimo celovitost pogovora, izbrisi niso takojšnji, tako da se prispevek ne izbriše še nekaj časa.
+      recover:
+        deleted_post_raw: "Zakaj je @%{discobot_username} izbrisal moj prispevek? :anguished:"
+        instructions: |-
+          Oh, ne! Izgleda ste po nesreči izbrisali nov prispevek, ki sem vam ga jaz pravkar naredil za vas.
+
+          Ali mi naredite uslugo in **prekličete izbris**?
+        not_found: |-
+          Imate težavo? Uporabite prikaži več<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da razkrijete akcijo <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> prekliči izbris.
+        reply: |-
+          Uf, to je bilo pa blizu! Hvala, da ste to rešili :wink:
+
+          Vedite, da imate samo ur%{deletion_after}ur za preklic izbrisa prispevka.
+      category_hashtag:
+        reply: |-
+          Odlično! Zapomnite si da to deluje tako za kategorije _kot_ za oznake, če so omogočene.
+      change_topic_notification_level:
+        not_found: |-
+          Izgleda, da še vedno opazujete :eyes: to temo! Če imate težavo najti nivo obveščanja, poglejte levo spodaj pod to temo.
+        reply: |-
+          Odlično opravljeno! Upam, da niste utišali to temo, ker sem jaz kdaj preveč klepetav :grin:.
+
+          Ko odgovorite v temo ali ko berete temo več kot nekaj minut, se bo nivo obveščanja samodejno nastavil na 'Sledim'. To lahko spremenite v [vaših uporabniških nastavitvah](%{base_uri}/my/preferences).
+      poll:
+        reply: |-
+          Hej, zanimiva anketa! Kako dobro sem vas naučil?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        not_found: |-
+          Imate težavo pri dodajanju skritega besedila? Poskusite vključiti naslednje v vaš naslednji odgovor:
+
+          ```text
+          [details=Izberi me za podrobnosti]
+          Tukaj so skrite podrobnosti
+          [/details]
+          ```
+        reply: |-
+          Enkratno — vaš občutek za _podrobnosti_ je občudovanja vreden!
+      end:
+        message: |-
+          Ta vodič ste predelali res kot pravi _napredni uporabnik_ :bow:
+
+          %{certificate}
+
+          To je vse kar sem pripravil za vas.
+
+          Nasvidenje zaenkrat! Če boste ponovno hoteli govoriti z menoj, mi lahko kadarkoli pošljite sporočilo. :sunglasses:
+      certificate:
+        alt: "Priznanje za napredne uporabnike"

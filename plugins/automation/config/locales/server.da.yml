@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  site_settings:
+    discourse_automation_enabled: "Aktiver discourse-automation plugin"
+  discourse_automation:
+    triggerables:
+      api_call:
+        title: API-kald
+      category_created_edited:
+        title: Kategori oprettet/redigeret
+      user_added_to_group:
+        title: Bruger tilføjet til gruppe
+      user_removed_from_group:
+        title: Bruger fjernet fra gruppe
+      topic:
+        title: Emne
+    scriptables:
+      post:
+        title: Opret et indlæg
+      zapier_webhook:
+        title: Zapier webhook
+      pin_topic:
+        title: Fastgør Emne
+      close_topic:
+        title: Luk emne
+      append_last_checked_by:
+        button_text: Færdig

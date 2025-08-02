@@ -1,0 +1,13 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse Spoiler Alert"
+  js:
+    spoiler:
+      title: Blur Spoiler
+      label:
+        show: "Show hidden content"
+    composer:
+      spoiler_text: "This text will be blurred"

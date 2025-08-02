@@ -1,0 +1,38 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.notifications-filter {
+      display: inline-flex;
+      position: relative;
+
+      .select-kit-collection {
+        padding: 0.25em;
+      }
+
+      .notifications-filter-header {
+        padding: 0.5em;
+        background: none;
+        outline: none;
+        cursor: pointer;
+
+        .filter-text {
+          margin-right: 0.5em;
+          color: var(--primary-medium);
+          cursor: pointer;
+          margin-bottom: 0;
+        }
+
+        .header-text {
+          color: var(--tertiary);
+          cursor: pointer;
+          margin-bottom: 0;
+        }
+
+        .d-icon {
+          color: var(--primary-medium);
+          margin: 0 0 0 0.25em;
+          font-size: var(--font-up-2);
+        }
+      }
+    }
+  }
+}

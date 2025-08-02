@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "פרטי Discourse"
+  js:
+    details:
+      title: הסתרת פרטים
+    composer:
+      details_title: תקציר
+      details_text: "טקסט זה יוסתר"

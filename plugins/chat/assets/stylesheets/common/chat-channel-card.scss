@@ -1,0 +1,88 @@
+.chat-channel-card {
+  display: grid;
+  grid-template-areas:
+    "title cta"
+    "membercount ."
+    "description description";
+  grid-template-rows: auto auto 1fr;
+  align-items: center;
+  position: relative;
+  padding: 0.75rem 1rem;
+  background-color: var(--primary-very-low);
+  border-radius: var(--d-border-radius);
+  min-height: 0;
+  min-width: 0;
+  border-left: 5px solid transparent;
+
+  &.--closed,
+  &.--archived {
+    opacity: 0.6;
+  }
+
+  &__header {
+    @include ellipsis;
+    align-items: center;
+    display: flex;
+    grid-area: title;
+    height: min-content;
+  }
+
+  &__read-restricted,
+  &__muted {
+    color: var(--primary-medium);
+  }
+
+  &__read-restricted {
+    font-size: var(--font-down-2-rem);
+  }
+
+  &__muted {
+    font-size: var(--font-down-1-rem);
+  }
+
+  &__description {
+    @include line-clamp(2);
+    align-self: flex-start;
+    color: var(--primary-medium);
+    padding-top: 0.5rem;
+    grid-area: description;
+  }
+
+  &__members {
+    font-size: var(--font-down-1-rem);
+    grid-area: membercount;
+  }
+
+  &__name {
+    @include ellipsis;
+  }
+
+  &__name-container {
+    display: flex;
+    gap: 0.25em;
+    align-items: center;
+    color: var(--primary);
+    font-size: var(--font-up-1-rem);
+    text-decoration: none;
+    min-width: 0;
+
+    &:visited,
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  &__leave-btn {
+    padding-right: 0;
+
+    &:focus {
+      @include default-focus;
+    }
+  }
+
+  &__cta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}

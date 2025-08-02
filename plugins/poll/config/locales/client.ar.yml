@@ -1,0 +1,186 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    poll:
+      voters:
+        zero: "ناخب"
+        one: "ناخب واحد"
+        two: "ناخبان"
+        few: "ناخبين"
+        many: "ناخبًا"
+        other: "ناخب"
+      total_votes:
+        zero: "صوت إجمالي"
+        one: "صوت واحد إجمالي"
+        two: "صوتان إجماليان"
+        few: "أصوات إجمالية"
+        many: "صوتًا إجماليًا"
+        other: "صوت إجمالي"
+      votes:
+        zero: "%{count} صوت"
+        one: "صوت واحد"
+        two: "صوتان"
+        few: "%{count} أصوات"
+        many: "%{count} صوتًا"
+        other: "%{count} صوت"
+      average_rating: "متوسط التقييمات: <strong>%{average}</strong>."
+      public:
+        title: "تكون الأصوات <strong>مرئية للعامة</strong>."
+      results:
+        groups:
+          title: "عليك أن تكون عضوًا في %{groups} للتصويت على استطلاع الرأي هذا."
+        vote:
+          title: "ستظهر النتائج بعد <strong>التصويت</strong>."
+        closed:
+          title: "ستظهر النتائج بعد <strong>إغلاق الاستطلاع</strong>."
+        staff:
+          title: "تظهر النتائج لأعضاء <strong>فريق العمل</strong> فقط."
+        tabs:
+          votes: "الأصوات"
+          outcome: "النتيجة"
+      multiple:
+        help:
+          at_least_min_options:
+            zero: "اختر <strong>%{count} خيار</strong> على الأقل."
+            one: "اختر <strong>خيارًا واحدًا (%{count})</strong> على الأقل."
+            two: "اختر <strong>خيارَين (%{count})</strong> على الأقل."
+            few: "اختر <strong>%{count} خيارات</strong> على الأقل."
+            many: "اختر <strong>%{count} خيارًا</strong> على الأقل."
+            other: "اختر <strong>%{count} خيار</strong> على الأقل."
+          up_to_max_options:
+            zero: "اختر ما يصل إلى <strong>%{count} خيار</strong>."
+            one: "اختر ما يصل إلى <strong>خيار واحد (%{count})</strong>."
+            two: "اختر ما يصل إلى <strong>خيارَين (%{count})</strong>."
+            few: "اختر ما يصل إلى <strong>%{count} خيارات</strong>."
+            many: "اختر ما يصل إلى <strong>%{count} خيارًا</strong>."
+            other: "اختر ما يصل إلى <strong>%{count} خيار</strong>."
+          x_options:
+            zero: "اختر <strong>%{count} خيار</strong>."
+            one: "اختر <strong>خيارًا واحدًا (%{count})</strong>."
+            two: "اختر <strong>خيارَين (%{count})</strong>."
+            few: "اختر <strong>%{count} خيارات</strong>."
+            many: "اختر <strong>%{count} خيارًا</strong>."
+            other: "اختر <strong>%{count} خيار</strong>."
+          between_min_and_max_options: "اختر بين <strong>%{min} و%{max} من الخيارات</strong>."
+      cast-votes:
+        title: "الإدلاء بصوتك"
+        label: "صوِّت اﻵن!"
+      show-results:
+        title: "عرض نتائج استطلاع الرأي"
+        label: "النتائج"
+      show-tally:
+        title: "إظهار نتائج التصويت حسب عدد الأصوات"
+        label: "عرض العداد"
+      show-percentage:
+        title: "إظهار نتائج التصويت كنسبة مئوية"
+        label: "العرض كنسبة مئوية"
+      remove-vote:
+        title: "إزالة صوتك"
+        label: "التراجع عن التصويت"
+      hide-results:
+        title: "العودة إلى تصويتاتك"
+        label: "تصويت"
+      group-results:
+        title: "تجميع الأصوات حسب حقل المستخدم"
+        label: "عرض التفاصيل"
+      export-results:
+        title: "تصدير نتائج الاستطلاع"
+        label: "تصدير"
+      open:
+        title: "فتح استطلاع الرأي"
+        label: "فتح"
+        confirm: "هل تريد بالتأكيد فتح استطلاع الرأي هذا؟"
+      close:
+        title: "إغلاق الاستطلاع"
+        label: "إغلاق"
+        confirm: "هل تريد بالتأكيد إغلاق استطلاع الرأي هذا؟"
+      automatic_close:
+        closes_in: "سيتم الإغلاق بعد <strong>%{timeLeft}</strong>."
+        age: "تم الإغلاق منذ <strong>%{age}</strong>."
+      breakdown:
+        title: "نتائج استطلاع الرأي"
+        votes: "%{count} صوت"
+        breakdown: "التفاصيل"
+        percentage: "النسبة المئوية"
+        count: "العدد"
+      ranked_choice:
+        title:
+          rounds: "الجولات"
+          outcome: "النتيجة"
+        none: "لا يوجد"
+        majority: "الأغلبية"
+        eliminated: "مستبعد"
+        round: "الجولة"
+        winner:
+          zero: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولة‎."
+          one: "كان الفائز هو‎ %{winner} ‎بعد جولة واحدة‎."
+          two: "كان الفائز هو‎ %{winner} ‎بعد جولتَين ‎(%{count})"
+          few: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولات‎."
+          many: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولة‎."
+          other: "كان الفائز هو‎ %{winner} ‎بعد‎ %{count} ‎جولة‎."
+        tied:
+          zero: "تعادل بعد‎ %{count} ‎جولة بين المرشحين التاليين‎:"
+          one: "تعادل بعد جولة واحدة بين المرشحين التاليين‎:"
+          two: "تعادل بعد جولتَين‎ (%{count}) ‎بين المرشحين التاليين‎:"
+          few: "تعادل بعد‎ %{count} ‎جولات بين المرشحين التاليين‎:"
+          many: "تعادل بعد‎ %{count} ‎جولة بين المرشحين التاليين‎:"
+          other: "تعادل بعد‎ %{count} ‎جولة بين المرشحين التاليين‎:"
+      options:
+        label: "الخيارات"
+        ranked_choice:
+          abstain: "الامتناع"
+          highest_priority: "(أعلى درجة أولوية)"
+          lowest_priority: "(أدنى درجة أولوية)"
+          login: "سجِّل الدخول للتصويت‎!"
+      error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
+      error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."
+      error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."
+      error_while_exporting_results: "عذرًا، حدث خطأ في أثناء تصدير نتائج استطلاع الرأي هذا."
+      ui_builder:
+        title: إنشاء استطلاع رأي
+        insert: إدراج استطلاع رأي
+        help:
+          options_min_count: يُرجى إدخال {1} خيار على الأقل.
+          options_max_count: أدخِل %{count} خيار على الأكثر.
+          invalid_min_value: يجب أن تكون أدنى قيمة هي 1 على الأقل.
+          invalid_max_value: يجب أن تكون أقصى قيمة هي 1 على الأقل، لكنها أقل من أو تساوي عدد الخيارات.
+          invalid_values: يجب أن يكون الحد الأدنى للقيمة أصغر من الحد الأقصى للقيمة.
+          min_step_value: الحد الأدنى لقيمة المسافة هو 1
+        poll_type:
+          label: النوع
+          regular: اختيار فردي
+          multiple: اختيارات متعددة
+          ranked_choice: اختيار مصنَّف
+          number: التقييم بالأرقام
+        poll_result:
+          label: عرض النتائج...
+          always: مرئية دائمًا
+          vote: بعد التصويت فقط
+          closed: عند إغلاق الاستطلاع
+          staff: لفريق العمل فقط
+        poll_groups:
+          label: تقييد التصويت على هذه المجموعات
+        poll_chart_type:
+          label: مخطط النتيجة
+          bar: شريط
+          pie: دائرة
+        poll_config:
+          max: الحد الأقصى للخيارات
+          min: الحد الأدنى للخيارات
+          step: المسافة
+        poll_public:
+          label: عرض أسماء المصوِّتين
+        poll_title:
+          label: العنوان (اختياري)
+        poll_options:
+          label: الخيارات (واحد لكل سطر)
+          add: إضافة خيار
+        automatic_close:
+          label: إغلاق الاستطلاع تلقائيًا
+        show_advanced: "إظهار الخيارات المتقدمة"
+        hide_advanced: "إخفاء الخيارات المتقدمة"

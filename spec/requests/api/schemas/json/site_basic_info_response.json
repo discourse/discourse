@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "logo_url": {
+      "type": "string"
+    },
+    "logo_small_url": {
+      "type": "string"
+    },
+    "apple_touch_icon_url": {
+      "type": "string"
+    },
+    "favicon_url": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "header_primary_color": {
+      "type": "string"
+    },
+    "header_background_color": {
+      "type": "string"
+    },
+    "login_required": {
+      "type": "boolean"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "include_in_discourse_discover": {
+      "type": "boolean"
+    },
+    "mobile_logo_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "logo_url",
+    "logo_small_url",
+    "apple_touch_icon_url",
+    "favicon_url",
+    "title",
+    "description",
+    "header_primary_color",
+    "header_background_color",
+    "login_required",
+    "locale",
+    "include_in_discourse_discover",
+    "mobile_logo_url"
+  ]
+}

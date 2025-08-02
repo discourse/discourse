@@ -1,0 +1,43 @@
+// Right to left styles.
+.rtl {
+  .d-icon-align-right,
+  .d-icon-angles-right,
+  .d-icon-angle-right,
+  .d-icon-arrow-right,
+  .d-icon-caret-right,
+  .d-icon-chevron-right,
+  .d-icon-hand-point-right,
+  .d-icon-quote-right {
+    transform: rotate(180deg);
+  }
+
+  .d-icon-align-left,
+  .d-icon-angles-left,
+  .d-icon-angle-left,
+  .d-icon-arrow-left,
+  .d-icon-caret-left,
+  .d-icon-chevron-left,
+  .d-icon-hand-point-left,
+  .d-icon-quote-left {
+    transform: rotate(180deg);
+  }
+}
+
+// For the support_mixed_text_direction setting
+html:not(.rtl) .cooked ul[dir="rtl"],
+html:not(.rtl) .d-editor-preview ul[dir="rtl"],
+.rtl .cooked ul[dir="ltr"],
+.rtl .d-editor-preview ul[dir="ltr"] {
+  padding-left: 0;
+  padding-right: 1.25em;
+  margin-right: 1.25em;
+}
+
+.rtl .ace_placeholder {
+  direction: rtl !important;
+  text-align: right !important;
+
+  [dir="ltr"] {
+    text-align: left !important;
+  }
+}

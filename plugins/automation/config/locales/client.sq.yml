@@ -1,0 +1,124 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    discourse_automation:
+      back: Kthehu mbrapa
+      edit: Redaktoni
+      fields:
+        user:
+          label: User
+        pm:
+          title:
+            label: Titulli
+          raw:
+            label: Trupi
+        pms:
+          title:
+            label: Titulli
+          raw:
+            label: Trupi
+        group:
+          label: Grupi
+        text:
+          label: Tekst
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Stemë
+        recurring:
+          frequencies:
+            day: dit
+            week: javë
+            month: muaj
+            year: vit
+        topic:
+          fields:
+            restricted_topic:
+              label: ID e temës
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Etiketat
+            restricted_categories:
+              label: Categories
+          created: Krijuar
+          with_images: Imazhet
+          with_links: Lidhjet
+          with_code: Kodi
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Kategoria prind
+        pm_created:
+          fields:
+            restricted_user:
+              label: Users
+            restricted_group:
+              label: Grupi
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategori
+            restricted_tags:
+              label: Etiketat
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Etiketat
+        post:
+          fields:
+            topic:
+              label: ID e temës
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupi
+        user_global_notice:
+          levels:
+            error: Gabim
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupi
+            badge:
+              label: Stemë
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: User
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID e temës
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID e temës
+            user:
+              label: User
+        close_topic:
+          fields:
+            topic:
+              label: ID e temës
+            user:
+              label: User
+      models:
+        trigger:
+          name:
+            label: Trigger
+        automation:
+          name:
+            label: Emri
+          trigger:
+            label: Trigger
+          version:
+            label: Versioni
+          enabled:
+            label: Aktivizuar

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+  width="12px"
+  height="12px"
+  viewBox="0 0 12 12"
+  version="1.0"
+  id="svg1849"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns="http://www.w3.org/2000/svg">
+  <defs
+    id="defs1841">
+    <polygon
+      id="path-1"
+      points="19 13 13 13 13 19 11 19 11 13 5 13 5 11 11 11 11 5 13 5 13 11 19 11"/>
+  </defs>
+  <g
+    transform="translate(-6.000000, -6.000000)"
+    style="fill:#000;fill-opacity:1">
+    <use
+      xlink:href="#path-1"
+      style="fill:#000;fill-opacity:1"/>
+  </g>
+</svg>

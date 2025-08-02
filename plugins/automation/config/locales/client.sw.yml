@@ -1,0 +1,131 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    discourse_automation:
+      back: Iliyopita
+      edit: Hariri
+      fields:
+        user:
+          label: Mtumiaji
+        pm:
+          title:
+            label: Kichwa cha Habari
+          raw:
+            label: Mwili
+        pms:
+          title:
+            label: Kichwa cha Habari
+          raw:
+            label: Mwili
+        group:
+          label: Kikundi
+        text:
+          label: Neno
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Beji
+        recurring:
+          frequencies:
+            day: siku
+            week: wiki
+            month: mwezi
+            year: mwaka
+          fields:
+            recurrence:
+              label: Kurudiarudia
+        topic:
+          fields:
+            restricted_topic:
+              label: Utambulisho wa Mada
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Lebo
+            restricted_categories:
+              label: Kategoria
+          created: Imetengenezwa
+          with_images: Picha
+          with_links: Viungo
+          with_code: Kodi
+          with_uploads: Upakiaji
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Kategoria Miliki
+        pm_created:
+          fields:
+            restricted_user:
+              label: Watumiaji
+            restricted_group:
+              label: Kikundi
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategoria
+            restricted_tags:
+              label: Lebo
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Lebo
+        post:
+          fields:
+            topic:
+              label: Utambulisho wa Mada
+        group_category_notification_default:
+          fields:
+            group:
+              label: Kikundi
+        user_global_notice:
+          levels:
+            success: Mafanikio
+            error: Hitilafu
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Kikundi
+            badge:
+              label: Beji
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Mtumiaji
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Utambulisho wa Mada
+        banner_topic:
+          fields:
+            topic_id:
+              label: Utambulisho wa Mada
+            user:
+              label: Mtumiaji
+        close_topic:
+          fields:
+            topic:
+              label: Utambulisho wa Mada
+            user:
+              label: Mtumiaji
+      models:
+        trigger:
+          name:
+            label: Anzisha
+        automation:
+          name:
+            label: Jina
+          trigger:
+            label: Anzisha
+          version:
+            label: Toleo
+          enabled:
+            label: Imeruhusiwa
+          disabled:
+            label: Imezuiwa

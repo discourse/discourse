@@ -1,0 +1,145 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "user_actions": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "excerpt": {
+              "type": "string"
+            },
+            "action_type": {
+              "type": "integer"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "avatar_template": {
+              "type": "string"
+            },
+            "acting_avatar_template": {
+              "type": "string"
+            },
+            "slug": {
+              "type": "string"
+            },
+            "topic_id": {
+              "type": "integer"
+            },
+            "target_user_id": {
+              "type": "integer"
+            },
+            "target_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "target_username": {
+              "type": "string"
+            },
+            "post_number": {
+              "type": "integer"
+            },
+            "post_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "user_id": {
+              "type": "integer"
+            },
+            "acting_username": {
+              "type": "string"
+            },
+            "acting_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "acting_user_id": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "deleted": {
+              "type": "boolean"
+            },
+            "hidden": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "post_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "action_code": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "category_id": {
+              "type": "integer"
+            },
+            "closed": {
+              "type": "boolean"
+            },
+            "archived": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "excerpt",
+            "action_type",
+            "created_at",
+            "avatar_template",
+            "acting_avatar_template",
+            "slug",
+            "topic_id",
+            "target_user_id",
+            "target_name",
+            "target_username",
+            "post_number",
+            "post_id",
+            "username",
+            "name",
+            "user_id",
+            "acting_username",
+            "acting_name",
+            "acting_user_id",
+            "title",
+            "deleted",
+            "hidden",
+            "post_type",
+            "action_code",
+            "category_id",
+            "closed",
+            "archived"
+          ]
+        }
+    }
+  },
+  "required": [
+    "user_actions"
+  ]
+}

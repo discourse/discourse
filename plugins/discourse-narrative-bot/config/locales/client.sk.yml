@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Začnite s novým používateľským návodom pre všetkých nových používateľov"
+        welcome_message: "Pošlite všetkým novým používateľom uvítaciu správu s rýchlym sprievodcom"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Príbehový Bot Discourse"

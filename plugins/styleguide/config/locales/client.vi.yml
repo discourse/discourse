@@ -1,0 +1,85 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    styleguide:
+      welcome: "Để bắt đầu, hãy chọn một phần từ menu bên trái."
+      categories:
+        atoms: Nguyên tử
+        molecules: Phân tử
+      sections:
+        typography:
+          title: "Kiểu chữ"
+          example: "Chào mừng đến với Discourse"
+        date_time_inputs:
+          title: "Ngày/giờ nhập"
+        font_scale:
+          title: "Hệ thống phông chữ"
+        colors:
+          title: "Màu sắc"
+        icons:
+          title: "Biểu tượng"
+          full_list: "Xem danh sách đầy đủ các biểu tượng Font Awesome"
+        buttons:
+          title: "Nút"
+        dropdowns:
+          title: "Trình đơn thả xuống"
+        categories:
+          title: "Chuyên mục"
+        navigation:
+          title: "Điều hướng"
+        navigation_bar:
+          title: "Thanh điều hướng"
+        navigation_stacked:
+          title: "Điều hướng ngăn xếp"
+        categories_list:
+          title: "Danh sách Danh mục"
+        topic_link:
+          title: "Liên kết chủ đề"
+        topic_list_item:
+          title: "Mục danh sách chủ đề"
+        topic_statuses:
+          title: "Trạng thái chủ đề"
+        topic_list:
+          title: "Danh sách chủ đề"
+        basic_topic_list:
+          title: "Danh sách chủ đề cơ bản"
+        footer_message:
+          title: "Tin nhắn chân trang"
+        signup_cta:
+          title: "Đăng ký CTA"
+        topic_timer_info:
+          title: "Bộ hẹn giờ chủ đề"
+        topic_footer_buttons:
+          title: "Các nút chân trang chủ đề"
+        topic_notifications:
+          title: "Thông báo chủ đề"
+        post:
+          title: "Bài đăng"
+        topic_map:
+          title: "Bản đồ chủ đề"
+        site_header:
+          title: "Tiêu đề trang web"
+        suggested_topics:
+          title: "Chủ đề tương tự"
+        post_menu:
+          title: "Menu Bài Đăng"
+        modal:
+          title: "Cửa sổ bật lên"
+          header: "Phương thức Tiêu đề"
+          footer: "Phương thức Chân trang"
+        user_about:
+          title: "Hộp Giới thiệu Người dùng"
+        header_icons:
+          title: "Biểu tượng tiêu đề"
+        spinners:
+          title: "Con quay"
+        empty_state:
+          title: "Trạng thái trống"
+        tooltips:
+          description: "Mô tả"
+          header: "Header"

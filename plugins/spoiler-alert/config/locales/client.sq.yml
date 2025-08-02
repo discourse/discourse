@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    spoiler:
+      title: Blur Spoiler
+      label:
+        show: "Shfaq përmbajtjen e fshehur"
+    composer:
+      spoiler_text: "Ky tekst do të fshihet"

@@ -1,0 +1,88 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    styleguide:
+      title: "Uputstvo za stilove"
+      welcome: "Kako biste počeli, odaberite sekciju iz menija sa leve strane."
+      categories:
+        atoms: Атоми
+        molecules: Molekuli
+        organisms: Organizmi
+      sections:
+        typography:
+          title: "Tipografija"
+          example: "Добро дошли на Дискорс"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Unos datuma/vremena"
+        font_scale:
+          title: "Систем фонтова"
+        colors:
+          title: "Boje"
+        icons:
+          title: "Ikonice"
+          full_list: "Pogledaj sve Font Awesome ikonice"
+        buttons:
+          title: "Дугмад"
+        dropdowns:
+          title: "Padajući meni"
+        categories:
+          title: "Kategorije"
+        bread_crumbs:
+          title: "Bread crumbs"
+        navigation:
+          title: "Navigacija"
+        navigation_bar:
+          title: "Navigacija"
+        navigation_stacked:
+          title: "Složena navigacija"
+        categories_list:
+          title: "Lista Kategorija"
+        topic_link:
+          title: "Link za temu"
+        topic_list_item:
+          title: "Ставка листе тема"
+        topic_statuses:
+          title: "Statusi tema"
+        topic_list:
+          title: "Lista tema"
+        basic_topic_list:
+          title: "Основна листа тема"
+        footer_message:
+          title: "Poruka u futeru"
+        signup_cta:
+          title: "ЦТА за регистрацију"
+        topic_timer_info:
+          title: "Tajmeri tema"
+        topic_footer_buttons:
+          title: "Dugmad za teme u futeru"
+        topic_notifications:
+          title: "Notifikacije za teme"
+        post:
+          title: "Post"
+        topic_map:
+          title: "Мапа тема"
+        site_header:
+          title: "Заглавље странице"
+        suggested_topics:
+          title: "Predložene Teme"
+        post_menu:
+          title: "Meni za post"
+        modal:
+          title: "Модал"
+          header: "Naslov modala"
+          footer: "Futer modala"
+        user_about:
+          title: "Polje o korisniku"
+        header_icons:
+          title: "Ikonice zaglavlja"
+        spinners:
+          title: "Spineri"
+        tooltips:
+          description: "Opis"
+          header: "Header"

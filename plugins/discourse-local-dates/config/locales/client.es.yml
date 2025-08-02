@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Hoy %{time}
+        tomorrow: Mañana %{time}
+        yesterday: Ayer %{time}
+        countdown:
+          passed: la fecha ha pasado
+      title: insertar fecha / hora
+      create:
+        form:
+          insert: Insertar
+          advanced_mode: Modo avanzado
+          simple_mode: Modo simple
+          format_description: "Formato usado para mostrarle la fecha a los usuarios. Usa Z para mostrar la diferencia horaria y zz para el nombre de la zona horaria."
+          timezones_title: Zonas horarias que se muestran
+          timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retrospectiva.
+          recurring_title: Recurrencia
+          recurring_description: "Definir la recurrencia de un evento. También puedes editar manualmente la opción recurrente generada por el formulario y usar una de las siguientes claves: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds"
+          recurring_none: Sin recurrencia
+          invalid_date: Fecha no válida, asegúrate de que la fecha y hora sean correctas
+          date_title: Fecha
+          time_title: Hora
+          format_title: Formato de fecha
+          timezone: Zona horaria
+          until: Hasta...
+          current_timezone: "Zona horaria actual:"
+          recurring:
+            every_day: "Cada día"
+            every_week: "Cada semana"
+            every_two_weeks: "Cada dos semanas"
+            every_month: "Cada mes"
+            every_two_months: "Cada dos meses"
+            every_three_months: "Cada tres meses"
+            every_six_months: "Cada seis meses"
+            every_year: "Cada año"
+      default_title: "Evento de %{site_name}"

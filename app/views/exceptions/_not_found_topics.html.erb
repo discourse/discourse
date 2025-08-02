@@ -1,0 +1,24 @@
+<div class="row page-not-found-topics">
+  <% if @top_viewed.count > 0 %>
+    <div class="popular-topics">
+      <h2 class="popular-topics-title"><%= t 'page_not_found.popular_topics' %></h2>
+      <% @top_viewed.each do |t| %>
+        <div class='not-found-topic'>
+          <%= link_to emoji_codes_to_img(t.fancy_title), t.relative_url %><%= category_badge(t.category) %>
+        </div>
+      <% end %>
+      <a href="<%= path "/top" %>" class="btn btn-default"><%= t 'page_not_found.see_more' %>&hellip;</a>
+    </div>
+  <% end %>
+  <% if @recent.count > 0 %>
+    <div class="recent-topics">
+      <h2 class="recent-topics-title"><%= t 'page_not_found.recent_topics' %></h2>
+      <% @recent.each do |t| %>
+        <div class='not-found-topic'>
+          <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
+        </div>
+      <% end %>
+      <a href="<%= path "/latest" %>" class="btn btn-default"><%= t 'page_not_found.see_more' %>&hellip;</a>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,462 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: מחיקת אוטומציה
+    discourse_automation:
+      title: אוטומציה
+      table_title: אוטומציות
+      create: הוספת אוטומציה
+      update: עדכון אוטומציה
+      back: חזרה
+      edit: עריכה
+      select_script: בחירת סקריפט
+      select_trigger: בחירת גורם מפעיל
+      confirm_automation_reset: הפעולה הזאת תאפס את אפשרויות הסקריפט וההזנקה, מצב חדש יישמר, להמשיך?
+      confirm_automation_trigger: פעולה זו תקפיץ את האוטומציה, להמשיך?
+      no_automation_yet: לא מוגדרות אוטומציות כרגע.
+      filter_placeholder: סינון לפי שם או תיאור…
+      edit_automation:
+        trigger_section:
+          forced: הקפצה זו נאכפת על ידי סקריפט.
+          next_pending_automation: "האוטומציה הבאה תוקפץ ב־: %{date}"
+          trigger_now: "להקפיץ כעת"
+          title: מתי/מה…
+        fields_section:
+          title: אפשרויות סקריפט
+      destroy_automation:
+        confirm: "למחוק את `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "הגדרה"
+          label_with_count:
+            one: "עריכת הגדרות (%{count})"
+            two: "עריכת הגדרות (%{count})"
+            many: "עריכת הגדרות (%{count})"
+            other: "עריכת הגדרות (%{count})"
+        user:
+          label: משתמש
+        pm:
+          title:
+            label: כותרת
+          raw:
+            label: Body
+        pms:
+          confirm_remove_pm: "להסיר את ההודעה הפרטית הזאת?"
+          placeholder_title: כותרת ההודעה הפרטית
+          add_pm: הוספת הודעה פרטית
+          no_pm_created: לא יצרת עדיין אף הודעה פרטית. הודעות פרטיות תישלחנה ברגע שהאוטומציה שלך תוזנק.
+          title:
+            label: כותרת
+          raw:
+            label: Body
+          delay:
+            label: השהיה (דקות)
+          prefers_encrypt:
+            label: מצפין הודעות פרטיות אם זמין
+        group:
+          label: קבוצה
+        text:
+          label: טקסט
+      triggerables:
+        not_found: לא ניתן למצוא את גורם ההקפצה `%{trigger}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
+        user_badge_granted:
+          fields:
+            badge:
+              label: עיטור
+            only_first_grant:
+              label: רק עם ההענקה הראשונה
+        stalled_topic:
+          durations:
+            PT1H: "שעה"
+            P1D: "יום"
+            P1W: "שבוע"
+            P2W: "שבועיים"
+            P1M: "חודש"
+            P3M: "שלושה חודשים"
+            P6M: "שישה חודשים"
+            P1Y: "שנה"
+          fields:
+            categories:
+              label: מוגבל לקטגוריות
+            tags:
+              label: מוגבל לתגיות
+            stalled_after:
+              label: מיושן לאחר
+        recurring:
+          every: כל
+          frequencies:
+            minute: דקה
+            hour: שעה
+            day: יום
+            weekday: יום חול
+            week: שבוע
+            month: חודש
+            year: שנה
+          fields:
+            recurrence:
+              label: חזרה
+            start_date:
+              label: תאריך התחלה
+        stalled_wiki:
+          durations:
+            PT1H: "שעה"
+            P1D: "יום"
+            P1W: "שבוע"
+            P2W: "שבועיים"
+            P1M: "חודש"
+            P3M: "שלושה חודשים"
+            P6M: "שישה חודשים"
+            P1Y: "שנה"
+          fields:
+            restricted_category:
+              label: מוגבל לקטגוריה
+            stalled_after:
+              label: השהיית הזנקה
+              description: הגדרת השהייה בין עריכת הוויקי האחרונה והזנקת האוטומציה
+            retriggered_after:
+              label: השהיית הזנקה חוזרת
+              description: הגדרת השהיה בין ההזנקה הראשונה לבאה, אם הוויקי עדיין לא נערך אחרי ההזנקה הראשונה.
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: קבוצה במעקב
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: קבוצה במעקב
+        user_promoted:
+          fields:
+            restricted_group:
+              label: הגבלה לקבוצה
+            trust_level_transition:
+              label: מעבר בין דרגות אמון
+          trust_levels:
+            ALL: "כל דרגות האמון"
+            TL01: "דרגת אמון 0 ל־1"
+            TL12: "דרגת אמון 1 ל־2"
+            TL23: "דרגת אמון 2 ל־3"
+            TL34: "דרגת אמון 3 ל־4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: לבצע ב־
+        topic:
+          fields:
+            restricted_topic:
+              label: מזהה נושא
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: פוסט מקורי בלבד
+              description: יוזנק רק אם הפוסט הוא הפוסט המקורי בנושא
+            action_type:
+              label: סוג פעולה
+              description: "כרשות, הגבלת ההקפצה לאירועים שנוצרו או נערכו בלבד"
+            valid_trust_levels:
+              label: דרגות אמון תקפות
+              description: יוזנק רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+            restricted_tags:
+              label: תגיות
+              description: כרשות, יוזנק רק אם לפוסט יש לפחות את אחת מהתגיות האלו
+            restricted_categories:
+              label: קטגוריות
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט הוא באחת מהקטגוריות האלה
+            exclude_subcategories:
+              label: להחריג תת־קטגוריות
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט הוא בדיוק בקטגוריות שצוינו להלן
+            restricted_archetype:
+              label: סוג נושא
+              description: הגדרת רשות, לאפשר להזניק רק על נושאים או הודעות אישיות
+            restricted_groups:
+              label: קבוצות מוגבלות
+              description: הגדרת רשות, יוזנק רק אם משתמש הפוסט הוא באיזושהי קבוצה מהקבוצות האלו
+            restricted_inbox_groups:
+              label: קבוצת תיבות דואר נכנס מוגבלות
+              description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית באחת מתיבות הדוא״ל הנכנס הקבוצתיות
+            excluded_groups:
+              label: קבוצות מוחרגות
+              description: הגדרת רשות, לדלג על ההנקה אם משתמש הפוסט שייך לאיזושהי קבוצה מהקבוצות האלו
+            ignore_automated:
+              label: התעלמות מאוטומטי
+              description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על פוסטים שנוצרו דרך דוא״ל
+            first_post_only:
+              label: פוסט ראשון בלבד
+              description: יוזנק רק אם הפוסט הוא הפוסט הראשון שיצר המשתמש
+            first_topic_only:
+              label: נושא ראשון בלבד
+              description: יוזנק רק אם הנושא הוא הנושא הראשון שיצר המשתמש
+            skip_via_email:
+              label: "דילוג דרך דוא״ל"
+              description: "לדלג על ההזנקה אם הפוסט נוצר דרך דוא״ל"
+            post_features:
+              label: תכונות פוסט
+              description: "הגדרת רשות, להגביל את ההזנקה רק לפוסטים עם התכונות האלו"
+          created: נוצר
+          edited: נערכו
+          topics: כל הנושאים
+          personal_messages: הודעות פרטיות
+          public_topics: נושאים ציבוריים (להחריג את כל הקטגוריות המאובטחות)
+          with_images: תמונות
+          with_links: קישורים
+          with_code: קוד
+          with_uploads: העלאות
+        user_updated:
+          fields:
+            user_profile:
+              label: שדות פרופיל המשתמש
+              description: יוזנק רק אם המשתמש מילא את השדות האלו
+            custom_fields:
+              label: להשתמש בשדות מותאמים אישית
+              description: יוזנק רק אם המשתמש מילא את השדות האלו
+            once_per_user:
+              label: פעם אחת לכל משתמש
+              description: יוזנק רק פעם אחת לכל משתמש
+            new_users_only:
+              label: משתמשים חדשים בלבד
+              description: יוזנק רק עבור משתמשים חדשים שיצטרפו לאחר הפעלת האוטומטית הזאת
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: קטגורית אם
+              description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
+        pm_created:
+          fields:
+            restricted_user:
+              label: משתמשים
+              description: יוזנק רק עבור הודעות פרטיות שנשלחות למשתמש הזה
+            restricted_group:
+              label: קבוצה
+              description: יוזנק רק עבור הודעות פרטיות שנשלחות לקבוצה הזאת
+            ignore_staff:
+              label: התעלמות מהסגל
+              description: לדלג על גורם ההפעלה אם זה משתמש מהסגל
+            ignore_group_members:
+              label: התעלמות מחברי הקבוצה
+              description: לדלג על ההזנקה אם המוען הוא חבר בקבוצה שצוינה לעיל
+            ignore_automated:
+              label: התעלמות מאוטומטי
+              description: לדלג על ההזנקה אם לשולח יש כתובת דוא״ל noreply (לא להגיב) או שהוא ממקור אוטומטי. חל רק על הודעות פרטיות שנוצרו דרך דוא״ל
+            valid_trust_levels:
+              label: דרגות אמון תקפות
+              description: יוזנק רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: תגיות נוספו או הוסרו
+            tags_added: תגיות נוספו
+            tags_removed: תגיות הוסרו
+          fields:
+            watching_categories:
+              label: קטגוריות במעקב
+              description: יוזנק רק אם הנושא הוא באחת מהקטגוריות הבאות
+            watching_tags:
+              label: תגיות במעקב
+              description: יוזנק רק אם לנושא יש את אחת מהתגיות האלה
+            trigger_on:
+              label: להזניק עקב
+            trigger_with_pms:
+              label: הזנקה עם הודעות פרטיות
+              description: יוזנק אפילו אם התגיות השתנו בהודעה פרטית
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: דרגות אמון תקפות
+              description: יוזנק רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+            restricted_category:
+              label: קטגוריה
+              description: הגדרת רשות, יוזנק רק אם נושא הפוסט בקטגוריה הזאת
+            restricted_tags:
+              label: תגיות
+              description: הגדרת רשות, יוזנק רק אם לפוסט יש את אחת התגיות הבאות
+      scriptables:
+        not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: כתובת התליה
+              description: "אמורה להיות כתובת התליה תקפה של Zapier, למשל: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: פעם אחת
+              description: מגיב פעם אחת בלבד בכל נושא
+            word_answer_list:
+              label: רשימה של צמדי מילה/תשובה
+              description: "מגדיר רשימה של קבוצות מפתח/ערך כאשר `מפתח` הוא הערך אחריו מחפשים, ו`ערך` הוא טקסט התגובה. את ה`מפתח` אפשר להשאיר ריק כדי להגיב לכל ההזנקות ללא תלות בתוכן. נא לשים לב ש`ערך` מקבל `{{key}}` בתור ממלא מקום להחלפת הערך של ה`מפתח` בתגובה. נא לשים לב ש`מפתח` יפוענח כביטוי רגולרי, ותווים מיוחדים כגון `.` דורשים החרגה אם הכוונה שלך הייתה נקודה, למשל: `\\.`"
+            answering_user:
+              label: משתמש שענה
+              description: ברירת המחדל היא משתמש המערכת
+        auto_tag_topic:
+          fields:
+            tags:
+              label: תגיות
+              description: רשימת תגיות להוספה לנושא.
+        post:
+          fields:
+            creator:
+              label: יוצר
+              post_creator_context: יוצר הפוסט
+              updated_user_context: המשתמש שעודכן
+            topic:
+              label: מזהה נושא
+            post:
+              label: תוכן הפוסט
+        topic:
+          fields:
+            creator:
+              label: יוצר
+              updated_user_context: המשתמש המעודכן
+            body:
+              label: גוף הנושא
+            title:
+              label: כותרת נושא
+            category:
+              label: קטגוריית הנושא
+            tags:
+              label: תגיות הנושא
+        group_category_notification_default:
+          fields:
+            group:
+              label: קבוצה
+            notification_level:
+              label: רמת התראה
+            update_existing_members:
+              label: עדכון חברים קיימים
+              description: מעדכן את רמת ההתראות עבור חברי קבוצה קיימים
+        user_global_notice:
+          fields:
+            level:
+              label: דרגה
+            notice:
+              label: הודעה
+              description: מקבל HTML, לא למלא את זה בקלט מפוקפק!
+          levels:
+            warning: אזהרה
+            info: פרטים
+            success: הצלחה
+            error: תקלה
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: שם העיטור
+            group:
+              label: קבוצה
+              description: קבוצת יעד. משתמשים עם העיטור שצוין יתווספו לקבוצה הזאת.
+            update_user_title_and_flair:
+              label: עדכון כותרת וסמלון המשתמש
+              description: רשות, עדכון כותרת וסמלון המשתמש
+            remove_members_without_badge:
+              label: הסרת חברים קיימים ללא עיטור
+              description: כרשות, להסיר חברי קבוצה קיימים בלי עיטורים מסוימים
+            badge:
+              label: עיטור
+              description: בחירת עיטור
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: להשעות עד (ברירת מחדל)
+            reason:
+              label: סיבה (ברירת מחדל)
+            actor:
+              label: משתמש
+              description: "המשתמש האחראי להשעיה (ברירת מחדל: מערכת)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: מזהה נושא
+            pinned_globally:
+              label: נעוץ גלובלית
+            pinned_until:
+              label: נעוץ עד
+        banner_topic:
+          fields:
+            topic_id:
+              label: מזהה נושא
+            banner_until:
+              label: להציב ככרזה עד
+            user:
+              label: משתמש
+              description: "המשתמש יוצר את הכרזה (ברירת מחדל: מערכת)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: מילים שנבדקות
+        topic_required_words:
+          fields:
+            words:
+              label: רשימת מילים נדרשות
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: שם קבוצת המשתתפים
+            giftee_assignment_messages:
+              label: הודעות שנשלחו למעניקי המתנה
+        send_pms:
+          add_a_pm_btn:
+            label: הוספת הודעה פרטית
+          fields:
+            receiver:
+              label: נמען או נמענת הודעה פרטית
+            sendable_pms:
+              label: הודעות פרטיות
+            sender:
+              label: מוען או מוענת הודעה פרטית
+              description: "נא לוודא שלמי ששלח יש את ההרשאות המתאימות לשליחת הודעות פרטיות למוען"
+        close_topic:
+          fields:
+            topic:
+              label: מזהה נושא
+            message:
+              label: הודעת סגירה
+              description: "הודעת רשות שתופיע ברשומת סגירת הנושא"
+            user:
+              label: משתמש
+              description: "המשתמש שסגר את הנושא (ברירת מחדל: מערכת)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "שם שדה מותאם אישית של משתמש"
+      unnamed_automation: "אוטומציה ללא שם"
+      models:
+        script:
+          name:
+            label: סקריפט
+        trigger:
+          name:
+            label: הזנקה
+        automation:
+          runs_today: "%{count} היום"
+          runs_this_week: "%{count} השבוע"
+          runs_this_month: "%{count} החודש"
+          runs:
+            label: ריצות
+          name:
+            label: שם
+          trigger:
+            label: הזנקה
+          script:
+            label: סקריפט
+          version:
+            label: גרסה
+          status:
+            label: מצב
+          enabled:
+            label: פעיל
+          disabled:
+            label: כבוי
+          placeholders:
+            label: ממלאי מקום
+          last_updated_at:
+            label: עדכון אחרון
+          last_run:
+            label: ריצה אחרונה
+          last_updated_by:
+            label: עודכן על ידי

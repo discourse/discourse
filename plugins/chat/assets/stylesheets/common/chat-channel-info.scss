@@ -1,0 +1,43 @@
+.c-channel-info {
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+
+  .chat-message-creator__container {
+    width: 100%;
+  }
+
+  &__nav {
+    .nav-pills {
+      margin: 0;
+      padding-bottom: 1rem;
+    }
+  }
+
+  &__member-count {
+    margin-left: 0.25em;
+  }
+}
+
+.c-channel-members__add-members {
+  display: flex;
+  gap: 1rem;
+
+  .chat-message-creator-container {
+    width: 100%;
+  }
+}
+
+// Info header
+.c-channel-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.c-channel-info-header__title {
+  font-size: var(--font-up-2);
+  margin: 0;
+}

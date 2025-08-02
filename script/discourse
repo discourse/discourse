@@ -1,0 +1,397 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "thor"
+
+class DiscourseCLI < Thor
+  def self.exit_on_failure?
+    true
+  end
+
+  desc "remap [--global,--regex,--force, --skip-max-length-violations] FROM TO",
+       "Remap a string sequence across all tables"
+  long_desc <<-TEXT
+    Replace a string sequence FROM with TO across all tables.
+
+    With --global option, the remapping is run on ***ALL***
+    databases. Instead of just running on the current database, run on
+    every database on this machine. This option is useful for
+    multi-site setups.
+
+    With --regex option, use PostgreSQL function regexp_replace to do
+    the remapping. Enabling this interprets FROM as a PostgreSQL
+    regular expression. TO can contain references to captures in the
+    FROM match. See the "Regular Expression Details" section and
+    "regexp_replace" documentation in the PostgreSQL manual for more
+    details.
+
+    With --skip-max-length-violations option, remapping is skipped for rows where
+    the remapped text exceeds the column's maximum length constraint. This option is
+    useful for non-critical remaps, allowing you to skip a few violating rows instead
+    of aborting the entire remap process.
+
+    Examples:
+
+    discourse remap talk.foo.com talk.bar.com # renaming a Discourse domain name
+
+    discourse remap --regex "\[\/?color(=[^\]]*)*]" "" # removing "color" bbcodes
+  TEXT
+  option :global, type: :boolean
+  option :regex, type: :boolean, default: false
+  option :force, type: :boolean
+  option :skip_max_length_violations, type: :boolean, default: false
+  def remap(from, to)
+    load_rails
+
+    if options[:regex]
+      puts "Rewriting all occurrences of #{from} to #{to} using regexp_replace"
+    else
+      puts "Rewriting all occurrences of #{from} to #{to}"
+    end
+
+    if options[:global]
+      puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS"
+    else
+      puts "WILL RUN ON '#{RailsMultisite::ConnectionManagement.current_db}' DB"
+    end
+
+    confirm!("THIS TASK WILL REWRITE DATA") unless options[:force]
+
+    if options[:skip_max_length_violations]
+      confirm!("WILL SKIP MAX LENGTH VIOLATIONS. THIS MIGHT BE UNSUITABLE FOR CRITICAL REMAPS")
+    end
+
+    if options[:global]
+      RailsMultisite::ConnectionManagement.each_connection do |db|
+        puts "", "Remapping tables on #{db}...", ""
+        do_remap(from, to)
+      end
+    else
+      puts "", "Remapping tables on #{RailsMultisite::ConnectionManagement.current_db}...", ""
+      do_remap(from, to)
+    end
+  end
+
+  desc "backup", "Backup a discourse forum"
+  option :s3_uploads,
+         type: :boolean,
+         default: false,
+         desc: "Include s3 uploads in the backup (ignored when --sql-only is used)"
+  option :sql_only,
+         type: :boolean,
+         default: false,
+         desc: "SQL-only, exclude uploads from the backup"
+  def backup(filename = nil)
+    load_rails
+
+    if options[:sql_only] && options[:s3_uploads]
+      puts "--sql-only flag overrides --s3-uploads. S3 uploads will not be included in the backup."
+    end
+
+    store = BackupRestore::BackupStore.create
+
+    if filename
+      destination_directory = File.dirname(filename).sub(/^\.$/, "")
+
+      if destination_directory.present? && store.remote?
+        puts "Only local backup storage supports paths."
+        exit(1)
+      end
+
+      filename_without_extension = File.basename(filename).sub(/\.(sql\.)?(tar\.gz|t?gz)$/i, "")
+    end
+
+    old_include_s3_uploads_in_backups = SiteSetting.include_s3_uploads_in_backups
+    SiteSetting.include_s3_uploads_in_backups = true if !options[:sql_only] && options[:s3_uploads]
+
+    begin
+      puts "Starting backup..."
+      backuper =
+        BackupRestore::Backuper.new(
+          Discourse.system_user.id,
+          filename: filename_without_extension,
+          with_uploads: !options[:sql_only],
+        )
+      backup_filename = backuper.run
+      exit(1) unless backuper.success
+
+      puts "Backup done."
+
+      if store.remote?
+        location =
+          BackupLocationSiteSetting.values.find { |v| v[:value] == SiteSetting.backup_location }
+        location = I18n.t("admin_js.#{location[:name]}") if location
+        puts "Output file is stored on #{location} as #{backup_filename}", ""
+      else
+        backup = store.file(backup_filename, include_download_source: true)
+
+        if destination_directory.present?
+          puts "Moving backup file..."
+          backup_path = File.join(destination_directory, backup_filename)
+          FileUtils.mv(backup.source, backup_path)
+        else
+          backup_path = backup.source
+        end
+
+        puts "Output file is in: #{backup_path}", ""
+      end
+    ensure
+      SiteSetting.include_s3_uploads_in_backups = old_include_s3_uploads_in_backups
+    end
+  end
+
+  desc "backup_url", "Get the URL of a backup file"
+  def backup_url(filename = nil)
+    load_rails
+
+    store = BackupRestore::BackupStore.create
+    raise "Backup URLs are only available for S3 backups" if !store.remote?
+
+    file = store.file(filename, include_download_source: true) if filename
+
+    if !file
+      discourse = File.exist?("/usr/local/bin/discourse") ? "discourse" : "./script/discourse"
+      puts "You must provide a valid filename. Did you mean one of the following?\n\n"
+      store.files.each { |f| puts "#{discourse} backup_url #{f.filename}" }
+      return
+    end
+
+    puts file.source
+  end
+
+  desc "import_backup_url",
+       "Downloads a backup file from a URL and stores it in the current backup store"
+  def import_backup_url(url = nil)
+    load_rails
+
+    store = BackupRestore::BackupStore.create
+    filename = File.basename(URI.parse(url).path)
+
+    file = store.file(filename)
+    if file
+      puts "Backup file already exists in the store"
+      return
+    end
+
+    puts "Downloading backup file from #{url}..."
+    tmpfile = BackupRestore::BackupFileHandler.download(url)
+
+    if store.remote?
+      puts "Uploading backup file to remote store..."
+      content_type = MiniMime.lookup_by_filename(filename).content_type
+      store.upload_file(filename, tmpfile.path, content_type)
+    else
+      puts "Saving backup file to local store..."
+      Discourse::Utils.execute_command(
+        "mv",
+        tmpfile.path,
+        File.join(BackupRestore::LocalBackupStore.base_directory, filename),
+      )
+    end
+  ensure
+    tmpfile&.unlink
+  end
+
+  desc "export", "Backup a Discourse forum"
+  option :s3_uploads,
+         type: :boolean,
+         default: false,
+         desc: "Include s3 uploads in the backup (ignored when --sql-only is used)"
+  option :sql_only,
+         type: :boolean,
+         default: false,
+         desc: "SQL-only, exclude uploads from the backup"
+  def export(filename = nil)
+    backup(filename)
+  end
+
+  desc "restore", "Restore a Discourse backup"
+  option :disable_emails,
+         type: :boolean,
+         default: true,
+         desc: "Disable outgoing emails for non-staff users after restore"
+  option :pause,
+         type: :boolean,
+         default: false,
+         desc: "Pause before migrating database and restoring uploads"
+  option :location, type: :string, enum: %w[local s3], desc: "Override the backup location"
+  def restore(filename = nil)
+    load_rails
+
+    discourse = File.exist?("/usr/local/bin/discourse") ? "discourse" : "./script/discourse"
+
+    if !filename
+      puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
+
+      store = BackupRestore::BackupStore.create(location: options[:location])
+      store.files.each { |file| puts "#{discourse} restore #{file.filename}" }
+
+      return
+    end
+
+    begin
+      puts "Starting restore: #{filename}"
+      restorer =
+        BackupRestore::Restorer.new(
+          user_id: Discourse.system_user.id,
+          filename: filename,
+          disable_emails: options[:disable_emails],
+          location: options[:location],
+          factory: BackupRestore::Factory.new(user_id: Discourse.system_user.id),
+          interactive: options[:pause],
+        )
+      restorer.run
+      puts "Restore done."
+    rescue BackupRestore::FilenameMissingError
+      puts "", "The filename argument was missing.", ""
+      usage
+    rescue BackupRestore::RestoreDisabledError
+      puts "",
+           "Restores are not allowed.",
+           "An admin needs to set allow_restore to true in the site settings before restores can be run."
+      puts "Enable now with", "", "#{discourse} enable_restore", ""
+      puts "Restore cancelled.", ""
+    end
+
+    exit(1) unless restorer.try(:success)
+  end
+
+  desc "import", "Restore a Discourse backup"
+  def import(filename = nil)
+    restore(filename)
+  end
+
+  desc "rollback", "Rollback to the previous working state"
+  def rollback
+    puts "Rolling back if needed.."
+    load_rails
+    BackupRestore.rollback!
+    puts "Done."
+  end
+
+  desc "enable_restore", "Allow restore operations"
+  def enable_restore
+    puts "Enabling restore..."
+    load_rails
+    SiteSetting.allow_restore = true
+    puts "Restore are now permitted. Disable them with `disable_restore`"
+  end
+
+  desc "disable_restore", "Forbid restore operations"
+  def disable_restore
+    puts "Disabling restore..."
+    load_rails
+    SiteSetting.allow_restore = false
+    puts "Restore are now forbidden. Enable them with `enable_restore`"
+  end
+
+  desc "enable_readonly", "Enable the readonly mode"
+  def enable_readonly
+    puts "Enabling readonly mode..."
+    load_rails
+    Discourse.enable_readonly_mode
+    puts "The site is now in readonly mode."
+  end
+
+  desc "disable_readonly", "Disable the readonly mode"
+  def disable_readonly
+    puts "Disabling readonly mode..."
+    load_rails
+    Discourse.disable_readonly_mode
+    puts "The site is now fully operable."
+  end
+
+  desc "request_refresh", "Ask all clients to refresh the browser"
+  def request_refresh
+    load_rails
+    Discourse.request_refresh!
+    puts "Requests sent. Clients will refresh on next navigation."
+  end
+
+  desc "export_categories",
+       "Export categories, all its topics, and all users who posted in those topics"
+  def export_categories(*category_ids)
+    puts "Starting export of categories...", ""
+    load_rails
+    ImportExport.export_categories(category_ids)
+    puts "", "Done", ""
+  end
+
+  desc "export_category",
+       "Export a category, all its topics, and all users who posted in those topics"
+  def export_category(category_id)
+    raise "Category id argument is missing!" unless category_id
+    export_categories([category_id])
+  end
+
+  desc "import_category",
+       "Import a category, its topics and the users from the output of the export_category command"
+  def import_category(filename)
+    raise "File name argument missing!" unless filename
+    puts "Starting import from #{filename}..."
+    load_rails
+    ImportExport.import(filename)
+    puts "", "Done", ""
+  end
+
+  desc "export_topics",
+       "Export topics and all users who posted in that topic. Accepts multiple topic id's"
+  def export_topics(*topic_ids)
+    puts "Starting export of topics...", ""
+    load_rails
+    ImportExport.export_topics(topic_ids)
+    puts "", "Done", ""
+  end
+
+  desc "import_topics", "Import topics and their users from the output of the export_topic command"
+  def import_topics(filename)
+    raise "File name argument missing!" unless filename
+    puts "Starting import from #{filename}..."
+    load_rails
+    ImportExport.import(filename)
+    puts "", "Done", ""
+  end
+
+  private
+
+  def confirm!(message, prompt = "ARE YOU SURE (type YES):")
+    unless yes?("#{message}, #{prompt}")
+      puts "aborting."
+      exit(1)
+    end
+  end
+
+  def load_rails
+    require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+  end
+
+  def do_remap(from, to)
+    begin
+      remap_options = {
+        verbose: true,
+        skip_max_length_violations: options[:skip_max_length_violations],
+      }
+
+      if options[:regex]
+        DbHelper.regexp_replace(from, to, **remap_options)
+      else
+        DbHelper.remap(from, to, **remap_options)
+      end
+
+      puts "Done", ""
+    rescue PG::StringDataRightTruncation => e
+      puts <<~TEXT
+        #{e}
+        One or more remapped texts exceeded the maximum column length constraint. Either fix the offending
+        column(s) mentioned in the error above or re-run the script with --skip-max-length-violations to skip these rows.
+      TEXT
+      exit(1)
+    rescue => ex
+      puts "Error: #{ex}"
+      puts "The remap has only been partially applied due to the error above. Please re-run the script again."
+      exit(1)
+    end
+  end
+end
+
+DiscourseCLI.start(ARGV)

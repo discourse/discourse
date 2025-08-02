@@ -1,0 +1,1276 @@
+@use "lib/viewport";
+
+@mixin onebox-shadow($thickness) {
+  border: 0;
+  margin-inline: $thickness;
+  box-shadow:
+    0 0 0 1px var(--primary-300),
+    0 0 0 $thickness var(--primary-100);
+
+  // Makes the outer drop shadow radius equal to --d-border-radius
+  border-radius: calc(var(--d-border-radius) - ($thickness / 2));
+}
+
+a.loading-onebox {
+  &::before {
+    content: "";
+    display: inline-flex;
+    float: left;
+    margin: 3px 5px 0 0;
+    position: relative;
+    height: 10px;
+    width: 10px;
+    border: 2px solid var(--primary-low-mid);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: rotate-forever 1s infinite linear;
+  }
+}
+
+.onebox-result {
+  margin-top: 15px;
+  padding: 12px;
+  font-size: var(--font-0);
+
+  @include post-aside;
+
+  .onebox-result-body {
+    padding-top: 5px;
+
+    img {
+      max-height: 80%;
+      max-width: 25%;
+      height: auto;
+      float: left;
+      margin-right: 1em;
+    }
+
+    h3,
+    h4 {
+      margin: 0;
+    }
+
+    code {
+      max-height: 400px;
+    }
+
+    .metrics {
+      clear: both;
+      padding-bottom: 25px;
+
+      .metric {
+        padding-left: 33px;
+        float: left;
+      }
+    }
+
+    // RottenTomatoes Onebox
+    img.verdict {
+      float: none;
+      margin-right: 7px;
+    }
+
+    // RottenTomatoes Onebox
+    img.popcorn {
+      float: none;
+      margin-left: 20px;
+      margin-right: 5px;
+    }
+  }
+
+  > .source {
+    margin-bottom: 12px;
+    margin-right: 10px;
+    display: block;
+    color: var(--primary);
+    position: relative;
+    height: 20px;
+
+    .info {
+      position: absolute;
+      font-size: var(--font-0);
+
+      a {
+        color: black;
+        text-decoration: none;
+        padding-right: 10px;
+      }
+
+      img.favicon {
+        margin-right: 3px;
+      }
+    }
+  }
+}
+
+@mixin onebox-favicon($class, $image) {
+  &.#{$class} .source {
+    background: absolute-image-url("/favicons/#{$image}.png") no-repeat 0% 50%;
+    background-size: 16px 16px;
+    padding-left: 20px;
+  }
+}
+
+aside.onebox {
+  @include onebox-shadow(4px);
+  margin-bottom: 1em;
+  padding: 1em;
+  font-size: var(--font-0);
+  background: var(--secondary);
+
+  &:first-child {
+    margin-top: 4px;
+  }
+
+  header {
+    align-items: center;
+    display: flex;
+    line-height: var(--line-height-medium);
+    margin-bottom: 1em;
+
+    .d-icon {
+      margin-right: 5px;
+      margin-top: 2px;
+
+      &.d-icon-fab-twitter {
+        color: var(--twitter);
+      }
+    }
+
+    a[href] {
+      color: var(--primary-med-or-secondary-med);
+      text-decoration: none;
+    }
+  }
+
+  @include onebox-favicon("stackexchange", "stackexchange");
+  @include onebox-favicon("instagram", "instagram");
+  @include onebox-favicon("googledocs", "google_branding/logo_drive_48px");
+  @include onebox-favicon("googledrive", "google_branding/logo_drive_48px");
+
+  .onebox-body {
+    clear: both;
+
+    h3,
+    h4 {
+      font-size: var(--font-up-1);
+      margin: 0 0 10px 0;
+      line-height: var(--line-height-medium);
+    }
+
+    a[href] {
+      color: var(--tertiary);
+      text-decoration: none;
+    }
+
+    a[href]:visited {
+      color: var(--tertiary);
+    }
+
+    img:not(.avatar, .onebox-avatar-inline) {
+      max-height: 170px;
+      max-width: 20%;
+      height: auto;
+      float: left;
+      margin-right: 1em;
+
+      @media all and (width <= 600px) {
+        max-width: 35%;
+      }
+
+      &.onebox-full-image {
+        max-height: none;
+        max-width: none;
+      }
+    }
+
+    [style*="--aspect-ratio"] > :first-child {
+      width: 100%;
+    }
+
+    [style*="--aspect-ratio"] > img {
+      height: auto;
+    }
+
+    // this allows us to load all onebox images without jiggle
+    // see: http://cssmojo.com/aspect-ratio-using-custom-properties-and-calc/
+    @supports (--custom: property) {
+      .aspect-image {
+        max-height: 170px;
+
+        --magic-ratio: calc(var(--aspect-ratio) + 0.15);
+        width: calc(128px * var(--magic-ratio));
+        max-width: 20%;
+        float: left;
+        margin-right: 1em;
+        height: auto;
+
+        img {
+          width: 100%;
+          height: inherit;
+          max-width: initial;
+          max-height: initial;
+          float: none;
+        }
+      }
+
+      // full size images for instagram, twitter, etc.
+      .aspect-image-full-size {
+        margin: 0.5em 0;
+        max-height: 100%;
+        width: calc(500px * var(--aspect-ratio));
+        max-width: 100%;
+
+        img {
+          width: 100%;
+          height: inherit;
+          max-width: initial;
+          max-height: initial;
+          float: none;
+        }
+      }
+
+      [style*="--aspect-ratio"] {
+        position: relative;
+      }
+
+      [style*="--aspect-ratio"]::before {
+        content: "";
+        display: block;
+        padding-bottom: calc(100% / (var(--aspect-ratio)));
+      }
+
+      [style*="--aspect-ratio"] > :first-child {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+      }
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    // twitter fixes
+    .tweet-images {
+      display: block;
+      clear: both;
+
+      img.tweet-image {
+        margin-top: 1em;
+        max-width: 100%;
+        max-height: 100%;
+        float: none;
+      }
+
+      @include viewport.until(sm) {
+        // Prevent twitter embeds from being taller than the mobile viewport
+        iframe {
+          max-height: 70vh;
+        }
+      }
+    }
+
+    &.user-onebox {
+      .fa {
+        margin-right: 5px;
+      }
+
+      .full-name,
+      .location {
+        margin-right: 10px;
+      }
+
+      .user-onebox--joined {
+        color: var(--primary-medium);
+        margin-top: 10px;
+      }
+
+      .aspect-image {
+        width: 80px;
+        height: 80px;
+        float: left;
+        margin-right: 1em;
+      }
+    }
+
+    // instagram + reddit fixes
+    .instagram-images,
+    .scale-images {
+      clear: both;
+      position: relative;
+
+      .instagram-image,
+      .scale-image {
+        padding: 5px 5px 5px 5px;
+        max-width: 100%;
+        max-height: 100%;
+        float: none;
+      }
+    }
+
+    .image-wrapper {
+      display: block;
+      position: relative;
+    }
+
+    .video-icon {
+      bottom: 15px;
+      right: 10px;
+      position: absolute;
+
+      &::before {
+        opacity: 0.8;
+
+        // ideally, the SVG used here should be in HTML and reference the SVG sprite
+        content: svg-uri(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
+        );
+      }
+    }
+  }
+}
+
+.chat-drawer-container .chat-message aside.onebox {
+  @include onebox-shadow(3px);
+}
+
+@mixin gdocs-logo($type) {
+  &.g-#{$type}-logo {
+    background: absolute-image-url(
+        "/favicons/google_branding/logo_#{$type}_48px.png"
+      )
+      no-repeat;
+  }
+}
+
+.googledocs-onebox-logo {
+  width: 60px;
+  height: 50px;
+  float: left;
+
+  @include gdocs-logo("docs");
+  @include gdocs-logo("forms");
+  @include gdocs-logo("sheets");
+  @include gdocs-logo("slides");
+  @include gdocs-logo("calendar");
+  @include gdocs-logo("drive");
+}
+
+// Google Calendar Placeholder
+.gdocs-onebox-splash {
+  background-color: var(--primary-low-mid);
+  color: var(--primary);
+  border: 1px inset var(--primary);
+
+  .gdocs-onebox-logo {
+    display: inline-block;
+    width: 128px;
+    height: 128px;
+
+    &.g-calendar-logo {
+      background: absolute-image-url(
+          "/favicons/google_branding/logo_calendar_128px.png"
+        )
+        no-repeat;
+    }
+  }
+}
+
+aside.onebox .onebox-body .onebox-avatar {
+  max-height: none;
+  max-width: none;
+  height: 60px;
+  width: 60px;
+}
+
+blockquote {
+  aside.onebox {
+    @include post-aside;
+  }
+}
+
+pre.onebox {
+  margin-bottom: 0;
+}
+
+// -- Onebox Github Code Blob --
+pre.onebox code ol.lines li::before {
+  box-sizing: border-box;
+  position: absolute;
+  display: inline-block;
+  width: 3.5em;
+  left: calc(-3em + 1px);
+  color: var(--primary-600);
+  text-align: right;
+  padding-right: 0.5em;
+  font-size: var(--font-down-1);
+  line-height: calc((13 + 9.4) / 13); // matches the `code` line-height
+  content: counter(li-counter);
+  counter-increment: li-counter;
+}
+
+pre.onebox code ol.lines li.selected::before {
+  background-color: var(--highlight-bg);
+}
+
+.onebox.githubblob,
+.onebox.gitlabblob {
+  .onebox-body h4 {
+    word-break: break-all;
+    margin-bottom: 5px;
+    font-size: 1rem;
+  }
+
+  .git-blob-info {
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-small);
+  }
+
+  pre {
+    margin-bottom: 0;
+  }
+}
+
+pre.onebox code ol {
+  margin-left: 0;
+  line-height: var(--line-height-large);
+}
+
+pre.onebox code {
+  background-color: var(--primary-very-low);
+  white-space: normal;
+}
+
+pre.onebox code li {
+  padding-left: 0.5em;
+}
+
+pre.onebox code ol.lines {
+  position: relative;
+  margin: 0 0 0 2.5em;
+  padding-left: 0.5em;
+}
+
+pre.onebox code ol.lines li {
+  list-style-type: none;
+  padding-left: 0.5em;
+  margin-left: 0;
+  border-left: 1px solid var(--primary-300);
+  min-height: 1.5em; // show empty li lines
+  white-space: pre;
+  width: max-content;
+}
+
+pre.onebox code ol.lines li.selected {
+  background-color: var(--highlight-bg);
+  border-left-color: rgb(var(--primary-rgb), 0.2);
+}
+
+.onebox-warning-message {
+  margin-top: 5px;
+  color: var(--primary-med-or-secondary-med);
+
+  img.emoji {
+    width: 20px;
+    height: 20px;
+    float: none;
+  }
+}
+
+// Onebox - Github - PR, Commit & Issue
+.onebox.githubpullrequest,
+.onebox.githubcommit,
+.onebox.githubissue {
+  .onebox-body {
+    display: grid;
+    grid-template-areas:
+      "icon title"
+      "icon branches"
+      "icon info"
+      "body body";
+    grid-template-columns: 2.5em minmax(0, 1fr);
+    gap: 0.25em 0.75em;
+
+    @include viewport.until(sm) {
+      gap: 0.25em 0.5em;
+      grid-template-columns: 1.5em minmax(0, 1fr);
+      grid-template-areas:
+        "icon title"
+        "branches branches"
+        "info info"
+        "body body";
+    }
+
+    h4 {
+      margin-bottom: 0;
+    }
+
+    > .github-icon {
+      // For backwards compatibility with old onebox
+      float: left;
+      margin-right: 5px;
+    }
+  }
+
+  .github-row {
+    display: contents;
+  }
+
+  .github-icon-container,
+  .github-info-container {
+    display: contents;
+  }
+
+  .github-icon {
+    grid-area: icon;
+    align-self: stretch;
+    max-width: 1.8em;
+    height: auto;
+    justify-self: center;
+    fill: var(--primary-high);
+  }
+
+  .branches {
+    grid-area: branches;
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-medium);
+
+    code {
+      word-break: break-all;
+    }
+  }
+
+  .github-info-container {
+    width: 100%;
+    overflow-x: hidden;
+
+    > span {
+      // TODO: remove in a few months
+      // replaced by .github-info in new commit oneboxes
+      grid-area: info;
+    }
+  }
+
+  .github-info {
+    grid-area: info;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.15em 0.75em;
+
+    .lines {
+      font-weight: bold;
+
+      .added {
+        color: var(--success);
+      }
+
+      .removed {
+        color: var(--danger);
+      }
+    }
+
+    .discourse-local-date {
+      white-space: nowrap;
+    }
+  }
+
+  .github-body-container {
+    grid-area: body;
+    margin: 1em 0 0 0;
+    color: var(--primary-very-high);
+    max-height: 400px;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    word-break: break-word;
+    font-family: var(--d-font-family--monospace);
+    font-size: 0.875em;
+    line-height: calc((13 + 4) / 13);
+    box-sizing: border-box;
+
+    .show-more {
+      font-family: var(--font-family);
+
+      // padding on right for larger hitzone
+      padding: 0.5em 1em 0 0.2em;
+    }
+  }
+
+  .onebox-avatar-inline {
+    border-radius: 2px;
+    vertical-align: text-bottom;
+  }
+
+  .labels span {
+    // !important required to override inline style attribute
+    background-color: var(--primary-medium) !important;
+    color: var(--secondary) !important;
+    padding: 2px 4px !important;
+  }
+
+  .emoji {
+    max-height: 15px;
+    margin: 0.2em;
+    min-width: 15px;
+  }
+}
+
+.onebox.githubactions {
+  h4 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .github-row {
+    display: flex;
+  }
+
+  .github-icon-container {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+
+  .github-icon {
+    fill: var(--primary-medium);
+    width: var(--font-up-3);
+    height: var(--font-up-3);
+  }
+
+  .github-icon-success {
+    fill: var(--success);
+  }
+
+  .github-icon-failure {
+    fill: var(--danger);
+  }
+
+  .github-icon-pending {
+    fill: #dbab0a;
+  }
+
+  .github-info {
+    color: var(--primary-high);
+  }
+
+  .github-run-number {
+    color: var(--primary-medium);
+  }
+}
+
+// Onebox - Github - Pull request
+.onebox-body .github-commit-status {
+  background: #f5f5f5;
+  border-radius: 5px;
+  margin: 0 0 5px 100px;
+  padding: 10px;
+}
+
+.onebox-body .status_tag {
+  display: inline-block;
+  color: #fff;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.onebox-body .build_status {
+  padding: 2px;
+  font-size: var(--font-down-1);
+}
+
+.onebox-body .status_tag.open {
+  background-color: #6cc644;
+}
+
+.onebox-body .status_tag.merged {
+  background-color: #6e5494;
+}
+
+.onebox-body .status_tag.closed {
+  background-color: #bd2c00;
+}
+
+// Onebox - Twitter - Status
+aside.onebox.twitterstatus .onebox-body {
+  h4 {
+    margin-bottom: 0;
+  }
+}
+
+// thumbnail, oddly, ONLY applies to twitter avatar
+.onebox.twitterstatus {
+  .thumbnail,
+  .thumbnail.onebox-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+
+  .twitter-screen-name {
+    font-size: var(--font-down-1);
+  }
+
+  .tweet .tweet-description {
+    white-space: pre-line;
+  }
+
+  p,
+  .tweet {
+    clear: left;
+    padding: 1em 0;
+
+    .quoted {
+      border: 1px solid var(--content-border-color);
+      padding: 0.5em 1em;
+      margin-top: 1em;
+      white-space: normal;
+
+      .quoted-link {
+        color: inherit;
+      }
+
+      .quoted-title {
+        font-weight: bold;
+        margin: 0.5em 0;
+        padding: 0;
+
+        span {
+          font-weight: lighter;
+          color: var(--primary-medium);
+        }
+      }
+
+      div {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  .date {
+    display: flex;
+    line-height: var(--line-height-small);
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .retweet {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+    white-space: nowrap;
+
+    svg {
+      fill: currentcolor;
+      margin-right: 0.25em;
+    }
+  }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
+}
+
+// Onebox - Imgur/Flickr - Album
+.onebox.imgur-album,
+.onebox.flickr-album {
+  .outer-box {
+    position: absolute;
+    z-index: z("base");
+    font-size: var(--font-down-1);
+    color: #fff;
+    background-color: rgb(0, 0, 0, 0.6);
+
+    @include ellipsis;
+    max-width: 100%;
+    padding: 5px 0;
+
+    .inner-box {
+      padding-left: 10px;
+      padding-right: 10px;
+      overflow: hidden;
+
+      @include ellipsis;
+
+      .album-title {
+        width: 100%;
+        font-size: var(--font-up-1);
+        line-height: var(--line-height-large);
+        color: #ccc;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+// resize stackexchange onebox image
+aside.onebox.stackexchange .onebox-body {
+  img:not(.onebox-avatar) {
+    max-height: 60%;
+    max-width: 10%;
+  }
+
+  .tags {
+    color: gray;
+  }
+}
+
+.onebox-metadata {
+  color: var(--primary-med-or-secondary-med);
+}
+
+aside.onebox.xkcd .onebox-body img {
+  float: none;
+  max-height: unset;
+}
+
+// pdf onebox
+.onebox.pdf .onebox-body {
+  .pdf-onebox-logo {
+    width: 60px;
+    height: 50px;
+    float: left;
+    background: absolute-image-url("/favicons/pdf_64px.png") no-repeat;
+    background-size: 48px 48px;
+  }
+
+  .filesize {
+    color: gray;
+  }
+}
+
+// allowlistedgeneric twitter labels
+.onebox.allowlistedgeneric,
+.onebox.whitelistedgeneric,
+.onebox.discoursetopic {
+  .label1,
+  .label2 {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  .label1 {
+    float: left;
+  }
+
+  .label2 {
+    float: right;
+  }
+}
+
+.onebox {
+  .site-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5em;
+  }
+
+  &.category-onebox {
+    border: 1px solid var(--content-border-color);
+    padding-left: calc(1em - 5px);
+    margin-left: 5px;
+  }
+
+  .badge-category-bg {
+    display: inline-block;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+}
+
+.onebox.discoursetopic {
+  h3 {
+    width: 100%;
+    margin-bottom: 0.2rem !important;
+  }
+
+  .topic-category {
+    color: var(--primary-high);
+    line-height: var(--line-height-medium);
+  }
+
+  .discourse-tags {
+    vertical-align: bottom;
+
+    .d-icon-tag {
+      font-size: var(--font-down-1);
+      margin-right: 0.35em;
+      margin-top: 0.15em;
+      color: var(--primary-medium);
+      align-self: center;
+    }
+  }
+
+  .discourse-tag:not(:last-child)::after {
+    content: ",";
+    margin-right: 0.15em;
+  }
+}
+
+.onebox.gfycat p {
+  span.label1 a {
+    white-space: nowrap;
+  }
+}
+
+.onebox.instagram {
+  div.instagram-description {
+    color: var(--primary-med-or-secondary-med);
+    padding-top: 10px;
+  }
+}
+
+.onebox.reddit {
+  div.aspect-image-full-size {
+    position: relative;
+  }
+
+  div.description {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+.onebox.githubfolder {
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+
+    &.onebox-full-image {
+      max-height: 60px;
+      max-width: 60px;
+    }
+  }
+
+  .label1 {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+.onebox.githubcommit {
+  pre.message {
+    padding: 0;
+  }
+}
+
+// mobile specific style
+.mobile-view article.onebox-body {
+  border-top: none;
+}
+
+// Google Photos Album
+.onebox.google-photos-album {
+  @extend .imgur-album;
+}
+
+aside.onebox.mixcloud-preview {
+  padding: 0;
+  border: 0;
+  height: 120px;
+  background-color: #1c1f21;
+
+  article.onebox-body img {
+    padding: 0;
+    max-height: 120px;
+  }
+
+  .onebox-body {
+    a[href],
+    a[href]:visited,
+    a[href]:hover {
+      color: #d1d1d1;
+    }
+
+    .video-icon {
+      position: relative;
+      top: 17px;
+      height: 100%;
+      float: left;
+      padding-left: 6px;
+    }
+
+    .mixcloud-text {
+      padding-left: 170px;
+      font-family: sans-serif;
+      color: gray;
+
+      h3 {
+        font-size: 13px;
+        font-weight: 300;
+        margin: 0;
+        padding-top: 15px;
+        height: 20px;
+      }
+
+      h4 {
+        font-size: 12px;
+        font-weight: 200;
+      }
+    }
+  }
+}
+
+@supports (aspect-ratio: 1) {
+  // Not supported on iOS < 15. For those devices, we just
+  // use the fixed width/height attributes on the iframe
+  .youtube-onebox {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+  }
+}
+
+// Force oneboxed videos to 16:9 aspect ratio
+.onebox.video-onebox,
+.video-container {
+  position: relative;
+  padding: 0 0 56.25% 0;
+  width: 100%;
+  background-color: black;
+
+  video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.video-placeholder-container {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 0 0 56.25% 0;
+  width: 100%;
+  background-color: black;
+
+  .video-placeholder-overlay {
+    background-color: rgb(0, 0, 0, 0.25);
+    padding: 1rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    .d-icon-play {
+      border-radius: var(--d-border-radius);
+      color: #fff;
+      display: flex;
+      filter: drop-shadow(3px 3px 2px rgb(0, 0, 0, 0.25));
+      height: 2.3rem;
+      transition: transform 0.15s;
+      width: 2.3rem;
+
+      @media (prefers-reduced-motion) {
+        transition: transform 0s;
+      }
+    }
+
+    .spinner {
+      border-color: #fff;
+      border-right-color: rgb(0, 0, 0, 0);
+      margin: 0;
+    }
+  }
+
+  @include hover {
+    .video-placeholder-overlay .d-icon-play {
+      transform: scale(1.2);
+    }
+  }
+}
+
+iframe.vimeo-onebox,
+iframe.loom-onebox {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+@supports not (aspect-ratio: auto) {
+  iframe.vimeo-onebox,
+  iframe.loom-onebox {
+    width: 690px;
+    height: 388px;
+  }
+}
+
+.video-container {
+  .notice {
+    background-color: var(--highlight-bg);
+    padding: 10px 20px;
+    position: absolute;
+    width: calc(100% - 40px);
+    animation: 0.5s fadeIn;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.onebox-placeholder-container {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  width: 100%;
+  padding: 0 0 48.25% 0;
+  background-color: var(--primary-low);
+
+  .placeholder-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.image {
+      &::before {
+        opacity: 0.8;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="grey" d="M464 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h416c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM112 120c-30.928 0-56 25.072-56 56s25.072 56 56 56 56-25.072 56-56-25.072-56-56-56zM64 384h384V272l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L208 320l-55.515-55.515c-4.686-4.686-12.284-4.686-16.971 0L64 336v48z"></path></svg>'
+        );
+      }
+    }
+
+    &.video {
+      &::before {
+        opacity: 0.8;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="white" d="M336.2 64H47.8C21.4 64 0 85.4 0 111.8v288.4C0 426.6 21.4 448 47.8 448h288.4c26.4 0 47.8-21.4 47.8-47.8V111.8c0-26.4-21.4-47.8-47.8-47.8zm189.4 37.7L416 177.3v157.4l109.6 75.5c21.2 14.6 50.4-.3 50.4-25.8V127.5c0-25.4-29.1-40.4-50.4-25.8z"></path></svg>'
+        );
+      }
+    }
+
+    &.audio {
+      &::before {
+        opacity: 0.4;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M511.99 32.01c0-21.71-21.1-37.01-41.6-30.51L150.4 96c-13.3 4.2-22.4 16.5-22.4 30.5v261.42c-10.05-2.38-20.72-3.92-32-3.92-53.02 0-96 28.65-96 64s42.98 64 96 64 96-28.65 96-64V214.31l256-75.02v184.63c-10.05-2.38-20.72-3.92-32-3.92-53.02 0-96 28.65-96 64s42.98 64 96 64 96-28.65 96-64l-.01-351.99z"></path></svg>'
+        );
+      }
+    }
+
+    &.map {
+      &::before {
+        opacity: 0.4;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z"></path></svg>'
+        );
+      }
+    }
+
+    &.generic {
+      &::before {
+        opacity: 0.4;
+        content: svg-uri(
+          '<svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M288 248v28c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-28c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm-12 72H108c-6.6 0-12 5.4-12 12v28c0 6.6 5.4 12 12 12h168c6.6 0 12-5.4 12-12v-28c0-6.6-5.4-12-12-12zm108-188.1V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V48C0 21.5 21.5 0 48 0h204.1C264.8 0 277 5.1 286 14.1L369.9 98c9 8.9 14.1 21.2 14.1 33.9zm-128-80V128h76.1L256 51.9zM336 464V176H232c-13.3 0-24-10.7-24-24V48H48v416h288z"></path></svg>'
+        );
+      }
+    }
+  }
+}
+
+aside.onebox.preview-error .site-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5em;
+}
+
+.onebox.threadsstatus .onebox-body {
+  .thumbnail,
+  .thumbnail.onebox-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+
+  .threads-screen-name {
+    font-size: var(--font-down-1);
+  }
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .thread-contents .thread-description {
+    white-space: pre-line;
+  }
+
+  p,
+  .thread-contents {
+    clear: left;
+    padding: 1em 0;
+
+    .quoted {
+      border: 1px solid var(--content-border-color);
+      padding: 0.5em 1em;
+      margin-top: 1em;
+      white-space: normal;
+
+      .quoted-link {
+        color: inherit;
+      }
+
+      .quoted-title {
+        font-weight: bold;
+        margin: 0.5em 0;
+        padding: 0;
+
+        span {
+          font-weight: lighter;
+          color: var(--primary-medium);
+        }
+      }
+
+      div {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  .date {
+    display: flex;
+    line-height: var(--line-height-small);
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .replies {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+
+    svg {
+      fill: currentcolor;
+      margin-right: 0.25em;
+    }
+  }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
+}

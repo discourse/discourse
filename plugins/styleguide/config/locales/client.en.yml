@@ -1,0 +1,112 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Styleguide"
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "To get started, choose a section from the menu on the left."
+
+      categories:
+        syntax: Syntax
+        atoms: Atoms
+        molecules: Molecules
+        organisms: Organisms
+
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typography"
+          example: "Welcome to Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Date/Time inputs"
+        menus:
+          title: "Menus"
+        multi_select:
+          title: "Multi select"
+        toasts:
+          title: "Toasts"
+        font_scale:
+          title: "Font System"
+        colors:
+          title: "Colors"
+        icons:
+          title: "Icons"
+          full_list: "See the full list of Font Awesome Icons"
+        forms:
+          title: "Forms"
+        buttons:
+          title: "Buttons"
+        dropdowns:
+          title: "Dropdowns"
+        categories:
+          title: "Categories"
+        bread_crumbs:
+          title: "Bread Crumbs"
+        navigation:
+          title: "Navigation"
+        navigation_bar:
+          title: "Navigation Bar"
+        navigation_stacked:
+          title: "Navigation Stacked"
+        categories_list:
+          title: "Categories List"
+        topic_link:
+          title: "Topic Link"
+        topic_list_item:
+          title: "Topic List Item"
+        topic_statuses:
+          title: "Topic Statuses"
+        topic_list:
+          title: "Topic List"
+        basic_topic_list:
+          title: "Basic Topic List"
+        footer_message:
+          title: "Footer Message"
+        signup_cta:
+          title: "Signup CTA"
+        topic_timer_info:
+          title: "Topic Timers"
+        topic_footer_buttons:
+          title: "Topic Footer Buttons"
+        topic_notifications:
+          title: "Topic Notifications"
+        post:
+          title: "Post"
+        post_list:
+          title: "Post List"
+          empty_example: "<PostList /> empty state"
+          populated_example: "<PostList /> populated state"
+        topic_map:
+          title: "Topic Map"
+        site_header:
+          title: "Site Header"
+        suggested_topics:
+          title: "Suggested Topics"
+        post_menu:
+          title: "Post Menu"
+        modal:
+          title: "Modal"
+          header: "Modal Title"
+          footer: "Modal Footer"
+        user_about:
+          title: "User About Box"
+        header_icons:
+          title: "Header Icons"
+        spinners:
+          title: "Spinners"
+        empty_state:
+          title: "Empty State"
+        tooltips:
+          title: "Tooltips"
+          description: "Description"
+          header: "Header"
+          hover_to_see: "Hover to see a tooltip"
+        char_counter:
+          title: "Character Counter"
+          placeholder: "Enter your text here..."
+

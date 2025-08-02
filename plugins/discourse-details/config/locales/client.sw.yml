@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    details:
+      title: Ficha Maelezo
+    composer:
+      details_title: Muhtasari
+      details_text: "Haya maandiko yatafichwa"

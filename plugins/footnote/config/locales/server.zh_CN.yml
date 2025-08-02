@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    enable_markdown_footnotes: 在此网站上启用脚注 Markdown
+    display_footnotes_inline: 启用脚注内联扩展

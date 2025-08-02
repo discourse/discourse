@@ -1,0 +1,112 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    poll:
+      voters:
+        one: "glasač"
+        few: "glasača"
+        other: "glasača"
+      total_votes:
+        one: "ukupno glasova"
+        few: "ukupno glasova"
+        other: "ukupno glasova"
+      average_rating: "Prosječna ocjena: <strong>%{average}</strong>."
+      public:
+        title: "Glasovi su <strong>javni</strong>."
+      results:
+        groups:
+          title: "Morate biti član %{groups} da biste glasali u ovoj anketi."
+        vote:
+          title: "Rezultati će biti prikazani nakon <strong>glasanja</strong>."
+        closed:
+          title: "Rezultati će biti prikazani nakon <strong>zatvaranja</strong>."
+        staff:
+          title: "Rezultati se prikazuju samo članovima <strong>osoblja</strong>."
+      cast-votes:
+        title: "Dajte svoj glas"
+        label: "Glasaj sada!"
+      show-results:
+        title: "Prikaži resultate anketa"
+        label: "Rezultati"
+      remove-vote:
+        title: "Ukloni svoj glas"
+      hide-results:
+        title: "Nazad na vaše glasove"
+      group-results:
+        title: "Grupiranje glasova prema korisničkom polju"
+        label: "Prikaži detaljnu podjelu"
+      export-results:
+        title: "Izvoz rezultata ankete"
+        label: "Izvoz"
+      open:
+        title: "Otvori anketu"
+        label: "Otvori"
+        confirm: "Jeste li sigurni da želite otvoriti anketu?"
+      close:
+        title: "Zatvori anketu"
+        label: "Zatvori"
+        confirm: "Jeste li sigurni da želite zatvoriti anketu?"
+      automatic_close:
+        closes_in: "Zatvara se u <strong>%{timeLeft}</strong>."
+        age: "Zatvoreno <strong>%{age}</strong>"
+      breakdown:
+        title: "Rezultati ankete"
+        votes: "%{count} glasova"
+        breakdown: "Slom"
+        percentage: "Postotak"
+        count: "Količina"
+      ranked_choice:
+        none: "Ništa"
+      options:
+        label: "Mogućnosti"
+      error_while_toggling_status: "Nažalost, došlo je do pogreške prilikom izmjene statusa ove ankete."
+      error_while_casting_votes: "Žao nam je, došlo je do pogreške prilikom vašeg glasanja."
+      error_while_fetching_voters: "Žao nam je, došlo je do pogreške prilikom prikaza glasača."
+      error_while_exporting_results: "Žao nam je, došlo je do pogreške prilikom izvoza rezultata ankete."
+      ui_builder:
+        title: Kreiraj anketu
+        insert: Umetni anketu
+        help:
+          options_min_count: Unesite barem 1 opciju.
+          options_max_count: Unesite najviše %{count} opcija.
+          invalid_min_value: Minimalna vrijednost mora biti najmanje 1.
+          invalid_max_value: Maksimalna vrijednost mora biti najmanje 1, ali manja ili jednaka broju opcija.
+          invalid_values: Minimalna vrijednost mora biti manja od maksimalne vrijednosti.
+          min_step_value: Minimalna vrijednost koraka je 1
+        poll_type:
+          label: Tip
+          regular: Jednostruki izbor
+          multiple: Višestruki izbor
+          number: Brojčana ocjena
+        poll_result:
+          label: Prikaži rezultate...
+          always: Uvijek vidljiv
+          vote: Tek nakon glasanja
+          closed: Kada je anketa zatvorena
+          staff: Samo osoblje
+        poll_groups:
+          label: Ograničite glasanje na ove grupe
+        poll_chart_type:
+          label: Grafikon rezultata
+          bar: Trakasti (Bar)
+          pie: Tortni (Pie)
+        poll_config:
+          max: Maks. izbori
+          min: Min Izbori
+          step: Korak
+        poll_public:
+          label: Pokažite tko je glasao
+        poll_title:
+          label: Naslov (izborno)
+        poll_options:
+          label: Opcije (jedna po liniji)
+          add: Dodaj opciju
+        automatic_close:
+          label: Automatski zatvori anketu
+        show_advanced: "Prikaži napredne mogućnosti"
+        hide_advanced: "Sakrij napredne opcije"

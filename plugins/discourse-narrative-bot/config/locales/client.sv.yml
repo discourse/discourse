@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Starta välkomsthandledningen för alla nya användare"
+        welcome_message: "Skicka ett välkomstmeddelande med en snabbhandledning till alla nya användare"

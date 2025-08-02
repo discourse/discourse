@@ -1,0 +1,53 @@
+<h1><%= t 'finish_installation.register.title' %></h1>
+
+<%- if @allowed_emails.present? %>
+  <%= form_tag(finish_installation_register_path, class:"wizard-container__fields") do %>
+
+    <div class='wizard-container__input wizard-container__field text-field'>
+      <label for="email">
+        <span class="wizard-container__label"><%= t 'js.user.email.title' %></span>
+      </label>
+
+      <div class='input-area'>
+        <!--email_off-->
+        <%= select_tag :email, options_for_select(@allowed_emails, selected: params[:email]), class: 'combobox wizard-container__combobox' %>
+        <!--/email_off-->
+      </div>
+    </div>
+
+    <div class='wizard-container__input wizard-container__field text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
+      <label for="username">
+        <span class="wizard-container__label"><%= t 'js.user.username.title' %></span>
+      </label>
+
+      <div class='wizard-container__description'><%= t 'js.user.username.instructions' %></div>
+
+      <div class='input-area'>
+        <%= text_field_tag(:username, params[:username], class:"wizard-container__text-input") %>
+      </div>
+      <%- @user.errors[:username].each do |e| %>
+        <div class='field-error-description'><%= e.to_s %></div>
+      <%- end %>
+    </div>
+
+    <div class='wizard-container__input wizard-container__field text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
+      <label for="password">
+        <span class="wizard-container__label"><%= t 'js.user.password.title' %></span>
+      </label>
+
+      <div class='wizard-container__description'><%= t 'js.user.password.instructions', count: SiteSetting.min_admin_password_length  %></div>
+
+      <div class='input-area'>
+        <%= password_field_tag(:password, params[:password], class:"wizard-container__text-input") %>
+      </div>
+      <% @user.errors[:password].each do |e| %>
+        <div class='field-error-description'><%= e.to_s %></div>
+      <% end %>
+    </div>
+
+    <%= submit_tag(t('finish_installation.register.button'), class: 'wizard-container__button primary') %>
+
+  <%- end %>
+<%- else -%>
+  <p><%= raw(t 'finish_installation.register.no_emails') %></p>
+<%- end %>

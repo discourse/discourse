@@ -1,0 +1,79 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  system_messages:
+    chat_channel_archive_failed:
+      title: "Arhiva Chat kanala nije uspjela"
+      subject_template: "Arhiva kanala za chat nije uspjela"
+    chat_channel_archive_failed_no_topic:
+      title: "Arhiva Chat kanala nije uspjela"
+      subject_template: "Arhiva kanala za chat nije uspjela"
+  chat:
+    deleted_chat_username: izbrisao
+    errors:
+      not_accepting_dms: "Žao nam je, %{username} trenutno ne prihvaća poruke."
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Suspendiraj korisnika"
+        agree_and_silence:
+          title: "Ušuti korisnika"
+        disagree:
+          title: "Odbaci"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} i %{count} drugi"
+          few: "%{comma_separated_usernames} i %{count} drugih"
+          other: "%{comma_separated_usernames} i %{count} druga"
+    mention_warning:
+      dismiss: "skloni"
+      cannot_see: "%{first_identifier} ne može pristupiti ovom kanalu i nije obaviješten."
+      cannot_see_multiple:
+        one: "%{first_identifier} i %{count} drugi korisnik ne mogu pristupiti ovom kanalu i nisu bili obaviješteni."
+        few: "%{first_identifier} i %{count} druga korisnika ne mogu pristupiti ovom kanalu i nisu bili obaviješteni."
+        other: "%{first_identifier} i %{count} drugih korisnika ne može pristupiti ovom kanalu i nisu bili obaviješteni."
+      without_membership: "%{first_identifier} se nije pridružio ovom kanalu."
+      without_membership_multiple:
+        one: "%{first_identifier} i još %{count} korisnik se nisu pridružili ovom kanalu."
+        few: "%{first_identifier} i još %{count} korisnika se nisu pridružili ovom kanalu."
+        other: "%{first_identifier} i još %{count} korisnika se nisu pridružili ovom kanalu."
+      group_mentions_disabled: "%{first_identifier} ne dopušta spominjanje."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} i %{count} druga grupa ne dopuštaju spominjanje."
+        few: "%{first_identifier} i %{count} druge grupe ne dopuštaju spominjanje."
+        other: "%{first_identifier} i %{count} drugih grupa ne dopuštaju spominjanje."
+      too_many_members: "%{first_identifier} ima previše članova. Nitko nije obaviješten."
+      too_many_members_multiple:
+        one: "%{first_identifier} i %{count} druga grupa imaju previše članova. Nitko nije obaviješten."
+        few: "%{first_identifier} i %{count} druge grupe imaju previše članova. Nitko nije obaviješten."
+        other: "%{first_identifier} i %{count} drugih grupa imaju previše članova. Nitko nije obaviješten."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "sadrži ne-ascii znakove"
+        is_already_in_use: "je već u upotrebi"
+    onebox:
+      thread_title_connector: "u"
+    transcript:
+      default_thread_title: "Nit"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} vas je spomenuo u "%{channel}"'
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Izbrisani korisnik"
+      from: "%{site_name}"
+  unsubscribe:
+    chat_summary:
+      never: Nikad

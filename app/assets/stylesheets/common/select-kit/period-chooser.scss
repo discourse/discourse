@@ -1,0 +1,74 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.period-chooser {
+      display: inline-flex;
+      position: relative;
+
+      .select-kit-collection {
+        padding: 5px;
+      }
+
+      .period-chooser-header {
+        display: inline-block; // safari 14 has issues with summary elements and flexbox
+        background: transparent;
+        border-color: transparent;
+        padding: 0;
+
+        h2.selected-name {
+          color: var(--secondary);
+          display: inline-block;
+
+          .date-section {
+            color: var(--primary);
+            margin-right: 5px;
+          }
+
+          .top-date-string {
+            font-size: var(--font-down-1);
+            color: var(--primary-med-or-secondary-high);
+            font-weight: normal;
+            text-transform: uppercase;
+          }
+        }
+
+        .d-icon {
+          color: var(--primary);
+          opacity: 1;
+          font-size: var(--font-up-3);
+        }
+
+        &.is-focused,
+        &:focus,
+        &:hover {
+          background: transparent;
+          border-color: transparent;
+          outline: none;
+        }
+      }
+
+      .period-chooser-row {
+        font-weight: bold;
+        padding: 5px;
+        font-size: var(--font-up-1);
+        align-items: center;
+        display: flex;
+
+        .period-title {
+          flex: 1 0 0px;
+        }
+
+        .date-section {
+          color: var(--primary);
+        }
+
+        .top-date-string {
+          font-weight: normal;
+          font-size: var(--font-down-1);
+          color: var(--primary-med-or-secondary-high);
+          text-transform: uppercase;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+.chat-composer-upload {
+  display: inline-flex;
+  height: 64px;
+  padding: 0.5rem;
+  border: 1px solid var(--primary-low-mid);
+  margin-right: 0.5em;
+  position: relative;
+  border-radius: var(--d-border-radius);
+  box-sizing: border-box;
+
+  &--image:not(.chat-composer-upload--in-progress) {
+    padding: 0;
+
+    .preview-img {
+      height: 62px;
+      width: 62px;
+      box-sizing: border-box;
+    }
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover {
+    .chat-composer-upload__remove-btn {
+      visibility: visible;
+      background: rgb(var(--always-black-rgb), 0.9);
+      padding: 5px;
+      border-radius: 100%;
+      font-size: var(--font-down-2);
+    }
+  }
+
+  &__remove-btn {
+    border: 1px solid var(--primary-medium);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    visibility: hidden;
+  }
+
+  .preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+
+    .d-icon {
+      font-size: var(--font-up-6);
+      margin-right: 0.5rem;
+    }
+
+    .preview-img {
+      object-position: center;
+      object-fit: cover;
+      border-radius: var(--d-border-radius);
+    }
+  }
+
+  .data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: var(--line-height-medium);
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+
+    .top-data,
+    .bottom-data {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-name {
+      display: inline-block;
+      max-width: 150px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 0.5em;
+    }
+
+    .uploading,
+    .processing {
+      font-size: var(--font-down-2);
+      margin-right: 0.75em;
+    }
+
+    .upload-progress {
+      width: 110px;
+    }
+
+    .extension-pill {
+      background: var(--primary-low);
+      border-radius: var(--d-border-radius);
+      font-size: var(--font-down-2-rem);
+      padding: 0.1em 0.4em;
+    }
+  }
+}

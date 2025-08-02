@@ -1,0 +1,30 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "avatar",
+        "profile_background",
+        "card_background",
+        "custom_emoji",
+        "composer"
+      ]
+    },
+    "user_id": {
+      "type": "integer",
+      "description": "required if uploading an avatar"
+    },
+    "synchronous": {
+      "type": "boolean",
+      "description": "Use this flag to return an id and url"
+    },
+    "file": {
+      "type": "string",
+      "format": "binary"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}

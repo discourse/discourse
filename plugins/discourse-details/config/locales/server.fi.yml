@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    details_enabled: 'Sisällytä mahdollisuus lisätä laajennettavia yksityiskohtia viestiin. Tämä ominaisuus löytyy viestieditorin työkalurivin ponnahdusvalikosta. Sinun on ajettava "rake posts:rebake" -komento, jos muutat tätä asetusta.'
+  details:
+    excerpt_details: "(katso lisätietoja napsauttamalla)"

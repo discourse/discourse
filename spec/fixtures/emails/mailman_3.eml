@@ -1,0 +1,15 @@
+Date: Tue, 16 May 2023 20:50:54 -0700
+From: Some One via example <list@ml.example.com>
+To: list@example.com
+CC: Some One <some@one.com>
+Message-ID: <5a0d382572c511c24daf1558c02f6a19@foo.com>
+Subject: library 1.2.3 released!
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-MailFrom: some@one.com
+X-Mailman-Version: 2.2.2
+X-BeenThere: list@ml.example.com
+Precedence: list
+
+library version 1.2.3 has been released!

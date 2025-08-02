@@ -1,0 +1,25 @@
+plugins:
+  discourse_narrative_bot_enabled:
+    default: true
+    client: true
+  disable_discourse_narrative_bot_welcome_post:
+    default: false
+  discourse_narrative_bot_welcome_post_type:
+    default: 'new_user_track'
+    enum: 'DiscourseNarrativeBot::WelcomePostTypeSiteSetting'
+  discourse_narrative_bot_skip_tutorials:
+    default: ''
+    type: list
+    hidden: true
+  discourse_narrative_bot_welcome_post_delay:
+    default: 0
+  discourse_narrative_bot_ignored_usernames:
+    default: 'discourse'
+    type: list
+  discourse_narrative_bot_disable_public_replies:
+    default: false
+
+uncategorized:
+  send_welcome_message:
+    default: false
+    hidden: true

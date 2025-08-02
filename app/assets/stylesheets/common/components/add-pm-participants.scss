@@ -1,0 +1,119 @@
+.d-modal.add-pm-participants {
+  .d-modal__body {
+    overflow-y: visible;
+  }
+}
+
+.add-pm-participants.modal .share.modal-panel {
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .title {
+      font-size: var(--font-0);
+      font-weight: normal;
+      margin-bottom: 8px;
+
+      .post-date {
+        color: var(--primary-medium);
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+
+    .topic-share-url {
+      width: 100%;
+      height: auto;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+    }
+
+    .sources {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      flex-direction: row;
+
+      .social-link {
+        font-size: var(--font-up-6);
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.add-pm-participants.modal .invite.modal-panel,
+.invite-link.modal-panel {
+  .error-message,
+  .success-message {
+    margin-bottom: 8px;
+  }
+
+  .body {
+    .invite-user-control,
+    .group-access-control,
+    .show-custom-message-control {
+      margin-bottom: 8px;
+    }
+
+    .group-access-control {
+      .select-kit.multi-select input.filter-input {
+        padding-left: 8px;
+      }
+
+      .group-chooser {
+        width: 100%;
+      }
+    }
+
+    .instructions {
+      margin-bottom: 8px;
+    }
+
+    .instructions.approval-notice {
+      color: var(--secondary-medium);
+    }
+
+    .invite-user-input {
+      width: 100%;
+
+      .input-wrapper {
+        width: 100%;
+
+        .filter-input {
+          width: 100%;
+        }
+      }
+    }
+
+    .invite-user-input-wrapper {
+      display: flex;
+
+      div.ac-wrap {
+        flex: 1;
+      }
+    }
+
+    .invite-link-input {
+      width: 100%;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+
+    .btn-primary {
+      margin-right: 8px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Բարի գալուստ Discourse"
+        colors:
+          title: "Գույներ"
+        icons:
+          title: "Պատկերակներ"
+        categories:
+          title: "Կատեգորիաներ"
+        navigation:
+          title: "Նավիգացիա"
+        categories_list:
+          title: "Կատեգորիաների Ցանկ"
+        topic_timer_info:
+          title: "Թեմաների Ժամաչափիչներ"
+        post:
+          title: "Գրառում"
+        suggested_topics:
+          title: "Առաջարկվող Թեմաներ"
+        tooltips:
+          description: "Նկարագրությունը"
+          header: "Վերնամաս"

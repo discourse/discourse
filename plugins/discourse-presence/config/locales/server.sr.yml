@@ -1,0 +1,9 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  site_settings:
+    presence_enabled: "Prikaži da korisnici trenutno kucaju odgovor ili menjaju poruku"

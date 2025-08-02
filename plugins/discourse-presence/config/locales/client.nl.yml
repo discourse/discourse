@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    presence:
+      replying:
+        one: "beantwoordt"
+        other: "beantwoorden"
+      editing:
+        one: "bewerkt"
+        other: "bewerken"
+      replying_to_topic:
+        one: "beantwoordt"
+        other: "beantwoorden"

@@ -1,0 +1,26 @@
+<aside class="onebox chat-onebox">
+  <article class="onebox-body chat-onebox-body">
+    <h3 class="chat-onebox-title">
+      <a href="/chat/c/-/{{channel_id}}">
+        {{#is_category}}
+          <span class="category-chat-badge" style="color: #{{color}}">
+            <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
+          </span>
+        {{/is_category}}
+        <span class="clear-badge">{{channel_name}}</span>
+      </a>
+    </h3>
+    {{#description}}
+      <div class="chat-onebox-description">{{description}}</div>
+    {{/description}}
+    <div class="chat-onebox-members-count">{{user_count_str}}</div>
+    <div class="chat-onebox-members">
+      {{#users}}
+        <a class="trigger-user-card" data-user-card="{{username}}" aria-hidden="true" tabindex="-1">
+          <img loading="lazy" alt="{{username}}" width="30" height="30" src="{{avatar_url}}" class="avatar">
+        </a>
+      {{/users}}
+      {{remaining_user_count_str}}
+    </div>
+  </article>
+</aside>

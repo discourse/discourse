@@ -1,0 +1,39 @@
+.select-kit {
+  &.combo-box {
+    &.category-chooser {
+      width: 300px;
+
+      .select-kit-row {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+
+        &.none {
+          .topic-count {
+            display: none;
+          }
+        }
+
+        .topic-count {
+          font-size: var(--font-down-1);
+          color: var(--primary-medium);
+          white-space: nowrap;
+          margin-left: 0.5em;
+          font-weight: normal;
+        }
+
+        .category-status {
+          color: var(--primary);
+          line-height: var(--line-height-large);
+          flex: 1 1 auto;
+        }
+
+        .category-desc {
+          flex: 1 1 auto;
+          font-size: var(--font-down-1);
+          line-height: var(--line-height-large);
+        }
+      }
+    }
+  }
+}

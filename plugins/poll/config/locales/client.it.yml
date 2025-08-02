@@ -1,0 +1,154 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    poll:
+      voters:
+        one: "votante"
+        other: "votanti"
+      total_votes:
+        one: "voto totale"
+        other: "voti totali"
+      votes:
+        one: "%{count} voto"
+        other: "%{count} voti"
+      average_rating: "Voto medio: <strong>%{average}</strong>."
+      public:
+        title: "I voti sono <strong>pubblici</strong>."
+      results:
+        groups:
+          title: "Devi essere un membro di %{groups} per votare in questo sondaggio."
+        vote:
+          title: "I risultati saranno mostrati al momento del <strong>voto</strong>."
+        closed:
+          title: "I risultati saranno mostrati a sondaggio <strong>chiuso</strong>."
+        staff:
+          title: "I risultati saranno mostrati solo ai membri dello <strong>staff</strong>"
+        tabs:
+          votes: "Voti"
+          outcome: "Esito"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Scegli almeno <strong>%{count}</strong> opzione."
+            other: "Scegli almeno <strong>%{count}</strong> opzioni."
+          up_to_max_options:
+            one: "Scegli fino a <strong>%{count}</strong> opzione."
+            other: "Scegli fino a <strong>%{count}</strong> opzioni."
+          x_options:
+            one: "Scegli <strong>%{count}</strong> opzione."
+            other: "Scegli <strong>%{count}</strong> opzioni."
+          between_min_and_max_options: "Scegli tra <strong>%{min} e %{max} opzioni</strong>."
+      cast-votes:
+        title: "Vota"
+        label: "Vota ora!"
+      show-results:
+        title: "Visualizza i risultati del sondaggio"
+        label: "Risultati"
+      show-tally:
+        title: "Mostra i risultati delle votazioni in base al numero di voti"
+        label: "Mostra conteggio"
+      show-percentage:
+        title: "Mostra i risultati del voto in percentuale"
+        label: "Visualizza come percentuale"
+      remove-vote:
+        title: "Annulla il tuo voto"
+        label: "Annulla il voto"
+      hide-results:
+        title: "Torna ai sondaggi"
+        label: "Vota"
+      group-results:
+        title: "Voti raggruppati per campo utente"
+        label: "Mostra la suddivisione"
+      export-results:
+        title: "Esporta i risultati del sondaggio"
+        label: "Esporta"
+      open:
+        title: "Apri il sondaggio"
+        label: "Apri"
+        confirm: "Sicuro di voler aprire questo sondaggio?"
+      close:
+        title: "Chiudi il sondaggio"
+        label: "Chiudi"
+        confirm: "Sicuro di voler chiudere questo sondaggio?"
+      automatic_close:
+        closes_in: "Chiude tra <strong>%{timeLeft}</strong>."
+        age: "Chiuso <strong>%{age}</strong>"
+      breakdown:
+        title: "Risultati del sondaggio"
+        votes: "%{count} voti"
+        breakdown: "Ripartizione"
+        percentage: "Percentuale"
+        count: "Conteggio"
+      ranked_choice:
+        title:
+          rounds: "Turni"
+          outcome: "Risultato"
+        none: "Nessuna"
+        majority: "Maggioranza"
+        eliminated: "Eliminato"
+        round: "Turno"
+        winner:
+          one: "Ha vinto %{winner} dopo un turno."
+          other: "Ha vinto %{winner} dopo %{count} turni."
+        tied:
+          one: "Pareggio dopo un turno tra i seguenti candidati:"
+          other: "Pareggio dopo %{count} turni tra i seguenti candidati:"
+      options:
+        label: "Opzioni"
+        ranked_choice:
+          abstain: "Astieniti"
+          highest_priority: "(massima priorità)"
+          lowest_priority: "(minima priorità)"
+          login: "Accedi per votare!"
+      error_while_toggling_status: "Spiacenti, si è verificato un errore nel cambiamento di stato di questo sondaggio."
+      error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
+      error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
+      error_while_exporting_results: "Spiacenti, si è verificato un errore durante l'esportazione dei risultati del sondaggio."
+      ui_builder:
+        title: Crea Sondaggio
+        insert: Inserisci Sondaggio
+        help:
+          options_min_count: Inserisci almeno un'opzione.
+          options_max_count: Inserisci al massimo %{count} opzioni.
+          invalid_min_value: Il valore minimo deve essere almeno 1.
+          invalid_max_value: Il valore massimo deve essere almeno 1, ma inferiore o uguale al numero di opzioni.
+          invalid_values: Il valore minimo deve essere minore del valore massimo.
+          min_step_value: Il valore di intervallo minimo è 1
+        poll_type:
+          label: Tipo
+          regular: Scelta Singola
+          multiple: Scelta Multipla
+          ranked_choice: Scelta classificata
+          number: Votazione Numerica
+        poll_result:
+          label: Mostra i risultati...
+          always: Sempre visibile
+          vote: Solo dopo la votazione
+          closed: Quando il sondaggio è chiuso
+          staff: Solo staff
+        poll_groups:
+          label: Limita il voto a questi gruppi
+        poll_chart_type:
+          label: Grafico dei risultati
+          bar: Barra
+          pie: Torta
+        poll_config:
+          max: Numero max di scelte
+          min: Numero min di scelte
+          step: Intervallo
+        poll_public:
+          label: Mostra i votanti
+        poll_title:
+          label: Titolo (facoltativo)
+        poll_options:
+          label: Opzioni (una per riga)
+          add: Aggiungi opzione
+        automatic_close:
+          label: Chiudi sondaggio automaticamente
+        show_advanced: "Mostra Opzioni Avanzate"
+        hide_advanced: "Nascondi Opzioni Avanzate"

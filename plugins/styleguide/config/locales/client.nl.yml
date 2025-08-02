@@ -1,0 +1,108 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    styleguide:
+      title: "Stijlgids"
+      welcome: "Kies een sectie in het menu links om te beginnen."
+      categories:
+        syntax: Syntax
+        atoms: Atomen
+        molecules: Moleculen
+        organisms: Organismen
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typografie"
+          example: "Welkom bij Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Datum-/tijdinvoer"
+        menus:
+          title: "Menu's"
+        toasts:
+          title: "Toasts"
+        font_scale:
+          title: "Lettertypesysteem"
+        colors:
+          title: "Kleuren"
+        icons:
+          title: "Pictogrammen"
+          full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"
+        forms:
+          title: "Formulieren"
+        buttons:
+          title: "Knoppen"
+        dropdowns:
+          title: "Vervolgkeuzelijsten"
+        categories:
+          title: "Categorieën"
+        bread_crumbs:
+          title: "Broodkruimels"
+        navigation:
+          title: "Navigatie"
+        navigation_bar:
+          title: "Navigatiebalk"
+        navigation_stacked:
+          title: "Navigatie gestapeld"
+        categories_list:
+          title: "Categorieënlijst"
+        topic_link:
+          title: "Topiclink"
+        topic_list_item:
+          title: "Topiclijstitem"
+        topic_statuses:
+          title: "Topicstatussen"
+        topic_list:
+          title: "Topiclijst"
+        basic_topic_list:
+          title: "Basistopicslijst"
+        footer_message:
+          title: "Voettekstbericht"
+        signup_cta:
+          title: "Registratie-CTA"
+        topic_timer_info:
+          title: "Topictimers"
+        topic_footer_buttons:
+          title: "Knoppen voor topicvoettekst"
+        topic_notifications:
+          title: "Topicmeldingen"
+        post:
+          title: "Bericht"
+        post_list:
+          title: "Berichtenlijst"
+          empty_example: "<PostList /> lege toestand"
+          populated_example: "<PostList /> gevulde toestand"
+        topic_map:
+          title: "Topickaart"
+        site_header:
+          title: "Header van de site"
+        suggested_topics:
+          title: "Voorgestelde topics"
+        post_menu:
+          title: "Berichtmenu"
+        modal:
+          title: "Modaal"
+          header: "Modaaltitel"
+          footer: "Modaalvoettekst"
+        user_about:
+          title: "Gebruikersinfovak"
+        header_icons:
+          title: "Koptekstpictogrammen"
+        spinners:
+          title: "Kringvelden"
+        empty_state:
+          title: "Lege toestand"
+        tooltips:
+          title: "Tooltips"
+          description: "Beschrijving"
+          header: "Koptekst"
+          hover_to_see: "Plaats de aanwijzer om een tooltip te zien"
+        char_counter:
+          title: "Tekensteller"
+          placeholder: "Voer hier je tekst in..."

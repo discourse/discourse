@@ -1,0 +1,10 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Fri, 15 Jan 2016 00:12:43 +0100
+Message-ID: <15@foo.bar.mail>
+Content-Type: text/plain
+
+This is a text reply :)
+
+Email parsing should not break because of a UTF-8 character: ’

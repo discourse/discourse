@@ -1,0 +1,134 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    discourse_automation:
+      back: Prethodno
+      edit: Edit
+      fields:
+        user:
+          label: User
+        pm:
+          title:
+            label: Naslov
+          raw:
+            label: Tijelo
+        pms:
+          title:
+            label: Naslov
+          raw:
+            label: Tijelo
+        group:
+          label: Grupa
+        text:
+          label: Poruka
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Bedž
+        recurring:
+          frequencies:
+            day: day
+            week: sedmica
+            month: mjesec
+            year: godina
+          fields:
+            recurrence:
+              label: Vraćanje
+        topic:
+          fields:
+            restricted_topic:
+              label: ID teme
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Oznake
+            restricted_categories:
+              label: Kategorije
+          created: Stvoreno
+          with_images: Images
+          with_links: Linkovi
+          with_code: Šifra
+          with_uploads: Uploads
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Parent Category
+        pm_created:
+          fields:
+            restricted_user:
+              label: Korisnici
+            restricted_group:
+              label: Grupa
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategorija
+            restricted_tags:
+              label: Oznake
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Oznake
+        post:
+          fields:
+            topic:
+              label: ID teme
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupa
+        user_global_notice:
+          levels:
+            info: Informacija
+            success: Uspjeh
+            error: Greška
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupa
+            badge:
+              label: Bedž
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: User
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID teme
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID teme
+            user:
+              label: User
+        close_topic:
+          fields:
+            topic:
+              label: ID teme
+            user:
+              label: User
+      models:
+        trigger:
+          name:
+            label: Trigger
+        automation:
+          name:
+            label: Ime
+          trigger:
+            label: Trigger
+          version:
+            label: Verzija
+          status:
+            label: Status
+          enabled:
+            label: Omogućen
+          disabled:
+            label: Neomogućen

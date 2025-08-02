@@ -1,0 +1,132 @@
+#!/bin/bash
+set -e
+
+SCRIPTPATH=$(cd "$(dirname "$0")" > /dev/null; pwd -P)
+SOURCE_DIR=$(cd "$SCRIPTPATH" > /dev/null; cd ../.. > /dev/null; pwd -P)
+DATA_DIR="$SOURCE_DIR/data/postgres"
+PLUGINS_DIR="$SOURCE_DIR/plugins"
+
+show_help() {
+cat <<EOF
+Usage: ${0##*/} [-e VAR=VAL] [--env VAR=VAL] [--env-file filename] [-h] [--init]
+
+  -e, --env       set environment variables
+      --env-file  pass in a file containing a list of environment variable assignments
+      --init      perform first-time initialization
+  -p --net-public publish ports on container on 0.0.0.0 (less secure as users on LAN may see dev env)
+EOF
+}
+
+initialize=""
+ENV_ARGS=""
+local_publish="127.0.0.1"
+
+while [ "${#@}" -ne "0" ]; do
+    case "$1" in
+        -h | --help)
+            show_help
+            exit 0
+            ;;
+        -i | --init)
+            initialize="initialize"
+            ;;
+        -p | --net-public)
+            local_publish="0.0.0.0"
+            ;;
+        -e | --env)
+            if [ -z "$2" ]; then
+                show_help
+                exit 0
+            else
+                ENV_ARGS+=" -e $2"
+                shift
+            fi
+            ;;
+        --env-file)
+            if [ -z "$2" ]; then
+                show_help
+                exit 0
+            else
+                ENV_ARGS="--env-file=$2"
+                break
+            fi
+            ;;
+        *)
+            echo "unexpected argument: $1" >& 2
+            show_help >& 2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [[ $(docker info -f "{{.Architecture}}") != *x86_64* ]]; then
+    echo "WARNING: Docker architecture is not x86_64."
+    echo "Discourse development is unlikely to work using Docker's architecture emulation."
+    echo "Please try a native development installation."
+    sleep 1
+fi
+
+echo "Using source in: ${SOURCE_DIR}"
+echo "Using data in:   ${DATA_DIR}"
+
+mkdir -p "${DATA_DIR}"
+
+mount_plugin_symlinks=""
+for symlink in $(find $PLUGINS_DIR -maxdepth 1 -type l); do
+    # `readlink -f` doesn't work on macOS, to fix it you need to override the `readlink` with `greadlink`
+    # > brew install coreutils
+    # > ln -s "$(which greadlink)" "$(dirname "$(which greadlink)")/readlink"
+    # reference: https://meta.discourse.org/t/beginners-guide-to-install-discourse-for-development-using-docker/102009/124?u=aleber
+    symlink_value=$(readlink -f $symlink)
+    plugin_name=$(basename $symlink)
+    mount_plugin_symlinks+=" -v ${symlink_value}:/src/plugins/${plugin_name}:delegated"
+done
+[[ ! -z "$mount_plugin_symlinks" ]] && echo "Mounting symlinks for plugins: ${mount_plugin_symlinks}"
+
+# 8025 mailhog
+# 3000 puma... if you must (but unicorn is preferred)
+# 9292 unicorn
+# 9405 prometheus exporter
+
+if [ "$(uname -m)" == "aarch64" ]; then
+    # NOTE: we currently (2024-01-17) don’t build an aarch64 image, so one must be pre-built locally.
+    # Avoiding `docker pull` so we don't override that local image.
+    ENV_ARGS+=" -e SE_MANAGER_PATH=/usr/local/bin/selenium-manager "
+else
+    # x86_64 environment - pull the latest image from dockerhub
+    docker pull discourse/discourse_dev:release
+fi
+
+docker run -d \
+    -p $local_publish:8025:8025 \
+    -p $local_publish:3000:3000 \
+    -p $local_publish:4200:4200 \
+    -p $local_publish:9292:9292 \
+    -p $local_publish:9405:9405 \
+    -v "$DATA_DIR:/shared/postgres_data:delegated" \
+    -v "$SOURCE_DIR:/src:delegated" \
+    -e UNICORN_BIND_ALL=true \
+    $mount_plugin_symlinks \
+    $ENV_ARGS \
+    --hostname=discourse \
+    --name=discourse_dev \
+    --restart=always \
+    discourse/discourse_dev:release /sbin/boot
+
+echo "Installing gems..."
+"${SCRIPTPATH}/bundle" install
+
+echo "pnpm install..."
+"${SCRIPTPATH}/exec" pnpm install
+
+if [ "${initialize}" = "initialize" ]; then
+    echo "Migrating database..."
+    "${SCRIPTPATH}/rake" db:create
+    "${SCRIPTPATH}/rake" db:migrate
+    RAILS_ENV=test "${SCRIPTPATH}/rake" db:migrate
+
+    echo "Creating admin user..."
+    "${SCRIPTPATH}/rake" admin:create
+fi
+

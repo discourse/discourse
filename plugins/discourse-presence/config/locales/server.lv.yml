@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  site_settings:
+    presence_enabled: "Vai rādīt lietotājus, kuri pašlaik atbild uz pašreizējo tēmu vai rediģē pašreizējo ziņu?"
+    presence_max_users_shown: "Parādīts maksimālais lietotāju skaits."

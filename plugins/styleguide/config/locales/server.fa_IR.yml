@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  site_settings:
+    styleguide_enabled: 'یک مسیر "/styleguide" برای کمک به سبک‌دهی دیسکورس فعال کنید'
+    styleguide_admin_only: "دید سبک‌دهی راهنما را برای مدیران محدود می‌کند"

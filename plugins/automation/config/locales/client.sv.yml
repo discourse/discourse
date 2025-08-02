@@ -1,0 +1,314 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    discourse_automation:
+      title: Automatisering
+      back: Tillbaka
+      edit: Redigera
+      select_script: Välj ett skript
+      select_trigger: Välj en utlösare
+      confirm_automation_reset: Den här åtgärden återställer skriptet och utlösningsalternativen, det nya tillståndet sparas, vill du fortsätta?
+      confirm_automation_trigger: Denna åtgärd kommer att utlösa automatisering, vill du fortsätta?
+      edit_automation:
+        trigger_section:
+          forced: Denna utlösare tvingas av skript.
+          next_pending_automation: "Nästa automatisering kommer att utlösas vid: %{date}"
+          trigger_now: "Utlös nu"
+          title: När/Vad...
+        fields_section:
+          title: Skriptalternativ
+      destroy_automation:
+        confirm: "Är du säker på att du vill ta bort `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "Konfigurera"
+        user:
+          label: Användare
+        pm:
+          title:
+            label: Rubrik
+          raw:
+            label: Huvuddel
+        pms:
+          confirm_remove_pm: "Är du säker på att du vill ta bort detta PM?"
+          placeholder_title: PM-titel
+          add_pm: Lägg till PM
+          no_pm_created: Du har inte skapat någon PM än. PM kommer att skickas när din automatisering utlöses.
+          title:
+            label: Rubrik
+          raw:
+            label: Huvuddel
+          delay:
+            label: Fördröjning (minuter)
+          prefers_encrypt:
+            label: Krypterar PM om tillgängligt
+        group:
+          label: Grupp
+        text:
+          label: Text
+      triggerables:
+        not_found: Kunde inte hitta utlösaren `%{trigger}` för automatisering `%{automation}`, se till att det tillhörande insticksprogrammet är installerat.
+        user_badge_granted:
+          fields:
+            badge:
+              label: Utmärkelse
+            only_first_grant:
+              label: Endast vid första beviljan
+        stalled_topic:
+          durations:
+            PT1H: "En timme"
+            P1D: "En dag"
+            P1W: "En vecka"
+            P2W: "Två veckor"
+            P1M: "En månad"
+            P3M: "Tre månader"
+            P6M: "Sex månader"
+            P1Y: "Ett år"
+          fields:
+            categories:
+              label: Begränsat till kategorier
+            tags:
+              label: Begränsat till taggar
+            stalled_after:
+              label: Stannade efter
+        recurring:
+          every: Varje
+          frequencies:
+            minute: minut
+            hour: timme
+            day: dag
+            weekday: veckodag
+            week: vecka
+            month: månad
+            year: år
+          fields:
+            recurrence:
+              label: Upprepning
+            start_date:
+              label: Startdatum
+        stalled_wiki:
+          durations:
+            PT1H: "En timme"
+            P1D: "En dag"
+            P1W: "En vecka"
+            P2W: "Två veckor"
+            P1M: "En månad"
+            P3M: "Tre månader"
+            P6M: "Sex månader"
+            P1Y: "Ett år"
+          fields:
+            stalled_after:
+              label: Utlösningsfördröjning
+              description: Definierar fördröjning mellan senaste wiki-redigering och automatisk utlösare
+            retriggered_after:
+              label: Återaktivera fördröjning
+              description: Definierar fördröjning mellan första utlösaren och nästa utlösare, om wiki fortfarande inte har redigerats efter första utlösaren
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Spårad grupp
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Spårad grupp
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Begränsa till grupp
+            trust_level_transition:
+              label: Byte av tillits nivå
+          trust_levels:
+            ALL: "Alla förtroendenivåer"
+            TL01: "TL0 till TL1"
+            TL12: "TL1 till TL2"
+            TL23: "TL2 till TL3"
+            TL34: "TL3 till TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Utför vid
+        topic:
+          fields:
+            restricted_topic:
+              label: Ämnes-ID
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Giltiga förtroendenivåer
+              description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
+            restricted_tags:
+              label: Taggar
+            restricted_categories:
+              label: Kategorier
+          created: Skapade
+          with_images: Bilder
+          with_links: Länkar
+          with_code: Kod
+          with_uploads: Uppladdningar
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Överordnad kategori
+              description: Valfritt, tillåter att begränsa utlösarens körning till denna kategori
+        pm_created:
+          fields:
+            restricted_user:
+              label: Användare
+            restricted_group:
+              label: Grupp
+            ignore_staff:
+              label: Ignorera personal
+              description: Hoppa över utlösaren om avsändaren är en medarbetare
+            valid_trust_levels:
+              label: Giltiga förtroendenivåer
+              description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Giltiga förtroendenivåer
+              description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
+            restricted_category:
+              label: Kategori
+            restricted_tags:
+              label: Taggar
+      scriptables:
+        not_found: Kunde inte hitta skript `%{script}` för automatisering `%{automation}`, se till att den tillhörande pluginen är installerad
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook-URL
+              description: "Förväntar sig en giltig Zapier-webhook-URL, t.ex. https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            word_answer_list:
+              label: Lista över ord/svarspar
+            answering_user:
+              label: Svarande användare
+              description: Standard är systemanvändaren
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Taggar
+        post:
+          fields:
+            topic:
+              label: Ämnes-ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupp
+        user_global_notice:
+          fields:
+            level:
+              label: Nivå
+            notice:
+              label: Notis
+              description: Accepterar HTML, fyll inte detta med opålitlig inmatning!
+          levels:
+            warning: Varning
+            info: Info
+            success: Lyckades
+            error: Fel
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupp
+            badge:
+              label: Utmärkelse
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Stäng av tills (standard)
+            reason:
+              label: Orsak (standard)
+            actor:
+              label: Användare
+              description: "Användaren som är ansvarig för avstängningen (standard: system)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Ämnes-ID
+            pinned_globally:
+              label: Fäst globalt
+            pinned_until:
+              label: Fäst tills
+        banner_topic:
+          fields:
+            topic_id:
+              label: Ämnes-ID
+            banner_until:
+              label: Skapa banner tills
+            user:
+              label: Användare
+              description: "Användaren som skapar bannern (standard: system)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Kontrollerade ord
+        topic_required_words:
+          fields:
+            words:
+              label: Lista över obligatoriska ord
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Deltagarnas gruppnamn
+            giftee_assignment_messages:
+              label: Meddelanden skickade till givare
+        send_pms:
+          add_a_pm_btn:
+            label: Lägg till PM
+          fields:
+            receiver:
+              label: PM-mottagare
+            sendable_pms:
+              label: PM
+            sender:
+              label: Avsändare för PM
+        close_topic:
+          fields:
+            topic:
+              label: Ämnes-ID
+            message:
+              label: Avslutningsmeddelande
+              description: "Valfritt meddelande att visa på tråden stängd post"
+            user:
+              label: Användare
+              description: "Användaren som stänger ämnet (standard: system)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Användaranpassat fältnamn"
+      models:
+        script:
+          name:
+            label: Skript
+        trigger:
+          name:
+            label: Trigger
+        automation:
+          name:
+            label: Namn
+          trigger:
+            label: Trigger
+          script:
+            label: Skript
+          version:
+            label: Version
+          status:
+            label: Status
+          enabled:
+            label: Aktiverad
+          disabled:
+            label: Inaktiverad
+          placeholders:
+            label: Platshållare
+          last_updated_at:
+            label: Senaste uppdatering
+          last_updated_by:
+            label: Uppdaterad av

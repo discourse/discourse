@@ -1,0 +1,55 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  discourse_narrative_bot:
+    quote:
+      trigger: "citat"
+    magic_8_ball:
+      answers:
+        "1": "Sigurno je"
+        "7": "Najvjerojatnije"
+        "9": "Da"
+        "19": "Izgledi nisu baš dobri"
+    new_user_narrative:
+      hello:
+        title: "Pozdrav!"
+    advanced_user_narrative:
+      change_topic_notification_level:
+        reply: |-
+          Sjajan rad! Nadam se da niste isključili ovu temu jer ponekad znam biti malo pričljiv :grin:.
+
+          Imajte na umu da kada odgovarate na temu ili čitate temu dulje od nekoliko minuta, ona se automatski postavlja na razinu obavijesti "praćenja". To možete promijeniti u [vašim korisničkim postavkama](%{base_uri}/my/preferences).
+      poll:
+        reply: |-
+          Hej, dobra anketa! Kako sam te podučio?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        not_found: |-
+          Imate problema s kreiranjem widgeta s detaljima? Pokušajte uključiti sljedeće u svoj sljedeći odgovor:
+
+          ```tekst
+          [details=Odaberite me za detalje]
+          Ovdje su detalji
+          [/details]
+          ```
+        reply: |-
+          Sjajan posao - vaša pozornost na _detalje_ je vrijedna divljenja!
+      end:
+        message: |-
+          Prošao si kroz ovo kao _napredni korisnik_ doista :bow:
+
+          %{certificate}
+
+          To je sve što imam za tebe.
+
+          Zbogom za sada! Ako želite ponovo razgovarati sa mnom, pošaljite mi poruku bilo kada :sunglasses:
+      certificate:
+        alt: "Napredna potvrda o postignuću korisnika"

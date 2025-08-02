@@ -1,0 +1,53 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Required if creating a new topic or new private message."
+    },
+    "raw": {
+      "type": "string"
+    },
+    "topic_id": {
+      "type": "integer",
+      "description": "Required if creating a new post."
+    },
+    "category": {
+      "type": "integer",
+      "description": "Optional if creating a new topic, and ignored if creating a new post."
+    },
+    "target_recipients": {
+      "type": "string",
+      "description": "Required for private message, comma separated.",
+      "example": "blake,sam"
+    },
+    "target_usernames": {
+      "type": "string",
+      "description": "Deprecated. Use target_recipients instead.",
+      "deprecated": true
+    },
+    "archetype": {
+      "type": "string",
+      "description": "Required for new private message.",
+      "example": "private_message"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "reply_to_post_number": {
+      "type": "integer",
+      "description": "Optional, the post number to reply to inside a topic."
+    },
+    "embed_url": {
+      "type": "string",
+      "description": "Provide a URL from a remote system to associate a forum topic with that URL, typically for using Discourse as a comments system for an external blog."
+    },
+    "external_id": {
+      "type": "string",
+      "description": "Provide an external_id from a remote system to associate a forum topic with that id."
+    }
+  },
+  "required": [
+    "raw"
+  ]
+}

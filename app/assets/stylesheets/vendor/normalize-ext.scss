@@ -1,0 +1,20 @@
+/* Discourse custom changes for backward compatibility
+   ========================================================================== */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}

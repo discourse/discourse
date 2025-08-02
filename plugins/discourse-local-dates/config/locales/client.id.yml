@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Hari ini 1 %{time}
+        tomorrow: Besok 1 %{time}
+        yesterday: Kemarin 1 %{time}
+        countdown:
+          passed: tanggal telah berlalu
+      title: Masukkan tanggal / waktu
+      create:
+        form:
+          insert: Masukkan
+          advanced_mode: Mode lanjutan
+          simple_mode: Mode sederhana
+          timezones_title: Zona waktu yang ditampilkan
+          invalid_date: Tanggal tidak valid, pastikan tanggal dan waktu sudah benar
+          date_title: Tanggal
+          time_title: Waktu
+          format_title: Format tanggal
+          timezone: Zona Waktu
+          until: Sampai...
+          current_timezone: "Zona waktu saat ini:"
+          recurring:
+            every_day: "Setiap hari"
+            every_week: "Setiap pekan"
+            every_two_weeks: "Setiap dua pekan"
+            every_month: "Setiap bulan"
+            every_two_months: "Setiap dua bulan"
+            every_three_months: "Setiap tiga bulan"
+            every_six_months: "Setiap enam bulan"
+            every_year: "Setiap tahun"
+      default_title: "%{site_name} Acara"

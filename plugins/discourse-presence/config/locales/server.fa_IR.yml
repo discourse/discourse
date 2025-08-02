@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  site_settings:
+    presence_enabled: "کاربرانی که در حال حاضر به موضوع فعلی پاسخ می‌دهند و یا در حال ویرایش پست فعلی هستند، نمایش داده شوند؟"
+    presence_max_users_shown: "حداکثر تعداد کاربران نمایش داده شده."

@@ -1,0 +1,21 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "upload_id": {
+      "type": "integer"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "uploaded",
+        "custom",
+        "gravatar",
+        "system"
+      ]
+    }
+  },
+  "required": [
+    "upload_id",
+    "type"
+  ]
+}

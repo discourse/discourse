@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    lazy_videos_enabled: "Lazy Videos-plug-in inschakelen"
+    lazy_youtube_enabled: "Lui laden inschakelen voor YouTube-insluitingen"
+    lazy_vimeo_enabled: "Lui laden inschakelen voor Vimeo-insluitingen"
+    lazy_tiktok_enabled: "Lui laden inschakelen voor TikTok-insluitingen (experimenteel)"

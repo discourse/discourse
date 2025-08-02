@@ -1,0 +1,154 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    poll:
+      voters:
+        one: "stemmer"
+        other: "stemmers"
+      total_votes:
+        one: "totale stem"
+        other: "totale stemmen"
+      votes:
+        one: "%{count} stem"
+        other: "%{count} stemmen"
+      average_rating: "Gemiddelde beoordeling: <strong>%{average}</strong>."
+      public:
+        title: "Stemmen zijn <strong>openbaar</strong>."
+      results:
+        groups:
+          title: "Je moet lid van %{groups} zijn om te stemmen in deze poll."
+        vote:
+          title: "Resultaten worden weergegeven bij <strong>stemmen</strong>."
+        closed:
+          title: "Resultaten worden weergegeven zodra <strong>gesloten</strong>."
+        staff:
+          title: "Resultaten worden alleen aan <strong>medewerkers</strong> weergegeven."
+        tabs:
+          votes: "Stemmen"
+          outcome: "Resultaat"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Kies minimaal <strong>%{count} optie</strong>."
+            other: "Kies minimaal <strong>%{count} opties</strong>."
+          up_to_max_options:
+            one: "Kies maximaal <strong>%{count} optie</strong>."
+            other: "Kies maximaal <strong>%{count} opties</strong>."
+          x_options:
+            one: "Kies <strong>%{count} optie</strong>."
+            other: "Kies <strong>%{count} opties</strong>."
+          between_min_and_max_options: "Kies <strong>%{min} tot %{max} opties</strong>."
+      cast-votes:
+        title: "Je stemmen uitbrengen"
+        label: "Stem nu!"
+      show-results:
+        title: "De pollresultaten weergeven"
+        label: "Resultaten"
+      show-tally:
+        title: "Stemresultaten weergeven op basis van het aantal stemmen"
+        label: "Telling weergeven"
+      show-percentage:
+        title: "Stemresultaten weergeven als percentage"
+        label: "Weergeven als percentage"
+      remove-vote:
+        title: "Verwijder je stem"
+        label: "Stem ongedaan maken"
+      hide-results:
+        title: "Terug naar je stemmen"
+        label: "Stemmen"
+      group-results:
+        title: "Stemmen groeperen op gebruikersveld"
+        label: "Verdeling weergeven"
+      export-results:
+        title: "De pollresultaten exporteren"
+        label: "Exporteren"
+      open:
+        title: "De poll openen"
+        label: "Openen"
+        confirm: "Weet je zeker dat je deze poll wilt openen?"
+      close:
+        title: "De poll sluiten"
+        label: "Sluiten"
+        confirm: "Weet je zeker dat je deze poll wilt sluiten?"
+      automatic_close:
+        closes_in: "Sluit over <strong>%{timeLeft}</strong>."
+        age: "Gesloten: <strong>%{age}</strong>"
+      breakdown:
+        title: "Pollresultaten"
+        votes: "%{count} stemmen"
+        breakdown: "Verdeling"
+        percentage: "Percentage"
+        count: "Aantal"
+      ranked_choice:
+        title:
+          rounds: "Rondes"
+          outcome: "Resultaat"
+        none: "Geen"
+        majority: "Meerderheid"
+        eliminated: "Uitgeschakeld"
+        round: "Ronde"
+        winner:
+          one: "De winnaar is %{winner} na één ronde."
+          other: "De winnaar is %{winner} na %{count} rondes."
+        tied:
+          one: "Na één ronde gelijk tussen de volgende kandidaten:"
+          other: "Na %{count} rondes gelijk tussen de volgende kandidaten:"
+      options:
+        label: "Opties"
+        ranked_choice:
+          abstain: "Onthouden"
+          highest_priority: "(hoogste prioriteit)"
+          lowest_priority: "(laagste prioriteit)"
+          login: "Meld je aan om te stemmen!"
+      error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
+      error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van je stemmen."
+      error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
+      error_while_exporting_results: "Sorry, er is een fout opgetreden bij het exporteren van pollresultaten."
+      ui_builder:
+        title: Poll maken
+        insert: Poll invoegen
+        help:
+          options_min_count: Voer minimaal 1 optie in.
+          options_max_count: Voer maximaal %{count} opties in.
+          invalid_min_value: De minimumwaarde moet minimaal 1 zijn.
+          invalid_max_value: Maximumwaarde moet minimaal 1 zijn, maar kleiner dan of gelijk aan het aantal opties.
+          invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
+          min_step_value: De minimumwaarde voor een stap is 1
+        poll_type:
+          label: Type
+          regular: Eén keuze
+          multiple: Meerkeuze
+          ranked_choice: Gerangschikte keuze
+          number: Numerieke beoordeling
+        poll_result:
+          label: Resultaten weergeven...
+          always: Altijd zichtbaar
+          vote: Pas na stemming
+          closed: Wanneer de poll is gesloten
+          staff: Alleen medewerkers
+        poll_groups:
+          label: Beperk het stemmen tot deze groepen
+        poll_chart_type:
+          label: Resultaatgrafiek
+          bar: Staaf
+          pie: Cirkel
+        poll_config:
+          max: Max. keuzes
+          min: Min. keuzes
+          step: Stap
+        poll_public:
+          label: Weergeven wie er heeft gestemd
+        poll_title:
+          label: Titel (optioneel)
+        poll_options:
+          label: Opties (één per regel)
+          add: Optie toevoegen
+        automatic_close:
+          label: Poll automatisch sluiten
+        show_advanced: "Geavanceerde opties weergeven"
+        hide_advanced: "Geavanceerde opties verbergen"

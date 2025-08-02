@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  badges:
+    certified:
+      long_description: |
+        Тази значка се присъжда при успешното преминаване на интерактивното обучение за нови потребители. Вие поехте инциативата да научите основните инструменти на дискусията и сега сте сертифицирани за това.
+  discourse_narrative_bot:
+    quote:
+      trigger: "цитат"
+    magic_8_ball:
+      answers:
+        "9": "Да"
+    new_user_narrative:
+      hello:
+        title: "Привет!"
+      bookmark:
+        instructions: |-
+          Ако искате да научите повече, изберете <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> отдолу и <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **отметнете това лично съобщение**. Ако го направите, може да има :подарък: в бъдещето ви!

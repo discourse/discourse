@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Benvingut a Discourse"
+        colors:
+          title: "Colors"
+        icons:
+          title: "Icones"
+        categories:
+          title: "Categories"
+        navigation:
+          title: "Navegació"
+        categories_list:
+          title: "Llista de categories"
+        topic_timer_info:
+          title: "Temporitzadors de temes"
+        post:
+          title: "Publicació"
+        suggested_topics:
+          title: "Temes recomanats"
+        tooltips:
+          description: "Descripció"
+          header: "Capçalera"

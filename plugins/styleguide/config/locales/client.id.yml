@@ -1,0 +1,99 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "Untuk memulai, pilih bagian dari menu di sebelah kiri."
+      categories:
+        atoms: Atom
+        molecules: Molekul
+        organisms: Organisme
+      sections:
+        typography:
+          title: "Tipografi"
+          example: "Selamat datang di Discourse"
+          paragraph: "Lorem ipsum dolor duduk amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut tenaga kerja et dolore magna aliqua. Ut Enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea komodo consequat. Duis aute irure dolor di reprehenderit di voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt anim id est laborum."
+        date_time_inputs:
+          title: "Masukan Tanggal/Waktu"
+        menus:
+          title: "Menu"
+        toasts:
+          title: "Toast"
+        font_scale:
+          title: "Sistem Font"
+        colors:
+          title: "Warna"
+        icons:
+          title: "Ikon"
+          full_list: "Lihat daftar lengkap Font Awesome Icons"
+        buttons:
+          title: "Tombol"
+        dropdowns:
+          title: "Dropdown"
+        categories:
+          title: "Kategori"
+        bread_crumbs:
+          title: "Bread Crumbs"
+        navigation:
+          title: "Navigasi"
+        navigation_bar:
+          title: "Bilah Navigasi"
+        navigation_stacked:
+          title: "Navigasi Bertumpuk"
+        categories_list:
+          title: "Daftar Kategori"
+        topic_link:
+          title: "Tautan Topik"
+        topic_list_item:
+          title: "Item Daftar Topik"
+        topic_statuses:
+          title: "Status Topik"
+        topic_list:
+          title: "Daftar Topik"
+        basic_topic_list:
+          title: "Daftar Topik Dasar"
+        footer_message:
+          title: "Pesan Footer"
+        signup_cta:
+          title: "CTA Pendaftaran"
+        topic_timer_info:
+          title: "Pengatur Waktu Topik"
+        topic_footer_buttons:
+          title: "Tombol Footer Topik"
+        topic_notifications:
+          title: "Notifikasi Topik"
+        post:
+          title: "Postingan"
+        topic_map:
+          title: "Peta Topik"
+        site_header:
+          title: "Header Situs"
+        suggested_topics:
+          title: "Topik Yang Disarankan"
+        post_menu:
+          title: "Menu Post"
+        modal:
+          title: "Modal"
+          header: "Judul Modal"
+          footer: "Footer Modal"
+        user_about:
+          title: "Kotak Tentang Pengguna"
+        header_icons:
+          title: "Ikon Header"
+        spinners:
+          title: "Spinners"
+        empty_state:
+          title: "Keadaan Kosong"
+        tooltips:
+          title: "Tooltip"
+          description: "Deskripsi"
+          header: "Header"
+          hover_to_see: "Arahkan kursor untuk melihat tooltip"
+        char_counter:
+          title: "Penghitung Karakter"
+          placeholder: "Masukkan teks Anda di sini..."

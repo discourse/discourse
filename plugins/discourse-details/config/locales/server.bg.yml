@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  site_settings:
+    details_enabled: 'Включете възможността за добавяне на разширяващи се подробности към публикация. Тази функция може да бъде намерена в изскачащото меню на лентата с инструменти на текстовия редактор. Трябва да промените всички публикации с "rake posts:rebake", ако промените тази настройка.'
+  details:
+    excerpt_details: "(щракнете за повече подробности)"

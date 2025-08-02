@@ -1,0 +1,7 @@
+plugins:
+  discourse_automation_enabled:
+    default: false
+    client: true
+  discourse_automation_enable_recurring_debug:
+    default: false
+    hidden: true

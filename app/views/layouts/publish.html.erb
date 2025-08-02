@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title><%= @topic.title %> - <%= SiteSetting.title %></title>
+    <%= render partial: "layouts/head" %>
+    <%= render partial: "common/discourse_publish_stylesheet" %>
+    <%= render_google_tag_manager_head_code %>
+    <%= render_google_universal_analytics_code %>
+    <%= render_adobe_analytics_tags_code %>
+    <%= preload_script 'publish' %>
+    <%= preload_script 'pageview' %>
+  </head>
+  <body class="<%= @body_classes.to_a.join(' ') %>">
+    <%= theme_lookup("header") %>
+    <%= yield %>
+    <%= theme_lookup("footer") %>
+  </body>
+</html>

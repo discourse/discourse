@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    spoiler_enabled: 'Ative o plugin de spoiler. Se mudar isso, você deve recompilar todas as postagens com: "rake posts:rebake"'
+  spoiler_alert:
+    excerpt_spoiler: "spoiler"

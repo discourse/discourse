@@ -1,0 +1,326 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Čavrljanje
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Uvijek"
+          never: "Nikad"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status chat kanala je promijenjen"
+            chat_channel_delete: "Chat kanal je izbrisan"
+            chat_auto_remove_membership: "Članstva su automatski uklonjena s kanala"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Izradite chat poruku na određenom kanalu."
+    chat:
+      deleted_chat_username: izbrisao
+      dates:
+        yesterday: "Jučer"
+      all_loaded: "Prikaz svih poruka"
+      already_enabled: "Chat je već omogućen na ovu temu. Molimo osvježite."
+      disabled_for_topic: "Chat je onemogućen na ovu temu."
+      bot: "bot"
+      create: "Kreiraj"
+      cancel: "Odustani"
+      cancel_reply: "Otkaži odgovor"
+      chat_channels: "Kanali"
+      move_to_channel:
+        title: "Premještanje poruka na kanal"
+        instructions:
+          one: "Premještate <strong>%{count}</strong> poruku. Odaberite odredišni kanal. Poruka rezerviranog mjesta stvorit će se u kanalu <strong>%{channelTitle}</strong> kako bi označila da je ova poruka premještena. Imajte na umu da se lanci odgovora neće sačuvati u novom kanalu, a poruke u starom kanalu više se neće prikazivati kao odgovori na premještene poruke."
+          few: "Premještate <strong>%{count}</strong> poruke. Odaberite odredišni kanal. Poruka rezerviranog mjesta stvorit će se u kanalu <strong>%{channelTitle}</strong> kako bi označila da je ova poruka premještena. Imajte na umu da se lanci odgovora neće sačuvati u novom kanalu, a poruke u starom kanalu više se neće prikazivati kao odgovori na premještene poruke."
+          other: "Premještate <strong>%{count}</strong> poruka. Odaberite odredišni kanal. Poruka rezerviranog mjesta stvorit će se u kanalu <strong>%{channelTitle}</strong> kako bi označila da su te poruke premještene. Imajte na umu da se lanci odgovora neće sačuvati u novom kanalu, a poruke u starom kanalu više se neće prikazivati kao odgovori na premještene poruke."
+        confirm_move: "Premjesti poruke"
+      channel_settings:
+        title: "Postavke kanala"
+        edit: "Uredi"
+        add: "Dodaj"
+        leave_channel: "Napusti kanal"
+        join: "Pridružite se"
+        leave: "Napustiti"
+      channel_archive:
+        title: "Arhiviraj kanal"
+        instructions: "<p>Arhiviranje kanala stavlja ga u način rada samo za čitanje i premješta sve poruke s kanala u novu ili postojeću temu. Ne mogu se slati nove poruke, niti se postojeće poruke ne mogu uređivati ili brisati.</p><p>Jeste li sigurni da želite arhivirati <strong>%{channelTitle}</strong> kanal?</p>"
+        process_started: "Počeo je proces arhiviranja. Ovaj način će se uskoro zatvoriti, a vi ćete dobiti osobnu poruku kada je proces arhive završen."
+        retry: "Pokušaj ponovo"
+      channel_open:
+        title: "Otvori kanal"
+        instructions: "Ponovno otvara kanal, svi korisnici će moći slati poruke i uređivati svoje postojeće poruke."
+      channel_close:
+        title: "Zatvori kanal"
+        instructions: "Zatvaranje kanala onemogućuje korisnicima koji nisu zaposlenici da šalju nove poruke ili uređuju postojeće poruke. Jeste li sigurni da želite zatvoriti ovaj kanal?"
+      channel_delete:
+        title: "Izbriši kanal"
+        instructions: "<p>Briše <strong>%{name}</strong> kanal i povijest čavrljanja. Sve poruke i povezani podaci, kao što su reakcije i prijenosi, bit će trajno izbrisani. Ako želite sačuvati povijest kanala i poništiti ga, možda radije želite arhivirati kanal.</p> <p>Jeste li sigurni da želite <strong>trajno izbrisati</strong> kanal? Za potvrdu upišite naziv kanala u okvir ispod.</p>"
+        confirm: "Razumijem posljedice, obriši kanal"
+        confirm_channel_name: "Unesite naziv kanala"
+        process_started: "Započeo je proces brisanja kanala. Ovaj modal će se uskoro zatvoriti, više nigdje nećete vidjeti izbrisani kanal."
+      channels_list_popup:
+        browse: "Pretražujte kanale"
+      close: "Zatvori"
+      remove: "Ukloni"
+      collapse: "Sažmi ladicu za chat"
+      expand: "Proširi ladicu za čavrljanje"
+      confirm_flag: "Jeste li sigurni da želite označiti poruku korisnika %{username}?"
+      deleted:
+        one: "Poruka je izbrisana. [view]"
+        few: "%{count} poruke su izbrisane. [view all]"
+        other: "%{count} poruka je izbrisano. [view all]"
+      delete: "Pobriši"
+      edited: "uredio"
+      muted: "utišano"
+      joined: "prijavljen"
+      empty_state:
+        direct_message: "Također možete započeti osobni razgovor s jednim ili više korisnika."
+      email_frequency:
+        never: "Nikad"
+      header_indicator_preference:
+        title: "Prikaži indikator aktivnosti u zaglavlju"
+        all_new: "Sve nove poruke"
+        never: "Nikad"
+      enable: "Omogući chat"
+      flag: "Označi zastavicom"
+      flagged: "Ova poruka je označena za pregled"
+      invalid_access: "Nemate pristup za pregled ovog kanala za chat"
+      invitation_notification: "<span>%{username}</span> <span>vas je pozvao da se pridružite chat kanalu</span>"
+      in_reply_to: "U odgovoru na"
+      heading: "Čet"
+      join: "Pridružite se"
+      last_visit: "posljednji posjet"
+      mention_warning:
+        invitations_sent:
+          one: "Poziv poslan"
+          few: "Pozivnice poslane"
+          other: "Pozivnice poslane"
+        invite: "Pozovite na kanal"
+        groups:
+          unreachable_1: "@%{group} ne dopušta spominjanje."
+          unreachable_2: "@%{group1} i @%{group2} ne dopuštaju spominjanje."
+          unreachable_multiple:
+            one: "@%{group} i %{count} druga grupa ne dopuštaju spominjanje."
+            few: "@%{group} i %{count} druge grupe ne dopuštaju spominjanje."
+            other: "@%{group} i %{count} drugih grupa ne dopuštaju spominjanje."
+        too_many_mentions:
+          one: "Ova poruka premašuje ograničenje obavijesti od %{count} spominjanja."
+          few: "Ova poruka premašuje ograničenje obavijesti od %{count} spominjanja."
+          other: "Ova poruka premašuje ograničenje obavijesti od %{count} spominjanja."
+        too_many_mentions_admin:
+          one: 'Ova poruka premašuje <a href="%{siteSettingUrl}" target="_blank">ograničenje obavijesti</a> od %{count} spominjanja.'
+          few: 'Ova poruka premašuje <a href="%{siteSettingUrl}" target="_blank">ograničenje obavijesti</a> od %{count} spominjanja.'
+          other: 'Ova poruka premašuje <a href="%{siteSettingUrl}" target="_blank">ograničenje obavijesti</a> od %{count} spominjanja.'
+      aria_roles:
+        header: "Zaglavlje chata"
+        composer: "Skladatelj chata"
+      kicked_from_channel: "Više ne možete pristupiti ovom kanalu."
+      placeholder_channel: "Čavrljanje u %{channelName}"
+      placeholder_thread: "Čavrljanje u niti"
+      placeholder_users: "Čavrljaj s %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Kanal je arhiviran, trenutno ne možete slati nove poruke."
+        closed: "Kanal je zatvoren, trenutno ne možete slati nove poruke."
+        read_only: "Kanal je samo za čitanje, trenutno ne možete slati nove poruke."
+      reply: "Odgovor"
+      edit: "Uredi"
+      rebake_message: "Popravi HTML"
+      bookmark_message: "Zabilješka"
+      bookmark_message_edit: "Uredi oznaku"
+      save: "Spremi"
+      select: "Odaberite"
+      unread_threads_count:
+        one: "Imate %{count} nepročitanu raspravu"
+        few: "Imate %{count} nepročitane rasprave"
+        other: "Imate %{count} nepročitanih rasprava"
+      sounds:
+        none: "Ništa"
+      title: "čet"
+      title_capitalized: "Čet"
+      upload_to_channel: "Prenesi na %{title}"
+      upload_to_thread: "Prenesi u nit"
+      exit: "natrag"
+      channel_status:
+        archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
+        closed: "Zatvoreno"
+        open: "Otvori"
+      browse:
+        back: "Natrag"
+        title: Kanali
+        filter_all: Sve
+        filter_open: Otvori
+        filter_closed: Zatvoreno
+      chat_message_separator:
+        today: Danas
+        yesterday: Jučer
+      about_view:
+        title: Naslov
+        name: Ime
+        description: Opis
+      channel_info:
+        back_to_channel: "Natrag"
+        tabs:
+          members: Članovi
+          settings: Postavke
+        remove_member: "Ukloni"
+      new_message_modal:
+        no_items: "Nema stvari"
+        filter: "Filter"
+      channel_edit_name_slug_modal:
+        title: Uredi kanal
+        input_placeholder: Dodajte ime
+        name: Naziv kanala
+      direct_message_creator:
+        title: Nova poruka
+        prefix: "Za:"
+      create_channel:
+        auto_join_users:
+          warning_1_group:
+            one: "Automatski dodati %{count} korisnika iz %{group}?"
+            few: "Automatski dodati %{count} korisnika iz %{group}?"
+            other: "Automatski dodati %{count} korisnika iz %{group}?"
+          warning_2_groups:
+            one: "Automatski dodati %{count} korisnika iz %{group1} i %{group2}?"
+            few: "Automatski dodati %{count} korisnika iz %{group1} i %{group2}?"
+            other: "Automatski dodati %{count} korisnika iz %{group1} i %{group2}?"
+        choose_category:
+          hint_1_group: 'Korisnici u %{group} će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+          hint_2_groups: 'Korisnici u %{group1} i %{group2} će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+          hint_multiple_groups:
+            one: 'Korisnici u %{group} i %{count} drugoj grupi će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+            few: 'Korisnici u %{group} i %{count} druge grupe će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+            other: 'Korisnici u %{group} i %{count} drugih grupa će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+        name: "Naziv kanala"
+        type: "Tip"
+        types:
+          category: "Kategorija"
+          topic: "Tema"
+      composer:
+        italic_text: "naglašen tekst"
+        bold_text: "jaki text"
+        send: "Pošalji"
+      quote:
+        default_thread_title: "Nit"
+      notification_levels:
+        never: "Nikad"
+      settings:
+        auto_join_users_info: "Provjeri svaki sat koji su korisnici bili aktivni u posljednja 3 mjeseca. Dodaj ih na ovaj kanal ako imaju pristup kategoriji %{category}."
+        auto_join_users_info_no_category: "Provjeri svaki sat koji su korisnici bili aktivni u posljednja 3 mjeseca. Dodaj ih na ovaj kanal ako imaju pristup odabranoj kategoriji."
+        follow: "Pridružite se"
+        followed: "Prijavljen"
+        threading_enabled: "Omogućeno"
+        threading_disabled: "Onemogućeno"
+        notifications: "Obavijest"
+        preview: "Pregled"
+        save: "Spremi"
+        saved: "Spremljeno"
+        unfollow: "Napustiti"
+        admin_title: "Administrator"
+        settings_title: "Postavke"
+        category_label: "Kategorija"
+        history_label: "Povijest"
+        members_label: "Članovi"
+      admin:
+        title: "Čet"
+        export_messages:
+          title: "Izvezi poruke čavrljanja"
+          create_export: "Stvori izvoz"
+          export_has_started: "Izvoz je počeo. Dobit ćete PM kad bude spreman."
+      incoming_webhooks:
+        back: "Natrag"
+        description: "Opis"
+        delete: "Pobriši"
+        emoji: "Emoji"
+        name: "Ime"
+        save: "Spremi"
+        edit: "Uredi"
+        system: "sistem"
+        url: "URL"
+        username: "Korisničko ime"
+      selection:
+        cancel: "Odustani"
+        copy: "Kopija"
+        new_topic:
+          title: "Prebaci u novu temu"
+        existing_topic:
+          title: "Prebaci u postojeću temu"
+        new_message:
+          title: "Premjestite u novu poruku"
+      retention_reminders:
+        short:
+          one: "%{count} dan"
+          few: "%{count} dana"
+          other: "%{count} dana"
+      emoji_picker:
+        objects: "Objekti"
+        activities: "Aktivnosti"
+        flags: "Oznake zastavicom"
+        symbols: "Simboli"
+      thread:
+        title: "Naslov"
+        view_thread: Pogledaj nit
+        replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        label: Nit
+        close: "Zatvori nit"
+        original_message:
+          started_by: "Započeto od"
+        settings: "Postavke"
+        last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Normalno"
+          tracking:
+            title: "Praćenje"
+          watching:
+            title: "Promatrano"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          other: "+%{count}"
+      threads:
+        open: "Otvori nit"
+        none: "Ne sudjelujete ni u jednoj niti na ovom kanalu."
+      draft_channel_screen:
+        header: "Nova poruka"
+        cancel: "Odustani"
+    notifications:
+      chat_invitation_html: "<span>%{username}</span> <span>vas je pozvao da se pridružite chat kanalu</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Poruka
+    review:
+      types:
+        chat_reviewable_message:
+          title: "Označena poruka čavrljanja"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Čet"
+        keyboard_shortcuts:
+          mark_all_channels_read: "%{shortcut} Označi sve kanale kao pročitane"
+    styleguide:
+      sections:
+        chat:
+          title: Čavrljanje
+    sidebar:
+      panels:
+        chat:
+          label: "Čavrljanje"

@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  site_settings:
+    details_enabled: 'Uključite mogućnost dodavanja proširivih detalja u objavu. Ova se značajka može pronaći u skočnom izborniku alatne trake skladatelja. Morate ponovno ispeći sve objave s "rake posts:rebake" ako promijenite ovu postavku.'
+  details:
+    excerpt_details: "(pritisni za više detalja)"

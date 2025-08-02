@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    details_enabled: '包括向帖子添加可扩展详细信息的功能。此功能可以在编辑器的工具栏弹出菜单中找到。如果您更改此设置，则必须使用 "rake posts:rebake" 重新发布所有帖子。'
+  details:
+    excerpt_details: "（点击了解更多详细信息）"

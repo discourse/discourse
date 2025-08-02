@@ -1,0 +1,38 @@
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.post-controls {
+  .post-action-feedback-button {
+    position: relative;
+    height: 100%;
+
+    &.--activated,
+    &.--activated:hover {
+      .d-icon-d-post-share {
+        color: var(--success);
+      }
+    }
+  }
+
+  .post-action-feedback-svg {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    display: block;
+    stroke: var(--success);
+    opacity: 0;
+
+    path {
+      stroke: var(--success);
+      stroke-width: 4;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: draw 1s forwards;
+    }
+  }
+}

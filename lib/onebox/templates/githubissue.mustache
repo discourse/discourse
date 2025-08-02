@@ -1,0 +1,40 @@
+<div class="github-row">
+  <div class="github-icon-container" title="Issue" data-github-private-repo="{{is_private}}">
+	  <svg width="60" height="60" class="github-icon" viewBox="0 0 14 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg>
+  </div>
+
+  <div class="github-info-container">
+    <h4>
+      <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+    </h4>
+
+    <div class="github-info">
+      <div class="date">
+        {{i18n.opened}} <span class="discourse-local-date" data-format="ll" data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
+      </div>
+
+      {{#closed_at}}
+        <div class="date">
+          {{i18n.closed}} <span class="discourse-local-date" data-format="ll" data-date="{{closed_at_date}}" data-time="{{closed_at_time}}" data-timezone="UTC">{{closed_at}}</span>
+        </div>
+      {{/closed_at}}
+
+      <div class="user">
+        <a href="{{user.html_url}}" target="_blank" rel="noopener">
+          <img alt="" src="{{user.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+          {{user.login}}
+        </a>
+      </div>
+    </div>
+
+    <div class="labels">
+      {{#labels}}
+        <span style="display:inline-block;margin-top:2px;background-color: #B8B8B8;padding: 2px;border-radius: 4px;color: #fff;margin-left: 3px;">
+          {{{name}}}
+        </span>
+      {{/labels}}
+    </div>
+  </div>
+</div>
+
+{{> github/github_body}}

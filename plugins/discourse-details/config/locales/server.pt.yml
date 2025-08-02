@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  site_settings:
+    details_enabled: 'Inclui a capacidade de adicionar detalhes expansíveis a uma postagem. Este recurso pode ser encontrado no menu popup da barra de ferramentas do compositor. Você deve refazer todos os posts com "rake posts: rebake" se você alterar esta configuração.'
+  details:
+    excerpt_details: "(clique para mais detalhes)"

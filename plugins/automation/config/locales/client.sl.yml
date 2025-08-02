@@ -1,0 +1,143 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  js:
+    discourse_automation:
+      back: Nazaj
+      edit: Uredi
+      fields:
+        user:
+          label: Uporabnik
+        pm:
+          title:
+            label: Naziv
+        pms:
+          title:
+            label: Naziv
+        group:
+          label: Skupina
+        text:
+          label: Besedilo
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Značka
+        stalled_topic:
+          durations:
+            P2W: "Dva tedna"
+            P3M: "Tri meseci"
+            P6M: "Šest mesecev"
+            P1Y: "Eno leto"
+        recurring:
+          frequencies:
+            minute: minuta
+            hour: ura
+            day: dan
+            week: teden
+            month: mesec
+            year: leto
+          fields:
+            recurrence:
+              label: Ponovitev
+        stalled_wiki:
+          durations:
+            P2W: "Dva tedna"
+            P3M: "Tri meseci"
+            P6M: "Šest mesecev"
+            P1Y: "Eno leto"
+        topic:
+          fields:
+            restricted_topic:
+              label: ID teme
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Oznake
+            restricted_categories:
+              label: Kategorije
+          created: Ustvarjeno
+          with_images: Slike
+          with_links: Povezave
+          with_code: Koda
+          with_uploads: Prenosi
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Nadrejena kategorija
+        pm_created:
+          fields:
+            restricted_user:
+              label: Uporabniki
+            restricted_group:
+              label: Skupina
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategorija
+            restricted_tags:
+              label: Oznake
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Oznake
+        post:
+          fields:
+            topic:
+              label: ID teme
+        group_category_notification_default:
+          fields:
+            group:
+              label: Skupina
+        user_global_notice:
+          levels:
+            success: Uspeh
+            error: napaka
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Skupina
+            badge:
+              label: Značka
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Uporabnik
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID teme
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID teme
+            user:
+              label: Uporabnik
+        close_topic:
+          fields:
+            topic:
+              label: ID teme
+            user:
+              label: Uporabnik
+      models:
+        trigger:
+          name:
+            label: Sproži
+        automation:
+          name:
+            label: Ime
+          trigger:
+            label: Sproži
+          version:
+            label: Verzija
+          status:
+            label: Stanje
+          enabled:
+            label: Vključeno
+          disabled:
+            label: Onemogočeno

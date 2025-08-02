@@ -1,0 +1,154 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  js:
+    poll:
+      voters:
+        one: "oylayan"
+        other: "oylayan"
+      total_votes:
+        one: "toplam oy"
+        other: "toplam oy"
+      votes:
+        one: "%{count} oy"
+        other: "%{count} oy"
+      average_rating: "Ortalama puan: <strong>%{average}</strong>."
+      public:
+        title: "Oylar <strong>herkese açıktır</strong>."
+      results:
+        groups:
+          title: "Bu ankette oy kullanabilmek için %{groups} üyesi olmanız gerekiyor."
+        vote:
+          title: "Sonuçlar <strong>oy</strong> bölümünde gösterilir."
+        closed:
+          title: "Sonuçlar <strong>kapandığında</strong> gösterilir."
+        staff:
+          title: "Sonuçlar sadece <strong>personel</strong> üyelerine gösterilir."
+        tabs:
+          votes: "Oylar"
+          outcome: "Sonuç"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "En az <strong>%{count} seçenek</strong> belirleyin."
+            other: "En az <strong>%{count} seçenek</strong> belirleyin."
+          up_to_max_options:
+            one: "En fazla <strong>%{count} seçenek</strong> belirleyin."
+            other: "En fazla <strong>%{count} seçenek</strong> belirleyin."
+          x_options:
+            one: "<strong>%{count} seçenek</strong> belirleyin."
+            other: "<strong>%{count} seçenek</strong> belirleyin."
+          between_min_and_max_options: "<strong>%{min} ila %{max} seçenek</strong> arasından seçim yapın."
+      cast-votes:
+        title: "Oylarınızı kullanın"
+        label: "Hemen oy verin!"
+      show-results:
+        title: "Anket sonuçlarını göster"
+        label: "Sonuçlar"
+      show-tally:
+        title: "Oylama sonuçlarını oy sayısına göre göster"
+        label: "Toplam sayıyı göster"
+      show-percentage:
+        title: "Oylama sonuçlarını yüzde olarak göster"
+        label: "Yüzde olarak göster"
+      remove-vote:
+        title: "Oyunuzu kaldırın"
+        label: "Oyu geri al"
+      hide-results:
+        title: "Oylarınıza dönün"
+        label: "Oy ver"
+      group-results:
+        title: "Kullanıcı alanına göre oyları gruplandır"
+        label: "Dağılımı göster"
+      export-results:
+        title: "Anket sonuçlarını dışa aktar"
+        label: "Dışa Aktar"
+      open:
+        title: "Anketi aç"
+        label: "Aç"
+        confirm: "Bu anketi açmak istediğinizden emin misiniz?"
+      close:
+        title: "Anketi kapat"
+        label: "Kapat"
+        confirm: "Bu anketi kapatmak istediğinizden emin misiniz?"
+      automatic_close:
+        closes_in: "<strong>%{timeLeft}</strong> içinde kapanıyor."
+        age: "Kapalı <strong>%{age}</strong>"
+      breakdown:
+        title: "Anket sonuçları"
+        votes: "%{count} oy"
+        breakdown: "Dağılım"
+        percentage: "Yüzde"
+        count: "Sayı"
+      ranked_choice:
+        title:
+          rounds: "Turlar"
+          outcome: "Sonuç"
+        none: "Yok"
+        majority: "Çoğunluk"
+        eliminated: "Elendi"
+        round: "Tur"
+        winner:
+          one: "Bir turdan sonra kazanan %{winner} oldu."
+          other: "%{count} turdan sonra kazanan %{winner} oldu."
+        tied:
+          one: "Aşağıdaki adaylar bir tur sonunda berabere kaldı:"
+          other: "Aşağıdaki adaylar %{count} tur sonunda berabere kaldı:"
+      options:
+        label: "Seçenekler"
+        ranked_choice:
+          abstain: "Çekimser"
+          highest_priority: "(en yüksek öncelik)"
+          lowest_priority: "(en düşük öncelik)"
+          login: "Oy vermek için giriş yapın!"
+      error_while_toggling_status: "Üzgünüz, bu anketin durumunu değiştirirken bir hata oluştu."
+      error_while_casting_votes: "Üzgünüm, oylarınızı kullanırken bir hata oluştu."
+      error_while_fetching_voters: "Üzgünüz, oy verenler gösterilirken bir hata oluştu."
+      error_while_exporting_results: "Üzgünüz, anket sonuçlarını dışa aktarırken bir hata oluştu."
+      ui_builder:
+        title: Anket Oluştur
+        insert: Anket Ekle
+        help:
+          options_min_count: En az 1 seçenek girin.
+          options_max_count: En fazla %{count} seçenek girin.
+          invalid_min_value: Minimum değer en az 1 olmalıdır.
+          invalid_max_value: Maksimum değer en az 1 olmalı, ancak seçenek sayısına eşit veya daha az olmalıdır.
+          invalid_values: Minimum değer maksimum değerden küçük olmalıdır.
+          min_step_value: Minimum adım değeri 1'dir
+        poll_type:
+          label: Tür
+          regular: Tek Seçim
+          multiple: Çoktan Seçmeli
+          ranked_choice: Sıralamalı Seçim
+          number: Sayı Derecelendirme
+        poll_result:
+          label: Sonuçları göster...
+          always: Her zaman görünür
+          vote: Sadece oylamadan sonra
+          closed: Anket kapatıldığında
+          staff: Sadece personel
+        poll_groups:
+          label: Oylamayı bu gruplarla sınırlandırın
+        poll_chart_type:
+          label: Sonuç tablosu
+          bar: Çubuk
+          pie: Pasta
+        poll_config:
+          max: Maksimum Seçenekler
+          min: Minimum Seçenekler
+          step: Adım
+        poll_public:
+          label: Oy verenleri göster
+        poll_title:
+          label: Başlık (isteğe bağlı)
+        poll_options:
+          label: Seçenekler (satır başına bir)
+          add: Seçenek ekle
+        automatic_close:
+          label: Anketi otomatik olarak kapat
+        show_advanced: "Gelişmiş Seçenekleri Göster"
+        hide_advanced: "Gelişmiş Seçenekleri Gizle"

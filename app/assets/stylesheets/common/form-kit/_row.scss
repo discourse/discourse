@@ -1,0 +1,36 @@
+.form-kit__row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: calc(-0.5 * var(--form-kit-gutter-x));
+  margin-left: calc(-0.5 * var(--form-kit-gutter-x));
+  row-gap: calc(var(--form-kit-gutter-y) + 1.75em);
+  padding-top: 1.75em;
+  width: 100%;
+
+  > * {
+    flex-shrink: 0;
+    padding-right: calc(var(--form-kit-gutter-x) * 0.5);
+    padding-left: calc(var(--form-kit-gutter-x) * 0.5);
+  }
+
+  > *:not(.col-*) {
+    width: 100%;
+  }
+
+  .form-kit__container-content {
+    width: 100% !important;
+  }
+
+  .form-kit__col:not(:has(.form-kit__button)) {
+    position: relative;
+  }
+
+  .form-kit__button {
+    height: 2em;
+  }
+
+  .form-kit__container-title {
+    position: absolute;
+    top: -1.75em;
+  }
+}

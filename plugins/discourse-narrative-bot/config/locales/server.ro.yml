@@ -1,0 +1,78 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  discourse_narrative_bot:
+    bio: "Bună, nu sunt o persoană reală. Sunt un bot care te poate învăța despre acest site. Pentru a interacționa cu mine, trimiteți-mi un mesaj sau menționați-mă pe nume."
+    quote:
+      trigger: "citează"
+    magic_8_ball:
+      answers:
+        "9": "Da"
+    new_user_narrative:
+      hello:
+        title: "Salutări!"
+        message: |-
+          Mulțumim că te-ai alăturat %{title} și bine ai venit!
+
+          - Eu sunt doar un robot, dar [personalul nostru prietenos](%{base_uri}/about) este aici să te ajute, în cazul în care ai nevoie să vorbești cu cineva.
+
+          - Din motive de securitate, limităm temporar ceea ce pot face noii utilizatori. Vei dobândi [noi abilități](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (și [insigne](%{base_uri}/badges)) pe măsură ce te cunoaștem.
+
+          - Credem tot timpul în [comportamentul civilizat al comunității](%{base_uri}/guidelines).
+      onebox:
+        instructions: |-
+          În continuare, poți partaja una dintre aceste legături? Răspunde cu **o legătură pe o singură linie**, iar acesta se va extinde automat pentru a include un rezumat ingenios.
+
+          Pentru a copia orice legătură, atinge și ține apăsat pe mobil sau dă clic dreapta pe dispozitivul de indicare:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
+        not_found: |-
+          Scuze, nu am găsit legătura în răspunsul tău! :cry:
+
+          Poți încerca să adaugi următoarea legătură, pe propria linie, în următorul răspuns?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
+      bookmark:
+        instructions: |-
+          Dacă vrei să afli mai multe, selectează <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> de mai jos şi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marchează ca semn de carte acest mesaj**. Dacă o faci, ar putea fi un :gift: în viitor!
+      search:
+        instructions: |-
+          _psst_ … Am ascuns o surpriză în acest subiect. Dacă ești gata pentru o provocare, **selectează pictograma de căutare** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> din dreapta sus &#8599;, alege „în acest subiect”, apoi caută.
+
+          Încearcă să cauți termenul „capy&#8203;bara” în acest subiect
+    advanced_user_narrative:
+      poll:
+        instructions: |-
+          Știai că poți adăuga un sondaj la orice postare? Încearcă să folosești iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> din editor pentru a **construi un sondaj**.
+        not_found: |-
+          Hopa! Nu a existat niciun sondaj în răspunsul tău.
+
+          Utilizează iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> în editor, sau copiază și lipește acest sondaj în următorul tău răspuns:
+
+          ``text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ````
+      details:
+        instructions: |-
+          Uneori poate vrei să **ascunzi detalii** în răspunsurile tale:
+
+          - Când discuți despre intrigi ale unui film sau ale unui spectacol TV, care ar fi considerate un spoiler.
+
+          - Când postarea ta are nevoie de o mulțime de detalii opționale care pot fi copleșitoare atunci când le citești pe toate odată.
+
+          [details=Selectează asta pentru a vedea cum funcționează!]
+          1. Selectează iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> din editor.
+          2. Selectează „Ascunde detalii”.
+          3. Editează rezumatul detaliilor și adaugă conținutul tău.
+          [/details]
+
+          Poți folosi iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> în editor pentru a adăuga o secțiune de detalii la următorul tău răspuns?

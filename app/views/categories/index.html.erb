@@ -1,0 +1,45 @@
+<div itemscope itemtype='http://schema.org/ItemList'>
+  <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+  <table class='category-list'>
+    <thead>
+      <tr>
+        <th class='category'><%= t 'js.categories.category' %></th>
+        <th class='topics'><%= t 'js.topic.list' %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @category_list.categories.each_with_index do |c, index| %>
+        <tr>
+          <td class='category' style='border-color: #<%= c.color %>;'>
+            <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+              <meta itemprop='position' content='<%= index %>'>
+              <meta itemprop='url' content='<%= c.url %>'>
+              <h3>
+                <a href='<%= c.url %>'>
+                  <span itemprop='name'><%= c.name %></span>
+                </a>
+              </h3>
+              <div itemprop='description'><%= c.description&.html_safe %></div>
+              <% if c.subcategory_list.present? %>
+                <div class='subcategories'>
+                  <% c.subcategory_list.each_with_index do |sc, index| %>
+                    <a href='<%= sc.url %>'><%= sc.name %></a>&nbsp;
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </td>
+          <td class='topics'>
+            <div title='<%= c.topic_count %> <%= t 'js.topic.list' %>'><%= c.topic_count %></div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% content_for :title do %><%= @title %><% end %>
+
+<% content_for :head do %>
+  <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+<% end %>

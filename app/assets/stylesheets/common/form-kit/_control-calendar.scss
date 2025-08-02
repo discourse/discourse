@@ -1,0 +1,77 @@
+.form-kit__control-calendar-menu-trigger {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.form-kit__field-calendar {
+  width: 100%;
+
+  .date-picker-container {
+    border: 1px solid var(--primary-low-mid);
+    box-sizing: border-box;
+    border-radius: var(--d-border-radius);
+  }
+}
+
+.form-kit__control-calendar {
+  display: flex;
+  flex-direction: row;
+
+  .date-picker {
+    display: none;
+  }
+}
+
+.form-kit__control-calendar + .date-picker-container {
+  width: 100%;
+
+  .pika-single {
+    position: relative !important;
+    border: none;
+    border-radius: 0;
+    width: 100%;
+    box-sizing: border-box;
+
+    .pika-button {
+      border-radius: 0;
+      text-align: center;
+    }
+
+    .is-selected {
+      .pika-button {
+        box-shadow: none;
+      }
+    }
+
+    .pika-lendar {
+      padding: 0;
+      box-sizing: border-box;
+      margin: 0;
+      width: 100%;
+    }
+
+    .pika-table {
+      margin-top: 0 !important; // core style was leaking on this
+    }
+
+    .pika-row:last-child {
+      border-bottom: none !important; // core style was leaking on this
+    }
+
+    .pika-row:hover {
+      background: none !important; // core style was leaking on this
+    }
+  }
+}
+
+.form-kit__control-calendar-menu-content {
+  .fk-d-menu__inner-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+  }
+
+  .date-picker-container {
+    padding-bottom: 1em;
+  }
+}

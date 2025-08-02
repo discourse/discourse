@@ -1,0 +1,82 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    chat_enabled: "채팅 활성화."
+  chat:
+    deleted_chat_username: 삭제되었습니다
+    errors:
+      delete_channel_failed: "채널 삭제에 실패했습니다. 다시 시도하세요."
+      not_accepting_dms: "죄송합니다. %{username} 님이 당분간 메시지를 받지 않습니다."
+      user_cannot_send_direct_messages: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
+    reviewables:
+      actions:
+        agree:
+          title: "동의..."
+        agree_and_keep_message:
+          title: "메시지 유지"
+        agree_and_suspend:
+          title: "사용자 차단"
+          description: "플래그에 동의하고 사용자를 일시 중지하십시오."
+        agree_and_silence:
+          title: "글 작성 중지 사용자"
+          description: "신고에 동의하고 사용자를 쓰기 금지로 설정합니다."
+        agree_and_restore:
+          title: "메시지 복원"
+        agree_and_delete:
+          title: "메시지 삭제"
+        disagree:
+          title: "동의하지 않음"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+    mention_warning:
+      dismiss: "무시"
+      cannot_see: "%{first_identifier} 이 채널에 액세스할 수 없으며 알림을 받지 않았습니다."
+      cannot_see_multiple:
+        other: "%{first_identifier}명 외 %{count}명의 사용자가 이 채널에 액세스할 수 없으며 알림을 받지 않았습니다."
+      without_membership: "%{first_identifier}이 채널에 참여하지 않았습니다."
+      without_membership_multiple:
+        other: "%{first_identifier} 및 %{count}명의 다른 사용자가 이 채널에 가입하지 않았습니다."
+      group_mentions_disabled: "%{first_identifier}은 언급을 허용하지 않습니다."
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} 및 %{count}개의 다른 그룹은 멘션을 허용하지 않습니다."
+      too_many_members: "%{first_identifier}은(는) 구성원이 너무 많습니다. 아무도 알림을 받지 않았습니다."
+      too_many_members_multiple:
+        other: "%{first_identifier} 및 %{count}개의 그룹은 회원 수가 너무 많습니다. 아무도 알림을 받지 않았습니다."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
+        is_already_in_use: "이미 사용 중"
+    personal_chat: "개인 채팅"
+    onebox:
+      x_members:
+        other: "회원 %{count}명"
+    transcript:
+      default_thread_title: "스레드"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: 채팅 메시지 보내기
+  reviewable_score_types:
+    needs_review:
+      title: "검토 필요"
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "삭제된 사용자"
+      from: "%{site_name}"
+  unsubscribe:
+    chat_summary:
+      never: 알림 받지 않기
+      when_away: 자리를 비울 때만
+  category:
+    cannot_delete:
+      has_chat_channels: "채팅 채널이 있기 때문에 이 카테고리를 삭제할 수 없습니다."

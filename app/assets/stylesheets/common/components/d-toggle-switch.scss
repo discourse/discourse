@@ -1,0 +1,112 @@
+.d-toggle-switch {
+  --toggle-switch-width: 45px;
+  --toggle-switch-height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:focus {
+    .d-toggle-switch__checkbox-slider {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+  }
+
+  &:hover {
+    .d-toggle-switch__checkbox-slider {
+      background-color: var(--primary-high);
+    }
+
+    .d-toggle-switch__checkbox[aria-checked="true"]:not([disabled])
+      + .d-toggle-switch__checkbox-slider {
+      background-color: var(--tertiary-hover);
+    }
+  }
+
+  &__label {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  &__checkbox {
+    position: absolute;
+    border: 0;
+    padding: 0;
+    background: transparent;
+
+    &:focus {
+      + .d-toggle-switch__checkbox-slider {
+        outline: 2px solid var(--tertiary);
+        outline-offset: 2px;
+      }
+
+      // Outline should show only when tabbing, not clicking
+      &:not(:focus-visible) {
+        + .d-toggle-switch__checkbox-slider {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider {
+    background-color: var(--tertiary);
+  }
+
+  &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider::before {
+    left: calc(var(--toggle-switch-width) - 22px);
+  }
+
+  &__checkbox[disabled] + .d-toggle-switch__checkbox-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &::before {
+      cursor: not-allowed;
+    }
+  }
+
+  &__checkbox-slider {
+    display: inline-block;
+    cursor: pointer;
+    background: var(--primary-low-mid);
+    border-radius: var(--toggle-switch-height);
+    width: var(--toggle-switch-width);
+    height: var(--toggle-switch-height);
+    position: relative;
+    vertical-align: middle;
+    transition: background 0.25s;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      color: var(--secondary);
+      left: 7px;
+      top: 6px;
+      position: absolute;
+    }
+  }
+
+  &__checkbox-slider::before,
+  &__checkbox-slider::after {
+    content: "";
+    display: block;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  &__checkbox-slider::before {
+    background: var(--secondary);
+    border-radius: 50%;
+    width: calc(var(--toggle-switch-height) * 0.75);
+    height: calc(var(--toggle-switch-height) * 0.75);
+    top: calc(var(--toggle-switch-height) * 0.125);
+    left: calc(var(--toggle-switch-height) * 0.125);
+    transition: left 0.25s;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0ms;
+    }
+  }
+}

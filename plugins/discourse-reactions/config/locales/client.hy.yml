@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    discourse_reactions:
+      main_reaction:
+        add: "Հավանել այս գրառումը"
+    notifications:
+      reaction_2_users: "%{username}, %{username2}"

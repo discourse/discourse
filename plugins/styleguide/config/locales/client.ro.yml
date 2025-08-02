@@ -1,0 +1,97 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Ghid de stil Discourse"
+  js:
+    styleguide:
+      title: "Ghid stilistic"
+      welcome: "Pentru a începe, alegeți o secțiune din meniul din stânga."
+      categories:
+        syntax: Sintaxă
+        atoms: Atomi
+        molecules: Molecule
+        organisms: Organisme
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Corpuri de literă"
+          example: "Bine ai venit la Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Introducerea datei/orei"
+        multi_select:
+          title: "Selectare multiplă"
+        font_scale:
+          title: "Sistem corpuri de literă"
+        colors:
+          title: "Culori"
+        icons:
+          title: "Pictograme"
+          full_list: "Vezi lista completă a pictogramelor din Font Awesome"
+        buttons:
+          title: "Butoane"
+        dropdowns:
+          title: "Meniuri cascadă"
+        categories:
+          title: "Categorii"
+        bread_crumbs:
+          title: "Urmărire cale acces"
+        navigation:
+          title: "Navigare"
+        navigation_bar:
+          title: "Bară de navigare"
+        navigation_stacked:
+          title: "Navigare suprapusă"
+        categories_list:
+          title: "Listă de categorii"
+        topic_link:
+          title: "Legătură spre subiect"
+        topic_list_item:
+          title: "Element din lista subiectelor"
+        topic_statuses:
+          title: "Statusuri pentru subiecte"
+        topic_list:
+          title: "Listă de subiecte"
+        footer_message:
+          title: "Mesaj subsol"
+        signup_cta:
+          title: "Îndemn la înregistrare"
+        topic_timer_info:
+          title: "Temporizatoare subiecte"
+        topic_footer_buttons:
+          title: "Butoanele de la subsolul subiectului"
+        topic_notifications:
+          title: "Notificări despre subiecte"
+        post:
+          title: "Postare"
+        topic_map:
+          title: "Harta subiectului"
+        suggested_topics:
+          title: "Subiecte sugerate"
+        post_menu:
+          title: "Meniu postare"
+        modal:
+          title: "Dialog modal"
+          header: "Titlu modal"
+          footer: "Subsol modal"
+        user_about:
+          title: "Casetă despre utilizator"
+        header_icons:
+          title: "Pictograme Antet"
+        spinners:
+          title: "Indicatori încărcare"
+        tooltips:
+          description: "Descriere"
+          header: "Antet"
+        char_counter:
+          title: "Contor de caractere"
+          placeholder: "Introdu textul tău aici..."

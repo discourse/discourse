@@ -1,0 +1,146 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    poll:
+      voters:
+        other: "投票者数"
+      total_votes:
+        other: "合計得票数"
+      votes:
+        other: "%{count} 票"
+      average_rating: "平均評価: <strong>%{average}</strong>。"
+      public:
+        title: "投票は<strong>公開</strong>されています。"
+      results:
+        groups:
+          title: "このアンケートに投票するには %{groups} のメンバーである必要があります。"
+        vote:
+          title: "結果は<strong>投票</strong>したとき表示されます。"
+        closed:
+          title: "結果は投票が<strong>クローズ</strong>になると表示されます。"
+        staff:
+          title: "結果は<strong>スタッフ</strong>メンバーにのみ表示されます。"
+        tabs:
+          votes: "投票"
+          outcome: "結果"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "少なくとも <strong>%{count} 個のオプション</strong>を選択してください。"
+          up_to_max_options:
+            other: "最大 <strong>%{count} 個のオプション</strong>を選択してください。"
+          x_options:
+            other: "<strong>%{count} 個のオプション</strong>を選択してください。"
+          between_min_and_max_options: "<strong>%{min} 個から %{max} 個までのオプション</strong>を選択してください。"
+      cast-votes:
+        title: "投票する"
+        label: "今すぐ投票！"
+      show-results:
+        title: "投票結果を表示する"
+        label: "結果"
+      show-tally:
+        title: "投票数で投票結果を表示する"
+        label: "集計を表示"
+      show-percentage:
+        title: "投票結果をパーセント率で表示する"
+        label: "パーセント率で表示"
+      remove-vote:
+        title: "投票の削除"
+        label: "投票を取り消す"
+      hide-results:
+        title: "自分の投票に戻る"
+        label: "投票"
+      group-results:
+        title: "ユーザーフィールド別に投票をグループ化"
+        label: "内訳を表示する"
+      export-results:
+        title: "投票結果をエクスポートする"
+        label: "エクスポート"
+      open:
+        title: "投票をオープンする"
+        label: "オープン"
+        confirm: "この投票をオープンにしてもよろしいですか？"
+      close:
+        title: "投票をクローズする"
+        label: "クローズ"
+        confirm: "この投票をクローズしてもよろしいですか？"
+      automatic_close:
+        closes_in: "<strong>%{timeLeft}</strong> でクローズします。"
+        age: "<strong>%{age}</strong> にクローズ"
+      breakdown:
+        title: "投票結果"
+        votes: "%{count} 票"
+        breakdown: "内訳"
+        percentage: "割合"
+        count: "票数"
+      ranked_choice:
+        title:
+          rounds: "ラウンド"
+          outcome: "結果"
+        none: "なし"
+        majority: "過半数"
+        eliminated: "排除"
+        round: "ラウンド"
+        winner:
+          other: "%{count} ラウンドの末、%{winner} が勝者となりました。"
+        tied:
+          other: "%{count} ラウンドの末、次の候補者が引き分けとなりました:"
+      options:
+        label: "オプション"
+        ranked_choice:
+          abstain: "棄権"
+          highest_priority: "(最優先)"
+          lowest_priority: "(最低優先)"
+          login: "ログインして投票！"
+      error_while_toggling_status: "この投票のステータスを切り替える際にエラーが発生しました。"
+      error_while_casting_votes: "投票の際にエラーが発生しました。"
+      error_while_fetching_voters: "投票者を表示する際にエラーが発生しました。"
+      error_while_exporting_results: "投票結果のエクスポート中にエラーが発生しました。"
+      ui_builder:
+        title: 投票を作成
+        insert: 投票の挿入
+        help:
+          options_min_count: 少なくとも1つのオプションを入力してください。
+          options_max_count: オプションを %{count} 個まで入力してください。
+          invalid_min_value: 最小値は少なくとも 1 である必要があります。
+          invalid_max_value: 最大値は少なくとも 1 である必要がありますが、オプションの数以下である必要があります。
+          invalid_values: 最小値は最大値より小さくなければなりません。
+          min_step_value: 最小ステップの値は 1 です
+        poll_type:
+          label: タイプ
+          regular: 単一選択
+          multiple: 複数選択
+          ranked_choice: ランク付けされた選択肢
+          number: 数字評価
+        poll_result:
+          label: 結果を表示する...
+          always: 常に表示
+          vote: 投票後のみ
+          closed: 投票がクローズされたとき
+          staff: スタッフのみ
+        poll_groups:
+          label: 次のグループに投票を制限する
+        poll_chart_type:
+          label: 結果グラフ
+          bar: 棒
+          pie: 円グラフ
+        poll_config:
+          max: 最大選択肢数
+          min: 最小選択肢数
+          step: 間隔
+        poll_public:
+          label: 投票者を表示する
+        poll_title:
+          label: タイトル (オプション)
+        poll_options:
+          label: オプション (1 行に 1 つ)
+          add: オプションを追加
+        automatic_close:
+          label: 投票を自動的にクローズする
+        show_advanced: "高度なオプションを表示"
+        hide_advanced: "高度なオプションを非表示"

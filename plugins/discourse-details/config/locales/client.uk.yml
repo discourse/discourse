@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Деталі Discourse"
+  js:
+    details:
+      title: Приховати подробиці
+    composer:
+      details_title: Підсумок
+      details_text: "Цей текст буде приховано"

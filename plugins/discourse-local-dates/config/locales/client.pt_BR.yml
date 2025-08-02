@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Datas locais Discourse"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Hoje %{time}
+        tomorrow: Amanhã %{time}
+        yesterday: Ontem %{time}
+        countdown:
+          passed: a data já passou
+      title: Inserir data/hora
+      create:
+        form:
+          insert: Inserir
+          advanced_mode: Modo avançado
+          simple_mode: Modo simples
+          format_description: "Formato usado para exibir a dada ao(à) usuário(a). Use Z para exibir o resultado e zz para o nome do fuso horário."
+          timezones_title: Fusos horários para exibir
+          timezones_description: Os fusos horários serão usados ​​para exibir datas na pré-visualização e no fallback.
+          recurring_title: Recorrência
+          recurring_description: "Defina a recorrência de um evento. Você também pode editar manualmente a opção recorrente gerada pelo formulário e usar uma das seguintes chaves em inglês: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Sem recorrência
+          invalid_date: Data inválida, verifique se a data e a hora estão corretas
+          date_title: Data
+          time_title: Hora
+          format_title: Formato de data
+          timezone: Fuso horário
+          until: Até…
+          current_timezone: "Fuso horário atual:"
+          recurring:
+            every_day: "Todos os dias"
+            every_week: "Todas as semanas"
+            every_two_weeks: "A cada duas semanas"
+            every_month: "A cada mês"
+            every_two_months: "A cada dois meses"
+            every_three_months: "A cada tres meses"
+            every_six_months: "A cada seis meses"
+            every_year: "Todos os anos"
+      default_title: "Evento %{site_name}"

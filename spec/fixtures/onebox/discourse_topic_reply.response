@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html lang="en-US" class="desktop-view not-mobile-device text-size-normal">
+  <head>
+    <meta charset="utf-8">
+    <title>Congratulations, most stars in 2013 GitHub Octoverse! - praise - Discourse Meta</title>
+    <meta name="description" content="Congratulations Discourse for qualifying Repositories with the most stars on GitHub Octoverse.
+
+[image]
+
+And that too in just over an year, way to go! [boom]">
+    <meta name="discourse_theme_id" content="28">
+    <meta name="discourse_current_homepage" content="latest">
+    <meta name="generator" content="Discourse 2.4.0.beta10 - https://github.com/discourse/discourse version c84652eb8b2bb9dd616056621ee7c7b91fcf64a2">
+<link rel="icon" type="image/png" href="https://d11a6trkgmumsb.cloudfront.net/optimized/3X/b/3/b33be9538df3547fcf9d1a51a4637d77392ac6f9_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://d11a6trkgmumsb.cloudfront.net/optimized/3X/a/c/ac166452701ce353fa6c8865e99879e8cacfb960_2_180x180.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<link rel="canonical" href="https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483" />
+<script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"https://meta.discourse.org","potentialAction":{"@type":"SearchAction","target":"https://meta.discourse.org/search?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<link rel="search" type="application/opensearchdescription+xml" href="https://meta.discourse.org/opensearch.xml" title="Discourse Meta Search">
+
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="BbAyxaxdWPCX+qVsIDsV0r15cp2tDKC99jKU4RwYPECq2KuQnA6CkBCuoikYDNcSmrqAtHo47MTGuP0EGKrVvQ==" />
+
+      <meta name="fragment" content="!">
+
+
+
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/locales/en_US-63e5ee4e7f9b6a799da9dc39b8643975b1e69865493ade629803b88041d0f419.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/locales/en_US-63e5ee4e7f9b6a799da9dc39b8643975b1e69865493ade629803b88041d0f419.br.js"></script>
+
+      <link rel="preload" href="/extra-locales/overrides?v=1a77a5faa3ee4ea9fae9babe7cc0b1fd" as="script">
+<script src="/extra-locales/overrides?v=1a77a5faa3ee4ea9fae9babe7cc0b1fd"></script>
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/ember_jquery-c2cca4a19fd4c70eabc95b010a6d7643955ec2a2251aeb1d70f625773eebea21.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/ember_jquery-c2cca4a19fd4c70eabc95b010a6d7643955ec2a2251aeb1d70f625773eebea21.br.js"></script>
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/preload-store-d32dcf974dddcac742f8a7a6aa7fcd686185920b201029d0ecb2b85527ef9034.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/preload-store-d32dcf974dddcac742f8a7a6aa7fcd686185920b201029d0ecb2b85527ef9034.br.js"></script>
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/vendor-23fec6bd10e0b5077f354cc249522da0f4e658c95f2b537bb5f50e17cb1464c7.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/vendor-23fec6bd10e0b5077f354cc249522da0f4e658c95f2b537bb5f50e17cb1464c7.br.js"></script>
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/pretty-text-bundle-2a0b2345a1fdd3b5b3eedfa6baf5b8ae0af5a0c2463cd671e4f42a2333029045.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/pretty-text-bundle-2a0b2345a1fdd3b5b3eedfa6baf5b8ae0af5a0c2463cd671e4f42a2333029045.br.js"></script>
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/application-8a639a415341ed09098584c60a98e38de881e853205f74831e0f7cd8fd265eee.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/application-8a639a415341ed09098584c60a98e38de881e853205f74831e0f7cd8fd265eee.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-adplugin-757236a7e9e5cb37859488950ab194b27027e7b133d9a496bd81231d9186df71.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-adplugin-757236a7e9e5cb37859488950ab194b27027e7b133d9a496bd81231d9186df71.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-akismet-b0df042fe9d3c1afff08efbe2e7de64390c679401a6aff0699a7be36866272bf.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-akismet-b0df042fe9d3c1afff08efbe2e7de64390c679401a6aff0699a7be36866272bf.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-assign-bd69e6069acae7938e8e3a348551a7eb68cf3ec803ed586be6822167ee3d4821.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-assign-bd69e6069acae7938e8e3a348551a7eb68cf3ec803ed586be6822167ee3d4821.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-cakeday-aaa0d061860d8a337c493728190ca9b242bd4affd43216dda00cfff029cdea06.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-cakeday-aaa0d061860d8a337c493728190ca9b242bd4affd43216dda00cfff029cdea06.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-canned-replies-d3e0a1edb99124fe7109af2831e0edfee2941a876204309d4af0210251f395ae.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-canned-replies-d3e0a1edb99124fe7109af2831e0edfee2941a876204309d4af0210251f395ae.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-checklist-033a0e2779be5a3f790cf949bded86a50f18f475727420ec30d0923263c77021.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-checklist-033a0e2779be5a3f790cf949bded86a50f18f475727420ec30d0923263c77021.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-customer-flair-plugin-f34152a0d6e85973f49a56d83e0852d31e1b15d54a6dfb994060187f920d2e63.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-customer-flair-plugin-f34152a0d6e85973f49a56d83e0852d31e1b15d54a6dfb994060187f920d2e63.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-data-explorer-f4c137d3b04196d9717f95dbad442c9c9d242d6547379fa246bc4ac45cba1dc2.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-data-explorer-f4c137d3b04196d9717f95dbad442c9c9d242d6547379fa246bc4ac45cba1dc2.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-details-a0eaecee5c192d6eda793b1c7a5f5e31c14360b171a1718d76eb4eef66f1ee9f.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-details-a0eaecee5c192d6eda793b1c7a5f5e31c14360b171a1718d76eb4eef66f1ee9f.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-internet-explorer-94a59cc54d7dfa189c6c0b90fe30742d2f65258346dab716d04b90339e81cfe0.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-internet-explorer-94a59cc54d7dfa189c6c0b90fe30742d2f65258346dab716d04b90339e81cfe0.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-knowledge-explorer-ee4cfc7f01f788e0f8b95622abde6ed41cf61ac73dda397cf94a78386b2f9e61.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-knowledge-explorer-ee4cfc7f01f788e0f8b95622abde6ed41cf61ac73dda397cf94a78386b2f9e61.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-local-dates-1474c1b17733f263e521a26b250d0c9ff204b7a9aa6e96424cbc6ed96db1e598.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-local-dates-1474c1b17733f263e521a26b250d0c9ff204b7a9aa6e96424cbc6ed96db1e598.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-narrative-bot-34c7a69c26a852a4f0464fc33b2abbf56163d77f77138d699a839ba8f260296d.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-narrative-bot-34c7a69c26a852a4f0464fc33b2abbf56163d77f77138d699a839ba8f260296d.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-presence-401411faec9309d47f4a10607f1d77fac5a0accfdf604a3b486a7ff383fc4e89.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-presence-401411faec9309d47f4a10607f1d77fac5a0accfdf604a3b486a7ff383fc4e89.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-push-notifications-69b92f0d386886d94267c9bc2da0e7bc1e31ac8ecf245562e60fb1316f1af716.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-push-notifications-69b92f0d386886d94267c9bc2da0e7bc1e31ac8ecf245562e60fb1316f1af716.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-saved-searches-dc5fbd248d076c4d371e1957585356ccd0bc1c61716aadfa239ef7dc3ca12254.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-saved-searches-dc5fbd248d076c4d371e1957585356ccd0bc1c61716aadfa239ef7dc3ca12254.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-solved-605fbd017b7457f71851a2e5391b83a2300acb95346e9f708015bf13ac23e63d.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-solved-605fbd017b7457f71851a2e5391b83a2300acb95346e9f708015bf13ac23e63d.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-spoiler-alert-b9c960367d7dd1d39f374a3cfba81367ae6539c7910bbdd3d3ecb3cb043afcf8.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-spoiler-alert-b9c960367d7dd1d39f374a3cfba81367ae6539c7910bbdd3d3ecb3cb043afcf8.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-teams-9d880a574498b77a497f1fdadb1669356ada502d28fc634987ace33cc6ebbfea.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-teams-9d880a574498b77a497f1fdadb1669356ada502d28fc634987ace33cc6ebbfea.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-user-notes-e78a1ef1ba38fc23c3f6b0cd87639a71263476c41c9dc17160dbdb35d8708d90.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-user-notes-e78a1ef1ba38fc23c3f6b0cd87639a71263476c41c9dc17160dbdb35d8708d90.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-voting-ec9e0e84e82dcd9b8d30a32a945fb7e1cd05be7306db535118571b3be3ddde38.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/discourse-voting-ec9e0e84e82dcd9b8d30a32a945fb7e1cd05be7306db535118571b3be3ddde38.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/hosted-site-cf32a12a1f91d912b50c3336c046837ccc6123374a28e2fe22f1582adf9d9d56.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/hosted-site-cf32a12a1f91d912b50c3336c046837ccc6123374a28e2fe22f1582adf9d9d56.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/lazy-yt-cc6987f1bc1a01aed5e746c9cbe75ba9f4b9c6354f47a08b9608525a21a5f5c4.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/lazy-yt-cc6987f1bc1a01aed5e746c9cbe75ba9f4b9c6354f47a08b9608525a21a5f5c4.br.js"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/poll-9bc3d76a43696902e086e7c9160c13d760c31909ff0b32daf2351f9b241d5ffa.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/plugins/poll-9bc3d76a43696902e086e7c9160c13d760c31909ff0b32daf2351f9b241d5ffa.br.js"></script>
+
+      <link rel="preload" href="/extra-locales/admin?v=769ce25b700c6ad05b6583bad127a4e0" as="script">
+<script src="/extra-locales/admin?v=769ce25b700c6ad05b6583bad127a4e0"></script>
+
+      <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/admin-e073e2dd2f0a28538d76fea3a3d7ca9be6a0ccb3c6ce077e5db26b8b1f5075f5.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/admin-e073e2dd2f0a28538d76fea3a3d7ca9be6a0ccb3c6ce077e5db26b8b1f5075f5.br.js"></script>
+
+
+      <script src='https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/342a4fcc6e8fa2b248129b6502e1e2a34c8c5658.js?__ws=meta.discourse.org'></script>
+<script src='https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/c1b0aea413595ae78b4d19ae64b30bd087bb13db.js?__ws=meta.discourse.org'></script>
+      <script src='https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/20fefd382fbe7008c47670e44d34331b03cf433a.js?__ws=meta.discourse.org'></script>
+<script src='https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/ce331135ccc14933f5d3a5c5ce0b464efec2b1d9.js?__ws=meta.discourse.org'></script>
+      <meta http-equiv="origin-trial" content="Avxkn9pqiyK+1F1LLCIuXTFKanihzkcBp9P63oOYbFG3xZdBX56KG7ffcvWPy2R1QrcGCtLSXEEx+BEz8m95+AwAAABTeyJvcmlnaW4iOiJodHRwczovL21ldGEuZGlzY291cnNlLm9yZzo0NDMiLCJmZWF0dXJlIjoiQmFkZ2luZyIsImV4cGlyeSI6MTU1NjIyNDYwM30=">
+<script src="https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/1d934958505c7972baabcf0e502d21428f1abd81.js?__ws=meta.discourse.org"></script>
+<script src="https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/f9ad4671d3fe5326a63a618e91d35bda79d14778.js?__ws=meta.discourse.org"></script>
+
+
+    <meta id="data-ga-universal-analytics" data-tracking-code="UA-33736483-2" data-json="{&quot;cookieDomain&quot;:&quot;auto&quot;,&quot;userId&quot;:8222}" data-auto-link-domains="">
+
+<link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/google-universal-analytics-f35b4da49411e6f5559073523aab983da483976a3954c79c756f8579f6fbd6ef.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/google-universal-analytics-f35b4da49411e6f5559073523aab983da483976a3954c79c756f8579f6fbd6ef.br.js"></script>
+
+
+    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+
+
+      <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/desktop_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="desktop" data-theme-id="28"/>
+
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/admin_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="admin" data-theme-id="28"/>
+
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/desktop_theme_28_cbf3b79a52c7c8ea3f20e2f76887f16a0978c397.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="28"/>
+
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-adplugin_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-adplugin" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-akismet_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-akismet" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-assign_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-assign" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-cakeday_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-cakeday" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-canned-replies_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-canned-replies" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-checklist_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-checklist" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-data-explorer_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-data-explorer" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-details_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-details" data-theme-id="28"/>
+
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-knowledge-explorer_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-knowledge-explorer" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-local-dates_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-local-dates" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-presence_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-presence" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-saved-searches_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-saved-searches" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-solved_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-solved" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-spoiler-alert_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-spoiler-alert" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-user-notes_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-user-notes" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-voting_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-voting" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-yearly-review_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-yearly-review" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/hosted-site_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="hosted-site" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/lazy-yt_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="lazy-yt" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/poll_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="poll" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/discourse-voting_desktop_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="discourse-voting_desktop" data-theme-id="28"/>
+  <link href="https://d3bpeqsaub0i6y.cloudfront.net/stylesheets/poll_desktop_861c488c6f2da5273bf45559e2b70d244304f7e2.css?__ws=meta.discourse.org" media="all" rel="stylesheet" data-target="poll_desktop" data-theme-id="28"/>
+
+
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of &#39;Congratulations, most stars in 2013 GitHub Octoverse!&#39;" href="https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483.rss" />
+    <meta property="og:site_name" content="Discourse Meta" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://d11a6trkgmumsb.cloudfront.net/optimized/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd_2_690x362.png" />
+<meta property="og:image" content="https://d11a6trkgmumsb.cloudfront.net/optimized/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd_2_690x362.png" />
+<meta property="og:url" content="https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483/2" />
+<meta name="twitter:url" content="https://meta.discourse.org/t/congratulations-most-stars-in-2013-github-octoverse/12483/2" />
+<meta property="og:title" content="Congratulations, most stars in 2013 GitHub Octoverse!" />
+<meta name="twitter:title" content="Congratulations, most stars in 2013 GitHub Octoverse!" />
+<meta property="og:description" content="Ah, cool. I was not sure how to see that since GitHub changed around the way project top stats looked. Thanks for that link and thank you – and everyone else who is contributing to the project!" />
+<meta name="twitter:description" content="Ah, cool. I was not sure how to see that since GitHub changed around the way project top stats looked. Thanks for that link and thank you – and everyone else who is contributing to the project!" />
+<meta property="article:published_time" content="2014-02-06T05:27:06+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+
+
+
+    <meta id="data-discourse-setup" data-cdn="https://d3bpeqsaub0i6y.cloudfront.net" data-base-url="https://meta.discourse.org" data-base-uri="" data-environment="production" data-letter-avatar-version="5_81c48a6156c45fac0d25db91e6a334df" data-markdown-it-url="https://d11a6trkgmumsb.cloudfront.net/assets/markdown-it-bundle-219531f88e0ba24abfaf623403cc362d025426df5015fa8cc7b3435fafa66549.br.js" data-service-worker-url="service-worker-90db8f8eb81929494dd5f040838bb009ee18c33038635f4593fbca17f3052bf0.js" data-default-locale="en_US" data-asset-version="72def2def80e506cd49c5fd357e7d4c6" data-disable-custom-css="false" data-highlight-js-path="/highlight-js/meta.discourse.org/784da56040d04ad27b515301d0cbc2df7307a5a0.js" data-svg-sprite-path="/svg-sprite/meta.discourse.org/svg-28-d474c15119cda4206af12f18ec246e0d180038b2.js" data-enable-js-error-reporting="true" data-s3-cdn="https://d11a6trkgmumsb.cloudfront.net" data-s3-base-url="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com">
+
+  </head>
+
+  <body class="primary-group-team">
+
+    <noscript data-path="/t/congratulations-most-stars-in-2013-github-octoverse/12483/2">
+
+  <header class="d-header">
+    <div class="wrap">
+      <div class="contents">
+        <div class="header-row">
+          <div class="logo-wrapper">
+            <a href="/">
+                <img src="https://d11a6trkgmumsb.cloudfront.net/original/3X/1/0/101f03af29f12ea30e1226eb96a02c3ed2f6d2ef.png" alt="Discourse Meta" id="site-logo">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+      <div id="main-outlet" class="wrap">
+        <!-- preload-content: -->
+          <h1 class="crawler-topic-title">
+    <a href="/t/congratulations-most-stars-in-2013-github-octoverse/12483">Congratulations, most stars in 2013 GitHub Octoverse!</a>
+  </h1>
+
+  <div id="breadcrumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+      <div itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+        <a href="https://meta.discourse.org/c/praise" class="badge-category__wrapper" itemprop="item">
+          <span class="badge-category__title" itemprop="name">praise</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </div>
+  </div>
+
+
+
+
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
+        <div class='crawler-post-meta'>
+          <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <a itemprop="url" href='https://meta.discourse.org/u/techAPJ'><span itemprop='name'>techAPJ</span></a>
+            (Arpit Jalan)
+          </span>
+
+          <span class="crawler-post-infos">
+              <meta itemprop='datePublished' content='2014-02-06T04:55:19Z'>
+              <time itemprop='dateModified' datetime='2015-06-19T06:45:49Z' class='post-time'>
+                June 19, 2015,  6:45am
+              </time>
+          <span itemprop='position'>1</span>
+          </span>
+        </div>
+        <div class='post' itemprop='articleBody'>
+          <p>Congratulations Discourse for qualifying <strong>Repositories with the most stars</strong> on <a href="http://octoverse.github.com/" rel="nofollow noopener">GitHub Octoverse</a>.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://d11a6trkgmumsb.cloudfront.net/original/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd.png" data-download-href="/uploads/short-url/tJuViGduTW0q554XGvz7IKrqawR.png?dl=1" title="github_octoverse.png" rel="nofollow noopener"><img src="https://d11a6trkgmumsb.cloudfront.net/optimized/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd_2_690x362.png" width="690" height="362" srcset="https://d11a6trkgmumsb.cloudfront.net/optimized/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd_2_690x362.png, https://d11a6trkgmumsb.cloudfront.net/optimized/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd_2_1035x543.png 1.5x, https://d11a6trkgmumsb.cloudfront.net/original/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd.png 2x" data-small-upload="https://d11a6trkgmumsb.cloudfront.net/optimized/2X/d/d063b3b0807377d98695ee08042a9ba0a8c593bd_2_10x10.png"><div class="meta">
+<svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">github_octoverse.png</span><span class="informations">1365×718 217 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+</div></a></div> </p>
+<p>And that too in just over an year, way to go! <img src="https://d3bpeqsaub0i6y.cloudfront.net/images/emoji/twitter/boom.png?v=9" title=":boom:" class="emoji" alt=":boom:"></p>
+        </div>
+
+        <meta itemprop='headline' content='Congratulations, most stars in 2013 GitHub Octoverse!'>
+
+        <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+           <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+           <meta itemprop="userInteractionCount" content="8" />
+           <span class='post-likes'>8 Likes</span>
+         </div>
+
+         <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+            <meta itemprop="interactionType" content="http://schema.org/CommentAction"/>
+            <meta itemprop="userInteractionCount" content="0" />
+          </div>
+
+            <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+            </div>
+
+    </div>
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
+        <div class='crawler-post-meta'>
+          <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <a itemprop="url" href='https://meta.discourse.org/u/codinghorror'><span itemprop='name'>codinghorror</span></a>
+            (Jeff Atwood)
+          </span>
+
+          <span class="crawler-post-infos">
+              <time itemprop='datePublished' datetime='2014-02-06T05:27:06Z' class='post-time'>
+                February 6, 2014,  5:27am
+              </time>
+          <span itemprop='position'>2</span>
+          </span>
+        </div>
+        <div class='post' itemprop='articleBody'>
+          <p>Ah, cool. I was not sure how to see that since GitHub changed around the way project top stats looked. Thanks for that link and thank you – and everyone else who is contributing to the project!</p>
+        </div>
+
+        <meta itemprop='headline' content='Congratulations, most stars in 2013 GitHub Octoverse!'>
+
+        <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+           <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+           <meta itemprop="userInteractionCount" content="1" />
+           <span class='post-likes'>1 Like</span>
+         </div>
+
+         <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+            <meta itemprop="interactionType" content="http://schema.org/CommentAction"/>
+            <meta itemprop="userInteractionCount" content="0" />
+          </div>
+
+
+    </div>
+
+
+
+
+
+
+        <!-- :preload-content -->
+        <footer>
+          <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
+            <a href='/'>Home</a>
+            <a href="/categories">Categories</a>
+            <a href="/guidelines">FAQ/Guidelines</a>
+            <a href="/tos">Terms of Service</a>
+            <a href="/privacy">Privacy Policy</a>
+          </nav>
+        </footer>
+      </div>
+
+      <footer id='noscript-footer'>
+        <p style="text-align:center;">Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+      </footer>
+    </noscript>
+
+
+<script src="https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/b4353c7945f6d1821a4ac86a58b89ae42f05d123.js?__ws=meta.discourse.org"></script>
+
+
+
+<script src="https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/26dd257ad550a1d6bf3661c267d83ba1ac22aa7c.js?__ws=meta.discourse.org"></script>
+<script src="https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/d8d959b18ecd9be4b777fba9782b94cfe6b63e64.js?__ws=meta.discourse.org"></script>
+
+<script src="https://d3bpeqsaub0i6y.cloudfront.net/theme-javascripts/ae9152d7150c428c27e176cb48ceabb3ed1f2447.js?__ws=meta.discourse.org"></script>
+
+
+    <section id='main'>
+    </section>
+
+    <div id='offscreen-content'>
+    </div>
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/preload-application-data-9cd6a7a2a8ad52cfc915d1666732ca9372606dd922cd5793c1358e9924c0103a.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/preload-application-data-9cd6a7a2a8ad52cfc915d1666732ca9372606dd922cd5793c1358e9924c0103a.br.js"></script>
+
+
+
+
+    <link rel="preload" href="https://d11a6trkgmumsb.cloudfront.net/assets/browser-update-1741a2ed67a367faeb0a582af064457e8b1b1354e52e6efcf8bf26301166dec8.br.js" as="script">
+<script src="https://d11a6trkgmumsb.cloudfront.net/assets/browser-update-1741a2ed67a367faeb0a582af064457e8b1b1354e52e6efcf8bf26301166dec8.br.js"></script>
+
+
+
+
+  <script async type="text/javascript" id="mini-profiler" src="/mini-profiler-resources/includes.js?v=2ed167b8bd3b0bc4e43c9ba3d0c679e4" data-version="2ed167b8bd3b0bc4e43c9ba3d0c679e4" data-path="/mini-profiler-resources/" data-current-id="qd4bfc20xvhph6kjwczx" data-ids="qd4bfc20xvhph6kjwczx,ux63q9n52151a6psgpu0" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body"></script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: видалити автоматизацію
+    discourse_automation:
+      title: Автоматизація
+      table_title: Автоматизація
+      create: Додати автоматизацію
+      update: Оновлення автоматизації
+      back: Назад
+      edit: Редагувати
+      select_script: Оберіть скрипт
+      select_trigger: Виберіть тригер
+      confirm_automation_reset: Ця дія скине скрипт і налаштування тригера, новий стан буде збережений, ви хочете продовжити?
+      confirm_automation_trigger: Ця дія запустить автоматизацію, ви хочете продовжити?
+      no_automation_yet: Наразі автоматизація не налаштована.
+      filter_placeholder: Фільтрувати за назвою або описом...
+      edit_automation:
+        trigger_section:
+          forced: Цей тригер запускається примусово за допомогою скрипта.
+          next_pending_automation: "Наступна автоматизація запуститься о: %{date}"
+          trigger_now: "Запустити зараз"
+          title: Коли/що...
+        fields_section:
+          title: Параметри сценарію
+      destroy_automation:
+        confirm: "Ви впевнені, що хочете видалити `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "Налаштувати"
+          label_with_count:
+            one: "Редагувати конфігурацію (%{count})"
+            few: "Редагувати конфігурації (%{count})"
+            many: "Редагувати конфігурації (%{count})"
+            other: "Редагувати конфігурації (%{count})"
+        user:
+          label: Користувач
+        pm:
+          title:
+            label: Назва
+          raw:
+            label: Тіло
+        pms:
+          confirm_remove_pm: "Ви впевнені, що хочете видалити це ПП?"
+          placeholder_title: Заголовок ПП
+          add_pm: Додати ПП
+          no_pm_created: Ви не створили ще жодних ПП повідомлень. ПП будуть відправлені після запуску автоматизації.
+          title:
+            label: Назва
+          raw:
+            label: Тіло
+          delay:
+            label: Затримка (хвилин)
+          prefers_encrypt:
+            label: Шифрує ПП, якщо можливо
+        group:
+          label: Група
+        text:
+          label: Текст
+      triggerables:
+        not_found: Не вдалося знайти тригер `%{trigger}` для автоматизації `%{automation}`, переконайтеся, що відповідний плагін встановлено
+        user_badge_granted:
+          fields:
+            badge:
+              label: Нагорода
+            only_first_grant:
+              label: Тільки на першу видачу
+        stalled_topic:
+          durations:
+            PT1H: "Одна година"
+            P1D: "Один день"
+            P1W: "Один тиждень"
+            P2W: "Два тижні"
+            P1M: "Один місяць"
+            P3M: "Три місяці"
+            P6M: "Шість місяців"
+            P1Y: "Один рік"
+          fields:
+            categories:
+              label: Обмежено категоріями
+            tags:
+              label: Обмежено тегами
+            stalled_after:
+              label: Завершено через
+        recurring:
+          every: Кожен
+          frequencies:
+            minute: хвилина
+            hour: година
+            day: день
+            weekday: будній день
+            week: тиждень
+            month: місяць
+            year: рік
+          fields:
+            recurrence:
+              label: Повторення
+            start_date:
+              label: Дата початку
+        stalled_wiki:
+          durations:
+            PT1H: "Одна година"
+            P1D: "Один день"
+            P1W: "Один тиждень"
+            P2W: "Два тижні"
+            P1M: "Один місяць"
+            P3M: "Три місяці"
+            P6M: "Шість місяців"
+            P1Y: "Один рік"
+          fields:
+            restricted_category:
+              label: Обмежено категорією
+            stalled_after:
+              label: Затримка запуску
+              description: Визначає затримку між останнім редагуванням вікі та запуском автоматизації
+            retriggered_after:
+              label: Затримка повторного запуску
+              description: Визначає затримку між першим тригером і наступним тригером, якщо вікі все ще не було відредаговано після першого тригера
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Відстежувана група
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Відстежувана група
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Обмежити групою
+            trust_level_transition:
+              label: Перехід рівня довіри
+          trust_levels:
+            ALL: "Всі рівні довіри"
+            TL01: "TL0 до TL1"
+            TL12: "TL1 до TL2"
+            TL23: "TL2 до TL3"
+            TL34: "TL3 до TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Виконати о
+        topic:
+          fields:
+            restricted_topic:
+              label: ID теми
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Тільки оригінальна публікація
+              description: Спрацюватиме лише в тому випадку, якщо публікація є оригінальною публікацією в темі
+            action_type:
+              label: Тип дії
+              description: "Необов'язково, обмеження тригеру для створених або відредагованих подій"
+            valid_trust_levels:
+              label: Доступні рівні довіри
+              description: Спрацьовує лише якщо допис створено користувачем із зазначеним рівнем довіри, за замовчуванням - будь-який рівень довіри
+            restricted_tags:
+              label: Теґи
+              description: Необов'язково, буде спрацьовувати лише в тому випадку, якщо публікація містить будь-який з цих тегів
+            restricted_categories:
+              label: Розділи
+              description: Необов’язково, спрацьовує тільки якщо тема допису належить до цих категорій
+            exclude_subcategories:
+              label: Виключити підкатегорії
+              description: Необов’язкова, спрацьовує тільки якщо тема допису точно відповідає зазначеним вище категоріям
+            restricted_archetype:
+              label: Тип теми
+              description: Необов’язково, дозволити спрацьовувати тільки в темах або особистих повідомленнях
+            restricted_groups:
+              label: Обмежені групи
+              description: Необов'язково, спрацьовує лише в тому випадку, якщо користувач публікації знаходиться в будь-якій з цих груп
+            restricted_inbox_groups:
+              label: Групи з обмеженням вхідних
+              description: Необов’язково, спрацьовує, лише якщо темою публікації є особисте повідомлення в одній із папок «Вхідні» групи
+            excluded_groups:
+              label: Виключені групи
+              description: Необов'язково, Пропустити тригер, якщо користувач, автор допису, належить до однієї з цих груп
+            ignore_automated:
+              label: Ігнорувати автоматичні
+              description: Пропустити тригер, якщо відправник має електронного листа без можливості відповаісти, або здійснюється з автоматичного джерела. Застосовується тільки до повідомлень, створених електронною поштою
+            first_post_only:
+              label: Лише перший допис
+              description: Спрацьовує, тільки якщо це перше повідомлення, створене користувачем
+            first_topic_only:
+              label: Тільки перша тема
+              description: Спрацьовує, тільки якщо тема є першою темою, яку створив користувач
+            skip_via_email:
+              label: "Пропустити електронною поштою"
+              description: "Пропускати, якщо публікація була створена електронною поштою"
+            post_features:
+              label: Особливості повідомлення
+              description: "Необов’язково, обмежувати лише повідомлення з цими функціями"
+          created: Створено
+          edited: Відредаговано
+          topics: Всі теми
+          personal_messages: Особисті повідомлення
+          public_topics: Публічні теми (виключати всі захищені категорії)
+          with_images: Зображення
+          with_links: Посилання
+          with_code: Код
+          with_uploads: Завантаження
+        user_updated:
+          fields:
+            user_profile:
+              label: Поля профілю користувача
+              description: Спрацює тільки якщо користувач заповнив усі ці поля
+            custom_fields:
+              label: Користувацькі поля
+              description: Спрацює тільки якщо користувач заповнив усі ці поля
+            once_per_user:
+              label: Один раз на користувача
+              description: Спрацює лише один раз для кожного користувача
+            new_users_only:
+              label: Тільки для нових користувачів
+              description: Активується лише для нових користувачів, які приєднаються після ввімкнення цієї автоматизації
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Батьківський розділ
+              description: Необов’язково, дозволяє обмежити виконання тригера цією категорією
+        pm_created:
+          fields:
+            restricted_user:
+              label: Користувачі
+              description: Спрацьовує лише для ПП, надісланих цьому користувачеві
+            restricted_group:
+              label: Група
+              description: Спрацьовує тільки для ПП, надісланих до цієї групи
+            ignore_staff:
+              label: Ігнорувати персонал
+              description: Пропустити тригер, якщо відправник є штатним користувачем
+            ignore_group_members:
+              label: Ігнорувати учасників групи
+              description: Пропустити тригер, якщо відправник є членом групи, зазначеної вище
+            ignore_automated:
+              label: Ігнорувати автоматичні
+              description: Пропустити тригер, якщо відправник має електронний лист без можливості відповісти, або здійснюється з автоматизованого джерела. Застосовується лише для ПП, створених електронною поштою
+            valid_trust_levels:
+              label: Доступні рівні довіри
+              description: Спрацьовує лише якщо допис створено користувачем із зазначеним рівнем довіри, за замовчуванням - будь-який рівень довіри
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Теги додано або видалено
+            tags_added: Теги додано
+            tags_removed: Теги видалено
+          fields:
+            watching_categories:
+              label: Перегляд категорій
+              description: Спрацюватиме лише в тому випадку, якщо тема належить до однієї з цих категорій
+            watching_tags:
+              label: Перегляд тегів
+              description: Запускатиметься лише в тому випадку, якщо тема містить будь-який з цих тегів
+            trigger_on:
+              label: Тригер увімкнено
+            trigger_with_pms:
+              label: Запуск з ПП
+              description: Буде спрацьовувати, навіть якщо мітки були змінені в ПП
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Доступні рівні довіри
+              description: Спрацьовує лише якщо допис створено користувачем із зазначеним рівнем довіри, за замовчуванням - будь-який рівень довіри
+            restricted_category:
+              label: Розділ
+              description: Необов'язково, спрацьовує тільки якщо тема допису належить до цієї категорії
+            restricted_tags:
+              label: Теґи
+              description: Необов'язково, буде спрацьовувати лише в тому випадку, якщо публікація містить будь-який з цих тегів
+      scriptables:
+        not_found: Не вдалося знайти скрипт `%{script}` для автоматизації `%{automation}`, переконайтеся, що відповідний плагін встановлено
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL-адреса веб-хука
+              description: "Очікується дійсна URL-адреса веб-хука Zapier, наприклад: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Один раз
+              description: Відповідає лише один раз на тему
+            word_answer_list:
+              label: Список пар слів/відповідей
+              description: "Визначає список груп ключів/значень, де `key` є пошуковим терміном, а `значення` текстом відповіді. Ключ можна залишити порожнім, щоб відповісти на всі тригери, незалежно від вмісту. Зверніть увагу, що `value` приймає `{{key}}` як заповнювач, який буде замінено значенням `key` у відповіді. Зверніть увагу, що `key` буде оцінюватися як регулярний регекс, а спеціальні символи типу `.` слід уникати, якщо ви насправді маєте на увазі крапку, наприклад: `\\ . `"
+            answering_user:
+              label: Користувач, який відповідає
+              description: За замовчуванням - користувач система
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Теґи
+              description: Список тегів для додавання до теми.
+        post:
+          fields:
+            creator:
+              label: Автор
+              post_creator_context: Автор допису
+              updated_user_context: Оновлений користувач
+            topic:
+              label: ID теми
+            post:
+              label: Вміст публікації
+        topic:
+          fields:
+            creator:
+              label: Автор
+              updated_user_context: Оновлений користувач
+            body:
+              label: Тіло теми
+            title:
+              label: Назва теми
+            category:
+              label: Категорія теми
+            tags:
+              label: Теги теми
+        group_category_notification_default:
+          fields:
+            group:
+              label: Група
+            notification_level:
+              label: Рівень сповіщень
+            update_existing_members:
+              label: Оновити існуючих учасників
+              description: Оновлює рівень сповіщень для існуючих членів групи
+        user_global_notice:
+          fields:
+            level:
+              label: Рівень
+            notice:
+              label: Повідомлення
+              description: Приймає HTML, не додавайте небезпечні дані!
+          levels:
+            warning: Попередження
+            info: Інформація
+            success: Успіх
+            error: Помилка
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Назва значка
+            group:
+              label: Група
+              description: Цільова група. Користувачі з вказаним значком будуть додані до цієї групи
+            update_user_title_and_flair:
+              label: Оновіть назву та значок користувача
+              description: Необов’язково, оновити назву та значок користувача
+            remove_members_without_badge:
+              label: Видалити існуючих учасників без значка
+              description: Необов'язково, видалення існуючих учасників групи без зазначеного значка
+            badge:
+              label: Нагорода
+              description: Виберіть значок
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Призупинити до (за замовчуванням)
+            reason:
+              label: Причина (за замовчуванням)
+            actor:
+              label: Користувач
+              description: "Користувач, відповідальний за призупинення (за замовчуванням: система)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID теми
+            pinned_globally:
+              label: Закріплено глобально
+            pinned_until:
+              label: Закріплено до
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID теми
+            banner_until:
+              label: Зробити банер до
+            user:
+              label: Користувач
+              description: "Користувач, який створює банер (за замовчуванням: система)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Перевірені слова
+        topic_required_words:
+          fields:
+            words:
+              label: Список обов'язкових слів
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Назва групи учасників
+            giftee_assignment_messages:
+              label: Повідомлення, надіслані дарувальнику
+        send_pms:
+          add_a_pm_btn:
+            label: Додати ПП
+          fields:
+            receiver:
+              label: Отримувач ПП
+            sendable_pms:
+              label: ПП
+            sender:
+              label: Відправник ПП
+              description: "Переконайтеся, що відправник має правильні дозволи для надсилання особистих повідомлень отримувачу"
+        close_topic:
+          fields:
+            topic:
+              label: ID теми
+            message:
+              label: Повідомлення про закриття
+              description: "Необов'язкове повідомлення для показу про закриту тему"
+            user:
+              label: Користувач
+              description: "Користувач, який закриває тему (за замовчуванням: система)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Назва користувальницького поля"
+      unnamed_automation: "Неназвана автоматизація"
+      models:
+        script:
+          name:
+            label: Скрипт
+        trigger:
+          name:
+            label: Запуск
+        automation:
+          runs_today: "%{count} сьогодні"
+          runs_this_week: "%{count} цього тижня"
+          runs_this_month: "%{count} цього місяця"
+          runs:
+            label: Запуски
+          name:
+            label: Імʼя
+          trigger:
+            label: Запуск
+          script:
+            label: Скрипт
+          version:
+            label: Версія
+          status:
+            label: Статус
+          enabled:
+            label: Включено
+          disabled:
+            label: Вимкнено
+          placeholders:
+            label: Заповнювачі
+          last_updated_at:
+            label: Останнє оновлення
+          last_run:
+            label: Останній запуск
+          last_updated_by:
+            label: Оновлено

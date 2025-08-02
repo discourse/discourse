@@ -1,0 +1,93 @@
+@use "lib/viewport";
+
+.sidebar-wrapper,
+.sidebar-hamburger-dropdown {
+  @include viewport.until(lg) {
+    background: var(--secondary);
+
+    .sidebar-footer-wrapper {
+      background: var(--secondary);
+
+      .sidebar-footer-container::before {
+        display: none;
+      }
+    }
+  }
+
+  .has-full-page-chat &,
+  .has-full-page-chat & .sidebar-footer-wrapper {
+    background: transparent;
+  }
+
+  .sidebar-container {
+    border-right: none;
+  }
+
+  .sidebar-sections {
+    padding: 0;
+  }
+
+  .sidebar-section-link {
+    transition: none;
+    border-radius: var(--d-border-radius);
+  }
+
+  .dropdown-menu__item .sidebar-section-link {
+    border-radius: 0;
+  }
+}
+
+.sidebar-section-wrapper {
+  @include viewport.from(xl) {
+    padding-block: 0.45em;
+  }
+
+  @include viewport.until(sm) {
+    .hamburger-panel .revamped & {
+      margin-bottom: var(--spacing-block-m);
+    }
+  }
+
+  .sidebar-section-header {
+    font-size: var(--font-down-2);
+  }
+
+  .sidebar-section-content {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+
+    @include viewport.from(xl) {
+      gap: var(--spacing-block-xs);
+    }
+  }
+}
+
+.sidebar-wrapper .sidebar-sections {
+  --scrollbarThumbBg: var(--d-selected);
+  padding: 0 1rem;
+}
+
+.sidebar-section-link-wrapper .sidebar-section-link:focus,
+.sidebar-section-link-wrapper .sidebar-section-link:hover {
+  .d-icon {
+    color: var(--primary);
+  }
+}
+
+.sidebar-new-topic-button__wrapper {
+  margin: 0 var(--spacing-inline-m) var(--spacing-block-l);
+
+  .sidebar-new-topic-button .d-icon {
+    display: none;
+  }
+}
+
+// put the draft menu above the slide-out hamburger on small desktop screens
+@include viewport.until(md) {
+  html:not(.mobile-view) {
+    .topic-drafts-menu-content {
+      z-index: z("modal", "overlay");
+    }
+  }
+}

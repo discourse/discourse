@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  site_settings:
+    poll_enabled: "Voleu permetre enquestes?"
+    poll_maximum_options: "Nombre màxim d'opcions permeses en una enquesta."
+    poll_edit_window_mins: "Nombre de minuts després de la creació de la publicació durant els quals poden editar-se les enquestes."
+    poll_minimum_trust_level_to_create: "Definiu el nivell de confiança mínim necessari per a crear enquestes."
+    poll_groupable_user_fields: "Conjunt de noms de camp d’usuari que es poden utilitzar per a agrupar i filtrar els resultats de la votació."
+  poll:
+    poll: "enquesta"
+    invalid_argument: "El valor '%{value}' no és vàlid per a l'argument '%{argument}'."
+    multiple_polls_with_same_name: "Hi ha múltiples enquestes amb el mateix nom: <strong>%{name}</strong>. Empreu l'atribut '<code>nom</code>' per a identificar inequívocament les enquestes."
+    default_poll_must_have_less_options:
+      one: "L'enquesta ha de tenir menys d'%{count} opció."
+      other: "L'enquesta ha de tenir menys de %{count} opcions."
+    named_poll_must_have_less_options:
+      one: "L'enquesta <strong>%{name}</strong> ha de tenir menys d'%{count} opció."
+      other: "L'enquesta <strong>%{name}</strong> ha de tenir menys de %{count} opcions."
+    default_poll_must_have_different_options: "L'enquesta ha de tenir diferents opcions."
+    named_poll_must_have_different_options: "L'enquesta anomenada <strong>%{name}</strong> ha de tenir diferents opcions."
+    default_poll_with_multiple_choices_has_invalid_parameters: "L'enquesta amb respostes múltiples té paràmetres incorrectes."
+    named_poll_with_multiple_choices_has_invalid_parameters: "L'enquesta amb respostes múltiples anomenada <strong>%{name}</strong> té paràmetres no vàlids."
+    requires_at_least_1_valid_option: "Cal seleccionar com a mínim una opció vàlida."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "No podeu canviar una enquesta després dels primers %{minutes} minuts."
+      cannot_edit_named_poll_with_votes: "No podeu canviar el nom de l'enquesta <strong>${name}</strong> després dels primers %{minutes} minuts."
+    no_poll_with_this_name: "No hi ha cap enquesta anomenada <strong>%{name}</strong> associada a aquesta entrada."
+    post_is_deleted: "No es pot actuar sobre una entrada suprimida."
+    user_cant_post_in_topic: "No podeu votar perquè no podeu publicar en aquest tema."
+    topic_must_be_open_to_vote: "El tema ha d'estar obert per a poder votar."
+    poll_must_be_open_to_vote: "L'enquesta ha d'estar oberta per a poder votar."
+    topic_must_be_open_to_toggle_status: "El tema ha d'estar obert per a canviar-ne l'estatus."
+    only_staff_or_op_can_toggle_status: "Sols un membre de l'equip responsable o el seu autor inicial poden canviar l'estatus d'una enquesta."
+    insufficient_rights_to_create: "No teniu permís per a crear enquestes."
+    email:
+      link_to_poll: "Feu clic per a veure l'enquesta"
+    user_field:
+      no_data: "No hi ha dades"

@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  site_settings:
+    poll_enabled: "Cho phép bình chọn?"
+    poll_maximum_options: "Số lượng tối đa tùy chọn trong một cuộc thăm dò. "
+    poll_edit_window_mins: "Số phút tình từ lúc tạo bài viết mà người dùng có quyền sửa thăm dò."
+    poll_minimum_trust_level_to_create: "Xác định mức độ tin cậy tối thiểu cần thiết để tạo các cuộc thăm dò."
+    poll_groupable_user_fields: "Một tập hợp các tên trường người dùng có thể được sử dụng để nhóm và lọc các kết quả thăm dò ý kiến."
+  poll:
+    multiple_polls_with_same_name: "Có nhiều cuộc thăm dò có cùng tên: <strong>%{name}</strong>. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc thăm dò của bạn."
+    default_poll_must_have_less_options:
+      other: "Thăm dò ý kiến phải có ít hơn %{count} tùy chọn."
+    named_poll_must_have_less_options:
+      other: "Cuộc thăm dò có tên <strong>%{name}</strong> phải có ít hơn %{count} lựa chọn."
+    default_poll_must_have_different_options: "Thăm dò ​​phải có các lựa chọn khác nhau."
+    named_poll_must_have_different_options: "Thăm dò <strong>%{name}</strong> ​​phải có các lựa chọn khác nhau."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Thăm dò ​​với nhiều lựa chọn có các tham số không hợp lệ."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Thăm dò <strong>%{name}</strong> ​​với nhiều lựa chọn có các tham số không hợp lệ. "
+    requires_at_least_1_valid_option: "Bạn phải chọn ít nhất 1 lựa chọn hợp lệ."
+    no_poll_with_this_name: "Không có thăm dò có tên <strong>%{name}</strong> liên kết với bài viết này."
+    post_is_deleted: "Không thể thực hiện trên bài viết đã xóa."
+    topic_must_be_open_to_vote: "Chủ đề phải được mở để bầu chọn."
+    poll_must_be_open_to_vote: "Thăm dò ​​phải được mở để tiến hành bầu chọn."
+    topic_must_be_open_to_toggle_status: "Chủ đề phải được mở để chuyển trạng thái."
+    only_staff_or_op_can_toggle_status: "Chỉ có người quản lí hoặc người đăng bài mới có quyền chuyển trạng thái của một thăm dò."
+    email:
+      link_to_poll: "Click để xem thăm dò."

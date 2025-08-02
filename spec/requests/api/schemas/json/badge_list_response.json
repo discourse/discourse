@@ -1,0 +1,257 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "badges": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "grant_count": {
+              "type": "integer"
+            },
+            "allow_title": {
+              "type": "boolean"
+            },
+            "multiple_grant": {
+              "type": "boolean"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "listable": {
+              "type": "boolean"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "badge_grouping_id": {
+              "type": "integer"
+            },
+            "system": {
+              "type": "boolean"
+            },
+            "long_description": {
+              "type": "string"
+            },
+            "slug": {
+              "type": "string"
+            },
+            "manually_grantable": {
+              "type": "boolean"
+            },
+            "query": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "trigger": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "target_posts": {
+              "type": "boolean"
+            },
+            "auto_revoke": {
+              "type": "boolean"
+            },
+            "show_posts": {
+              "type": "boolean"
+            },
+            "i18n_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "image_upload_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "badge_type_id": {
+              "type": "integer"
+            },
+            "show_in_post_header": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "description",
+            "grant_count",
+            "allow_title",
+            "multiple_grant",
+            "icon",
+            "image_url",
+            "listable",
+            "enabled",
+            "badge_grouping_id",
+            "system",
+            "long_description",
+            "slug",
+            "manually_grantable",
+            "query",
+            "trigger",
+            "target_posts",
+            "auto_revoke",
+            "show_posts",
+            "badge_type_id",
+            "image_upload_id",
+            "show_in_post_header"
+          ]
+        }
+    },
+    "badge_types": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "sort_order": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "sort_order"
+          ]
+        }
+    },
+    "badge_groupings": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "position": {
+              "type": "integer"
+            },
+            "system": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "description",
+            "position",
+            "system"
+          ]
+        }
+    },
+    "admin_badges": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protected_system_fields": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "triggers": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "user_change": {
+              "type": "integer"
+            },
+            "none": {
+              "type": "integer"
+            },
+            "post_revision": {
+              "type": "integer"
+            },
+            "trust_level_change": {
+              "type": "integer"
+            },
+            "post_action": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "user_change",
+            "none",
+            "post_revision",
+            "trust_level_change",
+            "post_action"
+          ]
+        },
+        "badge_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "badge_grouping_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "badge_type_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        }
+      },
+      "required": [
+        "protected_system_fields",
+        "triggers",
+        "badge_ids",
+        "badge_grouping_ids",
+        "badge_type_ids"
+      ]
+    }
+  },
+  "required": [
+    "badges",
+    "badge_types",
+    "badge_groupings",
+    "admin_badges"
+  ]
+}

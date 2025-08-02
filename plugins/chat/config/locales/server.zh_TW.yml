@@ -1,0 +1,72 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  site_settings:
+    chat_enabled: "啟用聊天."
+  chat:
+    deleted_chat_username: 已刪除
+    errors:
+      minimum_length_not_met:
+        other: "訊息過短，必須至少有 %{count} 個字元。"
+      message_too_long:
+        other: "訊息過長，不得超過 %{count} 個字元。"
+      not_accepting_dms: "對不起，%{username} 目前不接收訊息。"
+      user_cannot_send_direct_messages: "抱歉，您無法傳送私訊。"
+    reviewables:
+      actions:
+        agree:
+          title: "同意..."
+        agree_and_keep_message:
+          title: "保留訊息"
+        agree_and_suspend:
+          title: "將使用者停權"
+          description: "同意檢舉並停權使用者"
+        agree_and_silence:
+          title: "將使用者禁言"
+          description: "同意檢舉並禁止使用者發文"
+        agree_and_delete:
+          title: "刪除訊息"
+        disagree:
+          title: "不同意"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+    mention_warning:
+      dismiss: "忽略"
+    category_channel:
+      errors:
+        is_already_in_use: "已被使用"
+    bookmarkable:
+      notification_title: "%{channel_name} 中的訊息"
+    onebox:
+      thread_title_connector: "在"
+      x_members:
+        other: "%{count} 位成員"
+    transcript:
+      default_thread_title: "討論串"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} 在 "%{channel}" 提及了您'
+        other_type: '%{username} 在 "%{channel}" 提及了 %{identifier}'
+      new_chat_message: '%{username} 在 "%{channel}" 傳送了訊息'
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "已被刪除的使用者"
+      description:
+        other: "您有新的聊天訊息"
+      from: "%{site_name}"
+      view_messages:
+        other: "查看 %{count} 則訊息"
+  unsubscribe:
+    chat_summary:
+      never: 永不

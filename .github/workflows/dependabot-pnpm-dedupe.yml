@@ -1,0 +1,44 @@
+name: Pnpm dedupe on Dependabot PRs
+
+on:
+  push:
+    branches:
+      - "dependabot/npm_and_yarn/**/*"
+    paths:
+      - "pnpm-lock.yaml"
+
+permissions:
+  contents: write
+
+jobs:
+  deduplicate:
+    name: Deduplicate
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GH_PUSH_TOKEN }}
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: pnpm install
+        run: pnpm install --ignore-scripts --frozen-lockfile
+
+      - run: pnpm dedupe --ignore-scripts
+
+      - name: Git push
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+          git add pnpm-lock.yaml
+          git status
+          git commit -m "pnpm dedupe [dependabot skip]" && git push || echo "done"

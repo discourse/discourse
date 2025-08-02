@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Oggi %{time}
+        tomorrow: Domani %{time}
+        yesterday: Ieri %{time}
+        countdown:
+          passed: la data è passata
+      title: Inserisci data / ora
+      create:
+        form:
+          insert: Inserisci
+          advanced_mode: Modalità avanzata
+          simple_mode: Modalità semplice
+          format_description: "Formato utilizzato per visualizzare la data per l'utente. Usa Z per mostrare la differenza di orario e zz per il nome del fuso orario."
+          timezones_title: Fusi orari da visualizzare
+          timezones_description: I fusi orari verranno utilizzati per visualizzare le date nell'anteprima e nel fallback.
+          recurring_title: Ricorrenza
+          recurring_description: "Definisci la ricorrenza di un evento. Puoi anche modificare manualmente l'opzione di ricorrenza generata dal modulo e usare una delle seguenti chiavi: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Nessuna ricorrenza
+          invalid_date: Data non valida, accertati che la data e l'ora siano corrette
+          date_title: Data
+          time_title: Ora
+          format_title: Formato data
+          timezone: Fuso orario
+          until: Fino a...
+          current_timezone: "Fuso orario attuale:"
+          recurring:
+            every_day: "Ogni giorno"
+            every_week: "Ogni settimana"
+            every_two_weeks: "Ogni due settimane"
+            every_month: "Ogni mese"
+            every_two_months: "Ogni due mesi"
+            every_three_months: "Ogni tre mesi"
+            every_six_months: "Ogni sei mesi"
+            every_year: "Ogni anno"
+      default_title: "Evento %{site_name}"

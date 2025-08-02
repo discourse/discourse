@@ -1,0 +1,38 @@
+{
+  "app/assets/javascripts/discourse/components/*.js": {
+    "command": "dcomponent"
+  },
+  "app/assets/javascripts/discourse/lib/*.js": {
+    "command": "dlib"
+  },
+  "app/assets/javascripts/discourse/routes/*.js": {
+    "command": "droute"
+  },
+  "app/assets/javascripts/discourse/controllers/*.js": {
+    "command": "dcontroller"
+  },
+  "app/assets/javascripts/discourse/models/*.js": {
+    "command": "dmodel"
+  },
+  "app/assets/javascripts/discourse/helpers/*.js": {
+    "command": "dhelper"
+  },
+  "app/assets/javascripts/discourse/templates/*.hbs": {
+    "command": "dtemplate"
+  },
+  "app/assets/javascripts/discourse/templates/*.hbr": {
+    "command": "dtemplate"
+  },
+  "app/assets/javascripts/discourse/views/*.js": {
+    "command": "dview"
+  },
+  "app/serializers/*.rb": {
+    "command": "serializer"
+  },
+  "app/services/*.rb": {
+    "command": "service"
+  },
+  "config/*": {
+    "command": "config"
+  }
+}

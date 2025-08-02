@@ -1,0 +1,43 @@
+.d-time-input {
+  display: inline-flex;
+
+  .combo-box {
+    width: 65px;
+    min-width: auto;
+
+    &:not(.has-selection) {
+      .select-kit-selected-name .name {
+        color: var(--primary-medium);
+      }
+    }
+
+    .select-kit-header {
+      .d-icon {
+        padding-left: 0;
+      }
+
+      &:focus {
+        outline: 1px solid var(--tertiary);
+      }
+    }
+
+    .select-kit-collection {
+      min-width: auto;
+    }
+
+    .select-kit-filter {
+      width: auto;
+      overflow: hidden;
+
+      .filter-input {
+        min-width: 0;
+      }
+    }
+
+    .selected-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

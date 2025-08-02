@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    poll_enabled: "설문 조사를 허용 하시겠습니까?"
+    poll_maximum_options: "한 투표 당 설정할 수 있는 최대 투표 항목 수"
+    poll_edit_window_mins: "포스트 생성 이후 투표를 편집할 수 있는 시간(분)"
+    poll_minimum_trust_level_to_create: "설문을 만들 수 있는 최소 회원 레벨을 설정합니다."
+    poll_groupable_user_fields: "설문 조사 결과를 그룹화하고 필터링하는 데 사용할 수있는 사용자 필드 이름 세트입니다."
+  poll:
+    poll: "투표"
+    invalid_argument: "&#39;%{argument}&#39;인수에 대해 &#39;%{value}&#39;값이 잘못되었습니다."
+    multiple_polls_with_same_name: "같은 이름 <strong>%{name}</strong> 으로 투표가 여러 개 있습니다. '<code>name</code>' 속성을 사용하여 투표를 구분해보세요."
+    default_poll_must_have_at_least_1_option: "설문 조사에는 1 개 이상의 옵션이 있어야합니다."
+    named_poll_must_have_at_least_1_option: "이름이 <strong>%{name} 인</strong> 설문 조사에는 하나 이상의 옵션이 있어야합니다."
+    default_poll_must_have_less_options:
+      other: "투표 항목은 %{count}개보다 적어야합니다."
+    named_poll_must_have_less_options:
+      other: "<strong>%{name}</strong> 투표 에는 최소 %{count} 개의 투표 항목이 있어야 합니다."
+    default_poll_must_have_different_options: "투표 항목은 각각의 내용이 달라야 합니다."
+    named_poll_must_have_different_options: "<strong>%{name}</strong> 투표의 투표 항목 내용이 제각기 달라야 합니다."
+    default_poll_must_not_have_any_empty_options: "설문 조사에는 빈 옵션이 없어야합니다."
+    named_poll_must_not_have_any_empty_options: "이름이 <strong>%{name} 인</strong> 폴에는 빈 옵션이 <strong>없어야</strong> 합니다."
+    default_poll_with_multiple_choices_has_invalid_parameters: "복수응답 가능한 투표가 잘못된 매개변수를 가지고 있습니다."
+    named_poll_with_multiple_choices_has_invalid_parameters: "복수응답 가능한 <strong>%{name}</strong> 투표가 잘못된 매개변수를 가지고 있습니다."
+    requires_at_least_1_valid_option: "유효한 투표 항목을 적어도 1개는 선택해야 합니다."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "처음 %{minutes} 분 후에는 폴링을 변경할 수 없습니다."
+      cannot_edit_named_poll_with_votes: "%{minutes}분이 지나면 설문명 <strong>${name}</strong>을 변경 할 수 없습니다."
+    no_poll_with_this_name: "이 포스트와 관련한 <strong>%{name}</strong> 라는 이름의 투표는 없습니다."
+    post_is_deleted: "지워진 포스트에는 불가능합니다."
+    user_cant_post_in_topic: "이 주제에 게시 할 수 없으므로 투표 할 수 없습니다."
+    topic_must_be_open_to_vote: "토픽이 열려야 투표를 할 수 있습니다."
+    poll_must_be_open_to_vote: "투표가 열려있어야 표결할 수 있습니다."
+    one_vote_per_user: "이 투표에는 1표만 허용됩니다."
+    max_vote_per_user:
+      other: 이 투표에는 최대 %{count}표가 허용됩니다.
+    min_vote_per_user:
+      other: 이 투표에는 최소 %{count}개의 표가 필요합니다.
+    ranked_choice:
+      no_group_results_support: "잘못된 투표 유형입니다. rated_choice는 그룹화된 결과를 지원하지 않습니다."
+    topic_must_be_open_to_toggle_status: "토픽이 열려야 상태 변경을 할 수 있습니다."
+    only_staff_or_op_can_toggle_status: "운영진이나 작성자만이 투표 상태를 변경할 수 있습니다."
+    insufficient_rights_to_create: "설문 조사를 만들 수 없습니다."
+    email:
+      link_to_poll: "클릭해서 투표보기"
+    user_field:
+      no_data: "데이터 없음"

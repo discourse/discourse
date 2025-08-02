@@ -1,0 +1,76 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    styleguide:
+      title: "Stiliaus vadovas"
+      welcome: "Norėdami pradėti, kairėje esančiame meniu pasirinkite skyrių."
+      categories:
+        atoms: Atomai
+        molecules: Molekulės
+        organisms: Organizmai
+      sections:
+        typography:
+          title: "Tipografija"
+          example: "Sveiki atvykę į Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tai yra minim man, bet tai, kad pratimas gali būti ne taip, kaip jis gali būti susijęs su pasekmėmis. Duis aute irure dolor in reprehenderit in voluptate velit esse lum dolore eu fugiat nulla pariatur. Išskirtinis yra ne proident occaecat cupidatat, kuri yra oficiali, bet kurioje vietoje yra darbo vietoje."
+        date_time_inputs:
+          title: "Įvesties data/laikas"
+        font_scale:
+          title: "Šriftų sistema"
+        colors:
+          title: "Spalvos"
+        icons:
+          title: "Piktogramos"
+          full_list: "Peržiūrėkite visą nuostabių šriftų piktogramų sąrašą"
+        buttons:
+          title: "Mygtukai"
+        dropdowns:
+          title: "Išskleidžiamieji meniu"
+        categories:
+          title: "Kategorijos"
+        navigation:
+          title: "Navigacija"
+        navigation_bar:
+          title: "Naršymo juosta"
+        categories_list:
+          title: "Kategorijų sąrašas"
+        topic_link:
+          title: "Temos Nuoroda"
+        topic_statuses:
+          title: "Temos būsenos"
+        topic_list:
+          title: "Temų sąrašas"
+        basic_topic_list:
+          title: "Pagrindinis temų sąrašas"
+        footer_message:
+          title: "Poraštės žinutė"
+        signup_cta:
+          title: "Registracijos CTA"
+        topic_timer_info:
+          title: "Temos laikmačiai"
+        topic_footer_buttons:
+          title: "Temos poraštės mygtukai"
+        topic_notifications:
+          title: "Temos pranešimai"
+        post:
+          title: "Įrašai"
+        topic_map:
+          title: "Temos žemėlapis"
+        site_header:
+          title: "Svetainės antraštė"
+        suggested_topics:
+          title: "Siūlomos Temos"
+        modal:
+          title: "Modalinis"
+          header: "Modalinis pavadinimas"
+          footer: "Modalinė poraštė"
+        header_icons:
+          title: "Antraštės piktogramos"
+        tooltips:
+          description: "Aprašymas"
+          header: "Viršus"

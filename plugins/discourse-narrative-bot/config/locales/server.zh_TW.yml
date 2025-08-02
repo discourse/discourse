@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  site_settings:
+    discourse_narrative_bot_enabled: "啟用 Discourse 機器人"
+  badges:
+    certified:
+      name: 已認證
+  discourse_narrative_bot:
+    dice:
+      trigger: "擲骰"
+    quote:
+      trigger: "引用"
+      "3":
+        author: "蘇斯博士"
+      "9":
+        author: "李小龍"
+      "13":
+        author: "老子"
+    magic_8_ball:
+      answers:
+        "9": "是"
+    track_selector:
+      reset_trigger: "開始"
+      skip_trigger: "跳過"
+    new_user_narrative:
+      reset_trigger: "教學"
+      hello:
+        message: |-
+          感謝您加入 %{title}，歡迎！
+
+          - 我只是一個機器人，但是如果您需要聯繫真人的話， [我們友善工作成員們](%{base_uri}/about)也在這裡為您提供協助。
+
+          - 出於安全原因，我們暫時限制新用戶可以執行的操作。當我們了解您時，您將獲得 [新能力](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)(和 [badges](%{base_uri}/badges))。
+
+          - 我們始終相信 [文明社群行為](%{base_uri}/guidelines)。

@@ -1,0 +1,35 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  login:
+    authenticator_error_fetch_user_details: "사용자 세부 정보를 검색 할 수 없습니다. 활성 계정이 있습니까?"
+  site_settings:
+    oauth2_enabled: "맞춤 OAuth2가 사용 설정되었습니다."
+    oauth2_client_id: "사용자 정의 OAuth2의 클라이언트 ID"
+    oauth2_client_secret: "커스텀 OAuth2를위한 클라이언트 시크릿"
+    oauth2_authorize_url: "OAuth2의 인증 URL"
+    oauth2_token_url: "OAuth2의 토큰 URL"
+    oauth2_token_url_method: "토큰 URL을 가져 오는 데 사용되는 방법"
+    oauth2_callback_user_id_path: "사용자 ID에 대한 토큰 응답의 경로입니다. 예 : params.info.uuid"
+    oauth2_callback_user_info_paths: "다른 사용자 속성에 대한 토큰 응답의 경로 지원되는 속성은 이름, 사용자 이름, 이메일, email_verified 및 아바타입니다. 형식은 property : path입니다 (예 : name : params.info.name)."
+    oauth2_fetch_user_details: "OAuth2 용 사용자 JSON 가져 오기"
+    oauth2_user_json_url: "OAuth2 용 사용자 JSON을 가져 오는 URL (: 우리는 : Auth를 OAuth 호출에서 반환 한 ID로 대체하고 : token을 토큰 ID로 대체합니다)"
+    oauth2_user_json_url_method: "사용자 JSON URL을 가져 오는 데 사용되는 메소드"
+    oauth2_json_user_id_path: "OAuth2 사용자 JSON에서 사용자 ID의 경로입니다. 예 : user.id"
+    oauth2_json_username_path: "OAuth2 사용자 JSON에서 사용자 이름으로의 경로입니다. 예 : user.username"
+    oauth2_json_name_path: "OAuth2 사용자 JSON에서 사용자의 전체 경로입니다. 예 : user.name.full"
+    oauth2_json_email_path: "OAuth2 사용자 JSON에서 사용자의 이메일 경로입니다. 예 : user.email"
+    oauth2_json_email_verified_path: "OAuth2 사용자 JSON의 경로를 사용자의 이메일 확인 상태로 지정하십시오. 예 : user.email.verified. 이 설정을 적용하려면 oauth2_email_verified를 비활성화해야합니다"
+    oauth2_json_avatar_path: "Oauth2 사용자 JSON에서 사용자 아바타의 경로입니다. 예 : user.avatar_url"
+    oauth2_email_verified: "OAuth2 사이트에서 이메일을 확인한 경우이를 확인하십시오."
+    oauth2_debug_auth: "로그에 풍부한 디버깅 정보 포함"
+    oauth2_authorize_options: "요청을 승인 할 때 이러한 옵션"
+    oauth2_scope: "이 범위 요청을 승인 할 때"
+    oauth2_button_title: "OAuth2 버튼의 텍스트"
+    oauth2_allow_association_change: 사용자가 OAuth2 공급자와의 담화 계정 연결을 끊었다가 다시 연결하도록 허용
+    errors:
+      oauth2_fetch_user_details: "oauth2_fetch_user_details를 비활성화하려면 oauth2_callback_user_id_path가 있어야합니다."

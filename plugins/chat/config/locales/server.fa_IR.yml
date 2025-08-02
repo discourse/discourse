@@ -1,0 +1,102 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  site_settings:
+    chat_enabled: "گفتگو را فعال کنید."
+    enable_public_channels: "کانال های عمومی را بر اساس دسته ها فعال کنید."
+    chat_allow_uploads: "بارگذاری در کانال‌های گفتگو عمومی و کانال‌های پیام مستقیم مجاز است."
+    allow_chat_in_anonymous_mode: "این تنظیمات را فعال کنید تا به کاربران اجازه دهید که هنگام مرور وبگاه شما به صورت ناشناس از گفتگو استفاده کنند. این تنظیم نیاز دارد که ابتدا تنظیمات فعال‌سازی «حالت ناشناس فعال» باشد."
+    errors:
+      chat_upload_not_allowed_secure_uploads: "وقتی که در تنظیمات سایت آپلودهای ایمن فعال باشد، آپلود گفتگو مجاز نیست."
+      allow_chat_in_anonymous_mode_invalid: "این تنظیم نیاز دارد که ابتدا تنظیمات «فعال‌سازی حالت ناشناس» فعال باشد."
+  system_messages:
+    chat_channel_archive_complete:
+      text_body_template: |
+        بایگانی کانال گفتگو %{channel_hashtag_or_name} با موفقیت انجام شد. پیام‌ها در موضوع [%{topic_title}](%{topic_url}) کپی شده‌اند.
+    chat_channel_archive_failed:
+      title: "بایگانی کانال چت ناموفق بود"
+    chat_channel_archive_failed_no_topic:
+      title: "بایگانی کانال چت ناموفق بود"
+  chat:
+    deleted_chat_username: حذف شد
+    errors:
+      channel_exists_for_category: "یک کانال دیگر از قبل برای این دسته‌بندی و نام وجود دارد"
+      draft_too_long: "پیش‌نویس خیلی طولانی است."
+      cant_update_direct_message_channel: "ویژگی پیام مستقیم کانال مانند نام و توضیحات را نمی‌توان به‌روز کرد."
+      not_accepting_dms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
+      actor_ignoring_target_user: "شما در حال نادیده گرفتن %{username} هستید، بنابراین نمی‌توانید پیامی را برای او ارسال کنید."
+      actor_muting_target_user: "شما در حال بی‌صدا کردن %{username} هستید، بنابراین نمی‌توانید پیامی را برای آنها ارسال کنید."
+      user_cannot_send_direct_messages: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
+      thread_does_not_match_parent: "Thread با پیام parent مطابقت ندارد."
+    reviewables:
+      message_already_handled: "با تشکر از شما، اما ما در حال حاضر این پیام را بررسی کرده‌ایم و تشخیص داده‌ایم که نیازی به گزارش دوباره ندارد."
+      actions:
+        agree:
+          title: "موافقم..."
+        agree_and_suspend:
+          title: "کاربر تعلیق شده"
+        agree_and_delete:
+          title: "حذف پیام"
+          description: "پیام را حذف کنید تا کاربران نتوانند آن را ببینند."
+        disagree_and_restore:
+          title: "مخالفت و بازگرداندن پیام"
+          description: "پیام را بازیابی کنید تا همه کاربران بتوانند آن را ببینند."
+        disagree:
+          title: "مخالف"
+      direct_messages:
+        transcript_title: "رونوشت پیام‌های قبلی در %{channel_name}"
+        transcript_body: "برای ارائه متن بیشتر به شما، رونوشتی از پیام‌های قبلی را در این گفتگو (حداکثر ده مورد) قرار دادیم:\n\n%{transcript}"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} و %{count} نفر دیگر"
+          other: "%{comma_separated_usernames} و %{count} نفر دیگر"
+    mention_warning:
+      dismiss: "رد کردن"
+    bookmarkable:
+      notification_title: "پیام در %{channel_name}"
+    personal_chat: "گفتگوی شخصی"
+    onebox:
+      inline_to_channel: "گفتگو #%{chat_channel}"
+      inline_to_topic_channel: "گفتگو برای موضوع %{topic_title}"
+      x_members:
+        one: "%{count} عضو"
+        other: "%{count} عضو"
+      and_x_others:
+        one: "و %{count} نفر دیگر"
+        other: "و %{count} نفر دیگر"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: ارسال پیام
+  reviewable_score_types:
+    needs_review:
+      title: "نیاز به بررسی دارد"
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "کاربر حذف شده"
+      description:
+        one: "شما یک پیام گفتگو جدیدی دارید"
+        other: "شما پیام‌های گفتگو جدیدی دارید"
+      from: "%{site_name}"
+      view_messages:
+        one: "مشاهده پیام"
+        other: "مشاهده %{count} پیام"
+      view_more:
+        one: "مشاهده %{count} پیام بیشتر"
+        other: "مشاهده %{count} پیام بیشتر"
+  unsubscribe:
+    chat_summary:
+      never: هرگز
+  category:
+    cannot_delete:
+      has_chat_channels: "نمی‌توان این دسته‌بندی را حذف کرد، چون دارای کانال‌های گفتگو است"

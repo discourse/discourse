@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "tag_group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tag_names": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "parent_tag_name": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "one_per_topic": {
+          "type": "boolean"
+        },
+        "permissions": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "tag_names",
+        "parent_tag_name",
+        "one_per_topic",
+        "permissions"
+      ]
+    }
+  },
+  "required": [
+    "tag_group"
+  ]
+}

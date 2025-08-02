@@ -1,0 +1,214 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+en_GB:
+  js:
+    number:
+      format:
+        separator: "."
+    dates:
+      time: "HH:mm"
+      time_short: "HH:mm"
+      time_with_zone: "HH:mm (z)"
+      time_short_day: "ddd, HH:mm"
+      timeline_date: "MMM YYYY"
+      long_no_year: "D MMM, HH:mm"
+      long_no_year_no_time: "D MMM"
+      full_no_year_no_time: "Do MMMM"
+      long_with_year: "D MMM YYYY HH:mm"
+      long_with_year_no_time: "D MMM YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
+      long_date_without_year: "D MMM LT"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      tiny:
+        date_month: "D MMM"
+        date_year: "MMM YYYY"
+    review:
+      types:
+        reviewable_flagged_post:
+          noun: "post"
+        reviewable_queued_post:
+          noun: "post"
+        reviewable_post:
+          title: "Post"
+          noun: "post"
+    groups:
+      manage:
+        email:
+          status: "Synchronised %{old_emails} / %{total_emails} emails via IMAP."
+          mailboxes:
+            synchronized: "Synchronised Mailbox"
+        categories:
+          title: Categories
+      flair_bg_color: "Avatar Flair Background Colour"
+      flair_bg_color_placeholder: "(Optional) Hex colour value"
+      flair_color: "Avatar Flair Colour"
+      flair_color_placeholder: "(Optional) Hex colour value"
+    categories:
+      categories_label: "categories"
+      reorder:
+        title_long: "Reorganise the category list"
+    ip_lookup:
+      organisation: Organisation
+    user:
+      color_scheme: "Colour Palette"
+      experimental_sidebar:
+        navigation_section: "Navigation"
+      preferences_nav:
+        categories: "Categories"
+      change_profile_background:
+        instructions: "Profile headers will be centred and have a default width of 1110px."
+      change_card_background:
+        instructions: "Background images will be centred and have a default width of 590px."
+      categories_settings: "Categories"
+      invited:
+        invite:
+          description: "Description"
+      summary:
+        title: "Summary"
+    read_only_mode:
+      login_disabled: "Login is disabled whilst the site is in read only mode."
+      logout_disabled: "Logout is disabled whilst the site is in read only mode."
+    composer:
+      italic_text: "emphasised text"
+      collapse: "minimise the composer panel"
+    search:
+      categories: "Categories"
+      type:
+        categories: "Categories"
+      advanced:
+        in_category:
+          label: Categorised
+    topic:
+      automatically_add_to_groups: "This invitation also includes access to these groups:"
+    post:
+      errors:
+        upload_not_authorized: "Sorry, the file you are trying to upload is not authorised (authorised extensions: %{authorized_extensions})."
+      controls:
+        convert_to_moderator: "Add Staff Colour"
+        revert_to_regular: "Remove Staff Colour"
+        delete_topic_error: "An error occurred whilst deleting this topic"
+    category:
+      localization:
+        description: "Description"
+      description: "Description"
+      background_color: "Colour"
+      color_placeholder: "Any web colour"
+      already_used: "This colour has been used by another category"
+      uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behaviour and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customise / Text Content</a>.'
+      colors_disabled: "You can’t select colours because you have a category style of none."
+    categories_list: "Categories List"
+    filters:
+      categories:
+        title: "Categories"
+    keyboard_shortcuts_help:
+      navigation:
+        title: "Navigation"
+    tagging:
+      manage_groups_description: "Define groups to organise tags"
+    sidebar:
+      sections:
+        categories:
+          header_link_text: "Categories"
+        community:
+          edit_section:
+            header_dropdown: "Customise"
+  admin_js:
+    admin:
+      config:
+        navigation:
+          title: "Navigation"
+        email_appearance:
+          header_description: "Customise the template in which all html emails are rendered, and style using CSS"
+      dashboard:
+        exception_error: Sorry, an error occurred whilst executing the query
+      flags:
+        description: "Description"
+      api:
+        description: Description
+        scopes:
+          descriptions:
+            users:
+              anonymize: Anonymise user accounts.
+      appearance:
+        sidebar_link:
+          navigation: "Navigation"
+      config_areas:
+        flags:
+          description: "Description"
+          form:
+            description: "Description"
+        themes_and_components:
+          breadcrumb_title: "Customise"
+        color_palettes:
+          colors:
+            title: "Colours"
+      backups:
+        upload:
+          error: "There has been an error whilst uploading '%{filename}': %{message}"
+      customize:
+        title: "Customise"
+        color: "Colour"
+        theme:
+          customize_desc: "Customise:"
+          long_title: "Amend colours, CSS and HTML contents of your site"
+          color_scheme: "Colour Palette"
+          color_scheme_select: "Select colours to be used by theme"
+          colors: "Colours"
+          colors_title: "Colours"
+          color_definitions:
+            text: "Colour Definitions"
+            title: "Enter custom colour definitions (advanced users only)"
+            placeholder: |2-
+
+              Use this stylesheet to add custom colours to the list of CSS custom properties.
+
+              Example:
+
+              %{example}
+
+              Prefixing the property names is highly recommended to avoid conflicts with plugins and/or core.
+        colors:
+          select_base:
+            title: "Select base colour palette"
+          title: "Colours"
+          about: "Modify the colours used by your themes. Create a new colour palette to start."
+          undo_title: "Undo your changes to this colour since the last time it was saved."
+          revert_title: "Reset this colour to Discourse's default colour palette."
+        email_style:
+          instructions: "Customise the template in which all html emails are rendered, and style using CSS."
+      logs:
+        staff_actions:
+          actions:
+            anonymize_user: "anonymise user"
+        search_logs:
+          types:
+            header: "Header"
+      form_templates:
+        validations_modal:
+          table_headers:
+            description: "Description"
+      user:
+        anonymize: "Anonymise User"
+        anonymize_yes: "Yes, anonymise this account"
+        anonymize_failed: "There was a problem anonymising the account."
+        merge_failed: "There was an error whilst merging the users."
+        delete_confirm: "It is generally preferable to anonymise users rather than deleting them, to avoid removing content from existing discussions."
+      site_settings:
+        categories:
+          navigation: "Navigation"
+      badges:
+        description: Description
+        read_only_setting_help: "Customise text"
+      permalink:
+        post_title: "Post"
+      reseed:
+        modal:
+          categories: "Categories"
+  wizard_js:
+    wizard:
+      top_menu_items:
+        categories: "Categories"

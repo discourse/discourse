@@ -1,0 +1,29 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.composer-actions {
+      margin: 0;
+
+      .select-kit-header {
+        background: none;
+        outline: none;
+        padding: 0;
+        margin-right: 8px;
+        border: 1px solid var(--primary-medium);
+        min-height: unset;
+
+        .d-icon {
+          padding: 5px 6px;
+        }
+
+        &:hover,
+        &:focus {
+          background: var(--primary-low);
+        }
+      }
+
+      .d-icon {
+        margin: 0 !important;
+      }
+    }
+  }
+}

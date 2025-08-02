@@ -1,0 +1,57 @@
+# Path configurations for IntermediateDB and UploadsDB that the import script generates.
+# When running inside a Docker container, these files should be located in the
+# /shared/import directory to ensure proper functioning.
+source_db_path: "/shared/import/intermediate.db"
+output_db_path: "/shared/import/uploads.db"
+
+# Defines the directories the import script searches for uploaded files.
+# For most cases, a single path is sufficient. However, if uploads are
+# spread across multiple directories that cannot or should not be merged,
+# list all those directories here as multiple paths.
+root_paths:
+  - "/shared/import/files"
+
+# Directory where files downloaded from URLs are cached for processing.
+download_cache_path: "/shared/import/downloaded_files"
+
+# The number of threads used for processing uploads is determined as:
+#   thread_count = [number of CPU cores] * [thread_count_factor]
+# If uploads are stored on Amazon S3, the thread count is automatically
+# doubled to mitigate higher network latencies typically associated with S3.
+thread_count_factor: 1.5
+
+# Delete uploads from the output database that are not found in the source database.
+delete_surplus_uploads: false
+
+# Delete uploads from the output database that do not have a Discourse upload record.
+delete_missing_uploads: false
+
+# Check if files are missing in the upload store and update the database accordingly.
+# Set to false and re-run the script afterward if you want to create new uploads for missing files.
+fix_missing: false
+
+# Create optimized images for post uploads and avatars.
+create_optimized_images: false
+
+site_settings:
+  authorized_extensions: "*"
+  max_attachment_size_kb: 102_400
+  max_image_size_kb: 102_400
+
+  enable_s3_uploads: true
+  s3_upload_bucket: "your-bucket-name"
+  s3_region: "your-region"
+  s3_access_key_id: "your-access-key-id"
+  s3_secret_access_key: "your-secret-access-key"
+  s3_cdn_url: "https://your-cdn-url.com"
+
+  # Set this to true if the site is a multisite and configure the `multisite_db_name` accordingly
+  multisite: false
+  multisite_db_name: "default"
+
+# Sometimes a file can be found at one of many locations. Here's a list of transformations that can
+# be applied to the path to try and find the file. The first transformation that results in a file
+# being found will be used.
+path_replacements:
+#  - ["/foo/", "/bar/"]
+#  - ["/foo/", "/bar/baz/"]

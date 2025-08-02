@@ -1,0 +1,21 @@
+// Overrides for Windows High Contrast Mode
+
+/*
+  Some @media (forced-colors: active) {} styles
+  have also been used inside mixins in:
+  - common/components/buttons.scss
+
+  See file above for overrides.
+*/
+
+// Select Kit
+.select-kit {
+  .select-kit-row {
+    &:hover,
+    &:focus {
+      @media (forced-colors: active) {
+        outline: 2px auto transparent;
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    category:
+      sort_options:
+        votes: "Votes"
+    topic_voting:
+      title: "Vote par sujet"
+      reached_limit: "Vous n'avez plus de votes disponibles, enlevez-en un !"
+      list_votes: "Lister vos votes"
+      votes_nav_help: "sujets ayant reçu le plus de votes"
+      voted: "Vous avez voté pour ce sujet"
+      allow_topic_voting: "Autoriser les utilisateurs à voter dans cette catégorie"
+      vote_title: "Voter"
+      vote_title_plural: "Votes"
+      voted_title: "Voté"
+      voting_closed_title: "Fermé"
+      voting_limit: "Limite"
+      votes_left_button_title:
+        one: "Il vous reste %{count} vote."
+        other: "Il vous reste %{count} votes."
+      votes:
+        one: "%{count} vote"
+        other: "%{count} votes"
+      anonymous_button:
+        one: "Voter"
+        other: "Votes"
+      remove_vote: "Supprimer le vote"
+      no_votes_title_self: "Vous n'avez encore voté pour aucun sujet"
+      no_votes_title_others: "%{username} n'a encore voté pour aucun sujet"
+    filters:
+      votes:
+        title: "Votes"
+        help: "sujets ayant reçu le plus de votes"
+      my_votes:
+        title: "Mes votes"
+        help: "sujets sur lesquels vous avez voté"
+    search:
+      most_votes: "Le plus de votes"
+      advanced:
+        vote:
+          count:
+            label: "Nombre minimal de votes"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Événement de vote du sujet"
+          topic_upvote: "Lorsqu'un utilisateur vote sur un sujet"
+          topic_unvote: "Lorsqu'un utilisateur retire son vote sur un sujet"

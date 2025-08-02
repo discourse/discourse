@@ -1,0 +1,17 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Pornește tutorialul pentru toți utilizatorii noi"
+        welcome_message: "Trimite tuturor utilizatorilor noi un mesaj de întâmpinare cu un ghid de pornire rapidă"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Bot narativ Discourse"

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <% topic_url = @topic_view.absolute_url %>
+    <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
+    <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
+    <title><%= @topic_view.title %></title>
+    <link><%= topic_url %></link>
+    <description><%= @topic_view.posts.first.raw %></description>
+    <% if lang %><language><%= lang.sub('_', '-')%></language><% end %>
+    <lastBuildDate><%= @topic_view.topic.bumped_at.rfc2822 %></lastBuildDate>
+    <category><%= @topic_view.topic.category.name %></category>
+    <atom:link href="<%= topic_url %>.rss" rel="self" type="application/rss+xml" />
+    <% @topic_view.recent_posts.each do |post| %>
+      <% next unless post.user %>
+      <item>
+        <title><%= @topic_view.title %></title>
+        <dc:creator><![CDATA[<%= rss_creator(post.user) -%>]]></dc:creator>
+        <description><![CDATA[
+          <% post_url = Discourse.base_url + post.url %>
+          <% if post.hidden %>
+            <%= t('flagging.user_must_edit').html_safe %>
+          <% else %>
+            <%= PrettyText.format_for_email(post.cooked, post).html_safe %>
+          <% end %>
+          <p><%= link_to t('read_full_topic'), post_url %></p>
+        ]]></description>
+        <link><%= post_url %></link>
+        <pubDate><%= post.created_at.rfc2822 %></pubDate>
+        <guid isPermaLink="false"><%= Discourse.current_hostname %>-post-<%= post.topic_id %>-<%= post.post_number %></guid>
+        <source url="<%= topic_url %>.rss"><%= @topic_view.title %></source>
+      </item>
+    <% end %>
+  </channel>
+</rss>

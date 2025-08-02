@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    presence:
+      replying:
+        one: "պատասխանում է"
+        other: "պատասխանում է"
+      editing:
+        one: "խմբագրում է"
+        other: "խմբագրում է"
+      replying_to_topic:
+        one: "պատասխանում է"
+        other: "պատասխանում են"

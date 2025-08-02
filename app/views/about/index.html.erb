@@ -1,0 +1,121 @@
+<% if crawler_layout? %>
+
+<section itemscope itemtype="https://schema.org/AboutPage">
+  <h1 itemprop="name">
+    <%=t "js.about.title", **{title: @about.title} %>
+  </h1>
+
+  <div itemprop="text">
+    <%= @about.description %>
+  </div>
+
+  <h2><%=t "js.about.our_admins" %></h2>
+
+  <div class='admins-list' itemscope itemtype='http://schema.org/ItemList'>
+    <% @about.admins.each do |user| %>
+      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+        <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
+        <a rel='nofollow' href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
+          <span itemprop='image'>
+            <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
+          </span>
+          <span itemprop='name'>
+            <%= user.username %>
+            <% if user.name.present? && SiteSetting.enable_names %>
+              - <%= user.name %>
+            <% end %>
+          </span>
+        </a>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @about.moderators.count > 0 %>
+    <h2><%=t "js.about.our_moderators" %></h2>
+    <div class='moderators-list' itemscope itemtype='http://schema.org/ItemList'>
+      <% @about.moderators.each do |user| %>
+        <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+          <meta itemprop='url' content='<%= user_path(user.encoded_username(lower: true)) %>'>
+          <a rel='nofollow' href='<%= user_path(user.encoded_username(lower: true)) %>' itemprop='item'>
+            <span itemprop='image'>
+              <img width="45" height="45" class="avatar" src="<%= user.small_avatar_url %>">
+            </span>
+            <span itemprop='name'>
+              <%= user.username %>
+              <% if user.name.present? && SiteSetting.enable_names %>
+                - <%= user.name %>
+              <% end %>
+            </span>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%- stats = About.fetch_cached_stats %>
+
+  <section class='about stats'>
+    <h2><%=t 'js.about.stats' %></h2>
+
+    <table class='table'>
+      <tr>
+        <th>&nbsp;</th>
+        <th><%=t 'js.about.stat.all_time' %></th>
+        <th><%=t 'js.about.stat.last_day' %></th>
+        <th><%=t 'js.about.stat.last_7_days' %></th>
+        <th><%=t 'js.about.stat.last_30_days' %></th>
+      </tr>
+      <tr>
+        <td class='title'><%=t 'js.about.topic_count' %></td>
+        <td><%= stats["topic_count"] %></td>
+        <td><%= stats["topics_last_day"] %></td>
+        <td><%= stats["topics_7_days"] %></td>
+        <td><%= stats["topics_30_days"] %></td>
+      </tr>
+      <tr>
+        <td><%=t 'js.about.post_count' %></td>
+        <td><%= stats["post_count"] %></td>
+        <td><%= stats["posts_last_day"] %></td>
+        <td><%= stats["posts_7_days"] %></td>
+        <td><%= stats["posts_30_days"] %></td>
+      </tr>
+      <tr>
+        <td><%=t 'js.about.user_count' %></td>
+        <td><%= stats["user_count"] %></td>
+        <td><%= stats["users_last_day"] %></td>
+        <td><%= stats["users_7_days"] %></td>
+        <td><%= stats["users_30_days"] %></td>
+      </tr>
+      <tr>
+        <td><%=t 'js.about.active_user_count' %></td>
+        <td>&mdash;</td>
+        <td><%= stats["active_users_last_day"] %></td>
+        <td><%= stats["active_users_7_days"] %></td>
+        <td><%= stats["active_users_30_days"] %></td>
+      </tr>
+      <tr>
+        <td><%=t 'js.about.like_count' %></td>
+        <td><%= stats["like_count"] %></td>
+        <td><%= stats["likes_last_day"] %></td>
+        <td><%= stats["likes_7_days"] %></td>
+        <td><%= stats["likes_30_days"] %></td>
+      </tr>
+    </table>
+  </section>
+
+</section>
+<br/>
+<br/>
+
+<% end %>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: @title, description: SiteSetting.site_description) %>
+  <% end %>
+<% else %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+  <% end %>
+<% end %>

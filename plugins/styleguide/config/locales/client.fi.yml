@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Styleguide"
+  js:
+    styleguide:
+      title: "Tyyliopas"
+      welcome: "Aloita valitsemalla osio vasemmalla olevasta valikosta."
+      categories:
+        syntax: Syntaksi
+        atoms: Atomit
+        molecules: Molekyylit
+        organisms: Organismit
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typografia"
+          example: "Tervetuloa käyttämään Discoursea"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Päivämäärä-/kellonaikakentät"
+        menus:
+          title: "Valikot"
+        multi_select:
+          title: "Monivalinta"
+        toasts:
+          title: "Ilmoitusruudut"
+        font_scale:
+          title: "Fonttijärjestelmä"
+        colors:
+          title: "Värit"
+        icons:
+          title: "Kuvakkeet"
+          full_list: "Katso täydellinen luettelo Font Awesome -kuvakkeista"
+        forms:
+          title: "Lomakkeet"
+        buttons:
+          title: "Painikkeet"
+        dropdowns:
+          title: "Pudotusvalikot"
+        categories:
+          title: "Luokat"
+        bread_crumbs:
+          title: "Navigointipolku"
+        navigation:
+          title: "Navigointi"
+        navigation_bar:
+          title: "Navigointipalkki"
+        navigation_stacked:
+          title: "Pystynavigointi"
+        categories_list:
+          title: "Alueluettelo"
+        topic_link:
+          title: "Ketjun linkki"
+        topic_list_item:
+          title: "Ketjulistauksen osa"
+        topic_statuses:
+          title: "Ketjun tilat"
+        topic_list:
+          title: "Ketjulistaus"
+        basic_topic_list:
+          title: "Tavallinen ketjulistaus"
+        footer_message:
+          title: "Alatunnisteen viesti"
+        signup_cta:
+          title: "Rekisteröitymisen CTA"
+        topic_timer_info:
+          title: "Ketjuajastimet"
+        topic_footer_buttons:
+          title: "Ketjun alatunnisteen painikkeet"
+        topic_notifications:
+          title: "Ketjun ilmoitukset"
+        post:
+          title: "Viesti"
+        post_list:
+          title: "Viestiluettelo"
+          empty_example: "<PostList /> tyhjä tila"
+          populated_example: "<PostList /> täytetty tila"
+        topic_map:
+          title: "Ketjun kartta"
+        site_header:
+          title: "Sivuston yläpalkki"
+        suggested_topics:
+          title: "Ehdotettuja ketjuja"
+        post_menu:
+          title: "Viestin valikko"
+        modal:
+          title: "Modaali-ikkuna"
+          header: "Modaalin otsikko"
+          footer: "Modaalin alatunniste"
+        user_about:
+          title: "Käyttäjätietolaatikko"
+        header_icons:
+          title: "Yläpalkin kuvakkeet"
+        spinners:
+          title: "Latausnäkymät"
+        empty_state:
+          title: "Tyhjä tila"
+        tooltips:
+          title: "Työkaluvihjeet"
+          description: "Kuvaus"
+          header: "Yläpalkki"
+          hover_to_see: "Katso työkaluvihje osoittamalla"
+        char_counter:
+          title: "Merkkilaskuri"
+          placeholder: "Kirjoita tekstisi tähän..."

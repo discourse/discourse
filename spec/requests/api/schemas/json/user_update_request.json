@@ -1,0 +1,11 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "external_ids": {
+      "type": "object"
+    }
+  }
+}

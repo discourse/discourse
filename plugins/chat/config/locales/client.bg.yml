@@ -1,0 +1,211 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Чат
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Винаги"
+          never: "Никога"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Статусът на чат канала е променен"
+            chat_channel_delete: "Чат каналът е изтрит"
+            chat_auto_remove_membership: "Членството е автоматично премахнато от каналите"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Създаване на чат съобщение в зададен канал."
+    chat:
+      deleted_chat_username: изтрит
+      dates:
+        yesterday: "Вчера"
+      all_loaded: "Показани са всички съобщения"
+      already_enabled: "Чатът вече е активиран по тази тема. Моля опреснете страницата."
+      disabled_for_topic: "Чатът е деактивиран в тази тема."
+      bot: "бот"
+      create: "Създай"
+      cancel: "Прекрати"
+      cancel_reply: "Отмяна на отговора"
+      chat_channels: "Канали"
+      browse_all_channels: "Преглед на всички канали"
+      move_to_channel:
+        title: "Преместване на съобщенията в канал"
+        instructions:
+          one: "Вие премествате <strong>%{count}</strong> съобщение. Изберете целеви канал. Заместващо съобщение ще бъде създадено в канала <strong>%{channelTitle}</strong> , за да покаже, че това съобщение е преместено. Обърнете внимание, че веригите за отговори няма да бъдат запазени в новия канал и съобщенията в стария канал вече няма да се показват като отговарящи на преместени съобщения."
+          other: "Вие премествате <strong>%{count}</strong> съобщения. Изберете целеви канал. Заместващо съобщение ще бъде създадено в канала <strong>%{channelTitle}</strong> , за да покаже, че тези съобщения са били преместени. Обърнете внимание, че веригите за отговори няма да бъдат запазени в новия канал и съобщенията в стария канал вече няма да се показват като отговарящи на преместени съобщения."
+        confirm_move: "Преместване на съобщения"
+      channel_settings:
+        edit: "Редактирай"
+        add: "Добави "
+        join: "Влизане"
+        leave: "Напусни"
+      channel_delete:
+        instructions: "<p>Изтрива канала <strong>%{name}</strong> и историята на чата. Всички съобщения и свързани с тях данни, като реакции и качвания, ще бъдат изтрити за постоянно. Ако искате да запазите историята на канала и да го деактивирате, може вместо това да архивирате канала.</p> <p>Сигурни ли сте, че искате да <strong>изтриете окончателно</strong> канала? За да потвърдите, въведете името на канала в полето по-долу.</p>"
+      close: "Затвори"
+      remove: "Премахване"
+      expand: "Разгънете чекмеджето за чат"
+      deleted:
+        one: "Едно съобщение беше изтрито. [view]"
+        other: "%{count} съобщения бяха изтрити. [виж всички]"
+      delete: "Изтрий"
+      muted: "заглуши"
+      joined: "присъединен"
+      email_frequency:
+        never: "Никога"
+      header_indicator_preference:
+        title: "Показване на индикатора за активност в хедъра"
+        all_new: "Всички нови съобщения"
+        never: "Никога"
+      flag: "Сигнализиране"
+      heading: "Чат"
+      join: "Влизане"
+      last_visit: "последно посещение"
+      reply: "Отговорете"
+      edit: "Редактирай"
+      rebake_message: "Прегенерирай HTML "
+      bookmark_message: "Отметка"
+      bookmark_message_edit: "Редактиране на отметка"
+      save: "Запази "
+      sounds:
+        none: "Без"
+      title: "чат"
+      title_capitalized: "Чат"
+      exit: "назад"
+      channel_status:
+        closed: "Затворена"
+        open: "Отвори"
+      browse:
+        back: "Назад"
+        title: Канали
+        filter_all: Всички
+        filter_open: Отвори
+        filter_closed: Затворена
+      chat_message_separator:
+        today: Днес
+        yesterday: Вчера
+      about_view:
+        title: Заглавие
+        name: Име
+        description: Описание
+      channel_info:
+        back_to_channel: "Назад"
+        tabs:
+          members: Членове
+          settings: Настройки
+        remove_member: "Премахване"
+      new_message_modal:
+        filter: "Филтър"
+      direct_message_creator:
+        title: Ново Съобщение
+        prefix: "До:"
+      create_channel:
+        type: "Тип"
+        types:
+          category: "Категория"
+          topic: "Тема"
+      composer:
+        italic_text: "Подчертан текст"
+        bold_text: "удебелен текст"
+      notification_levels:
+        never: "Никога"
+      settings:
+        follow: "Влизане"
+        followed: "Присъединен"
+        threading_enabled: "Да е включен"
+        threading_disabled: "Деактивирани"
+        notifications: "Известия"
+        preview: "Преглед"
+        save: "Запази "
+        saved: "Запазено"
+        unfollow: "Напусни"
+        admin_title: "Администратор"
+        settings_title: "Настройки"
+        category_label: "Категория"
+        history_label: "История"
+        members_label: "Членове"
+      admin:
+        title: "Чат"
+      channel_list:
+        title: "Канали"
+      incoming_webhooks:
+        back: "Назад"
+        description: "Описание"
+        delete: "Изтрий"
+        emoji: "Емотикони"
+        name: "Име"
+        save: "Запази "
+        edit: "Редактирай"
+        system: "система"
+        url: "URL"
+        username: "Потребителско име"
+      selection:
+        cancel: "Прекрати"
+        copy: "Копирай"
+        new_topic:
+          title: "Премести в нова тема"
+        existing_topic:
+          title: "Преместете в съществуваща тема."
+      retention_reminders:
+        short:
+          one: "%{count} ден"
+          other: "%{count} дни"
+      emoji_picker:
+        objects: "Обекти"
+        activities: "Дейности"
+        flags: "Сигнали"
+        symbols: "Символи"
+      thread:
+        title: "Заглавие"
+        replies:
+          one: "%{count} отговор"
+          other: "%{count} отговора"
+        settings: "Настройки"
+        last_reply: "последен отговор"
+        notifications:
+          regular:
+            title: "Нормален"
+          tracking:
+            title: "Следене"
+          watching:
+            title: "Наблюдавай"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
+      draft_channel_screen:
+        header: "Ново Съобщение"
+        cancel: "Прекрати"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Съобщение
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Съобщение в чата с флаг"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Чат"
+    styleguide:
+      sections:
+        chat:
+          title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

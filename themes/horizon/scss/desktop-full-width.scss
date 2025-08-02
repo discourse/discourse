@@ -1,0 +1,276 @@
+@use "lib/viewport";
+
+// Full width layout. Ported from the Discourse Full Width theme component here
+// https://meta.discourse.org/t/discourse-full-width-component/292496, which we
+// intend to move into core over time.
+//
+// We are copying this here so we can continue to iterate on Horizon with full
+// width without having to include the theme component as a dependency, we
+// need to remove this once full width is in core.
+
+$sidebar-width: 17em;
+
+.wrap {
+  max-width: unset; // undoing core default
+}
+
+.d-header #site-logo {
+  // this prevents the logo from shifting header content
+  // when the sidebar is opened
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain; // contains logo without squishing/stretching
+
+  // allows some flexibility for wide logos
+  body:not(.has-sidebar-page) & {
+    max-width: unset;
+
+    @include viewport.until(sm) {
+      max-width: 25vw;
+    }
+  }
+}
+
+.d-header #site-text-logo {
+  font-size: clamp(var(--font-0), 2.5vw, var(--font-up-2));
+
+  .has-sidebar-page & {
+    white-space: wrap;
+    line-height: var(--line-height-medium);
+
+    @include line-clamp(2);
+  }
+}
+
+#main-outlet-wrapper {
+  padding: 0;
+
+  body.has-sidebar-page & {
+    .sidebar-wrapper {
+      width: var(--d-sidebar-width);
+    }
+  }
+
+  body.has-full-page-chat & {
+    gap: 0;
+  }
+
+  .sidebar-wrapper {
+    width: 100%; // safari has issues without this
+  }
+
+  #main-outlet {
+    margin: 0 auto;
+    max-width: var(--d-max-width);
+    width: 100%;
+
+    body.has-full-page-chat & {
+      max-width: unset;
+    }
+  }
+}
+
+.has-full-page-chat:not(.discourse-sidebar) .full-page-chat {
+  border: none;
+}
+
+#main-outlet > .regular {
+  max-width: var(--d-max-width);
+  margin: 0 auto;
+
+  body.has-sidebar-page & {
+    margin: 0 auto;
+  }
+}
+
+.d-header .title:not(.title--minimized) {
+  // allowing overflow here isn't always ideal
+  // but works well enough most of the time
+  overflow: visible;
+}
+
+.d-header {
+  > .wrap {
+    .contents {
+      display: grid;
+      grid-template-areas: "logo lspace extra-info rspace panel";
+      grid-template-columns:
+        minmax(auto, 1fr)
+        auto
+        minmax(0, calc(var(--d-max-width)))
+        auto
+        minmax(auto, 1fr);
+
+      .d-header-mode {
+        grid-area: extra-info;
+        white-space: nowrap;
+
+        @include viewport.until(md) {
+          display: none;
+        }
+      }
+
+      .d-header .title {
+        min-width: auto;
+      }
+
+      .has-sidebar-page & {
+        // at wide widths, when 1fr > 0
+        // we want the panel to be the same width as the sidebar
+        // this way we can get more accurate centering
+        grid-template-columns:
+          calc(var(--d-sidebar-width) - 11px) // 11px is wrap padding
+          1fr
+          minmax(0, calc(var(--d-max-width)))
+          1fr
+          minmax(0, calc(var(--d-sidebar-width) - 11px));
+        gap: 1em;
+
+        // at narrower widths, when 1fr = 0
+        // we can center without matching the sidebar's width
+        // which allows the title to take up the remaining width
+        @media screen and (width <= 1400px) {
+          grid-template-columns:
+            calc(var(--d-sidebar-width) - 11px)
+            1fr
+            minmax(0, calc(var(--d-max-width)))
+            1fr
+            auto;
+        }
+
+        @media screen and (width <= 1000px) {
+          gap: 0.5em;
+        }
+
+        .d-header-mode {
+          grid-area: extra-info;
+        }
+      }
+    }
+  }
+
+  .header-sidebar-toggle {
+    grid-area: logo;
+  }
+
+  .before-header-panel-outlet {
+    grid-area: extra-info;
+  }
+
+  .d-header-mode {
+    .bootstrap-mode {
+      display: none;
+    }
+  }
+
+  .home-logo-wrapper-outlet {
+    grid-area: logo;
+    margin-left: 3.7em; // 2.7em hamburger width + 1em for margin
+    margin-right: 0.725em;
+    display: flex;
+    overflow: visible;
+
+    .title {
+      flex: 1 1 auto;
+    }
+  }
+
+  .panel {
+    grid-area: panel;
+  }
+}
+
+.extra-info-wrapper {
+  grid-area: extra-info;
+  max-width: var(--d-max-width);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.header-search--enabled .floating-search-input-wrapper {
+  grid-area: extra-info;
+
+  @include viewport.until(md) {
+    grid-area: rspace;
+  }
+
+  @include viewport.until(sm) {
+    display: none;
+  }
+}
+
+body.has-sidebar-page {
+  .wrap {
+    max-width: unset; // undoing core default
+  }
+
+  .d-header-mode,
+  .extra-info-wrapper {
+    padding: 0;
+  }
+
+  @media screen and (width >= calc($reply-area-max-width + ($sidebar-width * 2))) {
+    #reply-control.show-preview {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .sidebar-container {
+      height: auto;
+    }
+  }
+
+  @media screen and (width <= calc($reply-area-max-width + ($sidebar-width * 2))) and (width >= calc($reply-area-max-width + calc($sidebar-width / 2))) {
+    #reply-control.show-preview:not(.fullscreen) {
+      margin-left: $sidebar-width;
+      width: auto;
+
+      // overruling new core composer changes
+      max-width: $reply-area-max-width;
+      transform: none;
+    }
+
+    .sidebar-container {
+      height: auto;
+    }
+  }
+
+  // overruling new core composer changes
+  @media screen and (min-width: $reply-area-max-width) {
+    #reply-control.show-preview:not(.fullscreen) {
+      max-width: $reply-area-max-width;
+      transform: none;
+    }
+  }
+}
+
+body.sidebar-animate {
+  #main-outlet-wrapper {
+    transition: none;
+  }
+
+  .d-header-wrap .wrap {
+    transition: none;
+  }
+}
+
+.d-header-icons {
+  display: flex;
+}
+
+.rtl {
+  .d-header .title {
+    margin-right: 3.7em; // 2.7em hamburger width + 1em for margin
+    margin-left: 0.725em;
+  }
+}
+
+// provides some extra space for login buttons
+@media screen and (width >= 1400px) {
+  .anon {
+    .d-header .panel {
+      grid-column-start: -4;
+    }
+  }
+}

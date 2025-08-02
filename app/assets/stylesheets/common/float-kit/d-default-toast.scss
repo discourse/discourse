@@ -1,0 +1,119 @@
+.fk-d-default-toast {
+  display: flex;
+  flex: 1 1 auto;
+  padding: 0.5rem;
+
+  &__close-container {
+    width: calc(40px - 0.5rem);
+    height: 30px;
+  }
+
+  &__icon-container {
+    flex: 1 0 auto;
+    display: flex;
+    width: calc(40px - 0.5rem);
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+
+    &.alert-success {
+      background-color: var(--success-low);
+      color: var(--primary);
+    }
+
+    &.alert-error {
+      background-color: var(--danger-low);
+      color: var(--primary);
+    }
+
+    &.alert-warning {
+      background-color: var(--highlight-bg);
+      color: var(--primary);
+    }
+
+    &.alert-info {
+      background-color: var(--tertiary-low);
+      color: var(--primary);
+
+      &.clickable {
+        color: var(--tertiary);
+        z-index: z("base");
+      }
+    }
+
+    .-success & {
+      .d-icon {
+        color: var(--success);
+      }
+    }
+
+    .-error & {
+      .d-icon {
+        color: var(--danger);
+      }
+    }
+
+    .-warning & {
+      .d-icon {
+        color: var(--highlight);
+      }
+    }
+
+    .-info & {
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  &__main-container {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 30px;
+  }
+
+  &__progress-bar {
+    width: 100%;
+    height: 5px;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-color: var(--success);
+    transform-origin: 0 0;
+  }
+
+  .fk-d-default-toast:has(&__progress-bar) {
+    padding-top: 15px;
+  }
+
+  &__texts {
+    min-height: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    margin-bottom: -0.5rem;
+
+    .btn {
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__title {
+    display: flex;
+    font-weight: 700;
+  }
+
+  &__message {
+    display: flex;
+    color: var(--primary-high);
+  }
+}

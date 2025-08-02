@@ -1,0 +1,144 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Mara kwa mara"
+          never: "Kamwe"
+    chat:
+      deleted_chat_username: imefutwa
+      dates:
+        yesterday: "Jana"
+      create: "Tengeneza"
+      cancel: "Ghairi"
+      channel_settings:
+        edit: "Hariri"
+        add: "ongeza"
+        join: "Jiunge"
+        leave: "Ondoka"
+      close: "Funga"
+      remove: "Ondoa"
+      delete: "Futa"
+      muted: "kunyamazisha"
+      joined: "alijiunga"
+      email_frequency:
+        never: "Kamwe"
+      header_indicator_preference:
+        never: "Kamwe"
+      flag: "Bendera"
+      join: "Jiunge"
+      last_visit: "Mara ya mwisho imetembelewa"
+      reply: "Jibu"
+      edit: "Hariri"
+      rebake_message: "Tengeneza upya HTML"
+      bookmark_message: "Alamisha"
+      save: "Hifadhi"
+      sounds:
+        none: "Hakuna"
+      exit: "iliyopita"
+      channel_status:
+        closed: "Imefungwa"
+        open: "Fungua"
+      browse:
+        back: "Iliyopita"
+        filter_all: Vyote
+        filter_open: Fungua
+        filter_closed: Imefungwa
+      chat_message_separator:
+        today: Leo
+        yesterday: Jana
+      about_view:
+        title: Kichwa cha Habari
+        name: Jina
+        description: Elezo
+      channel_info:
+        back_to_channel: "Iliyopita"
+        tabs:
+          members: Wanachama
+          settings: Mipangilio
+        remove_member: "Ondoa"
+      new_message_modal:
+        filter: "Chuja"
+      direct_message_creator:
+        title: Ujumbe Mpya
+        prefix: "Kwenda:"
+      create_channel:
+        type: "Aina"
+        types:
+          category: "Kikundi"
+          topic: "Mada"
+      composer:
+        italic_text: "Maneno yaliyo tiliwa mkazo"
+        bold_text: "Maneno yaliyokolezwa"
+        send: "Tuma"
+      notification_levels:
+        never: "Kamwe"
+      settings:
+        follow: "Jiunge"
+        followed: "Alijiunga"
+        threading_enabled: "Imeruhusiwa"
+        threading_disabled: "Imezuiwa"
+        notifications: "Taarifa"
+        preview: "Kihakiki"
+        save: "Hifadhi"
+        saved: "Imehifadhiwa"
+        unfollow: "Ondoka"
+        admin_title: "Kiongozi"
+        settings_title: "Mipangilio"
+        category_label: "Kategoria"
+        history_label: "Historia"
+        members_label: "Wanachama"
+      incoming_webhooks:
+        back: "Iliyopita"
+        description: "Elezo"
+        delete: "Futa"
+        emoji: "Emoji"
+        name: "Jina"
+        save: "Hifadhi"
+        edit: "Hariri"
+        system: "mfumo"
+        url: "Anwani ya mtandao"
+        username: "Jina la mtumiaji"
+      selection:
+        cancel: "Ghairi"
+        copy: "Nakili"
+        new_topic:
+          title: "Hamisha kwenda Mada Mpya"
+        existing_topic:
+          title: "Hamisha kwenda kwenye Mada Iliyopo"
+      retention_reminders:
+        short:
+          one: "siku %{count}"
+          other: "siku %{count}"
+      emoji_picker:
+        objects: "Vitu"
+        flags: "Bendera"
+      thread:
+        title: "Kichwa cha Habari"
+        replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        settings: "Mipangilio"
+        last_reply: "jibu la mwisho"
+        notifications:
+          regular:
+            title: "Kawaida"
+          tracking:
+            title: "Fuatilia"
+          watching:
+            title: "Angalia"
+      draft_channel_screen:
+        header: "Ujumbe Mpya"
+        cancel: "Ghairi"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Ujumbe

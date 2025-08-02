@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse بۇزغۇنچى ئاگاھلاندۇرۇشى"
+  js:
+    spoiler:
+      title: ۋەقەلىكنى غۇۋالاشتۇر
+      label:
+        show: "يوشۇرۇن مەزمۇننى كۆرسەت"
+    composer:
+      spoiler_text: "بۇ تېكىست غۇۋالاشتۇرۇلىدۇ"

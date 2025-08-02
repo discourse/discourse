@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Date locale Discourse"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Astăzi la %{time}
+        tomorrow: Mâine la %{time}
+        yesterday: Ieri la %{time}
+        countdown:
+          passed: data a trecut
+      title: Introdu data/ora
+      create:
+        form:
+          insert: Introdu
+          advanced_mode: Mod avansat
+          simple_mode: Mod simplu
+          format_description: "Format utilizat pentru a afișa data utilizatorului. Folosește Z pentru a afișa decalajul și zz pentru numele fusului orar."
+          timezones_title: Fusuri orare de afișat
+          timezones_description: Fusurile orare vor fi utilizate pentru a afișa datele în previzualizare și în rezervă.
+          recurring_title: Recurență
+          recurring_description: "Definește recurența unui eveniment. De asemenea, poți edita manual opțiunea recurentă generată de formular și poți utiliza una dintre următoarele chei: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Fără recurență
+          invalid_date: Dată invalidă, asigură-te că data și ora sunt corecte
+          date_title: Dată
+          time_title: Oră
+          format_title: Format dată
+          timezone: Fus orar
+          until: Pana la...
+          current_timezone: "Fus orar actual:"
+          recurring:
+            every_day: "În fiecare zi"
+            every_week: "În fiecare săptămână"
+            every_two_weeks: "La fiecare două săptămâni"
+            every_month: "În fiecare lună"
+            every_two_months: "La fiecare două luni"
+            every_three_months: "La fiecare trei luni"
+            every_six_months: "La fiecare șase luni"
+            every_year: "În fiecare an"
+      default_title: "Eveniment %{site_name}"

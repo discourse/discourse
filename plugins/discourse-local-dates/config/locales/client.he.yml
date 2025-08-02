@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "תאריכים מקומיים של Discourse"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: היום ב־%{time}
+        tomorrow: מחר ב־%{time}
+        yesterday: אתמול ב־%{time}
+        countdown:
+          passed: התאריך חלף
+      title: הוספת תאריך / שעה
+      create:
+        form:
+          insert: כתיבה
+          advanced_mode: מצב מתקדם
+          simple_mode: מצב פשוט
+          format_description: "תבנית המשמשת להצגת התאריך למשתמש. Z משמש להצגת ההפרש ו־zz לשם אזור הזמן."
+          timezones_title: אזורי זמן להצגה
+          timezones_description: אזורי זמן משמשים להצגת תאריך בתצוגה מקדימה וכברירת מחדל.
+          recurring_title: חזרה
+          recurring_description: "הגדרת תדירות חזרת האירוע. ניתן גם לערוך ידנית את אפשרות החזרה שנוצרה על ידי הטופס ולהשתמש במפתחות הבאים: years,‏ quarters,‏ months,‏ weeks,‏ days,‏ hours,‏ minutes,‏ seconds,‏ milliseconds."
+          recurring_none: ללא חזרה
+          invalid_date: תאריך שגוי, נא לוודא שהתאריך והשעה נכונים
+          date_title: תאריך
+          time_title: זמן
+          format_title: מבנה תאריך
+          timezone: אזור זמן
+          until: עד…
+          current_timezone: "אזור זמן נוכחי:"
+          recurring:
+            every_day: "כל יום"
+            every_week: "כל שבוע"
+            every_two_weeks: "כל שבועיים"
+            every_month: "כל חודש"
+            every_two_months: "כל חודשיים"
+            every_three_months: "כל שלושה חודשים"
+            every_six_months: "כל חצי שנה"
+            every_year: "כל שנה"
+      default_title: "אירוע %{site_name}"

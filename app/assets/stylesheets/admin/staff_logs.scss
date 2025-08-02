@@ -1,0 +1,423 @@
+@use "lib/viewport";
+
+// Styles for /admin/logs
+.log-details-modal {
+  pre {
+    white-space: pre-wrap;
+    max-height: 250px;
+  }
+}
+
+.staff-actions {
+  width: 100%;
+  word-wrap: break-word;
+
+  @media screen and (width >= 550px) and (width <= 767px) {
+    table.staff-logs tr {
+      display: grid;
+      grid-template-rows: auto auto;
+      grid-template-columns: repeat(4, 1fr);
+
+      td {
+        align-self: start;
+        padding: 2px 4px;
+      }
+    }
+
+    td.created-at {
+      grid-column-start: -1;
+    }
+
+    td.subject {
+      grid-row: 2;
+      grid-column-start: 2;
+
+      div.subject {
+        display: flex;
+
+        a {
+          word-wrap: break-word;
+          min-width: 25px;
+        }
+      }
+    }
+
+    td.details {
+      grid-row: 1;
+      grid-row-start: 1;
+      grid-row-end: 3;
+      grid-column-start: 3;
+    }
+
+    td.context {
+      grid-row-start: 1;
+      grid-row-end: 3;
+      grid-column-start: 4;
+    }
+  }
+
+  @include viewport.until(sm) {
+    table.staff-logs tr {
+      grid-template-columns: 1fr 1fr 0.5fr;
+
+      td.staff-users {
+        grid-column-start: 1;
+        grid-column-end: 3;
+      }
+
+      td.created-at {
+        grid-row: 1;
+        grid-column-start: -1;
+        text-align: right;
+      }
+
+      td.action {
+        grid-row: 2;
+        grid-column-start: 1;
+      }
+
+      td.subject {
+        grid-row: 2;
+        grid-column-start: 2;
+        grid-column-end: 5;
+        max-width: 60vw;
+      }
+
+      td.details,
+      td.context {
+        max-width: unset;
+      }
+
+      td.details {
+        grid-row: 3;
+        grid-column-start: 1;
+        grid-column-end: 5;
+        padding: 0.25em 0;
+        max-width: 90vw;
+      }
+
+      td.context {
+        grid-row: 4;
+        grid-column-start: 1;
+        grid-column-end: 5;
+      }
+    }
+  }
+
+  .staff-user {
+    font-weight: bold;
+    display: flex;
+
+    a:first-of-type {
+      margin-right: 0.25em;
+    }
+
+    .deleted-user {
+      font-size: var(--font-up-2);
+    }
+  }
+
+  .created_at {
+    text-align: center;
+  }
+
+  td.subject,
+  td.details {
+    max-width: 10vw;
+
+    > div {
+      max-height: 100px;
+      overflow-y: auto;
+    }
+  }
+
+  td.context {
+    word-break: break-all;
+  }
+}
+
+.staff-action-logs-controls {
+  display: flex;
+  align-items: center;
+  margin: 0 0 1em 0;
+
+  .select-kit {
+    margin: 0 0.5em;
+  }
+
+  button {
+    margin-left: auto;
+  }
+
+  a.filter {
+    .label {
+      font-weight: bold;
+    }
+
+    .d-icon {
+      margin-left: 0.5em;
+    }
+  }
+}
+
+.screened-email-export {
+  display: block;
+}
+
+.screened-ip-controls {
+  display: flex;
+  flex-wrap: wrap;
+
+  .screened-ip-address-form {
+    .combobox {
+      width: 140px;
+    }
+
+    @media screen and (width >= 900px) {
+      margin-left: auto;
+    }
+
+    @media screen and (width <= 899px) {
+      margin-top: 1em;
+    }
+  }
+}
+
+table.screened-ip-addresses {
+  td.ip_address {
+    min-width: 150px;
+    word-wrap: break-word;
+
+    input {
+      width: 80%;
+    }
+  }
+
+  td.actions {
+    text-align: right;
+  }
+}
+
+@media screen and (width >= 550px) {
+  table.screened-ip-addresses tr {
+    grid-template-columns: repeat(5, 1fr) auto;
+  }
+}
+
+@media screen and (width <= 549px) {
+  table.screened-ip-addresses tr {
+    td.actions {
+      grid-row: 3;
+      grid-column-start: -1;
+      grid-column-end: -4;
+      text-align: right;
+      margin-top: 0.5em;
+    }
+
+    td.created_at {
+      grid-row: 1;
+      grid-column-start: 3;
+      text-align: right;
+    }
+
+    td.last_match_at {
+      grid-row: 2;
+      grid-column-start: 3;
+      text-align: right;
+    }
+
+    td.match_count {
+      grid-row: 2;
+      grid-column-start: 2;
+    }
+  }
+}
+
+// Screened URLs
+
+@include viewport.until(md) {
+  .screened-urls {
+    td.domain {
+      grid-column-start: 1;
+      grid-column-end: 3;
+      word-wrap: break-word;
+    }
+  }
+}
+
+// Screened emails
+.screened-emails {
+  td.ip_address {
+    word-wrap: break-word;
+
+    @include viewport.from(md) {
+      max-width: 20vw;
+    }
+  }
+
+  @include viewport.until(md) {
+    td.email {
+      grid-column-start: 1;
+      grid-column-end: 3;
+      word-wrap: break-word;
+    }
+
+    td.ip_address {
+      grid-row: 2;
+      grid-column-start: 1;
+      grid-column-end: -1;
+    }
+
+    td.action {
+      margin-top: 0.25em;
+    }
+  }
+}
+
+// Watched words
+.watched-word-box {
+  display: inline-block;
+  width: 250px;
+  margin-bottom: 1em;
+  vertical-align: top;
+}
+
+.watched-words-link {
+  .watched-word-box {
+    min-width: 100%;
+  }
+}
+
+.watched-words-replace,
+.watched-words-tag {
+  .watched-word-box {
+    min-width: calc(50% - 5px);
+  }
+}
+
+.watched-word-box,
+.watched-words-test-modal {
+  .replacement {
+    white-space: pre;
+    background: var(--tertiary-low);
+  }
+
+  .tag {
+    background: var(--primary-low);
+    font-size: var(--font-down-1);
+    margin-right: 0.1em;
+    padding: 0.5em;
+  }
+}
+
+.watched-words-uploader {
+  display: inline-block;
+
+  label {
+    font-weight: normal;
+  }
+}
+
+.watched-words-list {
+  margin-top: 20px;
+  display: inline-block;
+  width: 100%;
+}
+
+.watched-word {
+  display: inline-block;
+  cursor: pointer;
+
+  .delete-word-record:hover {
+    color: var(--danger);
+  }
+}
+
+.watched-word-form {
+  .success-message {
+    margin-left: 1em;
+  }
+}
+
+.watched-words-detail {
+  .watched-word-controls,
+  .about,
+  .watched-word-form {
+    margin-bottom: 1em;
+  }
+
+  .about {
+    font-size: var(--font-up-1);
+    max-width: 30em;
+  }
+
+  .watched-word-controls .btn {
+    margin-bottom: 0.25em;
+    margin-right: 0.25em;
+  }
+}
+
+.watched-words-test-modal p {
+  margin-top: 0;
+}
+
+.watched-word-input {
+  label {
+    display: inline-block;
+    min-width: 150px;
+    padding-top: 4px;
+    vertical-align: top;
+  }
+
+  input.watched-word-input-field {
+    min-width: 300px;
+  }
+
+  .select-kit.multi-select.watched-word-input-field {
+    width: 300px;
+    margin-bottom: 9px;
+  }
+
+  + .btn-primary {
+    margin-top: 1em;
+  }
+}
+
+// Search logs
+table.search-logs-list {
+  td.term {
+    width: 60%;
+    word-wrap: break-word;
+
+    @media screen and (width <= 767px) {
+      width: 100%;
+    }
+  }
+
+  th:not(.term),
+  td:not(.term) {
+    text-align: center;
+  }
+
+  @media screen and (width >= 550px) {
+    tr {
+      td.term {
+        grid-column-start: span 3;
+      }
+    }
+  }
+
+  @include viewport.until(sm) {
+    tr {
+      td.term {
+        grid-column-start: 1;
+        grid-column-end: 4;
+      }
+
+      th:not(.term),
+      td:not(.term) {
+        text-align: left;
+      }
+    }
+  }
+}

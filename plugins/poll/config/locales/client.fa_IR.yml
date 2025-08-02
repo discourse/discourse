@@ -1,0 +1,100 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    poll:
+      voters:
+        one: "رای دهندگان"
+        other: "رای دهندگان"
+      total_votes:
+        one: "مجموع آرا"
+        other: "مجموع آرا"
+      average_rating: "میانگین امتیاز: <strong>%{average}</strong>."
+      public:
+        title: "آرا <strong>عمومی</strong> هستند."
+      results:
+        groups:
+          title: "برای رأی دهی باید از اعضای گروه %{groups} باشید."
+        vote:
+          title: "نتایج در <strong>نظرسنجی</strong> نمایش داده خواهند شد."
+        closed:
+          title: "نتایج بعد از <strong>پایان</strong> مدت نظرسنجی نمایش داده خواهند شد."
+        staff:
+          title: "فقط تیم <strong>مدیران</strong> می توانند نتایج نظرسنجی را مشاهده کنند."
+      cast-votes:
+        title: "انداختن رأی شما"
+        label: "ثبت رای!"
+      show-results:
+        title: "نمایش نتایج"
+        label: "نتایج"
+      hide-results:
+        title: "برگشتن به رای گیری "
+      group-results:
+        title: "آراء گروه با توجه به نام کاربر"
+      export-results:
+        title: "اک‍‍‍سپورت کردن نتایج نظرسنجی"
+        label: "خروجی گرفتن"
+      open:
+        title: "باز کردن نظرسنجی"
+        label: "باز"
+        confirm: "آیا از باز کردن این نظرسنجی اطمینان دارید؟"
+      close:
+        title: "بستن نظرسنجی"
+        label: "بستن"
+        confirm: "آیا از بستن این نظرسنجی اطمینان دارید؟"
+      automatic_close:
+        closes_in: "در <strong>%{timeLeft}</strong> بسته خواهد شد."
+        age: "در <strong>%{age}</strong> تمام شد."
+      breakdown:
+        title: "نتایج نظرسنجی"
+        votes: "%{count} رای"
+        percentage: "درصد"
+        count: "تعداد"
+      ranked_choice:
+        none: "هیچ کدام"
+      options:
+        label: "تنظیمات"
+      error_while_toggling_status: "متاسفانه در تغییر وضعیت این نظرسنجی، خطایی رخ داده است."
+      error_while_casting_votes: "متاسفانه در ثبت رای شما خطایی رخ داده است."
+      error_while_fetching_voters: "متاسفانه در نمایش رای دهندگان خطایی رخ داده است."
+      error_while_exporting_results: "متأسفانه در پروسه اکسپورت خطایی رخ داده."
+      ui_builder:
+        title: ساخت نظرسنجی
+        insert: درج نظر سنجی
+        help:
+          options_min_count: حداقل 1 گزینه را وارد کنید.
+          invalid_values: مقدار حداقل می بایست کمتر از مقدار حداکثر باشد.
+          min_step_value: حداقل مقدار مرحله 1 است
+        poll_type:
+          label: نوع
+          regular: یک انتخابی
+          multiple: چند انتخابی
+          number: امتیاز عددی
+        poll_result:
+          label: نمایش نتایج
+          always: به طور مداوم
+          vote: بعد از شرکت در نظرسنجی
+          closed: بعد از بسته شدن نظرسنجی
+          staff: فقط به تیم مدیریت
+        poll_groups:
+          label: محدودسازی قابلیت رأی دهی به گروه
+        poll_chart_type:
+          label: نمودار نتایج
+          bar: بار
+          pie: پای
+        poll_config:
+          step: مرحله
+        poll_public:
+          label: نمایش رای دهندگان
+        poll_title:
+          label: عنوان (اختیاری)
+        poll_options:
+          add: افزودن گزینه
+        automatic_close:
+          label: بسته شدن خودکار نظرسنجی
+        show_advanced: "نمایش گزینه‌های پیشرفته"
+        hide_advanced: "پنهان کردن گزینه‌های پیشرفته"

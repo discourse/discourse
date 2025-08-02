@@ -1,0 +1,162 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          never: "Aldri"
+    chat:
+      deleted_chat_username: slettet
+      dates:
+        yesterday: "I går"
+      create: "Opprett"
+      cancel: "Avbryt"
+      channel_settings:
+        edit: "Endre"
+        add: "Legg til"
+        join: "Bli medlem"
+        leave: "Forlat"
+      close: "Lukk"
+      remove: "Fjern"
+      delete: "Slett"
+      edited: "redigert"
+      muted: "ignorert"
+      joined: "medlem fra"
+      email_frequency:
+        never: "Aldri"
+      header_indicator_preference:
+        never: "Aldri"
+      flag: "Flagg"
+      join: "Bli medlem"
+      last_visit: "siste besøk"
+      reply: "Svar"
+      edit: "Endre"
+      rebake_message: "Generer HTML på nytt"
+      bookmark_message: "Bokmerke"
+      bookmark_message_edit: "Rediger bokmerke"
+      save: "Lagre"
+      select: "Velg"
+      sounds:
+        none: "Ingen"
+      exit: "forrige"
+      channel_status:
+        closed: "Lukket"
+        open: "Åpne"
+      browse:
+        back: "Forrige"
+        filter_all: Alle
+        filter_open: Åpne
+        filter_closed: Lukket
+      chat_message_separator:
+        today: I dag
+        yesterday: I går
+      about_view:
+        title: Tittel
+        name: Navn
+        description: Beskrivelse
+      channel_info:
+        back_to_channel: "Forrige"
+        tabs:
+          members: Medlemmer
+          settings: Instillinger
+        remove_member: "Fjern"
+      new_message_modal:
+        filter: "Filtrer"
+      direct_message_creator:
+        title: Ny Melding
+        prefix: "Til:"
+      channel:
+        memberships_count:
+          one: "%{count} medlem"
+          other: "%{count} medlemmer"
+      create_channel:
+        type: "Type"
+        types:
+          category: "Kategori"
+          topic: "Emne"
+      composer:
+        italic_text: "kursiv tekst"
+        bold_text: "sterk tekst"
+        send: "Send"
+      notification_levels:
+        never: "Aldri"
+      settings:
+        channel_wide_mentions_label: "Tillat @alle og @her omtaler"
+        channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
+        follow: "Bli medlem"
+        followed: "Medlem fra"
+        threading_enabled: "Aktivert"
+        threading_disabled: "Deaktivert"
+        notifications: "Varsler"
+        preview: "Forhåndsvis"
+        save: "Lagre"
+        saved: "Lagret"
+        unfollow: "Forlat"
+        admin_title: "Admin"
+        settings_title: "Instillinger"
+        category_label: "Kategori"
+        history_label: "Historie"
+        members_label: "Medlemmer"
+      incoming_webhooks:
+        back: "Forrige"
+        description: "Beskrivelse"
+        delete: "Slett"
+        emoji: "Emoji"
+        name: "Navn"
+        save: "Lagre"
+        edit: "Endre"
+        system: "system"
+        url: "URL"
+        username: "Brukernavn"
+      selection:
+        cancel: "Avbryt"
+        copy: "Kopier"
+        new_topic:
+          title: "Flytt til nytt emne"
+        existing_topic:
+          title: "Flytt til eksisterende emne"
+        new_message:
+          title: "Flytt til ny melding"
+      retention_reminders:
+        short:
+          one: "%{count} dag"
+          other: "%{count} dager"
+      emoji_picker:
+        objects: "Objekter"
+        activities: "Aktiviteter"
+        flags: "Flagg"
+        symbols: "Symboler"
+      thread:
+        title: "Tittel"
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        settings: "Instillinger"
+        last_reply: "siste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Overvåkning"
+          watching:
+            title: "Følger"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
+      draft_channel_screen:
+        header: "Ny Melding"
+        cancel: "Avbryt"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Send

@@ -1,0 +1,34 @@
+.conditional-loading-section {
+  &.is-loading {
+    padding: 2em;
+    margin: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-very-low);
+    flex-direction: column;
+
+    .title {
+      font-size: var(--font-up-1);
+      font-weight: 700;
+    }
+  }
+
+  &:not(.is-loading) {
+    animation: fadein 0.5s;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
+  }
+
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+}

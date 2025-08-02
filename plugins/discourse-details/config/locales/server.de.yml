@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    details_enabled: 'Biete die Möglichkeit an, erweiterbare Details zu einem Beitrag hinzuzufügen. Diese Funktion findest du im Toolbar-Pop-up-Menü des Editors. Du musst alle Beiträge mit „rake posts:rebake“ neu generieren, wenn du diese Einstellung änderst.'
+  details:
+    excerpt_details: "(klicke, um weitere Details zu sehen)"

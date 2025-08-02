@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse Spoiler Alert"
+  js:
+    spoiler:
+      title: Rozostření spoileru
+      label:
+        show: "Zobrazit skrytý obsah"
+    composer:
+      spoiler_text: "Tento text bude rozmazaný"

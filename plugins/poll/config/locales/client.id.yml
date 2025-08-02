@@ -1,0 +1,98 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  js:
+    poll:
+      voters:
+        other: "pemilih"
+      total_votes:
+        other: "jumlah suara"
+      votes:
+        other: "%{count} suara"
+      average_rating: "Rata-rata rating: <strong>%{average}</strong>."
+      results:
+        groups:
+          title: "Anda harus menjadi anggota %{groups} untuk memberikan suara dalam poll ini."
+        closed:
+          title: "Hasil akan ditampilkan setelah <strong>ditutup</strong>."
+        staff:
+          title: "Hasil hanya ditampilkan kepada anggota <strong>staf</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            other: "Pilih setidaknya <strong>%{count} opsi</strong>."
+          up_to_max_options:
+            other: "Pilih hingga <strong>%{count} pilihan</strong>."
+          x_options:
+            other: "Pilih <strong>%{count} pilihan</strong>."
+          between_min_and_max_options: "Pilih antara <strong>%{min} dan %{max} opsi</strong>."
+      cast-votes:
+        title: "Gunakan suaramu"
+        label: "Pilih sekarang!"
+      show-results:
+        title: "Lihat hasil polling"
+        label: "Hasil"
+      remove-vote:
+        label: "Batalkan pilihan"
+      hide-results:
+        title: "Kembali ke suaramu"
+        label: "Pilih"
+      group-results:
+        label: "Tampilkan rincian"
+      export-results:
+        label: "Ekspor"
+      open:
+        title: "Buka Polling"
+        label: "Buka"
+        confirm: "Apakah Anda yakin ingin membuka akun ini?"
+      close:
+        title: "Tutup polling"
+        label: "Tutup"
+        confirm: "Apakah Anda yakin ingin menutup akun ini?"
+      automatic_close:
+        closes_in: "Ditutup dalam <strong>%{timeLeft}</strong>"
+        age: "Ditutup <strong>%{age}</strong>"
+      breakdown:
+        title: "Hasil poll"
+        votes: "%{count} suara"
+        percentage: "Persentase"
+        count: "Jumlah"
+      ranked_choice:
+        none: "Tidak ada"
+      options:
+        label: "Opsi"
+      error_while_toggling_status: "Maaf, telah terjadi kesalahan pengalihan status dari pemilihan ini."
+      ui_builder:
+        insert: Masukkan Poll
+        help:
+          options_min_count: Masukkan setidaknya 1 pilihan.
+        poll_type:
+          label: Tipe
+          regular: Pilihan Tunggal
+          multiple: Pilihan ganda
+        poll_result:
+          label: Tampilkan Hasil...
+          always: Selalu terlihat
+          staff: Hanya staf
+        poll_chart_type:
+          bar: Batang
+          pie: Pai
+        poll_config:
+          max: Pilihan Maks
+          min: Pilihan Minimal
+          step: Langkah
+        poll_public:
+          label: Tunjukkan siapa yang memilih
+        poll_title:
+          label: Judul (opsional)
+        poll_options:
+          label: Pilihan (satu per baris)
+          add: Tambahkan opsi
+        automatic_close:
+          label: Tutup poll secara otomatis
+        show_advanced: "Tampilkan Opsi Lanjutan"
+        hide_advanced: "Sembunyikan Opsi Lanjutan"

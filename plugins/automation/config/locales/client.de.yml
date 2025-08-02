@@ -1,0 +1,460 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: Automatisierung löschen
+    discourse_automation:
+      title: Automatisierung
+      table_title: Automatisierungen
+      create: Automatisierung hinzufügen
+      update: Automatisierung aktualisieren
+      back: Zurück
+      edit: Bearbeiten
+      select_script: Skript auswählen
+      select_trigger: Auslöser auswählen
+      confirm_automation_reset: Diese Aktion setzt die Skript- und Auslöseroptionen zurück. Der neue Zustand wird gespeichert. Willst du fortfahren?
+      confirm_automation_trigger: Diese Aktion löst die Automatisierung aus. Willst du fortfahren?
+      no_automation_yet: Derzeit sind keine Automatisierungen konfiguriert.
+      filter_placeholder: Nach Namen oder Beschreibung filtern …
+      edit_automation:
+        trigger_section:
+          forced: Dieser Auslöser wird vom Skript erzwungen.
+          next_pending_automation: "Die nächste Automatisierung wird ausgelöst am: %{date}"
+          trigger_now: "Jetzt auslösen"
+          title: Wann/Was …
+        fields_section:
+          title: Skriptoptionen
+      destroy_automation:
+        confirm: "Bist du sicher, dass du `%{name}` löschen willst?"
+      fields:
+        key_value:
+          label_without_count: "Konfigurieren"
+          label_with_count:
+            one: "Konfiguration bearbeiten (%{count})"
+            other: "Konfiguration bearbeiten (%{count})"
+        user:
+          label: Benutzer
+        pm:
+          title:
+            label: Titel
+          raw:
+            label: Hauptteil
+        pms:
+          confirm_remove_pm: "Bist du sicher, dass du diese PN entfernen möchtest?"
+          placeholder_title: PN-Titel
+          add_pm: PN hinzufügen
+          no_pm_created: Du hast noch keine PN erstellt. PN werden verschickt, sobald deine Automatisierung ausgelöst wird.
+          title:
+            label: Titel
+          raw:
+            label: Hauptteil
+          delay:
+            label: Verzögerung (Minuten)
+          prefers_encrypt:
+            label: Verschlüsselt PN, falls verfügbar
+        group:
+          label: Gruppe
+        text:
+          label: Text
+      triggerables:
+        not_found: Konnte den Auslöser `%{trigger}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
+        user_badge_granted:
+          fields:
+            badge:
+              label: Abzeichen
+            only_first_grant:
+              label: Nur bei erster Vergabe
+        stalled_topic:
+          durations:
+            PT1H: "Eine Stunde"
+            P1D: "Ein Tag"
+            P1W: "Eine Woche"
+            P2W: "Zwei Wochen"
+            P1M: "Ein Monat"
+            P3M: "Drei Monate"
+            P6M: "Sechs Monate"
+            P1Y: "Ein Jahr"
+          fields:
+            categories:
+              label: Beschränkt auf Kategorien
+            tags:
+              label: Beschränkt auf Schlagwörter
+            stalled_after:
+              label: Festgefahren nach
+        recurring:
+          every: Jede(n/s)
+          frequencies:
+            minute: Minute
+            hour: Stunde
+            day: Tag
+            weekday: Wochentag
+            week: Woche
+            month: Monat
+            year: Jahr
+          fields:
+            recurrence:
+              label: Wiederholung
+            start_date:
+              label: Startdatum
+        stalled_wiki:
+          durations:
+            PT1H: "Eine Stunde"
+            P1D: "Ein Tag"
+            P1W: "Eine Woche"
+            P2W: "Zwei Wochen"
+            P1M: "Ein Monat"
+            P3M: "Drei Monate"
+            P6M: "Sechs Monate"
+            P1Y: "Ein Jahr"
+          fields:
+            restricted_category:
+              label: Auf Kategorie beschränkt
+            stalled_after:
+              label: Auslöseverzögerung
+              description: Definiert die Verzögerung zwischen der letzten Wiki-Bearbeitung und dem Auslöser der Automatisierung
+            retriggered_after:
+              label: Verzögerung der erneuten Auslösung
+              description: Definiert die Verzögerung zwischen dem ersten Auslöser und dem nächsten Auslöser, falls das Wiki nach dem ersten Auslöser noch nicht bearbeitet wurde
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Verfolgte Gruppe
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Verfolgte Gruppe
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Auf Gruppe beschränken
+            trust_level_transition:
+              label: Vertrauensstufenübergang
+          trust_levels:
+            ALL: "Alle Vertrauensstufen"
+            TL01: "VS0 auf VS1"
+            TL12: "VS1 auf VS2"
+            TL23: "VS2 auf VS3"
+            TL34: "VS3 auf VS4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Ausführen um
+        topic:
+          fields:
+            restricted_topic:
+              label: Themen-ID
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Nur Originalbeitrag
+              description: Wird nur ausgelöst, wenn der Beitrag der ursprüngliche Beitrag im Thema ist
+            action_type:
+              label: Aktionstyp
+              description: "Optional. Beschränke die Auslösung auf erstellte oder bearbeitete Ereignisse"
+            valid_trust_levels:
+              label: Gültige Vertrauensstufen
+              description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird. Standardmäßig eine beliebige Vertrauensstufe
+            restricted_tags:
+              label: Schlagwörter
+              description: Optional. Wird nur bei Beiträgen mit einem dieser Schlagwörter ausgelöst
+            restricted_categories:
+              label: Kategorien
+              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags in diese Kategorien fällt
+            exclude_subcategories:
+              label: Unterkategorien ausschließen
+              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags genau in die oben angegebenen Kategorien fällt
+            restricted_archetype:
+              label: Thementyp
+              description: Optional, nur bei Themen oder persönlichen Nachrichten auslösen lassen
+            restricted_groups:
+              label: Eingeschränkte Gruppen
+              description: Optional, wird nur ausgelöst, wenn der Beitragsbenutzer in einer dieser Gruppen ist
+            restricted_inbox_groups:
+              label: Gruppen mit eingeschränktem Posteingang
+              description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang einer der Gruppen ist
+            excluded_groups:
+              label: Ausgeschlossene Gruppen
+              description: Optional, überspringe die Auslösung, wenn der Beitragsbenutzer in einer dieser Gruppen ist
+            ignore_automated:
+              label: Automatisierte Nachrichten ignorieren
+              description: Überspringe den Auslöser, wenn der Absender eine Noreply-E-Mail-Adresse nutzt oder die Nachricht von einer automatischen Quelle stammt. Gilt nur für Beiträge, die per E-Mail erstellt wurden
+            first_post_only:
+              label: Nur erster Beitrag
+              description: Wird nur ausgelöst, wenn der Beitrag der erste Beitrag ist, den ein Benutzer erstellt hat
+            first_topic_only:
+              label: Nur erstes Thema
+              description: Wird nur ausgelöst, wenn das Thema das erste Thema ist, das ein Benutzer erstellt hat
+            skip_via_email:
+              label: "„Per E-Mail“ überspringen"
+              description: "Den Auslöser überspringen, wenn der Beitrag per E-Mail erstellt wurde"
+            post_features:
+              label: Merkmale des Beitrags
+              description: "Optional, beschränke die Auslösung auf Beiträge mit diesen Merkmalen"
+          created: Erstellt
+          edited: Bearbeitet
+          topics: Alle Themen
+          personal_messages: Persönliche Nachrichten
+          public_topics: Öffentliche Themen (alle sicheren Kategorien ausschließen)
+          with_images: Bilder
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
+        user_updated:
+          fields:
+            user_profile:
+              label: Benutzerprofilfelder
+              description: Wird nur ausgelöst, wenn der Benutzer alle diese Felder ausgefüllt hat
+            custom_fields:
+              label: Benutzerdefinierte Felder
+              description: Wird nur ausgelöst, wenn der Benutzer alle diese Felder ausgefüllt hat
+            once_per_user:
+              label: Einmal pro Benutzer
+              description: Wird nur einmal pro Benutzer ausgelöst
+            new_users_only:
+              label: Nur neue Benutzer
+              description: Wird nur für neue Benutzer ausgelöst, die nach der Aktivierung dieser Automatisierung beitreten
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Übergeordnete Kategorie
+              description: Optional. Ermöglicht es, die Ausführung des Auslösers auf diese Kategorie zu beschränken
+        pm_created:
+          fields:
+            restricted_user:
+              label: Benutzer
+              description: Wird nur für PN ausgelöst, die an diesen Benutzer gesendet werden
+            restricted_group:
+              label: Gruppe
+              description: Wird nur für PN ausgelöst, die an diese Gruppe gesendet werden
+            ignore_staff:
+              label: Teammitglieder ignorieren
+              description: Den Auslöser überspringen, falls der Absender ein Teammitglied ist
+            ignore_group_members:
+              label: Gruppenmitglieder ignorieren
+              description: Den Auslöser überspringen, falls der Absender ein Mitglied der oben angegebenen Gruppe ist
+            ignore_automated:
+              label: Automatisierte Nachrichten ignorieren
+              description: Den Auslöser überspringen, falls der Absender eine Noreply-E-Mail-Adresse nutzt oder die Nachricht von einer automatisierten Quelle stammt. Gilt nur für PN, die per E-Mail erstellt wurden
+            valid_trust_levels:
+              label: Gültige Vertrauensstufen
+              description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird. Standardmäßig eine beliebige Vertrauensstufe
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Schlagwörter hinzugefügt oder entfernt
+            tags_added: Schlagwörter hinzugefügt
+            tags_removed: Schlagwörter entfernt
+          fields:
+            watching_categories:
+              label: Überwachte Kategorien
+              description: Wird nur bei Themen aus einer dieser Kategorien ausgelöst
+            watching_tags:
+              label: Überwachte Schlagwörter
+              description: Wird nur bei Themen mit einem dieser Schlagwörter ausgelöst
+            trigger_on:
+              label: Auslösen wenn
+            trigger_with_pms:
+              label: Auslösen mit PN
+              description: Wird auch ausgelöst, wenn die Schlagwörter in einer PN geändert wurden
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Gültige Vertrauensstufen
+              description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird. Standardmäßig eine beliebige Vertrauensstufe
+            restricted_category:
+              label: Kategorie
+              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
+            restricted_tags:
+              label: Schlagwörter
+              description: Optional. Wird nur ausgelöst, wenn der Beitrag eines dieser Schlagwörter enthält
+      scriptables:
+        not_found: Konnte das Skript `%{script}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook-URL
+              description: "Erwartet eine gültige Zapier-Webhook-URL, z. B.: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Einmal
+              description: Antwortet nur einmal pro Thema
+            word_answer_list:
+              label: Liste von Wort/Antwort-Paaren
+              description: "Definiert eine Liste von Schlüssel/Wert-Gruppen, wobei `key` der gesuchte Begriff und `value` der Text der Antwort ist. `key` kann leer gelassen werden, um unabhängig vom Inhalt auf alle Auslöser zu reagieren. Beachte, dass `value` `{{key}}` als Platzhalter akzeptiert, der in der Antwort durch den Wert von `key` ersetzt wird. Beachte weiterhin, dass `key` als Regex ausgewertet wird und Sonderzeichen wie `.` maskiert werden müssen, wenn du tatsächlich einen Punkt meinst, z. B.: `\\.`"
+            answering_user:
+              label: Antwortender Benutzer
+              description: Standardmäßig Systembenutzer
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Schlagwörter
+              description: Liste der Schlagwörter, die dem Thema hinzugefügt werden sollen.
+        post:
+          fields:
+            creator:
+              label: Ersteller
+              post_creator_context: Der Ersteller des Beitrags
+              updated_user_context: Der aktualisierte Benutzer
+            topic:
+              label: Themen-ID
+            post:
+              label: Beitragsinhalt
+        topic:
+          fields:
+            creator:
+              label: Ersteller
+              updated_user_context: Der aktualisierte Benutzer
+            body:
+              label: Hauptteil des Themas
+            title:
+              label: Titel des Themas
+            category:
+              label: Kategorie des Themas
+            tags:
+              label: Schlagwörter des Themas
+        group_category_notification_default:
+          fields:
+            group:
+              label: Gruppe
+            notification_level:
+              label: Benachrichtigungsstufe
+            update_existing_members:
+              label: Bestehende Mitglieder aktualisieren
+              description: Aktualisiert die Benachrichtigungsstufe für bestehende Gruppenmitglieder
+        user_global_notice:
+          fields:
+            level:
+              label: Stufe
+            notice:
+              label: Hinweis
+              description: Akzeptiert HTML. Gib nur vertrauenswürdige Inhalte ein!
+          levels:
+            warning: Warnung
+            info: Info
+            success: Erfolg
+            error: Fehler
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Abzeichenname
+            group:
+              label: Gruppe
+              description: Zielgruppe. Benutzer mit dem angegebenen Abzeichen werden dieser Gruppe hinzugefügt
+            update_user_title_and_flair:
+              label: Benutzertitel und Flair aktualisieren
+              description: Optional. Benutzertitel und Flair aktualisieren
+            remove_members_without_badge:
+              label: Bestehende Mitglieder ohne Abzeichen entfernen
+              description: Optional. Bestehende Gruppenmitglieder ohne das angegebene Abzeichen entfernen
+            badge:
+              label: Abzeichen
+              description: Abzeichen auswählen
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Aussetzen bis (Standard)
+            reason:
+              label: Grund (Standard)
+            actor:
+              label: Benutzer
+              description: "Der für die Sperre verantwortliche Benutzer (Standard: System)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Themen-ID
+            pinned_globally:
+              label: Global angeheftet
+            pinned_until:
+              label: Angeheftet bis
+        banner_topic:
+          fields:
+            topic_id:
+              label: Themen-ID
+            banner_until:
+              label: Banner machen bis
+            user:
+              label: Benutzer
+              description: "Der Benutzer, der das Banner erstellt (Standard: System)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Geprüfte Wörter
+        topic_required_words:
+          fields:
+            words:
+              label: Liste der erforderlichen Wörter
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Gruppenname der Teilnehmer
+            giftee_assignment_messages:
+              label: An den Schenkenden gesendete Nachrichten
+        send_pms:
+          add_a_pm_btn:
+            label: PN hinzufügen
+          fields:
+            receiver:
+              label: PN-Empfänger
+            sendable_pms:
+              label: PN
+            sender:
+              label: PN-Absender
+              description: "Stelle sicher, dass der Absender über die erforderlichen Berechtigungen verfügt, um PNs an den Empfänger zu senden."
+        close_topic:
+          fields:
+            topic:
+              label: Themen-ID
+            message:
+              label: Nachricht bzgl. Schließung
+              description: "Optionale Nachricht, die im Eintrag „Thema geschlossen“ angezeigt wird"
+            user:
+              label: Benutzer
+              description: "Der Benutzer, der das Thema schließt (Standard: System)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Name des benutzerdefinierten Benutzerfelds"
+      unnamed_automation: "Automatisierung ohne Titel"
+      models:
+        script:
+          name:
+            label: Skript
+        trigger:
+          name:
+            label: Auslöser
+        automation:
+          runs_today: "%{count} heute"
+          runs_this_week: "%{count} diese Woche"
+          runs_this_month: "%{count} diesen Monat"
+          runs:
+            label: Läuft
+          name:
+            label: Name
+          trigger:
+            label: Auslöser
+          script:
+            label: Skript
+          version:
+            label: Version
+          status:
+            label: Status
+          enabled:
+            label: Aktiviert
+          disabled:
+            label: Deaktiviert
+          placeholders:
+            label: Platzhalter
+          last_updated_at:
+            label: Letzte Aktualisierung
+          last_run:
+            label: Letzter Lauf
+          last_updated_by:
+            label: Aktualisiert von

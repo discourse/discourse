@@ -1,0 +1,151 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    discourse_automation:
+      back: Forrige
+      edit: Endre
+      fields:
+        user:
+          label: Bruker
+        pm:
+          title:
+            label: Tittel
+          raw:
+            label: Body
+        pms:
+          title:
+            label: Tittel
+          raw:
+            label: Body
+        group:
+          label: Gruppe
+        text:
+          label: Tekst
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Merke
+        stalled_topic:
+          durations:
+            P2W: "To uker"
+            P3M: "Tre måneder"
+            P6M: "Seks måneder"
+            P1Y: "Ett år"
+        recurring:
+          frequencies:
+            minute: minutt
+            hour: time
+            day: dag
+            week: uke
+            month: måned
+            year: år
+          fields:
+            recurrence:
+              label: Regelmessighet
+        stalled_wiki:
+          durations:
+            P2W: "To uker"
+            P3M: "Tre måneder"
+            P6M: "Seks måneder"
+            P1Y: "Ett år"
+        topic:
+          fields:
+            restricted_topic:
+              label: Emne-ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Stikkord
+            restricted_categories:
+              label: Kategorier
+          created: Opprettet
+          with_images: Bilder
+          with_links: Lenker
+          with_code: Kode
+          with_uploads: Opplastinger
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Foreldrekategori
+        pm_created:
+          fields:
+            restricted_user:
+              label: Brukere
+            restricted_group:
+              label: Gruppe
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategori
+            restricted_tags:
+              label: Stikkord
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Stikkord
+        post:
+          fields:
+            topic:
+              label: Emne-ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Gruppe
+        user_global_notice:
+          fields:
+            level:
+              label: Nivå
+          levels:
+            info: Informasjon
+            success: Suksess
+            error: Feil
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Gruppe
+            badge:
+              label: Merke
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Bruker
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Emne-ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: Emne-ID
+            user:
+              label: Bruker
+        close_topic:
+          fields:
+            topic:
+              label: Emne-ID
+            user:
+              label: Bruker
+      models:
+        trigger:
+          name:
+            label: Utløser
+        automation:
+          name:
+            label: Navn
+          trigger:
+            label: Utløser
+          version:
+            label: Versjon
+          status:
+            label: Status
+          enabled:
+            label: Aktivert
+          disabled:
+            label: Deaktivert

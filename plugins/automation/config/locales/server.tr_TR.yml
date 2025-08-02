@@ -1,0 +1,153 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    discourse_automation_enabled: "discourse-automation eklentisini etkinleştirin"
+  discourse_automation:
+    models:
+      fields:
+        required_field: '`%{name}` alanı `%{target}:%{target_name}` üzerinde doldurulmalıdır.'
+        invalid_metadata: '`%{field}` verileri geçersiz veya `%{component}` bileşeni bilinmiyor.'
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "'custom_fields' veya 'user_profile' ögelerinden en az biri sağlanmalıdır."
+      user_badge_granted:
+        title: Kullanıcı rozeti verildi
+        doc: Bir kullanıcıya rozet verildiğinde bir otomasyonu tetikler.
+      user_first_logged_in:
+        title: Kullanıcı ilk kez giriş yaptı
+        doc: Bir kullanıcı ilk kez giriş yaptığında bir otomasyonu tetikler.
+      stalled_topic:
+        title: Durmuş konu
+        doc: Konu, belirli bir süre boyunca konu sahibinden yeni bir yanıt almadığında bir otomasyonu tetikler. Etkilenen konu sayısı çok yüksek olabileceğinden, bu tetikleyicinin bir etiket/kategoriyi kapsaması önerilir. Bir güvenlik önlemi olarak, etkilenen konu sayısı 250 ile sınırlandırılmıştır.
+      api_call:
+        title: API araması
+        description: Bir otomasyonu tetiklemek için GÖNDERİ talep etme
+        doc: GÖNDERİ talebi, global bir API anahtarıyla `/automations/:id/trigger.json` adresine gönderilmelidir.
+      category_created_edited:
+        title: Kategori oluşturuldu/düzenlendi
+        description: Bir kategori oluşturulduğunda veya düzenlendiğinde otomasyon tetiklenir
+      recurring:
+        title: Yinelenen
+      point_in_time:
+        title: Zamandaki nokta
+        description: Tarihe ulaşıldığında otomasyon tetiklenir
+      user_added_to_group:
+        title: Kullanıcı gruba eklendi
+        description: Belirtilen gruba bir kullanıcı eklendiğinde otomasyon tetiklenir
+      user_removed_from_group:
+        title: Kullanıcı gruptan çıkarıldı
+        description: Bir kullanıcı belirtilen gruptan çıkarıldığında otomasyon tetiklenir
+      user_promoted:
+        title: Kullanıcı terfi edildi
+        description: Bir kullanıcı bir güven seviyesinden diğerine terfi ettiğinde
+        transition_placeholder: "%{from_level_name} seviyesinden %{to_level_name} seviyesine"
+      stalled_wiki:
+        title: Durmuş wiki
+        description: Bir wiki tanımlanandan daha uzun bir süre boyunca düzenlenmezse otomasyon tetiklenecektir
+      post_created_edited:
+        title: Gönderi oluşturuldu/düzenlendi
+        description: Geçerli bir gönderi düzenlendiğinde veya oluşturulduğunda otomasyon tetiklenir
+      pm_created:
+        title: Kişisel mesaj oluşturuldu
+        description: Geçerli bir kişisel mesaj oluşturulduğunda otomasyon tetiklenir
+      topic_tags_changed:
+        title: Konu etiketleri değişti
+        description: Bir konunun etiketleri değiştirildiğinde otomasyon tetiklenir
+      topic:
+        title: Konu
+        description: İlişkili komut dosyası yalnızca belirtilen konuda kullanılır, bu, örneğin doğrulama yapan komut dosyaları için faydalıdır
+      after_post_cook:
+        title: Gönderi finalize edildikten sonra
+        description: Bir gönderi içeriği hazırlandığında otomasyon tetiklenir
+      user_updated:
+        title: Kullanıcı güncellemesinden sonra
+        description: Bir kullanıcı herhangi bir bilgiyi güncellediğinde otomasyon tetiklenir
+    scriptables:
+      post:
+        title: Gönderi oluştur
+        description: Belirli bir konuda gönderi oluşturun
+      topic:
+        title: Yeni konu oluşturun
+        description: Belirli bir kullanıcı olarak konu oluşturun
+      flag_post_on_words:
+        title: Kelimeler üzerine gönderiye bayrak ekle
+        description: Belirtilen kelimeleri içeriyorsa bir gönderiye bayrak ekler
+        flag_message: "Gönderi izin verilmeyen kelimeler içeriyor: %{words}"
+        doc: Verilen tüm kelimeleri aynı anda içeren gönderiye bayrak eklenir ve gönderi gizlenir. Virgülle ayrılan birden fazla kelime tanımlamanın birleşik olarak kullanılacağını unutmayın (her kelime mevcut olmalı).
+      zapier_webhook:
+        title: Zapier web kancası
+        description: Gövde olarak bir tetikleyici bağlamıyla bir zap çağırır
+      auto_responder:
+        title: Otomatik Yanıtlayıcı
+        description: Belirtilen anahtar kelimeleri içeren bir gönderiye yanıt gönderir
+      auto_tag_topic:
+        title: Konuyu Otomatik Etiketle
+        description: Bir konuya otomatik olarak etiket ekleyin
+      pin_topic:
+        title: Konuyu sabitle
+        description: Belirli bir tarihteki belirli bir konuyu sabitler
+      banner_topic:
+        title: Banner konusu yap
+        description: Bir konuyu banner'a dönüştür
+      gift_exchange:
+        title: Hediye değiş tokuşu
+        description: Birbirlerine hediye göndermeleri için bir grubun kullanıcılarını anonim olarak eşleştirmeye izin verir.
+        doc: Hediye değiş tokuşu en az 3 kullanıcısı olan mevcut bir grup gerektirir. Seçilen tarihte grubun her kullanıcısı bir hediye veren ve bir hediye alan ile eşleştirilir.
+      send_pms:
+        title: Özel mesaj gönder
+        description: Özel mesaj göndermeye izin verir (muhtemelen gecikmeli).
+        doc: Bir kullanıcıya birden fazla özel mesaj gönderilmesine izin verir. Her özel mesaj bir gecikme kabul eder.
+      suspend_user_by_email:
+        title: Kullanıcıyı e-posta ile askıya al
+        description: E-posta adresine göre bir hesabı otomatik olarak askıya alın
+      user_global_notice:
+        title: Kullanıcı küresel bildirisi
+        description: Bir kullanıcı için genel bir bildirim göstermeye izin verir
+      user_group_membership_through_badge:
+        title: Rozet ile Kullanıcı Grubu Üyeliği
+        description: Kullanıcı grubu üyeliğini rozete göre değiştir
+      suspend_user_by_email_with_api_call:
+        doc: '`Suspend_user_by_email` ögesini bir api çağrısıyla tetiklerken, uç nokta gönderilen parametrelerde geçerli bir `email` bulunmasını bekler. `s` ve `Suspend_until (ISO 8601 formatı)` varsayılan alan değerlerini geçersiz kılmak için de kullanılabilir.'
+      user_global_notice_with_stalled_topic:
+        doc: Durdurulan konu üzerinden tetiklendiğinde, konu sahibi global bildiriyi alır.
+      user_global_notice_with_first_accepted_solution:
+        doc: İlk kabul edilen çözüm aracılığıyla tetiklendiğinde, çözüm yazarı genel bildirimi alır.
+      send_pms_with_api_call:
+        doc: '`api call` tetikleyicisi ile `send pms` komut dosyasını kullanırken, talebinizin `usernames` parametresi alıcı listesini doldurmak için kullanılır.'
+      topic_required_words:
+        title: Konu gerekli kelimeler
+        description: Bir konuda gerekli olan kelimelerin bir listesini tanımlamaya izin verir, her gönderide en az bir tane kullanılmalıdır.
+        doc: Konu gerekli kelimeler bir konu gerektirir. Bir gönderi düzenlendiğinde/oluşturulduğunda, gönderi kelime listesine göre doğrulanır, en az bir kelime bulunmalıdır.
+        errors:
+          must_include_word: "Gönderi şu kelimelerden en az birini içermelidir: %{words}"
+      close_topic:
+        title: Konuyu kapat
+        description: Bir konuyu isteğe bağlı bir kapanış mesajıyla kapatır
+      append_last_edited_by:
+        title: Son düzenleyeni ekle
+        description: Gönderinin "son düzenleyen" bilgilerini finalize edilmiş içeriğin altına ekler.
+        text: "Son düzenleyen: @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Son kontrol edeni ekle
+        description: Finalize edilmiş içeriğin alt kısmına "son kontrol eden" bilgilerini ekler.
+        text: "Son kontrol eden: @%{username} %{date_time}"
+        summary: Belgeyi kontrol et
+        details: "Belge üzerinde kontrol gerçekleştirin: "
+        button_text: Bitti
+      add_user_to_group_through_custom_field:
+        title: "Kullanıcı Özel Alanı aracılığıyla gruba kullanıcı ekleyin"
+        description: "Kullanıcıları giriş yaptıklarında veya yinelenen bir kontrolle otomatik olarak gruplara ekleyin"
+      group_category_notification_default:
+        title: "Grup Kategorisi Bildirimi Varsayılan"
+        description: "Bir grubun üyeleri için bir kategorinin varsayılan bildirim seviyesini ayarlayın"
+      send_chat_message:
+        title: "Sohbet Mesajı gönder"
+        description: "Bir kanala özel bir sohbet mesajı gönderme"
+      random_assign:
+        title: "Rastgele Ata"
+        description: "Konuları rastgele bir gruba atayın"

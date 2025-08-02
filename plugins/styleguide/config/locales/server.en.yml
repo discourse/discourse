@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    styleguide_enabled: 'Enable a "/styleguide" path to aid in styling of Discourse'
+    styleguide_admin_only: "Limits visibility of the styleguide to admins"
+    styleguide_allowed_groups: "Limits visibility of the styleguide to members of the provided groups"

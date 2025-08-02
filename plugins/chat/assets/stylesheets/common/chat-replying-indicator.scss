@@ -1,0 +1,48 @@
+.chat-replying-indicator {
+  color: var(--primary-medium);
+  display: inline-flex;
+  font-size: var(--font-down-2);
+
+  &-container {
+    display: flex;
+    height: 1em; // Ensures the height is consistent even when empty
+    line-height: normal;
+  }
+
+  .chat-replying-indicator__text {
+    display: inline-flex;
+  }
+
+  .chat-replying-indicator__wave {
+    flex: 0 0 auto;
+    display: inline-flex;
+
+    .chat-replying-indicator__dot {
+      display: inline-block;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: chat-replying-indicator__wave 1.8s linear infinite;
+      }
+
+      &:nth-child(2) {
+        animation-delay: -1.6s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: -1.4s;
+      }
+    }
+
+    @keyframes chat-replying-indicator__wave {
+      0%,
+      60%,
+      100% {
+        transform: initial;
+      }
+
+      30% {
+        transform: translateY(-0.2em);
+      }
+    }
+  }
+}

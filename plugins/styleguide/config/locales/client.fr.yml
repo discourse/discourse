@@ -1,0 +1,108 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    styleguide:
+      title: "Guide de style"
+      welcome: "Pour commencer, choisissez une section dans le menu de gauche."
+      categories:
+        syntax: Syntaxe
+        atoms: Atomes
+        molecules: Molécules
+        organisms: Organismes
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typographie"
+          example: "Bienvenue sur Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Date/heure"
+        menus:
+          title: "Menus"
+        toasts:
+          title: "Toasts"
+        font_scale:
+          title: "Système de polices"
+        colors:
+          title: "Couleurs"
+        icons:
+          title: "Icônes"
+          full_list: "Voir la liste complète des icônes Font Awesome"
+        forms:
+          title: "Formulaires"
+        buttons:
+          title: "Boutons"
+        dropdowns:
+          title: "Listes déroulantes"
+        categories:
+          title: "Catégories"
+        bread_crumbs:
+          title: "Fils d'Ariane"
+        navigation:
+          title: "Navigation"
+        navigation_bar:
+          title: "Barre de navigation"
+        navigation_stacked:
+          title: "Navigation empilée"
+        categories_list:
+          title: "Liste des catégories"
+        topic_link:
+          title: "Lien vers le sujet"
+        topic_list_item:
+          title: "Élément de liste de sujets"
+        topic_statuses:
+          title: "Statuts des sujets"
+        topic_list:
+          title: "Liste des sujets"
+        basic_topic_list:
+          title: "Liste des sujets de base"
+        footer_message:
+          title: "Message de pied de page"
+        signup_cta:
+          title: "CTA d'inscription"
+        topic_timer_info:
+          title: "Actions planifiées pour le sujet"
+        topic_footer_buttons:
+          title: "Boutons du pied de page du sujet"
+        topic_notifications:
+          title: "Notifications de sujet"
+        post:
+          title: "Message"
+        post_list:
+          title: "Liste des publications"
+          empty_example: "<PostList /> état vide"
+          populated_example: "<PostList /> état rempli"
+        topic_map:
+          title: "Carte des sujets"
+        site_header:
+          title: "En-tête du site"
+        suggested_topics:
+          title: "Sujets suggérés"
+        post_menu:
+          title: "Menu du message"
+        modal:
+          title: "Modale"
+          header: "Titre de la modale"
+          footer: "Pied de la modale"
+        user_about:
+          title: "Boîte « à propos » de l'utilisateur"
+        header_icons:
+          title: "Icônes d'en-tête"
+        spinners:
+          title: "Icônes de chargement"
+        empty_state:
+          title: "État vide"
+        tooltips:
+          title: "Info-bulles"
+          description: "Description"
+          header: "En-tête"
+          hover_to_see: "Survolez pour afficher une info-bulle"
+        char_counter:
+          title: "Compteur de caractères"
+          placeholder: "Saisissez votre texte ici..."

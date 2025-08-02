@@ -1,0 +1,102 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    styleguide:
+      title: "Stilguide"
+      welcome: "Kom igång genom att välja ett avsnitt i menyn till vänster."
+      categories:
+        syntax: Syntax
+        atoms: Atomer
+        molecules: Molekyler
+        organisms: Organismer
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typografi"
+          example: "Välkommen till Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Inmatad datum/tid"
+        menus:
+          title: "Menyer"
+        toasts:
+          title: "Popup-fönster"
+        font_scale:
+          title: "Teckensnittssystem"
+        colors:
+          title: "Färger"
+        icons:
+          title: "Ikoner"
+          full_list: "Se hela listan över Font Awesome-ikoner"
+        buttons:
+          title: "Knappar"
+        dropdowns:
+          title: "Rullgardinsmenyer"
+        categories:
+          title: "Kategorier"
+        bread_crumbs:
+          title: "Brödsmulor"
+        navigation:
+          title: "Navigering"
+        navigation_bar:
+          title: "Navigeringsfält"
+        navigation_stacked:
+          title: "Staplad navigering"
+        categories_list:
+          title: "Kategorilista"
+        topic_link:
+          title: "Ämneslänk"
+        topic_list_item:
+          title: "Punkt i ämneslista"
+        topic_statuses:
+          title: "Ämnesstatus"
+        topic_list:
+          title: "Ämneslista"
+        basic_topic_list:
+          title: "Grundläggande ämneslista"
+        footer_message:
+          title: "Sidfotsmeddelande"
+        signup_cta:
+          title: "Registrera CTA"
+        topic_timer_info:
+          title: "Ämnestidtagningar"
+        topic_footer_buttons:
+          title: "Sidfotsknappar för ämne"
+        topic_notifications:
+          title: "Ämnesaviseringar"
+        post:
+          title: "Inlägg"
+        topic_map:
+          title: "Ämneskarta"
+        site_header:
+          title: "Sajtens sidhuvud"
+        suggested_topics:
+          title: "Föreslagna ämnen"
+        post_menu:
+          title: "Inläggsmeny"
+        modal:
+          title: "Modal"
+          header: "Modal titel"
+          footer: "Modal sidfot"
+        user_about:
+          title: "Användares Om-ruta"
+        header_icons:
+          title: "Rubrikikoner"
+        spinners:
+          title: "Spinnare"
+        empty_state:
+          title: "Tomt tillstånd"
+        tooltips:
+          title: "Verktygstips"
+          description: "Beskrivning"
+          header: "Sidhuvud"
+          hover_to_see: "Håll muspekaren kvar för att se en knappbeskrivning"
+        char_counter:
+          title: "Teckenräknare"
+          placeholder: "Skriv din text här..."

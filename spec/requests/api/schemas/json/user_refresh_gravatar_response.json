@@ -1,0 +1,15 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "gravatar_upload_id": {
+      "type": ["integer", "null"]
+    },
+    "gravatar_avatar_template": {
+      "type": ["string", "null"]
+    }
+  },
+  "required": [
+    "gravatar_upload_id",
+    "gravatar_avatar_template"
+  ]
+}

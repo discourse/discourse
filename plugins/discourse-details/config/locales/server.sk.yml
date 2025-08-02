@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  site_settings:
+    details_enabled: 'Zahrňte možnosť pridať rozšíriteľné podrobnosti do príspevku. Túto funkciu nájdete vo vyskakovacej ponuke nástrojov skladateľa. Ak zmeníte toto nastavenie, musíte všetky príspevky zopakovať pomocou „rake posts:rebake“.'
+  details:
+    excerpt_details: "(kliknite pre viac informácií)"

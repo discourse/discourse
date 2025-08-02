@@ -1,0 +1,455 @@
+en:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: delete automation
+    discourse_automation:
+      title: Automation
+      table_title: Automations
+      create: Add automation
+      update: Update automation
+      back: Back
+      edit: Edit
+      select_script: Select a script
+      select_trigger: Select a trigger
+      confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?
+      confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
+      no_automation_yet: There are currently no automations configured.
+      filter_placeholder: Filter by name or description...
+      edit_automation:
+        trigger_section:
+          forced: This trigger is forced by script.
+          next_pending_automation: "Next automation will trigger at: %{date}"
+          trigger_now: "Trigger now"
+          title: When/What...
+        fields_section:
+          title: Script options
+      destroy_automation:
+        confirm: "Are you sure you want to delete `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "Configure"
+          label_with_count:
+            one: "Edit Configuration (%{count})"
+            other: "Edit Configuration (%{count})"
+        user:
+          label: User
+        pm:
+          title:
+            label: Title
+          raw:
+            label: Body
+        pms:
+          confirm_remove_pm: "Are you sure you want to remove this PM?"
+          placeholder_title: PM title
+          add_pm: Add PM
+          no_pm_created: You haven’t created any PM yet. PMs will be sent once your automation is triggered.
+          title:
+            label: Title
+          raw:
+            label: Body
+          delay:
+            label: Delay (minutes)
+          prefers_encrypt:
+            label: Encrypts PM if available
+        group:
+          label: Group
+        text:
+          label: Text
+      triggerables:
+        not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
+        user_badge_granted:
+          fields:
+            badge:
+              label: Badge
+            only_first_grant:
+              label: Only on first grant
+        stalled_topic:
+          durations:
+            PT1H: "One hour"
+            P1D: "One day"
+            P1W: "One week"
+            P2W: "Two weeks"
+            P1M: "One month"
+            P3M: "Three months"
+            P6M: "Six months"
+            P1Y: "One year"
+          fields:
+            categories:
+              label: Limited to categories
+            tags:
+              label: Limited to tags
+            stalled_after:
+              label: Stalled after
+        recurring:
+          every: Every
+          frequencies:
+            minute: minute
+            hour: hour
+            day: day
+            weekday: weekday
+            week: week
+            month: month
+            year: year
+          fields:
+            recurrence:
+              label: Recurrence
+            start_date:
+              label: Start date
+        stalled_wiki:
+          durations:
+            PT1H: "One hour"
+            P1D: "One day"
+            P1W: "One week"
+            P2W: "Two weeks"
+            P1M: "One month"
+            P3M: "Three months"
+            P6M: "Six months"
+            P1Y: "One year"
+          fields:
+            restricted_category:
+              label: Restricted to category
+            stalled_after:
+              label: Trigger delay
+              description: Defines delay between last wiki edit and automation’s trigger
+            retriggered_after:
+              label: Re-trigger delay
+              description: Defines delay between first trigger and next trigger, if wiki has still not been edited after first trigger
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Tracked group
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Tracked group
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Restrict to group
+            trust_level_transition:
+              label: Trust level transition
+          trust_levels:
+            ALL: "All trust levels"
+            TL01: "TL0 to TL1"
+            TL12: "TL1 to TL2"
+            TL23: "TL2 to TL3"
+            TL34: "TL3 to TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Execute at
+        topic:
+          fields:
+            restricted_topic:
+              label: Topic ID
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Original post only
+              description: Will trigger only if the post is the original post in the topic
+            action_type:
+              label: Action type
+              description: "Optional, limit triggering to only created or edited events"
+            valid_trust_levels:
+              label: Valid trust levels
+              description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
+            restricted_tags:
+              label: Tags
+              description: Optional, will trigger only if the post has any of these tags
+            restricted_categories:
+              label: Categories
+              description: Optional, will trigger only if the post's topic is in these categories
+            exclude_subcategories:
+              label: Exclude subcategories
+              description: Optional, will only trigger if the post's topic is exactly in the categories specified above
+            restricted_archetype:
+              label: Topic Type
+              description: Optional, allow to trigger only on topics or personal messages
+            restricted_groups:
+              label: Restricted groups
+              description: Optional, will trigger only if the post user is in any of these groups
+            restricted_inbox_groups:
+              label: Restricted inboxes groups
+              description: Optional, will trigger only if the post's topic is a personal message in one of the group inboxes
+            excluded_groups:
+              label: Excluded groups
+              description: Optional, Skip the trigger if the post user belongs to any of these groups
+            ignore_automated:
+              label: Ignore automated
+              description: Skip the trigger if the sender has a noreply email or is from an automated source. Only applies to posts created via email
+            first_post_only:
+              label: First post only
+              description: Will trigger only if the post is the first post a user created
+            first_topic_only:
+              label: First topic only
+              description: Will trigger only if the topic is the first topic a user created
+            skip_via_email:
+              label: "Skip via email"
+              description: "Skip the trigger if the post was created via email"
+            post_features:
+              label: Post features
+              description: "Optional, limit triggering to only posts with these features"
+          created: Created
+          edited: Edited
+          topics: All Topics
+          personal_messages: Personal Messages
+          public_topics: Public Topics (exclude all secure categories)
+          with_images: Images
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
+        user_updated:
+          fields:
+            user_profile:
+              label: User profile fields
+              description: Will trigger only if the user has filled all these fields
+            custom_fields:
+              label: User custom fields
+              description: Will trigger only if the user has filled all these fields
+            once_per_user:
+              label: Once per user
+              description: Will trigger only once per user
+            new_users_only:
+              label: New users only
+              description: Will trigger only for new users that join after this automation is enabled
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Parent Category
+              description: Optional, allows to limit trigger execution to this category
+        pm_created:
+          fields:
+            restricted_user:
+              label: Users
+              description: Will trigger only for PMs sent to this user
+            restricted_group:
+              label: Group
+              description: Will trigger only for PMs sent to this group
+            ignore_staff:
+              label: Ignore staff
+              description: Skip the trigger if sender is a staff user
+            ignore_group_members:
+              label: Ignore group members
+              description: Skip the trigger if sender is a member of the Group specified above
+            ignore_automated:
+              label: Ignore automated
+              description: Skip the trigger if the sender has a noreply email or is from an automated source. Only applies to PMs created via email
+            valid_trust_levels:
+              label: Valid trust levels
+              description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tags added or removed
+            tags_added: Tags added
+            tags_removed: Tags removed
+          fields:
+            watching_categories:
+              label: Watching categories
+              description: Will trigger only if the topic is in one of these categories
+            watching_tags:
+              label: Watching tags
+              description: Will trigger only if the topic has any of these tags
+            trigger_on:
+              label: Trigger on
+            trigger_with_pms:
+              label: Trigger with PMs
+              description: Will trigger even if the tags were changed in a PM
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Valid trust levels
+              description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
+            restricted_category:
+              label: Category
+              description: Optional, will trigger only if the post's topic is in this category
+            restricted_tags:
+              label: Tags
+              description: Optional, will trigger only if the post has any of these tags
+      scriptables:
+        not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook URL
+              description: "Expects a valid Zapier webhook URL, eg: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Once
+              description: Only responds once by topic
+            word_answer_list:
+              label: List of word/answer pairs
+              description: "Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. The `key` can be left blank to respond to all triggers, regardless of content. Note that `value` accepts `{{key}}` as a placeholder to be replaced by the value of `key` in the reply. Note that `key` will be evaluated as a regex, and special chars like `.` should be escaped if you actually mean a dot, eg: `\\.`"
+            answering_user:
+              label: Answering user
+              description: Defaults to System user
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tags
+              description: List of tags to add to the topic.
+        post:
+          fields:
+            creator:
+              label: Creator
+              post_creator_context: The creator of the post
+              updated_user_context: The updated user
+            topic:
+              label: Topic ID
+            post:
+              label: Post content
+        topic:
+          fields:
+            creator:
+              label: Creator
+              updated_user_context: The updated user
+            body:
+              label: Topic body
+            title:
+              label: Topic title
+            category:
+              label: Topic category
+            tags:
+              label: Topic tags
+        group_category_notification_default:
+          fields:
+            group:
+              label: Group
+            notification_level:
+              label: Notification level
+            update_existing_members:
+              label: Update existing members
+              description: Updates the notification level for existing group members
+        user_global_notice:
+          fields:
+            level:
+              label: Level
+            notice:
+              label: Notice
+              description: Accepts HTML, do not fill this with untrusted input!
+          levels:
+            warning: Warning
+            info: Info
+            success: Success
+            error: Error
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Badge Name
+            group:
+              label: Group
+              description: Target group. Users with the specified badge will be added to this group
+            update_user_title_and_flair:
+              label: Update user title and flair
+              description: Optional, Update user title and flair
+            remove_members_without_badge:
+              label: Remove existing members without badge
+              description: Optional, Remove existing group members without the specified badge
+            badge:
+              label: Badge
+              description: Select badge
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Suspend until (default)
+            reason:
+              label: Reason (default)
+            actor:
+              label: User
+              description: "The user responsible for the suspension (default: system)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Topic ID
+            pinned_globally:
+              label: Pinned globally
+            pinned_until:
+              label: Pinned until
+        banner_topic:
+          fields:
+            topic_id:
+              label: Topic ID
+            banner_until:
+              label: Make banner until
+            user:
+              label: User
+              description: "The user creating the banner (default: system)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Checked words
+        topic_required_words:
+          fields:
+            words:
+              label: Required words list
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Group name of participants
+            giftee_assignment_messages:
+              label: Messages sent to gifter
+        send_pms:
+          add_a_pm_btn:
+            label: Add a PM
+          fields:
+            receiver:
+              label: PM receiver
+            sendable_pms:
+              label: PMs
+            sender:
+              label: PMs sender
+              description: "Ensure the sender has the correct permissions to send PMs to receiver"
+        close_topic:
+          fields:
+            topic:
+              label: Topic ID
+            message:
+              label: Closing message
+              description: "Optional message to show on the Topic Closed record"
+            user:
+              label: User
+              description: "The user closing the topic (default: system)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "User Custom Field name"
+      unnamed_automation: "Unnamed automation"
+
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Trigger
+        automation:
+          runs_today: "%{count} today"
+          runs_this_week: "%{count} this week"
+          runs_this_month: "%{count} this month"
+          runs:
+            label: Runs
+          name:
+            label: Name
+          trigger:
+            label: Trigger
+          script:
+            label: Script
+          version:
+            label: Version
+          status:
+            label: Status
+          enabled:
+            label: Enabled
+          disabled:
+            label: Disabled
+          placeholders:
+            label: Placeholders
+          last_updated_at:
+            label: Last update
+          last_run:
+            label: Last run
+          last_updated_by:
+            label: Updated by

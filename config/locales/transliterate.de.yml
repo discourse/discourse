@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# This file contains transliteration rules for German
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+de:
+  i18n:
+    transliterate:
+      rule:
+        Ä: "Ae"
+        Ö: "Oe"
+        Ü: "Ue"
+        ß: "ss"
+        ä: "ae"
+        ö: "oe"
+        ü: "ue"

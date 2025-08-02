@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="<%= html_lang %>">
+  <head>
+    <meta charset="utf-8">
+    <title><%= title_content %></title>
+    <meta name="description" content="<%= description_content %>">
+    <%= render partial: "layouts/head" %>
+    <%= render partial: "common/discourse_stylesheet" %>
+    <%= theme_lookup("head_tag") %>
+    <%= render_google_universal_analytics_code %>
+    <%= yield :head %>
+    <%= build_plugin_html 'server:before-head-close-crawler' %>
+  </head>
+  <body class="crawler <% if show_browser_update? %>browser-update<% end %>">
+    <%= theme_lookup("header") %>
+    <%= render partial: "layouts/noscript_header" %>
+    <div id="main-outlet" class="wrap" role="main">
+      <%= yield %>
+    </div>
+    <%= render partial: "layouts/noscript_footer" %>
+    <%= theme_lookup("footer") %>
+    <%= theme_lookup("body_tag") %>
+    <% if show_browser_update? %>
+      <div class="buorg"><div><%= I18n.t("js.browser_update").html_safe %></div></div>
+    <% end %>
+  </body>
+  <%= yield :after_body %>
+</html>

@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    styleguide_enabled: 'להפעיל נתיב `‎/styleguide` כדי לסייע בעיצוב של Discourse'
+    styleguide_admin_only: "מגביל את חשיפת מדריך הסגנון למנהלים"
+    styleguide_allowed_groups: "מגביל את החשיפה של מדריך הסגנון לחברים בקבוצות שסופקו"

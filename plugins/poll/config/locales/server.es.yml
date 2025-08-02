@@ -1,0 +1,67 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    poll_enabled: "¿Permitir encuestas?"
+    poll_maximum_options: "Número máximo de opciones permitidas en una encuesta."
+    poll_edit_window_mins: "Número de minutos tras la creación de la publicación durante los cuales las encuestas pueden ser editadas."
+    poll_minimum_trust_level_to_create: "Definir el nivel de confianza mínimo requerido para crear encuestas."
+    poll_create_allowed_groups: "Grupos que pueden crear encuestas."
+    poll_groupable_user_fields: "Un grupo de nombres de campos de usuario que se pueden usar para agrupar y filtrar los resultados de encuestas."
+    poll_export_data_explorer_query_id: "ID de la consulta del explorador de datos que se utilizará para exportar los resultados de la encuesta (0 para desactivar)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID de la consulta del explorador de datos que se utilizará para exportar los resultados de la votación por escrutinio instantáneo."
+    poll_default_public: "Al crear una nueva encuesta, activar por defecto la opción «mostrar quién ha votado»."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "encuesta"
+    invalid_argument: "Valor no válido «%{value}» para el argumento «%{argument}»."
+    multiple_polls_without_name: "Cuando crees varias encuestas, incluye nombres únicos añadiendo <code>name=ejemplo</code> a tus etiquetas <code>[poll]</code>."
+    multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa el atributo «<code>nombre</code>» para identificar de forma única tus encuestas."
+    default_poll_must_have_at_least_1_option: "La encuesta debe tener al menos 1 opción."
+    named_poll_must_have_at_least_1_option: "La encuesta llamada <strong>%{name}</strong> debe tener al menos 1 opción."
+    default_poll_must_have_less_options:
+      one: "La encuesta deben tener menos de %{count} opción."
+      other: "La encuesta debe tener menos de %{count} opciones."
+    named_poll_must_have_less_options:
+      one: "La encuesta llamada <strong>%{name}</strong> debe tener menos de %{count} opción."
+      other: "La encuesta llamada <strong>%{name}</strong> debe tener menos de %{count} opciones."
+    default_poll_must_have_different_options: "La encuesta debe tener opciones diferentes."
+    named_poll_must_have_different_options: "La encuesta nombrada <strong>%{name}</strong> debe tener opciones diferentes."
+    default_poll_must_not_have_any_empty_options: "La encuesta no puede tener ninguna opción vacía"
+    named_poll_must_not_have_any_empty_options: "La encuesta llamada <strong>%{name}</strong> no puede tener ninguna opción vacía"
+    default_poll_with_multiple_choices_has_invalid_parameters: "La encuesta con opciones múltiples tiene parámetros no válidos."
+    named_poll_with_multiple_choices_has_invalid_parameters: "La encuesta llamada <strong>%{name}</strong> con opciones múltiples tiene párametros no válidos."
+    requires_at_least_1_valid_option: "Debes seleccionar al menos 1 opción válida."
+    requires_that_at_least_one_option_is_ranked: "En las encuestas clasificadas, debes clasificar al menos una opción."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "No puedes cambiar la encuesta después de los primeros %{minutes} minutos."
+      cannot_edit_named_poll_with_votes: "No puedes cambiar el nombre de la encuesta <strong>${name}</strong> después de los primeros %{minutes} minutos."
+    no_poll_with_this_name: "No existe ninguna encuesta llamada <strong>%{name}</strong> asociada con esta publicación."
+    post_is_deleted: "No se puede actuar sobre una publicación eliminada."
+    user_cant_post_in_topic: "No puedes votar porque no puedes publicar en este tema."
+    topic_must_be_open_to_vote: "El tema debe estar abierto para votar."
+    poll_must_be_open_to_vote: "La encuesta debe estar abierta para votar."
+    one_vote_per_user: "Solo puedes votar una vez en esta encuesta."
+    max_vote_per_user:
+      one: Votar %{count} vez en esta encuesta.
+      other: Solo puedes votar %{count} veces en esta encuesta.
+    min_vote_per_user:
+      one: En esta encuesta hace falta %{count} voto.
+      other: En esta encuesta hacen falta %{count} votos.
+    ranked_choice:
+      vote_options_mismatch: "Para el escrutinio instantáneo, el número de elecciones realizadas en una votación debe coincidir con el número de opciones. El número de opciones es %{count} y el número de elecciones realizadas es %{provided}."
+      no_group_results_support: "Tipo de encuesta no válida, ranked_choice no admite resultados agrupados."
+    topic_must_be_open_to_toggle_status: "El tema debe estar abierto para cambiar el estado."
+    only_staff_or_op_can_toggle_status: "Solo un miembro del equipo o la persona que realizó la publicación original pueden cambiar el estado de una encuesta."
+    errors:
+      poll_not_found: "Encuesta no encontrada, confirma los parámetros."
+    insufficient_rights_to_create: "No tienes permitido crear encuestas."
+    email:
+      link_to_poll: "Haz clic para ver la encuesta."
+    user_field:
+      no_data: "No hay datos"

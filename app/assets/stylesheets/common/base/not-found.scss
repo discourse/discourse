@@ -1,0 +1,65 @@
+// Page not found styles
+.not-found-container {
+  background: var(--d-content-background);
+}
+
+.page-not-found {
+  margin: 0 0 40px 0;
+
+  h1.title {
+    font-size: var(--font-up-5);
+    line-height: var(--line-height-medium);
+  }
+
+  &-search {
+    margin-top: 20px;
+
+    label {
+      color: var(--primary);
+      font-size: var(--font-up-3);
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
+.page-not-found-topics {
+  display: flex;
+
+  @media screen and (width <= 600px) {
+    flex-wrap: wrap;
+  }
+}
+
+.popular-topics,
+.recent-topics {
+  box-sizing: border-box;
+  width: 50%;
+  max-width: 400px;
+  margin-bottom: 40px;
+  padding-right: 20px;
+
+  @media screen and (width <= 600px) {
+    width: 100%;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+}
+
+.not-found-topic {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 15px;
+
+  @media screen and (width <= 600px) {
+    &:nth-of-type(n + 6) {
+      display: none;
+    }
+  }
+
+  a:not(.badge-category__wrapper) {
+    flex-basis: 100%;
+  }
+}

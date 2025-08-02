@@ -1,0 +1,462 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: vymazať automatizáciu
+    discourse_automation:
+      title: Automatizácia
+      table_title: Automatizácie
+      create: Pridanie automatizácie
+      update: Aktualizácia automatizácie
+      back: Späť
+      edit: Upraviť
+      select_script: Vyberte skript
+      select_trigger: Vyberte spúšťač
+      confirm_automation_reset: Táto akcia resetuje možnosti skriptu a spúšťača, nový stav sa uloží, chcete pokračovať?
+      confirm_automation_trigger: Táto akcia spustí automatizáciu, chcete pokračovať?
+      no_automation_yet: V súčasnosti nie sú nakonfigurované žiadne automatizácie.
+      filter_placeholder: Filtrovanie podľa názvu alebo popisu...
+      edit_automation:
+        trigger_section:
+          forced: Tento spúšťač je vynútený skriptom.
+          next_pending_automation: "Ďalšia automatizácia sa spustí o: %{date}"
+          trigger_now: "Spustite teraz"
+          title: Kedy/Čo...
+        fields_section:
+          title: Možnosti skriptu
+      destroy_automation:
+        confirm: "Ste si istý, že chcete odstrániť `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "Konfigurovať"
+          label_with_count:
+            one: "Upraviť konfiguráciu (%{count})"
+            few: "Upraviť konfiguráciu (%{count})"
+            many: "Upraviť konfiguráciu (%{count})"
+            other: "Upraviť konfiguráciu (%{count})"
+        user:
+          label: Používateľ
+        pm:
+          title:
+            label: Názov
+          raw:
+            label: Telo
+        pms:
+          confirm_remove_pm: "Ste si istý, že chcete odstrániť tento PM?"
+          placeholder_title: Názov PM
+          add_pm: Pridať PM
+          no_pm_created: Zatiaľ ste nevytvorili žiadny PM. PM budú odoslané po spustení automatizácie.
+          title:
+            label: Názov
+          raw:
+            label: Telo
+          delay:
+            label: Oneskorenie (minúty)
+          prefers_encrypt:
+            label: Šifruje PM, ak je k dispozícii
+        group:
+          label: Skupina
+        text:
+          label: Text
+      triggerables:
+        not_found: Nepodarilo sa nájsť spúšťač `%{trigger}` pre automatizáciu `%{automation}`, skontrolujte, či je nainštalovaný priradený plugin
+        user_badge_granted:
+          fields:
+            badge:
+              label: Odznak
+            only_first_grant:
+              label: Len pri prvom grante
+        stalled_topic:
+          durations:
+            PT1H: "Jedna hodina"
+            P1D: "Jeden deň"
+            P1W: "Jeden týždeň"
+            P2W: "Dva týždne"
+            P1M: "Jeden mesiac"
+            P3M: "Tri mesiace"
+            P6M: "Šesť mesiacov"
+            P1Y: "Jeden rok"
+          fields:
+            categories:
+              label: Obmedzené na kategórie
+            tags:
+              label: Obmedzené na značky
+            stalled_after:
+              label: Zastavené po
+        recurring:
+          every: Každý
+          frequencies:
+            minute: minúta
+            hour: hodina
+            day: deň
+            weekday: pracovný deň
+            week: týždeň
+            month: mesiac
+            year: rok
+          fields:
+            recurrence:
+              label: Opakovanie
+            start_date:
+              label: Dátum začiatku
+        stalled_wiki:
+          durations:
+            PT1H: "Jedna hodina"
+            P1D: "Jeden deň"
+            P1W: "Jeden týždeň"
+            P2W: "Dva týždne"
+            P1M: "Jeden mesiac"
+            P3M: "Tri mesiace"
+            P6M: "Šesť mesiacov"
+            P1Y: "Jeden rok"
+          fields:
+            restricted_category:
+              label: Obmedzené na kategóriu
+            stalled_after:
+              label: Oneskorenie spustenia
+              description: Definuje oneskorenie medzi poslednou úpravou wiki a spustením automatizácie
+            retriggered_after:
+              label: Oneskorenie opätovného spustenia
+              description: Definuje oneskorenie medzi prvým spustením a ďalším spustením, ak wiki ešte nebola upravená po prvom spustení
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Sledovaná skupina
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Sledovaná skupina
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Obmedziť na skupinu
+            trust_level_transition:
+              label: Prechod na úroveň dôvery
+          trust_levels:
+            ALL: "Všetky úrovne dôvery"
+            TL01: "TL0 až TL1"
+            TL12: "TL1 až TL2"
+            TL23: "TL2 až TL3"
+            TL34: "TL3 až TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Vykonajte v
+        topic:
+          fields:
+            restricted_topic:
+              label: ID témy
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Len pôvodný príspevok
+              description: Spustí sa len vtedy, ak je príspevok pôvodným príspevkom v téme
+            action_type:
+              label: Typ akcie
+              description: "Voliteľné, obmedzte spúšťanie iba na vytvorené alebo upravené udalosti"
+            valid_trust_levels:
+              label: Platné úrovne dôvery
+              description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
+            restricted_tags:
+              label: Značky
+              description: Voliteľné, spustí sa iba vtedy, ak má príspevok niektorú z týchto značiek
+            restricted_categories:
+              label: Kategórie
+              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v týchto kategóriách
+            exclude_subcategories:
+              label: Vylúčiť podkategórie
+              description: Voliteľné, spustí sa iba v prípade, že téma príspevku je presne v kategóriách špecifikovaných vyššie
+            restricted_archetype:
+              label: Typ témy
+              description: Voliteľné, umožniť spúšťanie len na témy alebo osobné správy
+            restricted_groups:
+              label: Obmedzené skupiny
+              description: Voliteľné, spustí sa iba vtedy, ak je používateľ príspevku v niektorej z týchto skupín
+            restricted_inbox_groups:
+              label: Obmedzené skupiny doručenej pošty
+              description: Voliteľné, spustí sa iba vtedy, ak je témou príspevku osobná správa v jednej zo skupinových doručených schránok
+            excluded_groups:
+              label: Vylúčené skupiny
+              description: 'Voliteľné: Preskočte spúšťač, ak používateľ príspevku patrí do niektorej z týchto skupín'
+            ignore_automated:
+              label: Ignorovať automatizované
+              description: Spúšťač preskočte, ak odosielateľ nemá odpoveď na e-mail alebo pochádza z automatizovaného zdroja. Platí len pre príspevky vytvorené e-mailom
+            first_post_only:
+              label: Len prvý príspevok
+              description: Spustí sa iba vtedy, ak je príspevok prvým príspevkom, ktorý používateľ vytvoril
+            first_topic_only:
+              label: Len prvá téma
+              description: Spustí sa iba vtedy, ak je téma prvou témou, ktorú používateľ vytvoril
+            skip_via_email:
+              label: "Preskočiť cez e-mail"
+              description: "Vynechať spúšťač, ak bol príspevok vytvorený prostredníctvom e-mailu"
+            post_features:
+              label: Funkcie príspevku
+              description: "Voliteľné, obmedziť spúšťanie len na príspevky s týmito funkciami"
+          created: Vytvorené
+          edited: Upravené
+          topics: Všetky témy
+          personal_messages: Osobné správy
+          public_topics: Verejné témy (vylúčte všetky zabezpečené kategórie)
+          with_images: Obrázky
+          with_links: Odkazy
+          with_code: Kód
+          with_uploads: Nahrávanie
+        user_updated:
+          fields:
+            user_profile:
+              label: Polia používateľského profilu
+              description: Spustí sa iba vtedy, ak používateľ vyplnil všetky tieto polia
+            custom_fields:
+              label: Vlastné polia používateľa
+              description: Spustí sa iba vtedy, ak používateľ vyplnil všetky tieto polia
+            once_per_user:
+              label: Raz na používateľa
+              description: Spustí sa iba raz na používateľa
+            new_users_only:
+              label: Len pre nových používateľov
+              description: Spustí sa iba pre nových používateľov, ktorí sa pripoja po povolení tejto automatizácie
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Nadradená kategória
+              description: Voliteľné, umožňuje obmedziť spustenie spúšťača na túto kategóriu
+        pm_created:
+          fields:
+            restricted_user:
+              label: Používatelia
+              description: Spustí sa iba pre PM odoslané tomuto používateľovi
+            restricted_group:
+              label: Skupina
+              description: Spustí sa iba pre PM odoslané do tejto skupiny
+            ignore_staff:
+              label: Ignorovať zamestnancov
+              description: Ak je odosielateľ zamestnancom, preskočte spúšť
+            ignore_group_members:
+              label: Ignorovať členov skupiny
+              description: Preskočte spúšťač, ak je odosielateľ členom vyššie uvedenej skupiny
+            ignore_automated:
+              label: Ignorovať automatizované
+              description: Spúšťač preskočte, ak odosielateľ nemá odpoveď na e-mail alebo pochádza z automatizovaného zdroja. Platí len pre PM vytvorené prostredníctvom e-mailu
+            valid_trust_levels:
+              label: Platné úrovne dôvery
+              description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Pridané alebo odstránené značky
+            tags_added: Pridané značky
+            tags_removed: Odstránené značky
+          fields:
+            watching_categories:
+              label: Sledovanie kategórií
+              description: Spustí sa iba vtedy, ak je téma v jednej z týchto kategórií
+            watching_tags:
+              label: Sledovanie značiek
+              description: Spustí sa iba vtedy, ak téma obsahuje niektorú z týchto značiek
+            trigger_on:
+              label: Spúšťač na
+            trigger_with_pms:
+              label: Spúšťanie pomocou PM
+              description: Spustí sa, aj keď boli značky zmenené v PM
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Platné úrovne dôvery
+              description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolené na ľubovoľnú úroveň dôveryhodnosti
+            restricted_category:
+              label: Kategória
+              description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
+            restricted_tags:
+              label: Štítky
+              description: Voliteľné, spustí sa iba vtedy, ak má príspevok niektorú z týchto značiek
+      scriptables:
+        not_found: Nepodarilo sa nájsť spúšťač `%{script}` pre automatizáciu `%{automation}`, skontrolujte, či je nainštalovaný priradený plugin
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webová adresa URL
+              description: "Očakáva platnú webovú adresu webhooku Zapier, napr.: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Raz
+              description: Podľa témy odpovedá iba raz
+            word_answer_list:
+              label: Zoznam párov slov a odpovedí
+              description: "Definuje zoznam skupín kľúč/hodnota, kde „kľúč“ je hľadaný výraz a „hodnota“ text odpovede. Kľúč môže zostať prázdny, aby reagoval na všetky spúšťače bez ohľadu na obsah. Všimnite si, že `value` akceptuje `{{key}}` ako zástupný symbol, ktorý sa v odpovedi nahradí hodnotou `key`. Všimnite si, že `kľúč` bude vyhodnotený ako regulárny výraz a špeciálne znaky ako `.` by mali byť vynechané, ak máte na mysli bodku, napr.: `\\.`"
+            answering_user:
+              label: Odpovedajúci používateľ
+              description: Predvolené nastavenie používateľa systému
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Štítky
+              description: Zoznam značiek na pridanie k téme.
+        post:
+          fields:
+            creator:
+              label: Tvorca
+              post_creator_context: Tvorca príspevku
+              updated_user_context: Aktualizovaný používateľ
+            topic:
+              label: ID témy
+            post:
+              label: Obsah príspevku
+        topic:
+          fields:
+            creator:
+              label: Tvorca
+              updated_user_context: Aktualizovaný používateľ
+            body:
+              label: Telo témy
+            title:
+              label: Názov témy
+            category:
+              label: Kategória témy
+            tags:
+              label: Značky tém
+        group_category_notification_default:
+          fields:
+            group:
+              label: Skupina
+            notification_level:
+              label: Úroveň upozornení
+            update_existing_members:
+              label: Aktualizácia existujúcich členov
+              description: Aktualizuje úroveň upozornení pre existujúcich členov skupiny
+        user_global_notice:
+          fields:
+            level:
+              label: Úroveň
+            notice:
+              label: Oznámenie
+              description: Prijíma HTML, nevypĺňajte ho nedôveryhodným vstupom!
+          levels:
+            warning: Upozornenie
+            info: Info
+            success: Úspech
+            error: Chyba
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Názov odznaku
+            group:
+              label: Skupina
+              description: Cieľová skupina. Do tejto skupiny budú pridaní používatelia so zadaným odznakom
+            update_user_title_and_flair:
+              label: Aktualizujte názov a štýl používateľa
+              description: Voliteľné, Aktualizujte názov používateľa a štýl
+            remove_members_without_badge:
+              label: Odstráňte existujúcich členov bez odznaku
+              description: 'Voliteľné: Odstráňte existujúcich členov skupiny bez zadaného odznaku'
+            badge:
+              label: Odznak
+              description: Vyberte odznak
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Pozastaviť do (predvolené)
+            reason:
+              label: Dôvod (predvolené)
+            actor:
+              label: Používateľ
+              description: "Používateľ zodpovedný za pozastavenie (predvolené: systém)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID témy
+            pinned_globally:
+              label: Pripnuté globálne
+            pinned_until:
+              label: Pripnuté, kým
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID témy
+            banner_until:
+              label: Vytvorte banner do
+            user:
+              label: Používateľ
+              description: "Používateľ vytvárajúci banner (predvolené: systém)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Skontrolované slová
+        topic_required_words:
+          fields:
+            words:
+              label: Zoznam požadovaných slov
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Názov skupiny účastníkov
+            giftee_assignment_messages:
+              label: Správy odoslané darcovi
+        send_pms:
+          add_a_pm_btn:
+            label: Pridať PM
+          fields:
+            receiver:
+              label: PM prijímač
+            sendable_pms:
+              label: PMs
+            sender:
+              label: Odosielateľ PMs
+              description: "Uistite sa, že odosielateľ má správne oprávnenia na odosielanie PM príjemcovi."
+        close_topic:
+          fields:
+            topic:
+              label: ID témy
+            message:
+              label: Záverečná správa
+              description: "Voliteľná správa, ktorá sa zobrazí v zázname témy Uzavretá"
+            user:
+              label: Používateľ
+              description: "Používateľ, ktorý tému uzatvára (predvolené: systém)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Názov vlastného poľa používateľa"
+      unnamed_automation: "Nemenovaná automatizácia"
+      models:
+        script:
+          name:
+            label: Skript
+        trigger:
+          name:
+            label: Spúšťač
+        automation:
+          runs_today: "%{count} dnes"
+          runs_this_week: "%{count} tento týždeň"
+          runs_this_month: "%{count} tento mesiac"
+          runs:
+            label: Beží na
+          name:
+            label: Meno
+          trigger:
+            label: Spúšťač
+          script:
+            label: Skript
+          version:
+            label: Verzia
+          status:
+            label: Stav
+          enabled:
+            label: Povolené
+          disabled:
+            label: Vypnuté
+          placeholders:
+            label: Zástupné symboly
+          last_updated_at:
+            label: Posledná aktualizácia
+          last_run:
+            label: Posledný beh
+          last_updated_by:
+            label: Aktualizované

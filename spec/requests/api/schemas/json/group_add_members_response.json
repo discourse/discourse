@@ -1,0 +1,25 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "success": {
+      "type": "string"
+    },
+    "usernames": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "emails": {
+      "type": "array",
+      "items": {
+
+      }
+    }
+  },
+  "required": [
+    "success",
+    "usernames",
+    "emails"
+  ]
+}

@@ -1,0 +1,108 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    styleguide:
+      title: "Guida di stile"
+      welcome: "Per iniziare, scegli una sezione dal menu a sinistra."
+      categories:
+        syntax: Sintassi
+        atoms: Atomi
+        molecules: Molecole
+        organisms: Organismi
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Tipografia"
+          example: "Benvenuto in Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud esercizio ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Inserimenti Data/Ora"
+        menus:
+          title: "Menù"
+        toasts:
+          title: "Toast"
+        font_scale:
+          title: "Sistema di caratteri"
+        colors:
+          title: "Colori"
+        icons:
+          title: "Icone"
+          full_list: "Vedi l'elenco completo delle icone Font Awesome"
+        forms:
+          title: "Moduli"
+        buttons:
+          title: "Pulsanti"
+        dropdowns:
+          title: "Menu a tendina"
+        categories:
+          title: "Categorie"
+        bread_crumbs:
+          title: "Breadcrumb"
+        navigation:
+          title: "Navigazione"
+        navigation_bar:
+          title: "Barra Di Navigazione"
+        navigation_stacked:
+          title: "Navigazione Impilata"
+        categories_list:
+          title: "Lista Categorie"
+        topic_link:
+          title: "Link all'argomento"
+        topic_list_item:
+          title: "Elemento Elenco Argomenti"
+        topic_statuses:
+          title: "Stati degli Argomenti"
+        topic_list:
+          title: "Elenco Argomenti"
+        basic_topic_list:
+          title: "Elenco argomenti di base"
+        footer_message:
+          title: "Messaggio Piè di Pagina"
+        signup_cta:
+          title: "CTA registrazione"
+        topic_timer_info:
+          title: "Timer Argomento"
+        topic_footer_buttons:
+          title: "Pulsanti Piè di Pagina"
+        topic_notifications:
+          title: "Notifiche Argomenti"
+        post:
+          title: "Messaggio"
+        post_list:
+          title: "Elenco dei messaggi"
+          empty_example: "<PostList /> stato vuoto"
+          populated_example: "<PostList /> stato popolato"
+        topic_map:
+          title: "Mappa Argomento"
+        site_header:
+          title: "Intestazione del Sito"
+        suggested_topics:
+          title: "Argomenti suggeriti"
+        post_menu:
+          title: "Menu Messaggio"
+        modal:
+          title: "Finestra Dialogo"
+          header: "Titolo Finestra Dialogo"
+          footer: "Piè di Pagina Finestra Dialogo"
+        user_about:
+          title: "Casella Informazioni Utente"
+        header_icons:
+          title: "Icone Intestazione"
+        spinners:
+          title: "Icone di Caricamento"
+        empty_state:
+          title: "Stato Vuoto"
+        tooltips:
+          title: "Suggerimenti"
+          description: "Descrizione"
+          header: "Intestazione"
+          hover_to_see: "Passa il mouse per vedere una descrizione"
+        char_counter:
+          title: "Contatore di caratteri"
+          placeholder: "Inserisci qui il tuo testo..."

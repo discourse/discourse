@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  discourse_narrative_bot:
+    dice:
+      out_of_range: |-
+        Da li ste znali da [maksimalan broj strana](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematički ispravan ishod je 120?
+    magic_8_ball:
+      answers:
+        "9": "Da"
+    new_user_narrative:
+      bookmark:
+        instructions: |-
+          Ako želiš da saznaš više, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ispod i <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **markiraj ovu privatnu poruku**. Ako to uradiš, možda dobiješ jedan :gift: uskoro!

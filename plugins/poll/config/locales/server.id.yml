@@ -1,0 +1,51 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  site_settings:
+    poll_enabled: "Izinkan poll?"
+    poll_maximum_options: "Jumlah maksimum opsi yang diperbolehkan di sebuah poll."
+    poll_edit_window_mins: "Jumlah menit setelah post dibuat dimana poll masih bisa diedit."
+    poll_minimum_trust_level_to_create: "Tentukan trust level minimum yang diperlukan untuk membuat poll."
+    poll_groupable_user_fields: "Kumpulan nama bidang pengguna yang dapat digunakan untuk mengelompokkan dan memfilter hasil poll."
+    poll_default_public: "Saat membuat poll baru, aktifkan opsi 'tampilkan siapa yang memilih' secara bawaan."
+  poll:
+    poll: "poll"
+    invalid_argument: "Nilai '%{value}' tidak valid untuk argumen '%{argument}'."
+    multiple_polls_with_same_name: "Ada beberapa polling dengan nama yang sama: <strong>%{name}</strong>. Gunakan atribut '<code>nama</code>' untuk mengidentifikasi polling anda secara unik."
+    default_poll_must_have_at_least_1_option: "Poll harus memiliki setidaknya 1 opsi."
+    named_poll_must_have_at_least_1_option: "Poll bernama <strong>%{name}</strong> harus memiliki setidaknya 1 opsi."
+    default_poll_must_have_less_options:
+      other: "Polling harus kurang dari %{count} pilihan."
+    named_poll_must_have_less_options:
+      other: "Polling dengan nama <strong>%{name}</strong> harus kurang dari %{count} pilihan."
+    default_poll_must_have_different_options: "Polling harus memiliki pilihan yang berbeda."
+    named_poll_must_have_different_options: "Polling dengan nama <strong>%{name}</strong> harus memiliki pilihan yang berbeda."
+    default_poll_must_not_have_any_empty_options: "Poll tidak boleh memiliki opsi kosong."
+    named_poll_must_not_have_any_empty_options: "Poll bernama <strong>%{name}</strong> tidak boleh memiliki opsi kosong."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan pilihan ganda parameternya tidak benar."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan nama <strong>%{name}</strong> dengan pilihan ganda parameternya tidak benar."
+    requires_at_least_1_valid_option: "Anda harus memilih setidaknya 1 pilihan yang benar."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Anda tidak dapat mengubah poll setelah %{minutes} menit pertama."
+      cannot_edit_named_poll_with_votes: "Anda tidak dapat mengubah poll bernama <strong>${name}</strong> setelah %{minutes} menit pertama."
+    no_poll_with_this_name: "Tidak ada pollig <strong>%{name}</strong> yang terkait dengan pos ini."
+    post_is_deleted: "Tidak dapat beraksi pada sebuah pos yang dihapus."
+    user_cant_post_in_topic: "Anda tidak dapat memberikan pilihan karena Anda tidak dapat post di topik ini."
+    topic_must_be_open_to_vote: "Topik harus terbuka untuk dinilai."
+    poll_must_be_open_to_vote: "Polling harus terbuka untuk dinilai."
+    one_vote_per_user: "Hanya 1 pilihan yang diperbolehkan untuk poll ini."
+    max_vote_per_user:
+      other: Maksimal %{count} suara diperbolehkan untuk poll ini.
+    min_vote_per_user:
+      other: Diperlukan minimal %{count} suara untuk poll ini.
+    topic_must_be_open_to_toggle_status: "Topik harus terbuka untuk merubah status."
+    only_staff_or_op_can_toggle_status: "Hanya anggota staf atau penerbit asli yang dapat merubah status polling."
+    insufficient_rights_to_create: "Anda tidak diizinkan membuat poll."
+    email:
+      link_to_poll: "Klik untuk menampilkan polling."
+    user_field:
+      no_data: "Tidak ada Data"

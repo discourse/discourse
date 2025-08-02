@@ -1,0 +1,141 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    discourse_automation:
+      back: Atpakaļ
+      edit: Rediģēt
+      fields:
+        user:
+          label: Lietotājs
+        pm:
+          title:
+            label: Virsraksts
+          raw:
+            label: Saturs
+        pms:
+          title:
+            label: Virsraksts
+          raw:
+            label: Saturs
+        group:
+          label: Grupa
+        text:
+          label: Teksts
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Žetons
+        stalled_topic:
+          durations:
+            P2W: "Divas nedēļas"
+            P6M: "Seši mēneši"
+        recurring:
+          frequencies:
+            day: diena
+            week: nedēļa
+            month: mēnesis
+            year: gads
+          fields:
+            recurrence:
+              label: Atkārtošanās
+        stalled_wiki:
+          durations:
+            P2W: "Divas nedēļas"
+            P6M: "Seši mēneši"
+        topic:
+          fields:
+            restricted_topic:
+              label: Tēmas ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Birkas
+            restricted_categories:
+              label: Sadaļas
+          created: Radīts
+          with_images: Attēli
+          with_links: Saites
+          with_code: Kods
+          with_uploads: Augšupielādes
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Vecāksadaļa
+        pm_created:
+          fields:
+            restricted_user:
+              label: Lietotāji
+            restricted_group:
+              label: Grupa
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Sadaļa
+            restricted_tags:
+              label: Birkas
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Birkas
+        post:
+          fields:
+            topic:
+              label: Tēmas ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupa
+        user_global_notice:
+          levels:
+            success: Veiksmīgi
+            error: Kļūda...
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupa
+            badge:
+              label: Žetons
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Lietotājs
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Tēmas ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: Tēmas ID
+            user:
+              label: Lietotājs
+        close_topic:
+          fields:
+            topic:
+              label: Tēmas ID
+            user:
+              label: Lietotājs
+      models:
+        trigger:
+          name:
+            label: Aktivizēt
+        automation:
+          name:
+            label: Vārds
+          trigger:
+            label: Aktivizēt
+          version:
+            label: Versij
+          status:
+            label: Statuss
+          enabled:
+            label: Ieslēgts
+          disabled:
+            label: Atslēgt

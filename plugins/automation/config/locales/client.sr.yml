@@ -1,0 +1,109 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    discourse_automation:
+      back: Nazad
+      edit: Izmeni
+      fields:
+        user:
+          label: Korisnik
+        pm:
+          title:
+            label: Naslov
+        pms:
+          title:
+            label: Naslov
+        group:
+          label: Grupa
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Značka
+        recurring:
+          frequencies:
+            day: dan
+            week: nedelja
+            month: mesec
+            year: godina
+        topic:
+          fields:
+            restricted_topic:
+              label: ID Teme
+        post_created_edited:
+          fields:
+            restricted_categories:
+              label: Kategorije
+          created: Napravljeno
+          with_images: Slike
+          with_links: Linkovi
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Nadkategorija
+        pm_created:
+          fields:
+            restricted_user:
+              label: Korisnici
+            restricted_group:
+              label: Grupa
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategorija
+      scriptables:
+        post:
+          fields:
+            topic:
+              label: ID Teme
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupa
+        user_global_notice:
+          levels:
+            error: Greška
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupa
+            badge:
+              label: Značka
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Korisnik
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID Teme
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID Teme
+            user:
+              label: Korisnik
+        close_topic:
+          fields:
+            topic:
+              label: ID Teme
+            user:
+              label: Korisnik
+      models:
+        trigger:
+          name:
+            label: Okidač
+        automation:
+          name:
+            label: Ime foruma
+          trigger:
+            label: Okidač
+          version:
+            label: Verzija
+          status:
+            label: Status

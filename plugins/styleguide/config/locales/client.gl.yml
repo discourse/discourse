@@ -1,0 +1,88 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  js:
+    styleguide:
+      title: "Guía de estilo"
+      welcome: "Para comezar, escolla unha sección do menú da esquerda."
+      categories:
+        atoms: Átomos
+        molecules: Moléculas
+        organisms: Organismos
+      sections:
+        typography:
+          title: "Tipografía"
+          example: "A nosa benvida a Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, are in culpa qui officia deserunt mollit anim id is laborum."
+        date_time_inputs:
+          title: "Entradas de data/hora"
+        font_scale:
+          title: "Sistema de tipos de letra"
+        colors:
+          title: "Cores"
+        icons:
+          title: "Iconas"
+          full_list: "Vexa a listaxe completa das iconas dos tipos de letra"
+        buttons:
+          title: "Botóns"
+        dropdowns:
+          title: "Despregabeis"
+        categories:
+          title: "Categorías"
+        bread_crumbs:
+          title: "Rastro de migas"
+        navigation:
+          title: "Navegación"
+        navigation_bar:
+          title: "Barra de navegación"
+        navigation_stacked:
+          title: "Navegación vertical"
+        categories_list:
+          title: "Lista de categorías"
+        topic_link:
+          title: "Ligazón do tema"
+        topic_list_item:
+          title: "Elemento da lista de temas"
+        topic_statuses:
+          title: "Status do tema"
+        topic_list:
+          title: "Listaxe de temas"
+        basic_topic_list:
+          title: "Listaxe de temas básicos"
+        footer_message:
+          title: "Mensaxe rodapé"
+        signup_cta:
+          title: "Subscrición CTA"
+        topic_timer_info:
+          title: "Temporizadores do tema"
+        topic_footer_buttons:
+          title: "Botóns de rodapé do tema"
+        topic_notifications:
+          title: "Notificacións de temas"
+        post:
+          title: "Publicación"
+        topic_map:
+          title: "Mapa de temas"
+        site_header:
+          title: "Cabeceira do sitio"
+        suggested_topics:
+          title: "Temas suxeridos"
+        post_menu:
+          title: "Menú de publicación"
+        modal:
+          title: "Modal"
+          header: "Título da modal"
+          footer: "Rodapé da modal"
+        user_about:
+          title: "Caixa Verbo do usuario"
+        header_icons:
+          title: "Iconas de cabeceira"
+        spinners:
+          title: "Indicador de carga"
+        tooltips:
+          description: "Descrición"
+          header: "Cabeceira"

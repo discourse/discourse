@@ -1,0 +1,108 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# This script will promote post_migrate files
+# which have existed for more than one Discourse
+# stable version cycle.
+#
+# Renames will be staged in git, but not committed
+#
+# Usage:
+#   script/promote_migrations [--dry-run] [--plugins]
+
+require 'open3'
+require 'fileutils'
+
+VERSION_REGEX = %r{\/(\d+)_}
+
+DRY_RUN = !!ARGV.delete('--dry-run')
+PLUGINS = false
+
+if i = ARGV.find_index('--plugins-base')
+  ARGV.delete_at(i)
+  PLUGINS = true
+  PLUGINS_BASE = ARGV.delete_at(i)
+elsif ARGV.delete('--plugins')
+  PLUGINS = true
+  PLUGINS_BASE = 'plugins'
+end
+
+raise "Unknown arguments: #{ARGV.join(', ')}" if ARGV.length > 0
+
+def run(*args, capture: true)
+  out, s = Open3.capture2(*args)
+  if s.exitstatus != 0
+    STDERR.puts "Command failed: '#{args.join(' ')}'"
+    exit 1
+  end
+  out.strip
+end
+
+current_version = run 'git describe --abbrev=0 --match "v*"'
+puts "Current version is #{current_version}"
+
+run 'git fetch'
+current_stable_version =
+  run 'git describe --abbrev=0 --match "v*" origin/stable'
+puts "Current stable version is #{current_stable_version}"
+
+minor = current_stable_version[/^(v\d+\.\d+)\./, 1]
+
+previous_stable_version = "#{minor}.0"
+puts "Previous stable version is #{previous_stable_version}"
+
+stable_post_migrate_filenames =
+  run(
+    'git',
+    'ls-tree',
+    '--name-only',
+    '-r',
+    previous_stable_version,
+    'db/post_migrate'
+  ).split("\n")
+
+stable_post_migrate_filenames.sort!
+latest_stable_post_migration = stable_post_migrate_filenames.last
+
+puts "The latest core post_migrate file in #{previous_stable_version} is #{latest_stable_post_migration}"
+puts 'Promoting this, and all earlier post_migrates, to regular migrations'
+
+promote_threshold = latest_stable_post_migration[VERSION_REGEX, 1].to_i
+current_post_migrations =
+  if PLUGINS
+    puts 'Looking in plugins...'
+    Dir.glob("#{PLUGINS_BASE}/**/db/post_migrate/*")
+  else
+    Dir.glob('db/post_migrate/*')
+  end
+
+if current_post_migrations.length == 0
+  puts 'No post_migrate files found. All done'
+end
+
+current_post_migrations.each do |path|
+  version = path[VERSION_REGEX, 1].to_i
+  file = File.basename(path)
+  dir = File.dirname(path)
+
+  if version <= promote_threshold
+    print "Promoting #{path}..."
+    if DRY_RUN
+      puts ' (dry run)'
+    else
+      run 'mkdir', '-p', "#{dir}/../migrate"
+      run 'git', '-C', dir, 'mv', file, "../migrate/#{file}"
+      puts ' (done)'
+    end
+  end
+end
+
+puts 'Done! File moves are staged and ready for commit.'
+puts 'Suggested commit message:'
+puts '-' * 20
+puts <<~TEXT
+DEV: Promote historic post_deploy migrations
+
+This commit promotes all post_deploy migrations which existed in Discourse #{previous_stable_version} (timestamp <= #{promote_threshold})
+TEXT
+puts '-' * 20

@@ -1,0 +1,53 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    poll:
+      voters:
+        one: "votues"
+        other: "votuesit"
+      total_votes:
+        one: "total vota"
+        other: "totali votave"
+      average_rating: "Vlerësimi mesatar: <strong>%{average}</strong>."
+      cast-votes:
+        title: "Jepni votën tuaj"
+        label: "Voto Tani"
+      show-results:
+        title: "Display the poll results"
+        label: "Results"
+      hide-results:
+        title: "Back to your votes"
+      export-results:
+        label: "Eksporto"
+      open:
+        title: "Fillo një Sondazh"
+        label: "Fillo"
+        confirm: "Jeni të sigurt për të hapur këtë sondazh?"
+      close:
+        title: "Mbyll sondazhin"
+        label: "Mbyll"
+        confirm: "Jeni të sigurt për të mbyllur këtë sondazh?"
+      ranked_choice:
+        none: "Asnjë"
+      options:
+        label: "Opsione"
+      error_while_toggling_status: "Ndjesë, u has në një gabim kur u ndryshua gjendja e këtij sondazhi."
+      error_while_casting_votes: "Ndjesë, u has në një gabim duke mbledhur votat tuaja."
+      error_while_fetching_voters: "Ndjesë, u has në një gabim duke shfaqur votuesit."
+      ui_builder:
+        title: Krijo Sondazh
+        insert: Shto Sondazh
+        poll_type:
+          label: Lloji
+          regular: Pa Alternativa
+          multiple: Me Alternativa
+          number: Vlerësim Numrash
+        poll_config:
+          step: Hapi
+        poll_public:
+          label: Shfaq votuesit

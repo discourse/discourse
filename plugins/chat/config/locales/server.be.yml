@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  chat:
+    deleted_chat_username: аддалены
+    errors:
+      not_accepting_dms: "На жаль, %{username}не прымае паведамленні ў дадзены момант."
+    reviewables:
+      actions:
+        agree:
+          title: "Пагадзіцеся ..."
+        agree_and_suspend:
+          title: "прыпыненне карыстальніка"
+          description: "Пагадзіцеся са сцягамі і падвесіць карыстальнік."
+        agree_and_silence:
+          title: "Silence Карыстальнік"
+          description: "Пагадзіцеся са сцягамі і маўчанне карыстальніка."
+        disagree:
+          title: "не згаджацца"
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  unsubscribe:
+    chat_summary:
+      never: ніколі

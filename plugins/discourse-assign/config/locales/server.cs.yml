@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  site_settings:
+    assign_enabled: "Povolit plugin Assign (přidělování)"
+    assigns_public: "Umožněte veřejné zobrazení přidělených témat"
+    assigns_user_url_path: "Cesta k tématům přiřazeným uživatelům (použijte: {username} jako náhradu uživatelského jména)"
+    assigns_by_staff_mention: "Pokud člen redakce zmíní jiného člena redakce, téma se automaticky přidělí"
+    unassign_creates_tracking_post: "Pokud zrušíte přidělení tématu, zaznamená se z důvodu sledování změn malá aktivita"
+    assign_self_regex: "Regulární výraz, který musí vyhovět pro přidělení sobě. Příklad 'můj seznam'"
+    assign_other_regex: "Regulární výraz, který musí vyhovět pro přidělení ostatním pomocí zmínky. Příklad 'váš seznam'"
+    unassign_on_group_archive: "Pokud je zpráva archivována skupinou, zrušit přidělení zprávy (znovu přidělit, pokud je přesunuta zpět do složky Doručené)"
+    unassign_on_close: "Zrušit přidělení, když je téma uzavřeno"
+    reassign_on_open: "Při otevření tématu znovu přidělit dříve přidělené uživatele/skupiny."
+    invite_on_assign: "Pokud je uživateli nebo skupině přiřazena osobní zpráva, pozvěte je na soukromé zprávy, pokud ještě nejsou účastníky."
+    assign_mailer: "Kdy odeslat e-mail s upozorněním na úkoly"
+    remind_assigns: "Připomenout uživatelům nevyřízené úkoly."
+    remind_assigns_frequency: "Frekvence připomínání přidělených témat uživatelům."
+    pending_assign_reminder_threshold: "Počet nevyřízených úkolů, které spustí upozornění na připomenutí."
+    max_assigned_topics: "Maximální počet témat, která lze uživateli přidělit."
+    assign_allowed_on_groups: "Uživatelé v těchto skupinách mohou přidělovat témata a mohou jim být témata přidělována."
+    enable_assign_status: "Ke každému úkolu přidat přizpůsobitelné stavové pole."
+    assign_statuses: "Seznam stavů dostupných pro každý úkol. První stav je výchozí stav použitý pro každé nové přidělení."
+    errors:
+      assign_statuses:
+        too_few: "Musí být k dispozici alespoň dva různé stavy."
+        duplicate: "Existují duplicitní hodnoty stavu."
+        removed_in_use: "Nelze odebrat stav ze seznamu, pokud existují přidělení používající tento stav."
+  discourse_assign:
+    assigned_to: "Téma přiděleno uživateli @%{username}"
+    unassigned: "Přidělení tématu bylo odstraněno"
+    already_claimed: "Toto téma již bylo nárokováno."
+    already_assigned: "Téma je již přiděleno uživateli @%{username}"
+    too_many_assigns: "@%{username} již dosáhl/a maximálního počtu přidělených témat (%{max})."
+    too_many_assigns_for_topic: "Bylo dosaženo limitu %{limit} úkolů na téma."
+    forbidden_assign_to: "@%{username} nelze přidělit, protože nepatří do skupin, které mají povoleno přidělování."
+    forbidden_assignee_not_pm_participant: "@%{username} nelze přidělit, protože nemá přístup k této konverzaci. Uživateli @%{username} můžete udělit přístup tím, že je pozvete do této soukromé konverzace."
+    forbidden_assignee_cant_see_topic: "@%{username} nelze přidělit, protože k tomuto tématu nemá přístup."
+    group_already_assigned: "Téma je již přiděleno skupině @%{group}"
+    forbidden_group_assign_to: "@%{group} nelze přidělit, protože nepatří do skupin, které mají povoleno přidělování."
+    forbidden_group_assignee_not_pm_participant: "@%{group} nelze přidělit, protože ne všichni členové mají přístup k této soukromé konverzaci."
+    forbidden_group_assignee_cant_see_topic: "@%{group} nelze přidělit, protože ne všichni členové mají přístup k tomuto tématu."
+    flag_assigned: "Omlouváme se, toto nahlášené téma je přiděleno jinému uživateli"
+    flag_unclaimed: "Než začnete reagovat na nahlášení, musíte si toto téma nárokovat"
+    topic_assigned_excerpt: "vám přidělil/a téma '%{title}'"
+    topic_group_assigned_excerpt: "přidělil/a téma '%{title}' skupině @%{group}"
+    reminders_frequency:
+      never: "nikdy"
+      daily: "denně"
+      weekly: "týdně"
+      monthly: "měsíčně"
+      quarterly: "čtvrtletně"
+  assign_mailer:
+    title: "Assign Mailer"
+    subject_template: "[%{email_prefix}] %{assignee_name} vám přidělil/a '%{topic_title}'!"
+    text_body_template: |
+      Ahoj, %{assignee_name} ti **přidělil/a** diskusi
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Pokud máš zájem, klikni na níže uvedený odkaz:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Máte %{pending_assignments} nevyřízených úkolů"
+    body: |
+      Aktuálně máte [%{pending_assignments} nevyřízených úkolů](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Toto připomenutí bude odesláno %{frequency} , pokud máte více než jedno přiřazené téma.
+    newest: |
+      ### Nejnovější
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Nejstarší
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Náhodné přidělení
+        no_one: "Pokusili jsme se náhodně přiřadit člena `@%{group}`, ale nikdo nebyl dostupný."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} vás přidělil"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Vybraný stav je neplatný (není zahrnut v nastavení assigned_status)."

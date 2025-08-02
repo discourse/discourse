@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    discourse_local_dates_default_formats: "Formats de date fréquemment utilisés, voir : <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_default_timezones: "Liste de fuseaux horaires <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a> (page en anglais) par défaut"

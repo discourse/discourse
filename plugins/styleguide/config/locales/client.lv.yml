@@ -1,0 +1,87 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    styleguide:
+      title: "Stila ceļvedis"
+      welcome: "Lai sāktu, izvēlieties sadaļu no izvēlnes kreisajā pusē."
+      categories:
+        atoms: Atomi
+        molecules: Molekulas
+        organisms: Organismi
+      sections:
+        typography:
+          title: "Raksta zīmju stils"
+          example: "Sveicināti!"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud vingrošana ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Izņēmums sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Datuma/laika ievade"
+        font_scale:
+          title: "Fontu sistēma"
+        colors:
+          title: "Krāsas"
+        icons:
+          title: "Ikonas"
+          full_list: "Skatiet pilnu Font Awesome ikonas sarakstu"
+        buttons:
+          title: "Pogas"
+        dropdowns:
+          title: "Nolaižamās izvēlnes"
+        categories:
+          title: "Sadaļas"
+        bread_crumbs:
+          title: "atrašanās vietas norādes lapā"
+        navigation:
+          title: "Pārvietošanās"
+        navigation_bar:
+          title: "Navigācijas josla"
+        navigation_stacked:
+          title: "Navigācija sakrauta"
+        categories_list:
+          title: "Sadaļu saraksts"
+        topic_link:
+          title: "Tēmas saite"
+        topic_list_item:
+          title: "Tēmu saraksta vienums"
+        topic_statuses:
+          title: "Tēmas statusi"
+        topic_list:
+          title: "Tēmu saraksts"
+        basic_topic_list:
+          title: "Pamata tēmu saraksts"
+        footer_message:
+          title: "Kājenes ziņojums"
+        signup_cta:
+          title: "Uzaicinājums reģistrēties"
+        topic_timer_info:
+          title: "Tēmas taimeri"
+        topic_footer_buttons:
+          title: "Tēmas kājenes pogas"
+        topic_notifications:
+          title: "Paziņojumi par tēmu"
+        post:
+          title: "Ieraksts"
+        topic_map:
+          title: "Tēmas karte"
+        site_header:
+          title: "Vietnes galvene"
+        suggested_topics:
+          title: "Ieteiktās tēmas"
+        post_menu:
+          title: "Ziņas izvēlne"
+        modal:
+          title: "Modāls"
+          header: "Modālais nosaukums"
+          footer: "Modālā kājene"
+        user_about:
+          title: "Lietotāja info lauks"
+        header_icons:
+          title: "Galvenes ikonas"
+        spinners:
+          title: "Ciparu vērtības iestatīšana"
+        tooltips:
+          description: "Apraksts"

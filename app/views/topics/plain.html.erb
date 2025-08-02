@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="<%= html_lang %>">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title><%= @topic_view.topic.title %></title>
+  <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, published_time: @topic_view.published_time) %>
+  <% if @topic_view.prev_page %>
+    <link rel="prev" href="<%= @topic_view.prev_page_path -%>">
+  <% end %>
+  <% if @topic_view.next_page %>
+    <link rel="next" href="<%= @topic_view.next_page_path -%>">
+  <% end %>
+</head>
+<body>
+<% @topic_view.posts.each do |post| %>
+  <% if post.user %>
+    <div class='creator'>
+      <b><%= post.user.username %></b> <%= "(#{post.user.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names?) %> at <%= post.created_at.to_formatted_s(:long_ordinal) %> — #<%= post.post_number %>
+    </div>
+    <div class='post'>
+      <% if post.hidden %>
+        <%= t('flagging.user_must_edit').html_safe %>
+      <% else %>
+        <%= post.cooked.html_safe %>
+      <% end %>
+    </div>
+    <hr/>
+  <% end %>
+<% end %>
+<p>
+  <% if @topic_view.prev_page %>
+    <%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev' %>
+  <% end %>
+  <% if @topic_view.next_page %>
+    <b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next' %></b>
+  <% end %>
+</p>
+</body>

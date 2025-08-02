@@ -1,0 +1,93 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    styleguide:
+      title: "Vodič za stil"
+      welcome: "Da biste započeli, odaberite odjeljak s izbornika s lijeve strane."
+      categories:
+        atoms: Atomi
+        molecules: Molekule
+        organisms: Organizmi
+      sections:
+        typography:
+          title: "Tipografija"
+          example: "Dobrodošli na Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud istezanje ullamco Laboris nisi ut aliquip ex ea commodo posljedica. Duis aute irure dolor in rephenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est Laborum."
+        date_time_inputs:
+          title: "Unosi datuma/vremena"
+        font_scale:
+          title: "Sustav fonta"
+        colors:
+          title: "Boje"
+        icons:
+          title: "Ikone"
+          full_list: "Pogledajte cijeli popis ikona Font Awesome"
+        buttons:
+          title: "Gumbi"
+        dropdowns:
+          title: "Padajući izbornici"
+        categories:
+          title: "Kategorije"
+        bread_crumbs:
+          title: "Bread Crumbs"
+        navigation:
+          title: "Navigacija"
+        navigation_bar:
+          title: "Navigacijska traka"
+        navigation_stacked:
+          title: "Navigacija složena"
+        categories_list:
+          title: "Popis kategorija"
+        topic_link:
+          title: "Veza na temu"
+        topic_list_item:
+          title: "Stavka popisa tema"
+        topic_statuses:
+          title: "Statusi tema"
+        topic_list:
+          title: "Popis tema"
+        basic_topic_list:
+          title: "Popis osnovnih tema"
+        footer_message:
+          title: "Poruka podnožja"
+        signup_cta:
+          title: "Registracija CTA"
+        topic_timer_info:
+          title: "Mjerači vremena teme"
+        topic_footer_buttons:
+          title: "Gumbi podnožja teme"
+        topic_notifications:
+          title: "Obavijesti o temama"
+        post:
+          title: "Objava"
+        topic_map:
+          title: "Karta teme"
+        site_header:
+          title: "Zaglavlje web lokacije"
+        suggested_topics:
+          title: "Preporučene teme"
+        post_menu:
+          title: "Izbornik objava"
+        modal:
+          title: "Modalni"
+          header: "Modalni naslov"
+          footer: "Modalno podnožje"
+        user_about:
+          title: "O korisniku, box"
+        header_icons:
+          title: "Ikone zaglavlja"
+        spinners:
+          title: "Spinneri"
+        empty_state:
+          title: "Prazno stanje"
+        tooltips:
+          description: "Opis"
+          header: "Uzglavlje"
+          hover_to_see: "Zadržite pokazivač miša da biste vidjeli savjet alata"
+        char_counter:
+          placeholder: "Unesite svoj tekst ovdje..."

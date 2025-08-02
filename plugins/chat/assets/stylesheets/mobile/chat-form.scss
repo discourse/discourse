@@ -1,0 +1,27 @@
+.chat-form {
+  &__section {
+    margin-bottom: 0;
+
+    &:last-of-type {
+      .chat-form__section-content {
+        background: none;
+        padding-left: 0;
+      }
+    }
+
+    &-content {
+      background: var(--primary-very-low);
+      padding: 1rem;
+    }
+  }
+
+  &__section-title {
+    .chat-form__section:not(:first-of-type) & {
+      margin-top: 1.5rem;
+    }
+  }
+
+  &__row-content {
+    min-height: 40px;
+  }
+}

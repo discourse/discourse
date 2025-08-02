@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    enable_markdown_footnotes: enable footnote markdown on this site
+    display_footnotes_inline: enable inline expansion of footnotes

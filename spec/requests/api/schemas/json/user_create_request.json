@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean",
+      "description": "This param requires an admin api key in the request header or it will be ignored"
+    },
+    "approved": {
+      "type": "boolean"
+    },
+    "user_fields": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "1": {
+          "type": "boolean"
+        }
+      }
+    },
+    "external_ids": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "password",
+    "username"
+  ]
+}

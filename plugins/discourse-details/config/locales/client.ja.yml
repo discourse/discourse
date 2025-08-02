@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    details:
+      title: 詳細を隠す
+    composer:
+      details_title: 要約
+      details_text: "このテキストは表示されません"

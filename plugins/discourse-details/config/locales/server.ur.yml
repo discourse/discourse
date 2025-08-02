@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  site_settings:
+    details_enabled: 'پوسٹ میں قابل توسیع تفصیلات شامل کرنے کی صلاحیت شامل کریں۔ یہ فیچر کمپوزر کے ٹول بار پاپ اپ مینو میں ہے۔ اگر آپ اس ترتیب کو تبدیل کرتے ہیں تو آپ کو تمام پوسٹس کو "rake posts:rebake" کے ساتھ ری بیک کرنا چاہیے۔'
+  details:
+    excerpt_details: "(مزید تفصیلات کیلئے کلک کریں)"

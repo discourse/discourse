@@ -1,0 +1,32 @@
+<aside class="onebox">
+  <article class="onebox-body user-onebox">
+    {{{avatar}}}
+    <h3><a href="{{original_url}}">@{{{username}}}</a></h3>
+    <div>
+      {{#name}}
+        <span class="full-name">{{name}}</span>
+      {{/name}}
+      {{#location}}
+        <span class="location">
+          <svg class="fa d-icon d-icon-location-dot svg-icon" xmlns="http://www.w3.org/2000/svg">
+            <use href="#location-dot"></use>
+          </svg>
+          {{{location}}}
+        </span>
+      {{/location}}
+      {{#website}}
+        <span>
+          <svg class="fa d-icon d-icon-earth-americas svg-icon" xmlns="http://www.w3.org/2000/svg">
+            <use href="#earth-americas"></use>
+          </svg>
+          <a href="{{website}}">{{{website_name}}}</a>
+        </span>
+      {{/website}}
+    </div>
+    {{#bio}}
+      <p>{{{bio}}}</p>
+    {{/bio}}
+    <div class="user-onebox--joined">{{joined}}</div>
+  </article>
+  <div class="clearfix"></div>
+</aside>

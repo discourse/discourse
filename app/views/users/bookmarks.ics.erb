@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Discourse//<%= Discourse.current_hostname %>//<%= Discourse.full_version %>//EN
+<% @bookmark_reminders.each do |bookmark| %>
+BEGIN:VEVENT
+UID:bookmark_reminder_#<%= bookmark.id %>@<%= Discourse.current_hostname %>
+DTSTAMP:<%= bookmark.updated_at.strftime(I18n.t("datetime_formats.formats.calendar_ics")) %>
+DTSTART:<%= bookmark.reminder_at_ics_start %>
+DTEND:<%= bookmark.reminder_at_ics_end %>
+SUMMARY:<%= bookmark.name.presence || bookmark.title %>
+DESCRIPTION:<%= bookmark.bookmarkable_url %>
+URL:<%= bookmark.bookmarkable_url %>
+END:VEVENT
+<% end %>
+END:VCALENDAR

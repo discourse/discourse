@@ -1,0 +1,20 @@
+.dropdown-menu {
+  padding: 0;
+  margin: 0;
+
+  &__item {
+    list-style: none;
+
+    .btn {
+      padding: 0.65rem 1rem;
+      width: 100%;
+      justify-content: flex-start;
+      text-align: left;
+    }
+  }
+
+  &__divider {
+    margin: 0;
+    height: 0;
+  }
+}

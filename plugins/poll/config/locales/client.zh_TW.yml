@@ -1,0 +1,111 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    poll:
+      voters:
+        other: "投票者"
+      total_votes:
+        other: "總票數"
+      votes:
+        other: "%{count} 票"
+      average_rating: "平均評分：<strong>%{average}</strong>。"
+      public:
+        title: "投票是 <strong>公開的</strong>."
+      results:
+        groups:
+          title: "您必須是 %{groups} 的成員才能在此投票中投票。"
+        vote:
+          title: "投票結果將在 <strong>投票後</strong>顯示。"
+        closed:
+          title: "結果將顯示一次之後<strong>關閉</strong>。"
+        staff:
+          title: "結果僅向 <strong>內部人員顯示</strong> 。"
+      cast-votes:
+        title: "投你的票"
+        label: "現在投票！"
+      show-results:
+        title: "顯示投票結果"
+        label: "結果"
+      remove-vote:
+        title: "移除您的投票"
+      hide-results:
+        title: "返回到你的投票"
+        label: "投票"
+      group-results:
+        title: "按用戶字段分組投票"
+        label: "顯示細分"
+      export-results:
+        title: "匯出投票結果"
+        label: "匯出"
+      open:
+        title: "開啟投票"
+        label: "開啟"
+        confirm: "你確定要開啟這個投票嗎？"
+      close:
+        title: "關閉投票"
+        label: "關閉"
+        confirm: "你確定要關閉這個投票？"
+      automatic_close:
+        closes_in: "在 <strong>%{timeLeft}</strong>後關閉。"
+        age: "已關閉 <strong>%{age}</strong>"
+      breakdown:
+        title: "投票結果"
+        votes: "%{count} 票"
+        breakdown: "故障"
+        percentage: "百分比"
+        count: "次數"
+      ranked_choice:
+        none: "無"
+      options:
+        label: "選項"
+      error_while_toggling_status: "對不起，改變投票狀態時出錯了。"
+      error_while_casting_votes: "對不起，投票時出錯了。"
+      error_while_fetching_voters: "對不起，顯示投票者時出錯了。"
+      error_while_exporting_results: "抱歉，匯出投票結果時發生錯誤。"
+      ui_builder:
+        title: 創建投票
+        insert: 插入投票
+        help:
+          options_min_count: 至少輸入 1 個選項。
+          options_max_count: 最多輸入 %{count} 個選項。
+          invalid_min_value: 最小值必須至少為 1。
+          invalid_max_value: 最大值必須至少為 1，但小於或等於選項數。
+          invalid_values: 最小值必須比最大值小。
+          min_step_value: 最小梯級階值為 1
+        poll_type:
+          label: 類型
+          regular: 單選
+          multiple: 多選
+          number: 評分
+        poll_result:
+          label: 顯示結果...
+          always: 永遠可見
+          vote: 只有在投票之後
+          closed: 當投票結束時
+          staff: 只限工作人員
+        poll_groups:
+          label: 將投票限制在這些組中
+        poll_chart_type:
+          label: 結果圖
+          bar: 長條圖
+          pie: 圓餅圖
+        poll_config:
+          max: 最大選擇
+          min: 最小選擇
+          step: 梯級
+        poll_public:
+          label: 顯示投票人
+        poll_title:
+          label: 標題（可選）
+        poll_options:
+          label: 選項（每行一個）
+          add: 新增選項
+        automatic_close:
+          label: 自動關閉投票
+        show_advanced: "顯示進階選項"
+        hide_advanced: "隱藏進階選項"

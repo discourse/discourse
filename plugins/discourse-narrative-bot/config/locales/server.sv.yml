@@ -1,0 +1,397 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    discourse_narrative_bot_enabled: "Aktivera Discourse digitala hjälpreda (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Inaktivera introduktionsmeddelandet från Discourse digitala hjälpreda"
+    discourse_narrative_bot_ignored_usernames: "Användarnamn som Discourse digitala hjälpreda bör ignorera"
+    discourse_narrative_bot_disable_public_replies: "Inaktivera offentliga svar från Discourse digitala hjälpreda"
+    discourse_narrative_bot_welcome_post_type: "Vilken typ av välkomstinlägg som Discourse digitala hjälpreda bör skicka"
+    discourse_narrative_bot_welcome_post_delay: "Vänta i (n) sekunder innan Discourse digitala hjälpreda skickar välkomstinlägget"
+    discourse_narrative_bot_skip_tutorials: "Discourse digitala hjälpredas handledningar som ska hoppas över"
+  badges:
+    certified:
+      name: Certifierad
+      description: "Genomfört introduktion för nya användare"
+      long_description: |
+        Denna utmärkelse tilldelas efter att den interaktiva introduktionen för nya användare har genomförts. Du har genom detta initiativ lärt dig om de grundläggande diskussionsverktygen och är nu certifierad!
+    licensed:
+      name: Licencierad
+      description: "Genomfört den avancerade användarkursen"
+      long_description: |
+        Denna utmärkelse tilldelas efter att den interaktiva vägledningen för avancerade användare har genomförts. Du har lärt dig om de avancerade diskussionsverktygen och är nu certifierad!
+  discourse_narrative_bot:
+    bio: "Hej, jag är ingen riktig person. Jag är en bot som kan lära dig mer om den här webbplatsen. För att interagera med mig, skicka ett meddelande till mig eller nämna mig med namn."
+    tl2_promotion_message:
+      subject_template: "Nu när du har blivit befordrad är det dags att lära dig mer om några avancerade funktioner!"
+      text_body_template: |
+        Svara på detta meddelande med `@%{discobot_username} %{reset_trigger}` för att ta reda på mer om vad du kan göra.
+    timeout:
+      message: |-
+        Hej @%{username}, bara ett meddelande för att kolla hur det går då jag ej hört av dig på ett tag.
+
+        - för att fortsätta, svara mig när som helst..
+
+        - Om du vill hoppa över detta steg, säg `%{skip_trigger}`.
+
+        - För att börja om från början, säg `%{reset_trigger}`.
+
+        Om du inte är intresserad så är det inga problem, eftersom jag är en robot. Jag blir inte kränkt. :sob:
+    dice:
+      trigger: "kasta"
+      invalid: |-
+        Förlåt, men det är inte matematiskt möjligt att kombinera tärningarna så. :confounded:
+      not_enough_dice:
+        one: "Jag har bara %{count} tärningar. Skamligt, jag vet!"
+        other: "Jag har bara %{count} tärningar. Skamligt, jag vet!"
+      out_of_range: |-
+        Visste du att [maximalt antal sidor](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematiskt rättvis tärning är 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "citat"
+      "1":
+        quote: "Inom varje svårighet finns det möjligheter"
+        author: "Albert Einstein"
+      "2":
+        quote: "Frihet är inte värt att ha om det inte betyder frihet att göra fel."
+        author: "Mahatma Gandhi"
+      "3":
+        quote: "Gråt inte för att det är över, le eftersom det hände."
+        author: "Dr Seuss"
+      "4":
+        quote: "Om du vill ha något gjort rätt, gör det själv."
+        author: "Charles-Guillaume Étienne"
+      "5":
+        quote: "Tro att du kan, så är du är halvvägs där."
+        author: "Theodore Roosevelt"
+      "6":
+        quote: "Livet är som en låda med choklad. Du vet aldrig vad du kommer att få."
+        author: "Forrest Gumps mamma \n(Författaren: Winston Groom)"
+      "7":
+        quote: "Det är ett litet steg för en man, ett jättesprång för mänskligheten."
+        author: "Neil Armstrong"
+      "8":
+        quote: "Gör en sak varje dag som skrämmer dig."
+        author: "Eleanor Roosevelt"
+      "9":
+        quote: "Misstag är alltid förlåtliga, om en har modet att erkänna dem."
+        author: "Bruce Lee"
+      "10":
+        quote: "Oavsett vad människans sinne kan tänka och tro, kan det uppnås."
+        author: "Napoleon Hill"
+      "11":
+        quote: "Fred hemma, fred i världen."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Utbildning är inte ett sätt att undkomma fattigdomen, det är ett sätt att bekämpa den."
+        author: "Julius Nyerere"
+      "13":
+        quote: "En resa på tusen mil måste börja med ett enda steg."
+        author: "Lao Tzu"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: "framgång"
+      answers:
+        "1": "Det är säkert"
+        "2": "Det är bestämt så"
+        "3": "Utan tvivel"
+        "4": "Ja, definitivt"
+        "5": "Det kan du lita på"
+        "6": "Som jag ser det, ja"
+        "7": "Mest sannolikt"
+        "8": "Utsikterna är goda"
+        "9": "Ja"
+        "10": "Alla tecken tyder på ja"
+        "11": "Svaret var vagt, försök igen"
+        "12": "Fråga igen senare"
+        "13": "Bäst jag inte talar om det just nu"
+        "14": "Kan inte förutspå det just nu"
+        "15": "Koncentrera dig och fråga igen"
+        "16": "Räkna inte med det"
+        "17": "Mitt svar är nej"
+        "18": "Mina källor säger nej"
+        "19": "Utsikterna är inte så goda"
+        "20": "Mycket tveksamt"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "starta"
+      skip_trigger: "hoppa över"
+      help_trigger: "visa hjälp"
+      random_mention:
+        reply: |-
+          Hej! För att ta reda på vad jag kan göra, säg `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          I nuläget klarar jag av följande saker:
+
+          `@%{discobot_username} %{reset_trigger} {namn-på-handledning}`
+          > Startar en interaktiv handledning enbart för dig, i ett privat meddelande. `{namn-på-handledning}` kan vara en av dessa: `%{tracks}` .
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Det kan du lita på
+        discobot_disabled: Du har inaktiverat mig i dina inställningar. Du måste tillåta nybörjartips för att kunna interagera med mig.
+      do_not_understand:
+        first_response: |-
+          Halloj, tack för svaret!
+
+          Tyvärr är jag en dåligt programmerad bot och förstår inte riktigt detta. :frowning:
+        track_response: Du kan försöka igen, eller om du vill hoppa över detta steg, säg `%{skip_trigger}`. Annars, för att starta om, säg `%{reset_trigger}`.
+        second_response: |-
+          Åhh, tyvärr. Jag förstår fortfarande inte. :anguished:
+
+          Jag är bara en bot, men om du vill nå en riktigt person, besök [vår kontakt sida] (%{base_path}/about).
+
+          Under tiden håller jag mig undan.
+    new_user_narrative:
+      reset_trigger: "handledning"
+      title: "Certifikat för genomförd handledning för nya användare"
+      cert_title: "Som erkännande för att handledningen för nya användare har genomförts"
+      hello:
+        title: "Hej!"
+        message: |-
+          Tack för att du är med i %{title}, och välkommen!
+
+          - Jag är blott en robot, men [vår vänliga personal](%{base_uri}/about) finns också här och hjälper till ifall du behöver nå en person.
+
+          - För säkerhets skull, begränsar vi tillfälligt vad nya användare kan göra. Du kommer att erhålla [nya funktioner](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (och [utmärkelser](%{base_uri}/badges)) i takt med att vi lär känna dig.
+
+          - Vi tror på ett [civiliserat beteende i forumet](%{base_uri}/guidelines) i alla hänseenden.
+      onebox:
+        reply: |-
+          Coolt! Detta fungerar för de flesta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-länkar. Kom ihåg att den måste vara på en egen rad, _för sig själv_, utan något annat före eller efter den.
+      images:
+        instructions: |-
+          Här är en bild på en enhörning:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Om du gillar den (och vem gör inte det!) kör på och tryck på gilla knappen :heart: nedanför detta inlägg för att informera mig.
+
+          Kan du **svara med en bild?** Vilken bild som helst! Dra och släpp, tryck på knappen Ladda upp, eller kopiera och klistra in den.
+        reply: |-
+          Snygg bild – Jag tryckte på gilla :heart: knappen för att låta dig veta hur mycket jag uppskattade den :heart_eyes:
+        like_not_found: |-
+          Glömde du att gilla :heart: mitt [inlägg?](%{url}) :crying_cat_face:
+        not_found: |-
+          Det verkar som du inte laddade upp någon bild så jag har valt en bild som jag är _säker_ på att du kommer att gilla.
+
+          <%{image_url}>
+
+          Försök nu att ladda upp denna, eller klistra in länken på en egen rad!
+      likes:
+        instructions: |-
+          Här är en bild på en enhörning:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Om du gillar den (och vem gör inte det!) gå vidare och tryck på knappen gilla :heart: nedanför detta inlägg för att informera mig.
+        reply: |-
+          Tack för att du gillar mitt inlägg!
+        not_found: |-
+          Glömde du att gilla :heart: mitt [inlägg?](%{url}) :crying_cat_face:
+      formatting:
+        instructions: |-
+          Kan du göra några ord **feta** eller _kursiva_ i ditt nästa svar?
+
+          - skriv `**fet**` eller `_kursiv_`
+
+          - eller, tryck på knappen <kbd><b>B</b></kbd> eller <kbd><i>I</i></kbd> i redigeraren
+        reply: |-
+          Bra jobbat! HTML eller BBCode fungerar också för formatering – för att lära dig mer, [testa denna handledning](https://commonmark.org/help) :nerd:
+        not_found: |-
+          Äsch, jag kunde inte hitta någon formatering i ditt svar. :pencil2:
+
+          Kan du försöka igen? Använd knapparna <kbd><b>B</b></kbd> fet eller <kbd><i>I</i></kbd> kursiv i redigeraren om du kör fast.
+      quoting:
+        instructions: |-
+          Kan du försöka citera mig när du svarar, så att jag vet exakt vilken del du svarar på?
+
+          > Om detta är kaffe, ber jag dig ge mig lite te; men om detta är te, ber jag dig ge mig lite kaffe.
+          >
+          > En fördel med att tala med sig själv är att du kan vara säker på att åtminstone någon lyssnar.
+          >
+          > En del människor är födda med talets gåva, medans andra... är ofödda med den?
+
+          Välj den text med valfritt &uarr;-citat som du föredrar, och tryck sedan på knappen **Citera** som kommer fram över din markering – eller använd knappen **Svara** i inläggets underkant.
+
+          Under citatet skriver du ett ord eller två om varför du valde just detta, bara för att jag är så nyfiken :thinking:
+        reply: |-
+          Bra jobbat, du valde mitt favoritcitat! :left_speech_bubble:
+        not_found: |-
+          Hmm, det verkar som du inte citerade mig i ditt svar?
+
+          Genom att markera valfri text i mitt inlägg så kommer funktionen <kbd>**Citera**</kbd> att visas. Alternativt kan du trycka på **Svara** med valfri text markerad, vilket också kommer fungera! Kan du försöka igen?
+      bookmark:
+        instructions: |-
+          Om du vill lära dig mer, välj <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> nedanför och <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **bokmärk detta personliga meddelande**. Gör du det så väntar kanske en :gift: i framtiden!
+        not_found: |-
+          Ooops, jag ser inget bokmärke i detta ämne. Hittade du bokmärket under varje inlägg? Använd Visa mer <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> för att göra fler funktioner synliga vid behov.
+      emoji:
+        instructions: |-
+          Du kanske har sett att jag använder små bilder i mina svar :blue_car::dash: dessa kallas [emoji](https://sv.wikipedia.org/wiki/Emoji). Kan du **lägga till en emoji** i ditt svar? Vilken som helst av dessa fungerar:
+
+          - Skriv `:) ;) :D :P :O`
+
+          - Skriv kolon <kbd>:</kbd> och fyll sedan i med det kompletta emojinamnet `:tada:`
+
+          - Tryck på emojiknappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> i redigeraren, eller från din mobils tangentbord
+        reply: |-
+          Det är :sparkles: _emojitastiskt!_ :sparkles:
+        not_found: |-
+          Hoppsan, jag ser ingen emoji i ditt svar? Attans också! :sob:
+
+          Försök att skriva ett kolon <kbd>:</kbd> för att ta fram alla emojier, skriv sedan de första bokstäverna för det du söker, exempelvis `:bird:`
+
+          Eller tryck på emojiknappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> i redigeraren.
+
+          (Är du på en mobil kan du dessutom också komma åt emojier direkt från ditt tangentbord.)
+      mention:
+        instructions: |-
+          Ibland vill du fånga en persons uppmärksamhet, även om du inte svarar direkt till dem. Skriv `@` följt av deras användarnamn för att nämna dem.
+
+          Kan du nämna **`@%{discobot_username}`** i ditt svar?
+        reply: |-
+          _Sa någon mitt namn!?_ :raised_hand: Jag tror det var du! :wave: Nåväl, här är jag! Tack för att du nämner mig. :ok_hand:
+        not_found: |-
+          Jag ser inte mitt namn där någonstans :frowning: Kan du försöka nämna mig som `@%{discobot_username}` igen?
+
+          (Och ja, mitt användarnamn stavas _disco_, precis som i 70-talets dansera. Jag [älskar nattlivet!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        not_found: |-
+          Åh nej, mitt elaka inlägg har inte flaggats än. :worried: Kan du flagga det som olämpligt genom funktionen **flagga** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Glöm inte att använda Visa mera knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> för att visa fler funktioner för varje inlägg.
+      search:
+        hidden_message: |-
+          Hur kunde du missa denna kapybara? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Märkte du att du nu är tillbaka i början? Mata denna hungriga kapybara genom att **svara med `%{search_answer}` emoji** så förs du automatiskt till slutet.
+        reply: |-
+          Jippie, du hittade den :tada:
+
+          - För mer detaljerade sökningar, gå över till [fullständiga söksidan](%{search_url}).
+
+          - För att hoppa vartsomhelst i en lång diskussion, testa ämnets funktion för tidslinje till höger (och undertill på mobiler).
+
+          - Om du har ett fysiskt :keyboard:, tryck <kbd>?</kbd> för att visa eller hantera tangentbordsgenvägar.
+        not_found: |-
+          Hmm… det verkar som du har problem. Ber om ursäkt för det. Sökte du <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> efter termen **capy&#8203;bara** eller efter **kapy&#8203;bara**?
+      end:
+        message: |-
+          Tack för att du har hängt med mig @%{username}! Jag har gjort följande åt dig, jag tycker du har förtjänat det:
+
+          %{certificate}
+
+          Det var allt för tillfället! Kolla in [**våra senaste ämnen**](%{base_uri}/latest) eller [**kategorier**](%{base_uri}/categories). :sunglasses:
+
+          (Om du skulle vilja prata med mig igen för att lära dig mer, bara skriv till eller nämn `@%{discobot_username}` när som helst!)
+      certificate:
+        alt: "Intyg om prestation"
+    advanced_user_narrative:
+      reset_trigger: "avancerad handledning"
+      cert_title: "Som erkännande för att handledningen för avancerade användare har slutförts"
+      title: ":arrow_up: Avancerade användarfunktioner"
+      start_message: |-
+        Som en _avancerad_ användare, har du besökt [din sida för inställningar](%{base_uri}/my/preferences) än @%{username}?
+        Det finns många sätt att anpassa din upplevelse, till exempel att välja ett mörkt eller ljust tema.
+
+        Men jag tappar tråden, låt oss börja!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} är överlägset den coolaste bot jag känner :wink:"
+        instructions: |-
+          Alla gör misstag. Var inte orolig, du kan alltid redigera dina inlägg för att fixa dem!
+
+          Kan du börja med att **redigera* inlägget som jag precis skapade för din räkning?
+        not_found: |-
+          Det verkar som att du fortfarande behöver redigera [inlägget](%{url}) som jag skapade för dig. Kan du försöka igen?
+
+          Använd ikonen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> för att starta redigeraren.
+        reply: |-
+          Utmärkt arbete!
+
+          Notera att redigeringar gjorda efter 5 minuter kommer att synas offentligt som redigerade versioner, och en liten ikon i formen av en penna kommer att synas uppe till höger tillsammans med antalet genomförda ändringar.
+      delete:
+        instructions: |-
+          Om du vill ta tillbaka ett inlägg som du gjort, kan du radera det.
+
+          Ta och **radera** ett av dina inlägg ovanför genom att använda <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **radera**-funktionen. Radera inte det första inlägget bara!
+        not_found: |-
+          Jag ser inga raderade inlägg ännu? Kom ihåg att <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> Visa mer kommer att synliggöra <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> radera.
+        reply: |-
+          Whoooa! :boom:
+
+          För att bibehålla en kontinuitet i diskussioner, sker raderingar inte omedelbart, så inlägget kommer att tas bort efter en viss tid.
+      recover:
+        deleted_post_raw: "Varför raderade @%{discobot_username} mitt inlägg? :anguished:"
+        instructions: |-
+          Åhh nej! Det verkar som jag av misstag raderade ett nytt inlägg som jag precis skapat åt dig.
+
+          Kan du göra mig en tjänst och göra den <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **återskapad**?
+        not_found: |-
+          Har du problem? Kom ihåg att <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> Visa mer kommer att synliggöra <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> återskapa.
+        reply: |-
+          Pust, det var nära ögat! Tack för att du löste det :wink:
+
+          Men kom ihåg att du enbart har %{deletion_after}timme/timmar på dig att återskapa ett inlägg.
+      category_hashtag:
+        instructions: |-
+          Visste du att du kan hänvisa till kategorier och taggar i dina inlägg? Har du till exempel sett kategorin %{category}?
+
+          Skriv `#` var som helst i en mening och välj en kategori eller tagg.
+        not_found: |-
+          Hmm, jag ser ingen kategori någonstans där. Kan du kopiera denna i ditt nästa svar?
+
+          ```text
+          Jag kan skapa en kategorilänk genom #
+          ```
+        reply: |-
+          Utmärkt! Kom ihåg att detta fungerar både för kategorier _och_ taggar, om taggar har aktiverats.
+      change_topic_notification_level:
+        not_found: |-
+          Det verkar som du fortfarande bevakar :eyes: detta ämne! Om du har problem med att hitta den, så finns knappen för aviseringsnivån i ämnets underkant.
+        reply: |-
+          Asbra jobbat! Jag hoppas du inte tystade detta ämne då jag kan vara lite för pratsam emellanåt :grin:.
+
+          Notera att när du besvarar ett ämne, eller läser ett ämne i mer än ett par minuter, ställs aviseringsnivån automatiskt in till 'följer'. Du kan ändra detta i [dina användarinställningar](%{base_uri}/my/preferences).
+      poll:
+        reply: |-
+          Bra, fin omröstning! Hur lyckades jag med att lära dig detta?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        not_found: |-
+          Har du problem med att skapa en widget för detaljer? Försök med att inkludera följande i ditt nästa svar:
+
+          ```text
+          [details=Välj mig för detaljer]
+          Här är detaljerna
+          [/details]
+          ```
+        reply: |-
+          Bra jobbat! — din _detaljkännedom_ är avundsvärd!
+      end:
+        message: |-
+          Du blåste verkligen igenom detta som en _avancerad användare_ :bow:
+
+          %{certificate}
+
+          Det är allt jag har för dig idag.
+
+          Ajöss för stunden! Om du vill tala med mig igen, skicka mig ett meddelande när som helst :sunglasses:
+      certificate:
+        alt: "Diplom för genomförande av avancerad användargenomgång"

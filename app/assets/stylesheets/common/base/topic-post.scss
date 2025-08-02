@@ -1,0 +1,1749 @@
+@use "lib/viewport";
+
+#main-outlet > .regular {
+  background: var(--d-content-background);
+}
+
+.button-count.has-pending {
+  span {
+    background-color: var(--danger);
+    color: var(--secondary);
+    padding: 0.15em 0.3em 0.2em;
+    display: inline-block;
+    font-size: var(--font-down-2);
+    border-radius: var(--d-button-border-radius);
+  }
+}
+
+.placeholder-avatar {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    position: absolute;
+    left: 0;
+    content: "";
+    background: linear-gradient(
+      to right,
+      var(--primary-very-low) 10%,
+      var(--primary-low) 28%,
+      var(--primary-very-low) 43%
+    );
+    height: 45px;
+    width: 700px;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
+  }
+}
+
+.placeholder-text {
+  margin-left: var(--topic-body-width-padding);
+  display: inline-block;
+  width: calc(100% - var(--topic-body-width-padding));
+  height: 1.5em;
+  margin-bottom: 0.6em;
+}
+
+.post-stream .placeholder .row {
+  display: flex;
+}
+
+.names {
+  flex: 1 1 auto;
+  overflow: hidden;
+
+  span.first {
+    display: flex;
+    align-items: baseline;
+    font-weight: bold;
+  }
+
+  > span {
+    font-size: var(--font-0);
+    margin-right: 0.33em;
+    display: inline-block;
+
+    @include ellipsis;
+    vertical-align: middle;
+
+    a {
+      color: var(--primary-high-or-secondary-low);
+      outline-offset: -1px;
+    }
+  }
+
+  .fa {
+    font-size: var(--font-down-1);
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  .svg-icon-title {
+    margin-left: 3px;
+    margin-right: 0;
+  }
+
+  .new_user a,
+  .user-title,
+  .user-title a {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+// global styles for the cooked HTML content in posts (and preview)
+.cooked,
+.d-editor-preview {
+  word-wrap: break-word;
+  line-height: 1.5;
+
+  video {
+    max-width: 100%;
+  }
+
+  img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+    max-width: 100%;
+    height: auto;
+    display: inline-block; // Ensure dimensions are maintained even after load error
+
+    @supports not (aspect-ratio: 1) {
+      // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
+      height: var(--calculated-height);
+    }
+  }
+
+  svg {
+    max-height: 2000px;
+  }
+
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 2rem 0 0.67rem;
+    line-height: var(--line-height-medium);
+
+    a.anchor {
+      opacity: 0;
+      transition: opacity 0.25s;
+
+      &:focus-visible {
+        outline: 0;
+        opacity: 1;
+      }
+
+      &::before {
+        content: svg-uri(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 512 512" fill="#{$primary-medium}"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"></path></svg>'
+        );
+        line-height: 1.4;
+        margin-left: -20px;
+        padding-right: 4px;
+        position: absolute;
+        z-index: 2;
+      }
+    }
+
+    // the anchor icon is a CSS pseudo element set above
+    // so we can't change the color of the icon itself
+    // but we can change the color of the anchor text
+    &:has(a.anchor:focus-visible) {
+      color: var(--tertiary);
+    }
+
+    // show when hovering where icon should be
+    // show when hovering header
+    .discourse-no-touch & a.anchor:hover,
+    .discourse-no-touch &:hover a.anchor {
+      opacity: 1;
+    }
+  }
+
+  h1 {
+    font-size: var(--font-up-3-rem);
+  }
+
+  h2 {
+    font-size: var(--font-up-2-rem);
+  }
+
+  h3 {
+    font-size: var(--font-up-1-rem);
+  }
+
+  h4 {
+    font-size: var(--font-0-rem);
+  }
+
+  h5 {
+    font-size: var(--font-down-1-rem);
+  }
+
+  h6 {
+    font-size: var(--font-down-2-rem);
+  }
+
+  a {
+    word-wrap: break-word;
+  }
+
+  mark {
+    text-decoration: none;
+    background-color: var(--highlight);
+  }
+
+  ins {
+    background-color: var(--success-low);
+    text-decoration: underline;
+  }
+
+  del {
+    background-color: var(--danger-low);
+    text-decoration: line-through;
+  }
+
+  // Prevents users from breaking posts with tag nesting
+  big {
+    font-size: 1.5rem;
+  }
+
+  small {
+    font-size: 0.75rem;
+  }
+
+  small small {
+    font-size: 0.75em;
+  }
+
+  big big {
+    font-size: 1em;
+  }
+
+  sup sup,
+  sub sup,
+  sup sub,
+  sub sub {
+    top: 0;
+  }
+
+  sub sub sub {
+    bottom: 0;
+  }
+}
+
+.cooked-selection-barrier {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  opacity: 0;
+}
+
+// add staff color
+.moderator {
+  .regular > .cooked {
+    background-color: var(--highlight-bg);
+  }
+
+  .clearfix > .topic-meta-data > .names {
+    span.user-title {
+      color: var(--primary-high-or-secondary-low);
+
+      a {
+        background-color: var(--highlight-bg);
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+    }
+  }
+}
+
+.topic-meta-data {
+  display: flex;
+  align-items: flex-start;
+
+  .names {
+    margin-right: auto;
+
+    .first {
+      flex-shrink: 0;
+    }
+  }
+
+  .user-badge-buttons {
+    display: flex;
+    flex-shrink: 0;
+
+    a {
+      background: none;
+    }
+
+    .user-badge {
+      background: none;
+      border: none;
+    }
+  }
+
+  .post-infos {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+  }
+
+  .user-status-message-wrap {
+    display: flex;
+    flex-shrink: 0;
+
+    img.emoji {
+      width: 1em;
+      height: 1em;
+    }
+  }
+}
+
+:root {
+  --d-post-control-border-radius: var(--d-button-border-radius);
+  --d-post-control-text-color: var(--primary-low-mid);
+  --d-post-control-text-color--hover: var(--primary);
+  --d-post-control-icon-color: var(--primary-low-mid);
+  --d-post-control-icon-color--hover: var(--primary);
+  --d-post-control-background--hover: var(--primary-low);
+  --d-post-control-create-text-color: var(--primary-high);
+  --d-post-control-create-icon-color: var(--primary-high);
+  --d-post-control-sibling-text-color--hover: var(--primary-medium);
+}
+
+nav.post-controls {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--d-post-control-text-color);
+  user-select: none;
+
+  .actions {
+    display: inline-flex;
+    text-align: right;
+    margin-left: auto;
+
+    // Some buttons can be doubled up, like likes or flags
+    .double-button {
+      display: inline-flex;
+      flex: 0 1 auto;
+      align-items: stretch; // should always be the same height
+      white-space: nowrap;
+
+      .discourse-no-touch & {
+        &:hover {
+          button {
+            background: var(--d-post-control-background--hover);
+            color: var(--d-post-control-sibling-text-color--hover);
+          }
+        }
+      }
+
+      button {
+        margin-inline: 0;
+
+        &:first-child {
+          border-radius: var(--d-post-control-border-radius) 0 0
+            var(--d-post-control-border-radius);
+        }
+
+        &:last-child {
+          border-radius: 0 var(--d-post-control-border-radius)
+            var(--d-post-control-border-radius) 0;
+        }
+
+        &:first-child:last-child {
+          border-radius: var(--d-post-control-border-radius);
+        }
+
+        &.like {
+          // Like button with 0 likes
+          &:hover {
+            background: var(--love-low);
+
+            .d-icon {
+              color: var(--love);
+            }
+          }
+        }
+
+        &.has-like {
+          // Like button after I've liked
+          .d-icon {
+            color: var(--love);
+          }
+
+          .discourse-no-touch & {
+            &:hover {
+              background: var(--primary-low);
+
+              .d-icon {
+                color: var(--primary-medium);
+              }
+            }
+          }
+        }
+
+        &.button-count {
+          // Like count button
+          &:not(.my-likes) {
+            padding-right: 0;
+          }
+
+          + .toggle-like {
+            // Like button when like count is present
+            padding-left: 0.45em;
+
+            // Like button when like count is present
+            .discourse-no-touch & {
+              &:hover {
+                background: var(--primary-low);
+              }
+            }
+          }
+
+          // Like count button
+          .discourse-no-touch & {
+            &:hover {
+              color: var(--primary);
+            }
+          }
+        }
+
+        &.my-likes,
+        &.read-indicator,
+        &.regular-likes {
+          // Like count on posts
+          .d-icon {
+            color: var(--d-post-control-icon-color);
+            padding-left: 0.45em;
+          }
+        }
+
+        &[disabled] {
+          // Disabled like button
+          cursor: not-allowed;
+          opacity: 1;
+        }
+      }
+    }
+
+    a,
+    button {
+      display: inline-flex;
+      color: var(--d-post-control-text-color);
+    }
+
+    button {
+      flex: 0 1 auto;
+      font-size: var(--font-up-1);
+      padding: 8px 10px;
+      vertical-align: top;
+      background: transparent;
+      border: none;
+      border-radius: var(--d-post-control-border-radius);
+
+      .discourse-no-touch & {
+        &:hover,
+        &:focus-visible,
+        &:active {
+          outline: none;
+          background: var(--d-post-control-background--hover);
+          color: var(--d-post-control-text-color--hover);
+        }
+
+        &.delete:hover,
+        &.delete:active,
+        &.delete:focus {
+          background: var(--danger);
+          color: var(--secondary);
+
+          .d-icon {
+            color: var(--secondary);
+          }
+        }
+      }
+
+      &.hidden {
+        display: none;
+      }
+
+      &.admin {
+        position: relative;
+      }
+
+      &.bookmarked .d-icon {
+        color: var(--tertiary);
+      }
+
+      &.create {
+        margin-right: 0;
+        color: var(--d-post-control-create-text-color);
+
+        .d-icon {
+          color: var(--d-post-control-create-icon-color);
+        }
+      }
+    }
+  }
+
+  .btn.show-replies {
+    font-size: inherit;
+    padding: 10px;
+    color: var(--primary-medium);
+
+    .discourse-no-touch & {
+      &:hover,
+      &:focus-visible {
+        outline: none;
+        color: var(--d-post-control-text-color--hover);
+        background: var(--d-post-control-background--hover);
+      }
+    }
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+
+    .d-button-label + .d-icon {
+      margin-left: 0.45em;
+      margin-right: 0;
+    }
+  }
+}
+
+.deleted {
+  .regular > .cooked {
+    background-color: var(--danger-low-mid);
+  }
+
+  .topic-meta-data:not(.embedded-reply) {
+    color: var(--danger);
+
+    .post-info a,
+    a {
+      color: currentcolor;
+    }
+
+    .d-icon {
+      color: currentcolor;
+    }
+  }
+
+  nav.post-controls {
+    color: var(--danger);
+
+    .show-replies,
+    button.reply.create {
+      color: var(--danger);
+
+      .d-icon {
+        color: var(--danger);
+      }
+    }
+
+    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
+    .btn {
+      &:hover {
+        color: currentcolor;
+        background: var(--danger-low);
+
+        .d-icon {
+          color: currentcolor;
+        }
+      }
+
+      &[disabled]:hover {
+        background-color: transparent;
+        cursor: not-allowed;
+      }
+
+      &.fade-out {
+        opacity: 1;
+      }
+    }
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  .post-action {
+    color: var(--danger);
+  }
+}
+
+@keyframes heartBump {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.toggle-like.heart-animation .d-icon {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: heartBump 0.4s;
+  }
+}
+
+@keyframes slideout {
+  from {
+    max-height: 60px;
+  }
+
+  to {
+    max-height: 9999px;
+  }
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.75em;
+}
+
+// we use aside to hold expandable quotes (versus, say, static blockquotes)
+aside.quote {
+  margin-top: 1em;
+  margin-bottom: 1em;
+
+  .title {
+    display: flex;
+    align-items: start;
+    gap: var(--space-2);
+    color: var(--primary-high-or-secondary-low);
+    padding: 0.8em 0.8em 0 0.8em;
+
+    @include post-aside;
+    @include unselectable;
+
+    &[data-can-toggle-quote] {
+      cursor: pointer;
+    }
+
+    a {
+      @include ellipsis;
+    }
+
+    .badge-category__wrapper {
+      align-self: center;
+    }
+
+    .quote-controls {
+      min-height: 24px; // match avatar height for alignment
+    }
+
+    // empty control div can impact layout, so hide it
+    &:not([data-has-quote-controls]) {
+      .quote-controls {
+        display: none;
+      }
+    }
+  }
+
+  .quote-title__text-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2);
+    min-width: 0;
+
+    .badge-category__wrapper {
+      align-self: auto;
+    }
+  }
+
+  // blockquote is docked within aside for content
+  blockquote {
+    margin-top: 0;
+
+    .expanded-quote {
+      overflow: hidden;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: slideout 1s ease-in-out;
+      }
+
+      &.icon-only {
+        text-align: center;
+        font-size: var(--font-up-4);
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        color: var(--primary-medium);
+      }
+    }
+  }
+}
+
+.quote-controls,
+.quote-controls .d-icon {
+  color: var(--primary-low-mid-or-secondary-high);
+}
+
+.quote-controls {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  a {
+    margin-left: 0.3em;
+  }
+
+  .quote-toggle,
+  .back {
+    padding: 0;
+  }
+}
+
+.cooked .highlight {
+  background-color: var(--tertiary-low);
+  padding: 0.15em;
+  margin: -0.15em;
+}
+
+.post-ignored {
+  font-style: italic;
+}
+
+.post-action {
+  color: var(--primary-medium);
+
+  .undo-action,
+  .act-action {
+    margin-left: 5px;
+  }
+}
+
+.small-user-list {
+  .small-user-list-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .unknown {
+    display: inline-block;
+    background-color: var(--primary-low);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 0.25em;
+  }
+}
+
+.post-hidden {
+  .topic-avatar,
+  .cooked,
+  .topic-meta-data,
+  .post-actions {
+    opacity: 0.5;
+  }
+}
+
+.topic-post.staged {
+  opacity: 0.4;
+}
+
+.post-stream--cloaked {
+  min-height: 1px; // ensures that cloaked items have a minimum height to force the intersection observers to work
+}
+
+.quote-button {
+  flex-direction: column;
+
+  &.visible {
+    display: flex;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+
+    @media screen and (width <= 420px) {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .btn,
+      .ai-post-helper {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  }
+
+  .extra {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .fast-edit-container {
+    display: flex;
+    padding: 0.5em;
+    padding-top: 0;
+    flex-direction: column;
+    align-items: flex-start;
+
+    #fast-edit-input {
+      margin: 0;
+      width: 300px;
+      height: 90px;
+    }
+
+    .save-fast-edit {
+      margin-top: 0.5em;
+    }
+  }
+
+  .insert-quote + .quote-sharing {
+    border-left: 1px solid rgb(255, 255, 255, 0.3);
+  }
+
+  .btn-flat {
+    &:hover {
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+
+    .d-button-label {
+      white-space: nowrap;
+    }
+  }
+
+  .quote-sharing {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .quote-share-label {
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    &:hover {
+      .quote-share-label {
+        background: transparent;
+        opacity: 0;
+        max-width: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .quote-share-label + .quote-share-buttons {
+        max-width: 10em;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+      }
+
+      // this pseudo element creates a transition buffer zone
+      // without it, the width change on hover can cause transition jitter
+      // the width is roughly wide enough to cover long translations of "share"
+      &::after {
+        content: "";
+        position: absolute;
+        display: block;
+        background: transparent;
+        height: 100%;
+        padding: 0.5em 4em;
+        z-index: -1; // below the buttons
+      }
+    }
+
+    .quote-share-label + .quote-share-buttons {
+      opacity: 0;
+      overflow: hidden;
+      max-width: 0;
+      display: inline-flex;
+      transition: opacity 0.3s ease-in-out;
+    }
+  }
+}
+
+.post-avatar,
+.topic-avatar,
+.user-card-avatar {
+  position: relative;
+}
+
+.topic-avatar,
+.avatar-flair-preview,
+.user-card-avatar,
+.user-profile-avatar,
+.user-image,
+.latest-topic-list-item {
+  .avatar-flair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    bottom: 0;
+    right: -6px;
+  }
+}
+
+.topic-avatar .avatar-flair,
+.avatar-flair-preview .avatar-flair,
+.collapsed-info .user-profile-avatar .avatar-flair,
+.user-image .avatar-flair,
+.latest-topic-list-item .avatar-flair {
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
+
+  &.rounded {
+    background-size: 18px 18px;
+    border-radius: 12px;
+    width: 24px;
+    height: 24px;
+    bottom: -2px;
+    right: -8px;
+  }
+}
+
+.user-card-avatar .avatar-flair,
+.user-profile-avatar .avatar-flair {
+  background-size: 40px 40px;
+  width: 40px;
+  height: 40px;
+
+  &.rounded {
+    background-size: 30px 30px;
+    border-radius: 24px;
+    width: 40px;
+    height: 40px;
+    bottom: -2px;
+    right: -4px;
+  }
+
+  .fa {
+    font-size: var(--font-up-4);
+  }
+}
+
+.topic-body {
+  // this is necessary for ANYTHING that extends past the right edge of
+  // the post body, such as an image in a deeply nested list, image in
+  // a deeply nested blockquote, and so on.. you get the idea.
+  .cooked {
+    overflow: hidden;
+
+    .button-wrapper {
+      display: none;
+    }
+  }
+
+  .group-request {
+    border-top: 1px solid var(--content-border-color);
+    padding-top: 0.5em;
+  }
+}
+
+.small-action-desc,
+.topic-body {
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.post-info {
+  flex: 0 0 auto;
+  margin-right: 0.5em;
+
+  .btn {
+    padding: revert;
+  }
+
+  &.post-date {
+    margin-right: 0;
+  }
+
+  &.via-email,
+  &.whisper,
+  &.post-locked {
+    .d-icon {
+      font-size: var(--font-0);
+    }
+  }
+
+  .wiki,
+  .last-wiki-edit {
+    color: var(--wiki);
+  }
+
+  &.via-email {
+    color: var(--primary-low-mid-or-secondary-high);
+  }
+
+  &.raw-email {
+    cursor: pointer;
+  }
+
+  &.edits {
+    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
+    .btn {
+      display: flex;
+      align-items: center;
+
+      .d-button-label {
+        order: 0;
+        padding-right: 0.25em;
+        color: var(--primary-med-or-secondary-med);
+      }
+
+      .d-icon {
+        margin-right: 0;
+        order: 1;
+        color: var(--primary-med-or-secondary-med);
+      }
+
+      .discourse-no-touch & {
+        &:hover {
+          .d-button-label {
+            color: var(--primary-high);
+          }
+
+          .d-icon {
+            color: var(--primary-high);
+          }
+        }
+      }
+
+      &:focus {
+        @include default-focus;
+        background: transparent;
+      }
+    }
+  }
+}
+
+pre {
+  max-height: 2000px;
+
+  .bidi-warning,
+  .bidi-warning span {
+    font-style: normal;
+    background-color: var(--highlight);
+    color: var(--danger);
+    cursor: help;
+  }
+}
+
+.codeblock-buttons {
+  display: block;
+  position: relative;
+  overflow: visible;
+
+  .codeblock-button-wrapper {
+    position: absolute;
+    display: flex;
+  }
+
+  .copy-cmd,
+  .fullscreen-cmd {
+    @include unselectable;
+    top: 0;
+    min-height: 0;
+    font-size: var(--font-down-2);
+    opacity: 0.7;
+    cursor: pointer;
+
+    &.action-complete {
+      cursor: auto;
+
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+
+    .d-icon {
+      pointer-events: none;
+      margin-right: 0;
+    }
+  }
+}
+
+kbd {
+  align-items: center;
+  border: 1px solid var(--primary-low-mid);
+  background: var(--primary-very-low);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: inline-flex;
+  gap: 0 0.5em; // space between text and images/emoji
+  font-size: var(--font-down-1);
+  justify-content: center;
+  line-height: var(--line-height-large);
+  margin: 0 0.15em;
+  min-width: 24px;
+  padding: 0.15em 0.6em;
+
+  // don't allow more than 3 nested elements to prevent FF from crashing
+  // cf. http://what.thedailywtf.com/t/nested-elements/7927
+  // 3 levels are needed to prevent highlighted words being hidden
+  // cf. https://meta.discourse.org/t/word-disappears-when-searched-and-in-details-summary-kbd-b/25741
+  * * * {
+    display: none;
+  }
+}
+
+// we assume blockquotes have their own margins, so all blockquotes
+// will remove margins from first (top) and last (bottom) child elements
+blockquote,
+blockquote .post__contents-cooked-quote {
+  > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+.gap {
+  padding: 0.25em 0 0.5em
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
+  color: var(--primary-med-or-secondary-high);
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: var(--font-down-1);
+}
+
+.who-liked,
+.who-read {
+  transition: height 0.5s;
+
+  a {
+    margin: 0 0.25em 0.5em 0;
+    display: inline-block;
+  }
+}
+
+.reviewable .post-body,
+.cooked table,
+.d-editor-preview table {
+  thead {
+    th {
+      text-align: left;
+      padding-bottom: 2px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+  }
+
+  td {
+    padding: 3px 3px 3px 0.5em;
+  }
+}
+
+.small-action {
+  display: flex;
+  align-items: center;
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &.deleted {
+    .topic-avatar,
+    .small-action-desc {
+      background-color: var(--danger-low-mid);
+    }
+  }
+
+  .topic-avatar,
+  .small-action-desc {
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  .topic-avatar {
+    display: flex;
+    align-self: stretch;
+    flex: 0 0 auto;
+    margin: 0;
+    padding-top: 1em;
+    width: var(--topic-avatar-width);
+    justify-content: center;
+    height: auto;
+
+    .d-icon {
+      font-size: var(--font-up-3);
+      width: var(--topic-avatar-width);
+      color: var(--primary-low-mid);
+    }
+  }
+
+  .small-action-desc {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--primary-700);
+    padding: 1em 0 1em var(--topic-body-width-padding);
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+    );
+    min-width: 0; // Allows flex container to shrink
+
+    .avatar {
+      margin-right: 0.5em;
+      float: left;
+    }
+
+    p {
+      margin: 0;
+      padding: 0.15em 0.5em 0 0;
+    }
+  }
+
+  .small-action-contents {
+    flex: 1 1 auto;
+  }
+
+  .small-action-buttons {
+    margin-left: auto;
+  }
+
+  .small-action-custom-message {
+    flex: 1 1 100%;
+    font-weight: normal;
+    margin-top: 0.5em;
+    word-break: break-word;
+    min-width: 0; // Allows content like oneboxes to shrink
+    color: var(--primary);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  button {
+    background: transparent;
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--primary-500);
+    }
+
+    .discourse-no-touch & {
+      &:hover,
+      &:focus {
+        background: var(--primary-200);
+
+        .d-icon {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+
+  &.topic-post-visited {
+    .topic-post-visited-line {
+      text-align: center;
+      border-bottom: 1px solid var(--danger-medium);
+      z-index: z("base") + 2; // ensures last visit border is on top of post borders
+      line-height: 0;
+      margin: 0;
+      margin-bottom: -1px;
+      color: var(--danger-medium);
+      font-size: var(--font-down-1);
+      width: calc(
+        var(--topic-body-width) + var(--topic-avatar-width) +
+          (var(--topic-body-width-padding) * 2)
+      );
+
+      .topic-post-visited-message {
+        background-color: var(--secondary);
+        padding: 0 0.5em;
+      }
+    }
+  }
+}
+
+.whisper {
+  .post-info.whisper {
+    margin-left: 0.5em;
+  }
+
+  .topic-body {
+    .cooked {
+      font-style: italic;
+      color: var(--primary-medium);
+    }
+  }
+}
+
+a.mention,
+a.mention-group {
+  // linked
+  @include mention;
+
+  .user-status-message {
+    user-select: none;
+  }
+}
+
+.mention .emoji {
+  width: 0.93em;
+  height: 0.93em;
+}
+
+span.mention {
+  // unlinked, invalid mention
+  color: var(--primary-high);
+}
+
+.suggested-topics {
+  .topics {
+    padding-bottom: 15px;
+  }
+}
+
+.large-image-placeholder {
+  > a {
+    &.link {
+      margin-right: 10px;
+    }
+
+    > * {
+      overflow: hidden;
+      vertical-align: middle;
+    }
+
+    > .d-icon {
+      color: var(--primary-med-or-secondary-med);
+      margin-right: 6px;
+      font-size: var(--font-0);
+      line-height: var(--line-height-large);
+    }
+
+    > span.url {
+      display: inline-block;
+      max-width: 300px;
+      margin-right: 6px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    > span.help {
+      display: inline-block;
+      color: var(--primary-med-or-secondary-med);
+      font-size: var(--font-down-1);
+      font-style: italic;
+      line-height: var(--line-height-large);
+      margin-bottom: 1px;
+    }
+
+    > span.badge-notification {
+      vertical-align: unset;
+    }
+  }
+}
+
+.broken-image,
+.blocked-hotlinked-placeholder {
+  display: inline-flex;
+  flex-direction: column;
+  border: 1px solid var(--content-border-color);
+  align-items: center;
+  justify-content: center;
+
+  &:not(a) {
+    color: var(--primary-low-mid-or-secondary-high);
+  }
+
+  .d-icon {
+    margin: 16px;
+    font-size: var(--font-up-5);
+  }
+
+  .notice {
+    margin: 0 0.5em 0.5em 0.5em;
+  }
+}
+
+/* below standard tablet portrait ----------- */
+.reply-to-tab {
+  display: flex;
+  align-items: center;
+  margin-right: 2em;
+  max-width: 400px;
+  overflow: hidden;
+
+  img {
+    margin: 0 0.25em;
+  }
+}
+
+// Select posts
+.topic-post {
+  &.selected {
+    article.boxed {
+      .select-posts {
+        button.select-post {
+          background-color: var(--tertiary);
+          color: var(--secondary);
+          border-color: var(--tertiary);
+        }
+      }
+
+      .topic-body {
+        .contents::after {
+          display: none;
+        }
+      }
+    }
+  }
+
+  article.boxed {
+    position: relative;
+
+    .select-posts {
+      position: absolute;
+      right: 7em;
+      z-index: z("dropdown");
+      top: 0.5em;
+      height: 100px;
+
+      button {
+        margin-left: 8px;
+        background-color: var(--primary-low);
+        color: var(--primary);
+        box-shadow: var(--shadow-dropdown);
+      }
+    }
+  }
+}
+
+@media all and (width <= 767px) {
+  .reply-to-tab {
+    span {
+      display: none;
+    }
+  }
+
+  .user-title {
+    float: left;
+    clear: left;
+  }
+}
+
+.signup-cta {
+  box-sizing: border-box;
+  max-width: calc(var(--topic-body-width) + 4.5em);
+  padding: 3em 5em 2em
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
+
+  @include viewport.until(sm) {
+    padding: 1.5em 1.5em 0.25em;
+  }
+
+  h3 {
+    margin-bottom: 0.5em;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 1.5em 0 1em;
+
+    > * {
+      margin-bottom: 0.5em;
+    }
+
+    .btn {
+      margin-right: 0.5em;
+      white-space: nowrap;
+
+      .d-icon {
+        color: inherit;
+      }
+
+      &.btn-remind {
+        background: var(--primary-very-low);
+        margin-right: auto;
+
+        @include hover {
+          background: var(--primary-medium);
+        }
+      }
+
+      @include viewport.until(sm) {
+        &.btn-primary {
+          margin-right: 100%;
+        }
+      }
+    }
+  }
+}
+
+.post-notice {
+  box-sizing: border-box;
+  align-items: center;
+  background-color: var(--tertiary-low);
+  border-top: 1px solid var(--content-border-color);
+  display: flex;
+  width: 100%;
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
+  padding: var(--topic-body-width-padding);
+  padding-left: 0;
+
+  &.old {
+    background-color: unset;
+    color: var(--primary-medium);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  .post-notice-message {
+    p {
+      display: inline;
+    }
+
+    .custom_created_by {
+      display: inline-block;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .d-icon {
+    font-size: 2em;
+    width: var(--topic-avatar-width);
+    color: var(--primary-high);
+    margin-right: var(--topic-body-width-padding);
+  }
+}
+
+iframe {
+  max-width: 100%;
+  max-height: #{"min(1000px, 200vh)"};
+}
+
+.post-admin-menu {
+  display: inline-flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 320px;
+  position: absolute;
+  text-align: left;
+  bottom: -2px;
+  right: 15px;
+}
+
+.posts-filtered-notice {
+  position: sticky;
+  background-color: var(--tertiary-low);
+  bottom: 0;
+  padding: 1em;
+  margin-top: 0.5em;
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
+
+  .filtered-avatar {
+    margin: 0 0.5em;
+
+    + .names {
+      flex: inherit;
+    }
+  }
+
+  .filtered-replies-show-all {
+    margin-left: 1em;
+  }
+
+  .filtered-user-row {
+    @include ellipsis;
+  }
+}
+
+.pausable-animated-image {
+  position: relative;
+  display: inline-block;
+
+  > canvas,
+  > .animated-image-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  > canvas {
+    background-color: var(--primary-very-low);
+  }
+
+  > .animated-image-overlay {
+    pointer-events: none;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+
+    > .d-icon {
+      padding: 0.5em;
+      margin: 0.5em;
+      background-color: rgb(var(--always-black-rgb), 0.25);
+      color: var(--secondary-or-primary);
+      cursor: pointer;
+      display: none;
+    }
+  }
+
+  img.animated {
+    cursor: pointer;
+  }
+
+  html.no-touch
+    &:not(.paused-animated-image)
+    .animated:hover
+    + .animated-image-overlay
+    .d-icon-pause {
+    display: initial;
+  }
+
+  &.paused-animated-image
+    .animated.manually-paused
+    + .animated-image-overlay
+    .d-icon-play {
+    display: initial;
+  }
+}
+
+.paused-animated-image {
+  img.animated {
+    // need to keep the image hidden but clickable
+    // so the user can resume animation
+    opacity: 0;
+  }
+}
+
+.open-popup-link {
+  display: inline;
+  margin-inline: 0.25em;
+  position: sticky;
+  left: 1rem;
+  opacity: 0%;
+  white-space: nowrap;
+  transition: 0.25s ease-in-out opacity;
+}
+
+.fullscreen-table-wrapper {
+  display: block;
+  position: relative;
+
+  html.discourse-no-touch & {
+    transition: box-shadow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+}
+
+.fullscreen-code-modal {
+  pre code {
+    max-width: none;
+  }
+}
+
+.fullscreen-table-modal {
+  .d-modal__container {
+    width: auto;
+  }
+
+  .d-modal__body {
+    padding-top: 0;
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: var(--secondary);
+    }
+
+    td {
+      padding: 5px 6px 5px 3px;
+    }
+  }
+}
+
+html.discourse-no-touch .fullscreen-table-wrapper:hover {
+  border-radius: 5px;
+
+  .open-popup-link {
+    opacity: 100%;
+  }
+
+  &.--has-overflow,
+  &.--editable {
+    box-shadow:
+      0 2px 5px 0 rgb(var(--always-black-rgb), 0.1),
+      0 2px 10px 0 rgb(var(--always-black-rgb), 0.1);
+  }
+}
+
+.read-state {
+  position: absolute;
+
+  // We use absolute positioning here because we want it to display in the padding
+  align-self: center;
+  color: var(--tertiary-medium);
+  right: 0;
+  font-size: 0.571em;
+
+  &.read {
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      visibility 1s,
+      opacity ease-out 1s;
+  }
+}

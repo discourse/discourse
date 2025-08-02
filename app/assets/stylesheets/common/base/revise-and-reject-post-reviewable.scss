@@ -1,0 +1,28 @@
+.modal.revise-and-reject-reviewable {
+  .revise-and-reject-reviewable__optional {
+    margin-left: 0.5em;
+    color: var(--primary-low-mid);
+  }
+
+  .revise-and-reject-reviewable__custom-reason {
+    width: 100%;
+  }
+
+  .revise-and-reject-reviewable__queued-post {
+    @extend .reviewable-item;
+    padding: 1em;
+    margin: 0 0 1em 0;
+
+    .post-topic .title-text {
+      font-size: var(--font-up-1);
+    }
+
+    .post-body {
+      margin: 0;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+}

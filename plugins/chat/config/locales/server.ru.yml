@@ -1,0 +1,302 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    chat_separate_sidebar_mode: "Показывать отдельные режимы боковой панели для форума и чата."
+    chat_enabled: "Включить чат."
+    enable_public_channels: "Включить публичные каналы на основе категорий."
+    chat_allowed_groups: "Пользователи в этих группах могут общаться в чате. Обратите внимание, что администраторы и модераторы всегда могут получить доступ к чату."
+    chat_channel_retention_days: "Сообщения чата в обычных каналах будут храниться указанное здесь количество дней. Установите значение в «0», чтобы сохранять сообщения навсегда."
+    chat_dm_retention_days: "Сообщения чата в личных каналах чата будут храниться указанное здесь количество дней. Установите значение в «0», чтобы сохранять сообщения навсегда."
+    chat_auto_silence_duration: "Количество минут, в течение которых пользователи будут заморожены, если они превысят лимит скорости создания сообщений в чате. Установите значение в «0», чтобы отключить автозаморозку."
+    chat_allowed_messages_for_trust_level_0: "Количество сообщений, которые пользователи с уровнем доверия «0» могут отправлять в течение 30 секунд. Установите значение в «0», чтобы отключить ограничение."
+    chat_allowed_messages_for_other_trust_levels: "Количество сообщений, которые пользователи с уровнем доверия от «1» до «4» могут отправлять в течение 30 секунд. Установите значение в «0», чтобы отключить ограничение."
+    chat_silence_user_sensitivity: "Вероятность того, что пользователь, на которого поступила жалоба, будет автоматически заморожен."
+    chat_auto_silence_from_flags_duration: "Количество минут, в течение которых пользователи будут заморожены, если на их сообщения поступают жалобы."
+    chat_duplicate_message_sensitivity: "Вероятность того, что дубликат сообщения от одного и того же отправителя будет заблокирован через короткий промежуток времени. Десятичное число от 0 до 1.0, где 1.0 блокирует сообщения наиболее часто за короткий промежуток времени, а `0` разрешает дублирование сообщений."
+    chat_minimum_message_length: "Минимальное количество символов при создании сообщения чата."
+    chat_allow_uploads: "Разрешить загрузку в общедоступных каналах чата и каналах прямых сообщений."
+    chat_archive_destination_topic_status: "Статус, который должен быть присвоен теме назначения после завершения архивирования канала. Присваивается только в том случае, если целевой темой является новая тема, а не существующая."
+    direct_message_enabled_groups: "Разрешить пользователям в этих группах создавать личные чаты между пользователями. Примечание. Сотрудники всегда могут создавать личные чаты, а пользователи смогут отвечать на личные чаты, инициированные пользователями, имеющими разрешение на их создание."
+    chat_message_flag_allowed_groups: "Пользователи в этих группах могут жаловаться на сообщения в чате. Администраторы и модераторы всегда могут жаловаться на сообщения в чате."
+    max_mentions_per_chat_message: "Максимальное число упоминаний других пользователей, которое пользователь может сделать в сообщении чата."
+    chat_max_direct_message_users: "Максимальное число пользователей, которое можно добавить при создании прямого сообщения. Значение «0» — разрешить сообщения только себе. Сотрудники могут добавлять неограниченное число пользователей."
+    chat_allow_archiving_channels: "Разрешить персоналу архивировать сообщения в тему при закрытии канала."
+    chat_editing_grace_period: "В течение (n) с. после отправки чата при редактировании не будет отображаться тег («отредактировано») возле сообщения чата."
+    chat_editing_grace_period_max_diff_low_trust: "Максимальное количество изменённых символов, допустимое в нерегистрируемый период редактирования чата. При превышении этого значения отображается тег («отредактировано») возле сообщения чата (уровень доверия 0 и 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Максимальное количество изменённых символов, допустимое в нерегистрируемый период редактирования чата. При превышении этого значения отображается тег («отредактировано») возле сообщения чата (уровень доверия 2 и выше)."
+    chat_preferred_index: "Предпочитаемая вкладка при загрузке /chat."
+    errors:
+      chat_default_channel: "Канал чата по умолчанию должен быть общедоступным."
+      direct_message_enabled_groups_invalid: "Для этого параметра необходимо указать хотя бы одну группу. Если вы не хотите, чтобы кто-либо, кроме сотрудников, отправлял прямые сообщения, выберите группу сотрудников."
+      chat_upload_not_allowed_secure_uploads: "Загрузка в чат запрещена, если включено ограничение доступа к загружаемому контенту."
+  system_messages:
+    private_channel_title: "Канал %{id}"
+    chat_channel_archive_complete:
+      title: "Архивация канала завершена"
+      subject_template: "Архивация канала успешно завершена"
+      text_body_template: |
+        Архивация канала «%{channel_hashtag_or_name}» выполнена. Сообщения скопированы в тему [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Не удалось заархивировать канал"
+      subject_template: "Не удалось заархивировать канал"
+      text_body_template: |
+        Не удалось заархивировать канал «%{channel_hashtag_or_name}». Архивировано сообщений: %{messages_archived}. Частично заархивированные сообщения скопированы в тему [%{topic_title}](%{topic_url}). Посетите канал %{channel_url} и повторите попытку.
+    chat_channel_archive_failed_no_topic:
+      title: "Не удалось заархивировать канал"
+      subject_template: "Не удалось заархивировать канал"
+      text_body_template: |
+        Не удалось заархивировать канал «%{channel_hashtag_or_name}». Сообщения не архивированы. Тема не была создана по следующим причинам:
+
+          %{topic_validation_errors}
+
+        Посетите канал %{channel_url} и повторите попытку.
+  chat:
+    deleted_chat_username: удалён
+    errors:
+      users_cant_be_added_to_channel: "Пользователей нельзя добавлять в этот канал."
+      channel_exists_for_category: "Канал для этой категории уже существует"
+      channel_new_message_disallowed:
+        archived: "Канал архивирован, отправлять новые сообщения нельзя"
+        closed: "Канал закрыт, отправлять новые сообщения нельзя"
+        read_only: "Канал в режиме «только для чтения», отправлять новые сообщения нельзя"
+      channel_modify_message_disallowed:
+        archived: "Канал архивирован, редактировать и удалять сообщения нельзя"
+        closed: "Канал закрыт, редактировать и удалять сообщения нельзя"
+        read_only: "Канал в режиме «только для чтения», редактировать и удалять сообщения нельзя"
+      user_cannot_send_message: "В настоящее время вы не можете отправлять сообщения."
+      rate_limit_exceeded: "Превышен лимит сообщений, которые могут быть отправлены в течение 30 секунд"
+      auto_silence_from_flags: "На сообщение поступило большое количество жалоб, и пользователь был заморожен."
+      channel_cannot_be_archived: "Канал в данный момент не может быть заархивирован, он должен быть либо закрыт, либо открыт для архивации."
+      duplicate_message: "Вы отправляете одно и то же сообщение слишком часто."
+      delete_channel_failed: "Не удалось удалить канал, попробуйте ещё раз."
+      minimum_length_not_met:
+        one: "Сообщение слишком короткое, оно должно содержать не менее %{count} символа."
+        few: "Сообщение слишком короткое, оно должно содержать не менее %{count} символов."
+        many: "Сообщение слишком короткое, оно должно содержать не менее %{count} символов."
+        other: "Сообщение слишком короткое, оно должно содержать не менее %{count} символа."
+      message_too_long:
+        one: "Сообщение слишком длинное, оно должно содержать не более %{count} символа."
+        few: "Сообщение слишком длинное, оно должно содержать не более %{count} символов."
+        many: "Сообщение слишком длинное, оно должно содержать не более %{count} символов."
+        other: "Сообщение слишком длинное, оно должно содержать не более %{count} символа."
+      draft_too_long: "Черновик слишком длинный."
+      max_reactions_limit_reached: "Новые реакции на это сообщение запрещены."
+      message_move_invalid_channel: "Исходный и целевой каналы должны быть общедоступными."
+      message_move_no_messages_found: "Не найдено сообщений с указанными идентификаторами сообщений."
+      cant_update_direct_message_channel: "Такие свойства канала как название и описание, не могут быть обновлены."
+      not_accepting_dms: "%{username} в данный момент не принимает сообщения."
+      actor_ignoring_target_user: "Вы игнорируете %{username}, поэтому не можете отправлять им личные сообщения."
+      actor_muting_target_user: "Вы отключили все уведомления от %{username}, поэтому вы не можете отправлять им личные сообщения."
+      actor_disallowed_dms: "Вы решили запретить пользователям отправлять вам личные и прямые сообщения чата, поэтому вы не можете создавать новые прямые сообщения."
+      actor_preventing_target_user_from_dm: "Вы решили запретить %{username} отправлять вам личные и прямые сообщения чата, поэтому вы не можете создавать для них новые прямые сообщения."
+      user_cannot_send_direct_messages: "Вы не можете отправлять прямые сообщения."
+      over_chat_max_direct_message_users_allow_self: "Создать прямое сообщение с собой нельзя."
+      over_chat_max_direct_message_users:
+        one: "Вы не можете создать прямое сообщение более чем с %{count} пользователем."
+        few: "Вы не можете создать прямое сообщение более чем с %{count} пользователями."
+        many: "Вы не можете создать прямое сообщение более чем с %{count} пользователями."
+        other: "Вы не можете создать прямое сообщение более чем с %{count} пользователя."
+      original_message_not_found: "Исходное сообщение для сообщения, на которое вы отвечаете, не найдено или удалено."
+      thread_invalid_for_channel: "Цепочка не является частью указанного канала."
+      thread_does_not_match_parent: "Цепочка не соответствует родительскому сообщению."
+      invalid_direct_message: "Вы не можете создать это прямое сообщение."
+    reviewables:
+      message_already_handled: "Спасибо, но мы уже рассмотрели жалобу на это сообщение, поэтому жаловаться на него снова нет необходимости."
+      actions:
+        agree:
+          title: "Согласиться…"
+        agree_and_keep_message:
+          title: "Оставить сообщение"
+          description: "Согласиться с жалобой и оставить сообщение без изменений."
+        agree_and_keep_deleted:
+          title: "Оставить сообщение уделённым"
+          description: "Согласиться с жалобой и оставить сообщение удалённым."
+        agree_and_suspend:
+          title: "Заблокировать пользователя"
+          description: "Согласиться с жалобой и заблокировать пользователя."
+        agree_and_silence:
+          title: "Заморозка пользователя"
+          description: "Согласиться с жалобой и заморозить пользователя."
+        agree_and_restore:
+          title: "Восстановить сообщение"
+          description: "Восстановить сообщение, чтобы пользователи могли его видеть."
+        agree_and_delete:
+          title: "Удалить сообщение"
+          description: "Удалить сообщение, чтобы пользователи не могли его видеть."
+        delete_and_agree:
+          title: "Игнорировать жалобу и удалить сообщение"
+          description: "Проигнорируйте жалобу, удалив ее из очереди, и удалите сообщение."
+        disagree_and_restore:
+          title: "Отклонить жалобу и восстановить сообщение"
+          description: "Восстановить сообщение, чтобы все пользователи могли его видеть."
+        disagree:
+          title: "Отклонить"
+        ignore:
+          title: "Ничего не делать"
+          description: "Проигнорировать жалобу, удалив ее из очереди, не предпринимая никаких действий."
+      direct_messages:
+        transcript_title: "Содержимое предыдущих сообщений в канале %{channel_name}"
+        transcript_body: "Чтобы дать больше контекста, мы отображаем содержимое предыдущих сообщений этой беседы (до десяти):\n\n%{transcript}"
+    channel:
+      users_invited_to_channel:
+        one: "%{inviting_user} пригласил(-а): %{invited_users}"
+        few: "%{inviting_user} пригласил(-а): %{invited_users}"
+        many: "%{inviting_user} пригласил(-а): %{invited_users}"
+        other: "%{inviting_user} пригласил(-а): %{invited_users}"
+      archive:
+        first_post_raw: "Эта тема является архивом канала [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "Пользователь @%{acting_username} переместил сообщение в канал [%{channel_name}](%{first_moved_message_url})."
+        few: "Пользователь @%{acting_username} переместил %{count} сообщения в канал [%{channel_name}](%{first_moved_message_url})."
+        many: "Пользователь @%{acting_username} переместил %{count} сообщений в канал [%{channel_name}](%{first_moved_message_url})."
+        other: "Пользователь @%{acting_username} переместил %{count} сообщений в канал [%{channel_name}](%{first_moved_message_url})."
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} и ещё %{count}"
+          few: "%{comma_separated_usernames} и ещё %{count}"
+          many: "%{comma_separated_usernames} и ещё %{count}"
+          other: "%{comma_separated_usernames} и ещё %{count}"
+    mention_warning:
+      dismiss: "закрыть"
+      cannot_see: "Пользователь %{first_identifier} не имеет доступа к этому каналу и не был уведомлен."
+      cannot_see_multiple:
+        one: "%{first_identifier} и еще %{count} пользователь не имеют доступа к этому каналу и не были уведомлены."
+        few: "%{first_identifier} и еще %{count} пользователя не имеют доступа к этому каналу и не были уведомлены."
+        many: "%{first_identifier} и еще %{count} пользователей не имеют доступа к этому каналу и не были уведомлены."
+        other: "%{first_identifier} и другие пользователи (еще %{count}) не имеют доступа к этому каналу и не были уведомлены."
+      invitations_sent:
+        one: "Приглашение отправлено"
+        few: "Приглашения отправлены"
+        many: "Приглашения отправлены"
+        other: "Приглашения отправлены"
+      invite: "Пригласить в канал"
+      without_membership: "Пользователь %{first_identifier} не является участником канала."
+      without_membership_multiple:
+        one: "%{first_identifier} и еще %{count} пользователь не являются участниками канала."
+        few: "%{first_identifier} и еще %{count} пользователя не являются участниками канала."
+        many: "%{first_identifier} и еще %{count} пользователей не являются участниками канала."
+        other: "%{first_identifier} и другие пользователи\n (еще %{count}) не являются участниками канала."
+      group_mentions_disabled: "В группе «%{first_identifier}» не разрешены упоминания."
+      group_mentions_disabled_multiple:
+        one: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+        few: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+        many: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+        other: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+      global_mentions_disallowed: "Упоминания @here и @all в этом канале отключены."
+      too_many_members: "В группе «%{first_identifier}» слишком много участников. Никто не был уведомлен."
+      too_many_members_multiple:
+        one: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
+        few: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
+        many: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
+        other: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "содержит символы не в ascii-кодировке"
+        is_already_in_use: "уже используется"
+    bookmarkable:
+      notification_title: "Сообщение в канале %{channel_name}"
+    personal_chat: "личный чат"
+    onebox:
+      inline_to_message: "Сообщение №%{message_id} от пользователя %{username} — №%{chat_channel}"
+      inline_to_channel: "Чат №%{chat_channel}"
+      inline_to_topic_channel: "Чат по теме %{topic_title}"
+      inline_to_thread: "%{thread_title} — #%{chat_channel}"
+      inline_to_thread_no_title: "Цепочка сообщений в #%{chat_channel}"
+      thread_title_connector: "в"
+      x_members:
+        one: "%{count} участник"
+        few: "%{count} участника"
+        many: "%{count} участников"
+        other: "%{count} участника"
+      and_x_others:
+        one: "и ещё %{count}"
+        few: "и ещё %{count}"
+        many: "и ещё %{count}"
+        other: "и ещё %{count}"
+    transcript:
+      default_thread_title: "Цепочка сообщений"
+      split_thread_range: "сообщения от %{start} до %{end} из %{total}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: 'Пользователь %{username} упомянул вас на канале «%{channel}»'
+        other_type: '%{username} упомянул(а) %{identifier} в канале «%{channel}»'
+      direct_message_chat_mention:
+        direct: "Пользователь %{username} упомянул вас в личном чате"
+        other_type: "%{username} упомянул(а) %{identifier} в личном чате"
+      new_chat_message: 'Пользователь %{username} отправил сообщение на канале «%{channel}»'
+      new_direct_chat_message: "Пользователь %{username} отправил сообщение в личный чат"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Отправить сообщение в чат
+  reviewable_score_types:
+    needs_review:
+      title: "Требуется проверка"
+    notify_user:
+      chat_pm_title: 'Ваше сообщение в канале «%{channel_name}»'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'Сообщение в канале «%{channel_name}» требует внимания модератора'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Сотрудник считает, что это сообщение должно быть отправлено на премодерацию."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Удалённый пользователь"
+      description:
+        one: "У вас в чате одно новое сообщение"
+        few: "У вас в чате есть новые сообщения"
+        many: "У вас в чате есть новые сообщения"
+        other: "У вас в чате есть новые сообщения"
+      from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Новое сообщение"
+          few: "[%{site_name}] Новые сообщения"
+          many: "[%{site_name}] Новые сообщения"
+          other: "[%{site_name}] Новые сообщения"
+        chat_dm_1:
+          one: "[%{site_name}] Новое сообщение от пользователя %{name}"
+          few: "[%{site_name}] Новые сообщения от пользователя %{name}"
+          many: "[%{site_name}] Новые сообщения от пользователя %{name}"
+          other: "[%{site_name}] Новые сообщения от пользователя %{name}"
+        chat_dm_2: "[%{site_name}] Новые сообщения от пользователей %{name_1} и %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Новые сообщения от пользователя %{name} и еще %{count}"
+        chat_channel_1:
+          one: "[%{site_name}] Новое сообщение в канале «%{channel}»"
+          few: "[%{site_name}] Новые сообщения в канале «%{channel}»"
+          many: "[%{site_name}] Новые сообщения в канале «%{channel}»"
+          other: "[%{site_name}] Новые сообщения в канале «%{channel}»"
+        chat_channel_2: "[%{site_name}] Новые сообщения в каналах «%{channel_1}» и «%{channel_2}»"
+        chat_channel_3_or_more: "[%{site_name}] Новые сообщения в канале «%{channel}» и еще %{count}"
+        chat_channel_and_dm: "[%{site_name}] Новые сообщения в канале «%{channel}» и от пользователя %{name}"
+      unsubscribe: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
+      unsubscribe_no_link: "Эта сводка чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
+      view_messages:
+        one: "Посмотреть %{count} сообщение"
+        few: "Посмотреть %{count} сообщения"
+        many: "Посмотреть %{count} сообщений"
+        other: "Посмотреть %{count} сообщений"
+      view_more:
+        one: "Посмотреть ещё %{count} сообщение"
+        few: "Посмотреть ещё %{count} сообщения"
+        many: "Посмотреть ещё %{count} сообщений"
+        other: "Посмотреть ещё %{count} сообщений"
+      your_chat_settings: "Настройка частоты рассылки дайджеста чата"
+  unsubscribe:
+    chat_summary:
+      select_title: "Частота писем со сводками чата:"
+      never: Никогда
+      when_away: Если вы находитесь офлайн
+  category:
+    cannot_delete:
+      has_chat_channels: "Категорию удалить нельзя: в ней есть каналы чата."

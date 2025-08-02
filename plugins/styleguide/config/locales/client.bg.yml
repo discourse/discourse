@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "Цветове"
+        icons:
+          title: "Икони"
+        categories:
+          title: "Категории"
+        navigation:
+          title: "Навигация"
+        categories_list:
+          title: "Списък с категории"
+        post:
+          title: "Публикация"
+        suggested_topics:
+          title: "Подобни теми"
+        tooltips:
+          description: "Описание"
+          header: "Хедър"

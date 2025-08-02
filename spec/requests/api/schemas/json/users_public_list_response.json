@@ -1,0 +1,108 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "directory_items": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "likes_received": {
+              "type": "integer"
+            },
+            "likes_given": {
+              "type": "integer"
+            },
+            "topics_entered": {
+              "type": "integer"
+            },
+            "topic_count": {
+              "type": "integer"
+            },
+            "post_count": {
+              "type": "integer"
+            },
+            "posts_read": {
+              "type": "integer"
+            },
+            "days_visited": {
+              "type": "integer"
+            },
+            "user": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "avatar_template": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "username",
+                "name",
+                "avatar_template",
+                "title"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "likes_received",
+            "likes_given",
+            "topics_entered",
+            "topic_count",
+            "post_count",
+            "posts_read",
+            "days_visited",
+            "user"
+          ]
+        }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "last_updated_at": {
+          "type": ["string", "null"]
+        },
+        "total_rows_directory_items": {
+          "type": "integer"
+        },
+        "load_more_directory_items": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "last_updated_at",
+        "total_rows_directory_items",
+        "load_more_directory_items"
+      ]
+    }
+  },
+  "required": [
+    "directory_items",
+    "meta"
+  ]
+}

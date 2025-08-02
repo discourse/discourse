@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Šodien %{time}
+        tomorrow: Rīt %{time}
+        yesterday: Vakar %{time}
+        countdown:
+          passed: datums ir pagājis
+      title: Ievietojiet datumu / laiku
+      create:
+        form:
+          insert: Ievietot
+          advanced_mode: Uzlabots režīms
+          simple_mode: Vienkāršs režīms
+          format_description: "Formāts, ko izmanto, lai lietotājam parādītu datumu. Izmantojiet Z, lai parādītu nobīdi, un zz laika joslas nosaukumam."
+          timezones_title: Parādāmās laika joslas
+          timezones_description: Laika joslas tiks izmantotas, lai priekšskatījumā un rezervē parādītu datumus.
+          recurring_title: Atkārtošanās
+          recurring_description: "Definējiet notikuma atkārtošanos. Varat arī manuāli rediģēt veidlapas ģenerēto atkārtoto opciju un izmantot vienu no šīm atslēgām: gadi, ceturkšņi, mēneši, nedēļas, dienas, stundas, minūtes, sekundes, milisekundes."
+          recurring_none: Bez atkārtošanās
+          invalid_date: Nederīgs datums, pārliecinieties, vai datums un laiks ir pareizi
+          date_title: Datums
+          time_title: Laiks
+          format_title: Datuma formāts
+          timezone: Laika zona
+          until: Līdz ...
+          recurring:
+            every_day: "Katru dienu"
+            every_week: "Katru nedēļu"
+            every_two_weeks: "Katras divas nedēļas"
+            every_month: "Katru mēnesi"
+            every_two_months: "Ik pēc diviem mēnešiem"
+            every_three_months: "Ik pēc trim mēnešiem"
+            every_six_months: "Ik pēc sešiem mēnešiem"
+            every_year: "Katru gadu"

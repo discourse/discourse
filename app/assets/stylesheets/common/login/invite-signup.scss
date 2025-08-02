@@ -1,0 +1,119 @@
+@use "lib/viewport";
+
+.invites-show {
+  box-sizing: border-box;
+  background: var(--secondary);
+  padding: 1em;
+
+  @include viewport.from(sm) {
+    padding: 2rem 3rem;
+  }
+
+  .success-info p:last-child {
+    margin-bottom: 0;
+  }
+
+  .invited-by {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 1em 0;
+    font-size: var(--font-down-1);
+  }
+
+  .invited-by p {
+    margin: 0;
+  }
+
+  .user-info {
+    align-items: center;
+    gap: 0.5em;
+    margin: 0;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .create-account__password {
+    &-info {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &-tip-validation {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .invitation-cta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 2rem;
+    }
+  }
+
+  .instructions {
+    color: var(--primary-medium);
+  }
+
+  .disclaimer {
+    color: var(--primary-medium);
+    margin-top: 0.5em;
+  }
+
+  .invite-form form {
+    display: flex;
+    flex-direction: column;
+
+    .input-group {
+      &.email-input,
+      &.username-input,
+      &.name-input.name-required {
+        order: -1;
+      }
+    }
+  }
+
+  @include viewport.until(sm) {
+    .signup-progress-bar {
+      margin: 0;
+    }
+  }
+}
+
+.invite-page {
+  background: var(--secondary);
+}
+
+.invites-show,
+#simple-container .invite-error {
+  max-width: 500px;
+  padding: 2rem 3rem;
+  background: var(--secondary);
+  margin: 0 auto;
+
+  @include viewport.until(md) {
+    margin: 1em auto 1em auto;
+    padding: 1rem;
+  }
+}
+
+#simple-container .invite-error {
+  .error-info {
+    text-align: center;
+  }
+
+  .error-image {
+    text-align: center;
+    padding-bottom: 1em;
+  }
+}

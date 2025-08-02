@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html<%= raw @embeddable_css_class -%>>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <%= discourse_stylesheet_link_tag 'embed', theme_id: nil %>
+    <%- unless customization_disabled? %>
+      <%= discourse_stylesheet_link_tag  :embedded_theme %>
+    <%- end %>
+
+    <%- if @topic_view && @topic_view.page_title.present? %>
+      <title><%= @topic_view.page_title %> - <%= SiteSetting.title %></title>
+    <%- end %>
+
+    <meta id="data-embedded" data-referer="<%= @data_referer %>">
+    <%= preload_script 'embed-application' %>
+
+    <%= yield :head %>
+  </head>
+  <body>
+    <%= theme_lookup("embedded_header") %>
+    <%= yield %>
+  </body>
+</html>

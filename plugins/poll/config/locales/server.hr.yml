@@ -1,0 +1,58 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  site_settings:
+    poll_enabled: "Dozvoli ankete?"
+    poll_maximum_options: "Maksimalan broj opcija dozvoljenih u anketi."
+    poll_edit_window_mins: "Vrijeme nakon objave posta kada anketa može biti uređena."
+    poll_minimum_trust_level_to_create: "Definirajte minimalnu razinu povjerenja potrebnu za izradu anketa."
+    poll_groupable_user_fields: "Skup imena korisničkih polja koja se mogu koristiti za grupiranje i filtriranje rezultata ankete."
+  poll:
+    poll: "anketa"
+    invalid_argument: "Neispravna vrijednost '%{value}' za argument '%{argument}'."
+    multiple_polls_with_same_name: "Postoji više anketa s istim nazivom:<strong>%{name}</strong>. Upotrijebite atribut '<code>name</code>' da biste jedinstveno identificirali svoje ankete.."
+    default_poll_must_have_at_least_1_option: "Anketa mora imati najmanje 1 opciju."
+    named_poll_must_have_at_least_1_option: "Anketa <strong>%{name}</strong> mora imati najmanje 1 opciju."
+    default_poll_must_have_less_options:
+      one: "Anketa mora imati manje od %{count} opcije."
+      few: "Anketa mora imati manje od %{count} opcije."
+      other: "Anketa mora imati manje od %{count} opcija."
+    named_poll_must_have_less_options:
+      one: "Anketa <strong>%{name}</strong> mora imati manje od %{count} opcije."
+      few: "Anketa <strong>%{name}</strong> mora imati manje od %{count} opcije."
+      other: "Anketa <strong>%{name}</strong> mora imati manje od %{count} opcija."
+    default_poll_must_have_different_options: "Anketa mora imati različite opcije."
+    named_poll_must_have_different_options: "Anketa <strong>%{name}</strong> mora imati različite opcije."
+    default_poll_must_not_have_any_empty_options: "Anketa ne smije imati prazne opcije."
+    named_poll_must_not_have_any_empty_options: "Anketa <strong>%{name}</strong> ne smije imati prazne opcije."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Anketa sa više odabira sadrži nevažeće parametre."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Anketa <strong>%{name}</strong> sa više odabira sadrži nevažeće parametre."
+    requires_at_least_1_valid_option: "Morate odabrati najmanje 1 važeću opciju."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Ne možete promijeniti anketu nakon prvih %{minutes} minuta."
+      cannot_edit_named_poll_with_votes: "Ne možete promijeniti naziv ankete <strong>${name}</strong> nakon prvih %{minutes} minuta."
+    no_poll_with_this_name: "Nijedna anketa pod nazivom <strong>%{name}</strong> povezana s ovim postom."
+    post_is_deleted: "Ne može djelovati na izbrisanom postu."
+    user_cant_post_in_topic: "Ne možete glasati jer ne možete objavljivati u ovoj temi."
+    topic_must_be_open_to_vote: "Tema mora biti otvorena za glasovanje."
+    poll_must_be_open_to_vote: "Anketa biranja mora biti otvorena za glasovanje."
+    one_vote_per_user: "Za ovu anketu dopušten je samo 1 glas."
+    max_vote_per_user:
+      one: Za ovu anketu dopušteno je samo %{count} glas.
+      few: Za ovu anketu dopušteno je samo %{count} glasova.
+      other: Za ovu anketu dopušteno je najviše %{count} glasova.
+    min_vote_per_user:
+      one: Za ovu anketu dopušteno je najmanje %{count} glas.
+      few: Za ovu anketu dopušteno je najmanje %{count} glasa.
+      other: Za ovu anketu dopušteno je najmanje %{count} glasova.
+    topic_must_be_open_to_toggle_status: "Tema mora biti otvorena za prebacivanje statusa."
+    only_staff_or_op_can_toggle_status: "Samo član osoblja ili izvorni poster mogu prebaciti status ankete."
+    insufficient_rights_to_create: "Nemate dopuštenje za stvaranje anketa."
+    email:
+      link_to_poll: "Kliknite za pregled ankete."
+    user_field:
+      no_data: "Nema podataka"

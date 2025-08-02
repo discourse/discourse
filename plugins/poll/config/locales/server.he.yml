@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    poll_enabled: "לאפשר סקרים?"
+    poll_maximum_options: "מספר האפשרויות המרבי המותר בסקר"
+    poll_edit_window_mins: "מספר דקות אחרי יצירת פוסט במהלכן ניתן לערוך סקרים."
+    poll_minimum_trust_level_to_create: "הגדרת רמת המהימנות המזערית הנדרשת ליצירת סקרים."
+    poll_create_allowed_groups: "הקבוצות שמורשות ליצור סקרים."
+    poll_groupable_user_fields: "רשימה של שמות משדה המשתמש שניתן להשתמש בהם לקיבוץ ולסינון תוצאות סקרים."
+    poll_export_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לטובת ייצוא תוצאות סקר (0 להשבתה)."
+    poll_export_ranked_choice_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לייצוא תוצאות סקר מדורג."
+    poll_default_public: "בעת יצירת סקר חדש, יש להפעיל את האפשרות ‚להציג מי הצביע’ כברירת מחדל."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create (דרגת אמון מזערית ליצירת סקרים)"
+  poll:
+    poll: "סקר"
+    invalid_argument: "ערך שגוי ‚%{value}’ למשתנה ‚%{argument}’."
+    multiple_polls_without_name: "בעת יצירת מספר סקרים, כדאי לתת להם שמות ייחודיים על ידי הוספת <code>name=דוגמה</code> לתגיות <code>[poll]</code> שלך."
+    multiple_polls_with_same_name: "יש מספר סקרים עם אותו השם: <strong>%{name}</strong>. יש להשתמש במאפיין ‚<code>name</code>’ (שם) כדי לזהות את הסקרים שלך באופן ייחודי."
+    default_poll_must_have_at_least_1_option: "לסקר חייבת להיות אפשרות אחת לפחות."
+    named_poll_must_have_at_least_1_option: "לסקר בשם <strong>%{name}</strong> חייבת להיות אפשרות אחת לפחות."
+    default_poll_must_have_less_options:
+      one: "לסקר חייבת להיות פחות מאפשרות אחת."
+      two: "לסקר חייבות להיות פחות מ־%{count} אפשרויות."
+      many: "לסקר חייבות להיות פחות מ־%{count} אפשרויות."
+      other: "לסקר חייבות להיות פחות מ־%{count} אפשרויות."
+    named_poll_must_have_less_options:
+      one: "לסקר בשם <strong>%{name}</strong> צריכה להיות פחות מאפשרות אחת."
+      two: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ־%{count} אפשרויות."
+      many: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ־%{count} אפשרויות."
+      other: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ־%{count} אפשרויות."
+    default_poll_must_have_different_options: "לסקר חייבות להיות אפשרויות שונות זו מזו."
+    named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong> צריך שתהיינה אפשרויות שונות."
+    default_poll_must_not_have_any_empty_options: "לסקר לא יכולות להיות אפשרויות ריקות."
+    named_poll_must_not_have_any_empty_options: "לסקר בשם <strong>%{name}</strong> לא יכולות להיות אפשרויות ריקות."
+    default_poll_with_multiple_choices_has_invalid_parameters: "לסקר עם בחירה מרובה יש משתנים לא תקינים."
+    named_poll_with_multiple_choices_has_invalid_parameters: "לסקר בשם <strong>%{name}</strong> עם בחירה מרובה יש משתנים לא תקינים."
+    requires_at_least_1_valid_option: "עליך לבחור לפחות אפשרות אחת תקינה."
+    requires_that_at_least_one_option_is_ranked: "סקרי בחירה לפי דירוג, יש לדרג אפשרות אחת לפחות."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "אין לך אפשרות לשנות סקר לאחר %{minutes} הדקות הראשונות."
+      cannot_edit_named_poll_with_votes: "לא ניתן לשנות את שם הסקר <strong>${name}</strong> לאחר %{minutes} הדקות הראשונות."
+    no_poll_with_this_name: "אין סקר בשם <strong>%{name}</strong> שמקושר לפוסט הזה."
+    post_is_deleted: "לא ניתן לפעול על פוסט שנמחק."
+    user_cant_post_in_topic: "אין לך אפשרות להצביע כיוון שאין לך אפשרות לפרסם בנושא זה."
+    topic_must_be_open_to_vote: "הנושא חייב להיות פתוח להצבעות."
+    poll_must_be_open_to_vote: "הסקר חייב להיות פתוח להצבעות."
+    one_vote_per_user: "רק הצבעה אחת מותרת לסקר זה."
+    max_vote_per_user:
+      one: רק הצבעה %{count} מותרת לסקר זה.
+      two: רק %{count} הצבעות מותרות לסקר זה.
+      many: רק %{count} הצבעות מותרות לסקר זה.
+      other: רק %{count} הצבעות מותרות לסקר זה.
+    min_vote_per_user:
+      one: כמות מזערית של הצבעה %{count} נדרשת לסקר זה.
+      two: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
+      many: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
+      other: כמות מזערית של %{count} הצבעות מותרות לסקר זה.
+    ranked_choice:
+      vote_options_mismatch: "לסקר מדורג, מספר הבחירות שנעשו בהצבעה חייבות להיות תואמות למספר האפשרויות. מספר האפשרויות הוא %{count} ומספר הבחירות שנעשו היה %{provided}."
+      no_group_results_support: "סוג הסקר שגוי, ל־ranked_choice (בחירה לפי דירוג) אין תמיכה בתוצאות קיבוציות."
+    topic_must_be_open_to_toggle_status: "הנושא חייב להיות פתוח לשינויי מצב."
+    only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכולים לשנות מצב של סקר."
+    errors:
+      poll_not_found: "לא נמצא סקר, נא לאשר את המשתנים."
+    insufficient_rights_to_create: "אין לך הרשאה ליצור סקרים."
+    email:
+      link_to_poll: "יש ללחוץ כדי לצפות בסקר."
+    user_field:
+      no_data: "אין נתונים"

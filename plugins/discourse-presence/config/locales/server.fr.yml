@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    presence_enabled: "Afficher les utilisateurs qui sont en train de répondre au sujet actuel ou de modifier le message actuel ?"
+    presence_max_users_shown: "Nombre maximal d'utilisateurs affichés."

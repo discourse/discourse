@@ -1,0 +1,145 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "badge_types": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "sort_order": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "sort_order"
+          ]
+        }
+    },
+    "badge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "grant_count": {
+          "type": "integer"
+        },
+        "allow_title": {
+          "type": "boolean"
+        },
+        "multiple_grant": {
+          "type": "boolean"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "image_upload_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "listable": {
+          "type": "boolean"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "badge_grouping_id": {
+          "type": "integer"
+        },
+        "system": {
+          "type": "boolean"
+        },
+        "long_description": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "manually_grantable": {
+          "type": "boolean"
+        },
+        "query": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "trigger": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "target_posts": {
+          "type": "boolean"
+        },
+        "auto_revoke": {
+          "type": "boolean"
+        },
+        "show_posts": {
+          "type": "boolean"
+        },
+        "badge_type_id": {
+          "type": "integer"
+        },
+        "show_in_post_header": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "grant_count",
+        "allow_title",
+        "multiple_grant",
+        "icon",
+        "image_url",
+        "listable",
+        "enabled",
+        "badge_grouping_id",
+        "system",
+        "long_description",
+        "slug",
+        "manually_grantable",
+        "query",
+        "trigger",
+        "target_posts",
+        "auto_revoke",
+        "show_posts",
+        "badge_type_id",
+        "image_upload_id",
+        "show_in_post_header"
+      ]
+    }
+  },
+  "required": [
+    "badge_types",
+    "badge"
+  ]
+}

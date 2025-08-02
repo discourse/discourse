@@ -1,0 +1,77 @@
+skip_output:
+  - meta
+  - success
+
+pre-commit:
+  parallel: true
+  skip:
+    - merge
+    - rebase
+  commands:
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop --force-exclusion {staged_files}
+    syntax_tree:
+      glob: "*.{rb,rake}"
+      run: bundle exec stree check Gemfile {staged_files}
+    prettier:
+      glob: "*.js"
+      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
+      run: pnpm pprettier --list-different {staged_files}
+    prettier-scss:
+      glob: "*.scss"
+      include: "app/assets/stylesheets|plugins/.+?/assets/stylesheets"
+      run: pnpm pprettier --list-different {staged_files}
+    eslint:
+      glob: "*.js"
+      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
+      run: pnpm eslint --quiet {staged_files}
+    ember-template-lint:
+      glob: "*.hbs"
+      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
+      run: pnpm ember-template-lint {staged_files}
+    yaml-syntax:
+      glob: "*.{yaml,yml}"
+      # database.yml is an erb file not a yaml file
+      exclude: "database.yml"
+      run: bundle exec yaml-lint {staged_files}
+    i18n-lint:
+      glob: "**/{client,server}.en.yml"
+      run: bundle exec ruby script/i18n_lint.rb {staged_files}
+
+fix-staged:
+  parallel: false
+  commands:
+    prettier:
+      glob: "*.js"
+      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
+      run: pnpm pprettier --write {staged_files}
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop --force-exclusion -A {staged_files}
+    syntax_tree:
+      glob: "*.{rb,rake}"
+      run: bundle exec stree write Gemfile {staged_files}
+
+lints:
+  parallel: true
+  commands:
+    rubocop:
+      glob: "*.rb"
+      run: bundle exec rubocop
+    prettier:
+      run: pnpm pprettier --list-different **/*.js
+    prettier-scss:
+      run: pnpm pprettier --list-different **/*.scss
+    eslint:
+      run: pnpm eslint -f compact --quiet --ext .js .
+    ember-template-lint:
+      run: pnpm ember-template-lint .
+    yaml-syntax:
+      glob: "*.{yaml,yml}"
+      # database.yml is an erb file not a yaml file
+      exclude: "database.yml"
+      run: bundle exec yaml-lint {all_files}
+    i18n-lint:
+      glob: "**/{client,server}.en.yml"
+      run: bundle exec ruby script/i18n_lint.rb {all_files}

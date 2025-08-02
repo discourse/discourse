@@ -1,0 +1,406 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "automatic": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "user_count": {
+          "type": "integer"
+        },
+        "mentionable_level": {
+          "type": "integer"
+        },
+        "messageable_level": {
+          "type": "integer"
+        },
+        "visibility_level": {
+          "type": "integer"
+        },
+        "primary_group": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "grant_trust_level": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "incoming_email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "has_messages": {
+          "type": "boolean"
+        },
+        "flair_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flair_bg_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "flair_color": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bio_raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bio_cooked": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bio_excerpt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "public_admission": {
+          "type": "boolean"
+        },
+        "public_exit": {
+          "type": "boolean"
+        },
+        "allow_membership_requests": {
+          "type": "boolean"
+        },
+        "full_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "default_notification_level": {
+          "type": "integer"
+        },
+        "membership_request_template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_group_user": {
+          "type": "boolean"
+        },
+        "members_visibility_level": {
+          "type": "integer"
+        },
+        "can_see_members": {
+          "type": "boolean"
+        },
+        "can_admin_group": {
+          "type": "boolean"
+        },
+        "can_edit_group": {
+          "type": "boolean"
+        },
+        "publish_read_state": {
+          "type": "boolean"
+        },
+        "is_group_owner_display": {
+          "type": "boolean"
+        },
+        "mentionable": {
+          "type": "boolean"
+        },
+        "messageable": {
+          "type": "boolean"
+        },
+        "automatic_membership_email_domains": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "smtp_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "smtp_updated_by": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "smtp_enabled": {
+          "type": "boolean"
+        },
+        "smtp_server": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "smtp_port": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "smtp_ssl_mode": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "imap_enabled": {
+          "type": "boolean"
+        },
+        "imap_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_updated_by": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "imap_server": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_port": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_ssl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_mailbox_name": {
+          "type": "string"
+        },
+        "imap_mailboxes": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "email_username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "email_from_alias": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "email_password": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_last_error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_old_emails": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imap_new_emails": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message_count": {
+          "type": "integer"
+        },
+        "allow_unknown_sender_topic_replies": {
+          "type": "boolean"
+        },
+        "associated_group_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "watching_category_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "tracking_category_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "watching_first_post_category_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "regular_category_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "muted_category_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "watching_tags": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "watching_first_post_tags": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "tracking_tags": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "regular_tags": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "muted_tags": {
+          "type": "array",
+          "items": {
+
+          }
+        }
+      },
+      "required": [
+        "id",
+        "automatic",
+        "name",
+        "user_count",
+        "mentionable_level",
+        "messageable_level",
+        "visibility_level",
+        "primary_group",
+        "title",
+        "grant_trust_level",
+        "incoming_email",
+        "has_messages",
+        "flair_url",
+        "flair_bg_color",
+        "flair_color",
+        "bio_raw",
+        "bio_cooked",
+        "bio_excerpt",
+        "public_admission",
+        "public_exit",
+        "allow_membership_requests",
+        "full_name",
+        "default_notification_level",
+        "membership_request_template",
+        "is_group_user",
+        "members_visibility_level",
+        "can_see_members",
+        "can_admin_group",
+        "publish_read_state",
+        "is_group_owner_display",
+        "mentionable",
+        "messageable",
+        "automatic_membership_email_domains",
+        "smtp_server",
+        "smtp_port",
+        "smtp_ssl_mode",
+        "imap_server",
+        "imap_port",
+        "imap_ssl",
+        "imap_mailbox_name",
+        "imap_mailboxes",
+        "email_username",
+        "email_password",
+        "imap_last_error",
+        "imap_old_emails",
+        "imap_new_emails",
+        "message_count",
+        "allow_unknown_sender_topic_replies",
+        "watching_category_ids",
+        "tracking_category_ids",
+        "watching_first_post_category_ids",
+        "regular_category_ids",
+        "muted_category_ids"
+      ]
+    },
+    "extras": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "visible_group_names": {
+          "type": "array",
+          "items": {
+
+          }
+        }
+      },
+      "required": [
+        "visible_group_names"
+      ]
+    }
+  },
+  "required": [
+    "group",
+    "extras"
+  ]
+}

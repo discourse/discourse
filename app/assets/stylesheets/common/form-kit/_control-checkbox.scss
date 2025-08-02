@@ -1,0 +1,31 @@
+.form-kit {
+  &__control-checkbox {
+    &[type="checkbox"] {
+      margin: 0.17em;
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    &-label {
+      display: flex;
+      gap: 0.5em;
+      font-weight: normal !important;
+      margin: 0;
+      color: var(--primary);
+
+      .form-kit__field[data-disabled] & {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__control-checkbox-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__control-checkbox-description {
+    color: var(--primary-medium);
+  }
+}

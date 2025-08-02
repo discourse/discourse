@@ -1,0 +1,24 @@
+.select-kit {
+  &.combo-box {
+    &.mini-tag-chooser {
+      margin-bottom: 5px;
+      margin-left: 5px;
+
+      &.no-tags {
+        .select-kit-header .selected-name {
+          color: var(--primary-medium);
+        }
+      }
+
+      .select-kit-row {
+        &.is-selected {
+          background: none;
+        }
+
+        &.is-highlighted.is-selected {
+          background: var(--tertiary-low);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+<div class="github-row" data-github-private-repo="{{is_private}}">
+  {{#commit}}
+    <div class="github-icon-container" title="Commit">
+      <svg width="60" height="60" class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M10.5 7.75a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm1.43.75a4.002 4.002 0 01-7.86 0H.75a.75.75 0 110-1.5h3.32a4.001 4.001 0 017.86 0h3.32a.75.75 0 110 1.5h-3.32z"></path></svg>
+    </div>
+  {{/commit}}
+
+  {{#comment}}
+    <div class="github-icon-container" title="Comment">
+      <svg width="60" height="60" class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 2.75a.25.25 0 01.25-.25h8.5a.25.25 0 01.25.25v5.5a.25.25 0 01-.25.25h-3.5a.75.75 0 00-.53.22L3.5 11.44V9.25a.75.75 0 00-.75-.75h-1a.25.25 0 01-.25-.25v-5.5zM1.75 1A1.75 1.75 0 000 2.75v5.5C0 9.216.784 10 1.75 10H2v1.543a1.457 1.457 0 002.487 1.03L7.061 10h3.189A1.75 1.75 0 0012 8.25v-5.5A1.75 1.75 0 0010.25 1h-8.5zM14.5 4.75a.25.25 0 00-.25-.25h-.5a.75.75 0 110-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0114.25 12H14v1.543a1.457 1.457 0 01-2.487 1.03L9.22 12.28a.75.75 0 111.06-1.06l2.22 2.22v-2.19a.75.75 0 01.75-.75h1a.25.25 0 00.25-.25v-5.5z"></path></svg>
+    </div>
+  {{/comment}}
+
+  {{#discussion}}
+    <div class="github-icon-container" title="Discussion">
+      <svg width="60" height="60" class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M1.679 7.932c.412-.621 1.242-1.75 2.366-2.717C5.175 4.242 6.527 3.5 8 3.5c1.473 0 2.824.742 3.955 1.715 1.124.967 1.954 2.096 2.366 2.717a.119.119 0 010 .136c-.412.621-1.242 1.75-2.366 2.717C10.825 11.758 9.473 12.5 8 12.5c-1.473 0-2.824-.742-3.955-1.715C2.92 9.818 2.09 8.69 1.679 8.068a.119.119 0 010-.136zM8 2c-1.981 0-3.67.992-4.933 2.078C1.797 5.169.88 6.423.43 7.1a1.619 1.619 0 000 1.798c.45.678 1.367 1.932 2.637 3.024C4.329 13.008 6.019 14 8 14c1.981 0 3.67-.992 4.933-2.078 1.27-1.091 2.187-2.345 2.637-3.023a1.619 1.619 0 000-1.798c-.45-.678-1.367-1.932-2.637-3.023C11.671 2.992 9.981 2 8 2zm0 8a2 2 0 100-4 2 2 0 000 4z"></path></svg>
+    </div>
+  {{/discussion}}
+
+  {{#pr}}
+    <div class="github-icon-container" title="Pull Request">
+      <svg width="60" height="60" class="github-icon" viewBox="0 0 12 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M11 11.28V5c-.03-.78-.34-1.47-.94-2.06C9.46 2.35 8.78 2.03 8 2H7V0L4 3l3 3V4h1c.27.02.48.11.69.31.21.2.3.42.31.69v6.28A1.993 1.993 0 0 0 10 15a1.993 1.993 0 0 0 1-3.72zm-1 2.92c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zM4 3c0-1.11-.89-2-2-2a1.993 1.993 0 0 0-1 3.72v6.56A1.993 1.993 0 0 0 2 15a1.993 1.993 0 0 0 1-3.72V4.72c.59-.34 1-.98 1-1.72zm-.8 10c0 .66-.55 1.2-1.2 1.2-.65 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+    </div>
+  {{/pr}}
+
+  <div class="github-info-container">
+    {{#commit}}
+      <h4>
+        <a href="{{link}}" target="_blank" rel="noopener">{{commit.message.lines.first}}</a>
+      </h4>
+
+      <div class="github-info">
+        <span>
+          {{i18n.commit_by}}
+          <a href="{{author.html_url}}" target="_blank" rel="noopener">
+            <img alt="" src="{{author.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+            {{author.login}}
+          </a> - <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+        </span>
+      </div>
+    {{/commit}}
+
+    {{#comment}}
+      <h4>
+        {{i18n.comment_by}}
+        <a href="{{user.html_url}}" target="_blank" rel="noopener">
+          <img alt="" src="{{user.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+          {{user.login}}
+        </a> - <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+      </h4>
+    {{/comment}}
+
+    {{#discussion}}
+      <h4>
+        {{i18n.review_by}}
+        <a href="{{user.html_url}}" target="_blank" rel="noopener">
+          <img alt="" src="{{user.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+          {{user.login}}
+        </a> - <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+      </h4>
+    {{/discussion}}
+
+    {{#pr}}
+      <h4>
+        <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+      </h4>
+    {{/pr}}
+
+    <div class="branches">
+      <code>{{base.label}}</code> ← <code>{{head.label}}</code>
+    </div>
+
+    {{#pr}}
+      <div class="github-info">
+        <div class="date">
+          {{i18n.opened}} <span class="discourse-local-date" data-format="ll" data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
+        </div>
+
+        <div class="user">
+          <a href="{{user.html_url}}" target="_blank" rel="noopener">
+            <img alt="" src="{{user.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+            {{user.login}}
+          </a>
+        </div>
+
+        <div class="lines" title="{{i18n.pr_summary}}">
+          <a href="{{html_url}}/files" target="_blank" rel="noopener">
+            <span class="added">+{{additions}}</span>
+            <span class="removed">-{{deletions}}</span>
+          </a>
+        </div>
+      </div>
+    {{/pr}}
+  </div>
+</div>
+
+{{> github/github_body}}

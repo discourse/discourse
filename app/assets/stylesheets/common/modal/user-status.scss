@@ -1,0 +1,28 @@
+.user-status.modal {
+  .d-modal {
+    &__footer {
+      .delete-status {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
+
+    &__body {
+      .control-group-remove-status {
+        margin-top: 25px;
+      }
+
+      .pause-notifications {
+        margin-top: 1.5em;
+      }
+
+      .control-label {
+        font-weight: 700;
+      }
+
+      .tap-tile:last-child {
+        border: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "success": {
+      "type": "string"
+    },
+    "user": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "success",
+    "user"
+  ]
+}

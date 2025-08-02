@@ -1,0 +1,88 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "For å komme i gang, velg en seksjon fra menyen til venstre."
+      categories:
+        atoms: Atomer
+        molecules: Molekyler
+        organisms: Organismer
+      sections:
+        typography:
+          title: "Typografi"
+          example: "Velkommen til Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud trening ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Dato/tid inndata"
+        font_scale:
+          title: "Font System"
+        colors:
+          title: "Farger"
+        icons:
+          title: "Ikoner"
+          full_list: "Se hele listen over Font Awesome Icons"
+        buttons:
+          title: "Knapper"
+        dropdowns:
+          title: "Dropdowns"
+        categories:
+          title: "Kategorier"
+        bread_crumbs:
+          title: "Brødsmuler"
+        navigation:
+          title: "Navigasjon"
+        navigation_bar:
+          title: "Navigasjon"
+        navigation_stacked:
+          title: "Navigasjon Stablet"
+        categories_list:
+          title: "Liste over kategorier"
+        topic_link:
+          title: "Emne Link"
+        topic_list_item:
+          title: "Element for emne liste"
+        topic_statuses:
+          title: "Emne Statuser"
+        topic_list:
+          title: "Emne liste"
+        basic_topic_list:
+          title: "Enkel Emneliste"
+        footer_message:
+          title: "Bunntekst Melding"
+        signup_cta:
+          title: "Registrering av CTA"
+        topic_timer_info:
+          title: "Tidsbestemte handlinger for emne"
+        topic_footer_buttons:
+          title: "Emne bunntekstknapper"
+        topic_notifications:
+          title: "Emne Varsler"
+        post:
+          title: "Innlegg"
+        topic_map:
+          title: "Emne Kart"
+        site_header:
+          title: "Site Header"
+        suggested_topics:
+          title: "Anbefalte emner"
+        post_menu:
+          title: "Innlegg meny"
+        modal:
+          title: "Modell"
+          header: "Modell tittel"
+          footer: "Modal Footer"
+        user_about:
+          title: "Bruker om boks"
+        header_icons:
+          title: "Toppikoner"
+        spinners:
+          title: "Spinnere"
+        tooltips:
+          description: "Beskrivelse"
+          header: "Hode"

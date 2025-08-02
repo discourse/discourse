@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "Sāciet jauno lietotāju apmācību visiem jaunajiem lietotājiem"
+        welcome_message: "Nosūtiet visiem jaunajiem lietotājiem apsveikuma ziņojumu ar īso darba sākšanas rokasgrāmatu"

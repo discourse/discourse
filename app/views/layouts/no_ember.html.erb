@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="<%= html_lang %>">
+<head>
+  <meta charset="utf-8">
+  <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
+  <meta name="description" content="">
+  <%= render partial: "layouts/head" %>
+  <%= render partial: "common/discourse_stylesheet" %>
+  <%= discourse_csrf_tags %>
+
+  <%- unless customization_disabled? %>
+    <%= theme_lookup("head_tag") %>
+  <%- end %>
+
+  <%= yield(:no_ember_head) %>
+
+  <%- if allow_plugins? %>
+    <%= build_plugin_html 'server:before-head-close' %>
+  <%- end -%>
+
+  <%= preload_script "pageview" %>
+</head>
+<body class="no-ember <%= @custom_body_class %>">
+  <%- if allow_plugins? %>
+    <%= build_plugin_html 'server:after-body-open' %>
+  <%- end -%>
+
+  <%- unless customization_disabled? %>
+    <%= theme_lookup("header") %>
+  <%- end %>
+
+  <%- if allow_plugins? %>
+    <%= build_plugin_html 'server:header' %>
+  <%- end %>
+
+  <section id='main'>
+    <%= render partial: 'header', locals: { hide_auth_buttons: local_assigns[:hide_auth_buttons] } %>
+    <div id="main-outlet" class="<%= @container_class ? @container_class : 'wrap' %>">
+      <%= yield %>
+    </div>
+  </section>
+
+  <%- unless customization_disabled? %>
+    <%= theme_lookup("footer") %>
+    <%= theme_lookup("body_tag") %>
+  <%- end %>
+
+  <%- if allow_plugins? %>
+    <%= build_plugin_html 'no-client:footer' %>
+    <%= build_plugin_html 'server:before-body-close' %>
+  <%- end %>
+</body>
+</html>

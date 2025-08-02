@@ -1,0 +1,54 @@
+// styles that apply to the "share" modal & popup when sharing a link to a post or topic
+.link-share-container,
+.notify-user-input {
+  display: flex;
+  gap: 0.5em;
+
+  input,
+  .select-kit {
+    cursor: auto;
+    width: 100%;
+    margin-bottom: 0;
+  }
+}
+
+.link-share-container {
+  .invite-link {
+    flex: 1 0;
+  }
+
+  .mobile-view & {
+    flex-direction: column;
+  }
+}
+
+.link-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+
+  button {
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+  }
+
+  .sources {
+    display: flex;
+  }
+
+  .new-topic {
+    margin-right: 0;
+  }
+}
+
+.share-twitter {
+  .d-icon {
+    color: var(--twitter);
+  }
+}
+
+.share-facebook {
+  .d-icon {
+    color: var(--facebook);
+  }
+}

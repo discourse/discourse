@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    details_enabled: 'Include the ability to add expandable details to a post. This feature can be found in the toolbar popup menu of the composer. You must rebake all posts with "rake posts:rebake" if you change this setting.'
+  details:
+    excerpt_details: "(click for more details)"

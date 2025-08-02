@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Mada
+    scriptables:
+      pin_topic:
+        title: Bandika Mada
+      close_topic:
+        title: Funga Mada
+      append_last_checked_by:
+        button_text: Imekwisha

@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  site_settings:
+    assign_enabled: "Zuordnungs-Plug-in aktivieren"
+    assigns_public: "Zuordnung von Themen öffentlich sichtbar machen"
+    assigns_user_url_path: "Pfad zu Themen, die einem Benutzer zugeordnet sind (verwende {username}, um den Benutzernamen zu ersetzen)"
+    assigns_by_staff_mention: "Wenn ein Team-Mitglied ein anderes Team-Mitglied erwähnt, wird das Thema automatisch zugeordnet"
+    unassign_creates_tracking_post: "Wenn die Zuordnung aufgehoben wird, zur Nachvollziehbarkeit einen geflüsterten Beitrag oder eine Aktion erstellen"
+    assign_self_regex: "Regulärer Ausdruck, der erfüllt sein muss, um sich einem Thema selbst zuzuordnen. Beispiel: „meine Liste“"
+    assign_other_regex: "Regulärer Ausdruck, der erfüllt sein muss, um ein Thema jemand anderem per Erwähnung zuzuordnen. Beispiel: „deine Liste“"
+    unassign_on_group_archive: "Zuordnung aufheben, wenn eine Nachricht von einer Gruppe archiviert wurde (neu zuordnen, wenn sie wieder in den Posteingang verschoben wird)"
+    unassign_on_close: "Zuordnung aufheben, wenn ein Thema geschlossen wird"
+    reassign_on_open: "Wenn ein Thema eröffnet wird, ordne zuvor zugeordnete Benutzer/Gruppen neu zu"
+    invite_on_assign: "Wenn eine persönliche Nachricht einem Benutzer oder einer Gruppe zugeordnet wird, lade ihn/sie zu der PN ein, wenn er/sie nicht bereits Teilnehmer ist."
+    assign_mailer: "Wann für Zuordnungen Benachrichtigungs-E-Mails gesendet werden"
+    remind_assigns: "Benutzer an ausstehende Zuordnungen erinnern."
+    remind_assigns_frequency: "Häufigkeit, mit der Benutzer an zugeordnete Themen erinnert werden."
+    pending_assign_reminder_threshold: "Anzahl ausstehender Zuweisungen zum Auslösen einer Erinnerungsbenachrichtigung."
+    max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugeordnet werden können."
+    assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen und können Themen zugeordnet werden."
+    enable_assign_status: "Füge zu jeder Zuordnung ein anpassbares Statusfeld hinzu."
+    assign_statuses: "Liste der Status, die für jede Zuordnung verfügbar sind. Der erste Status ist der Standardstatus, der für jede neue Zuordnung verwendet wird."
+    errors:
+      assign_statuses:
+        too_few: "Es müssen mindestens zwei verschiedene Status verfügbar sein."
+        duplicate: "Es gibt doppelte Statuswerte."
+        removed_in_use: "Ein Status kann nicht aus der Liste entfernt werden, wenn es bereits Zuordnungen mit diesem Status gibt."
+  discourse_assign:
+    assigned_to: "Thema zugeordnet zu @%{username}"
+    unassigned: "Zuordnung zum Thema wurde aufgehoben"
+    already_claimed: "Dieses Thema wurde bereits übernommen."
+    already_assigned: "Thema ist bereits @%{username} zugeordnet"
+    too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugeordneten Themen erreicht (%{max})."
+    too_many_assigns_for_topic: "Das Limit von %{limit} Zuordnungen pro Thema wurde erreicht."
+    forbidden_assign_to: "@%{username} kann nicht zugeordnet werden, da die Person nicht zu den zugeordneten zulässigen Gruppen gehört."
+    forbidden_assignee_not_pm_participant: "@%{username} kann nicht zugeordnet werden, da die Person keinen Zugriff auf diese PN hat. Du kannst @%{username} Zugriff gewähren, indem du die Person zu dieser PN einlädst."
+    forbidden_assignee_cant_see_topic: "@%{username} kann nicht zugeordnet werden, da die Person keinen Zugriff auf dieses Thema hat."
+    group_already_assigned: "Thema ist bereits @%{group} zugeordnet"
+    forbidden_group_assign_to: "@%{group} kann nicht zugeordnet werden, da die Gruppe nicht zu den zugeordneten zulässigen Gruppen gehört."
+    forbidden_group_assignee_not_pm_participant: "@%{group} kann nicht zugeordnet werden, da nicht alle Mitglieder Zugriff auf diese PN haben."
+    forbidden_group_assignee_cant_see_topic: "@%{group} kann nicht zugeordnet werden, da nicht alle Mitglieder Zugriff auf dieses Thema haben."
+    flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugeordnet"
+    flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst"
+    topic_assigned_excerpt: "hat dir das Thema „%{title}“ zugeordnet"
+    topic_group_assigned_excerpt: "hat das Thema „%{title}“ @%{group} zugeordnet"
+    reminders_frequency:
+      never: "nie"
+      daily: "täglich"
+      weekly: "wöchentlich"
+      monthly: "monatlich"
+      quarterly: "vierteljährlich"
+  assign_mailer:
+    title: "Mailer zuordnen"
+    subject_template: "[%{email_prefix}] %{assignee_name} hat dir „%{topic_title}“ zugeordnet!"
+    text_body_template: |
+      Hey, %{assignee_name} hat dich einer Diskussion **zugeordnet**
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Wenn dich das interessiert, klicke auf den folgenden Link:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Du hast %{pending_assignments} ausstehende Zuordnungen"
+    body: |
+      Du hast aktuell [%{pending_assignments} ausstehende Zuordnungen](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Diese Erinnerung wird %{frequency} zugesandt, wenn du mehr als ein zugeordnetes Thema hast.
+    newest: |
+      ### Neuestes
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Ältestes
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Zufällig zuordnen
+        no_one: "Es wurde versucht, ein Mitglied von `@%{group}` zufällig zuzuordnen, aber es war niemand verfügbar."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} hat dich zugeordnet"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Der ausgewählte Status ist ungültig (er ist nicht in der Website-Einstellung assigned_status enthalten)."

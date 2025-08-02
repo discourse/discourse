@@ -1,0 +1,82 @@
+@use "lib/viewport";
+
+// Common styles for "user-info" component
+.user-info {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 0.75rem;
+
+  .user-image-inner {
+    position: relative;
+    display: inline-block;
+  }
+
+  .user-detail {
+    min-width: 0;
+
+    @include viewport.until(sm) {
+      font-size: var(--font-down-1);
+    }
+
+    .name-line {
+      > a {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 0.5em;
+        color: var(--primary-high);
+      }
+
+      .name,
+      .username {
+        width: 100%;
+
+        @include ellipsis;
+      }
+
+      span:first-child {
+        font-weight: bold;
+      }
+    }
+
+    .details {
+      color: var(--primary);
+
+      .d-icon-reply {
+        color: var(--primary-medium);
+      }
+    }
+
+    .title {
+      color: var(--primary-medium);
+
+      @include ellipsis;
+    }
+  }
+
+  &.medium {
+    min-height: 60px;
+
+    .username,
+    .name {
+      display: block;
+    }
+
+    .margin a {
+      margin-left: 0;
+    }
+
+    &.badge-info {
+      min-height: 80px;
+      min-width: 250px;
+
+      .granted-on {
+        color: var(--primary-med-or-secondary-med);
+      }
+
+      .post-link {
+        display: block;
+        margin-top: 0.2em;
+      }
+    }
+  }
+}

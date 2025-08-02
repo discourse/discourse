@@ -1,0 +1,20 @@
+.form-kit {
+  &__control-menu {
+    justify-content: space-between;
+    min-width: var(--form-kit-small-input);
+  }
+
+  &__control-menu-item {
+    .btn:focus,
+    .btn:active {
+      .discourse-touch & {
+        color: var(--primary);
+        background: rgb(0, 0, 0, 0);
+      }
+    }
+
+    &:last-of-type .btn {
+      color: var(--tertiary);
+    }
+  }
+}

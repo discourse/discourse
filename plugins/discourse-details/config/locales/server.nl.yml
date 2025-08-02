@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    details_enabled: 'Voeg de mogelijkheid toe om uitbreidbare details aan een bericht toe te voegen. Deze functie is te vinden in het pop-upmenu van de werkbalk van de editor. Je moet alle berichten opnieuw bakken met "rake posts:rebake" als je deze instelling wijzigt.'
+  details:
+    excerpt_details: "(klik voor meer informatie)"

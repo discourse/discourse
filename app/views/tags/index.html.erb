@@ -1,0 +1,45 @@
+<% content_for :head do %>
+  <%= raw crawlable_meta_data(title: @title, description: @description_meta) %>
+<% end %>
+
+<div class="tag-crawler">
+
+  <% if @extras[:categories] %>
+    <% @extras[:categories].each do |category| %>
+      <div class="tag-list">
+        <% if category[:name] %>
+          <h3><%= category[:name] %></h3>
+        <% end %>
+        <% category[:tags].each do |tag| %>
+          <%= render "tag", tag: tag %>
+        <% end %>
+      </div>
+      <div class="clearfix"></div>
+    <% end %>
+  <% end %>
+
+  <% if @extras[:tag_groups] %>
+    <% @extras[:tag_groups].each do |tag_group| %>
+      <div class="tag-list">
+        <% if tag_group[:name] %>
+          <h3><%= tag_group[:name] %></h3>
+        <% end %>
+        <% tag_group[:tags].each do |tag| %>
+          <%= render "tag", tag: tag %>
+        <% end %>
+      </div>
+      <div class="clearfix"></div>
+    <% end %>
+  <% end %>
+
+  <% if @tags.present? %>
+    <div class="tag-list">
+      <h3><%= t 'js.tagging.other_tags' %></h3>
+      <% @tags.each do |tag| %>
+        <%= render "tag", tag: tag %>
+      <% end %>
+    </div>
+    <div class="clearfix"></div>
+  <% end %>
+
+</div>

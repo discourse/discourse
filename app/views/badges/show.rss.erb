@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
+    <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
+    <title><%= @rss_title %></title>
+    <link><%= @rss_link %></link>
+    <description><![CDATA[<%= @rss_description %>]]></description>
+    <% if @badge.user_badges.first.present? %>
+      <atom:link href="<%= "#{@rss_link}.rss" %>" rel="self" type="application/rss+xml" />
+      <% @badge.user_badges.joins(:user).last(50).reverse_each do |user_badge| %>
+        <item>
+          <title><![CDATA[<%= "@#{user_badge.user.username}#{" #{user_badge.user.name}" if (user_badge.user.name.present? && SiteSetting.enable_names?)}" -%>]]></title>
+          <discourse:grantedAt><%= user_badge.granted_at.rfc2822 %></discourse:grantedAt>
+          <discourse:grantedBy><![CDATA[<%= "@#{user_badge.granted_by.username}#{" #{user_badge.granted_by.name}" if (user_badge.granted_by.name.present? && SiteSetting.enable_names?)}" -%>]]></discourse:grantedBy>
+          <guid><%= "#{@rss_link}?username=#{user_badge.user.username}" %></guid>
+        </item>
+      <% end %>
+    <% end %>
+  </channel>
+</rss>

@@ -1,0 +1,99 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "For at komme i gang, vælg en sektion fra menuen til venstre."
+      categories:
+        syntax: Syntaks
+        atoms: Atomer
+        molecules: Molekyler
+        organisms: Organismer
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typografi"
+          example: "Velkommen til Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Dato/klokkeslæt input"
+        menus:
+          title: "Menuer"
+        font_scale:
+          title: "Skrifttype"
+        colors:
+          title: "Farver"
+        icons:
+          title: "Ikoner"
+          full_list: "Se den fulde liste over Font Awesome Ikoner"
+        forms:
+          title: "Formularer"
+        buttons:
+          title: "Knapper"
+        dropdowns:
+          title: "Rullebokse"
+        categories:
+          title: "Kategorier"
+        bread_crumbs:
+          title: "Brødkrummer"
+        navigation:
+          title: "Navigation"
+        navigation_bar:
+          title: "Navigationsbjælke"
+        navigation_stacked:
+          title: "Navigation overlappet"
+        categories_list:
+          title: "Kategorioversigt"
+        topic_link:
+          title: "Emne Link"
+        topic_list_item:
+          title: "Emnelisteelement"
+        topic_statuses:
+          title: "Emne Statusser"
+        topic_list:
+          title: "Emneliste"
+        basic_topic_list:
+          title: "Grundlæggende Emneliste"
+        footer_message:
+          title: "Sidefod Besked"
+        signup_cta:
+          title: "Tilmeld CTA"
+        topic_timer_info:
+          title: "Emne-timere"
+        topic_footer_buttons:
+          title: "Knapper til emnesidefod"
+        topic_notifications:
+          title: "Emnemeddelelser"
+        post:
+          title: "Indlæg"
+        topic_map:
+          title: "Emnekort"
+        site_header:
+          title: "Sidehoved"
+        suggested_topics:
+          title: "Foreslåede emner"
+        post_menu:
+          title: "Send menu"
+        modal:
+          title: "Modal"
+          header: "Modal titel"
+          footer: "Modal sidefod"
+        user_about:
+          title: "Om bruger boks"
+        header_icons:
+          title: "Sidehoved ikoner"
+        spinners:
+          title: "Spinnere"
+        empty_state:
+          title: "Tom Tilstand"
+        tooltips:
+          description: "Beskrivelse"
+          header: "Sidehoved"
+        char_counter:
+          placeholder: "Indtast din tekst her..."

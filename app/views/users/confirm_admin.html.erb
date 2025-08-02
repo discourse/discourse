@@ -1,0 +1,20 @@
+<div id='simple-container'>
+  <h2><%= t 'activation.admin_confirm.title' %></h2>
+  <br/>
+
+  <%- unless @confirmed %>
+    <%=raw (t('activation.admin_confirm.description', target_email: @confirmation.target_user.email, target_username: @confirmation.target_user.username)) %>
+    <br/>
+    <br/>
+
+    <%= form_tag do %>
+      <%= submit_tag t('activation.admin_confirm.grant'), class: 'btn btn-primary' %>
+    <% end %>
+  <% else %>
+    <%=raw (t('activation.admin_confirm.complete', target_username: @confirmation.target_user.username)) %>
+    <br/>
+    <br/>
+    <%= link_to t("activation.admin_confirm.back_to", title: SiteSetting.title), Discourse.base_url, class: 'btn btn-primary' %>
+  <% end %>
+
+</div>

@@ -1,0 +1,164 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+en_GB:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM YYYY"
+    long_date: "D MMMM YYYY LT"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d-%m-%Y"
+      short_no_year: "%-d %B"
+      date_only: "%-d %B %Y"
+      long: "%-d %B %Y %H:%M"
+      no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
+  themes:
+    bad_color_scheme: "Can not update theme, invalid colour palette"
+    import_error:
+      generic: An error occurred whilst importing that theme
+    errors:
+      component_no_color_scheme: "Theme components can't have colour palettes"
+      optimized_link: Optimised image links are ephemeral and should not be included in theme source code.
+  emails:
+    incoming:
+      unrecognized_error: "Unrecognised Error"
+  activerecord:
+    errors:
+      models:
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "is not a valid colour"
+  webauthn:
+    validation:
+      unknown_cose_algorithm_error: "The algorithm used for the security key is not recognised."
+  reports:
+    post_edits:
+      labels:
+        post: Post
+    consolidated_page_views:
+      labels:
+        post: Post
+  site_settings:
+    email_subject: "Customisable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
+    restrict_letter_avatar_colors: "A list of 6-digit hexadecimal colour values to be used for letter avatar background."
+    category_colors: "A list of hexadecimal colour values allowed for categories."
+    pop3_polling_ssl: "Use SSL when connecting to the POP3 server. (Recommended)"
+    email_accent_bg_color: "The accent colour to be used as the background of some elements in HTML emails. Enter a colour name ('red') or hex value ('#FF0000')."
+    email_accent_fg_color: "The colour of text rendered on the email bg colour in HTML emails. Enter a colour name ('white') or hex value ('#FFFFFF')."
+    email_link_color: "The colour of links in HTML emails. Enter a colour name ('blue') or hex value ('#0000FF')."
+    group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customise subject format for standard emails</a>"
+    errors:
+      invalid_hex_value: "Colour values have to be 6-digit hexadecimal codes."
+  search:
+    types:
+      category: "Categories"
+  system_messages:
+    welcome_user:
+      text_body_template: |
+        Thanks for joining %{site_name}, and welcome!
+
+        %{new_user_tips}
+
+        We believe in [civilized community behaviour](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
+    welcome_invite:
+      text_body_template: |
+        Thanks for accepting your invitation to %{site_name} -- welcome!
+
+        - We've created this new account **%{username}** for you. Change your name or password by visiting [your user profile][prefs].
+
+        - When you log in, please **use the same email address from your original invitation** — otherwise we won't be able to tell it's you!
+
+        %{new_user_tips}
+
+        We believe in [civilized community behaviour](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
+
+        [prefs]: %{user_preferences_url}
+    email_reject_parsing:
+      subject_template: "[%{email_prefix}] Email issue -- Content Unrecognised"
+    email_reject_invalid_post_action:
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The Post Action was not recognised. Please try again, or post via the website if this continues.
+    email_reject_unrecognized_error:
+      title: "Email Reject Unrecognised Error"
+      subject_template: "[%{email_prefix}] Email issue -- Unrecognised Error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        There was an unrecognised error whilst processing your email and it wasn't posted. You should try again, or [contact a staff member](%{base_url}/about).
+    email_error_notification:
+      text_body_template: |
+        Unfortunately, there was an authentication error whilst polling mails from the POP server.
+
+        Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
+
+        If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
+    too_many_spam_flags:
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your posts have been temporarily hidden because they were flagged by the community.
+
+        As a precautionary measure, your new account has been silenced and will be unable to create replies or topics until a staff member can review your account. We apologise for the inconvenience.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    too_many_tl3_flags:
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know you that your account has been placed on hold due to a large number of community flags.
+
+        As a precautionary measure, your new account has been silenced from creating new replies or topics until a staff member can review your account. We apologise for the inconvenience.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    silenced_by_staff:
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to let you know that your account has been temporarily placed on hold as a precautionary measure.
+
+        Please do continue to browse, but you won't be able to reply or create topics until a [staff member](%{base_url}/about) reviews your most recent posts. We apologise for the inconvenience.
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
+  user_notifications:
+    signup_after_approval:
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        A staff member approved your account on %{site_name}.
+
+        You can now access your new account by logging in at:
+        %{base_url}
+
+        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+        %{new_user_tips}
+
+        We believe in [civilized community behaviour](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
+  upload:
+    unauthorized: "Sorry, the file you are trying to upload is not authorised (authorised extensions: %{authorized_extensions})."
+    optimize_failure_message: "An error occurred whilst optimising the uploaded image."
+  wizard:
+    step:
+      finished:
+        description: |
+          <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
+          <p>It is easy to customise your Discourse even further using our powerful theming system. For examples, check out the <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">top themes and components</a> on <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
+          <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
+  date:
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats

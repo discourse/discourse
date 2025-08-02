@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    presence:
+      replying:
+        one: "جواب دے رہے ہیں"
+        other: "جواب دے رہے ہیں"
+      editing:
+        one: "ترمیم کر رہے ہیں"
+        other: "ترمیم کر رہے ہیں"
+      replying_to_topic:
+        one: "جواب دیا جا رہا ہے"
+        other: "جواب دیا جا رہا ہے"

@@ -1,0 +1,9 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  theme_metadata:
+    description: "经典的 Discourse 主题，非常适合根据社区的特定需求进行定制。"

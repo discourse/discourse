@@ -1,0 +1,23 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Fri, 15 Jan 2016 00:12:43 +0100
+Message-ID: <21@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+This will not include the previous discussion that is present in this email.
+
+---
+*Previous Replies*
+
+This is previous reply #1.
+
+Posted by foo bar on 01/15/2016
+
+---
+[Visit the Topic](https://bar.com/t/wat/1/1) to respond
+
+To stop receiving notifications for this particular topic, [click here](h=
+ttps://bar.com/t/wat/1/unsubscribe). To unsubscribe from these emails, ch=
+ange your [user preferences](https://bar.com/my/preferences).

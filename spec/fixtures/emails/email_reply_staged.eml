@@ -1,0 +1,13 @@
+Return-Path: <staged@foo.com>
+From: Staged <staged@foo.com>
+To: one@foo.com
+Cc: team@bar.com, three@foo.com
+Subject: RE: Testing email threading
+Date: Fri, 15 Jan 2016 00:12:43 +0100
+Message-ID: <35@foo.bar.mail>
+In-Reply-To: <34@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+
+This is email reply **2**.

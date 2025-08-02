@@ -1,0 +1,87 @@
+{
+  "sha": "803d023e2307309f8b776ab3b8b7e38ba91c0919",
+  "commit": {
+    "author": {
+      "name": "Sam",
+      "email": "sam.saffron@gmail.com",
+      "date": "2013-08-02T02:03:53Z"
+    },
+    "committer": {
+      "name": "Sam",
+      "email": "sam.saffron@gmail.com",
+      "date": "2013-08-02T02:16:44Z"
+    },
+    "message": "Fixed GitHub auth, GitHub can provide us with a valid email - so automatically log in for those cases",
+    "tree": {
+      "sha": "8e0f3e17bb5ee3edc5701229dc1ad82dc5a41de6",
+      "url": "https://api.github.com/repos/discourse/discourse/git/trees/8e0f3e17bb5ee3edc5701229dc1ad82dc5a41de6"
+    },
+    "url": "https://api.github.com/repos/discourse/discourse/git/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+    "comment_count": 0
+  },
+  "url": "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+  "html_url": "https://github.com/discourse/discourse/commit/803d023e2307309f8b776ab3b8b7e38ba91c0919",
+  "comments_url": "https://api.github.com/repos/discourse/discourse/commits/803d023e2307309f8b776ab3b8b7e38ba91c0919/comments",
+  "author": {
+    "login": "SamSaffron",
+    "id": 5213,
+    "avatar_url": "https://2.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce?d=https%3A%2F%2Fidenticons.github.com%2F7d3010c11d08cf990b7614d2c2ca9098.png",
+    "gravatar_id": "3dcae8378d46c244172a115c28ca49ce",
+    "url": "https://api.github.com/users/SamSaffron",
+    "html_url": "https://github.com/SamSaffron",
+    "followers_url": "https://api.github.com/users/SamSaffron/followers",
+    "following_url": "https://api.github.com/users/SamSaffron/following{/other_user}",
+    "gists_url": "https://api.github.com/users/SamSaffron/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/SamSaffron/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/SamSaffron/subscriptions",
+    "organizations_url": "https://api.github.com/users/SamSaffron/orgs",
+    "repos_url": "https://api.github.com/users/SamSaffron/repos",
+    "events_url": "https://api.github.com/users/SamSaffron/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/SamSaffron/received_events",
+    "type": "User"
+  },
+  "committer": {
+    "login": "SamSaffron",
+    "id": 5213,
+    "avatar_url": "https://2.gravatar.com/avatar/3dcae8378d46c244172a115c28ca49ce?d=https%3A%2F%2Fidenticons.github.com%2F7d3010c11d08cf990b7614d2c2ca9098.png",
+    "gravatar_id": "3dcae8378d46c244172a115c28ca49ce",
+    "url": "https://api.github.com/users/SamSaffron",
+    "html_url": "https://github.com/SamSaffron",
+    "followers_url": "https://api.github.com/users/SamSaffron/followers",
+    "following_url": "https://api.github.com/users/SamSaffron/following{/other_user}",
+    "gists_url": "https://api.github.com/users/SamSaffron/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/SamSaffron/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/SamSaffron/subscriptions",
+    "organizations_url": "https://api.github.com/users/SamSaffron/orgs",
+    "repos_url": "https://api.github.com/users/SamSaffron/repos",
+    "events_url": "https://api.github.com/users/SamSaffron/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/SamSaffron/received_events",
+    "type": "User"
+  },
+  "parents": [
+    {
+      "sha": "cf333268d5b48946a659f173716aecc1096d7e66",
+      "url": "https://api.github.com/repos/discourse/discourse/commits/cf333268d5b48946a659f173716aecc1096d7e66",
+      "html_url": "https://github.com/discourse/discourse/commit/cf333268d5b48946a659f173716aecc1096d7e66"
+    }
+  ],
+  "stats": {
+    "total": 20,
+    "additions": 18,
+    "deletions": 2
+  },
+  "files": [
+    {
+      "sha": "0edc93bbf3d28a5020ee8b2d44ed68d4e3706a1f",
+      "filename": "app/controllers/users/omniauth_callbacks_controller.rb",
+      "status": "modified",
+      "additions": 18,
+      "deletions": 2,
+      "changes": 20,
+      "blob_url": "https://github.com/discourse/discourse/blob/803d023e2307309f8b776ab3b8b7e38ba91c0919/app/controllers/users/omniauth_callbacks_controller.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/803d023e2307309f8b776ab3b8b7e38ba91c0919/app/controllers/users/omniauth_callbacks_controller.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app/controllers/users/omniauth_callbacks_controller.rb?ref=803d023e2307309f8b776ab3b8b7e38ba91c0919",
+      "patch": "@@ -210,6 +210,8 @@ def create_or_sign_on_user_using_openid(auth_token)\n \n     if user_open_id.blank? && user = User.find_by_email(email)\n       # we trust so do an email lookup\n+      # TODO some openid providers may not be trust worthy, allow for that\n+      #  for now we are good (google, yahoo are trust worthy)\n       user_open_id = UserOpenId.create(url: identity_url , user_id: user.id, email: email, active: true)\n     end\n \n@@ -250,18 +252,32 @@ def create_or_sign_on_user_using_github(auth_token)\n \n     data = auth_token[:info]\n     screen_name = data[\"nickname\"]\n+    email = data[\"email\"]\n     github_user_id = auth_token[\"uid\"]\n \n     session[:authentication] = {\n       github_user_id: github_user_id,\n-      github_screen_name: screen_name\n+      github_screen_name: screen_name,\n+      email: email,\n+      email_valid: true\n     }\n \n     user_info = GithubUserInfo.where(github_user_id: github_user_id).first\n \n+    if !user_info && user = User.find_by_email(email)\n+      # we trust so do an email lookup\n+      user_info = GithubUserInfo.create(\n+          user_id: user.id,\n+          screen_name: screen_name,\n+          github_user_id: github_user_id\n+      )\n+    end\n+\n     @data = {\n       username: screen_name,\n-      auth_provider: \"Github\"\n+      auth_provider: \"Github\",\n+      email: email,\n+      email_valid: true\n     }\n \n     process_user_info(user_info, screen_name)"
+    }
+  ]
+}

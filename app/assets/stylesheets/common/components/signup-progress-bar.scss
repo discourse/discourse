@@ -1,0 +1,77 @@
+@use "lib/viewport";
+
+:root {
+  --progress-bar-line-width: 1px;
+  --progress-bar-circle-size: 0.5rem;
+  --progress-bar-icon-size: 0.25rem;
+}
+
+.signup-progress-bar {
+  width: auto;
+  display: flex;
+  box-sizing: border-box;
+  margin-bottom: 1.2rem;
+  gap: 1rem;
+
+  @include viewport.until(sm) {
+    margin: 1.5rem 0.85rem;
+  }
+
+  .account-created &,
+  .activate-account & {
+    margin-inline: 0;
+  }
+
+  &__segment {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--primary-low-mid);
+
+    &:first-child .signup-progress-bar__circle {
+      transform: translateX(50%);
+      z-index: 1;
+    }
+
+    &:last-child {
+      width: var(--progress-bar-circle-size);
+
+      .signup-progress-bar__circle {
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+    }
+  }
+
+  &__step {
+    display: flex;
+  }
+
+  &__circle {
+    flex-shrink: 0;
+    font-size: var(--progress-bar-icon-size);
+    color: var(--secondary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: var(--progress-bar-circle-size);
+    width: var(--progress-bar-circle-size);
+    transform: none;
+    border-radius: 50%;
+    border: var(--progress-bar-line-width) solid var(--primary-low-mid);
+    background-color: var(--secondary);
+
+    .--active & {
+      background-color: var(--success);
+      border-color: var(--success);
+      box-shadow: 0 0 1px calc(var(--progress-bar-circle-size) / 2)
+        var(--success-low);
+    }
+
+    .--completed & {
+      background-color: var(--success);
+      border-color: var(--success);
+    }
+  }
+}

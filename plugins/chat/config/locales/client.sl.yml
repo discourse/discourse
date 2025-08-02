@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Klepet
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vedno"
+          fullscreen: "Ko je klepet v celozaslonskem načinu"
+          never: "Nikoli"
+      web_hooks:
+        chat_event:
+          group_name: "Dogodki klepeta"
+          chat_message_created: "Sporočilo je ustvarjeno"
+          chat_message_edited: "Sporočilo je urejeno"
+          chat_message_trashed: "Sporočilo je zavrženo"
+          chat_message_restored: "Sporočilo je obnovljeno"
+    about:
+      chat_messages_count: "Sporočila klepeta"
+      chat_channels_count: "Kanali klepeta"
+      chat_users_count: "Uporabniki klepeta"
+    chat:
+      text_copied: Besedilo je bilo kopirano v odložišče
+      link_copied: Povezava je bila kopirana v odložišče
+      deleted_chat_username: izbrisano
+      dates:
+        yesterday: "Včeraj"
+      create: "Ustvari"
+      cancel: "Prekliči"
+      channel_settings:
+        edit: "Uredi"
+        add: "Dodaj"
+        join: "Pridruži se"
+        leave: "Zapusti"
+      close: "Zapri"
+      remove: "Odstrani"
+      delete: "Izbriši"
+      edited: "urejen"
+      muted: "utišani"
+      joined: "pridružen"
+      email_frequency:
+        never: "Nikoli"
+      header_indicator_preference:
+        only_mentions: "Samo omembe"
+        never: "Nikoli"
+      flag: "Prijavi"
+      heading: "Klepet"
+      join: "Pridruži se"
+      last_visit: "zadnji obisk"
+      reply: "Odgovori"
+      edit: "Uredi"
+      copy_text: "Kopiraj besedilo"
+      rebake_message: "Obnovi HTML"
+      bookmark_message: "Zaznamek"
+      bookmark_message_edit: "Uredi zaznamek"
+      save: "Shrani"
+      return_to_channel: "Vrni se na kanal"
+      sounds:
+        none: "Brez"
+      title: "klepet"
+      title_capitalized: "Klepet"
+      exit: "nazaj"
+      channel_status:
+        closed: "Zaprto"
+        open: "Odpri"
+      browse:
+        back: "Nazaj"
+        filter_all: Vse
+        filter_open: Odpri
+        filter_closed: Zaprto
+      chat_message_separator:
+        today: Danes
+        yesterday: Včeraj
+      members_view:
+        add_member: Dodaj člana
+      about_view:
+        title: Naziv
+        name: Ime
+        description: Opis
+      channel_info:
+        back_to_channel: "Nazaj"
+        tabs:
+          members: Člani
+          settings: Nastavitve
+        remove_member: "Odstrani"
+      new_message_modal:
+        user_search_placeholder: "...dodaj več članov"
+        create_group_placeholder: "Ime skupinskega klepeta (neobvezno)"
+        participants_counter: "%{selection_count}/%{max} udeležencev"
+        new_group_chat: "Nov skupinski klepet"
+        filter: "Filter"
+        create_new_group_chat: "Ustvari skupinski klepet"
+      direct_message_creator:
+        add_to_channel: "Dodajte v kanal"
+        title: Novo zasebno sporočilo
+        prefix: "Do:"
+        group_name: "Ime skupinskega klepeta (neobvezno)"
+        members_counter:
+          one: "%{count}/%{max} član"
+          two: "%{count}/%{max} člana"
+          few: "%{count}/%{max} člani"
+          other: "%{count}/%{max} članov"
+      create_channel:
+        type: "Tip"
+        types:
+          category: "Kategorija"
+          topic: "Tema"
+      reactions:
+        only_you: "<span>Odzvali ste se z </span>:%{emoji}:"
+        you_and_single_user: "<span>Vi in %{username} ste se odzvali z </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Vi, %{commaSeparatedUsernames} in %{username} ste se odzvali z </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Vi, %{commaSeparatedUsernames} in še %{count} uporabnik ste se odzvali z </span>:%{emoji}:"
+          two: "<span>Vi, %{commaSeparatedUsernames} in še %{count} uporabnika sta se odzvala z </span>:%{emoji}:"
+          few: "<span>Vi, %{commaSeparatedUsernames} in še %{count} uporabniki ste se odzvali z </span>:%{emoji}:"
+          other: "<span>Vi, %{commaSeparatedUsernames} in še %{count} uporabnikov se je odzvalo z </span>:%{emoji}:"
+        single_user: "<span>%{username} se je odzval z </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} in %{username} so se odzvali z </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} in še %{count} uporabnik so se odzvali z </span>:%{emoji}:"
+          two: "<span>%{commaSeparatedUsernames} in še %{count} uporabnika so se odzvali z </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} in še %{count} uporabniki so se odzvali z </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} in še %{count} uporabnikov se je odzvalo z </span>:%{emoji}:"
+      composer:
+        italic_text: "poudarjeno"
+        bold_text: "krepko"
+      notification_levels:
+        never: "Nikoli"
+      settings:
+        follow: "Pridruži se"
+        followed: "Pridružen"
+        threading_enabled: "Vključeno"
+        threading_disabled: "Onemogočeno"
+        notifications: "Obvestila"
+        preview: "Predogled"
+        save: "Shrani"
+        saved: "Shranjeno"
+        unfollow: "Zapusti"
+        admin_title: "Admin"
+        settings_title: "Nastavitve"
+        info_title: "Informacije o kanalu"
+        category_label: "Kategorija"
+        history_label: "Zgodovina"
+        members_label: "Člani"
+      admin:
+        title: "Klepet"
+        export_messages:
+          description: "To izvozi vsa sporočila iz vseh kanalov."
+      direct_messages:
+        close: "Zapri ta osebni klepet"
+      incoming_webhooks:
+        back: "Nazaj"
+        description: "Opis"
+        delete: "Izbriši"
+        emoji: "Emoji"
+        name: "Ime"
+        save: "Shrani"
+        edit: "Uredi"
+        system: "sistem"
+        url: "URL"
+        username: "Uporabniško ime"
+      selection:
+        cancel: "Prekliči"
+        copy: "Kopiraj"
+        new_topic:
+          title: "Prestavi v novo temo"
+        existing_topic:
+          title: "Prestavi v obstoječo temo"
+        new_message:
+          title: "Prestavi v novo ZS"
+      retention_reminders:
+        short:
+          one: "%{count} dan"
+          two: "%{count} dneva"
+          few: "%{count} dnevi"
+          other: "%{count} dni"
+      emoji_picker:
+        objects: "Stvari"
+        activities: "Dejavnosti"
+        flags: "Zastave"
+        symbols: "Simboli"
+      thread:
+        title: "Naziv"
+        replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        settings: "Nastavitve"
+        last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Običajna"
+          tracking:
+            title: "Sledim"
+          watching:
+            title: "Opazujem"
+        participants_other_count:
+          one: "+%{count}"
+          two: "+%{count}"
+          few: "+%{count}"
+          other: "+%{count}"
+      draft_channel_screen:
+        header: "Novo zasebno sporočilo"
+        cancel: "Prekliči"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Opozorilo
+    review:
+      types:
+        reviewable_chat_message:
+          noun: "sporočilo klepeta"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Klepet"
+    styleguide:
+      sections:
+        chat:
+          title: Klepet
+    sidebar:
+      panels:
+        chat:
+          label: "Klepet"

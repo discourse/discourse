@@ -1,0 +1,41 @@
+<% content_for :title do %><%= @page_title %> - <%= SiteSetting.title %><% end %>
+
+<% content_for :head do %>
+  <meta id="discourse-error" data-discourse-error="true">
+<% end %>
+
+<% content_for :no_ember_head do %>
+  <meta id="discourse-error" data-discourse-error="true">
+<% end %>
+
+<div class="page-not-found">
+  <h1 class="title"><%= @title %></h1>
+
+  <%- if !@current_user %>
+    <a href="<%= path "/login" %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user') %><%= I18n.t('log_in') %></a>
+  <%- end %>
+
+  <%- if @group&.dig(:allow_membership_requests) %>
+    <a href="<%= group_path @group[:name] %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user-plus') %> <%= I18n.t('not_in_group.request_membership') %></a>
+  <%- elsif @group&.dig(:public_admission) %>
+    <a href="<%= group_path @group[:name] %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user-plus') %> <%= I18n.t('not_in_group.join_group') %></a>
+  <%- end %>
+</div>
+
+<%= build_plugin_html 'server:not-found-before-topics' %>
+
+<%= @topics_partial %>
+
+<%- unless @hide_search%>
+  <div class="row">
+    <div class="page-not-found-search">
+      <form action='<%= path "/search" %>' id='discourse-search'>
+        <label for="search-input"><%= t 'page_not_found.search_title' %></label>
+        <input type="text" id="search-input" name="q" value="<%= @slug %>">
+        <button class="btn btn-primary"><%= t 'page_not_found.search_button' %></button>
+      </form>
+    </div>
+  </div>
+
+  <%= preload_script('onpopstate-handler') %>
+<%- end %>

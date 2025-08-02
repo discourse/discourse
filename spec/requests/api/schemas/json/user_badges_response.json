@@ -1,0 +1,197 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "badges": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "grant_count": {
+              "type": "integer"
+            },
+            "allow_title": {
+              "type": "boolean"
+            },
+            "multiple_grant": {
+              "type": "boolean"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "listable": {
+              "type": "boolean"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "badge_grouping_id": {
+              "type": "integer"
+            },
+            "system": {
+              "type": "boolean"
+            },
+            "slug": {
+              "type": "string"
+            },
+            "manually_grantable": {
+              "type": "boolean"
+            },
+            "badge_type_id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "description",
+            "grant_count",
+            "allow_title",
+            "multiple_grant",
+            "icon",
+            "image_url",
+            "listable",
+            "enabled",
+            "badge_grouping_id",
+            "system",
+            "slug",
+            "manually_grantable",
+            "badge_type_id"
+          ]
+        }
+    },
+    "badge_types": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "sort_order": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "sort_order"
+          ]
+        }
+    },
+    "granted_bies": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "avatar_template": {
+              "type": "string"
+            },
+            "flair_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "admin": {
+              "type": "boolean"
+            },
+            "moderator": {
+              "type": "boolean"
+            },
+            "trust_level": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "username",
+            "name",
+            "avatar_template",
+            "flair_name",
+            "admin",
+            "moderator",
+            "trust_level"
+          ]
+        }
+    },
+    "user_badges": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "granted_at": {
+              "type": "string"
+            },
+            "grouping_position": {
+              "type": "integer"
+            },
+            "is_favorite": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "can_favorite": {
+              "type": "boolean"
+            },
+            "badge_id": {
+              "type": "integer"
+            },
+            "granted_by_id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "granted_at",
+            "grouping_position",
+            "is_favorite",
+            "can_favorite",
+            "badge_id",
+            "granted_by_id"
+          ]
+        }
+    }
+  },
+  "required": [
+    "user_badges"
+  ]
+}

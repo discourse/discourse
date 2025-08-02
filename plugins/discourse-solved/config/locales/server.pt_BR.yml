@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  accepted_answer: "Resposta aceita"
+  site_settings:
+    solved_enabled: "Ativar plugin solucionado, permite que usuários(a) selecionem soluções para tópicos"
+    allow_solved_on_all_topics: "Permite que os(as) usuários(as) escolham soluções em todos os tópicos (quando esta opção estiver desmarcada, as soluções podem ser ativadas por categoria ou etiqueta)"
+    accept_all_solutions_trust_level: "Nível mínimo de confiança requerido para aceitar soluções em qualquer tópico (mesmo quando não for OP)"
+    accept_all_solutions_allowed_groups: "Grupos com permissão para aceitar soluções em qualquer tópico (mesmo quando não for OP). Administradores(as) e moderadores(as) sempre têm permissão."
+    empty_box_on_unsolved: "Apresentar uma caixa vazia próximo a tópicos não solucionados"
+    solved_quote_length: "Número de caracteres para citar ao exibir a solução abaixo da primeira postagem"
+    solved_topics_auto_close_hours: "Fechar tópico automaticamente (n) horas após a última resposta, uma vez que o tópico foi marcado como solucionado. Defina como 0 para desativar o fechamento automático."
+    show_filter_by_solved_status: "Mostrar um menu suspenso para filtrar uma lista de tópicos com o status de solucionado."
+    notify_on_staff_accept_solved: "Enviar uma notificação ao criador do tópico quando uma postagem for marcada como uma solução pela equipe."
+    ignore_solved_topics_in_assigned_reminder: "Evite lembretes de atribuições de inclusão de tópicos resolvidos. Aplica-se apenas ao usar o plugin discourse-assign."
+    assignment_status_on_solve: "Quando um tópico for solucionado, atualizar todas as atribuições para este status"
+    assignment_status_on_unsolve: "Quando um tópico não for solucionado, atualizar todas as atribuições para este status"
+    disable_solved_education_message: "Desativar mensagem educativa para tópicos solucionados."
+    accept_solutions_topic_author: "Permitir que o(a) autor(a) do tópico aceite uma solução."
+    solved_add_schema_markup: "Adicione uma marcação do esquema de QAPage ao HTML."
+    enable_solved_tags: "Etiquetas que permitirão que usuários(as) escolham soluções."
+    prioritize_solved_topics_in_search: "Priorizar tópicos solucionados em resultados de pesquisa."
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "Soluções aceitas"
+      xaxis: "Dia"
+      yaxis: "Total"
+  solved:
+    no_solutions:
+      self: "Você ainda não tem soluções aceitas."
+      others: "Nenhuma solução aceita."
+  badges:
+    solved_1:
+      name: "Resolvido!"
+      description: "Tem uma resposta marcada como solução"
+      long_description: "Este emblema é concedido por ter uma resposta marcada como solução para um tópico: :white_check_mark: Bom trabalho. :+1:"
+    solved_2:
+      name: "Conselhos e orientação"
+      description: "Tenha dez respostas marcadas como soluções"
+      long_description: "Este emblema é concedido por ter dez respostas suas marcadas como soluções para tópicos. :white_check_mark: Você é um recurso valioso para seus colegas que fazem parte da comunidade."
+    solved_3:
+      name: "Sagaz"
+      description: "Tenha 50 respostas marcadas como soluções"
+      long_description: "Este emblema é concedido por ter 50 respostas suas marcadas como soluções para tópicos. :white_check_mark: Você é um recurso valioso para seus colegas que fazem parte da comunidade. :clap:"
+    solved_4:
+      name: "Fábrica de soluções"
+      description: "Tenha 150 respostas marcadas como soluções"
+      long_description: "Este emblema é concedido por ter 150 respostas suas marcadas como soluções para tópicos. :white_check_mark: Ótimo trabalho. :slightly_smiling_face: Você é oficialmente uma Fábrica de soluções. :brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: Primeira solução aceita
+        doc: Se ativa quando um(a) usuário(a) tiver uma solução aceita pela primeira vez.
+  education:
+    topic_is_solved: |
+      ### Este tópico foi solucionado
+
+      Responda aqui apenas se:
+
+      - Você tiver mais informações
+
+      - A solução não funcionar para você
+
+      Se tiver algum assunto não relacionado, [comece um novo tópico](%{base_url}/new-topic).

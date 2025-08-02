@@ -1,0 +1,430 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: удалить автоматизацию
+    discourse_automation:
+      title: Автоматизация
+      back: Назад
+      edit: Отредактировать
+      select_script: Выберите скрипт
+      select_trigger: Выберите триггер
+      confirm_automation_reset: Параметры скрипта и триггера будут сброшены. Новое состояние будет сохранено. Продолжить?
+      confirm_automation_trigger: Будет запущена автоматизация. Продолжить?
+      filter_placeholder: Фильтровать по имени или описанию...
+      edit_automation:
+        trigger_section:
+          forced: Этот триггер вызван скриптом.
+          next_pending_automation: "Следующая автоматизация сработает %{date}"
+          trigger_now: "Запустить сейчас"
+          title: Когда и что…
+        fields_section:
+          title: Параметры скрипта
+      destroy_automation:
+        confirm: "Действительно удалить `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "Настроить"
+          label_with_count:
+            one: "Изменить конфигурацию (%{count})"
+            few: "Изменить конфигурацию (%{count})"
+            many: "Изменить конфигурацию (%{count})"
+            other: "Изменить конфигурацию (%{count})"
+        user:
+          label: Пользователь
+        pm:
+          title:
+            label: Название
+          raw:
+            label: Текст сообщения
+        pms:
+          confirm_remove_pm: "Действительно удалить это ЛС?"
+          placeholder_title: Название ЛС
+          add_pm: Добавить ЛС
+          no_pm_created: Вы еще не создали личных сообщений. ЛС будут отправлены после запуска автоматизации.
+          title:
+            label: Название
+          raw:
+            label: Текст сообщения
+          delay:
+            label: Задержка (в минутах)
+          prefers_encrypt:
+            label: Шифрует ЛС, если это возможно
+        group:
+          label: Группа
+        text:
+          label: Текст
+      triggerables:
+        not_found: Не удалось найти триггер `%{trigger}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
+        user_badge_granted:
+          fields:
+            badge:
+              label: Награда
+            only_first_grant:
+              label: Только при первой выдаче
+        stalled_topic:
+          durations:
+            PT1H: "1 час"
+            P1D: "1 день"
+            P1W: "1 неделя"
+            P2W: "2 недели"
+            P1M: "1 месяц"
+            P3M: "3 месяца"
+            P6M: "6 месяцев"
+            P1Y: "1 год"
+          fields:
+            categories:
+              label: Ограничено по категориям
+            tags:
+              label: Ограничено по тегам
+            stalled_after:
+              label: 'Считать неактивной после периода: '
+        recurring:
+          every: Кажд.
+          frequencies:
+            minute: минуту
+            hour: час
+            day: день
+            weekday: будний день
+            week: неделю
+            month: месяц
+            year: год
+          fields:
+            recurrence:
+              label: Повторение
+            start_date:
+              label: Дата начала
+        stalled_wiki:
+          durations:
+            PT1H: "1 час"
+            P1D: "1 день"
+            P1W: "1 неделя"
+            P2W: "2 недели"
+            P1M: "1 месяц"
+            P3M: "3 месяца"
+            P6M: "6 месяцев"
+            P1Y: "1 год"
+          fields:
+            restricted_category:
+              label: Ограничено по категории
+            stalled_after:
+              label: Задержка запуска
+              description: Задержка между последним редактированием вики-записи и запуском автоматизации
+            retriggered_after:
+              label: Задержка повторного запуска
+              description: Задержка между первым и следующим срабатыванием, если вики-запись не редактировалась после первого срабатывания
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Отслеживаемая группа
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Отслеживаемая группа
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Ограничить по группе
+            trust_level_transition:
+              label: Смена уровня доверия
+          trust_levels:
+            ALL: "Все уровни доверия"
+            TL01: "УД0 — УД1"
+            TL12: "УД1 — УД2"
+            TL23: "УД2 — УД3"
+            TL34: "УД3 — УД4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Время выполнения
+        topic:
+          fields:
+            restricted_topic:
+              label: ID темы
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Только оригинальная публикация
+              description: Срабатывает только в том случае, если публикация является оригинальной в этой теме
+            action_type:
+              label: Тип действия
+              description: "Необязательно; ограничить срабатывание только созданными или измененными событиями"
+            valid_trust_levels:
+              label: Допустимые уровни доверия
+              description: Сработает, только если публикация создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
+            restricted_tags:
+              label: Теги
+              description: Необязательно, срабатывает только в том случае, если публикация содержит любой из этих тегов
+            restricted_categories:
+              label: Категории
+            restricted_inbox_groups:
+              description: Необязательно, срабатывает только в том случае, если темой публикации является личное сообщение в одном из почтовых ящиков группы
+            ignore_automated:
+              label: Игнорировать автоматические
+              description: Пропустить триггер, если отправитель использует адрес эл. почты без возможности ответа (noreply) или письмо получено из источника автоматической рассылки. Применяется только к публикациям, созданным по электронной почте
+            first_post_only:
+              label: Только первая публикация
+              description: Срабатывает только в том случае, если это первая публикация пользователя
+            first_topic_only:
+              label: Только первая тема
+              description: Срабатывает только в том случае, если это первая тема пользователя
+            skip_via_email:
+              label: "Пропустить по электронной почте"
+              description: "Пропустить триггер, если публикация была создана по электронной почте"
+          created: Создано
+          edited: Изменено
+          with_images: Изображения
+          with_links: Ссылки
+          with_code: Код
+          with_uploads: Загрузки
+        user_updated:
+          fields:
+            user_profile:
+              label: Поля профиля пользователя
+              description: Сработает только в том случае, если пользователь заполнил все эти поля
+            custom_fields:
+              label: Пользовательские поля
+              description: Сработает только в том случае, если пользователь заполнил все эти поля
+            once_per_user:
+              label: Один раз на пользователя
+              description: Срабатывает только один раз для каждого пользователя
+            new_users_only:
+              label: Только новые пользователи
+              description: Срабатывает только для новых пользователей, которые присоединятся после включения этой автоматизации
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Родительская категория
+              description: Необязательно; позволяет ограничить срабатывание триггера указанной категорией
+        pm_created:
+          fields:
+            restricted_user:
+              label: Пользователи
+              description: Сработает только для личных сообщений, отправленных этому пользователю
+            restricted_group:
+              label: Группа
+              description: Сработает только для личных сообщений, отправленных в эту группу
+            ignore_staff:
+              label: Игнорировать персонал
+              description: Пропустить триггер, если отправитель является сотрудником
+            ignore_group_members:
+              label: Игнорировать участников группы
+              description: Пропустить триггер, если отправитель является участником указанной выше группы
+            ignore_automated:
+              label: Игнорировать автоматические
+              description: Пропустить триггер, если отправитель использует адрес эл. почты без возможности ответа (noreply) или письмо получено из источника автоматической рассылки. Применяется только к личным сообщениям, созданным по электронной почте
+            valid_trust_levels:
+              label: Допустимые уровни доверия
+              description: Сработает, только если публикация создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Теги добавлены или удалены
+            tags_added: Теги добавлены
+            tags_removed: Теги удалены
+          fields:
+            watching_categories:
+              label: Отслеживаемые категории
+              description: Сработает только в том случае, если тема относится к одной из этих категорий
+            watching_tags:
+              label: Отслеживаемые теги
+              description: Сработает только в том случае, если тема содержит любой из этих тегов
+            trigger_on:
+              label: 'Запустить при условии:'
+            trigger_with_pms:
+              label: Запуск при изменении в ЛС
+              description: Срабатывает, даже если теги были изменены в личном сообщении
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Допустимые уровни доверия
+              description: Сработает, только если публикация создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
+            restricted_category:
+              label: Категория
+              description: Необязательно, срабатывает только в том случае, если тема публикации находится в этой категории
+            restricted_tags:
+              label: Теги
+              description: Необязательно, срабатывает только в том случае, если публикация содержит любой из этих тегов
+      scriptables:
+        not_found: Не удалось найти скрипт `%{script}` для автоматизации `%{automation}`. Проверьте, установлен ли соответствующий плагин.
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL вебхука
+              description: "Требуется действительный URL вебхука Zapier, например: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Один раз
+              description: Отвечает только один раз на тему
+            word_answer_list:
+              label: Список пар «слово — ответ»
+              description: "Определяет список групп «ключ — значение», где «ключ» — это искомый термин, а «значение» — текст ответа. «Ключ» можно оставить пустым, чтобы реагировать на все триггеры, независимо от контента. Обратите внимание, что `value` принимает `{{key}}` в качестве заполнителя, который будет заменен значением `key` в ответе. При этом `key` будет оцениваться как регулярное выражение, а специальные символы, такие как `.`, должны быть экранированы, например: `\\.`"
+            answering_user:
+              label: Отвечающий пользователь
+              description: Пользователь по умолчанию — System
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Теги
+              description: Список тегов для добавления в тему.
+        post:
+          fields:
+            creator:
+              label: Автор
+              post_creator_context: Автор публикации
+              updated_user_context: Обновленный пользователь
+            topic:
+              label: ID темы
+            post:
+              label: Контент публикации
+        topic:
+          fields:
+            creator:
+              label: Автор
+              updated_user_context: Обновленный пользователь
+            body:
+              label: Текст темы
+            title:
+              label: Название темы
+            category:
+              label: Категория темы
+            tags:
+              label: Теги темы
+        group_category_notification_default:
+          fields:
+            group:
+              label: Группа
+            notification_level:
+              label: Уровень уведомлений
+            update_existing_members:
+              label: Обновить существующих участников
+              description: Обновляет уровень уведомлений для существующих участников группы
+        user_global_notice:
+          fields:
+            level:
+              label: Уровень
+            notice:
+              label: Уведомление
+              description: Принимает HTML — не вводите небезопасные данные!
+          levels:
+            warning: Предупреждение
+            info: Информация
+            success: Успех
+            error: Ошибка
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Название награды
+            group:
+              label: Группа
+              description: Целевая группа. Пользователи с указанной наградой будут добавлены в эту группу
+            update_user_title_and_flair:
+              label: Обновить название и значок пользователя
+              description: Необязательно, обновить название и значок пользователя
+            remove_members_without_badge:
+              label: Удалить существующих участников без награды
+              description: Необязательно, удалить существующих участников группы без указанной награды
+            badge:
+              label: Награда
+              description: Выбрать награду
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Заблокировать до (по умолчанию)
+            reason:
+              label: Причина (по умолчанию)
+            actor:
+              label: Пользователь
+              description: "Пользователь, ответственный за блокировку (по умолчанию — System)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID темы
+            pinned_globally:
+              label: Закреплено глобально
+            pinned_until:
+              label: Закреплено до
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID темы
+            banner_until:
+              label: Сделать баннером до
+            user:
+              label: Пользователь
+              description: "Пользователь, создающий баннер (по умолчанию — System)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Проверенные слова
+        topic_required_words:
+          fields:
+            words:
+              label: Список обязательных слов
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Название группы участников
+            giftee_assignment_messages:
+              label: Сообщения, отправленные дарителю
+        send_pms:
+          add_a_pm_btn:
+            label: Добавить ЛС
+          fields:
+            receiver:
+              label: Получатель ЛС
+            sendable_pms:
+              label: ЛС
+            sender:
+              label: Отправитель ЛС
+        close_topic:
+          fields:
+            topic:
+              label: ID темы
+            message:
+              label: Сообщение о закрытии
+              description: "Необязательное сообщение для показа при закрытии темы"
+            user:
+              label: Пользователь
+              description: "Пользователь, закрывающий тему (по умолчанию — System)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Название настраиваемого поля пользователя"
+      unnamed_automation: "Автоматизация без названия"
+      models:
+        script:
+          name:
+            label: Скрипт
+        trigger:
+          name:
+            label: Запуск
+        automation:
+          name:
+            label: Название
+          trigger:
+            label: Запуск
+          script:
+            label: Скрипт
+          version:
+            label: Версия
+          status:
+            label: Статус
+          enabled:
+            label: Включено
+          disabled:
+            label: Отключено
+          placeholders:
+            label: Заполнители
+          last_updated_at:
+            label: Последнее обновление
+          last_updated_by:
+            label: Кем обновлено

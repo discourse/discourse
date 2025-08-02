@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    details:
+      title: Skjul Detaljer
+    composer:
+      details_title: Sammendrag
+      details_text: "Denne teksten vil skjules"

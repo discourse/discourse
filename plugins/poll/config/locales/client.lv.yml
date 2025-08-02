@@ -1,0 +1,101 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  js:
+    poll:
+      average_rating: "Vidējais vērtējums: <strong>%{average}</strong>."
+      public:
+        title: "Balsojumi ir <strong>publiski</strong>."
+      results:
+        groups:
+          title: "Lai piedalītos šajā aptaujā, jums ir jāreģistrējas %{groups}"
+        vote:
+          title: "Rezultāti tiks parādīti <strong>balsojumu</strong>."
+        closed:
+          title: "Rezultāti tiks parādīti <strong>balsojumu</strong>."
+        staff:
+          title: "Rezultāti tiek parādīti tikai <strong>darbiniekiem</strong> darbiniekiem."
+      cast-votes:
+        title: "Atdod savas balsis"
+        label: "Balso tagad!"
+      show-results:
+        title: "Parādīt aptaujas rezultātus"
+      hide-results:
+        title: "Atpakaļ pie balsojumiem"
+      group-results:
+        title: "Grupējiet balsojumus pēc lietotāja lauka"
+        label: "Rādīt sadalījumu"
+      export-results:
+        title: "Eksportējiet aptaujas rezultātus"
+        label: "Eksportēt"
+      open:
+        title: "Atvērt aptauju"
+        label: "Atvērt"
+        confirm: "Vai tiešām vēlaties atvērt šo aptauju?"
+      close:
+        title: "Aizvērt aptauju"
+        label: "Aizvērt"
+        confirm: "Vai tiešām vēlaties slēgt šo aptauju?"
+      automatic_close:
+        closes_in: "Aizveras pēc<strong>%{timeLeft}</strong>."
+        age: "Slēgts <strong>%{age}</strong>"
+      breakdown:
+        title: "Aptaujas rezultāti"
+        votes: "%{count} balsis"
+        breakdown: "Sadalījums"
+        percentage: "Procentuāli"
+        count: "Skaits"
+      ranked_choice:
+        none: "Nav"
+      options:
+        label: "Opcijas"
+      error_while_toggling_status: "Diemžēl, mainot šīs aptaujas statusu, radās kļūda."
+      error_while_casting_votes: "Atvainojiet, radās kļūda balsojot."
+      error_while_fetching_voters: "Atvainojiet, parādot vēlētājus, radās kļūda."
+      error_while_exporting_results: "Atvainojiet, radās kļūda eksportējot aptaujas rezultātus."
+      ui_builder:
+        title: Veidot aptauju
+        insert: Ievietot aptauju
+        help:
+          options_min_count: Ievadiet vismaz 1 opciju.
+          options_max_count: Ievadiet ne vairāk kā %{count} opcijas.
+          invalid_min_value: Minimālajai vērtībai jābūt vismaz 1.
+          invalid_max_value: Maksimālajai vērtībai jābūt vismaz 1, bet mazākai vai vienādai ar opciju skaitu.
+          invalid_values: Minimālajai vērtībai jābūt mazākai par maksimālo vērtību.
+          min_step_value: Minimālā soļa vērtība ir 1
+        poll_type:
+          label: Tips
+          regular: Viena izvēle
+          multiple: Vairākas izvēles
+          number: Ciparu vērtējums
+        poll_result:
+          label: Rādīt rezultātus...
+          always: Vienmēr redzams
+          vote: Tikai pēc balsošanas
+          closed: Kad aptauja ir slēgta
+          staff: Tikai darbiniekiem
+        poll_groups:
+          label: Ierobežot balsošanu tikai šīm grupām
+        poll_chart_type:
+          label: Rezultātu diagramma
+          bar: Josla
+          pie: Sektors
+        poll_config:
+          max: Maksimālās izvēles
+          min: Min izvēles
+          step: Solis
+        poll_public:
+          label: Parādīt, kas balsoja
+        poll_title:
+          label: Nosaukums (pēc izvēles)
+        poll_options:
+          label: Iespējas (viena rindiņā)
+          add: Pievienot opciju
+        automatic_close:
+          label: Automātiski aizvērt aptauju
+        show_advanced: "Rādīt papildu opcijas"
+        hide_advanced: "Slēpt papildu opcijas"

@@ -1,0 +1,75 @@
+.btn-insert-table {
+  background: var(--tertiary);
+  color: var(--secondary);
+
+  .d-icon {
+    color: var(--secondary);
+  }
+
+  .discourse-no-touch & {
+    &:hover {
+      background-color: var(--tertiary-hover);
+      color: var(--secondary);
+
+      .d-icon {
+        color: var(--secondary);
+      }
+    }
+  }
+}
+
+.insert-table-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .d-modal__container {
+    --modal-max-width: $reply-area-max-width;
+    width: 100%;
+    height: 100%;
+    max-height: unset;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .d-modal__footer {
+    justify-content: space-between;
+
+    .primary-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .secondary-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .edit-reason {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn {
+        margin-right: 0;
+      }
+
+      input {
+        margin: 0;
+      }
+    }
+
+    .secondary-actions .tippy-content {
+      h4 {
+        color: var(--primary);
+      }
+
+      li {
+        margin-block: 0.25rem;
+        color: var(--primary-high);
+      }
+    }
+  }
+}

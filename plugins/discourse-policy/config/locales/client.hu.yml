@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  js:
+    discourse_policy:
+      builder:
+        save: Módosítások mentése
+        insert: Beszúrás
+        groups:
+          label: Csoportok
+        version:
+          label: Verzió
+        accept:
+          label: Elfogadás
+        revoke:
+          label: Visszavonás
+        private:
+          label: Privát?
+          description: Házirend állapotának privátban tartása a rendszergazdák számára
+        send-email:
+          label: E-mail küldése?
+      preferences:
+        policy_emails:
+          email_frequency_options:
+            never: Soha
+            when_away: Csak ha távol van
+            always: Mindig

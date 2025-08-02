@@ -1,0 +1,103 @@
+name: Release Notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      from:
+        description: "Starting ref (exclusive). Can be a tag, branch or commit ref. `latest-release` refers to the last beta version bump."
+        required: true
+        default: "latest-release"
+        type: string
+      to:
+        description: "Ending ref (inclusive). Can be a tag, branch or commit ref. `HEAD` refers to the most recent commit."
+        required: true
+        default: "HEAD"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: run
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim
+    timeout-minutes: 10
+    env:
+      from_ref: ${{ inputs.from || 'latest-release' }}
+      to_ref: ${{ inputs.to || 'HEAD' }}
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bundler cache
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gem-
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+
+      - name: Create output dir
+        run: mkdir -p tmp/notes
+
+      - name: Core release notes
+        run: bin/rake "release_note:generate[ $from_ref , $to_ref ]" | tee tmp/notes/core.txt
+
+      - name: Calculate from/to dates from refs
+        id: dates
+        run: |
+          from=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${from_ref}^{commit}")
+          echo "from=$from" >> $GITHUB_OUTPUT
+          to=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${to_ref}^{commit}")
+          echo "to=$to" >> $GITHUB_OUTPUT
+
+      - name: Setup all-the-plugins
+        run: |
+          git clone https://github.com/discourse/all-the-plugins tmp/all-the-plugins
+          cd tmp/all-the-plugins
+          ./reset-all-repos
+
+      - name: Plugin release notes
+        run: |
+          bin/rake "release_note:plugins:generate[ ${{ steps.dates.outputs.from }} , ${{ steps.dates.outputs.to }} , ./tmp/all-the-plugins/official/* , discourse ]" | tee tmp/notes/plugins.txt
+
+      - name: Export files
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: ./tmp/notes/*.txt
+
+      - name: Write summary
+        run: |
+          echo "### Release notes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "From: $from_ref - $(git rev-parse --short $from_ref) - ${{ steps.dates.outputs.from }}" >> $GITHUB_STEP_SUMMARY
+          echo "To: $to_ref - $(git rev-parse --short $to_ref) - ${{ steps.dates.outputs.to }}" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "Core:" >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
+          cat tmp/notes/core.txt >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
+          echo ""
+          echo "Plugins:" >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
+          cat tmp/notes/plugins.txt >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY

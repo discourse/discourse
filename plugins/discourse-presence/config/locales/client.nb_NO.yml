@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    presence:
+      replying:
+        one: "svarer"
+        other: "svarer"
+      editing:
+        one: "redigerer"
+        other: "redigerer"
+      replying_to_topic:
+        one: "svarer"
+        other: "svarer"

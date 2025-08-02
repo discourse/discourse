@@ -1,0 +1,29 @@
+@mixin chat-unread-indicator {
+  @include unselectable;
+  width: 14px;
+  height: 14px;
+  border-radius: 1em;
+  box-sizing: content-box;
+  -webkit-touch-callout: none;
+  background: var(--tertiary-med-or-tertiary);
+  color: var(--secondary);
+  font-size: var(--font-down-2);
+  text-align: center;
+  transition: border-color linear 0.15s;
+
+  @content;
+
+  &.-urgent {
+    background: var(--success);
+    color: var(--secondary);
+  }
+
+  &__number {
+    color: var(--secondary);
+    line-height: var(--line-height-small);
+  }
+}
+
+.c-unread-indicator {
+  @include chat-unread-indicator;
+}

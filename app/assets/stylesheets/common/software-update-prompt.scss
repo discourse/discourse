@@ -1,0 +1,58 @@
+.software-update-prompt {
+  position: fixed;
+  flex: 1;
+  right: 0;
+  left: 0;
+  top: var(--header-offset, 60px);
+  background-color: var(--tertiary-low);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s;
+  box-shadow: var(--shadow-header);
+  z-index: z("header") - 10;
+
+  .static-login &,
+  .wizard &,
+  .invite-page & {
+    top: 0;
+  }
+
+  .update-prompt-main-content {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .update-prompt-message {
+    color: var(--tertiary);
+    padding: 0.75em 0;
+
+    .d-icon {
+      color: var(--tertiary);
+      font-size: 0.9em;
+    }
+
+    .d-button-label > span {
+      text-decoration: underline;
+    }
+  }
+
+  .update-prompt-dismiss {
+    justify-content: flex-end;
+    display: flex;
+    height: 44px;
+    flex: 1;
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &.require-software-refresh {
+    max-height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: max-height 0.75s;
+  }
+}

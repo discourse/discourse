@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  discourse_automation:
+    triggerables:
+      api_call:
+        title: Κλήση API
+      category_created_edited:
+        title: Κατηγορία δημιουργήθηκε/επεξεργάστηκε
+      point_in_time:
+        title: Σημείο στο χρόνο
+      user_promoted:
+        transition_placeholder: "από %{from_level_name} σε %{to_level_name}"
+      topic:
+        title: Θέμα
+    scriptables:
+      topic:
+        title: Δημιουργήστε ένα θέμα
+      flag_post_on_words:
+        flag_message: "Η ανάρτηση περιέχει απαγορευμένες λέξεις: %{words}"
+      zapier_webhook:
+        title: Zapier webhook
+      pin_topic:
+        title: Καρφίτσωμα Θέματος
+      send_pms:
+        title: Αποστολή πμ
+      suspend_user_by_email:
+        title: Αναστολή χρήστη βάσει email
+      user_global_notice:
+        title: Καθολική σημείωση χρήστη
+        description: Επιτρέπει την εμφάνιση μιας καθολικής σημείωσης για έναν χρήστη
+      close_topic:
+        title: Κλείσιμο Θέματος
+      append_last_checked_by:
+        text: "Τελευταίος έλεγχος από @%{username} %{date_time}"
+        summary: Έλεγχος εγγράφου
+        button_text: Ολοκληρώθηκε

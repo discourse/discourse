@@ -1,0 +1,154 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    discourse_automation_enabled: "הפעלת תוסף discourse-automation"
+  discourse_automation:
+    models:
+      fields:
+        required_field: את השדה `%{name}` חובה למלא ב־`%{target}:%{target_name}`.
+        invalid_field: רכיב השדה `%{component}` אינו זמין לשימוש ב־`%{target}:%{target_name}`.
+        invalid_metadata: הנתונים עבור `%{field}` שגויים או שהרכיב `%{component}` אינו ידוע.
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "יש לציין לפחות אחת מבין האפשרויות ‚custom_fields’ (שדות מותאמים אישית) או ‚user_profile’ (פרופיל משתמש)."
+      user_badge_granted:
+        title: עיטור משתמש הוענק
+        doc: מקפיץ אוטומציה כשמוענק עיטור למשתמש.
+      user_first_logged_in:
+        title: כניסת המשתמש לראשונה
+        doc: מפעיל אוטומציה עם כניסת משתמש לראשונה
+      stalled_topic:
+        title: נושא מעוכב
+        doc: הזנקת אוטומציה כשנושא לא מקבל תגובות חדשות מבעלי הנושא למשך פרק זמן מסוים. מומלץ להגביל את ההזנקה הזאת לתגית/קטגוריה כיוון שמספר הנושאים שיושפעו יכול להיות גדול מאוד. כאמצעי בטיחות, מספר הנושאים המושפעים מוגבל ל־250 לכל היותר.
+      api_call:
+        title: קריאת API
+        description: הגשת בקשת POST להזנקת אוטומציה
+        doc: את בקשת ה־POST יש להגיש כנגד ‎`/automations/:id/trigger.json`‎ עם מפתח API כללי.
+      category_created_edited:
+        title: הקטגוריה נוצרה/נערכה
+        description: כאשר קטגוריה נוצרת או נערכת, האוטומציה תפעל
+      recurring:
+        title: מחזורי
+      point_in_time:
+        title: נקודה בזמן
+        description: כאשר יגיע התאריך האוטומציה תוקפץ
+      user_added_to_group:
+        title: משתמש נוסף לקבוצה
+        description: כאשר משתמש נוסף לקבוצה שצוינה האוטומציה תוזנק
+      user_removed_from_group:
+        title: משתמש הוסר מהקבוצה
+        description: כאשר משתמש מוסר מהקבוצה שצוינה, האוטומציה תופעל
+      user_promoted:
+        title: משתמש קיבל קידום
+        description: כאשר משתמש מקודם מדרגת אמון אחת לאחרת
+        transition_placeholder: "מ־%{from_level_name} עד %{to_level_name}"
+      stalled_wiki:
+        title: דף ויקי מיושן
+        description: כאשר ויקי לא נערך במשך תקופה ארוכה מזו שהוגדרה, האוטומציה תופעל
+      post_created_edited:
+        title: פוסט נוצר/נערך
+        description: כאשר הודעה תקפה נערכת או נוצרת, האוטומציה תוזנק
+      pm_created:
+        title: נוצרה הודעה פרטית
+        description: כאשר הודעה פרטית תקפה האוטומציה תוקפץ
+      topic_tags_changed:
+        title: תגיות הנושא השתנו
+        description: כאשר תגיות של נושא משתנות האוטומציה תוזנק
+      topic:
+        title: נושא
+        description: הסקריפט המשויך ישמש רק לנושא שצוין, חיוני לסקריפטים שמבצעים אימות למשל
+      after_post_cook:
+        title: אחרי בישול פוסט
+        description: כאשר תוכן פוסט מבושל האוטומציה תופעל
+      user_updated:
+        title: לאחר עדכון המשתמש
+        description: כאשר המשתמש מעדכן מידע האוטומציה תוזנק
+    scriptables:
+      post:
+        title: יצירת פוסט
+        description: יצירת פוסט בנושא מסוים
+      topic:
+        title: יצירת נושא
+        description: יצירת נושא בתור משתמש מסוים
+      flag_post_on_words:
+        title: סימון פוסט בדגל על המילים
+        description: מסמן פוסט בדגל אם מופיעות בו מילים מסוימות
+        flag_message: "הפוסט מכיל מילים אסורות: %{words}"
+        doc: פוסט שמכיל את כל המילים שסופקו בבת אחת יסומן ויוסתר. נא לשים לב שהגדרת מספר מילים עם פסיקים ביניהן ישמש כחיבור (כל מילה חייבת להיות קיימת).
+      zapier_webhook:
+        title: התליה של Zapier
+        description: קורא ל„זאפ” (פעולה באתר zapier) עם התוכן כגוף הזאפ
+      auto_responder:
+        title: משיב אוטומטי
+        description: מפרסם תשובה להודעה כולל מילות מפתח שצוינו
+      auto_tag_topic:
+        title: תיוג נושא אוטומטית
+        description: להוסיף תגיות לנושא אוטומטית
+      pin_topic:
+        title: נעץ נושא
+        description: הצמדת נושא מוגדר בתאריך נתון
+      banner_topic:
+        title: להציב ככרזה לנושא
+        description: הפיכת נושא לכרזה
+      gift_exchange:
+        title: החלפת מתנות
+        description: מאפשר לצוות בין צמדי משתמשים באופן אלמוני כדי לאפשר להם לשלוח מתנות זה לזה (כמו המשחק גמד ענק).
+        doc: החלפת מתנות דורשת קבוצה קיימת עם שלושה משתמשים לפחות. בתאריך שנבחר כל המשתמשים בקבוצה יצומדו עם משתמש/ת שיעניקו להם מתנה ומשתמש/ת שיקבל מהם מתנה.
+      send_pms:
+        title: שליחת הודעות פרטיות
+        description: מאפשר לשלוח הודעות פרטיות (אפשר להשהות).
+        doc: מאפשר לשלוח מספר הודעות פרטיות למשתמש. כל הודעה מקבלת שליחה דחויה.
+      suspend_user_by_email:
+        title: השהיית משתמש לפי דוא״ל
+        description: השעיית חשבון אוטומטית לפי כתובת דוא״ל
+      user_global_notice:
+        title: הודעה גלובלית למשתמש
+        description: מאפשר להציג הודעה גלובלית למשתמש
+      user_group_membership_through_badge:
+        title: חברות משתמשים בקבוצות לפי עיטורים
+        description: שינוי חברות בקבוצת משתמשים לפי עיטור
+      suspend_user_by_email_with_api_call:
+        doc: בעת הזנקת ‚suspend_user_by_email’ (השעיית משתמש לפי דוא״ל) עם קריאת API, נקודת הקצה מצפה לכך שיישלח ‚email’ (דוא״ל) תקני כחלק מהמשתנים. ‚reasons’ (סיבות) ו־‚suspend_until (ISO 8601 format)’ (השעייה עד בתבנית ISO 8601) יכולים גם הם לשמש כדי לדרוס את ערכי השדות כברירת המחדל.
+      user_global_notice_with_stalled_topic:
+        doc: כאשר הוא מוזנק בגלל נושא מיושן, בעלי הנושא יקבלו את ההודעה הגלובלית.
+      user_global_notice_with_first_accepted_solution:
+        doc: כאשר מוקפץ עקב הפתרון הראשון שהתקבל, הפותר יקבל התראה כללית.
+      send_pms_with_api_call:
+        doc: בעת שימוש בסקריפט ‚send pms’ (שליחת הודעות פרטיות) עקב הזנקת ‚api call’ (קריאת API), המשתנה ‚username’ (שם משתמש) בבקשה שלך ישמש למילוי רשימת הנמענים.
+      topic_required_words:
+        title: מילים שנחוצות לנושא
+        description: מאפשר להגדיר רשימה של מילים נדרשות בנושא, יש להשתמש לפחות באחת בכל פוסט.
+        doc: מילים הכרחיות לנושא דורשות שיהיה נושא. כאשר פוסט נערך/נוצר, הפוסט יעבור תיקוף מול רשימת המילים, לפחות אחת מהן צריכה להימצא בו.
+        errors:
+          must_include_word: "הפוסט חייב לכלול לפחות אחת מהמילים האלו: %{words}"
+      close_topic:
+        title: סגור נושא
+        description: סגירת הנושא עם הודעת סגירה כרשות
+      append_last_edited_by:
+        title: הוספת נערך לאחרונה על ידי
+        description: מוסיף את פרטי העריכה האחרונה של הפוסט לתחתית התוכן המבושל.
+        text: "נערך לאחרונה על ידי ‎@%{username} ב־%{date_time}"
+      append_last_checked_by:
+        title: הוספת נבדק לאחרונה על ידי
+        description: מוסיף את פרטי הבדיקה האחרונה של הפוסט לתחתית התוכן המבושל.
+        text: "נבדק לאחרונה על ידי ‎@%{username} ב־%{date_time}"
+        summary: בדיקת מסמך
+        details: "ביצוע בדיקה על המסמך: "
+        button_text: סיום
+      add_user_to_group_through_custom_field:
+        title: "הוספת משתמש לקבוצה באמצעות שדה מותאם אישית של משתמש"
+        description: "הוספת משתמשים לקבוצות אוטומטית עם הכניסה למערכת או בעת ביקור מחזורי"
+      group_category_notification_default:
+        title: "ברירת מחדל של התראה על קטגוריית קבוצה"
+        description: "הגדרת רמת ברירת המחדל של התראה בקטגוריה עבור חברים בקבוצה"
+      send_chat_message:
+        title: "שליחת הודעת צ׳אט"
+        description: "שליחת הודעת צ׳אט משלך לערוץ"
+      random_assign:
+        title: "הקצאה אקראית"
+        description: "הקצאת נושאים לקבוצה באופן אקראי"

@@ -1,0 +1,108 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    poll:
+      voters:
+        one: "stemmegiver"
+        other: "stemmegivere"
+      total_votes:
+        one: "antall stemmer"
+        other: "antall stemmer"
+      average_rating: "Gjennomsnitt: <strong>%{average}</strong>."
+      public:
+        title: "Stemmene er <strong>offentlige</strong>."
+      results:
+        groups:
+          title: "Du må være medlem av %{groups} for å stemme i denne avstemningen."
+        vote:
+          title: "Resultatene vises med <strong>stemmer</strong>."
+        closed:
+          title: "Resultatene vises når <strong>lukket</strong>."
+        staff:
+          title: "Resultatene vises bare til <strong>Moderatorer</strong> medlemmer."
+      cast-votes:
+        title: "Stem nå"
+        label: "Stem!"
+      show-results:
+        title: "Vis resultat"
+        label: "Resultater"
+      hide-results:
+        title: "Tilbake til dine stemmer"
+      group-results:
+        title: "Gruppere stemmer etter brukerfelt"
+        label: "Vis Fordeling"
+      export-results:
+        title: "Eksporter avstemmingsresultatene"
+        label: "Eksporter"
+      open:
+        title: "Åpne avstemning"
+        label: "Åpne"
+        confirm: "Er du sikker på at du vil åpne denne avstemningen?"
+      close:
+        title: "Lukk avstemning"
+        label: "Lukk"
+        confirm: "Er du sikker på at du vil lukke avstemningen?"
+      automatic_close:
+        closes_in: "Stenger om <strong>%{timeLeft}</strong>."
+        age: "Stengt <strong>%{age}</strong>"
+      breakdown:
+        title: "Avstemnings resultater"
+        votes: "%{count} stemmer"
+        breakdown: "Fordeling"
+        percentage: "Prosent"
+        count: "Antall"
+      ranked_choice:
+        none: "Ingen"
+      options:
+        label: "Alternativer"
+      error_while_toggling_status: "Beklager, det oppstod en feil ved endring av status på denne avstemningen."
+      error_while_casting_votes: "Beklager, det oppstod en feil da du ga din stemme."
+      error_while_fetching_voters: "Beklager, det oppstod en feil når stemmegivere skulle vises."
+      error_while_exporting_results: "Beklager, det oppstod en feil under eksport av avstemningsresultat."
+      ui_builder:
+        title: Lag avstemning.
+        insert: Sett inn avstemning
+        help:
+          options_min_count: Angi minst 1 alternativ.
+          options_max_count: Angi maksimalt %{count} alternativer.
+          invalid_min_value: Minimumsverdien må være minst 1.
+          invalid_max_value: Maksimumsverdien må være minst 1, men mindre enn eller lik med antall alternativer.
+          invalid_values: Minimumsverdien må være mindre enn maksimumsverdien.
+          min_step_value: Minimal stegverdi er 1
+        poll_type:
+          label: Type
+          regular: Et valg
+          multiple: Flere valg
+          number: Nummervurdering
+        poll_result:
+          label: Vis resultater...
+          always: Alltid synlig
+          vote: Bare etter stemming
+          closed: Når avstemningen er stengt
+          staff: Bare ansatte
+        poll_groups:
+          label: Begrens stemmegivning til disse gruppene
+        poll_chart_type:
+          label: Resultat diagram
+          bar: Bar
+          pie: Pai
+        poll_config:
+          max: Maks valg
+          min: Min. valg
+          step: Steg
+        poll_public:
+          label: Vis hvem som har stemt
+        poll_title:
+          label: Tittel (valgfritt)
+        poll_options:
+          label: Alternativer (en per linje)
+          add: Legg til alternativ
+        automatic_close:
+          label: Steng avstemningen automatisk
+        show_advanced: "Vis avanserte innstillinger"
+        hide_advanced: "Skjul avanserte alternativer"

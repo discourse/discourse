@@ -1,0 +1,20 @@
+plugins:
+  discourse_math_enabled:
+    default: false
+    client: true
+  discourse_math_provider:
+    default: "mathjax"
+    client: true
+    type: enum
+    choices:
+      - mathjax
+      - katex
+  discourse_math_zoom_on_hover:
+    default: false
+    client: true
+  discourse_math_enable_accessibility:
+    default: false
+    client: true
+  discourse_math_enable_asciimath:
+    default: false
+    client: true

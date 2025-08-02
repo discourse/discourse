@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse Local Dates"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: dnes v %{time}
+        tomorrow: zítra v %{time}
+        yesterday: včera v %{time}
+        countdown:
+          passed: datum uplynulo
+      title: Vložit datum / čas
+      create:
+        form:
+          insert: Vložit
+          advanced_mode: Pokročilý mód
+          simple_mode: Jednoduchý mód
+          format_description: "Formát použitý pro zobrazení data uživateli. Použijte Z pro zobrazení posunu a zz pro název časové zóny."
+          timezones_title: Časová pásma k zobrazení
+          timezones_description: Pro zobrazení dat v náhledu a záložním zobrazení se použijí časová pásma.
+          recurring_title: Opakování
+          recurring_description: "Definujte opakování události. Možnost opakování generovanou formulářem můžete také ručně upravit a použít jeden z následujících klíčů: roky, čtvrtletí, měsíce, týdny, dny, hodiny, minuty, sekundy, milisekundy."
+          recurring_none: Bez opakování
+          invalid_date: Nesprávné datum, zkontrolujte, zda je datum a čas správně.
+          date_title: Datum
+          time_title: Čas
+          format_title: Formát data
+          timezone: Časové pásmo
+          until: dokud...
+          current_timezone: "Aktuální časové pásmo:"
+          recurring:
+            every_day: "Každý den"
+            every_week: "Každý týden"
+            every_two_weeks: "Každé dva týdny"
+            every_month: "Každý měsíc"
+            every_two_months: "Každé dva měsíce"
+            every_three_months: "Každé tři měsíce"
+            every_six_months: "Každých šest měsíců"
+            every_year: "Každý rok"
+      default_title: "%{site_name} událost"

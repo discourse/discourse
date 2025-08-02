@@ -1,0 +1,148 @@
+en:
+  site_settings:
+    discourse_automation_enabled: "Enable discourse-automation plugin"
+  discourse_automation:
+    models:
+      fields:
+        required_field: Field `%{name}` must be filled on `%{target}:%{target_name}`.
+        invalid_field: Field’s component `%{component}` is not usable on `%{target}:%{target_name}`.
+        invalid_metadata: Data for `%{field}` is invalid or component `%{component}` is unknown.
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "At least one of 'custom_fields' or 'user_profile' must be provided."
+      user_badge_granted:
+        title: User badge granted
+        doc: Triggers an automation when a user is granted a badge.
+      user_first_logged_in:
+        title: User first logged in
+        doc: Triggers an automation when a user logs in for the first time.
+      stalled_topic:
+        title: Stalled topic
+        doc: Triggers an automation when the topic has not received a new reply from topic owner for a specified period of time. It is recommended to scope this trigger to a tag/category as the number of topics impacted can be very high. As a safety measure, the number of impacted topics is capped at 250.
+      api_call:
+        title: API call
+        description: Making a POST request to trigger an automation
+        doc: The POST request should be made to `/automations/:id/trigger.json` with a global API key.
+      category_created_edited:
+        title: Category created/edited
+        description: When a category is created or edited the automation will be triggered
+      recurring:
+        title: Recurring
+      point_in_time:
+        title: Point in time
+        description: When the date is reached the automation will be triggered
+      user_added_to_group:
+        title: User added to group
+        description: When a user is added to the specified group the automation will be triggered
+      user_removed_from_group:
+        title: User removed from group
+        description: When a user is removed from the specified group the automation will be triggered
+      user_promoted:
+        title: User promoted
+        description: When a user is promoted from one trust level to another
+        transition_placeholder: "from %{from_level_name} to %{to_level_name}"
+      stalled_wiki:
+        title: Stalled wiki
+        description: When a wiki has not been edited for a period longer than the one defined, the automation will be triggered
+      post_created_edited:
+        title: Post created/edited
+        description: When a valid post is edited or created the automation will be triggered
+      pm_created:
+        title: Personal message created
+        description: When a valid PM is created the automation will be triggered
+      topic_tags_changed:
+        title: Topic tags changed
+        description: When the tags of a topic are changed the automation will be triggered
+      topic:
+        title: Topic
+        description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
+      after_post_cook:
+        title: After post cook
+        description: When a post content is cooked the automation will be triggered
+      user_updated:
+        title: After user update
+        description: When a user updates any information the automation will be triggered
+    scriptables:
+      post:
+        title: Create a post
+        description: Create a post on a specified topic
+      topic:
+        title: Create a topic
+        description: Create a topic as a specific user
+      flag_post_on_words:
+        title: Flag post on words
+        description: Flags a post if it contains specified words
+        flag_message: "Post contains disallowed words: %{words}"
+        doc: Post containing all given words at once will be flagged and hidden. Note that defining multiple words delimited by a comma will be used as compound (each word has to be present).
+      zapier_webhook:
+        title: Zapier webhook
+        description: Calls a zap with the context of a trigger as body
+      auto_responder:
+        title: Auto Responder
+        description: Posts a reply to a post including specified keywords
+      auto_tag_topic:
+        title: Auto Tag Topic
+        description: Automatically add tags to a topic
+      pin_topic:
+        title: Pin Topic
+        description: Pins a specified topic at a given date
+      banner_topic:
+        title: Make banner topic
+        description: Make a topic into a banner
+      gift_exchange:
+        title: Gift exchange
+        description: Allows to anonymously pair users of a group to send each other a gift.
+        doc: Gift exchange requires an existing group with at least 3 users. At the chosen date each users of the group will be paired with one gifter and one giftee.
+      send_pms:
+        title: Send pms
+        description: Allows to send PMs (possibly delayed).
+        doc: Allows to send multiple pms to a user. Each PM accepts a delay.
+      suspend_user_by_email:
+        title: Suspend user by email
+        description: Automatically suspend an account based on email address 
+      user_global_notice:
+        title: User global notice
+        description: Allows to display a global notice for a user
+      user_group_membership_through_badge:
+        title: User Group Membership through Badge
+        description: Modify user group membership based on a badge
+      suspend_user_by_email_with_api_call:
+        doc: When triggering `suspend_user_by_email` with an api call, the endpoint expects a valid `email` to be present in the params sent. `reasons` and `suspend_until (ISO 8601 format)` can also be used to override default fields values.
+      user_global_notice_with_stalled_topic:
+        doc: When triggered through stalled topic, the topic owner will receive the global notice.
+      user_global_notice_with_first_accepted_solution:
+        doc: When triggered through first accepted solution, the solution author will receive the global notice.
+      send_pms_with_api_call:
+        doc: When using `send pms` script with `api call` trigger, the `usernames` param of your request will be used to fill the receivers list.
+      topic_required_words:
+        title: Topic required words
+        description: Allows to define a list of words required on a topic, at least one should be used in each post.
+        doc: Topic required words requires a topic. When a post is edited/created, the post will be validated against the list of words, at least one must be present.
+        errors:
+          must_include_word: "Post must include at least one of these words: %{words}"
+      close_topic:
+        title: Close Topic
+        description: Closes a topic with an optional closing message
+      append_last_edited_by:
+        title: Append last edited by
+        description: Adds the 'last edited by' details of the post to cooked content's bottom.
+        text: "Last edited by @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Append last checked by
+        description: Adds the 'last checked by' details of the post cooked content's bottom.
+        text: "Last checked by @%{username} %{date_time}"
+        summary: Check document
+        details: "Perform check on document: "
+        button_text: Done
+      add_user_to_group_through_custom_field:
+        title: "Add user to group through User Custom Field"
+        description: "Automatically add users to groups when they log in or with a recurring check"
+      group_category_notification_default:
+        title: "Group Category Notification Default"
+        description: "Set the default notification level of a category for members of a group"
+      send_chat_message:
+        title: "Send Chat Message"
+        description: "Send a custom chat message to a channel"
+      random_assign: 
+        title: "Random Assign"
+        description: "Randomly assign topics to a group"

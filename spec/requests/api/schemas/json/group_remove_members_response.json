@@ -1,0 +1,25 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "success": {
+      "type": "string"
+    },
+    "usernames": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "skipped_usernames": {
+      "type": "array",
+      "items": {
+
+      }
+    }
+  },
+  "required": [
+    "success",
+    "usernames",
+    "skipped_usernames"
+  ]
+}

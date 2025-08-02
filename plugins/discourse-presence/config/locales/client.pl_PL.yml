@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    presence:
+      replying:
+        one: "odpowiada"
+        few: "odpowiada"
+        many: "odpowiada"
+        other: "odpowiada"
+      editing:
+        one: "edytuje"
+        few: "edytuje"
+        many: "edytuje"
+        other: "edytuje"
+      replying_to_topic:
+        one: "odpowiada"
+        few: "odpowiada"
+        many: "odpowiadają"
+        other: "odpowiadają"

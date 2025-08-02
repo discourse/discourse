@@ -1,0 +1,89 @@
+.chat-channel-title {
+  @include ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .chat-channel-preview-card & {
+    max-width: 100%;
+  }
+
+  &__user-info {
+    overflow: hidden;
+  }
+
+  .user-status-message {
+    display: none; // we only show when in channels list
+  }
+
+  &__user-status-message {
+    flex-shrink: 3;
+    overflow: hidden;
+  }
+
+  .d-icon-lock {
+    margin-right: 0.25em;
+  }
+
+  .topic-chat-icon {
+    color: var(--primary-medium);
+    display: flex;
+  }
+
+  .chat-unread-count {
+    display: inline-block;
+    color: var(--secondary);
+    background-color: var(--tertiary-med-or-tertiary);
+    font-size: var(--font-down-2);
+    border-radius: 100%;
+    min-width: 1.4em;
+    min-height: 1.4em;
+    height: 1.4em;
+    width: 1.4em;
+    padding: 1px;
+    margin-left: 0.5rem;
+    text-align: center;
+  }
+}
+
+.chat-channel-title__users-count {
+  display: flex;
+  border-radius: 50%;
+  background: rgb(var(--primary-rgb), 0.1);
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--font-down-1);
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  color: var(--primary-high);
+}
+
+.chat-channel-title__category-badge {
+  color: var(--primary-medium);
+  display: flex;
+  font-size: var(--font-up-1);
+  position: relative;
+}
+
+.chat-channel-title__restricted-category-icon {
+  background-color: var(--secondary);
+  position: absolute;
+  border-radius: 50%;
+  padding: 2px 2px 3px;
+  color: var(--primary-high);
+  height: 0.5rem;
+  width: 0.5rem;
+  right: -0.5rem;
+  top: -0.1rem;
+}
+
+.chat-channel-title__category-title {
+  .emoji {
+    height: 1.2em;
+    vertical-align: text-bottom;
+    width: 1.2em;
+  }
+}

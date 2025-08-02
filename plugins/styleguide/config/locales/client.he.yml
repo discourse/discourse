@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "מדריך סגנון של Discourse"
+  js:
+    styleguide:
+      title: "מדריך סגנון"
+      welcome: "כדי להתחיל, יש לבחור בסעיף מהתפריט שמימין."
+      categories:
+        syntax: תחביר
+        atoms: אטומים
+        molecules: מולקולות
+        organisms: אורגניזמים
+      sections:
+        bem:
+          title: "BEM (מחליף רכיב מקטע)"
+        typography:
+          title: "טיפוגרפיה"
+          example: "ברוך בואך ל־Discourse"
+          paragraph: "לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית קולורס מונפרד אדנדום סילקוף, מרגשי ומרגשח. עמחליף לפרומי בלוף קינץ תתיח לרעח. לת צשחמי צש בליא, מנסוטו צמלח לביקו ננבי, צמוקו בלוקריה שיצמה ברורק. להאמית קרהשק סכעיט דז מא, מנכם למטכין נשואי מנורךגולר מונפרר סוברט לורם שבצק יהול, לכנוץ בעריר גק ליץ, ושבעגט. ושבעגט לבם סולגק. בראיט ולחת צורק מונחף, בגורמי מגמש. תרבנך וסתעד לכנו סתשם השמה - לתכי מורגם בורק? לתיג ישבעס."
+        date_time_inputs:
+          title: "קלטי תאריך/שעה"
+        menus:
+          title: "תפריטים"
+        multi_select:
+          title: "בחירה במרוכז"
+        toasts:
+          title: "חלוניות מידע"
+        font_scale:
+          title: "מערכת גופנים"
+        colors:
+          title: "צבעים"
+        icons:
+          title: "סמלים"
+          full_list: "הצגת רשימת הסמלים המלאה של Font Awesome"
+        forms:
+          title: "טפסים"
+        buttons:
+          title: "כפתורים"
+        dropdowns:
+          title: "נגללים"
+        categories:
+          title: "קטגוריות"
+        bread_crumbs:
+          title: "מחווני ניווט"
+        navigation:
+          title: "ניווט"
+        navigation_bar:
+          title: "סרגל ניווט"
+        navigation_stacked:
+          title: "ניווט מוערם"
+        categories_list:
+          title: "רשימת קטגוריות"
+        topic_link:
+          title: "קישור נושא"
+        topic_list_item:
+          title: "פריט ברשימת נושאים"
+        topic_statuses:
+          title: "מצבי נושא"
+        topic_list:
+          title: "רשימת נושאים"
+        basic_topic_list:
+          title: "רשימת נושאים בסיסית"
+        footer_message:
+          title: "הודעת כותרת תחתונה"
+        signup_cta:
+          title: "קריאה להרשמה"
+        topic_timer_info:
+          title: "שעוני עצר לנושא"
+        topic_footer_buttons:
+          title: "כפתורי כותרת תחתונה של נושא"
+        topic_notifications:
+          title: "התראות על נושאים"
+        post:
+          title: "פוסט"
+        post_list:
+          title: "רשימת פוסטים"
+          empty_example: "<PostList /> מצב ריק"
+          populated_example: "<PostList /> מצב מאוכלס"
+        topic_map:
+          title: "מפת נושאים"
+        site_header:
+          title: "כותרת האתר"
+        suggested_topics:
+          title: "נושאים מוצעים"
+        post_menu:
+          title: "תפריט פוסט"
+        modal:
+          title: "מודאלי"
+          header: "כותרת מודאלי"
+          footer: "כותרת תחתונה של מודאלי"
+        user_about:
+          title: "תיבת על אודות משתמש"
+        header_icons:
+          title: "סמלי כותרת עליונה"
+        spinners:
+          title: "שבשבות"
+        empty_state:
+          title: "מצב ריק"
+        tooltips:
+          title: "חלוניות תיאור"
+          description: "תיאור"
+          header: "כותרת"
+          hover_to_see: "יש לעבור מעל כדי לראות חלונית תיאור"
+        char_counter:
+          title: "מונה תווים"
+          placeholder: "נא להקליד כאן טקסט…"

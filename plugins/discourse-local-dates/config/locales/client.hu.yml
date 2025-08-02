@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse helyi dátumok"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Ma %{time}
+        tomorrow: Holnap %{time}
+        yesterday: Tegnap %{time}
+        countdown:
+          passed: elmúlt
+      title: Dátum/idő beszúrása
+      create:
+        form:
+          insert: Beszúrás
+          advanced_mode: Speciális mód
+          simple_mode: Egyszerű mód
+          format_description: "A dátum megjelenítésére használt formátum a felhasználó számára. Használja a Z-t az időeltolódás, a zz-t pedig az időzóna nevének megjelenítéséhez."
+          timezones_title: Megjelenítendő időzónák
+          timezones_description: Az időzónák a dátumok megjelenítésére szolgálnak az előnézetben és a tartalékban.
+          recurring_title: Ismétlődés
+          recurring_description: "Adja meg az esemény ismétlődését. Kézzel is szerkesztheti az űrlap által előállított ismétlődési beállítást, és a következő kulcsokat használhatja: years (év), quarters (negyedév), months (hónap), days (nap), hours (óra), minutes (perc), seconds (másodperc), milliseconds (ezredmásodperc)."
+          recurring_none: Nincs ismétlődés
+          invalid_date: Érvénytelen dátum, győződjön meg róla, hogy a dátum és idő helyes
+          date_title: Dátum
+          time_title: Idő
+          format_title: Dátumformátum
+          timezone: Időzóna
+          until: Eddig…
+          current_timezone: "Jelenlegi időzóna:"
+          recurring:
+            every_day: "Naponta"
+            every_week: "Hetente"
+            every_two_weeks: "Kéthetente"
+            every_month: "Havonta"
+            every_two_months: "Kéthavonta"
+            every_three_months: "Három havonta"
+            every_six_months: "Hat havonta"
+            every_year: "Évente"
+      default_title: "%{site_name} esemény"

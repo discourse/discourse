@@ -1,0 +1,118 @@
+@use "lib/viewport";
+
+.d-modal {
+  &__container {
+    width: 100%;
+  }
+}
+
+.sidebar__edit-navigation-menu__filter {
+  display: flex;
+  gap: 0.5em;
+  padding: 1rem 0.66em 0;
+
+  @include viewport.from(md) {
+    padding: 1rem 1.5rem 0;
+  }
+
+  .sidebar__edit-navigation-menu__filter-dropdown {
+    .select-kit-header {
+      background: var(--secondary);
+      color: var(--primary);
+      border: 1px solid var(--primary-low-mid);
+      font-size: var(--font-0);
+
+      &:hover,
+      &:focus {
+        background: var(--secondary);
+        color: var(--primary);
+
+        .d-icon {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+
+  .sidebar__edit-navigation-menu__filter-input {
+    display: flex;
+    flex-direction: row;
+    margin-right: auto;
+    width: 100%;
+    position: relative;
+    flex: 1 1 70%;
+
+    input {
+      margin: 0;
+    }
+  }
+
+  .sidebar__edit-navigation-menu__filter-dropdown-wrapper {
+    flex: 1 1 30%;
+    display: flex;
+
+    .select-kit {
+      width: 100%;
+
+      summary {
+        height: 100%;
+      }
+    }
+  }
+
+  .sidebar__edit-navigation-menu__filter-input-icon {
+    position: absolute;
+    left: 0.5em;
+    top: 0.65em;
+    color: var(--primary-low-mid);
+  }
+
+  .sidebar__edit-navigation-menu__filter-input-field {
+    border-color: var(--primary-low-mid);
+    padding-left: 1.75em;
+    width: 100%;
+
+    &:focus {
+      border-color: var(--tertiary);
+      outline: none;
+      outline-offset: 0;
+      box-shadow: inset 0 0 0 1px var(--tertiary);
+    }
+  }
+}
+
+.sidebar__edit-navigation-menu__footer {
+  display: flex;
+  width: 100%;
+  margin-top: 0.25em;
+
+  .btn.sidebar__edit-navigation-menu__reset-defaults-button {
+    margin-left: auto;
+    margin-right: 0;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      color: var(--tertiary);
+    }
+
+    &:focus,
+    &:active {
+      background: none;
+    }
+  }
+}
+
+.sidebar__edit-navigation-menu__deselect-wrapper {
+  margin: 0 1em 0 0;
+  line-height: var(--line-height-medium);
+
+  .btn-flat.sidebar__edit-navigation-menu__deselect-button {
+    margin-left: auto;
+    padding: 0;
+
+    &:focus,
+    &:active {
+      background: none;
+    }
+  }
+}

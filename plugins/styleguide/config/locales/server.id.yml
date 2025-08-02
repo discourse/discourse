@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+id:
+  site_settings:
+    styleguide_enabled: 'Aktifkan jalur “/styleguide” untuk membantu menata Discourse'
+    styleguide_admin_only: "Membatasi visibilitas styleguide ke admin"

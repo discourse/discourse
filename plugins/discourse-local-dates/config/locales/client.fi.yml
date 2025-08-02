@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse paikalliset päivämäärät"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Tänään %{time}
+        tomorrow: Huomenna %{time}
+        yesterday: Eilen %{time}
+        countdown:
+          passed: päivämäärä on mennyt
+      title: Lisää päivämäärä/aika
+      create:
+        form:
+          insert: Lisää
+          advanced_mode: Lisäasetukset
+          simple_mode: Piilota lisäasetukset
+          format_description: "Muotoilu, jota käytetään päivämäärän näyttämiseen käyttäjälle. Aseta Z näyttääksesi siirtymän ja zz aikavyöhykkeen nimen."
+          timezones_title: Näytettävät aikavyöhykkeet
+          timezones_description: Aikavyöhykkeitä käytetään näytettäessä päivämääriä esikatselussa sekä varana virhetilanteissa.
+          recurring_title: Toistuvuus
+          recurring_description: "Määrittele tapahtuman toistuvuus. Voit myös manuaalisesti muokata toistuvuusparametriä, jonka lomake luo viestiin. Käytä näitä avainsanoja: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Ei toistu
+          invalid_date: Päiväys ei kelpaa, tarkista päivämäärä ja aika
+          date_title: Päivämäärä
+          time_title: Aika
+          format_title: Päivämäärän muoto
+          timezone: Aikavyöhyke
+          until: Asti...
+          current_timezone: "Nykyinen aikavyöhyke:"
+          recurring:
+            every_day: "Joka päivä"
+            every_week: "Joka viikko"
+            every_two_weeks: "Joka toinen viikko"
+            every_month: "Joka kuukausi"
+            every_two_months: "Joka toinen kuukausi"
+            every_three_months: "Joka kolmas kuukausi"
+            every_six_months: "Kuuden kuukauden välein"
+            every_year: "Kerran vuodessa"
+      default_title: "%{site_name}-tapahtuma"

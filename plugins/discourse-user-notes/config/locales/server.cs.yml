@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  site_settings:
+    user_notes_enabled: "Povolit redaktorům připojit poznámku k uživatelům"
+  user_notes:
+    official_warning: "Obdrženo oficiální varování od @%{username} -- %{warning_link}"
+    user_suspended: "@%{username} zakázal tento účet do %{suspended_till}. Důvod: %{reason}"
+    user_silenced: "@%{username} ulmčel tento účet do %{silenced_till}. Důvod: %{reason}"
+  reports:
+    user_notes:
+      labels:
+        user: Uživatel
+        note: Poznámka
+        moderator: Moderátor

@@ -1,0 +1,36 @@
+Message-ID: <58@somesmtpaddress.mail>
+From: Discourse Team <team@somesmtpaddress.com>
+To: support+team@bar.com
+CC: someotherparty@test.com
+Date: Mon, 1 Dec 2016 13:37:42 +0100
+Subject: Fwd: Login problems
+Content-Type: multipart/related; boundary="00000000000072702105c89858de"
+
+--00000000000072702105c89858de
+Content-Type: multipart/alternative; boundary="00000000000072702005c89858dd"
+
+--00000000000072702005c89858dd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+---------- Forwarded message ---------
+From: Fred Flintstone <fred@bedrock.com>
+Date: Mon, 1 Dec 2016 13:37:42 +0100
+Subject: Re: Login problems
+To: Discourse Team <team@somesmtpaddress.com>
+CC: Terry Jones <terry@ccland.com>, don@ccland.com
+
+Hello I am having some issues with my forum.
+
+Fred
+
+--00000000000072702005c89858dd
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<p>Hello I am having some issues with my forum.</p>
+
+<br>Fred<br>
+
+--00000000000072702005c89858dd--
+--00000000000072702105c89858de

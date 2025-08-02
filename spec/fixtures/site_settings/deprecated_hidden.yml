@@ -1,0 +1,6 @@
+developer:
+  force_hostname:
+    hidden:
+      development: false
+      default: true
+    default: ''

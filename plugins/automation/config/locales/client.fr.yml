@@ -1,0 +1,428 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: supprimer l'automatisation
+    discourse_automation:
+      title: Automatisation
+      back: Revenir en arrière
+      edit: Modifier
+      select_script: Sélectionner un script
+      select_trigger: Sélectionner un déclencheur
+      confirm_automation_reset: Cette action réinitialisera les options de script et de déclencheur, le nouvel état sera enregistré. Voulez-vous continuer ?
+      confirm_automation_trigger: Cette action déclenchera l'automatisation. Voulez-vous continuer ?
+      filter_placeholder: Filtrer par nom ou description...
+      edit_automation:
+        trigger_section:
+          forced: Ce déclencheur est forcé par le script.
+          next_pending_automation: "La prochaine automatisation se déclenchera le : %{date}"
+          trigger_now: "Déclencher maintenant"
+          title: Quand/quoi…
+        fields_section:
+          title: Options de script
+      destroy_automation:
+        confirm: "Voulez-vous vraiment supprimer « %{name} » ?"
+      fields:
+        key_value:
+          label_without_count: "Configurer"
+          label_with_count:
+            one: "Modifier la configuration (%{count})"
+            other: "Modifier la configuration (%{count})"
+        user:
+          label: Utilisateur
+        pm:
+          title:
+            label: Titre
+          raw:
+            label: Corps
+        pms:
+          confirm_remove_pm: "Voulez-vous vraiment supprimer ce MP ?"
+          placeholder_title: Titre du MP
+          add_pm: Ajouter un MP
+          no_pm_created: Vous n'avez pas encore créé de MP. Les MP seront envoyés une fois votre automatisation déclenchée.
+          title:
+            label: Titre
+          raw:
+            label: Corps
+          delay:
+            label: Délai (minutes)
+          prefers_encrypt:
+            label: Chiffrer le MP si disponible
+        group:
+          label: Groupe
+        text:
+          label: Texte
+      triggerables:
+        not_found: Impossible de trouver le déclencheur « %{trigger} » pour l'automatisation « %{automation} ». Assurez-vous que l'extension associée est installée
+        user_badge_granted:
+          fields:
+            badge:
+              label: Badge
+            only_first_grant:
+              label: Uniquement lors de la première autorisation
+        stalled_topic:
+          durations:
+            PT1H: "Une heure"
+            P1D: "Un jour"
+            P1W: "Une semaine"
+            P2W: "Deux semaines"
+            P1M: "Un mois"
+            P3M: "Trois mois"
+            P6M: "Six mois"
+            P1Y: "Un an"
+          fields:
+            categories:
+              label: Limité aux catégories
+            tags:
+              label: Limité aux étiquettes
+            stalled_after:
+              label: Bloqué après
+        recurring:
+          every: Chaque
+          frequencies:
+            minute: minute
+            hour: heure
+            day: jour
+            weekday: jour de la semaine
+            week: semaine
+            month: mois
+            year: année
+          fields:
+            recurrence:
+              label: Périodicité
+            start_date:
+              label: Date de début
+        stalled_wiki:
+          durations:
+            PT1H: "Une heure"
+            P1D: "Un jour"
+            P1W: "Une semaine"
+            P2W: "Deux semaines"
+            P1M: "Un mois"
+            P3M: "Trois mois"
+            P6M: "Six mois"
+            P1Y: "Un an"
+          fields:
+            restricted_category:
+              label: Limité à la catégorie
+            stalled_after:
+              label: Délai de déclenchement
+              description: Définit le délai entre la dernière modification du wiki et le déclenchement de l'automatisation
+            retriggered_after:
+              label: Délai de redéclenchement
+              description: Définit le délai entre le premier déclencheur et le déclencheur suivant, si le wiki n'a toujours pas été modifié après le premier déclencheur
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Groupe suivi
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Groupe suivi
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Restreindre au groupe
+            trust_level_transition:
+              label: Transition de niveau de confiance
+          trust_levels:
+            ALL: "Tous les niveaux de confiance"
+            TL01: "TL0 à TL1"
+            TL12: "TL1 à TL2"
+            TL23: "TL2 à TL3"
+            TL34: "TL3 à TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Exécuter à
+        topic:
+          fields:
+            restricted_topic:
+              label: ID du sujet
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Publication originale uniquement
+              description: Se déclenchera uniquement si la publication est la publication originale du sujet
+            action_type:
+              label: Type d'action
+              description: "Facultatif, limitez le déclenchement aux seuls événements créés ou modifiés"
+            valid_trust_levels:
+              label: Niveaux de confiance valides
+              description: Se déclenchera uniquement si la publication est créée par un utilisateur repris dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
+            restricted_tags:
+              label: Étiquettes
+              description: Facultatif, ne se déclenchera que si la publication contient l'une de ces étiquettes
+            restricted_categories:
+              label: Catégories
+            restricted_inbox_groups:
+              description: Facultatif, ne se déclenchera que si le sujet de la publication est un message direct dans l'une des boîtes de réception du groupe
+            ignore_automated:
+              label: Ignorer l'automatisation
+              description: Ignorer le déclencheur si l'expéditeur a un e-mail de non-réponse ou provient d'une source automatique. Ne s'applique qu'aux publications créées par e-mail
+            first_post_only:
+              label: Première publication uniquement
+              description: Se déclenchera uniquement si la publication est la première publication créée par un utilisateur
+            first_topic_only:
+              label: Premier sujet uniquement
+              description: Se déclenchera uniquement si le sujet est le premier sujet créé par un utilisateur
+            skip_via_email:
+              label: "Ignorer par e-mail"
+              description: "Ignorez le déclencheur si la publication a été créée par e-mail"
+          created: Créé
+          edited: Modifié
+          with_images: Images
+          with_links: Liens
+          with_code: Code
+          with_uploads: Fichiers envoyés
+        user_updated:
+          fields:
+            user_profile:
+              label: Champs du profil utilisateur
+              description: Ne se déclenchera que si l'utilisateur a rempli tous ces champs
+            custom_fields:
+              label: Champs personnalisés pour l'utilisateur
+              description: Ne se déclenchera que si l'utilisateur a rempli tous ces champs
+            once_per_user:
+              label: Une fois par utilisateur
+              description: Ne se déclenchera qu'une seule fois par utilisateur
+            new_users_only:
+              label: Nouveaux utilisateurs uniquement
+              description: Ne se déclenchera que pour les nouveaux utilisateurs qui se joignent après l'activation de cette automatisation
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Catégorie parente
+              description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
+        pm_created:
+          fields:
+            restricted_user:
+              label: Utilisateurs
+              description: Se déclenchera uniquement pour les MP envoyés à cet utilisateur
+            restricted_group:
+              label: Groupe
+              description: Se déclenchera uniquement pour les MP envoyés à ce groupe
+            ignore_staff:
+              label: Ignorer le responsable
+              description: Ignorer le déclencheur si l'expéditeur est un responsable
+            ignore_group_members:
+              label: Ignorer les membres du groupe
+              description: Ignorer le déclencheur si l'expéditeur est membre du groupe spécifié ci-dessus
+            ignore_automated:
+              label: Ignorer l'automatisation
+              description: Ignorer le déclencheur si l'expéditeur a un e-mail de non-réponse ou provient d'une source automatique. Ne s'applique qu'aux MP créés par e-mail
+            valid_trust_levels:
+              label: Niveaux de confiance valides
+              description: Se déclenchera uniquement si la publication est créée par un utilisateur repris dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Étiquettes ajoutées ou supprimées
+            tags_added: Étiquettes ajoutées
+            tags_removed: Étiquettes supprimées
+          fields:
+            watching_categories:
+              label: Catégories suivies
+              description: Se déclenche uniquement si le sujet fait partie de l'une de ces catégories.
+            watching_tags:
+              label: Balises suivies
+              description: Se déclenche uniquement si le sujet contient l'une de ces étiquettes
+            trigger_on:
+              label: Déclencher
+            trigger_with_pms:
+              label: Déclenchement avec MP
+              description: Se déclenchera même si les étiquettes ont été modifiées dans un message privé
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Niveaux de confiance valides
+              description: Se déclenchera uniquement si la publication est créée par un utilisateur repris dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
+            restricted_category:
+              label: Catégorie
+              description: Facultatif, ne se déclenchera que si le sujet de la publication se trouve dans cette catégorie
+            restricted_tags:
+              label: Étiquettes
+              description: Facultatif, ne se déclenchera que si la publication contient l'une de ces étiquettes
+      scriptables:
+        not_found: Impossible de trouver le script « %{script} » pour l'automatisation « %{automation} », assurez-vous que l'extension associée est installée
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL du webhook
+              description: "Attend une URL de webhook Zapier valide, par exemple : https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Une fois
+              description: Ne répond qu'une seule fois par sujet
+            word_answer_list:
+              label: Liste des paires mot/réponse
+              description: "Définit une liste de groupes clé/valeur, où « clé » est le terme recherché et « valeur » le texte de la réponse. La « clé » peut être laissée vide pour répondre à tous les déclencheurs, quel que soit le contenu. Notez que « valeur » accepte « {{key}} » comme espace réservé à remplacer par la valeur de « key » dans la réponse. Notez que « key » sera évalué comme une expression régulière et que les caractères spéciaux comme « . » doivent être ignorés si vous voulez réellement intégrer un point, par exemple : « \\. »"
+            answering_user:
+              label: Utilisateur qui répond
+              description: Par défaut, utilisateur système
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Étiquettes
+              description: Liste des étiquettes à ajouter au sujet.
+        post:
+          fields:
+            creator:
+              label: Créateur
+              post_creator_context: Le créateur de la publication
+              updated_user_context: L'utilisateur mis à jour
+            topic:
+              label: ID du sujet
+            post:
+              label: Contenu de la publication
+        topic:
+          fields:
+            creator:
+              label: Créateur
+              updated_user_context: L'utilisateur mis à jour
+            body:
+              label: Corps du sujet
+            title:
+              label: Titre du sujet
+            category:
+              label: Catégorie de sujet
+            tags:
+              label: Étiquettes de sujet
+        group_category_notification_default:
+          fields:
+            group:
+              label: Groupe
+            notification_level:
+              label: Niveau de notification
+            update_existing_members:
+              label: Mettre à jour les membres existants
+              description: Met à jour le niveau de notification pour les membres du groupe existant
+        user_global_notice:
+          fields:
+            level:
+              label: Niveau
+            notice:
+              label: Avis
+              description: Accepte le HTML, ne le remplissez pas avec une entrée non fiable !
+          levels:
+            warning: Avertissement
+            info: Détails
+            success: Succès
+            error: Erreur
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Nom du badge
+            group:
+              label: Groupe
+              description: Groupe ciblé. Les utilisateurs ayant le badge spécifié seront ajoutés à ce groupe
+            update_user_title_and_flair:
+              label: Mettre à jour le titre et le style de l'utilisateur
+              description: Facultatif, mettre à jour le titre et le style de l'utilisateur
+            remove_members_without_badge:
+              label: Supprimer les membres existants sans badge
+              description: Facultatif, supprimer les membres du groupe existants sans le badge spécifié.
+            badge:
+              label: Badge
+              description: Sélectionner un badge
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Suspendre jusqu'à (par défaut)
+            reason:
+              label: Motif (par défaut)
+            actor:
+              label: Utilisateur
+              description: "L'utilisateur responsable de la suspension (par défaut : système)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID du sujet
+            pinned_globally:
+              label: Épinglé globalement
+            pinned_until:
+              label: Épinglé jusqu'à
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID du sujet
+            banner_until:
+              label: Faire une bannière jusqu'au
+            user:
+              label: Utilisateur
+              description: "L'utilisateur qui crée la bannière (par défaut : système)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Mots vérifiés
+        topic_required_words:
+          fields:
+            words:
+              label: Liste des mots requis
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Nom du groupe de participants
+            giftee_assignment_messages:
+              label: Messages envoyés au donateur
+        send_pms:
+          add_a_pm_btn:
+            label: Ajouter un MP
+          fields:
+            receiver:
+              label: Récepteur du MP
+            sendable_pms:
+              label: MP
+            sender:
+              label: Expéditeur du MP
+        close_topic:
+          fields:
+            topic:
+              label: ID du sujet
+            message:
+              label: Message de fermeture
+              description: "Message facultatif à afficher dans l'enregistrement Sujet fermé"
+            user:
+              label: Utilisateur
+              description: "L'utilisateur qui ferme le sujet (par défaut : système)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Nom du champ personnalisé de l'utilisateur"
+      unnamed_automation: "Automatisation sans nom"
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Déclencheur
+        automation:
+          name:
+            label: Nom
+          trigger:
+            label: Déclencheur
+          script:
+            label: Script
+          version:
+            label: Version
+          status:
+            label: Statut
+          enabled:
+            label: Activé
+          disabled:
+            label: Désactivé
+          placeholders:
+            label: Espaces réservés
+          last_updated_at:
+            label: Dernière mise à jour
+          last_updated_by:
+            label: Mis à jour par

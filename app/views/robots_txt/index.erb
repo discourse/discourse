@@ -1,0 +1,19 @@
+<%= @robots_info[:header] %>
+<% if Discourse.base_path.present? %>
+# This robots.txt file is not used. Please append the content below in the robots.txt file located at the root
+<% end %>
+#
+<% @robots_info[:agents].each do |agent| %>
+User-agent: <%= agent[:name] %>
+<% agent[:disallow].each do |path| %>
+Disallow: <%= path %>
+<% end %>
+
+
+<% end %>
+
+<%- if SiteSetting.enable_sitemap? && !SiteSetting.login_required? %>
+Sitemap: <%= request.protocol %><%= request.host_with_port %>/sitemap.xml
+<% end %>
+
+<%= server_plugin_outlet "robots_txt_index" %>

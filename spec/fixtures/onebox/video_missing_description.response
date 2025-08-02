@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head prefix="og: http://ogp.me/ns# video: http://ogp.me/ns/video#">
+<meta charset="utf-8">
+<title>Arrival of a Train at La Ciotat</title>
+<meta property="og:title" content="Arrival of a Train at La Ciotat">
+<meta property="og:site_name" content="Open Graph protocol examples">
+<meta property="og:type" content="video.movie">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="http://examples.opengraphprotocol.us/video-movie.html">
+<meta property="og:image" content="http://examples.opengraphprotocol.us/media/images/train.jpg">
+<meta property="og:image:secure_url" content="https://d72cgtgi6hvvl.cloudfront.net/media/images/train.jpg">
+<meta property="og:image:width" content="500">
+<meta property="og:image:height" content="328">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:video" content="http://examples.opengraphprotocol.us/media/video/train.mp4">
+<meta property="og:video:secure_url" content="https://d72cgtgi6hvvl.cloudfront.net/media/video/train.mp4">
+<meta property="og:video:type" content="video/mp4">
+<meta property="og:video:width" content="472">
+<meta property="og:video:height" content="296">
+<meta property="video:release_date" content="1895-12-28">
+<meta property="video:director" content="http://examples.opengraphprotocol.us/profile.html">
+<meta property="video:duration" content="50">
+<meta property="video:tag" content="La Ciotat">
+<meta property="video:tag" content="train">
+</head>
+<body>
+<p>A <a href="http://ogp.me/#type_video.movie">video.movie</a> object.</p>
+</body>
+</html>

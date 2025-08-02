@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  site_settings:
+    presence_enabled: "Vis brugere, der i øjeblikket svarer på det aktuelle emne, eller redigerer det aktuelle indlæg?"
+    presence_max_users_shown: "Maksimalt antal viste brugere."

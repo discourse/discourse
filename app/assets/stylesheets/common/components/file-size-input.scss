@@ -1,0 +1,16 @@
+.file-size-picker {
+  display: flex;
+
+  .file-size-input {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .file-size-unit-selector {
+    flex: 0 0 8em;
+  }
+
+  .select-kit .select-kit-header {
+    border-left: 0;
+  }
+}

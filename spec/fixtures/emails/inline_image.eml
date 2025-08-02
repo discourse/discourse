@@ -1,0 +1,76 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Fri, 15 Jan 2016 00:12:43 +0100
+Message-ID: <28@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: multipart/related; boundary=001a114b2eccff183a052998ec68
+
+--001a114b2eccff183a052998ec68
+Content-Type: multipart/alternative; boundary=001a114b2eccff1836052998ec67
+
+--001a114b2eccff1836052998ec67
+Content-Type: text/plain; charset=UTF-8
+
+Before
+
+[image: 内嵌图片 1]
+
+After
+
+--001a114b2eccff1836052998ec67
+Content-Type: text/html; charset=UTF-8
+
+<div dir="ltr"><b>Before</b><div><br></div><div><img src="cid:ii_1525434659ddb4cb" alt="内嵌图片 1"><br></div><div><br></div><div><i>After</i>
+</div></div>
+
+--001a114b2eccff1836052998ec67--
+--001a114b2eccff183a052998ec68
+Content-Type: image/png; name="logo.png"
+Content-Disposition: inline; filename="logo.png"
+Content-Transfer-Encoding: base64
+Content-ID: <ii_1525434659ddb4cb>
+X-Attachment-Id: ii_1525434659ddb4cb
+
+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
+uIDrr6oAAAAASUVORK5CYII=
+--001a114b2eccff183a052998ec68--

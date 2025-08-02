@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  site_settings:
+    details_enabled: 'Medtag muligheden for at tilføje udvidelige detaljer til et indlæg. Denne funktion kan findes i værktøjslinjens popup menu i editoren. Du skal genbage alle indlæg med "rake indlæg:rebake", hvis du ændrer denne indstilling.'
+  details:
+    excerpt_details: "(klik for flere detaljer)"

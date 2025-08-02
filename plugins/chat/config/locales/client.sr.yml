@@ -1,0 +1,137 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Uvek"
+          never: "Nikad"
+      logs:
+        staff_actions:
+          actions:
+            chat_auto_remove_membership: "Članstva su automatski uklonjena s kanala"
+    chat:
+      dates:
+        yesterday: "Juče"
+      all_loaded: "Prikaz svih poruka"
+      cancel: "Odustani"
+      channel_settings:
+        edit: "Izmeni"
+        add: "Dodaj"
+      close: "Zatvori"
+      remove: "Ukloni"
+      collapse: "Skupi okvir za chat"
+      delete: "Obriši"
+      muted: "utišano"
+      joined: "pridružen"
+      email_frequency:
+        never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
+      flag: "Označi Zastavom"
+      last_visit: "poslednja poseta"
+      placeholder_self: "Zapiši nešto"
+      reply: "Odgovori"
+      edit: "Izmeni"
+      rebake_message: "Popravi HTML"
+      bookmark_message: "Markiraj"
+      bookmark_message_edit: "Uredi marker"
+      save: "Sačuvaj"
+      sounds:
+        none: "Ništa"
+      exit: "nazad"
+      channel_status:
+        open: "Otvori"
+      browse:
+        back: "Nazad"
+        filter_all: sve
+        filter_open: Otvori
+      chat_message_separator:
+        today: Danas
+        yesterday: Juče
+      about_view:
+        title: Naslov
+        name: Ime foruma
+        description: Opis
+      channel_info:
+        back_to_channel: "Nazad"
+        tabs:
+          members: Članovi
+          settings: Podešavanja
+        remove_member: "Ukloni"
+      new_message_modal:
+        filter: "Filter"
+      direct_message_creator:
+        title: Nova privatna poruka
+      create_channel:
+        type: "Tip"
+        types:
+          category: "Kategorija"
+          topic: "Tema"
+      composer:
+        italic_text: "italic tekst"
+        bold_text: "boldovan tekst"
+      notification_levels:
+        never: "Nikad"
+      settings:
+        followed: "Pridružio"
+        notifications: "Obaveštenja"
+        save: "Sačuvaj"
+        saved: "Sačuvano"
+        admin_title: "Admin"
+        settings_title: "Podešavanja"
+        category_label: "Kategorija"
+        history_label: "Istorija"
+        members_label: "Članovi"
+      channel_list:
+        title: "Kanali"
+      incoming_webhooks:
+        back: "Nazad"
+        description: "Opis"
+        delete: "Obriši"
+        emoji: "Emoji"
+        name: "Ime foruma"
+        save: "Sačuvaj"
+        edit: "Izmeni"
+        system: "sistem"
+        url: "URL"
+        username: "Korisničko Ime"
+      selection:
+        cancel: "Odustani"
+        copy: "Kopija"
+        new_topic:
+          title: "Prebaci u Novu Temu"
+        existing_topic:
+          title: "Prebaci u Postojeću Temu"
+      retention_reminders:
+        short:
+          one: "%{count} дан"
+          few: "%{count} дана"
+          other: "%{count} дана"
+      emoji_picker:
+        flags: "Zastave"
+      thread:
+        title: "Naslov"
+        settings: "Podešavanja"
+        last_reply: "poslednji odgovor"
+        notifications:
+          regular:
+            title: "Normalno"
+          tracking:
+            title: "Praćeno"
+          watching:
+            title: "Posmatram"
+      draft_channel_screen:
+        header: "Nova privatna poruka"
+        cancel: "Odustani"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Privatna poruka

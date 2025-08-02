@@ -1,0 +1,153 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    discourse_automation_enabled: "Activar el plugin discourse-automation"
+  discourse_automation:
+    models:
+      fields:
+        required_field: El campo «%{name}» debe rellenarse en «%{target}:%{target_name}».
+        invalid_metadata: Los datos de «%{field}» no son válidos o el componente «%{component}» es desconocido.
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Debe proporcionarse al menos uno de los campos «custom_fields» o «user_profile»."
+      user_badge_granted:
+        title: Credencial de usuario concedida
+        doc: Activa una automatización cuando un usuario recibe una medalla.
+      user_first_logged_in:
+        title: Usuario que inició sesión por primera vez
+        doc: Activa una automatización cuando un usuario se conecta por primera vez.
+      stalled_topic:
+        title: Tema estancado
+        doc: Activa una automatización cuando el autor del tema no responde tras un periodo de tiempo especificado. Recomendamos limitarlo por etiqueta o categoría, ya que si no el número de temas impactados puede ser muy elevado. Como medida de seguridad, no podrá impactar a más de 250 temas.
+      api_call:
+        title: Llamada a la API
+        description: Hacer una solicitud POST para activar una automatización
+        doc: La solicitud POST debe hacerse a «/automations/:id/trigger.json» con una clave de API global.
+      category_created_edited:
+        title: Categoría creada/editada
+        description: Cuando se cree o edite una categoría se activará la automatización
+      recurring:
+        title: Recurrente
+      point_in_time:
+        title: Fecha y hora
+        description: Cuando se alcance la fecha, se activará la automatización
+      user_added_to_group:
+        title: Usuario añadido a un grupo
+        description: Cuando un usuario se añada al grupo especificado, se activará la automatización
+      user_removed_from_group:
+        title: Usuario eliminado del grupo
+        description: Cuando un usuario se elimine del grupo especificado, se activará la automatización
+      user_promoted:
+        title: Usuario sube de nivel de confianza
+        description: Cuando un usuario asciende de nivel de confianza
+        transition_placeholder: "de %{from_level_name} a %{to_level_name}"
+      stalled_wiki:
+        title: Wiki estancada
+        description: Cuando un wiki no haya sido editado durante un periodo superior al definido, se activará la automatización
+      post_created_edited:
+        title: Publicación creada o editada
+        description: Cuando se edita o se crea una publicación válida, se activa la automatización
+      pm_created:
+        title: Mensaje personal creado
+        description: Cuando se cree un MP válido se activará la automatización
+      topic_tags_changed:
+        title: Se han modificado las etiquetas de tema
+        description: Cuando se cambien las etiquetas de un tema, se activará la automatización.
+      topic:
+        title: Tema
+        description: El script asociado solo se utilizará en el tema especificado. Por ejemplo, esto es útil para los scripts que hacen validaciones
+      after_post_cook:
+        title: Después de cocinar la publicación
+        description: Cuando se cocine el contenido de una publicación se activará la automatización
+      user_updated:
+        title: Después de actualizar el usuario
+        description: Cuando un usuario actualiza cualquier información, se activará la automatización.
+    scriptables:
+      post:
+        title: Crear una publicación
+        description: Crear una publicación sobre un tema específico
+      topic:
+        title: Crear un tema
+        description: Crear un tema como usuario específico
+      flag_post_on_words:
+        title: Denunciar publicación según su contenido
+        description: Denuncia una publicación si contiene las palabras especificadas
+        flag_message: "La publicación contiene palabras no permitidas: %{words}"
+        doc: Las publicaciones que contengan todas las palabras a la vez serán denunciadas y ocultadas. Ten en cuenta que si defines varias palabras separadas por coma, todas ellas deberán estar presentes.
+      zapier_webhook:
+        title: Webhook de Zapier
+        description: Llama a un zap con el contexto de un activador como cuerpo
+      auto_responder:
+        title: Respuesta automática
+        description: Publica una respuesta a una publicación que incluye las palabras clave especificadas
+      auto_tag_topic:
+        title: Etiquetar automáticamente tema
+        description: Añadir etiquetas automáticamente a un tema
+      pin_topic:
+        title: Anclar tema
+        description: Fija un tema específico en una fecha determinada
+      banner_topic:
+        title: Convertir el tema en banner
+        description: Convertir un tema en un banner
+      gift_exchange:
+        title: Amigo invisible
+        description: Permite emparejar de forma anónima a los usuarios de un grupo para que se envíen un regalo entre ellos.
+        doc: El amigo invisible (intercambio de regalos) requiere un grupo existente con al menos 3 usuarios. En la fecha elegida, se emparejará a cada usuario con una persona a la que regalar (y otra distinta que le regalará).
+      send_pms:
+        title: Enviar mensajes privados
+        description: Permite enviar MPs (posiblemente con retardo).
+        doc: Permite enviar varios MPs a un usuario. Cada MP acepta un retardo.
+      suspend_user_by_email:
+        title: Suspender al usuario por correo electrónico
+        description: Suspender automáticamente una cuenta en función de la dirección de correo electrónico
+      user_global_notice:
+        title: Aviso global para un usuario
+        description: Permite mostrarle un aviso global a un usuario
+      user_group_membership_through_badge:
+        title: Pertenencia a grupos de usuarios mediante una medalla
+        description: Modificar la pertenencia a un grupo de usuarios en función de una medalla
+      suspend_user_by_email_with_api_call:
+        doc: Al activar «suspend_user_by_email» con una llamada API, se espera que haya un «email» válido en los parámetros enviados. También se pueden utilizar «reasons» y «suspend_until (formato ISO 8601)» para reemplazar los valores de los campos por defecto.
+      user_global_notice_with_stalled_topic:
+        doc: Cuando se active a través de un tema estancado, el autor del tema recibirá el aviso global
+      user_global_notice_with_first_accepted_solution:
+        doc: Cuando se active a través de la primera solución aceptada, el autor de la solución recibirá el aviso global.
+      send_pms_with_api_call:
+        doc: Si utilizas el script «send pms» con el activador «api call», el parámetro «usernames» de tu solicitud se utilizará para rellenar la lista de destinatarios.
+      topic_required_words:
+        title: Palabras requeridas en un tema
+        description: Permite definir una lista de palabras requeridas en un tema, debe utilizarse al menos una en cada publicación.
+        doc: Se necesita un tema para usar las Palabras requeridas en un tema. Cuando se cree o edite una publicación, se verificará que incluya al menos una de las palabras requeridas.
+        errors:
+          must_include_word: "La publicación debe contener al menos una de las siguientes palabras: %{words}"
+      close_topic:
+        title: Cerrar tema
+        description: Cierra un tema y permite opcionalmente incluir un mensaje
+      append_last_edited_by:
+        title: Anexar la última edición realizada por
+        description: Añade los datos de «Editado por última vez por» de la publicación en la parte inferior del contenido cocinado.
+        text: "Editado por última vez por @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Anexar la última comprobación realizada por
+        description: Añade los datos de «Comprobado por última vez por» de la parte inferior del contenido cocinado de la publicación.
+        text: "Comprobado por última vez por @%{username} %{date_time}"
+        summary: Comprobar documento
+        details: "Realiza la comprobación del documento: "
+        button_text: Hecho
+      add_user_to_group_through_custom_field:
+        title: "Añadir un usuario al grupo a través del campo personalizado de usuario"
+        description: "Añade usuarios automáticamente a grupos cuando inicien sesión o con una verificación recurrente"
+      group_category_notification_default:
+        title: "Notificación de categoría de grupo predeterminada"
+        description: "Establecer el nivel de notificación por defecto de una categoría para los miembros de un grupo"
+      send_chat_message:
+        title: "Enviar mensaje de chat"
+        description: "Enviar un mensaje de chat personalizado a un canal"
+      random_assign:
+        title: "Asignación aleatoria"
+        description: "Asignar temas aleatoriamente a un grupo"

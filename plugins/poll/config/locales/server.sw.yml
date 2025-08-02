@@ -1,0 +1,35 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  site_settings:
+    poll_enabled: "Ruhusu Uchaguzi?"
+    poll_maximum_options: "Idadi ya juu ya machaguo yanayoruhusiwa katika uchaguzi."
+    poll_edit_window_mins: "Idadi ya dakika baada ya maandiko kuwekwa ambapo uchaguzi unaweza kuhaririwa."
+    poll_minimum_trust_level_to_create: "Chagua kiwango cha chini ya uaminifu mtumiaji anahitaji kutengeneza uchaguzi."
+  poll:
+    multiple_polls_with_same_name: "Kuna chaguzi kadhaa zenye majina sawa: <strong>%{name}</strong>. Tumia dhana ya '<code>jina</code>' ilikutofautisha chaguzi zako."
+    default_poll_must_have_less_options:
+      one: "Chaguzi lazima uwe na chaguo chini ya %{count}."
+      other: "Uchaguzi lazima uwe na chaguo chini ya %{count}."
+    named_poll_must_have_less_options:
+      one: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na chaguo chini ya %{count}."
+      other: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na machaguo chini ya %{count}."
+    default_poll_must_have_different_options: "Uchaguzi lazima uwe na machaguo tofauti."
+    named_poll_must_have_different_options: "Uchaguzi wenye jina <strong>%{name}</strong> lazima uwe na machaguo tofauti."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Uchaguzi wenye machaguo mengi una vigezo ambavyo si sahihi."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Uchaguzi wenye jina <strong>%{name}</strong>, ambao una machaguo mengi, una vigezo ambavyo si sahihi."
+    requires_at_least_1_valid_option: "Lazima uchague angalau chaguo 1 sahihi."
+    no_poll_with_this_name: "Hakuna uchaguzi wenye jina <strong>%{name}</strong> unaohusiana na bandiko hili."
+    post_is_deleted: "Huwezi kufanyia kazi bandiko lililofutwa."
+    user_cant_post_in_topic: "Huwezi kupiga kura kwa sababu hauwezi kuchangia kwenye hii mada."
+    topic_must_be_open_to_vote: "Mada inatakiwa iwe wazi, ili kupiga kura."
+    poll_must_be_open_to_vote: "Uchaguzi lazima uwe wazi ili kupiga kura."
+    topic_must_be_open_to_toggle_status: "Mada inatakiwa iwe wazi ili kubadilisha hali."
+    only_staff_or_op_can_toggle_status: "Ni msaidizi au mwandishi wa bandiko tu, ndo wanaoweza kubadilisha hali ya uchaguzi."
+    insufficient_rights_to_create: "Hauruhusiwi kutengeneza uchaguzi."
+    email:
+      link_to_poll: "Bofya ili kuangalia uchaguzi."

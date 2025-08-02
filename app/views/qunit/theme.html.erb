@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Theme QUnit Test Runner</title>
+    <%= discourse_color_scheme_stylesheets %>
+    <meta name="color-scheme" content="light dark">
+
+    <%- if @has_test_bundle && !@suggested_themes %>
+      <%= preload_script "vendor" %>
+      <%= preload_script "test-support" %>
+      <%= preload_script "discourse" %>
+      <%= preload_script "test" %>
+      <%= preload_script_url ExtraLocalesController.url("main") %>
+      <%= preload_script_url ExtraLocalesController.url("mf") %>
+      <%= preload_script "admin" %>
+      <%- Discourse.find_plugin_js_assets(include_disabled: true, include_admin_asset: true, only: @required_plugins).each do |file| %>
+        <%= preload_script file %>
+      <%- end %>
+      <%= preload_script "test-site-settings" %>
+      <%= theme_translations_lookup %>
+      <%= theme_lookup("head_tag") %>
+      <%= theme_tests %>
+
+      <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
+      <meta property="og:title" content="">
+      <meta property="og:url" content="">
+      <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
+
+      <style>
+        <%= File.read("#{Rails.root}/app/assets/javascripts/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
+      </style>
+
+      <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>
+      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+
+      <%- Discourse.find_plugin_css_assets(include_disabled: true, only: @required_plugins, mobile_view: false, desktop_view: true, request: request).each do |file| %>
+        <%= discourse_stylesheet_link_tag(file) %>
+      <%- end %>
+    <%- else %>
+      <style>
+        html {
+          font-family: Arial;
+        }
+      </style>
+    <%- end %>
+
+    <%- if params['testem'] %>
+      <script defer src="/assets/testem.js" nonce="<%= csp_nonce_placeholder %>"></script>
+    <%- end %>
+  </head>
+  <body>
+    <%- if !@has_test_bundle %>
+      This is a production installation of Discourse, and cannot be used for theme testing.
+      For more information, see <a href="https://meta.discourse.org/t/66857">this guide</a>.
+    <% elsif @suggested_themes %>
+      <h2>Theme QUnit Test Runner</h2>
+
+      <%- if @suggested_themes.empty? %>
+        <p>Cannot find any theme tests.</p>
+      <%- else %>
+        <h3>Select a theme/component: </h3>
+        <%- @suggested_themes.each do |(id, name)| %>
+          <h4><%= link_to name, theme_qunit_path(id: id) %></h4>
+        <%- end %>
+      <%- end %>
+    <% else %>
+      <%= preload_script "scripts/discourse-test-listen-boot" %>
+      <%= preload_script "scripts/discourse-boot" %>
+    <%- end %>
+
+    <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>
+  </body>
+</html>

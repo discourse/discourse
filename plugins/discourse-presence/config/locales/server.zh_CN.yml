@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    presence_enabled: "显示当前正在回复当前话题或正在编辑当前帖子的用户？"
+    presence_max_users_shown: "显示的最大用户数。"

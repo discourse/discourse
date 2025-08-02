@@ -1,0 +1,171 @@
+<% if @topic_view %>
+  <div id="topic-title">
+    <h1>
+      <%= render_topic_title(@topic_view.topic) %>
+    </h1>
+
+    <% if @breadcrumbs.present? %>
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+        <% @breadcrumbs.each_with_index do |c, i| %>
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="<%= @topic_view.topic.category.url %>" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #<%= c[:color] %>'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'><%= c[:name] %></span>
+              </span>
+            </a>
+            <meta itemprop="position" content="<%= i + 1 %>" />
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @tags.present? %>
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+          <% @tags.each_with_index do |tag, i| %>
+            <a href='<%= "#{Discourse.base_url}/tag/#{tag.name}" %>' class='discourse-tag' rel="tag"><%= tag.name -%></a><% if i < @tags.size - 1 %>, <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= server_plugin_outlet "topic_header" %>
+
+  <%- if include_crawler_content? %>
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
+      <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
+      <% if @topic_view.topic.category.present? %>
+        <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
+      <% end %>
+      <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
+        <% if application_logo_url.present? %>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='<%= application_logo_url %>'>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @topic_view.crawler_posts&.first && !@topic_view.crawler_posts.first.is_first_post? %>
+        <% if @topic_view.topic.user.present? %>
+          <span itemprop='author' itemscope itemtype="http://schema.org/Person">
+            <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
+            <link itemprop='url' rel='nofollow' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
+          </span>
+        <% end %>
+        <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
+      <% end %>
+
+      <% @topic_view.crawler_posts.each do |post| %>
+        <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
+          <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+                <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+                <%
+                  post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
+                  who_username = post_custom_fields["action_code_who"] || ""
+                  small_action_href = post_custom_fields["action_code_path"] || ""
+                  if post.action_code
+                %>
+                  <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username, href: small_action_href).html_safe %>
+                <% end %>
+              </span>
+
+              <% if post.is_first_post? %>
+                <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% end %>
+
+              <% if post.image_url %>
+                <link itemprop="image" href="<%= post.image_url %>">
+              <% end %>
+
+              <span class="crawler-post-infos">
+                  <time <%= post.is_first_post? ? "" : "itemprop='datePublished'".html_safe %> datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
+                    <%= l post.created_at, format: :long %>
+                  </time>
+                <% if post.version > 1 %>
+                  <meta itemprop='dateModified' content='<%= post.last_version_at.to_formatted_s(:iso8601) %>'>
+                <% else %>
+                  <meta itemprop='dateModified' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
+                <% end %>
+              <span itemprop='position'><%= post.post_number %></span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
+              <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
+            </div>
+
+              <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
+                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+                  <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
+                    <% if link[:reflection] && link[:title].present? %>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="<%=link[:url]%>"><%=link[:title]%></a>
+                        <meta itemprop='position' content='<%= i+1 %>'>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if @topic_view.single_post_request? || @topic_view.prev_page || @topic_view.next_page %>
+      <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement' class="topic-body crawler-post">
+        <% if @topic_view.single_post_request? %>
+          <span itemprop='name'>
+            <%= link_to t(:show_post_in_topic), "#{@topic_view.current_page_path}#post_#{@topic_view.crawler_posts.first&.post_number}", itemprop: 'url' %>
+          </span>
+        <% else %>
+          <% if @topic_view.prev_page %>
+            <span itemprop='name'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'url' %></span>
+          <% end %>
+          <% if @topic_view.next_page %>
+            <span itemprop='name'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'url' %></b></span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= build_plugin_html 'server:topic-show-after-posts-crawler' %>
+  <% else %>
+    <%= t(:crawler_content_hidden) %>
+  <% end %>
+
+  <% content_for :head do %>
+    <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, rel: 'alternate nofollow', title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
+    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time, breadcrumbs: @breadcrumbs, tags: @tags.map(&:name)) %>
+
+    <% if !@topic_view.single_post_request? && (@topic_view.prev_page || @topic_view.next_page)  %>
+      <% if @topic_view.prev_page %>
+        <link rel="prev" href="<%= @topic_view.prev_page_path -%>">
+      <% end %>
+      <% if @topic_view.next_page %>
+        <link rel="next" href="<%= @topic_view.next_page_path -%>">
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% content_for(:title) { @title || "#{gsub_emoji_to_unicode(@topic_view.page_title)} - #{SiteSetting.title}" } %>
+
+  <% if @topic_view.print %>
+    <% content_for :after_body do %>
+        <%= preload_script('print-page') %>
+    <% end %>
+  <% end %>
+<% end %>

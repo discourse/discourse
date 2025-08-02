@@ -1,0 +1,128 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    discourse_automation:
+      back: Назад
+      edit: рэдагаваць
+      fields:
+        user:
+          label: карыстальнік
+        pm:
+          title:
+            label: Загаловак
+          raw:
+            label: Змест
+        pms:
+          title:
+            label: Загаловак
+          raw:
+            label: Змест
+        group:
+          label: група
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: значок
+        recurring:
+          frequencies:
+            day: дзень
+            week: тыдзень
+            month: месяц
+            year: год
+        topic:
+          fields:
+            restricted_topic:
+              label: Номер тэмы
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: тэгі
+            restricted_categories:
+              label: катэгорыі
+          created: створаны
+          with_images: Выява
+          with_links: Спасылкі
+          with_uploads: Загрузкі
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: бацькоўская катэгорыя
+        pm_created:
+          fields:
+            restricted_user:
+              label: карыстальнікаў
+            restricted_group:
+              label: група
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: катэгорыя
+            restricted_tags:
+              label: тэгі
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: тэгі
+        post:
+          fields:
+            topic:
+              label: Номер тэмы
+        group_category_notification_default:
+          fields:
+            group:
+              label: група
+        user_global_notice:
+          fields:
+            level:
+              label: ўзровень
+          levels:
+            success: поспех
+            error: памылка
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: група
+            badge:
+              label: значок
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: карыстальнік
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Номер тэмы
+        banner_topic:
+          fields:
+            topic_id:
+              label: Номер тэмы
+            user:
+              label: карыстальнік
+        close_topic:
+          fields:
+            topic:
+              label: Номер тэмы
+            user:
+              label: карыстальнік
+      models:
+        trigger:
+          name:
+            label: Трыггер старту
+        automation:
+          name:
+            label: імя
+          trigger:
+            label: Трыггер старту
+          version:
+            label: версія
+          status:
+            label: Статус
+          disabled:
+            label: Адключана

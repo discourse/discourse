@@ -1,0 +1,40 @@
+.chat-notices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+
+  .full-page-chat & {
+    padding-inline: 1rem;
+    box-sizing: border-box;
+    top: 2rem;
+  }
+
+  &__notice,
+  .chat-retention-reminder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--tertiary-low);
+    padding: 0.5rem;
+    color: var(--primary);
+    min-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 0.25rem;
+    box-sizing: border-box;
+  }
+
+  .dismiss-btn {
+    color: var(--primary-medium);
+    align-self: flex-start;
+
+    &:hover,
+    &:focus {
+      background: var(--tertiary-medium);
+    }
+  }
+}

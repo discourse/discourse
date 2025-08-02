@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../migrations"
+
+require "colored2"
+require "thor"
+
+module Migrations
+  configure_zeitwerk
+  enable_i18n
+
+  module CLI
+    class Application < Thor
+      desc "convert [FROM]", "Convert a file"
+      option :settings, type: :string, desc: "Path of settings file", banner: "path"
+      option :reset, type: :boolean, desc: "Reset database before converting data"
+      def convert(converter_type)
+        ::Migrations::CLI::ConvertCommand.new(converter_type, options).execute
+      end
+
+      desc "import", "Import a file"
+      option :reset, type: :boolean, desc: "Reset MappingsDB before importing data"
+      def import
+        ::Migrations::CLI::ImportCommand.new(options).execute
+      end
+
+      desc "upload", "Upload media uploads"
+      option :settings,
+             type: :string,
+             desc: "Uploads settings file path",
+             default: "./migrations/config/upload.yml",
+             aliases: "-s",
+             banner: "path"
+      option :fix_missing, type: :boolean, desc: "Fix missing uploads"
+      option :optimize, type: :boolean, desc: "Optimize uploads"
+      def upload
+        ::Migrations::CLI::UploadCommand.new(options).execute
+      end
+
+      desc "schema [COMMAND]", "Manage database schema"
+      subcommand "schema", ::Migrations::CLI::SchemaSubCommand
+
+      def self.exit_on_failure?
+        true
+      end
+    end
+  end
+end
+
+if defined?(RubyVM::YJIT)
+  RubyVM::YJIT.enable
+else
+  warn "WARNING: Performance degraded: RubyVM::YJIT is not available".yellow
+end
+
+# rubocop:disable Discourse/NoChdir
+Dir.chdir(File.expand_path("../..", __dir__)) { ::Migrations::CLI::Application.start }
+# rubocop:enable Discourse/NoChdir

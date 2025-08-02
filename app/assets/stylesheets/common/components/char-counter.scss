@@ -1,0 +1,18 @@
+.char-counter {
+  &__ratio {
+    display: block;
+    text-align: right;
+    margin-top: 0.5rem;
+  }
+
+  &.exceeded {
+    > textarea {
+      border-color: var(--danger);
+      outline-color: var(--danger);
+    }
+
+    &__ratio {
+      color: var(--danger);
+    }
+  }
+}

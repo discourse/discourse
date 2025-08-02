@@ -1,0 +1,33 @@
+@use "lib/viewport";
+
+.filter-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: var(--d-input-border);
+  border-radius: var(--d-input-border-radius);
+  box-sizing: border-box;
+
+  &.is-focused {
+    @include default-focus;
+  }
+
+  .filter-input,
+  .filter-input:focus {
+    width: 100%;
+    margin: 0;
+    border: none;
+    outline: none;
+
+    @include viewport.from(md) {
+      .chat-browse-view__actions & {
+        width: 210px;
+      }
+    }
+  }
+
+  .d-icon {
+    color: var(--primary-medium);
+    margin: 0 0.5rem;
+  }
+}

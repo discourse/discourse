@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  site_settings:
+    presence_enabled: "Да се покажат ли потребители, които в момента отговарят на текущата тема или редактират текущата публикация?"
+    presence_max_users_shown: "Показан е максимален брой потребители."

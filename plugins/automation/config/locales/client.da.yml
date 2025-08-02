@@ -1,0 +1,272 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    discourse_automation:
+      title: Automatisering
+      back: Tilbage
+      edit: Rediger
+      select_script: Vælg et script
+      select_trigger: Vælg en udløser
+      edit_automation:
+        trigger_section:
+          trigger_now: "Udløs nu"
+          title: Hvornår/hvad...
+        fields_section:
+          title: Script indstillinger
+      destroy_automation:
+        confirm: "Er du sikker på, at du vil slette `%{name}`?"
+      fields:
+        key_value:
+          label_without_count: "Konfigurer"
+        user:
+          label: Bruger
+        pm:
+          title:
+            label: Titel
+          raw:
+            label: Brødtekst
+        pms:
+          confirm_remove_pm: "Er du sikker på, at du vil fjerne denne PM?"
+          placeholder_title: PM titel
+          add_pm: Tilføj PM
+          no_pm_created: Du har ikke oprettet nogen PM endnu. PM'er vil blive sendt, når din automatisering er udløst.
+          title:
+            label: Titel
+          raw:
+            label: Brødtekst
+          delay:
+            label: Forsinkelse (minutter)
+          prefers_encrypt:
+            label: Krypterer PM hvis tilgængelig
+        group:
+          label: Gruppe
+        text:
+          label: Tekst
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Emblem
+        stalled_topic:
+          durations:
+            PT1H: "En time"
+            P1D: "En dag"
+            P1W: "En uge"
+            P2W: "To uger"
+            P1M: "En måned"
+            P3M: "Tre måneder"
+            P6M: "Seks måneder"
+            P1Y: "Et år"
+          fields:
+            categories:
+              label: Begrænset til kategorier
+            tags:
+              label: Begrænset til mærker
+            stalled_after:
+              label: Gået i stå efter
+        recurring:
+          every: Hver
+          frequencies:
+            minute: minut
+            hour: time
+            day: dag
+            weekday: hverdag
+            week: uge
+            month: måned
+            year: år
+          fields:
+            recurrence:
+              label: Gentagelse
+            start_date:
+              label: Start dato
+        stalled_wiki:
+          durations:
+            PT1H: "En time"
+            P1D: "En dag"
+            P1W: "En uge"
+            P2W: "To uger"
+            P1M: "En måned"
+            P3M: "Tre måneder"
+            P6M: "Seks måneder"
+            P1Y: "Et år"
+          fields:
+            restricted_category:
+              label: Begrænset til kategori
+            stalled_after:
+              label: Udløserforsinkelse
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Sporet gruppe
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Sporet gruppe
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Begræns til gruppe
+            trust_level_transition:
+              label: Overgang til tillidsniveau
+          trust_levels:
+            ALL: "Alle tillidsniveauer"
+            TL01: "TL0 til TL1"
+            TL12: "TL1 til TL2"
+            TL23: "TL2 til TL3"
+            TL34: "TL3 til TL4"
+        topic:
+          fields:
+            restricted_topic:
+              label: Emne ID
+        post_created_edited:
+          fields:
+            action_type:
+              label: Handlingstype
+            valid_trust_levels:
+              label: Gyldige tillidsniveauer
+            restricted_tags:
+              label: Mærker
+            restricted_categories:
+              label: Kategorier
+          created: Oprettet
+          edited: Redigeret
+          with_images: Billeder
+          with_links: Links
+          with_code: Kode
+          with_uploads: Overførsler
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Overordnet kategori
+        pm_created:
+          fields:
+            restricted_user:
+              label: Brugere
+            restricted_group:
+              label: Gruppe
+            valid_trust_levels:
+              label: Gyldige tillidsniveauer
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Gyldige tillidsniveauer
+            restricted_category:
+              label: Kategori
+            restricted_tags:
+              label: Mærker
+      scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook URL
+        auto_responder:
+          fields:
+            once:
+              label: En Gang
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Mærker
+        post:
+          fields:
+            topic:
+              label: Emne ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Gruppe
+            notification_level:
+              label: Notifikationsniveau
+            update_existing_members:
+              label: Opdater eksisterende medlemmer
+              description: Opdaterer meddelelsesniveauet for eksisterende gruppemedlemmer
+        user_global_notice:
+          fields:
+            level:
+              label: Niveau
+            notice:
+              label: Bemærk
+          levels:
+            warning: Advarsel
+            info: Info
+            success: Succes
+            error: Fejl
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Emblem Navn
+            group:
+              label: Gruppe
+            badge:
+              label: Emblem
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Bruger
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Emne ID
+            pinned_globally:
+              label: Fastgjort globalt
+            pinned_until:
+              label: Fastgjort indtil
+        banner_topic:
+          fields:
+            topic_id:
+              label: Emne ID
+            user:
+              label: Bruger
+              description: "Brugeren, der opretter banneret (standard: system)"
+        topic_required_words:
+          fields:
+            words:
+              label: Liste over påkrævede ord
+        send_pms:
+          add_a_pm_btn:
+            label: Tilføj en PM
+          fields:
+            sendable_pms:
+              label: PM'er
+        close_topic:
+          fields:
+            topic:
+              label: Emne ID
+            message:
+              label: Lukkebesked
+            user:
+              label: Bruger
+              description: "Brugeren, der lukker emnet (standard: system)"
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Udløser
+        automation:
+          name:
+            label: Navn
+          trigger:
+            label: Udløser
+          script:
+            label: Script
+          version:
+            label: Version
+          status:
+            label: Status
+          enabled:
+            label: Aktiveret
+          disabled:
+            label: Deaktiveret
+          placeholders:
+            label: Pladsholdere
+          last_updated_at:
+            label: Sidst opdateret
+          last_updated_by:
+            label: Opdateret af

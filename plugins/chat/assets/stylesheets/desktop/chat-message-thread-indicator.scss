@@ -1,0 +1,34 @@
+.chat-message-thread-indicator {
+  max-width: 600px;
+  grid-template-areas:
+    "avatar info replies participants"
+    "avatar excerpt excerpt excerpt";
+
+  &__replies-count {
+    display: flex;
+    align-self: center;
+  }
+}
+
+@container (max-width: 400px) {
+  .chat-message-thread-indicator {
+    grid-template-areas:
+      "avatar info info participants"
+      "excerpt excerpt excerpt replies";
+
+    &__replies-count {
+      align-self: center;
+      grid-area: replies;
+      justify-content: flex-end;
+    }
+
+    &__last-reply-excerpt {
+      white-space: wrap;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      margin-top: 0.5rem;
+      margin-right: 0.25rem;
+    }
+  }
+}

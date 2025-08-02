@@ -1,0 +1,108 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    styleguide:
+      title: "دليل الأنماط"
+      welcome: "اختر قسمًا من القائمة على اليمين لتبدأ."
+      categories:
+        syntax: بناء الجملة
+        atoms: الذرّات (Atoms)
+        molecules: الجزئيات (Molecules)
+        organisms: المخلوقات الحية (Organisms)
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "أسلوب الطباعة"
+          example: "مرحبًا بك في Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "حقول إدخال التاريخ/الوقت"
+        menus:
+          title: "القوائم"
+        toasts:
+          title: "الرسائل المنبثقة"
+        font_scale:
+          title: "نظام الخطوط"
+        colors:
+          title: "الألوان"
+        icons:
+          title: "الأيقونات"
+          full_list: "طالِع قائمة أيقونات Font Awesome كاملةً"
+        forms:
+          title: "النماذج"
+        buttons:
+          title: "الأزرار"
+        dropdowns:
+          title: "القوائم المنسدلة"
+        categories:
+          title: "الفئات"
+        bread_crumbs:
+          title: "عناصر التنقّل التفصيلي"
+        navigation:
+          title: "التنقل"
+        navigation_bar:
+          title: "شريط التنقّل"
+        navigation_stacked:
+          title: "التنقّل الرأسي"
+        categories_list:
+          title: "قائمة الفئات"
+        topic_link:
+          title: "رابط الموضوع"
+        topic_list_item:
+          title: "العنصر في قائمة الموضوعات"
+        topic_statuses:
+          title: "حالات الموضوعات"
+        topic_list:
+          title: "قائمة الموضوعات"
+        basic_topic_list:
+          title: "قائمة الموضوعات الأساسية"
+        footer_message:
+          title: "رسالة التذييل"
+        signup_cta:
+          title: "عبارة الحث على الاشتراك"
+        topic_timer_info:
+          title: "مؤقّتات الموضوعات"
+        topic_footer_buttons:
+          title: "أزرار تذييل الموضوع"
+        topic_notifications:
+          title: "إشعارات الموضوعات"
+        post:
+          title: "المنشور"
+        post_list:
+          title: "قائمة المنشورات"
+          empty_example: "<PostList /> حالة فارغة"
+          populated_example: "<PostList /> حالة ممتلئة"
+        topic_map:
+          title: "خريطة الموضوع"
+        site_header:
+          title: "رأس الموقع"
+        suggested_topics:
+          title: "الموضوعات المقترحة"
+        post_menu:
+          title: "قائمة المشاركة"
+        modal:
+          title: "النافذة المشروطة"
+          header: "العنوان المشروط"
+          footer: "التذييل المشروط"
+        user_about:
+          title: "مربع \"نبذة عن المستخدم\""
+        header_icons:
+          title: "أيقونات الترويسة"
+        spinners:
+          title: "المُنزلقات"
+        empty_state:
+          title: "حالة فارغة"
+        tooltips:
+          title: "تلميحات الأدوات"
+          description: "الوصف"
+          header: "الرأس"
+          hover_to_see: "مرِّر فوق الأقسام لرؤية تلميح"
+        char_counter:
+          title: "عداد الأحرف"
+          placeholder: "أدخل نصك هنا..."

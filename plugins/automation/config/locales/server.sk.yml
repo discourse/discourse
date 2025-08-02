@@ -1,0 +1,154 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  site_settings:
+    discourse_automation_enabled: "Povolenie zásuvného modulu discourse-automation"
+  discourse_automation:
+    models:
+      fields:
+        required_field: Pole `%{name}` musí byť vyplnené na `%{target}:%{target_name}`.
+        invalid_field: Komponent poľa `%{component}` nie je použiteľný na `%{target}:%{target_name}`.
+        invalid_metadata: Údaje pre `%{field}` sú neplatné alebo komponent `%{component}` nie je známy.
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Musí byť zadané aspoň jedno z 'custom_fields' alebo 'user_profile'."
+      user_badge_granted:
+        title: Používateľovi bol udelený odznak
+        doc: Spustí automatizáciu, keď je používateľovi udelený odznak.
+      user_first_logged_in:
+        title: Používateľ sa prvýkrát prihlásil
+        doc: Spustí automatizáciu, keď sa používateľ prvýkrát prihlási.
+      stalled_topic:
+        title: Zastavená téma
+        doc: Spustí automatizáciu, keď téma nedostane novú odpoveď od vlastníka témy počas určeného časového obdobia. Odporúča sa nastaviť rozsah tohto spúšťača na značku/kategóriu, pretože počet ovplyvnených tém môže byť veľmi vysoký. Z bezpečnostných dôvodov je počet dotknutých tém obmedzený na 250.
+      api_call:
+        title: Volanie API
+        description: Vytvorenie požiadavky POST na spustenie automatizácie
+        doc: Žiadosť POST by sa mala odoslať na adresu `/automations/:id/trigger.json` s globálnym kľúčom API.
+      category_created_edited:
+        title: Kategória vytvorená/upravená
+        description: Po vytvorení alebo úprave kategórie sa spustí automatizácia
+      recurring:
+        title: Opakujúce sa
+      point_in_time:
+        title: Bod v čase
+        description: Po dosiahnutí dátumu sa spustí automatizácia
+      user_added_to_group:
+        title: Používateľ bol pridaný do skupiny
+        description: Po pridaní používateľa do zadanej skupiny sa spustí automatizácia
+      user_removed_from_group:
+        title: Používateľ bol odstránený zo skupiny
+        description: Keď je používateľ odstránený zo zadanej skupiny, spustí sa automatizácia
+      user_promoted:
+        title: Používateľ bol povýšený
+        description: Keď je používateľ povýšený z jednej úrovne dôveryhodnosti na druhú
+        transition_placeholder: "od %{from_level_name} do %{to_level_name}"
+      stalled_wiki:
+        title: Zastavená wiki
+        description: Ak wiki nebola upravovaná dlhšie, ako je definované, spustí sa automatizácia
+      post_created_edited:
+        title: Príspevok vytvorený/upravený
+        description: Po úprave alebo vytvorení platného príspevku sa spustí automatizácia
+      pm_created:
+        title: Bola vytvorená osobná správa
+        description: Po vytvorení platného PM sa spustí automatizácia
+      topic_tags_changed:
+        title: Zmenili sa značky tém
+        description: Keď sa značky témy zmenia, spustí sa automatizácia
+      topic:
+        title: Témy
+        description: Pridružený skript sa použije iba na zadanú tému, čo je užitočné napríklad pri skriptoch, ktoré vykonávajú validáciu
+      after_post_cook:
+        title: Po spracovaní príspevku
+        description: Keď je obsah príspevku spracovaný, automatizácia bude spustená.
+      user_updated:
+        title: Po používateľskej aktualizácii
+        description: Keď používateľ aktualizuje akékoľvek informácie, spustí sa automatizácia
+    scriptables:
+      post:
+        title: Vytvorenie príspevku
+        description: Vytvorenie príspevku na zadanú tému
+      topic:
+        title: Vytvorenie témy
+        description: Vytvorenie témy ako konkrétny používateľ
+      flag_post_on_words:
+        title: Označiť príspevok na základe slov.
+        description: Označí príspevok, ak obsahuje zadané slová
+        flag_message: "Príspevok obsahuje nepovolené slová: %{words}"
+        doc: Príspevok obsahujúci všetky uvedené slová naraz bude označený a skrytý. Upozorňujeme, že definovanie viacerých slov oddelených čiarkou bude použité ako zloženina (každé slovo musí byť prítomné).
+      zapier_webhook:
+        title: Webhook Zapier
+        description: Volá zap s kontextom spúšťača ako telo
+      auto_responder:
+        title: Automatická odpoveď
+        description: Uverejní odpoveď na príspevok vrátane zadaných kľúčových slov
+      auto_tag_topic:
+        title: Automaticky označiť tému značkou.
+        description: Automaticky pridávať značky k téme
+      pin_topic:
+        title: Pripni tému
+        description: Pripne zadanú tému k danému dátumu
+      banner_topic:
+        title: Vytvorte tému bannera
+        description: Vytvorenie témy na banner
+      gift_exchange:
+        title: Výmena darčekov
+        description: Umožňuje anonymne spárovať používateľov skupiny, aby si navzájom poslali darček.
+        doc: Výmena darčekov vyžaduje existujúcu skupinu s minimálne 3 používateľmi. Vo vybranom dátume budú všetci používatelia skupiny spárovaní s jedným darcom a jedným obdarovaným.
+      send_pms:
+        title: Poslať súkromnú správu
+        description: Umožňuje posielať súkromnú správu (prípadne oneskorene).
+        doc: Umožňuje poslať viacero súkromných správ používateľovi. Každá súkromná správa môže mať nastavené oneskorenie.
+      suspend_user_by_email:
+        title: Pozastavenie používateľa e-mailom
+        description: Automatické pozastavenie konta na základe e-mailovej adresy
+      user_global_notice:
+        title: Globálne upozornenie používateľa
+        description: Umožňuje zobraziť globálne upozornenie pre používateľa
+      user_group_membership_through_badge:
+        title: Členstvo v skupine používateľov prostredníctvom odznaku
+        description: Upravte členstvo v skupine používateľov na základe odznaku
+      suspend_user_by_email_with_api_call:
+        doc: Pri spustení `suspend_user_by_email` pomocou API volania očakáva koncový bod platný `email`, ktorý musí byť prítomný v odoslaných parametroch. `reasons` a `suspend_until (ISO 8601 formát)` môžu byť tiež použité na prepísanie predvolených hodnôt polí.
+      user_global_notice_with_stalled_topic:
+        doc: Po spustení cez zastavenú tému dostane vlastník témy globálne upozornenie.
+      user_global_notice_with_first_accepted_solution:
+        doc: Po spustení prostredníctvom prvého prijatého riešenia dostane autor riešenia globálne upozornenie.
+      send_pms_with_api_call:
+        doc: Pri použití skriptu `send pms` so spúšťačom `api call` sa na vyplnenie zoznamu príjemcov použije parameter `usernames` vašej požiadavky.
+      topic_required_words:
+        title: Požadované slová témy
+        description: Umožňuje definovať zoznam slov požadovaných k téme, v každom príspevku by sa malo použiť aspoň jedno.
+        doc: Požadované slová témy vyžadujú tému. Keď sa príspevok upraví/vytvorí, príspevok sa overí podľa zoznamu slov, pričom musí byť prítomné aspoň jedno.
+        errors:
+          must_include_word: "Príspevok musí obsahovať aspoň jedno z týchto slov: %{words}"
+      close_topic:
+        title: Uzavrieť tému
+        description: Zatvorí tému voliteľnou záverečnou správou
+      append_last_edited_by:
+        title: Pripojiť naposledy upravené používateľom
+        description: Pridá podrobnosti "naposledy upravil" na spodok spracovaného obsahu príspevku.
+        text: "Naposledy upravil @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Pripojiť naposledy kontrolované používateľom
+        description: Pridá podrobnosti "naposledy skontroloval" na spodok spracovaného obsahu príspevku.
+        text: "Naposledy skontroloval @%{username} %{date_time}"
+        summary: Kontrola dokumentu
+        details: "Vykonať kontrolu dokumentu: "
+        button_text: Hotovo
+      add_user_to_group_through_custom_field:
+        title: "Pridanie používateľa do skupiny prostredníctvom vlastného poľa Používateľ"
+        description: "Automatické pridávanie používateľov do skupín pri prihlásení alebo pri opakovanej kontrole"
+      group_category_notification_default:
+        title: "Skupina Kategória Oznámenie Predvolené"
+        description: "Nastavenie predvolenej úrovne oznámenia kategórie pre členov skupiny"
+      send_chat_message:
+        title: "Odoslať chatovú správu"
+        description: "Odoslanie vlastnej chatovej správy do kanála"
+      random_assign:
+        title: "Náhodné priradenie"
+        description: "Náhodné priradenie tém do skupiny"

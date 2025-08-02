@@ -1,0 +1,21 @@
+.select-kit {
+  &.combo-box {
+    &.color-palettes {
+      .color-palettes-row {
+        .palettes {
+          display: flex;
+          align-items: center;
+          margin-left: 0.5em;
+          flex: 1 0 0;
+          padding: 8px;
+
+          .palette {
+            height: 15px;
+            width: 15px;
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

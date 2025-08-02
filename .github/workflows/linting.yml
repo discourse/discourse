@@ -1,0 +1,102 @@
+name: Linting
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: linting-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: run
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12-8core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 30
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+
+      - name: Setup gems
+        run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle config --local lockfile_checksums true
+          bundle install --jobs 4
+          bundle clean
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Bundler checksums
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          bundle lock --add-checksums
+          bundle lock --normalize-platforms
+          if [[ $(git status -s Gemfile.lock) ]]; then
+            echo "Gemfile.lock is not up to date. Please run 'bundle lock --add-checksums' and 'bundle lock --normalize-platforms'." && false
+          fi
+
+      - name: Rubocop
+        if: ${{ !cancelled() }}
+        run: bundle exec rubocop
+
+      - name: syntax_tree
+        if: ${{ !cancelled() }}
+        run: |
+          set -E
+          bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake') $(git ls-files '*.thor')
+
+      - name: ESLint
+        if: ${{ !cancelled() }}
+        run: pnpm lint:js
+
+      - name: Prettier
+        if: ${{ !cancelled() }}
+        run: |
+          pnpm prettier -v
+          pnpm lint:prettier
+
+      - name: Ember template lint
+        if: ${{ !cancelled() }}
+        run: pnpm lint:hbs
+
+      - name: Stylelint
+        if: ${{ !cancelled() }}
+        run: pnpm lint:css
+
+      - name: English locale lint (core)
+        if: ${{ !cancelled() }}
+        run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
+
+      - name: English locale lint (core plugins)
+        if: ${{ !cancelled() }}
+        run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
+
+      - name: Glint
+        if: ${{ !cancelled() }}
+        run: pnpm glint -p jsconfig.json --noEmit

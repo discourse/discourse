@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "Discourse يەرلىك چېسلاسى"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: بۈگۈن %{time}
+        tomorrow: ئەتە %{time}
+        yesterday: تۈنۈگۈن %{time}
+        countdown:
+          passed: ۋاقتى ئۆتتى
+      title: چېسلا / ۋاقىت قىستۇرۇش
+      create:
+        form:
+          insert: قىستۇر
+          advanced_mode: ئالىي ھالەت
+          simple_mode: ئاددىي ھالەت
+          format_description: "ئىشلەتكۈچىگە ۋاقىت كۆرسىتىش پىچىمى. Z ئىشلىتىلسە ۋاقىت رايونى پەرقىنى ئىشلىتىدۇ، zz ئىشلىتىلسە ۋاقىت رايون ئىسمىنى كۆرسىتىدۇ."
+          timezones_title: كۆرسىتىدىغان ۋاقىت رايونى
+          timezones_description: ۋاقىت رايونى كۆرسىتىدىغان چېسلا ۋە ۋاقىتنى بەلگىلەيدۇ.
+          recurring_title: تەكرار
+          recurring_description: "پائالىيەتنىڭ تەكرارلىنىشى بەلگىلىنىدۇ. سىز كۆزنەك ھاسىللىغان تەكرارلىنىش تاللانمىسىنى قولدا تەھرىرلەپ تۆۋەندىكى ئاچقۇچلاردىن بىرىنى ئىشلىتەلەيسىز: يىل، پەسىل، ئاي، ھەپتە، كۈن، سائەت، مىنۇت، سېكۇنت، مىللىسېكۇنت."
+          recurring_none: تەكرارلانمايدۇ
+          invalid_date: ئىناۋەتسىز ۋاقىت، چېسلا ۋە ۋاقىتنىڭ توغرا بولۇشىغا كاپالەتلىك قىلىڭ
+          date_title: چېسلا
+          time_title: ۋاقىت
+          format_title: چېسلا پىچىمى
+          timezone: ۋاقىت رايونى
+          until: تاكى…
+          current_timezone: "نۆۋەتتىكى ۋاقىت رايونى:"
+          recurring:
+            every_day: "ھەر كۈنى"
+            every_week: "ھەر ھەپتە"
+            every_two_weeks: "ھەر ئىككى ھەپتە"
+            every_month: "ھەر ئاي"
+            every_two_months: "ھەر ئىككى ئاي"
+            every_three_months: "ھەر ئۈچ ئاي"
+            every_six_months: "ھەر ئالتە ئاي"
+            every_year: "ھەر يىلى"
+      default_title: "%{site_name} پائالىيەت"

@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    presence:
+      replying:
+        one: "vastamine"
+        other: "vastamine"
+      editing:
+        one: "muutmine"
+        other: "muutmine"
+      replying_to_topic:
+        one: "vastamine"
+        other: "vastamine"

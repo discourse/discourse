@@ -1,0 +1,12 @@
+.chat-thread-list-header {
+  padding-inline: 0 0.5rem;
+  align-items: flex-start;
+
+  &__label {
+    padding-top: 0.35em;
+  }
+
+  &__label-channel {
+    line-height: var(--line-height-small);
+  }
+}

@@ -1,0 +1,105 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    poll:
+      voters:
+        one: "balsuotojas"
+        few: "balsuotojai"
+        many: "balsuotojų"
+        other: "balsuotojų"
+      total_votes:
+        one: "balsas iš viso"
+        few: "balsai iš viso"
+        many: "balsų iš viso"
+        other: "balsų iš viso"
+      average_rating: "Vidutinis reitingas: <strong>%{average}</strong>."
+      public:
+        title: "Balsai yra <strong>vieši</strong>."
+      results:
+        groups:
+          title: "Jūs turite būti %{groups} narys, norėdami balsuoti šioje apklausoje."
+      cast-votes:
+        title: "Apskaičiuoti tavo balsus"
+        label: "Balsuoti dabar!"
+      show-results:
+        title: "Rodyti balsavimo rezultatus"
+        label: "Rezultatai"
+      remove-vote:
+        title: "Pašalinti savo balsą"
+      hide-results:
+        title: "Grįžti į balsavimus"
+      group-results:
+        title: "Grupuoti balsus pagal vartotojo lauką"
+        label: "Rodyti suskirstymą"
+      export-results:
+        title: "Eksportuokite apklausos rezultatus"
+        label: "Eksportuoti"
+      open:
+        title: "Atidaryti balsavimą"
+        label: "Atidaryti"
+        confirm: "Ar tikrai norite atidaryti šį balsavimą?"
+      close:
+        title: "Uždaryti balsavimą"
+        label: "Uždaryti"
+        confirm: "Ar tikrai norite uždaryti šį balsavimą?"
+      automatic_close:
+        closes_in: "Užsidaro po <strong>%{timeLeft}</strong>."
+        age: "Uždaryta <strong>%{age}</strong>"
+      breakdown:
+        title: "Apklausos rezultatai"
+        votes: "%{count} balsų"
+        percentage: "Procentas"
+        count: "Skaičiuoti"
+      ranked_choice:
+        none: "Nieko"
+      options:
+        label: "Nustatymai"
+      error_while_toggling_status: "Atsiprašome, perjungiant šios apklausos būseną įvyko klaida."
+      error_while_casting_votes: "Atsiprašome, balsuojant įvyko klaida."
+      error_while_fetching_voters: "Atsiprašome, rodant rinkėjus įvyko klaida."
+      error_while_exporting_results: "Apgailestaujame, eksportuojant apklausos rezultatus įvyko klaida."
+      ui_builder:
+        title: Kurti apklausą
+        insert: Įterpti apklausą
+        help:
+          options_min_count: Įveskite bent 1 parinktį.
+          options_max_count: Įveskite daugiausia %{count} parinkčių.
+          invalid_min_value: Minimali vertė turi būti bent 1.
+          invalid_max_value: Didžiausia vertė turi būti bent 1, bet mažesnė arba lygi parinkčių skaičiui.
+          invalid_values: Minimali vertė turi būti mažesnė už didžiausią vertę.
+        poll_type:
+          label: Tipas
+          regular: Vienas pasirinkimas
+          multiple: Keli pasirinkimai
+        poll_result:
+          label: Rodyti rezultatus...
+          always: Visada matomas
+          vote: Tik po balsavimo
+          closed: Kai apklausa uždaryta
+          staff: Tik personalui
+        poll_groups:
+          label: Balsavimo apribojimas šioms grupėms
+        poll_chart_type:
+          label: Rezultatų diagrama
+          bar: Juosta
+          pie: Pyragas
+        poll_config:
+          max: Maksimalūs pasirinkimai
+          min: Minimalūs pasirinkimai
+          step: Žingsnis
+        poll_public:
+          label: Rodyti, kas balsavo
+        poll_title:
+          label: Pavadinimas (neprivaloma)
+        poll_options:
+          label: Parinktys (po vieną eilutėje)
+          add: Pridėti parinktį
+        automatic_close:
+          label: Automatiškai uždaryti apklausą
+        show_advanced: "Rodyti išplėstines parinktis"
+        hide_advanced: "Slėpti išplėstines parinktis"

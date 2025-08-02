@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+<link rel="preconnect" href="//abs.twimg.com">
+<link rel="dns-prefetch" href="//abs.twimg.com">
+<link rel="preconnect" href="//api.twitter.com">
+<link rel="dns-prefetch" href="//api.twitter.com">
+<link rel="preconnect" href="//pbs.twimg.com">
+<link rel="dns-prefetch" href="//pbs.twimg.com">
+<link rel="preconnect" href="//t.co">
+<link rel="dns-prefetch" href="//t.co">
+<link rel="preconnect" href="//video.twimg.com">
+<link rel="dns-prefetch" href="//video.twimg.com">
+<meta property="fb:app_id" content="2231777543">
+<meta property="og:site_name" content="Twitter">
+<meta name="google-site-verification" content="acYOOcR5z6puMzLn6hLDZI1nNHXPxt57OIstz1vnCV0">
+<meta name="facebook-domain-verification" content="x6sdcc8b5ju3bh8nbm59eswogvg6t1">
+<meta http-equiv="onion-location" content="https://twitter3e4tixl4xyajtrzo62zg5vztmjuricljdp2c5kshju4avyoid.onion/">
+<link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Twitter">
+<link rel="shortcut icon" href="//abs.twimg.com/favicons/twitter.2.ico">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Twitter">
+<meta name="apple-mobile-web-app-status-bar-style" content="white">
+<meta name="theme-color" content="#ffffff">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","url":"https://twitter.com/","potentialAction":{"@type":"SearchAction","query-input":"required name=search_term_string","target":{"@type":"EntryPoint","urlTemplate":"https://twitter.com/search?q={search_term_string}&ref_src=twcamp%5Eseo_searchbox%7Ctwsrc%5Eseo"}}}</script><meta http-equiv="origin-trial" content="AlpCmb40F5ZjDi9ZYe+wnr/V8MF+XmY41K4qUhoq+2mbepJTNd3q4CRqlACfnythEPZqcjryfAS1+ExS0FFRcA8AAABmeyJvcmlnaW4iOiJodHRwczovL3R3aXR0ZXIuY29tOjQ0MyIsImZlYXR1cmUiOiJMYXVuY2ggSGFuZGxlciIsImV4cGlyeSI6MTY1NTI1MTE5OSwiaXNTdWJkb21haW4iOnRydWV9">
+<style>html,body{height: 100%;}::cue{white-space:normal}</style>
+<style id="react-native-stylesheet">[stylesheet-group="0"]{}
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+body{margin:0;}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0;}
+input::-webkit-search-cancel-button,input::-webkit-search-decoration,input::-webkit-search-results-button,input::-webkit-search-results-decoration{display:none;}
+[stylesheet-group="0.1"]{}
+:focus:not([data-focusvisible-polyfill]){outline: none;}
+[stylesheet-group="0.5"]{}
+.css-18t94o4{cursor:pointer;}
+.css-4rbku5{background-color:rgba(0,0,0,0.00);color:inherit;font:inherit;list-style:none;margin-bottom:0px;margin-left:0px;margin-right:0px;margin-top:0px;text-align:inherit;text-decoration:none;}
+[stylesheet-group="1"]{}
+.css-1dbjc4n{-ms-flex-align:stretch;-ms-flex-direction:column;-ms-flex-negative:0;-ms-flex-preferred-size:auto;-webkit-align-items:stretch;-webkit-box-align:stretch;-webkit-box-direction:normal;-webkit-box-orient:vertical;-webkit-flex-basis:auto;-webkit-flex-direction:column;-webkit-flex-shrink:0;align-items:stretch;border:0 solid black;box-sizing:border-box;display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;flex-basis:auto;flex-direction:column;flex-shrink:0;margin-bottom:0px;margin-left:0px;margin-right:0px;margin-top:0px;min-height:0px;min-width:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;padding-top:0px;position:relative;z-index:0;}
+.css-901oao{border:0 solid black;box-sizing:border-box;color:rgba(0,0,0,1.00);display:inline;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin-bottom:0px;margin-left:0px;margin-right:0px;margin-top:0px;padding-bottom:0px;padding-left:0px;padding-right:0px;padding-top:0px;white-space:pre-wrap;word-wrap:break-word;}
+.css-16my406{color:inherit;font:inherit;white-space:inherit;}
+.css-1hf3ou5{max-width:100%;overflow-x:hidden;overflow-y:hidden;text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;}
+.css-9pa8cd{bottom:0px;height:100%;left:0px;opacity:0;position:absolute;right:0px;top:0px;width:100%;z-index:-1;}
+[stylesheet-group="2"]{}
+.r-13awgt0{-ms-flex:1 1 0%;-webkit-flex:1;flex:1;}
+.r-sdzlij{border-bottom-left-radius:9999px;border-bottom-right-radius:9999px;border-top-left-radius:9999px;border-top-right-radius:9999px;}
+.r-1phboty{border-bottom-style:solid;border-left-style:solid;border-right-style:solid;border-top-style:solid;}
+.r-rs99b7{border-bottom-width:1px;border-left-width:1px;border-right-width:1px;border-top-width:1px;}
+.r-4iw3lz{border-bottom-width:0;border-left-width:0;border-right-width:0;border-top-width:0;}
+.r-1udh08x{overflow-x:hidden;overflow-y:hidden;}
+.r-wwvuq4{padding-bottom:0;padding-left:0;padding-right:0;padding-top:0;}
+.r-6koalj{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;}
+.r-4qtqp9{display:inline-block;}
+.r-crgep1{margin-bottom:0px;margin-left:0px;margin-right:0px;margin-top:0px;}
+.r-t60dpp{padding-bottom:0px;padding-left:0px;padding-right:0px;padding-top:0px;}
+.r-1yadl64{border-bottom-width:0px;border-left-width:0px;border-right-width:0px;border-top-width:0px;}
+.r-42olwf{border-bottom-color:rgba(0,0,0,0.00);border-left-color:rgba(0,0,0,0.00);border-right-color:rgba(0,0,0,0.00);border-top-color:rgba(0,0,0,0.00);}
+.r-17gur6a{border-bottom-left-radius:0px;border-bottom-right-radius:0px;border-top-left-radius:0px;border-top-right-radius:0px;}
+.r-xyw6el{padding-bottom:12px;padding-left:12px;padding-right:12px;padding-top:12px;}
+.r-jxzhtn{border-bottom-color:rgba(239,243,244,1.00);border-left-color:rgba(239,243,244,1.00);border-right-color:rgba(239,243,244,1.00);border-top-color:rgba(239,243,244,1.00);}
+.r-1adg3ll{display:block;}
+.r-bztko3{overflow-x:visible;overflow-y:visible;}
+.r-xoduu5{display:-webkit-inline-box;display:-moz-inline-box;display:-ms-inline-flexbox;display:-webkit-inline-flex;display:inline-flex;}
+.r-xf4iuw{margin-bottom:-8px;margin-left:-8px;margin-right:-8px;margin-top:-8px;}
+.r-1ets6dv{border-bottom-color:rgba(207,217,222,1.00);border-left-color:rgba(207,217,222,1.00);border-right-color:rgba(207,217,222,1.00);border-top-color:rgba(207,217,222,1.00);}
+.r-1867qdf{border-bottom-left-radius:16px;border-bottom-right-radius:16px;border-top-left-radius:16px;border-top-right-radius:16px;}
+.r-1471scf{display:inline;}
+[stylesheet-group="2.1"]{}
+.r-1jgb5lz{margin-left:auto;margin-right:auto;}
+.r-ymttw5{padding-left:16px;padding-right:16px;}
+.r-oyd9sg{padding-bottom:4px;padding-top:4px;}
+.r-1fz3rvf{margin-left:12px;margin-right:12px;}
+.r-rjfia{padding-bottom:0px;padding-top:0px;}
+.r-1r5su4o{margin-bottom:16px;margin-top:16px;}
+.r-s1qlax{padding-left:4px;padding-right:4px;}
+.r-1e081e0{padding-left:12px;padding-right:12px;}
+.r-1pn2ns4{padding-left:8px;padding-right:8px;}
+.r-1yzf0co{padding-bottom:16px;padding-top:16px;}
+[stylesheet-group="2.2"]{}
+.r-12vffkv>*{pointer-events:auto;}
+.r-12vffkv{pointer-events:none!important;}
+.r-2llsf{min-height:100%;}
+.r-13qz1uu{width:100%;}
+.r-417010{z-index:0;}
+.r-lrvibr{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;user-select:none;}
+.r-1xk2f4g{clip:rect(1px, 1px, 1px, 1px);}
+.r-109y4c4{height:1px;}
+.r-u8s1d{position:absolute;}
+.r-92ng3h{width:1px;}
+.r-2yi16{min-height:36px;}
+.r-1qi8awa{min-width:36px;}
+.r-o7ynqc{-webkit-transition-duration:0.2s;transition-duration:0.2s;}
+.r-6416eg{-moz-transition-property:background-color, box-shadow;-webkit-transition-property:background-color, box-shadow;transition-property:background-color, box-shadow;}
+.r-1ny4l3l{outline-style:none;}
+.r-bcqeeo{min-width:0px;}
+.r-qvutc0{word-wrap:break-word;}
+.r-rjixqe{line-height:20px;}
+.r-37j5jr{font-family:"TwitterChirp",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+.r-q4m81j{text-align:center;}
+.r-a023e6{font-size:15px;}
+.r-b88u0q{font-weight:700;}
+.r-1awozwy{-ms-flex-align:center;-webkit-align-items:center;-webkit-box-align:center;align-items:center;}
+.r-18u37iz{-ms-flex-direction:row;-webkit-box-direction:normal;-webkit-box-orient:horizontal;-webkit-flex-direction:row;flex-direction:row;}
+.r-16y2uox{-ms-flex-positive:1;-webkit-box-flex:1;-webkit-flex-grow:1;flex-grow:1;}
+.r-1777fci{-ms-flex-pack:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
+.r-poiln3{font-family:inherit;}
+.r-1g40b8q{z-index:3;}
+.r-orgf3d{opacity:0;}
+.r-633pao{pointer-events:none!important;}
+.r-1d2f490{left:0px;}
+.r-1xcajam{position:fixed;}
+.r-zchlnj{right:0px;}
+.r-1gn8etr{top:-0.5px;}
+.r-dkhcqf{-webkit-transition-duration:350ms;transition-duration:350ms;}
+.r-axxi2z{-moz-transition-property:transform;-webkit-transition-property:-webkit-transform,transform;transition-property:-webkit-transform,transform;}
+.r-18jm5s1{-webkit-transition-timing-function:cubic-bezier(0,0,0,1);transition-timing-function:cubic-bezier(0,0,0,1);}
+.r-16e0dcy{-webkit-transform:translate3d(0, 0, 0) translateY(0px);transform:translate3d(0, 0, 0) translateY(0px);}
+.r-1e5uvyk{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
+.r-6026j{background-color:rgba(255,255,255,0.85);}
+.r-136ojw6{z-index:2;}
+.r-fxvszc{height:106px;}
+.r-1h3ijdo{height:53px;}
+.r-1pz39u2{-ms-flex-item-align:stretch;-ms-grid-row-align:stretch;-webkit-align-self:stretch;align-self:stretch;}
+.r-15ysp7h{min-height:32px;}
+.r-4wgw6l{min-width:32px;}
+.r-1habvwh{-ms-flex-align:start;-webkit-align-items:flex-start;-webkit-box-align:start;align-items:flex-start;}
+.r-s8bhmr{min-width:56px;}
+.r-1mf7evn{margin-right:20px;}
+.r-1loqt21{cursor:pointer;}
+.r-yyyyoo{fill:currentcolor;}
+.r-1xvli5t{height:1.25em;}
+.r-dnmrzs{max-width:100%;}
+.r-bnwqim{position:relative;}
+.r-1plcrui{vertical-align:text-bottom;}
+.r-z80fyv{height:20px;}
+.r-19wmn03{width:20px;}
+.r-1cvl2hr{color:rgba(29,155,240,1.00);}
+.r-lwhw9o{height:1.75rem;}
+.r-1wbh5a2{-ms-flex-negative:1;-webkit-flex-shrink:1;flex-shrink:1;}
+.r-1pi2tsx{height:100%;}
+.r-1iusvr4{-ms-flex-preferred-size:0px;-webkit-flex-basis:0px;flex-basis:0px;}
+.r-1oszu61{-ms-flex-align:stretch;-webkit-align-items:stretch;-webkit-box-align:stretch;align-items:stretch;}
+.r-eqz5dr{-ms-flex-direction:column;-webkit-box-direction:normal;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;}
+.r-8fdsdq{z-index:4;}
+.r-vqxq0j{border:0 solid black;}
+.r-deolkf{box-sizing:border-box;}
+.r-1mlwlqe{-ms-flex-preferred-size:auto;-webkit-flex-basis:auto;flex-basis:auto;}
+.r-ifefl9{min-height:0px;}
+.r-1sw30gj{background-color:rgba(239,243,244,1.00);}
+.r-1dqbpge{cursor:-webkit-text;cursor:text;}
+.r-7q8q6z{cursor:default;}
+.r-14j79pv{color:rgba(83,100,113,1.00);}
+.r-f727ji{padding-left:12px;}
+.r-16dba41{font-weight:400;}
+.r-30o5oe{-moz-appearance:none;-webkit-appearance:none;appearance:none;}
+.r-1dz5y72{resize:none;}
+.r-1niwhzg{background-color:rgba(0,0,0,0.00);}
+.r-homxoj{color:inherit;}
+.r-7cikom{font-size:inherit;}
+.r-1ttztb7{text-align:inherit;}
+.r-fdjqy7{text-align:left;}
+.r-y0fyvk::-webkit-input-placeholder{color:rgba(83,100,113,1.00);opacity:1;}
+.r-y0fyvk::-moz-placeholder{color:rgba(83,100,113,1.00);opacity:1;}
+.r-y0fyvk:-ms-input-placeholder{color:rgba(83,100,113,1.00);opacity:1;}
+.r-y0fyvk::placeholder{color:rgba(83,100,113,1.00);opacity:1;}
+.r-obd0qt{-ms-flex-align:end;-webkit-align-items:flex-end;-webkit-box-align:end;align-items:flex-end;}
+.r-1d4mawv{margin-right:4px;}
+.r-1w6e6rj{-ms-flex-wrap:wrap;-webkit-box-lines:multiple;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
+.r-1wtj0ep{-ms-flex-pack:justify;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;}
+.r-1b43r93{font-size:14px;}
+.r-1cwl3u0{line-height:16px;}
+.r-19u6a5r{margin-left:12px;}
+.r-1lul07w{-webkit-transform:translate3d(0, -3.5em, 0);transform:translate3d(0, -3.5em, 0);}
+.r-eafdt9{-webkit-transition-duration:0.15s;transition-duration:0.15s;}
+.r-1b8bd59{-moz-transition-property:transform, opacity;-webkit-transition-property:-webkit-transform,transform, opacity;transition-property:-webkit-transform,transform, opacity;}
+.r-nx0j10{-webkit-transition-timing-function:ease, ease, step-end;transition-timing-function:ease, ease, step-end;}
+.r-l5o3uw{background-color:rgba(29,155,240,1.00);}
+.r-y3da5r{box-shadow:0 0 8px rgba(101,119,134,0.2), 0 1px 3px 1px rgba(101,119,134,0.25);}
+.r-1kihuf0{-ms-flex-item-align:center;-ms-grid-row-align:center;-webkit-align-self:center;align-self:center;}
+.r-jwli3a{color:rgba(255,255,255,1.00);}
+.r-13hce6t{margin-left:4px;}
+.r-150rngu{-webkit-overflow-scrolling:touch;}
+.r-aqfbo4{-webkit-backface-visibility:hidden;backface-visibility:hidden;}
+.r-14lw9ot{background-color:rgba(255,255,255,1.00);}
+.r-1ljd8xs{border-left-width:1px;}
+.r-13l2t4g{border-right-width:1px;}
+.r-33ulu8{width:600px;}
+.r-184en5c{z-index:1;}
+.r-1ut4w64{margin-bottom:-1px;}
+.r-1qhn6m8{padding-left:16px;}
+.r-i023vh{padding-right:16px;}
+.r-ttdzmv{padding-top:12px;}
+.r-18kxxzh{-ms-flex-positive:0;-webkit-box-flex:0;-webkit-flex-grow:0;flex-grow:0;}
+.r-1b7u577{margin-right:12px;}
+.r-1hwvwag{-ms-flex-preferred-size:48px;-webkit-flex-basis:48px;flex-basis:48px;}
+.r-1p0dtai{bottom:0px;}
+.r-ipm5af{top:0px;}
+.r-1wyvozj{left:50%;}
+.r-1v2oles{top:50%;}
+.r-desppf{-webkit-transform:translateX(-50%) translateY(-50%);transform:translateX(-50%) translateY(-50%);}
+.r-ggadg3{left:-2px;}
+.r-8jfcpp{top:-2px;}
+.r-vvn4in{background-position:center;}
+.r-u6sd8q{background-repeat:no-repeat;}
+.r-4gszlv{background-size:cover;}
+.r-1wyyakw{z-index:-1;}
+.r-12181gd{box-shadow:0 0 2px rgba(0,0,0,0.03) inset;}
+.r-1bimlpy{background-color:rgba(207,217,222,1.00);}
+.r-m5arl1{width:2px;}
+.r-14gqq1x{margin-top:4px;}
+.r-kzbkwu{padding-bottom:12px;}
+.r-zl2h9q{margin-bottom:2px;}
+.r-k4xj1c{-ms-flex-align:start;-webkit-align-items:start;-webkit-box-align:start;align-items:start;}
+.r-1d09ksm{-ms-flex-align:baseline;-webkit-align-items:baseline;-webkit-box-align:baseline;align-items:baseline;}
+.r-3s2u2q{white-space:nowrap;}
+.r-1q142lx{-ms-flex-negative:0;-webkit-flex-shrink:0;flex-shrink:0;}
+.r-1wvb978{-webkit-font-feature-settings:'ss01' on;font-feature-settings:'ss01' on;}
+.r-9aw3ui{gap:4px;}
+.r-1ta3fxp{-moz-column-gap:8px;-webkit-column-gap:8px;column-gap:8px;}
+.r-1mdbhws{max-width:425px;}
+.r-1s2bzr4{margin-top:12px;}
+.r-1h0z5md{-ms-flex-pack:start;-webkit-box-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start;}
+.r-bt1l66{min-height:20px;}
+.r-clp7b1{-moz-transition-property:color;-webkit-transition-property:color;transition-property:color;}
+.r-1hdv0qi{width:1.25em;}
+.r-n6v787{font-size:13px;}
+.r-1k6nrdp{min-width:calc(1em + 2 * 12px);}
+.r-vc7bo5{min-width:calc(1em + 2 * 8px);}
+.r-j5o65s{border-bottom-color:rgba(239,243,244,1.00);}
+.r-qklmqi{border-bottom-width:1px;}
+.r-15zivkp{margin-bottom:4px;}
+.r-1inkyih{font-size:17px;}
+.r-1ssbvtb{gap:12px;}
+.r-1dgieki{border-top-color:rgba(239,243,244,1.00);}
+.r-1efd50x{border-top-style:solid;}
+.r-5kkj8d{border-top-width:1px;}
+.r-a2tzq0{-ms-flex-pack:distribute;-webkit-box-pack:justify;-webkit-justify-content:space-around;justify-content:space-around;}
+.r-3qxfft{min-height:1.875rem;}
+.r-h3s6tt{height:48px;}
+.r-50lct3{height:1.5em;}
+.r-1srniue{width:1.5em;}
+.r-rull8r{border-bottom-style:solid;}
+.r-o52ifk{height:100px;}
+.r-17bb2tj{-webkit-animation-duration:0.75s;animation-duration:0.75s;}
+.r-1muvv40{-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;}
+.r-127358a{-webkit-animation-name:r-9p3sdl;animation-name:r-9p3sdl;}
+@-webkit-keyframes r-9p3sdl{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg);}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg);}}
+@keyframes r-9p3sdl{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg);}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg);}}
+.r-1ldzwu0{-webkit-animation-timing-function:linear;animation-timing-function:linear;}</style>
+<title data-rh="true">Jeff Atwood on Twitter: "My first text message from my child! A moment that shall live on in infamy! https://t.co/TQMRJsFwnO" / Twitter</title>
+<meta data-rh="true" content="article" property="og:type">
+<meta data-rh="true" content="https://twitter.com/codinghorror/status/1409351083177046020" property="og:url">
+<meta data-rh="true" content="Jeff Atwood on Twitter" property="og:title">
+<meta data-rh="true" content="“My first text message from my child! A moment that shall live on in infamy!”" property="og:description">
+<meta data-rh="true" content="https://pbs.twimg.com/media/E48FVowUUAYyGLX.jpg:large" property="og:image">
+<meta data-rh="true" description="" name="description"> <link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020" rel="canonical">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020" hreflang="x-default" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ar" hreflang="ar" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ar-x-fm" hreflang="ar-x-fm" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=bg" hreflang="bg" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=bn" hreflang="bn" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ca" hreflang="ca" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=cs" hreflang="cs" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=da" hreflang="da" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=de" hreflang="de" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=el" hreflang="el" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=en" hreflang="en" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=en-GB" hreflang="en-GB" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=es" hreflang="es" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=eu" hreflang="eu" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=fa" hreflang="fa" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=fi" hreflang="fi" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=fil" hreflang="fil" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=fr" hreflang="fr" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ga" hreflang="ga" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=gl" hreflang="gl" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=gu" hreflang="gu" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ha" hreflang="ha" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=he" hreflang="he" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=hi" hreflang="hi" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=hr" hreflang="hr" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=hu" hreflang="hu" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=id" hreflang="id" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ig" hreflang="ig" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=it" hreflang="it" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ja" hreflang="ja" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=kn" hreflang="kn" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ko" hreflang="ko" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=mr" hreflang="mr" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ms" hreflang="ms" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=nb" hreflang="nb" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=nl" hreflang="nl" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=no" hreflang="no" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=pl" hreflang="pl" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=pt" hreflang="pt" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ro" hreflang="ro" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ru" hreflang="ru" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=sk" hreflang="sk" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=sr" hreflang="sr" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=sv" hreflang="sv" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ta" hreflang="ta" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=th" hreflang="th" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=tl" hreflang="tl" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=tr" hreflang="tr" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=uk" hreflang="uk" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=ur" hreflang="ur" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=vi" hreflang="vi" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=yo" hreflang="yo" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=zh" hreflang="zh" rel="alternate">
+<link data-rh="true" href="https://twitter.com/codinghorror/status/1409351083177046020?lang=zh-Hant" hreflang="zh-Hant" rel="alternate"> <meta data-rh="true" content="twitter://status?id=1409351083177046020" property="al:ios:url">
+<meta data-rh="true" content="333903271" property="al:ios:app_store_id">
+<meta data-rh="true" content="Twitter" property="al:ios:app_name">
+<meta data-rh="true" content="twitter://status?id=1409351083177046020" property="al:android:url">
+<meta data-rh="true" content="com.twitter.android" property="al:android:package">
+<meta data-rh="true" content="Twitter" property="al:android:app_name">
+</head>
+<body style="background-color: #FFFFFF;">
+  <noscript>
+    <style>
+    body {
+      -ms-overflow-style: scrollbar;
+      overflow-y: scroll;
+      overscroll-behavior-y: none;
+    }
+
+    .errorContainer {
+      background-color: #FFF;
+      color: #0F1419;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 10%;
+      font-family: Helvetica, sans-serif;
+      font-size: 16px;
+    }
+
+    .errorButton {
+      margin: 3em 0;
+    }
+
+    .errorButton a {
+      background: #1DA1F2;
+      border-radius: 2.5em;
+      color: white;
+      padding: 1em 2em;
+      text-decoration: none;
+    }
+
+    .errorButton a:hover,
+    .errorButton a:focus {
+      background: rgb(26, 145, 218);
+    }
+
+    .errorFooter {
+      color: #657786;
+      font-size: 80%;
+      line-height: 1.5;
+      padding: 1em 0;
+    }
+
+    .errorFooter a,
+    .errorFooter a:visited {
+      color: #657786;
+      text-decoration: none;
+      padding-right: 1em;
+    }
+
+    .errorFooter a:hover,
+    .errorFooter a:active {
+      text-decoration: underline;
+    }
+
+      #placeholder,
+      #react-root {
+        display: none !important;
+      }
+      body {
+        background-color: #FFF !important;
+      }
+    </style>
+    <div class="errorContainer">
+      <img width="46" height="38" srcset="https://abs.twimg.com/errors/logo46x38.png 1x, https://abs.twimg.com/errors/logo46x38@2x.png 2x" src="https://abs.twimg.com/errors/logo46x38.png" alt="Twitter">
+      <h1>JavaScript is not available.</h1>
+      <p>We’ve detected that JavaScript is disabled in this browser. Please enable JavaScript or switch to a supported browser to continue using twitter.com. You can see a list of supported browsers in our Help Center.</p>
+      <p class="errorButton"><a href="https://help.twitter.com/using-twitter/twitter-supported-browsers">Help Center</a></p>
+    <p class="errorFooter">
+      <a href="https://twitter.com/tos">Terms of Service</a>
+      <a href="https://twitter.com/privacy">Privacy Policy</a>
+      <a href="https://support.twitter.com/articles/20170514">Cookie Policy</a>
+      <a href="https://legal.twitter.com/imprint.html">Imprint</a>
+      <a href="https://business.twitter.com/en/help/troubleshooting/how-twitter-ads-work.html?ref=web-twc-ao-gbl-adsinfo&amp;utm_source=twc&amp;utm_medium=web&amp;utm_campaign=ao&amp;utm_content=adsinfo">Ads info</a>
+      © 2023 X Corp.
+    </p>
+
+    </div>
+  </noscript>
+<div id="react-root" style="height:100%;display:flex;"><div class="css-1dbjc4n r-13awgt0 r-12vffkv"><div class="css-1dbjc4n r-13awgt0 r-12vffkv"><div class="css-1dbjc4n r-13qz1uu r-417010" style="min-height:736px">
+<div aria-label="Skip to home timeline" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1niwhzg r-1ets6dv r-sdzlij r-1phboty r-4iw3lz r-1xk2f4g r-109y4c4 r-2yi16 r-1qi8awa r-1ny4l3l r-1udh08x r-wwvuq4 r-u8s1d r-o7ynqc r-6416eg r-lrvibr r-92ng3h"><div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-18u37iz r-16y2uox r-37j5jr r-a023e6 r-b88u0q r-1777fci r-rjixqe r-bcqeeo r-q4m81j r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-a023e6 r-rjixqe r-bcqeeo r-qvutc0"></span></div></div>
+<div aria-label="Skip to trending" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1niwhzg r-1ets6dv r-sdzlij r-1phboty r-4iw3lz r-1xk2f4g r-109y4c4 r-2yi16 r-1qi8awa r-1ny4l3l r-1udh08x r-wwvuq4 r-u8s1d r-o7ynqc r-6416eg r-lrvibr r-92ng3h"><div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-18u37iz r-16y2uox r-37j5jr r-a023e6 r-b88u0q r-1777fci r-rjixqe r-bcqeeo r-q4m81j r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-a023e6 r-rjixqe r-bcqeeo r-qvutc0"></span></div></div>
+<header role="banner" class="css-1dbjc4n r-lrvibr r-1g40b8q"><div class="css-1dbjc4n r-1h3ijdo r-orgf3d r-633pao"></div>
+<div class="css-1dbjc4n" data-testid="SSRSafeLayer"><div class="css-1dbjc4n r-1d2f490 r-1xcajam r-zchlnj r-1gn8etr">
+<div class="css-1dbjc4n r-1e5uvyk r-6026j r-16e0dcy r-dkhcqf r-axxi2z r-18jm5s1" data-testid="TopNavBar"><div class="css-1dbjc4n r-1jgb5lz r-13qz1uu"><div class="css-1dbjc4n r-fxvszc r-136ojw6" data-testid="twitter-logged-out-nav">
+<div class="css-1dbjc4n r-1h3ijdo r-136ojw6"><div class="css-1dbjc4n"><div class="css-1dbjc4n r-1h3ijdo"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1h3ijdo r-1777fci r-1jgb5lz r-ymttw5 r-13qz1uu">
+<div class="css-1dbjc4n r-1habvwh r-1pz39u2 r-1777fci r-15ysp7h r-s8bhmr"><div class="css-1dbjc4n r-1777fci r-1mf7evn"><h1 role="heading" class="css-4rbku5 css-1dbjc4n r-1awozwy r-1pz39u2 r-1loqt21 r-6koalj r-16y2uox r-1777fci r-4wgw6l"><a href="/" aria-label="Twitter" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-42olwf r-sdzlij r-1phboty r-rs99b7 r-1loqt21 r-2yi16 r-1qi8awa r-1ny4l3l r-o7ynqc r-6416eg r-lrvibr" style="margin-left:calc(0px + (-1 * ((36px + (1px * 2)) - 1.75rem) / 2))"><div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-18u37iz r-16y2uox r-37j5jr r-a023e6 r-b88u0q r-1777fci r-rjixqe r-bcqeeo r-q4m81j r-qvutc0" style="color:rgba(15,20,25,1.00)">
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-1cvl2hr r-4qtqp9 r-yyyyoo r-16y2uox r-lwhw9o r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-19wmn03"><g><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path></g></svg><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-a023e6 r-rjixqe r-bcqeeo r-qvutc0"></span>
+</div></a></h1></div></div>
+<div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1pi2tsx r-1777fci">
+<div class="css-1dbjc4n r-1habvwh"></div>
+<div class="css-1dbjc4n r-1awozwy r-1iusvr4 r-18u37iz r-16y2uox"><div class="css-1dbjc4n r-1oszu61 r-1iusvr4 r-18u37iz r-16y2uox"><div class="css-1dbjc4n r-13awgt0 r-eqz5dr r-bnwqim r-8fdsdq"><div class="r-1oszu61 r-vqxq0j r-deolkf r-6koalj r-1mlwlqe r-eqz5dr r-1wbh5a2 r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-13qz1uu r-417010"><form action="#" aria-label="Search Twitter" role="search" class="r-1oszu61 r-1phboty r-1yadl64 r-deolkf r-6koalj r-13awgt0 r-eqz5dr r-crgep1 r-ifefl9 r-bcqeeo r-t60dpp r-bnwqim r-417010">
+<div class="css-1dbjc4n r-1wbh5a2"><div class="css-1dbjc4n r-1sw30gj r-42olwf r-sdzlij r-1phboty r-rs99b7 r-eqz5dr r-16y2uox r-1wbh5a2 r-1777fci"><div class="css-1dbjc4n"><div class="css-1dbjc4n r-1awozwy r-18u37iz"><label class="css-1dbjc4n r-1dqbpge r-13awgt0 r-18u37iz" data-testid="SearchBox_Search_Input_label"><div class="css-1dbjc4n r-7q8q6z r-6koalj r-1777fci"><svg viewbox="0 0 24 24" aria-hidden="true" class="r-14j79pv r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-4wgw6l r-f727ji r-bnwqim r-1plcrui r-lrvibr"><g><path d="M10.25 3.75c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c1.795 0 3.419-.726 4.596-1.904 1.178-1.177 1.904-2.801 1.904-4.596 0-3.59-2.91-6.5-6.5-6.5zm-8.5 6.5c0-4.694 3.806-8.5 8.5-8.5s8.5 3.806 8.5 8.5c0 1.986-.682 3.815-1.824 5.262l4.781 4.781-1.414 1.414-4.781-4.781c-1.447 1.142-3.276 1.824-5.262 1.824-4.694 0-8.5-3.806-8.5-8.5z"></path></g></svg></div>
+<div class="css-1dbjc4n r-16y2uox r-1wbh5a2"><div dir="ltr" class="css-901oao r-6koalj r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><input type="text" aria-activedescendant="typeaheadFocus-0.5412497229651458" aria-autocomplete="list" aria-label="Search query" aria-owns="typeaheadDropdown-27962" autocapitalize="sentences" autocomplete="off" autocorrect="off" placeholder="Search Twitter" role="combobox" spellcheck="false" value="" enterkeyhint="search" dir="auto" class="r-30o5oe r-1niwhzg r-17gur6a r-1yadl64 r-deolkf r-homxoj r-poiln3 r-7cikom r-1ny4l3l r-xyw6el r-oyd9sg r-y0fyvk r-1dz5y72 r-fdjqy7 r-13qz1uu" data-testid="SearchBox_Search_Input"></div></div>
+<div class="css-1dbjc4n r-6koalj r-1777fci"></div></label></div></div></div></div>
+<div class="css-1dbjc4n r-13awgt0 r-bnwqim"></div>
+</form></div></div></div></div>
+</div>
+<div class="css-1dbjc4n r-obd0qt r-1pz39u2 r-1777fci r-15ysp7h r-s8bhmr"><div aria-expanded="false" aria-haspopup="menu" aria-label="More" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1niwhzg r-42olwf r-sdzlij r-1phboty r-rs99b7 r-2yi16 r-1qi8awa r-1ny4l3l r-o7ynqc r-6416eg r-lrvibr" style="margin-right:calc(4px + (-1 * ((36px + (1px * 2)) - 20px) / 2))"><div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-18u37iz r-16y2uox r-37j5jr r-a023e6 r-b88u0q r-1777fci r-rjixqe r-bcqeeo r-q4m81j r-qvutc0" style="color:rgba(15,20,25,1.00)">
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-z80fyv r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-19wmn03" style="color:rgba(15,20,25,1.00)"><g><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path></g></svg><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-a023e6 r-rjixqe r-bcqeeo r-qvutc0" style="border-bottom:2px solid #0F1419"></span>
+</div></div></div>
+</div></div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-16y2uox r-1w6e6rj r-1h3ijdo r-1wtj0ep r-1fz3rvf r-rjfia"><div class="css-1dbjc4n r-1awozwy r-1pz39u2 r-18u37iz r-16y2uox"><div class="css-1dbjc4n r-1awozwy r-1pz39u2 r-18u37iz r-16y2uox">
+<div class="css-1dbjc4n r-16y2uox"><a href="/login" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-1ets6dv r-sdzlij r-1phboty r-rs99b7 r-1loqt21 r-15ysp7h r-4wgw6l r-1ny4l3l r-ymttw5 r-o7ynqc r-6416eg r-lrvibr" data-testid="login"><div dir="ltr" class="css-901oao r-1awozwy r-1cvl2hr r-6koalj r-18u37iz r-16y2uox r-37j5jr r-a023e6 r-b88u0q r-1777fci r-rjixqe r-bcqeeo r-q4m81j r-qvutc0"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-1b43r93 r-1cwl3u0 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Log in</span></span></div></a></div>
+<div class="css-1dbjc4n r-16y2uox r-19u6a5r"><a href="/i/flow/signup" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-l5o3uw r-42olwf r-sdzlij r-1phboty r-rs99b7 r-1loqt21 r-15ysp7h r-4wgw6l r-1ny4l3l r-ymttw5 r-o7ynqc r-6416eg r-lrvibr" data-testid="signup"><div dir="ltr" class="css-901oao r-1awozwy r-jwli3a r-6koalj r-18u37iz r-16y2uox r-37j5jr r-a023e6 r-b88u0q r-1777fci r-rjixqe r-bcqeeo r-q4m81j r-qvutc0"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-1b43r93 r-1cwl3u0 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Sign up</span></span></div></a></div>
+</div></div></div>
+</div></div></div>
+<div class="css-1dbjc4n r-633pao r-u8s1d r-dkhcqf r-axxi2z r-18jm5s1 r-13qz1uu r-1wyyakw" style="-webkit-transform:translate3d(0, 0, 0) translateY(53px);transform:translate3d(0, 0, 0) translateY(53px)"><div class="css-1dbjc4n r-1jgb5lz r-13qz1uu"><div class="css-1dbjc4n r-1awozwy r-1777fci r-1jgb5lz r-19u6a5r r-13qz1uu"><div role="status" class="css-1dbjc4n r-1r5su4o r-orgf3d r-1lul07w r-eafdt9 r-1b8bd59 r-nx0j10"><div aria-label="New Tweets are available. Push the period key to go to the them." role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-l5o3uw r-sdzlij r-y3da5r r-1777fci r-1ny4l3l r-ymttw5 r-oyd9sg r-o7ynqc r-6416eg"><div class="css-1dbjc4n r-18u37iz">
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-1kihuf0 r-jwli3a r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-19wmn03"><g><path d="M12 3.59l7.457 7.45-1.414 1.42L13 7.41V21h-2V7.41l-5.043 5.05-1.414-1.42L12 3.59z"></path></g></svg><div dir="ltr" class="css-901oao css-1hf3ou5 r-1kihuf0 r-jwli3a r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-13hce6t r-bcqeeo r-qvutc0" data-testid="pillLabel"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">See new Tweets</span></div>
+</div></div></div></div></div></div>
+</div></div></header><main role="main" class="css-1dbjc4n r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-150rngu r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-aqfbo4 r-16y2uox"><div class="css-1dbjc4n r-1oszu61 r-1niwhzg r-18u37iz r-16y2uox r-1jgb5lz r-2llsf r-13qz1uu"><div class="css-1dbjc4n r-14lw9ot r-42olwf r-1ljd8xs r-13l2t4g r-1phboty r-16y2uox r-1jgb5lz r-13qz1uu r-184en5c" data-testid="primaryColumn"><div aria-label="Home timeline" tabindex="0" class="css-1dbjc4n"><div itemscope="" itemtype="https://schema.org/Collection">
+<meta content="Tweet with replies" itemprop="name">
+<section aria-labelledby="accessible-list-12471" role="region" class="css-1dbjc4n"><h1 dir="auto" aria-level="1" role="heading" class="css-4rbku5 css-901oao r-4iw3lz r-1xk2f4g r-109y4c4 r-1udh08x r-wwvuq4 r-u8s1d r-92ng3h" id="accessible-list-12471">Conversation</h1>
+<div aria-label="Timeline: Conversation" class="css-1dbjc4n"><div class="css-1dbjc4n">
+<div class="css-1dbjc4n r-1adg3ll r-1ny4l3l"><div itemprop="hasPart" itemscope="" itemtype="https://schema.org/SocialMediaPosting">
+<meta content="1409270864315486209" itemprop="identifier">
+<meta content="1" itemprop="position">
+<meta content="22" itemprop="commentCount">
+<meta content="" itemprop="contentRating">
+<meta content="2021-06-27T22:02:11.000Z" itemprop="dateCreated">
+<meta content="2021-06-27T22:02:11.000Z" itemprop="datePublished">
+<meta content="https://twitter.com/codinghorror/status/1409270864315486209" itemprop="url">
+<div itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+<meta content="5637652" itemprop="identifier">
+<meta content="codinghorror" itemprop="additionalName">
+<meta content="Jeff Atwood" itemprop="givenName">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/LikeAction" itemprop="interactionType">
+<meta content="Likes" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409270864315486209/likes" itemprop="url">
+<meta content="90" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Retweets" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409270864315486209/retweets" itemprop="url">
+<meta content="5" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Quotes" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409270864315486209/retweets/with_comments" itemprop="url">
+<meta content="1" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Replies" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409270864315486209" itemprop="url">
+<meta content="22" itemprop="userInteractionCount">
+</div>
+<article aria-labelledby="id__wk2npqyqe27 id__heytm06p3we id__1zlrqaji4zqj id__5lgpqiwbk3o id__zu7ppdkqypi id__fji39rts3g id__e9i5ssdstbm id__i961vzlkwe id__snsbalo4huf id__8y0tu67ubkg id__sd2ta53lv3 id__cq6e4s57d7d id__ch9rj9lapkr id__3yxqrgxmpz5 id__o450j16s83 id__bx2tmboihww id__6wsy9ir2gav id__yaid674jaw id__q2j8mv07ccl" role="article" tabindex="-1" class="css-1dbjc4n r-18u37iz r-1ut4w64 r-1ny4l3l r-1udh08x r-1qhn6m8 r-i023vh" data-testid="tweet"><div class="css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1ny4l3l">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-18u37iz"><div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-ttdzmv"></div></div></div>
+<div class="css-1dbjc4n r-18u37iz">
+<div class="css-1dbjc4n r-1awozwy r-1hwvwag r-18kxxzh r-1b7u577">
+<div class="css-1dbjc4n" data-testid="Tweet-User-Avatar"><div class="css-1dbjc4n r-18kxxzh r-1wbh5a2 r-13qz1uu"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1adg3ll r-h3s6tt r-bztko3" style="width:48px" data-testid="UserAvatar-Container-codinghorror">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-1adg3ll r-1pi2tsx r-1wyvozj r-bztko3 r-u8s1d r-1v2oles r-desppf r-13qz1uu">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-ggadg3 r-1udh08x r-u8s1d r-8jfcpp" style="height:calc(100% - -4px);width:calc(100% - -4px)"><a href="/codinghorror" aria-hidden="true" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-1loqt21 r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1niwhzg r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-14lw9ot r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-14lw9ot r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1adg3ll r-1udh08x" style="background-color:rgba(185,202,211,1.00)">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/profile_images/1517287320235298816/Qx-O6UCY_400x400.jpg")'></div>
+<img alt="" draggable="true" src="https://pbs.twimg.com/profile_images/1517287320235298816/Qx-O6UCY_400x400.jpg" class="css-9pa8cd">
+</div></div>
+</div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-12181gd r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"></div></div></a></div></div>
+</div></div>
+</div></div></div></div>
+<div class="css-1dbjc4n r-1bimlpy r-16y2uox r-1jgb5lz r-14gqq1x r-m5arl1"></div>
+</div>
+<div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">
+<div class="css-1dbjc4n r-zl2h9q"><div class="css-1dbjc4n r-k4xj1c r-18u37iz r-1wtj0ep"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs r-1ny4l3l" id="id__zu7ppdkqypi" data-testid="User-Name">
+<div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/codinghorror" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs">
+<div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-37j5jr r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Jeff Atwood</span></span></div>
+<div dir="ltr" class="css-901oao r-xoduu5 r-18u37iz r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 r-1awozwy r-xoduu5 r-poiln3 r-bcqeeo r-qvutc0"></span></div>
+</div></a></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1wbh5a2 r-13hce6t"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2">
+<div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/codinghorror" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div dir="ltr" class="css-901oao css-1hf3ou5 r-14j79pv r-18u37iz r-37j5jr r-1wvb978 r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@codinghorror</span></div></a></div>
+<div dir="ltr" aria-hidden="true" class="css-901oao r-14j79pv r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-s1qlax r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">·</span></div>
+<div class="css-1dbjc4n r-18u37iz r-1q142lx"><a href="/codinghorror/status/1409270864315486209" dir="ltr" aria-label="Jun 27, 2021" role="link" class="css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-37j5jr r-a023e6 r-16dba41 r-9aw3ui r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0"><time datetime="2021-06-27T22:02:11.000Z">Jun 27, 2021</time></a></div>
+</div></div>
+</div></div></div></div></div>
+<div itemprop="articleBody" data-testid="tweetTextAnnotations"><div class="css-1dbjc4n"><div dir="auto" lang="en" class="css-901oao r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0" style="color:rgba(15,20,25,1.00)" id="id__sd2ta53lv3" data-testid="tweetText"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Anyone else doing cellular Apple Watches rather than full blown cell phones for their almost-teens? The more I research this the more I like it.</span></div></div></div>
+<div class="css-1dbjc4n"><div aria-label="22 replies, 6 Retweets, 90 likes" role="group" class="css-1dbjc4n r-1ta3fxp r-18u37iz r-1wtj0ep r-1s2bzr4 r-1mdbhws" id="id__q2j8mv07ccl">
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="22 Replies. Reply" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="reply"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">22</span></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="6 Retweets. Retweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="retweet"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">6</span></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="90 Likes. Like" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="like"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">90</span></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n" style="display:inline-grid;-webkit-justify-content:inherit;justify-content:inherit;-webkit-transform:rotate(0deg) scale(1) translate3d(0, 0, 0);transform:rotate(0deg) scale(1) translate3d(0, 0, 0);-ms-flex-pack:inherit;-webkit-box-pack:inherit"><div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="Share Tweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path></g></svg>
+</div></div></div></div></div>
+</div></div>
+</div>
+</div>
+</div></div></article>
+</div></div>
+<div class="css-1dbjc4n r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"><div itemprop="hasPart" itemscope="" itemtype="https://schema.org/SocialMediaPosting">
+<meta content="1409351083177046020" itemprop="identifier">
+<meta content="2" itemprop="position">
+<meta content="4" itemprop="commentCount">
+<meta content="" itemprop="contentRating">
+<meta content="2021-06-28T03:20:57.000Z" itemprop="dateCreated">
+<meta content="2021-06-28T03:20:57.000Z" itemprop="datePublished">
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020" itemprop="url">
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020" itemprop="mainEntityOfPage">
+<div itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+<meta content="5637652" itemprop="identifier">
+<meta content="codinghorror" itemprop="additionalName">
+<meta content="Jeff Atwood" itemprop="givenName">
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/FollowAction" itemprop="interactionType">
+<meta content="Likes" itemprop="name">
+<meta content="284044" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/SubscribeAction" itemprop="interactionType">
+<meta content="Retweets" itemprop="name">
+<meta content="277" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/LikeAction" itemprop="interactionType">
+<meta content="Quotes" itemprop="name">
+<meta content="82117" itemprop="userInteractionCount">
+</div>
+</div>
+<div itemprop="sharedContent" itemscope="" itemtype="https://schema.org/CreativeWork">
+<meta content="Expanded Tweet URLs" itemprop="name">
+<meta content="https://t.co/TQMRJsFwnO" itemprop="url">
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020/photo/1" itemprop="url">
+</div>
+<meta content="https://twitter.com/codinghorror/status/1409270864315486209" itemprop="isPartOf">
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/LikeAction" itemprop="interactionType">
+<meta content="Likes" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020/likes" itemprop="url">
+<meta content="85" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Retweets" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020/retweets" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Quotes" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020/retweets/with_comments" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Replies" itemprop="name">
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020" itemprop="url">
+<meta content="4" itemprop="userInteractionCount">
+</div>
+<article aria-labelledby="id__suctvga0xlr id__kj6f74rrf5r id__b0efe6oquqf id__f3z2uddesr id__xmkqo9g1w1q id__bwl366m317s id__rnobdd1dfy id__4ne6vtsu02n id__k3kkoosn7lm id__iw09csvxbqa id__pie16bp4qbj id__rxqpdtu6rwq id__f7iutpffwuj id__1ipvwa4pbuz id__z59ufmodgg id__lf27xcfcf6s id__sl06dryrnk id__fmj9712b4x id__u8kmfj3tezh" role="article" tabindex="-1" class="css-1dbjc4n r-18u37iz r-1ny4l3l r-1udh08x r-1qhn6m8 r-i023vh" data-testid="tweet"><div class="css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1ny4l3l">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-18u37iz">
+<div class="css-1dbjc4n r-1hwvwag r-18kxxzh r-15zivkp r-1b7u577"><div class="css-1dbjc4n r-1bimlpy r-1p0dtai r-1d2f490 r-1jgb5lz r-u8s1d r-zchlnj r-ipm5af r-m5arl1"></div></div>
+<div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-ttdzmv"></div>
+</div></div>
+<div class="css-1dbjc4n r-18u37iz r-15zivkp">
+<div class="css-1dbjc4n r-1awozwy r-1hwvwag r-18kxxzh r-1b7u577"><div class="css-1dbjc4n" data-testid="Tweet-User-Avatar"><div class="css-1dbjc4n r-18kxxzh r-1wbh5a2 r-13qz1uu"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1adg3ll r-h3s6tt r-bztko3" style="width:48px" data-testid="UserAvatar-Container-codinghorror">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-1adg3ll r-1pi2tsx r-1wyvozj r-bztko3 r-u8s1d r-1v2oles r-desppf r-13qz1uu">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-ggadg3 r-1udh08x r-u8s1d r-8jfcpp" style="height:calc(100% - -4px);width:calc(100% - -4px)"><a href="/codinghorror" aria-hidden="true" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-1loqt21 r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1niwhzg r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-14lw9ot r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-14lw9ot r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1adg3ll r-1udh08x" style="background-color:rgba(185,202,211,1.00)">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/profile_images/1517287320235298816/Qx-O6UCY_400x400.jpg")'></div>
+<img alt="" draggable="true" src="https://pbs.twimg.com/profile_images/1517287320235298816/Qx-O6UCY_400x400.jpg" class="css-9pa8cd">
+</div></div>
+</div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-12181gd r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"></div></div></a></div></div>
+</div></div>
+</div></div></div></div></div>
+<div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci"><div class="css-1dbjc4n r-zl2h9q"><div class="css-1dbjc4n r-k4xj1c r-18u37iz r-1wtj0ep"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l" id="id__xmkqo9g1w1q" data-testid="User-Name">
+<div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/codinghorror" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs">
+<div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-37j5jr r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Jeff Atwood</span></span></div>
+<div dir="ltr" class="css-901oao r-xoduu5 r-18u37iz r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 r-1awozwy r-xoduu5 r-poiln3 r-bcqeeo r-qvutc0"></span></div>
+</div></a></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/codinghorror" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div dir="ltr" class="css-901oao css-1hf3ou5 r-14j79pv r-18u37iz r-37j5jr r-1wvb978 r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@codinghorror</span></div></a></div></div></div>
+</div></div></div></div></div></div>
+</div>
+<div class="css-1dbjc4n">
+<div class="css-1dbjc4n r-1habvwh"></div>
+<div class="css-1dbjc4n"><div itemprop="articleBody" data-testid="tweetTextAnnotations"><div class="css-1dbjc4n r-1s2bzr4"><div dir="auto" lang="en" class="css-901oao r-37j5jr r-1inkyih r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0" style="color:rgba(15,20,25,1.00)" id="id__pie16bp4qbj" data-testid="tweetText"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">My first text message from my child! A moment that shall live on in infamy!</span></div></div></div></div>
+<div class="css-1dbjc4n"><div aria-labelledby="id__7ylkdjmyscc id__x9cyyyj309m" class="css-1dbjc4n r-1ssbvtb r-1s2bzr4" id="id__f7iutpffwuj"><div class="css-1dbjc4n r-9aw3ui"><div class="css-1dbjc4n"><div class="css-1dbjc4n r-1ets6dv r-1867qdf r-1phboty r-rs99b7 r-1ny4l3l r-1udh08x r-o7ynqc r-6416eg">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-16y2uox r-1pi2tsx r-13qz1uu"><div role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1pi2tsx r-1ny4l3l"><div class="css-1dbjc4n r-1adg3ll r-1udh08x">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:124.57684495599187%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="Image" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010" data-testid="tweetPhoto">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/media/E48FVowUUAYyGLX?format=jpg&amp;name=large")'></div>
+<img alt="Image" draggable="true" src="https://pbs.twimg.com/media/E48FVowUUAYyGLX?format=jpg&amp;name=large" class="css-9pa8cd">
+</div></div>
+</div></div></div></div>
+<div itemprop="image" itemscope="" itemtype="https://schema.org/ImageObject">
+<meta content="Image" itemprop="caption">
+<meta content="https://pbs.twimg.com/media/E48FVowUUAYyGLX.jpg" itemprop="contentUrl">
+<meta content="https://pbs.twimg.com/media/E48FVowUUAYyGLX?format=jpg&amp;name=thumb" itemprop="thumbnailUrl">
+<meta content="1477" itemprop="width">
+<meta content="" itemprop="contentRating">
+</div>
+</div></div></div></div></div>
+<div class="css-1dbjc4n"></div>
+<div class="css-1dbjc4n r-1r5su4o"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wtj0ep">
+<div class="css-1dbjc4n r-1b7u577"><div class="css-1dbjc4n r-1d09ksm r-1471scf r-18u37iz r-1wbh5a2"><div dir="ltr" class="css-901oao r-14j79pv r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><a href="/codinghorror/status/1409351083177046020" aria-describedby="id__lcuy47jaujk" aria-label="3:20 AM · Jun 28, 2021" role="link" class="css-4rbku5 css-18t94o4 css-901oao css-16my406 r-14j79pv r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-poiln3 r-9aw3ui r-bcqeeo r-3s2u2q r-qvutc0"><time datetime="2021-06-28T03:20:57.000Z">3:20 AM · Jun 28, 2021</time></a></div></div></div>
+<div class="css-1dbjc4n r-18u37iz"></div>
+</div></div>
+<div role="group" class="css-1dbjc4n r-18u37iz r-1w6e6rj">
+<div role="separator" class="css-1dbjc4n r-1dgieki r-1efd50x r-5kkj8d r-109y4c4 r-13qz1uu"></div>
+<div class="css-1dbjc4n r-1mf7evn r-1yzf0co"><a href="/codinghorror/status/1409351083177046020/likes" dir="ltr" role="link" class="css-4rbku5 css-18t94o4 css-901oao r-1loqt21 r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-1b43r93 r-b88u0q r-1cwl3u0 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">85</span></span></span></div> <span class="css-901oao css-16my406 r-14j79pv r-poiln3 r-1b43r93 r-1cwl3u0 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Likes</span></span></a></div>
+</div>
+<div class="css-1dbjc4n"><div role="group" class="css-1dbjc4n r-1oszu61 r-1dgieki r-1efd50x r-5kkj8d r-1ta3fxp r-18u37iz r-h3s6tt r-a2tzq0 r-3qxfft r-s1qlax" id="id__u8kmfj3tezh">
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="Reply" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="reply"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+</div></div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="Retweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="retweet"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg>
+</div></div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="Like" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="like"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
+</div></div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="Bookmark" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="bookmark"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"><g><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"></path></g></svg>
+</div></div></div></div>
+<div class="css-1dbjc4n" style="display:inline-grid;-webkit-justify-content:inherit;justify-content:inherit;-webkit-transform:rotate(0deg) scale(1) translate3d(0, 0, 0);transform:rotate(0deg) scale(1) translate3d(0, 0, 0);-ms-flex-pack:inherit;-webkit-box-pack:inherit"><div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="Share Tweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"><g><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path></g></svg>
+</div></div></div></div></div>
+</div></div>
+<div class="css-1dbjc4n r-j5o65s r-rull8r r-qklmqi"></div>
+</div>
+</div></div></article>
+</div></div>
+<div class="css-1dbjc4n r-1adg3ll r-1ny4l3l"></div>
+<div class="css-1dbjc4n r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"><div itemprop="hasPart" itemscope="" itemtype="https://schema.org/SocialMediaPosting">
+<meta content="1409352104590729216" itemprop="identifier">
+<meta content="3" itemprop="position">
+<meta content="0" itemprop="commentCount">
+<meta content="" itemprop="contentRating">
+<meta content="2021-06-28T03:25:00.000Z" itemprop="dateCreated">
+<meta content="2021-06-28T03:25:00.000Z" itemprop="datePublished">
+<meta content="https://twitter.com/f_fz/status/1409352104590729216" itemprop="url">
+<div itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+<meta content="56679923" itemprop="identifier">
+<meta content="f_fz" itemprop="additionalName">
+<meta content="Ferdi F.Z." itemprop="givenName">
+</div>
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020" itemprop="isPartOf">
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/LikeAction" itemprop="interactionType">
+<meta content="Likes" itemprop="name">
+<meta content="https://twitter.com/f_fz/status/1409352104590729216/likes" itemprop="url">
+<meta content="1" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Retweets" itemprop="name">
+<meta content="https://twitter.com/f_fz/status/1409352104590729216/retweets" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Quotes" itemprop="name">
+<meta content="https://twitter.com/f_fz/status/1409352104590729216/retweets/with_comments" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Replies" itemprop="name">
+<meta content="https://twitter.com/f_fz/status/1409352104590729216" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<article aria-labelledby="id__bejfoqizk5 id__d4nrpwgwmwk id__fj9wmixnu7n id__vyvu1f5clp id__bj2jrgmi7u5 id__s50mes4osei id__zozaeyvv4lp id__b8pwfq6rp4e id__z7jk16pt6t id__pous16hv06l id__kcl6ciq674a id__3xnlzwvx60v id__ao9xmr9n23w id__99uy1bs53xd id__20ffhwkuid8 id__lnl96mogrza id__6sfa5g6xjf id__pz7aekvp1f id__mm5atbl979f" role="article" tabindex="-1" class="css-1dbjc4n r-18u37iz r-1ny4l3l r-1udh08x r-1qhn6m8 r-i023vh" data-testid="tweet"><div class="css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1ny4l3l">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-18u37iz"><div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-ttdzmv"></div></div></div>
+<div class="css-1dbjc4n r-18u37iz">
+<div class="css-1dbjc4n r-1awozwy r-1hwvwag r-18kxxzh r-1b7u577"><div class="css-1dbjc4n" data-testid="Tweet-User-Avatar"><div class="css-1dbjc4n r-18kxxzh r-1wbh5a2 r-13qz1uu"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1adg3ll r-h3s6tt r-bztko3" style="width:48px" data-testid="UserAvatar-Container-f_fz">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-1adg3ll r-1pi2tsx r-1wyvozj r-bztko3 r-u8s1d r-1v2oles r-desppf r-13qz1uu">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-ggadg3 r-1udh08x r-u8s1d r-8jfcpp" style="height:calc(100% - -4px);width:calc(100% - -4px)"><a href="/f_fz" aria-hidden="true" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-1loqt21 r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1niwhzg r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-14lw9ot r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-14lw9ot r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1adg3ll r-1udh08x" style="background-color:rgba(185,202,211,1.00)">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/profile_images/1361289869025181696/xvnNIGUA_400x400.jpg")'></div>
+<img alt="" draggable="true" src="https://pbs.twimg.com/profile_images/1361289869025181696/xvnNIGUA_400x400.jpg" class="css-9pa8cd">
+</div></div>
+</div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-12181gd r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"></div></div></a></div></div>
+</div></div>
+</div></div></div></div></div>
+<div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">
+<div class="css-1dbjc4n r-zl2h9q"><div class="css-1dbjc4n r-k4xj1c r-18u37iz r-1wtj0ep"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs r-1ny4l3l" id="id__bj2jrgmi7u5" data-testid="User-Name">
+<div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/f_fz" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs">
+<div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-37j5jr r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Ferdi F.Z.</span></span></div>
+<div dir="ltr" class="css-901oao r-xoduu5 r-18u37iz r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 r-1awozwy r-xoduu5 r-poiln3 r-bcqeeo r-qvutc0"></span></div>
+</div></a></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1wbh5a2 r-13hce6t"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2">
+<div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/f_fz" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div dir="ltr" class="css-901oao css-1hf3ou5 r-14j79pv r-18u37iz r-37j5jr r-1wvb978 r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@f_fz</span></div></a></div>
+<div dir="ltr" aria-hidden="true" class="css-901oao r-14j79pv r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-s1qlax r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">·</span></div>
+<div class="css-1dbjc4n r-18u37iz r-1q142lx"><a href="/f_fz/status/1409352104590729216" dir="ltr" aria-label="Jun 28, 2021" role="link" class="css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-37j5jr r-a023e6 r-16dba41 r-9aw3ui r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0"><time datetime="2021-06-28T03:25:00.000Z">Jun 28, 2021</time></a></div>
+</div></div>
+</div></div></div></div></div>
+<div itemprop="articleBody" data-testid="tweetTextAnnotations"><div class="css-1dbjc4n"><div dir="auto" lang="en" class="css-901oao r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0" style="color:rgba(15,20,25,1.00)" id="id__kcl6ciq674a" data-testid="tweetText"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Mind-blown!</span></div></div></div>
+<div class="css-1dbjc4n"><div aria-label="1 like" role="group" class="css-1dbjc4n r-1ta3fxp r-18u37iz r-1wtj0ep r-1s2bzr4 r-1mdbhws" id="id__mm5atbl979f">
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="0 Replies. Reply" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="reply"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="0 Retweets. Retweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="retweet"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="1 Like. Like" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="like"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">1</span></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n" style="display:inline-grid;-webkit-justify-content:inherit;justify-content:inherit;-webkit-transform:rotate(0deg) scale(1) translate3d(0, 0, 0);transform:rotate(0deg) scale(1) translate3d(0, 0, 0);-ms-flex-pack:inherit;-webkit-box-pack:inherit"><div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="Share Tweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path></g></svg>
+</div></div></div></div></div>
+</div></div>
+</div>
+</div>
+</div></div></article>
+</div></div>
+<div class="css-1dbjc4n r-1adg3ll r-1ny4l3l"></div>
+<div class="css-1dbjc4n r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"><div itemprop="hasPart" itemscope="" itemtype="https://schema.org/SocialMediaPosting">
+<meta content="1409352727008714757" itemprop="identifier">
+<meta content="4" itemprop="position">
+<meta content="0" itemprop="commentCount">
+<meta content="" itemprop="contentRating">
+<meta content="2021-06-28T03:27:29.000Z" itemprop="dateCreated">
+<meta content="2021-06-28T03:27:29.000Z" itemprop="datePublished">
+<meta content="https://twitter.com/chetfaliszek/status/1409352727008714757" itemprop="url">
+<div itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+<meta content="982040378" itemprop="identifier">
+<meta content="chetfaliszek" itemprop="additionalName">
+<meta content="Chet Faliszek" itemprop="givenName">
+</div>
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020" itemprop="isPartOf">
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/LikeAction" itemprop="interactionType">
+<meta content="Likes" itemprop="name">
+<meta content="https://twitter.com/chetfaliszek/status/1409352727008714757/likes" itemprop="url">
+<meta content="2" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Retweets" itemprop="name">
+<meta content="https://twitter.com/chetfaliszek/status/1409352727008714757/retweets" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Quotes" itemprop="name">
+<meta content="https://twitter.com/chetfaliszek/status/1409352727008714757/retweets/with_comments" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Replies" itemprop="name">
+<meta content="https://twitter.com/chetfaliszek/status/1409352727008714757" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<article aria-labelledby="id__6s3oxgufz6r id__atl1s0nqiwe id__dm1b7tg5a46 id__jlzv7mqmzus id__r6naboxypj9 id__qq9yprs0szb id__j8yzpnggksk id__h8ef30teyk id__60viiklzgl6 id__hjvr8n6lpb id__tr5imvyt5bg id__y4hm0wgr8r id__uefmcgxzbec id__2sa5ffr9i7d id__6k87dgzslqq id__9edyg17z9fe id__ak7eo0ltcxw id__c16rhgl89uh id__h22detcuhtf" role="article" tabindex="-1" class="css-1dbjc4n r-18u37iz r-1ny4l3l r-1udh08x r-1qhn6m8 r-i023vh" data-testid="tweet"><div class="css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1ny4l3l">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-18u37iz"><div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-ttdzmv"></div></div></div>
+<div class="css-1dbjc4n r-18u37iz">
+<div class="css-1dbjc4n r-1awozwy r-1hwvwag r-18kxxzh r-1b7u577"><div class="css-1dbjc4n" data-testid="Tweet-User-Avatar"><div class="css-1dbjc4n r-18kxxzh r-1wbh5a2 r-13qz1uu"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1adg3ll r-h3s6tt r-bztko3" style="width:48px" data-testid="UserAvatar-Container-chetfaliszek">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-1adg3ll r-1pi2tsx r-1wyvozj r-bztko3 r-u8s1d r-1v2oles r-desppf r-13qz1uu">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-ggadg3 r-1udh08x r-u8s1d r-8jfcpp" style="height:calc(100% - -4px);width:calc(100% - -4px)"><a href="/chetfaliszek" aria-hidden="true" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-1loqt21 r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1niwhzg r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-14lw9ot r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-14lw9ot r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1adg3ll r-1udh08x" style="background-color:rgba(185,202,211,1.00)">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/profile_images/2920094567/ecc0064d125a61407e9c0a735a5c5f76_400x400.jpeg")'></div>
+<img alt="" draggable="true" src="https://pbs.twimg.com/profile_images/2920094567/ecc0064d125a61407e9c0a735a5c5f76_400x400.jpeg" class="css-9pa8cd">
+</div></div>
+</div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-12181gd r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"></div></div></a></div></div>
+</div></div>
+</div></div></div></div></div>
+<div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">
+<div class="css-1dbjc4n r-zl2h9q"><div class="css-1dbjc4n r-k4xj1c r-18u37iz r-1wtj0ep"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs r-1ny4l3l" id="id__r6naboxypj9" data-testid="User-Name">
+<div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/chetfaliszek" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs">
+<div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-37j5jr r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Chet Faliszek</span></span></div>
+<div dir="ltr" class="css-901oao r-xoduu5 r-18u37iz r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 r-1awozwy r-xoduu5 r-poiln3 r-bcqeeo r-qvutc0"></span></div>
+</div></a></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1wbh5a2 r-13hce6t"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2">
+<div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/chetfaliszek" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div dir="ltr" class="css-901oao css-1hf3ou5 r-14j79pv r-18u37iz r-37j5jr r-1wvb978 r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@chetfaliszek</span></div></a></div>
+<div dir="ltr" aria-hidden="true" class="css-901oao r-14j79pv r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-s1qlax r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">·</span></div>
+<div class="css-1dbjc4n r-18u37iz r-1q142lx"><a href="/chetfaliszek/status/1409352727008714757" dir="ltr" aria-label="Jun 28, 2021" role="link" class="css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-37j5jr r-a023e6 r-16dba41 r-9aw3ui r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0"><time datetime="2021-06-28T03:27:29.000Z">Jun 28, 2021</time></a></div>
+</div></div>
+</div></div></div></div></div>
+<div itemprop="articleBody" data-testid="tweetTextAnnotations"><div class="css-1dbjc4n"><div dir="auto" lang="en" class="css-901oao r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0" style="color:rgba(15,20,25,1.00)" id="id__tr5imvyt5bg" data-testid="tweetText"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Make it their first NFT!</span></div></div></div>
+<div class="css-1dbjc4n"><div aria-label="2 likes" role="group" class="css-1dbjc4n r-1ta3fxp r-18u37iz r-1wtj0ep r-1s2bzr4 r-1mdbhws" id="id__h22detcuhtf">
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="0 Replies. Reply" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="reply"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="0 Retweets. Retweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="retweet"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="2 Likes. Like" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="like"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">2</span></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n" style="display:inline-grid;-webkit-justify-content:inherit;justify-content:inherit;-webkit-transform:rotate(0deg) scale(1) translate3d(0, 0, 0);transform:rotate(0deg) scale(1) translate3d(0, 0, 0);-ms-flex-pack:inherit;-webkit-box-pack:inherit"><div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="Share Tweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path></g></svg>
+</div></div></div></div></div>
+</div></div>
+</div>
+</div>
+</div></div></article>
+</div></div>
+<div class="css-1dbjc4n r-1adg3ll r-1ny4l3l"></div>
+<div class="css-1dbjc4n r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"><div itemprop="hasPart" itemscope="" itemtype="https://schema.org/SocialMediaPosting">
+<meta content="1409353075232362505" itemprop="identifier">
+<meta content="5" itemprop="position">
+<meta content="0" itemprop="commentCount">
+<meta content="" itemprop="contentRating">
+<meta content="2021-06-28T03:28:52.000Z" itemprop="dateCreated">
+<meta content="2021-06-28T03:28:52.000Z" itemprop="datePublished">
+<meta content="https://twitter.com/Hanzo55/status/1409353075232362505" itemprop="url">
+<div itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+<meta content="34945729" itemprop="identifier">
+<meta content="Hanzo55" itemprop="additionalName">
+<meta content="Shawn Holmes" itemprop="givenName">
+</div>
+<div itemprop="sharedContent" itemscope="" itemtype="https://schema.org/CreativeWork">
+<meta content="Expanded Tweet URLs" itemprop="name">
+<meta content="https://t.co/ARtq5AkZqG" itemprop="url">
+<meta content="https://twitter.com/Hanzo55/status/1409353075232362505/photo/1" itemprop="url">
+</div>
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020" itemprop="isPartOf">
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/LikeAction" itemprop="interactionType">
+<meta content="Likes" itemprop="name">
+<meta content="https://twitter.com/Hanzo55/status/1409353075232362505/likes" itemprop="url">
+<meta content="2" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Retweets" itemprop="name">
+<meta content="https://twitter.com/Hanzo55/status/1409353075232362505/retweets" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Quotes" itemprop="name">
+<meta content="https://twitter.com/Hanzo55/status/1409353075232362505/retweets/with_comments" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Replies" itemprop="name">
+<meta content="https://twitter.com/Hanzo55/status/1409353075232362505" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<article aria-labelledby="id__86a4p49htdb id__xh9f4uz2plb id__zoyrlnm72c id__ddin2pguay id__ljree44kcpc id__2bmhbv5czdm id__1uwenpesxk7 id__pik36rqcqt id__zoq5r106ejb id__4faym9u57th id__fcxz47a7ikl id__1vur6c8r629 id__dws3bivncbd id__4859bu5qwus id__hzik0htuiwb id__nih33plwasd id__agtlessmu7 id__j2x7h2airba id__nafsejmaop" role="article" tabindex="-1" class="css-1dbjc4n r-18u37iz r-1ny4l3l r-1udh08x r-1qhn6m8 r-i023vh" data-testid="tweet"><div class="css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1ny4l3l">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-18u37iz"><div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-ttdzmv"></div></div></div>
+<div class="css-1dbjc4n r-18u37iz">
+<div class="css-1dbjc4n r-1awozwy r-1hwvwag r-18kxxzh r-1b7u577"><div class="css-1dbjc4n" data-testid="Tweet-User-Avatar"><div class="css-1dbjc4n r-18kxxzh r-1wbh5a2 r-13qz1uu"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1adg3ll r-h3s6tt r-bztko3" style="width:48px" data-testid="UserAvatar-Container-Hanzo55">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-1adg3ll r-1pi2tsx r-1wyvozj r-bztko3 r-u8s1d r-1v2oles r-desppf r-13qz1uu">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-ggadg3 r-1udh08x r-u8s1d r-8jfcpp" style="height:calc(100% - -4px);width:calc(100% - -4px)"><a href="/Hanzo55" aria-hidden="true" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-1loqt21 r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1niwhzg r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-14lw9ot r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-14lw9ot r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1adg3ll r-1udh08x" style="background-color:rgba(185,202,211,1.00)">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/profile_images/1400457518669721604/v5zouGS9_400x400.jpg")'></div>
+<img alt="" draggable="true" src="https://pbs.twimg.com/profile_images/1400457518669721604/v5zouGS9_400x400.jpg" class="css-9pa8cd">
+</div></div>
+</div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-12181gd r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"></div></div></a></div></div>
+</div></div>
+</div></div></div></div></div>
+<div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">
+<div class="css-1dbjc4n r-zl2h9q"><div class="css-1dbjc4n r-k4xj1c r-18u37iz r-1wtj0ep"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs r-1ny4l3l" id="id__ljree44kcpc" data-testid="User-Name">
+<div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/Hanzo55" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs">
+<div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-37j5jr r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Shawn Holmes</span></span></div>
+<div dir="ltr" class="css-901oao r-xoduu5 r-18u37iz r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 r-1awozwy r-xoduu5 r-poiln3 r-bcqeeo r-qvutc0"></span></div>
+</div></a></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1wbh5a2 r-13hce6t"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2">
+<div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/Hanzo55" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div dir="ltr" class="css-901oao css-1hf3ou5 r-14j79pv r-18u37iz r-37j5jr r-1wvb978 r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@Hanzo55</span></div></a></div>
+<div dir="ltr" aria-hidden="true" class="css-901oao r-14j79pv r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-s1qlax r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">·</span></div>
+<div class="css-1dbjc4n r-18u37iz r-1q142lx"><a href="/Hanzo55/status/1409353075232362505" dir="ltr" aria-label="Jun 28, 2021" role="link" class="css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-37j5jr r-a023e6 r-16dba41 r-9aw3ui r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0"><time datetime="2021-06-28T03:28:52.000Z">Jun 28, 2021</time></a></div>
+</div></div>
+</div></div></div></div></div>
+<div itemprop="articleBody" data-testid="tweetTextAnnotations"><div class="css-1dbjc4n"><div dir="auto" lang="en" class="css-901oao r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0" style="color:rgba(15,20,25,1.00)" id="id__fcxz47a7ikl" data-testid="tweetText"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">This will be the next milestone</span></div></div></div>
+<div aria-labelledby="id__iqqc4vxsqc id__bnes0pdnfdh" class="css-1dbjc4n r-1ssbvtb r-1s2bzr4" id="id__dws3bivncbd"><div class="css-1dbjc4n r-9aw3ui"><div class="css-1dbjc4n"><div class="css-1dbjc4n r-1ets6dv r-1867qdf r-1phboty r-rs99b7 r-1ny4l3l r-1udh08x r-o7ynqc r-6416eg">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-16y2uox r-1pi2tsx r-13qz1uu"><div role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1pi2tsx r-1ny4l3l"><div class="css-1dbjc4n r-1adg3ll r-1udh08x">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:58.07799442896936%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="Image" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010" data-testid="tweetPhoto">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/media/E48HJy6XIAAUbuy?format=jpg&amp;name=900x900")'></div>
+<img alt="Image" draggable="true" src="https://pbs.twimg.com/media/E48HJy6XIAAUbuy?format=jpg&amp;name=900x900" class="css-9pa8cd">
+</div></div>
+</div></div></div></div>
+<div itemprop="image" itemscope="" itemtype="https://schema.org/ImageObject">
+<meta content="Image" itemprop="caption">
+<meta content="https://pbs.twimg.com/media/E48HJy6XIAAUbuy.jpg" itemprop="contentUrl">
+<meta content="https://pbs.twimg.com/media/E48HJy6XIAAUbuy?format=jpg&amp;name=thumb" itemprop="thumbnailUrl">
+<meta content="718" itemprop="width">
+<meta content="" itemprop="contentRating">
+</div>
+</div></div></div></div>
+<div class="css-1dbjc4n"><div aria-label="2 likes" role="group" class="css-1dbjc4n r-1ta3fxp r-18u37iz r-1wtj0ep r-1s2bzr4 r-1mdbhws" id="id__nafsejmaop">
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="0 Replies. Reply" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="reply"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="0 Retweets. Retweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="retweet"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="2 Likes. Like" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="like"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">2</span></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n" style="display:inline-grid;-webkit-justify-content:inherit;justify-content:inherit;-webkit-transform:rotate(0deg) scale(1) translate3d(0, 0, 0);transform:rotate(0deg) scale(1) translate3d(0, 0, 0);-ms-flex-pack:inherit;-webkit-box-pack:inherit"><div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="Share Tweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path></g></svg>
+</div></div></div></div></div>
+</div></div>
+</div>
+</div>
+</div></div></article>
+</div></div>
+<div class="css-1dbjc4n r-1adg3ll r-1ny4l3l"></div>
+<div class="css-1dbjc4n r-j5o65s r-qklmqi r-1adg3ll r-1ny4l3l"><div itemprop="hasPart" itemscope="" itemtype="https://schema.org/SocialMediaPosting">
+<meta content="1409354572838195201" itemprop="identifier">
+<meta content="6" itemprop="position">
+<meta content="0" itemprop="commentCount">
+<meta content="" itemprop="contentRating">
+<meta content="2021-06-28T03:34:49.000Z" itemprop="dateCreated">
+<meta content="2021-06-28T03:34:49.000Z" itemprop="datePublished">
+<meta content="https://twitter.com/andrenaleen/status/1409354572838195201" itemprop="url">
+<div itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+<meta content="901153681806176256" itemprop="identifier">
+<meta content="andrenaleen" itemprop="additionalName">
+<meta content="Andrei Taranchenko" itemprop="givenName">
+</div>
+<meta content="https://twitter.com/codinghorror/status/1409351083177046020" itemprop="isPartOf">
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/LikeAction" itemprop="interactionType">
+<meta content="Likes" itemprop="name">
+<meta content="https://twitter.com/andrenaleen/status/1409354572838195201/likes" itemprop="url">
+<meta content="1" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Retweets" itemprop="name">
+<meta content="https://twitter.com/andrenaleen/status/1409354572838195201/retweets" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Quotes" itemprop="name">
+<meta content="https://twitter.com/andrenaleen/status/1409354572838195201/retweets/with_comments" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<div itemprop="interactionStatistic" itemscope="" itemtype="https://schema.org/InteractionCounter">
+<meta content="https://schema.org/InteractAction" itemprop="interactionType">
+<meta content="Replies" itemprop="name">
+<meta content="https://twitter.com/andrenaleen/status/1409354572838195201" itemprop="url">
+<meta content="0" itemprop="userInteractionCount">
+</div>
+<article aria-labelledby="id__h7bvcsebky9 id__hc8ixps6x5t id__nu952nfyqk id__peis6vyrys id__8dcsijrt8sb id__fayyx23n6i id__pnx8m01a1l id__tn2xwku5nr id__9v81q0zmtu4 id__gcwkb5ylrii id__zllf8uan3kc id__cs37rzzpt9o id__smsdaa7bkhc id__suaoitn4fj id__rxd6aqy76rq id__mcxhli3g73g id__guc3dmwzabr id__dc5tj6adrit id__hoo5q3ndf1h" role="article" tabindex="-1" class="css-1dbjc4n r-18u37iz r-1ny4l3l r-1udh08x r-1qhn6m8 r-i023vh" data-testid="tweet"><div class="css-1dbjc4n r-eqz5dr r-16y2uox r-1wbh5a2"><div class="css-1dbjc4n r-16y2uox r-1wbh5a2 r-1ny4l3l">
+<div class="css-1dbjc4n"><div class="css-1dbjc4n r-18u37iz"><div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-ttdzmv"></div></div></div>
+<div class="css-1dbjc4n r-18u37iz">
+<div class="css-1dbjc4n r-1awozwy r-1hwvwag r-18kxxzh r-1b7u577"><div class="css-1dbjc4n" data-testid="Tweet-User-Avatar"><div class="css-1dbjc4n r-18kxxzh r-1wbh5a2 r-13qz1uu"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1adg3ll r-h3s6tt r-bztko3" style="width:48px" data-testid="UserAvatar-Container-andrenaleen">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-1adg3ll r-1pi2tsx r-1wyvozj r-bztko3 r-u8s1d r-1v2oles r-desppf r-13qz1uu">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-ggadg3 r-1udh08x r-u8s1d r-8jfcpp" style="height:calc(100% - -4px);width:calc(100% - -4px)"><a href="/andrenaleen" aria-hidden="true" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1niwhzg r-1loqt21 r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"><div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1niwhzg r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-14lw9ot r-1pi2tsx r-13qz1uu"></div></div>
+<div class="css-1dbjc4n r-14lw9ot r-sdzlij r-1wyvozj r-1udh08x r-633pao r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-1adg3ll r-1udh08x" style="background-color:rgba(185,202,211,1.00)">
+<div class="r-1adg3ll r-13qz1uu" style="padding-bottom:100%"></div>
+<div class="r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu"><div aria-label="" class="css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010">
+<div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style='background-image:url("https://pbs.twimg.com/profile_images/1069583899683110912/Xe38w2ow_400x400.jpg")'></div>
+<img alt="" draggable="true" src="https://pbs.twimg.com/profile_images/1069583899683110912/Xe38w2ow_400x400.jpg" class="css-9pa8cd">
+</div></div>
+</div></div>
+<div class="css-1dbjc4n r-sdzlij r-1wyvozj r-1udh08x r-u8s1d r-1v2oles r-desppf" style="height:calc(100% - 4px);width:calc(100% - 4px)"><div class="css-1dbjc4n r-12181gd r-1pi2tsx r-1ny4l3l r-o7ynqc r-6416eg r-13qz1uu"></div></div></a></div></div>
+</div></div>
+</div></div></div></div></div>
+<div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">
+<div class="css-1dbjc4n r-zl2h9q"><div class="css-1dbjc4n r-k4xj1c r-18u37iz r-1wtj0ep"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs r-1ny4l3l" id="id__8dcsijrt8sb" data-testid="User-Name">
+<div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs"><div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/andrenaleen" role="link" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div class="css-1dbjc4n r-1awozwy r-18u37iz r-1wbh5a2 r-dnmrzs">
+<div dir="ltr" class="css-901oao r-1awozwy r-6koalj r-37j5jr r-a023e6 r-b88u0q r-rjixqe r-bcqeeo r-1udh08x r-3s2u2q r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 css-1hf3ou5 r-poiln3 r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Andrei Taranchenko</span></span></div>
+<div dir="ltr" class="css-901oao r-xoduu5 r-18u37iz r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0" style="color:rgba(15,20,25,1.00)"><span class="css-901oao css-16my406 r-1awozwy r-xoduu5 r-poiln3 r-bcqeeo r-qvutc0"></span></div>
+</div></a></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1wbh5a2 r-13hce6t"><div class="css-1dbjc4n r-1d09ksm r-18u37iz r-1wbh5a2">
+<div class="css-1dbjc4n r-1wbh5a2 r-dnmrzs"><a href="/andrenaleen" role="link" tabindex="-1" class="css-4rbku5 css-18t94o4 css-1dbjc4n r-1loqt21 r-1wbh5a2 r-dnmrzs r-1ny4l3l"><div dir="ltr" class="css-901oao css-1hf3ou5 r-14j79pv r-18u37iz r-37j5jr r-1wvb978 r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">@andrenaleen</span></div></a></div>
+<div dir="ltr" aria-hidden="true" class="css-901oao r-14j79pv r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-s1qlax r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">·</span></div>
+<div class="css-1dbjc4n r-18u37iz r-1q142lx"><a href="/andrenaleen/status/1409354572838195201" dir="ltr" aria-label="Jun 28, 2021" role="link" class="css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-xoduu5 r-1q142lx r-1w6e6rj r-37j5jr r-a023e6 r-16dba41 r-9aw3ui r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0"><time datetime="2021-06-28T03:34:49.000Z">Jun 28, 2021</time></a></div>
+</div></div>
+</div></div></div></div></div>
+<div itemprop="articleBody" data-testid="tweetTextAnnotations"><div class="css-1dbjc4n"><div dir="auto" lang="en" class="css-901oao r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0" style="color:rgba(15,20,25,1.00)" id="id__zllf8uan3kc" data-testid="tweetText"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">I mean, a text from your kid is less dramatic than Pearl Harbor, but I don't have all the info.</span></div></div></div>
+<div class="css-1dbjc4n"><div aria-label="1 like" role="group" class="css-1dbjc4n r-1ta3fxp r-18u37iz r-1wtj0ep r-1s2bzr4 r-1mdbhws" id="id__hoo5q3ndf1h">
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="0 Replies. Reply" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="reply"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="0 Retweets. Retweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="retweet"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-label="1 Like. Like" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr" data-testid="like"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0">
+<div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
+</div>
+<div class="css-1dbjc4n r-xoduu5 r-1udh08x"><span data-testid="app-text-transition-container" style="transition-property:transform;transition-duration:0.3s;transform:translate3d(0, 0, 0)"><span class="css-901oao css-16my406 r-poiln3 r-n6v787 r-1cwl3u0 r-vc7bo5 r-1pn2ns4 r-qvutc0"><span class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">1</span></span></span></div>
+</div></div></div>
+<div class="css-1dbjc4n" style="display:inline-grid;-webkit-justify-content:inherit;justify-content:inherit;-webkit-transform:rotate(0deg) scale(1) translate3d(0, 0, 0);transform:rotate(0deg) scale(1) translate3d(0, 0, 0);-ms-flex-pack:inherit;-webkit-box-pack:inherit"><div class="css-1dbjc4n r-18u37iz r-1h0z5md"><div aria-expanded="false" aria-haspopup="menu" aria-label="Share Tweet" role="button" tabindex="0" class="css-18t94o4 css-1dbjc4n r-1777fci r-bt1l66 r-1ny4l3l r-bztko3 r-lrvibr"><div dir="ltr" class="css-901oao r-1awozwy r-14j79pv r-6koalj r-37j5jr r-a023e6 r-16dba41 r-1h0z5md r-rjixqe r-bcqeeo r-o7ynqc r-clp7b1 r-3s2u2q r-qvutc0"><div class="css-1dbjc4n r-xoduu5">
+<div class="css-1dbjc4n r-1niwhzg r-sdzlij r-1p0dtai r-xoduu5 r-1d2f490 r-xf4iuw r-1ny4l3l r-u8s1d r-zchlnj r-ipm5af r-o7ynqc r-6416eg"></div>
+<svg viewbox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"></path></g></svg>
+</div></div></div></div></div>
+</div></div>
+</div>
+</div>
+</div></div></article>
+</div></div>
+<div class="css-1dbjc4n r-o52ifk"><div class="css-1dbjc4n r-o52ifk"></div></div>
+</div></div></section>
+</div></div></div></div></div></div></main><div aria-valuemax="1" aria-valuemin="0" role="progressbar" class="css-1dbjc4n r-1awozwy r-1777fci" style="width:300px"><div class="css-1dbjc4n r-17bb2tj r-1muvv40 r-127358a r-1ldzwu0" style="height:26px;width:26px"><svg height="100%" viewbox="0 0 32 32" width="100%"><circle cx="16" cy="16" fill="none" r="14" stroke-width="4" style="stroke:#1D9BF0;opacity:0.2"></circle><circle cx="16" cy="16" fill="none" r="14" stroke-width="4" style="stroke:#1D9BF0;stroke-dasharray:80;stroke-dashoffset:60"></circle></svg></div></div>
+</div></div></div></div>
+</body>
+</html>

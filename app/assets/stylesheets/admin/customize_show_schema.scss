@@ -1,0 +1,17 @@
+.customize-show-schema {
+  &__header {
+    margin-bottom: 1em;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    color: var(--tertiary);
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      color: currentcolor;
+    }
+  }
+}

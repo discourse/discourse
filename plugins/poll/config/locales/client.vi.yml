@@ -1,0 +1,95 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    poll:
+      voters:
+        other: "người bình chọn"
+      total_votes:
+        other: "tổng số bình chọn"
+      votes:
+        other: "%{count} phiếu bầu"
+      average_rating: "Trung bình: <strong>%{average}</strong>."
+      public:
+        title: "Bình chọn <strong>công khai</strong>"
+      cast-votes:
+        title: "Thay đổi bình chọn của bạn"
+        label: "Bình chọn ngay!"
+      show-results:
+        title: "Hiển thị kết quả thăm dò"
+        label: "Kết quả"
+      hide-results:
+        title: "Trở lại bình chọn của bạn"
+      export-results:
+        title: "Xuất kết quả thăm dò ý kiến"
+        label: "Xuất"
+      open:
+        title: "Mở thăm dò"
+        label: "Mở"
+        confirm: "Bạn có muốn mở thăm dò này?"
+      close:
+        title: "Đóng thăm dò"
+        label: "Đóng"
+        confirm: "Bạn có muốn đóng thăm dò này ?"
+      automatic_close:
+        closes_in: "Đóng trong <strong>%{timeLeft}</strong>."
+        age: "Đã đóng <strong>%{age}</strong>"
+      breakdown:
+        title: "Kết quả thăm dò ý kiến"
+        votes: "%{count} phiếu bầu"
+        percentage: "Phần trăm"
+        count: "Đếm"
+      ranked_choice:
+        none: "Không có gì"
+      options:
+        label: "Tùy chọn"
+      error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái của thăm dò."
+      error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến bình chọn của bạn."
+      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."
+      error_while_exporting_results: "Xin lỗi, đã xảy ra lỗi khi xuất kết quả thăm dò ý kiến."
+      ui_builder:
+        title: Tạo thăm dò
+        insert: Chèn thăm dò
+        help:
+          options_min_count: Nhập ít nhất 1 tùy chọn.
+          options_max_count: Nhập nhiều nhất %{count} tùy chọn.
+          invalid_min_value: Giá trị tối thiểu phải ít nhất là 1.
+          invalid_max_value: Giá trị lớn nhất phải ít nhất là 1, nhưng nhỏ hơn hoặc bằng số lượng tùy chọn.
+          invalid_values: Giá trị nhỏ nhất phải nhỏ hơn giá trị lớn nhất.
+          min_step_value: Khoảng cách tối thiểu là 1
+        poll_type:
+          label: Loại
+          regular: Một lựa chọn
+          multiple: Nhiều lựa chọn
+          number: Xếp hạng
+        poll_result:
+          label: Hiển thị kết quả...
+          always: Luôn hiển thị
+          vote: Chỉ sau khi bỏ phiếu
+          closed: Khi cuộc thăm dò kết thúc
+          staff: Chỉ nhân viên
+        poll_groups:
+          label: Hạn chế bỏ phiếu cho các nhóm này
+        poll_chart_type:
+          label: Biểu đồ kết quả
+          bar: Bar
+          pie: Pie
+        poll_config:
+          max: Lựa chọn tối đa
+          min: Lựa chọn tối thiểu
+          step: Bước
+        poll_public:
+          label: Hiển thị người đã bình chọn
+        poll_title:
+          label: Tiêu đề (tùy chọn)
+        poll_options:
+          label: Tùy chọn (một trên mỗi dòng)
+          add: Thêm tùy chọn
+        automatic_close:
+          label: Tự động đóng thăm dò ý kiến
+        show_advanced: "Hiển thị các tùy chọn nâng cao"
+        hide_advanced: "Ẩn các tùy chọn nâng cao"

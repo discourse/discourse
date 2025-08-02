@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  discourse_automation:
+    triggerables:
+      user_badge_granted:
+        title: نشان کاربر اعطا شده
+      user_promoted:
+        transition_placeholder: "از %{from_level_name} به %{to_level_name}"
+      topic:
+        title: موضوع
+    scriptables:
+      post:
+        title: ایجاد نوشته
+        description: یک نوشته را در موضوع مشخص ایجاد کنید
+      topic:
+        title: ایجاد موضوع
+      pin_topic:
+        title: سنجاق زدن موضوع
+      close_topic:
+        title: بستن موضوع
+      append_last_edited_by:
+        text: "آخرین ویرایش توسط @%{username} %{date_time}"
+      append_last_checked_by:
+        text: "آخرین بررسی توسط @%{username} %{date_time}"
+        button_text: انجام شد
+      add_user_to_group_through_custom_field:
+        title: "افزودن کاربر به گروه از طریق فیلد سفارشی کاربر"

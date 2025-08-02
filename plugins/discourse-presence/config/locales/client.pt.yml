@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    presence:
+      replying:
+        one: "a responder"
+        other: "a responder"
+      editing:
+        one: "a editar"
+        other: "a editar"
+      replying_to_topic:
+        one: "a responder"
+        other: "a responder"

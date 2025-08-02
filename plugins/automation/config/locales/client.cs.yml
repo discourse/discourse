@@ -1,0 +1,163 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  js:
+    discourse_automation:
+      back: Zpět
+      edit: Upravit
+      destroy_automation:
+        confirm: "Jste si jisti, že chcete odstranit `%{name}`?"
+      fields:
+        user:
+          label: Uživatel
+        pm:
+          title:
+            label: Název
+          raw:
+            label: Tělo
+        pms:
+          title:
+            label: Název
+          raw:
+            label: Tělo
+        group:
+          label: Skupina
+        text:
+          label: Text
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Odznak
+        stalled_topic:
+          durations:
+            P2W: "Dva týdny"
+            P3M: "Tři měsíce"
+            P6M: "Šest měsíců"
+            P1Y: "Rok"
+        recurring:
+          frequencies:
+            minute: minuta
+            hour: hodina
+            day: den
+            week: týden
+            month: měsíc
+            year: rok
+          fields:
+            recurrence:
+              label: Opakování
+        stalled_wiki:
+          durations:
+            P2W: "Dva týdny"
+            P3M: "Tři měsíce"
+            P6M: "Šest měsíců"
+            P1Y: "Rok"
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Sledovaná skupina
+        topic:
+          fields:
+            restricted_topic:
+              label: ID tématu
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Štítky
+            restricted_categories:
+              label: Kategorie
+          created: Vytvořený
+          with_images: Obrázky
+          with_links: Odkazy
+          with_code: Kód
+          with_uploads: Nahrané soubory
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Nadřazená kategorie
+        pm_created:
+          fields:
+            restricted_user:
+              label: Uživatelé
+            restricted_group:
+              label: Skupina
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategorie
+            restricted_tags:
+              label: Štítky
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Štítky
+        post:
+          fields:
+            topic:
+              label: ID tématu
+        group_category_notification_default:
+          fields:
+            group:
+              label: Skupina
+        user_global_notice:
+          fields:
+            level:
+              label: Úroveň
+          levels:
+            info: Informace
+            success: Úspěch
+            error: Chyba
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Skupina
+              description: Cílová skupina. Uživatelé se zadaným odznakem budou přidáni do této skupiny
+            badge:
+              label: Odznak
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Pozastavit do (výchozí)
+            reason:
+              label: Důvod (výchozí)
+            actor:
+              label: Uživatel
+              description: "Uživatel odpovědný za pozastavení (výchozí: systém)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID tématu
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID tématu
+            user:
+              label: Uživatel
+        close_topic:
+          fields:
+            topic:
+              label: ID tématu
+            user:
+              label: Uživatel
+      models:
+        trigger:
+          name:
+            label: Spouštěč
+        automation:
+          name:
+            label: Jméno
+          trigger:
+            label: Spouštěč
+          version:
+            label: Verze
+          status:
+            label: Stav
+          enabled:
+            label: Zapnuto
+          disabled:
+            label: Vypnuto

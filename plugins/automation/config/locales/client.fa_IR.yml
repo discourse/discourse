@@ -1,0 +1,215 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  js:
+    discourse_automation:
+      title: اتوماسیون
+      back: بازگشت
+      edit: ویرایش
+      destroy_automation:
+        confirm: "آیا مطمئنید هستید که می‌خواهید «%{name}» را حذف کنید؟"
+      fields:
+        key_value:
+          label_without_count: "پیکربندی"
+        user:
+          label: کاربر
+        pm:
+          title:
+            label: عنوان
+          raw:
+            label: Body
+        pms:
+          title:
+            label: عنوان
+          raw:
+            label: Body
+          delay:
+            label: تاخیر (دقیقه)
+        group:
+          label: گروه
+        text:
+          label: متن
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: نشان
+        stalled_topic:
+          durations:
+            PT1H: "یک ساعت"
+            P1D: "یک روز"
+            P1W: "یک هفته"
+            P2W: "دو هفته"
+            P1M: "یک ماه"
+            P3M: "سه ماه"
+            P6M: "شش ماه"
+            P1Y: "یک سال"
+          fields:
+            categories:
+              label: محدود شده به دسته‌بندی‌ها
+            tags:
+              label: محدود شده به برچسب‌ها
+        recurring:
+          every: هر
+          frequencies:
+            minute: دقیقه
+            hour: ساعت
+            day: روز
+            weekday: روز هفته
+            week: هفته
+            month: ماه
+            year: سال
+          fields:
+            recurrence:
+              label: همروندی
+            start_date:
+              label: تاریخ شروع
+        stalled_wiki:
+          durations:
+            PT1H: "یک ساعت"
+            P1D: "یک روز"
+            P1W: "یک هفته"
+            P2W: "دو هفته"
+            P1M: "یک ماه"
+            P3M: "سه ماه"
+            P6M: "شش ماه"
+            P1Y: "یک سال"
+          fields:
+            restricted_category:
+              label: محدود به دسته‌بندی
+        topic:
+          fields:
+            restricted_topic:
+              label: شناسه موضوع
+        post_created_edited:
+          fields:
+            action_type:
+              label: نوع عمل
+            restricted_tags:
+              label: برچسب‌ها
+            restricted_categories:
+              label: دسته‌بندی‌ها
+          created: ساخته شده
+          edited: ویرایش شده
+          with_images: تصاویر
+          with_links: پیوندها
+          with_code: کد
+          with_uploads: بارگذاری‌ها
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: دسته‌بندی مادر
+        pm_created:
+          fields:
+            restricted_user:
+              label: کاربران
+            restricted_group:
+              label: گروه
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: دسته‌بندی
+            restricted_tags:
+              label: برچسب‌ها
+      scriptables:
+        auto_responder:
+          fields:
+            once:
+              label: یک بار
+              description: فقط یک بار بر اساس موضوع پاسخ می‌دهد
+        auto_tag_topic:
+          fields:
+            tags:
+              label: برچسب‌ها
+        post:
+          fields:
+            creator:
+              label: ایجاد کننده
+            topic:
+              label: شناسه موضوع
+            post:
+              label: محتوای نوشته
+        group_category_notification_default:
+          fields:
+            group:
+              label: گروه
+        user_global_notice:
+          fields:
+            level:
+              label: سطح
+          levels:
+            warning: هشدار
+            info: اطلاعات
+            success: موفقیت
+            error: خطا
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: گروه
+            badge:
+              label: نشان
+        suspend_user_by_email:
+          fields:
+            reason:
+              label: دلیل (پیش‌فرض)
+            actor:
+              label: کاربر
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: شناسه موضوع
+            pinned_until:
+              label: سنجاق شده تا
+        banner_topic:
+          fields:
+            topic_id:
+              label: شناسه موضوع
+            user:
+              label: کاربر
+        close_topic:
+          fields:
+            topic:
+              label: شناسه موضوع
+            user:
+              label: کاربر
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "نام فیلد سفارشی کاربر"
+      models:
+        script:
+          name:
+            label: اسکریپت
+        trigger:
+          name:
+            label: گیره
+        automation:
+          runs_today: "%{count} امروز"
+          runs_this_week: "%{count} این هفته"
+          runs_this_month: "%{count} این ماه"
+          runs:
+            label: اجراها
+          name:
+            label: نام
+          trigger:
+            label: گیره
+          script:
+            label: اسکریپت
+          version:
+            label: نسخه
+          status:
+            label: وضعیت
+          enabled:
+            label: فعال شد
+          disabled:
+            label: غیرفعال
+          last_updated_at:
+            label: آخرین به‌روزرسانی
+          last_run:
+            label: آخرین اجرا
+          last_updated_by:
+            label: به‌روز شده توسط

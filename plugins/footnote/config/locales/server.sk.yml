@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  site_settings:
+    enable_markdown_footnotes: povoliť poznámku pod čiarou na tejto stránke
+    display_footnotes_inline: umožniť rozšírenie poznámok pod čiarou na riadku

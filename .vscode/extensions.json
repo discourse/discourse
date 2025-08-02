@@ -1,0 +1,11 @@
+{
+  // List of extensions which should be recommended for users of this workspace.
+  "recommendations": [
+    "Shopify.ruby-lsp",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "lifeart.vscode-glimmer-syntax",
+    "typed-ember.glint-vscode",
+    "stylelint.vscode-stylelint"
+  ]
+}

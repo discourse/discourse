@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: тэма
+    scriptables:
+      pin_topic:
+        title: Замацаваць тэму
+      close_topic:
+        title: Закрыць тэму
+      append_last_checked_by:
+        button_text: Выканана

@@ -1,0 +1,25 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    styleguide:
+      sections:
+        colors:
+          title: "สี"
+        categories:
+          title: "หมวดหมู่"
+        navigation:
+          title: "การนำทาง"
+        categories_list:
+          title: "รายชื่อหมวดหมู่"
+        post:
+          title: "โพสต์"
+        suggested_topics:
+          title: "กระทู้แนะนำ"
+        tooltips:
+          description: "รายละเอียด"
+          header: "Header"

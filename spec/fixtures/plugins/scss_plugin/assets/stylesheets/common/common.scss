@@ -1,0 +1,15 @@
+@import "_variables";
+@import "../colors";
+@import "subfolder/other";
+
+body {
+  border-color: $color1;
+  fill: $color2;
+  line-height: $lineheight;
+}
+
+.pull-left { float: left; }
+
+footer {
+  border-color: $footer1;
+}

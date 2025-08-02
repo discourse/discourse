@@ -1,0 +1,121 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    poll:
+      voters:
+        one: "vælger"
+        other: "vælgere"
+      total_votes:
+        one: "afgiven stemme"
+        other: "afgivne stemmer"
+      average_rating: "Gennemsnitlig bedømmelse: <strong>%{average}</strong>."
+      public:
+        title: "Stemmerne er <strong>offentlige</strong>."
+      results:
+        groups:
+          title: "Du skal være medlem af %{groups} for at stemme i denne afstemning."
+        vote:
+          title: "Resultaterne vil blive vist ved <strong>afstemning</strong>."
+        closed:
+          title: "Resultaterne vil blive vist, når den er <strong>afsluttet</strong>."
+        staff:
+          title: "Resultaterne vises kun for <strong>personale</strong> medlemmer."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Vælg mindst <strong>%{count} valgmulighed</strong>."
+            other: "Vælg mindst <strong>%{count} valgmuligheder</strong>."
+      cast-votes:
+        title: "Afgiv dine stemmer"
+        label: "Stem nu!"
+      show-results:
+        title: "Vis afstemningsresultat"
+        label: "Resultater"
+      remove-vote:
+        title: "Fjern din stemme"
+        label: "Fortryd stemmeafgivning"
+      hide-results:
+        title: "Tilbage til dine stemmer"
+        label: "Stemmeafgivelse"
+      group-results:
+        title: "Gruppér stemmer efter brugerfelt"
+        label: "Vis fordeling"
+      export-results:
+        title: "Eksporter afstemningsresultaterne"
+        label: "Eksporter"
+      open:
+        title: "Åbn afstemningen"
+        label: "Åbn"
+        confirm: "Er du sikker på, at du vil åbne denne afstemning?"
+      close:
+        title: "Luk afstemningen"
+        label: "Luk"
+        confirm: "Er du sikker på, at du vil lukke denne afstemning?"
+      automatic_close:
+        closes_in: "Afsluttes om <strong>%{timeLeft}</strong>."
+        age: "Lukket <strong>%{age}</strong>"
+      breakdown:
+        title: "Afstemningsresultater"
+        votes: "%{count} stemmer"
+        breakdown: "Fordeling"
+        percentage: "Procentdel"
+        count: "Antal"
+      ranked_choice:
+        title:
+          outcome: "Resultat"
+        none: "Ingen"
+      options:
+        label: "Indstillinger"
+        ranked_choice:
+          abstain: "Afstå"
+      error_while_toggling_status: "Beklager, der opstod en fejl under statusskifte for denne afstemning."
+      error_while_casting_votes: "Beklager, der opstod en fejl under afgivelse af dine stemmer."
+      error_while_fetching_voters: "Beklager, der opstod en fejl med at vise deltagerne."
+      error_while_exporting_results: "Beklager, der opstod en fejl under eksport af afstemningsresultater."
+      ui_builder:
+        title: Opret afstemning
+        insert: Indsæt afstemning
+        help:
+          options_min_count: Indtast mindst 1 valgmulighed.
+          options_max_count: Indtast højst %{count} muligheder.
+          invalid_min_value: Minimumsværdien skal være mindst 1.
+          invalid_max_value: Maksimumsværdien skal være mindst 1, men mindre end eller lig med antallet af valgmuligheder.
+          invalid_values: Minimumsværdien skal være mindre end maksimumsværdien.
+          min_step_value: Den mindste trinværdi er 1
+        poll_type:
+          label: Type
+          regular: Enkelt valg
+          multiple: Flere valg
+          number: Nummerbedømmelse
+        poll_result:
+          label: Vis Resultater...
+          always: Altid synlig
+          vote: Kun efter afstemning
+          closed: Når afstemningen er afsluttet
+          staff: Kun personale
+        poll_groups:
+          label: Begræns afstemning til disse grupper
+        poll_chart_type:
+          label: Resultatdiagram
+          bar: Bar
+          pie: Tærte
+        poll_config:
+          max: Maks. Valg
+          min: Min. Valg
+          step: Trin
+        poll_public:
+          label: Vis hvem der stemte
+        poll_title:
+          label: Titel (valgfrit)
+        poll_options:
+          label: Valgmuligheder (en pr. linje)
+          add: Tilføj mulighed
+        automatic_close:
+          label: Luk afstemning automatisk
+        show_advanced: "Vis Avancerede Indstillinger"
+        hide_advanced: "Skjul Avancerede Indstillinger"

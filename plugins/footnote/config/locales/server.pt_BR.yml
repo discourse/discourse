@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    enable_markdown_footnotes: ativar redução de nota de rodapé neste site
+    display_footnotes_inline: ativar expansão em linha das notas de rodapé

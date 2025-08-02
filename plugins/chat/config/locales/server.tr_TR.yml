@@ -1,0 +1,264 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    chat_separate_sidebar_mode: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
+    chat_enabled: "Sohbeti etkinleştir."
+    enable_public_channels: "Kategorilere göre herkese açık kanalları etkinleştirin."
+    chat_allowed_groups: "Bu gruplardaki kullanıcılar sohbet edebilir. Yöneticilerin ve moderatörlerin her zaman sohbete erişebileceğini unutmayın."
+    chat_channel_retention_days: "Normal kanallardaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
+    chat_dm_retention_days: "Kişisel sohbet kanallarındaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
+    chat_auto_silence_duration: "Kullanıcıların sohbet mesajı oluşturma hızı sınırını aştıklarında susturulacağı dakika sayısı. Otomatik susturmayı devre dışı bırakmak için \"0\" olarak ayarlayın."
+    chat_allowed_messages_for_trust_level_0: "0. güven seviyesindeki kullanıcıların 30 saniye içinde göndermesine izin verilen mesaj sayısı. Limiti devre dışı bırakmak için \"0\" olarak ayarlayın."
+    chat_allowed_messages_for_other_trust_levels: "1-4. güven seviyesindeki kullanıcıların 30 saniye içinde göndermesine izin verilen mesaj sayısı. Limiti devre dışı bırakmak için \"0\" olarak ayarlayın."
+    chat_silence_user_sensitivity: "Sohbette işaretlenen bir kullanıcının otomatik olarak susturulma olasılığı."
+    chat_auto_silence_from_flags_duration: "Kullanıcıların, işaretli sohbet mesajları nedeniyle otomatik olarak susturulduğunda, susturulacakları dakika sayısı."
+    chat_duplicate_message_sensitivity: "Aynı gönderen tarafından eş kopya bir mesajın kısa bir süre içinde engellenme olasılığı. 0 ila 1,0 arasında ondalık sayı, 1,0 en yüksek ayardır (mesajları daha kısa sürede daha sık engeller). Eş kopya mesajlara izin vermek için \"0\" olarak ayarlayın."
+    chat_minimum_message_length: "Bir sohbet mesajı için minimum karakter sayısı."
+    chat_allow_uploads: "Genel sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
+    chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
+    direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
+    chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
+    max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."
+    chat_max_direct_message_users: "Kullanıcılar, yeni bir doğrudan mesaj oluştururken bu sayıdan daha fazla kullanıcı ekleyemez. Yalnızca kendisine mesaj gönderilmesine izin vermek için 0 olarak ayarlayın. Personel bu ayardan muaftır."
+    chat_allow_archiving_channels: "Personelin bir kanalı kapatırken mesajları bir konuya arşivlemesine izin verin."
+    chat_editing_grace_period: "Sohbet gönderdikten sonra (n) saniye boyunca düzenleme, sohbet mesajının yanında (düzenlenmiş) etiketi göstermeyecek."
+    chat_editing_grace_period_max_diff_low_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 0 ve 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 2 ve üstü)."
+    chat_preferred_index: "/chat yüklenirken tercih edilen sekme."
+    errors:
+      chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
+      direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
+      chat_upload_not_allowed_secure_uploads: "Güvenli yüklemeler site ayarı etkinleştirildiğinde sohbet yüklemelerine izin verilmez."
+  system_messages:
+    private_channel_title: "Kanal %{id}"
+    chat_channel_archive_complete:
+      title: "Sohbet Kanalı Arşivlemesi Tamamlandı"
+      subject_template: "Sohbet kanalı arşivlemesi başarıyla tamamlandı"
+      text_body_template: |
+        %{channel_hashtag_or_name} sohbet kanalının arşivlenmesi başarıyla tamamlandı. Mesajlar [%{topic_title}](%{topic_url}) konusuna kopyalandı.
+    chat_channel_archive_failed:
+      title: "Sohbet Kanalı Arşivleme Başarısız"
+      subject_template: "Sohbet kanalı arşivleme başarısız"
+      text_body_template: |
+        %{channel_hashtag_or_name} sohbet kanalının arşivlenmesi başarısız oldu. %{messages_archived} mesaj arşivlendi. Kısmen arşivlenen mesajlar [%{topic_title}](%{topic_url}) konusuna kopyalandı. Yeniden denemek için %{channel_url} adresinden kanalı ziyaret edin.
+    chat_channel_archive_failed_no_topic:
+      title: "Sohbet Kanalı Arşivlenemedi"
+      subject_template: "Sohbet kanalı arşivlenemedi"
+      text_body_template: |
+        %{channel_hashtag_or_name} adlı sohbet kanalının arşivlenmesi başarısız oldu. Hiçbir mesaj arşivlenmedi. Konu aşağıdaki nedenlerden dolayı başarıyla oluşturulamadı:
+
+          %{topic_validation_errors}
+
+        Yeniden denemek için %{channel_url} adresindeki kanalı ziyaret edin.
+  chat:
+    deleted_chat_username: silindi
+    errors:
+      users_cant_be_added_to_channel: "Bu kanala kullanıcı eklenemez."
+      channel_exists_for_category: "Bu kategori ve ada sahip bir kanal zaten var"
+      channel_new_message_disallowed:
+        archived: "Kanal arşivlendi, yeni mesaj gönderilemez"
+        closed: "Kanal kapalı, yeni mesaj gönderilemiyor"
+        read_only: "Kanal salt okunur, yeni mesaj gönderilemiyor"
+      channel_modify_message_disallowed:
+        archived: "Kanal arşivlendi, hiçbir mesaj düzenlenemez veya silinemez"
+        closed: "Kanal kapalı, hiçbir mesaj düzenlenemez veya silinemez"
+        read_only: "Kanal salt okunur, hiçbir mesaj düzenlenemez veya silinemez"
+      user_cannot_send_message: "Şu anda mesaj gönderemezsiniz."
+      rate_limit_exceeded: "30 saniye içinde gönderilebilecek sohbet mesajı limiti aşıldı"
+      auto_silence_from_flags: "Kullanıcıyı susturmaya yetecek kadar yüksek puanla bayrak eklenen sohbet mesajı."
+      channel_cannot_be_archived: "Kanal şu anda arşivlenemez, arşivlemek için kapalı veya açık olmalı."
+      duplicate_message: "Çok yakın zamanda aynı mesajı gönderdiniz."
+      delete_channel_failed: "Kanal silinemedi, lütfen tekrar deneyin."
+      minimum_length_not_met:
+        one: "Mesaj çok kısa, en az %{count} karakter içermeli."
+        other: "Mesaj çok kısa, en az %{count} karakter içermeli."
+      message_too_long:
+        one: "Mesaj çok uzun, mesajlar en fazla %{count} karakter olmalı."
+        other: "Mesaj çok uzun, mesajlar en fazla %{count} karakter olmalı."
+      draft_too_long: "Taslak fazla uzun."
+      max_reactions_limit_reached: "Bu mesajda yeni tepkilere izin verilmiyor."
+      message_move_invalid_channel: "Kaynak ve hedef kanal herkese açık kanallar olmalıdır."
+      message_move_no_messages_found: "Sağlanan mesaj kimlikleriyle mesaj bulunamadı."
+      cant_update_direct_message_channel: "Ad ve açıklama gibi doğrudan mesaj kanalı özellikleri güncellenemiyor."
+      not_accepting_dms: "Üzgünüz, %{username} şu anda mesaj kabul etmiyor."
+      actor_ignoring_target_user: "%{username} adlı kullanıcıyı yok sayıyorsunuz, bu nedenle ona mesaj gönderemezsiniz."
+      actor_muting_target_user: "%{username} adlı kullanıcıyı sessize aldınız, bu nedenle ona mesaj gönderemezsiniz."
+      actor_disallowed_dms: "Kullanıcıların size kişisel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, bu nedenle yeni doğrudan mesaj oluşturamazsınız."
+      actor_preventing_target_user_from_dm: "%{username} adlı kişinin size kişisel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, bu nedenle onlara yeni doğrudan mesaj oluşturamazsınız."
+      user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
+      over_chat_max_direct_message_users_allow_self: "Yalnızca kendinize doğrudan mesaj oluşturabilirsiniz."
+      over_chat_max_direct_message_users:
+        one: "%{count} üzeri başka kullanıcıyla doğrudan mesaj oluşturamazsınız."
+        other: "%{count} üzeri başka kullanıcıyla doğrudan mesaj oluşturamazsınız."
+      original_message_not_found: "Yanıtladığınız mesajın atası bulunamıyor veya silinmiş."
+      thread_invalid_for_channel: "Konu, sağlanan kanalın bir parçası değildir."
+      thread_does_not_match_parent: "Konu ana mesajla eşleşmiyor."
+      invalid_direct_message: "Bu doğrudan mesajı oluşturmanıza izin verilmiyor."
+    reviewables:
+      message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
+      actions:
+        agree:
+          title: "Kabul et..."
+        agree_and_keep_message:
+          title: "Mesajı Sakla"
+          description: "Bayrağı kabul edin ve mesajı değiştirmeyin."
+        agree_and_keep_deleted:
+          title: "Mesajı Silinmiş Tut"
+          description: "Bayrağı kabul edin ve mesajı silinmiş olarak bırakın."
+        agree_and_suspend:
+          title: "Kullanıcıyı Askıya Al"
+          description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
+        agree_and_silence:
+          title: "Kullanıcıyı Sustur"
+          description: "Bayrağı kabul edin ve kullanıcıyı susturun."
+        agree_and_restore:
+          title: "Mesajı Geri Yükle"
+          description: "Kullanıcıların görebilmesi için mesajı geri yükleyin."
+        agree_and_delete:
+          title: "Mesajı sil"
+          description: "Kullanıcıların görememesi için mesajı silin."
+        delete_and_agree:
+          title: "Bayrağı Yok Say ve Mesajı Sil"
+          description: "Kuyruktan kaldırarak bayrağı yok sayın ve mesajı sil."
+        disagree_and_restore:
+          title: "Katılma ve Mesajı Geri Yükle"
+          description: "Tüm kullanıcıların görebilmesi için mesajı geri yükle."
+        disagree:
+          title: "Katılma"
+        ignore:
+          title: "Hiçbir şey yapma"
+          description: "Herhangi bir işlem yapmadan bayrağı kuyruktan kaldırarak yok say."
+      direct_messages:
+        transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
+        transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"
+    channel:
+      users_invited_to_channel:
+        one: "%{invited_users} %{inviting_user} tarafından davet edildi."
+        other: "%{invited_users} %{inviting_user} tarafından davet edildi."
+      archive:
+        first_post_raw: "Bu konu, [%{channel_name}](%{channel_url}) sohbet kanalının bir arşividir."
+      messages_moved:
+        one: "@%{acting_username} bir mesajı [%{channel_name}](%{first_moved_message_url}) kanalına taşıdı."
+        other: "@%{acting_username} , %{count} mesajı [%{channel_name}](%{first_moved_message_url}) kanalına taşıdı."
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ve %{count} kişi daha"
+          other: "%{comma_separated_usernames} ve %{count} kişi daha"
+    mention_warning:
+      dismiss: "kapat"
+      cannot_see: "%{first_identifier} bu kanala erişemiyor ve bilgilendirilmedi."
+      cannot_see_multiple:
+        one: "%{first_identifier} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
+        other: "%{first_identifier} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
+      invitations_sent:
+        one: "Davet gönderildi"
+        other: "Davet gönderildi"
+      invite: "Kanala davet et"
+      without_membership: "%{first_identifier} bu kanala katılmadı."
+      without_membership_multiple:
+        one: "%{first_identifier} ve %{count} kullanıcı daha bu kanala katılmadı."
+        other: "%{first_identifier} ve %{count} kullanıcı daha bu kanala katılmadı."
+      group_mentions_disabled: "%{first_identifier} bahsetmeye izin vermiyor."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} ve %{count} grup daha bahsetmeye izin vermiyor."
+        other: "%{first_identifier} ve %{count} grup daha bahsetmeye izin vermiyor."
+      global_mentions_disallowed: "Bu kanalda @here ve @all bahsetmeleri devre dışı."
+      too_many_members: "%{first_identifier} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
+      too_many_members_multiple:
+        one: "%{first_identifier} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
+        other: "%{first_identifier} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
+        is_already_in_use: "zaten kullanımda"
+    bookmarkable:
+      notification_title: "%{channel_name} adlı kanaldaki mesaj"
+    personal_chat: "kişisel sohbet"
+    onebox:
+      inline_to_message: "%{username} adlı kullanıcının #%{message_id} mesajı - #%{chat_channel}"
+      inline_to_channel: "Sohbet #%{chat_channel}"
+      inline_to_topic_channel: "%{topic_title} Konusu için Sohbet"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "#%{chat_channel} kanalında ileti dizisi"
+      thread_title_connector: "içinde"
+      x_members:
+        one: "%{count} üye"
+        other: "%{count} üye"
+      and_x_others:
+        one: "ve %{count} üye daha"
+        other: "ve %{count} üye daha"
+    transcript:
+      default_thread_title: "İleti Dizisi"
+      split_thread_range: "%{total} mesajdan %{start} - %{end}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} "%{channel}" adlı kanalda sizden bahsetti'
+        other_type: '%{username} "%{channel}" adlı kanalda şundan bahsetti: %{identifier}'
+      direct_message_chat_mention:
+        direct: "%{username} kişisel sohbette sizden bahsetti"
+        other_type: "%{username} kişisel sohbette şundan bahsetti: %{identifier}"
+      new_chat_message: '%{username} "%{channel}" adlı kanalda bir mesaj gönderdi'
+      new_direct_chat_message: "%{username} kişisel sohbette bir mesaj gönderdi"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Sohbet mesajı gönder
+  reviewable_score_types:
+    needs_review:
+      title: "İnceleme Gerekiyor"
+    notify_user:
+      chat_pm_title: '"%{channel_name}" adlı kanaldaki sohbet mesajınız'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: '"%{channel_name}" adlı kanaldaki bir sohbet mesajı personelin dikkatini gerektiriyor'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Bir personel, bu sohbet mesajının incelenmesi gerektiğini düşünüyor."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Silinmiş kullanıcı"
+      description:
+        one: "Yeni bir sohbet mesajınız var"
+        other: "Yeni sohbet mesajlarınız var"
+      from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Yeni mesaj"
+          other: "[%{site_name}] Yeni mesajlar"
+        chat_dm_1:
+          one: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesaj"
+          other: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesajlar"
+        chat_dm_2: "[%{site_name}] %{name_1} ve %{name_2} kişiden daha yeni mesajlar"
+        chat_dm_3_or_more: "[%{site_name}] %{name} ve %{count} kişiden daha yeni mesajlar"
+        chat_channel_1:
+          one: "[%{site_name}] %{channel} adlı kanalda yeni mesaj"
+          other: "[%{site_name}] %{channel} adlı kanalda yeni mesajlar"
+        chat_channel_2: "[%{site_name}] %{channel_1} ve %{channel_2} kanallarında yeni mesajlar"
+        chat_channel_3_or_more: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni mesajlar"
+        chat_channel_and_dm: "[%{site_name}] %{channel} adlı kanalda ve %{name} adlı kişiden yeni mesajlar"
+      unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
+      unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."
+      view_messages:
+        one: "Mesajı görüntüle"
+        other: "%{count} mesajı görüntüle"
+      view_more:
+        one: "%{count} mesaj daha görüntüle"
+        other: "%{count} mesaj daha görüntüle"
+      your_chat_settings: "sohbet e-postası sıklığı tercihi"
+  unsubscribe:
+    chat_summary:
+      select_title: "Özet sohbet e-posta sıklığını şu şekilde ayarla:"
+      never: Asla
+      when_away: Sadece uzaktayken
+  category:
+    cannot_delete:
+      has_chat_channels: "Sohbet kanalları olduğu için bu kategori silinemiyor."

@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: اليوم %{time}
+        tomorrow: غدًا %{time}
+        yesterday: أمس %{time}
+        countdown:
+          passed: لقد انقضى التاريخ
+      title: إدخال التاريخ/الوقت
+      create:
+        form:
+          insert: إدراج
+          advanced_mode: الوضع المتقدّم
+          simple_mode: الوضع البسيط
+          format_description: "التنسيق المستخدم لعرض التاريخ للمستخدم. استخدم Z لعرض الإزاحة وzz لاسم المنطقة الزمنية."
+          timezones_title: المناطق الزمنية لعرضها
+          timezones_description: سيتم استخدام المناطق الزمنية لعرض التواريخ في المعاينة والنسخة الاحتياطية.
+          recurring_title: التكرار
+          recurring_description: "حدِّد مدى تكرار الحدث. يمكنك أيضًا تعديل خيار التكرار الذي أنشأه النموذج يدويًا واستخدام أحد المفاتيح التالية: years، ‏quarters، ‏months، ‏days، ‏hours، ‏minutes، ‏seconds، ‏milliseconds."
+          recurring_none: بلا تكرار
+          invalid_date: التاريخ غير صالح، تأكَّد من صحة التاريخ والوقت
+          date_title: التاريخ
+          time_title: الوقت
+          format_title: تنسيق التاريخ
+          timezone: المنطقة الزمنية
+          until: حتّى...
+          current_timezone: "المنطقة الزمنية الحالية:"
+          recurring:
+            every_day: "كل يوم"
+            every_week: "كل أسبوع"
+            every_two_weeks: "كل أسبوعين"
+            every_month: "كل شهر"
+            every_two_months: "كل شهرين"
+            every_three_months: "كل ثلاثة أشهر"
+            every_six_months: "كل ستة أشهر"
+            every_year: "كل سنة"
+      default_title: "حدث %{site_name}"

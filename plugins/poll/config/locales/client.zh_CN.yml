@@ -1,0 +1,151 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse 投票"
+  js:
+    poll:
+      voters:
+        other: "投票人"
+      total_votes:
+        other: "总票数"
+      votes:
+        other: "%{count} 票"
+      average_rating: "平均评分：<strong>%{average}</strong>。"
+      public:
+        title: "投票为<strong>公开</strong>。"
+      results:
+        groups:
+          title: "您需要成为 %{groups} 的成员才能在此投票中投票。"
+        vote:
+          title: "结果将在<strong>投票</strong>上显示。"
+        closed:
+          title: "结果将在<strong>关闭</strong>后显示。"
+        staff:
+          title: "结果仅向<strong>管理人员</strong>成员显示。"
+        tabs:
+          votes: "投票"
+          outcome: "成果"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "至少选择 <strong>%{count} 个选项</strong>。"
+          up_to_max_options:
+            other: "最多选择 <strong>%{count} 个选项</strong>。"
+          x_options:
+            other: "选择 <strong>%{count} 个选项</strong>。"
+          between_min_and_max_options: "选择 <strong>%{min} 到 %{max} 个选项</strong>。"
+      cast-votes:
+        title: "投票"
+        label: "立即投票！"
+      show-results:
+        title: "显示投票结果"
+        label: "结果"
+      show-tally:
+        title: "按票数显示投票结果"
+        label: "显示计数"
+      show-percentage:
+        title: "以百分比显示投票结果"
+        label: "以百分比显示"
+      remove-vote:
+        title: "移除您的投票"
+        label: "撤消投票"
+      hide-results:
+        title: "回到您的投票"
+        label: "投票"
+      group-results:
+        title: "按用户字段将投票分组"
+        label: "显示细分"
+      export-results:
+        title: "导出投票结果"
+        label: "导出"
+      open:
+        title: "打开投票"
+        label: "打开"
+        confirm: "确定要打开此投票吗？"
+      close:
+        title: "关闭投票"
+        label: "关闭"
+        confirm: "确定要关闭此投票吗？"
+      automatic_close:
+        closes_in: "在 <strong>%{timeLeft}</strong>后关闭。"
+        age: "已关闭 <strong>%{age}</strong>"
+      breakdown:
+        title: "投票结果"
+        votes: "%{count} 票"
+        breakdown: "细分"
+        percentage: "百分比"
+        count: "计数"
+      ranked_choice:
+        title:
+          rounds: "回合"
+          outcome: "结果"
+        none: "无"
+        majority: "多数"
+        eliminated: "被舍弃"
+        round: "回合"
+        winner:
+          other: "经过 %{count} 轮比赛后，获胜者为 %{winner}。"
+        tied:
+          other: "以下候选人在 %{count} 轮之后打成平手："
+      options:
+        label: "选项"
+        ranked_choice:
+          abstain: "弃权"
+          highest_priority: "（最高优先级）"
+          lowest_priority: "（最低优先级）"
+          login: "登录以投票！"
+      error_while_toggling_status: "抱歉，切换此投票的状态时出错。"
+      error_while_casting_votes: "抱歉，投票时出错。"
+      error_while_fetching_voters: "抱歉，显示投票人时出错。"
+      error_while_exporting_results: "抱歉，导出投票结果时出错。"
+      ui_builder:
+        title: 插入投票
+        insert: 插入投票
+        help:
+          options_min_count: 至少输入 1 个选项。
+          options_max_count: 最多输入 %{count} 个选项。
+          invalid_min_value: 最小值必须至少为 1。
+          invalid_max_value: 最大值必须至少为 1，但小于或等于选项数。
+          invalid_values: 最小值必须小于最大值。
+          min_step_value: 最小步长值为 1
+        poll_type:
+          label: 类型
+          regular: 单选
+          multiple: 多选
+          ranked_choice: 排序选择
+          number: 分数
+        poll_result:
+          label: 显示结果…
+          always: 始终可见
+          vote: 只在投票后
+          closed: 当投票被关闭后
+          staff: 仅管理人员
+        poll_groups:
+          label: 将投票限制为这些群组
+        poll_chart_type:
+          label: 结果图表
+          bar: 条形图
+          pie: 饼图
+        poll_config:
+          max: 最大选择
+          min: 最小选择
+          step: 步骤
+        poll_public:
+          label: 显示投票人
+        poll_title:
+          label: 标题（可选）
+        poll_options:
+          label: 选项（每行一个）
+          add: 添加选项
+        automatic_close:
+          label: 自动关闭投票
+        show_advanced: "显示高级选项"
+        hide_advanced: "隐藏高级选项"

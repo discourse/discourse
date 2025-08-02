@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Discourse Tests</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="Discourse Tests" />
+    <meta property="og:url" content="{{rootURL}}" />
+    <meta name="twitter:title" content="Discourse Tests" />
+    <meta name="twitter:url" content="{{rootURL}}" />
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="canonical" href="{{rootURL}}" />
+
+    <meta name="color-scheme" content="light dark">
+
+    {{content-for "head"}} {{content-for "test-head"}}
+
+    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
+    <link rel="stylesheet" href="{{rootURL}}assets/discourse.css">
+    <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
+    <link rel="stylesheet" href="{{rootURL}}bootstrap/core-css-for-tests.css" data-embroider-ignore />
+
+    {{content-for "head-footer"}} {{content-for "test-head-footer"}}
+
+    <style>
+      #ember-testing * {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        -o-transition: none !important;
+        transition: none !important;
+      }
+      #qunit-fixture {
+        position: absolute;
+        top: -10000px;
+        left: -10000px;
+        width: 1000px;
+        height: 1000px;
+      }
+    </style>
+  </head>
+  <body>
+    <discourse-assets-icons></discourse-assets-icons>
+
+    {{content-for "body"}} {{content-for "test-body"}}
+
+    <script src="/testem.js" integrity="" data-embroider-ignore></script>
+
+    <script src="{{rootURL}}assets/vendor.js"></script>
+
+    <script src="{{rootURL}}assets/test-support.js"></script>
+
+    <script src="{{rootURL}}assets/discourse.js"></script>
+
+    <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/main.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/mf.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/admin.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}extra-locales/0000000000000000000000000000000000000000/en/wizard.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}assets/test-site-settings.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}assets/admin.js" data-embroider-ignore></script>
+
+    <template id="dynamic-test-js">
+      {{content-for "test-plugin-css"}}
+      {{content-for "test-plugin-js"}}
+      {{content-for "test-plugin-tests-js"}}
+      <script defer src="{{rootURL}}assets/scripts/discourse-test-listen-boot.js" data-embroider-ignore></script>
+      <script defer src="{{rootURL}}assets/scripts/discourse-boot.js" data-embroider-ignore></script>
+      {{content-for "body-footer"}} {{content-for "test-body-footer"}}
+    </template>
+
+    <discourse-dynamic-test-js>
+    </discourse-dynamic-test-js>
+
+    <!-- This script takes the <template>, filters plugin assets as required, then appends to discourse-dynamic-test-js -->
+    <script src="{{rootURL}}assets/scripts/discourse-test-load-dynamic-js.js" data-embroider-ignore></script>
+
+    <link rel="stylesheet" href="{{rootURL}}stylesheets/qunit-custom.css" data-embroider-ignore />
+  </body>
+</html>

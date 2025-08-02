@@ -1,0 +1,61 @@
+.chat-channel-icon {
+  flex-shrink: 0;
+
+  &.--users-count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgb(var(--primary-rgb), 0.1);
+    box-sizing: border-box;
+    color: var(--primary-high);
+    padding: 0;
+
+    .chat-channel-row & {
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+      font-size: var(--font-up-1);
+    }
+  }
+
+  .chat-user-avatar {
+    .avatar {
+      .chat-channel-row & {
+        width: var(--channel-list-avatar-size);
+        height: var(--channel-list-avatar-size);
+      }
+    }
+  }
+
+  &.--custom-icon img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  &.--category-badge {
+    color: var(--primary-medium);
+    display: flex;
+    font-size: var(--font-up-1);
+    position: relative;
+
+    .chat-message-creator & {
+      justify-content: center;
+      width: 24px;
+    }
+  }
+
+  &__restricted-category-icon {
+    background-color: var(--secondary);
+    position: absolute;
+    border-radius: 50%;
+    padding: 2px 2px 3px;
+    color: var(--primary-high);
+    height: 0.5rem;
+    width: 0.5rem;
+    right: -0.5rem;
+    top: -0.1rem;
+  }
+}

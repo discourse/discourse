@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    discourse_local_dates_enabled: "Activează funcționalitatea discourse-local-dates. Aceasta va adăuga suport pentru fusurile orare locale în articole folosind elementul [date]."
+    discourse_local_dates_default_formats: "Formatele de dată și oră utilizate frecvent, vezi: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>formatul de șir momentjs</a>"
+    discourse_local_dates_default_timezones: "Lista implicită a fusurilor orare, trebuie să fie un <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>fuz orar</a>valid"

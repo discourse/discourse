@@ -1,0 +1,74 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    poll:
+      voters:
+        one: "քվեարկող"
+        other: "քվեարկող"
+      total_votes:
+        one: "ընդհանուր քվեարկող"
+        other: "ընդհանուր քվեները"
+      average_rating: "Միջին գնահատականը՝ <strong>%{average}</strong>:"
+      public:
+        title: "Քվեները <strong>հանրային</strong> են:"
+      results:
+        vote:
+          title: "Արդյունքները կցուցադրվեն ըստ <strong>քվեի</strong>:"
+        closed:
+          title: "Արդյունքները կցուցադրվեն <strong>փակվելուց</strong> անմիջապես հետո:"
+      cast-votes:
+        title: "Քվեարկեք"
+        label: "Քվեարկեք հիմա !"
+      show-results:
+        title: "Ցուցադրել հարցման արդյունքները"
+        label: "Արդյունքները"
+      hide-results:
+        title: "Վերադառնալ դեպի Ձեր քվեները"
+      export-results:
+        label: "Արտահանել"
+      open:
+        title: "Բացել հարցումը"
+        label: "Բացել"
+        confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք բացել այս հարցումը:"
+      close:
+        title: "Փակել հարցումը"
+        label: "Փակել"
+        confirm: " Դուք համոզվա՞ծ եք, որ ցանկանում եք փակել այս հարցումը:"
+      automatic_close:
+        closes_in: "Փակվում է <strong>%{timeLeft}</strong> անց:"
+        age: "Փակված է՝ <strong>%{age}</strong>"
+      breakdown:
+        count: "Քանակ"
+      ranked_choice:
+        none: "Ոչ մի"
+      options:
+        label: "Տարբերակներ"
+      error_while_toggling_status: "Ներողություն, այս հարցման կարգավիճակը փոխելիս տեղի է ունեցել սխալ:"
+      error_while_casting_votes: "Ներողություն, Ձեր քվեարկելիս տեղի է ունեցել սխալ:"
+      error_while_fetching_voters: "Ներողություն, քվեարկողներին ցուցադրելիս տեղի է ունեցել սխալ:"
+      ui_builder:
+        title: Ստեղծել Հարցում
+        insert: Ներմուծել Հարցում
+        help:
+          invalid_values: 'Նվազագույն արժեքը պետք է լինի առավելագույն արժեքից փոքր:'
+          min_step_value: Քայլի նվազագույն արժեքն է 1
+        poll_type:
+          label: Տիպը
+          regular: Մեկ Ընտրությամբ
+          multiple: Բազմակի Ընտրությամբ
+          number: Թվային Գնահատում
+        poll_result:
+          always: Միշտ տեսանելի
+        poll_config:
+          step: Քայլը
+        poll_public:
+          label: Ցուցադրել քվեարկողներին
+        automatic_close:
+          label: Ավտոմատ կերպով փակել հարցումը
+        show_advanced: "Ցույց տալ Ընդլայնված Տարբերակները"
+        hide_advanced: "Թաքցնել Ընդլայնված Տարբերակները"

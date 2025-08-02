@@ -1,0 +1,90 @@
+.fk-d-menu[data-identifier="usercard"] {
+  z-index: z("usercard");
+}
+
+.full-page-chat {
+  &.full-page-chat-sidebar-enabled {
+    grid-template-columns: 1fr;
+    overflow: inherit;
+  }
+
+  .chat-channel {
+    .chat-messages-container {
+      &.has-reply {
+        grid-template-columns: var(--message-left-width) 1fr;
+      }
+
+      .chat-user {
+        width: var(--message-left-width);
+      }
+    }
+  }
+}
+
+.chat-message-text {
+  img:not(.emoji, .avatar, .onebox-avatar-inline, .github-status-indicator) {
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    &:hover {
+      cursor: pointer;
+      border-radius: var(--d-border-radius);
+      box-shadow:
+        0 2px 5px 0 rgb(var(--always-black-rgb), 0.1),
+        0 2px 10px 0 rgb(var(--always-black-rgb), 0.1);
+    }
+  }
+}
+
+.chat-message-container:not(.-user-info-hidden) {
+  .chat-message {
+    padding: 0.65rem 1rem 0.15rem;
+  }
+}
+
+.chat-message-container.-user-info-hidden {
+  .chat-message {
+    padding: 0.15rem 1rem;
+  }
+
+  .chat-time {
+    color: var(--secondary-medium);
+    flex-shrink: 0;
+    font-size: var(--font-down-2);
+    margin-top: 0.4em;
+    display: none;
+    width: var(--message-left-width);
+  }
+
+  &:hover {
+    .chat-message-left-gutter__bookmark {
+      display: none;
+    }
+
+    .chat-time {
+      display: block;
+    }
+  }
+}
+
+// Full Page Styling in Core
+.has-full-page-chat {
+  #main-outlet {
+    padding: 0;
+  }
+
+  .full-page-chat {
+    border-left: 1px solid var(--primary-low);
+    border-right: 1px solid var(--primary-low);
+  }
+
+  &.has-sidebar-page .full-page-chat {
+    border-left: 0;
+  }
+}
+
+.chat-form {
+  &__description.-autojoin,
+  &__description.-channel-wide-mentions {
+    max-width: 50%;
+  }
+}

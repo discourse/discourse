@@ -1,0 +1,12 @@
+<%= tag.meta id: 'data-ga-universal-analytics', data: {
+  tracking_code: SiteSetting.ga_universal_tracking_code,
+  json: ga_universal_json,
+  auto_link_domains: SiteSetting.ga_universal_auto_link_domains
+} %>
+
+<% if SiteSetting.ga_version == "v3_analytics" %>
+  <%= preload_script "google-universal-analytics-v3" %>
+<% elsif SiteSetting.ga_version == "v4_gtag" %>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= SiteSetting.ga_universal_tracking_code %>" nonce="<%= csp_nonce_placeholder %>"></script>
+  <%= preload_script "google-universal-analytics-v4" %>
+<% end %>

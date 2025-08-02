@@ -1,0 +1,47 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  chat:
+    deleted_chat_username: διεγράφη
+    errors:
+      not_accepting_dms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Αποβολή Χρήστη"
+        agree_and_silence:
+          title: "Σίγαση Χρήστη"
+        disagree:
+          title: "Διαφωνώ"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} και %{count} ακόμη"
+          other: "%{comma_separated_usernames} και %{count} ακόμη"
+    mention_warning:
+      dismiss: "απόρριψη"
+    onebox:
+      thread_title_connector: "σε"
+      x_members:
+        one: "%{count} μέλος"
+        other: "%{count} μέλη"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} σε ανέφερε στο "%{channel}"'
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Διαγραμμένος χρήστης"
+  unsubscribe:
+    chat_summary:
+      never: Ποτέ

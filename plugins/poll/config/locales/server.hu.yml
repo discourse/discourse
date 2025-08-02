@@ -1,0 +1,67 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  site_settings:
+    poll_enabled: "Engedélyezi a szavazásokat?"
+    poll_maximum_options: "Szavazási lehetőségek legnagyobb száma a szavazásoknál."
+    poll_edit_window_mins: "A bejegyzés létrehozása után hány percig lehet szerkeszteni a bejegyzést."
+    poll_minimum_trust_level_to_create: "Adja meg a szavazások létrehozásához szükséges legkisebb bizalmi szintet."
+    poll_create_allowed_groups: "A szavazások létrehozására jogosult csoportok."
+    poll_groupable_user_fields: "A szavazási eredmények csoportosítására és szűrésére használható felhasználói mezőnevek halmaza."
+    poll_export_data_explorer_query_id: "A szavazási eredmények exportálásához használandó adatkezelő lekérdezés azonosítója. (0 a letiltáshoz)."
+    poll_export_ranked_choice_data_explorer_query_id: "Azonnali szavazás eredményhirdetés exportálásához használandó adatkezelő lekérdezés azonosítója."
+    poll_default_public: "Új szavazás létrehozásakor alapértelmezés szerint engedélyezze a „mutassa meg, ki szavazott” opciót."
+  keywords:
+    poll_create_allowed_groups: "szavazáshoz_minimális_megbízhatósági_szint_létrehozása"
+  poll:
+    poll: "szavazás"
+    invalid_argument: "Érvénytelen „%{value}” érték az „%{argument}” argumentumhoz."
+    multiple_polls_without_name: "Több szavazás létrehozásakor adjon meg egyedi neveket a <code>név=példa</code> hozzáadásával a <code>[poll]</code> címkéihez."
+    multiple_polls_with_same_name: "Több szavazás is ugyanazt a nevet használja: <strong>%{name}</strong>. Használja a „<code>name</code>” attribútumot, hogy egyedileg azonosítsa a szavazásokat."
+    default_poll_must_have_at_least_1_option: "A szavazásnak legalább 1 lehetőséget kell tartalmaznia."
+    named_poll_must_have_at_least_1_option: "A(z) <strong>%{name}</strong> szavazásnak legalább 1 lehetőséget kell tartalmaznia."
+    default_poll_must_have_less_options:
+      one: "A szavazások legfeljebb %{count} lehetőséget tartalmazhatnak."
+      other: "A szavazások legfeljebb %{count} lehetőséget tartalmazhatnak."
+    named_poll_must_have_less_options:
+      one: "A(z) <strong>%{name}</strong> szavazásnak kevesebb mint %{count} lehetőséget kell tartalmaznia."
+      other: "A(z) <strong>%{name}</strong> szavazásnak kevesebb mint %{count} lehetőséget kell tartalmaznia."
+    default_poll_must_have_different_options: "A szavazásoknak különböző lehetőségeket kell tartalmazniuk."
+    named_poll_must_have_different_options: "A(z) <strong>%{name}</strong> szavazásnak különböző lehetőségeket kell tartalmaznia."
+    default_poll_must_not_have_any_empty_options: "A szavazás nem tartalmazhat üres lehetőségeket."
+    named_poll_must_not_have_any_empty_options: "A(z) <strong>%{name}</strong> szavazásnak nem lehetnek üres lehetőségei."
+    default_poll_with_multiple_choices_has_invalid_parameters: "A többválasztós szavazás érvénytelen paraméterekkel rendelkezik."
+    named_poll_with_multiple_choices_has_invalid_parameters: "A(z) <strong>%{name}</strong> többválasztós szavazás érvénytelen paraméterekkel rendelkezik."
+    requires_at_least_1_valid_option: "Legalább 1 érvényes lehetőséget kell kiválasztania."
+    requires_that_at_least_one_option_is_ranked: "A rangsorolt szavazások során legalább egy lehetőséget rangsorolni kell."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "%{minutes} perc után nem lehet módosítani a szavazást."
+      cannot_edit_named_poll_with_votes: "Az első %{minutes} perc után nem módosíthatja a(z) <strong>${name}</strong> szavazás nevét."
+    no_poll_with_this_name: "Ehhez a bejegyzéshez nem tartozik <strong>%{name}</strong> nevű szavazás."
+    post_is_deleted: "Nem végezhet műveletet törölt bejegyzésen."
+    user_cant_post_in_topic: "Nem szavazhat, mert nem tehet bejegyzést ebben a témában."
+    topic_must_be_open_to_vote: "A témának nyitottnak kell lennie, hogy szavazni lehessen."
+    poll_must_be_open_to_vote: "A szavazásnak nyitottnak kell lennie ahhoz, hogy szavazni lehessen."
+    one_vote_per_user: "Csak 1 szavazat engedélyezett ennél a szavazásnál."
+    max_vote_per_user:
+      one: Csak %{count} szavazat engedélyezett ennél a szavazásnál.
+      other: Legfeljebb %{count} szavazat engedélyezett ennél a szavazásnál.
+    min_vote_per_user:
+      one: Legalább %{count} szavazat szükséges ennél a szavazásnál.
+      other: Legalább %{count} szavazat szükséges ennél a szavazásnál.
+    ranked_choice:
+      vote_options_mismatch: "Azonnali eredményhirdetés esetén a szavazás során meghozott választások számának meg kell egyeznie az opciók számával. Az opciók száma %{count} , a választások száma pedig %{provided}volt."
+      no_group_results_support: "Érvénytelen szavazástípus, a rangsorolt_választás nem támogatja a csoportosított eredményeket."
+    topic_must_be_open_to_toggle_status: "A témának nyitottnak kell lennie ahhoz, hogy átváltsa az állapotát."
+    only_staff_or_op_can_toggle_status: "Csak egy stábtag vagy az eredeti szerző tudja átváltani a szavazás állapotát."
+    errors:
+      poll_not_found: "A szavazás nem található, kérjük, erősítse meg a paramétereket."
+    insufficient_rights_to_create: "Nem hozhat létre szavazásokat."
+    email:
+      link_to_poll: "Kattintson ide a szavazás megtekintéséhez."
+    user_field:
+      no_data: "Nincs adat"

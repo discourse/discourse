@@ -1,0 +1,76 @@
+en:
+  site_settings:
+    poll_enabled: "Allow polls?"
+    poll_maximum_options: "Maximum number of options allowed in a poll."
+    poll_edit_window_mins: "Number of minutes after post creation during which polls can be edited."
+    poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
+    poll_create_allowed_groups: "The groups that are allowed to create polls."
+    poll_groupable_user_fields: "A set of user field names that can be used to group and filter poll results."
+    poll_export_data_explorer_query_id: "ID of the data explorer query to use for exporting poll results (0 to disable)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID of the data explorer query to use for exporting instant-runoff voting poll results."
+    poll_default_public: "When creating a new poll, enable the 'show who voted' option by default."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+
+  poll:
+    poll: "poll"
+    invalid_argument: "Invalid value '%{value}' for argument '%{argument}'."
+
+    multiple_polls_without_name: "When creating multiple polls, include unique names by adding <code>name=example</code> to your <code>[poll]</code> tags."
+    multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
+
+    default_poll_must_have_at_least_1_option: "Poll must have at least 1 option."
+    named_poll_must_have_at_least_1_option: "Poll named <strong>%{name}</strong> must have at least 1 option."
+
+    default_poll_must_have_less_options:
+      one: "Poll must have less than %{count} option."
+      other: "Poll must have less than %{count} options."
+    named_poll_must_have_less_options:
+      one: "Poll named <strong>%{name}</strong> must have less than %{count} option."
+      other: "Poll named <strong>%{name}</strong> must have less than %{count} options."
+
+    default_poll_must_have_different_options: "Poll must have different options."
+    named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
+
+    default_poll_must_not_have_any_empty_options: "Poll must not have any empty options."
+    named_poll_must_not_have_any_empty_options: "Poll named <strong>%{name}</strong> must not have any empty options."
+
+    default_poll_with_multiple_choices_has_invalid_parameters: "Poll with multiple choices has invalid parameters."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
+
+    requires_at_least_1_valid_option: "You must select at least 1 valid option."
+    requires_that_at_least_one_option_is_ranked: "In ranked-choice polls, you must rank at least one option."
+
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "You cannot change a poll after the first %{minutes} minutes."
+      cannot_edit_named_poll_with_votes: "You cannot change the poll named <strong>${name}</strong> after the first %{minutes} minutes."
+
+    no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
+
+    post_is_deleted: "Cannot act on a deleted post."
+
+    user_cant_post_in_topic: "You can't vote because you can't post in this topic."
+
+    topic_must_be_open_to_vote: "The topic must be open to vote."
+    poll_must_be_open_to_vote: "Poll must be open to vote."
+    one_vote_per_user: "Only 1 vote is allowed for this poll."
+    max_vote_per_user:
+      one: Only %{count} vote is allowed for this poll.
+      other: A maximum of %{count} votes is allowed for this poll.
+    min_vote_per_user:
+      one: A minimum of %{count} vote is required for this poll.
+      other: A minimum of %{count} votes is required for this poll.
+    ranked_choice:
+      vote_options_mismatch: "For instant-runoff, the number of choices made in a vote must match the number of options.  The number of options is %{count} and the number of choices made was %{provided}."
+      no_group_results_support: "Invalid poll type, ranked_choice does not support grouped results."
+    topic_must_be_open_to_toggle_status: "The topic must be open to toggle status."
+    only_staff_or_op_can_toggle_status: "Only a staff member or the original poster can toggle a poll status."
+    errors:
+      poll_not_found: "Poll not found, please confirm parameters."
+    insufficient_rights_to_create: "You are not allowed to create polls."
+
+    email:
+      link_to_poll: "Click to view the poll."
+
+    user_field:
+      no_data: "No Data"

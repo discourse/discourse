@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_local_dates: "تاریخ‌های محلی Discourse"
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: امروز %{time}
+        tomorrow: فردا %{time}
+        yesterday: دیروز %{time}
+        countdown:
+          passed: تاریخ گذشت
+      title: درج تاریخ / ساعت
+      create:
+        form:
+          insert: درج کردن
+          advanced_mode: حالت پیشرفته
+          simple_mode: حالت ساده
+          format_description: "فرمت مورد استفاده برای نمایش تاریخ به کاربر. از Z برای نشان دادن افست و zz برای نام منطقه زمانی استفاده کنید."
+          timezones_title: نمایش منطقه زمانی
+          timezones_description: از مناطق زمانی برای نمایش تاریخ‌ها در حالت پیش‌نمایش و در حالت پشتیبان استفاده می‌شود.
+          recurring_title: همروندی
+          recurring_description: "بازگشت یک رویداد را تعریف کنید. همچنین می توانید گزینه تکراری تولید شده توسط فرم را به صورت دستی ویرایش کنید و از یکی از کلیدهای زیر استفاده کنید: سال، فصل، ماه، هفته، روز، ساعت، دقیقه، ثانیه، میلی ثانیه."
+          recurring_none: بدون همروندی
+          invalid_date: تاریخ نامعتبر. مطمئن شوید تاریخ و زمان درست هستند.
+          date_title: تاریخ
+          time_title: زمان
+          format_title: فرمت تاریخ
+          timezone: منطقه‌ی زمانی
+          until: تا وقتی که...
+          current_timezone: "منطقه‌ زمانی فعلی:"
+          recurring:
+            every_day: "هر روز"
+            every_week: "هر هفته"
+            every_two_weeks: "هر دو هفته"
+            every_month: "هر ماه"
+            every_two_months: "هر دو ماه"
+            every_three_months: "هر سه ماه"
+            every_six_months: "هر شش ماه"
+            every_year: "هر سال"
+      default_title: "رویداد %{site_name}"

@@ -1,0 +1,153 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    discourse_automation_enabled: "Discourse-automatiseringsplug-in inschakelen"
+  discourse_automation:
+    models:
+      fields:
+        required_field: Veld '%{name}' moet worden ingevuld op '%{target}:%{target_name}'.
+        invalid_metadata: Gegevens voor '%{field}' zijn ongeldig of component '%{component}' is onbekend.
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Minimaal één van 'custom_fields' of 'user_profile' moet worden opgegeven."
+      user_badge_granted:
+        title: Gebruikersbadge toegekend
+        doc: Triggert een automatisering wanneer een badge wordt toegekend aan een gebruiker.
+      user_first_logged_in:
+        title: Gebruiker voor het eerst aangemeld
+        doc: Triggert een automatisering wanneer een gebruiker zich voor het eerst aanmeldt.
+      stalled_topic:
+        title: Stilgevallen topic
+        doc: Triggert een automatisering wanneer het topic gedurende een bepaalde periode geen nieuw antwoord van de topiceigenaar heeft ontvangen. Het wordt aanbevolen om deze trigger in te stellen op een tag/categorie, aangezien het aantal getroffen topics erg groot kan zijn. Uit veiligheidsoverwegingen is het aantal getroffen topics beperkt tot 250.
+      api_call:
+        title: API-aanroep
+        description: Een POST-verzoek doen om een automatisering te triggeren
+        doc: Het POST-verzoek moet worden gedaan aan '/automations/:id/trigger.json' met een globale API-sleutel.
+      category_created_edited:
+        title: Categorie gemaakt/bewerkt
+        description: Wanneer een categorie wordt gemaakt of bewerkt, wordt de automatisering getriggerd
+      recurring:
+        title: Terugkerend
+      point_in_time:
+        title: Tijdstip
+        description: Wanneer de datum wordt bereikt, wordt de automatisering getriggerd
+      user_added_to_group:
+        title: Gebruiker toegevoegd aan groep
+        description: Wanneer een gebruiker wordt toegevoegd aan de opgegeven groep, wordt de automatisering getriggerd
+      user_removed_from_group:
+        title: Gebruiker verwijderd uit groep
+        description: Wanneer een gebruiker wordt verwijderd uit de opgegeven groep, wordt de automatisering getriggerd
+      user_promoted:
+        title: Gebruiker gepromoveerd
+        description: Wanneer een gebruiker wordt gepromoveerd van het ene vertrouwensniveau naar het andere
+        transition_placeholder: "van %{from_level_name} naar %{to_level_name}"
+      stalled_wiki:
+        title: Stilgevallen wiki
+        description: Wanneer een wiki langer dan de opgegeven periode niet is bewerkt, wordt de automatisering getriggerd
+      post_created_edited:
+        title: Bericht gemaakt/bewerkt
+        description: Wanneer een geldig bericht wordt bewerkt of gemaakt, wordt de automatisering getriggerd
+      pm_created:
+        title: Bericht gemaakt door medewerker
+        description: Wanneer een geldige PB wordt gemaakt, wordt de automatisering getriggerd
+      topic_tags_changed:
+        title: Topictags gewijzigd
+        description: Wanneer de tags van een topic worden gewijzigd, wordt de automatisering getriggerd
+      topic:
+        title: Topic
+        description: Het bijbehorende script wordt alleen gebruikt voor het opgegeven topic, dit is bijvoorbeeld handig voor scripts die validatie uitvoeren
+      after_post_cook:
+        title: Na finalisering bericht
+        description: Wanneer de inhoud van een bericht wordt gefinaliseerd, wordt de automatisering getriggerd
+      user_updated:
+        title: Na update door gebruiker
+        description: Wanneer een gebruiker gegevens bijwerkt, wordt de automatisering geactiveerd
+    scriptables:
+      post:
+        title: Een bericht maken
+        description: Maak een bericht over een bepaald topic
+      topic:
+        title: Maak een topic
+        description: Maak een topic als een specifieke gebruiker
+      flag_post_on_words:
+        title: Bericht markeren bij woorden
+        description: Markeert een bericht als het opgegeven woorden bevat
+        flag_message: "Bericht bevat niet-toegestane woorden: %{words}"
+        doc: Berichten die alle opgegeven woorden tegelijk bevatten, worden gemarkeerd en verborgen. Het definiëren van meerdere woorden, gescheiden door komma's, wordt gebruikt als samenstelling (elk woord moet aanwezig zijn).
+      zapier_webhook:
+        title: Zapier-webhook
+        description: Roept een zap aan met de context van een trigger als body
+      auto_responder:
+        title: Automatische beantwoorder
+        description: Plaatst een antwoord op een bericht inclusief opgegeven trefwoorden
+      auto_tag_topic:
+        title: Topic automatisch taggen
+        description: Voeg automatisch tags toe aan een topic
+      pin_topic:
+        title: Topic vastmaken
+        description: Maakt een opgegeven topic vast op een bepaalde datum
+      banner_topic:
+        title: Bannertopic maken
+        description: Maakt een banner van een topic
+      gift_exchange:
+        title: Cadeau-uitwisseling
+        description: Maakt het mogelijk om gebruikers van een groep anoniem te koppelen om elkaar een cadeau te sturen.
+        doc: Cadeau-uitwisseling vereist een bestaande groep met minimaal 3 gebruikers. Op de gekozen datum worden alle gebruikers van de groep gekoppeld aan één gever en één ontvanger.
+      send_pms:
+        title: PB's sturen
+        description: Staat het sturen van PB's toe (mogelijk vertraagd).
+        doc: Staat het sturen van meerdere PB's naar een gebruiker toe. Elk PB krijgt een vertraging.
+      suspend_user_by_email:
+        title: Gebruiker schorsen op e-mailadres
+        description: Schors een account automatisch op basis van e-mailadres
+      user_global_notice:
+        title: Algemene kennisgeving voor gebruiker
+        description: Maakt het mogelijk om een algemene kennisgeving weer te geven voor een gebruiker
+      user_group_membership_through_badge:
+        title: Lidmaatschap van gebruikersgroep via badge
+        description: Wijzig het lidmaatschap van een gebruikersgroep op basis van een badge
+      suspend_user_by_email_with_api_call:
+        doc: Bij het triggeren van 'suspend_user_by_email' met een API-aanroep, verwacht het eindpunt dat er een geldige 'email' aanwezig is in de verzonden parameters. 'reasons' en 'suspend_until' (ISO 8601-notatie) kunnen ook worden gebruikt om standaard veldwaarden te overschrijven.
+      user_global_notice_with_stalled_topic:
+        doc: Indien getriggerd via stilgevallen topic, ontvangt de topiceigenaar de algemene melding.
+      user_global_notice_with_first_accepted_solution:
+        doc: Indien getriggerd via eerst geaccepteerde oplossing, ontvangt de auteur van de oplossing de algemene melding.
+      send_pms_with_api_call:
+        doc: Als het script 'send pms' wordt gebruikt met de trigger 'api call', wordt de parameter 'usernames' van je verzoek gebruikt om de lijst van ontvangers te vullen.
+      topic_required_words:
+        title: Topic vereist woorden
+        description: Maakt het mogelijk om een lijst van vereiste woorden te definiëren voor een topic. In elk bericht moet er minimaal één worden gebruikt.
+        doc: Topic vereist woorden. Wanneer een bericht wordt gemaakt/bewerkt, wordt het bericht gevalideerd aan de hand van de lijst van woorden, waarvan er minimaal één aanwezig moet zijn.
+        errors:
+          must_include_word: "Bericht moet minimaal één van deze woorden bevatten: %{words}"
+      close_topic:
+        title: Topic sluiten
+        description: Sluit een topic met een optioneel sluitingsbericht
+      append_last_edited_by:
+        title: Laatst bewerkt door toevoegen
+        description: Voegt de 'laatst bewerkt door'-gegevens van het bericht toe onderaan de gefinaliseerde inhoud.
+        text: "Laatst bewerkt door @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Laatst gecontroleerd door toevoegen
+        description: Voegt de 'laatst gecontroleerd door'-gegevens van het bericht toe onderaan de gefinaliseerde inhoud.
+        text: "Laatst gecontroleerd door @%{username} %{date_time}"
+        summary: Document controleren
+        details: "Controle uitvoeren op document: "
+        button_text: Gereed
+      add_user_to_group_through_custom_field:
+        title: "Gebruiker toevoegen aan groep via aangepast gebruikersveld"
+        description: "Voeg gebruikers automatisch toe aan groepen wanneer ze zich aanmelden of met een terugkerende controle"
+      group_category_notification_default:
+        title: "Standaard categoriemelding groep"
+        description: "Stel het standaard meldingsniveau van een categorie in voor leden van een groep"
+      send_chat_message:
+        title: "Chatbericht verzenden"
+        description: "Stuur een aangepast chatbericht naar een kanaal"
+      random_assign:
+        title: "Willekeurig toewijzen"
+        description: "Wijs topics willekeurig toe aan een groep"

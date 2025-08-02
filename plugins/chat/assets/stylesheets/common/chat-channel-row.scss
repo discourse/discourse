@@ -1,0 +1,121 @@
+.chat-channel-row {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  cursor: pointer;
+  color: var(--primary);
+
+  @media (hover: none) {
+    &:hover,
+    &:focus {
+      background: transparent;
+    }
+
+    &:active {
+      background: var(--primary-low);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover,
+    &.active {
+      background: var(--primary-very-low);
+    }
+  }
+
+  &.can-leave:hover {
+    .toggle-channel-membership-button.-leave {
+      display: block;
+
+      > * {
+        pointer-events: auto;
+      }
+    }
+
+    .chat-channel__metadata {
+      display: none;
+    }
+  }
+
+  &:hover,
+  &.active {
+    .chat-channel-name {
+      color: var(--primary);
+    }
+
+    .d-icon-lock {
+      background-color: var(--primary-low);
+    }
+  }
+
+  &:visited {
+    color: var(--primary);
+  }
+
+  &.muted {
+    opacity: 0.65;
+  }
+
+  &__content {
+    display: flex;
+    max-width: 100%;
+    align-items: center;
+    flex-grow: 1;
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  .chat-channel {
+    &__user-info,
+    &__channel-info {
+      white-space: nowrap;
+      overflow: hidden;
+
+      @include ellipsis;
+      display: flex;
+      align-items: center;
+    }
+
+    &__metadata {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+      margin-left: 0.5em;
+    }
+
+    &__metadata-date {
+      color: var(--primary-high);
+      font-size: var(--font-down-2);
+      white-space: nowrap;
+    }
+
+    .user-status-message {
+      display: inline-block;
+      font-size: var(--font-down-2);
+      margin-right: 0.5rem;
+
+      &-description {
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  &.unfollowing {
+    opacity: 0;
+  }
+
+  .toggle-channel-membership-button.-leave {
+    display: none;
+    margin-left: auto;
+  }
+}

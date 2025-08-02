@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse ئۇسلۇب قوللانمىسى"
+  js:
+    styleguide:
+      title: "ئۇسلۇب يېتەكچىسى"
+      welcome: "باشلاش ئۈچۈن سول تەرەپتىكى تىزىملىكتىن بىر بۆلەكنى تاللاڭ."
+      categories:
+        syntax: گرامماتىكىسى
+        atoms: ئاتوم
+        molecules: مولېكۇلا
+        organisms: جانلىقلار
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "مەتبەئە"
+          example: "Discourse قا خۇش كەپسىز"
+          paragraph: "بۇ يەردە ئۇيغۇرچە مەزمۇن بولىدۇ. جامائىتىمىزگە خۇش كەلدىڭىز! بىز بۇ مۇنبەردە پىكىر ئالماشتۇرۇپ، يېڭى ئىدىيەلەرنى ئوتتۇرىغا قويىمىز. بۇ سەھىپە سىزنىڭ قاتنىشىشىڭىز بىلەن تېخىمۇ جانلىنىدۇ. بىز بۇ مۇنبەردە ھەر خىل تېمىلاردا سۆزلىشىمىز، يېڭى ئۇچۇرلار بىلەن تونۇشىمىز. سىز ئۆزىڭىزنىڭ پىكىرلىرىنى قوشالايسىز. بۇ گۇرۇپپىدا ھەممە ئادەم ئۆز ئويلىغىنىنى ئېيتالايدۇ. يەنە بىر قۇر مەزمۇن بولسا، بۇ يەردە كۆرۈنىدۇ."
+        date_time_inputs:
+          title: "Datum / tyd insette"
+        menus:
+          title: "تىزىملىك"
+        multi_select:
+          title: "كۆپ تاللاش"
+        toasts:
+          title: "ئۇچۇر رامكىسى"
+        font_scale:
+          title: "خەت نۇسخا سىستېمىسى"
+        colors:
+          title: "رەڭ"
+        icons:
+          title: "سىنبەلگە"
+          full_list: "Font Awesome سىنبەلگىسىنىڭ تولۇق تىزىمىنى كۆرسىتىدۇ"
+        forms:
+          title: "جەدۋەل"
+        buttons:
+          title: "توپچە"
+        dropdowns:
+          title: "تارتما تىزىملىك"
+        categories:
+          title: "سەھىپە"
+        bread_crumbs:
+          title: "بەلگە ئىزى"
+        navigation:
+          title: "يولباشچى"
+        navigation_bar:
+          title: "يولباشچى بالداق"
+        navigation_stacked:
+          title: "دەستە يولباشچى"
+        categories_list:
+          title: "سەھىپە تىزىمى"
+        topic_link:
+          title: "تېما ئۇلانمىسى"
+        topic_list_item:
+          title: "تېما تىزىم تۈرى"
+        topic_statuses:
+          title: "تېما ئەھۋالى"
+        topic_list:
+          title: "تېما تىزىمى"
+        basic_topic_list:
+          title: "ئاساسىي تېما تىزىمى"
+        footer_message:
+          title: "بەت ئاستى ئۇچۇرى"
+        signup_cta:
+          title: "تىزىملىتىش چاقىرىق سۆزى"
+        topic_timer_info:
+          title: "تېما ۋاقىت خاتىرىلىگۈچ"
+        topic_footer_buttons:
+          title: "تېما بەت ئاستى توپچە"
+        topic_notifications:
+          title: "تېما ئۇقتۇرۇشى"
+        post:
+          title: "يازما"
+        post_list:
+          title: "يازما تىزىمى"
+          empty_example: "<PostList />بوش ھالەت"
+          populated_example: "<PostList />قاڭقىتىلغان ھالەت"
+        topic_map:
+          title: "تېما خەرىتىسى"
+        site_header:
+          title: "بېكەت بېشى"
+        suggested_topics:
+          title: "تەۋسىيە تېما"
+        post_menu:
+          title: "يازما تىزىملىكى"
+        modal:
+          title: "مودېل كۆزنىكى"
+          header: "مودېل كۆزنەك ماۋزۇسى"
+          footer: "مودېل كۆزنەك بەت ئاستى"
+        user_about:
+          title: "ئىشلەتكۈچى ھەققىدە رامكىسى"
+        header_icons:
+          title: "ماۋزۇ سىنبەلگە"
+        spinners:
+          title: "چىغ توپچە"
+        empty_state:
+          title: "بوش ھالەت"
+        tooltips:
+          title: "قورال ئەسكەرتىشى"
+          description: "چۈشەندۈرۈش"
+          header: "بەت قاش"
+          hover_to_see: "قورال ئەسكەرتىشىنى كۆرۈشتە لەيلىتىلىدۇ"
+        char_counter:
+          title: "ھەرپ سانىغۇچ"
+          placeholder: "تېكىست كىرگۈزۈڭ…"

@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    styleguide_enabled: 'Activar una ruta «/styleguide» para ayudar a personalizar el aspecto de Discourse'
+    styleguide_admin_only: "Solo permitir a los administradores ver la guía de estilo"
+    styleguide_allowed_groups: "Limita la visibilidad de la guía de estilo a los miembros de los grupos proporcionados"

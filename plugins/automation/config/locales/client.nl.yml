@@ -1,0 +1,428 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: automatisering verwijderen
+    discourse_automation:
+      title: Automatisering
+      back: Vorige
+      edit: Bewerken
+      select_script: Selecteer een script
+      select_trigger: Selecteer een trigger
+      confirm_automation_reset: Deze actie reset script- en triggeropties en de nieuwe toestand wordt opgeslagen. Wil je doorgaan?
+      confirm_automation_trigger: Deze actie triggert de automatisering. Wil je doorgaan?
+      filter_placeholder: Filter op naam of beschrijving...
+      edit_automation:
+        trigger_section:
+          forced: Deze trigger wordt geforceerd door een script.
+          next_pending_automation: "De volgende automatisering wordt getriggerd op: %{date}"
+          trigger_now: "Nu triggeren"
+          title: Wanneer/wat...
+        fields_section:
+          title: Scriptopties
+      destroy_automation:
+        confirm: "Weet je zeker dat je '%{name}' wilt verwijderen?"
+      fields:
+        key_value:
+          label_without_count: "Configureren"
+          label_with_count:
+            one: "Configuratie bewerken (%{count})"
+            other: "Configuratie bewerken (%{count})"
+        user:
+          label: Gebruiker
+        pm:
+          title:
+            label: Titel
+          raw:
+            label: Inhoud
+        pms:
+          confirm_remove_pm: "Weet je zeker dat je dit PB wilt verwijderen?"
+          placeholder_title: PB-titel
+          add_pm: PB toevoegen
+          no_pm_created: Je hebt nog geen PB's gemaakt. PB's worden gestuurd wanneer je automatisering wordt getriggerd.
+          title:
+            label: Titel
+          raw:
+            label: Inhoud
+          delay:
+            label: Vertraging (minuten)
+          prefers_encrypt:
+            label: Versleutelt PB indien beschikbaar
+        group:
+          label: Groep
+        text:
+          label: Tekst
+      triggerables:
+        not_found: Kon trigger '%{trigger}' voor automatisering '%{automation}' niet vinden. Controleer of de bijbehorende plug-in is geïnstalleerd
+        user_badge_granted:
+          fields:
+            badge:
+              label: Badge
+            only_first_grant:
+              label: Alleen bij eerste toekenning
+        stalled_topic:
+          durations:
+            PT1H: "Eén uur"
+            P1D: "Eén dag"
+            P1W: "Eén week"
+            P2W: "Twee weken"
+            P1M: "Eén maand"
+            P3M: "Drie maanden"
+            P6M: "Zes maanden"
+            P1Y: "Eén jaar"
+          fields:
+            categories:
+              label: Beperkt tot categorieën
+            tags:
+              label: Beperkt tot tags
+            stalled_after:
+              label: Stilgevallen na
+        recurring:
+          every: Elk(e)
+          frequencies:
+            minute: minuut
+            hour: uur
+            day: dag
+            weekday: weekdag
+            week: week
+            month: maand
+            year: jaar
+          fields:
+            recurrence:
+              label: Herhaling
+            start_date:
+              label: Begindatum
+        stalled_wiki:
+          durations:
+            PT1H: "Eén uur"
+            P1D: "Eén dag"
+            P1W: "Eén week"
+            P2W: "Twee weken"
+            P1M: "Eén maand"
+            P3M: "Drie maanden"
+            P6M: "Zes maanden"
+            P1Y: "Eén jaar"
+          fields:
+            restricted_category:
+              label: Beperkt tot categorie
+            stalled_after:
+              label: Triggervertraging
+              description: Definieert de vertraging tussen de laatste wikibewerking en de automatiseringstrigger
+            retriggered_after:
+              label: Hertriggervertraging
+              description: Definieert de vertraging tussen de eerste en de volgende trigger, als de wiki na de eerste trigger nog steeds niet is bewerkt
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Gevolgde groep
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Gevolgde groep
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Beperken tot groep
+            trust_level_transition:
+              label: Overgang vertrouwensniveau
+          trust_levels:
+            ALL: "Alle vertrouwensniveaus"
+            TL01: "TL0 naar TL1"
+            TL12: "TL1 naar TL2"
+            TL23: "TL2 naar TL3"
+            TL34: "TL3 naar TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Uitvoeren op
+        topic:
+          fields:
+            restricted_topic:
+              label: Topic-ID
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Alleen origineel bericht
+              description: Wordt alleen getriggerd als het bericht het oorspronkelijke bericht in het topic is
+            action_type:
+              label: Actietype
+              description: "Optioneel: beperk triggering tot alleen gemaakte of bewerkte gebeurtenissen"
+            valid_trust_levels:
+              label: Geldige vertrouwensniveaus
+              description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
+            restricted_tags:
+              label: Tags
+              description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
+            restricted_categories:
+              label: Categorieën
+            restricted_inbox_groups:
+              description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
+            ignore_automated:
+              label: Geautomatiseerd negeren
+              description: Sla de trigger over als de afzender een noreply-e-mailadres heeft of een geautomatiseerde bron is. Alleen van toepassing op berichten die via e-mail zijn gemaakt
+            first_post_only:
+              label: Alleen eerste bericht
+              description: Wordt alleen geactiveerd als het bericht het eerste is dat een gebruiker heeft gemaakt
+            first_topic_only:
+              label: Alleen eerste topic
+              description: Wordt alleen geactiveerd als het topic het eerste is dat een gebruiker heeft gemaakt
+            skip_via_email:
+              label: "Via e-mail overslaan"
+              description: "Sla de trigger over als het bericht via e-mail is aangemaakt"
+          created: Gemaakt
+          edited: Bewerkt
+          with_images: Afbeeldingen
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
+        user_updated:
+          fields:
+            user_profile:
+              label: Gebruikersprofielvelden
+              description: Wordt alleen geactiveerd als de gebruiker al deze velden heeft ingevuld
+            custom_fields:
+              label: Aangepaste gebruikersvelden
+              description: Wordt alleen geactiveerd als de gebruiker al deze velden heeft ingevuld
+            once_per_user:
+              label: Eenmaal per gebruiker
+              description: Wordt slechts eenmaal per gebruiker geactiveerd
+            new_users_only:
+              label: Alleen nieuwe gebruikers
+              description: Wordt alleen geactiveerd voor nieuwe gebruikers die lid worden nadat deze automatisering is ingeschakeld
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Bovenliggende categorie
+              description: 'Optioneel: maakt het mogelijk om de uitvoering van triggers te beperken tot deze categorie'
+        pm_created:
+          fields:
+            restricted_user:
+              label: Gebruikers
+              description: Wordt alleen getriggerd voor PB's die naar deze gebruiker worden verzonden
+            restricted_group:
+              label: Groep
+              description: Wordt alleen getriggerd voor PB's die naar deze groep worden verzonden
+            ignore_staff:
+              label: Medewerkers negeren
+              description: Sla de trigger over als de afzender een medewerker is
+            ignore_group_members:
+              label: Groepsleden negeren
+              description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep
+            ignore_automated:
+              label: Geautomatiseerd negeren
+              description: Sla de trigger over als de afzender een noreply-e-mailadres heeft of een geautomatiseerde bron is. Alleen van toepassing op PB's die via e-mail zijn gemaakt
+            valid_trust_levels:
+              label: Geldige vertrouwensniveaus
+              description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tags toegevoegd of verwijderd
+            tags_added: Tags toegevoegd
+            tags_removed: Tags verwijderd
+          fields:
+            watching_categories:
+              label: Categorieën observeren
+              description: Wordt alleen getriggerd als het topic in een van deze categorieën valt
+            watching_tags:
+              label: Tags observeren
+              description: Wordt alleen getriggerd als het topic een van deze tags heeft
+            trigger_on:
+              label: Triggeren bij
+            trigger_with_pms:
+              label: Triggeren bij PB's
+              description: Wordt ook getriggerd als de tags in een PB zijn gewijzigd
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Geldige vertrouwensniveaus
+              description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
+            restricted_category:
+              label: Categorie
+              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht tot deze categorie behoort'
+            restricted_tags:
+              label: Tags
+              description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
+      scriptables:
+        not_found: Kon script '%{script}' voor automatisering '%{automation}' niet vinden. Controleer of de bijbehorende plug-in is geïnstalleerd
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook-URL
+              description: "Verwacht een geldige Zapier-webhook-URL, bijvoorbeeld: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Eenmaal
+              description: Reageert slechts één keer per topic
+            word_answer_list:
+              label: Lijst van woord-antwoordparen
+              description: "Definieert een lijst van sleutel-waardegroepen, waarbij de 'sleutel' de gezochte term is en de 'waarde' de tekst van het antwoord. De 'sleutel' kan leeg worden gelaten om op alle triggers te reageren, ongeacht de inhoud. Merk op dat 'waarde' '{{key}}' accepteert als tijdelijke aanduiding die moet worden vervangen door de waarde van 'sleutel' in het antwoord. Merk op dat 'sleutel' wordt geëvalueerd als een regex en dat speciale tekens zoals '.' moeten worden ge-escapet als je echt een punt bedoelt, bijvoorbeeld: '\\ .'"
+            answering_user:
+              label: Antwoordende gebruiker
+              description: Standaard ingesteld op Systeemgebruiker
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Tags
+              description: Lijst van tags om toe te voegen aan het topic.
+        post:
+          fields:
+            creator:
+              label: Maker
+              post_creator_context: De maker van het bericht
+              updated_user_context: De bijgewerkte gebruiker
+            topic:
+              label: Topic-ID
+            post:
+              label: Berichtinhoud
+        topic:
+          fields:
+            creator:
+              label: Maker
+              updated_user_context: De bijgewerkte gebruiker
+            body:
+              label: Topicinhoud
+            title:
+              label: Topictitel
+            category:
+              label: Topiccategorie
+            tags:
+              label: Topictags
+        group_category_notification_default:
+          fields:
+            group:
+              label: Groep
+            notification_level:
+              label: Meldingsniveau
+            update_existing_members:
+              label: Bestaande leden bijwerken
+              description: Werkt het meldingsniveau bij voor bestaande groepsleden
+        user_global_notice:
+          fields:
+            level:
+              label: Niveau
+            notice:
+              label: Kennisgeving
+              description: Accepteert HTML, vul dit niet met niet-vertrouwde invoer!
+          levels:
+            warning: Waarschuwing
+            info: Info
+            success: Succes
+            error: Fout
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Badgenaam
+            group:
+              label: Groep
+              description: Doelgroep. Gebruikers met de opgegeven badge worden aan deze groep toegevoegd.
+            update_user_title_and_flair:
+              label: Gebruikerstitel en flair bijwerken
+              description: 'Optioneel: werk de gebruikerstitel en flair bij'
+            remove_members_without_badge:
+              label: Bestaande leden zonder badge verwijderen
+              description: 'Optioneel: verwijder bestaande groepsleden zonder de opgegeven badge'
+            badge:
+              label: Badge
+              description: Selecteer badge
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Schorsen tot (standaard)
+            reason:
+              label: Reden (standaard)
+            actor:
+              label: Gebruiker
+              description: "De gebruiker verantwoordelijk voor de schorsing (standaard: systeem)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Topic-ID
+            pinned_globally:
+              label: Globaal vastgemaakt
+            pinned_until:
+              label: Vastgemaakt tot
+        banner_topic:
+          fields:
+            topic_id:
+              label: Topic-ID
+            banner_until:
+              label: Banner maken tot
+            user:
+              label: Gebruiker
+              description: "De gebruiker die de banner maakt (standaard: systeem)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Gecontroleerde woorden
+        topic_required_words:
+          fields:
+            words:
+              label: Lijst van vereiste woorden
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Groepsnaam van deelnemers
+            giftee_assignment_messages:
+              label: Berichten gestuurd naar gever
+        send_pms:
+          add_a_pm_btn:
+            label: PB toevoegen
+          fields:
+            receiver:
+              label: PB-ontvanger
+            sendable_pms:
+              label: PB's
+            sender:
+              label: PB-afzender
+        close_topic:
+          fields:
+            topic:
+              label: Topic-ID
+            message:
+              label: Sluitingsbericht
+              description: "Optioneel bericht om weer te geven in het record Topic gesloten"
+            user:
+              label: Gebruiker
+              description: "De gebruiker die het topic sluit (standaard: systeem)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Naam aangepast gebruikersveld"
+      unnamed_automation: "Naamloze automatisering"
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Trigger
+        automation:
+          name:
+            label: Naam
+          trigger:
+            label: Trigger
+          script:
+            label: Script
+          version:
+            label: Versie
+          status:
+            label: Status
+          enabled:
+            label: Ingeschakeld
+          disabled:
+            label: Uitgeschakeld
+          placeholders:
+            label: Tijdelijke aanduidingen
+          last_updated_at:
+            label: Laatst bijgewerkt
+          last_updated_by:
+            label: Bijgewerkt door

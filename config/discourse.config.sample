@@ -1,0 +1,30 @@
+# this is a sample Discourse upstart script that can be used in Ubuntu
+# To use ensure you create wrappers for both bundler and bluepill using:
+#
+# rvm wrapper $(rvm current) bootup bluepill
+# rvm wrapper $(rvm current) bootup bundle
+#
+
+description "Discourse process"
+setuid discourse
+respawn
+respawn limit 3 30
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+env RAILS_ROOT=/var/www/discourse
+env RAILS_ENV=production
+env NUM_WEBS=4
+env HOME=/home/discourse
+env USER=discourse
+env GROUP=discourse
+
+script
+# runs in sh, move it to bash so we can source rvm
+exec /bin/bash <<EOT
+  source /home/discourse/.rvm/scripts/rvm
+  cd /var/www/discourse
+  exec /home/discourse/.rvm/bin/bootup_bluepill --no-privileged load /var/www/discourse/config/discourse.pill
+EOT
+end script

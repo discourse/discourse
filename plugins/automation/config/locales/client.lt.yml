@@ -1,0 +1,151 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    discourse_automation:
+      back: Atgal
+      edit: Redaguoti
+      fields:
+        user:
+          label: Narys
+        pm:
+          title:
+            label: Antraštė
+          raw:
+            label: Tekstas
+        pms:
+          title:
+            label: Antraštė
+          raw:
+            label: Tekstas
+        group:
+          label: Grupė
+        text:
+          label: Tekstas
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Ženklelis
+        stalled_topic:
+          durations:
+            P2W: "Dvi savaitės"
+            P3M: "Trys mėnesiai"
+            P6M: "Šeši mėnesiai"
+            P1Y: "Vieneri metai"
+        recurring:
+          frequencies:
+            minute: minutė
+            hour: valanda
+            day: diena
+            week: savaitė
+            month: mėnesis
+            year: metai
+          fields:
+            recurrence:
+              label: Pasikartojimas
+        stalled_wiki:
+          durations:
+            P2W: "Dvi savaitės"
+            P3M: "Trys mėnesiai"
+            P6M: "Šeši mėnesiai"
+            P1Y: "Vieneri metai"
+        topic:
+          fields:
+            restricted_topic:
+              label: Temos ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Žymos
+            restricted_categories:
+              label: Kategorijos
+          created: Sukurta
+          with_images: Paveiksliukai
+          with_links: Nuorodos
+          with_code: Kodas
+          with_uploads: Įkėlimai
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Tėvinė kategoriją
+        pm_created:
+          fields:
+            restricted_user:
+              label: Vartotojai
+            restricted_group:
+              label: Grupė
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Kategorija
+            restricted_tags:
+              label: Žymos
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Žymos
+        post:
+          fields:
+            topic:
+              label: Temos ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupė
+        user_global_notice:
+          fields:
+            level:
+              label: Lygis
+          levels:
+            info: Informacija
+            success: Sėkmingai
+            error: Klaida
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupė
+            badge:
+              label: Ženklelis
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Narys
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Temos ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: Temos ID
+            user:
+              label: Narys
+        close_topic:
+          fields:
+            topic:
+              label: Temos ID
+            user:
+              label: Narys
+      models:
+        trigger:
+          name:
+            label: Pritaikyti
+        automation:
+          name:
+            label: Vardas
+          trigger:
+            label: Pritaikyti
+          version:
+            label: Versija
+          status:
+            label: Statusas
+          enabled:
+            label: Galimas
+          disabled:
+            label: Uždrausta

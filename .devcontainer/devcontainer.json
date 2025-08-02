@@ -1,0 +1,37 @@
+{
+  "name": "Discourse",
+  "image": "docker.io/discourse/discourse_dev:20250307-0016",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/discourse,type=bind",
+  "workspaceFolder": "/workspace/discourse",
+  "postStartCommand": "./.devcontainer/scripts/start.rb",
+  "forwardPorts": [
+    9292, // bin/unicorn
+    3000, // bin/rails s
+    4200, // ember-cli
+    8025, // mailhog
+    9229  // chrome remote debug
+  ],
+  "remoteUser": "discourse",
+  "remoteEnv": {
+    "RAILS_DEVELOPMENT_HOSTS": ".app.github.dev",
+    "PGUSER": "discourse",
+    "SELENIUM_FORWARD_DEVTOOLS_TO_PORT": "9229",
+  },
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+    "source=${localWorkspaceFolderBasename}-pg,target=/shared/postgres_data,type=volume",
+    "source=${localWorkspaceFolderBasename}-redis,target=/shared/redis,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-lsp",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "lifeart.vscode-glimmer-syntax",
+        "typed-ember.glint-vscode",
+        "stylelint.vscode-stylelint"
+      ]
+    }
+  }
+}

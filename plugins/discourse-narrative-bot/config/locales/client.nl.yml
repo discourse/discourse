@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "De handleiding voor nieuwe gebruikers starten voor alle nieuwe gebruikers"
+        welcome_message: "Een welkomstbericht met een snelstartgids naar alle nieuwe gebruikers sturen"

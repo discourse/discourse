@@ -1,0 +1,4 @@
+CREATE TABLE first_table
+(
+    id INTEGER TEXT NOT NULL PRIMARY KEY
+);

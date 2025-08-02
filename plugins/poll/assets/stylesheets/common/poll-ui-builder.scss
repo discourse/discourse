@@ -1,0 +1,94 @@
+.poll-ui-builder-modal {
+  .show-advanced {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
+.poll-ui-builder {
+  label {
+    font-weight: bold;
+  }
+
+  .input-group {
+    margin-bottom: 15px;
+
+    input[type="number"],
+    input[type="text"],
+    input[type="time"],
+    .combo-box,
+    .multi-select,
+    .select-kit-header,
+    .date-picker-wrapper {
+      width: 100%;
+    }
+
+    .date-picker-wrapper {
+      margin-right: 5px;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .poll-public .d-toggle-switch__label {
+    margin-bottom: 0;
+  }
+
+  .radio-group {
+    display: inline-block;
+    margin-right: 30px;
+
+    input {
+      vertical-align: top;
+    }
+
+    label {
+      display: inline-block;
+    }
+  }
+
+  .poll-type {
+    .poll-type-value {
+      font-size: var(--font-down-1);
+    }
+    padding: 0;
+    margin-top: 0;
+    border: none;
+  }
+
+  .poll-options {
+    margin-bottom: 15px;
+
+    .poll-option-value {
+      align-items: flex-start;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0;
+
+      button {
+        margin-left: 0.5rem;
+      }
+    }
+
+    .poll-option-controls {
+      margin-top: 10px;
+    }
+
+    .tip {
+      display: inline-block;
+      vertical-align: bottom;
+    }
+  }
+
+  .tip {
+    display: block;
+    font-size: var(--font-down-1);
+    margin: -0.5em 0 0.5em;
+  }
+
+  .d-editor-preview {
+    width: 100%;
+  }
+}

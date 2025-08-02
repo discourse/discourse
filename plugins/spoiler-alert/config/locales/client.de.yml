@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Discourse Spoiler-Alarm"
+  js:
+    spoiler:
+      title: Spoiler unkenntlich machen
+      label:
+        show: "Zeige ausgeblendeten Inhalt"
+    composer:
+      spoiler_text: "Dieser Text wird unkenntlich gemacht"

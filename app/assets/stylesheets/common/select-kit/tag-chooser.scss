@@ -1,0 +1,14 @@
+.select-kit {
+  &.tag-chooser,
+  &.mini-tag-chooser,
+  &.tag-drop {
+    .select-kit-row {
+      display: flex;
+      align-items: baseline;
+
+      .discourse-tag-count {
+        margin-left: 5px;
+      }
+    }
+  }
+}

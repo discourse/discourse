@@ -1,0 +1,79 @@
+.powered-by-discourse {
+  grid-area: below-content;
+  justify-self: start;
+  font-size: var(--font-down-1);
+  letter-spacing: 0.2px; // extra spacing makes small text easier to read
+  padding: 2px; // animated hover "border" width
+  background: var(--secondary);
+  border-radius: 0.75em;
+  transition: all 0.25s ease-in-out;
+  margin-bottom: 0.45em;
+  color: var(--primary-medium);
+
+  .admin-area &,
+  .has-full-page-chat &,
+  .static-login &,
+  .invite-page &,
+  .account-created-page &,
+  .admin-invite-page &,
+  .activate-account-page & {
+    display: none !important;
+  }
+
+  &:visited {
+    color: var(--primary-medium);
+  }
+
+  &__content {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    color: currentcolor;
+    background: var(--secondary);
+    border-radius: 0.62em;
+    padding: 0.25em 0.65em 0.25em 0.5em;
+  }
+
+  .d-icon {
+    position: relative;
+    top: 0.05em; // vertical alignment
+  }
+
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--primary-high);
+
+      @media (prefers-reduced-motion: no-preference) {
+        // secondary repeat is an intentional buffer
+        background: linear-gradient(
+          45deg,
+          var(--secondary),
+          var(--secondary),
+          var(--secondary),
+          var(--secondary),
+          var(--secondary),
+          #d0232b,
+          #f15d22,
+          #fff9ae,
+          #00a94f,
+          #00aeef
+        );
+        background-size: 300%;
+        animation: d-rainbow-shimmer 0.5s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+        animation-delay: 0.15s; // avoid animating on passing hover
+      }
+    }
+
+    @keyframes d-rainbow-shimmer {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      100% {
+        background-position: 100% 50%;
+      }
+    }
+  }
+}

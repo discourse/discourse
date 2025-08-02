@@ -1,0 +1,11 @@
+<div id="simple-container">
+  <%if flash[:error].present? %>
+    <div class='alert alert-error'>
+      <%=flash[:error]%>
+    </div>
+  <%else%>
+    <div class='alert alert-error'>
+      <%= t 'login.omniauth_error_unknown' %>
+    </div>
+  <%end%>
+</div>

@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    lazy_videos_enabled: "تفعيل المكوِّن الإضافي Lazy Videos"
+    lazy_youtube_enabled: "تفعيل التحميل البطيء لعمليات التضمين في YouTube"
+    lazy_vimeo_enabled: "تفعيل التحميل البطيء لعمليات التضمين في ‎ Vimeo"
+    lazy_tiktok_enabled: "تفعيل التحميل البطيء لعمليات التضمين في ‎ TikTok(‎تجريبي‎)"

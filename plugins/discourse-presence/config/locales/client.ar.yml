@@ -1,0 +1,30 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  js:
+    presence:
+      replying:
+        zero: "يكتب ردًا"
+        one: "يكتب ردًا"
+        two: "يكتبان ردًا"
+        few: "يكتبون ردًا"
+        many: "يكتبون ردًا"
+        other: "يكتبون ردًا"
+      editing:
+        zero: "يعدّل المشاركة"
+        one: "يعدّل المشاركة"
+        two: "يعدّلان المشاركة"
+        few: "يعدّلون المشاركة"
+        many: "يعدّلون المشاركة"
+        other: "يعدّلون المشاركة"
+      replying_to_topic:
+        zero: "يكتب ردًا"
+        one: "يكتب ردًا"
+        two: "يكتبان ردًا"
+        few: "يكتبون ردًا"
+        many: "يكتبون ردًا"
+        other: "يكتبون ردًا"

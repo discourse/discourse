@@ -1,0 +1,6 @@
+domain: 'my-quandora-domain'
+username: 'my-quandora-username'
+password: 'my-quandora-password'
+
+kb_id: 'some-kb-id'
+question_id: 'some-question-id'

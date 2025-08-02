@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Przewodnik po stylach Discourse"
+  js:
+    styleguide:
+      title: "Przewodnik po stylach"
+      welcome: "Aby rozpocząć, wybierz sekcję z menu po lewej stronie."
+      categories:
+        syntax: Składnia
+        atoms: Atomy
+        molecules: Cząsteczki
+        organisms: Organizmy
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typografia"
+          example: "Witaj w Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercise ullamco labouris nisi ut aliquip ex ea commodo consat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Data/czas"
+        menus:
+          title: "Menu"
+        multi_select:
+          title: "Wybór wielokrotny"
+        toasts:
+          title: "Komunikaty podpowiedzi"
+        font_scale:
+          title: "System czcionek"
+        colors:
+          title: "Kolory"
+        icons:
+          title: "Ikony"
+          full_list: "Zobacz pełną listę niesamowitych ikon czcionek"
+        forms:
+          title: "Formularze"
+        buttons:
+          title: "Przyciski"
+        dropdowns:
+          title: "Listy rozwijane"
+        categories:
+          title: "Kategorie"
+        bread_crumbs:
+          title: "Okruszki nawigacyjne"
+        navigation:
+          title: "Nawigacja"
+        navigation_bar:
+          title: "Pasek nawigacyjny"
+        navigation_stacked:
+          title: "Panel ustawień"
+        categories_list:
+          title: "Lista Kategorii"
+        topic_link:
+          title: "Łącze tematu"
+        topic_list_item:
+          title: "Temat na liście tematów"
+        topic_statuses:
+          title: "Statusy tematów"
+        topic_list:
+          title: "Lista tematów"
+        basic_topic_list:
+          title: "Podstawowa lista tematów"
+        footer_message:
+          title: "Wiadomość w stopce"
+        signup_cta:
+          title: "Zarejestruj CTA"
+        topic_timer_info:
+          title: "Liczniki tematów"
+        topic_footer_buttons:
+          title: "Przyciski stopki tematu"
+        topic_notifications:
+          title: "Powiadomienia tematu"
+        post:
+          title: "Wpis"
+        post_list:
+          title: "Lista postów"
+          empty_example: "<PostList /> pusty stan"
+          populated_example: "<PostList /> stan wypełniony"
+        topic_map:
+          title: "Mapa tematu"
+        site_header:
+          title: "Nagłówek witryny"
+        suggested_topics:
+          title: "Sugerowane tematy"
+        post_menu:
+          title: "Menu postu"
+        modal:
+          title: "Modalne"
+          header: "Tytuł modalu"
+          footer: "Stopka modalu"
+        user_about:
+          title: "Blok o użytkowniku"
+        header_icons:
+          title: "Ikony nagłówka"
+        spinners:
+          title: "Ładowanie"
+        empty_state:
+          title: "Pusty stan"
+        tooltips:
+          title: "Podpowiedzi"
+          description: "Opis"
+          header: "Nagłówek"
+          hover_to_see: "Najedź kursorem, aby zobaczyć podpowiedź"
+        char_counter:
+          title: "Licznik znaków"
+          placeholder: "Tutaj wpisz swój tekst..."

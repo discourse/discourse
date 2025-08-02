@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    details_enabled: 'Inkludera möjligheten att lägga till expanderbara detaljer till ett inlägg. Den här funktionen finns i redigerarens popup-verktygsfält. Du måste uppdatera alla inlägg med "rake posts:rebake" om du ändrar denna inställning.'
+  details:
+    excerpt_details: "(klicka för mer detaljer)"

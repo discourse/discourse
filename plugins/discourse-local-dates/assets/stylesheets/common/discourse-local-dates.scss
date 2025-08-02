@@ -1,0 +1,49 @@
+.discourse-local-date {
+  svg,
+  span {
+    pointer-events: none;
+  }
+
+  &.cooked-date {
+    color: var(--primary);
+    cursor: pointer;
+    border-bottom: 1px dashed var(--primary-medium);
+
+    .d-icon {
+      color: var(--primary);
+    }
+
+    &.past {
+      border-bottom-color: var(--primary-low-mid);
+    }
+
+    &.past[data-countdown] {
+      color: var(--primary-medium);
+    }
+  }
+}
+
+.locale-dates-previews {
+  max-width: 250px;
+
+  .preview {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin: 0;
+
+    .timezone {
+      font-weight: 700;
+    }
+
+    &.current {
+      background: var(--tertiary-low);
+    }
+  }
+}
+
+.download-calendar {
+  text-align: right;
+  cursor: pointer;
+  margin-top: 0.5em;
+}

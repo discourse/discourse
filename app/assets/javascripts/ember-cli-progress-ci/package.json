@@ -1,0 +1,10 @@
+{
+  "name": "ember-cli-progress-ci",
+  "version": "1.0.0",
+  "description": "Provides output during the ember-cli build process for CI environments",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ]
+}

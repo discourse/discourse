@@ -1,0 +1,11 @@
+{
+  "name": "Foundation",
+  "authors": "Discourse",
+  "theme_version": "1.0.0",
+  "minimum_discourse_version": null,
+  "maximum_discourse_version": null,
+  "assets": {},
+  "modifiers": {},
+  "color_schemes": {},
+  "screenshots": ["screenshots/light.png", "screenshots/dark.png"]
+}

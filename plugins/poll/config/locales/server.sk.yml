@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  site_settings:
+    poll_enabled: "Povoliť hlasovania?"
+    poll_maximum_options: "Maximálny počet povolených možností v hlasovaní."
+    poll_edit_window_mins: "Počet minút po vytvorení hlasovania počas ktorých môže byť hlasovanie upravené."
+    poll_minimum_trust_level_to_create: "Definuj minimálny stupeň dôvery na vytvorenie hlasonia."
+    poll_create_allowed_groups: "Skupiny, ktoré majú povolené vytvárať ankety."
+    poll_groupable_user_fields: "Súbor názvov užívateľských polí, ktoré možno použiť na zoskupovanie a filtrovanie výsledkov prieskumu."
+    poll_export_data_explorer_query_id: "ID dotazu prieskumníka údajov, ktorý sa má použiť na export výsledkov prieskumu (0 na vypnutie)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID dotazu prieskumníka údajov, ktorý sa použije na export výsledkov hlasovania metódou okamžitého vyradenia."
+    poll_default_public: "Pri vytváraní novej ankety predvolene povoľte možnosť „Zobraziť, kto hlasoval“."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "anketa"
+    invalid_argument: "Neplatná hodnota '%{value}' pre argument '%{argument}'."
+    multiple_polls_without_name: "Pri vytváraní viacerých ankiet zahrňte jedinečné názvy pridaním <code>name=príklad</code> k vašim <code>[anketám]</code> tagom."
+    multiple_polls_with_same_name: "Existujú viaceré hlasovania s rovnakým menom: <strong>%{name}</strong>. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
+    default_poll_must_have_at_least_1_option: "Anketa musí obsahovať aspoň 1 možnosť."
+    named_poll_must_have_at_least_1_option: "Anketa <strong>%{name}</strong> musí mať aspoň 1 možnosť."
+    default_poll_must_have_less_options:
+      one: "Hlasovanie musí mať menej ako jednu možnosť."
+      few: "Hlasovanie musí mať menej ako %{count} možnosti."
+      many: "Hlasovanie musí mať menej ako %{count} možnosti."
+      other: "Hlasovanie musí mať menej ako %{count} možnosti."
+    named_poll_must_have_less_options:
+      one: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možnost."
+      few: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možnosti."
+      many: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možností."
+      other: "Hlasovanie s názvom <strong>%{name}</strong> musí mať menej ako %{count} možností."
+    default_poll_must_have_different_options: "Hlasovanie musí mať rôzne možnosti."
+    named_poll_must_have_different_options: "Hlasovanie s názvom <strong>%{name}</strong> musí mať rôzne možnosti."
+    default_poll_must_not_have_any_empty_options: "Anketa nesmie obsahovať žiadne prázdne možnosti."
+    named_poll_must_not_have_any_empty_options: "Anketa <strong>%{name}</strong> nesmie mať žiadne prázdne možnosti."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Hlasovanie s viac možnosťami má nesprávne parametre."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Hlasovanie s názvom <strong>%{name}</strong> s viac možnosťami má nesprávne parametre."
+    requires_at_least_1_valid_option: "Musite vybrať aspoň 1 platnú možnosť."
+    requires_that_at_least_one_option_is_ranked: "V prieskumoch s poradím možností musíte zaradiť aspoň jednu možnosť."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Po %{minutes} minútach nie je možné anketu upraviť."
+      cannot_edit_named_poll_with_votes: "Po viac ako %{minutes} minútach nie je možné zmeniť anketu <strong>${name}</strong>."
+    no_poll_with_this_name: "S týmto príspevkom nie je spojené žiadne hlasovanie s názvom <strong>%{name}</strong>."
+    post_is_deleted: "Na vymazanom príspevku nie je možné vykonať."
+    user_cant_post_in_topic: "K tomuto príspevku nemôžeš prispieť a preto nemôžeš ani hlasovať."
+    topic_must_be_open_to_vote: "Na odovzdanie hlasu téma otvorená."
+    poll_must_be_open_to_vote: "Na odovzdanie hlasu musí byť hlasovanie otvorené."
+    one_vote_per_user: "Pre túto anketu je povolený iba 1 hlas."
+    max_vote_per_user:
+      one: Pre túto anketu je povolený iba %{count} hlas.
+      few: V tomto prieskume sú povolené iba %{count} hlasy.
+      many: Pre túto anketu je povolený iba %{count} hlasov.
+      other: Pre túto anketu je povolených maximálne %{count} hlasov.
+    min_vote_per_user:
+      one: Pre túto anketu je potrebný minimálne %{count} hlas.
+      few: Pre túto anketu je potrebné minimálne %{count} hlasy.
+      many: Pre túto anketu je potrebné minimálne %{count} hlasov.
+      other: Pre túto anketu je potrebné minimálne %{count} hlasov.
+    ranked_choice:
+      vote_options_mismatch: "Pre metódu okamžitého vyradenia musí počet volieb v hlasovaní zodpovedať počtu možností. Počet možností je %{count} a počet vykonaných volieb bol %{provided}."
+      no_group_results_support: "Nesprávny typ ankety, anketa ranked_choice nepodporuje zoskupené výsledky."
+    topic_must_be_open_to_toggle_status: "Na zmenu stavu musí byť téma otvorená."
+    only_staff_or_op_can_toggle_status: "Zmeniť stav hlasovania môže iba zamestnanec alebo pôvodný prispievateľ."
+    errors:
+      poll_not_found: "Anketa nebola nájdená, potvrďte prosím parametre."
+    insufficient_rights_to_create: "Nemáš povolenie na vytvorenie hlasovania."
+    email:
+      link_to_poll: "Kliknite na zobrazenie hlasovania."
+    user_field:
+      no_data: "Žiadne údaje"

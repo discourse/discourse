@@ -1,0 +1,70 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  badges:
+    certified:
+      name: Sertifitseeritud
+    licensed:
+      name: Litsenseeritud
+  discourse_narrative_bot:
+    dice:
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "tsitaat"
+      "1":
+        author: "Albert Einstein"
+      "2":
+        author: "Mahatma Gandhi"
+      "3":
+        author: "Dr. Seuss"
+      "4":
+        author: "Charles-Guillaume Étienne"
+      "6":
+        author: "Forrest Gumpi ema"
+      "7":
+        author: "Neil Armstrong"
+      "8":
+        author: "Eleanor Roosevelt"
+      "9":
+        author: "Bruce Lee"
+      "10":
+        author: "Napoleon Hill"
+    magic_8_ball:
+      answers:
+        "1": "See on kindel"
+        "3": "Kahtlemata"
+        "4": "Jah, kindlasti"
+        "5": "Võid sellele loota"
+        "6": "Ahaa, just"
+        "7": "Tõenäoliselt"
+        "8": "Väljavaade on hea"
+        "9": "Jah"
+        "12": "Küsi hiljem uuesti"
+        "14": "Ei suuda praegu ennustada"
+        "15": "Keskendu ning küsi uuesti"
+        "16": "Sellele ära looda"
+        "17": "Minu vastus on ei"
+        "18": "Minu allikad ütlevad ei"
+        "20": "Väga kahtlane"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "alusta"
+      skip_trigger: "jäta vahele"
+      help_trigger: "näita abininfot"
+    new_user_narrative:
+      reset_trigger: "õpetus"
+      hello:
+        title: "Tere!"
+      quoting:
+        reply: |-
+          Suureprane töö. Valisid minu lemmiktsitaadi! :left_speech_bubble:
+      certificate:
+        alt: "Saavutuse tunnistus"
+    advanced_user_narrative:
+      reset_trigger: "õpetus edasijõutnudele"

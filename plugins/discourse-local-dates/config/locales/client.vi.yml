@@ -1,0 +1,42 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: '%{time} hôm nay'
+        tomorrow: '%{time} ngày mai'
+        yesterday: '%{time} hôm qua'
+        countdown:
+          passed: ngày qua
+      title: Chèn ngày / giờ
+      create:
+        form:
+          insert: Chèn
+          advanced_mode: Chế độ nâng cao
+          simple_mode: Chế độ đơn giản
+          format_description: "Định dạng được sử dụng để hiển thị ngày cho người dùng. Sử dụng Z để hiển thị độ lệch và zz cho tên múi giờ."
+          timezones_title: Múi giờ hiển thị
+          timezones_description: Múi giờ sẽ được sử dụng để hiển thị ngày trong bản xem trước và dự phòng.
+          recurring_title: Tái diễn
+          recurring_description: "Xác định sự lặp lại của một sự kiện. Bạn cũng có thể chỉnh sửa thủ công tùy chọn định kỳ do biểu mẫu tạo và sử dụng một trong các khóa sau: năm, quý, tháng, tuần, ngày, giờ, phút, giây, mili giây."
+          recurring_none: Không tái diễn
+          invalid_date: Ngày không hợp lệ, hãy đảm bảo ngày và giờ chính xác
+          date_title: Ngày
+          time_title: Thời gian
+          format_title: Định dạng ngày
+          timezone: Múi giờ
+          until: Cho đến khi...
+          recurring:
+            every_day: "Mỗi ngày"
+            every_week: "Mỗi tuần"
+            every_two_weeks: "Mỗi hai tuần"
+            every_month: "Mỗi tháng"
+            every_two_months: "Mỗi hai tháng"
+            every_three_months: "Mỗi ba tháng"
+            every_six_months: "Mỗi sáu tháng"
+            every_year: "Mỗi năm"

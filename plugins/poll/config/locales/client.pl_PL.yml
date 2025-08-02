@@ -1,0 +1,175 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Ankieta Discourse"
+  js:
+    poll:
+      voters:
+        one: "głosujący"
+        few: "głosujących"
+        many: "głosujących"
+        other: "głosujących"
+      total_votes:
+        one: "oddanych głosów"
+        few: "oddanych głosów"
+        many: "oddanych głosów"
+        other: "oddanych głosów"
+      votes:
+        one: "%{count} głos"
+        few: "%{count} głosy"
+        many: "%{count} głosów"
+        other: "%{count} głosów"
+      average_rating: "Średnia ocena: <strong>%{average}</strong>."
+      public:
+        title: "Głosy są <strong>jawne</strong>."
+      results:
+        groups:
+          title: "Aby głosować w tej ankiecie, musisz być członkiem %{groups}."
+        vote:
+          title: "Wyniki pojawią się po <strong>zagłosowaniu</strong>."
+        closed:
+          title: "Wyniki pojawią się po <strong>zamknięciu</strong> ankiety."
+        staff:
+          title: "Wyniki pokazywane są wyłącznie członkom <strong>zespołu</strong>."
+        tabs:
+          votes: "Głosy"
+          outcome: "Rezultat"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Wybierz co najmniej <strong>%{count} opcję</strong>."
+            few: "Wybierz co najmniej <strong>%{count} opcję</strong>."
+            many: "Wybierz co najmniej <strong>%{count} opcji</strong>."
+            other: "Wybierz co najmniej <strong>%{count} opcji</strong>."
+          up_to_max_options:
+            one: "Wybierz maksymalnie <strong>%{count} opcję</strong>."
+            few: "Wybierz maksymalnie <strong>%{count} opcję</strong>."
+            many: "Wybierz maksymalnie <strong>%{count} opcji</strong>."
+            other: "Wybierz maksymalnie <strong>%{count} opcji</strong>."
+          x_options:
+            one: "Wybierz <strong>%{count} opcję</strong>."
+            few: "Wybierz <strong>%{count} opcję</strong>."
+            many: "Wybierz <strong>%{count} opcji</strong>."
+            other: "Wybierz <strong>%{count} opcji</strong>."
+          between_min_and_max_options: "Wybierz pomiędzy <strong>%{min} a %{max} opcjami</strong>."
+      cast-votes:
+        title: "Oddaj głos"
+        label: "Oddaj głos!"
+      show-results:
+        title: "Wyświetl wyniki ankiety"
+        label: "Wyniki"
+      show-tally:
+        title: "Pokaż wyniki głosowania według liczby głosów"
+        label: "Wyświetl licznik"
+      show-percentage:
+        title: "Pokaż wyniki głosowania w procentach"
+        label: "Wyświetl jako procent"
+      remove-vote:
+        title: "Usuń swój głos"
+        label: "Cofnij głos"
+      hide-results:
+        title: "Wróć do oddanych głosów"
+        label: "Głosuj"
+      group-results:
+        title: "Grupuj głosy według pól użytkownika"
+        label: "Pokaż podsumowanie"
+      export-results:
+        title: "Eksportuj wyniki ankiety"
+        label: "Eksport"
+      open:
+        title: "Otwórz ankietę"
+        label: "Otwórz"
+        confirm: "Czy na pewno chcesz otworzyć tę ankietę?"
+      close:
+        title: "Zamknij ankietę"
+        label: "Zamknij"
+        confirm: "Czy na pewno chcesz zamknąć tę ankietę?"
+      automatic_close:
+        closes_in: "Zamknięcie ankiety w ciągu <strong>%{timeLeft}</strong>."
+        age: "Zamknięta <strong>%{age}</strong>"
+      breakdown:
+        title: "Wyniki ankiety"
+        votes: "%{count} głosów"
+        breakdown: "Podział"
+        percentage: "Procent"
+        count: "Liczba"
+      ranked_choice:
+        title:
+          rounds: "Rundy"
+          outcome: "Wynik"
+        none: "Brak"
+        majority: "Większość"
+        eliminated: "Wyeliminowane"
+        round: "Runda"
+        winner:
+          one: "Zwycięzcą został %{winner} po jednej rundzie."
+          few: "Zwycięzcą został %{winner} po %{count} rundach."
+          many: "Zwycięzcą został %{winner} po %{count} rundach."
+          other: "Zwycięzcą został %{winner} po %{count} rundach."
+        tied:
+          one: "Remis po jednej rundzie pomiędzy następującymi kandydatami:"
+          few: "Remis po %{count} rundach pomiędzy następującymi kandydatami:"
+          many: "Remis po %{count} rundach pomiędzy następującymi kandydatami:"
+          other: "Remis po %{count} rundach pomiędzy następującymi kandydatami:"
+      options:
+        label: "Opcje"
+        ranked_choice:
+          abstain: "Wstrzymaj się"
+          highest_priority: "(najwyższy priorytet)"
+          lowest_priority: "(najniższy priorytet)"
+          login: "Zaloguj się, aby zagłosować!"
+      error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
+      error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
+      error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
+      error_while_exporting_results: "Przepraszamy, wystąpił błąd podczas eksportowania wyników ankiety."
+      ui_builder:
+        title: Zbuduj ankietę
+        insert: Wstaw ankietę
+        help:
+          options_min_count: Wprowadź co najmniej 1 opcję.
+          options_max_count: Wprowadź co najwyżej %{count} opcji.
+          invalid_min_value: Minimalna wartość musi wynosić co najmniej 1.
+          invalid_max_value: Maksymalna wartość musi wynosić co najmniej 1, ale mniejsza lub równa liczbie opcji.
+          invalid_values: Wartość minimalna musi być mniejsza niż maksymalna.
+          min_step_value: Minimalna wartość kroku to 1
+        poll_type:
+          label: Typ
+          regular: Pojedynczy wybór
+          multiple: Wielokrotny wybór
+          ranked_choice: Wybór rankingowy
+          number: Liczba ocen
+        poll_result:
+          label: Pokaż wyniki...
+          always: Zawsze widoczna
+          vote: Dopiero po głosowaniu
+          closed: Kiedy ankieta jest zamknięta
+          staff: Wyłącznie dla zespołu
+        poll_groups:
+          label: Ogranicz głosowanie do tych grup
+        poll_chart_type:
+          label: Wykres wyników
+          bar: Pasek
+          pie: Ciasto
+        poll_config:
+          max: Maksymalne wybory
+          min: Minimalne wybory
+          step: Krok
+        poll_public:
+          label: Pokaż kto głosował
+        poll_title:
+          label: Tytuł (opcjonalnie)
+        poll_options:
+          label: Opcje (jedna na wiersz)
+          add: Dodaj opcję
+        automatic_close:
+          label: Automatycznie zamknij ankietę
+        show_advanced: "Pokaż opcje zaawansowane"
+        hide_advanced: "Ukryj opcje zaawansowane"

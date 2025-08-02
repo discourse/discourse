@@ -1,0 +1,4 @@
+<% content_for :head do %>
+  <%= raw crawlable_meta_data(title: I18n.t('badges.badge_title_metadata', display_name: @badge.display_name, site_title: SiteSetting.title), description: @badge.long_description) %>
+  <%= auto_discovery_link_tag(:rss, "#{@rss_link}.rss", title: @rss_title) %>
+<% end %>

@@ -1,0 +1,118 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    discourse_automation:
+      back: กลับ
+      edit: แก้ไข
+      fields:
+        user:
+          label: ผู้ใช้
+        pm:
+          title:
+            label: ชื่อเรื่อง
+        pms:
+          title:
+            label: ชื่อเรื่อง
+        group:
+          label: กลุ่ม
+        text:
+          label: ข้อความ
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: เหรียญ
+        recurring:
+          frequencies:
+            day: วัน
+            week: สัปดาห์
+            month: เดือน
+            year: ปี
+          fields:
+            recurrence:
+              label: มีการเกิดขึ้นซ้ำ
+        topic:
+          fields:
+            restricted_topic:
+              label: หมายเลขกระทู้
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: ป้าย
+            restricted_categories:
+              label: หมวดหมู่
+          created: สร้างเมื่อ
+          with_images: รูปภาพ
+          with_links: ลิงก์
+          with_uploads: อัปโหลด
+        pm_created:
+          fields:
+            restricted_user:
+              label: ผู้ใช้
+            restricted_group:
+              label: กลุ่ม
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: หมวดหมู่
+            restricted_tags:
+              label: ป้าย
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: ป้าย
+        post:
+          fields:
+            topic:
+              label: หมายเลขกระทู้
+        group_category_notification_default:
+          fields:
+            group:
+              label: กลุ่ม
+        user_global_notice:
+          levels:
+            info: ข้อมูล
+            success: สำเร็จ
+            error: ผิดพลาด
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: กลุ่ม
+            badge:
+              label: เหรียญ
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: ผู้ใช้
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: หมายเลขกระทู้
+        banner_topic:
+          fields:
+            topic_id:
+              label: หมายเลขกระทู้
+            user:
+              label: ผู้ใช้
+        close_topic:
+          fields:
+            topic:
+              label: หมายเลขกระทู้
+            user:
+              label: ผู้ใช้
+      models:
+        automation:
+          name:
+            label: ชื่อ
+          version:
+            label: เวอร์ชัน
+          status:
+            label: สถานะ
+          disabled:
+            label: ปิดใช้งานแล้ว

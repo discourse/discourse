@@ -1,0 +1,96 @@
+@use "lib/viewport";
+
+.chat-browse-view {
+  position: relative;
+  box-sizing: border-box;
+  padding: 1rem 1rem env(safe-area-inset-bottom) 1rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &__title {
+    box-sizing: border-box;
+    margin-bottom: 0;
+  }
+
+  &__content_wrapper {
+    box-sizing: border-box;
+    margin-top: 1rem;
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1.25rem;
+
+    @include viewport.until(md) {
+      grid-template-columns: repeat(1, 1fr);
+      grid-gap: 1rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+
+    .c-drawer-routes.--browse & {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+
+      .filter-input {
+        width: 100%;
+      }
+    }
+
+    @include viewport.until(md) {
+      flex-direction: column;
+
+      .filter-input-container {
+        margin-top: 1rem;
+      }
+
+      .filter-input-container,
+      nav {
+        width: 100%;
+      }
+    }
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    margin: 0;
+
+    &::before {
+      content: none; // there is a strange thing applied on nav-pills and this resets it
+    }
+  }
+
+  &__filter {
+    display: inline;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    @include viewport.until(sm) {
+      margin: 0;
+    }
+  }
+
+  &__filter-link,
+  &__filter-link:visited {
+    color: var(--primary);
+    font-size: var(--font-up-1);
+    padding: 0 0.25rem;
+
+    @include viewport.until(md) {
+      font-size: var(--font-up-1);
+    }
+  }
+}

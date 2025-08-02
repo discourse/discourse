@@ -1,0 +1,175 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "סקר של Discourse"
+  js:
+    poll:
+      voters:
+        one: "מצביע"
+        two: "מצביעים"
+        many: "מצביעים"
+        other: "מצביעים"
+      total_votes:
+        one: "מספר הצבעות כולל"
+        two: "מספר הצבעות כולל"
+        many: "מספר הצבעות כולל"
+        other: "מספר הצבעות"
+      votes:
+        one: "הצבעה"
+        two: "שתי הצבעות"
+        many: "%{count} הצבעות"
+        other: "%{count} הצבעות"
+      average_rating: "דירוג ממוצע: <strong>%{average}</strong>."
+      public:
+        title: "ההצבעות הן <strong>ציבוריות</strong>."
+      results:
+        groups:
+          title: "עליך להיות חבר בקבוצה %{groups} כדי להצביע לסקר הזה."
+        vote:
+          title: "התוצאות יופיעו לאחר <strong>ההצבעה</strong>."
+        closed:
+          title: "התוצאות יופיעו לאחר <strong>הסגירה</strong>."
+        staff:
+          title: "התוצאות זמינות לחברי <strong>סגל</strong> בלבד."
+        tabs:
+          votes: "הצבעות"
+          outcome: "תוצאה"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "נא לבחור לפחות ב<strong>אפשרות אחת</strong>."
+            two: "נא לבחור לפחות ב־<strong>%{count} אפשרויות</strong>."
+            many: "נא לבחור לפחות ב־<strong>%{count} אפשרויות</strong>."
+            other: "נא לבחור לפחות ב־<strong>%{count} אפשרויות</strong>."
+          up_to_max_options:
+            one: "נא לבחור עד <strong>אפשרות אחת</strong>."
+            two: "נא לבחור עד <strong>%{count} אפשרויות</strong>."
+            many: "נא לבחור עד <strong>%{count} אפשרויות</strong>."
+            other: "נא לבחור עד <strong>%{count} אפשרויות</strong>."
+          x_options:
+            one: "נא לבחור ב<strong>אפשרות אחת</strong>."
+            two: "נא לבחור ב־<strong>%{count} אפשרויות</strong>."
+            many: "נא לבחור ב־<strong>%{count} אפשרויות</strong>."
+            other: "נא לבחור ב־<strong>%{count} אפשרויות</strong>."
+          between_min_and_max_options: "נא לבחור בין <strong>%{min} ל־%{max} אפשרויות</strong>."
+      cast-votes:
+        title: "להצביע"
+        label: "להצביע עכשיו!"
+      show-results:
+        title: "הצגת תוצאות הסקר"
+        label: "תוצאות"
+      show-tally:
+        title: "הצגת תוצאות ההצבעה לפני מספר הקולות"
+        label: "הצגת מניין"
+      show-percentage:
+        title: "הצגת תוצאות ההצבעה כאחוזים"
+        label: "הצגה כאחוזים"
+      remove-vote:
+        title: "הסרת הצבעתך"
+        label: "ביטול הצבעה"
+      hide-results:
+        title: "חזרה להצבעות שלך"
+        label: "הצבעה"
+      group-results:
+        title: "קיבוץ הצבעות לפי משתמש"
+        label: "הצגת פילוח"
+      export-results:
+        title: "ייצוא תוצאות הסקר"
+        label: "ייצוא"
+      open:
+        title: "פתיחת הסקר"
+        label: "פתיחה"
+        confirm: "לפתוח את הסקר הזה?"
+      close:
+        title: "סגירת הסקר"
+        label: "סגירה"
+        confirm: "לסגור סקר זה?"
+      automatic_close:
+        closes_in: "נסגר בעוד <strong>%{timeLeft}</strong>."
+        age: "נסגר ב־<strong>%{age}</strong>"
+      breakdown:
+        title: "תוצאות הסקר"
+        votes: "%{count} הצבעות"
+        breakdown: "פילוח"
+        percentage: "אחוזים"
+        count: "ספירה"
+      ranked_choice:
+        title:
+          rounds: "סיבובים"
+          outcome: "תוצאה"
+        none: "ללא"
+        majority: "הרוב"
+        eliminated: "הודח"
+        round: "סיבוב"
+        winner:
+          one: "הניצחון לטובת %{winner} לאחר סיבוב אחד."
+          two: "הניצחון לטובת %{winner} אחרי שני סיבובים."
+          many: "הניצחון לטובת %{winner} אחרי %{count} סיבובים."
+          other: "הניצחון לטובת %{winner} אחרי %{count} סיבובים."
+        tied:
+          one: "שוויון לאחר סיבוב אחד בין המתמודדים:"
+          two: "שוויון לאחר שני סיבובים בין המתמודדים:"
+          many: "שוויון לאחר %{count} סיבובים בין המתמודדים הבאים:"
+          other: "שוויון לאחר %{count} סיבובים בין המתמודדים הבאים:"
+      options:
+        label: "אפשרויות"
+        ranked_choice:
+          abstain: "הימנעות"
+          highest_priority: "(העדיפות הגבוהה ביותר)"
+          lowest_priority: "(העדיפות הנמוכה ביותר)"
+          login: "יש להיכנס כדי להצביע!"
+      error_while_toggling_status: "חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
+      error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."
+      error_while_fetching_voters: "חלה שגיאה בהצגת המצביעים, עמך הסליחה."
+      error_while_exporting_results: "אירעה שגיאה בייצוא תוצאות הסקר."
+      ui_builder:
+        title: בניית סקר
+        insert: הכנסת סקר
+        help:
+          options_min_count: יש למלא אפשרות אחת לפחות.
+          options_max_count: יש למלא עד %{count} אפשרויות.
+          invalid_min_value: הערך המזערי חייב להיות 1 לפחות.
+          invalid_max_value: הערך המרבי חייב להיות 1 לפחות אך פחות מאשר או שווה למספר האפשרויות.
+          invalid_values: הערך המזערי חייב להיות קטן מהערך המרבי.
+          min_step_value: ערך הצעד המזערי הוא 1
+        poll_type:
+          label: סוג
+          regular: בחירה בודדת
+          multiple: בחירה מרובה
+          ranked_choice: בחירה לפי דירוג
+          number: ציון מספרי
+        poll_result:
+          label: להציג תוצאות...
+          always: גלוי תמיד
+          vote: רק לאחר הצבעה
+          closed: כשהסקר סגור
+          staff: סגל בלבד
+        poll_groups:
+          label: להגביל את ההצבעה לקבוצות אלה
+        poll_chart_type:
+          label: תרשים תוצאות
+          bar: עמודות
+          pie: עוגה
+        poll_config:
+          max: כמות האפשרויות המרבית
+          min: כמות האפשרויות המזערית
+          step: צעד
+        poll_public:
+          label: להציג מי המצביעים
+        poll_title:
+          label: כותרת (רשות)
+        poll_options:
+          label: אפשרויות (אחת בכל שורה)
+          add: הוספת אפשרות
+        automatic_close:
+          label: לסגור את הסקר אוטומטית
+        show_advanced: "הצגת אפשרויות מתקדמות"
+        hide_advanced: "הסתרת אפשרויות מתקדמות"

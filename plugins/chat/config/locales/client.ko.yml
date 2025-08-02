@@ -1,0 +1,364 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: 채팅
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "항상"
+          never: "알림 받지 않기"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "채팅 채널 상태 변경됨"
+            chat_channel_delete: "채팅 채널 삭제됨"
+            chat_auto_remove_membership: "채널에서 자동으로 제거된 멤버십"
+    chat:
+      deleted_chat_username: 삭제되었습니다
+      dates:
+        yesterday: "어제"
+      all_loaded: "모든 메시지 보기"
+      bot: "봇"
+      create: "글"
+      cancel: "취소"
+      chat_channels: "채널"
+      move_to_channel:
+        instructions:
+          other: "<strong>%{count}개</strong>의 메시지를 옮기고 있습니다. 새로운 채널을 선택하세요. <strong>%{channelTitle}</strong>에 메시지가 이동되었다는 것이 표시될 것입니다. 답변된 메시지는 새로운 채널에 이동되지 않을 것이며, 기존 채널의 메시지는 답변하는 메시지로 표시되지 않을 것입니다."
+        confirm_move: "메시지 이동"
+      channel_settings:
+        title: "채널 설정"
+        edit: "편집"
+        add: "추가"
+        close_channel: "채널 닫기"
+        open_channel: "채널 열기"
+        archive_channel: "아카이브 채널"
+        delete_channel: "채널 삭제"
+        join_channel: "채널 참여"
+        leave_channel: "채널 나가기"
+        join: "가입"
+        leave: "나가기"
+      channel_archive:
+        title: "보관된 채널"
+        retry: "재시도"
+      channel_delete:
+        instructions: "<p><strong>%{name}</strong> 채널과 채팅 기록을 삭제합니다. 반응과 업로드 같은 모든 메시지와 관련된 데이터가 영구적으로 삭제됩니다. 채널 기록을 보존하고 삭제하고 싶다면, 채널 보관을 고려하세요.</p> <p>정말로 채널을 <strong>영구적으로 삭제</strong>하시겠습니까? 확인을 위해, 채널의 이름을 아래에 입력하세요.</p>"
+      channels_list_popup:
+        browse: "채널 찾아보기"
+        create: "새 채널"
+      close: "닫기"
+      remove: "제거"
+      expand: "채팅창 확장"
+      deleted:
+        other: "%{count}메시지가 삭제되었습니다 [모두 보기]"
+      delete: "삭제하기"
+      edited: "편집됨"
+      muted: "알림끔"
+      joined: "가입"
+      empty_state:
+        direct_message_cta: "개인 채팅 시작"
+        title: "채널을 찾을 수 없습니다."
+      email_frequency:
+        never: "알림 받지 않기"
+        title: "이메일 알림"
+        when_away: "자리를 비울 때만"
+      header_indicator_preference:
+        title: "헤더에 활동 표시"
+        all_new: "모든 새 메시지"
+        never: "알림 받지 않기"
+      enable: "채팅 활성화"
+      flag: "신고"
+      emoji: "이모티콘 삽입"
+      flagged: "이 메시지는 신고가 되어 검토가 필요합니다."
+      heading: "채팅"
+      join: "가입"
+      last_visit: "마지막 방문"
+      mention_warning:
+        groups:
+          unreachable_1: "@%{group}에서 멘션을 허용하지 않습니다."
+          unreachable_2: "%{group1} 및 %{group2}는 언급을 허용하지 않습니다."
+          unreachable_multiple:
+            other: "%{group} 및 %{count}개의 그룹에서는 언급을 허용하지 않습니다."
+        too_many_mentions:
+          other: "이 메시지는 %{count}개의 언급 한도를 초과합니다."
+        too_many_mentions_admin:
+          other: '이 메시지는 %{count}개의 <a href="%{siteSettingUrl}" target="_blank">언급 한도</a>를 초과합니다.'
+      aria_roles:
+        header: "채팅 헤더"
+        composer: "채팅 작성기"
+        channels_list: "채팅 채널 목록"
+      no_public_channels_cta: "채널 찾아보기"
+      kicked_from_channel: "더 이상 이 채널에 접근할 수 없습니다."
+      only_chat_push_notifications:
+        title: "채팅 푸시 알림만 보내기"
+      open: "채팅 열기"
+      placeholder_channel: "%{channelName}에서 채팅"
+      placeholder_thread: "스레드에서 채팅"
+      placeholder_users: "%{commaSeparatedNames}과 채팅"
+      placeholder_new_message_disallowed:
+        archived: "채널이 보관되어 메시지를 보낼 수 없습니다."
+        read_only: "채널이 읽기 전용이므로 메시지를 보낼 수 없습니다."
+      remove_upload: "파일 제거"
+      reply: "댓글쓰기"
+      edit: "편집"
+      copy_link: "링크 복사"
+      rebake_message: "HTML 다시 빌드하기"
+      retry_staged_message:
+        title: "네트워크 오류"
+        action: "다시 보내시겠습니까?"
+      unreliable_network: "네트워크가 불안정하여 메시지 전송 및 초안 저장이 작동하지 않을 수 있음"
+      bookmark_message: "북마크"
+      bookmark_message_edit: "북마크 수정"
+      save: "저장"
+      select: "선택"
+      return_to_list: "채널 목록으로 돌아가기"
+      unread_threads_count:
+        other: "읽지 않은 토론이 %{count}개 있습니다."
+      scroll_to_bottom: "맨 아래로 스크롤"
+      scroll_to_new_messages: "새 메시지 보기"
+      sound:
+        title: "데스크톱 채팅 알림음"
+      sounds:
+        none: "없음"
+      title: "채팅"
+      title_capitalized: "채팅"
+      upload: "파일 첨부"
+      upload_to_channel: "%{title}에 업로드"
+      upload_to_thread: "스레드에 업로드"
+      uploaded_files:
+        other: "%{count}개의 파일"
+      exit: "뒤로"
+      channel_status:
+        read_only_header: "읽기전용 채널입니다."
+        read_only: "읽기 전용"
+        archived_header: "채널이 보관됨"
+        archived: "저장됨"
+        closed_header: "닫힌 채널"
+        closed: "닫힘"
+        open_header: "열린 채널"
+        open: "열기"
+      browse:
+        back: "뒤로"
+        title: 채널
+        filter_all: 전체
+        filter_open: 열기
+        filter_closed: 닫힘
+        filter_archived: 보관됨
+        filter_input_placeholder: 이름으로 채널 검색
+      chat_message_separator:
+        today: 오늘
+        yesterday: 어제
+      members_view:
+        filter_placeholder: 회원 찾기
+      about_view:
+        title: 제목
+        name: 그룹명
+        description: 내용
+      channel_info:
+        back_to_all_channels: "모든 채널"
+        back_to_channel: "뒤로"
+        tabs:
+          members: 회원
+          settings: 설정
+        remove_member: "제거"
+      new_message_modal:
+        title: 전송
+        add_user_short: <span>사용자 추가</span>
+        open_channel: <span>채널 열기</span>
+        default_search_placeholder: "#채널, @사용자 또는 아무거나"
+        default_channel_search_placeholder: "#채널"
+        default_user_search_placeholder: "@누군가"
+        disabled_user: "채팅 비활성화됨"
+        no_items: "항목이 없습니다"
+        filter: "필터"
+      channel_edit_name_slug_modal:
+        title: 채널 수정
+        input_placeholder: 이름 추가
+        name: 채널명
+        slug: 채널 슬러그(선택)
+      channel_edit_description_modal:
+        title: 설명 수정
+        input_placeholder: 설명 추가
+      direct_message_creator:
+        title: 새로운 메시지
+        prefix: "받는사람:"
+        no_results: 결과 없음
+      channel:
+        no_memberships: 이 채널에는 회원이 없습니다.
+        no_memberships_found: 회원을 찾을 수 없음
+        memberships_count:
+          other: "회원 %{count}명"
+      create_channel:
+        choose_category:
+          label: "카테고리 선택"
+          none: "하나 선택..."
+        create: "채널 만들기"
+        description: "설명 (선택 사항)"
+        name: "채널명"
+        slug: "채널 슬러그(선택)"
+        title: "새 채널"
+        type: "유형"
+        types:
+          category: "카테고리"
+          topic: "글"
+      reviewable:
+        type: "채팅 메시지"
+      composer:
+        toggle_toolbar: "툴바 전환"
+        italic_text: "강조하기"
+        bold_text: "굵게하기"
+        code_text: "코드 텍스트"
+        send: "보내기"
+      quote:
+        default_thread_title: "스레드"
+      notification_levels:
+        never: "알림 받지 않기"
+      settings:
+        channel_threading_label: "스레딩"
+        auto_join_users_label: "자동으로 사용자 추가"
+        follow: "가입"
+        followed: "가입"
+        threading_enabled: "활성화"
+        threading_disabled: "비활성"
+        muted_on: "켜기"
+        muted_off: "끄기"
+        notifications: "알림"
+        preview: "미리 보기"
+        save: "저장"
+        saved: "저장되었습니다"
+        unfollow: "나가기"
+        admin_title: "관리자"
+        settings_title: "설정"
+        category_label: "카테고리"
+        history_label: "히스토리"
+        members_label: "회원"
+      admin:
+        title: "채팅"
+        export_messages:
+          title: "채팅 내보내기"
+          create_export: "내보내기"
+          export_has_started: "내보내기가 시작되었습니다. 준비가 되면 메시지를 받을 것입니다."
+      direct_messages:
+        create: "이동"
+        leave: "이 개인 채팅에서 나가기"
+        cannot_create: "죄송합니다. 다이렉트 메시지를 보낼 수 없습니다."
+      channel_list:
+        title: "채널"
+      incoming_webhooks:
+        back: "뒤로"
+        channel_placeholder: "채널 선택"
+        current_emoji: "현재 이모티콘"
+        description: "내용"
+        delete: "삭제하기"
+        emoji: "이모티콘"
+        emoji_instructions: "이모티콘이 비어 있으면 시스템 아바타가 사용됩니다."
+        name: "그룹명"
+        no_emoji: "선택된 이모티콘 없음"
+        reset_emoji: "이모티콘 초기화"
+        save: "저장"
+        edit: "수정"
+        select_emoji: "이모티콘 선택"
+        system: "시스템"
+        url: "URL"
+        username: "아이디"
+      selection:
+        cancel: "취소"
+        copy: "복사"
+        move_selection_to_channel: "채널로 이동"
+        title: "채팅을 글로 이동"
+        new_topic:
+          title: "새로운 주제로 이동"
+        existing_topic:
+          title: "이미 있는 주제로 옮기기"
+        new_message:
+          title: "새 메시지로 이동"
+      replying_indicator:
+        single_user: "%{username}님이 입력 중"
+      retention_reminders:
+        short:
+          other: "%{count}일"
+      flagging:
+        action: "신고 메시지"
+      emoji_picker:
+        objects: "사물"
+        people_&_body: "사람과 신체"
+        travel_&_places: "여행 및 장소"
+        animals_&_nature: "동물 및 자연"
+        food_&_drink: "음식 및 음료"
+        activities: "활동"
+        flags: "신고"
+        symbols: "기호"
+        search_placeholder: "이모티콘 이름과 별칭으로 검색..."
+        no_results: "결과 없음"
+      thread:
+        title: "제목"
+        view_thread: 스레드 보기
+        replies:
+          other: "%{count} 댓글"
+        label: 스레드
+        close: "스레드 닫기"
+        original_message:
+          started_by: "시작한 사람"
+        settings: "사이트 설정"
+        last_reply: "마지막 댓글"
+        notifications:
+          regular:
+            title: "일반"
+          tracking:
+            title: "알림"
+          watching:
+            title: "모든 알림"
+        participants_other_count:
+          other: "+%{count}"
+      draft_channel_screen:
+        header: "새로운 메시지"
+        cancel: "취소"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description} "
+      popup:
+        chat_message: "새 채팅 메시지"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: 채팅 메시지 보내기
+          fields:
+            chat_channel_id:
+              label: 채팅 채널 ID
+            message:
+              label: 메시지 보내기
+            sender:
+              label: 발신자
+              description: 시스템 기본값
+    review:
+      types:
+        chat_reviewable_message:
+          title: "신고된 채팅 메시지"
+        reviewable_chat_message:
+          noun: "채팅 메시지"
+    keyboard_shortcuts_help:
+      chat:
+        title: "채팅"
+        keyboard_shortcuts:
+          mark_all_channels_read: "%{shortcut} 모든 채널 읽음 표시"
+    user_menu:
+      tabs:
+        chat_notifications: "채팅 알림"
+        chat_notifications_with_unread:
+          other: "채팅 알림 - 읽지 않은 알림 %{count}개"
+    styleguide:
+      sections:
+        chat:
+          title: 채팅
+    sidebar:
+      panels:
+        chat:
+          label: "채팅"

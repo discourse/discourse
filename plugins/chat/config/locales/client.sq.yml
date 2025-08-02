@@ -1,0 +1,169 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Biseda
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Gjithmonë"
+          fullscreen: "Biseda në ekran të plotë"
+          never: "Asnjëherë"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Statusi i kanalit të bisedës ndryshoi"
+            chat_channel_delete: "Kanali i bisedës u fshi"
+            chat_auto_remove_membership: "Anëtarësimet hiqen automatikisht nga kanalet"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Krijo një hapësirë për mesazhe në një kanal të caktuar."
+      web_hooks:
+        chat_event:
+          group_name: "Temat e bisedës"
+          chat_message_created: "Mesazhi është shkruar"
+          chat_message_edited: "Mesazhi është redaktuar"
+          chat_message_trashed: "Mesazhi është fshirë"
+          chat_message_restored: "Mesazhi është rishkruar"
+    about:
+      chat_messages_count: "Mesazhet e bisedës"
+      chat_channels_count: "Kanalet e bisedës"
+      chat_users_count: "Përdoruesit e bisedës"
+    chat:
+      text_copied: Teksti u kopjua në memo
+      link_copied: Linku u kopjua në memo
+      back_to_forum: "Forumi"
+      deleted_chat_username: deleted
+      dates:
+        yesterday: "Dje"
+      all_loaded: "Shfaq mesazhet"
+      already_enabled: "Biseda është aktivizuar tashmë për këtë temë. Rifreskoni faqen."
+      disabled_for_topic: "Biseda është çaktivizuar për këtë temë."
+      bot: "bot"
+      create: "Krijo"
+      cancel: "Anulo"
+      channel_settings:
+        edit: "Redakto"
+        add: "Shto"
+      close: "Mbyll"
+      remove: "Hiq"
+      delete: "Fshij"
+      muted: "të heshtur"
+      joined: "anëtarësuar"
+      email_frequency:
+        never: "Asnjëherë"
+      header_indicator_preference:
+        never: "Asnjëherë"
+      flag: "Sinjalizoni"
+      last_visit: "vizita e fundit"
+      reply: "Përgjigju"
+      edit: "Redakto"
+      rebake_message: "Rindërtoni HTML"
+      bookmark_message: "Shto tek të preferuarat"
+      save: "Ruaj"
+      sounds:
+        none: "Asnjë"
+      exit: "kthehu mbrapa"
+      channel_status:
+        open: "Fillo"
+      browse:
+        back: "Kthehu mbrapa"
+        filter_all: Të Gjithë
+        filter_open: Fillo
+      chat_message_separator:
+        today: Sot
+        yesterday: Dje
+      about_view:
+        title: Titulli
+        name: Emri
+        description: Përshkrimi
+      channel_info:
+        back_to_channel: "Kthehu mbrapa"
+        tabs:
+          members: Anëtarë
+          settings: Rregullimet
+        remove_member: "Hiq"
+      new_message_modal:
+        filter: "Filtro"
+      direct_message_creator:
+        title: Mesazh i ri
+        prefix: "Për:"
+      create_channel:
+        type: "Lloji"
+        types:
+          category: "Kategori"
+          topic: "Topic"
+      composer:
+        italic_text: "tekst i theksuar"
+        bold_text: "tekst i trashë"
+      notification_levels:
+        never: "Asnjëherë"
+      settings:
+        followed: "Anëtarësuar"
+        threading_enabled: "Aktivizuar"
+        notifications: "Njoftimet"
+        preview: "Parashikimi"
+        save: "Ruaj"
+        saved: "U ruajt"
+        admin_title: "Admin"
+        settings_title: "Rregullimet"
+        category_label: "Kategori"
+        history_label: "Historia"
+        members_label: "Anëtarë"
+      incoming_webhooks:
+        back: "Kthehu mbrapa"
+        description: "Përshkrimi"
+        delete: "Fshije"
+        emoji: "Emoji"
+        name: "Emri juaj"
+        save: "Ruaj"
+        edit: "Redakto"
+        system: "sistem"
+        url: "URL"
+        username: "Emri i përdoruesit"
+      selection:
+        cancel: "Anulo"
+        copy: "Kopjo"
+        new_topic:
+          title: "Ktheje në një temë të re"
+        existing_topic:
+          title: "Transfero tek një Temë tjetër"
+      retention_reminders:
+        short:
+          one: "%{count} ditë"
+          other: "%{count} ditë"
+      emoji_picker:
+        flags: "Sinjalizime"
+      thread:
+        title: "Titulli"
+        replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+        settings: "Rregullimet"
+        last_reply: "përgjigja e fundit"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Në gjurmim"
+          watching:
+            title: "Në vëzhgim"
+      draft_channel_screen:
+        header: "Mesazh i ri"
+        cancel: "Anulo"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Mesazh

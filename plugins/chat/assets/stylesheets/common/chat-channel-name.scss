@@ -1,0 +1,43 @@
+.chat-channel-name {
+  @include ellipsis;
+  color: var(--primary);
+
+  .chat-channel-row__info & {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .has-unread & {
+    font-weight: bold;
+  }
+
+  &__label {
+    @include ellipsis;
+  }
+
+  .emoji {
+    height: 1em;
+    width: 1em;
+    vertical-align: middle;
+  }
+
+  .chat-channel-unread-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    @include chat-unread-indicator {
+      width: 8px;
+      height: 8px;
+    }
+
+    &.-urgent {
+      width: auto;
+      height: auto;
+      min-width: 0.6em;
+      padding: 0.3em 0.5em;
+    }
+  }
+}

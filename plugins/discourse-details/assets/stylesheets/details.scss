@@ -1,0 +1,152 @@
+details {
+  position: relative;
+
+  .topic-body .cooked &,
+  .d-editor-preview,
+  &.details__boxed,
+  .ProseMirror & {
+    background-color: var(--primary-very-low);
+    padding: 0.25rem 0.75rem;
+    margin-bottom: 0.5rem;
+
+    &:not([open]) {
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background-color: var(--d-hover);
+      }
+    }
+
+    aside.quote .title,
+    blockquote,
+    code {
+      background-color: rgb(var(--primary-rgb), 0.05);
+    }
+  }
+}
+
+details.details__boxed {
+  summary {
+    font-weight: bold;
+  }
+}
+
+details,
+summary {
+  outline: none;
+}
+
+summary {
+  > p {
+    margin-block: 0;
+    padding-block: 1rem;
+  }
+}
+
+summary:first-of-type {
+  cursor: pointer;
+  display: block;
+}
+
+summary::before {
+  content: "\25BA";
+  margin-right: 0.25em;
+}
+
+details[open] > summary::before,
+details.open > summary::before {
+  content: "\25BC";
+}
+
+/* hide native indicator */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.topic-body .cooked,
+.d-editor-preview {
+  .elided {
+    background-color: unset;
+    padding: 0;
+
+    &:not([open]) {
+      // specificity needed to overrule non-elided
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background-color: unset;
+      }
+
+      summary:hover {
+        background: var(--d-hover);
+      }
+    }
+
+    &[open] {
+      background: var(--primary-very-low);
+      padding: 0.5rem 0.75rem;
+
+      summary {
+        padding: 0;
+      }
+    }
+
+    summary::before {
+      content: "" !important;
+      display: none;
+    }
+
+    summary {
+      @include unselectable;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0.5rem 0.75rem;
+      color: var(--primary-medium);
+      background: var(--primary-very-low);
+      width: min-content;
+      line-height: 1;
+
+      &:hover,
+      &:focus,
+      &:focus-within {
+        color: var(--primary);
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.ProseMirror {
+  // No hover effect when editing - the hover is only on the caret
+  details {
+    &:not([open]) {
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background-color: var(--primary-very-low);
+      }
+    }
+  }
+
+  summary {
+    // Important for Firefox so clicking on summary allows proper caret positioning
+    pointer-events: none;
+
+    &:hover {
+      &::before {
+        background: var(--primary-low);
+      }
+    }
+
+    &::before {
+      pointer-events: auto;
+      padding: var(--space-1) var(--space-2);
+      margin-left: calc(-1 * var(--space-2));
+      border-radius: var(--d-border-radius);
+    }
+  }
+}

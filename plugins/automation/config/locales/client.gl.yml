@@ -1,0 +1,151 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  js:
+    discourse_automation:
+      back: Volver
+      edit: Editar
+      fields:
+        user:
+          label: Usuario
+        pm:
+          title:
+            label: Título
+          raw:
+            label: Mensaxe
+        pms:
+          title:
+            label: Título
+          raw:
+            label: Mensaxe
+        group:
+          label: Grupo
+        text:
+          label: Texto
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Insignia
+        stalled_topic:
+          durations:
+            P2W: "Dúas semanas"
+            P3M: "Tres meses"
+            P6M: "Seis meses"
+            P1Y: "Un ano"
+        recurring:
+          frequencies:
+            minute: minuto
+            hour: hora
+            day: día
+            week: semana
+            month: mes
+            year: ano
+          fields:
+            recurrence:
+              label: Periodicidade
+        stalled_wiki:
+          durations:
+            P2W: "Dúas semanas"
+            P3M: "Tres meses"
+            P6M: "Seis meses"
+            P1Y: "Un ano"
+        topic:
+          fields:
+            restricted_topic:
+              label: ID do tema
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Etiquetas
+            restricted_categories:
+              label: Categorías
+          created: Creado
+          with_images: Imaxes
+          with_links: Ligazóns
+          with_code: Código
+          with_uploads: Cargas
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Categoría primaria
+        pm_created:
+          fields:
+            restricted_user:
+              label: Usuarios
+            restricted_group:
+              label: Grupo
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Categoría
+            restricted_tags:
+              label: Etiquetas
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Etiquetas
+        post:
+          fields:
+            topic:
+              label: ID do tema
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupo
+        user_global_notice:
+          fields:
+            level:
+              label: Nivel
+          levels:
+            info: Información
+            success: Feito
+            error: Erro
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupo
+            badge:
+              label: Insignia
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Usuario
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID do tema
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID do tema
+            user:
+              label: Usuario
+        close_topic:
+          fields:
+            topic:
+              label: ID do tema
+            user:
+              label: Usuario
+      models:
+        trigger:
+          name:
+            label: Disparador
+        automation:
+          name:
+            label: Nome
+          trigger:
+            label: Disparador
+          version:
+            label: Versión
+          status:
+            label: Estado
+          enabled:
+            label: Activado
+          disabled:
+            label: Desactivado

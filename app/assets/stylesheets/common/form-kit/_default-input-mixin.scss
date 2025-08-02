@@ -1,0 +1,54 @@
+@use "lib/viewport";
+
+@mixin default-input {
+  width: 100%;
+  height: 2em;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low-mid) !important;
+  border-radius: var(--d-input-border-radius);
+  padding: 0 0.5em !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  appearance: none;
+
+  @content;
+
+  @include viewport.until(sm) {
+    width: 100% !important;
+    height: 2.25em;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &:focus:focus-visible,
+  &:active {
+    // these `!important` flags are another great case for having a button element without that pesky default styling
+    &:not(:disabled) {
+      background-color: var(--secondary) !important;
+      color: var(--primary) !important;
+      border-color: var(--tertiary);
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+
+      .d-icon {
+        color: inherit !important;
+      }
+    }
+  }
+
+  &:hover:not(:disabled) {
+    .discourse-no-touch & {
+      background-color: var(--secondary);
+      color: var(--primary);
+      border-color: var(--tertiary);
+
+      .d-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  .has-errors & {
+    border-color: var(--danger);
+  }
+}

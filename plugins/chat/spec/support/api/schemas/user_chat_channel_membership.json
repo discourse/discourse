@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "required": [
+    "chat_channel_id",
+    "last_read_message_id",
+    "muted",
+    "notification_level",
+    "following",
+    "last_viewed_at"
+  ],
+  "properties": {
+    "chat_channel_id": { "type": "number" },
+    "last_read_message_id": { "type": ["number", "null"] },
+    "muted": { "type": "boolean" },
+    "notification_level": { "type": "string" },
+    "following": { "type": "boolean" },
+    "user": {
+      "type": ["object", "null"],
+      "required": ["id", "name", "avatar_template", "username"],
+      "properties": {
+        "id": { "type": "number" },
+        "name": { "type": "string" },
+        "avatar_template": { "type": "string" },
+        "username": { "type": "string" },
+        "can_chat": { "type": "boolean" },
+        "has_chat_enabled": { "type": "boolean" }
+      }
+    },
+    "last_viewed_at": { "type": "datetime" }
+  }
+}

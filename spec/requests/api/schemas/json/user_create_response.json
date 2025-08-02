@@ -1,0 +1,22 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "success": {
+      "type": "boolean"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "message": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "success",
+    "active",
+    "message"
+  ]
+}

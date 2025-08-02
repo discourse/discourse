@@ -1,0 +1,91 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    styleguide:
+      title: "스타일 가이드"
+      welcome: "시작하려면 왼쪽 메뉴에서 섹션을 선택하세요."
+      categories:
+        atoms: Atoms
+        molecules: 분자
+        organisms: 유기체
+      sections:
+        typography:
+          title: "타이포그래피"
+          example: "Discourse에 오신 것을 환영합니다"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "날짜/시간 입력"
+        font_scale:
+          title: "글꼴 시스템"
+        colors:
+          title: "색상"
+        icons:
+          title: "아이콘"
+          full_list: "Font Awesome Icons의 전체 목록보기"
+        buttons:
+          title: "버튼"
+        dropdowns:
+          title: "드롭다운"
+        categories:
+          title: "카테고리"
+        bread_crumbs:
+          title: "메뉴 경로"
+        navigation:
+          title: "내비게이션"
+        navigation_bar:
+          title: "내비게이션 바"
+        navigation_stacked:
+          title: "내비게이션 스택"
+        categories_list:
+          title: "카테고리 목록"
+        topic_link:
+          title: "글 링크"
+        topic_list_item:
+          title: "글 목록 항목"
+        topic_statuses:
+          title: "글 상태"
+        topic_list:
+          title: "글 목록"
+        basic_topic_list:
+          title: "기본 글 목록"
+        footer_message:
+          title: "하단 메시지"
+        signup_cta:
+          title: "가입 CTA"
+        topic_timer_info:
+          title: "글 타이머"
+        topic_footer_buttons:
+          title: "글 하단 버턴"
+        topic_notifications:
+          title: "글 알림"
+        post:
+          title: "글"
+        topic_map:
+          title: "글 맵"
+        site_header:
+          title: "사이트 헤더"
+        suggested_topics:
+          title: "주요 글"
+        post_menu:
+          title: "글쓰기 메뉴"
+        modal:
+          title: "모달"
+          header: "모달 제목"
+          footer: "모달 하단"
+        user_about:
+          title: "사용자 소개 상자"
+        header_icons:
+          title: "헤더 아이콘"
+        spinners:
+          title: "스피너"
+        empty_state:
+          title: "빈 상태"
+        tooltips:
+          description: "내용"
+          header: "헤더"
+          hover_to_see: "마우스를 올리면 툴팁이 표시됩니다."

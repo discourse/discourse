@@ -1,0 +1,67 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    poll_enabled: "Polls toestaan?"
+    poll_maximum_options: "Maximale aantal toegestane opties in een poll."
+    poll_edit_window_mins: "Aantal minuten na het maken van een bericht waarin polls kunnen worden bewerkt."
+    poll_minimum_trust_level_to_create: "Het minimale vertrouwensniveau dat nodig is om polls te maken."
+    poll_create_allowed_groups: "De groepen die polls mogen maken."
+    poll_groupable_user_fields: "Een aantal gebruikersveldnamen die voor het groeperen en filteren van pollresultaten kunnen worden gebruikt."
+    poll_export_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van pollresultaten (0 voor uitschakelen)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID van de te gebruiken gegevensverkennerquery voor het exporteren van de resultaten van polls met gerangschikte keuze."
+    poll_default_public: "Schakel bij het maken van een nieuwe poll standaard de optie 'Weergeven wie er heeft gestemd' in."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "poll"
+    invalid_argument: "Ongeldige waarde '%{value}' voor argument '%{argument}'."
+    multiple_polls_without_name: "Voeg bij het maken van meerdere polls unieke namen toe door <code>name=example</code> toe te voegen aan je <code>[poll]</code>-tags."
+    multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het attribuut '<code>naam</code>' om je polls uniek te identificeren."
+    default_poll_must_have_at_least_1_option: "De poll moet minstens 1 optie hebben."
+    named_poll_must_have_at_least_1_option: "De poll met de naam <strong>%{name}</strong> moet minstens 1 optie hebben."
+    default_poll_must_have_less_options:
+      one: "De poll moet minder dan %{count} optie hebben."
+      other: "De poll moet minder dan %{count} opties hebben."
+    named_poll_must_have_less_options:
+      one: "De poll met de naam <strong>%{name}</strong> moet minder dan %{count} optie hebben."
+      other: "De poll met de naam <strong>%{name}</strong> moet minder dan %{count} opties hebben."
+    default_poll_must_have_different_options: "De poll moet verschillende opties hebben."
+    named_poll_must_have_different_options: "De poll met de naam <strong>%{name}</strong> moet verschillende opties hebben."
+    default_poll_must_not_have_any_empty_options: "De poll mag geen lege opties hebben."
+    named_poll_must_not_have_any_empty_options: "De poll met de naam <strong>%{name}</strong> mag geen lege opties hebben."
+    default_poll_with_multiple_choices_has_invalid_parameters: "De poll met meerdere keuzes heeft ongeldige parameters."
+    named_poll_with_multiple_choices_has_invalid_parameters: "De poll met de naam <strong>%{name}</strong> met meerdere keuzes heeft ongeldige parameters."
+    requires_at_least_1_valid_option: "Je moet minimaal 1 geldige optie selecteren."
+    requires_that_at_least_one_option_is_ranked: "In polls met gerangschikte keuzes moet je minimaal één optie rangschikken."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Je kunt een poll niet wijzigen na de eerste %{minutes} minuten."
+      cannot_edit_named_poll_with_votes: "Je kunt de pollnaam <strong>${name}</strong> niet wijzigen na de eerste %{minutes} minuten."
+    no_poll_with_this_name: "Er is geen poll met de naam <strong>%{name}</strong> aan dit bericht gekoppeld."
+    post_is_deleted: "Dit kan niet bij een verwijderd bericht."
+    user_cant_post_in_topic: "Je kunt niet stemmen, omdat je geen berichten in dit topic kunt plaatsen."
+    topic_must_be_open_to_vote: "Het topic moet geopend zijn om te kunnen stemmen."
+    poll_must_be_open_to_vote: "De poll moet geopend zijn om te kunnen stemmen."
+    one_vote_per_user: "Er is slechts 1 stem toegestaan voor deze poll."
+    max_vote_per_user:
+      one: Er is slechts %{count} stem toegestaan voor deze poll.
+      other: Er zijn maximaal %{count} stemmen toegestaan voor deze poll.
+    min_vote_per_user:
+      one: Er is minimaal %{count} stem vereist voor deze poll.
+      other: Er zijn minimaal %{count} stemmen vereist voor deze poll.
+    ranked_choice:
+      vote_options_mismatch: "Voor gerangschikte keuze moet het aantal gemaakte keuzes bij een stemming overeenkomen met het aantal opties. Het aantal opties is %{count} en het gemaakte aantal keuzes was %{provided}."
+      no_group_results_support: "Ongeldig polltype, ranked_choice ondersteunt geen gegroepeerde resultaten."
+    topic_must_be_open_to_toggle_status: "Het topic moet geopend zijn om de status te kunnen omschakelen."
+    only_staff_or_op_can_toggle_status: "Alleen een medewerker of de oorspronkelijke plaatser van een bericht kan de status van een poll omschakelen."
+    errors:
+      poll_not_found: "Poll niet gevonden, controleer de parameters."
+    insufficient_rights_to_create: "Je mag geen polls maken."
+    email:
+      link_to_poll: "Klik om de poll weer te geven."
+    user_field:
+      no_data: "Geen gegevens"

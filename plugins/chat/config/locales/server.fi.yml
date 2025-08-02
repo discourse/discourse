@@ -1,0 +1,274 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    chat_separate_sidebar_mode: "Näytä erilliset sivupalkkitilat foorumille ja chatille."
+    chat_enabled: "Ota chat käyttöön."
+    enable_public_channels: "Käytä julkisia kanavia kategorioiden perusteella."
+    chat_allowed_groups: "Näiden ryhmien käyttäjät voivat keskustella chatissa. Huomaa, että ylläpitäjillä ja valvojilla on aina chatin käyttöoikeus."
+    chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
+    chat_dm_retention_days: "Henkilökohtaisten chat-kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
+    chat_auto_silence_duration: "Määrä minuutteina, jonka ajaksi käyttäjät hiljennetään heidän ylittäessään chat-viestien luontirajan. Voit poistaa automaattisen hiljentämisen käytöstä asettamalla arvoksi 0."
+    chat_allowed_messages_for_trust_level_0: "Viestien määrä, jonka luottamustason 0 käyttäjät voivat lähettää 30 sekunnin aikana. Voit poistaa rajan käytöstä asettamalla arvoksi 0."
+    chat_allowed_messages_for_other_trust_levels: "Viestien määrä, jonka luottamustasojen 1–4 käyttäjät voivat lähettää 30 sekunnin aikana. Voit poistaa rajan käytöstä asettamalla arvoksi 0."
+    chat_silence_user_sensitivity: "Todennäköisyys, että chatissa liputettu käyttäjä hiljennetään automaattisesti."
+    chat_auto_silence_from_flags_duration: "Määrä minuutteina, jonka ajaksi käyttäjät hiljennetään, kun heidät hiljennetään automaattisesti liputettujen chat-viestien takia."
+    chat_duplicate_message_sensitivity: "Todennäköisyys, että saman lähettäjän kaksoiskappaleviesti estetään lyhyen ajan sisällä. Desimaaliluku välillä 0–1,0, ja 1,0 on korkein asetus (estää viestit useammin lyhyemmässä ajassa). Voit sallia kaksoiskappaleviestit asettamalla arvoksi 0."
+    chat_minimum_message_length: "Chat-viestin merkkien vähimmäismäärä."
+    chat_allow_uploads: "Salli lataukset julkisilla chat-kanavilla ja yksityisviestikanavilla."
+    chat_archive_destination_topic_status: "Tila, jossa kohdeketjun tulisi olla, kun kanavan arkistointi on valmis. Tätä käytetään vain, kun kohdeketju on uusi ketju, ei olemassa oleva."
+    direct_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda käyttäjien välisiä henkilökohtaisia chat-keskusteluja. Huomautus: henkilökunta voi aina luoda henkilökohtaisia chat-keskusteluja, ja käyttäjät voivat vastata henkilökohtaisiin chat-keskusteluihin, jotka on aloittanut käyttäjä, jolla on oikeus luoda niitä."
+    chat_message_flag_allowed_groups: "Näiden ryhmien käyttäjät voivat liputtaa chat-viestejä. Huomaa, että ylläpitäjät ja valvojat voivat aina liputtaa chat-viestejä."
+    max_mentions_per_chat_message: "Kuinka monta @nimi-ilmoitusta käyttäjä voi lisätä chat-viestiin."
+    chat_max_direct_message_users: "Käyttäjät eivät voi lisätä tätä määrää enempää muita käyttäjiä luodessaan uutta yksityisviestiä. Aseta arvoksi 0, jos haluat sallia ainostaan viestit itselle. Tämä asetus ei koske henkilökuntaa."
+    chat_allow_archiving_channels: "Salli henkilökunnan arkistoida viestejä ketjuun suljettaessa kanavaa."
+    chat_editing_grace_period: "(n) sekunnin ajan chatin lähettämisen jälkeen muokkaaminen ei näytä (muokattu)-tunnistetta chat-viestissä."
+    chat_editing_grace_period_max_diff_low_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasot 0 ja 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasosta 2 ylöspäin)."
+    chat_preferred_index: "Ensisijainen välilehti ladattaessa /chat."
+    allow_chat_in_anonymous_mode: "Ota tämä asetus käyttöön, jotta sivustoasi selaavat käyttäjät voivat käyttää chattia anonyymisti. Tämä asetus edellyttää, että 'salli anonyymi tila`-asetus on käytössä."
+    errors:
+      chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
+      direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
+      chat_upload_not_allowed_secure_uploads: "Chat-lataukset eivät ole sallittuja, kun suojattujen latauksien sivustoasetus on käytössä."
+      allow_chat_in_anonymous_mode_invalid: "Tämä asetus edellyttää, että ensin otetaan käyttöön 'salli nimettömän tilan' asetukset."
+  system_messages:
+    private_channel_title: "Kanava %{id}"
+    chat_channel_archive_complete:
+      title: "Chat-kanavan arkistointi on valmis"
+      subject_template: "Chat-kanavan arkistointi on valmis"
+      text_body_template: |
+        Chat-kanavan %{channel_hashtag_or_name} arkistointi on valmis. Viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Chat-kanavan arkistointi epäonnistui"
+      subject_template: "Chat-kanavan arkistointi epäonnistui"
+      text_body_template: |
+        Chat-kanavan %{channel_hashtag_or_name} arkistointi epäonnistui. %{messages_archived} viestiä on arkistoitu. Osittain arkistoidut viestit kopioitiin ketjuun [%{topic_title}](%{topic_url}). Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
+    chat_channel_archive_failed_no_topic:
+      title: "Chat-kanavan arkistointi epäonnistui"
+      subject_template: "Chat-kanavan arkistointi epäonnistui"
+      text_body_template: |
+        Chat-kanavan %{channel_hashtag_or_name} arkistointi epäonnistui. Viestejä ei ole arkistoitu. Ketjun luominen ei onnistunut seuraavista syistä:
+
+          %{topic_validation_errors}
+
+        Yritä uudelleen vierailemalla kanavalla osoitteessa %{channel_url}.
+  chat:
+    deleted_chat_username: poistettu
+    errors:
+      users_cant_be_added_to_channel: "Käyttäjiä ei voi lisätä tälle kanavalle."
+      user_cant_be_removed_from_channel: "Käyttäjää ei voi poistaa tältä kanavalta"
+      channel_exists_for_category: "Tällä alueella ja nimellä on jo olemassa kanava"
+      channel_new_message_disallowed:
+        archived: "Kanava on arkistoitu, uusia viestejä ei voi lähettää"
+        closed: "Kanava on suljettu, uusia viestejä ei voi lähettää"
+        read_only: "Kanava on vain luettavissa, uusia viestejä ei voi lähettää"
+      channel_modify_message_disallowed:
+        archived: "Kanava on arkistoitu, viestejä ei voi muokata tai poistaa"
+        closed: "Kanava on suljettu, viestejä ei voi muokata tai poistaa"
+        read_only: "Kanava on vain luettavissa, viestejä ei voi muokata tai poistaa"
+      user_cannot_send_message: "Et voi lähettää viestejä tällä hetkellä."
+      rate_limit_exceeded: "Ylitti 30 sekunnin sisällä lähetettävien chat-viestien rajan"
+      auto_silence_from_flags: "Chat-viesti liputettiin riittävän korkealla pistemäärällä käyttäjän hiljentämiseksi."
+      channel_cannot_be_archived: "Kanavaa ei voi arkistoida tällä hetkellä, sen täytyy olla suljettu tai avoinna, jotta sen voi arkistoida."
+      duplicate_message: "Lähetit identtisen viestin liian äskettäin."
+      delete_channel_failed: "Kanavan poistaminen epäonnistui, yritä uudelleen."
+      minimum_length_not_met:
+        one: "Viesti on liian lyhyt, siinä täytyy olla vähintään %{count} merkki."
+        other: "Viesti on liian lyhyt, siinä täytyy olla vähintään %{count} merkkiä."
+      message_too_long:
+        one: "Viesti on liian pitkä. Enintään %{count} merkki sallitaan."
+        other: "Viesti on liian pitkä. Enintään %{count} merkkiä sallitaan."
+      draft_too_long: "Luonnos on liian pitkä."
+      max_reactions_limit_reached: "Uusia reaktioita ei sallita tässä viestissä."
+      message_move_invalid_channel: "Lähde- ja kohdekanavan täytyy olla julkisia kanavia."
+      message_move_no_messages_found: "Annetuilla viestitunnuksilla ei löytynyt viestejä."
+      cant_update_direct_message_channel: "Yksityisviestikanavan ominaisuuksia, kuten nimeä ja kuvausta, ei voi päivittää."
+      not_accepting_dms: "%{username} ei ota vastaan viestejä tällä hetkellä."
+      actor_ignoring_target_user: "Ohitat käyttäjän %{username} tällä hetkellä, joten et voi lähettää hänelle viestejä."
+      actor_muting_target_user: "Olet vaimentanut käyttäjän %{username}, joten et voi lähettää hänelle viestejä."
+      actor_disallowed_dms: "Olet päättänyt estää käyttäjiä lähettämästä sinulle henkilökohtaisia ja yksityisviestejä, joten et voi luoda uusia yksityisviestejä."
+      actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle henkilökohtaisia viestejä, joten et voi luoda uusia henkilökohtaisia viestejä hänelle."
+      not_reachable: "Valitettavasti %{username} ei käytä chattia."
+      user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
+      over_chat_max_direct_message_users_allow_self: "Voit luoda yksityisviestin vain itsellesi."
+      over_chat_max_direct_message_users:
+        one: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
+        other: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
+      original_message_not_found: "Sen viestin edeltäjää, johon olet vastaamassa, ei löydy, tai se on poistettu."
+      thread_invalid_for_channel: "Ketju ei kuulu ilmoitetulle kanavalle."
+      thread_does_not_match_parent: "Ketju ei vastaa ylemmän tason viestiä."
+      invalid_direct_message: "Et saa luoda tätä yksityisviestiä."
+    reviewables:
+      message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
+      actions:
+        agree:
+          title: "Hyväksy..."
+        agree_and_keep_message:
+          title: "Säilytä viesti"
+          description: "Hyväksy liputus ja pidä viesti ennallaan."
+        agree_and_keep_deleted:
+          title: "Pidä viesti poistettuna"
+          description: "Hyväksy liputus ja pidä viesti poistettuna."
+        agree_and_suspend:
+          title: "Aseta käyttäjä käyttökieltoon"
+          description: "Hyväksy liputus ja aseta käyttäjä käyttökieltoon."
+        agree_and_silence:
+          title: "Hiljennä käyttäjä"
+          description: "Hyväksy liputus ja hiljennä käyttäjä."
+        agree_and_restore:
+          title: "Palauta viesti"
+          description: "Palauta viesti, jotta käyttäjät näkevät sen."
+        agree_and_delete:
+          title: "Poista viesti"
+          description: "Poista viesti, jotta käyttäjät eivät näe sitä."
+        delete_and_agree:
+          title: "Ohita liputus ja poista viesti"
+          description: "Ohita lippu poistamalla se jonosta ja poista viesti."
+        disagree_and_restore:
+          title: "Hylkää ja palauta viesti"
+          description: "Palauta viesti, jotta kaikki käyttäjät näkevät sen."
+        disagree:
+          title: "Hylkää"
+        ignore:
+          title: "Älä tee mitään"
+          description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
+      direct_messages:
+        transcript_title: "Kanavan %{channel_name} aiempien viestin transkriptio"
+        transcript_body: "Antaaksemme sinulle enemmän kontekstia lisäsimme tämän keskustelun aiempien viestien transkription (enintään kymmenen):\n\n%{transcript}"
+    channel:
+      users_invited_to_channel:
+        one: "%{inviting_user} on kutsunut käyttäjän %{invited_users}."
+        other: "%{inviting_user} on kutsunut käyttäjät %{invited_users}."
+      archive:
+        first_post_raw: "Tämä ketju on chat-kanavan [%{channel_name}](%{channel_url}) arkisto."
+      messages_moved:
+        one: "@%{acting_username} siirsi viestin kanavalle [%{channel_name}](%{first_moved_message_url})."
+        other: "@%{acting_username} siirsi %{count} viestiä kanavalle [%{channel_name}](%{first_moved_message_url})."
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ja %{count} muu"
+          other: "%{comma_separated_usernames} ja %{count} muuta"
+    mention_warning:
+      dismiss: "hylkää"
+      cannot_see: "%{first_identifier} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
+      cannot_see_multiple:
+        one: "%{first_identifier} ja %{count} muu käyttäjä eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
+        other: "%{first_identifier} ja %{count} muuta käyttäjää eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
+      invitations_sent:
+        one: "Kutsu lähetetty"
+        other: "Kutsut lähetettiin"
+      invite: "Kutsu kanavalle"
+      without_membership: "%{first_identifier} ei ole liittynyt tälle kanavalle."
+      without_membership_multiple:
+        one: "%{first_identifier} ja %{count} muu käyttäjä eivät ole liittyneet tälle kanavalle."
+        other: "%{first_identifier} ja %{count} muuta käyttäjää eivät ole liittyneet tälle kanavalle."
+      group_mentions_disabled: "%{first_identifier} ei salli mainintoja."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} ja %{count} muu ryhmä eivät salli mainintoja."
+        other: "%{first_identifier} ja %{count} muuta ryhmää eivät salli mainintoja."
+      global_mentions_disallowed: "@here- ja @all-maininnat eivät ole käytössä tällä kanavalla."
+      too_many_members: "Ryhmässä %{first_identifier} on liian monta jäsentä. Kukaan ei saanut ilmoitusta."
+      too_many_members_multiple:
+        one: "Ryhmässä %{first_identifier} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
+        other: "Ryhmässä %{first_identifier} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"
+        is_already_in_use: "on jo käytössä"
+    bookmarkable:
+      notification_title: "viesti kanavalla %{channel_name}"
+    personal_chat: "henkilökohtainen chat"
+    onebox:
+      inline_to_message: "Viesti %{message_id}, lähettäjä: %{username} – #%{chat_channel}"
+      inline_to_channel: "Chat #%{chat_channel}"
+      inline_to_topic_channel: "Ketjun %{topic_title} chat-keskustelu"
+      inline_to_thread: "%{thread_title} – #%{chat_channel}"
+      inline_to_thread_no_title: "Ketju kanavalla #%{chat_channel}"
+      thread_title_connector: "kohteessa"
+      x_members:
+        one: "%{count} jäsen"
+        other: "%{count} jäsentä"
+      and_x_others:
+        one: "ja %{count} muu"
+        other: "ja %{count} muuta"
+    transcript:
+      default_thread_title: "Ketju"
+      split_thread_range: "viestit %{start}–%{end}/%{total}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} mainitsi sinut kanavalla "%{channel}"'
+        other_type: '%{username} mainitsi kohteen %{identifier} kanavalla "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} mainitsi sinut henkilökohtaisessa chatissa"
+        other_type: "%{username} mainitsi kohteen %{identifier} henkilökohtaisessa chatissa"
+      new_chat_message: '%{username} lähetti viestin kanavalla "%{channel}"'
+      new_direct_chat_message: "%{username} lähetti viestin henkilökohtaisessa chatissa"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Lähetä chat-viesti
+  reviewable_score_types:
+    needs_review:
+      title: "Vaatii käsittelyä"
+    notify_user:
+      chat_pm_title: 'Chat-viestisi kanavalla "%{channel_name}"'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'Chat-viesti kanavalla "%{channel_name}" vaatii henkilökunnan huomiota'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Henkilökunnan jäsenen mielestä tämä chat-viesti täytyy käsitellä."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Poistettu käyttäjä"
+      description:
+        one: "Sinulla on uusi chat-viesti"
+        other: "Sinulla on uusia chat-viestejä"
+      from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Uusi viesti"
+          other: "[%{site_name}] Uusia viestejä"
+        watched_thread:
+          one: "[%{site_name}] Uusi viesti kanavalta %{channel}"
+          other: "[%{site_name}] Uusia viestejä kanavalta %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muualla"
+          other: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muissa"
+        chat_dm_1:
+          one: "[%{site_name}] Uusi viesti käyttäjältä %{name}"
+          other: "[%{site_name}] Uusia viestejä käyttäjältä %{name}"
+        chat_dm_2: "[%{site_name}] Uusia viestejä käyttäjältä %{name_1} ja %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Uusia viestejä käyttäjältä %{name} ja %{count} muulta"
+        chat_channel_1:
+          one: "[%{site_name}] Uusi viesti kanavalta %{channel}"
+          other: "[%{site_name}] Uusia viestejä kanavalta %{channel}"
+        chat_channel_2: "[%{site_name}] Uusia viestejä kanavalta %{channel_1} ja %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muulla"
+        chat_channel_and_dm: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja käyttäjältä %{name}"
+      unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
+      unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."
+      view_messages:
+        one: "Näytä viesti"
+        other: "Näytä %{count} viestiä"
+      view_more:
+        one: "Näytä %{count} viesti lisää"
+        other: "Näytä %{count} viestiä lisää"
+      your_chat_settings: "chat-sähköpostien tiheysasetus"
+  unsubscribe:
+    chat_summary:
+      select_title: "Aseta chat-yhteenvetosähköpostien tiheydeksi:"
+      never: Ei koskaan
+      when_away: Vain poissa ollessa
+  category:
+    cannot_delete:
+      has_chat_channels: "Tätä aluetta ei voi poistaa, koska siinä on chat-kanavia."

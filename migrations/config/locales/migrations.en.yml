@@ -1,0 +1,58 @@
+en:
+  progressbar:
+    skips:
+      one: "%{count} skip"
+      other: "%{count} skips"
+    warnings:
+      one: "%{count} warning"
+      other: "%{count} warnings"
+    errors:
+      one: "%{count} error"
+      other: "%{count} errors"
+    estimated: "ETA: %{duration}"
+    elapsed: "Time: %{duration}"
+    processed:
+      progress: "Processed: %{current}"
+      progress_with_max: "Processed: %{current} / %{max}"
+
+  converter:
+    default_step_title: "Converting %{type}"
+    max_progress_calculation: "Calculating items took %{duration}"
+
+  importer:
+    default_step_title: "Importing %{type}"
+    loading_required_data: "Loading required data..."
+    done: "Done. Total runtime: %{runtime}"
+
+  schema:
+    validator:
+      include_exclude_not_allowed: "Cannot use `include` and `exclude` together at %{path}"
+      invalid_name_regex: "Invalid `name_regex`: %{message}"
+
+      output:
+        schema_file_directory_not_found: "Schema file directory not found"
+        models_directory_not_found: "Models directory not found"
+        models_namespace_undefined: "Models namespace not defined"
+
+      global:
+        excluded_tables_missing: "Missing globally excluded tables: %{table_names}"
+        excluded_columns_missing: "Missing globally excluded columns: %{column_names}"
+        modified_columns_missing: "Missing globally modified columns: %{column_names}"
+
+      tables:
+        excluded_tables_configured: "Excluded tables configured: %{table_names}"
+        not_configured: "Tables not configured or excluded: %{table_names}"
+        copy_table_not_found: "Can't copy table '%{table_name}' because it doesn't exist"
+
+        added_columns_exist: "Added columns already exist in '%{table_name}': %{column_names}"
+        included_columns_missing: "Included columns do not exist in '%{table_name}': %{column_names}"
+        excluded_columns_missing: "Excluded columns do not exist in '%{table_name}': %{column_names}"
+        modified_columns_missing: "Missing modified columns in '%{table_name}': %{column_names}"
+        modified_columns_included: "Modified columns included in '%{table_name}': %{column_names}"
+        modified_columns_excluded: "Modified columns excluded in '%{table_name}': %{column_names}"
+        modified_columns_globally_excluded: "Modified columns globally excluded in '%{table_name}': %{column_names}"
+        no_columns_configured: "No columns configured in '%{table_name}'"
+
+      plugins:
+        not_installed: "Plugins not installed: %{plugin_names}"
+        additional_installed: "Unconfigured plugins installed: %{plugin_names}"

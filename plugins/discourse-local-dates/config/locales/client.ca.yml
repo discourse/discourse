@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Avui %{time}
+        tomorrow: Demà %{time}
+        yesterday: Ahir %{time}
+        countdown:
+          passed: la data ha passat
+      title: Inseriu la data i l'hora
+      create:
+        form:
+          insert: Insereix
+          advanced_mode: Mode avançat
+          simple_mode: Mode simple
+          timezones_title: Zones horàries que s'han de mostrar
+          timezones_description: Les zones horàries es faran servir per a mostrar les dates en previsualització i recurs (fallback).
+          recurring_title: Recurrència
+          recurring_description: "Defineix la recurrència d'un esdeveniment. També podeu editar manualment l'opció recurrent generada pel formulari i utilitzar una de les claus següents: anys, trimestres, mesos, setmanes, dies, hores, minuts, segons i mil·lisegons."
+          recurring_none: Sense recurrència
+          invalid_date: La data no és vàlida. Assegureu-vos que la data i l'hora són correctes
+          date_title: Data
+          time_title: Hora
+          format_title: Format de data
+          timezone: Zona horària
+          until: Fins a...
+          recurring:
+            every_day: "Cada dia"
+            every_week: "Cada setmana"
+            every_two_weeks: "Cada dues setmanes"
+            every_month: "Cada mes"
+            every_two_months: "Cada dos mesos"
+            every_three_months: "Cada tres mesos"
+            every_six_months: "Cada sis mesos"
+            every_year: "Cada any"

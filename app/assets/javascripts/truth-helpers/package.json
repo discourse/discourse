@@ -1,0 +1,51 @@
+{
+  "name": "truth-helpers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Partial copy of ember truth helpers",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./*": "./src/*.js",
+    "./app/*": "./app/*.js",
+    "./addon-main.js": "./addon-main.cjs"
+  },
+  "files": [
+    "addon-main.cjs",
+    "src"
+  ],
+  "dependencies": {
+    "@embroider/addon-shim": "^1.9.0",
+    "ember-auto-import": "^2.10.0"
+  },
+  "engines": {
+    "node": ">= 18",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^9"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon",
+    "main": "addon-main.cjs",
+    "app-js": {
+      "./helpers/and.js": "./app/helpers/and.js",
+      "./helpers/eq.js": "./app/helpers/eq.js",
+      "./helpers/gt.js": "./app/helpers/gt.js",
+      "./helpers/gte.js": "./app/helpers/gte.js",
+      "./helpers/includes.js": "./app/helpers/includes.js",
+      "./helpers/lt.js": "./app/helpers/lt.js",
+      "./helpers/lte.js": "./app/helpers/lte.js",
+      "./helpers/not-eq.js": "./app/helpers/not-eq.js",
+      "./helpers/not.js": "./app/helpers/not.js",
+      "./helpers/or.js": "./app/helpers/or.js"
+    }
+  }
+}

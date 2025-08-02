@@ -1,0 +1,159 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Umfrage"
+  js:
+    poll:
+      voters:
+        one: "Teilnehmer"
+        other: "Teilnehmer"
+      total_votes:
+        one: "abgegebene Stimme"
+        other: "abgegebene Stimmen"
+      votes:
+        one: "%{count} Stimme"
+        other: "%{count} Stimmen"
+      average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
+      public:
+        title: "Stimmen sind <strong>öffentlich</strong>."
+      results:
+        groups:
+          title: "Du musst ein Mitglied von %{groups} sein, um an dieser Umfrage teilnehmen zu können."
+        vote:
+          title: "Ergebnisse werden <strong>nach Stimmabgabe</strong> angezeigt."
+        closed:
+          title: "Ergebnisse werden angezeigt, sobald die Abstimmung <strong>beendet</strong> ist."
+        staff:
+          title: "Ergebnisse werden nur <strong>Team-Mitgliedern</strong> angezeigt."
+        tabs:
+          votes: "Stimmen"
+          outcome: "Ergebnis"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Wähle mindestens <strong>%{count} Option</strong> aus."
+            other: "Wähle mindestens <strong>%{count} Optionen</strong> aus."
+          up_to_max_options:
+            one: "Wähle bis zu <strong>%{count} Option</strong> aus."
+            other: "Wähle bis zu <strong>%{count} Optionen</strong> aus."
+          x_options:
+            one: "Wähle <strong>%{count} Option</strong> aus."
+            other: "Wähle <strong>%{count} Optionen</strong> aus."
+          between_min_and_max_options: "Wähle zwischen <strong>%{min} und %{max} Optionen</strong> aus."
+      cast-votes:
+        title: "Gib deine Stimmen ab"
+        label: "Jetzt abstimmen!"
+      show-results:
+        title: "Das Ergebnis der Umfrage anzeigen"
+        label: "Ergebnisse"
+      show-tally:
+        title: "Abstimmungsergebnisse als absolute Zahlen anzeigen"
+        label: "Anzahl anzeigen"
+      show-percentage:
+        title: "Abstimmungsergebnisse als Prozentsätze anzeigen"
+        label: "Prozentsätze anzeigen"
+      remove-vote:
+        title: "Entferne deine Stimme"
+        label: "Abstimmung zurücknehmen"
+      hide-results:
+        title: "Zurück zur Umfrage"
+        label: "Abstimmen"
+      group-results:
+        title: "Stimmen anhand von Benutzerfeld gruppieren"
+        label: "Aufschlüsselung anzeigen"
+      export-results:
+        title: "Ergebnisse der Umfrage exportieren"
+        label: "Exportieren"
+      open:
+        title: "Umfrage starten"
+        label: "Starten"
+        confirm: "Möchtest du diese Umfrage wirklich starten?"
+      close:
+        title: "Umfrage beenden"
+        label: "Beenden"
+        confirm: "Möchtest du diese Umfrage wirklich beenden?"
+      automatic_close:
+        closes_in: "Wird in <strong>%{timeLeft}</strong> beendet."
+        age: "Geschlossen <strong>%{age}</strong>"
+      breakdown:
+        title: "Ergebnisse der Umfrage"
+        votes: "%{count} Stimmen"
+        breakdown: "Aufschlüsselung"
+        percentage: "Prozentsatz"
+        count: "Anzahl"
+      ranked_choice:
+        title:
+          rounds: "Runden"
+          outcome: "Ergebnis"
+        none: "Keiner"
+        majority: "Mehrheit"
+        eliminated: "Eliminiert"
+        round: "Runde"
+        winner:
+          one: "Der Gewinner war %{winner} nach einer Runde."
+          other: "Der Gewinner war %{winner} nach %{count} Runden."
+        tied:
+          one: "Gleichstand nach einer Runde zwischen folgenden Kandidaten:"
+          other: "Gleichstand nach %{count} Runden zwischen folgenden Kandidaten:"
+      options:
+        label: "Optionen"
+        ranked_choice:
+          abstain: "Enthalten"
+          highest_priority: "(höchste Priorität)"
+          lowest_priority: "(niedrigste Priorität)"
+          login: "Zum Abstimmen anmelden!"
+      error_while_toggling_status: "Leider ist beim Umschalten des Status dieser Umfrage ein Fehler aufgetreten."
+      error_while_casting_votes: "Leider ist beim Abgeben deiner Stimmen ein Fehler aufgetreten."
+      error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."
+      error_while_exporting_results: "Leider ist beim Exportieren der Umfrageergebnisse ein Fehler aufgetreten."
+      ui_builder:
+        title: Umfrage erstellen
+        insert: Umfrage einfügen
+        help:
+          options_min_count: Gib mindestens eine Option ein.
+          options_max_count: Gib maximal %{count} Optionen ein.
+          invalid_min_value: Der Mindestwert muss mindestens 1 betragen.
+          invalid_max_value: Der Maximalwert muss mindestens 1 betragen, aber kleiner oder gleich der Anzahl der Optionen sein.
+          invalid_values: Der Mindestwert muss kleiner als der Höchstwert sein.
+          min_step_value: Die minimale Schrittweite beträgt 1.
+        poll_type:
+          label: Art
+          regular: Einfachauswahl
+          multiple: Mehrfachauswahl
+          ranked_choice: Rangfolgewahl
+          number: Bewertung
+        poll_result:
+          label: Ergebnisse anzeigen …
+          always: Immer sichtbar
+          vote: Nur nach Stimmabgabe
+          closed: Wenn die Umfrage geschlossen ist
+          staff: Nur Team-Mitglieder
+        poll_groups:
+          label: Abstimmung auf diese Gruppen beschränken
+        poll_chart_type:
+          label: Ergebnisübersicht
+          bar: Balken
+          pie: Torte
+        poll_config:
+          max: Max. Auswahl
+          min: Min. Auswahl
+          step: Schrittweite
+        poll_public:
+          label: Anzeigen, wer abgestimmt hat
+        poll_title:
+          label: Titel (optional)
+        poll_options:
+          label: Optionen (eine pro Zeile)
+          add: Option hinzufügen
+        automatic_close:
+          label: Umfrage automatisch beenden
+        show_advanced: "Erweiterte Optionen anzeigen"
+        hide_advanced: "Erweiterte Optionen ausblenden"

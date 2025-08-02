@@ -1,0 +1,49 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    poll_enabled: "Permiți sondaje?"
+    poll_maximum_options: "Numărul maxim admis de opțiuni într-un sondaj"
+    poll_edit_window_mins: "Număr de minute după crearea postării pe parcursul cărora sondajele pot fi editate."
+    poll_minimum_trust_level_to_create: "Definește nivelul minim de încredere pentru a crea sondaje."
+    poll_default_public: "Când se creează un sondaj nou, activează opțiunea „arată cine a votat” în mod prestabilit."
+  poll:
+    invalid_argument: "Valoare nevalidă „%{value}” pentru argumentul „%{argument}”."
+    multiple_polls_without_name: "Atunci când creezi mai multe sondaje, include nume unice adăugând <code>name=exemplu</code> la etichetele <code>[poll]</code>."
+    multiple_polls_with_same_name: "Există mai multe sondaje cu același nume: <strong>%{name}</strong>. Folosește atributul '<code>name</code>' pentru a identifica sondajele."
+    default_poll_must_have_at_least_1_option: "Sondajul trebuie să aibă cel puţin o opţiune."
+    named_poll_must_have_at_least_1_option: "Sondajul <strong>%{name}</strong> trebuie să aibă cel puțin o opțiune."
+    default_poll_must_have_less_options:
+      one: "Sondajul trebuie să aibă mai puțin de o opțiune."
+      few: "Sondajul trebuie să conțină cel mult %{count} opțiuni."
+      other: "Sondajul trebuie să conțină cel mult %{count} de opțiuni."
+    named_poll_must_have_less_options:
+      one: "Sondajul <strong>%{name}</strong> trebuie să aibă cel mult o opțiune."
+      few: "Sondajul <strong>%{name}</strong> trebuie să aibă cel mult %{count} opțiuni."
+      other: "Sondajul <strong>%{name}</strong> trebuie să aibă cel mult %{count} de opțiuni."
+    default_poll_must_have_different_options: "Sondajul trebuie să aibă opțiuni diferite."
+    named_poll_must_have_different_options: "Sondajul numit <strong>%{name}</strong> trebuie să aibă opțiuni diferite."
+    default_poll_must_not_have_any_empty_options: "Sondajul nu trebuie să aibă nicio opţiune goală."
+    named_poll_must_not_have_any_empty_options: "Sondajul numit <strong>%{name}</strong> nu trebuie să aibă opțiuni goale."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Sondajul cu opțiuni multiple are parametri invalizi."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Sondajul numit <strong>%{name}</strong> cu opțiuni multiple are parametri invalizi."
+    requires_at_least_1_valid_option: "Trebuie să selectezi cel puțin o opțiune validă."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Nu poți schimba un sondaj după primele %{minutes} minute."
+      cannot_edit_named_poll_with_votes: "Nu poți schimba numele sondajului <strong>${name}</strong> după primele %{minutes} minute."
+    no_poll_with_this_name: "Nu există nici un sondaj cu numele <strong>%{name}</strong> asociat acestei postări."
+    post_is_deleted: "Postările șterse nu se pot modifica."
+    user_cant_post_in_topic: "Nu poți vota deoarece nu poți posta în acest subiect."
+    topic_must_be_open_to_vote: "Subiectul trebuie să fie deschis pentru votare."
+    poll_must_be_open_to_vote: "Sondajul trebuie să fie deschis pentru votare."
+    topic_must_be_open_to_toggle_status: "Subiectul trebuie să fie activ pentru a se schimba statutul."
+    only_staff_or_op_can_toggle_status: "Doar un administrator sau autorul postării inițiale poate schimba starea unui sondaj."
+    insufficient_rights_to_create: "Nu ai permisiunea de a crea sondaje."
+    email:
+      link_to_poll: "Click pentru afișarea sondajului."
+    user_field:
+      no_data: "Fără date"

@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  site_settings:
+    poll_enabled: "Permitir enquetes?"
+    poll_maximum_options: "Número máximo de opções permitidas em uma enquete."
+    poll_edit_window_mins: "O número de minutos depois da criação da publicação durante os quais as sondagens podem ser editadas."
+    poll_minimum_trust_level_to_create: "Defina o nível de confiança mínimo necessário para criar sondagens."
+    poll_groupable_user_fields: "Um conjunto de nomes de campos de utilizador que podem ser usados para agrupar e filtrar os resultados da sondagem."
+  poll:
+    poll: "enquete"
+    invalid_argument: "Valor inválido '%{value}' para o argumento '%{argument}'."
+    multiple_polls_with_same_name: "Existem várias sondagens com o mesmo nome: <strong>%{name}</strong>. Utilize o atributo '<code>nome</code>' para identificar as suas sondagens de maneira única."
+    default_poll_must_have_at_least_1_option: "A sondagem deve ter pelo menos 1 opção."
+    named_poll_must_have_at_least_1_option: "A sondagem com o nome <strong>%{name}</strong> deve ter pelo menos 1 opção."
+    default_poll_must_have_less_options:
+      one: "A sondagem deve ter menos que %{count} opção."
+      other: "A sondagem deve ter menos que %{count} opções."
+    named_poll_must_have_less_options:
+      one: "A sondagem com o nome <strong>%{name}</strong> deve ter menos que %{count} opção."
+      other: "A sondagem com o nome <strong>%{name}</strong> deve ter menos que %{count} opções."
+    default_poll_must_have_different_options: "A sondagem deve ter opções diferentes."
+    named_poll_must_have_different_options: "A sondagem com o nome <strong>%{name}</strong> deve ter opções diferentes."
+    default_poll_must_not_have_any_empty_options: "A sondagem não pode ter opções vazias."
+    named_poll_must_not_have_any_empty_options: "A sondagem com o nome <strong>%{name}</strong> não pode ter opções vazias."
+    default_poll_with_multiple_choices_has_invalid_parameters: "A sondagem com escolhas múltiplas tem parâmetros inválidos."
+    named_poll_with_multiple_choices_has_invalid_parameters: "A sondagem com o nome <strong>%{name}</strong> com escolha múltipla tem parâmetros inválidos."
+    requires_at_least_1_valid_option: "Deve selecionar pelo menos 1 opção válida."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Não é possível alterar uma sondagem após os primeiros %{minutes} minutos."
+      cannot_edit_named_poll_with_votes: "Não é possível alterar a sondagem com o nome <strong>${name}</strong> após os primeiros %{minutes} minutos."
+    no_poll_with_this_name: "Nenhuma sondagem com o nome <strong>%{name}</strong> está associada a esta publicação."
+    post_is_deleted: "Não é possível realizar ações na publicação eliminada."
+    user_cant_post_in_topic: "Não pode votar porque não pode publicar neste tópico."
+    topic_must_be_open_to_vote: "O tópico tem que estar aberto para votação."
+    poll_must_be_open_to_vote: "A sondagem deve estar aberta para votação."
+    one_vote_per_user: "Apenas 1 voto é permitido para esta sondagem."
+    max_vote_per_user:
+      one: Apenas %{count} voto é permitido nesta enquete.
+      other: São permitidos no máximo %{count} votos nesta enquete.
+    min_vote_per_user:
+      one: É necessário no mínimo %{count} voto nesta enquete.
+      other: É necessário no mínimo %{count} votos nesta enquete.
+    topic_must_be_open_to_toggle_status: "O tópico tem que estar aberto para alternar o estado."
+    only_staff_or_op_can_toggle_status: "Apenas um membro da equipa ou o autor original pode alternar o estado da sondagem."
+    insufficient_rights_to_create: "Não está autorizado para criar sondagens."
+    email:
+      link_to_poll: "Clique para ver a sondagem."
+    user_field:
+      no_data: "Sem dados"

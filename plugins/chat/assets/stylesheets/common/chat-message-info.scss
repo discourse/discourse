@@ -1,0 +1,118 @@
+.chat-message-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+}
+
+.chat-message-info__username {
+  display: inline-flex;
+  align-items: baseline;
+
+  & + .chat-message-info__bot-indicator,
+  & + .chat-message-info__date {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.chat-message-info__username__name {
+  color: var(--secondary-low);
+  font-weight: 700;
+
+  @include ellipsis;
+  max-width: 180px;
+}
+
+.chat-message-info__bot-indicator {
+  text-transform: uppercase;
+  padding: 0.2rem 0.3rem;
+  background: var(--primary-low);
+  color: var(--primary-900);
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-3);
+  line-height: var(--line-height-medium);
+  font-weight: 700;
+  letter-spacing: 0.1ch;
+}
+
+.chat-message-info__date {
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+
+  &:hover,
+  &:focus {
+    .chat-time {
+      color: var(--primary);
+    }
+  }
+}
+
+.chat-message-info__flag {
+  color: var(--secondary-medium);
+}
+
+.chat-message-info__bookmark {
+  .d-icon-discourse-bookmark-clock,
+  .d-icon-bookmark {
+    color: var(--primary-low-mid);
+    font-size: var(--font-down-2);
+  }
+}
+
+.chat-message-info__status {
+  display: flex;
+  margin-inline: 0.33rem;
+
+  .emoji {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.chat-message-info__original-message {
+  @include ellipsis;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: var(--font-down-2);
+  color: var(--primary-high);
+  gap: 0.5em;
+  line-height: 1.2;
+  background: var(--tertiary-very-low);
+  padding: 0.25em 0.75em;
+  border-radius: 8px;
+
+  .chat-channel-title {
+    gap: 0.25em;
+  }
+
+  .chat-channel-name {
+    color: var(--tertiary);
+  }
+
+  .chat-channel-icon {
+    .d-icon-d-chat {
+      height: 0.9em;
+      width: 0.9em;
+    }
+
+    &__restricted-category-icon {
+      background: var(--tertiary-very-low);
+      height: 0.355em;
+      width: 0.35em;
+      margin-right: 0.4em;
+      padding: 1px 1px 2px 1px;
+    }
+
+    &:has(.--users-count) {
+      display: none;
+    }
+  }
+
+  &__text,
+  &__text:visited {
+    color: var(--primary);
+  }
+}

@@ -1,0 +1,22 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  discourse_automation:
+    triggerables:
+      stalled_wiki:
+        title: 중단된 위키
+      topic:
+        title: 글
+    scriptables:
+      zapier_webhook:
+        description: 트리거의 컨텍스트를 본문으로 사용하여 Zap을 호출합니다.
+      pin_topic:
+        title: 글 고정
+      close_topic:
+        title: 글 닫기
+      append_last_checked_by:
+        button_text: 완료

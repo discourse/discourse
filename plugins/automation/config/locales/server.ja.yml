@@ -1,0 +1,153 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    discourse_automation_enabled: "discourse-automation プラグインを有効にする"
+  discourse_automation:
+    models:
+      fields:
+        required_field: フィールド `%{name}` は `%{target}:%{target_name}` で入力する必要があります。
+        invalid_metadata: '`%{field}` のデータが無効であるか、コンポーネント `%{component}` が不明です。'
+    triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "少なくとも 'custom_fields' または 'user_profile' のいずれかを指定する必要があります。"
+      user_badge_granted:
+        title: ユーザーバッジ付与
+        doc: ユーザーがバッジを付与されると、自動化がトリガーされます。
+      user_first_logged_in:
+        title: ユーザーの初回ログイン
+        doc: ユーザーが初めてログインするときに自動化をトリガーします。
+      stalled_topic:
+        title: トピックの失速
+        doc: 特定の期間、トピックにトピック所有者からの新しい返信がない場合に自動化をトリガーします。影響を受けるトピック数が非常に高くなる可能性があるため、このトリガーの範囲をタグ/カテゴリに設定することをお勧めします。安全対策として、影響のあるトピック数は 250 に制限されています。
+      api_call:
+        title: API 呼び出し
+        description: 自動化をトリガーする POST リクエストの作成
+        doc: POST リクエストは、グローバル API キーを使用して `/automations/:id/trigger.json` に行う必要があります。
+      category_created_edited:
+        title: カテゴリの作成/編集
+        description: カテゴリが作成または編集されると、自動化がトリガーされます
+      recurring:
+        title: 繰り返し
+      point_in_time:
+        title: 時点
+        description: 日付に達すると、自動化がトリガーされます
+      user_added_to_group:
+        title: グループへのユーザーの追加
+        description: ユーザーが特定のグループに追加されると、自動化がトリガーされます
+      user_removed_from_group:
+        title: グループからのユーザーの削除
+        description: ユーザーが特定のグループから削除されると、自動化がトリガーされます
+      user_promoted:
+        title: ユーザー昇格
+        description: ユーザーがある信頼レベルから別の信頼レベルに昇格したとき
+        transition_placeholder: "%{from_level_name} から %{to_level_name}"
+      stalled_wiki:
+        title: Wiki の失速
+        description: Wiki が所定の期間編集されていない場合、自動化がトリガーされます。
+      post_created_edited:
+        title: 投稿の作成/編集
+        description: 有効な投稿が編集または作成されると、自動化がトリガーされます。
+      pm_created:
+        title: 個人メッセージの作成
+        description: 有効な PM が作成されると、自動化がトリガーされます。
+      topic_tags_changed:
+        title: トピックタグの変更
+        description: トピックのタグが変更されると、自動化がトリガーされます
+      topic:
+        title: トピック
+        description: 関連付けられたスクリプトは特定のトピックでのみ使用されます。これは、検証を行うスクリプトなどに役立ちます。
+      after_post_cook:
+        title: 投稿のクック処理後
+        description: 投稿内容がクックされると、自動化がトリガーされます。
+      user_updated:
+        title: ユーザー更新後
+        description: ユーザーが情報を更新すると、自動化がトリガーされます
+    scriptables:
+      post:
+        title: 投稿を作成する
+        description: 指定されたトピックで投稿を作成します
+      topic:
+        title: トピックの作成
+        description: 特定のユーザーとしてトピックを作成します
+      flag_post_on_words:
+        title: 単語で投稿を通報する
+        description: 投稿に指定された単語が含まれる場合に通報します
+        flag_message: "投稿に許可されていない単語が含まれます: %{words}"
+        doc: 特定の単語が一度にすべて含まれる投稿は通報され、非表示になります。複数の単語をカンマ区切りで定義すると、複合語として使用されることに注意してください（すべての語が存在する必要があります）。
+      zapier_webhook:
+        title: Zapier webhook
+        description: トリガーのコンテキストを本体として zap を呼び出します
+      auto_responder:
+        title: 自動応答
+        description: 指定されたキーワードを含む投稿に返信を投稿します
+      auto_tag_topic:
+        title: トピックにタグを自動設定
+        description: トピックにタグを自動的に追加します
+      pin_topic:
+        title: トピックを固定
+        description: 指定されたトピックを特定の日付に固定します
+      banner_topic:
+        title: バナーをトピックにする
+        description: トピックをバナーにします
+      gift_exchange:
+        title: ギフト交換
+        description: グループの 2 人のユーザーが匿名で互いにギフトを贈ることができます。
+        doc: ギフト交換には、3 人以上のユーザーがいる既存のグループが必要です。選択した日に、一方がギフトを贈る側、もう一方がギフトを受ける側として、グループの各ユーザーがペアリングされます。
+      send_pms:
+        title: PM を送信する
+        description: PM の送信を許可します（遅延の可能性があります）。
+        doc: 複数の PM を 1 人のユーザーに送信できるようにします。各 PM は遅延を受け入れます。
+      suspend_user_by_email:
+        title: メールでユーザーを凍結する
+        description: メールアドレスに基づいてアカウントを自動的に凍結します
+      user_global_notice:
+        title: ユーザーのグローバル通知
+        description: ユーザーのグローバル通知を表示できるようにします
+      user_group_membership_through_badge:
+        title: バッジによるユーザーグループメンバーシップ
+        description: バッジに基づいてユーザーグループのメンバーシップを変更します。
+      suspend_user_by_email_with_api_call:
+        doc: API 呼び出しで `suspend_user_by_email` をトリガーする場合、エンドポイントでは送信されたパラメーターに有効な `email` が存在することを必要としてます。デフォルトのフィールド値をオーバーライドするには、`reasons` と `suspend_until（ISO 8601 形式）` を使用することも可能です。
+      user_global_notice_with_stalled_topic:
+        doc: 失速したトピックからトリガーされると、トピック所有者はグローバル通知を受信します。
+      user_global_notice_with_first_accepted_solution:
+        doc: 最初に承諾されたソリューションからトリガーされると、ソリューション作成者はグローバル通知を受け取ります。
+      send_pms_with_api_call:
+        doc: '`api call` で `send pms` スクリプトを使用する場合、リクエストの `usernames` パラメーターが受信者リストの入力に使用されます。'
+      topic_required_words:
+        title: トピックの必須単語
+        description: トピックに必要な単語のリストを定義できます。各投稿で少なくとも 1 つの単語が使用されている必要があります。
+        doc: トピックの必須単語にはトピックが必要です。投稿が編集/作成されると、その投稿は単語のリストに対して検証されます。少なくとも 1 つの単語が存在する必要があります。
+        errors:
+          must_include_word: "投稿には、次の単語の少なくとも 1 つを含める必要があります: %{words}"
+      close_topic:
+        title: トピックをクローズ
+        description: オプションの閉鎖メッセージを添えてトピックを閉鎖します
+      append_last_edited_by:
+        title: 最終編集者を追加する
+        description: '''最終編集者'' の詳細をクック済みコンテンツの下に追加します。'
+        text: "最終編集者: %{username} %{date_time}"
+      append_last_checked_by:
+        title: 最終確認者を追加する
+        description: '''最終確認者'' の詳細をクック済みコンテンツの下に追加します。'
+        text: "最終確認者: @%{username} %{date_time}"
+        summary: ドキュメントの確認
+        details: "ドキュメントの確認を行います: "
+        button_text: 完了
+      add_user_to_group_through_custom_field:
+        title: "ユーザーカスタムフィールドを介してグループにユーザーを追加する"
+        description: "ログイン時または定期的なチェック時にユーザーをグループに自動的に追加します"
+      group_category_notification_default:
+        title: "グループカテゴリ通知のデフォルト"
+        description: "グループのメンバーに対するカテゴリのデフォルトの通知レベルを設定します"
+      send_chat_message:
+        title: "チャットメッセージの送信"
+        description: "チャンネルにカスタムチャットメッセージを送信します"
+      random_assign:
+        title: "ランダム割り当て"
+        description: "グループにトピックをランダムに割り当てます"

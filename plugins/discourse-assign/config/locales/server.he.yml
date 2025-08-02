@@ -1,0 +1,100 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    assign_enabled: "הפעלת תוסף רישום על"
+    assigns_public: "לאפשר לציבור לצפות בהקצאות נושאים"
+    assigns_user_url_path: "נתיב לנושאים שמוקצים למשתמשים (יש להשתמש ב־{username} כחלופה לשם המשתמש)"
+    assigns_by_staff_mention: "אם חבר סגל מאוזכר על ידי חבר סגל אחר, הנושא מוקצה אוטומטית"
+    unassign_creates_tracking_post: "בעת ביטול הקצאת נושא תיווצר לחישה או פעולה קטנה כדי לעקוב אחר השינוי"
+    assign_self_regex: "ביטוי רגולרי שיש לצלוח כדי להקצות עצמית. למשל: ‚רשימה שלי’"
+    assign_other_regex: "ביטוי רגולרי שיש לצלוח כדי להקצות נושאים לאחרים דרך אזור. למשל: ‚רשימה שלך’"
+    unassign_on_group_archive: "כאשר הודעה מועברת לארכיון על ידי קבוצה, הקצאת ההודעה תבוטל (ההקצאה תחודש במקרה של החזרה לדואר הנכנס)"
+    unassign_on_close: "כאשר נושא נסגר יש לבטל את הקצאתו"
+    reassign_on_open: "כאשר נושא נפתח יש להקצות מחדש משתמשים/קבוצות שהוקצו בעבר"
+    invite_on_assign: "כשהודעה פרטית מוקצית למשתמש או לקבוצה, תישלח הזמנה להודעה הפרטית אם אינם חברים בה עדיין."
+    assign_mailer: "מתי לשלוח התראות בדוא״ל על הקצאות"
+    remind_assigns: "להזכיר למשתמשים בנוגע להקצאות מתאימות."
+    remind_assigns_frequency: "תדירות לשליחת תזכורת למשתמשים בנוגע לנושאים מוקצים."
+    max_assigned_topics: "מספר הנושאים המרבי שניתן להקצות למשתמש."
+    assign_allowed_on_groups: "משתמשים בקבוצות אלה רשאים להקצות נושאים וניתן להקצות להם נושאים."
+    enable_assign_status: "הוספת שדה מצב מותאם לכל משימה."
+    assign_statuses: "רשימת המצבים הזמינים לכל משימה. המצב הראשון הוא מצב ברירת המחדל שחל על כל משימה חדשה."
+    errors:
+      assign_statuses:
+        too_few: "חייבים להיות לפחות שני מצבים זמינים."
+        duplicate: "יש ערכי מצב כפולים."
+        removed_in_use: "אי אפשר להסיר מצב מהרשימה אם יש משימות קיימות שנמצאות במצב הזה."
+  discourse_assign:
+    assigned_to: "הנושא רשום ל@%{username}"
+    unassigned: "הקצאת הנושא בוטלה"
+    already_claimed: "נושא זה כבר נדרש."
+    already_assigned: "הנושא כבר מוקצה לטובת ‎@%{username}"
+    too_many_assigns: "‎@%{username}‎ כבר הגיע לכמות הנושאים המרבית שניתן להקצות לטובתו (%{max})."
+    too_many_assigns_for_topic: "המגבלה של %{limit} הקצאות לנושא הושגה."
+    forbidden_assign_to: "אין אפשרות להקצות את ‎@%{username}‎ כיוון שאין להם שייכות לקבוצות מורשות מוקצות."
+    forbidden_assignee_not_pm_participant: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה להודעה הפרטית הזאת. ניתן להעניק ל־‎@%{username} גישה על ידי שליחת הזמנה להודעה הפרטית הזאת."
+    forbidden_assignee_cant_see_topic: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה לנושא הזה."
+    group_already_assigned: "הנושא כבר מוקצה לטובת ‎@%{group}"
+    forbidden_group_assign_to: "אין אפשרות להקצות את ‎@%{group}‎ כיוון שאין להם שייכות לקבוצות מורשות מוקצות."
+    forbidden_group_assignee_not_pm_participant: "לא ניתן להקצות את ‎@%{group} כיוון שלא לכל החברים יש גישה להודעה הפרטית הזאת."
+    forbidden_group_assignee_cant_see_topic: "לא ניתן להקצות את ‎@%{group} כיוון שלא לכל החברים יש גישה לנושא הזה."
+    flag_assigned: "הנושא של דגל זה מוקצה למשתמש אחר, עמך הסליחה"
+    flag_unclaimed: "עליך לדרוש את הנושא הזה בטרם ביצוע פעילות על הדגל"
+    topic_assigned_excerpt: "הקצאה של הנושא ‚%{title}’ אליך"
+    topic_group_assigned_excerpt: "הנושא ‚%{title}’ הוקצה ל־‎@%{group}"
+    reminders_frequency:
+      never: "אף פעם"
+      daily: "יומית"
+      weekly: "שבועית"
+      monthly: "חודשית"
+      quarterly: "רבעונית"
+  assign_mailer:
+    title: "הקצאת שולח דוא״ל"
+    subject_template: "[%{email_prefix}] ‚%{topic_title}’ הוקצה אליך על ידי %{assignee_name} !"
+    text_body_template: |
+      היי, **הוקצה** אליך דיון על ידי %{assignee_name}
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      אם זה מעניין אותך, עליך ללחוץ על הקישור שלהלן:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "יש לך %{pending_assignments} הקצאות ממתינות"
+    body: |
+      כרגע יש לך [%{pending_assignments} מטלות ממתינות](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      תזכורת זו תישלח %{frequency} אם מוקצה אליך יותר מנושא אחד.
+    newest: |
+      ### החדשים ביותר
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### הישנים ביותר
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: הקצאה אקראית
+        no_one: "היה ניסיון להקצות אחד מחברי הקבוצה ‎`@%{group}`‎ באקראי, אך אף אחד מהם לא היה זמין."
+  discourse_push_notifications:
+    popup:
+      assigned: "הוקצה אליך על ידי ‎@%{username}"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "המצב הנבחר שגוי (אינו כלול בהגדרת האתר assigned_status - מצב מוקצה)."

@@ -1,0 +1,253 @@
+.chat-message-text.-deleted,
+.chat-message-text.-hidden {
+  margin-left: calc(var(--message-left-width) + 0.75em);
+  padding: 0;
+
+  .chat-message-expand {
+    color: var(--primary-high);
+    padding: 0.25em;
+
+    .d-button-label {
+      text-align: left;
+    }
+
+    &:hover {
+      background: inherit;
+      color: inherit;
+    }
+  }
+}
+
+.chat-message-reaction {
+  > * {
+    pointer-events: none;
+  }
+}
+
+[data-content][data-identifier="chat-message-reaction-tooltip"] {
+  font-size: var(--font-down-1);
+
+  .fk-d-tooltip__inner-content {
+    display: block;
+  }
+
+  .emoji {
+    padding-left: 0.25rem;
+  }
+}
+
+.chat-message {
+  align-items: flex-start;
+  padding: 0.25em 0.5em 0.25em 0.75em;
+  display: flex;
+  min-width: 0;
+
+  .chat-message-reaction {
+    @include chat-reaction;
+    will-change: scale;
+
+    &:active {
+      transform: scale(0.93);
+    }
+  }
+
+  .chat-message-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
+  }
+
+  .chat-message-text {
+    min-width: 0;
+    width: 100%;
+
+    mark {
+      background-color: var(--highlight);
+    }
+
+    code {
+      box-sizing: border-box;
+      font-size: var(--font-down-1);
+      width: 100%;
+    }
+
+    a.mention,
+    span.mention.--wide {
+      @include mention;
+
+      &.highlighted {
+        background: var(--tertiary-low);
+      }
+    }
+
+    // unlinked, invalid mention
+    span.mention:not(.--wide) {
+      color: var(--primary-high);
+    }
+
+    // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping
+    p img:not(.emoji) {
+      max-width: 100%;
+      height: auto;
+    }
+
+    ul,
+    ol {
+      padding-left: 1.25em;
+    }
+  }
+
+  .chat-message-edited {
+    display: inline-block;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  .chat-message-reaction-list,
+  .chat-transcript-reactions {
+    @include unselectable;
+    margin-top: 0.25em;
+    display: flex;
+    flex-wrap: wrap;
+
+    .react-btn {
+      vertical-align: top;
+      padding: 0 0.25em;
+      background: none;
+      border: none;
+      will-change: scale;
+
+      &:active {
+        transform: scale(0.93);
+      }
+
+      > * {
+        pointer-events: none;
+      }
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+
+      &:hover {
+        .d-icon {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+
+  .chat-message-avatar .chat-user-avatar .chat-user-avatar__container .avatar,
+  .chat-emoji-avatar .chat-emoji-avatar-container {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.touch .chat-message-container {
+  &.-active {
+    background: var(--d-hover);
+    border-radius: var(--d-border-radius);
+
+    &.-bookmarked {
+      background: var(--highlight-low);
+    }
+  }
+}
+
+.no-touch .chat-message-container {
+  &:hover {
+    .chat-message-reaction-list .chat-message-react-btn {
+      visibility: visible;
+    }
+  }
+
+  &:hover,
+  &.-active {
+    background: var(--d-hover);
+
+    &.-bookmarked {
+      background: var(--highlight-medium);
+    }
+
+    &.-deleted {
+      background-color: var(--danger-low);
+
+      .chat-message-expand {
+        color: var(--danger);
+      }
+    }
+
+    &.-highlighted {
+      background-color: var(--tertiary-medium);
+    }
+  }
+}
+
+.chat-message-container {
+  background-color: var(--d-content-background, var(--secondary));
+  width: 100%;
+
+  &.-errored {
+    color: var(--primary-medium);
+  }
+
+  &.-deleted {
+    background-color: var(--danger-low);
+    padding-block: 0.25rem;
+  }
+
+  &.-bookmarked {
+    background: var(--highlight-bg);
+  }
+
+  &.-highlighted {
+    background-color: var(--tertiary-low);
+  }
+
+  &.has-reply {
+    .chat-message {
+      display: grid;
+      grid-template-columns: var(--message-left-width) 1fr;
+      grid-template-rows: 30px auto;
+      grid-template-areas:
+        "replyto replyto"
+        "avatar message";
+
+      .chat-user-avatar {
+        grid-area: avatar;
+      }
+
+      .chat-message-content {
+        grid-area: message;
+      }
+    }
+  }
+
+  &.has-thread-indicator {
+    .chat-message {
+      display: grid;
+      grid-template-columns: var(--message-left-width) 1fr;
+      grid-template-rows: auto;
+      grid-template-areas:
+        "avatar message"
+        "threadindicator threadindicator";
+      padding-bottom: 0.65rem !important;
+
+      .chat-user-avatar {
+        grid-area: avatar;
+      }
+
+      .chat-message-content {
+        grid-area: message;
+      }
+    }
+  }
+
+  .chat-message-reaction-list .chat-message-react-btn {
+    visibility: hidden;
+  }
+}

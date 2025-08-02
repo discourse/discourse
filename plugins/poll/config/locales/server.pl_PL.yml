@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    poll_enabled: "Zezwalać na ankiety?"
+    poll_maximum_options: "Maksymalna ilość dozwolonych opcji w ankiecie."
+    poll_edit_window_mins: "Liczba minut po utworzeniu postu, podczas którego można edytować ankietę."
+    poll_minimum_trust_level_to_create: "Minimalny poziom zaufania potrzebny do stworzenia ankiety."
+    poll_create_allowed_groups: "Grupy, które mogą tworzyć ankiety."
+    poll_groupable_user_fields: "Zestaw nazw pól użytkownika, który może zostać użyty do grupowania i filtrowania wyników ankiet."
+    poll_export_data_explorer_query_id: "Identyfikator zapytania eksploratora danych używanego do eksportowania wyników ankiet (0, aby wyłączyć)."
+    poll_export_ranked_choice_data_explorer_query_id: "Identyfikator zapytania eksploratora danych używanego do eksportowania wyników ankiet głosowania w trybie natychmiastowym."
+    poll_default_public: "Podczas tworzenia nowej ankiety domyślnie włącz opcję 'show who voted'."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "ankieta"
+    invalid_argument: "Nieprawidłowa wartość '%{value}' dla argumentu '%{argument}'."
+    multiple_polls_without_name: "Tworząc wiele ankiet, dołącz unikalne nazwy, dodając <code>name=przykład</code> do tagów <code>[poll]</code>."
+    multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
+    default_poll_must_have_at_least_1_option: "Ankieta musi mieć co najmniej jedną opcję."
+    named_poll_must_have_at_least_1_option: "Ankieta o nazwie <strong>%{name}</strong> musi mieć co najmniej jedną opcję."
+    default_poll_must_have_less_options:
+      one: "Ankieta musi posiadać mniej niż %{count} opcję do wyboru."
+      few: "Ankieta musi posiadać mniej niż %{count} opcje do wyboru."
+      many: "Ankieta musi posiadać mniej niż %{count} opcji do wyboru."
+      other: "Ankieta musi posiadać mniej niż %{count} opcji do wyboru."
+    named_poll_must_have_less_options:
+      one: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcję."
+      few: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcje."
+      many: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcji."
+      other: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcji."
+    default_poll_must_have_different_options: "Ankieta musi posiadać kilka różnych opcji do wyboru."
+    named_poll_must_have_different_options: "Ankieta <strong>%{name}</strong> musi posiadać kilka różnych opcji do wyboru."
+    default_poll_must_not_have_any_empty_options: "Ankieta nie może mieć żadnych pustych opcji."
+    named_poll_must_not_have_any_empty_options: "Ankieta o nazwie <strong>%{name}</strong> nie może mieć żadnych pustych opcji."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru posiada nieprawidłowe parametry."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
+    requires_at_least_1_valid_option: "Musisz wybrać co najmniej 1 poprawną opcje."
+    requires_that_at_least_one_option_is_ranked: "W ankietach z wyborem rankingowym musisz ocenić przynajmniej jedną opcję."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Nie możesz edytować ankiety po upłynięciu %{minutes} minut od jej publikacji."
+      cannot_edit_named_poll_with_votes: "Nie możesz zmienić nazwy ankiety <strong>${name}</strong> po upłynięciu %{minutes} minut od jej publikacji."
+    no_poll_with_this_name: "Ankieta <strong>%{name}</strong> nie jest przypisana do tego wpisu."
+    post_is_deleted: "Nie można wykonywać akcji na usuniętym wpisie."
+    user_cant_post_in_topic: "Nie możesz głosować, bo nie możesz odpowiadać w tym temacie."
+    topic_must_be_open_to_vote: "Tematy musi być otwarta aby głosować."
+    poll_must_be_open_to_vote: "Ankieta musi być otwarta aby głosować."
+    one_vote_per_user: "W tej ankiecie można oddać tylko 1 głos."
+    max_vote_per_user:
+      one: Tylko %{count} głos jest dozwolony w tej ankiecie.
+      few: Tylko %{count} głosy są dozwolone w tej ankiecie.
+      many: Tylko %{count} głosów jest dozwolonych w tej ankiecie.
+      other: W tej ankiecie można oddać maksymalnie %{count} głosów.
+    min_vote_per_user:
+      one: Do tej ankiety wymagany jest co najmniej %{count} głos.
+      few: Do tej ankiety wymagane są co najmniej %{count} głosy.
+      many: Do tej ankiety wymagane jest co najmniej %{count} głosów.
+      other: Do tej ankiety wymagane jest co najmniej %{count} głosów.
+    ranked_choice:
+      vote_options_mismatch: "W przypadku natychmiastowego losowania liczba wyborów dokonanych w głosowaniu musi odpowiadać liczbie opcji. Liczba opcji to %{count}, a liczba dokonanych wyborów to %{provided}."
+      no_group_results_support: "Nieprawidłowy typ ankiety, ranked_choice nie obsługuje wyników grupowych."
+    topic_must_be_open_to_toggle_status: "Ankieta musi być otwarta aby zmienić status ankiety."
+    only_staff_or_op_can_toggle_status: "Status ankiety może być zmieniony przez autora wpisu lub członka załogi serwisu."
+    errors:
+      poll_not_found: "Nie znaleziono ankiety, proszę potwierdzić parametry."
+    insufficient_rights_to_create: "Nie masz zezwolenia na tworzenie ankiet."
+    email:
+      link_to_poll: "Kliknij, aby zobaczyć ankietę."
+    user_field:
+      no_data: "Brak danych"

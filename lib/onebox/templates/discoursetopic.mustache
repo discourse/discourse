@@ -1,0 +1,42 @@
+{{#image}}<img src="{{image}}" class="thumbnail"/>{{/image}}
+
+<div class="title-wrapper">
+  <h3><a href="{{link}}" target="_blank" rel="noopener">{{title}}</a></h3>
+  {{#render_category_block?}}
+  <div class="topic-category">
+    {{#categories}}
+      <span class="badge-wrapper bullet">
+        <span class="badge-category-bg" style="background-color: #{{color}};"></span>
+        <span class="badge-category clear-badge">
+          <span class="category-name">{{name}}</span>
+        </span>
+      </span>
+    {{/categories}}
+    {{#render_tags?}}
+    <div class="topic-header-extra">
+      <div class="list-tags">
+        <div class="discourse-tags">
+          <svg class="fa d-icon d-icon-tag svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#tag" /></svg>
+          {{#article_tags}}
+            <span class="discourse-tag simple">{{.}}</span>
+          {{/article_tags}}
+        </div>
+      </div>
+    </div>
+    {{/render_tags?}}
+  </div>
+  {{/render_category_block?}}
+</div>
+
+{{#description}}
+  <p>{{description}}</p>
+{{/description}}
+
+{{#data1}}
+  <p>
+    <span class="label1">{{label1}}: {{data1}}</span>
+    {{#data2}}
+      <span class="label2">{{label2}}: {{data2}}</span>
+    {{/data2}}
+  </p>
+{{/data1}}

@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        transition_placeholder: "%{from_level_name} నుండి %{to_level_name} వరకు"
+      topic:
+        title: విషయం
+    scriptables:
+      pin_topic:
+        title: విషయాన్ని పిన్ చేయండి
+      close_topic:
+        title: విషయాన్నీ మూసివేయండి
+      append_last_checked_by:
+        button_text: పూర్తయింది

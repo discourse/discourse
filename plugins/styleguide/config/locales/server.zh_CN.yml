@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    styleguide_enabled: '启用 `/styleguide` 路径以帮助设置 Discourse 的样式'
+    styleguide_admin_only: "将样式指南的公开范围限制为管理员"
+    styleguide_allowed_groups: "将样式指南的公开范围限制为提供的群组的成员"

@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  site_settings:
+    styleguide_enabled: 'Bật đường dẫn `/styleguide` để hỗ trợ việc tạo kiểu của Discourse'
+    styleguide_admin_only: "Giới hạn hiển thị của hướng dẫn style đối với quản trị viên"

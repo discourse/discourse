@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    styleguide:
+      sections:
+        typography:
+          example: "Сардэчна запрашаем у дыскурсе"
+        colors:
+          title: "<......"
+        icons:
+          title: "абразкі"
+        categories:
+          title: "Катэгорыі"
+        navigation:
+          title: "рух"
+        categories_list:
+          title: "Спіс катэгорый"
+        post:
+          title: "Паведамленне"
+        suggested_topics:
+          title: "Прапанаваныя тэмы"
+        tooltips:
+          description: "Апісанне"
+          header: "Header"
+        char_counter:
+          placeholder: "Увядзіце свой тэкст тут..."

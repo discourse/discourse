@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    category:
+      sort_options:
+        votes: "Stemmen"
+    topic_voting:
+      title: "Stemmen over topics"
+      reached_limit: "Je hebt geen stemmen meer, verwijder een bestaande stem!"
+      list_votes: "Je stemmen weergeven"
+      votes_nav_help: "topics met de meeste stemmen"
+      voted: "Je hebt op dit topic gestemd"
+      allow_topic_voting: "Gebruikers mogen op topics in deze categorie stemmen"
+      vote_title: "Stemmen"
+      vote_title_plural: "Stemmen"
+      voted_title: "Gestemd"
+      voting_closed_title: "Gesloten"
+      voting_limit: "Limiet"
+      votes_left_button_title:
+        one: "Je hebt nog %{count} stem."
+        other: "Je hebt nog %{count} stemmen."
+      votes:
+        one: "%{count} stem"
+        other: "%{count} stemmen"
+      anonymous_button:
+        one: "Stemmen"
+        other: "Stemmen"
+      remove_vote: "Stem verwijderen"
+      no_votes_title_self: "Je hebt nog niet gestemd op topics"
+      no_votes_title_others: "%{username} heeft nog niet gestemd op topics"
+    filters:
+      votes:
+        title: "Stemmen"
+        help: "topics met de meeste stemmen"
+      my_votes:
+        title: "Mijn stemmen"
+        help: "topics waarop je hebt gestemd"
+    search:
+      most_votes: "Meeste stemmen"
+      advanced:
+        vote:
+          count:
+            label: "Minimaal aantal stemmen"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Topicstemgebeurtenis"
+          topic_upvote: "Wanneer een gebruiker stemt bij een topic"
+          topic_unvote: "Wanneer een gebruiker een stem bij een topic intrekt"

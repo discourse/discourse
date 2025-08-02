@@ -1,0 +1,159 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    discourse_automation:
+      back: 뒤로
+      edit: 편집
+      select_script: 스크립트 선택
+      select_trigger: 트리거 선택
+      edit_automation:
+        fields_section:
+          title: 스크립트 옵션
+      destroy_automation:
+        confirm: "정말 `%{name}`을(를) 삭제하시겠습니까?"
+      fields:
+        user:
+          label: 사용자
+        pm:
+          title:
+            label: 제목
+          raw:
+            label: 본문
+        pms:
+          title:
+            label: 제목
+          raw:
+            label: 바디
+        group:
+          label: 그룹
+        text:
+          label: 텍스트
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: 배지
+        stalled_topic:
+          durations:
+            P2W: "2주"
+            P3M: "3개월"
+            P6M: "6개월"
+            P1Y: "1년"
+        recurring:
+          every: 매
+          frequencies:
+            minute: 정말 `%{name}`을(를) 삭제하시겠습니까?
+            hour: 시간
+            day: 일
+            week: 주
+            month: 월
+            year: 년
+          fields:
+            recurrence:
+              label: 반복
+        stalled_wiki:
+          durations:
+            P2W: "2주"
+            P3M: "3개월"
+            P6M: "6개월"
+            P1Y: "1년"
+        topic:
+          fields:
+            restricted_topic:
+              label: 토픽 ID
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: 태그
+            restricted_categories:
+              label: 카테고리
+          created: 생성됨
+          with_images: 이미지
+          with_links: 링크
+          with_code: 코드
+          with_uploads: 업로드된 파일
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: 상위 카테고리
+        pm_created:
+          fields:
+            restricted_user:
+              label: 사용자들
+            restricted_group:
+              label: 그룹
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: 카테고리
+            restricted_tags:
+              label: 태그
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: 태그
+        post:
+          fields:
+            topic:
+              label: 토픽 ID
+        group_category_notification_default:
+          fields:
+            group:
+              label: 그룹
+        user_global_notice:
+          fields:
+            level:
+              label: 레벨
+          levels:
+            info: 정보
+            success: 성공
+            error: 에러
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: 그룹
+            badge:
+              label: 배지
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: 사용자
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: 토픽 ID
+        banner_topic:
+          fields:
+            topic_id:
+              label: 토픽 ID
+            user:
+              label: 사용자
+        close_topic:
+          fields:
+            topic:
+              label: 토픽 ID
+            user:
+              label: 사용자
+      models:
+        trigger:
+          name:
+            label: Trigger
+        automation:
+          name:
+            label: 그룹명
+          trigger:
+            label: Trigger
+          version:
+            label: 버전
+          status:
+            label: 상태
+          enabled:
+            label: 활성화
+          disabled:
+            label: 비활성

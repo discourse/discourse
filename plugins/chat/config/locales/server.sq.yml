@@ -1,0 +1,245 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  site_settings:
+    chat_separate_sidebar_mode: "Shfaq mënyra të veçanta të shiritit anësor për forumin dhe bisedën."
+    chat_enabled: "Aktivizo bisedën."
+    enable_public_channels: "Aktivizo kanalet publike duke u bazuar në kategori."
+    chat_allowed_groups: "Përdoruesit në këto grupe mund të bisedojnë. Vini re se administratorët dhe moderatorët mund të kenë gjithmonë akses në bisedë."
+    chat_channel_retention_days: "Mesazhet e bisedës në kanalet e rregullta do të mbahen për kaq shumë ditë. Cakto në '0' për të ruajtur mesazhet përgjithmonë."
+    chat_dm_retention_days: "Mesazhet e bisedës në kanalet personale të bisedës do të ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
+    chat_auto_silence_duration: "Numri i minutave për të cilat përdoruesi do të ndërpritet kur tejkalon kufirin e normës së krijimit të mesazheve të bisedës. Kliko tek '0' për të çaktivizuar ndërprerjen automatike."
+    chat_allowed_messages_for_trust_level_0: "Numri i mesazheve që u lejohet përdoruesve të nivelit 0 të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
+    chat_allowed_messages_for_other_trust_levels: "Numri i mesazheve që përdoruesit me nivele limiti 1-4 lejohen të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
+    chat_silence_user_sensitivity: "Mundësia e një përdoruesi të shënuar në bisedë do të ndërpritet automatikisht."
+    chat_auto_silence_from_flags_duration: "Numri i minutave për të cilat përdoruesit do të ndërpriten automatikisht për shkak të mesazheve në bisedën e shënuar."
+    chat_duplicate_message_sensitivity: "Mundësia e një mesazhi të kopjuar nga i njëjti dërgues do të bllokohet në një periudhë të shkurtër. Numri decimal midis 0 dhe 1.0, me 1.0 është rendi më i lartë (bllokon mesazhet më shpesh në një kohë më të shkurtër). Kliko tek `0` për të lejuar mesazhe të kopjuara."
+    chat_minimum_message_length: "Numri minimal i karaktereve për një kanal bisede."
+    chat_allow_uploads: "Lejo ngarkimet në kanalet e bisedës publike dhe kanalet e mesazheve direkte."
+    chat_archive_destination_topic_status: "Statusi që duhet të jetë tema e synuar pasi të përfundojë ruajtja në kanal. Kjo vlen vetëm kur tema e synuar është një temë e re, jo një aktuale."
+    direct_message_enabled_groups: "Lejo përdoruesit brenda këtyre grupeve të krijojnë biseda personale nga përdoruesi në përdorues. Shënim: stafi mund të krijojë gjithmonë biseda personale dhe përdoruesit do të mund t'u përgjigjen bisedave personale të krijuara nga përdoruesit që kanë leje për t'i krijuar ato."
+    chat_message_flag_allowed_groups: "Përdoruesit në këto grupe lejohen të raportojnë mesazhet e bisedës. Vini re se administratorët dhe moderatorët mund të raportojnë gjithmonë mesazhet e bisedës."
+    max_mentions_per_chat_message: "Numri maksimal i njoftimeve me emër që një përdorues mund të përdorë në një mesazh bisede."
+    chat_max_direct_message_users: "Përdoruesit nuk mund të shtojnë më shumë se një numër të caktuar përdoruesish të tjerë kur krijojnë një mesazh të ri direkt. Vendoseni në numrin 0 për të krijuar mesazhe të reja. Stafi është i përjashtuar nga ky cilësim."
+    chat_allow_archiving_channels: "Lejoni stafin të arkivojë mesazhet në një temë kur mbyllni një kanal."
+    chat_editing_grace_period: "Për (numër) sekonda pas dërgimit të një bisede, redaktimi nuk do të shfaqë etiketimin (e redaktuar) nga mesazhi i bisedës."
+    chat_editing_grace_period_max_diff_low_trust: "Numri maksimal i ndryshimeve të karaktereve të lejuara në periudhën e afatit të redaktimit të bisedës, nëse ndryshohet disa herë, shfaq etiketimin (e redaktuar) nga mesazhi i bisedës (niveli i vlefshmërisë 0 dhe 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Numri maksimal i ndryshimeve të karaktereve të lejuara në periudhën e afatit të redaktimit të bisedës, nëse ndryshohet disa herë, shfaq etiketimin (e redaktuar) nga mesazhi i bisedës (niveli i vlefshmërisë 2 e lart)."
+    chat_preferred_index: "Faqja e posaçme kur po shkarkohet /shkruhet në bisedë."
+    errors:
+      chat_default_channel: "Kanali i parazgjedhur i bisedës duhet të jetë një kanal publik."
+      direct_message_enabled_groups_invalid: "Duhet të specifikoni të paktën një grup për këtë cilësim. Nëse nuk dëshironi që askush përveç stafit të dërgojë mesazhe të drejtpërdrejta, krijoni grupin e stafit."
+      chat_upload_not_allowed_secure_uploads: "Shkarkimet në biseda nuk lejohen kur është aktivizuar cilësimi i faqes të shkarkimeve të sigurta."
+  system_messages:
+    private_channel_title: "Kanali %{id}"
+    chat_channel_archive_complete:
+      title: "Arkivi i kanalit të bisedës është shkarkuar."
+      subject_template: "Arkivi i kanalit të bisedës u shkarkua me sukses"
+      text_body_template: |
+        Arkivimi i kanalit të bisedës %{channel_hashtag_or_name} ka përfunduar me sukses. Mesazhet u kopjuan në temën [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Arkivi i Kanalit të Bisedës nuk është Shkarkuar."
+      subject_template: "Arkivi i Kanalit të Bisedës nuk është shkarkuar."
+      text_body_template: |
+        Arkivimi i kanalit të bisedës %{channel_hashtag_or_name} nuk është shkarkuar. Mesazhet %{messages_archived} janë arkivuar. Mesazhet pjesërisht të arkivuara u kopjuan në titull [%{topic_title}](%{topic_url}). Vizito kanalin në %{channel_url} për ta provuar përsëri.
+    chat_channel_archive_failed_no_topic:
+      title: "Arkivi i Kanalit të Bisedës nuk është Shkarkuar."
+      text_body_template: |
+        Arkivimi i kanalit të bisedës %{channel_hashtag_or_name} është shkarkuar. Asnjë mesazh nuk është shkarkuar. Tema nuk u krijua me sukses për arsyet e mëposhtme:
+
+          %{topic_validation_errors}
+
+        Vizitoni kanalin në %{channel_url} për të provuar përsëri.
+  chat:
+    deleted_chat_username: deleted
+    errors:
+      users_cant_be_added_to_channel: "Përdoruesit nuk mund të shtohen në këtë kanal."
+      channel_new_message_disallowed:
+        archived: "Kanali është i arkivuar, nuk mund të dërgohen mesazhe të reja"
+        closed: "Kanali është i bllokuar, nuk mund të dërgohen mesazhe të reja"
+        read_only: "Kanali vetëm mund të lexohet, nuk mund të dërgohen mesazhe të reja"
+      channel_modify_message_disallowed:
+        archived: "Kanali është i arkivuar, asnjë mesazh nuk mund të ndryshohet ose fshihet"
+        closed: "Kanali është i bllokuar, asnjë mesazh nuk mund të ndryshohet ose fshihet."
+        read_only: "Kanali vetëm mund të lexohet , asnjë mesazh nuk mund të ndryshohet ose fshihet"
+      user_cannot_send_message: "Nuk mund të dërgoni më mesazhe në këtë moment."
+      rate_limit_exceeded: "Ka tejkaluar limitin e mesazheve të bisedës që mund të dërgohen brenda 30 sekondave"
+      channel_cannot_be_archived: "Kanali nuk mund të ruhet në këtë moment, duhet të jetë ose i mbyllur ose i hapur për arkivim."
+      duplicate_message: "Keni postuar një mesazh të njëjtë kohët e fundit."
+      delete_channel_failed: "Fshirja e kanalit nuk u krye, ju lutemi provojeni përsëri."
+      minimum_length_not_met:
+        one: "Mesazhi është shumë i shkurtër, duhet të ketë një minimum të karaktereve %{count} ."
+        other: "Mesazhi është shumë i shkurtër, duhet të ketë një minimum prej %{count} karaktere."
+      message_too_long:
+        one: "Mesazhi është shumë i gjatë, mesazhet duhet të kenë një maksimum prej %{count} karakteresh."
+        other: "Mesazhi është shumë i gjatë, mesazhet duhet të kenë një maksimum prej %{count} karakteresh."
+      draft_too_long: "Mesazhi shembull është shumë i gjatë."
+      max_reactions_limit_reached: "Komente të reja nuk lejohen në këtë mesazh."
+      message_move_invalid_channel: "Kanali kryesor dhe i caktuar duhet të jenë kanale publike."
+      message_move_no_messages_found: "Nuk ka asnjë mesazh me ID të mesazheve të dhëna."
+      cant_update_direct_message_channel: "Veçoritë e kanalit të mesazheve të drejtpërdrejta si emri dhe përshkrimi nuk mund të përditësohen."
+      not_accepting_dms: "Na vjen keq, %{username} nuk pranon mesazhe për momentin."
+      actor_ignoring_target_user: "Keni bllokuar %{username}, kështu që nuk mund t'u dërgoni mesazhe atyre."
+      actor_muting_target_user: "Keni bllokuar %{username}, kështu që nuk mund t'u dërgoni mesazhe atyre."
+      actor_disallowed_dms: "Keni zgjedhur të bllokoni përdoruesit t'ju dërgojnë mesazhe private dhe të drejtpërdrejta, kështu që nuk mund të dërgoni mesazhe të reja të drejtpërdrejta."
+      actor_preventing_target_user_from_dm: "Keni bllokuar %{username} që t'ju dërgojë mesazhe private dhe të drejtpërdrejta, kështu që nuk mund ti dërgoni mesazhe të reja të drejtpërdrejta."
+      user_cannot_send_direct_messages: "Na vjen keq, nuk mund të dërgoni mesazhe të drejtpërdrejta."
+      over_chat_max_direct_message_users_allow_self: "Ju mund të krijoni vetëm një mesazh të drejtpërdrejtë."
+      over_chat_max_direct_message_users:
+        one: "Ju nuk mund të krijoni një mesazh të drejtpërdrejtë me më shumë se %{count} përdorues të tjerë."
+        other: "Nuk mund të krijoni një mesazh të drejtpërdrejtë me më shumë se %{count} përdorues të tjerë."
+      original_message_not_found: "Dërguesi i mesazhit të cilit po i përgjigjeni nuk mund të gjendet ose është fshirë."
+      thread_invalid_for_channel: "Tema nuk është pjesë e kanalit të ofruar."
+      thread_does_not_match_parent: "Tema nuk përputhet me mesazhin e dërguesit."
+      invalid_direct_message: "Nuk ju lejohet të krijoni një mesazh të drejtpërdrejtë."
+    reviewables:
+      message_already_handled: "Faleminderit, mesazhi është rishikuar tashmë dhe nuk ka nevojë të raportohet përsëri."
+      actions:
+        agree:
+          title: "Pranuar"
+        agree_and_keep_message:
+          title: "Mesazhi është ruajtur"
+          description: "Kliko tek shënimi dhe ndrysho mesazhin."
+        agree_and_keep_deleted:
+          title: "Ruaj mesazhin e fshirë"
+          description: "Kliko tek shënimi dhe ruaj mesazhin e fshirë."
+        agree_and_suspend:
+          title: "Pezullo anëtarin"
+          description: "Kliko tek shënimi dhe bllokoni përdoruesin."
+        agree_and_silence:
+          title: "Bllokimi i përdoruesit"
+          description: "Kliko tek shënimi dhe blloko përdoruesin."
+        agree_and_restore:
+          title: "Rikthe mesazhin"
+          description: "Rikthe mesazhin që të shfaqet për përdoruesit"
+        agree_and_delete:
+          title: "Fshi Mesazhin"
+          description: "Fshi mesazhin në mënyrë që përdoruesit të mos e shohin atë."
+        delete_and_agree:
+          title: "Injoro shënimin dhe Fshi Mesazhin"
+          description: "Injoro shënimin duke e hequr atë nga radha dhe fshi mesazhin."
+        disagree_and_restore:
+          title: "Ndrysho dhe rikthe mesazhin"
+          description: "Rikthe mesazhin që të shfaqet për përdoruesit."
+        disagree:
+          title: "Jo dakord"
+        ignore:
+          title: "Mos bëni asnjë veprim"
+          description: "Injoro shënimin duke e hequr atë nga radha pa ndërmarrë asnjë veprim."
+      direct_messages:
+        transcript_title: "Kopja e mesazheve të mëparshme në %{channel_name}"
+        transcript_body: "Për t'ju dhënë më shumë informacion, kemi përfshirë një kopje të mesazheve të mëparshme në këtë bisedë (deri në dhjetë):\n\n%{transcript}"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} dhe %{count} të tjera"
+          other: "%{comma_separated_usernames} dhe %{count} të tjerë"
+    mention_warning:
+      dismiss: "hiqe"
+      cannot_see: "%{first_identifier} nuk mund të hyjë në këtë kanal dhe nuk u njoftua."
+      cannot_see_multiple:
+        one: "%{first_identifier} dhe %{count} përdorues të tjerë nuk mund të hyjnë në këtë kanal dhe nuk u njoftuan."
+        other: "%{first_identifier} dhe %{count} përdoruesit e tjerë nuk mund të hyjnë në këtë kanal dhe nuk u njoftuan."
+      invitations_sent:
+        one: "Ftesa u dërgua"
+        other: "Ftesat u dërguan"
+      invite: "Fto në kanal"
+      without_membership: "%{first_identifier} nuk i është bashkuar këtij kanali."
+      without_membership_multiple:
+        one: "%{first_identifier} dhe %{count} përdorues të tjerë nuk i janë bashkuar këtij kanali."
+        other: "%{first_identifier} dhe %{count} përdorues të tjerë nuk i janë bashkuar këtij kanali."
+      group_mentions_disabled: "%{first_identifier} nuk lejon të përmenden përdorues ."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} dhe %{count} grupi tjetër nuk lejojnë të përmenden përdorues të tjerë."
+        other: "%{first_identifier} dhe %{count} grupi tjetër nuk lejojnë të përmenden përdorues të tjerë."
+      global_mentions_disallowed: "@here dhe @all mentions janë çaktivizuar në këtë kanal."
+      too_many_members: "%{first_identifier} ka shumë anëtarë. Askush nuk ka marrë asnjë njoftim."
+      too_many_members_multiple:
+        one: "%{first_identifier} dhe %{count} grupi tjetër kanë shumë anëtarë. Askush ka marrë asnjë njoftim."
+        other: "%{first_identifier} dhe %{count} grupi tjetër kanë shumë anëtarë. Askush ka marrë asnjë njoftim."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "përmban karaktere të veçanta"
+        is_already_in_use: "është tashmë në përdorim"
+    bookmarkable:
+      notification_title: "mesazh në %{channel_name}"
+    personal_chat: "bisedë private"
+    onebox:
+      inline_to_message: "Mesazhi #%{message_id} nga %{username} – #%{chat_channel}"
+      inline_to_channel: "Biseda #%{chat_channel}"
+      inline_to_topic_channel: "Biseda për Temën %{topic_title}"
+      thread_title_connector: "në"
+      x_members:
+        one: "%{count} anëtar"
+        other: "%{count} anëtarët"
+      and_x_others:
+        one: "dhe %{count} të tjera"
+        other: "dhe %{count} të tjerë"
+    transcript:
+      split_thread_range: "mesazhe %{start} tek %{end} nga %{total}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} ju përmendi në "%{channel}"'
+        other_type: '%{username} përmendi %{identifier} në "%{channel}”'
+      direct_message_chat_mention:
+        direct: "%{username} ju përmendi në bisedë private"
+      new_chat_message: '%{username} dërgoi një mesazh në "%{channel}"'
+      new_direct_chat_message: "%{username} dërgoi një mesazh në bisedën personale."
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Dërgoi një kanal mesazhi.
+  reviewable_score_types:
+    needs_review:
+      title: "Nevojë për Rishikim"
+    notify_user:
+      chat_pm_title: 'Kanali juaj i bisedës në "%{channel_name}"'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'Një kanal bisede në "%{channel_name}" ka nevojë për rishikim nga stafi'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Një anëtar i stafit mendon se ky mesazh bisede ka nevojë për rishikim."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Përdoruesi është fshirë"
+      description:
+        one: "Ju keni një kanal të ri bisede"
+        other: "Ju keni mesazhe të reja në kanal"
+      from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Mesazh i ri"
+          other: "[%{site_name}] Mesazhe të reja"
+        chat_dm_1:
+          one: "[%{site_name}] Mesazh i ri nga %{name}"
+          other: "[%{site_name}] Mesazhe të reja nga %{name}"
+        chat_dm_2: "[%{site_name}] Mesazhe të reja nga %{name_1} dhe %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Mesazhe të reja nga %{name} dhe %{count} të tjerë"
+        chat_channel_1:
+          one: "[%{site_name}] Mesazh i ri në %{channel}"
+          other: "[%{site_name}] Mesazhe të reja në %{channel}"
+        chat_channel_2: "[%{site_name}] Mesazhe të reja në %{channel_1} dhe %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Mesazhe të reja në %{channel} dhe %{count} të tjerë"
+        chat_channel_and_dm: "[%{site_name}] Mesazhe të reja në %{channel} dhe nga %{name}"
+      unsubscribe: "Kjo përmbledhje bisede dërgohet nga %{site_link} kur nuk jeni në kanal. Ndrysho %{email_preferences_link}, ose %{unsubscribe_link} për t'u çregjistruar."
+      unsubscribe_no_link: "Kjo përmbledhje bisede dërgohet nga %{site_link} kur jeni në kanal. Ndryshoni %{email_preferences_link}tuaj."
+      view_messages:
+        one: "Shiko mesazhin"
+        other: "Shiko mesazhet %{count}"
+      your_chat_settings: "Preferenca e frekuencës së email-it të kanalit"
+  unsubscribe:
+    chat_summary:
+      select_title: "Cakto frekuencën e emaileve përmbledhëse të kanalit të bisedës në:"
+      never: Asnjëherë
+  category:
+    cannot_delete:
+      has_chat_channels: "Kjo kategori nuk mund të fshihet sepse ka kanale bisede."

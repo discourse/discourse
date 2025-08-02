@@ -1,0 +1,428 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: eliminar automatización
+    discourse_automation:
+      title: Automatización
+      back: Atrás
+      edit: Editar
+      select_script: Selecciona un script
+      select_trigger: Selecciona un activador
+      confirm_automation_reset: Esta acción restablecerá las opciones del script y del activador, y se guardará el nuevo estado. ¿Quieres continuar?
+      confirm_automation_trigger: Esta acción activará la automatización. ¿Quieres continuar?
+      filter_placeholder: Filtrar por nombre o descripción...
+      edit_automation:
+        trigger_section:
+          forced: Este activador está forzado por script.
+          next_pending_automation: "La siguiente automatización se activará el: %{date}"
+          trigger_now: "Activar ahora"
+          title: Cuándo/qué…
+        fields_section:
+          title: Opciones del script
+      destroy_automation:
+        confirm: "¿Seguro que quieres eliminar «%{name}»?"
+      fields:
+        key_value:
+          label_without_count: "Configurar"
+          label_with_count:
+            one: "Editar configuración (%{count})"
+            other: "Editar configuración (%{count})"
+        user:
+          label: Usuario
+        pm:
+          title:
+            label: Título
+          raw:
+            label: Cuerpo
+        pms:
+          confirm_remove_pm: "¿Seguro que quieres eliminar este MP?"
+          placeholder_title: Título del MP
+          add_pm: Añadir MP
+          no_pm_created: Todavía no has creado ningún MP. Los MP se enviarán una vez que se active tu automatización.
+          title:
+            label: Título
+          raw:
+            label: Cuerpo
+          delay:
+            label: Retardo (en minutos)
+          prefers_encrypt:
+            label: Cifra el MP cuando sea posible
+        group:
+          label: Grupo
+        text:
+          label: Texto
+      triggerables:
+        not_found: No se ha podido encontrar el activador «%{trigger}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
+        user_badge_granted:
+          fields:
+            badge:
+              label: Medalla
+            only_first_grant:
+              label: Solo en la primera concesión
+        stalled_topic:
+          durations:
+            PT1H: "Una hora"
+            P1D: "Un día"
+            P1W: "Una semana"
+            P2W: "Dos semanas"
+            P1M: "Un mes"
+            P3M: "Tres meses"
+            P6M: "Seis meses"
+            P1Y: "Un año"
+          fields:
+            categories:
+              label: Limitado a las categorías
+            tags:
+              label: Limitado a las etiquetas
+            stalled_after:
+              label: Estancado tras
+        recurring:
+          every: Cada
+          frequencies:
+            minute: minuto
+            hour: hora
+            day: día
+            weekday: día laborable (lunes a viernes)
+            week: semana
+            month: mes
+            year: año
+          fields:
+            recurrence:
+              label: Recurrencia
+            start_date:
+              label: Fecha de inicio
+        stalled_wiki:
+          durations:
+            PT1H: "Una hora"
+            P1D: "Un día"
+            P1W: "Una semana"
+            P2W: "Dos semanas"
+            P1M: "Un mes"
+            P3M: "Tres meses"
+            P6M: "Seis meses"
+            P1Y: "Un año"
+          fields:
+            restricted_category:
+              label: Restringido a la categoría
+            stalled_after:
+              label: Retardo de activación
+              description: Define el retraso entre la última edición del wiki y la activación de la automatización
+            retriggered_after:
+              label: Retardo antes de volver a activar
+              description: Define el retraso entre la primera activación y la siguiente, si la wiki todavía no ha sido editada desde la primera activación
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Grupo rastreado
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Grupo rastreado
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Restringir al grupo
+            trust_level_transition:
+              label: Transición a nivel de confianza
+          trust_levels:
+            ALL: "Todos los niveles de confianza"
+            TL01: "nivel 0 a nivel 1"
+            TL12: "nivel 1 a nivel 2"
+            TL23: "nivel 2 a nivel 3"
+            TL34: "nivel 3 a nivel 4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Ejecutar a las
+        topic:
+          fields:
+            restricted_topic:
+              label: ID del tema
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Solo publicación original
+              description: Se activará solo si la publicación es la publicación original en el tema
+            action_type:
+              label: Tipo de acción
+              description: "Opcional, limite la activación solo a eventos creados o editados"
+            valid_trust_levels:
+              label: Niveles de confianza válidos
+              description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
+            restricted_tags:
+              label: Etiquetas
+              description: Opcional, solo se activará si la publicación tiene alguna de estas etiquetas
+            restricted_categories:
+              label: Categorías
+            restricted_inbox_groups:
+              description: Opcional, se activará solo si el tema de la publicación es un mensaje personal en una de las bandejas de entrada del grupo.
+            ignore_automated:
+              label: Ignorar la automatización
+              description: Omite el activador si el remitente tiene un correo electrónico de no respuesta o procede de una fuente automatizada. Solo se aplica a las publicaciones creadas por correo electrónico
+            first_post_only:
+              label: Solo la primera publicación
+              description: Se activará solo si la publicación es la primera que creó un usuario.
+            first_topic_only:
+              label: Solo el primer tema
+              description: Se activará solo si el tema es el primer tema que creó un usuario
+            skip_via_email:
+              label: "Omitir por correo electrónico"
+              description: "Omitir el activador si la publicación se creó por correo electrónico"
+          created: Creado
+          edited: Editado
+          with_images: Imágenes
+          with_links: Enlaces
+          with_code: Código
+          with_uploads: Subidos
+        user_updated:
+          fields:
+            user_profile:
+              label: Campos del perfil de usuario
+              description: Se activará solo si el usuario ha completado todos estos campos
+            custom_fields:
+              label: Campos personalizados del usuario
+              description: Solo se activará si el usuario ha rellenado todos estos campos
+            once_per_user:
+              label: Una vez por usuario
+              description: Solo se activará una vez por usuario
+            new_users_only:
+              label: Solo nuevos usuarios
+              description: Se activará solo para los nuevos usuarios que se unan después de que esta automatización esté activada
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Categoría principal
+              description: Opcional, permite limitar la ejecución del activador a esta categoría
+        pm_created:
+          fields:
+            restricted_user:
+              label: Usuarios
+              description: Se activará solo para los MP enviados a este usuario
+            restricted_group:
+              label: Grupo
+              description: Se activará solo para los MP enviados a este grupo
+            ignore_staff:
+              label: Ignorar personal
+              description: Omitir la activación si el remitente es un usuario del personal
+            ignore_group_members:
+              label: Ignorar a los miembros del grupo
+              description: Omitir el activador si el remitente es un miembro del Grupo especificado anteriormente
+            ignore_automated:
+              label: Ignorar la automatización
+              description: Omite el activador si el remitente tiene un correo electrónico de no respuesta o procede de una fuente automatizada. Solo se aplica a los MP creados por correo electrónico
+            valid_trust_levels:
+              label: Niveles de confianza válidos
+              description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Etiquetas añadidas o eliminadas
+            tags_added: Etiquetas añadidas
+            tags_removed: Etiquetas eliminadas
+          fields:
+            watching_categories:
+              label: Observar categorías
+              description: Se activará solo si el tema está en una de estas categorías.
+            watching_tags:
+              label: Observar etiquetas
+              description: Se activará solo si el tema tiene alguna de estas etiquetas.
+            trigger_on:
+              label: Activar
+            trigger_with_pms:
+              label: Activar con mensajes privados
+              description: Se activará aunque se hayan cambiado las etiquetas en un MP
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Niveles de confianza válidos
+              description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
+            restricted_category:
+              label: Categoría
+              description: Opcional, solo se activará si el tema de la publicación está en esta categoría
+            restricted_tags:
+              label: Etiquetas
+              description: Opcional, solo se activará si la publicación tiene alguna de estas etiquetas
+      scriptables:
+        not_found: No se ha podido encontrar el script «%{script}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL del webhook
+              description: "Espera una URL válida del webhook de Zapier, por ejemplo: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Una vez
+              description: Solo responde una vez por tema
+            word_answer_list:
+              label: Lista de pares de palabras/respuestas
+              description: "Define una lista de grupos clave/valor, donde «clave» es el término buscado, y «valor» el texto de la respuesta. La «clave» puede dejarse en blanco para responder a todos los activadores, independientemente de su contenido. Ten en cuenta que «value» acepta «{{key}}» como marcador de posición que se sustituirá por el valor de «clave» en la respuesta. Ten en cuenta que «clave» se evaluará como una expresión regular, y que los caracteres especiales como «.» deben escaparse si en realidad se trata de un punto, p. ej.: «\\»."
+            answering_user:
+              label: Usuario que responde
+              description: Por defecto, usuario del sistema
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Etiquetas
+              description: Lista de etiquetas para añadir al tema.
+        post:
+          fields:
+            creator:
+              label: Creador
+              post_creator_context: El creador de la publicación.
+              updated_user_context: El usuario actualizado
+            topic:
+              label: ID del tema
+            post:
+              label: Contenido de la publicación
+        topic:
+          fields:
+            creator:
+              label: Creador
+              updated_user_context: El usuario actualizado
+            body:
+              label: Cuerpo del tema
+            title:
+              label: Título del tema
+            category:
+              label: Categoría del tema
+            tags:
+              label: Etiquetas del tema
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grupo
+            notification_level:
+              label: Nivel de notificación
+            update_existing_members:
+              label: Actualizar miembros existentes
+              description: Actualiza el nivel de notificación de los miembros del grupo existentes
+        user_global_notice:
+          fields:
+            level:
+              label: Nivel
+            notice:
+              label: Aviso
+              description: Acepta HTML, ¡no incluyas contenido inseguro o de terceros!
+          levels:
+            warning: Advertencia
+            info: Información
+            success: Éxito
+            error: Error
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Nombre de la medalla
+            group:
+              label: Grupo
+              description: Grupo objetivo. Los usuarios con la medalla especificada se añadirán a este grupo
+            update_user_title_and_flair:
+              label: Actualizar el título y el estilo del usuario
+              description: Opcional, actualizar el título y el estilo del usuario
+            remove_members_without_badge:
+              label: Eliminar miembros existentes sin medalla
+              description: Opcional, eliminar miembros del grupo existentes sin la medalla especificada
+            badge:
+              label: Medalla
+              description: Seleccionar medalla
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Suspender hasta (por defecto)
+            reason:
+              label: Motivo (por defecto)
+            actor:
+              label: Usuario
+              description: "Usuario responsable de la suspensión (por defecto: system)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID del tema
+            pinned_globally:
+              label: Anclado globalmente
+            pinned_until:
+              label: Anclado hasta
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID del tema
+            banner_until:
+              label: Convertir en banner hasta
+            user:
+              label: Usuario
+              description: "Usuario que crea el banner (por defecto: system)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Palabras revisadas
+        topic_required_words:
+          fields:
+            words:
+              label: Lista de palabras necesarias
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Nombre del grupo de participantes
+            giftee_assignment_messages:
+              label: Mensajes enviados a quien regala
+        send_pms:
+          add_a_pm_btn:
+            label: Añadir un MP
+          fields:
+            receiver:
+              label: Destinatario del MP
+            sendable_pms:
+              label: MPs
+            sender:
+              label: Remitente del MP
+        close_topic:
+          fields:
+            topic:
+              label: ID del tema
+            message:
+              label: Mensaje de cierre
+              description: "Mensaje opcional para mostrar en el indicador al cerrar el tema"
+            user:
+              label: Usuario
+              description: "Usuario que cierra el tema (por defecto: system)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Nombre del campo personalizado del usuario"
+      unnamed_automation: "Automatización sin nombre"
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Activador
+        automation:
+          name:
+            label: Nombre
+          trigger:
+            label: Activador
+          script:
+            label: Script
+          version:
+            label: Versión
+          status:
+            label: Estado
+          enabled:
+            label: Activado
+          disabled:
+            label: Desactivado
+          placeholders:
+            label: Marcadores de posición
+          last_updated_at:
+            label: Última actualización
+          last_updated_by:
+            label: Actualizado por

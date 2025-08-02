@@ -1,0 +1,87 @@
+$calendar-icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 448 512"><path d="M400 64h-48V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H160V12c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v52H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V160h352v298c0 3.3-2.7 6-6 6z"></path></svg>';
+
+.d-date-input {
+  display: inline-flex;
+  cursor: pointer;
+  flex-direction: column;
+  min-width: 140px;
+  flex: 1 0 auto;
+
+  .date-picker {
+    cursor: pointer;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    box-shadow: none;
+    position: relative;
+
+    &::placeholder {
+      font-size: var(--font-0);
+      color: var(--primary-medium);
+    }
+
+    &:focus {
+      @include default-focus;
+    }
+
+    // iOS doesn't display the placeholder attribute for date inputs
+    html.ios-device &:not(.--has-value)::after {
+      font-size: var(--font-0);
+      color: var(--primary-medium);
+      content: attr(placeholder);
+    }
+
+    // use custom icon and fix issues across browsers
+    // - Safari does not use an icon
+    // - default Chrome/IE icon too tall, makes input height inconsistent
+    // - default Chrome/IE icon are black on dark themes
+    // - allows themes to style as needed
+    // Note that this does nothing in Firefox
+    html:not(.ios-device) & {
+      &::after {
+        content: "";
+        mask: svg-uri($calendar-icon) no-repeat 50% 50%;
+        position: absolute;
+        right: 4px;
+        top: 0;
+        box-sizing: border-box;
+        background-color: var(--primary);
+        height: 100%;
+        width: 20px;
+        z-index: 1;
+      }
+
+      &::-webkit-calendar-picker-indicator {
+        background: transparent;
+        position: absolute;
+        cursor: pointer;
+        right: 0;
+        z-index: 2;
+      }
+    }
+  }
+
+  .pika-single {
+    margin-left: -1px;
+    margin-top: 1px;
+
+    .pika-row td {
+      .pika-button.pika-day {
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  }
+}
+
+.d-date-input + .d-time-input {
+  margin-left: 1px;
+}
+
+.d-time-input + .d-date-input {
+  margin-left: 1px;
+}
+
+.d-date-input + .clear-date-time {
+  margin-left: 1px;
+}

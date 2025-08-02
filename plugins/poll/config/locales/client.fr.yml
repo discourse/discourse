@@ -1,0 +1,154 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    poll:
+      voters:
+        one: "votant"
+        other: "votants"
+      total_votes:
+        one: "vote au total"
+        other: "votes au total"
+      votes:
+        one: "%{count} vote"
+        other: "%{count} votes"
+      average_rating: "Notation moyenne : <strong>%{average}</strong>"
+      public:
+        title: "Les votes sont <strong>publics</strong>."
+      results:
+        groups:
+          title: "Vous devez être membre du groupe %{groups} pour participer à ce sondage."
+        vote:
+          title: "Les résultats sont affichés après le <strong>vote</strong>."
+        closed:
+          title: "Les résultats sont affichés après la <strong>fermeture</strong> du sondage."
+        staff:
+          title: "Les résultats ne sont montrés qu'aux <strong>responsables</strong>."
+        tabs:
+          votes: "Votes"
+          outcome: "Résultat"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Choisissez au moins <strong>%{count} option</strong>."
+            other: "Choisissez au moins <strong>%{count} options</strong>."
+          up_to_max_options:
+            one: "Choisissez jusqu'à <strong>%{count} option</strong>."
+            other: "Choisissez jusqu'à <strong>%{count} options</strong>."
+          x_options:
+            one: "Choisissez <strong>%{count} option</strong>."
+            other: "Choisissez <strong>%{count} options</strong>."
+          between_min_and_max_options: "Choisissez entre <strong>%{min} et %{max} options</strong>."
+      cast-votes:
+        title: "Distribuez vos votes"
+        label: "Votez maintenant !"
+      show-results:
+        title: "Afficher les résultats du sondage"
+        label: "Résultats"
+      show-tally:
+        title: "Afficher les résultats du vote par nombre de votes"
+        label: "Afficher le décompte"
+      show-percentage:
+        title: "Afficher les résultats du vote sous forme de pourcentage"
+        label: "Afficher en pourcentage"
+      remove-vote:
+        title: "Supprimer votre vote"
+        label: "Annuler le vote"
+      hide-results:
+        title: "Retourner au vote"
+        label: "Vote"
+      group-results:
+        title: "Grouper les votes par champ utilisateur"
+        label: "Afficher les détails"
+      export-results:
+        title: "Exporter les résultats du sondage"
+        label: "Exporter"
+      open:
+        title: "Ouvrir le sondage"
+        label: "Ouvrir"
+        confirm: "Voulez-vous vraiment ouvrir ce sondage ?"
+      close:
+        title: "Fermer le sondage"
+        label: "Fermer"
+        confirm: "Voulez-vous vraiment fermer ce sondage ?"
+      automatic_close:
+        closes_in: "Se termine dans <strong>%{timeLeft}</strong>."
+        age: "Fermé <strong>%{age}</strong>"
+      breakdown:
+        title: "Résultats du sondage"
+        votes: "%{count} votes"
+        breakdown: "Détails"
+        percentage: "Pourcentage"
+        count: "Nombre"
+      ranked_choice:
+        title:
+          rounds: "Tours"
+          outcome: "Résultat"
+        none: "Aucun"
+        majority: "Majorité"
+        eliminated: "Éliminé"
+        round: "Tour"
+        winner:
+          one: "Le gagnant était %{winner} après un tour."
+          other: "Le gagnant était %{winner} après %{count} tours."
+        tied:
+          one: "Égalité après un tour entre les candidats suivants :"
+          other: "Égalité après %{count} tours entre les candidats suivants :"
+      options:
+        label: "Options"
+        ranked_choice:
+          abstain: "Abstention"
+          highest_priority: "(priorité la plus élevée)"
+          lowest_priority: "(priorité la plus faible)"
+          login: "Connectez-vous pour voter !"
+      error_while_toggling_status: "Nous sommes désolés, une erreur s'est produite lors du changement de statut de ce sondage."
+      error_while_casting_votes: "Nous sommes désolés, une erreur s'est produite lors de l'envoi de vos votes."
+      error_while_fetching_voters: "Nous sommes désolés, une erreur s'est produite lors de l'affichage des votants."
+      error_while_exporting_results: "Nous sommes désolés, une erreur s'est produite lors de l'exportation des résultats du sondage."
+      ui_builder:
+        title: Créer un sondage
+        insert: Insérer le sondage
+        help:
+          options_min_count: Saisissez au moins 1 réponse possible.
+          options_max_count: Saisissez au plus %{count} réponses possibles.
+          invalid_min_value: Cette valeur doit être supérieure à 1.
+          invalid_max_value: Le nombre maximal de réponses doit être compris entre 1 et le nombre total d'options.
+          invalid_values: La valeur minimale doit être plus petite que la valeur maximale.
+          min_step_value: Le valeur minimale du pas est de 1
+        poll_type:
+          label: Type
+          regular: Choix unique
+          multiple: Choix multiple
+          ranked_choice: Choix classé
+          number: Nombre
+        poll_result:
+          label: Afficher les résultats…
+          always: Toujours visible
+          vote: Seulement après le vote
+          closed: Lorsque le sondage est fermé
+          staff: Responsables seulement
+        poll_groups:
+          label: Limiter le vote à ces groupes
+        poll_chart_type:
+          label: Graphique des résultats
+          bar: Barre
+          pie: Circulaire
+        poll_config:
+          max: Nombre maximal de choix
+          min: Nombre minimal de choix
+          step: Pas
+        poll_public:
+          label: Afficher les votants
+        poll_title:
+          label: Titre (facultatif)
+        poll_options:
+          label: Réponses possibles (une réponse par ligne)
+          add: Ajouter une option
+        automatic_close:
+          label: Fermer le sondage automatiquement
+        show_advanced: "Afficher les options avancées"
+        hide_advanced: "Masquer les options avancées"

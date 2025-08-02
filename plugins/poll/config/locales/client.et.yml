@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    poll:
+      voters:
+        one: "hääletaja"
+        other: "hääletajat"
+      total_votes:
+        one: "häält kokku"
+        other: "hääli kokku"
+      average_rating: "Keskmine hinnang: <strong>%{average}</strong>."
+      cast-votes:
+        title: "Anna oma hääl"
+        label: "Hääleta nüüd!"
+      show-results:
+        title: "Kuva hääletuse tulemused"
+      hide-results:
+        title: "Tagasi sinu vastuse juurde"
+      export-results:
+        label: "Ekspordi"
+      open:
+        title: "Ava hääletus"
+        label: "Ava"
+        confirm: "Kas sa oled kindel, et soovid selle hääletuse avada?"
+      close:
+        title: "Sulge hääletus"
+        label: "Sulge"
+        confirm: "Kas sa oled kindel, et sa tahad antud hääletuse sulgeda?"
+      breakdown:
+        count: "Arv"
+      ranked_choice:
+        none: "Pole"
+      options:
+        label: "Suvandid"
+      error_while_toggling_status: "Kahjuks tekkis postituse staatuse ümberlülitamisel tõrge."
+      error_while_casting_votes: "Kahjuks tekkis hääletamise käigus tõrge."
+      error_while_fetching_voters: "Kahjuks tekkis hääletajate näitamise käigus tõrge."
+      ui_builder:
+        title: Koosta hääletus
+        insert: Sisesta hääletus
+        help:
+          min_step_value: Sammu minimaalne väärtus on 1
+        poll_type:
+          label: Tüüp
+          regular: Üks valik
+          multiple: Mitu valikut
+          number: Numbriline vastus
+        poll_config:
+          step: Samm
+        poll_public:
+          label: Näita vastajaid

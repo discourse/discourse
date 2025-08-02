@@ -1,0 +1,45 @@
+[data-content][data-identifier="user-tip"] {
+  min-width: 300px;
+  background-color: var(--tertiary);
+  border: none;
+  color: var(--secondary);
+
+  --float-kit-arrow-stroke-color: var(--tertiary);
+  --float-kit-arrow-fill-color: var(--tertiary);
+
+  .user-tip__container {
+    font-weight: normal;
+    padding: 0.5em;
+    text-align: left;
+  }
+
+  .user-tip__title {
+    font-size: var(--font-up-2);
+    font-weight: bold;
+  }
+
+  .user-tip__content {
+    margin-top: 0.25em;
+
+    a {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+  }
+
+  .user-tip__buttons {
+    margin-top: 1em;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-primary {
+    background: var(--secondary);
+    color: var(--tertiary);
+  }
+
+  .btn-flat.btn-text {
+    background-color: transparent;
+    color: var(--secondary);
+  }
+}

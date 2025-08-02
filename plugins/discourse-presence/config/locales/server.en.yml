@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    presence_enabled: "Show users that are currently replying to the current topic, or editing the current post?"
+    presence_max_users_shown: "Maximum number of users shown."

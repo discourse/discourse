@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "جزئیات Discourse"
+  js:
+    details:
+      title: پنهان کردن جزئیات
+    composer:
+      details_title: خلاصه
+      details_text: "این متن پنهان خواهد شد"

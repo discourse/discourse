@@ -1,0 +1,285 @@
+body {
+  background: unset !important;
+}
+
+#ember-testing-container {
+  position: fixed;
+  background: #fff;
+  bottom: 0;
+  right: 0;
+  width: 640px;
+  height: 384px;
+  overflow: auto;
+  z-index: 9999;
+  border: 1px solid #ccc;
+  transform: translateZ(0);
+  box-sizing: border-box;
+  max-height: 100vh;
+}
+
+#ember-testing {
+  background-color: #fff;
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5);
+  transform-origin: top left;
+}
+
+.discourse-root {
+  background: var(--secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #222;
+  }
+
+  #qunit-banner.qunit-pass {
+    background-color: #92b01e;
+  }
+
+  #qunit-banner.qunit-fail {
+    background-color: #7e2121;
+  }
+
+  #qunit-testrunner-toolbar {
+    background: #1b1b1b;
+  }
+
+  #qunit-testrunner-toolbar button {
+    background-color: #222;
+    border-color: #444;
+    color: #f8f8f8;
+  }
+
+  #qunit-filter-input,
+  #qunit-urlconfig-qunit_single_plugin,
+  #qunit-urlconfig-target {
+    background-color: var(--secondary);
+    border: 1px solid var(--primary-medium);
+    color: var(--primary);
+  }
+
+  #qunit-filteredTest {
+    background-color: #90ac2d;
+    color: #366097;
+  }
+
+  #qunit-testresult {
+    background-color: #366097;
+    border-color: #000;
+    color: #e2f0f7;
+  }
+
+  #qunit-testresult a {
+    color: #7eb0f2;
+  }
+
+  #qunit-tests b.counts {
+    color: #ddd;
+  }
+
+  #qunit-tests b.failed {
+    color: #f77;
+  }
+
+  #qunit-tests b.passed {
+    color: #90ac2d;
+  }
+
+  #qunit-tests .pass {
+    background-color: #0c3f59;
+    border-color: #000;
+    color: #edeff5;
+  }
+
+  #qunit-tests .pass .test-name {
+    color: #7eb0f2;
+  }
+
+  #qunit-tests .fail {
+    background-color: #7e2121;
+    color: #ddd;
+  }
+
+  #qunit-tests .skipped {
+    background-color: #1a1b18;
+  }
+
+  ol.qunit-assert-list > li > table > tbody,
+  tr.test-expected,
+  tr.test-actual,
+  tr.test-source {
+    border-color: #333;
+  }
+
+  #qunit-tests li {
+    border-color: #333;
+  }
+
+  #qunit-tests li li.pass {
+    background-color: #222;
+    border-color: #92b01e;
+    color: #90ac2d;
+  }
+
+  #qunit-tests li li.fail {
+    background-color: #222;
+    border-color: #7e2121;
+    color: #f77;
+  }
+
+  .qunit-assert-list {
+    background-color: #222;
+  }
+
+  #ember-testing-container {
+    background-color: #000;
+    border-color: #444;
+  }
+
+  #ember-testing {
+    background: #000;
+  }
+
+  #qunit-modulefilter-dropdown {
+    background-color: var(--secondary);
+    border: 1px solid var(--primary-medium);
+    color: var(--primary);
+
+    .clickable:hover {
+      background-color: #222;
+      color: #f8f8f8;
+    }
+  }
+
+  // Hardcode "dark" theme vars for now
+  :root {
+    --scheme-type: dark;
+    --primary: #ddd;
+    --secondary: #222;
+    --tertiary: #0f82af;
+    --quaternary: #c14924;
+    --header_background: #111;
+    --header_primary: #ddd;
+    --highlight: #a87137;
+    --danger: #e45735;
+    --success: #1ca551;
+    --love: #fa6c8d;
+    --d-selected: #2c2c2c;
+    --d-hover: #313131;
+    --always-black-rgb: 0, 0, 0;
+    --primary-rgb: 221, 221, 221;
+    --primary-low-rgb: 49, 49, 49;
+    --primary-very-low-rgb: 40, 40, 40;
+    --secondary-rgb: 34, 34, 34;
+    --header_background-rgb: 17, 17, 17;
+    --tertiary-rgb: 15, 130, 175;
+    --highlight-rgb: 168, 113, 55;
+    --success-rgb: 28, 165, 81;
+    --primary-very-low: #282828;
+    --primary-low: #313131;
+    --primary-low-mid: #7a7a7a;
+    --primary-medium: #909090;
+    --primary-high: #a6a6a6;
+    --primary-very-high: #c7c7c7;
+    --primary-50: #282828;
+    --primary-100: #2c2c2c;
+    --primary-200: #313131;
+    --primary-300: #585858;
+    --primary-400: #7a7a7a;
+    --primary-500: #858585;
+    --primary-600: #909090;
+    --primary-700: #9b9b9b;
+    --primary-800: #a6a6a6;
+    --primary-900: #c7c7c7;
+    --header_primary-low: rgb(72, 72, 72);
+    --header_primary-low-mid: rgb(131, 131, 131);
+    --header_primary-medium: rgb(164, 164, 164);
+    --header_primary-high: rgb(185, 185, 185);
+    --header_primary-very-high: rgb(210, 210, 210);
+    --secondary-low: #bdbdbd;
+    --secondary-medium: #919191;
+    --secondary-high: #646464;
+    --secondary-very-high: #313131;
+    --tertiary-very-low: #04212c;
+    --tertiary-low: #052e3d;
+    --tertiary-medium: #084860;
+    --tertiary-high: #0b6283;
+    --tertiary-hover: #14aeea;
+    --tertiary-50: #04212c;
+    --tertiary-100: #042431;
+    --tertiary-200: #052836;
+    --tertiary-300: #052e3d;
+    --tertiary-400: #06374a;
+    --tertiary-500: #073e54;
+    --tertiary-600: #084860;
+    --tertiary-700: #09516d;
+    --tertiary-800: #0a5a79;
+    --tertiary-900: #0b6283;
+    --quaternary-low: #3a160b;
+    --highlight-bg: #22170b;
+    --highlight-low: #22170b;
+    --highlight-medium: #4c3319;
+    --highlight-high: #976632;
+    --danger-low: #591b0c;
+    --danger-low-mid: rgb(99, 30, 13, 0.7);
+    --danger-medium: #a13116;
+    --danger-hover: #c63c1b;
+    --success-low: #0b4220;
+    --success-medium: #116331;
+    --success-hover: #168441;
+    --love-low: #8a0524;
+    --wiki: green;
+    --blend-primary-secondary-5: rgb(60, 60, 60);
+    --primary-med-or-secondary-med: #919191;
+    --primary-med-or-secondary-high: #646464;
+    --primary-high-or-secondary-low: #bdbdbd;
+    --primary-low-mid-or-secondary-high: #646464;
+    --primary-low-mid-or-secondary-low: #bdbdbd;
+    --primary-or-primary-low-mid: #7a7a7a;
+    --highlight-low-or-medium: #4c3319;
+    --tertiary-or-tertiary-low: #052e3d;
+    --tertiary-low-or-tertiary-high: #0b6283;
+    --tertiary-med-or-tertiary: #0f82af;
+    --secondary-or-primary: #ddd;
+    --tertiary-or-white: #fff;
+    --facebook-or-white: #fff;
+    --twitter-or-white: #fff;
+    --hljs-comment: #bba;
+    --hljs-number: #aff;
+    --hljs-string: #f99;
+    --hljs-literal: #9ae;
+    --hljs-tag: #99f;
+    --hljs-attribute: #0ee;
+    --hljs-symbol: #fbe;
+    --hljs-bg: #333;
+    --hljs-builtin-name: #14aeea;
+    --google: #fff;
+    --google-hover: #f2f2f2;
+    --instagram: #e1306c;
+    --instagram-hover: #ac194b;
+    --facebook: #0866ff;
+    --facebook-hover: #0047bb;
+    --cas: #70ba61;
+    --twitter: #000;
+    --github: #100e0f;
+    --github-hover: #463e42;
+    --discord: #7289da;
+    --discord-hover: #4a67cf;
+    --gold: rgb(231, 195, 0);
+    --silver: #c0c0c0;
+    --bronze: #cd7f32;
+    --shadow-modal: 0 8px 60px rgb(0, 0, 0, 1);
+    --shadow-composer: 0 -1px 40px rgb(0, 0, 0, 0.35);
+    --shadow-card: 0 4px 14px rgb(0, 0, 0, 0.5);
+    --shadow-dropdown: 0 2px 12px 0 rgb(0, 0, 0, 0.25);
+    --shadow-menu-panel: var(--shadow-dropdown);
+    --shadow-header: 0 2px 4px -1px rgb(0, 0, 0, 0.45);
+    --shadow-footer-nav: 0 0 2px 0 rgb(0, 0, 0, 0.4);
+    --shadow-focus-danger: 0 0 6px 0 var(--danger);
+    --float-kit-arrow-stroke-color: var(--primary-low);
+    --float-kit-arrow-fill-color: var(--secondary);
+    --chat-skeleton-animation-rgb: 40, 40, 40;
+  }
+}

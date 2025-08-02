@@ -1,0 +1,159 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Enquete Discourse"
+  js:
+    poll:
+      voters:
+        one: "votante"
+        other: "votantes"
+      total_votes:
+        one: "voto no total"
+        other: "votos no total"
+      votes:
+        one: "%{count} voto"
+        other: "%{count} votos"
+      average_rating: "Classificação média: <strong>%{average}</strong>."
+      public:
+        title: "Votos são <strong>públicos</strong>."
+      results:
+        groups:
+          title: "Você precisa ser membro de %{groups} para votar nesta enquete."
+        vote:
+          title: "Resultados serão mostrados ao <strong>votar</strong>."
+        closed:
+          title: "Resultados serão mostrados quando a votação <strong>terminar</strong>."
+        staff:
+          title: "Resultados são mostrados apenas para membros da <strong>equipe</strong>."
+        tabs:
+          votes: "Votos"
+          outcome: "Resultado"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Escolha pelo menos <strong>%{count} opção</strong>."
+            other: "Escolha pelo menos <strong>%{count} opções</strong>."
+          up_to_max_options:
+            one: "Escolha até <strong>%{count} opção</strong>."
+            other: "Escolha até <strong>%{count} opções</strong>."
+          x_options:
+            one: "Escolha <strong>%{count} opção</strong>."
+            other: "Escolha <strong>%{count} opções</strong>."
+          between_min_and_max_options: "Escolha entre <strong>%{min} e %{max} opções</strong>."
+      cast-votes:
+        title: "Participe da enquete"
+        label: "Votar agora!"
+      show-results:
+        title: "Mostrar o resultado da enquete"
+        label: "Resultados"
+      show-tally:
+        title: "Mostrar resultados da votação por número de votos"
+        label: "Exibir contagem"
+      show-percentage:
+        title: "Mostrar resultados da votação como porcentagem"
+        label: "Mostrar como porcentagem"
+      remove-vote:
+        title: "Remover seu voto"
+        label: "Desfazer votação"
+      hide-results:
+        title: "Voltar para os seus votos"
+        label: "Votar"
+      group-results:
+        title: "Agrupar votos por campo de usuário(a)"
+        label: "Mostrar divisão"
+      export-results:
+        title: "Exportar os resultados da enquete"
+        label: "Exportar"
+      open:
+        title: "Abrir a enquete"
+        label: "Abrir"
+        confirm: "Você tem certeza de que deseja abrir esta enquete?"
+      close:
+        title: "Fechar enquete"
+        label: "Fechar"
+        confirm: "Você tem certeza de que deseja fechar esta enquete?"
+      automatic_close:
+        closes_in: "Fecha em <strong>%{timeLeft}</strong>."
+        age: "Fechou <strong>%{age}</strong>"
+      breakdown:
+        title: "Resultados da enquete"
+        votes: "%{count} votos"
+        breakdown: "Divisão"
+        percentage: "Porcentagem"
+        count: "Contagem"
+      ranked_choice:
+        title:
+          rounds: "Rodadas"
+          outcome: "Resultado"
+        none: "Nenhum"
+        majority: "Maioria"
+        eliminated: "Eliminação"
+        round: "Rodada"
+        winner:
+          one: "O(a) vencedor(a) foi %{winner} após uma rodada."
+          other: "O(a) vencedor(a) foi %{winner} após %{count} rodadas."
+        tied:
+          one: "Empate dos(as) seguintes candidatos(as) após uma rodada:"
+          other: "Empate dos(as) seguintes candidatos(as) após %{count} rodadas:"
+      options:
+        label: "Opções"
+        ranked_choice:
+          abstain: "Abrir mão"
+          highest_priority: "(maior prioridade)"
+          lowest_priority: "(menor prioridade)"
+          login: "Entre para votar!"
+      error_while_toggling_status: "Desculpe, houve um erro ao mudar o status desta enquete."
+      error_while_casting_votes: "Desculpe, houve um erro ao registrar os seus votos."
+      error_while_fetching_voters: "Desculpe, houve um erro ao exibir os votantes."
+      error_while_exporting_results: "Desculpe, houve um erro ao exportar os resultados da pesquisa."
+      ui_builder:
+        title: Criar enquete
+        insert: Inserir enquete
+        help:
+          options_min_count: Insira pelo menos uma opção.
+          options_max_count: Insira no máximo %{count} opções.
+          invalid_min_value: O valor mínimo deve ser pelo menos 1.
+          invalid_max_value: O valor máximo deve ser pelo menos 1, mas menor ou igual ao número de opções.
+          invalid_values: O valor mínimo precisa ser menor do que o valor máximo.
+          min_step_value: O valor mínimo de intervalo é 1
+        poll_type:
+          label: Tipo
+          regular: Única escolha
+          multiple: Múltipla escolha
+          ranked_choice: Escolha classificada
+          number: Classificação numérica
+        poll_result:
+          label: Exibir resultados
+          always: Sempre visível
+          vote: Apenas após a votação
+          closed: Quando a enquete for encerrada
+          staff: Somente equipe
+        poll_groups:
+          label: Limitar votação a estes grupos
+        poll_chart_type:
+          label: Gráfico de resultados
+          bar: Barras
+          pie: Pizza
+        poll_config:
+          max: Escolhas máx.
+          min: Escolhas mínimas
+          step: Intervalo
+        poll_public:
+          label: Exibir quem votou
+        poll_title:
+          label: Título (opcional)
+        poll_options:
+          label: Opções (uma por linha)
+          add: Adicionar opção
+        automatic_close:
+          label: Fechar automaticamente a enquete
+        show_advanced: "Exibir opções avançadas"
+        hide_advanced: "Ocultar opções avançadas"

@@ -1,0 +1,74 @@
+// Styles used before the user is logged into discourse. For example, activating their
+// account or changing their email.
+.account-created-page,
+.activate-account-page {
+  background: var(--secondary);
+
+  #main-outlet {
+    padding: 0;
+    height: 100%;
+  }
+
+  .above-main-container-outlet {
+    display: none;
+  }
+}
+
+.activate-account-page .alert-error {
+  margin: 1em;
+}
+
+.account-created,
+.activate-account {
+  max-width: 500px;
+  padding: 2rem 3rem;
+  background: var(--secondary);
+  margin: 10vh auto 1em auto;
+
+  @media screen and (height <= 700px) {
+    margin: 1em auto 1em auto;
+  }
+}
+
+.account-created {
+  .ac-message {
+    font-size: var(--font-up-1);
+    line-height: var(--line-height-large);
+  }
+
+  .activation-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-top: 1em;
+  }
+
+  .edit-cancel {
+    text-transform: capitalize;
+  }
+
+  .success-info p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.activate-account {
+  .activate-account-button,
+  .continue-button {
+    margin-top: 1em;
+    margin-inline: auto;
+    display: block;
+    width: fit-content;
+  }
+
+  .login-welcome-header {
+    margin-inline: auto;
+    width: fit-content;
+  }
+
+  .tada-image {
+    width: 150px;
+    margin: auto;
+    padding-bottom: 1em;
+  }
+}

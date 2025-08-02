@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  js:
+    poll:
+      voters:
+        one: "галас"
+        few: "галасоў"
+        many: "галасоў"
+        other: "галасоў"
+      total_votes:
+        one: "голас"
+        few: "галасоў"
+        many: "галасоў"
+        other: "галасоў"
+      average_rating: "Сярэдні рэйтынг: <strong>%{average}strong>."
+      show-results:
+        label: "вынікі"
+      export-results:
+        label: "экспарт"
+      close:
+        label: "зачыніць"
+      breakdown:
+        count: "падлічваць"
+      options:
+        label: "Налады"
+      ui_builder:
+        poll_type:
+          label: тып

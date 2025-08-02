@@ -1,0 +1,96 @@
+# Morocco holiday (incomplete)definitions for the Ruby Holiday gem.
+#
+# Updated: 2013-07-01.
+# Some dates in Islamic Calendar are missing.
+# Sources:
+# - http://en.wikipedia.org/wiki/Public_holidays_in_Morocco
+---
+months:
+  1:
+  - name: Ras l' âm
+    regions: [ma]
+    mday: 1
+  - name: Takdim watikat al-istiqlal
+    regions: [ma]
+    mday: 11
+  5:
+  - name: Eid Ash-Shughl
+    regions: [ma]
+    mday: 1
+  7:
+  - name: Eid Al-Ârch
+    regions: [ma]
+    mday: 30
+  8:
+  - name: Zikra Oued Ed-Dahab
+    regions: [ma]
+    mday: 14
+  - name: Thawrat al malik wa shâab
+    regions: [ma]
+    mday: 20
+  - name: Eid Al Milad
+    regions: [ma]
+    mday: 21
+  11:
+  - name: Eid Al Massira Al Khadra
+    regions: [ma]
+    mday: 6
+  - name: Eid Al Istiqulal
+    regions: [ma]
+    mday: 18
+
+tests:
+  - given:
+      date: '2007-01-01'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Ras l' âm"
+  - given:
+      date: '2007-01-11'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Takdim watikat al-istiqlal"
+  - given:
+      date: '2007-05-01'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Eid Ash-Shughl"
+  - given:
+      date: '2007-07-30'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Eid Al-Ârch"
+  - given:
+      date: '2007-08-14'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Zikra Oued Ed-Dahab"
+  - given:
+      date: '2007-08-20'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Thawrat al malik wa shâab"
+  - given:
+      date: '2007-08-21'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Eid Al Milad"
+  - given:
+      date: '2007-11-06'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Eid Al Massira Al Khadra"
+  - given:
+      date: '2007-11-18'
+      regions: ["ma"]
+      options: ["informal"]
+    expect:
+      name: "Eid Al Istiqulal"

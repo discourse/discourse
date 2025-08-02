@@ -1,0 +1,12 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Discourse Details"
+  js:
+    details:
+      title: Hide Details
+    composer:
+      details_title: Summary
+      details_text: "This text will be hidden"

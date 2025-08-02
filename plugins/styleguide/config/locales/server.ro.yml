@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    styleguide_enabled: 'Activează o cale `/styleguide` pentru a ajuta la personalizarea Discourse'
+    styleguide_admin_only: "Limitează vizibilitatea ghidului de stil la administratori"

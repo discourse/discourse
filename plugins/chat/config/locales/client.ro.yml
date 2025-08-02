@@ -1,0 +1,249 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Întotdeauna"
+          never: "Niciodată"
+      logs:
+        staff_actions:
+          actions:
+            chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
+    chat:
+      back_to_forum: "Forum"
+      deleted_chat_username: șters
+      dates:
+        yesterday: "Ieri"
+      create: "Creează"
+      cancel: "Anulează"
+      move_to_channel:
+        instructions:
+          one: "Mutați <strong>%{count}</strong> mesaj. Selectați un canal de destinație. Un mesaj placeholder va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că acest mesaj a fost mutat. Retineți că lanțurile de răspuns nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca raspunsuri la mesajele mutate."
+          few: "Mutați <strong>%{count}</strong> mesaje. Selectați un canal destinație. Un mesaj substitut va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că aceste mesaje au fost mutate. Rețineți că lanțurile de răspunsuri nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca răspunsuri la mesajele mutate."
+          other: "Mutați <strong>%{count}</strong> mesaje. Selectați un canal destinație. Un mesaj substitut va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că aceste mesaje au fost mutate. Rețineți că lanțurile de răspunsuri nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca răspunsuri la mesajele mutate."
+      delete_messages:
+        confirm:
+          one: "Sigur vrei să ștergi acest mesaj?"
+          few: "Sigur vrei să ștergi aceste %{count} mesaje?"
+          other: "Sigur vrei să ștergi aceste %{count} de mesaje?"
+      channel_settings:
+        edit: "Modifică"
+        add: "Adaugă"
+        leave_groupchat_info: "Dacă părăsești această discuție de grup, nu vei mai avea acces la ea și nu vei mai primi notificări legate de ea. Pentru a reveni, va trebui să te re-invite un membru al discuției de grup."
+        join: "Alătură-te"
+        leave: "Părăsește"
+      channel_delete:
+        instructions: "<p>Șterge canalul <strong>%{name}</strong> și istoricul de chat. Toate mesajele și datele asociate, cum ar fi reacțiile și încărcările, vor fi șterse permanent. Dacă doriți să păstrați istoricul canalului și să-l decomisionați, s-ar putea să doriți să arhivați canalul în schimb.</p> <p>Sunteți sigur că doriți să ștergeți <strong>permanent</strong> canalul? Pentru a confirma, tastați numele canalului în caseta de mai jos.</p>"
+      close: "Închide sondajul"
+      remove: "Elimină"
+      expand: "Extinde sertarul de chat"
+      delete: "Șterge"
+      muted: "silențios"
+      joined: "înscris"
+      email_frequency:
+        never: "Niciodată"
+      header_indicator_preference:
+        title: "Afișați indicatorul de activitate în antet"
+        all_new: "Toate mesajele noi"
+        never: "Niciodată"
+      send_shortcut:
+        enter:
+          label: "Trimite prin Enter"
+          description: "Linie nouă prin Shift + Enter"
+        meta_enter:
+          label: "Trimite prin %{meta_key} + Enter"
+          description: "Linie nouă prin Enter"
+      flag: "Marchează cu marcaj de avertizare"
+      join: "Alătură-te"
+      last_visit: "ultima vizită"
+      mention_warning:
+        groups:
+          unreachable_1: "@%{group} nu permite mențiuni."
+          unreachable_multiple:
+            one: "@%{group} și încă %{count} grup nu permit mențiuni."
+            few: "@%{group} și încă %{count} grupuri nu permit mențiuni."
+            other: "@%{group} și încă %{count} de grupuri nu permit mențiuni."
+      no_direct_message_channels: "Încă nu te-ai alăturat niciunui mesaj direct!"
+      no_public_channels: "Încă nu te-ai alăturat niciunui canal!"
+      placeholder_group: "Discuție în grup"
+      reply: "Răspunde"
+      edit: "Modifică"
+      rebake_message: "Reconstruieşte HTML"
+      bookmark_message: "Semn de carte"
+      bookmark_message_edit: "Editați marcajul"
+      save: "Salvează"
+      return_to_channel: "Revino la canal"
+      return_to_threads_list: "Revino la lista de fire"
+      sounds:
+        none: "Nimeni"
+      exit: "înapoi"
+      channel_status:
+        closed: "Închis"
+        open: "Deschis"
+      browse:
+        back: "Înapoi"
+        filter_all: Toate
+        filter_open: Deschide
+        filter_closed: Închis
+      chat_message_separator:
+        today: Astăzi
+        yesterday: Ieri
+      members_view:
+        add_member: Adaugă membru
+        back_to_settings: "Înapoi la setări"
+      about_view:
+        title: Titlu
+        name: Nume
+        description: Descriere
+      channel_info:
+        back_to_channel: "Înapoi"
+        tabs:
+          members: Membri
+          settings: Setări
+        remove_member: "Elimină"
+      new_message_modal:
+        user_search_placeholder: "...adaugă mai mulți membri"
+        create_group_placeholder: "Nume grup discuție (opțional)"
+        participants_counter: "%{selection_count}/%{max} participanți"
+        new_group_chat: "Grup nou de discuție"
+        filter: "Filtru"
+        cant_add_more_members: "Numărul maxim de membri a fost atins"
+        create_new_group_chat: "Creează grup de discuție"
+      direct_message_creator:
+        add_to_channel: "Adaugă la canal"
+        title: Mesaj nou
+        prefix: "Către:"
+        no_results: Fără rezultate
+        group_name: "Nume grup discuție (opțional)"
+        members_counter:
+          one: "%{count}/%{max} membru"
+          few: "%{count}/%{max} membri"
+          other: "%{count}/%{max} de membri"
+      create_channel:
+        type: "Tip"
+        types:
+          category: "Categorie"
+          topic: "Subiect"
+      reactions:
+        only_you: "<span>Ai reacționat cu </span>:%{emoji}:"
+        you_and_single_user: "<span>Tu și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Tu, %{commaSeparatedUsernames} și %{username} ați reacționat cu </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          few: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+          other: "<span>Tu, %{commaSeparatedUsernames} și încă %{count} ați reacționat cu </span>:%{emoji}:"
+        single_user: "<span>%{username} a reacționat cu </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} și %{username} au reacționat cu </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} și încă %{count} au reacționat cu </span>:%{emoji}:"
+      composer:
+        italic_text: "text italic"
+        bold_text: "text aldin"
+        send: "Trimite"
+      quote:
+        default_thread_title: "Fir"
+      notification_levels:
+        never: "Niciodată"
+      settings:
+        notification_level: "Trimite notificări instante"
+        follow: "Alătură-te"
+        followed: "Înscris"
+        threading_enabled: "Activat"
+        threading_disabled: "Dezactivat"
+        notifications: "Notificări"
+        preview: "Previzualizează"
+        save: "Salvează"
+        saved: "Salvat"
+        unfollow: "Părăsește"
+        admin_title: "Administrator"
+        settings_title: "Setări"
+        category_label: "Categorie"
+        history_label: "Istoric"
+        members_label: "Membri"
+      direct_messages:
+        close: "Închide această conversație personală"
+      incoming_webhooks:
+        back: "Înapoi"
+        channel: "Canal"
+        description: "Descriere"
+        delete: "Șterge"
+        emoji: "Emoticon"
+        name: "Nume"
+        save: "Salvează"
+        edit: "Editează"
+        system: "sistem"
+        header_description: "Cârligele web primite pot fi folosite de sisteme externe pentru a posta mesaje într-un canal de discuții desemnat ca utilizator de tip bot"
+        url: "URL"
+        username: "Nume de utilizator"
+      selection:
+        cancel: "Anulează"
+        copy: "Copiază"
+        delete: "Șterge (%{selectionCount}/%{totalCount})"
+        new_topic:
+          title: "Mută în subiect nou"
+        existing_topic:
+          title: "Mută în subiect existent"
+      retention_reminders:
+        short:
+          one: "%{count} zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
+      emoji_picker:
+        objects: "Obiecte"
+        flags: "Semnalări"
+        no_results: "Fără rezultate"
+      thread:
+        title: "Titlu"
+        replies:
+          one: "%{count} răspuns"
+          few: "%{count} răspunsuri"
+          other: "%{count} de răspunsuri"
+        label: Fir
+        settings: "Setări"
+        last_reply: "ultimul răspuns"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Monitorizare"
+          watching:
+            title: "Urmărire"
+      threads:
+        list: "Fire"
+      draft_channel_screen:
+        header: "Mesaj nou"
+        cancel: "Anulează"
+      quick_reaction_type:
+        title: "Reacții la discuții cu un singur clic"
+        options:
+          frequent: "Cele mai utilizate reacții de discuții"
+          custom: "Reacții personalizate"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+      titles:
+        chat_mention: "Menționat în discuție"
+        chat_invitation: "Invitat în canalul de discuție"
+        chat_quoted: "Mesaj discuție citat"
+        chat_watched_thread: "Fir discuție urmărit"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Mesaj
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Mesaj discuție semnalat"
+    keyboard_shortcuts_help:
+      chat:
+        keyboard_shortcuts:
+          switch__unread_channel_arrows: "%{shortcut} Comută canal necitit"

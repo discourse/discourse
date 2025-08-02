@@ -1,0 +1,138 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "members": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "avatar_template": {
+              "type": "string"
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "last_posted_at": {
+              "type": "string"
+            },
+            "last_seen_at": {
+              "type": "string"
+            },
+            "added_at": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "username",
+            "name",
+            "avatar_template",
+            "title",
+            "last_posted_at",
+            "last_seen_at",
+            "added_at",
+            "timezone"
+          ]
+        }
+    },
+    "owners": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "avatar_template": {
+              "type": "string"
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "last_posted_at": {
+              "type": "string"
+            },
+            "last_seen_at": {
+              "type": "string"
+            },
+            "added_at": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "username",
+            "name",
+            "avatar_template",
+            "title",
+            "last_posted_at",
+            "last_seen_at",
+            "added_at",
+            "timezone"
+          ]
+        }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "limit": {
+          "type": "integer"
+        },
+        "offset": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "total",
+        "limit",
+        "offset"
+      ]
+    }
+  },
+  "required": [
+    "members",
+    "owners",
+    "meta"
+  ]
+}

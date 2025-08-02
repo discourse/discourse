@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Сегодня %{time}
+        tomorrow: Завтра %{time}
+        yesterday: Вчера %{time}
+        countdown:
+          passed: прошедшая дата
+      title: Дата / Время
+      create:
+        form:
+          insert: Вставить
+          advanced_mode: Расширенный режим
+          simple_mode: Простой режим
+          format_description: "Формат, используемый для отображения даты пользователю. Используйте Z для отображения смещения и zz для названия часового пояса."
+          timezones_title: Отображаемые часовые пояса
+          timezones_description: Часовые пояса будут использоваться для отображения дат в режиме предпросмотра и в резервном режиме.
+          recurring_title: Повторение
+          recurring_description: "Определение частоты повторения события. Кроме того, можно вручную изменить автоматически установленную частоту повтора, и использовать один из следующих ключей: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Без повторения
+          invalid_date: Недействительная дата, убедитесь, что дата и время верны
+          date_title: Дата
+          time_title: 'Определение частоты повторения события. Кроме того, можно вручную изменить автоматически установленную частоту повтора, и использовать один из следующих ключей: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds.'
+          format_title: Формат даты
+          timezone: Часовой пояс
+          until: По…
+          current_timezone: "Текущий часовой пояс:"
+          recurring:
+            every_day: "Каждый день"
+            every_week: "Каждую неделю"
+            every_two_weeks: "Каждые две недели"
+            every_month: "Каждый месяц"
+            every_two_months: "Каждые два месяца"
+            every_three_months: "Каждые три месяца"
+            every_six_months: "Каждые шесть месяцев"
+            every_year: "Каждый год"
+      default_title: "Событие на сайте %{site_name}"

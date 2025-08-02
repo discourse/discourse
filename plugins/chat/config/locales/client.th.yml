@@ -1,0 +1,146 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "เสมอ"
+          never: "ไม่เคย"
+    chat:
+      deleted_chat_username: ลบ
+      dates:
+        yesterday: "เมื่อวาน"
+      create: "สร้าง"
+      cancel: "ยกเลิก"
+      channel_settings:
+        edit: "แก้ไข"
+        add: "เพิ่ม"
+        join: "เข้าร่วม"
+        leave: "ออก"
+      close: "ปิด"
+      remove: "ลบ"
+      delete: "ลบ"
+      edited: "ถูกแก้ไข"
+      muted: "ปิดการแจ้งเตือน"
+      joined: "สมัครสมาชิกเมื่อ"
+      email_frequency:
+        never: "ไม่เคย"
+      header_indicator_preference:
+        never: "ไม่เคย"
+      flag: "ธง"
+      join: "เข้าร่วม"
+      last_visit: "เยี่ยมชมครั้งล่าสุด"
+      reply: "ตอบ"
+      edit: "แก้ไข"
+      bookmark_message: "บุ๊คมาร์ค"
+      bookmark_message_edit: "แก้ไขบุ๊กมาร์ก"
+      save: "บันทึก"
+      sounds:
+        none: "ไม่มี"
+      exit: "กลับ"
+      channel_status:
+        closed: "ปิด"
+        open: "เปิด"
+      browse:
+        back: "กลับ"
+        filter_all: ทั้งหมด
+        filter_open: เปิด
+        filter_closed: ปิด
+      chat_message_separator:
+        today: วันนี้
+        yesterday: เมื่อวาน
+      about_view:
+        title: ชื่อเรื่อง
+        name: ชื่อ
+        description: รายละเอียด
+      channel_info:
+        back_to_channel: "กลับ"
+        tabs:
+          members: สมาชิก
+          settings: การตั้งค่า
+        remove_member: "ลบ"
+      direct_message_creator:
+        title: สร้างข้อความใหม่
+        prefix: "ถึง:"
+      create_channel:
+        type: "ชนิด"
+        types:
+          category: "หมวดหมู่"
+          topic: "หัวข้อ"
+      composer:
+        italic_text: "ตัวอักษรเอียง"
+        bold_text: "ตัวอักษรหนา"
+        send: "ส่ง"
+      notification_levels:
+        never: "ไม่เคย"
+      settings:
+        follow: "เข้าร่วม"
+        followed: "สมัครสมาชิกเมื่อ"
+        threading_disabled: "ปิดใช้งานแล้ว"
+        notifications: "การแจ้งเตือน"
+        preview: "แสดงตัวอย่าง"
+        save: "บันทึก"
+        saved: "บันทึกแล้ว"
+        unfollow: "ออก"
+        admin_title: "ผู้ดูแลระบบ"
+        settings_title: "การตั้งค่า"
+        category_label: "หมวดหมู่"
+        history_label: "ประวัติ"
+        members_label: "สมาชิก"
+      incoming_webhooks:
+        back: "กลับ"
+        description: "รายละเอียด"
+        delete: "ลบ"
+        emoji: "Emoji"
+        name: "ชื่อ"
+        save: "บันทึก"
+        edit: "แก้ไข"
+        system: "ระบบ"
+        url: "URL"
+        username: "ชื่อผู้ใช้"
+      selection:
+        cancel: "ยกเลิก"
+        copy: "คัดลอก"
+        new_topic:
+          title: "ย้ายไปกระทู้ใหม่"
+        existing_topic:
+          title: "ย้ายไปกระทู้ที่มีอยู่แล้ว"
+        new_message:
+          title: "ย้ายไปข้อความใหม่"
+      retention_reminders:
+        short:
+          other: "%{count} วัน"
+      emoji_picker:
+        objects: "วัตถุ"
+        activities: "กิจกรรม"
+        flags: "ธง"
+        symbols: "สัญลักษณ์"
+      thread:
+        title: "ชื่อเรื่อง"
+        replies:
+          other: "%{count} ตอบ"
+        settings: "การตั้งค่า"
+        last_reply: "การตอบล่าสุด"
+        notifications:
+          regular:
+            title: "ปกติ"
+          tracking:
+            title: "ติดตาม"
+          watching:
+            title: "กำลังดู"
+      draft_channel_screen:
+        header: "สร้างข้อความใหม่"
+        cancel: "ยกเลิก"
+    notifications:
+      chat_quoted: "<span>%{username}</span>%{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: ข้อความ

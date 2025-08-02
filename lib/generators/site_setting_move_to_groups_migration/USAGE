@@ -1,0 +1,8 @@
+Description:
+    Generates migration to move data from trust level based site setting to group based site setting. It only works when moving from TrustLevelSetting or TrustLevelAndStaffSetting.
+
+Example:
+    bin/rails generate site_setting_move_to_groups_migration min_trust_to_create_topic create_topic_allowed_groups
+
+    This will create:
+        db/migrate/20231206041353_fill_create_topic_allowed_groups_based_on_deprecated_settings.rb

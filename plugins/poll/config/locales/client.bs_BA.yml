@@ -1,0 +1,92 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bs_BA:
+  js:
+    poll:
+      voters:
+        one: "glasač"
+        few: "glasača"
+        other: "glasača"
+      total_votes:
+        one: "ukupan glas"
+        few: "ukupno glasova"
+        other: "ukupno glasova"
+      average_rating: "Prosječna ocjena: <strong>%{average}</strong>."
+      public:
+        title: "Glasanje je <strong>javno</strong>."
+      results:
+        groups:
+          title: "Morate biti pripadnik %{groups} kako bi ste mogli glasati u ovoj anketi."
+        vote:
+          title: "Rezultati će biti prikazani pritiskom na<strong>glasaj</strong>."
+        closed:
+          title: "Rezultati će biti prikazani onda kada glasanje bude <strong>završeno</strong>."
+        staff:
+          title: "Rezultati su prikazani samo <strong>uredništvu i admin</strong> korisnicima."
+      cast-votes:
+        title: "ukupno glasova"
+        label: "Glasaj"
+      show-results:
+        title: "Prikaži rezultate ankete"
+        label: "Rezultati"
+      hide-results:
+        title: "Nazad na glasove"
+      group-results:
+        title: "Grupiraj glasove po polju korisnika"
+        label: "Prikaži raspodjelu"
+      export-results:
+        title: "Izvezi rezultate ankete (Export)"
+        label: "Izvoz"
+      open:
+        title: "Otvori anketu"
+        label: "Otvori"
+        confirm: "Da li ste sigurni da želite da otvorite ovu anketu?"
+      close:
+        title: "Zatvori anketu"
+        label: "Zatvori"
+        confirm: "Da li ste sigurni da želite da zatvorite ovu anketu?"
+      automatic_close:
+        closes_in: "Završava za <strong>%{timeLeft}</strong>."
+        age: "Završeno <strong>%{age}</strong>"
+      breakdown:
+        title: "Rezultati ankete"
+        votes: "%{count} glasova"
+        breakdown: "Razloženo"
+        percentage: "Procentualno"
+        count: "Broj"
+      ranked_choice:
+        none: "Ništa"
+      options:
+        label: "Opcije"
+      error_while_toggling_status: "Izvinjavamo se, pojavio se problem u prebacivanju statutusa ove ankete"
+      error_while_casting_votes: "Izvinjavamo se, pojavila se greška prikazivanja vaših glasova"
+      error_while_fetching_voters: "Izvinjavamo se, pojavila se greška pri prikazivanju glasača"
+      error_while_exporting_results: "Izvinjavamo se, došlo je do greške izvoza rezultata vaše ankete."
+      ui_builder:
+        title: Izgradi anketu
+        insert: Umetni anketu
+        help:
+          options_min_count: Unesite barem jednu opciju.
+          invalid_values: Minimalna vrijednost mora biti manja od maksimalne.
+          min_step_value: Minimalna vrijednost razmaka je 1
+        poll_type:
+          label: Tip
+          regular: Jedan izbor
+          multiple: Višestruki izbor
+          number: Rejting broja
+        poll_result:
+          always: Uvjek vidljivo
+          staff: Samo za urednike i admine
+        poll_chart_type:
+          bar: Bar dijagram
+          pie: Okrugli dijagram
+        poll_config:
+          step: Korak
+        poll_public:
+          label: Pokaži ko je glasao
+        automatic_close:
+          label: Automatski zatvori anketu

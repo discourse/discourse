@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sr:
+  chat:
+    errors:
+      not_accepting_dms: "Žao nam je, %{username} trenutno ne prihvata privatne poruke."
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Suspenduj Korisnika"
+        disagree:
+          title: "Odbaci"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+    mention_warning:
+      dismiss: "odbaci"
+  unsubscribe:
+    chat_summary:
+      never: Nikad

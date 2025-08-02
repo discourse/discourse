@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    presence_enabled: "Показати користувачів, які зараз відповідають на поточну тему чи редагують поточну публікацію?"
+    presence_max_users_shown: "Максимальна кількість показаних користувачів."

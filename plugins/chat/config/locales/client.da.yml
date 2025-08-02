@@ -1,0 +1,317 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Chat
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Altid"
+          fullscreen: "Når chat er i fuld skærm"
+          never: "Aldrig"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status for chat-kanal ændret"
+            chat_channel_delete: "Chat-kanal slettet"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Opret en chatbesked i en angivet kanal."
+    chat:
+      back_to_forum: "Forum"
+      deleted_chat_username: slettet
+      dates:
+        yesterday: "I går"
+      all_loaded: "Viser alle beskeder"
+      already_enabled: "Chat er allerede aktiveret på dette emne. Opdater venligst."
+      disabled_for_topic: "Chat er deaktiveret på dette emne."
+      bot: "bot"
+      create: "Opret"
+      cancel: "Annuller"
+      cancel_reply: "Annuller svar"
+      chat_channels: "Kanaler"
+      browse_all_channels: "Gennemse alle kanaler"
+      move_to_channel:
+        title: "Flyt beskeder til kanal"
+        confirm_move: "Flyt beskeder"
+      channel_settings:
+        title: "Kanal indstillinger"
+        edit: "Rediger"
+        add: "Tilføj"
+        close_channel: "Luk kanal"
+        open_channel: "Åbn kanal"
+        archive_channel: "Arkivér kanal"
+        delete_channel: "Slet kanal"
+        leave_channel: "Forlad kanal"
+        join: "Tilslut"
+        leave: "Forlad"
+      channel_archive:
+        title: "Arkivér Kanal"
+        retry: "Forsøg igen"
+      channel_open:
+        title: "Åbn Kanal"
+      channel_close:
+        title: "Luk Kanal"
+      channel_delete:
+        title: "Slet Kanal"
+        confirm_channel_name: "Indtast kanalnavn"
+      channels_list_popup:
+        browse: "Gennemse kanaler"
+        create: "Ny kanal"
+      close: "Luk"
+      remove: "Fjern"
+      deleted:
+        one: "En besked blev slettet. [vis]"
+        other: "%{count} beskeder blev slettet. [vis alle]"
+      hidden: "En meddelelse blev skjult. [vis]"
+      delete: "Slet"
+      edited: "redigeret"
+      muted: "stille!"
+      joined: "tilmeldt"
+      empty_state:
+        direct_message_cta: "Start en personlig chat"
+        title: "Ingen kanaler fundet"
+      email_frequency:
+        never: "Aldrig"
+      header_indicator_preference:
+        all_new: "Alle Nye Beskeder"
+        never: "Aldrig"
+      separate_sidebar_mode:
+        title: "Vis separate sidebjælke-tilstande for forum og chat"
+      enable: "Aktiver chat"
+      flag: "Rapportér"
+      emoji: "Indsæt humørikon"
+      invalid_access: "Du har ikke adgang til at se denne chatkanal"
+      invitation_notification: "<span>%{username}</span> <span>inviterede dig til at deltage i en chatkanal</span>"
+      in_reply_to: "Som svar til"
+      heading: "Chat"
+      join: "Tilslut"
+      last_visit: "sidste besøg"
+      mention_warning:
+        invitations_sent:
+          one: "Invitation sendt"
+          other: "Invitationer sendt"
+        invite: "Inviter til kanal"
+      placeholder_channel: "Chat i %{channelName}"
+      remove_upload: "Fjern fil"
+      react: "Reagér med humørikon"
+      reply: "Svar"
+      edit: "Rediger"
+      copy_link: "Kopiér link"
+      copy_text: "Kopiér tekst"
+      rebake_message: "Gendan HTML"
+      retry_staged_message:
+        title: "Netværksfejl"
+        action: "Send igen?"
+      bookmark_message: "Bogmærk"
+      bookmark_message_edit: "Rediger Bogmærke"
+      save: "Gem"
+      select: "Vælg"
+      sounds:
+        none: "Ingen"
+        bell: "Klokke"
+        ding: "Ding"
+      title: "chat"
+      title_capitalized: "Chat"
+      upload: "Vedhæft en fil"
+      uploaded_files:
+        one: "%{count} fil"
+        other: "%{count} filer"
+      exit: "tilbage"
+      channel_status:
+        read_only_header: "Kanalen er skrivebeskyttet"
+        read_only: "Kun læsning"
+        archived_header: "Kanalen er arkiveret"
+        archived: "Arkiveret"
+        closed: "Lukket"
+        open_header: "Kanalen er åben"
+        open: "Åbn"
+      browse:
+        back: "Tilbage"
+        title: Kanaler
+        filter_all: Alle
+        filter_open: Åbn
+        filter_closed: Lukket
+        filter_archived: Arkiveret
+      chat_message_separator:
+        today: I dag
+        yesterday: I går
+      members_view:
+        add_member: Tilføj Medlem
+        back_to_settings: "Tilbage til indstillinger"
+      about_view:
+        title: Titel
+        name: Navn
+        description: Beskrivelse
+      channel_info:
+        back_to_channel: "Tilbage"
+        tabs:
+          members: Brugere
+          settings: Indstillinger
+        remove_member: "Fjern"
+      new_message_modal:
+        no_items: "Ingen punkter"
+        filter: "Filter"
+      channel_edit_description_modal:
+        title: Rediger beskrivelse
+        input_placeholder: Tilføj en beskrivelse
+      direct_message_creator:
+        add_to_channel: "Føj til kanal"
+        title: Ny Besked
+        prefix: "Til:"
+        no_results: Ingen resultater
+      create_channel:
+        choose_category:
+          label: "Vælg en kategori"
+          none: "vælg en..."
+        create: "Opret kanal"
+        description: "Beskrivelse (valgfrit)"
+        name: "Kanal navn"
+        title: "Ny kanal"
+        type: "Type"
+        types:
+          category: "Kategori"
+          topic: "Emne"
+      reviewable:
+        type: "Chatbesked"
+      composer:
+        italic_text: "kursiv skrift"
+        bold_text: "fed skrift"
+        code_text: "kode tekst"
+        send: "Send"
+      quote:
+        copy_success: "Chat-citat kopieret til udklipsholderen"
+        default_thread_title: "Tråd"
+      notification_levels:
+        never: "Aldrig"
+      settings:
+        follow: "Tilslut"
+        followed: "Tilmeldt"
+        threading_enabled: "Aktiveret"
+        threading_disabled: "Deaktiveret"
+        notifications: "Notifikationer"
+        preview: "Forhåndsvisning"
+        save: "Gem"
+        saved: "Gemt"
+        unfollow: "Forlad"
+        admin_title: "Admin"
+        settings_title: "Indstillinger"
+        category_label: "Kategori"
+        history_label: "Historik"
+        members_label: "Brugere"
+      admin:
+        title: "Chat"
+        export_messages:
+          description: "Dette eksporterer alle beskeder fra alle kanaler."
+      incoming_webhooks:
+        back: "Tilbage"
+        description: "Beskrivelse"
+        delete: "Slet"
+        emoji: "Humørikon"
+        name: "Navn"
+        save: "Gem"
+        edit: "Redigér"
+        system: "system"
+        url: "URL"
+        username: "Brugernavn"
+      selection:
+        cancel: "Annuller"
+        quote_selection: "Citat i emne"
+        copy: "Kopier"
+        error: "Der opstod en fejl under flytning af chatbeskeder"
+        title: "Flyt chat til emne"
+        new_topic:
+          title: "Flyt til nyt emne"
+        existing_topic:
+          title: "Flyt til eksisterende emne"
+        new_message:
+          title: "Flyt til ny besked"
+      replying_indicator:
+        single_user: "%{username} skriver"
+      retention_reminders:
+        short:
+          one: "%{count} dag"
+          other: "%{count} dage"
+      emoji_picker:
+        objects: "Objekter"
+        activities: "Aktiviteter"
+        flags: "Flag"
+        symbols: "Symboler"
+        no_results: "Ingen resultater"
+      thread:
+        title: "Titel"
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        label: Tråd
+        settings: "Indstillinger"
+        last_reply: "seneste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Følger"
+          watching:
+            title: "Overvåger"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
+      draft_channel_screen:
+        header: "Ny Besked"
+        cancel: "Annuller"
+    notifications:
+      chat_invitation_html: "<span>%{username}</span> <span>inviterede dig til at deltage i en chatkanal</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct_html: '<span>%{username}</span> <span>nævnte dig i "%{channel}"</span>'
+          other_html: '<span>%{username}</span> <span>nævnte %{identifier} i "%{channel}"</span>'
+        direct_message_chat_mention:
+          direct_html: "<span>%{username}</span> <span>nævnte dig i personlig chat</span>"
+          other_html: "<span>%{username}</span> <span>nævnte %{identifier} i personlig chat</span>"
+        chat_message: "Ny chatbesked"
+        chat_quoted: "%{username} citerede din chatbesked"
+    action_codes:
+      chat:
+        enabled: '%{who} aktiverede <button class="btn-link open-chat">chat</button> %{when}'
+        disabled: "%{who} lukkede chat %{when}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: Send chatbesked
+          fields:
+            chat_channel_id:
+              label: Chat kanal ID
+            message:
+              label: Meddelelse
+            sender:
+              label: Afsender
+              description: Standard er system
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Rapporteret chatbesked"
+          noun: "chatbesked"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Skift kanal"
+    styleguide:
+      sections:
+        chat:
+          title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

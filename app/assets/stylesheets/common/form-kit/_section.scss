@@ -1,0 +1,16 @@
+.form-kit__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+
+  &.form-kit__actions {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+.form-kit__section-title {
+  margin: 0;
+  font-size: var(--font-up-1-rem);
+}

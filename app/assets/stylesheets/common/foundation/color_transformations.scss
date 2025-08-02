@@ -1,0 +1,182 @@
+// standard color transformations, use these if possible, and add any new dark-light-diffs here
+// any variables defined here can be added in theme color schemes
+// all variables should have the !default flag
+
+@use "sass:string";
+
+// primary
+$primary-very-low: dark-light-diff($primary, $secondary, 97%, -82%) !default;
+$primary-low: dark-light-diff($primary, $secondary, 90%, -78%) !default;
+$primary-low-mid: dark-light-diff($primary, $secondary, 70%, -45%) !default;
+$primary-medium: dark-light-diff($primary, $secondary, 50%, -35%) !default;
+$primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
+$primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
+
+// primary-numbers
+$primary-50: dark-light-diff($primary, $secondary, 97%, -82%) !default;
+$primary-100: dark-light-diff($primary, $secondary, 94%, -80%) !default;
+$primary-200: dark-light-diff($primary, $secondary, 90%, -78%) !default;
+$primary-300: dark-light-diff($primary, $secondary, 80%, -60%) !default;
+$primary-400: dark-light-diff($primary, $secondary, 70%, -45%) !default;
+$primary-500: dark-light-diff($primary, $secondary, 60%, -40%) !default;
+$primary-600: dark-light-diff($primary, $secondary, 50%, -35%) !default;
+$primary-700: dark-light-diff($primary, $secondary, 38%, -30%) !default;
+$primary-800: dark-light-diff($primary, $secondary, 30%, -25%) !default;
+$primary-900: dark-light-diff($primary, $secondary, 15%, -10%) !default;
+$header_primary-low: blend-header-primary-background(10%) !default;
+$header_primary-low-mid: blend-header-primary-background(35%) !default;
+$header_primary-medium: blend-header-primary-background(55%) !default;
+$header_primary-high: blend-header-primary-background(70%) !default;
+$header_primary-very-high: blend-header-primary-background(90%) !default;
+
+// secondary
+$secondary-low: dark-light-diff($secondary, $primary, 70%, -70%) !default;
+$secondary-medium: dark-light-diff($secondary, $primary, 50%, -50%) !default;
+$secondary-high: dark-light-diff($secondary, $primary, 30%, -35%) !default;
+$secondary-very-high: dark-light-diff($secondary, $primary, 7%, -7%) !default;
+
+// tertiary
+$tertiary-very-low: dark-light-diff($tertiary, $secondary, 90%, -75%) !default;
+$tertiary-low: dark-light-diff($tertiary, $secondary, 85%, -65%) !default;
+$tertiary-medium: dark-light-diff($tertiary, $secondary, 50%, -45%) !default;
+$tertiary-high: dark-light-diff($tertiary, $secondary, 20%, -25%) !default;
+$tertiary-hover: dark-light-choose(
+  dark-light-diff($tertiary, $secondary, -25%, -25%),
+  dark-light-diff($tertiary, $primary, 20%, 70%)
+) !default;
+
+// tertiary-numbers
+$tertiary-25: dark-light-diff($tertiary, $secondary, 93%, -80%) !default;
+$tertiary-50: dark-light-diff($tertiary, $secondary, 90%, -75%) !default;
+$tertiary-100: dark-light-diff($tertiary, $secondary, 88%, -72%) !default;
+$tertiary-200: dark-light-diff($tertiary, $secondary, 87%, -69%) !default;
+$tertiary-300: dark-light-diff($tertiary, $secondary, 85%, -65%) !default;
+$tertiary-400: dark-light-diff($tertiary, $secondary, 74%, -58%) !default;
+$tertiary-500: dark-light-diff($tertiary, $secondary, 63%, -52%) !default;
+$tertiary-600: dark-light-diff($tertiary, $secondary, 50%, -45%) !default;
+$tertiary-700: dark-light-diff($tertiary, $secondary, 40%, -38%) !default;
+$tertiary-800: dark-light-diff($tertiary, $secondary, 30%, -31%) !default;
+$tertiary-900: dark-light-diff($tertiary, $secondary, 20%, -25%) !default;
+
+// quaternary
+$quaternary-low: dark-light-diff($quaternary, $secondary, 70%, -70%) !default;
+
+// highlight
+$highlight-bg: dark-light-diff($highlight, $secondary, 70%, -80%) !default;
+$highlight-low: dark-light-diff(
+  $highlight,
+  $secondary,
+  70%,
+  -80%
+) !default; // TO BE REMOVED IF POSS
+$highlight-medium: dark-light-diff(
+  $highlight,
+  $secondary,
+  50%,
+  -55%
+) !default; // TO BE REMOVED IF POSS
+$highlight-high: dark-light-diff(
+  $highlight,
+  $secondary,
+  -50%,
+  -10%
+) !default; // TO BE REMOVED IF POSS
+
+// danger
+$danger-low: dark-light-diff($danger, $secondary, 85%, -64%) !default;
+$danger-low-mid: dark-light-diff(
+  rgba($danger, 0.7),
+  $secondary,
+  50%,
+  -60%
+) !default;
+$danger-medium: dark-light-diff($danger, $secondary, 30%, -35%) !default;
+$danger-hover: dark-light-diff($danger, $secondary, -20%, -20%) !default;
+
+// success
+$success-low: dark-light-diff($success, $secondary, 80%, -60%) !default;
+$success-medium: dark-light-diff($success, $secondary, 50%, -40%) !default;
+$success-hover: dark-light-diff($success, $secondary, -20%, -20%) !default;
+
+// love
+$love-low: dark-light-diff($love, $secondary, 85%, -60%) !default;
+
+// wiki
+$wiki: green !default;
+
+// blended variants
+$blend-primary-secondary-5: blend-two-colors($primary, $secondary, 5%) !default;
+$primary-med-or-secondary-med: dark-light-choose(
+  $primary-medium,
+  $secondary-medium
+) !default;
+$primary-med-or-secondary-high: dark-light-choose(
+  $primary-medium,
+  $secondary-high
+) !default;
+$primary-high-or-secondary-low: dark-light-choose(
+  $primary-high,
+  $secondary-low
+) !default;
+$primary-low-mid-or-secondary-high: dark-light-choose(
+  $primary-low-mid,
+  $secondary-high
+) !default;
+$primary-low-mid-or-secondary-low: dark-light-choose(
+  $primary-low-mid,
+  $secondary-low
+) !default;
+$primary-or-primary-low-mid: dark-light-choose(
+  $primary,
+  $primary-low-mid
+) !default;
+$highlight-low-or-medium: dark-light-choose(
+  $highlight-low,
+  $highlight-medium
+) !default;
+$tertiary-or-tertiary-low: dark-light-choose($tertiary, $tertiary-low) !default;
+$tertiary-low-or-tertiary-high: dark-light-choose(
+  $tertiary-low,
+  $tertiary-high
+) !default;
+$tertiary-med-or-tertiary: dark-light-choose(
+  $tertiary-medium,
+  $tertiary
+) !default;
+$secondary-or-primary: dark-light-choose($secondary, $primary) !default;
+$tertiary-or-white: dark-light-choose(
+  $tertiary,
+  string.unquote("#fff")
+) !default;
+$facebook-or-white: dark-light-choose(
+  $facebook,
+  string.unquote("#fff")
+) !default;
+$twitter-or-white: dark-light-choose($twitter, string.unquote("#fff")) !default;
+
+// code highlighting
+// stack overflow light & dark color pallets
+// https://github.com/highlightjs/highlight.js/blob/main/src/styles/stackoverflow-dark.css
+// https://github.com/highlightjs/highlight.js/blob/main/src/styles/stackoverflow-light.css
+$hljs-attr: dark-light-choose(#015692, #88aece) !default;
+$hljs-attribute: dark-light-choose(#803378, #c59bc1) !default;
+$hljs-addition: dark-light-choose(#2f6f44, #76c490) !default;
+$hljs-bg: dark-light-choose($primary-50, rgb(0, 0, 0, 0.25)) !default;
+$inline-code-bg: dark-light-choose($primary-100, rgb(0, 0, 0, 0.35)) !default;
+$hljs-comment: $primary-500 !default;
+$hljs-deletion: dark-light-choose(#c02d2e, #de7176) !default;
+$hljs-keyword: dark-light-choose(#015692, #88aece) !default;
+$hljs-title: dark-light-choose(#b75501, #f08d49) !default;
+$hljs-name: dark-light-choose(#b75501, #f08d49) !default;
+$hljs-punctuation: dark-light-choose(#535a60, #ccc) !default;
+$hljs-symbol: dark-light-choose(#54790d, #b5bd68) !default;
+$hljs-variable: dark-light-choose(#54790d, #b5bd68) !default;
+$hljs-string: dark-light-choose(#54790d, #b5bd68) !default;
+
+// shadow opacity variables
+$shadow-opacity-modal: dark-light-choose(0.6, 1) !default;
+$shadow-opacity-composer: dark-light-choose(0.12, 0.35) !default;
+$shadow-opacity-menu-panel: dark-light-choose(0.15, 0.35) !default;
+$shadow-opacity-card: dark-light-choose(0.15, 0.5) !default;
+$shadow-opacity-dropdown: dark-light-choose(0.1, 0.25) !default;
+$shadow-opacity-footer-nav: dark-light-choose(0.2, 0.4) !default;

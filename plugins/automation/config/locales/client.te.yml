@@ -1,0 +1,148 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    discourse_automation:
+      back: వెనుకకు
+      edit: సవరించండి
+      fields:
+        user:
+          label: సభ్యుడు
+        pm:
+          title:
+            label: శీర్షిక
+          raw:
+            label: బాడీ
+        pms:
+          title:
+            label: శీర్షిక
+          raw:
+            label: బాడీ
+        group:
+          label: సమూహం
+        text:
+          label: వచనం
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: బ్యాడ్జ్
+        stalled_topic:
+          durations:
+            P2W: "రెండు వారాలు"
+            P3M: "మూడు నెలలు"
+            P6M: "ఆరు నెలలు"
+            P1Y: "ఒక సంవత్సరం"
+        recurring:
+          frequencies:
+            minute: నిమిషం
+            hour: గంట
+            day: రోజు
+            week: వారం
+            month: నెల
+            year: సంవత్సరం
+        stalled_wiki:
+          durations:
+            P2W: "రెండు వారాలు"
+            P3M: "మూడు నెలలు"
+            P6M: "ఆరు నెలలు"
+            P1Y: "ఒక సంవత్సరం"
+        topic:
+          fields:
+            restricted_topic:
+              label: విషయపు ఐడీ
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: ట్యాగులు
+            restricted_categories:
+              label: వర్గాలు
+          created: సృష్టించిన
+          with_images: చిత్రాలు
+          with_links: లింకులు
+          with_code: కోడ్
+          with_uploads: అప్‌లోడ్‌లు
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: మాతృ వర్గం
+        pm_created:
+          fields:
+            restricted_user:
+              label: సభ్యులు
+            restricted_group:
+              label: సమూహం
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: వర్గం
+            restricted_tags:
+              label: ట్యాగులు
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: ట్యాగులు
+        post:
+          fields:
+            topic:
+              label: విషయపు ఐడీ
+        group_category_notification_default:
+          fields:
+            group:
+              label: సమూహం
+        user_global_notice:
+          fields:
+            level:
+              label: స్థాయి
+          levels:
+            info: సమాచారం
+            success: విజయం
+            error: లోపం
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: సమూహం
+            badge:
+              label: బ్యాడ్జ్
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: సభ్యుడు
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: విషయపు ఐడీ
+        banner_topic:
+          fields:
+            topic_id:
+              label: విషయపు ఐడీ
+            user:
+              label: సభ్యుడు
+        close_topic:
+          fields:
+            topic:
+              label: విషయపు ఐడీ
+            user:
+              label: సభ్యుడు
+      models:
+        trigger:
+          name:
+            label: ట్రిగ్గర్
+        automation:
+          name:
+            label: పేరు
+          trigger:
+            label: ట్రిగ్గర్
+          version:
+            label: సంస్కరణ
+          status:
+            label: స్థితి
+          enabled:
+            label: ప్రారంభించబడింది
+          disabled:
+            label: నిలిపివేయబడింది

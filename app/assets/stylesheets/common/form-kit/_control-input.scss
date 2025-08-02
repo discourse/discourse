@@ -1,0 +1,57 @@
+@use "lib/viewport";
+
+.form-kit__control-input {
+  z-index: 1;
+  min-width: auto !important;
+  max-width: 100% !important;
+
+  @include default-input;
+
+  .form-kit__field.has-error & {
+    border-color: var(--danger);
+  }
+
+  &.has-prefix.has-suffix {
+    border-radius: 0;
+  }
+
+  &.has-prefix:not(.has-suffix) {
+    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+  }
+
+  &.has-suffix:not(.has-prefix) {
+    border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+  }
+
+  &-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+.form-kit__before-input,
+.form-kit__after-input {
+  border: 1px solid var(--primary-low-mid);
+  padding-inline: 0.5em;
+  height: 2em;
+  box-sizing: border-box;
+  background: var(--primary-low);
+  display: flex;
+  align-items: center;
+
+  @include viewport.until(sm) {
+    height: 2.25em;
+  }
+}
+
+.form-kit__before-input {
+  margin-right: -0.25em;
+  border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+}
+
+.form-kit__after-input {
+  margin-left: -0.25em;
+  border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+}

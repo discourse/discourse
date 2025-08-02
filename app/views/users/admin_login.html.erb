@@ -1,0 +1,15 @@
+<% if @message %>
+  <%= @message %>
+  <% if @error %><p><%= @error %></p><% end %>
+<% else %>
+  <%=form_tag(u_admin_login_path, method: :put) do %>
+    <%= label_tag(:email, t('admin_login.email_input')) %>
+    <%= text_field_tag(:email, nil, autofocus: true) %><br><br>
+    <label for="use_safe_mode">
+      <%= check_box_tag 'use_safe_mode' %>
+      <%= t 'admin_login.safe_mode' %>
+    </label>
+    <br/>
+    <%= button_tag t('admin_login.submit_button'), class: "btn btn-primary", type: "submit" %>
+  <% end %>
+<% end %>

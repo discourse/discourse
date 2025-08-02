@@ -1,0 +1,102 @@
+<div class='container unsubscribe'>
+  <%- if !@found || !@key_owner_found || @different_user %>
+
+    <%if !@found %>
+      <p><%= t "unsubscribe.not_found_description" %></p>
+    <%- elsif !@key_owner_found %>
+      <p><%= t "unsubscribe.user_not_found_description" %></p>
+    <%- else %>
+      <p><%= t("unsubscribe.different_user_description").html_safe %></p>
+      <%= form_tag(session_path(id: current_user.username_lower), method: :delete) do %>
+        <%= hidden_field_tag(:return_url, @return_url) %>
+        <%= submit_tag t('unsubscribe.log_out'), class: 'btn btn-danger' %>
+      <%- end %>
+    <%- end %>
+  <%- else %>
+    <br/>
+    <h2><%= t 'unsubscribe.title'%> <%= @user.email %></h2>
+    <br/>
+    <%= form_tag(email_perform_unsubscribe_path(key: params[:key])) do %>
+      <%if @topic %>
+        <% if @watching_topic %>
+          <p>
+          <label>
+            <%= check_box_tag 'unwatch_topic', 1, true %>
+            <%= t('unsubscribe.stop_watching_topic', link: render_topic_title(@topic)).html_safe %>
+          </label>
+          </p>
+        <% else %>
+          <p>
+          <label>
+            <%= check_box_tag 'mute_topic', 1, true %>
+            <%= t('unsubscribe.mute_topic', link: render_topic_title(@topic)).html_safe %>
+          </label>
+          </p>
+        <% end %>
+
+
+        <% if @watched_count %>
+          <p>
+          <label>
+            <%= check_box_tag 'unwatch_category' %>
+            <%= t('unsubscribe.unwatch_category', category: category_badge(@topic.category, show_uncategorized: true)).html_safe %>
+          </label>
+          </p>
+        <% end %>
+      <% end %>
+
+      <% if @user.user_option.mailing_list_mode && !SiteSetting.disable_mailing_list_mode %>
+        <p>
+        <label>
+        <%= check_box_tag 'disable_mailing_list' %>
+        <%= t 'unsubscribe.mailing_list_mode' %>
+        </label>
+        </p>
+      <% end %>
+
+      <% if @digest_unsubscribe %>
+          <p>
+
+          <% if @digest_frequencies[:current] %>
+            <h3>
+              <% if @digest_frequencies[:current] == 'never' %>
+                <%= t('unsubscribe.digest_frequency.never_title') %> 
+              <% else %>
+                <%= t(
+                  'unsubscribe.digest_frequency.title',
+                  frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:current]}")
+                ) %>
+            <% end %>
+            </h3>
+            <br/>
+          <% end %>
+
+          <label><%= t 'unsubscribe.digest_frequency.select_title' %></label>
+          <%=
+            select_tag :digest_after_minutes,
+            options_for_select(@digest_frequencies[:frequencies], @digest_frequencies[:selected]),
+            class: 'combobox'
+          %>
+          </p>
+      <% end %>
+
+      <%= server_plugin_outlet "unsubscribe_options" %>
+
+      <% unless @unsubscribed_from_all %>
+        <p>
+        <label>
+          <%= check_box_tag 'unsubscribe_all', 1, @type=="all" %>
+          <%= t 'unsubscribe.all', sitename: SiteSetting.title %>
+        </label>
+        </p>
+      <% end %>
+
+      <br/>
+      <% text = @type=='digest' ? t('unsubscribe.submit') : t('unsubscribe.title') %>
+      <%= submit_tag text, class: 'btn btn-danger' %>
+    <%- end %>
+
+
+  <%- end %>
+
+</div>

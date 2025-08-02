@@ -1,0 +1,51 @@
+@use "lib/viewport";
+
+.reorder-categories {
+  thead {
+    th {
+      padding-bottom: 0.5em;
+    }
+  }
+
+  input[type="number"] {
+    margin: 0;
+    max-width: 4em;
+  }
+
+  table {
+    width: 100%;
+    padding-bottom: 150px;
+    margin: 0 0.667em;
+
+    td {
+      padding: 0.5em 0.5em 0.5em 0;
+      min-width: 10em;
+    }
+  }
+
+  .badge-category__wrapper .badge-category {
+    max-width: 20em;
+
+    @include viewport.until(sm) {
+      max-width: 30vw;
+    }
+  }
+
+  &__header-position {
+    text-align: right;
+  }
+}
+
+.reorder-categories-actions {
+  display: flex;
+  justify-content: end;
+  gap: 0.5rem;
+}
+
+.reorder-categories-depth-1 {
+  margin-left: 20px;
+}
+
+.reorder-categories-depth-2 {
+  margin-left: 40px;
+}

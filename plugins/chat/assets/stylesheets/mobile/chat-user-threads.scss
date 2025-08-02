@@ -1,0 +1,77 @@
+.c-user-thread {
+  display: flex;
+  gap: 1rem;
+  margin-inline: 0;
+  padding: 0.5rem 1.5rem;
+
+  .chat-channel-icon {
+    grid-area: avatar;
+    position: relative;
+
+    .avatar {
+      margin-top: 4px;
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+    }
+  }
+
+  .c-user-thread__link {
+    display: grid;
+    grid-column-gap: 0.75em;
+    grid-template-columns: 1fr auto;
+    margin-inline: 0;
+    width: 100%;
+    grid-template-areas:
+      "category timestamp"
+      "title title"
+      "excerpt excerpt";
+  }
+
+  .avatar-flair.--threads {
+    position: absolute;
+    top: -4px;
+    right: -3px;
+    background: var(--primary-low);
+    border-radius: 50%;
+    padding: 0.2em;
+    line-height: var(--line-height-small);
+    border: 2px solid var(--secondary-very-high);
+    color: var(--primary-high);
+  }
+
+  .chat__thread-title-container {
+    display: flex;
+    grid-area: title;
+
+    .chat__thread-title {
+      @include ellipsis;
+
+      &__name {
+        @include ellipsis;
+      }
+    }
+  }
+
+  .chat-channel-title {
+    grid-area: category;
+  }
+
+  .chat-message-thread-indicator__last-reply-timestamp {
+    grid-area: timestamp;
+    font-size: var(--font-down-2-rem);
+    align-self: center;
+  }
+
+  .c-user-thread__excerpt {
+    @include ellipsis;
+    grid-area: excerpt;
+    display: flex;
+    color: var(--primary-high);
+  }
+
+  .c-user-thread__excerpt-text {
+    margin-left: 0.25em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

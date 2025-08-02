@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Söylem Biçim Kılavuzu"
+  js:
+    styleguide:
+      title: "Stil rehberi"
+      welcome: "Başlamak için soldaki menüden bir bölüm seçin."
+      categories:
+        syntax: Sözdizimi
+        atoms: Atomlar
+        molecules: Moleküller
+        organisms: Organizmalar
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Tipografi"
+          example: "Discourse'a Hoş Geldiniz"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Tarih/Saat girdileri"
+        menus:
+          title: "Menüler"
+        multi_select:
+          title: "Çoklu seçim"
+        toasts:
+          title: "Beliren pencereler"
+        font_scale:
+          title: "Yazı Tipi Sistemi"
+        colors:
+          title: "Renkler"
+        icons:
+          title: "Simgeler"
+          full_list: "Font Awesome Simgelerinin tam listesine bakın"
+        forms:
+          title: "Formlar"
+        buttons:
+          title: "Düğmeler"
+        dropdowns:
+          title: "Açılır Menüler"
+        categories:
+          title: "Kategoriler"
+        bread_crumbs:
+          title: "İçerik Haritaları"
+        navigation:
+          title: "Gezinti"
+        navigation_bar:
+          title: "Gezinti Çubuğu"
+        navigation_stacked:
+          title: "Gezinti Yığılı"
+        categories_list:
+          title: "Kategori Listesi"
+        topic_link:
+          title: "Konu Bağlantısı"
+        topic_list_item:
+          title: "Konu Listesi Ögesi"
+        topic_statuses:
+          title: "Konu Durumları"
+        topic_list:
+          title: "Konu Listesi"
+        basic_topic_list:
+          title: "Temel Konu Listesi"
+        footer_message:
+          title: "Alt Bilgi Mesajı"
+        signup_cta:
+          title: "CTA'ya kaydolun"
+        topic_timer_info:
+          title: "Konu Zamanlayıcıları"
+        topic_footer_buttons:
+          title: "Konu Alt Bilgi Düğmeleri"
+        topic_notifications:
+          title: "Konu Bildirimleri"
+        post:
+          title: "Gönderi"
+        post_list:
+          title: "Gönderi Listesi"
+          empty_example: "<PostList /> boş durum"
+          populated_example: "<PostList /> doldurulmuş durum"
+        topic_map:
+          title: "Konu Haritası"
+        site_header:
+          title: "Site Başlığı"
+        suggested_topics:
+          title: "Önerilen Konular"
+        post_menu:
+          title: "Gönderi Menüsü"
+        modal:
+          title: "Kalıcı"
+          header: "Kalıcı Başlık"
+          footer: "Kalıcı Alt Bilgi"
+        user_about:
+          title: "Kullanıcı Hakkında Kutusu"
+        header_icons:
+          title: "Başlık Simgeleri"
+        spinners:
+          title: "Değer Değiştiriciler"
+        empty_state:
+          title: "Boş Durum"
+        tooltips:
+          title: "İpucu metinleri"
+          description: "Açıklama"
+          header: "Üst bilgi"
+          hover_to_see: "Araç ipucunu görmek için üzerine gidin"
+        char_counter:
+          title: "Karakter Sayacı"
+          placeholder: "Metninizi buraya girin..."

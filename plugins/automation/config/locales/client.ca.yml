@@ -1,0 +1,144 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    discourse_automation:
+      back: Enrere
+      edit: Edita
+      fields:
+        user:
+          label: Usuari
+        pm:
+          title:
+            label: Títol
+          raw:
+            label: Cos
+        pms:
+          title:
+            label: Títol
+          raw:
+            label: Cos
+        group:
+          label: Grup
+        text:
+          label: Text
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Insígnia
+        stalled_topic:
+          durations:
+            P2W: "Dues setmanes"
+            P6M: "Sis mesos"
+        recurring:
+          frequencies:
+            day: dia
+            week: setmana
+            month: mes
+            year: any
+          fields:
+            recurrence:
+              label: Recurrència
+        stalled_wiki:
+          durations:
+            P2W: "Dues setmanes"
+            P6M: "Sis mesos"
+        topic:
+          fields:
+            restricted_topic:
+              label: ID de tema
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Etiquetes
+            restricted_categories:
+              label: Categories
+          created: Creat
+          with_images: Imatges
+          with_links: Enllaços
+          with_code: Codi
+          with_uploads: Càrregues
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Categoria primària
+        pm_created:
+          fields:
+            restricted_user:
+              label: Usuaris
+            restricted_group:
+              label: Grup
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Categoria
+            restricted_tags:
+              label: Etiquetes
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Etiquetes
+        post:
+          fields:
+            topic:
+              label: ID de tema
+        group_category_notification_default:
+          fields:
+            group:
+              label: Grup
+        user_global_notice:
+          fields:
+            level:
+              label: Nivell
+          levels:
+            success: Èxit
+            error: Error
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grup
+            badge:
+              label: Insígnia
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Usuari
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID de tema
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID de tema
+            user:
+              label: Usuari
+        close_topic:
+          fields:
+            topic:
+              label: ID de tema
+            user:
+              label: Usuari
+      models:
+        trigger:
+          name:
+            label: Disparador
+        automation:
+          name:
+            label: Nom
+          trigger:
+            label: Disparador
+          version:
+            label: Versió
+          status:
+            label: Estat
+          enabled:
+            label: Activat
+          disabled:
+            label: Desactivat

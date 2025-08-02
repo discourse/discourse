@@ -1,0 +1,110 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    poll:
+      voters:
+        one: "votante"
+        other: "votantes"
+      total_votes:
+        one: "total da votação"
+        other: "total de votos"
+      average_rating: "Classificação média: <strong>%{average}</strong>."
+      public:
+        title: "Os votos são <strong>públicos</strong>."
+      results:
+        groups:
+          title: "Precisa de ser um membro de %{groups} para votar nesta sondagem."
+        vote:
+          title: "Os resultados serão mostrados após o <strong>voto</strong>."
+        closed:
+          title: "Os resultados serão mostrados após o <strong>fecho</strong>."
+        staff:
+          title: "Os resultados serão apenas mostrados aos membros do <strong>pessoal</strong>."
+      cast-votes:
+        title: "Vote"
+        label: "Vote agora!"
+      show-results:
+        title: "Exibir os resultados da sondagem"
+        label: "Resultados"
+      remove-vote:
+        title: "Remova o seu voto"
+      hide-results:
+        title: "Voltar para os seus votos"
+      group-results:
+        title: "Agrupar votos por campo de utilizador"
+        label: "Mostrar detalhes"
+      export-results:
+        title: "Exportar os resultados da sondagem"
+        label: "Exportar"
+      open:
+        title: "Abrir a sondagem"
+        label: "Abrir"
+        confirm: "Tem a certeza que deseja abrir esta sondagem?"
+      close:
+        title: "Fechar a sondagem"
+        label: "Fechar"
+        confirm: "Tem a certeza que deseja encerrar esta sondagem?"
+      automatic_close:
+        closes_in: "Fecha em <strong>%{timeLeft}</strong>."
+        age: "Fechou <strong>%{age}</strong>"
+      breakdown:
+        title: "Resultados da sondagem"
+        votes: "%{count} votos"
+        breakdown: "Detalhe"
+        percentage: "Percentagem"
+        count: "Soma"
+      ranked_choice:
+        none: "Nenhuma"
+      options:
+        label: "Opções"
+      error_while_toggling_status: "Lamentamos, mas ocorreu um erro ao alternar o estado desta sondagem."
+      error_while_casting_votes: "Lamentamos, mas ocorreu um erro ao submeter os seus votos."
+      error_while_fetching_voters: "Lamentamos, mas ocorreu um erro ao exibir os votantes."
+      error_while_exporting_results: "Lamentamos, mas ocorreu um erro ao exportar os resultados da sondagem."
+      ui_builder:
+        title: Criar Sondagem
+        insert: Inserir Sondagem
+        help:
+          options_min_count: Insira pelo menos uma opção.
+          options_max_count: Insira no máximo %{count} opções.
+          invalid_min_value: O valor mínimo deve ser pelo menos 1.
+          invalid_max_value: O valor máximo deve ser pelo menos 1, mas menor ou igual ao número de opções.
+          invalid_values: O valor mínimo deve ser menor que o valor máximo.
+          min_step_value: O valor mínimo é 1
+        poll_type:
+          label: Tipo
+          regular: Escolha Única
+          multiple: Escolha Múltipla
+          number: Classificação Numérica
+        poll_result:
+          label: Mostrar Resultados...
+          always: Sempre visível
+          vote: Somente após a votação
+          closed: Quando a enquete for fechada
+          staff: Apenas Pessoal
+        poll_groups:
+          label: Limitar a votação a estes grupos
+        poll_chart_type:
+          label: Gráfico de resultados
+          bar: Barras
+          pie: Circular
+        poll_config:
+          max: Máximo de Escolhas
+          min: Mínimo de Escolhas
+          step: Passo
+        poll_public:
+          label: Mostrar quem votou
+        poll_title:
+          label: Título (opcional)
+        poll_options:
+          label: Opções (uma por linha)
+          add: Adicionar alternativa
+        automatic_close:
+          label: Fechar sondagem automaticamente
+        show_advanced: "Mostrar Opções Avançadas"
+        hide_advanced: "Ocultar Opções Avançadas"

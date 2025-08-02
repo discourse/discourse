@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    lazy_videos_enabled: "Lazy Videos 플러그인 활성화"
+    lazy_youtube_enabled: "YouTube 임베드에 대한 지연 로딩 활성화"
+    lazy_vimeo_enabled: "Vimeo 임베드의 지연 로딩 활성화"
+    lazy_tiktok_enabled: "TikTok 임베드에 지연 로딩 활성화(실험적)"

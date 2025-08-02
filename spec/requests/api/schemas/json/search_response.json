@@ -1,0 +1,144 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "posts": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "users": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "grouped_search_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "more_posts": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "more_users": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "more_categories": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "term": {
+          "type": "string"
+        },
+        "search_log_id": {
+          "type": "integer"
+        },
+        "more_full_page_results": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "can_create_topic": {
+          "type": "boolean"
+        },
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "extra": {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": [
+                "array",
+                "null"
+              ]
+            }
+          }
+        },
+        "post_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "user_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "category_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "tag_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        },
+        "group_ids": {
+          "type": "array",
+          "items": {
+
+          }
+        }
+      },
+      "required": [
+        "more_posts",
+        "more_users",
+        "more_categories",
+        "term",
+        "search_log_id",
+        "more_full_page_results",
+        "can_create_topic",
+        "error",
+        "post_ids",
+        "user_ids",
+        "category_ids",
+        "tag_ids",
+        "group_ids"
+      ]
+    }
+  },
+  "required": [
+    "posts",
+    "users",
+    "categories",
+    "tags",
+    "groups",
+    "grouped_search_result"
+  ]
+}

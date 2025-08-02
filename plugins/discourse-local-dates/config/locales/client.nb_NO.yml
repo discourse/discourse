@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: I dag klokken %{time}
+        tomorrow: I morgen kl. %{time}
+        yesterday: Igår %{time}
+        countdown:
+          passed: datoen har passert
+      title: Sett inn dato / tid
+      create:
+        form:
+          insert: Sett inn
+          advanced_mode: Avansert modus
+          simple_mode: Enkel modus
+          format_description: "Formatet som brukes for å vise datoen for brukeren. Bruk Z til å vise forskyvningen og zz for tidssonenavnet."
+          timezones_title: Tidssoner som vises
+          timezones_description: Tidssoner vil brukes for å vise datoer i forhåndsvisninger og fallback.
+          recurring_title: Regelmessighet
+          recurring_description: "Definer regelmessigheten til en hendelse. Du kan også manuelt redigere regelmessigheten etter at den er opprettet ved å bruke de følgende nøklene: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Ingen regelmessighet
+          invalid_date: Ugyldig dato, sjekk at dato og klokkeslett er korrekt
+          date_title: Dato
+          time_title: Tid
+          format_title: Datoformat
+          timezone: Tidssone
+          until: Inntil...
+          current_timezone: "Gjeldende tidssone:"
+          recurring:
+            every_day: "Hver dag"
+            every_week: "Hver uke"
+            every_two_weeks: "Annenhver uke"
+            every_month: "Hver måned"
+            every_two_months: "Annenhver måned"
+            every_three_months: "Hver tredje måned"
+            every_six_months: "Hver sjette måned"
+            every_year: "Hvert år"
+      default_title: "%{site_name} Hendelse"

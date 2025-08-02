@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    enable_markdown_footnotes: abilita markdown nelle note a piè di pagina su questo sito
+    display_footnotes_inline: consenti l'espansione inline delle note a piè di pagina

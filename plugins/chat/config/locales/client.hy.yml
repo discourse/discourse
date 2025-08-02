@@ -1,0 +1,156 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Միշտ"
+          never: "Երբեք"
+    chat:
+      deleted_chat_username: ջնջված
+      dates:
+        yesterday: "Երեկվա"
+      create: "Ստեղծել"
+      cancel: "Չեղարկել"
+      channel_settings:
+        edit: "Խմբագրել"
+        add: "Ավելացնել"
+        join: "Միանալ"
+        leave: "Լքել"
+      close: "Փակել"
+      remove: "Հեռացնել"
+      delete: "Ջնջել"
+      edited: "խմբագրվել է"
+      muted: "խլացված"
+      joined: "միացել է"
+      email_frequency:
+        never: "Երբեք"
+      header_indicator_preference:
+        never: "Երբեք"
+      flag: "Դրոշակավորել"
+      join: "Միանալ"
+      last_visit: "վերջին այցելությունը"
+      reply: "Պատասխանել"
+      edit: "Խմբագրել"
+      rebake_message: "Վերակառուցել HTML-ը"
+      bookmark_message: "Էջանշել"
+      bookmark_message_edit: "Խմբագրել Էջանիշը"
+      save: "Պահպանել"
+      sounds:
+        none: "Ոչ մի"
+      exit: "ետ"
+      channel_status:
+        closed: "Փակված"
+        open: "Բացել"
+      browse:
+        back: "Ետ"
+        filter_all: Բոլորը
+        filter_open: Բացել
+        filter_closed: Փակված
+      chat_message_separator:
+        today: Այսօրվա
+        yesterday: Երեկվա
+      about_view:
+        title: Վերնագիր
+        name: Անուն
+        description: Նկարագրությունը
+      channel_info:
+        back_to_channel: "Ետ"
+        tabs:
+          members: Անդամներ
+          settings: Կարգավորումներ
+        remove_member: "Հեռացնել"
+      new_message_modal:
+        no_items: "Տարրեր չկան"
+        filter: "Ֆիլտր"
+      direct_message_creator:
+        title: Նոր Հաղորդագրություն
+        prefix: "Ում:"
+      channel:
+        memberships_count:
+          one: "%{count} անդամ"
+          other: "%{count} անդամ"
+      create_channel:
+        type: "Տիպը"
+        types:
+          category: "Կատեգորիա"
+          topic: "Թեմա"
+      composer:
+        italic_text: "շեղ տեքստ"
+        bold_text: "թավ տեքստ"
+        send: "Ուղարկել"
+      notification_levels:
+        never: "Երբեք"
+      settings:
+        follow: "Միանալ"
+        followed: "Միացել է"
+        threading_disabled: "Անջատված"
+        notifications: "Ծանուցումներ"
+        preview: "Նախադիտում"
+        save: "Պահպանել"
+        saved: "Պահված է"
+        unfollow: "Լքել"
+        admin_title: "Ադմին"
+        settings_title: "Կարգավորումներ"
+        category_label: "Կատեգորիա"
+        history_label: "Պատմություն"
+        members_label: "Անդամներ"
+      incoming_webhooks:
+        back: "Ետ"
+        description: "Նկարագրությունը"
+        delete: "Ջնջել"
+        emoji: "Էմոջի"
+        name: "Անուն"
+        save: "Պահպանել"
+        edit: "Խմբագրել"
+        system: "համակարգային"
+        url: "URL"
+        username: "Օգտանուն"
+      selection:
+        cancel: "Չեղարկել"
+        copy: "Կրկնօրինակել"
+        new_topic:
+          title: "Տեղափոխվել դեպի Նոր Թեմա"
+        existing_topic:
+          title: "Տեղափոխել դեպի Գոյություն Ունեցող Թեմա"
+        new_message:
+          title: "Տեղափոխել դեպի Նոր Հաղորդագրություն"
+      retention_reminders:
+        short:
+          one: "%{count} օր"
+          other: "%{count} օր"
+      emoji_picker:
+        objects: "Օբյեկտներ"
+        activities: "Ակտիվություն"
+        flags: "Դրոշակներ"
+        symbols: "Նշաններ"
+      thread:
+        title: "Վերնագիր"
+        replies:
+          one: "%{count} պատասխան"
+          other: "%{count} պատասխան"
+        settings: "Կարգավորումներ"
+        last_reply: "վերջին պատասխանը"
+        notifications:
+          regular:
+            title: "Նորմալ"
+          tracking:
+            title: "Հետևում Եմ"
+          watching:
+            title: "Դիտում Եմ"
+      draft_channel_screen:
+        header: "Նոր Հաղորդագրություն"
+        cancel: "Չեղարկել"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Նոր Հաղորդագրություն

@@ -1,0 +1,9 @@
+.chat-message-actions {
+  background-color: var(--secondary);
+}
+
+.chat-message-actions-container[data-popper-reference-hidden],
+.chat-message-actions-container[data-popper-escaped] {
+  visibility: hidden;
+  pointer-events: none;
+}

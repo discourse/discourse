@@ -1,0 +1,47 @@
+.chat-user-avatar {
+  @include unselectable;
+  display: flex;
+  align-items: center;
+
+  &.is-online {
+    .avatar {
+      padding: 2px;
+      box-shadow:
+        inset 0 0 0 1px var(--success),
+        inset 0 0 0 2px var(--secondary);
+    }
+  }
+
+  &__container {
+    .chat-user-presence-flair {
+      box-sizing: border-box;
+      position: absolute;
+      background-color: var(--success);
+      border: 1px solid var(--secondary);
+      border-radius: 50%;
+
+      .chat-message & {
+        width: 10px;
+        height: 10px;
+        right: 0;
+        bottom: 0;
+      }
+
+      .chat-channel-title & {
+        width: 8px;
+        height: 8px;
+        right: -1px;
+        bottom: -1px;
+      }
+    }
+  }
+
+  .chat-message-container:not(.has-reply) & {
+    width: var(--message-left-width);
+    flex-shrink: 0;
+  }
+
+  .chat-channel-title & {
+    width: auto;
+  }
+}

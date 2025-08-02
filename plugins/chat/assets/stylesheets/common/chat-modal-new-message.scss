@@ -1,0 +1,17 @@
+.chat-modal-new-message {
+  & + .modal-backdrop {
+    opacity: 1;
+    background: transparent;
+  }
+
+  .chat-message-creator__search,
+  .chat-message-creator__new-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .chat-message-creator__add-members-header-container {
+    padding-inline: 1rem;
+  }
+}

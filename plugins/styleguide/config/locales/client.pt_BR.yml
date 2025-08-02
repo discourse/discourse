@@ -1,0 +1,113 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Guia de estilo Discourse"
+  js:
+    styleguide:
+      title: "Guia de estilo"
+      welcome: "Para começar, escolha uma seção no menu à esquerda."
+      categories:
+        syntax: Sintaxe
+        atoms: Átomos
+        molecules: Moléculas
+        organisms: Organismos
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Tipografia"
+          example: "Boas-vindas ao Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Entradas de data/hora"
+        menus:
+          title: "Menus"
+        toasts:
+          title: "Barra de notificação"
+        font_scale:
+          title: "Sistema da fonte"
+        colors:
+          title: "Cores"
+        icons:
+          title: "Ícones"
+          full_list: "Exibir a lista completa de ícones incríveis de fonte"
+        forms:
+          title: "Formulários"
+        buttons:
+          title: "Botões"
+        dropdowns:
+          title: "Menus suspensos"
+        categories:
+          title: "Categorias"
+        bread_crumbs:
+          title: "Navegação estrutural"
+        navigation:
+          title: "Navegação"
+        navigation_bar:
+          title: "Barra de navegação"
+        navigation_stacked:
+          title: "Navegação empilhada"
+        categories_list:
+          title: "Lista de categorias"
+        topic_link:
+          title: "Link de tópico"
+        topic_list_item:
+          title: "Item de lista de tópicos"
+        topic_statuses:
+          title: "Status do tópico"
+        topic_list:
+          title: "Lista de tópicos"
+        basic_topic_list:
+          title: "Lista de tópicos básicos"
+        footer_message:
+          title: "Mensagem de rodapé"
+        signup_cta:
+          title: "CTA de cadastro"
+        topic_timer_info:
+          title: "Timers de tópico"
+        topic_footer_buttons:
+          title: "Botões no rodapé do tópico"
+        topic_notifications:
+          title: "Notificações de tópico"
+        post:
+          title: "Postagem"
+        post_list:
+          title: "Lista de postagens"
+          empty_example: "<PostList /> estado vazio"
+          populated_example: "<PostList /> estado preenchido"
+        topic_map:
+          title: "Mapa do tópico"
+        site_header:
+          title: "Cabeçalho do site"
+        suggested_topics:
+          title: "Tópicos sugeridos"
+        post_menu:
+          title: "Menu de postagem"
+        modal:
+          title: "Modal"
+          header: "Título do modal"
+          footer: "Rodapé do modal"
+        user_about:
+          title: "Caixa Sobre do(a) usuário(a)"
+        header_icons:
+          title: "Ícones no cabeçalho"
+        spinners:
+          title: "Controle giratório"
+        empty_state:
+          title: "Estado vazio"
+        tooltips:
+          title: "Dicas de ferramenta"
+          description: "Descrição"
+          header: "Cabeçalho"
+          hover_to_see: "Passe o mouse para ver uma dica"
+        char_counter:
+          title: "Contador de Caracteres"
+          placeholder: "Insira seu texto aqui..."

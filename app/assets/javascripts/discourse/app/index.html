@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--
+      👋 Greetings Discourse Developer. This html file is used by ember-cli/embroider to define our JS entrypoints,
+      but it is never actually used in development or production. Instead, we generate an `assets.json` file which
+      is ingested by Rails and used to generate the correct <script> tags.
+
+      When ember-cli is used as a proxy, we use the rails-generated HTML and replace urls in script/link tags
+      with the local ember-cli versions.
+    -->
+    <meta charset="utf-8">
+    <title>Discourse - Ember CLI</title>
+
+    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
+    <link integrity="" rel="stylesheet" href="{{rootURL}}assets/discourse.css" />
+
+    <script defer src="{{rootURL}}assets/vendor.js"></script>
+
+    <script defer src="{{rootURL}}assets/discourse.js"></script>
+  </head>
+  <body>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+// --------------------------------------------------
+// Badges
+// --------------------------------------------------
+
+// Base
+// --------------------------------------------------
+:root {
+  --category-badge-size: 0.75em;
+  --category-badge-border-radius: 0px;
+}
+
+%badge {
+  display: inline-block;
+  font-weight: normal;
+  white-space: nowrap;
+  border-radius: 10px;
+}
+
+// Category badges
+// --------------------------------------------------
+.badge-category__wrapper {
+  color: var(--primary-high);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--font-down-1);
+  white-space: nowrap;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+
+  .badge-category {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.33em;
+    color: var(--primary-high);
+    min-width: 0;
+
+    &.--style-square::before {
+      content: "";
+      background: var(--category-badge-color);
+      flex: 0 0 auto;
+      width: var(--category-badge-size);
+      height: var(--category-badge-size);
+      border-radius: var(--category-badge-border-radius);
+    }
+
+    &.--style-emoji,
+    &.--style-icon {
+      display: flex;
+      align-items: center;
+
+      .d-icon,
+      .emoji {
+        width: 0.74em;
+        height: 0.74em;
+      }
+    }
+
+    &.--style-icon .d-icon {
+      color: var(--category-badge-color);
+    }
+
+    &.--style-icon .d-icon + .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &__name {
+      color: var(--category-badge-title-color);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    &.--has-parent {
+      &::before {
+        background: linear-gradient(
+          90deg,
+          var(--parent-category-badge-color) 50%,
+          var(--category-badge-color) 50%
+        );
+      }
+    }
+
+    .extra-info-wrapper & {
+      color: var(--header_primary-high);
+    }
+  }
+
+  .d-icon {
+    width: 0.74em;
+    height: 0.74em;
+    color: var(--primary-medium);
+  }
+}
+
+// Notification badge
+// --------------------------------------------------
+.badge-notification {
+  @extend %badge;
+  position: relative;
+  top: -2px;
+  padding: 0.21em 0.42em;
+  min-width: 0.5em;
+  color: var(--secondary);
+  font-size: var(--font-down-2);
+  line-height: var(--line-height-small);
+  text-align: center;
+  background-color: var(--primary-low-mid-or-secondary-low);
+
+  &[href] {
+    color: var(--secondary);
+  }
+
+  &:hover {
+    color: var(--secondary);
+  }
+
+  // Unread posts
+  &.unread-posts {
+    background-color: var(--tertiary-med-or-tertiary);
+    color: var(--secondary);
+    font-weight: dark-light-choose(normal, bold);
+  }
+
+  &.new-topic {
+    background-color: transparent;
+    padding-left: 0.15em;
+  }
+
+  &.new-topic::before {
+    content: "";
+    background: var(--tertiary-med-or-tertiary);
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+  }
+}
+
+// Posts badge
+// --------------------------------------------------
+.badge-posts {
+  font-weight: normal;
+  font-size: var(--font-0);
+  line-height: var(--line-height-small);
+
+  &[href] {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+// Group badge
+// --------------------------------------------------
+.badge-group {
+  @extend %badge;
+  padding: 2px 5px;
+  color: var(--primary);
+  background-color: var(--primary-low);
+  border-color: var(--primary-low);
+  font-size: var(--font-down-1);
+}

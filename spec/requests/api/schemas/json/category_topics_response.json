@@ -1,0 +1,238 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "users": {
+      "type": "array",
+      "items":
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "avatar_template": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "username",
+            "name",
+            "avatar_template"
+          ]
+        }
+    },
+    "primary_groups": {
+      "type": "array",
+      "items": {
+
+      }
+    },
+    "topic_list": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "can_create_topic": {
+          "type": "boolean"
+        },
+        "per_page": {
+          "type": "integer"
+        },
+        "top_tags": {
+          "type": "array",
+          "items": {}
+        },
+        "topics": {
+          "type": "array",
+          "items":
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "fancy_title": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "posts_count": {
+                  "type": "integer"
+                },
+                "reply_count": {
+                  "type": "integer"
+                },
+                "highest_post_number": {
+                  "type": "integer"
+                },
+                "image_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "last_posted_at": {
+                  "type": "string"
+                },
+                "bumped": {
+                  "type": "boolean"
+                },
+                "bumped_at": {
+                  "type": "string"
+                },
+                "archetype": {
+                  "type": "string"
+                },
+                "unseen": {
+                  "type": "boolean"
+                },
+                "pinned": {
+                  "type": "boolean"
+                },
+                "unpinned": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "excerpt": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "closed": {
+                  "type": "boolean"
+                },
+                "archived": {
+                  "type": "boolean"
+                },
+                "bookmarked": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "liked": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "views": {
+                  "type": "integer"
+                },
+                "like_count": {
+                  "type": "integer"
+                },
+                "has_summary": {
+                  "type": "boolean"
+                },
+                "last_poster_username": {
+                  "type": "string"
+                },
+                "category_id": {
+                  "type": "integer"
+                },
+                "pinned_globally": {
+                  "type": "boolean"
+                },
+                "featured_link": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "posters": {
+                  "type": "array",
+                  "items":
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "extras": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "user_id": {
+                          "type": "integer"
+                        },
+                        "primary_group_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "extras",
+                        "description",
+                        "user_id",
+                        "primary_group_id"
+                      ]
+                    }
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "fancy_title",
+                "slug",
+                "posts_count",
+                "reply_count",
+                "highest_post_number",
+                "image_url",
+                "created_at",
+                "last_posted_at",
+                "bumped",
+                "bumped_at",
+                "archetype",
+                "unseen",
+                "pinned",
+                "unpinned",
+                "excerpt",
+                "visible",
+                "closed",
+                "archived",
+                "bookmarked",
+                "liked",
+                "views",
+                "like_count",
+                "has_summary",
+                "last_poster_username",
+                "category_id",
+                "pinned_globally",
+                "featured_link",
+                "posters"
+              ]
+            }
+        }
+      },
+      "required": [
+        "can_create_topic",
+        "per_page",
+        "topics"
+      ]
+    }
+  },
+  "required": [
+    "topic_list"
+  ]
+}

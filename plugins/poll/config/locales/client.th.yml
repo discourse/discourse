@@ -1,0 +1,50 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+th:
+  js:
+    poll:
+      voters:
+        other: "ผู้โหวต"
+      total_votes:
+        other: "คะแนนโหวตทั้งหมด"
+      average_rating: "คะแนนเฉลี่ย: <strong>%{average}</strong>"
+      results:
+        groups:
+          title: "คุณต้องเป็นสมาชิกของ %{groups} จึงจะโหวตในแบบสำรวจนี้ได้"
+      cast-votes:
+        title: "โหวต"
+        label: "โหวตเดี๋ยวนี้"
+      show-results:
+        title: "แสดงผลโหวต"
+      hide-results:
+        title: "กลับสู่การโหวต"
+      export-results:
+        label: "ส่งออก"
+      open:
+        title: "เปิดโพล"
+        label: "เปิด"
+        confirm: "คุณแน่ใจหรือไม่ที่จะเปิดโพลนี้"
+      close:
+        title: "ปิดโพล"
+        label: "ปิด"
+        confirm: "คุณแน่ใจหรือไม่ที่จะปิดโพลนี้"
+      ranked_choice:
+        none: "ไม่มี"
+      options:
+        label: "ตัวเลือก"
+      error_while_toggling_status: "ขออภัย มีข้อผิดพลาดในการแสดงสถานะของโพล"
+      error_while_casting_votes: "ขออภัย มีข้อผิดพลาดในการโหวต"
+      error_while_fetching_voters: "ขออภัย มีข้อผิดพลาดในการแสดงผู้โหวต"
+      ui_builder:
+        title: สร้างโพล
+        insert: แทรกโพล
+        help:
+          invalid_values: ค่าต่ำสุดต้องน้อยกว่าค่าสูงสุด
+        poll_type:
+          label: ชนิด
+        poll_public:
+          label: แสดงรายชื่อผู้โหวต

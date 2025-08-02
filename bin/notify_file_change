@@ -1,0 +1,43 @@
+#!/bin/bash
+
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../tmp && pwd )"
+
+SOCKET="$DIR"/file_change.sock
+
+if [[ -e "$SOCKET" ]]; then
+  if command -v socat &> /dev/null; then
+    echo "$1 $2" | socat - UNIX-CONNECT:$SOCKET >/dev/null 2>/dev/null
+  else
+    echo "$1 $2" | nc -U $SOCKET >/dev/null 2>/dev/null
+  fi
+  if [ $? != 0 ]; then
+    rm $SOCKET
+  fi
+fi
+
+# To enable:
+#
+# 1. Install socat
+# 2. Add VIM_AUTOSPEC=1 to your environment
+# 3. Add the following to your .vimrc
+#
+
+# function! s:notify_file_change_discourse()
+#   let notify = getcwd() . "/bin/notify_file_change"
+#   if ! executable(notify)
+#     let root = rails#app().path()
+#     notify = root . "/bin/notify_file_change"
+#   end
+#   if executable(notify)
+#     if executable('socat')
+#       execute "!" . notify . ' ' . expand("%:p") . " " . line(".")
+#     end
+#   end
+# endfunction
+
+# autocmd BufWritePost * silent! call s:notify_file_change()
+
+# What this does?
+#
+# bin/rake autospec will now automatically try running specs where the actual cursor is located first, then fall back to running spec file

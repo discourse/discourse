@@ -1,0 +1,31 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: reply+4f97315cc828096c9cb34c6f1a0d6fe8@bar.com
+Date: Sat, 30 Jan 2016 01:10:11 +0100
+Message-ID: <38@foo.bar.mail>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="--==_mimepart_56abff5d49749_ddf83fca6d033a28548ad";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_56abff5d49749_ddf83fca6d033a28548ad
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Please find the eml file attached.
+
+----==_mimepart_56abff5d49749_ddf83fca6d033a28548ad
+Content-Type: message/rfc822; name="sample.eml"
+Content-Disposition: attachment; filename="sample.eml"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_jnxo58s31
+Content-ID: <f_jnxo58s31>
+
+RGF0ZTogU3VuLCAxIEFwciAyMDEyIDE0OjI1OjI1IC0wNjAwDQpGcm9tOiBmaWxlQGZ5aWNlbnRl
+ci5jb20NClN1YmplY3Q6IFdlbGNvbWUNClRvOiBzb21lb25lQHNvbWV3aGVyZS5jb20NCg0KRGVh
+ciBGcmllbmQsDQoNCldlbGNvbWUgdG8gZmlsZS5meWljZW50ZXIuY29tIQ0KDQpTaW5jZXJlbHks
+DQpGWUljZW50ZXIuY29tIFRlYW0NCg==
+----==_mimepart_56abff5d49749_ddf83fca6d033a28548ad--

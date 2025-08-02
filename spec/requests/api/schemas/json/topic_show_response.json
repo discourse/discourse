@@ -1,0 +1,971 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "post_stream": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "avatar_template": {
+                "type": "string"
+              },
+              "created_at": {
+                "type": "string"
+              },
+              "cooked": {
+                "type": "string"
+              },
+              "post_number": {
+                "type": "integer"
+              },
+              "post_type": {
+                "type": "integer"
+              },
+              "updated_at": {
+                "type": "string"
+              },
+              "reply_count": {
+                "type": "integer"
+              },
+              "reply_to_post_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "quote_count": {
+                "type": "integer"
+              },
+              "incoming_link_count": {
+                "type": "integer"
+              },
+              "reads": {
+                "type": "integer"
+              },
+              "readers_count": {
+                "type": "integer"
+              },
+              "score": {
+                "type": "number"
+              },
+              "yours": {
+                "type": "boolean"
+              },
+              "topic_id": {
+                "type": "integer"
+              },
+              "topic_slug": {
+                "type": "string"
+              },
+              "display_username": {
+                "type": "string"
+              },
+              "primary_group_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_bg_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "version": {
+                "type": "integer"
+              },
+              "can_edit": {
+                "type": "boolean"
+              },
+              "can_delete": {
+                "type": "boolean"
+              },
+              "can_recover": {
+                "type": "boolean"
+              },
+              "can_see_hidden_post": {
+                "type": "boolean"
+              },
+              "can_wiki": {
+                "type": "boolean"
+              },
+              "link_counts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    },
+                    "internal": {
+                      "type": "boolean"
+                    },
+                    "reflection": {
+                      "type": "boolean"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "clicks": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "internal",
+                    "reflection",
+                    "title",
+                    "clicks"
+                  ]
+                }
+              },
+              "read": {
+                "type": "boolean"
+              },
+              "user_title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "bookmarked": {
+                "type": "boolean"
+              },
+              "actions_summary": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "can_act": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "can_act"
+                  ]
+                }
+              },
+              "moderator": {
+                "type": "boolean"
+              },
+              "admin": {
+                "type": "boolean"
+              },
+              "staff": {
+                "type": "boolean"
+              },
+              "user_id": {
+                "type": "integer"
+              },
+              "hidden": {
+                "type": "boolean"
+              },
+              "trust_level": {
+                "type": "integer"
+              },
+              "deleted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "user_deleted": {
+                "type": "boolean"
+              },
+              "edit_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "can_view_edit_history": {
+                "type": "boolean"
+              },
+              "wiki": {
+                "type": "boolean"
+              },
+              "reviewable_id": {
+                "type": "integer"
+              },
+              "reviewable_score_count": {
+                "type": "integer"
+              },
+              "reviewable_score_pending_count": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "username",
+              "avatar_template",
+              "created_at",
+              "cooked",
+              "post_number",
+              "post_type",
+              "updated_at",
+              "reply_count",
+              "reply_to_post_number",
+              "quote_count",
+              "incoming_link_count",
+              "reads",
+              "readers_count",
+              "score",
+              "yours",
+              "topic_id",
+              "topic_slug",
+              "display_username",
+              "primary_group_name",
+              "flair_name",
+              "flair_url",
+              "flair_bg_color",
+              "flair_color",
+              "version",
+              "can_edit",
+              "can_delete",
+              "can_recover",
+              "can_wiki",
+              "link_counts",
+              "read",
+              "user_title",
+              "bookmarked",
+              "actions_summary",
+              "moderator",
+              "admin",
+              "staff",
+              "user_id",
+              "hidden",
+              "trust_level",
+              "deleted_at",
+              "user_deleted",
+              "edit_reason",
+              "can_view_edit_history",
+              "wiki",
+              "reviewable_id",
+              "reviewable_score_count",
+              "reviewable_score_pending_count"
+            ]
+          }
+        },
+        "stream": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "posts",
+        "stream"
+      ]
+    },
+    "timeline_lookup": {
+      "type": "array",
+      "items": {}
+    },
+    "suggested_topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "fancy_title": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "posts_count": {
+            "type": "integer"
+          },
+          "reply_count": {
+            "type": "integer"
+          },
+          "highest_post_number": {
+            "type": "integer"
+          },
+          "image_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "last_posted_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "bumped": {
+            "type": "boolean"
+          },
+          "bumped_at": {
+            "type": "string"
+          },
+          "archetype": {
+            "type": "string"
+          },
+          "unseen": {
+            "type": "boolean"
+          },
+          "pinned": {
+            "type": "boolean"
+          },
+          "unpinned": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "visible": {
+            "type": "boolean"
+          },
+          "closed": {
+            "type": "boolean"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "bookmarked": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "liked": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {}
+          },
+          "tags_descriptions": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {}
+          },
+          "like_count": {
+            "type": "integer"
+          },
+          "views": {
+            "type": "integer"
+          },
+          "category_id": {
+            "type": "integer"
+          },
+          "featured_link": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "posters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "extras": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "username": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "avatar_template": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "username",
+                    "name",
+                    "avatar_template"
+                  ]
+                }
+              },
+              "required": [
+                "extras",
+                "description",
+                "user"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "fancy_title",
+          "slug",
+          "posts_count",
+          "reply_count",
+          "highest_post_number",
+          "image_url",
+          "created_at",
+          "last_posted_at",
+          "bumped",
+          "bumped_at",
+          "archetype",
+          "unseen",
+          "pinned",
+          "unpinned",
+          "excerpt",
+          "visible",
+          "closed",
+          "archived",
+          "bookmarked",
+          "liked",
+          "tags",
+          "tags_descriptions",
+          "like_count",
+          "views",
+          "category_id",
+          "featured_link",
+          "posters"
+        ]
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {}
+    },
+    "tags_descriptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "id": {
+      "type": "integer"
+    },
+    "title": {
+      "type": "string"
+    },
+    "fancy_title": {
+      "type": "string"
+    },
+    "posts_count": {
+      "type": "integer"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "views": {
+      "type": "integer"
+    },
+    "reply_count": {
+      "type": "integer"
+    },
+    "like_count": {
+      "type": "integer"
+    },
+    "last_posted_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "visible": {
+      "type": "boolean"
+    },
+    "closed": {
+      "type": "boolean"
+    },
+    "archived": {
+      "type": "boolean"
+    },
+    "has_summary": {
+      "type": "boolean"
+    },
+    "archetype": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "category_id": {
+      "type": "integer"
+    },
+    "word_count": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "deleted_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "user_id": {
+      "type": "integer"
+    },
+    "featured_link": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pinned_globally": {
+      "type": "boolean"
+    },
+    "pinned_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pinned_until": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "image_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "slow_mode_seconds": {
+      "type": "integer"
+    },
+    "draft": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "draft_key": {
+      "type": "string"
+    },
+    "draft_sequence": {
+      "type": "integer"
+    },
+    "unpinned": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pinned": {
+      "type": "boolean"
+    },
+    "current_post_number": {
+      "type": "integer"
+    },
+    "highest_post_number": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "deleted_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "has_deleted": {
+      "type": "boolean"
+    },
+    "actions_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "hidden": {
+            "type": "boolean"
+          },
+          "can_act": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "count",
+          "hidden",
+          "can_act"
+        ]
+      }
+    },
+    "chunk_size": {
+      "type": "integer"
+    },
+    "bookmarked": {
+      "type": "boolean"
+    },
+    "bookmarks": {
+      "type": "array",
+      "items": {}
+    },
+    "topic_timer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "message_bus_last_id": {
+      "type": "integer"
+    },
+    "participant_count": {
+      "type": "integer"
+    },
+    "show_read_indicator": {
+      "type": "boolean"
+    },
+    "thumbnails": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "slow_mode_enabled_until": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "details": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "can_edit": {
+          "type": "boolean"
+        },
+        "notification_level": {
+          "type": "integer"
+        },
+        "can_move_posts": {
+          "type": "boolean"
+        },
+        "can_delete": {
+          "type": "boolean"
+        },
+        "can_remove_allowed_users": {
+          "type": "boolean"
+        },
+        "can_create_post": {
+          "type": "boolean"
+        },
+        "can_reply_as_new_topic": {
+          "type": "boolean"
+        },
+        "can_invite_to": {
+          "type": "boolean"
+        },
+        "can_invite_via_email": {
+          "type": "boolean"
+        },
+        "can_flag_topic": {
+          "type": "boolean"
+        },
+        "can_convert_topic": {
+          "type": "boolean"
+        },
+        "can_review_topic": {
+          "type": "boolean"
+        },
+        "can_close_topic": {
+          "type": "boolean"
+        },
+        "can_archive_topic": {
+          "type": "boolean"
+        },
+        "can_split_merge_topic": {
+          "type": "boolean"
+        },
+        "can_edit_staff_notes": {
+          "type": "boolean"
+        },
+        "can_toggle_topic_visibility": {
+          "type": "boolean"
+        },
+        "can_pin_unpin_topic": {
+          "type": "boolean"
+        },
+        "can_moderate_category": {
+          "type": "boolean"
+        },
+        "can_remove_self_id": {
+          "type": "integer"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "username": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "avatar_template": {
+                "type": "string"
+              },
+              "post_count": {
+                "type": "integer"
+              },
+              "primary_group_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_bg_color": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flair_group_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "admin": {
+                "type": "boolean"
+              },
+              "moderator": {
+                "type": "boolean"
+              },
+              "trust_level": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id",
+              "username",
+              "name",
+              "avatar_template",
+              "post_count",
+              "primary_group_name",
+              "flair_name",
+              "flair_url",
+              "flair_color",
+              "flair_bg_color",
+              "admin",
+              "moderator",
+              "trust_level"
+            ]
+          }
+        },
+        "created_by": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "avatar_template": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "username",
+            "name",
+            "avatar_template"
+          ]
+        },
+        "last_poster": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "avatar_template": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "username",
+            "name",
+            "avatar_template"
+          ]
+        }
+      },
+      "required": [
+        "can_edit",
+        "notification_level",
+        "can_move_posts",
+        "can_delete",
+        "can_remove_allowed_users",
+        "can_create_post",
+        "can_reply_as_new_topic",
+        "can_convert_topic",
+        "can_review_topic",
+        "can_close_topic",
+        "can_archive_topic",
+        "can_split_merge_topic",
+        "can_edit_staff_notes",
+        "can_toggle_topic_visibility",
+        "can_pin_unpin_topic",
+        "can_moderate_category",
+        "can_remove_self_id",
+        "created_by",
+        "last_poster"
+      ]
+    }
+  },
+  "required": [
+    "post_stream",
+    "timeline_lookup",
+    "suggested_topics",
+    "tags",
+    "tags_descriptions",
+    "id",
+    "title",
+    "fancy_title",
+    "posts_count",
+    "created_at",
+    "views",
+    "reply_count",
+    "like_count",
+    "last_posted_at",
+    "visible",
+    "closed",
+    "archived",
+    "has_summary",
+    "archetype",
+    "slug",
+    "category_id",
+    "word_count",
+    "deleted_at",
+    "user_id",
+    "featured_link",
+    "pinned_globally",
+    "pinned_at",
+    "pinned_until",
+    "image_url",
+    "slow_mode_seconds",
+    "draft",
+    "draft_key",
+    "draft_sequence",
+    "unpinned",
+    "pinned",
+    "highest_post_number",
+    "deleted_by",
+    "has_deleted",
+    "actions_summary",
+    "chunk_size",
+    "bookmarked",
+    "bookmarks",
+    "topic_timer",
+    "message_bus_last_id",
+    "participant_count",
+    "show_read_indicator",
+    "thumbnails",
+    "slow_mode_enabled_until",
+    "details"
+  ]
+}

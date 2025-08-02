@@ -1,0 +1,329 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: διαγραφή αυτοματισμού
+    discourse_automation:
+      title: Αυτοματισμός
+      table_title: Αυτοματισμοί
+      create: Προσθήκη αυτοματισμού
+      update: Ενημέρωση αυτοματισμού
+      back: Πίσω
+      edit: Επεξεργασία
+      select_script: Επιλέξτε μια δέσμη ενεργειών
+      select_trigger: Επιλέξτε ένα έναυσμα
+      no_automation_yet: Προς το παρόν δεν έχουν ρυθμιστεί αυτοματισμοί.
+      filter_placeholder: Φιλτράρισμα κατά όνομα ή περιγραφή...
+      edit_automation:
+        trigger_section:
+          next_pending_automation: "Ο επόμενος αυτοματισμός θα ενεργοποιηθεί στις: %{date}"
+          trigger_now: "Ενεργοποίηση τώρα"
+          title: Πότε/Τι...
+        fields_section:
+          title: Επιλογές σεναρίου
+      destroy_automation:
+        confirm: "Είστε βέβαιοι ότι θέλετε να διαγράψετε το `%{name}`;"
+      fields:
+        key_value:
+          label_without_count: "Διαμόρφωση"
+          label_with_count:
+            one: "Επεξεργασία διαμόρφωσης (%{count})"
+            other: "Επεξεργασία διαμορφώσεων (%{count})"
+        user:
+          label: Χρήστης
+        pm:
+          title:
+            label: Τίτλος
+          raw:
+            label: Κύριο μέρος
+        pms:
+          title:
+            label: Τίτλος
+          raw:
+            label: Κύριο μέρος
+          delay:
+            label: Καθυστέρηση (λεπτά)
+        group:
+          label: Ομάδα
+        text:
+          label: Κείμενο
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Παράσημο
+        stalled_topic:
+          durations:
+            PT1H: "Μία ώρα"
+            P1D: "Μία ημέρα"
+            P1W: "Μία εβδομάδα"
+            P2W: "Δύο εβδομάδες"
+            P1M: "Ένας μήνας"
+            P3M: "Τρεις μήνες"
+            P6M: "Έξι μήνες"
+            P1Y: "Ένα έτος"
+          fields:
+            categories:
+              label: Περιορίζεται στις κατηγορίες
+            tags:
+              label: Περιορίζεται στις ετικέτες
+        recurring:
+          every: Κάθε
+          frequencies:
+            minute: λεπτό
+            hour: ώρα
+            day: ημέρα
+            weekday: καθημερινή
+            week: εβδομάδα
+            month: μήνας
+            year: έτος
+          fields:
+            recurrence:
+              label: Επανάληψη
+            start_date:
+              label: Ημερομηνία έναρξης
+        stalled_wiki:
+          durations:
+            PT1H: "Μία ώρα"
+            P1D: "Μία ημέρα"
+            P1W: "Μία εβδομάδα"
+            P2W: "Δύο εβδομάδες"
+            P1M: "Ένας μήνας"
+            P3M: "Τρεις μήνες"
+            P6M: "Έξι μήνες"
+            P1Y: "Ένα έτος"
+          fields:
+            restricted_category:
+              label: Περιορίζεται στην κατηγορία
+            stalled_after:
+              label: Καθυστέρηση ενεργοποίησης
+            retriggered_after:
+              label: Καθυστέρηση επανενεργοποίησης
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Περιορισμός σε ομάδα
+        point_in_time:
+          fields:
+            execute_at:
+              label: Εκτέλεση στις
+        topic:
+          fields:
+            restricted_topic:
+              label: ID Θέματος
+        post_created_edited:
+          fields:
+            original_post_only:
+              label: Μόνο η αρχική ανάρτηση
+              description: Θα ενεργοποιηθεί μόνο αν η ανάρτηση είναι η αρχική ανάρτηση στο θέμα
+            restricted_tags:
+              label: Ετικέτες
+            restricted_categories:
+              label: Κατηγορίες
+          created: Δημιουργήθηκε
+          with_images: Εικόνες
+          with_links: Σύνδεσμοι
+          with_code: Κωδικός
+          with_uploads: Μεταφορτώσεις
+        user_updated:
+          fields:
+            user_profile:
+              label: Πεδία προφίλ χρήστη
+              description: Θα ενεργοποιηθεί μόνο αν ο χρήστης έχει συμπληρώσει όλα αυτά τα πεδία
+            custom_fields:
+              description: Θα ενεργοποιηθεί μόνο αν ο χρήστης έχει συμπληρώσει όλα αυτά τα πεδία
+            once_per_user:
+              label: Μία φορά ανά χρήστη
+              description: Θα ενεργοποιηθεί μόνο μία φορά ανά χρήστη
+            new_users_only:
+              label: Μόνο νέοι χρήστες
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Μητρική Κατηγορία
+        pm_created:
+          fields:
+            restricted_user:
+              label: Χρήστες
+            restricted_group:
+              label: Ομάδα
+            ignore_staff:
+              label: Αγνόηση προσωπικού
+              description: Παράλειψη ενεργοποίησης αν ο αποστολέας είναι χρήστης προσωπικού
+            ignore_group_members:
+              label: Αγνόηση μελών ομάδας
+              description: Παράλειψη ενεργοποίησης αν ο αποστολέας είναι μέλος της ομάδας που καθορίστηκε παραπάνω
+        topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Ετικέτες προστέθηκαν ή αφαιρέθηκαν
+            tags_added: Προστέθηκαν ετικέτες
+            tags_removed: Αφαιρέθηκαν ετικέτες
+          fields:
+            watching_categories:
+              label: Κατηγορίες σε παρακολούθηση
+              description: Θα ενεργοποιηθεί μόνο αν το θέμα βρίσκεται σε μία από αυτές τις κατηγορίες
+            watching_tags:
+              label: Ετικέτες σε παρακολούθηση
+              description: Θα ενεργοποιηθεί μόνο αν το θέμα έχει κάποια από αυτές τις ετικέτες
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Κατηγορία
+            restricted_tags:
+              label: Ετικέτες
+      scriptables:
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhook URL
+              description: "Αναμένει ένα έγκυρο URL του Zapier webhook, π.χ.: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Μια φορά
+              description: Απαντά μόνο μία φορά ανά θέμα
+            answering_user:
+              label: Χρήστης που απαντά
+              description: Προεπιλέγεται στον χρήστη Σύστημα
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Ετικέτες
+        post:
+          fields:
+            creator:
+              label: Δημιουργός
+              post_creator_context: Ο δημιουργός της ανάρτησης
+            topic:
+              label: ID Θέματος
+        topic:
+          fields:
+            creator:
+              label: Δημιουργός
+            body:
+              label: Σώμα θέματος
+            title:
+              label: Τίτλος θέματος
+            category:
+              label: Κατηγορία θέματος
+            tags:
+              label: Ετικέτες θέματος
+        group_category_notification_default:
+          fields:
+            group:
+              label: Ομάδα
+            notification_level:
+              label: Επίπεδο ειδοποίησης
+            update_existing_members:
+              label: Ενημέρωση υπαρχόντων μελών
+              description: Ενημερώνει το επίπεδο ειδοποίησης για τα υπάρχοντα μέλη της ομάδας
+        user_global_notice:
+          fields:
+            level:
+              label: Επίπεδο
+            notice:
+              label: Σημείωση
+          levels:
+            warning: Προειδοποίηση
+            info: Πληροφορίες
+            success: Επιτυχία
+            error: Σφάλμα
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Όνομα σήματος
+            group:
+              label: Ομάδα
+            remove_members_without_badge:
+              label: Αφαίρεση υπαρχόντων μελών χωρίς σήμα
+              description: Προαιρετικό, αφαίρεση υπαρχόντων μελών ομάδας χωρίς το καθορισμένο σήμα
+            badge:
+              label: Παράσημο
+              description: Επιλογή σήματος
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Αναστολή μέχρι (προεπιλογή)
+            reason:
+              label: Αιτιολογία (προεπιλογή)
+            actor:
+              label: Χρήστης
+              description: "Ο χρήστης που είναι υπεύθυνος για την αναστολή (προεπιλογή: σύστημα)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID Θέματος
+            pinned_globally:
+              label: Καρφιτσωμένο καθολικά
+            pinned_until:
+              label: Καρφιτσωμένο μέχρι
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID Θέματος
+            user:
+              label: Χρήστης
+        flag_post_on_words:
+          fields:
+            words:
+              label: Ελεγμένες λέξεις
+        topic_required_words:
+          fields:
+            words:
+              label: Λίστα απαιτούμενων λέξεων
+        send_pms:
+          add_a_pm_btn:
+            label: Προσθήκη ενός ΠΜ
+          fields:
+            receiver:
+              label: Παραλήπτης ΠΜ
+            sendable_pms:
+              label: ΠΜ
+            sender:
+              label: Αποστολέας ΠΜ
+        close_topic:
+          fields:
+            topic:
+              label: ID Θέματος
+            message:
+              label: Κλείσιμο μηνύματος
+            user:
+              label: Χρήστης
+              description: "Ο χρήστης που κλείνει το θέμα (προεπιλογή: σύστημα)"
+      unnamed_automation: "Ανώνυμος αυτοματισμός"
+      models:
+        trigger:
+          name:
+            label: Έναυσμα
+        automation:
+          runs_today: "%{count} σήμερα"
+          runs_this_week: "%{count} αυτή την εβδομάδα"
+          runs_this_month: "%{count} αυτό τον μήνα"
+          runs:
+            label: Εκτελέσεις
+          name:
+            label: Όνομα
+          trigger:
+            label: Έναυσμα
+          version:
+            label: Έκδοση
+          status:
+            label: Κατάσταση
+          enabled:
+            label: Ενεργοποιημένο
+          disabled:
+            label: Απενεργοποιημένο
+          last_updated_at:
+            label: Τελευταία ενημέρωση
+          last_run:
+            label: Τελευταία εκτέλεση
+          last_updated_by:
+            label: Ενημερώθηκε από

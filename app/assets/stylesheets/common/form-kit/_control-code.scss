@@ -1,0 +1,39 @@
+.form-kit__field-code {
+  .ace-wrapper {
+    width: 100%;
+
+    > .loading-container {
+      width: 100%;
+    }
+  }
+
+  .ace-wrapper[data-disabled="true"] {
+    opacity: 0.5;
+
+    .ace_scroller {
+      cursor: not-allowed !important;
+    }
+  }
+
+  .ace-wrapper[data-disabled="false"] {
+    .ace_focus {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -1px;
+
+      @include default-input {
+        height: unset;
+        border-color: var(--tertiary);
+      }
+    }
+  }
+}
+
+.form-kit__control-code {
+  min-height: 250px !important;
+  width: 100%;
+  box-sizing: border-box;
+
+  .form-kit__field.has-error & {
+    border-color: var(--danger);
+  }
+}

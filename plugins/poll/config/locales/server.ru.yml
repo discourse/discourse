@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  site_settings:
+    poll_enabled: "Разрешить пользователям создавать опросы"
+    poll_maximum_options: "Максимальное количество вариантов ответов, допустимых в опросе."
+    poll_edit_window_mins: "Количество минут с момента создания сообщения, в течение которых разрешено редактирование опросов."
+    poll_minimum_trust_level_to_create: "Определить минимальный уровень доверия, необходимый для создания опросов."
+    poll_create_allowed_groups: "Группы, которым разрешено создавать опросы."
+    poll_groupable_user_fields: "Набор имен пользователей, которые можно использовать для группировки и фильтрации результатов опроса."
+    poll_export_data_explorer_query_id: "ID запроса в Data Explorer для экспорта результатов опроса (0 для отключения)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID запроса в Data Explorer, который нужно использовать для экспорта результатов опроса рейтингового голосования."
+    poll_default_public: "При создании нового опроса включите опцию «Показывать проголосовавших» по умолчанию."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
+  poll:
+    poll: "опрос"
+    invalid_argument: "Неверное значение «%{value}» для аргумента «%{argument}»."
+    multiple_polls_without_name: "При создании нескольких опросов используйте уникальные имена, добавив <code>name=пример</code> в теги <code>[опроса]</code>."
+    multiple_polls_with_same_name: "Обнаружено несколько опросов с одним и тем же названием: <strong>%{name}</strong>. Чтобы система могла различать опросы между собой, придумайте разные значения для атрибута <code>name</code>."
+    default_poll_must_have_at_least_1_option: "Опрос должен содержать хотя бы 1 вариант ответа."
+    named_poll_must_have_at_least_1_option: "Опрос с названием <strong>%{name}</strong> должен содержать хотя бы 1 вариант ответа."
+    default_poll_must_have_less_options:
+      one: "В опросе может быть не более %{count} варианта ответа."
+      few: "В опросе может быть не более %{count} вариантов ответов."
+      many: "В опросе может быть не более %{count} вариантов ответов."
+      other: "В опросе может быть не более %{count} вариантов ответов."
+    named_poll_must_have_less_options:
+      one: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} варианта ответа."
+      few: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} вариантов ответов."
+      many: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} вариантов ответов."
+      other: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} вариантов ответов."
+    default_poll_must_have_different_options: "В опросе не должно быть одинаковых вариантов ответа."
+    named_poll_must_have_different_options: "В опросе <strong>%{name}</strong> не должно быть одинаковых вариантов ответа."
+    default_poll_must_not_have_any_empty_options: "Настройки опроса не могут быть пустыми."
+    named_poll_must_not_have_any_empty_options: "Настройки опроса <strong>%{name}</strong> не могут быть пустыми."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Опрос с множественным выбором вариантов ответа содержит неправильные параметры."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Опрос <strong>%{name}</strong> с множественным выбором вариантов ответа содержит неправильные параметры."
+    requires_at_least_1_valid_option: "Выберите хотя бы 1 вариант ответа."
+    requires_that_at_least_one_option_is_ranked: "В опросах с голосованием по принципу ранжирования необходимо выбрать хотя бы один вариант."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Вы не можете редактировать опрос после прошедших %{minutes} минут."
+      cannot_edit_named_poll_with_votes: "Вы не можете изменить имя опроса <strong>${name}</strong> после прошедших %{minutes} минут."
+    no_poll_with_this_name: "В данном сообщении нет опроса под названием <strong>%{name}</strong>."
+    post_is_deleted: "Невозможно совершить действие над удаленным сообщением."
+    user_cant_post_in_topic: "Вы не можете голосовать, поскольку вы не можете создавать сообщения в этой теме."
+    topic_must_be_open_to_vote: "Для проведения голосования тема должна быть открыта."
+    poll_must_be_open_to_vote: "Для проведения голосования опрос должен быть открыт."
+    one_vote_per_user: "В этом опросе допускается только 1 голос."
+    max_vote_per_user:
+      one: В этом опросе допускается только %{count} голос.
+      few: В этом опросе допускается только %{count} голоса.
+      many: В этом опросе допускается не более %{count} голосов.
+      other: В этом опросе допускается не более %{count} голосов.
+    min_vote_per_user:
+      one: В этом опросе требуется минимум %{count} голос.
+      few: В этом опросе требуется минимум %{count} голоса.
+      many: В этом опросе требуется минимум %{count} голосов.
+      other: В этом опросе требуется минимум %{count} голосов.
+    ranked_choice:
+      vote_options_mismatch: "При использовании системы рейтингового голосования число сделанных выборов должно совпадать с количеством доступных вариантов. Количество вариантов — %{count}, а количество сделанных выборов — %{provided}."
+      no_group_results_support: "Недопустимый тип опроса. Рейтинговое_голосование не поддерживает сгруппированные результаты."
+    topic_must_be_open_to_toggle_status: "Для изменения статуса тема должна быть открыта."
+    only_staff_or_op_can_toggle_status: "Только модераторы или автор могут поменять статус опроса."
+    errors:
+      poll_not_found: "Опрос не найден, подтвердите параметры."
+    insufficient_rights_to_create: "Вы не можете создавать опросы."
+    email:
+      link_to_poll: "Нажмите, чтобы перейти к опросу."
+    user_field:
+      no_data: "Нет данных"

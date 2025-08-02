@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    lazy_videos_enabled: "Abilita il plugin Lazy Videos"
+    lazy_youtube_enabled: "Abilita il caricamento lazy per i video YouTube incorporati"
+    lazy_vimeo_enabled: "Abilita il caricamento lazy per i video Vimeo incorporati"
+    lazy_tiktok_enabled: "Abilita il caricamento lazy per i video TikTok incorporati (sperimentale)"

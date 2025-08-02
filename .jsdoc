@@ -1,0 +1,19 @@
+// jsdoc doesn't accept paths starting with _ (which is the case on github runners)
+// so we need to alter the default config
+{
+  "source": {
+    "excludePattern": ""
+  },
+  "templates": {
+    "default": {
+      "includeDate": false
+    }
+  },
+  "opts": {
+    "encoding": "utf8",
+    "recurse": true
+  },
+  "metadata": {
+    "title": "Discourse"
+  }
+}

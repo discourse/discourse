@@ -1,0 +1,15 @@
+{
+  "name": "deprecation-silencer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Silence deprecation in the build",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [],
+  "engines": {
+    "node": ">= 18",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^9"
+  }
+}

@@ -1,0 +1,31 @@
+<div class="github-row">
+  <div class="github-icon-container" title="Commit">
+    {{#success}}
+      <svg width="24" height="24" class="github-icon github-icon-success" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12zm16.28-2.72a.75.75 0 00-1.06-1.06l-5.97 5.97-2.47-2.47a.75.75 0 00-1.06 1.06l3 3a.75.75 0 001.06 0l6.5-6.5z"></path></svg>
+    {{/success}}
+
+    {{#pending}}
+      <svg width="24" height="24" class="github-icon github-icon-pending" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"></path></svg>
+    {{/pending}}
+
+    {{#failure}}
+      <svg width="24" height="24" class="github-icon github-icon-failure" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12zm8.036-4.024a.75.75 0 00-1.06 1.06L10.939 12l-2.963 2.963a.75.75 0 101.06 1.06L12 13.06l2.963 2.964a.75.75 0 001.061-1.06L13.061 12l2.963-2.964a.75.75 0 10-1.06-1.06L12 10.939 9.036 7.976z"></path></svg>
+    {{/failure}}
+
+    {{#unknown}}
+      <svg width="24" height="24" class="github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18a6 6 0 100-12 6 6 0 000 12z"></path></svg>
+    {{/unknown}}
+  </div>
+
+  <div class="github-info-container">
+    <h4>
+      <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+    </h4>
+
+    {{#run_number}}
+      <div class="github-info">
+        {{name}} <span class="github-run-number">#{{run_number}}</span>
+      </div>
+    {{/run_number}}
+  </div>
+</div>

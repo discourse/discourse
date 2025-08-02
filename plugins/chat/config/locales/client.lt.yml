@@ -1,0 +1,275 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Pokalbis
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Visada"
+          fullscreen: "Kai pokalbis vyksta viso ekrano režimu"
+          never: "Niekada"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Pokalbių kanalo būsena pakeista"
+            chat_channel_delete: "Pokalbių kanalas ištrintas"
+            chat_auto_remove_membership: "Narystės automatiškai pašalinamos iš kanalų"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Sukurkite pokalbio pranešimą nurodytame kanale."
+      web_hooks:
+        chat_event:
+          group_name: "Pokalbių įvykiai"
+          chat_message_created: "Žinutė sukurta"
+          chat_message_edited: "Žinutė redaguojama"
+          chat_message_trashed: "Žinutė išmesta į šiukšliadėžę"
+          chat_message_restored: "Žinutė atkurta"
+    about:
+      chat_messages_count: "Pokalbių žinutės"
+      chat_channels_count: "Pokalbių kanalai"
+      chat_users_count: "Pokalbių naudotojai"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} pokalbių žinutė"
+          few: "%{formatted_number} pokalbių žinutė"
+          many: "%{formatted_number} pokalbių žinutė"
+          other: "%{formatted_number} pokalbių žinutės"
+    chat:
+      text_copied: Tekstas nukopijuotas į iškarpinę
+      link_copied: Nuoroda nukopijuota į iškarpinę
+      back_to_forum: "Forumas"
+      deleted_chat_username: ištrintas
+      dates:
+        yesterday: "Vakar"
+      all_loaded: "Rodomi visi pranešimai"
+      already_enabled: "Šioje temoje pokalbių funkcija jau įjungta. Atnaujinkite puslapį."
+      disabled_for_topic: "Pokalbiai šioje temoje išjungti."
+      bot: "botas"
+      create: "Sukurti"
+      cancel: "Atšaukti"
+      cancel_reply: "Atšaukti atsakymą"
+      chat_channels: "Kanalai"
+      browse_all_channels: "Naršyti visus kanalus"
+      see_in: "Žiūrėti"
+      move_to_channel:
+        title: "Perkelti pranešimus į kanalą"
+        instructions:
+          one: "Jūs perkeliate <strong>%{count}</strong> pranešimą. Pasirinkite paskirties kanalą. Kanale <strong>%{channelTitle}</strong> bus sukurtas vietos žymėjimo pranešimas, nurodantis, kad šis pranešimas buvo perkeltas. Atminkite, kad atsakymų grandinės nebus išsaugotos naujame kanale, o senojo kanalo pranešimai nebebus rodomi kaip atsakymai į perkeltus pranešimus."
+          few: "Jūs perkeliate <strong>%{count}</strong> pranešimą. Pasirinkite paskirties kanalą. Kanale <strong>%{channelTitle}</strong> bus sukurtas vietos žymėjimo pranešimas, nurodantis, kad šis pranešimas buvo perkeltas. Atminkite, kad atsakymų grandinės nebus išsaugotos naujame kanale, o senojo kanalo pranešimai nebebus rodomi kaip atsakymai į perkeltus pranešimus."
+          many: "Jūs perkeliate <strong>%{count}</strong> pranešimą. Pasirinkite paskirties kanalą. Kanale <strong>%{channelTitle}</strong> bus sukurtas vietos žymėjimo pranešimas, nurodantis, kad šis pranešimas buvo perkeltas. Atminkite, kad atsakymų grandinės nebus išsaugotos naujame kanale, o senojo kanalo pranešimai nebebus rodomi kaip atsakymai į perkeltus pranešimus."
+          other: "Jūs perkeliate <strong>%{count}</strong> žinutes. Pasirinkite paskirties kanalą. Kanale <strong>%{channelTitle}</strong> bus sukurtas vietos žymėjimo pranešimas, nurodantis, kad šie pranešimai buvo perkelti. Atminkite, kad atsakymų grandinės nebus išsaugotos naujame kanale, o senojo kanalo pranešimai nebebus rodomi kaip atsakymai į jokius perkeltus pranešimus."
+        confirm_move: "Perkelti pranešimus"
+      delete_messages:
+        confirm:
+          one: "Ar tikrai norite ištrinti šį pranešimą?"
+          few: "Ar tikrai norite ištrinti šį pranešimą?"
+          many: "Ar tikrai norite ištrinti šį pranešimą?"
+          other: "Ar tikrai norite ištrinti šias %{count} žinutes?"
+      channel_settings:
+        title: "Kanalo nustatymai"
+        edit: "Redaguoti"
+        add: "Pridėti"
+        close_channel: "Uždaryti kanalą"
+        open_channel: "Atidaryti kanalą"
+        archive_channel: "Archyvuoti kanalą"
+        delete_channel: "Ištrinti kanalą"
+        join_channel: "Prisijungti prie kanalo"
+        leave_channel: "Išeiti iš kanalo"
+        leave_groupchat_info: "Išėję iš šio grupinio pokalbio, nebeturėsite jo prieigos ir negausite su juo susijusių pranešimų. Norėdami vėl prisijungti, turėsite gauti pakartotinį grupės pokalbio nario kvietimą."
+        join: "Prisijungti"
+        leave: "Palikti"
+        save_label:
+          mute_channel: "Išsaugota kanalo nutildymo nuostata"
+          desktop_notification: "Darbalaukio pranešimų nuostata išsaugota"
+          mobile_notification: "Mobiliųjų tiesioginių pranešimų nuostata išsaugota"
+      channel_archive:
+        title: "Archyvavimo kanalas"
+        instructions: "<p>Archyvuojant kanalą, jis perkeliamas į tik skaitymo režimą ir visos žinutės iš kanalo perkeliamos į naują arba esamą temą. Naujų žinučių siųsti negalima, o esamų žinučių negalima redaguoti ar ištrinti.</p><p>Ar tikrai norite archyvuoti <strong>%{channelTitle}</strong> kanalą?</p>"
+        process_started: "Archyvavimo procesas pradėtas. Šis modalinis langas netrukus užsidarys, o kai archyvavimo procesas bus baigtas, gausite asmeninį pranešimą."
+        retry: "Bandykite dar kartą"
+      channel_open:
+        title: "Atidaryti kanalą"
+        instructions: "Iš naujo atidaromas kanalas, visi vartotojai galės siųsti žinutes ir redaguoti esamas žinutes."
+      channel_close:
+        title: "Uždaryti kanalą"
+        instructions: "Uždarius kanalą, ne darbuotojai negalės siųsti naujų žinučių arba redaguoti esamų žinučių. Ar tikrai norite uždaryti šį kanalą?"
+      channel_delete:
+        title: "Ištrinti kanalą"
+        instructions: "<p>Ištrina <strong>%{name}</strong> kanalą ir pokalbių istoriją. Visos žinutės ir susiję duomenys, pvz., reakcijos ir įkėlimai, bus visam laikui ištrinti. Jei norite išsaugoti kanalo istoriją ir ją pašalinti, galite archyvuoti kanalą.</p> <p>Ar tikrai norite <strong>visam laikui ištrinti</strong> kanalą? Norėdami patvirtinti, įveskite kanalo pavadinimą žemiau esančiame laukelyje.</p>"
+        confirm: "Suprantu pasekmes, ištrinkite kanalą"
+        confirm_channel_name: "Įveskite kanalo pavadinimą"
+      channels_list_popup:
+        browse: "Naršyti kanalus"
+      close: "Uždaryti"
+      remove: "Pašalinti"
+      delete: "Pašalinti"
+      edited: "taisytas"
+      muted: "nutyldita"
+      joined: "prisijungė"
+      email_frequency:
+        never: "Niekada"
+      header_indicator_preference:
+        never: "Niekada"
+      flag: "Pranešti"
+      heading: "Pokalbis"
+      join: "Prisijungti"
+      last_visit: "paskutinis apsilankymas"
+      no_public_channels_cta: "Naršyti kanalus"
+      ignore_channel_wide_mention:
+        description: "Nesiųsti pranešimų apie paminėjimus visame kanale (@here ir @all)"
+      show_thread_title_prompts:
+        title: "Rodyti temos pavadinimo raginimus"
+        description: "Rodyti raginimus nustatyti naujų gijų pavadinimą"
+      open: "Atviras juodraštis"
+      open_full_page: "Atidaryti pokalbį viso ekrano režimu"
+      reply: "Atsakyti"
+      edit: "Redaguoti"
+      rebake_message: "Perkurti HTML"
+      bookmark_message: "Žymės"
+      bookmark_message_edit: "Redaguoti žymę"
+      save: "Išsaugoti"
+      sounds:
+        none: "Nieko"
+      title: "pokalbis"
+      title_capitalized: "Pokalbis"
+      exit: "atgal"
+      channel_status:
+        closed: "Uždaryta"
+        open: "Atidaryti"
+      browse:
+        back: "Atgal"
+        filter_all: Visos
+        filter_open: Atidaryti
+        filter_closed: Uždaryta
+      chat_message_separator:
+        today: Šiandien
+        yesterday: Vakar
+      about_view:
+        title: Antraštė
+        name: Vardas
+        description: Aprašymas
+      channel_info:
+        back_to_channel: "Atgal"
+        tabs:
+          members: Nariai
+          settings: Nustatymai
+        remove_member: "Pašalinti"
+      new_message_modal:
+        no_items: "Nėra elementų"
+        filter: "Filtruoti"
+      direct_message_creator:
+        title: Nauja žinutė
+        prefix: "Kam:"
+      create_channel:
+        type: "Tipas"
+        types:
+          category: "Kategorija"
+          topic: "Tema"
+      composer:
+        italic_text: "pasviras tekstas"
+        bold_text: "paryškintas tekstas"
+        send: "Siųsti"
+      notification_levels:
+        never: "Niekada"
+      settings:
+        follow: "Prisijungti"
+        followed: "Prisijungė"
+        threading_enabled: "Galimas"
+        threading_disabled: "Uždrausta"
+        notifications: "Pranešimai"
+        preview: "Peržiūrėti"
+        save: "Išsaugoti"
+        saved: "Išsaugota"
+        unfollow: "Palikti"
+        admin_title: "Administratorius"
+        settings_title: "Nustatymai"
+        category_label: "Kategorija"
+        history_label: "Istorija"
+        members_label: "Nariai"
+      admin:
+        title: "Pokalbis"
+      incoming_webhooks:
+        back: "Atgal"
+        description: "Aprašymas"
+        delete: "Pašalinti"
+        emoji: "Emoji"
+        name: "Vardas"
+        save: "Išsaugoti"
+        edit: "Redaguoti"
+        system: "sistema"
+        url: "Nuoroda"
+        username: "Vartotojo vardas"
+      selection:
+        cancel: "Atšaukti"
+        copy: "Kopijuoti"
+        new_topic:
+          title: "Perkelti į naują temą"
+        existing_topic:
+          title: "Perkelti į esamą temą"
+        new_message:
+          title: "Pereiti prie naujos žinutės"
+      retention_reminders:
+        short:
+          one: "%{count} diena"
+          few: "%{count} dienos"
+          many: "%{count} dienų"
+          other: "%{count} dienų"
+      emoji_picker:
+        objects: "Objektai"
+        activities: "Veikla"
+        flags: "Pažymėk!"
+        symbols: "Simboliai"
+      thread:
+        title: "Antraštė"
+        replies:
+          one: "%{count} atsakymas"
+          few: "%{count} atsakymai"
+          many: "%{count} atsakymai"
+          other: "%{count} atsakymai"
+        settings: "Nustatymai"
+        last_reply: "Paskutinis atsakymas"
+        notifications:
+          regular:
+            title: "Įprastas"
+          tracking:
+            title: "Seku"
+          watching:
+            title: "Stebiu"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
+      draft_channel_screen:
+        header: "Nauja žinutė"
+        cancel: "Atšaukti"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Žinutės
+    keyboard_shortcuts_help:
+      chat:
+        title: "Pokalbis"
+    styleguide:
+      sections:
+        chat:
+          title: Pokalbis
+    sidebar:
+      panels:
+        chat:
+          label: "Pokalbis"

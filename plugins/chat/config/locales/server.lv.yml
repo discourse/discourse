@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  chat:
+    deleted_chat_username: dzēsts
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Apturētie lietotāji"
+        disagree:
+          title: "Nepiekrist"
+    channel:
+      dm_title:
+        single_user: "%{username}"
+    mention_warning:
+      dismiss: "nerādīt"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} pieminēja jūs "%{channel}"'
+  unsubscribe:
+    chat_summary:
+      never: Nekad

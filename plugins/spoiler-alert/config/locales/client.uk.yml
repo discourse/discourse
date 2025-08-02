@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "Cпойлер cповіщення Discourse"
+  js:
+    spoiler:
+      title: Розмитий спойлер
+      label:
+        show: "Показати прихований вміст"
+    composer:
+      spoiler_text: "Цей текст буде розмитим"

@@ -1,0 +1,15 @@
+{{#image}}<img src="{{image}}" class="thumbnail">{{/image}}
+
+<h3><a href="{{link}}" target="_blank" rel="noopener">{{{title}}}</a></h3>
+
+{{#by_info}}<b>{{by_info}}</b>{{/by_info}}
+
+<p>{{description}}</p>
+
+<p>
+  {{#rating}}{{rating}}{{/rating}}
+  {{#isbn_asin}}{{isbn_asin_text}}: {{isbn_asin}}, {{/isbn_asin}}
+  {{#publisher}}{{publisher}}, {{/publisher}}
+  {{#published}}{{published}}{{/published}}
+  {{#price}}<strong>{{price}}</strong>{{/price}}
+</p>

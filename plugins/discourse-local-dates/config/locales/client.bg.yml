@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          date_title: Дата
+          time_title: Време
+          timezone: Часова зона

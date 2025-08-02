@@ -1,0 +1,139 @@
+rails_env   = ENV['RAILS_ENV']  || "production"
+rails_root  = ENV['RAILS_ROOT'] || "/var/rails/my_discourse"
+
+user = ENV["DISCOURSE_USER"] || ENV['USER'] || 'user_running_app'
+group = ENV["DISCOURSE_GROUP"] || ENV['GROUP'] || 'www-data'
+num_webs = ENV["NUM_WEBS"].to_i > 0 ? ENV["NUM_WEBS"].to_i : 4
+
+# to debug use
+#Bluepill.application("your_app", :foreground => true) do |app|
+
+# Running bluepill as a user? Use:
+Bluepill.application("discourse", :base_dir => ENV["HOME"] + '/.bluepill') do |app|
+
+# Running bluepill as root? Use:
+#Bluepill.application("discourse") do |app|
+
+  # getting this to work was a nightmare
+  # bundle exec spawns a process totally messing with the demonize option
+  # so we suck the environment out and set it up first
+  bootup_bundle = [ "#{ENV['HOME']}/.rvm/bin/rvm/bootup_bundle",
+                    "/usr/local/rvm/bin/rvm/bootup_bundle",
+                    `which bootup_bundle`.strip,
+                  ].each do |location|
+    if File.exist? location
+      break location
+    end
+  end
+  # XXX if none match, bootup_bundle is set to the array
+
+  if bootup_bundle
+    app.environment = `env -i BUNDLE_GEMFILE=#{rails_root}/Gemfile #{bootup_bundle} exec env`.lines.inject({}) do |env_hash,l|
+      kv = l.chomp.split('=',2)
+      env_hash[kv[0]] = kv[1]
+      env_hash
+    end
+  end
+
+  app.environment ||= {}
+
+  # Load .env file if there is one
+  if File.exist? "#{rails_root}/.env"
+    File.read("#{rails_root}/.env").split("\n").each do |l|
+      kv = l.chomp.split('=',2)
+      app.environment[kv[0]] = kv[1]
+    end
+  end
+
+  # Force RAILS_ENV to the value specified in the environment of the bluepill invocation
+  app.environment['RAILS_ENV'] = rails_env
+
+  app.gid = group
+  app.uid = user
+
+  app.working_dir = rails_root
+  sockdir = "#{rails_root}/tmp/sockets"
+  File.directory? sockdir or FileUtils.mkdir_p sockdir
+
+  # Discourse is set to use Thin as its WebServer, here is its running scripts.
+  num_webs.times do |i|
+    app.process("thin-#{i}") do |process|
+      process.start_command  = "bundle exec thin start -e production -t 0 --socket #{sockdir}/thin.#{i}.sock --pid #{rails_root}/tmp/pids/thin-#{i}.pid --log #{rails_root}/log/thin-#{i}.log --daemonize"
+
+      process.stop_command  = "bundle exec thin stop --pid #{rails_root}/tmp/pids/thin-#{i}.pid"
+
+      # Alternatively, you can start with a port number instead of a socket. If you do that, then you MUST update
+      # the upstream section in the nginx config to match.
+      # The nginx.sample.conf file assumes you're using sockets.
+      # process.start_command  = "bundle exec thin start -e production -t 0 -p #{9040 + i} -P #{rails_root}/tmp/pids/thin-#{i}.pid -d"
+
+      process.pid_file = "#{rails_root}/tmp/pids/thin-#{i}.pid"
+
+      process.start_grace_time = 30.seconds
+      process.stop_grace_time = 30.seconds
+      process.restart_grace_time = 10.seconds
+      
+      process.group = "thins"
+      process.uid = user
+      process.gid = group
+      
+      process.daemonize = false
+      process.stdout = process.stderr = "#{rails_root}/log/thin-#{i}.log"
+      
+      # Thanks to: http://www.garrensmith.com/2012/09/24/Staying-up-with-Unicorn-Upstart-Bluepill.html
+      # If the amount of memory is exceeded 3 times out of 5, restart
+      process.checks :mem_usage, :every => 1.minutes, :below => 750.megabytes, :times => [3, 5]
+    end
+  end
+
+  # You can use Puma as WebServer as well, please use the scripts below.
+  #app.process("puma") do |process|
+  #  process.start_command  = "puma -e production -C #{rails_root}/config/puma.rb"
+  #
+  #    # Puma's Setting file is located in config/puma.rb, if you want to edit them, go to puma.rb.
+  #    # the upstream section in the nginx config to match.
+  #    # The nginx.sample.conf file assumes you're using sockets.
+  #    
+  #  process.pid_file = "#{rails_root}/tmp/pids/puma.pid"
+  #  process.start_grace_time = 30.seconds
+  #  process.stop_grace_time = 10.seconds
+  #  process.restart_grace_time = 10.seconds
+  #  process.group = "pumas"
+  #  process.uid = user
+  #  process.gid = group
+  #  process.daemonize = false
+  #  process.stdout = process.stderr = "#{rails_root}/log/puma.log"
+  #    # Thanks to: http://www.garrensmith.com/2012/09/24/Staying-up-with-Unicorn-Upstart-Bluepill.html
+  #    # If the amount of memory is exceeded 3 times out of 5, restart
+  #  process.checks :mem_usage, :every => 1.minutes, :below => 750.megabytes, :times => [3, 5]
+  #end
+
+#debug instance
+#    app.process("thin-debug") do |process|
+#      process.start_command  = "bundle exec thin start -e development -t 0 -p 10040 -P #{rails_root}/tmp/pids/thin-debug.pid -l #{rails_root}/log/thin-debug.log" -d"
+#      process.pid_file = "#{rails_root}/tmp/pids/thin-debug.pid"
+#      process.start_grace_time = 30.seconds
+#      process.stop_grace_time = 10.seconds
+#      process.restart_grace_time = 10.seconds
+#      process.group = "thins"
+#      process.uid = user
+#      process.gid = group
+#      process.daemonize = false
+#      process.stdout = process.stderr = "#{rails_root}/log/thin-debug.log"
+#    end
+
+  app.process("sidekiq-worker") do |process|
+    pidfile = "#{rails_root}/tmp/pids/sidekiq-worker.pid"
+
+    process.start_command  = "/usr/bin/env PIDFILE=#{pidfile} RAILS_ENV=#{rails_env} bundle exec sidekiq -L #{rails_root}/log/sidekiq.log"
+    process.pid_file = pidfile
+    process.start_grace_time = 30.seconds
+    process.stop_grace_time = 10.seconds
+    process.restart_grace_time = 10.seconds
+    process.uid = user
+    process.gid = group
+    process.daemonize = true
+  end
+
+end
+

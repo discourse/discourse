@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lv:
+  site_settings:
+    poll_enabled: "Vai atļaut aptaujas?"
+    poll_maximum_options: "Aptaujā atļautais maksimālais iespēju skaits."
+    poll_edit_window_mins: "Minūšu skaits pēc ieraksta izveides, kura laikā var rediģēt aptaujas."
+    poll_minimum_trust_level_to_create: "Definējiet minimālo uzticības līmeni, kas nepieciešams aptauju izveidei."
+    poll_groupable_user_fields: "Lietotāju lauku nosaukumu kopa, ko var izmantot aptauju rezultātu grupēšanai un filtrēšanai."
+  poll:
+    poll: "aptauja"
+    invalid_argument: "Nederīga vērtība “%{value}” argumentam “%{argument}”."
+    multiple_polls_with_same_name: "Ir vairākas aptaujas ar tādu pašu nosaukumu: <strong>%{name}</strong>. Izmantojiet<code>nosaukums</code>”, lai unikāli identificētu savas aptaujas."
+    default_poll_must_have_at_least_1_option: "Aptaujai ir jābūt vismaz 1 opcijai."
+    named_poll_must_have_at_least_1_option: "Aptaujai ar nosaukumu <strong>%{name}</strong> ir jābūt vismaz 1 opcijai."
+    default_poll_must_have_different_options: "Aptaujai jābūt dažādām iespējām."
+    named_poll_must_have_different_options: "Aptaujai ar nosaukumu <strong>%{name}</strong> ir jābūt dažādām iespējām."
+    default_poll_must_not_have_any_empty_options: "Aptaujā nedrīkst būt tukšu iespēju."
+    named_poll_must_not_have_any_empty_options: "Aptaujā ar nosaukumu <strong>%{name}</strong> nedrīkst būt tukšas iespējas."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Aptaujā ar vairākām iespējām ir nederīgi parametri."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Aptaujā ar nosaukumu <strong>%{name}</strong> ar vairākām izvēlēm ir nederīgi parametri."
+    requires_at_least_1_valid_option: "Jums jāizvēlas vismaz 1 derīga opcija."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Aptauju nevar mainīt pēc pirmajām %{minutes} minūtēm."
+      cannot_edit_named_poll_with_votes: "Aptaujas nosaukumu <strong>${name}</strong> nevar mainīt pēc pirmajām %{minutes} minūtēm."
+    no_poll_with_this_name: "Ar šo ziņu nav saistīta neviena aptauja ar nosaukumu <strong>%{name}</strong>"
+    post_is_deleted: "Nevar rīkoties ar izdzēsto ziņu."
+    user_cant_post_in_topic: "Jūs nevarat balsot, jo nevarat ievietot ziņas šajā tēmā."
+    topic_must_be_open_to_vote: "Tēmai jābūt atvērtai balsošanai."
+    poll_must_be_open_to_vote: "Aptaujai jābūt atvērtai, lai balsotu."
+    topic_must_be_open_to_toggle_status: "Tēmai jābūt atvērtai, lai mainītu statusu."
+    only_staff_or_op_can_toggle_status: "Tikai darbinieks vai sākotnējais aptaujas veidotājs var mainīt aptaujas statusu."
+    insufficient_rights_to_create: "Jums nav atļauts veidot aptaujas."
+    email:
+      link_to_poll: "Noklikšķiniet, lai skatītu aptauju."
+    user_field:
+      no_data: "Nav datu"

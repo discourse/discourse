@@ -1,0 +1,34 @@
+<%= replace_plugin_html('server:simple-header') do %>
+  <header class="d-header">
+    <div class="wrap">
+      <div class="contents clearfix">
+        <div class="title">
+          <a href="<%= path "/" %>">
+            <%- if application_logo_url.present? %>
+              <picture>
+                <%- if application_logo_dark_url.present? %>
+                  <source srcset="<%= application_logo_dark_url %>" media="(prefers-color-scheme: dark)" />
+                <%- end %>
+                <img src="<%= application_logo_url %>" alt="<%= SiteSetting.title %>" id="site-logo" />
+              </picture>
+            <%- else %>
+              <h2 id='site-text-logo'><%= SiteSetting.title %></h2>
+            <%- end %>
+          </a>
+        </div>
+        <div class="panel clearfix">
+          <%- unless current_user || local_assigns[:hide_auth_buttons] %>
+            <span class='header-buttons'>
+              <span class='auth-buttons'>
+                <%- if can_sign_up? %>
+                  <a href="<%= path "/signup" %>" class='btn btn-text btn-primary btn-small sign-up-button'><%= I18n.t('sign_up') %></a>
+                <%- end %>
+                <a href="<%= path "/login" %>" class='btn btn-icon-text btn-primary btn-small login-button'><%= SvgSprite.raw_svg('user') %><%= I18n.t('log_in') %></a>
+              </span>
+            </span>
+          <%- end %>
+        </div>
+      </div>
+    </div>
+  </header>
+<% end %>

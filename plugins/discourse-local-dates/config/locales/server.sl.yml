@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  site_settings:
+    discourse_local_dates_default_formats: "Za pogosto uporabljene oblike datuma in časa glejte: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>oblikovanje zapisa momentjs</a>"
+    discourse_local_dates_default_timezones: "Privzeti seznam časovnih pasov, biti mora veljaven <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

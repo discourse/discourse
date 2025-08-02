@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse 样式指南"
+  js:
+    styleguide:
+      title: "样式指南"
+      welcome: "首先，从左侧菜单中选择一个部分。"
+      categories:
+        syntax: 语法
+        atoms: 原子
+        molecules: 分子
+        organisms: 生物
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "排版"
+          example: "欢迎来到 Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "日期/时间输入"
+        menus:
+          title: "菜单"
+        multi_select:
+          title: "多选"
+        toasts:
+          title: "消息框"
+        font_scale:
+          title: "字体系统"
+        colors:
+          title: "颜色"
+        icons:
+          title: "图标"
+          full_list: "查看 Font Awesome 图标的完整列表"
+        forms:
+          title: "表单"
+        buttons:
+          title: "按钮"
+        dropdowns:
+          title: "下拉菜单"
+        categories:
+          title: "类别"
+        bread_crumbs:
+          title: "路径"
+        navigation:
+          title: "导航"
+        navigation_bar:
+          title: "导航栏"
+        navigation_stacked:
+          title: "堆叠式导航"
+        categories_list:
+          title: "类别列表"
+        topic_link:
+          title: "话题链接"
+        topic_list_item:
+          title: "话题列表项"
+        topic_statuses:
+          title: "话题状态"
+        topic_list:
+          title: "话题列表"
+        basic_topic_list:
+          title: "基本话题列表"
+        footer_message:
+          title: "页脚消息"
+        signup_cta:
+          title: "注册号召性用语"
+        topic_timer_info:
+          title: "话题计时器"
+        topic_footer_buttons:
+          title: "话题页脚按钮"
+        topic_notifications:
+          title: "话题通知"
+        post:
+          title: "帖子"
+        post_list:
+          title: "帖子列表"
+          empty_example: "<PostList /> 空状态"
+          populated_example: "<PostList /> 已填写状态"
+        topic_map:
+          title: "话题图"
+        site_header:
+          title: "网站标头"
+        suggested_topics:
+          title: "建议的话题"
+        post_menu:
+          title: "帖子菜单"
+        modal:
+          title: "模式窗口"
+          header: "模式窗口标题"
+          footer: "模式窗口页脚"
+        user_about:
+          title: "用户信息框"
+        header_icons:
+          title: "标头图标"
+        spinners:
+          title: "旋转的图标"
+        empty_state:
+          title: "空状态"
+        tooltips:
+          title: "工具提示"
+          description: "描述"
+          header: "标头"
+          hover_to_see: "悬停以查看工具提示"
+        char_counter:
+          title: "字符计数器"
+          placeholder: "在此处输入您的文本…"

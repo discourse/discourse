@@ -1,0 +1,15 @@
+.select-kit {
+  &.is-expanded {
+    z-index: z("dropdown");
+  }
+
+  .select-kit-filter {
+    .filter-input {
+      font-size: 16px;
+    }
+  }
+
+  .select-kit-row {
+    padding: 0.75em 0.5em;
+  }
+}

@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    styleguide_enabled: 'Ota käyttöön `/styleguide`-polku, joka auttaa Discoursen tyylimuotoilussa'
+    styleguide_admin_only: "Rajoittaa tyylioppaan näkyvyyden ylläpitäjille"
+    styleguide_allowed_groups: "Rajoittaa tyylioppaan näkyvyyden annettujen ryhmien jäseniin"

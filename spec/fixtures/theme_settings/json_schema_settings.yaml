@@ -1,0 +1,4 @@
+test_setting:
+  default: ""
+  description: "A JSON schema field type"
+  json_schema: '{ "type": "array", "uniqueItems": true, "items": { "type": "object", "properties": { "color": { "type": "string" }, "icon": { "type": "string" } }, "additionalProperties": false } }'

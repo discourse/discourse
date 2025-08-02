@@ -1,0 +1,172 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Poll"
+  js:
+    poll:
+      voters:
+        one: "voter"
+        other: "voters"
+      total_votes:
+        one: "total vote"
+        other: "total votes"
+      votes:
+        one: "%{count} vote"
+        other: "%{count} votes"
+
+      average_rating: "Average rating: <strong>%{average}</strong>."
+
+      public:
+        title: "Votes are <strong>public</strong>."
+
+      results:
+        groups:
+          title: "You need to be a member of %{groups} to vote in this poll."
+        vote:
+          title: "Results will be shown on <strong>vote</strong>."
+        closed:
+          title: "Results will be shown once <strong>closed</strong>."
+        staff:
+          title: "Results are only shown to <strong>staff</strong> members."
+        tabs:
+          votes: "Votes"
+          outcome: "Outcome"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Choose at least <strong>%{count} option</strong>."
+            other: "Choose at least <strong>%{count} options</strong>."
+          up_to_max_options:
+            one: "Choose up to <strong>%{count} option</strong>."
+            other: "Choose up to <strong>%{count} options</strong>."
+          x_options:
+            one: "Choose <strong>%{count} option</strong>."
+            other: "Choose <strong>%{count} options</strong>."
+          between_min_and_max_options: "Choose between <strong>%{min} and %{max} options</strong>."
+
+      cast-votes:
+        title: "Cast your votes"
+        label: "Vote now!"
+
+      show-results:
+        title: "Display the poll results"
+        label: "Results"
+
+      show-tally:
+        title: "Show voting results by number of votes"
+        label: "Display tally"
+
+      show-percentage:
+        title: "Show voting results as percentage"
+        label: "Display as percentage"
+
+      remove-vote:
+        title: "Remove your vote"
+        label: "Undo vote"
+
+      hide-results:
+        title: "Back to your votes"
+        label: "Vote"
+
+      group-results:
+        title: "Group votes by user field"
+        label: "Show breakdown"
+
+      export-results:
+        title: "Export the poll results"
+        label: "Export"
+
+      open:
+        title: "Open the poll"
+        label: "Open"
+        confirm: "Are you sure you want to open this poll?"
+
+      close:
+        title: "Close the poll"
+        label: "Close"
+        confirm: "Are you sure you want to close this poll?"
+
+      automatic_close:
+        closes_in: "Closes in <strong>%{timeLeft}</strong>."
+        age: "Closed <strong>%{age}</strong>"
+
+      breakdown:
+        title: "Poll results"
+        votes: "%{count} votes"
+        breakdown: "Breakdown"
+        percentage: "Percentage"
+        count: "Count"
+
+      ranked_choice:
+        title:
+          rounds: "Rounds"
+          outcome: "Result"
+        none: "None"
+        majority: "Majority"
+        eliminated: "Eliminated"
+        round: "Round"
+        winner:
+          one: "Winner was %{winner} after one round."
+          other: "Winner was %{winner} after %{count} rounds."
+        tied:
+          one: "Tied after one round between the following candidates:"
+          other: "Tied after %{count} rounds between the following candidates:"
+
+      options:
+        label: "Options"
+        ranked_choice:
+          abstain: "Abstain"
+          highest_priority: "(highest priority)"
+          lowest_priority: "(lowest priority)"
+          login: "Login to vote!"
+
+      error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
+      error_while_casting_votes: "Sorry, there was an error casting your votes."
+      error_while_fetching_voters: "Sorry, there was an error displaying the voters."
+      error_while_exporting_results: "Sorry, there was an error exporting poll results."
+
+      ui_builder:
+        title: Build Poll
+        insert: Insert Poll
+        help:
+          options_min_count: Enter at least 1 option.
+          options_max_count: Enter at most %{count} options.
+          invalid_min_value: Minimum value must be at least 1.
+          invalid_max_value: Maximum value must be at least 1, but less than or equal with the number of options.
+          invalid_values: Minimum value must be smaller than the maximum value.
+          min_step_value: The minimum step value is 1
+        poll_type:
+          label: Type
+          regular: Single Choice
+          multiple: Multiple Choice
+          ranked_choice: Ranked Choice
+          number: Number Rating
+        poll_result:
+          label: Show Results...
+          always: Always visible
+          vote: Only after voting
+          closed: When the poll is closed
+          staff: Staff only
+        poll_groups:
+          label: Limit voting to these groups
+        poll_chart_type:
+          label: Result chart
+          bar: Bar
+          pie: Pie
+        poll_config:
+          max: Max Choices
+          min: Min Choices
+          step: Step
+        poll_public:
+          label: Show who voted
+        poll_title:
+          label: Title (optional)
+        poll_options:
+          label: Options (one per line)
+          add: Add option
+        automatic_close:
+          label: Automatically close poll
+        show_advanced: "Show Advanced Options"
+        hide_advanced: "Hide Advanced Options"

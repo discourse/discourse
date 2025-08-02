@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    details:
+      title: Peida üksikasjad
+    composer:
+      details_title: Kokkuvõte
+      details_text: "See tekst on peidetud"

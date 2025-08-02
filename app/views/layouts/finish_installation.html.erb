@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <%= discourse_stylesheet_link_tag 'wizard', theme_id: nil %>
+    <%= discourse_color_scheme_stylesheets %>
+
+    <%= render partial: "layouts/head" %>
+    <title><%= t 'wizard.title' %></title>
+  </head>
+
+  <body class='wizard'>
+    <div id='wizard-main'>
+      <div class='wizard-container'>
+        <div class='wizard-container-contents finish-installation'>
+          <%= yield %>
+        </div>
+        <div class='wizard-footer'>
+          <div class='discourse-logo'></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

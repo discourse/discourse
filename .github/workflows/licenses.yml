@@ -1,0 +1,65 @@
+name: Licenses
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: licenses-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: run
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
+
+      - name: Bundler cache
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gem-
+
+      - name: Setup gems
+        run: |
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
+
+      - name: Setup licensed
+        run: |
+          gem install licensed
+
+      - name: Check RubyGems Licenses
+        if: ${{ !cancelled() }}
+        run: |
+          licensed cache
+          licensed status
+
+      - name: pnpm install
+        run: pnpm install
+
+      - name: Check JS Licenses
+        if: ${{ !cancelled() }}
+        run: |
+          pnpm licensee --errors-only

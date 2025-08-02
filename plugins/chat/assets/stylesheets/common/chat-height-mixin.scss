@@ -1,0 +1,24 @@
+@mixin chat-height($inset: 0) {
+  // desktop and mobile
+  // -1px is for the bottom border of the chat navbar
+  $base-height: calc(
+    var(--composer-vh, 1vh) * 100 - var(--main-outlet-offset, 0px) - 1px -
+      $inset
+  );
+  height: calc($base-height);
+
+  // mobile with keyboard opened
+  html.keyboard-visible & {
+    height: calc($base-height);
+  }
+
+  // ipad
+  html.footer-nav-ipad & {
+    height: calc($base-height);
+  }
+
+  // PWA/HUB without keyboard
+  html.footer-nav-visible:not(.keyboard-visible) & {
+    height: calc($base-height - var(--footer-nav-height, 0px));
+  }
+}

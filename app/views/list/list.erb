@@ -1,0 +1,161 @@
+<%- if include_crawler_content? %>
+
+<%= server_plugin_outlet "topic_list_header" %>
+
+<%- if SiteSetting.tagging_enabled && @tag_id %>
+  <h1>
+    <%= link_to "#{Discourse.base_url}/tag/#{@tag_id}", itemprop: 'item' do %>
+      <span itemprop='name'><%= @tag_id %></span>
+    <% end %>
+  </h1>
+<% end %>
+
+<% if @category %>
+  <h1>
+    <% if @category.parent_category %>
+      <%= link_to @category.parent_category.url, itemprop: 'item' do %>
+        <span itemprop='name'><%= @category.parent_category.name %></span>
+      <% end %>
+      &nbsp;
+    <% end %>
+
+    <%= link_to @category.url, itemprop: 'item' do %>
+      <span itemprop='name'><%= @category.name %></span>
+    <% end %>
+  </h1>
+  <br/>
+
+  <% if params[:page].to_i == 0 && @subcategories.present? %>
+    <% @subcategories.each do |subcategory| %>
+      <a href='<%= subcategory.url %>'>
+        <span itemprop='name'><%= subcategory.name %></span>
+      </a>
+      <% if subcategory.description.present? %>
+        <span itemprop='description'><%= subcategory.description_text %></span>
+      <% end %>
+    <% end %>
+    <br/>
+  <% end %>
+<% end %>
+
+<div class="topic-list-container" itemscope itemtype='http://schema.org/ItemList'>
+  <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+
+  <table class='topic-list'>
+
+    <thead>
+      <tr>
+        <th><%= t 'js.topic.title' %></th>
+        <th></th>
+        <th class="replies"><%= t 'js.replies' %></th>
+        <th class="views"><%= t 'js.views' %></th>
+        <th><%= t 'js.activity' %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @list.topics.each_with_index do |t,i| %>
+        <tr class="topic-list-item">
+          <td class="main-link" itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+            <meta itemprop='position' content='<%= i + 1 %>'>
+            <span class="link-top-line">
+              <a itemprop='url' href='<%= t.url %>' class='title raw-link raw-topic-link'><%= t.title %></a>
+            </span>
+            <div class="link-bottom-line">
+              <% if (!@category || @category.has_children?) && t.category && !t.category.uncategorized? %>
+                <a href='<%= t.category.url %>' class='badge-wrapper bullet'>
+                  <span class='badge-category-bg' style='background-color: #<%= t.category.color %>'></span>
+                  <span class='badge-category clear-badge'>
+                    <span class='category-name'><%= t.category.name %></span>
+                  </span>
+                </a>
+              <% end %>
+              <% if tags = t.visible_tags(guardian) %>
+                <div class="discourse-tags">
+                  <% tags.each_with_index do |tag, index| %>
+                    <a href='<%= tag.full_url %>' class='discourse-tag'><%= tag.name %></a>
+                    <% if index < tags.size - 1 %>,&nbsp;<% end %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <% if t.pinned_until && (t.pinned_until > Time.zone.now) && (t.pinned_globally || @list.category) && t.excerpt %>
+              <p class='excerpt'>
+                <%= t.excerpt.html_safe %>
+              </p>
+            <% end %>
+          </td>
+          <td class='posters'>
+            <% t.posters.each do |poster| %>
+              <a rel='nofollow' href="<%= Discourse.base_url %>/u/<%= poster.user.username %>" class="<%= poster.extras %>">
+                <%- poster_name_and_description = h(poster.name_and_description) %>
+                <img width="25" height="25" src="<%= poster.user.avatar_template.gsub('{size}', '25') %>" class="avatar" title='<%= poster_name_and_description %>' aria-label='<%= poster_name_and_description %>'>
+              </a>
+            <% end %>
+          </td>
+          <td class="replies">
+            <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count - 1 %></span>
+          </td>
+          <td class="views">
+            <span class='views' title='<%= t 'views' %>'><%= t.views %></span>
+          </td>
+          <td>
+            <%= I18n.l(t.last_posted_at || t.created_at, format: :date_only) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+
+  </table>
+</div>
+
+<% if @list.topics.length > 0 && @list.more_topics_url %>
+  <div class="navigation" role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+    <% if params[:page].to_i > 0 %>
+      <span itemprop='name'><a href='<%= @list.prev_topics_url %>' rel='prev' itemprop='url'><%= t 'prev_page' %></a> &nbsp;</span>
+    <% end %>
+    <% if @list.topics.size == @list.per_page %>
+      <span itemprop='name'><b><a href='<%= @list.more_topics_url %>' rel='next' itemprop='url'><%= t 'next_page' %></a></b></span>
+    <% end %>
+  </div>
+
+  <% content_for :head do %>
+    <% if params[:page].to_i > 0 %>
+      <link rel="prev" href="<%= @list.prev_topics_url -%>">
+    <% end %>
+    <link rel="next" href="<%= @list.more_topics_url -%>">
+  <% end %>
+<% end %>
+<% else %>
+  <%= t(:crawler_content_hidden) %>
+<%- end %> <!-- include_crawler_content? -->
+
+<% if @rss %>
+  <% content_for :head do %>
+    <%= auto_discovery_link_tag(:rss, "#{Discourse.base_url}/posts.rss", title: I18n.t("rss_description.posts")) %>
+    <%= auto_discovery_link_tag(:rss, { action: "#{@rss}_feed", params: @params || {} }, title: I18n.t("rss_description.#{@rss_description}")) %>
+  <% end %>
+<% end %>
+
+<% if @category %>
+  <% content_for :head do %>
+    <%= auto_discovery_link_tag(:rss, { action: :category_feed }, rel: 'alternate nofollow', title: t('rss_topics_in_category', category: @category.name)) %>
+    <%= raw crawlable_meta_data(title: @category.name, description: @category.description, image: @category.uploaded_logo&.url.presence) %>
+  <% end %>
+<% elsif @tag_id %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: @title, description: @description_meta) %>
+  <% end %>
+<% else %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+  <% end %>
+<% end %>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+<% elsif @category %>
+  <% content_for :title do %><%= @category.name %> - <%= SiteSetting.title %><% end %>
+<% elsif params[:page].to_i > 1 %>
+  <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %> - <%= SiteSetting.title %><% end %>
+<% end %>

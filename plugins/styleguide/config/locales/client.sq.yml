@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  js:
+    styleguide:
+      title: "Udhëzues stili"
+      welcome: "Për të filluar, zgjidhni një seksion nga menyja në të majtë."
+      categories:
+        syntax: Sintaksë
+      sections:
+        typography:
+          example: "Mirë se vini në Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        colors:
+          title: "Ngjyrat"
+        dropdowns:
+          title: "Lista e hapësirave"
+        categories:
+          title: "Kategoritë"
+        bread_crumbs:
+          title: "Kontrolli grafik"
+        navigation:
+          title: "Shfletimi"
+        navigation_stacked:
+          title: "Kërkim i mbingarkuar"
+        categories_list:
+          title: "Lista Kategorive"
+        topic_list_item:
+          title: "Artikulli i listës së temave"
+        basic_topic_list:
+          title: "Lista e temave bazë"
+        topic_timer_info:
+          title: "Kohëmatësi i temës"
+        post:
+          title: "Postim"
+        topic_map:
+          title: "Harta e temës"
+        suggested_topics:
+          title: "Temat e sugjeruara"
+        modal:
+          title: "Modalitet"
+        user_about:
+          title: "Përdoruesi Rreth Hapësirës"
+        tooltips:
+          description: "Përshkrimi"
+          header: "Ballina"
+        char_counter:
+          placeholder: "Shkruani tekstin tuaj këtu..."

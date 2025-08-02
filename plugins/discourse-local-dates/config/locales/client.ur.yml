@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: آج %{time}
+        tomorrow: کل %{time}
+        yesterday: کَل %{time}
+        countdown:
+          passed: تاریخ گزر چکی ہے
+      title: تاریخ / وقت شامل کریں
+      create:
+        form:
+          insert: شامل
+          advanced_mode: اَیڈوانس مَوڈ
+          simple_mode: سادہ مَوڈ
+          format_description: "صارف کو تاریخ دکھانے کے لیے استعمال ہونے والا فارمیٹ۔ آف سیٹ دکھانے کے لیے Z اور ٹائم زون کے نام کے لیے zz استعمال کریں۔"
+          timezones_title: ظاہر کیے جانے والے ٹائم زَونز
+          timezones_description: پیشگی اور فالبَیک میں تاریخیں ظاہر کرنے کیلئے ٹائم زَونز استعمال کیے جائیں گے۔
+          recurring_title: تَقْلِید
+          recurring_description: "ایک واقعہ کی تکرار کی وضاحت کریں۔ فارم کی طرف سے پیدا ہونے والے تکرار کے اختیار کو آپ دستی طور پر ترمیم بھی کرسکتے ہیں اور مندرجہ ذیل کِیز میں سے ایک کا استعمال کر سکتے ہیں: سال، چوتھائی، مہینے، ہفتے، دن، گھنٹے، منٹ، سیکنڈ، ملی سکنڈ۔"
+          recurring_none: تَقْلِید نہیں
+          invalid_date: غلط تاریخ، یقینی بنائیں کہ تاریخ اور وقت درست ہیں
+          date_title: تاریخ
+          time_title: وقت
+          format_title: تاریخ فارمَیٹ
+          timezone: ٹائم زون
+          until: جب تک...
+          current_timezone: "موجودہ ٹائم زون:"
+          recurring:
+            every_day: "ہر دن"
+            every_week: "ہر ہفتے"
+            every_two_weeks: "ہر دو ہفتے"
+            every_month: "ہر مہینے"
+            every_two_months: "ہر دو ماہ"
+            every_three_months: "ہر تین ماہ"
+            every_six_months: "ہر چھ ماہ"
+            every_year: "ہر سال"
+      default_title: "%{site_name} وقع"

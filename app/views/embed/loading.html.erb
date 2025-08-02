@@ -1,0 +1,9 @@
+<% content_for :head do %>
+  <meta http-equiv="refresh" content="30">
+<% end %>
+
+<header class='discourse' data-embed-state='loading'>
+  <h3><%= t 'embed.loading' %></h3>
+  <%= link_to(image_tag(SiteSetting.site_logo_url, class: 'logo'), Discourse.base_url) %>
+  <div class='clearfix'></div>
+</header>

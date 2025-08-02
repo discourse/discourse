@@ -1,0 +1,31 @@
+Return-Path: <discourse@bar.com>
+From: Foo Bar <discourse@bar.com>
+To: team@bar.com
+Date: Mon, 29 Feb 2016 21:54:01 +0100
+Message-ID: <56d4afe991ed0_3ab83fdf94441a20677f0@HAL.lan.mail>
+Subject: Email with .rb file attached
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="--==_mimepart_56d4afe991d17_3ab83fdf94441a206765";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_56d4afe991d17_3ab83fdf94441a206765
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Please find the source code of Discourse attached.
+----==_mimepart_56d4afe991d17_3ab83fdf94441a206765
+Content-Type: application/x-ruby;
+ charset=UTF-8;
+ filename=discourse.rb
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename=discourse.rb
+Content-ID: <56d4afe992cb6_3ab83fdf94441a20678c3@HAL.lan.mail>
+
+cHV0cyAiSGVsbG8gRGlzY291cnNlIgo=
+
+----==_mimepart_56d4afe991d17_3ab83fdf94441a206765--

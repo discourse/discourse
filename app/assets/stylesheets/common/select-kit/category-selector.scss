@@ -1,0 +1,34 @@
+.select-kit,
+.select-kit-box {
+  &.category-selector {
+    .category-row {
+      max-width: 100%;
+
+      .category-status {
+        gap: 0 0.5em;
+      }
+
+      .topic-count {
+        margin-left: 0.25em;
+      }
+
+      .plus-subcategories {
+        font-size: var(--font-down-2);
+        margin-left: 0.25em;
+      }
+    }
+
+    .selected-choice-category {
+      .badge-category .d-icon {
+        margin: 0;
+      }
+
+      &:hover,
+      &:focus {
+        .badge-category {
+          color: var(--secondary);
+        }
+      }
+    }
+  }
+}

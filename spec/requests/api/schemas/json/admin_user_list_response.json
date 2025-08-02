@@ -1,0 +1,118 @@
+{
+  "type": "array",
+  "minItems": 1,
+  "uniqueItems": true,
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "username": {
+        "type": "string"
+      },
+      "name": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "avatar_template": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "secondary_emails": {
+        "type": "array",
+        "items": {
+
+        }
+      },
+      "active": {
+        "type": "boolean"
+      },
+      "admin": {
+        "type": "boolean"
+      },
+      "moderator": {
+        "type": "boolean"
+      },
+      "last_seen_at": {
+        "type": ["string", "null"]
+      },
+      "last_emailed_at": {
+        "type": ["string", "null"]
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "last_seen_age": {
+        "type": ["number", "null"]
+      },
+      "last_emailed_age": {
+        "type": ["number", "null"]
+      },
+      "created_at_age": {
+        "type": ["number", "null"]
+      },
+      "trust_level": {
+        "type": "integer"
+      },
+      "manual_locked_trust_level": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "title": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "time_read": {
+        "type": "integer"
+      },
+      "staged": {
+        "type": "boolean"
+      },
+      "days_visited": {
+        "type": "integer"
+      },
+      "posts_read_count": {
+        "type": "integer"
+      },
+      "topics_entered": {
+        "type": "integer"
+      },
+      "post_count": {
+        "type": "integer"
+      }
+    },
+    "required": [
+      "id",
+      "username",
+      "name",
+      "avatar_template",
+      "active",
+      "admin",
+      "moderator",
+      "last_seen_at",
+      "last_emailed_at",
+      "created_at",
+      "last_seen_age",
+      "last_emailed_age",
+      "created_at_age",
+      "trust_level",
+      "manual_locked_trust_level",
+      "title",
+      "time_read",
+      "staged",
+      "days_visited",
+      "posts_read_count",
+      "topics_entered",
+      "post_count"
+    ]
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "datatypes": {
+      "type": "string",
+      "enum": [
+        "blob",
+        "boolean",
+        "date",
+        "datetime",
+        "float",
+        "inet",
+        "integer",
+        "json",
+        "numeric",
+        "text"
+      ]
+    }
+  },
+  "type": "object",
+  "required": [
+    "output",
+    "schema",
+    "plugins"
+  ],
+  "properties": {
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_file": {
+          "type": "string"
+        },
+        "models_directory": {
+          "type": "string"
+        },
+        "models_namespace": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_file",
+        "models_directory",
+        "models_namespace"
+      ]
+    },
+    "schema": {
+      "type": "object",
+      "required": [
+        "tables",
+        "global"
+      ],
+      "properties": {
+        "tables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "columns": {
+                "type": "object",
+                "properties": {
+                  "exclude": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "include": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "modify": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "datatype": {
+                          "$ref": "#/$defs/datatypes"
+                        },
+                        "nullable": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "name"
+                      ],
+                      "anyOf": [
+                        {
+                          "required": [
+                            "datatype"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "nullable"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "add": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "datatype": {
+                          "$ref": "#/$defs/datatypes"
+                        },
+                        "nullable": {
+                          "type": "boolean"
+                        },
+                        "max_length": {
+                          "type": "integer"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "name",
+                        "datatype"
+                      ]
+                    }
+                  }
+                },
+                "additionalProperties": false,
+                "not": {
+                  "required": [
+                    "exclude",
+                    "include"
+                  ]
+                }
+              },
+              "indexes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "uniqueItems": true
+                    },
+                    "unique": {
+                      "type": "boolean"
+                    },
+                    "condition": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "columns"
+                  ]
+                }
+              },
+              "primary_key_column_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "copy_of": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "global": {
+          "type": "object",
+          "properties": {
+            "columns": {
+              "properties": {
+                "modify": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "name_regex": {
+                        "type": "string",
+                        "format": "regex"
+                      },
+                      "datatype": {
+                        "$ref": "#/$defs/datatypes"
+                      },
+                      "rename_to": {
+                        "type": "string"
+                      },
+                      "nullable": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "anyOf": [
+                      {
+                        "required": [
+                          "datatype"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "rename_to"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "nullable"
+                        ]
+                      }
+                    ],
+                    "oneOf": [
+                      {
+                        "required": [
+                          "name"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "name_regex"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "exclude": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "tables": {
+              "properties": {
+                "exclude": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "plugins": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

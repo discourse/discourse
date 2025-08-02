@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "為所有的新使用者啟動使用者教學。"
+        welcome_message: "寄送包含快速入門指引的歡迎訊息給所有新使用者。"

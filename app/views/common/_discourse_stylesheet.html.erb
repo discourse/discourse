@@ -1,0 +1,47 @@
+<%= discourse_color_scheme_stylesheets %>
+
+<%= discourse_stylesheet_link_tag(:common, supports_rtl: true) %>
+
+<% if SiteSetting.viewport_based_mobile_mode %>
+  <%= discourse_stylesheet_link_tag(:mobile, supports_rtl: true, media: "(max-width: 39.99999rem)") %>
+  <%= discourse_stylesheet_link_tag(:desktop, supports_rtl: true, media: "(min-width: 40rem)") %>
+<% else %>
+  <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop, supports_rtl: true) %>
+<% end %>
+
+<%- if staff? %>
+  <%= discourse_stylesheet_link_tag(:admin, supports_rtl: true) %>
+<%- end %>
+
+<%- if admin? %>
+  <%= discourse_stylesheet_link_tag(:wizard, supports_rtl: true) %>
+<%- end %>
+
+<% if SiteSetting.viewport_based_mobile_mode %>
+  <%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: true, desktop_view: true, request: request, rtl: false).each do |file| %>
+    <%= 
+      media = if file.end_with?("_mobile")
+        "(max-width: 39.99999rem)"
+      elsif file.end_with?("_desktop")
+        "(min-width: 40rem)"
+      else
+        nil
+      end
+      discourse_stylesheet_link_tag(file, media: media, supports_rtl: true) 
+    %>
+  <%- end %>
+<% else %>
+  <%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request, rtl: rtl?).each do |file| %>
+    <%= discourse_stylesheet_link_tag(file) %>
+  <%- end %>
+<% end %>
+
+<%- if theme_id.present? %>
+  <%= discourse_stylesheet_link_tag(:common_theme, supports_rtl: true) %>
+  <% if SiteSetting.viewport_based_mobile_mode %>
+    <%= discourse_stylesheet_link_tag(:mobile_theme, media: "(max-width: 39.99999rem)", supports_rtl: true) %>
+    <%= discourse_stylesheet_link_tag(:desktop_theme, media: "(min-width: 40rem)", supports_rtl: true) %>
+  <% else %>
+    <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme, supports_rtl: true) %>
+  <% end %>
+<%- end %>

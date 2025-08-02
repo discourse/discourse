@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    details:
+      title: Details verbergen
+    composer:
+      details_title: Samenvatting
+      details_text: "Deze tekst wordt verborgen"

@@ -1,0 +1,29 @@
+.btn-edit-table {
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.fullscreen-table-wrapper:hover .fullscreen-table-wrapper__buttons button {
+  opacity: 100%;
+}
+
+.fullscreen-table-wrapper {
+  .discourse-no-touch & {
+    &__buttons {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+    }
+  }
+
+  .discourse-touch & {
+    display: flex;
+    flex-direction: column-reverse;
+    padding-bottom: 0.5em;
+
+    .open-popup-link {
+      left: 0;
+      margin: 0;
+    }
+  }
+}

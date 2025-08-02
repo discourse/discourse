@@ -1,0 +1,28 @@
+<%= discourse_color_scheme_stylesheets() %>
+
+<div class="published-page-header">
+    <div class="published-page-header-wrapper">
+      <%- if @logo.present? %>
+        <a href="<%= @site_url %>">
+          <img class="published-page-logo" src="<%=@logo.url%>"/>
+        </a>
+      <%- end -%>
+      <h1 class="published-page-title"><%= @topic.title %></h1>
+    </div>
+  </div>
+<div class="published-page-content-wrapper">
+  <div class="published-page-content-header">
+    <div class="published-page-author">
+      <img class="avatar" src="<%= @topic.user.avatar_template.gsub('{size}', '90') %>">
+      <div class="published-page-author-details">
+        <div class="username"><%= @topic.user.username %></div>
+        <div class="topic-created-at"><%= short_date(@topic.created_at) %></div>
+      </div>
+    </div>
+  </div>
+  <%- if @topic.first_post.present? %>
+    <div class="published-page-content-body">
+      <%= @topic.first_post.cooked.html_safe %>
+    </div>
+  <%- end -%>
+</div>

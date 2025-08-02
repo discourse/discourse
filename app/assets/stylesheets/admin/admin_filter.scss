@@ -1,0 +1,34 @@
+@use "lib/viewport";
+
+.d-admin-filter {
+  background-color: var(--primary-very-low);
+  padding: var(--space-2);
+  display: flex;
+  gap: var(--space-2);
+
+  @include viewport.until(md) {
+    flex-direction: column;
+  }
+}
+
+.admin-filter__input-container {
+  min-width: 50%;
+
+  @media screen and (width <= 500px) {
+    width: 100%;
+  }
+
+  input {
+    min-width: 15em;
+    margin: 0;
+
+    @media screen and (width <= 500px) {
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+}
+
+.admin-filter__input {
+  width: 100%;
+}

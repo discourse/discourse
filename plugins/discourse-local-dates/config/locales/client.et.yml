@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+et:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          date_title: Kuupäev
+          time_title: Aeg
+          timezone: Ajavöönd
+          recurring:
+            every_day: "Iga päev"
+            every_week: "Iga nädal"
+            every_two_weeks: "Iga kahe nädala tagant"
+            every_month: "Iga kuu"
+            every_two_months: "Iga kahe kuu tagant"
+            every_three_months: "Iga kolme kuu tagant"
+            every_six_months: "Iga kuue kuu tagant"
+            every_year: "Iga aasta"
+      default_title: "%{site_name} Sündmus"

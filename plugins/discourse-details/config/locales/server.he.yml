@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    details_enabled: 'לכלול את היכולת להוסיף פירוט מתרחב לפוסט הזה. ניתן למצוא את היכולת הזאת בתפריט הכלים הקופץ של אזור הכתיבה. עליך „לאפות מחדש” את כל הפוסטים עם „rake posts:rebake” אם בחרת לשנות את ההגדרה הזאת.'
+  details:
+    excerpt_details: "(לחיצה לפרטים נוספים)"

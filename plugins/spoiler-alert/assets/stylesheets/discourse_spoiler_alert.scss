@@ -1,0 +1,63 @@
+.spoiled {
+  cursor: auto;
+  transform: translateZ(0); // Safari jitter fix
+
+  .lightbox .meta {
+    display: none;
+  }
+
+  svg {
+    vertical-align: middle;
+  }
+}
+
+.spoiler-blurred {
+  @include unselectable;
+  cursor: pointer;
+  filter: blur(0.5em);
+
+  a,
+  area,
+  audio,
+  button,
+  details,
+  embed,
+  iframe,
+  img.animated,
+  input,
+  map,
+  object,
+  option,
+  portal,
+  select,
+  textarea,
+  track,
+  video,
+  .lightbox {
+    pointer-events: none;
+  }
+
+  img {
+    filter: blur(1em);
+  }
+
+  .discourse-no-touch & {
+    &:hover,
+    &:focus {
+      filter: blur(0.18em);
+
+      img {
+        filter: blur(0.5em);
+      }
+    }
+  }
+}
+
+.ProseMirror {
+  .spoiled:not(.spoiler-blurred) {
+    box-shadow: 0 0 4px 4px rgb(var(--primary-rgb), 0.2);
+    inline-size: max-content;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+}

@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    discourse_narrative_bot:
+      welcome_post_type:
+        new_user_track: "すべての新規ユーザーに新規ユーザー向けチュートリアルを開始する"
+        welcome_message: "すべての新規ユーザーにクイックスタートガイド付きのようこそメッセージを送信する"

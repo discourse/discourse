@@ -1,0 +1,28 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  js:
+    login:
+      patreon:
+        name: Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtros'
+      group: 'Grupo'
+      rewards: 'Recompensas'
+      filter: 'Filtrar'
+      help_text: 'Pode sincronizar um grupo do Discourse com uma ou mais camadas de recompensa do Patreon.'
+      edit: 'Editar'
+      delete: 'Eliminar'
+      save: 'Guardar'
+      update_data: 'Atualizar Dados de Patreon e Sincronizar Grupos'
+      refresh_page: 'Foram transferidos novos dados da API do Patreon. Por favor, atualize a página.'
+      field:
+        email: "E-mail"
+        amount_cents: "Valor (em cent.)"
+        rewards: "Recompensas"

@@ -1,0 +1,51 @@
+{
+  "licenses": {
+    "blueOak": "bronze",
+    "spdx": [
+      "CC0-1.0",
+      "CC-BY-3.0",
+      "CC-BY-4.0",
+      "Apache-2.0 WITH LLVM-exception",
+      "ISC"
+    ]
+  },
+  "packages": {
+    "@fortawesome/fontawesome-free": "*",
+    "@glimmer/compiler": "*",
+    "@glimmer/debug": "*",
+    "@glimmer/encoder": "*",
+    "@glimmer/global-context": "*",
+    "@glimmer/interfaces": "*",
+    "@glimmer/manager": "*",
+    "@glimmer/node": "*",
+    "@glimmer/opcode-compiler": "*",
+    "@glimmer/program": "*",
+    "@glimmer/syntax": "*",
+    "@glimmer/vm": "*",
+    "@jspreadsheet/formula": "2.0.2",
+    "cli-table": "0.3.11",
+    "component-bind": "1.0.0",
+    "component-inherit": "0.0.3",
+    "duplex": "1.0.0",
+    "ember-template-lint-plugin-discourse": "*",
+    "glob": "3.1.21",
+    "indexof": "0.0.1",
+    "inherits": "1.0.2",
+    "jsonify": "0.0.1",
+    "jspreadsheet-ce": "4.13.4",
+    "line-stream": "0.0.0",
+    "messageformat": "0.1.5",
+    "regenerator-transform": "0.10.1",
+    "source-map": "0.1.43",
+    "sourcemap-validator": "1.1.1",
+    "spawn-command": "0.0.2",
+    "squoosh": "2.0.0",
+    "taffydb": "2.6.2"
+  },
+  "corrections": true,
+  "ignore": [
+    {
+      "author": "Discourse"
+    }
+  ]
+}

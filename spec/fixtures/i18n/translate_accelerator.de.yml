@@ -1,0 +1,5 @@
+de:
+  foo: "Foo in :de"
+  bar: "Bar in :de"
+  wat: "Hello %{count}"
+  foo_with_variable: "Foo in :de with %{variable}"

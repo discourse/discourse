@@ -1,0 +1,110 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    poll:
+      voters:
+        other: "투표자"
+      total_votes:
+        other: "전체 투표"
+      votes:
+        other: "%{count} 투표"
+      average_rating: "평균: <strong>%{average}</strong>."
+      public:
+        title: "투표는 <strong>공개</strong> 입니다."
+      results:
+        groups:
+          title: "이 여론 조사에 투표하려면 %{groups} 회원이어야합니다."
+        vote:
+          title: "<strong>투표</strong> 결과가 표시됩니다."
+        closed:
+          title: "결과가 <strong>닫히면 표시</strong> 됩니다."
+        staff:
+          title: "결과는 <strong>직원</strong> 에게만 표시됩니다."
+      cast-votes:
+        title: "표 던지기"
+        label: "지금 투표!"
+      show-results:
+        title: "투표 결과 표시"
+        label: "검색 결과"
+      remove-vote:
+        title: "내 투표 삭제"
+      hide-results:
+        title: "투표로 돌아가기"
+      group-results:
+        title: "사용자 필드 별 그룹 투표"
+        label: "고장 표시"
+      export-results:
+        title: "설문 조사 결과 내보내기"
+        label: "내보내기"
+      open:
+        title: "투표 열기"
+        label: "열기"
+        confirm: "투표를 여시겠습니까?"
+      close:
+        title: "투표 닫기"
+        label: "닫기"
+        confirm: "정말 이 투표를 닫으시겠어요?"
+      automatic_close:
+        closes_in: "<strong>%{timeLeft}</strong> 에서 닫습니다."
+        age: "휴관일 <strong>%{age}</strong>"
+      breakdown:
+        title: "투표 결과"
+        votes: "%{count} 투표"
+        breakdown: "분석"
+        percentage: "백분율"
+        count: "수"
+      ranked_choice:
+        none: "없음"
+      options:
+        label: "옵션"
+      error_while_toggling_status: "죄송합니다. 이 투표의 상태를 바꾸는 도중 에러가 발생하였습니다."
+      error_while_casting_votes: "죄송합니다. 투표를 하는 도중 에러가 발생하였습니다."
+      error_while_fetching_voters: "죄송합니다. 투표한 사람을 표시하는 도중 에러가 발생하였습니다."
+      error_while_exporting_results: "설문 조사 결과를 내보내는 중에 오류가 발생했습니다."
+      ui_builder:
+        title: 투표 만들기
+        insert: 투표 삽입하기
+        help:
+          options_min_count: 옵션을 하나 이상 입력하세요.
+          options_max_count: '%{count}개의 옵션을 입력하십시오.'
+          invalid_min_value: 최소값은 1 이상이어야 합니다.
+          invalid_max_value: 최대값은 1 이상이어야 하지만 옵션 수보다 작거나 같아야 합니다.
+          invalid_values: 최소값은 최대값보다는 작아야 합니다.
+          min_step_value: 최소 단계 값은 1입니다.
+        poll_type:
+          label: 유형
+          regular: 단일 선택
+          multiple: 복수 선택
+          number: 점수 매기기
+        poll_result:
+          label: 결과 표시...
+          always: 항상 보이는
+          vote: 투표 후에 만
+          closed: 투표가 종료되었을 때
+          staff: 직원 만
+        poll_groups:
+          label: 이 그룹으로 투표 제한
+        poll_chart_type:
+          label: 결과 차트
+          bar: 바
+          pie: 그래프
+        poll_config:
+          max: 최대 선택
+          min: 최소 선택
+          step: 단계
+        poll_public:
+          label: 투표한 사람 보기
+        poll_title:
+          label: 제목 (선택 사항)
+        poll_options:
+          label: 옵션 (한 줄에 하나씩)
+          add: 옵션 추가
+        automatic_close:
+          label: 설문 조사 자동 종료
+        show_advanced: "고급 옵션 표시"
+        hide_advanced: "고급 옵션 숨기기"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
+    <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
+    <title><%= @title %></title>
+    <link><%= @link %></link>
+    <description><%= @description %></description>
+    <% if lang %><language><%= lang.sub('_', '-')%></language><% end %>
+    <% if @topic_list.topics && @topic_list.topics.length > 0 %>
+      <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
+      <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
+      <% @topic_list.topics.each do |topic| %>
+        <% topic_url = topic.url -%>
+        <item>
+          <title><%= topic.title %></title>
+          <dc:creator><![CDATA[<%= rss_creator(topic.user) -%>]]></dc:creator>
+          <category><%= topic.category.name %></category>
+          <description><![CDATA[
+            <%- if first_post = topic.ordered_posts.first %>
+            <%= PrettyText.format_for_email(first_post.cooked, first_post).html_safe %>
+            <%- end %>
+            <p><small><%= t 'rss_num_posts', count: topic.posts_count %> - <%= t 'rss_num_participants', count: topic.participant_count %></small></p>
+            <p><%= link_to t('read_full_topic'), topic_url %></p>
+          ]]></description>
+          <link><%= topic_url %></link>
+          <pubDate><%= topic.created_at.rfc2822 %></pubDate>
+          <discourse:topicPinned><%= topic.pinned_at ? 'Yes' : 'No' %></discourse:topicPinned>
+          <discourse:topicClosed><%= topic.closed ? 'Yes' : 'No' %></discourse:topicClosed>
+          <discourse:topicArchived><%= topic.archived ? 'Yes' : 'No' %></discourse:topicArchived>
+          <guid isPermaLink="false"><%= Discourse.current_hostname %>-topic-<%= topic.id %></guid>
+          <source url="<%= topic_url %>.rss"><%= topic.title %></source>
+        </item>
+      <% end %>
+    <% end %>
+  </channel>
+</rss>

@@ -1,0 +1,217 @@
+// --------------------------------------------------
+// Variables used throughout the theme
+// this file is injected into every theme CSS file
+// --------------------------------------------------
+
+// Layout dimensions
+// --------------------------------------------------
+
+@use "sass:color";
+@use "sass:math";
+@use "sass:meta";
+@use "math" as discourse-math;
+
+$small-width: 800px !default;
+$medium-width: 995px !default;
+$large-width: 1110px !default;
+$topic-body-width: 690px;
+$topic-body-width-padding: 11px;
+$topic-avatar-width: 45px;
+$reply-area-max-width: 1475px !default;
+$d-sidebar-width: 17em !default;
+$d-sidebar-narrow-width: 14em !default;
+
+// Brand color variables
+// --------------------------------------------------
+
+$google: #fff !default;
+$google-hover: color.adjust($google, $lightness: -5%) !default;
+$instagram: #e1306c !default;
+$instagram-hover: color.adjust($instagram, $lightness: -15%) !default;
+$facebook: #0866ff !default;
+$facebook-hover: color.adjust($facebook, $lightness: -15%) !default;
+$cas: #70ba61 !default;
+$twitter: #000 !default;
+$github: #100e0f !default;
+$github-hover: color.adjust($github, $lightness: 20%) !default;
+$discord: #7289da !default;
+$discord-hover: color.adjust($discord, $lightness: -10%) !default;
+
+// Badge color variables
+// --------------------------------------------------
+
+$gold: rgb(231, 195, 0) !default;
+$silver: #c0c0c0 !default;
+$bronze: #cd7f32 !default;
+
+// Fonts
+// --------------------------------------------------
+
+$base-font-family: var(--font-family) !default;
+$base-font-size-smallest: var(--base-font-size-smallest) !default;
+$base-font-size-smaller: var(--base-font-size-smaller) !default;
+$base-font-size: var(--base-font-size) !default;
+$base-font-size-larger: var(--base-font-size-larger) !default;
+$base-font-size-largest: var(--base-font-size-largest) !default;
+$heading-font-family: var(--heading-font-family) !default;
+
+// Font-size definitions, multiplier ^ (step / interval)
+$font-up-6: var(--font-up-6) !default;
+$font-up-5: var(--font-up-5) !default;
+$font-up-4: var(--font-up-4) !default;
+$font-up-3: var(--font-up-3) !default;
+$font-up-2: var(--font-up-2) !default;
+$font-up-1: var(--font-up-1) !default;
+$font-0: var(--font-0);
+$font-down-1: var(--font-down-1) !default;
+$font-down-2: var(--font-down-2) !default;
+$font-down-3: var(--font-down-3) !default;
+$font-down-4: var(--font-down-4) !default;
+$font-down-5: var(--font-down-5) !default;
+$font-down-6: var(--font-down-6) !default;
+
+// Common line-heights
+$line-height-small: var(--line-height-small) !default;
+$line-height-medium: var(--line-height-medium) !default;
+$line-height-large: var(--line-height-large) !default;
+
+// Z-index
+// --------------------------------------------------
+
+$z-layers: (
+  "max": 9999,
+  "modal": (
+    "dialog": 1700,
+    "tooltip": 1600,
+    "popover": 1500,
+    "dropdown": 1400,
+    "content": 1300,
+    "overlay": 1200,
+  ),
+  "fullscreen": 1150,
+  "mobile-header": 1150,
+  "mobile-composer": 1100,
+  "ipad-header-nav": 1020,
+  "header": 1000,
+  "footer-nav": 900,
+  "tooltip": 600,
+  "usercard": 500,
+  "composer": (
+    "dropdown": 700,
+    "tooltip": 600,
+    "popover": 500,
+    "content": 400,
+  ),
+  "dropdown": 300,
+  "chat-drawer": 200,
+  "timeline": 100,
+  "base": 1,
+);
+
+@function map-has-nested-keys($map, $keys...) {
+  @each $key in $keys {
+    /* stylelint-disable-next-line scss/no-global-function-names */
+    @if not map-has-key($map, $key) {
+      @return false;
+    }
+
+    /* stylelint-disable-next-line scss/no-global-function-names */
+    $map: map-get($map, $key);
+  }
+
+  @return true;
+}
+
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    /* stylelint-disable-next-line scss/no-global-function-names */
+    $map: map-get($map, $key);
+  }
+
+  @return $map;
+}
+
+@function z($layers...) {
+  @if not map-has-nested-keys($z-layers, $layers...) {
+    @warn "No layer defined for `#{meta.inspect($layers...)}` in $z-layers map- Check variables.scss, property omitted.";
+  }
+
+  @return map-deep-get($z-layers, $layers...);
+}
+
+// Color utilities
+// --------------------------------------------------
+
+// w3c definition of color brightness https://www.w3.org/TR/AERT#color-contrast
+@function dc-color-brightness($color) {
+  @return (
+    (color.red($color) * 0.299) + (color.green($color) * 0.587) +
+      (color.blue($color) * 0.114)
+  );
+}
+
+// Uses an approximation of sRGB blending, GAMMA=2 instead of GAMMA=2.2
+@function srgb-scale($foreground, $background, $percent) {
+  $ratio: math.div($percent, 100%);
+  $iratio: 1 - $ratio;
+  $f_r2: color.red($foreground) * color.red($foreground);
+  $f_g2: color.green($foreground) * color.green($foreground);
+  $f_b2: color.blue($foreground) * color.blue($foreground);
+  $b_r2: color.red($background) * color.red($background);
+  $b_g2: color.green($background) * color.green($background);
+  $b_b2: color.blue($background) * color.blue($background);
+  $r_r2: $f_r2 * $ratio + $b_r2 * $iratio;
+  $r_g2: $f_g2 * $ratio + $b_g2 * $iratio;
+  $r_b2: $f_b2 * $ratio + $b_b2 * $iratio;
+  $r_r: discourse-math.sqrt($r_r2);
+  $r_g: discourse-math.sqrt($r_g2);
+  $r_b: discourse-math.sqrt($r_b2);
+
+  @return rgb($r_r, $r_g, $r_b);
+}
+
+// Replaces dark-light-diff($primary,50%)
+@function blend-two-colors($color1, $color2, $percent) {
+  @return srgb-scale($color1, $color2, $percent);
+}
+
+@function blend-header-primary-background($percent) {
+  @return srgb-scale($header_primary, $header_background, $percent);
+}
+
+@function dark-light-diff(
+  $adjusted-color,
+  $comparison-color,
+  $lightness,
+  $darkness
+) {
+  @if dc-color-brightness($adjusted-color) <
+    dc-color-brightness($comparison-color)
+  {
+    @return color.scale($adjusted-color, $lightness: $lightness);
+  } @else {
+    @return color.scale($adjusted-color, $lightness: $darkness);
+  }
+}
+
+@function dark-light-choose($light-theme-result, $dark-theme-result) {
+  @if is-light-color-scheme() {
+    @return $light-theme-result;
+  } @else {
+    @return $dark-theme-result;
+  }
+}
+
+@function is-light-color-scheme() {
+  @if dc-color-brightness($primary) < dc-color-brightness($secondary) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+@function is-dark-color-scheme() {
+  @return not is-light-color-scheme();
+}
+
+@import "color_transformations";

@@ -1,0 +1,115 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Styleguide"
+  js:
+    styleguide:
+      title: "Styleguide"
+      welcome: "Wähle einen Abschnitt aus dem linken Menü aus, um loszulegen."
+      categories:
+        syntax: Syntax
+        atoms: Atome
+        molecules: Moleküle
+        organisms: Organismen
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "Typografie"
+          example: "Willkommen bei Discourse"
+          paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        date_time_inputs:
+          title: "Datum/Uhrzeit"
+        menus:
+          title: "Menüs"
+        multi_select:
+          title: "Mehrfachauswahl"
+        toasts:
+          title: "Toasts"
+        font_scale:
+          title: "Schrift"
+        colors:
+          title: "Farben"
+        icons:
+          title: "Symbole"
+          full_list: "Siehe vollständige Liste der „Font Awesome“-Symbole"
+        forms:
+          title: "Formulare"
+        buttons:
+          title: "Buttons"
+        dropdowns:
+          title: "Dropdowns"
+        categories:
+          title: "Kategorien"
+        bread_crumbs:
+          title: "Breadcrumbs"
+        navigation:
+          title: "Navigation"
+        navigation_bar:
+          title: "Navigationsleiste"
+        navigation_stacked:
+          title: "Gestapelte Navigation"
+        categories_list:
+          title: "Kategorienliste"
+        topic_link:
+          title: "Link zu Thema"
+        topic_list_item:
+          title: "Element in Themenliste"
+        topic_statuses:
+          title: "Themenstatus"
+        topic_list:
+          title: "Themenliste"
+        basic_topic_list:
+          title: "Grundlegende Themenliste"
+        footer_message:
+          title: "Fußzeile"
+        signup_cta:
+          title: "Aufforderung zur Registrierung"
+        topic_timer_info:
+          title: "Zeitschaltuhren"
+        topic_footer_buttons:
+          title: "Buttons in Themen-Fußzeile"
+        topic_notifications:
+          title: "Themen-Benachrichtigungen"
+        post:
+          title: "Beitrag"
+        post_list:
+          title: "Beitragsliste"
+          empty_example: "<PostList /> leerer Zustand"
+          populated_example: "<PostList /> gefüllter Zustand"
+        topic_map:
+          title: "Themenübersicht"
+        site_header:
+          title: "Seitenkopf"
+        suggested_topics:
+          title: "Vorgeschlagene Themen"
+        post_menu:
+          title: "Beitrag-Aktionen"
+        modal:
+          title: "Dialogbox"
+          header: "Dialogbox-Titel"
+          footer: "Dialogbox-Fußzeile"
+        user_about:
+          title: "Benutzerprofil"
+        header_icons:
+          title: "Header-Symbole"
+        spinners:
+          title: "Spinner"
+        empty_state:
+          title: "Empty State"
+        tooltips:
+          title: "Tooltipps"
+          description: "Beschreibung"
+          header: "Kopfzeile"
+          hover_to_see: "Bewege den Mauszeiger darüber, um einen Tooltipp zu sehen"
+        char_counter:
+          title: "Zeichenzähler"
+          placeholder: "Gib deinen Text hier ein …"

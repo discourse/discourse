@@ -1,0 +1,35 @@
+.form-kit__control-radio-label {
+  display: flex;
+  gap: 0.5em;
+  font-weight: normal !important;
+  margin: 0;
+  color: var(--primary);
+
+  .form-kit__field[data-disabled] & {
+    cursor: not-allowed;
+  }
+
+  input[type="radio"] {
+    margin-right: 0; // old input overrule
+  }
+}
+
+.form-kit__control-radio-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-kit__control-radio-description {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1-rem);
+}
+
+.form-kit__inline-radio {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+
+  input[type="radio"] {
+    margin-right: 0; // old input overrule
+  }
+}

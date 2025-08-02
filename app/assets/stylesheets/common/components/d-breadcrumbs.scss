@@ -1,0 +1,30 @@
+.d-breadcrumbs {
+  display: flex;
+  margin: var(--space-2) 0 var(--space-4) 0;
+
+  &__item {
+    list-style-type: none;
+  }
+
+  &__link,
+  &__link:visited {
+    color: var(--primary-medium);
+  }
+
+  li {
+    .separator {
+      margin-right: var(--space-1);
+
+      .d-icon {
+        color: var(--primary-medium);
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+
+  li:last-child {
+    .separator {
+      display: none;
+    }
+  }
+}

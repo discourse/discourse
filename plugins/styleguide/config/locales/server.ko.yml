@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    styleguide_enabled: 'Discourse 스타일링에 도움이되는`/ styleguide` 경로 활성화'
+    styleguide_admin_only: "스타일 가이드의 접근을 관리자로 제한합니다."

@@ -1,0 +1,99 @@
+# frozen_string_literal: true
+
+# This is used in topic lists
+class TopicPostersSummary
+  # localization is fast, but this allows us to avoid
+  # calling it in a loop which adds up
+  def self.translations
+    {
+      original_poster: I18n.t(:original_poster),
+      most_recent_poster: I18n.t(:most_recent_poster),
+      frequent_poster: I18n.t(:frequent_poster),
+      joiner: I18n.t(:poster_description_joiner),
+    }
+  end
+
+  attr_reader :topic, :options
+
+  def initialize(topic, options = {})
+    @topic = topic
+    @options = options
+    @translations = options[:translations] || TopicPostersSummary.translations
+  end
+
+  def summary
+    sorted_top_posters.compact.map(&method(:new_topic_poster_for))
+  end
+
+  private
+
+  def new_topic_poster_for(user)
+    topic_poster = TopicPoster.new
+    topic_poster.user = user
+    topic_poster.description = descriptions_for(user)
+    topic_poster.primary_group = user_lookup.primary_groups[user.id]
+    topic_poster.flair_group = user_lookup.flair_groups[user.id]
+    if topic.last_post_user_id == user.id
+      topic_poster.extras = +"latest"
+      topic_poster.extras << " single" if user_ids.uniq.size == 1
+    end
+    topic_poster
+  end
+
+  def descriptions_by_id(ids: nil)
+    @descriptions_by_id ||=
+      begin
+        result = {}
+        ids = ids || user_ids
+
+        if id = ids.shift
+          result[id] ||= []
+          result[id] << @translations[:original_poster]
+        end
+
+        if id = ids.shift
+          result[id] ||= []
+          result[id] << @translations[:most_recent_poster]
+        end
+
+        while id = ids.shift
+          result[id] ||= []
+          result[id] << @translations[:frequent_poster]
+        end
+
+        result
+      end
+  end
+
+  def descriptions_for(user)
+    descriptions_by_id[user.id].join(@translations[:joiner])
+  end
+
+  def shuffle_last_poster_to_back_in(summary)
+    unless last_poster_is_topic_creator?
+      summary.reject! { |u| u.id == topic.last_post_user_id }
+      summary << user_lookup[topic.last_post_user_id]
+    end
+    summary
+  end
+
+  def last_poster_is_topic_creator?
+    topic.user_id == topic.last_post_user_id
+  end
+
+  def sorted_top_posters
+    shuffle_last_poster_to_back_in top_posters
+  end
+
+  def top_posters
+    user_ids.map { |id| user_lookup[id] }.compact.uniq.take(5)
+  end
+
+  def user_ids
+    [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids]
+  end
+
+  def user_lookup
+    @user_lookup ||= options[:user_lookup] || UserLookup.new(user_ids)
+  end
+end

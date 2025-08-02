@@ -1,0 +1,10 @@
+.user-info {
+  &.medium {
+    display: flex;
+
+    .user-image {
+      width: 55px;
+      margin-right: 0;
+    }
+  }
+}

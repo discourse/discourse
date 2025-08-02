@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  site_settings:
+    presence_enabled: "현재 글에 댓글을 작성하고 있거나 현재 글을 수정중인 사용자를 표시 하시겠습니까?"
+    presence_max_users_shown: "표시되는 최대 사용자 수입니다."

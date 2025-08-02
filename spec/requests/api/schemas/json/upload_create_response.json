@@ -1,0 +1,89 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "url": {
+      "type": "string"
+    },
+    "original_filename": {
+      "type": "string"
+    },
+    "filesize": {
+      "type": "integer"
+    },
+    "width": {
+      "type": "integer"
+    },
+    "height": {
+      "type": "integer"
+    },
+    "thumbnail_width": {
+      "type": "integer"
+    },
+    "thumbnail_height": {
+      "type": "integer"
+    },
+    "extension": {
+      "type": "string"
+    },
+    "short_url": {
+      "type": "string"
+    },
+    "short_path": {
+      "type": "string"
+    },
+    "retain_hours": {
+      "type": ["string", "null"]
+    },
+    "human_filesize": {
+      "type": "string"
+    },
+    "dominant_color": {
+      "type": ["string", "null"]
+    },
+    "thumbnail": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "upload_id": {
+          "type": "integer"
+        },
+        "url": {
+          "type": "string"
+        },
+        "extension": {
+          "type": "string"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "filesize": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "required": [
+    "id",
+    "url",
+    "original_filename",
+    "filesize",
+    "width",
+    "height",
+    "thumbnail_width",
+    "thumbnail_height",
+    "extension",
+    "short_url",
+    "short_path",
+    "retain_hours",
+    "human_filesize"
+  ]
+}

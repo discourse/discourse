@@ -1,0 +1,20 @@
+plugins:
+  discourse_local_dates_email_timezone:
+    default: "Etc/UTC"
+    client: true
+    area: "localization"
+  discourse_local_dates_email_format:
+    default: "llll z"
+    client: true
+  discourse_local_dates_enabled:
+    default: true
+    client: true
+    area: "localization"
+  discourse_local_dates_default_formats:
+    default: "LLL|LTS|LL|LLLL"
+    client: true
+    type: list
+  discourse_local_dates_default_timezones:
+    default: "Europe/Paris|America/Los_Angeles"
+    client: true
+    type: list

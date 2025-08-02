@@ -1,0 +1,71 @@
+// --------------------------------------------------
+// Generic helper classes
+// --------------------------------------------------
+
+// Floats
+// --------------------------------------------------
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+// Element visibility
+// --------------------------------------------------
+.show {
+  display: block;
+}
+
+.hide,
+.hidden {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+// Contain floats
+// --------------------------------------------------
+.clearfix {
+  &::before,
+  &::after {
+    display: table;
+    content: " ";
+  }
+
+  &::after {
+    clear: both;
+  }
+}
+
+// Overflow
+// --------------------------------------------------
+.overflow-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Clickable elements
+// --------------------------------------------------
+.clickable {
+  cursor: pointer;
+}
+
+.non-clickable {
+  cursor: default;
+}

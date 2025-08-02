@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  js:
+    presence:
+      replying:
+        other: "正在回覆"
+      editing:
+        other: "正在編輯"
+      replying_to_topic:
+        other: "正在回覆"

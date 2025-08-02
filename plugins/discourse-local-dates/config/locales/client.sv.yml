@@ -1,0 +1,44 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Idag %{time}
+        tomorrow: Imorgon %{time}
+        yesterday: Igår %{time}
+        countdown:
+          passed: datumet har passerats
+      title: Ange datum/tid
+      create:
+        form:
+          insert: Ange
+          advanced_mode: Avancerat läge
+          simple_mode: Enkelt läge
+          format_description: "Format som används för att visa datumet för användaren. Använd Z för att visa förskjutningen och zz för tidszonens namn."
+          timezones_title: Tidszon att visa
+          timezones_description: Tidszon kommer att användas för att visa datum i förhandsgranskning och reserv.
+          recurring_title: Upprepning
+          recurring_description: "Ange upprepningen av en händelse. Du kan också manuellt redigera det återkommande alternativet som skapas av formuläret och använda en av följande nycklar: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Ingen upprepning
+          invalid_date: Ogiltigt datum, kontrollera att datum och tid stämmer
+          date_title: Datum
+          time_title: Tid
+          format_title: Datumformat
+          timezone: Tidszon
+          until: Tills...
+          current_timezone: "Aktuell tidszon:"
+          recurring:
+            every_day: "Varje dag"
+            every_week: "Varje vecka"
+            every_two_weeks: "Varannan vecka"
+            every_month: "Varje månad"
+            every_two_months: "Varannan månad"
+            every_three_months: "Var tredje månad"
+            every_six_months: "Var sjätte månad"
+            every_year: "Varje år"
+      default_title: "%{site_name} Händelse"

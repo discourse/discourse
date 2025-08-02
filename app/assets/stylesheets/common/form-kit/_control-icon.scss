@@ -1,0 +1,46 @@
+@use "lib/viewport";
+
+.form-kit__control-icon {
+  width: 100% !important;
+  min-width: var(--form-kit-small-input);
+
+  .formatted-selection {
+    display: none !important;
+  }
+
+  .d-icon-angle-down,
+  .d-icon-angle-up {
+    color: var(--primary-medium) !important;
+  }
+
+  .select-kit-header-wrapper .d-icon:first-of-type {
+    color: var(--primary);
+  }
+
+  .select-kit-header {
+    padding-inline: 0.65em !important;
+    height: 2em;
+
+    @include viewport.until(sm) {
+      height: 2.25em;
+    }
+
+    &:hover:not(:disabled) {
+      .discourse-no-touch & {
+        background-color: var(--secondary);
+        color: var(--primary);
+        border: 1px solid var(--tertiary);
+
+        .d-icon {
+          color: inherit;
+        }
+      }
+    }
+  }
+
+  .form-kit__field.has-error & {
+    summary {
+      border-color: var(--danger);
+    }
+  }
+}

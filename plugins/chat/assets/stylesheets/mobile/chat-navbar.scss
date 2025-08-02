@@ -1,0 +1,15 @@
+.c-navbar {
+  gap: 0.5rem;
+
+  &-container {
+    max-width: 100vw;
+  }
+
+  &__back-button {
+    align-self: stretch;
+  }
+
+  &__title {
+    padding-left: 0.3rem;
+  }
+}

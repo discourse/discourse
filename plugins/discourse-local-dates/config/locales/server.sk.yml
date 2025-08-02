@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  site_settings:
+    discourse_local_dates_enabled: "Povolenie funkcie discourse-local-dates. Pridá to podporu pre dátumy v miestnom časovom pásme v príspevkoch pomocou prvku [date]."
+    discourse_local_dates_default_formats: "Často používané časové zóny, viď. <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>formáty momentjs</a>"
+    discourse_local_dates_default_timezones: "Predvolený zoznam časových zón, musí byť platná <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>ČZ</a>"
+    discourse_local_dates_email_format: "Formát používaný na zobrazenie dátumu v e-mailoch, príklady: pozri: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs string format</a>"
+    discourse_local_dates_email_timezone: "Časová zóna používaná na zobrazenie dátumov v e-mailoch, musí to byť platná <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"

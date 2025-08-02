@@ -1,0 +1,430 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    discourse_narrative_bot_enabled: "Ota Discourse Narrative Bot käyttöön (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Poista Discourse Narrative Botin tervetuloviesti käytöstä"
+    discourse_narrative_bot_ignored_usernames: "Käyttäjätunnnukset, jotka Discourse Narrative Botin tulisi jättää huomiotta"
+    discourse_narrative_bot_disable_public_replies: "Estä Discourse Narrative Botia vastaamasta julkisesti ketjuihin"
+    discourse_narrative_bot_welcome_post_type: "Minkätyyppisen tervetuloviestin Discourse Narrative Bot lähettää"
+    discourse_narrative_bot_welcome_post_delay: "Odota (n) sekuntia ennen kuin Discourse Narrative Bot lähettää tervetuloviestin."
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot -oppaat ohitettavaksi"
+  badges:
+    certified:
+      name: Tutkinto plakkarissa
+      description: "Suoritti peruskurssin"
+      long_description: |
+        Tämä kunniamerkki myönnetään, kun suoritat vuorovaikutteisen palstan käytön peruskurssin. Otit tavoitteeksesi hallita tavallisimmat toiminnot, ja nyt sinulla on siitä todistus!
+    licensed:
+      name: Pätevyytensä osoittanut
+      description: "Suoritti jatkokurssin"
+      long_description: |
+        Tämä kunniamerkki myönnetään, kun suoritat vuorovaikutteisen palstan käytön jatkokurssin. Olet omaksunut edistyneemmätkin toiminnot, ja olet osoittanut taitosi.
+  discourse_narrative_bot:
+    bio: "Hei, en ole oikea ihminen. Olen botti, ja tarjoan opastusta sivuston käyttämisessä. Jos haluat jutella, lähetä minulle viesti tai mainitse minut nimeltä."
+    tl2_promotion_message:
+      subject_template: "Nyt kun sinut on ylennetty, on aika oppia joitakin kehittyneitä ominaisuuksia!"
+      text_body_template: |
+        Vastaa tähän viestiin kirjoittamalla `@%{discobot_username} %{reset_trigger}` oppiaksesi mitä muuta voit tehdä.
+    timeout:
+      message: |-
+        Hei @%{username}, kyselen kuulumisia, kun en ole kuullut sinusta hetkeen.
+
+        - Voit jatkaa milloin vain vastaamalla minulle.
+
+        - Voit hypätä tämän vaiheen yli sanomalla `%{skip_trigger}`.
+
+        - Voit aloittaa alusta sanomalla `%{reset_trigger}`.
+
+        Jos et viitsi, sekin on ihan okei. Olen robotti. Minulla ei ole tunteita. :sob:
+    dice:
+      trigger: "heitä"
+      invalid: |-
+        Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia pyytämälläsi tavalla. :confounded:
+      not_enough_dice:
+        one: "Minulla on vain %{count} noppa. Häpeällistä, tiedän!"
+        other: "Minulla on vain %{count} noppaa. Häpeällistä, tiedän!"
+      out_of_range: |-
+        Tiesitkö, että [suurin mahdollinen määrä sivuja](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matemaattisesti tasapuolisessa nopassa on 120?
+      results: |-
+        > :game_die: %{results}
+    quote:
+      trigger: "sitaatti"
+      "1":
+        quote: "Tutki parhaita kirjailijoita siten avartaaksesi mielikuvituksesi piiriä"
+        author: "Aleksis Kivi"
+      "2":
+        quote: "On ihan mahdollista, että todellisuus on olemassa."
+        author: "Esko Valtaoja"
+      "3":
+        quote: "Jokainen syy, joka estää kuntoilun, on tekosyy."
+        author: "Urho Kekkonen"
+      "4":
+        quote: "Älkää kiinnittäkö huomiota mitä kriitikot sanovat, kriitikoille ei ole koskaan pystytetty yhtään patsasta."
+        author: "Jean Sibelius"
+      "5":
+        quote: "Kahdesta vaihtoehdosta koetan valita aina sen, joka pelottaa enemmän."
+        author: "Jouko Turkka"
+      "6":
+        quote: "Jos Suomessa juodaankin jokunen Koskenkorva liikaa, on siihen hyvä syy: paljon muuta tekemistä ei löydy."
+        author: "Linus Torvalds"
+      "7":
+        quote: "Kaikki lähtee siitä kun sä opit syömään lihapullat haarukalla. Silloin sä osaat tehdä mitä tahansa."
+        author: "Matti Nykänen"
+      "8":
+        quote: "Käsitykseni on, että se, mitä Suomen kansa tällä hetkellä ennen kaikkea kaipaa, on läheistä, asiallisuuteen pohjautuvaa ymmärtämystä eri yhteiskuntalukkien, eri kieliryhmien ja eri puolueiden kesken. Se takaa jatkuvan yhteiskunnallisen rauhan ja siitä riippuu, missä määrin tämä kansa kykenee vapauttansa ja itsenäisyytensä lujittamaan ja tarvittaessa puolustamaan."
+        author: "Lauri Kristian Relander"
+      "9":
+        quote: "Naisen työala tulevaisuudessa on laaja, hänen tehtävänsä tärkeä. Mitä vuosisadat, vuosituhannet ovat rikkoneet ja laiminlyöneet, se kaikki tulee hänen korjata ja parantaa."
+        author: "Minna Canth"
+      "10":
+        quote: "Joskus pitää laittaa viatonkin vankilaan. Joskus täytyy poliisin laittaa viaton lusimaan. Arvovalta säilyy. Pelote säilyy. Aina siellä muutama viaton istuu, viaton pulmunen istuu siellä."
+        author: "Rauno Repomies televisiosarjassa Pasila"
+      "11":
+        quote: "Rauha kotona, rauha maailmassa."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Koulutus ei ole keino paeta köyhyyttä, se on keino taistella sitä vastaan."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Tuhannen mailin matka alkaa yhdestä askeleesta."
+        author: "Laozi"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
+    magic_8_ball:
+      trigger: "ennustus"
+      answers:
+        "1": "Se on varmaakin varmempaa"
+        "2": "Niin on tapahtuva"
+        "3": "Epäilemättä"
+        "4": "Kyllä, ehdottomasti"
+        "5": "Voit laskea sen varaan"
+        "6": "Näkemykseni on, että kyllä"
+        "7": "Todennäköisesti"
+        "8": "Siltä näyttäisi"
+        "9": "Kyllä"
+        "10": "Merkit viittaavat siihen suuntaan"
+        "11": "Näky epäselvä, yritä uudelleen"
+        "12": "Palaa myöhemmin asiaan"
+        "13": "Parempi, etten kerro vielä"
+        "14": "En pysty sanomaan juuri nyt"
+        "15": "Keskity ja kysy sitten uudelleen"
+        "16": "Älä laske sen varaan"
+        "17": "Vastaukseni on ei"
+        "18": "Lähteeni kertovat, että ei"
+        "19": "Ei siltä vaikuta"
+        "20": "Epäilen sitä vahvasti"
+      result: |-
+        > :crystal_ball: %{result}
+    track_selector:
+      reset_trigger: "aloita"
+      skip_trigger: "ohita"
+      help_trigger: "apua"
+      random_mention:
+        reply: |-
+          Moi! Jos haluat tietää mitä osaan, sano `@%{discobot_username} %{help_trigger}`.
+        tracks: |-
+          Osaan tällä hetkellä tehdä seuraavia asioita:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Aloittaa interaktiivisen opastuksen kahdenkeskisesti yksityisviestillä. `{name-of-tutorial}` voi olla yksi seuraavista: `%{tracks}`.
+        bot_actions: |-
+          `@%{discobot_username} %{dice_trigger} 2d6`
+          > :game_die: 3, 6
+
+          `@%{discobot_username} %{quote_trigger}`
+          %{quote_sample}
+
+          `@%{discobot_username} %{magic_8_ball_trigger}`
+          > :crystal_ball: Voit laskea sen varaan
+        discobot_disabled: Olet poistanut minut käytöstä asetuksissasi. Sinun on sallittava uuden käyttäjän aloittamisvinkit, jotta pääset vuorovaikutukseen kanssani.
+      do_not_understand:
+        first_response: |-
+          Hei, kiitos kun vastasit!
+
+          Valitettavasti olen huonosti ohjelmoitu botti, enkä aivan ymmärtänyt mitä tarkoitit. :frowning:
+        track_response: Voit yrittää uudelleen, tai jos mieluummin hyppäät vaiheen yli, sano %{skip_trigger}`. Tai jos haluat aloittaa alusta, sano `%{reset_trigger}`.
+        second_response: |-
+          Voi ei, en vieläkään tajua. :anguished:
+
+          Olen kuitenkin vain botti. Jos haluat tavoittaa aidon ihmisen, katsopa [yhteystietoja tältä sivulta](%{base_path}/about).
+
+          En häiritse sinua enempää nyt.
+    new_user_narrative:
+      reset_trigger: "opastus"
+      title: "Diplomi opastuksen suorittamisesta"
+      cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
+      hello:
+        title: "Tervehdys!"
+        message: |-
+          Kiitos kun liityit sivustolle %{title}. Tervetuloa!
+
+          – Olen vain robotti, mutta [avulias henkilökuntamme](%{base_uri}/about) on myös täällä auttamassa, jos sinun tarvitsee saada yhteys ihmiseen.
+
+          – Turvallisuussyistä uusi käyttäjä ei voi heti tehdä kaikkea. Saat [uusia kykyjä](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (ja [kunniamerkkejä](%{base_uri}/badges)) sitä mukaa, kun tutustumme sinuun.
+
+          Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
+      onebox:
+        instructions: |-
+          Seuraavaksi voitko jakaa yhden näistä linkeistä minun kanssani? Vastaa **linkillä itse rivillä**, ja se laajenee automaattisesti sisältääksesi näppärän yhteenvedon.
+
+          Voit kopioida minkä tahansa linkin napauttamalla ja pitämällä mobiilia pohjassa tai napsauttamalla hiiren oikealla osoitinta:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en. ikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
+        reply: |-
+          Siistiä! Suurin osa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla _yksin omalla rivillään_; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
+        not_found: |-
+          Anteeksi, en löytänyt linkkiä vastauksestasi! :cry:
+
+          Voitko kokeilla lisätä seuraavan linkin omalle rivilleen seuraavaan vastaukseesi?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
+      images:
+        instructions: |-
+          Tämä on kuva yksisarvisesta:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Jos pidät siitä (kukapa ei pitäisi!), kerro siitä minulle painamalla tykkää-nappia :heart: tämän viestin alla.
+
+          Osaatkohan **vastata kuvalla?** Ihan mikä tahansa kuva kelpaa! Vedä ja pudota, paina liitä-nappia tai vaikkapa kopioi ja liitä.
+        reply: |-
+          Loistava kuva – Painoin tykkää-nappia :heart:, jotta tiedät, että pidin siitä kovasti! :heart_eyes:
+        like_not_found: |-
+          Unohditko tykätä :heart: [viestistäni?](%{url}) :crying_cat_face:
+        not_found: |-
+          Näyttää siltä, ettet ladannut kuvaa, joten valitsin kuvan josta _takuulla_ pidät.
+
+          <%{image_url}>
+
+          Kokeilepa liittää tämä kuva tai liittää linkin osoite omalle rivilleen!
+      likes:
+        instructions: |-
+          Tässä on kuva yksisarvisesta:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
+
+          Jos pidät siitä (kukapa ei pitäisi!), kerro siitä minulle painamalla :heart: tykkää -painiketta tämän viestin alla.
+        reply: |-
+          Kiitos kun tykkäsit viestistäni!
+        not_found: |-
+          Unohditko tykätä :heart: [viestistäni?](%{url}) :crying_cat_face:
+      formatting:
+        instructions: |-
+          **Lihavoi** tai **kursivoi** sanoja seuraavasta vastauksestasi.
+
+          – kirjoita `**lihavointia**` tai `_kursivointia_`
+
+          – tai käytä viestieditorin <kbd><b>B</b></kbd>- tai <kbd><i>I</i></kbd>-painiketta
+        reply: |-
+          Hyvin tehty! HTML ja BBCode käyvät myös muotoiluun. Jos on puhtia, [tästä johdannosta](https://commonmark.org/help) opit lisää. :nerd:
+        not_found: |-
+          Pahus, en näe muotoilua viestissäsi. :pencil2:
+
+          Kokeilisitko uudelleen? Käytä editorin <kbd><b>B</b></kbd>-lihavointipainiketta tai <kbd><i>I</i></kbd>-kursivointipainiketta, jos muuten ei meinaa onnistua.
+      quoting:
+        instructions: |-
+          Voisitko lainata minua vastatessasi, jotta tiedän mihin kohtaan viittaat?
+
+          > Jos tässä on kahvia, tuo minulle teetä. Jos tässä on teetä, tuo minulle kahvia.
+          >
+          > Hyvä puoli itsekseen juttelussa on, että voit olla varma, että joku kuuntelee.
+          >
+          > Jotkut ovat briljantteja sanankäyttäjiä ja toiset... öö... tuota... eivät ole.
+
+          Valitse haluamasi sitaatin &uarr; teksti ja paina sitten Lainaa-painiketta, joka ilmestyy valintasi yhteyteen. Lainaa-napin sijasta voit myös painaa Vastaa-nappia tämän viestin alla.
+
+          Kuvaile parilla sanalla sitaatin perään, miksi valitsit juuri sen, sillä olen kovin utelias. :thinking:
+        reply: |-
+          Satuit valitsemaan suosikkisitaattini! :left_speech_bubble:
+        not_found: |-
+          Hmm, minusta tuntuu, ettet lainannut tekstiäni vastaukseesi?
+
+          <kbd>**Lainaa**</kbd>-painike ilmestyy, kun valitset viestini tekstiä. **Vastaa**-painike käy yhtä hyvin, jos sinulla on tekstiä valittuna. Kokeilisitko uudelleen?
+      bookmark:
+        instructions: |-
+          Jos haluat oppia lisää, valitse <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> tämän viestin alta ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **lisää tämä henkilökohtainen viesti kirjanmerkkeihisi**. Jos teet niin, sinua voi odottaa :gift: tulevaisuudessa!
+        reply: |-
+          Erinomaista! Nyt voit helposti palata takaisin keskusteluumme milloin tahansa [profiilisi kirjanmerkit-välilehden](%{bookmark_url}) kautta. Valitse profiilikuvasi yläoikealla &#8599;
+        not_found: |-
+          Tuota noin, et ole mielestäni kirjanmerkinnyt tämän ketjun viestejä. Löysithän kirjanmerkkikuvakkeen kunkin viestin alta? Voi olla, että sinun täytyy klikata <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">-kuvaketta, jotta näet sen ja muita toimintoja.
+      emoji:
+        instructions: |-
+          Tapaan käyttää pieniä kuvia :blue_car::dash: viesteissäni; ne ovat [emojeja](https://fi.wikipedia.org/wiki/Emoji). **Laitapa joku emoji** vastausviestiisi. On useita tapoja:
+
+          – Näppäile `:) ;) :D :P :O`
+
+          – Laita kaksoispiste <kbd>:</kbd> ja sen perään emojin nimi `:tada:`
+
+          – Paina editorin tai mobiililaitteesi näppäimistön emoji-kuvaketta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">
+        reply: |-
+          :sparkles: _Emojinomaista!_ :sparkles:
+        not_found: |-
+          Oho, et tainnut laittaa emojia viestiisi. Nyyh! :sob:
+
+          Saat emojivalitsimen esiin näppäilemällä kaksoispisteen <kbd>:</kbd>. Ala kirjoittaa sen perään englanniksi millaisen emojin haluat – esimerkiksi lintu on `:bird:`
+
+          Voit myös painaa editorin emojikuvaketta <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16">.
+
+          (Mobiililaitteella voit lisätä emojin suoraan näppäimistöltäsikin.)
+      mention:
+        instructions: |-
+          Voit haluta huomiota joltakulta, vaikket edes olisi vastaamassa hänelle suoraan. Mainitse hänet näppäilemällä `@` ja sen perään käyttäjätunnus kokonaisuudessaan.
+
+          Mainitsepa minut **`@%{discobot_username}`** seuraavassa vastauksessasi.
+        reply: |-
+          _Kutsuiko joku minua!?_ :raised_hand: Sinäkö se olit? :wave: Tässäpä minä! Kiitos kun mainitsit minut. :ok_hand:
+        not_found: |-
+          En näe nimeäni. :frowning: Yrittäisitkö nimeni `@%{discobot_username}` mainitsemista vielä kerran?
+
+          (Huomaa, että nimessäni on kansainvälisessä hengessä _disco_, ihan kuin siinä 1970-luvun tanssityylissä. [Rakastan yöelämää!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+      flag:
+        instructions: |-
+          Haluamme pitää keskustelumme ystävällisinä ja tarvitsemme apuasi [pitääksemme asiat sivistyneinä](%{guidelines_url}). Jos huomaat ongelman, ilmoita siitä kirjoittajalle tai [avuliaalle henkilökunnallemme](%{about_url}) liputtamalla asia. Viestin liputtamiselle on monia syitä viattomasta ketjun jakavasta ehdotuksesta aina selkeään yhteisön standardien rikkomukseen. Jos valitset **Jotain muuta**, aloitat henkilökohtaisen viestikeskustelun valvojien kanssa, jossa voit kysyä lisäkysymyksiä.
+
+          > :imp: Kirjoitin tässä jotain ikävää
+
+          **Merkitse tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ja valitse **Se on sopimaton** syyksi!
+        reply: |-
+          [Henkilökuntamme](%{group_url}) saa yksityisen ilmoituksen liputuksesta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, poistin liputuksesi.)
+        not_found: |-
+          Oi voi, tuhmaa viestiäni ei ole vielä liputettu sopimattomaksi. :worried: Voitko liputtaa sen sopimattomaksi **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> -painikkeella? Älä unohda, että saat lisää toimintoja näkyviin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> -painikkeen takaa.
+      search:
+        instructions: |-
+          _psst_ … Olen piilottanut yllätyksen tähän ketjuun. Jos kaipaat haastetta, etsi sitä **valitsemalla hakukuvake** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> oikeasta yläkulmasta &#8599;, valitse "tässä ketjussa" ja hae sitä.
+
+          Kokeile etsiä termiä "kapy&#8203;bara" tästä ketjusta
+        hidden_message: |-
+          Miten sinulta jäi tämä kapybara huomaamatta? :wink:
+
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
+
+          Huomasitko, että palasit takaisin alkuun? Ruoki söpöä nälkäistä kapybaraa **vastaamalla %{search_answer}-emojilla**, niin sinut palautetaan automaattisesti takaisin loppuun.
+        reply: |-
+          Jes, löysit sen :tada:
+
+          – Tarkempia hakuja voit tehdä [suurella hakusivulla](%{search_url}).
+
+          – Hyppää mihin kohtaan haluat pitkää keskustelua oikealla olevalla aikajanan avulla (sijaitsee mobiiliversiossa alhaalla).
+
+          -–Jos sinulla on fyysinen :keyboard:, tarkastele käteviä näppäinoikoteitä painamalla <kbd>?</kbd>.
+        not_found: |-
+          Hm… sinulla vaikuttaa olevan vaikeuksia. Pahoitteluni. Haitko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> hakusanalla **kapybara**?
+      end:
+        message: |-
+          Kiitos kun jaksoit loppuun asti @%{username}! Tein tämän sinulle, minusta olet ansainnut sen:
+
+          %{certificate}
+
+          Siinä kaikki tältä erää! Tsekkaa [**tuoreimmat ketjut**](%{base_uri}/latest) tai tutki [**keskustelualueita**](%{base_uri}/categories). :sunglasses:
+
+          (Jos haluat vielä jutella kanssani ja oppia lisää, lähetä minulle yksityisviesti tai mainitse `@%{discobot_username}` koska vain!)
+      certificate:
+        alt: "Diplomi"
+    advanced_user_narrative:
+      reset_trigger: "edistynyt opastus"
+      cert_title: "Tunnustuksena palstan käytön jatkokurssin menestyksekkäästä suorittamisesta"
+      title: ":arrow_up: Jatkokurssi"
+      start_message: |-
+        _Edistynyt_ käyttäjä kun olet, oletko @%{username} jo käynyt [käyttäjäasetussivulla](%{base_uri}/my/preferences)? Siellä voit mukauttaa sivustoa makusi mukaan monilla tavoin, esimerkiksi valita tumman ja vaalean teeman väliltä.
+
+        Vaan eipä harhauduta asiasta vaan aloitetaan!
+      edit:
+        bot_created_post_raw: "@%{discobot_username} on ylivoimaisesti mahtavin botti, jonka tiedän. :wink:"
+        instructions: |-
+          Kaikki tekevät virheitä. Vaan älä huoli, voit muokata viestejäsi ja korjata erheesi!
+
+          Aloita **muokkaamalla** viestiä, jonka juuri tein sinun nimissäsi.
+        not_found: |-
+          Näyttää, ettet vielä muokannut [viestiä](%{url}), jonka tein puolestasi. Yrittäisitkö uudelleen?
+
+          Palaa viestieditoriin klikkaamalla <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16">-kuvaketta.
+        reply: |-
+          Hyvin tehty!
+
+          Huomaa, että 5 minuutin jälkeen tehdyt muokkaukset näkyvät kaikille muokkaushistoriassa, joka ilmestyy viestin oikeaan yläkulmaan pienenä kynäsymbolina, jossa näkyy muokkausten määrä.
+      delete:
+        instructions: |-
+          Jos haluat perua viestisi, voit poistaa sen.
+
+          **Poista** yltä mikä tahansa viestisi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **poista**-toiminnon avulla. Älä kuitenkaan erehdy poistamaan ketjun ensimmäistä viestiä!
+        not_found: |-
+          Minusta viestejä ei vielä poistettu? Muista, että <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> poista-kuvakkeen.
+        reply: |-
+          Vau! :boom:
+
+          Keskusteluiden jatkuvuuden vuoksi viesti ei poistu kokonaan välittömästi, vaan se poistuu vasta jonkin ajan kuluttua.
+      recover:
+        deleted_post_raw: "Miksi @%{discobot_username} poisti viestini? :anguished:"
+        instructions: |-
+          Voi ei! Taisin vahingossa poistaa viestin, jonka tein sinun nimissäsi.
+
+          Tekisitkö palveluksen ja <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **palauttaisit** sen?
+        not_found: |-
+          Onko sinulla ongelmia? Muista, että <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> näytä lisää -kuvake paljastaa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> palauta-kuvakkeen.
+        reply: |-
+          Huh, sydäntä kylmäsi! Kiitos, kun korjasit mokani. :wink:
+
+          Huomioi, että viestin voi palauttaa vain %{deletion_after} tunnin sisällä sen poistamisesta.
+      category_hashtag:
+        instructions: |-
+          Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt alueella %{category}?
+
+          Kirjoita # mihin tahansa kohtaan lauseessa ja valitse mieleinen alue tai tunniste.
+        not_found: |-
+          Höh, en näe viittauksia alueisiin. Kopioisitko tämän seuraavaan vastaukseesi?
+
+          ```text
+          Voin luoda aluelinkin käyttäen risuaitaa #
+          ```
+        reply: |-
+          Erinomaista! Muista, että tämä toimii alueiden lisäksi myös tunnisteille, jos ne ovat käytössä täällä.
+      change_topic_notification_level:
+        instructions: |-
+          Sinulla on jokaiselle ketjulle ilmoitustaso. Aluksi se on "tavallinen", jolloin saat tavalliseen tapaan ilmoituksen vain, jos joku puhuu nimenomaan sinulle.
+
+          Oletuksena henkilökohtaisen viestiketjujen ilmoitustaso on kaikkein korkein eli "tarkkaillaan", jolloin saat ilmoituksen jokaikisestä viestistä. Voit kuitenkin valita _mille tahansa_ ketjulle ilmoitustason "tarkkaillaan", "seurataan" tai "vaimennettu".
+
+          Kokeillaanpa vaihtaa tämän ketjun ilmoitustasoa. Ketjun alla on painike, joka näyttää sinun tarkkailevan tätä ketjua. Vaihda ilmoitustasoksi **seurataan**.
+        not_found: |-
+          Näytät yhä tarkkailevan :eyes: tätä ketjua! Jollet meinaa löytää sitä, ilmoitustasopainike sijaitsee ketjun alla.
+        reply: |-
+          Mahtavaa! Toivottavasti et kuitenkaan vaimentanut tätä ketjua, vaikka saatan välillä olla vähän liiankin puhelias. :grin:.
+
+          Huomioi, että kun vastaat ketjuun tai luet sitä kauemmin kuin muutaman minuutin ajan, se saa automaattisesti ilmoitustasokseen 'seurataan'. Tätä voi säätää [käyttäjäasetuksissa](%{base_uri}/my/preferences).
+      poll:
+        reply: |-
+          Hauska kysely! Miten onnistuin opetuksessa?
+
+          [poll]
+          * :+1:
+          * :-1:
+          [/poll]
+      details:
+        not_found: |-
+          Onko sinulla ongelmia tietotoiminnon kanssa? Kokeilepa laittaa tämä seuraavaan vastaukseesi:
+
+          ```text
+          [details=Paina niin saat tarkempaa tietoa]
+          Yksityiskohtaista tietoa
+          [/details]
+          ```
+        reply: |-
+          Hyvin tehty – panostustasi _yksityiskohtiin_ on pakko arvostaa!
+      end:
+        message: |-
+          Selvitit tämän kuin _edistynyt käyttäjä_ konsanaan! :bow:
+
+          %{certificate}
+
+          Siinä oli kaikki, mitä minulla on tarjota.
+
+          Kuulemiin! Jos haluat vielä jutella kanssani, lähetä viesti milloin vain! :sunglasses:
+      certificate:
+        alt: "Diplomi jatkokurssista"

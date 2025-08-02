@@ -1,0 +1,144 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    discourse_automation:
+      back: Quay lại
+      edit: Sửa
+      fields:
+        user:
+          label: Người dùng
+        pm:
+          title:
+            label: Tiêu đề
+          raw:
+            label: Thân
+        pms:
+          title:
+            label: Tiêu đề
+          raw:
+            label: Thân
+        group:
+          label: Nhóm
+        text:
+          label: Văn bản
+      triggerables:
+        user_badge_granted:
+          fields:
+            badge:
+              label: Huy hiệu
+        stalled_topic:
+          durations:
+            P2W: "Hai tuần"
+            P3M: "Ba tháng"
+            P6M: "Sáu tháng"
+            P1Y: "Một năm"
+        recurring:
+          frequencies:
+            day: ngày
+            week: tuần
+            month: tháng
+            year: năm
+          fields:
+            recurrence:
+              label: Tái diễn
+        stalled_wiki:
+          durations:
+            P2W: "Hai tuần"
+            P3M: "Ba tháng"
+            P6M: "Sáu tháng"
+            P1Y: "Một năm"
+        topic:
+          fields:
+            restricted_topic:
+              label: ID Chủ đề
+        post_created_edited:
+          fields:
+            restricted_tags:
+              label: Thẻ
+            restricted_categories:
+              label: Danh mục
+          created: Tạo bởi
+          with_images: Hình ảnh
+          with_links: Liên kết
+          with_code: Mã
+          with_uploads: Tải lên
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: Danh mục cha
+        pm_created:
+          fields:
+            restricted_user:
+              label: Thành viên
+            restricted_group:
+              label: Nhóm
+        after_post_cook:
+          fields:
+            restricted_category:
+              label: Danh mục
+            restricted_tags:
+              label: Thẻ
+      scriptables:
+        auto_tag_topic:
+          fields:
+            tags:
+              label: Thẻ
+        post:
+          fields:
+            topic:
+              label: ID Chủ đề
+        group_category_notification_default:
+          fields:
+            group:
+              label: Nhóm
+        user_global_notice:
+          levels:
+            info: Thông tin
+            success: Thành công
+            error: Lỗi
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Nhóm
+            badge:
+              label: Huy hiệu
+        suspend_user_by_email:
+          fields:
+            actor:
+              label: Người dùng
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID Chủ đề
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID Chủ đề
+            user:
+              label: Người dùng
+        close_topic:
+          fields:
+            topic:
+              label: ID Chủ đề
+            user:
+              label: Người dùng
+      models:
+        trigger:
+          name:
+            label: Phát động
+        automation:
+          name:
+            label: Tên
+          trigger:
+            label: Phát động
+          version:
+            label: Phiên bản
+          status:
+            label: Trạng thái
+          disabled:
+            label: Vô hiệu hóa

@@ -1,0 +1,293 @@
+.user-messages-page {
+  .paginated-topics-list {
+    margin-top: 0;
+  }
+
+  .show-mores {
+    margin-top: 0.5em;
+  }
+}
+
+.user-main {
+  padding-bottom: 60px; // slightly taller than .footer-nav
+
+  .user-content {
+    box-sizing: border-box;
+    background-color: var(--secondary);
+
+    table {
+      width: 100%;
+      margin-top: 12px;
+    }
+  }
+
+  .about {
+    margin-bottom: 0;
+    color: var(--secondary);
+
+    .secondary {
+      dl {
+        padding: 8px 0;
+      }
+    }
+
+    .details {
+      margin-bottom: 12px;
+
+      .user-profile-avatar {
+        .avatar-flair {
+          right: 2px;
+        }
+        display: block;
+        float: none;
+        margin: 8px auto;
+
+        img.avatar {
+          float: none;
+        }
+      }
+
+      .user-profile-names {
+        text-align: center;
+      }
+
+      .featured-topic {
+        text-align: center;
+        font-size: var(--font-0);
+      }
+
+      .location-and-website {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size: var(--font-0);
+
+        .d-icon {
+          width: 0.8em;
+          height: 0.8em;
+          margin-right: 0.25em;
+        }
+
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      .user-profile-location {
+        margin-right: 1em;
+      }
+
+      .user-profile-location,
+      .user-profile-website {
+        justify-content: center;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .primary {
+      display: flex;
+      flex-wrap: wrap;
+      color: var(--primary);
+
+      .avatar {
+        margin: 0 0 12px;
+      }
+
+      .primary-textual {
+        flex: 1 1 100%;
+        word-break: break-word;
+        margin: 0;
+        max-width: 100%;
+      }
+
+      .bio {
+        color: var(--primary);
+        margin: 0 auto 8px;
+        max-width: 700px;
+        text-align: center;
+
+        ol {
+          margin-left: 25px;
+        }
+
+        ul,
+        ol {
+          display: inline-block;
+          padding-left: 0;
+          text-align: left;
+        }
+      }
+
+      .public-user-fields .public-user-field {
+        text-align: center;
+      }
+    }
+
+    &.has-background {
+      .user-profile-image {
+        height: 200px;
+      }
+
+      .user-profile-avatar {
+        margin-top: -60px;
+      }
+    }
+
+    .controls {
+      flex: 1 1 25%;
+
+      ul {
+        li,
+        > span {
+          display: flex;
+          flex: 1 1 45%;
+
+          button,
+          a {
+            width: 100%;
+          }
+
+          .select-kit.dropdown-select-box.user-notifications-dropdown {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .user-field {
+    label {
+      width: auto;
+      text-align: left;
+      font-weight: bold;
+    }
+  }
+}
+
+.user-main .collapsed-info.about.has-background {
+  background-image: none !important; // todo: make changes to behavior to remove this
+
+  .details {
+    margin-top: 0;
+  }
+}
+
+.user-main .collapsed-info.about .details {
+  display: flex;
+  margin-bottom: 0;
+
+  .user-profile-avatar {
+    margin: 0;
+    flex: 0 0 auto;
+    align-self: flex-start;
+  }
+
+  .primary .primary-textual {
+    flex: 1 0 80%;
+    margin: 0;
+  }
+
+  .user-profile-names {
+    text-align: left;
+  }
+}
+
+.paginated-topics-list {
+  margin-top: 20px;
+}
+
+.stats-section {
+  li {
+    margin: 0 15px 10px 0;
+    padding: 0;
+
+    &.linked-stat {
+      a {
+        padding: 0;
+      }
+    }
+  }
+}
+
+.badge-card.medium {
+  width: 100%;
+}
+
+.user-preferences {
+  padding-bottom: 2em;
+
+  .instructions {
+    margin-top: 4px;
+  }
+
+  .controls-dropdown {
+    margin-bottom: 16px;
+  }
+
+  .delete-account {
+    overflow: hidden;
+  }
+
+  .checkbox-label {
+    display: flex;
+    overflow: auto;
+    width: 100%;
+    padding: 5px 0;
+
+    input {
+      margin-right: 5px;
+      flex: 0 0 auto;
+    }
+  }
+
+  .apps .controls button {
+    float: right;
+  }
+
+  #change-email {
+    width: 100%;
+  }
+}
+
+.user-right {
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 20px;
+    }
+  }
+}
+
+.user-invites-page {
+  .user-invite-search input {
+    width: 100%;
+  }
+
+  .user-additional-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .user-invite-search {
+      width: 100%;
+    }
+  }
+
+  .user-invite-none {
+    margin-top: 1em;
+  }
+}
+
+.second-factor {
+  .second-factor-item {
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .details {
+    width: 75%;
+  }
+}

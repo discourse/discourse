@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  site_settings:
+    presence_enabled: "Quere amosar os usuarios que están respondendo ao tema actual ou editando a publicación actual?"
+    presence_max_users_shown: "Amósase o número máximo de usuarios."

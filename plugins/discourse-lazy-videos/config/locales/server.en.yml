@@ -1,0 +1,6 @@
+en:
+  site_settings:
+    lazy_videos_enabled: "Enable the Lazy Videos plugin"
+    lazy_youtube_enabled: "Enable lazy loading for YouTube embeds"
+    lazy_vimeo_enabled: "Enable lazy loading for Vimeo embeds"
+    lazy_tiktok_enabled: "Enable lazy loading for TikTok embeds (experimental)"

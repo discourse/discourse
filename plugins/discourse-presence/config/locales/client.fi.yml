@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    presence:
+      replying:
+        one: "kirjoittaa vastausta"
+        other: "kirjoittavat vastausta"
+      editing:
+        one: "muokkaa vastausta"
+        other: "muokkaavat vastausta"
+      replying_to_topic:
+        one: "kirjoittaa vastausta"
+        other: "kirjoittavat vastausta"
