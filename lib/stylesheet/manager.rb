@@ -79,10 +79,10 @@ class Stylesheet::Manager
       Theme.where("user_selectable OR id = ?", SiteSetting.default_theme_id).pluck(
         :id,
         :color_scheme_id,
+        :dark_color_scheme_id,
       )
 
     color_schemes = ColorScheme.where(user_selectable: true).to_a
-    color_schemes << ColorScheme.find_by(id: SiteSetting.default_dark_mode_color_scheme_id)
     color_schemes << ColorScheme.base
     color_schemes = color_schemes.compact.uniq
 
@@ -90,7 +90,7 @@ class Stylesheet::Manager
     targets += targets.map { |t| :"#{t}_rtl" }
     compiled = Set.new
 
-    themes.each do |theme_id, color_scheme_id|
+    themes.each do |theme_id, light_color_scheme_id, dark_color_scheme_id|
       manager = self.new(theme_id: theme_id)
 
       targets.each do |target|
@@ -113,10 +113,10 @@ class Stylesheet::Manager
           end
       end
 
-      theme_color_scheme = ColorScheme.find_by_id(color_scheme_id)
+      theme_color_scheme = ColorScheme.find_by_id(light_color_scheme_id)
+      theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
       theme = manager.get_theme(theme_id)
-
-      [theme_color_scheme, *color_schemes].compact.uniq.each do |scheme|
+      [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
         [true, false].each do |dark|
           mode = dark ? "dark" : "light"
           $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (#{mode})"

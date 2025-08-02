@@ -120,7 +120,7 @@ export default RouteTemplate(
     {{#unless @controller.model.component}}
       {{#unless @controller.siteSettings.use_overhauled_theme_color_palette}}
         <section
-          class="form-horizontal theme settings control-unit theme-settings__color-scheme"
+          class="form-horizontal theme settings control-unit theme-settings__light-color-scheme"
         >
           <div class="row setting">
             <div class="setting-label">
@@ -138,7 +138,7 @@ export default RouteTemplate(
                 {{#if @controller.colorSchemeId}}
                   <DButton
                     @icon="pencil"
-                    @action={{@controller.editColorScheme}}
+                    @action={{@controller.editLightColorScheme}}
                     @title="admin.customize.theme.edit_color_scheme"
                   />
                 {{/if}}
@@ -150,16 +150,61 @@ export default RouteTemplate(
             </div>
 
             <div class="setting-controls">
-              {{#if @controller.colorSchemeChanged}}
+              {{#if @controller.lightColorSchemeChanged}}
                 <DButton
-                  @action={{@controller.changeScheme}}
+                  @action={{@controller.changeLightScheme}}
                   @icon="check"
-                  class="ok submit-edit"
+                  class="ok submit-light-edit"
                 />
                 <DButton
-                  @action={{@controller.cancelChangeScheme}}
+                  @action={{@controller.cancelChangeLightScheme}}
                   @icon="xmark"
-                  class="cancel cancel-edit"
+                  class="cancel cancel-light-edit"
+                />
+              {{/if}}
+            </div>
+          </div>
+        </section>
+        <section
+          class="form-horizontal theme settings control-unit theme-settings__dark-color-scheme"
+        >
+          <div class="row setting">
+            <div class="setting-label">
+              {{i18n "admin.customize.theme.dark_color_scheme"}}
+            </div>
+
+            <div class="setting-value">
+              <div class="color-palette-input-group">
+                <ColorPalettes
+                  @content={{@controller.colorSchemes}}
+                  @value={{@controller.darkColorSchemeId}}
+                  @icon="paintbrush"
+                  @options={{hash filterable=true}}
+                />
+                {{#if @controller.darkColorSchemeId}}
+                  <DButton
+                    @icon="pencil"
+                    @action={{@controller.editDarkColorScheme}}
+                    @title="admin.customize.theme.edit_dark_color_scheme"
+                  />
+                {{/if}}
+              </div>
+
+              <div class="desc">{{i18n
+                  "admin.customize.theme.dark_color_scheme_select"
+                }}</div>
+            </div>
+            <div class="setting-controls">
+              {{#if @controller.darkColorSchemeChanged}}
+                <DButton
+                  @action={{@controller.changeDarkScheme}}
+                  @icon="check"
+                  class="ok submit-dark-edit"
+                />
+                <DButton
+                  @action={{@controller.cancelChangeDarkScheme}}
+                  @icon="xmark"
+                  class="cancel cancel-dark-edit"
                 />
               {{/if}}
             </div>

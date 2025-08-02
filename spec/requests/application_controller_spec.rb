@@ -668,9 +668,11 @@ RSpec.describe ApplicationController do
       let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
 
       before do
-        SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
         SiteSetting.interface_color_selector = "sidebar_footer"
-        Theme.find_by(id: SiteSetting.default_theme_id).update!(color_scheme_id: light_scheme.id)
+        Theme.find_default.update!(
+          color_scheme_id: light_scheme.id,
+          dark_color_scheme_id: dark_scheme.id,
+        )
       end
 
       context "when light mode is forced" do
@@ -1625,7 +1627,7 @@ RSpec.describe ApplicationController do
     let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
 
     before do
-      SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+      Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
     end
 

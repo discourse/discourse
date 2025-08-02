@@ -30,10 +30,6 @@ if !theme_exists
 
   Theme.foundation_theme.set_default!
 
-  if SiteSetting.default_dark_mode_color_scheme_id ==
-       SiteSetting.defaults[:default_dark_mode_color_scheme_id]
-    dark_scheme_id = ColorScheme.where(base_scheme_id: "Dark").pick(:id)
-
-    SiteSetting.default_dark_mode_color_scheme_id = dark_scheme_id if dark_scheme_id.present?
-  end
+  dark_scheme_id = ColorScheme.where(base_scheme_id: "Dark").pick(:id)
+  Theme.foundation_theme.update!(dark_color_scheme_id: dark_scheme_id) if dark_scheme_id.present?
 end

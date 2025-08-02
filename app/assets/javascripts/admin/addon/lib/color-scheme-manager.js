@@ -115,7 +115,7 @@ export async function applyColorScheme(scheme, options = {}) {
  */
 
 export async function setDefaultColorScheme(scheme, store, options = {}) {
-  const { previewMode = "live" } = options;
+  const { previewMode = "live", mode = "light" } = options;
 
   try {
     // Determine preview behavior
@@ -149,9 +149,13 @@ export async function setDefaultColorScheme(scheme, store, options = {}) {
     }
 
     const schemeId = scheme?.id || null;
-    defaultTheme.set("color_scheme_id", schemeId);
-
-    await defaultTheme.saveChanges("color_scheme_id");
+    if (mode === "light") {
+      defaultTheme.set("color_scheme_id", schemeId);
+      await defaultTheme.saveChanges("color_scheme_id");
+    } else {
+      defaultTheme.set("dark_color_scheme_id", schemeId);
+      await defaultTheme.saveChanges("dark_color_scheme_id");
+    }
 
     if (shouldReload) {
       window.location.reload();
