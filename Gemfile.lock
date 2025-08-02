@@ -185,6 +185,9 @@ GEM
     fspath (3.1.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    goldiloader (5.4.0)
+      activerecord (>= 6.1, < 8.1)
+      activesupport (>= 6.1, < 8.1)
     google-protobuf (4.31.1)
       bigdecimal
       rake (>= 13)
@@ -767,6 +770,7 @@ DEPENDENCIES
   faraday-retry
   fast_blank
   fastimage
+  goldiloader
   hashery
   highline
   htmlentities
@@ -965,6 +969,7 @@ CHECKSUMS
   ffi (1.17.2-x86_64-linux-musl) sha256=97c0eb3981414309285a64dc4d466bd149e981c279a56371ef811395d68cb95c
   fspath (3.1.2) sha256=b5ac9bafb97e2c8f8f9e303cd98ebd484be76fe9aa588bc4d01c6d99e78c9d75
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
+  goldiloader (5.4.0) sha256=277a86ff424b963bc9d98d8f4d10bb7eea0eb010d3209893dea7092302350b73
   google-protobuf (4.31.1) sha256=022bc82931a0860a7f2ace41bd48e904c8e65032c1d5eefc33294b5edf9741f8
   google-protobuf (4.31.1-aarch64-linux-gnu) sha256=d5b8268b2e07776b15a73ed96ca416eab771821b162b239dbdbfb2c85e2d17e5
   google-protobuf (4.31.1-aarch64-linux-musl) sha256=fcd5b79ac4048e89e44c4c64fb432fa6400ec3c2f0344a7effa95fbc6895d24a
