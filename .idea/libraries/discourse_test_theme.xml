@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="discourse-test-theme">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/spec/fixtures/themes/discourse-test-theme.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

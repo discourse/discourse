@@ -1,7 +1,11 @@
 development:
   prepared_statements: false
   adapter: postgresql
-  database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
+  database: discourse_test
+  host: ec2-35-95-109-47.us-west-2.compute.amazonaws.com
+  port: 5432
+  username: postgres
+  password: sirjghvneutrcjf84hd
   min_messages: warning
   pool: 5
   checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>
@@ -35,6 +39,10 @@ test:
   prepared_statements: false
   adapter: postgresql
   database: <%= test_db %>
+  host: ec2-35-95-109-47.us-west-2.compute.amazonaws.com
+  port: 5432
+  username: postgres
+  password: sirjghvneutrcjf84hd
   min_messages: warning
   pool: 2
   reaping_frequency: 0
@@ -47,6 +55,10 @@ profile:
   prepared_statements: false
   adapter: postgresql
   database: discourse_profile
+  host: localhost
+  port: 5432
+  username: postgres
+  password: sirjghvneutrcjf84hd
   min_messages: warning
   pool: 5
   host_names:

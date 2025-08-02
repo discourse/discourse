@@ -15,7 +15,8 @@
 /config/multisite.yml
 # `discourse_dev` gem
 /config/dev.yml
-
+/config/database.yml
+/config/discourse_defaults.conf
 /public/assets
 /public/backups
 /public/csv
