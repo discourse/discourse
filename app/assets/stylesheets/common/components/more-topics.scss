@@ -8,16 +8,16 @@
   .nav {
     margin-block: 0;
 
-    @include viewport.until(lg) {
-      font-size: var(--font-down-1);
-    }
-
     li {
       .btn {
+        box-sizing: content-box;
         color: var(--primary);
         background-color: transparent;
-        padding: calc(0.8em - var(--d-nav-underline-height)) 0.8em; // match th block padding minus border
+        padding: var(--d-topic-list-header-data-padding-y) 0.8em;
+        border: none;
         border-radius: 0;
+        font-size: var(--d-topic-list-data-font-size);
+        line-height: var(--line-height-medium);
 
         .discourse-no-touch & {
           &:hover {
