@@ -80,9 +80,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @discourseComputed("colorSchemeId", "model.color_scheme_id")
-  colorSchemeChanged(colorSchemeId, existingId) {
+  lightColorSchemeChanged(colorSchemeId, existingId) {
     colorSchemeId = colorSchemeId === null ? null : parseInt(colorSchemeId, 10);
+
     return colorSchemeId !== existingId;
+  }
+
+  @discourseComputed("darkColorSchemeId", "model.dark_color_scheme_id")
+  darkColorSchemeChanged(darkColorSchemeId, existingId) {
+    darkColorSchemeId =
+      darkColorSchemeId === null ? null : parseInt(darkColorSchemeId, 10);
+    return darkColorSchemeId !== existingId;
   }
 
   @discourseComputed("availableChildThemes", "model.childThemes.[]", "model")
@@ -307,18 +315,33 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  cancelChangeScheme() {
+  cancelChangeLightScheme() {
     this.set("colorSchemeId", this.get("model.color_scheme_id"));
   }
 
   @action
-  changeScheme() {
+  cancelChangeDarkScheme() {
+    this.set("darkColorSchemeId", this.get("model.dark_color_scheme_id"));
+  }
+
+  @action
+  changeLightScheme() {
     let schemeId = this.colorSchemeId;
     this.set(
       "model.color_scheme_id",
       schemeId === null ? null : parseInt(schemeId, 10)
     );
     this.model.saveChanges("color_scheme_id");
+  }
+
+  @action
+  changeDarkScheme() {
+    let schemeId = this.darkColorSchemeId;
+    this.set(
+      "model.dark_color_scheme_id",
+      schemeId === null ? null : parseInt(schemeId, 10)
+    );
+    this.model.saveChanges("dark_color_scheme_id");
   }
 
   @action
@@ -441,7 +464,15 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   }
 
   @action
-  editColorScheme() {
+  editLightColorScheme() {
     this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
+  }
+
+  @action
+  editDarkColorScheme() {
+    this.router.transitionTo(
+      "adminCustomize.colors.show",
+      this.darkColorSchemeId
+    );
   }
 }

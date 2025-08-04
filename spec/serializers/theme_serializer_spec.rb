@@ -24,6 +24,19 @@ RSpec.describe ThemeSerializer do
     end
   end
 
+  describe "color schemes" do
+    fab!(:theme) { Fabricate(:theme, color_scheme_id: 1, dark_color_scheme_id: 2) }
+    let(:serialized) { ThemeSerializer.new(theme.reload).as_json[:theme] }
+
+    it "should include color scheme id" do
+      expect(serialized[:color_scheme_id]).to eq(1)
+    end
+
+    it "should include dark color scheme id" do
+      expect(serialized[:dark_color_scheme_id]).to eq(2)
+    end
+  end
+
   describe "screenshot_url" do
     fab!(:theme)
     let(:serialized) { ThemeSerializer.new(theme.reload).as_json[:theme] }

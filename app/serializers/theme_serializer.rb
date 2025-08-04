@@ -4,6 +4,7 @@ require "base64"
 
 class ThemeSerializer < BasicThemeSerializer
   attributes :color_scheme_id,
+             :dark_color_scheme_id,
              :user_selectable,
              :auto_update,
              :remote_theme_id,
