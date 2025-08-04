@@ -706,6 +706,7 @@ aside.quote {
   display: flex;
   align-items: center;
   margin-left: auto;
+  order: 2; // for non-glimmer post stream
 
   a {
     margin-left: 0.3em;
