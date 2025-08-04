@@ -50,7 +50,7 @@ export function categoryBadgeHTML(category, opts) {
   }
 
   if (!opts.styleType) {
-    opts.styleType = category.style_type;
+    opts.styleType = category.style_type || "square";
 
     if (opts.styleType === "icon") {
       opts.icon = opts.icon || category.icon;
