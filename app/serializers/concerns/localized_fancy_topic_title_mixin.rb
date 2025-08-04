@@ -24,6 +24,6 @@ module LocalizedFancyTopicTitleMixin
   def _topic
     return topic if defined?(topic) && topic.class == Topic
     return object if object.class == Topic
-    object.topic if object.topic.class == Topic
+    object.topic if defined?(object.topic) && object.topic.class == Topic
   end
 end
