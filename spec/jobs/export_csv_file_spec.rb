@@ -101,7 +101,6 @@ RSpec.describe Jobs::ExportCsvFile do
         Zip::File.open(Discourse.store.path_for(Upload.last)) do |zip_file|
           zip_file.each do |entry|
             content = zip_file.read(entry)
-            p CSV.parse(content)
             expect(CSV.parse(content).size).to eq(5) # [header, 2, 3, 4, 5]
           end
         end
