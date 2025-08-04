@@ -12,7 +12,7 @@ module DiscourseAi
 
       def search
         query = params[:q].to_s
-        use_hyde = SiteSettings.ai_embeddings_semantic_search_use_hyde
+        use_hyde = SiteSetting.ai_embeddings_semantic_search_use_hyde
 
         if params[:hyde].present?
           use_hyde = !(params[:hyde].to_s.downcase == "false" || params[:hyde].to_s == "0")
