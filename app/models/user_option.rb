@@ -18,7 +18,7 @@ class UserOption < ActiveRecord::Base
   }
 
   self.ignored_columns = [
-    "sidebar_list_destination", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
   ]
 
   self.primary_key = :user_id
@@ -276,7 +276,6 @@ end
 #  email_previous_replies           :integer          default(2), not null
 #  enable_allowed_pm_users          :boolean          default(FALSE), not null
 #  enable_defer                     :boolean          default(FALSE), not null
-#  enable_experimental_sidebar      :boolean          default(FALSE)
 #  enable_quoting                   :boolean          default(TRUE), not null
 #  enable_smart_lists               :boolean          default(TRUE), not null
 #  external_links_in_new_tab        :boolean          default(FALSE), not null
