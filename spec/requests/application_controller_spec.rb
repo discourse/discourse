@@ -455,6 +455,32 @@ RSpec.describe ApplicationController do
           expect(fake_logger.errors.length).to eq(0)
           expect(fake_logger.warnings.length).to eq(0)
         end
+
+        it "should render category badges with correct style classes on 404 page" do
+          Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+
+          # Create categories with different style types
+          square_cat = Fabricate(:category, style_type: :square)
+          icon_cat = Fabricate(:category, style_type: :icon, icon: "user")
+          emoji_cat = Fabricate(:category, style_type: :emoji, emoji: "smile")
+
+          # Create topics in each category
+          Fabricate(:topic, title: "Square Category Topic", category: square_cat)
+          Fabricate(:topic, title: "Icon Category Topic", category: icon_cat)
+          Fabricate(:topic, title: "Emoji Category Topic", category: emoji_cat)
+
+          get "/t/nope-nope/99999999"
+          expect(response.status).to eq(404)
+
+          # Check that category badges have the correct style classes
+          expect(response.body).to include("badge-category --style-square")
+          expect(response.body).to include("badge-category --style-icon")
+          expect(response.body).to include("badge-category --style-emoji")
+
+          # Check that icon and emoji content are rendered
+          expect(response.body).to include('<svg id="user"') # SVG icon
+          expect(response.body).to include('class="emoji"') # Emoji image
+        end
       end
 
       it "should cache results" do

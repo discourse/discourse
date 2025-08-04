@@ -42,14 +42,14 @@ module CategoryBadge
     data = shared_data(category, opts)
 
     style_class =
-      case category.respond_to?(:style_type) && category.style_type
-      when "icon"
-        "--style-icon"
-      when "emoji"
-        "--style-emoji"
-      else
-        "--style-square"
-      end
+      if category.respond_to?(:style_type) && category.style_type.present?
+        case category.style_type
+        when "icon"
+          "--style-icon"
+        when "emoji"
+          "--style-emoji"
+        end
+      end || "--style-square"
     class_names = "badge-category #{style_class} #{data[:parent_category] ? "--has-parent" : ""}"
     description = category.description_text ? "title='#{category.description_text}'" : ""
 
