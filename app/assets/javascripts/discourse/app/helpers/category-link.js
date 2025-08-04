@@ -111,6 +111,15 @@ export function categoryLinkHTML(category, options) {
     if (options.ancestors) {
       categoryOptions.ancestors = options.ancestors;
     }
+    if (options.styleType) {
+      categoryOptions.styleType = options.styleType;
+    }
+    if (options.icon) {
+      categoryOptions.icon = options.icon;
+    }
+    if (options.emoji) {
+      categoryOptions.emoji = options.emoji;
+    }
   }
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
 }

@@ -26,9 +26,9 @@ module("Integration | Helper | category-link", function (hooks) {
   test("styleType option", async function (assert) {
     await render(
       <template>
-        {{categoryLink
-          (hash name="test-cat" style_type="square")
-          styleType="icon"
+        {{categoryLink 
+          (hash name="test-cat")
+          styleType="icon" 
           icon="user"
         }}
       </template>
