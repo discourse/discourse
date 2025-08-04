@@ -155,6 +155,105 @@ en:
       placeholder: date
       from_placeholder: "from date"
       to_placeholder: "to date"
+    languages:
+      ar:
+        name: Arabic
+      be:
+        name: Belarusian
+      bg:
+        name: Bulgarian
+      bs_BA:
+        name: Bosnian
+      ca:
+        name: Catalan
+      cs:
+        name: Czech
+      da:
+        name: Danish
+      de:
+        name: German
+      el:
+        name: Greek
+      en:
+        name: English (US)
+      en_GB:
+        name: English (UK)
+      es:
+        name: Spanish
+      et:
+        name: Estonian
+      fa_IR:
+        name: Persian
+      fi:
+        name: Finnish
+      fr:
+        name: French
+      gl:
+        name: Galician
+      he:
+        name: Hebrew
+      hr:
+        name: Croatian
+      hu:
+        name: Hungarian
+      hy:
+        name: Armenian
+      id:
+        name: Indonesian
+      it:
+        name: Italian
+      ja:
+        name: Japanese
+      ko:
+        name: Korean
+      lt:
+        name: Lithuanian
+      lv:
+        name: Latvian
+      nb_NO:
+        name: Norwegian Bokmål
+      nl:
+        name: Dutch
+      pl_PL:
+        name: Polish
+      pt:
+        name: Portuguese
+      pt_BR:
+        name: Portuguese
+      ro:
+        name: Romanian
+      ru:
+        name: Russian
+      sk:
+        name: Slovak
+      sl:
+        name: Slovene
+      sq:
+        name: Albanian
+      sr:
+        name: Serbian
+      sv:
+        name: Swedish
+      sw:
+        name: Swahili
+      te:
+        name: Telugu
+      th:
+        name: Thai
+      tr_TR:
+        name: Turkish
+      ug:
+        name: Uyghur
+      uk:
+        name: Ukrainian
+      ur:
+        name: Urdu
+      vi:
+        name: Vietnamese
+      zh_TW:
+        name: Chinese
+      zh_CN:
+        name: Chinese Simplified
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
@@ -229,7 +328,7 @@ en:
 
     themes:
       default_description: "Default"
-      broken_theme_alert: "Your site may not work because a theme / component has errors."
+      broken_theme_alert: "Your site may not work because a theme / component has errors. Check the browser console for more information."
       error_caused_by: "Caused by '%{name}'. <a target='blank' href='%{path}'>Click here</a> to update, reconfigure or disable."
       only_admins: "(this message is only shown to site administrators)"
 
@@ -1444,16 +1543,20 @@ en:
         description: "Skip new user onboarding tips and badges"
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
-      color_scheme_default_on_all_devices: "Set default color palette on all my devices"
+      color_scheme_default_on_all_devices: "Set default color palette and mode on all my devices"
       color_scheme: "Color Palette"
       color_schemes:
         default_description: "Theme default"
-        disable_dark_scheme: "Same as regular"
         dark_instructions: "You can preview the dark mode color palette by toggling your device's dark mode."
         undo: "Reset"
-        regular: "Regular"
+        regular: "Light mode"
         dark: "Dark mode"
-        default_dark_scheme: "(site default)"
+        interface_mode: "Mode"
+        interface_mode_instructions: "‘Auto’ uses your system’s preferences for light or dark mode."
+        interface_modes:
+          auto: "Auto"
+          light: "Light"
+          dark: "Dark"
       dark_mode: "Dark Mode"
       dark_mode_enable: "Enable automatic dark mode color palette"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
@@ -1462,6 +1565,7 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
+      enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -2681,6 +2785,9 @@ en:
     welcome_banner_location:
       above_topic_content: "Above topic content"
       below_site_header: "Below site header"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Rich text"
 
     shortcut_modifier_key:
       shift: "Shift"
@@ -2876,7 +2983,6 @@ en:
       italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      heading_label: "H"
       heading_title: "Headings"
       heading_level_n: "Heading %{levelNumber}"
       heading_level_n_title: "Heading %{levelNumber}"
@@ -5468,7 +5574,7 @@ en:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filter reports
+      filter_reports: "Filter reports..."
       filter_reports_no_results: "No reports match your filter"
 
       tags:
@@ -6547,7 +6653,7 @@ en:
             filter_by_used: "Used"
             filter_by_unused: "Unused"
             filter_by_updates_available: "Updates available"
-            search_components: "Type a component name"
+            search_components: "Filter by component name or description..."
             new_update_for_component: "New update available for %{name}!"
             component_up_to_date: '"%{name}" is up to date.'
             updated_successfully: '"%{name}" has been updated successfully.'
@@ -6743,7 +6849,10 @@ en:
           theme: "Theme"
           component: "Component"
           components: "Components"
-          search_placeholder: "type to search…"
+          search_placeholder: "Filter by theme name or description..."
+          filter_all: "All"
+          filter_user_selectable: "User selectable"
+          no_themes_found: "No themes match your filters"
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
@@ -6785,9 +6894,12 @@ en:
           color_scheme_user_selectable: "Color palette can be selected by users"
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
+          dark_color_scheme: "Dark Color Palette"
           edit_color_scheme: "Edit Color Palette"
+          edit_dark_color_scheme: "Edit DarkWColor Palette"
           default_light_scheme: "Light (default)"
           color_scheme_select: "Select colors to be used by theme"
+          dark_color_scheme_select: "Select colors to be used by theme in dark mode"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
           add_all_themes: "Add all themes"
@@ -6987,20 +7099,27 @@ en:
           preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so palette changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
           title: "Colors"
           edit: "Edit"
-          set_default: "Set as active on %{theme}"
+          set_default_light: "Set as light palette on default theme (%{theme})"
+          set_default_dark: "Set as dark palette on default theme (%{theme})"
           set_default_success: "%{schemeName} set as active palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
           filters:
-            search_placeholder: "Search by name or theme..."
+            search_placeholder: "Filter by palette or theme name..."
             all: "All"
             user_selectable: "User selectable"
             from_theme: "From theme"
             no_results: "No color palettes found"
+          active_light_badge:
+            text: "Active light"
+            title: "Active light color palette"
             reset: "Reset filters"
-          active_badge:
-            text: "Active"
-            title: "Active color palette"
+          active_dark_badge:
+            text: "Active dark"
+            title: "Active light color palette"
+          active_both_badge:
+            text: "Active light and dark"
+            title: "Active light and dark color palette"
           system_palette: "This is a built-in color palette, it cannot be edited or deleted."
           back_to_colors: "Back to color palettes"
           long_title: "Color palettes"

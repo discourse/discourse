@@ -24,6 +24,7 @@ module Migrations::Database::IntermediateDB
         chat_separate_sidebar_mode,
         chat_sound,
         color_scheme_id,
+        composition_mode,
         dark_scheme_id,
         default_calendar,
         digest_after_minutes,
@@ -37,9 +38,9 @@ module Migrations::Database::IntermediateDB
         email_previous_replies,
         enable_allowed_pm_users,
         enable_defer,
-        enable_experimental_sidebar,
         enable_quoting,
         enable_smart_lists,
+        enable_markdown_monospace_font,
         external_links_in_new_tab,
         hide_presence,
         hide_profile,
@@ -74,7 +75,7 @@ module Migrations::Database::IntermediateDB
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?
+        ?, ?, ?
       )
     SQL
 
@@ -95,6 +96,7 @@ module Migrations::Database::IntermediateDB
       chat_separate_sidebar_mode: nil,
       chat_sound: nil,
       color_scheme_id: nil,
+      composition_mode: nil,
       dark_scheme_id: nil,
       default_calendar: nil,
       digest_after_minutes: nil,
@@ -108,9 +110,9 @@ module Migrations::Database::IntermediateDB
       email_previous_replies: nil,
       enable_allowed_pm_users: nil,
       enable_defer: nil,
-      enable_experimental_sidebar: nil,
       enable_quoting: nil,
       enable_smart_lists: nil,
+      enable_markdown_monospace_font: nil,
       external_links_in_new_tab: nil,
       hide_presence: nil,
       hide_profile: nil,
@@ -160,6 +162,7 @@ module Migrations::Database::IntermediateDB
         chat_separate_sidebar_mode,
         chat_sound,
         color_scheme_id,
+        composition_mode,
         dark_scheme_id,
         default_calendar,
         digest_after_minutes,
@@ -173,9 +176,9 @@ module Migrations::Database::IntermediateDB
         email_previous_replies,
         ::Migrations::Database.format_boolean(enable_allowed_pm_users),
         ::Migrations::Database.format_boolean(enable_defer),
-        ::Migrations::Database.format_boolean(enable_experimental_sidebar),
         ::Migrations::Database.format_boolean(enable_quoting),
         ::Migrations::Database.format_boolean(enable_smart_lists),
+        ::Migrations::Database.format_boolean(enable_markdown_monospace_font),
         ::Migrations::Database.format_boolean(external_links_in_new_tab),
         ::Migrations::Database.format_boolean(hide_presence),
         ::Migrations::Database.format_boolean(hide_profile),

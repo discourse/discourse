@@ -197,7 +197,6 @@ pt:
       search: "Pesquisar"
     themes:
       default_description: "Predefinição"
-      broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
       error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é exibida apenas para administradores do site)"
     broken_decorator_alert: "As publicações podem não ser apresentadas corretamente porque um dos decoradores de conteúdo da publicação no seu sítio gerou um erro."
@@ -1296,7 +1295,6 @@ pt:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
       reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Define a paleta de cores predefinida em todos os meus dispositivos"
       color_scheme: "Paleta de Cores"
       color_schemes:
         default_description: "Tema padrão"

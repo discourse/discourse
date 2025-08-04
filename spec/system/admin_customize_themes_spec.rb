@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Admin Customize Themes", type: :system do
-  fab!(:color_scheme)
+  fab!(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: "light") }
   fab!(:theme) { Fabricate(:theme, name: "Cool theme 1", user_selectable: true) }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
@@ -11,21 +11,38 @@ describe "Admin Customize Themes", type: :system do
   before { sign_in(admin) }
 
   describe "when visiting the page to customize a single theme" do
-    it "should allow admin to update the color scheme of the theme" do
+    it "should allow admin to update the light color scheme of the theme" do
       visit("/admin/customize/themes/#{theme.id}")
 
-      color_scheme_settings = find(".theme-settings__color-scheme")
+      color_scheme_settings = find(".theme-settings__light-color-scheme")
 
-      expect(color_scheme_settings).not_to have_css(".submit-edit")
-      expect(color_scheme_settings).not_to have_css(".cancel-edit")
+      expect(color_scheme_settings).to have_no_css(".submit-light-edit")
+      expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
 
       color_scheme_settings.find(".color-palettes").click
       color_scheme_settings.find(".color-palettes-row[data-value='#{color_scheme.id}']").click
-      color_scheme_settings.find(".submit-edit").click
+      color_scheme_settings.find(".submit-light-edit").click
 
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
-      expect(color_scheme_settings).not_to have_css(".submit-edit")
-      expect(color_scheme_settings).not_to have_css(".cancel-edit")
+      expect(color_scheme_settings).to have_no_css(".submit-light-edit")
+      expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
+    end
+
+    it "should allow admin to update the dark color scheme of the theme" do
+      visit("/admin/customize/themes/#{theme.id}")
+
+      color_scheme_settings = find(".theme-settings__dark-color-scheme")
+
+      expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
+      expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
+
+      color_scheme_settings.find(".color-palettes").click
+      color_scheme_settings.find(".color-palettes-row[data-value='#{color_scheme.id}']").click
+      color_scheme_settings.find(".submit-dark-edit").click
+
+      expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
+      expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
+      expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
     end
   end
 
@@ -66,10 +83,10 @@ describe "Admin Customize Themes", type: :system do
   it "cannot edit js, upload files or delete system themes" do
     theme.update_columns(id: -10)
     visit("/admin/customize/themes/#{theme.id}")
-    expect(page).not_to have_css(".title button")
-    expect(page).not_to have_css(".edit-code")
-    expect(page).not_to have_css("button.upload")
-    expect(page).not_to have_css(".delete")
+    expect(page).to have_no_css(".title button")
+    expect(page).to have_no_css(".edit-code")
+    expect(page).to have_no_css("button.upload")
+    expect(page).to have_no_css(".delete")
   end
 
   it "hides unecessary sections and buttons for system themes" do
@@ -94,10 +111,10 @@ describe "Admin Customize Themes", type: :system do
 
     theme.stubs(:system?).returns(true)
     visit("/admin/customize/themes/#{theme.id}")
-    expect(page).not_to have_css(".created-by")
-    expect(page).not_to have_css(".export")
-    expect(page).not_to have_css(".extra-files")
-    expect(page).not_to have_css(".theme-settings")
+    expect(page).to have_no_css(".created-by")
+    expect(page).to have_no_css(".export")
+    expect(page).to have_no_css(".extra-files")
+    expect(page).to have_no_css(".theme-settings")
   end
 
   describe "when editing theme translations" do

@@ -8,6 +8,7 @@
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1em;
   align-items: stretch;
+  margin-top: var(--space-4);
 }
 
 .theme-card {
@@ -94,7 +95,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     border-top-left-radius: var(--d-border-radius);
     border-top-right-radius: var(--d-border-radius);
 

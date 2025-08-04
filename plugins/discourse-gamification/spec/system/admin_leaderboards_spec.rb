@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin leaderboards", type: :system, js: true do
+describe "Admin leaderboards", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   let(:admin_leaderboard_page) { PageObjects::Pages::AdminLeaderboards.new }
   let(:dialog) { PageObjects::Components::Dialog.new }

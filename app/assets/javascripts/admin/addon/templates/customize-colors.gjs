@@ -1,16 +1,16 @@
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
 import DPageSubheader from "discourse/components/d-page-subheader";
-import DSelect from "discourse/components/d-select";
-import FilterInput from "discourse/components/filter-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
+import AdminFilterControls from "admin/components/admin-filter-controls";
 import ColorPaletteListItem from "admin/components/color-palette-list-item";
+
+const FILTER_MINIMUM = 8;
 
 export default RouteTemplate(
   <template>
@@ -45,68 +45,41 @@ export default RouteTemplate(
       </:actions>
     </DPageSubheader>
 
-    {{#if @controller.showFilters}}
-      <div class="color-palette__filters">
-        <FilterInput
-          placeholder={{i18n
-            "admin.customize.colors.filters.search_placeholder"
-          }}
-          @filterAction={{@controller.onFilterChange}}
-          @value={{@controller.filterValue}}
-          class="admin-filter__input"
-          @icons={{hash left="magnifying-glass"}}
-        />
-        <DSelect
-          @value={{@controller.typeFilter}}
-          @includeNone={{false}}
-          @onChange={{@controller.onTypeFilterChange}}
-          as |select|
-        >
-          {{#each @controller.typeFilterOptions as |option|}}
-            <select.Option @value={{option.value}}>
-              {{option.label}}
-            </select.Option>
-          {{/each}}
-        </DSelect>
-      </div>
-    {{/if}}
-
     {{#if @controller.changedThemePreferences}}
       <div class="alert alert-info">
         {{htmlSafe
           (i18n
             "admin.customize.colors.preference_warning"
-            link="/my/preferences/interface"
+            link=(getUrl "/my/preferences/interface")
           )
         }}
       </div>
     {{/if}}
 
-    <ul class="color-palette__list">
-      {{#each @controller.filteredColorSchemes as |scheme|}}
-        <ColorPaletteListItem
-          @scheme={{scheme}}
-          @defaultTheme={{@controller.defaultTheme}}
-          @isDefaultThemeColorScheme={{@controller.isDefaultThemeColorScheme}}
-          @toggleUserSelectable={{@controller.toggleUserSelectable}}
-          @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
-          @deleteColorScheme={{@controller.deleteColorScheme}}
-        />
-      {{/each}}
-    </ul>
-
-    {{#if @controller.showFilters}}
-      {{#unless @controller.filteredColorSchemes.length}}
-        <div class="color-palette__no-results">
-          <h3>{{i18n "admin.customize.colors.filters.no_results"}}</h3>
-          <DButton
-            @icon="arrow-rotate-left"
-            @label="admin.customize.colors.filters.reset"
-            @action={{@controller.resetFilters}}
-            class="btn-default"
+    <AdminFilterControls
+      @array={{@controller.sortedColorSchemes}}
+      @minItemsForFilter={{FILTER_MINIMUM}}
+      @searchableProps={{@controller.searchableProps}}
+      @dropdownOptions={{@controller.dropdownOptions}}
+      @inputPlaceholder={{i18n
+        "admin.customize.colors.filters.search_placeholder"
+      }}
+      @noResultsMessage={{i18n "admin.customize.colors.filters.no_results"}}
+      as |schemes|
+    >
+      <ul class="color-palette__list">
+        {{#each schemes as |scheme|}}
+          <ColorPaletteListItem
+            @scheme={{scheme}}
+            @defaultTheme={{@controller.defaultTheme}}
+            @isDefaultThemeLightColorScheme={{@controller.isDefaultThemeLightColorScheme}}
+            @isDefaultThemeDarkColorScheme={{@controller.isDefaultThemeDarkColorScheme}}
+            @toggleUserSelectable={{@controller.toggleUserSelectable}}
+            @setAsDefaultThemePalette={{@controller.setAsDefaultThemePalette}}
+            @deleteColorScheme={{@controller.deleteColorScheme}}
           />
-        </div>
-      {{/unless}}
-    {{/if}}
+        {{/each}}
+      </ul>
+    </AdminFilterControls>
   </template>
 );

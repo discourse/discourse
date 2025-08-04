@@ -42,9 +42,7 @@ export default class AiComposerHelperMenu extends Component {
         // Since we want site default translations (and we are using: force_default_locale)
         // we need to replace the translated_name with the site default locale name
         const siteLocale = this.siteSettings.default_locale;
-        const availableLocales = JSON.parse(
-          this.siteSettings.available_locales
-        );
+        const availableLocales = this.siteSettings.available_locales;
         const locale = availableLocales.find((l) => l.value === siteLocale);
         const translatedName = i18n(
           "discourse_ai.ai_helper.context_menu.translate_prompt",

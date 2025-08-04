@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { alias, or } from "@ember/object/computed";
 import { service } from "@ember/service";

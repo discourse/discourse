@@ -201,7 +201,6 @@ fr:
       search: "Recherche"
     themes:
       default_description: "Par défaut"
-      broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
       error_caused_by: "Causée par « %{name} ». <a target='blank' href='%{path}'>Cliquez ici</a> pour mettre à jour, reconfigurer or désactiver."
       only_admins: "(ce message n'est visible que pour les administrateurs du site)"
     broken_decorator_alert: "Les publications risquent de ne pas s'afficher correctement, car l'un des décorateurs de contenu de publication de votre site a généré une erreur."
@@ -1282,7 +1281,6 @@ fr:
         description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs"
       reset_seen_user_tips: "Afficher à nouveau les conseils d'utilisation"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
-      color_scheme_default_on_all_devices: "Définir la palette de couleurs par défaut sur tous mes appareils"
       color_scheme: "Palette de couleurs"
       color_schemes:
         default_description: "Couleur du thème"
@@ -1292,6 +1290,9 @@ fr:
         regular: "Normal"
         dark: "Mode sombre"
         default_dark_scheme: "(par défaut)"
+        interface_modes:
+          light: "Clair"
+          dark: "Sombre"
       dark_mode: "Mode sombre"
       dark_mode_enable: "Activer la palette de couleurs du mode sombre automatiquement"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"

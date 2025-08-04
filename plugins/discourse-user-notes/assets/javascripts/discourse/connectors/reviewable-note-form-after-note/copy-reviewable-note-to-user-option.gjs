@@ -2,10 +2,8 @@ import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
 
 export default class CopyReviewableNoteToUserOption extends Component {
-  static shouldRender(args, context) {
-    return (
-      context.siteSettings.user_notes_enabled && context.currentUser?.staff
-    );
+  static shouldRender(args, { siteSettings, currentUser }) {
+    return siteSettings.user_notes_enabled && currentUser?.staff;
   }
 
   <template>

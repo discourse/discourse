@@ -232,7 +232,6 @@ lt:
       search: "Paieška"
     themes:
       default_description: "Numatytasis"
-      broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
       error_caused_by: "Sukėlė '%{name}'. <a target='blank' href='%{path}'>Spustelėkite čia</a> norėdami atnaujinti, iš naujo sukonfigūruoti arba išjungti."
       only_admins: "(šis pranešimas rodomas tik svetainės administratoriams)"
     broken_decorator_alert: "Įrašai gali būti rodomi netinkamai, nes vienas iš jūsų svetainės įrašo turinio dekoratorių iškėlė klaidą."
@@ -1373,7 +1372,6 @@ lt:
         description: "Praleiskite naujų naudotojų patarimus ir ženklelius"
       reset_seen_user_tips: "Dar kartą rodyti naudotojo patarimus"
       theme_default_on_all_devices: "Padarykite tai kaip numatytąją temą visuose mano įrenginiuose"
-      color_scheme_default_on_all_devices: "Nustatyti numatytąją spalvų paletę visuose mano įrenginiuose"
       color_scheme: "Spalvų paletė"
       color_schemes:
         default_description: "Tema numatytoji"
@@ -1383,6 +1381,9 @@ lt:
         regular: "Nuolatinės"
         dark: "Tamsus režimas"
         default_dark_scheme: "(numatytoji svetainė)"
+        interface_modes:
+          light: "Šviesi"
+          dark: "Tamsi"
       dark_mode: "Tamsus režimas"
       dark_mode_enable: "Įgalinti automatinę tamsaus režimo spalvų paletę"
       text_size_default_on_all_devices: "Padarykite tai numatytuoju teksto dydžiu visuose mano įrenginiuose"

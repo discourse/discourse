@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";

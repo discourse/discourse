@@ -42,7 +42,7 @@ function postStreamTest(name, attrs) {
 
       postStreamTest("extensibility", {
         posts() {
-          withPluginApi("1.34.0", (api) => {
+          withPluginApi((api) => {
             api.registerValueTransformer(
               "post-menu-buttons",
               ({ value: dag, context: { post, firstButtonKey } }) => {

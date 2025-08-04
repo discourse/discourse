@@ -19,6 +19,17 @@ ug:
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
         time: "ۋاقىت"
         summarize: "خۇلاسە"
+      tool_description:
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          one: "%{count} سەھىپە تېپىلدى"
+          other: "%{count} سەھىپە تېپىلدى"
+        tags:
+          one: "%{count} بەلگە تېپىلدى"
+          other: "%{count} بەلگە تېپىلدى"
     summarization:
       chat:
         no_targets: "تاللىغان مەزگىلدىكى ئۇچۇر يوق."
@@ -28,6 +39,15 @@ ug:
           neutral: "بىتەرەپ \U0001F610"
         sentiment_analysis:
           neutral: "بىتەرەپ"
+    llm:
+      configuration:
+        invalid_seeded_model: "بۇ مودېلدا مەزكۇر ئىقتىدارنى ئىشلىتەلمەيسىز"
+        must_select_model: "ئالدى بىلەن LLM نى تاللىشىڭىز كېرەك"
+      endpoints:
+        not_configured: "%{display_name} (سەپلەنمىگەن)"
     ai_staff_action_logger:
       updated: "يېڭىلاندى"
       removed: "چىقىرىۋېتىلدى"
+    errors:
+      user_not_allowed: ئىشلەتكۈچىنىڭ بۇ تېمىغا قاتنىشىشىغا يول قويۇلمىغان.
+      prompt_message_length: '%{idx} ئۇچۇر 1000 ھەرپ چېكىدىن ئېشىپ كەتتى.'

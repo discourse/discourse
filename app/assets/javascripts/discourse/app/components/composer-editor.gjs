@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -140,7 +141,7 @@ export default class ComposerEditor extends Component {
       );
 
       let key;
-      if (this.siteSettings.rich_editor) {
+      if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
         key = allowImages
           ? "reply_placeholder_rte"
           : "reply_placeholder_rte_no_images";

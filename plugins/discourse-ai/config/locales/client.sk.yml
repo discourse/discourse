@@ -562,7 +562,6 @@ sk:
           max_usages_required: "Musí byť nastavené, ak nie je nastavený maximálny počet tokenov"
         usage:
           ai_bot: "AI bot"
-          ai_helper: "Pomocník"
           ai_helper_image_caption: "Popis obrázka"
           ai_persona: "Persona (%{persona})"
           ai_summarization: "Zhrnúť"

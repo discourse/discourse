@@ -4,13 +4,14 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
@@ -18,6 +19,32 @@ import { resettableTracked } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 
 const MAX_RESULTS = 20;
+
+const FilterNavigationMenuList = <template>
+  {{#if @data.filteredTips.length}}
+    <DropdownMenu as |dropdown|>
+      {{#each @data.filteredTips as |item index|}}
+        <dropdown.item>
+          <DButton
+            class={{concatClass
+              "filter-navigation__tip-button"
+              (if (eq index @data.selectedIndex) "--selected")
+            }}
+            @action={{fn @data.selectItem item}}
+          >
+            <span class="filter-navigation__tip-name">
+              {{item.name}}
+            </span>
+            {{#if item.description}}
+              <span class="filter-navigation__tip-description">—
+                {{item.description}}</span>
+            {{/if}}
+          </DButton>
+        </dropdown.item>
+      {{/each}}
+    </DropdownMenu>
+  {{/if}}
+</template>;
 
 /**
  * This component provides an input field and parsing logic for filter
@@ -38,7 +65,6 @@ const MAX_RESULTS = 20;
  * as well as delimiters (like ",") that allow for multiple values.
  */
 export default class FilterNavigationMenu extends Component {
-  @service currentUser;
   @service menu;
   @service site;
 
@@ -361,7 +387,10 @@ export default class FilterNavigationMenu extends Component {
 
   @action
   handleKeydown(event) {
-    if (this.filteredTips.length === 0) {
+    if (
+      this.filteredTips.length === 0 &&
+      ["ArrowDown", "ArrowUp", "Tab"].includes(event.key)
+    ) {
       return;
     }
 
@@ -387,7 +416,7 @@ export default class FilterNavigationMenu extends Component {
         );
         break;
       case " ":
-        if (!this.dmenuInstance) {
+        if (!this.dMenuInstance) {
           this.openFilterMenu();
         }
         break;
@@ -397,18 +426,19 @@ export default class FilterNavigationMenu extends Component {
           event.stopPropagation();
           this.selectItem(this.filteredTips[this.selectedIndex]);
         } else {
-          if (!this.dmenuInstance) {
-            this.args.onChange(this.currentInputValue, true);
-            return;
-          }
+          cancel(this.searchTimer);
 
-          this.dmenuInstance?.close().then(() => {
+          if (!this.dMenuInstance) {
             this.args.onChange(this.currentInputValue, true);
-          });
+          } else {
+            this.dMenuInstance.close().then(() => {
+              this.args.onChange(this.currentInputValue, true);
+            });
+          }
         }
         break;
       case "Escape":
-        this.dmenuInstance?.close();
+        this.dMenuInstance?.close();
         break;
     }
   }
@@ -441,17 +471,12 @@ export default class FilterNavigationMenu extends Component {
 
     if (tip.delimiters) {
       let lastMatches = false;
-      results = results.map((result) => {
-        result.delimiters = tip.delimiters;
-        return result;
-      });
+
+      results.forEach((result) => (result.delimiters = tip.delimiters));
 
       results = results.filter((result) => {
         lastMatches ||= lastTerm === result.term;
-        if (splitTerms.includes(result.term)) {
-          return false;
-        }
-        return true;
+        return !splitTerms.includes(result.term);
       });
 
       if (lastMatches) {
@@ -472,7 +497,7 @@ export default class FilterNavigationMenu extends Component {
 
   <template>
     <div class="topic-query-filter__input">
-      <DButton @icon="filter" class="topic-query-filter__icon btn-flat" />
+      {{icon "filter" class="topic-query-filter__icon btn-flat"}}
 
       <input
         class="topic-query-filter__filter-term"
@@ -497,32 +522,3 @@ export default class FilterNavigationMenu extends Component {
     </div>
   </template>
 }
-
-const FilterNavigationMenuList = <template>
-  {{#if @data.filteredTips.length}}
-    <DropdownMenu as |dropdown|>
-      {{#each @data.filteredTips as |item index|}}
-        <dropdown.item>
-          <DButton
-            class={{concatClass
-              "filter-navigation__tip-button"
-              (if
-                (eq index @data.selectedIndex)
-                "--selected"
-              )
-            }}
-            @action={{fn @data.selectItem item}}
-          >
-            <span class="filter-navigation__tip-name">
-              {{item.name}}
-            </span>
-            {{#if item.description}}
-              <span class="filter-navigation__tip-description">—
-                {{item.description}}</span>
-            {{/if}}
-          </DButton>
-        </dropdown.item>
-      {{/each}}
-    </DropdownMenu>
-  {{/if}}
-</template>;

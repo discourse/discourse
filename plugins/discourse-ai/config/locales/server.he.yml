@@ -9,6 +9,7 @@ he:
     ai:
       flag_types:
         review: "הוספת פוסט לתור הביקורת"
+        review_hide: "הוספת פוסט לתור הסקירה והסתרתו"
         spam: "סימון כזבל והסתרת הפוסט"
         spam_silence: "סימון כזבל, הסתרת הפוסט והשתקת המשתמש"
     scriptables:
@@ -103,6 +104,9 @@ he:
     ai_discord_search_mode: "נא לבחור את מצב החיפוש לחיפוש ב־Discord"
     ai_discord_search_persona: "הדמות לשימוש בחיפוש Discord."
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
+    ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
+    ai_translation_model: "המודל לשימוש לתרגום. המודל הזה חייב לתמוך בתרגום. הדמויות יכולות לדרוס את ההגדרה הזאת."
+    ai_translation_max_post_length: "אורך הפוסט המרבי לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -110,6 +114,7 @@ he:
   reports:
     sentiment_analysis:
       title: "ניתוח הבעות"
+      description: "הדוח מספק ניתוח רגשות לפוסטים, בקיבוץ לפי קטגוריות, עם דירוג חיובי, שלילי ופושר לכל אחד מהפוסטים והקטגוריות."
     overall_sentiment:
       title: "רגש כללי"
       description: 'התרשים משווה את מספר הפוסטים שמסווגים כחיוביים או שליליים. אלו מחושבים כאשר ניקוד חיובי או שלילי הוא גדול מסף הניקוד המוגדר. משמעות הדבר היא שפוסטים נייטרליים לא מופיעים. הודעות אישיות מוחרגות גם כן. מסווגות באמצעות „cardiffnlp/twitter-roberta-base-sentiment-latest”'
@@ -201,9 +206,12 @@ he:
       description: "פוסטים שסווגו עם הרגש הפתעה באמצעות בינה מלאכותית, בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
   discourse_ai:
     ai_artifact:
+      link: "הצגה בלשונית חדשה"
+      copy_embed: "העתקת הטמעה"
       view_source: "הצגת המקור"
       view_changes: "הצגת שינויים"
       change_description: "עריכת התיאור"
+      copied: "הועתקה ללוח הגזירים"
     unknown_model: "דגם בינה מלאכותית לא ידוע"
     tools:
       custom_name: "%{name} (מותאם אישית)"
@@ -254,6 +262,7 @@ he:
       silence_reason: "המשתמש הושתק אוטומטית על ידי <a href='%{url}'>בינה מלאכותית של Discourse</a>"
       invalid_error_type: "סוג השגיאה שסופק לא תקין"
       unexpected: "אירעה שגיאה בלתי צפויה"
+      bot_user_update_failed: "עדכון משתמש בוט סריקת הזבל נכשל"
       logging_subject: "זיהוי זבל"
     ai_bot:
       reply_error: "נראה שהמערכת שלך נתקלה בקשיים לא צפויים בעת הניסיון להשיב, עמך הסליחה.\n\n[details='פרטי השגיאה']\n%{details}\n[/details]"
@@ -276,12 +285,18 @@ he:
         designer:
           name: מעצב
           description: "בוט בינה מלאכותית שמתמחה ביצירת ועריכת תמונות"
+        forum_researcher:
+          name: מחקר לפורום
+          description: "בוט בינה מלאכותית שמתמחה במחקר עמוק עבור הפורום"
         sql_helper:
           name: מסייע SQL
           description: "בוט בינה מלאכותית שמתמחה בסיוע בכתיבת שאילתות SQL במופע ה־Discourse הזה"
         settings_explorer:
           name: סייר הגדרות
           description: "בוט בינה מלאכותית שמתמחה בסיור בהגדרות אתר ה־Discourse"
+        researcher:
+          name: מחקר ברשת
+          description: "בוט בינה מלאכותית עם גישה לגוגל שיכולים לחפש ולקרוא אתרים באינטרנט"
         creative:
           name: יצירה
           description: "בוט בינה מלאכותית ללא שילובים חיצוניים שמתמחה ביצירת משימות יצירתיות"
@@ -296,18 +311,62 @@ he:
           description: "בוט בינה מלאכותית שמתמחה ביצירת תוצרים אינטרנטיים אינטראקטיביים"
         summarizer:
           name: "מסכם"
+          description: "דמות ברירת מחדל שעליה מופעלים תקצירי בינה מלאכותית"
         short_summarizer:
           name: "מסכם (מקוצר)"
+        concept_finder:
+          name: "איתור מושגים"
+          description: "בוט בינה מלאכותית שמתמחה בזיהוי מושגים וערכות עיצוב בתוכן"
+        concept_matcher:
+          name: "תיאום מושגים"
+          description: "בוט בינה מלאכותית שמתמחה בהתאמת תוכן כנגן מושגים קיימים"
+        concept_deduplicator:
+          name: "הסרת כפילות מושגים"
+          description: "בוט בינה מלאכותית שמתמחה בהסרת מושגים כפולים"
         custom_prompt:
           name: "בקשה מותאמת אישית"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת הבקשה המותאמת של המסייע"
         smart_dates:
           name: "תאריכים חכמים"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת התאריכים החכמים של המסייע"
+        markdown_table_generator:
+          name: "יצירת טבלאות ב־Markdown"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת יצירת הטבלאות ב־Markdown של המסייע"
+        post_illustrator:
+          name: "איור פוסטים"
+          description: "מייצר הנחיות ל־StableDiffusion כדי לתפעל את יכולת איור הפוסטים של המסייע"
+        proofreader:
+          name: "הגהה"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת הגהת הטקסט של המסייע"
+        titles_generator:
+          name: "יצירת כותרות"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת הצעת כותרות הנושאים של המסייע"
+        tutor:
+          name: "הדרכה"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת ההסבר של המסייע"
+        translator:
+          name: "תרגום"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת התרגום של המסייע"
+        image_captioner:
+          name: "תיאור תמונות"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת תיאור התמונות של המסייע"
         locale_detector:
           name: "מזהה שפה ומקום"
+          description: "על גביו פועלת יכולת התרגום על ידי זיהוי השפה והניב של טקסט מסוים (פוסטים, כותרות וכו׳)"
+        post_raw_translator:
+          name: "תרגום פוסטים"
+          description: "על גביו פועלת יכולת התרגום על ידי תרגום פוסטים שמכילים Markdown של Discourse"
         topic_title_translator:
           name: "מתרגם כותרות נושאים"
+          description: "על גביו פועלת יכולת התרגום על ידי תרגום כותרות נושאים"
         short_text_translator:
           name: "מתרגם טקסטים קצרים"
+        spam_detector:
+          name: "זיהוי זבל"
+          description: "דמות ברירת מחדל שעליה פועלת יכולת זיהוי הזבל שלנו"
+        content_creator:
+          name: "יצירת תוכן"
+          description: "דמות ברירת המחדל שעליה פועל חיפוש HyDE"
         report_runner:
           name: "אצן דוחות"
           description: "דמות ברירת המחדל שסקריפט אוטומציית הדוחות משתמש בה"
@@ -318,8 +377,19 @@ he:
         researcher:
           researcher_llm:
             name: "LLM"
+            description: "מודל שפה לשימוש למחקר (ברירת המחדל היא ה־LLM של הדמות הנוכחית)"
+          max_tokens_per_batch:
+            name: "מספר אסימונים מרבי לאצווה"
+            description: "מספר האסימונים המרבי לשימוש לכל אצווה (ריכוז של פעולות) מחקר"
+          max_tokens_per_post:
+            name: "מספר אסימונים מרבי לפוסט"
+            description: "מספר האסימונים המרבי לשימוש לכל פוסט מחקר"
           max_results:
             name: "מספר תוצאות מרבי"
+            description: "מספר התוצאות המרבי לכלול במסנן"
+          include_private:
+            name: "לכלול פרטיים"
+            description: "לכלול נושאים פרטיים במסננים"
         create_artifact:
           creator_llm:
             name: "LLM"
@@ -332,6 +402,7 @@ he:
             name: "עדכון אלגוריתם"
             description: "לבקש מ־LLM להחליף לחלוטין או להשתמש ב־diff (הבדלים) כדי לעדכן"
           do_not_echo_artifact:
+            name: "לא להחזיר תוצרים"
             description: "יגביל את העלויות אבל יפגום ביעילות עדכוני התוצרים"
         google:
           base_query:
@@ -377,6 +448,7 @@ he:
         javascript_evaluator: "שערוך JavaScript"
         create_image: "יצירת תמונה"
         edit_image: "עריכת תמונה"
+        researcher: "מתבצע מחקר"
         researcher_dry_run: "המחקר בהכנה"
       tool_help:
         read_artifact: "לקרוא תוצר דפדפני באמצעות בוט הבינה המלאכותית"
@@ -404,6 +476,7 @@ he:
         dall_e: "יצירת תמונה באמצעות DALL-E 3"
         search_meta_discourse: "חיפוש ב־Meta Discrouse"
         javascript_evaluator: "שערוך JavaScript"
+        researcher: "לחקור את פרטי הפורום באמצעות בוט בינה מלאכותית"
       tool_description:
         read_artifact: "לקרוא תוצר דפדפני באמצעות בוט הבינה המלאכותית"
         update_artifact: "עודכן תוצר דפדפני באמצעות בוט הבינה המלאכותית"
@@ -421,8 +494,51 @@ he:
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
         image: "%{prompt}"
+        categories:
+          one: "נמצאה קטגוריה"
+          two: "נמצאו שתי קטגוריות"
+          many: "נמצאו %{count} קטגוריות"
+          other: "נמצאו %{count} קטגוריות"
+        tags:
+          one: "נמצאה תגית"
+          two: "נמצאו שתי תגיות"
+          many: "נמצאו %{count} תגיות"
+          other: "נמצאו %{count} תגיות"
+        search:
+          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+        search_meta_discourse:
+          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+        google:
+          one: "נמצאה <a href='%{url}'>תוצאה</a> לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} <a href='%{url}'>תוצאות</a> לחיפוש אחר ‚%{query}’"
         setting_context: "נקרא הקשר עבור: %{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          one: "יעדים מוצעים: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
+          two: "יעדים מוצעים: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
+          many: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+          other: "יעדים מוצעים: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+        researcher:
+          one: "במהלך מחקר: %{goals}\n\nנמצא פוסט שעונה על ‚%{filter}’"
+          two: "במהלך מחקר: %{goals}\n\nנמצאו שני פוסטים שעונים על ‚%{filter}’"
+          many: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+          other: "במהלך מחקר: %{goals}\n\nנמצאו %{count} פוסטים שעונים על ‚%{filter}’"
+        search_settings:
+          one: "נמצאה תוצאה לחיפוש אחר ‚%{query}’"
+          two: "נמצאו שתי תוצאות לחיפוש אחר ‚%{query}’"
+          many: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
+          other: "נמצאו %{count} תוצאות לחיפוש אחר ‚%{query}’"
+      discoveries:
+        continue_conversation:
+          raw: "בחיפוש שלי אחר %{query}, הצגת לי את המידע הבא:\n\n%{context}\n\nאפשר להמשיך את השיחה."
     summarization:
       configuration_hint:
         one: "יש להגדיר את ההגדרה `%{setting}` תחילה."
@@ -448,7 +564,8 @@ he:
           neutral: "נייטרלי"
     llm:
       configuration:
-        disable_module_first: "קודם צריך להשבית את %{setting}."
+        create_llm: "יש להפעיל LLM/מש״ג בטרם הפעלת היכולת הזאת"
+        disable_modules_first: "תחילה יש להשבית את המודולים הבאים: %{settings}"
         set_llm_first: "קודם יש להגדיר את %{setting}"
         model_unreachable: "לא הצלחנו לקבל תגובה מהמודל הזה. נא לוודא שההגדרות שלך נכונות קודם."
         invalid_seeded_model: "אי אפשר להשתמש במודל הזה עם היכולת הזאת"
@@ -466,6 +583,8 @@ he:
         many: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
         other: "לא הצלחנו למחוק את המודל הזה כי %{settings} משתמשים בו. נא לעדכן את ההגדרות לנסות שוב."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
+    personas:
+      malformed_examples: "הדוגמה הבאה היא בתבנית שגויה."
     embeddings:
       delete_failed: "זה המודל שנמצא בשימוש. יש לעדכן את `ai embeddings selected model`."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
@@ -491,6 +610,12 @@ he:
       no_default_llm: לדמות חייב להיות מוגדר default_llm (מודל ברירת מחדל).
       user_not_allowed: המשתמש לא מורשה להשתתף בנושא.
       prompt_message_length: ההודעה %{idx} חורגת ממגבלת 1000 התווים.
+      persona_already_exists: כבר קיימת דמות בשם %{name}.
+      custom_tool_exists:
+        one: "כבר קיים כלי מותאם בשם %{names}."
+        two: "כבר קיימים כלים מותאמים בשמות %{names}."
+        many: "כבר קיימים כלים מותאמים בשמות %{names}."
+        other: "כבר קיימים כלים מותאמים בשמות %{names}."
   dashboard:
     problem:
       ai_llm_status: "מודל השפה הגדול: %{model_name} נתקל בקשיים. נא לגשת ל<a href='%{url}'>עמוד ההגדרות של המודל</a>."

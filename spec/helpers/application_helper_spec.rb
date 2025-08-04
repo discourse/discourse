@@ -817,7 +817,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "returns two color scheme link tags when dark mode is enabled" do
-      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pick(:id)
+      Theme.find_default.update!(dark_color_scheme_id: ColorScheme.where(name: "Dark").pick(:id))
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
 
       expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
@@ -826,7 +826,7 @@ RSpec.describe ApplicationHelper do
 
     it "handles a missing dark color scheme gracefully" do
       scheme = ColorScheme.create!(name: "pyramid")
-      SiteSetting.default_dark_mode_color_scheme_id = scheme.id
+      Theme.find_default.update!(dark_color_scheme_id: scheme.id)
       scheme.destroy!
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
 
@@ -873,7 +873,7 @@ RSpec.describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
         @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme")
 
-        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pick(:id)
+        Theme.find_default.update!(dark_color_scheme_id: ColorScheme.where(name: "Dark").pick(:id))
       end
 
       it "returns no dark scheme stylesheet when user has disabled that option" do
@@ -974,7 +974,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "doesn't render theme-color meta tag for the dark scheme if none is set" do
-      SiteSetting.default_dark_mode_color_scheme_id = -1
+      Theme.find_default.update!(dark_color_scheme_id: -1)
       helper.request.cookies.delete("dark_scheme_id")
 
       expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
@@ -997,7 +997,7 @@ RSpec.describe ApplicationHelper do
   describe "#discourse_color_scheme_meta_tag" do
     fab!(:color_scheme)
 
-    before { SiteSetting.default_dark_mode_color_scheme_id = -1 }
+    before { Theme.find_default.update!(dark_color_scheme_id: -1) }
 
     it "renders a 'light' color-scheme if no dark scheme is set and the current scheme is light" do
       ColorSchemeRevisor.revise(
@@ -1054,6 +1054,176 @@ RSpec.describe ApplicationHelper do
       it "returns the same value as #scheme_id" do
         expect(helper.dark_scheme_id).to eq(helper.scheme_id)
         expect(helper.scheme_id).to eq(light_scheme.id)
+      end
+    end
+  end
+
+  describe "#forced_light_mode?" do
+    fab!(:user)
+
+    context "when the user preference in the database is set to light" do
+      before do
+        user.user_option.update!(interface_color_mode: UserOption::LIGHT_MODE)
+        helper.stubs(:current_user).returns(user)
+      end
+
+      it "returns true if the forced_color_mode cookie is set to `light`" do
+        helper.request.cookies["forced_color_mode"] = "light"
+        expect(helper.forced_light_mode?).to eq(true)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `dark`" do
+        helper.request.cookies["forced_color_mode"] = "dark"
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `auto`" do
+        helper.request.cookies["forced_color_mode"] = "auto"
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+
+      it "returns true if the forced_color_mode cookie is not set" do
+        helper.request.cookies["forced_color_mode"] = nil
+        expect(helper.forced_light_mode?).to eq(true)
+      end
+    end
+
+    context "when the user preference in the database is set to dark" do
+      before do
+        user.user_option.update!(interface_color_mode: UserOption::DARK_MODE)
+        helper.stubs(:current_user).returns(user)
+      end
+
+      it "returns true if the forced_color_mode cookie is set to `light`" do
+        helper.request.cookies["forced_color_mode"] = "light"
+        expect(helper.forced_light_mode?).to eq(true)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `dark`" do
+        helper.request.cookies["forced_color_mode"] = "dark"
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `auto`" do
+        helper.request.cookies["forced_color_mode"] = "auto"
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+
+      it "returns false if the forced_color_mode cookie is not set" do
+        helper.request.cookies["forced_color_mode"] = nil
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+    end
+
+    context "when the user preference in the database is set to auto" do
+      before do
+        user.user_option.update!(interface_color_mode: UserOption::AUTO_MODE)
+        helper.stubs(:current_user).returns(user)
+      end
+
+      it "returns true if the forced_color_mode cookie is set to `light`" do
+        helper.request.cookies["forced_color_mode"] = "light"
+        expect(helper.forced_light_mode?).to eq(true)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `dark`" do
+        helper.request.cookies["forced_color_mode"] = "dark"
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `auto`" do
+        helper.request.cookies["forced_color_mode"] = "auto"
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+
+      it "returns false if the forced_color_mode cookie is not set" do
+        helper.request.cookies["forced_color_mode"] = nil
+        expect(helper.forced_light_mode?).to eq(false)
+      end
+    end
+  end
+
+  describe "#forced_dark_mode?" do
+    fab!(:user)
+
+    context "when the user preference in the database is set to light" do
+      before do
+        user.user_option.update!(interface_color_mode: UserOption::LIGHT_MODE)
+        helper.stubs(:current_user).returns(user)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `light`" do
+        helper.request.cookies["forced_color_mode"] = "light"
+        expect(helper.forced_dark_mode?).to eq(false)
+      end
+
+      it "returns true if the forced_color_mode cookie is set to `dark`" do
+        helper.request.cookies["forced_color_mode"] = "dark"
+        expect(helper.forced_dark_mode?).to eq(true)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `auto`" do
+        helper.request.cookies["forced_color_mode"] = "auto"
+        expect(helper.forced_dark_mode?).to eq(false)
+      end
+
+      it "returns true if the forced_color_mode cookie is not set" do
+        helper.request.cookies["forced_color_mode"] = nil
+        expect(helper.forced_dark_mode?).to eq(false)
+      end
+    end
+
+    context "when the user preference in the database is set to dark" do
+      before do
+        user.user_option.update!(interface_color_mode: UserOption::DARK_MODE)
+        helper.stubs(:current_user).returns(user)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `light`" do
+        helper.request.cookies["forced_color_mode"] = "light"
+        expect(helper.forced_dark_mode?).to eq(false)
+      end
+
+      it "returns true if the forced_color_mode cookie is set to `dark`" do
+        helper.request.cookies["forced_color_mode"] = "dark"
+        expect(helper.forced_dark_mode?).to eq(true)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `auto`" do
+        helper.request.cookies["forced_color_mode"] = "auto"
+        expect(helper.forced_dark_mode?).to eq(false)
+      end
+
+      it "returns true if the forced_color_mode cookie is not set" do
+        helper.request.cookies["forced_color_mode"] = nil
+        expect(helper.forced_dark_mode?).to eq(true)
+      end
+    end
+
+    context "when the user preference in the database is set to auto" do
+      before do
+        user.user_option.update!(interface_color_mode: UserOption::AUTO_MODE)
+        helper.stubs(:current_user).returns(user)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `light`" do
+        helper.request.cookies["forced_color_mode"] = "light"
+        expect(helper.forced_dark_mode?).to eq(false)
+      end
+
+      it "returns true if the forced_color_mode cookie is set to `dark`" do
+        helper.request.cookies["forced_color_mode"] = "dark"
+        expect(helper.forced_dark_mode?).to eq(true)
+      end
+
+      it "returns false if the forced_color_mode cookie is set to `auto`" do
+        helper.request.cookies["forced_color_mode"] = "auto"
+        expect(helper.forced_dark_mode?).to eq(false)
+      end
+
+      it "returns false if the forced_color_mode cookie is not set" do
+        helper.request.cookies["forced_color_mode"] = nil
+        expect(helper.forced_dark_mode?).to eq(false)
       end
     end
   end

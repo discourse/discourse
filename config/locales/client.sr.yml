@@ -226,7 +226,6 @@ sr:
       search: "Pretraži"
     themes:
       default_description: "Подразумевано"
-      broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
       error_caused_by: "Izazvano od '%{name}'. <a target='blank' href='%{path}'>Klikni ovde</a> da unaprediš, rekonfigurišeš ili onemogućiš."
       only_admins: "(ova poruka je prikazana samo sajt administratorima)"
     broken_decorator_alert: "Objava se možda neće prikazivati korektno zato što jedna od post dekoratora na vašem sajtu je imala grešku."
@@ -1223,7 +1222,6 @@ sr:
         description: "Preskoči savete i značke za novog korisnika"
       reset_seen_user_tips: "Prikaži korisničke savete ponovo"
       theme_default_on_all_devices: "Postavi za podrazumevanu vizuelnu temu na svim mojim uređajima"
-      color_scheme_default_on_all_devices: "Postavi kao podrazumevanu paletu boja na svim mojim uređajima"
       color_scheme: "Paleta Boja"
       color_schemes:
         default_description: "Podrzumevane vrednosti vizuelne teme"

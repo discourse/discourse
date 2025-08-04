@@ -229,7 +229,6 @@ hr:
       search: "Pretraživanje"
     themes:
       default_description: "Zadano"
-      broken_theme_alert: "Vaša stranica možda neće raditi jer tema/komponenta ima greške."
       error_caused_by: "Uzrokuje '%{name}'. <a target='blank' href='%{path}'>Kliknite ovdje</a> za ažuriranje, ponovnu konfiguraciju ili onemogućivanje."
       only_admins: "(ova se poruka prikazuje samo administratorima stranice)"
     broken_decorator_alert: "Postovi se možda neće ispravno prikazati jer je jedan od dekoratora sadržaja postova na vašoj web-lokaciji pokrenuo pogrešku."
@@ -1432,7 +1431,6 @@ hr:
         description: "Preskoči savjete i značke novog korisnika"
       reset_seen_user_tips: "Ponovno prikaži savjete za korisnike"
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
-      color_scheme_default_on_all_devices: "Postavi zadanu paletu boja na svim mojim uređajima"
       color_scheme: "Paleta boja"
       color_schemes:
         default_description: "Zadana tema"
@@ -1442,6 +1440,10 @@ hr:
         regular: "Stalni član"
         dark: "Tamni način rada"
         default_dark_scheme: "(zadana web lokacija)"
+        interface_modes:
+          auto: "Auto"
+          light: "Svijetlo"
+          dark: "Tamno"
       dark_mode: "Tamni način rada"
       dark_mode_enable: "Omogućite automatsku paletu boja tamnog načina rada"
       text_size_default_on_all_devices: "Postavi ovu veličinu teksta kao zadanu na svim mojim uređajima"

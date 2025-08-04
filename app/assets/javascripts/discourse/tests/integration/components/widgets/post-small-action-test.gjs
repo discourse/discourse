@@ -119,7 +119,7 @@ module(
     test("`addGroupPostSmallActionCode` plugin api", async function (assert) {
       const self = this;
 
-      withPluginApi("1.6.0", (api) => {
+      withPluginApi((api) => {
         api.addGroupPostSmallActionCode("some_code");
       });
 
@@ -156,7 +156,7 @@ module(
       const self = this;
 
       withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
-        withPluginApi("1.6.0", (api) => {
+        withPluginApi((api) => {
           api.addPostSmallActionClassesCallback((postAttrs) => {
             if (postAttrs.canRecover) {
               return ["abcde"];

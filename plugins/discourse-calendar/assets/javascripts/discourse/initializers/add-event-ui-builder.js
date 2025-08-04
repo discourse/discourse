@@ -45,7 +45,7 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.discourse_post_event_enabled) {
-      withPluginApi("0.8.7", initializeEventBuilder);
+      withPluginApi(initializeEventBuilder);
     }
   },
 };

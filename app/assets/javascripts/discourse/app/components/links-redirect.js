@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { getOwner } from "@ember/owner";
 import ClickTrack from "discourse/lib/click-track";

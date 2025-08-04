@@ -381,7 +381,7 @@ class TopicsFilter
   end
 
   def filter_by_number_of_views(min: nil, max: nil)
-    filter_by_topic_range(column_name: "views", min:, max:)
+    filter_by_topic_range(column_name: "topics.views", min:, max:)
   end
 
   def filter_categories(values:)

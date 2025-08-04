@@ -37,9 +37,7 @@ export default class VoteBox extends Component {
         topic.user_voted = true;
         this.currentUser.votes_exceeded = !result.can_vote;
         this.currentUser.votes_left = result.votes_left;
-        if (result.alert) {
-          this.votesAlert = result.votes_left;
-        }
+        this.votesAlert = result.alert;
         this.allowClick = true;
         this.showOptions = false;
       })
@@ -114,7 +112,7 @@ export default class VoteBox extends Component {
           {{htmlSafe
             (i18n
               "topic_voting.votes_left"
-              count=this.votesAlert
+              count=this.currentUser.votes_left
               path="/my/activity/votes"
             )
           }}

@@ -125,11 +125,14 @@
   --gold: #{$gold};
   --silver: #{$silver};
   --bronze: #{$bronze};
+  --d-link-color: var(--tertiary);
   --title-color--read: var(--primary-medium);
   --content-border-color: var(--primary-low);
   --input-border-color: var(--primary-400);
   --table-border-color: var(--content-border-color);
   --metadata-color: var(--primary-medium);
+  --d-badge-card-background-color: var(--primary-very-low);
+  --mention-background-color: var(--primary-low);
   --title-color: var(--primary);
   --title-color--header: var(--header_primary);
   --excerpt-color: var(--primary-high);

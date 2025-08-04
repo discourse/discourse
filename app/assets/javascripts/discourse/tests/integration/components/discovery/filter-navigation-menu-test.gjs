@@ -11,7 +11,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DMenus from "float-kit/components/d-menus";
 
 module(
-  "Integration | Component | discovery | filter-navigation-menu",
+  "Integration | Component | discovery | FilterNavigationMenu",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -53,12 +53,14 @@ module(
     });
 
     test("keyboard navigation through tips", async function (assert) {
+      const self = this;
+
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
+            @tips={{self.tips}}
+            @initialFilterQueryString={{self.query}}
+            @onChange={{self.update}}
           />
           <DMenus />
         </template>
@@ -76,7 +78,7 @@ module(
       );
       assert
         .dom(
-          ".filter-navigation__tip-button--selected .filter-navigation__tip-name"
+          ".filter-navigation__tip-button.--selected .filter-navigation__tip-name"
         )
         .hasText("category:");
 
@@ -87,25 +89,27 @@ module(
       );
       assert
         .dom(
-          ".filter-navigation__tip-button--selected .filter-navigation__tip-name"
+          ".filter-navigation__tip-button.--selected .filter-navigation__tip-name"
         )
         .hasText("tag:");
 
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "ArrowUp");
       assert
         .dom(
-          ".filter-navigation__tip-button--selected .filter-navigation__tip-name"
+          ".filter-navigation__tip-button.--selected .filter-navigation__tip-name"
         )
         .hasText("category:");
     });
 
     test("selecting a tip with Tab", async function (assert) {
+      const self = this;
+
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
+            @tips={{self.tips}}
+            @initialFilterQueryString={{self.query}}
+            @onChange={{self.update}}
           />
 
           <DMenus />
@@ -131,23 +135,29 @@ module(
     });
 
     test("searching tag values", async function (assert) {
+      const self = this;
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
+            @tips={{self.tips}}
+            @initialFilterQueryString={{self.query}}
+            @onChange={{self.update}}
           />
           <DMenus />
         </template>
       );
 
       await triggerEvent("#topic-query-filter-input", "focus");
+      await assert
+        .dom(".filter-navigation__tip-button")
+        .exists("initial filters shown");
+
       await fillIn("#topic-query-filter-input", "tag:e");
 
-      assert
+      await assert
         .dom(".filter-navigation__tip-button")
         .exists("tag search results shown");
+
       await triggerKeyEvent(
         "#topic-query-filter-input",
         "keydown",
@@ -159,12 +169,13 @@ module(
     });
 
     test("escape hides suggestions", async function (assert) {
+      const self = this;
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
+            @tips={{self.tips}}
+            @initialFilterQueryString={{self.query}}
+            @onChange={{self.update}}
           />
           <DMenus />
         </template>
@@ -173,7 +184,7 @@ module(
       await triggerEvent("#topic-query-filter-input", "focus");
       assert
         .dom(".filter-navigation__tip-button")
-        .exists("tips visible after focus");
+        .exists({ count: 3 }, "tips visible after focus");
 
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Escape");
       assert
@@ -182,6 +193,7 @@ module(
     });
 
     test("prefix support for categories", async function (assert) {
+      const self = this;
       this.tips = [
         {
           name: "category:",
@@ -198,9 +210,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{this.tips}}
-            @initialFilterQueryString={{this.query}}
-            @onChange={{this.update}}
+            @tips={{self.tips}}
+            @initialFilterQueryString={{self.query}}
+            @onChange={{self.update}}
           />
           <DMenus />
         </template>

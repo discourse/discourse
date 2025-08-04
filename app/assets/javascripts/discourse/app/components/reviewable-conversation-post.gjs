@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { gte } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";

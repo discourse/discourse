@@ -1,6 +1,6 @@
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";

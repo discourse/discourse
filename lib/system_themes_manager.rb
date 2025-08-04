@@ -20,11 +20,13 @@ class SystemThemesManager
         else
           "#{remote_theme.color_scheme.name} Dark"
         end
-      remote_theme
-        .color_schemes
-        .where(name: alternative_theme_name)
-        .first
-        &.update!(user_selectable: true)
+
+      alternative_color_scheme =
+        remote_theme.color_schemes.where(name: alternative_theme_name).first
+      alternative_color_scheme&.update!(user_selectable: true)
+      if remote_theme.dark_color_scheme.blank? && alternative_color_scheme
+        remote_theme.update!(dark_color_scheme: alternative_color_scheme)
+      end
     end
     remote_theme.update_column(:enabled, true)
     Stylesheet::Manager.clear_theme_cache!

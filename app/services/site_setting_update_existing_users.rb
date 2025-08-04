@@ -122,6 +122,7 @@ class SiteSettingUpdateExistingUsers
       default_other_notification_level_when_replying: "notification_level_when_replying",
       default_other_like_notification_frequency: "like_notification_frequency",
       default_other_skip_new_user_tips: "skip_new_user_tips",
+      default_other_enable_markdown_monospace_font: "enable_markdown_monospace_font",
       default_email_digest_frequency: "digest_after_minutes",
       default_include_tl0_in_digests: "include_tl0_in_digests",
       default_text_size: "text_size_key",
@@ -130,6 +131,7 @@ class SiteSettingUpdateExistingUsers
       default_hide_presence: "hide_presence",
       default_sidebar_link_to_filtered_list: "sidebar_link_to_filtered_list",
       default_sidebar_show_count_of_new_items: "sidebar_show_count_of_new_items",
+      default_composition_mode: "composition_mode",
     }
   end
 

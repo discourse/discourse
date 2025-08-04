@@ -7,8 +7,6 @@ import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 import { setDefaultColorScheme } from "admin/lib/color-scheme-manager";
 
-const COUNT_TO_FILTER = 8;
-
 export default class AdminCustomizeColorsController extends Controller {
   @service router;
   @service modal;
@@ -17,22 +15,39 @@ export default class AdminCustomizeColorsController extends Controller {
   @service toasts;
   @service session;
   @service site;
+  @service siteSettings;
 
   @tracked defaultTheme = null;
-  @tracked filterValue = "";
-  @tracked typeFilter = "all";
 
-  isDefaultThemeColorScheme = (scheme) => {
+  isDefaultThemeLightColorScheme = (scheme) => {
     return this.defaultTheme?.color_scheme_id === scheme.id;
   };
 
+  isDefaultThemeDarkColorScheme = (scheme) => {
+    return this.defaultTheme?.dark_color_scheme_id === scheme.id;
+  };
+
   @tracked _initialSortedSchemes = [];
-  _initialUserColorSchemeId = undefined;
-  _initialDefaultThemeColorSchemeId = null;
+  _initialUserLightColorSchemeId = undefined;
+  _initialUserDarkColorSchemeId = undefined;
+  _initialDefaultThemeLightColorSchemeId = null;
+  _initialDefaultThemeDarkColorSchemeId = null;
   _sortedOnce = false;
 
-  get canPreviewColorScheme() {
-    return currentThemeId() === this.defaultTheme?.id;
+  canPreviewColorScheme(mode) {
+    const usingDefaultTheme = currentThemeId() === this.defaultTheme?.id;
+    const usingDefaultLightScheme =
+      this._initialUserLightColorSchemeId ===
+      this._initialDefaultThemeLightColorSchemeId;
+    const usingDefaultDarkScheme =
+      this._initialUserDarkColorSchemeId ===
+      this._initialDefaultThemeDarkColorSchemeId;
+
+    return (
+      usingDefaultTheme &&
+      ((mode === "dark" && this.isUsingDarkMode && usingDefaultDarkScheme) ||
+        (mode === "light" && !this.isUsingDarkMode && usingDefaultLightScheme))
+    );
   }
 
   get allBaseColorSchemes() {
@@ -40,50 +55,71 @@ export default class AdminCustomizeColorsController extends Controller {
   }
 
   _captureInitialState() {
-    this._initialUserColorSchemeId = this.session.userColorSchemeId;
-    this._initialDefaultThemeColorSchemeId = this.defaultTheme?.color_scheme_id;
+    this._initialUserLightColorSchemeId = this.session.userColorSchemeId;
+    this._initialUserDarkColorSchemeId = this.session.userDarkSchemeId;
+    this._initialDefaultThemeLightColorSchemeId =
+      this.defaultTheme?.color_scheme_id;
+    this._initialDefaultThemeDarkColorSchemeId =
+      this.defaultTheme?.dark_color_scheme_id;
   }
 
   get changedThemePreferences() {
     // can't check against null, because the default scheme ID is null
-    if (this._initialUserColorSchemeId === undefined && this.defaultTheme) {
+    if (
+      this._initialUserLightColorSchemeId === undefined &&
+      this.defaultTheme
+    ) {
       this._captureInitialState();
     }
 
     const changedColors =
-      this._initialUserColorSchemeId !== this._initialDefaultThemeColorSchemeId;
+      this._initialUserColorSchemeId !==
+      this._initialDefaultThemeLightColorSchemeId;
     const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
 
     return changedColors || changedTheme;
   }
 
-  get filteredColorSchemes() {
+  get isUsingDarkMode() {
+    // check if user has dark mode available and is using it
+    return (
+      this.session.darkModeAvailable &&
+      this.session.userDarkSchemeId !== -1 &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
+  }
+
+  get sortedColorSchemes() {
     // only sort initially, this avoids position jumps when state changes on interaction
     if (!this._sortedOnce && this.model?.length > 0) {
       this._doInitialSort();
     }
 
-    let schemes = [...this._initialSortedSchemes];
+    return [...this._initialSortedSchemes];
+  }
 
-    switch (this.typeFilter) {
-      case "user_selectable":
-        schemes = schemes.filter((scheme) => scheme.user_selectable);
-        break;
-      case "from_theme":
-        schemes = schemes.filter((scheme) => scheme.theme_id);
-        break;
-    }
+  get searchableProps() {
+    return ["name", "theme_name"];
+  }
 
-    if (this.filterValue) {
-      const term = this.filterValue.toLowerCase();
-      schemes = schemes.filter((scheme) => {
-        const nameMatches = scheme.name?.toLowerCase().includes(term);
-        const themeMatches = scheme.theme_name?.toLowerCase().includes(term);
-        return nameMatches || themeMatches;
-      });
-    }
-
-    return schemes;
+  get dropdownOptions() {
+    return [
+      {
+        value: "all",
+        label: i18n("admin.customize.colors.filters.all"),
+        filterFn: () => true,
+      },
+      {
+        value: "user_selectable",
+        label: i18n("admin.customize.colors.filters.user_selectable"),
+        filterFn: (scheme) => scheme.user_selectable,
+      },
+      {
+        value: "from_theme",
+        label: i18n("admin.customize.colors.filters.from_theme"),
+        filterFn: (scheme) => scheme.theme_id,
+      },
+    ];
   }
 
   _doInitialSort() {
@@ -96,7 +132,7 @@ export default class AdminCustomizeColorsController extends Controller {
     if (lightBaseScheme) {
       const builtInDefault = {
         ...lightBaseScheme,
-        id: 0,
+        id: null,
         name: i18n("admin.customize.theme.default_light_scheme"),
         description: i18n("admin.customize.theme.default_light_scheme"),
         is_builtin_default: true,
@@ -105,15 +141,16 @@ export default class AdminCustomizeColorsController extends Controller {
     }
 
     schemes.sort((a, b) => {
-      const defaultId = this.defaultTheme?.color_scheme_id;
+      const defaultLightId = this.defaultTheme?.color_scheme_id;
+      const defaultDarkId = this.defaultTheme?.dark_color_scheme_id;
 
       const isDefaultA = a.is_builtin_default
-        ? defaultId === null
-        : a.id === defaultId;
+        ? defaultLightId === null || defaultDarkId === null
+        : a.id === defaultLightId || a.id === defaultDarkId;
 
       const isDefaultB = b.is_builtin_default
-        ? defaultId === null
-        : b.id === defaultId;
+        ? defaultLightId === null || defaultDarkId === null
+        : b.id === defaultLightId || b.id === defaultDarkId;
 
       if (isDefaultA !== isDefaultB) {
         return isDefaultA ? -1 : 1;
@@ -128,29 +165,6 @@ export default class AdminCustomizeColorsController extends Controller {
 
     this._initialSortedSchemes = schemes;
     this._sortedOnce = true;
-  }
-
-  get showFilters() {
-    return (
-      this.model.filter((scheme) => !scheme.is_base).length > COUNT_TO_FILTER
-    );
-  }
-
-  get typeFilterOptions() {
-    return [
-      {
-        value: "all",
-        label: i18n("admin.customize.colors.filters.all"),
-      },
-      {
-        value: "user_selectable",
-        label: i18n("admin.customize.colors.filters.user_selectable"),
-      },
-      {
-        value: "from_theme",
-        label: i18n("admin.customize.colors.filters.from_theme"),
-      },
-    ];
   }
 
   _resetSortedSchemes() {
@@ -193,13 +207,23 @@ export default class AdminCustomizeColorsController extends Controller {
   }
 
   @action
-  async setAsDefaultThemePalette(scheme) {
+  async setAsDefaultThemePalette(scheme, mode) {
     try {
-      if (this.canPreviewColorScheme) {
-        this.defaultTheme = await setDefaultColorScheme(scheme, this.store);
+      let previewMode;
+      if (scheme.is_builtin_default) {
+        previewMode = "reload";
+      } else if (this.canPreviewColorScheme(mode)) {
+        previewMode = "live";
+      } else {
+        previewMode = "none";
       }
 
-      if (!this.canPreviewColorScheme) {
+      this.defaultTheme = await setDefaultColorScheme(scheme, this.store, {
+        previewMode,
+        mode,
+      });
+
+      if (!this.canPreviewColorScheme(mode)) {
         const schemeName = scheme.description || scheme.name;
         const themeName = this.defaultTheme.name;
         this.toasts.success({
@@ -245,22 +269,5 @@ export default class AdminCustomizeColorsController extends Controller {
         },
       });
     });
-  }
-
-  @action
-  onFilterChange(event) {
-    this.filterValue = event.target?.value || "";
-  }
-
-  @action
-  onTypeFilterChange(value) {
-    this.typeFilter = value;
-  }
-
-  @action
-  resetFilters() {
-    this.filterValue = "";
-    this.typeFilter = "all";
-    document.querySelector(".admin-filter__input")?.focus();
   }
 }

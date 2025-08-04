@@ -1,8 +1,11 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+
+const TOOLTIP_SELECTOR =
+  ".fk-d-tooltip__content[data-identifier='inline-footnote']";
 
 acceptance("Discourse Footnote Plugin", function (needs) {
   needs.settings({
@@ -29,44 +32,24 @@ acceptance("Discourse Footnote Plugin", function (needs) {
   test("displays the footnote on click", async function (assert) {
     await visit("/t/-/45");
 
-    assert.dom("#footnote-tooltip", document.body).exists();
-
     // open
     await click(".expand-footnote");
-    assert
-      .dom(".footnote-tooltip-content", document.body)
-      .hasText("consectetur adipiscing elit ↩︎");
-    assert.dom("#footnote-tooltip", document.body).hasAttribute("data-show");
+
+    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit ↩︎");
 
     // close by clicking outside
-    await click(document.body);
-    assert
-      .dom("#footnote-tooltip", document.body)
-      .doesNotHaveAttribute("data-show");
+    await triggerEvent(".d-header", "pointerdown");
+    assert.dom(TOOLTIP_SELECTOR).doesNotExist();
 
     // open again
     await click(".expand-footnote");
-    assert
-      .dom(".footnote-tooltip-content", document.body)
-      .hasText("consectetur adipiscing elit ↩︎");
-    assert.dom("#footnote-tooltip", document.body).hasAttribute("data-show");
-
-    // close by clicking the button
-    await click(".expand-footnote");
-    assert
-      .dom("#footnote-tooltip", document.body)
-      .doesNotHaveAttribute("data-show");
+    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit ↩︎");
   });
 
   test("clicking a second footnote with same name works", async function (assert) {
     await visit("/t/-/45");
 
-    assert.dom("#footnote-tooltip", document.body).exists();
-
     await click(".second .expand-footnote");
-    assert
-      .dom(".footnote-tooltip-content", document.body)
-      .hasText("consectetur adipiscing elit ↩︎");
-    assert.dom("#footnote-tooltip", document.body).hasAttribute("data-show");
+    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit ↩︎");
   });
 });

@@ -199,7 +199,6 @@ sq:
       search: "Kërko"
     themes:
       default_description: "Paracaktuar"
-      broken_theme_alert: "Faqja juaj mund të mos funksionojë sepse një temë/komponent ka gabime."
       error_caused_by: "Shkaktuar nga '%{name}'. <a target='blank' href='%{path}'>Klikoni këtu</a> për të përditësuar, rikonfiguruar ose çaktivizuar."
       only_admins: "(ky mesazh u shfaqet vetëm administratorëve të faqes)"
     broken_decorator_alert: "Postimet mund të mos shfaqen saktë sepse një nga dekoruesit e përmbajtjes së postimit në faqen tuaj ngriti një gabim."
@@ -1270,7 +1269,6 @@ sq:
         description: "Kapërceni këshillat dhe distinktivët për hyrjen e përdoruesve të rinj"
       reset_seen_user_tips: "Shfaq përsëri këshillat për përdoruesit"
       theme_default_on_all_devices: "Bëje këtë temë të paracaktuar në të gjitha pajisjet e mia"
-      color_scheme_default_on_all_devices: "Cakto paletën e parazgjedhur të ngjyrave në të gjitha pajisjet e mia"
       color_scheme: "Paleta e ngjyrave"
       color_schemes:
         default_description: "Tema e paracaktuar"

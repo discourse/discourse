@@ -8,7 +8,7 @@ RSpec.describe "AI Composer helper", type: :system do
   before do
     enable_current_plugin
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
-    assign_fake_provider_to(:ai_helper_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_helper_enabled = true
     Jobs.run_immediately!
     sign_in(user)
@@ -326,9 +326,8 @@ RSpec.describe "AI Composer helper", type: :system do
 
       suggestion = ai_suggestion_dropdown.suggestion_name(0)
       ai_suggestion_dropdown.select_suggestion_by_value(0)
-      tag_selector = page.find(".mini-tag-chooser summary")
 
-      expect(tag_selector["data-name"]).to eq(suggestion)
+      expect(page).to have_css(".mini-tag-chooser summary[data-name='#{suggestion}']")
     end
 
     it "does not suggest tags that already exist" do

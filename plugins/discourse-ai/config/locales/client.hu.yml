@@ -59,7 +59,7 @@ hu:
       modals:
         select_option: "Válasszon egy lehetőséget…"
       layout:
-        table: "Tábla"
+        table: "Táblázat"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"
@@ -136,7 +136,7 @@ hu:
           ai_summarization: "Összefoglalás"
           ai_spam: "Kéretlen tartalom"
         next:
-          title: "Tovább"
+          title: "Következő"
         tests:
           title: "Teszt futtatása"
           success: "Sikeres!"
@@ -156,7 +156,7 @@ hu:
           copied: "Másolva!"
           cancel: "Mégse"
         thumbnail_suggestions:
-          select: "Válasszon"
+          select: "Kiválasztás"
           selected: "Kiválasztott"
         image_caption:
           save_caption: "Mentés"
@@ -177,8 +177,8 @@ hu:
         debug_ai_modal:
           request: "Kérés"
           response: "Válasz"
-          next_log: "Tovább"
-          previous_log: "Vissza"
+          next_log: "Következő"
+          previous_log: "Előző"
         invite_ai_conversation:
           button: "Meghívás"
         share_modal:

@@ -15,6 +15,7 @@ export default class CsvUploader extends Component {
     id: "discourse-post-event-csv-uploader",
     autoStartUploads: false,
     uploadUrl: this.args.uploadUrl,
+    preventDirectS3Uploads: true,
     uppyReady: () => {
       this.uppyUpload.uppyWrapper.uppyInstance.on("file-added", () => {
         this.dialog.confirm({

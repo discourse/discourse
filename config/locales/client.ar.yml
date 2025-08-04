@@ -312,7 +312,6 @@ ar:
       search: "البحث"
     themes:
       default_description: "افتراضي"
-      broken_theme_alert: "قد لا يعمل موقعك كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن."
       error_caused_by: "بسبب '%{name}'. <a target='blank' href='%{path}'>انقر هنا</a> للتحديث أو إعادة الإعداد أو الإيقاف"
       only_admins: "(تظهر هذه الرسالة لمسؤولي الموقع فقط)"
     broken_decorator_alert: "قد لا يتم عرض المنشورات بشكلٍٍ صحيح لأن أحد مصمِّمي محتوى المنشورات على موقعك أشار إلى خطأ."
@@ -1594,7 +1593,6 @@ ar:
         description: "تخطي نصائح وشارات تهيئة المستخدم الجديد"
       reset_seen_user_tips: "عرض نصائح المستخدم مرة أخرى"
       theme_default_on_all_devices: "جعل هذه السمة الافتراضية على كل أجهزتي"
-      color_scheme_default_on_all_devices: "تعيين لوحة الألوان الافتراضية على جميع أجهزتي"
       color_scheme: "لوحة الألوان"
       color_schemes:
         default_description: "السمة الافتراضية"
@@ -1604,6 +1602,9 @@ ar:
         regular: "العادي"
         dark: "الوضع الداكن"
         default_dark_scheme: "(الوضع الافتراضي للموقع)"
+        interface_modes:
+          light: "فاتح"
+          dark: "داكن"
       dark_mode: "الوضع الداكن"
       dark_mode_enable: "تفعيل لوحة الألوان في الوضع الداكن تلقائيًا"
       text_size_default_on_all_devices: "جعل هذا الحجم الافتراضي للنص على جميع أجهزتي"

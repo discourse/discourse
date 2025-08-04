@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";

@@ -173,7 +173,6 @@ ko:
       search: "검색"
     themes:
       default_description: "기본"
-      broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 테마를 업데이트 또는 재설정하거나, 테마 사용을 중지하세요."
       only_admins: "(이 메시지는 사이트 운영자에게만 표시됩니다)"
     broken_decorator_alert: "사이트의 게시물 콘텐츠 데코레이터 중 하나가 오류를 발생시켜 게시물이 올바르게 표시되지 않을 수 있습니다."
@@ -1132,6 +1131,9 @@ ko:
         regular: "일반"
         dark: "다크 모드"
         default_dark_scheme: "(사이트 디폴트)"
+        interface_modes:
+          light: "라이트"
+          dark: "다크"
       dark_mode: "다크 모드"
       text_size_default_on_all_devices: "모든 디바이스에서 디폴트 텍스트 크기로 설정"
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"

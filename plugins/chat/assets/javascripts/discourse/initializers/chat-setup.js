@@ -31,7 +31,7 @@ class ChatSetupInit {
     setOwner(this, owner);
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
-    withPluginApi("0.12.1", (api) => {
+    withPluginApi((api) => {
       api.addAboutPageActivity("chat_messages", (periods) => {
         const count = periods["7_days"];
         if (count) {
@@ -67,7 +67,9 @@ class ChatSetupInit {
           class: "chat-emoji-btn",
           icon: "face-smile",
           position: "dropdown",
-          displayed: owner.lookup("service:site").mobileView,
+          get displayed() {
+            return owner.lookup("service:site").mobileView;
+          },
           action(context) {
             const didSelectEmoji = (emoji) => {
               const composer = owner.lookup(`service:chat-${context}-composer`);

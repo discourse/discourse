@@ -201,7 +201,6 @@ pt_BR:
       search: "Pesquisar"
     themes:
       default_description: "Padrão"
-      broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
       error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é mostrada somente aos(às) administradores(es) do site)"
     broken_decorator_alert: "As postagens podem não ser exibidas corretamente porque um dos decoradores de conteúdo de postagem em seu site gerou um erro."
@@ -1348,7 +1347,6 @@ pt_BR:
         description: "Pular emblemas e dicas de integração de novo(a) usuário(a)"
       reset_seen_user_tips: "Mostrar dicas do(a) usuário(a) novamente"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Definir paleta de cores padrão em todos os meus dispositivos"
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Tema padrão"
@@ -1358,6 +1356,10 @@ pt_BR:
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(padrão do site)"
+        interface_modes:
+          auto: "Automático"
+          light: "Claro"
+          dark: "Escuro"
       dark_mode: "Modo escuro"
       dark_mode_enable: "Ativar a paleta de cores do modo escuro automaticamente"
       text_size_default_on_all_devices: "Definir este tamanho de texto como padrão em todos os meus dispositivos"

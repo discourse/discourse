@@ -1,7 +1,7 @@
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import formatDate from "discourse/helpers/format-date";
-import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import ListSetting from "select-kit/components/list-setting";

@@ -257,7 +257,6 @@ sk:
       search: "Hľadať"
     themes:
       default_description: "Predvolené"
-      broken_theme_alert: "Vaša stránka nemusí fungovať, pretože téma/komponent obsahuje chyby."
       error_caused_by: "Spôsobené '%{name}'. <a target='blank' href='%{path}'>Kliknutím sem</a> aktualizujte, prekonfigurujte alebo deaktivujte."
       only_admins: "(táto správa sa zobrazuje iba správcom stránok)"
     broken_decorator_alert: "Príspevky sa nemusia zobrazovať správne, pretože jeden z dekoratérov obsahu príspevku na vašom webe vyvolal chybu."
@@ -1522,7 +1521,6 @@ sk:
         description: "Preskočiť tipy a odznaky na registráciu nového používateľa"
       reset_seen_user_tips: "Znova zobraziť tipy používateľov"
       theme_default_on_all_devices: "Nastaviť túto tému ako predvolenú na všetkých mojich zariadeniach"
-      color_scheme_default_on_all_devices: "Nastavenie predvolenej palety farieb na všetkých mojich zariadeniach"
       color_scheme: "Paleta farieb"
       color_schemes:
         default_description: "Predvolená téma"
@@ -1532,6 +1530,10 @@ sk:
         regular: "Bežné"
         dark: "Tmavý režim"
         default_dark_scheme: "(predvolené nastavenie stránky)"
+        interface_modes:
+          auto: "Auto"
+          light: "Svetlá"
+          dark: "Tmavá"
       dark_mode: "Tmavý režim"
       dark_mode_enable: "Povoliť automatickú farebnú paletu tmavého režimu"
       text_size_default_on_all_devices: "Nastaviť ako predvolenú veľkosť textu na všetkých mojich zariadeniach"
@@ -2752,6 +2754,9 @@ sk:
     welcome_banner_location:
       above_topic_content: "Obsah vyššie uvedenej témy"
       below_site_header: "Pod hlavičkou stránky"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Formátovaný text"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2959,7 +2964,6 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
-      heading_label: "H"
       heading_title: "Nadpisy"
       heading_level_n: "Nadpis %{levelNumber}"
       heading_level_n_title: "Nadpis %{levelNumber}"
@@ -7180,7 +7184,6 @@ sk:
           preference_warning: "Zmenili ste <a href='%{link}'>osobné nastavenia témy</a>, takže zmeny palety nemusia byť viditeľné. Návštevníci, ktorí nezmenili svoje predvolené nastavenia, budú stále vidieť zmeny, ktoré tu vykonáte."
           title: "Farby"
           edit: "Upraviť"
-          set_default: "Nastavenie ako aktívne na stránke %{theme}"
           set_default_success: "%{schemeName} nastaviť ako aktívnu paletu pre %{themeName}"
           saved_refreshing: "Uložené! Osviežujúce farby..."
           from_theme: "Z témy: %{name}"

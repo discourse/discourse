@@ -39,14 +39,14 @@ describe "Interface color selector", type: :system do
 
   before do
     SiteSetting.interface_color_selector = "sidebar_footer"
-    SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+    Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
 
     SiteSetting.logo = light_mode_image
     SiteSetting.logo_dark = dark_mode_image
   end
 
   it "is not available when there's no default dark scheme" do
-    SiteSetting.default_dark_mode_color_scheme_id = -1
+    Theme.find_default.update!(dark_color_scheme_id: nil)
 
     visit("/")
 
@@ -54,7 +54,7 @@ describe "Interface color selector", type: :system do
   end
 
   it "is not available when the default theme's scheme is the same as the site's default dark scheme" do
-    Theme.find(SiteSetting.default_theme_id).update!(color_scheme_id: dark_scheme.id)
+    Theme.find_default.update!(color_scheme_id: dark_scheme.id)
 
     visit("/")
 

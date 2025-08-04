@@ -80,7 +80,7 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
   });
 
   test("admin-customize-theme-included-components-setting plugin outlet", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.renderInOutlet(
         "admin-customize-theme-included-components-setting",
         <template>

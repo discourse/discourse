@@ -403,7 +403,6 @@ tr_TR:
           max_usages_help: "Bu gruptaki her kullanıcının belirtilen süre içinde yapay zekâ modelini kullanabileceği maksimum sayı. Bu kota, grup genelinde paylaşılmaz, bireysel kullanıcı başına izlenir."
         usage:
           ai_bot: "YZ botu"
-          ai_helper: "Yardımcı"
           ai_persona: "Kişilik (%{persona})"
           ai_summarization: "Özetle"
           ai_embeddings_semantic_search: "YZ araması"

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
 import CategoryTitleLink from "discourse/components/category-title-link";

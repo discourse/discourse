@@ -171,7 +171,6 @@ zh_TW:
       search: "搜索"
     themes:
       default_description: "預設"
-      broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
       error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>按一下這裡</a> 以更新、重新設定或停用。"
       only_admins: "（此消息僅向網站管理員顯示）"
     broken_decorator_alert: "貼文可能無法正確顯示，因為您網站上的帖子內容裝飾器之一引發了錯誤。"
@@ -1213,7 +1212,6 @@ zh_TW:
         description: "跳過新使用者登入時的提示和徽章"
       reset_seen_user_tips: "再次顯示使用者提示"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
-      color_scheme_default_on_all_devices: "在我的所有裝置上設定預設調色盤"
       color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
@@ -1223,6 +1221,10 @@ zh_TW:
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
+        interface_modes:
+          auto: "自動"
+          light: "輕亮"
+          dark: "黑暗"
       dark_mode: "夜間模式"
       dark_mode_enable: "啟用自動深色模式調色板"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"

@@ -289,6 +289,9 @@ function initializeDiscourseCalendar(api) {
             ) {
               return i18n(this.notification.data.message, {
                 username: this.username,
+                eventName:
+                  this.notification.data.event_name ||
+                  i18n("discourse_post_event.notifications.an_event"),
               });
             }
             return super.label;
@@ -1037,7 +1040,7 @@ export default {
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.calendar_enabled) {
-      withPluginApi("0.8.22", initializeDiscourseCalendar);
+      withPluginApi(initializeDiscourseCalendar);
     }
   },
 };

@@ -22,7 +22,7 @@ export default class RegionInput extends ComboBoxComponent {
     const localeNames = {};
     let regions = [];
 
-    JSON.parse(this.siteSettings.available_locales).forEach((locale) => {
+    this.siteSettings.available_locales.forEach((locale) => {
       localeNames[locale.value] = locale.name;
     });
 

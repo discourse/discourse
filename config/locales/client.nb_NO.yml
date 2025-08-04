@@ -198,7 +198,6 @@ nb_NO:
       search: "Søk"
     themes:
       default_description: "Forvalg"
-      broken_theme_alert: "Det kan hende at nettstedet ditt ikke fungerer fordi et tema/en komponent har feil."
       error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
       only_admins: "(denne meldingen vises bare til nettstedets administratorer)"
     broken_decorator_alert: "Innlegg vises kanskje ikke riktig fordi en av dekoratorene for innleggsinnhold på nettstedet ditt har gitt en feil."
@@ -1243,6 +1242,9 @@ nb_NO:
         regular: "Aktivt medlem"
         dark: "Mørk modus"
         default_dark_scheme: "(nettstedsstandard)"
+        interface_modes:
+          light: "Lys"
+          dark: "Mørk"
       dark_mode: "Mørk Modus"
       text_size_default_on_all_devices: "Gjør denne standardtekststørrelsen på alle mine enheter"
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"

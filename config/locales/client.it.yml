@@ -200,7 +200,6 @@ it:
       search: "Cerca"
     themes:
       default_description: "Predefinito"
-      broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
       error_caused_by: "Causato da '%{name}'. <a target='blank' href='%{path}'>Clicca qui</a> per aggiornare, riconfigurare o disattivare."
       only_admins: "(questo messaggio è mostrato solo agli amministratori del sito)"
     broken_decorator_alert: "I messaggi potrebbero non essere visualizzati correttamente perché uno dei decoratori dei contenuti dei messaggi sul tuo sito ha generato un errore."
@@ -1280,7 +1279,6 @@ it:
         description: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti"
       reset_seen_user_tips: "Mostra di nuovo i suggerimenti per gli utenti"
       theme_default_on_all_devices: "Rendi questo il tema predefinito su tutti i miei dispositivi."
-      color_scheme_default_on_all_devices: "Imposta questo schema colori predefinito su tutti i miei dispositivi"
       color_scheme: "Schema di colori"
       color_schemes:
         default_description: "Tema predefinito"
@@ -1290,6 +1288,9 @@ it:
         regular: "Normale"
         dark: "Modalità scura"
         default_dark_scheme: "(predefinito del sito)"
+        interface_modes:
+          light: "Chiaro"
+          dark: "Scuro"
       dark_mode: "Modalità scura"
       dark_mode_enable: "Attiva lo schema di colori automatico della modalità scura"
       text_size_default_on_all_devices: "Rendi questa la dimensione del testo predefinita su tutti i miei dispositivi"

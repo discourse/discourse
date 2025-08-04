@@ -360,7 +360,7 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    withPluginApi("1.25.0", (api) => {
+    withPluginApi((api) => {
       api.addComposerImageWrapperButton(
         "My Custom Button",
         "custom-button-class",

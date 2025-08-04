@@ -105,6 +105,10 @@ module PageObjects
         self
       end
 
+      def reply_button_focused?
+        page.has_css?("#{COMPOSER_ID} .btn-primary:focus")
+      end
+
       def create
         find("#{COMPOSER_ID} .btn-primary").click
       end
@@ -329,11 +333,15 @@ module PageObjects
       end
 
       def has_rich_editor_active?
-        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__right-icon.--active")
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch.--rte")
       end
 
       def has_no_rich_editor_active?
-        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__left-icon.--active")
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch.--markdown")
+      end
+
+      def has_markdown_editor_active?
+        has_no_rich_editor_active?
       end
 
       def toggle_rich_editor

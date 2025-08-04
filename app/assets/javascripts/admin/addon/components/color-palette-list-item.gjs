@@ -4,10 +4,11 @@ import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { not } from "truth-helpers";
+import { not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import SvgSingleColorPalettePlaceholder from "admin/components/svg/single-color-palette-placeholder";
 import { getColorSchemeStyles } from "admin/lib/color-transformations";
@@ -20,14 +21,6 @@ export default class ColorPaletteListItem extends Component {
 
   get isBuiltInDefault() {
     return this.args.scheme?.is_builtin_default || false;
-  }
-
-  get setAsDefaultLabel() {
-    const themeName = this.args.defaultTheme?.name || "Default";
-
-    return i18n("admin.customize.colors.set_default", {
-      theme: themeName,
-    });
   }
 
   get canEdit() {
@@ -45,13 +38,26 @@ export default class ColorPaletteListItem extends Component {
     return true;
   }
 
-  get isActive() {
+  get isDefaultLight() {
     if (this.isBuiltInDefault) {
       return this.args.defaultTheme && !this.args.defaultTheme.color_scheme_id;
     }
     return (
       this.args.defaultTheme &&
-      this.args.isDefaultThemeColorScheme(this.args.scheme)
+      this.args.isDefaultThemeLightColorScheme(this.args.scheme)
+    );
+  }
+
+  get isDefaultDark() {
+    if (this.isBuiltInDefault) {
+      return (
+        this.args.defaultDarkTheme &&
+        !this.args.defaultDarkTheme.color_scheme_id
+      );
+    }
+    return (
+      this.args.defaultTheme &&
+      this.args.isDefaultThemeDarkColorScheme(this.args.scheme)
     );
   }
 
@@ -83,6 +89,35 @@ export default class ColorPaletteListItem extends Component {
       : existingStyles;
 
     return htmlSafe(allStyles);
+  }
+
+  get activeBadgeTitle() {
+    if (this.isDefaultLight && this.isDefaultDark) {
+      return i18n("admin.customize.colors.active_both_badge.title");
+    }
+    if (this.isDefaultLight) {
+      return i18n("admin.customize.colors.active_light_badge.title");
+    }
+    return i18n("admin.customize.colors.active_dark_badge.title");
+  }
+
+  get activeBadgeText() {
+    if (this.isDefaultLight && this.isDefaultDark) {
+      return i18n("admin.customize.colors.active_both_badge.text");
+    }
+    if (this.isDefaultLight) {
+      return i18n("admin.customize.colors.active_light_badge.text");
+    }
+    return i18n("admin.customize.colors.active_dark_badge.text");
+  }
+
+  @bind
+  setAsDefaultLabel(mode) {
+    const themeName = this.args.defaultTheme?.name || "Default";
+
+    return i18n(`admin.customize.colors.set_default_${mode}`, {
+      theme: themeName,
+    });
   }
 
   @action
@@ -138,12 +173,12 @@ export default class ColorPaletteListItem extends Component {
             {{/if}}
           </div>
 
-          {{#if this.isActive}}
+          {{#if (or this.isDefaultLight this.isDefaultDark)}}
             <span
-              title={{i18n "admin.customize.colors.active_badge.title"}}
+              title={{this.activeBadgeTitle}}
               class="theme-card__badge --active"
             >
-              {{i18n "admin.customize.colors.active_badge.text"}}
+              {{this.activeBadgeText}}
             </span>
           {{/if}}
         </div>
@@ -209,11 +244,26 @@ export default class ColorPaletteListItem extends Component {
                         this.handleAsyncAction
                         @setAsDefaultThemePalette
                         @scheme
+                        "light"
+                      }}
+                      @icon="far-star"
+                      @translatedLabel={{fn this.setAsDefaultLabel "light"}}
+                      class="btn-transparent btn-palette-default"
+                      disabled={{this.isDefaultLight}}
+                    />
+                  </dropdown.item>
+                  <dropdown.item>
+                    <DButton
+                      @action={{fn
+                        this.handleAsyncAction
+                        @setAsDefaultThemePalette
+                        @scheme
+                        "dark"
                       }}
                       @icon="star"
-                      @translatedLabel={{this.setAsDefaultLabel}}
+                      @translatedLabel={{fn this.setAsDefaultLabel "dark"}}
                       class="btn-transparent btn-palette-default"
-                      disabled={{this.isActive}}
+                      disabled={{this.isDefaultDark}}
                     />
                   </dropdown.item>
 

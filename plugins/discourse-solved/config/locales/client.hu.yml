@@ -31,7 +31,7 @@ hu:
         other: "megoldás"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
-        all: "Összes"
+        all: "összes"
         solved: "megoldott"
         unsolved: "megoldatlan"
       no_solved_topics_title: "Még egy témát sem oldott meg"
@@ -72,5 +72,5 @@ hu:
             any: Bármely
           fields:
             maximum_trust_level:
-              label: 'Bizalmi szint:'
+              label: Bizalmi szint
               description: Az ezen a bizalmi szint alatti felhasználók aktiválják ezt az automatizálást

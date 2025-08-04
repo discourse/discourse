@@ -24,8 +24,7 @@ RSpec.describe "AI image caption", type: :system do
   before do
     enable_current_plugin
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
-    assign_fake_provider_to(:ai_helper_model)
-    assign_fake_provider_to(:ai_helper_image_caption_model)
+    assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_helper_enabled = true
     SiteSetting.ai_helper_enabled_features = "image_caption"
     sign_in(user)

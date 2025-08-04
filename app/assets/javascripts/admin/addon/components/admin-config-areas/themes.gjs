@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import getURL from "discourse/helpers/get-url";
 import lazyHash from "discourse/helpers/lazy-hash";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
@@ -106,8 +106,6 @@ export default class AdminConfigAreasThemes extends Component {
         </PluginOutlet>
       </:actions>
     </DPageSubheader>
-    <div class="admin-detail">
-      <ThemesGrid @themes={{@themes}} />
-    </div>
+    <ThemesGrid @themes={{@themes}} />
   </template>
 }

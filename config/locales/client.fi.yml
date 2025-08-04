@@ -201,7 +201,6 @@ fi:
       search: "Hae"
     themes:
       default_description: "Oletus"
-      broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
       error_caused_by: "Aiheuttaja: '%{name}'. Päivitä, määritä uudelleen tai poista se käytöstä <a target='blank' href='%{path}'>klikkaamalla tätä</a>."
       only_admins: "(tämä viesti näytetään vain sivuston ylläpitäjille)"
     broken_decorator_alert: "Viestit eivät välttämättä näy oikein, koska yksi sivustosi viestien sisällön somistajista ilmoitti virheestä."
@@ -1303,7 +1302,6 @@ fi:
         description: "Ohita uuden käyttäjän aloittamisvinkit ja kunniamerkit"
       reset_seen_user_tips: "Näytä käyttäjävinkkejä uudelleen"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
-      color_scheme_default_on_all_devices: "Aseta oletusväripaletti kaikille laitteilleni"
       color_scheme: "Väripaletti"
       color_schemes:
         default_description: "Teeman oletus"
@@ -1313,6 +1311,10 @@ fi:
         regular: "Tavallinen"
         dark: "Tumma tila"
         default_dark_scheme: "(sivuston oletus)"
+        interface_modes:
+          auto: "Auto"
+          light: "Vaalea"
+          dark: "Tumma"
       dark_mode: "Tumma tila"
       dark_mode_enable: "Ota käyttöön automaattinen tumman tilan väripaletti"
       text_size_default_on_all_devices: "Tee tästä oletusfonttikoko kaikille laitteilleni"

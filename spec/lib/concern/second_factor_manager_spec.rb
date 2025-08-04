@@ -165,7 +165,7 @@ RSpec.describe SecondFactorManager do
 
   describe "#authenticate_second_factor" do
     let(:params) { {} }
-    let(:secure_session) { {} }
+    let(:secure_session) { SecureSession.new("some-prefix") }
 
     context "when neither security keys nor totp/backup codes are enabled" do
       before { disable_security_key && disable_totp }

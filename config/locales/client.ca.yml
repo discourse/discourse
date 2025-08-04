@@ -201,7 +201,6 @@ ca:
       search: "Cerca"
     themes:
       default_description: "Per defecte"
-      broken_theme_alert: "És possible que el vostre lloc no funcioni perquè una aparença o component té errors."
       error_caused_by: "Causat per '%{name}'. <a target='blank' href='%{path}'>Feu clic aquí</a> per actualitzar, tornar a configurar o desactivar."
       only_admins: "(aquest missatge només es mostra als administradors del lloc)"
     broken_decorator_alert: "És possible que les publicacions no es mostrin correctament perquè un dels decoradors de contingut de publicacions del vostre lloc web ha generat un error."
@@ -995,6 +994,9 @@ ca:
         regular: "Habitual"
         dark: "Mode fosc"
         default_dark_scheme: "(lloc predeterminat)"
+        interface_modes:
+          light: "Clar"
+          dark: "Fosc"
       dark_mode: "Mode fosc"
       text_size_default_on_all_devices: "Fes que aquesta sigui la mida de text predeterminada en tots els meus dispositius"
       allow_private_messages: "Permet a altres usuaris d'enviar-me missatges personals"

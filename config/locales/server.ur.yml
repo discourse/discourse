@@ -55,23 +55,54 @@ ur:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} کی طرف سے #%{post_number}"
+    too_many_urls: "ایک درخواست میں 10 سے زیادہ یو آر ایل ون باکس کو ان لائن نہیں کر سکتے۔"
+    concurrency_not_allowed: "ایک ساتھ ان لائن ون باکسنگ کی درخواستوں کی اجازت نہیں ہے۔ براہ کرم ایک وقت میں ایک درخواست بھیجیں۔"
   components:
+    enabled_filter: "فعال"
     disabled_filter: "غیر فعال"
+    updates_available_filter: "اپ ڈیٹس دستیاب ہیں"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "%{max_size} بائٹس کے زیادہ سے زیادہ سائز سے تجاوز کر گیا۔"
   themes:
     bad_color_scheme: "تِھیم اَپ ڈَیٹ نہیں ہو سکتی، غلط رنگ پیلیٹ"
     other_error: "تِھیم اَپ ڈَیٹ کرتے ہوے کچھ غلط ہو گیا"
     ember_selector_error: "معذرت – #ember یا .ember-view CSS سلیکٹرز استعمال کرنے کی اجازت نہیں ہے، کیونکہ یہ نام متحرک طور پر رن ٹائم پر بنائے جاتے ہیں اور وقت کے ساتھ ساتھ تبدیل ہوتے جائیں گے، جس کے نتیجے میں CSS ٹوٹ جاتا ہے۔ کوئی مختلف سلیکٹر آزمائیں۔"
+    setting_not_themeable: "سیٹنگ '%{name}' تھیم ایبل نہیں۔"
     import_error:
       generic: اس تھیم کو درآمد کرتے وقت ایک خرابی پیش آگئی
+      upload: "اپ لوڈ اثاثہ بنانے میں خرابی: %{name}۔ %{errors}"
+      screenshot: "تھیم اسکرین شاٹس درآمد کرنے میں خرابی۔ %{errors}"
+      screenshot_invalid_type: "تھیم کے اسکرین شاٹس درج ذیل فارمیٹس میں سے ایک میں ہونے چاہئیں: %{accepted_formats}۔ اسکرین شاٹ %{file_name} کا فارمیٹ غلط ہے۔"
+      screenshot_invalid_size: "تھیم کے اسکرین شاٹس %{max_size}سے کم ہونے چاہئیں۔ اسکرین شاٹ %{file_name} بہت بڑا ہے۔"
+      screenshot_invalid_dimensions: "تھیم کے اسکرین شاٹس زیادہ سے زیادہ %{max_width}x%{max_height}ہونے چاہئیں۔ اسکرین شاٹ %{file_name} اس سے زیادہ ہے۔ اس کے طول و عرض ہیں %{width}x%{height}۔"
       about_json: "درآمد کی خرابی: about.json موجود نہیں ہے، یا غلط ہے۔ کیا آپ کو یقین ہے کہ یہ ایک ڈسکورس تھیم ہے؟"
+      about_json_too_big: "درآمد کی خرابی: about.json %{limit} کی حد سے بڑا ہے۔"
       about_json_values: "about.json غلط اقدار پر مشتمل ہے: %{errors}"
       modifier_values: "about.json موڈیفائر میں غلط اقدار ہیں: %{errors}"
+      asset_too_big: "اثاثہ %{filename} %{limit} کی حد سے بڑا ہے"
+      theme_too_big: "تھیم %{limit} کی حد سے بڑی ہے"
       git: "گِٹ رِیپَوزِٹَری کلَون کرنے میں خرابی، رسائی کی اجازت نہیں یا رِیپَوزِٹَری موجود نہیں ہے"
       git_ref_not_found: "چیک آؤٹ کرنے سے قاصر گِٹ حوالہ: %{ref}"
+      git_unsupported_scheme: "گٹ ریپو کو کلون کرنے سے قاصر: اسکیم غیر تعاون یافتہ"
       unpack_failed: "فائل کھولنے میں ناکام"
       file_too_big: "غیر کمپریسڈ فائل بہت بڑی ہے۔"
       unknown_file_type: "آپ کی اَپ لوڈ کردہ فائل ایک درست ڈسکورس تِھیم نہیں لگ رہی۔"
       not_allowed_theme: "`%{repo}` اجازت یافتہ تھیمز کی فہرست میں نہیں ہے ('allowed_theme_repos' عالمی ترتیب کو چیک کریں)۔"
+      ssh_key_gone: "آپ نے تھیم کو انسٹال کرنے کے لیے کافی انتظار کیا اور SSH کلید کی میعاد ختم ہو گئی۔ براہ کرم دوبارہ کوشش کریں۔"
+      too_many_files: "تھیم میں فائلوں کی تعداد (%{count}) فائلوں کی زیادہ سے زیادہ (%{limit}) اجازت شدہ تعداد سے تجاوز کر گئی ہے"
+      migrations:
+        invalid_filename: "منتقلی فائل کے لیے غلط فائل کا نام: %{filename}۔ فائل کے ناموں کا آغاز 4 ہندسوں سے ہونا چاہیے جس کے بعد ایک ہائفن اور پھر ایک ایسا نام جس میں صرف ہائفن کے ساتھ حروفِ عددی حروف ہوں۔"
+        name_too_long:
+          one: "منتقلی کا نام بہت طویل ہے۔ یہ %{count} حرف سے زیادہ نہیں ہونا چاہیے۔"
+          other: "منتقلی کا نام بہت طویل ہے۔ یہ %{count} حروف سے زیادہ نہیں ہونا چاہیے۔"
+        too_many_pending_migrations: "اس تھیم میں بہت زیادہ زیر التواء منتقلیاں ہیں۔ تھیمز کو ایک اپ ڈیٹ میں 100 سے زیادہ منتقلیاں متعارف کرانے کی اجازت نہیں ہے۔"
+        out_of_sequence: "منتقلی '%{name}' ترتیب سے باہر ہے۔ اس تھیم کے لیے آخری منتقلی کا ورژن نمبر %{current} تھا جو کہ نئی منتقلی سے زیادہ ہے"
+        syntax_error: "منتقلی '%{name}' چلانے میں ناکام کیونکہ اس میں نحوی خامی ہے: %{error}"
+        exceeded_memory_limit: "منتقلی '%{name}' ناکام ہو گئی کیونکہ یہ میموری کی حد سے تجاوز کر گئی"
+        timed_out: "منتقلی '%{name}' کا وقت ختم ہو گیا"
+        no_exported_function: "منتقلی '%{name}' منتقلی کو انجام دینے کے لیے ایک فنکشن برآمد نہیں کرتا"
     errors:
       component_no_user_selectable: "تِھیم کے کمپنَینٹ صارف کے قابلِ انتخاب نہیں ہو سکتے"
       component_no_default: "تِھیم کے کمپنَینٹ ڈیفالٹ تِھیم نہیں ہوسکتے"
@@ -605,8 +636,8 @@ ur:
         one: "< %{count}منٹ "
         other: "< %{count}m"
       x_minutes:
-        one: "%{count}منٹ"
-        other: "%{count}منٹ "
+        one: "%{count}m"
+        other: "%{count}m"
       about_x_hours:
         one: "%{count}گھنٹا"
         other: "%{count}گھنٹے"

@@ -1,9 +1,17 @@
 import { mentionRegex } from "pretty-text/mentions";
 import { ajax } from "discourse/lib/ajax";
+import getURL from "discourse/lib/get-url";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+import { i18n } from "discourse-i18n";
 
 const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
+
+function unicodeEnabled({ getContext }) {
+  return getContext().siteSettings.unicodeUsernames;
+}
+
+const resolvedMentionRegex = mentionRegex(unicodeEnabled);
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -37,10 +45,11 @@ const extension = {
       },
     },
   },
-
   inputRules: {
-    // TODO(renato): pass unicodeUsernames?
-    match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
+    match: new RegExp(
+      `(^|\\W)(${resolvedMentionRegex.source}) $`,
+      `${resolvedMentionRegex.flags}`
+    ),
     handler: (state, match, start, end) => {
       const { $from } = state.selection;
       if ($from.nodeBefore?.type === state.schema.nodes.mention) {
@@ -85,7 +94,7 @@ const extension = {
     },
   },
 
-  plugins({ pmState: { Plugin, PluginKey } }) {
+  plugins({ pmState: { Plugin, PluginKey }, getContext }) {
     const key = new PluginKey("mention");
 
     return new Plugin({
@@ -98,6 +107,7 @@ const extension = {
           processMentionNodes(view) {
             const mentionNames = [];
             const mentionNodes = [];
+            const hereMention = getContext().siteSettings.here_mention;
 
             if (this._processingMentionNodes) {
               return;
@@ -119,12 +129,12 @@ const extension = {
             mentionNodes.sort((a, b) => b.pos - a.pos);
 
             const invalidateMentions = async () => {
-              await fetchMentions(mentionNames);
+              await fetchMentions(mentionNames, getContext());
 
               for (const mentionNode of mentionNodes) {
                 const { name, node, pos } = mentionNode;
 
-                if (VALID_MENTIONS.has(name)) {
+                if (VALID_MENTIONS.has(name) || hereMention === name) {
                   continue;
                 }
 
@@ -146,7 +156,7 @@ const extension = {
   },
 };
 
-async function fetchMentions(names) {
+async function fetchMentions(names, context) {
   // only fetch new mentions that are not already validated
   names = names.uniq().filter((name) => {
     return !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name);
@@ -157,7 +167,7 @@ async function fetchMentions(names) {
   }
 
   const response = await ajax("/composer/mentions", {
-    data: { names },
+    data: { names, topic_id: context.topicId },
   });
 
   const lowerGroupNames = Object.keys(response.groups).map((groupName) =>
@@ -175,7 +185,73 @@ async function fetchMentions(names) {
     } else {
       INVALID_MENTIONS.add(name);
     }
+
+    checkMentionWarning(name, response, context);
   });
+}
+
+function checkMentionWarning(name, response, context) {
+  const hereCount = parseInt(response?.here_count, 10) || 0;
+  const maxMentions = parseInt(
+    response?.max_users_notified_per_group_mention,
+    10
+  );
+
+  let reason;
+  let body;
+
+  if (hereCount > 0) {
+    body = i18n(`composer.here_mention`, {
+      here: context.siteSettings.here_mention,
+      count: hereCount,
+    });
+  } else if (response.users.includes(name)) {
+    reason = response.user_reasons?.[name];
+
+    if (reason) {
+      body = i18n(`composer.cannot_see_mention.${reason}`, {
+        username: name,
+      });
+    }
+  } else if (response.groups[name]) {
+    const userCount = response.groups[name]?.user_count || 0;
+    const notifiedCount = response.groups[name]?.notified_count || 0;
+    reason = response.group_reasons?.[name];
+
+    const groupLink = getURL(`/g/${name}/members`);
+
+    if (reason) {
+      body = i18n(`composer.cannot_see_group_mention.${reason}`, {
+        group: name,
+        count: notifiedCount,
+      });
+    } else if (notifiedCount > maxMentions) {
+      body = i18n("composer.group_mentioned_limit", {
+        group: `@${name}`,
+        count: maxMentions,
+        group_link: groupLink,
+      });
+    } else if (userCount > 0) {
+      const translationKey =
+        userCount >= 5
+          ? "composer.larger_group_mentioned"
+          : "composer.group_mentioned";
+
+      body = i18n(translationKey, {
+        group: `@${name}`,
+        count: userCount,
+        group_link: groupLink,
+      });
+    }
+  }
+
+  if (body) {
+    context.appEvents.trigger("composer-messages:create", {
+      extraClass: "custom-body",
+      templateName: "education",
+      body,
+    });
+  }
 }
 
 export default extension;

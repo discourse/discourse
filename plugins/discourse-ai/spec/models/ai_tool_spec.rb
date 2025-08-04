@@ -2,7 +2,7 @@
 
 RSpec.describe AiTool do
   fab!(:llm_model) { Fabricate(:llm_model, name: "claude-2") }
-  let(:llm) { DiscourseAi::Completions::Llm.proxy("custom:#{llm_model.id}") }
+  let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, raw: "bananas are a tasty fruit") }
   fab!(:bot_user) { Discourse.system_user }

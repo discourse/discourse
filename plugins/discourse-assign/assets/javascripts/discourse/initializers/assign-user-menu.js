@@ -8,7 +8,7 @@ export default {
   name: "assign-user-menu",
 
   initialize(container) {
-    withPluginApi("1.2.0", (api) => {
+    withPluginApi((api) => {
       const siteSettings = container.lookup("service:site-settings");
       if (!siteSettings.assign_enabled) {
         return;

@@ -403,7 +403,6 @@ nl:
           max_usages_help: "Maximum aantal keren dat elke gebruiker in deze groep het AI-model kan gebruiken binnen de opgegeven tijdsduur. Dit quotum wordt bijgehouden per individuele gebruiker, niet gedeeld door de groep."
         usage:
           ai_bot: "AI-bot"
-          ai_helper: "Helper"
           ai_persona: "Persona (%{persona})"
           ai_summarization: "Samenvatten"
           ai_embeddings_semantic_search: "AI zoeken"

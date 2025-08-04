@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import computed from "discourse/lib/decorators";

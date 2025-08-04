@@ -200,7 +200,6 @@ es:
       search: "Buscar"
     themes:
       default_description: "Por defecto"
-      broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
       error_caused_by: "Causado por «%{name}». <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o desctivar."
       only_admins: "(este mensaje solo lo ven los administradores del sitio)"
     broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
@@ -1280,7 +1279,6 @@ es:
         description: "Omitir consejos y medallas de bienvenida"
       reset_seen_user_tips: "Mostrar consejos de usuario de nuevo"
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
-      color_scheme_default_on_all_devices: "Establecer la paleta de colores por defecto en todos mis dispositivos"
       color_scheme: "Paleta de colores"
       color_schemes:
         default_description: "Tema predeterminado"
@@ -1290,6 +1288,9 @@ es:
         regular: "Habitual"
         dark: "Modo oscuro"
         default_dark_scheme: "(valor predeterminado por el sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Oscuro"
       dark_mode: "Modo oscuro"
       dark_mode_enable: "Activar la paleta de colores automática del modo oscuro"
       text_size_default_on_all_devices: "Hacer que este sea el tamaño por defecto en todos mis dispositivos"

@@ -201,7 +201,6 @@ fa_IR:
       search: "جستجو"
     themes:
       default_description: "پیش‌فرض"
-      broken_theme_alert: "ممکن است سایت شما به دلیل خطا در پوسته یا کامپوننت کار نکند."
       error_caused_by: "ناشی از '%{name}'. برای به روز رسانی، پیکربندی مجدد یا غیر فعال کردن، <a target='blank' href='%{path}'>کلیک کنید</a>."
       only_admins: "(این پیام فقط به مدیران سایت نمایش داده می‌شود)"
     broken_decorator_alert: "ممکن است پست ها به درستی نمایش داده نشوند زیرا یکی از دکوراتورهای محتوای پست در سایت شما خطایی ایجاد کرده است."
@@ -1288,7 +1287,6 @@ fa_IR:
         description: "نکات و نشان‌های ورود کاربر جدید را نادیده بگیرید"
       reset_seen_user_tips: "دوباره نکات کاربر را نشان بده"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
-      color_scheme_default_on_all_devices: "پالت رنگی پیش‌فرض را در همه دستگاه‌های من تنظیم کن"
       color_scheme: "پالت رنگ"
       color_schemes:
         default_description: "تم پیش‌فرض"
@@ -1298,6 +1296,10 @@ fa_IR:
         regular: "عادی"
         dark: "حالت تاریک"
         default_dark_scheme: "(پیش‌فرض سایت)"
+        interface_modes:
+          auto: "خودکار"
+          light: "روشن"
+          dark: "تیره"
       dark_mode: "حالت تاریک"
       dark_mode_enable: "پالت رنگ حالت تاریک خودکار را فعال کنید"
       text_size_default_on_all_devices: "این سایز قلم حالت پیش فرض در تمام دستگاه های من باشد"

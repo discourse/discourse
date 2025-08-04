@@ -8,7 +8,7 @@ module("Integration | Component | latest-topic-list-item", function (hooks) {
   setupRenderingTest(hooks);
 
   test("latest-topic-list-item-class value transformer", async function (assert) {
-    withPluginApi("1.39.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "latest-topic-list-item-class",
         ({ value, context }) => {

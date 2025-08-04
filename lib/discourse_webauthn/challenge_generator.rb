@@ -8,9 +8,8 @@ module DiscourseWebauthn
         @challenge = params[:challenge]
       end
 
-      def commit_to_session(secure_session, user)
-        secure_session[DiscourseWebauthn.session_challenge_key(user)] = @challenge
-
+      def commit_to_session(secure_session, user, expires: nil)
+        secure_session.set(DiscourseWebauthn.session_challenge_key(user), @challenge, expires:)
         self
       end
     end

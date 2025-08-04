@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Topic voting", type: :system, js: true do
+RSpec.describe "Topic voting", type: :system do
   fab!(:user)
   fab!(:admin) { Fabricate(:admin, trust_level: TrustLevel[4]) }
   fab!(:category1) { Fabricate(:category) }
@@ -10,10 +10,11 @@ RSpec.describe "Topic voting", type: :system, js: true do
   fab!(:topic3) { Fabricate(:topic, category: category2) }
   fab!(:post1) { Fabricate(:post, topic: topic1) }
   fab!(:post2) { Fabricate(:post, topic: topic2) }
-  fab!(:category_page) { PageObjects::Pages::Category.new }
-  fab!(:topic_page) { PageObjects::Pages::Topic.new }
-  fab!(:user_page) { PageObjects::Pages::User.new }
-  fab!(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
+
+  let(:category_page) { PageObjects::Pages::Category.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:user_page) { PageObjects::Pages::User.new }
+  let(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
 
   before do
     SiteSetting.topic_voting_enabled = true
@@ -53,5 +54,19 @@ RSpec.describe "Topic voting", type: :system, js: true do
     # unvoting
     topic_page.remove_vote
     expect(topic_page.vote_count).to have_text("0")
+  end
+
+  context "when no votes are left" do
+    before do
+      DiscourseTopicVoting::CategorySetting.create!(category: category1)
+      SiteSetting.topic_voting_tl4_vote_limit = 1
+    end
+
+    it "alerts the user" do
+      category_page.visit(category1).select_topic(topic1)
+      topic_page.vote
+
+      expect(topic_page).to have_votes_left_popup(0)
+    end
   end
 end

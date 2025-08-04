@@ -28,6 +28,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_delete_account,
              :can_post_anonymously,
              :can_ignore_users,
+             :can_edit_tags,
              :can_delete_all_posts_and_topics,
              :custom_fields,
              :muted_category_ids,
@@ -164,6 +165,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_edit
     true
+  end
+
+  def can_edit_tags
+    scope.can_edit_tag?
   end
 
   def can_invite_to_forum

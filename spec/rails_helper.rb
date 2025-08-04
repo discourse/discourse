@@ -190,6 +190,7 @@ module TestSetup
     Middleware::AnonymousCache.disable_anon_cache
     BlockRequestsMiddleware.allow_requests!
     BlockRequestsMiddleware.current_example_location = nil
+    ApplicationSerializer.fragment_cache.clear
   end
 end
 

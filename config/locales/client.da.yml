@@ -197,7 +197,6 @@ da:
       search: "Søg"
     themes:
       default_description: "Standard"
-      broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi et tema/en komponent har fejl."
       error_caused_by: "Forårsaget af '%{name}'. <a target='blank' href='%{path}'>Klik her</a> for at opdatere, omkonfigurere, eller slå fra."
       only_admins: "(denne meddelelse vises kun til webstedsadministratorer)"
     broken_decorator_alert: "Indlæg vises muligvis ikke korrekt, fordi en af indlægsindholddekoratørerne på dit websted gav en fejl."
@@ -1221,6 +1220,10 @@ da:
         regular: "Almindelig"
         dark: "Mørk tilstand"
         default_dark_scheme: "(standard for websted)"
+        interface_modes:
+          auto: "Auto"
+          light: "Lys"
+          dark: "Mørk"
       dark_mode: "Mørk Tilstand"
       text_size_default_on_all_devices: "Gør dette til standard tekststørrelse på alle mine enheder"
       allow_private_messages: "Tillad andre brugere at sende mig personlige beskeder"

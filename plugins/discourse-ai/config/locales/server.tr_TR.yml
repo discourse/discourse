@@ -404,7 +404,6 @@ tr_TR:
           neutral: "Nötr"
     llm:
       configuration:
-        disable_module_first: "Önce %{setting} devre dışı bırakılmalı."
         set_llm_first: "Önce %{setting} ayarlanmalı"
         model_unreachable: "Bu modelden yanıt alamadık. Önce ayarlarınızı kontrol edin."
         invalid_seeded_model: "Bu modeli bu özellikle kullanamazsınız"

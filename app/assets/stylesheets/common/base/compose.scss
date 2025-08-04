@@ -916,7 +916,7 @@ html.composer-open:not(.has-full-page-chat) {
     align-items: center;
     position: absolute;
     right: 0.5rem;
-    top: 0.5rem;
+    top: 0;
     color: var(--primary-medium);
     font-size: var(--font-0);
 
@@ -1041,7 +1041,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       .reply-to {
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
         margin-bottom: 0;
         padding-bottom: 8px;
       }
@@ -1051,7 +1051,7 @@ html.composer-open:not(.has-full-page-chat) {
       }
 
       &.show-preview .d-editor-textarea-wrapper {
-        border-right: 1px solid var(--primary-low);
+        border-right: 1px solid var(--content-border-color);
       }
 
       #draft-status,

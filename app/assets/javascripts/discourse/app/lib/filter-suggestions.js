@@ -20,8 +20,26 @@ export default class FilterSuggestions {
           lastTerm
         );
       case "tag":
+        return await FilterSuggestions.getTagSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
       case "username":
+        return await FilterSuggestions.getUserSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
       case "date":
+        return await FilterSuggestions.getDateSuggestions(
+          prefix,
+          filterName,
+          prevTerms,
+          lastTerm
+        );
       case "number":
         return await FilterSuggestions.getNumberSuggestions(
           prefix,
