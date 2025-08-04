@@ -23,11 +23,14 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   def paste_and_click_image
+    # This helper can only be used reliably to paste a single image when no other images are present.
+    expect(rich).to have_no_css(".composer-image-node img")
+
     cdp.allow_clipboard
     cdp.copy_test_image
     cdp.paste
-    # account for the debounced resolution
-    sleep 0.2
+
+    expect(rich).to have_css(".composer-image-node img", count: 1)
     rich.find(".composer-image-node img").click
   end
 
