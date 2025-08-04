@@ -50,12 +50,12 @@ export function categoryBadgeHTML(category, opts) {
   }
 
   if (!opts.styleType) {
-    opts.styleType = category.styleType;
+    opts.styleType = category.style_type;
 
     if (opts.styleType === "icon") {
-      opts.icon = category.icon;
+      opts.icon = opts.icon || category.icon;
     } else if (opts.styleType === "emoji") {
-      opts.emoji = category.emoji;
+      opts.emoji = opts.emoji || category.emoji;
     }
   }
 
