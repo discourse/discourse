@@ -11,5 +11,6 @@ export default {
     }
 
     setResolverOption("mobileView", Mobile.mobileView);
+    Mobile.maybeReload();
   },
 };

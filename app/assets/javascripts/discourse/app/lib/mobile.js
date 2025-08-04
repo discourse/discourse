@@ -27,15 +27,18 @@ const Mobile = {
       if (window.location.search.match(/mobile_view=auto/)) {
         localStorage.removeItem("mobileView");
       }
-      if (localStorage.mobileView) {
-        let savedValue = localStorage.mobileView === "true";
-        if (savedValue !== this.mobileView) {
-          this.reloadPage(savedValue);
-        }
-      }
     } catch {
       // localStorage may be disabled, just skip this
       // you get security errors if it is disabled
+    }
+  },
+
+  maybeReload() {
+    if (localStorage.mobileView) {
+      let savedValue = localStorage.mobileView === "true";
+      if (savedValue !== this.mobileView) {
+        this.reloadPage(savedValue);
+      }
     }
   },
 
