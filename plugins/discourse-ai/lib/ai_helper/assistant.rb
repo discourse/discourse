@@ -312,7 +312,7 @@ module DiscourseAi
 
       # Priorities are:
       #   1. Persona's default LLM
-      #   2. SiteSetting.ai_default_llm_id (or newest LLM if not set)
+      #   2. SiteSetting.ai_default_llm_model (or newest LLM if not set)
       def self.find_ai_helper_model(helper_mode, persona_klass)
         model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 

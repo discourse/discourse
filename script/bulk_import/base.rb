@@ -607,6 +607,7 @@ class BulkImport::Base
     automatically_unpin_topics
     enable_quoting
     enable_smart_lists
+    enable_markdown_monospace_font
     external_links_in_new_tab
     dynamic_favicon
     new_topic_duration_minutes
@@ -1394,6 +1395,7 @@ class BulkImport::Base
     automatically_unpin_topics: SiteSetting.default_topics_automatic_unpin,
     enable_quoting: SiteSetting.default_other_enable_quoting,
     enable_smart_lists: SiteSetting.default_other_enable_smart_lists,
+    enable_markdown_monospace_font: SiteSetting.default_other_enable_markdown_monospace_font,
     external_links_in_new_tab: SiteSetting.default_other_external_links_in_new_tab,
     dynamic_favicon: SiteSetting.default_other_dynamic_favicon,
     new_topic_duration_minutes: SiteSetting.default_other_new_topic_duration_minutes,

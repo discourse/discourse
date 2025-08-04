@@ -29,6 +29,7 @@ class SiteSerializer < ApplicationSerializer
     :topic_featured_link_allowed_category_ids,
     :user_themes,
     :user_color_schemes,
+    :default_light_color_scheme,
     :default_dark_color_scheme,
     :censored_regexp,
     :shared_drafts_category_id,
@@ -62,13 +63,14 @@ class SiteSerializer < ApplicationSerializer
       Theme
         .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
         .order("lower(name)")
-        .pluck(:id, :name, :color_scheme_id)
-        .map do |id, n, cs|
+        .pluck(:id, :name, :color_scheme_id, :dark_color_scheme_id)
+        .map do |id, name, color_scheme_id, dark_color_scheme_id|
           {
             theme_id: id,
-            name: n,
+            name: name,
             default: id == SiteSetting.default_theme_id,
-            color_scheme_id: cs,
+            color_scheme_id: color_scheme_id,
+            dark_color_scheme_id: dark_color_scheme_id,
           }
         end
         .as_json
@@ -85,9 +87,16 @@ class SiteSerializer < ApplicationSerializer
     end
   end
 
+  def default_light_color_scheme
+    ColorSchemeSerializer.new(
+      ColorScheme.find_by_id(Theme.find_default&.color_scheme_id),
+      root: false,
+    ).as_json
+  end
+
   def default_dark_color_scheme
     ColorSchemeSerializer.new(
-      ColorScheme.find_by_id(SiteSetting.default_dark_mode_color_scheme_id),
+      ColorScheme.find_by_id(Theme.find_default&.dark_color_scheme_id),
       root: false,
     ).as_json
   end

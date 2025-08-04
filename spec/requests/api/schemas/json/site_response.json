@@ -510,6 +510,12 @@
                 "integer",
                 "null"
               ]
+            },
+            "dark_color_scheme_id": {
+              "type": [
+                "integer",
+                "null"
+              ]
             }
           },
           "required": [
@@ -550,6 +556,12 @@
             "colors"
           ]
         }
+    },
+    "default_light_color_scheme": {
+      "type": [
+        "object",
+        "null"
+      ]
     },
     "default_dark_color_scheme": {
       "type": [
@@ -925,6 +937,7 @@
     "topic_featured_link_allowed_category_ids",
     "user_themes",
     "user_color_schemes",
+    "default_light_color_scheme",
     "default_dark_color_scheme",
     "censored_regexp",
     "custom_emoji_translation",

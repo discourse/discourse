@@ -455,6 +455,28 @@ RSpec.describe ApplicationController do
           expect(fake_logger.errors.length).to eq(0)
           expect(fake_logger.warnings.length).to eq(0)
         end
+
+        it "should render category badges with correct style classes on 404 page" do
+          Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+
+          square_cat = Fabricate(:category, style_type: :square)
+          icon_cat = Fabricate(:category, style_type: :icon, icon: "user")
+          emoji_cat = Fabricate(:category, style_type: :emoji, emoji: "smile")
+
+          Fabricate(:topic, title: "Square Category Topic", category: square_cat)
+          Fabricate(:topic, title: "Icon Category Topic", category: icon_cat)
+          Fabricate(:topic, title: "Emoji Category Topic", category: emoji_cat)
+
+          get "/t/nope-nope/99999999"
+          expect(response.status).to eq(404)
+
+          expect(response.body).to include("badge-category --style-square")
+          expect(response.body).to include("badge-category --style-icon")
+          expect(response.body).to include("badge-category --style-emoji")
+
+          expect(response.body).to include('<svg id="user"')
+          expect(response.body).to include('class="emoji"')
+        end
       end
 
       it "should cache results" do
@@ -668,9 +690,11 @@ RSpec.describe ApplicationController do
       let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
 
       before do
-        SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
         SiteSetting.interface_color_selector = "sidebar_footer"
-        Theme.find_by(id: SiteSetting.default_theme_id).update!(color_scheme_id: light_scheme.id)
+        Theme.find_default.update!(
+          color_scheme_id: light_scheme.id,
+          dark_color_scheme_id: dark_scheme.id,
+        )
       end
 
       context "when light mode is forced" do
@@ -1625,7 +1649,7 @@ RSpec.describe ApplicationController do
     let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
 
     before do
-      SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+      Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
     end
 

@@ -200,10 +200,10 @@ class TagsController < ::ApplicationController
   end
 
   def update
-    guardian.ensure_can_admin_tags!
-
     tag = Tag.find_by_name(params[:tag_id])
     raise Discourse::NotFound if tag.nil?
+
+    guardian.ensure_can_edit_tag!(tag)
 
     if (params[:tag][:id].present?)
       new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
@@ -402,7 +402,7 @@ class TagsController < ::ApplicationController
   end
 
   def create_synonyms
-    guardian.ensure_can_admin_tags!
+    guardian.ensure_can_edit_tag!
     value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
     if value.is_a?(Array)
       render json:
@@ -419,9 +419,11 @@ class TagsController < ::ApplicationController
   end
 
   def destroy_synonym
-    guardian.ensure_can_admin_tags!
     synonym = Tag.where_name(params[:synonym_id]).first
     raise Discourse::NotFound unless synonym
+
+    guardian.ensure_can_edit_tag!(synonym)
+
     if synonym.target_tag == @tag
       synonym.update!(target_tag: nil)
       render json: success_json

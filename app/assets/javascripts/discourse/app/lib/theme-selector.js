@@ -76,6 +76,7 @@ export function listThemes(site) {
       name: t.name,
       id: t.theme_id,
       color_scheme_id: t.color_scheme_id,
+      dark_color_scheme_id: t.dark_color_scheme_id,
     });
   });
 

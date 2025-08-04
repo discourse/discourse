@@ -11,6 +11,7 @@ class Theme < ActiveRecord::Base
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
     color_scheme_id
+    dark_color_scheme_id
     default
     locale
     translations
@@ -36,6 +37,7 @@ class Theme < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :color_scheme
+  belongs_to :dark_color_scheme, class_name: "ColorScheme"
   alias_method :color_palette, :color_scheme
 
   has_many :theme_fields, dependent: :destroy, validate: false
@@ -1156,19 +1158,20 @@ end
 #
 # Table name: themes
 #
-#  id               :integer          not null, primary key
-#  name             :string           not null
-#  user_id          :integer          not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  compiler_version :integer          default(0), not null
-#  user_selectable  :boolean          default(FALSE), not null
-#  hidden           :boolean          default(FALSE), not null
-#  color_scheme_id  :integer
-#  remote_theme_id  :integer
-#  component        :boolean          default(FALSE), not null
-#  enabled          :boolean          default(TRUE), not null
-#  auto_update      :boolean          default(TRUE), not null
+#  id                   :integer          not null, primary key
+#  auto_update          :boolean          default(TRUE), not null
+#  compiler_version     :integer          default(0), not null
+#  component            :boolean          default(FALSE), not null
+#  enabled              :boolean          default(TRUE), not null
+#  hidden               :boolean          default(FALSE), not null
+#  name                 :string           not null
+#  user_selectable      :boolean          default(FALSE), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  color_scheme_id      :integer
+#  dark_color_scheme_id :integer
+#  remote_theme_id      :integer
+#  user_id              :integer          not null
 #
 # Indexes
 #

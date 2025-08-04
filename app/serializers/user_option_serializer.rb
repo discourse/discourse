@@ -14,6 +14,7 @@ class UserOptionSerializer < ApplicationSerializer
              :enable_quoting,
              :enable_smart_lists,
              :enable_defer,
+             :enable_markdown_monospace_font,
              :digest_after_minutes,
              :automatically_unpin_topics,
              :auto_track_topics_after_msecs,

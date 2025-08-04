@@ -4550,7 +4550,7 @@ ja:
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
-      filter_reports: レポートをフィルタ
+      filter_reports: "レポートをフィルタ..."
       tags:
         remove_muted_tags_from_latest:
           always: "常時"
@@ -5564,7 +5564,8 @@ ja:
           theme: "テーマ"
           component: "コンポーネント"
           components: "コンポーネント"
-          search_placeholder: "入力して検索…"
+          filter_all: "すべて"
+          filter_user_selectable: "ユーザー選択可能"
           theme_name: "テーマ名"
           component_name: "コンポーネント名"
           themes_intro: "まず既存のテーマを選択するか、新しいテーマをインストールしてください"

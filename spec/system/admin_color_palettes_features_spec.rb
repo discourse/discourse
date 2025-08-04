@@ -91,6 +91,46 @@ describe "Admin Color Palettes Features", type: :system do
         expect(page).to have_css(".theme-card__badge.--selectable")
       end
     end
+
+    it "can set as light and dark default for theme" do
+      visit("/admin/customize/colors")
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_light",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      within("[data-palette-id='#{regular_palette.id}']") do
+        expect(page).to have_css(
+          ".theme-card__badge.--active",
+          text: I18n.t("admin_js.admin.customize.colors.active_light_badge.text").upcase,
+        )
+      end
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_dark",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      within("[data-palette-id='#{regular_palette.id}']") do
+        expect(page).to have_css(
+          ".theme-card__badge.--active",
+          text: I18n.t("admin_js.admin.customize.colors.active_both_badge.text").upcase,
+        )
+      end
+    end
   end
 
   describe "CSS variables" do

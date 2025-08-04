@@ -135,7 +135,12 @@ end
 
 build_cmd << "-prod" if resolved_ember_env == "production"
 
-if existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
+core_build_reusable =
+  existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
+
+if core_build_reusable && ENV["LOAD_PLUGINS"] == "0"
+  log "Reusing existing core ember build. Plugins not loaded. All done."
+elsif core_build_reusable
   log "Reusing existing core ember build. Only building plugins..."
   build_env["SKIP_CORE_BUILD"] = "1"
   build_cmd << "-o" << "dist/_plugin_only_build"

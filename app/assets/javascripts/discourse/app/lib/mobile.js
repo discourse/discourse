@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { isTesting } from "discourse/lib/environment";
 
 let mobileForced = false;
@@ -9,9 +8,10 @@ const Mobile = {
   mobileView: false,
 
   init() {
-    const $html = $("html");
-    this.isMobileDevice = mobileForced || $html.hasClass("mobile-device");
-    this.mobileView = mobileForced || $html.hasClass("mobile-view");
+    const documentClassList = document.documentElement.classList;
+    this.isMobileDevice =
+      mobileForced || documentClassList.contains("mobile-device");
+    this.mobileView = mobileForced || documentClassList.contains("mobile-view");
 
     if (isTesting() || mobileForced) {
       return;
@@ -27,15 +27,18 @@ const Mobile = {
       if (window.location.search.match(/mobile_view=auto/)) {
         localStorage.removeItem("mobileView");
       }
-      if (localStorage.mobileView) {
-        let savedValue = localStorage.mobileView === "true";
-        if (savedValue !== this.mobileView) {
-          this.reloadPage(savedValue);
-        }
-      }
     } catch {
       // localStorage may be disabled, just skip this
       // you get security errors if it is disabled
+    }
+  },
+
+  maybeReload() {
+    if (localStorage.mobileView) {
+      let savedValue = localStorage.mobileView === "true";
+      if (savedValue !== this.mobileView) {
+        this.reloadPage(savedValue);
+      }
     }
   },
 
@@ -66,5 +69,7 @@ export function resetMobile() {
   mobileForced = false;
   Mobile.init();
 }
+
+Mobile.init();
 
 export default Mobile;

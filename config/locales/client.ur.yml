@@ -5194,7 +5194,7 @@ ur:
     admin:
       title: "ڈِسکورس ایڈمن"
       moderator: "ماڈریٹر"
-      filter_reports: رپورٹیں فِلٹر کریں
+      filter_reports: "رپورٹیں فِلٹر کریں..."
       filter_reports_no_results: "کوئی رپورٹ آپ کے چھاننے سے مماثل نہیں"
       tags:
         remove_muted_tags_from_latest:
@@ -5874,6 +5874,7 @@ ur:
           theme: "تھیم"
           component: "جزو"
           components: "اجزاء"
+          filter_all: "تمام"
           theme_name: "تھیم نام"
           component_name: "جزو نام"
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"

@@ -115,6 +115,7 @@ let userOptionFields = [
   "enable_quoting",
   "enable_smart_lists",
   "enable_defer",
+  "enable_markdown_monospace_font",
   "automatically_unpin_topics",
   "digest_after_minutes",
   "new_topic_duration_minutes",
@@ -236,6 +237,7 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
   @userOption("enable_quoting") enable_quoting;
   @userOption("enable_smart_lists") enable_smart_lists;
+  @userOption("enable_markdown_monospace_font") enable_markdown_monospace_font;
   @userOption("dynamic_favicon") dynamic_favicon;
   @userOption("automatically_unpin_topics") automatically_unpin_topics;
   @userOption("likes_notifications_disabled") likes_notifications_disabled;
@@ -267,6 +269,7 @@ export default class User extends RestModel.extend(Evented) {
   @mapBy("sidebarTags", "name") sidebarTagNames;
   @filterBy("groups", "has_messages", true) groupsWithMessages;
   @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
+  @alias("can_edit_tags") canEditTags;
 
   numGroupsToDisplay = 2;
 

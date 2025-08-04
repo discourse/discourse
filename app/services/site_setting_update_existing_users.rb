@@ -122,6 +122,7 @@ class SiteSettingUpdateExistingUsers
       default_other_notification_level_when_replying: "notification_level_when_replying",
       default_other_like_notification_frequency: "like_notification_frequency",
       default_other_skip_new_user_tips: "skip_new_user_tips",
+      default_other_enable_markdown_monospace_font: "enable_markdown_monospace_font",
       default_email_digest_frequency: "digest_after_minutes",
       default_include_tl0_in_digests: "include_tl0_in_digests",
       default_text_size: "text_size_key",

@@ -2541,6 +2541,7 @@ pl_PL:
     tagging_enabled: "Włączyć tagi w tematach? Więcej informacji można znaleźć w <a href=\"https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041\">przewodniku administratora po tagach w Meta</a>."
     min_trust_to_create_tag: "Minimalny poziom zaufania potrzebny do stworzenia tagu."
     create_tag_allowed_groups: "Grupy, które mogą tworzyć tagi. Administratorzy i moderatorzy zawsze mogą tworzyć tagi."
+    edit_tags_allowed_groups: "Grupy, które mają uprawnienia do edycji tagów, opisów tagów i synonimów tagów."
     max_tags_per_topic: "Maksymalna liczba tagów, które mogą zostać połączone z tematem."
     enable_max_tags_per_email_subject: "Użyj max_tags_per_email_subject podczas generowania tematu wiadomości e-mail"
     max_tags_per_email_subject: "Maksymalna liczba tagów, które mogą znajdować się w temacie wiadomości e-mail"
