@@ -52,6 +52,11 @@ export function listColorSchemes(site, options = {}) {
           colors: defaultDarkColorScheme.colors,
         });
       }
+    } else {
+      results.unshift({
+        id: -1,
+        name: `${i18n("user.color_schemes.default_description")}`,
+      });
     }
   }
 
