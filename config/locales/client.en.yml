@@ -1565,6 +1565,7 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
+      enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"

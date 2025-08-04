@@ -180,6 +180,7 @@ CREATE TABLE user_options
     email_previous_replies               INTEGER,
     enable_allowed_pm_users              BOOLEAN,
     enable_defer                         BOOLEAN,
+    enable_markdown_monospace_font       BOOLEAN,
     enable_quoting                       BOOLEAN,
     enable_smart_lists                   BOOLEAN,
     external_links_in_new_tab            BOOLEAN,

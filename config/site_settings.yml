@@ -3821,6 +3821,9 @@ user_preferences:
     default: 1
     enum: "CompositionModeSiteSetting"
     area: "posts_and_topics|user_defaults"
+  default_other_enable_markdown_monospace_font:
+    default: true
+    area: "posts_and_topics|user_defaults"
 
 api:
   retain_web_hook_events_period_days:

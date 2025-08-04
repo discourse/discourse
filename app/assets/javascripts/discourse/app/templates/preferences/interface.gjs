@@ -234,6 +234,12 @@ export default RouteTemplate(
         data-setting-name="user-dynamic-favicon"
         class="pref-dynamic-favicon"
       />
+      <PreferenceCheckbox
+        @labelKey="user.enable_markdown_monospace_font"
+        @checked={{@controller.model.user_option.enable_markdown_monospace_font}}
+        data-setting-name="user-enable-markdown-monospace-font"
+        class="pref-enable-markdown-monospace-font"
+      />
       <div
         class="controls controls-dropdown pref-page-title"
         data-setting-name="user-page-title"

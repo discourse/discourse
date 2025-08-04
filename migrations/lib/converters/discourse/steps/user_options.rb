@@ -50,6 +50,7 @@ module Migrations::Converters::Discourse
         enable_defer: item[:enable_defer],
         enable_quoting: item[:enable_quoting],
         enable_smart_lists: item[:enable_smart_lists],
+        enable_markdown_monospace_font: item[:enable_markdown_monospace_font],
         external_links_in_new_tab: item[:external_links_in_new_tab],
         hide_presence: item[:hide_presence],
         hide_profile: item[:hide_profile],
