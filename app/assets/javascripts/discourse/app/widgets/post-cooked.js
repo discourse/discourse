@@ -15,21 +15,15 @@ import {
 } from "discourse/lib/update-user-status-on-mention";
 import { i18n } from "discourse-i18n";
 
-let _beforeAdoptDecorators = [];
-let _afterAdoptDecorators = [];
+let _decorators = [];
 
 // Don't call this directly: use `plugin-api/decorateCookedElement`
-export function addDecorator(callback, { afterAdopt = false } = {}) {
-  if (afterAdopt) {
-    _afterAdoptDecorators.push(callback);
-  } else {
-    _beforeAdoptDecorators.push(callback);
-  }
+export function addDecorator(callback) {
+  _decorators.push(callback);
 }
 
 export function resetDecorators() {
-  _beforeAdoptDecorators = [];
-  _afterAdoptDecorators = [];
+  _decorators = [];
 }
 
 let detachedDocument = document.implementation.createHTMLDocument("detached");
@@ -83,11 +77,8 @@ export default class PostCooked {
   }
 
   _decorateAndAdopt(cooked) {
-    _beforeAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
-
+    _decorators.forEach((d) => d(cooked, this.decoratorHelper));
     document.adoptNode(cooked);
-
-    _afterAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
   }
 
   _applySearchHighlight(html) {
