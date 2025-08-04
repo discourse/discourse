@@ -31,11 +31,12 @@ describe "Composer - ProseMirror editor", type: :system do
     cdp.paste
 
     expect(rich).to have_css(".composer-image-node img", count: 1)
+    expect(rich).to have_no_css(".composer-image-node img[src='/images/transparent.png']")
     expect(rich).to have_no_css(".composer-image-node img[data-placeholder='true']")
 
     rich.find(".composer-image-node img").click
 
-    expect(rich).to have_css(".composer-image-node .composer-image-toolbar", count: 1)
+    expect(rich).to have_css(".composer-image-node .fk-d-menu", count: 2)
   end
 
   it "hides the Composer container's preview button" do
