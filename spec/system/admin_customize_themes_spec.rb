@@ -223,6 +223,17 @@ describe "Admin Customize Themes", type: :system do
       visit("/admin/customize/themes/#{component.id}")
       expect(theme_page).to have_back_button_to_components_page
     end
+
+    it "allows to add component to all themes" do
+      visit("/admin/customize/themes/#{component.id}")
+      expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
+        I18n.t("js.select_kit.default_header_text"),
+      )
+      theme_page.click_add_all_themes_button
+      expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
+        "#{theme.name}, Foundation, Horizon",
+      )
+    end
   end
 
   describe "theme color palette editor" do

@@ -154,6 +154,11 @@ module PageObjects
         )
       end
 
+      def click_add_all_themes_button
+        find(".relative-theme-selector .setting-label .btn-link").click
+        find(".setting-controls .ok").click
+      end
+
       def has_no_page_header?
         has_no_css?(".d-page-header")
       end
