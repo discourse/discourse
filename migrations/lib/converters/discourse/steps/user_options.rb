@@ -51,6 +51,7 @@ module Migrations::Converters::Discourse
         enable_experimental_sidebar: item[:enable_experimental_sidebar],
         enable_quoting: item[:enable_quoting],
         enable_smart_lists: item[:enable_smart_lists],
+        eenable_markdown_monospace_font: item[:enable_markdown_monospace_font],
         external_links_in_new_tab: item[:external_links_in_new_tab],
         hide_presence: item[:hide_presence],
         hide_profile: item[:hide_profile],

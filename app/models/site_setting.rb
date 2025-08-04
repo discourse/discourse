@@ -49,6 +49,7 @@ class SiteSetting < ActiveRecord::Base
     default_other_dynamic_favicon
     default_other_like_notification_frequency
     default_other_skip_new_user_tips
+    default_other_enable_markdown_monospace_font
     default_topics_automatic_unpin
     default_categories_watching
     default_categories_tracking

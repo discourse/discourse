@@ -86,6 +86,7 @@ export default class InterfaceController extends Controller {
       "dark_scheme_id",
       "bookmark_auto_delete_preference",
       "interface_color_mode",
+      "enable_markdown_monospace_font",
     ];
 
     if (makeThemeDefault) {

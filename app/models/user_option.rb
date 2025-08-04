@@ -84,6 +84,7 @@ class UserOption < ActiveRecord::Base
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.enable_smart_lists = SiteSetting.default_other_enable_smart_lists
     self.enable_defer = SiteSetting.default_other_enable_defer
+    self.enable_markdown_monospace_font = SiteSetting.default_other_enable_markdown_monospace_font
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
     self.skip_new_user_tips = SiteSetting.default_other_skip_new_user_tips
@@ -277,6 +278,7 @@ end
 #  enable_allowed_pm_users          :boolean          default(FALSE), not null
 #  enable_defer                     :boolean          default(FALSE), not null
 #  enable_experimental_sidebar      :boolean          default(FALSE)
+#  enable_markdown_monospace_font   :boolean          default(TRUE), not null
 #  enable_quoting                   :boolean          default(TRUE), not null
 #  enable_smart_lists               :boolean          default(TRUE), not null
 #  external_links_in_new_tab        :boolean          default(FALSE), not null
