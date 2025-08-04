@@ -606,9 +606,6 @@ class PluginApi {
    * Use `options.onlyStream` if you only want to decorate posts within a topic,
    * and not in other places like the user stream.
    *
-   * Decoration normally happens in a detached DOM. Use `options.afterAdopt`
-   * to decorate html content after it is adopted by the main `document`.
-   *
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
@@ -622,16 +619,9 @@ class PluginApi {
 
     callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
 
-    addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
+    addDecorator(callback);
 
-    this.onAppEvent(
-      opts.afterAdopt
-        ? "decorate-post-cooked-element:after-adopt"
-        : "decorate-post-cooked-element:before-adopt",
-      callback
-    );
-
-    // TODO (glimmer-post-stream) should we also handle afterAdopt for non-stream renderings?
+    this.onAppEvent("decorate-post-cooked-element", callback);
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
