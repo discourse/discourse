@@ -7,7 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import { isRailsTesting, isTesting } from "discourse/lib/environment";
+import { isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
@@ -151,7 +151,7 @@ export default class Site extends RestModel {
             ].join("\n- ")
           );
         } else {
-          if (!isTesting() && !isRailsTesting()) {
+          if (!isTesting()) {
             console.log("✅  Using the new 'glimmer' post stream!");
           }
         }
@@ -169,7 +169,7 @@ export default class Site extends RestModel {
           );
           enabled = false;
         } else {
-          if (!isTesting() && !isRailsTesting()) {
+          if (!isTesting()) {
             console.log("✅  Using the new 'glimmer' post stream!");
           }
 

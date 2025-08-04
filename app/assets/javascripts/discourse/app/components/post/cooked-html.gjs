@@ -7,7 +7,7 @@ import curryComponent from "ember-curry-component";
 import DecoratedHtml from "discourse/components/decorated-html";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
-import { isRailsTesting, isTesting } from "discourse/lib/environment";
+import { isTesting } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import decorateLinkCounts from "discourse/lib/post-cooked-html-decorators/link-counts";
 import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions";
@@ -119,7 +119,7 @@ export default class PostCookedHtml extends Component {
           this.#pendingDecoratorCleanup.push(decorationCleanup);
         }
       } catch (e) {
-        if (isRailsTesting() || isTesting()) {
+        if (isTesting()) {
           throw e;
         } else {
           // in case one of the decorators throws an error we want to surface it to the console but prevent

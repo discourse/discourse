@@ -6,24 +6,29 @@ let environment = "unknown";
 
 export function setEnvironment(e) {
   if (isTesting()) {
-    environment = "testing";
+    environment = "test";
   } else {
     environment = e;
   }
 }
 
 /**
- * Returns true if running in the qunit test harness
+ * Returns true if running in the qunit test harness or RAILS_ENV=test (e.g. for system specs)
  */
 export function isTesting() {
-  return environment === "qunit-testing";
+  return environment === "test";
 }
 
 /**
- * Returns true is RAILS_ENV=test (e.g. for system specs)
+ * Returns true if RAILS_ENV=test (e.g. for system specs)
  */
 export function isRailsTesting() {
-  return environment === "test";
+  deprecated("isRailsTesting is deprecated. Use isTesting instead.", {
+    id: "discourse.is-rails-testing",
+    since: "3.5.0.beta9-dev",
+  });
+
+  return isTesting();
 }
 
 // Generally means "before we migrated to Ember CLI"
