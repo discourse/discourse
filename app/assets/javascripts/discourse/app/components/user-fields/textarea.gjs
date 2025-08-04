@@ -8,6 +8,12 @@ import UserFieldBase from "./base";
 export default class UserFieldTextArea extends UserFieldBase {
   <template>
     <div class="controls">
+      <Textarea
+        id={{concat "user-" this.elementId}}
+        @value={{this.value}}
+        class="form-template-field__textarea"
+        maxlength={{this.site.user_field_max_length}}
+      />
       <label
         class="control-label alt-placeholder"
         for={{concat "user-" this.elementId}}
@@ -16,12 +22,6 @@ export default class UserFieldTextArea extends UserFieldBase {
         {{~#unless this.field.required}}
           {{i18n "user_fields.optional"}}{{/unless~}}
       </label>
-      <Textarea
-        id={{concat "user-" this.elementId}}
-        @value={{this.value}}
-        class="form-template-field__textarea"
-        maxlength={{this.site.user_field_max_length}}
-      />
       {{#if this.validation.failed}}
         <InputTip @validation={{this.validation}} />
       {{else}}
