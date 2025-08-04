@@ -35,10 +35,10 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
                 "Unnamed triage automation script ID #{field["automation_id"]}"
               end
             )
-          temp = field["temperature"] || "NULL"
+          temp = field["temperature"]
 
           # Extract the model ID from the setting value (e.g., "custom:-5" -> "-5")
-          model = field["model"] || "NULL"
+          model = field["model"]
           model = model.split(":").last if model.start_with?("custom:")
 
           desc = "Seeded Persona for an LLM Triage script"
