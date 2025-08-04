@@ -30,6 +30,7 @@ class Theme < ActiveRecord::Base
 
   attr_accessor :child_components
   attr_accessor :skip_child_components_update
+  attr_accessor :has_just_been_created
 
   def self.cache
     @cache ||= DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")

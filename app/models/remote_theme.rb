@@ -113,6 +113,7 @@ class RemoteTheme < ActiveRecord::Base
         )
       existing = false
     end
+    theme.has_just_been_created = !existing
 
     theme.component = theme_info["component"].to_s == "true"
     theme.child_components = child_components = theme_info["components"].presence || []

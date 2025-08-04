@@ -12,20 +12,22 @@ class SystemThemesManager
     theme_dir = "#{Rails.root}/themes/#{theme_name}"
 
     remote_theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
-    if remote_theme.color_scheme
-      remote_theme.color_scheme.update!(user_selectable: true)
-      alternative_theme_name =
-        if remote_theme.color_scheme.name =~ / Dark$/
-          remote_theme.color_scheme.name.sub(" Dark", "")
-        else
-          "#{remote_theme.color_scheme.name} Dark"
-        end
+    if remote_theme.has_just_been_created
+      if remote_theme.color_scheme
+        remote_theme.color_scheme.update!(user_selectable: true)
+        alternative_scheme_name =
+          if remote_theme.color_scheme.name =~ / Dark$/
+            remote_theme.color_scheme.name.sub(" Dark", "")
+          else
+            "#{remote_theme.color_scheme.name} Dark"
+          end
 
-      alternative_color_scheme =
-        remote_theme.color_schemes.where(name: alternative_theme_name).first
-      alternative_color_scheme&.update!(user_selectable: true)
-      if remote_theme.dark_color_scheme.blank? && alternative_color_scheme
-        remote_theme.update!(dark_color_scheme: alternative_color_scheme)
+        alternative_color_scheme =
+          remote_theme.color_schemes.where(name: alternative_scheme_name).first
+        alternative_color_scheme&.update!(user_selectable: true)
+        if remote_theme.dark_color_scheme.blank? && alternative_color_scheme
+          remote_theme.update!(dark_color_scheme: alternative_color_scheme)
+        end
       end
     end
     remote_theme.update_column(:enabled, true)
