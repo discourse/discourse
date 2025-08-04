@@ -148,11 +148,16 @@ module(
       );
 
       await triggerEvent("#topic-query-filter-input", "focus");
+      await assert
+        .dom(".filter-navigation__tip-button")
+        .exists("initial filters shown");
+
       await fillIn("#topic-query-filter-input", "tag:e");
 
-      assert
+      await assert
         .dom(".filter-navigation__tip-button")
         .exists("tag search results shown");
+
       await triggerKeyEvent(
         "#topic-query-filter-input",
         "keydown",

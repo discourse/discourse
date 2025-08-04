@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
@@ -387,7 +387,10 @@ export default class FilterNavigationMenu extends Component {
 
   @action
   handleKeydown(event) {
-    if (this.filteredTips.length === 0) {
+    if (
+      this.filteredTips.length === 0 &&
+      ["ArrowDown", "ArrowUp", "Tab"].includes(event.key)
+    ) {
       return;
     }
 
@@ -413,7 +416,7 @@ export default class FilterNavigationMenu extends Component {
         );
         break;
       case " ":
-        if (!this.dmenuInstance) {
+        if (!this.dMenuInstance) {
           this.openFilterMenu();
         }
         break;
@@ -423,18 +426,19 @@ export default class FilterNavigationMenu extends Component {
           event.stopPropagation();
           this.selectItem(this.filteredTips[this.selectedIndex]);
         } else {
-          if (!this.dmenuInstance) {
-            this.args.onChange(this.currentInputValue, true);
-            return;
-          }
+          cancel(this.searchTimer);
 
-          this.dmenuInstance?.close().then(() => {
+          if (!this.dMenuInstance) {
             this.args.onChange(this.currentInputValue, true);
-          });
+          } else {
+            this.dMenuInstance.close().then(() => {
+              this.args.onChange(this.currentInputValue, true);
+            });
+          }
         }
         break;
       case "Escape":
-        this.dmenuInstance?.close();
+        this.dMenuInstance?.close();
         break;
     }
   }
