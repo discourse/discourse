@@ -71,6 +71,13 @@ export default class DiscoveryNavigation extends Component {
     this.modal.show(ReorderCategories);
   }
 
+  get headingClasses() {
+    return concatClass(
+      "category-heading",
+      this.args.category?.uploaded_logo?.url ? "--has-logo" : null
+    );
+  }
+
   <template>
     <AddCategoryTagClasses
       @category={{@category}}
@@ -90,7 +97,7 @@ export default class DiscoveryNavigation extends Component {
         @outletArgs={{lazyHash category=@category tag=@tag}}
       />
 
-      <section class="category-heading">
+      <section class={{this.headingClasses}}>
         {{#if @category.uploaded_logo.url}}
           <CategoryLogo
             @category={{@category}}

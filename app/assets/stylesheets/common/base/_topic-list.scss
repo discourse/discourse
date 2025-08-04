@@ -46,12 +46,15 @@
 
 .category-heading {
   max-width: 100%;
-  display: flex;
-  gap: var(--space-4);
-  margin-bottom: var(--space-4);
-  padding: var(--space-2);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+
+  &.--has-logo {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    padding: var(--space-2);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+  }
 
   &__logo.category-logo.aspect-image {
     height: 6em;
@@ -64,6 +67,12 @@
     margin: 0;
     line-height: var(--line-height-large);
     font-size: var(--font-0);
+    color: var(--category-boxes-description-text-color);
+  }
+
+  &__content {
+    // 100 container - width of logo - gap - padding
+    width: calc(100% - 6em - var(--space-4) - var(--space-2) * 2);
   }
 
   &__content .badge-category__wrapper {
