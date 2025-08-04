@@ -5,9 +5,8 @@ module DiscourseAi
     module LlmTriage
       def self.handle(
         post:,
-        model:,
+        triage_persona_id:,
         search_for_text:,
-        system_prompt:,
         category_id: nil,
         tags: nil,
         canned_reply: nil,
@@ -18,7 +17,6 @@ module DiscourseAi
         automation: nil,
         max_post_tokens: nil,
         stop_sequences: nil,
-        temperature: nil,
         whisper: nil,
         reply_persona_id: nil,
         max_output_tokens: nil,
@@ -34,42 +32,55 @@ module DiscourseAi
           return
         end
 
-        llm = DiscourseAi::Completions::Llm.proxy(model)
+        triage_persona = AiPersona.find(triage_persona_id)
+        model_id = triage_persona.default_llm_id || SiteSetting.ai_default_llm_model
+        return if model_id.blank?
+        model = LlmModel.find(model_id)
 
-        s_prompt = system_prompt.to_s.sub("%%POST%%", "") # Backwards-compat. We no longer sub this.
-        prompt = DiscourseAi::Completions::Prompt.new(s_prompt)
+        bot =
+          DiscourseAi::Personas::Bot.as(
+            Discourse.system_user,
+            persona: triage_persona.class_instance.new,
+            model: model,
+          )
 
-        content = "title: #{post.topic.title}\n#{post.raw}"
+        input = "title: #{post.topic.title}\n#{post.raw}"
 
-        content =
-          llm.tokenizer.truncate(
-            content,
+        input =
+          model.tokenizer_class.truncate(
+            input,
             max_post_tokens,
             strict: SiteSetting.ai_strict_token_counting,
           ) if max_post_tokens.present?
 
         if post.upload_ids.present?
-          content = [content]
-          content.concat(post.upload_ids.map { |upload_id| { upload_id: upload_id } })
+          input = [input]
+          input.concat(post.upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
 
-        prompt.push(type: :user, content: content)
+        bot_ctx =
+          DiscourseAi::Personas::BotContext.new(
+            user: Discourse.system_user,
+            skip_tool_details: true,
+            feature_name: "llm_triage",
+            messages: [{ type: :user, content: input }],
+          )
 
         result = nil
 
-        result =
-          llm.generate(
-            prompt,
-            max_tokens: max_output_tokens,
-            temperature: temperature,
-            user: Discourse.system_user,
-            stop_sequences: stop_sequences,
-            feature_name: "llm_triage",
-            feature_context: {
-              automation_id: automation&.id,
-              automation_name: automation&.name,
-            },
-          )&.strip
+        llm_args = {
+          max_tokens: max_output_tokens,
+          stop_sequences: stop_sequences,
+          feature_context: {
+            automation_id: automation&.id,
+            automation_name: automation&.name,
+          },
+        }
+
+        result = +""
+        bot.reply(bot_ctx, llm_args: llm_args) do |partial, _, type|
+          result << partial if type.blank?
+        end
 
         if result.present? && result.downcase.include?(search_for_text.downcase)
           user = User.find_by_username(canned_reply_user) if canned_reply_user.present?
@@ -92,6 +103,7 @@ module DiscourseAi
             end
           elsif canned_reply.present? && action != :edit
             post_type = whisper ? Post.types[:whisper] : Post.types[:regular]
+
             PostCreator.create!(
               user,
               topic_id: post.topic_id,
