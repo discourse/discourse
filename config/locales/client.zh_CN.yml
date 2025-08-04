@@ -4781,7 +4781,7 @@ zh_CN:
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
-      filter_reports: 筛选举报
+      filter_reports: "筛选举报..."
       tags:
         remove_muted_tags_from_latest:
           always: "始终"
@@ -5811,7 +5811,7 @@ zh_CN:
             filter_by_used: "已使用"
             filter_by_unused: "未使用"
             filter_by_updates_available: "有可用更新"
-            search_components: "输入组件名"
+            search_components: "按组件名称或描述过滤..."
             new_update_for_component: "%{name} 有新的更新可用！"
             component_up_to_date: '“%{name}” 已是最新。'
             updated_successfully: '“%{name}” 已成功更新。'
@@ -5997,7 +5997,10 @@ zh_CN:
           theme: "主题"
           component: "组件"
           components: "组件"
-          search_placeholder: "输入以搜索…"
+          search_placeholder: "按主题名称或描述过滤..."
+          filter_all: "所有"
+          filter_user_selectable: "用户可选"
+          no_themes_found: "没有符合您筛选条件的主题"
           theme_name: "主题名称"
           component_name: "组件名称"
           themes_intro: "选择现有主题或安装新主题以开始"
@@ -6229,12 +6232,11 @@ zh_CN:
           saved_refreshing: "保存！正在刷新颜色..."
           from_theme: "来自主题： %{name}"
           filters:
-            search_placeholder: "按名称或主题搜索..."
+            search_placeholder: "按调色板或主题名称筛选..."
             all: "所有"
             user_selectable: "用户可选"
             from_theme: "来自主题"
             no_results: "未找到调色板"
-            reset: "重置过滤器"
           active_badge:
             text: "有效"
             title: "激活调色板"

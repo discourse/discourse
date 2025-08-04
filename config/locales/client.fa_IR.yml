@@ -4840,7 +4840,7 @@ fa_IR:
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "ناظر"
-      filter_reports: صافی گزارشات
+      filter_reports: "صافی گزارشات..."
       tags:
         remove_muted_tags_from_latest:
           always: "همیشه"
@@ -5861,7 +5861,8 @@ fa_IR:
           theme: "قالب"
           component: "کامپوننت "
           components: "کامپوننت‌ها"
-          search_placeholder: "برای جستجو تایپ کنید…"
+          filter_all: "همه"
+          filter_user_selectable: "قابل انتخاب توسط کاربر"
           theme_name: "نام قالب"
           component_name: "نام کامپوننت"
           themes_intro: "برای شروع یک تم موجود را انتخاب کنید یا یک تم جدید نصب کنید"

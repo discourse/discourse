@@ -4107,7 +4107,7 @@ lt:
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
-      filter_reports: Filtruoti ataskaitas
+      filter_reports: "Filtruoti ataskaitas..."
       tags:
         remove_muted_tags_from_latest:
           always: "visada"
@@ -4695,6 +4695,7 @@ lt:
           theme: "Tema"
           component: "Komponentas"
           components: "Komponentai"
+          filter_all: "Visi"
           theme_name: "Temos pavadinimas"
           component_name: "Komponento pavadinimas"
           themes_intro: "Norėdami pradėti, pasirinkite esamą temą arba įdiekite naują"

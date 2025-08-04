@@ -3203,6 +3203,7 @@ et:
           theme: "Teema"
           component: "Komponent"
           components: "Komponendid"
+          filter_all: "Kõik"
           theme_name: "Teema nimi"
           component_name: "Komponendi nimi"
           customize_desc: "Kohanda:"
