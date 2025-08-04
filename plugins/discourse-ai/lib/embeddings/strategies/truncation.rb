@@ -39,7 +39,12 @@ module DiscourseAi
         end
 
         def prepare_query_text(text, vdef, asymmetric: false)
-          qtext = asymmetric ? "#{vdef.search_prompt} #{text}" : text
+          qtext = ""
+          if asymmetric && vdef.search_prompt.present?
+            qtext = "#{vdef.search_prompt} #{text}"
+          else
+            qtext = text
+          end
           max_length = vdef.max_sequence_length - 2
 
           vdef.tokenizer.truncate(qtext, max_length, strict: SiteSetting.ai_strict_token_counting)
