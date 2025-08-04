@@ -5,6 +5,7 @@ import UserFieldConfirm from "./user-fields/confirm";
 import UserFieldDropdown from "./user-fields/dropdown";
 import UserFieldMultiselect from "./user-fields/multiselect";
 import UserFieldText from "./user-fields/text";
+import UserFieldTextArea from "./user-fields/textarea";
 
 export default class UserField extends Component {
   get components() {
@@ -13,6 +14,7 @@ export default class UserField extends Component {
       dropdown: UserFieldDropdown,
       multiselect: UserFieldMultiselect,
       text: UserFieldText,
+      textarea: UserFieldTextArea,
     });
   }
 

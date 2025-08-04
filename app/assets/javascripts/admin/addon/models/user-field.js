@@ -8,6 +8,7 @@ export default class UserField extends RestModel {
     if (!this._fieldTypes) {
       this._fieldTypes = [
         UserFieldType.create({ id: "text" }),
+        UserFieldType.create({ id: "textarea" }),
         UserFieldType.create({ id: "confirm" }),
         UserFieldType.create({ id: "dropdown", hasOptions: true }),
         UserFieldType.create({ id: "multiselect", hasOptions: true }),

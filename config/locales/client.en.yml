@@ -8044,6 +8044,7 @@ en:
 
         field_types:
           text: "Text"
+          textarea: "Textarea"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
