@@ -34,7 +34,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
         allow(vdef).to receive(:prepare_query_text).and_call_original
 
-        vector.vector_from(text, asymmetric: true)
+        vector.vector_from(text, true)
 
         expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: true)
       end
@@ -56,7 +56,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
         allow(vdef).to receive(:prepare_query_text).and_call_original
 
-        vector.vector_from(text, asymmetric: false)
+        vector.vector_from(text, false)
 
         expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: false)
       end
