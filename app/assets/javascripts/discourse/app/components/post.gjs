@@ -69,6 +69,8 @@ export default class Post extends Component {
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
       post: this.args.post,
+      prevPost: this.args.prevPost,
+      nextPost: this.args.nextPost,
     });
   }
 
@@ -76,6 +78,7 @@ export default class Post extends Component {
     return applyValueTransformer("post-article-class", [], {
       post: this.args.post,
       prevPost: this.args.prevPost,
+      nextPost: this.args.nextPost,
     });
   }
 
@@ -164,7 +167,14 @@ export default class Post extends Component {
       isPM ||
         (isRegular &&
           (this.args.post.topic.posts_count > 1 || showWithoutReplies)),
-      { post: this.args.post, isPM, isRegular, showWithoutReplies }
+      {
+        post: this.args.post,
+        isPM,
+        isRegular,
+        showWithoutReplies,
+        prevPost: this.args.prevPost,
+        nextPost: this.args.nextPost,
+      }
     );
   }
 
@@ -441,7 +451,7 @@ export default class Post extends Component {
               {{this.addEventListeners this.customEventListeners}}
             >
               <PluginOutlet
-                @name="in-post-article"
+                @name="post-article-content"
                 @outletArgs={{postOutletArgs}}
               >
                 {{#if this.hasRepliesAbove}}
