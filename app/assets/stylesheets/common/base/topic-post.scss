@@ -1130,6 +1130,11 @@ blockquote .post__contents-cooked-quote {
   > *:last-child {
     margin-bottom: 0 !important;
   }
+
+  table {
+    table-layout: fixed; // prevents table from expanding past the post body width
+    width: 100%;
+  }
 }
 
 .gap {
