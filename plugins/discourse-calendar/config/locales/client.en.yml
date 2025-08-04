@@ -317,14 +317,9 @@ en:
         before_event_reminder: "An event is about to start"
         after_event_reminder: "An event has ended"
         ongoing_event_reminder: "An event is ongoing"
-        # TODO: delete the following keys (until ongoing_event_reminder_html)
-        # when event-invitation and event-reminder notification item widgets
-        # are removed
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} has automatically set your attendance and invited you to %{description}"
-        before_event_reminder_html: "An event is about to start %{description}"
-        after_event_reminder_html: "An event has ended %{description}"
-        ongoing_event_reminder_html: "An event is ongoing  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} has automatically set your attendance and invited you to %{eventName}"
+        an_event: "an event"
       edit_reason: "Event updated"
       edit_reason_closed: "Event closed"
       edit_reason_opened: "Event opened"
