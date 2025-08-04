@@ -49,6 +49,7 @@ export default class PostMetaDataEditsIndicator extends Component {
   <template>
     <div class="post-info edits">
       <DButton
+        ...attributes
         class={{concatClass
           "btn-flat"
           (historyHeat this.siteSettings this.updatedAt)
