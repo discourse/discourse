@@ -4810,7 +4810,7 @@ fr:
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
-      filter_reports: Filtrer les rapports
+      filter_reports: "Filtrer les rapports..."
       tags:
         remove_muted_tags_from_latest:
           always: "toujours"
@@ -5843,7 +5843,8 @@ fr:
           theme: "Thème"
           component: "Composant"
           components: "Composants"
-          search_placeholder: "saisissez pour rechercher…"
+          filter_all: "Tout"
+          filter_user_selectable: "Sélectionnable par l'utilisateur"
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
           themes_intro: "Sélectionnez un thème existant ou installez-en un nouveau pour commencer"

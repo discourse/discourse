@@ -252,6 +252,8 @@ uk:
         settings_explorer:
           name: Провідник налаштувань
           description: "AI Bot спеціалізується на допомозі досліджувати налаштування сайту Discourse"
+        researcher:
+          description: "ШІ-бот з доступом до Google, який може шукати та читати веб-сторінки"
         creative:
           name: Творчий
           description: "AI Bot без зовнішніх інтеграцій, що спеціалізуються на творчих завданнях"
@@ -261,6 +263,9 @@ uk:
         discourse_helper:
           name: "Discourse Помічник"
           description: "AI Bot спеціалізується на допомозі із завданнями, пов’язаними з Discourse"
+        web_artifact_creator:
+          name: "Створювач веб-артефактів"
+          description: "ШІ-бот спеціалізується на створенні інтерактивних веб-артефактів"
         summarizer:
           name: "Підсумовувач"
           description: "Персона за замовчуванням, яка використовується для створення зведень ШІ"

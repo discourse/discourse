@@ -3715,7 +3715,7 @@ ro:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      filter_reports: Filtrează rapoarte
+      filter_reports: "Filtrează rapoarte..."
       filter_reports_no_results: "Niciun raport nu corespunde filtrului tău"
       tags:
         remove_muted_tags_from_latest:
@@ -4395,7 +4395,6 @@ ro:
             filter_by_used: "Folosită"
             filter_by_unused: "Nefolosită"
             filter_by_updates_available: "Actualizări disponibile"
-            search_components: "Introdu un nume de componentă"
             new_update_for_component: "O nouă actualizare este disponibilă pentru %{name}!"
             component_up_to_date: '„%{name}” este actualizată.'
             updated_successfully: '„%{name}” a fost actualizată cu succes.'
@@ -4545,6 +4544,8 @@ ro:
           disabled_filter: "Dezactivat"
         theme:
           theme: "Temă"
+          filter_all: "Toate"
+          filter_user_selectable: "Selectabilă de către utilizator"
           themes_intro_new: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
           themes_intro_img_alt: "Substituent nou pentru temă"
           customize_desc: "Personalizează:"
@@ -4655,12 +4656,10 @@ ro:
           saved_refreshing: "Salvată! Se reîmprospătează culorile..."
           from_theme: "Din tema: %{name}"
           filters:
-            search_placeholder: "Caută după nume sau temă..."
             all: "Toate"
             user_selectable: "Selectabilă de către utilizator"
             from_theme: "Din temă"
             no_results: "Nu am găsit palete de culori"
-            reset: "Resetează filtre"
           active_badge:
             text: "Activă"
             title: "Paletă de culori activă"
