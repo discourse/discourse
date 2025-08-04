@@ -42,7 +42,7 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
           model = model.split(":").last if model.start_with?("custom:")
 
           row =
-            "'#{name}', 'Seeded Persona for an LLM Triage script', FALSE, '#{field["system_prompt"]}', #{temp}, #{field["model"]}, NOW(), NOW()"
+            "'#{name}', 'Seeded Persona for an LLM Triage script', FALSE, '#{field["system_prompt"]}', #{temp}, #{model}, NOW(), NOW()"
 
           DB.query_single(<<~SQL)&.first
             INSERT INTO ai_personas (name, description, enabled, system_prompt, temperature, default_llm_id, created_at, updated_at)
