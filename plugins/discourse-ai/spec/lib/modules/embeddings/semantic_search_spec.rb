@@ -41,6 +41,38 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
       expect(posts).to contain_exactly(post)
     end
 
+    context "with HYDE disabled" do
+      let(:query_embedding) { [0.12] * vector_def.dimensions }
+
+      before { EmbeddingsGenerationStubs.hugging_face_service(query, query_embedding) }
+
+      it "uses asymmetric embeddings when HYDE is disabled" do
+        insert_candidate(post.topic)
+
+        vector = DiscourseAi::Embeddings::Vector.instance
+        allow(vector).to receive(:vector_from).and_call_original
+
+        posts = semantic_search.search_for_topics(query, hyde: false)
+
+        expect(vector).to have_received(:vector_from).with(query, true)
+        expect(posts).to contain_exactly(post)
+      end
+    end
+
+    context "with HYDE enabled" do
+      it "uses HYDE embeddings and not asymmetric ones" do
+        insert_candidate(post.topic)
+
+        vector = DiscourseAi::Embeddings::Vector.instance
+        allow(vector).to receive(:vector_from).and_call_original
+
+        posts = trigger_search(query)
+
+        expect(vector).not_to have_received(:vector_from).with(query, true)
+        expect(posts).to contain_exactly(post)
+      end
+    end
+
     describe "applies different scopes to the candidates" do
       context "when the topic is not visible" do
         it "returns an empty list" do

@@ -1,0 +1,10 @@
+{"time":"2025-07-30T17:49:05.362430804-03:00","level":"INFO","source":{"function":"github.com/charmbracelet/crush/internal/config.loadProviders","file":"/home/runner/work/crush/crush/internal/config/provider.go","line":113},"msg":"Getting live provider data"}
+{"time":"2025-07-30T17:49:05.535196817-03:00","level":"INFO","source":{"function":"github.com/charmbracelet/crush/internal/config.saveProvidersInCache","file":"/home/runner/work/crush/crush/internal/config/provider.go","line":48},"msg":"Saving cached provider data","path":"/home/falco/.local/share/crush/providers.json"}
+{"time":"2025-07-30T17:49:05.536125081-03:00","level":"WARN","source":{"function":"github.com/charmbracelet/crush/internal/config.Load","file":"/home/runner/work/crush/crush/internal/config/load.go","line":82},"msg":"No providers configured"}
+{"time":"2025-07-30T17:49:06.162580047-03:00","level":"INFO","msg":"OK   20250424200609_initial.sql (1.87ms)"}
+{"time":"2025-07-30T17:49:06.163186163-03:00","level":"INFO","msg":"OK   20250515105448_add_summary_message_id.sql (564.44µs)"}
+{"time":"2025-07-30T17:49:06.163718226-03:00","level":"INFO","msg":"OK   20250624000000_add_created_at_indexes.sql (509.74µs)"}
+{"time":"2025-07-30T17:49:06.164236319-03:00","level":"INFO","msg":"OK   20250627000000_add_provider_to_messages.sql (498.19µs)"}
+{"time":"2025-07-30T17:49:06.16424754-03:00","level":"INFO","msg":"goose: successfully migrated database to version: 20250627000000"}
+{"time":"2025-07-30T17:49:06.164290921-03:00","level":"INFO","source":{"function":"github.com/charmbracelet/crush/internal/app.(*App).initLSPClients","file":"/home/runner/work/crush/crush/internal/app/lsp.go","line":18},"msg":"LSP clients initialization started in background"}
+{"time":"2025-07-30T17:49:06.164308221-03:00","level":"WARN","source":{"function":"github.com/charmbracelet/crush/internal/app.New","file":"/home/runner/work/crush/crush/internal/app/app.go","line":97},"msg":"No agent configuration found"}

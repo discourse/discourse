@@ -12,7 +12,11 @@ module DiscourseAi
 
       def search
         query = params[:q].to_s
-        skip_hyde = params[:hyde].to_s.downcase == "false" || params[:hyde].to_s == "0"
+        use_hyde = SiteSettings.ai_embeddings_semantic_search_use_hyde
+
+        if params[:hyde].present?
+          use_hyde = !(params[:hyde].to_s.downcase == "false" || params[:hyde].to_s == "0")
+        end
 
         if query.length < SiteSetting.min_search_term_length
           raise Discourse::InvalidParameters.new(:q)
@@ -29,7 +33,7 @@ module DiscourseAi
 
         semantic_search = DiscourseAi::Embeddings::SemanticSearch.new(guardian)
 
-        if !skip_hyde && !semantic_search.cached_query?(query)
+        if use_hyde && !semantic_search.cached_query?(query)
           RateLimiter.new(
             current_user,
             "semantic-search",
@@ -48,7 +52,7 @@ module DiscourseAi
         hijack do
           begin
             semantic_search
-              .search_for_topics(query, _page = 1, hyde: !skip_hyde)
+              .search_for_topics(query, _page = 1, hyde: use_hyde)
               .each { |topic_post| grouped_results.add(topic_post) }
 
             render_serialized(
