@@ -48,7 +48,6 @@ module Migrations::Converters::Discourse
         email_previous_replies: item[:email_previous_replies],
         enable_allowed_pm_users: item[:enable_allowed_pm_users],
         enable_defer: item[:enable_defer],
-        enable_experimental_sidebar: item[:enable_experimental_sidebar],
         enable_quoting: item[:enable_quoting],
         enable_smart_lists: item[:enable_smart_lists],
         eenable_markdown_monospace_font: item[:enable_markdown_monospace_font],
