@@ -227,12 +227,12 @@ export default class BulkTopicActions extends Component {
     this.loading = false;
     if (this.errors) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("generic_error") },
       });
     } else {
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("topics.bulk.completed") },
       });
     }
