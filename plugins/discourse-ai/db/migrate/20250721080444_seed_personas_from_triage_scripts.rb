@@ -44,6 +44,12 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
           desc = "Seeded Persona for an LLM Triage script"
           prompt = field["system_prompt"]
 
+          existing_id = DB.query_single(<<~SQL, name: name).first
+              SELECT id from ai_personas where name = :name
+            SQL
+
+          next existing_id if existing_id.present?
+
           DB.query_single(
             <<~SQL,
             INSERT INTO ai_personas (name, description, enabled, system_prompt, temperature, default_llm_id, created_at, updated_at)
