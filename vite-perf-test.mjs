@@ -98,7 +98,7 @@ async function startVite(args) {
 
   server = execa({
     cwd: "app/assets/javascripts/discourse",
-  })`./node_modules/.bin/vite ${args} --port 0`;
+  })`./node_modules/.bin/ember ${args} --proxy http://localhost:3000 --port 0`;
 
   server.catch((error) => {
     if (error.exitCode !== 143) {
@@ -112,7 +112,8 @@ async function startVite(args) {
     server.stdout.on("data", (line) => {
       // console.log(line.toString());
 
-      let result = /Local:\s+(https?:\/\/.*)\//g.exec(
+      // let result = /Local:\s+(https?:\/\/.*)\//g.exec(
+      let result = /Serving on\s+(https?:\/\/.*)\//g.exec(
         stripAnsi(line.toString())
       );
 
@@ -139,8 +140,9 @@ async function startVite(args) {
 }
 
 try {
-  await startVite("--force");
-  await startVite("");
+  await startVite("server");
+  await startVite("server");
+  // await startVite("");
 
   await exec("close browser", () => {
     return browser.close();
