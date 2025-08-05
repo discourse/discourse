@@ -22,6 +22,7 @@ import { i18n } from "discourse-i18n";
  * @property {boolean} [hideShortcutInTitle]
  * @property {string} title
  * @property {string} [shortcut]
+ * @property {string} [ariaKeyshortcuts]
  * @property {boolean} [unshift]
  * @property {Function} [active]
  */
