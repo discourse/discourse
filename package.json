@@ -23,6 +23,7 @@
     "ember-template-lint": "7.9.1",
     "esbuild": "^0.25.8",
     "eslint": "9.32.0",
+    "execa": "^9.6.0",
     "jsdoc": "^4.0.4",
     "lefthook": "^1.12.2",
     "licensee": "^11.1.1",
@@ -35,6 +36,7 @@
     "prettier": "3.5.3",
     "puppeteer-core": "^24.15.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
+    "strip-ansi": "^7.1.0",
     "stylelint": "16.23.0",
     "terser": "^5.43.1",
     "typescript": "5.6.x"
@@ -83,7 +85,7 @@
         "webpack"
       ]
     },
-    "overrides":{
+    "overrides": {
       "@ember/render-modifiers": "github:jrjohnson/ember-render-modifiers#v2-addon&path:/ember-render-modifiers"
     }
   }
