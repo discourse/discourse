@@ -2,8 +2,7 @@
 
 module DiscourseAi
   module Translation
-    class TopicCandidates
-      # Topics that are eligible for translation based on site settings
+    class TopicCandidates < BaseCandidates
       def self.get
         topics =
           Topic
@@ -16,7 +15,7 @@ module DiscourseAi
 
         if SiteSetting.ai_translation_backfill_limit_to_public_content
           # exclude all PMs
-          # and only include posts from public categories
+          # and only include topics from public categories
           topics =
             topics
               .where.not(archetype: Archetype.private_message)
@@ -31,13 +30,33 @@ module DiscourseAi
         end
       end
 
-      def self.get_completion_per_locale(locale)
-        done = get.where(locale:).count
-        done += TopicLocalization.where(locale:).count
+      private
 
-        total = get.count
+      def self.calculate_completion_per_locale(locale)
+        base_locale = locale.split("_").first
 
-        done / total.to_f
+        sql = <<~SQL
+          WITH eligible_topics AS (
+            #{get.to_sql}
+          ),
+          total_count AS (
+            SELECT COUNT(*) AS count FROM eligible_topics
+          ),
+          done_count AS (
+            SELECT COUNT(DISTINCT t.id)
+            FROM eligible_topics t
+            LEFT JOIN topic_localizations tl ON t.id = tl.topic_id AND tl.locale LIKE :base_locale
+            WHERE t.locale LIKE :base_locale OR tl.topic_id IS NOT NULL
+          )
+          SELECT d.count AS done, t.count AS total
+          FROM total_count t, done_count d
+        SQL
+
+        DB.query_single(sql, base_locale: "#{base_locale}%")
+      end
+
+      def self.completion_cache_key_for_type
+        "discourse_ai::translation::topic_candidates"
       end
     end
   end

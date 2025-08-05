@@ -1,30 +1,44 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import cookie, { removeCookie } from "discourse/lib/cookie";
+import cookie from "discourse/lib/cookie";
 
 const COOKIE_NAME = "forced_color_mode";
-const DARK = "dark";
-const LIGHT = "light";
+const DARK_VALUE_FOR_COOKIE = "dark";
+const LIGHT_VALUE_FOR_COOKIE = "light";
+const AUTO_VALUE_FOR_COOKIE = "auto";
 
 export default class InterfaceColor extends Service {
   @service appEvents;
+  @service currentUser;
   @service siteSettings;
   @service session;
 
-  @tracked forcedColorMode;
+  @tracked colorMode;
 
   get lightModeForced() {
-    return this.selectorAvailable && this.forcedColorMode === LIGHT;
+    return this.selectorAvailable && this.colorModeIsLight;
   }
 
   get darkModeForced() {
-    return this.selectorAvailable && this.forcedColorMode === DARK;
+    return this.selectorAvailable && this.colorModeIsDark;
   }
 
   get selectorAvailable() {
     return (
       this.session.darkModeAvailable && !this.session.defaultColorSchemeIsDark
     );
+  }
+
+  get colorModeIsLight() {
+    return this.colorMode === LIGHT_VALUE_FOR_COOKIE;
+  }
+
+  get colorModeIsDark() {
+    return this.colorMode === DARK_VALUE_FOR_COOKIE;
+  }
+
+  get colorModeIsAuto() {
+    return this.colorMode === AUTO_VALUE_FOR_COOKIE;
   }
 
   get selectorAvailableInSidebar() {
@@ -46,18 +60,26 @@ export default class InterfaceColor extends Service {
       return;
     }
 
-    const forcedColorMode = cookie(COOKIE_NAME);
+    const cookieValue = cookie(COOKIE_NAME);
 
-    if (forcedColorMode === LIGHT) {
+    if (cookieValue === AUTO_VALUE_FOR_COOKIE) {
+      this.useAutoMode({ adjustStylesheets: false });
+    } else if (cookieValue === LIGHT_VALUE_FOR_COOKIE) {
       this.forceLightMode({ flipStylesheets: false });
-    } else if (forcedColorMode === DARK) {
+    } else if (cookieValue === DARK_VALUE_FOR_COOKIE) {
       this.forceDarkMode({ flipStylesheets: false });
+    } else if (this.currentUser?.prefersAutoColor) {
+      this.colorMode = AUTO_VALUE_FOR_COOKIE;
+    } else if (this.currentUser?.prefersLightColor) {
+      this.colorMode = LIGHT_VALUE_FOR_COOKIE;
+    } else if (this.currentUser?.prefersDarkColor) {
+      this.colorMode = DARK_VALUE_FOR_COOKIE;
     }
   }
 
   forceLightMode({ flipStylesheets = true } = {}) {
-    this.forcedColorMode = LIGHT;
-    cookie(COOKIE_NAME, LIGHT, {
+    this.colorMode = LIGHT_VALUE_FOR_COOKIE;
+    cookie(COOKIE_NAME, LIGHT_VALUE_FOR_COOKIE, {
       path: "/",
       expires: 365,
     });
@@ -70,12 +92,12 @@ export default class InterfaceColor extends Service {
         darkStylesheet.media = "none";
       }
     }
-    this.appEvents.trigger("interface-color:changed", LIGHT);
+    this.appEvents.trigger("interface-color:changed", LIGHT_VALUE_FOR_COOKIE);
   }
 
   forceDarkMode({ flipStylesheets = true } = {}) {
-    this.forcedColorMode = DARK;
-    cookie(COOKIE_NAME, DARK, {
+    this.colorMode = DARK_VALUE_FOR_COOKIE;
+    cookie(COOKIE_NAME, DARK_VALUE_FOR_COOKIE, {
       path: "/",
       expires: 365,
     });
@@ -88,23 +110,34 @@ export default class InterfaceColor extends Service {
         darkStylesheet.media = "all";
       }
     }
-    this.appEvents.trigger("interface-color:changed", DARK);
+    this.appEvents.trigger("interface-color:changed", DARK_VALUE_FOR_COOKIE);
   }
 
-  removeColorModeOverride() {
-    this.forcedColorMode = null;
-    removeCookie(COOKIE_NAME, { path: "/" });
+  useAutoMode({ adjustStylesheets = true } = {}) {
+    this.colorMode = AUTO_VALUE_FOR_COOKIE;
+    cookie(COOKIE_NAME, AUTO_VALUE_FOR_COOKIE, {
+      path: "/",
+      expires: 365,
+    });
 
-    const lightStylesheet = this.#lightColorsStylesheet();
-    if (lightStylesheet) {
-      lightStylesheet.media = "(prefers-color-scheme: light)";
-      this.appEvents.trigger("interface-color:changed", LIGHT);
-    }
+    if (adjustStylesheets) {
+      const lightStylesheet = this.#lightColorsStylesheet();
+      if (lightStylesheet) {
+        lightStylesheet.media = "(prefers-color-scheme: light)";
+        this.appEvents.trigger(
+          "interface-color:changed",
+          LIGHT_VALUE_FOR_COOKIE
+        );
+      }
 
-    const darkStylesheet = this.#darkColorsStylesheet();
-    if (darkStylesheet) {
-      darkStylesheet.media = "(prefers-color-scheme: dark)";
-      this.appEvents.trigger("interface-color:changed", DARK);
+      const darkStylesheet = this.#darkColorsStylesheet();
+      if (darkStylesheet) {
+        darkStylesheet.media = "(prefers-color-scheme: dark)";
+        this.appEvents.trigger(
+          "interface-color:changed",
+          DARK_VALUE_FOR_COOKIE
+        );
+      }
     }
   }
 

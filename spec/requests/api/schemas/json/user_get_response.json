@@ -818,6 +818,9 @@
             },
             "composition_mode": {
               "type": "integer"
+            },
+            "interface_color_mode": {
+              "type": "integer"
             }
           },
           "required": [
@@ -856,7 +859,8 @@
             "title_count_mode",
             "timezone",
             "skip_new_user_tips",
-            "topics_unread_when_closed"
+            "topics_unread_when_closed",
+            "interface_color_mode"
           ]
         }
       },

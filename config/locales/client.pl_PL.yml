@@ -194,6 +194,105 @@ pl_PL:
       placeholder: data
       from_placeholder: "od daty"
       to_placeholder: "do daty"
+    languages:
+      ar:
+        name: arabski
+      be:
+        name: białoruski
+      bg:
+        name: bułgarski
+      bs_BA:
+        name: bośniacki
+      ca:
+        name: kataloński
+      cs:
+        name: czeski
+      da:
+        name: duński
+      de:
+        name: niemiecki
+      el:
+        name: grecki
+      en:
+        name: angielski (USA)
+      en_GB:
+        name: angielski (Wielka Brytania)
+      es:
+        name: hiszpański
+      et:
+        name: estoński
+      fa_IR:
+        name: perski
+      fi:
+        name: fiński
+      fr:
+        name: francuski
+      gl:
+        name: galicyjski
+      he:
+        name: hebrajski
+      hr:
+        name: chorwacki
+      hu:
+        name: węgierski
+      hy:
+        name: ormiański
+      id:
+        name: indonezyjski
+      it:
+        name: włoski
+      ja:
+        name: japoński
+      ko:
+        name: koreański
+      lt:
+        name: litewski
+      lv:
+        name: łotewski
+      nb_NO:
+        name: norweski bokmål
+      nl:
+        name: holenderski
+      pl_PL:
+        name: polski
+      pt:
+        name: portugalski
+      pt_BR:
+        name: portugalski
+      ro:
+        name: rumuński
+      ru:
+        name: rosyjski
+      sk:
+        name: słowacki
+      sl:
+        name: słowieński
+      sq:
+        name: albański
+      sr:
+        name: serbski
+      sv:
+        name: szwedzki
+      sw:
+        name: suahili
+      te:
+        name: telugu
+      th:
+        name: tajski
+      tr_TR:
+        name: turecki
+      ug:
+        name: ujgurski
+      uk:
+        name: ukraiński
+      ur:
+        name: urdu
+      vi:
+        name: wietnamski
+      zh_TW:
+        name: chiński
+      zh_CN:
+        name: chiński uproszczony
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} od @%{username}"
@@ -257,6 +356,7 @@ pl_PL:
       search: "Szukaj"
     themes:
       default_description: "Domyślny"
+      broken_theme_alert: "Twoja witryna może nie działać, ponieważ motyw/komponent zawiera błędy. Sprawdź konsolę przeglądarki, aby uzyskać więcej informacji."
       error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
       only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
     broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
@@ -1517,7 +1617,7 @@ pl_PL:
         description: "Pomiń wskazówki i plakietki dotyczące wprowadzania nowych użytkowników"
       reset_seen_user_tips: "Pokaż ponownie podpowiedzi użytkownika"
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
-      color_scheme_default_on_all_devices: "Ustaw domyślną paletę kolorów na wszystkich moich urządzeniach"
+      color_scheme_default_on_all_devices: "Ustaw domyślną paletę kolorów i tryb na wszystkich moich urządzeniach"
       color_scheme: "Paleta Kolorów"
       color_schemes:
         default_description: "Motyw domyślny"
@@ -1527,6 +1627,12 @@ pl_PL:
         regular: "Normalny"
         dark: "Tryb ciemny"
         default_dark_scheme: "(domyślny na stronie)"
+        interface_mode: "Tryb"
+        interface_mode_instructions: "Opcja „Automatyczny” wykorzystuje preferencje systemu dotyczące trybu jasnego lub ciemnego."
+        interface_modes:
+          auto: "Automatyczny"
+          light: "Jasny"
+          dark: "Ciemny"
       dark_mode: "Tryb ciemny"
       dark_mode_enable: "Włącz automatyczną paletę kolorów trybu ciemnego"
       text_size_default_on_all_devices: "Ustaw ten domyślny rozmiar tekstu na wszystkich urządzeniach"
@@ -2948,7 +3054,6 @@ pl_PL:
       italic_label: "I"
       italic_title: "Wyróżnienie"
       italic_text: "wyróżniony tekst"
-      heading_label: "N"
       heading_title: "Nagłówki"
       heading_level_n: "Nagłówek %{levelNumber}"
       heading_level_n_title: "Nagłówek %{levelNumber}"
@@ -7167,9 +7272,10 @@ pl_PL:
             title: "Wybierz podstawową paletę kolorów"
             description: "Paleta podstawowa:"
           preference_warning: "Zmieniłeś <a href='%{link}'>ustawienia swojego motywu osobistego</a>, więc zmiany palety barw mogą być dla Ciebie niewidoczne. Osoby odwiedzające, które nie zmieniły swoich ustawień domyślnych, nadal zobaczą wprowadzone przez Ciebie zmiany."
+          dark_mode_warning: "Obecnie używasz trybu ciemnego. Podczas ustawiania aktywnej palety kolorów kolory zostaną zastosowane do jasnego trybu motywu. Jeśli chcesz zmienić domyślne kolory trybu ciemnego, edytuj <a href='%{link}'>ustawienia witryny trybu ciemnego</a>."
           title: "Kolory"
           edit: "Edytuj"
-          set_default: "Ustaw jako aktywne na %{theme}"
+          set_default: "Aktywuj na domyślnym motywie (%{theme})"
           set_default_success: "%{schemeName} ustawiono jako aktywną paletę dla %{themeName}"
           saved_refreshing: "Zapisane! Odświeżanie kolorów..."
           from_theme: "Z motywu: %{name}"

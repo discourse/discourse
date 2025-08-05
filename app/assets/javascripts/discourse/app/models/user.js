@@ -13,7 +13,10 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
-import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import {
+  INTERFACE_COLOR_MODES,
+  USER_OPTION_COMPOSITION_MODES,
+} from "discourse/lib/constants";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -107,6 +110,7 @@ let userOptionFields = [
   "email_previous_replies",
   "color_scheme_id",
   "dark_scheme_id",
+  "interface_color_mode",
   "dynamic_favicon",
   "enable_quoting",
   "enable_smart_lists",
@@ -248,6 +252,7 @@ export default class User extends RestModel.extend(Evented) {
   @mapBy("sidebarTags", "name") sidebarTagNames;
   @filterBy("groups", "has_messages", true) groupsWithMessages;
   @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
+  @alias("can_edit_tags") canEditTags;
 
   numGroupsToDisplay = 2;
 
@@ -1298,6 +1303,24 @@ export default class User extends RestModel.extend(Evented) {
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  }
+
+  get prefersLightColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.LIGHT
+    );
+  }
+
+  get prefersDarkColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.DARK
+    );
+  }
+
+  get prefersAutoColor() {
+    return (
+      this.user_option?.interface_color_mode === INTERFACE_COLOR_MODES.AUTODARK
+    );
   }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat, fn } from "@ember/helper";
 import { tagName } from "@ember-decorators/component";

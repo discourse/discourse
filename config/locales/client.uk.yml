@@ -194,6 +194,105 @@ uk:
       placeholder: дата
       from_placeholder: "з дати"
       to_placeholder: "дата"
+    languages:
+      ar:
+        name: Арабська
+      be:
+        name: Білоруська
+      bg:
+        name: Болгарська
+      bs_BA:
+        name: Боснійська
+      ca:
+        name: Каталонська
+      cs:
+        name: Чеська
+      da:
+        name: Данська
+      de:
+        name: Німецька
+      el:
+        name: Грецька
+      en:
+        name: Англійська (США)
+      en_GB:
+        name: Англійська (Велика Британія)
+      es:
+        name: Іспанська
+      et:
+        name: Естонська
+      fa_IR:
+        name: Перська
+      fi:
+        name: Фінська
+      fr:
+        name: Французька
+      gl:
+        name: Галісійська
+      he:
+        name: Іврит
+      hr:
+        name: Хорватська
+      hu:
+        name: Угорська
+      hy:
+        name: Вірменська
+      id:
+        name: Індонезійська
+      it:
+        name: італійська
+      ja:
+        name: Японська
+      ko:
+        name: Корейська
+      lt:
+        name: Литовська
+      lv:
+        name: Латиська
+      nb_NO:
+        name: Норвезький букмол
+      nl:
+        name: Нідерландська
+      pl_PL:
+        name: Польська
+      pt:
+        name: Португальська
+      pt_BR:
+        name: Португальська
+      ro:
+        name: Румунська
+      ru:
+        name: Російська
+      sk:
+        name: Словацька
+      sl:
+        name: Словенська
+      sq:
+        name: Албанська
+      sr:
+        name: Сербська
+      sv:
+        name: Шведська
+      sw:
+        name: Суахілі.
+      te:
+        name: Телугу
+      th:
+        name: Тайська
+      tr_TR:
+        name: Турецька
+      ug:
+        name: Уйгурська
+      uk:
+        name: Українська
+      ur:
+        name: Урду
+      vi:
+        name: В'єтнамська
+      zh_TW:
+        name: Китайська
+      zh_CN:
+        name: Китайська спрощена
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "допис #%{postNumber} від @%{username}"
@@ -257,6 +356,7 @@ uk:
       search: "Пошук"
     themes:
       default_description: "Типово"
+      broken_theme_alert: "Ваш сайт може не працювати через помилки в темі/компоненті. Перегляньте консоль браузера для отримання додаткової інформації."
       error_caused_by: "Викликано '%{name}'. <a target='blank' href='%{path}'>Натисніть тут</a>, щоб оновити, переналаштувати або вимкнути."
       only_admins: "(це повідомлення показується тільки адміністраторам сайту)"
     broken_decorator_alert: "Повідомлення можуть показуватись неправильно, оскільки один з декораторів вмісту дописів на вашому сайті викликав помилку."
@@ -1521,7 +1621,6 @@ uk:
         description: "Пропустити поради щодо створення користувача та значків"
       reset_seen_user_tips: "Знову показати поради користувача"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
-      color_scheme_default_on_all_devices: "Встановити палітру кольорів за замовчуванням на всіх моїх пристроях"
       color_scheme: "Колірна палітра"
       color_schemes:
         default_description: "Типова тема"
@@ -1531,6 +1630,10 @@ uk:
         regular: "Звичайний"
         dark: "Темний режим"
         default_dark_scheme: "(типово для сайту)"
+        interface_modes:
+          auto: "Авто"
+          light: "Світла"
+          dark: "Темна"
       dark_mode: "Темний режим"
       dark_mode_enable: "Увімкнути автоматичну палітру кольорів темного режиму"
       text_size_default_on_all_devices: "Зробити цей розмір тексту базовим для всіх моїх пристроїв"
@@ -2743,6 +2846,9 @@ uk:
     welcome_banner_location:
       above_topic_content: "Над вмістом теми"
       below_site_header: "Нижче заголовка сайту"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "Форматований текст"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2950,7 +3056,6 @@ uk:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "виділення тексту курсивом"
-      heading_label: "Н"
       heading_title: "Заголовки"
       heading_level_n: "Заголовок %{levelNumber}"
       heading_level_n_title: "Заголовок %{levelNumber}"
@@ -5631,6 +5736,7 @@ uk:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
       filter_reports: Фільтр звітів
+      filter_reports_no_results: "Немає звітів, що відповідають вашому фільтру"
       tags:
         remove_muted_tags_from_latest:
           always: "завжди"
@@ -5961,6 +6067,7 @@ uk:
               header_description: "Перегляд журналу виконаних пошукових запитів"
         plugins:
           title: "Встановлені плагіни"
+          header_description: "Плагіни розширюють можливості вашої спільноти за допомогою додаткових функцій. Нижче перераховані як попередньо встановлені, так і користувацькі плагіни."
         api_keys:
           title: "Ключі API"
           header_description: "Ключі API дозволяють безпечно інтегрувати Discourse. із зовнішніми системами та автоматизувати дії. Адміністратори можуть створювати ключі за допомогою спеціальних областей для контролю доступу до ресурсів та конфіденційних даних. Межі обмежують функціональність, забезпечують підвищення безпеки."
@@ -6784,7 +6891,9 @@ uk:
           enabled: "Включено"
           disabled: "Вимкнено"
           preinstalled: "Попередньо встановлений"
+          search_placeholder: "Пошук плагінів..."
           reset: "Скинути"
+          no_results: "Не знайдено плагінів, що відповідають вашим фільтрам"
       navigation_menu:
         sidebar: "Бічна панель"
         header_dropdown: "Випадаючий заголовок"
@@ -7167,9 +7276,10 @@ uk:
             title: "Виберіть базову колірну палітру"
             description: "Базова палітра:"
           preference_warning: "Ви змінили <a href='%{link}'>налаштування особистої теми</a>, тому зміни палітри можуть бути непомітними для вас. Відвідувачі, які не змінили налаштування за замовчуванням, все одно побачать внесені вами тут зміни."
+          dark_mode_warning: "Ви зараз використовуєте темний режим. Під час налаштування активної колірної палітри кольори будуть застосовані до світлого режиму теми. Якщо ви хочете змінити кольори темного режиму за замовчуванням, відредагуйте налаштування темного режиму сайту <a href='%{link}'></a>."
           title: "Кольори"
           edit: "Редагувати"
-          set_default: "Встановити як активний на %{theme}"
+          set_default: "Активувати у темі за замовчуванням (%{theme})"
           set_default_success: "%{schemeName} встановити як активну палітру для %{themeName}"
           saved_refreshing: "Збережено! Оновлення кольорів..."
           from_theme: "З теми: %{name}"

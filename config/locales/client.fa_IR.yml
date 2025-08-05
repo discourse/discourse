@@ -1287,7 +1287,6 @@ fa_IR:
         description: "نکات و نشان‌های ورود کاربر جدید را نادیده بگیرید"
       reset_seen_user_tips: "دوباره نکات کاربر را نشان بده"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
-      color_scheme_default_on_all_devices: "پالت رنگی پیش‌فرض را در همه دستگاه‌های من تنظیم کن"
       color_scheme: "پالت رنگ"
       color_schemes:
         default_description: "تم پیش‌فرض"
@@ -1297,6 +1296,10 @@ fa_IR:
         regular: "عادی"
         dark: "حالت تاریک"
         default_dark_scheme: "(پیش‌فرض سایت)"
+        interface_modes:
+          auto: "خودکار"
+          light: "روشن"
+          dark: "تیره"
       dark_mode: "حالت تاریک"
       dark_mode_enable: "پالت رنگ حالت تاریک خودکار را فعال کنید"
       text_size_default_on_all_devices: "این سایز قلم حالت پیش فرض در تمام دستگاه های من باشد"

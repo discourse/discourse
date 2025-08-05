@@ -194,6 +194,105 @@ he:
       placeholder: תאריך
       from_placeholder: "מתאריך"
       to_placeholder: "עד תאריך"
+    languages:
+      ar:
+        name: ערבית
+      be:
+        name: בלארוסית
+      bg:
+        name: בולגרית
+      bs_BA:
+        name: בוסנית
+      ca:
+        name: קטלאנית
+      cs:
+        name: צ׳כית
+      da:
+        name: דנית
+      de:
+        name: גרמנית
+      el:
+        name: יוונית
+      en:
+        name: אנגלית אמריקאית
+      en_GB:
+        name: אנגלית בריטית
+      es:
+        name: ספרדית
+      et:
+        name: אסטונית
+      fa_IR:
+        name: פרסית
+      fi:
+        name: פינית
+      fr:
+        name: צרפתית
+      gl:
+        name: גליסית
+      he:
+        name: עברית
+      hr:
+        name: קרואטית
+      hu:
+        name: הונגרית
+      hy:
+        name: ארמנית
+      id:
+        name: אינדונזית
+      it:
+        name: איטלקית
+      ja:
+        name: יפנית
+      ko:
+        name: קוריאנית
+      lt:
+        name: ליטאית
+      lv:
+        name: לטבית
+      nb_NO:
+        name: נורווגית ספרותית
+      nl:
+        name: הולנדית
+      pl_PL:
+        name: פולנית
+      pt:
+        name: פורטוגלית
+      pt_BR:
+        name: פורטוגלית
+      ro:
+        name: רומנית
+      ru:
+        name: רוסית
+      sk:
+        name: סלובקית
+      sl:
+        name: סלובנית
+      sq:
+        name: אלבנית
+      sr:
+        name: סרבית
+      sv:
+        name: שוודית
+      sw:
+        name: סוואהילית
+      te:
+        name: טלוגו
+      th:
+        name: תאית
+      tr_TR:
+        name: טורקית
+      ug:
+        name: אויגורית
+      uk:
+        name: אוקראינית
+      ur:
+        name: אורדו
+      vi:
+        name: וייטנאמית
+      zh_TW:
+        name: סינית
+      zh_CN:
+        name: סינית פשוטה
     share:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
       post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
@@ -1515,7 +1614,6 @@ he:
         description: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים"
       reset_seen_user_tips: "הצגת עצות למשתמש שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
-      color_scheme_default_on_all_devices: "הגדרת ערכת צבעים כברירת מחדל לכל המכשירים שלי"
       color_scheme: "לוח צבעים"
       color_schemes:
         default_description: "ברירת המחדל לערכת העיצוב"
@@ -1525,6 +1623,10 @@ he:
         regular: "רגילה"
         dark: "מצב כהה"
         default_dark_scheme: "(ברירת המחדל של האתר)"
+        interface_modes:
+          auto: "אוט׳"
+          light: "בהיר"
+          dark: "כהה"
       dark_mode: "מצב כהה"
       dark_mode_enable: "הפעלת ערכת צבעים כהה אוטומטית"
       text_size_default_on_all_devices: "הפוך את גודל הטקסט הזה לברירת המחדל בכל המכשירים שלי"
@@ -2948,7 +3050,6 @@ he:
       italic_label: "I"
       italic_title: "נטוי"
       italic_text: "טקסט נטוי"
-      heading_label: "כ"
       heading_title: "כותרות"
       heading_level_n: "כותרת %{levelNumber}"
       heading_level_n_title: "כותרת %{levelNumber}"
@@ -7155,9 +7256,10 @@ he:
           select_base:
             title: "בחירת לוח צבעים בסיסי"
             description: "לוח בסיסי:"
+          dark_mode_warning: "בחרת בעיצוב כהה. כשמגדירים ערכת צבעים פעילה הצבעים יחולו על ההגוון הבהיר של ערכת העיצוב. כדי לשנות את צבעי ברירת המחדל של המצב הכהה, נא לערוך את <a href='%{link}'>הגדרות האתר במצב כהה</a>."
           title: "צבעים"
           edit: "עריכה"
-          set_default: "הגדרה כפעיל ב־%{theme}"
+          set_default_success: "%{schemeName} הוגדרה כערכה פעילה עבור %{themeName}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"
           filters:

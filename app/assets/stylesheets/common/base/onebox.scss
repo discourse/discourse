@@ -623,6 +623,12 @@ pre.onebox code ol.lines li.selected {
   }
 }
 
+.onebox.githubrepo {
+  .github-row {
+    display: contents;
+  }
+}
+
 .onebox.githubactions {
   h4 {
     margin-top: 5px;

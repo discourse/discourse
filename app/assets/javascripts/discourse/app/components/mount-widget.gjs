@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import ArrayProxy from "@ember/array/proxy";
 import Component from "@ember/component";
 import { cancel, scheduleOnce } from "@ember/runloop";

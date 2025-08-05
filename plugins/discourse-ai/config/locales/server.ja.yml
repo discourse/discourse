@@ -395,7 +395,6 @@ ja:
           neutral: "ニュートラル"
     llm:
       configuration:
-        disable_module_first: "まず %{setting} を無効にする必要があります"
         set_llm_first: "先に %{setting} を設定します"
         model_unreachable: "このモデルから応答を得られませんでした。まず設定を確認してください。"
         invalid_seeded_model: "この機能ではこのモデルを使用できません"

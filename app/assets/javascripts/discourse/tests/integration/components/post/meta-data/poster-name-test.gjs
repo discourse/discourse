@@ -209,5 +209,19 @@ module(
       assert.dom("span.custom-class").exists();
       assert.dom("span.another-class").exists();
     });
+
+    test("poster-name-user-title transformer", async function (assert) {
+      this.post.username = "eviltrout";
+      this.post.user_title = "Original Title";
+
+      withPluginApi((api) => {
+        api.registerValueTransformer("poster-name-user-title", ({ value }) => {
+          return value + " - Transformed";
+        });
+      });
+
+      await renderComponent(this.post);
+      assert.dom(".user-title").hasText("Original Title - Transformed");
+    });
   }
 );

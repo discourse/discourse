@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { scheduleOnce } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";

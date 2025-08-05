@@ -4605,6 +4605,31 @@ RSpec.describe UsersController do
         PostActionCreator.like(liker, post)
       end
     end
+
+    context "when content localization enabled" do
+      fab!(:topic) { Fabricate(:topic, user:, locale: "en") }
+      fab!(:es_localization) { Fabricate(:topic_localization, topic:, locale: "es") }
+      fab!(:de_localization) { Fabricate(:topic_localization, topic:, locale: "de") }
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "es|de"
+      end
+
+      it "returns localized topic titles in summary" do
+        I18n.stubs(:locale).returns(:es)
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topics"][0]["fancy_title"]).to eq(es_localization.fancy_title)
+
+        I18n.stubs(:locale).returns(:de)
+        get "/u/#{user.username_lower}/summary.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topics"][0]["fancy_title"]).to eq(de_localization.fancy_title)
+      end
+    end
   end
 
   describe "#confirm_admin" do

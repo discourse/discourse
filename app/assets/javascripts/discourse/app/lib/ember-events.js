@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { EventDispatcher } from "@ember/-internals/views";
 import Component from "@ember/component";
 import EmberObject from "@ember/object";

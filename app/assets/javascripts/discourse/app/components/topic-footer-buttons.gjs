@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat, hash } from "@ember/helper";
 import { computed } from "@ember/object";
@@ -8,6 +9,7 @@ import { eq, gt } from "truth-helpers";
 import BookmarkMenu from "discourse/components/bookmark-menu";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import PinnedButton from "discourse/components/pinned-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
@@ -21,7 +23,6 @@ import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dro
 import TopicBookmarkManager from "discourse/lib/topic-bookmark-manager";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import PinnedButton from "select-kit/components/pinned-button";
 import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import DMenu from "float-kit/components/d-menu";
 

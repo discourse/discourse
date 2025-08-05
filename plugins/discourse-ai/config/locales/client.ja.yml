@@ -404,7 +404,6 @@ ja:
           max_usages_help: "このグループの各ユーザーが指定された期間内に AI モデルを使用できる最大回数。この使用量制限はグループ全体で共有されるのではなく、ユーザーごとに追跡されます。"
         usage:
           ai_bot: "AI ボット"
-          ai_helper: "ヘルパー"
           ai_persona: "ペルソナ (%{persona})"
           ai_summarization: "要約"
           ai_embeddings_semantic_search: "AI 検索"

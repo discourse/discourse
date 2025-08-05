@@ -47,7 +47,7 @@ body.has-full-page-chat {
 
 // the below are elements whose z-index needs to be adjusted due to the above change
 .chat-message-actions-container {
-  .chat-drawer.is-expanded & {
+  .has-drawer-chat & {
     z-index: calc(z("composer", "dropdown") + 1);
   }
 }

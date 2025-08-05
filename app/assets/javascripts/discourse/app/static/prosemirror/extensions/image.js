@@ -3,9 +3,11 @@ import {
   lookupUncachedUploadUrls,
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse/lib/debounce";
 import { isNumeric } from "discourse/lib/utilities";
 import ImageNodeView from "../components/image-node-view";
 import GlimmerNodeView from "../lib/glimmer-node-view";
+import { getChangedRanges } from "../lib/plugin-utils";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
 
@@ -203,17 +205,18 @@ const extension = {
         apply(tr, value) {
           let updated = value.slice();
 
-          // we should only track the changes
-          tr.doc.descendants((node, pos) => {
-            if (node.type.name === "image" && node.attrs.originalSrc) {
-              if (node.attrs.src.endsWith(PLACEHOLDER_IMG)) {
-                updated.push({ pos, src: node.attrs.originalSrc });
-              } else {
-                updated = updated.filter(
-                  (u) => u.src !== node.attrs.originalSrc
-                );
+          getChangedRanges(tr).forEach(({ new: { from, to } }) => {
+            tr.doc.nodesBetween(from, to, (node, pos) => {
+              if (node.type.name === "image" && node.attrs.originalSrc) {
+                if (node.attrs.src.endsWith(PLACEHOLDER_IMG)) {
+                  updated.push({ pos, src: node.attrs.originalSrc });
+                } else {
+                  updated = updated.filter(
+                    (u) => u.src !== node.attrs.originalSrc
+                  );
+                }
               }
-            }
+            });
           });
 
           return updated;
@@ -221,33 +224,60 @@ const extension = {
       },
 
       view() {
+        const processUrls = async (view) => {
+          const unresolvedUrls = shortUrlResolver.getState(view.state);
+          if (!unresolvedUrls.length) {
+            return;
+          }
+
+          const resolvedUrls = {};
+          const uncachedSrcs = [];
+
+          for (const { src } of unresolvedUrls) {
+            const cachedUrl = lookupCachedUploadUrl(src).url;
+            if (cachedUrl) {
+              resolvedUrls[src] = cachedUrl;
+            } else {
+              uncachedSrcs.push(src);
+            }
+          }
+
+          if (uncachedSrcs.length > 0) {
+            const results = await lookupUncachedUploadUrls(uncachedSrcs, ajax);
+
+            for (const result of results) {
+              if (result?.url && result?.short_url) {
+                resolvedUrls[result.short_url] = result.url;
+              }
+            }
+          }
+
+          const tr = view.state.tr.setMeta("addToHistory", false);
+
+          for (const { pos, src } of unresolvedUrls) {
+            const url = resolvedUrls[src];
+
+            if (!url) {
+              continue;
+            }
+
+            const node = view.state.doc.nodeAt(pos);
+            if (!node) {
+              continue;
+            }
+
+            tr.setNodeMarkup(pos, null, { ...node.attrs, src: url });
+          }
+
+          view.dispatch(tr);
+        };
+
         return {
-          update: async (view, prevState) => {
+          update: (view, prevState) => {
             if (prevState.doc.eq(view.state.doc)) {
               return;
             }
-
-            const unresolvedUrls = shortUrlResolver.getState(view.state);
-
-            for (const unresolved of unresolvedUrls) {
-              const cachedUrl = lookupCachedUploadUrl(unresolved.src).url;
-              const url =
-                cachedUrl ||
-                (await lookupUncachedUploadUrls([unresolved.src], ajax))[0]
-                  ?.url;
-
-              if (url) {
-                const node = view.state.doc.nodeAt(unresolved.pos);
-                if (node) {
-                  const attrs = { ...node.attrs, src: url };
-                  const transaction = view.state.tr
-                    .setNodeMarkup(unresolved.pos, null, attrs)
-                    .setMeta("addToHistory", false);
-
-                  view.dispatch(transaction);
-                }
-              }
-            }
+            discourseDebounce(null, processUrls, view, 100);
           },
         };
       },

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import SecretValueList from "admin/components/secret-value-list";
 
