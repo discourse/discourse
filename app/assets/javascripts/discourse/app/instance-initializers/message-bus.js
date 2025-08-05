@@ -54,6 +54,7 @@ export default {
   after: "inject-objects",
 
   initialize(owner) {
+    return;
     // We don't use the message bus in testing
     if (isTesting()) {
       return;
