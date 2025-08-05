@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
@@ -10,6 +9,7 @@ import UserLink from "discourse/components/user-link";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { bind } from "discourse/lib/decorators";
@@ -25,15 +25,17 @@ export default class PostMetaDataPosterName extends Component {
   showNameAndGroup = true;
   showGlyph = true;
 
-  constructor() {
-    super(...arguments);
-    this.#trackUserStatus();
-  }
+  trackUserStatus = helperFn(({ user }, on) => {
+    if (!this.userStatus.isEnabled) {
+      return;
+    }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.#stopTrackingUserStatus();
-  }
+    user?.statusManager?.trackStatus();
+
+    on.cleanup(() => {
+      user?.statusManager?.stopTrackingStatus();
+    });
+  });
 
   get suppressSimilarName() {
     return applyValueTransformer(
@@ -65,7 +67,6 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   get user() {
-    // TODO where does user comes from?
     return this.args.post.user;
   }
 
@@ -99,12 +100,6 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   @bind
-  refreshUserStatus() {
-    this.#stopTrackingUserStatus();
-    this.#trackUserStatus();
-  }
-
-  @bind
   withBadgeDescription(badge) {
     // Alter the badge description to show that the badge was granted for this post.
     badge.description = i18n("post.badge_granted_tooltip", {
@@ -121,23 +116,9 @@ export default class PostMetaDataPosterName extends Component {
       : name;
   }
 
-  #trackUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.trackStatus();
-    }
-  }
-
-  #stopTrackingUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.stopTrackingStatus();
-    }
-  }
-
   <template>
-    <div
-      class="names trigger-user-card"
-      {{didUpdate this.refreshUserStatus this.user}}
-    >
+    {{this.trackUserStatus user=this.user}}
+    <div class="names trigger-user-card">
       <PluginOutlet
         @name="post-meta-data-poster-name"
         @outletArgs={{lazyHash post=@post}}

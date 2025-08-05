@@ -256,6 +256,9 @@ discourse_ai:
   ai_embeddings_semantic_search_enabled:
     default: false
     client: true
+    area: "ai-features/embeddings"
+  ai_embeddings_semantic_search_use_hyde:
+    default: false
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/embeddings"
   ai_embeddings_semantic_search_hyde_model:  # Deprecated. TODO(keegan): Remove 2025-09-01

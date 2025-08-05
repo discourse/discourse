@@ -51,9 +51,13 @@
   }
 }
 
-.container.posts {
-  grid-template-columns: auto 8em;
+body:not(.d-toc-installed) {
+  .container.posts {
+    grid-template-columns: auto 8em;
+  }
+}
 
+.container.posts {
   @media screen and (width <= 924px) {
     grid-template-columns: auto auto;
   }

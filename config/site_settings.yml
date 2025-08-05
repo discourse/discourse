@@ -568,6 +568,10 @@ basic:
     client: true
     default: true
     area: "interface"
+  floatkit_autocomplete_chat_composer:
+    client: true
+    default: true
+    area: "interface"
 
 login:
   invite_only:
@@ -2581,6 +2585,9 @@ security:
   moderators_view_emails:
     client: true
     default: false
+  moderators_view_ips:
+    default: true
+    client: true
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"

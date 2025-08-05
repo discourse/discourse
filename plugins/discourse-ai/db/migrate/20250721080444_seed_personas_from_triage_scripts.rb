@@ -35,20 +35,33 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
                 "Unnamed triage automation script ID #{field["automation_id"]}"
               end
             )
-          temp = field["temperature"] || "NULL"
+          temp = field["temperature"]
 
           # Extract the model ID from the setting value (e.g., "custom:-5" -> "-5")
-          model = field["model"] || "NULL"
-          model = model.split(":").last if model.start_with?("custom:")
+          model = field["model"]
+          model = model.split(":").last if model && model.start_with?("custom:")
 
-          row =
-            "'#{name}', 'Seeded Persona for an LLM Triage script', FALSE, '#{field["system_prompt"]}', #{temp}, #{model}, NOW(), NOW()"
+          desc = "Seeded Persona for an LLM Triage script"
+          prompt = field["system_prompt"]
 
-          DB.query_single(<<~SQL)&.first
+          existing_id = DB.query_single(<<~SQL, name: name).first
+              SELECT id from ai_personas where name = :name
+            SQL
+
+          next existing_id if existing_id.present?
+
+          DB.query_single(
+            <<~SQL,
             INSERT INTO ai_personas (name, description, enabled, system_prompt, temperature, default_llm_id, created_at, updated_at)
-            VALUES (#{row})
+            VALUES (:name, :desc, FALSE, :prompt, :temp, :model, NOW(), NOW())
             RETURNING id
           SQL
+            name: name,
+            desc: desc,
+            prompt: prompt,
+            temp: temp,
+            model: model,
+          )&.first
         end
       end
 
