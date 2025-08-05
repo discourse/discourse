@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "RSpec Mocks from_described_class" do
   class TestClass
     def self.clock_time
