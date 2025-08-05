@@ -443,19 +443,28 @@ RSpec.describe NotificationsController do
         end
 
         context "when a notification topic has localizations" do
-          fab!(:jap_user) { Fabricate(:user, locale: "ja") }
-          fab!(:topic) { Fabricate(:topic, locale: "en") }
+          fab!(:english_topic) { Fabricate(:topic, locale: "en") }
           fab!(:topic_localization_es) do
-            Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Hola Mundo")
+            Fabricate(
+              :topic_localization,
+              topic: english_topic,
+              locale: "es",
+              fancy_title: "Hola Mundo",
+            )
           end
           fab!(:topic_localization_ja) do
-            Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "こんにちは世界")
+            Fabricate(
+              :topic_localization,
+              topic: english_topic,
+              locale: "ja",
+              fancy_title: "こんにちは世界",
+            )
           end
           fab!(:notification) do
             Fabricate(
               :notification,
-              topic:,
-              user: jap_user,
+              topic: english_topic,
+              user:,
               notification_type: Notification.types[:liked],
             )
           end
@@ -463,7 +472,7 @@ RSpec.describe NotificationsController do
           it "displays the localized fancy title in the user's locale when content_localization_enabled enabled" do
             SiteSetting.content_localization_enabled = true
             SiteSetting.allow_user_locale = true
-            sign_in(jap_user)
+            user.update!(locale: "ja")
 
             get "/notifications.json"
 
@@ -475,13 +484,13 @@ RSpec.describe NotificationsController do
           it "does not display the localized fancy title in the user's locale when content_localization_enabled disabled" do
             SiteSetting.content_localization_enabled = false
             SiteSetting.allow_user_locale = true
-            sign_in(jap_user)
+            user.update!(locale: "ja")
 
             get "/notifications.json"
 
             expect(response.status).to eq(200)
             notifications = response.parsed_body["notifications"]
-            expect(notifications.first["fancy_title"]).to eq(topic.fancy_title)
+            expect(notifications.first["fancy_title"]).to eq(english_topic.fancy_title)
           end
         end
       end
