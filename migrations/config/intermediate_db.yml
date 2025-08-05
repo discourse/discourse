@@ -89,6 +89,11 @@ schema:
       columns:
         exclude:
           - "id"
+    tag_users:
+      primary_key_column_names: [ "tag_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
     tags:
       columns:
         exclude:
@@ -347,7 +352,6 @@ schema:
         - "tag_group_permissions"
         - "tag_groups"
         - "tag_search_data"
-        - "tag_users"
         - "tags_web_hooks"
         - "theme_color_schemes"
         - "theme_fields"
