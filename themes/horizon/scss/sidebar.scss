@@ -38,6 +38,8 @@
 }
 
 .sidebar-section-wrapper {
+  --d-sidebar-section-border-color: var(--d-sidebar-border-color);
+
   @include viewport.from(xl) {
     padding-block: 0.45em;
   }
