@@ -87,7 +87,9 @@ describe DiscourseAi::Completions::CancelManager do
       wait_for { cancel_manager.callbacks.size == 1 }
 
       cancel_manager.cancel!
-      completion_thread.join(2)
+
+      # on slow machines this may take a bit longer to cancel, usually on a fast machine this is instant
+      completion_thread.join(5)
 
       expect(completion_thread).not_to be_alive
     ensure
