@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
