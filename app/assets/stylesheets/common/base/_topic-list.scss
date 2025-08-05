@@ -1,5 +1,9 @@
 @use "lib/viewport";
 
+:root {
+  --category-header-logo-size: 3rem;
+}
+
 #navigation-bar {
   display: flex;
   flex-wrap: wrap;
@@ -50,17 +54,13 @@
   &.--has-logo {
     display: flex;
     gap: var(--space-4);
-    margin-bottom: var(--space-4);
-    padding: var(--space-2);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    margin-bottom: var(--space-6);
   }
 
   &__logo.category-logo.aspect-image {
-    height: 6em;
-    width: 6em;
-    border-radius: var(--d-border-radius);
-    overflow: hidden;
+    height: var(--category-header-logo-size);
+    width: var(--category-header-logo-size);
+    margin-top: calc(1rem - 1cap);
   }
 
   &__description {
