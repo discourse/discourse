@@ -63,7 +63,7 @@ const exec = (description, fn, assertion) => {
     });
 };
 
-page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
+// page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
 
 page.on("response", (resp) => {
   if (resp.status() !== 200 && resp.status() !== 302 && resp.status() !== 304) {
@@ -96,6 +96,7 @@ async function startVite(args) {
   const label = `vite ${args}`;
   console.time(label);
 
+  console.log("vite start");
   server = execa({
     cwd: "app/assets/javascripts/discourse",
   })`./node_modules/.bin/vite ${args} --port 0`;
