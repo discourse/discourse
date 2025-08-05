@@ -12,11 +12,10 @@ class Admin::StaffActionLogsController < Admin::StaffController
     start_date = params[:start_date]&.to_time
     end_date = params[:end_date]&.to_time
 
-    query = UserHistory
-    query = query.where("created_at >= ?", start_date) if start_date.present?
-    query = query.where("created_at <= ?", end_date) if end_date.present?
+    staff_action_logs = UserHistory.staff_action_records(current_user, filters)
+    staff_action_logs = staff_action_logs.where("created_at >= ?", start_date) if start_date
+    staff_action_logs = staff_action_logs.where("created_at <= ?", end_date) if end_date
 
-    staff_action_logs = query.staff_action_records(current_user, filters)
     count = staff_action_logs.count
     staff_action_logs = staff_action_logs.offset(page * page_size).limit(page_size).to_a
 
