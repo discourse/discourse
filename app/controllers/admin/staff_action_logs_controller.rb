@@ -9,12 +9,13 @@ class Admin::StaffActionLogsController < Admin::StaffController
     page = (params[:page] || 0).to_i
     page_size = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
-    start_date = params[:start_date]&.to_time
-    end_date = params[:end_date]&.to_time
-
-    staff_action_logs = UserHistory.staff_action_records(current_user, filters)
-    staff_action_logs = staff_action_logs.where("created_at >= ?", start_date) if start_date
-    staff_action_logs = staff_action_logs.where("created_at <= ?", end_date) if end_date
+    staff_action_logs =
+      UserHistory.staff_action_records(
+        current_user,
+        **filters,
+        start_date: params[:start_date]&.to_time,
+        end_date: params[:end_date]&.to_time,
+      )
 
     count = staff_action_logs.count
     staff_action_logs = staff_action_logs.offset(page * page_size).limit(page_size).to_a
