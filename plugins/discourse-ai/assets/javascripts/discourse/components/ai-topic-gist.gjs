@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { TABLE_AI_LAYOUT } from "../services/gists";
 
 export default class AiTopicGist extends Component {
   @service gists;
 
   get shouldShow() {
-    return this.gists.preference === "table-ai" && this.gists.shouldShow;
+    return (
+      this.gists.currentPreference === TABLE_AI_LAYOUT && this.gists.showToggle
+    );
   }
 
   get hasGist() {
