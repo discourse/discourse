@@ -139,6 +139,11 @@ export default class FilterNavigationMenu extends Component {
       return this.args.tips
         .filter((tip) => tip.priority)
         .sort((a, b) => (b.priority || 0) - (a.priority || 0))
+        .sort((a, b) => {
+          const aName = a.name.toLowerCase();
+          const bName = b.name.toLowerCase();
+          return aName.localeCompare(bName);
+        })
         .slice(0, MAX_RESULTS);
     }
 
@@ -495,7 +500,7 @@ export default class FilterNavigationMenu extends Component {
       }
     }
 
-    this.filterSuggessionResults = results;
+    this.filterSuggessionResults = results || [];
     this.trackedMenuListData.filteredTips = this.filteredTips;
   }
 
