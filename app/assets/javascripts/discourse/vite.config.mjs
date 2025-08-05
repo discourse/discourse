@@ -26,7 +26,7 @@ const extensions = [
   ".gts",
   ".ts",
   ".hbs",
-  ".json",
+  // ".json",
 ];
 
 export default defineConfig(({ mode, command }) => {
@@ -70,9 +70,20 @@ export default defineConfig(({ mode, command }) => {
       // mkcert(),
       visualizer({ emitFile: true }),
     ],
+    // optimizeDeps: {
+    //   ...optimizeDeps(),
+    //   include: ["virtual-dom"],
+    // },
     optimizeDeps: {
-      ...optimizeDeps(),
       include: ["virtual-dom"],
+      exclude: ["@embroider/macros"],
+      rollupOptions: {
+        plugins: [
+          resolver(),
+          templateTag(),
+          babel({ babelHelpers: "runtime", extensions }),
+        ],
+      },
     },
     server: {
       port: 4200,
