@@ -44,11 +44,11 @@ class SeedPersonasFromTriageScripts < ActiveRecord::Migration[8.0]
           desc = "Seeded Persona for an LLM Triage script"
           prompt = field["system_prompt"]
 
-          duplicate = DB.query_single(<<~SQL, name: name).first
+          existing_id = DB.query_single(<<~SQL, name: name).first
               SELECT id from ai_personas where name = :name
             SQL
 
-          next nil if duplicate.present?
+          next existing_id if existing_id.present?
 
           DB.query_single(
             <<~SQL,
