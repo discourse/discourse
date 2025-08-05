@@ -81,7 +81,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_localize_content?,
              :effective_locale,
              :use_reviewable_ui_refresh,
-             :use_experimental_sidebar_messages_count
+             :use_experimental_sidebar_messages_count,
+             :can_see_ip
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -360,5 +361,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_use_reviewable_ui_refresh?
     scope.can_see_review_queue?
+  end
+
+  def can_see_ip
+    scope.can_see_ip?
+  end
+
+  def include_can_see_ip?
+    object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
   end
 end
