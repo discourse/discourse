@@ -10,6 +10,7 @@ import UserLink from "discourse/components/user-link";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import helperFn from "discourse/helpers/helper-fn";
 import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { bind } from "discourse/lib/decorators";
@@ -25,16 +26,16 @@ export default class PostMetaDataPosterName extends Component {
   showNameAndGroup = true;
   showGlyph = true;
 
-  trackUserStatus = modifier((_, [user]) => {
+  trackUserStatus = helperFn(({ user }, on) => {
     if (!this.userStatus.isEnabled) {
       return;
     }
 
     user?.statusManager?.trackStatus();
 
-    return () => {
+    on.cleanup(() => {
       user?.statusManager?.stopTrackingStatus();
-    };
+    });
   });
 
   get suppressSimilarName() {
@@ -67,7 +68,6 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   get user() {
-    // TODO where does user comes from?
     return this.args.post.user;
   }
 
@@ -118,7 +118,8 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   <template>
-    <div class="names trigger-user-card" {{this.trackUserStatus this.user}}>
+    {{this.trackUserStatus user=this.user}}
+    <div class="names trigger-user-card">
       <PluginOutlet
         @name="post-meta-data-poster-name"
         @outletArgs={{lazyHash post=@post}}
