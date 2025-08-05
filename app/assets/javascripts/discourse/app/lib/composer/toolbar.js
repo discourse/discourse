@@ -109,7 +109,7 @@ export class ToolbarBase {
       );
       const shortcutTitle = `${translateModKey(
         PLATFORM_KEY_MODIFIER + " "
-      )}${shortcutKeyTranslated.replace(/\+/g, " ")}`;
+      )}${shortcutKeyTranslated}`;
 
       if (buttonAttrs.hideShortcutInTitle) {
         createdButton.title = title;
@@ -139,7 +139,7 @@ export class ToolbarBase {
           );
           const shortcutTitle = `${translateModKey(
             PLATFORM_KEY_MODIFIER + " "
-          )}${shortcutKeyTranslated.replace(/\+/g, " ")}`;
+          )}${shortcutKeyTranslated}`;
 
           // These shortcuts are actually bound in the keymap inside
           // components/d-editor.gjs
@@ -147,7 +147,6 @@ export class ToolbarBase {
             `${PLATFORM_KEY_MODIFIER}+${option.shortcut}`.toLowerCase()
           ] = option;
 
-          // TODO (martin) Actually this shouldn't have the macOS/symbols i think?
           option.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
         }
       });
