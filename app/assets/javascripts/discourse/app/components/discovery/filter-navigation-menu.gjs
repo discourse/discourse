@@ -453,7 +453,6 @@ export default class FilterNavigationMenu extends Component {
   }
 
   async #performFilterSuggestionSearch(filterName, valueText, tip, prefix) {
-    const type = tip.type;
     let lastTerm = valueText;
     let results = [];
     let prevTerms = "";
@@ -470,7 +469,7 @@ export default class FilterNavigationMenu extends Component {
     lastTerm = (lastTerm || "").toLowerCase().trim();
 
     results = await FilterSuggestions.getFilterSuggestionsByType(
-      type,
+      tip,
       prefix,
       filterName,
       prevTerms,

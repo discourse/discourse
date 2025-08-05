@@ -946,7 +946,11 @@ after_initialize do
       results << {
         name: "assigned:",
         description: I18n.t("discourse_assign.filter.description.assigned"),
-        type: "username",
+        type: "username_group_list",
+        extra_entries: [
+          { name: "nobody", description: I18n.t("discourse_assign.filter.description.nobody") },
+          { name: "*", description: I18n.t("discourse_assign.filter.description.anyone") },
+        ],
         priority: 1,
       }
     end
