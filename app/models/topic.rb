@@ -2141,7 +2141,7 @@ class Topic < ActiveRecord::Base
   end
 
   def in_user_locale?
-    locale == I18n.locale.to_s
+    LocaleNormalizer.is_same?(locale, I18n.locale)
   end
 
   def get_localization(locale = I18n.locale)
