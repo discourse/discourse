@@ -68,7 +68,7 @@ module(
 
       await triggerEvent("#topic-query-filter-input", "focus");
       assert
-        .dom(".filter-navigation__tip-button")
+        .dom(".filter-navigation__tip-item")
         .exists({ count: 3 }, "tips appear");
 
       await triggerKeyEvent(
@@ -78,7 +78,7 @@ module(
       );
       assert
         .dom(
-          ".filter-navigation__tip-button.--selected .filter-navigation__tip-name"
+          ".filter-navigation__tip-item.--selected .filter-navigation__tip-name"
         )
         .hasText("category:");
 
@@ -89,14 +89,14 @@ module(
       );
       assert
         .dom(
-          ".filter-navigation__tip-button.--selected .filter-navigation__tip-name"
+          ".filter-navigation__tip-item.--selected .filter-navigation__tip-name"
         )
         .hasText("tag:");
 
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "ArrowUp");
       assert
         .dom(
-          ".filter-navigation__tip-button.--selected .filter-navigation__tip-name"
+          ".filter-navigation__tip-item.--selected .filter-navigation__tip-name"
         )
         .hasText("category:");
     });
@@ -155,7 +155,7 @@ module(
       await triggerEvent("#topic-query-filter-input", "focus");
 
       assert
-        .dom(".filter-navigation__tip-button")
+        .dom(".filter-navigation__tip-item")
         .exists("tag search results shown");
 
       await triggerKeyEvent(
@@ -183,13 +183,13 @@ module(
 
       await triggerEvent("#topic-query-filter-input", "focus");
       assert
-        .dom(".filter-navigation__tip-button")
+        .dom(".filter-navigation__tip-item")
         .exists({ count: 3 }, "tips visible after focus");
 
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Escape");
       await triggerKeyEvent("#topic-query-filter-input", "keydown", "Escape");
       assert
-        .dom(".filter-navigation__tip-button")
+        .dom(".filter-navigation__tip-item")
         .doesNotExist("tips hidden after escape");
     });
 
@@ -223,11 +223,11 @@ module(
       await fillIn("#topic-query-filter-input", "cat");
 
       assert
-        .dom(".filter-navigation__tip-button")
+        .dom(".filter-navigation__tip-item")
         .exists("category search results shown");
 
       assert
-        .dom(".filter-navigation__tip-button")
+        .dom(".filter-navigation__tip-item")
         .exists(".badge-category__wrapper", "category badge HTML shown");
 
       await triggerKeyEvent(
