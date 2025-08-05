@@ -101,9 +101,14 @@ export class ToolbarBase {
     // Main button shortcut bindings and title text.
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
     if (buttonAttrs.shortcut) {
+      const shortcutKeyTranslated = translateModKey(
+        buttonAttrs.shortcut.length === 1
+          ? buttonAttrs.shortcut.toUpperCase()
+          : buttonAttrs.shortcut
+      );
       const shortcutTitle = `${translateModKey(
-        PLATFORM_KEY_MODIFIER + "+"
-      )}${translateModKey(buttonAttrs.shortcut)}`;
+        PLATFORM_KEY_MODIFIER + " "
+      )}${shortcutKeyTranslated.replace(/\+/g, " ")}`;
 
       if (buttonAttrs.hideShortcutInTitle) {
         createdButton.title = title;
@@ -116,6 +121,8 @@ export class ToolbarBase {
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
+
+      createdButton.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
     } else {
       createdButton.title = title;
     }
@@ -124,11 +131,23 @@ export class ToolbarBase {
     if (buttonAttrs.popupMenu) {
       buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
+          const shortcutKeyTranslated = translateModKey(
+            option.shortcut.length === 1
+              ? option.shortcut.toUpperCase()
+              : option.shortcut
+          );
+          const shortcutTitle = `${translateModKey(
+            PLATFORM_KEY_MODIFIER + " "
+          )}${shortcutKeyTranslated.replace(/\+/g, " ")}`;
+
           // These shortcuts are actually bound in the keymap inside
           // components/d-editor.gjs
           this.shortcuts[
             `${PLATFORM_KEY_MODIFIER}+${option.shortcut}`.toLowerCase()
           ] = option;
+
+          // TODO (martin) Actually this shouldn't have the macOS/symbols i think?
+          option.ariaKeyshortcuts = shortcutTitle.replace(/\s/g, "+");
         }
       });
     }

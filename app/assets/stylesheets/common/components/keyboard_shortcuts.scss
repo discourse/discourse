@@ -49,6 +49,11 @@
 #keyboard-shortcuts-help {
   box-sizing: border-box;
 
+  .filter-input-container {
+    grid-column: 1 / -1;
+    margin-bottom: 1em;
+  }
+
   .keyboard-shortcuts-help__container {
     columns: 2 20em; // Set maximum of 2 columns
 

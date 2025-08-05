@@ -87,7 +87,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       htmlLabel += ` <kbd class="shortcut ${
         content.alwaysShowShortcut ? "--always-visible" : ""
       }">${translateModKey(
-        PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+        PLATFORM_KEY_MODIFIER + " " + content.shortcut.replace(/\+/g, " ")
       )}</kbd>`;
     }
 
@@ -154,6 +154,7 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
                 class={{concatClass (if (this.getActive option) "--active")}}
+                aria-keyshortcuts={{option.ariaKeyshortcuts}}
               />
             </dropdown.item>
           {{/each}}
