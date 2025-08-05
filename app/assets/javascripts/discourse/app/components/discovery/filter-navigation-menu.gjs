@@ -356,6 +356,7 @@ export default class FilterNavigationMenu extends Component {
     }
 
     this.clearSelection();
+    this.inputElement.focus();
   }
 
   @action
@@ -374,6 +375,11 @@ export default class FilterNavigationMenu extends Component {
 
   @action
   async openFilterMenu() {
+    if (this.dMenuInstance) {
+      this.dMenuInstance.show();
+      return;
+    }
+
     this.dMenuInstance = await this.menu.show(this.inputElement, {
       identifier: "filter-navigation-menu-list",
       component: FilterNavigationMenuList,

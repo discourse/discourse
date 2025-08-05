@@ -69,12 +69,16 @@ export default class Post extends Component {
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
       post: this.args.post,
+      prevPost: this.args.prevPost,
+      nextPost: this.args.nextPost,
     });
   }
 
   get additionalArticleClasses() {
     return applyValueTransformer("post-article-class", [], {
       post: this.args.post,
+      prevPost: this.args.prevPost,
+      nextPost: this.args.nextPost,
     });
   }
 
@@ -163,7 +167,14 @@ export default class Post extends Component {
       isPM ||
         (isRegular &&
           (this.args.post.topic.posts_count > 1 || showWithoutReplies)),
-      { post: this.args.post, isPM, isRegular, showWithoutReplies }
+      {
+        post: this.args.post,
+        isPM,
+        isRegular,
+        showWithoutReplies,
+        prevPost: this.args.prevPost,
+        nextPost: this.args.nextPost,
+      }
     );
   }
 
@@ -408,6 +419,8 @@ export default class Post extends Component {
             )
             decoratorState=this.decoratorState
             topicPageQueryParams=@topicPageQueryParams
+            prevPost=@prevPost
+            nextPost=@nextPost
           )
           as |postOutletArgs|
         }}
@@ -437,212 +450,224 @@ export default class Post extends Component {
               data-user-id={{@post.user_id}}
               {{this.addEventListeners this.customEventListeners}}
             >
-              {{#if this.hasRepliesAbove}}
-                <div class="post__row row">
-                  <section
-                    id={{concat "embedded-posts__top--" @post.post_number}}
-                    class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
-                  >
-                    <DButton
-                      class="post__collapse-button post__collapse-button-down collapse-down"
-                      @action={{this.toggleReplyAbove}}
-                      @icon="chevron-down"
-                      @title="post.collapse"
-                    />
-                    {{#each this.repliesAbove.value key="id" as |reply|}}
-                      <PostEmbedded
-                        @post={{reply}}
-                        @above={{true}}
-                        @highlightTerm={{@highlightTerm}}
-                        @streamElement={{@streamElement}}
+              <PluginOutlet
+                @name="post-article-content"
+                @outletArgs={{postOutletArgs}}
+              >
+                {{#if this.hasRepliesAbove}}
+                  <div class="post__row row">
+                    <section
+                      id={{concat "embedded-posts__top--" @post.post_number}}
+                      class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
+                    >
+                      <DButton
+                        class="post__collapse-button post__collapse-button-down collapse-down"
+                        @action={{this.toggleReplyAbove}}
+                        @icon="chevron-down"
+                        @title="post.collapse"
                       />
-                    {{/each}}
-                  </section>
-                </div>
-              {{/if}}
-              {{#if (and (not @post.deletedAt) @post.notice)}}
+                      {{#each this.repliesAbove.value key="id" as |reply|}}
+                        <PostEmbedded
+                          @post={{reply}}
+                          @above={{true}}
+                          @highlightTerm={{@highlightTerm}}
+                          @streamElement={{@streamElement}}
+                        />
+                      {{/each}}
+                    </section>
+                  </div>
+                {{/if}}
+                {{#if (and (not @post.deletedAt) @post.notice)}}
+                  <div class="post__row row">
+                    <PostNotice @post={{@post}} />
+                  </div>
+                {{/if}}
                 <div class="post__row row">
-                  <PostNotice @post={{@post}} />
-                </div>
-              {{/if}}
-              <div class="post__row row">
-                <PostAvatar
-                  @post={{@post}}
-                  @decoratorState={{this.decoratorState}}
-                  @keyboardSelected={{@keyboardSelected}}
-                />
-                <div class="post__body topic-body clearfix">
-                  <PluginOutlet
-                    @name="post-metadata"
-                    @outletArgs={{postOutletArgs}}
-                  >
-                    <PostMetaData
-                      @post={{@post}}
-                      @editPost={{@editPost}}
-                      @hasRepliesAbove={{this.hasRepliesAbove}}
-                      @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
-                      @multiSelect={{@multiSelect}}
-                      @repliesAbove={{this.repliesAbove}}
-                      @selectBelow={{@selectBelow}}
-                      @selectReplies={{@selectReplies}}
-                      @selected={{@selected}}
-                      @showHistory={{@showHistory}}
-                      @showRawEmail={{@showRawEmail}}
-                      @togglePostSelection={{@togglePostSelection}}
-                      @toggleReplyAbove={{this.toggleReplyAbove}}
-                    />
-                  </PluginOutlet>
-                  <div
-                    class={{concatClass
-                      "post__regular regular"
-                      (unless this.repliesShown "post__contents contents")
-                      (if
-                        this.isReplyToTabDisplayed
-                        "post__contents--avoid-tab avoid-tab"
-                      )
-                    }}
-                  >
+                  <PostAvatar
+                    @post={{@post}}
+                    @decoratorState={{this.decoratorState}}
+                    @keyboardSelected={{@keyboardSelected}}
+                  />
+                  <div class="post__body topic-body clearfix">
                     <PluginOutlet
-                      @name="post-content-cooked-html"
+                      @name="post-metadata"
                       @outletArgs={{postOutletArgs}}
                     >
-                      <PostCookedHtml
+                      <PostMetaData
                         @post={{@post}}
-                        @highlightTerm={{@highlightTerm}}
-                        @decoratorState={{this.decoratorState}}
-                        @streamElement={{@streamElement}}
+                        @editPost={{@editPost}}
+                        @hasRepliesAbove={{this.hasRepliesAbove}}
+                        @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
+                        @multiSelect={{@multiSelect}}
+                        @repliesAbove={{this.repliesAbove}}
+                        @selectBelow={{@selectBelow}}
+                        @selectReplies={{@selectReplies}}
+                        @selected={{@selected}}
+                        @showHistory={{@showHistory}}
+                        @showRawEmail={{@showRawEmail}}
+                        @togglePostSelection={{@togglePostSelection}}
+                        @toggleReplyAbove={{this.toggleReplyAbove}}
                       />
                     </PluginOutlet>
-
-                    {{#if @post.requestedGroupName}}
-                      <div class="post__group-request group-request">
-                        <a href={{this.groupRequestUrl}}>
-                          {{i18n "groups.requests.handle"}}
-                        </a>
-                      </div>
-                    {{/if}}
-
-                    {{#if (and @post.cooked_hidden @post.can_see_hidden_post)}}
-                      {{! template-lint-disable no-invalid-interactive }}
-                      <a
-                        class="post__expand-hidden expand-hidden"
-                        {{on "click" @expandHidden}}
+                    <div
+                      class={{concatClass
+                        "post__regular regular"
+                        (unless this.repliesShown "post__contents contents")
+                        (if
+                          this.isReplyToTabDisplayed
+                          "post__contents--avoid-tab avoid-tab"
+                        )
+                      }}
+                    >
+                      <PluginOutlet
+                        @name="post-content-cooked-html"
+                        @outletArgs={{postOutletArgs}}
                       >
-                        {{i18n "post.show_hidden"}}
-                      </a>
-                    {{/if}}
-
-                    {{#if
-                      (and
-                        (not this.expandedFirstPost.isResolved)
-                        @post.expandablePost
-                      )
-                    }}
-                      <DButton
-                        class="post__expand-button expand-post"
-                        @action={{this.expandFirstPost}}
-                        @translatedLabel={{if
-                          this.expandedFirstPost.isPending
-                          (i18n "loading")
-                          (concat (i18n "post.show_full") "...")
-                        }}
-                      />
-                    {{/if}}
-
-                    <section class="post__menu-area post-menu-area clearfix">
-                      <PostMenu
-                        @post={{@post}}
-                        @prevPost={{@prevPost}}
-                        @nextPost={{@nextPost}}
-                        @canCreatePost={{@canCreatePost}}
-                        @changeNotice={{@changeNotice}}
-                        @changePostOwner={{@changePostOwner}}
-                        @copyLink={{this.copyLink}}
-                        @deletePost={{@deletePost}}
-                        @editPost={{@editPost}}
-                        @filteredRepliesView={{this.filteredRepliesView}}
-                        @grantBadge={{@grantBadge}}
-                        @lockPost={{@lockPost}}
-                        @permanentlyDeletePost={{@permanentlyDeletePost}}
-                        @rebakePost={{@rebakePost}}
-                        @recoverPost={{@recoverPost}}
-                        @repliesShown={{this.repliesShown}}
-                        @replyToPost={{@replyToPost}}
-                        @share={{this.share}}
-                        @showFlags={{@showFlags}}
-                        @showLogin={{@showLogin}}
-                        @showPagePublish={{@showPagePublish}}
-                        @showReadIndicator={{@showReadIndicator}}
-                        @toggleLike={{this.toggleLike}}
-                        @togglePostType={{@togglePostType}}
-                        @toggleReplies={{this.toggleReplies}}
-                        @toggleWiki={{@toggleWiki}}
-                        @unhidePost={{@unhidePost}}
-                        @unlockPost={{@unlockPost}}
-                      />
-                    </section>
-
-                    {{#if this.repliesBelow}}
-                      <section
-                        id={{concat
-                          "embedded-posts__bottom--"
-                          @post.post_number
-                        }}
-                        class="post__embedded-posts post__embedded-posts--bottom embedded-posts bottom"
-                      >
-                        {{#each this.repliesBelow key="id" as |reply|}}
-                          <PostEmbedded
-                            role="region"
-                            aria-label={{i18n
-                              "post.sr_embedded_reply_description"
-                              post_number=@post.post_number
-                              username=reply.username
-                            }}
-                            @post={{reply}}
-                            @highlightTerm={{@highlightTerm}}
-                            @streamElement={{@streamElement}}
-                          />
-                        {{/each}}
-
-                        <DButton
-                          class="post__collapse-button post__collapse-button-up collapse-up"
-                          @action={{this.toggleRepliesBelow}}
-                          @ariaLabel="post.sr_collapse_replies"
-                          @icon="chevron-up"
-                          @title="post.collapse"
+                        <PostCookedHtml
+                          @post={{@post}}
+                          @highlightTerm={{@highlightTerm}}
+                          @decoratorState={{this.decoratorState}}
+                          @streamElement={{@streamElement}}
                         />
+                      </PluginOutlet>
 
-                        {{#if this.canLoadMoreRepliesBelow}}
-                          <DButton
-                            class="post__load-more load-more-replies"
-                            @label="post.load_more_replies"
-                            @action={{this.loadMoreReplies}}
-                          />
-                        {{/if}}
+                      {{#if @post.requestedGroupName}}
+                        <div class="post__group-request group-request">
+                          <a href={{this.groupRequestUrl}}>
+                            {{i18n "groups.requests.handle"}}
+                          </a>
+                        </div>
+                      {{/if}}
+
+                      {{#if
+                        (and @post.cooked_hidden @post.can_see_hidden_post)
+                      }}
+                        {{! template-lint-disable no-invalid-interactive }}
+                        <a
+                          class="post__expand-hidden expand-hidden"
+                          {{on "click" @expandHidden}}
+                        >
+                          {{i18n "post.show_hidden"}}
+                        </a>
+                      {{/if}}
+
+                      {{#if
+                        (and
+                          (not this.expandedFirstPost.isResolved)
+                          @post.expandablePost
+                        )
+                      }}
+                        <DButton
+                          class="post__expand-button expand-post"
+                          @action={{this.expandFirstPost}}
+                          @translatedLabel={{if
+                            this.expandedFirstPost.isPending
+                            (i18n "loading")
+                            (concat (i18n "post.show_full") "...")
+                          }}
+                        />
+                      {{/if}}
+
+                      <section class="post__menu-area post-menu-area clearfix">
+                        <PostMenu
+                          @post={{@post}}
+                          @prevPost={{@prevPost}}
+                          @nextPost={{@nextPost}}
+                          @canCreatePost={{@canCreatePost}}
+                          @changeNotice={{@changeNotice}}
+                          @changePostOwner={{@changePostOwner}}
+                          @copyLink={{this.copyLink}}
+                          @deletePost={{@deletePost}}
+                          @editPost={{@editPost}}
+                          @filteredRepliesView={{this.filteredRepliesView}}
+                          @grantBadge={{@grantBadge}}
+                          @lockPost={{@lockPost}}
+                          @permanentlyDeletePost={{@permanentlyDeletePost}}
+                          @rebakePost={{@rebakePost}}
+                          @recoverPost={{@recoverPost}}
+                          @repliesShown={{this.repliesShown}}
+                          @replyToPost={{@replyToPost}}
+                          @share={{this.share}}
+                          @showFlags={{@showFlags}}
+                          @showLogin={{@showLogin}}
+                          @showPagePublish={{@showPagePublish}}
+                          @showReadIndicator={{@showReadIndicator}}
+                          @toggleLike={{this.toggleLike}}
+                          @togglePostType={{@togglePostType}}
+                          @toggleReplies={{this.toggleReplies}}
+                          @toggleWiki={{@toggleWiki}}
+                          @unhidePost={{@unhidePost}}
+                          @unlockPost={{@unlockPost}}
+                        />
                       </section>
-                    {{/if}}
-                  </div>
 
-                  <section class="post__actions post-actions">
-                    <PostActionsSummary @post={{@post}} />
-                  </section>
-                  <PostLinks @post={{@post}} />
+                      {{#if this.repliesBelow}}
+                        <section
+                          id={{concat
+                            "embedded-posts__bottom--"
+                            @post.post_number
+                          }}
+                          class="post__embedded-posts post__embedded-posts--bottom embedded-posts bottom"
+                        >
+                          {{#each this.repliesBelow key="id" as |reply|}}
+                            <PostEmbedded
+                              role="region"
+                              aria-label={{i18n
+                                "post.sr_embedded_reply_description"
+                                post_number=@post.post_number
+                                username=reply.username
+                              }}
+                              @post={{reply}}
+                              @highlightTerm={{@highlightTerm}}
+                              @streamElement={{@streamElement}}
+                            />
+                          {{/each}}
+
+                          <DButton
+                            class="post__collapse-button post__collapse-button-up collapse-up"
+                            @action={{this.toggleRepliesBelow}}
+                            @ariaLabel="post.sr_collapse_replies"
+                            @icon="chevron-up"
+                            @title="post.collapse"
+                          />
+
+                          {{#if this.canLoadMoreRepliesBelow}}
+                            <DButton
+                              class="post__load-more load-more-replies"
+                              @label="post.load_more_replies"
+                              @action={{this.loadMoreReplies}}
+                            />
+                          {{/if}}
+                        </section>
+                      {{/if}}
+                    </div>
+
+                    <section class="post__actions post-actions">
+                      <PostActionsSummary @post={{@post}} />
+                    </section>
+                    <PluginOutlet
+                      @name="post-links"
+                      @outletArgs={{postOutletArgs}}
+                    >
+                      <PostLinks @post={{@post}} />
+                    </PluginOutlet>
+                  </div>
                 </div>
-              </div>
-              {{#if this.shouldShowTopicMap}}
-                <div class="post__topic-map topic-map --op">
-                  <TopicMap
-                    @model={{@post.topic}}
-                    @cancelFilter={{@cancelFilter}}
-                    @topicDetails={{@post.topic.details}}
-                    @postStream={{@post.topic.postStream}}
-                    @showPMMap={{eq @post.topic.archetype "private_message"}}
-                    @showInvite={{@showInvite}}
-                    @removeAllowedGroup={{@removeAllowedGroup}}
-                    @removeAllowedUser={{@removeAllowedUser}}
-                  />
-                </div>
-              {{/if}}
+                {{#if this.shouldShowTopicMap}}
+                  <div class="post__topic-map topic-map --op">
+                    <TopicMap
+                      @model={{@post.topic}}
+                      @cancelFilter={{@cancelFilter}}
+                      @topicDetails={{@post.topic.details}}
+                      @postStream={{@post.topic.postStream}}
+                      @showPMMap={{eq @post.topic.archetype "private_message"}}
+                      @showInvite={{@showInvite}}
+                      @removeAllowedGroup={{@removeAllowedGroup}}
+                      @removeAllowedUser={{@removeAllowedUser}}
+                    />
+                  </div>
+                {{/if}}
+              </PluginOutlet>
             </article>
           </PluginOutlet>
         {{/let}}

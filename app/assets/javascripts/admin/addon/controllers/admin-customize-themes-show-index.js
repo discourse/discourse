@@ -39,7 +39,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @filterBy("allThemes", "component", false) availableParentThemes;
   @filterBy("availableParentThemes", "isActive") availableActiveParentThemes;
   @mapBy("availableParentThemes", "name") availableThemesNames;
-  @mapBy("availableActiveParentThemes", "name") availableActiveThemesNames;
   @filterBy("availableChildThemes", "hasParents") availableActiveChildThemes;
   @mapBy("availableChildThemes", "name") availableComponentsNames;
   @mapBy("availableActiveChildThemes", "name") availableActiveComponentsNames;
@@ -115,7 +114,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       choices: this.availableThemesNames,
       default: this.parentThemesNames.join("|"),
       value: this.parentThemesNames.join("|"),
-      defaultValues: this.availableActiveThemesNames.join("|"),
+      defaultValues: this.availableThemesNames.join("|"),
       allThemes: this.allThemes,
       setDefaultValuesLabel: i18n("admin.customize.theme.add_all_themes"),
     });
