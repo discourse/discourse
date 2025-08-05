@@ -18,6 +18,7 @@ export default class AiConversationsSidebarManager extends Service {
   @service appEvents;
   @service sidebarState;
   @service messageBus;
+  @service lastForumUrl;
 
   @tracked topics = [];
   @tracked sections = new TrackedArray();
@@ -159,6 +160,14 @@ export default class AiConversationsSidebarManager extends Service {
     }
 
     this._removeScrollListener();
+  }
+
+  storeAppURL(url = null) {
+    this.lastForumUrl.storeUrl(url);
+  }
+
+  get lastKnownAppURL() {
+    return this.lastForumUrl.url;
   }
 
   async fetchMessages() {

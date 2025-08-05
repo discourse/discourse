@@ -3,7 +3,6 @@ import Service, { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 import { CHAT_PANEL } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
@@ -28,6 +27,7 @@ export default class ChatStateManager extends Service {
   @service router;
   @service site;
   @service chatDrawerRouter;
+  @service lastForumUrl;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
@@ -35,14 +35,12 @@ export default class ChatStateManager extends Service {
   @tracked hasPreloadedChannels = false;
 
   @tracked _chatURL = null;
-  @tracked _appURL = null;
 
   _store = new KeyValueStore(PREFERRED_MODE_STORE_NAMESPACE);
 
   reset() {
     this._store.remove(PREFERRED_MODE_KEY);
     this._chatURL = null;
-    this._appURL = null;
   }
 
   prefersFullPage() {
@@ -166,13 +164,7 @@ export default class ChatStateManager extends Service {
   }
 
   storeAppURL(url = null) {
-    if (url) {
-      this._appURL = url;
-    } else if (this.router.currentURL?.startsWith("/chat")) {
-      this._appURL = "/";
-    } else {
-      this._appURL = this.router.currentURL;
-    }
+    this.lastForumUrl.storeUrl(url);
   }
 
   storeChatURL(url) {
@@ -180,13 +172,7 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownAppURL() {
-    const url = this._appURL;
-
-    if (url && url !== "/") {
-      return url;
-    }
-
-    return this.router.urlFor(`discovery.${defaultHomepage()}`);
+    return this.lastForumUrl.url;
   }
 
   get lastKnownChatURL() {
