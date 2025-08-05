@@ -1242,6 +1242,9 @@ nb_NO:
         regular: "Aktivt medlem"
         dark: "Mørk modus"
         default_dark_scheme: "(nettstedsstandard)"
+        interface_modes:
+          light: "Lys"
+          dark: "Mørk"
       dark_mode: "Mørk Modus"
       text_size_default_on_all_devices: "Gjør denne standardtekststørrelsen på alle mine enheter"
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
@@ -4385,7 +4388,7 @@ nb_NO:
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
-      filter_reports: Filtrer rapporter
+      filter_reports: "Filtrer rapporter..."
       tags:
         remove_muted_tags_from_latest:
           always: "alltid"
@@ -4945,6 +4948,7 @@ nb_NO:
           theme: "Drakt"
           component: "Komponent"
           components: "Komponenter"
+          filter_all: "Alle"
           theme_name: "Navn på tema"
           component_name: "Komponent navn"
           themes_intro: "Velg et eksisterende tema eller installer et nytt for å komme i gang"

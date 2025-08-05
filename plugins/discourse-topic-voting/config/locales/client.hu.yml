@@ -18,14 +18,14 @@ hu:
       vote_title: "Szavazás"
       vote_title_plural: "Szavazatok"
       voted_title: "Szavazott"
-      voting_closed_title: "Lezárt"
-      voting_limit: "Limit"
+      voting_closed_title: "Lezárva"
+      voting_limit: "Korlát"
       votes:
         one: "%{count} szavazat"
         other: "%{count} szavazat"
       anonymous_button:
         one: "Szavazás"
-        other: "Szavazatok"
+        other: "Szavazás"
       remove_vote: "Szavazat eltávolítása"
     filters:
       votes:

@@ -517,6 +517,9 @@ be:
       color_schemes:
         undo: "скінуць"
         regular: "звычайны"
+        interface_modes:
+          light: "святло"
+          dark: "цёмна"
       experimental_sidebar:
         options: "Налады"
         navigation_section: "рух"
@@ -1900,6 +1903,7 @@ be:
           disabled_filter: "Адключана"
         theme:
           theme: "тэма"
+          filter_all: "усе"
           customize_desc: "Кастамізаваць:"
           create: "стварыць"
           create_type: "тып"

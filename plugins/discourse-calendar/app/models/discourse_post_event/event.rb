@@ -223,6 +223,7 @@ module DiscoursePostEvent
           topic_title: self.name || post.topic.title,
           display_username: post.user.username,
           message: message,
+          event_name: self.name,
         }.to_json,
       }
 

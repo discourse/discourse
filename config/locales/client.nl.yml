@@ -1279,7 +1279,6 @@ nl:
         description: "Introductietips en badges voor nieuwe gebruikers overslaan"
       reset_seen_user_tips: "Gebruikerstips opnieuw weergeven"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
-      color_scheme_default_on_all_devices: "Standaard kleurenpalet instellen op al mijn apparaten"
       color_scheme: "Kleurenpalet"
       color_schemes:
         default_description: "Standaard voor thema"
@@ -1289,6 +1288,9 @@ nl:
         regular: "Normaal"
         dark: "Donkere modus"
         default_dark_scheme: "(standaard voor website)"
+        interface_modes:
+          light: "Licht"
+          dark: "Donker"
       dark_mode: "Donkere modus"
       dark_mode_enable: "Automatisch kleurenpalet voor donkere modus inschakelen"
       text_size_default_on_all_devices: "Dit de standaard tekstgrootte maken op al mijn apparaten"
@@ -4806,7 +4808,7 @@ nl:
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
-      filter_reports: Rapporten filteren
+      filter_reports: "Rapporten filteren..."
       tags:
         remove_muted_tags_from_latest:
           always: "altijd"
@@ -5837,7 +5839,8 @@ nl:
           theme: "Thema"
           component: "Onderdeel"
           components: "Onderdelen"
-          search_placeholder: "typ om te zoeken…"
+          filter_all: "Alles"
+          filter_user_selectable: "Door gebruiker te selecteren"
           theme_name: "Themanaam"
           component_name: "Onderdeelnaam"
           themes_intro: "Selecteer een bestaand of installeer een nieuw thema om te beginnen"

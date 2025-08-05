@@ -403,7 +403,6 @@ pt_BR:
           max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada por cada usuário(a) individual e não é compartilhada no grupo."
         usage:
           ai_bot: "Bot de IA"
-          ai_helper: "Ajudante"
           ai_persona: "Persona (%{persona})"
           ai_summarization: "Resumir"
           ai_embeddings_semantic_search: "Pesquisa com IA"

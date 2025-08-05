@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  AUTO_MODE = 1
+  LIGHT_MODE = 2
+  DARK_MODE = 3
+
   HOMEPAGES = {
     # -1 => reserved for "custom homepage"
     1 => "latest",
@@ -14,7 +18,7 @@ class UserOption < ActiveRecord::Base
   }
 
   self.ignored_columns = [
-    "sidebar_list_destination", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
   ]
 
   self.primary_key = :user_id
@@ -80,6 +84,7 @@ class UserOption < ActiveRecord::Base
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.enable_smart_lists = SiteSetting.default_other_enable_smart_lists
     self.enable_defer = SiteSetting.default_other_enable_defer
+    self.enable_markdown_monospace_font = SiteSetting.default_other_enable_markdown_monospace_font
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
     self.skip_new_user_tips = SiteSetting.default_other_skip_new_user_tips
@@ -114,6 +119,14 @@ class UserOption < ActiveRecord::Base
 
   def redirected_to_top_yet?
     last_redirected_to_top_at.present?
+  end
+
+  def light_mode_forced?
+    interface_color_mode == LIGHT_MODE
+  end
+
+  def dark_mode_forced?
+    interface_color_mode == DARK_MODE
   end
 
   def update_last_redirected_to_top!
@@ -264,7 +277,7 @@ end
 #  email_previous_replies           :integer          default(2), not null
 #  enable_allowed_pm_users          :boolean          default(FALSE), not null
 #  enable_defer                     :boolean          default(FALSE), not null
-#  enable_experimental_sidebar      :boolean          default(FALSE)
+#  enable_markdown_monospace_font   :boolean          default(TRUE), not null
 #  enable_quoting                   :boolean          default(TRUE), not null
 #  enable_smart_lists               :boolean          default(TRUE), not null
 #  external_links_in_new_tab        :boolean          default(FALSE), not null
@@ -272,6 +285,7 @@ end
 #  hide_profile                     :boolean          default(FALSE), not null
 #  hide_profile_and_presence        :boolean          default(FALSE), not null
 #  include_tl0_in_digests           :boolean          default(FALSE)
+#  interface_color_mode             :integer          default(1), not null
 #  last_redirected_to_top_at        :datetime
 #  like_notification_frequency      :integer          default(1), not null
 #  mailing_list_mode                :boolean          default(FALSE), not null

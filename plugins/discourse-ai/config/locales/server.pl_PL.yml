@@ -31,6 +31,7 @@ pl_PL:
         description: "Okresowy raport oparty na dużym modelu językowym"
   site_settings:
     discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
+    ai_default_llm_model: "Domyślny model LLM do wykorzystania we wszystkich funkcjach AI"
     ai_artifact_security: "System artefaktów AI generuje ramki IFRAME z kodem, który można uruchomić. Tryb ścisły wymusza dodatkowe kliknięcie, aby uruchomić kod. Tryb łagodny uruchamia kod natychmiast. Tryb hybrydowy pozwala użytkownikowi na podanie danych w trybie artefakt-sztuczna inteligencja-autorun, aby wyświetlić je natychmiast. Tryb wyłączony wyłącza system artefaktów."
     ai_toxicity_enabled: "Włącz moduł toksyczności."
     ai_toxicity_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API modułu toksyczności"
@@ -584,7 +585,7 @@ pl_PL:
     llm:
       configuration:
         create_llm: "Przed włączeniem tej funkcji należy skonfigurować LLM"
-        disable_module_first: "Najpierw musisz wyłączyć %{setting}."
+        disable_modules_first: "Najpierw musisz wyłączyć te moduły: %{settings}"
         set_llm_first: "Najpierw ustaw %{setting}"
         model_unreachable: "Nie mogliśmy uzyskać odpowiedzi od tego modelu. Sprawdź najpierw swoje ustawienia."
         invalid_seeded_model: "Nie można używać tego modelu z tą funkcją"

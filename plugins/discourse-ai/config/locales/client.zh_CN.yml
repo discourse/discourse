@@ -159,6 +159,9 @@ zh_CN:
               description: "用于 LLM 的温度值，增加该值会提高生成内容的随机性（留空则使用模型默认值）"
     discourse_ai:
       title: "AI"
+      default_llm:
+        title: "默认 LLM 模型"
+        description: "所有 AI 功能使用的默认 LLM 模型。如果功能配置或角色中未指定 LLM，则将使用此模型。如果未指定默认 LLM，则将使用最后创建的 LLM。"
       features:
         back: "返回"
         disabled: "(已禁用)"
@@ -429,7 +432,7 @@ zh_CN:
           max_usages_help: "此群组中每个用户在指定时长内可以使用 AI 模型的最大次数。此配额按个别用户进行跟踪，不在整个群组中共享。"
         usage:
           ai_bot: "AI 机器人"
-          ai_helper: "助手"
+          ai_helper: "助手 (%{persona})"
           ai_persona: "角色 (%{persona})"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"

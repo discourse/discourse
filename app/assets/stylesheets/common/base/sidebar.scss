@@ -50,6 +50,7 @@
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
+  --d-sidebar-active-font-weight: bold; // example: active section link
 
   @include viewport.until(sm) {
     --d-sidebar-row-height: 2.4em;

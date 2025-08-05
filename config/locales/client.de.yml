@@ -138,6 +138,105 @@ de:
       placeholder: Datum
       from_placeholder: "ab Datum"
       to_placeholder: "bis Datum"
+    languages:
+      ar:
+        name: Arabisch
+      be:
+        name: Belarusisch
+      bg:
+        name: Bulgarisch
+      bs_BA:
+        name: Bosnisch
+      ca:
+        name: Katalanisch
+      cs:
+        name: Tschechisch
+      da:
+        name: Dänisch
+      de:
+        name: Deutsch
+      el:
+        name: Griechisch
+      en:
+        name: Englisch (US)
+      en_GB:
+        name: Englisch (UK)
+      es:
+        name: Spanisch
+      et:
+        name: Estnisch
+      fa_IR:
+        name: Persisch
+      fi:
+        name: Finnisch
+      fr:
+        name: Französisch
+      gl:
+        name: Galicisch
+      he:
+        name: Hebräisch
+      hr:
+        name: Kroatisch
+      hu:
+        name: Ungarisch
+      hy:
+        name: Armenisch
+      id:
+        name: Indonesisch
+      it:
+        name: Italienisch
+      ja:
+        name: Japanisch
+      ko:
+        name: Koreanisch
+      lt:
+        name: Litauisch
+      lv:
+        name: Lettisch
+      nb_NO:
+        name: Norwegisch Bokmål
+      nl:
+        name: Niederländisch
+      pl_PL:
+        name: Polnisch
+      pt:
+        name: Portugiesisch
+      pt_BR:
+        name: Portugiesisch (BR)
+      ro:
+        name: Rumänisch
+      ru:
+        name: Russisch
+      sk:
+        name: Slowakisch
+      sl:
+        name: Slowenisch
+      sq:
+        name: Albanisch
+      sr:
+        name: Serbisch
+      sv:
+        name: Schwedisch
+      sw:
+        name: Swahili
+      te:
+        name: Telugu
+      th:
+        name: Thai
+      tr_TR:
+        name: Türkisch
+      ug:
+        name: Uigurisch
+      uk:
+        name: Ukrainisch
+      ur:
+        name: Urdu
+      vi:
+        name: Vietnamesisch
+      zh_TW:
+        name: Chinesisch
+      zh_CN:
+        name: Vereinfachtes Chinesisch
     share:
       topic_html: 'Thema: <span class="topic-title">%{topicTitle}</span>'
       post: "Beitrag Nr. %{postNumber} von @%{username}"
@@ -201,6 +300,7 @@ de:
       search: "Suche"
     themes:
       default_description: "Standard"
+      broken_theme_alert: "Es kann sein, dass deine Website nicht funktioniert, weil ein Theme/eine Komponente Fehler aufweist. Überprüfe die Browser-Konsole für weitere Informationen."
       error_caused_by: "Verursacht durch „%{name}“. <a target='blank' href='%{path}'>Klicke hier</a> , um die Funktion zu aktualisieren, neu zu konfigurieren oder zu deaktivieren."
       only_admins: "(Diese Nachricht wird nur Website-Administratoren angezeigt)"
     broken_decorator_alert: "Beiträge werden möglicherweise nicht richtig angezeigt, weil einer der Beitragsausstatter auf deiner Website einen Fehler ausgelöst hat."
@@ -1355,7 +1455,7 @@ de:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
       reset_seen_user_tips: "Benutzertipps erneut anzeigen"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
-      color_scheme_default_on_all_devices: "Standard-Farbpalette auf allen meinen Geräten festlegen"
+      color_scheme_default_on_all_devices: "Standard-Farbpalette und Modus auf allen meinen Geräten festlegen"
       color_scheme: "Farbpalette"
       color_schemes:
         default_description: "Theme-Standard"
@@ -1365,6 +1465,12 @@ de:
         regular: "Regulär"
         dark: "Dunkler Modus"
         default_dark_scheme: "(Website-Standard)"
+        interface_mode: "Modus"
+        interface_mode_instructions: "„Auto“ verwendet die Einstellungen deines Systems für den hellen oder dunklen Modus."
+        interface_modes:
+          auto: "Automatisch"
+          light: "Hell"
+          dark: "Dunkel"
       dark_mode: "Dunkler Modus"
       dark_mode_enable: "Farbpalette für den dunklen Modus automatisch aktivieren"
       text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
@@ -2667,7 +2773,6 @@ de:
       italic_label: "K"
       italic_title: "Betonung"
       italic_text: "betonter Text"
-      heading_label: "H"
       heading_title: "Überschriften"
       heading_level_n: "Überschrift %{levelNumber}"
       heading_level_n_title: "Überschrift %{levelNumber}"
@@ -5105,7 +5210,7 @@ de:
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
-      filter_reports: Berichte filtern
+      filter_reports: "Berichte filtern..."
       filter_reports_no_results: "Keine Berichte entsprechen deinem Filter"
       tags:
         remove_muted_tags_from_latest:
@@ -6163,7 +6268,6 @@ de:
             filter_by_used: "Verwendet"
             filter_by_unused: "Nicht verwendet"
             filter_by_updates_available: "Updates verfügbar"
-            search_components: "Gib einen Komponentennamen ein"
             new_update_for_component: "Neues Update verfügbar für %{name}!"
             component_up_to_date: '„%{name}“ ist aktuell.'
             updated_successfully: '„%{name}“ wurde erfolgreich aktualisiert.'
@@ -6353,7 +6457,8 @@ de:
           theme: "Theme"
           component: "Komponente"
           components: "Komponenten"
-          search_placeholder: "zum Suchen etwas eingeben …"
+          filter_all: "Alle"
+          filter_user_selectable: "Vom Benutzer wählbar"
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
@@ -6594,19 +6699,18 @@ de:
             title: "Wähle Basis-Farbpalette"
             description: "Basis-Palette:"
           preference_warning: "Du hast <a href='%{link}'>deine persönlichen Theme-Einstellungen</a> geändert, sodass die Änderungen an der Palette für dich möglicherweise nicht sichtbar sind. Besucher, die ihre Standardeinstellungen nicht geändert haben, sehen trotzdem die Änderungen, die du hier vornimmst."
+          dark_mode_warning: "Du verwendest derzeit den dunklen Modus. Wenn du eine aktive Farbpalette einstellst, werden die Farben auf den hellen Modus des Themes angewendet. Wenn du die Standardfarben für den dunklen Modus ändern möchtest, bearbeite bitte die <a href='%{link}'>Einstellung für den dunklen Modus der Website</a>."
           title: "Farben"
           edit: "Bearbeiten"
-          set_default: "Als aktiv für %{theme} festlegen"
+          set_default: "Im Standard-Theme aktivieren (%{theme})"
           set_default_success: "%{schemeName} als aktive Palette für %{themeName} festgelegt"
           saved_refreshing: "Gespeichert! Aktualisiere Farben..."
           from_theme: "Vom Theme: %{name}"
           filters:
-            search_placeholder: "Suche nach Name oder Theme..."
             all: "Gesamt"
             user_selectable: "Vom Benutzer wählbar"
             from_theme: "Vom Theme"
             no_results: "Keine Farbpaletten gefunden"
-            reset: "Filter zurücksetzen"
           active_badge:
             text: "Aktiv"
             title: "Aktive Farbpalette"

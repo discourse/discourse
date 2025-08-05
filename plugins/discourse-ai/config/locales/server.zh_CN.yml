@@ -24,6 +24,7 @@ zh_CN:
         description: "基于大语言模型的定期报告"
   site_settings:
     discourse_ai_enabled: "启用 Discourse AI 插件。"
+    ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
     ai_toxicity_enabled: "启用毒性模块。"
     ai_toxicity_inference_service_api_endpoint: "为毒性模块运行 API 的 URL"
     ai_toxicity_inference_service_api_key: "毒性 API 的 API 密钥"
@@ -396,7 +397,7 @@ zh_CN:
           neutral: "中性"
     llm:
       configuration:
-        disable_module_first: "您必须先禁用“%{setting}”。"
+        disable_modules_first: "您必须先禁用这些模块： %{settings}"
         set_llm_first: "首先设置%{setting}"
         model_unreachable: "我们无法从此模型获得回应。请先检查您的设置。"
         invalid_seeded_model: "您无法在此模型中使用此功能"

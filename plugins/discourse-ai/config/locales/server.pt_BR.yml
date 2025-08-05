@@ -404,7 +404,6 @@ pt_BR:
           neutral: "Neutro"
     llm:
       configuration:
-        disable_module_first: "Você precisa desativar %{setting} primeiro."
         set_llm_first: "Defina %{setting} primeiro"
         model_unreachable: "Não foi possível obter uma resposta deste modelo. Confira as configurações primeiro."
         invalid_seeded_model: "Não é possível usar este modelo com este recurso"

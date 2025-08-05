@@ -1,11 +1,10 @@
-import { currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 
@@ -30,22 +29,21 @@ acceptance("Discourse Assign | User Private Messages", function (needs) {
     updateCurrentUser({ redesigned_user_page_nav_enabled: true });
 
     await visit("/u/eviltrout/messages");
+    await click(".messages-dropdown-trigger");
+    const options = findAll(".dropdown-menu__item");
+    assert.dom(options[2]).hasText(i18n("discourse_assign.assigned"));
 
-    const messagesDropdown = selectKit(".user-nav-messages-dropdown");
-
-    await messagesDropdown.expand();
-    await messagesDropdown.selectRowByName(i18n("discourse_assign.assigned"));
-
+    await click(options[2].querySelector(".btn"));
     assert.strictEqual(
       currentURL(),
       "/u/eviltrout/messages/assigned",
       "transitioned to the assigned page"
     );
-
-    assert.strictEqual(
-      messagesDropdown.header().name(),
-      i18n("discourse_assign.assigned"),
-      "assigned messages is selected in the dropdown"
-    );
+    assert
+      .dom(".messages-dropdown-trigger")
+      .hasText(
+        i18n("discourse_assign.assigned"),
+        "assigned messages is selected in the dropdown"
+      );
   });
 });

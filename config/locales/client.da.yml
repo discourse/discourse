@@ -1220,6 +1220,10 @@ da:
         regular: "Almindelig"
         dark: "Mørk tilstand"
         default_dark_scheme: "(standard for websted)"
+        interface_modes:
+          auto: "Auto"
+          light: "Lys"
+          dark: "Mørk"
       dark_mode: "Mørk Tilstand"
       text_size_default_on_all_devices: "Gør dette til standard tekststørrelse på alle mine enheder"
       allow_private_messages: "Tillad andre brugere at sende mig personlige beskeder"
@@ -4094,7 +4098,7 @@ da:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filtrer rapporter
+      filter_reports: "Filtrer rapporter..."
       tags:
         remove_muted_tags_from_latest:
           always: "altid"
@@ -4894,6 +4898,8 @@ da:
           theme: "Tema"
           component: "Komponent"
           components: "komponenter"
+          filter_all: "Alle"
+          filter_user_selectable: "Kan vælges af brugeren"
           theme_name: "Tema navn"
           component_name: "Komponent navn"
           themes_intro: "Vælg et eksisterende tema, eller installer et nyt for at komme i gang"

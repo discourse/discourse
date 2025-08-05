@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer - ProseMirror editor", type: :system do
-  fab!(:user) do
+  fab!(:current_user) do
     Fabricate(
       :user,
       refresh_auto_groups: true,
@@ -14,7 +14,7 @@ describe "Composer - ProseMirror editor", type: :system do
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
 
-  before { sign_in(user) }
+  before { sign_in(current_user) }
 
   def open_composer
     page.visit "/new-topic"
@@ -23,10 +23,20 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   def paste_and_click_image
+    # This helper can only be used reliably to paste a single image when no other images are present.
+    expect(rich).to have_no_css(".composer-image-node img")
+
     cdp.allow_clipboard
     cdp.copy_test_image
     cdp.paste
+
+    expect(rich).to have_css(".composer-image-node img", count: 1)
+    expect(rich).to have_no_css(".composer-image-node img[src='/images/transparent.png']")
+    expect(rich).to have_no_css(".composer-image-node img[data-placeholder='true']")
+
     rich.find(".composer-image-node img").click
+
+    expect(rich).to have_css(".composer-image-node .fk-d-menu", count: 2)
   end
 
   it "hides the Composer container's preview button" do
@@ -40,16 +50,29 @@ describe "Composer - ProseMirror editor", type: :system do
     expect(composer).to have_composer_preview_toggle
   end
 
-  it "saves the user's rich editor preference to the database" do
+  it "saves the user's rich editor preference and remembers it when reopening the composer" do
     open_composer
+    expect(composer).to have_rich_editor_active
     composer.toggle_rich_editor
-    expect(page).to have_css(".composer-toggle-switch.--markdown")
+    expect(composer).to have_markdown_editor_active
 
     try_until_success(frequency: 0.5) do
-      expect(user.user_option.reload.composition_mode).to eq(
+      expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:markdown],
       )
     end
+
+    visit("/")
+    open_composer
+    expect(composer).to have_markdown_editor_active
+  end
+
+  it "remembers the user's rich editor preference when starting a new PM" do
+    current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
+    page.visit("/u/#{current_user.username}/messages")
+    find(".new-private-message").click
+    expect(composer).to be_opened
+    expect(composer).to have_rich_editor_active
   end
 
   # TODO (martin) Remove this once we are sure all users have migrated
@@ -68,7 +91,7 @@ describe "Composer - ProseMirror editor", type: :system do
     expect(composer).to have_rich_editor
 
     try_until_success(frequency: 0.5) do
-      expect(user.user_option.reload.composition_mode).to eq(
+      expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:rich],
       )
     end
@@ -83,7 +106,7 @@ describe "Composer - ProseMirror editor", type: :system do
   context "with autocomplete" do
     it "triggers an autocomplete on mention" do
       open_composer
-      composer.type_content("@#{user.username}")
+      composer.type_content("@#{current_user.username}")
 
       expect(composer).to have_mention_autocomplete
     end
@@ -115,6 +138,19 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.toggle_rich_editor
 
       expect(composer).to have_value("Why :repeat_single_button: ")
+    end
+  end
+
+  context "with composer messages" do
+    fab!(:category)
+
+    it "shows a popup" do
+      open_composer
+      composer.type_content("Maybe @staff can help?")
+
+      expect(composer).to have_popup_content(
+        I18n.t("js.composer.cannot_see_group_mention.not_mentionable", group: "staff"),
+      )
     end
   end
 
@@ -939,19 +975,19 @@ describe "Composer - ProseMirror editor", type: :system do
 
     before do
       Draft.set(
-        user,
+        current_user,
         topic.draft_key,
         0,
-        { reply: "hey @#{user.username} and @unknown - how are you?" }.to_json,
+        { reply: "hey @#{current_user.username} and @unknown - how are you?" }.to_json,
       )
     end
 
     it "validates manually typed mentions" do
       open_composer
 
-      composer.type_content("Hey @#{user.username} ")
+      composer.type_content("Hey @#{current_user.username} ")
 
-      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_css("a.mention", text: current_user.username)
 
       composer.type_content("and @invalid_user - how are you?")
 
@@ -959,7 +995,9 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(composer).to have_value("Hey @#{user.username} and @invalid_user - how are you?")
+      expect(composer).to have_value(
+        "Hey @#{current_user.username} and @invalid_user - how are you?",
+      )
     end
 
     it "validates mentions in drafts" do
@@ -967,7 +1005,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to be_opened
 
-      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_css("a.mention", text: current_user.username)
       expect(rich).to have_no_css("a.mention", text: "@unknown")
     end
 
@@ -1055,7 +1093,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       upsert_hyperlink_modal.fill_in_link_text("Updated Example")
       upsert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
-      upsert_hyperlink_modal.click_primary_button
+      upsert_hyperlink_modal.send_enter_link_text
 
       expect(rich).to have_css("a[href='https://updated-example.com']", text: "Updated Example")
 
@@ -1301,6 +1339,51 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  describe "image URL resolution" do
+    it "resolves upload URLs and displays images correctly" do
+      open_composer
+      cdp.allow_clipboard
+
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
+      short_url1 = "upload://#{Upload.base62_sha1(upload1.sha1)}"
+      short_url2 = "upload://#{Upload.base62_sha1(upload2.sha1)}"
+
+      page.execute_script(<<~JS)
+        window.urlLookupRequests = 0;
+
+        const originalXHROpen = window.XMLHttpRequest.prototype.open;
+        window.XMLHttpRequest.prototype.open = function(method, url) {
+          if (url.toString().endsWith('/uploads/lookup-urls')) {
+            window.urlLookupRequests++;
+          }
+          return originalXHROpen.apply(this, arguments);
+        };
+      JS
+
+      markdown = "![image 1](#{short_url1})\n\n![image 2](#{short_url2})"
+      cdp.copy_paste(markdown)
+
+      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
+      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+
+      # loaded in a single api call
+      initial_request_count = page.evaluate_script("window.urlLookupRequests")
+      expect(initial_request_count).to eq(1)
+
+      composer.toggle_rich_editor
+      composer.toggle_rich_editor
+
+      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
+      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+
+      # loaded from cache, no new request
+      final_request_count = page.evaluate_script("window.urlLookupRequests")
+      expect(final_request_count).to eq(initial_request_count)
+    end
+  end
+
   describe "image alt text display and editing" do
     it "shows alt text input when image is selected" do
       open_composer
@@ -1420,6 +1503,20 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("This is a test")
       expect(rich).to have_css("h2", text: "This is a test")
+    end
+  end
+
+  describe "quote node" do
+    it "keeps the cursor outside quote when pasted" do
+      open_composer
+
+      markdown = "[quote]\nThis is a quote\n\n[/quote]"
+      cdp.copy_paste(markdown)
+      composer.type_content("This is a test")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(markdown + "\n\nThis is a test")
     end
   end
 end

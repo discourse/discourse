@@ -854,6 +854,9 @@ et:
         default_description: "Teema vaikimisi"
         undo: "Lähtesta"
         regular: "Tavaline"
+        interface_modes:
+          light: "Hele"
+          dark: "Tume"
       dark_mode: "Tume režiim"
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
@@ -3200,6 +3203,7 @@ et:
           theme: "Teema"
           component: "Komponent"
           components: "Komponendid"
+          filter_all: "Kõik"
           theme_name: "Teema nimi"
           component_name: "Komponendi nimi"
           customize_desc: "Kohanda:"

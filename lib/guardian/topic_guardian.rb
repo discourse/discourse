@@ -156,14 +156,13 @@ module TopicGuardian
   end
 
   def can_delete_topic?(topic)
-    !topic.trashed? &&
-      (
-        (
-          is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at &&
-            topic.created_at > 24.hours.ago
-        ) || is_category_group_moderator?(topic.category) ||
-          user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
-      ) && !topic.is_category_topic? && !Discourse.static_doc_topic_ids.include?(topic.id)
+    return false if topic.trashed?
+    return false if topic.is_category_topic?
+    return false if Discourse.static_doc_topic_ids.include?(topic.id)
+    return true if is_category_group_moderator?(topic.category)
+    return true if user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+
+    is_my_own?(topic) && can_delete_own_topic?(topic)
   end
 
   def can_permanently_delete_topic?(topic)
@@ -366,6 +365,10 @@ module TopicGuardian
   end
 
   private
+
+  def can_delete_own_topic?(topic)
+    topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago
+  end
 
   def private_message_topic_scope(scope)
     pm_scope = scope.private_messages_for_user(user)

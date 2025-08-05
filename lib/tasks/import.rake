@@ -191,6 +191,7 @@ def insert_user_options
                   automatically_unpin_topics,
                   enable_quoting,
                   enable_smart_lists,
+                  enable_markdown_monospace_font,
                   external_links_in_new_tab,
                   dynamic_favicon,
                   new_topic_duration_minutes,
@@ -220,6 +221,7 @@ def insert_user_options
                   , #{SiteSetting.default_other_enable_smart_lists}
                   , #{SiteSetting.default_other_external_links_in_new_tab}
                   , #{SiteSetting.default_other_dynamic_favicon}
+                  , #{SiteSetting.default_other_enable_markdown_monospace_font}
                   , #{SiteSetting.default_other_new_topic_duration_minutes}
                   , #{SiteSetting.default_other_auto_track_topics_after_msecs}
                   , #{SiteSetting.default_other_notification_level_when_replying}

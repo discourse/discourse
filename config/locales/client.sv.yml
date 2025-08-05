@@ -1188,6 +1188,9 @@ sv:
         regular: "Vanlig"
         dark: "Mörkt läge"
         default_dark_scheme: "(standard för webbplatsen)"
+        interface_modes:
+          light: "Ljust"
+          dark: "Mörkt"
       dark_mode: "Mörkt läge"
       text_size_default_on_all_devices: "Gör detta till standardstorlek för text på alla mina enheter"
       allow_private_messages: "Tillåt andra användare att skicka mig personliga meddelanden"
@@ -4397,7 +4400,7 @@ sv:
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
-      filter_reports: Filtrera rapporter
+      filter_reports: "Filtrera rapporter..."
       tags:
         remove_muted_tags_from_latest:
           always: "alltid"
@@ -5183,7 +5186,7 @@ sv:
           theme: "Tema"
           component: "Komponent"
           components: "Komponenter"
-          search_placeholder: "skriv för att söka…"
+          filter_all: "Alla"
           theme_name: "Temanamn"
           component_name: "Komponentnamn"
           themes_intro: "Välj ett befintligt tema eller installera ett nytt för att komma igång"

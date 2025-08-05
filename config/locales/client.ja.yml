@@ -1198,7 +1198,6 @@ ja:
         description: "新規ユーザー向けオンボーディングのヒントとバッジをスキップする"
       reset_seen_user_tips: "ユーザーヒントをもう一度表示する"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトのテーマにする"
-      color_scheme_default_on_all_devices: "デフォルトの色パレットをすべてのデバイスに設定する"
       color_scheme: "色パレット"
       color_schemes:
         default_description: "デフォルトのテーマ"
@@ -1208,6 +1207,9 @@ ja:
         regular: "通常"
         dark: "ダークモード"
         default_dark_scheme: "(サイトのデフォルト)"
+        interface_modes:
+          light: "ライト"
+          dark: "ダーク"
       dark_mode: "ダークモード"
       dark_mode_enable: "ダークモードの色パレットを自動的に有効にする"
       text_size_default_on_all_devices: "これをすべてのデバイスのデフォルトのテキストサイズにする"
@@ -4548,7 +4550,7 @@ ja:
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
-      filter_reports: レポートをフィルタ
+      filter_reports: "レポートをフィルタ..."
       tags:
         remove_muted_tags_from_latest:
           always: "常時"
@@ -5562,7 +5564,8 @@ ja:
           theme: "テーマ"
           component: "コンポーネント"
           components: "コンポーネント"
-          search_placeholder: "入力して検索…"
+          filter_all: "すべて"
+          filter_user_selectable: "ユーザー選択可能"
           theme_name: "テーマ名"
           component_name: "コンポーネント名"
           themes_intro: "まず既存のテーマを選択するか、新しいテーマをインストールしてください"

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";

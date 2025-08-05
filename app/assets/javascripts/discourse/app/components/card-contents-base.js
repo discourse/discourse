@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { alias, match } from "@ember/object/computed";
 import { next, schedule, throttle } from "@ember/runloop";
@@ -145,7 +146,7 @@ export default class CardContentsBase extends Component {
 
     // Mention click
     this._showCardOnClick(event, this.mentionSelector, (el) =>
-      el.innerText.replace(/^@/, "")
+      el.innerText.trim().replace(/^@/, "")
     );
   }
 

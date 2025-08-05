@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
@@ -22,7 +23,6 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
-import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
@@ -44,6 +44,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { SKIP } from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
@@ -94,9 +95,9 @@ export default class DEditor extends Component {
 
     this.setupToolbar();
 
-    // TODO (martin) Remove this once we are sure all users have migrated
-    // to the new rich editor preference, or a few months after the 3.5 release.
     if (this.siteSettings.rich_editor) {
+      // TODO (martin) Remove this once we are sure all users have migrated
+      // to the new rich editor preference, or a few months after the 3.5 release.
       await this.handleOldRichEditorPreference();
 
       if (this.currentUser.useRichEditor) {
@@ -736,10 +737,7 @@ export default class DEditor extends Component {
   <template>
     <div
       class="d-editor-container
-        {{if
-          this.siteSettings.rich_editor
-          'd-editor-container--rich-editor-enabled'
-        }}"
+        {{if this.siteSettings.rich_editor '--rich-editor-enabled'}}"
     >
       <div class="d-editor-textarea-column">
         {{yield}}

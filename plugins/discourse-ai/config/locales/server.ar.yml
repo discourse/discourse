@@ -431,7 +431,6 @@ ar:
           neutral: "محايدة"
     llm:
       configuration:
-        disable_module_first: "يجب عليك إيقاف %{setting} أولًا."
         set_llm_first: "اضبط %{setting} أولًا"
         model_unreachable: "لم نتمكن من الحصول على رد من هذا النموذج. تحقَّق من إعداداتك أولًا."
         invalid_seeded_model: "لا يمكنك استخدام هذا النموذج مع هذه الميزة"

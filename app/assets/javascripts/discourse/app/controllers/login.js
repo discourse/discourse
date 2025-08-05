@@ -203,6 +203,11 @@ export default class LoginPageController extends Controller {
   }
 
   @action
+  loginPasswordChanged(event) {
+    this.loginPassword = event.target.value;
+  }
+
+  @action
   showCreateAccount(createAccountProps = {}) {
     if (this.site.isReadOnly) {
       this.dialog.alert(i18n("read_only_mode.login_disabled"));
@@ -244,7 +249,6 @@ export default class LoginPageController extends Controller {
     if (this.loginDisabled) {
       return;
     }
-
     if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
       this.flash = i18n("login.blank_username_or_password");
       this.flashType = "error";

@@ -4,6 +4,10 @@
 
 $mobile-breakpoint: 700px;
 
+:root {
+  --admin-content-max-width: min(700px, 100%);
+}
+
 // Common admin styles
 .admin-main-nav {
   display: inline-flex;

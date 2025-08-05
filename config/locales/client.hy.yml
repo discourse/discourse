@@ -1257,6 +1257,9 @@ hy:
         regular: "Սովորական"
         dark: "Մութ ռեժիմ"
         default_dark_scheme: "(լռելյայն գունային սխեման)"
+        interface_modes:
+          light: "Բաց"
+          dark: "Մութ"
       dark_mode: "Մութ ռեժիմ"
       text_size_default_on_all_devices: "Դարձնել սա լռելյայն տեքստի չափ իմ բոլոր սարքավորում համար"
       allow_private_messages: "Թույլ տալ այլ օգտատերերին ուղարկել ինձ անձնական հաղորդագրություններ"
@@ -3836,7 +3839,7 @@ hy:
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
-      filter_reports: Ֆիլտրել հաշվետվությունները
+      filter_reports: "Ֆիլտրել հաշվետվությունները..."
       tags:
         remove_muted_tags_from_latest:
           always: "միշտ"
@@ -4412,6 +4415,7 @@ hy:
           theme: "Թեմա"
           component: "Բաղադրիչ"
           components: "Բաղադրիչներ"
+          filter_all: "Բոլոր"
           theme_name: "Թեմայի անվանում"
           component_name: "Բաղադրիչի անուն"
           themes_intro: "Ընտրել գոյություն ունեցող թեմա կամ տեղադրել նորը՝ մեկնարկի համար"

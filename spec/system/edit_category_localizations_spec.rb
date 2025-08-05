@@ -82,17 +82,32 @@ describe "Edit Category Localizations", type: :system do
     end
 
     describe "when editing a category with localizations" do
-      fab!(:category_localization) { Fabricate(:category_localization, category: category) }
+      fab!(:category_localization) { Fabricate(:category_localization, category:, locale: "es") }
+      fab!(:category_localization) { Fabricate(:category_localization, category:, locale: "ja") }
 
       it "allows you to delete localizations" do
-        expect(CategoryLocalization.where(category_id: category.id).count).to eq(1)
+        expect(CategoryLocalization.where(category_id: category.id).count).to eq(2)
         category_page.visit_edit_localizations(category)
-        page.find(".edit-category-tab-localizations .remove-localization").click
+
+        expect(category_page).to have_selector(
+          ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
+          count: 2,
+        )
+        expect(
+          category_page.find("#control-localizations-0-locale option.--selected"),
+        ).to have_content("Spanish (Español)")
+        expect(
+          category_page.find("#control-localizations-1-locale option.--selected"),
+        ).to have_content("Japanese (日本語)")
+
+        page.find(".edit-category-tab-localizations .remove-localization", match: :first).click
         category_page.save_settings
         page.refresh
-        try_until_success do
-          expect(CategoryLocalization.where(category_id: category.id).count).to eq(0)
-        end
+
+        expect(category_page).to_not have_css("#control-localizations-0-locale option.--selected")
+        expect(
+          category_page.find("#control-localizations-0-locale option.--selected"),
+        ).to have_content("Japanese (日本語)")
       end
     end
   end

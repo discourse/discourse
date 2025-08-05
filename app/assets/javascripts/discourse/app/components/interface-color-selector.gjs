@@ -34,7 +34,7 @@ export default class InterfaceColorSelector extends Component {
 
   @action
   switchToAuto(dMenu) {
-    this.interfaceColor.removeColorModeOverride();
+    this.interfaceColor.useAutoMode();
     dMenu.close();
   }
 
@@ -45,12 +45,13 @@ export default class InterfaceColorSelector extends Component {
       @identifier="interface-color-selector"
       @animated={{false}}
       class="interface-color-selector icon"
+      data-current-mode={{this.interfaceColor.colorMode}}
     >
       <:content as |dMenu|>
         <DropdownMenu as |dropdown|>
           <dropdown.item>
             <DButton
-              class="btn-default interface-color-selector__light-option"
+              class="interface-color-selector__light-option"
               @icon="sun"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_selector.light"
@@ -60,7 +61,7 @@ export default class InterfaceColorSelector extends Component {
           </dropdown.item>
           <dropdown.item>
             <DButton
-              class="btn-default interface-color-selector__dark-option"
+              class="interface-color-selector__dark-option"
               @icon="moon"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_selector.dark"
@@ -70,7 +71,7 @@ export default class InterfaceColorSelector extends Component {
           </dropdown.item>
           <dropdown.item>
             <DButton
-              class="btn-default interface-color-selector__auto-option"
+              class="interface-color-selector__auto-option"
               @icon="circle-half-stroke"
               @translatedLabel={{i18n
                 "sidebar.footer.interface_color_selector.auto"

@@ -1212,7 +1212,6 @@ zh_TW:
         description: "跳過新使用者登入時的提示和徽章"
       reset_seen_user_tips: "再次顯示使用者提示"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
-      color_scheme_default_on_all_devices: "在我的所有裝置上設定預設調色盤"
       color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
@@ -1222,6 +1221,10 @@ zh_TW:
         regular: "普通"
         dark: "夜間模式"
         default_dark_scheme: "(網站預設值)"
+        interface_modes:
+          auto: "自動"
+          light: "輕亮"
+          dark: "黑暗"
       dark_mode: "夜間模式"
       dark_mode_enable: "啟用自動深色模式調色板"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
@@ -4575,7 +4578,7 @@ zh_TW:
     admin:
       title: "論壇管理員"
       moderator: "板主"
-      filter_reports: 過濾報告
+      filter_reports: "過濾報告..."
       tags:
         remove_muted_tags_from_latest:
           always: "總是"
@@ -5654,7 +5657,8 @@ zh_TW:
           theme: "佈景主題"
           component: "元件"
           components: "元件"
-          search_placeholder: "輸入以搜尋…"
+          filter_all: "全部"
+          filter_user_selectable: "使用者可選"
           theme_name: "佈景主題名稱"
           component_name: "元件名稱"
           themes_intro: "選擇現有或安裝新佈景主題以開始"

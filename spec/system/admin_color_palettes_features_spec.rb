@@ -23,14 +23,13 @@ describe "Admin Color Palettes Features", type: :system do
     it "shows filters when there are more than 8 color schemes" do
       visit("/admin/customize/colors")
 
-      expect(page).to have_css(".color-palette__filters")
-      expect(page).to have_css(".admin-filter__input")
+      expect(page).to have_css(".admin-filter-controls__input")
     end
 
     it "can filter by text search" do
       visit("/admin/customize/colors")
 
-      find(".admin-filter__input").fill_in(with: user_selectable_palette.name)
+      find(".admin-filter-controls__input").fill_in(with: user_selectable_palette.name)
 
       expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
       expect(page).to have_no_css("[data-palette-id='#{regular_palette.id}']")
@@ -50,13 +49,10 @@ describe "Admin Color Palettes Features", type: :system do
     it "shows no results state" do
       visit("/admin/customize/colors")
 
-      find(".admin-filter__input").fill_in(with: "bananas")
+      find(".admin-filter-controls__input").fill_in(with: "bananas")
 
-      expect(page).to have_css(".color-palette__no-results")
-      expect(page).to have_css(
-        "button",
-        text: I18n.t("admin_js.admin.customize.colors.filters.reset"),
-      )
+      expect(page).to have_css(".admin-filter-controls__no-results")
+      expect(page).to have_css("button", text: I18n.t("admin_js.admin.plugins.filters.reset"))
     end
   end
 
@@ -93,6 +89,46 @@ describe "Admin Color Palettes Features", type: :system do
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(".theme-card__badge.--selectable")
+      end
+    end
+
+    it "can set as light and dark default for theme" do
+      visit("/admin/customize/colors")
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_light",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      within("[data-palette-id='#{regular_palette.id}']") do
+        expect(page).to have_css(
+          ".theme-card__badge.--active",
+          text: I18n.t("admin_js.admin.customize.colors.active_light_badge.text").upcase,
+        )
+      end
+
+      within("[data-palette-id='#{regular_palette.id}']") { find(".btn-flat").click }
+
+      expect(page).to have_css(".dropdown-menu")
+
+      click_button(
+        I18n.t(
+          "admin_js.admin.customize.colors.set_default_dark",
+          { theme: Theme.find_default.name },
+        ),
+      )
+
+      within("[data-palette-id='#{regular_palette.id}']") do
+        expect(page).to have_css(
+          ".theme-card__badge.--active",
+          text: I18n.t("admin_js.admin.customize.colors.active_both_badge.text").upcase,
+        )
       end
     end
   end

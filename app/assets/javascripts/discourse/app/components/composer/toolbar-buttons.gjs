@@ -43,6 +43,7 @@ export default class ComposerToolbarButtons extends Component {
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
+              @title={{button.title}}
               @context={{@data.context}}
               @content={{(button.popupMenu.options)}}
               @onChange={{button.popupMenu.action}}

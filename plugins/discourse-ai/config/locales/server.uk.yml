@@ -31,6 +31,7 @@ uk:
         description: "Періодичний звіт на основі великої мовної моделі"
   site_settings:
     discourse_ai_enabled: "Увімкнкти плагін ШІ для Discourse"
+    ai_default_llm_model: "Модель LLM за замовчуванням для всіх функцій ШІ"
     ai_artifact_security: "Система артефактів штучного інтелекту генерує IFRAME з виконуваним кодом. Строгий режим вимагає додаткового кліку для запуску коду. Нечіткий режим запускає код негайно. Гібридний режим дозволяє користувачеві вказати data-ai-artifact-autorun для негайного відображення. Вимкнений режим вимикає систему артефактів."
     ai_toxicity_enabled: "Увімкнути модуль перевірки на токсичність"
     ai_toxicity_inference_service_api_endpoint: "URL-адреса, де працює API для модуля перевірки на токсичність"
@@ -158,10 +159,25 @@ uk:
       description: "Дописи класифіковані за бажаністю емоції за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_disappointment:
       title: "\U0001F61E Розчарування"
+      description: "Дописи, класифіковані з емоцією розчарування за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_disapproval:
+      title: "\U0001F44E Несхвалення"
+      description: "Дописи, класифіковані з емоцією несхвалення за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_disgust:
       title: "\U0001F922 Огида"
+      description: "Дописи, класифіковані за емоцією \"огида\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_embarrassment:
+      title: "\U0001F633 Збентеження"
+      description: "Дописи, класифіковані з емоцією збентеження за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_excitement:
+      title: "\U0001F92A Хвилювання"
+      description: "Дописи класифіковані за емоційним збудженням за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_fear:
       title: "\U0001F628 Страх"
+      description: "Дописи, класифіковані з емоцією \"страх\" за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
+    emotion_gratitude:
+      title: "\U0001F64F Вдячність"
+      description: "Дописи, класифіковані з емоцією подяки за допомогою ШІ, використовуючи модель \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
       title: "\U0001F60A Радість"
     emotion_neutral:
@@ -236,6 +252,8 @@ uk:
         settings_explorer:
           name: Провідник налаштувань
           description: "AI Bot спеціалізується на допомозі досліджувати налаштування сайту Discourse"
+        researcher:
+          description: "ШІ-бот з доступом до Google, який може шукати та читати веб-сторінки"
         creative:
           name: Творчий
           description: "AI Bot без зовнішніх інтеграцій, що спеціалізуються на творчих завданнях"
@@ -245,6 +263,72 @@ uk:
         discourse_helper:
           name: "Discourse Помічник"
           description: "AI Bot спеціалізується на допомозі із завданнями, пов’язаними з Discourse"
+        web_artifact_creator:
+          name: "Створювач веб-артефактів"
+          description: "ШІ-бот спеціалізується на створенні інтерактивних веб-артефактів"
+        summarizer:
+          name: "Підсумовувач"
+          description: "Персона за замовчуванням, яка використовується для створення зведень ШІ"
+        short_summarizer:
+          name: "Узагальнювач (коротка форма)"
+          description: "Персона за замовчуванням, яка використовується для створення коротких резюме елементів списків тем на основі штучного інтелекту"
+        concept_finder:
+          name: "Пошук концепцій"
+          description: "ШІ-бот спеціалізується на виявленні концептів і тем у контенті"
+        concept_matcher:
+          name: "Зіставлення концепцій"
+          description: "ШІ-бот спеціалізується на зіставленні контенту з існуючими концепціями"
+        concept_deduplicator:
+          name: "Дедуплікатор концепцій"
+          description: "ШІ-бот спеціалізується на дедуплікації концепцій"
+        custom_prompt:
+          name: "Користувальницькі підказки"
+          description: "Персона за замовчуванням, яка активує функцію користувацьких підказок у Помічнику"
+        smart_dates:
+          name: "Розумні дати"
+          description: "Персона за замовчуванням, яка забезпечує функцію розумних дат у Помічнику"
+        markdown_table_generator:
+          name: "Генератор таблиць Markdown"
+          description: "Персона за замовчуванням, яка забезпечує функцію генерації таблиці Markdown у Помічнику"
+        post_illustrator:
+          name: "Ілюстратор постів"
+          description: "Генерує запити StableDiffusion для роботи функції ілюстрації публікацій у Помічнику"
+        proofreader:
+          name: "Коректор"
+          description: "Персона за замовчуванням, яка забезпечує функцію перевірки тексту у Помічнику"
+        titles_generator:
+          name: "Генератор заголовків"
+          description: "Персона за замовчуванням, яка забезпечує функцію пропонування назв тем у Помічнику"
+        tutor:
+          name: "Репетитор"
+          description: "Персона за замовчуванням, що забезпечує функцію пояснення у Помічнику"
+        translator:
+          name: "Перекладач"
+          description: "Персона за замовчуванням, яка активує функцію перекладача в Помічнику"
+        image_captioner:
+          name: "Підписи до зображень"
+          description: "Персона за замовчуванням, яка активує функцію підписів до зображень у Помічнику"
+        locale_detector:
+          name: "Детектор локалізації"
+          description: "Вмикає функцію перекладу, визначаючи локалізацію певного тексту (дописів, заголовків тощо)."
+        post_raw_translator:
+          name: "Посада перекладача"
+          description: "Забезпечує функцію перекладу, перекладаючи публікації, що містять Discourse Markdown"
+        topic_title_translator:
+          name: "Перекладач назви теми"
+          description: "Забезпечує функцію перекладу, перекладаючи назви тем"
+        short_text_translator:
+          name: "Перекладач коротких текстів"
+          description: "Забезпечує функцію перекладу як універсальний перекладач тексту, який використовується для коротких текстів, таких як назви категорій або теги"
+        spam_detector:
+          name: "Детектор спаму"
+          description: "Персона за замовчуванням, яка забезпечує роботу нашої функції виявлення спаму"
+        content_creator:
+          name: "Творець контенту"
+          description: "Персона за замовчуванням, що забезпечує пошук HyDE"
+        report_runner:
+          name: "Виконавець звітів"
+          description: "Персона за замовчуванням, що використовується у скрипті автоматизації звітів"
       topic_not_found: "Всього недоступно, тема не знайдена!"
       summarizing: "Підведення підсумків теми"
       searching: "Пошук: '%{query}'"
@@ -252,6 +336,7 @@ uk:
         researcher:
           researcher_llm:
             name: "LLM"
+            description: "Мовна модель для дослідження (за замовчуванням - LLM поточної персони)"
           max_tokens_per_batch:
             name: "Максимальна кількість токенів на пакет"
             description: "Максимальна кількість токенів для використання в кожній партії дослідження"
@@ -400,11 +485,20 @@ uk:
           few: "Запропоновані цілі: %{goals}\n\nЗнайдено %{count} повідомлення, що відповідають '%{filter}'"
           many: "Запропоновані цілі: %{goals}\n\nЗнайдено %{count} повідомлення, що відповідають '%{filter}'"
           other: "Запропоновані цілі: %{goals}\n\nЗнайдено %{count} повідомлень, що відповідають '%{filter}'"
+        researcher:
+          one: "Дослідження: %{goals}\n\nЗнайдена %{count} публікація, що відповідає '%{filter}'"
+          few: "Дослідження: %{goals}\n\nЗнайдено %{count} публікації, що відповідають '%{filter}'"
+          many: "Дослідження: %{goals}\n\nЗнайдено %{count} публікацій, що відповідають '%{filter}'"
+          other: "Дослідження: %{goals}\n\nЗнайдено %{count} публікацій, що відповідають '%{filter}'"
         search_settings:
           one: "Знайдено %{count} результат для '%{query}'"
           few: "Знайдено %{count} результати для '%{query}'"
           many: "Знайдено %{count} результатів для '%{query}'"
           other: "Знайдено %{count} результатів для '%{query}'"
+      discoveries:
+        continue_conversation:
+          title: "Розмова про відкриття: Пошук за запитом %{query}"
+          raw: "У моєму пошуку %{query}ви показали мені таку інформацію:\n\n%{context}\n\nПродовжимо розмову."
     summarization:
       configuration_hint:
         one: "Спочатку налаштуйте параметр `%{setting}`."
@@ -415,6 +509,7 @@ uk:
         no_targets: "За вибраний період повідомлень не було."
     sentiment:
       reports:
+        overall_sentiment: "Загальний настрій (Позитивний - Негативний)"
         post_emotion:
           sadness: "Смуток \U0001F622"
           surprise: "Сюрприз \U0001F631"
@@ -429,9 +524,13 @@ uk:
           neutral: "Нейтральна"
     llm:
       configuration:
-        disable_module_first: "Спочатку потрібно вимкнути %{setting} ."
+        create_llm: "Перш ніж увімкнути цю функцію, потрібно налаштувати LLM."
+        disable_modules_first: "Спочатку потрібно вимкнути ці модулі: %{settings}"
+        set_llm_first: "Спочатку встановіть %{setting} ."
         model_unreachable: "Нам не вдалося отримати відповідь від цієї моделі. Спочатку перевірте свої налаштування."
         invalid_seeded_model: "Ви не можете використовувати цю модель із цією функцією"
+        invalid_persona_response_format: "Вибрана персона повинна мати формат відповіді з логічними назвами полів «спам»"
+        must_select_model: "Спочатку ви повинні вибрати LLM"
       endpoints:
         not_configured: "%{display_name} (не налаштовано)"
         configuration_hint:
@@ -445,16 +544,25 @@ uk:
         many: "Ми не змогли видалити цю модель, оскільки її використовують %{settings} . Оновіть налаштування та повторіть спробу."
         other: "Ми не змогли видалити цю модель, оскільки її використовують %{settings} . Оновіть налаштування та повторіть спробу."
       cannot_edit_builtin: "Ви не можете редагувати вбудовану модель."
+    personas:
+      malformed_examples: "Наведені приклади мають неправильний формат."
     embeddings:
+      delete_failed: "Ця модель наразі використовується. Спочатку оновіть `ai embeddings selected model`."
       cannot_edit_builtin: "Ви не можете редагувати вбудовану модель."
       configuration:
         disable_embeddings: "Спершу потрібно вимкнути функцію «AI embeddings enabled»."
+        invalid_config: "Ви вибрали недійсний варіант."
+        choose_model: "Спочатку встановіть 'ai embeddings selected model'."
     llm_models:
       missing_provider_param: "%{param} не може бути пустим"
+      bedrock_invalid_url: "Будь ласка, заповніть усі поля, щоб використовувати цю модель."
     ai_staff_action_logger:
       updated: "оновлено"
+      set: "набір"
       removed: "вилучені"
     errors:
+      quota_exceeded: "Ви перевищили квоту для цієї моделі. Будь ласка, спробуйте ще раз через %{relative_time}."
+      quota_required: "Ви повинні вказати максимальну кількість токенів або варіантів використання для цієї моделі"
       no_query_specified: Параметр запиту є обов'язковим, будь ласка, вкажіть його.
       no_user_for_persona: Зазначена персона не має пов'язаного з нею користувача.
       persona_not_found: Вказана персона не існує. Перевірте параметри persona_name або persona_id.
@@ -464,3 +572,12 @@ uk:
       no_default_llm: Особа повинна мати значення default_llm.
       user_not_allowed: Користувачеві заборонено брати участь у темі.
       prompt_message_length: Повідомлення %{idx} перевищує ліміт у 1000 символів.
+      persona_already_exists: Персона з іменем %{name} вже існує.
+      custom_tool_exists:
+        one: "Користувацький інструмент з назвою %{names} вже існує."
+        few: "Користувацькі інструменти з назвами %{names} вже існують."
+        many: "Користувацькі інструменти з назвами %{names} вже існують."
+        other: "Користувацькі інструменти з назвами %{names} вже існують."
+  dashboard:
+    problem:
+      ai_llm_status: "У моделі LLM: %{model_name} виникають проблеми. Будь ласка, перевірте <a href='%{url}'>сторінку конфігурації моделі</a>."

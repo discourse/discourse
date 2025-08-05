@@ -1521,7 +1521,6 @@ cs:
         description: "Přeskočit tipy po registraci nového uživatele"
       reset_seen_user_tips: "Znovu zobrazit tipy uživatele"
       theme_default_on_all_devices: "Nastavit výchozí motiv na všech mých zařízeních"
-      color_scheme_default_on_all_devices: "Nastavit výchozí paletu barev na všech mých zařízeních"
       color_scheme: "Paleta barev"
       color_schemes:
         default_description: "Výchozí z motivu"
@@ -1531,6 +1530,10 @@ cs:
         regular: "Běžný"
         dark: "Tmavý režim"
         default_dark_scheme: "(výchozí nastavení webu)"
+        interface_modes:
+          auto: "Automaticky"
+          light: "Světlý režim"
+          dark: "Tmavý režim"
       dark_mode: "Tmavý režim"
       dark_mode_enable: "Povolit automatickou paletu barev tmavého režimu"
       text_size_default_on_all_devices: "Nastavit tuto výchozí velikost textu na všech mých zařízeních"
@@ -2956,7 +2959,6 @@ cs:
       italic_label: "I"
       italic_title: "Kurzíva"
       italic_text: "text kurzívou"
-      heading_label: "H"
       heading_title: "Nadpisy"
       heading_level_n: "Nadpis %{levelNumber}"
       heading_level_n_title: "Nadpis %{levelNumber}"
@@ -5646,7 +5648,7 @@ cs:
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
-      filter_reports: Filtrovat sestavy
+      filter_reports: "Filtrovat sestavy..."
       filter_reports_no_results: "Vašim filtrům neodpovídají žádné sestavy"
       tags:
         remove_muted_tags_from_latest:
@@ -6740,7 +6742,6 @@ cs:
             filter_by_used: "Použitý"
             filter_by_unused: "Nepoužitý"
             filter_by_updates_available: "Dostupné aktualizace"
-            search_components: "Zadejte název komponenty"
             new_update_for_component: "K dispozici je nová aktualizace pro %{name}!"
             component_up_to_date: '„%{name}“ je aktuální.'
             updated_successfully: '"%{name}" byla úspěšně aktualizována.'
@@ -6930,7 +6931,8 @@ cs:
           theme: "Motiv"
           component: "Komponenta"
           components: "Komponenty"
-          search_placeholder: "pište pro vyhledávání…"
+          filter_all: "Vše"
+          filter_user_selectable: "Volitelný uživatelem"
           theme_name: "Název motivu"
           component_name: "Název komponenty"
           themes_intro: "Začněte výběrem existujícího motivu nebo nainstalujte nový"
@@ -7189,17 +7191,14 @@ cs:
           preference_warning: "Změnili jste <a href='%{link}'>nastavení svého osobního motivu</a>, takže změny palety pro vás nemusí být viditelné. Návštěvníci, kteří nezměnili svá výchozí nastavení, tak stále uvidí změny, které zde provedete."
           title: "Barvy"
           edit: "Upravit"
-          set_default: "Nastavit jako aktivní pro %{theme}"
           set_default_success: "%{schemeName} nastaveno jako aktivní paleta pro %{themeName}"
           saved_refreshing: "Uloženo! Obnovuji barvy..."
           from_theme: "Z motivu: %{name}"
           filters:
-            search_placeholder: "Hledat podle jména nebo motivu..."
             all: "Vše"
             user_selectable: "Volitelný uživatelem"
             from_theme: "Z motivu"
             no_results: "Nebyly nalezeny žádné palety barev"
-            reset: "Odstranit filtry"
           active_badge:
             text: "Aktivní"
             title: "Aktivní paleta barev"

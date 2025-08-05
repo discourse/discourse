@@ -670,6 +670,9 @@ sw:
       color_schemes:
         undo: "Anza Upya"
         regular: "Kawaida"
+        interface_modes:
+          light: "Hafifu"
+          dark: "Nyeusi"
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
@@ -2844,6 +2847,7 @@ sw:
           disabled_filter: "Imezuiwa"
         theme:
           theme: "Mandhari"
+          filter_all: "Yote"
           customize_desc: "Geuza Kukufaa:"
           title: "Mandhari"
           create: "Tengeneza"

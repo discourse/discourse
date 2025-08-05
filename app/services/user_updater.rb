@@ -26,8 +26,10 @@ class UserUpdater
     enable_quoting
     enable_smart_lists
     enable_defer
+    enable_markdown_monospace_font
     color_scheme_id
     dark_scheme_id
+    interface_color_mode
     dynamic_favicon
     automatically_unpin_topics
     digest_after_minutes

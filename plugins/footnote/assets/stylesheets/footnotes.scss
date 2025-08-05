@@ -1,21 +1,18 @@
 .inline-footnotes {
+  counter-reset: inline-footnote;
+
   a.expand-footnote {
     user-select: none;
-    padding: 0 0.4em;
-    color: var(--primary-low-mid-or-secondary-high);
-    background: var(--primary-low);
-    border-radius: 3px;
-    min-height: 1.25em;
-    display: inline-flex;
-    align-items: center;
+    display: inline-block;
 
-    &:hover {
-      background: var(--primary-medium);
-      color: var(--secondary);
-    }
-
-    > * {
-      pointer-events: none;
+    &::after {
+      padding: 0 0.125em;
+      display: inline-block;
+      content: "[" counter(inline-footnote) "]";
+      vertical-align: super;
+      font-size: 0.75rem;
+      line-height: 1;
+      counter-increment: inline-footnote;
     }
   }
 
@@ -38,78 +35,22 @@
   }
 }
 
-#footnote-tooltip {
-  background-color: var(--primary-low);
-  color: var(--primary);
-  padding: 0.5em;
-  font-size: var(--font-down-1);
-  border-radius: 3px;
-  display: none;
-  z-index: z("modal", "tooltip");
-  max-width: 400px;
+.fk-d-tooltip__content[data-identifier="inline-footnote"] {
   overflow-wrap: break-word;
-  box-sizing: border-box;
+  font-size: var(--font-down-1);
 
-  .mobile-view & {
-    // tooltips are positioned 5px from the left
-    // - 10px accounts for this and gives 5px space on the right
-    max-width: calc(100dvw - 10px);
+  .footnote-backref {
+    display: none;
   }
 
-  .footnote-tooltip-content {
-    overflow: hidden;
-
-    .footnote-backref {
-      display: none;
-    }
-
-    img {
-      object-fit: cover;
-      max-width: 100%;
-    }
-
-    p {
-      margin: 0;
-    }
+  img {
+    object-fit: cover;
+    max-width: 100%;
   }
-}
 
-#footnote-tooltip[data-show] {
-  display: block;
-}
-
-#arrow,
-#arrow::before {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: inherit;
-}
-
-#arrow {
-  visibility: hidden;
-}
-
-#arrow::before {
-  visibility: visible;
-  content: "";
-  transform: rotate(45deg);
-}
-
-#footnote-tooltip[data-popper-placement^="top"] > #arrow {
-  bottom: -4px;
-}
-
-#footnote-tooltip[data-popper-placement^="bottom"] > #arrow {
-  top: -4px;
-}
-
-#footnote-tooltip[data-popper-placement^="left"] > #arrow {
-  right: -4px;
-}
-
-#footnote-tooltip[data-popper-placement^="right"] > #arrow {
-  left: -4px;
+  p {
+    margin: 0;
+  }
 }
 
 .ProseMirror {

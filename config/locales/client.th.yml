@@ -2916,6 +2916,7 @@ th:
           disabled_filter: "ปิดใช้งานแล้ว"
         theme:
           theme: "ธีม"
+          filter_all: "ทั้งหมด"
           theme_name: "ชื่อธีม"
           customize_desc: "การปรับแต่ง:"
           title: "ธีม"

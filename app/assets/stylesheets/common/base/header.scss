@@ -24,7 +24,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 0 var(--d-header-padding-v);
+    padding: 0 var(--d-header-padding-x);
 
     .contents {
       display: flex;
@@ -171,7 +171,6 @@
     padding: 0.2143em;
     text-decoration: none;
     cursor: pointer;
-    border: 1px solid transparent;
     outline: none;
 
     img.avatar {
@@ -181,19 +180,11 @@
 
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
-      background-color: var(--primary-low);
-      border-top: 1px solid transparent;
-      border-left: 1px solid transparent;
-      border-right: 1px solid transparent;
+      background-color: var(--d-hover);
 
       > .d-icon {
         color: var(--primary-medium);
       }
-    }
-
-    &:active {
-      color: var(--primary);
-      background-color: var(--primary-low);
     }
   }
 

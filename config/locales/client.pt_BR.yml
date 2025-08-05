@@ -1347,7 +1347,6 @@ pt_BR:
         description: "Pular emblemas e dicas de integração de novo(a) usuário(a)"
       reset_seen_user_tips: "Mostrar dicas do(a) usuário(a) novamente"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Definir paleta de cores padrão em todos os meus dispositivos"
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Tema padrão"
@@ -1357,6 +1356,10 @@ pt_BR:
         regular: "Normal"
         dark: "Modo escuro"
         default_dark_scheme: "(padrão do site)"
+        interface_modes:
+          auto: "Automático"
+          light: "Claro"
+          dark: "Escuro"
       dark_mode: "Modo escuro"
       dark_mode_enable: "Ativar a paleta de cores do modo escuro automaticamente"
       text_size_default_on_all_devices: "Definir este tamanho de texto como padrão em todos os meus dispositivos"
@@ -5013,7 +5016,7 @@ pt_BR:
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
-      filter_reports: Filtrar relatórios
+      filter_reports: "Filtrar relatórios..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -6128,7 +6131,8 @@ pt_BR:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
-          search_placeholder: "digite para pesquisar…"
+          filter_all: "Todos"
+          filter_user_selectable: "Selecionável por usuário(a)"
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"

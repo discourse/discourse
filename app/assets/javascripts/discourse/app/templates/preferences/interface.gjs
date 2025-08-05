@@ -80,6 +80,18 @@ export default RouteTemplate(
                 />
               </div>
             </div>
+            <div class="control-subgroup interface-color-mode">
+              <div class="instructions">{{i18n
+                  "user.color_schemes.interface_mode"
+                }}</div>
+              <div class="controls">
+                <ComboBox
+                  @content={{@controller.interfaceColorModes}}
+                  @value={{@controller.selectedInterfaceColorMode}}
+                  @onChange={{@controller.selectColorMode}}
+                />
+              </div>
+            </div>
           {{/if}}
         </div>
         {{#if @controller.previewingColorScheme}}
@@ -100,7 +112,7 @@ export default RouteTemplate(
         {{/if}}
         {{#if @controller.showDarkColorSchemeSelector}}
           <div class="instructions">
-            {{i18n "user.color_schemes.dark_instructions"}}
+            {{i18n "user.color_schemes.interface_mode_instructions"}}
           </div>
         {{/if}}
       </fieldset>
@@ -221,6 +233,12 @@ export default RouteTemplate(
         @checked={{@controller.model.user_option.dynamic_favicon}}
         data-setting-name="user-dynamic-favicon"
         class="pref-dynamic-favicon"
+      />
+      <PreferenceCheckbox
+        @labelKey="user.enable_markdown_monospace_font"
+        @checked={{@controller.model.user_option.enable_markdown_monospace_font}}
+        data-setting-name="user-enable-markdown-monospace-font"
+        class="pref-enable-markdown-monospace-font"
       />
       <div
         class="controls controls-dropdown pref-page-title"

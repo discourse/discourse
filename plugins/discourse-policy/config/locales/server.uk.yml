@@ -5,7 +5,16 @@
 # https://translate.discourse.org/
 
 uk:
+  site_settings:
+    policy_enabled: "Дозволити політики?"
+    policy_restrict_to_staff_posts: "Політики можуть з'являтися лише на статтях персоналу"
+    policy_easy_revoke: "Показувати кнопки \"Приймаю\" і \"відкликати\" одночасно,"
   discourse_policy:
+    errors:
+      user_missing: "Користувача немає в групі"
+      group_not_found: "Групу для політики не знайдено"
+      no_policy: "Для повідомлення не існує політики"
+      staff_only: "Політика може застосовуватися лише до посад персоналу"
     error:
       no_permission: "Не авторизовано"
   reports:

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import ClassicComponent, { setComponentTemplate } from "@ember/component";
 import templateOnly from "@ember/component/template-only";
 import { click, fillIn, render } from "@ember/test-helpers";

@@ -5,7 +5,7 @@
   flex-grow: 1;
   max-width: 100%;
 
-  &--rich-editor-enabled .d-editor-textarea-wrapper textarea.d-editor-input {
+  .d-editor-textarea-wrapper textarea.d-editor-input.--markdown-monospace {
     font-family: var(--d-font-family--monospace);
     font-variant-ligatures: none;
 

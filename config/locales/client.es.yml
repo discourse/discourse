@@ -1279,7 +1279,6 @@ es:
         description: "Omitir consejos y medallas de bienvenida"
       reset_seen_user_tips: "Mostrar consejos de usuario de nuevo"
       theme_default_on_all_devices: "Hacer que este sea el tema por defecto en todos mis dispositivos"
-      color_scheme_default_on_all_devices: "Establecer la paleta de colores por defecto en todos mis dispositivos"
       color_scheme: "Paleta de colores"
       color_schemes:
         default_description: "Tema predeterminado"
@@ -1289,6 +1288,9 @@ es:
         regular: "Habitual"
         dark: "Modo oscuro"
         default_dark_scheme: "(valor predeterminado por el sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Oscuro"
       dark_mode: "Modo oscuro"
       dark_mode_enable: "Activar la paleta de colores automática del modo oscuro"
       text_size_default_on_all_devices: "Hacer que este sea el tamaño por defecto en todos mis dispositivos"
@@ -4806,7 +4808,7 @@ es:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar informes
+      filter_reports: "Filtrar informes..."
       tags:
         remove_muted_tags_from_latest:
           always: "siempre"
@@ -5838,7 +5840,8 @@ es:
           theme: "Tema"
           component: "Componente"
           components: "Componentes"
-          search_placeholder: "escribe para buscar..."
+          filter_all: "Todo"
+          filter_user_selectable: "Seleccionable por el usuario"
           theme_name: "Nombre del tema"
           component_name: "Nombre del componente"
           themes_intro: "Selecciona un tema existente o instala uno nuevo para empezar"
