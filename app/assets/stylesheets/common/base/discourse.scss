@@ -968,12 +968,6 @@ form {
       height: 0.74em;
       width: 0.74em;
     }
-
-    &.solved {
-      .d-icon {
-        color: var(--success);
-      }
-    }
   }
 
   .topic-status-warning .d-icon-envelope {
