@@ -143,6 +143,11 @@
   justify-content: space-between;
   margin: 0 0 1em 0;
 
+  // for too small screen, we want it to also wrap
+  @media (width <= 400px) {
+    flex-wrap: wrap;
+  }
+
   .staff-action-logs-controls__left {
     flex: 1 1 auto;
     justify-content: flex-start;
