@@ -20,7 +20,7 @@ RSpec.describe DiscourseAssign do
       expect(assigned_option).to include(
         name: "assigned:",
         description: I18n.t("discourse_assign.filter.description.assigned"),
-        type: "username",
+        type: "username_group_list",
         priority: 1,
       )
     end
