@@ -129,11 +129,11 @@ export default class CategoriesBoxes extends Component {
                   <div class="subcategories">
                     {{#each c.subcategories as |sc|}}
                       <a class="subcategory" href={{sc.url}}>
-                        {{#if sc.uploaded_logo.url}}
-                          <span class="subcategory-image-placeholder">
+                        <span class="subcategory-image-placeholder">
+                          {{#if sc.uploaded_logo.url}}
                             <CategoryLogo @category={{sc}} />
-                          </span>
-                        {{/if}}
+                          {{/if}}
+                        </span>
                         {{categoryLink sc hideParent="true"}}
                       </a>
                     {{/each}}
