@@ -2,6 +2,7 @@
 
 :root {
   --category-header-logo-size: 3rem;
+  --category-description-width: 690px;
 }
 
 #navigation-bar {
@@ -61,6 +62,7 @@
     height: var(--category-header-logo-size);
     width: var(--category-header-logo-size);
     margin-top: calc(1rem - 1cap);
+    flex-shrink: 0;
   }
 
   &__description {
@@ -68,11 +70,11 @@
     line-height: var(--line-height-large);
     font-size: var(--font-0);
     color: var(--category-boxes-description-text-color);
+    max-width: var(--category-description-width);
   }
 
   &__content {
-    // 100 container - width of logo - gap - padding
-    width: calc(100% - 6em - var(--space-4) - var(--space-2) * 2);
+    flex-grow: 1;
   }
 
   &__content .badge-category__wrapper {
