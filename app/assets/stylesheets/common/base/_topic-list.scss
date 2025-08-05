@@ -2,7 +2,8 @@
 
 :root {
   --category-header-logo-size: 3rem;
-  --category-description-width: 690px;
+  --category-description-width: 760px;
+  --category-header-border: 1px solid var(--content-border-color);
 }
 
 #navigation-bar {
@@ -56,6 +57,9 @@
     display: flex;
     gap: var(--space-4);
     margin-bottom: var(--space-6);
+    border: var(--category-header-border);
+    padding: var(--space-4);
+    border-radius: var(--d-border-radius);
   }
 
   &__logo.category-logo.aspect-image {
