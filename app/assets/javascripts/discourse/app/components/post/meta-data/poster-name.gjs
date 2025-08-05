@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -25,15 +25,17 @@ export default class PostMetaDataPosterName extends Component {
   showNameAndGroup = true;
   showGlyph = true;
 
-  constructor() {
-    super(...arguments);
-    this.#trackUserStatus();
-  }
+  trackUserStatus = modifier((_, [user]) => {
+    if (!this.userStatus.isEnabled) {
+      return;
+    }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.#stopTrackingUserStatus();
-  }
+    user?.statusManager?.trackStatus();
+
+    return () => {
+      user?.statusManager?.stopTrackingStatus();
+    };
+  });
 
   get suppressSimilarName() {
     return applyValueTransformer(
@@ -99,12 +101,6 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   @bind
-  refreshUserStatus() {
-    this.#stopTrackingUserStatus();
-    this.#trackUserStatus();
-  }
-
-  @bind
   withBadgeDescription(badge) {
     // Alter the badge description to show that the badge was granted for this post.
     badge.description = i18n("post.badge_granted_tooltip", {
@@ -121,23 +117,8 @@ export default class PostMetaDataPosterName extends Component {
       : name;
   }
 
-  #trackUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.trackStatus();
-    }
-  }
-
-  #stopTrackingUserStatus() {
-    if (this.userStatus.isEnabled) {
-      this.user?.statusManager?.stopTrackingStatus();
-    }
-  }
-
   <template>
-    <div
-      class="names trigger-user-card"
-      {{didUpdate this.refreshUserStatus this.user}}
-    >
+    <div class="names trigger-user-card" {{this.trackUserStatus this.user}}>
       <PluginOutlet
         @name="post-meta-data-poster-name"
         @outletArgs={{lazyHash post=@post}}
