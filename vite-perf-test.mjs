@@ -66,7 +66,7 @@ const exec = (description, fn, assertion) => {
 page.on("console", (msg) => console.log(`PAGE LOG: ${msg.text()}`));
 
 page.on("response", (resp) => {
-  if (resp.status() !== 200 && resp.status() !== 302) {
+  if (resp.status() !== 200 && resp.status() !== 302 && resp.status() !== 304) {
     console.log(
       "FAILED HTTP REQUEST TO " + resp.url() + " Status is: " + resp.status()
     );
@@ -92,10 +92,13 @@ if (process.env.AUTH_USER && process.env.AUTH_PASSWORD) {
 
 let server;
 
-try {
+async function startVite(args) {
+  const label = `vite ${args}`;
+  console.time(label);
+
   server = execa({
     cwd: "app/assets/javascripts/discourse",
-  })`./node_modules/.bin/vite --force --port 0`;
+  })`./node_modules/.bin/vite ${args} --port 0`;
 
   server.catch((error) => {
     if (error.exitCode !== 143) {
@@ -121,12 +124,23 @@ try {
   });
 
   await exec("go to site", () => {
-    return page.goto(`${appURL}/latest`, { timeout: 0 });
+    return page.goto(`${appURL}/latest?safe_mode=no_plugins,no_themes`, {
+      timeout: 0,
+    });
   });
 
   await exec("expect a log in button in the header", () => {
     return page.waitForSelector("a#skip-link", { visible: true });
   });
+
+  console.timeEnd(label);
+
+  server.kill();
+}
+
+try {
+  await startVite("--force");
+  await startVite("");
 
   await exec("close browser", () => {
     return browser.close();
