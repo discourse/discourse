@@ -49,11 +49,13 @@ module DiscourseAi
           .fetch(embedding_key, expires_in: 1.week) { vector.vector_from(hypothetical_post) }
       end
 
-      def embedding(search_term)
+      def embedding(search_term, asymmetric: false)
         digest = OpenSSL::Digest::SHA1.hexdigest(search_term)
         embedding_key = build_embedding_key(digest, "", SiteSetting.ai_embeddings_selected_model)
 
-        Discourse.cache.fetch(embedding_key, expires_in: 1.week) { vector.vector_from(search_term) }
+        Discourse
+          .cache
+          .fetch(embedding_key, expires_in: 1.week) { vector.vector_from(search_term, asymmetric) }
       end
 
       # this ensures the candidate topics are over selected
@@ -73,8 +75,11 @@ module DiscourseAi
         end
 
         search_embedding = nil
-        search_embedding = hyde_embedding(search_term) if hyde
-        search_embedding = embedding(search_term) if search_embedding.blank?
+        if hyde
+          search_embedding = hyde_embedding(search_term)
+        else
+          search_embedding = embedding(search_term, asymmetric: true)
+        end
 
         over_selection_limit = limit * OVER_SELECTION_FACTOR
 
@@ -120,7 +125,7 @@ module DiscourseAi
           Discourse
             .cache
             .fetch(embedding_key, expires_in: 1.week) do
-              vector.vector_from(search_term, asymetric: true)
+              vector.vector_from(search_term, asymmetric: true)
             end
 
         candidate_post_ids =
@@ -205,11 +210,7 @@ module DiscourseAi
       def find_ai_hyde_model(persona_klass)
         model_id = persona_klass.default_llm_id || SiteSetting.ai_default_llm_model
 
-        if model_id.present?
-          LlmModel.find_by(id: model_id)
-        else
-          LlmModel.last
-        end
+        model_id.present? ? LlmModel.find_by(id: model_id) : LlmModel.last
       end
 
       def self.find_ai_hyde_model_id

@@ -165,8 +165,8 @@ class EmbeddingDefinition < ActiveRecord::Base
     "https://#{service.target}:#{service.port}"
   end
 
-  def prepare_query_text(text, asymetric: false)
-    strategy.prepare_query_text(text, self, asymetric: asymetric)
+  def prepare_query_text(text, asymmetric: false)
+    strategy.prepare_query_text(text, self, asymmetric: asymmetric)
   end
 
   def prepare_target_text(target)
