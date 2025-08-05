@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { or } from "@ember/object/computed";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseComputed from "discourse/lib/decorators";
@@ -21,6 +22,13 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   startDate = null;
   /** @type {moment.Moment | null} */
   endDate = null;
+
+  @or("startDate", "endDate") hasDateFilter;
+
+  @discourseComputed("startDate", "endDate")
+  filterClasses(startDate, endDate) {
+    return startDate || endDate ? "btn-primary" : "";
+  }
 
   @discourseComputed("filters.action_name")
   actionFilter(name) {

@@ -34,10 +34,6 @@ module PageObjects
         find(".clear-filters").click
       end
 
-      def click_date_time_filter
-        find(".btn.date-time-filter").click
-      end
-
       def click_export_button
         find(".export-staff-action-logs").click
       end

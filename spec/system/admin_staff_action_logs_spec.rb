@@ -91,8 +91,6 @@ describe "Admin staff action logs", type: :system do
     it "can see filtered logs" do
       visit "/admin/logs/staff_action_logs"
 
-      staff_action_logs_page.click_date_time_filter
-
       staff_action_logs_page.fill_date_filter_from(7.days.ago)
       staff_action_logs_page.fill_date_filter_to(2.days.ago)
 
@@ -104,8 +102,6 @@ describe "Admin staff action logs", type: :system do
 
     it "can export filtered logs" do
       visit "/admin/logs/staff_action_logs"
-
-      staff_action_logs_page.click_date_time_filter
 
       staff_action_logs_page.fill_date_filter_from(7.days.ago)
       staff_action_logs_page.fill_date_filter_to(2.days.ago)
