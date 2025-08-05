@@ -67,26 +67,45 @@ export default class FilterSuggestions {
   async getUsernameGroupListSuggestions() {
     let suggestions = [];
 
-    // Add extra entries first (like "nobody", "*")
-    if (this.tip.extra_entries) {
+    // Parse comma-separated terms - use the last term for searching
+    const terms = this.lastTerm ? this.lastTerm.split(",") : [];
+    const searchTerm = terms.length > 0 ? terms[terms.length - 1].trim() : "";
+    const previousTerms = terms
+      .slice(0, -1)
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0);
+
+    // Create a set of already used terms for duplicate checking
+    const usedTerms = new Set(previousTerms.map((t) => t.toLowerCase()));
+
+    if (this.tip.extra_entries && usedTerms.size === 0) {
       const extraSuggestions = this.tip.extra_entries
         .filter((entry) => {
-          if (!this.lastTerm) {
+          // Skip if already used
+          if (usedTerms.has(entry.name.toLowerCase())) {
+            return false;
+          }
+
+          if (!searchTerm) {
             return true;
           }
           return (
-            entry.name.toLowerCase().includes(this.lastTerm.toLowerCase()) ||
-            entry.description
-              .toLowerCase()
-              .includes(this.lastTerm.toLowerCase())
+            entry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            entry.description.toLowerCase().includes(searchTerm.toLowerCase())
           );
         })
-        .map((entry) => ({
-          name: this.buildSuggestionName(entry.name),
-          description: entry.description,
-          isSuggestion: true,
-          term: entry.name,
-        }));
+        .map((entry) => {
+          const termWithCommas =
+            previousTerms.length > 0
+              ? `${previousTerms.join(",")},${entry.name}`
+              : entry.name;
+          return {
+            name: this.buildSuggestionName(termWithCommas),
+            description: entry.description,
+            isSuggestion: true,
+            term: entry.name,
+          };
+        });
 
       suggestions = suggestions.concat(extraSuggestions);
     }
@@ -94,18 +113,26 @@ export default class FilterSuggestions {
     // Add user suggestions
     try {
       const data = { limit: 10 };
-      if ((this.lastTerm || "").length > 0) {
-        data.term = this.lastTerm;
+      if (searchTerm.length > 0) {
+        data.term = searchTerm;
       } else {
         data.last_seen_users = true;
       }
       const response = await ajax("/u/search/users.json", { data });
-      const userSuggestions = response.users.map((user) => ({
-        name: this.buildSuggestionName(user.username),
-        description: user.name || "",
-        term: user.username,
-        isSuggestion: true,
-      }));
+      const userSuggestions = response.users
+        .filter((user) => !usedTerms.has(user.username.toLowerCase()))
+        .map((user) => {
+          const termWithCommas =
+            previousTerms.length > 0
+              ? `${previousTerms.join(",")},${user.username}`
+              : user.username;
+          return {
+            name: this.buildSuggestionName(termWithCommas),
+            description: user.name || "",
+            term: user.username,
+            isSuggestion: true,
+          };
+        });
 
       suggestions = suggestions.concat(userSuggestions);
     } catch {
@@ -114,16 +141,24 @@ export default class FilterSuggestions {
 
     try {
       const data = { limit: 5 };
-      if ((this.lastTerm || "").length > 0) {
-        data.term = this.lastTerm;
+      if (searchTerm.length > 0) {
+        data.term = searchTerm;
       }
       const response = await ajax("/groups/search.json", { data });
-      const groupSuggestions = response.map((group) => ({
-        name: this.buildSuggestionName(group.name),
-        description: group.full_name || group.name,
-        term: group.name,
-        isSuggestion: true,
-      }));
+      const groupSuggestions = response
+        .map((group) => {
+          const termWithCommas =
+            previousTerms.length > 0
+              ? `${previousTerms.join(",")},${group.name}`
+              : group.name;
+          return {
+            name: this.buildSuggestionName(termWithCommas),
+            description: group.full_name || group.name,
+            term: group.name,
+            isSuggestion: true,
+          };
+        })
+        .filter((suggestion) => !usedTerms.has(suggestion.term.toLowerCase()));
 
       suggestions = suggestions.concat(groupSuggestions);
     } catch {
@@ -133,8 +168,8 @@ export default class FilterSuggestions {
     // Limit total results and prioritize exact matches
     return suggestions
       .sort((a, b) => {
-        const aExact = a.term.toLowerCase() === this.lastTerm?.toLowerCase();
-        const bExact = b.term.toLowerCase() === this.lastTerm?.toLowerCase();
+        const aExact = a.term.toLowerCase() === searchTerm?.toLowerCase();
+        const bExact = b.term.toLowerCase() === searchTerm?.toLowerCase();
         if (aExact && !bExact) {
           return -1;
         }
