@@ -26,27 +26,25 @@ const FilterNavigationMenuList = <template>
   {{#if @data.filteredTips.length}}
     <DropdownMenu as |dropdown|>
       {{#each @data.filteredTips as |item index|}}
-        <dropdown.item>
-          <DButton
-            class={{concatClass
-              "filter-navigation__tip-button"
-              (if (eq index @data.selectedIndex) "--selected")
-            }}
-            @action={{fn @data.selectItem item}}
-          >
-            {{#if item.category}}
-              {{categoryBadge item.category allowUncategorized=true}}
-            {{else}}
-              <span class="filter-navigation__tip-name">
-                {{item.name}}
-              </span>
+        <dropdown.item
+          class={{concatClass
+            "filter-navigation__tip-item"
+            (if (eq index @data.selectedIndex) "--selected")
+          }}
+          {{on "click" (fn @data.selectItem item)}}
+        >
+          {{#if item.category}}
+            {{categoryBadge item.category allowUncategorized=true}}
+          {{else}}
+            <span class="filter-navigation__tip-name">
+              {{item.name}}
+            </span>
 
-              {{#if item.description}}
-                <span class="filter-navigation__tip-description">—
-                  {{item.description}}</span>
-              {{/if}}
+            {{#if item.description}}
+              <span class="filter-navigation__tip-description">—
+                {{item.description}}</span>
             {{/if}}
-          </DButton>
+          {{/if}}
         </dropdown.item>
       {{/each}}
     </DropdownMenu>
