@@ -14,8 +14,9 @@ module DiscourseAi
         query = params[:q].to_s
         use_hyde = SiteSetting.ai_embeddings_semantic_search_use_hyde
 
-        if params[:hyde].present?
-          use_hyde = !(params[:hyde].to_s.downcase == "false" || params[:hyde].to_s == "0")
+        if params[:hyde].present? &&
+             (params[:hyde].to_s.downcase == "false" || params[:hyde].to_s == "0")
+          use_hyde = false
         end
 
         if query.length < SiteSetting.min_search_term_length
