@@ -222,6 +222,14 @@ module(
       await triggerEvent("#topic-query-filter-input", "focus");
       await fillIn("#topic-query-filter-input", "cat");
 
+      assert
+        .dom(".filter-navigation__tip-button")
+        .exists("category search results shown");
+
+      assert
+        .dom(".filter-navigation__tip-button")
+        .exists(".badge-category__wrapper", "category badge HTML shown");
+
       await triggerKeyEvent(
         "#topic-query-filter-input",
         "keydown",

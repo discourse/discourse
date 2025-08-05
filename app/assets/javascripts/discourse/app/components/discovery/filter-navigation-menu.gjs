@@ -10,6 +10,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import categoryBadge from "discourse/helpers/category-badge";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -32,12 +33,17 @@ const FilterNavigationMenuList = <template>
             }}
             @action={{fn @data.selectItem item}}
           >
-            <span class="filter-navigation__tip-name">
-              {{item.name}}
-            </span>
-            {{#if item.description}}
-              <span class="filter-navigation__tip-description">—
-                {{item.description}}</span>
+            {{#if item.category}}
+              {{categoryBadge item.category allowUncategorized=true}}
+            {{else}}
+              <span class="filter-navigation__tip-name">
+                {{item.name}}
+              </span>
+
+              {{#if item.description}}
+                <span class="filter-navigation__tip-description">—
+                  {{item.description}}</span>
+              {{/if}}
             {{/if}}
           </DButton>
         </dropdown.item>
