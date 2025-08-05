@@ -31,7 +31,7 @@ const FilterNavigationMenuList = <template>
             "filter-navigation__tip-item"
             (if (eq index @data.selectedIndex) "--selected")
           }}
-          onClick={{fn @data.selectItem item}}
+         {{on "click" (fn @data.selectItem item)}}
         >
           {{#if item.category}}
             {{categoryBadge item.category allowUncategorized=true}}
