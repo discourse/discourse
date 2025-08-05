@@ -338,8 +338,8 @@ class UserHistory < ActiveRecord::Base
         .includes(:acting_user, :target_user)
     query = query.where(admin_only: false) unless viewer && viewer.admin?
 
-    query = query.where("created_at >= ?", opts[:start_date]) if opts[:start_date]
-    query = query.where("created_at <= ?", opts[:end_date]) if opts[:end_date]
+    query = query.where("created_at >= ?", opts[:start_date].to_time) if opts[:start_date]
+    query = query.where("created_at <= ?", opts[:end_date].to_time) if opts[:end_date]
 
     query
   end
