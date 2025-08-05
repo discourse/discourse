@@ -3164,7 +3164,7 @@ bs_BA:
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
-      filter_reports: Filtriraj izvještaje
+      filter_reports: "Filtriraj izvještaje..."
       tags:
         remove_muted_tags_from_latest:
           always: "uvijek"
@@ -3728,6 +3728,7 @@ bs_BA:
           theme: "Izgled"
           component: "Komponenta"
           components: "Komponenti"
+          filter_all: "Sve"
           theme_name: "Ime teme"
           component_name: "Naziv komponenta"
           themes_intro: "Izaberite postojeću temu ili instalirajte novu da biste započeli"

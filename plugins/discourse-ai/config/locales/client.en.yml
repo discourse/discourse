@@ -132,9 +132,9 @@ en:
               description: "In silent mode persona will receive the content but will not post anything on the forum - useful when performing triage using tools"
         llm_triage:
           fields:
-            system_prompt:
-              label: "System Prompt"
-              description: "The prompt that will be used to triage, be sure for it to reply with a single word you can use to trigger the action"
+            triage_persona:
+              label: "Persona"
+              description: "Persona used to triage, be sure for it to reply with a single word you can use to trigger the action"
             max_post_tokens:
               label: "Max Post Tokens"
               description: "The maximum number of tokens to scan using LLM triage"
@@ -174,12 +174,6 @@ en:
             reply_persona:
               label: "Reply Persona"
               description: "AI Persona to use for replies (must have default LLM), will be prioritized over canned reply"
-            model:
-              label: "Model"
-              description: "Language model used for triage"
-            temperature:
-              label: "Temperature"
-              description: "Temperature to use for the LLM. Increase to increase randomness (leave empty to use model default)"
             max_output_tokens:
               label: "Max output tokens"
               description: "When specified, sets an upper bound to the maximum number of tokens the model can generate. Respects LLM's max output tokens limit"

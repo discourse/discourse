@@ -86,6 +86,7 @@ export default class InterfaceController extends Controller {
       "dark_scheme_id",
       "bookmark_auto_delete_preference",
       "interface_color_mode",
+      "enable_markdown_monospace_font",
     ];
 
     if (makeThemeDefault) {
@@ -100,9 +101,10 @@ export default class InterfaceController extends Controller {
     return this.siteSettings.available_locales;
   }
 
-  @discourseComputed
-  defaultDarkSchemeId() {
-    return this.siteSettings.default_dark_mode_color_scheme_id;
+  @discourseComputed("currentThemeId")
+  defaultDarkSchemeId(themeId) {
+    const theme = this.userSelectableThemes?.findBy("id", themeId);
+    return theme?.dark_color_scheme_id || -1;
   }
 
   @discourseComputed
@@ -345,18 +347,10 @@ export default class InterfaceController extends Controller {
         this.enableDarkMode ? null : -1
       );
     } else {
-      // if chosen dark scheme matches site dark scheme, no need to store
-      if (
-        this.defaultDarkSchemeId > 0 &&
-        this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
-      ) {
-        this.set("model.user_option.dark_scheme_id", null);
-      } else {
-        this.set(
-          "model.user_option.dark_scheme_id",
-          this.selectedDarkColorSchemeId
-        );
-      }
+      this.set(
+        "model.user_option.dark_scheme_id",
+        this.selectedDarkColorSchemeId
+      );
     }
 
     return this.model

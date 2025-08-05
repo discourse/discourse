@@ -4404,7 +4404,6 @@ te:
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
-      filter_reports: నివేదికలను ఫిల్టర్ చేయండి
       tags:
         remove_muted_tags_from_latest:
           always: "ఎల్లప్పుడూ"
@@ -5178,7 +5177,7 @@ te:
           theme: "థీమ్"
           component: "భాగం"
           components: "భాగాలు"
-          search_placeholder: "శోధించడానికి టైప్ చేయండి…"
+          filter_all: "అన్నీ"
           theme_name: "థీమ్ పేరు"
           component_name: "భాగం పేరు"
           themes_intro: "ప్రారంభించడానికి ఇప్పటికే ఉన్న థీమ్‌ను ఎంచుకోండి లేదా కొత్తదాన్ని ఇన్‌స్టాల్ చేయండి"

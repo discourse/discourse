@@ -127,6 +127,10 @@
   display: inline-flex;
   flex-wrap: wrap;
 
+  &:has(.box) {
+    gap: var(--space-1);
+  }
+
   &__tag-separator {
     margin-right: 0.25em;
     color: var(--tag-text-color);

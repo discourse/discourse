@@ -367,11 +367,6 @@ basic:
   default_theme_id:
     default: -1
     hidden: true
-  default_dark_mode_color_scheme_id:
-    default: -1
-    type: enum
-    enum: "ColorSchemeSetting"
-    client: true
   relative_date_duration:
     client: true
     default: 30
@@ -3826,6 +3821,9 @@ user_preferences:
     default: 1
     enum: "CompositionModeSiteSetting"
     area: "posts_and_topics|user_defaults"
+  default_other_enable_markdown_monospace_font:
+    default: true
+    area: "posts_and_topics|user_defaults"
 
 api:
   retain_web_hook_events_period_days:
@@ -3932,6 +3930,13 @@ tags:
     hidden: true
   create_tag_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
+  edit_tags_allowed_groups:
+    default: "1|2" # auto group admins, moderators
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false

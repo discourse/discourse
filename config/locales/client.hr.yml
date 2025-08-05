@@ -5295,7 +5295,7 @@ hr:
     admin:
       title: "Administrator"
       moderator: "Moderator"
-      filter_reports: Filtrirajte izvješća
+      filter_reports: "Filtrirajte izvješća..."
       tags:
         remove_muted_tags_from_latest:
           always: "uvijek"
@@ -5959,6 +5959,7 @@ hr:
           theme: "Tema"
           component: "Komponenta"
           components: "Komponente"
+          filter_all: "Sve"
           theme_name: "Naziv teme"
           component_name: "Naziv komponente"
           themes_intro: "Odaberite postojeću temu ili instalirajte novu da biste započeli"

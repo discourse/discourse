@@ -4859,7 +4859,7 @@ tr_TR:
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
-      filter_reports: Raporları filtrele
+      filter_reports: "Raporları filtrele..."
       tags:
         remove_muted_tags_from_latest:
           always: "her zaman"
@@ -5941,7 +5941,8 @@ tr_TR:
           theme: "Tema"
           component: "Bileşen"
           components: "Bileşenler"
-          search_placeholder: "aramak için yazın…"
+          filter_all: "Tümü"
+          filter_user_selectable: "Kullanıcı tarafından seçilebilir"
           theme_name: "Tema adı"
           component_name: "Bileşen adı"
           themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\nyükleyin"

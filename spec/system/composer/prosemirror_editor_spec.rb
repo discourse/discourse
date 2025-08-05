@@ -23,10 +23,20 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   def paste_and_click_image
+    # This helper can only be used reliably to paste a single image when no other images are present.
+    expect(rich).to have_no_css(".composer-image-node img")
+
     cdp.allow_clipboard
     cdp.copy_test_image
     cdp.paste
+
+    expect(rich).to have_css(".composer-image-node img", count: 1)
+    expect(rich).to have_no_css(".composer-image-node img[src='/images/transparent.png']")
+    expect(rich).to have_no_css(".composer-image-node img[data-placeholder='true']")
+
     rich.find(".composer-image-node img").click
+
+    expect(rich).to have_css(".composer-image-node .fk-d-menu", count: 2)
   end
 
   it "hides the Composer container's preview button" do
@@ -128,6 +138,19 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.toggle_rich_editor
 
       expect(composer).to have_value("Why :repeat_single_button: ")
+    end
+  end
+
+  context "with composer messages" do
+    fab!(:category)
+
+    it "shows a popup" do
+      open_composer
+      composer.type_content("Maybe @staff can help?")
+
+      expect(composer).to have_popup_content(
+        I18n.t("js.composer.cannot_see_group_mention.not_mentionable", group: "staff"),
+      )
     end
   end
 
@@ -1316,6 +1339,51 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  describe "image URL resolution" do
+    it "resolves upload URLs and displays images correctly" do
+      open_composer
+      cdp.allow_clipboard
+
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
+
+      short_url1 = "upload://#{Upload.base62_sha1(upload1.sha1)}"
+      short_url2 = "upload://#{Upload.base62_sha1(upload2.sha1)}"
+
+      page.execute_script(<<~JS)
+        window.urlLookupRequests = 0;
+
+        const originalXHROpen = window.XMLHttpRequest.prototype.open;
+        window.XMLHttpRequest.prototype.open = function(method, url) {
+          if (url.toString().endsWith('/uploads/lookup-urls')) {
+            window.urlLookupRequests++;
+          }
+          return originalXHROpen.apply(this, arguments);
+        };
+      JS
+
+      markdown = "![image 1](#{short_url1})\n\n![image 2](#{short_url2})"
+      cdp.copy_paste(markdown)
+
+      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
+      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+
+      # loaded in a single api call
+      initial_request_count = page.evaluate_script("window.urlLookupRequests")
+      expect(initial_request_count).to eq(1)
+
+      composer.toggle_rich_editor
+      composer.toggle_rich_editor
+
+      expect(page).to have_css("img[src='#{upload1.url}'][data-orig-src='#{short_url1}']")
+      expect(page).to have_css("img[src='#{upload2.url}'][data-orig-src='#{short_url2}']")
+
+      # loaded from cache, no new request
+      final_request_count = page.evaluate_script("window.urlLookupRequests")
+      expect(final_request_count).to eq(initial_request_count)
+    end
+  end
+
   describe "image alt text display and editing" do
     it "shows alt text input when image is selected" do
       open_composer
@@ -1435,6 +1503,20 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("This is a test")
       expect(rich).to have_css("h2", text: "This is a test")
+    end
+  end
+
+  describe "quote node" do
+    it "keeps the cursor outside quote when pasted" do
+      open_composer
+
+      markdown = "[quote]\nThis is a quote\n\n[/quote]"
+      cdp.copy_paste(markdown)
+      composer.type_content("This is a test")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value(markdown + "\n\nThis is a test")
     end
   end
 end

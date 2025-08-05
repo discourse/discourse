@@ -88,4 +88,35 @@ describe DiscourseAi::Translation::PostLocalizer do
       }.to_not change { PostLocalization.count }
     end
   end
+
+  describe ".has_relocalize_quota?" do
+    fab!(:post)
+
+    it "returns false if quota is already 2 or more" do
+      Discourse.redis.set(described_class.relocalize_key(post, "en"), 2, ex: 10)
+      expect(described_class.has_relocalize_quota?(post, "en")).to eq(false)
+
+      Discourse.redis.set(described_class.relocalize_key(post, "en"), 3, ex: 10)
+      expect(described_class.has_relocalize_quota?(post, "en")).to eq(false)
+    end
+
+    it "returns true if quota is less than 2 and increments quota" do
+      Discourse.redis.set(described_class.relocalize_key(post, "en"), 1, ex: 10)
+
+      expect(described_class.has_relocalize_quota?(post, "en")).to eq(true)
+    end
+
+    it "does not increment quota if skip_incr is true" do
+      Discourse.redis.set(described_class.relocalize_key(post, "en"), 1, ex: 10)
+
+      described_class.has_relocalize_quota?(post, "en", skip_incr: true)
+      expect(Discourse.redis.get(described_class.relocalize_key(post, "en"))).to eq("1")
+    end
+
+    it "increments quota if it was not set before" do
+      described_class.has_relocalize_quota?(post, "en")
+
+      expect(Discourse.redis.get(described_class.relocalize_key(post, "en"))).to eq("1")
+    end
+  end
 end

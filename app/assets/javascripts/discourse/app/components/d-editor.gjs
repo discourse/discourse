@@ -737,10 +737,7 @@ export default class DEditor extends Component {
   <template>
     <div
       class="d-editor-container
-        {{if
-          this.siteSettings.rich_editor
-          'd-editor-container--rich-editor-enabled'
-        }}"
+        {{if this.siteSettings.rich_editor '--rich-editor-enabled'}}"
     >
       <div class="d-editor-textarea-column">
         {{yield}}

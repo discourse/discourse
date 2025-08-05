@@ -99,6 +99,7 @@ acceptance("Discourse Calendar - Notifications", function (needs) {
               display_username: "apacer",
               message:
                 "discourse_post_event.notifications.invite_user_predefined_attendance_notification",
+              event_name: "APAC call",
             },
           },
         ],
@@ -179,7 +180,7 @@ acceptance("Discourse Calendar - Notifications", function (needs) {
       notifications[4].textContent.replaceAll(/\s+/g, " ").trim(),
       `${i18n(
         "discourse_post_event.notifications.invite_user_predefined_attendance_notification",
-        { username: "apacer" }
+        { username: "apacer", eventName: "APAC call" }
       )} Asia Pacific team call`,
       "event invitation with predefined attendance notification has the right content"
     );

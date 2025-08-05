@@ -4388,6 +4388,7 @@ sq:
           enabled_filter: "Aktivizuar"
         theme:
           theme: "Tema"
+          filter_all: "Të gjitha"
           customize_desc: "Personalizo:"
           create_type: "Lloji"
           create_name: "Emri"

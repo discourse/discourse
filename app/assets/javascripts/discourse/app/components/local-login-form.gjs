@@ -170,7 +170,7 @@ export default class LocalLoginForm extends Component {
         <div class="input-group" {{didInsert this.passkeyConditionalLogin}}>
           <Input
             {{on "focusin" this.scrollInputIntoView}}
-            @value={{@loginName}}
+            value={{@loginName}}
             @type="email"
             id="login-account-name"
             class={{valueEntered @loginName}}
@@ -202,7 +202,8 @@ export default class LocalLoginForm extends Component {
           <PasswordField
             {{on "focusin" this.scrollInputIntoView}}
             {{on "keydown" this.loginOnEnter}}
-            @value={{@loginPassword}}
+            {{on "input" @loginPasswordChanged}}
+            value={{@loginPassword}}
             @capsLockOn={{this.capsLockOn}}
             type={{if this.maskPassword "password" "text"}}
             disabled={{this.disableLoginFields}}

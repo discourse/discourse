@@ -50,12 +50,12 @@ export function categoryBadgeHTML(category, opts) {
   }
 
   if (!opts.styleType) {
-    opts.styleType = category.styleType;
+    opts.styleType = category.style_type || "square";
 
     if (opts.styleType === "icon") {
-      opts.icon = category.icon;
+      opts.icon = opts.icon || category.icon;
     } else if (opts.styleType === "emoji") {
-      opts.emoji = category.emoji;
+      opts.emoji = opts.emoji || category.emoji;
     }
   }
 
@@ -110,6 +110,15 @@ export function categoryLinkHTML(category, options) {
     }
     if (options.ancestors) {
       categoryOptions.ancestors = options.ancestors;
+    }
+    if (options.styleType) {
+      categoryOptions.styleType = options.styleType;
+    }
+    if (options.icon) {
+      categoryOptions.icon = options.icon;
+    }
+    if (options.emoji) {
+      categoryOptions.emoji = options.emoji;
     }
   }
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
