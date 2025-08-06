@@ -15,7 +15,7 @@ const SCORE_TYPE_TO_CSS_CLASS_MAP = {
  *
  * @component ReviewableFlagReason
  *
- * @template
+ * @example
  * ```gjs
  * <ReviewableFlagReason @score={{this.score}} />
  * ```
