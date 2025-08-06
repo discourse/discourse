@@ -181,6 +181,15 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownAppURL() {
+    if (
+      this._appURL &&
+      this._appURL !== "/" &&
+      !this._appURL.startsWith("/chat") &&
+      !this._appURL.startsWith("/discourse-ai/ai-bot")
+    ) {
+      return this._appURL;
+    }
+
     const lastForumUrl = this.routeHistory.history.find((url) => {
       return (
         !url.startsWith("/chat") && !url.startsWith("/discourse-ai/ai-bot")
