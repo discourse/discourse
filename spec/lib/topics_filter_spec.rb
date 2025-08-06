@@ -949,7 +949,6 @@ RSpec.describe TopicsFilter do
           topic_with_tag1_tag4 = Fabricate(:topic, tags: [tag, tag4])
           topic_with_tag1_tag3_tag4 = Fabricate(:topic, tags: [tag, tag3, tag4])
           Fabricate(:topic, tags: [tag3, tag4])
-          puts Topic.count
           expect(
             TopicsFilter
               .new(guardian: Guardian.new)
@@ -962,6 +961,7 @@ RSpec.describe TopicsFilter do
           )
         end
       end
+
       describe "when query string is `tags:tag1,tag2,tag3`" do
         it "should only return topics that are tagged with either tag1, tag2 or tag3" do
           topic_with_tag3 = Fabricate(:topic, tags: [tag3])
