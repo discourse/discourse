@@ -919,7 +919,7 @@ after_initialize do
 
     next scope.where("1 = 0") if user_ids.empty? && group_ids.empty?
 
-    assignment_query = nil
+    assignment_query = Assignment.none # needed cause we are adding .or later
 
     if user_ids.present?
       assignment_query =
