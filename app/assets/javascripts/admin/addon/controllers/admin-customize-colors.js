@@ -72,12 +72,14 @@ export default class AdminCustomizeColorsController extends Controller {
       this._captureInitialState();
     }
 
-    const changedColors =
-      this._initialUserColorSchemeId !==
-      this._initialDefaultThemeLightColorSchemeId;
+    const usingDefaultColors = this.isUsingDarkMode
+      ? this._initialUserDarkSchemeId !==
+        this._initialDefaultThemeDarkColorSchemeId
+      : this._initialUserLightSchemeId !==
+        this._initialDefaultThemeLightColorSchemeId;
     const changedTheme = this.defaultTheme?.id !== currentThemeId(this.site);
 
-    return changedColors || changedTheme;
+    return !usingDefaultColors || changedTheme;
   }
 
   get isUsingDarkMode() {
