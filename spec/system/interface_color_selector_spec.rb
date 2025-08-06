@@ -62,7 +62,7 @@ describe "Interface color selector", type: :system do
   end
 
   it "is not available if the user uses the same scheme for dark mode as the light mode" do
-    user.user_option.update!(color_scheme_id: light_scheme.id, dark_scheme_id: -1)
+    user.user_option.update!(color_scheme_id: light_scheme.id, dark_scheme_id: light_scheme.id)
     sign_in(user)
 
     visit("/")
