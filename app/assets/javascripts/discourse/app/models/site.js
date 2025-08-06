@@ -92,6 +92,7 @@ export default class Site extends RestModel {
   @sort("categories", "topicCountDesc") categoriesByCount;
 
   #glimmerPostStreamEnabled;
+  #siteInitialized = false;
 
   init() {
     super.init(...arguments);
@@ -110,6 +111,18 @@ export default class Site extends RestModel {
     if (this.siteSettings.viewport_based_mobile_mode) {
       return !this.capabilities.viewport.sm;
     } else {
+      if (!(this.#siteInitialized ||= getOwnerWithFallback(this)._booted)) {
+        deprecated(
+          "Accessing `Site.mobileView` or `Site.desktopView` during the site initialization is deprecated and " +
+            "will be forbidden in future versions, as this can cause layout errors during browser resizing. " +
+            "Please move these checks to a component, transformer, or API callback.",
+          {
+            since: "v3.5.0.beta9-dev",
+            id: "discourse.site-check-view-initializing",
+          }
+        );
+      }
+
       return Mobile.mobileView;
     }
   }
