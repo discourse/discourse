@@ -35,15 +35,15 @@ export default class ChatStateManager extends Service {
   @tracked isDrawerActive = false;
   @tracked hasPreloadedChannels = false;
 
-  @tracked _appURL = null;
   @tracked _chatURL = null;
+  @tracked _appURL = null;
 
   _store = new KeyValueStore(PREFERRED_MODE_STORE_NAMESPACE);
 
   reset() {
     this._store.remove(PREFERRED_MODE_KEY);
-    this._appURL = null;
     this._chatURL = null;
+    this._appURL = null;
   }
 
   prefersFullPage() {
