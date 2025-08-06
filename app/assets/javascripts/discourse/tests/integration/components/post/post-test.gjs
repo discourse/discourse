@@ -62,6 +62,8 @@ module("Integration | Component | Post", function (hooks) {
       like_count: 3,
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
       created_at: new Date(new Date().getTime() - 30 * 60 * 1000),
+      user_id: 1,
+      username: "eviltrout",
     });
 
     this.post = post;
@@ -383,20 +385,21 @@ module("Integration | Component | Post", function (hooks) {
 
   test("reply directly above", async function (assert) {
     this.siteSettings.suppress_reply_directly_above = false;
-    this.post.reply_to_user = {
-      username: "eviltrout",
-      avatar_template: "/images/avatar.png",
-    };
-    this.post.post_number = 2;
-    this.post.reply_to_post_number = 1;
 
-    const prevPost = this.store.createRecord("post", {
-      id: 122,
-      post_number: 1,
+    const reply = this.store.createRecord("post", {
+      id: 369,
+      post_number: 2,
+      reply_to_post_number: 1,
       topic: this.post.topic,
+      user_id: 2,
+      username: "somebody",
+      reply_to_user: {
+        username: "eviltrout",
+        avatar_template: "/images/avatar.png",
+      },
     });
 
-    await renderComponent(this.post, { prevPost });
+    await renderComponent(reply, { prevPost: this.post });
 
     assert.dom(".avoid-tab").exists({ count: 1 }, "has the avoid tab class");
     await click("a.reply-to-tab");
